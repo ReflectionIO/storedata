@@ -14,10 +14,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.Text;
 import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.google.appengine.api.urlfetch.HTTPRequest;
 import com.google.appengine.api.urlfetch.HTTPResponse;
@@ -28,7 +24,7 @@ import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
  * @author billy1380
  * 
  */
-public class DataCollectorIOS implements DataCollector {
+public class DataCollectorIOS extends DataStoreDataCollector implements DataCollector {
 
 	private static final Logger LOG = Logger.getLogger(DataCollectorIOS.class);
 
@@ -36,19 +32,15 @@ public class DataCollectorIOS implements DataCollector {
 
 	private static final String KEY_FORMAT = "gather.iOS.%s.%s";
 
-	private static final String TOP_FREE_APPS = "topfreeapplications";
-	private static final String TOP_PAID_APPS = "toppaidapplications";
-	private static final String TOP_GROSSING_APPS = "topgrossingapplications";
-	private static final String TOP_FREE_IPAD_APPS = "topfreeipadapplications";
-	private static final String TOP_PAID_IPAD_APPS = "toppaidipadapplications";
-	private static final String TOP_GROSSING_IPAD_APPS = "topgrossingipadapplications";
-	private static final String NEW_APPS = "newapplications";
-	private static final String NEW_FREE_APPS = "newfreeapplications";
-	private static final String NEW_PAID_APPS = "newpaidapplications";
-
-	private static final int MAX_DATA_CHUNK_LENGTH = 500000;
-
-	private static final String DATASTORE_ENITY_NAME = "FeedFetch";
+	public static final String TOP_FREE_APPS = "topfreeapplications";
+	public static final String TOP_PAID_APPS = "toppaidapplications";
+	public static final String TOP_GROSSING_APPS = "topgrossingapplications";
+	public static final String TOP_FREE_IPAD_APPS = "topfreeipadapplications";
+	public static final String TOP_PAID_IPAD_APPS = "toppaidipadapplications";
+	public static final String TOP_GROSSING_IPAD_APPS = "topgrossingipadapplications";
+	public static final String NEW_APPS = "newapplications";
+	public static final String NEW_FREE_APPS = "newfreeapplications";
+	public static final String NEW_PAID_APPS = "newpaidapplications";
 
 	/*
 	 * (non-Javadoc)
@@ -113,58 +105,6 @@ public class DataCollectorIOS implements DataCollector {
 		}
 
 		return success;
-	}
-
-	private List<String> splitEqually(String text, int size) {
-		List<String> ret = new ArrayList<String>((text.length() + size - 1) / size);
-
-		for (int start = 0; start < text.length(); start += size) {
-			ret.add(text.substring(start, Math.min(text.length(), start + size)));
-		}
-
-		return ret;
-	}
-
-	private void store(String data, String countryCode, String store, String type, Date date) {
-
-		if (LOG.isTraceEnabled()) {
-			LOG.trace("Saving Data to data store");
-		}
-
-		List<String> splitData = splitEqually(data, MAX_DATA_CHUNK_LENGTH);
-
-		if (LOG.isDebugEnabled()) {
-			LOG.debug(String.format("Data split into [%d] chuncks", splitData.size()));
-		}
-
-		DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
-
-		for (int i = 0; i < splitData.size(); i++) {
-			Entity entity = new Entity(DATASTORE_ENITY_NAME);
-
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(String.format("Data chunck [%d of %d] is [%d] characters", i, splitData.size(), splitData.get(i).length()));
-			}
-
-			Text dataAsTextField = new Text(splitData.get(i));
-			entity.setProperty("data", dataAsTextField);
-			entity.setProperty("country", countryCode);
-			entity.setProperty("store", store);
-			entity.setProperty("type", type);
-			entity.setProperty("date", date);
-			entity.setProperty("part", Integer.valueOf(i + 1));
-			entity.setProperty("totalparts", Integer.valueOf(splitData.size()));
-
-			if (LOG.isTraceEnabled()) {
-				LOG.trace(String.format("Saving entity [%s]", entity.toString()));
-			}
-
-			datastoreService.put(entity);
-		}
-
-		if (LOG.isInfoEnabled()) {
-			LOG.info(String.format("Storing entity complete [%s] [%s] [%s] at [%s]", countryCode, store, type, date.toString()));
-		}
 	}
 
 	private String get(String countryCode, String type) {
