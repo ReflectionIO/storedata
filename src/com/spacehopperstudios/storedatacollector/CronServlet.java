@@ -56,7 +56,7 @@ public class CronServlet extends HttpServlet {
 
 		String ingest = req.getParameter("ingest");
 		if (ingest != null) {
-			if ("iOS".toUpperCase().equals(store.toUpperCase())) {
+			if ("iOS".toUpperCase().equals(ingest.toUpperCase())) {
 				success = (new IngestorIOS()).ingest();
 			}
 		}

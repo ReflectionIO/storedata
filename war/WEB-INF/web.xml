@@ -8,8 +8,18 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>Cron Tasks</servlet-name>
 		<servlet-class>com.spacehopperstudios.storedatacollector.CronServlet</servlet-class>
 	</servlet>
+	<servlet>
+		<servlet-name>Dev Helper</servlet-name>
+		<servlet-class>com.spacehopperstudios.storedatacollector.DevHelperServlet</servlet-class>
+	</servlet>
+	
 	<servlet-mapping>
 		<servlet-name>Cron Tasks</servlet-name>
 		<url-pattern>/gather</url-pattern>
 	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Dev Helper</servlet-name>
+		<url-pattern>/devhelper</url-pattern>
+	</servlet-mapping>
+	
 </web-app>

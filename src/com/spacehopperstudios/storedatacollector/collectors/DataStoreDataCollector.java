@@ -61,13 +61,14 @@ public abstract class DataStoreDataCollector {
 			}
 
 			Text dataAsTextField = new Text(splitData.get(i));
-			entity.setProperty("data", dataAsTextField);
-			entity.setProperty("country", countryCode);
-			entity.setProperty("store", store);
-			entity.setProperty("type", type);
-			entity.setProperty("date", date);
-			entity.setProperty("part", Integer.valueOf(i + 1));
-			entity.setProperty("totalparts", Integer.valueOf(splitData.size()));
+			entity.setProperty(ENTITY_COLUMN_DATA, dataAsTextField);
+			entity.setProperty(ENTITY_COLUMN_COUNTRY, countryCode);
+			entity.setProperty(ENTITY_COLUMN_STORE, store);
+			entity.setProperty(ENTITY_COLUMN_TYPE, type);
+			entity.setProperty(ENTITY_COLUMN_DATE, date);
+			entity.setProperty(ENTITY_COLUMN_PART, Integer.valueOf(i + 1));
+			entity.setProperty(ENTITY_COLUMN_TOTALPARTS, Integer.valueOf(splitData.size()));
+			entity.setProperty(ENTITY_COLUMN_INGESTED, Boolean.FALSE);
 
 			if (LOG.isTraceEnabled()) {
 				LOG.trace(String.format("Saving entity [%s]", entity.toString()));

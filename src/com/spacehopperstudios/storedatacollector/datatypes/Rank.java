@@ -25,5 +25,6 @@ public class Rank {
 	@Id
 	public Long id;
 	public String source;
+	public float price;
 
 }

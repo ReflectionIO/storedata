@@ -45,7 +45,8 @@ public class IngestorIOS implements Ingestor {
 		boolean success = false;
 
 		List<Entity> stored = get(DataCollectorIOS.TOP_FREE_APPS);
-		Map<Date, String> combined = combineDataParts(stored); // one data string for each import of the day (should be 2)
+		Map<Date, Map<Integer, Entity>> grouped = groupDataByDate(stored);
+		Map<Date, String> combined = combineDataParts(grouped);
 
 		for (Date key : combined.keySet()) {
 			List<Item> items = (new ParserIOS()).parse(combined.get(key));
@@ -66,12 +67,19 @@ public class IngestorIOS implements Ingestor {
 				rank.source = (String) stored.get(0).getProperty(DataCollectorIOS.ENTITY_COLUMN_STORE);
 				rank.country = (String) stored.get(0).getProperty(DataCollectorIOS.ENTITY_COLUMN_COUNTRY);
 				rank.date = (Date) stored.get(0).getProperty(DataCollectorIOS.ENTITY_COLUMN_DATE);
+				rank.price = item.price;
 
 				if (PersistenceService.ofy().load().type(Rank.class).filter("source=", rank.source).filter("type=", rank.type).filter("date=", rank.date)
 						.filter("country=", rank.country).filter("position=", rank.position).count() == 0) {
 					PersistenceService.ofy().save().entity(rank);
 				}
 			}
+		}
+
+		DatastoreService dataStoreService = DatastoreServiceFactory.getDatastoreService();
+		for (Entity entity : stored) {
+			entity.setProperty(DataCollectorIOS.ENTITY_COLUMN_INGESTED, Boolean.TRUE);
+			dataStoreService.put(entity);
 		}
 
 		// stored = get(date, DataCollectorIOS.TOP_PAID_APPS);
@@ -98,46 +106,62 @@ public class IngestorIOS implements Ingestor {
 		// stored = get(date, DataCollectorIOS.NEW_PAID_APPS);
 		// combined = combineDataParts(stored);
 
+		success = true;
+
 		return success;
 	}
 
-	private Map<Date, String> combineDataParts(List<Entity> entities) {
-		Map<Date, List<String>> map = new HashMap<Date, List<String>>();
+	private Map<Date, Map<Integer, Entity>> groupDataByDate(List<Entity> entities) {
+		Map<Date, Map<Integer, Entity>> map = new HashMap<Date, Map<Integer, Entity>>();
 		Map<Date, Integer> sizeMap = new HashMap<Date, Integer>();
 
 		for (Entity entity : entities) {
 			Date date = (Date) entity.getProperty(DataStoreDataCollector.ENTITY_COLUMN_DATE);
-			List<String> dataChunks = null;
-			String data = ((Text) entity.getProperty(DataStoreDataCollector.ENTITY_COLUMN_DATA)).getValue();
+			Map<Integer, Entity> dataChunks = null;
+			// String data = ((Text) entity.getProperty(DataStoreDataCollector.ENTITY_COLUMN_DATA)).getValue();
 
 			int chunkIndex = ((Long) entity.getProperty(DataStoreDataCollector.ENTITY_COLUMN_PART)).intValue();
 			int totalChunks = ((Long) entity.getProperty(DataStoreDataCollector.ENTITY_COLUMN_TOTALPARTS)).intValue();
 
 			if ((dataChunks = map.get(date)) == null) {
-				dataChunks = new ArrayList<String>(totalChunks);
-				for (int i = 0; i < totalChunks; i++) {
-					dataChunks.add("");
-				}
+				dataChunks = new HashMap<Integer, Entity>(totalChunks);
 				map.put(date, dataChunks);
 				sizeMap.put(date, Integer.valueOf(totalChunks));
 			}
 
-			dataChunks.set(chunkIndex - 1, data);
+			dataChunks.put(Integer.valueOf(chunkIndex), entity);
 		}
 
-		Map<Date, String> combined = new HashMap<Date, String>(map.size());
+		List<Date> remove = new ArrayList<Date>();
+		// remove any items with incomplete sets
+		for (Date key : map.keySet()) {
+			Map<Integer, Entity> part = map.get(key);
+			if (part.size() < sizeMap.get(key).intValue()) {
+				remove.add(key);
+			}
+		}
 
-		for (Date date : map.keySet()) {
+		for (Date date : remove) {
+			map.remove(date);
+		}
+
+		return map;
+	}
+
+	private Map<Date, String> combineDataParts(Map<Date, Map<Integer, Entity>> grouped) {
+
+		Map<Date, String> combined = new HashMap<Date, String>(grouped.size());
+
+		for (Date date : grouped.keySet()) {
 			StringBuffer buffer = new StringBuffer();
 			boolean complete = true;
 
-			for (String part : (List<String>) map.get(date)) {
-				if (part.length() == 0) {
-					complete = false;
-					break;
-				}
+			Map<Integer, Entity> group = grouped.get(date);
 
-				buffer.append(part);
+			for (int i = 0; i < group.size(); i++) {
+				Entity part = group.get(Integer.valueOf(i + 1));
+				String data = ((Text) part.getProperty(DataCollectorIOS.ENTITY_COLUMN_DATA)).getValue();
+				buffer.append(data);
 			}
 
 			if (complete) {
@@ -155,7 +179,7 @@ public class IngestorIOS implements Ingestor {
 
 		Filter typeFilter = new FilterPredicate(DataStoreDataCollector.ENTITY_COLUMN_TYPE, FilterOperator.EQUAL, type);
 		Filter storeFilter = new FilterPredicate(DataStoreDataCollector.ENTITY_COLUMN_STORE, FilterOperator.EQUAL, "ios");
-		Filter ingestedFilter = new FilterPredicate(DataStoreDataCollector.ENTITY_COLUMN_INGESTED, FilterOperator.NOT_EQUAL, true);
+		Filter ingestedFilter = new FilterPredicate(DataStoreDataCollector.ENTITY_COLUMN_INGESTED, FilterOperator.NOT_EQUAL, Boolean.TRUE);
 		Filter filter = CompositeFilterOperator.and(typeFilter, storeFilter, ingestedFilter);
 
 		query.setFilter(filter);
