@@ -47,7 +47,61 @@ public class IngestorIOS implements Ingestor {
 		List<Entity> stored = get(DataCollectorIOS.TOP_FREE_APPS);
 		Map<Date, Map<Integer, Entity>> grouped = groupDataByDate(stored);
 		Map<Date, String> combined = combineDataParts(grouped);
+		extractItemRanks(stored, grouped, combined);
 
+		stored = get(DataCollectorIOS.TOP_PAID_APPS);
+		grouped = groupDataByDate(stored);
+		combined = combineDataParts(grouped);
+		extractItemRanks(stored, grouped, combined);
+		
+		stored = get(DataCollectorIOS.TOP_GROSSING_APPS);
+		grouped = groupDataByDate(stored);
+		combined = combineDataParts(grouped);
+		extractItemRanks(stored, grouped, combined);
+		
+		stored = get(DataCollectorIOS.TOP_FREE_IPAD_APPS);
+		grouped = groupDataByDate(stored);
+		combined = combineDataParts(grouped);
+		extractItemRanks(stored, grouped, combined);
+
+		stored = get(DataCollectorIOS.TOP_PAID_IPAD_APPS);
+		grouped = groupDataByDate(stored);
+		combined = combineDataParts(grouped);
+		extractItemRanks(stored, grouped, combined);
+		
+		stored = get(DataCollectorIOS.TOP_GROSSING_IPAD_APPS);
+		grouped = groupDataByDate(stored);
+		combined = combineDataParts(grouped);
+		extractItemRanks(stored, grouped, combined);
+		
+		stored = get(DataCollectorIOS.NEW_APPS);
+		grouped = groupDataByDate(stored);
+		combined = combineDataParts(grouped);
+		extractItemRanks(stored, grouped, combined);
+		
+		stored = get(DataCollectorIOS.NEW_FREE_APPS);
+		grouped = groupDataByDate(stored);
+		combined = combineDataParts(grouped);
+		extractItemRanks(stored, grouped, combined);
+		
+		stored = get(DataCollectorIOS.NEW_PAID_APPS);
+		grouped = groupDataByDate(stored);
+		combined = combineDataParts(grouped);
+		extractItemRanks(stored, grouped, combined);
+
+		success = true;
+
+		return success;
+	}
+
+	/**
+	 * @param stored
+	 * @param grouped
+	 * @param combined
+	 */
+	private void extractItemRanks(List<Entity> stored, Map<Date, Map<Integer, Entity>> grouped, Map<Date, String> combined) {
+		DatastoreService dataStoreService = DatastoreServiceFactory.getDatastoreService();
+		
 		for (Date key : combined.keySet()) {
 			List<Item> items = (new ParserIOS()).parse(combined.get(key));
 
@@ -68,47 +122,22 @@ public class IngestorIOS implements Ingestor {
 				rank.country = (String) stored.get(0).getProperty(DataCollectorIOS.ENTITY_COLUMN_COUNTRY);
 				rank.date = (Date) stored.get(0).getProperty(DataCollectorIOS.ENTITY_COLUMN_DATE);
 				rank.price = item.price;
+				rank.currency = item.currency;
 
 				if (PersistenceService.ofy().load().type(Rank.class).filter("source=", rank.source).filter("type=", rank.type).filter("date=", rank.date)
 						.filter("country=", rank.country).filter("position=", rank.position).count() == 0) {
 					PersistenceService.ofy().save().entity(rank);
 				}
 			}
+			
+			for (Integer entityKey : grouped.get(key).keySet()) {
+				Entity entity = grouped.get(key).get(entityKey);
+
+				entity.setProperty(DataCollectorIOS.ENTITY_COLUMN_INGESTED, Boolean.TRUE);
+				dataStoreService.put(entity);
+			}
+			
 		}
-
-		DatastoreService dataStoreService = DatastoreServiceFactory.getDatastoreService();
-		for (Entity entity : stored) {
-			entity.setProperty(DataCollectorIOS.ENTITY_COLUMN_INGESTED, Boolean.TRUE);
-			dataStoreService.put(entity);
-		}
-
-		// stored = get(date, DataCollectorIOS.TOP_PAID_APPS);
-		// combined = combineDataParts(stored);
-		//
-		// stored = get(date, DataCollectorIOS.TOP_GROSSING_APPS);
-		// combined = combineDataParts(stored);
-		//
-		// stored = get(date, DataCollectorIOS.TOP_FREE_IPAD_APPS);
-		// combined = combineDataParts(stored);
-		//
-		// stored = get(date, DataCollectorIOS.TOP_PAID_IPAD_APPS);
-		// combined = combineDataParts(stored);
-		//
-		// stored = get(date, DataCollectorIOS.TOP_GROSSING_IPAD_APPS);
-		// combined = combineDataParts(stored);
-		//
-		// stored = get(date, DataCollectorIOS.NEW_APPS);
-		// combined = combineDataParts(stored);
-		//
-		// stored = get(date, DataCollectorIOS.NEW_FREE_APPS);
-		// combined = combineDataParts(stored);
-		//
-		// stored = get(date, DataCollectorIOS.NEW_PAID_APPS);
-		// combined = combineDataParts(stored);
-
-		success = true;
-
-		return success;
 	}
 
 	private Map<Date, Map<Integer, Entity>> groupDataByDate(List<Entity> entities) {

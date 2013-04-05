@@ -13,6 +13,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.spacehopperstudios.storedatacollector.datatypes.Item;
+import com.sun.org.apache.xerces.internal.dom.AttrNSImpl;
 
 /**
  * @author billy1380
@@ -29,7 +30,7 @@ public class ParserIOS implements Parser {
 	private static final String KEY_PRICE = "im:price";
 	private static final String KEY_ATTRIBUTES = "attributes";
 	private static final String KEY_AMOUNT = "amount";
-//	private static final String KEY_CURRENCY = "currency";
+	private static final String KEY_CURRENCY = "currency";
 	private static final String KEY_ID = "id";
 	private static final String KEY_INTERNAL_ID = "im:id";
 	private static final String KEY_BUNDLE_ID = "im:bundleId";
@@ -54,6 +55,8 @@ public class ParserIOS implements Parser {
 			item.name = jsonItem.get(KEY_NAME).getAsJsonObject().get(KEY_LABEL).getAsString();
 			
 			JsonObject attributes = jsonItem.get(KEY_PRICE).getAsJsonObject().get(KEY_ATTRIBUTES).getAsJsonObject();
+			item.price = attributes.get(KEY_AMOUNT).getAsFloat();
+			item.currency = attributes.get(KEY_CURRENCY).getAsString();
 			
 			attributes = jsonItem.get(KEY_ID).getAsJsonObject().get(KEY_ATTRIBUTES).getAsJsonObject();
 			item.internalId = attributes.get(KEY_INTERNAL_ID).getAsString();

@@ -26,5 +26,6 @@ public class Rank {
 	public Long id;
 	public String source;
 	public float price;
+	public String currency;
 
 }

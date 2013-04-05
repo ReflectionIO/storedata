@@ -29,5 +29,6 @@ public class Item {
 	public String internalId;
 	public String type;
 	public Date added;
+	public String currency;
 
 }
