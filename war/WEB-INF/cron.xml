@@ -3,6 +3,6 @@
 	<cron>
 		<url>/gather?store=iOS</url>
 		<description>Gather iOS store data</description>
-		<schedule>every 12 hours</schedule>
+		<schedule>every 12 hours from 01:00 to 13:00</schedule>
 	</cron>
 </cronentries> 
