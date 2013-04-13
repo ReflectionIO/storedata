@@ -6,7 +6,9 @@ package com.spacehopperstudios.storedatacollector.objectify;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
+import com.spacehopperstudios.storedatacollector.datatypes.FeedFetch;
 import com.spacehopperstudios.storedatacollector.datatypes.Item;
+import com.spacehopperstudios.storedatacollector.datatypes.ItemRankSummary;
 import com.spacehopperstudios.storedatacollector.datatypes.Rank;
 
 /**
@@ -15,8 +17,10 @@ import com.spacehopperstudios.storedatacollector.datatypes.Rank;
  */
 public class PersistenceService {
 	static {
-		ObjectifyService.factory().register(Item.class);
-		ObjectifyService.factory().register(Rank.class);
+		factory().register(FeedFetch.class);
+		factory().register(Item.class);
+		factory().register(Rank.class);
+		factory().register(ItemRankSummary.class);
 	}
 
 	public static Objectify ofy() {

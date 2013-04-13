@@ -18,16 +18,23 @@ import com.googlecode.objectify.annotation.Index;
 @Cache
 public class Item {
 
-	public String name;
-	public float price;
-	public String source;
 	@Id
 	public String id;
+	
 	@Index
 	public String externalId;
 	@Index
 	public String internalId;
+	
+	public String name;
+	public float price;
+	
+	@Index
+	public String source;
+	
+	@Index
 	public String type;
+	
 	public Date added;
 	public String currency;
 

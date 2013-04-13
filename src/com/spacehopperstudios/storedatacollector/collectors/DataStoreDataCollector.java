@@ -1,30 +1,18 @@
 package com.spacehopperstudios.storedatacollector.collectors;
 
+import static com.spacehopperstudios.storedatacollector.objectify.PersistenceService.ofy;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.Text;
+import com.spacehopperstudios.storedatacollector.datatypes.FeedFetch;
 
 public abstract class DataStoreDataCollector {
 	
 	public static final int MAX_DATA_CHUNK_LENGTH = 500000;
-
-	public static final String DATASTORE_ENITY_NAME = "FeedFetch";
-	
-	public static final String ENTITY_COLUMN_DATA = "data";
-	public static final String ENTITY_COLUMN_COUNTRY = "country";
-	public static final String ENTITY_COLUMN_STORE = "store";
-	public static final String ENTITY_COLUMN_TYPE = "type";
-	public static final String ENTITY_COLUMN_DATE = "date";
-	public static final String ENTITY_COLUMN_PART = "part";
-	public static final String ENTITY_COLUMN_TOTALPARTS = "totalparts";
-	public static final String ENTITY_COLUMN_INGESTED = "ingested";
 
 	private static final Logger LOG = Logger.getLogger(DataStoreDataCollector.class);
 
@@ -51,30 +39,23 @@ public abstract class DataStoreDataCollector {
 			LOG.debug(String.format("Data split into [%d] chuncks", splitData.size()));
 		}
 
-		DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
-
 		for (int i = 0; i < splitData.size(); i++) {
-			Entity entity = new Entity(DATASTORE_ENITY_NAME);
+			FeedFetch entity = new FeedFetch();
 
 			if (LOG.isDebugEnabled()) {
 				LOG.debug(String.format("Data chunck [%d of %d] is [%d] characters", i, splitData.size(), splitData.get(i).length()));
 			}
 
-			Text dataAsTextField = new Text(splitData.get(i));
-			entity.setProperty(ENTITY_COLUMN_DATA, dataAsTextField);
-			entity.setProperty(ENTITY_COLUMN_COUNTRY, countryCode);
-			entity.setProperty(ENTITY_COLUMN_STORE, store);
-			entity.setProperty(ENTITY_COLUMN_TYPE, type);
-			entity.setProperty(ENTITY_COLUMN_DATE, date);
-			entity.setProperty(ENTITY_COLUMN_PART, Integer.valueOf(i + 1));
-			entity.setProperty(ENTITY_COLUMN_TOTALPARTS, Integer.valueOf(splitData.size()));
-			entity.setProperty(ENTITY_COLUMN_INGESTED, Boolean.FALSE);
+			entity.data = splitData.get(i);
+			entity.country = countryCode;
+			entity.store = store;
+			entity.type = type;
+			entity.date = date;
+			entity.part = Integer.valueOf(i + 1);
+			entity.totalParts = Integer.valueOf(splitData.size());
+			entity.ingested = false;
 
-			if (LOG.isTraceEnabled()) {
-				LOG.trace(String.format("Saving entity [%s]", entity.toString()));
-			}
-
-			datastoreService.put(entity);
+			ofy().save().entity(entity);
 		}
 
 		if (LOG.isInfoEnabled()) {

@@ -3,6 +3,8 @@
  */
 package com.spacehopperstudios.storedatacollector.ingestors;
 
+import static com.spacehopperstudios.storedatacollector.objectify.PersistenceService.ofy;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,21 +13,10 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
-import com.google.appengine.api.datastore.Query.Filter;
-import com.google.appengine.api.datastore.Query.FilterOperator;
-import com.google.appengine.api.datastore.Query.FilterPredicate;
-import com.google.appengine.api.datastore.Text;
 import com.spacehopperstudios.storedatacollector.collectors.DataCollectorIOS;
-import com.spacehopperstudios.storedatacollector.collectors.DataStoreDataCollector;
+import com.spacehopperstudios.storedatacollector.datatypes.FeedFetch;
 import com.spacehopperstudios.storedatacollector.datatypes.Item;
 import com.spacehopperstudios.storedatacollector.datatypes.Rank;
-import com.spacehopperstudios.storedatacollector.objectify.PersistenceService;
 
 /**
  * @author billy1380
@@ -44,8 +35,8 @@ public class IngestorIOS implements Ingestor {
 	public boolean ingest() {
 		boolean success = false;
 
-		List<Entity> stored = get(DataCollectorIOS.TOP_FREE_APPS);
-		Map<Date, Map<Integer, Entity>> grouped = groupDataByDate(stored);
+		List<FeedFetch> stored = get(DataCollectorIOS.TOP_FREE_APPS);
+		Map<Date, Map<Integer, FeedFetch>> grouped = groupDataByDate(stored);
 		Map<Date, String> combined = combineDataParts(grouped);
 		extractItemRanks(stored, grouped, combined);
 
@@ -53,12 +44,12 @@ public class IngestorIOS implements Ingestor {
 		grouped = groupDataByDate(stored);
 		combined = combineDataParts(grouped);
 		extractItemRanks(stored, grouped, combined);
-		
+
 		stored = get(DataCollectorIOS.TOP_GROSSING_APPS);
 		grouped = groupDataByDate(stored);
 		combined = combineDataParts(grouped);
 		extractItemRanks(stored, grouped, combined);
-		
+
 		stored = get(DataCollectorIOS.TOP_FREE_IPAD_APPS);
 		grouped = groupDataByDate(stored);
 		combined = combineDataParts(grouped);
@@ -68,22 +59,22 @@ public class IngestorIOS implements Ingestor {
 		grouped = groupDataByDate(stored);
 		combined = combineDataParts(grouped);
 		extractItemRanks(stored, grouped, combined);
-		
+
 		stored = get(DataCollectorIOS.TOP_GROSSING_IPAD_APPS);
 		grouped = groupDataByDate(stored);
 		combined = combineDataParts(grouped);
 		extractItemRanks(stored, grouped, combined);
-		
+
 		stored = get(DataCollectorIOS.NEW_APPS);
 		grouped = groupDataByDate(stored);
 		combined = combineDataParts(grouped);
 		extractItemRanks(stored, grouped, combined);
-		
+
 		stored = get(DataCollectorIOS.NEW_FREE_APPS);
 		grouped = groupDataByDate(stored);
 		combined = combineDataParts(grouped);
 		extractItemRanks(stored, grouped, combined);
-		
+
 		stored = get(DataCollectorIOS.NEW_PAID_APPS);
 		grouped = groupDataByDate(stored);
 		combined = combineDataParts(grouped);
@@ -99,9 +90,8 @@ public class IngestorIOS implements Ingestor {
 	 * @param grouped
 	 * @param combined
 	 */
-	private void extractItemRanks(List<Entity> stored, Map<Date, Map<Integer, Entity>> grouped, Map<Date, String> combined) {
-		DatastoreService dataStoreService = DatastoreServiceFactory.getDatastoreService();
-		
+	private void extractItemRanks(List<FeedFetch> stored, Map<Date, Map<Integer, FeedFetch>> grouped, Map<Date, String> combined) {
+
 		for (Date key : combined.keySet()) {
 			List<Item> items = (new ParserIOS()).parse(combined.get(key));
 
@@ -109,51 +99,51 @@ public class IngestorIOS implements Ingestor {
 				Item item = items.get(i);
 
 				// save the item if it does not exist
-				if (PersistenceService.ofy().load().type(Item.class).filter("externalId", item.externalId).count() == 0) {
-					item.added = (Date) stored.get(0).getProperty(DataCollectorIOS.ENTITY_COLUMN_DATE);
-					PersistenceService.ofy().save().entity(item);
+				if (ofy().load().type(Item.class).filter("externalId =", item.externalId).count() == 0) {
+					item.added = (Date) stored.get(0).date;
+					ofy().save().entity(item);
 				}
 
 				Rank rank = new Rank();
 				rank.position = i;
 				rank.itemId = item.externalId;
-				rank.type = (String) stored.get(0).getProperty(DataCollectorIOS.ENTITY_COLUMN_TYPE);
-				rank.source = (String) stored.get(0).getProperty(DataCollectorIOS.ENTITY_COLUMN_STORE);
-				rank.country = (String) stored.get(0).getProperty(DataCollectorIOS.ENTITY_COLUMN_COUNTRY);
-				rank.date = (Date) stored.get(0).getProperty(DataCollectorIOS.ENTITY_COLUMN_DATE);
+				rank.type = stored.get(0).type;
+				rank.source = stored.get(0).store;
+				rank.country = stored.get(0).country;
+				rank.date = stored.get(0).date;
 				rank.price = item.price;
 				rank.currency = item.currency;
 
-				if (PersistenceService.ofy().load().type(Rank.class).filter("source=", rank.source).filter("type=", rank.type).filter("date=", rank.date)
-						.filter("country=", rank.country).filter("position=", rank.position).count() == 0) {
-					PersistenceService.ofy().save().entity(rank);
+				if (ofy().load().type(Rank.class).filter("source =", rank.source).filter("type =", rank.type).filter("date =", rank.date)
+						.filter("country =", rank.country).filter("position =", rank.position).count() == 0) {
+					ofy().save().entity(rank);
 				}
 			}
-			
-			for (Integer entityKey : grouped.get(key).keySet()) {
-				Entity entity = grouped.get(key).get(entityKey);
 
-				entity.setProperty(DataCollectorIOS.ENTITY_COLUMN_INGESTED, Boolean.TRUE);
-				dataStoreService.put(entity);
+			for (Integer entityKey : grouped.get(key).keySet()) {
+				FeedFetch entity = grouped.get(key).get(entityKey);
+
+				entity.ingested = true;
+				ofy().save().entity(entity);
 			}
-			
+
 		}
 	}
 
-	private Map<Date, Map<Integer, Entity>> groupDataByDate(List<Entity> entities) {
-		Map<Date, Map<Integer, Entity>> map = new HashMap<Date, Map<Integer, Entity>>();
+	private Map<Date, Map<Integer, FeedFetch>> groupDataByDate(List<FeedFetch> entities) {
+		Map<Date, Map<Integer, FeedFetch>> map = new HashMap<Date, Map<Integer, FeedFetch>>();
 		Map<Date, Integer> sizeMap = new HashMap<Date, Integer>();
 
-		for (Entity entity : entities) {
-			Date date = (Date) entity.getProperty(DataStoreDataCollector.ENTITY_COLUMN_DATE);
-			Map<Integer, Entity> dataChunks = null;
+		for (FeedFetch entity : entities) {
+			Date date = entity.date;
+			Map<Integer, FeedFetch> dataChunks = null;
 			// String data = ((Text) entity.getProperty(DataStoreDataCollector.ENTITY_COLUMN_DATA)).getValue();
 
-			int chunkIndex = ((Long) entity.getProperty(DataStoreDataCollector.ENTITY_COLUMN_PART)).intValue();
-			int totalChunks = ((Long) entity.getProperty(DataStoreDataCollector.ENTITY_COLUMN_TOTALPARTS)).intValue();
+			int chunkIndex = entity.part;
+			int totalChunks = entity.totalParts;
 
 			if ((dataChunks = map.get(date)) == null) {
-				dataChunks = new HashMap<Integer, Entity>(totalChunks);
+				dataChunks = new HashMap<Integer, FeedFetch>(totalChunks);
 				map.put(date, dataChunks);
 				sizeMap.put(date, Integer.valueOf(totalChunks));
 			}
@@ -162,9 +152,10 @@ public class IngestorIOS implements Ingestor {
 		}
 
 		List<Date> remove = new ArrayList<Date>();
+		
 		// remove any items with incomplete sets
 		for (Date key : map.keySet()) {
-			Map<Integer, Entity> part = map.get(key);
+			Map<Integer, FeedFetch> part = map.get(key);
 			if (part.size() < sizeMap.get(key).intValue()) {
 				remove.add(key);
 			}
@@ -177,7 +168,7 @@ public class IngestorIOS implements Ingestor {
 		return map;
 	}
 
-	private Map<Date, String> combineDataParts(Map<Date, Map<Integer, Entity>> grouped) {
+	private Map<Date, String> combineDataParts(Map<Date, Map<Integer, FeedFetch>> grouped) {
 
 		Map<Date, String> combined = new HashMap<Date, String>(grouped.size());
 
@@ -185,11 +176,11 @@ public class IngestorIOS implements Ingestor {
 			StringBuffer buffer = new StringBuffer();
 			boolean complete = true;
 
-			Map<Integer, Entity> group = grouped.get(date);
+			Map<Integer, FeedFetch> group = grouped.get(date);
 
 			for (int i = 0; i < group.size(); i++) {
-				Entity part = group.get(Integer.valueOf(i + 1));
-				String data = ((Text) part.getProperty(DataCollectorIOS.ENTITY_COLUMN_DATA)).getValue();
+				FeedFetch part = group.get(Integer.valueOf(i + 1));
+				String data = part.data;
 				buffer.append(data);
 			}
 
@@ -201,22 +192,10 @@ public class IngestorIOS implements Ingestor {
 		return combined;
 	}
 
-	private List<Entity> get(String type) {
-		DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
+	private List<FeedFetch> get(String type) {
 
-		Query query = new Query(DataStoreDataCollector.DATASTORE_ENITY_NAME);
-
-		Filter typeFilter = new FilterPredicate(DataStoreDataCollector.ENTITY_COLUMN_TYPE, FilterOperator.EQUAL, type);
-		Filter storeFilter = new FilterPredicate(DataStoreDataCollector.ENTITY_COLUMN_STORE, FilterOperator.EQUAL, "ios");
-		Filter ingestedFilter = new FilterPredicate(DataStoreDataCollector.ENTITY_COLUMN_INGESTED, FilterOperator.NOT_EQUAL, Boolean.TRUE);
-		Filter filter = CompositeFilterOperator.and(typeFilter, storeFilter, ingestedFilter);
-
-		query.setFilter(filter);
-
-		PreparedQuery preparedQuery = datastoreService.prepare(query);
-
-		List<Entity> stored = new ArrayList<Entity>();
-		for (Entity row : preparedQuery.asIterable()) {
+		List<FeedFetch> stored = new ArrayList<FeedFetch>();
+		for (FeedFetch row : ofy().load().type(FeedFetch.class).filter("type = ", type).filter("store =", "ios").filter("ingested =", Boolean.FALSE)) {
 			stored.add(row);
 		}
 

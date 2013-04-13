@@ -3,6 +3,8 @@
  */
 package com.spacehopperstudios.storedatacollector;
 
+import static com.spacehopperstudios.storedatacollector.objectify.PersistenceService.ofy;
+
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -17,8 +19,11 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
-import com.spacehopperstudios.storedatacollector.collectors.DataStoreDataCollector;
+import com.googlecode.objectify.cmd.Query;
+import com.spacehopperstudios.storedatacollector.datatypes.FeedFetch;
+import com.spacehopperstudios.storedatacollector.datatypes.ItemRankSummary;
+import com.spacehopperstudios.storedatacollector.datatypes.Rank;
+import com.spacehopperstudios.storedatacollector.objectify.PersistenceService;
 
 /**
  * @author William Shakour
@@ -40,37 +45,42 @@ public class DevHelperServlet extends HttpServlet {
 
 		if (action != null) {
 			if ("addingested".toUpperCase().equals(action.toUpperCase())) {
-				DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
-
-				Query query = new Query("FeedFetch");
-				PreparedQuery preparedQuery = datastoreService.prepare(query);
 
 				int i = 0;
-				for (Entity entity : preparedQuery.asIterable(FetchOptions.Builder.withOffset(Integer.parseInt(start)).limit(Integer.parseInt(count)))) {
-					entity.setProperty(DataStoreDataCollector.ENTITY_COLUMN_INGESTED, Boolean.FALSE);
-					datastoreService.put(entity);
+				for (FeedFetch entity : ofy().load().type(FeedFetch.class).offset(Integer.parseInt(start)).limit(Integer.parseInt(count)).iterable()) {
+					entity.ingested = false;
 
-					if (LOG.isDebugEnabled()) {
-						LOG.debug(String.format("Added [%s] to entity [%d]", DataStoreDataCollector.ENTITY_COLUMN_INGESTED, entity.getKey().getId()));
+					ofy().save().entity(entity);
+
+					if (LOG.isTraceEnabled()) {
+						LOG.trace(String.format("Set entity [%d] ingested to false", entity.id.longValue()));
 					}
-					
+
 					i++;
 				}
-				
+
 				if (LOG.isDebugEnabled()) {
-					LOG.debug(String.format("Found [%d] entities", i));
+					LOG.debug(String.format("Processed [%d] entities", i));
 				}
 
 				success = true;
 			} else if ("uningest".toUpperCase().equals(action.toUpperCase())) {
-				DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
 
-				Query query = new Query("FeedFetch");
-				PreparedQuery preparedQuery = datastoreService.prepare(query);
+				int i = 0;
+				for (FeedFetch entity : ofy().load().type(FeedFetch.class).offset(Integer.parseInt(start)).limit(Integer.parseInt(count)).iterable()) {
+					entity.ingested = false;
 
-				for (Entity entity : preparedQuery.asIterable()) {
-					entity.setProperty(DataStoreDataCollector.ENTITY_COLUMN_INGESTED, Boolean.FALSE);
-					datastoreService.put(entity);
+					ofy().save().entity(entity).now();
+
+					if (LOG.isTraceEnabled()) {
+						LOG.trace(String.format("Set entity [%d] ingested to false", entity.id.longValue()));
+					}
+
+					i++;
+				}
+
+				if (LOG.isDebugEnabled()) {
+					LOG.debug(String.format("Processed [%d] entities", i));
 				}
 
 				success = true;
@@ -78,15 +88,116 @@ public class DevHelperServlet extends HttpServlet {
 				if (object != null) {
 					DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
 
-					Query query = new Query(object);
+					com.google.appengine.api.datastore.Query query = new com.google.appengine.api.datastore.Query(object);
 					PreparedQuery preparedQuery = datastoreService.prepare(query);
 
-					for (Entity entity : preparedQuery.asIterable()) {
+					int i = 0;
+					for (Entity entity : preparedQuery.asIterable(FetchOptions.Builder.withOffset(Integer.parseInt(start)).limit(Integer.parseInt(count)))) {
 						datastoreService.delete(entity.getKey());
+
+						if (LOG.isTraceEnabled()) {
+							LOG.trace(String.format("Removed entity [%d]", entity.getKey().getId()));
+						}
+
+						i++;
+					}
+
+					if (LOG.isDebugEnabled()) {
+						LOG.debug(String.format("Processed [%d] entities", i));
 					}
 
 					success = true;
 				}
+			} else if ("countitemrank".toUpperCase().equals(action.toUpperCase())) {
+				int i = 0;
+				Query<Rank> queryRank = ofy().load().type(Rank.class).filter("counted =", Boolean.FALSE).offset(Integer.parseInt(start))
+						.limit(Integer.parseInt(count));
+
+				// Query<Rank> queryRank = ofy().load().type(Rank.class).filter("id =", Long.valueOf(19816));
+
+				for (Rank rank : queryRank.iterable()) {
+					// get the item rank summary
+					Query<ItemRankSummary> querySummary = PersistenceService.ofy().load().type(ItemRankSummary.class).filter("itemId =", rank.itemId)
+							.filter("type =", rank.type).filter("source =", rank.source);
+
+					ItemRankSummary itemRankSummary = null;
+
+					if (querySummary.count() > 0) {
+						// we already have an item for this
+						itemRankSummary = querySummary.list().get(0);
+					} else {
+						itemRankSummary = new ItemRankSummary();
+						itemRankSummary.itemId = rank.itemId;
+						itemRankSummary.type = rank.type;
+						itemRankSummary.source = rank.source;
+					}
+
+					itemRankSummary.numberOfTimesRanked++;
+
+					if (rank.position < 10) {
+						itemRankSummary.numberOfTimesRankedTop10++;
+					}
+
+					if (rank.position < 25) {
+						itemRankSummary.numberOfTimesRankedTop25++;
+					}
+
+					if (rank.position < 50) {
+						itemRankSummary.numberOfTimesRankedTop50++;
+					}
+
+					if (rank.position < 100) {
+						itemRankSummary.numberOfTimesRankedTop100++;
+					}
+
+					if (rank.position < 200) {
+						itemRankSummary.numberOfTimesRankedTop200++;
+					}
+
+					ofy().save().entity(itemRankSummary).now();
+
+					if (LOG.isTraceEnabled()) {
+						LOG.trace(String.format("Updated item item summary for [%s:%s:%s]", itemRankSummary.source, itemRankSummary.type,
+								itemRankSummary.itemId));
+					}
+
+					rank.counted = true;
+
+					ofy().save().entity(rank).now();
+
+					if (LOG.isTraceEnabled()) {
+						LOG.trace(String.format("Updated rank counted for %d", rank.id.longValue()));
+					}
+
+					i++;
+				}
+
+				if (LOG.isDebugEnabled()) {
+					LOG.debug(String.format("Processed [%d] entities", i));
+				}
+
+				success = true;
+
+			} else if ("uncountranks".toUpperCase().equals(action.toUpperCase())) {
+
+				int i = 0;
+				for (Rank rank : ofy().load().type(Rank.class).offset(Integer.parseInt(start)).limit(Integer.parseInt(count)).iterable()) {
+					rank.counted = false;
+
+					ofy().save().entity(rank);
+
+					if (LOG.isTraceEnabled()) {
+						LOG.trace(String.format("Uncounted rank [%d]", rank.id.longValue()));
+					}
+
+					i++;
+				}
+
+				if (LOG.isDebugEnabled()) {
+					LOG.debug(String.format("Processed [%d] entities", i));
+				}
+
+				success = true;
 			}
 		}
 

@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+import com.spacehopperstudios.storedatacollector.collectors.DataCollectorAmazon;
 import com.spacehopperstudios.storedatacollector.collectors.DataCollectorIOS;
 import com.spacehopperstudios.storedatacollector.ingestors.IngestorIOS;
 
@@ -31,27 +32,30 @@ public class CronServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-//		String appEngineCron = req.getHeader("X-AppEngine-Cron");
-//
-//		// bail out if we have not been called by app engine cron
-//		if (appEngineCron == null || !Boolean.parseBoolean(appEngineCron)) {
-//			resp.setStatus(401);
-//			resp.getOutputStream().print("failure");
-//			LOG.warn("Attempt to run script directly, this is not permitted");
-//			return;
-//		}
+		// String appEngineCron = req.getHeader("X-AppEngine-Cron");
+		//
+		// // bail out if we have not been called by app engine cron
+		// if (appEngineCron == null || !Boolean.parseBoolean(appEngineCron)) {
+		// resp.setStatus(401);
+		// resp.getOutputStream().print("failure");
+		// LOG.warn("Attempt to run script directly, this is not permitted");
+		// return;
+		// }
 
 		String store = req.getParameter("store");
 		boolean success = false;
 
 		if (store != null) {
 			if ("iOS".toUpperCase().equals(store.toUpperCase())) {
+				// ios app store
 				success = (new DataCollectorIOS()).collect();
-			} /*
-			 * else if (false) {
-			 * 
-			 * }
-			 */
+			} else if ("Amazon".toUpperCase().equals(store.toUpperCase())) {
+				// amazon store
+				success = (new DataCollectorAmazon()).collect();
+			} else if ("Play".toUpperCase().equals(store.toUpperCase())) {
+				// google play store
+			}
+
 		}
 
 		String ingest = req.getParameter("ingest");
