@@ -6,7 +6,12 @@ package com.spacehopperstudios.storedatacollector;
 import static com.spacehopperstudios.storedatacollector.objectify.PersistenceService.ofy;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.UUID;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -48,6 +53,7 @@ public class DevHelperServlet extends HttpServlet {
 		String rankEnd = req.getParameter("rankend");
 		String feedType = req.getParameter("feedtype");
 		String itemId = req.getParameter("itemid");
+		String date = req.getParameter("date");
 
 		boolean success = false;
 
@@ -95,6 +101,51 @@ public class DevHelperServlet extends HttpServlet {
 				}
 
 				success = true;
+			} else if ("addcode".toUpperCase().equals(action.toUpperCase())) {
+				DateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH");
+				Date startDate = null, endDate = null;
+				try {
+					startDate = format.parse(date);
+					Calendar cal = Calendar.getInstance();
+					cal.setTime(startDate);
+					cal.add(Calendar.HOUR, 2);
+					endDate = cal.getTime();
+
+				} catch (ParseException e) {
+					LOG.error("Error parsing date", e);
+				}
+
+				if (startDate != null) {
+					int i = 0;
+
+					String code = UUID.randomUUID().toString();
+					for (FeedFetch entity : ofy().load().type(FeedFetch.class).filter("date >=", startDate).filter("date <", endDate)
+							.offset(Integer.parseInt(start)).limit(Integer.parseInt(count)).iterable()) {
+
+						if (entity.code == null || entity.code.isEmpty()) {
+
+							entity.code = code;
+							ofy().save().entity(entity);
+
+							if (LOG.isTraceEnabled()) {
+								LOG.trace(String.format("Added code [%s] to entity [%d]", entity.code, entity.id.longValue()));
+							}
+
+							i++;
+						} else {
+							if (LOG.isTraceEnabled()) {
+								LOG.trace(String.format("Entity [%d] has code [%s]", entity.id.longValue(), entity.code));
+							}
+						}
+
+					}
+
+					if (LOG.isDebugEnabled()) {
+						LOG.debug(String.format("Processed [%d] entities", i));
+					}
+
+					success = true;
+				}
 			} else if ("remove".toUpperCase().equals(action.toUpperCase())) {
 				if (object != null) {
 					DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
@@ -321,7 +372,7 @@ public class DevHelperServlet extends HttpServlet {
 					buffer.append(rank.position + 1);
 					buffer.append(",");
 					buffer.append(rank.price);
-					buffer.append("\n");			
+					buffer.append("\n");
 				}
 
 				query = ofy().load().type(Rank.class).filter("source =", "ios").filter("type =", DataCollectorIOS.TOP_GROSSING_APPS)

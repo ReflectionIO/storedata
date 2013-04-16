@@ -22,6 +22,8 @@ public class FeedFetch {
 
 	public String country;
 	public String data;
+	
+	@Index
 	public Date date;
 	
 	@Index
