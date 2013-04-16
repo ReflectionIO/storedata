@@ -37,4 +37,6 @@ public class FeedFetch {
 	@Index
 	public String type;
 
+	public String code;
+
 }

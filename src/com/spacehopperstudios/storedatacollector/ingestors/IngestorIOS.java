@@ -113,6 +113,7 @@ public class IngestorIOS implements Ingestor {
 				rank.date = stored.get(0).date;
 				rank.price = item.price;
 				rank.currency = item.currency;
+				rank.code = stored.get(0).code;
 
 				if (ofy().load().type(Rank.class).filter("source =", rank.source).filter("type =", rank.type).filter("date =", rank.date)
 						.filter("country =", rank.country).filter("position =", rank.position).count() == 0) {

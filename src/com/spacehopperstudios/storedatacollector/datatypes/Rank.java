@@ -47,4 +47,6 @@ public class Rank {
 	 */
 	@Index
 	public boolean counted;
+	
+	public String code;
 }

@@ -27,7 +27,7 @@ public abstract class DataStoreDataCollector {
 		return ret;
 	}
 
-	protected void store(String data, String countryCode, String store, String type, Date date) {
+	protected void store(String data, String countryCode, String store, String type, Date date, String code) {
 
 		if (LOG.isTraceEnabled()) {
 			LOG.trace("Saving Data to data store");
@@ -54,6 +54,7 @@ public abstract class DataStoreDataCollector {
 			entity.part = Integer.valueOf(i + 1);
 			entity.totalParts = Integer.valueOf(splitData.size());
 			entity.ingested = false;
+			entity.code = code;
 
 			ofy().save().entity(entity);
 		}

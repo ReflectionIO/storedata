@@ -6,6 +6,7 @@ package com.spacehopperstudios.storedatacollector;
 import static com.spacehopperstudios.storedatacollector.objectify.PersistenceService.ofy;
 
 import java.io.IOException;
+import java.util.Calendar;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -20,6 +21,7 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.googlecode.objectify.cmd.Query;
+import com.spacehopperstudios.storedatacollector.collectors.DataCollectorIOS;
 import com.spacehopperstudios.storedatacollector.datatypes.FeedFetch;
 import com.spacehopperstudios.storedatacollector.datatypes.ItemRankSummary;
 import com.spacehopperstudios.storedatacollector.datatypes.Rank;
@@ -33,6 +35,8 @@ import com.spacehopperstudios.storedatacollector.objectify.PersistenceService;
 public class DevHelperServlet extends HttpServlet {
 	private static final Logger LOG = Logger.getLogger(DevHelperServlet.class);
 
+	private static final String RANK_END_200_PLUS = "200+";
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -40,8 +44,15 @@ public class DevHelperServlet extends HttpServlet {
 		String object = req.getParameter("object");
 		String start = req.getParameter("start");
 		String count = req.getParameter("count");
+		String rankStart = req.getParameter("rankstart");
+		String rankEnd = req.getParameter("rankend");
+		String feedType = req.getParameter("feedtype");
+		String itemId = req.getParameter("itemid");
 
 		boolean success = false;
+
+		String markup = null;
+		String csv = null;
 
 		if (action != null) {
 			if ("addingested".toUpperCase().equals(action.toUpperCase())) {
@@ -179,7 +190,6 @@ public class DevHelperServlet extends HttpServlet {
 				success = true;
 
 			} else if ("uncountranks".toUpperCase().equals(action.toUpperCase())) {
-
 				int i = 0;
 				for (Rank rank : ofy().load().type(Rank.class).offset(Integer.parseInt(start)).limit(Integer.parseInt(count)).iterable()) {
 					rank.counted = false;
@@ -198,6 +208,143 @@ public class DevHelperServlet extends HttpServlet {
 				}
 
 				success = true;
+			} else if ("appswithrank".toUpperCase().equals(action.toUpperCase())) {
+				int rankStartValue = Integer.parseInt(rankStart);
+				int rankEndValue = RANK_END_200_PLUS.equals(rankEnd) ? Integer.MAX_VALUE : Integer.parseInt(rankEnd);
+
+				StringBuffer buffer = new StringBuffer();
+
+				buffer.append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
+
+				buffer.append("<html>");
+				buffer.append("<head>");
+				buffer.append("<meta name=\"generator\" content=\"HTML Tidy, see www.w3.org\">");
+				buffer.append("<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">");
+				buffer.append("<title>Store Collector - Helper functions</title>");
+				buffer.append("</head>");
+				buffer.append("<body>");
+				buffer.append("<table>");
+				buffer.append("<tr><th>Appliation</th><th>top 10</th><th>top 25</th><th>top 50</th><th>top 100</th><th>top 200</th><th>total</th></tr>");
+
+				Query<ItemRankSummary> query = ofy().load().type(ItemRankSummary.class).filter("type =", feedType).filter("source =", "ios");
+
+				if (rankEndValue < 10) {
+					query = query.filter("numberOfTimesRankedTop10 >", Integer.valueOf(0));
+				} else if (rankEndValue < 25) {
+					query = query.filter("numberOfTimesRankedTop25 >", Integer.valueOf(0));
+				} else if (rankEndValue < 50) {
+					query = query.filter("numberOfTimesRankedTop50 >", Integer.valueOf(0));
+				} else if (rankEndValue < 100) {
+					query = query.filter("numberOfTimesRankedTop100 >", Integer.valueOf(0));
+				} else if (rankEndValue < 200) {
+					query = query.filter("numberOfTimesRankedTop200 >", Integer.valueOf(0));
+				} else if (rankEndValue >= 200) {
+					// every ranked item should appear at least once
+					// query = query.filter("numberOfTimesRanked >", Integer.valueOf(0));
+				}
+
+				if (rankStartValue >= 10) {
+					query = query.filter("numberOfTimesRankedTop10 =", Integer.valueOf(0));
+
+					if (rankStartValue >= 25) {
+						query = query.filter("numberOfTimesRankedTop25 =", Integer.valueOf(0));
+
+						if (rankStartValue >= 50) {
+							query = query.filter("numberOfTimesRankedTop50 =", Integer.valueOf(0));
+
+							if (rankStartValue >= 100) {
+								query = query.filter("numberOfTimesRankedTop100 =", Integer.valueOf(0));
+
+								if (rankStartValue >= 200) {
+									query = query.filter("numberOfTimesRankedTop200 =", Integer.valueOf(0));
+								}
+							}
+						}
+					}
+				}
+
+				query = query.offset(Integer.parseInt(start)).limit(Integer.parseInt(count));
+
+				int i = 0;
+				for (ItemRankSummary itemRankSummary : query.iterable()) {
+					buffer.append("<tr><td>");
+					buffer.append(itemRankSummary.itemId);
+					buffer.append("</td><td>");
+					buffer.append(itemRankSummary.numberOfTimesRankedTop10);
+					buffer.append("</td><td>");
+					buffer.append(itemRankSummary.numberOfTimesRankedTop25);
+					buffer.append("</td><td>");
+					buffer.append(itemRankSummary.numberOfTimesRankedTop50);
+					buffer.append("</td><td>");
+					buffer.append(itemRankSummary.numberOfTimesRankedTop100);
+					buffer.append("</td><td>");
+					buffer.append(itemRankSummary.numberOfTimesRankedTop200);
+					buffer.append("</td><td>");
+					buffer.append(itemRankSummary.numberOfTimesRanked);
+					buffer.append("</td></tr>");
+					i++;
+				}
+
+				buffer.append("</table>");
+
+				buffer.append("Found ");
+				buffer.append(i);
+				buffer.append(" items. <br>");
+
+				buffer.append("</body>");
+				buffer.append("</html>");
+
+				markup = buffer.toString();
+
+				success = true;
+			} else if ("ranksforapp".toUpperCase().equals(action.toUpperCase())) {
+				StringBuffer buffer = new StringBuffer();
+
+				buffer.append("# data for item ");
+				buffer.append(itemId);
+				buffer.append(" extracted from toppaidapplications and topgrossingapplications");
+				buffer.append("\n");
+				buffer.append("# item id, date, paid possition, grossing possition, price");
+				buffer.append("\n");
+
+				Calendar cal = Calendar.getInstance();
+				cal.add(Calendar.DAY_OF_YEAR, -30);
+
+				Query<Rank> query = ofy().load().type(Rank.class).filter("source =", "ios").filter("type =", DataCollectorIOS.TOP_PAID_APPS)
+						.filter("date >", cal.getTime()).filter("itemId = ", itemId).offset(Integer.parseInt(start)).limit(Integer.parseInt(count));
+
+				for (Rank rank : query.iterable()) {
+					buffer.append(rank.itemId);
+					buffer.append(",");
+					buffer.append(rank.date);
+					buffer.append(",");
+					buffer.append(rank.position + 1);
+					buffer.append(",");
+					buffer.append(rank.price);
+					buffer.append("\n");			
+				}
+
+				query = ofy().load().type(Rank.class).filter("source =", "ios").filter("type =", DataCollectorIOS.TOP_GROSSING_APPS)
+						.filter("date >", cal.getTime()).filter("itemId = ", itemId).offset(Integer.parseInt(start)).limit(Integer.parseInt(count));
+
+				for (Rank rank : query.iterable()) {
+					buffer.append(rank.itemId);
+					buffer.append(",");
+					buffer.append(rank.date);
+					buffer.append(",");
+					buffer.append(rank.position + 1);
+					buffer.append(",");
+					buffer.append(rank.price);
+					buffer.append("\n");
+				}
+
+				csv = buffer.toString();
+
+				success = true;
+			} else {
+				if (LOG.isInfoEnabled()) {
+					LOG.info(String.format("Action [%s] not supported", action));
+				}
 			}
 		}
 
@@ -206,7 +353,14 @@ public class DevHelperServlet extends HttpServlet {
 		}
 
 		resp.setHeader("Cache-Control", "no-cache");
-		resp.getOutputStream().print(success ? "success" : "failure");
+
+		if (markup != null) {
+			resp.getOutputStream().print(markup);
+		} else if (csv != null) {
+			resp.getOutputStream().print(csv);
+		} else {
+			resp.getOutputStream().print(success ? "success" : "failure");
+		}
 
 	}
 }

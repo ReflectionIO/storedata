@@ -7,28 +7,164 @@
 <!-- but may lead to some differences in layout.   -->
 
 <html>
-<head>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<title>Store Collector</title>
-</head>
+  <head>
+    <meta name="generator" content="HTML Tidy, see www.w3.org">
+    <meta http-equiv="content-type" content=
+    "text/html; charset=UTF-8">
 
-<body>
-	<h2>Some Admin/Dev Helper functions</h2>
+    <title>Store Collector - Helper functions</title>
+  </head>
 
-	<form action="/devhelper" method="get">
-		<label>action:</label> <select id="action" name="action">
-			<option value="addingested">Adds &quot;ingested&quot; column to FeedFetch</option>
-			<option value="uningest">Mark all FeedFetch rows as uninjested</option>
-			<option value="remove">Remove object data</option>
-			<option value="countitemrank">Create rank summary</option>
-			<option value="uncountranks">Mark all Rank rows as uncounted </option>
-		</select> <br /> <label>object (only for remove):</label> <input id="object"
-			name="object" type="text" /> <br />
-		<p>All actions can by chunck-ed using:</p>
-		<label>start:</label> <input id="start" name="start" type="text"
-			value="0" /> <br /> <label>count:</label> <input id="count"
-			name="count" type="text" value="100" /> <br /> <input type="submit"
-			id="devhelpersubmit" name="devhelpersubmit" />
-	</form>
-</body>
+  <body>
+    <h2>Some Admin/Dev Helper functions</h2>
+
+    <form action="/devhelper" method="get">
+      <label>action:</label> <select id="action" name="action">
+        <option value="addingested">
+          Adds "ingested" column to FeedFetch
+        </option>
+
+        <option value="uningest">
+          Mark all FeedFetch rows as uninjested
+        </option>
+
+        <option value="remove">
+          Remove object data
+        </option>
+
+        <option value="countitemrank">
+          Create rank summary
+        </option>
+
+        <option value="uncountranks">
+          Mark all Rank rows as uncounted
+        </option>
+
+        <option value="appswithrank">
+          Apps with rank range
+        </option>
+
+        <option value="ranksforapp">
+          App rank data (csv)
+        </option>
+      </select><br>
+       <label>object (only for remove):</label> <select id="object"
+      name="object">
+        <!--  <option value="FeedFetch">
+                          FeedFetch
+                        </option> -->
+
+        <option value="Item">
+          Item
+        </option>
+
+        <option value="Rank">
+          Rank
+        </option>
+
+        <option value="ItemRankSummary">
+          ItemRankSummary
+        </option>
+      </select><br>
+       <label>start rank:</label> <select id="rankstart" name=
+      "rankstart">
+        <option value="0">
+          1
+        </option>
+
+        <option value="10">
+          11
+        </option>
+
+        <option value="25">
+          26
+        </option>
+
+        <option value="50">
+          51
+        </option>
+
+        <option value="100">
+          101
+        </option>
+
+        <option value="200">
+          201
+        </option>
+      </select> to <select id="rankend" name="rankend">
+        <option value="9">
+          10
+        </option>
+
+        <option value="24">
+          25
+        </option>
+
+        <option value="49">
+          50
+        </option>
+
+        <option value="99">
+          100
+        </option>
+
+        <option value="199">
+          200
+        </option>
+
+        <option value="200+">
+          more than 200
+        </option>
+      </select><br>
+       <label>feed type:</label><select id="feedtype" name=
+      "feedtype">
+        <option value="topfreeapplications">
+          top free
+        </option>
+
+        <option value="toppaidapplications">
+          top paid
+        </option>
+
+        <option value="topgrossingapplications">
+          top grossing
+        </option>
+
+        <option value="topfreeipadapplications">
+          top free ipad
+        </option>
+
+        <option value="toppaidipadapplications">
+          top paid ipad
+        </option>
+
+        <option value="topgrossingipadapplications">
+          top grossing ipad
+        </option>
+
+        <option value="newapplications">
+          new
+        </option>
+
+        <option value="newfreeapplications">
+          new free
+        </option>
+
+        <option value="newpaidapplications">
+          new paid
+        </option>
+      </select><br>
+       <label>item id:</label> <input type="text" name="itemid" id=
+      "itemid"> 
+
+      <p>All actions can by chunck-ed using:</p>
+      <label>start:</label> <input id="start" name="start" type=
+      "text" value="0"><br>
+       <label>count:</label> <input id="count" name="count" type=
+      "text" value="100"><br>
+       <input type="submit" id="devhelpersubmit" name=
+      "devhelpersubmit">
+    </form>
+  </body>
 </html>
+

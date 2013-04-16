@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.log4j.Logger;
 
@@ -58,33 +59,34 @@ public class DataCollectorIOS extends DataStoreDataCollector implements DataColl
 			}
 
 			String data;
+			String code = UUID.randomUUID().toString();
 			for (String countryCode : splitCountries) {
 				data = get(countryCode, TOP_FREE_APPS);
-				store(data, countryCode, "ios", TOP_FREE_APPS, new Date());
+				store(data, countryCode, "ios", TOP_FREE_APPS, new Date(), code);
 
 				data = get(countryCode, TOP_PAID_APPS);
-				store(data, countryCode, "ios", TOP_PAID_APPS, new Date());
+				store(data, countryCode, "ios", TOP_PAID_APPS, new Date(), code);
 
 				data = get(countryCode, TOP_GROSSING_APPS);
-				store(data, countryCode, "ios", TOP_GROSSING_APPS, new Date());
+				store(data, countryCode, "ios", TOP_GROSSING_APPS, new Date(), code);
 
 				data = get(countryCode, TOP_FREE_IPAD_APPS);
-				store(data, countryCode, "ios", TOP_FREE_IPAD_APPS, new Date());
+				store(data, countryCode, "ios", TOP_FREE_IPAD_APPS, new Date(), code);
 
 				data = get(countryCode, TOP_PAID_IPAD_APPS);
-				store(data, countryCode, "ios", TOP_PAID_IPAD_APPS, new Date());
+				store(data, countryCode, "ios", TOP_PAID_IPAD_APPS, new Date(), code);
 
 				data = get(countryCode, TOP_GROSSING_IPAD_APPS);
-				store(data, countryCode, "ios", TOP_GROSSING_IPAD_APPS, new Date());
+				store(data, countryCode, "ios", TOP_GROSSING_IPAD_APPS, new Date(), code);
 
 				data = get(countryCode, NEW_APPS);
-				store(data, countryCode, "ios", NEW_APPS, new Date());
+				store(data, countryCode, "ios", NEW_APPS, new Date(), code);
 
 				data = get(countryCode, NEW_FREE_APPS);
-				store(data, countryCode, "ios", NEW_FREE_APPS, new Date());
+				store(data, countryCode, "ios", NEW_FREE_APPS, new Date(), code);
 
 				data = get(countryCode, NEW_PAID_APPS);
-				store(data, countryCode, "ios", NEW_PAID_APPS, new Date());
+				store(data, countryCode, "ios", NEW_PAID_APPS, new Date(), code);
 			}
 
 			success = true;
