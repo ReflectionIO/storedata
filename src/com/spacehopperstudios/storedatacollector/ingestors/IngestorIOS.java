@@ -95,25 +95,27 @@ public class IngestorIOS implements Ingestor {
 		for (Date key : combined.keySet()) {
 			List<Item> items = (new ParserIOS()).parse(combined.get(key));
 
+			FeedFetch firstFeedFetch = grouped.get(key).get(0);
+			
 			for (int i = 0; i < items.size(); i++) {
 				Item item = items.get(i);
 
 				// save the item if it does not exist
 				if (ofy().load().type(Item.class).filter("externalId =", item.externalId).count() == 0) {
-					item.added = (Date) stored.get(0).date;
+					item.added = key;
 					ofy().save().entity(item);
 				}
 
 				Rank rank = new Rank();
 				rank.position = i;
 				rank.itemId = item.externalId;
-				rank.type = stored.get(0).type;
-				rank.source = stored.get(0).store;
-				rank.country = stored.get(0).country;
-				rank.date = stored.get(0).date;
+				rank.type = firstFeedFetch.type;
+				rank.source = firstFeedFetch.store;
+				rank.country = firstFeedFetch.country;
+				rank.date = key;
 				rank.price = item.price;
 				rank.currency = item.currency;
-				rank.code = stored.get(0).code;
+				rank.code = firstFeedFetch.code;
 
 				if (ofy().load().type(Rank.class).filter("source =", rank.source).filter("type =", rank.type).filter("date =", rank.date)
 						.filter("country =", rank.country).filter("position =", rank.position).count() == 0) {
