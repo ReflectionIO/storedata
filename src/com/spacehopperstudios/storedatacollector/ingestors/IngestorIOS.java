@@ -95,7 +95,8 @@ public class IngestorIOS implements Ingestor {
 		for (Date key : combined.keySet()) {
 			List<Item> items = (new ParserIOS()).parse(combined.get(key));
 
-			FeedFetch firstFeedFetch = grouped.get(key).get(0);
+			Map<Integer, FeedFetch> group = grouped.get(key);
+			FeedFetch firstFeedFetch = group.values().iterator().next();
 			
 			for (int i = 0; i < items.size(); i++) {
 				Item item = items.get(i);

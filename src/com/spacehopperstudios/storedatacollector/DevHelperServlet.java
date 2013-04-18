@@ -9,8 +9,12 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.ServletException;
@@ -361,31 +365,61 @@ public class DevHelperServlet extends HttpServlet {
 				Calendar cal = Calendar.getInstance();
 				cal.add(Calendar.DAY_OF_YEAR, -30);
 
+				Map<String, Rank> paid = new HashMap<String, Rank>();
+				Map<String, Rank> grossing = new HashMap<String, Rank>();
+
+				List<String> codes = new ArrayList<String>();
+
 				Query<Rank> query = ofy().load().type(Rank.class).filter("source =", "ios").filter("type =", DataCollectorIOS.TOP_PAID_APPS)
 						.filter("date >", cal.getTime()).filter("itemId = ", itemId).offset(Integer.parseInt(start)).limit(Integer.parseInt(count));
 
 				for (Rank rank : query.iterable()) {
-					buffer.append(rank.itemId);
-					buffer.append(",");
-					buffer.append(rank.date);
-					buffer.append(",");
-					buffer.append(rank.position + 1);
-					buffer.append(",");
-					buffer.append(rank.price);
-					buffer.append("\n");
+					paid.put(rank.code, rank);
+
+					if (!codes.contains(rank.code)) {
+						codes.add(rank.code);
+					}
 				}
 
 				query = ofy().load().type(Rank.class).filter("source =", "ios").filter("type =", DataCollectorIOS.TOP_GROSSING_APPS)
 						.filter("date >", cal.getTime()).filter("itemId = ", itemId).offset(Integer.parseInt(start)).limit(Integer.parseInt(count));
 
 				for (Rank rank : query.iterable()) {
-					buffer.append(rank.itemId);
+					grossing.put(rank.code, rank);
+
+					if (!codes.contains(rank.code)) {
+						codes.add(rank.code);
+					}
+				}
+
+				Rank grossingItem, paidItem;
+				Rank masterItem;
+				for (String code : codes) {
+					grossingItem = grossing.get(code);
+					paidItem = paid.get(code);
+
+					if (grossingItem != null) {
+						masterItem = grossingItem;
+					} else {
+						masterItem = paidItem;
+					}
+					
+					buffer.append(masterItem.itemId);
 					buffer.append(",");
-					buffer.append(rank.date);
+					buffer.append(masterItem.date);
 					buffer.append(",");
-					buffer.append(rank.position + 1);
+					
+					if (paidItem != null) {
+						buffer.append(paidItem.position + 1);
+					}
 					buffer.append(",");
-					buffer.append(rank.price);
+
+					if (grossingItem != null) {
+						buffer.append(grossingItem.position + 1);
+					}
+					buffer.append(",");
+					
+					buffer.append(masterItem.price);
 					buffer.append("\n");
 				}
 
