@@ -71,7 +71,7 @@ public class DevHelperServlet extends HttpServlet {
 				for (FeedFetch entity : ofy().load().type(FeedFetch.class).offset(Integer.parseInt(start)).limit(Integer.parseInt(count)).iterable()) {
 					entity.ingested = false;
 
-					ofy().save().entity(entity);
+					ofy().save().entity(entity).now();
 
 					if (LOG.isTraceEnabled()) {
 						LOG.trace(String.format("Set entity [%d] ingested to false", entity.id.longValue()));
@@ -176,7 +176,7 @@ public class DevHelperServlet extends HttpServlet {
 				}
 			} else if ("countitemrank".toUpperCase().equals(action.toUpperCase())) {
 				int i = 0;
-				Query<Rank> queryRank = ofy().load().type(Rank.class).filter("counted =", Boolean.FALSE).offset(Integer.parseInt(start))
+				Query<Rank> queryRank = ofy().cache(false).load().type(Rank.class).filter("counted =", Boolean.FALSE).offset(Integer.parseInt(start))
 						.limit(Integer.parseInt(count));
 
 				// Query<Rank> queryRank = ofy().load().type(Rank.class).filter("id =", Long.valueOf(19816));
@@ -340,6 +340,10 @@ public class DevHelperServlet extends HttpServlet {
 					i++;
 				}
 
+				if (LOG.isDebugEnabled()) {
+					LOG.debug(String.format("Found [%d] entities", i));
+				}
+
 				buffer.append("</table>");
 
 				buffer.append("Found ");
@@ -359,7 +363,7 @@ public class DevHelperServlet extends HttpServlet {
 				buffer.append(itemId);
 				buffer.append(" extracted from toppaidapplications and topgrossingapplications");
 				buffer.append("\n");
-				buffer.append("# item id, date, paid possition, grossing possition, price");
+				buffer.append("#item id,date,paid possition,grossing possition,price");
 				buffer.append("\n");
 
 				Calendar cal = Calendar.getInstance();
@@ -403,12 +407,12 @@ public class DevHelperServlet extends HttpServlet {
 					} else {
 						masterItem = paidItem;
 					}
-					
+
 					buffer.append(masterItem.itemId);
 					buffer.append(",");
 					buffer.append(masterItem.date);
 					buffer.append(",");
-					
+
 					if (paidItem != null) {
 						buffer.append(paidItem.position + 1);
 					}
@@ -418,7 +422,7 @@ public class DevHelperServlet extends HttpServlet {
 						buffer.append(grossingItem.position + 1);
 					}
 					buffer.append(",");
-					
+
 					buffer.append(masterItem.price);
 					buffer.append("\n");
 				}
@@ -426,6 +430,8 @@ public class DevHelperServlet extends HttpServlet {
 				csv = buffer.toString();
 
 				success = true;
+			} else if ("convertdatatoblobs".toUpperCase().equals(action.toUpperCase())) {
+				// TODO: sort this out
 			} else {
 				if (LOG.isInfoEnabled()) {
 					LOG.info(String.format("Action [%s] not supported", action));

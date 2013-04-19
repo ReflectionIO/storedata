@@ -5,6 +5,9 @@ package com.spacehopperstudios.storedatacollector.ingestors;
 
 import static com.spacehopperstudios.storedatacollector.objectify.PersistenceService.ofy;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.channels.Channels;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -13,6 +16,10 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import com.google.appengine.api.files.AppEngineFile;
+import com.google.appengine.api.files.FileReadChannel;
+import com.google.appengine.api.files.FileService;
+import com.google.appengine.api.files.FileServiceFactory;
 import com.spacehopperstudios.storedatacollector.collectors.DataCollectorIOS;
 import com.spacehopperstudios.storedatacollector.datatypes.FeedFetch;
 import com.spacehopperstudios.storedatacollector.datatypes.Item;
@@ -35,10 +42,16 @@ public class IngestorIOS implements Ingestor {
 	public boolean ingest() {
 		boolean success = false;
 
-		List<FeedFetch> stored = get(DataCollectorIOS.TOP_FREE_APPS);
-		Map<Date, Map<Integer, FeedFetch>> grouped = groupDataByDate(stored);
-		Map<Date, String> combined = combineDataParts(grouped);
-		extractItemRanks(stored, grouped, combined);
+		List<FeedFetch> stored;
+		Map<Date, Map<Integer, FeedFetch>> grouped;
+		Map<Date, String> combined;
+
+		// For now we are only interested in top grossing and top paid
+
+		// stored = get(DataCollectorIOS.TOP_FREE_APPS);
+		// grouped = groupDataByDate(stored);
+		// combined = combineDataParts(grouped);
+		// extractItemRanks(stored, grouped, combined);
 
 		stored = get(DataCollectorIOS.TOP_PAID_APPS);
 		grouped = groupDataByDate(stored);
@@ -50,10 +63,10 @@ public class IngestorIOS implements Ingestor {
 		combined = combineDataParts(grouped);
 		extractItemRanks(stored, grouped, combined);
 
-		stored = get(DataCollectorIOS.TOP_FREE_IPAD_APPS);
-		grouped = groupDataByDate(stored);
-		combined = combineDataParts(grouped);
-		extractItemRanks(stored, grouped, combined);
+		// stored = get(DataCollectorIOS.TOP_FREE_IPAD_APPS);
+		// grouped = groupDataByDate(stored);
+		// combined = combineDataParts(grouped);
+		// extractItemRanks(stored, grouped, combined);
 
 		stored = get(DataCollectorIOS.TOP_PAID_IPAD_APPS);
 		grouped = groupDataByDate(stored);
@@ -65,20 +78,20 @@ public class IngestorIOS implements Ingestor {
 		combined = combineDataParts(grouped);
 		extractItemRanks(stored, grouped, combined);
 
-		stored = get(DataCollectorIOS.NEW_APPS);
-		grouped = groupDataByDate(stored);
-		combined = combineDataParts(grouped);
-		extractItemRanks(stored, grouped, combined);
+		// stored = get(DataCollectorIOS.NEW_APPS);
+		// grouped = groupDataByDate(stored);
+		// combined = combineDataParts(grouped);
+		// extractItemRanks(stored, grouped, combined);
 
-		stored = get(DataCollectorIOS.NEW_FREE_APPS);
-		grouped = groupDataByDate(stored);
-		combined = combineDataParts(grouped);
-		extractItemRanks(stored, grouped, combined);
+		// stored = get(DataCollectorIOS.NEW_FREE_APPS);
+		// grouped = groupDataByDate(stored);
+		// combined = combineDataParts(grouped);
+		// extractItemRanks(stored, grouped, combined);
 
-		stored = get(DataCollectorIOS.NEW_PAID_APPS);
-		grouped = groupDataByDate(stored);
-		combined = combineDataParts(grouped);
-		extractItemRanks(stored, grouped, combined);
+		// stored = get(DataCollectorIOS.NEW_PAID_APPS);
+		// grouped = groupDataByDate(stored);
+		// combined = combineDataParts(grouped);
+		// extractItemRanks(stored, grouped, combined);
 
 		success = true;
 
@@ -92,19 +105,28 @@ public class IngestorIOS implements Ingestor {
 	 */
 	private void extractItemRanks(List<FeedFetch> stored, Map<Date, Map<Integer, FeedFetch>> grouped, Map<Date, String> combined) {
 
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Extracting item ranks");
+		}
+
 		for (Date key : combined.keySet()) {
+
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(String.format("Parsing [%s]", key.toString()));
+			}
+
 			List<Item> items = (new ParserIOS()).parse(combined.get(key));
 
 			Map<Integer, FeedFetch> group = grouped.get(key);
 			FeedFetch firstFeedFetch = group.values().iterator().next();
-			
+
 			for (int i = 0; i < items.size(); i++) {
 				Item item = items.get(i);
 
 				// save the item if it does not exist
 				if (ofy().load().type(Item.class).filter("externalId =", item.externalId).count() == 0) {
 					item.added = key;
-					ofy().save().entity(item);
+					ofy().save().entity(item).now();
 				}
 
 				Rank rank = new Rank();
@@ -118,25 +140,47 @@ public class IngestorIOS implements Ingestor {
 				rank.currency = item.currency;
 				rank.code = firstFeedFetch.code;
 
-				if (ofy().load().type(Rank.class).filter("source =", rank.source).filter("type =", rank.type).filter("date =", rank.date)
+				// will only save the rank if it has not been done before
+				if (ofy().cache(false).load().type(Rank.class).filter("source =", rank.source).filter("type =", rank.type).filter("date =", rank.date)
 						.filter("country =", rank.country).filter("position =", rank.position).count() == 0) {
-					ofy().save().entity(rank);
+					ofy().save().entity(rank).now();
+
+					if (LOG.isTraceEnabled()) {
+						LOG.trace(String.format("Saved rank [%s] for", rank.itemId));
+					}
 				}
 			}
 
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Marking items as ingested");
+			}
+
+			int i = 0;
 			for (Integer entityKey : grouped.get(key).keySet()) {
 				FeedFetch entity = grouped.get(key).get(entityKey);
 
 				entity.ingested = true;
-				ofy().save().entity(entity);
+				ofy().save().entity(entity).now();
+				i++;
+
+				if (LOG.isTraceEnabled()) {
+					LOG.trace(String.format("Marked entity [%d]", entity.id.longValue()));
+				}
 			}
 
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(String.format("Marked [%d] items", i));
+			}
 		}
 	}
 
 	private Map<Date, Map<Integer, FeedFetch>> groupDataByDate(List<FeedFetch> entities) {
 		Map<Date, Map<Integer, FeedFetch>> map = new HashMap<Date, Map<Integer, FeedFetch>>();
 		Map<Date, Integer> sizeMap = new HashMap<Date, Integer>();
+
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Grouping entites by date");
+		}
 
 		for (FeedFetch entity : entities) {
 			Date date = entity.date;
@@ -156,17 +200,42 @@ public class IngestorIOS implements Ingestor {
 		}
 
 		List<Date> remove = new ArrayList<Date>();
-		
+
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Creating list of incomplete feeds");
+		}
+
 		// remove any items with incomplete sets
+		int i = 0;
 		for (Date key : map.keySet()) {
 			Map<Integer, FeedFetch> part = map.get(key);
 			if (part.size() < sizeMap.get(key).intValue()) {
 				remove.add(key);
+				i++;
 			}
 		}
 
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(String.format("List contains [%d] items", i));
+		}
+
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("remove any items with incomplete sets");
+		}
+
+		i = 0;
 		for (Date date : remove) {
 			map.remove(date);
+
+			if (LOG.isTraceEnabled()) {
+				LOG.trace(String.format("Removed item with key [%s]", date.toString()));
+			}
+
+			i++;
+		}
+
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(String.format("Removed [%d] items", i));
 		}
 
 		return map;
@@ -177,20 +246,63 @@ public class IngestorIOS implements Ingestor {
 		Map<Date, String> combined = new HashMap<Date, String>(grouped.size());
 
 		for (Date date : grouped.keySet()) {
-			StringBuffer buffer = new StringBuffer();
-			boolean complete = true;
-
 			Map<Integer, FeedFetch> group = grouped.get(date);
+			String data = null;
+			boolean blob = false;
 
-			for (int i = 0; i < group.size(); i++) {
-				FeedFetch part = group.get(Integer.valueOf(i + 1));
-				String data = part.data;
-				buffer.append(data);
+			if (group.size() == 1) {
+				data = group.values().iterator().next().data;
+				if (data.startsWith("/blobstore/writable:")) {
+					blob = true;
+				}
 			}
 
-			if (complete) {
-				combined.put(date, buffer.toString());
+			StringBuffer buffer = new StringBuffer();
+
+			if (blob) {
+				FileService fileService = FileServiceFactory.getFileService();
+
+				AppEngineFile file = new AppEngineFile(data);
+				FileReadChannel readChannel = null;
+				BufferedReader reader = null;
+
+				try {
+					readChannel = fileService.openReadChannel(file, false);
+					reader = new BufferedReader(Channels.newReader(readChannel, "UTF8"));
+					int length;
+					char[] bytes = new char[1024];
+					while ((length = reader.read(bytes)) > 0) {
+						buffer.append(bytes, 0, length);
+					}
+				} catch (IOException e) {
+					LOG.error("Error closing read channel for file [%s]", e);
+				} finally {
+					if (reader != null) {
+						try {
+							reader.close();
+						} catch (IOException e) {
+							LOG.error("Error closing reader", e);
+						}
+					}
+					
+					if (readChannel != null) {
+						try {
+							readChannel.close();
+						} catch (IOException e) {
+							LOG.error("Error closing read channel for file [%s]", e);
+						}
+					}
+				}
+
+			} else {
+				for (int i = 0; i < group.size(); i++) {
+					FeedFetch part = group.get(Integer.valueOf(i + 1));
+					data = part.data;
+					buffer.append(data);
+				}
 			}
+
+			combined.put(date, buffer.toString());
 		}
 
 		return combined;
@@ -198,9 +310,23 @@ public class IngestorIOS implements Ingestor {
 
 	private List<FeedFetch> get(String type) {
 
+		if (LOG.isInfoEnabled()) {
+			LOG.info(String.format("Fetching %s", type));
+		}
+
 		List<FeedFetch> stored = new ArrayList<FeedFetch>();
-		for (FeedFetch row : ofy().load().type(FeedFetch.class).filter("type = ", type).filter("store =", "ios").filter("ingested =", Boolean.FALSE)) {
+
+		// for now ingest so that we don't kill the band width
+
+		int i = 0;
+		for (FeedFetch row : ofy().cache(false).load().type(FeedFetch.class).filter("type = ", type).filter("store =", "ios")
+				.filter("ingested =", Boolean.FALSE).limit(20)) {
 			stored.add(row);
+			i++;
+		}
+
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(String.format("Found [%d] uningested items", i));
 		}
 
 		return stored;

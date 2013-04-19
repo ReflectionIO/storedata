@@ -32,15 +32,15 @@ public class CronServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-		// String appEngineCron = req.getHeader("X-AppEngine-Cron");
-		//
-		// // bail out if we have not been called by app engine cron
-		// if (appEngineCron == null || !Boolean.parseBoolean(appEngineCron)) {
-		// resp.setStatus(401);
-		// resp.getOutputStream().print("failure");
-		// LOG.warn("Attempt to run script directly, this is not permitted");
-		// return;
-		// }
+//		String appEngineCron = req.getHeader("X-AppEngine-Cron");
+//
+//		// bail out if we have not been called by app engine cron
+//		if (appEngineCron == null || !Boolean.parseBoolean(appEngineCron)) {
+//			resp.setStatus(401);
+//			resp.getOutputStream().print("failure");
+//			LOG.warn("Attempt to run script directly, this is not permitted");
+//			return;
+//		}
 
 		String store = req.getParameter("store");
 		boolean success = false;
