@@ -21,6 +21,7 @@ import com.google.appengine.api.files.FileReadChannel;
 import com.google.appengine.api.files.FileService;
 import com.google.appengine.api.files.FileServiceFactory;
 import com.spacehopperstudios.storedatacollector.collectors.DataCollectorIOS;
+import com.spacehopperstudios.storedatacollector.collectors.DataStoreDataCollector;
 import com.spacehopperstudios.storedatacollector.datatypes.FeedFetch;
 import com.spacehopperstudios.storedatacollector.datatypes.Item;
 import com.spacehopperstudios.storedatacollector.datatypes.Rank;
@@ -29,9 +30,11 @@ import com.spacehopperstudios.storedatacollector.datatypes.Rank;
  * @author billy1380
  * 
  */
-public class IngestorIOS implements Ingestor {
+public class IngestorIOS extends DataStoreDataCollector implements Ingestor {
 
 	private static final Logger LOG = Logger.getLogger(IngestorIOS.class);
+	private int count = 20;
+	private String type = null;
 
 	/*
 	 * (non-Javadoc)
@@ -41,61 +44,110 @@ public class IngestorIOS implements Ingestor {
 	@Override
 	public boolean ingest() {
 		boolean success = false;
+		boolean selectedType = (type != null);
 
-		List<FeedFetch> stored;
-		Map<Date, Map<Integer, FeedFetch>> grouped;
-		Map<Date, String> combined;
+		List<FeedFetch> stored = null;
+		Map<Date, Map<Integer, FeedFetch>> grouped = null;
+		Map<Date, String> combined = null;
 
 		// For now we are only interested in top grossing and top paid
 
-		// stored = get(DataCollectorIOS.TOP_FREE_APPS);
-		// grouped = groupDataByDate(stored);
-		// combined = combineDataParts(grouped);
-		// extractItemRanks(stored, grouped, combined);
+//		if (!selectedType || type.equals(DataCollectorIOS.TOP_FREE_APPS)) {
+//			 stored = get(DataCollectorIOS.TOP_FREE_APPS);
+//			 grouped = groupDataByDate(stored);
+//			 combined = combineDataParts(grouped);
+//			 extractItemRanks(stored, grouped, combined);
+//			 blobify(stored, grouped, combined);
+//		}
 
-		stored = get(DataCollectorIOS.TOP_PAID_APPS);
-		grouped = groupDataByDate(stored);
-		combined = combineDataParts(grouped);
-		extractItemRanks(stored, grouped, combined);
+		if (!selectedType || type.equals(DataCollectorIOS.TOP_PAID_APPS)) {
+			stored = get(DataCollectorIOS.TOP_PAID_APPS);
+			grouped = groupDataByDate(stored);
+			combined = combineDataParts(grouped);
+			extractItemRanks(stored, grouped, combined);
+			blobify(stored, grouped, combined);
+		}
 
-		stored = get(DataCollectorIOS.TOP_GROSSING_APPS);
-		grouped = groupDataByDate(stored);
-		combined = combineDataParts(grouped);
-		extractItemRanks(stored, grouped, combined);
+		if (!selectedType || type.equals(DataCollectorIOS.TOP_GROSSING_APPS)) {
+			stored = get(DataCollectorIOS.TOP_GROSSING_APPS);
+			grouped = groupDataByDate(stored);
+			combined = combineDataParts(grouped);
+			extractItemRanks(stored, grouped, combined);
+			blobify(stored, grouped, combined);
+		}
 
-		// stored = get(DataCollectorIOS.TOP_FREE_IPAD_APPS);
-		// grouped = groupDataByDate(stored);
-		// combined = combineDataParts(grouped);
-		// extractItemRanks(stored, grouped, combined);
+//		if (!selectedType || type.equals(DataCollectorIOS.TOP_FREE_IPAD_APPS)) {
+//			 stored = get(DataCollectorIOS.TOP_FREE_IPAD_APPS);
+//			 grouped = groupDataByDate(stored);
+//			 combined = combineDataParts(grouped);
+//			 extractItemRanks(stored, grouped, combined);
+//			 blobify(stored, grouped, combined);
+//		}
 
-		stored = get(DataCollectorIOS.TOP_PAID_IPAD_APPS);
-		grouped = groupDataByDate(stored);
-		combined = combineDataParts(grouped);
-		extractItemRanks(stored, grouped, combined);
+		if (!selectedType || type.equals(DataCollectorIOS.TOP_PAID_IPAD_APPS)) {
+			stored = get(DataCollectorIOS.TOP_PAID_IPAD_APPS);
+			grouped = groupDataByDate(stored);
+			combined = combineDataParts(grouped);
+			extractItemRanks(stored, grouped, combined);
+			blobify(stored, grouped, combined);
+		}
 
-		stored = get(DataCollectorIOS.TOP_GROSSING_IPAD_APPS);
-		grouped = groupDataByDate(stored);
-		combined = combineDataParts(grouped);
-		extractItemRanks(stored, grouped, combined);
+		if (!selectedType || type.equals(DataCollectorIOS.TOP_GROSSING_IPAD_APPS)) {
+			stored = get(DataCollectorIOS.TOP_GROSSING_IPAD_APPS);
+			grouped = groupDataByDate(stored);
+			combined = combineDataParts(grouped);
+			extractItemRanks(stored, grouped, combined);
+			blobify(stored, grouped, combined);
+		}
 
-		// stored = get(DataCollectorIOS.NEW_APPS);
-		// grouped = groupDataByDate(stored);
-		// combined = combineDataParts(grouped);
-		// extractItemRanks(stored, grouped, combined);
+//		if (!selectedType || type.equals(DataCollectorIOS.NEW_APPS)) {
+//			 stored = get(DataCollectorIOS.NEW_APPS);
+//			 grouped = groupDataByDate(stored);
+//			 combined = combineDataParts(grouped);
+//			 extractItemRanks(stored, grouped, combined);
+//			 blobify(stored, grouped, combined);
+//		}
 
-		// stored = get(DataCollectorIOS.NEW_FREE_APPS);
-		// grouped = groupDataByDate(stored);
-		// combined = combineDataParts(grouped);
-		// extractItemRanks(stored, grouped, combined);
+//		if (!selectedType || type.equals(DataCollectorIOS.NEW_FREE_APPS)) {
+//			 stored = get(DataCollectorIOS.NEW_FREE_APPS);
+//			 grouped = groupDataByDate(stored);
+//			 combined = combineDataParts(grouped);
+//			 extractItemRanks(stored, grouped, combined);
+//			 blobify(stored, grouped, combined);
+//		}
 
-		// stored = get(DataCollectorIOS.NEW_PAID_APPS);
-		// grouped = groupDataByDate(stored);
-		// combined = combineDataParts(grouped);
-		// extractItemRanks(stored, grouped, combined);
+//		if (!selectedType || type.equals(DataCollectorIOS.NEW_PAID_APPS)) {
+//			 stored = get(DataCollectorIOS.NEW_PAID_APPS);
+//			 grouped = groupDataByDate(stored);
+//			 combined = combineDataParts(grouped);
+//			 extractItemRanks(stored, grouped, combined);
+//			 blobify(stored, grouped, combined);
+//		}
 
 		success = true;
 
 		return success;
+	}
+
+	private void blobify(List<FeedFetch> stored, Map<Date, Map<Integer, FeedFetch>> grouped, Map<Date, String> combined) {
+		for (Date date : grouped.keySet()) {
+			Map<Integer, FeedFetch> group = grouped.get(date);
+			boolean first = true;
+
+			for (Integer keyInteger : group.keySet()) {
+				FeedFetch entity = group.get(keyInteger);
+				if (entity.totalParts == 1 && entity.data.startsWith("/blobstore/writable:")) {
+					continue;
+				}
+				
+				if (first) {
+					store(combined.get(date), entity.country, entity.store, entity.type, entity.date, entity.code, true);
+					first = false;
+				}
+
+				ofy().delete().entity(entity).now();
+			}
+		}
 	}
 
 	/**
@@ -284,7 +336,7 @@ public class IngestorIOS implements Ingestor {
 							LOG.error("Error closing reader", e);
 						}
 					}
-					
+
 					if (readChannel != null) {
 						try {
 							readChannel.close();
@@ -319,8 +371,8 @@ public class IngestorIOS implements Ingestor {
 		// for now ingest so that we don't kill the band width
 
 		int i = 0;
-		for (FeedFetch row : ofy().cache(false).load().type(FeedFetch.class).filter("type = ", type).filter("store =", "ios")
-				.filter("ingested =", Boolean.FALSE).limit(20)) {
+		for (FeedFetch row : ofy().cache(false).load().type(FeedFetch.class).order("date").filter("type = ", type).filter("store =", "ios")
+				.filter("ingested =", Boolean.FALSE).limit(count)) {
 			stored.add(row);
 			i++;
 		}
@@ -330,6 +382,17 @@ public class IngestorIOS implements Ingestor {
 		}
 
 		return stored;
+	}
+
+	@Override
+	public boolean ingest(int count) {
+		this.count = count;
+		return ingest();
+	}
+
+	public boolean ingest(int count, String type) {
+		this.type = type;
+		return ingest(count);
 	}
 
 }

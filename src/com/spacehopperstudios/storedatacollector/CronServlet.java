@@ -32,15 +32,29 @@ public class CronServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-//		String appEngineCron = req.getHeader("X-AppEngine-Cron");
-//
-//		// bail out if we have not been called by app engine cron
-//		if (appEngineCron == null || !Boolean.parseBoolean(appEngineCron)) {
-//			resp.setStatus(401);
-//			resp.getOutputStream().print("failure");
-//			LOG.warn("Attempt to run script directly, this is not permitted");
-//			return;
-//		}
+		String appEngineCron = req.getHeader("X-AppEngine-Cron");
+		String appEngineQueue = req.getHeader("X-AppEngine-QueueName");
+
+		boolean isNotCron = false, isNotQueue = false;
+
+		// bail out if we have not been called by app engine cron
+		if ((isNotCron = (appEngineCron == null || !Boolean.parseBoolean(appEngineCron)))
+				&& (isNotQueue = (appEngineQueue == null || !"default".toLowerCase().equals(appEngineQueue.toLowerCase())))) {
+			resp.setStatus(401);
+			resp.getOutputStream().print("failure");
+			LOG.warn("Attempt to run script directly, this is not permitted");
+			return;
+		}
+
+		if (LOG.isDebugEnabled()) {
+			if (!isNotCron) {
+				LOG.debug("Servelet is being called by Cron");
+			}
+
+			if (!isNotQueue) {
+				LOG.debug("Servelet is being called from default queue");
+			}
+		}
 
 		String store = req.getParameter("store");
 		boolean success = false;
@@ -61,7 +75,21 @@ public class CronServlet extends HttpServlet {
 		String ingest = req.getParameter("ingest");
 		if (ingest != null) {
 			if ("iOS".toUpperCase().equals(ingest.toUpperCase())) {
-				success = (new IngestorIOS()).ingest();
+				boolean gotCount = false;
+				boolean gotType = false;
+
+				String count = req.getParameter("count"), type = req.getParameter("type");
+
+				gotCount = (count != null);
+				gotType = (type != null);
+
+				if (gotCount && gotType) {
+					success = (new IngestorIOS()).ingest(Integer.parseInt(count), type);
+				} else if (gotCount) {
+					success = (new IngestorIOS()).ingest(Integer.parseInt(count));
+				} else {
+					success = (new IngestorIOS()).ingest();
+				}
 			}
 		}
 

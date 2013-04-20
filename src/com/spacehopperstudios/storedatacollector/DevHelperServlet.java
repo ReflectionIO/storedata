@@ -29,6 +29,10 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.taskqueue.Queue;
+import com.google.appengine.api.taskqueue.QueueFactory;
+import com.google.appengine.api.taskqueue.TaskOptions;
+import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.googlecode.objectify.cmd.Query;
 import com.spacehopperstudios.storedatacollector.collectors.DataCollectorIOS;
 import com.spacehopperstudios.storedatacollector.datatypes.FeedFetch;
@@ -49,6 +53,20 @@ public class DevHelperServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+		String appEngineQueue = req.getHeader("X-AppEngine-QueueName");
+		boolean isNotQueue = (appEngineQueue == null || !"default".toLowerCase().equals(appEngineQueue.toLowerCase()));
+		
+		if (isNotQueue) {
+			Queue defaultQueue = QueueFactory.getDefaultQueue();
+			
+			if (req.getParameter("cron") == null) {
+				defaultQueue.add(TaskOptions.Builder.withUrl("/devhelper?" + req.getQueryString()).method(Method.GET));
+			} else {
+				defaultQueue.add(TaskOptions.Builder.withUrl("/gather?" + req.getQueryString()).method(Method.GET));
+			}
+			return;
+		}
+		
 		String action = req.getParameter("action");
 		String object = req.getParameter("object");
 		String start = req.getParameter("start");
@@ -431,7 +449,7 @@ public class DevHelperServlet extends HttpServlet {
 
 				success = true;
 			} else if ("convertdatatoblobs".toUpperCase().equals(action.toUpperCase())) {
-				// TODO: sort this out
+				// will not support this
 			} else {
 				if (LOG.isInfoEnabled()) {
 					LOG.info(String.format("Action [%s] not supported", action));
