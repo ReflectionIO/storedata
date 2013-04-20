@@ -19,6 +19,14 @@
     <h2>Some Admin/Dev Helper functions</h2>
 
     <form action="/devhelper" method="get">
+    	<label>queue:</label> <select id="defer" name="defer">
+    	<option value="yes">
+          yes
+        </option>
+        <option value="no">
+          no
+        </option>
+    	</select><br>
       <label>action:</label> <select id="action" name="action">
         <option value="addingested">
           Adds "ingested" column to FeedFetch

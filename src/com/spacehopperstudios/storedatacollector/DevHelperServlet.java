@@ -56,7 +56,7 @@ public class DevHelperServlet extends HttpServlet {
 		String appEngineQueue = req.getHeader("X-AppEngine-QueueName");
 		boolean isNotQueue = (appEngineQueue == null || !"default".toLowerCase().equals(appEngineQueue.toLowerCase()));
 		
-		if (isNotQueue) {
+		if (isNotQueue && (req.getParameter("defer") == null || req.getParameter("defer").equals("yes"))) {
 			Queue defaultQueue = QueueFactory.getDefaultQueue();
 			
 			if (req.getParameter("cron") == null) {
@@ -302,15 +302,15 @@ public class DevHelperServlet extends HttpServlet {
 				Query<ItemRankSummary> query = ofy().load().type(ItemRankSummary.class).filter("type =", feedType).filter("source =", "ios");
 
 				if (rankEndValue < 10) {
-					query = query.filter("numberOfTimesRankedTop10 >", Integer.valueOf(0));
+					query = query.filter("numberOfTimesRankedTop10 >", Integer.valueOf(0)).order("numberOfTimesRankedTop10");
 				} else if (rankEndValue < 25) {
-					query = query.filter("numberOfTimesRankedTop25 >", Integer.valueOf(0));
+					query = query.filter("numberOfTimesRankedTop25 >", Integer.valueOf(0)).order("numberOfTimesRankedTop25");
 				} else if (rankEndValue < 50) {
-					query = query.filter("numberOfTimesRankedTop50 >", Integer.valueOf(0));
+					query = query.filter("numberOfTimesRankedTop50 >", Integer.valueOf(0)).order("numberOfTimesRankedTop50");
 				} else if (rankEndValue < 100) {
-					query = query.filter("numberOfTimesRankedTop100 >", Integer.valueOf(0));
+					query = query.filter("numberOfTimesRankedTop100 >", Integer.valueOf(0)).order("numberOfTimesRankedTop100");
 				} else if (rankEndValue < 200) {
-					query = query.filter("numberOfTimesRankedTop200 >", Integer.valueOf(0));
+					query = query.filter("numberOfTimesRankedTop200 >", Integer.valueOf(0)).order("numberOfTimesRankedTop200");
 				} else if (rankEndValue >= 200) {
 					// every ranked item should appear at least once
 					// query = query.filter("numberOfTimesRanked >", Integer.valueOf(0));

@@ -20,6 +20,7 @@ import com.google.appengine.api.files.AppEngineFile;
 import com.google.appengine.api.files.FileReadChannel;
 import com.google.appengine.api.files.FileService;
 import com.google.appengine.api.files.FileServiceFactory;
+import com.googlecode.objectify.VoidWork;
 import com.spacehopperstudios.storedatacollector.collectors.DataCollectorIOS;
 import com.spacehopperstudios.storedatacollector.collectors.DataStoreDataCollector;
 import com.spacehopperstudios.storedatacollector.datatypes.FeedFetch;
@@ -52,13 +53,13 @@ public class IngestorIOS extends DataStoreDataCollector implements Ingestor {
 
 		// For now we are only interested in top grossing and top paid
 
-//		if (!selectedType || type.equals(DataCollectorIOS.TOP_FREE_APPS)) {
-//			 stored = get(DataCollectorIOS.TOP_FREE_APPS);
-//			 grouped = groupDataByDate(stored);
-//			 combined = combineDataParts(grouped);
-//			 extractItemRanks(stored, grouped, combined);
-//			 blobify(stored, grouped, combined);
-//		}
+		// if (!selectedType || type.equals(DataCollectorIOS.TOP_FREE_APPS)) {
+		// stored = get(DataCollectorIOS.TOP_FREE_APPS);
+		// grouped = groupDataByDate(stored);
+		// combined = combineDataParts(grouped);
+		// extractItemRanks(stored, grouped, combined);
+		// blobify(stored, grouped, combined);
+		// }
 
 		if (!selectedType || type.equals(DataCollectorIOS.TOP_PAID_APPS)) {
 			stored = get(DataCollectorIOS.TOP_PAID_APPS);
@@ -76,13 +77,13 @@ public class IngestorIOS extends DataStoreDataCollector implements Ingestor {
 			blobify(stored, grouped, combined);
 		}
 
-//		if (!selectedType || type.equals(DataCollectorIOS.TOP_FREE_IPAD_APPS)) {
-//			 stored = get(DataCollectorIOS.TOP_FREE_IPAD_APPS);
-//			 grouped = groupDataByDate(stored);
-//			 combined = combineDataParts(grouped);
-//			 extractItemRanks(stored, grouped, combined);
-//			 blobify(stored, grouped, combined);
-//		}
+		// if (!selectedType || type.equals(DataCollectorIOS.TOP_FREE_IPAD_APPS)) {
+		// stored = get(DataCollectorIOS.TOP_FREE_IPAD_APPS);
+		// grouped = groupDataByDate(stored);
+		// combined = combineDataParts(grouped);
+		// extractItemRanks(stored, grouped, combined);
+		// blobify(stored, grouped, combined);
+		// }
 
 		if (!selectedType || type.equals(DataCollectorIOS.TOP_PAID_IPAD_APPS)) {
 			stored = get(DataCollectorIOS.TOP_PAID_IPAD_APPS);
@@ -100,29 +101,29 @@ public class IngestorIOS extends DataStoreDataCollector implements Ingestor {
 			blobify(stored, grouped, combined);
 		}
 
-//		if (!selectedType || type.equals(DataCollectorIOS.NEW_APPS)) {
-//			 stored = get(DataCollectorIOS.NEW_APPS);
-//			 grouped = groupDataByDate(stored);
-//			 combined = combineDataParts(grouped);
-//			 extractItemRanks(stored, grouped, combined);
-//			 blobify(stored, grouped, combined);
-//		}
+		// if (!selectedType || type.equals(DataCollectorIOS.NEW_APPS)) {
+		// stored = get(DataCollectorIOS.NEW_APPS);
+		// grouped = groupDataByDate(stored);
+		// combined = combineDataParts(grouped);
+		// extractItemRanks(stored, grouped, combined);
+		// blobify(stored, grouped, combined);
+		// }
 
-//		if (!selectedType || type.equals(DataCollectorIOS.NEW_FREE_APPS)) {
-//			 stored = get(DataCollectorIOS.NEW_FREE_APPS);
-//			 grouped = groupDataByDate(stored);
-//			 combined = combineDataParts(grouped);
-//			 extractItemRanks(stored, grouped, combined);
-//			 blobify(stored, grouped, combined);
-//		}
+		// if (!selectedType || type.equals(DataCollectorIOS.NEW_FREE_APPS)) {
+		// stored = get(DataCollectorIOS.NEW_FREE_APPS);
+		// grouped = groupDataByDate(stored);
+		// combined = combineDataParts(grouped);
+		// extractItemRanks(stored, grouped, combined);
+		// blobify(stored, grouped, combined);
+		// }
 
-//		if (!selectedType || type.equals(DataCollectorIOS.NEW_PAID_APPS)) {
-//			 stored = get(DataCollectorIOS.NEW_PAID_APPS);
-//			 grouped = groupDataByDate(stored);
-//			 combined = combineDataParts(grouped);
-//			 extractItemRanks(stored, grouped, combined);
-//			 blobify(stored, grouped, combined);
-//		}
+		// if (!selectedType || type.equals(DataCollectorIOS.NEW_PAID_APPS)) {
+		// stored = get(DataCollectorIOS.NEW_PAID_APPS);
+		// grouped = groupDataByDate(stored);
+		// combined = combineDataParts(grouped);
+		// extractItemRanks(stored, grouped, combined);
+		// blobify(stored, grouped, combined);
+		// }
 
 		success = true;
 
@@ -139,7 +140,7 @@ public class IngestorIOS extends DataStoreDataCollector implements Ingestor {
 				if (entity.totalParts == 1 && entity.data.startsWith("/blobstore/writable:")) {
 					continue;
 				}
-				
+
 				if (first) {
 					store(combined.get(date), entity.country, entity.store, entity.type, entity.date, entity.code, true);
 					first = false;
@@ -155,13 +156,13 @@ public class IngestorIOS extends DataStoreDataCollector implements Ingestor {
 	 * @param grouped
 	 * @param combined
 	 */
-	private void extractItemRanks(List<FeedFetch> stored, Map<Date, Map<Integer, FeedFetch>> grouped, Map<Date, String> combined) {
+	private void extractItemRanks(List<FeedFetch> stored, final Map<Date, Map<Integer, FeedFetch>> grouped, Map<Date, String> combined) {
 
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Extracting item ranks");
 		}
 
-		for (Date key : combined.keySet()) {
+		for (final Date key : combined.keySet()) {
 
 			if (LOG.isDebugEnabled()) {
 				LOG.debug(String.format("Parsing [%s]", key.toString()));
@@ -207,22 +208,30 @@ public class IngestorIOS extends DataStoreDataCollector implements Ingestor {
 				LOG.debug("Marking items as ingested");
 			}
 
-			int i = 0;
-			for (Integer entityKey : grouped.get(key).keySet()) {
-				FeedFetch entity = grouped.get(key).get(entityKey);
+			ofy().transact(new VoidWork() {
 
-				entity.ingested = true;
-				ofy().save().entity(entity).now();
-				i++;
+				@Override
+				public void vrun() {
+					int i = 0;
+					for (Integer entityKey : grouped.get(key).keySet()) {
+						FeedFetch entity = grouped.get(key).get(entityKey);
 
-				if (LOG.isTraceEnabled()) {
-					LOG.trace(String.format("Marked entity [%d]", entity.id.longValue()));
+						entity.ingested = true;
+						ofy().save().entity(entity).now();
+						i++;
+
+						if (LOG.isTraceEnabled()) {
+							LOG.trace(String.format("Marked entity [%d]", entity.id.longValue()));
+						}
+					}
+
+					if (LOG.isDebugEnabled()) {
+						LOG.debug(String.format("Marked [%d] items", i));
+					}
 				}
-			}
 
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(String.format("Marked [%d] items", i));
-			}
+			});
+
 		}
 	}
 
@@ -327,7 +336,7 @@ public class IngestorIOS extends DataStoreDataCollector implements Ingestor {
 						buffer.append(bytes, 0, length);
 					}
 				} catch (IOException e) {
-					LOG.error("Error closing read channel for file [%s]", e);
+					LOG.error(String.format("Error closing read channel for file [%s]", file.getFullPath()), e);
 				} finally {
 					if (reader != null) {
 						try {
@@ -341,7 +350,7 @@ public class IngestorIOS extends DataStoreDataCollector implements Ingestor {
 						try {
 							readChannel.close();
 						} catch (IOException e) {
-							LOG.error("Error closing read channel for file [%s]", e);
+							LOG.error(String.format("Error closing read channel for file [%s]", file.getFullPath()), e);
 						}
 					}
 				}
@@ -363,7 +372,7 @@ public class IngestorIOS extends DataStoreDataCollector implements Ingestor {
 	private List<FeedFetch> get(String type) {
 
 		if (LOG.isInfoEnabled()) {
-			LOG.info(String.format("Fetching %s", type));
+			LOG.info(String.format("Fetching [%s]", type));
 		}
 
 		List<FeedFetch> stored = new ArrayList<FeedFetch>();
