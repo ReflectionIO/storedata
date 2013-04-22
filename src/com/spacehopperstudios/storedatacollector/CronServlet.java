@@ -39,7 +39,7 @@ public class CronServlet extends HttpServlet {
 
 		// bail out if we have not been called by app engine cron
 		if ((isNotCron = (appEngineCron == null || !Boolean.parseBoolean(appEngineCron)))
-				&& (isNotQueue = (appEngineQueue == null || !"default".toLowerCase().equals(appEngineQueue.toLowerCase())))) {
+				&& (isNotQueue = (appEngineQueue == null || !"deferred".toLowerCase().equals(appEngineQueue.toLowerCase())))) {
 			resp.setStatus(401);
 			resp.getOutputStream().print("failure");
 			LOG.warn("Attempt to run script directly, this is not permitted");
@@ -52,7 +52,7 @@ public class CronServlet extends HttpServlet {
 			}
 
 			if (!isNotQueue) {
-				LOG.debug("Servelet is being called from default queue");
+				LOG.debug(String.format("Servelet is being called from [%s] queue", appEngineQueue));
 			}
 		}
 

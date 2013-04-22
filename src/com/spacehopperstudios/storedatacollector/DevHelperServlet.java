@@ -54,15 +54,15 @@ public class DevHelperServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 		String appEngineQueue = req.getHeader("X-AppEngine-QueueName");
-		boolean isNotQueue = (appEngineQueue == null || !"default".toLowerCase().equals(appEngineQueue.toLowerCase()));
+		boolean isNotQueue = (appEngineQueue == null || !"deferred".toLowerCase().equals(appEngineQueue.toLowerCase()));
 		
 		if (isNotQueue && (req.getParameter("defer") == null || req.getParameter("defer").equals("yes"))) {
-			Queue defaultQueue = QueueFactory.getDefaultQueue();
+			Queue deferredQueue = QueueFactory.getQueue("deferred");
 			
 			if (req.getParameter("cron") == null) {
-				defaultQueue.add(TaskOptions.Builder.withUrl("/devhelper?" + req.getQueryString()).method(Method.GET));
+				deferredQueue.add(TaskOptions.Builder.withUrl("/devhelper?" + req.getQueryString()).method(Method.GET));
 			} else {
-				defaultQueue.add(TaskOptions.Builder.withUrl("/gather?" + req.getQueryString()).method(Method.GET));
+				deferredQueue.add(TaskOptions.Builder.withUrl("/gather?" + req.getQueryString()).method(Method.GET));
 			}
 			return;
 		}
