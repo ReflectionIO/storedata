@@ -51,7 +51,7 @@ public abstract class DataStoreDataCollector {
 		BufferedWriter writer = null;
 
 		try {
-			file = fileService.createNewBlobFile("application/json", code + ".json");
+			file = fileService.createNewBlobFile("application/json", code + "_" + type + ".json");
 			writeChannel = fileService.openWriteChannel(file, true);
 
 			writer = new BufferedWriter(Channels.newWriter(writeChannel, "UTF8"));
