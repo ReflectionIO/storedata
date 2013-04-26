@@ -6,6 +6,8 @@ package com.spacehopperstudios.storedatacollector;
 import static com.spacehopperstudios.storedatacollector.objectify.PersistenceService.ofy;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -33,11 +35,20 @@ import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
+import com.google.appengine.tools.mapreduce.KeyValue;
+import com.google.appengine.tools.mapreduce.MapReduceJob;
+import com.google.appengine.tools.mapreduce.MapReduceSettings;
+import com.google.appengine.tools.mapreduce.MapReduceSpecification;
+import com.google.appengine.tools.mapreduce.Marshallers;
+import com.google.appengine.tools.mapreduce.inputs.DatastoreInput;
+import com.google.appengine.tools.mapreduce.outputs.InMemoryOutput;
 import com.googlecode.objectify.cmd.Query;
 import com.spacehopperstudios.storedatacollector.collectors.DataCollectorIOS;
 import com.spacehopperstudios.storedatacollector.datatypes.FeedFetch;
 import com.spacehopperstudios.storedatacollector.datatypes.ItemRankSummary;
 import com.spacehopperstudios.storedatacollector.datatypes.Rank;
+import com.spacehopperstudios.storedatacollector.mapreduce.RankCountMapper;
+import com.spacehopperstudios.storedatacollector.mapreduce.RankCountReducer;
 import com.spacehopperstudios.storedatacollector.objectify.PersistenceService;
 
 /**
@@ -49,16 +60,17 @@ public class DevHelperServlet extends HttpServlet {
 	private static final Logger LOG = Logger.getLogger(DevHelperServlet.class);
 
 	private static final String RANK_END_200_PLUS = "200+";
+	private static final boolean USE_BACKENDS = false;
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 		String appEngineQueue = req.getHeader("X-AppEngine-QueueName");
 		boolean isNotQueue = (appEngineQueue == null || !"deferred".toLowerCase().equals(appEngineQueue.toLowerCase()));
-		
+
 		if (isNotQueue && (req.getParameter("defer") == null || req.getParameter("defer").equals("yes"))) {
 			Queue deferredQueue = QueueFactory.getQueue("deferred");
-			
+
 			if (req.getParameter("cron") == null) {
 				deferredQueue.add(TaskOptions.Builder.withUrl("/devhelper?" + req.getQueryString()).method(Method.GET));
 			} else {
@@ -66,7 +78,7 @@ public class DevHelperServlet extends HttpServlet {
 			}
 			return;
 		}
-		
+
 		String action = req.getParameter("action");
 		String object = req.getParameter("object");
 		String start = req.getParameter("start");
@@ -450,6 +462,12 @@ public class DevHelperServlet extends HttpServlet {
 				success = true;
 			} else if ("convertdatatoblobs".toUpperCase().equals(action.toUpperCase())) {
 				// will not support this
+			} else if ("countitemrankmr".toUpperCase().equals(action.toUpperCase())) {
+				
+				int rankStartValue = Integer.parseInt(rankStart);
+				int rankEndValue = RANK_END_200_PLUS.equals(rankEnd) ? Integer.MAX_VALUE : Integer.parseInt(rankEnd);
+				
+				redirectToPipelineStatus(req, resp, startStatsJob(5, 5, "ios", "us", feedType, rankStartValue, rankEndValue));
 			} else {
 				if (LOG.isInfoEnabled()) {
 					LOG.info(String.format("Action [%s] not supported", action));
@@ -472,4 +490,35 @@ public class DevHelperServlet extends HttpServlet {
 		}
 
 	}
+
+	private String getUrlBase(HttpServletRequest req) throws MalformedURLException {
+		URL requestUrl = new URL(req.getRequestURL().toString());
+		String portString = requestUrl.getPort() == -1 ? "" : ":" + requestUrl.getPort();
+		return requestUrl.getProtocol() + "://" + requestUrl.getHost() + portString + "/";
+	}
+
+	private void redirectToPipelineStatus(HttpServletRequest req, HttpServletResponse resp, String pipelineId) throws IOException {
+		String destinationUrl = getPipelineStatusUrl(getUrlBase(req), pipelineId);
+		LOG.info("Redirecting to " + destinationUrl);
+		resp.sendRedirect(destinationUrl);
+	}
+
+	private String getPipelineStatusUrl(String urlBase, String pipelineId) {
+		return urlBase + "_ah/pipeline/status.html?root=" + pipelineId;
+	}
+
+	private MapReduceSettings getSettings() {
+		MapReduceSettings settings = new MapReduceSettings().setWorkerQueueName("mapreduce-workers").setControllerQueueName("default");
+		if (USE_BACKENDS) {
+			settings.setBackend("worker");
+		}
+		return settings;
+	}
+
+	private String startStatsJob(int mapShardCount, int reduceShardCount, String source, String country, String type, int start, int end) {
+		return MapReduceJob.start(MapReduceSpecification.of("Item stats", new DatastoreInput("Rank", mapShardCount),
+				new RankCountMapper(source, country, type, start, end), Marshallers.getStringMarshaller(), Marshallers.getLongMarshaller(), new RankCountReducer(),
+				new InMemoryOutput<KeyValue<String, Long>>(reduceShardCount)), getSettings());
+	}
+
 }
