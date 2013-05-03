@@ -1,5 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Change the refresh rate of the default queue to 1/s -->
 <queue-entries>
-	<!--Change the refresh rate of the default queue to 1/s -->
+	<total-storage-limit>1000M</total-storage-limit>
+	<queue>
+		<name>default</name>
+		<rate>100/s</rate>
+		<bucket-size>100</bucket-size>
+		<retry-parameters>
+			<task-age-limit>3d</task-age-limit>
+		</retry-parameters>
+		<max-concurrent-requests>
+			300
+		</max-concurrent-requests>
+	</queue>
+	<queue>
+		<name>mapreduce-workers</name>
+		<rate>100/s</rate>
+		<bucket-size>100</bucket-size>
+		<retry-parameters>
+			<task-age-limit>3d</task-age-limit>
+		</retry-parameters>
+		<max-concurrent-requests>
+			100
+		</max-concurrent-requests>
+	</queue>
+
 	<queue>
 		<name>deferred</name>
 		<rate>100/s</rate>

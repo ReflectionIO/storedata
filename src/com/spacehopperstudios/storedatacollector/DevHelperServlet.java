@@ -41,14 +41,18 @@ import com.google.appengine.tools.mapreduce.MapReduceSettings;
 import com.google.appengine.tools.mapreduce.MapReduceSpecification;
 import com.google.appengine.tools.mapreduce.Marshallers;
 import com.google.appengine.tools.mapreduce.inputs.DatastoreInput;
+import com.google.appengine.tools.mapreduce.outputs.BlobFileOutput;
 import com.google.appengine.tools.mapreduce.outputs.InMemoryOutput;
 import com.googlecode.objectify.cmd.Query;
 import com.spacehopperstudios.storedatacollector.collectors.DataCollectorIOS;
 import com.spacehopperstudios.storedatacollector.datatypes.FeedFetch;
 import com.spacehopperstudios.storedatacollector.datatypes.ItemRankSummary;
 import com.spacehopperstudios.storedatacollector.datatypes.Rank;
+import com.spacehopperstudios.storedatacollector.mapreduce.CsvBlobReducer;
+import com.spacehopperstudios.storedatacollector.mapreduce.PaidGrossingMapper;
 import com.spacehopperstudios.storedatacollector.mapreduce.RankCountMapper;
 import com.spacehopperstudios.storedatacollector.mapreduce.RankCountReducer;
+import com.spacehopperstudios.storedatacollector.mapreduce.TotalRankedItemsCountMapper;
 import com.spacehopperstudios.storedatacollector.objectify.PersistenceService;
 
 /**
@@ -463,11 +467,21 @@ public class DevHelperServlet extends HttpServlet {
 			} else if ("convertdatatoblobs".toUpperCase().equals(action.toUpperCase())) {
 				// will not support this
 			} else if ("countitemrankmr".toUpperCase().equals(action.toUpperCase())) {
-				
+
 				int rankStartValue = Integer.parseInt(rankStart);
 				int rankEndValue = RANK_END_200_PLUS.equals(rankEnd) ? Integer.MAX_VALUE : Integer.parseInt(rankEnd);
-				
-				redirectToPipelineStatus(req, resp, startStatsJob(5, 5, "ios", "us", feedType, rankStartValue, rankEndValue));
+
+				redirectToPipelineStatus(req, resp, startStatsJob(5, 2, "ios", "us", feedType, rankStartValue, rankEndValue));
+
+				success = true;
+			} else if ("countranksmr".toUpperCase().equals(action.toUpperCase())) {
+				redirectToPipelineStatus(req, resp, startRankCountJob(5, 2, "ios", "us", feedType));
+
+				success = true;
+			} else if ("createcsvofallranks".toUpperCase().equals(action.toUpperCase())) {
+				redirectToPipelineStatus(req, resp, startCreateCsvBlobRank(5, 1, "ios", "us", feedType));
+
+				success = true;
 			} else {
 				if (LOG.isInfoEnabled()) {
 					LOG.info(String.format("Action [%s] not supported", action));
@@ -489,6 +503,13 @@ public class DevHelperServlet extends HttpServlet {
 			resp.getOutputStream().print(success ? "success" : "failure");
 		}
 
+	}
+
+	private String startCreateCsvBlobRank(int mapShardCount, int reduceSharedCount, String source, String country, String type) {
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd-HHmmss");
+		return MapReduceJob.start(MapReduceSpecification.of("Create Rank csv blob", new DatastoreInput("Rank", mapShardCount), new PaidGrossingMapper(source,
+				country), Marshallers.getStringMarshaller(), Marshallers.getStringMarshaller(), new CsvBlobReducer(),
+				new BlobFileOutput("PaidGrossing" + format.format(new Date()) + "%d.csv", "text/csv", reduceSharedCount)), getSettings());
 	}
 
 	private String getUrlBase(HttpServletRequest req) throws MalformedURLException {
@@ -516,8 +537,14 @@ public class DevHelperServlet extends HttpServlet {
 	}
 
 	private String startStatsJob(int mapShardCount, int reduceShardCount, String source, String country, String type, int start, int end) {
-		return MapReduceJob.start(MapReduceSpecification.of("Item stats", new DatastoreInput("Rank", mapShardCount),
-				new RankCountMapper(source, country, type, start, end), Marshallers.getStringMarshaller(), Marshallers.getLongMarshaller(), new RankCountReducer(),
+		return MapReduceJob.start(MapReduceSpecification.of("Item stats", new DatastoreInput("Rank", mapShardCount), new RankCountMapper(source, country, type,
+				start, end), Marshallers.getStringMarshaller(), Marshallers.getLongMarshaller(), new RankCountReducer(),
+				new InMemoryOutput<KeyValue<String, Long>>(reduceShardCount)), getSettings());
+	}
+
+	private String startRankCountJob(int mapShardCount, int reduceShardCount, String source, String country, String type) {
+		return MapReduceJob.start(MapReduceSpecification.of("Rank count", new DatastoreInput("Rank", mapShardCount), new TotalRankedItemsCountMapper(source,
+				country, type), Marshallers.getStringMarshaller(), Marshallers.getLongMarshaller(), new RankCountReducer(),
 				new InMemoryOutput<KeyValue<String, Long>>(reduceShardCount)), getSettings());
 	}
 

@@ -20,33 +20,33 @@ public class Rank {
 
 	@Id
 	public Long id;
-	
+
 	@Index
 	public int position;
-	
+
 	@Index
 	public String itemId;
-	
+
 	@Index
 	public String type;
-	
+
 	@Index
 	public String country;
-	
+
 	@Index
 	public Date date;
-	
+
 	@Index
 	public String source;
-	
+
 	public float price;
 	public String currency;
-	
+
 	/**
 	 * This flag indicates whether this row has been counted
 	 */
 	@Index
 	public boolean counted;
-	
+
 	public String code;
 }

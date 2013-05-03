@@ -29,10 +29,12 @@ public class RankCountReducer extends Reducer<String, Long, KeyValue<String, Lon
 
 	@Override
 	public void beginShard() {
+		LOG.info("beginShard()");
 	}
 
 	@Override
 	public void beginSlice() {
+		LOG.info("beginSlice()");
 	}
 
 	@Override
@@ -48,10 +50,12 @@ public class RankCountReducer extends Reducer<String, Long, KeyValue<String, Lon
 
 	@Override
 	public void endShard() {
+		LOG.info("endShard()");
 	}
 
 	@Override
 	public void endSlice() {
+		LOG.info("endSlice()");
 	}
 
 }

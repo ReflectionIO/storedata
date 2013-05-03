@@ -9,21 +9,19 @@ import org.apache.log4j.Logger;
 
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.tools.mapreduce.Mapper;
-import com.spacehopperstudios.storedatacollector.collectors.DataCollectorIOS;
 import com.spacehopperstudios.storedatacollector.datatypes.Rank;
 
 /**
- * @author William Shakour
+ * @author billy1380
  * 
  */
-public class RankCountMapper extends Mapper<Entity, String, Long> {
-
-	/**
-	 * 
+public class TotalRankedItemsCountMapper extends Mapper<Entity, String, Long> {
+	/*
+	 *  
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger LOG = Logger.getLogger(RankCountMapper.class);
+	private static final Logger LOG = Logger.getLogger(TotalRankedItemsCountMapper.class);
 
 	private String source;
 
@@ -31,16 +29,10 @@ public class RankCountMapper extends Mapper<Entity, String, Long> {
 
 	private String type;
 
-	private int start;
-
-	private int end;
-
-	public RankCountMapper(String source, String country, String type, int start, int end) {
+	public TotalRankedItemsCountMapper(String source, String country, String type) {
 		this.source = source;
 		this.country = country;
 		this.type = type;
-		this.start = start;
-		this.end = end;
 	}
 
 	private void incrementCounter(String name, long delta) {
@@ -86,35 +78,6 @@ public class RankCountMapper extends Mapper<Entity, String, Long> {
 
 		emit1("total entities");
 		emit1("map calls in shard " + getContext().getShardNumber());
-		
-		if (rank.position <= end && rank.position >= start) {
-			String shortType = null;
-			
-			if (rank.type.equals(DataCollectorIOS.TOP_FREE_APPS)) {
-				shortType = "tfa";
-			} else if (rank.type.equals(DataCollectorIOS.TOP_PAID_APPS)) {
-				shortType = "tpa";
-			} else if (rank.type.equals(DataCollectorIOS.TOP_GROSSING_APPS)) {
-				shortType = "tga";
-			} else if (rank.type.equals(DataCollectorIOS.TOP_FREE_IPAD_APPS)) {
-				shortType = "tfia";
-			} else if (rank.type.equals(DataCollectorIOS.TOP_PAID_IPAD_APPS)) {
-				shortType = "tpia";
-			} else if (rank.type.equals(DataCollectorIOS.TOP_GROSSING_IPAD_APPS)) {
-				shortType = "tgia";
-			} else if (rank.type.equals(DataCollectorIOS.NEW_APPS)) {
-				shortType = "na";
-			} else if (rank.type.equals(DataCollectorIOS.NEW_FREE_APPS)) {
-				shortType = "nfa";
-			} else if (rank.type.equals(DataCollectorIOS.NEW_PAID_APPS)) {
-				shortType = "npa";
-			}
-			
-			String name = shortType + "." + rank.itemId + "." + Integer.toString(start) + "." + Integer.toString(end);
-			
-			emit1(name);	
-		}		
-
 	}
 
 	@Override
@@ -128,5 +91,4 @@ public class RankCountMapper extends Mapper<Entity, String, Long> {
 		LOG.info("endSlice()");
 		emit1("total map slice terminations");
 	}
-
 }
