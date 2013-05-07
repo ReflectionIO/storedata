@@ -21,7 +21,7 @@ public class DataCollectorIOS extends DataStoreDataCollector implements DataColl
 
 	private static final String COUNTRIES_KEY = "gather.iOS.countries";
 
-	private static final String KEY_FORMAT = "gather.iOS.%s.%s";
+	private static final String KEY_FORMAT = "gather.iOS.%s";
 
 	public static final String TOP_FREE_APPS = "topfreeapplications";
 	public static final String TOP_PAID_APPS = "toppaidapplications";
@@ -104,13 +104,15 @@ public class DataCollectorIOS extends DataStoreDataCollector implements DataColl
 			LOG.debug(String.format("Getting data for [%s] and type [%s]", countryCode, type));
 		}
 
-		String key = String.format(KEY_FORMAT, countryCode, type);
-
+		String key = String.format(KEY_FORMAT, type);
+		
 		if (LOG.isDebugEnabled()) {
-			LOG.debug(String.format("Key for endpoint is [%s]", key));
+			LOG.debug(String.format("key is [%s]", key));
 		}
+		
+		String endpoint = String.format(System.getProperty(key), countryCode);
 
-		return HttpDataGetter.getData(key);
+		return HttpDataGetter.getData(endpoint);
 	}
 
 	

@@ -79,9 +79,8 @@ public class HttpDataGetter {
 	 * @param key
 	 * @return
 	 */
-	public static String getData(String key) {
+	public static String getData(String endpoint) {
 		String data = null;
-		String endpoint = System.getProperty(key);
 
 		if (LOG.isDebugEnabled()) {
 			LOG.debug(String.format("endpoint is [%s]", endpoint));
@@ -91,7 +90,7 @@ public class HttpDataGetter {
 			URL url = new URL(endpoint);
 			data = getData(url);
 		} catch (MalformedURLException e) {
-			LOG.error(String.format("Error creating url [%s] from property [%s]", endpoint, key), e);
+			LOG.error(String.format("Error creating url from endpoint [%s]", endpoint), e);
 		}
 
 		return data;
