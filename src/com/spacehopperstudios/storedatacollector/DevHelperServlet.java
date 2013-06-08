@@ -18,13 +18,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.log4j.Logger;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -61,7 +61,7 @@ import com.spacehopperstudios.storedatacollector.objectify.PersistenceService;
  */
 @SuppressWarnings("serial")
 public class DevHelperServlet extends HttpServlet {
-	private static final Logger LOG = Logger.getLogger(DevHelperServlet.class);
+	private static final Logger LOG = Logger.getLogger(DevHelperServlet.class.getName());
 
 	private static final String RANK_END_200_PLUS = "200+";
 	private static final boolean USE_BACKENDS = false;
@@ -107,15 +107,15 @@ public class DevHelperServlet extends HttpServlet {
 
 					ofy().save().entity(entity).now();
 
-					if (LOG.isTraceEnabled()) {
-						LOG.trace(String.format("Set entity [%d] ingested to false", entity.id.longValue()));
+					if (LOG.isLoggable(Level.FINER)) {
+						LOG.finer(String.format("Set entity [%d] ingested to false", entity.id.longValue()));
 					}
 
 					i++;
 				}
 
-				if (LOG.isDebugEnabled()) {
-					LOG.debug(String.format("Processed [%d] entities", i));
+				if (LOG.isLoggable(Level.FINE)) {
+					LOG.fine(String.format("Processed [%d] entities", i));
 				}
 
 				success = true;
@@ -127,15 +127,15 @@ public class DevHelperServlet extends HttpServlet {
 
 					ofy().save().entity(entity).now();
 
-					if (LOG.isTraceEnabled()) {
-						LOG.trace(String.format("Set entity [%d] ingested to false", entity.id.longValue()));
+					if (LOG.isLoggable(Level.FINER)) {
+						LOG.finer(String.format("Set entity [%d] ingested to false", entity.id.longValue()));
 					}
 
 					i++;
 				}
 
-				if (LOG.isDebugEnabled()) {
-					LOG.debug(String.format("Processed [%d] entities", i));
+				if (LOG.isLoggable(Level.FINE)) {
+					LOG.fine(String.format("Processed [%d] entities", i));
 				}
 
 				success = true;
@@ -150,7 +150,7 @@ public class DevHelperServlet extends HttpServlet {
 					endDate = cal.getTime();
 
 				} catch (ParseException e) {
-					LOG.error("Error parsing date", e);
+					LOG.log(Level.SEVERE, "Error parsing date", e);
 				}
 
 				if (startDate != null) {
@@ -165,21 +165,21 @@ public class DevHelperServlet extends HttpServlet {
 							entity.code = code;
 							ofy().save().entity(entity);
 
-							if (LOG.isTraceEnabled()) {
-								LOG.trace(String.format("Added code [%s] to entity [%d]", entity.code, entity.id.longValue()));
+							if (LOG.isLoggable(Level.FINER)) {
+								LOG.finer(String.format("Added code [%s] to entity [%d]", entity.code, entity.id.longValue()));
 							}
 
 							i++;
 						} else {
-							if (LOG.isTraceEnabled()) {
-								LOG.trace(String.format("Entity [%d] has code [%s]", entity.id.longValue(), entity.code));
+							if (LOG.isLoggable(Level.FINER)) {
+								LOG.finer(String.format("Entity [%d] has code [%s]", entity.id.longValue(), entity.code));
 							}
 						}
 
 					}
 
-					if (LOG.isDebugEnabled()) {
-						LOG.debug(String.format("Processed [%d] entities", i));
+					if (LOG.isLoggable(Level.FINE)) {
+						LOG.fine(String.format("Processed [%d] entities", i));
 					}
 
 					success = true;
@@ -195,15 +195,15 @@ public class DevHelperServlet extends HttpServlet {
 					for (Entity entity : preparedQuery.asIterable(FetchOptions.Builder.withOffset(Integer.parseInt(start)).limit(Integer.parseInt(count)))) {
 						datastoreService.delete(entity.getKey());
 
-						if (LOG.isTraceEnabled()) {
-							LOG.trace(String.format("Removed entity [%d]", entity.getKey().getId()));
+						if (LOG.isLoggable(Level.FINER)) {
+							LOG.finer(String.format("Removed entity [%d]", entity.getKey().getId()));
 						}
 
 						i++;
 					}
 
-					if (LOG.isDebugEnabled()) {
-						LOG.debug(String.format("Processed [%d] entities", i));
+					if (LOG.isLoggable(Level.FINE)) {
+						LOG.fine(String.format("Processed [%d] entities", i));
 					}
 
 					success = true;
@@ -256,8 +256,8 @@ public class DevHelperServlet extends HttpServlet {
 
 					ofy().save().entity(itemRankSummary).now();
 
-					if (LOG.isTraceEnabled()) {
-						LOG.trace(String.format("Updated item item summary for [%s:%s:%s]", itemRankSummary.source, itemRankSummary.type,
+					if (LOG.isLoggable(Level.FINER)) {
+						LOG.finer(String.format("Updated item item summary for [%s:%s:%s]", itemRankSummary.source, itemRankSummary.type,
 								itemRankSummary.itemId));
 					}
 
@@ -265,15 +265,15 @@ public class DevHelperServlet extends HttpServlet {
 
 					ofy().save().entity(rank).now();
 
-					if (LOG.isTraceEnabled()) {
-						LOG.trace(String.format("Updated rank counted for %d", rank.id.longValue()));
+					if (LOG.isLoggable(Level.FINER)) {
+						LOG.finer(String.format("Updated rank counted for %d", rank.id.longValue()));
 					}
 
 					i++;
 				}
 
-				if (LOG.isDebugEnabled()) {
-					LOG.debug(String.format("Processed [%d] entities", i));
+				if (LOG.isLoggable(Level.FINE)) {
+					LOG.fine(String.format("Processed [%d] entities", i));
 				}
 
 				success = true;
@@ -285,15 +285,15 @@ public class DevHelperServlet extends HttpServlet {
 
 					ofy().save().entity(rank);
 
-					if (LOG.isTraceEnabled()) {
-						LOG.trace(String.format("Uncounted rank [%d]", rank.id.longValue()));
+					if (LOG.isLoggable(Level.FINER)) {
+						LOG.finer(String.format("Uncounted rank [%d]", rank.id.longValue()));
 					}
 
 					i++;
 				}
 
-				if (LOG.isDebugEnabled()) {
-					LOG.debug(String.format("Processed [%d] entities", i));
+				if (LOG.isLoggable(Level.FINE)) {
+					LOG.fine(String.format("Processed [%d] entities", i));
 				}
 
 				success = true;
@@ -374,8 +374,8 @@ public class DevHelperServlet extends HttpServlet {
 					i++;
 				}
 
-				if (LOG.isDebugEnabled()) {
-					LOG.debug(String.format("Found [%d] entities", i));
+				if (LOG.isLoggable(Level.FINE)) {
+					LOG.fine(String.format("Found [%d] entities", i));
 				}
 
 				buffer.append("</table>");
@@ -483,13 +483,13 @@ public class DevHelperServlet extends HttpServlet {
 
 				success = true;
 			} else {
-				if (LOG.isInfoEnabled()) {
+				if (LOG.isLoggable(Level.INFO)) {
 					LOG.info(String.format("Action [%s] not supported", action));
 				}
 			}
 		}
 
-		if (LOG.isInfoEnabled()) {
+		if (LOG.isLoggable(Level.INFO)) {
 			LOG.info(String.format("Imported completed status = [%s]", success ? "success" : "failure"));
 		}
 

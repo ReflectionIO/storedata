@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import org.apache.log4j.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.google.appengine.api.urlfetch.HTTPRequest;
@@ -22,7 +22,7 @@ import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
  */
 public class HttpDataGetter {
 
-	private static final Logger LOG = Logger.getLogger(HttpDataGetter.class);
+	private static final Logger LOG = Logger.getLogger(HttpDataGetter.class.getName());
 
 	/**
 	 * Gets data from a url using HTTP POST (although it looks like it could easily have been a GET)
@@ -40,8 +40,8 @@ public class HttpDataGetter {
 			HTTPRequest request = new HTTPRequest(url, HTTPMethod.POST);
 			request.getFetchOptions().setDeadline(Double.valueOf(20));
 
-			if (LOG.isTraceEnabled()) {
-				LOG.trace("Fetching response");
+			if (LOG.isLoggable(Level.FINER)) {
+				LOG.finer("Fetching response");
 			}
 			HTTPResponse response = fetcher.fetch(request);
 
@@ -51,23 +51,23 @@ public class HttpDataGetter {
 				byte[] content = response.getContent();
 
 				if (content == null || content.length == 0) {
-					LOG.error(String.format("Response for [%s] was empty", url.toString()));
+					LOG.log(Level.SEVERE, String.format("Response for [%s] was empty", url.toString()));
 				} else {
 					data = new String(content);
 
-					if (LOG.isInfoEnabled()) {
+					if (LOG.isLoggable(Level.INFO)) {
 						LOG.info(String.format("Recievend [%d] bytes for request", content.length));
 					}
 
-					if (LOG.isTraceEnabled()) {
-						LOG.trace(data);
+					if (LOG.isLoggable(Level.FINER)) {
+						LOG.finer(data);
 					}
 				}
 			} else {
-				LOG.error(String.format("Http error occured for request to [%s] with code [%d]", url.toString(), responseCode));
+				LOG.log(Level.SEVERE, String.format("Http error occured for request to [%s] with code [%d]", url.toString(), responseCode));
 			}
 		} catch (IOException e) {
-			LOG.error(String.format("Error fetching response for url [%s]", url.toString()), e);
+			LOG.log(Level.SEVERE, String.format("Error fetching response for url [%s]", url.toString()), e);
 		}
 
 		return data;
@@ -82,15 +82,15 @@ public class HttpDataGetter {
 	public static String getData(String endpoint) {
 		String data = null;
 
-		if (LOG.isDebugEnabled()) {
-			LOG.debug(String.format("endpoint is [%s]", endpoint));
+		if (LOG.isLoggable(Level.FINE)) {
+			LOG.fine(String.format("endpoint is [%s]", endpoint));
 		}
 
 		try {
 			URL url = new URL(endpoint);
 			data = getData(url);
 		} catch (MalformedURLException e) {
-			LOG.error(String.format("Error creating url from endpoint [%s]", endpoint), e);
+			LOG.log(Level.SEVERE, String.format("Error creating url from endpoint [%s]", endpoint), e);
 		}
 
 		return data;

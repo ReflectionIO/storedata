@@ -8,8 +8,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.apache.log4j.Logger;
 
 /**
  * @author billy1380
@@ -17,7 +18,7 @@ import org.apache.log4j.Logger;
  */
 public class DataCollectorIOS extends DataStoreDataCollector implements DataCollector {
 
-	private static final Logger LOG = Logger.getLogger(DataCollectorIOS.class);
+	private static final Logger LOG = Logger.getLogger(DataCollectorIOS.class.getName());
 
 	private static final String COUNTRIES_KEY = "gather.iOS.countries";
 
@@ -33,29 +34,33 @@ public class DataCollectorIOS extends DataStoreDataCollector implements DataColl
 	public static final String NEW_FREE_APPS = "newfreeapplications";
 	public static final String NEW_PAID_APPS = "newpaidapplications";
 
+	@Override
+	public void enqueueCountriesAndTypes() {
+		
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see com.spacehopperstudios.storedatacollector.collectors.DataCollector#collect()
 	 */
 	@Override
-	public boolean collect() {
-		if (LOG.isTraceEnabled()) {
-			LOG.trace("Entering...");
+	public void collect(String country, String type) {
+		if (LOG.isLoggable(Level.FINER)) {
+			LOG.finer("Entering...");
 		}
 
-		boolean success = false;
 		try {
 			String countries = System.getProperty(COUNTRIES_KEY);
-			if (LOG.isInfoEnabled()) {
-				LOG.info(String.format("Found countries [%s].", countries));
+			if (LOG.isLoggable(Level.FINE)) {
+				LOG.fine(String.format("Found countries [%s].", countries));
 			}
 
 			List<String> splitCountries = new ArrayList<String>();
 			Collections.addAll(splitCountries, countries.split(","));
 
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(String.format("[%d] countries to fetch data for", splitCountries.size()));
+			if (LOG.isLoggable(Level.FINE)) {
+				LOG.fine(String.format("[%d] countries to fetch data for", splitCountries.size()));
 			}
 
 			String data;
@@ -89,25 +94,22 @@ public class DataCollectorIOS extends DataStoreDataCollector implements DataColl
 				store(data, countryCode, "ios", NEW_PAID_APPS, new Date(), code);
 			}
 
-			success = true;
 		} finally {
-			if (LOG.isTraceEnabled()) {
-				LOG.trace("Exiting...");
+			if (LOG.isLoggable(Level.FINER)) {
+				LOG.finer("Exiting...");
 			}
 		}
-
-		return success;
 	}
 
 	private String get(String countryCode, String type) {
-		if (LOG.isDebugEnabled()) {
-			LOG.debug(String.format("Getting data for [%s] and type [%s]", countryCode, type));
+		if (LOG.isLoggable(Level.FINE)) {
+			LOG.fine(String.format("Getting data for [%s] and type [%s]", countryCode, type));
 		}
 
 		String key = String.format(KEY_FORMAT, type);
 		
-		if (LOG.isDebugEnabled()) {
-			LOG.debug(String.format("key is [%s]", key));
+		if (LOG.isLoggable(Level.FINE)) {
+			LOG.fine(String.format("key is [%s]", key));
 		}
 		
 		String endpoint = String.format(System.getProperty(key), countryCode);

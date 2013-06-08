@@ -13,8 +13,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.log4j.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.appengine.api.files.AppEngineFile;
 import com.google.appengine.api.files.FileReadChannel;
@@ -33,7 +33,7 @@ import com.spacehopperstudios.storedatacollector.datatypes.Rank;
  */
 public class IngestorIOS extends DataStoreDataCollector implements Ingestor {
 
-	private static final Logger LOG = Logger.getLogger(IngestorIOS.class);
+	private static final Logger LOG = Logger.getLogger(IngestorIOS.class.getName());
 	private int count = 20;
 	private String type = null;
 
@@ -158,14 +158,14 @@ public class IngestorIOS extends DataStoreDataCollector implements Ingestor {
 	 */
 	private void extractItemRanks(List<FeedFetch> stored, final Map<Date, Map<Integer, FeedFetch>> grouped, Map<Date, String> combined) {
 
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("Extracting item ranks");
+		if (LOG.isLoggable(Level.FINE)) {
+			LOG.fine("Extracting item ranks");
 		}
 
 		for (final Date key : combined.keySet()) {
 
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(String.format("Parsing [%s]", key.toString()));
+			if (LOG.isLoggable(Level.FINE)) {
+				LOG.fine(String.format("Parsing [%s]", key.toString()));
 			}
 
 			List<Item> items = (new ParserIOS()).parse(combined.get(key));
@@ -198,14 +198,14 @@ public class IngestorIOS extends DataStoreDataCollector implements Ingestor {
 						.filter("country =", rank.country).filter("position =", rank.position).count() == 0) {
 					ofy().save().entity(rank).now();
 
-					if (LOG.isTraceEnabled()) {
-						LOG.trace(String.format("Saved rank [%s] for", rank.itemId));
+					if (LOG.isLoggable(Level.FINER)) {
+						LOG.finer(String.format("Saved rank [%s] for", rank.itemId));
 					}
 				}
 			}
 
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("Marking items as ingested");
+			if (LOG.isLoggable(Level.FINE)) {
+				LOG.fine("Marking items as ingested");
 			}
 
 			ofy().transact(new VoidWork() {
@@ -220,13 +220,13 @@ public class IngestorIOS extends DataStoreDataCollector implements Ingestor {
 						ofy().save().entity(entity).now();
 						i++;
 
-						if (LOG.isTraceEnabled()) {
-							LOG.trace(String.format("Marked entity [%d]", entity.id.longValue()));
+						if (LOG.isLoggable(Level.FINER)) {
+							LOG.finer(String.format("Marked entity [%d]", entity.id.longValue()));
 						}
 					}
 
-					if (LOG.isDebugEnabled()) {
-						LOG.debug(String.format("Marked [%d] items", i));
+					if (LOG.isLoggable(Level.FINE)) {
+						LOG.fine(String.format("Marked [%d] items", i));
 					}
 				}
 
@@ -239,8 +239,8 @@ public class IngestorIOS extends DataStoreDataCollector implements Ingestor {
 		Map<Date, Map<Integer, FeedFetch>> map = new HashMap<Date, Map<Integer, FeedFetch>>();
 		Map<Date, Integer> sizeMap = new HashMap<Date, Integer>();
 
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("Grouping entites by date");
+		if (LOG.isLoggable(Level.FINE)) {
+			LOG.fine("Grouping entites by date");
 		}
 
 		for (FeedFetch entity : entities) {
@@ -262,8 +262,8 @@ public class IngestorIOS extends DataStoreDataCollector implements Ingestor {
 
 		List<Date> remove = new ArrayList<Date>();
 
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("Creating list of incomplete feeds");
+		if (LOG.isLoggable(Level.FINE)) {
+			LOG.fine("Creating list of incomplete feeds");
 		}
 
 		// remove any items with incomplete sets
@@ -276,27 +276,27 @@ public class IngestorIOS extends DataStoreDataCollector implements Ingestor {
 			}
 		}
 
-		if (LOG.isDebugEnabled()) {
-			LOG.debug(String.format("List contains [%d] items", i));
+		if (LOG.isLoggable(Level.FINE)) {
+			LOG.fine(String.format("List contains [%d] items", i));
 		}
 
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("remove any items with incomplete sets");
+		if (LOG.isLoggable(Level.FINE)) {
+			LOG.fine("remove any items with incomplete sets");
 		}
 
 		i = 0;
 		for (Date date : remove) {
 			map.remove(date);
 
-			if (LOG.isTraceEnabled()) {
-				LOG.trace(String.format("Removed item with key [%s]", date.toString()));
+			if (LOG.isLoggable(Level.FINER)) {
+				LOG.finer(String.format("Removed item with key [%s]", date.toString()));
 			}
 
 			i++;
 		}
 
-		if (LOG.isDebugEnabled()) {
-			LOG.debug(String.format("Removed [%d] items", i));
+		if (LOG.isLoggable(Level.FINE)) {
+			LOG.fine(String.format("Removed [%d] items", i));
 		}
 
 		return map;
@@ -336,13 +336,13 @@ public class IngestorIOS extends DataStoreDataCollector implements Ingestor {
 						buffer.append(bytes, 0, length);
 					}
 				} catch (IOException e) {
-					LOG.error(String.format("Error closing read channel for file [%s]", file.getFullPath()), e);
+					LOG.log(Level.SEVERE, String.format("Error closing read channel for file [%s]", file.getFullPath()), e);
 				} finally {
 					if (reader != null) {
 						try {
 							reader.close();
 						} catch (IOException e) {
-							LOG.error("Error closing reader", e);
+							LOG.log(Level.SEVERE, "Error closing reader", e);
 						}
 					}
 
@@ -350,7 +350,7 @@ public class IngestorIOS extends DataStoreDataCollector implements Ingestor {
 						try {
 							readChannel.close();
 						} catch (IOException e) {
-							LOG.error(String.format("Error closing read channel for file [%s]", file.getFullPath()), e);
+							LOG.log(Level.SEVERE, String.format("Error closing read channel for file [%s]", file.getFullPath()), e);
 						}
 					}
 				}
@@ -371,7 +371,7 @@ public class IngestorIOS extends DataStoreDataCollector implements Ingestor {
 
 	private List<FeedFetch> get(String type) {
 
-		if (LOG.isInfoEnabled()) {
+		if (LOG.isLoggable(Level.INFO)) {
 			LOG.info(String.format("Fetching [%s]", type));
 		}
 
@@ -386,8 +386,8 @@ public class IngestorIOS extends DataStoreDataCollector implements Ingestor {
 			i++;
 		}
 
-		if (LOG.isDebugEnabled()) {
-			LOG.debug(String.format("Found [%d] uningested items", i));
+		if (LOG.isLoggable(Level.FINE)) {
+			LOG.fine(String.format("Found [%d] uningested items", i));
 		}
 
 		return stored;

@@ -8,5 +8,15 @@ package com.spacehopperstudios.storedatacollector.collectors;
  *
  */
 public interface DataCollector {
-	boolean collect();
+	/**
+	 * Collects data for 
+	 * @param country the store country
+	 * @param type 
+	 */
+	void collect(String country, String type);
+	
+	/**
+	 * Puts a message in the queue for each list for each country
+	 */
+	void enqueueCountriesAndTypes();
 }

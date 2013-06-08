@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/log4j-1.2.16.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/gson-1.7.1.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/objectify-4.0b2.jar" sourcepath="/Library/JavaDevLib/objectify/objectify-4.0b2-sources.jar">
 		<attributes>

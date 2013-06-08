@@ -2,7 +2,7 @@ package com.spacehopperstudios.storedatacollector.mapreduce;
 
 import static com.spacehopperstudios.storedatacollector.objectify.PersistenceService.ofy;
 
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
 
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.tools.mapreduce.Mapper;
@@ -17,7 +17,7 @@ public class PaidGrossingMapper extends Mapper<Entity, String, String> {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger LOG = Logger.getLogger(PaidGrossingMapper.class);
+	private static final Logger LOG = Logger.getLogger(PaidGrossingMapper.class.getName());
 
 	private String country = null;
 	private String source = null;
@@ -47,7 +47,7 @@ public class PaidGrossingMapper extends Mapper<Entity, String, String> {
 			return;
 		if (!rank.country.equals(country))
 			return;
-		if (rank.price == 0) 
+		if (rank.price == 0)
 			return;
 		if (!(rank.type.equals(DataCollectorIOS.TOP_PAID_APPS) || rank.type.equals(DataCollectorIOS.TOP_GROSSING_APPS)))
 			return;

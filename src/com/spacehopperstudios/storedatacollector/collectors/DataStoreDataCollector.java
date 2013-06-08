@@ -8,8 +8,8 @@ import java.nio.channels.Channels;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import org.apache.log4j.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.appengine.api.files.AppEngineFile;
 import com.google.appengine.api.files.FileService;
@@ -21,7 +21,7 @@ public abstract class DataStoreDataCollector {
 
 	public static final int MAX_DATA_CHUNK_LENGTH = 500000;
 
-	private static final Logger LOG = Logger.getLogger(DataStoreDataCollector.class);
+	private static final Logger LOG = Logger.getLogger(DataStoreDataCollector.class.getName());
 
 	private List<String> splitEqually(String text, int size) {
 		List<String> ret = new ArrayList<String>((text.length() + size - 1) / size);
@@ -39,8 +39,8 @@ public abstract class DataStoreDataCollector {
 
 	protected void store(String data, String countryCode, String store, String type, Date date, String code, boolean ingested) {
 
-		if (LOG.isTraceEnabled()) {
-			LOG.trace("Saving Data to data store");
+		if (LOG.isLoggable(Level.FINER)) {
+			LOG.finer("Saving Data to data store");
 		}
 
 		AppEngineFile file = null;
@@ -59,13 +59,13 @@ public abstract class DataStoreDataCollector {
 
 			blob = true;
 		} catch (IOException e) {
-			LOG.error("Could not write data to blob store", e);
+			LOG.log(Level.SEVERE, "Could not write data to blob store", e);
 		} finally {
 			if (writer != null) {
 				try {
 					writer.close();
 				} catch (IOException e) {
-					LOG.error("Failed to close writer", e);
+					LOG.log(Level.SEVERE, "Failed to close writer", e);
 				}
 			}
 
@@ -73,9 +73,9 @@ public abstract class DataStoreDataCollector {
 				try {
 					writeChannel.closeFinally();
 				} catch (IllegalStateException e) {
-					LOG.error("Failed to close write channel", e);
+					LOG.log(Level.SEVERE, "Failed to close write channel", e);
 				} catch (IOException e) {
-					LOG.error("Failed to close write channel", e);
+					LOG.log(Level.SEVERE, "Failed to close write channel", e);
 				}
 			}
 		}
@@ -83,8 +83,8 @@ public abstract class DataStoreDataCollector {
 		if (blob) {
 			FeedFetch entity = new FeedFetch();
 
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(String.format("Saving as blob @ [%s]", file.getFullPath()));
+			if (LOG.isLoggable(Level.FINE)) {
+				LOG.fine(String.format("Saving as blob @ [%s]", file.getFullPath()));
 			}
 
 			entity.data = file.getFullPath();
@@ -101,15 +101,15 @@ public abstract class DataStoreDataCollector {
 		} else {
 			List<String> splitData = splitEqually(data, MAX_DATA_CHUNK_LENGTH);
 
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(String.format("Data split into [%d] chuncks", splitData.size()));
+			if (LOG.isLoggable(Level.FINE)) {
+				LOG.fine(String.format("Data split into [%d] chuncks", splitData.size()));
 			}
 
 			for (int i = 0; i < splitData.size(); i++) {
 				FeedFetch entity = new FeedFetch();
 
-				if (LOG.isDebugEnabled()) {
-					LOG.debug(String.format("Data chunck [%d of %d] is [%d] characters", i, splitData.size(), splitData.get(i).length()));
+				if (LOG.isLoggable(Level.FINE)) {
+					LOG.fine(String.format("Data chunck [%d of %d] is [%d] characters", i, splitData.size(), splitData.get(i).length()));
 				}
 
 				entity.data = splitData.get(i);
@@ -126,7 +126,7 @@ public abstract class DataStoreDataCollector {
 			}
 		}
 
-		if (LOG.isInfoEnabled()) {
+		if (LOG.isLoggable(Level.INFO)) {
 			LOG.info(String.format("Storing entity complete [%s] [%s] [%s] at [%s]", countryCode, store, type, date.toString()));
 		}
 	}

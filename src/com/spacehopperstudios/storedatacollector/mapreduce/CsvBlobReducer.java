@@ -1,8 +1,7 @@
 package com.spacehopperstudios.storedatacollector.mapreduce;
 
 import java.nio.ByteBuffer;
-
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
 
 import com.google.appengine.tools.mapreduce.Reducer;
 import com.google.appengine.tools.mapreduce.ReducerInput;
@@ -16,7 +15,7 @@ public class CsvBlobReducer extends Reducer<String, String, ByteBuffer> {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger LOG = Logger.getLogger(CsvBlobReducer.class);
+	private static final Logger LOG = Logger.getLogger(CsvBlobReducer.class.getName());
 
 	@Override
 	public void beginShard() {
@@ -59,7 +58,7 @@ public class CsvBlobReducer extends Reducer<String, String, ByteBuffer> {
 		}
 
 		if (i > 2) {
-			LOG.warn("Found more than 2 items in a single reducer input, this should not happen");
+			LOG.warning("Found more than 2 items in a single reducer input, this should not happen");
 		}
 
 		buffer.append(masterItem.itemId);

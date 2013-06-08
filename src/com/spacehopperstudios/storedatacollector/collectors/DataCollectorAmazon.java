@@ -3,7 +3,8 @@
  */
 package com.spacehopperstudios.storedatacollector.collectors;
 
-import org.apache.log4j.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author William Shakour
@@ -11,10 +12,15 @@ import org.apache.log4j.Logger;
  */
 public class DataCollectorAmazon extends DataStoreDataCollector implements DataCollector {
 
-	private static final Logger LOG = Logger.getLogger(DataCollectorAmazon.class);
+	private static final Logger LOG = Logger.getLogger(DataCollectorAmazon.class.getName());
 	
 	@Override
-	public boolean collect() {
+	public void enqueueCountriesAndTypes() {
+		
+	}
+	
+	@Override
+	public void collect(String country, String type) {
 //		<?php
 //
 //				//Enter your IDs
@@ -51,21 +57,17 @@ public class DataCollectorAmazon extends DataStoreDataCollector implements DataC
 //				}
 //				?>
 		
-		if (LOG.isTraceEnabled()) {
-			LOG.trace("Entering...");
+		if (LOG.isLoggable(Level.FINER)) {
+			LOG.finer("Entering...");
 		}
-
-		boolean success = false;
 		
 		try {
 			
 		} finally {
-			if (LOG.isTraceEnabled()) {
-				LOG.trace("Exiting...");
+			if (LOG.isLoggable(Level.FINER)) {
+				LOG.finer("Exiting...");
 			}
 		}
-		
-		return success;
 	}
 
 }

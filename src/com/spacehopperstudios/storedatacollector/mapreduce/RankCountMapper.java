@@ -5,7 +5,7 @@ package com.spacehopperstudios.storedatacollector.mapreduce;
 
 import static com.spacehopperstudios.storedatacollector.objectify.PersistenceService.ofy;
 
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
 
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.tools.mapreduce.Mapper;
@@ -23,7 +23,7 @@ public class RankCountMapper extends Mapper<Entity, String, Long> {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger LOG = Logger.getLogger(RankCountMapper.class);
+	private static final Logger LOG = Logger.getLogger(RankCountMapper.class.getName());
 
 	private String source;
 
