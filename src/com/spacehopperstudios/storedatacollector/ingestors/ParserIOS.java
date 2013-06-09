@@ -5,7 +5,6 @@ package com.spacehopperstudios.storedatacollector.ingestors;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gson.JsonArray;
@@ -13,6 +12,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.spacehopperstudios.storedatacollector.datatypes.Item;
+import com.spacehopperstudios.storedatacollector.logging.GaeLevel;
 
 /**
  * @author billy1380
@@ -42,8 +42,8 @@ public class ParserIOS implements Parser {
 	@Override
 	public List<Item> parse(String data) {
 
-		if (LOG.isLoggable(Level.FINE)) {
-			LOG.fine("Started parsing data");
+		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			LOG.log(GaeLevel.DEBUG, "Started parsing data");
 		}
 
 		List<Item> items = new ArrayList<Item>();
@@ -67,15 +67,15 @@ public class ParserIOS implements Parser {
 			item.type = "Application"; // TODO: this can be obtained from the data
 			item.source = "ios";
 
-			if (LOG.isLoggable(Level.FINER)) {
-				LOG.finer(String.format("Found item [%s]", item.name));
+			if (LOG.isLoggable(GaeLevel.TRACE)) {
+				LOG.log(GaeLevel.TRACE, String.format("Found item [%s]", item.name));
 			}
 
 			items.add(item);
 		}
 
-		if (LOG.isLoggable(Level.FINE)) {
-			LOG.fine(String.format("Found [%d] items", items.size()));
+		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			LOG.log(GaeLevel.DEBUG, String.format("Found [%d] items", items.size()));
 		}
 
 		return items;

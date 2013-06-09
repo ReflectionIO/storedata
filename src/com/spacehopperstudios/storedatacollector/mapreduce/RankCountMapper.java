@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.tools.mapreduce.Mapper;
-import com.spacehopperstudios.storedatacollector.collectors.DataCollectorIOS;
+import com.spacehopperstudios.storedatacollector.collectors.CollectorIOS;
 import com.spacehopperstudios.storedatacollector.datatypes.Rank;
 
 /**
@@ -90,25 +90,26 @@ public class RankCountMapper extends Mapper<Entity, String, Long> {
 		if (rank.position <= end && rank.position >= start) {
 			String shortType = null;
 			
-			if (rank.type.equals(DataCollectorIOS.TOP_FREE_APPS)) {
+			if (rank.type.equals(CollectorIOS.TOP_FREE_APPS)) {
 				shortType = "tfa";
-			} else if (rank.type.equals(DataCollectorIOS.TOP_PAID_APPS)) {
+			} else if (rank.type.equals(CollectorIOS.TOP_PAID_APPS)) {
 				shortType = "tpa";
-			} else if (rank.type.equals(DataCollectorIOS.TOP_GROSSING_APPS)) {
+			} else if (rank.type.equals(CollectorIOS.TOP_GROSSING_APPS)) {
 				shortType = "tga";
-			} else if (rank.type.equals(DataCollectorIOS.TOP_FREE_IPAD_APPS)) {
+			} else if (rank.type.equals(CollectorIOS.TOP_FREE_IPAD_APPS)) {
 				shortType = "tfia";
-			} else if (rank.type.equals(DataCollectorIOS.TOP_PAID_IPAD_APPS)) {
+			} else if (rank.type.equals(CollectorIOS.TOP_PAID_IPAD_APPS)) {
 				shortType = "tpia";
-			} else if (rank.type.equals(DataCollectorIOS.TOP_GROSSING_IPAD_APPS)) {
+			} else if (rank.type.equals(CollectorIOS.TOP_GROSSING_IPAD_APPS)) {
 				shortType = "tgia";
-			} else if (rank.type.equals(DataCollectorIOS.NEW_APPS)) {
-				shortType = "na";
-			} else if (rank.type.equals(DataCollectorIOS.NEW_FREE_APPS)) {
-				shortType = "nfa";
-			} else if (rank.type.equals(DataCollectorIOS.NEW_PAID_APPS)) {
-				shortType = "npa";
-			}
+			} 
+//			else if (rank.type.equals(CollectorIOS.NEW_APPS)) {
+//				shortType = "na";
+//			} else if (rank.type.equals(CollectorIOS.NEW_FREE_APPS)) {
+//				shortType = "nfa";
+//			} else if (rank.type.equals(CollectorIOS.NEW_PAID_APPS)) {
+//				shortType = "npa";
+//			}
 			
 			String name = shortType + "." + rank.itemId + "." + Integer.toString(start) + "." + Integer.toString(end);
 			

@@ -3,24 +3,26 @@
  */
 package com.spacehopperstudios.storedatacollector.collectors;
 
-import java.util.logging.Level;
+import java.util.List;
 import java.util.logging.Logger;
+
+import com.spacehopperstudios.storedatacollector.logging.GaeLevel;
 
 /**
  * @author William Shakour
  *
  */
-public class DataCollectorAmazon extends DataStoreDataCollector implements DataCollector {
+public class CollectorAmazon extends StoreCollector implements Collector {
 
-	private static final Logger LOG = Logger.getLogger(DataCollectorAmazon.class.getName());
+	private static final Logger LOG = Logger.getLogger(CollectorAmazon.class.getName());
 	
 	@Override
-	public void enqueueCountriesAndTypes() {
-		
+	public int enqueue() {
+		return 0;	
 	}
 	
 	@Override
-	public void collect(String country, String type) {
+	public List<Long> collect(String country, String type, String code) {
 //		<?php
 //
 //				//Enter your IDs
@@ -57,17 +59,19 @@ public class DataCollectorAmazon extends DataStoreDataCollector implements DataC
 //				}
 //				?>
 		
-		if (LOG.isLoggable(Level.FINER)) {
-			LOG.finer("Entering...");
+		if (LOG.isLoggable(GaeLevel.TRACE)) {
+			LOG.log(GaeLevel.TRACE, "Entering...");
 		}
 		
 		try {
 			
 		} finally {
-			if (LOG.isLoggable(Level.FINER)) {
-				LOG.finer("Exiting...");
+			if (LOG.isLoggable(GaeLevel.TRACE)) {
+				LOG.log(GaeLevel.TRACE, "Exiting...");
 			}
 		}
+		
+		return null;
 	}
 
 }

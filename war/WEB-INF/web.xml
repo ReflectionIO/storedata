@@ -8,6 +8,17 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<servlet-name>Cron Tasks</servlet-name>
 		<servlet-class>com.spacehopperstudios.storedatacollector.CronServlet</servlet-class>
 	</servlet>
+	
+	<servlet>
+		<servlet-name>Collector Tasks</servlet-name>
+		<servlet-class>com.spacehopperstudios.storedatacollector.CollectorServlet</servlet-class>
+	</servlet>
+	
+	<servlet>
+		<servlet-name>Ingestor Tasks</servlet-name>
+		<servlet-class>com.spacehopperstudios.storedatacollector.IngestorServlet</servlet-class>
+	</servlet>
+	
 	<servlet>
 		<servlet-name>Dev Helper</servlet-name>
 		<servlet-class>com.spacehopperstudios.storedatacollector.DevHelperServlet</servlet-class>
@@ -15,7 +26,15 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 
 	<servlet-mapping>
 		<servlet-name>Cron Tasks</servlet-name>
+		<url-pattern>/cron</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Collector Tasks</servlet-name>
 		<url-pattern>/gather</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Ingestor Tasks</servlet-name>
+		<url-pattern>/ingest</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>Dev Helper</servlet-name>

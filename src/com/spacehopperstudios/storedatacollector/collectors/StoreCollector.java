@@ -15,13 +15,15 @@ import com.google.appengine.api.files.AppEngineFile;
 import com.google.appengine.api.files.FileService;
 import com.google.appengine.api.files.FileServiceFactory;
 import com.google.appengine.api.files.FileWriteChannel;
+import com.googlecode.objectify.Key;
 import com.spacehopperstudios.storedatacollector.datatypes.FeedFetch;
+import com.spacehopperstudios.storedatacollector.logging.GaeLevel;
 
-public abstract class DataStoreDataCollector {
+public abstract class StoreCollector {
 
 	public static final int MAX_DATA_CHUNK_LENGTH = 500000;
 
-	private static final Logger LOG = Logger.getLogger(DataStoreDataCollector.class.getName());
+	private static final Logger LOG = Logger.getLogger(StoreCollector.class.getName());
 
 	private List<String> splitEqually(String text, int size) {
 		List<String> ret = new ArrayList<String>((text.length() + size - 1) / size);
@@ -33,14 +35,16 @@ public abstract class DataStoreDataCollector {
 		return ret;
 	}
 
-	protected void store(String data, String countryCode, String store, String type, Date date, String code) {
-		store(data, countryCode, store, type, date, code, false);
+	protected List<Long> store(String data, String countryCode, String store, String type, Date date, String code) {
+		return store(data, countryCode, store, type, date, code, false);
 	}
 
-	protected void store(String data, String countryCode, String store, String type, Date date, String code, boolean ingested) {
+	protected List<Long> store(String data, String countryCode, String store, String type, Date date, String code, boolean ingested) {
 
-		if (LOG.isLoggable(Level.FINER)) {
-			LOG.finer("Saving Data to data store");
+		List<Long> ids = new ArrayList<Long>(4);
+
+		if (LOG.isLoggable(GaeLevel.TRACE)) {
+			LOG.log(GaeLevel.TRACE, "Saving Data to data store");
 		}
 
 		AppEngineFile file = null;
@@ -83,8 +87,8 @@ public abstract class DataStoreDataCollector {
 		if (blob) {
 			FeedFetch entity = new FeedFetch();
 
-			if (LOG.isLoggable(Level.FINE)) {
-				LOG.fine(String.format("Saving as blob @ [%s]", file.getFullPath()));
+			if (LOG.isLoggable(GaeLevel.DEBUG)) {
+				LOG.log(GaeLevel.DEBUG, String.format("Saving as blob @ [%s]", file.getFullPath()));
 			}
 
 			entity.data = file.getFullPath();
@@ -97,19 +101,22 @@ public abstract class DataStoreDataCollector {
 			entity.ingested = ingested;
 			entity.code = code;
 
-			ofy().save().entity(entity).now();
+			Key<FeedFetch> key = ofy().save().entity(entity).now();
+			ids.add(Long.valueOf(key.getId()));
+
 		} else {
 			List<String> splitData = splitEqually(data, MAX_DATA_CHUNK_LENGTH);
 
-			if (LOG.isLoggable(Level.FINE)) {
-				LOG.fine(String.format("Data split into [%d] chuncks", splitData.size()));
+			if (LOG.isLoggable(GaeLevel.DEBUG)) {
+				LOG.log(GaeLevel.DEBUG, String.format("Data split into [%d] chuncks", splitData.size()));
 			}
 
+			Key<FeedFetch> key;
 			for (int i = 0; i < splitData.size(); i++) {
 				FeedFetch entity = new FeedFetch();
 
-				if (LOG.isLoggable(Level.FINE)) {
-					LOG.fine(String.format("Data chunck [%d of %d] is [%d] characters", i, splitData.size(), splitData.get(i).length()));
+				if (LOG.isLoggable(GaeLevel.DEBUG)) {
+					LOG.log(GaeLevel.DEBUG, String.format("Data chunck [%d of %d] is [%d] characters", i, splitData.size(), splitData.get(i).length()));
 				}
 
 				entity.data = splitData.get(i);
@@ -122,12 +129,15 @@ public abstract class DataStoreDataCollector {
 				entity.ingested = ingested;
 				entity.code = code;
 
-				ofy().save().entity(entity).now();
+				key = ofy().save().entity(entity).now();
+				ids.add(Long.valueOf(key.getId()));
 			}
 		}
 
 		if (LOG.isLoggable(Level.INFO)) {
 			LOG.info(String.format("Storing entity complete [%s] [%s] [%s] at [%s]", countryCode, store, type, date.toString()));
 		}
+
+		return ids;
 	}
 }

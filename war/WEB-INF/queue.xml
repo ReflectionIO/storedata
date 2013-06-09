@@ -34,4 +34,23 @@
 			<task-retry-limit>2</task-retry-limit>
 		</retry-parameters>
 	</queue>
+	
+	<queue>
+		<name>gather</name>
+		<rate>100/s</rate>
+		<bucket-size>100</bucket-size>
+		<max-concurrent-requests>100</max-concurrent-requests>
+		<retry-parameters>
+			<task-retry-limit>5</task-retry-limit>
+		</retry-parameters>
+	</queue>
+	<queue>
+		<name>ingest</name>
+		<rate>100/s</rate>
+		<bucket-size>100</bucket-size>
+		<max-concurrent-requests>100</max-concurrent-requests>
+		<retry-parameters>
+			<task-retry-limit>5</task-retry-limit>
+		</retry-parameters>
+	</queue>
 </queue-entries>

@@ -20,114 +20,48 @@ import com.google.appengine.api.files.AppEngineFile;
 import com.google.appengine.api.files.FileReadChannel;
 import com.google.appengine.api.files.FileService;
 import com.google.appengine.api.files.FileServiceFactory;
+import com.google.appengine.api.taskqueue.Queue;
+import com.google.appengine.api.taskqueue.QueueFactory;
+import com.google.appengine.api.taskqueue.TaskOptions;
+import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.googlecode.objectify.VoidWork;
-import com.spacehopperstudios.storedatacollector.collectors.DataCollectorIOS;
-import com.spacehopperstudios.storedatacollector.collectors.DataStoreDataCollector;
+import com.spacehopperstudios.storedatacollector.collectors.StoreCollector;
 import com.spacehopperstudios.storedatacollector.datatypes.FeedFetch;
 import com.spacehopperstudios.storedatacollector.datatypes.Item;
 import com.spacehopperstudios.storedatacollector.datatypes.Rank;
+import com.spacehopperstudios.storedatacollector.datatypes.StoreType;
+import com.spacehopperstudios.storedatacollector.logging.GaeLevel;
 
 /**
  * @author billy1380
  * 
  */
-public class IngestorIOS extends DataStoreDataCollector implements Ingestor {
+public class IngestorIOS extends StoreCollector implements Ingestor {
 
 	private static final Logger LOG = Logger.getLogger(IngestorIOS.class.getName());
-	private int count = 20;
-	private String type = null;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.spacehopperstudios.storedatacollector.ingestors.Ingestor#ingest(java.util.Date)
-	 */
 	@Override
-	public boolean ingest() {
-		boolean success = false;
-		boolean selectedType = (type != null);
+	public void ingest(List<Long> itemIds) {
+		if (LOG.isLoggable(GaeLevel.TRACE)) {
+			LOG.log(GaeLevel.TRACE, "Entering...");
+		}
 
 		List<FeedFetch> stored = null;
 		Map<Date, Map<Integer, FeedFetch>> grouped = null;
 		Map<Date, String> combined = null;
 
-		// For now we are only interested in top grossing and top paid
-
-		// if (!selectedType || type.equals(DataCollectorIOS.TOP_FREE_APPS)) {
-		// stored = get(DataCollectorIOS.TOP_FREE_APPS);
-		// grouped = groupDataByDate(stored);
-		// combined = combineDataParts(grouped);
-		// extractItemRanks(stored, grouped, combined);
-		// blobify(stored, grouped, combined);
-		// }
-
-		if (!selectedType || type.equals(DataCollectorIOS.TOP_PAID_APPS)) {
-			stored = get(DataCollectorIOS.TOP_PAID_APPS);
+		try {
+			stored = get(itemIds);
 			grouped = groupDataByDate(stored);
 			combined = combineDataParts(grouped);
 			extractItemRanks(stored, grouped, combined);
 			blobify(stored, grouped, combined);
+		} finally {
+			if (LOG.isLoggable(GaeLevel.TRACE)) {
+				LOG.log(GaeLevel.TRACE, "Exiting...");
+			}
 		}
 
-		if (!selectedType || type.equals(DataCollectorIOS.TOP_GROSSING_APPS)) {
-			stored = get(DataCollectorIOS.TOP_GROSSING_APPS);
-			grouped = groupDataByDate(stored);
-			combined = combineDataParts(grouped);
-			extractItemRanks(stored, grouped, combined);
-			blobify(stored, grouped, combined);
-		}
-
-		// if (!selectedType || type.equals(DataCollectorIOS.TOP_FREE_IPAD_APPS)) {
-		// stored = get(DataCollectorIOS.TOP_FREE_IPAD_APPS);
-		// grouped = groupDataByDate(stored);
-		// combined = combineDataParts(grouped);
-		// extractItemRanks(stored, grouped, combined);
-		// blobify(stored, grouped, combined);
-		// }
-
-		if (!selectedType || type.equals(DataCollectorIOS.TOP_PAID_IPAD_APPS)) {
-			stored = get(DataCollectorIOS.TOP_PAID_IPAD_APPS);
-			grouped = groupDataByDate(stored);
-			combined = combineDataParts(grouped);
-			extractItemRanks(stored, grouped, combined);
-			blobify(stored, grouped, combined);
-		}
-
-		if (!selectedType || type.equals(DataCollectorIOS.TOP_GROSSING_IPAD_APPS)) {
-			stored = get(DataCollectorIOS.TOP_GROSSING_IPAD_APPS);
-			grouped = groupDataByDate(stored);
-			combined = combineDataParts(grouped);
-			extractItemRanks(stored, grouped, combined);
-			blobify(stored, grouped, combined);
-		}
-
-		// if (!selectedType || type.equals(DataCollectorIOS.NEW_APPS)) {
-		// stored = get(DataCollectorIOS.NEW_APPS);
-		// grouped = groupDataByDate(stored);
-		// combined = combineDataParts(grouped);
-		// extractItemRanks(stored, grouped, combined);
-		// blobify(stored, grouped, combined);
-		// }
-
-		// if (!selectedType || type.equals(DataCollectorIOS.NEW_FREE_APPS)) {
-		// stored = get(DataCollectorIOS.NEW_FREE_APPS);
-		// grouped = groupDataByDate(stored);
-		// combined = combineDataParts(grouped);
-		// extractItemRanks(stored, grouped, combined);
-		// blobify(stored, grouped, combined);
-		// }
-
-		// if (!selectedType || type.equals(DataCollectorIOS.NEW_PAID_APPS)) {
-		// stored = get(DataCollectorIOS.NEW_PAID_APPS);
-		// grouped = groupDataByDate(stored);
-		// combined = combineDataParts(grouped);
-		// extractItemRanks(stored, grouped, combined);
-		// blobify(stored, grouped, combined);
-		// }
-
-		success = true;
-
-		return success;
 	}
 
 	private void blobify(List<FeedFetch> stored, Map<Date, Map<Integer, FeedFetch>> grouped, Map<Date, String> combined) {
@@ -158,14 +92,14 @@ public class IngestorIOS extends DataStoreDataCollector implements Ingestor {
 	 */
 	private void extractItemRanks(List<FeedFetch> stored, final Map<Date, Map<Integer, FeedFetch>> grouped, Map<Date, String> combined) {
 
-		if (LOG.isLoggable(Level.FINE)) {
-			LOG.fine("Extracting item ranks");
+		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			LOG.log(GaeLevel.DEBUG, "Extracting item ranks");
 		}
 
 		for (final Date key : combined.keySet()) {
 
-			if (LOG.isLoggable(Level.FINE)) {
-				LOG.fine(String.format("Parsing [%s]", key.toString()));
+			if (LOG.isLoggable(GaeLevel.DEBUG)) {
+				LOG.log(GaeLevel.DEBUG, String.format("Parsing [%s]", key.toString()));
 			}
 
 			List<Item> items = (new ParserIOS()).parse(combined.get(key));
@@ -198,14 +132,14 @@ public class IngestorIOS extends DataStoreDataCollector implements Ingestor {
 						.filter("country =", rank.country).filter("position =", rank.position).count() == 0) {
 					ofy().save().entity(rank).now();
 
-					if (LOG.isLoggable(Level.FINER)) {
-						LOG.finer(String.format("Saved rank [%s] for", rank.itemId));
+					if (LOG.isLoggable(GaeLevel.TRACE)) {
+						LOG.log(GaeLevel.TRACE, String.format("Saved rank [%s] for", rank.itemId));
 					}
 				}
 			}
 
-			if (LOG.isLoggable(Level.FINE)) {
-				LOG.fine("Marking items as ingested");
+			if (LOG.isLoggable(GaeLevel.DEBUG)) {
+				LOG.log(GaeLevel.DEBUG, "Marking items as ingested");
 			}
 
 			ofy().transact(new VoidWork() {
@@ -220,13 +154,13 @@ public class IngestorIOS extends DataStoreDataCollector implements Ingestor {
 						ofy().save().entity(entity).now();
 						i++;
 
-						if (LOG.isLoggable(Level.FINER)) {
-							LOG.finer(String.format("Marked entity [%d]", entity.id.longValue()));
+						if (LOG.isLoggable(GaeLevel.TRACE)) {
+							LOG.log(GaeLevel.TRACE, String.format("Marked entity [%d]", entity.id.longValue()));
 						}
 					}
 
-					if (LOG.isLoggable(Level.FINE)) {
-						LOG.fine(String.format("Marked [%d] items", i));
+					if (LOG.isLoggable(GaeLevel.DEBUG)) {
+						LOG.log(GaeLevel.DEBUG, String.format("Marked [%d] items", i));
 					}
 				}
 
@@ -239,8 +173,8 @@ public class IngestorIOS extends DataStoreDataCollector implements Ingestor {
 		Map<Date, Map<Integer, FeedFetch>> map = new HashMap<Date, Map<Integer, FeedFetch>>();
 		Map<Date, Integer> sizeMap = new HashMap<Date, Integer>();
 
-		if (LOG.isLoggable(Level.FINE)) {
-			LOG.fine("Grouping entites by date");
+		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			LOG.log(GaeLevel.DEBUG, "Grouping entites by date");
 		}
 
 		for (FeedFetch entity : entities) {
@@ -262,8 +196,8 @@ public class IngestorIOS extends DataStoreDataCollector implements Ingestor {
 
 		List<Date> remove = new ArrayList<Date>();
 
-		if (LOG.isLoggable(Level.FINE)) {
-			LOG.fine("Creating list of incomplete feeds");
+		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			LOG.log(GaeLevel.DEBUG, "Creating list of incomplete feeds");
 		}
 
 		// remove any items with incomplete sets
@@ -276,27 +210,27 @@ public class IngestorIOS extends DataStoreDataCollector implements Ingestor {
 			}
 		}
 
-		if (LOG.isLoggable(Level.FINE)) {
-			LOG.fine(String.format("List contains [%d] items", i));
+		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			LOG.log(GaeLevel.DEBUG, String.format("List contains [%d] items", i));
 		}
 
-		if (LOG.isLoggable(Level.FINE)) {
-			LOG.fine("remove any items with incomplete sets");
+		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			LOG.log(GaeLevel.DEBUG, "remove any items with incomplete sets");
 		}
 
 		i = 0;
 		for (Date date : remove) {
 			map.remove(date);
 
-			if (LOG.isLoggable(Level.FINER)) {
-				LOG.finer(String.format("Removed item with key [%s]", date.toString()));
+			if (LOG.isLoggable(GaeLevel.TRACE)) {
+				LOG.log(GaeLevel.TRACE, String.format("Removed item with key [%s]", date.toString()));
 			}
 
 			i++;
 		}
 
-		if (LOG.isLoggable(Level.FINE)) {
-			LOG.fine(String.format("Removed [%d] items", i));
+		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			LOG.log(GaeLevel.DEBUG, String.format("Removed [%d] items", i));
 		}
 
 		return map;
@@ -369,10 +303,10 @@ public class IngestorIOS extends DataStoreDataCollector implements Ingestor {
 		return combined;
 	}
 
-	private List<FeedFetch> get(String type) {
+	private List<FeedFetch> get(List<Long> itemIds) {
 
 		if (LOG.isLoggable(Level.INFO)) {
-			LOG.info(String.format("Fetching [%s]", type));
+			LOG.info(String.format("Fetching [%d] items", itemIds == null ? 0 : itemIds.size()));
 		}
 
 		List<FeedFetch> stored = new ArrayList<FeedFetch>();
@@ -380,28 +314,61 @@ public class IngestorIOS extends DataStoreDataCollector implements Ingestor {
 		// for now ingest so that we don't kill the band width
 
 		int i = 0;
-		for (FeedFetch row : ofy().cache(false).load().type(FeedFetch.class).order("date").filter("type = ", type).filter("store =", "ios")
-				.filter("ingested =", Boolean.FALSE).limit(count)) {
-			stored.add(row);
-			i++;
+		Map<Long, FeedFetch> items = ofy().cache(false).load().type(FeedFetch.class).ids(itemIds);
+		FeedFetch row = null;
+		for (Long itemId : itemIds) {
+			row = items.get(itemId);
+			if (!row.ingested) {
+				stored.add(row);
+				i++;
+			} else {
+				stored.clear();
+				i = 0;
+
+				if (LOG.isLoggable(Level.WARNING)) {
+					LOG.warning(String.format("found ingested item [%d] in items marked for ingesting", itemId.longValue()));
+				}
+
+				break;
+			}
 		}
 
-		if (LOG.isLoggable(Level.FINE)) {
-			LOG.fine(String.format("Found [%d] uningested items", i));
+		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			LOG.log(GaeLevel.DEBUG, String.format("Found [%d] uningested items", i));
 		}
 
 		return stored;
 	}
 
+	private void enqueue(Queue queue, List<Long> itemIds) {
+		StringBuffer buffer = new StringBuffer();
+		for (Long id : itemIds) {
+			if (buffer.length() != 0) {
+				buffer.append(",");
+			}
+
+			buffer.append(id.toString());
+		}
+
+		queue.add(TaskOptions.Builder.withUrl(String.format(ENQUEUE_INGEST_FORMAT, StoreType.Ios.toString(), buffer.toString())).method(Method.GET));
+	}
+
 	@Override
-	public boolean ingest(int count) {
-		this.count = count;
-		return ingest();
-	}
+	public void enqueue(List<Long> itemIds) {
+		if (LOG.isLoggable(GaeLevel.TRACE)) {
+			LOG.log(GaeLevel.TRACE, "Enterign...");
+		}
 
-	public boolean ingest(int count, String type) {
-		this.type = type;
-		return ingest(count);
-	}
+		try {
+			Queue queue = QueueFactory.getQueue("ingest");
 
+			if (queue != null) {
+				enqueue(queue, itemIds);
+			}
+		} finally {
+			if (LOG.isLoggable(GaeLevel.TRACE)) {
+				LOG.log(GaeLevel.TRACE, "Exiting...");
+			}
+		}
+	}
 }

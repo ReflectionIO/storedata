@@ -44,10 +44,11 @@ import com.google.appengine.tools.mapreduce.inputs.DatastoreInput;
 import com.google.appengine.tools.mapreduce.outputs.BlobFileOutput;
 import com.google.appengine.tools.mapreduce.outputs.InMemoryOutput;
 import com.googlecode.objectify.cmd.Query;
-import com.spacehopperstudios.storedatacollector.collectors.DataCollectorIOS;
+import com.spacehopperstudios.storedatacollector.collectors.CollectorIOS;
 import com.spacehopperstudios.storedatacollector.datatypes.FeedFetch;
 import com.spacehopperstudios.storedatacollector.datatypes.ItemRankSummary;
 import com.spacehopperstudios.storedatacollector.datatypes.Rank;
+import com.spacehopperstudios.storedatacollector.logging.GaeLevel;
 import com.spacehopperstudios.storedatacollector.mapreduce.CsvBlobReducer;
 import com.spacehopperstudios.storedatacollector.mapreduce.PaidGrossingMapper;
 import com.spacehopperstudios.storedatacollector.mapreduce.RankCountMapper;
@@ -107,15 +108,15 @@ public class DevHelperServlet extends HttpServlet {
 
 					ofy().save().entity(entity).now();
 
-					if (LOG.isLoggable(Level.FINER)) {
-						LOG.finer(String.format("Set entity [%d] ingested to false", entity.id.longValue()));
+					if (LOG.isLoggable(GaeLevel.TRACE)) {
+						LOG.log(GaeLevel.TRACE, String.format("Set entity [%d] ingested to false", entity.id.longValue()));
 					}
 
 					i++;
 				}
 
-				if (LOG.isLoggable(Level.FINE)) {
-					LOG.fine(String.format("Processed [%d] entities", i));
+				if (LOG.isLoggable(GaeLevel.DEBUG)) {
+					LOG.log(GaeLevel.DEBUG, String.format("Processed [%d] entities", i));
 				}
 
 				success = true;
@@ -127,15 +128,15 @@ public class DevHelperServlet extends HttpServlet {
 
 					ofy().save().entity(entity).now();
 
-					if (LOG.isLoggable(Level.FINER)) {
-						LOG.finer(String.format("Set entity [%d] ingested to false", entity.id.longValue()));
+					if (LOG.isLoggable(GaeLevel.TRACE)) {
+						LOG.log(GaeLevel.TRACE, String.format("Set entity [%d] ingested to false", entity.id.longValue()));
 					}
 
 					i++;
 				}
 
-				if (LOG.isLoggable(Level.FINE)) {
-					LOG.fine(String.format("Processed [%d] entities", i));
+				if (LOG.isLoggable(GaeLevel.DEBUG)) {
+					LOG.log(GaeLevel.DEBUG, String.format("Processed [%d] entities", i));
 				}
 
 				success = true;
@@ -165,21 +166,21 @@ public class DevHelperServlet extends HttpServlet {
 							entity.code = code;
 							ofy().save().entity(entity);
 
-							if (LOG.isLoggable(Level.FINER)) {
-								LOG.finer(String.format("Added code [%s] to entity [%d]", entity.code, entity.id.longValue()));
+							if (LOG.isLoggable(GaeLevel.TRACE)) {
+								LOG.log(GaeLevel.TRACE, String.format("Added code [%s] to entity [%d]", entity.code, entity.id.longValue()));
 							}
 
 							i++;
 						} else {
-							if (LOG.isLoggable(Level.FINER)) {
-								LOG.finer(String.format("Entity [%d] has code [%s]", entity.id.longValue(), entity.code));
+							if (LOG.isLoggable(GaeLevel.TRACE)) {
+								LOG.log(GaeLevel.TRACE, String.format("Entity [%d] has code [%s]", entity.id.longValue(), entity.code));
 							}
 						}
 
 					}
 
-					if (LOG.isLoggable(Level.FINE)) {
-						LOG.fine(String.format("Processed [%d] entities", i));
+					if (LOG.isLoggable(GaeLevel.DEBUG)) {
+						LOG.log(GaeLevel.DEBUG, String.format("Processed [%d] entities", i));
 					}
 
 					success = true;
@@ -195,15 +196,15 @@ public class DevHelperServlet extends HttpServlet {
 					for (Entity entity : preparedQuery.asIterable(FetchOptions.Builder.withOffset(Integer.parseInt(start)).limit(Integer.parseInt(count)))) {
 						datastoreService.delete(entity.getKey());
 
-						if (LOG.isLoggable(Level.FINER)) {
-							LOG.finer(String.format("Removed entity [%d]", entity.getKey().getId()));
+						if (LOG.isLoggable(GaeLevel.TRACE)) {
+							LOG.log(GaeLevel.TRACE, String.format("Removed entity [%d]", entity.getKey().getId()));
 						}
 
 						i++;
 					}
 
-					if (LOG.isLoggable(Level.FINE)) {
-						LOG.fine(String.format("Processed [%d] entities", i));
+					if (LOG.isLoggable(GaeLevel.DEBUG)) {
+						LOG.log(GaeLevel.DEBUG, String.format("Processed [%d] entities", i));
 					}
 
 					success = true;
@@ -256,8 +257,8 @@ public class DevHelperServlet extends HttpServlet {
 
 					ofy().save().entity(itemRankSummary).now();
 
-					if (LOG.isLoggable(Level.FINER)) {
-						LOG.finer(String.format("Updated item item summary for [%s:%s:%s]", itemRankSummary.source, itemRankSummary.type,
+					if (LOG.isLoggable(GaeLevel.TRACE)) {
+						LOG.log(GaeLevel.TRACE, String.format("Updated item item summary for [%s:%s:%s]", itemRankSummary.source, itemRankSummary.type,
 								itemRankSummary.itemId));
 					}
 
@@ -265,15 +266,15 @@ public class DevHelperServlet extends HttpServlet {
 
 					ofy().save().entity(rank).now();
 
-					if (LOG.isLoggable(Level.FINER)) {
-						LOG.finer(String.format("Updated rank counted for %d", rank.id.longValue()));
+					if (LOG.isLoggable(GaeLevel.TRACE)) {
+						LOG.log(GaeLevel.TRACE, String.format("Updated rank counted for %d", rank.id.longValue()));
 					}
 
 					i++;
 				}
 
-				if (LOG.isLoggable(Level.FINE)) {
-					LOG.fine(String.format("Processed [%d] entities", i));
+				if (LOG.isLoggable(GaeLevel.DEBUG)) {
+					LOG.log(GaeLevel.DEBUG, String.format("Processed [%d] entities", i));
 				}
 
 				success = true;
@@ -285,15 +286,15 @@ public class DevHelperServlet extends HttpServlet {
 
 					ofy().save().entity(rank);
 
-					if (LOG.isLoggable(Level.FINER)) {
-						LOG.finer(String.format("Uncounted rank [%d]", rank.id.longValue()));
+					if (LOG.isLoggable(GaeLevel.TRACE)) {
+						LOG.log(GaeLevel.TRACE, String.format("Uncounted rank [%d]", rank.id.longValue()));
 					}
 
 					i++;
 				}
 
-				if (LOG.isLoggable(Level.FINE)) {
-					LOG.fine(String.format("Processed [%d] entities", i));
+				if (LOG.isLoggable(GaeLevel.DEBUG)) {
+					LOG.log(GaeLevel.DEBUG, String.format("Processed [%d] entities", i));
 				}
 
 				success = true;
@@ -374,8 +375,8 @@ public class DevHelperServlet extends HttpServlet {
 					i++;
 				}
 
-				if (LOG.isLoggable(Level.FINE)) {
-					LOG.fine(String.format("Found [%d] entities", i));
+				if (LOG.isLoggable(GaeLevel.DEBUG)) {
+					LOG.log(GaeLevel.DEBUG, String.format("Found [%d] entities", i));
 				}
 
 				buffer.append("</table>");
@@ -408,7 +409,7 @@ public class DevHelperServlet extends HttpServlet {
 
 				List<String> codes = new ArrayList<String>();
 
-				Query<Rank> query = ofy().load().type(Rank.class).filter("source =", "ios").filter("type =", DataCollectorIOS.TOP_PAID_APPS)
+				Query<Rank> query = ofy().load().type(Rank.class).filter("source =", "ios").filter("type =", CollectorIOS.TOP_PAID_APPS)
 						.filter("date >", cal.getTime()).filter("itemId = ", itemId).offset(Integer.parseInt(start)).limit(Integer.parseInt(count));
 
 				for (Rank rank : query.iterable()) {
@@ -419,7 +420,7 @@ public class DevHelperServlet extends HttpServlet {
 					}
 				}
 
-				query = ofy().load().type(Rank.class).filter("source =", "ios").filter("type =", DataCollectorIOS.TOP_GROSSING_APPS)
+				query = ofy().load().type(Rank.class).filter("source =", "ios").filter("type =", CollectorIOS.TOP_GROSSING_APPS)
 						.filter("date >", cal.getTime()).filter("itemId = ", itemId).offset(Integer.parseInt(start)).limit(Integer.parseInt(count));
 
 				for (Rank rank : query.iterable()) {

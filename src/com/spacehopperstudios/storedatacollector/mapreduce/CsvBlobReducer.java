@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 import com.google.appengine.tools.mapreduce.Reducer;
 import com.google.appengine.tools.mapreduce.ReducerInput;
 import com.google.gson.Gson;
-import com.spacehopperstudios.storedatacollector.collectors.DataCollectorIOS;
+import com.spacehopperstudios.storedatacollector.collectors.CollectorIOS;
 import com.spacehopperstudios.storedatacollector.datatypes.Rank;
 
 public class CsvBlobReducer extends Reducer<String, String, ByteBuffer> {
@@ -50,9 +50,9 @@ public class CsvBlobReducer extends Reducer<String, String, ByteBuffer> {
 			
 			masterItem = (new Gson()).fromJson(values.next(), Rank.class);
 			
-			if (masterItem.type.equals(DataCollectorIOS.TOP_PAID_APPS)) {
+			if (masterItem.type.equals(CollectorIOS.TOP_PAID_APPS)) {
 				paidItem = masterItem;
-			} else if (masterItem.type.equals(DataCollectorIOS.TOP_GROSSING_APPS)) {
+			} else if (masterItem.type.equals(CollectorIOS.TOP_GROSSING_APPS)) {
 				grossingItem = masterItem;
 			}
 		}

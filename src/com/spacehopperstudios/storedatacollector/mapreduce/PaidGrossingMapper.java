@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.tools.mapreduce.Mapper;
 import com.google.gson.Gson;
-import com.spacehopperstudios.storedatacollector.collectors.DataCollectorIOS;
+import com.spacehopperstudios.storedatacollector.collectors.CollectorIOS;
 import com.spacehopperstudios.storedatacollector.datatypes.Rank;
 
 public class PaidGrossingMapper extends Mapper<Entity, String, String> {
@@ -49,7 +49,7 @@ public class PaidGrossingMapper extends Mapper<Entity, String, String> {
 			return;
 		if (rank.price == 0)
 			return;
-		if (!(rank.type.equals(DataCollectorIOS.TOP_PAID_APPS) || rank.type.equals(DataCollectorIOS.TOP_GROSSING_APPS)))
+		if (!(rank.type.equals(CollectorIOS.TOP_PAID_APPS) || rank.type.equals(CollectorIOS.TOP_GROSSING_APPS)))
 			return;
 
 		String code = rank.code + rank.itemId;
