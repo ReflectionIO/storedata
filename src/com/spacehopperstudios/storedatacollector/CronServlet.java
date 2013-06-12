@@ -35,6 +35,10 @@ public class CronServlet extends HttpServlet {
 		String appEngineCron = req.getHeader("X-AppEngine-Cron");
 		String appEngineQueue = req.getHeader("X-AppEngine-QueueName");
 
+		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			LOG.log(GaeLevel.DEBUG, String.format("appEngineCron is [%s] and appEngineQueue is [%s]", appEngineCron, appEngineQueue));
+		}
+
 		boolean isNotCron = false, isNotQueue = false;
 
 		// bail out if we have not been called by app engine cron

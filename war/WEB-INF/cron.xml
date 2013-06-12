@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cronentries>
 	<cron>
-		<url>/gather?store=ios</url>
+		<url>/cron?store=ios</url>
 		<description>Gather iOS store data</description>
 		<schedule>every 12 hours from 01:00 to 13:00</schedule>
 	</cron>

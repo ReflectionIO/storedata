@@ -69,7 +69,7 @@ public class DevHelperServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+		
 		String appEngineQueue = req.getHeader("X-AppEngine-QueueName");
 		boolean isNotQueue = (appEngineQueue == null || !"deferred".toLowerCase().equals(appEngineQueue.toLowerCase()));
 
@@ -79,7 +79,11 @@ public class DevHelperServlet extends HttpServlet {
 			if (req.getParameter("cron") == null) {
 				deferredQueue.add(TaskOptions.Builder.withUrl("/devhelper?" + req.getQueryString()).method(Method.GET));
 			} else {
-				deferredQueue.add(TaskOptions.Builder.withUrl("/gather?" + req.getQueryString()).method(Method.GET));
+				if (LOG.isLoggable(GaeLevel.DEBUG)) {
+					LOG.log(GaeLevel.DEBUG, "Adding gather request to deferred queue");
+				}
+				
+				deferredQueue.add(TaskOptions.Builder.withUrl("/cron?" + req.getQueryString()).method(Method.GET));
 			}
 			return;
 		}
@@ -258,8 +262,8 @@ public class DevHelperServlet extends HttpServlet {
 					ofy().save().entity(itemRankSummary).now();
 
 					if (LOG.isLoggable(GaeLevel.TRACE)) {
-						LOG.log(GaeLevel.TRACE, String.format("Updated item item summary for [%s:%s:%s]", itemRankSummary.source, itemRankSummary.type,
-								itemRankSummary.itemId));
+						LOG.log(GaeLevel.TRACE,
+								String.format("Updated item item summary for [%s:%s:%s]", itemRankSummary.source, itemRankSummary.type, itemRankSummary.itemId));
 					}
 
 					rank.counted = true;
@@ -509,8 +513,8 @@ public class DevHelperServlet extends HttpServlet {
 	private String startCreateCsvBlobRank(int mapShardCount, int reduceSharedCount, String source, String country, String type) {
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd-HHmmss");
 		return MapReduceJob.start(MapReduceSpecification.of("Create Rank csv blob", new DatastoreInput("Rank", mapShardCount), new PaidGrossingMapper(source,
-				country), Marshallers.getStringMarshaller(), Marshallers.getStringMarshaller(), new CsvBlobReducer(),
-				new BlobFileOutput("PaidGrossing" + format.format(new Date()) + "%d.csv", "text/csv", reduceSharedCount)), getSettings());
+				country), Marshallers.getStringMarshaller(), Marshallers.getStringMarshaller(), new CsvBlobReducer(), new BlobFileOutput("PaidGrossing"
+				+ format.format(new Date()) + "%d.csv", "text/csv", reduceSharedCount)), getSettings());
 	}
 
 	private String getUrlBase(HttpServletRequest req) throws MalformedURLException {
