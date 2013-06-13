@@ -8,12 +8,14 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
+import com.google.appengine.api.taskqueue.TransientFailureException;
 import com.spacehopperstudios.storedatacollector.datatypes.StoreType;
 import com.spacehopperstudios.storedatacollector.logging.GaeLevel;
 
@@ -135,7 +137,24 @@ public class CollectorIOS extends StoreCollector implements Collector {
 	}
 
 	private void enqueue(Queue queue, String country, String type, String code) {
-		queue.add(TaskOptions.Builder.withUrl(String.format(ENQUEUE_GATHER_FORMAT, StoreType.Ios.toString(), country, type, code)).method(Method.GET));
+		try {
+			queue.add(TaskOptions.Builder.withUrl(String.format(ENQUEUE_GATHER_FORMAT, StoreType.Ios.toString(), country, type, code)).method(Method.GET));
+		} catch (TransientFailureException ex) {
+			
+			if (LOG.isLoggable(Level.WARNING)) {
+				LOG.warning(String.format("Could not queue a message because of [%s] - will retry it once", ex.toString()));
+			}
+			
+			// retry once
+			try {
+				queue.add(TaskOptions.Builder.withUrl(String.format(ENQUEUE_GATHER_FORMAT, StoreType.Ios.toString(), country, type, code)).method(Method.GET));
+			} catch (TransientFailureException reEx) {
+				if (LOG.isLoggable(Level.SEVERE)) {
+					LOG.log(Level.SEVERE, String.format("Retry of with parameters country [%s] type [%s] code [%s] failed while adding to queue [%s] twice",
+							country, type, code, queue.getQueueName()), reEx);
+				}
+			}
+		}
 	}
 
 }

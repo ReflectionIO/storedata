@@ -23,6 +23,7 @@ import com.google.appengine.api.files.FileServiceFactory;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
+import com.google.appengine.api.taskqueue.TransientFailureException;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.googlecode.objectify.VoidWork;
 import com.spacehopperstudios.storedatacollector.collectors.StoreCollector;
@@ -350,7 +351,27 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			buffer.append(id.toString());
 		}
 
-		queue.add(TaskOptions.Builder.withUrl(String.format(ENQUEUE_INGEST_FORMAT, StoreType.Ios.toString(), buffer.toString())).method(Method.GET));
+		String store = StoreType.Ios.toString(), ids = buffer.toString();
+		
+		try {
+			queue.add(TaskOptions.Builder.withUrl(String.format(ENQUEUE_INGEST_FORMAT, store, ids)).method(Method.GET));
+		} catch (TransientFailureException ex) {
+
+			if (LOG.isLoggable(Level.WARNING)) {
+				LOG.warning(String.format("Could not queue a message because of [%s] - will retry it once", ex.toString()));
+			}
+
+			// retry once
+			try {
+				queue.add(TaskOptions.Builder.withUrl(String.format(ENQUEUE_INGEST_FORMAT, store, ids)).method(Method.GET));
+			} catch (TransientFailureException reEx) {
+				if (LOG.isLoggable(Level.SEVERE)) {
+					LOG.log(Level.SEVERE,
+							String.format("Retry of with parameters store [%s] ids [%s] failed while adding to queue [%s] twice", store, ids,
+									queue.getQueueName()), reEx);
+				}
+			}
+		}
 	}
 
 	@Override
