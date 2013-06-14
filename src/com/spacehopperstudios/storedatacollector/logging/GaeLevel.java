@@ -10,8 +10,8 @@ public final class GaeLevel extends Level {
 		super(name, value);
 	}
 
-	public static final Level DEBUG = new GaeLevel("DEBUG", 800);
+	public static final Level DEBUG = Level.FINER;
 
-	public static final Level TRACE = new GaeLevel("TRACE", 700);
+	public static final Level TRACE = Level.FINEST;
 
 }

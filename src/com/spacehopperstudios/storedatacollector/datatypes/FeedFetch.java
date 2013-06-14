@@ -22,20 +22,20 @@ public class FeedFetch {
 
 	public String country;
 	public String data;
-	
+
 	@Index
 	public Date date;
-	
+
 	@Index
 	public boolean ingested;
-	
+
 	@Index
 	public String store;
-	
+
 	public int part;
 	@AlsoLoad("totalparts")
 	public int totalParts;
-	
+
 	@Index
 	public String type;
 

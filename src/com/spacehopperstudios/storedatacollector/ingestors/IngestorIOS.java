@@ -96,6 +96,8 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 		if (LOG.isLoggable(GaeLevel.DEBUG)) {
 			LOG.log(GaeLevel.DEBUG, "Extracting item ranks");
 		}
+		
+		DataStorePersist persistor = new DataStorePersist();
 
 		for (final Date key : combined.keySet()) {
 
@@ -110,12 +112,14 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 
 			for (int i = 0; i < items.size(); i++) {
 				Item item = items.get(i);
-
-				// save the item if it does not exist
-				if (ofy().load().type(Item.class).filter("externalId =", item.externalId).count() == 0) {
-					item.added = key;
-					ofy().save().entity(item).now();
-				}
+				
+				item.added = key;
+						
+//				// save the item if it does not exist
+//				if (ofy().load().type(Item.class).filter("externalId =", item.externalId).count() == 0) {
+//					item.added = key;
+//					ofy().save().entity(item).now();
+//				}
 
 				Rank rank = new Rank();
 				rank.position = i;
@@ -128,15 +132,17 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 				rank.currency = item.currency;
 				rank.code = firstFeedFetch.code;
 
-				// will only save the rank if it has not been done before
-				if (ofy().cache(false).load().type(Rank.class).filter("source =", rank.source).filter("type =", rank.type).filter("date =", rank.date)
-						.filter("country =", rank.country).filter("position =", rank.position).count() == 0) {
-					ofy().save().entity(rank).now();
-
-					if (LOG.isLoggable(GaeLevel.TRACE)) {
-						LOG.log(GaeLevel.TRACE, String.format("Saved rank [%s] for", rank.itemId));
-					}
-				}
+//				// will only save the rank if it has not been done before
+//				if (ofy().cache(false).load().type(Rank.class).filter("source =", rank.source).filter("type =", rank.type).filter("date =", rank.date)
+//						.filter("country =", rank.country).filter("position =", rank.position).count() == 0) {
+//					ofy().save().entity(rank).now();
+//
+//					if (LOG.isLoggable(GaeLevel.TRACE)) {
+//						LOG.log(GaeLevel.TRACE, String.format("Saved rank [%s] for", rank.itemId));
+//					}
+//				}
+				
+				persistor.enqueue(item, rank);
 			}
 
 			if (LOG.isLoggable(GaeLevel.DEBUG)) {
@@ -377,7 +383,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 	@Override
 	public void enqueue(List<Long> itemIds) {
 		if (LOG.isLoggable(GaeLevel.TRACE)) {
-			LOG.log(GaeLevel.TRACE, "Enterign...");
+			LOG.log(GaeLevel.TRACE, "Entering...");
 		}
 
 		try {
