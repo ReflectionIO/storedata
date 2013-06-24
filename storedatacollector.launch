@@ -10,7 +10,7 @@
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="com.google.gdt.eclipse.suite.appengineClasspathProvider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.google.appengine.tools.development.DevAppServerMain"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="--port=8888 /Users/billy1380/Documents/EclipseProjects/storedatacollector/war"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="--port=8888 C:\projects2\storedatacollector\war"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="storedatacollector"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-javaagent:/Applications/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.8.0/appengine-java-sdk-1.8.0/lib/agent/appengine-agent.jar -XstartOnFirstThread -Ddatastore.default_high_rep_job_policy_unapplied_job_pct=50 -Xmx1024m -Xbootclasspath/p:/Applications/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.7.7.1/appengine-java-sdk-1.7.7.1/lib/override/appengine-dev-jdk-overrides.jar"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-javaagent:C:\eclipse\plugins\com.google.appengine.eclipse.sdkbundle_1.8.1.1\appengine-java-sdk-1.8.1.1\lib\agent\appengine-agent.jar -Ddatastore.default_high_rep_job_policy_unapplied_job_pct=50 -Xmx1024m -Xbootclasspath/p:/Applications/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.7.7.1/appengine-java-sdk-1.7.7.1/lib/override/appengine-dev-jdk-overrides.jar"/>
 </launchConfiguration>

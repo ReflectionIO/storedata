@@ -7,24 +7,28 @@ import java.util.logging.Logger;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.tools.mapreduce.Mapper;
 import com.google.gson.Gson;
-import com.spacehopperstudios.storedatacollector.collectors.CollectorIOS;
 import com.spacehopperstudios.storedatacollector.datatypes.Rank;
 
-public class PaidGrossingMapper extends Mapper<Entity, String, String> {
+public class TopAndGrossingMapper extends Mapper<Entity, String, String> {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger LOG = Logger.getLogger(PaidGrossingMapper.class.getName());
+	private static final Logger LOG = Logger.getLogger(TopAndGrossingMapper.class.getName());
 
 	private String country = null;
 	private String source = null;
 
-	public PaidGrossingMapper(String source, String country) {
+	private String topType;
+	private String grossingType;
+
+	public TopAndGrossingMapper(String topType, String grossingType, String source, String country) {
 		this.country = country;
 		this.source = source;
+		this.topType = topType;
+		this.grossingType = grossingType;
 	}
 
 	@Override
@@ -49,7 +53,7 @@ public class PaidGrossingMapper extends Mapper<Entity, String, String> {
 			return;
 		if (rank.price == 0)
 			return;
-		if (!(rank.type.equals(CollectorIOS.TOP_PAID_APPS) || rank.type.equals(CollectorIOS.TOP_GROSSING_APPS)))
+		if (!(rank.type.equals(topType) || rank.type.equals(grossingType)))
 			return;
 
 		String code = rank.code + rank.itemId;

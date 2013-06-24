@@ -50,7 +50,7 @@ import com.spacehopperstudios.storedatacollector.datatypes.ItemRankSummary;
 import com.spacehopperstudios.storedatacollector.datatypes.Rank;
 import com.spacehopperstudios.storedatacollector.logging.GaeLevel;
 import com.spacehopperstudios.storedatacollector.mapreduce.CsvBlobReducer;
-import com.spacehopperstudios.storedatacollector.mapreduce.PaidGrossingMapper;
+import com.spacehopperstudios.storedatacollector.mapreduce.TopAndGrossingMapper;
 import com.spacehopperstudios.storedatacollector.mapreduce.RankCountMapper;
 import com.spacehopperstudios.storedatacollector.mapreduce.RankCountReducer;
 import com.spacehopperstudios.storedatacollector.mapreduce.TotalRankedItemsCountMapper;
@@ -69,7 +69,7 @@ public class DevHelperServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		
+
 		String appEngineQueue = req.getHeader("X-AppEngine-QueueName");
 		boolean isNotQueue = (appEngineQueue == null || !"deferred".toLowerCase().equals(appEngineQueue.toLowerCase()));
 
@@ -82,7 +82,7 @@ public class DevHelperServlet extends HttpServlet {
 				if (LOG.isLoggable(GaeLevel.DEBUG)) {
 					LOG.log(GaeLevel.DEBUG, "Adding gather request to deferred queue");
 				}
-				
+
 				deferredQueue.add(TaskOptions.Builder.withUrl("/cron?" + req.getQueryString()).method(Method.GET));
 			}
 			return;
@@ -218,7 +218,9 @@ public class DevHelperServlet extends HttpServlet {
 				Query<Rank> queryRank = ofy().cache(false).load().type(Rank.class).filter("counted =", Boolean.FALSE).offset(Integer.parseInt(start))
 						.limit(Integer.parseInt(count));
 
-				// Query<Rank> queryRank = ofy().load().type(Rank.class).filter("id =", Long.valueOf(19816));
+				// Query<Rank> queryRank =
+				// ofy().load().type(Rank.class).filter("id =",
+				// Long.valueOf(19816));
 
 				for (Rank rank : queryRank.iterable()) {
 					// get the item rank summary
@@ -334,7 +336,8 @@ public class DevHelperServlet extends HttpServlet {
 					query = query.filter("numberOfTimesRankedTop200 >", Integer.valueOf(0)).order("numberOfTimesRankedTop200");
 				} else if (rankEndValue >= 200) {
 					// every ranked item should appear at least once
-					// query = query.filter("numberOfTimesRanked >", Integer.valueOf(0));
+					// query = query.filter("numberOfTimesRanked >",
+					// Integer.valueOf(0));
 				}
 
 				if (rankStartValue >= 10) {
@@ -483,8 +486,14 @@ public class DevHelperServlet extends HttpServlet {
 				redirectToPipelineStatus(req, resp, startRankCountJob(5, 2, "ios", "us", feedType));
 
 				success = true;
-			} else if ("createcsvofallranks".toUpperCase().equals(action.toUpperCase())) {
-				redirectToPipelineStatus(req, resp, startCreateCsvBlobRank(5, 1, "ios", "us", feedType));
+			} else if ("createcsvofpaidranks".toUpperCase().equals(action.toUpperCase())) {
+				redirectToPipelineStatus(req, resp,
+						startCreateCsvBlobRank(5, 1, CollectorIOS.TOP_PAID_APPS, CollectorIOS.TOP_GROSSING_APPS, "ios", "us", feedType));
+
+				success = true;
+			} else if ("createcsvoffreeranks".toUpperCase().equals(action.toUpperCase())) {
+				redirectToPipelineStatus(req, resp,
+						startCreateCsvBlobRank(5, 1, CollectorIOS.TOP_FREE_APPS, CollectorIOS.TOP_GROSSING_APPS, "ios", "us", feedType));
 
 				success = true;
 			} else {
@@ -510,11 +519,12 @@ public class DevHelperServlet extends HttpServlet {
 
 	}
 
-	private String startCreateCsvBlobRank(int mapShardCount, int reduceSharedCount, String source, String country, String type) {
+	private String startCreateCsvBlobRank(int mapShardCount, int reduceSharedCount, String topType, String grossingType, String source, String country,
+			String type) {
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd-HHmmss");
-		return MapReduceJob.start(MapReduceSpecification.of("Create Rank csv blob", new DatastoreInput("Rank", mapShardCount), new PaidGrossingMapper(source,
-				country), Marshallers.getStringMarshaller(), Marshallers.getStringMarshaller(), new CsvBlobReducer(), new BlobFileOutput("PaidGrossing"
-				+ format.format(new Date()) + "%d.csv", "text/csv", reduceSharedCount)), getSettings());
+		return MapReduceJob.start(MapReduceSpecification.of("Create Rank csv blob", new DatastoreInput("Rank", mapShardCount), new TopAndGrossingMapper(topType,
+				grossingType, source, country), Marshallers.getStringMarshaller(), Marshallers.getStringMarshaller(), new CsvBlobReducer(), new BlobFileOutput(
+				"PaidGrossing" + format.format(new Date()) + "%d.csv", "text/csv", reduceSharedCount)), getSettings());
 	}
 
 	private String getUrlBase(HttpServletRequest req) throws MalformedURLException {

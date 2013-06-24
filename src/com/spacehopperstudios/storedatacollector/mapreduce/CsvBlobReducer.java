@@ -1,12 +1,18 @@
 package com.spacehopperstudios.storedatacollector.mapreduce;
 
+import static com.spacehopperstudios.storedatacollector.objectify.PersistenceService.ofy;
+
 import java.nio.ByteBuffer;
+import java.util.List;
 import java.util.logging.Logger;
 
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.google.appengine.tools.mapreduce.Reducer;
 import com.google.appengine.tools.mapreduce.ReducerInput;
 import com.google.gson.Gson;
-import com.spacehopperstudios.storedatacollector.collectors.CollectorIOS;
+import com.spacehopperstudios.storedatacollector.collectors.HttpExternalGetter;
+import com.spacehopperstudios.storedatacollector.datatypes.Item;
 import com.spacehopperstudios.storedatacollector.datatypes.Rank;
 
 public class CsvBlobReducer extends Reducer<String, String, ByteBuffer> {
@@ -24,9 +30,7 @@ public class CsvBlobReducer extends Reducer<String, String, ByteBuffer> {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("# data for shard ");
 		buffer.append(getContext().getShardNumber());
-		buffer.append(" extracted from toppaidapplications and topgrossingapplications");
-		buffer.append("\n");
-		buffer.append("#item id,date,paid possition,grossing possition,price");
+		buffer.append("#item id,date,paid possition,grossing possition,price,usesiap");
 		buffer.append("\n");
 
 		getContext().emit(ByteBuffer.wrap(buffer.toString().getBytes()));
@@ -39,21 +43,21 @@ public class CsvBlobReducer extends Reducer<String, String, ByteBuffer> {
 
 	@Override
 	public void reduce(String key, ReducerInput<String> values) {
-		Rank grossingItem = null, paidItem = null;
+		Rank grossingItem = null, topItem = null;
 		Rank masterItem = null;
-		
+
 		StringBuffer buffer = new StringBuffer();
-		
+
 		int i = 0;
-		while(values.hasNext()) {
+		while (values.hasNext()) {
 			i++;
-			
+
 			masterItem = (new Gson()).fromJson(values.next(), Rank.class);
-			
-			if (masterItem.type.equals(CollectorIOS.TOP_PAID_APPS)) {
-				paidItem = masterItem;
-			} else if (masterItem.type.equals(CollectorIOS.TOP_GROSSING_APPS)) {
+
+			if (masterItem.type.contains("grossing")) {
 				grossingItem = masterItem;
+			} else if (masterItem.type.contains("top")) {
+				topItem = masterItem;
 			}
 		}
 
@@ -66,8 +70,8 @@ public class CsvBlobReducer extends Reducer<String, String, ByteBuffer> {
 		buffer.append(masterItem.date);
 		buffer.append(",");
 
-		if (paidItem != null) {
-			buffer.append(paidItem.position + 1);
+		if (topItem != null) {
+			buffer.append(topItem.position + 1);
 		}
 		buffer.append(",");
 
@@ -77,9 +81,65 @@ public class CsvBlobReducer extends Reducer<String, String, ByteBuffer> {
 		buffer.append(",");
 
 		buffer.append(masterItem.price);
+
+		buffer.append(",");
+
+		try {
+			if (usesIap(masterItem)) {
+				buffer.append(true);
+			} else {
+				buffer.append(false);
+			}
+		} catch (Exception ex) {
+			buffer.append("?");
+		}
+
 		buffer.append("\n");
-		
+
 		getContext().emit(ByteBuffer.wrap(buffer.toString().getBytes()));
+	}
+
+	private boolean usesIap(Rank rank) throws Exception {
+
+		String usesIapKey = rank.itemId + ".usesIap";
+
+		MemcacheService memCacheService = MemcacheServiceFactory.getMemcacheService();
+
+		Boolean cachedUsesIap = (Boolean) memCacheService.get(usesIapKey);
+
+		if (cachedUsesIap == null) {
+			String rankItemIdKey = rank.itemId + ".itemId";
+
+			String itemId = (String) memCacheService.get(rankItemIdKey);
+
+			if (itemId == null) {
+				List<Item> items = ofy().load().type(Item.class).filter("externalId =", rank.itemId).limit(1).list();
+
+				if (items != null && items.size() > 0) {
+					itemId = items.get(0).internalId;
+
+					memCacheService.put(rankItemIdKey, itemId);
+				}
+			}
+
+			if (itemId == null) {
+				throw new Exception("Could not find an item for this rank which is wrong!");
+			}
+
+			String data = HttpExternalGetter.getData("https://itunes.apple.com/app/id" + itemId);
+
+			if (data != null) {
+				cachedUsesIap = data.contains("class=\"extra-list in-app-purchases") ? Boolean.TRUE : Boolean.FALSE;
+
+				memCacheService.put(usesIapKey, cachedUsesIap);
+			}
+
+			if (cachedUsesIap == null) {
+				throw new Exception("Could not find whether the app uses iap or not!");
+			}
+		}
+
+		return cachedUsesIap.booleanValue();
 	}
 
 	@Override
