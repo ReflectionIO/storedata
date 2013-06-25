@@ -33,7 +33,7 @@ public class HttpExternalGetter {
 	 * @param key
 	 * @return
 	 */
-	public static String getData(URL url) {
+	public static String getData(URL url, HTTPMethod method) {
 		String data = null;
 		URLFetchService fetcher = URLFetchServiceFactory.getURLFetchService();
 
@@ -82,7 +82,7 @@ public class HttpExternalGetter {
 	 * @param key
 	 * @return
 	 */
-	public static String getData(String endpoint) {
+	public static String getData(String endpoint, HTTPMethod method) {
 		String data = null;
 
 		if (LOG.isLoggable(GaeLevel.DEBUG)) {
@@ -91,7 +91,7 @@ public class HttpExternalGetter {
 
 		try {
 			URL url = new URL(endpoint);
-			data = getData(url);
+			data = getData(url, method);
 		} catch (MalformedURLException e) {
 			if (LOG.isLoggable(Level.SEVERE)) {
 				LOG.log(Level.SEVERE, String.format("Error creating url from endpoint [%s]", endpoint), e);
@@ -99,5 +99,9 @@ public class HttpExternalGetter {
 		}
 
 		return data;
+	}
+
+	public static String getData(String endpoint) {
+		return getData(endpoint, HTTPMethod.POST);
 	}
 }
