@@ -51,9 +51,11 @@ public class TopAndGrossingMapper extends Mapper<Entity, String, String> {
 			return;
 		if (!rank.country.equals(country))
 			return;
-		if (rank.price == 0)
+		if (topType.contains("free") && rank.price != 0)
 			return;
 		if (!(rank.type.equals(topType) || rank.type.equals(grossingType)))
+			return;
+		if (topType.contains("paid") && rank.price == 0)
 			return;
 
 		String code = rank.code + rank.itemId;

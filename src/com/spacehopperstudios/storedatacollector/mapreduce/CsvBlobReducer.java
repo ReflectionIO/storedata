@@ -118,8 +118,7 @@ public class CsvBlobReducer extends Reducer<String, String, ByteBuffer> {
 	private String iapColumn(Rank master, Rank top, Rank grossing) {
 		String iapColumn = null;
 		try {
-			if ((top == null && grossing != null) || // you are NOT in the top list (free or paid) but somehow you are in the grossing list you are using iap
-					(top != null && top.price == 0 && grossing != null) || // you are in the top free list and in the grossing list you are using iap
+			if ((top != null && top.price == 0 && grossing != null) || // you are in the top free list and in the grossing list you are using iap
 					usesIapViaLookup(master)) {
 				iapColumn = "true";
 			} else {
