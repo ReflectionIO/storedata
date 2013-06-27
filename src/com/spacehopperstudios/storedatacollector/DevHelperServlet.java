@@ -524,7 +524,8 @@ public class DevHelperServlet extends HttpServlet {
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd-HHmmss");
 		return MapReduceJob.start(MapReduceSpecification.of("Create Rank csv blob", new DatastoreInput("Rank", mapShardCount), new TopAndGrossingMapper(
 				topType, grossingType, source, country), Marshallers.getStringMarshaller(), Marshallers.getStringMarshaller(), new CsvBlobReducer(topType,
-				grossingType), new BlobFileOutput("PaidGrossing" + format.format(new Date()) + "%d.csv", "text/csv", reduceSharedCount)), getSettings());
+				grossingType), new BlobFileOutput(topType + "_" + grossingType + format.format(new Date()) + "_%d.csv", "text/csv", reduceSharedCount)),
+				getSettings());
 	}
 
 	private String getUrlBase(HttpServletRequest req) throws MalformedURLException {
