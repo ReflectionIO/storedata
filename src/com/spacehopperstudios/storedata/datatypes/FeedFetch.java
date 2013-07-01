@@ -28,15 +28,15 @@ public class FeedFetch extends DataType {
 	public Date date;
 
 	@Index
-	public Boolean ingested;
+	public Boolean ingested = Boolean.FALSE;
 
 	@Index
 	public String store;
 
-	public Integer part;
+	public Integer part = Integer.valueOf(0);
 
 	@AlsoLoad("totalparts")
-	public Integer totalParts;
+	public Integer totalParts = Integer.valueOf(0);
 
 	@Index
 	public String type;

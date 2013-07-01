@@ -62,7 +62,7 @@ public class ParserIOS implements Parser {
 				item.name = jsonItem.get(KEY_NAME).getAsJsonObject().get(KEY_LABEL).getAsString();
 
 				JsonObject attributes = jsonItem.get(KEY_PRICE).getAsJsonObject().get(KEY_ATTRIBUTES).getAsJsonObject();
-				item.price = attributes.get(KEY_AMOUNT).getAsFloat();
+				item.price = Float.valueOf(attributes.get(KEY_AMOUNT).getAsFloat());
 				item.currency = attributes.get(KEY_CURRENCY).getAsString();
 
 				attributes = jsonItem.get(KEY_ID).getAsJsonObject().get(KEY_ATTRIBUTES).getAsJsonObject();

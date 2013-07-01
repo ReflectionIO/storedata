@@ -20,22 +20,22 @@ public class ItemRankSummary extends DataType {
 	public String source;
 
 	@Index
-	public Integer numberOfTimesRanked;
+	public Integer numberOfTimesRanked = Integer.valueOf(0);
 
 	@Index
-	public Integer numberOfTimesRankedTop10;
+	public Integer numberOfTimesRankedTop10 = Integer.valueOf(0);
 
 	@Index
-	public Integer numberOfTimesRankedTop25;
+	public Integer numberOfTimesRankedTop25 = Integer.valueOf(0);
 
 	@Index
-	public Integer numberOfTimesRankedTop50;
+	public Integer numberOfTimesRankedTop50 = Integer.valueOf(0);
 
 	@Index
-	public Integer numberOfTimesRankedTop100;
+	public Integer numberOfTimesRankedTop100 = Integer.valueOf(0);
 
 	@Index
-	public Integer numberOfTimesRankedTop200;
+	public Integer numberOfTimesRankedTop200 = Integer.valueOf(0);
 
 	@Override
 	public JsonObject toJson() {

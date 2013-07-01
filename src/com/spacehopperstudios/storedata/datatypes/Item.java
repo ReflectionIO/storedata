@@ -27,7 +27,8 @@ public class Item extends DataType {
 	public String internalId;
 
 	public String name;
-	public Float price;
+	
+	public Float price = Float.valueOf(0);
 
 	@Index
 	public String source;
@@ -36,6 +37,7 @@ public class Item extends DataType {
 	public String type;
 
 	public Date added;
+	
 	public String currency;
 
 	@Override

@@ -69,7 +69,7 @@ public class DevHelperServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		
+
 		String appEngineQueue = req.getHeader("X-AppEngine-QueueName");
 		boolean isNotQueue = (appEngineQueue == null || !"deferred".toLowerCase().equals(appEngineQueue.toLowerCase()));
 
@@ -82,7 +82,7 @@ public class DevHelperServlet extends HttpServlet {
 				if (LOG.isLoggable(GaeLevel.DEBUG)) {
 					LOG.log(GaeLevel.DEBUG, "Adding gather request to deferred queue");
 				}
-				
+
 				deferredQueue.add(TaskOptions.Builder.withUrl("/cron?" + req.getQueryString()).method(Method.GET));
 			}
 			return;
@@ -108,7 +108,7 @@ public class DevHelperServlet extends HttpServlet {
 
 				int i = 0;
 				for (FeedFetch entity : ofy().load().type(FeedFetch.class).offset(Integer.parseInt(start)).limit(Integer.parseInt(count)).iterable()) {
-					entity.ingested = false;
+					entity.ingested = Boolean.FALSE;
 
 					ofy().save().entity(entity).now();
 
@@ -237,26 +237,26 @@ public class DevHelperServlet extends HttpServlet {
 						itemRankSummary.source = rank.source;
 					}
 
-					itemRankSummary.numberOfTimesRanked++;
+					itemRankSummary.numberOfTimesRanked = Integer.valueOf(itemRankSummary.numberOfTimesRanked.intValue() + 1);
 
-					if (rank.position < 10) {
-						itemRankSummary.numberOfTimesRankedTop10++;
+					if (rank.position.intValue() < 10) {
+						itemRankSummary.numberOfTimesRankedTop10 = Integer.valueOf(itemRankSummary.numberOfTimesRankedTop10 + 1);
 					}
 
-					if (rank.position < 25) {
-						itemRankSummary.numberOfTimesRankedTop25++;
+					if (rank.position.intValue() < 25) {
+						itemRankSummary.numberOfTimesRankedTop25 = Integer.valueOf(itemRankSummary.numberOfTimesRankedTop25 + 1);
 					}
 
-					if (rank.position < 50) {
-						itemRankSummary.numberOfTimesRankedTop50++;
+					if (rank.position.intValue() < 50) {
+						itemRankSummary.numberOfTimesRankedTop50 = Integer.valueOf(itemRankSummary.numberOfTimesRankedTop50 + 1);
 					}
 
-					if (rank.position < 100) {
-						itemRankSummary.numberOfTimesRankedTop100++;
+					if (rank.position.intValue() < 100) {
+						itemRankSummary.numberOfTimesRankedTop100 = Integer.valueOf(itemRankSummary.numberOfTimesRankedTop100 + 1);
 					}
 
-					if (rank.position < 200) {
-						itemRankSummary.numberOfTimesRankedTop200++;
+					if (rank.position.intValue() < 200) {
+						itemRankSummary.numberOfTimesRankedTop200 = Integer.valueOf(itemRankSummary.numberOfTimesRankedTop200 + 1);
 					}
 
 					ofy().save().entity(itemRankSummary).now();
@@ -364,17 +364,17 @@ public class DevHelperServlet extends HttpServlet {
 					buffer.append("<tr><td>");
 					buffer.append(itemRankSummary.itemId);
 					buffer.append("</td><td>");
-					buffer.append(itemRankSummary.numberOfTimesRankedTop10);
+					buffer.append(itemRankSummary.numberOfTimesRankedTop10.intValue());
 					buffer.append("</td><td>");
-					buffer.append(itemRankSummary.numberOfTimesRankedTop25);
+					buffer.append(itemRankSummary.numberOfTimesRankedTop25.intValue());
 					buffer.append("</td><td>");
-					buffer.append(itemRankSummary.numberOfTimesRankedTop50);
+					buffer.append(itemRankSummary.numberOfTimesRankedTop50.intValue());
 					buffer.append("</td><td>");
-					buffer.append(itemRankSummary.numberOfTimesRankedTop100);
+					buffer.append(itemRankSummary.numberOfTimesRankedTop100.intValue());
 					buffer.append("</td><td>");
-					buffer.append(itemRankSummary.numberOfTimesRankedTop200);
+					buffer.append(itemRankSummary.numberOfTimesRankedTop200.intValue());
 					buffer.append("</td><td>");
-					buffer.append(itemRankSummary.numberOfTimesRanked);
+					buffer.append(itemRankSummary.numberOfTimesRanked.intValue());
 					buffer.append("</td></tr>");
 					i++;
 				}

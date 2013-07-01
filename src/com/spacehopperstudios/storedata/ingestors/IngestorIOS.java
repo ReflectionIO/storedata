@@ -123,7 +123,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 				// }
 
 				Rank rank = new Rank();
-				rank.position = i;
+				rank.position = Integer.valueOf(i);
 				rank.itemId = item.externalId;
 				rank.type = firstFeedFetch.type;
 				rank.source = firstFeedFetch.store;
@@ -158,7 +158,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 					for (Integer entityKey : grouped.get(key).keySet()) {
 						FeedFetch entity = grouped.get(key).get(entityKey);
 
-						entity.ingested = true;
+						entity.ingested = Boolean.TRUE;
 						ofy().save().entity(entity).now();
 						i++;
 
@@ -326,7 +326,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 		FeedFetch row = null;
 		for (Long itemId : itemIds) {
 			row = items.get(itemId);
-			if (!row.ingested) {
+			if (!row.ingested.booleanValue()) {
 				stored.add(row);
 				i++;
 			} else {

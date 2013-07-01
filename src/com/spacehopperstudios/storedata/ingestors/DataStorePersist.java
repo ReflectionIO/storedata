@@ -59,10 +59,10 @@ public class DataStorePersist {
 	private TaskOptions convertItemRankToParams(TaskOptions options, Item item, Rank rank) {
 		return options.param("itemAdded", Long.toString(item.added.getTime())).param("itemCurrency", item.currency)
 				.param("itemExternalId", urlencode(item.externalId)).param("itemInternalId", item.internalId).param("itemName", urlencode(item.name))
-				.param("itemPrice", Float.toString(item.price)).param("itemSource", item.source).param("itemType", item.type).param("rankCode", rank.code)
-				.param("rankCounted", Boolean.toString(rank.counted)).param("rankCountry", rank.country).param("rankCurrency", rank.currency)
+				.param("itemPrice", item.price.toString()).param("itemSource", item.source).param("itemType", item.type).param("rankCode", rank.code)
+				.param("rankCounted", rank.counted.toString()).param("rankCountry", rank.country).param("rankCurrency", rank.currency)
 				.param("rankDate", Long.toString(rank.date.getTime())).param("rankItemId", urlencode(rank.itemId))
-				.param("rankPosition", Integer.toString(rank.position)).param("rankPrice", Float.toString(rank.price)).param("rankSource", rank.source)
+				.param("rankPosition", rank.position.toString()).param("rankPrice", rank.price.toString()).param("rankSource", rank.source)
 				.param("rankType", rank.type);
 	}
 

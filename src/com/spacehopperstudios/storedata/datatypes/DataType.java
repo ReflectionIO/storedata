@@ -26,12 +26,12 @@ public abstract class DataType extends Jsonable {
 	 * DataType Id
 	 */
 	@Id
-	public Long id;
+	public Long id = null;
 
 	/**
 	 * created date
 	 */
-	public Date created;
+	public Date created = new Date();
 
 	@Override
 	public JsonObject toJson() {

@@ -22,7 +22,7 @@ import com.googlecode.objectify.annotation.Index;
 public class Rank extends DataType {
 
 	@Index
-	public Integer position;
+	public Integer position = Integer.valueOf(0);
 
 	@Index
 	public String itemId;
@@ -39,7 +39,7 @@ public class Rank extends DataType {
 	@Index
 	public String source;
 
-	public Float price;
+	public Float price = Float.valueOf(0);
 
 	public String currency;
 
@@ -47,7 +47,7 @@ public class Rank extends DataType {
 	 * This flag indicates whether this row has been counted
 	 */
 	@Index
-	public Boolean counted;
+	public Boolean counted = Boolean.FALSE;
 
 	public String code;
 

@@ -275,7 +275,7 @@ public class InstallCountries {
 		c.name = shortName;
 		c.a2Code = alpha2Code;
 		c.a3Code = alpha3Code;
-		c.nCode = numericCode;
+		c.nCode = Integer.valueOf(numericCode);
 		c.stores = new ArrayList<String>();
 		
 		return c;

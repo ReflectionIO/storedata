@@ -94,12 +94,13 @@ public abstract class StoreCollector {
 			}
 
 			entity.data = fileNameForEntitiy;
+			entity.country = countryCode;
 			entity.store = store;
 			entity.type = type;
 			entity.date = date;
-			entity.part = 1;
-			entity.totalParts = 1;
-			entity.ingested = ingested;
+			entity.part = Integer.valueOf(1);
+			entity.totalParts = Integer.valueOf(1);
+			entity.ingested = Boolean.valueOf(ingested);
 			entity.code = code;
 
 			Key<FeedFetch> key = ofy().save().entity(entity).now();
@@ -127,7 +128,7 @@ public abstract class StoreCollector {
 				entity.date = date;
 				entity.part = Integer.valueOf(i + 1);
 				entity.totalParts = Integer.valueOf(splitData.size());
-				entity.ingested = ingested;
+				entity.ingested = Boolean.valueOf(ingested);
 				entity.code = code;
 
 				key = ofy().save().entity(entity).now();
