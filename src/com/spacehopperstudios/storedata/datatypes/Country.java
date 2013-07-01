@@ -7,7 +7,7 @@
 //
 package com.spacehopperstudios.storedata.datatypes;
 
-import com.googlecode.objectify.annotation.EntitySubclass;
+import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Index;
 
 /**
@@ -15,7 +15,7 @@ import com.googlecode.objectify.annotation.Index;
  * 
  *         Loosely based on http://en.wikipedia.org/wiki/ISO_3166-1
  */
-@EntitySubclass
+@Entity
 public class Country extends DataType {
 
 	/**

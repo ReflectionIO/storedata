@@ -6,20 +6,16 @@ package com.spacehopperstudios.storedata.datatypes;
 import java.util.Date;
 
 import com.googlecode.objectify.annotation.Cache;
-import com.googlecode.objectify.annotation.EntitySubclass;
-import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Index;
 
 /**
  * @author billy1380
  * 
  */
-@EntitySubclass
+@Entity
 @Cache
 public class Rank extends DataType {
-
-	@Id
-	public Long id;
 
 	@Index
 	public int position;

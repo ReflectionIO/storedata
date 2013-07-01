@@ -11,7 +11,6 @@ import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
 import com.spacehopperstudios.storedata.datatypes.Country;
-import com.spacehopperstudios.storedata.datatypes.DataType;
 import com.spacehopperstudios.storedata.datatypes.FeedFetch;
 import com.spacehopperstudios.storedata.datatypes.Item;
 import com.spacehopperstudios.storedata.datatypes.ItemRankSummary;
@@ -25,7 +24,6 @@ import com.spacehopperstudios.storedata.datatypes.Store;
 public class PersistenceService {
 	static {
 		factory().register(Country.class);
-		factory().register(DataType.class);
 		factory().register(Store.class);
 		factory().register(FeedFetch.class);
 		factory().register(Item.class);

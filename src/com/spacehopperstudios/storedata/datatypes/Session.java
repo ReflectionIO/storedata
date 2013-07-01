@@ -13,7 +13,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.googlecode.objectify.annotation.Entity;
 
+@Entity
 public class Session extends DataType {
 	public Date expires;
 	public String accessCode;

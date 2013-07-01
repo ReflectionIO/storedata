@@ -1,9 +1,9 @@
 package com.spacehopperstudios.storedata.datatypes;
 
-import com.googlecode.objectify.annotation.EntitySubclass;
+import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Index;
 
-@EntitySubclass
+@Entity
 public class ItemRankSummary extends DataType {
 
 	@Index

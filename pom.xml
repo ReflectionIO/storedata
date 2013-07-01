@@ -3,6 +3,7 @@
 	<groupId>com.spacehopperstudios.storedatacollector</groupId>
 	<artifactId>storedatacollector</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<resources>
@@ -22,9 +23,20 @@
 					<target />
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>com.google.appengine</groupId>
+				<artifactId>appengine-maven-plugin</artifactId>
+				<version>1.8.1</version>
+			</plugin>
 		</plugins>
+		<directory>war/WEB-INF/</directory>
 	</build>
 	<dependencies>
+		<dependency>
+			<groupId>com.google.appengine</groupId>
+			<artifactId>appengine-api-1.0-sdk</artifactId>
+			<version>1.8.1</version>
+		</dependency>
 		<dependency>
 			<groupId>com.google.appengine.tools</groupId>
 			<artifactId>appengine-mapreduce</artifactId>
@@ -39,6 +51,17 @@
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>2.2.4</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.appengine.tools</groupId>
+			<artifactId>appengine-gcs-client</artifactId>
+			<version>[0.3,0.4)</version>
 		</dependency>
 	</dependencies>
 </project>

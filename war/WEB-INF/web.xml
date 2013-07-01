@@ -6,27 +6,27 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	version="2.5">
 	<servlet>
 		<servlet-name>Cron Tasks</servlet-name>
-		<servlet-class>com.spacehopperstudios.storedatacollector.CronServlet</servlet-class>
+		<servlet-class>com.spacehopperstudios.storedata.CronServlet</servlet-class>
 	</servlet>
 	
 	<servlet>
 		<servlet-name>Collector Tasks</servlet-name>
-		<servlet-class>com.spacehopperstudios.storedatacollector.CollectorServlet</servlet-class>
+		<servlet-class>com.spacehopperstudios.storedata.CollectorServlet</servlet-class>
 	</servlet>
 	
 	<servlet>
 		<servlet-name>Ingestor Tasks</servlet-name>
-		<servlet-class>com.spacehopperstudios.storedatacollector.IngestorServlet</servlet-class>
+		<servlet-class>com.spacehopperstudios.storedata.IngestorServlet</servlet-class>
 	</servlet>
 
 	<servlet>
 		<servlet-name>Persist Tasks</servlet-name>
-		<servlet-class>com.spacehopperstudios.storedatacollector.PersistServlet</servlet-class>
+		<servlet-class>com.spacehopperstudios.storedata.PersistServlet</servlet-class>
 	</servlet>
 	
 	<servlet>
 		<servlet-name>Dev Helper</servlet-name>
-		<servlet-class>com.spacehopperstudios.storedatacollector.DevHelperServlet</servlet-class>
+		<servlet-class>com.spacehopperstudios.storedata.DevHelperServlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>

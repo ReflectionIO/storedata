@@ -39,7 +39,7 @@ import com.spacehopperstudios.storedata.logging.GaeLevel;
 public class IngestorIOS extends StoreCollector implements Ingestor {
 
 	private static final Logger LOG = Logger.getLogger(IngestorIOS.class.getName());
-	
+
 	private static final String IOS_STORE_A3 = "ios";
 
 	@Override
@@ -73,7 +73,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 
 			for (Integer keyInteger : group.keySet()) {
 				FeedFetch entity = group.get(keyInteger);
-				if (entity.totalParts == 1 && entity.data.startsWith("/blobstore/writable:")) {
+				if (entity.totalParts == 1 && (entity.data.startsWith("/blobstore/writable:") || entity.data.startsWith("/gs/"))) {
 					continue;
 				}
 
@@ -255,7 +255,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 
 			if (group.size() == 1) {
 				data = group.values().iterator().next().data;
-				if (data.startsWith("/blobstore/writable:")) {
+				if (data.startsWith("/blobstore/writable:") || data.startsWith("/gs/")) {
 					blob = true;
 				}
 			}

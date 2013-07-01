@@ -6,18 +6,18 @@ package com.spacehopperstudios.storedata.datatypes;
 import java.util.Date;
 
 import com.googlecode.objectify.annotation.AlsoLoad;
-import com.googlecode.objectify.annotation.EntitySubclass;
+import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Index;
 
 /**
  * @author billy1380
  * 
  */
-@EntitySubclass
+@Entity
 public class FeedFetch extends DataType {
 
 	public String country;
-	
+
 	public String data;
 
 	@Index

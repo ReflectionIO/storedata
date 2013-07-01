@@ -11,10 +11,11 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.google.appengine.api.files.AppEngineFile;
-import com.google.appengine.api.files.FileService;
-import com.google.appengine.api.files.FileServiceFactory;
-import com.google.appengine.api.files.FileWriteChannel;
+import com.google.appengine.tools.cloudstorage.GcsFileOptions;
+import com.google.appengine.tools.cloudstorage.GcsFilename;
+import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
+import com.google.appengine.tools.cloudstorage.GcsService;
+import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
 import com.googlecode.objectify.Key;
 import com.spacehopperstudios.storedata.datatypes.FeedFetch;
 import com.spacehopperstudios.storedata.logging.GaeLevel;
@@ -22,6 +23,7 @@ import com.spacehopperstudios.storedata.logging.GaeLevel;
 public abstract class StoreCollector {
 
 	public static final int MAX_DATA_CHUNK_LENGTH = 500000;
+	public static final String GATHER_BUCKET_KEY = "gather.bucket";
 
 	private static final Logger LOG = Logger.getLogger(StoreCollector.class.getName());
 
@@ -47,16 +49,15 @@ public abstract class StoreCollector {
 			LOG.log(GaeLevel.TRACE, "Saving Data to data store");
 		}
 
-		AppEngineFile file = null;
-		FileService fileService = FileServiceFactory.getFileService();
+		GcsService fileService = GcsServiceFactory.createGcsService();
+		GcsFilename fileName = new GcsFilename(System.getProperty(GATHER_BUCKET_KEY), store + "/" + countryCode + "_" + type + "_" + code);
 
 		boolean blob = false;
-		FileWriteChannel writeChannel = null;
+		GcsOutputChannel writeChannel = null;
 		BufferedWriter writer = null;
 
 		try {
-			file = fileService.createNewBlobFile("application/json", code + "_" + countryCode + "_" + type + ".json");
-			writeChannel = fileService.openWriteChannel(file, true);
+			writeChannel = fileService.createOrReplace(fileName, new GcsFileOptions.Builder().mimeType("application/json").build());
 
 			writer = new BufferedWriter(Channels.newWriter(writeChannel, "UTF8"));
 			writer.write(data);
@@ -75,7 +76,7 @@ public abstract class StoreCollector {
 
 			if (writeChannel != null) {
 				try {
-					writeChannel.closeFinally();
+					writeChannel.close();
 				} catch (IllegalStateException e) {
 					LOG.log(Level.SEVERE, "Failed to close write channel", e);
 				} catch (IOException e) {
@@ -86,13 +87,13 @@ public abstract class StoreCollector {
 
 		if (blob) {
 			FeedFetch entity = new FeedFetch();
+			String fileNameForEntitiy = "/gs/" + fileName.getBucketName() + "/" + fileName.getObjectName();
 
 			if (LOG.isLoggable(GaeLevel.DEBUG)) {
-				LOG.log(GaeLevel.DEBUG, String.format("Saving as blob @ [%s]", file.getFullPath()));
+				LOG.log(GaeLevel.DEBUG, String.format("Saving as blob @ [%s]", fileNameForEntitiy));
 			}
 
-			entity.data = file.getFullPath();
-			entity.country = countryCode;
+			entity.data = fileNameForEntitiy;
 			entity.store = store;
 			entity.type = type;
 			entity.date = date;

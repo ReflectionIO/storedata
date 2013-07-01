@@ -54,11 +54,11 @@ public class ParserIOS implements Parser {
 
 		if (entriesElement != null) {
 			JsonArray entries = entriesElement.getAsJsonArray();
-
+      
 			for (JsonElement entry : entries) {
 				JsonObject jsonItem = entry.getAsJsonObject();
 
-				Item item = new Item();
+				Item item = new Item() ;
 				item.name = jsonItem.get(KEY_NAME).getAsJsonObject().get(KEY_LABEL).getAsString();
 
 				JsonObject attributes = jsonItem.get(KEY_PRICE).getAsJsonObject().get(KEY_ATTRIBUTES).getAsJsonObject();
