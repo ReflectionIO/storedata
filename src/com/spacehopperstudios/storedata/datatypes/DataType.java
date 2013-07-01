@@ -20,7 +20,7 @@ import com.willshex.gson.json.Jsonable;
  * @author billy1380
  * 
  */
-public class DataType extends Jsonable {
+public abstract class DataType extends Jsonable {
 
 	/**
 	 * DataType Id
@@ -36,9 +36,9 @@ public class DataType extends Jsonable {
 	@Override
 	public JsonObject toJson() {
 		JsonObject object = super.toJson();
-		JsonElement jsonId = id == null ? JsonNull.INSTANCE : new JsonPrimitive(id.doubleValue());
+		JsonElement jsonId = id == null ? JsonNull.INSTANCE : new JsonPrimitive(id);
 		object.add("id", jsonId);
-		JsonElement jsonCreated = created == null ? JsonNull.INSTANCE : new JsonPrimitive(created.getTime());
+		JsonElement jsonCreated = created == null ? JsonNull.INSTANCE : new JsonPrimitive(Long.valueOf(created.getTime()));
 		object.add("created", jsonCreated);
 		return object;
 	}

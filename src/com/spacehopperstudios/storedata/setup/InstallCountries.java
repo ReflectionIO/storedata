@@ -7,8 +7,11 @@
 //
 package com.spacehopperstudios.storedata.setup;
 
-import com.spacehopperstudios.storedata.datatypes.Country;
 import static com.spacehopperstudios.storedata.objectify.PersistenceService.ofy;
+
+import java.util.ArrayList;
+
+import com.spacehopperstudios.storedata.datatypes.Country;
 
 /**
  * @author billy1380
@@ -273,7 +276,7 @@ public class InstallCountries {
 		c.a2Code = alpha2Code;
 		c.a3Code = alpha3Code;
 		c.nCode = numericCode;
-		c.stores = "";
+		c.stores = new ArrayList<String>();
 		
 		return c;
 	}

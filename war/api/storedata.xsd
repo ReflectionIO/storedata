@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.spacehopperstudios.com/storedata/" xmlns="http://www.spacehopperstudios.com/storedata/">
+
+	<xsd:complexType name="DataType">
+		<xsd:attribute name="id" type="xsd:long" default="0" />
+		<xsd:attribute name="created" type="xsd:dateTime" use="optional" />
+	</xsd:complexType>
+
+	<xsd:complexType name="FeedFetch">
+		<xsd:complexContent>
+			<xsd:extension base="DataType">
+				<xsd:attribute name="country" type="xsd:string" />
+				<xsd:attribute name="data" type="xsd:string" />
+				<xsd:attribute name="date" type="xsd:dateTime" />
+				<xsd:attribute name="ingested" type="xsd:boolean" />
+				<xsd:attribute name="store" type="xsd:string" />
+				<xsd:attribute name="part" type="xsd:int" />
+				<xsd:attribute name="totalParts" type="xsd:int" />
+				<xsd:attribute name="type" type="xsd:string" />
+				<xsd:attribute name="code" type="xsd:string" />
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:complexType name="Country">
+		<xsd:complexContent>
+			<xsd:extension base="DataType">
+				<xsd:sequence>
+					<xsd:element name="stores" type="xsd:string" maxOccurs="unbounded" />
+				</xsd:sequence>
+
+				<xsd:attribute name="name" type="xsd:string" />
+				<xsd:attribute name="a2Code" type="xsd:string" />
+				<xsd:attribute name="a3Code" type="xsd:string" />
+				<xsd:attribute name="nCode" type="xsd:int" />
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:complexType name="Item">
+		<xsd:complexContent>
+			<xsd:extension base="DataType">
+				<xsd:attribute name="externalId" type="xsd:string" />
+				<xsd:attribute name="internalId" type="xsd:string" />
+				<xsd:attribute name="name" type="xsd:string" />
+				<xsd:attribute name="price" type="xsd:float" />
+				<xsd:attribute name="source" type="xsd:string" />
+				<xsd:attribute name="type" type="xsd:string" />
+				<xsd:attribute name="added" type="xsd:dateTime" />
+				<xsd:attribute name="currency" type="xsd:string" />
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:complexType name="ItemRankSummary">
+		<xsd:complexContent>
+			<xsd:extension base="DataType">
+				<xsd:attribute name="itemId" type="xsd:string" />
+				<xsd:attribute name="type" type="xsd:string" />
+				<xsd:attribute name="source" type="xsd:string" />
+				<xsd:attribute name="numberOfTimesRanked" type="xsd:int" />
+				<xsd:attribute name="numberOfTimesRankedTop10" type="xsd:int" />
+				<xsd:attribute name="numberOfTimesRankedTop25" type="xsd:int" />
+				<xsd:attribute name="numberOfTimesRankedTop50" type="xsd:int" />
+				<xsd:attribute name="numberOfTimesRankedTop100" type="xsd:int" />
+				<xsd:attribute name="numberOfTimesRankedTop200" type="xsd:int" />
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:complexType name="Rank">
+		<xsd:complexContent>
+			<xsd:extension base="DataType">
+				<xsd:attribute name="position" type="xsd:int" />
+				<xsd:attribute name="itemId" type="xsd:string" />
+				<xsd:attribute name="type" type="xsd:string" />
+				<xsd:attribute name="country" type="xsd:string" />
+				<xsd:attribute name="date" type="xsd:dateTime" />
+				<xsd:attribute name="source" type="xsd:string" />
+				<xsd:attribute name="price" type="xsd:float" />
+				<xsd:attribute name="currency" type="xsd:string" />
+				<xsd:attribute name="counted" type="xsd:boolean" />
+				<xsd:attribute name="code" type="xsd:string" />
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:complexType name="Store">
+		<xsd:complexContent>
+			<xsd:extension base="DataType">
+				<xsd:sequence>
+					<xsd:element name="countries" type="xsd:string"
+						maxOccurs="unbounded" />
+				</xsd:sequence>
+				<xsd:attribute name="a3Code" type="xsd:string" />
+				<xsd:attribute name="name" type="xsd:string" />
+				<xsd:attribute name="url" type="xsd:string" />
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:simpleType name="StoreType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="ios" />
+			<xsd:enumeration value="mac" />
+			<xsd:enumeration value="gpl" />
+			<xsd:enumeration value="azn" />
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:complexType name="Request">
+		<xsd:sequence>
+			<xsd:element name="session" type="Session" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="Response">
+		<xsd:sequence>
+			<xsd:element name="error" type="Error" minOccurs="0"
+				maxOccurs="1" />
+		</xsd:sequence>
+		<xsd:attribute name="status" type="StatusType" use="required" />
+	</xsd:complexType>
+
+	<xsd:complexType name="Error">
+		<xsd:attribute name="code" type="xsd:int" />
+		<xsd:attribute name="message" type="xsd:string" />
+	</xsd:complexType>
+
+	<xsd:simpleType name="StatusType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="success" />
+			<xsd:enumeration value="failure" />
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:complexType name="Session">
+		<xsd:complexContent>
+			<xsd:extension base="DataType">
+				<xsd:attribute name="expires" type="xsd:dateTime" use="optional" />
+				<xsd:attribute name="accessCode" type="xsd:string"
+					use="required" />
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+</xsd:schema>

@@ -7,6 +7,14 @@
 //
 package com.spacehopperstudios.storedata.datatypes;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Index;
 
@@ -21,7 +29,7 @@ public class Store extends DataType {
 	 * Store 3 character alpha code
 	 */
 	@Index
-	public String a3code;
+	public String a3Code;
 
 	/**
 	 * Store name
@@ -34,9 +42,62 @@ public class Store extends DataType {
 	 */
 	public String url;
 
-	/**
-	 * Comma delimited list of a2 country codes that the store operates in
-	 */
-	public String countries;
+	public List<String> countries;
+
+	@Override
+	public JsonObject toJson() {
+		JsonObject object = super.toJson();
+		JsonElement jsonCountries = JsonNull.INSTANCE;
+		if (countries != null) {
+			jsonCountries = new JsonArray();
+			for (int i = 0; i < countries.size(); i++) {
+				JsonElement jsonCountriesItem = countries.get(i) == null ? JsonNull.INSTANCE : new JsonPrimitive(countries.get(i));
+				((JsonArray) jsonCountries).add(jsonCountriesItem);
+			}
+		}
+		object.add("countries", jsonCountries);
+		JsonElement jsonA3Code = a3Code == null ? JsonNull.INSTANCE : new JsonPrimitive(a3Code);
+		object.add("a3Code", jsonA3Code);
+		JsonElement jsonName = name == null ? JsonNull.INSTANCE : new JsonPrimitive(name);
+		object.add("name", jsonName);
+		JsonElement jsonUrl = url == null ? JsonNull.INSTANCE : new JsonPrimitive(url);
+		object.add("url", jsonUrl);
+		return object;
+	}
+
+	@Override
+	public void fromJson(JsonObject jsonObject) {
+		super.fromJson(jsonObject);
+		if (jsonObject.has("countries")) {
+			JsonElement jsonCountries = jsonObject.get("countries");
+			if (jsonCountries != null) {
+				countries = new ArrayList<String>();
+				for (int i = 0; i < jsonCountries.getAsJsonArray().size(); i++) {
+					if (jsonCountries.getAsJsonArray().get(i) != null) {
+						countries.add(jsonCountries.getAsJsonArray().get(i).getAsString());
+					}
+				}
+			}
+		}
+
+		if (jsonObject.has("a3Code")) {
+			JsonElement jsonA3Code = jsonObject.get("a3Code");
+			if (jsonA3Code != null) {
+				a3Code = jsonA3Code.getAsString();
+			}
+		}
+		if (jsonObject.has("name")) {
+			JsonElement jsonName = jsonObject.get("name");
+			if (jsonName != null) {
+				name = jsonName.getAsString();
+			}
+		}
+		if (jsonObject.has("url")) {
+			JsonElement jsonUrl = jsonObject.get("url");
+			if (jsonUrl != null) {
+				url = jsonUrl.getAsString();
+			}
+		}
+	}
 
 }
