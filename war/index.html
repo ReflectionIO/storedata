@@ -24,7 +24,7 @@
     <h2>Some Admin/Dev Helper functions</h2>
 
     <form action="/devhelper" method="get">
-    	<label>queue:</label> <select id="defer" name="defer">
+    	<label>queue</label> <select id="defer" name="defer">
     	<option value="yes">
           yes
         </option>
@@ -32,13 +32,13 @@
           no
         </option>
     	</select><br>
-      <label>action:</label> <select id="action" name="action">
+      <label>action</label> <select id="action" name="action">
         <option value="addingested">
-          Adds "ingested" column to FeedFetch
+          Adds &quot;ingested&quot; column to FeedFetch
         </option>
 
         <option value="uningest">
-          Mark all FeedFetch rows as uninjested
+          Mark all FeedFetch rows as un-ingested
         </option>
         
         <option value="addcode">
@@ -84,8 +84,16 @@
         <option value="createcsvoffreeranks">
         	Create CSV of top free ranks
         </option>
+        
+        <option value="addcountries" >
+        Add all countries
+        </option>
+        
+        <option value="addstores">
+        Add all stores
+        </option>
       </select><br>
-       <label>object (only for remove):</label> <select id="object"
+       <label>object (only for remove)</label> <select id="object"
       name="object">
         <!--  <option value="FeedFetch">
                           FeedFetch
@@ -103,7 +111,7 @@
           ItemRankSummary
         </option>
       </select><br>
-       <label>start rank:</label> <select id="rankstart" name=
+       <label>start rank</label> <select id="rankstart" name=
       "rankstart">
         <option value="0">
           1
@@ -153,7 +161,7 @@
           more than 200
         </option>
       </select><br>
-       <label>feed type:</label><select id="feedtype" name=
+       <label>feed type</label><select id="feedtype" name=
       "feedtype">
         <option value="topfreeapplications">
           top free
@@ -191,14 +199,14 @@
           new paid
         </option>
       </select><br>
-       <label>item id:</label> <input type="text" name="itemid" id=
+       <label>item id</label> <input type="text" name="itemid" id=
       "itemid"> <br>
-      <label>date:</label> <input type="text" name="date" id="date" value="2013-04-16-16"> <br> 
+      <label>date</label> <input type="text" name="date" id="date" value="2013-04-16-16"> <br> 
 
-      <p>All actions can by chunck-ed using:</p>
-      <label>start:</label> <input id="start" name="start" type=
+      <p>All actions can by chunck-ed using</p>
+      <label>start</label> <input id="start" name="start" type=
       "text" value="0"><br>
-       <label>count:</label> <input id="count" name="count" type=
+       <label>count</label> <input id="count" name="count" type=
       "text" value="100"><br>
        <input type="submit" id="devhelpersubmit" name=
       "devhelpersubmit" class="btn btn-primary">

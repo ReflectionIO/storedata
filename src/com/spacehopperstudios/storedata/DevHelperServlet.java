@@ -55,6 +55,8 @@ import com.spacehopperstudios.storedata.mapreduce.RankCountReducer;
 import com.spacehopperstudios.storedata.mapreduce.TopAndGrossingMapper;
 import com.spacehopperstudios.storedata.mapreduce.TotalRankedItemsCountMapper;
 import com.spacehopperstudios.storedata.objectify.PersistenceService;
+import com.spacehopperstudios.storedata.setup.CountriesInstaller;
+import com.spacehopperstudios.storedata.setup.StoresInstaller;
 
 /**
  * @author William Shakour
@@ -493,6 +495,10 @@ public class DevHelperServlet extends HttpServlet {
 						startCreateCsvBlobRank(5, 1, CollectorIOS.TOP_FREE_APPS, CollectorIOS.TOP_GROSSING_APPS, "ios", "us", feedType));
 
 				success = true;
+			} else if ("addcountries".toUpperCase().equals(action.toUpperCase())) {
+				CountriesInstaller.install();
+			} else if ("addstores".toUpperCase().equals(action.toUpperCase())) {
+				StoresInstaller.install();
 			} else {
 				if (LOG.isLoggable(Level.INFO)) {
 					LOG.info(String.format("Action [%s] not supported", action));
