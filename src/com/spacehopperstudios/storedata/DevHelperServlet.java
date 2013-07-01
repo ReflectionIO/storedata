@@ -41,7 +41,7 @@ import com.google.appengine.tools.mapreduce.MapReduceSettings;
 import com.google.appengine.tools.mapreduce.MapReduceSpecification;
 import com.google.appengine.tools.mapreduce.Marshallers;
 import com.google.appengine.tools.mapreduce.inputs.DatastoreInput;
-import com.google.appengine.tools.mapreduce.outputs.BlobFileOutput;
+import com.google.appengine.tools.mapreduce.outputs.GoogleCloudStorageFileOutput;
 import com.google.appengine.tools.mapreduce.outputs.InMemoryOutput;
 import com.googlecode.objectify.cmd.Query;
 import com.spacehopperstudios.storedata.collectors.CollectorIOS;
@@ -497,8 +497,10 @@ public class DevHelperServlet extends HttpServlet {
 				success = true;
 			} else if ("addcountries".toUpperCase().equals(action.toUpperCase())) {
 				CountriesInstaller.install();
+				success = true;
 			} else if ("addstores".toUpperCase().equals(action.toUpperCase())) {
 				StoresInstaller.install();
+				success = true;
 			} else {
 				if (LOG.isLoggable(Level.INFO)) {
 					LOG.info(String.format("Action [%s] not supported", action));
@@ -527,8 +529,8 @@ public class DevHelperServlet extends HttpServlet {
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd-HHmmss");
 		return MapReduceJob.start(MapReduceSpecification.of("Create Rank csv blob", new DatastoreInput("Rank", mapShardCount), new TopAndGrossingMapper(
 				topType, grossingType, source, country), Marshallers.getStringMarshaller(), Marshallers.getStringMarshaller(), new CsvBlobReducer(topType,
-				grossingType), new BlobFileOutput(topType + "_" + grossingType + format.format(new Date()) + "_%d.csv", "text/csv", reduceSharedCount)),
-				getSettings());
+				grossingType), new GoogleCloudStorageFileOutput("rankmatchoutput", topType + "_" + grossingType + format.format(new Date()) + "_%d.csv", "text/csv",
+				reduceSharedCount)), getSettings());
 	}
 
 	private String getUrlBase(HttpServletRequest req) throws MalformedURLException {

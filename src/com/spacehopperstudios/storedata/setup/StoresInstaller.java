@@ -37,7 +37,7 @@ public class StoresInstaller {
 								"si", "sb", "za", "es", "lk", "kn", "lc", "vc", "sr", "sz", "se", "ch", "tw", "tj", "tz", "th", "tt", "tn", "tr", "tm", "tc",
 								"ug", "gb", "ua", "ae", "uy", "us", "uz", "ve", "vn", "vg", "ye", "zw" })),
 				createStore("Apple Mac OS X Store", "mac", "http://www.apple.com"), createStore("Android Play Store", "gpl", "http://play.google.com"),
-				createStore("Amazon", "azn", "http://www.amazon.com"));
+				createStore("Amazon Appstore for Android", "azn", "http://www.amazon.com"));
 	}
 
 	private static Store createStore(String name, String a3Code, String url) {
