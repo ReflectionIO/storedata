@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-	targetNamespace="http://www.spacehopperstudios.com/storedata/" xmlns="http://www.spacehopperstudios.com/storedata/">
+	targetNamespace="http://storedata.spacehopperstudios.com" xmlns="http://storedata.spacehopperstudios.com">
 
 	<xsd:complexType name="DataType">
 		<xsd:attribute name="id" type="xsd:long" default="0" />
@@ -34,6 +34,7 @@
 				<xsd:attribute name="a2Code" type="xsd:string" />
 				<xsd:attribute name="a3Code" type="xsd:string" />
 				<xsd:attribute name="nCode" type="xsd:int" />
+				<xsd:attribute name="continent" type="xsd:string" />
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
@@ -100,15 +101,6 @@
 		</xsd:complexContent>
 	</xsd:complexType>
 
-	<xsd:simpleType name="StoreType">
-		<xsd:restriction base="xsd:string">
-			<xsd:enumeration value="ios" />
-			<xsd:enumeration value="mac" />
-			<xsd:enumeration value="gpl" />
-			<xsd:enumeration value="azn" />
-		</xsd:restriction>
-	</xsd:simpleType>
-
 	<xsd:complexType name="Request">
 		<xsd:sequence>
 			<xsd:element name="session" type="Session" />
@@ -144,4 +136,11 @@
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
+
+	<xsd:simpleType name="SortDirectionType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="ascending" />
+			<xsd:enumeration value="descending" />
+		</xsd:restriction>
+	</xsd:simpleType>
 </xsd:schema>
