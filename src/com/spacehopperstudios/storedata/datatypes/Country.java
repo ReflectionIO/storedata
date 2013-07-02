@@ -43,6 +43,8 @@ public class Country extends DataType {
 	 */
 	public String a3Code;
 
+	public String continent;
+
 	/**
 	 * Country numeric code
 	 */
@@ -70,6 +72,8 @@ public class Country extends DataType {
 		object.add("a3Code", jsonA3Code);
 		JsonElement jsonNCode = nCode == null ? JsonNull.INSTANCE : new JsonPrimitive(nCode);
 		object.add("nCode", jsonNCode);
+		JsonElement jsonContinent = continent == null ? JsonNull.INSTANCE : new JsonPrimitive(continent);
+		object.add("continent", jsonContinent);
 		return object;
 	}
 
@@ -110,6 +114,12 @@ public class Country extends DataType {
 			JsonElement jsonNCode = jsonObject.get("nCode");
 			if (jsonNCode != null) {
 				nCode = Integer.valueOf(jsonNCode.getAsInt());
+			}
+		}
+		if (jsonObject.has("continent")) {
+			JsonElement jsonContinent = jsonObject.get("continent");
+			if (jsonContinent != null) {
+				continent = jsonContinent.getAsString();
 			}
 		}
 	}
