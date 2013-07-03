@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-	targetNamespace="http://storedata.spacehopperstudios.com" xmlns="http://storedata.spacehopperstudios.com">
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://storedata.spacehopperstudios.com" xmlns="http://storedata.spacehopperstudios.com">
 
 	<xsd:complexType name="DataType">
 		<xsd:attribute name="id" type="xsd:long" default="0" />
@@ -91,8 +90,7 @@
 		<xsd:complexContent>
 			<xsd:extension base="DataType">
 				<xsd:sequence>
-					<xsd:element name="countries" type="xsd:string"
-						maxOccurs="unbounded" />
+					<xsd:element name="countries" type="xsd:string" maxOccurs="unbounded" />
 				</xsd:sequence>
 				<xsd:attribute name="a3Code" type="xsd:string" />
 				<xsd:attribute name="name" type="xsd:string" />
@@ -102,15 +100,12 @@
 	</xsd:complexType>
 
 	<xsd:complexType name="Request">
-		<xsd:sequence>
-			<xsd:element name="session" type="Session" />
-		</xsd:sequence>
+		<xsd:attribute name="accessCode" type="xsd:string" />
 	</xsd:complexType>
 
 	<xsd:complexType name="Response">
 		<xsd:sequence>
-			<xsd:element name="error" type="Error" minOccurs="0"
-				maxOccurs="1" />
+			<xsd:element name="error" type="Error" minOccurs="0" maxOccurs="1" />
 		</xsd:sequence>
 		<xsd:attribute name="status" type="StatusType" use="required" />
 	</xsd:complexType>
@@ -127,14 +122,12 @@
 		</xsd:restriction>
 	</xsd:simpleType>
 
-	<xsd:complexType name="Session">
-		<xsd:complexContent>
-			<xsd:extension base="DataType">
-				<xsd:attribute name="expires" type="xsd:dateTime" use="optional" />
-				<xsd:attribute name="accessCode" type="xsd:string"
-					use="required" />
-			</xsd:extension>
-		</xsd:complexContent>
+	<xsd:complexType name="Pager">
+		<xsd:attribute name="start" type="xsd:long" />
+		<xsd:attribute name="count" type="xsd:long" />
+		<xsd:attribute name="sortBy" type="xsd:string" />
+		<xsd:attribute name="sortDirection" type="SortDirectionType" />
+		<xsd:attribute name="totalCount" type="xsd:long" />
 	</xsd:complexType>
 
 	<xsd:simpleType name="SortDirectionType">

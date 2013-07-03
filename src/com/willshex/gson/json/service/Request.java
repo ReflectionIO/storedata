@@ -6,32 +6,30 @@
 //  Copyrights © 2013 SPACEHOPPER STUDIOS LTD. All rights reserved.
 //
 package com.willshex.gson.json.service;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import com.spacehopperstudios.storedata.datatypes.Session;
+import com.google.gson.JsonPrimitive;
 import com.willshex.gson.json.Jsonable;
 
 public class Request extends Jsonable {
-	public Session session;
+	public String accessCode;
 
 	@Override
 	public JsonObject toJson() {
 		JsonObject object = super.toJson();
-		JsonElement jsonSession = session == null ? JsonNull.INSTANCE : session.toJson();
-		object.add("session", jsonSession);
+		JsonElement jsonAccessCode = accessCode == null ? JsonNull.INSTANCE : new JsonPrimitive(accessCode);
+		object.add("accessCode", jsonAccessCode);
 		return object;
 	}
 
 	@Override
 	public void fromJson(JsonObject jsonObject) {
 		super.fromJson(jsonObject);
-		if (jsonObject.has("session")) {
-			JsonElement jsonSession = jsonObject.get("session");
-			if (jsonSession != null) {
-				session = new Session();
-				session.fromJson(jsonSession.getAsJsonObject());
+		if (jsonObject.has("accessCode")) {
+			JsonElement jsonAccessCode = jsonObject.get("accessCode");
+			if (jsonAccessCode != null) {
+				accessCode = jsonAccessCode.getAsString();
 			}
 		}
 	}

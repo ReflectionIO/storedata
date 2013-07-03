@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<wsdl:definitions name="core"
-	targetNamespace="http://storedata.spacehopperstudios.com/core"
-	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:sdc="http://storedata.spacehopperstudios.com/core"
-	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<wsdl:definitions name="core" targetNamespace="http://storedata.spacehopperstudios.com/core" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:sdc="http://storedata.spacehopperstudios.com/core" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 	<wsdl:types>
-		<xsd:schema targetNamespace="http://storedata.spacehopperstudios.com/core"
-			xmlns:sd="http://storedata.spacehopperstudios.com">
-			<xsd:import schemaLocation="../storedata.xsd"
-				namespace="http://storedata.spacehopperstudios.com" />
-
+		<xsd:schema targetNamespace="http://storedata.spacehopperstudios.com/core" xmlns:sd="http://storedata.spacehopperstudios.com">
+			<xsd:import schemaLocation="../storedata.xsd" namespace="http://storedata.spacehopperstudios.com" />
 
 			<xsd:element name="GetCountriesInput" type="sdc:GetCountriesRequest" />
 			<xsd:element name="GetCountriesOutput" type="sdc:GetCountriesResponse" />
@@ -16,16 +11,20 @@
 			<xsd:element name="GetStoresInput" type="sdc:GetStoresRequest" />
 			<xsd:element name="GetStoresOutput" type="sdc:GetStoresResponse" />
 
+			<xsd:element name="GetTopItemsInput" type="sdc:GetTopItemsRequest" />
+			<xsd:element name="GetTopItemsOutput" type="sdc:GetTopItemsResponse" />
+
+			<xsd:element name="GetItemRanksInput" type="sdc:GetItemRanksRequest" />
+			<xsd:element name="GetItemRanksOutput" type="sdc:GetItemRanksResponse" />
+
 			<xsd:complexType name="GetCountriesRequest">
 				<xsd:complexContent>
 					<xsd:extension base="sd:Request">
 						<xsd:sequence>
-							<xsd:element name="store" type="sd:Store" maxOccurs="1" />
+							<xsd:element name="store" type="sd:Store" />
+							<xsd:element name="pager" type="sd:Pager" />
 						</xsd:sequence>
 						<xsd:attribute name="query" type="xsd:string" />
-						<xsd:attribute name="count" type="xsd:long" />
-						<xsd:attribute name="sortBy" type="xsd:string" />
-						<xsd:attribute name="sortDirection" type="sd:SortDirectionType" />
 					</xsd:extension>
 				</xsd:complexContent>
 			</xsd:complexType>
@@ -34,11 +33,9 @@
 				<xsd:complexContent>
 					<xsd:extension base="sd:Response">
 						<xsd:sequence>
-							<xsd:element name="countries" type="sd:Country"
-								maxOccurs="unbounded">
+							<xsd:element name="countries" type="sd:Country" maxOccurs="unbounded" />
+							<xsd:element name="pager" type="sd:Pager" />
 						</xsd:sequence>
-						<xsd:attribute name="totalCount" type="xsd:long"
-							use="optional" />
 					</xsd:extension>
 				</xsd:complexContent>
 			</xsd:complexType>
@@ -47,13 +44,11 @@
 				<xsd:complexContent>
 					<xsd:extension base="sd:Request">
 						<xsd:sequence>
-							<xsd:element name="country" type="sd:Country"
-								maxOccurs="1" />
+							<xsd:element name="country" type="sd:Country" />
+							<xsd:element name="pager" type="sd:Pager" />
 						</xsd:sequence>
+
 						<xsd:attribute name="query" type="xsd:string" />
-						<xsd:attribute name="count" type="xsd:long" />
-						<xsd:attribute name="sortBy" type="xsd:string" />
-						<xsd:attribute name="sortDirection" type="sd:SortDirectionType" />
 					</xsd:extension>
 				</xsd:complexContent>
 			</xsd:complexType>
@@ -62,36 +57,154 @@
 				<xsd:complexContent>
 					<xsd:extension base="sd:Response">
 						<xsd:sequence>
-							<xsd:element name="stores" type="sd:Store" maxOccurs="unbounded">
+							<xsd:element name="stores" type="sd:Store" maxOccurs="unbounded" />
+							<xsd:element name="pager" type="sd:Pager" />
 						</xsd:sequence>
-						<xsd:attribute name="totalCount" type="xsd:long"
-							use="optional" />
 					</xsd:extension>
 				</xsd:complexContent>
 			</xsd:complexType>
 
-			<xsd:complexType name="GetTopItemsRequest"></xsd:complexType>
+			<xsd:complexType name="GetTopItemsRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="country" type="sd:Country" />
+							<xsd:element name="store" type="sd:Store" />
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
 
-			<xsd:complexType name="GetTopItemsResponse"></xsd:complexType>
+						<!-- The list type e.g. for ios store it would be freeiphone or grossingipad -->
+						<xsd:attribute name="listType" type="xsd:string" />
+						<xsd:attribute name="on" type="xsd:dateTime" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetTopItemsResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+							<xsd:element name="items" type="sd:Item" maxOccurs="unbounded" />
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetItemRanksRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="item" type="sd:Item" />
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+
+						<xsd:attribute name="after" type="xsd:dateTime" />
+						<xsd:attribute name="before" type="xsd:dateTime" />
+
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetItemRanksResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+							<xsd:element name="ranks" type="sd:Rank" maxOccurs="unbounded" />
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
 		</xsd:schema>
 	</wsdl:types>
 
 	<wsdl:message name="GetCountriesRequest">
-		<wsdl:part name="input" element="sdc:GetCountriesInput"></wsdl:part>
+		<wsdl:part name="input" element="sdc:GetCountriesInput" />
 	</wsdl:message>
 	<wsdl:message name="GetCountriesResponse">
-		<wsdl:part name="output" element="sdc:GetCountriesOutput"></wsdl:part>
+		<wsdl:part name="output" element="sdc:GetCountriesOutput" />
 	</wsdl:message>
+	<wsdl:message name="GetStoresRequest">
+		<wsdl:part name="input" element="sdc:GetStoresInput" />
+	</wsdl:message>
+	<wsdl:message name="GetStoresResponse">
+		<wsdl:part name="output" element="sdc:GetStoresOutput" />
+	</wsdl:message>
+	<wsdl:message name="GetTopItemsRequest">
+		<wsdl:part name="input" element="sdc:GetTopItemsInput" />
+	</wsdl:message>
+	<wsdl:message name="GetTopItemsResponse">
+		<wsdl:part name="output" element="sdc:GetTopItemsOutput" />
+	</wsdl:message>
+
+	<wsdl:message name="GetItemRanksRequest">
+		<wsdl:part name="input" element="sdc:GetItemRanksInput" />
+	</wsdl:message>
+	<wsdl:message name="GetItemRanksResponse">
+		<wsdl:part name="output" element="sdc:GetItemRanksOutput" />
+	</wsdl:message>
+
 	<wsdl:portType name="core">
 		<wsdl:operation name="GetCountries">
-			<wsdl:input message="sdc:GetCountriesRequest"></wsdl:input>
-			<wsdl:output message="sdc:GetCountriesResponse"></wsdl:output>
+			<wsdl:input message="sdc:GetCountriesRequest" />
+			<wsdl:output message="sdc:GetCountriesResponse" />
 		</wsdl:operation>
+		<wsdl:operation name="GetStores">
+			<wsdl:input message="sdc:GetStoresRequest" />
+			<wsdl:output message="sdc:GetStoresResponse" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetTopItems">
+			<wsdl:input message="sdc:GetTopItemsRequest" />
+			<wsdl:output message="sdc:GetTopItemsResponse" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetItemRanks">
+			<wsdl:input message="sdc:GetItemRanksRequest" />
+			<wsdl:output message="sdc:GetItemRanksResponse" />
+		</wsdl:operation>
+
 	</wsdl:portType>
 	<wsdl:binding name="coreSOAP" type="sdc:core">
-		<soap:binding style="document"
-			transport="http://schemas.xmlsoap.org/soap/http" />
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="GetCountries">
+			<soap:operation soapAction="http://storedata.spacehopperstudios.com/core/GetCountries" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetStores">
+			<soap:operation soapAction="http://storedata.spacehopperstudios.com/core/GetStores" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetTopItems">
+			<soap:operation soapAction="http://storedata.spacehopperstudios.com/core/GetTopItems" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetItemRanks">
+			<soap:operation soapAction="http://storedata.spacehopperstudios.com/core/GetItemRanks" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
 	</wsdl:binding>
 	<wsdl:service name="core">
 		<wsdl:port name="coreSOAP" binding="sdc:coreSOAP">

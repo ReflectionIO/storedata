@@ -14,13 +14,13 @@ import com.google.gson.JsonPrimitive;
 import com.willshex.gson.json.Jsonable;
 
 public class Error extends Jsonable {
-	public Number code;
+	public Integer code;
 	public String message;
 
 	@Override
 	public JsonObject toJson() {
 		JsonObject object = super.toJson();
-		JsonElement jsonCode = code == null ? JsonNull.INSTANCE : new JsonPrimitive(code.doubleValue());
+		JsonElement jsonCode = code == null ? JsonNull.INSTANCE : new JsonPrimitive(code);
 		object.add("code", jsonCode);
 		JsonElement jsonMessage = message == null ? JsonNull.INSTANCE : new JsonPrimitive(message);
 		object.add("message", jsonMessage);
@@ -33,7 +33,7 @@ public class Error extends Jsonable {
 		if (jsonObject.has("code")) {
 			JsonElement jsonCode = jsonObject.get("code");
 			if (jsonCode != null) {
-				code = Double.valueOf(jsonCode.getAsDouble());
+				code = Integer.valueOf(jsonCode.getAsInt());
 			}
 		}
 		if (jsonObject.has("message")) {
