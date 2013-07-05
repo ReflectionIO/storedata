@@ -21,11 +21,11 @@ public abstract class ActionHandler {
 
 		if (e instanceof InputValidationException) {
 			error.code = Integer.valueOf(((InputValidationException) e).getCode());
+			error.message = ((InputValidationException) e).getMessage();
 		} else {
 			error.code = Integer.valueOf(888);
+			error.message = "An unexpected error occured [" + e.toString() + "]";
 		}
-
-		error.message = e.toString();
 
 		log.log(Level.SEVERE, error.message, e);
 

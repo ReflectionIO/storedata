@@ -27,8 +27,9 @@ public class PersistenceService {
 		factory().register(Store.class);
 		factory().register(FeedFetch.class);
 		factory().register(Item.class);
-		factory().register(Rank.class);
 		factory().register(ItemRankSummary.class);
+		factory().register(Rank.class);
+		factory().register(Store.class);
 	}
 
 	public static Objectify ofy() {

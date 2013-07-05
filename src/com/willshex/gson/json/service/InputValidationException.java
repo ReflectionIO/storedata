@@ -25,6 +25,6 @@ public class InputValidationException extends Exception {
 	}
 
 	public String toString() {
-		return "Code:" + String.valueOf(code) + " = " + getClass().getSimpleName() + ": " + getMessage();
+		return "code[" + String.valueOf(code) + "] = " + getClass().getSimpleName() + "[" + getMessage() + "]";
 	}
 }

@@ -49,7 +49,7 @@ public class Country extends DataType {
 	 * Country numeric code
 	 */
 	public Integer nCode = Integer.valueOf(0);
-
+	
 	public List<String> stores;
 
 	@Override
