@@ -12,6 +12,7 @@ import static com.spacehopperstudios.storedata.objectify.PersistenceService.ofy;
 import java.util.List;
 
 import com.spacehopperstudios.storedata.api.datatypes.Pager;
+import com.spacehopperstudios.storedata.datatypes.Country;
 import com.spacehopperstudios.storedata.datatypes.Store;
 import com.willshex.gson.json.service.InputValidationException;
 
@@ -139,5 +140,54 @@ public class ValidationHelper {
 					ValidationError.PagerStartLargerThanTotal.getMessage(parent));
 
 		return pager;
+	}
+
+	/**
+	 * 
+	 * @param country
+	 * @param parent
+	 * @return
+	 * @throws InputValidationException
+	 */
+	public static Country validateCountry(Country country, String parent) throws InputValidationException {
+
+		if (country == null)
+			throw new InputValidationException(ValidationError.CountryNull.getCode(), ValidationError.CountryNull.getMessage(parent));
+
+		boolean isIdLookup = false, isA2CodeLookup = false, isNameLookup = false;
+
+		if (country.id != null) {
+			isIdLookup = true;
+		} else if (country.a2Code != null) {
+			isA2CodeLookup = true;
+		} else if (country.name != null) {
+			isNameLookup = true;
+		}
+
+		if (!(isIdLookup || isA2CodeLookup || isNameLookup)) {
+			throw new InputValidationException(ValidationError.CountryNoLookup.getCode(), ValidationError.CountryNoLookup.getMessage(parent));
+		}
+
+		Country lookupCountry = null;
+		if (isIdLookup) {
+			lookupCountry = ofy().load().type(Country.class).id(country.id).now();
+		} else if (isA2CodeLookup) {
+			List<Country> found = ofy().load().type(Country.class).filter("a2Code", country.a2Code).limit(1).list();
+
+			if (found != null && found.size() > 0) {
+				lookupCountry = found.get(0);
+			}
+		} else if (isNameLookup) {
+			List<Country> found = ofy().load().type(Country.class).filter("name", country.name).limit(1).list();
+
+			if (found != null && found.size() > 0) {
+				lookupCountry = found.get(0);
+			}
+		}
+
+		if (lookupCountry == null)
+			throw new InputValidationException(ValidationError.CountryNotFound.getCode(), ValidationError.CountryNotFound.getMessage(parent));
+
+		return lookupCountry;
 	}
 }

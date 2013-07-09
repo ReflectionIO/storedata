@@ -10,7 +10,13 @@ package com.spacehopperstudios.storedata.api.core;
 import static com.spacehopperstudios.storedata.objectify.PersistenceService.ofy;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import com.googlecode.objectify.cmd.Query;
@@ -22,7 +28,11 @@ import com.spacehopperstudios.storedata.api.core.call.GetStoresRequest;
 import com.spacehopperstudios.storedata.api.core.call.GetStoresResponse;
 import com.spacehopperstudios.storedata.api.core.call.GetTopItemsRequest;
 import com.spacehopperstudios.storedata.api.core.call.GetTopItemsResponse;
+import com.spacehopperstudios.storedata.api.datatypes.SortDirectionType;
 import com.spacehopperstudios.storedata.datatypes.Country;
+import com.spacehopperstudios.storedata.datatypes.Item;
+import com.spacehopperstudios.storedata.datatypes.Rank;
+import com.spacehopperstudios.storedata.datatypes.Store;
 import com.spacehopperstudios.storedata.input.ValidationError;
 import com.spacehopperstudios.storedata.input.ValidationHelper;
 import com.willshex.gson.json.service.ActionHandler;
@@ -49,14 +59,12 @@ public final class Core extends ActionHandler {
 			try {
 				input.store = ValidationHelper.validateStore(input.store, "input");
 				isStore = true;
-			} catch (InputValidationException ex) {
-			}
+			} catch (InputValidationException ex) {}
 
 			try {
 				input.query = ValidationHelper.validateQuery(input.query, "input");
 				isQuery = true;
-			} catch (InputValidationException ex) {
-			}
+			} catch (InputValidationException ex) {}
 
 			Query<Country> query = ofy().load().type(Country.class).offset(input.pager.start.intValue()).limit(input.pager.count.intValue());
 			List<Country> countries = null;
@@ -69,12 +77,12 @@ public final class Core extends ActionHandler {
 				if (input.query.equals("*")) {
 					countries = query.list();
 				} else {
-					query = query.filter("a2Code", input.query);
+					query = query.filter("a2Code >=", input.query).filter("a2Code <", input.query + "\uFFFD");
 					countries = query.list();
 
 					if (countries.size() < input.pager.count.intValue()) {
 						query = ofy().load().type(Country.class).offset(input.pager.start.intValue()).limit(input.pager.count.intValue() - countries.size())
-								.filter("name", input.query);
+								.filter("name >=", input.query).filter("name <", input.query + "\uFFFD");
 
 						// We have no control over whether countries is a read-only list so we just copy it
 						List<Country> merged = new ArrayList<Country>(query.list());
@@ -107,6 +115,56 @@ public final class Core extends ActionHandler {
 			if (input == null)
 				throw new NullPointerException("Invalid argument null - GetStoresRequest: input");
 
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			input.pager = ValidationHelper.validatePager(input.pager, "input");
+
+			boolean isQuery = false;
+			boolean isCountry = false;
+
+			try {
+				input.country = ValidationHelper.validateCountry(input.country, "input");
+				isCountry = true;
+			} catch (InputValidationException ex) {}
+
+			try {
+				input.query = ValidationHelper.validateQuery(input.query, "input");
+				isQuery = true;
+			} catch (InputValidationException ex) {}
+
+			Query<Store> query = ofy().load().type(Store.class).offset(input.pager.start.intValue()).limit(input.pager.count.intValue());
+			List<Store> stores = null;
+
+			if (isCountry) {
+				query = query.filter("a3Code in", input.country.stores);
+				stores = query.list();
+			} else if (isQuery) {
+				// we do not modify the query with a filter if the query is *
+				if (input.query.equals("*")) {
+					stores = query.list();
+				} else {
+					query = query.filter("a3Code >=", input.query).filter("a3Code <", input.query + "\uFFFD");
+					stores = query.list();
+
+					if (stores.size() < input.pager.count.intValue()) {
+						query = ofy().load().type(Store.class).offset(input.pager.start.intValue()).limit(input.pager.count.intValue() - stores.size())
+								.filter("name >=", input.query).filter("name <", input.query + "\uFFFD");
+
+						// We have no control over whether stores is a read-only list so we just copy it
+						List<Store> merged = new ArrayList<Store>(query.list());
+						merged.addAll(stores);
+						stores = merged;
+					}
+				}
+			} else
+				throw new InputValidationException(ValidationError.GetStoresNeedsCountryOrQuery.getCode(),
+						ValidationError.GetStoresNeedsCountryOrQuery.getMessage("input"));
+
+			if (stores != null) {
+				output.stores = stores;
+				output.pager = input.pager;
+			}
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -122,6 +180,87 @@ public final class Core extends ActionHandler {
 		try {
 			if (input == null)
 				throw new NullPointerException("Invalid argument null - GetTopItemsRequest: input");
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			input.pager = ValidationHelper.validatePager(input.pager, "input");
+
+			input.country = ValidationHelper.validateCountry(input.country, "input");
+
+			if (input.listType == null)
+				throw new NullPointerException("Invalid argument null - String: input.listType");
+
+			if (input.on == null)
+				throw new NullPointerException("Invalid argument null - Date: input.on");
+
+			input.store = ValidationHelper.validateStore(input.store, "input");
+
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(input.on);
+			cal.set(Calendar.HOUR_OF_DAY, 0);
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.SECOND, 0);
+			cal.set(Calendar.MILLISECOND, 1);
+			Date after = cal.getTime();
+			cal.add(Calendar.DAY_OF_YEAR, 1);
+			Date before = cal.getTime();
+
+			String order = "";
+
+			if (input.pager.sortDirection != null && input.pager.sortDirection == SortDirectionType.SortDirectionTypeAscending) {
+				order = "-";
+			}
+
+			if (input.pager.sortBy == null || input.pager.sortBy.length() == 0) {
+				order += "position";
+			} else {
+				order += input.pager.sortBy;
+			}
+
+			Query<Rank> query = ofy().load().type(Rank.class).filter("date >=", after).filter("date <", before).filter("country", input.country.a2Code)
+					.filter("type", input.listType).filter("source", input.store.a3Code).offset(input.pager.start.intValue())
+					.limit(input.pager.count.intValue()).order(order);
+
+			List<Rank> ranks = query.list();
+
+			if (ranks != null && ranks.size() != 0) {
+				List<String> itemIds = new ArrayList<String>();
+				final Map<String, Rank> lookup = new HashMap<String, Rank>();
+
+				Rank lookupRank = null;
+				for (Rank rank : ranks) {
+					if (!lookup.containsKey(rank.itemId)) {
+						itemIds.add(rank.itemId);
+					} else {
+						// if an item appears more than once adjust the value in the by averaging out the position
+						lookupRank = lookup.get(rank.itemId);
+						lookupRank.position = Integer.valueOf((int) (lookupRank.position.floatValue() + rank.position.floatValue() * 0.5f));
+					}
+				}
+
+				List<Item> items = ofy().load().type(Item.class).filter("externalId in", itemIds).list();
+
+				Collections.sort(items, new Comparator<Item>() {
+
+					@Override
+					public int compare(Item lhs, Item rhs) {
+						int compare = 0;
+
+						int lhsRank = lookup.get(lhs.externalId).position.intValue();
+						int rhsRank = lookup.get(rhs.externalId).position.intValue();
+
+						if (lhsRank > rhsRank) {
+							compare = 1;
+						} else if (lhsRank < rhsRank) {
+							compare = -1;
+						}
+						return compare;
+					}
+
+				});
+
+				output.items = items;
+			}
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {

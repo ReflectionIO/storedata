@@ -1,6 +1,6 @@
 //
-//  DataCollectionServlet.java
-//  from - jspacecloud
+//  CollectorServlet.java
+//  storedata
 //
 //  Created by William Shakour on May 25, 2013.
 //  Copyright © 2013 Spacehopper Studios Ltd. All rights reserved.
