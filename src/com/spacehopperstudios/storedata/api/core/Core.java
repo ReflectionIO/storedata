@@ -11,8 +11,6 @@ import static com.spacehopperstudios.storedata.objectify.PersistenceService.ofy;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -47,7 +45,8 @@ public final class Core extends ActionHandler {
 		GetCountriesResponse output = new GetCountriesResponse();
 		try {
 			if (input == null)
-				throw new NullPointerException("Invalid argument null - GetCountriesRequest: input");
+				throw new InputValidationException(ValidationError.GetCountriesNeedsStoreOrQuery.getCode(),
+						ValidationError.GetCountriesNeedsStoreOrQuery.getMessage("GetCountriesRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
@@ -97,6 +96,10 @@ public final class Core extends ActionHandler {
 			if (countries != null) {
 				output.countries = countries;
 				output.pager = input.pager;
+
+				if (output.pager.totalCount == null && output.pager.count != null && output.countries.size() < output.pager.count.intValue()) {
+					output.pager.totalCount = Long.valueOf(output.countries.size());
+				}
 			}
 
 			output.status = StatusType.StatusTypeSuccess;
@@ -113,7 +116,8 @@ public final class Core extends ActionHandler {
 		GetStoresResponse output = new GetStoresResponse();
 		try {
 			if (input == null)
-				throw new NullPointerException("Invalid argument null - GetStoresRequest: input");
+				throw new InputValidationException(ValidationError.GetCountriesNeedsStoreOrQuery.getCode(),
+						ValidationError.GetCountriesNeedsStoreOrQuery.getMessage("GetStoresRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
@@ -163,6 +167,10 @@ public final class Core extends ActionHandler {
 			if (stores != null) {
 				output.stores = stores;
 				output.pager = input.pager;
+
+				if (output.pager.totalCount == null && output.pager.count != null && output.stores.size() < output.pager.count.intValue()) {
+					output.pager.totalCount = Long.valueOf(output.stores.size());
+				}
 			}
 
 			output.status = StatusType.StatusTypeSuccess;
@@ -179,7 +187,8 @@ public final class Core extends ActionHandler {
 		GetTopItemsResponse output = new GetTopItemsResponse();
 		try {
 			if (input == null)
-				throw new NullPointerException("Invalid argument null - GetTopItemsRequest: input");
+				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
+						ValidationError.InvalidValueNull.getMessage("GetTopItemsRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
@@ -188,10 +197,11 @@ public final class Core extends ActionHandler {
 			input.country = ValidationHelper.validateCountry(input.country, "input");
 
 			if (input.listType == null)
-				throw new NullPointerException("Invalid argument null - String: input.listType");
+				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
+						ValidationError.InvalidValueNull.getMessage("String: input.listType"));
 
 			if (input.on == null)
-				throw new NullPointerException("Invalid argument null - Date: input.on");
+				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(), ValidationError.InvalidValueNull.getMessage("Date: input.on"));
 
 			input.store = ValidationHelper.validateStore(input.store, "input");
 
@@ -219,7 +229,7 @@ public final class Core extends ActionHandler {
 
 			Query<Rank> query = ofy().load().type(Rank.class).filter("date >=", after).filter("date <", before).filter("country", input.country.a2Code)
 					.filter("type", input.listType).filter("source", input.store.a3Code).offset(input.pager.start.intValue())
-					.limit(input.pager.count.intValue()).order(order);
+					.limit(input.pager.count.intValue()).order("date").order(order);
 
 			List<Rank> ranks = query.list();
 
@@ -227,39 +237,16 @@ public final class Core extends ActionHandler {
 				List<String> itemIds = new ArrayList<String>();
 				final Map<String, Rank> lookup = new HashMap<String, Rank>();
 
-				Rank lookupRank = null;
 				for (Rank rank : ranks) {
 					if (!lookup.containsKey(rank.itemId)) {
 						itemIds.add(rank.itemId);
-					} else {
-						// if an item appears more than once adjust the value in the by averaging out the position
-						lookupRank = lookup.get(rank.itemId);
-						lookupRank.position = Integer.valueOf((int) (lookupRank.position.floatValue() + rank.position.floatValue() * 0.5f));
+						lookup.put(rank.itemId, rank);
 					}
 				}
 
-				List<Item> items = ofy().load().type(Item.class).filter("externalId in", itemIds).list();
-
-				Collections.sort(items, new Comparator<Item>() {
-
-					@Override
-					public int compare(Item lhs, Item rhs) {
-						int compare = 0;
-
-						int lhsRank = lookup.get(lhs.externalId).position.intValue();
-						int rhsRank = lookup.get(rhs.externalId).position.intValue();
-
-						if (lhsRank > rhsRank) {
-							compare = 1;
-						} else if (lhsRank < rhsRank) {
-							compare = -1;
-						}
-						return compare;
-					}
-
-				});
-
-				output.items = items;
+				output.ranks = ranks;
+				output.items = ofy().load().type(Item.class).filter("externalId in", itemIds).list();
+				output.pager = input.pager;
 			}
 
 			output.status = StatusType.StatusTypeSuccess;
@@ -276,7 +263,8 @@ public final class Core extends ActionHandler {
 		GetItemRanksResponse output = new GetItemRanksResponse();
 		try {
 			if (input == null)
-				throw new NullPointerException("Invalid argument null - GetItemRanksRequest: input");
+				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
+						ValidationError.InvalidValueNull.getMessage("GetItemRanksRequest: input"));
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {

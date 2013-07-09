@@ -26,6 +26,7 @@ public enum ValidationError {
 	CountryNull(100011, "Invalid value null for Country: %s.country"),
 	CountryNotFound(100012, "Country not found Store: %s.value"),
 	CountryNoLookup(100013, "Invalid country lookup, need either id or a2Code or name for Country: %s.country"),
+	InvalidValueNull(100014, "Invalid value null %s"),
 
 	GetCountriesNeedsStoreOrQuery(100101, "GetCountries call should either have a store or a query. To get all countries use * for the query"),
 

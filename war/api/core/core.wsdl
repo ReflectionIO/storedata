@@ -84,6 +84,7 @@
 				<xsd:complexContent>
 					<xsd:extension base="sd:Response">
 						<xsd:sequence>
+							<xsd:element name="ranks" type="sd:rank" maxOccurs="unbounded" />
 							<xsd:element name="items" type="sd:Item" maxOccurs="unbounded" />
 							<xsd:element name="pager" type="sd:Pager" />
 						</xsd:sequence>
