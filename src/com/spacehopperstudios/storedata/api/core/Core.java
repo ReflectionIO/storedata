@@ -196,6 +196,7 @@ public final class Core extends ActionHandler {
 
 			input.country = ValidationHelper.validateCountry(input.country, "input");
 
+			// TODO: validate the list type by store
 			if (input.listType == null)
 				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
 						ValidationError.InvalidValueNull.getMessage("String: input.listType"));
@@ -221,6 +222,7 @@ public final class Core extends ActionHandler {
 				order = "-";
 			}
 
+			// TODO: validate the sort direction
 			if (input.pager.sortBy == null || input.pager.sortBy.length() == 0) {
 				order += "position";
 			} else {
@@ -265,6 +267,34 @@ public final class Core extends ActionHandler {
 			if (input == null)
 				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
 						ValidationError.InvalidValueNull.getMessage("GetItemRanksRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			input.pager = ValidationHelper.validatePager(input.pager, "input");
+
+			input.item = ValidationHelper.validateItem(input.item, "input");
+
+			Calendar cal = Calendar.getInstance();
+
+			if (input.before == null)
+				input.before = cal.getTime();
+
+			if (input.after == null) {
+				cal.setTime(input.before);
+				cal.add(Calendar.DAY_OF_YEAR, -30);
+				input.after = cal.getTime();
+			}
+
+			long diff = input.before.getTime() - input.after.getTime();
+			long diffDays = diff / (24 * 60 * 60 * 1000);
+
+			if (diffDays > 60 || diffDays < 0)
+				throw new InputValidationException(ValidationError.DateRangeOutOfBounds.getCode(),
+						ValidationError.DateRangeOutOfBounds.getMessage("0-60 days: input.before - input.after"));
+
+			output.ranks = ofy().load().type(Rank.class).offset(input.pager.start.intValue()).limit(input.pager.count.intValue())
+					.filter("externalId", input.item.id).filter("date >=", input.before).filter("date <=", input.after).filter("source", input.item.source)
+					.list();
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {

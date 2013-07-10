@@ -13,6 +13,7 @@ import java.util.List;
 
 import com.spacehopperstudios.storedata.api.datatypes.Pager;
 import com.spacehopperstudios.storedata.datatypes.Country;
+import com.spacehopperstudios.storedata.datatypes.Item;
 import com.spacehopperstudios.storedata.datatypes.Store;
 import com.willshex.gson.json.service.InputValidationException;
 
@@ -164,9 +165,8 @@ public class ValidationHelper {
 			isNameLookup = true;
 		}
 
-		if (!(isIdLookup || isA2CodeLookup || isNameLookup)) {
+		if (!(isIdLookup || isA2CodeLookup || isNameLookup))
 			throw new InputValidationException(ValidationError.CountryNoLookup.getCode(), ValidationError.CountryNoLookup.getMessage(parent));
-		}
 
 		Country lookupCountry = null;
 		if (isIdLookup) {
@@ -189,5 +189,58 @@ public class ValidationHelper {
 			throw new InputValidationException(ValidationError.CountryNotFound.getCode(), ValidationError.CountryNotFound.getMessage(parent));
 
 		return lookupCountry;
+	}
+
+	/**
+	 * @param item
+	 * @param string
+	 * @return
+	 * @throws InputValidationException
+	 */
+	public static Item validateItem(Item item, String parent) throws InputValidationException {
+		if (item == null)
+			throw new InputValidationException(ValidationError.ItemNull.getCode(), ValidationError.ItemNull.getMessage(parent));
+
+		Store itemStore = new Store();
+		itemStore.a3Code = item.source;
+
+		itemStore = validateStore(itemStore, parent + ".item");
+		
+		item.source = itemStore.a3Code;
+
+		boolean isIdLookup = false, isIntIdLookup = false, isExtIdLookup = false;
+
+		if (item.id != null) {
+			isIdLookup = true;
+		} else if (item.externalId != null) {
+			isExtIdLookup = true;
+		} else if (item.internalId != null) {
+			isIntIdLookup = true;
+		}
+
+		if (!(isIdLookup || isIntIdLookup || isExtIdLookup))
+			throw new InputValidationException(ValidationError.ItemNoLookup.getCode(), ValidationError.ItemNoLookup.getMessage(parent));
+
+		Item lookupItem = null;
+		if (isIdLookup) {
+			lookupItem = ofy().load().type(Item.class).id(item.id).now();
+		} else if (isExtIdLookup) {
+			List<Item> found = ofy().load().type(Item.class).filter("externalId", item.externalId).limit(1).list();
+
+			if (found != null && found.size() > 0) {
+				lookupItem = found.get(0);
+			}
+		} else if (isIntIdLookup) {
+			List<Item> found = ofy().load().type(Item.class).filter("internalId", item.internalId).limit(1).list();
+
+			if (found != null && found.size() > 0) {
+				lookupItem = found.get(0);
+			}
+		}
+
+		if (lookupItem == null)
+			throw new InputValidationException(ValidationError.ItemNotFound.getCode(), ValidationError.ItemNotFound.getMessage(parent));
+
+		return lookupItem;
 	}
 }
