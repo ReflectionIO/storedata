@@ -58,12 +58,14 @@ public final class Core extends ActionHandler {
 			try {
 				input.store = ValidationHelper.validateStore(input.store, "input");
 				isStore = true;
-			} catch (InputValidationException ex) {}
+			} catch (InputValidationException ex) {
+			}
 
 			try {
 				input.query = ValidationHelper.validateQuery(input.query, "input");
 				isQuery = true;
-			} catch (InputValidationException ex) {}
+			} catch (InputValidationException ex) {
+			}
 
 			Query<Country> query = ofy().load().type(Country.class).offset(input.pager.start.intValue()).limit(input.pager.count.intValue());
 			List<Country> countries = null;
@@ -129,12 +131,14 @@ public final class Core extends ActionHandler {
 			try {
 				input.country = ValidationHelper.validateCountry(input.country, "input");
 				isCountry = true;
-			} catch (InputValidationException ex) {}
+			} catch (InputValidationException ex) {
+			}
 
 			try {
 				input.query = ValidationHelper.validateQuery(input.query, "input");
 				isQuery = true;
-			} catch (InputValidationException ex) {}
+			} catch (InputValidationException ex) {
+			}
 
 			Query<Store> query = ofy().load().type(Store.class).offset(input.pager.start.intValue()).limit(input.pager.count.intValue());
 			List<Store> stores = null;
@@ -293,7 +297,7 @@ public final class Core extends ActionHandler {
 						ValidationError.DateRangeOutOfBounds.getMessage("0-60 days: input.before - input.after"));
 
 			output.ranks = ofy().load().type(Rank.class).offset(input.pager.start.intValue()).limit(input.pager.count.intValue())
-					.filter("externalId", input.item.id).filter("date >=", input.before).filter("date <=", input.after).filter("source", input.item.source)
+					.filter("itemId", input.item.externalId).filter("source", input.item.source).filter("date <=", input.before).filter("date >=", input.after)
 					.list();
 
 			output.status = StatusType.StatusTypeSuccess;

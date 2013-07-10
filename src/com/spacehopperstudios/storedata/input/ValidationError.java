@@ -24,11 +24,11 @@ public enum ValidationError {
 	PagerCountTooSmall(100009, "Invalid 0 or negative value for Long: %s.pager.count"),
 	PagerCountTooLarge(100010, "Invalid value, maximum count should be <= 30 Long: %s.pager.count"),
 	CountryNull(100011, "Invalid value null for Country: %s.country"),
-	CountryNotFound(100012, "Country not found Country: %s.value"),
+	CountryNotFound(100012, "Country not found Country: %s.country"),
 	CountryNoLookup(100013, "Invalid country lookup, need either id or a2Code or name for Country: %s.country"),
 	InvalidValueNull(100014, "Invalid value null %s"),
 	ItemNull(100015, "Invalid value null for Item: %s.item"),
-	ItemNotFound(100016, "Item not found Item: %s.value"),
+	ItemNotFound(100016, "Item not found Item: %s.item"),
 	ItemNoLookup(100017, "Invalid item lookup, need either id or externalId or internalId for Item: %s.item"),
 	DateRangeOutOfBounds(100018, "Invalid date range, should be between %s"),
 
