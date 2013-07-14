@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>History Graph</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Bootstrap -->
+  <link href="../assets/css/bootstrap.min.css" rel="stylesheet" media="screen">
+  <script src="http://code.jquery.com/jquery.js"></script>
+  <script src="../assets/js/bootstrap.min.js"></script>
+  <!--jCharFX -->
+  <link href="../assets/css/jchartfx.css" rel="stylesheet" type="text/css"  />
+  <script type="text/javascript" src="../assets/js/jchartfx.system.js"></script>
+  <script type="text/javascript" src="../assets/js/jchartfx.coreBasic.js"></script>
+</head>
+<body onload="loadChart()">
+  <div id="ChartDiv" style="width:600px;height:400px"></div>
+  <script type="text/javascript" language="javascript">
+    var chart1;
+
+    function loadChart()
+    {        
+     chart1 = new cfx.Chart();
+     chart1.getData().setSeries(2);
+     chart1.getAxisY().setMin(500);
+     chart1.getAxisY().setMax(2000);
+     var series1 = chart1.getSeries().getItem(0);
+     var series2 = chart1.getSeries().getItem(1);
+     series1.setGallery(cfx.Gallery.Lines);
+     series2.setGallery(cfx.Gallery.Bar);
+     var data = [
+     { "Month": "Jan", "Bikes": 1800, "Parts": 1300 },
+     { "Month": "Feb", "Bikes": 1760, "Parts": 900 },
+     { "Month": "Mar", "Bikes": 1740, "Parts": 970 },
+     { "Month": "Apr", "Bikes": 1750, "Parts": 1010},
+     { "Month": "May", "Bikes": 1810, "Parts": 1070 },
+     { "Month": "Jun", "Bikes": 1920, "Parts": 1180 }
+     ];
+     chart1.setDataSource(data);
+     var divHolder = document.getElementById('ChartDiv');
+     chart1.create(divHolder);            
+   }
+
+ </script>
+</body>
+</html>

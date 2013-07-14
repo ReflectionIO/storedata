@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- bootstrap -->
+    <link href="../assets/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="../assets/js/bootstrap.min.js"></script>
+
+    <!-- jchartfx -->
+    <link rel="stylesheet" type="text/css" href="../assets/css/jchartfx.css" />
+    <script type="text/javascript" src="../assets/js/jchartfx.system.js"></script>
+    <script type="text/javascript" src="../assets/js/jchartfx.coreBasic.js"></script>    
+    <script type="text/javascript" src="../assets/js/jchartfx.animation.js"></script>    
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <select>
+              <option>iPhone</option>
+              <option>iPad</option>
+            </select>
+            <select>
+              <option>United States</option>
+              <option>United Kingdom</option>
+              <option>Australia</option>
+            </select>
+            <select>
+              <option>Last 7 days</option>
+              <option>Last 14 days</option>
+              <option>Last 30 days</option>
+            </select>
+      </div>
+      <div class="row-fluid">
+        <div id="ChartDiv" style="width:600px;height:400px;display:inline-block"></div>
+    </div>
+
+</div>
+<script type="text/javascript" language="javascript">
+
+    window.onload = function () {
+        loadChart();
+    }
+
+    var chart1;
+
+    function loadChart()
+    {        
+         //chart1 = new cfx.Chart();
+         chart1 = new cfx.Chart();chart1.getAnimations().getLoad().setEnabled(true);
+
+         /*var items = [{
+            "Date": "2012-01-21T23:45:10.280Z",
+            "Value": 7,
+            "UpperLimit": 8,
+            "LowerLimit": 6
+        }, {
+            "Date": "2012-01-26T23:45:10.280Z",
+            "Value": 8,
+            "UpperLimit": 9,
+            "LowerLimit": 7
+        }, {
+            "Date": "2012-02-10T23:45:10.280Z",
+            "Value": 9,
+            "UpperLimit": 10,
+            "LowerLimit": 7
+        }, {
+            "Date": "2012-02-19T23:45:10.280Z",
+            "Value": 10,
+            "UpperLimit": 11,
+            "LowerLimit": 8
+        }, {
+            "Date": "2012-03-21T23:45:10.280Z",
+            "Value": 12,
+            "UpperLimit": 13,
+            "LowerLimit": 9
+        }, {
+            "Date": "2012-03-29T23:45:10.280Z",
+            "Value": 13,
+            "UpperLimit": 14,
+            "LowerLimit": 10
+        }, {
+            "Date": "2012-04-10T23:45:10.280Z",
+            "Value": 14,
+            "UpperLimit": 15,
+            "LowerLimit": 10
+        }, {
+            "Date": "2012-04-19T23:45:10.280Z",
+            "Value": 14,
+            "UpperLimit": 16,
+            "LowerLimit": 11
+        }, {
+            "Date": "2012-05-10T23:45:10.280Z",
+            "Value": 15,
+            "UpperLimit": 17,
+            "LowerLimit": 12
+        }, {
+            "Date": "2012-05-19T23:45:10.280Z",
+            "Value": 16,
+            "UpperLimit": 18,
+            "LowerLimit": 13
+        }];*/
+
+        var items = [{
+            "id": 512,
+            "created": 1373037454474,
+            "position": 0,
+            "itemId": "com.gameloft.despicableme2",
+            "type": "topfreeapplications",
+            "country": "us",
+            "date": "2012-04-19T23:45:10.280Z",
+            "source": "ios",
+            "price": 0,
+            "currency": "USD",
+            "counted": false,
+            "code": "a3a4b76f-047a-45ef-9828-3bf3a916f5b9"
+        },
+        {
+            "id": 1654,
+            "created": 1373037467367,
+            "position": 35,
+            "itemId": "com.gameloft.despicableme2",
+            "type": "topgrossingapplications",
+            "country": "us",
+            "date": "2012-04-20T23:45:10.280Z",
+            "source": "ios",
+            "price": 0,
+            "currency": "USD",
+            "counted": false,
+            "code": "a3a4b76f-047a-45ef-9828-3bf3a916f5b9"
+        },
+        {
+            "id": 1819,
+            "created": 1373037469903,
+            "position": 0,
+            "itemId": "com.gameloft.despicableme2",
+            "type": "topfreeipadapplications",
+            "country": "us",
+            "date": "2012-04-21T23:45:10.280Z",
+            "source": "ios",
+            "price": 0,
+            "currency": "USD",
+            "counted": false,
+            "code": "a3a4b76f-047a-45ef-9828-3bf3a916f5b9"
+        },
+        {
+            "id": 3048,
+            "created": 1373037496040,
+            "position": 58,
+            "itemId": "com.gameloft.despicableme2",
+            "type": "topgrossingipadapplications",
+            "country": "us",
+            "date": "2012-04-22T23:45:10.280Z",
+            "source": "ios",
+            "price": 0,
+            "currency": "USD",
+            "counted": false,
+            "code": "a3a4b76f-047a-45ef-9828-3bf3a916f5b9"
+        }];
+
+        var axisY = chart1.getAxisY();
+        axisY.setMin(0);
+        axisY.setMax(100);
+        chart1.setGallery(cfx.Gallery.Area);
+        chart1.getData().setSeries(2);
+        var series1 = chart1.getSeries().getItem(0);
+        var series2 = chart1.getSeries().getItem(1);
+        series2.setColor("#801702D1");
+        series2.getBorder().setWidth(4);
+        series1.setGallery(cfx.Gallery.Curve);
+
+        var legBox = chart1.getLegendBox();
+        legBox.setDock(cfx.DockArea.Bottom);
+        legBox.setContentLayout(cfx.ContentLayout.Center);
+
+
+        //----Assign data fields--------
+
+        var fields = chart1.getDataSourceSettings().getFields();
+        var field1 = new cfx.FieldMap();
+        var field2 = new cfx.FieldMap();
+        var field3 = new cfx.FieldMap();
+        var field4 = new cfx.FieldMap();
+
+        /*field1.setName("Date");
+        field1.setUsage(cfx.FieldUsage.XValue);
+        fields.add(field1);
+
+        field2.setName("Value");
+        field2.setUsage(cfx.FieldUsage.Value);
+        field2.setDisplayName("Estimated position");
+        fields.add(field2);
+
+        field4.setName("LowerLimit");
+        field4.setUsage(cfx.FieldUsage.FromValue);
+        fields.add(field4);
+
+        field3.setName("UpperLimit");
+        field3.setDisplayName("Error margin");
+        field3.setUsage(cfx.FieldUsage.Value);
+        fields.add(field3);*/
+
+        field1.setName("date");
+        field1.setUsage(cfx.FieldUsage.XValue);
+        fields.add(field1);
+
+        field2.setName("position");
+        field2.setUsage(cfx.FieldUsage.Value);
+        fields.add(field2);
+
+        //--- Set zero to the top of the screen ---
+        chart1.getAxisY().setInverted(true);
+
+        //----Set Sample Data------------
+        chart1.setDataSource(items);
+
+        var chartDiv = document.getElementById('ChartDiv');
+        chart1.create(chartDiv);    
+
+    }
+</script>
+
+<!--
+<div id="images"></div>
+<script>
+(function() {
+  var flickerAPI = "http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?";
+  $.getJSON( flickerAPI, {
+    tags: "mount rainier",
+    tagmode: "any",
+    format: "json"
+  })
+  .done(function( data ) {
+    $.each( data.items, function( i, item ) {
+      $( "<img/>" ).attr( "src", item.media.m ).appendTo( "#images" );
+      if ( i === 3 ) {
+        return false;
+      }
+    });
+  });
+})();
+</script>
+-->
+</body>
+</html>
