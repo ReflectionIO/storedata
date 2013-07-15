@@ -3,7 +3,6 @@ package com.spacehopperstudios.storedata.mapreduce;
 import static com.spacehopperstudios.storedata.objectify.PersistenceService.ofy;
 
 import java.nio.ByteBuffer;
-import java.util.List;
 import java.util.logging.Logger;
 
 import com.google.appengine.api.memcache.MemcacheService;
@@ -11,8 +10,12 @@ import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.google.appengine.tools.mapreduce.Reducer;
 import com.google.appengine.tools.mapreduce.ReducerInput;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.spacehopperstudios.storedata.datatypes.Item;
 import com.spacehopperstudios.storedata.datatypes.Rank;
+
+import static com.spacehopperstudios.utility.JsonUtils.toJsonObject;
 
 public class CsvBlobReducer extends Reducer<String, String, ByteBuffer> {
 	/**
@@ -21,7 +24,6 @@ public class CsvBlobReducer extends Reducer<String, String, ByteBuffer> {
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger LOG = Logger.getLogger(CsvBlobReducer.class.getName());
-	
 
 	private String topType;
 	private String grossingType;
@@ -51,7 +53,7 @@ public class CsvBlobReducer extends Reducer<String, String, ByteBuffer> {
 		buffer.append(getContext().getShardNumber());
 		buffer.append("]\n");
 		buffer.append("#item id,date,top possition,grossing possition,price,usesiap");
-		
+
 		buffer.append("\n");
 
 		getContext().emit(ByteBuffer.wrap(buffer.toString().getBytes()));
@@ -128,7 +130,7 @@ public class CsvBlobReducer extends Reducer<String, String, ByteBuffer> {
 				iapColumn = "false";
 			}
 		} catch (Exception ex) {
-			iapColumn = getItemId(master);
+			iapColumn = "";
 		}
 
 		return iapColumn;
@@ -140,53 +142,58 @@ public class CsvBlobReducer extends Reducer<String, String, ByteBuffer> {
 
 		MemcacheService memCacheService = MemcacheServiceFactory.getMemcacheService();
 
-		Boolean cachedUsesIap = (Boolean) memCacheService.get(usesIapKey);
+		Boolean usesIap = (Boolean) memCacheService.get(usesIapKey);
 
-		if (cachedUsesIap == null) {
+		if (usesIap == null) {
 
-			String itemId = getItemId(rank);
+			usesIap = isRankItemIap(rank);
 
-			if (itemId == null) {
-				throw new Exception("Could not find an item for this rank which is wrong!");
-			}
+			// TODO: maybe enqueue request to find out
 
-			// String data = HttpExternalGetter.getData("http://webcache.googleusercontent.com/search?q=cache:https://itunes.apple.com/app/id" + itemId,
-			// HTTPMethod.GET);
-			//
-			// if (data != null) {
-			// cachedUsesIap = data.contains("class=\"extra-list in-app-purchases") ? Boolean.TRUE : Boolean.FALSE;
-			//
-			// memCacheService.put(usesIapKey, cachedUsesIap);
-			// }
-
-			if (cachedUsesIap == null) {
+			if (usesIap == null) {
 				throw new Exception("Could not find whether the app uses iap or not!");
 			}
+
+			memCacheService.put(usesIapKey, usesIap);
 		}
 
-		return cachedUsesIap.booleanValue();
+		return usesIap.booleanValue();
 	}
 
 	/**
 	 * @return
+	 * @throws Exception
 	 */
-	private String getItemId(Rank rank) {
-		String rankItemIdKey = rank.itemId + ".itemId";
+	private Boolean isRankItemIap(Rank rank) throws Exception {
+		Boolean isRankItemIap = null;
+
+		String rankItemKey = rank.itemId + ".item";
 
 		MemcacheService memCacheService = MemcacheServiceFactory.getMemcacheService();
 
-		String itemId = (String) memCacheService.get(rankItemIdKey);
+		Item item = (Item) memCacheService.get(rankItemKey);
 
-		if (itemId == null) {
-			List<Item> items = ofy().load().type(Item.class).filter("externalId =", rank.itemId).limit(1).list();
+		if (item == null) {
+			item = ofy().load().type(Item.class).filter("externalId", rank.itemId).limit(1).first().now();
 
-			if (items != null && items.size() > 0) {
-				itemId = items.get(0).internalId;
+			if (item == null) {
+				throw new Exception("Could not find an item for this rank which is just, wrong!");
+			}
 
-				memCacheService.put(rankItemIdKey, itemId);
+			memCacheService.put(rankItemKey, item);
+
+			JsonObject properties = toJsonObject(item.properties);
+
+			if (properties != null) {
+				JsonElement value = properties.get("usesIap");
+
+				if (value != null) {
+					isRankItemIap = Boolean.valueOf(value.getAsBoolean());
+				}
 			}
 		}
-		return itemId;
+
+		return isRankItemIap;
 	}
 
 	@Override

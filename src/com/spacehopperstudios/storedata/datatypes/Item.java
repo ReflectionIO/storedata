@@ -27,7 +27,7 @@ public class Item extends DataType {
 	public String internalId;
 
 	public String name;
-	
+
 	public Float price = Float.valueOf(0);
 
 	@Index
@@ -37,8 +37,10 @@ public class Item extends DataType {
 	public String type;
 
 	public Date added;
-	
+
 	public String currency;
+
+	public String properties;
 
 	@Override
 	public JsonObject toJson() {
@@ -59,6 +61,8 @@ public class Item extends DataType {
 		object.add("added", jsonAdded);
 		JsonElement jsonCurrency = currency == null ? JsonNull.INSTANCE : new JsonPrimitive(currency);
 		object.add("currency", jsonCurrency);
+		JsonElement jsonProperties = properties == null ? JsonNull.INSTANCE : new JsonPrimitive(properties);
+		object.add("properties", jsonProperties);
 		return object;
 	}
 
@@ -111,6 +115,12 @@ public class Item extends DataType {
 			JsonElement jsonCurrency = jsonObject.get("currency");
 			if (jsonCurrency != null) {
 				currency = jsonCurrency.getAsString();
+			}
+		}
+		if (jsonObject.has("properties")) {
+			JsonElement jsonProperties = jsonObject.get("properties");
+			if (jsonProperties != null) {
+				properties = jsonProperties.getAsString();
 			}
 		}
 	}

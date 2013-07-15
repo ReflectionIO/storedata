@@ -46,6 +46,7 @@ import com.google.appengine.tools.mapreduce.outputs.InMemoryOutput;
 import com.googlecode.objectify.cmd.Query;
 import com.spacehopperstudios.storedata.collectors.CollectorIOS;
 import com.spacehopperstudios.storedata.datatypes.FeedFetch;
+import com.spacehopperstudios.storedata.datatypes.Item;
 import com.spacehopperstudios.storedata.datatypes.ItemRankSummary;
 import com.spacehopperstudios.storedata.datatypes.Rank;
 import com.spacehopperstudios.storedata.logging.GaeLevel;
@@ -501,6 +502,12 @@ public class DevHelperServlet extends HttpServlet {
 			} else if ("addstores".toUpperCase().equals(action.toUpperCase())) {
 				StoresInstaller.install();
 				success = true;
+			} else if ("getadditionalproperties".toUpperCase().equals(action.toUpperCase())) {
+				Item item = ofy().load().type(Item.class).filter("externalId", itemId).filter("source", "ios").first().now();
+				Queue itemPropertyLookupQueue = QueueFactory.getQueue("itempropertylookup");
+				itemPropertyLookupQueue.add(TaskOptions.Builder
+						.withUrl(String.format("/itempropertylookup?item=%d", item.id.longValue())).method(Method.GET));
+				success = true;
 			} else {
 				if (LOG.isLoggable(Level.INFO)) {
 					LOG.info(String.format("Action [%s] not supported", action));
@@ -529,8 +536,8 @@ public class DevHelperServlet extends HttpServlet {
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd-HHmmss");
 		return MapReduceJob.start(MapReduceSpecification.of("Create Rank csv blob", new DatastoreInput("Rank", mapShardCount), new TopAndGrossingMapper(
 				topType, grossingType, source, country), Marshallers.getStringMarshaller(), Marshallers.getStringMarshaller(), new CsvBlobReducer(topType,
-				grossingType), new GoogleCloudStorageFileOutput("rankmatchoutput", topType + "_" + grossingType + format.format(new Date()) + "_%d.csv", "text/csv",
-				reduceSharedCount)), getSettings());
+				grossingType), new GoogleCloudStorageFileOutput("rankmatchoutput", topType + "_" + grossingType + format.format(new Date()) + "_%d.csv",
+				"text/csv", reduceSharedCount)), getSettings());
 	}
 
 	private String getUrlBase(HttpServletRequest req) throws MalformedURLException {
