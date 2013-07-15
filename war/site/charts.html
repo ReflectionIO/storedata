@@ -10,37 +10,37 @@
   <script src="../assets/js/bootstrap.min.js"></script>
   
   <style type="text/css">
-  body {
-    padding-top: 20px;
-    padding-bottom: 40px;
-  }
-  .sidebar-nav {
-    padding: 9px 0;
-  }
-
-  .nav-tabs > li, .nav-pills > li {
-    float:none;
-    display:inline-block;
-    *display:inline; /* ie7 fix */
-     zoom:1; /* hasLayout ie7 trigger */
-}
-
-.nav-tabs, .nav-pills {
-    text-align:center;
-}
-
-  @media (max-width: 980px) {
-    /* Enable use of floated navbar text */
-    .navbar-text.pull-right {
-      float: none;
-      padding-left: 5px;
-      padding-right: 5px;
+    body {
+      padding-top: 20px;
+      padding-bottom: 40px;
     }
-  }
+    .sidebar-nav {
+      padding: 9px 0;
+    }
+
+    .nav-tabs > li, .nav-pills > li {
+      float:none;
+      display:inline-block;
+      *display:inline; /* ie7 fix */
+      zoom:1; /* hasLayout ie7 trigger */
+    }
+
+    .nav-tabs, .nav-pills {
+      text-align:center;
+    }
+
+    @media (max-width: 980px) {
+      /* Enable use of floated navbar text */
+      .navbar-text.pull-right {
+        float: none;
+        padding-left: 5px;
+        padding-right: 5px;
+      }
+    }
   </style>
 </head>
 <body>
-  
+
   <div class="container-fluid">
     <div class="row-fluid" style="text-align: center">
       <div class="tabbable"> <!-- Only required for left/right tabs -->
@@ -85,7 +85,7 @@
       </div>
 
       <div class="span10">
-        <table class="table table-striped table-hover">
+        <table class="table table-striped table-hover" id="table-charts">
           <thead>
             <tr>
               <th></th>
@@ -95,29 +95,95 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td style="text-align: center">1</td>
-              <td>Dekem</td>
-              <td>League of Legends</td>
-              <td>SpaceFrog</td>
-            </tr>
-            <tr>
-              <td style="text-align: center">2</td>
-              <td>Delta-V Racing</td>
-              <td>Mass Effect</td>
-              <td>KOTOR</td>
-            </tr>
-            <tr>
-              <td style="text-align: center">3</td>
-              <td>World of Warcraft</td>
-              <td>Call of Duty</td>
-              <td>League of Legends</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
+        </tbody>
+      </table>
     </div>
+
   </div>
+</div>
+<script type="text/javascript">
+  var datafree = ["Delta-V","Angry Birds","Cut the Rope","XCom","Clash of Clans"];
+  var datapaid = ["XMen","Fairway Solitaire","Mystery Room","Little Dentist","Chopper"];
+  var datagross = ["Rayman Jungle Run","Badland","Infinity Blade 2","Super Hexagon","Puzzle Agent"];
+
+  var items;
+
+  $(document).ready(function(){
+
+      getTopItems();
+
+  });
+
+  function getTopItems() {
+
+            /*$.post("GetItemsRank.json", 
+
+                function(data) {
+
+                    items = data.ranks;
+
+                    
+                    $.each(items, function(index, d){           
+                        d.date = new Date(d.date);
+                        d.position++;
+                    });
+
+                    loadChart();
+
+                }, 
+
+                "json");*/
+
+               $.ajax({
+                        type: "POST",
+                        url: "GetTopItems.json",
+                        //data: { name: "John", location: "Boston" },
+                        //contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function(data) {
+                            items = data.ranks;
+                            /*
+                            $.each(items, function(index, item){           
+                                item.date = new Date(item.date);
+                                item.position++;
+                            });
+                            */
+
+                            loadTable();
+                        }
+                });
+        }
+
+  function loadTable() {
+    
+      var maxRows = items.length;
+
+      // create the required number of rows
+      for (var i = 0; i < maxRows; i++) {
+        $('#table-charts > tbody:last').append('<tr id=pos'+i+'></tr>');
+      };
+
+      // create the numbers
+      for (var i = 0; i < maxRows; i++) {
+        $('#pos'+i).append('<td style="text-align: center">'+(i+1)+'</td>');
+      };
+
+      // add to the free charts
+      for (var i = 0; i < maxRows; i++) {
+        $('#pos'+i).append('<td>'+items[i].itemId+'</td>');
+      };
+
+      // add to the paid charts
+      for (var i = 0; i < maxRows; i++) {
+        $('#pos'+i).append('<td>'+items[i].itemId+'</td>');
+      };
+
+      // add to the top grossing charts
+      for (var i = 0; i < maxRows; i++) {
+        $('#pos'+i).append('<td>'+items[i].itemId+'</td>');
+      };
+    }
+
+</script>
 </body>
 </html>
