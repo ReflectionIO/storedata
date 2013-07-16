@@ -62,4 +62,12 @@
 			<task-retry-limit>5</task-retry-limit>
 		</retry-parameters>
 	</queue>
+	<queue>
+		<name>itempropertylookup</name>
+		<rate>1/m</rate>
+		<max-concurrent-requests>1</max-concurrent-requests>
+		<retry-parameters>
+			<task-retry-limit>0</task-retry-limit>
+		</retry-parameters>
+	</queue>
 </queue-entries>

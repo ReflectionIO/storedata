@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<wsdl:definitions name="core" targetNamespace="http://storedata.spacehopperstudios.com/core" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
-	xmlns:sdc="http://storedata.spacehopperstudios.com/core" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<wsdl:definitions name="core" targetNamespace="http://app.reflection.io/core" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:sdc="http://app.reflection.io/core" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 	<wsdl:types>
-		<xsd:schema targetNamespace="http://storedata.spacehopperstudios.com/core" xmlns:sd="http://storedata.spacehopperstudios.com">
-			<xsd:import schemaLocation="../storedata.xsd" namespace="http://storedata.spacehopperstudios.com" />
+		<xsd:schema targetNamespace="http://app.reflection.io/core" xmlns:sd="http://app.reflection.io">
+			<xsd:import schemaLocation="../app.xsd" namespace="http://app.reflection.io" />
 
 			<xsd:element name="GetCountriesInput" type="sdc:GetCountriesRequest" />
 			<xsd:element name="GetCountriesOutput" type="sdc:GetCountriesResponse" />
@@ -171,7 +171,7 @@
 	<wsdl:binding name="coreSOAP" type="sdc:core">
 		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
 		<wsdl:operation name="GetCountries">
-			<soap:operation soapAction="http://storedata.spacehopperstudios.com/core/GetCountries" />
+			<soap:operation soapAction="http://app.reflection.io/core/GetCountries" />
 			<wsdl:input>
 				<soap:body use="literal" />
 			</wsdl:input>
@@ -180,7 +180,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="GetStores">
-			<soap:operation soapAction="http://storedata.spacehopperstudios.com/core/GetStores" />
+			<soap:operation soapAction="http://app.reflection.io/core/GetStores" />
 			<wsdl:input>
 				<soap:body use="literal" />
 			</wsdl:input>
@@ -189,7 +189,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="GetTopItems">
-			<soap:operation soapAction="http://storedata.spacehopperstudios.com/core/GetTopItems" />
+			<soap:operation soapAction="http://app.reflection.io/core/GetTopItems" />
 			<wsdl:input>
 				<soap:body use="literal" />
 			</wsdl:input>
@@ -198,7 +198,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="GetItemRanks">
-			<soap:operation soapAction="http://storedata.spacehopperstudios.com/core/GetItemRanks" />
+			<soap:operation soapAction="http://app.reflection.io/core/GetItemRanks" />
 			<wsdl:input>
 				<soap:body use="literal" />
 			</wsdl:input>
@@ -209,7 +209,7 @@
 	</wsdl:binding>
 	<wsdl:service name="core">
 		<wsdl:port name="coreSOAP" binding="sdc:coreSOAP">
-			<soap:address location="http://storedata.spacehopperstudios.com/core/" />
+			<soap:address location="http://app.reflection.io/core/" />
 		</wsdl:port>
 	</wsdl:service>
 </wsdl:definitions>
