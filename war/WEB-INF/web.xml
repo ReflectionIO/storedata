@@ -6,37 +6,37 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	version="2.5">
 	<servlet>
 		<servlet-name>Cron Tasks</servlet-name>
-		<servlet-class>com.spacehopperstudios.storedata.CronServlet</servlet-class>
+		<servlet-class>io.reflection.app.CronServlet</servlet-class>
 	</servlet>
 	
 	<servlet>
 		<servlet-name>Collector Tasks</servlet-name>
-		<servlet-class>com.spacehopperstudios.storedata.CollectorServlet</servlet-class>
+		<servlet-class>io.reflection.app.CollectorServlet</servlet-class>
 	</servlet>
 	
 	<servlet>
 		<servlet-name>Ingestor Tasks</servlet-name>
-		<servlet-class>com.spacehopperstudios.storedata.IngestorServlet</servlet-class>
+		<servlet-class>io.reflection.app.IngestorServlet</servlet-class>
 	</servlet>
 
 	<servlet>
 		<servlet-name>Persist Tasks</servlet-name>
-		<servlet-class>com.spacehopperstudios.storedata.PersistServlet</servlet-class>
+		<servlet-class>io.reflection.app.PersistServlet</servlet-class>
 	</servlet>
 	
 	<servlet>
 		<servlet-name>Dev Helper</servlet-name>
-		<servlet-class>com.spacehopperstudios.storedata.DevHelperServlet</servlet-class>
+		<servlet-class>io.reflection.app.DevHelperServlet</servlet-class>
 	</servlet>
 	
 	<servlet>
 	    <servlet-name>Core api</servlet-name>
-	    <servlet-class>com.spacehopperstudios.storedata.api.core.CoreJsonServlet</servlet-class>
+	    <servlet-class>io.reflection.app.api.core.CoreJsonServlet</servlet-class>
 	</servlet>
 	
 	<servlet>
 	    <servlet-name>Item Property Lookup</servlet-name>
-	    <servlet-class>com.spacehopperstudios.storedata.apple.ItemPropertyLookupServlet</servlet-class>
+	    <servlet-class>io.reflection.app.apple.ItemPropertyLookupServlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
