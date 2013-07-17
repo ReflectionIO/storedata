@@ -9,9 +9,7 @@
 		<retry-parameters>
 			<task-age-limit>3d</task-age-limit>
 		</retry-parameters>
-		<max-concurrent-requests>
-			300
-		</max-concurrent-requests>
+		<max-concurrent-requests>300</max-concurrent-requests>
 	</queue>
 	<queue>
 		<name>mapreduce-workers</name>
@@ -20,9 +18,7 @@
 		<retry-parameters>
 			<task-age-limit>3d</task-age-limit>
 		</retry-parameters>
-		<max-concurrent-requests>
-			100
-		</max-concurrent-requests>
+		<max-concurrent-requests>100</max-concurrent-requests>
 	</queue>
 
 	<queue>
@@ -34,12 +30,12 @@
 			<task-retry-limit>2</task-retry-limit>
 		</retry-parameters>
 	</queue>
-	
+
 	<queue>
 		<name>gather</name>
-		<rate>100/s</rate>
-		<bucket-size>100</bucket-size>
-		<max-concurrent-requests>100</max-concurrent-requests>
+		<rate>20/s</rate>
+		<bucket-size>10</bucket-size>
+		<max-concurrent-requests>20</max-concurrent-requests>
 		<retry-parameters>
 			<task-retry-limit>5</task-retry-limit>
 		</retry-parameters>
@@ -55,9 +51,9 @@
 	</queue>
 	<queue>
 		<name>persist</name>
-		<rate>100/s</rate>
-		<bucket-size>100</bucket-size>
-		<max-concurrent-requests>300</max-concurrent-requests>
+		<rate>50/s</rate>
+		<bucket-size>10</bucket-size>
+		<max-concurrent-requests>50</max-concurrent-requests>
 		<retry-parameters>
 			<task-retry-limit>5</task-retry-limit>
 		</retry-parameters>
@@ -66,9 +62,9 @@
 		<name>itempropertylookup</name>
 		<rate>1/m</rate>
 		<max-concurrent-requests>1</max-concurrent-requests>
+		<bucket-size>1</bucket-size>
 		<retry-parameters>
 			<task-retry-limit>0</task-retry-limit>
 		</retry-parameters>
-		<bucket-size>1</bucket-size>
 	</queue>
 </queue-entries>
