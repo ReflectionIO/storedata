@@ -24,6 +24,7 @@ public class CsvBlobReducer extends Reducer<String, String, ByteBuffer> {
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger LOG = Logger.getLogger(CsvBlobReducer.class.getName());
+	private static final String NOT_AVAILABLE = "NA";
 
 	private String topType;
 	private String grossingType;
@@ -95,11 +96,15 @@ public class CsvBlobReducer extends Reducer<String, String, ByteBuffer> {
 
 		if (topItem != null) {
 			buffer.append(topItem.position + 1);
+		} else {
+			buffer.append(NOT_AVAILABLE);
 		}
 		buffer.append(",");
 
 		if (grossingItem != null) {
 			buffer.append(grossingItem.position + 1);
+		} else {
+			buffer.append(NOT_AVAILABLE);
 		}
 		buffer.append(",");
 
@@ -130,7 +135,7 @@ public class CsvBlobReducer extends Reducer<String, String, ByteBuffer> {
 				iapColumn = "false";
 			}
 		} catch (Exception ex) {
-			iapColumn = "na";
+			iapColumn = NOT_AVAILABLE;
 		}
 
 		return iapColumn;
