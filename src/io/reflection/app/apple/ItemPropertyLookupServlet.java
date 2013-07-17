@@ -15,6 +15,7 @@ import io.reflection.app.datatypes.Item;
 import io.reflection.app.logging.GaeLevel;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,7 +24,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
+import com.google.appengine.api.taskqueue.Queue;
+import com.google.appengine.api.taskqueue.QueueFactory;
+import com.google.appengine.api.taskqueue.TaskOptions;
+import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.google.appengine.api.urlfetch.HTTPMethod;
+import com.google.appengine.api.utils.SystemProperty;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -35,6 +43,11 @@ import com.google.gson.JsonPrimitive;
 @SuppressWarnings("serial")
 public class ItemPropertyLookupServlet extends HttpServlet {
 	private static final Logger LOG = Logger.getLogger(ItemPropertyLookupServlet.class.getName());
+
+	private static final String PROPERTY_IAP = "usesIap";
+	private static final String PROPERTY_IAP_ON = "usesIap.on";
+
+	private static final long DURATION_30_DAYS = 30 * 24 * 60 * 60 * 1000;
 
 	/*
 	 * (non-Javadoc)
@@ -68,6 +81,26 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 
 		String itemId = req.getParameter("item");
 
+		if (SystemProperty.environment.value() != SystemProperty.Environment.Value.Production) {
+			if (LOG.isLoggable(Level.SEVERE)) {
+				LOG.severe("This message should only be displayed on the developement server because it does not respect queue configuration");
+			}
+
+			MemcacheService memCache = MemcacheServiceFactory.getMemcacheService();
+			String key = "io.reflection.app.apple.ItemPropertyLookupServlet.runAt";
+			Date date = (Date) memCache.get(key);
+			Date now = new Date();
+
+			if (date != null && now.getTime() - date.getTime() < 60000) {
+				Queue itemPropertyLookupQueue = QueueFactory.getQueue("itempropertylookup");
+				itemPropertyLookupQueue.add(TaskOptions.Builder.withUrl(String.format("/itempropertylookup?item=%s", itemId)).method(Method.GET));
+
+				return;
+			}
+
+			memCache.put(key, now);
+		}
+
 		Item item = ofy().load().type(Item.class).id(Long.valueOf(itemId)).now();
 
 		if (item != null) {
@@ -83,14 +116,22 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 				properties = new JsonObject();
 				doCurl = true;
 			} else {
-
-				JsonElement value = properties.get("usesIap");
+				JsonElement value = properties.get(PROPERTY_IAP);
 
 				if (value == null) {
 					doCurl = true;
 				} else {
-					if (LOG.isLoggable(GaeLevel.DEBUG)) {
-						LOG.log(GaeLevel.DEBUG, String.format("Item [%d] has properties but no iap", item.id.intValue()));
+					value = properties.get(PROPERTY_IAP_ON);
+
+					if (value == null) {
+						doCurl = true;
+					} else {
+						Date on = new Date(value.getAsLong());
+						Date now = new Date();
+
+						if (now.getTime() - on.getTime() > DURATION_30_DAYS) {
+							doCurl = true;
+						}
 					}
 				}
 			}
@@ -103,14 +144,11 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 				if (data != null) {
 					usesIap = data.contains("class=\"extra-list in-app-purchases") ? Boolean.TRUE : Boolean.FALSE;
 
-					if (usesIap.booleanValue()) {
-						properties.add("usesIap", new JsonPrimitive(usesIap));
+					properties.add(PROPERTY_IAP, new JsonPrimitive(usesIap));
+					properties.add(PROPERTY_IAP_ON, new JsonPrimitive(Long.valueOf(new Date().getTime())));
+					item.properties = fromJsonObject(properties);
 
-						item.properties = fromJsonObject(properties);
-
-						ofy().save().entity(item);
-					}
-
+					ofy().save().entity(item);
 				} else {
 					if (LOG.isLoggable(Level.WARNING)) {
 						LOG.log(Level.WARNING, String.format("Could not get additional data from [%s] for [%s]", itemUrl, itemId));

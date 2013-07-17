@@ -503,11 +503,28 @@ public class DevHelperServlet extends HttpServlet {
 				StoresInstaller.install();
 				success = true;
 			} else if ("getadditionalproperties".toUpperCase().equals(action.toUpperCase())) {
-				Item item = ofy().load().type(Item.class).filter("externalId", itemId).filter("source", "ios").first().now();
-				Queue itemPropertyLookupQueue = QueueFactory.getQueue("itempropertylookup");
-				itemPropertyLookupQueue.add(TaskOptions.Builder
-						.withUrl(String.format("/itempropertylookup?item=%d", item.id.longValue())).method(Method.GET));
-				success = true;
+
+				if (itemId != null && itemId.length() != 0) {
+					Item item = ofy().load().type(Item.class).filter("externalId", itemId).filter("source", "ios").first().now();
+					Queue itemPropertyLookupQueue = QueueFactory.getQueue("itempropertylookup");
+					itemPropertyLookupQueue.add(TaskOptions.Builder.withUrl(String.format("/itempropertylookup?item=%d", item.id.longValue())).method(
+							Method.GET));
+
+					success = true;
+				} else if (start != null && count != null) {
+					List<Item> items = ofy().load().type(Item.class).filter("source", "ios").offset(Integer.parseInt(start)).limit(Integer.parseInt(count))
+							.list();
+
+					for (Item item : items) {
+						Queue itemPropertyLookupQueue = QueueFactory.getQueue("itempropertylookup");
+						itemPropertyLookupQueue.add(TaskOptions.Builder.withUrl(String.format("/itempropertylookup?item=%d", item.id.longValue())).method(
+								Method.GET));
+					}
+
+					success = true;
+				} else {
+					success = false;
+				}
 			} else {
 				if (LOG.isLoggable(Level.INFO)) {
 					LOG.info(String.format("Action [%s] not supported", action));
