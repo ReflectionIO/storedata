@@ -18,11 +18,26 @@
     <meta name="author" content="">
     
     <link href="../assets/css/bootstrap.css" rel="stylesheet">
+    
+    <style type="text/css">
+    
+    #content {
+    	margin: 0px auto;
+    	width: 500px;
+    }
+    
+    #rankstart, #rankend{
+    	width: 65px;
+    }
+    
+    </style>
+    
   </head>
 
   <body>
-    <h2>Some Admin/Dev Helper functions</h2>
 
+	<div id="content">
+	<h2>Admin/Dev Helper functions</h2>
     <form action="/devhelper" method="get">
     	<label>queue</label> <select id="defer" name="defer">
     	<option value="yes">
@@ -207,7 +222,7 @@
       "itemid"> <br>
       <label>date</label> <input type="text" name="date" id="date" value="2013-04-16-16"> <br> 
 
-      <p>All actions can by chunck-ed using</p>
+      <p>Actions can by chunck-ed using</p>
       <label>start</label> <input id="start" name="start" type=
       "text" value="0"><br>
        <label>count</label> <input id="count" name="count" type=
@@ -215,10 +230,10 @@
        <input type="submit" id="devhelpersubmit" name=
       "devhelpersubmit" class="btn btn-primary">
     </form>
-    
     <footer>
-       <p>&copy; Store Data 2013</p>
+       <p>Copyrights &copy; reflection.io 2013</p>
     </footer>
+	</div>    
   </body>
 </html>
 
