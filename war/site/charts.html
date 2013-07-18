@@ -213,7 +213,7 @@
       var maxRows = chartdata.length;
 
       for (var i = 0; i < maxRows; i++) {
-        $('td#'+listType+i).replaceWith('<td>'+chartdata[i].itemId+'</td>');
+        $('td#'+listType+i).replaceWith('<td><a href="rankings.html?itemId='+chartdata[i].itemId+'&type='+listType+'">'+chartdata[i].itemId+'</a></td>');
       };
 
   }

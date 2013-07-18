@@ -13,7 +13,10 @@
     <link rel="stylesheet" type="text/css" href="../assets/css/jchartfx.css" />
     <script type="text/javascript" src="../assets/js/jchartfx.system.js"></script>
     <script type="text/javascript" src="../assets/js/jchartfx.coreBasic.js"></script>    
-    <script type="text/javascript" src="../assets/js/jchartfx.animation.js"></script>    
+    <script type="text/javascript" src="../assets/js/jchartfx.animation.js"></script>   
+
+    <!-- purl -->
+    <script type="text/javascript" src="../assets/js/purl.js"></script>  
 
 </head>
 <body>
@@ -59,10 +62,12 @@ $.getJSON("GetItemsRank.json", function(data){
     </script>-->
     <script type="text/javascript">
 
-        var items;
+        var items = [];
         var chart1;
 
         window.onload = function () {
+
+            console.log($.url().param("itemId"));
 
             getItemsRank();
 
@@ -87,18 +92,29 @@ $.getJSON("GetItemsRank.json", function(data){
                 }, 
 
                 "json");*/
+            
+                var externalId = $.url().param("itemId"); //"com.gameloft.despicableme2";
+                var type = $.url().param("type");
 
-               $.ajax({
+                var requestString = "{'accessCode':'b72b4e32-1062-4cc7-bc6b-52498ee10f09','item':{'source':'ios','externalId':"+externalId+"}}";
+
+                $.ajax({
                         type: "POST",
-                        url: "GetItemsRank.json",
-                        //data: { name: "John", location: "Boston" },
+                        url: "../core",
+                        data: { action: "GetItemRanks", request: requestString },
                         //contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function(data) {
-                            items = data.ranks;
-                            $.each(items, function(index, item){           
-                                item.date = new Date(item.date);
-                                item.position++;
+                            
+                            $.each(data.ranks, function(index, item){    
+                                // only use the specific "type" of list e.g. topfreeapplications, topfreeipadapplications
+                                if (item.type == type) {
+                                    item.date = new Date(item.date);
+                                    item.position++;
+                                    console.log(item);
+                                    items.push(item);
+                                };       
+                                
                             });
 
                             loadChart();
@@ -109,18 +125,18 @@ $.getJSON("GetItemsRank.json", function(data){
         function loadChart() {        
 
             chart1 = new cfx.Chart();
-            chart1.getAnimations().getLoad().setEnabled(true);
+            //chart1.getAnimations().getLoad().setEnabled(true);
 
             var axisY = chart1.getAxisY();
-            axisY.setMin(0);
-            axisY.setMax(100);
+            //axisY.setMin(0);
+            //axisY.setMax(500);
             chart1.setGallery(cfx.Gallery.Area);
             chart1.getData().setSeries(2);
             var series1 = chart1.getSeries().getItem(0);
             var series2 = chart1.getSeries().getItem(1);
             series2.setColor("#801702D1");
             series2.getBorder().setWidth(4);
-            series1.setGallery(cfx.Gallery.Curve);
+            series1.setGallery(cfx.Gallery.Lines);
 
             var legBox = chart1.getLegendBox();
             legBox.setDock(cfx.DockArea.Bottom);
