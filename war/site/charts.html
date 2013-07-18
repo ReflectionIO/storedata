@@ -213,8 +213,11 @@
 
       var maxRows = chartdata.length;
 
+      // for now just assume that the country is 'us'
+      var country = 'us';
+      
       for (var i = 0; i < maxRows; i++) {
-        $('td#'+listType+i).replaceWith('<td><a href="rankings.html?itemId='+chartdata[i].itemId+'&type='+listType+'">'+chartdata[i].itemId+'</a></td>');
+        $('td#'+listType+i).replaceWith('<td><a href="rankings.html?itemId='+chartdata[i].itemId+'&type='+listType+'&country='+country+'">'+chartdata[i].itemId+'</a></td>');
       };
 
   }

@@ -58,14 +58,12 @@ public final class Core extends ActionHandler {
 			try {
 				input.store = ValidationHelper.validateStore(input.store, "input");
 				isStore = true;
-			} catch (InputValidationException ex) {
-			}
+			} catch (InputValidationException ex) {}
 
 			try {
 				input.query = ValidationHelper.validateQuery(input.query, "input");
 				isQuery = true;
-			} catch (InputValidationException ex) {
-			}
+			} catch (InputValidationException ex) {}
 
 			Query<Country> query = ofy().load().type(Country.class).offset(input.pager.start.intValue()).limit(input.pager.count.intValue());
 			List<Country> countries = null;
@@ -131,14 +129,12 @@ public final class Core extends ActionHandler {
 			try {
 				input.country = ValidationHelper.validateCountry(input.country, "input");
 				isCountry = true;
-			} catch (InputValidationException ex) {
-			}
+			} catch (InputValidationException ex) {}
 
 			try {
 				input.query = ValidationHelper.validateQuery(input.query, "input");
 				isQuery = true;
-			} catch (InputValidationException ex) {
-			}
+			} catch (InputValidationException ex) {}
 
 			Query<Store> query = ofy().load().type(Store.class).offset(input.pager.start.intValue()).limit(input.pager.count.intValue());
 			List<Store> stores = null;
@@ -278,6 +274,12 @@ public final class Core extends ActionHandler {
 
 			input.item = ValidationHelper.validateItem(input.item, "input");
 
+			input.country = ValidationHelper.validateCountry(input.country, "input");
+
+			if (input.type == null)
+				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
+						ValidationError.InvalidValueNull.getMessage("String: input.type"));
+
 			Calendar cal = Calendar.getInstance();
 
 			if (input.before == null)
@@ -298,7 +300,7 @@ public final class Core extends ActionHandler {
 
 			output.ranks = ofy().load().type(Rank.class).offset(input.pager.start.intValue()).limit(input.pager.count.intValue())
 					.filter("itemId", input.item.externalId).filter("source", input.item.source).filter("date <=", input.before).filter("date >=", input.after)
-					.list();
+					.filter("type", input.type).filter("country", input.country.a2Code).list();
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {

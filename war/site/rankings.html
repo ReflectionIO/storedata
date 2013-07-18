@@ -95,8 +95,9 @@ $.getJSON("GetItemsRank.json", function(data){
             
                 var externalId = $.url().param("itemId"); //"com.gameloft.despicableme2";
                 var type = $.url().param("type");
+                var country = $.url().param("country");
 
-                var requestString = "{'accessCode':'b72b4e32-1062-4cc7-bc6b-52498ee10f09','item':{'source':'ios','externalId':"+externalId+"}}";
+                var requestString = "{'accessCode':'b72b4e32-1062-4cc7-bc6b-52498ee10f09','item':{'source':'ios','externalId':"+externalId+"},'type':'"+type+"','country':{'a2Code':'"+country+"'}}";
 
                 $.ajax({
                         type: "POST",
