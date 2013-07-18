@@ -54,29 +54,14 @@ public class ParserIOS implements Parser {
 		JsonElement entriesElement = jsonRss.get(KEY_FEED).getAsJsonObject().get(KEY_ENTRY);
 
 		if (entriesElement != null) {
-			JsonArray entries = entriesElement.getAsJsonArray();
-      
-			for (JsonElement entry : entries) {
-				JsonObject jsonItem = entry.getAsJsonObject();
+			if (entriesElement.isJsonArray()) {
+				JsonArray entries = entriesElement.getAsJsonArray();
 
-				Item item = new Item() ;
-				item.name = jsonItem.get(KEY_NAME).getAsJsonObject().get(KEY_LABEL).getAsString();
-
-				JsonObject attributes = jsonItem.get(KEY_PRICE).getAsJsonObject().get(KEY_ATTRIBUTES).getAsJsonObject();
-				item.price = Float.valueOf(attributes.get(KEY_AMOUNT).getAsFloat());
-				item.currency = attributes.get(KEY_CURRENCY).getAsString();
-
-				attributes = jsonItem.get(KEY_ID).getAsJsonObject().get(KEY_ATTRIBUTES).getAsJsonObject();
-				item.internalId = attributes.get(KEY_INTERNAL_ID).getAsString();
-				item.externalId = attributes.get(KEY_BUNDLE_ID).getAsString();
-				item.type = "Application"; // TODO: this can be obtained from the data
-				item.source = "ios";
-
-				if (LOG.isLoggable(GaeLevel.TRACE)) {
-					LOG.log(GaeLevel.TRACE, String.format("Found item [%s]", item.name));
+				for (JsonElement entry : entries) {
+					addItem(entry.getAsJsonObject(), items);
 				}
-
-				items.add(item);
+			} else {
+				addItem(entriesElement.getAsJsonObject(), items);
 			}
 		} else {
 			if (LOG.isLoggable(Level.WARNING)) {
@@ -89,6 +74,31 @@ public class ParserIOS implements Parser {
 		}
 
 		return items;
+	}
+
+	/**
+	 * @param entry
+	 * @param items
+	 */
+	private void addItem(JsonObject jsonItem, List<Item> items) {
+		Item item = new Item();
+		item.name = jsonItem.get(KEY_NAME).getAsJsonObject().get(KEY_LABEL).getAsString();
+
+		JsonObject attributes = jsonItem.get(KEY_PRICE).getAsJsonObject().get(KEY_ATTRIBUTES).getAsJsonObject();
+		item.price = Float.valueOf(attributes.get(KEY_AMOUNT).getAsFloat());
+		item.currency = attributes.get(KEY_CURRENCY).getAsString();
+
+		attributes = jsonItem.get(KEY_ID).getAsJsonObject().get(KEY_ATTRIBUTES).getAsJsonObject();
+		item.internalId = attributes.get(KEY_INTERNAL_ID).getAsString();
+		item.externalId = attributes.get(KEY_BUNDLE_ID).getAsString();
+		item.type = "Application"; // TODO: this can be obtained from the data
+		item.source = "ios";
+
+		if (LOG.isLoggable(GaeLevel.TRACE)) {
+			LOG.log(GaeLevel.TRACE, String.format("Found item [%s]", item.name));
+		}
+
+		items.add(item);
 	}
 
 }
