@@ -107,14 +107,31 @@
   var datagross = ["Rayman Jungle Run","Badland","Infinity Blade 2","Super Hexagon","Puzzle Agent"];
 
   var items;
+  var maxItems = 10;
 
   $(document).ready(function(){
 
-      getTopItems();
+      getTopItemsFree();
+      getTopItemsPaid();
+      getTopItemsGrossing();
+
+      createTable();
 
   });
 
-  function getTopItems() {
+  function getTopItemsFree() {
+      getTopItems("topfreeapplications");
+  }
+
+  function getTopItemsPaid() {
+      getTopItems("toppaidapplications");
+  }
+
+  function getTopItemsGrossing() {
+      getTopItems("topgrossingapplications");
+  }
+
+  function getTopItems(listType) {
 
             /*$.post("GetItemsRank.json", 
 
@@ -134,10 +151,12 @@
 
                 "json");*/
 
+               var requestString = "{'accessCode':'b72b4e32-1062-4cc7-bc6b-52498ee10f09','country':{'a2Code':'us'},'listType':"+listType+",'on':1373041735000,'store':{'a3Code':'ios'}}";
+
                $.ajax({
                         type: "POST",
-                        url: "GetTopItems.json",
-                        //data: { name: "John", location: "Boston" },
+                        url: "../core",
+                        data: { action: "GetTopItems", request: requestString },
                         //contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function(data) {
@@ -149,10 +168,53 @@
                             });
                             */
 
-                            loadTable();
+                            //loadTable();
+                            updateTable(data.ranks);
                         }
                 });
         }
+
+  function createTable() {
+
+      var maxRows = maxItems;
+
+      // create the required number of rows
+      for (var i = 0; i < maxRows; i++) {
+        $('#table-charts > tbody:last').append('<tr id=pos'+i+'></tr>');
+      };
+
+      // create the numbers
+      for (var i = 0; i < maxRows; i++) {
+        $('#pos'+i).append('<td style="text-align: center">'+(i+1)+'</td>');
+      };
+
+      /*
+      // add to the free charts
+      for (var i = 0; i < maxRows; i++) {
+        $('#pos'+i).append('<td>blank</td>');
+      };
+
+      // add to the paid charts
+      for (var i = 0; i < maxRows; i++) {
+        $('#pos'+i).append('<td>blank</td>');
+      };
+
+      // add to the top grossing charts
+      for (var i = 0; i < maxRows; i++) {
+        $('#pos'+i).append('<td>blank</td>');
+      };*/
+
+  }
+
+  function updateTable(chartdata) {
+
+      var maxRows = items.length;
+
+      for (var i = 0; i < maxRows; i++) {
+        $('#pos'+i).append('<td>'+chartdata[i].itemId+'</td>');
+        //$('#pos'+i).replaceWith('<td>'+chartdata[i].itemId+'</td>');
+      };
+  }
 
   function loadTable() {
     
