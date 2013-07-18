@@ -102,11 +102,7 @@
   </div>
 </div>
 <script type="text/javascript">
-  var datafree = ["Delta-V","Angry Birds","Cut the Rope","XCom","Clash of Clans"];
-  var datapaid = ["XMen","Fairway Solitaire","Mystery Room","Little Dentist","Chopper"];
-  var datagross = ["Rayman Jungle Run","Badland","Infinity Blade 2","Super Hexagon","Puzzle Agent"];
-
-  var items;
+  
   var maxItems = 10;
 
   $(document).ready(function(){
@@ -140,7 +136,7 @@
                     items = data.ranks;
 
                     
-                    $.each(items, function(index, d){           
+                    $.each(data.ranks, function(index, d){           
                         d.date = new Date(d.date);
                         d.position++;
                     });
@@ -151,7 +147,14 @@
 
                 "json");*/
 
-               var requestString = "{'accessCode':'b72b4e32-1062-4cc7-bc6b-52498ee10f09','country':{'a2Code':'us'},'listType':"+listType+",'on':1373041735000,'store':{'a3Code':'ios'}}";
+              var date;
+              //var date = new Date(2010, 6, 26).getTime() / 1000;
+              //var date = new Date().getTime() / 1000;
+              //var date = 1373041735000; //1375657200000
+              //date = new Date(2013, 6, 5).getTime(); // year, month, day:  note: month starts from zero 
+              date = new Date(2013, 6, 18).getTime();
+
+               var requestString = "{'accessCode':'b72b4e32-1062-4cc7-bc6b-52498ee10f09','country':{'a2Code':'us'},'listType':"+listType+",'on':"+date+",'store':{'a3Code':'ios'}}";
 
                $.ajax({
                         type: "POST",
@@ -160,16 +163,15 @@
                         //contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function(data) {
-                            items = data.ranks;
                             /*
-                            $.each(items, function(index, item){           
+                            $.each(data.rank, function(index, item){           
                                 item.date = new Date(item.date);
                                 item.position++;
                             });
                             */
 
                             //loadTable();
-                            updateTable(data.ranks);
+                            updateTable(data.ranks, listType);
                         }
                 });
         }
@@ -188,63 +190,33 @@
         $('#pos'+i).append('<td style="text-align: center">'+(i+1)+'</td>');
       };
 
-      /*
+      
       // add to the free charts
       for (var i = 0; i < maxRows; i++) {
-        $('#pos'+i).append('<td>blank</td>');
+        $('#pos'+i).append('<td id="topfreeapplications'+i+'">blank</td>');
       };
 
       // add to the paid charts
       for (var i = 0; i < maxRows; i++) {
-        $('#pos'+i).append('<td>blank</td>');
+        $('#pos'+i).append('<td id="toppaidapplications'+i+'">blank</td>');
       };
 
       // add to the top grossing charts
       for (var i = 0; i < maxRows; i++) {
-        $('#pos'+i).append('<td>blank</td>');
-      };*/
+        $('#pos'+i).append('<td id="topgrossingapplications'+i+'">blank</td>');
+      };
 
   }
 
-  function updateTable(chartdata) {
+  function updateTable(chartdata, listType) {
 
-      var maxRows = items.length;
+      var maxRows = chartdata.length;
 
       for (var i = 0; i < maxRows; i++) {
-        $('#pos'+i).append('<td>'+chartdata[i].itemId+'</td>');
-        //$('#pos'+i).replaceWith('<td>'+chartdata[i].itemId+'</td>');
+        $('td#'+listType+i).replaceWith('<td>'+chartdata[i].itemId+'</td>');
       };
+
   }
-
-  function loadTable() {
-    
-      var maxRows = items.length;
-
-      // create the required number of rows
-      for (var i = 0; i < maxRows; i++) {
-        $('#table-charts > tbody:last').append('<tr id=pos'+i+'></tr>');
-      };
-
-      // create the numbers
-      for (var i = 0; i < maxRows; i++) {
-        $('#pos'+i).append('<td style="text-align: center">'+(i+1)+'</td>');
-      };
-
-      // add to the free charts
-      for (var i = 0; i < maxRows; i++) {
-        $('#pos'+i).append('<td>'+items[i].itemId+'</td>');
-      };
-
-      // add to the paid charts
-      for (var i = 0; i < maxRows; i++) {
-        $('#pos'+i).append('<td>'+items[i].itemId+'</td>');
-      };
-
-      // add to the top grossing charts
-      for (var i = 0; i < maxRows; i++) {
-        $('#pos'+i).append('<td>'+items[i].itemId+'</td>');
-      };
-    }
 
 </script>
 </body>
