@@ -231,7 +231,7 @@ public final class Core extends ActionHandler {
 
 			Query<Rank> query = ofy().load().type(Rank.class).filter("date >=", after).filter("date <", before).filter("country", input.country.a2Code)
 					.filter("type", input.listType).filter("source", input.store.a3Code).offset(input.pager.start.intValue())
-					.limit(input.pager.count.intValue()).order("date").order(order);
+					.limit(input.pager.count.intValue()).order("-date").order(order);
 
 			List<Rank> ranks = query.list();
 
@@ -300,7 +300,7 @@ public final class Core extends ActionHandler {
 
 			output.ranks = ofy().load().type(Rank.class).offset(input.pager.start.intValue()).limit(input.pager.count.intValue())
 					.filter("itemId", input.item.externalId).filter("source", input.item.source).filter("date <=", input.before).filter("date >=", input.after)
-					.filter("type", input.type).filter("country", input.country.a2Code).list();
+					.filter("type", input.type).filter("country", input.country.a2Code).order("-date").list();
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
