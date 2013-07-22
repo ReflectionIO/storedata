@@ -8,7 +8,10 @@
   <!--<link href="../assets/css/bootstrap-responsive.css" rel="stylesheet">-->
   <script src="http://code.jquery.com/jquery.js"></script>
   <script src="../assets/js/bootstrap.min.js"></script>
+
+  <!-- DatePicker -->
   <script src="../assets/js/bootstrap-datepicker.js"></script>
+   <link href="../assets/css/datepicker.css" rel="stylesheet" media="screen">
   
   <style type="text/css">
     body {
@@ -112,6 +115,8 @@
   
   var maxItems = 10;
   var date = new Date().getTime();
+  //var date = new Date(2013, 6, 18).getTime();
+  //alert(new Date());
 
   // --------------- EVENTS ---------------
   $(document).ready(function(){
@@ -139,8 +144,8 @@
   // --------------- METHODS ---------------
   function createDate() {
     $('#datepicker').datepicker({
-      format: "dd/mm/yy",
-      //endDate: "21/07/13",
+      format: "dd-mm-yyyy",
+      //endDate: "22-07-2013",
       //autoclose: true,
       todayHighlight: true
     });
