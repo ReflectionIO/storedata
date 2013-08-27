@@ -1,5 +1,7 @@
 package io.reflection.app.mapreduce;
 
+import static com.willshex.gson.json.shared.Convert.toJsonObject;
+import static io.reflection.app.objectify.PersistenceService.ofy;
 import io.reflection.app.datatypes.Item;
 import io.reflection.app.datatypes.Rank;
 
@@ -13,9 +15,6 @@ import com.google.appengine.tools.mapreduce.ReducerInput;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import static com.spacehopperstudios.utility.JsonUtils.toJsonObject;
-import static io.reflection.app.objectify.PersistenceService.ofy;
 
 public class CsvBlobReducer extends Reducer<String, String, ByteBuffer> {
 	/**

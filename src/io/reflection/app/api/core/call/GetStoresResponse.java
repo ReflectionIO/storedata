@@ -17,7 +17,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import com.willshex.gson.json.service.Response;
+import com.willshex.gson.json.service.shared.Response;
 
 public class GetStoresResponse extends Response {
 	public List<Store> stores;

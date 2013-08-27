@@ -33,9 +33,9 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import com.googlecode.objectify.cmd.Query;
-import com.willshex.gson.json.service.ActionHandler;
-import com.willshex.gson.json.service.InputValidationException;
-import com.willshex.gson.json.service.StatusType;
+import com.willshex.gson.json.service.server.ActionHandler;
+import com.willshex.gson.json.service.server.InputValidationException;
+import com.willshex.gson.json.service.shared.StatusType;
 
 public final class Core extends ActionHandler {
 	private static final Logger LOG = Logger.getLogger(Core.class.getName());

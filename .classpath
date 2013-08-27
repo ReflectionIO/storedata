@@ -6,12 +6,21 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/spchopr.utility.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/spchopr.gson.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/spchopr.gson.json.service_appengine.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/spchopr.gson.json.service.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/spchopr.service_appengine.jar"/>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

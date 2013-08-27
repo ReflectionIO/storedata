@@ -7,8 +7,8 @@
 //
 package io.reflection.app.apple;
 
-import static com.spacehopperstudios.utility.JsonUtils.fromJsonObject;
-import static com.spacehopperstudios.utility.JsonUtils.toJsonObject;
+import static com.willshex.gson.json.shared.Convert.fromJsonObject;
+import static com.willshex.gson.json.shared.Convert.toJsonObject;
 import static io.reflection.app.objectify.PersistenceService.ofy;
 import io.reflection.app.collectors.HttpExternalGetter;
 import io.reflection.app.datatypes.Item;
@@ -52,7 +52,9 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+	 * @see
+	 * javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest
+	 * , javax.servlet.http.HttpServletResponse)
 	 */
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

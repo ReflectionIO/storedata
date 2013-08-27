@@ -14,7 +14,7 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.googlecode.objectify.annotation.Id;
-import com.willshex.gson.json.Jsonable;
+import com.willshex.gson.json.shared.Jsonable;
 
 /**
  * @author billy1380

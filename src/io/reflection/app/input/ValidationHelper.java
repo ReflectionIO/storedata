@@ -15,7 +15,7 @@ import io.reflection.app.datatypes.Store;
 
 import java.util.List;
 
-import com.willshex.gson.json.service.InputValidationException;
+import com.willshex.gson.json.service.server.InputValidationException;
 
 /**
  * @author billy1380
