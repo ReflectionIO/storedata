@@ -44,12 +44,13 @@
 				<xsd:attribute name="externalId" type="xsd:string" />
 				<xsd:attribute name="internalId" type="xsd:string" />
 				<xsd:attribute name="name" type="xsd:string" />
+				<xsd:attribute name="creatorName" type="xsd:string" />
 				<xsd:attribute name="price" type="xsd:float" />
 				<xsd:attribute name="source" type="xsd:string" />
 				<xsd:attribute name="type" type="xsd:string" />
 				<xsd:attribute name="added" type="xsd:dateTime" />
 				<xsd:attribute name="currency" type="xsd:string" />
-				<xsd:attribute name="properties" type="xsd:string"></xsd:attribute>
+				<xsd:attribute name="properties" type="xsd:string" />
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
@@ -74,6 +75,7 @@
 		<xsd:complexContent>
 			<xsd:extension base="DataType">
 				<xsd:attribute name="position" type="xsd:int" />
+				<xsd:attribute name="grossingPosition" type="xsd:int" />
 				<xsd:attribute name="itemId" type="xsd:string" />
 				<xsd:attribute name="type" type="xsd:string" />
 				<xsd:attribute name="country" type="xsd:string" />

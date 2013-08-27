@@ -29,11 +29,11 @@ public class StringUtils {
 	}
 
 	public static String stripslashes(String value) {
-		return value.replace("\\", "");
+		return value == null ? null : value.replace("\\'", "'").replace("\\\"", "\"").replace("\\\\", "\\");
 	}
 
 	public static String addslashes(String value) {
-		return value;
+		return value == null ? null : value.replace("\\", "\\\\").replace("\"", "\\\"").replace("'", "\\'");
 	}
 
 	public static String urldecode(String value) {

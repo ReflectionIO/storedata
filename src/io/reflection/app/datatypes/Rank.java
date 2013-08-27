@@ -23,6 +23,9 @@ public class Rank extends DataType {
 
 	@Index
 	public Integer position = Integer.valueOf(0);
+	
+	@Index
+	public Integer grossingPosition = Integer.valueOf(0);
 
 	@Index
 	public String itemId;
@@ -56,6 +59,8 @@ public class Rank extends DataType {
 		JsonObject object = super.toJson();
 		JsonElement jsonPosition = position == null ? JsonNull.INSTANCE : new JsonPrimitive(position);
 		object.add("position", jsonPosition);
+		JsonElement jsonGrossingPosition = grossingPosition == null ? JsonNull.INSTANCE : new JsonPrimitive(grossingPosition);
+		object.add("grossingPosition", jsonGrossingPosition);
 		JsonElement jsonItemId = itemId == null ? JsonNull.INSTANCE : new JsonPrimitive(itemId);
 		object.add("itemId", jsonItemId);
 		JsonElement jsonType = type == null ? JsonNull.INSTANCE : new JsonPrimitive(type);
@@ -84,6 +89,12 @@ public class Rank extends DataType {
 			JsonElement jsonPosition = jsonObject.get("position");
 			if (jsonPosition != null) {
 				position = Integer.valueOf(jsonPosition.getAsInt());
+			}
+		}
+		if (jsonObject.has("grossingPosition")) {
+			JsonElement jsongrossingPosition = jsonObject.get("grossingPosition");
+			if (jsongrossingPosition != null) {
+				grossingPosition = Integer.valueOf(jsongrossingPosition.getAsInt());
 			}
 		}
 		if (jsonObject.has("itemId")) {

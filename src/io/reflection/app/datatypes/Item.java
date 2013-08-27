@@ -27,6 +27,8 @@ public class Item extends DataType {
 	public String internalId;
 
 	public String name;
+	
+	public String creatorName;
 
 	public Float price = Float.valueOf(0);
 
@@ -51,6 +53,8 @@ public class Item extends DataType {
 		object.add("internalId", jsonInternalId);
 		JsonElement jsonName = name == null ? JsonNull.INSTANCE : new JsonPrimitive(name);
 		object.add("name", jsonName);
+		JsonElement jsonCreatorName = creatorName == null ? JsonNull.INSTANCE : new JsonPrimitive(creatorName);
+		object.add("creatorName", jsonCreatorName);
 		JsonElement jsonPrice = price == null ? JsonNull.INSTANCE : new JsonPrimitive(price);
 		object.add("price", jsonPrice);
 		JsonElement jsonSource = source == null ? JsonNull.INSTANCE : new JsonPrimitive(source);
@@ -85,6 +89,12 @@ public class Item extends DataType {
 			JsonElement jsonName = jsonObject.get("name");
 			if (jsonName != null) {
 				name = jsonName.getAsString();
+			}
+		}
+		if (jsonObject.has("creatorName")) {
+			JsonElement jsonCreatorName = jsonObject.get("creatorName");
+			if (jsonCreatorName != null) {
+				creatorName = jsonCreatorName.getAsString();
 			}
 		}
 		if (jsonObject.has("price")) {

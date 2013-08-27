@@ -35,6 +35,7 @@ public class ParserIOS implements Parser {
 	private static final String KEY_ID = "id";
 	private static final String KEY_INTERNAL_ID = "im:id";
 	private static final String KEY_BUNDLE_ID = "im:bundleId";
+	private static final String KEY_ARTIST = "im:artist";
 
 	/*
 	 * (non-Javadoc)
@@ -93,6 +94,7 @@ public class ParserIOS implements Parser {
 		item.externalId = attributes.get(KEY_BUNDLE_ID).getAsString();
 		item.type = "Application"; // TODO: this can be obtained from the data
 		item.source = "ios";
+		item.creatorName = jsonItem.get(KEY_ARTIST).getAsJsonObject().get(KEY_LABEL).getAsString();
 
 		if (LOG.isLoggable(GaeLevel.TRACE)) {
 			LOG.log(GaeLevel.TRACE, String.format("Found item [%s]", item.name));
