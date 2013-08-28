@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.willshex.gson.json.shared.Convert;
 
 /**
  * @author billy1380
@@ -51,7 +51,7 @@ public class ParserIOS implements Parser {
 
 		List<Item> items = new ArrayList<Item>();
 
-		JsonObject jsonRss = (new JsonParser()).parse(data).getAsJsonObject();
+		JsonObject jsonRss = Convert.toJsonObject(data);
 		JsonElement entriesElement = jsonRss.get(KEY_FEED).getAsJsonObject().get(KEY_ENTRY);
 
 		if (entriesElement != null) {

@@ -36,6 +36,7 @@ import com.googlecode.objectify.VoidWork;
  * @author billy1380
  * 
  */
+@SuppressWarnings("deprecation")
 public class IngestorIOS extends StoreCollector implements Ingestor {
 
 	private static final Logger LOG = Logger.getLogger(IngestorIOS.class.getName());
