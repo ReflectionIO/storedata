@@ -18,6 +18,8 @@ import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.google.appengine.api.taskqueue.TransientFailureException;
+import com.google.gson.JsonObject;
+import com.willshex.gson.json.shared.Convert;
 
 /**
  * @author billy1380
@@ -111,7 +113,21 @@ public class CollectorIOS extends StoreCollector implements Collector {
 		try {
 
 			data = get(country, type);
-			ids = store(data, country, IOS_STORE_A3, type, new Date(), code);
+
+			if (data != null && data.length() > 0) {
+				// before storeing the data make sure that it is a valid json object
+				JsonObject parsed = Convert.toJsonObject(data);
+
+				if (parsed == null) {
+					throw new RuntimeException("The data could not be parsed or parsing it returned a null json object");
+				}
+
+				ids = store(data, country, IOS_STORE_A3, type, new Date(), code);
+			} else {
+				if (LOG.isLoggable(GaeLevel.TRACE)) {
+					LOG.log(GaeLevel.TRACE, "Obtained data was empty for country [" + country + "], type [" + type + "] and code [" + code + "]");
+				}
+			}
 
 		} finally {
 			if (LOG.isLoggable(GaeLevel.TRACE)) {
@@ -149,8 +165,7 @@ public class CollectorIOS extends StoreCollector implements Collector {
 
 			// retry once
 			try {
-				queue.add(TaskOptions.Builder.withUrl(String.format(ENQUEUE_GATHER_FORMAT, IOS_STORE_A3, country, type, code)).method(
-						Method.GET));
+				queue.add(TaskOptions.Builder.withUrl(String.format(ENQUEUE_GATHER_FORMAT, IOS_STORE_A3, country, type, code)).method(Method.GET));
 			} catch (TransientFailureException reEx) {
 				if (LOG.isLoggable(Level.SEVERE)) {
 					LOG.log(Level.SEVERE, String.format("Retry of with parameters country [%s] type [%s] code [%s] failed while adding to queue [%s] twice",
