@@ -93,6 +93,8 @@ $.getJSON("GetItemsRank.json", function(data){
 
                 "json");*/
             
+                // to do a gather run this: http://127.0.0.1:8888/dev/devhelper?action=gather&store=ios&cron=yes
+                // to check on it go here: http://127.0.0.1:8888/_ah/admin and click on "Task Queues"
                 var externalId = $.url().param("itemId"); //"com.gameloft.despicableme2";
                 var type = $.url().param("type");
                 var country = $.url().param("country");
@@ -112,7 +114,7 @@ $.getJSON("GetItemsRank.json", function(data){
                                 if (item.type == type) {
                                     item.date = new Date(item.date);
                                     item.position++;
-                                    //console.log(item);
+                                    console.log(item);
                                     items.push(item);
                                 };       
                                 

@@ -114,9 +114,9 @@
 <script type="text/javascript">
   
   var maxItems = 10;
-  var date = new Date().getTime();
-  //var date = new Date(2013, 6, 18).getTime();
-  //alert(new Date());
+  // var date = new Date().getTime();
+  // var date = new Date(2013, 6, 5).getTime();
+  var date = new Date(2013, 6, 18).getTime();
 
   // --------------- EVENTS ---------------
   $(document).ready(function(){
@@ -142,10 +142,21 @@
     });
 
   // --------------- METHODS ---------------
+  function convertDate(d) {
+    function pad2(n) {
+        return n > 9 ? n : '0' + n;
+    }
+    var year = d.getUTCFullYear();
+    var month = d.getUTCMonth() + 1;  // months start at zero
+    var day = d.getUTCDate();
+
+    return pad2(day) + '-' + pad2(month) + '-' + year;
+}
+
   function createDate() {
     $('#datepicker').datepicker({
       format: "dd-mm-yyyy",
-      //endDate: "22-07-2013",
+      endDate: convertDate(new Date()),
       //autoclose: true,
       todayHighlight: true
     });
@@ -188,6 +199,9 @@
               dataType: "json",
               success: function(data) {
                 console.log(data);
+                $.each(data.stores, function(index, item){           
+                        console.log(item.name);
+                  });
                   
               }
       });
