@@ -22,11 +22,12 @@ public class CollectorFactory {
 		Collector collector = null;
 		
 		if ("ios".equals(store.toLowerCase())) {
+			// ios store
 			collector = new CollectorIOS();
-		} else if ("amazon".equals(store.toLowerCase())) {
+		} else if ("azn".equals(store.toLowerCase())) {
 			// amazon store
 			collector = new CollectorAmazon();
-		} else if ("play".equals(store.toLowerCase())) {
+		} else if ("gpl".equals(store.toLowerCase())) {
 			// google play store
 		}
 		

@@ -23,8 +23,8 @@ public class IngestorFactory {
 
 		if ("ios".equals(store.toLowerCase())) {
 			ingestor = new IngestorIOS();
-		} else if ("amazon".equals(store.toLowerCase())) {
-		} else if ("play".equals(store.toLowerCase())) {
+		} else if ("azn".equals(store.toLowerCase())) {
+		} else if ("gpl".equals(store.toLowerCase())) {
 		}
 
 		return ingestor;
