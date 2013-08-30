@@ -31,4 +31,6 @@ public interface Collector {
 	 * @return The number of messages added
 	 */
 	int enqueue();
+	
+	boolean isGrossing(String type);
 }

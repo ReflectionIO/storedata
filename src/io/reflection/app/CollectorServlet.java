@@ -7,13 +7,15 @@
 //
 package io.reflection.app;
 
-import io.reflection.app.collectors.CollectorAmazon;
-import io.reflection.app.collectors.CollectorIOS;
-import io.reflection.app.ingestors.IngestorIOS;
+import io.reflection.app.collectors.Collector;
+import io.reflection.app.collectors.CollectorFactory;
+import io.reflection.app.ingestors.Ingestor;
+import io.reflection.app.ingestors.IngestorFactory;
 import io.reflection.app.logging.GaeLevel;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
@@ -58,15 +60,23 @@ public class CollectorServlet extends HttpServlet {
 
 		List<Long> collected = null;
 
-		if ("ios".equals(store.toLowerCase())) {
-			// ios app store
-			collected = (new CollectorIOS()).collect(country, type, code);
-			(new IngestorIOS()).enqueue(collected);
-		} else if ("amazon".equals(store.toLowerCase())) {
-			// amazon store
-			collected = (new CollectorAmazon()).collect(country, type, code);
-		} else if ("play".equals(store.toLowerCase())) {
-			// google play store
+		Collector collector = CollectorFactory.getCollectorForStore(store);
+		Ingestor ingestor = IngestorFactory.getIngestorForStore(store);
+
+		if (collector != null) {
+			collected = collector.collect(country, type, code);
+		} else {
+			if (LOG.isLoggable(Level.WARNING)) {
+				LOG.warning("Could not find Collector for store [" + store + "]");
+			}
+		}
+
+		if (ingestor != null) {
+			ingestor.enqueue(collected);
+		} else {
+			if (LOG.isLoggable(Level.WARNING)) {
+				LOG.warning("Could not find Ingestor for store [" + store + "]");
+			}
 		}
 
 		resp.setHeader("Cache-Control", "no-cache");

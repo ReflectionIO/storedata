@@ -74,4 +74,13 @@ public class CollectorAmazon extends StoreCollector implements Collector {
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see io.reflection.app.collectors.Collector#isGrossing(java.lang.String)
+	 */
+	@Override
+	public boolean isGrossing(String type) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

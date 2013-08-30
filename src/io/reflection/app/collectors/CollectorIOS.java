@@ -175,4 +175,12 @@ public class CollectorIOS extends StoreCollector implements Collector {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see io.reflection.app.collectors.Collector#isGrossing(java.lang.String)
+	 */
+	@Override
+	public boolean isGrossing(String type) {
+		return type.equalsIgnoreCase(TOP_GROSSING_IPAD_APPS) || type.equalsIgnoreCase(TOP_GROSSING_APPS);
+	}
+
 }
