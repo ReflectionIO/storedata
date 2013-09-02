@@ -201,13 +201,10 @@ public class DataStorePersist {
 			ofy().save().entity(item).now();
 		}
 
-		if (ofy().cache(false).load().type(Rank.class).filter("source =", rank.source).filter("type =", rank.type).filter("date =", rank.date)
-				.filter("country =", rank.country).filter("position =", rank.position).count() == 0) {
-			ofy().save().entity(rank).now();
+		ofy().save().entity(rank).now();
 
-			if (LOG.isLoggable(GaeLevel.TRACE)) {
-				LOG.log(GaeLevel.TRACE, String.format("Saved rank [%s] for", rank.itemId));
-			}
+		if (LOG.isLoggable(GaeLevel.TRACE)) {
+			LOG.log(GaeLevel.TRACE, String.format("Saved rank [%s] for", rank.itemId));
 		}
 
 		if (LOG.isLoggable(GaeLevel.TRACE)) {
