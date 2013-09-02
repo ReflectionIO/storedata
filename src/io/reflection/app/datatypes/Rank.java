@@ -12,6 +12,7 @@ import com.google.gson.JsonPrimitive;
 import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.condition.IfNotZero;
 
 /**
  * @author billy1380
@@ -21,10 +22,10 @@ import com.googlecode.objectify.annotation.Index;
 @Cache
 public class Rank extends DataType {
 
-	@Index
+	@Index(IfNotZero.class)
 	public Integer position = Integer.valueOf(0);
 	
-	@Index
+	@Index(IfNotZero.class)
 	public Integer grossingPosition = Integer.valueOf(0);
 
 	@Index
@@ -45,12 +46,6 @@ public class Rank extends DataType {
 	public Float price = Float.valueOf(0);
 
 	public String currency;
-
-	/**
-	 * This flag indicates whether this row has been counted
-	 */
-	@Index
-	public Boolean counted = Boolean.FALSE;
 
 	public String code;
 
@@ -75,8 +70,6 @@ public class Rank extends DataType {
 		object.add("price", jsonPrice);
 		JsonElement jsonCurrency = currency == null ? JsonNull.INSTANCE : new JsonPrimitive(currency);
 		object.add("currency", jsonCurrency);
-		JsonElement jsonCounted = counted == null ? JsonNull.INSTANCE : new JsonPrimitive(counted.booleanValue());
-		object.add("counted", jsonCounted);
 		JsonElement jsonCode = code == null ? JsonNull.INSTANCE : new JsonPrimitive(code);
 		object.add("code", jsonCode);
 		return object;
@@ -137,12 +130,6 @@ public class Rank extends DataType {
 			JsonElement jsonCurrency = jsonObject.get("currency");
 			if (jsonCurrency != null) {
 				currency = jsonCurrency.getAsString();
-			}
-		}
-		if (jsonObject.has("counted")) {
-			JsonElement jsonCounted = jsonObject.get("counted");
-			if (jsonCounted != null) {
-				counted = Boolean.valueOf(jsonCounted.getAsBoolean());
 			}
 		}
 		if (jsonObject.has("code")) {

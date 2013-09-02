@@ -33,4 +33,10 @@ public interface Collector {
 	int enqueue();
 	
 	boolean isGrossing(String type);
+
+	/**
+	 * @param type
+	 * @return
+	 */
+	List<String> getCounterpartTypes(String type);
 }

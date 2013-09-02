@@ -6,6 +6,7 @@ package io.reflection.app.collectors;
 import io.reflection.app.logging.GaeLevel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -181,6 +182,28 @@ public class CollectorIOS extends StoreCollector implements Collector {
 	@Override
 	public boolean isGrossing(String type) {
 		return type.equalsIgnoreCase(TOP_GROSSING_IPAD_APPS) || type.equalsIgnoreCase(TOP_GROSSING_APPS);
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.collectors.Collector#getCounterpartTypes(java.lang.String)
+	 */
+	@Override
+	public List<String> getCounterpartTypes(String type) {
+		switch (type) {
+		case TOP_FREE_APPS:
+			return Arrays.asList(TOP_GROSSING_APPS);
+		case TOP_PAID_APPS:
+			return Arrays.asList(TOP_GROSSING_APPS);
+		case TOP_GROSSING_APPS:
+			return Arrays.asList(TOP_PAID_APPS, TOP_FREE_APPS);
+		case TOP_FREE_IPAD_APPS:
+			return Arrays.asList(TOP_GROSSING_IPAD_APPS);
+		case TOP_PAID_IPAD_APPS:
+			return Arrays.asList(TOP_GROSSING_IPAD_APPS);
+		case TOP_GROSSING_IPAD_APPS:
+			return Arrays.asList(TOP_PAID_IPAD_APPS, TOP_FREE_IPAD_APPS);
+		}
+		return null;
 	}
 
 }

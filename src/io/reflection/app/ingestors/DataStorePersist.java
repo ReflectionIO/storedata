@@ -6,11 +6,14 @@ package io.reflection.app.ingestors;
 import static com.spacehopperstudios.utility.StringUtils.urldecode;
 import static com.spacehopperstudios.utility.StringUtils.urlencode;
 import static io.reflection.app.objectify.PersistenceService.ofy;
+import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.Item;
 import io.reflection.app.datatypes.Rank;
 import io.reflection.app.logging.GaeLevel;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,7 +33,8 @@ public class DataStorePersist {
 
 	private static final Logger LOG = Logger.getLogger(DataStorePersist.class.getName());
 
-	public void enqueue(Item item, Rank rank) {
+	public void enqueue(Item item, Integer position, String itemId, String type, String store, String country, Date date, Float price, String currency,
+			String code) {
 		if (LOG.isLoggable(GaeLevel.TRACE)) {
 			LOG.log(GaeLevel.TRACE, "Entering...");
 		}
@@ -39,7 +43,7 @@ public class DataStorePersist {
 			Queue queue = QueueFactory.getQueue("persist");
 
 			if (queue != null) {
-				enqueue(queue, item, rank);
+				enqueue(queue, item, position, type, store, country, date, price, currency, code);
 			}
 		} finally {
 			if (LOG.isLoggable(GaeLevel.TRACE)) {
@@ -48,22 +52,22 @@ public class DataStorePersist {
 		}
 	}
 
-	private String convertItemRankToPayloadString(Item item, Rank rank) {
+	private String convertItemRankToPayloadString(Item item, Integer position, String type, String store, String country, Date date, Float price,
+			String currency, String code) {
 		return String
-				.format("itemAdded=%d&itemCurrency=%s&itemExternalId=%s&itemInternalId=%s&itemName=%s&itemPrice=%f&itemSource=%s&itemType=%s&rankCode=%s&rankCounted=%b&rankCountry=%s&rankCurrency=%s&rankDate=%d&rankItemId=%s&rankPosition=%d&rankPrice=%f&rankSource=%s&rankType=%s",
-						item.added, item.currency, urlencode(item.externalId), item.internalId, urlencode(item.name), item.price, item.source, item.type,
-						rank.code, rank.counted, rank.country, rank.currency, rank.date.getTime(), urlencode(rank.itemId), rank.position, rank.price,
-						rank.source, rank.type);
+				.format("itemAdded=%d&itemCurrency=%s&itemExternalId=%s&itemInternalId=%s&itemName=%s&itemPrice=%f&itemSource=%s&itemType=%s&rankCode=%s&rankCountry=%s&rankCurrency=%s&rankDate=%d&rankItemId=%s&rankPosition=%d&rankPrice=%f&rankSource=%s&rankType=%s",
+						item.added, item.currency, urlencode(item.externalId), item.internalId, urlencode(item.name), item.price, item.source, item.type, code,
+						country, currency, date.getTime(), urlencode(item.externalId), position, price, store, type);
 	}
 
-	private TaskOptions convertItemRankToParams(TaskOptions options, Item item, Rank rank) {
+	private TaskOptions convertItemRankToParams(TaskOptions options, Item item, Integer position, String type, String store, String country, Date date,
+			Float price, String currency, String code) {
 		return options.param("itemAdded", Long.toString(item.added.getTime())).param("itemCurrency", item.currency)
 				.param("itemExternalId", urlencode(item.externalId)).param("itemInternalId", item.internalId).param("itemName", urlencode(item.name))
-				.param("itemPrice", item.price.toString()).param("itemSource", item.source).param("itemType", item.type).param("rankCode", rank.code)
-				.param("rankCounted", rank.counted.toString()).param("rankCountry", rank.country).param("rankCurrency", rank.currency)
-				.param("rankDate", Long.toString(rank.date.getTime())).param("rankItemId", urlencode(rank.itemId))
-				.param("rankPosition", rank.position.toString()).param("rankPrice", rank.price.toString()).param("rankSource", rank.source)
-				.param("rankType", rank.type);
+				.param("itemPrice", item.price.toString()).param("itemSource", item.source).param("itemType", item.type).param("rankCode", code)
+				.param("rankCountry", country).param("rankCurrency", currency).param("rankDate", Long.toString(date.getTime()))
+				.param("rankItemId", urlencode(item.externalId)).param("rankPosition", position.toString()).param("rankPrice", price.toString())
+				.param("rankSource", store).param("rankType", type);
 	}
 
 	private Item convertParamsToItem(HttpServletRequest req) {
@@ -81,24 +85,87 @@ public class DataStorePersist {
 	}
 
 	private Rank convertParamsToRank(HttpServletRequest req) {
-		Rank rank = new Rank();
-		rank.code = req.getParameter("rankCode");
-		rank.counted = Boolean.parseBoolean(req.getParameter("rankCounted"));
-		rank.country = req.getParameter("rankCountry");
-		rank.currency = req.getParameter("rankCurrency");
-		rank.date = new Date(Long.parseLong(req.getParameter("rankDate")));
-		rank.itemId = urldecode(req.getParameter("rankItemId"));
-		rank.position = Integer.parseInt(req.getParameter("rankPosition"));
-		rank.price = Float.parseFloat(req.getParameter("rankPrice"));
-		rank.source = req.getParameter("rankSource");
-		rank.type = req.getParameter("rankType");
+		Rank rank = null;
+
+		String rankCode = req.getParameter("rankCode");
+		String rankCountry = req.getParameter("rankCountry");
+		String rankCurrency = req.getParameter("rankCurrency");
+		Date rankDate = new Date(Long.parseLong(req.getParameter("rankDate")));
+		String rankItemId = urldecode(req.getParameter("rankItemId"));
+		int rankPosition = Integer.parseInt(req.getParameter("rankPosition"));
+		float rankPrice = Float.parseFloat(req.getParameter("rankPrice"));
+		String rankSource = req.getParameter("rankSource");
+		String rankType = req.getParameter("rankType");
+
+		boolean isGrossing = isGrossing(rankSource, rankType);
+
+		if ((rank = getRankWithParameters(rankSource, rankCountry, rankItemId, rankType, rankDate, rankCode)) == null) {
+			rank = new Rank();
+
+			rank.code = rankCode;
+			rank.country = rankCountry;
+			rank.currency = rankCurrency;
+			rank.date = rankDate;
+			rank.itemId = rankItemId;
+			rank.price = rankPrice;
+			rank.source = rankSource;
+			rank.type = rankType;
+		}
+
+		if (isGrossing) {
+			rank.grossingPosition = rankPosition;
+		} else {
+			rank.position = rankPosition;
+			rank.type = rankType;
+		}
 
 		return rank;
 	}
 
-	private void enqueue(Queue queue, Item item, Rank rank) {
+	private boolean isGrossing(String store, String type) {
+		return CollectorFactory.getCollectorForStore(store).isGrossing(type);
+	}
 
-		TaskOptions options = convertItemRankToParams(TaskOptions.Builder.withUrl("/persist").method(Method.POST), item, rank);
+	public static Rank getRankWithParameters(String store, String country, String itemId, String type, Date date, String code) {
+
+		Rank rank = null;
+
+		List<String> counterpartType = CollectorFactory.getCollectorForStore(store).getCounterpartTypes(type);
+
+		Date startDate, endDate;
+
+		Calendar c = Calendar.getInstance();
+
+		c.setTime(date);
+		c.add(Calendar.HOUR, -2);
+		startDate = c.getTime();
+
+		c.setTime(date);
+		c.add(Calendar.HOUR, 2);
+		endDate = c.getTime();
+
+		List<Rank> foundRanks = ofy().cache(false).load().type(Rank.class).filter("source =", store).filter("country =", country).filter("itemId =", itemId)
+				.filter("date >=", startDate).filter("date <", endDate).filter("type in", counterpartType).list();
+
+		if (foundRanks != null) {
+			for (Rank found : foundRanks) {
+				// if one of the items of the counter types within the four hour window matches the gather code then that is the right row quit
+
+				if (code.equals(found.code)) {
+					rank = found;
+					break;
+				}
+			}
+		}
+
+		return rank;
+	}
+
+	private void enqueue(Queue queue, Item item, Integer position, String type, String store, String country, Date date, Float price, String currency,
+			String code) {
+
+		TaskOptions options = convertItemRankToParams(TaskOptions.Builder.withUrl("/persist").method(Method.POST), item, position, type, store, country, date,
+				price, currency, code);
 
 		try {
 			queue.add(options);
@@ -113,8 +180,10 @@ public class DataStorePersist {
 				queue.add(options);
 			} catch (TransientFailureException reEx) {
 				if (LOG.isLoggable(Level.SEVERE)) {
-					LOG.log(Level.SEVERE, String.format("Retry of with payload [%s] failed while adding to queue [%s] twice",
-							convertItemRankToPayloadString(item, rank), queue.getQueueName()), reEx);
+					LOG.log(Level.SEVERE,
+							String.format("Retry of with payload [%s] failed while adding to queue [%s] twice",
+									convertItemRankToPayloadString(item, position, type, store, country, date, price, currency, code), queue.getQueueName()),
+							reEx);
 				}
 			}
 		}
@@ -124,7 +193,7 @@ public class DataStorePersist {
 		if (LOG.isLoggable(GaeLevel.TRACE)) {
 			LOG.log(GaeLevel.TRACE, "Entering...");
 		}
-		
+
 		Item item = convertParamsToItem(req);
 		Rank rank = convertParamsToRank(req);
 
@@ -140,7 +209,7 @@ public class DataStorePersist {
 				LOG.log(GaeLevel.TRACE, String.format("Saved rank [%s] for", rank.itemId));
 			}
 		}
-		
+
 		if (LOG.isLoggable(GaeLevel.TRACE)) {
 			LOG.log(GaeLevel.TRACE, "Exiting...");
 		}

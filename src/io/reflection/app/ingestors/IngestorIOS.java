@@ -7,7 +7,6 @@ import static io.reflection.app.objectify.PersistenceService.ofy;
 import io.reflection.app.collectors.StoreCollector;
 import io.reflection.app.datatypes.FeedFetch;
 import io.reflection.app.datatypes.Item;
-import io.reflection.app.datatypes.Rank;
 import io.reflection.app.logging.GaeLevel;
 
 import java.io.BufferedReader;
@@ -117,34 +116,8 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 
 				item.added = key;
 
-				// // save the item if it does not exist
-				// if (ofy().load().type(Item.class).filter("externalId =", item.externalId).count() == 0) {
-				// item.added = key;
-				// ofy().save().entity(item).now();
-				// }
-
-				Rank rank = new Rank();
-				rank.position = Integer.valueOf(i);
-				rank.itemId = item.externalId;
-				rank.type = firstFeedFetch.type;
-				rank.source = firstFeedFetch.store;
-				rank.country = firstFeedFetch.country;
-				rank.date = key;
-				rank.price = item.price;
-				rank.currency = item.currency;
-				rank.code = firstFeedFetch.code;
-
-				// // will only save the rank if it has not been done before
-				// if (ofy().cache(false).load().type(Rank.class).filter("source =", rank.source).filter("type =", rank.type).filter("date =", rank.date)
-				// .filter("country =", rank.country).filter("position =", rank.position).count() == 0) {
-				// ofy().save().entity(rank).now();
-				//
-				// if (LOG.isLoggable(GaeLevel.TRACE)) {
-				// LOG.log(GaeLevel.TRACE, String.format("Saved rank [%s] for", rank.itemId));
-				// }
-				// }
-
-				persistor.enqueue(item, rank);
+				persistor.enqueue(item, Integer.valueOf(i + 1), item.externalId, firstFeedFetch.type, firstFeedFetch.store, firstFeedFetch.country, key,
+						item.price, item.currency, firstFeedFetch.code);
 			}
 
 			if (LOG.isLoggable(GaeLevel.DEBUG)) {

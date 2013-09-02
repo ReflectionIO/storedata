@@ -83,4 +83,13 @@ public class CollectorAmazon extends StoreCollector implements Collector {
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see io.reflection.app.collectors.Collector#getCounterpartTypes(java.lang.String)
+	 */
+	@Override
+	public List<String> getCounterpartTypes(String type) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

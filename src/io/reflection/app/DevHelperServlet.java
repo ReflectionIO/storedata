@@ -15,7 +15,6 @@ import io.reflection.app.mapreduce.RankCountMapper;
 import io.reflection.app.mapreduce.RankCountReducer;
 import io.reflection.app.mapreduce.TopAndGrossingMapper;
 import io.reflection.app.mapreduce.TotalRankedItemsCountMapper;
-import io.reflection.app.objectify.PersistenceService;
 import io.reflection.app.setup.CountriesInstaller;
 import io.reflection.app.setup.StoresInstaller;
 
@@ -217,92 +216,92 @@ public class DevHelperServlet extends HttpServlet {
 					success = true;
 				}
 			} else if ("countitemrank".toUpperCase().equals(action.toUpperCase())) {
-				int i = 0;
-				Query<Rank> queryRank = ofy().cache(false).load().type(Rank.class).filter("counted =", Boolean.FALSE).offset(Integer.parseInt(start))
-						.limit(Integer.parseInt(count));
-
-				// Query<Rank> queryRank = ofy().load().type(Rank.class).filter("id =", Long.valueOf(19816));
-
-				for (Rank rank : queryRank.iterable()) {
-					// get the item rank summary
-					Query<ItemRankSummary> querySummary = PersistenceService.ofy().load().type(ItemRankSummary.class).filter("itemId =", rank.itemId)
-							.filter("type =", rank.type).filter("source =", rank.source);
-
-					ItemRankSummary itemRankSummary = null;
-
-					if (querySummary.count() > 0) {
-						// we already have an item for this
-						itemRankSummary = querySummary.list().get(0);
-					} else {
-						itemRankSummary = new ItemRankSummary();
-						itemRankSummary.itemId = rank.itemId;
-						itemRankSummary.type = rank.type;
-						itemRankSummary.source = rank.source;
-					}
-
-					itemRankSummary.numberOfTimesRanked = Integer.valueOf(itemRankSummary.numberOfTimesRanked.intValue() + 1);
-
-					if (rank.position.intValue() < 10) {
-						itemRankSummary.numberOfTimesRankedTop10 = Integer.valueOf(itemRankSummary.numberOfTimesRankedTop10 + 1);
-					}
-
-					if (rank.position.intValue() < 25) {
-						itemRankSummary.numberOfTimesRankedTop25 = Integer.valueOf(itemRankSummary.numberOfTimesRankedTop25 + 1);
-					}
-
-					if (rank.position.intValue() < 50) {
-						itemRankSummary.numberOfTimesRankedTop50 = Integer.valueOf(itemRankSummary.numberOfTimesRankedTop50 + 1);
-					}
-
-					if (rank.position.intValue() < 100) {
-						itemRankSummary.numberOfTimesRankedTop100 = Integer.valueOf(itemRankSummary.numberOfTimesRankedTop100 + 1);
-					}
-
-					if (rank.position.intValue() < 200) {
-						itemRankSummary.numberOfTimesRankedTop200 = Integer.valueOf(itemRankSummary.numberOfTimesRankedTop200 + 1);
-					}
-
-					ofy().save().entity(itemRankSummary).now();
-
-					if (LOG.isLoggable(GaeLevel.TRACE)) {
-						LOG.log(GaeLevel.TRACE,
-								String.format("Updated item item summary for [%s:%s:%s]", itemRankSummary.source, itemRankSummary.type, itemRankSummary.itemId));
-					}
-
-					rank.counted = true;
-
-					ofy().save().entity(rank).now();
-
-					if (LOG.isLoggable(GaeLevel.TRACE)) {
-						LOG.log(GaeLevel.TRACE, String.format("Updated rank counted for %d", rank.id.longValue()));
-					}
-
-					i++;
-				}
-
-				if (LOG.isLoggable(GaeLevel.DEBUG)) {
-					LOG.log(GaeLevel.DEBUG, String.format("Processed [%d] entities", i));
-				}
+//				int i = 0;
+//				Query<Rank> queryRank = ofy().cache(false).load().type(Rank.class).filter("counted =", Boolean.FALSE).offset(Integer.parseInt(start))
+//						.limit(Integer.parseInt(count));
+//
+//				// Query<Rank> queryRank = ofy().load().type(Rank.class).filter("id =", Long.valueOf(19816));
+//
+//				for (Rank rank : queryRank.iterable()) {
+//					// get the item rank summary
+//					Query<ItemRankSummary> querySummary = PersistenceService.ofy().load().type(ItemRankSummary.class).filter("itemId =", rank.itemId)
+//							.filter("type =", rank.type).filter("source =", rank.source);
+//
+//					ItemRankSummary itemRankSummary = null;
+//
+//					if (querySummary.count() > 0) {
+//						// we already have an item for this
+//						itemRankSummary = querySummary.list().get(0);
+//					} else {
+//						itemRankSummary = new ItemRankSummary();
+//						itemRankSummary.itemId = rank.itemId;
+//						itemRankSummary.type = rank.type;
+//						itemRankSummary.source = rank.source;
+//					}
+//
+//					itemRankSummary.numberOfTimesRanked = Integer.valueOf(itemRankSummary.numberOfTimesRanked.intValue() + 1);
+//
+//					if (rank.position.intValue() <= 10) {
+//						itemRankSummary.numberOfTimesRankedTop10 = Integer.valueOf(itemRankSummary.numberOfTimesRankedTop10 + 1);
+//					}
+//
+//					if (rank.position.intValue() <= 25) {
+//						itemRankSummary.numberOfTimesRankedTop25 = Integer.valueOf(itemRankSummary.numberOfTimesRankedTop25 + 1);
+//					}
+//
+//					if (rank.position.intValue() <= 50) {
+//						itemRankSummary.numberOfTimesRankedTop50 = Integer.valueOf(itemRankSummary.numberOfTimesRankedTop50 + 1);
+//					}
+//
+//					if (rank.position.intValue() <= 100) {
+//						itemRankSummary.numberOfTimesRankedTop100 = Integer.valueOf(itemRankSummary.numberOfTimesRankedTop100 + 1);
+//					}
+//
+//					if (rank.position.intValue() <= 200) {
+//						itemRankSummary.numberOfTimesRankedTop200 = Integer.valueOf(itemRankSummary.numberOfTimesRankedTop200 + 1);
+//					}
+//
+//					ofy().save().entity(itemRankSummary).now();
+//
+//					if (LOG.isLoggable(GaeLevel.TRACE)) {
+//						LOG.log(GaeLevel.TRACE,
+//								String.format("Updated item item summary for [%s:%s:%s]", itemRankSummary.source, itemRankSummary.type, itemRankSummary.itemId));
+//					}
+//
+//					rank.counted = true;
+//
+//					ofy().save().entity(rank).now();
+//
+//					if (LOG.isLoggable(GaeLevel.TRACE)) {
+//						LOG.log(GaeLevel.TRACE, String.format("Updated rank counted for %d", rank.id.longValue()));
+//					}
+//
+//					i++;
+//				}
+//
+//				if (LOG.isLoggable(GaeLevel.DEBUG)) {
+//					LOG.log(GaeLevel.DEBUG, String.format("Processed [%d] entities", i));
+//				}
 
 				success = true;
 
 			} else if ("uncountranks".toUpperCase().equals(action.toUpperCase())) {
-				int i = 0;
-				for (Rank rank : ofy().load().type(Rank.class).offset(Integer.parseInt(start)).limit(Integer.parseInt(count)).iterable()) {
-					rank.counted = false;
-
-					ofy().save().entity(rank);
-
-					if (LOG.isLoggable(GaeLevel.TRACE)) {
-						LOG.log(GaeLevel.TRACE, String.format("Uncounted rank [%d]", rank.id.longValue()));
-					}
-
-					i++;
-				}
-
-				if (LOG.isLoggable(GaeLevel.DEBUG)) {
-					LOG.log(GaeLevel.DEBUG, String.format("Processed [%d] entities", i));
-				}
+//				int i = 0;
+//				for (Rank rank : ofy().load().type(Rank.class).offset(Integer.parseInt(start)).limit(Integer.parseInt(count)).iterable()) {
+//					rank.counted = false;
+//
+//					ofy().save().entity(rank);
+//
+//					if (LOG.isLoggable(GaeLevel.TRACE)) {
+//						LOG.log(GaeLevel.TRACE, String.format("Uncounted rank [%d]", rank.id.longValue()));
+//					}
+//
+//					i++;
+//				}
+//
+//				if (LOG.isLoggable(GaeLevel.DEBUG)) {
+//					LOG.log(GaeLevel.DEBUG, String.format("Processed [%d] entities", i));
+//				}
 
 				success = true;
 			} else if ("appswithrank".toUpperCase().equals(action.toUpperCase())) {
