@@ -83,7 +83,6 @@
 				<xsd:attribute name="source" type="xsd:string" />
 				<xsd:attribute name="price" type="xsd:float" />
 				<xsd:attribute name="currency" type="xsd:string" />
-				<xsd:attribute name="counted" type="xsd:boolean" />
 				<xsd:attribute name="code" type="xsd:string" />
 			</xsd:extension>
 		</xsd:complexContent>
