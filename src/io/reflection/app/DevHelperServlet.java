@@ -108,42 +108,42 @@ public class DevHelperServlet extends HttpServlet {
 		if (action != null) {
 			if ("addingested".toUpperCase().equals(action.toUpperCase())) {
 
-				int i = 0;
-				for (FeedFetch entity : ofy().load().type(FeedFetch.class).offset(Integer.parseInt(start)).limit(Integer.parseInt(count)).iterable()) {
-					entity.ingested = Boolean.FALSE;
-
-					ofy().save().entity(entity).now();
-
-					if (LOG.isLoggable(GaeLevel.TRACE)) {
-						LOG.log(GaeLevel.TRACE, String.format("Set entity [%d] ingested to false", entity.id.longValue()));
-					}
-
-					i++;
-				}
-
-				if (LOG.isLoggable(GaeLevel.DEBUG)) {
-					LOG.log(GaeLevel.DEBUG, String.format("Processed [%d] entities", i));
-				}
+//				int i = 0;
+//				for (FeedFetch entity : ofy().load().type(FeedFetch.class).offset(Integer.parseInt(start)).limit(Integer.parseInt(count)).iterable()) {
+//					entity.ingested = Boolean.FALSE;
+//
+//					ofy().save().entity(entity).now();
+//
+//					if (LOG.isLoggable(GaeLevel.TRACE)) {
+//						LOG.log(GaeLevel.TRACE, String.format("Set entity [%d] ingested to false", entity.id.longValue()));
+//					}
+//
+//					i++;
+//				}
+//
+//				if (LOG.isLoggable(GaeLevel.DEBUG)) {
+//					LOG.log(GaeLevel.DEBUG, String.format("Processed [%d] entities", i));
+//				}
 
 				success = true;
 			} else if ("uningest".toUpperCase().equals(action.toUpperCase())) {
 
-				int i = 0;
-				for (FeedFetch entity : ofy().load().type(FeedFetch.class).offset(Integer.parseInt(start)).limit(Integer.parseInt(count)).iterable()) {
-					entity.ingested = false;
-
-					ofy().save().entity(entity).now();
-
-					if (LOG.isLoggable(GaeLevel.TRACE)) {
-						LOG.log(GaeLevel.TRACE, String.format("Set entity [%d] ingested to false", entity.id.longValue()));
-					}
-
-					i++;
-				}
-
-				if (LOG.isLoggable(GaeLevel.DEBUG)) {
-					LOG.log(GaeLevel.DEBUG, String.format("Processed [%d] entities", i));
-				}
+//				int i = 0;
+//				for (FeedFetch entity : ofy().load().type(FeedFetch.class).offset(Integer.parseInt(start)).limit(Integer.parseInt(count)).iterable()) {
+//					entity.ingested = false;
+//
+//					ofy().save().entity(entity).now();
+//
+//					if (LOG.isLoggable(GaeLevel.TRACE)) {
+//						LOG.log(GaeLevel.TRACE, String.format("Set entity [%d] ingested to false", entity.id.longValue()));
+//					}
+//
+//					i++;
+//				}
+//
+//				if (LOG.isLoggable(GaeLevel.DEBUG)) {
+//					LOG.log(GaeLevel.DEBUG, String.format("Processed [%d] entities", i));
+//				}
 
 				success = true;
 			} else if ("addcode".toUpperCase().equals(action.toUpperCase())) {

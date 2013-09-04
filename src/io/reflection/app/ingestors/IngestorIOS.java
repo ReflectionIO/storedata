@@ -26,9 +26,6 @@ import com.google.appengine.api.files.FileService;
 import com.google.appengine.api.files.FileServiceFactory;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
-import com.google.appengine.api.taskqueue.TaskOptions;
-import com.google.appengine.api.taskqueue.TaskOptions.Method;
-import com.google.appengine.api.taskqueue.TransientFailureException;
 import com.googlecode.objectify.VoidWork;
 
 /**
@@ -40,7 +37,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 
 	private static final Logger LOG = Logger.getLogger(IngestorIOS.class.getName());
 
-	private static final String IOS_STORE_A3 = "ios";
+//	private static final String IOS_STORE_A3 = "ios";
 
 	@Override
 	public void ingest(List<Long> itemIds) {
@@ -132,7 +129,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 					for (Integer entityKey : grouped.get(key).keySet()) {
 						FeedFetch entity = grouped.get(key).get(entityKey);
 
-						entity.ingested = Boolean.TRUE;
+//						entity.ingested = Boolean.TRUE;
 						ofy().save().entity(entity).now();
 						i++;
 
@@ -300,59 +297,50 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 		FeedFetch row = null;
 		for (Long itemId : itemIds) {
 			row = items.get(itemId);
-			if (!row.ingested.booleanValue()) {
-				stored.add(row);
-				i++;
-			} else {
-				stored.clear();
-				i = 0;
-
-				if (LOG.isLoggable(Level.WARNING)) {
-					LOG.warning(String.format("found ingested item [%d] in items marked for ingesting", itemId.longValue()));
-				}
-
-				break;
-			}
+			stored.add(row);
+			i++;
 		}
 
 		if (LOG.isLoggable(GaeLevel.DEBUG)) {
-			LOG.log(GaeLevel.DEBUG, String.format("Found [%d] uningested items", i));
+			LOG.log(GaeLevel.DEBUG, String.format("Found [%d] ingestable items", i));
 		}
 
 		return stored;
 	}
 
 	private void enqueue(Queue queue, List<Long> itemIds) {
-		StringBuffer buffer = new StringBuffer();
-		for (Long id : itemIds) {
-			if (buffer.length() != 0) {
-				buffer.append(",");
-			}
-
-			buffer.append(id.toString());
-		}
-
-		String store = IOS_STORE_A3, ids = buffer.toString();
-
-		try {
-			queue.add(TaskOptions.Builder.withUrl(String.format(ENQUEUE_INGEST_FORMAT, store, ids)).method(Method.GET));
-		} catch (TransientFailureException ex) {
-
-			if (LOG.isLoggable(Level.WARNING)) {
-				LOG.warning(String.format("Could not queue a message because of [%s] - will retry it once", ex.toString()));
-			}
-
-			// retry once
-			try {
-				queue.add(TaskOptions.Builder.withUrl(String.format(ENQUEUE_INGEST_FORMAT, store, ids)).method(Method.GET));
-			} catch (TransientFailureException reEx) {
-				if (LOG.isLoggable(Level.SEVERE)) {
-					LOG.log(Level.SEVERE,
-							String.format("Retry of with parameters store [%s] ids [%s] failed while adding to queue [%s] twice", store, ids,
-									queue.getQueueName()), reEx);
-				}
-			}
-		}
+		return;
+		
+//		StringBuffer buffer = new StringBuffer();
+//		for (Long id : itemIds) {
+//			if (buffer.length() != 0) {
+//				buffer.append(",");
+//			}
+//
+//			buffer.append(id.toString());
+//		}
+//
+//		String store = IOS_STORE_A3, ids = buffer.toString();
+//
+//		try {
+//			queue.add(TaskOptions.Builder.withUrl(String.format(ENQUEUE_INGEST_FORMAT, store, ids)).method(Method.GET));
+//		} catch (TransientFailureException ex) {
+//
+//			if (LOG.isLoggable(Level.WARNING)) {
+//				LOG.warning(String.format("Could not queue a message because of [%s] - will retry it once", ex.toString()));
+//			}
+//
+//			// retry once
+//			try {
+//				queue.add(TaskOptions.Builder.withUrl(String.format(ENQUEUE_INGEST_FORMAT, store, ids)).method(Method.GET));
+//			} catch (TransientFailureException reEx) {
+//				if (LOG.isLoggable(Level.SEVERE)) {
+//					LOG.log(Level.SEVERE,
+//							String.format("Retry of with parameters store [%s] ids [%s] failed while adding to queue [%s] twice", store, ids,
+//									queue.getQueueName()), reEx);
+//				}
+//			}
+//		}
 	}
 
 	@Override

@@ -7,7 +7,7 @@
 //
 package io.reflection.app;
 
-import io.reflection.app.ingestors.IngestorIOS;
+import io.reflection.app.ingestors.IngestorFactory;
 import io.reflection.app.logging.GaeLevel;
 
 import java.io.IOException;
@@ -67,9 +67,7 @@ public class IngestorServlet extends HttpServlet {
 			}
 
 			if (itemIds != null && itemIds.size() != 0) {
-				if ("ios".equals(store.toLowerCase())) {
-					(new IngestorIOS()).ingest(itemIds);
-				}
+				IngestorFactory.getIngestorForStore(store.toLowerCase()).ingest(itemIds);
 			}
 		}
 

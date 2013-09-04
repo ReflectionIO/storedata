@@ -28,9 +28,6 @@ public class FeedFetch extends DataType {
 	public Date date;
 
 	@Index
-	public Boolean ingested = Boolean.FALSE;
-
-	@Index
 	public String store;
 
 	public Integer part = Integer.valueOf(0);
@@ -52,8 +49,6 @@ public class FeedFetch extends DataType {
 		object.add("data", jsonData);
 		JsonElement jsonDate = date == null ? JsonNull.INSTANCE : new JsonPrimitive(date.getTime());
 		object.add("date", jsonDate);
-		JsonElement jsonIngested = ingested == null ? JsonNull.INSTANCE : new JsonPrimitive(ingested);
-		object.add("ingested", jsonIngested);
 		JsonElement jsonStore = store == null ? JsonNull.INSTANCE : new JsonPrimitive(store);
 		object.add("store", jsonStore);
 		JsonElement jsonPart = part == null ? JsonNull.INSTANCE : new JsonPrimitive(part);
@@ -86,12 +81,6 @@ public class FeedFetch extends DataType {
 			JsonElement jsonDate = jsonObject.get("date");
 			if (jsonDate != null) {
 				date = new Date(jsonDate.getAsLong());
-			}
-		}
-		if (jsonObject.has("ingested")) {
-			JsonElement jsonIngested = jsonObject.get("ingested");
-			if (jsonIngested != null) {
-				ingested = Boolean.valueOf(jsonIngested.getAsBoolean());
 			}
 		}
 		if (jsonObject.has("store")) {
