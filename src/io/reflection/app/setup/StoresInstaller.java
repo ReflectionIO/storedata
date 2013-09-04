@@ -22,6 +22,10 @@ public class StoresInstaller {
 
 	public static void install() {
 
+		if (true) {
+			throw new UnsupportedOperationException("Stores have been migrated to mysql");
+		}
+		
 		ofy().save().entities(
 				createStore(
 						"Apple iOS Store",

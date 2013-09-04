@@ -20,6 +20,11 @@ import java.util.List;
  */
 public class CountriesInstaller {
 	public static void install() {
+		
+		if (true) {
+			throw new UnsupportedOperationException("Countries have been migrated to mysql");
+		}
+		
 		ofy().save().entities(createCountry("Afghanistan", "af", "afg", 4), createCountry("Åland Islands", "ax", "ala", 248),
 				createCountry("Albania", "al", "alb", 8, Arrays.asList(new String[] { "ios" })),
 				createCountry("Algeria", "dz", "dza", 12, Arrays.asList(new String[] { "ios" })), createCountry("American Samoa", "as", "asm", 16),
