@@ -14,6 +14,7 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Ignore;
 import com.willshex.gson.json.shared.Jsonable;
 
 /**
@@ -25,13 +26,16 @@ public abstract class DataType extends Jsonable {
 	/**
 	 * DataType Id
 	 */
-	@Id
-	public Long id = null;
+	@Id public Long id = null;
 
 	/**
 	 * created date
 	 */
 	public Date created = new Date();
+
+	// @Index(IfNotDefault.class) public String deleted = "n";
+
+	@Ignore public String deleted;
 
 	@Override
 	public JsonObject toJson() {
@@ -40,6 +44,8 @@ public abstract class DataType extends Jsonable {
 		object.add("id", jsonId);
 		JsonElement jsonCreated = created == null ? JsonNull.INSTANCE : new JsonPrimitive(Long.valueOf(created.getTime()));
 		object.add("created", jsonCreated);
+		JsonElement jsonDeleted = deleted == null ? JsonNull.INSTANCE : new JsonPrimitive(deleted);
+		object.add("deleted", jsonDeleted);
 		return object;
 	}
 
@@ -56,6 +62,12 @@ public abstract class DataType extends Jsonable {
 			JsonElement jsonCreated = jsonObject.get("created");
 			if (jsonCreated != null) {
 				created = new Date(jsonCreated.getAsLong());
+			}
+		}
+		if (jsonObject.has("deleted")) {
+			JsonElement jsonDeleted = jsonObject.get("deleted");
+			if (jsonDeleted != null) {
+				deleted = jsonDeleted.getAsString();
 			}
 		}
 	}

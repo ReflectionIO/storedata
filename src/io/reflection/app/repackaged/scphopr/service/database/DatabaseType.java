@@ -11,10 +11,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum DatabaseType {
-	DatabaseTypeSession("session"), @Deprecated
-	DatabaseTypeProperty("property"), DatabaseTypePropertyvalue("propertyvalue"), DatabaseTypeMetaproperty("metaproperty"), DatabaseTypeApplication(
-			"application"), DatabaseTypePublisher("publisher"), DatabaseTypeUser("user"), DatabaseTypeDevice("device"), DatabaseTypePropertymodifier(
-			"propertymodifier");
+	DatabaseTypeSession("session"),
+	DatabaseTypeProperty("property"),
+	DatabaseTypeItem("item"),
+	DatabaseTypeRank("rank"),
+	DatabaseTypeCountry("country"),
+	DatabaseTypeStore("store"),
+	DatabaseTypeUser("user");
 	private String value;
 	private static Map<String, DatabaseType> valueLookup = null;
 

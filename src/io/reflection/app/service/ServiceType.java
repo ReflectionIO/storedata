@@ -15,7 +15,11 @@ import java.util.Map;
  * 
  */
 public enum ServiceType {
-	ServiceTypeDatabase("database");
+	ServiceTypeDatabase("database"),
+	ServiceTypeItem("item"),
+	ServiceTypeRank("rank"),
+	ServiceTypeCountry("country"),
+	ServiceTypeStore("store");
 
 	private String value;
 	private static Map<String, ServiceType> valueLookup = null;

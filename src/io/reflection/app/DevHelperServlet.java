@@ -164,22 +164,22 @@ public class DevHelperServlet extends HttpServlet {
 					int i = 0;
 
 					String code = UUID.randomUUID().toString();
-					for (FeedFetch entity : ofy().load().type(FeedFetch.class).filter("date >=", startDate).filter("date <", endDate)
+					for (FeedFetch feed : ofy().load().type(FeedFetch.class).filter("date >=", startDate).filter("date <", endDate)
 							.offset(Integer.parseInt(start)).limit(Integer.parseInt(count)).iterable()) {
 
-						if (entity.code == null || entity.code.isEmpty()) {
+						if (feed.code == null || feed.code.isEmpty()) {
 
-							entity.code = code;
-							ofy().save().entity(entity);
+							feed.code = code;
+							ofy().save().entity(feed);
 
 							if (LOG.isLoggable(GaeLevel.TRACE)) {
-								LOG.log(GaeLevel.TRACE, String.format("Added code [%s] to entity [%d]", entity.code, entity.id.longValue()));
+								LOG.log(GaeLevel.TRACE, String.format("Added code [%s] to entity [%d]", feed.code, feed.id.longValue()));
 							}
 
 							i++;
 						} else {
 							if (LOG.isLoggable(GaeLevel.TRACE)) {
-								LOG.log(GaeLevel.TRACE, String.format("Entity [%d] has code [%s]", entity.id.longValue(), entity.code));
+								LOG.log(GaeLevel.TRACE, String.format("Entity [%d] has code [%s]", feed.id.longValue(), feed.code));
 							}
 						}
 
