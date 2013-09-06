@@ -26,7 +26,7 @@ final class RankService implements IRankService {
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection rankConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
-		String getRankQuery = String.format("select * from `rank` where `deleted`='n' and `id`='%d' limit 1", id.longValue());
+		String getRankQuery = String.format("SELECT * FROM `rank` WHERE `deleted`='n' AND `id`='%d' LIMIT 1", id.longValue());
 		try {
 			rankConnection.connect();
 			rankConnection.executeQuery(getRankQuery);
@@ -50,22 +50,28 @@ final class RankService implements IRankService {
 	 */
 	private Rank toRank(Connection connection) {
 		Rank rank = new Rank();
-		
+
 		rank.id = connection.getCurrentRowLong("id");
 		rank.created = connection.getCurrentRowDateTime("created");
 		rank.deleted = connection.getCurrentRowString("deleted");
-		
+
 		rank.code = connection.getCurrentRowString("code");
 		rank.country = connection.getCurrentRowString("country");
 		rank.currency = connection.getCurrentRowString("currency");
 		rank.date = connection.getCurrentRowDateTime("date");
-		rank.grossingPosition = connection.getCurrentRowInteger("grossingPosition");
+		rank.grossingPosition = connection.getCurrentRowInteger("grossingposition");
+		rank.itemId = connection.getCurrentRowString("itemid");
+		rank.position = connection.getCurrentRowInteger("possition");
+		rank.price = Float.valueOf((float) connection.getCurrentRowInteger("price").intValue() / 100.0f);
+		rank.source = connection.getCurrentRowString("source");
+		rank.type = connection.getCurrentRowString("type");
 
 		return rank;
 	}
 
 	@Override
 	public Rank addRank(Rank rank) {
+		// insert into rank (created,position,grossingposition,itemid,type,country,date,source,price,currency,code) values (?,?,?,?,?,?,?,?,?,?,?);
 		throw new UnsupportedOperationException();
 	}
 
@@ -79,4 +85,32 @@ final class RankService implements IRankService {
 		throw new UnsupportedOperationException();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.rank.IRankService#getItemGatherCodeRank(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public Rank getItemGatherCodeRank(String itemId, String code) {
+		Rank rank = null;
+		
+		String query = String.format("SELECT * FROM `rank` WHERE `itemid`='%s' AND `code`='%s' AND `deleted`='n' LIMIT 1", itemId, code);
+		
+		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+		
+		try {
+			rankConnection.connect();
+			rankConnection.executeQuery(query);
+			
+			if (rankConnection.fetchNextRow()) {
+				rank = toRank(rankConnection);
+			}
+		} finally {
+			if (rankConnection != null) {
+				rankConnection.disconnect();
+			}
+		}
+		
+		return rank;
+	}
 }

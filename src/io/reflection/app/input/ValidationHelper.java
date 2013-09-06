@@ -7,13 +7,13 @@
 //
 package io.reflection.app.input;
 
-import static io.reflection.app.objectify.PersistenceService.ofy;
 import io.reflection.app.api.datatypes.Pager;
 import io.reflection.app.datatypes.Country;
 import io.reflection.app.datatypes.Item;
 import io.reflection.app.datatypes.Store;
-
-import java.util.List;
+import io.reflection.app.service.country.CountryServiceProvider;
+import io.reflection.app.service.item.ItemServiceProvider;
+import io.reflection.app.service.store.StoreServiceProvider;
 
 import com.willshex.gson.json.service.server.InputValidationException;
 
@@ -69,19 +69,11 @@ public class ValidationHelper {
 
 		Store lookupStore = null;
 		if (isIdLookup) {
-			lookupStore = ofy().load().type(Store.class).id(store.id).now();
+			lookupStore = StoreServiceProvider.provide().getStore(store.id);
 		} else if (isA3CodeLookup) {
-			List<Store> found = ofy().load().type(Store.class).filter("a3Code", store.a3Code).limit(1).list();
-
-			if (found != null && found.size() > 0) {
-				lookupStore = found.get(0);
-			}
+			lookupStore = StoreServiceProvider.provide().getA3CodeStore(store.a3Code);
 		} else if (isNameLookup) {
-			List<Store> found = ofy().load().type(Store.class).filter("name", store.name).limit(1).list();
-
-			if (found != null && found.size() > 0) {
-				lookupStore = found.get(0);
-			}
+			lookupStore = StoreServiceProvider.provide().getNameStore(store.name);
 		}
 
 		if (lookupStore == null)
@@ -170,19 +162,11 @@ public class ValidationHelper {
 
 		Country lookupCountry = null;
 		if (isIdLookup) {
-			lookupCountry = ofy().load().type(Country.class).id(country.id).now();
+			lookupCountry = CountryServiceProvider.provide().getCountry(country.id);
 		} else if (isA2CodeLookup) {
-			List<Country> found = ofy().load().type(Country.class).filter("a2Code", country.a2Code).limit(1).list();
-
-			if (found != null && found.size() > 0) {
-				lookupCountry = found.get(0);
-			}
+			lookupCountry = CountryServiceProvider.provide().getA2CodeCountry(country.a2Code);
 		} else if (isNameLookup) {
-			List<Country> found = ofy().load().type(Country.class).filter("name", country.name).limit(1).list();
-
-			if (found != null && found.size() > 0) {
-				lookupCountry = found.get(0);
-			}
+			lookupCountry = CountryServiceProvider.provide().getNamedCountry(country.name);
 		}
 
 		if (lookupCountry == null)
@@ -205,7 +189,7 @@ public class ValidationHelper {
 		itemStore.a3Code = item.source;
 
 		itemStore = validateStore(itemStore, parent + ".item");
-		
+
 		item.source = itemStore.a3Code;
 
 		boolean isIdLookup = false, isIntIdLookup = false, isExtIdLookup = false;
@@ -223,19 +207,11 @@ public class ValidationHelper {
 
 		Item lookupItem = null;
 		if (isIdLookup) {
-			lookupItem = ofy().load().type(Item.class).id(item.id).now();
+			lookupItem = ItemServiceProvider.provide().getItem(item.id);
 		} else if (isExtIdLookup) {
-			List<Item> found = ofy().load().type(Item.class).filter("externalId", item.externalId).limit(1).list();
-
-			if (found != null && found.size() > 0) {
-				lookupItem = found.get(0);
-			}
+			lookupItem = ItemServiceProvider.provide().getExternalIdItem(item.externalId);
 		} else if (isIntIdLookup) {
-			List<Item> found = ofy().load().type(Item.class).filter("internalId", item.internalId).limit(1).list();
-
-			if (found != null && found.size() > 0) {
-				lookupItem = found.get(0);
-			}
+			lookupItem = ItemServiceProvider.provide().getInternalIdItem(item.internalId);
 		}
 
 		if (lookupItem == null)

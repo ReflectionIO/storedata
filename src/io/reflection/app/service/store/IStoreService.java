@@ -7,6 +7,10 @@
 //
 package io.reflection.app.service.store;
 
+import java.util.List;
+
+import io.reflection.app.api.datatypes.Pager;
+import io.reflection.app.datatypes.Country;
 import io.reflection.app.datatypes.Store;
 
 import com.spacehopperstudios.service.IService;
@@ -34,5 +38,37 @@ public interface IStoreService extends IService {
 	 * @param store
 	 */
 	public void deleteStore(Store store);
+
+	/**
+	 * @param country
+	 * @param pager 
+	 * @return
+	 */
+	public List<Store> getCountryStores(Country country, Pager pager);
+
+	/**
+	 * @param pager
+	 * @return
+	 */
+	public List<Store> getStores(Pager pager);
+
+	/**
+	 * @param query
+	 * @param pager
+	 * @return
+	 */
+	public List<Store> searchStores(String query, Pager pager);
+
+	/**
+	 * @param a3Code
+	 * @return
+	 */
+	public Store getA3CodeStore(String a3Code);
+
+	/**
+	 * @param name
+	 * @return
+	 */
+	public Store getNameStore(String name);
 
 }

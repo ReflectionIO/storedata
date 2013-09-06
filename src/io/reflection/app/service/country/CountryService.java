@@ -7,14 +7,18 @@
 //
 package io.reflection.app.service.country;
 
-import java.util.Arrays;
-
+import static com.spacehopperstudios.utility.StringUtils.addslashes;
+import io.reflection.app.api.datatypes.Pager;
 import io.reflection.app.datatypes.Country;
+import io.reflection.app.datatypes.Store;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
+
+import java.util.Arrays;
+import java.util.List;
 
 final class CountryService implements ICountryService {
 	public String getName() {
@@ -80,6 +84,126 @@ final class CountryService implements ICountryService {
 	@Override
 	public void deleteCountry(Country country) {
 		throw new UnsupportedOperationException();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.country.ICountryService#getA2CodeCountry(java.lang.String)
+	 */
+	@Override
+	public Country getA2CodeCountry(String a2Code) {
+		Country country = null;
+
+		String query = String.format("SELECT * from `country` WHERE `a2code`='%s' and `deleted`='n'", addslashes(a2Code));
+
+		Connection countryConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeCountry.toString());
+
+		try {
+			countryConnection.connect();
+			countryConnection.executeQuery(query);
+
+			if (countryConnection.fetchNextRow()) {
+				country = toCountry(countryConnection);
+			}
+		} finally {
+			if (countryConnection != null) {
+				countryConnection.disconnect();
+			}
+		}
+
+		return country;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.country.ICountryService#getA3CodeCountry(java.lang.String)
+	 */
+	@Override
+	public Country getA3CodeCountry(String a3Code) {
+		Country country = null;
+
+		String query = String.format("SELECT * from `country` WHERE `a3code`='%s' and `deleted`='n'", addslashes(a3Code));
+
+		Connection countryConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeCountry.toString());
+
+		try {
+			countryConnection.connect();
+			countryConnection.executeQuery(query);
+
+			if (countryConnection.fetchNextRow()) {
+				country = toCountry(countryConnection);
+			}
+		} finally {
+			if (countryConnection != null) {
+				countryConnection.disconnect();
+			}
+		}
+
+		return country;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.country.ICountryService#getNamedCountry(java.lang.String)
+	 */
+	@Override
+	public Country getNamedCountry(String name) {
+		Country country = null;
+
+		String query = String.format("SELECT * from `country` WHERE `name`='%s' and `deleted`='n'", addslashes(name));
+
+		Connection countryConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeCountry.toString());
+
+		try {
+			countryConnection.connect();
+			countryConnection.executeQuery(query);
+
+			if (countryConnection.fetchNextRow()) {
+				country = toCountry(countryConnection);
+			}
+		} finally {
+			if (countryConnection != null) {
+				countryConnection.disconnect();
+			}
+		}
+
+		return country;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.country.ICountryService#getStoreCountries(io.reflection.app.datatypes.Store, io.reflection.app.api.datatypes.Pager)
+	 */
+	@Override
+	public List<Country> getStoreCountries(Store store, Pager pager) {
+		// TODO Auto-generated method stub getStoreCountries
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.country.ICountryService#getCountries(io.reflection.app.api.datatypes.Pager)
+	 */
+	@Override
+	public List<Country> getCountries(Pager pager) {
+		// TODO Auto-generated method stub getCountries
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.country.ICountryService#searchCountries(java.lang.String, io.reflection.app.api.datatypes.Pager)
+	 */
+	@Override
+	public List<Country> searchCountries(String query, Pager pager) {
+		// TODO Auto-generated method stub searchCountries
+		return null;
 	}
 
 }

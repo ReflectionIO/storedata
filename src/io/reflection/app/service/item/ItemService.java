@@ -8,6 +8,7 @@
 
 package io.reflection.app.service.item;
 
+import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import io.reflection.app.datatypes.Item;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
@@ -73,7 +74,29 @@ final class ItemService implements IItemService {
 
 	@Override
 	public Item addItem(Item item) {
-		throw new UnsupportedOperationException();
+		Item addedItem = null;
+
+		String query = String
+				.format("INSERT INTO `item` (`externalid`,`internalid`,`name`,`creatorname`,`price`,`source`,`type`,`added`,`currency`,`properties`) VALUES ('%s','%s','%s','%s',%d,'%s','%s','%s',%d,'%s')",
+						addslashes(item.externalId), addslashes(item.internalId), addslashes(item.name), addslashes(item.creatorName), item.price,
+						addslashes(item.source), addslashes(item.type), item.added.getTime(), addslashes(item.properties));
+
+		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
+
+		try {
+			itemConnection.connect();
+			itemConnection.executeQuery(query);
+
+			if (itemConnection.getAffectedRowCount() > 0) {
+				addedItem = getItem(Long.valueOf(itemConnection.getInsertedId()));
+			}
+		} finally {
+			if (itemConnection != null) {
+				itemConnection.disconnect();
+			}
+		}
+
+		return addedItem;
 	}
 
 	@Override
@@ -84,6 +107,43 @@ final class ItemService implements IItemService {
 	@Override
 	public void deleteItem(Item item) {
 		throw new UnsupportedOperationException();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.item.IItemService#getExternalIdItem(java.lang.String)
+	 */
+	@Override
+	public Item getExternalIdItem(String externalId) {
+		Item item = null;
+
+		String query = String.format("SELECT * FROM `item` WHERE `externalid` = '%s' and `deleted`='n'", addslashes(externalId));
+		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
+
+		try {
+			itemConnection.connect();
+			itemConnection.executeQuery(query);
+
+			if (itemConnection.fetchNextRow()) {
+				item = toItem(itemConnection);
+			}
+		} finally {
+			if (itemConnection != null) {
+				itemConnection.disconnect();
+			}
+		}
+
+		return item;
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.item.IItemService#getInternalIdItem(java.lang.String)
+	 */
+	@Override
+	public Item getInternalIdItem(String internalId) {
+		// TODO Auto-generated method stub getInternalIdItem
+		return null;
 	}
 
 }

@@ -1,9 +1,9 @@
 package io.reflection.app.mapreduce;
 
 import static com.willshex.gson.json.shared.Convert.toJsonObject;
-import static io.reflection.app.objectify.PersistenceService.ofy;
 import io.reflection.app.datatypes.Item;
 import io.reflection.app.datatypes.Rank;
+import io.reflection.app.service.item.ItemServiceProvider;
 
 import java.nio.ByteBuffer;
 import java.util.logging.Logger;
@@ -178,7 +178,7 @@ public class CsvBlobReducer extends Reducer<String, String, ByteBuffer> {
 		Item item = (Item) memCacheService.get(rankItemKey);
 
 		if (item == null) {
-			item = ofy().load().type(Item.class).filter("externalId", rank.itemId).limit(1).first().now();
+			item = ItemServiceProvider.provide().getExternalIdItem(rank.itemId);
 
 			if (item == null) {
 				throw new Exception("Could not find an item for this rank which is just, wrong!");

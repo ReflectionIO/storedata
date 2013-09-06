@@ -23,6 +23,8 @@ import io.reflection.app.datatypes.Rank;
 import io.reflection.app.datatypes.Store;
 import io.reflection.app.input.ValidationError;
 import io.reflection.app.input.ValidationHelper;
+import io.reflection.app.service.country.CountryServiceProvider;
+import io.reflection.app.service.store.StoreServiceProvider;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -58,36 +60,25 @@ public final class Core extends ActionHandler {
 			try {
 				input.store = ValidationHelper.validateStore(input.store, "input");
 				isStore = true;
-			} catch (InputValidationException ex) {}
+			} catch (InputValidationException ex) {
+			}
 
 			try {
 				input.query = ValidationHelper.validateQuery(input.query, "input");
 				isQuery = true;
-			} catch (InputValidationException ex) {}
+			} catch (InputValidationException ex) {
+			}
 
-			Query<Country> query = ofy().load().type(Country.class).offset(input.pager.start.intValue()).limit(input.pager.count.intValue());
 			List<Country> countries = null;
 
 			if (isStore) {
-				query = query.filter("a2Code in", input.store.countries);
-				countries = query.list();
+				countries = CountryServiceProvider.provide().getStoreCountries(input.store, input.pager);
 			} else if (isQuery) {
 				// we do not modify the query with a filter if the query is *
 				if (input.query.equals("*")) {
-					countries = query.list();
+					countries = CountryServiceProvider.provide().getCountries(input.pager);
 				} else {
-					query = query.filter("a2Code >=", input.query).filter("a2Code <", input.query + "\uFFFD");
-					countries = query.list();
-
-					if (countries.size() < input.pager.count.intValue()) {
-						query = ofy().load().type(Country.class).offset(input.pager.start.intValue()).limit(input.pager.count.intValue() - countries.size())
-								.filter("name >=", input.query).filter("name <", input.query + "\uFFFD");
-
-						// We have no control over whether countries is a read-only list so we just copy it
-						List<Country> merged = new ArrayList<Country>(query.list());
-						merged.addAll(countries);
-						countries = merged;
-					}
+					countries = CountryServiceProvider.provide().searchCountries(input.query, input.pager);
 				}
 			} else
 				throw new InputValidationException(ValidationError.GetCountriesNeedsStoreOrQuery.getCode(),
@@ -129,36 +120,25 @@ public final class Core extends ActionHandler {
 			try {
 				input.country = ValidationHelper.validateCountry(input.country, "input");
 				isCountry = true;
-			} catch (InputValidationException ex) {}
+			} catch (InputValidationException ex) {
+			}
 
 			try {
 				input.query = ValidationHelper.validateQuery(input.query, "input");
 				isQuery = true;
-			} catch (InputValidationException ex) {}
+			} catch (InputValidationException ex) {
+			}
 
-			Query<Store> query = ofy().load().type(Store.class).offset(input.pager.start.intValue()).limit(input.pager.count.intValue());
 			List<Store> stores = null;
 
 			if (isCountry) {
-				query = query.filter("a3Code in", input.country.stores);
-				stores = query.list();
+				stores = StoreServiceProvider.provide().getCountryStores(input.country, input.pager);
 			} else if (isQuery) {
 				// we do not modify the query with a filter if the query is *
 				if (input.query.equals("*")) {
-					stores = query.list();
+					stores = StoreServiceProvider.provide().getStores(input.pager);
 				} else {
-					query = query.filter("a3Code >=", input.query).filter("a3Code <", input.query + "\uFFFD");
-					stores = query.list();
-
-					if (stores.size() < input.pager.count.intValue()) {
-						query = ofy().load().type(Store.class).offset(input.pager.start.intValue()).limit(input.pager.count.intValue() - stores.size())
-								.filter("name >=", input.query).filter("name <", input.query + "\uFFFD");
-
-						// We have no control over whether stores is a read-only list so we just copy it
-						List<Store> merged = new ArrayList<Store>(query.list());
-						merged.addAll(stores);
-						stores = merged;
-					}
+					stores = StoreServiceProvider.provide().searchStores(input.query, input.pager);
 				}
 			} else
 				throw new InputValidationException(ValidationError.GetStoresNeedsCountryOrQuery.getCode(),

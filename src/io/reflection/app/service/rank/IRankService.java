@@ -35,4 +35,11 @@ public interface IRankService extends IService {
 	 */
 	public void deleteRank(Rank rank);
 
+	/**
+	 * @param itemId
+	 * @param code
+	 * @return
+	 */
+	public Rank getItemGatherCodeRank(String itemId, String code);
+
 }

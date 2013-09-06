@@ -86,24 +86,24 @@ public abstract class StoreCollector {
 		}
 
 		if (blob) {
-			FeedFetch entity = new FeedFetch();
+			FeedFetch feed = new FeedFetch();
 			String fileNameForEntitiy = "/gs/" + fileName.getBucketName() + "/" + fileName.getObjectName();
 
 			if (LOG.isLoggable(GaeLevel.DEBUG)) {
 				LOG.log(GaeLevel.DEBUG, String.format("Saving as blob @ [%s]", fileNameForEntitiy));
 			}
 
-			entity.data = fileNameForEntitiy;
-			entity.country = countryCode;
-			entity.store = store;
-			entity.type = type;
-			entity.date = date;
-			entity.part = Integer.valueOf(1);
-			entity.totalParts = Integer.valueOf(1);
+			feed.data = fileNameForEntitiy;
+			feed.country = countryCode;
+			feed.store = store;
+			feed.type = type;
+			feed.date = date;
+			feed.part = Integer.valueOf(1);
+			feed.totalParts = Integer.valueOf(1);
 //			entity.ingested = Boolean.valueOf(ingested);
-			entity.code = code;
+			feed.code = code;
 
-			Key<FeedFetch> key = ofy().save().entity(entity).now();
+			Key<FeedFetch> key = ofy().save().entity(feed).now();
 			ids.add(Long.valueOf(key.getId()));
 
 		} else {
@@ -115,22 +115,22 @@ public abstract class StoreCollector {
 
 			Key<FeedFetch> key;
 			for (int i = 0; i < splitData.size(); i++) {
-				FeedFetch entity = new FeedFetch();
+				FeedFetch feed = new FeedFetch();
 
 				if (LOG.isLoggable(GaeLevel.DEBUG)) {
 					LOG.log(GaeLevel.DEBUG, String.format("Data chunck [%d of %d] is [%d] characters", i, splitData.size(), splitData.get(i).length()));
 				}
 
-				entity.data = splitData.get(i);
-				entity.country = countryCode;
-				entity.store = store;
-				entity.type = type;
-				entity.date = date;
-				entity.part = Integer.valueOf(i + 1);
-				entity.totalParts = Integer.valueOf(splitData.size());
-				entity.code = code;
+				feed.data = splitData.get(i);
+				feed.country = countryCode;
+				feed.store = store;
+				feed.type = type;
+				feed.date = date;
+				feed.part = Integer.valueOf(i + 1);
+				feed.totalParts = Integer.valueOf(splitData.size());
+				feed.code = code;
 
-				key = ofy().save().entity(entity).now();
+				key = ofy().save().entity(feed).now();
 				ids.add(Long.valueOf(key.getId()));
 			}
 		}

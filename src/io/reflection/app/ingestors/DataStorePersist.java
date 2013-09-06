@@ -5,15 +5,15 @@ package io.reflection.app.ingestors;
 
 import static com.spacehopperstudios.utility.StringUtils.urldecode;
 import static com.spacehopperstudios.utility.StringUtils.urlencode;
-import static io.reflection.app.objectify.PersistenceService.ofy;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.Item;
 import io.reflection.app.datatypes.Rank;
 import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.service.item.IItemService;
+import io.reflection.app.service.item.ItemServiceProvider;
+import io.reflection.app.service.rank.RankServiceProvider;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -99,7 +99,7 @@ public class DataStorePersist {
 
 		boolean isGrossing = isGrossing(rankSource, rankType);
 
-		if ((rank = getRankWithParameters(rankSource, rankCountry, rankItemId, rankType, rankDate, rankCode)) == null) {
+		if ((rank = getRankWithParameters(rankItemId, rankCode)) == null) {
 			rank = new Rank();
 
 			rank.code = rankCode;
@@ -126,39 +126,8 @@ public class DataStorePersist {
 		return CollectorFactory.getCollectorForStore(store).isGrossing(type);
 	}
 
-	public static Rank getRankWithParameters(String store, String country, String itemId, String type, Date date, String code) {
-
-		Rank rank = null;
-
-		List<String> counterpartType = CollectorFactory.getCollectorForStore(store).getCounterpartTypes(type);
-
-		Date startDate, endDate;
-
-		Calendar c = Calendar.getInstance();
-
-		c.setTime(date);
-		c.add(Calendar.HOUR, -2);
-		startDate = c.getTime();
-
-		c.setTime(date);
-		c.add(Calendar.HOUR, 2);
-		endDate = c.getTime();
-
-		List<Rank> foundRanks = ofy().cache(false).load().type(Rank.class).filter("source =", store).filter("country =", country).filter("itemId =", itemId)
-				.filter("date >=", startDate).filter("date <", endDate).filter("type in", counterpartType).list();
-
-		if (foundRanks != null) {
-			for (Rank found : foundRanks) {
-				// if one of the items of the counter types within the four hour window matches the gather code then that is the right row quit
-
-				if (code.equals(found.code)) {
-					rank = found;
-					break;
-				}
-			}
-		}
-
-		return rank;
+	private Rank getRankWithParameters(String itemId, String code) {
+		return RankServiceProvider.provide().getItemGatherCodeRank(itemId, code);
 	}
 
 	private void enqueue(Queue queue, Item item, Integer position, String type, String store, String country, Date date, Float price, String currency,
@@ -197,11 +166,16 @@ public class DataStorePersist {
 		Item item = convertParamsToItem(req);
 		Rank rank = convertParamsToRank(req);
 
-		if (ofy().load().type(Item.class).filter("externalId =", item.externalId).count() == 0) {
-			ofy().save().entity(item).now();
+		IItemService itemService = ItemServiceProvider.provide();
+		if (itemService.getExternalIdItem(item.externalId) == null) {
+			itemService.addItem(item);
 		}
 
-		ofy().save().entity(rank).now();
+		if (rank.id == null) {
+			RankServiceProvider.provide().addRank(rank);
+		} else {
+			RankServiceProvider.provide().updateRank(rank);
+		}
 
 		if (LOG.isLoggable(GaeLevel.TRACE)) {
 			LOG.log(GaeLevel.TRACE, String.format("Saved rank [%s] for", rank.itemId));

@@ -36,4 +36,16 @@ public interface IItemService extends IService {
 	 */
 	public void deleteItem(Item item);
 
+	/**
+	 * @param externalId
+	 * @return
+	 */
+	public Item getExternalIdItem(String externalId);
+
+	/**
+	 * @param internalId
+	 * @return
+	 */
+	public Item getInternalIdItem(String internalId);
+
 }

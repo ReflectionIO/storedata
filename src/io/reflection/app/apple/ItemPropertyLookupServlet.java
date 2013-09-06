@@ -9,10 +9,11 @@ package io.reflection.app.apple;
 
 import static com.willshex.gson.json.shared.Convert.fromJsonObject;
 import static com.willshex.gson.json.shared.Convert.toJsonObject;
-import static io.reflection.app.objectify.PersistenceService.ofy;
 import io.reflection.app.collectors.HttpExternalGetter;
 import io.reflection.app.datatypes.Item;
 import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.service.item.IItemService;
+import io.reflection.app.service.item.ItemServiceProvider;
 
 import java.io.IOException;
 import java.util.Date;
@@ -103,7 +104,8 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 			memCache.put(key, now);
 		}
 
-		Item item = ofy().load().type(Item.class).id(Long.valueOf(itemId)).now();
+		IItemService itemService = ItemServiceProvider.provide();
+		Item item = itemService.getItem(Long.valueOf(itemId));
 
 		if (item != null) {
 			boolean doCurl = false;
@@ -150,7 +152,7 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 					properties.add(PROPERTY_IAP_ON, new JsonPrimitive(Long.valueOf(new Date().getTime())));
 					item.properties = fromJsonObject(properties);
 
-					ofy().save().entity(item);
+					itemService.updateItem(item);
 				} else {
 					if (LOG.isLoggable(Level.WARNING)) {
 						LOG.log(Level.WARNING, String.format("Could not get additional data from [%s] for [%s]", itemUrl, itemId));

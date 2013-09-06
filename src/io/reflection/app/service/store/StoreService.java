@@ -7,6 +7,10 @@
 //
 package io.reflection.app.service.store;
 
+import java.util.List;
+
+import io.reflection.app.api.datatypes.Pager;
+import io.reflection.app.datatypes.Country;
 import io.reflection.app.datatypes.Store;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
@@ -67,6 +71,51 @@ final class StoreService implements IStoreService {
 	@Override
 	public void deleteStore(Store store) {
 		throw new UnsupportedOperationException();
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.store.IStoreService#getCountryStores(io.reflection.app.datatypes.Country, io.reflection.app.api.datatypes.Pager)
+	 */
+	@Override
+	public List<Store> getCountryStores(Country country, Pager pager) {
+		// TODO Auto-generated method stub getCountryStores
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.store.IStoreService#getStores(io.reflection.app.api.datatypes.Pager)
+	 */
+	@Override
+	public List<Store> getStores(Pager pager) {
+		// TODO Auto-generated method stub getStores
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.store.IStoreService#searchStores(java.lang.String, io.reflection.app.api.datatypes.Pager)
+	 */
+	@Override
+	public List<Store> searchStores(String query, Pager pager) {
+		// TODO Auto-generated method stub searchStores
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.store.IStoreService#getA3CodeStore(java.lang.String)
+	 */
+	@Override
+	public Store getA3CodeStore(String a3Code) {
+		// TODO Auto-generated method stub getA3CodeStore
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.store.IStoreService#getNameStore(java.lang.String)
+	 */
+	@Override
+	public Store getNameStore(String name) {
+		// TODO Auto-generated method stub getNameStore
+		return null;
 	}
 
 }
