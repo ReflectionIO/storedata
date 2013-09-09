@@ -3,7 +3,8 @@
 //  from - jspacecloud
 //
 //  Created by William Shakour on June 9, 2013.
-//  Copyright © 2013 Holy Bananas Ltd. All rights reserved.
+//  Copyright © 2013 SPACEHOPPER STUDIOS LTD. All rights reserved.
+//  Copyright © 2013 reflection.io. All rights reserved.
 //
 package io.reflection.app;
 

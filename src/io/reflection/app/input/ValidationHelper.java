@@ -8,12 +8,16 @@
 package io.reflection.app.input;
 
 import io.reflection.app.api.datatypes.Pager;
+import io.reflection.app.collectors.Collector;
+import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.Country;
 import io.reflection.app.datatypes.Item;
 import io.reflection.app.datatypes.Store;
 import io.reflection.app.service.country.CountryServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
+
+import java.util.List;
 
 import com.willshex.gson.json.service.server.InputValidationException;
 
@@ -73,7 +77,7 @@ public class ValidationHelper {
 		} else if (isA3CodeLookup) {
 			lookupStore = StoreServiceProvider.provide().getA3CodeStore(store.a3Code);
 		} else if (isNameLookup) {
-			lookupStore = StoreServiceProvider.provide().getNameStore(store.name);
+			lookupStore = StoreServiceProvider.provide().getNamedStore(store.name);
 		}
 
 		if (lookupStore == null)
@@ -218,5 +222,17 @@ public class ValidationHelper {
 			throw new InputValidationException(ValidationError.ItemNotFound.getCode(), ValidationError.ItemNotFound.getMessage(parent));
 
 		return lookupItem;
+	}
+
+	/**
+	 * @param listType
+	 * @param store
+	 * @return
+	 */
+	public static String validateListType(String listType, Store store) {
+		Collector collector = CollectorFactory.getCollectorForStore(store.a3Code);
+		List<String> types = collector.getTypes();
+		
+		return types.contains(listType) ? listType : null;
 	}
 }

@@ -9,6 +9,7 @@
 package io.reflection.app.service.item;
 
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
+import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.datatypes.Item;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
@@ -59,15 +60,15 @@ final class ItemService implements IItemService {
 		item.deleted = connection.getCurrentRowString("deleted");
 
 		item.added = connection.getCurrentRowDateTime("added");
-		item.creatorName = connection.getCurrentRowString("creatorname");
-		item.currency = connection.getCurrentRowString("currency");
-		item.externalId = connection.getCurrentRowString("externalid");
-		item.internalId = connection.getCurrentRowString("internalid");
-		item.name = connection.getCurrentRowString("name");
+		item.creatorName = stripslashes(connection.getCurrentRowString("creatorname"));
+		item.currency = stripslashes(connection.getCurrentRowString("currency"));
+		item.externalId = stripslashes(connection.getCurrentRowString("externalid"));
+		item.internalId = stripslashes(connection.getCurrentRowString("internalid"));
+		item.name = stripslashes(connection.getCurrentRowString("name"));
 		item.price = Float.valueOf((float) connection.getCurrentRowInteger("price").intValue() / 100.0f);
-		item.properties = connection.getCurrentRowString("properties");
-		item.source = connection.getCurrentRowString("source");
-		item.type = connection.getCurrentRowString("type");
+		item.properties = stripslashes(connection.getCurrentRowString("properties"));
+		item.source = stripslashes(connection.getCurrentRowString("source"));
+		item.type = stripslashes(connection.getCurrentRowString("type"));
 
 		return item;
 	}
@@ -76,7 +77,7 @@ final class ItemService implements IItemService {
 	public Item addItem(Item item) {
 		Item addedItem = null;
 
-		String query = String
+		final String addItemQuery = String
 				.format("INSERT INTO `item` (`externalid`,`internalid`,`name`,`creatorname`,`price`,`source`,`type`,`added`,`currency`,`properties`) VALUES ('%s','%s','%s','%s',%d,'%s','%s','%s',%d,'%s')",
 						addslashes(item.externalId), addslashes(item.internalId), addslashes(item.name), addslashes(item.creatorName), item.price,
 						addslashes(item.source), addslashes(item.type), item.added.getTime(), addslashes(item.properties));
@@ -85,7 +86,7 @@ final class ItemService implements IItemService {
 
 		try {
 			itemConnection.connect();
-			itemConnection.executeQuery(query);
+			itemConnection.executeQuery(addItemQuery);
 
 			if (itemConnection.getAffectedRowCount() > 0) {
 				addedItem = getItem(Long.valueOf(itemConnection.getInsertedId()));
@@ -101,7 +102,32 @@ final class ItemService implements IItemService {
 
 	@Override
 	public Item updateItem(Item item) {
-		throw new UnsupportedOperationException();
+		Item updatedItem = null;
+
+		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+		String updateItemQuery = String
+				.format("UPDATE `item` SET `externalid`='%s',`internalid`='%s',`name`='%s',`creatorname`='%s',`price`=%d,`source`='%s',`type`='%s',`added`=%d,`currency`='%s',`properties`='%s' WHERE `id`=%d;",
+						addslashes(item.externalId), addslashes(item.internalId), addslashes(item.name), addslashes(item.creatorName),
+						(int) (item.price.floatValue() * 100.0f), addslashes(item.source), addslashes(item.type), item.added.getTime(),
+						addslashes(item.currency), addslashes(item.properties), item.id.longValue());
+
+		try {
+			itemConnection.connect();
+			itemConnection.executeQuery(updateItemQuery);
+
+			if (itemConnection.getAffectedRowCount() > 0) {
+				updatedItem = getItem(item.id);
+			} else {
+				updatedItem = item;
+			}
+
+		} finally {
+			if (itemConnection != null) {
+				itemConnection.disconnect();
+			}
+		}
+
+		return updatedItem;
 	}
 
 	@Override
@@ -118,12 +144,12 @@ final class ItemService implements IItemService {
 	public Item getExternalIdItem(String externalId) {
 		Item item = null;
 
-		String query = String.format("SELECT * FROM `item` WHERE `externalid` = '%s' and `deleted`='n'", addslashes(externalId));
+		final String getExternalIdItemQuery = String.format("SELECT * FROM `item` WHERE `externalid` = '%s' and `deleted`='n'", addslashes(externalId));
 		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
 
 		try {
 			itemConnection.connect();
-			itemConnection.executeQuery(query);
+			itemConnection.executeQuery(getExternalIdItemQuery);
 
 			if (itemConnection.fetchNextRow()) {
 				item = toItem(itemConnection);
@@ -137,13 +163,33 @@ final class ItemService implements IItemService {
 		return item;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.service.item.IItemService#getInternalIdItem(java.lang.String)
 	 */
 	@Override
 	public Item getInternalIdItem(String internalId) {
-		// TODO Auto-generated method stub getInternalIdItem
-		return null;
+		Item item = null;
+
+		final String getInternalIdItemQuery = String.format("SELECT * FROM `item` WHERE `internalid` = '%s' and `deleted`='n'", addslashes(internalId));
+
+		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
+
+		try {
+			itemConnection.connect();
+			itemConnection.executeQuery(getInternalIdItemQuery);
+
+			if (itemConnection.fetchNextRow()) {
+				item = toItem(itemConnection);
+			}
+		} finally {
+			if (itemConnection != null) {
+				itemConnection.disconnect();
+			}
+		}
+
+		return item;
 	}
 
 }

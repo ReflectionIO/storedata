@@ -69,6 +69,11 @@ public interface IStoreService extends IService {
 	 * @param name
 	 * @return
 	 */
-	public Store getNameStore(String name);
+	public Store getNamedStore(String name);
+
+	/**
+	 * @return
+	 */
+	public long getStoresCount();
 
 }

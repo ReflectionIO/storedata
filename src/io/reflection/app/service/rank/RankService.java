@@ -7,6 +7,8 @@
 //
 package io.reflection.app.service.rank;
 
+import static com.spacehopperstudios.utility.StringUtils.addslashes;
+import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.datatypes.Rank;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
@@ -26,7 +28,8 @@ final class RankService implements IRankService {
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection rankConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
-		String getRankQuery = String.format("SELECT * FROM `rank` WHERE `deleted`='n' AND `id`='%d' LIMIT 1", id.longValue());
+		final String getRankQuery = String.format("SELECT * FROM `rank` WHERE `deleted`='n' AND `id`='%d' LIMIT 1", id.longValue());
+
 		try {
 			rankConnection.connect();
 			rankConnection.executeQuery(getRankQuery);
@@ -55,29 +58,77 @@ final class RankService implements IRankService {
 		rank.created = connection.getCurrentRowDateTime("created");
 		rank.deleted = connection.getCurrentRowString("deleted");
 
-		rank.code = connection.getCurrentRowString("code");
-		rank.country = connection.getCurrentRowString("country");
-		rank.currency = connection.getCurrentRowString("currency");
+		rank.code = stripslashes(connection.getCurrentRowString("code"));
+		rank.country = stripslashes(connection.getCurrentRowString("country"));
+		rank.currency = stripslashes(connection.getCurrentRowString("currency"));
 		rank.date = connection.getCurrentRowDateTime("date");
 		rank.grossingPosition = connection.getCurrentRowInteger("grossingposition");
-		rank.itemId = connection.getCurrentRowString("itemid");
+		rank.itemId = stripslashes(connection.getCurrentRowString("itemid"));
 		rank.position = connection.getCurrentRowInteger("possition");
 		rank.price = Float.valueOf((float) connection.getCurrentRowInteger("price").intValue() / 100.0f);
-		rank.source = connection.getCurrentRowString("source");
-		rank.type = connection.getCurrentRowString("type");
+		rank.source = stripslashes(connection.getCurrentRowString("source"));
+		rank.type = stripslashes(connection.getCurrentRowString("type"));
 
 		return rank;
 	}
 
 	@Override
 	public Rank addRank(Rank rank) {
-		// insert into rank (created,position,grossingposition,itemid,type,country,date,source,price,currency,code) values (?,?,?,?,?,?,?,?,?,?,?);
-		throw new UnsupportedOperationException();
+		Rank addedRank = null;
+
+		final String addeRankQuery = String
+				.format("INSERT INTO `rank` (`position`,`grossingposition`,`itemid`,`type`,`country`,`date`,`source`,`price`,`currency`,`code`) VALUES (%d,%d,'%s','%s','%s',%d,'%s',%d,'%s','%s')",
+						rank.position.longValue(), rank.grossingPosition.longValue(), addslashes(rank.itemId), addslashes(rank.type), addslashes(rank.country),
+						rank.date.getTime(), addslashes(rank.source), (int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency),
+						addslashes(rank.code));
+
+		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+
+		try {
+			rankConnection.connect();
+			rankConnection.executeQuery(addeRankQuery);
+
+			if (rankConnection.getAffectedRowCount() > 0) {
+				addedRank = getRank(Long.valueOf(rankConnection.getInsertedId()));
+			}
+		} finally {
+			if (rankConnection != null) {
+				rankConnection.disconnect();
+			}
+		}
+
+		return addedRank;
 	}
 
 	@Override
 	public Rank updateRank(Rank rank) {
-		throw new UnsupportedOperationException();
+		Rank updatedRank = null;
+
+		final String updateRankQuery = String
+				.format("UPDATE `rank` SET `position`=%d,`grossingposition`=%d,`itemid`='%s',`type`='%s',`country`='%s',`date`=%d,`source`='%s',`price`=%d,`currency`='%s',`code`='%s' WHERE `id`=%d;",
+						rank.position.longValue(), rank.grossingPosition.longValue(), addslashes(rank.itemId), addslashes(rank.type), addslashes(rank.country),
+						rank.date.getTime(), addslashes(rank.source), (int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency),
+						addslashes(rank.code), rank.id.longValue());
+
+		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+
+		try {
+			rankConnection.connect();
+			rankConnection.executeQuery(updateRankQuery);
+
+			if (rankConnection.getAffectedRowCount() > 0) {
+				updatedRank = getRank(rank.id);
+			} else {
+				updatedRank = rank;
+			}
+
+		} finally {
+			if (rankConnection != null) {
+				rankConnection.disconnect();
+			}
+		}
+
+		return updatedRank;
 	}
 
 	@Override
@@ -93,15 +144,15 @@ final class RankService implements IRankService {
 	@Override
 	public Rank getItemGatherCodeRank(String itemId, String code) {
 		Rank rank = null;
-		
-		String query = String.format("SELECT * FROM `rank` WHERE `itemid`='%s' AND `code`='%s' AND `deleted`='n' LIMIT 1", itemId, code);
-		
+
+		final String getItemGatherCodeRankQuery = String.format("SELECT * FROM `rank` WHERE `itemid`='%s' AND `code`='%s' AND `deleted`='n' LIMIT 1", itemId, code);
+
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
-		
+
 		try {
 			rankConnection.connect();
-			rankConnection.executeQuery(query);
-			
+			rankConnection.executeQuery(getItemGatherCodeRankQuery);
+
 			if (rankConnection.fetchNextRow()) {
 				rank = toRank(rankConnection);
 			}
@@ -110,7 +161,7 @@ final class RankService implements IRankService {
 				rankConnection.disconnect();
 			}
 		}
-		
+
 		return rank;
 	}
 }

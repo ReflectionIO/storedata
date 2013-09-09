@@ -3,7 +3,7 @@
 //  from - jspacecloud
 //
 //  Created by William Shakour on Jul 1, 2012.
-//  Copyright © 2012 Spacehopper Studios Ltd. All rights reserved.
+//  Copyright © 2012 SPACEHOPPER STUDIOS LTD. All rights reserved.
 //
 package io.reflection.app;
 

@@ -92,7 +92,7 @@ public class ParserIOS implements Parser {
 		attributes = jsonItem.get(KEY_ID).getAsJsonObject().get(KEY_ATTRIBUTES).getAsJsonObject();
 		item.internalId = attributes.get(KEY_INTERNAL_ID).getAsString();
 		item.externalId = attributes.get(KEY_BUNDLE_ID).getAsString();
-		item.type = "Application"; // TODO: this can be obtained from the data
+		item.type = "Application"; // LATER this can be obtained from the data
 		item.source = "ios";
 		item.creatorName = jsonItem.get(KEY_ARTIST).getAsJsonObject().get(KEY_LABEL).getAsString();
 

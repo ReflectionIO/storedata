@@ -39,4 +39,9 @@ public interface Collector {
 	 * @return
 	 */
 	List<String> getCounterpartTypes(String type);
+
+	/**
+	 * @return
+	 */
+	List<String> getTypes();
 }

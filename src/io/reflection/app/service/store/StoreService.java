@@ -7,8 +7,6 @@
 //
 package io.reflection.app.service.store;
 
-import java.util.List;
-
 import io.reflection.app.api.datatypes.Pager;
 import io.reflection.app.datatypes.Country;
 import io.reflection.app.datatypes.Store;
@@ -17,6 +15,11 @@ import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProv
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
+import static com.spacehopperstudios.utility.StringUtils.addslashes;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 final class StoreService implements IStoreService {
 	public String getName() {
@@ -30,7 +33,8 @@ final class StoreService implements IStoreService {
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection storeConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeStore.toString());
 
-		String getStoreQuery = String.format("select * from `store` where `deleted`='n' and `id`='%d' limit 1", id.longValue());
+		final String getStoreQuery = String.format("SELECT * FROM `store` WHERE `deleted`='n' AND `id`='%d' LIMIT 1", id.longValue());
+
 		try {
 			storeConnection.connect();
 			storeConnection.executeQuery(getStoreQuery);
@@ -55,6 +59,14 @@ final class StoreService implements IStoreService {
 	private Store toStore(Connection connection) {
 		Store store = new Store();
 		store.id = connection.getCurrentRowLong("id");
+		store.created = connection.getCurrentRowDateTime("created");
+		store.deleted = connection.getCurrentRowString("deleted");
+
+		store.a3Code = connection.getCurrentRowString("a3code");
+		store.countries = Arrays.asList(connection.getCurrentRowString("countries").split(","));
+		store.name = connection.getCurrentRowString("name");
+		store.url = connection.getCurrentRowString("url");
+
 		return store;
 	}
 
@@ -73,25 +85,53 @@ final class StoreService implements IStoreService {
 		throw new UnsupportedOperationException();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.service.store.IStoreService#getCountryStores(io.reflection.app.datatypes.Country, io.reflection.app.api.datatypes.Pager)
 	 */
 	@Override
 	public List<Store> getCountryStores(Country country, Pager pager) {
-		// TODO Auto-generated method stub getCountryStores
+
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.service.store.IStoreService#getStores(io.reflection.app.api.datatypes.Pager)
 	 */
 	@Override
 	public List<Store> getStores(Pager pager) {
-		// TODO Auto-generated method stub getStores
-		return null;
+		List<Store> stores = new ArrayList<Store>();
+
+		final String getStoresQuery = String.format("SELECT * FROM `store` ORDER BY `%s` %s LIMIT %d, %d", pager.sortBy, pager.sortDirection,
+				pager.start.longValue(), pager.count.longValue());
+		Connection storeConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeStore.toString());
+
+		try {
+			storeConnection.connect();
+			storeConnection.executeQuery(getStoresQuery);
+
+			while (storeConnection.fetchNextRow()) {
+				Store store = toStore(storeConnection);
+
+				if (store != null) {
+					stores.add(store);
+				}
+			}
+		} finally {
+			if (storeConnection != null) {
+				storeConnection.disconnect();
+			}
+		}
+
+		return stores;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.service.store.IStoreService#searchStores(java.lang.String, io.reflection.app.api.datatypes.Pager)
 	 */
 	@Override
@@ -100,22 +140,58 @@ final class StoreService implements IStoreService {
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.service.store.IStoreService#getA3CodeStore(java.lang.String)
 	 */
 	@Override
 	public Store getA3CodeStore(String a3Code) {
-		// TODO Auto-generated method stub getA3CodeStore
-		return null;
+		Store store = null;
+
+		final String getA3CodeQuery = String.format("SELECT * FROM `store` WHERE `a3code`='%s' AND `deleted`='n' LIMIT 1", addslashes(a3Code));
+		Connection storeConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeStore.toString());
+
+		try {
+			storeConnection.connect();
+			storeConnection.executeQuery(getA3CodeQuery);
+
+			if (storeConnection.fetchNextRow()) {
+				store = toStore(storeConnection);
+			}
+
+		} finally {
+			if (storeConnection != null) {
+				storeConnection.disconnect();
+			}
+		}
+
+		return store;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.service.store.IStoreService#getNameStore(java.lang.String)
 	 */
 	@Override
-	public Store getNameStore(String name) {
+	public Store getNamedStore(String name) {
 		// TODO Auto-generated method stub getNameStore
 		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.store.IStoreService#getStoresCount()
+	 */
+	@Override
+	public long getStoresCount() {
+		long count = 0;
+
+		// LATER Auto-generated method stub getStoresCount
+
+		return count;
 	}
 
 }

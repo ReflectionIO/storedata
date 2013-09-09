@@ -13,6 +13,7 @@ import io.reflection.app.collectors.StoreCollector;
 import io.reflection.app.datatypes.FeedFetch;
 import io.reflection.app.datatypes.Item;
 import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.persisters.PersisterBase;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,12 +32,10 @@ import com.google.appengine.api.files.FileService;
 import com.google.appengine.api.files.FileServiceFactory;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
-import com.googlecode.objectify.VoidWork;
-
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.google.appengine.api.taskqueue.TransientFailureException;
-
+import com.googlecode.objectify.VoidWork;
 
 /**
  * @author billy1380
@@ -105,8 +104,6 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			LOG.log(GaeLevel.DEBUG, "Extracting item ranks");
 		}
 
-		DataStorePersist persistor = new DataStorePersist();
-
 		for (final Date key : combined.keySet()) {
 
 			if (LOG.isLoggable(GaeLevel.DEBUG)) {
@@ -123,7 +120,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 
 				item.added = key;
 
-				persistor.enqueue(item, Integer.valueOf(i + 1), item.externalId, firstFeedFetch.type, firstFeedFetch.store, firstFeedFetch.country, key,
+				PersisterBase.enqueue(item, Integer.valueOf(i + 1), item.externalId, firstFeedFetch.type, firstFeedFetch.store, firstFeedFetch.country, key,
 						item.price, item.currency, firstFeedFetch.code);
 			}
 
@@ -139,7 +136,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 					for (Integer entityKey : grouped.get(key).keySet()) {
 						FeedFetch feed = grouped.get(key).get(entityKey);
 
-//						entity.ingested = Boolean.TRUE;
+						// entity.ingested = Boolean.TRUE;
 						ofy().save().entity(feed).now();
 						i++;
 
@@ -319,7 +316,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 	}
 
 	private void enqueue(Queue queue, List<Long> itemIds) {
-		
+
 		StringBuffer buffer = new StringBuffer();
 		for (Long id : itemIds) {
 			if (buffer.length() != 0) {

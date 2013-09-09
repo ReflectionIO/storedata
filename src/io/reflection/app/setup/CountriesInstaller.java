@@ -9,6 +9,7 @@ package io.reflection.app.setup;
 
 import static io.reflection.app.objectify.PersistenceService.ofy;
 import io.reflection.app.datatypes.Country;
+import io.reflection.app.service.country.CountryServiceProvider;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,10 +22,10 @@ import java.util.List;
 public class CountriesInstaller {
 	public static void install() {
 		
-		if (true) {
-			throw new UnsupportedOperationException("Countries have been migrated to mysql");
-		}
-		
+		if (CountryServiceProvider.provide().getCountriesCount() == 0) { 
+			
+			// LATER Add countries to database
+			
 		ofy().save().entities(createCountry("Afghanistan", "af", "afg", 4), createCountry("Åland Islands", "ax", "ala", 248),
 				createCountry("Albania", "al", "alb", 8, Arrays.asList(new String[] { "ios" })),
 				createCountry("Algeria", "dz", "dza", 12, Arrays.asList(new String[] { "ios" })), createCountry("American Samoa", "as", "asm", 16),
@@ -199,6 +200,7 @@ public class CountriesInstaller {
 				createCountry("Virgin Islands, U.S.", "vi", "vir", 850), createCountry("Wallis and Futuna", "wf", "wlf", 876),
 				createCountry("Western Sahara", "eh", "esh", 732), createCountry("Yemen", "ye", "yem", 887, Arrays.asList(new String[] { "ios" })),
 				createCountry("Zambia", "zm", "zmb", 894), createCountry("Zimbabwe", "zw", "zwe", 716, Arrays.asList(new String[] { "ios" })));
+		}
 	}
 
 	private static Country createCountry(String shortName, String alpha2Code, String alpha3Code, int numericCode) {

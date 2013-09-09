@@ -152,7 +152,7 @@ public class CsvBlobReducer extends Reducer<String, String, ByteBuffer> {
 
 			usesIap = isRankItemIap(rank);
 
-			// TODO: maybe enqueue request to find out
+			// LATER maybe enqueue request to find out
 
 			if (usesIap == null) {
 				throw new Exception("Could not find whether the app uses iap or not!");

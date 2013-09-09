@@ -119,9 +119,7 @@ public class CollectorIOS extends StoreCollector implements Collector {
 				// before storeing the data make sure that it is a valid json object
 				JsonObject parsed = Convert.toJsonObject(data);
 
-				if (parsed == null) {
-					throw new RuntimeException("The data could not be parsed or parsing it returned a null json object");
-				}
+				if (parsed == null) { throw new RuntimeException("The data could not be parsed or parsing it returned a null json object"); }
 
 				ids = store(data, country, IOS_STORE_A3, type, new Date(), code);
 			} else {
@@ -176,7 +174,9 @@ public class CollectorIOS extends StoreCollector implements Collector {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.collectors.Collector#isGrossing(java.lang.String)
 	 */
 	@Override
@@ -184,7 +184,9 @@ public class CollectorIOS extends StoreCollector implements Collector {
 		return type.equalsIgnoreCase(TOP_GROSSING_IPAD_APPS) || type.equalsIgnoreCase(TOP_GROSSING_APPS);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.collectors.Collector#getCounterpartTypes(java.lang.String)
 	 */
 	@Override
@@ -204,6 +206,11 @@ public class CollectorIOS extends StoreCollector implements Collector {
 			return Arrays.asList(TOP_PAID_IPAD_APPS, TOP_FREE_IPAD_APPS);
 		}
 		return null;
+	}
+
+	@Override
+	public List<String> getTypes() {
+		return Arrays.asList(TOP_FREE_APPS, TOP_PAID_APPS, TOP_GROSSING_APPS, TOP_FREE_IPAD_APPS, TOP_PAID_IPAD_APPS, TOP_GROSSING_IPAD_APPS);
 	}
 
 }

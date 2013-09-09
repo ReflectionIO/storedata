@@ -80,4 +80,9 @@ public interface ICountryService extends IService {
 	 */
 	public List<Country> searchCountries(String query, Pager pager);
 
+	/**
+	 * @return
+	 */
+	public long getCountriesCount();
+
 }

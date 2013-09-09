@@ -9,6 +9,7 @@ package io.reflection.app.service.country;
 
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import io.reflection.app.api.datatypes.Pager;
+import io.reflection.app.api.datatypes.SortDirectionType;
 import io.reflection.app.datatypes.Country;
 import io.reflection.app.datatypes.Store;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
@@ -17,8 +18,11 @@ import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import com.spacehopperstudios.utility.StringUtils;
 
 final class CountryService implements ICountryService {
 	public String getName() {
@@ -32,7 +36,7 @@ final class CountryService implements ICountryService {
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection countryConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeCountry.toString());
 
-		String getCountryQuery = String.format("select * from `country` where `deleted`='n' and `id`='%d' limit 1", id.longValue());
+		String getCountryQuery = String.format("SELECT * FROM `country` WHERE `deleted`='n' AND `id`='%d' LIMIT 1", id.longValue());
 		try {
 			countryConnection.connect();
 			countryConnection.executeQuery(getCountryQuery);
@@ -73,6 +77,7 @@ final class CountryService implements ICountryService {
 
 	@Override
 	public Country addCountry(Country country) {
+		// LATER Auto-generated method stub addCountry
 		throw new UnsupportedOperationException();
 	}
 
@@ -95,13 +100,13 @@ final class CountryService implements ICountryService {
 	public Country getA2CodeCountry(String a2Code) {
 		Country country = null;
 
-		String query = String.format("SELECT * from `country` WHERE `a2code`='%s' and `deleted`='n'", addslashes(a2Code));
+		final String getA2CodeCountryQuery = String.format("SELECT * FROM `country` WHERE `a2code`='%s' AND `deleted`='n' LIMIT 1", addslashes(a2Code));
 
 		Connection countryConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeCountry.toString());
 
 		try {
 			countryConnection.connect();
-			countryConnection.executeQuery(query);
+			countryConnection.executeQuery(getA2CodeCountryQuery);
 
 			if (countryConnection.fetchNextRow()) {
 				country = toCountry(countryConnection);
@@ -124,13 +129,13 @@ final class CountryService implements ICountryService {
 	public Country getA3CodeCountry(String a3Code) {
 		Country country = null;
 
-		String query = String.format("SELECT * from `country` WHERE `a3code`='%s' and `deleted`='n'", addslashes(a3Code));
+		final String getA3CodeCountryQuery = String.format("SELECT * FROM `country` WHERE `a3code`='%s' AND `deleted`='n' LIMIT 1", addslashes(a3Code));
 
 		Connection countryConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeCountry.toString());
 
 		try {
 			countryConnection.connect();
-			countryConnection.executeQuery(query);
+			countryConnection.executeQuery(getA3CodeCountryQuery);
 
 			if (countryConnection.fetchNextRow()) {
 				country = toCountry(countryConnection);
@@ -153,13 +158,13 @@ final class CountryService implements ICountryService {
 	public Country getNamedCountry(String name) {
 		Country country = null;
 
-		String query = String.format("SELECT * from `country` WHERE `name`='%s' and `deleted`='n'", addslashes(name));
+		final String getNamedCountryQuery = String.format("SELECT * FROM `country` WHERE `name`='%s' AND `deleted`='n' LIMIT 1", addslashes(name));
 
 		Connection countryConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeCountry.toString());
 
 		try {
 			countryConnection.connect();
-			countryConnection.executeQuery(query);
+			countryConnection.executeQuery(getNamedCountryQuery);
 
 			if (countryConnection.fetchNextRow()) {
 				country = toCountry(countryConnection);
@@ -180,8 +185,40 @@ final class CountryService implements ICountryService {
 	 */
 	@Override
 	public List<Country> getStoreCountries(Store store, Pager pager) {
-		// TODO Auto-generated method stub getStoreCountries
-		return null;
+		List<Country> countries = new ArrayList<Country>();
+
+		String commaDelimitedCountryCodes = null;
+
+		if (store.countries != null && store.countries.size() > 0) {
+			commaDelimitedCountryCodes = StringUtils.join(store.countries, "','");
+		}
+
+		if (commaDelimitedCountryCodes != null && commaDelimitedCountryCodes.length() != 0) {
+			String getStoreCountriesQuery = String.format("SELECT * FROM `country` WHERE `a2code` IN ('%s') AND `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d",
+					commaDelimitedCountryCodes, pager.sortBy, pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "asc" : "desc",
+					pager.start.longValue(), pager.count.longValue());
+
+			Connection countryConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeCountry.toString());
+
+			try {
+				countryConnection.connect();
+				countryConnection.executeQuery(getStoreCountriesQuery);
+
+				while (countryConnection.fetchNextRow()) {
+					Country country = toCountry(countryConnection);
+
+					if (country != null) {
+						countries.add(country);
+					}
+
+				}
+			} finally {
+				if (countryConnection != null) {
+					countryConnection.disconnect();
+				}
+			}
+		}
+		return countries;
 	}
 
 	/*
@@ -204,6 +241,20 @@ final class CountryService implements ICountryService {
 	public List<Country> searchCountries(String query, Pager pager) {
 		// TODO Auto-generated method stub searchCountries
 		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.country.ICountryService#getCountriesCount()
+	 */
+	@Override
+	public long getCountriesCount() {
+		long count = 0;
+
+		// TODO Auto-generated method stub getCountriesCount
+
+		return count;
 	}
 
 }

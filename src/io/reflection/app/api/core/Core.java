@@ -175,8 +175,7 @@ public final class Core extends ActionHandler {
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
 			input.country = ValidationHelper.validateCountry(input.country, "input");
-
-			// TODO: validate the list type by store
+			
 			if (input.listType == null)
 				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
 						ValidationError.InvalidValueNull.getMessage("String: input.listType"));
@@ -185,6 +184,11 @@ public final class Core extends ActionHandler {
 				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(), ValidationError.InvalidValueNull.getMessage("Date: input.on"));
 
 			input.store = ValidationHelper.validateStore(input.store, "input");
+			
+			if (input.store == null)
+				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(), ValidationError.InvalidValueNull.getMessage("Store: input.store"));
+			
+			input.listType = ValidationHelper.validateListType(input.listType, input.store);
 
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(input.on);
@@ -201,13 +205,14 @@ public final class Core extends ActionHandler {
 			if (input.pager.sortDirection != null && input.pager.sortDirection == SortDirectionType.SortDirectionTypeAscending) {
 				order = "-";
 			}
-
-			// TODO: validate the sort direction
+			
 			if (input.pager.sortBy == null || input.pager.sortBy.length() == 0) {
 				order += "position";
 			} else {
 				order += input.pager.sortBy;
 			}
+			
+			// TODO validate the sort by - only sortable rank column names allowed
 
 			Query<Rank> query = ofy().load().type(Rank.class).filter("date >=", after).filter("date <", before).filter("country", input.country.a2Code)
 					.filter("type", input.listType).filter("source", input.store.a3Code).offset(input.pager.start.intValue())

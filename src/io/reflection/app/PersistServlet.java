@@ -1,14 +1,16 @@
 //
-//  DataIngestorServlet.java
+//  PersistServlet.java
 //  from - jspacecloud
 //
 //  Created by William Shakour on June 9, 2013.
-//  Copyright © 2013 Holy Bananas Ltd. All rights reserved.
+// 
+//  Copyright © 2013 reflection.io. All rights reserved.
+//  Copyright © 2013 SPACEHOPPER STUDIOS LTD. All rights reserved.
 //
 package io.reflection.app;
 
-import io.reflection.app.ingestors.DataStorePersist;
 import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.persisters.ServicePersister;
 
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -47,7 +49,7 @@ public class PersistServlet extends HttpServlet {
 			}
 		}
 		
-		(new DataStorePersist()).perisist(req);
+		(new ServicePersister()).perisist(req);
 
 		resp.setHeader("Cache-Control", "no-cache");
 	}
