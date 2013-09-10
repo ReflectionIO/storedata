@@ -12,6 +12,7 @@ import java.util.List;
 
 import io.reflection.app.api.datatypes.Pager;
 import io.reflection.app.datatypes.Country;
+import io.reflection.app.datatypes.Item;
 import io.reflection.app.datatypes.Rank;
 import io.reflection.app.datatypes.Store;
 
@@ -58,5 +59,16 @@ public interface IRankService extends IService {
 	 * @return
 	 */
 	public List<Rank> getRanks(Country country, Store store, String listType, Date after, Date before, Pager pager);
+
+	/**
+	 * @param country
+	 * @param listType
+	 * @param item
+	 * @param after
+	 * @param before
+	 * @param pager
+	 * @return
+	 */
+	public List<Rank> getItemRanks(Country country, String listType, Item item, Date after, Date before, Pager pager);
 
 }

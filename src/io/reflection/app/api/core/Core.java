@@ -7,7 +7,6 @@
 //
 package io.reflection.app.api.core;
 
-import static io.reflection.app.objectify.PersistenceService.ofy;
 import io.reflection.app.api.core.call.GetCountriesRequest;
 import io.reflection.app.api.core.call.GetCountriesResponse;
 import io.reflection.app.api.core.call.GetItemRanksRequest;
@@ -258,14 +257,22 @@ public final class Core extends ActionHandler {
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
+			
+			if (input.pager.sortBy == null) {
+				input.pager.sortBy = "date";
+			}
+			
+			if (input.pager.sortDirection == null) {
+				input.pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
+			}
 
-			input.item = ValidationHelper.validateItem(input.item, "input");
+			input.item = ValidationHelper.validateItem(input.item, "input");			
 
 			input.country = ValidationHelper.validateCountry(input.country, "input");
 
-			if (input.type == null)
+			if (input.listType == null)
 				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
-						ValidationError.InvalidValueNull.getMessage("String: input.type"));
+						ValidationError.InvalidValueNull.getMessage("String: input.listType"));
 
 			Calendar cal = Calendar.getInstance();
 
@@ -278,6 +285,9 @@ public final class Core extends ActionHandler {
 				input.after = cal.getTime();
 			}
 
+			Store store = StoreServiceProvider.provide().getA3CodeStore(input.item.source);
+			input.listType = ValidationHelper.validateListType(input.listType, store);
+			
 			long diff = input.before.getTime() - input.after.getTime();
 			long diffDays = diff / (24 * 60 * 60 * 1000);
 
@@ -285,10 +295,11 @@ public final class Core extends ActionHandler {
 				throw new InputValidationException(ValidationError.DateRangeOutOfBounds.getCode(),
 						ValidationError.DateRangeOutOfBounds.getMessage("0-60 days: input.before - input.after"));
 
-			// FIXME use Rank service api instead of objectify
-			output.ranks = ofy().load().type(Rank.class).offset(input.pager.start.intValue()).limit(input.pager.count.intValue())
-					.filter("itemId", input.item.externalId).filter("source", input.item.source).filter("date <=", input.before).filter("date >=", input.after)
-					.filter("type", input.type).filter("country", input.country.a2Code).order("-date").list();
+			output.ranks = RankServiceProvider.provide().getItemRanks(input.country, input.listType, input.item, input.after, input.before, input.pager);
+			
+			if (input.pager.start.intValue() == 0) {
+				output.item = input.item;
+			}
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {

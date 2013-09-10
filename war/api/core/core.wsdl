@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<wsdl:definitions name="core" targetNamespace="http://app.reflection.io/core" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
-	xmlns:sdc="http://app.reflection.io/core" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<wsdl:definitions name="core" targetNamespace="http://app.reflection.io/core" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:sdc="http://app.reflection.io/core"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 	<wsdl:types>
 		<xsd:schema targetNamespace="http://app.reflection.io/core" xmlns:sd="http://app.reflection.io">
 			<xsd:import schemaLocation="../app.xsd" namespace="http://app.reflection.io" />
@@ -103,7 +103,7 @@
 
 						<xsd:attribute name="after" type="xsd:dateTime" />
 						<xsd:attribute name="before" type="xsd:dateTime" />
-						<xsd:attribute name="type" type="xsd:string" />
+						<xsd:attribute name="listType" type="xsd:string" />
 
 					</xsd:extension>
 				</xsd:complexContent>
@@ -115,6 +115,7 @@
 						<xsd:sequence>
 							<xsd:element name="ranks" type="sd:Rank" maxOccurs="unbounded" />
 							<xsd:element name="pager" type="sd:Pager" />
+							<xsd:element name="item" type="sd:Item" />
 						</xsd:sequence>
 					</xsd:extension>
 				</xsd:complexContent>

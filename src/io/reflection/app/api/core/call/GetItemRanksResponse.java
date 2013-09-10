@@ -2,12 +2,14 @@
 //  GetItemRanksResponse.java
 //  storedata
 //
-//  Created by William Shakour on 03 July 2013.
+//  Created by William Shakour on September 10, 2013.
 //  Copyrights © 2013 SPACEHOPPER STUDIOS LTD. All rights reserved.
+//  Copyrights © 2013 reflection.io. All rights reserved.
 //
 package io.reflection.app.api.core.call;
 
 import io.reflection.app.api.datatypes.Pager;
+import io.reflection.app.datatypes.Item;
 import io.reflection.app.datatypes.Rank;
 
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ import com.willshex.gson.json.service.shared.Response;
 public class GetItemRanksResponse extends Response {
 	public List<Rank> ranks;
 	public Pager pager;
+	public Item item;
 
 	@Override
 	public JsonObject toJson() {
@@ -37,6 +40,8 @@ public class GetItemRanksResponse extends Response {
 		object.add("ranks", jsonRanks);
 		JsonElement jsonPager = pager == null ? JsonNull.INSTANCE : pager.toJson();
 		object.add("pager", jsonPager);
+		JsonElement jsonItem = item == null ? JsonNull.INSTANCE : item.toJson();
+		object.add("item", jsonItem);
 		return object;
 	}
 
@@ -62,6 +67,13 @@ public class GetItemRanksResponse extends Response {
 			if (jsonPager != null) {
 				pager = new Pager();
 				pager.fromJson(jsonPager.getAsJsonObject());
+			}
+		}
+		if (jsonObject.has("item")) {
+			JsonElement jsonItem = jsonObject.get("item");
+			if (jsonItem != null) {
+				item = new Item();
+				item.fromJson(jsonItem.getAsJsonObject());
 			}
 		}
 	}

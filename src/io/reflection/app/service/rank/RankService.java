@@ -13,6 +13,7 @@ import io.reflection.app.api.datatypes.Pager;
 import io.reflection.app.api.datatypes.SortDirectionType;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.Country;
+import io.reflection.app.datatypes.Item;
 import io.reflection.app.datatypes.Rank;
 import io.reflection.app.datatypes.Store;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
@@ -215,6 +216,40 @@ final class RankService implements IRankService {
 			}
 		}
 
+		return ranks;
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.rank.IRankService#getItemRanks(io.reflection.app.datatypes.Country, java.lang.String, io.reflection.app.datatypes.Item, java.util.Date, java.util.Date, io.reflection.app.api.datatypes.Pager)
+	 */
+	@Override
+	public List<Rank> getItemRanks(Country country, String listType, Item item, Date after, Date before, Pager pager) {
+		List<Rank> ranks = new ArrayList<Rank>();
+
+		String getCountryStoreTypeRanksQuery = String.format(
+				"SELECT * FROM `rank` WHERE `type`='%s' AND `country`='%s' AND `itemid`='%s' AND `date`>=%d AND `date`<%d AND `deleted`='n' ORDER BY `%s` %s LIMIT %d,%d",
+				addslashes(listType), addslashes(country.a2Code), addslashes(item.externalId), after.getTime(), before.getTime(), pager.sortBy,
+				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "asc" : "desc", pager.start, pager.count);
+
+		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+
+		try {
+			rankConnection.connect();
+			rankConnection.executeQuery(getCountryStoreTypeRanksQuery);
+
+			while (rankConnection.fetchNextRow()) {
+				Rank rank = toRank(rankConnection);
+
+				if (rank != null) {
+					ranks.add(rank);
+				}
+			}
+		} finally {
+			if (rankConnection != null) {
+				rankConnection.disconnect();
+			}
+		}
+		
 		return ranks;
 	}
 }

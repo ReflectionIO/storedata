@@ -2,8 +2,9 @@
 //  GetItemRanksRequest.java
 //  storedata
 //
-//  Created by William Shakour on 03 July 2013.
+//  Created by William Shakour on September 10, 2013.
 //  Copyrights © 2013 SPACEHOPPER STUDIOS LTD. All rights reserved.
+//  Copyrights © 2013 reflection.io. All rights reserved.
 //
 package io.reflection.app.api.core.call;
 
@@ -25,7 +26,7 @@ public class GetItemRanksRequest extends Request {
 	public Pager pager;
 	public Date after;
 	public Date before;
-	public String type;
+	public String listType;
 
 	@Override
 	public JsonObject toJson() {
@@ -40,8 +41,8 @@ public class GetItemRanksRequest extends Request {
 		object.add("after", jsonAfter);
 		JsonElement jsonBefore = before == null ? JsonNull.INSTANCE : new JsonPrimitive(before.getTime());
 		object.add("before", jsonBefore);
-		JsonElement jsonType = type == null ? JsonNull.INSTANCE : new JsonPrimitive(type);
-		object.add("type", jsonType);
+		JsonElement jsonListType = listType == null ? JsonNull.INSTANCE : new JsonPrimitive(listType);
+		object.add("listType", jsonListType);
 		return object;
 	}
 
@@ -81,10 +82,10 @@ public class GetItemRanksRequest extends Request {
 				before = new Date(jsonBefore.getAsLong());
 			}
 		}
-		if (jsonObject.has("type")) {
-			JsonElement jsonType = jsonObject.get("type");
-			if (jsonType != null) {
-				type = jsonType.getAsString();
+		if (jsonObject.has("listType")) {
+			JsonElement jsonListType = jsonObject.get("listType");
+			if (jsonListType != null) {
+				listType = jsonListType.getAsString();
 			}
 		}
 	}

@@ -79,7 +79,7 @@ public class CollectorAmazon extends StoreCollector implements Collector {
 	 */
 	@Override
 	public boolean isGrossing(String type) {
-		// TODO Auto-generated method stub isGrossing
+		// TODO Auto-generated method stub io.reflection.app.collectors.Collector#isGrossing(java.lang.String)
 		return false;
 	}
 
@@ -88,7 +88,7 @@ public class CollectorAmazon extends StoreCollector implements Collector {
 	 */
 	@Override
 	public List<String> getCounterpartTypes(String type) {
-		// TODO Auto-generated method stub getCounterpartTypes
+		// TODO Auto-generated method stub io.reflection.app.collectors.Collector#getCounterpartTypes(java.lang.String)
 		return null;
 	}
 
@@ -97,7 +97,7 @@ public class CollectorAmazon extends StoreCollector implements Collector {
 	 */
 	@Override
 	public List<String> getTypes() {
-		// TODO Auto-generated method stub getTypes
+		// TODO Auto-generated method stub io.reflection.app.collectors.Collector#getTypes()
 		return null;
 	}
 
