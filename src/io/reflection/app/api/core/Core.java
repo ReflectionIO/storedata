@@ -24,6 +24,7 @@ import io.reflection.app.datatypes.Store;
 import io.reflection.app.input.ValidationError;
 import io.reflection.app.input.ValidationHelper;
 import io.reflection.app.service.country.CountryServiceProvider;
+import io.reflection.app.service.rank.RankServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
 
 import java.util.ArrayList;
@@ -34,7 +35,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import com.googlecode.objectify.cmd.Query;
 import com.willshex.gson.json.service.server.ActionHandler;
 import com.willshex.gson.json.service.server.InputValidationException;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -189,6 +189,10 @@ public final class Core extends ActionHandler {
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
+			
+			if (input.pager.sortDirection == null) {
+				input.pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
+			}
 
 			input.country = ValidationHelper.validateCountry(input.country, "input");
 			
@@ -216,27 +220,9 @@ public final class Core extends ActionHandler {
 			cal.add(Calendar.DAY_OF_YEAR, 1);
 			Date before = cal.getTime();
 
-			String order = "";
-
-			if (input.pager.sortDirection != null && input.pager.sortDirection == SortDirectionType.SortDirectionTypeAscending) {
-				order = "-";
-			}
+			// FIXME Use Rank sevice api instead of objectify
 			
-			if (input.pager.sortBy == null || input.pager.sortBy.length() == 0) {
-				order += "position";
-			} else {
-				order += input.pager.sortBy;
-			}
-			
-			// FIXME Use sevice api instead of objectify
-			
-			// TODO validate the sort by - only sortable rank column names allowed
-			
-			Query<Rank> query = ofy().load().type(Rank.class).filter("date >=", after).filter("date <", before).filter("country", input.country.a2Code)
-					.filter("type", input.listType).filter("source", input.store.a3Code).offset(input.pager.start.intValue())
-					.limit(input.pager.count.intValue()).order("-date").order(order);
-
-			List<Rank> ranks = query.list();
+			List<Rank> ranks = RankServiceProvider.provide().getRanks(input.country, input.store, input.listType, after, before, input.pager);
 
 			if (ranks != null && ranks.size() != 0) {
 				List<String> itemIds = new ArrayList<String>();
@@ -250,6 +236,7 @@ public final class Core extends ActionHandler {
 				}
 
 				output.ranks = ranks;
+				// FIXME use Item service api instead of objectify
 				output.items = ofy().load().type(Item.class).filter("externalId in", itemIds).list();
 				output.pager = input.pager;
 			}

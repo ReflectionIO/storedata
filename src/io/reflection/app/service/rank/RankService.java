@@ -9,12 +9,21 @@ package io.reflection.app.service.rank;
 
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
+import io.reflection.app.api.datatypes.Pager;
+import io.reflection.app.api.datatypes.SortDirectionType;
+import io.reflection.app.collectors.CollectorFactory;
+import io.reflection.app.datatypes.Country;
 import io.reflection.app.datatypes.Rank;
+import io.reflection.app.datatypes.Store;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 final class RankService implements IRankService {
 	public String getName() {
@@ -145,7 +154,8 @@ final class RankService implements IRankService {
 	public Rank getItemGatherCodeRank(String itemId, String code) {
 		Rank rank = null;
 
-		final String getItemGatherCodeRankQuery = String.format("SELECT * FROM `rank` WHERE `itemid`='%s' AND `code`='%s' AND `deleted`='n' LIMIT 1", itemId, code);
+		final String getItemGatherCodeRankQuery = String.format("SELECT * FROM `rank` WHERE `itemid`='%s' AND `code`='%s' AND `deleted`='n' LIMIT 1", itemId,
+				code);
 
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
@@ -163,5 +173,48 @@ final class RankService implements IRankService {
 		}
 
 		return rank;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.rank.IRankService#getRanks(io.reflection.app.datatypes.Country, io.reflection.app.datatypes.Store, java.lang.String,
+	 * java.util.Date, java.util.Date, io.reflection.app.api.datatypes.Pager)
+	 */
+	@Override
+	public List<Rank> getRanks(Country country, Store store, String listType, Date after, Date before, Pager pager) {
+		List<Rank> ranks = new ArrayList<Rank>();
+
+		if (CollectorFactory.getCollectorForStore(store.a3Code).isGrossing(listType)) {
+			pager.sortBy = "grossingPosition";
+		} else {
+			pager.sortBy = "position";
+		}
+
+		String getCountryStoreTypeRanksQuery = String.format(
+				"SELECT * FROM `rank` WHERE `type`='%s' AND `country`='%s' AND `source`='%s' AND `date`>=%d AND `date`<%d ORDER BY `%s` %s LIMIT %d,%d",
+				addslashes(listType), addslashes(country.a2Code), addslashes(store.a3Code), after.getTime(), before.getTime(), pager.sortBy,
+				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "asc" : "desc", pager.start, pager.count);
+
+		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+
+		try {
+			rankConnection.connect();
+			rankConnection.executeQuery(getCountryStoreTypeRanksQuery);
+
+			while (rankConnection.fetchNextRow()) {
+				Rank rank = toRank(rankConnection);
+
+				if (rank != null) {
+					ranks.add(rank);
+				}
+			}
+		} finally {
+			if (rankConnection != null) {
+				rankConnection.disconnect();
+			}
+		}
+
+		return ranks;
 	}
 }
