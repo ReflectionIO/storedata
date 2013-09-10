@@ -53,6 +53,14 @@ public final class Core extends ActionHandler {
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
+			
+			if (input.pager.sortBy == null) {
+				input.pager.sortBy = "a3code";
+			}
+			
+			if (input.pager.sortDirection == null) {
+				input.pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
+			}
 
 			boolean isQuery = false;
 			boolean isStore = false;
@@ -114,6 +122,14 @@ public final class Core extends ActionHandler {
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
+			if (input.pager.sortBy == null) {
+				input.pager.sortBy = "a3code";
+			}
+			
+			if (input.pager.sortDirection == null) {
+				input.pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
+			}
+			
 			boolean isQuery = false;
 			boolean isCountry = false;
 
@@ -212,8 +228,10 @@ public final class Core extends ActionHandler {
 				order += input.pager.sortBy;
 			}
 			
+			// FIXME Use sevice api instead of objectify
+			
 			// TODO validate the sort by - only sortable rank column names allowed
-
+			
 			Query<Rank> query = ofy().load().type(Rank.class).filter("date >=", after).filter("date <", before).filter("country", input.country.a2Code)
 					.filter("type", input.listType).filter("source", input.store.a3Code).offset(input.pager.start.intValue())
 					.limit(input.pager.count.intValue()).order("-date").order(order);

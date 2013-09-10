@@ -7,7 +7,10 @@
 //
 package io.reflection.app.service.store;
 
+import static com.spacehopperstudios.utility.StringUtils.addslashes;
+import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.api.datatypes.Pager;
+import io.reflection.app.api.datatypes.SortDirectionType;
 import io.reflection.app.datatypes.Country;
 import io.reflection.app.datatypes.Store;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
@@ -15,11 +18,12 @@ import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProv
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
-import static com.spacehopperstudios.utility.StringUtils.addslashes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import com.spacehopperstudios.utility.StringUtils;
 
 final class StoreService implements IStoreService {
 	public String getName() {
@@ -62,26 +66,29 @@ final class StoreService implements IStoreService {
 		store.created = connection.getCurrentRowDateTime("created");
 		store.deleted = connection.getCurrentRowString("deleted");
 
-		store.a3Code = connection.getCurrentRowString("a3code");
+		store.a3Code = stripslashes(connection.getCurrentRowString("a3code"));
 		store.countries = Arrays.asList(connection.getCurrentRowString("countries").split(","));
-		store.name = connection.getCurrentRowString("name");
-		store.url = connection.getCurrentRowString("url");
+		store.name = stripslashes(connection.getCurrentRowString("name"));
+		store.url = stripslashes(connection.getCurrentRowString("url"));
 
 		return store;
 	}
 
 	@Override
 	public Store addStore(Store store) {
+		// LATER Auto-generated method stub addStore
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public Store updateStore(Store store) {
+		// LATER Auto-generated method stub updateStore
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void deleteStore(Store store) {
+		// LATER Auto-generated method stub deleteStore
 		throw new UnsupportedOperationException();
 	}
 
@@ -92,8 +99,40 @@ final class StoreService implements IStoreService {
 	 */
 	@Override
 	public List<Store> getCountryStores(Country country, Pager pager) {
+		List<Store> stores = new ArrayList<Store>();
 
-		return null;
+		String commaDelimitedStoreCodes = null;
+
+		if (country.stores != null && country.stores.size() > 0) {
+			commaDelimitedStoreCodes = StringUtils.join(country.stores, "','");
+		}
+
+		if (commaDelimitedStoreCodes != null && commaDelimitedStoreCodes.length() != 0) {
+			String getCountryStoresQuery = String.format("SELECT * FROM `store` WHERE `a3code` IN ('%s') AND `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d",
+					commaDelimitedStoreCodes, pager.sortBy, pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "asc" : "desc",
+					pager.start.longValue(), pager.count.longValue());
+
+			Connection storeConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeStore.toString());
+
+			try {
+				storeConnection.connect();
+				storeConnection.executeQuery(getCountryStoresQuery);
+
+				while (storeConnection.fetchNextRow()) {
+					Store store = toStore(storeConnection);
+
+					if (store != null) {
+						stores.add(store);
+					}
+
+				}
+			} finally {
+				if (storeConnection != null) {
+					storeConnection.disconnect();
+				}
+			}
+		}
+		return stores;
 	}
 
 	/*
