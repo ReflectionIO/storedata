@@ -37,7 +37,7 @@ final class StoreService implements IStoreService {
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection storeConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeStore.toString());
 
-		final String getStoreQuery = String.format("SELECT * FROM `store` WHERE `deleted`='n' AND `id`='%d' LIMIT 1", id.longValue());
+		final String getStoreQuery = String.format("SELECT * FROM `store` WHERE `deleted`='n' AND `id`=%d LIMIT 1", id.longValue());
 
 		try {
 			storeConnection.connect();

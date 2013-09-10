@@ -18,12 +18,12 @@ import io.reflection.app.api.core.call.GetTopItemsRequest;
 import io.reflection.app.api.core.call.GetTopItemsResponse;
 import io.reflection.app.api.datatypes.SortDirectionType;
 import io.reflection.app.datatypes.Country;
-import io.reflection.app.datatypes.Item;
 import io.reflection.app.datatypes.Rank;
 import io.reflection.app.datatypes.Store;
 import io.reflection.app.input.ValidationError;
 import io.reflection.app.input.ValidationHelper;
 import io.reflection.app.service.country.CountryServiceProvider;
+import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
 
@@ -220,8 +220,6 @@ public final class Core extends ActionHandler {
 			cal.add(Calendar.DAY_OF_YEAR, 1);
 			Date before = cal.getTime();
 
-			// FIXME Use Rank sevice api instead of objectify
-			
 			List<Rank> ranks = RankServiceProvider.provide().getRanks(input.country, input.store, input.listType, after, before, input.pager);
 
 			if (ranks != null && ranks.size() != 0) {
@@ -236,8 +234,7 @@ public final class Core extends ActionHandler {
 				}
 
 				output.ranks = ranks;
-				// FIXME use Item service api instead of objectify
-				output.items = ofy().load().type(Item.class).filter("externalId in", itemIds).list();
+				output.items = ItemServiceProvider.provide().getExternalIdItemBatch(itemIds);
 				output.pager = input.pager;
 			}
 
@@ -288,6 +285,7 @@ public final class Core extends ActionHandler {
 				throw new InputValidationException(ValidationError.DateRangeOutOfBounds.getCode(),
 						ValidationError.DateRangeOutOfBounds.getMessage("0-60 days: input.before - input.after"));
 
+			// FIXME use Rank service api instead of objectify
 			output.ranks = ofy().load().type(Rank.class).offset(input.pager.start.intValue()).limit(input.pager.count.intValue())
 					.filter("itemId", input.item.externalId).filter("source", input.item.source).filter("date <=", input.before).filter("date >=", input.after)
 					.filter("type", input.type).filter("country", input.country.a2Code).order("-date").list();

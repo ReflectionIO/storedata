@@ -36,7 +36,7 @@ final class CountryService implements ICountryService {
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection countryConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeCountry.toString());
 
-		String getCountryQuery = String.format("SELECT * FROM `country` WHERE `deleted`='n' AND `id`='%d' LIMIT 1", id.longValue());
+		String getCountryQuery = String.format("SELECT * FROM `country` WHERE `deleted`='n' AND `id`=%d LIMIT 1", id.longValue());
 		try {
 			countryConnection.connect();
 			countryConnection.executeQuery(getCountryQuery);

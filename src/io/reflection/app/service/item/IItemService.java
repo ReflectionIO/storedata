@@ -8,6 +8,8 @@
 
 package io.reflection.app.service.item;
 
+import java.util.List;
+
 import io.reflection.app.datatypes.Item;
 
 import com.spacehopperstudios.service.IService;
@@ -47,5 +49,11 @@ public interface IItemService extends IService {
 	 * @return
 	 */
 	public Item getInternalIdItem(String internalId);
+
+	/**
+	 * @param itemIds
+	 * @return
+	 */
+	public List<Item> getExternalIdItemBatch(List<String> itemIds);
 
 }

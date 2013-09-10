@@ -17,6 +17,11 @@ import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.spacehopperstudios.utility.StringUtils;
+
 final class ItemService implements IItemService {
 	public String getName() {
 		return ServiceType.ServiceTypeItem.toString();
@@ -29,7 +34,7 @@ final class ItemService implements IItemService {
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection itemConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
 
-		String getItemQuery = String.format("select * from `item` where `deleted`='n' and `id`='%d' limit 1", id.longValue());
+		String getItemQuery = String.format("SELECT * FROM `item` WHERE `deleted`='n' AND `id`=%d LIMIT 1", id.longValue());
 		try {
 			itemConnection.connect();
 			itemConnection.executeQuery(getItemQuery);
@@ -190,6 +195,47 @@ final class ItemService implements IItemService {
 		}
 
 		return item;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.item.IItemService#getExternalIdItemBatch(java.util.List)
+	 */
+	@Override
+	public List<Item> getExternalIdItemBatch(List<String> itemIds) {
+		List<Item> items = new ArrayList<Item>();
+
+		String commaDelimitedItemIds = null;
+
+		if (itemIds != null && itemIds.size() > 0) {
+			commaDelimitedItemIds = StringUtils.join(itemIds, "','");
+		}
+
+		if (commaDelimitedItemIds != null && commaDelimitedItemIds.length() != 0) {
+			String getExternalIdItemBatchQuery = String.format("SELECT * FROM `item` WHERE `externalid` IN ('%s') and `deleted`='n'", commaDelimitedItemIds);
+
+			Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
+
+			try {
+				itemConnection.connect();
+				itemConnection.executeQuery(getExternalIdItemBatchQuery);
+
+				while (itemConnection.fetchNextRow()) {
+					Item item = toItem(itemConnection);
+
+					if (item != null) {
+						items.add(item);
+					}
+				}
+			} finally {
+				if (itemConnection != null) {
+					itemConnection.disconnect();
+				}
+			}
+		}
+
+		return items;
 	}
 
 }

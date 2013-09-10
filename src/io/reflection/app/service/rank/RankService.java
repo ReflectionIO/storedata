@@ -37,7 +37,7 @@ final class RankService implements IRankService {
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection rankConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
-		final String getRankQuery = String.format("SELECT * FROM `rank` WHERE `deleted`='n' AND `id`='%d' LIMIT 1", id.longValue());
+		final String getRankQuery = String.format("SELECT * FROM `rank` WHERE `deleted`='n' AND `id`=%d LIMIT 1", id.longValue());
 
 		try {
 			rankConnection.connect();
@@ -186,13 +186,13 @@ final class RankService implements IRankService {
 		List<Rank> ranks = new ArrayList<Rank>();
 
 		if (CollectorFactory.getCollectorForStore(store.a3Code).isGrossing(listType)) {
-			pager.sortBy = "grossingPosition";
+			pager.sortBy = "grossingposition";
 		} else {
 			pager.sortBy = "position";
 		}
 
 		String getCountryStoreTypeRanksQuery = String.format(
-				"SELECT * FROM `rank` WHERE `type`='%s' AND `country`='%s' AND `source`='%s' AND `date`>=%d AND `date`<%d ORDER BY `%s` %s LIMIT %d,%d",
+				"SELECT * FROM `rank` WHERE `type`='%s' AND `country`='%s' AND `source`='%s' AND `date`>=%d AND `date`<%d AND `deleted`='n' ORDER BY `%s` %s LIMIT %d,%d",
 				addslashes(listType), addslashes(country.a2Code), addslashes(store.a3Code), after.getTime(), before.getTime(), pager.sortBy,
 				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "asc" : "desc", pager.start, pager.count);
 
