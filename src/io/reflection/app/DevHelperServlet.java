@@ -404,7 +404,7 @@ public class DevHelperServlet extends HttpServlet {
 				buffer.append(itemId);
 				buffer.append(" extracted from toppaidapplications and topgrossingapplications");
 				buffer.append("\n");
-				buffer.append("#item id,date,paid possition,grossing possition,price");
+				buffer.append("#item id,date,paid position,grossing position,price");
 				buffer.append("\n");
 
 				Calendar cal = Calendar.getInstance();

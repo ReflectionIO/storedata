@@ -74,7 +74,7 @@ final class RankService implements IRankService {
 		rank.date = connection.getCurrentRowDateTime("date");
 		rank.grossingPosition = connection.getCurrentRowInteger("grossingposition");
 		rank.itemId = stripslashes(connection.getCurrentRowString("itemid"));
-		rank.position = connection.getCurrentRowInteger("possition");
+		rank.position = connection.getCurrentRowInteger("position");
 		rank.price = Float.valueOf((float) connection.getCurrentRowInteger("price").intValue() / 100.0f);
 		rank.source = stripslashes(connection.getCurrentRowString("source"));
 		rank.type = stripslashes(connection.getCurrentRowString("type"));
@@ -87,9 +87,9 @@ final class RankService implements IRankService {
 		Rank addedRank = null;
 
 		final String addeRankQuery = String
-				.format("INSERT INTO `rank` (`position`,`grossingposition`,`itemid`,`type`,`country`,`date`,`source`,`price`,`currency`,`code`) VALUES (%d,%d,'%s','%s','%s',%d,'%s',%d,'%s','%s')",
+				.format("INSERT INTO `rank` (`position`,`grossingposition`,`itemid`,`type`,`country`,`date`,`source`,`price`,`currency`,`code`) VALUES (%d,%d,'%s','%s','%s',FROM_UNIXTIME(%d),'%s',%d,'%s','%s')",
 						rank.position.longValue(), rank.grossingPosition.longValue(), addslashes(rank.itemId), addslashes(rank.type), addslashes(rank.country),
-						rank.date.getTime(), addslashes(rank.source), (int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency),
+						rank.date.getTime() / 1000, addslashes(rank.source), (int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency),
 						addslashes(rank.code));
 
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
@@ -100,6 +100,11 @@ final class RankService implements IRankService {
 
 			if (rankConnection.getAffectedRowCount() > 0) {
 				addedRank = getRank(Long.valueOf(rankConnection.getInsertedId()));
+				
+				if (addedRank == null) {
+					addedRank = rank;
+					addedRank.id = Long.valueOf(rankConnection.getInsertedId());
+				}
 			}
 		} finally {
 			if (rankConnection != null) {
@@ -115,9 +120,9 @@ final class RankService implements IRankService {
 		Rank updatedRank = null;
 
 		final String updateRankQuery = String
-				.format("UPDATE `rank` SET `position`=%d,`grossingposition`=%d,`itemid`='%s',`type`='%s',`country`='%s',`date`=%d,`source`='%s',`price`=%d,`currency`='%s',`code`='%s' WHERE `id`=%d;",
+				.format("UPDATE `rank` SET `position`=%d,`grossingposition`=%d,`itemid`='%s',`type`='%s',`country`='%s',`date`=FROM_UNIXTIME(%d),`source`='%s',`price`=%d,`currency`='%s',`code`='%s' WHERE `id`=%d;",
 						rank.position.longValue(), rank.grossingPosition.longValue(), addslashes(rank.itemId), addslashes(rank.type), addslashes(rank.country),
-						rank.date.getTime(), addslashes(rank.source), (int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency),
+						rank.date.getTime() / 1000, addslashes(rank.source), (int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency),
 						addslashes(rank.code), rank.id.longValue());
 
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
@@ -193,8 +198,8 @@ final class RankService implements IRankService {
 		}
 
 		String getCountryStoreTypeRanksQuery = String.format(
-				"SELECT * FROM `rank` WHERE `type`='%s' AND `country`='%s' AND `source`='%s' AND `date`>=%d AND `date`<%d AND `deleted`='n' ORDER BY `%s` %s LIMIT %d,%d",
-				addslashes(listType), addslashes(country.a2Code), addslashes(store.a3Code), after.getTime(), before.getTime(), pager.sortBy,
+				"SELECT * FROM `rank` WHERE `type`='%s' AND `country`='%s' AND `source`='%s' AND `date`>=FROM_UNIXTIME(%d) AND `date`<FROM_UNIXTIME(%d) AND `deleted`='n' ORDER BY `%s` %s LIMIT %d,%d",
+				addslashes(listType), addslashes(country.a2Code), addslashes(store.a3Code), after.getTime() / 1000, before.getTime() / 1000, pager.sortBy,
 				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "asc" : "desc", pager.start, pager.count);
 
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
@@ -227,8 +232,8 @@ final class RankService implements IRankService {
 		List<Rank> ranks = new ArrayList<Rank>();
 
 		String getCountryStoreTypeRanksQuery = String.format(
-				"SELECT * FROM `rank` WHERE `type`='%s' AND `country`='%s' AND `itemid`='%s' AND `date`>=%d AND `date`<%d AND `deleted`='n' ORDER BY `%s` %s LIMIT %d,%d",
-				addslashes(listType), addslashes(country.a2Code), addslashes(item.externalId), after.getTime(), before.getTime(), pager.sortBy,
+				"SELECT * FROM `rank` WHERE `type`='%s' AND `country`='%s' AND `itemid`='%s' AND `date`>=FROM_UNIXTIME(%d) AND `date`<FROM_UNIXTIME(%d) AND `deleted`='n' ORDER BY `%s` %s LIMIT %d,%d",
+				addslashes(listType), addslashes(country.a2Code), addslashes(item.externalId), after.getTime() / 1000, before.getTime() / 1000, pager.sortBy,
 				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "asc" : "desc", pager.start, pager.count);
 
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());

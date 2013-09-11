@@ -52,7 +52,7 @@ public class CsvBlobReducer extends Reducer<String, String, ByteBuffer> {
 		buffer.append(" on shard id [");
 		buffer.append(getContext().getShardNumber());
 		buffer.append("]\n");
-		buffer.append("#item id,date,top possition,grossing possition,price,usesiap");
+		buffer.append("#item id,date,top position,grossing position,price,usesiap");
 
 		buffer.append("\n");
 

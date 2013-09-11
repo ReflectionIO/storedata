@@ -83,9 +83,10 @@ final class ItemService implements IItemService {
 		Item addedItem = null;
 
 		final String addItemQuery = String
-				.format("INSERT INTO `item` (`externalid`,`internalid`,`name`,`creatorname`,`price`,`source`,`type`,`added`,`currency`,`properties`) VALUES ('%s','%s','%s','%s',%d,'%s','%s','%s',%d,'%s')",
-						addslashes(item.externalId), addslashes(item.internalId), addslashes(item.name), addslashes(item.creatorName), item.price,
-						addslashes(item.source), addslashes(item.type), item.added.getTime(), addslashes(item.properties));
+				.format("INSERT INTO `item` (`externalid`,`internalid`,`name`,`creatorname`,`price`,`source`,`type`,`added`,`currency`,`properties`) VALUES ('%s','%s','%s','%s',%d,'%s','%s',FROM_UNIXTIME(%d),'%s','%s')",
+						addslashes(item.externalId), addslashes(item.internalId), addslashes(item.name), addslashes(item.creatorName),
+						(int) (item.price.floatValue() * 100.0f), addslashes(item.source), addslashes(item.type), item.added.getTime() / 1000,
+						addslashes(item.currency), addslashes(item.properties));
 
 		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
 
@@ -95,6 +96,11 @@ final class ItemService implements IItemService {
 
 			if (itemConnection.getAffectedRowCount() > 0) {
 				addedItem = getItem(Long.valueOf(itemConnection.getInsertedId()));
+				
+				if (addedItem == null) {
+					addedItem = item;
+					addedItem.id = Long.valueOf(itemConnection.getInsertedId());
+				}
 			}
 		} finally {
 			if (itemConnection != null) {
@@ -111,9 +117,9 @@ final class ItemService implements IItemService {
 
 		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 		String updateItemQuery = String
-				.format("UPDATE `item` SET `externalid`='%s',`internalid`='%s',`name`='%s',`creatorname`='%s',`price`=%d,`source`='%s',`type`='%s',`added`=%d,`currency`='%s',`properties`='%s' WHERE `id`=%d;",
+				.format("UPDATE `item` SET `externalid`='%s',`internalid`='%s',`name`='%s',`creatorname`='%s',`price`=%d,`source`='%s',`type`='%s',`added`=FROM_UNIXTIME(%d),`currency`='%s',`properties`='%s' WHERE `id`=%d;",
 						addslashes(item.externalId), addslashes(item.internalId), addslashes(item.name), addslashes(item.creatorName),
-						(int) (item.price.floatValue() * 100.0f), addslashes(item.source), addslashes(item.type), item.added.getTime(),
+						(int) (item.price.floatValue() * 100.0f), addslashes(item.source), addslashes(item.type), item.added.getTime()/ 1000,
 						addslashes(item.currency), addslashes(item.properties), item.id.longValue());
 
 		try {

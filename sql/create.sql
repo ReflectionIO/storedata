@@ -27,6 +27,7 @@ CREATE TABLE `item` (
   `creatorname` varchar(1000) DEFAULT NULL,
   `price` int(11) DEFAULT NULL,
   `source` char(3) DEFAULT NULL,
+  `added` datetime DEFAULT NULL,
   `type` varchar(1000) DEFAULT NULL,
   `currency` varchar(100) DEFAULT NULL,
   `properties` text,
