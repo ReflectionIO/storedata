@@ -1,0 +1,36 @@
+body {
+  padding-top: 70px;
+  padding-bottom: 40px;
+}
+
+.sidebar-heading {
+
+}
+
+.game-rank {
+  text-align:center !important; 
+  vertical-align:middle !important;
+}
+
+.game-icon, .game-icon2 {
+  float: left;
+  width:45px;
+  height:45px;
+}
+
+.game-text {
+  padding-left:15px;
+}
+
+.game-name, .game-publisher, .game-name2, .game-publisher2 {
+  padding-left:15px;
+}
+
+.rank-col {
+	text-align:center; 
+	width:10%;
+}
+
+.leaderboard-col {
+	width:30%;
+}
