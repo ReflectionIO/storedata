@@ -15,6 +15,7 @@ import io.reflection.app.api.core.call.GetStoresRequest;
 import io.reflection.app.api.core.call.GetStoresResponse;
 import io.reflection.app.api.core.call.GetTopItemsRequest;
 import io.reflection.app.api.core.call.GetTopItemsResponse;
+import io.reflection.app.api.datatypes.Pager;
 import io.reflection.app.api.datatypes.SortDirectionType;
 import io.reflection.app.datatypes.Country;
 import io.reflection.app.datatypes.Rank;
@@ -52,11 +53,11 @@ public final class Core extends ActionHandler {
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
-			
+
 			if (input.pager.sortBy == null) {
 				input.pager.sortBy = "a3code";
 			}
-			
+
 			if (input.pager.sortDirection == null) {
 				input.pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
 			}
@@ -67,14 +68,12 @@ public final class Core extends ActionHandler {
 			try {
 				input.store = ValidationHelper.validateStore(input.store, "input");
 				isStore = true;
-			} catch (InputValidationException ex) {
-			}
+			} catch (InputValidationException ex) {}
 
 			try {
 				input.query = ValidationHelper.validateQuery(input.query, "input");
 				isQuery = true;
-			} catch (InputValidationException ex) {
-			}
+			} catch (InputValidationException ex) {}
 
 			List<Country> countries = null;
 
@@ -87,17 +86,13 @@ public final class Core extends ActionHandler {
 				} else {
 					countries = CountryServiceProvider.provide().searchCountries(input.query, input.pager);
 				}
-			} else
-				throw new InputValidationException(ValidationError.GetCountriesNeedsStoreOrQuery.getCode(),
-						ValidationError.GetCountriesNeedsStoreOrQuery.getMessage("input"));
+			} else throw new InputValidationException(ValidationError.GetCountriesNeedsStoreOrQuery.getCode(),
+					ValidationError.GetCountriesNeedsStoreOrQuery.getMessage("input"));
 
 			if (countries != null) {
 				output.countries = countries;
 				output.pager = input.pager;
-
-				if (output.pager.totalCount == null && output.pager.count != null && output.countries.size() < output.pager.count.intValue()) {
-					output.pager.totalCount = Long.valueOf(output.countries.size());
-				}
+				updatePager(output.pager, output.countries);
 			}
 
 			output.status = StatusType.StatusTypeSuccess;
@@ -124,25 +119,23 @@ public final class Core extends ActionHandler {
 			if (input.pager.sortBy == null) {
 				input.pager.sortBy = "a3code";
 			}
-			
+
 			if (input.pager.sortDirection == null) {
 				input.pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
 			}
-			
+
 			boolean isQuery = false;
 			boolean isCountry = false;
 
 			try {
 				input.country = ValidationHelper.validateCountry(input.country, "input");
 				isCountry = true;
-			} catch (InputValidationException ex) {
-			}
+			} catch (InputValidationException ex) {}
 
 			try {
 				input.query = ValidationHelper.validateQuery(input.query, "input");
 				isQuery = true;
-			} catch (InputValidationException ex) {
-			}
+			} catch (InputValidationException ex) {}
 
 			List<Store> stores = null;
 
@@ -155,17 +148,12 @@ public final class Core extends ActionHandler {
 				} else {
 					stores = StoreServiceProvider.provide().searchStores(input.query, input.pager);
 				}
-			} else
-				throw new InputValidationException(ValidationError.GetStoresNeedsCountryOrQuery.getCode(),
-						ValidationError.GetStoresNeedsCountryOrQuery.getMessage("input"));
+			} else throw new InputValidationException(ValidationError.GetStoresNeedsCountryOrQuery.getCode(),
+					ValidationError.GetStoresNeedsCountryOrQuery.getMessage("input"));
 
 			if (stores != null) {
 				output.stores = stores;
-				output.pager = input.pager;
-
-				if (output.pager.totalCount == null && output.pager.count != null && output.stores.size() < output.pager.count.intValue()) {
-					output.pager.totalCount = Long.valueOf(output.stores.size());
-				}
+				updatePager(output.pager, output.stores);
 			}
 
 			output.status = StatusType.StatusTypeSuccess;
@@ -188,13 +176,13 @@ public final class Core extends ActionHandler {
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
-			
+
 			if (input.pager.sortDirection == null) {
 				input.pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
 			}
 
 			input.country = ValidationHelper.validateCountry(input.country, "input");
-			
+
 			if (input.listType == null)
 				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
 						ValidationError.InvalidValueNull.getMessage("String: input.listType"));
@@ -203,10 +191,11 @@ public final class Core extends ActionHandler {
 				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(), ValidationError.InvalidValueNull.getMessage("Date: input.on"));
 
 			input.store = ValidationHelper.validateStore(input.store, "input");
-			
+
 			if (input.store == null)
-				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(), ValidationError.InvalidValueNull.getMessage("Store: input.store"));
-			
+				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
+						ValidationError.InvalidValueNull.getMessage("Store: input.store"));
+
 			input.listType = ValidationHelper.validateListType(input.listType, input.store);
 
 			Calendar cal = Calendar.getInstance();
@@ -234,7 +223,9 @@ public final class Core extends ActionHandler {
 
 				output.ranks = ranks;
 				output.items = ItemServiceProvider.provide().getExternalIdItemBatch(itemIds);
+
 				output.pager = input.pager;
+				updatePager(output.pager, output.ranks);
 			}
 
 			output.status = StatusType.StatusTypeSuccess;
@@ -257,16 +248,16 @@ public final class Core extends ActionHandler {
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
-			
+
 			if (input.pager.sortBy == null) {
 				input.pager.sortBy = "date";
 			}
-			
+
 			if (input.pager.sortDirection == null) {
 				input.pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
 			}
 
-			input.item = ValidationHelper.validateItem(input.item, "input");			
+			input.item = ValidationHelper.validateItem(input.item, "input");
 
 			input.country = ValidationHelper.validateCountry(input.country, "input");
 
@@ -276,8 +267,7 @@ public final class Core extends ActionHandler {
 
 			Calendar cal = Calendar.getInstance();
 
-			if (input.before == null)
-				input.before = cal.getTime();
+			if (input.before == null) input.before = cal.getTime();
 
 			if (input.after == null) {
 				cal.setTime(input.before);
@@ -287,7 +277,7 @@ public final class Core extends ActionHandler {
 
 			Store store = StoreServiceProvider.provide().getA3CodeStore(input.item.source);
 			input.listType = ValidationHelper.validateListType(input.listType, store);
-			
+
 			long diff = input.before.getTime() - input.after.getTime();
 			long diffDays = diff / (24 * 60 * 60 * 1000);
 
@@ -296,10 +286,13 @@ public final class Core extends ActionHandler {
 						ValidationError.DateRangeOutOfBounds.getMessage("0-60 days: input.before - input.after"));
 
 			output.ranks = RankServiceProvider.provide().getItemRanks(input.country, input.listType, input.item, input.after, input.before, input.pager);
-			
+
 			if (input.pager.start.intValue() == 0) {
 				output.item = input.item;
 			}
+
+			output.pager = input.pager;
+			updatePager(output.pager, output.ranks);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -308,5 +301,13 @@ public final class Core extends ActionHandler {
 		}
 		LOG.finer("Exiting getItemRanks");
 		return output;
+	}
+
+	private void updatePager(Pager pager, List<?> list) {
+		pager.start = Long.valueOf(pager.start.longValue() + list.size());
+
+		if (pager.totalCount == null && pager.count != null && list.size() < pager.count.intValue()) {
+			pager.totalCount = Long.valueOf(list.size());
+		}
 	}
 }
