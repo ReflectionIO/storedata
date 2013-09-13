@@ -78,6 +78,11 @@
 			<groupId>org.renjin</groupId>
 			<artifactId>renjin-script-engine</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.26</version>
+		</dependency>
 	</dependencies>
 	<repositories>
 		<repository>

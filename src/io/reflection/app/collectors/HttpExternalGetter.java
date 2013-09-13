@@ -40,7 +40,7 @@ public class HttpExternalGetter {
 
 		try {
 			HTTPRequest request = new HTTPRequest(url, HTTPMethod.POST);
-			request.getFetchOptions().setDeadline(Double.valueOf(20));
+			request.getFetchOptions().setDeadline(Double.valueOf(60.0));
 
 			if (LOG.isLoggable(GaeLevel.TRACE)) {
 				LOG.log(GaeLevel.TRACE, "Fetching response");

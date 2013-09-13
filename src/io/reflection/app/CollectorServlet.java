@@ -61,7 +61,6 @@ public class CollectorServlet extends HttpServlet {
 		List<Long> collected = null;
 
 		Collector collector = CollectorFactory.getCollectorForStore(store);
-		Ingestor ingestor = IngestorFactory.getIngestorForStore(store);
 
 		if (collector != null) {
 			collected = collector.collect(country, type, code);
@@ -71,11 +70,21 @@ public class CollectorServlet extends HttpServlet {
 			}
 		}
 
-		if (ingestor != null) {
-			ingestor.enqueue(collected);
+		List<String> countries = IngestorFactory.getIngestorCountries(store);
+
+		if (countries.contains(country)) {
+			Ingestor ingestor = IngestorFactory.getIngestorForStore(store);
+
+			if (ingestor != null) {
+				ingestor.enqueue(collected);
+			} else {
+				if (LOG.isLoggable(Level.WARNING)) {
+					LOG.warning("Could not find Ingestor for store [" + store + "]");
+				}
+			}
 		} else {
-			if (LOG.isLoggable(Level.WARNING)) {
-				LOG.warning("Could not find Ingestor for store [" + store + "]");
+			if (LOG.isLoggable(Level.INFO)) {
+				LOG.info("Country [" + country + "] not in list of countries to ingest.");
 			}
 		}
 

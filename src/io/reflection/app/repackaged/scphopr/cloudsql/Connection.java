@@ -20,6 +20,8 @@ import com.google.appengine.api.rdbms.AppEngineDriver;
 
 public final class Connection {
 
+	private static final String CONNECTION_LOCAL_KEY = "connection.local";
+
 	private String server;
 	private String database;
 	private java.sql.Connection connection;
@@ -30,6 +32,7 @@ public final class Connection {
 	private long affectedRowCount;
 	private long insertedId;
 	private boolean isTransactionMode;
+	private boolean isLocal = false;
 
 	private static final Logger LOG = Logger.getLogger(Connection.class.getName());
 
@@ -38,21 +41,24 @@ public final class Connection {
 	}
 
 	public Connection(String server, String database, String username, String password, boolean transactionMode) {
-		if (LOG.isLoggable(GaeLevel.DEBUG)) {
-			LOG.log(GaeLevel.DEBUG, "create connection with server: " + server + ", database: " + database + ", username: " + username + " and password: ********");
+		String local = System.getProperty(CONNECTION_LOCAL_KEY);
+
+		if (local != null) {
+			isLocal = Boolean.parseBoolean(local);
 		}
 
-		if (server == null)
-			throw new NullPointerException("server name cannot be null");
+		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			LOG.log(GaeLevel.DEBUG, "create connection with server: " + server + ", database: " + database + ", username: " + username
+					+ " and password: ********");
+		}
 
-		if (database == null)
-			throw new NullPointerException("database name cannot be null");
+		if (server == null) throw new NullPointerException("server name cannot be null");
 
-		if (username == null)
-			throw new NullPointerException("username cannot be null");
+		if (database == null) throw new NullPointerException("database name cannot be null");
 
-		if (password == null)
-			throw new NullPointerException("password cannot be null");
+		if (username == null) throw new NullPointerException("username cannot be null");
+
+		if (password == null) throw new NullPointerException("password cannot be null");
 
 		this.isTransactionMode = transactionMode;
 
@@ -61,16 +67,40 @@ public final class Connection {
 		this.username = username;
 		this.password = password;
 
-		try {
-			DriverManager.registerDriver(new AppEngineDriver());
-		} catch (SQLException ex) {
-			LOG.log(GaeLevel.SEVERE, "Error registering driver", ex);
+		if (isLocal) {
+			String databaseDriver = getDatabaseDriverName();
+
+			try {
+				Class.forName(databaseDriver).newInstance();
+			} catch (InstantiationException ex) {
+				LOG.log(GaeLevel.SEVERE, "Error registering driver", ex);
+			} catch (IllegalAccessException ex) {
+				LOG.log(GaeLevel.SEVERE, "Error registering driver", ex);
+			} catch (ClassNotFoundException ex) {
+				LOG.log(GaeLevel.SEVERE, "Error registering driver", ex);
+			}
+		} else {
+			try {
+				DriverManager.registerDriver(new AppEngineDriver());
+			} catch (SQLException ex) {
+				LOG.log(GaeLevel.SEVERE, "Error registering driver", ex);
+			}
 		}
 	}
 
-	public void connect() {
-		String url = "jdbc:google:rdbms://" + server + "/" + database;
+	private String getDatabaseDriverName() {
+		return "com.mysql.jdbc.Driver";
+	}
 
+	public void connect() {
+		String url = null;
+
+		if (isLocal) {
+			url = "jdbc:mysql://" + server + "/" + database;
+		} else {
+			url = "jdbc:google:rdbms://" + server + "/" + database;
+		}
+		
 		try {
 			if (connection == null) {
 				connection = DriverManager.getConnection(url, username, password);
@@ -98,10 +128,8 @@ public final class Connection {
 			LOG.log(GaeLevel.DEBUG, "executing query: " + query);
 		}
 
-		if (query == null)
-			throw new NullPointerException("query cannot be null");
-		if (query.length() == 0)
-			throw new IllegalArgumentException("query cannot be empty");
+		if (query == null) throw new NullPointerException("query cannot be null");
+		if (query.length() == 0) throw new IllegalArgumentException("query cannot be empty");
 
 		affectedRowCount = -1;
 		statement = null;
@@ -150,10 +178,9 @@ public final class Connection {
 		boolean fetched = false;
 		if (queryResult != null) {
 			try {
-				if (fetched = queryResult.next()) {
-				}
+				if (fetched = queryResult.next()) {}
 			} catch (SQLException ex) {
-				LOG.log(GaeLevel.SEVERE, "Error fetching next row",ex);
+				LOG.log(GaeLevel.SEVERE, "Error fetching next row", ex);
 			}
 		}
 
