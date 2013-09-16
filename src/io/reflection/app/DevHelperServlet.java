@@ -85,7 +85,7 @@ public class DevHelperServlet extends HttpServlet {
 					LOG.log(GaeLevel.DEBUG, "Adding gather request to deferred queue");
 				}
 
-				deferredQueue.add(TaskOptions.Builder.withUrl("/cron?" + req.getQueryString()).method(Method.GET));
+//				deferredQueue.add(TaskOptions.Builder.withUrl("/cron?" + req.getQueryString()).method(Method.GET));
 			}
 			return;
 		}

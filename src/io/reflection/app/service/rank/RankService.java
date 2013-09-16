@@ -100,7 +100,7 @@ final class RankService implements IRankService {
 
 			if (rankConnection.getAffectedRowCount() > 0) {
 				addedRank = getRank(Long.valueOf(rankConnection.getInsertedId()));
-				
+
 				if (addedRank == null) {
 					addedRank = rank;
 					addedRank.id = Long.valueOf(rankConnection.getInsertedId());
@@ -198,8 +198,8 @@ final class RankService implements IRankService {
 		}
 
 		String getCountryStoreTypeRanksQuery = String.format(
-				"SELECT * FROM `rank` WHERE `type`='%s' AND `country`='%s' AND `source`='%s' AND `date`>=FROM_UNIXTIME(%d) AND `date`<FROM_UNIXTIME(%d) AND `deleted`='n' ORDER BY `%s` %s LIMIT %d,%d",
-				addslashes(listType), addslashes(country.a2Code), addslashes(store.a3Code), after.getTime() / 1000, before.getTime() / 1000, pager.sortBy,
+				"SELECT * FROM `rank` WHERE `type`='%s' AND `country`='%s' AND `source`='%s' AND %s `deleted`='n' ORDER BY `%s` %s LIMIT %d,%d",
+				addslashes(listType), addslashes(country.a2Code), addslashes(store.a3Code), beforeAfterQuery(before, after), pager.sortBy,
 				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "asc" : "desc", pager.start, pager.count);
 
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
@@ -224,16 +224,19 @@ final class RankService implements IRankService {
 		return ranks;
 	}
 
-	/* (non-Javadoc)
-	 * @see io.reflection.app.service.rank.IRankService#getItemRanks(io.reflection.app.datatypes.Country, java.lang.String, io.reflection.app.datatypes.Item, java.util.Date, java.util.Date, io.reflection.app.api.datatypes.Pager)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.rank.IRankService#getItemRanks(io.reflection.app.datatypes.Country, java.lang.String, io.reflection.app.datatypes.Item,
+	 * java.util.Date, java.util.Date, io.reflection.app.api.datatypes.Pager)
 	 */
 	@Override
 	public List<Rank> getItemRanks(Country country, String listType, Item item, Date after, Date before, Pager pager) {
 		List<Rank> ranks = new ArrayList<Rank>();
 
 		String getCountryStoreTypeRanksQuery = String.format(
-				"SELECT * FROM `rank` WHERE `type`='%s' AND `country`='%s' AND `itemid`='%s' AND `date`>=FROM_UNIXTIME(%d) AND `date`<FROM_UNIXTIME(%d) AND `deleted`='n' ORDER BY `%s` %s LIMIT %d,%d",
-				addslashes(listType), addslashes(country.a2Code), addslashes(item.externalId), after.getTime() / 1000, before.getTime() / 1000, pager.sortBy,
+				"SELECT * FROM `rank` WHERE `type`='%s' AND `country`='%s' AND `itemid`='%s' AND %s `deleted`='n' ORDER BY `%s` %s LIMIT %d,%d",
+				addslashes(listType), addslashes(country.a2Code), addslashes(item.externalId), beforeAfterQuery(before, after), pager.sortBy,
 				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "asc" : "desc", pager.start, pager.count);
 
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
@@ -254,7 +257,61 @@ final class RankService implements IRankService {
 				rankConnection.disconnect();
 			}
 		}
-		
+
 		return ranks;
+	}
+
+	/**
+	 * @param before
+	 * @param after
+	 * @return
+	 */
+	private String beforeAfterQuery(Date before, Date after) {
+		StringBuffer buffer = new StringBuffer();
+
+		if (after != null) {
+			buffer.append("`date`>=FROM_UNIXTIME(");
+			buffer.append(after.getTime() / 1000);
+			buffer.append(") AND ");
+		}
+
+		if (before != null) {
+			buffer.append("`date`<FROM_UNIXTIME(");
+			buffer.append(before.getTime() / 1000);
+			buffer.append(") AND ");
+		}
+
+		return buffer.toString();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.rank.IRankService#getRanksCount(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date)
+	 */
+	@Override
+	public Long getRanksCount(Country country, Store store, String listType, Date before, Date after) {
+		Long ranksCount = Long.valueOf(0);
+
+		String getRanksCountQuery = String.format(
+				"SELECT COUNT(1) AS `count` FROM `rank` WHERE `type`='%s' AND `country`='%s' AND `source`='%s' AND %s `deleted`='n'",
+				addslashes(listType), addslashes(country.a2Code), addslashes(store.a3Code), beforeAfterQuery(before, after));
+
+		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+
+		try {
+			rankConnection.connect();
+			rankConnection.executeQuery(getRanksCountQuery);
+
+			if (rankConnection.fetchNextRow()) {
+				ranksCount = rankConnection.getCurrentRowLong("count");
+			}
+		} finally {
+			if (rankConnection != null) {
+				rankConnection.disconnect();
+			}
+		}
+
+		return ranksCount;
 	}
 }
