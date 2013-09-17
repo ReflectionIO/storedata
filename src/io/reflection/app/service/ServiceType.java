@@ -19,7 +19,8 @@ public enum ServiceType {
 	ServiceTypeItem("item"),
 	ServiceTypeRank("rank"),
 	ServiceTypeCountry("country"),
-	ServiceTypeStore("store");
+	ServiceTypeStore("store"),
+	ServiceTypeApplication("application");
 
 	private String value;
 	private static Map<String, ServiceType> valueLookup = null;

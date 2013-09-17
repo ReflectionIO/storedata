@@ -17,7 +17,8 @@ public enum DatabaseType {
 	DatabaseTypeRank("rank"),
 	DatabaseTypeCountry("country"),
 	DatabaseTypeStore("store"),
-	DatabaseTypeUser("user");
+	DatabaseTypeUser("user"),
+	DatabaseTypeApplication("application");
 	private String value;
 	private static Map<String, DatabaseType> valueLookup = null;
 

@@ -1,218 +1,218 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <wsdl:definitions name="core" targetNamespace="http://app.reflection.io/core" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:sdc="http://app.reflection.io/core"
-	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-	<wsdl:types>
-		<xsd:schema targetNamespace="http://app.reflection.io/core" xmlns:sd="http://app.reflection.io">
-			<xsd:import schemaLocation="../app.xsd" namespace="http://app.reflection.io" />
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <wsdl:types>
+        <xsd:schema targetNamespace="http://app.reflection.io/core" xmlns:sd="http://app.reflection.io">
+            <xsd:import schemaLocation="../app.xsd" namespace="http://app.reflection.io" />
 
-			<xsd:element name="GetCountriesInput" type="sdc:GetCountriesRequest" />
-			<xsd:element name="GetCountriesOutput" type="sdc:GetCountriesResponse" />
+            <xsd:element name="GetCountriesInput" type="sdc:GetCountriesRequest" />
+            <xsd:element name="GetCountriesOutput" type="sdc:GetCountriesResponse" />
 
-			<xsd:element name="GetStoresInput" type="sdc:GetStoresRequest" />
-			<xsd:element name="GetStoresOutput" type="sdc:GetStoresResponse" />
+            <xsd:element name="GetStoresInput" type="sdc:GetStoresRequest" />
+            <xsd:element name="GetStoresOutput" type="sdc:GetStoresResponse" />
 
-			<xsd:element name="GetTopItemsInput" type="sdc:GetTopItemsRequest" />
-			<xsd:element name="GetTopItemsOutput" type="sdc:GetTopItemsResponse" />
+            <xsd:element name="GetTopItemsInput" type="sdc:GetTopItemsRequest" />
+            <xsd:element name="GetTopItemsOutput" type="sdc:GetTopItemsResponse" />
 
-			<xsd:element name="GetItemRanksInput" type="sdc:GetItemRanksRequest" />
-			<xsd:element name="GetItemRanksOutput" type="sdc:GetItemRanksResponse" />
+            <xsd:element name="GetItemRanksInput" type="sdc:GetItemRanksRequest" />
+            <xsd:element name="GetItemRanksOutput" type="sdc:GetItemRanksResponse" />
 
-			<xsd:complexType name="GetCountriesRequest">
-				<xsd:complexContent>
-					<xsd:extension base="sd:Request">
-						<xsd:sequence>
-							<xsd:element name="store" type="sd:Store" />
-							<xsd:element name="pager" type="sd:Pager" />
-						</xsd:sequence>
-						<xsd:attribute name="query" type="xsd:string" />
-					</xsd:extension>
-				</xsd:complexContent>
-			</xsd:complexType>
+            <xsd:complexType name="GetCountriesRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="store" type="sd:Store" />
+                            <xsd:element name="pager" type="sd:Pager" />
+                        </xsd:sequence>
+                        <xsd:attribute name="query" type="xsd:string" />
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
 
-			<xsd:complexType name="GetCountriesResponse">
-				<xsd:complexContent>
-					<xsd:extension base="sd:Response">
-						<xsd:sequence>
-							<xsd:element name="countries" type="sd:Country" maxOccurs="unbounded" />
-							<xsd:element name="pager" type="sd:Pager" />
-						</xsd:sequence>
-					</xsd:extension>
-				</xsd:complexContent>
-			</xsd:complexType>
+            <xsd:complexType name="GetCountriesResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+                            <xsd:element name="countries" type="sd:Country" maxOccurs="unbounded" />
+                            <xsd:element name="pager" type="sd:Pager" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
 
-			<xsd:complexType name="GetStoresRequest">
-				<xsd:complexContent>
-					<xsd:extension base="sd:Request">
-						<xsd:sequence>
-							<xsd:element name="country" type="sd:Country" />
-							<xsd:element name="pager" type="sd:Pager" />
-						</xsd:sequence>
+            <xsd:complexType name="GetStoresRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="country" type="sd:Country" />
+                            <xsd:element name="pager" type="sd:Pager" />
+                        </xsd:sequence>
 
-						<xsd:attribute name="query" type="xsd:string" />
-					</xsd:extension>
-				</xsd:complexContent>
-			</xsd:complexType>
+                        <xsd:attribute name="query" type="xsd:string" />
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
 
-			<xsd:complexType name="GetStoresResponse">
-				<xsd:complexContent>
-					<xsd:extension base="sd:Response">
-						<xsd:sequence>
-							<xsd:element name="stores" type="sd:Store" maxOccurs="unbounded" />
-							<xsd:element name="pager" type="sd:Pager" />
-						</xsd:sequence>
-					</xsd:extension>
-				</xsd:complexContent>
-			</xsd:complexType>
+            <xsd:complexType name="GetStoresResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+                            <xsd:element name="stores" type="sd:Store" maxOccurs="unbounded" />
+                            <xsd:element name="pager" type="sd:Pager" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
 
-			<xsd:complexType name="GetTopItemsRequest">
-				<xsd:complexContent>
-					<xsd:extension base="sd:Request">
-						<xsd:sequence>
-							<xsd:element name="country" type="sd:Country" />
-							<xsd:element name="store" type="sd:Store" />
-							<xsd:element name="pager" type="sd:Pager" />
-						</xsd:sequence>
+            <xsd:complexType name="GetTopItemsRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="country" type="sd:Country" />
+                            <xsd:element name="store" type="sd:Store" />
+                            <xsd:element name="pager" type="sd:Pager" />
+                        </xsd:sequence>
 
-						<!-- The list type e.g. for ios store it would be freeiphone or grossingipad -->
-						<xsd:attribute name="listType" type="xsd:string" />
-						<xsd:attribute name="on" type="xsd:dateTime" />
-					</xsd:extension>
-				</xsd:complexContent>
-			</xsd:complexType>
+                        <!-- The list type e.g. for ios store it would be freeiphone or grossingipad -->
+                        <xsd:attribute name="listType" type="xsd:string" />
+                        <xsd:attribute name="on" type="xsd:dateTime" />
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
 
-			<xsd:complexType name="GetTopItemsResponse">
-				<xsd:complexContent>
-					<xsd:extension base="sd:Response">
-						<xsd:sequence>
-							<xsd:element name="ranks" type="sd:Rank" maxOccurs="unbounded" />
-							<xsd:element name="items" type="sd:Item" maxOccurs="unbounded" />
-							<xsd:element name="pager" type="sd:Pager" />
-						</xsd:sequence>
-					</xsd:extension>
-				</xsd:complexContent>
-			</xsd:complexType>
+            <xsd:complexType name="GetTopItemsResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+                            <xsd:element name="ranks" type="sd:Rank" maxOccurs="unbounded" />
+                            <xsd:element name="items" type="sd:Item" maxOccurs="unbounded" />
+                            <xsd:element name="pager" type="sd:Pager" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
 
-			<xsd:complexType name="GetItemRanksRequest">
-				<xsd:complexContent>
-					<xsd:extension base="sd:Request">
-						<xsd:sequence>
-							<xsd:element name="item" type="sd:Item" />
-							<xsd:element name="country" type="sd:Country" />
-							<xsd:element name="pager" type="sd:Pager" />
-						</xsd:sequence>
+            <xsd:complexType name="GetItemRanksRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="item" type="sd:Item" />
+                            <xsd:element name="country" type="sd:Country" />
+                            <xsd:element name="pager" type="sd:Pager" />
+                        </xsd:sequence>
 
-						<xsd:attribute name="after" type="xsd:dateTime" />
-						<xsd:attribute name="before" type="xsd:dateTime" />
-						<xsd:attribute name="listType" type="xsd:string" />
+                        <xsd:attribute name="after" type="xsd:dateTime" />
+                        <xsd:attribute name="before" type="xsd:dateTime" />
+                        <xsd:attribute name="listType" type="xsd:string" />
 
-					</xsd:extension>
-				</xsd:complexContent>
-			</xsd:complexType>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
 
-			<xsd:complexType name="GetItemRanksResponse">
-				<xsd:complexContent>
-					<xsd:extension base="sd:Response">
-						<xsd:sequence>
-							<xsd:element name="ranks" type="sd:Rank" maxOccurs="unbounded" />
-							<xsd:element name="pager" type="sd:Pager" />
-							<xsd:element name="item" type="sd:Item" />
-						</xsd:sequence>
-					</xsd:extension>
-				</xsd:complexContent>
-			</xsd:complexType>
+            <xsd:complexType name="GetItemRanksResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+                            <xsd:element name="ranks" type="sd:Rank" maxOccurs="unbounded" />
+                            <xsd:element name="pager" type="sd:Pager" />
+                            <xsd:element name="item" type="sd:Item" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
 
-		</xsd:schema>
-	</wsdl:types>
+        </xsd:schema>
+    </wsdl:types>
 
-	<wsdl:message name="GetCountriesRequest">
-		<wsdl:part name="input" element="sdc:GetCountriesInput" />
-	</wsdl:message>
-	<wsdl:message name="GetCountriesResponse">
-		<wsdl:part name="output" element="sdc:GetCountriesOutput" />
-	</wsdl:message>
-	<wsdl:message name="GetStoresRequest">
-		<wsdl:part name="input" element="sdc:GetStoresInput" />
-	</wsdl:message>
-	<wsdl:message name="GetStoresResponse">
-		<wsdl:part name="output" element="sdc:GetStoresOutput" />
-	</wsdl:message>
-	<wsdl:message name="GetTopItemsRequest">
-		<wsdl:part name="input" element="sdc:GetTopItemsInput" />
-	</wsdl:message>
-	<wsdl:message name="GetTopItemsResponse">
-		<wsdl:part name="output" element="sdc:GetTopItemsOutput" />
-	</wsdl:message>
+    <wsdl:message name="GetCountriesRequest">
+        <wsdl:part name="input" element="sdc:GetCountriesInput" />
+    </wsdl:message>
+    <wsdl:message name="GetCountriesResponse">
+        <wsdl:part name="output" element="sdc:GetCountriesOutput" />
+    </wsdl:message>
+    <wsdl:message name="GetStoresRequest">
+        <wsdl:part name="input" element="sdc:GetStoresInput" />
+    </wsdl:message>
+    <wsdl:message name="GetStoresResponse">
+        <wsdl:part name="output" element="sdc:GetStoresOutput" />
+    </wsdl:message>
+    <wsdl:message name="GetTopItemsRequest">
+        <wsdl:part name="input" element="sdc:GetTopItemsInput" />
+    </wsdl:message>
+    <wsdl:message name="GetTopItemsResponse">
+        <wsdl:part name="output" element="sdc:GetTopItemsOutput" />
+    </wsdl:message>
 
-	<wsdl:message name="GetItemRanksRequest">
-		<wsdl:part name="input" element="sdc:GetItemRanksInput" />
-	</wsdl:message>
-	<wsdl:message name="GetItemRanksResponse">
-		<wsdl:part name="output" element="sdc:GetItemRanksOutput" />
-	</wsdl:message>
+    <wsdl:message name="GetItemRanksRequest">
+        <wsdl:part name="input" element="sdc:GetItemRanksInput" />
+    </wsdl:message>
+    <wsdl:message name="GetItemRanksResponse">
+        <wsdl:part name="output" element="sdc:GetItemRanksOutput" />
+    </wsdl:message>
 
-	<wsdl:portType name="core">
-		<wsdl:operation name="GetCountries">
-			<wsdl:input message="sdc:GetCountriesRequest" />
-			<wsdl:output message="sdc:GetCountriesResponse" />
-		</wsdl:operation>
-		<wsdl:operation name="GetStores">
-			<wsdl:input message="sdc:GetStoresRequest" />
-			<wsdl:output message="sdc:GetStoresResponse" />
-		</wsdl:operation>
+    <wsdl:portType name="core">
+        <wsdl:operation name="GetCountries">
+            <wsdl:input message="sdc:GetCountriesRequest" />
+            <wsdl:output message="sdc:GetCountriesResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="GetStores">
+            <wsdl:input message="sdc:GetStoresRequest" />
+            <wsdl:output message="sdc:GetStoresResponse" />
+        </wsdl:operation>
 
-		<wsdl:operation name="GetTopItems">
-			<wsdl:input message="sdc:GetTopItemsRequest" />
-			<wsdl:output message="sdc:GetTopItemsResponse" />
-		</wsdl:operation>
+        <wsdl:operation name="GetTopItems">
+            <wsdl:input message="sdc:GetTopItemsRequest" />
+            <wsdl:output message="sdc:GetTopItemsResponse" />
+        </wsdl:operation>
 
-		<wsdl:operation name="GetItemRanks">
-			<wsdl:input message="sdc:GetItemRanksRequest" />
-			<wsdl:output message="sdc:GetItemRanksResponse" />
-		</wsdl:operation>
+        <wsdl:operation name="GetItemRanks">
+            <wsdl:input message="sdc:GetItemRanksRequest" />
+            <wsdl:output message="sdc:GetItemRanksResponse" />
+        </wsdl:operation>
 
-	</wsdl:portType>
-	<wsdl:binding name="coreSOAP" type="sdc:core">
-		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
-		<wsdl:operation name="GetCountries">
-			<soap:operation soapAction="http://app.reflection.io/core/GetCountries" />
-			<wsdl:input>
-				<soap:body use="literal" />
-			</wsdl:input>
-			<wsdl:output>
-				<soap:body use="literal" />
-			</wsdl:output>
-		</wsdl:operation>
-		<wsdl:operation name="GetStores">
-			<soap:operation soapAction="http://app.reflection.io/core/GetStores" />
-			<wsdl:input>
-				<soap:body use="literal" />
-			</wsdl:input>
-			<wsdl:output>
-				<soap:body use="literal" />
-			</wsdl:output>
-		</wsdl:operation>
-		<wsdl:operation name="GetTopItems">
-			<soap:operation soapAction="http://app.reflection.io/core/GetTopItems" />
-			<wsdl:input>
-				<soap:body use="literal" />
-			</wsdl:input>
-			<wsdl:output>
-				<soap:body use="literal" />
-			</wsdl:output>
-		</wsdl:operation>
-		<wsdl:operation name="GetItemRanks">
-			<soap:operation soapAction="http://app.reflection.io/core/GetItemRanks" />
-			<wsdl:input>
-				<soap:body use="literal" />
-			</wsdl:input>
-			<wsdl:output>
-				<soap:body use="literal" />
-			</wsdl:output>
-		</wsdl:operation>
-	</wsdl:binding>
-	<wsdl:service name="core">
-		<wsdl:port name="coreSOAP" binding="sdc:coreSOAP">
-			<soap:address location="http://app.reflection.io/core/" />
-		</wsdl:port>
-	</wsdl:service>
+    </wsdl:portType>
+    <wsdl:binding name="coreSOAP" type="sdc:core">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+        <wsdl:operation name="GetCountries">
+            <soap:operation soapAction="http://app.reflection.io/core/GetCountries" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetStores">
+            <soap:operation soapAction="http://app.reflection.io/core/GetStores" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetTopItems">
+            <soap:operation soapAction="http://app.reflection.io/core/GetTopItems" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetItemRanks">
+            <soap:operation soapAction="http://app.reflection.io/core/GetItemRanks" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="core">
+        <wsdl:port name="coreSOAP" binding="sdc:coreSOAP">
+            <soap:address location="http://app.reflection.io/core/" />
+        </wsdl:port>
+    </wsdl:service>
 </wsdl:definitions>

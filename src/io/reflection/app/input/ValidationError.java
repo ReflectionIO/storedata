@@ -34,7 +34,11 @@ public enum ValidationError {
 
 	GetCountriesNeedsStoreOrQuery(100101, "GetCountries call should either have a store or a query. To get all countries use * for the query"),
 
-	GetStoresNeedsCountryOrQuery(100201, "GetStores call should either have a country or a query. To get all stores use * for the query"), ;
+	GetStoresNeedsCountryOrQuery(100201, "GetStores call should either have a country or a query. To get all stores use * for the query"),
+
+	// lookup service
+	LookupApplicationNeedsInternalOrExternalId(100301,
+			"LookupApplication should have at least one internal or external application id, you can also add multiple ids of each type");
 
 	private int code;
 	private String message;
