@@ -20,10 +20,15 @@ import io.reflection.app.service.ServiceType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.spacehopperstudios.utility.StringUtils;
 
 final class ApplicationService implements IApplicationService {
+
+	private static final Logger LOG = Logger.getLogger(ApplicationService.class.getName());
+
 	public String getName() {
 		return ServiceType.ServiceTypeApplication.toString();
 	}
@@ -35,7 +40,9 @@ final class ApplicationService implements IApplicationService {
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection applicationConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeApplication.toString());
 
-		String getApplicationQuery = String.format("SELECT * FROM `application` WHERE `deleted`='n' and `id`='%d' LIMIT 1", id.longValue());
+		String getApplicationQuery = String
+				.format("SELECT * FROM `application` JOIN `sup_application_iap` ON `application_id`=`sup_application_iap`.`internalid` WHERE `deleted`='n' and `id`='%d' LIMIT 1",
+						id.longValue());
 		try {
 			applicationConnection.connect();
 			applicationConnection.executeQuery(getApplicationQuery);
@@ -66,7 +73,11 @@ final class ApplicationService implements IApplicationService {
 			application.title = stripslashes(connection.getCurrentRowString("title"));
 			application.artworkUrlSmall = stripslashes(connection.getCurrentRowString("artwork_url_small"));
 			application.artistName = stripslashes(connection.getCurrentRowString("artist_name"));
-			application.usesIap = (connection.getCurrentRowInteger("usesiap") == Integer.valueOf(1) ? Boolean.TRUE : Boolean.FALSE);
+
+			String usesIap = null;
+			if ((usesIap = connection.getCurrentRowString("usesiap")) != null) {
+				application.usesIap = (usesIap.equalsIgnoreCase("y") ? Boolean.TRUE : Boolean.FALSE);
+			}
 		}
 
 		if (LookupDetailTypeHelper.isMedium(detail)) {
@@ -119,8 +130,9 @@ final class ApplicationService implements IApplicationService {
 		if (internalIds != null && internalIds.size() > 0) {
 			String items = "'" + StringUtils.join(internalIds, "','") + "'";
 
-			String lookupInternalIdsApplicationQuery = String.format("SELECT %s FROM `epf_application` WHERE `application_id` IN (%s)",
-					columnsForLookupDetailType(detail), items);
+			String lookupInternalIdsApplicationQuery = String
+					.format("SELECT %s FROM `epf_application` JOIN `sup_application_iap` ON `application_id`=`sup_application_iap`.`internalid` WHERE `application_id` IN (%s)",
+							columnsForLookupDetailType(detail), items);
 
 			Connection applicationConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeApplication.toString());
 
@@ -199,8 +211,11 @@ final class ApplicationService implements IApplicationService {
 		if (externalIds != null && externalIds.size() > 0) {
 			String items = "'" + StringUtils.join(externalIds, "','") + "'";
 
-			String lookupInternalIdsApplicationQuery = String.format("SELECT %s FROM `epf_application` JOIN `item` ON `application_id`=`internalid` WHERE `externalid` IN (%s)",
-					columnsForLookupDetailType(detail), items);
+			// LATER: this might not be the most efficient thing in the world - consider resolving the externalids to internal ids then doing the query with a
+			// single join
+			String lookupInternalIdsApplicationQuery = String
+					.format("SELECT %s FROM `epf_application` JOIN `item` ON `application_id`=`item`.`internalid` JOIN `sup_application_iap` ON `application_id`=`sup_application_iap`.`internalid` WHERE `item`.`internalid` IN (%s)",
+							columnsForLookupDetailType(detail), items);
 
 			Connection applicationConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeApplication.toString());
 
@@ -225,4 +240,33 @@ final class ApplicationService implements IApplicationService {
 		return applications;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.application.IApplicationService#setApplicationIap(io.reflection.app.datatypes.Application, boolean)
+	 */
+	@Override
+	public void setApplicationIap(Application application, Boolean usesIap) {
+
+		String setApplicationConnectionQuery = String.format("%s INTO `sup_application_iap` SET `internalid`='%d', `usesiap`='%s'",
+				application.usesIap == null ? "INSERT" : "REPLACE", application.id.longValue(), usesIap.booleanValue() ? 'y' : 'n');
+
+		Connection applicationConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeApplication.toString());
+
+		try {
+			applicationConnection.connect();
+			applicationConnection.executeQuery(setApplicationConnectionQuery);
+
+			if (applicationConnection.getAffectedRowCount() == 0) {
+				if (LOG.isLoggable(Level.WARNING)) {
+					LOG.warning("Application with id [" + application.id + "] does not seem to be affected by update of uses IAP to [" + usesIap + "]");
+				}
+			}
+		} finally {
+			if (applicationConnection != null) {
+				applicationConnection.disconnect();
+			}
+		}
+
+	}
 }

@@ -53,4 +53,11 @@ public interface IApplicationService extends IService {
 	 */
 	public List<Application> lookupExternalIdsApplication(List<String> externalIds, LookupDetailType detail);
 
+	/**
+	 * 
+	 * @param application
+	 * @param usesIap
+	 */
+	public void setApplicationIap(Application application, Boolean usesIap);
+
 }
