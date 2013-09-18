@@ -68,9 +68,10 @@ CREATE TABLE `store` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
 
 CREATE TABLE `sup_application_iap` (
-  `internalid` int(11) NOT NULL AUTO_INCREMENT,
+  `internalid` int(11) NOT NULL,
+  `lastupdated` datetime DEFAULT NULL,
   `usesiap`	 enum('y','n') DEFAULT NULL,
-  PRIMARY KEY (`interalid`)
+  PRIMARY KEY (`internalid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
 
 INSERT INTO `rio`.`country`(

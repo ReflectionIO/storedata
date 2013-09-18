@@ -10,8 +10,10 @@ package io.reflection.app.apple;
 import static com.willshex.gson.json.shared.Convert.fromJsonObject;
 import static com.willshex.gson.json.shared.Convert.toJsonObject;
 import io.reflection.app.collectors.HttpExternalGetter;
+import io.reflection.app.datatypes.Application;
 import io.reflection.app.datatypes.Item;
 import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.service.application.ApplicationServiceProvider;
 import io.reflection.app.service.item.IItemService;
 import io.reflection.app.service.item.ItemServiceProvider;
 
@@ -53,9 +55,7 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest
-	 * , javax.servlet.http.HttpServletResponse)
+	 * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest , javax.servlet.http.HttpServletResponse)
 	 */
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -84,7 +84,7 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 
 		String itemId = req.getParameter("item");
 
-		if (SystemProperty.environment.value() != SystemProperty.Environment.Value.Production) {
+		if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Development) {
 			if (LOG.isLoggable(Level.SEVERE)) {
 				LOG.severe("This message should only be displayed on the developement server because it does not respect queue configuration");
 			}
@@ -105,12 +105,12 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 		}
 
 		IItemService itemService = ItemServiceProvider.provide();
-		Item item = itemService.getItem(Long.valueOf(itemId));
+		Item item = itemService.getInternalIdItem(itemId);
 
 		if (item != null) {
 			boolean doCurl = false;
 
-			JsonObject properties = toJsonObject(item.properties);
+			JsonObject properties = toJsonObject(item.properties == null || item.properties.equalsIgnoreCase("null") ? null : item.properties);
 
 			if (properties == null) {
 				if (LOG.isLoggable(GaeLevel.DEBUG)) {
@@ -141,7 +141,7 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 			}
 
 			if (doCurl) {
-				String itemUrl = "https://itunes.apple.com/app/id" + item.internalId;
+				String itemUrl = "https://itunes.apple.com/app/id" + itemId;
 				String data = HttpExternalGetter.getData(itemUrl, HTTPMethod.GET);
 				Boolean usesIap = null;
 
@@ -153,6 +153,10 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 					item.properties = fromJsonObject(properties);
 
 					itemService.updateItem(item);
+
+					Application application = new Application();
+					application.id = Long.valueOf(itemId);
+					ApplicationServiceProvider.provide().setApplicationIap(application, usesIap);
 				} else {
 					if (LOG.isLoggable(Level.WARNING)) {
 						LOG.log(Level.WARNING, String.format("Could not get additional data from [%s] for [%s]", itemUrl, itemId));

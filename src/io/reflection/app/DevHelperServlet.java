@@ -6,15 +6,17 @@ package io.reflection.app;
 import static io.reflection.app.objectify.PersistenceService.ofy;
 import io.reflection.app.collectors.CollectorIOS;
 import io.reflection.app.datatypes.FeedFetch;
-import io.reflection.app.datatypes.Item;
 import io.reflection.app.datatypes.ItemRankSummary;
 import io.reflection.app.datatypes.Rank;
+import io.reflection.app.datatypes.Store;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.mapreduce.CsvBlobReducer;
 import io.reflection.app.mapreduce.RankCountMapper;
 import io.reflection.app.mapreduce.RankCountReducer;
 import io.reflection.app.mapreduce.TopAndGrossingMapper;
 import io.reflection.app.mapreduce.TotalRankedItemsCountMapper;
+import io.reflection.app.service.application.ApplicationServiceProvider;
+import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.setup.CountriesInstaller;
 import io.reflection.app.setup.StoresInstaller;
 
@@ -85,7 +87,7 @@ public class DevHelperServlet extends HttpServlet {
 					LOG.log(GaeLevel.DEBUG, "Adding gather request to deferred queue");
 				}
 
-//				deferredQueue.add(TaskOptions.Builder.withUrl("/cron?" + req.getQueryString()).method(Method.GET));
+				// deferredQueue.add(TaskOptions.Builder.withUrl("/cron?" + req.getQueryString()).method(Method.GET));
 			}
 			return;
 		}
@@ -106,47 +108,47 @@ public class DevHelperServlet extends HttpServlet {
 		String csv = null;
 
 		if (action != null) {
-			if ("addingested".toUpperCase().equals(action.toUpperCase())) {
+			if ("addingested".equalsIgnoreCase(action)) {
 
-//				int i = 0;
-//				for (FeedFetch entity : ofy().load().type(FeedFetch.class).offset(Integer.parseInt(start)).limit(Integer.parseInt(count)).iterable()) {
-//					entity.ingested = Boolean.FALSE;
-//
-//					ofy().save().entity(entity).now();
-//
-//					if (LOG.isLoggable(GaeLevel.TRACE)) {
-//						LOG.log(GaeLevel.TRACE, String.format("Set entity [%d] ingested to false", entity.id.longValue()));
-//					}
-//
-//					i++;
-//				}
-//
-//				if (LOG.isLoggable(GaeLevel.DEBUG)) {
-//					LOG.log(GaeLevel.DEBUG, String.format("Processed [%d] entities", i));
-//				}
-
-				success = true;
-			} else if ("uningest".toUpperCase().equals(action.toUpperCase())) {
-
-//				int i = 0;
-//				for (FeedFetch entity : ofy().load().type(FeedFetch.class).offset(Integer.parseInt(start)).limit(Integer.parseInt(count)).iterable()) {
-//					entity.ingested = false;
-//
-//					ofy().save().entity(entity).now();
-//
-//					if (LOG.isLoggable(GaeLevel.TRACE)) {
-//						LOG.log(GaeLevel.TRACE, String.format("Set entity [%d] ingested to false", entity.id.longValue()));
-//					}
-//
-//					i++;
-//				}
-//
-//				if (LOG.isLoggable(GaeLevel.DEBUG)) {
-//					LOG.log(GaeLevel.DEBUG, String.format("Processed [%d] entities", i));
-//				}
+				// int i = 0;
+				// for (FeedFetch entity : ofy().load().type(FeedFetch.class).offset(Integer.parseInt(start)).limit(Integer.parseInt(count)).iterable()) {
+				// entity.ingested = Boolean.FALSE;
+				//
+				// ofy().save().entity(entity).now();
+				//
+				// if (LOG.isLoggable(GaeLevel.TRACE)) {
+				// LOG.log(GaeLevel.TRACE, String.format("Set entity [%d] ingested to false", entity.id.longValue()));
+				// }
+				//
+				// i++;
+				// }
+				//
+				// if (LOG.isLoggable(GaeLevel.DEBUG)) {
+				// LOG.log(GaeLevel.DEBUG, String.format("Processed [%d] entities", i));
+				// }
 
 				success = true;
-			} else if ("addcode".toUpperCase().equals(action.toUpperCase())) {
+			} else if ("uningest".equalsIgnoreCase(action)) {
+
+				// int i = 0;
+				// for (FeedFetch entity : ofy().load().type(FeedFetch.class).offset(Integer.parseInt(start)).limit(Integer.parseInt(count)).iterable()) {
+				// entity.ingested = false;
+				//
+				// ofy().save().entity(entity).now();
+				//
+				// if (LOG.isLoggable(GaeLevel.TRACE)) {
+				// LOG.log(GaeLevel.TRACE, String.format("Set entity [%d] ingested to false", entity.id.longValue()));
+				// }
+				//
+				// i++;
+				// }
+				//
+				// if (LOG.isLoggable(GaeLevel.DEBUG)) {
+				// LOG.log(GaeLevel.DEBUG, String.format("Processed [%d] entities", i));
+				// }
+
+				success = true;
+			} else if ("addcode".equalsIgnoreCase(action)) {
 				DateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH");
 				Date startDate = null, endDate = null;
 				try {
@@ -191,7 +193,7 @@ public class DevHelperServlet extends HttpServlet {
 
 					success = true;
 				}
-			} else if ("remove".toUpperCase().equals(action.toUpperCase())) {
+			} else if ("remove".equalsIgnoreCase(action)) {
 				if (object != null) {
 					DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
 
@@ -215,96 +217,96 @@ public class DevHelperServlet extends HttpServlet {
 
 					success = true;
 				}
-			} else if ("countitemrank".toUpperCase().equals(action.toUpperCase())) {
-//				int i = 0;
-//				Query<Rank> queryRank = ofy().cache(false).load().type(Rank.class).filter("counted =", Boolean.FALSE).offset(Integer.parseInt(start))
-//						.limit(Integer.parseInt(count));
-//
-//				// Query<Rank> queryRank = ofy().load().type(Rank.class).filter("id =", Long.valueOf(19816));
-//
-//				for (Rank rank : queryRank.iterable()) {
-//					// get the item rank summary
-//					Query<ItemRankSummary> querySummary = PersistenceService.ofy().load().type(ItemRankSummary.class).filter("itemId =", rank.itemId)
-//							.filter("type =", rank.type).filter("source =", rank.source);
-//
-//					ItemRankSummary itemRankSummary = null;
-//
-//					if (querySummary.count() > 0) {
-//						// we already have an item for this
-//						itemRankSummary = querySummary.list().get(0);
-//					} else {
-//						itemRankSummary = new ItemRankSummary();
-//						itemRankSummary.itemId = rank.itemId;
-//						itemRankSummary.type = rank.type;
-//						itemRankSummary.source = rank.source;
-//					}
-//
-//					itemRankSummary.numberOfTimesRanked = Integer.valueOf(itemRankSummary.numberOfTimesRanked.intValue() + 1);
-//
-//					if (rank.position.intValue() <= 10) {
-//						itemRankSummary.numberOfTimesRankedTop10 = Integer.valueOf(itemRankSummary.numberOfTimesRankedTop10 + 1);
-//					}
-//
-//					if (rank.position.intValue() <= 25) {
-//						itemRankSummary.numberOfTimesRankedTop25 = Integer.valueOf(itemRankSummary.numberOfTimesRankedTop25 + 1);
-//					}
-//
-//					if (rank.position.intValue() <= 50) {
-//						itemRankSummary.numberOfTimesRankedTop50 = Integer.valueOf(itemRankSummary.numberOfTimesRankedTop50 + 1);
-//					}
-//
-//					if (rank.position.intValue() <= 100) {
-//						itemRankSummary.numberOfTimesRankedTop100 = Integer.valueOf(itemRankSummary.numberOfTimesRankedTop100 + 1);
-//					}
-//
-//					if (rank.position.intValue() <= 200) {
-//						itemRankSummary.numberOfTimesRankedTop200 = Integer.valueOf(itemRankSummary.numberOfTimesRankedTop200 + 1);
-//					}
-//
-//					ofy().save().entity(itemRankSummary).now();
-//
-//					if (LOG.isLoggable(GaeLevel.TRACE)) {
-//						LOG.log(GaeLevel.TRACE,
-//								String.format("Updated item item summary for [%s:%s:%s]", itemRankSummary.source, itemRankSummary.type, itemRankSummary.itemId));
-//					}
-//
-//					rank.counted = true;
-//
-//					ofy().save().entity(rank).now();
-//
-//					if (LOG.isLoggable(GaeLevel.TRACE)) {
-//						LOG.log(GaeLevel.TRACE, String.format("Updated rank counted for %d", rank.id.longValue()));
-//					}
-//
-//					i++;
-//				}
-//
-//				if (LOG.isLoggable(GaeLevel.DEBUG)) {
-//					LOG.log(GaeLevel.DEBUG, String.format("Processed [%d] entities", i));
-//				}
+			} else if ("countitemrank".equalsIgnoreCase(action)) {
+				// int i = 0;
+				// Query<Rank> queryRank = ofy().cache(false).load().type(Rank.class).filter("counted =", Boolean.FALSE).offset(Integer.parseInt(start))
+				// .limit(Integer.parseInt(count));
+				//
+				// // Query<Rank> queryRank = ofy().load().type(Rank.class).filter("id =", Long.valueOf(19816));
+				//
+				// for (Rank rank : queryRank.iterable()) {
+				// // get the item rank summary
+				// Query<ItemRankSummary> querySummary = PersistenceService.ofy().load().type(ItemRankSummary.class).filter("itemId =", rank.itemId)
+				// .filter("type =", rank.type).filter("source =", rank.source);
+				//
+				// ItemRankSummary itemRankSummary = null;
+				//
+				// if (querySummary.count() > 0) {
+				// // we already have an item for this
+				// itemRankSummary = querySummary.list().get(0);
+				// } else {
+				// itemRankSummary = new ItemRankSummary();
+				// itemRankSummary.itemId = rank.itemId;
+				// itemRankSummary.type = rank.type;
+				// itemRankSummary.source = rank.source;
+				// }
+				//
+				// itemRankSummary.numberOfTimesRanked = Integer.valueOf(itemRankSummary.numberOfTimesRanked.intValue() + 1);
+				//
+				// if (rank.position.intValue() <= 10) {
+				// itemRankSummary.numberOfTimesRankedTop10 = Integer.valueOf(itemRankSummary.numberOfTimesRankedTop10 + 1);
+				// }
+				//
+				// if (rank.position.intValue() <= 25) {
+				// itemRankSummary.numberOfTimesRankedTop25 = Integer.valueOf(itemRankSummary.numberOfTimesRankedTop25 + 1);
+				// }
+				//
+				// if (rank.position.intValue() <= 50) {
+				// itemRankSummary.numberOfTimesRankedTop50 = Integer.valueOf(itemRankSummary.numberOfTimesRankedTop50 + 1);
+				// }
+				//
+				// if (rank.position.intValue() <= 100) {
+				// itemRankSummary.numberOfTimesRankedTop100 = Integer.valueOf(itemRankSummary.numberOfTimesRankedTop100 + 1);
+				// }
+				//
+				// if (rank.position.intValue() <= 200) {
+				// itemRankSummary.numberOfTimesRankedTop200 = Integer.valueOf(itemRankSummary.numberOfTimesRankedTop200 + 1);
+				// }
+				//
+				// ofy().save().entity(itemRankSummary).now();
+				//
+				// if (LOG.isLoggable(GaeLevel.TRACE)) {
+				// LOG.log(GaeLevel.TRACE,
+				// String.format("Updated item item summary for [%s:%s:%s]", itemRankSummary.source, itemRankSummary.type, itemRankSummary.itemId));
+				// }
+				//
+				// rank.counted = true;
+				//
+				// ofy().save().entity(rank).now();
+				//
+				// if (LOG.isLoggable(GaeLevel.TRACE)) {
+				// LOG.log(GaeLevel.TRACE, String.format("Updated rank counted for %d", rank.id.longValue()));
+				// }
+				//
+				// i++;
+				// }
+				//
+				// if (LOG.isLoggable(GaeLevel.DEBUG)) {
+				// LOG.log(GaeLevel.DEBUG, String.format("Processed [%d] entities", i));
+				// }
 
 				success = true;
 
-			} else if ("uncountranks".toUpperCase().equals(action.toUpperCase())) {
-//				int i = 0;
-//				for (Rank rank : ofy().load().type(Rank.class).offset(Integer.parseInt(start)).limit(Integer.parseInt(count)).iterable()) {
-//					rank.counted = false;
-//
-//					ofy().save().entity(rank);
-//
-//					if (LOG.isLoggable(GaeLevel.TRACE)) {
-//						LOG.log(GaeLevel.TRACE, String.format("Uncounted rank [%d]", rank.id.longValue()));
-//					}
-//
-//					i++;
-//				}
-//
-//				if (LOG.isLoggable(GaeLevel.DEBUG)) {
-//					LOG.log(GaeLevel.DEBUG, String.format("Processed [%d] entities", i));
-//				}
+			} else if ("uncountranks".equalsIgnoreCase(action)) {
+				// int i = 0;
+				// for (Rank rank : ofy().load().type(Rank.class).offset(Integer.parseInt(start)).limit(Integer.parseInt(count)).iterable()) {
+				// rank.counted = false;
+				//
+				// ofy().save().entity(rank);
+				//
+				// if (LOG.isLoggable(GaeLevel.TRACE)) {
+				// LOG.log(GaeLevel.TRACE, String.format("Uncounted rank [%d]", rank.id.longValue()));
+				// }
+				//
+				// i++;
+				// }
+				//
+				// if (LOG.isLoggable(GaeLevel.DEBUG)) {
+				// LOG.log(GaeLevel.DEBUG, String.format("Processed [%d] entities", i));
+				// }
 
 				success = true;
-			} else if ("appswithrank".toUpperCase().equals(action.toUpperCase())) {
+			} else if ("appswithrank".equalsIgnoreCase(action)) {
 				int rankStartValue = Integer.parseInt(rankStart);
 				int rankEndValue = RANK_END_200_PLUS.equals(rankEnd) ? Integer.MAX_VALUE : Integer.parseInt(rankEnd);
 
@@ -397,7 +399,7 @@ public class DevHelperServlet extends HttpServlet {
 				markup = buffer.toString();
 
 				success = true;
-			} else if ("ranksforapp".toUpperCase().equals(action.toUpperCase())) {
+			} else if ("ranksforapp".equalsIgnoreCase(action)) {
 				StringBuffer buffer = new StringBuffer();
 
 				buffer.append("# data for item ");
@@ -471,9 +473,9 @@ public class DevHelperServlet extends HttpServlet {
 				csv = buffer.toString();
 
 				success = true;
-			} else if ("convertdatatoblobs".toUpperCase().equals(action.toUpperCase())) {
+			} else if ("convertdatatoblobs".equalsIgnoreCase(action)) {
 				// will not support this
-			} else if ("countitemrankmr".toUpperCase().equals(action.toUpperCase())) {
+			} else if ("countitemrankmr".equalsIgnoreCase(action)) {
 
 				int rankStartValue = Integer.parseInt(rankStart);
 				int rankEndValue = RANK_END_200_PLUS.equals(rankEnd) ? Integer.MAX_VALUE : Integer.parseInt(rankEnd);
@@ -481,50 +483,40 @@ public class DevHelperServlet extends HttpServlet {
 				redirectToPipelineStatus(req, resp, startStatsJob(5, 2, "ios", "us", feedType, rankStartValue, rankEndValue));
 
 				success = true;
-			} else if ("countranksmr".toUpperCase().equals(action.toUpperCase())) {
+			} else if ("countranksmr".equalsIgnoreCase(action)) {
 				redirectToPipelineStatus(req, resp, startRankCountJob(5, 2, "ios", "us", feedType));
 
 				success = true;
-			} else if ("createcsvofpaidranks".toUpperCase().equals(action.toUpperCase())) {
+			} else if ("createcsvofpaidranks".equalsIgnoreCase(action)) {
 				redirectToPipelineStatus(req, resp,
 						startCreateCsvBlobRank(5, 1, CollectorIOS.TOP_PAID_APPS, CollectorIOS.TOP_GROSSING_APPS, "ios", "us", feedType));
 
 				success = true;
-			} else if ("createcsvoffreeranks".toUpperCase().equals(action.toUpperCase())) {
+			} else if ("createcsvoffreeranks".equalsIgnoreCase(action)) {
 				redirectToPipelineStatus(req, resp,
 						startCreateCsvBlobRank(5, 1, CollectorIOS.TOP_FREE_APPS, CollectorIOS.TOP_GROSSING_APPS, "ios", "us", feedType));
 
 				success = true;
-			} else if ("addcountries".toUpperCase().equals(action.toUpperCase())) {
+			} else if ("addcountries".equalsIgnoreCase(action)) {
 				CountriesInstaller.install();
 				success = true;
-			} else if ("addstores".toUpperCase().equals(action.toUpperCase())) {
+			} else if ("addstores".equalsIgnoreCase(action)) {
 				StoresInstaller.install();
 				success = true;
-			} else if ("getadditionalproperties".toUpperCase().equals(action.toUpperCase())) {
+			} else if ("getadditionalproperties".equalsIgnoreCase(action)) {
 
-				if (itemId != null && itemId.length() != 0) {
-					Item item = ofy().load().type(Item.class).filter("externalId", itemId).filter("source", "ios").first().now();
+				Store store = StoreServiceProvider.provide().getA3CodeStore("ios");
+				List<String> itemIds = ApplicationServiceProvider.provide().getStoreIapNaApplicationIds(store);
+
+				for (String id : itemIds) {
 					Queue itemPropertyLookupQueue = QueueFactory.getQueue("itempropertylookup");
-					itemPropertyLookupQueue.add(TaskOptions.Builder.withUrl(String.format("/itempropertylookup?item=%d", item.id.longValue())).method(
-							Method.GET));
-
-					success = true;
-				} else if (start != null && count != null) {
-					List<Item> items = ofy().load().type(Item.class).filter("source", "ios").offset(Integer.parseInt(start)).limit(Integer.parseInt(count))
-							.list();
-
-					for (Item item : items) {
-						Queue itemPropertyLookupQueue = QueueFactory.getQueue("itempropertylookup");
-						itemPropertyLookupQueue.add(TaskOptions.Builder.withUrl(String.format("/itempropertylookup?item=%d", item.id.longValue())).method(
-								Method.GET));
-					}
-
-					success = true;
-				} else {
-					success = false;
+					itemPropertyLookupQueue.add(TaskOptions.Builder.withUrl(String.format("/itempropertylookup?item=%s", id)).method(Method.GET));
 				}
+
+				success = true;
+
 			} else {
+
 				if (LOG.isLoggable(Level.INFO)) {
 					LOG.info(String.format("Action [%s] not supported", action));
 				}

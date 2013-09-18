@@ -183,7 +183,7 @@ final class ItemService implements IItemService {
 	public Item getInternalIdItem(String internalId) {
 		Item item = null;
 
-		final String getInternalIdItemQuery = String.format("SELECT * FROM `item` WHERE `internalid` = '%s' and `deleted`='n'", addslashes(internalId));
+		final String getInternalIdItemQuery = String.format("SELECT * FROM `item` WHERE `internalid`='%s' and `deleted`='n'", addslashes(internalId));
 
 		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
 

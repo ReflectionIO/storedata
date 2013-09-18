@@ -8,10 +8,12 @@
 //
 package io.reflection.app.service.application;
 
+import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.api.lookup.datatypes.LookupDetailType;
 import io.reflection.app.api.lookup.helpers.LookupDetailTypeHelper;
 import io.reflection.app.datatypes.Application;
+import io.reflection.app.datatypes.Store;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
@@ -248,7 +250,7 @@ final class ApplicationService implements IApplicationService {
 	@Override
 	public void setApplicationIap(Application application, Boolean usesIap) {
 
-		String setApplicationConnectionQuery = String.format("%s INTO `sup_application_iap` SET `internalid`='%d', `usesiap`='%s'",
+		String setApplicationConnectionQuery = String.format("%s INTO `sup_application_iap` SET `internalid`='%d', `usesiap`='%s', `lastupdated`=NOW()",
 				application.usesIap == null ? "INSERT" : "REPLACE", application.id.longValue(), usesIap.booleanValue() ? 'y' : 'n');
 
 		Connection applicationConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeApplication.toString());
@@ -268,5 +270,40 @@ final class ApplicationService implements IApplicationService {
 			}
 		}
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.application.IApplicationService#getStoreIapNaApplicationIds(java.lang.String)
+	 */
+	@Override
+	public List<String> getStoreIapNaApplicationIds(Store store) {
+		List<String> ids = new ArrayList<String>();
+
+		String getStoreIapNaApplicationIdsQuery = String
+				.format("SELECT `item`.`internalid` as `id` FROM `item` LEFT OUTER JOIN `sup_application_iap` ON `item`.`internalid`=`sup_application_iap`.`usesiap` WHERE `item`.`source`='%s' AND (`sup_application_iap`.`lastupdated` < DATE_SUB(NOW(), INTERVAL 30 DAY) OR `sup_application_iap`.`internalid` IS NULL)",
+						addslashes(store.a3Code));
+
+		Connection applicationConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeApplication.toString());
+
+		try {
+			applicationConnection.connect();
+			applicationConnection.executeQuery(getStoreIapNaApplicationIdsQuery);
+
+			while (applicationConnection.fetchNextRow()) {
+				String id = applicationConnection.getCurrentRowString("id");
+
+				if (id != null) {
+					ids.add(id);
+				}
+			}
+		} finally {
+			if (applicationConnection != null) {
+				applicationConnection.disconnect();
+			}
+		}
+
+		return ids;
 	}
 }
