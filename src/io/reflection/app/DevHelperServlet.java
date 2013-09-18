@@ -81,7 +81,7 @@ public class DevHelperServlet extends HttpServlet {
 			Queue deferredQueue = QueueFactory.getQueue("deferred");
 
 			if (req.getParameter("cron") == null) {
-				deferredQueue.add(TaskOptions.Builder.withUrl("/devhelper?" + req.getQueryString()).method(Method.GET));
+				deferredQueue.add(TaskOptions.Builder.withUrl("/dev/devhelper?" + req.getQueryString()).method(Method.GET));
 			} else {
 				if (LOG.isLoggable(GaeLevel.DEBUG)) {
 					LOG.log(GaeLevel.DEBUG, "Adding gather request to deferred queue");
