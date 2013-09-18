@@ -12,6 +12,7 @@ import java.util.List;
 
 import io.reflection.app.api.lookup.datatypes.LookupDetailType;
 import io.reflection.app.datatypes.Application;
+import io.reflection.app.datatypes.Store;
 
 import com.spacehopperstudios.service.IService;
 
@@ -59,5 +60,10 @@ public interface IApplicationService extends IService {
 	 * @param usesIap
 	 */
 	public void setApplicationIap(Application application, Boolean usesIap);
+
+	/**
+	 * @return
+	 */
+	public List<String> getStoreIapNaApplicationIds(Store store);
 
 }
