@@ -282,7 +282,7 @@ final class ApplicationService implements IApplicationService {
 		List<String> ids = new ArrayList<String>();
 
 		String getStoreIapNaApplicationIdsQuery = String
-				.format("SELECT `item`.`internalid` as `id` FROM `item` LEFT OUTER JOIN `sup_application_iap` ON `item`.`internalid`=`sup_application_iap`.`usesiap` WHERE `item`.`source`='%s' AND (`sup_application_iap`.`lastupdated` < DATE_SUB(NOW(), INTERVAL 30 DAY) OR `sup_application_iap`.`internalid` IS NULL)",
+				.format("SELECT `item`.`internalid` as `id` FROM `item` LEFT OUTER JOIN `sup_application_iap` ON `item`.`internalid`=`sup_application_iap`.`internalid` WHERE `item`.`source`='%s' AND (`sup_application_iap`.`lastupdated` < DATE_SUB(NOW(), INTERVAL 30 DAY) OR `sup_application_iap`.`internalid` IS NULL)",
 						addslashes(store.a3Code));
 
 		Connection applicationConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeApplication.toString());
