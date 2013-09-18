@@ -9,6 +9,7 @@ package io.reflection.app.apple;
 
 import static com.willshex.gson.json.shared.Convert.fromJsonObject;
 import static com.willshex.gson.json.shared.Convert.toJsonObject;
+import io.reflection.app.api.lookup.datatypes.LookupDetailType;
 import io.reflection.app.collectors.HttpExternalGetter;
 import io.reflection.app.datatypes.Application;
 import io.reflection.app.datatypes.Item;
@@ -18,7 +19,9 @@ import io.reflection.app.service.item.IItemService;
 import io.reflection.app.service.item.ItemServiceProvider;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -154,9 +157,11 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 
 					itemService.updateItem(item);
 
-					Application application = new Application();
-					application.id = Long.valueOf(itemId);
-					ApplicationServiceProvider.provide().setApplicationIap(application, usesIap);
+					List<Application> applications = ApplicationServiceProvider.provide().lookupInternalIdsApplication(Arrays.asList(itemId), LookupDetailType.LookupDetailTypeShort);
+					
+					if (applications != null && applications.size() > 0) {
+						ApplicationServiceProvider.provide().setApplicationIap(applications.get(0), usesIap);
+					}
 				} else {
 					if (LOG.isLoggable(Level.WARNING)) {
 						LOG.log(Level.WARNING, String.format("Could not get additional data from [%s] for [%s]", itemUrl, itemId));
