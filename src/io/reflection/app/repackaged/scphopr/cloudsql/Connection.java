@@ -17,10 +17,11 @@ import java.util.Date;
 import java.util.logging.Logger;
 
 import com.google.appengine.api.rdbms.AppEngineDriver;
+import com.google.appengine.api.utils.SystemProperty;
 
 public final class Connection {
 
-	private static final String CONNECTION_LOCAL_KEY = "connection.local";
+	private static final String CONNECTION_NATIVE_KEY = "connection.native";
 
 	private String server;
 	private String database;
@@ -32,7 +33,7 @@ public final class Connection {
 	private long affectedRowCount;
 	private long insertedId;
 	private boolean isTransactionMode;
-	private boolean isLocal = false;
+	private boolean isNative = false;
 
 	private static final Logger LOG = Logger.getLogger(Connection.class.getName());
 
@@ -41,10 +42,10 @@ public final class Connection {
 	}
 
 	public Connection(String server, String database, String username, String password, boolean transactionMode) {
-		String local = System.getProperty(CONNECTION_LOCAL_KEY);
+		String nativePropertyValue = System.getProperty(CONNECTION_NATIVE_KEY);
 
-		if (local != null) {
-			isLocal = Boolean.parseBoolean(local);
+		if (nativePropertyValue != null) {
+			isNative = Boolean.parseBoolean(nativePropertyValue);
 		}
 
 		if (LOG.isLoggable(GaeLevel.DEBUG)) {
@@ -67,7 +68,7 @@ public final class Connection {
 		this.username = username;
 		this.password = password;
 
-		if (isLocal) {
+		if (isNative) {
 			String databaseDriver = getDatabaseDriverName();
 
 			try {
@@ -89,18 +90,26 @@ public final class Connection {
 	}
 
 	private String getDatabaseDriverName() {
-		return "com.mysql.jdbc.Driver";
+		if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Production) {
+			return "com.mysql.jdbc.GoogleDriver";
+		} else {
+			return "com.mysql.jdbc.Driver";
+		}
 	}
 
 	public void connect() {
 		String url = null;
 
-		if (isLocal) {
-			url = "jdbc:mysql://" + server + "/" + database;
+		if (isNative) {
+			if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Production) {
+				url = "jdbc:google:mysql://" + server + "/" + database;
+			} else {
+				url = "jdbc:mysql://" + server + "/" + database;
+			}
 		} else {
 			url = "jdbc:google:rdbms://" + server + "/" + database;
 		}
-		
+
 		try {
 			if (connection == null) {
 				connection = DriverManager.getConnection(url, username, password);
