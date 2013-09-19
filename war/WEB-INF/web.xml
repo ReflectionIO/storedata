@@ -35,6 +35,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	</servlet>
 	
 	<servlet>
+	    <servlet-name>Lookup api</servlet-name>
+	    <servlet-class>io.reflection.app.api.lookup.LookupJsonServlet</servlet-class>
+	</servlet>
+	
+	<servlet>
 	    <servlet-name>Item Property Lookup</servlet-name>
 	    <servlet-class>io.reflection.app.apple.ItemPropertyLookupServlet</servlet-class>
 	</servlet>
@@ -63,6 +68,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	<servlet-mapping>
 	    <servlet-name>Core api</servlet-name>
 	    <url-pattern>/core</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+	    <servlet-name>Lookup api</servlet-name>
+	    <url-pattern>/lookup</url-pattern>
 	</servlet-mapping>
 	
 	<servlet-mapping>

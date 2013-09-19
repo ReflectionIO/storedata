@@ -45,7 +45,7 @@ public final class Lookup extends ActionHandler {
 
 			output.applications = new ArrayList<Application>();
 
-			if (isExternalIdsLookup) {
+			if (isInternalIdsLookup) {
 				List<Application> lookup = ApplicationServiceProvider.provide().lookupInternalIdsApplication(input.internalIds, input.detail);
 
 				if (lookup != null) {

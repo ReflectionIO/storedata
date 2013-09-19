@@ -133,7 +133,7 @@ final class ApplicationService implements IApplicationService {
 			String items = "'" + StringUtils.join(internalIds, "','") + "'";
 
 			String lookupInternalIdsApplicationQuery = String
-					.format("SELECT %s FROM `epf_application` JOIN `sup_application_iap` ON `application_id`=`sup_application_iap`.`internalid` WHERE `application_id` IN (%s)",
+					.format("SELECT %s FROM `epf_application` LEFT JOIN `sup_application_iap` ON `application_id`=`sup_application_iap`.`internalid` WHERE `application_id` IN (%s)",
 							columnsForLookupDetailType(detail), items);
 
 			Connection applicationConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeApplication.toString());
@@ -216,7 +216,7 @@ final class ApplicationService implements IApplicationService {
 			// LATER: this might not be the most efficient thing in the world - consider resolving the externalids to internal ids then doing the query with a
 			// single join
 			String lookupInternalIdsApplicationQuery = String
-					.format("SELECT %s FROM `epf_application` JOIN `item` ON `application_id`=`item`.`internalid` JOIN `sup_application_iap` ON `application_id`=`sup_application_iap`.`internalid` WHERE `item`.`internalid` IN (%s)",
+					.format("SELECT %s FROM `epf_application` JOIN `item` ON `application_id`=`item`.`internalid` LEFT JOIN `sup_application_iap` ON `application_id`=`sup_application_iap`.`internalid` WHERE `item`.`externalid` IN (%s)",
 							columnsForLookupDetailType(detail), items);
 
 			Connection applicationConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeApplication.toString());
