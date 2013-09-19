@@ -10,13 +10,14 @@ package io.reflection.app.apple;
 import static com.willshex.gson.json.shared.Convert.fromJsonObject;
 import static com.willshex.gson.json.shared.Convert.toJsonObject;
 import io.reflection.app.api.lookup.datatypes.LookupDetailType;
-import io.reflection.app.collectors.HttpExternalGetter;
+//import io.reflection.app.collectors.HttpExternalGetter;
 import io.reflection.app.datatypes.Application;
 import io.reflection.app.datatypes.Item;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.application.ApplicationServiceProvider;
-import io.reflection.app.service.item.IItemService;
+//import io.reflection.app.service.item.IItemService;
 import io.reflection.app.service.item.ItemServiceProvider;
+import io.reflection.app.service.rank.RankServiceProvider;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -36,7 +37,7 @@ import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
-import com.google.appengine.api.urlfetch.HTTPMethod;
+//import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.google.appengine.api.utils.SystemProperty;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -107,8 +108,7 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 			memCache.put(key, now);
 		}
 
-		IItemService itemService = ItemServiceProvider.provide();
-		Item item = itemService.getInternalIdItem(itemId);
+		Item item = ItemServiceProvider.provide().getInternalIdItem(itemId);
 
 		if (item != null) {
 			boolean doCurl = false;
@@ -143,35 +143,54 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 				}
 			}
 
-			if (doCurl) {
-				String itemUrl = "https://itunes.apple.com/app/id" + itemId;
-				String data = HttpExternalGetter.getData(itemUrl, HTTPMethod.GET);
-				Boolean usesIap = null;
-
-				if (data != null) {
-					usesIap = data.contains("class=\"extra-list in-app-purchases") ? Boolean.TRUE : Boolean.FALSE;
-
-					properties.add(PROPERTY_IAP, new JsonPrimitive(usesIap));
-					properties.add(PROPERTY_IAP_ON, new JsonPrimitive(Long.valueOf(new Date().getTime())));
-					item.properties = fromJsonObject(properties);
-
-					itemService.updateItem(item);
-
-					List<Application> applications = ApplicationServiceProvider.provide().lookupInternalIdsApplication(Arrays.asList(itemId), LookupDetailType.LookupDetailTypeShort);
+			Boolean usesIap = null;
+			if (doCurl && item.price == 0) {
+				if ((usesIap = RankServiceProvider.provide().getItemHasGrossingRank(item)).booleanValue()) {
+					doCurl = false;
 					
-					if (applications != null && applications.size() > 0) {
-						ApplicationServiceProvider.provide().setApplicationIap(applications.get(0), usesIap);
-					}
-				} else {
-					if (LOG.isLoggable(Level.WARNING)) {
-						LOG.log(Level.WARNING, String.format("Could not get additional data from [%s] for [%s]", itemUrl, itemId));
-					}
+					setIap(item, properties, usesIap);
 				}
 			}
+
+//			if (doCurl) {
+//				String itemUrl = "https://itunes.apple.com/app/id" + itemId;
+//				String data = HttpExternalGetter.getData(itemUrl, HTTPMethod.GET);
+//
+//				if (data != null) {
+//					usesIap = data.contains("class=\"extra-list in-app-purchases") ? Boolean.TRUE : Boolean.FALSE;
+//
+//					setIap(item, properties, usesIap);
+//				} else {
+//					if (LOG.isLoggable(Level.WARNING)) {
+//						LOG.log(Level.WARNING, String.format("Could not get additional data from [%s] for [%s]", itemUrl, itemId));
+//					}
+//				}
+//			}
 		} else {
 			if (LOG.isLoggable(Level.WARNING)) {
 				LOG.log(Level.WARNING, String.format("Could not get find item for [%s]", itemId));
 			}
+		}
+
+	}
+
+	/**
+	 * @param item
+	 * @param usesIap
+	 */
+	private void setIap(Item item, JsonObject properties, Boolean usesIap) {
+		properties.add(PROPERTY_IAP, new JsonPrimitive(usesIap));
+		properties.add(PROPERTY_IAP_ON, new JsonPrimitive(Long.valueOf(new Date().getTime())));
+
+		item.properties = fromJsonObject(properties);
+
+		ItemServiceProvider.provide().updateItem(item);
+
+		List<Application> applications = ApplicationServiceProvider.provide().lookupInternalIdsApplication(Arrays.asList(item.internalId),
+				LookupDetailType.LookupDetailTypeShort);
+
+		if (applications != null && applications.size() > 0) {
+			ApplicationServiceProvider.provide().setApplicationIap(applications.get(0), usesIap);
 		}
 
 	}

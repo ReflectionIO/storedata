@@ -81,4 +81,10 @@ public interface IRankService extends IService {
 	 */
 	public Long getRanksCount(Country country, Store store, String listType, Date before, Date after);
 
+	/**
+	 * @param item
+	 * @return
+	 */
+	public Boolean getItemHasGrossingRank(Item item);
+
 }

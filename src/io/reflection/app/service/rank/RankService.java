@@ -294,8 +294,8 @@ final class RankService implements IRankService {
 		Long ranksCount = Long.valueOf(0);
 
 		String getRanksCountQuery = String.format(
-				"SELECT COUNT(1) AS `count` FROM `rank` WHERE `type`='%s' AND `country`='%s' AND `source`='%s' AND %s `deleted`='n'",
-				addslashes(listType), addslashes(country.a2Code), addslashes(store.a3Code), beforeAfterQuery(before, after));
+				"SELECT COUNT(1) AS `count` FROM `rank` WHERE `type`='%s' AND `country`='%s' AND `source`='%s' AND %s `deleted`='n'", addslashes(listType),
+				addslashes(country.a2Code), addslashes(store.a3Code), beforeAfterQuery(before, after));
 
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
@@ -313,5 +313,35 @@ final class RankService implements IRankService {
 		}
 
 		return ranksCount;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.rank.IRankService#getItemHasGrossingRank(io.reflection.app.datatypes.Item)
+	 */
+	@Override
+	public Boolean getItemHasGrossingRank(Item item) {
+		Boolean hasGrossingRank = Boolean.FALSE;
+
+		String getItemHasGrossingRankQuery = String.format("SELECT `id` FROM `rank` WHERE `itemid`='%s' AND `grossingposition`<>0 LIMIT 1",
+				addslashes(item.externalId));
+
+		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+
+		try {
+			rankConnection.connect();
+			rankConnection.executeQuery(getItemHasGrossingRankQuery);
+
+			if (rankConnection.fetchNextRow()) {
+				hasGrossingRank = Boolean.TRUE;
+			}
+		} finally {
+			if (rankConnection != null) {
+				rankConnection.disconnect();
+			}
+		}
+
+		return hasGrossingRank;
 	}
 }
