@@ -5,6 +5,10 @@ var country = "us";
 var overviewType = "all";
 var maxRows = 30;
 
+var idLookup = { 
+
+};
+
 $(document).ready(function(){
 
 	$('#leaderboard-all').show();
@@ -124,6 +128,7 @@ $(document).ready(function(){
    //var date = new Date().getTime();
 
    var requestString = "{'accessCode':'b72b4e32-1062-4cc7-bc6b-52498ee10f09','country':{'a2Code':"+country+"},'listType':"+listType+",'on':"+date+",'store':{'a3Code':'ios'},'pager':{'count':"+maxRows+"}}";
+   
    //alert(requestString);
    $.ajax({
             type: "POST",
@@ -134,15 +139,29 @@ $(document).ready(function(){
             success: function(data) {
 
             	if (data.ranks != null) {
-            		//alert(data.ranks.length);
+            		
+            		var idLookupString = "";
 
-            		$.each(data.ranks, function(index, item){           
-            			item.date = new Date(item.date);
-            			item.position++;
-            			//console.log(item.itemId);
+            		var len = data.items.length;
+
+            		var currentLookup = new Object();
+            		
+            		$.each(data.items, function(index, item){      
+            			// create the lookup table for ids
+            			currentLookup[item.externalId] = item.internalId;     
+            			
+            			idLookupString += "%22" + item.externalId + "%22";
+
+            			if (index < len - 1) {
+            				idLookupString += ",";
+            			};
             		});
 
-            		updateTable(data.ranks, listType, listID);
+            		// update the lookup table for the current list type (e.g. paid, free, grossing)
+            		idLookup[listID] = currentLookup;
+
+            		//updateTable(data.ranks, listType, listID);
+            		lookupApplications(idLookupString, data.ranks, listType, listID);
             	} else {
             		// only display the error message once (this function is called 3 times)
             		if (listType == "toppaidapplications") {
@@ -168,11 +187,13 @@ function getTopItemsSingle(listType, listID) {
             	if (data.ranks != null) {
             		//alert(data.ranks.length);
 
+            		/*
             		$.each(data.ranks, function(index, item){           
             			item.date = new Date(item.date);
-            			item.position++;
+            			//item.position++;
             			//console.log(item.itemId);
             		});
+					*/
 
             		updateTableSingle(data.ranks, listType, listID);
             	} else {
@@ -180,6 +201,24 @@ function getTopItemsSingle(listType, listID) {
             		alert("No data found for this date - try 5th or 10th of September");
             		
             	}
+            }
+    });
+  }
+
+  function lookupApplications(lookupList, chartdata, listType, listID) {
+
+  	var requestString = "{'accessCode':'b72b4e32-1062-4cc7-bc6b-52498ee10f09','externalIds':["+lookupList+"],'detail':'short'}";
+  	//var requestString = '{"accessCode":"b72b4e32-1062-4cc7-bc6b-52498ee10f09","externalIds":["com.rovio.AngryBirdsHalloween"],"detail":"short"}';
+
+   $.ajax({
+            type: "POST",
+            url: "../lookup",
+            data: { action: "LookupApplication", request: requestString },
+            //contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(data) {
+
+            	updateTable(chartdata, listType, listID, data.applications);
             }
     });
   }
@@ -263,8 +302,10 @@ function createTable() {
       };
   }
 
-  function updateTable(chartdata, listType, listID) {
-      
+  function updateTable(chartdata, listType, listID, appdata) {
+
+  		var lenAppData = appdata.length;
+
       for (var i = 0; i < maxRows; i++) {
       	/*<td><img class="game-icon" src="../assets/img/icon_placeholder.png">
               <div>
@@ -275,12 +316,28 @@ function createTable() {
         //$('td#'+listID+i).replaceWith('<td id="'+listID+i+'"><a href="rankings.html?itemId='+chartdata[i].itemId+'&type='+listID+'&country='+country+'">'+chartdata[i].itemId+'</a></td>');
       	//$('td#'+listID+i).html('Whatever <b>HTML</b> you want here.');
 
+      	// grab the internal id for this product to get it's full name from the appdata object
+      	var currentLookup = idLookup[listID];
+      	var internalId = currentLookup[chartdata[i].itemId];
+      	var appInfo = null;
+
+      	for (var j = 0; j < lenAppData; j++) {
+      		if (internalId == appdata[j].id) {
+      			appInfo = appdata[j];
+      			break;
+      		}
+      			
+      	}
+      	
+
       	// replace the icon
       	// e.g. $('td #toppaidapplications .game-icon')
-      	$('td#'+listID+i+' .game-icon').html('<img src="../assets/img/icon_placeholder.png">');
+      	//$('td#'+listID+i+' .game-icon').attr("src".,"./assets/img/icon_placeholder.png");
 
       	// replace the app name
       	//$('td#'+listID+i+' .game-name').html('Terraria<br>');
+
+      	// use the external id to generate the name and publisher of the app (temporary fix for missing entries in our appdata object)
       	var itemNameArray = chartdata[i].itemId.split(".");
       	var itemName = itemNameArray[itemNameArray.length-1]; // assume the app name is the last element
       	var itemPublisher = itemNameArray[0]; // assume the publihser name is the first element although will probably be 2nd
@@ -289,10 +346,31 @@ function createTable() {
       		itemPublisher = itemNameArray[1];
       	};
 
-      	$('td#'+listID+i+' .game-name').html('<a href="rankings.html?itemId='+chartdata[i].itemId+'&type='+listType+'&country='+country+'">'+itemName+'</a><br>');
-      	
+      	// we current don't always get the appdata in the LookupApplication call so check that we have
+      	if (appInfo != null) {
+      		itemName = appInfo.title;
+      		itemPublisher = appInfo.artistName;
+      		// replace the icon
+       		$('td#'+listID+i+' .game-icon').attr("src", appInfo.artworkUrlSmall );
+      	}
+
+      	var maxStringLength = 20;
+
+      	// shorten the app name if necessary
+      	if(itemName.length > maxStringLength) {
+    		itemName = itemName.substring(0,maxStringLength)+"...";
+		}
+
+		// shorten the publisher name if necessary
+      	if(itemPublisher.length > maxStringLength) {
+    		itemPublisher = itemPublisher.substring(0,maxStringLength)+"...";
+		}
 
       	// replace the app name
+      	$('td#'+listID+i+' .game-name').html('<a href="graph.html?itemId='+chartdata[i].itemId+'&type='+listType+'&country='+country+'">'+itemName+'</a><br>');
+      	
+
+      	// replace the publisher name
       	$('td#'+listID+i+' .game-publisher').html(itemPublisher);
 
 
@@ -320,7 +398,7 @@ function createTable() {
       		itemPublisher = itemNameArray[1];
       	};
 
-      	$('td#info'+i+' .game-name2').html('<a href="rankings.html?itemId='+chartdata[i].itemId+'&type='+listType+'&country='+country+'">'+itemName+'</a><br>');
+      	$('td#info'+i+' .game-name2').html('<a href="graph.html?itemId='+chartdata[i].itemId+'&type='+listType+'&country='+country+'">'+itemName+'</a><br>');
       	
 
       	// replace the app name

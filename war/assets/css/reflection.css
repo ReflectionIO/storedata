@@ -24,6 +24,7 @@ body {
 
 .game-name, .game-publisher, .game-name2, .game-publisher2 {
   padding-left:15px;
+  font-size: small;
 }
 
 .rank-col {

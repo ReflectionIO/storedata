@@ -96,10 +96,10 @@ $.getJSON("GetItemsRank.json", function(data){
                 // to do a gather run this: http://127.0.0.1:8888/dev/devhelper?action=gather&store=ios&cron=yes
                 // to check on it go here: http://127.0.0.1:8888/_ah/admin and click on "Task Queues"
                 var externalId = $.url().param("itemId"); //"com.gameloft.despicableme2";
-                var type = $.url().param("type");
+                var listType = $.url().param("type");
                 var country = $.url().param("country");
 
-                var requestString = "{'accessCode':'b72b4e32-1062-4cc7-bc6b-52498ee10f09','item':{'source':'ios','externalId':"+externalId+"},'type':'"+type+"','country':{'a2Code':'"+country+"'}}";
+                var requestString = "{'accessCode':'b72b4e32-1062-4cc7-bc6b-52498ee10f09','item':{'source':'ios','externalId':"+externalId+"},'listType':'"+listType+"','country':{'a2Code':'"+country+"'}}";
 
                 $.ajax({
                         type: "POST",
