@@ -74,6 +74,19 @@ CREATE TABLE `sup_application_iap` (
   PRIMARY KEY (`internalid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
 
+CREATE TABLE `feedfetch` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `country` char(2) DEFAULT NULL,
+  `data` text,
+  `date` datetime NOT NULL,
+  `store` char(3) DEFAULT NULL,
+  `type` varchar(1000) DEFAULT NULL,
+  `code` varchar(100) DEFAULT NULL,
+  `deleted` enum('y','n') DEFAULT 'n',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
 INSERT INTO `rio`.`country`(
 `name`,
 `a2code`,

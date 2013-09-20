@@ -198,9 +198,9 @@ final class RankService implements IRankService {
 		}
 
 		String getCountryStoreTypeRanksQuery = String.format(
-				"SELECT * FROM `rank` WHERE `type`='%s' AND `country`='%s' AND `source`='%s' AND %s `deleted`='n' ORDER BY `%s` %s LIMIT %d,%d",
+				"SELECT * FROM `rank` WHERE `type`='%s' AND `country`='%s' AND `source`='%s' AND %s `deleted`='n' ORDER BY `%s` %s,`date` ASC LIMIT %d,%d",
 				addslashes(listType), addslashes(country.a2Code), addslashes(store.a3Code), beforeAfterQuery(before, after), pager.sortBy,
-				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "asc" : "desc", pager.start, pager.count);
+				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
 
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
@@ -235,9 +235,9 @@ final class RankService implements IRankService {
 		List<Rank> ranks = new ArrayList<Rank>();
 
 		String getCountryStoreTypeRanksQuery = String.format(
-				"SELECT * FROM `rank` WHERE `type`='%s' AND `country`='%s' AND `itemid`='%s' AND %s `deleted`='n' ORDER BY `%s` %s LIMIT %d,%d",
+				"SELECT * FROM `rank` WHERE `type`='%s' AND `country`='%s' AND `itemid`='%s' AND %s `deleted`='n' ORDER BY `%s` %s,`date` ASC LIMIT %d,%d",
 				addslashes(listType), addslashes(country.a2Code), addslashes(item.externalId), beforeAfterQuery(before, after), pager.sortBy,
-				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "asc" : "desc", pager.start, pager.count);
+				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
 
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 

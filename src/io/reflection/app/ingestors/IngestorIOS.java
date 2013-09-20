@@ -35,7 +35,6 @@ import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.google.appengine.api.taskqueue.TransientFailureException;
-import com.googlecode.objectify.VoidWork;
 
 /**
  * @author billy1380
@@ -78,17 +77,17 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			boolean first = true;
 
 			for (Integer keyInteger : group.keySet()) {
-				FeedFetch entity = group.get(keyInteger);
-				if (entity.totalParts == 1 && (entity.data.startsWith("/blobstore/writable:") || entity.data.startsWith("/gs/"))) {
+				FeedFetch feedFetch = group.get(keyInteger);
+				if (feedFetch.totalParts == 1 && (feedFetch.data.startsWith("/blobstore/writable:") || feedFetch.data.startsWith("/gs/"))) {
 					continue;
 				}
 
 				if (first) {
-					store(combined.get(date), entity.country, entity.store, entity.type, entity.date, entity.code, true);
+					store(combined.get(date), feedFetch.country, feedFetch.store, feedFetch.type, feedFetch.date, feedFetch.code, true);
 					first = false;
 				}
 
-				ofy().delete().entity(entity).now();
+				ofy().delete().entity(feedFetch).now();
 			}
 		}
 	}
@@ -128,29 +127,29 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 				LOG.log(GaeLevel.DEBUG, "Marking items as ingested");
 			}
 
-			ofy().transact(new VoidWork() {
-
-				@Override
-				public void vrun() {
-					int i = 0;
-					for (Integer entityKey : grouped.get(key).keySet()) {
-						FeedFetch feed = grouped.get(key).get(entityKey);
-
-						// entity.ingested = Boolean.TRUE;
-						ofy().save().entity(feed).now();
-						i++;
-
-						if (LOG.isLoggable(GaeLevel.TRACE)) {
-							LOG.log(GaeLevel.TRACE, String.format("Marked entity [%d]", feed.id.longValue()));
-						}
-					}
-
-					if (LOG.isLoggable(GaeLevel.DEBUG)) {
-						LOG.log(GaeLevel.DEBUG, String.format("Marked [%d] items", i));
-					}
-				}
-
-			});
+//			ofy().transact(new VoidWork() {
+//
+//				@Override
+//				public void vrun() {
+//					int i = 0;
+//					for (Integer entityKey : grouped.get(key).keySet()) {
+//						FeedFetch feed = grouped.get(key).get(entityKey);
+//
+//						// entity.ingested = Boolean.TRUE;
+//						ofy().save().entity(feed).now();
+//						i++;
+//
+//						if (LOG.isLoggable(GaeLevel.TRACE)) {
+//							LOG.log(GaeLevel.TRACE, String.format("Marked entity [%d]", feed.id.longValue()));
+//						}
+//					}
+//
+//					if (LOG.isLoggable(GaeLevel.DEBUG)) {
+//						LOG.log(GaeLevel.DEBUG, String.format("Marked [%d] items", i));
+//					}
+//				}
+//
+//			});
 
 		}
 	}

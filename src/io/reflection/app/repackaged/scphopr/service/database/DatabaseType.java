@@ -18,7 +18,8 @@ public enum DatabaseType {
 	DatabaseTypeCountry("country"),
 	DatabaseTypeStore("store"),
 	DatabaseTypeUser("user"),
-	DatabaseTypeApplication("application");
+	DatabaseTypeApplication("application"),
+	DatabaseTypeFeedFetch("fetchfeed");
 	private String value;
 	private static Map<String, DatabaseType> valueLookup = null;
 

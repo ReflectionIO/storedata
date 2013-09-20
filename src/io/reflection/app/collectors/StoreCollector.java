@@ -1,8 +1,8 @@
 package io.reflection.app.collectors;
 
-import static io.reflection.app.objectify.PersistenceService.ofy;
 import io.reflection.app.datatypes.FeedFetch;
 import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.service.fetchfeed.FeedFetchServiceProvider;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -18,24 +18,23 @@ import com.google.appengine.tools.cloudstorage.GcsFilename;
 import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
 import com.google.appengine.tools.cloudstorage.GcsService;
 import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
-import com.googlecode.objectify.Key;
 
 public abstract class StoreCollector {
 
-	public static final int MAX_DATA_CHUNK_LENGTH = 500000;
+	// public static final int MAX_DATA_CHUNK_LENGTH = 500000;
 	public static final String GATHER_BUCKET_KEY = "gather.bucket";
 
 	private static final Logger LOG = Logger.getLogger(StoreCollector.class.getName());
 
-	private List<String> splitEqually(String text, int size) {
-		List<String> ret = new ArrayList<String>((text.length() + size - 1) / size);
-
-		for (int start = 0; start < text.length(); start += size) {
-			ret.add(text.substring(start, Math.min(text.length(), start + size)));
-		}
-
-		return ret;
-	}
+	// private List<String> splitEqually(String text, int size) {
+	// List<String> ret = new ArrayList<String>((text.length() + size - 1) / size);
+	//
+	// for (int start = 0; start < text.length(); start += size) {
+	// ret.add(text.substring(start, Math.min(text.length(), start + size)));
+	// }
+	//
+	// return ret;
+	// }
 
 	protected List<Long> store(String data, String countryCode, String store, String type, Date date, String code) {
 		return store(data, countryCode, store, type, date, code, false);
@@ -98,41 +97,25 @@ public abstract class StoreCollector {
 			feed.store = store;
 			feed.type = type;
 			feed.date = date;
-			feed.part = Integer.valueOf(1);
-			feed.totalParts = Integer.valueOf(1);
-//			entity.ingested = Boolean.valueOf(ingested);
+
+			// entity.ingested = Boolean.valueOf(ingested);
 			feed.code = code;
 
-			Key<FeedFetch> key = ofy().save().entity(feed).now();
-			ids.add(Long.valueOf(key.getId()));
+			feed = FeedFetchServiceProvider.provide().addFeedFetch(feed);
+			ids.add(feed.id);
 
 		} else {
-			List<String> splitData = splitEqually(data, MAX_DATA_CHUNK_LENGTH);
+			FeedFetch feed = new FeedFetch();
 
-			if (LOG.isLoggable(GaeLevel.DEBUG)) {
-				LOG.log(GaeLevel.DEBUG, String.format("Data split into [%d] chuncks", splitData.size()));
-			}
+			feed.data = data;
+			feed.country = countryCode;
+			feed.store = store;
+			feed.type = type;
+			feed.date = date;
+			feed.code = code;
 
-			Key<FeedFetch> key;
-			for (int i = 0; i < splitData.size(); i++) {
-				FeedFetch feed = new FeedFetch();
-
-				if (LOG.isLoggable(GaeLevel.DEBUG)) {
-					LOG.log(GaeLevel.DEBUG, String.format("Data chunck [%d of %d] is [%d] characters", i, splitData.size(), splitData.get(i).length()));
-				}
-
-				feed.data = splitData.get(i);
-				feed.country = countryCode;
-				feed.store = store;
-				feed.type = type;
-				feed.date = date;
-				feed.part = Integer.valueOf(i + 1);
-				feed.totalParts = Integer.valueOf(splitData.size());
-				feed.code = code;
-
-				key = ofy().save().entity(feed).now();
-				ids.add(Long.valueOf(key.getId()));
-			}
+			feed = FeedFetchServiceProvider.provide().addFeedFetch(feed);
+			ids.add(feed.id);
 		}
 
 		if (LOG.isLoggable(Level.INFO)) {
