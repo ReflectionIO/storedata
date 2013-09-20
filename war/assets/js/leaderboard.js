@@ -4,6 +4,7 @@ var date = new Date().getTime();
 var country = "us";
 var overviewType = "all";
 var maxRows = 30;
+var pageStartAll = 0;
 
 var idLookup = { 
 
@@ -14,10 +15,14 @@ $(document).ready(function(){
 	$('#leaderboard-all').show();
 	$('#leaderboard-single').hide();
 
-	createTable();
-	createTableSingle();
+	createTableRows();
+	createTableRowsSingle();
 
 	getTopItemsAll();
+
+	// show the load more button "loading..."
+	var btn = $( "#load_more_all" );
+	btn.button('loading');
 
  });
 
@@ -95,6 +100,20 @@ $(document).ready(function(){
         getTopItemsAll();
     });
 
+	// load more entries if you click the "Load more" button
+    $( "#load_more_all" ).click(function() {
+
+    	var btn = $(this)
+        btn.button('loading')
+        //setTimeout(function () {
+         //   btn.button('reset')
+        //}, 3000)
+
+  		pageStartAll += maxRows;
+  		createTableRows();
+  		getTopItemsAll();
+	});
+
 
   // --------------- METHODS ---------------
   function convertDate(d) {
@@ -126,8 +145,9 @@ $(document).ready(function(){
   //date = new Date(2013, 6, 5).getTime(); // year, month, day:  note: month starts from zero 
   //date = new Date(2013, 6, 18).getTime();
    //var date = new Date().getTime();
-
-   var requestString = "{'accessCode':'b72b4e32-1062-4cc7-bc6b-52498ee10f09','country':{'a2Code':"+country+"},'listType':"+listType+",'on':"+date+",'store':{'a3Code':'ios'},'pager':{'count':"+maxRows+"}}";
+	var pager =	"{'count':"+maxRows+",'start':"+pageStartAll+"}";
+	//var pager = "{'count':"+maxRows+",'start':30}";
+   var requestString = "{'accessCode':'b72b4e32-1062-4cc7-bc6b-52498ee10f09','country':{'a2Code':"+country+"},'listType':"+listType+",'on':"+date+",'store':{'a3Code':'ios'},'pager':"+pager+"}";
    
    //alert(requestString);
    $.ajax({
@@ -156,6 +176,10 @@ $(document).ready(function(){
             				idLookupString += ",";
             			};
             		});
+
+            		if (listType == "toppaidapplications") {
+            			console.log(data);
+            		}
 
             		// update the lookup table for the current list type (e.g. paid, free, grossing)
             		idLookup[listID] = currentLookup;
@@ -210,6 +234,10 @@ function getTopItemsSingle(listType, listID) {
   	var requestString = "{'accessCode':'b72b4e32-1062-4cc7-bc6b-52498ee10f09','externalIds':["+lookupList+"],'detail':'short'}";
   	//var requestString = '{"accessCode":"b72b4e32-1062-4cc7-bc6b-52498ee10f09","externalIds":["com.rovio.AngryBirdsHalloween"],"detail":"short"}';
 
+  	// reset the "Load more" button when the data has loaded
+	var btn = $( "#load_more_all" );
+	btn.button('reset');
+
    $.ajax({
             type: "POST",
             url: "../lookup",
@@ -220,43 +248,51 @@ function getTopItemsSingle(listType, listID) {
 
             	updateTable(chartdata, listType, listID, data.applications);
             }
+
+            // reset the "Load more" button
+            //$( "#load_more_all" ).button('reset');
+
+            
+            
     });
   }
 
-function createTable() {
+function createTableRows() {
 
+		var startPos = pageStartAll;
+		var endPos = startPos + maxRows;
       // create the required number of rows
-      for (var i = 0; i < maxRows; i++) {
+      for (var i = startPos; i < endPos; i++) {
         $('#table-charts > tbody:last').append('<tr id=posall'+i+'></tr>');
       };
 
       // create the numbers
-      for (var i = 0; i < maxRows; i++) {
+      for (var i = startPos; i < endPos; i++) {
         $('#posall'+i).append('<td class="game-rank">'+(i+1)+'</td>');
       };
 
       // add to the paid charts
-      for (var i = 0; i < maxRows; i++) {
-        $('#posall'+i).append('<td id="paid'+i+'"><img class="game-icon" src="../assets/img/icon_placeholder.png"><div><span class="game-name">Name<br></span><span class="game-publisher">Publisher</span></div></td>');
+      for (var i = startPos; i < endPos; i++) {
+        $('#posall'+i).append('<td id="paid'+i+'"><img class="game-icon img-rounded" src="../assets/img/icon_placeholder.png"><div><span class="game-name">Name<br></span><span class="game-publisher">Publisher</span></div></td>');
       };
       
       // add to the free charts
-      for (var i = 0; i < maxRows; i++) {
+      for (var i = startPos; i < endPos; i++) {
         //$('#pos'+i).append('<td id="topfreeapplications'+i+'">blank</td>');
-        $('#posall'+i).append('<td id="free'+i+'"><img class="game-icon" src="../assets/img/icon_placeholder.png"><div><span class="game-name">Name<br></span><span class="game-publisher">Publisher</span></div></td>');
+        $('#posall'+i).append('<td id="free'+i+'"><img class="game-icon img-rounded" src="../assets/img/icon_placeholder.png"><div><span class="game-name">Name<br></span><span class="game-publisher">Publisher</span></div></td>');
 
       };
 
       // add to the top grossing charts
-      for (var i = 0; i < maxRows; i++) {
+      for (var i = startPos; i < endPos; i++) {
         //$('#pos'+i).append('<td id="topgrossingapplications'+i+'">blank</td>');
-        $('#posall'+i).append('<td id="grossing'+i+'"><img class="game-icon" src="../assets/img/icon_placeholder.png"><div><span class="game-name">Name<br></span><span class="game-publisher">Publisher</span></div></td>');
+        $('#posall'+i).append('<td id="grossing'+i+'"><img class="game-icon img-rounded" src="../assets/img/icon_placeholder.png"><div><span class="game-name">Name<br></span><span class="game-publisher">Publisher</span></div></td>');
 
       };
 
   }
 
-  function createTableSingle() {
+  function createTableRowsSingle() {
 
       // create the required number of rows
       for (var i = 0; i < maxRows; i++) {
@@ -306,7 +342,14 @@ function createTable() {
 
   		var lenAppData = appdata.length;
 
-      for (var i = 0; i < maxRows; i++) {
+  		var startPos = 0;
+		var endPos = startPos + chartdata.length;
+
+		var rowPos = pageStartAll;
+
+		console.log("endPos = " + endPos);
+
+      for (var i = startPos; i < endPos; i++) {
       	/*<td><img class="game-icon" src="../assets/img/icon_placeholder.png">
               <div>
                 <span class="game-text">Terraria<br></span>
@@ -317,9 +360,11 @@ function createTable() {
       	//$('td#'+listID+i).html('Whatever <b>HTML</b> you want here.');
 
       	// grab the internal id for this product to get it's full name from the appdata object
+      	var appInfo = null;
+
       	var currentLookup = idLookup[listID];
       	var internalId = currentLookup[chartdata[i].itemId];
-      	var appInfo = null;
+      	
 
       	for (var j = 0; j < lenAppData; j++) {
       		if (internalId == appdata[j].id) {
@@ -351,7 +396,7 @@ function createTable() {
       		itemName = appInfo.title;
       		itemPublisher = appInfo.artistName;
       		// replace the icon
-       		$('td#'+listID+i+' .game-icon').attr("src", appInfo.artworkUrlSmall );
+       		$('td#'+listID+rowPos+' .game-icon').attr("src", appInfo.artworkUrlSmall );
       	}
 
       	var maxStringLength = 20;
@@ -367,13 +412,13 @@ function createTable() {
 		}
 
       	// replace the app name
-      	$('td#'+listID+i+' .game-name').html('<a href="graph.html?itemId='+chartdata[i].itemId+'&type='+listType+'&country='+country+'">'+itemName+'</a><br>');
+      	$('td#'+listID+rowPos+' .game-name').html('<a href="graph.html?itemId='+chartdata[i].itemId+'&type='+listType+'&country='+country+'">'+itemName+'</a><br>');
       	
 
       	// replace the publisher name
-      	$('td#'+listID+i+' .game-publisher').html(itemPublisher);
+      	$('td#'+listID+rowPos+' .game-publisher').html(itemPublisher);
 
-
+      	rowPos++;
       };
 
   }
