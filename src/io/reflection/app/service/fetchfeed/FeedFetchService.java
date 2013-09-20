@@ -72,7 +72,7 @@ final class FeedFetchService implements IFeedFetchService {
 	public FeedFetch addFeedFetch(FeedFetch feedFetch) {
 		FeedFetch addedFeedFetch = null;
 
-		final String addeFeedFetchQuery = String.format(
+		final String addFeedFetchQuery = String.format(
 				"INSERT INTO `feedfetch` (`country`,`data`,`date`,`store`,`type`,`code`) VALUES ('%s','%s',FROM_UNIXTIME(%d),'%s','%s','%s')",
 				addslashes(feedFetch.country), addslashes(feedFetch.data), feedFetch.date.getTime() / 1000, addslashes(feedFetch.store),
 				addslashes(feedFetch.type), addslashes(feedFetch.code));
@@ -81,7 +81,7 @@ final class FeedFetchService implements IFeedFetchService {
 
 		try {
 			feedFetchConnection.connect();
-			feedFetchConnection.executeQuery(addeFeedFetchQuery);
+			feedFetchConnection.executeQuery(addFeedFetchQuery);
 
 			if (feedFetchConnection.getAffectedRowCount() > 0) {
 				addedFeedFetch = getFeedFetch(Long.valueOf(feedFetchConnection.getInsertedId()));
