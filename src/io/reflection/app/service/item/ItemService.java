@@ -117,7 +117,7 @@ final class ItemService implements IItemService {
 
 		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 		String updateItemQuery = String
-				.format("UPDATE `item` SET `externalid`='%s',`internalid`='%s',`name`='%s',`creatorname`='%s',`price`=%d,`source`='%s',`type`='%s',`added`=FROM_UNIXTIME(%d),`currency`='%s',`properties`='%s' WHERE `id`=%d;",
+				.format("UPDATE `item` SET `externalid`='%s',`internalid`='%s',`name`='%s',`creatorname`='%s',`price`=%d,`source`='%s',`type`='%s',`added`=FROM_UNIXTIME(%d),`currency`='%s',`properties`='%s' WHERE `id`=%d",
 						addslashes(item.externalId), addslashes(item.internalId), addslashes(item.name), addslashes(item.creatorName),
 						(int) (item.price.floatValue() * 100.0f), addslashes(item.source), addslashes(item.type), item.added.getTime()/ 1000,
 						addslashes(item.currency), addslashes(item.properties), item.id.longValue());

@@ -45,9 +45,12 @@ public interface IRankService extends IService {
 	/**
 	 * @param itemId
 	 * @param code
+	 * @param type 
+	 * @param country 
+	 * @param store 
 	 * @return
 	 */
-	public Rank getItemGatherCodeRank(String itemId, String code);
+	public Rank getItemGatherCodeRank(String itemId, String code, String store, String country, String type);
 
 	/**
 	 * @param country

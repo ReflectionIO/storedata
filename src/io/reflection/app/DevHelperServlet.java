@@ -9,6 +9,8 @@ import io.reflection.app.datatypes.FeedFetch;
 import io.reflection.app.datatypes.ItemRankSummary;
 import io.reflection.app.datatypes.Rank;
 import io.reflection.app.datatypes.Store;
+import io.reflection.app.ingestors.Ingestor;
+import io.reflection.app.ingestors.IngestorFactory;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.mapreduce.CsvBlobReducer;
 import io.reflection.app.mapreduce.RankCountMapper;
@@ -27,6 +29,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -50,6 +53,8 @@ import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
+import com.google.appengine.api.utils.SystemProperty;
+import com.google.appengine.api.utils.SystemProperty.Environment;
 import com.google.appengine.tools.mapreduce.KeyValue;
 import com.google.appengine.tools.mapreduce.MapReduceJob;
 import com.google.appengine.tools.mapreduce.MapReduceSettings;
@@ -87,7 +92,9 @@ public class DevHelperServlet extends HttpServlet {
 					LOG.log(GaeLevel.DEBUG, "Adding gather request to deferred queue");
 				}
 
-				// deferredQueue.add(TaskOptions.Builder.withUrl("/cron?" + req.getQueryString()).method(Method.GET));
+				if (SystemProperty.environment.value() == Environment.Value.Development) {
+					deferredQueue.add(TaskOptions.Builder.withUrl("/cron?" + req.getQueryString()).method(Method.GET));
+				}
 			}
 			return;
 		}
@@ -146,6 +153,12 @@ public class DevHelperServlet extends HttpServlet {
 				// if (LOG.isLoggable(GaeLevel.DEBUG)) {
 				// LOG.log(GaeLevel.DEBUG, String.format("Processed [%d] entities", i));
 				// }
+
+				success = true;
+			} else if ("ingest".equalsIgnoreCase(action)) {
+
+				Ingestor i = IngestorFactory.getIngestorForStore("ios");
+				i.enqueue(Arrays.asList(Long.valueOf(itemId)));
 
 				success = true;
 			} else if ("addcode".equalsIgnoreCase(action)) {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
   <application>storedatacollector</application>
-  <version>13</version>
+  <version>15</version>
 
   <!--
     Allows App Engine to send multiple requests to one instance in parallel:
@@ -17,6 +17,7 @@
 	<!-- <property name="gather.ios.countries" value="al,gb,ua,us,zw" /> -->
 	<!-- <property name="gather.ios.countries" value="us" /> -->
 	<property name="ingest.ios.countries" value="us,gb,cn,de,fr" />
+    <!-- <property name="ingest.ios.countries" value="" /> -->
 	
 	
 	<property name="gather.ios.topfreeapplications" value="https://itunes.apple.com/%s/rss/topfreeapplications/limit=400/json" />

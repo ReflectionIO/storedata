@@ -34,7 +34,7 @@ public class ServicePersister extends PersisterBase {
 	 */
 	@Override
 	protected Rank getRankWithParameters(String store, String country, String itemId, String type, Date date, String code) {
-		return RankServiceProvider.provide().getItemGatherCodeRank(itemId, code);
+		return RankServiceProvider.provide().getItemGatherCodeRank(itemId, code, store, country, type);
 	}
 
 	/*

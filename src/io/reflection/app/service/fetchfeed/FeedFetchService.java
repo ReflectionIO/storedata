@@ -10,6 +10,9 @@ package io.reflection.app.service.fetchfeed;
 
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
+
+import com.google.appengine.api.utils.SystemProperty;
+
 import io.reflection.app.datatypes.FeedFetch;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
@@ -73,9 +76,10 @@ final class FeedFetchService implements IFeedFetchService {
 		FeedFetch addedFeedFetch = null;
 
 		final String addFeedFetchQuery = String.format(
-				"INSERT INTO `feedfetch` (`country`,`data`,`date`,`store`,`type`,`code`) VALUES ('%s','%s',FROM_UNIXTIME(%d),'%s','%s','%s')",
+				"INSERT INTO `feedfetch` (`country`,`data`,`date`,`store`,`type`,`code`, `oldkey`) VALUES ('%s','%s',FROM_UNIXTIME(%d),'%s','%s','%s', %s)",
 				addslashes(feedFetch.country), addslashes(feedFetch.data), feedFetch.date.getTime() / 1000, addslashes(feedFetch.store),
-				addslashes(feedFetch.type), addslashes(feedFetch.code));
+				addslashes(feedFetch.type), addslashes(feedFetch.code),
+				SystemProperty.environment.value() == SystemProperty.Environment.Value.Development ? "-1" : "NULL");
 
 		Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
 

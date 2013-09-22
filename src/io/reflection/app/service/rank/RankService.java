@@ -157,11 +157,11 @@ final class RankService implements IRankService {
 	 * @see io.reflection.app.service.rank.IRankService#getItemGatherCodeRank(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public Rank getItemGatherCodeRank(String itemId, String code) {
+	public Rank getItemGatherCodeRank(String itemId, String code, String store, String country, String type) {
 		Rank rank = null;
 
-		final String getItemGatherCodeRankQuery = String.format("SELECT * FROM `rank` WHERE `itemid`='%s' AND `code`='%s' AND `deleted`='n' LIMIT 1", itemId,
-				code);
+		final String getItemGatherCodeRankQuery = String.format("SELECT * FROM `rank` WHERE `itemid`='%s' AND `code`='%s' AND `source`='%s' AND `country`='%s' AND `type`='%s' AND `deleted`='n' LIMIT 1", itemId,
+				code, store, country, type);
 
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 

@@ -8,12 +8,12 @@
 //
 package io.reflection.app.ingestors;
 
-import static io.reflection.app.objectify.PersistenceService.ofy;
 import io.reflection.app.collectors.StoreCollector;
 import io.reflection.app.datatypes.FeedFetch;
 import io.reflection.app.datatypes.Item;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.persisters.PersisterBase;
+import io.reflection.app.service.fetchfeed.FeedFetchServiceProvider;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -62,7 +62,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			grouped = groupDataByDate(stored);
 			combined = combineDataParts(grouped);
 			extractItemRanks(stored, grouped, combined);
-			blobify(stored, grouped, combined);
+//			blobify(stored, grouped, combined);
 		} finally {
 			if (LOG.isLoggable(GaeLevel.TRACE)) {
 				LOG.log(GaeLevel.TRACE, "Exiting...");
@@ -71,6 +71,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 
 	}
 
+	@SuppressWarnings("unused")
 	private void blobify(List<FeedFetch> stored, Map<Date, Map<Integer, FeedFetch>> grouped, Map<Date, String> combined) {
 		for (Date date : grouped.keySet()) {
 			Map<Integer, FeedFetch> group = grouped.get(date);
@@ -87,7 +88,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 					first = false;
 				}
 
-				ofy().delete().entity(feedFetch).now();
+				FeedFetchServiceProvider.provide().deleteFeedFetch(feedFetch);
 			}
 		}
 	}
@@ -127,29 +128,29 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 				LOG.log(GaeLevel.DEBUG, "Marking items as ingested");
 			}
 
-//			ofy().transact(new VoidWork() {
-//
-//				@Override
-//				public void vrun() {
-//					int i = 0;
-//					for (Integer entityKey : grouped.get(key).keySet()) {
-//						FeedFetch feed = grouped.get(key).get(entityKey);
-//
-//						// entity.ingested = Boolean.TRUE;
-//						ofy().save().entity(feed).now();
-//						i++;
-//
-//						if (LOG.isLoggable(GaeLevel.TRACE)) {
-//							LOG.log(GaeLevel.TRACE, String.format("Marked entity [%d]", feed.id.longValue()));
-//						}
-//					}
-//
-//					if (LOG.isLoggable(GaeLevel.DEBUG)) {
-//						LOG.log(GaeLevel.DEBUG, String.format("Marked [%d] items", i));
-//					}
-//				}
-//
-//			});
+			// ofy().transact(new VoidWork() {
+			//
+			// @Override
+			// public void vrun() {
+			// int i = 0;
+			// for (Integer entityKey : grouped.get(key).keySet()) {
+			// FeedFetch feed = grouped.get(key).get(entityKey);
+			//
+			// // entity.ingested = Boolean.TRUE;
+			// ofy().save().entity(feed).now();
+			// i++;
+			//
+			// if (LOG.isLoggable(GaeLevel.TRACE)) {
+			// LOG.log(GaeLevel.TRACE, String.format("Marked entity [%d]", feed.id.longValue()));
+			// }
+			// }
+			//
+			// if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			// LOG.log(GaeLevel.DEBUG, String.format("Marked [%d] items", i));
+			// }
+			// }
+			//
+			// });
 
 		}
 	}
@@ -299,10 +300,9 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 		// for now ingest so that we don't kill the band width
 
 		int i = 0;
-		Map<Long, FeedFetch> items = ofy().cache(false).load().type(FeedFetch.class).ids(itemIds);
 		FeedFetch row = null;
 		for (Long itemId : itemIds) {
-			row = items.get(itemId);
+			row = FeedFetchServiceProvider.provide().getFeedFetch(itemId);
 			stored.add(row);
 			i++;
 		}
