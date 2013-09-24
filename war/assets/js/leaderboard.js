@@ -382,14 +382,8 @@ function createTableRows() {
       	// replace the app name
       	//$('td#'+listID+i+' .game-name').html('Terraria<br>');
 
-      	// use the external id to generate the name and publisher of the app (temporary fix for missing entries in our appdata object)
-      	var itemNameArray = chartdata[i].itemId.split(".");
-      	var itemName = itemNameArray[itemNameArray.length-1]; // assume the app name is the last element
-      	var itemPublisher = itemNameArray[0]; // assume the publihser name is the first element although will probably be 2nd
-
-      	if (itemNameArray.length > 2) {
-      		itemPublisher = itemNameArray[1];
-      	};
+        var itemName;
+        var itemPublisher;
 
       	// we current don't always get the appdata in the LookupApplication call so check that we have
       	if (appInfo != null) {
@@ -398,6 +392,17 @@ function createTableRows() {
       		// replace the icon
        		$('td#'+listID+rowPos+' .game-icon').attr("src", appInfo.artworkUrlSmall );
       	}
+        else {
+          // only split if we didn't retrieve valid data
+          // use the external id to generate the name and publisher of the app (temporary fix for missing entries in our appdata object)
+          var itemNameArray = chartdata[i].itemId.split(".");
+          itemName = itemNameArray[itemNameArray.length-1]; // assume the app name is the last element
+          itemPublisher = itemNameArray[0]; // assume the publihser name is the first element although will probably be 2nd
+
+          if (itemNameArray.length > 2) {
+            itemPublisher = itemNameArray[1];
+          }
+        }
 
       	var maxStringLength = 20;
 
