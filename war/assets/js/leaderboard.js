@@ -3,7 +3,7 @@ var storeCode = "";
 var date = new Date().getTime();
 var country = "us";
 var overviewType = "all";
-var maxRows = 30;
+var maxRows = 25;
 var pageStartAll = 0;
 
 var idLookup = { 
@@ -149,6 +149,8 @@ $(document).ready(function(){
 	//var pager = "{'count':"+maxRows+",'start':30}";
    var requestString = "{'accessCode':'b72b4e32-1062-4cc7-bc6b-52498ee10f09','country':{'a2Code':"+country+"},'listType':"+listType+",'on':"+date+",'store':{'a3Code':'ios'},'pager':"+pager+"}";
    
+   var btn = $( "#load_more_all" );
+
    //alert(requestString);
    $.ajax({
             type: "POST",
@@ -168,7 +170,7 @@ $(document).ready(function(){
             		
             		$.each(data.items, function(index, item){      
             			// create the lookup table for ids
-            			currentLookup[item.externalId] = item.internalId;     
+            			currentLookup[item.externalId] = item;     
             			
             			idLookupString += "%22" + item.externalId + "%22";
 
@@ -177,19 +179,25 @@ $(document).ready(function(){
             			};
             		});
 
-            		if (listType == "toppaidapplications") {
-            			console.log(data);
-            		}
-
             		// update the lookup table for the current list type (e.g. paid, free, grossing)
             		idLookup[listID] = currentLookup;
+                
+                if (listType == "toppaidapplications") {
+                  console.log(data);
+                  console.log(currentLookup);
+                  console.log(idLookup);
+                  
+                }
 
-            		//updateTable(data.ranks, listType, listID);
-            		lookupApplications(idLookupString, data.ranks, listType, listID);
+            		updateTable(data.ranks, listType, listID);
+            		//lookupApplications(idLookupString, data.ranks, listType, listID);
+
+                  // make the "Load more" button active again after just one successful call (note it should be after 3 though!)
+                 btn.button('reset');
             	} else {
             		// only display the error message once (this function is called 3 times)
             		if (listType == "toppaidapplications") {
-            			alert("No data found for this date - try 5th or 10th of September");
+            			alert("No data found for this date");
             		};
             		
             	}
@@ -222,7 +230,7 @@ function getTopItemsSingle(listType, listID) {
             		updateTableSingle(data.ranks, listType, listID);
             	} else {
             		
-            		alert("No data found for this date - try 5th or 10th of September");
+            		alert("No data found for this date");
             		
             	}
             }
@@ -338,9 +346,11 @@ function createTableRows() {
       };
   }
 
-  function updateTable(chartdata, listType, listID, appdata) {
+  function updateTable(chartdata, listType, listID) {
 
-  		var lenAppData = appdata.length;
+    var appDataLookup = idLookup[listID];
+    
+  		// var lenAppData = appdata.length;
 
   		var startPos = 0;
 		var endPos = startPos + chartdata.length;
@@ -359,38 +369,18 @@ function createTableRows() {
         //$('td#'+listID+i).replaceWith('<td id="'+listID+i+'"><a href="rankings.html?itemId='+chartdata[i].itemId+'&type='+listID+'&country='+country+'">'+chartdata[i].itemId+'</a></td>');
       	//$('td#'+listID+i).html('Whatever <b>HTML</b> you want here.');
 
-      	// grab the internal id for this product to get it's full name from the appdata object
-      	var appInfo = null;
 
-      	var currentLookup = idLookup[listID];
-      	var internalId = currentLookup[chartdata[i].itemId];
-      	
-
-      	for (var j = 0; j < lenAppData; j++) {
-      		if (internalId == appdata[j].id) {
-      			appInfo = appdata[j];
-      			break;
-      		}
-      			
-      	}
-      	
-
-      	// replace the icon
-      	// e.g. $('td #toppaidapplications .game-icon')
-      	//$('td#'+listID+i+' .game-icon').attr("src".,"./assets/img/icon_placeholder.png");
-
-      	// replace the app name
-      	//$('td#'+listID+i+' .game-name').html('Terraria<br>');
-
+        var appInfo = appDataLookup[chartdata[i].itemId];
+        
         var itemName;
         var itemPublisher;
 
       	// we current don't always get the appdata in the LookupApplication call so check that we have
       	if (appInfo != null) {
-      		itemName = appInfo.title;
-      		itemPublisher = appInfo.artistName;
+      		itemName = appInfo.name;
+      		itemPublisher = appInfo.creatorName;
       		// replace the icon
-       		$('td#'+listID+rowPos+' .game-icon').attr("src", appInfo.artworkUrlSmall );
+       		$('td#'+listID+rowPos+' .game-icon').attr("src", appInfo.smallImage );
       	}
         else {
           // only split if we didn't retrieve valid data

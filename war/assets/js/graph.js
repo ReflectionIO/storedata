@@ -250,28 +250,44 @@ function getItemsRank() {
             dataType: "json",
             success: function(data) {
 
-                console.log(data.ranks);
+                console.log(data);
 
                 var dateData = [];
                 var minPosition = 1000;
                 var maxPosition = 20;
                 var pos = 0;
+                var nodeDate;
+                var dayOfMonth = 0; // the current day of the month. i only want to show 1 entry per day
+                var dayOfMonthOld = -1;
 
+                // the data comes in reverse so I need to loop through it in reverse()
                 $.each(data.ranks.reverse(), function(index, item){    
                     // only use the specific "type" of list e.g. topfreeapplications, topfreeipadapplications
                     if (item.type == type) {
-                        pos = item.position;
-                        var thisEntry = [item.date, pos];
-                        averagesData.push(thisEntry); // store the dates
-                        dateData.push(new Date(item.date));
+                        
+                        var nodeDate = new Date(item.date);
+                        dateData.push(nodeDate); // this is purely for the console.log call below
 
-                        if (pos > maxPosition) {
-                            maxPosition = pos;
-                        }
+                        dayOfMonth = nodeDate.getDate();
 
-                        if (pos < minPosition) {
-                            minPosition = pos;
-                        }
+                        // only add the node to the graph if we haven't already got one for that day of the month
+                        //if (dayOfMonth != dayOfMonthOld) {
+                            pos = item.position;
+                            var thisEntry = [item.date, pos];
+                            averagesData.push(thisEntry); // store the dates
+                            
+
+                            if (pos > maxPosition) {
+                                maxPosition = pos;
+                            }
+
+                            if (pos < minPosition) {
+                                minPosition = pos;
+                            }
+                            dayOfMonthOld = dayOfMonth;
+                        //}
+
+                        
                     };       
                     
                 });
