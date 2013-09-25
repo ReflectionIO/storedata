@@ -111,11 +111,7 @@ public class ParserIOS implements Parser {
 				item.largeImage = jsonElement.getAsJsonObject().get(KEY_LABEL).getAsString();
 			}
 		}
-
-		item.smallImage = "";
-		item.mediumImage = "";
-		item.largeImage = "";
-
+		
 		if (LOG.isLoggable(GaeLevel.TRACE)) {
 			LOG.log(GaeLevel.TRACE, String.format("Found item [%s]", item.name));
 		}

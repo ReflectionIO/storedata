@@ -88,9 +88,10 @@ public abstract class PersisterBase {
 	private static String convertItemRankToPayloadString(Item item, Integer position, String type, String store, String country, Date date, Float price,
 			String currency, String code) {
 		return String
-				.format("itemAdded=%d&itemCurrency=%s&itemExternalId=%s&itemInternalId=%s&itemName=%s&itemPrice=%f&itemSource=%s&itemType=%s&creatorName=%s&rankCode=%s&rankCountry=%s&rankCurrency=%s&rankDate=%d&rankItemId=%s&rankPosition=%d&rankPrice=%f&rankSource=%s&rankType=%s",
+				.format("itemAdded=%d&itemCurrency=%s&itemExternalId=%s&itemInternalId=%s&itemName=%s&itemPrice=%f&itemSource=%s&itemType=%s&creatorName=%s&smallImage=%s&mediumImage=%s&largeImage=%s&rankCode=%s&rankCountry=%s&rankCurrency=%s&rankDate=%d&rankItemId=%s&rankPosition=%d&rankPrice=%f&rankSource=%s&rankType=%s",
 						item.added, item.currency, urlencode(item.externalId), item.internalId, urlencode(item.name), item.price, item.source, item.type,
-						urlencode(item.creatorName), code, country, currency, date.getTime(), urlencode(item.externalId), position, price, store, type);
+						urlencode(item.creatorName), urlencode(item.smallImage), urlencode(item.mediumImage), urlencode(item.largeImage), code, country,
+						currency, date.getTime(), urlencode(item.externalId), position, price, store, type);
 	}
 
 	private static TaskOptions convertItemRankToParams(TaskOptions options, Item item, Integer position, String type, String store, String country, Date date,
@@ -98,7 +99,8 @@ public abstract class PersisterBase {
 		return options.param("itemAdded", Long.toString(item.added.getTime())).param("itemCurrency", item.currency)
 				.param("itemExternalId", urlencode(item.externalId)).param("itemInternalId", item.internalId).param("itemName", urlencode(item.name))
 				.param("itemPrice", item.price.toString()).param("itemSource", item.source).param("itemType", item.type).param("creatorName", item.creatorName)
-				.param("rankCode", code).param("rankCountry", country).param("rankCurrency", currency).param("rankDate", Long.toString(date.getTime()))
+				.param("smallImage", item.smallImage).param("mediumImage", item.mediumImage).param("largeImage", item.largeImage).param("rankCode", code)
+				.param("rankCountry", country).param("rankCurrency", currency).param("rankDate", Long.toString(date.getTime()))
 				.param("rankItemId", urlencode(item.externalId)).param("rankPosition", position.toString()).param("rankPrice", price.toString())
 				.param("rankSource", store).param("rankType", type);
 	}
@@ -114,6 +116,9 @@ public abstract class PersisterBase {
 		item.source = req.getParameter("itemSource");
 		item.type = req.getParameter("itemType");
 		item.creatorName = req.getParameter("creatorName");
+		item.smallImage = req.getParameter("smallImage");
+		item.mediumImage = req.getParameter("mediumImage");
+		item.largeImage = req.getParameter("largeImage");
 
 		return item;
 	}
