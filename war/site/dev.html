@@ -7,236 +7,155 @@
 <!-- but may lead to some differences in layout.   -->
 
 <html>
-  <head>
-    <meta http-equiv="content-type" content=
-    "text/html; charset=UTF-8">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 
-    <title>Store Data - Dev console</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Dev console">
-    <meta name="author" content="">
-    
-    <link href="../assets/css/bootstrap.css" rel="stylesheet">
-    
-    <style type="text/css">
-    
-    #content {
-    	margin: 0px auto;
-    	width: 500px;
-    }
-    
-    #rankstart, #rankend{
-    	width: 65px;
-    }
-    
-    </style>
-    
-  </head>
+<title>Store Data - Dev console</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Dev console">
+<meta name="author" content="">
 
-  <body>
+<link href="../assets/css/bootstrap.css" rel="stylesheet">
+
+<style type="text/css">
+#content {
+	margin: 0px auto;
+	width: 500px;
+}
+
+#rankstart,#rankend {
+	width: 65px;
+}
+</style>
+
+</head>
+
+<body>
 
 	<div id="content">
-	<h2>Admin/Dev Helper functions</h2>
-    <form action="/dev/devhelper" method="get">
-    	<label>queue</label> <select id="defer" name="defer">
-    	<option value="yes">
-          yes
-        </option>
-        <option value="no">
-          no
-        </option>
-    	</select><br>
-      <label>action</label> <select id="action" name="action">
-        <option value="addingested">
-          Adds &quot;ingested&quot; column to FeedFetch
-        </option>
+		<h2>Admin/Dev Helper functions</h2>
+		<form action="/dev/devhelper" method="POST">
+			<label>queue</label> <select id="defer" name="defer">
+				<option value="yes">yes</option>
+				<option value="no">no</option>
+			</select><br> <label>action</label> <select id="action" name="action">
+				<option value="addingested">Adds &quot;ingested&quot;
+					column to FeedFetch</option>
 
-        <option value="uningest">
-          Mark all FeedFetch rows as un-ingested
-        </option>
-        
-        <option value="ingest">
-          Ingest single item with id
-        </option>
-        
-        <option value="addcode">
-          Add code
-        </option>
+				<option value="uningest">Mark all FeedFetch rows as
+					un-ingested</option>
 
-        <option value="remove">
-          Remove object data
-        </option>
-        
-        <option value="countitemrank">
-          Create rank summary
-        </option>
+				<option value="ingest">Ingest single feed with id (item id)
+				</option>
 
-        <option value="uncountranks">
-          Mark all Rank rows as uncounted
-        </option>
+				<option value="ingestmulti">Ingest multiple feeds with
+					comma delimited ids</option>
 
-        <option value="appswithrank">
-          Apps with rank range
-        </option>
+				<option value="addcode">Add code</option>
 
-        <option value="ranksforapp">
-          App rank data (csv)
-        </option>
-        
-        <option value="convertdatatoblobs">
-        	Convert data chucks to blobs
-        </option>
-        
-        <option value="countitemrankmr">
-        	Create rank summary using map reduce
-        </option>
-        
-        <option value="countranksmr">
-        	Count ranks using map reduce
-        </option>
-        
-        <option value="createcsvofpaidranks">
-        	Create CSV of top paid ranks
-        </option>
-        
-        <option value="createcsvoffreeranks">
-        	Create CSV of top free ranks
-        </option>
-        
-        <option value="addcountries" >
-        Add all countries
-        </option>
-        
-        <option value="addstores">
-        Add all stores
-        </option>
-        
-        <option value="getadditionalproperties">
-        Get additional properties
-        </option>
-      </select><br>
-       <label>object (only for remove)</label> <select id="object"
-      name="object">
-        <!--  <option value="FeedFetch">
+				<option value="remove">Remove object data</option>
+
+				<option value="countitemrank">Create rank summary</option>
+
+				<option value="uncountranks">Mark all Rank rows as
+					uncounted</option>
+
+				<option value="appswithrank">Apps with rank range</option>
+
+				<option value="ranksforapp">App rank data (csv)</option>
+
+				<option value="convertdatatoblobs">Convert data chucks to
+					blobs</option>
+
+				<option value="countitemrankmr">Create rank summary using
+					map reduce</option>
+
+				<option value="countranksmr">Count ranks using map reduce</option>
+
+				<option value="createcsvofpaidranks">Create CSV of top paid
+					ranks</option>
+
+				<option value="createcsvoffreeranks">Create CSV of top free
+					ranks</option>
+
+				<option value="addcountries">Add all countries</option>
+
+				<option value="addstores">Add all stores</option>
+
+				<option value="getadditionalproperties">Get additional
+					properties</option>
+			</select><br> <label>object (only for remove)</label> <select id="object"
+				name="object">
+				<!--  <option value="FeedFetch">
                           FeedFetch
                         </option> -->
 
-        <option value="Item">
-          Item
-        </option>
+				<option value="Item">Item</option>
 
-        <option value="Rank">
-          Rank
-        </option>
+				<option value="Rank">Rank</option>
 
-        <option value="ItemRankSummary">
-          ItemRankSummary
-        </option>
-      </select><br>
-       <label>start rank</label> <select id="rankstart" name=
-      "rankstart">
-        <option value="0">
-          1
-        </option>
+				<option value="ItemRankSummary">ItemRankSummary</option>
+			</select><br> <label>start rank</label> <select id="rankstart"
+				name="rankstart">
+				<option value="0">1</option>
 
-        <option value="10">
-          11
-        </option>
+				<option value="10">11</option>
 
-        <option value="25">
-          26
-        </option>
+				<option value="25">26</option>
 
-        <option value="50">
-          51
-        </option>
+				<option value="50">51</option>
 
-        <option value="100">
-          101
-        </option>
+				<option value="100">101</option>
 
-        <option value="200">
-          201
-        </option>
-      </select> to <select id="rankend" name="rankend">
-        <option value="9">
-          10
-        </option>
+				<option value="200">201</option>
+			</select> to <select id="rankend" name="rankend">
+				<option value="9">10</option>
 
-        <option value="24">
-          25
-        </option>
+				<option value="24">25</option>
 
-        <option value="49">
-          50
-        </option>
+				<option value="49">50</option>
 
-        <option value="99">
-          100
-        </option>
+				<option value="99">100</option>
 
-        <option value="199">
-          200
-        </option>
+				<option value="199">200</option>
 
-        <option value="200+">
-          more than 200
-        </option>
-      </select><br>
-       <label>feed type</label><select id="feedtype" name=
-      "feedtype">
-        <option value="topfreeapplications">
-          top free
-        </option>
+				<option value="200+">more than 200</option>
+			</select><br> <label>feed type</label><select id="feedtype"
+				name="feedtype">
+				<option value="topfreeapplications">top free</option>
 
-        <option value="toppaidapplications">
-          top paid
-        </option>
+				<option value="toppaidapplications">top paid</option>
 
-        <option value="topgrossingapplications">
-          top grossing
-        </option>
+				<option value="topgrossingapplications">top grossing</option>
 
-        <option value="topfreeipadapplications">
-          top free ipad
-        </option>
+				<option value="topfreeipadapplications">top free ipad</option>
 
-        <option value="toppaidipadapplications">
-          top paid ipad
-        </option>
+				<option value="toppaidipadapplications">top paid ipad</option>
 
-        <option value="topgrossingipadapplications">
-          top grossing ipad
-        </option>
+				<option value="topgrossingipadapplications">top grossing
+					ipad</option>
 
-        <option value="newapplications">
-          new
-        </option>
+				<option value="newapplications">new</option>
 
-        <option value="newfreeapplications">
-          new free
-        </option>
+				<option value="newfreeapplications">new free</option>
 
-        <option value="newpaidapplications">
-          new paid
-        </option>
-      </select><br>
-       <label>item id</label> <input type="text" name="itemid" id=
-      "itemid"> <br>
-      <label>date</label> <input type="text" name="date" id="date" value="2013-04-16-16"> <br> 
+				<option value="newpaidapplications">new paid</option>
+			</select><br> <label>item id</label> <input type="text" name="itemid"
+				id="itemid"> <br> <label>date</label> <input
+				type="text" name="date" id="date" value="2013-04-16-16"> <br>
 
-      <p>Actions can by chunck-ed using</p>
-      <label>start</label> <input id="start" name="start" type=
-      "text" value="0"><br>
-       <label>count</label> <input id="count" name="count" type=
-      "text" value="100"><br>
-       <input type="submit" id="devhelpersubmit" name=
-      "devhelpersubmit" class="btn btn-primary">
-    </form>
-    <footer>
-       <p>Copyrights &copy; reflection.io 2013</p>
-    </footer>
-	</div>    
-  </body>
+			<p>Actions can by chunck-ed using</p>
+			<label>start</label> <input id="start" name="start" type="text"
+				value="0"><br> <label>count</label> <input id="count"
+				name="count" type="text" value="100"><br>
+			<textarea rows="10" cols="50" name="feedIds"></textarea> <br />
+			<input type="submit" id="devhelpersubmit" name="devhelpersubmit"
+				class="btn btn-primary">
+		</form>
+		<footer>
+		<p>Copyrights &copy; reflection.io 2013</p>
+		</footer>
+	</div>
+</body>
 </html>
 

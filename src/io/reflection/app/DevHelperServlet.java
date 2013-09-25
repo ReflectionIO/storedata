@@ -76,6 +76,14 @@ public class DevHelperServlet extends HttpServlet {
 	private static final String RANK_END_200_PLUS = "200+";
 	private static final boolean USE_BACKENDS = false;
 
+	/* (non-Javadoc)
+	 * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+	 */
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		doGet(req, resp);
+	}
+	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -108,6 +116,7 @@ public class DevHelperServlet extends HttpServlet {
 		String feedType = req.getParameter("feedtype");
 		String itemId = req.getParameter("itemid");
 		String date = req.getParameter("date");
+		String feedIds = req.getParameter("feedIds");
 
 		boolean success = false;
 
@@ -161,7 +170,19 @@ public class DevHelperServlet extends HttpServlet {
 				i.enqueue(Arrays.asList(Long.valueOf(itemId)));
 
 				success = true;
+			} else if ("ingestmulti".equalsIgnoreCase(action)) {
+
+				Ingestor i = IngestorFactory.getIngestorForStore("ios");
+
+				String[] feedIdsArray = feedIds.split(",");
+
+				for (String feedId : feedIdsArray) {
+					i.enqueue(Arrays.asList(Long.valueOf(feedId)));
+				}
+
+				success = true;
 			} else if ("addcode".equalsIgnoreCase(action)) {
+
 				DateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH");
 				Date startDate = null, endDate = null;
 				try {
