@@ -36,6 +36,8 @@ public class ParserIOS implements Parser {
 	private static final String KEY_INTERNAL_ID = "im:id";
 	private static final String KEY_BUNDLE_ID = "im:bundleId";
 	private static final String KEY_ARTIST = "im:artist";
+	private static final String KEY_IMAGE = "im:image";
+	private static final String KEY_HEIGHT = "height";
 
 	/*
 	 * (non-Javadoc)
@@ -95,6 +97,24 @@ public class ParserIOS implements Parser {
 		item.type = "Application"; // LATER this can be obtained from the data
 		item.source = "ios";
 		item.creatorName = jsonItem.get(KEY_ARTIST).getAsJsonObject().get(KEY_LABEL).getAsString();
+
+		JsonArray images = jsonItem.get(KEY_IMAGE).getAsJsonArray();
+
+		for (JsonElement jsonElement : images) {
+			attributes = jsonElement.getAsJsonObject().get(KEY_ATTRIBUTES).getAsJsonObject();
+
+			if (attributes.get(KEY_HEIGHT).getAsString().equals("53")) {
+				item.smallImage = jsonElement.getAsJsonObject().get(KEY_LABEL).getAsString();
+			} else if (attributes.get(KEY_HEIGHT).getAsString().equals("75")) {
+				item.mediumImage = jsonElement.getAsJsonObject().get(KEY_LABEL).getAsString();
+			} else if (attributes.get(KEY_HEIGHT).getAsString().equals("100")) {
+				item.largeImage = jsonElement.getAsJsonObject().get(KEY_LABEL).getAsString();
+			}
+		}
+
+		item.smallImage = "";
+		item.mediumImage = "";
+		item.largeImage = "";
 
 		if (LOG.isLoggable(GaeLevel.TRACE)) {
 			LOG.log(GaeLevel.TRACE, String.format("Found item [%s]", item.name));

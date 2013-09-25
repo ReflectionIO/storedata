@@ -1,6 +1,11 @@
-/**
- * 
- */
+//  
+//  Item.java
+//  storedata
+//
+//  Created by William Shakour on September 25, 2013.
+//  Copyrights © 2013 SPACEHOPPER STUDIOS LTD. All rights reserved.
+//  Copyrights © 2013 reflection.io. All rights reserved.
+//
 package io.reflection.app.datatypes;
 
 import java.util.Date;
@@ -13,35 +18,21 @@ import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Index;
 
-/**
- * @author billy1380
- * 
- */
 @Entity
 @Cache
 public class Item extends DataType {
-
-	@Index
-	public String externalId;
-	@Index
-	public String internalId;
-
+	@Index public String externalId;
+	@Index public String internalId;
 	public String name;
-	
 	public String creatorName;
-
 	public Float price = Float.valueOf(0);
-
-	@Index
-	public String source;
-
-	@Index
-	public String type;
-
+	@Index public String source;
+	@Index public String type;
 	public Date added;
-
 	public String currency;
-
+	public String smallImage;
+	public String mediumImage;
+	public String largeImage;
 	public String properties;
 
 	@Override
@@ -65,6 +56,12 @@ public class Item extends DataType {
 		object.add("added", jsonAdded);
 		JsonElement jsonCurrency = currency == null ? JsonNull.INSTANCE : new JsonPrimitive(currency);
 		object.add("currency", jsonCurrency);
+		JsonElement jsonSmallImage = smallImage == null ? JsonNull.INSTANCE : new JsonPrimitive(smallImage);
+		object.add("smallImage", jsonSmallImage);
+		JsonElement jsonMediumImage = mediumImage == null ? JsonNull.INSTANCE : new JsonPrimitive(mediumImage);
+		object.add("mediumImage", jsonMediumImage);
+		JsonElement jsonLargeImage = largeImage == null ? JsonNull.INSTANCE : new JsonPrimitive(largeImage);
+		object.add("largeImage", jsonLargeImage);
 		JsonElement jsonProperties = properties == null ? JsonNull.INSTANCE : new JsonPrimitive(properties);
 		object.add("properties", jsonProperties);
 		return object;
@@ -127,6 +124,24 @@ public class Item extends DataType {
 				currency = jsonCurrency.getAsString();
 			}
 		}
+		if (jsonObject.has("smallImage")) {
+			JsonElement jsonSmallImage = jsonObject.get("smallImage");
+			if (jsonSmallImage != null) {
+				smallImage = jsonSmallImage.getAsString();
+			}
+		}
+		if (jsonObject.has("mediumImage")) {
+			JsonElement jsonMediumImage = jsonObject.get("mediumImage");
+			if (jsonMediumImage != null) {
+				mediumImage = jsonMediumImage.getAsString();
+			}
+		}
+		if (jsonObject.has("largeImage")) {
+			JsonElement jsonLargeImage = jsonObject.get("largeImage");
+			if (jsonLargeImage != null) {
+				largeImage = jsonLargeImage.getAsString();
+			}
+		}
 		if (jsonObject.has("properties")) {
 			JsonElement jsonProperties = jsonObject.get("properties");
 			if (jsonProperties != null) {
@@ -134,5 +149,4 @@ public class Item extends DataType {
 			}
 		}
 	}
-
 }

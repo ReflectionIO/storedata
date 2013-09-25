@@ -51,6 +51,9 @@
                 <xsd:attribute name="type" type="xsd:string" />
                 <xsd:attribute name="added" type="xsd:dateTime" />
                 <xsd:attribute name="currency" type="xsd:string" />
+                <xsd:attribute name="smallImage" type="xsd:string" />
+                <xsd:attribute name="mediumImage" type="xsd:string" />
+                <xsd:attribute name="largeImage" type="xsd:string" />
                 <xsd:attribute name="properties" type="xsd:string" />
             </xsd:extension>
         </xsd:complexContent>

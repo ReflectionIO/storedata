@@ -71,6 +71,11 @@ final class ItemService implements IItemService {
 		item.internalId = stripslashes(connection.getCurrentRowString("internalid"));
 		item.name = stripslashes(connection.getCurrentRowString("name"));
 		item.price = Float.valueOf((float) connection.getCurrentRowInteger("price").intValue() / 100.0f);
+
+		item.smallImage = stripslashes(connection.getCurrentRowString("smallimage"));
+		item.mediumImage = stripslashes(connection.getCurrentRowString("mediumimage"));
+		item.largeImage = stripslashes(connection.getCurrentRowString("largeimage"));
+
 		item.properties = stripslashes(connection.getCurrentRowString("properties"));
 		item.source = stripslashes(connection.getCurrentRowString("source"));
 		item.type = stripslashes(connection.getCurrentRowString("type"));
@@ -83,10 +88,11 @@ final class ItemService implements IItemService {
 		Item addedItem = null;
 
 		final String addItemQuery = String
-				.format("INSERT INTO `item` (`externalid`,`internalid`,`name`,`creatorname`,`price`,`source`,`type`,`added`,`currency`,`properties`) VALUES ('%s','%s','%s','%s',%d,'%s','%s',FROM_UNIXTIME(%d),'%s','%s')",
+				.format("INSERT INTO `item` (`externalid`,`internalid`,`name`,`creatorname`,`price`,`source`,`type`,`added`,`currency`,`smallimage`,`mediumimage`,`largeimage`,`properties`) VALUES ('%s','%s','%s','%s',%d,'%s','%s',FROM_UNIXTIME(%d),'%s','%s','%s','%s','%s')",
 						addslashes(item.externalId), addslashes(item.internalId), addslashes(item.name), addslashes(item.creatorName),
 						(int) (item.price.floatValue() * 100.0f), addslashes(item.source), addslashes(item.type), item.added.getTime() / 1000,
-						addslashes(item.currency), addslashes(item.properties));
+						addslashes(item.currency), addslashes(item.smallImage), addslashes(item.mediumImage), addslashes(item.largeImage),
+						addslashes(item.properties));
 
 		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
 
@@ -96,7 +102,7 @@ final class ItemService implements IItemService {
 
 			if (itemConnection.getAffectedRowCount() > 0) {
 				addedItem = getItem(Long.valueOf(itemConnection.getInsertedId()));
-				
+
 				if (addedItem == null) {
 					addedItem = item;
 					addedItem.id = Long.valueOf(itemConnection.getInsertedId());
@@ -117,10 +123,11 @@ final class ItemService implements IItemService {
 
 		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 		String updateItemQuery = String
-				.format("UPDATE `item` SET `externalid`='%s',`internalid`='%s',`name`='%s',`creatorname`='%s',`price`=%d,`source`='%s',`type`='%s',`added`=FROM_UNIXTIME(%d),`currency`='%s',`properties`='%s' WHERE `id`=%d",
+				.format("UPDATE `item` SET `externalid`='%s',`internalid`='%s',`name`='%s',`creatorname`='%s',`price`=%d,`source`='%s',`type`='%s',`added`=FROM_UNIXTIME(%d),`currency`='%s',`smallimage`='%s',`mediumimage`='%s',`largeimage`='%s',`properties`='%s' WHERE `id`=%d",
 						addslashes(item.externalId), addslashes(item.internalId), addslashes(item.name), addslashes(item.creatorName),
-						(int) (item.price.floatValue() * 100.0f), addslashes(item.source), addslashes(item.type), item.added.getTime()/ 1000,
-						addslashes(item.currency), addslashes(item.properties), item.id.longValue());
+						(int) (item.price.floatValue() * 100.0f), addslashes(item.source), addslashes(item.type), item.added.getTime() / 1000,
+						addslashes(item.currency), addslashes(item.smallImage), addslashes(item.mediumImage), addslashes(item.largeImage),
+						addslashes(item.properties), item.id.longValue());
 
 		try {
 			itemConnection.connect();

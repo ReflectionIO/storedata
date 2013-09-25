@@ -16,8 +16,6 @@ CREATE TABLE `country` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
 
-
-
 CREATE TABLE `item` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -30,12 +28,13 @@ CREATE TABLE `item` (
   `added` datetime DEFAULT NULL,
   `type` varchar(1000) DEFAULT NULL,
   `currency` varchar(100) DEFAULT NULL,
+  `smallimage` varchar(4096) DEFAULT NULL,
+  `mediumimage` varchar(4096) DEFAULT NULL,
+  `largeimage` varchar(4096) DEFAULT NULL,
   `properties` text,
   `deleted` enum('y','n') DEFAULT 'n',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
-
-
+) ENGINE=InnoDB AUTO_INCREMENT=10631 DEFAULT CHARSET=utf8$$
 
 CREATE TABLE `rank` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
