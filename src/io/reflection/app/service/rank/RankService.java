@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.spacehopperstudios.utility.StringUtils;
+
 final class RankService implements IRankService {
 	public String getName() {
 		return ServiceType.ServiceTypeRank.toString();
@@ -157,11 +159,19 @@ final class RankService implements IRankService {
 	 * @see io.reflection.app.service.rank.IRankService#getItemGatherCodeRank(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public Rank getItemGatherCodeRank(String itemId, String code, String store, String country, String type) {
+	public Rank getItemGatherCodeRank(String itemId, String code, String store, String country, List<String> possibleTypes) {
 		Rank rank = null;
 
-		final String getItemGatherCodeRankQuery = String.format("SELECT * FROM `rank` WHERE `itemid`='%s' AND `code`='%s' AND `source`='%s' AND `country`='%s' AND `type`='%s' AND `deleted`='n' LIMIT 1", itemId,
-				code, store, country, type);
+		String typesQueryPart = null;
+		if (possibleTypes.size() == 1) {
+			typesQueryPart = String.format("`type`='%s'", possibleTypes.get(0));
+		} else {
+			typesQueryPart = "`type` IN ('" + StringUtils.join(possibleTypes, "','") + "')";
+		}
+
+		final String getItemGatherCodeRankQuery = String.format(
+				"SELECT * FROM `rank` WHERE `itemid`='%s' AND `code`='%s' AND `source`='%s' AND `country`='%s' AND %s AND `deleted`='n' LIMIT 1", itemId, code,
+				store, country, typesQueryPart);
 
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
@@ -344,4 +354,49 @@ final class RankService implements IRankService {
 
 		return hasGrossingRank;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.rank.IRankService#addRanksBatch(java.util.List)
+	 */
+	@Override
+	public Long addRanksBatch(List<Rank> ranks) {
+		Long addedRankCount = Long.valueOf(0);
+
+		StringBuffer addRanksBatchQuery = new StringBuffer();
+
+		addRanksBatchQuery
+				.append("INSERT INTO `rank` (`position`,`grossingposition`,`itemid`,`type`,`country`,`date`,`source`,`price`,`currency`,`code`) VALUES ");
+
+		boolean addComma = false;
+		for (Rank rank : ranks) {
+			if (addComma) {
+				addRanksBatchQuery.append(",");
+			}
+
+			addRanksBatchQuery.append(String.format("(%d,%d,'%s','%s','%s',FROM_UNIXTIME(%d),'%s',%d,'%s','%s')", rank.position.longValue(),
+					rank.grossingPosition.longValue(), addslashes(rank.itemId), addslashes(rank.type), addslashes(rank.country), rank.date.getTime() / 1000,
+					addslashes(rank.source), (int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency), addslashes(rank.code)));
+			addComma = true;
+		}
+
+		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+
+		try {
+			rankConnection.connect();
+			rankConnection.executeQuery(addRanksBatchQuery.toString());
+
+			if (rankConnection.getAffectedRowCount() > 0) {
+				addedRankCount = Long.valueOf(rankConnection.getAffectedRowCount());
+			}
+		} finally {
+			if (rankConnection != null) {
+				rankConnection.disconnect();
+			}
+		}
+
+		return addedRankCount;
+	}
+
 }

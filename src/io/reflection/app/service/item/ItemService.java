@@ -251,4 +251,50 @@ final class ItemService implements IItemService {
 		return items;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.item.IItemService#addItemsBatch(java.util.List)
+	 */
+	@Override
+	public Long addItemsBatch(List<Item> items) {
+		Long addedItemCount = Long.valueOf(0);
+
+		StringBuffer addItemsBatchQuery = new StringBuffer();
+
+		addItemsBatchQuery
+				.append("INSERT INTO `item` (`externalid`,`internalid`,`name`,`creatorname`,`price`,`source`,`type`,`added`,`currency`,`smallimage`,`mediumimage`,`largeimage`,`properties`) VALUES ");
+
+		boolean addComma = false;
+		for (Item item : items) {
+			if (addComma) {
+				addItemsBatchQuery.append(",");
+			}
+
+			addItemsBatchQuery.append(String.format("('%s','%s','%s','%s',%d,'%s','%s',FROM_UNIXTIME(%d),'%s','%s','%s','%s','%s')",
+					addslashes(item.externalId), addslashes(item.internalId), addslashes(item.name), addslashes(item.creatorName),
+					(int) (item.price.floatValue() * 100.0f), addslashes(item.source), addslashes(item.type), item.added.getTime() / 1000,
+					addslashes(item.currency), addslashes(item.smallImage), addslashes(item.mediumImage), addslashes(item.largeImage),
+					addslashes(item.properties)));
+			addComma = true;
+		}
+
+		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
+
+		try {
+			itemConnection.connect();
+			itemConnection.executeQuery(addItemsBatchQuery.toString());
+
+			if (itemConnection.getAffectedRowCount() > 0) {
+				addedItemCount = Long.valueOf(itemConnection.getAffectedRowCount());
+			}
+		} finally {
+			if (itemConnection != null) {
+				itemConnection.disconnect();
+			}
+		}
+
+		return addedItemCount;
+	}
+
 }

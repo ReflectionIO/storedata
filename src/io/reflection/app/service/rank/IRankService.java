@@ -45,12 +45,12 @@ public interface IRankService extends IService {
 	/**
 	 * @param itemId
 	 * @param code
-	 * @param type 
-	 * @param country 
-	 * @param store 
+	 * @param type
+	 * @param country
+	 * @param store
 	 * @return
 	 */
-	public Rank getItemGatherCodeRank(String itemId, String code, String store, String country, String type);
+	public Rank getItemGatherCodeRank(String itemId, String code, String store, String country, List<String> possibleTypes);
 
 	/**
 	 * @param country
@@ -89,5 +89,11 @@ public interface IRankService extends IService {
 	 * @return
 	 */
 	public Boolean getItemHasGrossingRank(Item item);
+
+	/**
+	 * @param ranks
+	 * @return
+	 */
+	public Long addRanksBatch(List<Rank> ranks);
 
 }

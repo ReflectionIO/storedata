@@ -56,4 +56,10 @@ public interface IItemService extends IService {
 	 */
 	public List<Item> getExternalIdItemBatch(List<String> itemIds);
 
+	/**
+	 * @param items
+	 * @return
+	 */
+	public Long addItemsBatch(List<Item> items);
+
 }

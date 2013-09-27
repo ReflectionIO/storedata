@@ -7,6 +7,7 @@
 //
 package io.reflection.app.persisters;
 
+import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.Item;
 import io.reflection.app.datatypes.Rank;
 import io.reflection.app.logging.GaeLevel;
@@ -14,7 +15,9 @@ import io.reflection.app.service.item.IItemService;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +37,10 @@ public class ServicePersister extends PersisterBase {
 	 */
 	@Override
 	protected Rank getRankWithParameters(String store, String country, String itemId, String type, Date date, String code) {
-		return RankServiceProvider.provide().getItemGatherCodeRank(itemId, code, store, country, type);
+		List<String> types = new ArrayList<String>();
+		types.addAll(CollectorFactory.getCollectorForStore(store).getCounterpartTypes(type));
+		types.add(type);
+		return RankServiceProvider.provide().getItemGatherCodeRank(itemId, code, store, country, types);
 	}
 
 	/*
