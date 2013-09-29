@@ -225,7 +225,9 @@ public final class Core extends ActionHandler {
 				output.items = ItemServiceProvider.provide().getExternalIdItemBatch(itemIds);
 
 				output.pager = input.pager;
-				updatePager(output.pager, output.ranks);
+				updatePager(output.pager, output.ranks,
+						input.pager.totalCount == null ? RankServiceProvider.provide().getRanksCount(input.country, input.store, input.listType, after, before)
+								: null);
 			}
 
 			output.status = StatusType.StatusTypeSuccess;
@@ -285,7 +287,7 @@ public final class Core extends ActionHandler {
 				throw new InputValidationException(ValidationError.DateRangeOutOfBounds.getCode(),
 						ValidationError.DateRangeOutOfBounds.getMessage("0-60 days: input.before - input.after"));
 
-			output.ranks = RankServiceProvider.provide().getItemRanks(input.country, input.listType, input.item, input.after, input.before, input.pager);
+			output.ranks = RankServiceProvider.provide().getItemRanks(input.country, store, input.listType, input.item, input.after, input.before, input.pager);
 
 			if (input.pager.start.intValue() == 0) {
 				output.item = input.item;
@@ -303,11 +305,20 @@ public final class Core extends ActionHandler {
 		return output;
 	}
 
+	/**
+	 * @param pager
+	 * @param ranks
+	 */
 	private void updatePager(Pager pager, List<?> list) {
+		updatePager(pager, list, null);
+
+	}
+
+	private void updatePager(Pager pager, List<?> list, Long total) {
 		pager.start = Long.valueOf(pager.start.longValue() + list.size());
 
-		if (pager.totalCount == null && pager.count != null && list.size() < pager.count.intValue()) {
-			pager.totalCount = Long.valueOf(list.size());
+		if (total != null) {
+			pager.totalCount = total;
 		}
 	}
 }

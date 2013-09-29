@@ -11,6 +11,7 @@ import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.api.datatypes.Pager;
 import io.reflection.app.api.datatypes.SortDirectionType;
+import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.Country;
 import io.reflection.app.datatypes.Item;
@@ -201,33 +202,55 @@ final class RankService implements IRankService {
 	public List<Rank> getRanks(Country country, Store store, String listType, Date after, Date before, Pager pager) {
 		List<Rank> ranks = new ArrayList<Rank>();
 
-		if (CollectorFactory.getCollectorForStore(store.a3Code).isGrossing(listType)) {
-			pager.sortBy = "grossingposition";
-		} else {
-			pager.sortBy = "position";
-		}
+		String code = getGatherCode(store, after, before);
 
-		String getCountryStoreTypeRanksQuery = String.format(
-				"SELECT * FROM `rank` WHERE `type`='%s' AND `country`='%s' AND `source`='%s' AND %s `deleted`='n' ORDER BY `%s` %s,`date` ASC LIMIT %d,%d",
-				addslashes(listType), addslashes(country.a2Code), addslashes(store.a3Code), beforeAfterQuery(before, after), pager.sortBy,
-				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
+		if (code != null) {
+			Collector collector = CollectorFactory.getCollectorForStore(store.a3Code);
+			boolean isGrossing = collector.isGrossing(listType);
 
-		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+			List<String> types = new ArrayList<String>();
 
-		try {
-			rankConnection.connect();
-			rankConnection.executeQuery(getCountryStoreTypeRanksQuery);
-
-			while (rankConnection.fetchNextRow()) {
-				Rank rank = toRank(rankConnection);
-
-				if (rank != null) {
-					ranks.add(rank);
-				}
+			if (isGrossing) {
+				types.addAll(collector.getCounterpartTypes(listType));
 			}
-		} finally {
-			if (rankConnection != null) {
-				rankConnection.disconnect();
+
+			types.add(addslashes(listType));
+
+			String typesQueryPart = null;
+			if (types.size() == 1) {
+				typesQueryPart = String.format("`type`='%s'", types.get(0));
+			} else {
+				typesQueryPart = "`type` IN ('" + StringUtils.join(types, "','") + "')";
+			}
+
+			if (isGrossing) {
+				pager.sortBy = "grossingposition";
+			} else {
+				pager.sortBy = "position";
+			}
+
+			String getCountryStoreTypeRanksQuery = String
+					.format("SELECT * FROM `rank` WHERE %s AND `country`='%s' AND `source`='%s' AND `code`='%s' AND %s `deleted`='n' ORDER BY `%s` %s,`date` DESC LIMIT %d,%d",
+							typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), code, isGrossing ? "`grossingposition`<>0 AND" : "",
+							pager.sortBy, pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
+
+			Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+
+			try {
+				rankConnection.connect();
+				rankConnection.executeQuery(getCountryStoreTypeRanksQuery);
+
+				while (rankConnection.fetchNextRow()) {
+					Rank rank = toRank(rankConnection);
+
+					if (rank != null) {
+						ranks.add(rank);
+					}
+				}
+			} finally {
+				if (rankConnection != null) {
+					rankConnection.disconnect();
+				}
 			}
 		}
 
@@ -241,26 +264,54 @@ final class RankService implements IRankService {
 	 * java.util.Date, java.util.Date, io.reflection.app.api.datatypes.Pager)
 	 */
 	@Override
-	public List<Rank> getItemRanks(Country country, String listType, Item item, Date after, Date before, Pager pager) {
+	public List<Rank> getItemRanks(Country country, Store store, String listType, Item item, Date after, Date before, Pager pager) {
 		List<Rank> ranks = new ArrayList<Rank>();
 
-		String getCountryStoreTypeRanksQuery = String.format(
-				"SELECT * FROM `rank` WHERE `type`='%s' AND `country`='%s' AND `itemid`='%s' AND %s `deleted`='n' ORDER BY `%s` %s,`date` ASC LIMIT %d,%d",
-				addslashes(listType), addslashes(country.a2Code), addslashes(item.externalId), beforeAfterQuery(before, after), pager.sortBy,
-				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
+		String code = getGatherCode(store, after, before);
+
+		if (code != null) {
+			String getCountryStoreTypeRanksQuery = String
+					.format("SELECT * FROM `rank` WHERE `type`='%s' AND `country`='%s' AND `source`='%s' AND `itemid`='%s' AND `code`='%s' AND `deleted`='n' ORDER BY `%s` %s,`date` DESC LIMIT %d,%d",
+							addslashes(listType), addslashes(country.a2Code), addslashes(store.a3Code), addslashes(item.externalId), code, pager.sortBy,
+							pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
+
+			Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+
+			try {
+				rankConnection.connect();
+				rankConnection.executeQuery(getCountryStoreTypeRanksQuery);
+
+				while (rankConnection.fetchNextRow()) {
+					Rank rank = toRank(rankConnection);
+
+					if (rank != null) {
+						ranks.add(rank);
+					}
+				}
+			} finally {
+				if (rankConnection != null) {
+					rankConnection.disconnect();
+				}
+			}
+		}
+
+		return ranks;
+	}
+
+	private String getGatherCode(Store store, Date after, Date before) {
+		String code = null;
+
+		String getGatherCode = String.format("SELECT DISTINCT `code` FROM `rank` WHERE `source`='%s' AND %s `deleted`='n' ORDER BY `date` DESC LIMIT 1",
+				addslashes(store.a3Code), beforeAfterQuery(before, after));
 
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
 		try {
 			rankConnection.connect();
-			rankConnection.executeQuery(getCountryStoreTypeRanksQuery);
+			rankConnection.executeQuery(getGatherCode);
 
-			while (rankConnection.fetchNextRow()) {
-				Rank rank = toRank(rankConnection);
-
-				if (rank != null) {
-					ranks.add(rank);
-				}
+			if (rankConnection.fetchNextRow()) {
+				code = rankConnection.getCurrentRowString("code");
 			}
 		} finally {
 			if (rankConnection != null) {
@@ -268,7 +319,7 @@ final class RankService implements IRankService {
 			}
 		}
 
-		return ranks;
+		return code;
 	}
 
 	/**
@@ -300,25 +351,47 @@ final class RankService implements IRankService {
 	 * @see io.reflection.app.service.rank.IRankService#getRanksCount(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date)
 	 */
 	@Override
-	public Long getRanksCount(Country country, Store store, String listType, Date before, Date after) {
+	public Long getRanksCount(Country country, Store store, String listType, Date after, Date before) {
 		Long ranksCount = Long.valueOf(0);
 
-		String getRanksCountQuery = String.format(
-				"SELECT COUNT(1) AS `count` FROM `rank` WHERE `type`='%s' AND `country`='%s' AND `source`='%s' AND %s `deleted`='n'", addslashes(listType),
-				addslashes(country.a2Code), addslashes(store.a3Code), beforeAfterQuery(before, after));
+		String code = getGatherCode(store, after, before);
 
-		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+		if (code != null) {
+			Collector collector = CollectorFactory.getCollectorForStore(store.a3Code);
+			boolean isGrossing = collector.isGrossing(listType);
 
-		try {
-			rankConnection.connect();
-			rankConnection.executeQuery(getRanksCountQuery);
+			List<String> types = new ArrayList<String>();
 
-			if (rankConnection.fetchNextRow()) {
-				ranksCount = rankConnection.getCurrentRowLong("count");
+			if (isGrossing) {
+				types.addAll(collector.getCounterpartTypes(listType));
 			}
-		} finally {
-			if (rankConnection != null) {
-				rankConnection.disconnect();
+
+			types.add(addslashes(listType));
+
+			String typesQueryPart = null;
+			if (types.size() == 1) {
+				typesQueryPart = String.format("`type`='%s'", types.get(0));
+			} else {
+				typesQueryPart = "`type` IN ('" + StringUtils.join(types, "','") + "')";
+			}
+
+			String getRanksCountQuery = String.format(
+					"SELECT COUNT(1) AS `count` FROM `rank` WHERE %s AND `country`='%s' AND `source`='%s' AND `code`='%s' AND %s `deleted`='n'",
+					typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), code, isGrossing ? "`grossingposition`<>0 AND" : "");
+
+			Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+
+			try {
+				rankConnection.connect();
+				rankConnection.executeQuery(getRanksCountQuery);
+
+				if (rankConnection.fetchNextRow()) {
+					ranksCount = rankConnection.getCurrentRowLong("count");
+				}
+			} finally {
+				if (rankConnection != null) {
+					rankConnection.disconnect();
+				}
 			}
 		}
 

@@ -65,6 +65,7 @@ public interface IRankService extends IService {
 
 	/**
 	 * @param country
+	 * @param store 
 	 * @param listType
 	 * @param item
 	 * @param after
@@ -72,17 +73,17 @@ public interface IRankService extends IService {
 	 * @param pager
 	 * @return
 	 */
-	public List<Rank> getItemRanks(Country country, String listType, Item item, Date after, Date before, Pager pager);
+	public List<Rank> getItemRanks(Country country, Store store, String listType, Item item, Date after, Date before, Pager pager);
 
 	/**
 	 * @param country
 	 * @param store
 	 * @param listType
-	 * @param before
 	 * @param after
+	 * @param before
 	 * @return
 	 */
-	public Long getRanksCount(Country country, Store store, String listType, Date before, Date after);
+	public Long getRanksCount(Country country, Store store, String listType, Date after, Date before);
 
 	/**
 	 * @param item
