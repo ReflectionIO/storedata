@@ -53,8 +53,6 @@ import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
-import com.google.appengine.api.utils.SystemProperty;
-import com.google.appengine.api.utils.SystemProperty.Environment;
 import com.google.appengine.tools.mapreduce.KeyValue;
 import com.google.appengine.tools.mapreduce.MapReduceJob;
 import com.google.appengine.tools.mapreduce.MapReduceSettings;
@@ -100,9 +98,9 @@ public class DevHelperServlet extends HttpServlet {
 					LOG.log(GaeLevel.DEBUG, "Adding gather request to deferred queue");
 				}
 
-				if (SystemProperty.environment.value() == Environment.Value.Development) {
+//				if (SystemProperty.environment.value() == Environment.Value.Development) {
 					deferredQueue.add(TaskOptions.Builder.withUrl("/cron?" + req.getQueryString()).method(Method.GET));
-				}
+//				}
 			}
 			return;
 		}
