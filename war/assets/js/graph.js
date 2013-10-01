@@ -260,8 +260,7 @@ function getItemsRank() {
                 var dayOfMonth = 0; // the current day of the month. i only want to show 1 entry per day
                 var dayOfMonthOld = -1;
 
-                // the data comes in reverse so I need to loop through it in reverse()
-                $.each(data.ranks.reverse(), function(index, item){    
+                $.each(data.ranks, function(index, item){    
                     // only use the specific "type" of list e.g. topfreeapplications, topfreeipadapplications
                     if (item.type == type) {
                         
@@ -270,22 +269,27 @@ function getItemsRank() {
 
                         dayOfMonth = nodeDate.getDate();
 
-                        // only add the node to the graph if we haven't already got one for that day of the month
-                        //if (dayOfMonth != dayOfMonthOld) {
+                        
+                        // do things a bit differently if a top grossing app
+                        if ((type.indexOf("grossing") != -1)) {
+                            pos = item.grossingPosition;
+                        } else {
                             pos = item.position;
-                            var thisEntry = [item.date, pos];
-                            averagesData.push(thisEntry); // store the dates
+                        }
                             
+                        var thisEntry = [item.date, pos];
+                        averagesData.push(thisEntry); // store the dates
+                        
 
-                            if (pos > maxPosition) {
-                                maxPosition = pos;
-                            }
+                        if (pos > maxPosition) {
+                            maxPosition = pos;
+                        }
 
-                            if (pos < minPosition) {
-                                minPosition = pos;
-                            }
-                            dayOfMonthOld = dayOfMonth;
-                        //}
+                        if (pos < minPosition) {
+                            minPosition = pos;
+                        }
+                        dayOfMonthOld = dayOfMonth;
+                        
 
                         
                     };       
