@@ -262,7 +262,7 @@ function getItemsRank() {
 
                 $.each(data.ranks, function(index, item){    
                     // only use the specific "type" of list e.g. topfreeapplications, topfreeipadapplications
-                    if (item.type == type) {
+                    //if (item.type == type) {
                         
                         var nodeDate = new Date(item.date);
                         dateData.push(nodeDate); // this is purely for the console.log call below
@@ -292,7 +292,7 @@ function getItemsRank() {
                         
 
                         
-                    };       
+                    //};       
                     
                 });
 

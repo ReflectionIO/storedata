@@ -36,14 +36,7 @@ $(document).ready(function () {
 
 $('#appstore').change(function () {
 
-  // reset the starting position if you change stores
-    hideTableRows();
-    pageStartAll = 0;
-    rankList = new Object();
-
-    // show the load more button "loading..."
-    btnLoadAll.button('loading');
-    btnLoadSingle.button('loading');
+    resetTable();
 
     //alert("rub a dub");
     //alert($(this).find('option:selected').attr('rel'));
@@ -114,15 +107,20 @@ $('#country').change(function () {
 $('#datepicker').datepicker({
     format: "dd-mm-yyyy",
     endDate: convertDate(new Date()),
-    //autoclose: true,
+    autoclose: true,
     todayHighlight: true
 });
+
+$('#datepicker').attr("value", convertDate(new Date()));
 
 $('#datepicker').datepicker().on('changeDate', function (e) {
     //alert(e.date.toString());
     //alert(e.date.getTime());
     date = e.date.getTime();
     //alert(date);
+
+    resetTable();
+
     getTopItemsAll();
 });
 
@@ -142,6 +140,18 @@ $("#load_more_all, #load_more_single").click(function () {
 
 
 // --------------- METHODS ---------------
+
+function resetTable() {
+
+    // reset the starting position if you change stores
+    hideTableRows();
+    pageStartAll = 0;
+    rankList = new Object();
+
+    // show the load more button "loading..."
+    btnLoadAll.button('loading');
+    btnLoadSingle.button('loading');
+}
 
 function convertDate(d) {
     function pad2(n) {
@@ -240,13 +250,14 @@ function getTopItems(listType, listID) {
                 // if we are looking at a specific overview type then get the entries for it
                 if (overviewType != "all" && overviewType == listID) {
                   getTopItemsSingle(listType, listID);
-                  btnLoadSingle.button('reset');
+                  
                 }
                 
                 //lookupApplications(idLookupString, data.ranks, listType, listID);
 
                 // make the "Load more" button active again after just one successful call (note it should be after 3 though!)
                 btnLoadAll.button('reset');
+                btnLoadSingle.button('reset');
                 
             } else {
                 // only display the error message once (this function is called 3 times)
