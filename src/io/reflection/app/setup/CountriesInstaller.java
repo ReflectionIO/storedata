@@ -8,8 +8,8 @@
 package io.reflection.app.setup;
 
 import static io.reflection.app.objectify.PersistenceService.ofy;
-import io.reflection.app.datatypes.Country;
 import io.reflection.app.service.country.CountryServiceProvider;
+import io.reflection.app.shared.datatypes.Country;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -5,7 +5,7 @@ package io.reflection.app.mapreduce;
 
 import static io.reflection.app.objectify.PersistenceService.ofy;
 import io.reflection.app.collectors.CollectorIOS;
-import io.reflection.app.datatypes.Rank;
+import io.reflection.app.shared.datatypes.Rank;
 
 import java.util.logging.Logger;
 

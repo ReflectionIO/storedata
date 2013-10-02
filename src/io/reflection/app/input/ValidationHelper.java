@@ -7,15 +7,15 @@
 //
 package io.reflection.app.input;
 
-import io.reflection.app.api.datatypes.Pager;
+import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
-import io.reflection.app.datatypes.Country;
-import io.reflection.app.datatypes.Item;
-import io.reflection.app.datatypes.Store;
 import io.reflection.app.service.country.CountryServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
+import io.reflection.app.shared.datatypes.Country;
+import io.reflection.app.shared.datatypes.Item;
+import io.reflection.app.shared.datatypes.Store;
 
 import java.util.List;
 

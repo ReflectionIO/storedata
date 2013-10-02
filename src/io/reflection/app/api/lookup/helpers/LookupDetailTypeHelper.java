@@ -7,7 +7,7 @@
 //
 package io.reflection.app.api.lookup.helpers;
 
-import io.reflection.app.api.lookup.datatypes.LookupDetailType;
+import io.reflection.app.api.lookup.shared.datatypes.LookupDetailType;
 
 /**
  * @author billy1380

@@ -9,7 +9,7 @@
 
 package io.reflection.app.service.fetchfeed;
 
-import io.reflection.app.datatypes.FeedFetch;
+import io.reflection.app.shared.datatypes.FeedFetch;
 
 import com.spacehopperstudios.service.IService;
 

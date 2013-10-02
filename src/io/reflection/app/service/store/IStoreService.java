@@ -9,9 +9,9 @@ package io.reflection.app.service.store;
 
 import java.util.List;
 
-import io.reflection.app.api.datatypes.Pager;
-import io.reflection.app.datatypes.Country;
-import io.reflection.app.datatypes.Store;
+import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.shared.datatypes.Country;
+import io.reflection.app.shared.datatypes.Store;
 
 import com.spacehopperstudios.service.IService;
 

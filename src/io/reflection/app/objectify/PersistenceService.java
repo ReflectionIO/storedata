@@ -7,7 +7,7 @@
 //
 package io.reflection.app.objectify;
 
-import io.reflection.app.datatypes.FeedFetch;
+import io.reflection.app.shared.datatypes.FeedFetch;
 
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;

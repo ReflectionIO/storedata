@@ -1,9 +1,9 @@
 package io.reflection.app.mapreduce;
 
 import static com.willshex.gson.json.shared.Convert.toJsonObject;
-import io.reflection.app.datatypes.Item;
-import io.reflection.app.datatypes.Rank;
 import io.reflection.app.service.item.ItemServiceProvider;
+import io.reflection.app.shared.datatypes.Item;
+import io.reflection.app.shared.datatypes.Rank;
 
 import java.nio.ByteBuffer;
 import java.util.logging.Logger;

@@ -10,9 +10,9 @@ package io.reflection.app.persisters;
 import static com.spacehopperstudios.utility.StringUtils.urldecode;
 import static com.spacehopperstudios.utility.StringUtils.urlencode;
 import io.reflection.app.collectors.CollectorFactory;
-import io.reflection.app.datatypes.Item;
-import io.reflection.app.datatypes.Rank;
 import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.shared.datatypes.Item;
+import io.reflection.app.shared.datatypes.Rank;
 
 import java.util.Date;
 import java.util.logging.Level;

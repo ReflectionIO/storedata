@@ -7,11 +7,11 @@
 //
 package io.reflection.app.service.rank;
 
-import io.reflection.app.api.datatypes.Pager;
-import io.reflection.app.datatypes.Country;
-import io.reflection.app.datatypes.Item;
-import io.reflection.app.datatypes.Rank;
-import io.reflection.app.datatypes.Store;
+import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.shared.datatypes.Country;
+import io.reflection.app.shared.datatypes.Item;
+import io.reflection.app.shared.datatypes.Rank;
+import io.reflection.app.shared.datatypes.Store;
 
 import java.util.Date;
 import java.util.List;

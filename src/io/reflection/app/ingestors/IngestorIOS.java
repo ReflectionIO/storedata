@@ -9,11 +9,11 @@
 package io.reflection.app.ingestors;
 
 import io.reflection.app.collectors.StoreCollector;
-import io.reflection.app.datatypes.FeedFetch;
-import io.reflection.app.datatypes.Item;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.persisters.PersisterBase;
 import io.reflection.app.service.fetchfeed.FeedFetchServiceProvider;
+import io.reflection.app.shared.datatypes.FeedFetch;
+import io.reflection.app.shared.datatypes.Item;
 
 import java.io.BufferedReader;
 import java.io.IOException;

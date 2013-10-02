@@ -3,7 +3,7 @@
  */
 package io.reflection.app.ingestors;
 
-import io.reflection.app.datatypes.Item;
+import io.reflection.app.shared.datatypes.Item;
 
 import java.util.List;
 

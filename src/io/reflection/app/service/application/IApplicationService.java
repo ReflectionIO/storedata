@@ -10,9 +10,9 @@ package io.reflection.app.service.application;
 
 import java.util.List;
 
-import io.reflection.app.api.lookup.datatypes.LookupDetailType;
-import io.reflection.app.datatypes.Application;
-import io.reflection.app.datatypes.Store;
+import io.reflection.app.api.lookup.shared.datatypes.LookupDetailType;
+import io.reflection.app.shared.datatypes.Application;
+import io.reflection.app.shared.datatypes.Store;
 
 import com.spacehopperstudios.service.IService;
 

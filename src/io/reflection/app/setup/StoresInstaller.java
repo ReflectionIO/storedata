@@ -8,8 +8,8 @@
 package io.reflection.app.setup;
 
 import static io.reflection.app.objectify.PersistenceService.ofy;
-import io.reflection.app.datatypes.Store;
 import io.reflection.app.service.store.StoreServiceProvider;
+import io.reflection.app.shared.datatypes.Store;
 
 import java.util.ArrayList;
 import java.util.Arrays;

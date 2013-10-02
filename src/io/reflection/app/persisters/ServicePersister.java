@@ -8,12 +8,12 @@
 package io.reflection.app.persisters;
 
 import io.reflection.app.collectors.CollectorFactory;
-import io.reflection.app.datatypes.Item;
-import io.reflection.app.datatypes.Rank;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.item.IItemService;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
+import io.reflection.app.shared.datatypes.Item;
+import io.reflection.app.shared.datatypes.Rank;
 
 import java.util.ArrayList;
 import java.util.Date;

@@ -5,10 +5,6 @@ package io.reflection.app;
 
 import static io.reflection.app.objectify.PersistenceService.ofy;
 import io.reflection.app.collectors.CollectorIOS;
-import io.reflection.app.datatypes.FeedFetch;
-import io.reflection.app.datatypes.ItemRankSummary;
-import io.reflection.app.datatypes.Rank;
-import io.reflection.app.datatypes.Store;
 import io.reflection.app.ingestors.Ingestor;
 import io.reflection.app.ingestors.IngestorFactory;
 import io.reflection.app.logging.GaeLevel;
@@ -21,6 +17,10 @@ import io.reflection.app.service.application.ApplicationServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.setup.CountriesInstaller;
 import io.reflection.app.setup.StoresInstaller;
+import io.reflection.app.shared.datatypes.FeedFetch;
+import io.reflection.app.shared.datatypes.ItemRankSummary;
+import io.reflection.app.shared.datatypes.Rank;
+import io.reflection.app.shared.datatypes.Store;
 
 import java.io.IOException;
 import java.net.MalformedURLException;

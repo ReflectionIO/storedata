@@ -9,15 +9,15 @@ package io.reflection.app.apple;
 
 import static com.willshex.gson.json.shared.Convert.fromJsonObject;
 import static com.willshex.gson.json.shared.Convert.toJsonObject;
-import io.reflection.app.api.lookup.datatypes.LookupDetailType;
+import io.reflection.app.api.lookup.shared.datatypes.LookupDetailType;
 //import io.reflection.app.collectors.HttpExternalGetter;
-import io.reflection.app.datatypes.Application;
-import io.reflection.app.datatypes.Item;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.application.ApplicationServiceProvider;
 //import io.reflection.app.service.item.IItemService;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
+import io.reflection.app.shared.datatypes.Application;
+import io.reflection.app.shared.datatypes.Item;
 
 import java.io.IOException;
 import java.util.Arrays;

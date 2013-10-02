@@ -8,7 +8,7 @@
 //
 package io.reflection.app.api.lookup;
 
-import io.reflection.app.api.lookup.call.LookupApplicationRequest;
+import io.reflection.app.api.lookup.shared.call.LookupApplicationRequest;
 
 import com.google.gson.JsonObject;
 import com.willshex.gson.json.service.server.JsonServlet;

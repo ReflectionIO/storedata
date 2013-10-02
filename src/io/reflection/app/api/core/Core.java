@@ -7,25 +7,28 @@
 //
 package io.reflection.app.api.core;
 
-import io.reflection.app.api.core.call.GetCountriesRequest;
-import io.reflection.app.api.core.call.GetCountriesResponse;
-import io.reflection.app.api.core.call.GetItemRanksRequest;
-import io.reflection.app.api.core.call.GetItemRanksResponse;
-import io.reflection.app.api.core.call.GetStoresRequest;
-import io.reflection.app.api.core.call.GetStoresResponse;
-import io.reflection.app.api.core.call.GetTopItemsRequest;
-import io.reflection.app.api.core.call.GetTopItemsResponse;
-import io.reflection.app.api.datatypes.Pager;
-import io.reflection.app.api.datatypes.SortDirectionType;
-import io.reflection.app.datatypes.Country;
-import io.reflection.app.datatypes.Rank;
-import io.reflection.app.datatypes.Store;
+import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
+import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
+import io.reflection.app.api.core.shared.call.GetCountriesRequest;
+import io.reflection.app.api.core.shared.call.GetCountriesResponse;
+import io.reflection.app.api.core.shared.call.GetItemRanksRequest;
+import io.reflection.app.api.core.shared.call.GetItemRanksResponse;
+import io.reflection.app.api.core.shared.call.GetStoresRequest;
+import io.reflection.app.api.core.shared.call.GetStoresResponse;
+import io.reflection.app.api.core.shared.call.GetTopItemsRequest;
+import io.reflection.app.api.core.shared.call.GetTopItemsResponse;
+import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.collectors.CollectorIOS;
 import io.reflection.app.input.ValidationError;
 import io.reflection.app.input.ValidationHelper;
 import io.reflection.app.service.country.CountryServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
+import io.reflection.app.shared.datatypes.Country;
+import io.reflection.app.shared.datatypes.Rank;
+import io.reflection.app.shared.datatypes.Store;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -239,6 +242,109 @@ public final class Core extends ActionHandler {
 		return output;
 	}
 
+	public GetAllTopItemsResponse getAllTopItems(GetAllTopItemsRequest input) {
+		LOG.finer("Entering getAllTopItems");
+		GetAllTopItemsResponse output = new GetAllTopItemsResponse();
+
+		try {
+			if (input == null)
+				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
+						ValidationError.InvalidValueNull.getMessage("GetAllTopItemsRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			input.pager = ValidationHelper.validatePager(input.pager, "input");
+
+			if (input.pager.sortDirection == null) {
+				input.pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
+			}
+
+			input.country = ValidationHelper.validateCountry(input.country, "input");
+
+			if (input.listType == null)
+				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
+						ValidationError.InvalidValueNull.getMessage("String: input.listType"));
+
+			if (input.on == null)
+				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(), ValidationError.InvalidValueNull.getMessage("Date: input.on"));
+
+			input.store = ValidationHelper.validateStore(input.store, "input");
+
+			if (input.store == null)
+				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
+						ValidationError.InvalidValueNull.getMessage("Store: input.store"));
+
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(input.on);
+			cal.set(Calendar.HOUR_OF_DAY, 0);
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.SECOND, 0);
+			cal.set(Calendar.MILLISECOND, 1);
+			Date after = cal.getTime();
+			cal.add(Calendar.DAY_OF_YEAR, 1);
+			Date before = cal.getTime();
+
+			List<String> itemIds = new ArrayList<String>();
+			final Map<String, Rank> lookup = new HashMap<String, Rank>();
+
+			List<Rank> ranks = RankServiceProvider.provide().getRanks(input.country, input.store, getFreeListName(input.store, input.listType), after, before,
+					input.pager);
+
+			if (ranks != null && ranks.size() != 0) {
+				for (Rank rank : ranks) {
+					if (!lookup.containsKey(rank.itemId)) {
+						itemIds.add(rank.itemId);
+						lookup.put(rank.itemId, rank);
+					}
+				}
+
+				output.freeRanks = ranks;
+
+				output.pager = input.pager;
+				updatePager(output.pager, output.freeRanks,
+						input.pager.totalCount == null ? RankServiceProvider.provide().getRanksCount(input.country, input.store, input.listType, after, before)
+								: null);
+			}
+
+			ranks = RankServiceProvider.provide()
+					.getRanks(input.country, input.store, getPaidListName(input.store, input.listType), after, before, input.pager);
+
+			if (ranks != null && ranks.size() != 0) {
+				for (Rank rank : ranks) {
+					if (!lookup.containsKey(rank.itemId)) {
+						itemIds.add(rank.itemId);
+						lookup.put(rank.itemId, rank);
+					}
+				}
+
+				output.paidRanks = ranks;
+			}
+
+			ranks = RankServiceProvider.provide().getRanks(input.country, input.store, getGrossingListName(input.store, input.listType), after, before,
+					input.pager);
+
+			if (ranks != null && ranks.size() != 0) {
+				for (Rank rank : ranks) {
+					if (!lookup.containsKey(rank.itemId)) {
+						itemIds.add(rank.itemId);
+						lookup.put(rank.itemId, rank);
+					}
+				}
+
+				output.grossingRanks = ranks;
+			}
+
+			output.items = ItemServiceProvider.provide().getExternalIdItemBatch(itemIds);
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getAllTopItems");
+		return output;
+	}
+
 	public GetItemRanksResponse getItemRanks(GetItemRanksRequest input) {
 		LOG.finer("Entering getItemRanks");
 		GetItemRanksResponse output = new GetItemRanksResponse();
@@ -320,5 +426,48 @@ public final class Core extends ActionHandler {
 		if (total != null) {
 			pager.totalCount = total;
 		}
+	}
+
+	private String getFreeListName(Store store, String type) {
+		String listName = null;
+
+		if ("ios".equalsIgnoreCase(store.a3Code)) {
+			if ("ipad".equalsIgnoreCase(type)) {
+				listName = CollectorIOS.TOP_FREE_APPS;
+			} else {
+				listName = CollectorIOS.TOP_FREE_IPAD_APPS;
+			}
+		}
+
+		return listName;
+	}
+
+	private String getPaidListName(Store store, String type) {
+		String listName = null;
+
+		if ("ios".equalsIgnoreCase(store.a3Code)) {
+			if ("ipad".equalsIgnoreCase(type)) {
+				listName = CollectorIOS.TOP_PAID_APPS;
+			} else {
+				listName = CollectorIOS.TOP_PAID_IPAD_APPS;
+			}
+		}
+
+		return listName;
+
+	}
+
+	private String getGrossingListName(Store store, String type) {
+		String listName = null;
+
+		if ("ios".equalsIgnoreCase(store.a3Code)) {
+			if ("ipad".equalsIgnoreCase(type)) {
+				listName = CollectorIOS.TOP_GROSSING_APPS;
+			} else {
+				listName = CollectorIOS.TOP_GROSSING_IPAD_APPS;
+			}
+		}
+
+		return listName;
 	}
 }

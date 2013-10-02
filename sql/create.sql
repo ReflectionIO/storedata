@@ -13,7 +13,8 @@ CREATE TABLE `country` (
   `continent` varchar(1000) DEFAULT NULL,
   `stores` text,
   `deleted` enum('y','n') DEFAULT 'n',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_a2code` (`a2code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
 
 CREATE TABLE `item` (
@@ -33,7 +34,9 @@ CREATE TABLE `item` (
   `largeimage` varchar(4096) DEFAULT NULL,
   `properties` text,
   `deleted` enum('y','n') DEFAULT 'n',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `index_internalid` (`internalid`),
+  KEY `index_externalid` (`externalid`(255))
 ) ENGINE=InnoDB AUTO_INCREMENT=10631 DEFAULT CHARSET=utf8$$
 
 CREATE TABLE `rank` (
@@ -50,10 +53,9 @@ CREATE TABLE `rank` (
   `currency` varchar(100) DEFAULT NULL,
   `code` varchar(100) DEFAULT NULL,
   `deleted` enum('y','n') DEFAULT 'n',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `index_code` (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
-
-
 
 CREATE TABLE `store` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -63,7 +65,8 @@ CREATE TABLE `store` (
   `url` varchar(4096) DEFAULT NULL,
   `countries` text,
   `deleted` enum('y','n') DEFAULT 'n',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_a3code` (`a3code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
 
 CREATE TABLE `sup_application_iap` (

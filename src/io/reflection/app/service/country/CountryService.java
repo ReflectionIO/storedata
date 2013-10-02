@@ -8,15 +8,15 @@
 package io.reflection.app.service.country;
 
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
-import io.reflection.app.api.datatypes.Pager;
-import io.reflection.app.api.datatypes.SortDirectionType;
-import io.reflection.app.datatypes.Country;
-import io.reflection.app.datatypes.Store;
+import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
+import io.reflection.app.shared.datatypes.Country;
+import io.reflection.app.shared.datatypes.Store;
 
 import java.util.ArrayList;
 import java.util.Arrays;

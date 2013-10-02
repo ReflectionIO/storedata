@@ -53,7 +53,7 @@
 		<name>persist</name>
 		<rate>50/s</rate>
 		<bucket-size>10</bucket-size>
-		<max-concurrent-requests>50</max-concurrent-requests>
+		<max-concurrent-requests>10</max-concurrent-requests>
 		<retry-parameters>
 			<task-retry-limit>5</task-retry-limit>
 		</retry-parameters>

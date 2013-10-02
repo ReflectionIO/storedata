@@ -13,12 +13,12 @@ import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 
 import com.google.appengine.api.utils.SystemProperty;
 
-import io.reflection.app.datatypes.FeedFetch;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
+import io.reflection.app.shared.datatypes.FeedFetch;
 
 final class FeedFetchService implements IFeedFetchService {
 	public String getName() {

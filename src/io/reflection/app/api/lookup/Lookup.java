@@ -8,12 +8,12 @@
 //
 package io.reflection.app.api.lookup;
 
-import io.reflection.app.api.lookup.call.LookupApplicationRequest;
-import io.reflection.app.api.lookup.call.LookupApplicationResponse;
-import io.reflection.app.datatypes.Application;
+import io.reflection.app.api.lookup.shared.call.LookupApplicationRequest;
+import io.reflection.app.api.lookup.shared.call.LookupApplicationResponse;
 import io.reflection.app.input.ValidationError;
 import io.reflection.app.input.ValidationHelper;
 import io.reflection.app.service.application.ApplicationServiceProvider;
+import io.reflection.app.shared.datatypes.Application;
 
 import java.util.ArrayList;
 import java.util.List;

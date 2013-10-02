@@ -7,10 +7,11 @@
 //
 package io.reflection.app.api.core;
 
-import io.reflection.app.api.core.call.GetCountriesRequest;
-import io.reflection.app.api.core.call.GetItemRanksRequest;
-import io.reflection.app.api.core.call.GetStoresRequest;
-import io.reflection.app.api.core.call.GetTopItemsRequest;
+import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
+import io.reflection.app.api.core.shared.call.GetCountriesRequest;
+import io.reflection.app.api.core.shared.call.GetItemRanksRequest;
+import io.reflection.app.api.core.shared.call.GetStoresRequest;
+import io.reflection.app.api.core.shared.call.GetTopItemsRequest;
 
 import com.google.gson.JsonObject;
 import com.willshex.gson.json.service.server.JsonServlet;
@@ -34,6 +35,10 @@ public final class CoreJsonServlet extends JsonServlet {
 			GetTopItemsRequest input = new GetTopItemsRequest();
 			input.fromJson(request);
 			output = service.getTopItems(input).toString();
+		} else if ("GetAllTopItems".equals(action)) {
+			GetAllTopItemsRequest input = new GetAllTopItemsRequest();
+			input.fromJson(request);
+			output = service.getAllTopItems(input).toString();
 		} else if ("GetItemRanks".equals(action)) {
 			GetItemRanksRequest input = new GetItemRanksRequest();
 			input.fromJson(request);

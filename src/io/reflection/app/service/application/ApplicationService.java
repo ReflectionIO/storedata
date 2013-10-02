@@ -10,15 +10,15 @@ package io.reflection.app.service.application;
 
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
-import io.reflection.app.api.lookup.datatypes.LookupDetailType;
 import io.reflection.app.api.lookup.helpers.LookupDetailTypeHelper;
-import io.reflection.app.datatypes.Application;
-import io.reflection.app.datatypes.Store;
+import io.reflection.app.api.lookup.shared.datatypes.LookupDetailType;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
+import io.reflection.app.shared.datatypes.Application;
+import io.reflection.app.shared.datatypes.Store;
 
 import java.util.ArrayList;
 import java.util.List;

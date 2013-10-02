@@ -10,7 +10,7 @@ package io.reflection.app.service.item;
 
 import java.util.List;
 
-import io.reflection.app.datatypes.Item;
+import io.reflection.app.shared.datatypes.Item;
 
 import com.spacehopperstudios.service.IService;
 
