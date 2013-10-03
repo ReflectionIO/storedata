@@ -287,7 +287,8 @@ public final class Core extends ActionHandler {
 			List<String> itemIds = new ArrayList<String>();
 			final Map<String, Rank> lookup = new HashMap<String, Rank>();
 
-			List<Rank> ranks = RankServiceProvider.provide().getRanks(input.country, input.store, getFreeListName(input.store, input.listType), after, before,
+			String freeListType;
+			List<Rank> ranks = RankServiceProvider.provide().getRanks(input.country, input.store, freeListType = getFreeListName(input.store, input.listType), after, before,
 					input.pager);
 
 			if (ranks != null && ranks.size() != 0) {
@@ -333,7 +334,7 @@ public final class Core extends ActionHandler {
 
 			output.pager = input.pager;
 			updatePager(output.pager, output.freeRanks,
-					input.pager.totalCount == null ? RankServiceProvider.provide().getRanksCount(input.country, input.store, input.listType, after, before)
+					input.pager.totalCount == null ? RankServiceProvider.provide().getRanksCount(input.country, input.store, freeListType, after, before)
 							: null);
 
 			output.status = StatusType.StatusTypeSuccess;
