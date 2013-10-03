@@ -240,6 +240,22 @@ function getItemsRank() {
     var type = url.param("type");
     var country = url.param("country");
 
+    var startDate = new Date(2013,9,22).getTime();
+    var endDate = new Date().getTime(); // today
+
+    // var endDate = new Date();
+    // var startDate = endDate.setDate(endDate.getDate()-7);
+
+    // console.log(startDate);
+    // console.log(endDate);
+
+    // endDate = endDate.getTime();
+    // startDate = startDate.getTime();
+
+    console.log(startDate);
+    console.log(endDate);
+    
+
     var requestString = "{'accessCode':'b72b4e32-1062-4cc7-bc6b-52498ee10f09','item':{'source':'ios','externalId':"+itemId+"},'listType':'"+type+"','country':{'a2Code':'"+country+"'}}";
 
     $.ajax({

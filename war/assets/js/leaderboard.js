@@ -96,11 +96,14 @@ $('#country').change(function () {
     var selected = $(this).find('option:selected');
     var value = selected.attr("value");
 
-    //country = value;
+    country = value;
 
     //getTopItemsAll();
 
     //alert(selected + " " + value);
+
+    resetTable();
+    getTopItemsAll();
 });
 
 
@@ -120,7 +123,6 @@ $('#datepicker').datepicker().on('changeDate', function (e) {
     //alert(date);
 
     resetTable();
-
     getTopItemsAll();
 });
 
