@@ -7,13 +7,20 @@
 //
 package io.reflection.app.admin.client;
 
-import com.google.gwt.core.client.EntryPoint;
+import io.reflection.app.admin.client.controller.NavigationController;
+import io.reflection.app.admin.client.part.Footer;
+import io.reflection.app.admin.client.part.Header;
+
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.RootPanel;
 
 /**
  * @author billy1380
  * 
  */
-public class AdminSystem implements EntryPoint {
+public class AdminSystem extends ErrorHandlingEntryPoint {
+
+	HTMLPanel mContainer;
 
 	/*
 	 * (non-Javadoc)
@@ -22,7 +29,23 @@ public class AdminSystem implements EntryPoint {
 	 */
 	@Override
 	public void onModuleLoad() {
-		// TODO Auto-generated method stub
+		super.onModuleLoad();
+
+		mContainer = new HTMLPanel("");
+		mContainer.getElement().setId("container");
+
+		mContainer.add(new Header());
+
+		NavigationController nav = NavigationController.get();
+		mContainer.add(nav.getPageHolderPanel());
+
+		nav.addRanksPage();
+
+		mContainer.add(new Footer());
+
+		RootPanel.get().add(mContainer);
+		
+		
 
 	}
 

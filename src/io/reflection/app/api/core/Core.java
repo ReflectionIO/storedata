@@ -207,9 +207,9 @@ public final class Core extends ActionHandler {
 			cal.set(Calendar.MINUTE, 0);
 			cal.set(Calendar.SECOND, 0);
 			cal.set(Calendar.MILLISECOND, 1);
-			Date after = cal.getTime();
-			cal.add(Calendar.DAY_OF_YEAR, 1);
 			Date before = cal.getTime();
+			cal.add(Calendar.DAY_OF_YEAR, -1);
+			Date after = cal.getTime();
 
 			List<Rank> ranks = RankServiceProvider.provide().getRanks(input.country, input.store, input.listType, after, before, input.pager);
 
@@ -280,9 +280,9 @@ public final class Core extends ActionHandler {
 			cal.set(Calendar.MINUTE, 0);
 			cal.set(Calendar.SECOND, 0);
 			cal.set(Calendar.MILLISECOND, 1);
-			Date after = cal.getTime();
-			cal.add(Calendar.DAY_OF_YEAR, 1);
 			Date before = cal.getTime();
+			cal.add(Calendar.DAY_OF_YEAR, -1);
+			Date after = cal.getTime();
 
 			List<String> itemIds = new ArrayList<String>();
 			final Map<String, Rank> lookup = new HashMap<String, Rank>();
@@ -299,11 +299,6 @@ public final class Core extends ActionHandler {
 				}
 
 				output.freeRanks = ranks;
-
-				output.pager = input.pager;
-				updatePager(output.pager, output.freeRanks,
-						input.pager.totalCount == null ? RankServiceProvider.provide().getRanksCount(input.country, input.store, input.listType, after, before)
-								: null);
 			}
 
 			ranks = RankServiceProvider.provide()
@@ -335,6 +330,11 @@ public final class Core extends ActionHandler {
 			}
 
 			output.items = ItemServiceProvider.provide().getExternalIdItemBatch(itemIds);
+
+			output.pager = input.pager;
+			updatePager(output.pager, output.freeRanks,
+					input.pager.totalCount == null ? RankServiceProvider.provide().getRanksCount(input.country, input.store, input.listType, after, before)
+							: null);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -433,9 +433,9 @@ public final class Core extends ActionHandler {
 
 		if ("ios".equalsIgnoreCase(store.a3Code)) {
 			if ("ipad".equalsIgnoreCase(type)) {
-				listName = CollectorIOS.TOP_FREE_APPS;
-			} else {
 				listName = CollectorIOS.TOP_FREE_IPAD_APPS;
+			} else {
+				listName = CollectorIOS.TOP_FREE_APPS;
 			}
 		}
 
@@ -447,9 +447,9 @@ public final class Core extends ActionHandler {
 
 		if ("ios".equalsIgnoreCase(store.a3Code)) {
 			if ("ipad".equalsIgnoreCase(type)) {
-				listName = CollectorIOS.TOP_PAID_APPS;
-			} else {
 				listName = CollectorIOS.TOP_PAID_IPAD_APPS;
+			} else {
+				listName = CollectorIOS.TOP_PAID_APPS;
 			}
 		}
 
@@ -462,9 +462,9 @@ public final class Core extends ActionHandler {
 
 		if ("ios".equalsIgnoreCase(store.a3Code)) {
 			if ("ipad".equalsIgnoreCase(type)) {
-				listName = CollectorIOS.TOP_GROSSING_APPS;
-			} else {
 				listName = CollectorIOS.TOP_GROSSING_IPAD_APPS;
+			} else {
+				listName = CollectorIOS.TOP_GROSSING_APPS;
 			}
 		}
 
