@@ -31,6 +31,7 @@ a {
 p {
     font-size: 1em;
     line-height: 1.5625;
+    margin-bottom: 2em;
 }
 select {
     color: #fff;
@@ -74,7 +75,7 @@ select {
 #header {
     overflow: hidden;
     height: auto;
-    background: #363744 url('../images/bg.png') fixed no-repeat bottom;
+    background: #363744 url('../images/header_bg.jpg') fixed no-repeat bottom;
     height: 100%}
 .no-touch #header {
     background-attachment: fixed;
@@ -105,7 +106,6 @@ margin-top: 100px;
     font-size: 16px;
     opacity: 0;
     padding-top: 2em;
-    padding-bottom: 60px;
     color: #8587a1;
 }
 #intro p {
@@ -115,9 +115,14 @@ margin-top: 100px;
    width: 360px;
    margin: 40px 8px 0;
    display: inline;
-   height: 62px;
+   height: 60px;
    border-radius: 5px;
    background: #23242e;
+   border: 2px solid #23242e !important;
+   color: white;
+   font-size: 14px;
+   letter-spacing: 0px;
+   font-family: AvenirNextLTPro-Demi, Arial, sans-serif;
 }
 #intro .invite {
 -webkit-appearance: none;
@@ -235,6 +240,13 @@ transition: all .4s ease-in-out;
 .about a:hover {
    color: white;
    background: #7e72c9;
+}
+.about-image {
+
+    /* Remove the hex code and add your image here. Remove this comment too! */
+    
+    background: #f5f5f5 url(../images/put-an-image-here-alex.png);
+    height: 450px;
 }
 #call-to-action {
    background: #7e72c9;
@@ -394,7 +406,7 @@ a.mail {
 section#studio {
     overflow: hidden;
 }
-#studio, #contacts {
+#studio {
     background: whitesmoke;
 }
 .swiper-slide:not(.swiper-slide-active) img {
@@ -455,7 +467,7 @@ section#studio {
 .swiper-container {
     overflow: visible;
     margin: 0 auto;
-    max-width: 670px;
+    max-width: 1000px;
     height: 50px;
 }
 .service {
@@ -467,7 +479,7 @@ section#studio {
 .service h5 {
     margin-top: 30px;
     margin-bottom: .5em;
-    color: #999;
+    color: #484a50;
     font-size: 1.3125em;
     -webkit-transition: all .4s ease-in-out;
     -moz-transition: all .4s ease-in-out;
@@ -685,10 +697,14 @@ input {
 input[type=text] {
     margin-bottom: 15px;
     height: 40px;
+    border-radius: 5px !important;
+    border: 2px solid #e9eaef !important;
 }
 textarea {
     height: 120px;
     resize: none;
+    border-radius: 5px !important;
+    border: 2px solid #e9eaef !important;
 }
 input[type=text], textarea {
     padding: 1em;
@@ -700,7 +716,7 @@ input[type=text], textarea {
     color: #1a1a1a;
 }
 input[type=text]:focus, textarea:focus {
-    background: #e6e6e6;
+    border-color: #d8d9dd !important;
     -webkit-transition: all .15s linear;
     -moz-transition: all .15s linear;
     transition: all .15s linear;
