@@ -7,6 +7,7 @@
 //
 package io.reflection.app.admin.client.controller;
 
+import io.reflection.app.admin.client.page.FeedBrowserPage;
 import io.reflection.app.admin.client.page.RanksPage;
 
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -21,6 +22,7 @@ public class NavigationController {
 
 	private HTMLPanel mPanel = null;
 	private RanksPage mRanksPage = null;
+	private FeedBrowserPage mFeedBrowserPage = null;
 
 	public static NavigationController get() {
 		if (mOne == null) {
@@ -57,6 +59,20 @@ public class NavigationController {
 			mPanel.add(mRanksPage);
 		} else {}
 
+	}
+
+	/**
+	 * 
+	 */
+	public void addFeedBrowserPage() {
+		if (mFeedBrowserPage == null) {
+			mFeedBrowserPage = new FeedBrowserPage();
+		}
+
+		if (!mFeedBrowserPage.isAttached()) {
+			mPanel.clear();
+			mPanel.add(mFeedBrowserPage);
+		} else {}
 	}
 
 }

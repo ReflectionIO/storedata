@@ -32,10 +32,6 @@ public class RankController {
 
 	private static RankController mOne = null;
 
-	public static final String HOST = Window.Location.getHost();
-
-	public static final String CORE_END_POINT = "http://" + HOST + "/core";
-
 	private Map<String, Item> mItemLookup = new HashMap<String, Item>();
 
 	public static RankController get() {
@@ -48,10 +44,10 @@ public class RankController {
 
 	public void getAllTopItems() {
 		CoreService service = new CoreService();
-		service.setUrl(CORE_END_POINT);
+		service.setUrl(ControllerHelper.CORE_END_POINT);
 
 		final GetAllTopItemsRequest input = new GetAllTopItemsRequest();
-		input.accessCode = "b72b4e32-1062-4cc7-bc6b-52498ee10f09";
+		input.accessCode = ControllerHelper.ACCESS_CODE;
 
 		input.country = new Country();
 		input.country.a2Code = "gb";
@@ -77,9 +73,9 @@ public class RankController {
 						}
 					}
 
-					EventController.get().fireEventFromSource(new ReceivedRanks("free" + input.listType, result.freeRanks), RankController.get());
-					EventController.get().fireEventFromSource(new ReceivedRanks("paid" + input.listType, result.paidRanks), RankController.get());
-					EventController.get().fireEventFromSource(new ReceivedRanks("grossing" + input.listType, result.grossingRanks), RankController.get());
+					EventController.get().fireEventFromSource(new ReceivedRanks("free" + input.listType, result.freeRanks), RankController.this);
+					EventController.get().fireEventFromSource(new ReceivedRanks("paid" + input.listType, result.paidRanks), RankController.this);
+					EventController.get().fireEventFromSource(new ReceivedRanks("grossing" + input.listType, result.grossingRanks), RankController.this);
 				}
 			}
 

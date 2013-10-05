@@ -288,8 +288,10 @@ public final class Core extends ActionHandler {
 			final Map<String, Rank> lookup = new HashMap<String, Rank>();
 
 			String freeListType;
-			List<Rank> ranks = RankServiceProvider.provide().getRanks(input.country, input.store, freeListType = getFreeListName(input.store, input.listType), after, before,
-					input.pager);
+			String code = null;
+
+			List<Rank> ranks = RankServiceProvider.provide().getRanks(input.country, input.store, freeListType = getFreeListName(input.store, input.listType),
+					after, before, input.pager);
 
 			if (ranks != null && ranks.size() != 0) {
 				for (Rank rank : ranks) {
@@ -297,13 +299,22 @@ public final class Core extends ActionHandler {
 						itemIds.add(rank.itemId);
 						lookup.put(rank.itemId, rank);
 					}
+				}
+
+				if (code == null) {
+					code = ranks.get(0).code;
 				}
 
 				output.freeRanks = ranks;
 			}
 
-			ranks = RankServiceProvider.provide()
-					.getRanks(input.country, input.store, getPaidListName(input.store, input.listType), after, before, input.pager);
+			if (code == null) {
+				ranks = RankServiceProvider.provide().getRanks(input.country, input.store, getPaidListName(input.store, input.listType), after, before,
+						input.pager);
+			} else {
+				ranks = RankServiceProvider.provide().getGatherCodeRanks(input.country, input.store, getPaidListName(input.store, input.listType), code,
+						input.pager);
+			}
 
 			if (ranks != null && ranks.size() != 0) {
 				for (Rank rank : ranks) {
@@ -313,11 +324,20 @@ public final class Core extends ActionHandler {
 					}
 				}
 
+				if (code == null) {
+					code = ranks.get(0).code;
+				}
+
 				output.paidRanks = ranks;
 			}
 
-			ranks = RankServiceProvider.provide().getRanks(input.country, input.store, getGrossingListName(input.store, input.listType), after, before,
-					input.pager);
+			if (code == null) {
+				ranks = RankServiceProvider.provide().getRanks(input.country, input.store, getGrossingListName(input.store, input.listType), after, before,
+						input.pager);
+			} else {
+				ranks = RankServiceProvider.provide().getGatherCodeRanks(input.country, input.store, getGrossingListName(input.store, input.listType), code,
+						input.pager);
+			}
 
 			if (ranks != null && ranks.size() != 0) {
 				for (Rank rank : ranks) {
@@ -325,6 +345,10 @@ public final class Core extends ActionHandler {
 						itemIds.add(rank.itemId);
 						lookup.put(rank.itemId, rank);
 					}
+				}
+
+				if (code == null) {
+					code = ranks.get(0).code;
 				}
 
 				output.grossingRanks = ranks;
@@ -333,9 +357,15 @@ public final class Core extends ActionHandler {
 			output.items = ItemServiceProvider.provide().getExternalIdItemBatch(itemIds);
 
 			output.pager = input.pager;
-			updatePager(output.pager, output.freeRanks,
-					input.pager.totalCount == null ? RankServiceProvider.provide().getRanksCount(input.country, input.store, freeListType, after, before)
-							: null);
+			if (input.pager.totalCount == null) {
+				if (code == null) {
+					input.pager.totalCount = RankServiceProvider.provide().getRanksCount(input.country, input.store, freeListType, after, before);
+				} else {
+					input.pager.totalCount = RankServiceProvider.provide().getGatherCodeRanksCount(input.country, input.store, freeListType, code);
+				}
+			}
+
+			updatePager(output.pager, output.freeRanks, input.pager.totalCount);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {

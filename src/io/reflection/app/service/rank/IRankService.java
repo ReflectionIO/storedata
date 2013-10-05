@@ -65,7 +65,7 @@ public interface IRankService extends IService {
 
 	/**
 	 * @param country
-	 * @param store 
+	 * @param store
 	 * @param listType
 	 * @param item
 	 * @param after
@@ -96,5 +96,26 @@ public interface IRankService extends IService {
 	 * @return
 	 */
 	public Long addRanksBatch(List<Rank> ranks);
+
+	/**
+	 * 
+	 * @param country
+	 * @param store
+	 * @param listType
+	 * @param code
+	 * @param pager
+	 * @return
+	 */
+	public List<Rank> getGatherCodeRanks(Country country, Store store, String listType, String code, Pager pager);
+
+	/**
+	 * 
+	 * @param country
+	 * @param store
+	 * @param listType
+	 * @param code
+	 * @return
+	 */
+	public Long getGatherCodeRanksCount(Country country, Store store, String listType, String code);
 
 }

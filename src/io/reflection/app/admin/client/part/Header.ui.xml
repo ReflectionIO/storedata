@@ -15,8 +15,11 @@
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
-                    <li ui:field="liRanks">
-                        <g:InlineHyperlink ui:field="lnkRanks" targetHistoryToken="ranks">Ranks</g:InlineHyperlink>
+                    <li ui:field="mRanksItem">
+                        <g:InlineHyperlink ui:field="mRanksLink" targetHistoryToken="ranks">Ranks</g:InlineHyperlink>
+                    </li>
+                    <li ui:field="mFeedBrowserItem">
+                        <g:InlineHyperlink ui:field="mFeedBrowserLink" targetHistoryToken="feedbrowswer">Feed Browser</g:InlineHyperlink>
                     </li>
                 </ul>
             </div><!--/.nav-collapse -->

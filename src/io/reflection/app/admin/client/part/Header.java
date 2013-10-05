@@ -29,19 +29,29 @@ public class Header extends Composite {
 
 	interface HeaderUiBinder extends UiBinder<Widget, Header> {}
 
-	@UiField InlineHyperlink lnkRanks;
-
-	@UiField LIElement liRanks;
+	@UiField InlineHyperlink mRanksLink;
+	@UiField LIElement mRanksItem;
+	
+	@UiField InlineHyperlink mFeedBrowserLink;
+	@UiField LIElement mFeedBrowserItem;
 
 	public Header() {
 		initWidget(uiBinder.createAndBindUi(this));
-		liRanks.addClassName("active");
+		mRanksItem.addClassName("active");
 	}
 
-	@UiHandler("lnkRanks")
-	public void onLnkProjects(ClickEvent event) {
+	@UiHandler("mRanksLink")
+	public void onRanksLinkClicked(ClickEvent event) {
 		NavigationController.get().addRanksPage();
-		liRanks.addClassName("active");
+		mRanksItem.addClassName("active");
+		mFeedBrowserItem.removeClassName("active");
+	}
+	
+	@UiHandler("mFeedBrowserLink")
+	public void onFeedBrowserLinkClicked(ClickEvent event) {
+		NavigationController.get().addFeedBrowserPage();
+		mFeedBrowserItem.addClassName("active");
+		mRanksItem.removeClassName("active");
 	}
 
 }
