@@ -109,7 +109,7 @@ final class StoreService implements IStoreService {
 
 		if (commaDelimitedStoreCodes != null && commaDelimitedStoreCodes.length() != 0) {
 			String getCountryStoresQuery = String.format("SELECT * FROM `store` WHERE `a3code` IN ('%s') AND `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d",
-					commaDelimitedStoreCodes, pager.sortBy, pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "asc" : "desc",
+					commaDelimitedStoreCodes, pager.sortBy, pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
 					pager.start.longValue(), pager.count.longValue());
 
 			Connection storeConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeStore.toString());
@@ -144,8 +144,8 @@ final class StoreService implements IStoreService {
 	public List<Store> getStores(Pager pager) {
 		List<Store> stores = new ArrayList<Store>();
 
-		final String getStoresQuery = String.format("SELECT * FROM `store` ORDER BY `%s` %s LIMIT %d, %d", pager.sortBy, pager.sortDirection,
-				pager.start.longValue(), pager.count.longValue());
+		final String getStoresQuery = String.format("SELECT * FROM `store` WHERE `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d", pager.sortBy,
+				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start.longValue(), pager.count.longValue());
 		Connection storeConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeStore.toString());
 
 		try {

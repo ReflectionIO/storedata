@@ -19,7 +19,7 @@
                         <g:InlineHyperlink ui:field="mRanksLink" targetHistoryToken="ranks">Ranks</g:InlineHyperlink>
                     </li>
                     <li ui:field="mFeedBrowserItem">
-                        <g:InlineHyperlink ui:field="mFeedBrowserLink" targetHistoryToken="feedbrowswer">Feed Browser</g:InlineHyperlink>
+                        <g:InlineHyperlink ui:field="mFeedBrowserLink" targetHistoryToken="feedbrowser">Feed Browser</g:InlineHyperlink>
                     </li>
                 </ul>
             </div><!--/.nav-collapse -->

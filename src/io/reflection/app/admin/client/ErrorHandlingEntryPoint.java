@@ -41,7 +41,7 @@ public abstract class ErrorHandlingEntryPoint implements EntryPoint {
 			private String messageForThrowable(Throwable e) {
 				String message = "";
 				if (e.getCause() != null) {
-					message += "Caused by: " + messageForThrowable(e);
+					message += "Caused by: " + messageForThrowable(e.getCause());
 				}
 
 				message += e.getMessage() + "\n";

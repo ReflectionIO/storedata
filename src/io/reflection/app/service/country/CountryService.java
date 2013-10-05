@@ -194,8 +194,9 @@ final class CountryService implements ICountryService {
 		}
 
 		if (commaDelimitedCountryCodes != null && commaDelimitedCountryCodes.length() != 0) {
-			String getStoreCountriesQuery = String.format("SELECT * FROM `country` WHERE `a2code` IN ('%s') AND `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d",
-					commaDelimitedCountryCodes, pager.sortBy, pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "asc" : "desc",
+			String getStoreCountriesQuery = String.format(
+					"SELECT * FROM `country` WHERE `a2code` IN ('%s') AND `deleted`='n' ORDER BY `relevance` ASC,`%s` %s,`a2code` ASC LIMIT %d, %d",
+					commaDelimitedCountryCodes, pager.sortBy, pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
 					pager.start.longValue(), pager.count.longValue());
 
 			Connection countryConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeCountry.toString());
@@ -228,8 +229,30 @@ final class CountryService implements ICountryService {
 	 */
 	@Override
 	public List<Country> getCountries(Pager pager) {
-		// TODO Auto-generated method stub getCountries
-		return null;
+		List<Country> countries = new ArrayList<Country>();
+
+		final String getCountriesQuery = String.format("SELECT * FROM `country` WHERE `deleted`='n' ORDER BY `relevance` ASC,`%s` %s,`a2code` ASC LIMIT %d, %d", pager.sortBy,
+				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start.longValue(), pager.count.longValue());
+		Connection countryConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeCountry.toString());
+
+		try {
+			countryConnection.connect();
+			countryConnection.executeQuery(getCountriesQuery);
+
+			while (countryConnection.fetchNextRow()) {
+				Country country = toCountry(countryConnection);
+
+				if (country != null) {
+					countries.add(country);
+				}
+			}
+		} finally {
+			if (countryConnection != null) {
+				countryConnection.disconnect();
+			}
+		}
+
+		return countries;
 	}
 
 	/*

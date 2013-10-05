@@ -99,7 +99,7 @@ public class RanksPage extends Composite implements ReceivedRanksEventHandler {
 
 		EventController.get().addHandlerToSource(ReceivedRanks.TYPE, RankController.get(), this);
 		
-//		RankController.get().getAllTopItems();
+		RankController.get().getAllTopItems();
 	}
 
 	/*

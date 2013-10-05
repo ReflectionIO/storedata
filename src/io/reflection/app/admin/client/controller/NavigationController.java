@@ -9,6 +9,8 @@ package io.reflection.app.admin.client.controller;
 
 import io.reflection.app.admin.client.page.FeedBrowserPage;
 import io.reflection.app.admin.client.page.RanksPage;
+import io.reflection.app.admin.client.part.Footer;
+import io.reflection.app.admin.client.part.Header;
 
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -23,6 +25,31 @@ public class NavigationController {
 	private HTMLPanel mPanel = null;
 	private RanksPage mRanksPage = null;
 	private FeedBrowserPage mFeedBrowserPage = null;
+	private Header mHeader = null;
+	private Footer mFooter = null;
+
+	private Stack mStack;
+
+	public static class Stack {
+		private String mPage;
+
+		private Stack() {}
+
+		public String getPage() {
+			return mPage;
+		}
+
+		public static Stack parse(String value) {
+			Stack s = new Stack();
+			String[] split = value.split("/");
+
+			if (split.length > 0) {
+				s.mPage = split[0];
+			}
+
+			return s;
+		}
+	}
 
 	public static NavigationController get() {
 		if (mOne == null) {
@@ -59,6 +86,7 @@ public class NavigationController {
 			mPanel.add(mRanksPage);
 		} else {}
 
+		mHeader.activateRanks();
 	}
 
 	/**
@@ -73,6 +101,52 @@ public class NavigationController {
 			mPanel.clear();
 			mPanel.add(mFeedBrowserPage);
 		} else {}
+
+		mHeader.activateFeedBrowser();
 	}
 
+	/**
+	 * @param value
+	 */
+	public void addPage(String value) {
+		Stack s = null;
+		if (value == null || value.length() == 0) {
+			value = "rank";
+			s = Stack.parse(value);
+		}
+		
+		s = Stack.parse(value);
+
+		if ("rank".equals(s.getPage())) {
+			addRanksPage();
+		} else if ("feedbrowser".equals(s.getPage())) {
+			addFeedBrowserPage();			
+		}
+
+		mStack = s;
+	}
+
+	/**
+	 * @return
+	 */
+	public Widget getHeader() {
+		if (mHeader == null) {
+			mHeader = new Header();
+		}
+		return mHeader;
+	}
+
+	/**
+	 * @return
+	 */
+	public Widget getFooter() {
+		if (mFooter == null) {
+			mFooter = new Footer();
+		}
+		return mFooter;
+	}
+
+	public String getCurrentPage() {
+		return mStack.getPage();
+	}
 }

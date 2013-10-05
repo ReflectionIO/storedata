@@ -8,9 +8,10 @@
 package io.reflection.app.admin.client;
 
 import io.reflection.app.admin.client.controller.NavigationController;
-import io.reflection.app.admin.client.part.Footer;
-import io.reflection.app.admin.client.part.Header;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 
@@ -20,7 +21,7 @@ import com.google.gwt.user.client.ui.RootPanel;
  */
 public class AdminSystem extends ErrorHandlingEntryPoint {
 
-	HTMLPanel mContainer;
+	private HTMLPanel mContainer;
 
 	/*
 	 * (non-Javadoc)
@@ -31,22 +32,33 @@ public class AdminSystem extends ErrorHandlingEntryPoint {
 	public void onModuleLoad() {
 		super.onModuleLoad();
 
+		History.addValueChangeHandler(new ValueChangeHandler<String>() {
+
+			@Override
+			public void onValueChange(ValueChangeEvent<String> event) {
+				NavigationController.get().addPage(event.getValue());
+			}
+		});
+
+		makeContainer();
+
+		// add header
+		mContainer.add(NavigationController.get().getHeader());
+
+		// add page area
+		mContainer.add(NavigationController.get().getPageHolderPanel());
+
+		// add footer
+		mContainer.add(NavigationController.get().getFooter());
+
+		History.fireCurrentHistoryState();
+
+	}
+
+	private void makeContainer() {
 		mContainer = new HTMLPanel("");
 		mContainer.getElement().setId("container");
-
-		mContainer.add(new Header());
-
-		NavigationController nav = NavigationController.get();
-		mContainer.add(nav.getPageHolderPanel());
-
-		nav.addRanksPage();
-
-		mContainer.add(new Footer());
-
 		RootPanel.get().add(mContainer);
-		
-		
-
 	}
 
 }

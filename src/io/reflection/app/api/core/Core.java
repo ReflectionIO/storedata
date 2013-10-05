@@ -156,6 +156,7 @@ public final class Core extends ActionHandler {
 
 			if (stores != null) {
 				output.stores = stores;
+				output.pager = input.pager;
 				updatePager(output.pager, output.stores);
 			}
 

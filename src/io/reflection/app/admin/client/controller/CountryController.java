@@ -11,6 +11,7 @@ import io.reflection.app.admin.client.event.ReceivedCountries;
 import io.reflection.app.api.core.client.CoreService;
 import io.reflection.app.api.core.shared.call.GetCountriesRequest;
 import io.reflection.app.api.core.shared.call.GetCountriesResponse;
+import io.reflection.app.api.shared.datatypes.Pager;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -37,6 +38,11 @@ public class CountryController {
 
 		final GetCountriesRequest input = new GetCountriesRequest();
 		input.accessCode = ControllerHelper.ACCESS_CODE;
+
+		input.pager = new Pager();
+		input.pager.count = 30l;
+
+		input.query = "*";
 
 		service.getCountries(input, new AsyncCallback<GetCountriesResponse>() {
 
