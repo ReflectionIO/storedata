@@ -7,9 +7,12 @@
 //
 package io.reflection.app;
 
+import static io.reflection.app.objectify.PersistenceService.ofy;
 import io.reflection.app.collectors.CollectorAmazon;
 import io.reflection.app.collectors.CollectorIOS;
 import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.shared.datatypes.Item;
+import io.reflection.app.shared.datatypes.Rank;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -19,6 +22,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.googlecode.objectify.cmd.QueryKeys;
 
 /**
  * @author William Shakour
@@ -61,6 +66,7 @@ public class CronServlet extends HttpServlet {
 		}
 
 		String store = req.getParameter("store");
+		String deleteSome = req.getParameter("deletesome");
 		int count = 0;
 
 		if (store != null) {
@@ -72,6 +78,14 @@ public class CronServlet extends HttpServlet {
 				count = (new CollectorAmazon()).enqueue();
 			} else if ("play".equals(store.toLowerCase())) {
 				// google play store
+			}
+		} else if (deleteSome != null) {
+			if ("Rank".equals(deleteSome)) {
+				QueryKeys<Rank> query = ofy().load().type(Rank.class).limit(200).keys();
+				ofy().delete().keys(query.iterable());
+			} else if ("Item".equals(deleteSome)) {
+				QueryKeys<Item> query = ofy().load().type(Item.class).limit(100).keys();
+				ofy().delete().keys(query.iterable());
 			}
 		}
 

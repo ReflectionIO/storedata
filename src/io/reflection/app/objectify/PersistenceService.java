@@ -7,7 +7,8 @@
 //
 package io.reflection.app.objectify;
 
-import io.reflection.app.shared.datatypes.FeedFetch;
+import io.reflection.app.shared.datatypes.Item;
+import io.reflection.app.shared.datatypes.Rank;
 
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
@@ -21,10 +22,10 @@ public class PersistenceService {
 	static {
 		// factory().register(Country.class);
 		// factory().register(Store.class);
-		factory().register(FeedFetch.class);
-		// factory().register(Item.class);
+		// factory().register(FeedFetch.class);
+		factory().register(Item.class);
 		// factory().register(ItemRankSummary.class);
-		// factory().register(Rank.class);
+		factory().register(Rank.class);
 		// factory().register(Store.class);
 	}
 

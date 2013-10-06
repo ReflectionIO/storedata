@@ -8,9 +8,10 @@
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="4"/>
 </listAttribute>
+<booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="com.google.gdt.eclipse.maven.mavenClasspathProvider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.google.gwt.dev.DevMode"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-remoteUI &quot;${gwt_remote_ui_server_port}:${unique_id}&quot; -logLevel INFO -codeServerPort 9997 -server com.google.appengine.tools.development.gwt.AppEngineLauncher -war C:\projects\storedata\war -port 8888 io.reflection.app.admin.AdminSystem"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-remoteUI &quot;${gwt_remote_ui_server_port}:${unique_id}&quot; -logLevel INFO -codeServerPort 9997 -server com.google.appengine.tools.development.gwt.AppEngineLauncher -war /Users/billy1380/Documents/EclipseProjects/storedata/war -port 8888 io.reflection.app.admin.AdminSystem"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="storedata"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Drdbms.password=&quot;&quot; -Drdbms.user=&quot;rio_app_user&quot; -Drdbms.database=&quot;rio&quot; -Drdbms.hosted.instance=&quot;storedatacollector:reflectiondb&quot; -Drdbms.server=hosted -Ddatastore.default_high_rep_job_policy_unapplied_job_pct=50 -Xmx512m -javaagent:C:\eclipse\plugins\com.google.appengine.eclipse.sdkbundle_1.8.5\appengine-java-sdk-1.8.5\lib\agent\appengine-agent.jar -Xbootclasspath/p:/Applications/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.8.4/appengine-java-sdk-1.8.4/lib/override/appengine-dev-jdk-overrides.jar"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Drdbms.password=&quot;sooth28@duns&quot; -Drdbms.user=&quot;rio_app_user&quot; -Drdbms.database=&quot;rio&quot; -Drdbms.hosted.instance=&quot;storedatacollector:reflectiondb&quot; -Drdbms.server=hosted -javaagent:/Applications/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.8.5/appengine-java-sdk-1.8.5/lib/agent/appengine-agent.jar -Ddatastore.default_high_rep_job_policy_unapplied_job_pct=50 -Xmx512m -Xbootclasspath/p:/Applications/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.8.4/appengine-java-sdk-1.8.4/lib/override/appengine-dev-jdk-overrides.jar"/>
 </launchConfiguration>
