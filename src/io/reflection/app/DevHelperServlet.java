@@ -88,6 +88,20 @@ public class DevHelperServlet extends HttpServlet {
 		String appEngineQueue = req.getHeader("X-AppEngine-QueueName");
 		boolean isNotQueue = (appEngineQueue == null || !"deferred".toLowerCase().equals(appEngineQueue.toLowerCase()));
 
+//		if (true) {
+//			com.google.appengine.api.datastore.Query query = new com.google.appengine.api.datastore.Query("__GsFileInfo__");
+//			PreparedQuery p = DatastoreServiceFactory.getDatastoreService().prepare(query);
+//			for (Entity e : p.asIterable()) {
+//				String name = e.getKey().getName();
+//				String destname = (String) e.getProperty("filename");
+//				
+//				System.out.println(name + " " + destname);
+//			}
+//			
+//			
+//			return;
+//		}
+		
 		if (isNotQueue && (req.getParameter("defer") == null || req.getParameter("defer").equals("yes"))) {
 			Queue deferredQueue = QueueFactory.getQueue("deferred");
 
