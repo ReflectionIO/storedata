@@ -760,7 +760,7 @@ button.button {
    letter-spacing: 1px;
    box-shadow: none;
 }
-#contacts button:hover {
+#contacts button:hover, #contacts button:focus {
    background: #7e72c9;
    color: white;
 }
@@ -1096,6 +1096,10 @@ section {
     position: relative;
 }
 
+#registration .error, #registration .valid {
+    top: 10px;
+}
+
 #registration img {
     margin-bottom: 30px;
 }
@@ -1105,7 +1109,7 @@ section {
     margin-bottom: 50px;
 }
 
-#error .alert-box {
+#registration .alert-box {
 	color: white;
 }
 
@@ -1143,8 +1147,8 @@ section {
     -moz-transition: all .4s ease-in-out;
     -o-transition: all .4s ease-in-out;
     transition: all .4s ease-in-out;
-    margin: 30px 10px;
+    margin: 30px 0;
 }
-.submit-signup:hover {
+.submit-signup:hover, .submit-signup:focus {
    background: #9780e4;
 }
