@@ -14,7 +14,7 @@ $('<img/>').attr('src', 'http://placehold.it/1920x1080/1a1a1a/F4594E&amptext=192
 						jQuery('#explore').animate({opacity: '1', 'margin-top': '6em'}, 1000);
 					}
 					
-					jQuery('a.invite').addClass("ease");
+					jQuery('a.invite').addClass("smooth");
 				});
 			});
 		});
