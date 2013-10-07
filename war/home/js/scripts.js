@@ -20,8 +20,6 @@ $('<img/>').attr('src', 'http://placehold.it/1920x1080/1a1a1a/F4594E&amptext=192
 		});
 	});
 });
-
-//$('a.invite').hide().delay(1200).fadeIn(9000);
 	
 jQuery(document).ready(function() {
 
