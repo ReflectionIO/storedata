@@ -12,12 +12,12 @@ body {
     font-family: 'Helvetica Neue', helvetica;
     line-height: 1.2em;
     color: #8f9298;
-    min-width: 960px;
+    /*min-width: 960px;*/
 }
 h1, h2, h3, h4, h5, h6 {
     color: #484a50;
     letter-spacing: -1px;
-    font-weight: 700;
+    font-weight: 500;
     font-family: AvenirNextLTPro-Demi, Arial, sans-serif;
 }
 
@@ -75,8 +75,8 @@ select {
 #header {
     overflow: hidden;
     height: auto;
-    background: #363744 url('../images/header_bg.jpg') fixed no-repeat bottom;
-    height: 100%}
+    background: #343543 url('../images/header_bg.png') fixed repeat-x bottom;
+    min-height: 100%}
 .no-touch #header {
     background-attachment: fixed;
 }
@@ -88,7 +88,8 @@ margin-top: 100px;
     margin-top: 100px;
 }
 #logo img {
-
+    max-width: 180px;
+    max-height: 30px;
 }
 #intro {
     margin-top: 2em;
@@ -111,9 +112,9 @@ margin-top: 100px;
 #intro p {
     color: #fff;
 }
-#intro .address {
-   width: 360px;
-   margin: 40px 8px 0;
+/* #intro .address {
+   max-width: 360px;
+   margin: 40px 0;
    display: inline;
    height: 60px;
    border-radius: 5px;
@@ -123,7 +124,7 @@ margin-top: 100px;
    font-size: 14px;
    letter-spacing: 0px;
    font-family: AvenirNextLTPro-Demi, Arial, sans-serif;
-}
+} */
 #intro .invite {
 -webkit-appearance: none;
 background: none;
@@ -135,10 +136,10 @@ text-transform: uppercase;
 font-weight: 900;
 font-size: 12px;
 letter-spacing: 1px;
--webkit-transition: all .4s ease-in-out;
--moz-transition: all .4s ease-in-out;
--o-transition: all .4s ease-in-out;
-transition: all .4s ease-in-out;
+/* margin: 0 10px; */
+opacity: 0;
+margin-top: 2em;
+display: inline-block;
 }
 #intro .invite:hover {
    background: #9780e4;
@@ -147,6 +148,14 @@ transition: all .4s ease-in-out;
    display: inline;
    position: relative;
 }
+
+.ease {
+	-webkit-transition: all .4s ease-in-out;
+	-moz-transition: all .4s ease-in-out;
+	-o-transition: all .4s ease-in-out;
+    transition: all .4s ease-in-out;
+}
+
 #explore {
     opacity: 0;
     margin-top: 0;
@@ -201,20 +210,11 @@ transition: all .4s ease-in-out;
     /*height: 3em;*/
     margin-top: 10px;
 }
-#menu-mobile {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    width: 20px;
-    height: 20px;
-    background-image: url(../images/menu.svg);
-    background-size: 20px;
-    background-repeat: no-repeat;
-    cursor: pointer;
+.menu-mobile {
+=
+    color: red !important;
 }
-#menu-mobile:hover, #menu-mobile.active {
-    background-image: url(../images/menu-hover.svg);
-}
+
 .about {
    text-align: left;
    margin-bottom: 15px;
@@ -248,17 +248,38 @@ transition: all .4s ease-in-out;
     background: #f5f5f5 url(../images/put-an-image-here-alex.png);
     height: 450px;
 }
+
+.team,
+.team h5,
+.team p {
+    text-align: left !important;
+    padding: 0;
+    margin: 0;
+}
+.team {
+    border: 2px solid #e5e5e5;
+    border-radius: 3px;
+    padding: 25px;
+    margin: 20px 0;
+}
+.team p {
+    margin: 20px 0 0;
+    font-size: 14px;
+}
+
 #call-to-action {
    background: #7e72c9;
 }
 #call-to-action h2 {
    font-size: 18px;
    color: white;
+   text-align: center;
+   margin-bottom: 40px;
 }
 #call-to-action a {
+text-align: center;
    padding: 15px 20px;
    border: 2px solid white;
-   margin-left: 30px;
    color: white;
    border-radius: 5px;
    text-transform: uppercase;
@@ -285,7 +306,7 @@ section h1 {
 #contacts
 .member {
     margin-bottom: 2em;
-    min-heighti: 230px;
+    min-height: 230px;
 }
 .member:last-child {
     margin-bottom: 0;
@@ -696,7 +717,7 @@ input {
 }
 input[type=text] {
     margin-bottom: 15px;
-    height: 40px;
+    height: 55px;
     border-radius: 5px !important;
     border: 2px solid #e9eaef !important;
 }
@@ -727,6 +748,7 @@ button.button {
     border: 0;
 }
 #contacts button {
+   outline: none;
    color: #7e72c9;
    width: 100%;
    background: none;
@@ -795,6 +817,20 @@ span.valid {
     color: #999;
     font-size: 1.5em;
     font-family: Cabin, sans-serif;
+}
+
+#contacts span.error,
+#contacts span.valid {
+    position: absolute;
+    top: 8px;
+    right: 1em;
+}
+
+.signup span.error,
+.signup span.valid  {
+    position: absolute;
+    top: 10px;
+    right: 1em;
 }
 footer {
     padding-bottom: 3.75em;
@@ -931,7 +967,7 @@ section {
     margin-top: 20px;
 }
 #explore {
-    margin-top: 3em;
+    margin-bottom: 165px;
 }
 #top-navigation ul {
     font-size: 1em;
@@ -1045,4 +1081,70 @@ section {
 #next-project:hover, #previous-project:hover, #close-project:hover {
     opacity: 1;
 }
+}
+
+.phone {
+    display: block;
+    margin: 100px auto !important;
+    max-width: 100px;
+}
+
+#registration {
+    background: #363744;
+    text-align: center;
+    margin-top: 80px;
+    position: relative;
+}
+
+#registration img {
+    margin-bottom: 30px;
+}
+
+#registration p {
+    color: #8587a1;
+    margin-bottom: 50px;
+}
+
+#error .alert-box {
+	color: white;
+}
+
+.signup {
+    max-width: 450px;
+    margin: 0 auto;
+}
+
+#registration .details {
+    position: relative;
+   display: inline;
+   height: 60px;
+   border-radius: 5px;
+   background: #23242e;
+   border: 2px solid #23242e !important;
+   color: white;
+   font-size: 14px;
+   letter-spacing: 0px;
+   font-family: AvenirNextLTPro-Demi, Arial, sans-serif;
+}
+
+.submit-signup {
+	outline: none;
+    -webkit-appearance: none;
+    background: none;
+    border: 2px solid #9780e4;
+    color: white;
+    padding: 20px 25px;
+    border-radius: 5px;
+    text-transform: uppercase;
+    font-weight: 900;
+    font-size: 12px;
+    letter-spacing: 1px;
+    -webkit-transition: all .4s ease-in-out;
+    -moz-transition: all .4s ease-in-out;
+    -o-transition: all .4s ease-in-out;
+    transition: all .4s ease-in-out;
+    margin: 30px 10px;
+}
+.submit-signup:hover {
+   background: #9780e4;
 }

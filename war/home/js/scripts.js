@@ -7,17 +7,21 @@ $('<img/>').attr('src', 'http://placehold.it/1920x1080/1a1a1a/F4594E&amptext=192
 	jQuery('#logo').fadeIn(600, function() {
 		jQuery('h1').animate({opacity: '1', 'padding-top': '0'}, 500,function() {
 			jQuery('h2').animate({opacity: '1', 'padding-top': '0'}, 500,function() {
-				if(jQuery(window).width()<767){	
-					jQuery('#explore').animate({opacity: '1', 'margin-top': '2.5em'}, 1000);
-				} else {
-					jQuery('#explore').animate({opacity: '1', 'margin-top': '6em'}, 1000);
-				}
+				jQuery('a.invite').animate({'opacity': '1'}, 300, function() {
+					if(jQuery(window).width()<767){	
+						jQuery('#explore').animate({opacity: '1', 'margin-top': '2.5em'}, 1000);
+					} else {
+						jQuery('#explore').animate({opacity: '1', 'margin-top': '6em'}, 1000);
+					}
+					
+					jQuery('a.invite').addClass("ease");
+				});
 			});
 		});
 	});
 });
 
-$('a.invite').hide().delay(1200).fadeIn(9000);
+//$('a.invite').hide().delay(1200).fadeIn(9000);
 	
 jQuery(document).ready(function() {
 
@@ -70,7 +74,7 @@ jQuery(document).ready(function() {
 	    if(jQuery(window).width()>767){	
 			if (jQuery("#top-navigation ul").is(":hidden") ) {
 			    jQuery("#top-navigation ul").show();
-			   	jQuery('#menu-mobile').removeClass('active');		
+			   	jQuery('#menu-mobile').removeClass('active');			
 			}
 	    }
 	});
@@ -112,29 +116,6 @@ jQuery(document).ready(function() {
 	    }
 	    
 	    event.preventDefault();
-	});
-	
-	/*-----------------------------------------------------------------------------------*/
-	/*	Studio
-	/*-----------------------------------------------------------------------------------*/
-	
-	/* Initialize Slider */	
-	var swiper = jQuery('#swiper').swiper({
-		loop:true,
-		grabCursor: true,
-		autoPlay: 4000
-	});
-	
-	/* On Load swiper height should adjust to img size */
-	jQuery('.swiper-slide img').load(function() {
-		jQuery('#swiper').height(jQuery('.swiper-slide img').height());
-		jQuery('.swiper-wrapper').height(jQuery('.swiper-slide img').height());
-	});
-	
-	/* On Resize swiper height should adjust to img size */
-	jQuery(window).resize(function() {
-		jQuery('#swiper').height(jQuery('.swiper-slide img').height());
-		jQuery('.swiper-wrapper').height(jQuery('.swiper-slide img').height());
 	});
 	
 	/*-----------------------------------------------------------------------------------*/

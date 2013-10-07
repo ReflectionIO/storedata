@@ -11,12 +11,14 @@
 	<link href="favicon.ico" rel="icon" type="image/x-icon" />
 	
 	<link rel="stylesheet" href="css/normalize.css" />
+	<link rel="stylesheet" href="css/flexslider.css" />
 	<link rel="stylesheet" href="css/foundation.css" />
 	<link rel="stylesheet" href="css/MyFontsWebfontsKit.css" />
 	<link rel="stylesheet" href="css/styles.css" />
 
 	
 	<link href='http://fonts.googleapis.com/css?family=Cabin:400,700,400italic|Merriweather:900' rel='stylesheet' type='text/css'>
+
 	<script src="js/vendor/custom.modernizr.js"></script>
 
 </head>
@@ -39,12 +41,7 @@
 					<div id="intro">
 						<h1>Powerful market intelligence for the global app market.</h1>
 						<h2>Make smarter business decisions. Access revenue, download and ranking data for any app in the store.</h2>
-						<form>
-							<div class='validation'>
-							<input class='address' type="text" name="FirstName" placeholder='Email address&hellip;'>
-						</div>
-							<input class='invite' type="submit" value="Request Invite">
-						</form>
+						<a class='invite' href="signup.html">Request Invite</a>
 						<div id="explore"><a class="scroll" href="#services"><img src="images/scroll.svg" alt="Scroll"/></a></div>
 					</div>
 				</div>
@@ -55,14 +52,14 @@
 		<!-- START TOP-BAR -->
 				<div id="top-bar">
 			<div class="row">
-				<div class="large-4 columns">
+				<div class="large-2 columns">
 					<div id="logo-lettering" >
 						<a class="scroll" href="#header"><img src="images/nav-logo.png" alt="Logo Lettering"/></a>
 					</div>
 					<div id="menu-mobile" class="show-for-small">
 					</div>
 				</div>
-				<div class="large-8 columns">
+				<div class="large-10 columns">
 					<nav id="top-navigation">
 						<ul class="inline-list">
 							<li><a href="#services">Features</a></li>
@@ -88,6 +85,14 @@
 				<div class="large-4 small-4 columns">
 					<div id="video" class="service smooth">
 						<img  src="images/statistical_128.png" alt="Video">	
+						<h5 class="hide-for-small">Revenue & Download Data</h5>
+						<p class="hide-for-small">Analyse historical revenue, ranking and download information for any app to base your business decisions on.</p>
+					</div>
+				</div>
+
+				<div class="large-4 small-4 columns">
+					<div id="video" class="service smooth">
+						<img  src="images/global_128.png" alt="Video">	
 						<h5 class="hide-for-small">Global App Leaderboard</h5>
 						<p class="hide-for-small">View revenue and download data for the Top 400 apps in any country, in any category, at any time.</p>
 					</div>
@@ -95,18 +100,9 @@
 
 				<div class="large-4 small-4 columns">
 					<div id="video" class="service smooth">
-						<img  src="images/global_128.png" alt="Video">	
-						<h5 class="hide-for-small">Revenue & Download Data</h5>
-						<p class="hide-for-small">Analyse historical revenue, ranking and download information for any app to base your business decisions on.
-						</p>
-					</div>
-				</div>
-
-				<div class="large-4 small-4 columns">
-					<div id="video" class="service smooth">
 						<img  src="images/historical_128.png" alt="Video">	
-						<h5 class="hide-for-small">Beautiful & Functional</h5>
-						<p class="hide-for-small">Access meaningful market intelligence wherever you are on any device through our easy to use web app.</p>
+						<h5 class="hide-for-small">Powerful Statistical Model</h5>
+						<p class="hide-for-small">We have created an algorithm that statistically paints a very accurate picture of the stores based on public ranking and private download and revenue data.</p>
 					</div>
 				</div>
 
@@ -130,8 +126,8 @@
 				<div class="large-4 small-4 columns">
 					<div id="video" class="service smooth">
 						<img  src="images/beautiful_128.png" alt="Video">	
-						<h5 class="hide-for-small">Powerful Statistical Model</h5>
-						<p class="hide-for-small">We have created an algorithm that statistically paints a very accurate picture of the stores based on public ranking and private download and revenue data.</p>
+						<h5 class="hide-for-small">Beautiful & Functional</h5>
+						<p class="hide-for-small">Access meaningful market intelligence wherever you are on any device through our easy to use web app.</p>
 					</div>
 				</div>
 
@@ -145,23 +141,23 @@
 			<div class="row">
 				<div class="large-6 large-offset-3 columns intro">
 					<h1>Make Smarter Decisions</h1>
-					<p>Analyze daily revenue, downloads and ranking for the Top 400 apps in any country/category. Make smart business, marketing and development decisions by comparing the performance of similar apps.</p>
+					<p>Analyse daily revenue, downloads and ranking for the Top 400 apps in any country &amp; category. Make smart business, marketing and development decisions by comparing the performance of similar apps.</p>
 				</div>
 			</div>
-			<div class="studio">
+<div class="">
 				<div class="row">
-					<div class="large-12 columns">
-						<div id="swiper" class="swiper-container">
-							<div class="swiper-wrapper">
-
-								<div class="swiper-slide"><img src="images/leaderboard.png" alt="slider image 1" ></div>
-
-								<div class="swiper-slide"><img src="images/download_history.png" alt="slider image 2"></div>
-
-								<div class="swiper-slide"><img src="images/revenue_history.png" alt="slider image 3"/></div>
-
-							</div>
-						</div>
+					<div class="flexslider">
+					  <ul class="slides">
+					    <li>
+					      <img src="images/leaderboard.png" />
+					    </li>
+					    <li>
+					      <img src="images/revenue_history.png" />
+					    </li>
+					    <li>
+					      <img src="images/download_history.png" />
+					    </li>
+					  </ul>
 					</div>
 				</div>
 			</div>
@@ -175,14 +171,26 @@
 				<div class="large-6 columns about">
 					<h1>About Us</h1>
 					<p>We’re a core team of talented engineers and designers with over 35 years of combined experience in the web and mobile space.</p>
-					<p>Tired of how expensive and cumbersome it is to get up to date and accurate information about the app market, we decided to make a better service ourselves.</p>
+					<p>We were tired of how expensive and cumbersome it was to get up to date and accurate information about apps and the app market so we decided to create a better service ourselves.</p>
 					<h5>Work with Reflection</h5>
 					<br>
-					<p>Our small and passionate startup is growing. If you're a self-starter, would love to be part of a growing business and have what it takes to get things done, we'd like to hear from you.</p>
-					<a href="#">Work with us</a>
+					<p>Our small and passionate start-up is growing. If you're a self-starter, would love to be part of a growing start-up and have what it takes to get things done, we’d like to hear from you.</p>
+					<a href="#contact">Work with us</a>
 				</div>
 
-				<div class="large-6 columns about-image">
+				<div class="large-6 columns">
+					<section class='team'>
+						<h5>William Shakour</h5>
+						<p>Originally from Sudan, William has written code for a large variety of devices and platforms - ranging from phones to servers and everything in-between. When he is not making sense of app data he loves to write mobile games.</p>
+					</section>
+					<section class='team'>
+						<h5>Gustaf Leksell</h5>
+						<p>Before founding Reflection, Gustaf led Business Development for Games at BBC Worldwide. He has lived and worked in Seoul, Shanghai and Austin where he designed & produced successful mobile and online games.</p>
+					</section>
+					<section class='team'>
+						<h5>Chi Dire</h5>
+						<p>Chi has more than 20 years experience coding apps and services for small to global brands. With more than 600 apps across his devices, he thought it was time to try and make sense of it all.</p>
+					</section>
 				</div>
 
 			</div>
@@ -192,8 +200,11 @@
 		<!-- START call-to-action SECTION -->
 		<section id="call-to-action">
 			<div class="row">
-				<div class="large-12 columns intro">
-					<h2>Need data for reports or articles? Reference us and get it for free.<a href="#">Get in touch</a></h2>
+				<div class="large-6 large-centered columns intro">
+					<h2>Need data for reports or articles? Reference us and get it for free.</h2>
+				</div>
+				<div class='large-3 large-centered columns'>
+					<a href="#contacts">Get in touch</a>
 				</div>
 			</div>
 		
@@ -270,14 +281,14 @@
 					<hr/>
 					<div class="center-list">
 						<ul class="inline-list social">
-							<li><a class="facebook"></a></li>
-							<li><a class="linkedin"></a></li>
+							<li><a class="facebook" href='https://www.facebook.com/reflection.io' target='_blank' ></a></li>
+							<li><a class="linkedin" href='http://www.linkedin.com/company/reflection-io-ltd' target='_blank' ></a></li>
 						</ul>
 					</div>
 				</div>
 			</div>
 			<div class='row'>
-				<p class='copyright'>&copy; Reflection 2013.</p>
+				<p class='copyright'>&copy; Reflection.io Ltd 2013.</p>
 			</div>
 		</footer>
 		<!-- END FOOTER -->
@@ -312,6 +323,7 @@
 	<!-- END PROJECT PAGE -->
 	
 	<!-- Foundation Scripts -->
+
 	<script src="js/vendor/jquery.js"></script>
 	<script src="js/foundation.min.js"></script>
 		
@@ -321,16 +333,20 @@
 	<script src="js/jquery.mixitup.min.js"></script>
 	<script src="js/jquery.easing.js"></script>
 	
-	<!-- Swiper Plugin -->
-	<script  src="js/idangerous.swiper-1.9.3.js"></script>
-	
 	<!-- Feed Plugins -->
 	<script src="js/jquery.tweet.js"></script>
 	<script src="js/jquery.flickr.js"></script>
 	<script src="js/jquery.instagram.js"></script>
 	
 	<!-- Cotton Specific Scripts -->
+
 	<script src="js/scripts.js"></script>
+
+	<!-- Flexslider -->
+
+	<script src="js/jquery.flexslider-min.js"></script>
+
+	<script src="js/flexslider.js"></script>
 	
 </body>
 </html>
