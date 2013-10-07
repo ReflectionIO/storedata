@@ -79,18 +79,24 @@ public class CronServlet extends HttpServlet {
 			} else if ("play".equals(store.toLowerCase())) {
 				// google play store
 			}
+			
+			if (LOG.isLoggable(Level.INFO)) {
+				LOG.info(String.format("%d Tasks added successfully", count));
+			}
 		} else if (deleteSome != null) {
 			if ("Rank".equals(deleteSome)) {
 				QueryKeys<Rank> query = ofy().load().type(Rank.class).limit(200).keys();
 				ofy().delete().keys(query.iterable());
+				count = 200;
 			} else if ("Item".equals(deleteSome)) {
 				QueryKeys<Item> query = ofy().load().type(Item.class).limit(100).keys();
 				ofy().delete().keys(query.iterable());
+				count = 200;
 			}
-		}
-
-		if (LOG.isLoggable(Level.INFO)) {
-			LOG.info(String.format("%d Tasks added successfully", count));
+			
+			if (LOG.isLoggable(Level.INFO)) {
+				LOG.info(String.format("%d %ds deleted successfully", count, deleteSome));
+			}
 		}
 
 		resp.setHeader("Cache-Control", "no-cache");
