@@ -22,7 +22,7 @@
         <img class="img-rounded {style.image}" src="{smallImage}" />
         <div class="{style.description} col-md-9">
             <span>
-                <a href="#itemId={itemId}">
+                <a href="#item/{itemId}">
                     <ui:text from="{name}" />
                 </a>
                 <br />
