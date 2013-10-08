@@ -43,6 +43,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	    <servlet-name>Item Property Lookup</servlet-name>
 	    <servlet-class>io.reflection.app.apple.ItemPropertyLookupServlet</servlet-class>
 	</servlet>
+    
+    <servlet>
+        <servlet-name>Send Mail</servlet-name>
+        <servlet-class>io.reflection.app.EmailServlet</servlet-class>
+    </servlet>
 
 	<servlet-mapping>
 		<servlet-name>Cron Tasks</servlet-name>
@@ -79,6 +84,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	    <servlet-name>Item Property Lookup</servlet-name>
 	    <url-pattern>/itempropertylookup</url-pattern>
 	</servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>Send Mail</servlet-name>
+        <url-pattern>/sendmail</url-pattern>
+    </servlet-mapping>
 
 	<servlet>
 		<display-name>Remote API Servlet</display-name>

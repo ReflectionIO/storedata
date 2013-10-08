@@ -127,6 +127,22 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
+    
+    <xsd:complexType name="User">
+        <xsd:complexContent>
+            <xsd:extension base="DataType">
+                  <xsd:attribute type="xsd:string" name="forename" />
+  <xsd:attribute type="xsd:string" name="surname" />
+  <xsd:attribute type="xsd:string" name="username" />
+  <xsd:attribute type="xsd:string" name="avatar" />
+  <xsd:attribute type="xsd:string" name="company" />
+  `password` varchar(64) NOT NULL DEFAULT '',
+  `lastloggedin` datetime NOT NULL,
+  `deleted` enum('y','n') NOT NULL DEFAULT 'n',
+  `verified` enum('y','n') NOT NULL DEFAULT 'n',
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
 
     <xsd:complexType name="Request">
         <xsd:attribute name="accessCode" type="xsd:string" />

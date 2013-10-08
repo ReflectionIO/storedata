@@ -90,6 +90,23 @@ CREATE TABLE `feedfetch` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
 
+CREATE TABLE `user` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `forename` varchar(30) NOT NULL,
+  `surname` varchar(30) NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `avatar` varchar(4096) DEFAULT NULL,
+  `company` varchar(30) DEFAULT NULL,
+  `password` varchar(64) NOT NULL DEFAULT '',
+  `lastloggedin` datetime NOT NULL,
+  `deleted` enum('y','n') NOT NULL DEFAULT 'n',
+  `verified` enum('y','n') NOT NULL DEFAULT 'n',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+
 INSERT INTO `rio`.`country`(
 `name`,
 `a2code`,
