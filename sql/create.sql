@@ -99,7 +99,7 @@ CREATE TABLE `user` (
   `avatar` varchar(4096) DEFAULT NULL,
   `company` varchar(30) DEFAULT NULL,
   `password` varchar(64) NOT NULL DEFAULT '',
-  `lastloggedin` datetime NOT NULL,
+  `lastloggedin` datetime DEFAULT NULL,
   `deleted` enum('y','n') NOT NULL DEFAULT 'n',
   `verified` enum('y','n') NOT NULL DEFAULT 'n',
   PRIMARY KEY (`id`),

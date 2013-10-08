@@ -12,6 +12,7 @@ import io.reflection.app.api.core.shared.call.GetCountriesRequest;
 import io.reflection.app.api.core.shared.call.GetItemRanksRequest;
 import io.reflection.app.api.core.shared.call.GetStoresRequest;
 import io.reflection.app.api.core.shared.call.GetTopItemsRequest;
+import io.reflection.app.api.core.shared.call.RegisterUserRequest;
 
 import com.google.gson.JsonObject;
 import com.willshex.gson.json.service.server.JsonServlet;
@@ -43,6 +44,10 @@ public final class CoreJsonServlet extends JsonServlet {
 			GetItemRanksRequest input = new GetItemRanksRequest();
 			input.fromJson(request);
 			output = service.getItemRanks(input).toString();
+		} else if ("RegisterUser".equals(action)) {
+			RegisterUserRequest input = new RegisterUserRequest();
+			input.fromJson(request);
+			output = service.registerUser(input).toString();
 		}
 
 		return output;

@@ -20,6 +20,9 @@
             <xsd:element name="GetItemRanksInput" type="sdc:GetItemRanksRequest" />
             <xsd:element name="GetItemRanksOutput" type="sdc:GetItemRanksResponse" />
 
+            <xsd:element name="RegisterUserInput" type="sdc:RegisterUserRequest" />
+            <xsd:element name="RegisterUserOutput" type="sdc:RegisterUsersResponse" />
+
             <xsd:complexType name="GetCountriesRequest">
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
@@ -146,6 +149,22 @@
                 </xsd:complexContent>
             </xsd:complexType>
 
+            <xsd:complexType name="RegisterUserRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="user" type="sd:User" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="RegisterUserResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response" />
+                </xsd:complexContent>
+            </xsd:complexType>
+
         </xsd:schema>
     </wsdl:types>
 
@@ -161,14 +180,14 @@
     <wsdl:message name="GetStoresResponse">
         <wsdl:part name="output" element="sdc:GetStoresOutput" />
     </wsdl:message>
-    
+
     <wsdl:message name="GetTopItemsRequest">
         <wsdl:part name="input" element="sdc:GetTopItemsInput" />
     </wsdl:message>
     <wsdl:message name="GetTopItemsResponse">
         <wsdl:part name="output" element="sdc:GetTopItemsOutput" />
     </wsdl:message>
-    
+
     <wsdl:message name="GetAllTopItemsRequest">
         <wsdl:part name="input" element="sdc:GetTopItemsInput" />
     </wsdl:message>
@@ -181,6 +200,13 @@
     </wsdl:message>
     <wsdl:message name="GetItemRanksResponse">
         <wsdl:part name="output" element="sdc:GetItemRanksOutput" />
+    </wsdl:message>
+    
+    <wsdl:message name="RegisterUserRequest">
+        <wsdl:part name="input" element="sdc:RegisterUserInput" />
+    </wsdl:message>
+    <wsdl:message name="RegisterUserResponse">
+        <wsdl:part name="output" element="sdc:RegisterUserOutput" />
     </wsdl:message>
 
     <wsdl:portType name="core">
@@ -197,7 +223,7 @@
             <wsdl:input message="sdc:GetTopItemsRequest" />
             <wsdl:output message="sdc:GetTopItemsResponse" />
         </wsdl:operation>
-        
+
         <wsdl:operation name="GetAllTopItems">
             <wsdl:input message="sdc:GetAllTopItemsRequest" />
             <wsdl:output message="sdc:GetAllTopItemsResponse" />
@@ -206,6 +232,11 @@
         <wsdl:operation name="GetItemRanks">
             <wsdl:input message="sdc:GetItemRanksRequest" />
             <wsdl:output message="sdc:GetItemRanksResponse" />
+        </wsdl:operation>
+        
+        <wsdl:operation name="RegisterUser">
+            <wsdl:input message="sdc:RegisterUserRequest" />
+            <wsdl:output message="sdc:RegisterUserResponse" />
         </wsdl:operation>
 
     </wsdl:portType>
@@ -238,7 +269,7 @@
                 <soap:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
-        
+
         <wsdl:operation name="GetAllTopItems">
             <soap:operation soapAction="http://app.reflection.io/core/GetAllTopItems" />
             <wsdl:input>
@@ -248,9 +279,19 @@
                 <soap:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
-        
+
         <wsdl:operation name="GetItemRanks">
             <soap:operation soapAction="http://app.reflection.io/core/GetItemRanks" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        
+        <wsdl:operation name="RegisterUser">
+            <soap:operation soapAction="http://app.reflection.io/core/RegisterUser" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>

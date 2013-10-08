@@ -17,6 +17,8 @@ import io.reflection.app.api.core.shared.call.GetStoresRequest;
 import io.reflection.app.api.core.shared.call.GetStoresResponse;
 import io.reflection.app.api.core.shared.call.GetTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetTopItemsResponse;
+import io.reflection.app.api.core.shared.call.RegisterUserRequest;
+import io.reflection.app.api.core.shared.call.RegisterUserResponse;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.collectors.CollectorIOS;
@@ -26,9 +28,11 @@ import io.reflection.app.service.country.CountryServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
+import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.datatypes.Country;
 import io.reflection.app.shared.datatypes.Rank;
 import io.reflection.app.shared.datatypes.Store;
+import io.reflection.app.shared.datatypes.User;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -440,6 +444,31 @@ public final class Core extends ActionHandler {
 			output.error = convertToErrorAndLog(LOG, e);
 		}
 		LOG.finer("Exiting getItemRanks");
+		return output;
+	}
+
+	public RegisterUserResponse registerUser(RegisterUserRequest input) {
+		LOG.finer("Entering registerUser");
+		RegisterUserResponse output = new RegisterUserResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
+						ValidationError.InvalidValueNull.getMessage("GetItemRanksRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			input.user = ValidationHelper.validateAlphaUser(input.user, "input");
+
+			User user = UserServiceProvider.provide().addUser(input.user);
+
+			LOG.info(String.format("Added user with name [%s %s] and email [%s],", user.forename, user.surname, user.username));
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting registerUser");
 		return output;
 	}
 

@@ -45,6 +45,11 @@ jQuery(document).ready(function() {
 			jQuery('#message').parent().find('.valid').fadeIn('slow');			
 		}
 		
+		var action = jQuery('#action').val();
+		if (action != "contact") {
+			error = true;
+		}
+		
 		if(error == true) {
 			jQuery('#error').fadeIn('slow');
 			setTimeout(function() {
@@ -58,7 +63,7 @@ jQuery(document).ready(function() {
 		jQuery.ajax({
 			type: "POST",
 			url: "/sendmail",
-			data: {name:name,email:email,message:message}, 
+			data: {name:name,email:email,message:message,action:action}, 
 			timeout: 60000,
 			error: function(request,error) {
 				if (error == "timeout") {

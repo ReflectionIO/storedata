@@ -31,6 +31,9 @@ public enum ValidationError {
 	ItemNotFound(100016, "Item not found Item: %s.item"),
 	ItemNoLookup(100017, "Invalid item lookup, need either id or externalId or internalId for Item: %s.item"),
 	DateRangeOutOfBounds(100018, "Invalid date range, should be between %s"),
+	UserNull(100019, "Invalid value null for User: %s.user"),
+	StringNull(100020, "Invalid value null or empty for String: %s"),
+	BadEmailFormat(100021, "Invalid email address for Email: %s"),
 
 	GetCountriesNeedsStoreOrQuery(100101, "GetCountries call should either have a store or a query. To get all countries use * for the query"),
 
@@ -38,7 +41,9 @@ public enum ValidationError {
 
 	// lookup service
 	LookupApplicationNeedsInternalOrExternalId(100301,
-			"LookupApplication should have at least one internal or external application id, you can also add multiple ids of each type");
+			"LookupApplication should have at least one internal or external application id, you can also add multiple ids of each type"),
+	
+	;
 
 	private int code;
 	private String message;

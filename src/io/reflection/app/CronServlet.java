@@ -95,7 +95,7 @@ public class CronServlet extends HttpServlet {
 			}
 			
 			if (LOG.isLoggable(Level.INFO)) {
-				LOG.info(String.format("%d %ds deleted successfully", count, deleteSome));
+				LOG.info(String.format("%d %ss deleted successfully", count, deleteSome));
 			}
 		}
 

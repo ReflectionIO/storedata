@@ -23,19 +23,24 @@
     <p>We're launching our beta in the beginning of 2014.</p>
     <p>Please enter your details to request an invite.</p>
     <br /><br />
-    <form id="contact-form" action="/" method="post">
+    <form id="contact-form" action="/sendmail" method="POST">
       <div class="large-6 large-offset-3 columns"> 
         <div class="large-12 columns formContainer">
-          <input type="text" name="name" id="name" value="" class="requiredField details" placeholder="First name">
+          <input type="text" name="forename" id="forename"  class="requiredField details" placeholder="First name">
         </div>
         <div class="large-12 columns formContainer">
-          <input type="text" name="name" id="name" value="" class="requiredField details" placeholder="Last name">
+          <input type="text" name="surname" id="surname" class="requiredField details" placeholder="Last name">
         </div>
         <div class="large-12 columns formContainer">
-          <input type="text" name="email" id="email" value="" class="requiredField email details" placeholder="Email Address">
+          <input type="text" name="company" id="company" class="requiredField details" placeholder="Company name">
         </div>
         <div class="large-12 columns formContainer">
-          <input type="hidden" name="submitted" id="submitted" class="button" value="SEND"><button id="submit" class="large-12 columns submit-signup" type="submit">Request Invite</button>
+          <input type="text" name="email" id="email" class="requiredField email details" placeholder="Email Address">
+        </div>
+        <div class="large-12 columns formContainer">
+          <input type="hidden" name="submitted" id="submitted" class="button" value="SEND">
+          <input type="hidden" name="action" id="action" value="register" />
+          <button id="submit" class="large-12 columns submit-signup" type="submit">Request Invite</button>
         </div>
         <div class="large-12 columns formContainer">
           <p id="error" data-alert class="alert-box">Please fill in all data correctly.</p>

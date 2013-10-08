@@ -13,6 +13,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.logging.Logger;
 
@@ -229,7 +230,10 @@ public final class Connection {
 
 		if (queryResult != null) {
 			try {
-				value = new Date(queryResult.getTimestamp(key).getTime());
+				Timestamp t;
+				if ((t = queryResult.getTimestamp(key)) != null) {
+					value = new Date(t.getTime());
+				}
 			} catch (SQLException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error getting value for column", ex);
 			}

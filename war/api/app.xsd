@@ -4,7 +4,7 @@
     <xsd:complexType name="DataType">
         <xsd:attribute name="id" type="xsd:long" default="0" />
         <xsd:attribute name="created" type="xsd:dateTime" use="optional" />
-        <xsd:attribute name="deleted" type="xsd:boolean" use="optional" />
+        <xsd:attribute name="deleted" type="xsd:string" use="optional" />
     </xsd:complexType>
 
     <xsd:complexType name="FeedFetch">
@@ -127,19 +127,18 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="User">
         <xsd:complexContent>
             <xsd:extension base="DataType">
-                  <xsd:attribute type="xsd:string" name="forename" />
-  <xsd:attribute type="xsd:string" name="surname" />
-  <xsd:attribute type="xsd:string" name="username" />
-  <xsd:attribute type="xsd:string" name="avatar" />
-  <xsd:attribute type="xsd:string" name="company" />
-  `password` varchar(64) NOT NULL DEFAULT '',
-  `lastloggedin` datetime NOT NULL,
-  `deleted` enum('y','n') NOT NULL DEFAULT 'n',
-  `verified` enum('y','n') NOT NULL DEFAULT 'n',
+                <xsd:attribute type="xsd:string" name="forename" />
+                <xsd:attribute type="xsd:string" name="surname" />
+                <xsd:attribute type="xsd:string" name="username" />
+                <xsd:attribute type="xsd:string" name="avatar" />
+                <xsd:attribute type="xsd:string" name="company" />
+                <xsd:attribute type="xsd:string" name="password" />
+                <xsd:attribute type="xsd:dateTime" name="lastLoggedIn" />
+                <xsd:attribute type="xsd:string" name="verified" />
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>

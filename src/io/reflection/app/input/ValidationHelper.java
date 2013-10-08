@@ -16,6 +16,7 @@ import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.shared.datatypes.Country;
 import io.reflection.app.shared.datatypes.Item;
 import io.reflection.app.shared.datatypes.Store;
+import io.reflection.app.shared.datatypes.User;
 
 import java.util.List;
 
@@ -46,6 +47,26 @@ public class ValidationHelper {
 		return accessCode;
 	}
 
+	public static User validateAlphaUser(User user, String parent) throws InputValidationException {
+		if (user == null) throw new InputValidationException(ValidationError.UserNull.getCode(), ValidationError.UserNull.getMessage(parent));
+
+		if (user.forename == null || (user.forename = user.forename.trim()).length() == 0)
+			throw new InputValidationException(ValidationError.StringNull.getCode(), ValidationError.StringNull.getMessage(parent + ".forename"));
+		if (user.surname == null || (user.surname = user.surname.trim()).length() == 0)
+			throw new InputValidationException(ValidationError.StringNull.getCode(), ValidationError.StringNull.getMessage(parent + ".surname"));
+		if (user.company == null || (user.company = user.company.trim()).length() == 0)
+			throw new InputValidationException(ValidationError.StringNull.getCode(), ValidationError.StringNull.getMessage(parent + ".company"));
+
+		if (user.username == null || (user.username = user.username.trim()).length() == 0)
+			throw new InputValidationException(ValidationError.StringNull.getCode(), ValidationError.StringNull.getMessage(parent + ".username"));
+
+		if (!user.username.matches("^([\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4})?$"))
+			throw new InputValidationException(ValidationError.BadEmailFormat.getCode(), ValidationError.BadEmailFormat.getMessage(parent + ".username"));
+
+		return user;
+
+	}
+
 	/**
 	 * 
 	 * @param store
@@ -54,8 +75,7 @@ public class ValidationHelper {
 	 * @throws InputValidationException
 	 */
 	public static Store validateStore(Store store, String parent) throws InputValidationException {
-		if (store == null)
-			throw new InputValidationException(ValidationError.StoreNull.getCode(), ValidationError.StoreNull.getMessage(parent));
+		if (store == null) throw new InputValidationException(ValidationError.StoreNull.getCode(), ValidationError.StoreNull.getMessage(parent));
 
 		boolean isIdLookup = false, isA3CodeLookup = false, isNameLookup = false;
 
@@ -67,9 +87,8 @@ public class ValidationHelper {
 			isNameLookup = true;
 		}
 
-		if (!(isIdLookup || isA3CodeLookup || isNameLookup)) {
-			throw new InputValidationException(ValidationError.StoreNoLookup.getCode(), ValidationError.StoreNoLookup.getMessage(parent));
-		}
+		if (!(isIdLookup || isA3CodeLookup || isNameLookup)) { throw new InputValidationException(ValidationError.StoreNoLookup.getCode(),
+				ValidationError.StoreNoLookup.getMessage(parent)); }
 
 		Store lookupStore = null;
 		if (isIdLookup) {
@@ -80,8 +99,7 @@ public class ValidationHelper {
 			lookupStore = StoreServiceProvider.provide().getNamedStore(store.name);
 		}
 
-		if (lookupStore == null)
-			throw new InputValidationException(ValidationError.StoreNotFound.getCode(), ValidationError.StoreNotFound.getMessage(parent));
+		if (lookupStore == null) throw new InputValidationException(ValidationError.StoreNotFound.getCode(), ValidationError.StoreNotFound.getMessage(parent));
 
 		return lookupStore;
 	}
@@ -94,8 +112,7 @@ public class ValidationHelper {
 	 * @throws InputValidationException
 	 */
 	public static String validateQuery(String query, String parent) throws InputValidationException {
-		if (query == null)
-			throw new InputValidationException(ValidationError.SearchQueryNull.getCode(), ValidationError.SearchQueryNull.getMessage(parent));
+		if (query == null) throw new InputValidationException(ValidationError.SearchQueryNull.getCode(), ValidationError.SearchQueryNull.getMessage(parent));
 
 		return query;
 	}
@@ -117,14 +134,12 @@ public class ValidationHelper {
 			return pager;
 		}
 
-		if (pager.start == null)
-			pager.start = Long.valueOf(0);
+		if (pager.start == null) pager.start = Long.valueOf(0);
 
 		if (pager.start < 0)
 			throw new InputValidationException(ValidationError.PagerStartNegative.getCode(), ValidationError.PagerStartNegative.getMessage(parent));
 
-		if (pager.count == null)
-			pager.count = Long.valueOf(0);
+		if (pager.count == null) pager.count = Long.valueOf(0);
 
 		if (pager.count.intValue() <= 0)
 			throw new InputValidationException(ValidationError.PagerCountTooSmall.getCode(), ValidationError.PagerCountTooSmall.getMessage(parent));
@@ -148,8 +163,7 @@ public class ValidationHelper {
 	 */
 	public static Country validateCountry(Country country, String parent) throws InputValidationException {
 
-		if (country == null)
-			throw new InputValidationException(ValidationError.CountryNull.getCode(), ValidationError.CountryNull.getMessage(parent));
+		if (country == null) throw new InputValidationException(ValidationError.CountryNull.getCode(), ValidationError.CountryNull.getMessage(parent));
 
 		boolean isIdLookup = false, isA2CodeLookup = false, isNameLookup = false;
 
@@ -186,8 +200,7 @@ public class ValidationHelper {
 	 * @throws InputValidationException
 	 */
 	public static Item validateItem(Item item, String parent) throws InputValidationException {
-		if (item == null)
-			throw new InputValidationException(ValidationError.ItemNull.getCode(), ValidationError.ItemNull.getMessage(parent));
+		if (item == null) throw new InputValidationException(ValidationError.ItemNull.getCode(), ValidationError.ItemNull.getMessage(parent));
 
 		Store itemStore = new Store();
 		itemStore.a3Code = item.source;
@@ -218,8 +231,7 @@ public class ValidationHelper {
 			lookupItem = ItemServiceProvider.provide().getInternalIdItem(item.internalId);
 		}
 
-		if (lookupItem == null)
-			throw new InputValidationException(ValidationError.ItemNotFound.getCode(), ValidationError.ItemNotFound.getMessage(parent));
+		if (lookupItem == null) throw new InputValidationException(ValidationError.ItemNotFound.getCode(), ValidationError.ItemNotFound.getMessage(parent));
 
 		return lookupItem;
 	}
@@ -232,7 +244,7 @@ public class ValidationHelper {
 	public static String validateListType(String listType, Store store) {
 		Collector collector = CollectorFactory.getCollectorForStore(store.a3Code);
 		List<String> types = collector.getTypes();
-		
+
 		return types.contains(listType) ? listType : null;
 	}
 }

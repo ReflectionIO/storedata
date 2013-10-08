@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum DatabaseType {
+	
 	DatabaseTypeSession("session"),
 	DatabaseTypeProperty("property"),
 	DatabaseTypeItem("item"),
@@ -20,6 +21,7 @@ public enum DatabaseType {
 	DatabaseTypeUser("user"),
 	DatabaseTypeApplication("application"),
 	DatabaseTypeFeedFetch("fetchfeed");
+	
 	private String value;
 	private static Map<String, DatabaseType> valueLookup = null;
 
@@ -38,6 +40,7 @@ public enum DatabaseType {
 				valueLookup.put(currentDatabaseType.value, currentDatabaseType);
 			}
 		}
+		
 		return valueLookup.get(value);
 	}
 }
