@@ -30,7 +30,7 @@ a {
     color: #9780e4;
 }
 a:hover {
-    color: #363744;
+    color: #272833;
 }
 p {
     font-size: 1em;
@@ -79,7 +79,7 @@ select {
 #header {
     overflow: hidden;
     height: auto;
-    background: #343543 url('../images/header_bg.png') fixed repeat-x bottom;
+    background: #272833 url('../images/header_bg.png') fixed repeat-x bottom;
     min-height: 100%}
 .no-touch #header {
     background-attachment: fixed;
@@ -171,7 +171,7 @@ display: inline-block;
 .touch #explore a img, .no-touch #explore:hover a img {
     opacity: 1;
 }
-#top-bar{position:fixed;top:-75px;z-index: 999;width:100%;height:auto;background-color:#363744;}
+#top-bar{position:fixed;top:-75px;z-index: 999;width:100%;height:auto;background-color:#272833;}
 #top-navigation ul{display:none;font-size: 1.5em;margin-bottom: 0.75em;}
 #top-navigation li{width:100%;}
 #top-navigation li a{padding-top: 5px;font-size: 12px;font-weight: 900;-webkit-transition: all 0.3s ease-in-out;-moz-transition: all 0.3s ease-in-out;-o-transition: all 0.3s ease-in-out;transition: all 0.3s ease-in-out;font-family: AvenirNextLTPro-Demi, Arial, sans-serif;text-transform: uppercase;}
@@ -264,8 +264,8 @@ text-align: center;
    background: white;
 }
 section {
-    padding-top: 3.125em;
-    padding-bottom: 1.875em;
+    /* padding-top: 3.125em;
+    padding-bottom: 1.875em; */
     text-align: center;
 }
 section h1 {
@@ -1048,7 +1048,7 @@ section {
 }
 
 #registration {
-    background: #363744;
+    background: #272833;
     text-align: center;
     margin-top: 80px;
     position: relative;
@@ -1064,7 +1064,7 @@ section {
 
 #registration p {
     color: #8587a1;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     font-family: AvenirNextLTPro-Demi, Arial, sans-serif;
     padding: 0 25px;
 }
@@ -1079,12 +1079,12 @@ section {
 }
 
 #registration .details {
-    position: relative;
+   position: relative;
    display: inline;
    height: 60px;
    border-radius: 5px;
-   background: #23242e;
-   border: 2px solid #23242e !important;
+   background: #17171D;
+   border: 2px solid #17171D !important;
    color: white;
    font-size: 14px;
    letter-spacing: 0px;
@@ -1122,7 +1122,7 @@ section {
     
     /* All Section Styles */
     
-    section{padding-top: 6.25em;padding-bottom: 3.75em;}
+    /* section{padding-top: 6.25em;padding-bottom: 3.75em;} */
     
     /* Header */
     

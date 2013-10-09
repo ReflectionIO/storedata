@@ -38,6 +38,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	    <servlet-name>Lookup api</servlet-name>
 	    <servlet-class>io.reflection.app.api.lookup.LookupJsonServlet</servlet-class>
 	</servlet>
+    
+    <servlet>
+        <servlet-name>Admin api</servlet-name>
+        <servlet-class>io.reflection.app.api.admin.AdminJsonServlet</servlet-class>
+    </servlet>
 	
 	<servlet>
 	    <servlet-name>Item Property Lookup</servlet-name>
@@ -79,6 +84,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	    <servlet-name>Lookup api</servlet-name>
 	    <url-pattern>/lookup</url-pattern>
 	</servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>Admin api</servlet-name>
+        <url-pattern>/admin</url-pattern>
+    </servlet-mapping>
 	
 	<servlet-mapping>
 	    <servlet-name>Item Property Lookup</servlet-name>
@@ -153,7 +163,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 
 <security-constraint>
   <web-resource-collection>
-    <url-pattern>/admin/*</url-pattern>
+    <url-pattern>/internal/*</url-pattern>
   </web-resource-collection>
   <auth-constraint>
     <role-name>admin</role-name>

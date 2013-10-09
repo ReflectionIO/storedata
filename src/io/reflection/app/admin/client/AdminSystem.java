@@ -8,6 +8,7 @@
 package io.reflection.app.admin.client;
 
 import io.reflection.app.admin.client.controller.NavigationController;
+import io.reflection.app.admin.client.res.Styles;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -56,6 +57,8 @@ public class AdminSystem extends ErrorHandlingEntryPoint {
 	}
 
 	private void makeContainer() {
+		Styles.INSTANCE.reflection().ensureInjected();
+		
 		mContainer = new HTMLPanel("");
 		mContainer.getElement().setId("container");
 		RootPanel.get().add(mContainer);

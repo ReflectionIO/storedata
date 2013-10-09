@@ -1,0 +1,11 @@
+@CHARSET "UTF-8";
+
+a {
+	cursor: pointer;
+    color: #9780E4;
+}
+
+a:hover {
+	text-decoration: none;
+	color: #272833;
+}

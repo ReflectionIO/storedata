@@ -7,6 +7,7 @@
 //
 package io.reflection.app.api.core;
 
+import static io.reflection.app.api.PagerHelper.updatePager;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
 import io.reflection.app.api.core.shared.call.GetCountriesRequest;
@@ -19,7 +20,6 @@ import io.reflection.app.api.core.shared.call.GetTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetTopItemsResponse;
 import io.reflection.app.api.core.shared.call.RegisterUserRequest;
 import io.reflection.app.api.core.shared.call.RegisterUserResponse;
-import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.collectors.CollectorIOS;
 import io.reflection.app.input.ValidationError;
@@ -54,8 +54,8 @@ public final class Core extends ActionHandler {
 		GetCountriesResponse output = new GetCountriesResponse();
 		try {
 			if (input == null)
-				throw new InputValidationException(ValidationError.GetCountriesNeedsStoreOrQuery.getCode(),
-						ValidationError.GetCountriesNeedsStoreOrQuery.getMessage("GetCountriesRequest: input"));
+				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
+						ValidationError.InvalidValueNull.getMessage("GetCountriesRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
@@ -116,8 +116,8 @@ public final class Core extends ActionHandler {
 		GetStoresResponse output = new GetStoresResponse();
 		try {
 			if (input == null)
-				throw new InputValidationException(ValidationError.GetCountriesNeedsStoreOrQuery.getCode(),
-						ValidationError.GetCountriesNeedsStoreOrQuery.getMessage("GetStoresRequest: input"));
+				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
+						ValidationError.InvalidValueNull.getMessage("GetStoresRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
@@ -453,7 +453,7 @@ public final class Core extends ActionHandler {
 		try {
 			if (input == null)
 				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
-						ValidationError.InvalidValueNull.getMessage("GetItemRanksRequest: input"));
+						ValidationError.InvalidValueNull.getMessage("RegisterUserRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
@@ -470,23 +470,6 @@ public final class Core extends ActionHandler {
 		}
 		LOG.finer("Exiting registerUser");
 		return output;
-	}
-
-	/**
-	 * @param pager
-	 * @param ranks
-	 */
-	private void updatePager(Pager pager, List<?> list) {
-		updatePager(pager, list, null);
-
-	}
-
-	private void updatePager(Pager pager, List<?> list, Long total) {
-		pager.start = Long.valueOf(pager.start.longValue() + list.size());
-
-		if (total != null) {
-			pager.totalCount = total;
-		}
 	}
 
 	private String getFreeListName(Store store, String type) {

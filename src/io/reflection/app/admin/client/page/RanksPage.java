@@ -13,7 +13,7 @@ import io.reflection.app.admin.client.controller.RankController;
 import io.reflection.app.admin.client.event.ReceivedRanks;
 import io.reflection.app.admin.client.event.handler.ReceivedRanksEventHandler;
 import io.reflection.app.admin.client.part.BootstrapGwtCellTable;
-import io.reflection.app.admin.client.part.data.RanksRow;
+import io.reflection.app.admin.client.part.datatypes.RanksGroup;
 import io.reflection.app.shared.datatypes.Item;
 import io.reflection.app.shared.datatypes.Rank;
 
@@ -36,47 +36,47 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class RanksPage extends Composite implements ReceivedRanksEventHandler {
 
-	@UiField(provided = true) CellTable<RanksRow> mRanks = new CellTable<RanksRow>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
-
 	private static RanksPageUiBinder uiBinder = GWT.create(RanksPageUiBinder.class);
 
 	interface RanksPageUiBinder extends UiBinder<Widget, RanksPage> {}
 
-	private List<RanksRow> mRows = null;
+	@UiField(provided = true) CellTable<RanksGroup> mRanks = new CellTable<RanksGroup>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
+
+	private List<RanksGroup> mRows = null;
 
 	public RanksPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		TextColumn<RanksRow> position = new TextColumn<RanksRow>() {
+		TextColumn<RanksGroup> position = new TextColumn<RanksGroup>() {
 
 			@Override
-			public String getValue(RanksRow object) {
+			public String getValue(RanksGroup object) {
 				return object.free.position.toString();
 			}
-			
-		};
-//		position.setCellStyleNames("text-muted");
 
-		Column<RanksRow, Item> paid = new Column<RanksRow, Item>(new MiniAppCell()) {
+		};
+		// position.setCellStyleNames("text-muted");
+
+		Column<RanksGroup, Item> paid = new Column<RanksGroup, Item>(new MiniAppCell()) {
 
 			@Override
-			public Item getValue(RanksRow object) {
+			public Item getValue(RanksGroup object) {
 				return RankController.get().lookupItem(object.paid.itemId);
 			}
 		};
 
-		Column<RanksRow, Item> free = new Column<RanksRow, Item>(new MiniAppCell()) {
+		Column<RanksGroup, Item> free = new Column<RanksGroup, Item>(new MiniAppCell()) {
 
 			@Override
-			public Item getValue(RanksRow object) {
+			public Item getValue(RanksGroup object) {
 				return RankController.get().lookupItem(object.free.itemId);
 			}
 		};
 
-		Column<RanksRow, Item> grossing = new Column<RanksRow, Item>(new MiniAppCell()) {
+		Column<RanksGroup, Item> grossing = new Column<RanksGroup, Item>(new MiniAppCell()) {
 
 			@Override
-			public Item getValue(RanksRow object) {
+			public Item getValue(RanksGroup object) {
 				return RankController.get().lookupItem(object.grossing.itemId);
 			}
 		};
@@ -84,21 +84,21 @@ public class RanksPage extends Composite implements ReceivedRanksEventHandler {
 		TextHeader rankHeader = new TextHeader("Rank");
 		rankHeader.setHeaderStyleNames("col-md-1");
 		mRanks.addColumn(position, rankHeader);
-		
+
 		TextHeader paidHeader = new TextHeader("Paid");
 		paidHeader.setHeaderStyleNames("col-md-3");
 		mRanks.addColumn(paid, paidHeader);
-		
+
 		TextHeader freeHeader = new TextHeader("Free");
 		freeHeader.setHeaderStyleNames("col-md-3");
 		mRanks.addColumn(free, freeHeader);
-		
+
 		TextHeader grossingHeader = new TextHeader("Grossing");
 		grossingHeader.setHeaderStyleNames("col-md-3");
 		mRanks.addColumn(grossing, grossingHeader);
 
 		EventController.get().addHandlerToSource(ReceivedRanks.TYPE, RankController.get(), this);
-		
+
 		RankController.get().getAllTopItems();
 	}
 
@@ -110,7 +110,7 @@ public class RanksPage extends Composite implements ReceivedRanksEventHandler {
 	@Override
 	public void receivedRanks(String listType, List<Rank> ranks) {
 		if (mRows == null) {
-			mRows = new ArrayList<RanksRow>();
+			mRows = new ArrayList<RanksGroup>();
 		}
 
 		long count = ranks.size();
@@ -120,7 +120,7 @@ public class RanksPage extends Composite implements ReceivedRanksEventHandler {
 
 		for (int i = 0; i < count; i++) {
 			if (mRows.size() <= i) {
-				mRows.add(new RanksRow());
+				mRows.add(new RanksGroup());
 			}
 
 			if ("free".equals(type)) {
