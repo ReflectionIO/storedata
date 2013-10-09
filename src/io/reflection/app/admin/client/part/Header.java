@@ -7,10 +7,18 @@
 //
 package io.reflection.app.admin.client.part;
 
+import java.util.List;
+
+import io.reflection.app.admin.client.controller.EventController;
 import io.reflection.app.admin.client.controller.NavigationController;
+import io.reflection.app.admin.client.controller.UserController;
+import io.reflection.app.admin.client.event.ReceivedUsers;
+import io.reflection.app.admin.client.event.ReceivedUsers.Handler;
+import io.reflection.app.shared.datatypes.User;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -23,7 +31,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author billy1380
  * 
  */
-public class Header extends Composite {
+public class Header extends Composite implements Handler {
 
 	private static HeaderUiBinder uiBinder = GWT.create(HeaderUiBinder.class);
 
@@ -38,9 +46,19 @@ public class Header extends Composite {
 	@UiField InlineHyperlink mUsersLink;
 	@UiField LIElement mUsersItem;
 
+	@UiField SpanElement mTotalUsers;
+
 	public Header() {
 		initWidget(uiBinder.createAndBindUi(this));
 		mRanksItem.addClassName("active");
+		
+		EventController.get().addHandlerToSource(ReceivedUsers.TYPE, UserController.get(), this);
+		
+		if (UserController.get().hasUsers()) {
+			mTotalUsers.setInnerText(Long.toString(UserController.get().getUsersCount()));
+		} else {
+			UserController.get().fetchUsers();
+		}
 	}
 
 	@UiHandler("mRanksLink")
@@ -75,6 +93,16 @@ public class Header extends Composite {
 		mRanksItem.addClassName("active");
 		mFeedBrowserItem.removeClassName("active");
 		mUsersItem.removeClassName("active");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.admin.client.event.ReceivedUsers.ReceivedUsersEventHandler#receivedUsers(java.util.List)
+	 */
+	@Override
+	public void receivedUsers(List<User> users) {
+		mTotalUsers.setInnerText(Long.toString(UserController.get().getUsersCount()));
 	}
 
 }

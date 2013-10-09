@@ -7,20 +7,31 @@
 //
 package io.reflection.app.admin.client.event;
 
-import io.reflection.app.admin.client.event.handler.ReceivedRanksEventHandler;
+import io.reflection.app.admin.client.event.ReceivedRanks.Handler;
 import io.reflection.app.shared.datatypes.Rank;
 
 import java.util.List;
 
+import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * @author billy1380
  * 
  */
-public class ReceivedRanks extends GwtEvent<ReceivedRanksEventHandler> {
+public class ReceivedRanks extends GwtEvent<Handler> {
 
-	public static Type<ReceivedRanksEventHandler> TYPE = new Type<ReceivedRanksEventHandler>();
+	public interface Handler extends EventHandler {
+
+		/**
+		 * @param listType
+		 * @param ranks
+		 */
+		void receivedRanks(String listType, List<Rank> ranks);
+
+	}
+	
+	public static Type<Handler> TYPE = new Type<Handler>();
 
 	private String mListType = null;
 	private List<Rank> mRanks = null;
@@ -40,7 +51,7 @@ public class ReceivedRanks extends GwtEvent<ReceivedRanksEventHandler> {
 	 * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
 	 */
 	@Override
-	public GwtEvent.Type<ReceivedRanksEventHandler> getAssociatedType() {
+	public GwtEvent.Type<Handler> getAssociatedType() {
 		return TYPE;
 	}
 
@@ -50,7 +61,7 @@ public class ReceivedRanks extends GwtEvent<ReceivedRanksEventHandler> {
 	 * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
 	 */
 	@Override
-	protected void dispatch(ReceivedRanksEventHandler handler) {
+	protected void dispatch(Handler handler) {
 		handler.receivedRanks(mListType, mRanks);
 
 	}

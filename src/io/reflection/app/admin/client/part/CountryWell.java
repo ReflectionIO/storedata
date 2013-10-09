@@ -10,7 +10,7 @@ package io.reflection.app.admin.client.part;
 import io.reflection.app.admin.client.controller.CountryController;
 import io.reflection.app.admin.client.controller.EventController;
 import io.reflection.app.admin.client.event.ReceivedCountries;
-import io.reflection.app.admin.client.event.handler.ReceivedCountriesEventHandler;
+import io.reflection.app.admin.client.event.ReceivedCountries.Handler;
 import io.reflection.app.shared.datatypes.Country;
 
 import java.util.List;
@@ -24,7 +24,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author billy1380
  * 
  */
-public class CountryWell extends Composite implements ReceivedCountriesEventHandler {
+public class CountryWell extends Composite implements Handler {
 
 	private static CountryWellUiBinder uiBinder = GWT.create(CountryWellUiBinder.class);
 

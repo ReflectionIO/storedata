@@ -25,10 +25,11 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class UserController {
+public class UserController implements ServiceController {
 
 	private List<User> mUsers = new ArrayList<User>();
 	private long mCount = -1;
+	private Pager mPager;
 
 	private static UserController mOne = null;
 
@@ -40,26 +41,35 @@ public class UserController {
 		return mOne;
 	}
 
-	public void getAllUsers() {
+	public void fetchUsers() {
 		AdminService service = new AdminService();
-		service.setUrl(ControllerHelper.ADMIN_END_POINT);
+		service.setUrl(ADMIN_END_POINT);
 
 		final GetUsersRequest input = new GetUsersRequest();
-		input.accessCode = ControllerHelper.ACCESS_CODE;
+		input.accessCode = ACCESS_CODE;
 
-		input.pager = new Pager();
-		input.pager.count = Long.valueOf(25);
-		input.pager.start = Long.valueOf(0);
+		if (mPager == null) {
+			mPager = new Pager();
+			mPager.count = STEP;
+			mPager.start = Long.valueOf(0);
+		}
+		input.pager = mPager;
 
 		service.getUsers(input, new AsyncCallback<GetUsersResponse>() {
 
 			@Override
 			public void onSuccess(GetUsersResponse result) {
 				if (result.status == StatusType.StatusTypeSuccess) {
-					mUsers.addAll(result.users);
+					if (result.users != null) {
+						mUsers.addAll(result.users);
+					}
 
-					if (result.pager != null && result.pager.totalCount != null) {
-						mCount = result.pager.totalCount.longValue();
+					if (result.pager != null) {
+						mPager = result.pager;
+
+						if (mPager.totalCount != null) {
+							mCount = mPager.totalCount.longValue();
+						}
 					}
 
 					EventController.get().fireEventFromSource(new ReceivedUsers(result.users), UserController.this);
@@ -79,5 +89,9 @@ public class UserController {
 
 	public long getUsersCount() {
 		return mCount;
+	}
+	
+	public boolean hasUsers() {
+		return mUsers.size() > 0;
 	}
 }

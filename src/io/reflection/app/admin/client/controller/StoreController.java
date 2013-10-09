@@ -21,7 +21,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class StoreController {
+public class StoreController implements ServiceController {
 
 	private static StoreController mOne = null;
 
@@ -35,10 +35,10 @@ public class StoreController {
 
 	public void getAllStores() {
 		CoreService service = new CoreService();
-		service.setUrl(ControllerHelper.CORE_END_POINT);
+		service.setUrl(CORE_END_POINT);
 
 		final GetStoresRequest input = new GetStoresRequest();
-		input.accessCode = ControllerHelper.ACCESS_CODE;
+		input.accessCode = ACCESS_CODE;
 		
 		input.query = "*";
 

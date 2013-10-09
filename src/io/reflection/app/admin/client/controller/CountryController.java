@@ -21,7 +21,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class CountryController {
+public class CountryController implements ServiceController {
 	private static CountryController mOne = null;
 
 	public static CountryController get() {
@@ -34,13 +34,13 @@ public class CountryController {
 
 	public void getAllCountries() {
 		CoreService service = new CoreService();
-		service.setUrl(ControllerHelper.CORE_END_POINT);
+		service.setUrl(CORE_END_POINT);
 
 		final GetCountriesRequest input = new GetCountriesRequest();
-		input.accessCode = ControllerHelper.ACCESS_CODE;
+		input.accessCode = ACCESS_CODE;
 
 		input.pager = new Pager();
-		input.pager.count = 30l;
+		input.pager.count = STEP;
 
 		input.query = "*";
 

@@ -11,7 +11,7 @@ import io.reflection.app.admin.client.cell.MiniAppCell;
 import io.reflection.app.admin.client.controller.EventController;
 import io.reflection.app.admin.client.controller.RankController;
 import io.reflection.app.admin.client.event.ReceivedRanks;
-import io.reflection.app.admin.client.event.handler.ReceivedRanksEventHandler;
+import io.reflection.app.admin.client.event.ReceivedRanks.Handler;
 import io.reflection.app.admin.client.part.BootstrapGwtCellTable;
 import io.reflection.app.admin.client.part.datatypes.RanksGroup;
 import io.reflection.app.shared.datatypes.Item;
@@ -34,7 +34,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author billy1380
  * 
  */
-public class RanksPage extends Composite implements ReceivedRanksEventHandler {
+public class RanksPage extends Composite implements Handler {
 
 	private static RanksPageUiBinder uiBinder = GWT.create(RanksPageUiBinder.class);
 
@@ -99,7 +99,7 @@ public class RanksPage extends Composite implements ReceivedRanksEventHandler {
 
 		EventController.get().addHandlerToSource(ReceivedRanks.TYPE, RankController.get(), this);
 
-		RankController.get().getAllTopItems();
+		RankController.get().fetchTopItems();
 	}
 
 	/*

@@ -28,11 +28,13 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class RankController {
+public class RankController implements ServiceController {
 
 	private static RankController mOne = null;
 
 	private Map<String, Item> mItemLookup = new HashMap<String, Item>();
+
+	private Pager mPager;
 
 	public static RankController get() {
 		if (mOne == null) {
@@ -42,22 +44,25 @@ public class RankController {
 		return mOne;
 	}
 
-	public void getAllTopItems() {
+	public void fetchTopItems() {
 		CoreService service = new CoreService();
-		service.setUrl(ControllerHelper.CORE_END_POINT);
+		service.setUrl(CORE_END_POINT);
 
 		final GetAllTopItemsRequest input = new GetAllTopItemsRequest();
-		input.accessCode = ControllerHelper.ACCESS_CODE;
+		input.accessCode = ACCESS_CODE;
 
 		input.country = new Country();
-		input.country.a2Code = "gb";
+		input.country.a2Code = "us";
 
 		input.listType = "iphone";
 		input.on = new Date();
 
-		input.pager = new Pager();
-		input.pager.count = Long.valueOf(25);
-		input.pager.start = Long.valueOf(0);
+		if (mPager == null) {
+			mPager = new Pager();
+			mPager.count = STEP;
+			mPager.start = Long.valueOf(0);
+		}
+		input.pager = mPager;
 
 		input.store = new Store();
 		input.store.a3Code = "ios";
@@ -67,6 +72,10 @@ public class RankController {
 			@Override
 			public void onSuccess(GetAllTopItemsResponse result) {
 				if (result.status == StatusType.StatusTypeSuccess) {
+					if (input.pager != null) {
+						mPager = result.pager;
+					}
+
 					if (result.items != null) {
 						for (Item item : result.items) {
 							mItemLookup.put(item.externalId, item);
