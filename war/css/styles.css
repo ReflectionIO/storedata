@@ -1064,8 +1064,9 @@ section {
 
 #registration p {
     color: #8587a1;
-    margin-bottom: 25px;
+    margin-bottom: 10px;
     font-family: AvenirNextLTPro-Demi, Arial, sans-serif;
+    padding: 0 25px;
 }
 
 #registration .alert-box {
