@@ -153,7 +153,7 @@
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
                         <xsd:sequence>
-                            <xsd:element name="user" type="sd:User" />
+                            <xsd:element name="user" type="sd:User" maxOccurs="1" />
                         </xsd:sequence>
                     </xsd:extension>
                 </xsd:complexContent>

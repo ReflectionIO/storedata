@@ -18,6 +18,8 @@ import io.reflection.app.api.core.shared.call.GetStoresRequest;
 import io.reflection.app.api.core.shared.call.GetStoresResponse;
 import io.reflection.app.api.core.shared.call.GetTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetTopItemsResponse;
+import io.reflection.app.api.core.shared.call.RegisterUserRequest;
+import io.reflection.app.api.core.shared.call.RegisterUserResponse;
 
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
@@ -123,6 +125,28 @@ public final class CoreService extends JsonService {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					GetItemRanksResponse outputParameter = new GetItemRanksResponse();
+					parseResponse(response.getText(), outputParameter);
+					output.onSuccess(outputParameter);
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+				}
+			});
+		} catch (RequestException e) {
+			output.onFailure(e);
+		}
+	}
+
+	public static final String CoreMethodRegisterUser = "RegisterUser";
+
+	public void registerUser(RegisterUserRequest input, final AsyncCallback<RegisterUserResponse> output) {
+		try {
+			sendRequest(CoreMethodRegisterUser, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					RegisterUserResponse outputParameter = new RegisterUserResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
 				}

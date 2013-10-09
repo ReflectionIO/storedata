@@ -35,6 +35,9 @@ public class Header extends Composite {
 	@UiField InlineHyperlink mFeedBrowserLink;
 	@UiField LIElement mFeedBrowserItem;
 
+	@UiField InlineHyperlink mUsersLink;
+	@UiField LIElement mUsersItem;
+
 	public Header() {
 		initWidget(uiBinder.createAndBindUi(this));
 		mRanksItem.addClassName("active");
@@ -51,14 +54,27 @@ public class Header extends Composite {
 
 	}
 
+	@UiHandler("mUsersLink")
+	public void onUsersLinkClicked(ClickEvent event) {
+		NavigationController.get().addUsersPage();
+	}
+
 	public void activateFeedBrowser() {
 		mFeedBrowserItem.addClassName("active");
 		mRanksItem.removeClassName("active");
+		mUsersItem.removeClassName("active");
+	}
+
+	public void activateUsers() {
+		mFeedBrowserItem.removeClassName("active");
+		mRanksItem.removeClassName("active");
+		mUsersItem.addClassName("active");
 	}
 
 	public void activateRanks() {
 		mRanksItem.addClassName("active");
 		mFeedBrowserItem.removeClassName("active");
+		mUsersItem.removeClassName("active");
 	}
 
 }

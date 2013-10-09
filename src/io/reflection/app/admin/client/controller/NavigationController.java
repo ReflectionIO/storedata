@@ -9,6 +9,7 @@ package io.reflection.app.admin.client.controller;
 
 import io.reflection.app.admin.client.page.FeedBrowserPage;
 import io.reflection.app.admin.client.page.RanksPage;
+import io.reflection.app.admin.client.page.UsersPage;
 import io.reflection.app.admin.client.part.Footer;
 import io.reflection.app.admin.client.part.Header;
 
@@ -25,8 +26,9 @@ public class NavigationController {
 	private HTMLPanel mPanel = null;
 	private RanksPage mRanksPage = null;
 	private FeedBrowserPage mFeedBrowserPage = null;
+	private UsersPage mUsersPage = null;
 	private Header mHeader = null;
-	private Footer mFooter = null;
+	private Footer mFooter = null;	
 
 	private Stack mStack;
 
@@ -121,6 +123,8 @@ public class NavigationController {
 			addRanksPage();
 		} else if ("feedbrowser".equals(s.getPage())) {
 			addFeedBrowserPage();			
+		} else if ("users".equals(s.getPage())) {
+			addUsersPage();
 		}
 
 		mStack = s;
@@ -148,5 +152,22 @@ public class NavigationController {
 
 	public String getCurrentPage() {
 		return mStack.getPage();
+	}
+
+	/**
+	 * 
+	 */
+	public void addUsersPage() {
+		if (mUsersPage == null) {
+			mUsersPage = new UsersPage();
+		}
+
+		if (!mUsersPage.isAttached()) {
+			mPanel.clear();
+			mPanel.add(mUsersPage);
+		} else {}
+
+		mHeader.activateUsers();
+		
 	}
 }

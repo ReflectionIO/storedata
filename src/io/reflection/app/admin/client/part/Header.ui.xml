@@ -21,6 +21,9 @@
                     <li ui:field="mFeedBrowserItem">
                         <g:InlineHyperlink ui:field="mFeedBrowserLink" targetHistoryToken="feedbrowser">Feed Browser</g:InlineHyperlink>
                     </li>
+                    <li ui:field="mUsersItem">
+                        <g:InlineHyperlink ui:field="mUsersLink" targetHistoryToken="users">Users</g:InlineHyperlink>
+                    </li>
                 </ul>
             </div><!--/.nav-collapse -->
         </div>
