@@ -113,13 +113,13 @@ public class NavigationController {
 	public void addPage(String value) {
 		Stack s = null;
 		if (value == null || value.length() == 0) {
-			value = "rank";
+			value = "ranks";
 			s = Stack.parse(value);
 		}
 		
 		s = Stack.parse(value);
 
-		if ("rank".equals(s.getPage())) {
+		if ("ranks".equals(s.getPage())) {
 			addRanksPage();
 		} else if ("feedbrowser".equals(s.getPage())) {
 			addFeedBrowserPage();			

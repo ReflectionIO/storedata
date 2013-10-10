@@ -21,13 +21,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -41,8 +44,11 @@ public class RanksPage extends Composite implements Handler {
 	interface RanksPageUiBinder extends UiBinder<Widget, RanksPage> {}
 
 	@UiField(provided = true) CellTable<RanksGroup> mRanks = new CellTable<RanksGroup>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
+	@UiField InlineHyperlink mMore;
 
 	private List<RanksGroup> mRows = null;
+	private int mCycles = 0;
+	private int mStart, mCount;
 
 	public RanksPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -113,26 +119,40 @@ public class RanksPage extends Composite implements Handler {
 			mRows = new ArrayList<RanksGroup>();
 		}
 
-		long count = ranks.size();
-
 		String type = listType.replace("iphone", "");
 		type.replace("ipad", "");
+		
+		if (mCycles == 0) {
+			mStart = mRows.size();
+			mCount = ranks.size() + mStart;
+		} 
+		
+		mCycles++;
+		
+		if (mCycles == 3) {
+			mCycles = 0;
+		}
 
-		for (int i = 0; i < count; i++) {
+		for (int i = mStart; i < mCount; i++) {
 			if (mRows.size() <= i) {
 				mRows.add(new RanksGroup());
 			}
 
 			if ("free".equals(type)) {
-				mRows.get(i).free = ranks.get(i);
+				mRows.get(i).free = ranks.get(i - mStart);
 			} else if ("paid".equals(type)) {
-				mRows.get(i).paid = ranks.get(i);
+				mRows.get(i).paid = ranks.get(i - mStart);
 			} else if ("grossing".equals(type)) {
-				mRows.get(i).grossing = ranks.get(i);
+				mRows.get(i).grossing = ranks.get(i - mStart);
 			}
 
 		}
 
 		mRanks.setRowData(mRows);
+	}
+
+	@UiHandler("mMore")
+	void onMoreClicked(ClickEvent event) {
+		RankController.get().fetchTopItems();
 	}
 }

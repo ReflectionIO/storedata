@@ -42,6 +42,7 @@ public class UserController implements ServiceController {
 	}
 
 	public void fetchUsers() {
+		
 		AdminService service = new AdminService();
 		service.setUrl(ADMIN_END_POINT);
 
@@ -92,6 +93,6 @@ public class UserController implements ServiceController {
 	}
 	
 	public boolean hasUsers() {
-		return mUsers.size() > 0;
+		return mPager != null || mUsers.size() > 0;
 	}
 }

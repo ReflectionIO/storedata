@@ -15,9 +15,9 @@
             <span class="col-md-9">
 
                 <c:CellTable ui:field="mRanks" styleName="table table-hover table-striped" />
+                
+                <g:InlineHyperlink ui:field="mMore" styleName="btn btn-default" text="More" targetHistoryToken="ranks" />
             </span>
-            <!-- <th class="rank-col">Rank</th> <th class="leaderboard-col">Paid</th> <th class="leaderboard-col">Free</th> <th class="leaderboard-col">Grossing</th> -->
-
         </span>
     </g:HTMLPanel>
 </ui:UiBinder> 
