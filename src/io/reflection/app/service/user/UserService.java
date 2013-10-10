@@ -114,21 +114,25 @@ final class UserService implements IUserService {
 		String searchUsersQuery = String.format("SELECT * FROM `user` WHERE `username` LIKE '%%1$s%' OR `forename` LIKE '%%1$s%' OR `surname` LIKE '%%1$s%'",
 				addslashes(mask));
 
-		if (pager.sortBy != null) {
+		if (pager != null) {
 			String sortByQuery = "id";
 
-			if ("username".equals(pager.sortBy) || "forename".equals(pager.sortBy) || "surname".equals(pager.sortBy) || "customerid".equals(pager.sortBy)) {
+			if (pager.sortBy != null
+					&& ("username".equals(pager.sortBy) || "forename".equals(pager.sortBy) || "surname".equals(pager.sortBy) || "customerid"
+							.equals(pager.sortBy))) {
 				sortByQuery = pager.sortBy;
 			}
 
 			String sortDirectionQuery = "DESC";
 
-			switch (pager.sortDirection) {
-			case SortDirectionTypeAscending:
-				sortDirectionQuery = "ASC";
-				break;
-			default:
-				break;
+			if (pager.sortDirection != null) {
+				switch (pager.sortDirection) {
+				case SortDirectionTypeAscending:
+					sortDirectionQuery = "ASC";
+					break;
+				default:
+					break;
+				}
 			}
 
 			searchUsersQuery += String.format(" ORDER BY `%s` %s", sortByQuery, sortDirectionQuery);
@@ -315,21 +319,25 @@ final class UserService implements IUserService {
 
 		String getUserIdsQuery = "SELECT * FROM `user` WHERE `deleted`='n'";
 
-		if (pager.sortBy != null) {
+		if (pager != null) {
 			String sortByQuery = "id";
 
-			if ("username".equals(pager.sortBy) || "forename".equals(pager.sortBy) || "surname".equals(pager.sortBy) || "customerid".equals(pager.sortBy)) {
+			if (pager.sortBy != null
+					&& ("username".equals(pager.sortBy) || "forename".equals(pager.sortBy) || "surname".equals(pager.sortBy) || "customerid"
+							.equals(pager.sortBy))) {
 				sortByQuery = pager.sortBy;
 			}
 
 			String sortDirectionQuery = "DESC";
 
-			switch (pager.sortDirection) {
-			case SortDirectionTypeAscending:
-				sortDirectionQuery = "ASC";
-				break;
-			default:
-				break;
+			if (pager.sortDirection != null) {
+				switch (pager.sortDirection) {
+				case SortDirectionTypeAscending:
+					sortDirectionQuery = "ASC";
+					break;
+				default:
+					break;
+				}
 			}
 
 			getUserIdsQuery += String.format(" ORDER BY `%s` %s", sortByQuery, sortDirectionQuery);

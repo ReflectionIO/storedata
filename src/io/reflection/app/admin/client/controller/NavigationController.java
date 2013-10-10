@@ -7,6 +7,7 @@
 //
 package io.reflection.app.admin.client.controller;
 
+import io.reflection.app.admin.client.event.NavigationChanged;
 import io.reflection.app.admin.client.page.FeedBrowserPage;
 import io.reflection.app.admin.client.page.RanksPage;
 import io.reflection.app.admin.client.page.UsersPage;
@@ -28,28 +29,42 @@ public class NavigationController {
 	private FeedBrowserPage mFeedBrowserPage = null;
 	private UsersPage mUsersPage = null;
 	private Header mHeader = null;
-	private Footer mFooter = null;	
+	private Footer mFooter = null;
 
 	private Stack mStack;
 
 	public static class Stack {
-		private String mPage;
+		private String[] mParts;
 
-		private Stack() {}
+		private Stack(String value) {
+			mParts = value.split("/");
+		}
 
 		public String getPage() {
-			return mPage;
+			return mParts.length > 0 ? mParts[0] : null;
+		}
+
+		public String getAction() {
+			return mParts.length > 1 ? mParts[1] : null;
+		}
+
+		public String getParameter(int index) {
+			return mParts.length > (2 + index) ? mParts[2 + index] : null;
 		}
 
 		public static Stack parse(String value) {
-			Stack s = new Stack();
-			String[] split = value.split("/");
+			return new Stack(value);
+		}
 
-			if (split.length > 0) {
-				s.mPage = split[0];
-			}
-
-			return s;
+		/**
+		 * @return
+		 */
+		public boolean hasAction() {
+			return getAction() != null;
+		}
+		
+		public boolean hasPage() {
+			return getPage() != null;
 		}
 	}
 
@@ -88,7 +103,6 @@ public class NavigationController {
 			mPanel.add(mRanksPage);
 		} else {}
 
-		mHeader.activateRanks();
 	}
 
 	/**
@@ -104,7 +118,6 @@ public class NavigationController {
 			mPanel.add(mFeedBrowserPage);
 		} else {}
 
-		mHeader.activateFeedBrowser();
 	}
 
 	/**
@@ -114,20 +127,21 @@ public class NavigationController {
 		Stack s = null;
 		if (value == null || value.length() == 0) {
 			value = "ranks";
-			s = Stack.parse(value);
 		}
-		
+
 		s = Stack.parse(value);
 
 		if ("ranks".equals(s.getPage())) {
 			addRanksPage();
 		} else if ("feedbrowser".equals(s.getPage())) {
-			addFeedBrowserPage();			
+			addFeedBrowserPage();
 		} else if ("users".equals(s.getPage())) {
 			addUsersPage();
 		}
 
 		mStack = s;
+		
+		EventController.get().fireEventFromSource(new NavigationChanged(s), NavigationController.this);
 	}
 
 	/**
@@ -167,7 +181,5 @@ public class NavigationController {
 			mPanel.add(mUsersPage);
 		} else {}
 
-		mHeader.activateUsers();
-		
 	}
 }

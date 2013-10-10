@@ -22,7 +22,9 @@ public interface ServiceController {
 	public static final String ADMIN_END_POINT = "//" + HOST + "/admin";
 
 	public static final String ACCESS_CODE = "b72b4e32-1062-4cc7-bc6b-52498ee10f09";
-	
-	public static final Long STEP = Long.valueOf(25);
+
+	public static final int STEP_VALUE = 10;
+
+	public static final Long STEP = Long.valueOf(STEP_VALUE);
 
 }

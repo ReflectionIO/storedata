@@ -11,9 +11,10 @@ import java.util.List;
 
 import io.reflection.app.admin.client.controller.EventController;
 import io.reflection.app.admin.client.controller.NavigationController;
+import io.reflection.app.admin.client.controller.NavigationController.Stack;
 import io.reflection.app.admin.client.controller.UserController;
 import io.reflection.app.admin.client.event.ReceivedUsers;
-import io.reflection.app.admin.client.event.ReceivedUsers.Handler;
+import io.reflection.app.admin.client.event.NavigationChanged;
 import io.reflection.app.shared.datatypes.User;
 
 import com.google.gwt.core.client.GWT;
@@ -31,7 +32,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author billy1380
  * 
  */
-public class Header extends Composite implements Handler {
+public class Header extends Composite implements ReceivedUsers.Handler, NavigationChanged.Handler {
 
 	private static HeaderUiBinder uiBinder = GWT.create(HeaderUiBinder.class);
 
@@ -54,11 +55,13 @@ public class Header extends Composite implements Handler {
 		
 		EventController.get().addHandlerToSource(ReceivedUsers.TYPE, UserController.get(), this);
 		
-		if (UserController.get().hasUsers()) {
-			mTotalUsers.setInnerText(Long.toString(UserController.get().getUsersCount()));
-		} else {
-			UserController.get().fetchUsers();
-		}
+//		if (UserController.get().hasUsers()) {
+//			mTotalUsers.setInnerText(Long.toString(UserController.get().getUsersCount()));
+//		} else {
+//			UserController.get().fetchUsers();
+//		}
+		
+		EventController.get().addHandlerToSource(NavigationChanged.TYPE, NavigationController.get(), this);
 	}
 
 	@UiHandler("mRanksLink")
@@ -77,19 +80,19 @@ public class Header extends Composite implements Handler {
 		NavigationController.get().addUsersPage();
 	}
 
-	public void activateFeedBrowser() {
+	private void activateFeedBrowser() {
 		mFeedBrowserItem.addClassName("active");
 		mRanksItem.removeClassName("active");
 		mUsersItem.removeClassName("active");
 	}
 
-	public void activateUsers() {
+	private void activateUsers() {
 		mFeedBrowserItem.removeClassName("active");
 		mRanksItem.removeClassName("active");
 		mUsersItem.addClassName("active");
 	}
 
-	public void activateRanks() {
+	private void activateRanks() {
 		mRanksItem.addClassName("active");
 		mFeedBrowserItem.removeClassName("active");
 		mUsersItem.removeClassName("active");
@@ -103,6 +106,20 @@ public class Header extends Composite implements Handler {
 	@Override
 	public void receivedUsers(List<User> users) {
 		mTotalUsers.setInnerText(Long.toString(UserController.get().getUsersCount()));
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.admin.client.event.NavigationChanged.Handler#navigationChanged(io.reflection.app.admin.client.controller.NavigationController.Stack)
+	 */
+	@Override
+	public void navigationChanged(Stack stack) {
+		if ("ranks".equals(stack.getPage())) {
+			activateRanks();
+		} else if ("feedbrowser".equals(stack.getPage())) {
+			activateFeedBrowser();
+		} else if("users".equals(stack.getPage())) {
+			activateUsers();
+		}
 	}
 
 }

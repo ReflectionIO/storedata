@@ -1,5 +1,7 @@
 @CHARSET "UTF-8";
 
+@external pagination, active;
+
 a {
 	cursor: pointer;
     color: #9780E4;
@@ -8,4 +10,14 @@ a {
 a:hover {
 	text-decoration: none;
 	color: #272833;
+}
+
+.pagination > .active > a,
+.pagination > .active > span,
+.pagination > .active > a:hover,
+.pagination > .active > span:hover,
+.pagination > .active > a:focus,
+.pagination > .active > span:focus {
+	background-color: #9780E4;
+	border-color: #9780E4;
 }

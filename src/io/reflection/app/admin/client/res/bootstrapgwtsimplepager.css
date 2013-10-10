@@ -1,0 +1,12 @@
+@CHARSET "UTF-8";
+
+.button {
+	cursor: pointer;
+}
+
+.pageDetails {
+}
+
+.disabledButton {
+	cursor: not-allowed;
+}

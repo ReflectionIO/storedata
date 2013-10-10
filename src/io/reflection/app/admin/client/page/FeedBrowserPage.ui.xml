@@ -1,22 +1,28 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.admin.client.part">
-	<ui:style>
-		/* Add CSS here. See the GWT docs on UI Binder for more details */
-	</ui:style>
-	<g:HTMLPanel>
-		<!-- Add GWT widgets here. Enter < and hit Ctrl-Space to auto-complete widget names. The ui:field attribute binds an element to a field in the owner class. See the 
-			GWT docs on UI Binder for more details. -->
-		<h2>Feed Browser</h2>
-		<p:StoreWell ui:field="mStoreWell" />
-		<p:CountryWell ui:field="mCountryWell" />
-		
-		<h3>Ingested Feeds</h3>
-		<p>One or more items of these feeds have been converted to rank data.</p>
-		
-		
-		<h3>Outstanding Feeds</h3>
-		<p>These feeds have not been used yet.</p>
-		
-		
-	</g:HTMLPanel>
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.admin.client.part"
+    xmlns:c="urn:import:com.google.gwt.user.cellview.client">
+    <ui:style>
+        /* Add CSS here. See the GWT docs on UI Binder for more details */
+    </ui:style>
+    <g:HTMLPanel>
+        <!-- Add GWT widgets here. Enter < and hit Ctrl-Space to auto-complete widget names. The ui:field attribute binds an element to a field in the owner class. 
+            See the GWT docs on UI Binder for more details. -->
+        <h2>Feed Browser</h2>
+        <p:StoreWell ui:field="mStoreWell" />
+        <p:CountryWell ui:field="mCountryWell" />
+
+        <h3>Ingested Feeds</h3>
+        <p>One or more items of these feeds have been converted to rank data.</p>
+        <c:CellTable ui:field="mIngestedFeeds" />
+
+        <c:SimplePager ui:field="mIngestedPager" />
+
+        <h3>Outstanding Feeds</h3>
+        <p>These feeds have not been used yet.</p>
+        <c:CellTable ui:field="mOutstandingFeeds" />
+
+        <c:SimplePager ui:field="mOutstandingPager" />
+
+
+    </g:HTMLPanel>
 </ui:UiBinder> 

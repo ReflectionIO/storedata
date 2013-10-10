@@ -7,14 +7,21 @@
 //
 package io.reflection.app.admin.client.page;
 
+import io.reflection.app.admin.client.controller.ServiceController;
+import io.reflection.app.admin.client.part.BootstrapGwtCellTable;
+import io.reflection.app.shared.datatypes.FeedFetch;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author billy1380
- *
+ * 
  */
 public class FeedBrowserPage extends Composite {
 
@@ -22,19 +29,17 @@ public class FeedBrowserPage extends Composite {
 
 	interface FeedBrowserPageUiBinder extends UiBinder<Widget, FeedBrowserPage> {}
 
-	/**
-	 * Because this class has a default constructor, it can
-	 * be used as a binder template. In other words, it can be used in other
-	 * *.ui.xml files as follows:
-	 * <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	 *   xmlns:g="urn:import:**user's package**">
-	 *  <g:**UserClassName**>Hello!</g:**UserClassName>
-	 * </ui:UiBinder>
-	 * Note that depending on the widget that is used, it may be necessary to
-	 * implement HasHTML instead of HasText.
-	 */
+	@UiField(provided = true) CellTable<FeedFetch> mIngestedFeeds = new CellTable<FeedFetch>(ServiceController.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true) SimplePager mIngestedPager = new SimplePager();
+	
+	@UiField(provided = true) CellTable<FeedFetch> mOutstandingFeeds = new CellTable<FeedFetch>(ServiceController.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true) SimplePager mOutstandingPager = new SimplePager();
+
 	public FeedBrowserPage() {
 		initWidget(uiBinder.createAndBindUi(this));
+		
+		mIngestedPager.setDisplay(mIngestedFeeds);
+		mOutstandingPager.setDisplay(mOutstandingFeeds);
 	}
 
 }

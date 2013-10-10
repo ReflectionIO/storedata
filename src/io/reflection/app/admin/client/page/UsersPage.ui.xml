@@ -12,6 +12,6 @@
 
         <c:CellTable ui:field="mUsers" styleName="table table-hover table-striped" />
         
-        <g:InlineHyperlink ui:field="mMore" styleName="btn btn-default" text="More" targetHistoryToken="users" />
+        <c:SimplePager ui:field="mPager"/>
     </g:HTMLPanel>
 </ui:UiBinder> 

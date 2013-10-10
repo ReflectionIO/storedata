@@ -7,29 +7,35 @@
 //
 package io.reflection.app.admin.client.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import io.reflection.app.admin.client.event.ReceivedUsers;
 import io.reflection.app.api.admin.client.AdminService;
 import io.reflection.app.api.admin.shared.call.GetUsersRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersResponse;
 import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.shared.datatypes.User;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.view.client.AsyncDataProvider;
+import com.google.gwt.view.client.HasData;
+import com.google.gwt.view.client.Range;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author billy1380
  * 
  */
-public class UserController implements ServiceController {
+public class UserController extends AsyncDataProvider<User> implements ServiceController {
 
 	private List<User> mUsers = new ArrayList<User>();
 	private long mCount = -1;
 	private Pager mPager;
+	private int mStart;
+	private int mEnd;
 
 	private static UserController mOne = null;
 
@@ -42,7 +48,7 @@ public class UserController implements ServiceController {
 	}
 
 	public void fetchUsers() {
-		
+
 		AdminService service = new AdminService();
 		service.setUrl(ADMIN_END_POINT);
 
@@ -53,6 +59,7 @@ public class UserController implements ServiceController {
 			mPager = new Pager();
 			mPager.count = STEP;
 			mPager.start = Long.valueOf(0);
+			mPager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
 		}
 		input.pager = mPager;
 
@@ -72,7 +79,10 @@ public class UserController implements ServiceController {
 							mCount = mPager.totalCount.longValue();
 						}
 					}
-
+					
+					updateRowCount((int) mCount, true);
+					updateRowData(mStart, mUsers.subList(mStart, mEnd));
+					
 					EventController.get().fireEventFromSource(new ReceivedUsers(result.users), UserController.this);
 				}
 			}
@@ -91,8 +101,26 @@ public class UserController implements ServiceController {
 	public long getUsersCount() {
 		return mCount;
 	}
-	
+
 	public boolean hasUsers() {
 		return mPager != null || mUsers.size() > 0;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.view.client.AbstractDataProvider#onRangeChanged(com.google.gwt.view.client.HasData)
+	 */
+	@Override
+	protected void onRangeChanged(HasData<User> display) {
+		Range r = display.getVisibleRange();
+		mStart = r.getStart();
+		mEnd = mStart + r.getLength();
+
+		if (mEnd > mUsers.size()) {
+			fetchUsers();
+		} else {
+			updateRowData(mStart, mUsers.subList(mStart, mEnd));
+		}
 	}
 }
