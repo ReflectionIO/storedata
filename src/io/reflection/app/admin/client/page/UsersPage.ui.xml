@@ -12,6 +12,9 @@
 
         <c:CellTable ui:field="mUsers" styleName="table table-hover table-striped" />
         
-        <c:SimplePager ui:field="mPager"/>
+        <!-- <c:SimplePager ui:field="mPager"/> -->
+        <!-- <c:PageSizePager ui:field="mPager" /> -->
+        
+        <p:SimplePager ui:field="mPager" styleName="col-md-offset-1" />
     </g:HTMLPanel>
 </ui:UiBinder> 

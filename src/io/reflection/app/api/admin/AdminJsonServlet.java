@@ -8,6 +8,7 @@
 //
 package io.reflection.app.api.admin;
 
+import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersRequest;
 
 import com.google.gson.JsonObject;
@@ -23,6 +24,10 @@ public final class AdminJsonServlet extends JsonServlet {
 			GetUsersRequest input = new GetUsersRequest();
 			input.fromJson(request);
 			output = service.getUsers(input).toString();
+		} else if ("GetUsersCount".equals(action)) {
+			GetUsersCountRequest input = new GetUsersCountRequest();
+			input.fromJson(request);
+			output = service.getUsersCount(input).toString();
 		}
 		return output;
 	}

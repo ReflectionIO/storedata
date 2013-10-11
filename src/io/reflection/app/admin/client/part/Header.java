@@ -7,15 +7,12 @@
 //
 package io.reflection.app.admin.client.part;
 
-import java.util.List;
-
 import io.reflection.app.admin.client.controller.EventController;
 import io.reflection.app.admin.client.controller.NavigationController;
 import io.reflection.app.admin.client.controller.NavigationController.Stack;
 import io.reflection.app.admin.client.controller.UserController;
-import io.reflection.app.admin.client.event.ReceivedUsers;
 import io.reflection.app.admin.client.event.NavigationChanged;
-import io.reflection.app.shared.datatypes.User;
+import io.reflection.app.admin.client.event.ReceivedCount;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.LIElement;
@@ -32,7 +29,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author billy1380
  * 
  */
-public class Header extends Composite implements ReceivedUsers.Handler, NavigationChanged.Handler {
+public class Header extends Composite implements ReceivedCount.Handler, NavigationChanged.Handler {
 
 	private static HeaderUiBinder uiBinder = GWT.create(HeaderUiBinder.class);
 
@@ -53,13 +50,13 @@ public class Header extends Composite implements ReceivedUsers.Handler, Navigati
 		initWidget(uiBinder.createAndBindUi(this));
 		mRanksItem.addClassName("active");
 		
-		EventController.get().addHandlerToSource(ReceivedUsers.TYPE, UserController.get(), this);
+		EventController.get().addHandlerToSource(ReceivedCount.TYPE, UserController.get(), this);
 		
-//		if (UserController.get().hasUsers()) {
-//			mTotalUsers.setInnerText(Long.toString(UserController.get().getUsersCount()));
-//		} else {
-//			UserController.get().fetchUsers();
-//		}
+		if (UserController.get().getUsersCount() >= 0) {
+			mTotalUsers.setInnerText(Long.toString(UserController.get().getUsersCount()));
+		} else {
+			UserController.get().fetchUsersCount();
+		}
 		
 		EventController.get().addHandlerToSource(NavigationChanged.TYPE, NavigationController.get(), this);
 	}
@@ -98,16 +95,6 @@ public class Header extends Composite implements ReceivedUsers.Handler, Navigati
 		mUsersItem.removeClassName("active");
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.admin.client.event.ReceivedUsers.ReceivedUsersEventHandler#receivedUsers(java.util.List)
-	 */
-	@Override
-	public void receivedUsers(List<User> users) {
-		mTotalUsers.setInnerText(Long.toString(UserController.get().getUsersCount()));
-	}
-
 	/* (non-Javadoc)
 	 * @see io.reflection.app.admin.client.event.NavigationChanged.Handler#navigationChanged(io.reflection.app.admin.client.controller.NavigationController.Stack)
 	 */
@@ -120,6 +107,15 @@ public class Header extends Composite implements ReceivedUsers.Handler, Navigati
 		} else if("users".equals(stack.getPage())) {
 			activateUsers();
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.admin.client.event.ReceivedCount.Handler#receivedCount(java.lang.Long)
+	 */
+	@Override
+	public void receivedCount(Long count) {
+		mTotalUsers.setInnerText(count.toString());
+		
 	}
 
 }

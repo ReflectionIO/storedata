@@ -16,7 +16,7 @@
 
                 <c:CellTable ui:field="mRanks" styleName="table table-hover table-striped" />
                 
-                <g:InlineHyperlink ui:field="mMore" styleName="btn btn-default" text="More" targetHistoryToken="ranks" />
+                <p:PageSizePager ui:field="mPager" />
             </span>
         </span>
     </g:HTMLPanel>

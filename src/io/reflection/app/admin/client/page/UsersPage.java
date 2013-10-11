@@ -10,15 +10,13 @@ package io.reflection.app.admin.client.page;
 import io.reflection.app.admin.client.controller.ServiceController;
 import io.reflection.app.admin.client.controller.UserController;
 import io.reflection.app.admin.client.part.BootstrapGwtCellTable;
-import io.reflection.app.admin.client.part.BootstrapGwtSimplePager;
+import io.reflection.app.admin.client.part.SimplePager;
 import io.reflection.app.shared.datatypes.User;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
-import com.google.gwt.user.cellview.client.SimplePager;
-import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.ui.Composite;
@@ -35,7 +33,7 @@ public class UsersPage extends Composite {
 	interface UsersPageUiBinder extends UiBinder<Widget, UsersPage> {}
 
 	@UiField(provided = true) CellTable<User> mUsers = new CellTable<User>(ServiceController.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
-	@UiField(provided = true) SimplePager mPager = new SimplePager(TextLocation.CENTER, BootstrapGwtSimplePager.INSTANCE, true, 1000, false);
+	@UiField SimplePager mPager;
 
 	public UsersPage() {
 		initWidget(uiBinder.createAndBindUi(this));

@@ -62,7 +62,7 @@
 }
 
 .datePickerDayIsValue {
-	background: #428BCA;
+	background: #9780E4;
 	color: #fff;
 	font-weight: bold;
 	-webkit-border-radius: 4px;
@@ -84,7 +84,7 @@
 }
 
 .datePickerDayIsValueAndHighlighted {
-	background: #357EBD;
+	background: #9780E4;
 	border-color: #3071A9;
 	color: white
 }

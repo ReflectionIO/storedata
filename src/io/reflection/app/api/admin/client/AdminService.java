@@ -8,6 +8,8 @@
 //
 package io.reflection.app.api.admin.client;
 
+import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
+import io.reflection.app.api.admin.shared.call.GetUsersCountResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersResponse;
 
@@ -27,6 +29,28 @@ public final class AdminService extends JsonService {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					GetUsersResponse outputParameter = new GetUsersResponse();
+					parseResponse(response.getText(), outputParameter);
+					output.onSuccess(outputParameter);
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+				}
+			});
+		} catch (RequestException e) {
+			output.onFailure(e);
+		}
+	}
+
+	public static final String AdminMethodGetUsersCount = "GetUsersCount";
+
+	public void getUsersCount(GetUsersCountRequest input, final AsyncCallback<GetUsersCountResponse> output) {
+		try {
+			sendRequest(AdminMethodGetUsersCount, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					GetUsersCountResponse outputParameter = new GetUsersCountResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
 				}

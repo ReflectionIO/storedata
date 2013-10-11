@@ -7,6 +7,9 @@
 
             <xsd:element name="GetUsersInput" type="sda:GetUsersRequest" />
             <xsd:element name="GetUsersOutput" type="sda:GetUsersResponse" />
+            
+            <xsd:element name="GetUsersCountInput" type="sda:GetUsersCountRequest" />
+            <xsd:element name="GetUsersCountOutput" type="sda:GetUsersCountResponse" />
 
             <xsd:complexType name="GetUsersRequest">
                 <xsd:complexContent>
@@ -28,6 +31,20 @@
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>
+            
+            <xsd:complexType name="GetUsersCountRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request" />
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="GetUsersCountResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:attribute name="count" type="xsd:long" />
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
 
         </xsd:schema>
     </wsdl:types>
@@ -38,17 +55,37 @@
     <wsdl:message name="GetUsersResponse">
         <wsdl:part name="output" element="sda:GetUsersOutput" />
     </wsdl:message>
+    
+    <wsdl:message name="GetUsersCountRequest">
+        <wsdl:part name="input" element="sda:GetUsersCountInput" />
+    </wsdl:message>
+    <wsdl:message name="GetUsersCountResponse">
+        <wsdl:part name="output" element="sda:GetUsersCountOutput" />
+    </wsdl:message>
 
     <wsdl:portType name="admin">
         <wsdl:operation name="GetUsers">
             <wsdl:input message="sda:GetUsersRequest" />
             <wsdl:output message="sda:GetUsersResponse" />
         </wsdl:operation>
+        <wsdl:operation name="GetUsersCount">
+            <wsdl:input message="sda:GetUsersCountRequest" />
+            <wsdl:output message="sda:GetUsersCountResponse" />
+        </wsdl:operation>
     </wsdl:portType>
     <wsdl:binding name="adminSOAP" type="sda:admin">
         <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
         <wsdl:operation name="GetUsers">
             <soap:operation soapAction="http://app.reflection.io/admin/GetUsers" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetUsersCount">
+            <soap:operation soapAction="http://app.reflection.io/admin/GetUsersCount" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>

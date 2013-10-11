@@ -9,13 +9,13 @@ package io.reflection.app.admin.client.page;
 
 import io.reflection.app.admin.client.controller.ServiceController;
 import io.reflection.app.admin.client.part.BootstrapGwtCellTable;
+import io.reflection.app.admin.client.part.SimplePager;
 import io.reflection.app.shared.datatypes.FeedFetch;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
-import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -30,10 +30,10 @@ public class FeedBrowserPage extends Composite {
 	interface FeedBrowserPageUiBinder extends UiBinder<Widget, FeedBrowserPage> {}
 
 	@UiField(provided = true) CellTable<FeedFetch> mIngestedFeeds = new CellTable<FeedFetch>(ServiceController.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
-	@UiField(provided = true) SimplePager mIngestedPager = new SimplePager();
+	@UiField SimplePager mIngestedPager;
 	
 	@UiField(provided = true) CellTable<FeedFetch> mOutstandingFeeds = new CellTable<FeedFetch>(ServiceController.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
-	@UiField(provided = true) SimplePager mOutstandingPager = new SimplePager();
+	@UiField SimplePager mOutstandingPager;
 
 	public FeedBrowserPage() {
 		initWidget(uiBinder.createAndBindUi(this));

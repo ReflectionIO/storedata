@@ -8,6 +8,7 @@
 package io.reflection.app.admin.client.controller;
 
 import io.reflection.app.admin.client.event.ReceivedRanks;
+import io.reflection.app.admin.client.part.datatypes.RanksGroup;
 import io.reflection.app.api.core.client.CoreService;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
@@ -16,24 +17,31 @@ import io.reflection.app.shared.datatypes.Country;
 import io.reflection.app.shared.datatypes.Item;
 import io.reflection.app.shared.datatypes.Store;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.view.client.AsyncDataProvider;
+import com.google.gwt.view.client.HasData;
+import com.google.gwt.view.client.Range;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author billy1380
  * 
  */
-public class RankController implements ServiceController {
+public class RankController extends AsyncDataProvider<RanksGroup> implements ServiceController {
 
 	private static RankController mOne = null;
 
 	private Map<String, Item> mItemLookup = new HashMap<String, Item>();
 
+	private List<RanksGroup> mRows = null;
+	
 	private Pager mPager;
 
 	public static RankController get() {
@@ -85,6 +93,22 @@ public class RankController implements ServiceController {
 					EventController.get().fireEventFromSource(new ReceivedRanks("free" + input.listType, result.freeRanks), RankController.this);
 					EventController.get().fireEventFromSource(new ReceivedRanks("paid" + input.listType, result.paidRanks), RankController.this);
 					EventController.get().fireEventFromSource(new ReceivedRanks("grossing" + input.listType, result.grossingRanks), RankController.this);
+					
+					if (mRows == null) {
+						mRows = new ArrayList<RanksGroup>();
+					}
+					
+					int count = result.freeRanks.size();
+					RanksGroup r;
+					for (int i = 0; i < count; i++) {
+						mRows.add(r = new RanksGroup());
+						r.free = result.freeRanks.get(i);
+						r.paid = result.paidRanks.get(i);
+						r.grossing = result.grossingRanks.get(i);
+					}
+					
+					updateRowCount(mPager.totalCount.intValue(), true);
+					updateRowData(0, mRows);
 				}
 			}
 
@@ -97,5 +121,23 @@ public class RankController implements ServiceController {
 
 	public Item lookupItem(String externalId) {
 		return mItemLookup.get(externalId);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.google.gwt.view.client.AbstractDataProvider#onRangeChanged(com.google.gwt.view.client.HasData)
+	 */
+	@Override
+	protected void onRangeChanged(HasData<RanksGroup> display) {
+		
+		Range r = display.getVisibleRange();
+
+		int start = r.getStart();
+		int end = start + r.getLength();
+
+		if (mRows == null || end > mRows.size()) {
+			fetchTopItems();
+		} else {
+			updateRowData(start, mRows.subList(start, end));
+		}
 	}
 }

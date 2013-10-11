@@ -15,13 +15,13 @@
         <p>One or more items of these feeds have been converted to rank data.</p>
         <c:CellTable ui:field="mIngestedFeeds" />
 
-        <c:SimplePager ui:field="mIngestedPager" />
+        <p:SimplePager ui:field="mIngestedPager" />
 
         <h3>Outstanding Feeds</h3>
         <p>These feeds have not been used yet.</p>
         <c:CellTable ui:field="mOutstandingFeeds" />
 
-        <c:SimplePager ui:field="mOutstandingPager" />
+        <p:SimplePager ui:field="mOutstandingPager" />
 
 
     </g:HTMLPanel>

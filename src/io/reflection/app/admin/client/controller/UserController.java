@@ -7,8 +7,11 @@
 //
 package io.reflection.app.admin.client.controller;
 
+import io.reflection.app.admin.client.event.ReceivedCount;
 import io.reflection.app.admin.client.event.ReceivedUsers;
 import io.reflection.app.api.admin.client.AdminService;
+import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
+import io.reflection.app.api.admin.shared.call.GetUsersCountResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersResponse;
 import io.reflection.app.api.shared.datatypes.Pager;
@@ -34,8 +37,6 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 	private List<User> mUsers = new ArrayList<User>();
 	private long mCount = -1;
 	private Pager mPager;
-	private int mStart;
-	private int mEnd;
 
 	private static UserController mOne = null;
 
@@ -47,7 +48,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		return mOne;
 	}
 
-	public void fetchUsers() {
+	private void fetchUsers() {
 
 		AdminService service = new AdminService();
 		service.setUrl(ADMIN_END_POINT);
@@ -77,12 +78,15 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 						if (mPager.totalCount != null) {
 							mCount = mPager.totalCount.longValue();
+
+							EventController.get().fireEventFromSource(new ReceivedCount(result.pager.totalCount), UserController.this);
 						}
 					}
-					
+
 					updateRowCount((int) mCount, true);
-					updateRowData(mStart, mUsers.subList(mStart, mEnd));
-					
+					updateRowData(input.pager.start.intValue(),
+							mUsers.subList(input.pager.start.intValue(), Math.min(input.pager.start.intValue() + input.pager.count.intValue(), mPager.totalCount.intValue())) );
+
 					EventController.get().fireEventFromSource(new ReceivedUsers(result.users), UserController.this);
 				}
 			}
@@ -114,13 +118,42 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 	@Override
 	protected void onRangeChanged(HasData<User> display) {
 		Range r = display.getVisibleRange();
-		mStart = r.getStart();
-		mEnd = mStart + r.getLength();
 
-		if (mEnd > mUsers.size()) {
+		int start = r.getStart();
+		int end = start + r.getLength();
+
+		if (end > mUsers.size()) {
 			fetchUsers();
 		} else {
-			updateRowData(mStart, mUsers.subList(mStart, mEnd));
+			updateRowData(start, mUsers.subList(start, end));
 		}
+	}
+
+	/**
+	 * 
+	 */
+	public void fetchUsersCount() {
+		AdminService service = new AdminService();
+		service.setUrl(ADMIN_END_POINT);
+
+		final GetUsersCountRequest input = new GetUsersCountRequest();
+		input.accessCode = ACCESS_CODE;
+
+		service.getUsersCount(input, new AsyncCallback<GetUsersCountResponse>() {
+
+			@Override
+			public void onSuccess(GetUsersCountResponse result) {
+				if (result.status == StatusType.StatusTypeSuccess) {
+					mCount = result.count;
+
+					EventController.get().fireEventFromSource(new ReceivedCount(result.count), UserController.this);
+				}
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("Error");
+			}
+		});
 	}
 }

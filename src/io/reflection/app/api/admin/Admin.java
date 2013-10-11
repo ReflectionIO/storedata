@@ -9,6 +9,8 @@
 package io.reflection.app.api.admin;
 
 import static io.reflection.app.api.PagerHelper.updatePager;
+import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
+import io.reflection.app.api.admin.shared.call.GetUsersCountResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersResponse;
 import io.reflection.app.input.ValidationError;
@@ -46,6 +48,27 @@ public final class Admin extends ActionHandler {
 			output.error = convertToErrorAndLog(LOG, e);
 		}
 		LOG.finer("Exiting getUsers");
+		return output;
+	}
+
+	public GetUsersCountResponse getUsersCount(GetUsersCountRequest input) {
+		LOG.finer("Entering getUsersCount");
+		GetUsersCountResponse output = new GetUsersCountResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
+						ValidationError.InvalidValueNull.getMessage("GetUsersCountRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			output.count = UserServiceProvider.provide().getUsersCount();
+			
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getUsersCount");
 		return output;
 	}
 }
