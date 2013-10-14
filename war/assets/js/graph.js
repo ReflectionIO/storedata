@@ -9,6 +9,28 @@ $(document).ready(function(){
 
  });
 
+$('#reportrange').daterangepicker(
+    {
+      ranges: {
+         'Today': [moment(), moment()],
+         'Yesterday': [moment().subtract('days', 1), moment().subtract('days', 1)],
+         'Last 7 Days': [moment().subtract('days', 6), moment()],
+         'Last 30 Days': [moment().subtract('days', 29), moment()],
+         'This Month': [moment().startOf('month'), moment().endOf('month')],
+         'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]
+      },
+      startDate: moment().subtract('days', 29),
+      endDate: moment()
+    },
+    function(start, end) {
+        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+    }
+);
+
+/*$(document).ready(function() {
+    $('#reservation').daterangepicker();
+});*/
+
 
 /*$(function () { 
     $('#container').highcharts({
@@ -240,7 +262,7 @@ function getItemsRank() {
     var type = url.param("type");
     var country = url.param("country");
 
-    var startDate = new Date(2013,9,22).getTime();
+    var startDate = new Date(2013,8,29).getTime(); // remember month starts at index 0 (not 1)
     var endDate = new Date().getTime(); // today
 
     // var endDate = new Date();
@@ -254,9 +276,14 @@ function getItemsRank() {
 
     console.log(startDate);
     console.log(endDate);
+
+    // after: startdate 
+    // before: endDate
+
+    var pager = "{'count':" + 30 + ",'start':" + 0 + ",'sortDirection':'descending','sortBy':'date'}";
     
 
-    var requestString = "{'accessCode':'b72b4e32-1062-4cc7-bc6b-52498ee10f09','item':{'source':'ios','externalId':"+itemId+"},'listType':'"+type+"','country':{'a2Code':'"+country+"'}}";
+    var requestString = "{'accessCode':'b72b4e32-1062-4cc7-bc6b-52498ee10f09','item':{'source':'ios','externalId':"+itemId+"},'listType':'"+type+"','country':{'a2Code':'"+country+"'},'after':"+startDate+",'before':"+endDate+", 'pager':" + pager + "}";
 
     $.ajax({
         type: "POST",
@@ -285,28 +312,31 @@ function getItemsRank() {
 
                         dayOfMonth = nodeDate.getDate();
 
-                        
-                        // do things a bit differently if a top grossing app
-                        if ((type.indexOf("grossing") != -1)) {
-                            pos = item.grossingPosition;
-                        } else {
-                            pos = item.position;
-                        }
+                        if (dayOfMonth != dayOfMonthOld) {
+                         
+                            // do things a bit differently if a top grossing app
+                            if ((type.indexOf("grossing") != -1)) {
+                                pos = item.grossingPosition;
+                            } else {
+                                pos = item.position;
+                            }
+                                
+                            var thisEntry = [item.date, pos];
+                            averagesData.push(thisEntry); // store the dates
                             
-                        var thisEntry = [item.date, pos];
-                        averagesData.push(thisEntry); // store the dates
-                        
 
-                        if (pos > maxPosition) {
-                            maxPosition = pos;
+                            if (pos > maxPosition) {
+                                maxPosition = pos;
+                            }
+
+                            if (pos < minPosition) {
+                                minPosition = pos;
+                            }
+                        
+                            dayOfMonthOld = dayOfMonth;
                         }
 
-                        if (pos < minPosition) {
-                            minPosition = pos;
-                        }
-                        dayOfMonthOld = dayOfMonth;
                         
-
                         
                     //};       
                     
@@ -324,8 +354,8 @@ function getItemsRank() {
                     minPosition -= 10;
                 }
 
-                console.log("minPosition = " + minPosition);
-                console.log("maxPosition = " + maxPosition);
+                // console.log("minPosition = " + minPosition);
+                // console.log("maxPosition = " + maxPosition);
 
                 loadChart(minPosition, maxPosition);
             }

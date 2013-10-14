@@ -352,20 +352,20 @@ function createTableRowsOverall() {
 
     // add to the paid charts
     for (var i = startPos; i < endPos; i++) {
-        $('#posall' + i).append('<td id="paid' + i + '"><img class="game-icon img-rounded" src="../assets/img/icon_placeholder.png"><div><span class="game-name">Name<br></span><span class="game-publisher">Publisher</span></div></td>');
+        $('#posall' + i).append('<td id="paid' + i + '"><img class="game-icon img-rounded" src="../assets/img/icon_placeholder.png"><div><span class="game-name">Name<br></span><span class="game-publisher text-muted">Publisher</span></div></td>');
     };
 
     // add to the free charts
     for (var i = startPos; i < endPos; i++) {
         //$('#pos'+i).append('<td id="topfreeapplications'+i+'">blank</td>');
-        $('#posall' + i).append('<td id="free' + i + '"><img class="game-icon img-rounded" src="../assets/img/icon_placeholder.png"><div><span class="game-name">Name<br></span><span class="game-publisher">Publisher</span></div></td>');
+        $('#posall' + i).append('<td id="free' + i + '"><img class="game-icon img-rounded" src="../assets/img/icon_placeholder.png"><div><span class="game-name">Name<br></span><span class="game-publisher text-muted">Publisher</span></div></td>');
 
     };
 
     // add to the top grossing charts
     for (var i = startPos; i < endPos; i++) {
         //$('#pos'+i).append('<td id="topgrossingapplications'+i+'">blank</td>');
-        $('#posall' + i).append('<td id="grossing' + i + '"><img class="game-icon img-rounded" src="../assets/img/icon_placeholder.png"><div><span class="game-name">Name<br></span><span class="game-publisher">Publisher</span></div></td>');
+        $('#posall' + i).append('<td id="grossing' + i + '"><img class="game-icon img-rounded" src="../assets/img/icon_placeholder.png"><div><span class="game-name">Name<br></span><span class="game-publisher text-muted">Publisher</span></div></td>');
 
     };
 
