@@ -73,7 +73,7 @@ function getItemsRank() {
     var pager = "{'count':" + 30 + ",'start':" + 0 + ",'sortDirection':'descending','sortBy':'date'}";
     
 
-    var requestString = "{'accessCode':'b72b4e32-1062-4cc7-bc6b-52498ee10f09','item':{'source':'ios','externalId':"+itemId+"},'listType':'"+type+"','country':{'a2Code':'"+country+"'},'after':"+startDate+",'before':"+endDate+", 'pager':" + pager + "}";
+    var requestString = "{'accessCode':'b72b4e32-1062-4cc7-bc6b-52498ee10f09','item':{'source':'ios','externalId':"+itemId+"},'listType':'"+type+"','country':{'a2Code':'"+country+"'},'start':"+startDate+",'end':"+endDate+", 'pager':" + pager + "}";
 
     $.ajax({
         type: "POST",
