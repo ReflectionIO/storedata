@@ -35,7 +35,7 @@ public class PersistServlet extends HttpServlet {
 
 		boolean isNotQueue = false;
 
-		// bail out if we have not been called by app engine cron
+		// bail out if we have not been called by app engine persist queue
 		if ((isNotQueue = (appEngineQueue == null || !"persist".toLowerCase().equals(appEngineQueue.toLowerCase())))) {
 			resp.setStatus(401);
 			resp.getOutputStream().print("failure");

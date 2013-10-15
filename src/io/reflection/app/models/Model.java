@@ -14,11 +14,11 @@ import java.util.Date;
  * 
  */
 public interface Model {
-	public static final String ENQUEUE_MODEL_FORMAT = "";
 
-	void enqueue(String store, String country, String type, Date after, Date before);
+	void enqueue(String store, String country, String type, Date date);
 
-	void calculate();
-
-	void apply();
+	
+	void prepare(String store, String country, String type, Date date);
+	
+	
 }

@@ -7,9 +7,12 @@
 
             <xsd:element name="GetUsersInput" type="sda:GetUsersRequest" />
             <xsd:element name="GetUsersOutput" type="sda:GetUsersResponse" />
-            
+
             <xsd:element name="GetUsersCountInput" type="sda:GetUsersCountRequest" />
             <xsd:element name="GetUsersCountOutput" type="sda:GetUsersCountResponse" />
+
+            <xsd:element name="GetModelOutcomeInput" type="sda:GetModelOutcomeRequest" />
+            <xsd:element name="GetModelOutcomeOutput" type="sda:GetModelOutcomeResponse" />
 
             <xsd:complexType name="GetUsersRequest">
                 <xsd:complexContent>
@@ -31,7 +34,7 @@
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>
-            
+
             <xsd:complexType name="GetUsersCountRequest">
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request" />
@@ -46,6 +49,37 @@
                 </xsd:complexContent>
             </xsd:complexType>
 
+            <xsd:complexType name="GetModelOutcomeRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="country" type="sd:Country" />
+                            <xsd:element name="store" type="sd:Store" />
+                        </xsd:sequence>
+                        <xsd:attribute name="date" type="xsd:dateTime" />
+                        <xsd:attribute name="listType" type="xsd:string" />
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="GetModelOutcomeResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:attribute name="grossingA" type="xsd:double" />
+                        <xsd:attribute name="paidA" type="xsd:double" />
+                        <xsd:attribute name="bRatio" type="xsd:double" />
+                        <xsd:attribute name="totalDownloads" type="xsd:double" />
+                        <xsd:attribute name="paidB" type="xsd:double" />
+                        <xsd:attribute name="grossingB" type="xsd:double" />
+                        <xsd:attribute name="piadAIap" type="xsd:double" />
+                        <xsd:attribute name="grossingAIap" type="xsd:double" />
+                        <xsd:attribute name="freeA" type="xsd:double" />
+                        <xsd:attribute name="theta" type="xsd:double" />
+                        <xsd:attribute name="freeB" type="xsd:double" />
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
         </xsd:schema>
     </wsdl:types>
 
@@ -55,7 +89,7 @@
     <wsdl:message name="GetUsersResponse">
         <wsdl:part name="output" element="sda:GetUsersOutput" />
     </wsdl:message>
-    
+
     <wsdl:message name="GetUsersCountRequest">
         <wsdl:part name="input" element="sda:GetUsersCountInput" />
     </wsdl:message>
