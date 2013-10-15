@@ -1,8 +1,8 @@
 //  
 //  GetItemRanksRequest.java
-//  storedata
+//  reflection.io
 //
-//  Created by William Shakour on September 10, 2013.
+//  Created by William Shakour on October 15, 2013.
 //  Copyrights © 2013 SPACEHOPPER STUDIOS LTD. All rights reserved.
 //  Copyrights © 2013 reflection.io. All rights reserved.
 //
@@ -24,8 +24,8 @@ public class GetItemRanksRequest extends Request {
 	public Item item;
 	public Country country;
 	public Pager pager;
-	public Date after;
-	public Date before;
+	public Date start;
+	public Date end;
 	public String listType;
 
 	@Override
@@ -37,10 +37,10 @@ public class GetItemRanksRequest extends Request {
 		object.add("country", jsonCountry);
 		JsonElement jsonPager = pager == null ? JsonNull.INSTANCE : pager.toJson();
 		object.add("pager", jsonPager);
-		JsonElement jsonAfter = after == null ? JsonNull.INSTANCE : new JsonPrimitive(after.getTime());
-		object.add("after", jsonAfter);
-		JsonElement jsonBefore = before == null ? JsonNull.INSTANCE : new JsonPrimitive(before.getTime());
-		object.add("before", jsonBefore);
+		JsonElement jsonStart = start == null ? JsonNull.INSTANCE : new JsonPrimitive(start.getTime());
+		object.add("start", jsonStart);
+		JsonElement jsonEnd = end == null ? JsonNull.INSTANCE : new JsonPrimitive(end.getTime());
+		object.add("end", jsonEnd);
 		JsonElement jsonListType = listType == null ? JsonNull.INSTANCE : new JsonPrimitive(listType);
 		object.add("listType", jsonListType);
 		return object;
@@ -70,16 +70,16 @@ public class GetItemRanksRequest extends Request {
 				pager.fromJson(jsonPager.getAsJsonObject());
 			}
 		}
-		if (jsonObject.has("after")) {
-			JsonElement jsonAfter = jsonObject.get("after");
-			if (jsonAfter != null) {
-				after = new Date(jsonAfter.getAsLong());
+		if (jsonObject.has("start")) {
+			JsonElement jsonStart = jsonObject.get("start");
+			if (jsonStart != null) {
+				start = new Date(jsonStart.getAsLong());
 			}
 		}
-		if (jsonObject.has("before")) {
-			JsonElement jsonBefore = jsonObject.get("before");
-			if (jsonBefore != null) {
-				before = new Date(jsonBefore.getAsLong());
+		if (jsonObject.has("end")) {
+			JsonElement jsonEnd = jsonObject.get("end");
+			if (jsonEnd != null) {
+				end = new Date(jsonEnd.getAsLong());
 			}
 		}
 		if (jsonObject.has("listType")) {

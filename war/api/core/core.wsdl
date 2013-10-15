@@ -129,8 +129,8 @@
                             <xsd:element name="pager" type="sd:Pager" />
                         </xsd:sequence>
 
-                        <xsd:attribute name="after" type="xsd:dateTime" />
-                        <xsd:attribute name="before" type="xsd:dateTime" />
+                        <xsd:attribute name="start" type="xsd:dateTime" />
+                        <xsd:attribute name="end" type="xsd:dateTime" />
                         <xsd:attribute name="listType" type="xsd:string" />
 
                     </xsd:extension>

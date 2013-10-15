@@ -212,11 +212,11 @@ public final class Core extends ActionHandler {
 			cal.set(Calendar.MINUTE, 0);
 			cal.set(Calendar.SECOND, 0);
 			cal.set(Calendar.MILLISECOND, 1);
-			Date before = cal.getTime();
+			Date end = cal.getTime();
 			cal.add(Calendar.DAY_OF_YEAR, -1);
-			Date after = cal.getTime();
+			Date start = cal.getTime();
 
-			List<Rank> ranks = RankServiceProvider.provide().getRanks(input.country, input.store, input.listType, after, before, input.pager);
+			List<Rank> ranks = RankServiceProvider.provide().getRanks(input.country, input.store, input.listType, start, end, input.pager);
 
 			if (ranks != null && ranks.size() != 0) {
 				List<String> itemIds = new ArrayList<String>();
@@ -234,7 +234,7 @@ public final class Core extends ActionHandler {
 
 				output.pager = input.pager;
 				updatePager(output.pager, output.ranks,
-						input.pager.totalCount == null ? RankServiceProvider.provide().getRanksCount(input.country, input.store, input.listType, after, before)
+						input.pager.totalCount == null ? RankServiceProvider.provide().getRanksCount(input.country, input.store, input.listType, start, end)
 								: null);
 			}
 
@@ -285,9 +285,9 @@ public final class Core extends ActionHandler {
 			cal.set(Calendar.MINUTE, 0);
 			cal.set(Calendar.SECOND, 0);
 			cal.set(Calendar.MILLISECOND, 1);
-			Date before = cal.getTime();
+			Date end = cal.getTime();
 			cal.add(Calendar.DAY_OF_YEAR, -1);
-			Date after = cal.getTime();
+			Date start = cal.getTime();
 
 			List<String> itemIds = new ArrayList<String>();
 			final Map<String, Rank> lookup = new HashMap<String, Rank>();
@@ -296,7 +296,7 @@ public final class Core extends ActionHandler {
 			String code = null;
 
 			List<Rank> ranks = RankServiceProvider.provide().getRanks(input.country, input.store, freeListType = getFreeListName(input.store, input.listType),
-					after, before, input.pager);
+					start, end, input.pager);
 
 			if (ranks != null && ranks.size() != 0) {
 				for (Rank rank : ranks) {
@@ -314,7 +314,7 @@ public final class Core extends ActionHandler {
 			}
 
 			if (code == null) {
-				ranks = RankServiceProvider.provide().getRanks(input.country, input.store, getPaidListName(input.store, input.listType), after, before,
+				ranks = RankServiceProvider.provide().getRanks(input.country, input.store, getPaidListName(input.store, input.listType), start, end,
 						input.pager);
 			} else {
 				ranks = RankServiceProvider.provide().getGatherCodeRanks(input.country, input.store, getPaidListName(input.store, input.listType), code,
@@ -337,7 +337,7 @@ public final class Core extends ActionHandler {
 			}
 
 			if (code == null) {
-				ranks = RankServiceProvider.provide().getRanks(input.country, input.store, getGrossingListName(input.store, input.listType), after, before,
+				ranks = RankServiceProvider.provide().getRanks(input.country, input.store, getGrossingListName(input.store, input.listType), start, end,
 						input.pager);
 			} else {
 				ranks = RankServiceProvider.provide().getGatherCodeRanks(input.country, input.store, getGrossingListName(input.store, input.listType), code,
@@ -364,7 +364,7 @@ public final class Core extends ActionHandler {
 			output.pager = input.pager;
 			if (input.pager.totalCount == null) {
 				if (code == null) {
-					input.pager.totalCount = RankServiceProvider.provide().getRanksCount(input.country, input.store, freeListType, after, before);
+					input.pager.totalCount = RankServiceProvider.provide().getRanksCount(input.country, input.store, freeListType, start, end);
 				} else {
 					input.pager.totalCount = RankServiceProvider.provide().getGatherCodeRanksCount(input.country, input.store, freeListType, code);
 				}
@@ -411,25 +411,25 @@ public final class Core extends ActionHandler {
 
 			Calendar cal = Calendar.getInstance();
 
-			if (input.before == null) input.before = cal.getTime();
+			if (input.end == null) input.end = cal.getTime();
 
-			if (input.after == null) {
-				cal.setTime(input.before);
+			if (input.start == null) {
+				cal.setTime(input.end);
 				cal.add(Calendar.DAY_OF_YEAR, -30);
-				input.after = cal.getTime();
+				input.start = cal.getTime();
 			}
 
 			Store store = StoreServiceProvider.provide().getA3CodeStore(input.item.source);
 			input.listType = ValidationHelper.validateListType(input.listType, store);
 
-			long diff = input.before.getTime() - input.after.getTime();
+			long diff = input.end.getTime() - input.start.getTime();
 			long diffDays = diff / (24 * 60 * 60 * 1000);
 
 			if (diffDays > 60 || diffDays < 0)
 				throw new InputValidationException(ValidationError.DateRangeOutOfBounds.getCode(),
-						ValidationError.DateRangeOutOfBounds.getMessage("0-60 days: input.before - input.after"));
+						ValidationError.DateRangeOutOfBounds.getMessage("0-60 days: input.end - input.start"));
 
-			output.ranks = RankServiceProvider.provide().getItemRanks(input.country, store, input.listType, input.item, input.after, input.before, input.pager);
+			output.ranks = RankServiceProvider.provide().getItemRanks(input.country, store, input.listType, input.item, input.start, input.end, input.pager);
 
 			if (input.pager.start.intValue() == 0) {
 				output.item = input.item;
