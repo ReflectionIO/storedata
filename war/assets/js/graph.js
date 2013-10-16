@@ -1,5 +1,6 @@
 
 var rangeData = [];
+var historyList = {};
 
 var chart;
 var chartLoaded = false;
@@ -47,6 +48,20 @@ $('#reportrange').daterangepicker(
     }
 );
 
+// when the user presses a nav button
+$(".btn").click(function () {
+
+    var value = $(this).attr("value");
+
+    if (value == "overview") {
+        alert(value);
+    }
+    else {
+        $('#graph-container').toggle();
+    }
+
+});
+
 
 function getItemsRank() {
 
@@ -70,7 +85,7 @@ function getItemsRank() {
     // endDate = endDate.getTime();
     // startDate = startDate.getTime();
 
-    var pager = "{'count':" + 30 + ",'start':" + 0 + ",'sortDirection':'descending','sortBy':'date'}";
+    var pager = "{'count':" + 60 + ",'start':" + 0 + ",'sortDirection':'descending','sortBy':'date'}";
     
 
     var requestString = "{'accessCode':'b72b4e32-1062-4cc7-bc6b-52498ee10f09','item':{'source':'ios','externalId':"+itemId+"},'listType':'"+type+"','country':{'a2Code':'"+country+"'},'start':"+startDate+",'end':"+endDate+", 'pager':" + pager + "}";
@@ -86,7 +101,7 @@ function getItemsRank() {
                 console.log(data);
 
                 var averagesData = [];
-                var dateData = [];
+                // var dateData = [];
                 var minPosition = 1000;
                 var maxPosition = 20;
                 var pos = 0;
@@ -94,12 +109,14 @@ function getItemsRank() {
                 var dayOfMonth = 0; // the current day of the month. i only want to show 1 entry per day
                 var dayOfMonthOld = -1;
 
+                
+
                 $.each(data.ranks, function(index, item){    
                     // only use the specific "type" of list e.g. topfreeapplications, topfreeipadapplications
                     //if (item.type == type) {
                         
                         var nodeDate = new Date(item.date);
-                        dateData.push(nodeDate); // this is purely for the console.log call below
+                        // dateData.push(nodeDate); // this is purely for the console.log call below
 
                         dayOfMonth = nodeDate.getDate();
 
@@ -126,15 +143,11 @@ function getItemsRank() {
                         
                             dayOfMonthOld = dayOfMonth;
                         }
-
-                        
-                        
                     //};       
-                    
                 });
 
                 console.log(averagesData);
-                console.log(dateData);
+                // console.log(dateData);
 
                 maxPosition += 10;
 
@@ -144,6 +157,14 @@ function getItemsRank() {
                 else  {
                     minPosition -= 10;
                 }
+
+                var history = {};
+                history.data = averagesData;
+                history.minPosition = minPosition;
+                history.maxPosition = maxPosition;
+
+                historyList["rank"] = history; // "rank" should be dynamic
+                console.log(historyList);
 
                 // console.log("minPosition = " + minPosition);
                 // console.log("maxPosition = " + maxPosition);
@@ -177,7 +198,7 @@ function updateApp(item) {
 
 function loadChart(averagesData, minPosition, maxPosition) {
 
-    /*var averages = [
+    /*var averagesData = [
             [1246406400000, 21.5],
             [1246492800000, 22.1],
             [1246579200000, 23],
@@ -264,11 +285,11 @@ function loadChart(averagesData, minPosition, maxPosition) {
                 }*/]
         });
 
-        
-
 }
 
 function refreshChart(averagesData, minPosition, maxPosition) {
     
+    // chart.series[0].yAxis.min = 15;
     chart.series[0].setData(averagesData,true);
+    // chart.redraw();
 }

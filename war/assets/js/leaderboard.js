@@ -228,6 +228,8 @@ function getTopItems(listType, listID) {
                 var newRankData = new Array();
                 $.each(data.ranks, function (index, item) {
                     newRankData[index] = currentLookup[item.itemId]; // get the item information using our previously constructed item info
+                    newRankData[index].downloads = item.downloads;
+                    newRankData[index].revenue = item.revenue;
                 });
 
                 // add to the rankList (note: rankList keeps growing in size to store every app retrieved from the server)
@@ -389,7 +391,7 @@ function createTableRowsSingle() {
 
     // add to the info column
     for (var i = startPos; i < endPos; i++) {
-        $('#possingle' + i).append('<td id="info' + i + '"><img class="game-icon2" src="../assets/img/icon_placeholder.png"><div><span class="game-name2">Name<br></span><span class="game-publisher2">Publisher</span></div></td>');
+        $('#possingle' + i).append('<td id="info' + i + '"><img class="game-icon2" src="../assets/img/icon_placeholder.png"><div><span class="game-name2">Name<br></span><span class="game-publisher2 text-muted">Publisher</span></div></td>');
     };
 
     // add to the price column
@@ -538,8 +540,21 @@ function updateTableSingle(chartdata, listType, listID) {
         $('td#info' + i + ' .game-publisher2').html(itemPublisher);
 
         // replace the price
-        $('td#price' + i).html('$'+chartdata[i].price);
+        if (chartdata[i].price == 0) {
+          $('td#price' + i).html('Free');
+        } else {
+          $('td#price' + i).html('$'+chartdata[i].price);
+        }
 
+        // replace the downloads
+        $('td#downloads' + i).html(chartdata[i].downloads);
+
+        // replace the revenue
+        $('td#revenue' + i).html('$'+chartdata[i].revenue);
+
+        // replace the iap
+        $('td#iap' + i).html('YES');
+        
         // show the row
         $('#possingle' + i).show();
     };
