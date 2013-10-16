@@ -88,6 +88,8 @@
                 <xsd:attribute name="price" type="xsd:float" />
                 <xsd:attribute name="currency" type="xsd:string" />
                 <xsd:attribute name="code" type="xsd:string" />
+                <xsd:attribute name="revenue" type="xsd:float" />
+                <xsd:attribute name="downloads" type="xsd:int" />
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>

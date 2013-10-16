@@ -82,6 +82,9 @@ final class RankService implements IRankService {
 		rank.source = stripslashes(connection.getCurrentRowString("source"));
 		rank.type = stripslashes(connection.getCurrentRowString("type"));
 
+		rank.revenue = Float.valueOf(0);
+		rank.downloads = Integer.valueOf(0);
+
 		return rank;
 	}
 
@@ -472,7 +475,7 @@ final class RankService implements IRankService {
 				rankConnection.disconnect();
 			}
 		}
-		
+
 		return ranks;
 	}
 

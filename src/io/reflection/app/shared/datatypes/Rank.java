@@ -22,32 +22,28 @@ import com.googlecode.objectify.condition.IfNotZero;
 @Cache
 public class Rank extends DataType {
 
-	@Index(IfNotZero.class)
-	public Integer position = Integer.valueOf(0);
-	
-	@Index(IfNotZero.class)
-	public Integer grossingPosition = Integer.valueOf(0);
+	@Index(IfNotZero.class) public Integer position = Integer.valueOf(0);
 
-	@Index
-	public String itemId;
+	@Index(IfNotZero.class) public Integer grossingPosition = Integer.valueOf(0);
 
-	@Index
-	public String type;
+	@Index public String itemId;
 
-	@Index
-	public String country;
+	@Index public String type;
 
-	@Index
-	public Date date;
+	@Index public String country;
 
-	@Index
-	public String source;
+	@Index public Date date;
+
+	@Index public String source;
 
 	public Float price = Float.valueOf(0);
 
 	public String currency;
 
 	public String code;
+
+	public Float revenue;
+	public Integer downloads;
 
 	@Override
 	public JsonObject toJson() {
@@ -72,6 +68,10 @@ public class Rank extends DataType {
 		object.add("currency", jsonCurrency);
 		JsonElement jsonCode = code == null ? JsonNull.INSTANCE : new JsonPrimitive(code);
 		object.add("code", jsonCode);
+		JsonElement jsonRevenue = revenue == null ? JsonNull.INSTANCE : new JsonPrimitive(revenue);
+		object.add("revenue", jsonRevenue);
+		JsonElement jsonDownloads = downloads == null ? JsonNull.INSTANCE : new JsonPrimitive(downloads);
+		object.add("downloads", jsonDownloads);
 		return object;
 	}
 
@@ -85,9 +85,9 @@ public class Rank extends DataType {
 			}
 		}
 		if (jsonObject.has("grossingPosition")) {
-			JsonElement jsongrossingPosition = jsonObject.get("grossingPosition");
-			if (jsongrossingPosition != null) {
-				grossingPosition = Integer.valueOf(jsongrossingPosition.getAsInt());
+			JsonElement jsonGrossingPosition = jsonObject.get("grossingPosition");
+			if (jsonGrossingPosition != null) {
+				grossingPosition = Integer.valueOf(jsonGrossingPosition.getAsInt());
 			}
 		}
 		if (jsonObject.has("itemId")) {
@@ -136,6 +136,18 @@ public class Rank extends DataType {
 			JsonElement jsonCode = jsonObject.get("code");
 			if (jsonCode != null) {
 				code = jsonCode.getAsString();
+			}
+		}
+		if (jsonObject.has("revenue")) {
+			JsonElement jsonRevenue = jsonObject.get("revenue");
+			if (jsonRevenue != null) {
+				revenue = Float.valueOf(jsonRevenue.getAsFloat());
+			}
+		}
+		if (jsonObject.has("downloads")) {
+			JsonElement jsonDownloads = jsonObject.get("downloads");
+			if (jsonDownloads != null) {
+				downloads = Integer.valueOf(jsonDownloads.getAsInt());
 			}
 		}
 	}
