@@ -144,8 +144,9 @@ public class ValidationHelper {
 		if (pager.count.intValue() <= 0)
 			throw new InputValidationException(ValidationError.PagerCountTooSmall.getCode(), ValidationError.PagerCountTooSmall.getMessage(parent));
 
-		if (pager.count.intValue() > 30)
-			throw new InputValidationException(ValidationError.PagerCountTooLarge.getCode(), ValidationError.PagerCountTooLarge.getMessage(parent));
+		// TODO: for now this is disabled until we sort something out for it
+//		if (pager.count.intValue() > 30)
+//			throw new InputValidationException(ValidationError.PagerCountTooLarge.getCode(), ValidationError.PagerCountTooLarge.getMessage(parent));
 
 		if (pager.start != null && pager.totalCount != null && pager.start.longValue() > pager.totalCount.longValue())
 			throw new InputValidationException(ValidationError.PagerStartLargerThanTotal.getCode(),
