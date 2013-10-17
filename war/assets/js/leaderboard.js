@@ -447,6 +447,7 @@ function updateTable(chartdata, listType, listID) {
         //$('td#'+listID+i).html('Whatever <b>HTML</b> you want here.');
 
         var itemName;
+        var itemNameFull;
         var itemPublisher;
 
         // we current don't always get the appdata in the LookupApplication call so check that we have
@@ -467,6 +468,8 @@ function updateTable(chartdata, listType, listID) {
             }
         }
 
+        itemNameFull = itemName;
+
         var maxStringLength = 20;
 
         // shorten the app name if necessary
@@ -480,7 +483,7 @@ function updateTable(chartdata, listType, listID) {
         }
 
         // replace the app name
-        $('td#' + listID + rowPos + ' .game-name').html('<a href="graph.html?itemId=' + chartdata[i].externalId + '&type=' + listType + '&country=' + country + '">' + itemName + '</a><br>');
+        $('td#' + listID + rowPos + ' .game-name').html('<a href="graph.html?itemId=' + chartdata[i].externalId + '&type=' + listType + '&country=' + country + '&name=' + itemNameFull + '&publisher=' + itemPublisher + '">' + itemName + '</a><br>');
 
 
         // replace the publisher name
@@ -501,6 +504,7 @@ function updateTableSingle(chartdata, listType, listID) {
     for (var i = 0; i < endPos; i++) {
 
         var itemName;
+        var itemNameFull;
         var itemPublisher;
 
         // we current don't always get the appdata in the LookupApplication call so check that we have
@@ -521,6 +525,8 @@ function updateTableSingle(chartdata, listType, listID) {
             }
         }
 
+        itemNameFull = itemName;
+
         var maxStringLength = 20;
 
         // shorten the app name if necessary
@@ -534,7 +540,7 @@ function updateTableSingle(chartdata, listType, listID) {
         }
 
         // replace the app name
-        $('td#info' + i + ' .game-name2').html('<a href="graph.html?itemId=' + chartdata[i].externalId + '&type=' + listType + '&country=' + country + '">' + itemName + '</a><br>');
+        $('td#info' + i + ' .game-name2').html('<a href="graph.html?itemId=' + chartdata[i].externalId + '&type=' + listType + '&country=' + country + '&name=' + itemNameFull + '&publisher=' + itemPublisher + '">' + itemName + '</a><br>');
 
         // replace the publisher name
         $('td#info' + i + ' .game-publisher2').html(itemPublisher);

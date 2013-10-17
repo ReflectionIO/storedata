@@ -64,3 +64,14 @@ body {
 #reportrange span {
 	padding-left: 3px;
 }
+
+.loader-container {
+  min-width: 500px;
+  height: 500px; 
+  line-height: 500px; /* should match height */
+  text-align: center;
+}
+
+.loader-container > img {
+  vertical-align: middle;
+}

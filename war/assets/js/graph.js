@@ -23,6 +23,12 @@ $(document).ready(function(){
     // console.log(startDate);
     // console.log(endDate);
 
+    var url = purl(); // parse the current page URL
+    var name = url.param("name");
+    var publisher = url.param("publisher");
+    $('#app-name').html(name+'<br>');
+    $('#publisher-name').html(publisher);
+
     getItemsRank();
 
  });
@@ -42,6 +48,7 @@ $('#reportrange').daterangepicker(
     },
     function(start, end) {
         $('#graph').hide();
+        $('#loader').show();
         $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
         startDate = moment(start).unix() * 1000;
         endDate = moment(end).unix() * 1000;
@@ -135,6 +142,7 @@ function createGraphData(data, type, graphType) {
     var nodeDate;
     var dayOfMonth = 0; // the current day of the month. i only want to show 1 entry per day
     var dayOfMonthOld = -1;
+    var d;
 
     $.each(data.ranks, function(index, item){    
         // only use the specific "type" of list e.g. topfreeapplications, topfreeipadapplications
@@ -144,6 +152,45 @@ function createGraphData(data, type, graphType) {
             // dateData.push(nodeDate); // this is purely for the console.log call below
 
             dayOfMonth = nodeDate.getDate();
+
+            if (graphType == "rank") {
+                console.log("dayOfMonth = " + dayOfMonth + " | dayOfMonthOld = " + dayOfMonthOld);
+            }
+
+
+            if (dayOfMonthOld != -1) {
+                // IMPORTANT NOTE: TO TEST THIS FEATURE I NEED TO USE THE FOLLOWING GAME DETAILS
+                // http://127.0.0.1:8888/alpha/graph.html?itemId=com.nerdyoctopus.dots&type=topfreeapplications&country=us
+                // http://127.0.0.1:8888/alpha/graph.html?itemId=com.merekdavis.Mextures&type=toppaidapplications&country=us
+                // THE APPLICABLE DATES ARE 22nd September 2013 - 17th October 2013
+                // THIS CODE CURRENTLY ONLY WORKS FOR RANKS. I NEED A DIFERENT VALUE FOR pos ON REVENUE AND DOWNLOADS
+                var addMissingPoints = false;
+                // this handles when a game drops of the chart then comes back in again
+                if (dayOfMonthOld > dayOfMonth ) {
+                    // check whether the drop off occured at the end of month
+                    if (dayOfMonth != 1) {
+                        d = 1;
+                        addMissingPoints = true;
+                    }
+                }
+                else if ( (dayOfMonth - dayOfMonthOld) > 1 ) {
+                    // then check that the drop off didn't occur during the month
+                    d = dayOfMonthOld;
+                    addMissingPoints = true;
+                }
+
+                if (addMissingPoints) {
+                    while (d < dayOfMonth) {
+                        pos = 1001;
+                        rangeTop = pos;
+                        rangeBottom = pos;
+                        rankData.push([item.date, pos]);
+                        rangeData.push([item.date, rangeTop, rangeBottom]);
+                        d++;
+                    }
+                }
+            }
+            
 
             if (dayOfMonth != dayOfMonthOld) {
              
@@ -188,7 +235,7 @@ function createGraphData(data, type, graphType) {
         //};       
     });
 
-    console.log(rankData);
+    // console.log(rankData);
     // console.log(dateData);
 
     maxPosition += 10;
@@ -229,8 +276,8 @@ function createGraphData(data, type, graphType) {
 
 function updateApp(item) {
 
-     $('#app-name').html(item.name+'<br>');
-     $('#publisher-name').html(item.creatorName);
+     // $('#app-name').html(item.name+'<br>');
+     // $('#publisher-name').html(item.creatorName);
      $('.game-icon-heading').attr("src", item.mediumImage);
 
 }
@@ -244,10 +291,11 @@ function loadChart(graphData) {
     var heading = graphData.heading;
     var seriesName = graphData.seriesName;
 
-    console.log(rangeData);
+    // console.log(rangeData);
 
 
     $('#graph').show();
+    $('#loader').hide();
 
     chart = new Highcharts.Chart({
         chart: {
