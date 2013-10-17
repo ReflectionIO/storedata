@@ -51,10 +51,13 @@ CREATE TABLE `rank` (
   `source` char(3) DEFAULT NULL,
   `price` int(11) DEFAULT NULL,
   `currency` varchar(100) DEFAULT NULL,
+  `revenue` int(11) DEFAULT NULL,
+  `downloads` int(11) DEFAULT NULL,
   `code` varchar(100) DEFAULT NULL,
   `deleted` enum('y','n') DEFAULT 'n',
   PRIMARY KEY (`id`),
-  KEY `index_code` (`code`)
+  KEY `index_code` (`code`),
+  KEY `index_date` (`date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
 
 CREATE TABLE `store` (
@@ -374,3 +377,25 @@ VALUES
 ("Apple Mac OS X Store", "mac", "http://www.apple.com", ""),
 ("Android Play Store", "gpl", "http://play.google.com", ""),
 ("Amazon Appstore for Android", "azn", "http://www.amazon.com", "")$$
+
+CREATE TABLE `modelrun` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `deleted` enum('y','n') DEFAULT 'n',
+  `country` char(3) DEFAULT NULL,
+  `source` char(3) DEFAULT NULL,
+  `code` varchar(100) DEFAULT NULL,
+  `grossinga` float DEFAULT NULL,
+  `paida` float DEFAULT NULL,
+  `bratio` float DEFAULT NULL,
+  `totaldownloads` float DEFAULT NULL,
+  `paidb` float DEFAULT NULL,
+  `grossingb` float DEFAULT NULL,
+  `piadaiap` float DEFAULT NULL,
+  `grossingaiap` float DEFAULT NULL,
+  `freea` float DEFAULT NULL,
+  `theta` float DEFAULT NULL,
+  `freeb` float DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `index_code` (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$

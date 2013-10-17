@@ -118,4 +118,10 @@ public interface IRankService extends IService {
 	 */
 	public Long getGatherCodeRanksCount(Country country, Store store, String listType, String code);
 
+	/**
+	 * @param code
+	 * @return
+	 */
+	public Date getCodeLastRankDate(String code);
+
 }

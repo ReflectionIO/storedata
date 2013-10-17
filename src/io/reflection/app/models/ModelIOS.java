@@ -15,6 +15,7 @@ import io.reflection.app.renjin.RenjinRModelBase;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
+import io.reflection.app.service.rank.RankServiceProvider;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -102,11 +103,13 @@ public class ModelIOS extends RenjinRModelBase implements Model {
 	 * @see io.reflection.app.models.Model#prepare(java.lang.String, java.lang.String, java.lang.String, java.util.Date)
 	 */
 	@Override
-	public void prepare(String store, String country, String listType, Date date) {
+	public void prepare(String store, String country, String listType, String code) {
 		if (LOG.isLoggable(GaeLevel.TRACE)) {
 			LOG.log(GaeLevel.TRACE, "Entering...");
 		}
 
+		Date date = RankServiceProvider.provide().getCodeLastRankDate(code);
+		
 		try {
 			mEngine.eval("cut.point <- 300");
 
@@ -155,12 +158,12 @@ public class ModelIOS extends RenjinRModelBase implements Model {
 		}
 
 		Connection connection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
-
+		
 		String query = String.format(
 				"SELECT `r`.`itemid`, `r`.`position`,`r`.`grossingposition`, `r`.`price`, `s`.`usesiap` FROM `rank` AS `r` JOIN `item` AS `i`"
 						+ " ON `i`.`externalid`=`r`.`itemid` LEFT JOIN `sup_application_iap` AS `s` ON `s`.`internalid`=`i`.`internalid`"
-						+ " WHERE `r`.`country`='%s' AND `r`.`source`='%s' AND %s AND `r`.`type` in (%s) AND `date`<FROM_UNIXTIME(%d) ORDER BY `date` DESC",
-				country, store, priceQuery, typesQueryPart, date.getTime() / 1000);
+						+ " WHERE `r`.`country`='%s' AND `r`.`source`='%s' AND %s AND `r`.`type` in (%s) AND `date`<FROM_UNIXTIME(%d)"
+						+ " ORDER BY `date` DESC", country, store, priceQuery, typesQueryPart, date);
 
 		StringVector.Builder itemIdBuilder = StringVector.newBuilder();
 		IntArrayVector.Builder topPositionBuilder = new IntArrayVector.Builder();
@@ -275,8 +278,8 @@ public class ModelIOS extends RenjinRModelBase implements Model {
 			LOG.log(GaeLevel.DEBUG, "th: " + ((Vector) mEngine.get("th")).asReal());
 			LOG.log(GaeLevel.DEBUG, "bf: " + ((Vector) mEngine.get("bf")).asReal());
 		}
-		
-//		String code = UUID.randomUUID().toString();
+
+		// String code = UUID.randomUUID().toString();
 	}
 
 }

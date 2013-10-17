@@ -145,6 +145,29 @@
         </xsd:complexContent>
     </xsd:complexType>
 
+    <xsd:complexType name="ModelRun">
+        <xsd:complexContent>
+            <xsd:extension base="DataType">
+                <xsd:sequence>
+                    <xsd:element name="country" type="Country" />
+                    <xsd:element name="store" type="Store" />
+                </xsd:sequence>
+                <xsd:attribute name="code" type="xsd:string" />
+                <xsd:attribute name="grossingA" type="xsd:double" />
+                <xsd:attribute name="paidA" type="xsd:double" />
+                <xsd:attribute name="bRatio" type="xsd:double" />
+                <xsd:attribute name="totalDownloads" type="xsd:double" />
+                <xsd:attribute name="paidB" type="xsd:double" />
+                <xsd:attribute name="grossingB" type="xsd:double" />
+                <xsd:attribute name="piadAIap" type="xsd:double" />
+                <xsd:attribute name="grossingAIap" type="xsd:double" />
+                <xsd:attribute name="freeA" type="xsd:double" />
+                <xsd:attribute name="theta" type="xsd:double" />
+                <xsd:attribute name="freeB" type="xsd:double" />
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
     <xsd:complexType name="Request">
         <xsd:attribute name="accessCode" type="xsd:string" />
     </xsd:complexType>

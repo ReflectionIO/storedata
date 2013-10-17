@@ -530,4 +530,31 @@ final class RankService implements IRankService {
 		return ranksCount;
 	}
 
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.rank.IRankService#getCodeLastRankDate(java.lang.String)
+	 */
+	@Override
+	public Date getCodeLastRankDate(String code) {
+		Date date = null;
+		
+		String getCodeLastRankDateQuery = String.format("SELECT `date` FROM `rank` WHERE `code`='%s' ORDER BY `date` DESC LIMIT 1");
+		
+		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+		
+		try {
+			rankConnection.connect();
+			rankConnection.executeQuery(getCodeLastRankDateQuery);
+			
+			if (rankConnection.fetchNextRow()) {
+				date = rankConnection.getCurrentRowDateTime("date");
+			}
+		} finally {
+			if (rankConnection != null) {
+				rankConnection.disconnect();
+			}
+		}
+		
+		return date;
+	}
+
 }

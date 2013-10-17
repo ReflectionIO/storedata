@@ -56,7 +56,7 @@
                             <xsd:element name="country" type="sd:Country" />
                             <xsd:element name="store" type="sd:Store" />
                         </xsd:sequence>
-                        <xsd:attribute name="date" type="xsd:dateTime" />
+                        <xsd:attribute name="code" type="xsd:string" />
                         <xsd:attribute name="listType" type="xsd:string" />
                     </xsd:extension>
                 </xsd:complexContent>
@@ -65,17 +65,9 @@
             <xsd:complexType name="GetModelOutcomeResponse">
                 <xsd:complexContent>
                     <xsd:extension base="sd:Response">
-                        <xsd:attribute name="grossingA" type="xsd:double" />
-                        <xsd:attribute name="paidA" type="xsd:double" />
-                        <xsd:attribute name="bRatio" type="xsd:double" />
-                        <xsd:attribute name="totalDownloads" type="xsd:double" />
-                        <xsd:attribute name="paidB" type="xsd:double" />
-                        <xsd:attribute name="grossingB" type="xsd:double" />
-                        <xsd:attribute name="piadAIap" type="xsd:double" />
-                        <xsd:attribute name="grossingAIap" type="xsd:double" />
-                        <xsd:attribute name="freeA" type="xsd:double" />
-                        <xsd:attribute name="theta" type="xsd:double" />
-                        <xsd:attribute name="freeB" type="xsd:double" />
+                        <xsd:sequence>
+                            <xsd:element name="run" type="sd:ModelRun" />
+                        </xsd:sequence>
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>

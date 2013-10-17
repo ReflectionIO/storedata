@@ -12,7 +12,6 @@ import io.reflection.app.models.Model;
 import io.reflection.app.models.ModelFactory;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -52,16 +51,11 @@ public class ModelServlet extends HttpServlet {
 		String store = req.getParameter("store");
 		String country = req.getParameter("country");
 		String type = req.getParameter("type");
-		String date = req.getParameter("date");
+		String code = req.getParameter("code");
 
 		Model model = ModelFactory.getModelForStore(store);
 		if (model != null) {
-			Date dateFromParam = null;
-			if (date != null) {
-				dateFromParam = new Date(Long.parseLong(date)); 
-			}
-			
-			model.prepare(store, country, type, dateFromParam);
+			model.prepare(store, country, type, code);
 		} else {
 			if (LOG.isLoggable(Level.WARNING)) {
 				LOG.warning("Could not find Collector for store [" + store + "]");
@@ -69,6 +63,14 @@ public class ModelServlet extends HttpServlet {
 		}
 
 		resp.setHeader("Cache-Control", "no-cache");
+	}
+	
+	/* (non-Javadoc)
+	 * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+	 */
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		doPost(req, resp);
 	}
 
 }

@@ -15,10 +15,10 @@ import java.util.Date;
  */
 public interface Model {
 
-	void enqueue(String store, String country, String type, Date date);
+	void enqueue(String store, String country, String type, Date code);
 
 	
-	void prepare(String store, String country, String type, Date date);
+	void prepare(String store, String country, String type, String code);
 	
 	
 }
