@@ -75,7 +75,9 @@ $(window).bind('hashchange', function() {
 
     // note: this is called when the system constructs the hash as well when you go back
     // only execute the code if the player has hit the back button
-    //if (storedHash != newHash) {
+    console.log("s hash = " + storedHash);
+    console.log("n hash = " + newHash);
+    if (storedHash != newHash) {
       //do your stuff based on the comparison of newHash to originalHash
       if (newHash != null && newHash.length > 0) {
         var hashList = newHash.split('#');
@@ -114,9 +116,11 @@ $(window).bind('hashchange', function() {
       updateLeaderboard();
 
       // alert(newHash);
-      originalHash = newHash;
-    //}
+      
+    }
 
+    originalHash = newHash;
+    storedHash = newHash;
     
 });
 
