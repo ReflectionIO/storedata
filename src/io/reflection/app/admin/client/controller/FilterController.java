@@ -7,6 +7,9 @@
 //
 package io.reflection.app.admin.client.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.reflection.app.admin.client.handler.FilterEventHandler;
 import io.reflection.app.shared.datatypes.Country;
 import io.reflection.app.shared.datatypes.Store;
@@ -56,16 +59,22 @@ public class FilterController {
 			EventController.get().fireEventFromSource(new FilterEventHandler.ChangedFilterParameter<String>("list.type", mListType, previousListType), this);
 		}
 	}
-	
+
 	public Store getStore() {
 		return StoreController.get().getStore(mStore);
 	}
-	
+
 	public Country getCountry() {
 		return CountryController.get().getCountry(mCountry);
 	}
-	
-	public String getListType() {
-		return mListType;
+
+	public List<String> getListTypes() {
+		List<String> types = new ArrayList<String>();
+
+		
+		// FIXME this should be replaced with names of lists based on store type and list type
+		types.add(mListType);
+
+		return types;
 	}
 }

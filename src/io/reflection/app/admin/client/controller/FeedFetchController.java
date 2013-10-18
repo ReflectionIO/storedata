@@ -40,7 +40,7 @@ public class FeedFetchController implements ServiceController {
 
 		input.country = FilterController.get().getCountry();
 		input.store = FilterController.get().getStore();
-		input.listType = FilterController.get().getListType();
+		input.listTypes = FilterController.get().getListTypes();
 
 		service.getFeedFetches(input, new AsyncCallback<GetFeedFetchesResponse>() {
 

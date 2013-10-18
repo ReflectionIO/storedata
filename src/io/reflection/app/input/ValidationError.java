@@ -34,6 +34,7 @@ public enum ValidationError {
 	UserNull(100019, "Invalid value null for User: %s.user"),
 	StringNull(100020, "Invalid value null or empty for String: %s"),
 	BadEmailFormat(100021, "Invalid email address for Email: %s"),
+	ListTypeNotFound(100022, "List type not found for String: %s"),
 
 	GetCountriesNeedsStoreOrQuery(100101, "GetCountries call should either have a store or a query. To get all countries use * for the query"),
 

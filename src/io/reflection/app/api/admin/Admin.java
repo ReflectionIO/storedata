@@ -17,8 +17,10 @@ import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersCountResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersResponse;
+import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.input.ValidationError;
 import io.reflection.app.input.ValidationHelper;
+import io.reflection.app.service.fetchfeed.FeedFetchServiceProvider;
 import io.reflection.app.service.user.UserServiceProvider;
 
 import java.util.logging.Logger;
@@ -93,6 +95,84 @@ public final class Admin extends ActionHandler {
 		LOG.finer("Entering getFeedFetches");
 		GetFeedFetchesResponse output = new GetFeedFetchesResponse();
 		try {
+			if (input == null)
+				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
+						ValidationError.InvalidValueNull.getMessage("GetFeedFetchesRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			input.pager = ValidationHelper.validatePager(input.pager, "input");
+
+			if (input.pager.sortBy == null) {
+				input.pager.sortBy = "date";
+			}
+
+			if (input.pager.sortDirection == null) {
+				input.pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
+			}
+
+			input.country = ValidationHelper.validateCountry(input.country, "input");
+
+			input.store = ValidationHelper.validateStore(input.store, "input");
+
+			if (input.listTypes == null)
+				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
+						ValidationError.InvalidValueNull.getMessage("List: input.listType"));
+
+			String validatedListType, listType;
+			StringBuffer badListTypes = new StringBuffer();
+			for (int i = 0; i < input.listTypes.size(); i++) {
+				listType = input.listTypes.get(i);
+				validatedListType = ValidationHelper.validateListType(listType, input.store);
+
+				input.listTypes.remove(i);
+
+				if (listType != null) {
+					input.listTypes.add(i, validatedListType);
+				} else {
+					if (badListTypes.length() != 0) {
+						badListTypes.append(",");
+					}
+
+					badListTypes.append(listType);
+				}
+			}
+
+			if (input.listTypes.size() == 0)
+				throw new InputValidationException(ValidationError.ListTypeNotFound.getCode(),
+						ValidationError.ListTypeNotFound.getMessage("String: input.listTypes"));
+
+			if (input.mixed == null) {
+				input.mixed = Boolean.FALSE;
+			}
+
+			if (input.mixed.booleanValue()) {
+				output.mixed = FeedFetchServiceProvider.provide().getFeedFetches(input.store, input.country, input.listTypes, input.pager);
+
+				output.pager = input.pager;
+				updatePager(output.pager, output.mixed,
+						input.pager.totalCount == null ? FeedFetchServiceProvider.provide().getFeedFetchesCount(input.store, input.country, input.listTypes)
+								: null);
+
+			} else {
+				output.ingested = FeedFetchServiceProvider.provide().getIngestedFeedFetches(input.store, input.country, input.listTypes, input.pager);
+
+				output.uningested = FeedFetchServiceProvider.provide().getUningestedFeedFetches(input.store, input.country, input.listTypes, input.pager);
+
+				output.pager = input.pager;
+
+				if (output.ingested != null && (output.uningested == null || output.ingested.size() > output.uningested.size())) {
+					updatePager(
+							output.pager,
+							output.ingested,
+							input.pager.totalCount == null ? FeedFetchServiceProvider.provide().getIngestedFeedFetchesCount(input.store, input.country,
+									input.listTypes) : null);
+				} else {
+					updatePager(output.pager, output.uningested, input.pager.totalCount == null ? FeedFetchServiceProvider.provide()
+							.getUningestedFeedFetchesCount(input.store, input.country, input.listTypes) : null);
+				}
+			}
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;

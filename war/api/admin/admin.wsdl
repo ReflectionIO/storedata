@@ -82,8 +82,8 @@
                             <xsd:element name="country" type="sd:Country" />
                             <xsd:element name="store" type="sd:Store" />
                             <xsd:element name="pager" type="sd:Pager" />
+                            <xsd:element name="listTypes" type="xsd:string" maxOccurs="unbounded" />
                         </xsd:sequence>
-                        <xsd:attribute name="listType" type="xsd:string" />
                         <xsd:attribute name="mixed" type="xsd:boolean" default="false" />
                     </xsd:extension>
                 </xsd:complexContent>
@@ -96,6 +96,7 @@
                             <xsd:element name="ingested" type="sd:FeedFetch" maxOccurs="unbounded" />
                             <xsd:element name="uningested" type="sd:FeedFetch" maxOccurs="unbounded" />
                             <xsd:element name="mixed" type="sd:FeedFetch" maxOccurs="unbounded" />
+                            <xsd:element name="pager" type="sd:Pager" />
                         </xsd:sequence>
                     </xsd:extension>
                 </xsd:complexContent>

@@ -8,6 +8,7 @@
 //
 package io.reflection.app.api.admin.shared.call;
 
+import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.shared.datatypes.FeedFetch;
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public class GetFeedFetchesResponse extends Response {
 	public List<FeedFetch> ingested;
 	public List<FeedFetch> uningested;
 	public List<FeedFetch> mixed;
+	public Pager pager;
 
 	@Override
 	public JsonObject toJson() {
@@ -54,6 +56,8 @@ public class GetFeedFetchesResponse extends Response {
 			}
 		}
 		object.add("mixed", jsonMixed);
+		JsonElement jsonPager = pager == null ? JsonNull.INSTANCE : pager.toJson();
+		object.add("pager", jsonPager);
 		return object;
 	}
 
@@ -102,5 +106,12 @@ public class GetFeedFetchesResponse extends Response {
 			}
 		}
 
+		if (jsonObject.has("pager")) {
+			JsonElement jsonPager = jsonObject.get("pager");
+			if (jsonPager != null) {
+				pager = new Pager();
+				pager.fromJson(jsonPager.getAsJsonObject());
+			}
+		}
 	}
 }

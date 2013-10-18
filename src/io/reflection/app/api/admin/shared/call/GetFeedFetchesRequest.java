@@ -12,6 +12,10 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.shared.datatypes.Country;
 import io.reflection.app.shared.datatypes.Store;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
@@ -22,7 +26,7 @@ public class GetFeedFetchesRequest extends Request {
 	public Country country;
 	public Store store;
 	public Pager pager;
-	public String listType;
+	public List<String> listTypes;
 	public Boolean mixed;
 
 	@Override
@@ -34,8 +38,15 @@ public class GetFeedFetchesRequest extends Request {
 		object.add("store", jsonStore);
 		JsonElement jsonPager = pager == null ? JsonNull.INSTANCE : pager.toJson();
 		object.add("pager", jsonPager);
-		JsonElement jsonListType = listType == null ? JsonNull.INSTANCE : new JsonPrimitive(listType);
-		object.add("listType", jsonListType);
+		JsonElement jsonListTypes = JsonNull.INSTANCE;
+		if (listTypes != null) {
+			jsonListTypes = new JsonArray();
+			for (int i = 0; i < listTypes.size(); i++) {
+				JsonElement jsonListTypesItem = listTypes.get(i) == null ? JsonNull.INSTANCE : new JsonPrimitive(listTypes.get(i));
+				((JsonArray) jsonListTypes).add(jsonListTypesItem);
+			}
+		}
+		object.add("listTypes", jsonListTypes);
 		JsonElement jsonMixed = mixed == null ? JsonNull.INSTANCE : new JsonPrimitive(mixed);
 		object.add("mixed", jsonMixed);
 		return object;
@@ -65,12 +76,20 @@ public class GetFeedFetchesRequest extends Request {
 				pager.fromJson(jsonPager.getAsJsonObject());
 			}
 		}
-		if (jsonObject.has("listType")) {
-			JsonElement jsonListType = jsonObject.get("listType");
-			if (jsonListType != null) {
-				listType = jsonListType.getAsString();
+		if (jsonObject.has("listTypes")) {
+			JsonElement jsonListTypes = jsonObject.get("listTypes");
+			if (jsonListTypes != null) {
+				listTypes = new ArrayList<String>();
+				String item = null;
+				for (int i = 0; i < jsonListTypes.getAsJsonArray().size(); i++) {
+					if (jsonListTypes.getAsJsonArray().get(i) != null) {
+						item = jsonListTypes.getAsJsonArray().get(i).getAsString();
+						listTypes.add(item);
+					}
+				}
 			}
 		}
+
 		if (jsonObject.has("mixed")) {
 			JsonElement jsonMixed = jsonObject.get("mixed");
 			if (jsonMixed != null) {

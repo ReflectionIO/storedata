@@ -9,7 +9,12 @@
 
 package io.reflection.app.service.fetchfeed;
 
+import java.util.List;
+
+import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.shared.datatypes.Country;
 import io.reflection.app.shared.datatypes.FeedFetch;
+import io.reflection.app.shared.datatypes.Store;
 
 import com.spacehopperstudios.service.IService;
 
@@ -36,5 +41,47 @@ public interface IFeedFetchService extends IService {
 	 * @param feedFetch
 	 */
 	public void deleteFeedFetch(FeedFetch feedFetch);
+
+	/**
+	 * @param store
+	 * @param country
+	 * @param types
+	 * @param pager
+	 * @return
+	 */
+	public List<FeedFetch> getFeedFetches(Store store, Country country, List<String> types, Pager pager);
+
+	/**
+	 * @return
+	 */
+	public Long getFeedFetchesCount(Store store, Country country, List<String> types);
+
+	/**
+	 * @param store
+	 * @param country
+	 * @param types
+	 * @param pager
+	 * @return
+	 */
+	public List<FeedFetch> getIngestedFeedFetches(Store store, Country country, List<String> types, Pager pager);
+
+	/**
+	 * @return
+	 */
+	public Long getIngestedFeedFetchesCount(Store store, Country country, List<String> listType);
+
+	/**
+	 * @param store
+	 * @param country
+	 * @param types
+	 * @param pager
+	 * @return
+	 */
+	public List<FeedFetch> getUningestedFeedFetches(Store store, Country country, List<String> types, Pager pager);
+
+	/**
+	 * @return
+	 */
+	public Long getUningestedFeedFetchesCount(Store store, Country country, List<String> types);
 
 }
