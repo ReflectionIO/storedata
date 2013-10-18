@@ -62,7 +62,7 @@ $(".btn").click(function () {
     var value = $(this).attr("value");
 
     if (value == "overview") {
-        alert(value);
+        
     }
     else {
         // $('#graph-container').toggle();
@@ -153,15 +153,16 @@ function createGraphData(data, type, graphType) {
 
             dayOfMonth = nodeDate.getDate();
 
-            if (graphType == "rank") {
-                console.log("dayOfMonth = " + dayOfMonth + " | dayOfMonthOld = " + dayOfMonthOld);
-            }
+            // if (graphType == "rank") {
+            //     console.log("dayOfMonth = " + dayOfMonth + " | dayOfMonthOld = " + dayOfMonthOld);
+            // }
 
 
             if (dayOfMonthOld != -1) {
                 // IMPORTANT NOTE: TO TEST THIS FEATURE I NEED TO USE THE FOLLOWING GAME DETAILS
                 // http://127.0.0.1:8888/alpha/graph.html?itemId=com.nerdyoctopus.dots&type=topfreeapplications&country=us
                 // http://127.0.0.1:8888/alpha/graph.html?itemId=com.merekdavis.Mextures&type=toppaidapplications&country=us
+                // http://127.0.0.1:8888/alpha/graph.html?itemId=com.bitstrips.bitstrips&type=topfreeapplications&country=us&name=Bitstrips&publisher=Bitstrips
                 // THE APPLICABLE DATES ARE 22nd September 2013 - 17th October 2013
                 // THIS CODE CURRENTLY ONLY WORKS FOR RANKS. I NEED A DIFERENT VALUE FOR pos ON REVENUE AND DOWNLOADS
                 var addMissingPoints = false;

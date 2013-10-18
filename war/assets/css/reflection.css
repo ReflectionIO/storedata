@@ -70,6 +70,8 @@ body {
   height: 500px; 
   line-height: 500px; /* should match height */
   text-align: center;
+  width: 100%;
+  display:inline-block;
 }
 
 .loader-container > img {

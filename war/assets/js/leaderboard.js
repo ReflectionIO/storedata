@@ -1,11 +1,14 @@
 // Global variables
+var baseUrl;
 var storeCode = "";
+var store = "iphone";
 var date = new Date().getTime();
 var country = "us";
 var overviewType = "all";
 var maxRows = 25;
 var maxRowsCreated = 0;
 var pageStartAll = 0;
+var storedHash = "";
 
 var idLookup = {
 
@@ -21,17 +24,100 @@ var btnLoadSingle = $("#load_more_single");
 
 $(document).ready(function () {
 
-    $('#leaderboard-all').show();
-    $('#leaderboard-single').hide();
+    var url = $(location).attr("href");
+    var urlWithHashTagsSplit = url.split("#");
+    baseUrl = urlWithHashTagsSplit[0]; // get rid of anything after the hash if there is one
+
+    if (urlWithHashTagsSplit.length > 1) {
+      for (var i = 0; i < urlWithHashTagsSplit.length; i++) {
+        console.log(urlWithHashTagsSplit[i]);
+      }
+      // note: we should probably do some validation here
+      store = urlWithHashTagsSplit[1];
+      overviewType = urlWithHashTagsSplit[2];
+      country = urlWithHashTagsSplit[3];
+      date = urlWithHashTagsSplit[4];
+
+      if (store == "ipad") {
+        storeCode = "ipad";
+      }
+    }
+
+    // // get the selected index
+    // console.log($("#overview").prop("selectedIndex"));
+
+    // // set the selected index
+    // $("#overview").prop("selectedIndex", 3);
+
+    // //var name = $("#overview").find('option:selected').text();
+
+    // console.log($('#overview>option:selected').text());
+
+    // $("#overview > option").each(function() {
+    //   alert(this.text + ' ' + this.value);
+    // });
+
 
     createTableRows();
 
-    getTopItemsAll();
+    updateLeaderboard();
 
     // show the load more button "loading..."
     btnLoadAll.button('loading');
     btnLoadSingle.button('loading');
 
+});
+
+var originalHash = window.location.hash;
+$(window).bind('hashchange', function() {
+
+    var newHash = window.location.hash;
+
+    // note: this is called when the system constructs the hash as well when you go back
+    // only execute the code if the player has hit the back button
+    //if (storedHash != newHash) {
+      //do your stuff based on the comparison of newHash to originalHash
+      if (newHash != null && newHash.length > 0) {
+        var hashList = newHash.split('#');
+        //console.log(hashList);
+        overviewType = hashList[2];
+      }
+      else {
+
+        initValues();
+        console.log(overviewType);
+        // alert("initValues");
+      }
+
+      // // get the selected index
+      // console.log($("#overview").prop("selectedIndex"));
+
+      // // set the selected index
+      // $("#overview").prop("selectedIndex", 3);
+
+      // //var name = $("#overview").find('option:selected').text();
+
+      // get the selected index
+      // console.log($('#overview>option:selected').text());
+
+      // highlight the correct overview button
+      var i = 0;
+      var compareString = "overview_" + overviewType; 
+      $("#overview > option").each(function() {
+        //alert(this.text + ' ' + this.value);
+        if (this.value == compareString) {
+          $("#overview").prop("selectedIndex", i);
+        }
+        i++;
+      });
+
+      updateLeaderboard();
+
+      // alert(newHash);
+      originalHash = newHash;
+    //}
+
+    
 });
 
 $('#appstore').change(function () {
@@ -45,13 +131,14 @@ $('#appstore').change(function () {
 
     if (name == "iPhone") {
         storeCode = "";
+        store = "iphone";
     } else if (name = "iPad") {
         storeCode = "ipad";
+        store = "ipad";
     } else {
         storeCode = "";
+        store = "iphone";
     }
-
-
 
     if (overviewType == "all") {
         getTopItemsAll();
@@ -68,27 +155,12 @@ $('#overview').change(function () {
 
     overviewType = value.split("_")[1];
 
-    if (value == "overview_all") {
-        $('#leaderboard-all').show();
-        $('#leaderboard-single').hide();
-        // don't call the server if we've just changed the overview
-        // console.log(" rankList = " + rankList["paid"].length + "pageStartAll = " + pageStartAll );
-        // if the "Load more" button has been pressed then load more otherwise just showing the page is enough
-        if (rankList["paid"].length < pageStartAll) {
-          // console.log("load more data...");
-          getTopItemsAll();
-        }
-        
-    } else {
-        $('#leaderboard-all').hide();
-        $('#leaderboard-single').show();
+    updateHash();
 
+    //history.pushState({id: 'SOME ID'}, '', 'myurl.html');
 
+    updateLeaderboard();
 
-        getTopItemsSingle("top" + overviewType + storeCode + "applications", overviewType);
-    }
-
-    //alert(selected + " " + value);
 });
 
 $('#country').change(function () {
@@ -103,6 +175,7 @@ $('#country').change(function () {
     //alert(selected + " " + value);
 
     resetTable();
+    
     getTopItemsAll();
 });
 
@@ -123,6 +196,7 @@ $('#datepicker').datepicker().on('changeDate', function (e) {
     //alert(date);
 
     resetTable();
+    
     getTopItemsAll();
 });
 
@@ -142,6 +216,19 @@ $("#load_more_all, #load_more_single").click(function () {
 
 
 // --------------- METHODS ---------------
+
+function initValues() {
+
+  storeCode = "";
+  store = "iphone";
+  // date = new Date().getTime();
+  country = "us";
+  overviewType = "all";
+  maxRows = 25;
+  maxRowsCreated = 0;
+  pageStartAll = 0;
+  storedHash = "";
+}
 
 function resetTable() {
 
@@ -164,6 +251,39 @@ function convertDate(d) {
     var day = d.getUTCDate();
 
     return pad2(day) + '-' + pad2(month) + '-' + year;
+}
+
+function updateHash() {
+
+  storedHash = "#" + store + "#" + overviewType + "#" + country + "#" + date;
+
+  // alert(storedHash);
+
+  $(location).attr('href',baseUrl + storedHash);
+}
+
+function updateLeaderboard() {
+    
+    if (overviewType == "all") {
+        $('#leaderboard-all').show();
+        $('#leaderboard-single').hide();
+        // don't call the server if we've just changed the overview
+        // console.log(" rankList = " + rankList["paid"].length + "pageStartAll = " + pageStartAll );
+        // if the "Load more" button has been pressed then load more otherwise just showing the page is enough
+        
+        var r = rankList["paid"];
+        if (r == null || (r.length < pageStartAll)) {
+          // console.log("load more data...");
+          getTopItemsAll();
+        }
+        
+    } else {
+        $('#leaderboard-all').hide();
+        $('#leaderboard-single').show();
+
+        getTopItemsSingle("top" + overviewType + storeCode + "applications", overviewType);
+    }
+
 }
 
 function getTopItemsAll() {
@@ -565,4 +685,5 @@ function updateTableSingle(chartdata, listType, listID) {
         $('#possingle' + i).show();
     };
 
-}
+  }
+
