@@ -7,7 +7,7 @@
 //
 package io.reflection.app.admin.client.controller;
 
-import io.reflection.app.admin.client.event.ReceivedRanks;
+import io.reflection.app.admin.client.handler.RanksEventHandler.ReceivedRanks;
 import io.reflection.app.admin.client.part.datatypes.RanksGroup;
 import io.reflection.app.api.core.client.CoreService;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;

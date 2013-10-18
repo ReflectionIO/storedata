@@ -7,8 +7,8 @@
 //
 package io.reflection.app.admin.client.controller;
 
-import io.reflection.app.admin.client.event.ReceivedCount;
-import io.reflection.app.admin.client.event.ReceivedUsers;
+import io.reflection.app.admin.client.handler.UsersEventHandler.ReceivedCount;
+import io.reflection.app.admin.client.handler.UsersEventHandler.ReceivedUsers;
 import io.reflection.app.api.admin.client.AdminService;
 import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersCountResponse;

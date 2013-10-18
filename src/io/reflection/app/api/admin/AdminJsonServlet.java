@@ -8,6 +8,8 @@
 //
 package io.reflection.app.api.admin;
 
+import io.reflection.app.api.admin.shared.call.GetFeedFetchesRequest;
+import io.reflection.app.api.admin.shared.call.GetModelOutcomeRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersRequest;
 
@@ -28,6 +30,14 @@ public final class AdminJsonServlet extends JsonServlet {
 			GetUsersCountRequest input = new GetUsersCountRequest();
 			input.fromJson(request);
 			output = service.getUsersCount(input).toString();
+		} else if ("GetModelOutcome".equals(action)) {
+			GetModelOutcomeRequest input = new GetModelOutcomeRequest();
+			input.fromJson(request);
+			output = service.getModelOutcome(input).toString();
+		} else if ("GetFeedFetches".equals(action)) {
+			GetFeedFetchesRequest input = new GetFeedFetchesRequest();
+			input.fromJson(request);
+			output = service.getFeedFetches(input).toString();
 		}
 		return output;
 	}

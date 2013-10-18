@@ -9,6 +9,10 @@
 package io.reflection.app.api.admin;
 
 import static io.reflection.app.api.PagerHelper.updatePager;
+import io.reflection.app.api.admin.shared.call.GetFeedFetchesRequest;
+import io.reflection.app.api.admin.shared.call.GetFeedFetchesResponse;
+import io.reflection.app.api.admin.shared.call.GetModelOutcomeRequest;
+import io.reflection.app.api.admin.shared.call.GetModelOutcomeResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersCountResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersRequest;
@@ -62,13 +66,39 @@ public final class Admin extends ActionHandler {
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
 			output.count = UserServiceProvider.provide().getUsersCount();
-			
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
 			output.error = convertToErrorAndLog(LOG, e);
 		}
 		LOG.finer("Exiting getUsersCount");
+		return output;
+	}
+
+	public GetModelOutcomeResponse getModelOutcome(GetModelOutcomeRequest input) {
+		LOG.finer("Entering getModelOutcome");
+		GetModelOutcomeResponse output = new GetModelOutcomeResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getModelOutcome");
+		return output;
+	}
+
+	public GetFeedFetchesResponse getFeedFetches(GetFeedFetchesRequest input) {
+		LOG.finer("Entering getFeedFetches");
+		GetFeedFetchesResponse output = new GetFeedFetchesResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getFeedFetches");
 		return output;
 	}
 }

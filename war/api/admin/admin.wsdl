@@ -14,6 +14,9 @@
             <xsd:element name="GetModelOutcomeInput" type="sda:GetModelOutcomeRequest" />
             <xsd:element name="GetModelOutcomeOutput" type="sda:GetModelOutcomeResponse" />
 
+            <xsd:element name="GetFeedFetchesInput" type="sda:GetFeedFetchesRequest" />
+            <xsd:element name="GetFeedFetchesOutput" type="sda:GetFeedFetchesResponse" />
+
             <xsd:complexType name="GetUsersRequest">
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
@@ -72,6 +75,32 @@
                 </xsd:complexContent>
             </xsd:complexType>
 
+            <xsd:complexType name="GetFeedFetchesRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="country" type="sd:Country" />
+                            <xsd:element name="store" type="sd:Store" />
+                            <xsd:element name="pager" type="sd:Pager" />
+                        </xsd:sequence>
+                        <xsd:attribute name="listType" type="xsd:string" />
+                        <xsd:attribute name="mixed" type="xsd:boolean" default="false" />
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="GetFeedFetchesResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+                            <xsd:element name="ingested" type="sd:FeedFetch" maxOccurs="unbounded" />
+                            <xsd:element name="uningested" type="sd:FeedFetch" maxOccurs="unbounded" />
+                            <xsd:element name="mixed" type="sd:FeedFetch" maxOccurs="unbounded" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
         </xsd:schema>
     </wsdl:types>
 
@@ -89,6 +118,20 @@
         <wsdl:part name="output" element="sda:GetUsersCountOutput" />
     </wsdl:message>
 
+    <wsdl:message name="GetModelOutcomeRequest">
+        <wsdl:part name="input" element="sda:GetModelOutcomeInput" />
+    </wsdl:message>
+    <wsdl:message name="GetModelOutcomeResponse">
+        <wsdl:part name="output" element="sda:GetModelOutcomeOutput" />
+    </wsdl:message>
+
+    <wsdl:message name="GetFeedFetchesRequest">
+        <wsdl:part name="input" element="sda:GetFeedFetchesInput" />
+    </wsdl:message>
+    <wsdl:message name="GetFeedFetchesResponse">
+        <wsdl:part name="output" element="sda:GetFeedFetchesOutput" />
+    </wsdl:message>
+
     <wsdl:portType name="admin">
         <wsdl:operation name="GetUsers">
             <wsdl:input message="sda:GetUsersRequest" />
@@ -97,6 +140,14 @@
         <wsdl:operation name="GetUsersCount">
             <wsdl:input message="sda:GetUsersCountRequest" />
             <wsdl:output message="sda:GetUsersCountResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="GetModelOutcome">
+            <wsdl:input message="sda:GetModelOutcomeRequest" />
+            <wsdl:output message="sda:GetModelOutcomeResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="GetFeedFetches">
+            <wsdl:input message="sda:GetFeedFetchesRequest" />
+            <wsdl:output message="sda:GetFeedFetchesResponse" />
         </wsdl:operation>
     </wsdl:portType>
     <wsdl:binding name="adminSOAP" type="sda:admin">
@@ -119,6 +170,25 @@
                 <soap:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
+        <wsdl:operation name="GetModelOutcome">
+            <soap:operation soapAction="http://app.reflection.io/admin/GetModelOutcome" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetFeedFetches">
+            <soap:operation soapAction="http://app.reflection.io/admin/GetFeedFetches" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        
     </wsdl:binding>
     <wsdl:service name="admin">
         <wsdl:port name="adminSOAP" binding="sda:adminSOAP">

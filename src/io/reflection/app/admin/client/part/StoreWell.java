@@ -9,8 +9,7 @@ package io.reflection.app.admin.client.part;
 
 import io.reflection.app.admin.client.controller.EventController;
 import io.reflection.app.admin.client.controller.StoreController;
-import io.reflection.app.admin.client.event.ReceivedStores;
-import io.reflection.app.admin.client.event.ReceivedStores.Handler;
+import io.reflection.app.admin.client.handler.StoresEventHandler;
 import io.reflection.app.shared.datatypes.Store;
 
 import java.util.List;
@@ -29,7 +28,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author billy1380
  * 
  */
-public class StoreWell extends Composite implements Handler {
+public class StoreWell extends Composite implements StoresEventHandler {
 
 	private static StoreWellUiBinder uiBinder = GWT.create(StoreWellUiBinder.class);
 
@@ -47,9 +46,9 @@ public class StoreWell extends Composite implements Handler {
 	public StoreWell() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		EventController.get().addHandlerToSource(ReceivedStores.TYPE, StoreController.get(), this);
+		EventController.get().addHandlerToSource(StoresEventHandler.TYPE, StoreController.get(), this);
 
-		StoreController.get().getAllStores();
+		StoreController.get().fetchAllStores();
 
 	}
 

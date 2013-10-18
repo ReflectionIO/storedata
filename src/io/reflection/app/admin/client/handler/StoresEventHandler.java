@@ -1,13 +1,12 @@
 //
-//  ReceivedStores.java
+//  StoresEventHandler.java
 //  storedata
 //
 //  Created by William Shakour (billy1380) on 5 Oct 2013.
 //  Copyright © 2013 SPACEHOPPER STUDIOS LTD. All rights reserved.
 //
-package io.reflection.app.admin.client.event;
+package io.reflection.app.admin.client.handler;
 
-import io.reflection.app.admin.client.event.ReceivedStores.Handler;
 import io.reflection.app.shared.datatypes.Store;
 
 import java.util.List;
@@ -19,14 +18,18 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author billy1380
  * 
  */
-public class ReceivedStores extends GwtEvent<Handler> {
+public interface StoresEventHandler extends EventHandler {
+	public static final GwtEvent.Type<StoresEventHandler> TYPE = new GwtEvent.Type<StoresEventHandler>();
+	
+	
+	public void receivedStores(List<Store> stores);
 
-	public interface Handler extends EventHandler {
-		public void receivedStores(List<Store> stores);
-	}
+public class ReceivedStores extends GwtEvent<StoresEventHandler> {
 
 	
-	public static Type<Handler> TYPE = new Type<Handler>();
+
+	
+	
 
 	private List<Store> mStores;
 
@@ -40,7 +43,7 @@ public class ReceivedStores extends GwtEvent<Handler> {
 	 * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
 	 */
 	@Override
-	public com.google.gwt.event.shared.GwtEvent.Type<Handler> getAssociatedType() {
+	public com.google.gwt.event.shared.GwtEvent.Type<StoresEventHandler> getAssociatedType() {
 		return TYPE;
 	}
 
@@ -50,9 +53,10 @@ public class ReceivedStores extends GwtEvent<Handler> {
 	 * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
 	 */
 	@Override
-	protected void dispatch(Handler handler) {
+	protected void dispatch(StoresEventHandler handler) {
 		handler.receivedStores(mStores);
 
 	}
 
+}
 }

@@ -7,11 +7,15 @@
 //
 package io.reflection.app.admin.client.controller;
 
-import io.reflection.app.admin.client.event.ReceivedCountries;
+import io.reflection.app.admin.client.handler.CountriesEventHandler;
 import io.reflection.app.api.core.client.CoreService;
 import io.reflection.app.api.core.shared.call.GetCountriesRequest;
 import io.reflection.app.api.core.shared.call.GetCountriesResponse;
 import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.shared.datatypes.Country;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -24,6 +28,8 @@ import com.willshex.gson.json.service.shared.StatusType;
 public class CountryController implements ServiceController {
 	private static CountryController mOne = null;
 
+	private Map<String, Country> mCountryLookup = null;
+
 	public static CountryController get() {
 		if (mOne == null) {
 			mOne = new CountryController();
@@ -32,7 +38,7 @@ public class CountryController implements ServiceController {
 		return mOne;
 	}
 
-	public void getAllCountries() {
+	public void fetchAllCountries() {
 		CoreService service = new CoreService();
 		service.setUrl(CORE_END_POINT);
 
@@ -50,10 +56,18 @@ public class CountryController implements ServiceController {
 			public void onSuccess(GetCountriesResponse result) {
 				if (result.status == StatusType.StatusTypeSuccess) {
 					if (result.countries != null && result.countries.size() > 0) {
-						EventController.get().fireEventFromSource(new ReceivedCountries(result.countries), CountryController.this);
+
+						if (mCountryLookup == null) {
+							mCountryLookup = new HashMap<String, Country>();
+						}
+
+						for (Country country : result.countries) {
+							mCountryLookup.put(country.a2Code, country);
+						}
+
+						EventController.get().fireEventFromSource(new CountriesEventHandler.ReceivedCountries(result.countries), CountryController.this);
 					}
 				}
-
 			}
 
 			@Override
@@ -62,5 +76,13 @@ public class CountryController implements ServiceController {
 
 			}
 		});
+	}
+
+	/**
+	 * @param mCountry
+	 * @return
+	 */
+	public Country getCountry(String code) {
+		return mCountryLookup == null ? null : mCountryLookup.get(code);
 	}
 }

@@ -7,7 +7,7 @@
 //
 package io.reflection.app.admin.client.controller;
 
-import io.reflection.app.admin.client.event.NavigationChanged;
+import io.reflection.app.admin.client.handler.NavigationEventHandler;
 import io.reflection.app.admin.client.page.FeedBrowserPage;
 import io.reflection.app.admin.client.page.RanksPage;
 import io.reflection.app.admin.client.page.UsersPage;
@@ -141,7 +141,7 @@ public class NavigationController {
 
 		mStack = s;
 		
-		EventController.get().fireEventFromSource(new NavigationChanged(s), NavigationController.this);
+		EventController.get().fireEventFromSource(new NavigationEventHandler.ChangedEvent(s), NavigationController.this);
 	}
 
 	/**

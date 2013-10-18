@@ -7,12 +7,15 @@
 //
 package io.reflection.app.admin.client.part;
 
+import java.util.List;
+
 import io.reflection.app.admin.client.controller.EventController;
 import io.reflection.app.admin.client.controller.NavigationController;
 import io.reflection.app.admin.client.controller.NavigationController.Stack;
 import io.reflection.app.admin.client.controller.UserController;
-import io.reflection.app.admin.client.event.NavigationChanged;
-import io.reflection.app.admin.client.event.ReceivedCount;
+import io.reflection.app.admin.client.handler.NavigationEventHandler;
+import io.reflection.app.admin.client.handler.UsersEventHandler;
+import io.reflection.app.shared.datatypes.User;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.LIElement;
@@ -29,7 +32,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author billy1380
  * 
  */
-public class Header extends Composite implements ReceivedCount.Handler, NavigationChanged.Handler {
+public class Header extends Composite implements UsersEventHandler, NavigationEventHandler {
 
 	private static HeaderUiBinder uiBinder = GWT.create(HeaderUiBinder.class);
 
@@ -50,7 +53,7 @@ public class Header extends Composite implements ReceivedCount.Handler, Navigati
 		initWidget(uiBinder.createAndBindUi(this));
 		mRanksItem.addClassName("active");
 		
-		EventController.get().addHandlerToSource(ReceivedCount.TYPE, UserController.get(), this);
+		EventController.get().addHandlerToSource(UsersEventHandler.TYPE, UserController.get(), this);
 		
 		if (UserController.get().getUsersCount() >= 0) {
 			mTotalUsers.setInnerText(Long.toString(UserController.get().getUsersCount()));
@@ -58,7 +61,7 @@ public class Header extends Composite implements ReceivedCount.Handler, Navigati
 			UserController.get().fetchUsersCount();
 		}
 		
-		EventController.get().addHandlerToSource(NavigationChanged.TYPE, NavigationController.get(), this);
+		EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this);
 	}
 
 	@UiHandler("mRanksLink")
@@ -110,10 +113,18 @@ public class Header extends Composite implements ReceivedCount.Handler, Navigati
 	}
 
 	/* (non-Javadoc)
-	 * @see io.reflection.app.admin.client.event.ReceivedCount.Handler#receivedCount(java.lang.Long)
+	 * @see io.reflection.app.admin.client.handler.UsersEventHandler#receivedUsers(java.util.List)
 	 */
 	@Override
-	public void receivedCount(Long count) {
+	public void receivedUsers(List<User> users) {
+		// do nothing
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.admin.client.handler.UsersEventHandler#receivedUsersCount(java.lang.Long)
+	 */
+	@Override
+	public void receivedUsersCount(Long count) {
 		mTotalUsers.setInnerText(count.toString());
 		
 	}

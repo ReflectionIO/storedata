@@ -8,20 +8,53 @@
         <!-- Add GWT widgets here. Enter < and hit Ctrl-Space to auto-complete widget names. The ui:field attribute binds an element to a field in the owner class. 
             See the GWT docs on UI Binder for more details. -->
         <h2>Feed Browser</h2>
-        <p:StoreWell ui:field="mStoreWell" />
-        <p:CountryWell ui:field="mCountryWell" />
+        <g:FormPanel>
+            <g:HTMLPanel styleName="well sidebar-nav col-sm-3">
+                <g:HTMLPanel styleName="form-group">
+                    <label>App Store</label>
+                    <g:ListBox styleName="form-control" ui:field="mAppStore">
+                        <g:item value="iph">iPhone</g:item>
+                        <g:item value="ipa">iPad</g:item>
+                    </g:ListBox>
+                </g:HTMLPanel>
 
-        <h3>Ingested Feeds</h3>
-        <p>One or more items of these feeds have been converted to rank data.</p>
-        <c:CellTable ui:field="mIngestedFeeds" />
+                <g:HTMLPanel styleName="form-group">
+                    <label>Overview</label>
+                    <g:ListBox styleName="form-control" ui:field="mListType">
+                        <g:item value="all">All</g:item>
+                        <g:item value="paid">Paid</g:item>
+                        <g:item value="free">Free</g:item>
+                        <g:item value="grossing">Grossing</g:item>
+                    </g:ListBox>
+                </g:HTMLPanel>
 
-        <p:SimplePager ui:field="mIngestedPager" />
+                <g:HTMLPanel styleName="form-group">
+                    <label>Country</label>
+                    <g:ListBox styleName="form-control" ui:field="mCountry">
+                        <g:item value="us">United States</g:item>
+                        <g:item value="gb">United Kingdom</g:item>
+                        <g:item value="cn">China</g:item>
+                        <g:item value="de">Germany</g:item>
+                        <g:item value="fr">France</g:item>
+                    </g:ListBox>
+                </g:HTMLPanel>
 
-        <h3>Outstanding Feeds</h3>
-        <p>These feeds have not been used yet.</p>
-        <c:CellTable ui:field="mOutstandingFeeds" />
+            </g:HTMLPanel>
+        </g:FormPanel>
 
-        <p:SimplePager ui:field="mOutstandingPager" />
+        <g:HTMLPanel styleName="col-sm-9">
+            <h3>Ingested Feeds</h3>
+            <p>One or more items of these feeds have been converted to rank data.</p>
+            <c:CellTable ui:field="mIngestedFeeds" />
+
+            <p:SimplePager ui:field="mIngestedPager" />
+
+            <h3>Outstanding Feeds</h3>
+            <p>These feeds have not been used yet.</p>
+            <c:CellTable ui:field="mOutstandingFeeds" />
+
+            <p:SimplePager ui:field="mOutstandingPager" />
+        </g:HTMLPanel>
 
 
     </g:HTMLPanel>

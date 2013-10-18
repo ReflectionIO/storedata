@@ -9,27 +9,33 @@ package io.reflection.app.admin.client.part;
 
 import io.reflection.app.admin.client.controller.CountryController;
 import io.reflection.app.admin.client.controller.EventController;
-import io.reflection.app.admin.client.event.ReceivedCountries;
-import io.reflection.app.admin.client.event.ReceivedCountries.Handler;
+import io.reflection.app.admin.client.handler.CountriesEventHandler;
 import io.reflection.app.shared.datatypes.Country;
 
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author billy1380
  * 
  */
-public class CountryWell extends Composite implements Handler {
+public class CountryWell extends Composite implements CountriesEventHandler {
 
 	private static CountryWellUiBinder uiBinder = GWT.create(CountryWellUiBinder.class);
 
 	interface CountryWellUiBinder extends UiBinder<Widget, CountryWell> {}
 
+	@UiField Hyperlink mMore;
+	@UiField HTMLPanel mMainCountries;
+	@UiField HTMLPanel mMoreCountries;
+	
 	/**
 	 * Because this class has a default constructor, it can be used as a binder template. In other words, it can be used in other *.ui.xml files as follows:
 	 * <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:**user's package**"> <g:**UserClassName**>Hello!</g:**UserClassName>
@@ -38,9 +44,9 @@ public class CountryWell extends Composite implements Handler {
 	public CountryWell() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		EventController.get().addHandlerToSource(ReceivedCountries.TYPE, CountryController.get(), this);
+		EventController.get().addHandlerToSource(CountriesEventHandler.TYPE, CountryController.get(), this);
 
-		CountryController.get().getAllCountries();
+		CountryController.get().fetchAllCountries();
 	}
 
 	/*
@@ -49,8 +55,20 @@ public class CountryWell extends Composite implements Handler {
 	 * @see io.reflection.app.admin.client.event.handler.ReceivedCountriesEventHandler#receivedCountries(java.util.List)
 	 */
 	@Override
-	public void receivedCountries(List<Country> country) {
+	public void receivedCountries(List<Country> countries) {
+		mMainCountries.clear();
 
+		int i = 0;
+		HTMLPanel row = null;
+		for (Country country : countries) {
+			if (i++ % 4 == 0) {
+				row = new HTMLPanel("");
+				row.setStyleName("row");
+				mMainCountries.add(row);
+			}
+
+			row.add(new MiniCountry(country));
+		}
 	}
 
 }

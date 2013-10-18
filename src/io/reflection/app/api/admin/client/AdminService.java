@@ -8,6 +8,10 @@
 //
 package io.reflection.app.api.admin.client;
 
+import io.reflection.app.api.admin.shared.call.GetFeedFetchesRequest;
+import io.reflection.app.api.admin.shared.call.GetFeedFetchesResponse;
+import io.reflection.app.api.admin.shared.call.GetModelOutcomeRequest;
+import io.reflection.app.api.admin.shared.call.GetModelOutcomeResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersCountResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersRequest;
@@ -51,6 +55,50 @@ public final class AdminService extends JsonService {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					GetUsersCountResponse outputParameter = new GetUsersCountResponse();
+					parseResponse(response.getText(), outputParameter);
+					output.onSuccess(outputParameter);
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+				}
+			});
+		} catch (RequestException e) {
+			output.onFailure(e);
+		}
+	}
+
+	public static final String AdminMethodGetModelOutcome = "GetModelOutcome";
+
+	public void getModelOutcome(GetModelOutcomeRequest input, final AsyncCallback<GetModelOutcomeResponse> output) {
+		try {
+			sendRequest(AdminMethodGetModelOutcome, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					GetModelOutcomeResponse outputParameter = new GetModelOutcomeResponse();
+					parseResponse(response.getText(), outputParameter);
+					output.onSuccess(outputParameter);
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+				}
+			});
+		} catch (RequestException e) {
+			output.onFailure(e);
+		}
+	}
+
+	public static final String AdminMethodGetFeedFetches = "GetFeedFetches";
+
+	public void getFeedFetches(GetFeedFetchesRequest input, final AsyncCallback<GetFeedFetchesResponse> output) {
+		try {
+			sendRequest(AdminMethodGetFeedFetches, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					GetFeedFetchesResponse outputParameter = new GetFeedFetchesResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
 				}
