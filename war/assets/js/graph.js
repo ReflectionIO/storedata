@@ -163,6 +163,7 @@ function createGraphData(data, type, graphType) {
                 // http://127.0.0.1:8888/alpha/graph.html?itemId=com.nerdyoctopus.dots&type=topfreeapplications&country=us
                 // http://127.0.0.1:8888/alpha/graph.html?itemId=com.merekdavis.Mextures&type=toppaidapplications&country=us
                 // http://127.0.0.1:8888/alpha/graph.html?itemId=com.bitstrips.bitstrips&type=topfreeapplications&country=us&name=Bitstrips&publisher=Bitstrips
+                http://127.0.0.1:8888/alpha/graph.html?itemId=uk.co.cubeinteractive.dipdap.paid&type=toppaidipadapplications&country=gb&name=Dipdap&publisher=Cube%20Interactive
                 // THE APPLICABLE DATES ARE 22nd September 2013 - 17th October 2013
                 // THIS CODE CURRENTLY ONLY WORKS FOR RANKS. I NEED A DIFERENT VALUE FOR pos ON REVENUE AND DOWNLOADS
                 var addMissingPoints = false;

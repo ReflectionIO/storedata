@@ -174,9 +174,7 @@ $('#country').change(function () {
 
     country = value;
 
-    //getTopItemsAll();
-
-    //alert(selected + " " + value);
+    //updateHash();
 
     resetTable();
     
@@ -443,10 +441,12 @@ function lookupApplications(lookupList, chartdata, listType, listID) {
 function hideTableRows() {
     var startPos = 0;
     var endPos = maxRowsCreated;
+    console.log("maxRowsCreated = " + maxRowsCreated);
     for (var i = startPos; i < endPos; i++) {
       $('#posall' + i).hide();
       $('#possingle' + i).hide();
     };
+    $('tbody').hide();
 }
 
 function createTableRows() {
@@ -619,6 +619,8 @@ function updateTable(chartdata, listType, listID) {
         rowPos++;
     };
 
+    $('tbody').show();
+
 }
 
 function updateTableSingle(chartdata, listType, listID) {
@@ -688,6 +690,8 @@ function updateTableSingle(chartdata, listType, listID) {
         // show the row
         $('#possingle' + i).show();
     };
+
+    $('tbody').show();
 
   }
 
