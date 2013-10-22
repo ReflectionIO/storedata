@@ -10,13 +10,6 @@ package io.reflection.app.service.fetchfeed;
 
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import com.google.appengine.api.utils.SystemProperty;
-import com.spacehopperstudios.utility.StringUtils;
-
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
@@ -27,6 +20,12 @@ import io.reflection.app.service.ServiceType;
 import io.reflection.app.shared.datatypes.Country;
 import io.reflection.app.shared.datatypes.FeedFetch;
 import io.reflection.app.shared.datatypes.Store;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.appengine.api.utils.SystemProperty;
+import com.spacehopperstudios.utility.StringUtils;
 
 final class FeedFetchService implements IFeedFetchService {
 	public String getName() {
@@ -175,7 +174,7 @@ final class FeedFetchService implements IFeedFetchService {
 	@Override
 	public Long getFeedFetchesCount(Store store, Country country, List<String> types) {
 		Long feedFetchesCount = Long.valueOf(0);
-		
+
 		String typesQueryPart = null;
 		if (types.size() == 1) {
 			typesQueryPart = String.format("`type`='%s'", types.get(0));
@@ -184,8 +183,8 @@ final class FeedFetchService implements IFeedFetchService {
 		}
 
 		String getFeedFetchesCountQuery = String.format(
-				"SELECT count(1) as `count` FROM `feedfetch` WHERE `store`='%s' AND `country`='%s' AND %s AND `deleted`='n'",
-				addslashes(store.a3Code), addslashes(country.a2Code), typesQueryPart == null ? "" : typesQueryPart);
+				"SELECT count(1) as `count` FROM `feedfetch` WHERE `store`='%s' AND `country`='%s' AND %s AND `deleted`='n'", addslashes(store.a3Code),
+				addslashes(country.a2Code), typesQueryPart == null ? "" : typesQueryPart);
 
 		Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
 
@@ -201,7 +200,7 @@ final class FeedFetchService implements IFeedFetchService {
 				feedFetchConnection.disconnect();
 			}
 		}
-		
+
 		return feedFetchesCount;
 	}
 
@@ -213,10 +212,49 @@ final class FeedFetchService implements IFeedFetchService {
 	 */
 	@Override
 	public List<FeedFetch> getIngestedFeedFetches(Store store, Country country, List<String> types, Pager pager) {
+		return getStatusFeedFetches(store, country, types, pager, true);
+	}
+
+	/**
+	 * @param store
+	 * @param country
+	 * @param pager
+	 * @param b
+	 * @return
+	 */
+	private List<FeedFetch> getStatusFeedFetches(Store store, Country country, List<String> types, Pager pager, boolean ingested) {
 		List<FeedFetch> feedFetches = new ArrayList<FeedFetch>();
-		
-		// TODO Auto-generated method stub
-		
+
+		String typesQueryPart = null;
+		if (types.size() == 1) {
+			typesQueryPart = String.format("`type`='%s'", types.get(0));
+		} else {
+			typesQueryPart = "`type` IN ('" + StringUtils.join(types, "','") + "')";
+		}
+
+		String getIngestedFeedFetchesQuery = String
+				.format("SELECT `f`.* FROM `feedfetch` `f` LEFT JOIN `rank` `r` ON `f`.`code`=`r`.`code` WHERE `f`.`store`='%s' AND `f`.`country`='%s' AND `f`.%s AND `r`.`code` IS%sNULL AND `f`.`deleted`='n' ORDER BY `f`.`date` DESC LIMIT %d,%d",
+						store.a3Code, country.a2Code, typesQueryPart, ingested ? " NOT " : " ", pager.start, pager.count);
+
+		Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
+
+		try {
+			feedFetchConnection.connect();
+			feedFetchConnection.executeQuery(getIngestedFeedFetchesQuery);
+
+			while (feedFetchConnection.fetchNextRow()) {
+				FeedFetch feedFetch = toFeedFetch(feedFetchConnection);
+
+				if (feedFetch != null) {
+					feedFetches.add(feedFetch);
+				}
+			}
+		} finally {
+			if (feedFetchConnection != null) {
+				feedFetchConnection.disconnect();
+			}
+		}
+
 		return feedFetches;
 	}
 
@@ -227,10 +265,46 @@ final class FeedFetchService implements IFeedFetchService {
 	 * io.reflection.app.shared.datatypes.Country, java.util.List)
 	 */
 	@Override
-	public Long getIngestedFeedFetchesCount(Store store, Country country, List<String> listType) {
+	public Long getIngestedFeedFetchesCount(Store store, Country country, List<String> types) {
+		return getStatusFeedFetchesCount(store, country, types, true);
+	}
+
+	/**
+	 * @param store
+	 * @param country
+	 * @param types
+	 * @param b
+	 * @return
+	 */
+	private Long getStatusFeedFetchesCount(Store store, Country country, List<String> types, boolean ingested) {
 		Long feedFetchesCount = Long.valueOf(0);
-		
-		// TODO Auto-generated method stub
+
+		String typesQueryPart = null;
+		if (types.size() == 1) {
+			typesQueryPart = String.format("`type`='%s'", types.get(0));
+		} else {
+			typesQueryPart = "`type` IN ('" + StringUtils.join(types, "','") + "')";
+		}
+
+		String getIngestedFeedFetchesQuery = String
+				.format("SELECT count(1) as `count` FROM `feedfetch` `f` LEFT JOIN `rank` `r` ON `f`.`code`=`r`.`code` WHERE `f`.`store`='%s' AND `f`.`country`='%s' AND `f`.%s AND `r`.`code` IS%sNULL AND `f`.`deleted`='n'",
+						store.a3Code, country.a2Code, typesQueryPart, ingested ? " NOT " : " ");
+
+		Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
+
+		try {
+			feedFetchConnection.connect();
+			feedFetchConnection.executeQuery(getIngestedFeedFetchesQuery);
+
+			if (feedFetchConnection.fetchNextRow()) {
+				feedFetchesCount = feedFetchConnection.getCurrentRowLong("count");
+			}
+		} finally {
+			if (feedFetchConnection != null) {
+				feedFetchConnection.disconnect();
+			}
+		}
+
 		return feedFetchesCount;
 	}
 
@@ -242,10 +316,7 @@ final class FeedFetchService implements IFeedFetchService {
 	 */
 	@Override
 	public List<FeedFetch> getUningestedFeedFetches(Store store, Country country, List<String> types, Pager pager) {
-		List<FeedFetch> feedFetches = new ArrayList<FeedFetch>();
-		
-		// TODO Auto-generated method stub
-		return feedFetches;
+		return getStatusFeedFetches(store, country, types, pager, false);
 	}
 
 	/*
@@ -256,10 +327,7 @@ final class FeedFetchService implements IFeedFetchService {
 	 */
 	@Override
 	public Long getUningestedFeedFetchesCount(Store store, Country country, List<String> types) {
-		Long feedFetchesCount = Long.valueOf(0);
-		
-		// TODO Auto-generated method stub
-		return feedFetchesCount;
+		return getStatusFeedFetchesCount(store, country, types, false);
 	}
 
 }

@@ -22,46 +22,14 @@ public interface FeedFetchesEventHandler extends EventHandler {
 
 	public static final GwtEvent.Type<FeedFetchesEventHandler> TYPE = new GwtEvent.Type<FeedFetchesEventHandler>();
 	
-	public class ReceivedMixedFeedFetches extends GwtEvent<FeedFetchesEventHandler> {
-
-		private List<FeedFetch> mMixed;
-
-		public ReceivedMixedFeedFetches(List<FeedFetch> mixed) {
-			mMixed = mixed;
-		}
-		
-		/* (non-Javadoc)
-		 * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-		 */
-		@Override
-		public com.google.gwt.event.shared.GwtEvent.Type<FeedFetchesEventHandler> getAssociatedType() {
-			return TYPE;
-		}
-
-		/* (non-Javadoc)
-		 * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-		 */
-		@Override
-		protected void dispatch(FeedFetchesEventHandler handler) {
-			handler.receivedMixedFeedFetches(mMixed);
-		}
-		
-	}
-	
 	public class ReceivedFeedFetches extends GwtEvent<FeedFetchesEventHandler> {
 
-		private List<FeedFetch> mIngested;
-		private List<FeedFetch> mUningested;
+		private List<FeedFetch> mFeedFetches;
 
-		/**
-		 * @param ingested
-		 * @param uningested
-		 */
-		public ReceivedFeedFetches(List<FeedFetch> ingested, List<FeedFetch> uningested) {
-			mIngested = ingested;
-			mUningested = uningested;
+		public ReceivedFeedFetches(List<FeedFetch> feedFetches) {
+			mFeedFetches = feedFetches;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
 		 */
@@ -75,13 +43,12 @@ public interface FeedFetchesEventHandler extends EventHandler {
 		 */
 		@Override
 		protected void dispatch(FeedFetchesEventHandler handler) {
-			handler.receivedFeedFetches(mIngested, mUningested);
+			handler.receivedFeedFetches(mFeedFetches);
 		}
 		
 	}
 	
-	public void receivedMixedFeedFetches(List<FeedFetch> mixed);
+	public void receivedFeedFetches(List<FeedFetch> feedFetches);
 	
-	public void receivedFeedFetches(List<FeedFetch> ingested, List<FeedFetch> uningested);
 	
 }

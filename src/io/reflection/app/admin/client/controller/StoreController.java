@@ -26,6 +26,9 @@ import com.willshex.gson.json.service.shared.StatusType;
  */
 public class StoreController implements ServiceController {
 
+	public static final String IPHONE_A3_CODE = "iph";
+	public static final String IPAD_A3_CODE = "ipa";
+
 	private static StoreController mOne = null;
 
 	private Map<String, Store> mStoreLookup = null;
@@ -69,7 +72,7 @@ public class StoreController implements ServiceController {
 
 						if (iosStore != null) {
 							Store ipad = new Store();
-							ipad.a3Code = "ipa";
+							ipad.a3Code = IPAD_A3_CODE;
 							ipad.countries = iosStore.countries;
 							ipad.created = iosStore.created;
 							ipad.deleted = iosStore.deleted;
@@ -80,7 +83,7 @@ public class StoreController implements ServiceController {
 							result.stores.add(ipad);
 
 							Store iphone = new Store();
-							iphone.a3Code = "iph";
+							iphone.a3Code = IPHONE_A3_CODE;
 							iphone.countries = iosStore.countries;
 							iphone.created = iosStore.created;
 							iphone.deleted = iosStore.deleted;
@@ -116,6 +119,18 @@ public class StoreController implements ServiceController {
 	 * @return
 	 */
 	public Store getStore(String code) {
-		return mStoreLookup == null ? null : mStoreLookup.get(code);
+		Store store = null;
+
+		if (code != null && (mStoreLookup == null || (store = mStoreLookup.get(code)) != null)) {
+			store = new Store();
+
+			if (IPAD_A3_CODE.equalsIgnoreCase(code) || IPHONE_A3_CODE.equalsIgnoreCase(code)) {
+				store.a3Code = "ios";
+			} else {
+				store.a3Code = code;
+			}
+		}
+
+		return store;
 	}
 }

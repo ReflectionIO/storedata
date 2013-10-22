@@ -2,7 +2,7 @@
 //  GetFeedFetchesRequest.java
 //  reflection.io
 //
-//  Created by William Shakour on October 18, 2013.
+//  Created by William Shakour on October 22, 2013.
 //  Copyrights © 2013 SPACEHOPPER STUDIOS LTD. All rights reserved.
 //  Copyrights © 2013 reflection.io. All rights reserved.
 //
@@ -27,7 +27,6 @@ public class GetFeedFetchesRequest extends Request {
 	public Store store;
 	public Pager pager;
 	public List<String> listTypes;
-	public Boolean mixed;
 
 	@Override
 	public JsonObject toJson() {
@@ -47,8 +46,6 @@ public class GetFeedFetchesRequest extends Request {
 			}
 		}
 		object.add("listTypes", jsonListTypes);
-		JsonElement jsonMixed = mixed == null ? JsonNull.INSTANCE : new JsonPrimitive(mixed);
-		object.add("mixed", jsonMixed);
 		return object;
 	}
 
@@ -90,11 +87,5 @@ public class GetFeedFetchesRequest extends Request {
 			}
 		}
 
-		if (jsonObject.has("mixed")) {
-			JsonElement jsonMixed = jsonObject.get("mixed");
-			if (jsonMixed != null) {
-				mixed = Boolean.valueOf(jsonMixed.getAsBoolean());
-			}
-		}
 	}
 }

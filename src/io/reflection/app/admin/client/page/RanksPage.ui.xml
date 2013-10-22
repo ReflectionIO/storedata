@@ -9,15 +9,17 @@
             See the GWT docs on UI Binder for more details. -->
         <h2>Ranks</h2>
 
-        <span class="row">
-            <p:RankFilter />
+        <div class="row">
 
-            <span class="col-md-9">
+            <div class="col-md-9">
 
                 <c:CellTable ui:field="mRanks" styleName="table table-hover table-striped" />
-                
+
                 <p:PageSizePager ui:field="mPager" />
-            </span>
-        </span>
+            </div>
+
+            <p:RankFilter />
+
+        </div>
     </g:HTMLPanel>
 </ui:UiBinder> 

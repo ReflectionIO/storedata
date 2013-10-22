@@ -83,6 +83,12 @@ public class CountryController implements ServiceController {
 	 * @return
 	 */
 	public Country getCountry(String code) {
-		return mCountryLookup == null ? null : mCountryLookup.get(code);
+		Country country = null;
+		if (code != null && (mCountryLookup == null || (country = mCountryLookup.get(code)) == null)) {
+			country = new Country();
+			country.a2Code = code;
+		}
+
+		return country;
 	}
 }

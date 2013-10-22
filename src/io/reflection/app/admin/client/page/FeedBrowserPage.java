@@ -8,11 +8,11 @@
 package io.reflection.app.admin.client.page;
 
 import io.reflection.app.admin.client.controller.EventController;
+import io.reflection.app.admin.client.controller.FeedFetchController;
 import io.reflection.app.admin.client.controller.FilterController;
 import io.reflection.app.admin.client.controller.NavigationController;
 import io.reflection.app.admin.client.controller.NavigationController.Stack;
 import io.reflection.app.admin.client.controller.ServiceController;
-import io.reflection.app.admin.client.handler.FilterEventHandler;
 import io.reflection.app.admin.client.handler.NavigationEventHandler;
 import io.reflection.app.admin.client.part.BootstrapGwtCellTable;
 import io.reflection.app.admin.client.part.SimplePager;
@@ -20,11 +20,12 @@ import io.reflection.app.shared.datatypes.FeedFetch;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
-import com.google.gwt.user.client.Window;
+import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -33,17 +34,14 @@ import com.google.gwt.user.client.ui.Widget;
  * @author billy1380
  * 
  */
-public class FeedBrowserPage extends Composite implements NavigationEventHandler, FilterEventHandler {
+public class FeedBrowserPage extends Composite implements NavigationEventHandler {
 
 	private static FeedBrowserPageUiBinder uiBinder = GWT.create(FeedBrowserPageUiBinder.class);
 
 	interface FeedBrowserPageUiBinder extends UiBinder<Widget, FeedBrowserPage> {}
 
-	@UiField(provided = true) CellTable<FeedFetch> mIngestedFeeds = new CellTable<FeedFetch>(ServiceController.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
-	@UiField SimplePager mIngestedPager;
-
-	@UiField(provided = true) CellTable<FeedFetch> mOutstandingFeeds = new CellTable<FeedFetch>(ServiceController.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
-	@UiField SimplePager mOutstandingPager;
+	@UiField(provided = true) CellTable<FeedFetch> mFeeds = new CellTable<FeedFetch>(ServiceController.SHORT_STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true) SimplePager mPager = new SimplePager(false, false);
 
 	@UiField ListBox mAppStore;
 	@UiField ListBox mListType;
@@ -52,15 +50,40 @@ public class FeedBrowserPage extends Composite implements NavigationEventHandler
 	public FeedBrowserPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		mIngestedPager.setDisplay(mIngestedFeeds);
-		mOutstandingPager.setDisplay(mOutstandingFeeds);
+		mFeeds.addColumn(new TextColumn<FeedFetch>() {
 
-		EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this);
+			@Override
+			public String getValue(FeedFetch object) {
+				return object.code;
+			}
+		}, "Code");
+
+		mFeeds.addColumn(new TextColumn<FeedFetch>() {
+
+			@Override
+			public String getValue(FeedFetch object) {
+				return DateTimeFormat.getFormat("yyyy-MM-dd a").format(object.date);
+			}
+		}, "Date");
+		
+		mFeeds.addColumn(new TextColumn<FeedFetch>() {
+
+			@Override
+			public String getValue(FeedFetch object) {
+				return object.type;
+			}
+		}, "Type");
+
+		FeedFetchController.get().addDataDisplay(mFeeds);
+		mPager.setDisplay(mFeeds);
+
 		EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this);
 
+		FilterController.get().start();
 		FilterController.get().setStore(mAppStore.getValue(mAppStore.getSelectedIndex()));
 		FilterController.get().setListType(mListType.getValue(mListType.getSelectedIndex()));
 		FilterController.get().setCountry(mCountry.getValue(mCountry.getSelectedIndex()));
+		FilterController.get().commit();
 	}
 
 	/*
@@ -72,17 +95,6 @@ public class FeedBrowserPage extends Composite implements NavigationEventHandler
 	@Override
 	public void navigationChanged(Stack stack) {
 
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.admin.client.event.FilterChanged.Handler#filterParamChanged(java.lang.String, java.lang.Object, java.lang.Object)
-	 */
-	@Override
-	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
-
-		Window.alert(name + " changed to " + currentValue);
 	}
 
 	@UiHandler("mAppStore")

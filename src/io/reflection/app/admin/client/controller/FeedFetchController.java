@@ -8,20 +8,34 @@
 package io.reflection.app.admin.client.controller;
 
 import io.reflection.app.admin.client.handler.FeedFetchesEventHandler;
+import io.reflection.app.admin.client.handler.FilterEventHandler;
 import io.reflection.app.api.admin.client.AdminService;
 import io.reflection.app.api.admin.shared.call.GetFeedFetchesRequest;
 import io.reflection.app.api.admin.shared.call.GetFeedFetchesResponse;
+import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.shared.datatypes.FeedFetch;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.view.client.AsyncDataProvider;
+import com.google.gwt.view.client.HasData;
+import com.google.gwt.view.client.Range;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author billy1380
  * 
  */
-public class FeedFetchController implements ServiceController {
+public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements ServiceController, FilterEventHandler {
 	private static FeedFetchController mOne = null;
+
+	private List<FeedFetch> mRows = null;
+
+	private Pager mPager;
 
 	public static FeedFetchController get() {
 		if (mOne == null) {
@@ -31,6 +45,10 @@ public class FeedFetchController implements ServiceController {
 		return mOne;
 	}
 
+	private FeedFetchController() {
+		EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this);
+	}
+	
 	public void fetchFeedFetches() {
 		AdminService service = new AdminService();
 		service.setUrl(ADMIN_END_POINT);
@@ -38,28 +56,94 @@ public class FeedFetchController implements ServiceController {
 		final GetFeedFetchesRequest input = new GetFeedFetchesRequest();
 		input.accessCode = ACCESS_CODE;
 
+		if (mPager == null) {
+			mPager = new Pager();
+			mPager.count = SHORT_STEP;
+			mPager.start = Long.valueOf(0);
+		}
+		input.pager = mPager;
+		
 		input.country = FilterController.get().getCountry();
 		input.store = FilterController.get().getStore();
 		input.listTypes = FilterController.get().getListTypes();
 
-		service.getFeedFetches(input, new AsyncCallback<GetFeedFetchesResponse>() {
+		if (input.country != null && input.store != null && input.listTypes != null) {
+			service.getFeedFetches(input, new AsyncCallback<GetFeedFetchesResponse>() {
 
-			@Override
-			public void onSuccess(GetFeedFetchesResponse output) {
-				if (output.status == StatusType.StatusTypeSuccess) {
-					if (output.mixed != null) {
-						EventController.get().fireEventFromSource(new FeedFetchesEventHandler.ReceivedMixedFeedFetches(output.mixed), FeedFetchController.this);
-					} else if (output.ingested != null || output.uningested != null) {
-						EventController.get().fireEventFromSource(new FeedFetchesEventHandler.ReceivedFeedFetches(output.ingested, output.uningested),
-								FeedFetchController.this);
+				@Override
+				public void onSuccess(GetFeedFetchesResponse output) {
+					if (output.status == StatusType.StatusTypeSuccess) {
+						if (output.feedFetches != null) {
+							if (output.pager != null) {
+								mPager = output.pager;
+							}
+
+							EventController.get().fireEventFromSource(new FeedFetchesEventHandler.ReceivedFeedFetches(output.feedFetches),
+									FeedFetchController.this);
+
+							if (mRows == null) {
+								mRows = new ArrayList<FeedFetch>();
+							}
+
+							mRows.addAll(output.feedFetches);
+
+							updateRowCount(mPager.totalCount.intValue(), true);
+							updateRowData(0, mRows);
+						}
 					}
 				}
-			}
 
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert(caught.getMessage());
-			}
-		});
+				@Override
+				public void onFailure(Throwable caught) {
+					Window.alert(caught.getMessage());
+				}
+			});
+		}
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.view.client.AbstractDataProvider#onRangeChanged(com.google.gwt.view.client.HasData)
+	 */
+	@Override
+	protected void onRangeChanged(HasData<FeedFetch> display) {
+		Range r = display.getVisibleRange();
+
+		int start = r.getStart();
+		int end = start + r.getLength();
+
+		if (mRows == null || end > mRows.size()) {
+			fetchFeedFetches();
+		} else {
+			updateRowData(start, mRows.subList(start, end));
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.admin.client.handler.FilterEventHandler#filterParamChanged(java.lang.String, java.lang.Object, java.lang.Object)
+	 */
+	@Override
+	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
+		mPager = null;
+		mRows = null;
+
+		fetchFeedFetches();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.admin.client.handler.FilterEventHandler#filterParamsChanged(java.util.Map, java.util.Map)
+	 */
+	@Override
+	public void filterParamsChanged(Map<String, ?> currentValues, Map<String, ?> previousValues) {
+		mPager = null;
+		mRows = null;
+
+		fetchFeedFetches();
+	}
+
 }

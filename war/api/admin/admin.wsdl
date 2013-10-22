@@ -84,7 +84,6 @@
                             <xsd:element name="pager" type="sd:Pager" />
                             <xsd:element name="listTypes" type="xsd:string" maxOccurs="unbounded" />
                         </xsd:sequence>
-                        <xsd:attribute name="mixed" type="xsd:boolean" default="false" />
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>
@@ -93,9 +92,7 @@
                 <xsd:complexContent>
                     <xsd:extension base="sd:Response">
                         <xsd:sequence>
-                            <xsd:element name="ingested" type="sd:FeedFetch" maxOccurs="unbounded" />
-                            <xsd:element name="uningested" type="sd:FeedFetch" maxOccurs="unbounded" />
-                            <xsd:element name="mixed" type="sd:FeedFetch" maxOccurs="unbounded" />
+                            <xsd:element name="feedFetches" type="sd:FeedFetch" maxOccurs="unbounded" />
                             <xsd:element name="pager" type="sd:Pager" />
                         </xsd:sequence>
                     </xsd:extension>

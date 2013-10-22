@@ -78,33 +78,33 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 		service.getAllTopItems(input, new AsyncCallback<GetAllTopItemsResponse>() {
 
 			@Override
-			public void onSuccess(GetAllTopItemsResponse result) {
-				if (result.status == StatusType.StatusTypeSuccess) {
-					if (input.pager != null) {
-						mPager = result.pager;
+			public void onSuccess(GetAllTopItemsResponse output) {
+				if (output.status == StatusType.StatusTypeSuccess) {
+					if (output.pager != null) {
+						mPager = output.pager;
 					}
 
-					if (result.items != null) {
-						for (Item item : result.items) {
+					if (output.items != null) {
+						for (Item item : output.items) {
 							mItemLookup.put(item.externalId, item);
 						}
 					}
 
-					EventController.get().fireEventFromSource(new ReceivedRanks("free" + input.listType, result.freeRanks), RankController.this);
-					EventController.get().fireEventFromSource(new ReceivedRanks("paid" + input.listType, result.paidRanks), RankController.this);
-					EventController.get().fireEventFromSource(new ReceivedRanks("grossing" + input.listType, result.grossingRanks), RankController.this);
+					EventController.get().fireEventFromSource(new ReceivedRanks("free" + input.listType, output.freeRanks), RankController.this);
+					EventController.get().fireEventFromSource(new ReceivedRanks("paid" + input.listType, output.paidRanks), RankController.this);
+					EventController.get().fireEventFromSource(new ReceivedRanks("grossing" + input.listType, output.grossingRanks), RankController.this);
 					
 					if (mRows == null) {
 						mRows = new ArrayList<RanksGroup>();
 					}
 					
-					int count = result.freeRanks.size();
+					int count = output.freeRanks.size();
 					RanksGroup r;
 					for (int i = 0; i < count; i++) {
 						mRows.add(r = new RanksGroup());
-						r.free = result.freeRanks.get(i);
-						r.paid = result.paidRanks.get(i);
-						r.grossing = result.grossingRanks.get(i);
+						r.free = output.freeRanks.get(i);
+						r.paid = output.paidRanks.get(i);
+						r.grossing = output.grossingRanks.get(i);
 					}
 					
 					updateRowCount(mPager.totalCount.intValue(), true);

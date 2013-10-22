@@ -142,36 +142,11 @@ public final class Admin extends ActionHandler {
 				throw new InputValidationException(ValidationError.ListTypeNotFound.getCode(),
 						ValidationError.ListTypeNotFound.getMessage("String: input.listTypes"));
 
-			if (input.mixed == null) {
-				input.mixed = Boolean.FALSE;
-			}
+			output.feedFetches = FeedFetchServiceProvider.provide().getFeedFetches(input.store, input.country, input.listTypes, input.pager);
 
-			if (input.mixed.booleanValue()) {
-				output.mixed = FeedFetchServiceProvider.provide().getFeedFetches(input.store, input.country, input.listTypes, input.pager);
-
-				output.pager = input.pager;
-				updatePager(output.pager, output.mixed,
-						input.pager.totalCount == null ? FeedFetchServiceProvider.provide().getFeedFetchesCount(input.store, input.country, input.listTypes)
-								: null);
-
-			} else {
-				output.ingested = FeedFetchServiceProvider.provide().getIngestedFeedFetches(input.store, input.country, input.listTypes, input.pager);
-
-				output.uningested = FeedFetchServiceProvider.provide().getUningestedFeedFetches(input.store, input.country, input.listTypes, input.pager);
-
-				output.pager = input.pager;
-
-				if (output.ingested != null && (output.uningested == null || output.ingested.size() > output.uningested.size())) {
-					updatePager(
-							output.pager,
-							output.ingested,
-							input.pager.totalCount == null ? FeedFetchServiceProvider.provide().getIngestedFeedFetchesCount(input.store, input.country,
-									input.listTypes) : null);
-				} else {
-					updatePager(output.pager, output.uningested, input.pager.totalCount == null ? FeedFetchServiceProvider.provide()
-							.getUningestedFeedFetchesCount(input.store, input.country, input.listTypes) : null);
-				}
-			}
+			output.pager = input.pager;
+			updatePager(output.pager, output.feedFetches,
+					input.pager.totalCount == null ? FeedFetchServiceProvider.provide().getFeedFetchesCount(input.store, input.country, input.listTypes) : null);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
