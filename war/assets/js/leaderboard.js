@@ -8,7 +8,7 @@ var overviewType = "all";
 var maxRows = 25;
 var maxRowsCreated = 0;
 var pageStartAll = 0;
-var storedHash = "";
+var storedHash = "";//window.location.hash;
 
 var idLookup = {
 
@@ -41,6 +41,8 @@ $(document).ready(function () {
       if (store == "ipad") {
         storeCode = "ipad";
       }
+
+      storedHash = "#" + store + "#" + overviewType + "#" + country + "#" + date;
     }
 
     // // get the selected index
@@ -68,26 +70,50 @@ $(document).ready(function () {
 
 });
 
-var originalHash = window.location.hash;
 $(window).bind('hashchange', function() {
 
     var newHash = window.location.hash;
 
     // note: this is called when the system constructs the hash as well when you go back
     // only execute the code if the player has hit the back button
-    console.log("s hash = " + storedHash);
-    console.log("n hash = " + newHash);
+    console.log("std hash = " + storedHash);
+    console.log("new hash = " + newHash);
     if (storedHash != newHash) {
-      //do your stuff based on the comparison of newHash to originalHash
+      //do your stuff based on the comparison of newHash to storedHash
       if (newHash != null && newHash.length > 0) {
         var hashList = newHash.split('#');
         //console.log(hashList);
+        store = hashList[1];
         overviewType = hashList[2];
+        country = hashList[3];
+        date = hashList[4];
+
+        if (storedHash != null && storedHash.length > 0) {
+           var shashList = storedHash.split('#');
+          //console.log(hashList);
+          sstore = shashList[1];
+          soverviewType = shashList[2];
+          scountry = shashList[3];
+          sdate = shashList[4];
+
+          if (store != sstore || country != scountry || date != sdate ) {
+            resetTable();
+          }
+          // otherwise if the only thing that has changed is the overviewType then don't resetTable()
+        }
+        // else {
+        //   alert("resetTable");
+        //   resetTable();
+        // }
+
+        
       }
       else {
 
         initValues();
-        console.log(overviewType);
+
+        resetTable();
+        // console.log(overviewType);
         // alert("initValues");
       }
 
@@ -102,16 +128,15 @@ $(window).bind('hashchange', function() {
       // get the selected index
       // console.log($('#overview>option:selected').text());
 
-      // highlight the correct overview button
-      var i = 0;
-      var compareString = "overview_" + overviewType; 
-      $("#overview > option").each(function() {
-        //alert(this.text + ' ' + this.value);
-        if (this.value == compareString) {
-          $("#overview").prop("selectedIndex", i);
-        }
-        i++;
-      });
+      // highlightAppstoreButton();
+      // highlightOverviewButton();
+
+      highlightOptionButton("#appstore", "appstore_" + store);
+      highlightOptionButton("#overview", "overview_" + overviewType);
+      highlightOptionButton("#country", country);
+
+      // update the date picker with the new date
+      // $('#datepicker').attr("value", convertDate(new Date(date)));
 
       updateLeaderboard();
 
@@ -119,7 +144,6 @@ $(window).bind('hashchange', function() {
       
     }
 
-    originalHash = newHash;
     storedHash = newHash;
     
 });
@@ -143,6 +167,8 @@ $('#appstore').change(function () {
         storeCode = "";
         store = "iphone";
     }
+
+    updateHash();
 
     if (overviewType == "all") {
         getTopItemsAll();
@@ -174,9 +200,9 @@ $('#country').change(function () {
 
     country = value;
 
-    //updateHash();
-
     resetTable();
+
+    updateHash();
     
     getTopItemsAll();
 });
@@ -189,6 +215,7 @@ $('#datepicker').datepicker({
     todayHighlight: true
 });
 
+// set the date to today's date on the datepicker
 $('#datepicker').attr("value", convertDate(new Date()));
 
 $('#datepicker').datepicker().on('changeDate', function (e) {
@@ -198,6 +225,8 @@ $('#datepicker').datepicker().on('changeDate', function (e) {
     //alert(date);
 
     resetTable();
+
+    updateHash();
     
     getTopItemsAll();
 });
@@ -257,11 +286,9 @@ function convertDate(d) {
 
 function updateHash() {
 
-  storedHash = "#" + store + "#" + overviewType + "#" + country + "#" + date;
+  var newHash = "#" + store + "#" + overviewType + "#" + country + "#" + date;
 
-  // alert(storedHash);
-
-  $(location).attr('href',baseUrl + storedHash);
+  $(location).attr('href',baseUrl + newHash);
 }
 
 function updateLeaderboard() {
@@ -441,6 +468,9 @@ function lookupApplications(lookupList, chartdata, listType, listID) {
 function hideTableRows() {
     var startPos = 0;
     var endPos = maxRowsCreated;
+    if (maxRowsCreated == 0) {
+      endPos = maxRows;
+    }
     console.log("maxRowsCreated = " + maxRowsCreated);
     for (var i = startPos; i < endPos; i++) {
       $('#posall' + i).hide();
@@ -694,4 +724,33 @@ function updateTableSingle(chartdata, listType, listID) {
     $('tbody').show();
 
   }
+
+  function highlightOptionButton(optionNameId, compareString) {
+
+      // highlight the correct button
+      var i = 0;
+      $(optionNameId + " > option").each(function() {
+        //alert(this.text + ' ' + this.value);
+        if (this.value == compareString) {
+          $(optionNameId).prop("selectedIndex", i);
+        }
+        i++;
+      });
+
+  }
+
+  // function highlightOverviewButton() {
+
+  //     // highlight the correct overview button
+  //     var i = 0;
+  //     var compareString = "overview_" + overviewType; 
+  //     $("#overview > option").each(function() {
+  //       //alert(this.text + ' ' + this.value);
+  //       if (this.value == compareString) {
+  //         $("#overview").prop("selectedIndex", i);
+  //       }
+  //       i++;
+  //     });
+
+  // }
 
