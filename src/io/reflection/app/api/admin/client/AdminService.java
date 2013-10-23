@@ -16,6 +16,12 @@ import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersCountResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersResponse;
+import io.reflection.app.api.admin.shared.call.TriggerGatherRequest;
+import io.reflection.app.api.admin.shared.call.TriggerGatherResponse;
+import io.reflection.app.api.admin.shared.call.TriggerIngestRequest;
+import io.reflection.app.api.admin.shared.call.TriggerIngestResponse;
+import io.reflection.app.api.admin.shared.call.TriggerModelRequest;
+import io.reflection.app.api.admin.shared.call.TriggerModelResponse;
 
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
@@ -99,6 +105,72 @@ public final class AdminService extends JsonService {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					GetFeedFetchesResponse outputParameter = new GetFeedFetchesResponse();
+					parseResponse(response.getText(), outputParameter);
+					output.onSuccess(outputParameter);
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+				}
+			});
+		} catch (RequestException e) {
+			output.onFailure(e);
+		}
+	}
+
+	public static final String AdminMethodTriggerGather = "TriggerGather";
+
+	public void triggerGather(TriggerGatherRequest input, final AsyncCallback<TriggerGatherResponse> output) {
+		try {
+			sendRequest(AdminMethodTriggerGather, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					TriggerGatherResponse outputParameter = new TriggerGatherResponse();
+					parseResponse(response.getText(), outputParameter);
+					output.onSuccess(outputParameter);
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+				}
+			});
+		} catch (RequestException e) {
+			output.onFailure(e);
+		}
+	}
+
+	public static final String AdminMethodTriggerIngest = "TriggerIngest";
+
+	public void triggerIngest(TriggerIngestRequest input, final AsyncCallback<TriggerIngestResponse> output) {
+		try {
+			sendRequest(AdminMethodTriggerIngest, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					TriggerIngestResponse outputParameter = new TriggerIngestResponse();
+					parseResponse(response.getText(), outputParameter);
+					output.onSuccess(outputParameter);
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+				}
+			});
+		} catch (RequestException e) {
+			output.onFailure(e);
+		}
+	}
+
+	public static final String AdminMethodTriggerModel = "TriggerModel";
+
+	public void triggerModel(TriggerModelRequest input, final AsyncCallback<TriggerModelResponse> output) {
+		try {
+			sendRequest(AdminMethodTriggerModel, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					TriggerModelResponse outputParameter = new TriggerModelResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
 				}

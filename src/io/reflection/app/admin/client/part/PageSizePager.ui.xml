@@ -5,10 +5,10 @@
     </ui:style>
     <g:HTMLPanel>
         <ul class="pager">
-            <li>
+            <li ui:field="mShowLessItem">
                 <g:Anchor ui:field="mShowLess">Show Less</g:Anchor>
             </li>
-            <li>
+            <li ui:field="mShowMoreItem">
                 <g:Anchor ui:field="mShowMore">Show More</g:Anchor>
             </li>
         </ul>

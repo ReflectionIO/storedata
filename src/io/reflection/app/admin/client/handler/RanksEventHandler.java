@@ -27,6 +27,8 @@ public interface RanksEventHandler extends EventHandler {
 	 * @param ranks
 	 */
 	void receivedRanks(String listType, List<Rank> ranks);
+	
+	void fetchingRanks();
 
 	public class ReceivedRanks extends GwtEvent<RanksEventHandler> {
 
@@ -60,8 +62,26 @@ public interface RanksEventHandler extends EventHandler {
 		@Override
 		protected void dispatch(RanksEventHandler handler) {
 			handler.receivedRanks(mListType, mRanks);
+		}
+	}
+	
+	public class FetchingRanks extends  GwtEvent<RanksEventHandler> {
 
+		/* (non-Javadoc)
+		 * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
+		 */
+		@Override
+		public com.google.gwt.event.shared.GwtEvent.Type<RanksEventHandler> getAssociatedType() {
+			return TYPE;
 		}
 
+		/* (non-Javadoc)
+		 * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+		 */
+		@Override
+		protected void dispatch(RanksEventHandler handler) {
+			handler.fetchingRanks();
+		}
+		
 	}
 }

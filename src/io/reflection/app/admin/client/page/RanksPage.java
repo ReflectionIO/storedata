@@ -7,13 +7,18 @@
 //
 package io.reflection.app.admin.client.page;
 
+import java.util.List;
+
 import io.reflection.app.admin.client.cell.MiniAppCell;
+import io.reflection.app.admin.client.controller.EventController;
 import io.reflection.app.admin.client.controller.RankController;
 import io.reflection.app.admin.client.controller.ServiceController;
+import io.reflection.app.admin.client.handler.RanksEventHandler;
 import io.reflection.app.admin.client.part.BootstrapGwtCellTable;
 import io.reflection.app.admin.client.part.PageSizePager;
 import io.reflection.app.admin.client.part.datatypes.RanksGroup;
 import io.reflection.app.shared.datatypes.Item;
+import io.reflection.app.shared.datatypes.Rank;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -29,7 +34,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author billy1380
  * 
  */
-public class RanksPage extends Composite {
+public class RanksPage extends Composite implements RanksEventHandler {
 
 	private static RanksPageUiBinder uiBinder = GWT.create(RanksPageUiBinder.class);
 
@@ -91,8 +96,26 @@ public class RanksPage extends Composite {
 		grossingHeader.setHeaderStyleNames("col-md-3");
 		mRanks.addColumn(grossing, grossingHeader);
 
-
+		EventController.get().addHandlerToSource(RanksEventHandler.TYPE, RankController.get(), this);
+		
 		RankController.get().addDataDisplay(mRanks);
 		mPager.setDisplay(mRanks);
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.admin.client.handler.RanksEventHandler#receivedRanks(java.lang.String, java.util.List)
+	 */
+	@Override
+	public void receivedRanks(String listType, List<Rank> ranks) {
+		mPager.setLoading(false);
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.admin.client.handler.RanksEventHandler#fetchingRanks()
+	 */
+	@Override
+	public void fetchingRanks() {
+		mPager.setLoading(true);
 	}
 }

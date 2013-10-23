@@ -17,6 +17,12 @@ import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersCountResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersResponse;
+import io.reflection.app.api.admin.shared.call.TriggerGatherRequest;
+import io.reflection.app.api.admin.shared.call.TriggerGatherResponse;
+import io.reflection.app.api.admin.shared.call.TriggerIngestRequest;
+import io.reflection.app.api.admin.shared.call.TriggerIngestResponse;
+import io.reflection.app.api.admin.shared.call.TriggerModelRequest;
+import io.reflection.app.api.admin.shared.call.TriggerModelResponse;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.input.ValidationError;
 import io.reflection.app.input.ValidationHelper;
@@ -154,6 +160,45 @@ public final class Admin extends ActionHandler {
 			output.error = convertToErrorAndLog(LOG, e);
 		}
 		LOG.finer("Exiting getFeedFetches");
+		return output;
+	}
+
+	public TriggerGatherResponse triggerGather(TriggerGatherRequest input) {
+		LOG.finer("Entering triggerGather");
+		TriggerGatherResponse output = new TriggerGatherResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting triggerGather");
+		return output;
+	}
+
+	public TriggerIngestResponse triggerIngest(TriggerIngestRequest input) {
+		LOG.finer("Entering triggerIngest");
+		TriggerIngestResponse output = new TriggerIngestResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting triggerIngest");
+		return output;
+	}
+
+	public TriggerModelResponse triggerModel(TriggerModelRequest input) {
+		LOG.finer("Entering triggerModel");
+		TriggerModelResponse output = new TriggerModelResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting triggerModel");
 		return output;
 	}
 }

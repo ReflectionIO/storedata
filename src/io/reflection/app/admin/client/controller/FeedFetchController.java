@@ -12,6 +12,10 @@ import io.reflection.app.admin.client.handler.FilterEventHandler;
 import io.reflection.app.api.admin.client.AdminService;
 import io.reflection.app.api.admin.shared.call.GetFeedFetchesRequest;
 import io.reflection.app.api.admin.shared.call.GetFeedFetchesResponse;
+import io.reflection.app.api.admin.shared.call.TriggerIngestRequest;
+import io.reflection.app.api.admin.shared.call.TriggerIngestResponse;
+import io.reflection.app.api.admin.shared.call.TriggerModelRequest;
+import io.reflection.app.api.admin.shared.call.TriggerModelResponse;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.shared.datatypes.FeedFetch;
 
@@ -144,6 +148,66 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 		mRows = null;
 
 		fetchFeedFetches();
+	}
+	
+	public void model(String code) {
+		AdminService service = new AdminService();
+		service.setUrl(ADMIN_END_POINT);
+
+		final TriggerModelRequest input = new TriggerModelRequest();
+		input.accessCode = ACCESS_CODE;
+		
+		input.country = FilterController.get().getCountry();
+		input.store = FilterController.get().getStore();
+		input.listTypes = FilterController.get().getAllListTypes();
+		input.code = code;
+	
+		service.triggerModel(input, new AsyncCallback<TriggerModelResponse>() {
+			
+			@Override
+			public void onSuccess(TriggerModelResponse output) {
+				if (output.status == StatusType.StatusTypeFailure && output.error != null) { 
+					Window.alert(output.error.message);
+				}
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert(caught.getMessage());
+			}
+		});
+	}
+
+	/**
+	 * @param code
+	 */
+	public void ingest(String code) {
+		AdminService service = new AdminService();
+		service.setUrl(ADMIN_END_POINT);
+
+		final TriggerIngestRequest input = new TriggerIngestRequest();
+		input.accessCode = ACCESS_CODE;
+		
+		input.country = FilterController.get().getCountry();
+		input.store = FilterController.get().getStore();
+		input.listTypes = FilterController.get().getAllListTypes();
+		input.code = code;
+	
+		service.triggerIngest(input, new AsyncCallback<TriggerIngestResponse>() {
+			
+			@Override
+			public void onSuccess(TriggerIngestResponse output) {
+				if (output.status == StatusType.StatusTypeFailure && output.error != null) { 
+					Window.alert(output.error.message);
+				}
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert(caught.getMessage());
+			}
+		});
+		
 	}
 
 }

@@ -132,6 +132,22 @@ public class FilterController {
 		return types;
 	}
 
+	public List<String> getAllListTypes() {
+		List<String> types = new ArrayList<String>();
+
+		if (StoreController.IPHONE_A3_CODE.equals(mCurrentValues.get(STORE_KEY))) {
+			types.add("toppaidapplications");
+			types.add("topfreeapplications");
+			types.add("topgrossingapplications");
+		} else if (StoreController.IPAD_A3_CODE.equals(mCurrentValues.get(STORE_KEY))) {
+			types.add("toppaidipadapplications");
+			types.add("topfreeipadapplications");
+			types.add("topgrossingipadapplications");
+		}
+
+		return types;
+	}
+
 	/**
 	 * 
 	 */

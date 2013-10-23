@@ -17,6 +17,15 @@
             <xsd:element name="GetFeedFetchesInput" type="sda:GetFeedFetchesRequest" />
             <xsd:element name="GetFeedFetchesOutput" type="sda:GetFeedFetchesResponse" />
 
+            <xsd:element name="TriggerGatherInput" type="sda:TriggerGatherRequest" />
+            <xsd:element name="TriggerGatherOutput" type="sda:TriggerGatherResponse" />
+
+            <xsd:element name="TriggerIngestInput" type="sda:TriggerIngestRequest" />
+            <xsd:element name="TriggerIngestOutput" type="sda:TriggerIngestResponse" />
+
+            <xsd:element name="TriggerModelInput" type="sda:TriggerModelRequest" />
+            <xsd:element name="TriggerModelOutput" type="sda:TriggerModelResponse" />
+
             <xsd:complexType name="GetUsersRequest">
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
@@ -99,6 +108,74 @@
                 </xsd:complexContent>
             </xsd:complexType>
 
+            <xsd:complexType name="TriggerGatherRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="country" type="sd:Country" />
+                            <xsd:element name="store" type="sd:Store" />
+                            <xsd:element name="listTypes" type="xsd:string" maxOccurs="unbounded" />
+                        </xsd:sequence>
+                        <xsd:attribute name="code" type="xsd:string" />
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="TriggerGatherResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="TriggerIngestRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="country" type="sd:Country" />
+                            <xsd:element name="store" type="sd:Store" />
+                            <xsd:element name="listTypes" type="xsd:string" maxOccurs="unbounded" />
+                        </xsd:sequence>
+                        <xsd:attribute name="code" type="xsd:string" />
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="TriggerIngestResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="TriggerModelRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="country" type="sd:Country" />
+                            <xsd:element name="store" type="sd:Store" />
+                            <xsd:element name="listTypes" type="xsd:string" maxOccurs="unbounded" />
+                        </xsd:sequence>
+                        <xsd:attribute name="code" type="xsd:string" />
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="TriggerModelResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
         </xsd:schema>
     </wsdl:types>
 
@@ -130,6 +207,27 @@
         <wsdl:part name="output" element="sda:GetFeedFetchesOutput" />
     </wsdl:message>
 
+    <wsdl:message name="TriggerGatherRequest">
+        <wsdl:part name="input" element="sda:TriggerGatherInput" />
+    </wsdl:message>
+    <wsdl:message name="TriggerGatherResponse">
+        <wsdl:part name="output" element="sda:TriggerGatherOutput" />
+    </wsdl:message>
+
+    <wsdl:message name="TriggerIngestRequest">
+        <wsdl:part name="input" element="sda:TriggerIngestInput" />
+    </wsdl:message>
+    <wsdl:message name="TriggerIngestResponse">
+        <wsdl:part name="output" element="sda:TriggerIngestOutput" />
+    </wsdl:message>
+
+    <wsdl:message name="TriggerModelRequest">
+        <wsdl:part name="input" element="sda:TriggerModelInput" />
+    </wsdl:message>
+    <wsdl:message name="TriggerModelResponse">
+        <wsdl:part name="output" element="sda:TriggerModelOutput" />
+    </wsdl:message>
+
     <wsdl:portType name="admin">
         <wsdl:operation name="GetUsers">
             <wsdl:input message="sda:GetUsersRequest" />
@@ -146,6 +244,18 @@
         <wsdl:operation name="GetFeedFetches">
             <wsdl:input message="sda:GetFeedFetchesRequest" />
             <wsdl:output message="sda:GetFeedFetchesResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="TriggerGather">
+            <wsdl:input message="sda:TriggerGatherRequest" />
+            <wsdl:output message="sda:TriggerGatherResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="TriggerIngest">
+            <wsdl:input message="sda:TriggerIngestRequest" />
+            <wsdl:output message="sda:TriggerIngestResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="TriggerModel">
+            <wsdl:input message="sda:TriggerModelRequest" />
+            <wsdl:output message="sda:TriggerModelResponse" />
         </wsdl:operation>
     </wsdl:portType>
     <wsdl:binding name="adminSOAP" type="sda:admin">
@@ -186,7 +296,33 @@
                 <soap:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
-        
+        <wsdl:operation name="TriggerGather">
+            <soap:operation soapAction="http://app.reflection.io/admin/TriggerGather" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="TriggerIngest">
+            <soap:operation soapAction="http://app.reflection.io/admin/TriggerIngest" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="TriggerModel">
+            <soap:operation soapAction="http://app.reflection.io/admin/TriggerModel" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
     </wsdl:binding>
     <wsdl:service name="admin">
         <wsdl:port name="adminSOAP" binding="sda:adminSOAP">

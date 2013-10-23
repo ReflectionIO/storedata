@@ -15,6 +15,7 @@ import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.shared.datatypes.Country;
 import io.reflection.app.shared.datatypes.Item;
+import io.reflection.app.admin.client.handler.RanksEventHandler.FetchingRanks;
 import io.reflection.app.shared.datatypes.Store;
 
 import java.util.ArrayList;
@@ -117,6 +118,8 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 				Window.alert("Error");
 			}
 		});
+		
+		EventController.get().fireEventFromSource(new FetchingRanks(), RankController.this);
 	}
 
 	public Item lookupItem(String externalId) {

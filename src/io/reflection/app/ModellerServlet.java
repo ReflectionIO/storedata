@@ -1,5 +1,5 @@
 //
-//  ModelServlet.java
+//  ModellerServlet.java
 //  storedata
 //
 //  Created by William Shakour (billy1380) on 15 Oct 2013.
@@ -25,9 +25,9 @@ import javax.servlet.http.HttpServletResponse;
  * 
  */
 @SuppressWarnings("serial")
-public class ModelServlet extends HttpServlet {
+public class ModellerServlet extends HttpServlet {
 
-	private static final Logger LOG = Logger.getLogger(ModelServlet.class.getName());
+	private static final Logger LOG = Logger.getLogger(ModellerServlet.class.getName());
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
