@@ -54,6 +54,7 @@ public class ModellerServlet extends HttpServlet {
 		String code = req.getParameter("code");
 
 		Model model = ModelFactory.getModelForStore(store);
+		
 		if (model != null) {
 			model.prepare(store, country, type, code);
 		} else {

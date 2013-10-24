@@ -24,8 +24,12 @@ import io.reflection.app.api.admin.shared.call.TriggerIngestResponse;
 import io.reflection.app.api.admin.shared.call.TriggerModelRequest;
 import io.reflection.app.api.admin.shared.call.TriggerModelResponse;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.collectors.Collector;
+import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.input.ValidationError;
 import io.reflection.app.input.ValidationHelper;
+import io.reflection.app.models.Model;
+import io.reflection.app.models.ModelFactory;
 import io.reflection.app.service.fetchfeed.FeedFetchServiceProvider;
 import io.reflection.app.service.user.UserServiceProvider;
 
@@ -121,32 +125,7 @@ public final class Admin extends ActionHandler {
 
 			input.store = ValidationHelper.validateStore(input.store, "input");
 
-			if (input.listTypes == null)
-				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
-						ValidationError.InvalidValueNull.getMessage("List: input.listType"));
-
-			String validatedListType, listType;
-			StringBuffer badListTypes = new StringBuffer();
-			for (int i = 0; i < input.listTypes.size(); i++) {
-				listType = input.listTypes.get(i);
-				validatedListType = ValidationHelper.validateListType(listType, input.store);
-
-				input.listTypes.remove(i);
-
-				if (listType != null) {
-					input.listTypes.add(i, validatedListType);
-				} else {
-					if (badListTypes.length() != 0) {
-						badListTypes.append(",");
-					}
-
-					badListTypes.append(listType);
-				}
-			}
-
-			if (input.listTypes.size() == 0)
-				throw new InputValidationException(ValidationError.ListTypeNotFound.getCode(),
-						ValidationError.ListTypeNotFound.getMessage("String: input.listTypes"));
+			input.listTypes = ValidationHelper.validateListTypes(input.listTypes, input.store, "input");
 
 			output.feedFetches = FeedFetchServiceProvider.provide().getFeedFetches(input.store, input.country, input.listTypes, input.pager);
 
@@ -193,6 +172,35 @@ public final class Admin extends ActionHandler {
 		LOG.finer("Entering triggerModel");
 		TriggerModelResponse output = new TriggerModelResponse();
 		try {
+			if (input == null)
+				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
+						ValidationError.InvalidValueNull.getMessage("TriggerModelRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			input.country = ValidationHelper.validateCountry(input.country, "input");
+
+			input.store = ValidationHelper.validateStore(input.store, "input");
+
+			input.listTypes = ValidationHelper.validateListTypes(input.listTypes, input.store, "input");
+
+			Model model = ModelFactory.getModelForStore(input.store.a3Code);
+			Collector collector = CollectorFactory.getCollectorForStore(input.store.a3Code);
+
+			String type = null;
+			for (String listType : input.listTypes) {
+				if (collector.isGrossing(listType)) {
+					type = listType;
+					break;
+				}
+			}
+
+			if (type == null)
+				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
+						ValidationError.InvalidValueNull.getMessage("should contain a grossing list name List: input.listType"));
+
+			model.enqueue(input.store.a3Code, input.country.a2Code, type, input.code);
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;

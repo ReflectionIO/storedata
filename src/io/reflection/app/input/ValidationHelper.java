@@ -145,8 +145,8 @@ public class ValidationHelper {
 			throw new InputValidationException(ValidationError.PagerCountTooSmall.getCode(), ValidationError.PagerCountTooSmall.getMessage(parent));
 
 		// TODO: for now this is disabled until we sort something out for it
-//		if (pager.count.intValue() > 30)
-//			throw new InputValidationException(ValidationError.PagerCountTooLarge.getCode(), ValidationError.PagerCountTooLarge.getMessage(parent));
+		// if (pager.count.intValue() > 30)
+		// throw new InputValidationException(ValidationError.PagerCountTooLarge.getCode(), ValidationError.PagerCountTooLarge.getMessage(parent));
 
 		if (pager.start != null && pager.totalCount != null && pager.start.longValue() > pager.totalCount.longValue())
 			throw new InputValidationException(ValidationError.PagerStartLargerThanTotal.getCode(),
@@ -247,5 +247,42 @@ public class ValidationHelper {
 		List<String> types = collector.getTypes();
 
 		return types.contains(listType) ? listType : null;
+	}
+
+	/**
+	 * @param listTypes
+	 * @param string
+	 * @return
+	 * @throws InputValidationException
+	 */
+	public static List<String> validateListTypes(List<String> listTypes, Store store, String parent) throws InputValidationException {
+		if (listTypes == null)
+			throw new InputValidationException(ValidationError.InvalidValueNull.getCode(), ValidationError.InvalidValueNull.getMessage("List: " + parent
+					+ ".listType"));
+
+		String validatedListType, listType;
+		StringBuffer badListTypes = new StringBuffer();
+		for (int i = 0; i < listTypes.size(); i++) {
+			listType = listTypes.get(i);
+			validatedListType = ValidationHelper.validateListType(listType, store);
+
+			listTypes.remove(i);
+
+			if (listType != null) {
+				listTypes.add(i, validatedListType);
+			} else {
+				if (badListTypes.length() != 0) {
+					badListTypes.append(",");
+				}
+
+				badListTypes.append(listType);
+			}
+		}
+
+		if (listTypes.size() == 0)
+			throw new InputValidationException(ValidationError.ListTypeNotFound.getCode(), ValidationError.ListTypeNotFound.getMessage("String: " + parent
+					+ ".listTypes"));
+
+		return listTypes;
 	}
 }

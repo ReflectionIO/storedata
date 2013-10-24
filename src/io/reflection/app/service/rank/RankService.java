@@ -537,7 +537,7 @@ final class RankService implements IRankService {
 	public Date getCodeLastRankDate(String code) {
 		Date date = null;
 		
-		String getCodeLastRankDateQuery = String.format("SELECT `date` FROM `rank` WHERE `code`='%s' ORDER BY `date` DESC LIMIT 1");
+		String getCodeLastRankDateQuery = String.format("SELECT `date` FROM `rank` WHERE `code`='%s' ORDER BY `date` DESC LIMIT 1", code);
 		
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 		

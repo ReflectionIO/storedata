@@ -7,7 +7,6 @@
 //
 package io.reflection.app.models;
 
-import java.util.Date;
 
 /**
  * @author billy1380
@@ -15,7 +14,7 @@ import java.util.Date;
  */
 public interface Model {
 
-	void enqueue(String store, String country, String type, Date code);
+	void enqueue(String store, String country, String type, String code);
 
 	
 	void prepare(String store, String country, String type, String code);
