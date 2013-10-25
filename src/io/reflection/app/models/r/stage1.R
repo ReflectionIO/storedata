@@ -1,6 +1,6 @@
 ## 
 
-require(truncreg)
+library(truncreg)
 
 ## First, select apps with both a top rank and and grossing position
 
