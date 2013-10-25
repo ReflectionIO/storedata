@@ -16,21 +16,24 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.willshex.service.ContextAwareServelet;
 
 /**
  * @author billy1380
  * 
  */
 @SuppressWarnings("serial")
-public class ModellerServlet extends HttpServlet {
+public class ModellerServlet extends ContextAwareServelet {
 
 	private static final Logger LOG = Logger.getLogger(ModellerServlet.class.getName());
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		super.doPost(req, resp);
+		
 		String appEngineQueue = req.getHeader("X-AppEngine-QueueName");
 		boolean isNotQueue = false;
 

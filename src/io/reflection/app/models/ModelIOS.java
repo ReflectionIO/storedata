@@ -11,12 +11,12 @@ import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.renjin.RenjinRModelBase;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.service.rank.RankServiceProvider;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
@@ -26,9 +26,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.script.Invocable;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 import org.renjin.primitives.sequence.IntSequence;
@@ -54,10 +51,9 @@ import com.spacehopperstudios.utility.StringUtils;
  * @author billy1380
  * 
  */
-public class ModelIOS implements Model {
+public class ModelIOS extends RenjinRModelBase implements Model {
 
 	private static final Logger LOG = Logger.getLogger(ModelIOS.class.getName());
-	private static final Logger LOGGER = Logger.getLogger(ModelIOS.class.getName());
 
 	/*
 	 * (non-Javadoc)
@@ -119,13 +115,6 @@ public class ModelIOS implements Model {
 		Date date = RankServiceProvider.provide().getCodeLastRankDate(code);
 
 		try {
-			ScriptEngineManager factory = new ScriptEngineManager();
-
-			if (mEngine == null) {
-				mEngine = factory.getEngineByName("Renjin");
-				mInvocableEngine = (Invocable) mEngine;
-			}
-
 			mEngine.eval("cut.point <- 300");
 
 			// set simulation inputs
@@ -146,43 +135,6 @@ public class ModelIOS implements Model {
 		} finally {
 			if (LOG.isLoggable(GaeLevel.TRACE)) {
 				LOG.log(GaeLevel.TRACE, "Exiting...");
-			}
-		}
-
-	}
-
-	protected ScriptEngine mEngine;
-	protected Invocable mInvocableEngine;
-
-	protected void changeWd(String to) throws NoSuchMethodException, ScriptException {
-		String wd = mInvocableEngine.invokeFunction("getwd").toString();
-
-		LOGGER.info(wd);
-
-		String newWd = wd.replace("\"", "") + to;
-
-		mInvocableEngine.invokeFunction("setwd", newWd);
-
-		LOGGER.info(mInvocableEngine.invokeFunction("getwd").toString());
-	}
-
-	protected void put(String name, Object value) {
-		mEngine.put(name, value);
-	}
-
-	protected Object get(String name) {
-		return mEngine.get(name);
-	}
-
-	protected void run(InputStream in) throws ScriptException {
-		InputStreamReader reader = new InputStreamReader(in);
-		try {
-			mEngine.eval(reader);
-		} finally {
-			try {
-				reader.close();
-			} catch (IOException e) {
-				throw new RuntimeException(e);
 			}
 		}
 
@@ -214,8 +166,8 @@ public class ModelIOS implements Model {
 		String query = String.format(
 				"SELECT `r`.`itemid`, `r`.`position`,`r`.`grossingposition`, `r`.`price`, `s`.`usesiap` FROM `rank` AS `r` JOIN `item` AS `i`"
 						+ " ON `i`.`externalid`=`r`.`itemid` LEFT JOIN `sup_application_iap` AS `s` ON `s`.`internalid`=`i`.`internalid`"
-						+ " WHERE `r`.`country`='%s' AND `r`.`source`='%s' AND %s AND `r`.`type` in (%s) AND `date`<FROM_UNIXTIME(%d)"
-						+ " ORDER BY `date` DESC", country, store, priceQuery, typesQueryPart, date);
+						+ " WHERE `r`.`country`='%s' AND `r`.`source`='%s' AND %s AND `r`.%s AND `date`<FROM_UNIXTIME(%d)"
+						+ " ORDER BY `date` DESC", country, store, priceQuery, typesQueryPart, date.getTime() / 1000);
 
 		StringVector.Builder itemIdBuilder = StringVector.newBuilder();
 		IntArrayVector.Builder topPositionBuilder = new IntArrayVector.Builder();

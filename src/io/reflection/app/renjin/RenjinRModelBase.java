@@ -14,8 +14,11 @@ import java.util.logging.Logger;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+
+import org.renjin.appengine.AppEngineContextFactory;
+
+import com.willshex.service.ContextAwareServelet;
 
 /**
  * @author billy1380
@@ -23,8 +26,9 @@ import javax.script.ScriptException;
  */
 public abstract class RenjinRModelBase {
 
-	private static final Logger LOGGER = Logger.getLogger(RenjinRModelBase.class.getName());
+	private static final Logger LOG = Logger.getLogger(RenjinRModelBase.class.getName());
 
+	protected static final ThreadLocal<ScriptEngine> ENGINE = new ThreadLocal<ScriptEngine>();
 	protected ScriptEngine mEngine;
 	protected Invocable mInvocableEngine;
 
@@ -32,22 +36,28 @@ public abstract class RenjinRModelBase {
 	 * 
 	 */
 	public RenjinRModelBase() {
-		ScriptEngineManager factory = new ScriptEngineManager();
+		mEngine = ENGINE.get();
 
-		mEngine = factory.getEngineByName("Renjin");
+		if (mEngine == null) {
+			mEngine = AppEngineContextFactory.createScriptEngine(ContextAwareServelet.CONTEXT.get());
+
+			if (mEngine == null) throw new RuntimeException("Could not create an instance of Renjin script engine");
+		}
+
+		// mEngine = factory.getEngineByName("Renjin");
 		mInvocableEngine = (Invocable) mEngine;
 	}
 
 	protected void changeWd(String to) throws NoSuchMethodException, ScriptException {
 		String wd = mInvocableEngine.invokeFunction("getwd").toString();
 
-		LOGGER.info(wd);
+		LOG.info(wd);
 
 		String newWd = wd.replace("\"", "") + to;
 
 		mInvocableEngine.invokeFunction("setwd", newWd);
 
-		LOGGER.info(mInvocableEngine.invokeFunction("getwd").toString());
+		LOG.info(mInvocableEngine.invokeFunction("getwd").toString());
 	}
 
 	protected void put(String name, Object value) {
