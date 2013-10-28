@@ -19,14 +19,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.willshex.service.ContextAwareServelet;
+import com.willshex.service.ContextAwareServlet;
 
 /**
  * @author billy1380
  * 
  */
 @SuppressWarnings("serial")
-public class ModellerServlet extends ContextAwareServelet {
+public class ModellerServlet extends ContextAwareServlet {
 
 	private static final Logger LOG = Logger.getLogger(ModellerServlet.class.getName());
 

@@ -18,7 +18,7 @@ import javax.script.ScriptException;
 
 import org.renjin.appengine.AppEngineContextFactory;
 
-import com.willshex.service.ContextAwareServelet;
+import com.willshex.service.ContextAwareServlet;
 
 /**
  * @author billy1380
@@ -39,7 +39,7 @@ public abstract class RenjinRModelBase {
 		mEngine = ENGINE.get();
 
 		if (mEngine == null) {
-			mEngine = AppEngineContextFactory.createScriptEngine(ContextAwareServelet.CONTEXT.get());
+			mEngine = AppEngineContextFactory.createScriptEngine(ContextAwareServlet.CONTEXT.get());
 
 			if (mEngine == null) throw new RuntimeException("Could not create an instance of Renjin script engine");
 		}
