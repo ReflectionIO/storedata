@@ -2,7 +2,7 @@
 //  ModelRun.java
 //  reflection.io
 //
-//  Created by William Shakour on October 17, 2013.
+//  Created by William Shakour on October 28, 2013.
 //  Copyrights © 2013 SPACEHOPPER STUDIOS LTD. All rights reserved.
 //  Copyrights © 2013 reflection.io. All rights reserved.
 //
@@ -14,9 +14,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 public class ModelRun extends DataType {
-	public Country country;
-	public Store store;
+	public String country;
+	public String store;
 	public String code;
+	public FormType form;
 	public Double grossingA;
 	public Double paidA;
 	public Double bRatio;
@@ -32,12 +33,14 @@ public class ModelRun extends DataType {
 	@Override
 	public JsonObject toJson() {
 		JsonObject object = super.toJson();
-		JsonElement jsonCountry = country == null ? JsonNull.INSTANCE : country.toJson();
+		JsonElement jsonCountry = country == null ? JsonNull.INSTANCE : new JsonPrimitive(country);
 		object.add("country", jsonCountry);
-		JsonElement jsonStore = store == null ? JsonNull.INSTANCE : store.toJson();
+		JsonElement jsonStore = store == null ? JsonNull.INSTANCE : new JsonPrimitive(store);
 		object.add("store", jsonStore);
 		JsonElement jsonCode = code == null ? JsonNull.INSTANCE : new JsonPrimitive(code);
 		object.add("code", jsonCode);
+		JsonElement jsonForm = form == null ? JsonNull.INSTANCE : new JsonPrimitive(form.toString());
+		object.add("form", jsonForm);
 		JsonElement jsonGrossingA = grossingA == null ? JsonNull.INSTANCE : new JsonPrimitive(grossingA);
 		object.add("grossingA", jsonGrossingA);
 		JsonElement jsonPaidA = paidA == null ? JsonNull.INSTANCE : new JsonPrimitive(paidA);
@@ -69,21 +72,25 @@ public class ModelRun extends DataType {
 		if (jsonObject.has("country")) {
 			JsonElement jsonCountry = jsonObject.get("country");
 			if (jsonCountry != null) {
-				country = new Country();
-				country.fromJson(jsonCountry.getAsJsonObject());
+				country = jsonCountry.getAsString();
 			}
 		}
 		if (jsonObject.has("store")) {
 			JsonElement jsonStore = jsonObject.get("store");
 			if (jsonStore != null) {
-				store = new Store();
-				store.fromJson(jsonStore.getAsJsonObject());
+				store = jsonStore.getAsString();
 			}
 		}
 		if (jsonObject.has("code")) {
 			JsonElement jsonCode = jsonObject.get("code");
 			if (jsonCode != null) {
 				code = jsonCode.getAsString();
+			}
+		}
+		if (jsonObject.has("form")) {
+			JsonElement jsonForm = jsonObject.get("form");
+			if (jsonForm != null) {
+				form = FormType.fromString(jsonForm.getAsString());
 			}
 		}
 		if (jsonObject.has("grossingA")) {

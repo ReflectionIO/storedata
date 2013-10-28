@@ -148,11 +148,10 @@
     <xsd:complexType name="ModelRun">
         <xsd:complexContent>
             <xsd:extension base="DataType">
-                <xsd:sequence>
-                    <xsd:element name="country" type="Country" />
-                    <xsd:element name="store" type="Store" />
-                </xsd:sequence>
+                <xsd:attribute name="country" type="xsd:string" />
+                <xsd:attribute name="store" type="xsd:string" />
                 <xsd:attribute name="code" type="xsd:string" />
+                <xsd:attribute name="form" type="FormType" />
                 <xsd:attribute name="grossingA" type="xsd:double" />
                 <xsd:attribute name="paidA" type="xsd:double" />
                 <xsd:attribute name="bRatio" type="xsd:double" />
@@ -205,4 +204,12 @@
             <xsd:enumeration value="descending" />
         </xsd:restriction>
     </xsd:simpleType>
+
+    <xsd:simpleType name="FormType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="tablet" />
+            <xsd:enumeration value="other" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
 </xsd:schema>

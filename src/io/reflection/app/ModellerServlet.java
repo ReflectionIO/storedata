@@ -16,8 +16,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import com.willshex.service.ContextAwareServlet;
 
@@ -31,16 +29,21 @@ public class ModellerServlet extends ContextAwareServlet {
 	private static final Logger LOG = Logger.getLogger(ModellerServlet.class.getName());
 
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		super.doPost(req, resp);
-		
-		String appEngineQueue = req.getHeader("X-AppEngine-QueueName");
+	protected void doPost() {
+
+		String appEngineQueue = REQUEST.get().getHeader("X-AppEngine-QueueName");
 		boolean isNotQueue = false;
 
 		// bail out if we have not been called by app engine model queue
 		if ((isNotQueue = (appEngineQueue == null || !"model".toLowerCase().equals(appEngineQueue.toLowerCase())))) {
-			resp.setStatus(401);
-			resp.getOutputStream().print("failure");
+			RESPONSE.get().setStatus(401);
+			try {
+				RESPONSE.get().getOutputStream().print("failure");
+			} catch (IOException e) {
+				if (LOG.isLoggable(Level.WARNING)) {
+					LOG.log(Level.WARNING, "Could not print failure response", e);
+				}
+			}
 			LOG.warning("Attempt to run script directly, this is not permitted");
 			return;
 		}
@@ -51,13 +54,13 @@ public class ModellerServlet extends ContextAwareServlet {
 			}
 		}
 
-		String store = req.getParameter("store");
-		String country = req.getParameter("country");
-		String type = req.getParameter("type");
-		String code = req.getParameter("code");
+		String store = REQUEST.get().getParameter("store");
+		String country = REQUEST.get().getParameter("country");
+		String type = REQUEST.get().getParameter("type");
+		String code = REQUEST.get().getParameter("code");
 
 		Model model = ModelFactory.getModelForStore(store);
-		
+
 		if (model != null) {
 			model.prepare(store, country, type, code);
 		} else {
@@ -66,15 +69,17 @@ public class ModellerServlet extends ContextAwareServlet {
 			}
 		}
 
-		resp.setHeader("Cache-Control", "no-cache");
+		RESPONSE.get().setHeader("Cache-Control", "no-cache");
 	}
-	
-	/* (non-Javadoc)
-	 * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.willshex.service.ContextAwareServlet#doGet()
 	 */
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		doPost(req, resp);
+	protected void doGet() throws ServletException, IOException {
+		doPost();
 	}
 
 }

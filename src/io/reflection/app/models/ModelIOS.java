@@ -15,7 +15,10 @@ import io.reflection.app.renjin.RenjinRModelBase;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
+import io.reflection.app.service.modelrun.ModelRunServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
+import io.reflection.app.shared.datatypes.FormType;
+import io.reflection.app.shared.datatypes.ModelRun;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -121,11 +124,18 @@ public class ModelIOS extends RenjinRModelBase implements Model {
 			mEngine.eval("Napps  <- 30");
 			mEngine.eval("Dt.in <- 100000");
 
-			put(store, country, listType, date, "`r`.`price`=0", "free.raw");
+			Collector collector = CollectorFactory.getCollectorForStore(store);
+			List<String> listTypes = new ArrayList<String>();
+			listTypes.addAll(collector.getCounterpartTypes(listType));
+			listTypes.add(addslashes(listType));
 
-			put(store, country, listType, date, "`r`.`price`<>0", "paid.raw");
+			put(store, country, listTypes, date, "`r`.`price`=0", "free.raw");
+
+			put(store, country, listTypes, date, "`r`.`price`<>0", "paid.raw");
 
 			runAnalysis();
+
+			persistValues(store, country, listTypes, code);
 
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | ScriptException | SQLException e) {
 			LOG.log(Level.SEVERE, String.format("Error occured calculating values with parameters store [%s], country [%s], type [%s], [%s]", store, country,
@@ -140,25 +150,74 @@ public class ModelIOS extends RenjinRModelBase implements Model {
 
 	}
 
-	private void put(String store, String country, String listType, Date date, String priceQuery, String rVariable) throws ScriptException,
+	/**
+	 * @param code
+	 * @param listTypes
+	 * @param country
+	 * @param store
+	 * 
+	 */
+	private void persistValues(String store, String country, List<String> listTypes, String code) {
+
+		boolean isIpad = false;
+
+		for (String listType : listTypes) {
+			if (listType.contains("ipad")) {
+				isIpad = true;
+				break;
+			}
+		}
+
+		FormType form = isIpad ? FormType.FormTypeTablet : FormType.FormTypeOther;
+
+		ModelRun run = ModelRunServiceProvider.provide().getGatherCodeModelRun(store, country, form, code);
+
+		boolean isUpdate = false;
+
+		if (run == null) {
+			run = new ModelRun();
+		} else {
+			isUpdate = true;
+		}
+
+		if (!isUpdate) {
+			run.country = country;
+			run.store = store;
+			run.code = code;
+			run.form = form;
+		}
+
+		run.grossingA = Double.valueOf(((Vector) mEngine.get("ag")).asReal());
+		run.paidA = Double.valueOf(((Vector) mEngine.get("ap")).asReal());
+		run.bRatio = Double.valueOf(((Vector) mEngine.get("b.ratio")).asReal());
+		run.totalDownloads = Double.valueOf(((Vector) mEngine.get("Dt")).asReal());
+		run.paidB = Double.valueOf(((Vector) mEngine.get("bp")).asReal());
+		run.grossingB = Double.valueOf(((Vector) mEngine.get("bg")).asReal());
+		run.piadAIap = Double.valueOf(((Vector) mEngine.get("iap.ap")).asReal());
+		run.grossingAIap = Double.valueOf(((Vector) mEngine.get("iap.ag")).asReal());
+		run.freeA = Double.valueOf(((Vector) mEngine.get("af")).asReal());
+		run.theta = Double.valueOf(((Vector) mEngine.get("th")).asReal());
+		run.freeB = Double.valueOf(((Vector) mEngine.get("bf")).asReal());
+
+		if (isUpdate) {
+			ModelRunServiceProvider.provide().updateModelRun(run);
+		} else {
+			ModelRunServiceProvider.provide().addModelRun(run);
+		}
+	}
+
+	private void put(String store, String country, List<String> listTypes, Date date, String priceQuery, String rVariable) throws ScriptException,
 			InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
 
 		ListVector.Builder builder = ListVector.newBuilder();
 		builder.setAttribute(Symbols.CLASS, new StringArrayVector("data.frame"));
 		builder.setAttribute(Symbols.NAMES, new StringArrayVector("item.id", "top.position", "grossing.position", "price", "usesiap"));
 
-		Collector collector = CollectorFactory.getCollectorForStore(store);
-
-		List<String> types = new ArrayList<String>();
-		types.addAll(collector.getCounterpartTypes(listType));
-
-		types.add(addslashes(listType));
-
 		String typesQueryPart = null;
-		if (types.size() == 1) {
-			typesQueryPart = String.format("`type`='%s'", types.get(0));
+		if (listTypes.size() == 1) {
+			typesQueryPart = String.format("`type`='%s'", listTypes.get(0));
 		} else {
-			typesQueryPart = "`type` IN ('" + StringUtils.join(types, "','") + "')";
+			typesQueryPart = "`type` IN ('" + StringUtils.join(listTypes, "','") + "')";
 		}
 
 		Connection connection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
@@ -166,8 +225,8 @@ public class ModelIOS extends RenjinRModelBase implements Model {
 		String query = String.format(
 				"SELECT `r`.`itemid`, `r`.`position`,`r`.`grossingposition`, `r`.`price`, `s`.`usesiap` FROM `rank` AS `r` JOIN `item` AS `i`"
 						+ " ON `i`.`externalid`=`r`.`itemid` LEFT JOIN `sup_application_iap` AS `s` ON `s`.`internalid`=`i`.`internalid`"
-						+ " WHERE `r`.`country`='%s' AND `r`.`source`='%s' AND %s AND `r`.%s AND `date`<FROM_UNIXTIME(%d)"
-						+ " ORDER BY `date` DESC", country, store, priceQuery, typesQueryPart, date.getTime() / 1000);
+						+ " WHERE `r`.`country`='%s' AND `r`.`source`='%s' AND %s AND `r`.%s AND `date`<FROM_UNIXTIME(%d)" + " ORDER BY `date` DESC", country,
+				store, priceQuery, typesQueryPart, date.getTime() / 1000);
 
 		StringVector.Builder itemIdBuilder = StringVector.newBuilder();
 		IntArrayVector.Builder topPositionBuilder = new IntArrayVector.Builder();

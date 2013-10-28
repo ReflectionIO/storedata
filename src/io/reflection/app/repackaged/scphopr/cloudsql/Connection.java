@@ -255,6 +255,20 @@ public final class Connection {
 
 		return value;
 	}
+	
+	public Double getCurrentRowDouble(String key) {
+		Double value = null;
+		
+		if (queryResult != null) {
+			try {
+				value = queryResult.getDouble(key);
+			} catch (SQLException ex) {
+				LOG.log(GaeLevel.SEVERE, "Error getting value for column", ex);
+			}
+		}
+		
+		return value;
+	}
 
 	public String getCurrentRowString(String key) {
 		String value = null;

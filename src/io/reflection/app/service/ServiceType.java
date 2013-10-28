@@ -22,7 +22,8 @@ public enum ServiceType {
 	ServiceTypeStore("store"),
 	ServiceTypeApplication("application"),
 	ServiceTypeFeedFetch("fetchfeed"),
-	ServiceTypeUser("user");
+	ServiceTypeUser("user"),
+	ServiceTypeModelRun("modelrun");
 
 	private String value;
 	private static Map<String, ServiceType> valueLookup = null;
