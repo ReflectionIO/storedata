@@ -11,7 +11,7 @@ import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.logging.GaeLevel;
-import io.reflection.app.renjin.RenjinRModelBase;
+import io.reflection.app.renjin.RenjinRModellerBase;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
@@ -56,26 +56,28 @@ import com.spacehopperstudios.utility.StringUtils;
  * @author billy1380
  * 
  */
-public class ModellerIOS extends RenjinRModelBase implements Modeller {
+public class ModellerIOS extends RenjinRModellerBase implements Modeller {
 
 	private static final Logger LOG = Logger.getLogger(ModellerIOS.class.getName());
 
+	private static final String STORE = "ios";
+	
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.models.Model#enqueue(java.util.List)
+	 * @see io.reflection.app.modellers.Modeller#enqueue(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void enqueue(String store, String country, String type, String code) {
+	public void enqueue(String country, String type, String code) {
 		if (LOG.isLoggable(GaeLevel.TRACE)) {
 			LOG.log(GaeLevel.TRACE, "Entering...");
 		}
-
+		
 		try {
 			Queue queue = QueueFactory.getQueue("model");
 
 			TaskOptions options = TaskOptions.Builder.withUrl("/model").method(Method.POST);
-			options.param("store", store);
+			options.param("store", STORE);
 			options.param("country", country);
 			options.param("type", type);
 			options.param("code", code);
@@ -109,10 +111,10 @@ public class ModellerIOS extends RenjinRModelBase implements Modeller {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.models.Model#modelVariables(java.lang.String, java.lang.String, java.lang.String, java.util.Date)
+	 * @see io.reflection.app.models.Model#modelVariables(java.lang.String, java.lang.String, java.util.Date)
 	 */
 	@Override
-	public void modelVariables(String store, String country, String listType, String code) {
+	public void modelVariables(String country, String listType, String code) {
 		if (LOG.isLoggable(GaeLevel.TRACE)) {
 			LOG.log(GaeLevel.TRACE, "Entering...");
 		}
@@ -120,27 +122,29 @@ public class ModellerIOS extends RenjinRModelBase implements Modeller {
 		Date date = RankServiceProvider.provide().getCodeLastRankDate(code);
 
 		try {
+			init();
+			
 			mEngine.eval("cut.point <- 300");
 
 			// set simulation inputs
 			mEngine.eval("Napps  <- 30");
 			mEngine.eval("Dt.in <- 100000");
 
-			Collector collector = CollectorFactory.getCollectorForStore(store);
+			Collector collector = CollectorFactory.getCollectorForStore(STORE);
 			List<String> listTypes = new ArrayList<String>();
 			listTypes.addAll(collector.getCounterpartTypes(listType));
 			listTypes.add(addslashes(listType));
 
-			put(store, country, listTypes, date, "`r`.`price`=0", "free.raw");
+			put(STORE, country, listTypes, date, "`r`.`price`=0", "free.raw");
 
-			put(store, country, listTypes, date, "`r`.`price`<>0", "paid.raw");
+			put(STORE, country, listTypes, date, "`r`.`price`<>0", "paid.raw");
 
 			runModelParts();
 
-			persistValues(store, country, getForm(listType), code);
+			persistValues(STORE, country, getForm(listType), code);
 
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | ScriptException | SQLException e) {
-			LOG.log(Level.SEVERE, String.format("Error occured calculating values with parameters store [%s], country [%s], type [%s], [%s]", store, country,
+			LOG.log(Level.SEVERE, String.format("Error occured calculating values with parameters store [%s], country [%s], type [%s], [%s]", STORE, country,
 					listType, date == null ? "null" : Long.toString(date.getTime())), e);
 
 			throw new RuntimeException(e);
@@ -163,10 +167,10 @@ public class ModellerIOS extends RenjinRModelBase implements Modeller {
 
 		Country c = new Country();
 		c.a2Code = country;
-		
+
 		Store s = new Store();
 		s.a3Code = store;
-		
+
 		ModelRun run = ModelRunServiceProvider.provide().getGatherCodeModelRun(c, s, form, code);
 
 		boolean isUpdate = false;
@@ -342,7 +346,9 @@ public class ModellerIOS extends RenjinRModelBase implements Modeller {
 		// String code = UUID.randomUUID().toString();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.modellers.Modeller#getForm(java.lang.String)
 	 */
 	@Override

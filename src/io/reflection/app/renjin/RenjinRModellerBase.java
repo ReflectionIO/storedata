@@ -1,5 +1,5 @@
 //
-//  RenjinRModelBase.java
+//  RenjinRModellerBase.java
 //  storedata
 //
 //  Created by William Shakour (billy1380) on 14 Oct 2013.
@@ -24,18 +24,15 @@ import com.willshex.service.ContextAwareServlet;
  * @author billy1380
  * 
  */
-public abstract class RenjinRModelBase {
+public abstract class RenjinRModellerBase {
 
-	private static final Logger LOG = Logger.getLogger(RenjinRModelBase.class.getName());
+	private static final Logger LOG = Logger.getLogger(RenjinRModellerBase.class.getName());
 
 	protected static final ThreadLocal<ScriptEngine> ENGINE = new ThreadLocal<ScriptEngine>();
 	protected ScriptEngine mEngine;
 	protected Invocable mInvocableEngine;
 
-	/**
-	 * 
-	 */
-	public RenjinRModelBase() {
+	protected void init() {
 		mEngine = ENGINE.get();
 
 		if (mEngine == null) {
@@ -47,7 +44,7 @@ public abstract class RenjinRModelBase {
 		// mEngine = factory.getEngineByName("Renjin");
 		mInvocableEngine = (Invocable) mEngine;
 	}
-
+	
 	protected void changeWd(String to) throws NoSuchMethodException, ScriptException {
 		String wd = mInvocableEngine.invokeFunction("getwd").toString();
 

@@ -62,7 +62,7 @@ public class ModellerServlet extends ContextAwareServlet {
 		Modeller model = ModellerFactory.getModellerForStore(store);
 
 		if (model != null) {
-			model.modelVariables(store, country, type, code);
+			model.modelVariables(country, type, code);
 		} else {
 			if (LOG.isLoggable(Level.WARNING)) {
 				LOG.warning("Could not find Modeller for store [" + store + "]");

@@ -15,9 +15,9 @@ import io.reflection.app.shared.datatypes.FormType;
  */
 public interface Modeller {
 
-	void enqueue(String store, String country, String type, String code);
+	void enqueue(String country, String type, String code);
 
-	void modelVariables(String store, String country, String type, String code);
+	void modelVariables(String country, String type, String code);
 
 	FormType getForm(String type);
 

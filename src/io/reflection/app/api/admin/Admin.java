@@ -210,7 +210,7 @@ public final class Admin extends ActionHandler {
 						ValidationError.InvalidValueNull.getMessage("should contain a grossing list name List: input.listType"));
 
 			Modeller model = ModellerFactory.getModellerForStore(input.store.a3Code);
-			model.enqueue(input.store.a3Code, input.country.a2Code, type, input.code);
+			model.enqueue(input.country.a2Code, type, input.code);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
