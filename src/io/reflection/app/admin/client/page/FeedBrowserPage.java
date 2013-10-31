@@ -50,6 +50,7 @@ public class FeedBrowserPage extends Composite {
 	
 	@UiField Button mIngest;
 	@UiField Button mModel;
+	@UiField Button mPredict;
 
 	public FeedBrowserPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -65,6 +66,7 @@ public class FeedBrowserPage extends Composite {
 
 				mIngest.setEnabled(selected != null);
 				mModel.setEnabled(selected != null);
+				mPredict.setEnabled(selected != null);
 			}
 		});
 		mFeeds.setSelectionModel(s);
@@ -142,6 +144,16 @@ public class FeedBrowserPage extends Composite {
 		
 		if (selected != null) {
 			FeedFetchController.get().model(selected.code);
+		}
+	}
+	
+	@UiHandler("mPredict")
+	void onPredictClicked(ClickEvent event) {
+		@SuppressWarnings("unchecked")
+		FeedFetch selected = ((SingleSelectionModel<FeedFetch>)mFeeds.getSelectionModel()).getSelectedObject();
+		
+		if (selected != null) {
+			FeedFetchController.get().predict(selected.code);
 		}
 	}
 }

@@ -14,6 +14,7 @@
         <g:HTMLPanel styleName="btn-group">
             <g:Button styleName="btn btn-default" text="Ingest" enabled="false" ui:field="mIngest" />
             <g:Button styleName="btn btn-default" text="Model" enabled="false" ui:field="mModel" />
+            <g:Button styleName="btn btn-default" text="Predict" enabled="false" ui:field="mPredict" />
         </g:HTMLPanel>
 
         <div class="row">

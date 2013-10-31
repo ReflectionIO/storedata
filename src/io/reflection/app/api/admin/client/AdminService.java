@@ -22,6 +22,8 @@ import io.reflection.app.api.admin.shared.call.TriggerIngestRequest;
 import io.reflection.app.api.admin.shared.call.TriggerIngestResponse;
 import io.reflection.app.api.admin.shared.call.TriggerModelRequest;
 import io.reflection.app.api.admin.shared.call.TriggerModelResponse;
+import io.reflection.app.api.admin.shared.call.TriggerPredictRequest;
+import io.reflection.app.api.admin.shared.call.TriggerPredictResponse;
 
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
@@ -171,6 +173,28 @@ public final class AdminService extends JsonService {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					TriggerModelResponse outputParameter = new TriggerModelResponse();
+					parseResponse(response.getText(), outputParameter);
+					output.onSuccess(outputParameter);
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+				}
+			});
+		} catch (RequestException e) {
+			output.onFailure(e);
+		}
+	}
+
+	public static final String AdminMethodTriggerPredict = "TriggerPredict";
+
+	public void triggerPredict(TriggerPredictRequest input, final AsyncCallback<TriggerPredictResponse> output) {
+		try {
+			sendRequest(AdminMethodTriggerPredict, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					TriggerPredictResponse outputParameter = new TriggerPredictResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
 				}

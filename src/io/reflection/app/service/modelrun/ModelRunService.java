@@ -15,8 +15,10 @@ import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProv
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
+import io.reflection.app.shared.datatypes.Country;
 import io.reflection.app.shared.datatypes.FormType;
 import io.reflection.app.shared.datatypes.ModelRun;
+import io.reflection.app.shared.datatypes.Store;
 
 final class ModelRunService implements IModelRunService {
 	public String getName() {
@@ -71,7 +73,7 @@ final class ModelRunService implements IModelRunService {
 		modelRun.totalDownloads = connection.getCurrentRowDouble("totaldownloads");
 		modelRun.paidB = connection.getCurrentRowDouble("paidb");
 		modelRun.grossingB = connection.getCurrentRowDouble("grossingb");
-		modelRun.piadAIap = connection.getCurrentRowDouble("piadaiap");
+		modelRun.paidAIap = connection.getCurrentRowDouble("paidaiap");
 		modelRun.grossingAIap = connection.getCurrentRowDouble("grossingaiap");
 		modelRun.freeA = connection.getCurrentRowDouble("freea");
 		modelRun.theta = connection.getCurrentRowDouble("theta");
@@ -85,10 +87,10 @@ final class ModelRunService implements IModelRunService {
 		ModelRun addedModelRun = null;
 
 		final String addModelRunQuery = String
-				.format("INSERT INTO `modelrun` (`country`,`store`,`code`,`form`,`grossinga`,`paida`,`bratio`,`totaldownloads`,`paidb`,`grossingb`,`piadaiap`,`grossingaiap`,`freea`,`theta`,`freeb`) VALUES ('%s','%s','%s','%s',%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f);",
+				.format("INSERT INTO `modelrun` (`country`,`store`,`code`,`form`,`grossinga`,`paida`,`bratio`,`totaldownloads`,`paidb`,`grossingb`,`paidaiap`,`grossingaiap`,`freea`,`theta`,`freeb`) VALUES ('%s','%s','%s','%s',%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f);",
 						addslashes(modelRun.country), addslashes(modelRun.store), addslashes(modelRun.code), modelRun.form.toString(),
 						modelRun.grossingA.doubleValue(), modelRun.paidA.doubleValue(), modelRun.bRatio.doubleValue(), modelRun.totalDownloads.doubleValue(),
-						modelRun.paidB.doubleValue(), modelRun.grossingB.doubleValue(), modelRun.piadAIap.doubleValue(), modelRun.grossingAIap.doubleValue(),
+						modelRun.paidB.doubleValue(), modelRun.grossingB.doubleValue(), modelRun.paidAIap.doubleValue(), modelRun.grossingAIap.doubleValue(),
 						modelRun.freeA.doubleValue(), modelRun.theta.doubleValue(), modelRun.freeB.doubleValue());
 
 		Connection modelRunConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeModelRun.toString());
@@ -119,10 +121,10 @@ final class ModelRunService implements IModelRunService {
 		ModelRun updatedModelRun = null;
 
 		final String updateModelRunQuery = String
-				.format("UPDATE `modelrun` SET `country`='%s',`store`='%s',`code`='%s',`form`='%s',`grossinga`=%f,`paida`=%f,`bratio`=%f,`totaldownloads`=%f,`paidb`=%f,`grossingb`=%f,`piadaiap`=%f,`grossingaiap`=%f,`freea`=%f,`theta`=%f,`freeb`=%f WHERE `id`=%d AND `deleted`='n';",
+				.format("UPDATE `modelrun` SET `country`='%s',`store`='%s',`code`='%s',`form`='%s',`grossinga`=%f,`paida`=%f,`bratio`=%f,`totaldownloads`=%f,`paidb`=%f,`grossingb`=%f,`paidaiap`=%f,`grossingaiap`=%f,`freea`=%f,`theta`=%f,`freeb`=%f WHERE `id`=%d AND `deleted`='n';",
 						addslashes(modelRun.country), addslashes(modelRun.store), addslashes(modelRun.code), modelRun.form.toString(),
 						modelRun.grossingA.doubleValue(), modelRun.paidA.doubleValue(), modelRun.bRatio.doubleValue(), modelRun.totalDownloads.doubleValue(),
-						modelRun.paidB.doubleValue(), modelRun.grossingB.doubleValue(), modelRun.piadAIap.doubleValue(), modelRun.grossingAIap.doubleValue(),
+						modelRun.paidB.doubleValue(), modelRun.grossingB.doubleValue(), modelRun.paidAIap.doubleValue(), modelRun.grossingAIap.doubleValue(),
 						modelRun.freeA.doubleValue(), modelRun.theta.doubleValue(), modelRun.freeB.doubleValue(), modelRun.id.longValue());
 
 		Connection modelRunConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeModelRun.toString());
@@ -158,11 +160,11 @@ final class ModelRunService implements IModelRunService {
 	 * io.reflection.app.shared.datatypes.FormType, java.lang.String)
 	 */
 	@Override
-	public ModelRun getGatherCodeModelRun(String store, String country, FormType form, String code) {
+	public ModelRun getGatherCodeModelRun(Country country, Store store, FormType form, String code) {
 		ModelRun modelRun = null;
 
 		final String getGatherCodeModelRunQuery = String.format(
-				"SELECT * FROM `modelrun` WHERE `store`='%s' AND `country`='%s' AND `form`='%s' AND `code`='%s'", addslashes(store), addslashes(country),
+				"SELECT * FROM `modelrun` WHERE `store`='%s' AND `country`='%s' AND `form`='%s' AND `code`='%s'", addslashes(store.a3Code), addslashes(country.a2Code),
 				form.toString(), addslashes(code));
 
 		Connection modelRunConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeModelRun.toString());

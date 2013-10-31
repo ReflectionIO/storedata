@@ -392,7 +392,7 @@ CREATE TABLE `modelrun` (
   `totaldownloads` double DEFAULT NULL,
   `paidb` double DEFAULT NULL,
   `grossingb` double DEFAULT NULL,
-  `piadaiap` double DEFAULT NULL,
+  `paidaiap` double DEFAULT NULL,
   `grossingaiap` double DEFAULT NULL,
   `freea` double DEFAULT NULL,
   `theta` double DEFAULT NULL,

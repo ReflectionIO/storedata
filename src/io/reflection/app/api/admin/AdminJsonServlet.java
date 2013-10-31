@@ -15,6 +15,7 @@ import io.reflection.app.api.admin.shared.call.GetUsersRequest;
 import io.reflection.app.api.admin.shared.call.TriggerGatherRequest;
 import io.reflection.app.api.admin.shared.call.TriggerIngestRequest;
 import io.reflection.app.api.admin.shared.call.TriggerModelRequest;
+import io.reflection.app.api.admin.shared.call.TriggerPredictRequest;
 
 import com.google.gson.JsonObject;
 import com.willshex.gson.json.service.server.JsonServlet;
@@ -53,6 +54,10 @@ public final class AdminJsonServlet extends JsonServlet {
 			TriggerModelRequest input = new TriggerModelRequest();
 			input.fromJson(request);
 			output = service.triggerModel(input).toString();
+		} else if ("TriggerPredict".equals(action)) {
+			TriggerPredictRequest input = new TriggerPredictRequest();
+			input.fromJson(request);
+			output = service.triggerPredict(input).toString();
 		}
 		return output;
 	}

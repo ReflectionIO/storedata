@@ -82,8 +82,8 @@ final class RankService implements IRankService {
 		rank.source = stripslashes(connection.getCurrentRowString("source"));
 		rank.type = stripslashes(connection.getCurrentRowString("type"));
 
-		rank.revenue = Float.valueOf(0);
-		rank.downloads = Integer.valueOf(0);
+		rank.revenue = Float.valueOf((float) connection.getCurrentRowLong("revenue").longValue() / 100.0f);
+		rank.downloads = connection.getCurrentRowInteger("downloads");
 
 		return rank;
 	}
@@ -93,10 +93,11 @@ final class RankService implements IRankService {
 		Rank addedRank = null;
 
 		final String addeRankQuery = String
-				.format("INSERT INTO `rank` (`position`,`grossingposition`,`itemid`,`type`,`country`,`date`,`source`,`price`,`currency`,`code`) VALUES (%d,%d,'%s','%s','%s',FROM_UNIXTIME(%d),'%s',%d,'%s','%s')",
+				.format("INSERT INTO `rank` (`position`,`grossingposition`,`itemid`,`type`,`country`,`date`,`source`,`price`,`currency`,`code`) VALUES (%d,%d,'%s','%s','%s',FROM_UNIXTIME(%d),'%s',%d,'%s','%s',%s,%s)",
 						rank.position.longValue(), rank.grossingPosition.longValue(), addslashes(rank.itemId), addslashes(rank.type), addslashes(rank.country),
 						rank.date.getTime() / 1000, addslashes(rank.source), (int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency),
-						addslashes(rank.code));
+						addslashes(rank.code), rank.revenue == null ? "NULL" : rank.revenue.floatValue() * 100, rank.downloads == null ? "NULL"
+								: rank.downloads.intValue());
 
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
@@ -126,10 +127,11 @@ final class RankService implements IRankService {
 		Rank updatedRank = null;
 
 		final String updateRankQuery = String
-				.format("UPDATE `rank` SET `position`=%d,`grossingposition`=%d,`itemid`='%s',`type`='%s',`country`='%s',`date`=FROM_UNIXTIME(%d),`source`='%s',`price`=%d,`currency`='%s',`code`='%s' WHERE `id`=%d;",
+				.format("UPDATE `rank` SET `position`=%d,`grossingposition`=%d,`itemid`='%s',`type`='%s',`country`='%s',`date`=FROM_UNIXTIME(%d),`source`='%s',`price`=%d,`currency`='%s',`code`='%s',`revenue`=%s,`downloads`=%s WHERE `id`=%d;",
 						rank.position.longValue(), rank.grossingPosition.longValue(), addslashes(rank.itemId), addslashes(rank.type), addslashes(rank.country),
 						rank.date.getTime() / 1000, addslashes(rank.source), (int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency),
-						addslashes(rank.code), rank.id.longValue());
+						addslashes(rank.code), rank.revenue == null ? "NULL" : rank.revenue.floatValue() * 100, rank.downloads == null ? "NULL"
+								: rank.downloads.intValue(), rank.id.longValue());
 
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
@@ -530,21 +532,23 @@ final class RankService implements IRankService {
 		return ranksCount;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.service.rank.IRankService#getCodeLastRankDate(java.lang.String)
 	 */
 	@Override
 	public Date getCodeLastRankDate(String code) {
 		Date date = null;
-		
+
 		String getCodeLastRankDateQuery = String.format("SELECT `date` FROM `rank` WHERE `code`='%s' ORDER BY `date` DESC LIMIT 1", code);
-		
+
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
-		
+
 		try {
 			rankConnection.connect();
 			rankConnection.executeQuery(getCodeLastRankDateQuery);
-			
+
 			if (rankConnection.fetchNextRow()) {
 				date = rankConnection.getCurrentRowDateTime("date");
 			}
@@ -553,7 +557,7 @@ final class RankService implements IRankService {
 				rankConnection.disconnect();
 			}
 		}
-		
+
 		return date;
 	}
 

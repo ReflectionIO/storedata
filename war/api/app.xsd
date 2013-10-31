@@ -158,7 +158,7 @@
                 <xsd:attribute name="totalDownloads" type="xsd:double" />
                 <xsd:attribute name="paidB" type="xsd:double" />
                 <xsd:attribute name="grossingB" type="xsd:double" />
-                <xsd:attribute name="piadAIap" type="xsd:double" />
+                <xsd:attribute name="paidAIap" type="xsd:double" />
                 <xsd:attribute name="grossingAIap" type="xsd:double" />
                 <xsd:attribute name="freeA" type="xsd:double" />
                 <xsd:attribute name="theta" type="xsd:double" />

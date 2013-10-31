@@ -1,15 +1,17 @@
 //
-//  ModellerServlet.java
+//  PerdictorServlet.java
 //  storedata
 //
-//  Created by William Shakour (billy1380) on 15 Oct 2013.
+//  Created by William Shakour (billy1380) on 30 Oct 2013.
 //  Copyright © 2013 SPACEHOPPER STUDIOS LTD. All rights reserved.
 //
 package io.reflection.app;
 
 import io.reflection.app.logging.GaeLevel;
-import io.reflection.app.modellers.Modeller;
-import io.reflection.app.modellers.ModellerFactory;
+import io.reflection.app.predictors.Predictor;
+import io.reflection.app.predictors.PredictorFactory;
+import io.reflection.app.shared.datatypes.ModelRun;
+import io.reflection.app.shared.datatypes.Rank;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -21,13 +23,13 @@ import com.willshex.service.ContextAwareServlet;
 
 /**
  * @author billy1380
- * 
+ *
  */
 @SuppressWarnings("serial")
-public class ModellerServlet extends ContextAwareServlet {
+public class PerdictorServlet extends ContextAwareServlet {
 
-	private static final Logger LOG = Logger.getLogger(ModellerServlet.class.getName());
-
+	private static final Logger LOG = Logger.getLogger(PerdictorServlet.class.getName());
+	
 	@Override
 	protected void doPost() {
 
@@ -35,7 +37,7 @@ public class ModellerServlet extends ContextAwareServlet {
 		boolean isNotQueue = false;
 
 		// bail out if we have not been called by app engine model queue
-		if ((isNotQueue = (appEngineQueue == null || !"model".toLowerCase().equals(appEngineQueue.toLowerCase())))) {
+		if ((isNotQueue = (appEngineQueue == null || !"predict".toLowerCase().equals(appEngineQueue.toLowerCase())))) {
 			RESPONSE.get().setStatus(401);
 			try {
 				RESPONSE.get().getOutputStream().print("failure");
@@ -54,18 +56,22 @@ public class ModellerServlet extends ContextAwareServlet {
 			}
 		}
 
-		String store = REQUEST.get().getParameter("store");
-		String country = REQUEST.get().getParameter("country");
-		String type = REQUEST.get().getParameter("type");
-		String code = REQUEST.get().getParameter("code");
+		String jsonModelRun = REQUEST.get().getParameter("modelRun");
+		String jsonRank = REQUEST.get().getParameter("rank");
 
-		Modeller model = ModellerFactory.getModellerForStore(store);
+		ModelRun modelRun = new ModelRun();
+		modelRun.fromJson(jsonModelRun);
+		
+		Rank rank = new Rank();
+		rank.fromJson(jsonRank);
+		
+		Predictor perdictor = PredictorFactory.getPredictorForStore(modelRun.store);
 
-		if (model != null) {
-			model.modelVariables(store, country, type, code);
+		if (perdictor != null) {
+			perdictor.predictRevenueAndDownloads(modelRun, rank);
 		} else {
 			if (LOG.isLoggable(Level.WARNING)) {
-				LOG.warning("Could not find Modeller for store [" + store + "]");
+				LOG.warning("Could not find Predictor for store [" + modelRun.store + "]");
 			}
 		}
 
@@ -81,5 +87,4 @@ public class ModellerServlet extends ContextAwareServlet {
 	protected void doGet() throws ServletException, IOException {
 		doPost();
 	}
-
 }

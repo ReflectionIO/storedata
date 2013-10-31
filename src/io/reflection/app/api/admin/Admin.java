@@ -23,16 +23,27 @@ import io.reflection.app.api.admin.shared.call.TriggerIngestRequest;
 import io.reflection.app.api.admin.shared.call.TriggerIngestResponse;
 import io.reflection.app.api.admin.shared.call.TriggerModelRequest;
 import io.reflection.app.api.admin.shared.call.TriggerModelResponse;
+import io.reflection.app.api.admin.shared.call.TriggerPredictRequest;
+import io.reflection.app.api.admin.shared.call.TriggerPredictResponse;
+import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.input.ValidationError;
 import io.reflection.app.input.ValidationHelper;
-import io.reflection.app.models.Model;
-import io.reflection.app.models.ModelFactory;
+import io.reflection.app.modellers.Modeller;
+import io.reflection.app.modellers.ModellerFactory;
+import io.reflection.app.predictors.Predictor;
+import io.reflection.app.predictors.PredictorFactory;
 import io.reflection.app.service.fetchfeed.FeedFetchServiceProvider;
+import io.reflection.app.service.modelrun.ModelRunServiceProvider;
+import io.reflection.app.service.rank.RankServiceProvider;
 import io.reflection.app.service.user.UserServiceProvider;
+import io.reflection.app.shared.datatypes.FormType;
+import io.reflection.app.shared.datatypes.ModelRun;
+import io.reflection.app.shared.datatypes.Rank;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 import com.willshex.gson.json.service.server.ActionHandler;
@@ -184,7 +195,6 @@ public final class Admin extends ActionHandler {
 
 			input.listTypes = ValidationHelper.validateListTypes(input.listTypes, input.store, "input");
 
-			Model model = ModelFactory.getModelForStore(input.store.a3Code);
 			Collector collector = CollectorFactory.getCollectorForStore(input.store.a3Code);
 
 			String type = null;
@@ -199,6 +209,7 @@ public final class Admin extends ActionHandler {
 				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
 						ValidationError.InvalidValueNull.getMessage("should contain a grossing list name List: input.listType"));
 
+			Modeller model = ModellerFactory.getModellerForStore(input.store.a3Code);
 			model.enqueue(input.store.a3Code, input.country.a2Code, type, input.code);
 
 			output.status = StatusType.StatusTypeSuccess;
@@ -207,6 +218,61 @@ public final class Admin extends ActionHandler {
 			output.error = convertToErrorAndLog(LOG, e);
 		}
 		LOG.finer("Exiting triggerModel");
+		return output;
+	}
+
+	public TriggerPredictResponse triggerPredict(TriggerPredictRequest input) {
+		LOG.finer("Entering triggerPredict");
+		TriggerPredictResponse output = new TriggerPredictResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
+						ValidationError.InvalidValueNull.getMessage("TriggerModelRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			input.country = ValidationHelper.validateCountry(input.country, "input");
+
+			input.store = ValidationHelper.validateStore(input.store, "input");
+
+			input.listTypes = ValidationHelper.validateListTypes(input.listTypes, input.store, "input");
+
+			Collector collector = CollectorFactory.getCollectorForStore(input.store.a3Code);
+
+			String type = null;
+			for (String listType : input.listTypes) {
+				if (collector.isGrossing(listType)) {
+					type = listType;
+					break;
+				}
+			}
+
+			if (type == null)
+				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
+						ValidationError.InvalidValueNull.getMessage("should contain a grossing list name List: input.listType"));
+
+			Modeller modeller = ModellerFactory.getModellerForStore(input.store.a3Code);
+			FormType form = modeller.getForm(type);
+
+			Predictor predictor = PredictorFactory.getPredictorForStore(input.store.a3Code);
+
+			ModelRun modelRun = ModelRunServiceProvider.provide().getGatherCodeModelRun(input.country, input.store, form, input.code);
+
+			Pager p = new Pager();
+			p.start = Long.valueOf(0);
+			p.count = Long.valueOf(Long.MAX_VALUE);
+			List<Rank> ranks = RankServiceProvider.provide().getGatherCodeRanks(input.country, input.store, type, input.code, p);
+
+			for (Rank rank : ranks) {
+				predictor.enqueue(modelRun, rank);
+			}
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting triggerPredict");
 		return output;
 	}
 }

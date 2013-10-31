@@ -16,6 +16,8 @@ import io.reflection.app.api.admin.shared.call.TriggerIngestRequest;
 import io.reflection.app.api.admin.shared.call.TriggerIngestResponse;
 import io.reflection.app.api.admin.shared.call.TriggerModelRequest;
 import io.reflection.app.api.admin.shared.call.TriggerModelResponse;
+import io.reflection.app.api.admin.shared.call.TriggerPredictRequest;
+import io.reflection.app.api.admin.shared.call.TriggerPredictResponse;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.shared.datatypes.FeedFetch;
 
@@ -208,6 +210,37 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 			}
 		});
 		
+	}
+
+	/**
+	 * @param code
+	 */
+	public void predict(String code) {
+		AdminService service = new AdminService();
+		service.setUrl(ADMIN_END_POINT);
+
+		final TriggerPredictRequest input = new TriggerPredictRequest();
+		input.accessCode = ACCESS_CODE;
+		
+		input.country = FilterController.get().getCountry();
+		input.store = FilterController.get().getStore();
+		input.listTypes = FilterController.get().getAllListTypes();
+		input.code = code;
+	
+		service.triggerPredict(input, new AsyncCallback<TriggerPredictResponse>() {
+			
+			@Override
+			public void onSuccess(TriggerPredictResponse output) {
+				if (output.status == StatusType.StatusTypeFailure && output.error != null) { 
+					Window.alert(output.error.message);
+				}
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert(caught.getMessage());
+			}
+		});
 	}
 
 }

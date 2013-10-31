@@ -28,6 +28,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<servlet-name>Persist Tasks</servlet-name>
 		<servlet-class>io.reflection.app.PersistServlet</servlet-class>
 	</servlet>
+    
+    <servlet>
+        <servlet-name>Predictor Tasks</servlet-name>
+        <servlet-class>io.reflection.app.PerdictorServlet</servlet-class>
+    </servlet>
 	
 	<servlet>
 		<servlet-name>Dev Helper</servlet-name>
@@ -83,7 +88,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<servlet-name>Dev Helper</servlet-name>
 		<url-pattern>/dev/devhelper</url-pattern>
 	</servlet-mapping>
-	
+    <servlet-mapping>
+        <servlet-name>Predictor Tasks</servlet-name>
+        <url-pattern>/predict</url-pattern>
+    </servlet-mapping>
+    
 	<servlet-mapping>
 	    <servlet-name>Core api</servlet-name>
 	    <url-pattern>/core</url-pattern>

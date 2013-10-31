@@ -8,8 +8,10 @@
 //
 package io.reflection.app.service.modelrun;
 
+import io.reflection.app.shared.datatypes.Country;
 import io.reflection.app.shared.datatypes.FormType;
 import io.reflection.app.shared.datatypes.ModelRun;
+import io.reflection.app.shared.datatypes.Store;
 
 import com.spacehopperstudios.service.IService;
 
@@ -38,12 +40,12 @@ public interface IModelRunService extends IService {
 	public void deleteModelRun(ModelRun modelRun);
 
 	/**
-	 * @param store
 	 * @param country
+	 * @param store
 	 * @param listTypes
 	 * @param code
 	 * @return
 	 */
-	public ModelRun getGatherCodeModelRun(String store, String country, FormType form, String code);
+	public ModelRun getGatherCodeModelRun(Country country, Store store, FormType form, String code);
 
 }

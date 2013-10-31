@@ -51,7 +51,7 @@ import com.google.gson.JsonPrimitive;
 public class ItemPropertyLookupServlet extends HttpServlet {
 	private static final Logger LOG = Logger.getLogger(ItemPropertyLookupServlet.class.getName());
 
-	private static final String PROPERTY_IAP = "usesIap";
+	public static final String PROPERTY_IAP = "usesIap";
 	private static final String PROPERTY_IAP_ON = "usesIap.on";
 
 	private static final long DURATION_30_DAYS = 30 * 24 * 60 * 60 * 1000;

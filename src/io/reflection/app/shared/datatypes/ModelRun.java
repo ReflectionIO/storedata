@@ -24,7 +24,7 @@ public class ModelRun extends DataType {
 	public Double totalDownloads;
 	public Double paidB;
 	public Double grossingB;
-	public Double piadAIap;
+	public Double paidAIap;
 	public Double grossingAIap;
 	public Double freeA;
 	public Double theta;
@@ -53,8 +53,8 @@ public class ModelRun extends DataType {
 		object.add("paidB", jsonPaidB);
 		JsonElement jsonGrossingB = grossingB == null ? JsonNull.INSTANCE : new JsonPrimitive(grossingB);
 		object.add("grossingB", jsonGrossingB);
-		JsonElement jsonPiadAIap = piadAIap == null ? JsonNull.INSTANCE : new JsonPrimitive(piadAIap);
-		object.add("piadAIap", jsonPiadAIap);
+		JsonElement jsonPaidAIap = paidAIap == null ? JsonNull.INSTANCE : new JsonPrimitive(paidAIap);
+		object.add("paidAIap", jsonPaidAIap);
 		JsonElement jsonGrossingAIap = grossingAIap == null ? JsonNull.INSTANCE : new JsonPrimitive(grossingAIap);
 		object.add("grossingAIap", jsonGrossingAIap);
 		JsonElement jsonFreeA = freeA == null ? JsonNull.INSTANCE : new JsonPrimitive(freeA);
@@ -129,10 +129,10 @@ public class ModelRun extends DataType {
 				grossingB = Double.valueOf(jsonGrossingB.getAsDouble());
 			}
 		}
-		if (jsonObject.has("piadAIap")) {
-			JsonElement jsonPiadAIap = jsonObject.get("piadAIap");
-			if (jsonPiadAIap != null) {
-				piadAIap = Double.valueOf(jsonPiadAIap.getAsDouble());
+		if (jsonObject.has("paidAIap")) {
+			JsonElement jsonPaidAIap = jsonObject.get("paidAIap");
+			if (jsonPaidAIap != null) {
+				paidAIap = Double.valueOf(jsonPaidAIap.getAsDouble());
 			}
 		}
 		if (jsonObject.has("grossingAIap")) {
