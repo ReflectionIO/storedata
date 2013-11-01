@@ -293,6 +293,12 @@ function loadChart(graphData) {
     var heading = graphData.heading;
     var seriesName = graphData.seriesName;
 
+    var isReversed = false;
+
+    if (seriesName == "Rank") {
+        isReversed = true;
+    }
+
     // console.log(rangeData);
 
 
@@ -322,7 +328,7 @@ function loadChart(graphData) {
                 title: {
                     text: null
                 },
-                reversed: true,
+                reversed: isReversed,
                 min: minPosition,
                 max: maxPosition
             },

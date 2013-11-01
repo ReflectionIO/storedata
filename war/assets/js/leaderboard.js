@@ -476,7 +476,9 @@ function hideTableRows() {
       $('#posall' + i).hide();
       $('#possingle' + i).hide();
     };
-    $('tbody').hide();
+    //$('tbody').hide(); // this hides the date as well
+    $('#tbody-single').hide();
+    $('#tbody-all').hide();
 }
 
 function createTableRows() {
@@ -649,7 +651,8 @@ function updateTable(chartdata, listType, listID) {
         rowPos++;
     };
 
-    $('tbody').show();
+    // $('tbody').show();
+    $('#tbody-all').show();
 
 }
 
@@ -721,7 +724,8 @@ function updateTableSingle(chartdata, listType, listID) {
         $('#possingle' + i).show();
     };
 
-    $('tbody').show();
+    // $('tbody').show();
+    $('#tbody-single').show();
 
   }
 
