@@ -36,7 +36,7 @@ $(document).ready(function () {
       store = urlWithHashTagsSplit[1];
       overviewType = urlWithHashTagsSplit[2];
       country = urlWithHashTagsSplit[3];
-      date = urlWithHashTagsSplit[4];
+      date = parseInt(urlWithHashTagsSplit[4]);
 
       if (store == "ipad") {
         storeCode = "ipad";
@@ -44,6 +44,8 @@ $(document).ready(function () {
 
       storedHash = "#" + store + "#" + overviewType + "#" + country + "#" + date;
     }
+
+    document.getElementById("datepicker").value = convertDate(new Date(date));
 
     // // get the selected index
     // console.log($("#overview").prop("selectedIndex"));
@@ -86,7 +88,7 @@ $(window).bind('hashchange', function() {
         store = hashList[1];
         overviewType = hashList[2];
         country = hashList[3];
-        date = hashList[4];
+        date = parseInt(hashList[4]);
 
         if (storedHash != null && storedHash.length > 0) {
            var shashList = storedHash.split('#');
@@ -94,7 +96,7 @@ $(window).bind('hashchange', function() {
           sstore = shashList[1];
           soverviewType = shashList[2];
           scountry = shashList[3];
-          sdate = shashList[4];
+          sdate = parseInt(shashList[4]);
 
           if (store != sstore || country != scountry || date != sdate ) {
             resetTable();
@@ -106,6 +108,7 @@ $(window).bind('hashchange', function() {
         //   resetTable();
         // }
 
+        document.getElementById("datepicker").value = convertDate(new Date(date));
         
       }
       else {
@@ -216,13 +219,15 @@ $('#datepicker').datepicker({
 });
 
 // set the date to today's date on the datepicker
-$('#datepicker').attr("value", convertDate(new Date()));
+// $('#datepicker').attr("value", convertDate(new Date()));
 
 $('#datepicker').datepicker().on('changeDate', function (e) {
     //alert(e.date.toString());
     //alert(e.date.getTime());
     date = e.date.getTime();
-    //alert(date);
+    console.log(new Date(date));
+    console.log(e.date);
+    // alert(date);
 
     resetTable();
 
@@ -259,6 +264,8 @@ function initValues() {
   maxRowsCreated = 0;
   pageStartAll = 0;
   storedHash = "";
+
+  document.getElementById("datepicker").value = convertDate(new Date());
 }
 
 function resetTable() {
