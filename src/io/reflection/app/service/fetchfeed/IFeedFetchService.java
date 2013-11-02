@@ -84,4 +84,13 @@ public interface IFeedFetchService extends IService {
 	 */
 	public Long getUningestedFeedFetchesCount(Store store, Country country, List<String> types);
 
+	/**
+	 * @param store
+	 * @param country
+	 * @param listType
+	 * @param code
+	 * @return
+	 */
+	public List<Long> getIngestableFeedFetchIds(Store store, Country country, String listType, String code);
+
 }

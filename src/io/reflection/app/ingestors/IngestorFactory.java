@@ -35,7 +35,7 @@ public class IngestorFactory {
 	}
 
 	public static List<String> getIngestorCountries(String store) {
-		List<String> countries = new ArrayList<>();
+		List<String> countries = new ArrayList<String>();
 		String propertyValue = System.getProperty("ingest." + store + ".countries");
 
 		if (propertyValue != null && propertyValue.length() > 0) {

@@ -152,7 +152,7 @@ public final class Connection {
 				statement = connection.createStatement();
 			}
 
-			if (statement.execute(query)) {
+			if (statement.execute(query, Statement.RETURN_GENERATED_KEYS)) {
 				queryResult = statement.getResultSet();
 			} else {
 				queryResult = statement.getGeneratedKeys();

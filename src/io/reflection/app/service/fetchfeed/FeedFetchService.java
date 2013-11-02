@@ -330,4 +330,38 @@ final class FeedFetchService implements IFeedFetchService {
 		return getStatusFeedFetchesCount(store, country, types, false);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.fetchfeed.IFeedFetchService#getIngestableFeedFetchIds(io.reflection.app.shared.datatypes.Store,
+	 * io.reflection.app.shared.datatypes.Country, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public List<Long> getIngestableFeedFetchIds(Store store, Country country, String type, String code) {
+		List<Long> feedFetchIds = new ArrayList<Long>();
+
+		final String getIngestableFeedFetchIdsQuery = String.format(
+				"SELECT `id` FROM `feedfetch` WHERE `store`='%s' AND `country`='%s' AND `type`='%s' AND `code`='%s'", store.a3Code, country.a2Code, type, code);
+		
+		Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
+		
+		try {
+			feedFetchConnection.connect();
+			feedFetchConnection.executeQuery(getIngestableFeedFetchIdsQuery);
+			
+			if (feedFetchConnection.fetchNextRow()) {
+				Long id = feedFetchConnection.getCurrentRowLong("id");
+				
+				if (id != null) {
+					feedFetchIds.add(id);
+				}
+			}
+		} finally {
+			if (feedFetchConnection != null) {
+				feedFetchConnection.disconnect();
+			}
+		}
+
+		return feedFetchIds;
+	}
 }

@@ -1,6 +1,6 @@
 copy /Y %USERPROFILE%\.m2\repository\com\google\appengine\appengine-api-1.0-sdk\1.8.5\appengine-api-1.0-sdk-1.8.5.jar C:\projects\storedata\war\WEB-INF\lib\.
 copy /Y %USERPROFILE%\.m2\repository\com\googlecode\objectify\objectify\4.0b3\objectify-4.0b3.jar C:\projects\storedata\war\WEB-INF\lib\.
-copy /Y %USERPROFILE%\.m2\repository\com\google\guava\guava\14.0.1\guava-14.0.1.jar C:\projects\storedata\war\WEB-INF\lib\.
+copy /Y %USERPROFILE%\.m2\repository\com\google\guava\guava\15.0\guava-15.0.jar C:\projects\storedata\war\WEB-INF\lib\.
 copy /Y %USERPROFILE%\.m2\repository\com\google\appengine\appengine-api-labs\1.7.6\appengine-api-labs-1.7.6.jar C:\projects\storedata\war\WEB-INF\lib\.
 copy /Y %USERPROFILE%\.m2\repository\com\google\code\gson\gson\2.2.4\gson-2.2.4.jar C:\projects\storedata\war\WEB-INF\lib\.
 copy /Y %USERPROFILE%\.m2\repository\javax\servlet\servlet-api\2.5\servlet-api-2.5.jar C:\projects\storedata\war\WEB-INF\lib\.

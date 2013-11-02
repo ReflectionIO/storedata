@@ -1,5 +1,5 @@
 eclipse.preferences.version=1
-filesCopiedToWebInfLib=appengine-api-1.0-sdk-1.8.5.jar|appengine-api-labs.jar|appengine-endpoints.jar|appengine-jsr107cache-1.8.5.jar|jsr107cache-1.1.jar
+filesCopiedToWebInfLib=appengine-api-1.0-sdk-1.8.6.jar|appengine-api-labs.jar|appengine-endpoints.jar|appengine-jsr107cache-1.8.6.jar|jsr107cache-1.1.jar
 gaeDatanucleusEnabled=false
 gaeDatanucleusVersion=v2
 gaeDeployDialogSettings=
@@ -11,7 +11,7 @@ mySqlDatabasePassword=
 mySqlDatabaseUser=rio_app_user
 mySqlHostName=localhost
 mySqlIsConfigured=true
-mySqlJdbcJar=C\:\\projects\\storedata\\war\\WEB-INF\\lib\\mysql-connector-java-5.1.26.jar
+mySqlJdbcJar=/Users/billy1380/Documents/EclipseProjects/storedata/war/WEB-INF/lib/mysql-connector-java-5.1.26.jar
 mySqlPort=3306
 prodDatabaseName=spacecloud
 prodDatabasePassword=

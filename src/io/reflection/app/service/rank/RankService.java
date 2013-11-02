@@ -93,7 +93,7 @@ final class RankService implements IRankService {
 		Rank addedRank = null;
 
 		final String addeRankQuery = String
-				.format("INSERT INTO `rank` (`position`,`grossingposition`,`itemid`,`type`,`country`,`date`,`source`,`price`,`currency`,`code`) VALUES (%d,%d,'%s','%s','%s',FROM_UNIXTIME(%d),'%s',%d,'%s','%s',%s,%s)",
+				.format("INSERT INTO `rank` (`position`,`grossingposition`,`itemid`,`type`,`country`,`date`,`source`,`price`,`currency`,`code`,`revenue`,`downloads`) VALUES (%d,%d,'%s','%s','%s',FROM_UNIXTIME(%d),'%s',%d,'%s','%s',%s,%s)",
 						rank.position.longValue(), rank.grossingPosition.longValue(), addslashes(rank.itemId), addslashes(rank.type), addslashes(rank.country),
 						rank.date.getTime() / 1000, addslashes(rank.source), (int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency),
 						addslashes(rank.code), rank.revenue == null ? "NULL" : rank.revenue.floatValue() * 100, rank.downloads == null ? "NULL"
@@ -387,7 +387,7 @@ final class RankService implements IRankService {
 		StringBuffer addRanksBatchQuery = new StringBuffer();
 
 		addRanksBatchQuery
-				.append("INSERT INTO `rank` (`position`,`grossingposition`,`itemid`,`type`,`country`,`date`,`source`,`price`,`currency`,`code`) VALUES ");
+				.append("INSERT INTO `rank` (`position`,`grossingposition`,`itemid`,`type`,`country`,`date`,`source`,`price`,`currency`,`code`,`revenue`,`downloads`) VALUES ");
 
 		boolean addComma = false;
 		for (Rank rank : ranks) {
@@ -395,9 +395,10 @@ final class RankService implements IRankService {
 				addRanksBatchQuery.append(",");
 			}
 
-			addRanksBatchQuery.append(String.format("(%d,%d,'%s','%s','%s',FROM_UNIXTIME(%d),'%s',%d,'%s','%s')", rank.position.longValue(),
+			addRanksBatchQuery.append(String.format("(%d,%d,'%s','%s','%s',FROM_UNIXTIME(%d),'%s',%d,'%s','%s',%s,%s)", rank.position.longValue(),
 					rank.grossingPosition.longValue(), addslashes(rank.itemId), addslashes(rank.type), addslashes(rank.country), rank.date.getTime() / 1000,
-					addslashes(rank.source), (int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency), addslashes(rank.code)));
+					addslashes(rank.source), (int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency), addslashes(rank.code),
+					rank.revenue == null ? "NULL" : rank.revenue.floatValue() * 100, rank.downloads == null ? "NULL" : rank.downloads.intValue()));
 			addComma = true;
 		}
 

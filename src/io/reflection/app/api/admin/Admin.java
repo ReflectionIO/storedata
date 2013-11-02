@@ -29,6 +29,8 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
+import io.reflection.app.ingestors.Ingestor;
+import io.reflection.app.ingestors.IngestorFactory;
 import io.reflection.app.input.ValidationError;
 import io.reflection.app.input.ValidationHelper;
 import io.reflection.app.modellers.Modeller;
@@ -170,6 +172,25 @@ public final class Admin extends ActionHandler {
 		LOG.finer("Entering triggerIngest");
 		TriggerIngestResponse output = new TriggerIngestResponse();
 		try {
+			if (input == null)
+				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
+						ValidationError.InvalidValueNull.getMessage("TriggerModelRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			input.country = ValidationHelper.validateCountry(input.country, "input");
+
+			input.store = ValidationHelper.validateStore(input.store, "input");
+
+			input.listTypes = ValidationHelper.validateListTypes(input.listTypes, input.store, "input");
+			
+			Ingestor i = IngestorFactory.getIngestorForStore(input.store.a3Code);
+			
+			for (String listType : input.listTypes) {
+				List<Long> ids = FeedFetchServiceProvider.provide().getIngestableFeedFetchIds(input.store, input.country, listType, input.code);
+				i.enqueue(ids);
+			}
+			
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
