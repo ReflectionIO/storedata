@@ -7,8 +7,6 @@
 //
 package io.reflection.app.admin.client.page;
 
-import java.util.List;
-
 import io.reflection.app.admin.client.cell.MiniAppCell;
 import io.reflection.app.admin.client.controller.EventController;
 import io.reflection.app.admin.client.controller.RankController;
@@ -19,6 +17,8 @@ import io.reflection.app.admin.client.part.PageSizePager;
 import io.reflection.app.admin.client.part.datatypes.RanksGroup;
 import io.reflection.app.shared.datatypes.Item;
 import io.reflection.app.shared.datatypes.Rank;
+
+import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -100,6 +100,7 @@ public class RanksPage extends Composite implements RanksEventHandler {
 		
 		RankController.get().addDataDisplay(mRanks);
 		mPager.setDisplay(mRanks);
+		
 		
 	}
 

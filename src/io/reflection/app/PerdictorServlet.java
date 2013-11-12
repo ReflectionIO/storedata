@@ -10,8 +10,6 @@ package io.reflection.app;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.predictors.Predictor;
 import io.reflection.app.predictors.PredictorFactory;
-import io.reflection.app.shared.datatypes.ModelRun;
-import io.reflection.app.shared.datatypes.Rank;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -23,13 +21,13 @@ import com.willshex.service.ContextAwareServlet;
 
 /**
  * @author billy1380
- *
+ * 
  */
 @SuppressWarnings("serial")
 public class PerdictorServlet extends ContextAwareServlet {
 
 	private static final Logger LOG = Logger.getLogger(PerdictorServlet.class.getName());
-	
+
 	@Override
 	protected void doPost() {
 
@@ -56,22 +54,18 @@ public class PerdictorServlet extends ContextAwareServlet {
 			}
 		}
 
-		String jsonModelRun = REQUEST.get().getParameter("modelRun");
-		String jsonRank = REQUEST.get().getParameter("rank");
+		String country = REQUEST.get().getParameter("country");
+		String store = REQUEST.get().getParameter("store");
+		String type = REQUEST.get().getParameter("type");
+		String code = REQUEST.get().getParameter("code");
 
-		ModelRun modelRun = new ModelRun();
-		modelRun.fromJson(jsonModelRun);
-		
-		Rank rank = new Rank();
-		rank.fromJson(jsonRank);
-		
-		Predictor perdictor = PredictorFactory.getPredictorForStore(modelRun.store);
+		Predictor perdictor = PredictorFactory.getPredictorForStore(store);
 
 		if (perdictor != null) {
-			perdictor.predictRevenueAndDownloads(modelRun, rank);
+			perdictor.predictRevenueAndDownloads(country, type, code);
 		} else {
 			if (LOG.isLoggable(Level.WARNING)) {
-				LOG.warning("Could not find Predictor for store [" + modelRun.store + "]");
+				LOG.warning("Could not find Predictor for store [" + store + "]");
 			}
 		}
 

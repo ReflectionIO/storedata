@@ -104,9 +104,10 @@ public interface IRankService extends IService {
 	 * @param listType
 	 * @param code
 	 * @param pager
+	 * @param ignoreGrossingRank 
 	 * @return
 	 */
-	public List<Rank> getGatherCodeRanks(Country country, Store store, String listType, String code, Pager pager);
+	public List<Rank> getGatherCodeRanks(Country country, Store store, String listType, String code, Pager pager, boolean ignoreGrossingRank);
 
 	/**
 	 * 
@@ -123,5 +124,11 @@ public interface IRankService extends IService {
 	 * @return
 	 */
 	public Date getCodeLastRankDate(String code);
+
+	/**
+	 * @param updateRanks
+	 * @return
+	 */
+	public Long updateRanksBatch(List<Rank> updateRanks);
 
 }

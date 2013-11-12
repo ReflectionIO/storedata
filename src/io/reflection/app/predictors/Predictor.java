@@ -7,16 +7,19 @@
 //
 package io.reflection.app.predictors;
 
-import io.reflection.app.shared.datatypes.ModelRun;
-import io.reflection.app.shared.datatypes.Rank;
 
 /**
  * @author billy1380
  * 
  */
 public interface Predictor {
-	void enqueue(ModelRun modelRun, Rank rank);
+	void enqueue(String country, String type, String code);
 
-	void predictRevenueAndDownloads(ModelRun modelRun, Rank rank);
+	/**
+	 * @param country
+	 * @param type
+	 * @param code
+	 */
+	void predictRevenueAndDownloads(String country, String type, String code);
 
 }

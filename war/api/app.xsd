@@ -19,6 +19,7 @@
                 <xsd:attribute name="totalParts" type="xsd:int" />
                 <xsd:attribute name="type" type="xsd:string" />
                 <xsd:attribute name="code" type="xsd:string" />
+                <xsd:attribute name="status" type="FeedFetchStatusType" />
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
@@ -209,6 +210,15 @@
         <xsd:restriction base="xsd:string">
             <xsd:enumeration value="tablet" />
             <xsd:enumeration value="other" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="FeedFetchStatusType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="gathered" />
+            <xsd:enumeration value="ingested" />
+            <xsd:enumeration value="modelled" />
+            <xsd:enumeration value="predicted" />
         </xsd:restriction>
     </xsd:simpleType>
 

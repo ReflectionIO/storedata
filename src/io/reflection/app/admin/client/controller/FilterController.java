@@ -7,14 +7,15 @@
 //
 package io.reflection.app.admin.client.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import io.reflection.app.admin.client.handler.FilterEventHandler;
 import io.reflection.app.shared.datatypes.Country;
 import io.reflection.app.shared.datatypes.Store;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author billy1380
@@ -25,6 +26,8 @@ public class FilterController {
 	public static final String STORE_KEY = "store";
 	public static final String COUNTRY_KEY = "country";
 	private static final String LIST_TYPE_KEY = "list.type";
+	private static final String START_DATE_KEY = "start.date";
+	private static final String END_DATE_KEY = "end.date";
 
 	private static FilterController mOne = null;
 
@@ -130,6 +133,54 @@ public class FilterController {
 		}
 
 		return types;
+	}
+
+	public Date getStartDate() {
+		return (Date) mCurrentValues.get(START_DATE_KEY);
+	}
+
+	public Date getEndDate() {
+		return (Date) mCurrentValues.get(END_DATE_KEY);
+	}
+
+	public void setStartDate(Date value) {
+		if (value != null && !value.equals(mCurrentValues.get(START_DATE_KEY))) {
+			Date previousStartDate = (Date) mCurrentValues.get(START_DATE_KEY);
+			mCurrentValues.put(START_DATE_KEY, value);
+
+			if (mInTransaction) {
+				if (mPreviousValues == null) {
+					mPreviousValues = new HashMap<String, Object>();
+				}
+
+				mPreviousValues.put(START_DATE_KEY, previousStartDate);
+			} else {
+				EventController.get()
+						.fireEventFromSource(
+								new FilterEventHandler.ChangedFilterParameter<Date>(START_DATE_KEY, (Date) mCurrentValues.get(START_DATE_KEY),
+										previousStartDate), this);
+			}
+		}
+	}
+
+	public void setEndDate(Date value) {
+		if (value != null && !value.equals(mCurrentValues.get(END_DATE_KEY))) {
+			Date previousEndDate = (Date) mCurrentValues.get(END_DATE_KEY);
+			mCurrentValues.put(END_DATE_KEY, value);
+
+			if (mInTransaction) {
+				if (mPreviousValues == null) {
+					mPreviousValues = new HashMap<String, Object>();
+				}
+
+				mPreviousValues.put(END_DATE_KEY, previousEndDate);
+			} else {
+				EventController.get()
+						.fireEventFromSource(
+								new FilterEventHandler.ChangedFilterParameter<Date>(END_DATE_KEY, (Date) mCurrentValues.get(END_DATE_KEY),
+										previousEndDate), this);
+			}
+		}
 	}
 
 	public List<String> getAllListTypes() {

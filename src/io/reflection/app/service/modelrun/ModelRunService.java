@@ -164,8 +164,8 @@ final class ModelRunService implements IModelRunService {
 		ModelRun modelRun = null;
 
 		final String getGatherCodeModelRunQuery = String.format(
-				"SELECT * FROM `modelrun` WHERE `store`='%s' AND `country`='%s' AND `form`='%s' AND `code`='%s'", addslashes(store.a3Code), addslashes(country.a2Code),
-				form.toString(), addslashes(code));
+				"SELECT * FROM `modelrun` WHERE `store`='%s' AND `country`='%s' AND `form`='%s' AND `code`='%s'", addslashes(store.a3Code),
+				addslashes(country.a2Code), form.toString(), addslashes(code));
 
 		Connection modelRunConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeModelRun.toString());
 

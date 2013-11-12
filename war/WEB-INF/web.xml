@@ -24,10 +24,10 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
         <servlet-class>io.reflection.app.ModellerServlet</servlet-class>
     </servlet>
 
-	<servlet>
+	<!-- <servlet>
 		<servlet-name>Persist Tasks</servlet-name>
 		<servlet-class>io.reflection.app.PersistServlet</servlet-class>
-	</servlet>
+	</servlet> -->
     
     <servlet>
         <servlet-name>Predictor Tasks</servlet-name>
@@ -80,10 +80,10 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
         <servlet-name>Modeller Tasks</servlet-name>
         <url-pattern>/model</url-pattern>
     </servlet-mapping>
-	<servlet-mapping>
+	<!-- <servlet-mapping>
 		<servlet-name>Persist Tasks</servlet-name>
 		<url-pattern>/persist</url-pattern>
-	</servlet-mapping>
+	</servlet-mapping> -->
 	<servlet-mapping>
 		<servlet-name>Dev Helper</servlet-name>
 		<url-pattern>/dev/devhelper</url-pattern>

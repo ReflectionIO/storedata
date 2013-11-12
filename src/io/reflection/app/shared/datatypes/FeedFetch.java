@@ -24,21 +24,19 @@ public class FeedFetch extends DataType {
 
 	public String data;
 
-	@Index
-	public Date date;
+	@Index public Date date;
 
-	@Index
-	public String store;
+	@Index public String store;
 
 	public Integer part = Integer.valueOf(0);
 
-	@AlsoLoad("totalparts")
-	public Integer totalParts = Integer.valueOf(0);
+	@AlsoLoad("totalparts") public Integer totalParts = Integer.valueOf(0);
 
-	@Index
-	public String type;
+	@Index public String type;
 
 	public String code;
+
+	public FeedFetchStatusType status;
 
 	@Override
 	public JsonObject toJson() {
@@ -59,6 +57,8 @@ public class FeedFetch extends DataType {
 		object.add("type", jsonType);
 		JsonElement jsonCode = code == null ? JsonNull.INSTANCE : new JsonPrimitive(code);
 		object.add("code", jsonCode);
+		JsonElement jsonStatus = status == null ? JsonNull.INSTANCE : new JsonPrimitive(status.toString());
+		object.add("status", jsonStatus);
 		return object;
 	}
 
@@ -111,6 +111,12 @@ public class FeedFetch extends DataType {
 			JsonElement jsonCode = jsonObject.get("code");
 			if (jsonCode != null) {
 				code = jsonCode.getAsString();
+			}
+		}
+		if (jsonObject.has("status")) {
+			JsonElement jsonStatus = jsonObject.get("status");
+			if (jsonStatus != null) {
+				status = FeedFetchStatusType.fromString(jsonStatus.getAsString());
 			}
 		}
 	}

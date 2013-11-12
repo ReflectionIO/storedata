@@ -23,7 +23,11 @@ public class PagerHelper {
 	}
 
 	public static void updatePager(Pager pager, List<?> list, Long total) {
-		pager.start = Long.valueOf(pager.start.longValue() + list.size());
+		if (list != null) {
+			pager.start = Long.valueOf(pager.start.longValue() + (list.size()));
+		} else {
+			// list is null so do nothing
+		}
 
 		if (total != null) {
 			pager.totalCount = total;

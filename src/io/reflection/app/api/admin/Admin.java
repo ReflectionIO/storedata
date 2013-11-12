@@ -25,7 +25,6 @@ import io.reflection.app.api.admin.shared.call.TriggerModelRequest;
 import io.reflection.app.api.admin.shared.call.TriggerModelResponse;
 import io.reflection.app.api.admin.shared.call.TriggerPredictRequest;
 import io.reflection.app.api.admin.shared.call.TriggerPredictResponse;
-import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
@@ -38,12 +37,7 @@ import io.reflection.app.modellers.ModellerFactory;
 import io.reflection.app.predictors.Predictor;
 import io.reflection.app.predictors.PredictorFactory;
 import io.reflection.app.service.fetchfeed.FeedFetchServiceProvider;
-import io.reflection.app.service.modelrun.ModelRunServiceProvider;
-import io.reflection.app.service.rank.RankServiceProvider;
 import io.reflection.app.service.user.UserServiceProvider;
-import io.reflection.app.shared.datatypes.FormType;
-import io.reflection.app.shared.datatypes.ModelRun;
-import io.reflection.app.shared.datatypes.Rank;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -140,11 +134,11 @@ public final class Admin extends ActionHandler {
 
 			input.listTypes = ValidationHelper.validateListTypes(input.listTypes, input.store, "input");
 
-			output.feedFetches = FeedFetchServiceProvider.provide().getFeedFetches(input.store, input.country, input.listTypes, input.pager);
+			output.feedFetches = FeedFetchServiceProvider.provide().getFeedFetches(input.country, input.store, input.listTypes, input.pager);
 
 			output.pager = input.pager;
 			updatePager(output.pager, output.feedFetches,
-					input.pager.totalCount == null ? FeedFetchServiceProvider.provide().getFeedFetchesCount(input.store, input.country, input.listTypes) : null);
+					input.pager.totalCount == null ? FeedFetchServiceProvider.provide().getFeedFetchesCount(input.country, input.store, input.listTypes) : null);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -183,14 +177,14 @@ public final class Admin extends ActionHandler {
 			input.store = ValidationHelper.validateStore(input.store, "input");
 
 			input.listTypes = ValidationHelper.validateListTypes(input.listTypes, input.store, "input");
-			
+
 			Ingestor i = IngestorFactory.getIngestorForStore(input.store.a3Code);
-			
+
 			for (String listType : input.listTypes) {
-				List<Long> ids = FeedFetchServiceProvider.provide().getIngestableFeedFetchIds(input.store, input.country, listType, input.code);
+				List<Long> ids = FeedFetchServiceProvider.provide().getIngestableFeedFetchIds(input.country, input.store, listType, input.code);
 				i.enqueue(ids);
 			}
-			
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -272,21 +266,9 @@ public final class Admin extends ActionHandler {
 				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
 						ValidationError.InvalidValueNull.getMessage("should contain a grossing list name List: input.listType"));
 
-			Modeller modeller = ModellerFactory.getModellerForStore(input.store.a3Code);
-			FormType form = modeller.getForm(type);
-
 			Predictor predictor = PredictorFactory.getPredictorForStore(input.store.a3Code);
 
-			ModelRun modelRun = ModelRunServiceProvider.provide().getGatherCodeModelRun(input.country, input.store, form, input.code);
-
-			Pager p = new Pager();
-			p.start = Long.valueOf(0);
-			p.count = Long.valueOf(Long.MAX_VALUE);
-			List<Rank> ranks = RankServiceProvider.provide().getGatherCodeRanks(input.country, input.store, type, input.code, p);
-
-			for (Rank rank : ranks) {
-				predictor.enqueue(modelRun, rank);
-			}
+			predictor.enqueue(input.country.a2Code, type, input.code);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {

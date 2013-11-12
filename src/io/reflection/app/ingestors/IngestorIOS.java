@@ -8,12 +8,20 @@
 //
 package io.reflection.app.ingestors;
 
+import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.collectors.Collector;
+import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.collectors.StoreCollector;
 import io.reflection.app.logging.GaeLevel;
-import io.reflection.app.persisters.PersisterBase;
 import io.reflection.app.service.fetchfeed.FeedFetchServiceProvider;
+import io.reflection.app.service.item.ItemServiceProvider;
+import io.reflection.app.service.rank.RankServiceProvider;
+import io.reflection.app.shared.datatypes.Country;
 import io.reflection.app.shared.datatypes.FeedFetch;
+import io.reflection.app.shared.datatypes.FeedFetchStatusType;
 import io.reflection.app.shared.datatypes.Item;
+import io.reflection.app.shared.datatypes.Rank;
+import io.reflection.app.shared.datatypes.Store;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -62,7 +70,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			grouped = groupDataByDate(stored);
 			combined = combineDataParts(grouped);
 			extractItemRanks(stored, grouped, combined);
-//			blobify(stored, grouped, combined);
+			// blobify(stored, grouped, combined);
 		} finally {
 			if (LOG.isLoggable(GaeLevel.TRACE)) {
 				LOG.log(GaeLevel.TRACE, "Exiting...");
@@ -94,6 +102,8 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 	}
 
 	/**
+	 * extractItemRanks
+	 * 
 	 * @param stored
 	 * @param grouped
 	 * @param combined
@@ -104,6 +114,9 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			LOG.log(GaeLevel.DEBUG, "Extracting item ranks");
 		}
 
+		Collector c = CollectorFactory.getCollectorForStore("ios");
+
+		boolean isGrossing;
 		for (final Date key : combined.keySet()) {
 
 			if (LOG.isLoggable(GaeLevel.DEBUG)) {
@@ -112,22 +125,115 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 
 			List<Item> items = (new ParserIOS()).parse(combined.get(key));
 
+			List<Rank> addRanks = new ArrayList<Rank>();
+			List<Rank> updateRanks = new ArrayList<Rank>();
+
+			List<Item> addItems = new ArrayList<Item>();
+
 			Map<Integer, FeedFetch> group = grouped.get(key);
 			FeedFetch firstFeedFetch = group.values().iterator().next();
 
+			isGrossing = c.isGrossing(firstFeedFetch.type);
+
+			Country country = new Country();
+			country.a2Code = firstFeedFetch.country;
+
+			Store store = new Store();
+			store.a3Code = firstFeedFetch.store;
+
+			Pager pager = new Pager();
+			pager.start = Long.valueOf(0);
+			pager.count = new Long(Long.MAX_VALUE);
+
+			List<Rank> foundRanks = RankServiceProvider.provide().getGatherCodeRanks(country, store, firstFeedFetch.type, firstFeedFetch.code, pager, true);
+
+			Map<String, Rank> lookup = indexRanks(foundRanks);
+			List<String> itemIds = new ArrayList<String>();
+
+			Rank rank, existing;
+			Item item;
 			for (int i = 0; i < items.size(); i++) {
-				Item item = items.get(i);
+				item = items.get(i);
+
+				existing = null;
 
 				item.added = key;
 
-				PersisterBase.enqueue(item, Integer.valueOf(i + 1), item.externalId, firstFeedFetch.type, firstFeedFetch.store, firstFeedFetch.country, key,
-						item.price, item.currency, firstFeedFetch.code);
+				rank = new Rank();
+				rank.code = firstFeedFetch.code;
+				rank.country = firstFeedFetch.country;
+				rank.currency = item.currency;
+				rank.date = key;
+				rank.itemId = item.externalId;
+
+				rank.price = item.price;
+				rank.source = firstFeedFetch.store;
+				rank.type = firstFeedFetch.type;
+
+				if ((existing = lookup.get(constructKey(rank))) != null) {
+					rank = existing;
+				}
+
+				if (isGrossing) {
+					rank.grossingPosition = Integer.valueOf(i + 1);
+				} else {
+					rank.position = Integer.valueOf(i + 1);
+				}
+
+				// PersisterBase.enqueue(item, Integer.valueOf(i + 1), item.externalId, firstFeedFetch.type, firstFeedFetch.store, firstFeedFetch.country, key,
+				// item.price, item.currency, firstFeedFetch.code);
+
+				if (existing == null) {
+					addRanks.add(rank);
+					addItems.add(item);
+					itemIds.add(item.externalId);
+				} else {
+					updateRanks.add(rank);
+				}
+			}
+
+			if (addRanks.size() > 0) {
+				RankServiceProvider.provide().addRanksBatch(addRanks);
+			}
+
+			if (updateRanks.size() > 0) {
+				RankServiceProvider.provide().updateRanksBatch(updateRanks);
+			}
+
+			// we do not update items
+			// if (updateItems.size() > 0) {
+			// ItemServiceProvider.provide().updateItemsBatch(updateItems);
+			// }
+
+			List<Item> foundItems = ItemServiceProvider.provide().getExternalIdItemBatch(itemIds);
+			List<Item> newItems = new ArrayList<Item>();
+
+			boolean found = false;
+			for (Item addItem : addItems) {
+				found = false;
+
+				for (Item foundItem : foundItems) {
+					if (foundItem.externalId.equals(addItem.externalId)) {
+						found = true;
+						break;
+					}
+				}
+
+				if (!found) {
+					newItems.add(addItem);
+				}
+			}
+
+			if (newItems.size() > 0) {
+				ItemServiceProvider.provide().addItemsBatch(newItems);
 			}
 
 			if (LOG.isLoggable(GaeLevel.DEBUG)) {
 				LOG.log(GaeLevel.DEBUG, "Marking items as ingested");
 			}
 
+			
+			
 			// ofy().transact(new VoidWork() {
 			//
 			// @Override
@@ -151,8 +257,34 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			// }
 			//
 			// });
-
+			for (int i = 0; i < group.size(); i++) {
+				FeedFetch current = group.get(Integer.valueOf(i));
+				current.status = FeedFetchStatusType.FeedFetchStatusTypeIngested;
+				FeedFetchServiceProvider.provide().updateFeedFetch(current);
+			}
 		}
+	}
+
+	/**
+	 * @param ranks
+	 * @return
+	 */
+	private Map<String, Rank> indexRanks(List<Rank> ranks) {
+		Map<String, Rank> indexed = new HashMap<String, Rank>();
+
+		for (Rank rank : ranks) {
+			indexed.put(constructKey(rank), rank);
+		}
+
+		return indexed;
+	}
+
+	/**
+	 * @param rank
+	 * @return
+	 */
+	private String constructKey(Rank rank) {
+		return rank.code + rank.source + rank.country + rank.itemId;
 	}
 
 	private Map<Date, Map<Integer, FeedFetch>> groupDataByDate(List<FeedFetch> entities) {

@@ -318,7 +318,7 @@ public final class Core extends ActionHandler {
 						input.pager);
 			} else {
 				ranks = RankServiceProvider.provide().getGatherCodeRanks(input.country, input.store, getPaidListName(input.store, input.listType), code,
-						input.pager);
+						input.pager, false);
 			}
 
 			if (ranks != null && ranks.size() != 0) {
@@ -341,7 +341,7 @@ public final class Core extends ActionHandler {
 						input.pager);
 			} else {
 				ranks = RankServiceProvider.provide().getGatherCodeRanks(input.country, input.store, getGrossingListName(input.store, input.listType), code,
-						input.pager);
+						input.pager, false);
 			}
 
 			if (ranks != null && ranks.size() != 0) {

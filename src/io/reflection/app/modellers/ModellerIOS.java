@@ -15,9 +15,12 @@ import io.reflection.app.renjin.RenjinRModellerBase;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
+import io.reflection.app.service.fetchfeed.FeedFetchServiceProvider;
 import io.reflection.app.service.modelrun.ModelRunServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
 import io.reflection.app.shared.datatypes.Country;
+import io.reflection.app.shared.datatypes.FeedFetch;
+import io.reflection.app.shared.datatypes.FeedFetchStatusType;
 import io.reflection.app.shared.datatypes.FormType;
 import io.reflection.app.shared.datatypes.ModelRun;
 import io.reflection.app.shared.datatypes.Store;
@@ -61,7 +64,7 @@ public class ModellerIOS extends RenjinRModellerBase implements Modeller {
 	private static final Logger LOG = Logger.getLogger(ModellerIOS.class.getName());
 
 	private static final String STORE = "ios";
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -72,7 +75,7 @@ public class ModellerIOS extends RenjinRModellerBase implements Modeller {
 		if (LOG.isLoggable(GaeLevel.TRACE)) {
 			LOG.log(GaeLevel.TRACE, "Entering...");
 		}
-		
+
 		try {
 			Queue queue = QueueFactory.getQueue("model");
 
@@ -123,7 +126,7 @@ public class ModellerIOS extends RenjinRModellerBase implements Modeller {
 
 		try {
 			init();
-			
+
 			mEngine.eval("cut.point <- 300");
 
 			// set simulation inputs
@@ -141,7 +144,15 @@ public class ModellerIOS extends RenjinRModellerBase implements Modeller {
 
 			runModelParts();
 
-			persistValues(STORE, country, getForm(listType), code);
+			Country c = new Country();
+			c.a2Code = country;
+
+			Store s = new Store();
+			s.a3Code = STORE;
+
+			persistValues(c, s, getForm(listType), code);
+
+			alterFeedFetchStatus(c, s, listTypes, code);
 
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | ScriptException | SQLException e) {
 			LOG.log(Level.SEVERE, String.format("Error occured calculating values with parameters store [%s], country [%s], type [%s], [%s]", STORE, country,
@@ -157,21 +168,32 @@ public class ModellerIOS extends RenjinRModellerBase implements Modeller {
 	}
 
 	/**
+	 * 
+	 * @param country
+	 * @param store
+	 * @param listTypes
+	 * @param code
+	 */
+	private void alterFeedFetchStatus(Country country, Store store, List<String> listTypes, String code) {
+		List<FeedFetch> feeds = FeedFetchServiceProvider.provide().getGatherCodeFeedFetches(country, store, listTypes, code);
+
+		for (FeedFetch feedFetch : feeds) {
+			feedFetch.status = FeedFetchStatusType.FeedFetchStatusTypeModelled;
+
+			FeedFetchServiceProvider.provide().updateFeedFetch(feedFetch);
+		}
+	}
+
+	/**
 	 * @param code
 	 * @param listTypes
 	 * @param country
 	 * @param store
 	 * 
 	 */
-	private void persistValues(String store, String country, FormType form, String code) {
+	private void persistValues(Country country, Store store, FormType form, String code) {
 
-		Country c = new Country();
-		c.a2Code = country;
-
-		Store s = new Store();
-		s.a3Code = store;
-
-		ModelRun run = ModelRunServiceProvider.provide().getGatherCodeModelRun(c, s, form, code);
+		ModelRun run = ModelRunServiceProvider.provide().getGatherCodeModelRun(country, store, form, code);
 
 		boolean isUpdate = false;
 
@@ -182,8 +204,8 @@ public class ModellerIOS extends RenjinRModellerBase implements Modeller {
 		}
 
 		if (!isUpdate) {
-			run.country = country;
-			run.store = store;
+			run.country = country.a2Code;
+			run.store = store.a3Code;
 			run.code = code;
 			run.form = form;
 		}
@@ -299,8 +321,8 @@ public class ModellerIOS extends RenjinRModellerBase implements Modeller {
 
 		// simulated data
 
-		if (LOG.isLoggable(GaeLevel.DEBUG)) {
-			LOG.log(GaeLevel.DEBUG, "my.labelled.df: " + mEngine.get("my.labelled.df"));
+		if (LOG.isLoggable(GaeLevel.TRACE)) {
+			LOG.log(GaeLevel.TRACE, "my.labelled.df: " + mEngine.get("my.labelled.df"));
 		}
 
 		// // LOGGER.info("my.labelled.df: " + ((ListVector) engine.get("my.labelled.df")).toString());

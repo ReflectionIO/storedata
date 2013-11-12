@@ -7,15 +7,26 @@
 //
 package io.reflection.app.predictors;
 
+import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.apple.ItemPropertyLookupServlet;
 import io.reflection.app.helpers.ItemPropertyWrapper;
 import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.modellers.Modeller;
+import io.reflection.app.modellers.ModellerFactory;
 import io.reflection.app.service.item.ItemServiceProvider;
+import io.reflection.app.service.modelrun.ModelRunServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
+import io.reflection.app.shared.datatypes.Country;
+import io.reflection.app.shared.datatypes.FormType;
 import io.reflection.app.shared.datatypes.Item;
 import io.reflection.app.shared.datatypes.ModelRun;
 import io.reflection.app.shared.datatypes.Rank;
+import io.reflection.app.shared.datatypes.Store;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,13 +44,126 @@ public class PredictorIOS implements Predictor {
 
 	private static final Logger LOG = Logger.getLogger(PredictorIOS.class.getName());
 
+	private static final String IOS_STORE_A3 = "ios";
+
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.predictors.Predictor#enqueue(io.reflection.app.shared.datatypes.ModelRun, io.reflection.app.shared.datatypes.Rank)
+	 * @see io.reflection.app.predictors.Predictor#enqueue(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void enqueue(ModelRun modelRun, Rank rank) {
+	public void enqueue(String country, String type, String code) {
+		Country c = new Country();
+		c.a2Code = country;
+
+		Store s = new Store();
+		s.a3Code = IOS_STORE_A3;
+
+		Pager p = new Pager();
+		p.start = Long.valueOf(0);
+		p.count = new Long(Long.MAX_VALUE);
+
+		Modeller modeller = ModellerFactory.getModellerForStore(IOS_STORE_A3);
+
+		FormType form = modeller.getForm(type);
+		ModelRun modelRun = ModelRunServiceProvider.provide().getGatherCodeModelRun(c, s, form, code);
+
+		List<Rank> foundRanks = RankServiceProvider.provide().getGatherCodeRanks(c, s, type, code, p, false);
+		Map<String, Item> lookup = lookupItemsForRanks(foundRanks);
+
+		Item item = null;
+		for (Rank rank : foundRanks) {
+			item = lookup.get(rank.itemId);
+			ItemPropertyWrapper properties = new ItemPropertyWrapper(item.properties);
+
+			boolean usesIap = properties.getBoolean(ItemPropertyLookupServlet.PROPERTY_IAP);
+
+			if (item != null) {
+				if (rank.price.floatValue() > 0) {
+					if (usesIap) {
+
+						if (rank.grossingPosition != null) {
+							rank.revenue = Float.valueOf((float) (modelRun.grossingB.doubleValue() * Math.pow(rank.grossingPosition.doubleValue(),
+									-modelRun.grossingAIap.doubleValue())));
+							rank.downloads = (int) (rank.revenue.doubleValue() / (rank.price.doubleValue() + modelRun.theta.doubleValue()));
+						} else {
+							rank.downloads = Integer.valueOf((int) (modelRun.paidB.doubleValue() * Math.pow(rank.position.doubleValue(), -modelRun.paidAIap)));
+							rank.revenue = Float.valueOf((float) ((modelRun.theta.doubleValue() + rank.price.doubleValue()) * rank.downloads.doubleValue()));
+						}
+
+					} else {
+
+						if (rank.grossingPosition != null) {
+							rank.revenue = Float.valueOf((float) (modelRun.grossingB.doubleValue() * Math.pow(rank.grossingPosition.doubleValue(),
+									-modelRun.grossingA.doubleValue())));
+							rank.downloads = (int) (rank.revenue.floatValue() / rank.price.floatValue());
+						} else {
+							rank.downloads = Integer.valueOf((int) (modelRun.paidB.doubleValue() * Math.pow(rank.position.doubleValue(), -modelRun.paidA)));
+							rank.revenue = Float.valueOf(rank.price.floatValue() * rank.downloads.floatValue());
+						}
+
+					}
+				} else if (rank.price.floatValue() == 0) {
+					if (usesIap || rank.grossingPosition != null) {
+						if (rank.grossingPosition != null) {
+							rank.revenue = Float.valueOf((float) (modelRun.grossingB.doubleValue() * Math.pow(rank.grossingPosition.doubleValue(),
+									-modelRun.grossingAIap.doubleValue())));
+							rank.downloads = (int) (rank.revenue.doubleValue() / modelRun.theta.doubleValue());
+						} else {
+							rank.downloads = Integer.valueOf((int) (modelRun.freeB.doubleValue() * Math.pow(rank.position.doubleValue(), -modelRun.freeA)));
+							rank.revenue = Float.valueOf((float) (modelRun.theta.doubleValue() * rank.downloads.doubleValue()));
+						}
+					} else {
+
+						if (rank.grossingPosition != null) {
+							// ERROR!!!
+						} else {
+							rank.downloads = Integer.valueOf((int) (modelRun.freeB.doubleValue() * Math.pow(rank.position.doubleValue(), -modelRun.freeB)));
+							rank.revenue = Float.valueOf(0);
+						}
+
+					}
+				}
+
+				RankServiceProvider.provide().updateRank(rank);
+			}
+		}
+	}
+
+	/**
+	 * @param foundRanks
+	 * @param lookup
+	 * @return
+	 */
+	private Map<String, Item> lookupItemsForRanks(List<Rank> ranks) {
+		Map<String, Item> lookup = new HashMap<String, Item>();
+
+		List<String> itemIds = new ArrayList<String>();
+
+		for (Rank rank : ranks) {
+			if (!itemIds.contains(rank.itemId)) {
+				itemIds.add(rank.itemId);
+			}
+		}
+
+		if (itemIds.size() > 0) {
+			List<Item> foundItems = ItemServiceProvider.provide().getExternalIdItemBatch(itemIds);
+
+			for (Item item : foundItems) {
+				lookup.put(item.externalId, item);
+			}
+		}
+
+		return lookup;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.predictors.Predictor#predictRevenueAndDownloads(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void predictRevenueAndDownloads(String country, String type, String code) {
 		if (LOG.isLoggable(GaeLevel.TRACE)) {
 			LOG.log(GaeLevel.TRACE, "Entering...");
 		}
@@ -48,8 +172,10 @@ public class PredictorIOS implements Predictor {
 			Queue queue = QueueFactory.getQueue("predict");
 
 			TaskOptions options = TaskOptions.Builder.withUrl("/predict").method(Method.POST);
-			options.param("modelRun", modelRun.toString());
-			options.param("rank", rank.toString());
+			options.param("country", country);
+			options.param("store", IOS_STORE_A3);
+			options.param("type", type);
+			options.param("code", code);
 
 			try {
 				queue.add(options);
@@ -75,71 +201,6 @@ public class PredictorIOS implements Predictor {
 				LOG.log(GaeLevel.TRACE, "Exiting...");
 			}
 		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.predictors.Predictor#predictRevenueAndDownloads(io.reflection.app.shared.datatypes.ModelRun,
-	 * io.reflection.app.shared.datatypes.Rank)
-	 */
-	@Override
-	public void predictRevenueAndDownloads(ModelRun modelRun, Rank rank) {
-		Item item = ItemServiceProvider.provide().getExternalIdItem(rank.itemId);
-
-		ItemPropertyWrapper properties = new ItemPropertyWrapper(item.properties);
-
-		boolean usesIap = properties.getBoolean(ItemPropertyLookupServlet.PROPERTY_IAP);
-
-		if (item != null) {
-			if (rank.price.floatValue() > 0) {
-				if (usesIap) {
-
-					if (rank.grossingPosition != null) {
-						rank.revenue = Float.valueOf((float) (modelRun.grossingB.doubleValue() * Math.pow(rank.grossingPosition.doubleValue(),
-								-modelRun.grossingAIap.doubleValue())));
-						rank.downloads = (int) (rank.revenue.doubleValue() / (rank.price.doubleValue() + modelRun.theta.doubleValue()));
-					} else {
-						rank.downloads = Integer.valueOf((int) (modelRun.paidB.doubleValue() * Math.pow(rank.position.doubleValue(), -modelRun.paidAIap)));
-						rank.revenue = Float.valueOf((float) ((modelRun.theta.doubleValue() + rank.price.doubleValue()) * rank.downloads.doubleValue()));
-					}
-
-				} else {
-
-					if (rank.grossingPosition != null) {
-						rank.revenue = Float.valueOf((float) (modelRun.grossingB.doubleValue() * Math.pow(rank.grossingPosition.doubleValue(),
-								-modelRun.grossingA.doubleValue())));
-						rank.downloads = (int) (rank.revenue.floatValue() / rank.price.floatValue());
-					} else {
-						rank.downloads = Integer.valueOf((int) (modelRun.paidB.doubleValue() * Math.pow(rank.position.doubleValue(), -modelRun.paidA)));
-						rank.revenue = Float.valueOf(rank.price.floatValue() * rank.downloads.floatValue());
-					}
-
-				}
-			} else if (rank.price.floatValue() == 0) {
-				if (usesIap || rank.grossingPosition != null) {
-					if (rank.grossingPosition != null) {
-						rank.revenue = Float.valueOf((float) (modelRun.grossingB.doubleValue() * Math.pow(rank.grossingPosition.doubleValue(),
-								-modelRun.grossingAIap.doubleValue())));
-						rank.downloads = (int) (rank.revenue.doubleValue() / modelRun.theta.doubleValue());
-					} else {
-						rank.downloads = Integer.valueOf((int) (modelRun.freeB.doubleValue() * Math.pow(rank.position.doubleValue(), -modelRun.freeA)));
-						rank.revenue = Float.valueOf((float) (modelRun.theta.doubleValue() * rank.downloads.doubleValue()));
-					}
-				} else {
-
-					if (rank.grossingPosition != null) {
-						// ERROR!!!
-					} else {
-						rank.downloads = Integer.valueOf((int) (modelRun.freeB.doubleValue() * Math.pow(rank.position.doubleValue(), -modelRun.freeB)));
-						rank.revenue = Float.valueOf(0);
-					}
-
-				}
-			}
-		}
-		
-		RankServiceProvider.provide().updateRank(rank);
 
 	}
 

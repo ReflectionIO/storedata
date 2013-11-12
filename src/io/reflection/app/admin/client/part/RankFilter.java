@@ -7,6 +7,8 @@
 //
 package io.reflection.app.admin.client.part;
 
+import io.reflection.app.admin.client.controller.FilterController;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +20,7 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.DateBox;
 import com.google.gwt.user.datepicker.client.DateBox.DefaultFormat;
@@ -33,6 +36,9 @@ public class RankFilter extends Composite {
 	interface RankFilterUiBinder extends UiBinder<Widget, RankFilter> {}
 
 	@UiField DateBox mDate;
+	@UiField ListBox mAppStore;
+	@UiField ListBox mListType;
+	@UiField ListBox mCountry;
 
 	/**
 	 * Because this class has a default constructor, it can be used as a binder template. In other words, it can be used in other *.ui.xml files as follows:
@@ -70,6 +76,13 @@ public class RankFilter extends Composite {
 				mDate.getDatePicker().setTransientEnabledOnDates(false, dates);
 			}
 		});
+		
+		FilterController.get().start();
+		FilterController.get().setStore(mAppStore.getValue(mAppStore.getSelectedIndex()));
+		FilterController.get().setListType(mListType.getValue(mListType.getSelectedIndex()));
+		FilterController.get().setCountry(mCountry.getValue(mCountry.getSelectedIndex()));
+		FilterController.get().setStartDate(mDate.getValue());
+		FilterController.get().commit();
 
 	}
 

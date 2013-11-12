@@ -210,7 +210,7 @@ final class RankService implements IRankService {
 		String code = getGatherCode(country, store, after, before);
 
 		if (code != null) {
-			ranks.addAll(getGatherCodeRanks(country, store, listType, code, pager));
+			ranks.addAll(getGatherCodeRanks(country, store, listType, code, pager, false));
 		}
 
 		return ranks;
@@ -423,68 +423,6 @@ final class RankService implements IRankService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.service.rank.IRankService#getGatherCodeRanks(io.reflection.app.shared.datatypes.Country, io.reflection.app.shared.datatypes.Store,
-	 * java.lang.String, java.lang.String, io.reflection.app.api.shared.datatypes.Pager)
-	 */
-	@Override
-	public List<Rank> getGatherCodeRanks(Country country, Store store, String listType, String code, Pager pager) {
-		List<Rank> ranks = new ArrayList<Rank>();
-
-		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
-
-		Collector collector = CollectorFactory.getCollectorForStore(store.a3Code);
-		boolean isGrossing = collector.isGrossing(listType);
-
-		List<String> types = new ArrayList<String>();
-
-		if (isGrossing) {
-			types.addAll(collector.getCounterpartTypes(listType));
-		}
-
-		types.add(addslashes(listType));
-
-		String typesQueryPart = null;
-		if (types.size() == 1) {
-			typesQueryPart = String.format("`type`='%s'", types.get(0));
-		} else {
-			typesQueryPart = "`type` IN ('" + StringUtils.join(types, "','") + "')";
-		}
-
-		if (isGrossing) {
-			pager.sortBy = "grossingposition";
-		} else {
-			pager.sortBy = "position";
-		}
-
-		String getCountryStoreTypeRanksQuery = String
-				.format("SELECT * FROM `rank` WHERE %s AND `country`='%s' AND `source`='%s' AND `code`='%s' AND %s `deleted`='n' ORDER BY `%s` %s,`date` DESC LIMIT %d,%d",
-						typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), code, isGrossing ? "`grossingposition`<>0 AND" : "",
-						pager.sortBy, pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
-
-		try {
-			rankConnection.connect();
-			rankConnection.executeQuery(getCountryStoreTypeRanksQuery);
-
-			while (rankConnection.fetchNextRow()) {
-				Rank rank = toRank(rankConnection);
-
-				if (rank != null) {
-					ranks.add(rank);
-				}
-			}
-
-		} finally {
-			if (rankConnection != null) {
-				rankConnection.disconnect();
-			}
-		}
-
-		return ranks;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see io.reflection.app.service.rank.IRankService#getGatherCodeRanksCount(io.reflection.app.shared.datatypes.Country,
 	 * io.reflection.app.shared.datatypes.Store, java.lang.String, java.lang.String, io.reflection.app.api.shared.datatypes.Pager)
 	 */
@@ -562,4 +500,104 @@ final class RankService implements IRankService {
 		return date;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.rank.IRankService#updateRanksBatch(java.util.List)
+	 */
+	@Override
+	public Long updateRanksBatch(List<Rank> updateRanks) {
+		long ranksCount = 0;
+
+		final String updateRanksBatchQueryFormat = "UPDATE `rank` SET `position`=%d,`grossingposition`=%d,`itemid`='%s',`type`='%s',`country`='%s',`date`=FROM_UNIXTIME(%d),`source`='%s',`price`=%d,`currency`='%s',`code`='%s',`revenue`=%s,`downloads`=%s WHERE `id`=%d;";
+
+		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+
+		try {
+			rankConnection.connect();
+
+			String updateRanksBatchQuery;
+			for (Rank rank : updateRanks) {
+				updateRanksBatchQuery = String.format(updateRanksBatchQueryFormat, rank.position.longValue(), rank.grossingPosition.longValue(),
+						addslashes(rank.itemId), addslashes(rank.type), addslashes(rank.country), rank.date.getTime() / 1000, addslashes(rank.source),
+						(int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency), addslashes(rank.code), rank.revenue == null ? "NULL"
+								: rank.revenue.floatValue() * 100, rank.downloads == null ? "NULL" : rank.downloads.intValue(), rank.id.longValue());
+
+				rankConnection.executeQuery(updateRanksBatchQuery);
+
+				if (rankConnection.getAffectedRowCount() > 0) {
+					ranksCount++;
+				}
+			}
+		} finally {
+			if (rankConnection != null) {
+				rankConnection.disconnect();
+			}
+		}
+
+		return Long.valueOf(ranksCount);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.rank.IRankService#getGatherCodeRanks(io.reflection.app.shared.datatypes.Country, io.reflection.app.shared.datatypes.Store,
+	 * java.lang.String, java.lang.String, io.reflection.app.api.shared.datatypes.Pager, boolean)
+	 */
+	@Override
+	public List<Rank> getGatherCodeRanks(Country country, Store store, String listType, String code, Pager pager, boolean ignoreGrossingRank) {
+		List<Rank> ranks = new ArrayList<Rank>();
+
+		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+
+		Collector collector = CollectorFactory.getCollectorForStore(store.a3Code);
+		boolean isGrossing = collector.isGrossing(listType);
+
+		List<String> types = new ArrayList<String>();
+
+		if (isGrossing) {
+			types.addAll(collector.getCounterpartTypes(listType));
+		}
+
+		types.add(addslashes(listType));
+
+		String typesQueryPart = null;
+		if (types.size() == 1) {
+			typesQueryPart = String.format("`type`='%s'", types.get(0));
+		} else {
+			typesQueryPart = "`type` IN ('" + StringUtils.join(types, "','") + "')";
+		}
+
+		if (isGrossing) {
+			pager.sortBy = "grossingposition";
+		} else {
+			pager.sortBy = "position";
+		}
+
+		String getCountryStoreTypeRanksQuery = String
+				.format("SELECT * FROM `rank` WHERE %s AND `country`='%s' AND `source`='%s' AND `code`='%s' AND %s `deleted`='n' ORDER BY `%s` %s,`date` DESC LIMIT %d,%d",
+						typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), code,
+						isGrossing && !ignoreGrossingRank ? "`grossingposition`<>0 AND" : "", pager.sortBy,
+						pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
+
+		try {
+			rankConnection.connect();
+			rankConnection.executeQuery(getCountryStoreTypeRanksQuery);
+
+			while (rankConnection.fetchNextRow()) {
+				Rank rank = toRank(rankConnection);
+
+				if (rank != null) {
+					ranks.add(rank);
+				}
+			}
+
+		} finally {
+			if (rankConnection != null) {
+				rankConnection.disconnect();
+			}
+		}
+
+		return ranks;
+	}
 }

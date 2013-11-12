@@ -43,54 +43,89 @@ public interface IFeedFetchService extends IService {
 	public void deleteFeedFetch(FeedFetch feedFetch);
 
 	/**
+	 * 
+	 * @param country
+	 * @param store
+	 * @param types
+	 * @param pager
+	 * @return
+	 */
+	public List<FeedFetch> getFeedFetches(Country country, Store store, List<String> types, Pager pager);
+
+	/**
+	 * 
+	 * @param country
+	 * @param store
+	 * @param types
+	 * @return
+	 */
+	public Long getFeedFetchesCount(Country country, Store store, List<String> types);
+
+	/**
+	 * 
+	 * @param country
+	 * @param store
+	 * @param types
+	 * @param pager
+	 * @return
+	 */
+	public List<FeedFetch> getIngestedFeedFetches(Country country, Store store, List<String> types, Pager pager);
+
+	/**
+	 * 
+	 * @param store
+	 * @param country
+	 * @param listType
+	 * @return
+	 */
+	public Long getIngestedFeedFetchesCount(Country country, Store store, List<String> listType);
+
+	/**
 	 * @param store
 	 * @param country
 	 * @param types
 	 * @param pager
 	 * @return
 	 */
-	public List<FeedFetch> getFeedFetches(Store store, Country country, List<String> types, Pager pager);
+	public List<FeedFetch> getUningestedFeedFetches(Country country, Store store, List<String> types, Pager pager);
 
 	/**
-	 * @return
-	 */
-	public Long getFeedFetchesCount(Store store, Country country, List<String> types);
-
-	/**
-	 * @param store
+	 * 
 	 * @param country
+	 * @param store
 	 * @param types
-	 * @param pager
 	 * @return
 	 */
-	public List<FeedFetch> getIngestedFeedFetches(Store store, Country country, List<String> types, Pager pager);
+	public Long getUningestedFeedFetchesCount(Country country, Store store, List<String> types);
 
 	/**
-	 * @return
-	 */
-	public Long getIngestedFeedFetchesCount(Store store, Country country, List<String> listType);
-
-	/**
-	 * @param store
+	 * 
 	 * @param country
-	 * @param types
-	 * @param pager
-	 * @return
-	 */
-	public List<FeedFetch> getUningestedFeedFetches(Store store, Country country, List<String> types, Pager pager);
-
-	/**
-	 * @return
-	 */
-	public Long getUningestedFeedFetchesCount(Store store, Country country, List<String> types);
-
-	/**
 	 * @param store
-	 * @param country
 	 * @param listType
 	 * @param code
 	 * @return
 	 */
-	public List<Long> getIngestableFeedFetchIds(Store store, Country country, String listType, String code);
+	public List<Long> getIngestableFeedFetchIds(Country country, Store store, String listType, String code);
+
+	/**
+	 * 
+	 * @param country
+	 * @param store
+	 * @param types
+	 * @param code
+	 * @return
+	 */
+	public Boolean isReadyToModel(Country country, Store store, List<String> types, String code);
+
+	/**
+	 * 
+	 * @param country
+	 * @param store
+	 * @param types
+	 * @param code
+	 * @return
+	 */
+	public List<FeedFetch> getGatherCodeFeedFetches(Country country, Store store, List<String> types, String code);
 
 }

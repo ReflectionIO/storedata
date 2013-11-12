@@ -16,7 +16,7 @@
 
                 <g:HTMLPanel styleName="form-group">
                     <label>Overview</label>
-                    <g:ListBox styleName="form-control" ui:field="mOverview">
+                    <g:ListBox styleName="form-control" ui:field="mListType">
                         <g:item value="all">All</g:item>
                         <g:item value="paid">Paid</g:item>
                         <g:item value="free">Free</g:item>
