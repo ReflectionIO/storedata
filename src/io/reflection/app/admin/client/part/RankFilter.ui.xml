@@ -9,8 +9,8 @@
                 <g:HTMLPanel styleName="form-group">
                     <label>App Store</label>
                     <g:ListBox styleName="form-control" ui:field="mAppStore">
-                        <g:item value="iphone">iPhone</g:item>
-                        <g:item value="ipad">iPad</g:item>
+                        <g:item value="iph">iPhone</g:item>
+                        <g:item value="ipa">iPad</g:item>
                     </g:ListBox>
                 </g:HTMLPanel>
 

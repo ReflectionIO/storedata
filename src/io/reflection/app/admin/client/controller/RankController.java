@@ -7,16 +7,14 @@
 //
 package io.reflection.app.admin.client.controller;
 
+import io.reflection.app.admin.client.handler.RanksEventHandler.FetchingRanks;
 import io.reflection.app.admin.client.handler.RanksEventHandler.ReceivedRanks;
 import io.reflection.app.admin.client.part.datatypes.RanksGroup;
 import io.reflection.app.api.core.client.CoreService;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
 import io.reflection.app.api.shared.datatypes.Pager;
-import io.reflection.app.shared.datatypes.Country;
 import io.reflection.app.shared.datatypes.Item;
-import io.reflection.app.admin.client.handler.RanksEventHandler.FetchingRanks;
-import io.reflection.app.shared.datatypes.Store;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -60,10 +58,9 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 		final GetAllTopItemsRequest input = new GetAllTopItemsRequest();
 		input.accessCode = ACCESS_CODE;
 
-		input.country = new Country();
-		input.country.a2Code = "us";
+		input.country = FilterController.get().getCountry();
 
-		input.listType = "iphone";
+		input.listType = FilterController.get().getListTypes().get(0);
 		input.on = new Date();
 
 		if (mPager == null) {
@@ -73,8 +70,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 		}
 		input.pager = mPager;
 
-		input.store = new Store();
-		input.store.a3Code = "ios";
+		input.store = FilterController.get().getStore();
 
 		service.getAllTopItems(input, new AsyncCallback<GetAllTopItemsResponse>() {
 
