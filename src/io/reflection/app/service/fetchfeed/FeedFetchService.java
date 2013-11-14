@@ -117,11 +117,10 @@ final class FeedFetchService implements IFeedFetchService {
 	public FeedFetch updateFeedFetch(FeedFetch feedFetch) {
 		FeedFetch updatedFeedFetch = null;
 
-		final String updateFeedFetchQuery = String
-				.format("UPDATE `feedfetch` SET `country`='%s',data='%s',date=FROM_UNIXTIME(%d),`store`='%s',part=%d,totalparts=%d,type='%s',code='%s',status='%s' WHERE `id`=%d",
-						addslashes(feedFetch.country), addslashes(feedFetch.data), feedFetch.date.getTime() / 1000, addslashes(feedFetch.store),
-						feedFetch.part.intValue(), feedFetch.totalParts.intValue(), addslashes(feedFetch.type), addslashes(feedFetch.code),
-						feedFetch.status.toString(), feedFetch.id.longValue());
+		final String updateFeedFetchQuery = String.format(
+				"UPDATE `feedfetch` SET `country`='%s',data='%s',date=FROM_UNIXTIME(%d),`store`='%s',type='%s',code='%s',status='%s' WHERE `id`=%d",
+				addslashes(feedFetch.country), addslashes(feedFetch.data), feedFetch.date.getTime() / 1000, addslashes(feedFetch.store),
+				addslashes(feedFetch.type), addslashes(feedFetch.code), feedFetch.status.toString(), feedFetch.id.longValue());
 
 		Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
 

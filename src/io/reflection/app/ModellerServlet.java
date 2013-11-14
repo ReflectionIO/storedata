@@ -10,6 +10,8 @@ package io.reflection.app;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.modellers.Modeller;
 import io.reflection.app.modellers.ModellerFactory;
+import io.reflection.app.predictors.Predictor;
+import io.reflection.app.predictors.PredictorFactory;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -63,6 +65,10 @@ public class ModellerServlet extends ContextAwareServlet {
 
 		if (model != null) {
 			model.modelVariables(country, type, code);
+			
+			Predictor p = PredictorFactory.getPredictorForStore(store);
+			p.enqueue(country, type, code);
+			
 		} else {
 			if (LOG.isLoggable(Level.WARNING)) {
 				LOG.warning("Could not find Modeller for store [" + store + "]");

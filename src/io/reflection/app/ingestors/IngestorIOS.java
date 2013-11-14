@@ -13,6 +13,7 @@ import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.collectors.StoreCollector;
 import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.modellers.ModellerFactory;
 import io.reflection.app.service.fetchfeed.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
@@ -71,6 +72,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			combined = combineDataParts(grouped);
 			extractItemRanks(stored, grouped, combined);
 			// blobify(stored, grouped, combined);
+
 		} finally {
 			if (LOG.isLoggable(GaeLevel.TRACE)) {
 				LOG.log(GaeLevel.TRACE, "Exiting...");
@@ -232,8 +234,6 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 				LOG.log(GaeLevel.DEBUG, "Marking items as ingested");
 			}
 
-			
-			
 			// ofy().transact(new VoidWork() {
 			//
 			// @Override
@@ -257,11 +257,14 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			// }
 			//
 			// });
+
 			for (int i = 0; i < group.size(); i++) {
 				FeedFetch current = group.get(Integer.valueOf(i));
 				current.status = FeedFetchStatusType.FeedFetchStatusTypeIngested;
 				FeedFetchServiceProvider.provide().updateFeedFetch(current);
 			}
+
+			ModellerFactory.getModellerForStore(IOS_STORE_A3).enqueue(firstFeedFetch.country, firstFeedFetch.type, firstFeedFetch.code);
 		}
 	}
 
