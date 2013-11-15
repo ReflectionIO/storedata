@@ -52,6 +52,7 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
+import com.google.appengine.api.taskqueue.TaskOptions.Builder;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.google.appengine.tools.mapreduce.KeyValue;
 import com.google.appengine.tools.mapreduce.MapReduceJob;
@@ -74,47 +75,64 @@ public class DevHelperServlet extends HttpServlet {
 	private static final String RANK_END_200_PLUS = "200+";
 	private static final boolean USE_BACKENDS = false;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		doGet(req, resp);
 	}
-	
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 		String appEngineQueue = req.getHeader("X-AppEngine-QueueName");
 		boolean isNotQueue = (appEngineQueue == null || !"deferred".toLowerCase().equals(appEngineQueue.toLowerCase()));
 
-//		if (true) {
-//			com.google.appengine.api.datastore.Query query = new com.google.appengine.api.datastore.Query("__GsFileInfo__");
-//			PreparedQuery p = DatastoreServiceFactory.getDatastoreService().prepare(query);
-//			for (Entity e : p.asIterable()) {
-//				String name = e.getKey().getName();
-//				String destname = (String) e.getProperty("filename");
-//				
-//				System.out.println(name + " " + destname);
-//			}
-//			
-//			
-//			return;
-//		}
-		
+		// if (true) {
+		// com.google.appengine.api.datastore.Query query = new com.google.appengine.api.datastore.Query("__GsFileInfo__");
+		// PreparedQuery p = DatastoreServiceFactory.getDatastoreService().prepare(query);
+		// for (Entity e : p.asIterable()) {
+		// String name = e.getKey().getName();
+		// String destname = (String) e.getProperty("filename");
+		//
+		// System.out.println(name + " " + destname);
+		// }
+		//
+		//
+		// return;
+		// }
+
 		if (isNotQueue && (req.getParameter("defer") == null || req.getParameter("defer").equals("yes"))) {
 			Queue deferredQueue = QueueFactory.getQueue("deferred");
 
 			if (req.getParameter("cron") == null) {
-				deferredQueue.add(TaskOptions.Builder.withUrl("/dev/devhelper?" + req.getQueryString()).method(Method.GET));
+				String query = req.getQueryString();
+
+				if (query != null) {
+					deferredQueue.add(TaskOptions.Builder.withUrl("/dev/devhelper?" + query).method(Method.GET));
+				} else {
+					TaskOptions options = Builder.withUrl("/dev/devhelper");
+
+					@SuppressWarnings("rawtypes")
+					Map params = req.getParameterMap();
+
+					for (Object param : params.keySet()) {
+						options.param((String) param, req.getParameter((String) param));
+					}
+					
+					deferredQueue.add(options.method(Method.POST));
+				}
 			} else {
 				if (LOG.isLoggable(GaeLevel.DEBUG)) {
 					LOG.log(GaeLevel.DEBUG, "Adding gather request to deferred queue");
 				}
 
-//				if (SystemProperty.environment.value() == Environment.Value.Development) {
-					deferredQueue.add(TaskOptions.Builder.withUrl("/cron?" + req.getQueryString()).method(Method.GET));
-//				}
+				// if (SystemProperty.environment.value() == Environment.Value.Development) {
+				deferredQueue.add(TaskOptions.Builder.withUrl("/cron?" + req.getQueryString()).method(Method.GET));
+				// }
 			}
 			return;
 		}
