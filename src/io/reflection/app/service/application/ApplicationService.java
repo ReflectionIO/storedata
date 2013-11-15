@@ -250,14 +250,15 @@ final class ApplicationService implements IApplicationService {
 	@Override
 	public void setApplicationIap(Application application, Boolean usesIap) {
 
-		String setApplicationConnectionQuery = String.format("%s INTO `sup_application_iap` SET `internalid`='%d', `usesiap`='%s', `lastupdated`=NOW()",
-				application.usesIap == null ? "INSERT" : "REPLACE", application.id.longValue(), usesIap.booleanValue() ? 'y' : 'n');
+		String setApplicationIapQuery = String.format("%s `sup_application_iap` SET `internalid`='%d', `usesiap`='%s', `lastupdated`=NOW()%s",
+				application.usesIap == null ? "INSERT INTO" : "UPDATE", application.id.longValue(), usesIap.booleanValue() ? 'y' : 'n',
+				application.usesIap == null ? "" : " WHERE `internalid`=" + application.id.longValue());
 
 		Connection applicationConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeApplication.toString());
 
 		try {
 			applicationConnection.connect();
-			applicationConnection.executeQuery(setApplicationConnectionQuery);
+			applicationConnection.executeQuery(setApplicationIapQuery);
 
 			if (applicationConnection.getAffectedRowCount() == 0) {
 				if (LOG.isLoggable(Level.WARNING)) {
