@@ -250,7 +250,7 @@ final class ApplicationService implements IApplicationService {
 	@Override
 	public void setApplicationIap(Application application, Boolean usesIap) {
 
-		String setApplicationIapQuery = String.format("%s `sup_application_iap` SET `internalid`='%d', `usesiap`='%s', `lastupdated`=NOW()%s",
+		String setApplicationIapQuery = String.format("%s `sup_application_iap` SET `internalid`=%d, `usesiap`='%s', `lastupdated`=NOW()%s",
 				application.usesIap == null ? "INSERT INTO" : "UPDATE", application.id.longValue(), usesIap.booleanValue() ? 'y' : 'n',
 				application.usesIap == null ? "" : " WHERE `internalid`=" + application.id.longValue());
 
