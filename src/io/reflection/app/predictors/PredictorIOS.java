@@ -53,6 +53,80 @@ public class PredictorIOS implements Predictor {
 	 */
 	@Override
 	public void enqueue(String country, String type, String code) {
+		if (LOG.isLoggable(GaeLevel.TRACE)) {
+			LOG.log(GaeLevel.TRACE, "Entering...");
+		}
+
+		try {
+			Queue queue = QueueFactory.getQueue("predict");
+
+			TaskOptions options = TaskOptions.Builder.withUrl("/predict").method(Method.POST);
+			options.param("country", country);
+			options.param("store", IOS_STORE_A3);
+			options.param("type", type);
+			options.param("code", code);
+
+			try {
+				queue.add(options);
+			} catch (TransientFailureException ex) {
+
+				if (LOG.isLoggable(Level.WARNING)) {
+					LOG.warning(String.format("Could not queue a message because of [%s] - will retry it once", ex.toString()));
+				}
+
+				// retry once
+				try {
+					queue.add(options);
+				} catch (TransientFailureException reEx) {
+					if (LOG.isLoggable(Level.SEVERE)) {
+						LOG.log(Level.SEVERE,
+								String.format("Retry of with payload [%s] failed while adding to queue [%s] twice", options.toString(), queue.getQueueName()),
+								reEx);
+					}
+				}
+			}
+		} finally {
+			if (LOG.isLoggable(GaeLevel.TRACE)) {
+				LOG.log(GaeLevel.TRACE, "Exiting...");
+			}
+		}
+	}
+
+	/**
+	 * @param foundRanks
+	 * @param lookup
+	 * @return
+	 */
+	private Map<String, Item> lookupItemsForRanks(List<Rank> ranks) {
+		Map<String, Item> lookup = new HashMap<String, Item>();
+
+		List<String> itemIds = new ArrayList<String>();
+
+		for (Rank rank : ranks) {
+			if (!itemIds.contains(rank.itemId)) {
+				itemIds.add(rank.itemId);
+			}
+		}
+
+		if (itemIds.size() > 0) {
+			List<Item> foundItems = ItemServiceProvider.provide().getExternalIdItemBatch(itemIds);
+
+			for (Item item : foundItems) {
+				lookup.put(item.externalId, item);
+			}
+		}
+
+		return lookup;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.predictors.Predictor#predictRevenueAndDownloads(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void predictRevenueAndDownloads(String country, String type, String code) {
+
 		Country c = new Country();
 		c.a2Code = country;
 
@@ -128,80 +202,6 @@ public class PredictorIOS implements Predictor {
 				RankServiceProvider.provide().updateRank(rank);
 			}
 		}
-	}
-
-	/**
-	 * @param foundRanks
-	 * @param lookup
-	 * @return
-	 */
-	private Map<String, Item> lookupItemsForRanks(List<Rank> ranks) {
-		Map<String, Item> lookup = new HashMap<String, Item>();
-
-		List<String> itemIds = new ArrayList<String>();
-
-		for (Rank rank : ranks) {
-			if (!itemIds.contains(rank.itemId)) {
-				itemIds.add(rank.itemId);
-			}
-		}
-
-		if (itemIds.size() > 0) {
-			List<Item> foundItems = ItemServiceProvider.provide().getExternalIdItemBatch(itemIds);
-
-			for (Item item : foundItems) {
-				lookup.put(item.externalId, item);
-			}
-		}
-
-		return lookup;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.predictors.Predictor#predictRevenueAndDownloads(java.lang.String, java.lang.String, java.lang.String)
-	 */
-	@Override
-	public void predictRevenueAndDownloads(String country, String type, String code) {
-		if (LOG.isLoggable(GaeLevel.TRACE)) {
-			LOG.log(GaeLevel.TRACE, "Entering...");
-		}
-
-		try {
-			Queue queue = QueueFactory.getQueue("predict");
-
-			TaskOptions options = TaskOptions.Builder.withUrl("/predict").method(Method.POST);
-			options.param("country", country);
-			options.param("store", IOS_STORE_A3);
-			options.param("type", type);
-			options.param("code", code);
-
-			try {
-				queue.add(options);
-			} catch (TransientFailureException ex) {
-
-				if (LOG.isLoggable(Level.WARNING)) {
-					LOG.warning(String.format("Could not queue a message because of [%s] - will retry it once", ex.toString()));
-				}
-
-				// retry once
-				try {
-					queue.add(options);
-				} catch (TransientFailureException reEx) {
-					if (LOG.isLoggable(Level.SEVERE)) {
-						LOG.log(Level.SEVERE,
-								String.format("Retry of with payload [%s] failed while adding to queue [%s] twice", options.toString(), queue.getQueueName()),
-								reEx);
-					}
-				}
-			}
-		} finally {
-			if (LOG.isLoggable(GaeLevel.TRACE)) {
-				LOG.log(GaeLevel.TRACE, "Exiting...");
-			}
-		}
-
 	}
 
 }
