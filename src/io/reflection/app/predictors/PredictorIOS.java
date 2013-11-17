@@ -155,22 +155,20 @@ public class PredictorIOS implements Predictor {
 			if (item != null) {
 				if (rank.price.floatValue() > 0) {
 					if (usesIap) {
-
 						if (rank.grossingPosition != null) {
-							rank.revenue = Float.valueOf((float) (modelRun.grossingB.doubleValue() * Math.pow(rank.grossingPosition.doubleValue(),
-									-modelRun.grossingAIap.doubleValue())));
-							rank.downloads = (int) (rank.revenue.doubleValue() / (rank.price.doubleValue() + modelRun.theta.doubleValue()));
+							rank.downloads = Integer.valueOf((int) (modelRun.grossingB.doubleValue() * Math.pow(rank.grossingPosition.doubleValue(),
+									-modelRun.grossingAIap)));
+							rank.revenue = Float.valueOf((float) (rank.downloads.doubleValue() * (rank.price.doubleValue() + modelRun.theta.doubleValue())));
 						} else {
 							rank.downloads = Integer.valueOf((int) (modelRun.paidB.doubleValue() * Math.pow(rank.position.doubleValue(), -modelRun.paidAIap)));
 							rank.revenue = Float.valueOf((float) ((modelRun.theta.doubleValue() + rank.price.doubleValue()) * rank.downloads.doubleValue()));
 						}
 
 					} else {
-
 						if (rank.grossingPosition != null) {
-							rank.revenue = Float.valueOf((float) (modelRun.grossingB.doubleValue() * Math.pow(rank.grossingPosition.doubleValue(),
+							rank.downloads = Integer.valueOf((int) (modelRun.grossingB.doubleValue() * Math.pow(rank.grossingPosition.doubleValue(),
 									-modelRun.grossingA.doubleValue())));
-							rank.downloads = (int) (rank.revenue.floatValue() / rank.price.floatValue());
+							rank.revenue = Float.valueOf((float) (rank.downloads.floatValue() * rank.price.floatValue()));
 						} else {
 							rank.downloads = Integer.valueOf((int) (modelRun.paidB.doubleValue() * Math.pow(rank.position.doubleValue(), -modelRun.paidA)));
 							rank.revenue = Float.valueOf(rank.price.floatValue() * rank.downloads.floatValue());
@@ -180,20 +178,20 @@ public class PredictorIOS implements Predictor {
 				} else if (rank.price.floatValue() == 0) {
 					if (usesIap || rank.grossingPosition != null) {
 						if (rank.grossingPosition != null) {
-							rank.revenue = Float.valueOf((float) (modelRun.grossingB.doubleValue() * Math.pow(rank.grossingPosition.doubleValue(),
+							rank.downloads = Integer.valueOf((int) (modelRun.grossingB.doubleValue() * Math.pow(rank.grossingPosition.doubleValue(),
 									-modelRun.grossingAIap.doubleValue())));
-							rank.downloads = (int) (rank.revenue.doubleValue() / modelRun.theta.doubleValue());
+							rank.revenue = Float.valueOf((float) (rank.downloads.doubleValue() * modelRun.theta.doubleValue()));
 						} else {
 							rank.downloads = Integer.valueOf((int) (modelRun.freeB.doubleValue() * Math.pow(rank.position.doubleValue(), -modelRun.freeA)));
 							rank.revenue = Float.valueOf((float) (modelRun.theta.doubleValue() * rank.downloads.doubleValue()));
 						}
 					} else {
-
 						if (rank.grossingPosition != null) {
 							// ERROR!!!
 						} else {
-							rank.downloads = Integer.valueOf((int) (modelRun.freeB.doubleValue() * Math.pow(rank.position.doubleValue(), -modelRun.freeB)));
+							rank.downloads = Integer.valueOf((int) (modelRun.freeB.doubleValue() * Math.pow(rank.position.doubleValue(), -modelRun.freeA)));
 							rank.revenue = Float.valueOf(0);
+
 						}
 
 					}
