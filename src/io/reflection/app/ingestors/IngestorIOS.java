@@ -30,6 +30,7 @@ import java.nio.channels.Channels;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -133,9 +134,22 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			List<Item> addItems = new ArrayList<Item>();
 
 			Map<Integer, FeedFetch> group = grouped.get(key);
-			FeedFetch firstFeedFetch = group.values().iterator().next();
+			Iterator<FeedFetch> iterator = group.values().iterator();
+			FeedFetch firstFeedFetch = iterator.next();
 
 			isGrossing = c.isGrossing(firstFeedFetch.type);
+			
+			if (!isGrossing) {
+				FeedFetch f = null;
+				while((f = iterator.next()) != null) {
+					if (c.isGrossing(f.type)) {
+						firstFeedFetch = f;
+						isGrossing = true;
+						
+						break;
+					}
+				}
+			}
 
 			Country country = new Country();
 			country.a2Code = firstFeedFetch.country;
@@ -264,7 +278,9 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 				FeedFetchServiceProvider.provide().updateFeedFetch(current);
 			}
 
-			ModellerFactory.getModellerForStore(IOS_STORE_A3).enqueue(firstFeedFetch.country, firstFeedFetch.type, firstFeedFetch.code);
+			if (isGrossing) {
+				ModellerFactory.getModellerForStore(IOS_STORE_A3).enqueue(firstFeedFetch.country, firstFeedFetch.type, firstFeedFetch.code);
+			}
 		}
 	}
 
