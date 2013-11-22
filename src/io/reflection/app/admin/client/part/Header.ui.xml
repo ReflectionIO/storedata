@@ -21,15 +21,9 @@
                 <a class="navbar-brand" href=""><g:Image styleName="{style.aligntoimage}" resource="{res.logo}"/>&nbsp;&nbsp;Reflection</a>
             </div>
             <div class="collapse navbar-collapse">
-                <ul class="nav navbar-nav">
+                <ul class="nav navbar-nav" ui:field="mNavList">
                     <li ui:field="mRanksItem">
                         <g:InlineHyperlink ui:field="mRanksLink" targetHistoryToken="ranks">Ranks</g:InlineHyperlink>
-                    </li>
-                    <li ui:field="mFeedBrowserItem">
-                        <g:InlineHyperlink ui:field="mFeedBrowserLink" targetHistoryToken="feedbrowser">Feed Browser</g:InlineHyperlink>
-                    </li>
-                    <li ui:field="mUsersItem">
-                        <g:InlineHyperlink ui:field="mUsersLink" targetHistoryToken="users">Users <span class="badge" ui:field="mTotalUsers">1+</span></g:InlineHyperlink>
                     </li>
                 </ul>
             </div><!--/.nav-collapse -->

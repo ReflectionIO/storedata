@@ -135,6 +135,9 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
 		mPager = null;
 		mRows = null;
+		
+		updateRowData(0, new ArrayList<FeedFetch>());
+		updateRowCount(0, false);
 
 		fetchFeedFetches();
 	}

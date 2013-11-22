@@ -9,6 +9,8 @@ package io.reflection.app.admin.client.controller;
 
 import io.reflection.app.admin.client.handler.UsersEventHandler.ReceivedCount;
 import io.reflection.app.admin.client.handler.UsersEventHandler.ReceivedUsers;
+import io.reflection.app.admin.client.handler.UsersEventHandler.UserLoggedIn;
+import io.reflection.app.admin.client.handler.UsersEventHandler.UserLoggedOut;
 import io.reflection.app.api.admin.client.AdminService;
 import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersCountResponse;
@@ -37,6 +39,8 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 	private List<User> mUsers = new ArrayList<User>();
 	private long mCount = -1;
 	private Pager mPager;
+
+	private User mLoggedIn = null;
 
 	private static UserController mOne = null;
 
@@ -84,8 +88,10 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 					}
 
 					updateRowCount((int) mCount, true);
-					updateRowData(input.pager.start.intValue(),
-							mUsers.subList(input.pager.start.intValue(), Math.min(input.pager.start.intValue() + input.pager.count.intValue(), mPager.totalCount.intValue())) );
+					updateRowData(
+							input.pager.start.intValue(),
+							mUsers.subList(input.pager.start.intValue(),
+									Math.min(input.pager.start.intValue() + input.pager.count.intValue(), mPager.totalCount.intValue())));
 
 					EventController.get().fireEventFromSource(new ReceivedUsers(result.users), UserController.this);
 				}
@@ -155,5 +161,22 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 				Window.alert("Error");
 			}
 		});
+	}
+
+	public User getLoggedInUser() {
+		return mLoggedIn;
+	}
+
+	public void setLoggedInUser(User user) {
+
+		if (mLoggedIn != user) {
+			mLoggedIn = user;
+
+			if (mLoggedIn == null) {
+				EventController.get().fireEventFromSource(new UserLoggedIn(mLoggedIn), UserController.this);
+			} else {
+				EventController.get().fireEventFromSource(new UserLoggedOut(), UserController.this);
+			}
+		}
 	}
 }

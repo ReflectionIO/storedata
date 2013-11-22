@@ -9,6 +9,7 @@ package io.reflection.app.admin.client.controller;
 
 import io.reflection.app.admin.client.handler.NavigationEventHandler;
 import io.reflection.app.admin.client.page.FeedBrowserPage;
+import io.reflection.app.admin.client.page.LoginPage;
 import io.reflection.app.admin.client.page.RanksPage;
 import io.reflection.app.admin.client.page.UsersPage;
 import io.reflection.app.admin.client.part.Footer;
@@ -28,6 +29,8 @@ public class NavigationController {
 	private RanksPage mRanksPage = null;
 	private FeedBrowserPage mFeedBrowserPage = null;
 	private UsersPage mUsersPage = null;
+	private LoginPage mLoginPage = null;
+
 	private Header mHeader = null;
 	private Footer mFooter = null;
 
@@ -62,7 +65,7 @@ public class NavigationController {
 		public boolean hasAction() {
 			return getAction() != null;
 		}
-		
+
 		public boolean hasPage() {
 			return getPage() != null;
 		}
@@ -120,13 +123,25 @@ public class NavigationController {
 
 	}
 
+	public void addLoginPage() {
+		if (mLoginPage == null) {
+			mLoginPage = new LoginPage();
+		}
+
+		if (!mLoginPage.isAttached()) {
+			mPanel.clear();
+			mPanel.add(mLoginPage);
+		} else {}
+		
+	}
+
 	/**
 	 * @param value
 	 */
 	public void addPage(String value) {
 		Stack s = null;
 		if (value == null || value.length() == 0) {
-			value = "ranks";
+			value = "login";
 		}
 
 		s = Stack.parse(value);
@@ -137,10 +152,12 @@ public class NavigationController {
 			addFeedBrowserPage();
 		} else if ("users".equals(s.getPage())) {
 			addUsersPage();
+		} else if ("login".equals(s.getPage())) {
+			addLoginPage();
 		}
 
 		mStack = s;
-		
+
 		EventController.get().fireEventFromSource(new NavigationEventHandler.ChangedEvent(s), NavigationController.this);
 	}
 

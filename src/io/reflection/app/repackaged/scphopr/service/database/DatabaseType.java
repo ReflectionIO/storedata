@@ -21,7 +21,9 @@ public enum DatabaseType {
 	DatabaseTypeUser("user"),
 	DatabaseTypeApplication("application"),
 	DatabaseTypeFeedFetch("fetchfeed"),
-	DatabaseTypeModelRun("modelrun");
+	DatabaseTypeModelRun("modelrun"),
+	DatabaseTypePermission("permission"),
+	DatabaseTypeRole("role");
 
 	private String value;
 	private static Map<String, DatabaseType> valueLookup = null;

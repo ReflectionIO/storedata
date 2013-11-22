@@ -134,6 +134,12 @@
     <xsd:complexType name="User">
         <xsd:complexContent>
             <xsd:extension base="DataType">
+
+                <xsd:sequence>
+                    <xsd:element name="permissions" type="Permission" maxOccurs="unbounded" minOccurs="0" />
+                    <xsd:element name="roles" type="Role" maxOccurs="unbounded" minOccurs="0" />
+                </xsd:sequence>
+
                 <xsd:attribute type="xsd:string" name="forename" />
                 <xsd:attribute type="xsd:string" name="surname" />
                 <xsd:attribute type="xsd:string" name="username" />
@@ -142,6 +148,38 @@
                 <xsd:attribute type="xsd:string" name="password" />
                 <xsd:attribute type="xsd:dateTime" name="lastLoggedIn" />
                 <xsd:attribute type="xsd:string" name="verified" />
+                <xsd:attribute type="xsd:dateTime" name="expires" />
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:simpleType name="PermissionTypeType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="User" />
+            <xsd:enumeration value="Special" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:complexType name="Permission">
+        <xsd:complexContent>
+            <xsd:extension base="DataType">
+                <xsd:attribute name="type" type="PermissionTypeType" />
+                <xsd:attribute name="name" type="xsd:string" />
+                <xsd:attribute name="description" type="xsd:string" />
+                <xsd:attribute name="code" type="xsd:string" />
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="Role">
+        <xsd:complexContent>
+            <xsd:extension base="DataType">
+                <xsd:sequence>
+                    <xsd:element name="permissions" type="Permission" minOccurs="0" maxOccurs="unbounded" />
+                </xsd:sequence>
+                <xsd:attribute name="name" type="xsd:string" />
+                <xsd:attribute name="description" type="xsd:string" />
+                <xsd:attribute name="code" type="xsd:string" />
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>

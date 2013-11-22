@@ -19,12 +19,16 @@ import com.google.gwt.event.shared.GwtEvent;
  * 
  */
 public interface UsersEventHandler extends EventHandler {
-	
+
 	public static final GwtEvent.Type<UsersEventHandler> TYPE = new GwtEvent.Type<UsersEventHandler>();
-	
+
 	public void receivedUsers(List<User> users);
 
 	public void receivedUsersCount(Long count);
+
+	public void userLoggedIn(User user);
+
+	public void userLoggedOut();
 
 	public class ReceivedCount extends GwtEvent<UsersEventHandler> {
 
@@ -83,6 +87,58 @@ public interface UsersEventHandler extends EventHandler {
 		protected void dispatch(UsersEventHandler handler) {
 			handler.receivedUsers(mUser);
 
+		}
+	}
+
+	public class UserLoggedIn extends GwtEvent<UsersEventHandler> {
+		private User mUser = null;
+
+		public UserLoggedIn(User user) {
+			mUser = user;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
+		 */
+		@Override
+		public com.google.gwt.event.shared.GwtEvent.Type<UsersEventHandler> getAssociatedType() {
+			return TYPE;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+		 */
+		@Override
+		protected void dispatch(UsersEventHandler handler) {
+			handler.userLoggedIn(mUser);
+		}
+	}
+
+	public class UserLoggedOut extends GwtEvent<UsersEventHandler> {
+		public UserLoggedOut() {}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
+		 */
+		@Override
+		public com.google.gwt.event.shared.GwtEvent.Type<UsersEventHandler> getAssociatedType() {
+			return TYPE;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+		 */
+		@Override
+		protected void dispatch(UsersEventHandler handler) {
+			handler.userLoggedOut();
 		}
 	}
 }

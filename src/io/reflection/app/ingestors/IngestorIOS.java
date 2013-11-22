@@ -138,18 +138,6 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			FeedFetch firstFeedFetch = iterator.next();
 
 			isGrossing = c.isGrossing(firstFeedFetch.type);
-			
-			if (!isGrossing) {
-				FeedFetch f = null;
-				while((f = iterator.next()) != null) {
-					if (c.isGrossing(f.type)) {
-						firstFeedFetch = f;
-						isGrossing = true;
-						
-						break;
-					}
-				}
-			}
 
 			Country country = new Country();
 			country.a2Code = firstFeedFetch.country;
