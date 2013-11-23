@@ -1,13 +1,13 @@
 @CHARSET "UTF-8";
 
-@external pagination, active;
+@external pagination, active, btn-primary, active, open, dropdown-toggle;
 
 a {
 	cursor: pointer;
     color: #9780E4;
 }
 
-a:hover {
+a:hover, a:focus, a:active, a.active {
 	text-decoration: none;
 	color: #272833;
 }
@@ -20,4 +20,14 @@ a:hover {
 .pagination > .active > span:focus {
 	background-color: #9780E4;
 	border-color: #9780E4;
+}
+
+.btn-primary {
+	background-color: #9780E4;
+	border-color: #8873CD;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open .dropdown-toggle.btn-primary {
+	background-color: #272833;
+	border-color: #3D3D47;
 }

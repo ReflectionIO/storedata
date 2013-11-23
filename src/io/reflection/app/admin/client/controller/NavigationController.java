@@ -11,6 +11,7 @@ import io.reflection.app.admin.client.handler.NavigationEventHandler;
 import io.reflection.app.admin.client.page.FeedBrowserPage;
 import io.reflection.app.admin.client.page.LoginPage;
 import io.reflection.app.admin.client.page.RanksPage;
+import io.reflection.app.admin.client.page.RegisterPage;
 import io.reflection.app.admin.client.page.UsersPage;
 import io.reflection.app.admin.client.part.Footer;
 import io.reflection.app.admin.client.part.Header;
@@ -30,6 +31,7 @@ public class NavigationController {
 	private FeedBrowserPage mFeedBrowserPage = null;
 	private UsersPage mUsersPage = null;
 	private LoginPage mLoginPage = null;
+	private RegisterPage mRegisterPage = null;
 
 	private Header mHeader = null;
 	private Footer mFooter = null;
@@ -132,7 +134,18 @@ public class NavigationController {
 			mPanel.clear();
 			mPanel.add(mLoginPage);
 		} else {}
-		
+
+	}
+
+	public void addRegisterPage() {
+		if (mRegisterPage == null) {
+			mRegisterPage = new RegisterPage();
+		}
+
+		if (!mRegisterPage.isAttached()) {
+			mPanel.clear();
+			mPanel.add(mRegisterPage);
+		} else {}
 	}
 
 	/**
@@ -154,6 +167,8 @@ public class NavigationController {
 			addUsersPage();
 		} else if ("login".equals(s.getPage())) {
 			addLoginPage();
+		} else if ("register".equals(s.getPage())) {
+			addRegisterPage();
 		}
 
 		mStack = s;
