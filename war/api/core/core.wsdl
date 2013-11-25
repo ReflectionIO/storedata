@@ -205,7 +205,6 @@
                     <xsd:extension base="sd:Response">
                         <xsd:sequence>
                             <xsd:element name="session" type="sd:Session" maxOccurs="1" />
-                            <xsd:element name="user" type="sd:User" maxOccurs="1" />
                         </xsd:sequence>
                     </xsd:extension>
                 </xsd:complexContent>

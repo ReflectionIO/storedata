@@ -209,6 +209,9 @@
     <xsd:complexType name="Session">
         <xsd:complexContent>
             <xsd:extension base="DataType">
+                <xsd:sequence>
+                    <xsd:element name="user" type="User" maxOccurs="1" />
+                </xsd:sequence>
                 <xsd:attribute name="expires" type="xsd:dateTime" use="optional" />
                 <xsd:attribute name="token" type="xsd:string" use="required" />
             </xsd:extension>

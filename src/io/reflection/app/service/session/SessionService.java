@@ -14,6 +14,7 @@ import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProv
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
+import io.reflection.app.shared.datatypes.User;
 
 final class SessionService implements ISessionService {
 	public String getName() {
@@ -27,7 +28,7 @@ final class SessionService implements ISessionService {
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection sessionConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeSession.toString());
 
-		String getSessionQuery = String.format("select * from `session` where `deleted`='n' and `id`='%d' limit 1", id.longValue());
+		String getSessionQuery = String.format("SELECT * FROM `session` WHERE `deleted`='n' AND `id`='%d' LIMIT 1", id.longValue());
 		try {
 			sessionConnection.connect();
 			sessionConnection.executeQuery(getSessionQuery);
@@ -51,13 +52,22 @@ final class SessionService implements ISessionService {
 	 */
 	private Session toSession(Connection connection) {
 		Session session = new Session();
+
 		session.id = connection.getCurrentRowLong("id");
+		session.created = connection.getCurrentRowDateTime("created");
+		session.deleted = connection.getCurrentRowString("deleted");
+
+		session.expires = connection.getCurrentRowDateTime("expires");
+		session.token = connection.getCurrentRowString("token");
+		session.user = new User();
+		session.user.id = connection.getCurrentRowLong("userid");
+
 		return session;
 	}
 
 	@Override
 	public Session addSession(Session session) {
-		throw new UnsupportedOperationException();
+		return createUserSession(session.user);
 	}
 
 	@Override
@@ -67,7 +77,81 @@ final class SessionService implements ISessionService {
 
 	@Override
 	public void deleteSession(Session session) {
-		throw new UnsupportedOperationException();
+		Connection sessionConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSession.toString());
+
+		String deleteSessionQuery = String.format("UPDATE `session` SET `deleted`='y' WHERE `id`=%d", session.id.longValue());
+		try {
+			sessionConnection.connect();
+			sessionConnection.executeQuery(deleteSessionQuery);
+		} finally {
+			if (sessionConnection != null) {
+				sessionConnection.disconnect();
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.session.ISessionService#createUserSession(io.reflection.app.shared.datatypes.User)
+	 */
+	@Override
+	public Session createUserSession(User user) {
+		Session session = null;
+
+		IDatabaseService databaseService = DatabaseServiceProvider.provide();
+		Connection sessionConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeSession.toString());
+
+		String createUserSessionQuery = String.format(
+				"INSERT INTO `session` (`userid`, `token` `expires`) values (%d, UUID(), date_add(now(), interval 20 minute))", user.id.longValue());
+
+		try {
+			sessionConnection.connect();
+			sessionConnection.executeQuery(createUserSessionQuery);
+
+			if (sessionConnection.getAffectedRowCount() > 0) {
+				long sessionId = sessionConnection.getInsertedId();
+
+				session = getSession(sessionId);
+			}
+		} finally {
+			if (sessionConnection != null) {
+				sessionConnection.disconnect();
+			}
+		}
+
+		return session;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.session.ISessionService#getUserSession(io.reflection.app.shared.datatypes.User)
+	 */
+	@Override
+	public Session getUserSession(User user) {
+		Session session = null;
+
+		IDatabaseService databaseService = DatabaseServiceProvider.provide();
+		Connection sessionConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeSession.toString());
+
+		String getUserSessionQuery = String.format(
+				"SELECT * FROM `session` WHERE `userid`=\'%d\' AND `expires` > NOW() AND `deleted`='n' ORDER BY `expires` DESC LIMIT 1", user.id.longValue());
+
+		try {
+			sessionConnection.connect();
+			sessionConnection.executeQuery(getUserSessionQuery);
+
+			if (sessionConnection.fetchNextRow()) {
+				session = toSession(sessionConnection);
+			}
+		} finally {
+			if (sessionConnection != null) {
+				sessionConnection.disconnect();
+			}
+		}
+
+		return session;
 	}
 
 }

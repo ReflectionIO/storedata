@@ -30,6 +30,8 @@ import io.reflection.app.api.core.shared.call.LogoutRequest;
 import io.reflection.app.api.core.shared.call.LogoutResponse;
 import io.reflection.app.api.core.shared.call.RegisterUserRequest;
 import io.reflection.app.api.core.shared.call.RegisterUserResponse;
+import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.collectors.CollectorIOS;
 import io.reflection.app.input.ValidationError;
@@ -37,7 +39,10 @@ import io.reflection.app.input.ValidationHelper;
 import io.reflection.app.service.country.CountryServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
+import io.reflection.app.service.session.ISessionService;
+import io.reflection.app.service.session.SessionServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
+import io.reflection.app.service.user.IUserService;
 import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.datatypes.Country;
 import io.reflection.app.shared.datatypes.Rank;
@@ -50,6 +55,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.willshex.gson.json.service.server.ActionHandler;
@@ -485,7 +491,44 @@ public final class Core extends ActionHandler {
 	public LoginResponse login(LoginRequest input) {
 		LOG.finer("Entering login");
 		LoginResponse output = new LoginResponse();
+		
 		try {
+			if (input == null)
+				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
+						ValidationError.InvalidValueNull.getMessage("LoginRequest: input"));
+
+			if (input.username == null)
+				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
+						ValidationError.InvalidValueNull.getMessage("String: input.username"));
+
+			if (input.password == null)
+				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
+						ValidationError.InvalidValueNull.getMessage("String: input.password"));
+
+			IUserService userService = UserServiceProvider.provide();
+
+			User user = userService.getLoginUser(input.username, input.password);
+
+			if (user == null) throw new Exception("Invalid credentials - no user found in");
+
+			ISessionService sessionService = SessionServiceProvider.provide();
+
+			if (LOG.isLoggable(Level.FINER)) {
+				LOG.finer("Getting user session");
+			}
+
+			Session session = sessionService.getUserSession(user);
+
+			if (session == null) {
+				if (LOG.isLoggable(Level.FINER)) {
+					LOG.finer("Existing session not found, creating new session");
+				}
+
+				session = sessionService.createUserSession(user);
+			}
+
+			output.session = session;
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -538,6 +581,29 @@ public final class Core extends ActionHandler {
 		LOG.finer("Entering checkUsername");
 		CheckUsernameResponse output = new CheckUsernameResponse();
 		try {
+			IUserService userService = UserServiceProvider.provide();
+
+			Long userCount = userService.searchUsersCount(input.username);
+
+			if (userCount.longValue() > 0) {
+				Pager p = new Pager();
+				p.start = Long.valueOf(0);
+				p.count = userCount;
+
+				List<User> users = userService.searchUsers(input.username, p);
+
+				for (User user : users) {
+					if (user.username.equalsIgnoreCase(input.username)) {
+						output.usernameInUse = Boolean.TRUE;
+						break;
+					}
+				}
+			}
+
+			if (output.usernameInUse != Boolean.TRUE) {
+				output.usernameInUse = Boolean.FALSE;
+			}
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;

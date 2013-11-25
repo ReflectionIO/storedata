@@ -400,3 +400,15 @@ CREATE TABLE `modelrun` (
   PRIMARY KEY (`id`),
   KEY `index_code` (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+CREATE TABLE `session` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `userid` int(11) unsigned NOT NULL,
+  `token` char(36) NOT NULL,
+  `expires` datetime NOT NULL,
+  `deleted` enum('y','n') NOT NULL DEFAULT 'n',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_token` (`token`),
+  KEY `index_userid` (`userid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$

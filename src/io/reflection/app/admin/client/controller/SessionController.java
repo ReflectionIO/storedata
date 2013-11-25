@@ -7,11 +7,13 @@
 //
 package io.reflection.app.admin.client.controller;
 
-import io.reflection.app.admin.client.handler.UsersEventHandler.UserLoggedIn;
-import io.reflection.app.admin.client.handler.UsersEventHandler.UserLoggedOut;
+import io.reflection.app.admin.client.handler.SessionEventHandler.UserLoggedIn;
+import io.reflection.app.admin.client.handler.SessionEventHandler.UserLoggedOut;
 import io.reflection.app.api.core.client.CoreService;
 import io.reflection.app.api.core.shared.call.LoginRequest;
 import io.reflection.app.api.core.shared.call.LoginResponse;
+import io.reflection.app.api.core.shared.call.LogoutRequest;
+import io.reflection.app.api.core.shared.call.LogoutResponse;
 import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.shared.datatypes.User;
 
@@ -41,16 +43,24 @@ public class SessionController implements ServiceController {
 		return mLoggedIn;
 	}
 
-	public void setLoggedInUser(User user) {
+	public Session getSession() {
+		return mSession;
+	}
+
+	private void setLoggedInUser(User user, Session session) {
 
 		if (mLoggedIn != user) {
 			mLoggedIn = user;
 
 			if (mLoggedIn == null) {
-				EventController.get().fireEventFromSource(new UserLoggedIn(mLoggedIn), SessionController.this);
+				EventController.get().fireEventFromSource(new UserLoggedIn(mLoggedIn, mSession), SessionController.this);
 			} else {
 				EventController.get().fireEventFromSource(new UserLoggedOut(), SessionController.this);
 			}
+		}
+
+		if (mSession != session) {
+			mSession = session;
 		}
 	}
 
@@ -76,14 +86,38 @@ public class SessionController implements ServiceController {
 			public void onSuccess(LoginResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
 					Window.alert("login was successful");
-					
-					mLoggedIn = output.user;
-					mSession = output.session;
+
+					if (output.session != null && output.session.user != null) {
+						setLoggedInUser(output.session.user, output.session);
+					}
 				} else {
 					Window.alert("login failed");
 				}
 			}
 		});
+	}
+
+	public void logout() {
+		CoreService service = new CoreService();
+		service.setUrl(CORE_END_POINT);
+
+		final LogoutRequest input = new LogoutRequest();
+		input.accessCode = ACCESS_CODE;
+
+		service.logout(input, new AsyncCallback<LogoutResponse>() {
+
+			@Override
+			public void onSuccess(LogoutResponse result) {
+				// no one cares
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				// no one cares
+			}
+		});
+
+		setLoggedInUser(null, null);
 	}
 
 }

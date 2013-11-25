@@ -9,7 +9,6 @@
 package io.reflection.app.api.core.shared.call;
 
 import io.reflection.app.api.shared.datatypes.Session;
-import io.reflection.app.shared.datatypes.User;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
@@ -18,15 +17,12 @@ import com.willshex.gson.json.service.shared.Response;
 
 public class LoginResponse extends Response {
 	public Session session;
-	public User user;
 
 	@Override
 	public JsonObject toJson() {
 		JsonObject object = super.toJson();
 		JsonElement jsonSession = session == null ? JsonNull.INSTANCE : session.toJson();
 		object.add("session", jsonSession);
-		JsonElement jsonUser = user == null ? JsonNull.INSTANCE : user.toJson();
-		object.add("user", jsonUser);
 		return object;
 	}
 
@@ -38,13 +34,6 @@ public class LoginResponse extends Response {
 			if (jsonSession != null) {
 				session = new Session();
 				session.fromJson(jsonSession.getAsJsonObject());
-			}
-		}
-		if (jsonObject.has("user")) {
-			JsonElement jsonUser = jsonObject.get("user");
-			if (jsonUser != null) {
-				user = new User();
-				user.fromJson(jsonUser.getAsJsonObject());
 			}
 		}
 	}

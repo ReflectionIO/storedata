@@ -15,6 +15,6 @@
         <!-- <c:SimplePager ui:field="mPager"/> -->
         <!-- <c:PageSizePager ui:field="mPager" /> -->
         
-        <p:SimplePager ui:field="mPager" styleName="col-md-offset-1" />
+        <p:SimplePager ui:field="mPager" />
     </g:HTMLPanel>
 </ui:UiBinder> 

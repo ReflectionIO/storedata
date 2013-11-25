@@ -169,6 +169,10 @@ public class NavigationController {
 			addLoginPage();
 		} else if ("register".equals(s.getPage())) {
 			addRegisterPage();
+		} else if ("logout".equals(s.getPage())) {
+			SessionController.get().logout();
+			addPage("ranks");
+			return;
 		}
 
 		mStack = s;

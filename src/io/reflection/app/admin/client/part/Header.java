@@ -12,7 +12,9 @@ import io.reflection.app.admin.client.controller.NavigationController;
 import io.reflection.app.admin.client.controller.NavigationController.Stack;
 import io.reflection.app.admin.client.controller.UserController;
 import io.reflection.app.admin.client.handler.NavigationEventHandler;
+import io.reflection.app.admin.client.handler.SessionEventHandler;
 import io.reflection.app.admin.client.handler.UsersEventHandler;
+import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.shared.datatypes.User;
 
 import java.util.List;
@@ -32,7 +34,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author billy1380
  * 
  */
-public class Header extends Composite implements UsersEventHandler, NavigationEventHandler {
+public class Header extends Composite implements UsersEventHandler, NavigationEventHandler, SessionEventHandler {
 
 	private static HeaderUiBinder uiBinder = GWT.create(HeaderUiBinder.class);
 
@@ -71,8 +73,6 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 //		}
 		
 		EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this);
-		
-		userLoggedIn(null);
 	}
 
 	private void activateFeedBrowser() {
@@ -136,10 +136,10 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.admin.client.handler.UsersEventHandler#userLoggedIn(io.reflection.app.shared.datatypes.User)
+	 * @see io.reflection.app.admin.client.handler.SessionEventHandler#userLoggedIn(io.reflection.app.shared.datatypes.User)
 	 */
 	@Override
-	public void userLoggedIn(User user) {
+	public void userLoggedIn(User user, Session session) {
 		addFeedBrowser();
 		addUsers();
 		removeLogin();
@@ -149,7 +149,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.admin.client.handler.UsersEventHandler#userLoggedOut()
+	 * @see io.reflection.app.admin.client.handler.SessionEventHandler#userLoggedOut()
 	 */
 	@Override
 	public void userLoggedOut() {

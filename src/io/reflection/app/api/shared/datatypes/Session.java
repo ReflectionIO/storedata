@@ -9,6 +9,7 @@
 package io.reflection.app.api.shared.datatypes;
 
 import io.reflection.app.shared.datatypes.DataType;
+import io.reflection.app.shared.datatypes.User;
 
 import java.util.Date;
 
@@ -18,12 +19,15 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 public class Session extends DataType {
+	public User user;
 	public Date expires;
 	public String token;
 
 	@Override
 	public JsonObject toJson() {
 		JsonObject object = super.toJson();
+		JsonElement jsonUser = user == null ? JsonNull.INSTANCE : user.toJson();
+		object.add("user", jsonUser);
 		JsonElement jsonExpires = expires == null ? JsonNull.INSTANCE : new JsonPrimitive(expires.getTime());
 		object.add("expires", jsonExpires);
 		JsonElement jsonToken = token == null ? JsonNull.INSTANCE : new JsonPrimitive(token);
@@ -34,6 +38,13 @@ public class Session extends DataType {
 	@Override
 	public void fromJson(JsonObject jsonObject) {
 		super.fromJson(jsonObject);
+		if (jsonObject.has("user")) {
+			JsonElement jsonUser = jsonObject.get("user");
+			if (jsonUser != null) {
+				user = new User();
+				user.fromJson(jsonUser.getAsJsonObject());
+			}
+		}
 		if (jsonObject.has("expires")) {
 			JsonElement jsonExpires = jsonObject.get("expires");
 			if (jsonExpires != null) {

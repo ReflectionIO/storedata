@@ -9,6 +9,7 @@
 package io.reflection.app.service.session;
 
 import io.reflection.app.api.shared.datatypes.Session;
+import io.reflection.app.shared.datatypes.User;
 
 import com.spacehopperstudios.service.IService;
 
@@ -35,5 +36,19 @@ public interface ISessionService extends IService {
 	 * @param session
 	 */
 	public void deleteSession(Session session);
+
+	/**
+	 * Create user session
+	 * @param user
+	 * @return
+	 */
+    public Session createUserSession (User user);
+
+    /**
+     * Get user session
+     * @param user
+     * @return
+     */
+    public Session getUserSession (User user);
 
 }
