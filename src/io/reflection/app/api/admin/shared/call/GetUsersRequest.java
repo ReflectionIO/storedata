@@ -13,7 +13,7 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import com.willshex.gson.json.service.shared.Request;
+import io.reflection.app.api.shared.datatypes.Request;
 
 public class GetUsersRequest extends Request {
 	public Pager pager;

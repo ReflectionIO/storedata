@@ -9,7 +9,7 @@
 package io.reflection.app.api.admin.shared.call;
 
 import com.google.gson.JsonObject;
-import com.willshex.gson.json.service.shared.Request;
+import io.reflection.app.api.shared.datatypes.Request;
 
 public class GetUsersCountRequest extends Request {
 	@Override

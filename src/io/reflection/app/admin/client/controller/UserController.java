@@ -9,8 +9,6 @@ package io.reflection.app.admin.client.controller;
 
 import io.reflection.app.admin.client.handler.UsersEventHandler.ReceivedCount;
 import io.reflection.app.admin.client.handler.UsersEventHandler.ReceivedUsers;
-import io.reflection.app.admin.client.handler.UsersEventHandler.UserLoggedIn;
-import io.reflection.app.admin.client.handler.UsersEventHandler.UserLoggedOut;
 import io.reflection.app.api.admin.client.AdminService;
 import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersCountResponse;
@@ -38,9 +36,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 	private List<User> mUsers = new ArrayList<User>();
 	private long mCount = -1;
-	private Pager mPager;
-
-	private User mLoggedIn = null;
+	private Pager mPager;	
 
 	private static UserController mOne = null;
 
@@ -163,20 +159,4 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		});
 	}
 
-	public User getLoggedInUser() {
-		return mLoggedIn;
-	}
-
-	public void setLoggedInUser(User user) {
-
-		if (mLoggedIn != user) {
-			mLoggedIn = user;
-
-			if (mLoggedIn == null) {
-				EventController.get().fireEventFromSource(new UserLoggedIn(mLoggedIn), UserController.this);
-			} else {
-				EventController.get().fireEventFromSource(new UserLoggedOut(), UserController.this);
-			}
-		}
-	}
 }

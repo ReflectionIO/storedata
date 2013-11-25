@@ -1,17 +1,17 @@
 //  
-//  TriggerGatherRequest.java
+//  ChangeUserDetailsResponse.java
 //  reflection.io
 //
-//  Created by William Shakour on October 23, 2013.
+//  Created by William Shakour on November 25, 2013.
 //  Copyrights © 2013 SPACEHOPPER STUDIOS LTD. All rights reserved.
 //  Copyrights © 2013 reflection.io. All rights reserved.
 //
-package io.reflection.app.api.admin.shared.call;
+package io.reflection.app.api.core.shared.call;
 
 import com.google.gson.JsonObject;
-import io.reflection.app.api.shared.datatypes.Request;
+import com.willshex.gson.json.service.shared.Response;
 
-public class TriggerGatherRequest extends Request {
+public class ChangeUserDetailsResponse extends Response {
 	@Override
 	public JsonObject toJson() {
 		JsonObject object = super.toJson();

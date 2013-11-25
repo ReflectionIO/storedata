@@ -205,8 +205,20 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
+    
+    <xsd:complexType name="Session">
+        <xsd:complexContent>
+            <xsd:extension base="DataType">
+                <xsd:attribute name="expires" type="xsd:dateTime" use="optional" />
+                <xsd:attribute name="token" type="xsd:string" use="required" />
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
 
     <xsd:complexType name="Request">
+        <xsd:sequence>
+            <xsd:element name="session" type="Session"></xsd:element>
+        </xsd:sequence>
         <xsd:attribute name="accessCode" type="xsd:string" />
     </xsd:complexType>
 

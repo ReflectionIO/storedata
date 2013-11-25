@@ -25,7 +25,8 @@ public enum ServiceType {
 	ServiceTypeUser("user"),
 	ServiceTypeModelRun("modelrun"),
 	ServiceTypePermission("permission"),
-	ServiceTypeRole("role");
+	ServiceTypeRole("role"),
+	ServiceTypeSession("session");
 
 	private String value;
 	private static Map<String, ServiceType> valueLookup = null;

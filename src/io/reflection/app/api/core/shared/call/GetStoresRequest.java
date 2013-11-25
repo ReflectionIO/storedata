@@ -8,13 +8,13 @@
 package io.reflection.app.api.core.shared.call;
 
 import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.api.shared.datatypes.Request;
 import io.reflection.app.shared.datatypes.Country;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.willshex.gson.json.service.shared.Request;
 
 public class GetStoresRequest extends Request {
 	public Country country;

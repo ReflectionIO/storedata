@@ -9,6 +9,7 @@
 package io.reflection.app.api.lookup.shared.call;
 
 import io.reflection.app.api.lookup.shared.datatypes.LookupDetailType;
+import io.reflection.app.api.shared.datatypes.Request;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.willshex.gson.json.service.shared.Request;
 
 public class LookupApplicationRequest extends Request {
 	public List<String> internalIds;

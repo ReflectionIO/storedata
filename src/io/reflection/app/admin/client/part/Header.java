@@ -59,17 +59,20 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 	public Header() {
 		initWidget(uiBinder.createAndBindUi(this));
+		
 		mRanksItem.addClassName("active");
 
 		EventController.get().addHandlerToSource(UsersEventHandler.TYPE, UserController.get(), this);
-
-		if (UserController.get().getUsersCount() >= 0) {
-			mTotalUsers.setInnerText(Long.toString(UserController.get().getUsersCount()));
-		} else {
-			UserController.get().fetchUsersCount();
-		}
-
+		
+//		if (UserController.get().getUsersCount() >= 0) {
+//			mTotalUsers.setInnerText(Long.toString(UserController.get().getUsersCount()));
+//		} else {
+//			UserController.get().fetchUsersCount();
+//		}
+		
 		EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this);
+		
+		userLoggedIn(null);
 	}
 
 	private void activateFeedBrowser() {
@@ -189,6 +192,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 				UserController.get().fetchUsersCount();
 			}
+			
 			mTotalUsers.addClassName("badge");
 
 			mUsersLink.setText("Users ");
@@ -235,7 +239,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	 * 
 	 */
 	private void removeLogin() {
-		if (mLogoutItem != null) {
+		if (mLoginItem != null) {
 			mNavList.removeChild(mLoginItem);
 		}
 	}
@@ -244,24 +248,27 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	 * 
 	 */
 	private void removeLogout() {
-		// TODO Auto-generated method stub
-
+		if (mLogoutItem != null) {
+			mNavList.removeChild(mLogoutItem);
+		}
 	}
 
 	/**
 	 * 
 	 */
 	private void removeUsers() {
-		// TODO Auto-generated method stub
-
+		if (mUsersItem != null) {
+			mNavList.removeChild(mUsersItem);
+		}
 	}
 
 	/**
 	 * 
 	 */
 	private void removeFeedBrowser() {
-		// TODO Auto-generated method stub
-
+		if (mFeedBrowserItem != null) {
+			mNavList.removeChild(mFeedBrowserItem);
+		}
 	}
 
 }

@@ -8,6 +8,12 @@
 package io.reflection.app.api.core;
 
 import static io.reflection.app.api.PagerHelper.updatePager;
+import io.reflection.app.api.core.shared.call.ChangePasswordRequest;
+import io.reflection.app.api.core.shared.call.ChangePasswordResponse;
+import io.reflection.app.api.core.shared.call.ChangeUserDetailsRequest;
+import io.reflection.app.api.core.shared.call.ChangeUserDetailsResponse;
+import io.reflection.app.api.core.shared.call.CheckUsernameRequest;
+import io.reflection.app.api.core.shared.call.CheckUsernameResponse;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
 import io.reflection.app.api.core.shared.call.GetCountriesRequest;
@@ -18,6 +24,10 @@ import io.reflection.app.api.core.shared.call.GetStoresRequest;
 import io.reflection.app.api.core.shared.call.GetStoresResponse;
 import io.reflection.app.api.core.shared.call.GetTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetTopItemsResponse;
+import io.reflection.app.api.core.shared.call.LoginRequest;
+import io.reflection.app.api.core.shared.call.LoginResponse;
+import io.reflection.app.api.core.shared.call.LogoutRequest;
+import io.reflection.app.api.core.shared.call.LogoutResponse;
 import io.reflection.app.api.core.shared.call.RegisterUserRequest;
 import io.reflection.app.api.core.shared.call.RegisterUserResponse;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
@@ -469,6 +479,71 @@ public final class Core extends ActionHandler {
 			output.error = convertToErrorAndLog(LOG, e);
 		}
 		LOG.finer("Exiting registerUser");
+		return output;
+	}
+
+	public LoginResponse login(LoginRequest input) {
+		LOG.finer("Entering login");
+		LoginResponse output = new LoginResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting login");
+		return output;
+	}
+
+	public LogoutResponse logout(LogoutRequest input) {
+		LOG.finer("Entering logout");
+		LogoutResponse output = new LogoutResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting logout");
+		return output;
+	}
+
+	public ChangePasswordResponse changePassword(ChangePasswordRequest input) {
+		LOG.finer("Entering changePassword");
+		ChangePasswordResponse output = new ChangePasswordResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting changePassword");
+		return output;
+	}
+
+	public ChangeUserDetailsResponse changeUserDetails(ChangeUserDetailsRequest input) {
+		LOG.finer("Entering changeUserDetails");
+		ChangeUserDetailsResponse output = new ChangeUserDetailsResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting changeUserDetails");
+		return output;
+	}
+
+	public CheckUsernameResponse checkUsername(CheckUsernameRequest input) {
+		LOG.finer("Entering checkUsername");
+		CheckUsernameResponse output = new CheckUsernameResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting checkUsername");
 		return output;
 	}
 

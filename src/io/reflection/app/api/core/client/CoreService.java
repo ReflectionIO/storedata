@@ -8,6 +8,12 @@
 //
 package io.reflection.app.api.core.client;
 
+import io.reflection.app.api.core.shared.call.ChangePasswordRequest;
+import io.reflection.app.api.core.shared.call.ChangePasswordResponse;
+import io.reflection.app.api.core.shared.call.ChangeUserDetailsRequest;
+import io.reflection.app.api.core.shared.call.ChangeUserDetailsResponse;
+import io.reflection.app.api.core.shared.call.CheckUsernameRequest;
+import io.reflection.app.api.core.shared.call.CheckUsernameResponse;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
 import io.reflection.app.api.core.shared.call.GetCountriesRequest;
@@ -18,6 +24,10 @@ import io.reflection.app.api.core.shared.call.GetStoresRequest;
 import io.reflection.app.api.core.shared.call.GetStoresResponse;
 import io.reflection.app.api.core.shared.call.GetTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetTopItemsResponse;
+import io.reflection.app.api.core.shared.call.LoginRequest;
+import io.reflection.app.api.core.shared.call.LoginResponse;
+import io.reflection.app.api.core.shared.call.LogoutRequest;
+import io.reflection.app.api.core.shared.call.LogoutResponse;
 import io.reflection.app.api.core.shared.call.RegisterUserRequest;
 import io.reflection.app.api.core.shared.call.RegisterUserResponse;
 
@@ -147,6 +157,116 @@ public final class CoreService extends JsonService {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					RegisterUserResponse outputParameter = new RegisterUserResponse();
+					parseResponse(response.getText(), outputParameter);
+					output.onSuccess(outputParameter);
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+				}
+			});
+		} catch (RequestException e) {
+			output.onFailure(e);
+		}
+	}
+
+	public static final String CoreMethodLogin = "Login";
+
+	public void login(LoginRequest input, final AsyncCallback<LoginResponse> output) {
+		try {
+			sendRequest(CoreMethodLogin, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					LoginResponse outputParameter = new LoginResponse();
+					parseResponse(response.getText(), outputParameter);
+					output.onSuccess(outputParameter);
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+				}
+			});
+		} catch (RequestException e) {
+			output.onFailure(e);
+		}
+	}
+
+	public static final String CoreMethodLogout = "Logout";
+
+	public void logout(LogoutRequest input, final AsyncCallback<LogoutResponse> output) {
+		try {
+			sendRequest(CoreMethodLogout, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					LogoutResponse outputParameter = new LogoutResponse();
+					parseResponse(response.getText(), outputParameter);
+					output.onSuccess(outputParameter);
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+				}
+			});
+		} catch (RequestException e) {
+			output.onFailure(e);
+		}
+	}
+
+	public static final String CoreMethodChangePassword = "ChangePassword";
+
+	public void changePassword(ChangePasswordRequest input, final AsyncCallback<ChangePasswordResponse> output) {
+		try {
+			sendRequest(CoreMethodChangePassword, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					ChangePasswordResponse outputParameter = new ChangePasswordResponse();
+					parseResponse(response.getText(), outputParameter);
+					output.onSuccess(outputParameter);
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+				}
+			});
+		} catch (RequestException e) {
+			output.onFailure(e);
+		}
+	}
+
+	public static final String CoreMethodChangeUserDetails = "ChangeUserDetails";
+
+	public void changeUserDetails(ChangeUserDetailsRequest input, final AsyncCallback<ChangeUserDetailsResponse> output) {
+		try {
+			sendRequest(CoreMethodChangeUserDetails, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					ChangeUserDetailsResponse outputParameter = new ChangeUserDetailsResponse();
+					parseResponse(response.getText(), outputParameter);
+					output.onSuccess(outputParameter);
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+				}
+			});
+		} catch (RequestException e) {
+			output.onFailure(e);
+		}
+	}
+
+	public static final String CoreMethodCheckUsername = "CheckUsername";
+
+	public void checkUsername(CheckUsernameRequest input, final AsyncCallback<CheckUsernameResponse> output) {
+		try {
+			sendRequest(CoreMethodCheckUsername, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					CheckUsernameResponse outputParameter = new CheckUsernameResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
 				}
