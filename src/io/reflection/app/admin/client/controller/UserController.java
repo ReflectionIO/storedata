@@ -10,12 +10,17 @@ package io.reflection.app.admin.client.controller;
 import io.reflection.app.admin.client.handler.UsersEventHandler.ReceivedCount;
 import io.reflection.app.admin.client.handler.UsersEventHandler.ReceivedUsers;
 import io.reflection.app.api.admin.client.AdminService;
+import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
+import io.reflection.app.api.admin.shared.call.AssignRoleResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersCountResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersResponse;
+import io.reflection.app.api.admin.shared.call.SetPasswordRequest;
+import io.reflection.app.api.admin.shared.call.SetPasswordResponse;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.shared.datatypes.Role;
 import io.reflection.app.shared.datatypes.User;
 
 import java.util.ArrayList;
@@ -155,6 +160,67 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 			@Override
 			public void onFailure(Throwable caught) {
 				Window.alert("Error");
+			}
+		});
+	}
+
+	/**
+	 * @param selected
+	 */
+	public void makeAdmin(Long userId) {
+		AdminService service = new AdminService();
+		service.setUrl(ADMIN_END_POINT);
+		
+		AssignRoleRequest input = new AssignRoleRequest();
+		input.accessCode = ACCESS_CODE;
+		
+		input.role = new Role();
+		input.role.name = "admin";
+		
+		input.user = new User();
+		input.user.id = userId;
+		
+		service.assignRole(input, new AsyncCallback<AssignRoleResponse>() {
+			
+			@Override
+			public void onSuccess(AssignRoleResponse output) {
+				
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+			}
+		});
+	}
+
+	/**
+	 * @param valueOf
+	 * @param text
+	 */
+	public void setPassword(Long userId, String newPassword) {
+		AdminService service = new AdminService();
+		service.setUrl(ADMIN_END_POINT);
+		
+		SetPasswordRequest input = new SetPasswordRequest();
+		input.accessCode = ACCESS_CODE;
+		
+		input.password = newPassword;
+		
+		input.user = new User();
+		input.user.id = userId;
+		
+		service.setPassword(input, new AsyncCallback<SetPasswordResponse>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onSuccess(SetPasswordResponse output) {
+				// TODO Auto-generated method stub
+				
 			}
 		});
 	}

@@ -74,6 +74,9 @@ public class SessionController implements ServiceController {
 
 		final LoginRequest input = new LoginRequest();
 		input.accessCode = ACCESS_CODE;
+		
+		input.username = username;
+		input.password = password;
 
 		service.login(input, new AsyncCallback<LoginResponse>() {
 
@@ -118,6 +121,13 @@ public class SessionController implements ServiceController {
 		});
 
 		setLoggedInUser(null, null);
+	}
+
+	/**
+	 * @return
+	 */
+	public boolean isLoggedInUserAdmin() {
+		return true;
 	}
 
 }

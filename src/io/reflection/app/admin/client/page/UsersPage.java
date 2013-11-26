@@ -14,13 +14,20 @@ import io.reflection.app.admin.client.part.SimplePager;
 import io.reflection.app.shared.datatypes.User;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TextHeader;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.view.client.SelectionChangeEvent;
+import com.google.gwt.view.client.SelectionChangeEvent.Handler;
+import com.google.gwt.view.client.SingleSelectionModel;
 
 /**
  * @author billy1380
@@ -34,10 +41,39 @@ public class UsersPage extends Composite {
 
 	@UiField(provided = true) CellTable<User> mUsers = new CellTable<User>(ServiceController.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) SimplePager mPager = new SimplePager(false, false);
+	
+	@UiField InlineHyperlink mAssignPassword;
+	@UiField Button mMakeAdmin;
 
 	public UsersPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
+		addUserColumns();
+		
+		final SingleSelectionModel<User> s = new SingleSelectionModel<User>();
+		s.addSelectionChangeHandler(new Handler() {
+
+			@Override
+			public void onSelectionChange(SelectionChangeEvent event) {
+				User selected = s.getSelectedObject();
+
+				mAssignPassword.setVisible(selected != null);
+				
+				if (selected != null) {
+					mAssignPassword.setTargetHistoryToken("changepassword/" + selected.id.toString());
+				}
+				
+				mMakeAdmin.setEnabled(selected != null);
+			}
+		});
+		mUsers.setSelectionModel(s);
+
+		UserController.get().addDataDisplay(mUsers);
+		mPager.setDisplay(mUsers);
+
+	}
+	
+	private void addUserColumns() {
 		TextColumn<User> name = new TextColumn<User>() {
 
 			@Override
@@ -75,10 +111,16 @@ public class UsersPage extends Composite {
 		TextHeader emailHeader = new TextHeader("E-mail");
 		emailHeader.setHeaderStyleNames("col-md-3");
 		mUsers.addColumn(email, emailHeader);
-
-		UserController.get().addDataDisplay(mUsers);
-		mPager.setDisplay(mUsers);
-
+	}
+	
+	@UiHandler("mMakeAdmin")
+	void onModelClicked(ClickEvent event) {
+		@SuppressWarnings("unchecked")
+		User selected = ((SingleSelectionModel<User>)mUsers.getSelectionModel()).getSelectedObject();
+		
+		if (selected != null) {
+			UserController.get().makeAdmin(selected.id);
+		}
 	}
 
 }

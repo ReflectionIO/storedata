@@ -9,6 +9,8 @@
 package io.reflection.app.api.admin;
 
 import static io.reflection.app.api.PagerHelper.updatePager;
+import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
+import io.reflection.app.api.admin.shared.call.AssignRoleResponse;
 import io.reflection.app.api.admin.shared.call.GetFeedFetchesRequest;
 import io.reflection.app.api.admin.shared.call.GetFeedFetchesResponse;
 import io.reflection.app.api.admin.shared.call.GetModelOutcomeRequest;
@@ -17,6 +19,8 @@ import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersCountResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersResponse;
+import io.reflection.app.api.admin.shared.call.SetPasswordRequest;
+import io.reflection.app.api.admin.shared.call.SetPasswordResponse;
 import io.reflection.app.api.admin.shared.call.TriggerGatherRequest;
 import io.reflection.app.api.admin.shared.call.TriggerGatherResponse;
 import io.reflection.app.api.admin.shared.call.TriggerIngestRequest;
@@ -276,6 +280,32 @@ public final class Admin extends ActionHandler {
 			output.error = convertToErrorAndLog(LOG, e);
 		}
 		LOG.finer("Exiting triggerPredict");
+		return output;
+	}
+
+	public SetPasswordResponse setPassword(SetPasswordRequest input) {
+		LOG.finer("Entering setPassword");
+		SetPasswordResponse output = new SetPasswordResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting setPassword");
+		return output;
+	}
+
+	public AssignRoleResponse assignRole(AssignRoleRequest input) {
+		LOG.finer("Entering assignRole");
+		AssignRoleResponse output = new AssignRoleResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting assignRole");
 		return output;
 	}
 }

@@ -28,6 +28,12 @@
             
             <xsd:element name="TriggerPredictInput" type="sda:TriggerPredictRequest" />
             <xsd:element name="TriggerPredictOutput" type="sda:TriggerPredictResponse" />
+            
+            <xsd:element name="SetPasswordInput" type="sda:SetPasswordRequest" />
+            <xsd:element name="SetPasswordOutput" type="sda:SetPasswordResponse" />
+            
+            <xsd:element name="AssignRoleInput" type="sda:AssignRoleRequest" />
+            <xsd:element name="AssignRoleOutput" type="sda:AssignRoleResponse" />
 
             <xsd:complexType name="GetUsersRequest">
                 <xsd:complexContent>
@@ -201,6 +207,42 @@
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>
+            
+            <xsd:complexType name="SetPasswordRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="user" type="sd:User" />
+                        </xsd:sequence>
+                        <xsd:attribute name="password" type="xsd:string" />
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="SetPasswordResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+            
+            <xsd:complexType name="AssignRoleRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="user" type="sd:User" />
+                            <xsd:element name="role" type="sd:Role" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="AssignRoleResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
 
         </xsd:schema>
     </wsdl:types>
@@ -260,6 +302,20 @@
     <wsdl:message name="TriggerPredictResponse">
         <wsdl:part name="output" element="sda:TriggerPredictOutput" />
     </wsdl:message>
+    
+    <wsdl:message name="SetPasswordRequest">
+        <wsdl:part name="input" element="sda:SetPasswordInput" />
+    </wsdl:message>
+    <wsdl:message name="SetPasswordResponse">
+        <wsdl:part name="output" element="sda:SetPasswordOutput" />
+    </wsdl:message>
+    
+    <wsdl:message name="AssignRoleRequest">
+        <wsdl:part name="input" element="sda:AssignRoleInput" />
+    </wsdl:message>
+    <wsdl:message name="AssignRoleResponse">
+        <wsdl:part name="output" element="sda:AssignRoleOutput" />
+    </wsdl:message>
 
     <wsdl:portType name="admin">
         <wsdl:operation name="GetUsers">
@@ -294,6 +350,16 @@
         <wsdl:operation name="TriggerPredict">
             <wsdl:input message="sda:TriggerPredictRequest" />
             <wsdl:output message="sda:TriggerPredictResponse" />
+        </wsdl:operation>
+        
+        <wsdl:operation name="SetPassword">
+            <wsdl:input message="sda:SetPasswordRequest" />
+            <wsdl:output message="sda:SetPasswordResponse" />
+        </wsdl:operation>
+        
+        <wsdl:operation name="AssignRole">
+            <wsdl:input message="sda:AssignRoleRequest" />
+            <wsdl:output message="sda:AssignRoleResponse" />
         </wsdl:operation>
     </wsdl:portType>
     <wsdl:binding name="adminSOAP" type="sda:admin">
@@ -363,6 +429,26 @@
         </wsdl:operation>
         <wsdl:operation name="TriggerPredict">
             <soap:operation soapAction="http://app.reflection.io/admin/TriggerPredict" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        
+        <wsdl:operation name="SetPassword">
+            <soap:operation soapAction="http://app.reflection.io/admin/SetPassword" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        
+        <wsdl:operation name="AssignRole">
+            <soap:operation soapAction="http://app.reflection.io/admin/AssignRole" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>

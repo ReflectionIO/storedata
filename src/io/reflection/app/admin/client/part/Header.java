@@ -39,6 +39,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	private static HeaderUiBinder uiBinder = GWT.create(HeaderUiBinder.class);
 
 	interface HeaderUiBinder extends UiBinder<Widget, Header> {}
+	
+	private static final String ACTIVE_STYLE_NAME = "active";
 
 	@UiField InlineHyperlink mRanksLink;
 	@UiField LIElement mRanksItem;
@@ -61,36 +63,60 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 	public Header() {
 		initWidget(uiBinder.createAndBindUi(this));
-		
-		mRanksItem.addClassName("active");
+
+		mRanksItem.addClassName(ACTIVE_STYLE_NAME);
 
 		EventController.get().addHandlerToSource(UsersEventHandler.TYPE, UserController.get(), this);
-		
-//		if (UserController.get().getUsersCount() >= 0) {
-//			mTotalUsers.setInnerText(Long.toString(UserController.get().getUsersCount()));
-//		} else {
-//			UserController.get().fetchUsersCount();
-//		}
-		
+
+		// if (UserController.get().getUsersCount() >= 0) {
+		// mTotalUsers.setInnerText(Long.toString(UserController.get().getUsersCount()));
+		// } else {
+		// UserController.get().fetchUsersCount();
+		// }
+
 		EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this);
+		
+		addLogin();
 	}
 
+	private void activate(LIElement item) {
+		if (item != null) {
+			item.addClassName(ACTIVE_STYLE_NAME);
+		}
+	}
+	
+	private void deactivate(LIElement item) {
+		if (item != null) {
+			item.removeClassName(ACTIVE_STYLE_NAME);
+		}
+	}
+	
 	private void activateFeedBrowser() {
-		mFeedBrowserItem.addClassName("active");
-		mRanksItem.removeClassName("active");
-		mUsersItem.removeClassName("active");
+		activate(mFeedBrowserItem);
+		deactivate(mRanksItem);
+		deactivate(mUsersItem);
+		deactivate(mLoginItem);
 	}
 
 	private void activateUsers() {
-		mFeedBrowserItem.removeClassName("active");
-		mRanksItem.removeClassName("active");
-		mUsersItem.addClassName("active");
+		deactivate(mFeedBrowserItem);
+		deactivate(mRanksItem);
+		activate(mUsersItem);
+		deactivate(mLoginItem);
 	}
 
 	private void activateRanks() {
-		mRanksItem.addClassName("active");
-		mFeedBrowserItem.removeClassName("active");
-		mUsersItem.removeClassName("active");
+		activate(mRanksItem);
+		deactivate(mFeedBrowserItem);
+		deactivate(mUsersItem);
+		deactivate(mLoginItem);
+	}
+	
+	private void activateLogin() {
+		deactivate(mRanksItem);
+		deactivate(mFeedBrowserItem);
+		deactivate(mUsersItem);
+		activate(mLoginItem);
 	}
 
 	/*
@@ -107,6 +133,10 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			activateFeedBrowser();
 		} else if ("users".equals(stack.getPage())) {
 			activateUsers();
+		} else if ("login".equals(stack.getPage())) {
+			activateLogin();
+		} else {
+			deactivateAll();
 		}
 	}
 
@@ -184,7 +214,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			mUsersLink = new InlineHyperlink("", "users");
 
 			mTotalUsers = Document.get().createSpanElement();
-			
+
 			if (UserController.get().getUsersCount() >= 0) {
 				mTotalUsers.setInnerText(Long.toString(UserController.get().getUsersCount()));
 			} else {
@@ -192,7 +222,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 				UserController.get().fetchUsersCount();
 			}
-			
+
 			mTotalUsers.addClassName("badge");
 
 			mUsersLink.setText("Users ");
@@ -271,4 +301,11 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		}
 	}
 
+	private void deactivateAll() {
+		deactivate(mRanksItem);
+		deactivate(mFeedBrowserItem);
+		deactivate(mRanksItem);
+		deactivate(mLoginItem);
+	}
+	
 }

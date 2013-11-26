@@ -8,6 +8,7 @@
 package io.reflection.app.admin.client.controller;
 
 import io.reflection.app.admin.client.handler.NavigationEventHandler;
+import io.reflection.app.admin.client.page.ChangePasswordPage;
 import io.reflection.app.admin.client.page.FeedBrowserPage;
 import io.reflection.app.admin.client.page.LoginPage;
 import io.reflection.app.admin.client.page.RanksPage;
@@ -32,6 +33,7 @@ public class NavigationController {
 	private UsersPage mUsersPage = null;
 	private LoginPage mLoginPage = null;
 	private RegisterPage mRegisterPage = null;
+	private ChangePasswordPage mChangePasswordPage = null;
 
 	private Header mHeader = null;
 	private Footer mFooter = null;
@@ -147,6 +149,17 @@ public class NavigationController {
 			mPanel.add(mRegisterPage);
 		} else {}
 	}
+	
+	public void addChangePasswordPage() {
+		if (mChangePasswordPage == null) {
+			mChangePasswordPage = new ChangePasswordPage();
+		}
+		
+		if (!mChangePasswordPage.isAttached()) {
+			mPanel.clear();
+			mPanel.add(mChangePasswordPage);
+		}
+	}
 
 	/**
 	 * @param value
@@ -154,7 +167,7 @@ public class NavigationController {
 	public void addPage(String value) {
 		Stack s = null;
 		if (value == null || value.length() == 0) {
-			value = "login";
+			value = "ranks";
 		}
 
 		s = Stack.parse(value);
@@ -173,6 +186,8 @@ public class NavigationController {
 			SessionController.get().logout();
 			addPage("ranks");
 			return;
+		} else if ("changepassword".equals(s.getPage())) {
+			addChangePasswordPage();
 		}
 
 		mStack = s;
@@ -217,5 +232,9 @@ public class NavigationController {
 			mPanel.add(mUsersPage);
 		} else {}
 
+	}
+	
+	public Stack getStack() {
+		return mStack;
 	}
 }

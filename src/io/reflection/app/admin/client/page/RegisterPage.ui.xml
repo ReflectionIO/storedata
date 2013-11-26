@@ -2,6 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:style>
         @external form-control;
+        
         .noteDetail {
         	font-size: smaller;
         	margin-top: 5px;

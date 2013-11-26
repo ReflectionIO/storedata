@@ -10,6 +10,12 @@
 
         <h2>Users</h2>
 
+        <g:HTMLPanel styleName="btn-group">
+            <g:InlineHyperlink styleName="btn btn-default" text="Assign password" visible="false" ui:field="mAssignPassword" />
+            <g:Button styleName="btn btn-default" text="Make admin" enabled="false" ui:field="mMakeAdmin" />
+        </g:HTMLPanel>
+
+
         <c:CellTable ui:field="mUsers" styleName="table table-hover table-striped" />
         
         <!-- <c:SimplePager ui:field="mPager"/> -->

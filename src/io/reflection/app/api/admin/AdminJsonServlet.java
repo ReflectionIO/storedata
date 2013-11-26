@@ -8,10 +8,12 @@
 //
 package io.reflection.app.api.admin;
 
+import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
 import io.reflection.app.api.admin.shared.call.GetFeedFetchesRequest;
 import io.reflection.app.api.admin.shared.call.GetModelOutcomeRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersRequest;
+import io.reflection.app.api.admin.shared.call.SetPasswordRequest;
 import io.reflection.app.api.admin.shared.call.TriggerGatherRequest;
 import io.reflection.app.api.admin.shared.call.TriggerIngestRequest;
 import io.reflection.app.api.admin.shared.call.TriggerModelRequest;
@@ -58,6 +60,14 @@ public final class AdminJsonServlet extends JsonServlet {
 			TriggerPredictRequest input = new TriggerPredictRequest();
 			input.fromJson(request);
 			output = service.triggerPredict(input).toString();
+		} else if ("SetPassword".equals(action)) {
+			SetPasswordRequest input = new SetPasswordRequest();
+			input.fromJson(request);
+			output = service.setPassword(input).toString();
+		} else if ("AssignRole".equals(action)) {
+			AssignRoleRequest input = new AssignRoleRequest();
+			input.fromJson(request);
+			output = service.assignRole(input).toString();
 		}
 		return output;
 	}
