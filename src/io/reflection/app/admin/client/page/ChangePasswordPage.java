@@ -25,7 +25,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author billy1380
- *
+ * 
  */
 public class ChangePasswordPage extends Composite {
 
@@ -33,84 +33,104 @@ public class ChangePasswordPage extends Composite {
 
 	interface ChangePasswordPageUiBinder extends UiBinder<Widget, ChangePasswordPage> {}
 
-    @UiField PasswordTextBox mPassword;
-    @UiField HTMLPanel mPasswordGroup;
-    @UiField HTMLPanel mPasswordNote;
-    
-    @UiField PasswordTextBox mNewPassword;
-    @UiField PasswordTextBox mConfirmPassword;
-    @UiField HTMLPanel mNewPasswordGroup;
-    @UiField HTMLPanel mNewPasswordNote;
-    
-    @UiField Button mChangePassword;
-	
+	@UiField PasswordTextBox mPassword;
+	@UiField HTMLPanel mPasswordGroup;
+	@UiField HTMLPanel mPasswordNote;
+
+	@UiField PasswordTextBox mNewPassword;
+	@UiField PasswordTextBox mConfirmPassword;
+	@UiField HTMLPanel mNewPasswordGroup;
+	@UiField HTMLPanel mNewPasswordNote;
+
+	@UiField Button mChangePassword;
+
+	private String mPasswordError = null;
+	private String mNewPasswordError = null;
+
 	public ChangePasswordPage() {
 		initWidget(uiBinder.createAndBindUi(this));
-		
+
 		mPassword.getElement().setAttribute("placeholder", "Current Password");
-		
+
 		mNewPassword.getElement().setAttribute("placeholder", "New Password");
 		mConfirmPassword.getElement().setAttribute("placeholder", "Confirm Password");
-		
-		mPasswordGroup.setVisible(!SessionController.get().isLoggedInUserAdmin());
 	}
-	
+
 	@UiHandler("mChangePassword")
 	void onChangePassword(ClickEvent event) {
 		if (validate()) {
 			if (SessionController.get().isLoggedInUserAdmin()) {
 				UserController.get().setPassword(Long.valueOf(NavigationController.get().getStack().getParameter(0)), mNewPassword.getText());
 			} else {
-				
+				SessionController.get().changePassword(mPassword.getText(), mNewPassword.getText());
 			}
 		} else {
-//			if (mUsernameError != null) {
-//				FormHelper.showNote(true, mUsernameGroup, mUsernameNote, mUsernameError);
-//			}
-//
-//			if (mPasswordError != null) {
-//				FormHelper.showNote(true, mPasswordGroup, mPasswordNote, mPasswordError);
-//			}
+			if (mPasswordError != null) {
+				FormHelper.showNote(true, mPasswordGroup, mPasswordNote, mPasswordError);
+			}
+
+			if (mNewPasswordError != null) {
+				FormHelper.showNote(true, mNewPasswordGroup, mNewPasswordNote, mNewPasswordError);
+			}
 		}
 	}
-	
+
 	boolean validate() {
 		boolean validated = true;
 
-//		String username = mUsername.getText();
-//		String password = mPassword.getText();
-//
-//		if (username == null || username.length() == 0) {
-//			mUsernameError = "Cannot be empty";
-//			validated = false;
-//		} else if (username.length() < 6) {
-//			mUsernameError = "Too short (6 - 255)";
-//			validated = false;
-//		} else if (username.length() > 255) {
-//			mUsernameError = "Too long (6 -255)";
-//			validated = false;
-//		} else {
-//			mUsernameError = null;
-//			validated = validated && true;
-//		}
-//
-//		if (password == null || password.length() == 0) {
-//			mPasswordError = "Cannot be empty";
-//			validated = false;
-//		} else if (password.length() < 6) {
-//			mPasswordError = "Too short (6-100)";
-//			validated = false;
-//		} else if (password.length() > 100) {
-//			mPasswordError = "Too long (6 - 100)";
-//			validated = false;
-//		} else {
-//			mPasswordError = null;
-//			validated = validated && true;
-//		}
+		String newPassword = mNewPassword.getText();
+		String confirmPassword = mConfirmPassword.getText();
+		String password = mPassword.getText();
+
+		if (newPassword == null || newPassword.length() == 0) {
+			mNewPasswordError = "Cannot be empty";
+			validated = false;
+		} else if (newPassword.length() < 6) {
+			mNewPasswordError = "Too short (6-100)";
+			validated = false;
+		} else if (newPassword.length() > 100) {
+			mNewPasswordError = "Too long (6 - 100)";
+			validated = false;
+		} else if (!newPassword.equals(confirmPassword)) {
+			mNewPasswordError = "Password and confirmation should match";
+			validated = false;
+		} else {
+			mNewPasswordError = null;
+			validated = validated && true;
+		}
+
+		if (!SessionController.get().isLoggedInUserAdmin()) {
+			if (password == null || password.length() == 0) {
+				mPasswordError = "Cannot be empty";
+				validated = false;
+			} else if (password.length() < 6) {
+				mPasswordError = "Too short (6-100)";
+				validated = false;
+			} else if (password.length() > 100) {
+				mPasswordError = "Too long (6 - 100)";
+				validated = false;
+			} else {
+				mPasswordError = null;
+				validated = validated && true;
+			}
+		}
 
 		return validated;
 	}
 	
-	
+	/* (non-Javadoc)
+	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
+	 */
+	@Override
+	protected void onAttach() {
+		super.onAttach();
+		
+		mPassword.setText("");
+
+		mNewPassword.setText("");
+		mConfirmPassword.setText("");
+		
+		mPasswordGroup.setVisible(!SessionController.get().isLoggedInUserAdmin());
+	}
 
 }

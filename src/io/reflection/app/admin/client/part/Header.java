@@ -9,6 +9,7 @@ package io.reflection.app.admin.client.part;
 
 import io.reflection.app.admin.client.controller.EventController;
 import io.reflection.app.admin.client.controller.NavigationController;
+import io.reflection.app.admin.client.controller.SessionController;
 import io.reflection.app.admin.client.controller.NavigationController.Stack;
 import io.reflection.app.admin.client.controller.UserController;
 import io.reflection.app.admin.client.handler.NavigationEventHandler;
@@ -75,6 +76,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		// }
 
 		EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this);
+		EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this);
 		
 		addLogin();
 	}

@@ -53,9 +53,9 @@ public class SessionController implements ServiceController {
 			mLoggedIn = user;
 
 			if (mLoggedIn == null) {
-				EventController.get().fireEventFromSource(new UserLoggedIn(mLoggedIn, mSession), SessionController.this);
-			} else {
 				EventController.get().fireEventFromSource(new UserLoggedOut(), SessionController.this);
+			} else {
+				EventController.get().fireEventFromSource(new UserLoggedIn(mLoggedIn, mSession), SessionController.this);
 			}
 		}
 
@@ -88,13 +88,10 @@ public class SessionController implements ServiceController {
 			@Override
 			public void onSuccess(LoginResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
-					Window.alert("login was successful");
-
 					if (output.session != null && output.session.user != null) {
 						setLoggedInUser(output.session.user, output.session);
 					}
 				} else {
-					Window.alert("login failed");
 				}
 			}
 		});
@@ -128,6 +125,15 @@ public class SessionController implements ServiceController {
 	 */
 	public boolean isLoggedInUserAdmin() {
 		return true;
+	}
+
+	/**
+	 * 
+	 * @param password
+	 * @param newPassword
+	 */
+	public void changePassword(String password, String newPassword) {
+		
 	}
 
 }

@@ -103,7 +103,7 @@ final class SessionService implements ISessionService {
 		Connection sessionConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeSession.toString());
 
 		String createUserSessionQuery = String.format(
-				"INSERT INTO `session` (`userid`, `token` `expires`) values (%d, UUID(), date_add(now(), interval 20 minute))", user.id.longValue());
+				"INSERT INTO `session` (`userid`, `token`, `expires`) values (%d, UUID(), date_add(now(), interval 20 minute))", user.id.longValue());
 
 		try {
 			sessionConnection.connect();
@@ -136,7 +136,7 @@ final class SessionService implements ISessionService {
 		Connection sessionConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeSession.toString());
 
 		String getUserSessionQuery = String.format(
-				"SELECT * FROM `session` WHERE `userid`=\'%d\' AND `expires` > NOW() AND `deleted`='n' ORDER BY `expires` DESC LIMIT 1", user.id.longValue());
+				"SELECT * FROM `session` WHERE `userid`=%d AND `expires` > NOW() AND `deleted`='n' ORDER BY `expires` DESC LIMIT 1", user.id.longValue());
 
 		try {
 			sessionConnection.connect();

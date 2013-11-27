@@ -66,6 +66,20 @@ public class RegisterPage extends Composite {
 		
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
+	 */
+	@Override
+	protected void onAttach() {
+		super.onAttach();
+		
+		mUsername.setText("");
+		mPassword.setText("");
+		mConfirmPassword.setText("");
+		mForename.setText("");
+		mSurname.setText("");
+		mCompany.setText("");
+	}
 	
 
 }

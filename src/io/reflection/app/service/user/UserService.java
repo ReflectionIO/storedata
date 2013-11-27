@@ -468,4 +468,32 @@ final class UserService implements IUserService {
 		return user;
 	}
 
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.user.IUserService#getUsernameUser(java.lang.String)
+	 */
+	@Override
+	public User getUsernameUser(String username) {
+		User user = null;
+
+		IDatabaseService databaseService = DatabaseServiceProvider.provide();
+		Connection userConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
+
+		String getUserByUsernameQuery = String.format("SELECT * FROM `user` WHERE `deleted`='n' AND `username`='%s' LIMIT 1", username);
+
+		try {
+			userConnection.connect();
+			userConnection.executeQuery(getUserByUsernameQuery);
+
+			if (userConnection.fetchNextRow()) {
+				user = this.toUser(userConnection);
+			}
+		} finally {
+			if (userConnection != null) {
+				userConnection.disconnect();
+			}
+		}
+
+		return user;
+	}
+
 }

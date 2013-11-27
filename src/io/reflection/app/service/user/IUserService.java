@@ -102,4 +102,10 @@ public interface IUserService extends IService {
 	 */
 	public User getSessionUser(DataType session);
 
+	/**
+	 * @param username
+	 * @return
+	 */
+	public User getUsernameUser(String username);
+
 }

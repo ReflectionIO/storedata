@@ -149,12 +149,12 @@ public class NavigationController {
 			mPanel.add(mRegisterPage);
 		} else {}
 	}
-	
+
 	public void addChangePasswordPage() {
 		if (mChangePasswordPage == null) {
 			mChangePasswordPage = new ChangePasswordPage();
 		}
-		
+
 		if (!mChangePasswordPage.isAttached()) {
 			mPanel.clear();
 			mPanel.add(mChangePasswordPage);
@@ -177,17 +177,19 @@ public class NavigationController {
 		} else if ("feedbrowser".equals(s.getPage())) {
 			addFeedBrowserPage();
 		} else if ("users".equals(s.getPage())) {
-			addUsersPage();
+			if (s.getAction() == null) {
+				addUsersPage();
+			} else if ("changepassword".equals(s.getAction())) {
+				addChangePasswordPage();
+			}
 		} else if ("login".equals(s.getPage())) {
 			addLoginPage();
 		} else if ("register".equals(s.getPage())) {
 			addRegisterPage();
 		} else if ("logout".equals(s.getPage())) {
 			SessionController.get().logout();
-			addPage("ranks");
+			addPage("login");
 			return;
-		} else if ("changepassword".equals(s.getPage())) {
-			addChangePasswordPage();
 		}
 
 		mStack = s;
@@ -233,7 +235,7 @@ public class NavigationController {
 		} else {}
 
 	}
-	
+
 	public Stack getStack() {
 		return mStack;
 	}

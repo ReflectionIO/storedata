@@ -526,8 +526,13 @@ public final class Core extends ActionHandler {
 
 				session = sessionService.createUserSession(user);
 			}
-
-			output.session = session;
+			
+			if (session != null) {
+				session.user = user;
+				output.session = session;
+			} else {
+				// FIXME: throw an exception
+			}
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {

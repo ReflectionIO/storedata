@@ -60,7 +60,7 @@ public class UsersPage extends Composite {
 				mAssignPassword.setVisible(selected != null);
 				
 				if (selected != null) {
-					mAssignPassword.setTargetHistoryToken("changepassword/" + selected.id.toString());
+					mAssignPassword.setTargetHistoryToken("users/changepassword/" + selected.id.toString());
 				}
 				
 				mMakeAdmin.setEnabled(selected != null);

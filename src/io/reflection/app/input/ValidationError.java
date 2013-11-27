@@ -35,6 +35,10 @@ public enum ValidationError {
 	StringNull(100020, "Invalid value null or empty for String: %s"),
 	BadEmailFormat(100021, "Invalid email address for Email: %s"),
 	ListTypeNotFound(100022, "List type not found for String: %s"),
+	UserNotFound(100023, "User not found User: %s"),
+	UserNoLookup(100024, "Invalid user lookup, need either id or username for User: %s"),
+	InvalidStringTooShort(100025, "Invalid value too short (%d-%d): %s"),
+	InvalidStringTooLong(100026, "Invalid value too long (%d-%d): %s"),
 
 	GetCountriesNeedsStoreOrQuery(100101, "GetCountries call should either have a store or a query. To get all countries use * for the query"),
 
@@ -60,6 +64,10 @@ public enum ValidationError {
 
 	public String getMessage(String parent) {
 		return String.format(message, parent == null ? "" : parent);
+	}
+	
+	public String getMessage(String parent, int minValue, int maxValue) {
+		return String.format(message, parent == null ? "" : parent, minValue, maxValue);
 	}
 
 }

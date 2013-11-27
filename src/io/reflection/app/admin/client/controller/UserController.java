@@ -171,7 +171,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		AdminService service = new AdminService();
 		service.setUrl(ADMIN_END_POINT);
 		
-		AssignRoleRequest input = new AssignRoleRequest();
+		final AssignRoleRequest input = new AssignRoleRequest();
 		input.accessCode = ACCESS_CODE;
 		
 		input.role = new Role();
@@ -184,11 +184,14 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 			
 			@Override
 			public void onSuccess(AssignRoleResponse output) {
-				
+				if (output.status == StatusType.StatusTypeSuccess) {
+					// not sure what to do
+				}
 			}
 			
 			@Override
 			public void onFailure(Throwable caught) {
+				
 			}
 		});
 	}

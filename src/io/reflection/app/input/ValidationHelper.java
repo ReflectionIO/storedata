@@ -13,6 +13,7 @@ import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.service.country.CountryServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
+import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.datatypes.Country;
 import io.reflection.app.shared.datatypes.Item;
 import io.reflection.app.shared.datatypes.Store;
@@ -284,5 +285,66 @@ public class ValidationHelper {
 					+ ".listTypes"));
 
 		return listTypes;
+	}
+
+	/**
+	 * 
+	 * @param user
+	 * @param parent
+	 * @return
+	 * @throws InputValidationException
+	 */
+	public static User validateUser(User user, String parent) throws InputValidationException {
+		if (user == null) throw new InputValidationException(ValidationError.StoreNull.getCode(), ValidationError.StoreNull.getMessage(parent));
+
+		boolean isIdLookup = false, isNameLookup = false;
+
+		if (user.id != null) {
+			isIdLookup = true;
+		} else if (user.username != null) {
+			isNameLookup = true;
+		}
+
+		if (!(isIdLookup || isNameLookup)) { throw new InputValidationException(ValidationError.UserNoLookup.getCode(),
+				ValidationError.UserNoLookup.getMessage(parent)); }
+
+		User lookupUser = null;
+		if (isIdLookup) {
+			lookupUser = UserServiceProvider.provide().getUser(user.id);
+		} else if (isNameLookup) {
+			lookupUser = UserServiceProvider.provide().getUsernameUser(user.username);
+		}
+
+		if (lookupUser == null) throw new InputValidationException(ValidationError.UserNotFound.getCode(), ValidationError.UserNotFound.getMessage(parent));
+
+		return lookupUser;
+	}
+
+	/**
+	 * 
+	 * @param password
+	 * @param parent
+	 * @return
+	 * @throws InputValidationException
+	 */
+	public static String validatePassword(String password, String parent) throws InputValidationException {
+		if (password == null || password.length() == 0)
+			throw new InputValidationException(ValidationError.StringNull.getCode(), ValidationError.StringNull.getMessage(parent));
+
+		password = validateStringLength(password, parent, 6, 100);
+
+		return password;
+	}
+
+	public static String validateStringLength(String value, String parent, int minLenth, int maxLength) throws InputValidationException {
+		if (value.length() < minLenth)
+			throw new InputValidationException(ValidationError.InvalidStringTooShort.getCode(),
+					ValidationError.InvalidStringTooShort.getMessage(parent, minLenth, maxLength));
+
+		if (value.length() > maxLength)
+			throw new InputValidationException(ValidationError.InvalidStringTooLong.getCode(),
+					ValidationError.InvalidStringTooLong.getMessage(parent, minLenth, maxLength));
+
+		return value;
 	}
 }

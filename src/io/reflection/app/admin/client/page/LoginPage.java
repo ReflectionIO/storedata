@@ -7,14 +7,19 @@
 //
 package io.reflection.app.admin.client.page;
 
+import io.reflection.app.admin.client.controller.EventController;
 import io.reflection.app.admin.client.controller.SessionController;
+import io.reflection.app.admin.client.handler.SessionEventHandler;
 import io.reflection.app.admin.client.helper.FormHelper;
+import io.reflection.app.api.shared.datatypes.Session;
+import io.reflection.app.shared.datatypes.User;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -27,7 +32,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author billy1380
  * 
  */
-public class LoginPage extends Composite {
+public class LoginPage extends Composite implements SessionEventHandler {
 
 	private static LoginPageUiBinder uiBinder = GWT.create(LoginPageUiBinder.class);
 
@@ -54,6 +59,8 @@ public class LoginPage extends Composite {
 
 		mUsername.getElement().setAttribute("placeholder", "Email address");
 		mPassword.getElement().setAttribute("placeholder", "Password");
+		
+		EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this);
 
 	}
 
@@ -107,5 +114,33 @@ public class LoginPage extends Composite {
 		}
 
 		return validated;
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
+	 */
+	@Override
+	protected void onAttach() {
+		super.onAttach();
+		
+		mUsername.setText("");
+		mPassword.setText("");
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.admin.client.handler.SessionEventHandler#userLoggedIn(io.reflection.app.shared.datatypes.User, io.reflection.app.api.shared.datatypes.Session)
+	 */
+	@Override
+	public void userLoggedIn(User user, Session session) {
+		History.newItem("ranks");
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.admin.client.handler.SessionEventHandler#userLoggedOut()
+	 */
+	@Override
+	public void userLoggedOut() {
+		mUsername.setText("");
+		mPassword.setText("");
 	}
 }
