@@ -9,6 +9,7 @@ package io.reflection.app.admin.client.handler;
 
 import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.shared.datatypes.User;
+import com.willshex.gson.json.service.shared.Error;
 
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
@@ -24,6 +25,8 @@ public interface SessionEventHandler extends EventHandler {
 	public void userLoggedIn(User user, Session session);
 
 	public void userLoggedOut();
+	
+	public void userLoginFailed(Error error);
 
 
 	public class UserLoggedIn extends GwtEvent<SessionEventHandler> {
@@ -79,4 +82,32 @@ public interface SessionEventHandler extends EventHandler {
 			handler.userLoggedOut();
 		}
 	}
+	
+	public class UserLoginFailed extends GwtEvent<SessionEventHandler> {
+		private Error mError;
+		
+		public UserLoginFailed(Error error) {
+			mError = error;
+		}
+
+		/* (non-Javadoc)
+		 * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
+		 */
+		@Override
+		public com.google.gwt.event.shared.GwtEvent.Type<SessionEventHandler> getAssociatedType() {
+			return  TYPE;
+		}
+
+		/* (non-Javadoc)
+		 * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+		 */
+		@Override
+		protected void dispatch(SessionEventHandler handler) {
+			if (mError != null)
+				handler.userLoginFailed(mError);
+		}
+		
+		
+	}
+
 }

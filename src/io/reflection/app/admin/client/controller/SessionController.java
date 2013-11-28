@@ -9,6 +9,8 @@ package io.reflection.app.admin.client.controller;
 
 import io.reflection.app.admin.client.handler.SessionEventHandler.UserLoggedIn;
 import io.reflection.app.admin.client.handler.SessionEventHandler.UserLoggedOut;
+import io.reflection.app.admin.client.handler.SessionEventHandler.UserLoginFailed;
+import io.reflection.app.admin.client.helper.FormHelper;
 import io.reflection.app.api.core.client.CoreService;
 import io.reflection.app.api.core.shared.call.LoginRequest;
 import io.reflection.app.api.core.shared.call.LoginResponse;
@@ -17,7 +19,6 @@ import io.reflection.app.api.core.shared.call.LogoutResponse;
 import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.shared.datatypes.User;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.willshex.gson.json.service.shared.StatusType;
 
@@ -82,7 +83,7 @@ public class SessionController implements ServiceController {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				Window.alert("login failed");
+				EventController.get().fireEventFromSource(new UserLoginFailed(FormHelper.convertToError(caught)), SessionController.this);
 			}
 
 			@Override
@@ -92,6 +93,7 @@ public class SessionController implements ServiceController {
 						setLoggedInUser(output.session.user, output.session);
 					}
 				} else {
+					EventController.get().fireEventFromSource(new UserLoginFailed(output.error), SessionController.this);
 				}
 			}
 		});

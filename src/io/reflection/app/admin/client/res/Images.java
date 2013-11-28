@@ -23,4 +23,7 @@ public interface Images extends ClientBundle {
 
 	@Source("spinner.gif")
 	ImageResource spinner();
+	
+	@Source("spinnerinfo.gif")
+	ImageResource spinnerInfo();
 }

@@ -31,6 +31,8 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 
+import com.willshex.gson.json.service.shared.Error;
+
 /**
  * @author billy1380
  * 
@@ -308,6 +310,13 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		deactivate(mFeedBrowserItem);
 		deactivate(mRanksItem);
 		deactivate(mLoginItem);
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.admin.client.handler.SessionEventHandler#userLoginFailed(com.willshex.gson.json.service.shared.Error)
+	 */
+	@Override
+	public void userLoginFailed(Error error) {
 	}
 	
 }

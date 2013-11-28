@@ -8,6 +8,7 @@
 package io.reflection.app.admin.client.helper;
 
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.willshex.gson.json.service.shared.Error;
 
 /**
  * @author billy1380
@@ -17,9 +18,13 @@ public class FormHelper {
 	public static void showNote(boolean isError, HTMLPanel group, HTMLPanel note, String text) {
 		if (group != null) {
 			if (isError) {
-				group.addStyleName("alert alert-danger has-error");
+				group.addStyleName("alert");
+				group.addStyleName("alert-danger");
+				group.addStyleName("has-error");
 			} else {
-				group.addStyleName("alert alert-success has-success");
+				group.addStyleName("alert");
+				group.addStyleName("alert-success");
+				group.addStyleName("has-error");
 			}
 		}
 
@@ -35,7 +40,22 @@ public class FormHelper {
 		}
 
 		if (group != null) {
-			group.removeStyleName("alert alert-danger alert-success has-error");
+			group.removeStyleName("alert");
+			group.removeStyleName("alert-success");
+			group.removeStyleName("alert-danger");
+			group.removeStyleName("has-error");
 		}
+	}
+
+	/**
+	 * @param caught
+	 * @return
+	 */
+	public static Error convertToError(Throwable caught) {
+		Error e = new Error();
+		e.code = Integer.valueOf(1000);
+		e.message = caught.getMessage();
+		
+		return e;
 	}
 }

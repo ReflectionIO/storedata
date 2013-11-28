@@ -11,6 +11,8 @@ import io.reflection.app.admin.client.controller.EventController;
 import io.reflection.app.admin.client.controller.SessionController;
 import io.reflection.app.admin.client.handler.SessionEventHandler;
 import io.reflection.app.admin.client.helper.FormHelper;
+import io.reflection.app.admin.client.part.AlertBox;
+import io.reflection.app.admin.client.part.AlertBox.AlertBoxType;
 import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.shared.datatypes.User;
 
@@ -20,13 +22,16 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.gson.json.service.shared.Error;
 
 /**
  * @author billy1380
@@ -37,6 +42,8 @@ public class LoginPage extends Composite implements SessionEventHandler {
 	private static LoginPageUiBinder uiBinder = GWT.create(LoginPageUiBinder.class);
 
 	interface LoginPageUiBinder extends UiBinder<Widget, LoginPage> {}
+
+	@UiField FormPanel mForm;
 
 	@UiField TextBox mUsername;
 	@UiField HTMLPanel mUsernameGroup;
@@ -51,6 +58,8 @@ public class LoginPage extends Composite implements SessionEventHandler {
 	@UiField InlineHyperlink mRegister;
 	@UiField InlineHyperlink mForgotPassword;
 
+	@UiField AlertBox mAlertBox;
+
 	private String mUsernameError = null;
 	private String mPasswordError = null;
 
@@ -59,7 +68,7 @@ public class LoginPage extends Composite implements SessionEventHandler {
 
 		mUsername.getElement().setAttribute("placeholder", "Email address");
 		mPassword.getElement().setAttribute("placeholder", "Password");
-		
+
 		EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this);
 
 	}
@@ -67,6 +76,15 @@ public class LoginPage extends Composite implements SessionEventHandler {
 	@UiHandler("mLogin")
 	void onLoginClicked(ClickEvent event) {
 		if (validate()) {
+			mForm.setVisible(false);
+
+			mAlertBox.setVisible(true);
+			mAlertBox.setType(AlertBoxType.InfoAlertBoxType);
+			mAlertBox.setLoading(true);
+			mAlertBox.setText("Please wait");
+			mAlertBox.setDetail(" - verifying your username and password...");
+			mAlertBox.setCanDismiss(false);
+
 			SessionController.get().login(mUsername.getText(), mPassword.getText());
 		} else {
 			if (mUsernameError != null) {
@@ -115,32 +133,83 @@ public class LoginPage extends Composite implements SessionEventHandler {
 
 		return validated;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
 	 */
 	@Override
 	protected void onAttach() {
 		super.onAttach();
-		
-		mUsername.setText("");
-		mPassword.setText("");
+
+		resetForm();
 	}
 
-	/* (non-Javadoc)
-	 * @see io.reflection.app.admin.client.handler.SessionEventHandler#userLoggedIn(io.reflection.app.shared.datatypes.User, io.reflection.app.api.shared.datatypes.Session)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.admin.client.handler.SessionEventHandler#userLoggedIn(io.reflection.app.shared.datatypes.User,
+	 * io.reflection.app.api.shared.datatypes.Session)
 	 */
 	@Override
 	public void userLoggedIn(User user, Session session) {
-		History.newItem("ranks");
+		mAlertBox.setVisible(true);
+		mAlertBox.setType(AlertBoxType.SuccessAlertBoxType);
+		mAlertBox.setLoading(false);
+		mAlertBox.setText("Login Successfull");
+		if (user.forename != null && user.forename.length() != 0) {
+			mAlertBox.setDetail(" - welcome back " + user.forename + ".");
+		} else {
+			mAlertBox.setDetail("");
+		}
+		mAlertBox.setCanDismiss(false);
+		
+		Timer t = new Timer() {
+			
+			@Override
+			public void run() {
+				History.newItem("ranks");
+			}
+		};
+		
+		t.schedule(2000);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.admin.client.handler.SessionEventHandler#userLoggedOut()
 	 */
 	@Override
 	public void userLoggedOut() {
+		resetForm();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.admin.client.handler.SessionEventHandler#userLoginFailed(com.willshex.gson.json.service.shared.Error)
+	 */
+	@Override
+	public void userLoginFailed(Error error) {
+		mAlertBox.setVisible(true);
+		mAlertBox.setType(AlertBoxType.DangerAlertBoxType);
+		mAlertBox.setLoading(false);
+		mAlertBox.setText("An error occured:");
+		mAlertBox.setDetail("(" + error.code + ") " + error.message);
+		mAlertBox.setCanDismiss(true);
+		
+		mForm.setVisible(true);
+	}
+
+	public void resetForm() {
+		mForm.setVisible(true);
 		mUsername.setText("");
 		mPassword.setText("");
+		mRememberMe.setValue(Boolean.FALSE);
+		FormHelper.hideNote(mUsernameGroup, mUsernameNote);
+		FormHelper.hideNote(mPasswordGroup, mPasswordNote);
+		mAlertBox.setVisible(false);
 	}
 }
