@@ -17,6 +17,7 @@ import io.reflection.app.admin.client.page.UsersPage;
 import io.reflection.app.admin.client.part.Footer;
 import io.reflection.app.admin.client.part.Header;
 
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -181,6 +182,18 @@ public class NavigationController {
 				addUsersPage();
 			} else if ("changepassword".equals(s.getAction())) {
 				addChangePasswordPage();
+			} else if ("assignrole".equals(s.getAction())) {
+				String userId = s.getParameter(0);
+				String roleName = s.getParameter(1);
+				
+				if (userId != null) {
+					if (roleName.equalsIgnoreCase("admin")) {
+						UserController.get().makeAdmin(Long.valueOf(userId));
+					}
+				}
+				
+				History.newItem("users");
+				return;
 			}
 		} else if ("login".equals(s.getPage())) {
 			addLoginPage();
@@ -188,7 +201,7 @@ public class NavigationController {
 			addRegisterPage();
 		} else if ("logout".equals(s.getPage())) {
 			SessionController.get().logout();
-			addPage("login");
+			History.newItem("login");
 			return;
 		}
 

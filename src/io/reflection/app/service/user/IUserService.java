@@ -8,11 +8,13 @@
 //
 package io.reflection.app.service.user;
 
-import java.util.List;
-
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.shared.datatypes.DataType;
+import io.reflection.app.shared.datatypes.Permission;
+import io.reflection.app.shared.datatypes.Role;
 import io.reflection.app.shared.datatypes.User;
+
+import java.util.List;
 
 import com.spacehopperstudios.service.IService;
 
@@ -107,5 +109,31 @@ public interface IUserService extends IService {
 	 * @return
 	 */
 	public User getUsernameUser(String username);
+	
+	/**
+	 * @param user
+	 * @param role
+	 */
+	public void assignRole(User user, Role role);
+
+	/**
+	 * @param user
+	 * @param role
+	 * @return
+	 */
+	public Boolean hasRole(User user, Role role);
+	
+	/**
+	 * @param user
+	 * @param permission
+	 */
+	public void assignPermission(User user, Permission permission);
+
+	/**
+	 * @param user
+	 * @param permission
+	 * @return
+	 */
+	public Boolean hasPermission(User user, Permission permission);
 
 }

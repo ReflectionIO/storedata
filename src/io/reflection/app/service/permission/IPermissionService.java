@@ -36,4 +36,10 @@ public interface IPermissionService extends IService {
 	 */
 	public void deletePermission(Permission permission);
 
+	/**
+	 * @param name
+	 * @return
+	 */
+	public Permission getNamedPermission(String name);
+
 }

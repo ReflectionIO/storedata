@@ -286,26 +286,26 @@ public final class Admin extends ActionHandler {
 	public SetPasswordResponse setPassword(SetPasswordRequest input) {
 		LOG.finer("Entering setPassword");
 		SetPasswordResponse output = new SetPasswordResponse();
-		
+
 		try {
 			if (input == null)
 				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
 						ValidationError.InvalidValueNull.getMessage("SetPasswordRequest: input"));
-			
-			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
-			
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
 			input.user = ValidationHelper.validateUser(input.user, "input.user");
-			
+
 			input.password = ValidationHelper.validatePassword(input.password, "input.password");
-			
+
 			UserServiceProvider.provide().updateUserPassword(input.user, input.password);
-			
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
 			output.error = convertToErrorAndLog(LOG, e);
 		}
-		
+
 		LOG.finer("Exiting setPassword");
 		return output;
 	}
@@ -314,6 +314,19 @@ public final class Admin extends ActionHandler {
 		LOG.finer("Entering assignRole");
 		AssignRoleResponse output = new AssignRoleResponse();
 		try {
+			if (input == null)
+				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
+						ValidationError.InvalidValueNull.getMessage("AssignRoleRequest: input"));
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
+			input.user = ValidationHelper.validateUser(input.user, "input.user");
+
+			input.role = ValidationHelper.validateRole(input.role, "input.role");
+
+			if (!UserServiceProvider.provide().hasRole(input.user, input.role).booleanValue()) {
+				UserServiceProvider.provide().assignRole(input.user, input.role);
+			}
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;

@@ -12,10 +12,14 @@ import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.service.country.CountryServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
+import io.reflection.app.service.permission.PermissionServiceProvider;
+import io.reflection.app.service.role.RoleServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.datatypes.Country;
 import io.reflection.app.shared.datatypes.Item;
+import io.reflection.app.shared.datatypes.Permission;
+import io.reflection.app.shared.datatypes.Role;
 import io.reflection.app.shared.datatypes.Store;
 import io.reflection.app.shared.datatypes.User;
 
@@ -336,15 +340,90 @@ public class ValidationHelper {
 		return password;
 	}
 
+	/**
+	 * 
+	 * @param value
+	 * @param parent
+	 * @param minLenth
+	 * @param maxLength
+	 * @return
+	 * @throws InputValidationException
+	 */
 	public static String validateStringLength(String value, String parent, int minLenth, int maxLength) throws InputValidationException {
 		if (value.length() < minLenth)
-			throw new InputValidationException(ValidationError.InvalidStringTooShort.getCode(),
-					ValidationError.InvalidStringTooShort.getMessage(parent, minLenth, maxLength));
+			throw new InputValidationException(ValidationError.InvalidStringTooShort.getCode(), ValidationError.InvalidStringTooShort.getMessage(parent,
+					minLenth, maxLength));
 
 		if (value.length() > maxLength)
-			throw new InputValidationException(ValidationError.InvalidStringTooLong.getCode(),
-					ValidationError.InvalidStringTooLong.getMessage(parent, minLenth, maxLength));
+			throw new InputValidationException(ValidationError.InvalidStringTooLong.getCode(), ValidationError.InvalidStringTooLong.getMessage(parent,
+					minLenth, maxLength));
 
 		return value;
+	}
+
+	/**
+	 * 
+	 * @param role
+	 * @param parent
+	 * @return
+	 * @throws InputValidationException
+	 */
+	public static Role validateRole(Role role, String parent) throws InputValidationException {
+		if (role == null) throw new InputValidationException(ValidationError.RoleNull.getCode(), ValidationError.RoleNull.getMessage(parent));
+
+		boolean isIdLookup = false, isNameLookup = false;
+
+		if (role.id != null) {
+			isIdLookup = true;
+		} else if (role.name != null) {
+			isNameLookup = true;
+		}
+
+		if (!(isIdLookup || isNameLookup)) { throw new InputValidationException(ValidationError.RoleNoLookup.getCode(),
+				ValidationError.RoleNoLookup.getMessage(parent)); }
+
+		Role lookupRole = null;
+		if (isIdLookup) {
+			lookupRole = RoleServiceProvider.provide().getRole(role.id);
+		} else if (isNameLookup) {
+			lookupRole = RoleServiceProvider.provide().getNamedRole(role.name);
+		}
+
+		if (lookupRole == null) throw new InputValidationException(ValidationError.RoleNotFound.getCode(), ValidationError.RoleNotFound.getMessage(parent));
+
+		return lookupRole;
+	}
+	
+	/**
+	 * 
+	 * @param permission
+	 * @param parent
+	 * @return
+	 * @throws InputValidationException
+	 */
+	public static Permission validatePermission(Permission permission, String parent) throws InputValidationException {
+		if (permission == null) throw new InputValidationException(ValidationError.PermissionNull.getCode(), ValidationError.PermissionNull.getMessage(parent));
+
+		boolean isIdLookup = false, isNameLookup = false;
+
+		if (permission.id != null) {
+			isIdLookup = true;
+		} else if (permission.name != null) {
+			isNameLookup = true;
+		}
+
+		if (!(isIdLookup || isNameLookup)) { throw new InputValidationException(ValidationError.PermissionNoLookup.getCode(),
+				ValidationError.PermissionNoLookup.getMessage(parent)); }
+
+		Permission lookupPermission = null;
+		if (isIdLookup) {
+			lookupPermission = PermissionServiceProvider.provide().getPermission(permission.id);
+		} else if (isNameLookup) {
+			lookupPermission = PermissionServiceProvider.provide().getNamedPermission(permission.name);
+		}
+
+		if (lookupPermission == null) throw new InputValidationException(ValidationError.PermissionNotFound.getCode(), ValidationError.PermissionNotFound.getMessage(parent));
+
+		return lookupPermission;
 	}
 }

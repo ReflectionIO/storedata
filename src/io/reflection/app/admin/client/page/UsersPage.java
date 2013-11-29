@@ -14,14 +14,11 @@ import io.reflection.app.admin.client.part.SimplePager;
 import io.reflection.app.shared.datatypes.User;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TextHeader;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
@@ -43,7 +40,7 @@ public class UsersPage extends Composite {
 	@UiField(provided = true) SimplePager mPager = new SimplePager(false, false);
 	
 	@UiField InlineHyperlink mAssignPassword;
-	@UiField Button mMakeAdmin;
+	@UiField InlineHyperlink mMakeAdmin;
 
 	public UsersPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -58,12 +55,15 @@ public class UsersPage extends Composite {
 				User selected = s.getSelectedObject();
 
 				mAssignPassword.setVisible(selected != null);
+				mMakeAdmin.setVisible(selected != null);
 				
 				if (selected != null) {
 					mAssignPassword.setTargetHistoryToken("users/changepassword/" + selected.id.toString());
 				}
 				
-				mMakeAdmin.setEnabled(selected != null);
+				if (selected != null) {
+					mMakeAdmin.setTargetHistoryToken("users/assignrole/" + selected.id.toString() + "/admin");
+				}
 			}
 		});
 		mUsers.setSelectionModel(s);
@@ -111,16 +111,6 @@ public class UsersPage extends Composite {
 		TextHeader emailHeader = new TextHeader("E-mail");
 		emailHeader.setHeaderStyleNames("col-md-3");
 		mUsers.addColumn(email, emailHeader);
-	}
-	
-	@UiHandler("mMakeAdmin")
-	void onModelClicked(ClickEvent event) {
-		@SuppressWarnings("unchecked")
-		User selected = ((SingleSelectionModel<User>)mUsers.getSelectionModel()).getSelectedObject();
-		
-		if (selected != null) {
-			UserController.get().makeAdmin(selected.id);
-		}
 	}
 
 }

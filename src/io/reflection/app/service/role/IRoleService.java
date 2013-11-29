@@ -36,4 +36,10 @@ public interface IRoleService extends IService {
 	 */
 	public void deleteRole(Role role);
 
+	/**
+	 * @param name
+	 * @return
+	 */
+	public Role getNamedRole(String name);
+
 }

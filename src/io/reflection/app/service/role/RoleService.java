@@ -8,6 +8,8 @@
 //
 package io.reflection.app.service.role;
 
+import static com.spacehopperstudios.utility.StringUtils.addslashes;
+import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
@@ -16,6 +18,7 @@ import io.reflection.app.service.ServiceType;
 import io.reflection.app.shared.datatypes.Role;
 
 final class RoleService implements IRoleService {
+
 	public String getName() {
 		return ServiceType.ServiceTypeRole.toString();
 	}
@@ -27,7 +30,7 @@ final class RoleService implements IRoleService {
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection roleConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeRole.toString());
 
-		String getRoleQuery = String.format("select * from `role` where `deleted`='n' and `id`='%d' limit 1", id.longValue());
+		String getRoleQuery = String.format("SELECT * FROM `role` WHERE `deleted`='n' AND `id`=%d LIMIT 1", id.longValue());
 		try {
 			roleConnection.connect();
 			roleConnection.executeQuery(getRoleQuery);
@@ -51,7 +54,15 @@ final class RoleService implements IRoleService {
 	 */
 	private Role toRole(Connection connection) {
 		Role role = new Role();
+
 		role.id = connection.getCurrentRowLong("id");
+		role.created = connection.getCurrentRowDateTime("created");
+		role.deleted = connection.getCurrentRowString("deleted");
+
+		role.code = stripslashes(connection.getCurrentRowString("code"));
+		role.description = stripslashes(connection.getCurrentRowString("description"));
+		role.name = stripslashes(connection.getCurrentRowString("name"));
+
 		return role;
 	}
 
@@ -69,5 +80,35 @@ final class RoleService implements IRoleService {
 	public void deleteRole(Role role) {
 		throw new UnsupportedOperationException();
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.role.IRoleService#getNamedRole(java.lang.String)
+	 */
+	@Override
+	public Role getNamedRole(String name) {
+		Role role = null;
+
+		IDatabaseService databaseService = DatabaseServiceProvider.provide();
+		Connection roleConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeRole.toString());
+
+		String getRoleQuery = String.format("SELECT * FROM `role` WHERE `deleted`='n' AND `name`='%s' LIMIT 1", addslashes(name));
+
+		try {
+			roleConnection.connect();
+			roleConnection.executeQuery(getRoleQuery);
+
+			if (roleConnection.fetchNextRow()) {
+				role = toRole(roleConnection);
+			}
+		} finally {
+			if (roleConnection != null) {
+				roleConnection.disconnect();
+			}
+		}
+		return role;
+	}
+
 
 }

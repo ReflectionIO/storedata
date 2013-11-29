@@ -412,3 +412,64 @@ CREATE TABLE `session` (
   UNIQUE KEY `unique_token` (`token`),
   KEY `index_userid` (`userid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+CREATE TABLE `permission` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `name` varchar(1000) NOT NULL,
+  `description` varchar(4096) DEFAULT NULL,
+  `code` char(3) DEFAULT NULL,
+  `deleted` enum('y','n') DEFAULT 'n',
+  PRIMARY KEY (`id`),
+  KEY `index_name` (`name`(255))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+CREATE TABLE `role` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `name` varchar(1000) NOT NULL,
+  `description` varchar(4096) DEFAULT NULL,
+  `code` char(3) DEFAULT NULL,
+  `deleted` enum('y','n') DEFAULT 'n',
+  PRIMARY KEY (`id`),
+  KEY `index_name` (`name`(255))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+CREATE TABLE `rolepermission` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `roleid` int(11) NOT NULL,
+  `permissionid` int(11) NOT NULL,
+  `deleted` enum('y','n') DEFAULT 'n',
+  PRIMARY KEY (`id`),
+  KEY `index_roleid` (`roleid`),
+  KEY `index_permissionid` (`permissionid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+CREATE TABLE `userpermission` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `permissionid` int(11) NOT NULL,
+  `userid` int(11) NOT NULL,
+  `deleted` enum('y','n') DEFAULT 'n',
+  PRIMARY KEY (`id`),
+  KEY `index_userid` (`userid`),
+  KEY `index_permissionid` (`permissionid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+CREATE TABLE `userrole` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `roleid` int(11) NOT NULL,
+  `userid` int(11) NOT NULL,
+  `deleted` enum('y','n') DEFAULT 'n',
+  PRIMARY KEY (`id`),
+  KEY `index_userid` (`userid`),
+  KEY `index_roleid` (`roleid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+INSERT INTO `role` (`name`, `description`, `code`) VALUES
+('admin', 'can perform administrator tasks', 'ADM'),
+('developer', 'can view data intended for developers', 'DEV'),
+('premium', 'can view all application data', 'PRE'),
+('alpha', 'can view data intended for alpha users', 'ALF')$$

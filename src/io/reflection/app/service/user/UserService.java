@@ -8,6 +8,8 @@
 //
 package io.reflection.app.service.user;
 
+import static com.spacehopperstudios.utility.StringUtils.addslashes;
+import static com.spacehopperstudios.utility.StringUtils.sha1Hash;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
@@ -15,17 +17,19 @@ import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
 import io.reflection.app.shared.datatypes.DataType;
+import io.reflection.app.shared.datatypes.Permission;
+import io.reflection.app.shared.datatypes.Role;
 import io.reflection.app.shared.datatypes.User;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.spacehopperstudios.utility.StringUtils.addslashes;
-import static com.spacehopperstudios.utility.StringUtils.sha1Hash;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 final class UserService implements IUserService {
 
 	private static final String SALT = "salt.username.magic";
+	private static final Logger LOG = Logger.getLogger(UserService.class.getName());
 
 	public String getName() {
 		return ServiceType.ServiceTypeUser.toString();
@@ -468,7 +472,9 @@ final class UserService implements IUserService {
 		return user;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#getUsernameUser(java.lang.String)
 	 */
 	@Override
@@ -494,6 +500,133 @@ final class UserService implements IUserService {
 		}
 
 		return user;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.user.IUserService#assignRole(io.reflection.app.shared.datatypes.User, io.reflection.app.shared.datatypes.Role)
+	 */
+	@Override
+	public void assignRole(User user, Role role) {
+		String assignUserRoleQuery = String.format("INSERT INTO `userrole` (`userid`, `roleid`) VALUES (%d, %d)", user.id.longValue(), role.id.longValue());
+
+		Connection roleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRole.toString());
+
+		try {
+			roleConnection.connect();
+			roleConnection.executeQuery(assignUserRoleQuery);
+
+			if (roleConnection.getAffectedRowCount() > 0) {
+				if (LOG.isLoggable(Level.INFO)) {
+					LOG.info(String.format("Role with roleid [%d] was added to user with userid [%d]", role.id.longValue(), user.id.longValue()));
+				}
+			} else {
+				if (LOG.isLoggable(Level.WARNING)) {
+					LOG.warning(String.format("Role with roleid [%d] was NOT added to user with userid [%d]", role.id.longValue(), user.id.longValue()));
+				}
+			}
+		} finally {
+			if (roleConnection != null) {
+				roleConnection.disconnect();
+			}
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.user.IUserService#hasRole(io.reflection.app.shared.datatypes.User, io.reflection.app.shared.datatypes.Role)
+	 */
+	@Override
+	public Boolean hasRole(User user, Role role) {
+		Boolean hasUserRole = Boolean.FALSE;
+
+		String hasUserRoleQuery = String.format("SELECT `id` FROM `userrole` WHERE `userid`=%d AND `roleid`=%d AND `deleted`='n' LIMIT 1", user.id.longValue(),
+				role.id.longValue());
+
+		Connection roleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRole.toString());
+
+		try {
+			roleConnection.connect();
+			roleConnection.executeQuery(hasUserRoleQuery);
+
+			if (roleConnection.fetchNextRow()) {
+				hasUserRole = Boolean.TRUE;
+			}
+		} finally {
+			if (roleConnection != null) {
+				roleConnection.disconnect();
+			}
+		}
+
+		return hasUserRole;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.user.IUserService#assignPermission(io.reflection.app.shared.datatypes.User, io.reflection.app.shared.datatypes.Permission)
+	 */
+	@Override
+	public void assignPermission(User user, Permission permission) {
+		String assignUserPermissionQuery = String.format("INSERT INTO `userpermission` (`userid`, `permissionid`) VALUES (%d, %d)", user.id.longValue(),
+				permission.id.longValue());
+
+		Connection permissionConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypePermission.toString());
+
+		try {
+			permissionConnection.connect();
+			permissionConnection.executeQuery(assignUserPermissionQuery);
+
+			if (permissionConnection.getAffectedRowCount() > 0) {
+				if (LOG.isLoggable(Level.INFO)) {
+					LOG.info(String.format("Permission with permissionid [%d] was added to user with userid [%d]", permission.id.longValue(),
+							user.id.longValue()));
+				}
+			} else {
+				if (LOG.isLoggable(Level.WARNING)) {
+					LOG.warning(String.format("Permission with permissionid [%d] was NOT added to user with userid [%d]", permission.id.longValue(),
+							user.id.longValue()));
+				}
+			}
+		} finally {
+			if (permissionConnection != null) {
+				permissionConnection.disconnect();
+			}
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.user.IUserService#hasPermission(io.reflection.app.shared.datatypes.User, io.reflection.app.shared.datatypes.Permission)
+	 */
+	@Override
+	public Boolean hasPermission(User user, Permission permission) {
+		Boolean hasUserPermission = Boolean.FALSE;
+
+		String hasUserPermissionQuery = String.format("SELECT `id` FROM `userpermission` WHERE `userid`=%d AND `permissionid`=%d AND `deleted`='n' LIMIT 1",
+				user.id.longValue(), permission.id.longValue());
+
+		Connection permissionConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypePermission.toString());
+
+		try {
+			permissionConnection.connect();
+			permissionConnection.executeQuery(hasUserPermissionQuery);
+
+			if (permissionConnection.fetchNextRow()) {
+				hasUserPermission = Boolean.TRUE;
+			}
+		} finally {
+			if (permissionConnection != null) {
+				permissionConnection.disconnect();
+			}
+		}
+
+		return hasUserPermission;
 	}
 
 }

@@ -8,6 +8,8 @@
 //
 package io.reflection.app.service.permission;
 
+import static com.spacehopperstudios.utility.StringUtils.addslashes;
+import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
@@ -27,7 +29,7 @@ final class PermissionService implements IPermissionService {
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection permissionConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypePermission.toString());
 
-		String getPermissionQuery = String.format("select * from `permission` where `deleted`='n' and `id`='%d' limit 1", id.longValue());
+		String getPermissionQuery = String.format("SELECT * FROM `permission` WHERE `deleted`='n' AND `id`=%d LIMIT 1", id.longValue());
 		try {
 			permissionConnection.connect();
 			permissionConnection.executeQuery(getPermissionQuery);
@@ -40,6 +42,7 @@ final class PermissionService implements IPermissionService {
 				permissionConnection.disconnect();
 			}
 		}
+
 		return permission;
 	}
 
@@ -51,7 +54,15 @@ final class PermissionService implements IPermissionService {
 	 */
 	private Permission toPermission(Connection connection) {
 		Permission permission = new Permission();
+
 		permission.id = connection.getCurrentRowLong("id");
+		permission.created = connection.getCurrentRowDateTime("created");
+		permission.deleted = connection.getCurrentRowString("deleted");
+
+		permission.code = stripslashes(connection.getCurrentRowString("code"));
+		permission.description = stripslashes(connection.getCurrentRowString("description"));
+		permission.name = stripslashes(connection.getCurrentRowString("name"));
+
 		return permission;
 	}
 
@@ -68,6 +79,35 @@ final class PermissionService implements IPermissionService {
 	@Override
 	public void deletePermission(Permission permission) {
 		throw new UnsupportedOperationException();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.permission.IPermissionService#getNamedPermission(java.lang.String)
+	 */
+	@Override
+	public Permission getNamedPermission(String name) {
+		Permission permission = null;
+
+		IDatabaseService databaseService = DatabaseServiceProvider.provide();
+		Connection permissionConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypePermission.toString());
+
+		String getPermissionQuery = String.format("SELECT * FROM `permission` WHERE `deleted`='n' AND `name`='%s' LIMIT 1", addslashes(name));
+		try {
+			permissionConnection.connect();
+			permissionConnection.executeQuery(getPermissionQuery);
+
+			if (permissionConnection.fetchNextRow()) {
+				permission = toPermission(permissionConnection);
+			}
+		} finally {
+			if (permissionConnection != null) {
+				permissionConnection.disconnect();
+			}
+		}
+
+		return permission;
 	}
 
 }
