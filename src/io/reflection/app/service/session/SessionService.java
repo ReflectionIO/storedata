@@ -28,7 +28,8 @@ final class SessionService implements ISessionService {
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection sessionConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeSession.toString());
 
-		String getSessionQuery = String.format("SELECT * FROM `session` WHERE `deleted`='n' AND `id`='%d' LIMIT 1", id.longValue());
+		String getSessionQuery = String.format(
+				"SELECT * FROM `session` WHERE `id`='%d' AND `expires` > NOW() AND `deleted`='n' ORDER BY `expires` DESC LIMIT 1", id.longValue());
 		try {
 			sessionConnection.connect();
 			sessionConnection.executeQuery(getSessionQuery);
@@ -137,6 +138,37 @@ final class SessionService implements ISessionService {
 
 		String getUserSessionQuery = String.format(
 				"SELECT * FROM `session` WHERE `userid`=%d AND `expires` > NOW() AND `deleted`='n' ORDER BY `expires` DESC LIMIT 1", user.id.longValue());
+
+		try {
+			sessionConnection.connect();
+			sessionConnection.executeQuery(getUserSessionQuery);
+
+			if (sessionConnection.fetchNextRow()) {
+				session = toSession(sessionConnection);
+			}
+		} finally {
+			if (sessionConnection != null) {
+				sessionConnection.disconnect();
+			}
+		}
+
+		return session;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.session.ISessionService#getTokenSession(java.lang.String)
+	 */
+	@Override
+	public Session getTokenSession(String token) {
+		Session session = null;
+
+		IDatabaseService databaseService = DatabaseServiceProvider.provide();
+		Connection sessionConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeSession.toString());
+
+		String getUserSessionQuery = String.format(
+				"SELECT * FROM `session` WHERE `token`='%s' AND `expires` > NOW() AND `deleted`='n' ORDER BY `expires` DESC LIMIT 1", token);
 
 		try {
 			sessionConnection.connect();

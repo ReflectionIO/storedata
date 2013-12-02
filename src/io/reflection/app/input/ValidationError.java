@@ -14,7 +14,8 @@ package io.reflection.app.input;
 public enum ValidationError {
 
 	AccessCodeNull(100001, "Invalid value null for String: %s.accessCode"),
-	AccessCodeNoMatch(100002, "Invalid value does not match scheme for String: %s.accessCode"),
+	
+	TokenNoMatch(100002, "Invalid value does not match scheme for String: %s"),
 	
 	StoreNull(100003, "Invalid value null for Store: %s.store"),
 	StoreNotFound(100004, "Store not found Store: %s.value"),
@@ -58,6 +59,10 @@ public enum ValidationError {
 	PermissionNull(100030, "Invalid value null for Permission: %s"),
 	PermissionNotFound(100031, "Permission not found Permission: %s"),
 	PermissionNoLookup(100032, "Invalid permission lookup, need either id or name for Permission: %s"),
+	
+	SessionNull(100033, "Invalid value null for Session: %s"),
+	SessionNotFound(100034, "Session not found Session: %s"),
+	SessionNoLookup(100035, "Invalid session lookup, need either id or token for Session: %s"),
 
 	GetCountriesNeedsStoreOrQuery(100101, "GetCountries call should either have a store or a query. To get all countries use * for the query"),
 

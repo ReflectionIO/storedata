@@ -166,48 +166,46 @@ public class NavigationController {
 	 * @param value
 	 */
 	public void addPage(String value) {
-		Stack s = null;
+
 		if (value == null || value.length() == 0) {
 			value = "ranks";
 		}
 
-		s = Stack.parse(value);
+		mStack = Stack.parse(value);
 
-		if ("ranks".equals(s.getPage())) {
+		if ("ranks".equals(mStack.getPage())) {
 			addRanksPage();
-		} else if ("feedbrowser".equals(s.getPage())) {
+		} else if ("feedbrowser".equals(mStack.getPage())) {
 			addFeedBrowserPage();
-		} else if ("users".equals(s.getPage())) {
-			if (s.getAction() == null) {
+		} else if ("users".equals(mStack.getPage())) {
+			if (mStack.getAction() == null) {
 				addUsersPage();
-			} else if ("changepassword".equals(s.getAction())) {
+			} else if ("changepassword".equals(mStack.getAction())) {
 				addChangePasswordPage();
-			} else if ("assignrole".equals(s.getAction())) {
-				String userId = s.getParameter(0);
-				String roleName = s.getParameter(1);
-				
+			} else if ("assignrole".equals(mStack.getAction())) {
+				String userId = mStack.getParameter(0);
+				String roleName = mStack.getParameter(1);
+
 				if (userId != null) {
 					if (roleName.equalsIgnoreCase("admin")) {
 						UserController.get().makeAdmin(Long.valueOf(userId));
 					}
 				}
-				
+
 				History.newItem("users");
 				return;
 			}
-		} else if ("login".equals(s.getPage())) {
+		} else if ("login".equals(mStack.getPage())) {
 			addLoginPage();
-		} else if ("register".equals(s.getPage())) {
+		} else if ("register".equals(mStack.getPage())) {
 			addRegisterPage();
-		} else if ("logout".equals(s.getPage())) {
+		} else if ("logout".equals(mStack.getPage())) {
 			SessionController.get().logout();
 			History.newItem("login");
 			return;
 		}
 
-		mStack = s;
-
-		EventController.get().fireEventFromSource(new NavigationEventHandler.ChangedEvent(s), NavigationController.this);
+		EventController.get().fireEventFromSource(new NavigationEventHandler.ChangedEvent(mStack), NavigationController.this);
 	}
 
 	/**

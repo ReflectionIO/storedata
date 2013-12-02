@@ -19,6 +19,9 @@ import io.reflection.app.api.core.shared.call.LogoutResponse;
 import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.shared.datatypes.User;
 
+import java.util.Date;
+
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.willshex.gson.json.service.shared.StatusType;
 
@@ -29,12 +32,18 @@ import com.willshex.gson.json.service.shared.StatusType;
 public class SessionController implements ServiceController {
 	private static SessionController mOne;
 
+	private static final String COOKIE_KEY_TOKEN = SessionController.class.getName() + ".token";
+	private static final long COOKIE_SHORT_DURATION = 1000 * 60 * 60 * 24 * 1;
+	// private static final long COOKIE_LONG_DURATION = 1000 * 60 * 60 * 24 * 30;
+
 	private User mLoggedIn = null;
 	private Session mSession = null;
 
 	public static SessionController get() {
 		if (mOne == null) {
 			mOne = new SessionController();
+
+			mOne.restoreSession();
 		}
 
 		return mOne;
@@ -62,6 +71,12 @@ public class SessionController implements ServiceController {
 
 		if (mSession != session) {
 			mSession = session;
+
+			if (mSession != null) {
+				Cookies.setCookie(COOKIE_KEY_TOKEN, mSession.token, new Date(System.currentTimeMillis() + COOKIE_SHORT_DURATION));
+			}
+		} else {
+			Cookies.removeCookie(COOKIE_KEY_TOKEN);
 		}
 	}
 
@@ -75,7 +90,7 @@ public class SessionController implements ServiceController {
 
 		final LoginRequest input = new LoginRequest();
 		input.accessCode = ACCESS_CODE;
-		
+
 		input.username = username;
 		input.password = password;
 
@@ -109,13 +124,13 @@ public class SessionController implements ServiceController {
 		service.logout(input, new AsyncCallback<LogoutResponse>() {
 
 			@Override
-			public void onSuccess(LogoutResponse result) {
-				// no one cares
+			public void onSuccess(LogoutResponse output) {
+				Cookies.removeCookie(COOKIE_KEY_TOKEN);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				// no one cares
+				Cookies.removeCookie(COOKIE_KEY_TOKEN);
 			}
 		});
 
@@ -135,7 +150,41 @@ public class SessionController implements ServiceController {
 	 * @param newPassword
 	 */
 	public void changePassword(String password, String newPassword) {
-		
+
 	}
 
+	private void restoreSession() {
+		String token = Cookies.getCookie(COOKIE_KEY_TOKEN);
+
+		if (token != null) {
+			CoreService core = new CoreService();
+			core.setUrl(CORE_END_POINT);
+
+			LoginRequest input = new LoginRequest();
+			input.accessCode = ACCESS_CODE;
+
+			input.session = new Session();
+			input.session.token = token;
+
+			core.login(input, new AsyncCallback<LoginResponse>() {
+
+				@Override
+				public void onSuccess(LoginResponse output) {
+
+					if (output.status == StatusType.StatusTypeSuccess) {
+						if (output.session != null && output.session.user != null) {
+							setLoggedInUser(output.session.user, output.session);
+						}
+					} else {
+						EventController.get().fireEventFromSource(new UserLoginFailed(output.error), SessionController.this);
+					}
+				}
+
+				@Override
+				public void onFailure(Throwable caught) {
+					EventController.get().fireEventFromSource(new UserLoginFailed(FormHelper.convertToError(caught)), SessionController.this);
+				}
+			});
+		}
+	}
 }

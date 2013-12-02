@@ -16,7 +16,6 @@ import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProv
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
-import io.reflection.app.shared.datatypes.DataType;
 import io.reflection.app.shared.datatypes.Permission;
 import io.reflection.app.shared.datatypes.Role;
 import io.reflection.app.shared.datatypes.User;
@@ -421,34 +420,34 @@ final class UserService implements IUserService {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.service.user.IUserService#getSessionUser(io.reflection.app.shared.datatypes.DataType)
-	 */
-	@Override
-	public User getSessionUser(DataType session) {
-		User user = null;
-
-		Connection sessionConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSession.toString());
-
-		String getSessionUserQuery = String.format("SELECT `userid` FROM `session` WHERE `id`=%d", session.id.longValue());
-
-		try {
-			sessionConnection.connect();
-			sessionConnection.executeQuery(getSessionUserQuery);
-
-			if (sessionConnection.fetchNextRow()) {
-				user = this.getUser(sessionConnection.getCurrentRowLong("userid"));
-			}
-		} finally {
-			if (sessionConnection != null) {
-				sessionConnection.disconnect();
-			}
-		}
-
-		return user;
-	}
+//	/*
+//	 * (non-Javadoc)
+//	 * 
+//	 * @see io.reflection.app.service.user.IUserService#getSessionUser(io.reflection.app.shared.datatypes.DataType)
+//	 */
+//	@Override
+//	public User getSessionUser(DataType session) {
+//		User user = null;
+//
+//		Connection sessionConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSession.toString());
+//
+//		String getSessionUserQuery = String.format("SELECT `userid` FROM `session` WHERE `id`=%d", session.id.longValue());
+//
+//		try {
+//			sessionConnection.connect();
+//			sessionConnection.executeQuery(getSessionUserQuery);
+//
+//			if (sessionConnection.fetchNextRow()) {
+//				user = this.getUser(sessionConnection.getCurrentRowLong("userid"));
+//			}
+//		} finally {
+//			if (sessionConnection != null) {
+//				sessionConnection.disconnect();
+//			}
+//		}
+//
+//		return user;
+//	}
 
 	/**
 	 * 

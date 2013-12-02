@@ -9,6 +9,8 @@ package io.reflection.app.admin.client.controller;
 
 import io.reflection.app.admin.client.handler.UsersEventHandler.ReceivedCount;
 import io.reflection.app.admin.client.handler.UsersEventHandler.ReceivedUsers;
+import io.reflection.app.admin.client.handler.UsersEventHandler.UserRegistered;
+import io.reflection.app.admin.client.handler.UsersEventHandler.UserRegistrationFailed;
 import io.reflection.app.api.admin.client.AdminService;
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
 import io.reflection.app.api.admin.shared.call.AssignRoleResponse;
@@ -18,6 +20,9 @@ import io.reflection.app.api.admin.shared.call.GetUsersRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersResponse;
 import io.reflection.app.api.admin.shared.call.SetPasswordRequest;
 import io.reflection.app.api.admin.shared.call.SetPasswordResponse;
+import io.reflection.app.api.core.client.CoreService;
+import io.reflection.app.api.core.shared.call.RegisterUserRequest;
+import io.reflection.app.api.core.shared.call.RegisterUserResponse;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.shared.datatypes.Role;
@@ -31,6 +36,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
 import com.google.gwt.view.client.Range;
+import com.willshex.gson.json.service.shared.Error;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**
@@ -41,7 +47,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 	private List<User> mUsers = new ArrayList<User>();
 	private long mCount = -1;
-	private Pager mPager;	
+	private Pager mPager;
 
 	private static UserController mOne = null;
 
@@ -170,28 +176,28 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 	public void makeAdmin(Long userId) {
 		AdminService service = new AdminService();
 		service.setUrl(ADMIN_END_POINT);
-		
+
 		final AssignRoleRequest input = new AssignRoleRequest();
 		input.accessCode = ACCESS_CODE;
-		
+
 		input.role = new Role();
 		input.role.name = "admin";
-		
+
 		input.user = new User();
 		input.user.id = userId;
-		
+
 		service.assignRole(input, new AsyncCallback<AssignRoleResponse>() {
-			
+
 			@Override
 			public void onSuccess(AssignRoleResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
 					// not sure what to do
 				}
 			}
-			
+
 			@Override
 			public void onFailure(Throwable caught) {
-				
+
 			}
 		});
 	}
@@ -203,27 +209,75 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 	public void setPassword(Long userId, String newPassword) {
 		AdminService service = new AdminService();
 		service.setUrl(ADMIN_END_POINT);
-		
+
 		SetPasswordRequest input = new SetPasswordRequest();
 		input.accessCode = ACCESS_CODE;
-		
+
 		input.password = newPassword;
-		
+
 		input.user = new User();
 		input.user.id = userId;
-		
+
 		service.setPassword(input, new AsyncCallback<SetPasswordResponse>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void onSuccess(SetPasswordResponse output) {
 				// TODO Auto-generated method stub
-				
+
+			}
+		});
+	}
+
+	/**
+	 * 
+	 * @param username
+	 * @param password
+	 * @param forename
+	 * @param surname
+	 * @param company
+	 */
+	public void registerUser(String username, String password, String forename, String surname, String company) {
+		CoreService service = new CoreService();
+		service.setUrl(CORE_END_POINT);
+
+		RegisterUserRequest input = new RegisterUserRequest();
+		input.accessCode = ACCESS_CODE;
+
+		input.user = new User();
+		input.user.company = company;
+		input.user.forename = forename;
+		input.user.surname = surname;
+		input.user.username = username;
+		input.user.password = password;
+
+		final String email = username;
+
+		service.registerUser(input, new AsyncCallback<RegisterUserResponse>() {
+
+			@Override
+			public void onSuccess(RegisterUserResponse output) {
+				if (output.status == StatusType.StatusTypeSuccess) {
+					EventController.get().fireEventFromSource(new UserRegistered(email), UserController.this);
+				} else {
+					EventController.get().fireEventFromSource(new UserRegistrationFailed(output.error), UserController.this);
+				}
+
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Error e = new Error();
+
+				e.code = Integer.valueOf(-1);
+				e.message = caught.getMessage();
+
+				EventController.get().fireEventFromSource(new UserRegistrationFailed(e), UserController.this);
 			}
 		});
 	}

@@ -93,8 +93,8 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 
 							mRows.addAll(output.feedFetches);
 
-							updateRowCount(mPager.totalCount.intValue(), true);
 							updateRowData(0, mRows);
+							updateRowCount(mPager.totalCount.intValue(), true);
 						}
 					}
 				}

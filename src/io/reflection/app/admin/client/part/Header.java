@@ -30,7 +30,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
-
 import com.willshex.gson.json.service.shared.Error;
 
 /**
@@ -42,7 +41,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	private static HeaderUiBinder uiBinder = GWT.create(HeaderUiBinder.class);
 
 	interface HeaderUiBinder extends UiBinder<Widget, Header> {}
-	
+
 	private static final String ACTIVE_STYLE_NAME = "active";
 
 	@UiField InlineHyperlink mRanksLink;
@@ -79,7 +78,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 		EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this);
 		EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this);
-		
+
 		addLogin();
 	}
 
@@ -88,13 +87,13 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			item.addClassName(ACTIVE_STYLE_NAME);
 		}
 	}
-	
+
 	private void deactivate(LIElement item) {
 		if (item != null) {
 			item.removeClassName(ACTIVE_STYLE_NAME);
 		}
 	}
-	
+
 	private void activateFeedBrowser() {
 		activate(mFeedBrowserItem);
 		deactivate(mRanksItem);
@@ -115,7 +114,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		deactivate(mUsersItem);
 		deactivate(mLoginItem);
 	}
-	
+
 	private void activateLogin() {
 		deactivate(mRanksItem);
 		deactivate(mFeedBrowserItem);
@@ -312,11 +311,34 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		deactivate(mLoginItem);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.admin.client.handler.SessionEventHandler#userLoginFailed(com.willshex.gson.json.service.shared.Error)
 	 */
 	@Override
-	public void userLoginFailed(Error error) {
+	public void userLoginFailed(Error error) {}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.admin.client.handler.UsersEventHandler#userRegistered(java.lang.String)
+	 */
+	@Override
+	public void userRegistered(String email) {
+		// TODO Auto-generated method stub
+
 	}
-	
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.admin.client.handler.UsersEventHandler#userRegistrationFailed(com.willshex.gson.json.service.shared.Error)
+	 */
+	@Override
+	public void userRegistrationFailed(Error error) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

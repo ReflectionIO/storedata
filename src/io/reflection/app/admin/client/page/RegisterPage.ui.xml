@@ -1,5 +1,5 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.admin.client.part">
     <ui:style>
         @external form-control;
         
@@ -28,7 +28,10 @@
     </ui:style>
     <g:HTMLPanel>
         <h2>Create Account</h2>
-        <g:FormPanel>
+        
+        <p:AlertBox ui:field="mAlertBox" visible="false" />
+        
+        <g:FormPanel ui:field="mForm">
             <g:HTMLPanel styleName="col-sm-offset-4 col-sm-4">
                 <g:HTMLPanel ui:field="mForenameGroup" styleName="form-group">
                     <label>First name</label>

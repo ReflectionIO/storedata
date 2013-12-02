@@ -8,12 +8,14 @@
 package io.reflection.app.input;
 
 import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.service.country.CountryServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
 import io.reflection.app.service.role.RoleServiceProvider;
+import io.reflection.app.service.session.SessionServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.datatypes.Country;
@@ -45,7 +47,7 @@ public class ValidationHelper {
 			throw new InputValidationException(ValidationError.AccessCodeNull.getCode(), ValidationError.AccessCodeNull.getMessage(parent));
 
 		if (!accessCode.matches("([0-9a-f]{8})-([0-9a-f]{4})-([0-9a-f]{4})-([0-9a-f]{4})-([0-9a-f]{12})"))
-			throw new InputValidationException(ValidationError.AccessCodeNoMatch.getCode(), ValidationError.AccessCodeNoMatch.getMessage(parent));
+			throw new InputValidationException(ValidationError.TokenNoMatch.getCode(), ValidationError.TokenNoMatch.getMessage(parent));
 
 		// if all is good look it up
 
@@ -298,8 +300,8 @@ public class ValidationHelper {
 	 * @return
 	 * @throws InputValidationException
 	 */
-	public static User validateUser(User user, String parent) throws InputValidationException {
-		if (user == null) throw new InputValidationException(ValidationError.StoreNull.getCode(), ValidationError.StoreNull.getMessage(parent));
+	public static User validateExistingUser(User user, String parent) throws InputValidationException {
+		if (user == null) throw new InputValidationException(ValidationError.UserNull.getCode(), ValidationError.UserNull.getMessage(parent));
 
 		boolean isIdLookup = false, isNameLookup = false;
 
@@ -322,6 +324,19 @@ public class ValidationHelper {
 		if (lookupUser == null) throw new InputValidationException(ValidationError.UserNotFound.getCode(), ValidationError.UserNotFound.getMessage(parent));
 
 		return lookupUser;
+	}
+
+	/**
+	 * 
+	 * @param user
+	 * @param parent
+	 * @return
+	 * @throws InputValidationException
+	 */
+	public static User validateRegisteringUser(User user, String parent) throws InputValidationException {
+		if (user == null) throw new InputValidationException(ValidationError.UserNull.getCode(), ValidationError.UserNull.getMessage(parent));
+
+		return user;
 	}
 
 	/**
@@ -393,7 +408,7 @@ public class ValidationHelper {
 
 		return lookupRole;
 	}
-	
+
 	/**
 	 * 
 	 * @param permission
@@ -402,7 +417,8 @@ public class ValidationHelper {
 	 * @throws InputValidationException
 	 */
 	public static Permission validatePermission(Permission permission, String parent) throws InputValidationException {
-		if (permission == null) throw new InputValidationException(ValidationError.PermissionNull.getCode(), ValidationError.PermissionNull.getMessage(parent));
+		if (permission == null)
+			throw new InputValidationException(ValidationError.PermissionNull.getCode(), ValidationError.PermissionNull.getMessage(parent));
 
 		boolean isIdLookup = false, isNameLookup = false;
 
@@ -412,8 +428,8 @@ public class ValidationHelper {
 			isNameLookup = true;
 		}
 
-		if (!(isIdLookup || isNameLookup)) { throw new InputValidationException(ValidationError.PermissionNoLookup.getCode(),
-				ValidationError.PermissionNoLookup.getMessage(parent)); }
+		if (!(isIdLookup || isNameLookup))
+			throw new InputValidationException(ValidationError.PermissionNoLookup.getCode(), ValidationError.PermissionNoLookup.getMessage(parent));
 
 		Permission lookupPermission = null;
 		if (isIdLookup) {
@@ -422,8 +438,61 @@ public class ValidationHelper {
 			lookupPermission = PermissionServiceProvider.provide().getNamedPermission(permission.name);
 		}
 
-		if (lookupPermission == null) throw new InputValidationException(ValidationError.PermissionNotFound.getCode(), ValidationError.PermissionNotFound.getMessage(parent));
+		if (lookupPermission == null)
+			throw new InputValidationException(ValidationError.PermissionNotFound.getCode(), ValidationError.PermissionNotFound.getMessage(parent));
 
 		return lookupPermission;
+	}
+
+	/**
+	 * @param token
+	 * @param string
+	 * @return
+	 */
+	public static String validateToken(String token, String parent) throws InputValidationException {
+
+		if (token == null) throw new InputValidationException(ValidationError.StringNull.getCode(), ValidationError.StringNull.getMessage(parent));
+
+		if (!token.matches("([0-9a-f]{8})-([0-9a-f]{4})-([0-9a-f]{4})-([0-9a-f]{4})-([0-9a-f]{12})"))
+			throw new InputValidationException(ValidationError.TokenNoMatch.getCode(), ValidationError.TokenNoMatch.getMessage(parent));
+
+		return token;
+	}
+
+	/**
+	 * @param session
+	 * @return
+	 */
+	public static Session validateSession(Session session, String parent) throws InputValidationException {
+
+		if (session == null) throw new InputValidationException(ValidationError.SessionNull.getCode(), ValidationError.SessionNull.getMessage(parent));
+
+		boolean isIdLookup = false, isTokenLookup = false;
+
+		if (session.id != null) {
+			isIdLookup = true;
+		} else if (session.token != null) {
+			isTokenLookup = true;
+		}
+
+		if (!(isIdLookup || isTokenLookup))
+			throw new InputValidationException(ValidationError.SessionNoLookup.getCode(), ValidationError.SessionNoLookup.getMessage(parent));
+
+		Session lookupSession = null;
+		if (isIdLookup) {
+			lookupSession = SessionServiceProvider.provide().getSession(session.id);
+
+			if (lookupSession == null)
+				throw new InputValidationException(ValidationError.SessionNotFound.getCode(), ValidationError.SessionNotFound.getMessage(parent));
+		} else if (isTokenLookup) {
+			session.token = validateToken(session.token, parent + ".token");
+
+			lookupSession = SessionServiceProvider.provide().getTokenSession(session.token);
+
+			if (lookupSession == null)
+				throw new InputValidationException(ValidationError.SessionNotFound.getCode(), ValidationError.SessionNotFound.getMessage(parent));
+		}
+
+		return lookupSession;
 	}
 }

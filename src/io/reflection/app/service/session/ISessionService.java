@@ -51,4 +51,10 @@ public interface ISessionService extends IService {
      */
     public Session getUserSession (User user);
 
+	/**
+	 * @param token
+	 * @return
+	 */
+	public Session getTokenSession(String token);
+
 }

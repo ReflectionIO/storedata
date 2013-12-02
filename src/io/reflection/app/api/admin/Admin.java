@@ -294,7 +294,7 @@ public final class Admin extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
-			input.user = ValidationHelper.validateUser(input.user, "input.user");
+			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
 
 			input.password = ValidationHelper.validatePassword(input.password, "input.password");
 
@@ -319,7 +319,7 @@ public final class Admin extends ActionHandler {
 						ValidationError.InvalidValueNull.getMessage("AssignRoleRequest: input"));
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
-			input.user = ValidationHelper.validateUser(input.user, "input.user");
+			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
 
 			input.role = ValidationHelper.validateRole(input.role, "input.role");
 

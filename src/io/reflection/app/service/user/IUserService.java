@@ -9,7 +9,6 @@
 package io.reflection.app.service.user;
 
 import io.reflection.app.api.shared.datatypes.Pager;
-import io.reflection.app.shared.datatypes.DataType;
 import io.reflection.app.shared.datatypes.Permission;
 import io.reflection.app.shared.datatypes.Role;
 import io.reflection.app.shared.datatypes.User;
@@ -95,14 +94,6 @@ public interface IUserService extends IService {
 	 * @param user
 	 */
 	public void updateLoginTime(User user);
-
-	/**
-	 * Gets the User with the session id
-	 * 
-	 * @param session
-	 * @return
-	 */
-	public User getSessionUser(DataType session);
 
 	/**
 	 * @param username

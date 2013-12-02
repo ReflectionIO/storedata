@@ -31,7 +31,6 @@ import io.reflection.app.api.core.shared.call.LogoutResponse;
 import io.reflection.app.api.core.shared.call.RegisterUserRequest;
 import io.reflection.app.api.core.shared.call.RegisterUserResponse;
 import io.reflection.app.api.shared.datatypes.Pager;
-import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.collectors.CollectorIOS;
 import io.reflection.app.input.ValidationError;
@@ -473,7 +472,12 @@ public final class Core extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
-			input.user = ValidationHelper.validateAlphaUser(input.user, "input");
+			if (input.accessCode.equalsIgnoreCase("b72b4e32-1062-4cc7-bc6b-52498ee10f09")) {
+				// use the email servlet code to determine whether they are an alpha user
+				input.user = ValidationHelper.validateAlphaUser(input.user, "input");
+			} else {
+				input.user = ValidationHelper.validateRegisteringUser(input.user, "input.user");
+			}
 
 			User user = UserServiceProvider.provide().addUser(input.user);
 
@@ -491,47 +495,61 @@ public final class Core extends ActionHandler {
 	public LoginResponse login(LoginRequest input) {
 		LOG.finer("Entering login");
 		LoginResponse output = new LoginResponse();
-		
+
 		try {
 			if (input == null)
 				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
 						ValidationError.InvalidValueNull.getMessage("LoginRequest: input"));
 
-			if (input.username == null)
-				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
-						ValidationError.InvalidValueNull.getMessage("String: input.username"));
+			boolean foundToken = false;
 
-			if (input.password == null)
-				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
-						ValidationError.InvalidValueNull.getMessage("String: input.password"));
-
-			IUserService userService = UserServiceProvider.provide();
-
-			User user = userService.getLoginUser(input.username, input.password);
-
-			if (user == null) throw new Exception("Invalid credentials - no user found in");
-
-			ISessionService sessionService = SessionServiceProvider.provide();
-
-			if (LOG.isLoggable(Level.FINER)) {
-				LOG.finer("Getting user session");
+			if (input.session != null && input.session.token != null && !input.session.token.equals("")) {
+				foundToken = true;
 			}
 
-			Session session = sessionService.getUserSession(user);
+			if (!foundToken) {
+				if (input.username == null)
+					throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
+							ValidationError.InvalidValueNull.getMessage("String: input.username"));
 
-			if (session == null) {
+				if (input.password == null)
+					throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
+							ValidationError.InvalidValueNull.getMessage("String: input.password"));
+
+				IUserService userService = UserServiceProvider.provide();
+
+				User user = userService.getLoginUser(input.username, input.password);
+
+				if (user == null) throw new Exception("Invalid credentials - no user found in");
+
+				ISessionService sessionService = SessionServiceProvider.provide();
+
 				if (LOG.isLoggable(Level.FINER)) {
-					LOG.finer("Existing session not found, creating new session");
+					LOG.finer("Getting user session");
 				}
 
-				session = sessionService.createUserSession(user);
-			}
-			
-			if (session != null) {
-				session.user = user;
-				output.session = session;
+				output.session = sessionService.getUserSession(user);
+
+				if (output.session == null) {
+					if (LOG.isLoggable(Level.FINER)) {
+						LOG.finer("Existing session not found, creating new session");
+					}
+
+					output.session = sessionService.createUserSession(user);
+
+					if (output.session != null) {
+						output.session.user = user;
+					} else {
+						// FIXME: throw an exception
+					}
+				} else {
+					output.session.user = user;
+				}
 			} else {
-				// FIXME: throw an exception
+				input.session = ValidationHelper.validateSession(input.session, "input.session");
+
+				output.session = input.session;
+				output.session.user = UserServiceProvider.provide().getUser(input.session.user.id);
 			}
 
 			output.status = StatusType.StatusTypeSuccess;

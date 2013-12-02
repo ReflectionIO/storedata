@@ -8,8 +8,11 @@
 package io.reflection.app.admin.client.page;
 
 import io.reflection.app.admin.client.controller.EventController;
+import io.reflection.app.admin.client.controller.NavigationController;
+import io.reflection.app.admin.client.controller.NavigationController.Stack;
 import io.reflection.app.admin.client.controller.SessionController;
 import io.reflection.app.admin.client.handler.SessionEventHandler;
+import io.reflection.app.admin.client.helper.AlertBoxHelper;
 import io.reflection.app.admin.client.helper.FormHelper;
 import io.reflection.app.admin.client.part.AlertBox;
 import io.reflection.app.admin.client.part.AlertBox.AlertBoxType;
@@ -70,7 +73,6 @@ public class LoginPage extends Composite implements SessionEventHandler {
 		mPassword.getElement().setAttribute("placeholder", "Password");
 
 		EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this);
-
 	}
 
 	@UiHandler("mLogin")
@@ -78,12 +80,8 @@ public class LoginPage extends Composite implements SessionEventHandler {
 		if (validate()) {
 			mForm.setVisible(false);
 
-			mAlertBox.setVisible(true);
-			mAlertBox.setType(AlertBoxType.InfoAlertBoxType);
-			mAlertBox.setLoading(true);
-			mAlertBox.setText("Please wait");
-			mAlertBox.setDetail(" - verifying your username and password...");
-			mAlertBox.setCanDismiss(false);
+			AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Please wait", " - verifying your username and password...", false)
+					.setVisible(true);
 
 			SessionController.get().login(mUsername.getText(), mPassword.getText());
 		} else {
@@ -144,6 +142,11 @@ public class LoginPage extends Composite implements SessionEventHandler {
 		super.onAttach();
 
 		resetForm();
+
+		Stack s = NavigationController.get().getStack();
+		if (s != null && s.hasAction()) {
+			mUsername.setText(s.getAction());
+		}
 	}
 
 	/*
@@ -154,25 +157,17 @@ public class LoginPage extends Composite implements SessionEventHandler {
 	 */
 	@Override
 	public void userLoggedIn(User user, Session session) {
-		mAlertBox.setVisible(true);
-		mAlertBox.setType(AlertBoxType.SuccessAlertBoxType);
-		mAlertBox.setLoading(false);
-		mAlertBox.setText("Login Successfull");
-		if (user.forename != null && user.forename.length() != 0) {
-			mAlertBox.setDetail(" - welcome back " + user.forename + ".");
-		} else {
-			mAlertBox.setDetail("");
-		}
-		mAlertBox.setCanDismiss(false);
-		
+		AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.SuccessAlertBoxType, false, "Login Successfull",
+				user.forename != null && user.forename.length() != 0 ? " - welcome back " + user.forename + "." : "", false).setVisible(true);
+
 		Timer t = new Timer() {
-			
+
 			@Override
 			public void run() {
 				History.newItem("ranks");
 			}
 		};
-		
+
 		t.schedule(2000);
 	}
 
@@ -193,14 +188,13 @@ public class LoginPage extends Composite implements SessionEventHandler {
 	 */
 	@Override
 	public void userLoginFailed(Error error) {
-		mAlertBox.setVisible(true);
-		mAlertBox.setType(AlertBoxType.DangerAlertBoxType);
-		mAlertBox.setLoading(false);
-		mAlertBox.setText("An error occured:");
-		mAlertBox.setDetail("(" + error.code + ") " + error.message);
-		mAlertBox.setCanDismiss(true);
-		
-		mForm.setVisible(true);
+		if (!mForm.isVisible()) {
+			AlertBoxHelper
+					.configureAlert(mAlertBox, AlertBoxType.DangerAlertBoxType, false, "An error occured:", "(" + error.code + ") " + error.message, true)
+					.setVisible(true);
+
+			mForm.setVisible(true);
+		}
 	}
 
 	public void resetForm() {
@@ -208,8 +202,10 @@ public class LoginPage extends Composite implements SessionEventHandler {
 		mUsername.setText("");
 		mPassword.setText("");
 		mRememberMe.setValue(Boolean.FALSE);
+
 		FormHelper.hideNote(mUsernameGroup, mUsernameNote);
 		FormHelper.hideNote(mPasswordGroup, mPasswordNote);
+
 		mAlertBox.setVisible(false);
 	}
 }

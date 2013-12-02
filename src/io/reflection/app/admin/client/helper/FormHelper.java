@@ -15,6 +15,7 @@ import com.willshex.gson.json.service.shared.Error;
  * 
  */
 public class FormHelper {
+	
 	public static void showNote(boolean isError, HTMLPanel group, HTMLPanel note, String text) {
 		if (group != null) {
 			if (isError) {
@@ -55,7 +56,7 @@ public class FormHelper {
 		Error e = new Error();
 		e.code = Integer.valueOf(1000);
 		e.message = caught.getMessage();
-		
+
 		return e;
 	}
 }
