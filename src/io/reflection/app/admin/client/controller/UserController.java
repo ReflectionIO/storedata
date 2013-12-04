@@ -7,10 +7,12 @@
 //
 package io.reflection.app.admin.client.controller;
 
-import io.reflection.app.admin.client.handler.UsersEventHandler.ReceivedCount;
-import io.reflection.app.admin.client.handler.UsersEventHandler.ReceivedUsers;
-import io.reflection.app.admin.client.handler.UsersEventHandler.UserRegistered;
-import io.reflection.app.admin.client.handler.UsersEventHandler.UserRegistrationFailed;
+import io.reflection.app.admin.client.handler.user.UserPasswordChangedEventHandler.UserPasswordChangeFailed;
+import io.reflection.app.admin.client.handler.user.UserPasswordChangedEventHandler.UserPasswordChanged;
+import io.reflection.app.admin.client.handler.user.UserRegisteredEventHandler.UserRegistered;
+import io.reflection.app.admin.client.handler.user.UserRegisteredEventHandler.UserRegistrationFailed;
+import io.reflection.app.admin.client.handler.user.UsersEventHandler.ReceivedCount;
+import io.reflection.app.admin.client.handler.user.UsersEventHandler.ReceivedUsers;
 import io.reflection.app.api.admin.client.AdminService;
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
 import io.reflection.app.api.admin.shared.call.AssignRoleResponse;
@@ -210,7 +212,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		AdminService service = new AdminService();
 		service.setUrl(ADMIN_END_POINT);
 
-		SetPasswordRequest input = new SetPasswordRequest();
+		final SetPasswordRequest input = new SetPasswordRequest();
 		input.accessCode = ACCESS_CODE;
 
 		input.password = newPassword;
@@ -222,14 +224,22 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
 
+				Error e = new Error();
+
+				e.code = Integer.valueOf(-1);
+				e.message = caught.getMessage();
+
+				EventController.get().fireEventFromSource(new UserPasswordChangeFailed(e), UserController.this);
 			}
 
 			@Override
 			public void onSuccess(SetPasswordResponse output) {
-				// TODO Auto-generated method stub
-
+				if (output.status == StatusType.StatusTypeSuccess) {
+					EventController.get().fireEventFromSource(new UserPasswordChanged(input.user.id), UserController.this);
+				} else {
+					EventController.get().fireEventFromSource(new UserPasswordChangeFailed(output.error), UserController.this);
+				}
 			}
 		});
 	}

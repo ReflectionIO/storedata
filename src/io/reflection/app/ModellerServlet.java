@@ -7,6 +7,7 @@
 //
 package io.reflection.app;
 
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.modellers.Modeller;
 import io.reflection.app.modellers.ModellerFactory;
@@ -64,7 +65,11 @@ public class ModellerServlet extends ContextAwareServlet {
 		Modeller model = ModellerFactory.getModellerForStore(store);
 
 		if (model != null) {
-			model.modelVariables(country, type, code);
+			try {
+				model.modelVariables(country, type, code);
+			} catch (DataAccessException e) {
+				throw new RuntimeException(e);
+			}
 			
 			Predictor p = PredictorFactory.getPredictorForStore(store);
 			p.enqueue(country, type, code);

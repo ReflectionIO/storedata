@@ -8,11 +8,12 @@
 //
 package io.reflection.app.service.application;
 
-import java.util.List;
-
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.lookup.shared.datatypes.LookupDetailType;
 import io.reflection.app.shared.datatypes.Application;
 import io.reflection.app.shared.datatypes.Store;
+
+import java.util.List;
 
 import com.spacehopperstudios.service.IService;
 
@@ -21,49 +22,48 @@ public interface IApplicationService extends IService {
 	 * @param id
 	 * @return
 	 */
-	public Application getApplication(Long id);
+	public Application getApplication(Long id) throws DataAccessException;
 
 	/**
 	 * @param application
 	 * @return
 	 */
-	public Application addApplication(Application application);
+	public Application addApplication(Application application) throws DataAccessException;
 
 	/**
 	 * @param application
 	 * @return
 	 */
-	public Application updateApplication(Application application);
+	public Application updateApplication(Application application) throws DataAccessException;
 
 	/**
 	 * @param application
 	 */
-	public void deleteApplication(Application application);
-
+	public void deleteApplication(Application application) throws DataAccessException;
 	/**
 	 * @param internalIds
 	 * @param detail
 	 * @return
 	 */
-	public List<Application> lookupInternalIdsApplication(List<String> internalIds, LookupDetailType detail);
+	public List<Application> lookupInternalIdsApplication(List<String> internalIds, LookupDetailType detail) throws DataAccessException;
 
 	/**
 	 * @param externalIds
 	 * @param detail
 	 * @return
 	 */
-	public List<Application> lookupExternalIdsApplication(List<String> externalIds, LookupDetailType detail);
+	public List<Application> lookupExternalIdsApplication(List<String> externalIds, LookupDetailType detail) throws DataAccessException;
 
 	/**
 	 * 
 	 * @param application
 	 * @param usesIap
 	 */
-	public void setApplicationIap(Application application, Boolean usesIap);
+	public void setApplicationIap(Application application, Boolean usesIap) throws DataAccessException;
 
 	/**
 	 * @return
 	 */
-	public List<String> getStoreIapNaApplicationIds(Store store);
+	public List<String> getStoreIapNaApplicationIds(Store store) throws DataAccessException;
 
 }

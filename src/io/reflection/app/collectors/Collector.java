@@ -3,6 +3,8 @@
  */
 package io.reflection.app.collectors;
 
+import io.reflection.app.api.exception.DataAccessException;
+
 import java.util.List;
 
 /**
@@ -23,7 +25,7 @@ public interface Collector {
 	 * @param code
 	 *            ties all items in a single gather such that top grossing and top paid and top free entries can be married
 	 */
-	List<Long> collect(String country, String type, String code);
+	List<Long> collect(String country, String type, String code) throws DataAccessException;
 
 	/**
 	 * Puts a message in the queue for each list for each country
@@ -31,7 +33,7 @@ public interface Collector {
 	 * @return The number of messages added
 	 */
 	int enqueue();
-	
+
 	boolean isGrossing(String type);
 
 	/**

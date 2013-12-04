@@ -10,6 +10,7 @@ package io.reflection.app.service.role;
 
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
@@ -24,7 +25,7 @@ final class RoleService implements IRoleService {
 	}
 
 	@Override
-	public Role getRole(Long id) {
+	public Role getRole(Long id) throws DataAccessException {
 		Role role = null;
 
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
@@ -51,8 +52,9 @@ final class RoleService implements IRoleService {
 	 * 
 	 * @param connection
 	 * @return
+	 * @throws DataAccessException 
 	 */
-	private Role toRole(Connection connection) {
+	private Role toRole(Connection connection) throws DataAccessException {
 		Role role = new Role();
 
 		role.id = connection.getCurrentRowLong("id");
@@ -87,7 +89,7 @@ final class RoleService implements IRoleService {
 	 * @see io.reflection.app.service.role.IRoleService#getNamedRole(java.lang.String)
 	 */
 	@Override
-	public Role getNamedRole(String name) {
+	public Role getNamedRole(String name) throws DataAccessException {
 		Role role = null;
 
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
@@ -109,6 +111,5 @@ final class RoleService implements IRoleService {
 		}
 		return role;
 	}
-
 
 }

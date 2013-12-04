@@ -7,6 +7,7 @@
 //
 package io.reflection.app.predictors;
 
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.apple.ItemPropertyLookupServlet;
 import io.reflection.app.helpers.ItemPropertyWrapper;
@@ -96,8 +97,9 @@ public class PredictorIOS implements Predictor {
 	 * @param foundRanks
 	 * @param lookup
 	 * @return
+	 * @throws DataAccessException
 	 */
-	private Map<String, Item> lookupItemsForRanks(List<Rank> ranks) {
+	private Map<String, Item> lookupItemsForRanks(List<Rank> ranks) throws DataAccessException {
 		Map<String, Item> lookup = new HashMap<String, Item>();
 
 		List<String> itemIds = new ArrayList<String>();
@@ -125,7 +127,7 @@ public class PredictorIOS implements Predictor {
 	 * @see io.reflection.app.predictors.Predictor#predictRevenueAndDownloads(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void predictRevenueAndDownloads(String country, String type, String code) {
+	public void predictRevenueAndDownloads(String country, String type, String code) throws DataAccessException {
 
 		Country c = new Country();
 		c.a2Code = country;

@@ -13,10 +13,14 @@ import io.reflection.app.admin.client.part.BootstrapGwtCellTable;
 import io.reflection.app.admin.client.part.SimplePager;
 import io.reflection.app.shared.datatypes.User;
 
+import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.ui.Composite;
@@ -38,7 +42,7 @@ public class UsersPage extends Composite {
 
 	@UiField(provided = true) CellTable<User> mUsers = new CellTable<User>(ServiceController.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) SimplePager mPager = new SimplePager(false, false);
-	
+
 	@UiField InlineHyperlink mAssignPassword;
 	@UiField InlineHyperlink mMakeAdmin;
 
@@ -46,7 +50,7 @@ public class UsersPage extends Composite {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		addUserColumns();
-		
+
 		final SingleSelectionModel<User> s = new SingleSelectionModel<User>();
 		s.addSelectionChangeHandler(new Handler() {
 
@@ -56,11 +60,11 @@ public class UsersPage extends Composite {
 
 				mAssignPassword.setVisible(selected != null);
 				mMakeAdmin.setVisible(selected != null);
-				
+
 				if (selected != null) {
 					mAssignPassword.setTargetHistoryToken("users/changepassword/" + selected.id.toString());
 				}
-				
+
 				if (selected != null) {
 					mMakeAdmin.setTargetHistoryToken("users/assignrole/" + selected.id.toString() + "/admin");
 				}
@@ -72,7 +76,7 @@ public class UsersPage extends Composite {
 		mPager.setDisplay(mUsers);
 
 	}
-	
+
 	private void addUserColumns() {
 		TextColumn<User> name = new TextColumn<User>() {
 
@@ -100,11 +104,11 @@ public class UsersPage extends Composite {
 		companyHeader.setHeaderStyleNames("col-md-1");
 		mUsers.addColumn(company, companyHeader);
 
-		TextColumn<User> email = new TextColumn<User>() {
+		Column<User, SafeHtml> email = new Column<User, SafeHtml>(new SafeHtmlCell()) {
 
 			@Override
-			public String getValue(User object) {
-				return object.username;
+			public SafeHtml getValue(User object) {
+				return SafeHtmlUtils.fromTrustedString("<a href=\"mailto:" + object.username + "\">" + object.username + "</a>");
 			}
 		};
 

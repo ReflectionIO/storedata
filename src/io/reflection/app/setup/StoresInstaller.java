@@ -8,6 +8,7 @@
 package io.reflection.app.setup;
 
 import static io.reflection.app.objectify.PersistenceService.ofy;
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.shared.datatypes.Store;
 
@@ -21,7 +22,7 @@ import java.util.List;
  */
 public class StoresInstaller {
 
-	public static void install() {
+	public static void install() throws DataAccessException {
 
 		if (StoreServiceProvider.provide().getStoresCount() == 0) {
 			// LATER add stores to database

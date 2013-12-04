@@ -8,6 +8,7 @@
 //
 package io.reflection.app.ingestors;
 
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
@@ -58,7 +59,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 	private static final String IOS_STORE_A3 = "ios";
 
 	@Override
-	public void ingest(List<Long> itemIds) {
+	public void ingest(List<Long> itemIds) throws DataAccessException {
 		if (LOG.isLoggable(GaeLevel.TRACE)) {
 			LOG.log(GaeLevel.TRACE, "Entering...");
 		}
@@ -83,7 +84,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 	}
 
 	@SuppressWarnings("unused")
-	private void blobify(List<FeedFetch> stored, Map<Date, Map<Integer, FeedFetch>> grouped, Map<Date, String> combined) {
+	private void blobify(List<FeedFetch> stored, Map<Date, Map<Integer, FeedFetch>> grouped, Map<Date, String> combined) throws DataAccessException {
 		for (Date date : grouped.keySet()) {
 			Map<Integer, FeedFetch> group = grouped.get(date);
 			boolean first = true;
@@ -110,8 +111,9 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 	 * @param stored
 	 * @param grouped
 	 * @param combined
+	 * @throws DataAccessException 
 	 */
-	private void extractItemRanks(List<FeedFetch> stored, final Map<Date, Map<Integer, FeedFetch>> grouped, Map<Date, String> combined) {
+	private void extractItemRanks(List<FeedFetch> stored, final Map<Date, Map<Integer, FeedFetch>> grouped, Map<Date, String> combined) throws DataAccessException {
 
 		if (LOG.isLoggable(GaeLevel.DEBUG)) {
 			LOG.log(GaeLevel.DEBUG, "Extracting item ranks");
@@ -428,7 +430,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 		return combined;
 	}
 
-	private List<FeedFetch> get(List<Long> itemIds) {
+	private List<FeedFetch> get(List<Long> itemIds) throws DataAccessException {
 
 		if (LOG.isLoggable(Level.INFO)) {
 			LOG.info(String.format("Fetching [%d] items", itemIds == null ? 0 : itemIds.size()));

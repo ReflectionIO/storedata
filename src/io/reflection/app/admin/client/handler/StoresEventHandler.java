@@ -20,43 +20,37 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public interface StoresEventHandler extends EventHandler {
 	public static final GwtEvent.Type<StoresEventHandler> TYPE = new GwtEvent.Type<StoresEventHandler>();
-	
-	
+
 	public void receivedStores(List<Store> stores);
 
-public class ReceivedStores extends GwtEvent<StoresEventHandler> {
+	public class ReceivedStores extends GwtEvent<StoresEventHandler> {
 
-	
+		private List<Store> mStores;
 
-	
-	
+		public ReceivedStores(List<Store> stores) {
+			mStores = stores;
+		}
 
-	private List<Store> mStores;
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
+		 */
+		@Override
+		public com.google.gwt.event.shared.GwtEvent.Type<StoresEventHandler> getAssociatedType() {
+			return TYPE;
+		}
 
-	public ReceivedStores(List<Store> stores) {
-		mStores = stores;
-	}
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+		 */
+		@Override
+		protected void dispatch(StoresEventHandler handler) {
+			handler.receivedStores(mStores);
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-	 */
-	@Override
-	public com.google.gwt.event.shared.GwtEvent.Type<StoresEventHandler> getAssociatedType() {
-		return TYPE;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-	 */
-	@Override
-	protected void dispatch(StoresEventHandler handler) {
-		handler.receivedStores(mStores);
+		}
 
 	}
-
-}
 }

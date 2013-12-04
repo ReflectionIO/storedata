@@ -7,6 +7,8 @@
 //
 package io.reflection.app.predictors;
 
+import io.reflection.app.api.exception.DataAccessException;
+
 
 /**
  * @author billy1380
@@ -20,6 +22,6 @@ public interface Predictor {
 	 * @param type
 	 * @param code
 	 */
-	void predictRevenueAndDownloads(String country, String type, String code);
+	void predictRevenueAndDownloads(String country, String type, String code) throws DataAccessException;
 
 }

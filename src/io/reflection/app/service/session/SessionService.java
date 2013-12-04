@@ -8,6 +8,7 @@
 //
 package io.reflection.app.service.session;
 
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
@@ -22,7 +23,7 @@ final class SessionService implements ISessionService {
 	}
 
 	@Override
-	public Session getSession(Long id) {
+	public Session getSession(Long id) throws DataAccessException {
 		Session session = null;
 
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
@@ -50,8 +51,9 @@ final class SessionService implements ISessionService {
 	 * 
 	 * @param connection
 	 * @return
+	 * @throws DataAccessException 
 	 */
-	private Session toSession(Connection connection) {
+	private Session toSession(Connection connection) throws DataAccessException {
 		Session session = new Session();
 
 		session.id = connection.getCurrentRowLong("id");
@@ -67,7 +69,7 @@ final class SessionService implements ISessionService {
 	}
 
 	@Override
-	public Session addSession(Session session) {
+	public Session addSession(Session session) throws DataAccessException {
 		return createUserSession(session.user);
 	}
 
@@ -77,7 +79,7 @@ final class SessionService implements ISessionService {
 	}
 
 	@Override
-	public void deleteSession(Session session) {
+	public void deleteSession(Session session) throws DataAccessException {
 		Connection sessionConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSession.toString());
 
 		String deleteSessionQuery = String.format("UPDATE `session` SET `deleted`='y' WHERE `id`=%d", session.id.longValue());
@@ -97,7 +99,7 @@ final class SessionService implements ISessionService {
 	 * @see io.reflection.app.service.session.ISessionService#createUserSession(io.reflection.app.shared.datatypes.User)
 	 */
 	@Override
-	public Session createUserSession(User user) {
+	public Session createUserSession(User user) throws DataAccessException {
 		Session session = null;
 
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
@@ -130,7 +132,7 @@ final class SessionService implements ISessionService {
 	 * @see io.reflection.app.service.session.ISessionService#getUserSession(io.reflection.app.shared.datatypes.User)
 	 */
 	@Override
-	public Session getUserSession(User user) {
+	public Session getUserSession(User user) throws DataAccessException {
 		Session session = null;
 
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
@@ -161,7 +163,7 @@ final class SessionService implements ISessionService {
 	 * @see io.reflection.app.service.session.ISessionService#getTokenSession(java.lang.String)
 	 */
 	@Override
-	public Session getTokenSession(String token) {
+	public Session getTokenSession(String token) throws DataAccessException {
 		Session session = null;
 
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();

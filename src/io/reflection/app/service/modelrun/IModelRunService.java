@@ -8,6 +8,7 @@
 //
 package io.reflection.app.service.modelrun;
 
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.shared.datatypes.Country;
 import io.reflection.app.shared.datatypes.FormType;
 import io.reflection.app.shared.datatypes.ModelRun;
@@ -20,24 +21,24 @@ public interface IModelRunService extends IService {
 	 * @param id
 	 * @return
 	 */
-	public ModelRun getModelRun(Long id);
+	public ModelRun getModelRun(Long id) throws DataAccessException;
 
 	/**
 	 * @param modelRun
 	 * @return
 	 */
-	public ModelRun addModelRun(ModelRun modelRun);
+	public ModelRun addModelRun(ModelRun modelRun) throws DataAccessException;
 
 	/**
 	 * @param modelRun
 	 * @return
 	 */
-	public ModelRun updateModelRun(ModelRun modelRun);
+	public ModelRun updateModelRun(ModelRun modelRun) throws DataAccessException;
 
 	/**
 	 * @param modelRun
 	 */
-	public void deleteModelRun(ModelRun modelRun);
+	public void deleteModelRun(ModelRun modelRun) throws DataAccessException;
 
 	/**
 	 * @param country
@@ -46,6 +47,6 @@ public interface IModelRunService extends IService {
 	 * @param code
 	 * @return
 	 */
-	public ModelRun getGatherCodeModelRun(Country country, Store store, FormType form, String code);
+	public ModelRun getGatherCodeModelRun(Country country, Store store, FormType form, String code) throws DataAccessException;
 
 }

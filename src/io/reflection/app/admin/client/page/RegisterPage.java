@@ -9,14 +9,11 @@ package io.reflection.app.admin.client.page;
 
 import io.reflection.app.admin.client.controller.EventController;
 import io.reflection.app.admin.client.controller.UserController;
-import io.reflection.app.admin.client.handler.UsersEventHandler;
+import io.reflection.app.admin.client.handler.user.UserRegisteredEventHandler;
 import io.reflection.app.admin.client.helper.AlertBoxHelper;
 import io.reflection.app.admin.client.helper.FormHelper;
 import io.reflection.app.admin.client.part.AlertBox;
 import io.reflection.app.admin.client.part.AlertBox.AlertBoxType;
-import io.reflection.app.shared.datatypes.User;
-
-import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -37,7 +34,7 @@ import com.willshex.gson.json.service.shared.Error;
  * @author billy1380
  * 
  */
-public class RegisterPage extends Composite implements UsersEventHandler {
+public class RegisterPage extends Composite implements UserRegisteredEventHandler {
 
 	private static RegisterPageUiBinder uiBinder = GWT.create(RegisterPageUiBinder.class);
 
@@ -83,7 +80,7 @@ public class RegisterPage extends Composite implements UsersEventHandler {
 		mSurname.getElement().setAttribute("placeholder", "Last name");
 		mCompany.getElement().setAttribute("placeholder", "Company");
 
-		EventController.get().addHandlerToSource(UsersEventHandler.TYPE, UserController.get(), this);
+		EventController.get().addHandlerToSource(UserRegisteredEventHandler.TYPE, UserController.get(), this);
 
 	}
 
@@ -238,27 +235,11 @@ public class RegisterPage extends Composite implements UsersEventHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.admin.client.handler.UsersEventHandler#receivedUsers(java.util.List)
+	 * @see io.reflection.app.admin.client.handler.user.UserRegisteredEventHandler#userRegistered(java.lang.String)
 	 */
 	@Override
-	public void receivedUsers(List<User> users) {}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.admin.client.handler.UsersEventHandler#receivedUsersCount(java.lang.Long)
-	 */
-	@Override
-	public void receivedUsersCount(Long count) {}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.admin.client.handler.UsersEventHandler#userRegistered(java.lang.String)
-	 */
-	@Override
-	public void userRegistered(String username) {
-		final String email = username;
+	public void userRegistered(String email) {
+		final String username = email;
 
 		AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.SuccessAlertBoxType, false, "Account created", " - you can now login and use Reflection.io.",
 				false).setVisible(true);
@@ -267,17 +248,18 @@ public class RegisterPage extends Composite implements UsersEventHandler {
 
 			@Override
 			public void run() {
-				History.newItem("login/" + email);
+				History.newItem("login/" + username);
 			}
 		};
 
 		t.schedule(2000);
+
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.admin.client.handler.UsersEventHandler#userRegistrationFailed(com.willshex.gson.json.service.shared.Error)
+	 * @see io.reflection.app.admin.client.handler.user.UserRegisteredEventHandler#userRegistrationFailed(com.willshex.gson.json.service.shared.Error)
 	 */
 	@Override
 	public void userRegistrationFailed(Error error) {

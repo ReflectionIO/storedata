@@ -10,6 +10,7 @@ package io.reflection.app.service.modelrun;
 
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
@@ -26,7 +27,7 @@ final class ModelRunService implements IModelRunService {
 	}
 
 	@Override
-	public ModelRun getModelRun(Long id) {
+	public ModelRun getModelRun(Long id) throws DataAccessException {
 		ModelRun modelRun = null;
 
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
@@ -54,8 +55,9 @@ final class ModelRunService implements IModelRunService {
 	 * 
 	 * @param connection
 	 * @return
+	 * @throws DataAccessException
 	 */
-	private ModelRun toModelRun(Connection connection) {
+	private ModelRun toModelRun(Connection connection) throws DataAccessException {
 		ModelRun modelRun = new ModelRun();
 
 		modelRun.id = connection.getCurrentRowLong("id");
@@ -83,7 +85,7 @@ final class ModelRunService implements IModelRunService {
 	}
 
 	@Override
-	public ModelRun addModelRun(ModelRun modelRun) {
+	public ModelRun addModelRun(ModelRun modelRun) throws DataAccessException {
 		ModelRun addedModelRun = null;
 
 		final String addModelRunQuery = String
@@ -117,7 +119,7 @@ final class ModelRunService implements IModelRunService {
 	}
 
 	@Override
-	public ModelRun updateModelRun(ModelRun modelRun) {
+	public ModelRun updateModelRun(ModelRun modelRun) throws DataAccessException {
 		ModelRun updatedModelRun = null;
 
 		final String updateModelRunQuery = String
@@ -160,7 +162,7 @@ final class ModelRunService implements IModelRunService {
 	 * io.reflection.app.shared.datatypes.FormType, java.lang.String)
 	 */
 	@Override
-	public ModelRun getGatherCodeModelRun(Country country, Store store, FormType form, String code) {
+	public ModelRun getGatherCodeModelRun(Country country, Store store, FormType form, String code) throws DataAccessException {
 		ModelRun modelRun = null;
 
 		final String getGatherCodeModelRunQuery = String.format(

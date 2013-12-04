@@ -8,6 +8,7 @@
 //
 package io.reflection.app.service.session;
 
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.shared.datatypes.User;
 
@@ -18,43 +19,43 @@ public interface ISessionService extends IService {
 	 * @param id
 	 * @return
 	 */
-	public Session getSession(Long id);
+	public Session getSession(Long id) throws DataAccessException;
 
 	/**
 	 * @param session
 	 * @return
 	 */
-	public Session addSession(Session session);
+	public Session addSession(Session session) throws DataAccessException;
 
 	/**
 	 * @param session
 	 * @return
 	 */
-	public Session updateSession(Session session);
+	public Session updateSession(Session session) throws DataAccessException;
 
 	/**
 	 * @param session
 	 */
-	public void deleteSession(Session session);
+	public void deleteSession(Session session) throws DataAccessException;
 
 	/**
 	 * Create user session
 	 * @param user
 	 * @return
 	 */
-    public Session createUserSession (User user);
+    public Session createUserSession (User user) throws DataAccessException;
 
     /**
      * Get user session
      * @param user
      * @return
      */
-    public Session getUserSession (User user);
+    public Session getUserSession (User user) throws DataAccessException;
 
 	/**
 	 * @param token
 	 * @return
 	 */
-	public Session getTokenSession(String token);
+	public Session getTokenSession(String token) throws DataAccessException;
 
 }

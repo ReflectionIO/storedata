@@ -9,6 +9,7 @@ package io.reflection.app.apple;
 
 import static com.willshex.gson.json.shared.Convert.fromJsonObject;
 import static com.willshex.gson.json.shared.Convert.toJsonObject;
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.lookup.shared.datatypes.LookupDetailType;
 //import io.reflection.app.collectors.HttpExternalGetter;
 import io.reflection.app.logging.GaeLevel;
@@ -108,7 +109,12 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 			memCache.put(key, now);
 		}
 
-		Item item = ItemServiceProvider.provide().getInternalIdItem(itemId);
+		Item item;
+		try {
+			item = ItemServiceProvider.provide().getInternalIdItem(itemId);
+		} catch (DataAccessException e) {
+			throw new RuntimeException(e);
+		}
 
 		if (item != null) {
 			boolean doCurl = false;
@@ -145,27 +151,32 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 
 			Boolean usesIap = null;
 			if (doCurl && item.price == 0) {
-				if ((usesIap = RankServiceProvider.provide().getItemHasGrossingRank(item)).booleanValue()) {
-					doCurl = false;
-					
-					setIap(item, properties, usesIap);
+				try {
+					if ((usesIap = RankServiceProvider.provide().getItemHasGrossingRank(item)).booleanValue()) {
+						doCurl = false;
+
+						setIap(item, properties, usesIap);
+
+					}
+				} catch (DataAccessException e) {
+					throw new RuntimeException(e);
 				}
 			}
 
-//			if (doCurl) {
-//				String itemUrl = "https://itunes.apple.com/app/id" + itemId;
-//				String data = HttpExternalGetter.getData(itemUrl, HTTPMethod.GET);
-//
-//				if (data != null) {
-//					usesIap = data.contains("class=\"extra-list in-app-purchases") ? Boolean.TRUE : Boolean.FALSE;
-//
-//					setIap(item, properties, usesIap);
-//				} else {
-//					if (LOG.isLoggable(Level.WARNING)) {
-//						LOG.log(Level.WARNING, String.format("Could not get additional data from [%s] for [%s]", itemUrl, itemId));
-//					}
-//				}
-//			}
+			// if (doCurl) {
+			// String itemUrl = "https://itunes.apple.com/app/id" + itemId;
+			// String data = HttpExternalGetter.getData(itemUrl, HTTPMethod.GET);
+			//
+			// if (data != null) {
+			// usesIap = data.contains("class=\"extra-list in-app-purchases") ? Boolean.TRUE : Boolean.FALSE;
+			//
+			// setIap(item, properties, usesIap);
+			// } else {
+			// if (LOG.isLoggable(Level.WARNING)) {
+			// LOG.log(Level.WARNING, String.format("Could not get additional data from [%s] for [%s]", itemUrl, itemId));
+			// }
+			// }
+			// }
 		} else {
 			if (LOG.isLoggable(Level.WARNING)) {
 				LOG.log(Level.WARNING, String.format("Could not get find item for [%s]", itemId));
@@ -177,8 +188,9 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 	/**
 	 * @param item
 	 * @param usesIap
+	 * @throws DataAccessException
 	 */
-	private void setIap(Item item, JsonObject properties, Boolean usesIap) {
+	private void setIap(Item item, JsonObject properties, Boolean usesIap) throws DataAccessException {
 		properties.add(PROPERTY_IAP, new JsonPrimitive(usesIap));
 		properties.add(PROPERTY_IAP_ON, new JsonPrimitive(Long.valueOf(new Date().getTime())));
 

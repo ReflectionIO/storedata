@@ -8,6 +8,7 @@
 //
 package io.reflection.app;
 
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.ingestors.IngestorFactory;
 import io.reflection.app.logging.GaeLevel;
 
@@ -68,7 +69,11 @@ public class IngestorServlet extends HttpServlet {
 			}
 
 			if (itemIds != null && itemIds.size() != 0) {
-				IngestorFactory.getIngestorForStore(store.toLowerCase()).ingest(itemIds);
+				try {
+					IngestorFactory.getIngestorForStore(store.toLowerCase()).ingest(itemIds);
+				} catch (DataAccessException e) {
+					throw new RuntimeException(e);
+				}
 			}
 		}
 

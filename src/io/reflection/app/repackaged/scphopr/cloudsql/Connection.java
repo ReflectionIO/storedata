@@ -7,6 +7,7 @@
 //
 package io.reflection.app.repackaged.scphopr.cloudsql;
 
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.logging.GaeLevel;
 
 import java.sql.DriverManager;
@@ -38,11 +39,11 @@ public final class Connection {
 
 	private static final Logger LOG = Logger.getLogger(Connection.class.getName());
 
-	public Connection(String server, String database, String username, String password) {
+	public Connection(String server, String database, String username, String password) throws DataAccessException {
 		this(server, database, username, password, false);
 	}
 
-	public Connection(String server, String database, String username, String password, boolean transactionMode) {
+	public Connection(String server, String database, String username, String password, boolean transactionMode) throws DataAccessException {
 		String nativePropertyValue = System.getProperty(CONNECTION_NATIVE_KEY);
 
 		if (nativePropertyValue != null) {
@@ -76,16 +77,24 @@ public final class Connection {
 				Class.forName(databaseDriver).newInstance();
 			} catch (InstantiationException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error registering driver", ex);
+
+				throw new DataAccessException();
 			} catch (IllegalAccessException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error registering driver", ex);
+
+				throw new DataAccessException();
 			} catch (ClassNotFoundException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error registering driver", ex);
+
+				throw new DataAccessException();
 			}
 		} else {
 			try {
 				DriverManager.registerDriver(new AppEngineDriver());
 			} catch (SQLException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error registering driver", ex);
+
+				throw new DataAccessException();
 			}
 		}
 	}
@@ -98,7 +107,7 @@ public final class Connection {
 		}
 	}
 
-	public void connect() {
+	public void connect() throws DataAccessException {
 		String url = null;
 
 		if (isNative) {
@@ -118,22 +127,24 @@ public final class Connection {
 			}
 		} catch (SQLException ex) {
 			LOG.log(GaeLevel.SEVERE, "Error conneting to databse", ex);
+
+			throw new DataAccessException();
 		}
 
 		return;
 	}
 
-	public boolean isConnected() {
+	public boolean isConnected() throws DataAccessException {
 		try {
 			return connection != null && !connection.isClosed();
 		} catch (SQLException ex) {
 			LOG.log(GaeLevel.SEVERE, "Error checking if connection is closed", ex);
-		}
 
-		return false;
+			throw new DataAccessException();
+		}
 	}
 
-	public void executeQuery(String query) throws NullPointerException {
+	public void executeQuery(String query) throws NullPointerException, DataAccessException {
 		if (LOG.isLoggable(GaeLevel.DEBUG)) {
 			LOG.log(GaeLevel.DEBUG, "executing query: " + query);
 		}
@@ -159,12 +170,14 @@ public final class Connection {
 			}
 		} catch (SQLException ex) {
 			LOG.log(GaeLevel.SEVERE, "Error executing query", ex);
+
+			throw new DataAccessException();
 		}
 
 		return;
 	}
 
-	public long getInsertedId() {
+	public long getInsertedId() throws DataAccessException {
 		long insertedId = 0;
 
 		if (this.insertedId != -1) {
@@ -177,6 +190,8 @@ public final class Connection {
 					}
 				} catch (SQLException ex) {
 					LOG.log(GaeLevel.SEVERE, "Error getting inserted id", ex);
+
+					throw new DataAccessException();
 				}
 			}
 		}
@@ -184,20 +199,22 @@ public final class Connection {
 		return insertedId;
 	}
 
-	public boolean fetchNextRow() {
+	public boolean fetchNextRow() throws DataAccessException {
 		boolean fetched = false;
 		if (queryResult != null) {
 			try {
 				if (fetched = queryResult.next()) {}
 			} catch (SQLException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error fetching next row", ex);
+
+				throw new DataAccessException();
 			}
 		}
 
 		return fetched;
 	}
 
-	public Object getCurrentRowValue(String key) {
+	public Object getCurrentRowValue(String key) throws DataAccessException {
 		Object value = null;
 
 		if (queryResult != null) {
@@ -205,13 +222,15 @@ public final class Connection {
 				value = queryResult.getObject(key);
 			} catch (SQLException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error getting value for column", ex);
+
+				throw new DataAccessException();
 			}
 		}
 
 		return value;
 	}
 
-	public Integer getCurrentRowInteger(String key) {
+	public Integer getCurrentRowInteger(String key) throws DataAccessException {
 		Integer value = null;
 
 		if (queryResult != null) {
@@ -219,13 +238,15 @@ public final class Connection {
 				value = queryResult.getInt(key);
 			} catch (SQLException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error getting value for column", ex);
+
+				throw new DataAccessException();
 			}
 		}
 
 		return value;
 	}
 
-	public Date getCurrentRowDateTime(String key) {
+	public Date getCurrentRowDateTime(String key) throws DataAccessException {
 		Date value = null;
 
 		if (queryResult != null) {
@@ -236,13 +257,15 @@ public final class Connection {
 				}
 			} catch (SQLException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error getting value for column", ex);
+
+				throw new DataAccessException();
 			}
 		}
 
 		return value;
 	}
 
-	public Long getCurrentRowLong(String key) {
+	public Long getCurrentRowLong(String key) throws DataAccessException {
 		Long value = null;
 
 		if (queryResult != null) {
@@ -250,27 +273,31 @@ public final class Connection {
 				value = queryResult.getLong(key);
 			} catch (SQLException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error getting value for column", ex);
+
+				throw new DataAccessException();
 			}
 		}
 
 		return value;
 	}
-	
-	public Double getCurrentRowDouble(String key) {
+
+	public Double getCurrentRowDouble(String key) throws DataAccessException {
 		Double value = null;
-		
+
 		if (queryResult != null) {
 			try {
 				value = queryResult.getDouble(key);
 			} catch (SQLException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error getting value for column", ex);
+
+				throw new DataAccessException();
 			}
 		}
-		
+
 		return value;
 	}
 
-	public String getCurrentRowString(String key) {
+	public String getCurrentRowString(String key) throws DataAccessException {
 		String value = null;
 
 		if (queryResult != null) {
@@ -278,6 +305,8 @@ public final class Connection {
 				value = queryResult.getString(key);
 			} catch (SQLException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error getting value for column", ex);
+
+				throw new DataAccessException();
 			}
 		}
 
@@ -285,7 +314,7 @@ public final class Connection {
 	}
 
 	@Deprecated
-	public int getRowCount() {
+	public int getRowCount() throws DataAccessException {
 		int count = 0;
 
 		if (queryResult != null) {
@@ -295,13 +324,15 @@ public final class Connection {
 				queryResult.beforeFirst();
 			} catch (SQLException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error getting row count", ex);
+
+				throw new DataAccessException();
 			}
 		}
 
 		return count;
 	}
 
-	public void disconnect() {
+	public void disconnect() throws DataAccessException {
 		if (connection != null) {
 			try {
 				if (!connection.isClosed()) {
@@ -310,31 +341,37 @@ public final class Connection {
 				}
 			} catch (SQLException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error while closing connection", ex);
+
+				throw new DataAccessException();
 			}
 		}
 
 		return;
 	}
 
-	public long getAffectedRowCount() {
+	public long getAffectedRowCount() throws DataAccessException {
 		if (statement != null) {
 			try {
 				affectedRowCount = statement.getUpdateCount();
 			} catch (SQLException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error getting affected row count", ex);
+
+				throw new DataAccessException();
 			}
 		}
 
 		return affectedRowCount;
 	}
 
-	public void commit() {
+	public void commit() throws DataAccessException {
 		if (isTransactionMode) {
 			if (isConnected()) {
 				try {
 					connection.commit();
 				} catch (SQLException ex) {
 					LOG.log(GaeLevel.SEVERE, "Error committing transaction", ex);
+
+					throw new DataAccessException();
 				}
 			}
 		} else {

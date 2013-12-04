@@ -28,6 +28,7 @@ import io.reflection.app.shared.datatypes.User;
 import java.util.List;
 
 import com.willshex.gson.json.service.server.InputValidationException;
+import com.willshex.gson.json.service.server.ServiceException;
 
 /**
  * @author billy1380
@@ -81,7 +82,7 @@ public class ValidationHelper {
 	 * @return
 	 * @throws InputValidationException
 	 */
-	public static Store validateStore(Store store, String parent) throws InputValidationException {
+	public static Store validateStore(Store store, String parent) throws ServiceException {
 		if (store == null) throw new InputValidationException(ValidationError.StoreNull.getCode(), ValidationError.StoreNull.getMessage(parent));
 
 		boolean isIdLookup = false, isA3CodeLookup = false, isNameLookup = false;
@@ -169,7 +170,7 @@ public class ValidationHelper {
 	 * @return
 	 * @throws InputValidationException
 	 */
-	public static Country validateCountry(Country country, String parent) throws InputValidationException {
+	public static Country validateCountry(Country country, String parent) throws ServiceException {
 
 		if (country == null) throw new InputValidationException(ValidationError.CountryNull.getCode(), ValidationError.CountryNull.getMessage(parent));
 
@@ -207,7 +208,7 @@ public class ValidationHelper {
 	 * @return
 	 * @throws InputValidationException
 	 */
-	public static Item validateItem(Item item, String parent) throws InputValidationException {
+	public static Item validateItem(Item item, String parent) throws ServiceException {
 		if (item == null) throw new InputValidationException(ValidationError.ItemNull.getCode(), ValidationError.ItemNull.getMessage(parent));
 
 		Store itemStore = new Store();
@@ -300,7 +301,7 @@ public class ValidationHelper {
 	 * @return
 	 * @throws InputValidationException
 	 */
-	public static User validateExistingUser(User user, String parent) throws InputValidationException {
+	public static User validateExistingUser(User user, String parent) throws ServiceException {
 		if (user == null) throw new InputValidationException(ValidationError.UserNull.getCode(), ValidationError.UserNull.getMessage(parent));
 
 		boolean isIdLookup = false, isNameLookup = false;
@@ -383,7 +384,7 @@ public class ValidationHelper {
 	 * @return
 	 * @throws InputValidationException
 	 */
-	public static Role validateRole(Role role, String parent) throws InputValidationException {
+	public static Role validateRole(Role role, String parent) throws ServiceException {
 		if (role == null) throw new InputValidationException(ValidationError.RoleNull.getCode(), ValidationError.RoleNull.getMessage(parent));
 
 		boolean isIdLookup = false, isNameLookup = false;
@@ -416,7 +417,7 @@ public class ValidationHelper {
 	 * @return
 	 * @throws InputValidationException
 	 */
-	public static Permission validatePermission(Permission permission, String parent) throws InputValidationException {
+	public static Permission validatePermission(Permission permission, String parent) throws ServiceException {
 		if (permission == null)
 			throw new InputValidationException(ValidationError.PermissionNull.getCode(), ValidationError.PermissionNull.getMessage(parent));
 
@@ -463,7 +464,7 @@ public class ValidationHelper {
 	 * @param session
 	 * @return
 	 */
-	public static Session validateSession(Session session, String parent) throws InputValidationException {
+	public static Session validateSession(Session session, String parent) throws ServiceException {
 
 		if (session == null) throw new InputValidationException(ValidationError.SessionNull.getCode(), ValidationError.SessionNull.getMessage(parent));
 

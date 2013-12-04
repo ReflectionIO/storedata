@@ -8,6 +8,7 @@
 //
 package io.reflection.app.service.permission;
 
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.shared.datatypes.Permission;
 
 import com.spacehopperstudios.service.IService;
@@ -17,29 +18,29 @@ public interface IPermissionService extends IService {
 	 * @param id
 	 * @return
 	 */
-	public Permission getPermission(Long id);
+	public Permission getPermission(Long id) throws DataAccessException;
 
 	/**
 	 * @param permission
 	 * @return
 	 */
-	public Permission addPermission(Permission permission);
+	public Permission addPermission(Permission permission) throws DataAccessException;
 
 	/**
 	 * @param permission
 	 * @return
 	 */
-	public Permission updatePermission(Permission permission);
+	public Permission updatePermission(Permission permission) throws DataAccessException;
 
 	/**
 	 * @param permission
 	 */
-	public void deletePermission(Permission permission);
+	public void deletePermission(Permission permission) throws DataAccessException;
 
 	/**
 	 * @param name
 	 * @return
 	 */
-	public Permission getNamedPermission(String name);
+	public Permission getNamedPermission(String name) throws DataAccessException;
 
 }

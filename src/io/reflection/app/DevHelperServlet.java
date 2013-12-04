@@ -4,6 +4,7 @@
 package io.reflection.app;
 
 import static io.reflection.app.objectify.PersistenceService.ofy;
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.collectors.CollectorIOS;
 import io.reflection.app.ingestors.Ingestor;
 import io.reflection.app.ingestors.IngestorFactory;
@@ -122,7 +123,7 @@ public class DevHelperServlet extends HttpServlet {
 					for (Object param : params.keySet()) {
 						options.param((String) param, req.getParameter((String) param));
 					}
-					
+
 					deferredQueue.add(options.method(Method.POST));
 				}
 			} else {
@@ -562,15 +563,33 @@ public class DevHelperServlet extends HttpServlet {
 
 				success = true;
 			} else if ("addcountries".equalsIgnoreCase(action)) {
-				CountriesInstaller.install();
+				try {
+					CountriesInstaller.install();
+				} catch (DataAccessException e) {
+					throw new RuntimeException(e);
+				}
 				success = true;
 			} else if ("addstores".equalsIgnoreCase(action)) {
-				StoresInstaller.install();
+				try {
+					StoresInstaller.install();
+				} catch (DataAccessException e) {
+					throw new RuntimeException(e);
+				}
 				success = true;
 			} else if ("getadditionalproperties".equalsIgnoreCase(action)) {
 
-				Store store = StoreServiceProvider.provide().getA3CodeStore("ios");
-				List<String> itemIds = ApplicationServiceProvider.provide().getStoreIapNaApplicationIds(store);
+				Store store;
+				try {
+					store = StoreServiceProvider.provide().getA3CodeStore("ios");
+				} catch (DataAccessException e) {
+					throw new RuntimeException(e);
+				}
+				List<String> itemIds;
+				try {
+					itemIds = ApplicationServiceProvider.provide().getStoreIapNaApplicationIds(store);
+				} catch (DataAccessException e) {
+					throw new RuntimeException(e);
+				}
 
 				for (String id : itemIds) {
 					Queue itemPropertyLookupQueue = QueueFactory.getQueue("itempropertylookup");

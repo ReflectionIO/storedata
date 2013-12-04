@@ -8,6 +8,7 @@
 package io.reflection.app.setup;
 
 import static io.reflection.app.objectify.PersistenceService.ofy;
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.service.country.CountryServiceProvider;
 import io.reflection.app.shared.datatypes.Country;
 
@@ -20,7 +21,7 @@ import java.util.List;
  * 
  */
 public class CountriesInstaller {
-	public static void install() {
+	public static void install() throws DataAccessException {
 		
 		if (CountryServiceProvider.provide().getCountriesCount() == 0) { 
 			

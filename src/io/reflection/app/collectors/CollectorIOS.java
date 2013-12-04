@@ -3,6 +3,7 @@
  */
 package io.reflection.app.collectors;
 
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.logging.GaeLevel;
 
 import java.util.ArrayList;
@@ -103,7 +104,7 @@ public class CollectorIOS extends StoreCollector implements Collector {
 	 * @see io.reflection.appcollector.collectors.DataCollector#collect()
 	 */
 	@Override
-	public List<Long> collect(String country, String type, String code) {
+	public List<Long> collect(String country, String type, String code) throws DataAccessException {
 		if (LOG.isLoggable(GaeLevel.TRACE)) {
 			LOG.log(GaeLevel.TRACE, "Entering...");
 		}

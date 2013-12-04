@@ -10,6 +10,7 @@ package io.reflection.app.service.fetchfeed;
 
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
@@ -34,7 +35,7 @@ final class FeedFetchService implements IFeedFetchService {
 	}
 
 	@Override
-	public FeedFetch getFeedFetch(Long id) {
+	public FeedFetch getFeedFetch(Long id) throws DataAccessException {
 		FeedFetch feedFetch = null;
 
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
@@ -61,8 +62,9 @@ final class FeedFetchService implements IFeedFetchService {
 	 * 
 	 * @param connection
 	 * @return
+	 * @throws DataAccessException
 	 */
-	private FeedFetch toFeedFetch(Connection connection) {
+	private FeedFetch toFeedFetch(Connection connection) throws DataAccessException {
 		FeedFetch feedFetch = new FeedFetch();
 
 		feedFetch.id = connection.getCurrentRowLong("id");
@@ -81,7 +83,7 @@ final class FeedFetchService implements IFeedFetchService {
 	}
 
 	@Override
-	public FeedFetch addFeedFetch(FeedFetch feedFetch) {
+	public FeedFetch addFeedFetch(FeedFetch feedFetch) throws DataAccessException {
 		FeedFetch addedFeedFetch = null;
 
 		final String addFeedFetchQuery = String.format(
@@ -114,7 +116,7 @@ final class FeedFetchService implements IFeedFetchService {
 	}
 
 	@Override
-	public FeedFetch updateFeedFetch(FeedFetch feedFetch) {
+	public FeedFetch updateFeedFetch(FeedFetch feedFetch) throws DataAccessException {
 		FeedFetch updatedFeedFetch = null;
 
 		final String updateFeedFetchQuery = String.format(
@@ -154,7 +156,7 @@ final class FeedFetchService implements IFeedFetchService {
 	 * io.reflection.app.shared.datatypes.Store,java.util.List, io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
-	public List<FeedFetch> getFeedFetches(Country country, Store store, List<String> types, Pager pager) {
+	public List<FeedFetch> getFeedFetches(Country country, Store store, List<String> types, Pager pager) throws DataAccessException {
 		List<FeedFetch> feedFetches = new ArrayList<FeedFetch>();
 
 		String typesQueryPart = null;
@@ -198,7 +200,7 @@ final class FeedFetchService implements IFeedFetchService {
 	 * io.reflection.app.shared.datatypes.Store,java.util.List)
 	 */
 	@Override
-	public Long getFeedFetchesCount(Country country, Store store, List<String> types) {
+	public Long getFeedFetchesCount(Country country, Store store, List<String> types) throws DataAccessException {
 		Long feedFetchesCount = Long.valueOf(0);
 
 		String typesQueryPart = null;
@@ -237,7 +239,7 @@ final class FeedFetchService implements IFeedFetchService {
 	 * io.reflection.app.shared.datatypes.Store,java.util.List, io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
-	public List<FeedFetch> getIngestedFeedFetches(Country country, Store store, List<String> types, Pager pager) {
+	public List<FeedFetch> getIngestedFeedFetches(Country country, Store store, List<String> types, Pager pager) throws DataAccessException {
 		return getStatusFeedFetches(country, store, types, pager, true);
 	}
 
@@ -247,8 +249,9 @@ final class FeedFetchService implements IFeedFetchService {
 	 * @param pager
 	 * @param b
 	 * @return
+	 * @throws DataAccessException
 	 */
-	private List<FeedFetch> getStatusFeedFetches(Country country, Store store, List<String> types, Pager pager, boolean ingested) {
+	private List<FeedFetch> getStatusFeedFetches(Country country, Store store, List<String> types, Pager pager, boolean ingested) throws DataAccessException {
 		List<FeedFetch> feedFetches = new ArrayList<FeedFetch>();
 
 		String typesQueryPart = null;
@@ -291,7 +294,7 @@ final class FeedFetchService implements IFeedFetchService {
 	 * io.reflection.app.shared.datatypes.Store,java.util.List)
 	 */
 	@Override
-	public Long getIngestedFeedFetchesCount(Country country, Store store, List<String> types) {
+	public Long getIngestedFeedFetchesCount(Country country, Store store, List<String> types) throws DataAccessException {
 		return getStatusFeedFetchesCount(country, store, types, true);
 	}
 
@@ -301,8 +304,9 @@ final class FeedFetchService implements IFeedFetchService {
 	 * @param types
 	 * @param b
 	 * @return
+	 * @throws DataAccessException
 	 */
-	private Long getStatusFeedFetchesCount(Country country, Store store, List<String> types, boolean ingested) {
+	private Long getStatusFeedFetchesCount(Country country, Store store, List<String> types, boolean ingested) throws DataAccessException {
 		Long feedFetchesCount = Long.valueOf(0);
 
 		String typesQueryPart = null;
@@ -341,7 +345,7 @@ final class FeedFetchService implements IFeedFetchService {
 	 * io.reflection.app.shared.datatypes.Country,io.reflection.app.shared.datatypes.Store, java.util.List, io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
-	public List<FeedFetch> getUningestedFeedFetches(Country country, Store store, List<String> types, Pager pager) {
+	public List<FeedFetch> getUningestedFeedFetches(Country country, Store store, List<String> types, Pager pager) throws DataAccessException {
 		return getStatusFeedFetches(country, store, types, pager, false);
 	}
 
@@ -352,7 +356,7 @@ final class FeedFetchService implements IFeedFetchService {
 	 * io.reflection.app.shared.datatypes.Store,java.util.List)
 	 */
 	@Override
-	public Long getUningestedFeedFetchesCount(Country country, Store store, List<String> types) {
+	public Long getUningestedFeedFetchesCount(Country country, Store store, List<String> types) throws DataAccessException {
 		return getStatusFeedFetchesCount(country, store, types, false);
 	}
 
@@ -363,7 +367,7 @@ final class FeedFetchService implements IFeedFetchService {
 	 * io.reflection.app.shared.datatypes.Store,java.lang.String, java.lang.String)
 	 */
 	@Override
-	public List<Long> getIngestableFeedFetchIds(Country country, Store store, String type, String code) {
+	public List<Long> getIngestableFeedFetchIds(Country country, Store store, String type, String code) throws DataAccessException {
 		List<Long> feedFetchIds = new ArrayList<Long>();
 
 		final String getIngestableFeedFetchIdsQuery = String.format(
@@ -398,7 +402,7 @@ final class FeedFetchService implements IFeedFetchService {
 	 * io.reflection.app.shared.datatypes.Store,java.util.List, java.lang.String)
 	 */
 	@Override
-	public Boolean isReadyToModel(Country country, Store store, List<String> types, String code) {
+	public Boolean isReadyToModel(Country country, Store store, List<String> types, String code) throws DataAccessException {
 		Boolean isReadyToModel = Boolean.FALSE;
 
 		String typesQueryPart = null;
@@ -445,7 +449,7 @@ final class FeedFetchService implements IFeedFetchService {
 	 * io.reflection.app.shared.datatypes.Store,java.util.List, java.lang.String)
 	 */
 	@Override
-	public List<FeedFetch> getGatherCodeFeedFetches(Country country, Store store, List<String> types, String code) {
+	public List<FeedFetch> getGatherCodeFeedFetches(Country country, Store store, List<String> types, String code) throws DataAccessException {
 		List<FeedFetch> feedFetches = new ArrayList<FeedFetch>();
 
 		String typesQueryPart = null;

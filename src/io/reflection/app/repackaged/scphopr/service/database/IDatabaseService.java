@@ -7,6 +7,7 @@
 //
 package io.reflection.app.repackaged.scphopr.service.database;
 
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 
 import com.spacehopperstudios.service.IService;
@@ -24,12 +25,12 @@ public interface IDatabaseService extends IService {
 	public static final String DATABASE_CRON_USERNAME_KEY = "db.connection.cron.username";
 	public static final String DATABASE_CRON_PASSWORD_KEY = "db.connection.cron.password";
 
-	public Connection getNamedConnection(String name);
+	public Connection getNamedConnection(String name) throws DataAccessException;
 
-	public Connection getConnection(String server, String database, String username, String password);
+	public Connection getConnection(String server, String database, String username, String password) throws DataAccessException;
 
-	public Connection getAdminNamedConnection(String name);
+	public Connection getAdminNamedConnection(String name) throws DataAccessException;
 
-	public Connection getCronNamedConnection(String name);
+	public Connection getCronNamedConnection(String name) throws DataAccessException;
 
 }

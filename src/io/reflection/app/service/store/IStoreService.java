@@ -7,11 +7,12 @@
 //
 package io.reflection.app.service.store;
 
-import java.util.List;
-
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.shared.datatypes.Country;
 import io.reflection.app.shared.datatypes.Store;
+
+import java.util.List;
 
 import com.spacehopperstudios.service.IService;
 
@@ -20,60 +21,60 @@ public interface IStoreService extends IService {
 	 * @param id
 	 * @return
 	 */
-	public Store getStore(Long id);
+	public Store getStore(Long id) throws DataAccessException;
 
 	/**
 	 * @param store
 	 * @return
 	 */
-	public Store addStore(Store store);
+	public Store addStore(Store store) throws DataAccessException;
 
 	/**
 	 * @param store
 	 * @return
 	 */
-	public Store updateStore(Store store);
+	public Store updateStore(Store store) throws DataAccessException;
 
 	/**
 	 * @param store
 	 */
-	public void deleteStore(Store store);
+	public void deleteStore(Store store) throws DataAccessException;
 
 	/**
 	 * @param country
 	 * @param pager 
 	 * @return
 	 */
-	public List<Store> getCountryStores(Country country, Pager pager);
+	public List<Store> getCountryStores(Country country, Pager pager) throws DataAccessException;
 
 	/**
 	 * @param pager
 	 * @return
 	 */
-	public List<Store> getStores(Pager pager);
+	public List<Store> getStores(Pager pager) throws DataAccessException;
 
 	/**
 	 * @param query
 	 * @param pager
 	 * @return
 	 */
-	public List<Store> searchStores(String query, Pager pager);
+	public List<Store> searchStores(String query, Pager pager) throws DataAccessException;
 
 	/**
 	 * @param a3Code
 	 * @return
 	 */
-	public Store getA3CodeStore(String a3Code);
+	public Store getA3CodeStore(String a3Code) throws DataAccessException;
 
 	/**
 	 * @param name
 	 * @return
 	 */
-	public Store getNamedStore(String name);
+	public Store getNamedStore(String name) throws DataAccessException;
 
 	/**
 	 * @return
 	 */
-	public long getStoresCount();
+	public long getStoresCount() throws DataAccessException;
 
 }

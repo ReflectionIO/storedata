@@ -8,6 +8,7 @@
 //
 package io.reflection.app.service.user;
 
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.shared.datatypes.Permission;
 import io.reflection.app.shared.datatypes.Role;
@@ -24,14 +25,14 @@ public interface IUserService extends IService {
 	 * @param id
 	 * @return
 	 */
-	public User getUser(Long id);
+	public User getUser(Long id) throws DataAccessException;
 
 	/**
 	 * 
 	 * @param user
 	 * @return
 	 */
-	public User addUser(User user);
+	public User addUser(User user) throws DataAccessException;
 
 	/**
 	 * 
@@ -39,34 +40,34 @@ public interface IUserService extends IService {
 	 * @param pager
 	 * @return
 	 */
-	public List<User> searchUsers(String mask, Pager pager);
+	public List<User> searchUsers(String mask, Pager pager) throws DataAccessException;
 
 	/**
 	 * 
 	 * @param mask
 	 * @return
 	 */
-	public Long searchUsersCount(String mask);
+	public Long searchUsersCount(String mask) throws DataAccessException;
 
 	/**
 	 * 
 	 * @param user
 	 * @param newPassword
 	 */
-	public void updateUserPassword(User user, String newPassword);
+	public void updateUserPassword(User user, String newPassword) throws DataAccessException;
 
 	/**
 	 * 
 	 * @param user
 	 * @return
 	 */
-	public User updateUser(User user);
+	public User updateUser(User user) throws DataAccessException;
 
 	/**
 	 * 
 	 * @param user
 	 */
-	public void deleteUser(User user);
+	public void deleteUser(User user) throws DataAccessException;
 
 	/**
 	 * 
@@ -74,57 +75,57 @@ public interface IUserService extends IService {
 	 * @param password
 	 * @return
 	 */
-	public User getLoginUser(String username, String password);
+	public User getLoginUser(String username, String password) throws DataAccessException;
 
 	/**
 	 * 
 	 * @param pager
 	 * @return
 	 */
-	public List<User> getUsers(Pager pager);
+	public List<User> getUsers(Pager pager) throws DataAccessException;
 
 	/**
 	 * 
 	 * @return
 	 */
-	public Long getUsersCount();
+	public Long getUsersCount() throws DataAccessException;
 
 	/**
 	 * 
 	 * @param user
 	 */
-	public void updateLoginTime(User user);
+	public void updateLoginTime(User user) throws DataAccessException;
 
 	/**
 	 * @param username
 	 * @return
 	 */
-	public User getUsernameUser(String username);
-	
+	public User getUsernameUser(String username) throws DataAccessException;
+
 	/**
 	 * @param user
 	 * @param role
 	 */
-	public void assignRole(User user, Role role);
+	public void assignRole(User user, Role role) throws DataAccessException;
 
 	/**
 	 * @param user
 	 * @param role
 	 * @return
 	 */
-	public Boolean hasRole(User user, Role role);
-	
+	public Boolean hasRole(User user, Role role) throws DataAccessException;
+
 	/**
 	 * @param user
 	 * @param permission
 	 */
-	public void assignPermission(User user, Permission permission);
+	public void assignPermission(User user, Permission permission) throws DataAccessException;
 
 	/**
 	 * @param user
 	 * @param permission
 	 * @return
 	 */
-	public Boolean hasPermission(User user, Permission permission);
+	public Boolean hasPermission(User user, Permission permission) throws DataAccessException;
 
 }

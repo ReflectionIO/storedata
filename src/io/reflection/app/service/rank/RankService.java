@@ -9,6 +9,7 @@ package io.reflection.app.service.rank;
 
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.collectors.Collector;
@@ -35,7 +36,7 @@ final class RankService implements IRankService {
 	}
 
 	@Override
-	public Rank getRank(Long id) {
+	public Rank getRank(Long id) throws DataAccessException {
 		Rank rank = null;
 
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
@@ -63,8 +64,9 @@ final class RankService implements IRankService {
 	 * 
 	 * @param connection
 	 * @return
+	 * @throws DataAccessException
 	 */
-	private Rank toRank(Connection connection) {
+	private Rank toRank(Connection connection) throws DataAccessException {
 		Rank rank = new Rank();
 
 		rank.id = connection.getCurrentRowLong("id");
@@ -89,7 +91,7 @@ final class RankService implements IRankService {
 	}
 
 	@Override
-	public Rank addRank(Rank rank) {
+	public Rank addRank(Rank rank) throws DataAccessException {
 		Rank addedRank = null;
 
 		final String addeRankQuery = String
@@ -123,7 +125,7 @@ final class RankService implements IRankService {
 	}
 
 	@Override
-	public Rank updateRank(Rank rank) {
+	public Rank updateRank(Rank rank) throws DataAccessException {
 		Rank updatedRank = null;
 
 		final String updateRankQuery = String
@@ -165,7 +167,7 @@ final class RankService implements IRankService {
 	 * @see io.reflection.app.service.rank.IRankService#getItemGatherCodeRank(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public Rank getItemGatherCodeRank(String itemId, String code, String store, String country, List<String> possibleTypes) {
+	public Rank getItemGatherCodeRank(String itemId, String code, String store, String country, List<String> possibleTypes) throws DataAccessException {
 		Rank rank = null;
 
 		String typesQueryPart = null;
@@ -204,7 +206,7 @@ final class RankService implements IRankService {
 	 * java.util.Date, java.util.Date, io.reflection.app.api.datatypes.Pager)
 	 */
 	@Override
-	public List<Rank> getRanks(Country country, Store store, String listType, Date after, Date before, Pager pager) {
+	public List<Rank> getRanks(Country country, Store store, String listType, Date after, Date before, Pager pager) throws DataAccessException {
 		List<Rank> ranks = new ArrayList<Rank>();
 
 		String code = getGatherCode(country, store, after, before);
@@ -223,7 +225,7 @@ final class RankService implements IRankService {
 	 * java.util.Date, java.util.Date, io.reflection.app.api.datatypes.Pager)
 	 */
 	@Override
-	public List<Rank> getItemRanks(Country country, Store store, String listType, Item item, Date after, Date before, Pager pager) {
+	public List<Rank> getItemRanks(Country country, Store store, String listType, Item item, Date after, Date before, Pager pager) throws DataAccessException {
 		List<Rank> ranks = new ArrayList<Rank>();
 
 		Collector collector = CollectorFactory.getCollectorForStore(store.a3Code);
@@ -278,7 +280,7 @@ final class RankService implements IRankService {
 		return ranks;
 	}
 
-	private String getGatherCode(Country country, Store store, Date after, Date before) {
+	private String getGatherCode(Country country, Store store, Date after, Date before) throws DataAccessException {
 		String code = null;
 
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
@@ -333,7 +335,7 @@ final class RankService implements IRankService {
 	 * @see io.reflection.app.service.rank.IRankService#getRanksCount(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date)
 	 */
 	@Override
-	public Long getRanksCount(Country country, Store store, String listType, Date after, Date before) {
+	public Long getRanksCount(Country country, Store store, String listType, Date after, Date before) throws DataAccessException {
 		Long ranksCount = Long.valueOf(0);
 
 		String code = getGatherCode(country, store, after, before);
@@ -351,7 +353,7 @@ final class RankService implements IRankService {
 	 * @see io.reflection.app.service.rank.IRankService#getItemHasGrossingRank(io.reflection.app.datatypes.Item)
 	 */
 	@Override
-	public Boolean getItemHasGrossingRank(Item item) {
+	public Boolean getItemHasGrossingRank(Item item) throws DataAccessException {
 		Boolean hasGrossingRank = Boolean.FALSE;
 
 		String getItemHasGrossingRankQuery = String.format("SELECT `id` FROM `rank` WHERE `itemid`='%s' AND `grossingposition`<>0 LIMIT 1",
@@ -381,7 +383,7 @@ final class RankService implements IRankService {
 	 * @see io.reflection.app.service.rank.IRankService#addRanksBatch(java.util.List)
 	 */
 	@Override
-	public Long addRanksBatch(List<Rank> ranks) {
+	public Long addRanksBatch(List<Rank> ranks) throws DataAccessException {
 		Long addedRankCount = Long.valueOf(0);
 
 		StringBuffer addRanksBatchQuery = new StringBuffer();
@@ -427,7 +429,7 @@ final class RankService implements IRankService {
 	 * io.reflection.app.shared.datatypes.Store, java.lang.String, java.lang.String, io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
-	public Long getGatherCodeRanksCount(Country country, Store store, String listType, String code) {
+	public Long getGatherCodeRanksCount(Country country, Store store, String listType, String code) throws DataAccessException {
 		Long ranksCount = Long.valueOf(0);
 
 		Collector collector = CollectorFactory.getCollectorForStore(store.a3Code);
@@ -477,7 +479,7 @@ final class RankService implements IRankService {
 	 * @see io.reflection.app.service.rank.IRankService#getCodeLastRankDate(java.lang.String)
 	 */
 	@Override
-	public Date getCodeLastRankDate(String code) {
+	public Date getCodeLastRankDate(String code) throws DataAccessException {
 		Date date = null;
 
 		String getCodeLastRankDateQuery = String.format("SELECT `date` FROM `rank` WHERE `code`='%s' ORDER BY `date` DESC LIMIT 1", code);
@@ -506,7 +508,7 @@ final class RankService implements IRankService {
 	 * @see io.reflection.app.service.rank.IRankService#updateRanksBatch(java.util.List)
 	 */
 	@Override
-	public Long updateRanksBatch(List<Rank> updateRanks) {
+	public Long updateRanksBatch(List<Rank> updateRanks) throws DataAccessException {
 		long ranksCount = 0;
 
 		final String updateRanksBatchQueryFormat = "UPDATE `rank` SET `position`=%d,`grossingposition`=%d,`itemid`='%s',`type`='%s',`country`='%s',`date`=FROM_UNIXTIME(%d),`source`='%s',`price`=%d,`currency`='%s',`code`='%s',`revenue`=%s,`downloads`=%s WHERE `id`=%d;";
@@ -545,7 +547,8 @@ final class RankService implements IRankService {
 	 * java.lang.String, java.lang.String, io.reflection.app.api.shared.datatypes.Pager, boolean)
 	 */
 	@Override
-	public List<Rank> getGatherCodeRanks(Country country, Store store, String listType, String code, Pager pager, boolean ignoreGrossingRank) {
+	public List<Rank> getGatherCodeRanks(Country country, Store store, String listType, String code, Pager pager, boolean ignoreGrossingRank)
+			throws DataAccessException {
 		List<Rank> ranks = new ArrayList<Rank>();
 
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());

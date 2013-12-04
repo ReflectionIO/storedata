@@ -7,6 +7,7 @@
 //
 package io.reflection.app.modellers;
 
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.shared.datatypes.FormType;
 
 /**
@@ -17,7 +18,7 @@ public interface Modeller {
 
 	void enqueue(String country, String type, String code);
 
-	void modelVariables(String country, String type, String code);
+	void modelVariables(String country, String type, String code) throws DataAccessException ;
 
 	FormType getForm(String type);
 

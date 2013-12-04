@@ -7,6 +7,7 @@
 //
 package io.reflection.app.service.rank;
 
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.shared.datatypes.Country;
 import io.reflection.app.shared.datatypes.Item;
@@ -23,24 +24,24 @@ public interface IRankService extends IService {
 	 * @param id
 	 * @return
 	 */
-	public Rank getRank(Long id);
+	public Rank getRank(Long id) throws DataAccessException;
 
 	/**
 	 * @param rank
 	 * @return
 	 */
-	public Rank addRank(Rank rank);
+	public Rank addRank(Rank rank) throws DataAccessException;
 
 	/**
 	 * @param rank
 	 * @return
 	 */
-	public Rank updateRank(Rank rank);
+	public Rank updateRank(Rank rank) throws DataAccessException;
 
 	/**
 	 * @param rank
 	 */
-	public void deleteRank(Rank rank);
+	public void deleteRank(Rank rank) throws DataAccessException;
 
 	/**
 	 * @param itemId
@@ -50,7 +51,7 @@ public interface IRankService extends IService {
 	 * @param store
 	 * @return
 	 */
-	public Rank getItemGatherCodeRank(String itemId, String code, String store, String country, List<String> possibleTypes);
+	public Rank getItemGatherCodeRank(String itemId, String code, String store, String country, List<String> possibleTypes) throws DataAccessException;
 
 	/**
 	 * @param country
@@ -61,7 +62,7 @@ public interface IRankService extends IService {
 	 * @param pager
 	 * @return
 	 */
-	public List<Rank> getRanks(Country country, Store store, String listType, Date after, Date before, Pager pager);
+	public List<Rank> getRanks(Country country, Store store, String listType, Date after, Date before, Pager pager) throws DataAccessException;
 
 	/**
 	 * @param country
@@ -73,7 +74,7 @@ public interface IRankService extends IService {
 	 * @param pager
 	 * @return
 	 */
-	public List<Rank> getItemRanks(Country country, Store store, String listType, Item item, Date after, Date before, Pager pager);
+	public List<Rank> getItemRanks(Country country, Store store, String listType, Item item, Date after, Date before, Pager pager) throws DataAccessException;
 
 	/**
 	 * @param country
@@ -83,19 +84,19 @@ public interface IRankService extends IService {
 	 * @param before
 	 * @return
 	 */
-	public Long getRanksCount(Country country, Store store, String listType, Date after, Date before);
+	public Long getRanksCount(Country country, Store store, String listType, Date after, Date before) throws DataAccessException;
 
 	/**
 	 * @param item
 	 * @return
 	 */
-	public Boolean getItemHasGrossingRank(Item item);
+	public Boolean getItemHasGrossingRank(Item item) throws DataAccessException;
 
 	/**
 	 * @param ranks
 	 * @return
 	 */
-	public Long addRanksBatch(List<Rank> ranks);
+	public Long addRanksBatch(List<Rank> ranks) throws DataAccessException;
 
 	/**
 	 * 
@@ -104,10 +105,11 @@ public interface IRankService extends IService {
 	 * @param listType
 	 * @param code
 	 * @param pager
-	 * @param ignoreGrossingRank 
+	 * @param ignoreGrossingRank
 	 * @return
 	 */
-	public List<Rank> getGatherCodeRanks(Country country, Store store, String listType, String code, Pager pager, boolean ignoreGrossingRank);
+	public List<Rank> getGatherCodeRanks(Country country, Store store, String listType, String code, Pager pager, boolean ignoreGrossingRank)
+			throws DataAccessException;
 
 	/**
 	 * 
@@ -117,18 +119,18 @@ public interface IRankService extends IService {
 	 * @param code
 	 * @return
 	 */
-	public Long getGatherCodeRanksCount(Country country, Store store, String listType, String code);
+	public Long getGatherCodeRanksCount(Country country, Store store, String listType, String code) throws DataAccessException;
 
 	/**
 	 * @param code
 	 * @return
 	 */
-	public Date getCodeLastRankDate(String code);
+	public Date getCodeLastRankDate(String code) throws DataAccessException;
 
 	/**
 	 * @param updateRanks
 	 * @return
 	 */
-	public Long updateRanksBatch(List<Rank> updateRanks);
+	public Long updateRanksBatch(List<Rank> updateRanks) throws DataAccessException;
 
 }

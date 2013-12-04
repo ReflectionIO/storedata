@@ -10,6 +10,7 @@ package io.reflection.app.service.item;
 
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
@@ -28,7 +29,7 @@ final class ItemService implements IItemService {
 	}
 
 	@Override
-	public Item getItem(Long id) {
+	public Item getItem(Long id) throws DataAccessException {
 		Item item = null;
 
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
@@ -56,8 +57,9 @@ final class ItemService implements IItemService {
 	 * 
 	 * @param connection
 	 * @return
+	 * @throws DataAccessException
 	 */
-	private Item toItem(Connection connection) {
+	private Item toItem(Connection connection) throws DataAccessException {
 		Item item = new Item();
 
 		item.id = connection.getCurrentRowLong("id");
@@ -84,7 +86,7 @@ final class ItemService implements IItemService {
 	}
 
 	@Override
-	public Item addItem(Item item) {
+	public Item addItem(Item item) throws DataAccessException {
 		Item addedItem = null;
 
 		final String addItemQuery = String
@@ -118,7 +120,7 @@ final class ItemService implements IItemService {
 	}
 
 	@Override
-	public Item updateItem(Item item) {
+	public Item updateItem(Item item) throws DataAccessException {
 		Item updatedItem = null;
 
 		String updateItemQuery = String
@@ -127,7 +129,7 @@ final class ItemService implements IItemService {
 						(int) (item.price.floatValue() * 100.0f), addslashes(item.source), addslashes(item.type), item.added.getTime() / 1000,
 						addslashes(item.currency), addslashes(item.smallImage), addslashes(item.mediumImage), addslashes(item.largeImage),
 						addslashes(item.properties), item.id.longValue());
-		
+
 		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
 		try {
@@ -160,7 +162,7 @@ final class ItemService implements IItemService {
 	 * @see io.reflection.app.service.item.IItemService#getExternalIdItem(java.lang.String)
 	 */
 	@Override
-	public Item getExternalIdItem(String externalId) {
+	public Item getExternalIdItem(String externalId) throws DataAccessException {
 		Item item = null;
 
 		final String getExternalIdItemQuery = String.format("SELECT * FROM `item` WHERE `externalid` = '%s' and `deleted`='n'", addslashes(externalId));
@@ -188,7 +190,7 @@ final class ItemService implements IItemService {
 	 * @see io.reflection.app.service.item.IItemService#getInternalIdItem(java.lang.String)
 	 */
 	@Override
-	public Item getInternalIdItem(String internalId) {
+	public Item getInternalIdItem(String internalId) throws DataAccessException {
 		Item item = null;
 
 		final String getInternalIdItemQuery = String.format("SELECT * FROM `item` WHERE `internalid`='%s' and `deleted`='n'", addslashes(internalId));
@@ -217,7 +219,7 @@ final class ItemService implements IItemService {
 	 * @see io.reflection.app.service.item.IItemService#getExternalIdItemBatch(java.util.List)
 	 */
 	@Override
-	public List<Item> getExternalIdItemBatch(List<String> itemIds) {
+	public List<Item> getExternalIdItemBatch(List<String> itemIds) throws DataAccessException {
 		List<Item> items = new ArrayList<Item>();
 
 		String commaDelimitedItemIds = null;
@@ -258,7 +260,7 @@ final class ItemService implements IItemService {
 	 * @see io.reflection.app.service.item.IItemService#addItemsBatch(java.util.List)
 	 */
 	@Override
-	public Long addItemsBatch(List<Item> items) {
+	public Long addItemsBatch(List<Item> items) throws DataAccessException {
 		Long addedItemCount = Long.valueOf(0);
 
 		StringBuffer addItemsBatchQuery = new StringBuffer();

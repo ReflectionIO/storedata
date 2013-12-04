@@ -10,6 +10,7 @@ package io.reflection.app.service.permission;
 
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
@@ -23,7 +24,7 @@ final class PermissionService implements IPermissionService {
 	}
 
 	@Override
-	public Permission getPermission(Long id) {
+	public Permission getPermission(Long id) throws DataAccessException {
 		Permission permission = null;
 
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
@@ -51,8 +52,9 @@ final class PermissionService implements IPermissionService {
 	 * 
 	 * @param connection
 	 * @return
+	 * @throws DataAccessException
 	 */
-	private Permission toPermission(Connection connection) {
+	private Permission toPermission(Connection connection) throws DataAccessException {
 		Permission permission = new Permission();
 
 		permission.id = connection.getCurrentRowLong("id");
@@ -87,7 +89,7 @@ final class PermissionService implements IPermissionService {
 	 * @see io.reflection.app.service.permission.IPermissionService#getNamedPermission(java.lang.String)
 	 */
 	@Override
-	public Permission getNamedPermission(String name) {
+	public Permission getNamedPermission(String name) throws DataAccessException {
 		Permission permission = null;
 
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();

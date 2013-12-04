@@ -10,6 +10,7 @@ package io.reflection.app.service.application;
 
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.lookup.helpers.LookupDetailTypeHelper;
 import io.reflection.app.api.lookup.shared.datatypes.LookupDetailType;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
@@ -36,7 +37,7 @@ final class ApplicationService implements IApplicationService {
 	}
 
 	@Override
-	public Application getApplication(Long id) {
+	public Application getApplication(Long id) throws DataAccessException {
 		Application application = null;
 
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
@@ -65,8 +66,9 @@ final class ApplicationService implements IApplicationService {
 	 * 
 	 * @param connection
 	 * @return
+	 * @throws DataAccessException 
 	 */
-	private Application toApplication(Connection connection, LookupDetailType detail) {
+	private Application toApplication(Connection connection, LookupDetailType detail) throws DataAccessException {
 		Application application = new Application();
 
 		application.id = connection.getCurrentRowLong("application_id");
@@ -126,7 +128,7 @@ final class ApplicationService implements IApplicationService {
 	 * io.reflection.app.api.lookup.datatypes.LookupDetailType)
 	 */
 	@Override
-	public List<Application> lookupInternalIdsApplication(List<String> internalIds, LookupDetailType detail) {
+	public List<Application> lookupInternalIdsApplication(List<String> internalIds, LookupDetailType detail) throws DataAccessException {
 		List<Application> applications = new ArrayList<Application>();
 
 		if (internalIds != null && internalIds.size() > 0) {
@@ -207,7 +209,7 @@ final class ApplicationService implements IApplicationService {
 	 * io.reflection.app.api.lookup.datatypes.LookupDetailType)
 	 */
 	@Override
-	public List<Application> lookupExternalIdsApplication(List<String> externalIds, LookupDetailType detail) {
+	public List<Application> lookupExternalIdsApplication(List<String> externalIds, LookupDetailType detail) throws DataAccessException {
 		List<Application> applications = new ArrayList<Application>();
 
 		if (externalIds != null && externalIds.size() > 0) {
@@ -248,7 +250,7 @@ final class ApplicationService implements IApplicationService {
 	 * @see io.reflection.app.service.application.IApplicationService#setApplicationIap(io.reflection.app.datatypes.Application, boolean)
 	 */
 	@Override
-	public void setApplicationIap(Application application, Boolean usesIap) {
+	public void setApplicationIap(Application application, Boolean usesIap) throws DataAccessException {
 
 		String setApplicationIapQuery = String.format("%s `sup_application_iap` SET `internalid`=%d, `usesiap`='%s', `lastupdated`=NOW()%s",
 				application.usesIap == null ? "INSERT INTO" : "UPDATE", application.id.longValue(), usesIap.booleanValue() ? 'y' : 'n',
@@ -279,7 +281,7 @@ final class ApplicationService implements IApplicationService {
 	 * @see io.reflection.app.service.application.IApplicationService#getStoreIapNaApplicationIds(java.lang.String)
 	 */
 	@Override
-	public List<String> getStoreIapNaApplicationIds(Store store) {
+	public List<String> getStoreIapNaApplicationIds(Store store) throws DataAccessException {
 		List<String> ids = new ArrayList<String>();
 
 		String getStoreIapNaApplicationIdsQuery = String

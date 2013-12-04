@@ -10,6 +10,7 @@ package io.reflection.app.service.user;
 
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.sha1Hash;
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
@@ -40,7 +41,7 @@ final class UserService implements IUserService {
 	 * @see io.reflection.app.service.user.IUserService#getUser(java.lang.Long)
 	 */
 	@Override
-	public User getUser(Long id) {
+	public User getUser(Long id) throws DataAccessException {
 		User user = null;
 
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
@@ -70,7 +71,7 @@ final class UserService implements IUserService {
 	 * @see io.reflection.app.service.user.IUserService#addUser(io.reflection.app.shared.datatypes.User)
 	 */
 	@Override
-	public User addUser(User user) {
+	public User addUser(User user) throws DataAccessException {
 		User addedUser = null;
 
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
@@ -108,7 +109,7 @@ final class UserService implements IUserService {
 	 * @see io.reflection.app.service.user.IUserService#searchUsers(java.lang.String, io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
-	public List<User> searchUsers(String mask, Pager pager) {
+	public List<User> searchUsers(String mask, Pager pager) throws DataAccessException {
 		List<User> users = new ArrayList<User>();
 
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
@@ -173,7 +174,7 @@ final class UserService implements IUserService {
 	 * @see io.reflection.app.service.user.IUserService#SearchUsersCount(java.lang.String)
 	 */
 	@Override
-	public Long searchUsersCount(String mask) {
+	public Long searchUsersCount(String mask) throws DataAccessException {
 		Long usersCount = Long.valueOf(0);
 
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
@@ -205,7 +206,7 @@ final class UserService implements IUserService {
 	 * @see io.reflection.app.service.user.IUserService#updateUserPassword(io.reflection.app.shared.datatypes.User, java.lang.String)
 	 */
 	@Override
-	public void updateUserPassword(User user, String newPassword) {
+	public void updateUserPassword(User user, String newPassword) throws DataAccessException {
 		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
 		String updateUserPasswordQuery = String.format("UPDATE `user` SET `password`='%s' WHERE `id`=%d", sha1Hash(SALT + newPassword), user.id.longValue());
@@ -231,7 +232,7 @@ final class UserService implements IUserService {
 	 * @see io.reflection.app.service.user.IUserService#updateUser(io.reflection.app.shared.datatypes.User)
 	 */
 	@Override
-	public User updateUser(User user) {
+	public User updateUser(User user) throws DataAccessException {
 		User updatedUser = null;
 
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
@@ -261,7 +262,7 @@ final class UserService implements IUserService {
 	 * @see io.reflection.app.service.user.IUserService#deleteUser(io.reflection.app.shared.datatypes.User)
 	 */
 	@Override
-	public void deleteUser(User user) {
+	public void deleteUser(User user) throws DataAccessException {
 		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
 		String deleteUserQuery = String.format("UPDATE `user` SET `deleted`='y' WHERE `id`=%d", user.id.longValue());
@@ -281,7 +282,7 @@ final class UserService implements IUserService {
 	 * @see io.reflection.app.service.user.IUserService#getLoginUser(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public User getLoginUser(String username, String password) {
+	public User getLoginUser(String username, String password) throws DataAccessException {
 		User user = null;
 
 		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
@@ -314,7 +315,7 @@ final class UserService implements IUserService {
 	 * @see io.reflection.app.service.user.IUserService#getUsers(io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
-	public List<User> getUsers(Pager pager) {
+	public List<User> getUsers(Pager pager) throws DataAccessException {
 		List<User> users = new ArrayList<User>();
 
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
@@ -377,7 +378,7 @@ final class UserService implements IUserService {
 	 * @see io.reflection.app.service.user.IUserService#getUsersCount()
 	 */
 	@Override
-	public Long getUsersCount() {
+	public Long getUsersCount() throws DataAccessException {
 		Long usersCount = Long.valueOf(0);
 
 		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
@@ -406,7 +407,7 @@ final class UserService implements IUserService {
 	 * @see io.reflection.app.service.user.IUserService#updateLoginTime(io.reflection.app.shared.datatypes.User)
 	 */
 	@Override
-	public void updateLoginTime(User user) {
+	public void updateLoginTime(User user) throws DataAccessException {
 		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
 		String updateLoginTimeQuery = String.format("UPDATE `user` SET `lastloggedin`=NOW() WHERE `id`=%d", user.id.longValue());
@@ -420,41 +421,41 @@ final class UserService implements IUserService {
 		}
 	}
 
-//	/*
-//	 * (non-Javadoc)
-//	 * 
-//	 * @see io.reflection.app.service.user.IUserService#getSessionUser(io.reflection.app.shared.datatypes.DataType)
-//	 */
-//	@Override
-//	public User getSessionUser(DataType session) {
-//		User user = null;
-//
-//		Connection sessionConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSession.toString());
-//
-//		String getSessionUserQuery = String.format("SELECT `userid` FROM `session` WHERE `id`=%d", session.id.longValue());
-//
-//		try {
-//			sessionConnection.connect();
-//			sessionConnection.executeQuery(getSessionUserQuery);
-//
-//			if (sessionConnection.fetchNextRow()) {
-//				user = this.getUser(sessionConnection.getCurrentRowLong("userid"));
-//			}
-//		} finally {
-//			if (sessionConnection != null) {
-//				sessionConnection.disconnect();
-//			}
-//		}
-//
-//		return user;
-//	}
+	// /*
+	// * (non-Javadoc)
+	// *
+	// * @see io.reflection.app.service.user.IUserService#getSessionUser(io.reflection.app.shared.datatypes.DataType)
+	// */
+	// @Override
+	// public User getSessionUser(DataType session) {
+	// User user = null;
+	//
+	// Connection sessionConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSession.toString());
+	//
+	// String getSessionUserQuery = String.format("SELECT `userid` FROM `session` WHERE `id`=%d", session.id.longValue());
+	//
+	// try {
+	// sessionConnection.connect();
+	// sessionConnection.executeQuery(getSessionUserQuery);
+	//
+	// if (sessionConnection.fetchNextRow()) {
+	// user = this.getUser(sessionConnection.getCurrentRowLong("userid"));
+	// }
+	// } finally {
+	// if (sessionConnection != null) {
+	// sessionConnection.disconnect();
+	// }
+	// }
+	//
+	// return user;
+	// }
 
 	/**
 	 * 
 	 * @param connction
 	 * @return
 	 */
-	private User toUser(Connection connection) {
+	private User toUser(Connection connection) throws DataAccessException {
 		User user = new User();
 
 		user.id = connection.getCurrentRowLong("id");
@@ -477,7 +478,7 @@ final class UserService implements IUserService {
 	 * @see io.reflection.app.service.user.IUserService#getUsernameUser(java.lang.String)
 	 */
 	@Override
-	public User getUsernameUser(String username) {
+	public User getUsernameUser(String username) throws DataAccessException {
 		User user = null;
 
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
@@ -507,7 +508,7 @@ final class UserService implements IUserService {
 	 * @see io.reflection.app.service.user.IUserService#assignRole(io.reflection.app.shared.datatypes.User, io.reflection.app.shared.datatypes.Role)
 	 */
 	@Override
-	public void assignRole(User user, Role role) {
+	public void assignRole(User user, Role role) throws DataAccessException {
 		String assignUserRoleQuery = String.format("INSERT INTO `userrole` (`userid`, `roleid`) VALUES (%d, %d)", user.id.longValue(), role.id.longValue());
 
 		Connection roleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRole.toString());
@@ -539,7 +540,7 @@ final class UserService implements IUserService {
 	 * @see io.reflection.app.service.user.IUserService#hasRole(io.reflection.app.shared.datatypes.User, io.reflection.app.shared.datatypes.Role)
 	 */
 	@Override
-	public Boolean hasRole(User user, Role role) {
+	public Boolean hasRole(User user, Role role) throws DataAccessException {
 		Boolean hasUserRole = Boolean.FALSE;
 
 		String hasUserRoleQuery = String.format("SELECT `id` FROM `userrole` WHERE `userid`=%d AND `roleid`=%d AND `deleted`='n' LIMIT 1", user.id.longValue(),
@@ -569,7 +570,7 @@ final class UserService implements IUserService {
 	 * @see io.reflection.app.service.user.IUserService#assignPermission(io.reflection.app.shared.datatypes.User, io.reflection.app.shared.datatypes.Permission)
 	 */
 	@Override
-	public void assignPermission(User user, Permission permission) {
+	public void assignPermission(User user, Permission permission) throws DataAccessException {
 		String assignUserPermissionQuery = String.format("INSERT INTO `userpermission` (`userid`, `permissionid`) VALUES (%d, %d)", user.id.longValue(),
 				permission.id.longValue());
 
@@ -604,7 +605,7 @@ final class UserService implements IUserService {
 	 * @see io.reflection.app.service.user.IUserService#hasPermission(io.reflection.app.shared.datatypes.User, io.reflection.app.shared.datatypes.Permission)
 	 */
 	@Override
-	public Boolean hasPermission(User user, Permission permission) {
+	public Boolean hasPermission(User user, Permission permission) throws DataAccessException {
 		Boolean hasUserPermission = Boolean.FALSE;
 
 		String hasUserPermissionQuery = String.format("SELECT `id` FROM `userpermission` WHERE `userid`=%d AND `permissionid`=%d AND `deleted`='n' LIMIT 1",

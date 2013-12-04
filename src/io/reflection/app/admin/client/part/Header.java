@@ -13,8 +13,8 @@ import io.reflection.app.admin.client.controller.SessionController;
 import io.reflection.app.admin.client.controller.NavigationController.Stack;
 import io.reflection.app.admin.client.controller.UserController;
 import io.reflection.app.admin.client.handler.NavigationEventHandler;
-import io.reflection.app.admin.client.handler.SessionEventHandler;
-import io.reflection.app.admin.client.handler.UsersEventHandler;
+import io.reflection.app.admin.client.handler.user.SessionEventHandler;
+import io.reflection.app.admin.client.handler.user.UsersEventHandler;
 import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.shared.datatypes.User;
 
@@ -317,28 +317,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	 * @see io.reflection.app.admin.client.handler.SessionEventHandler#userLoginFailed(com.willshex.gson.json.service.shared.Error)
 	 */
 	@Override
-	public void userLoginFailed(Error error) {}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.admin.client.handler.UsersEventHandler#userRegistered(java.lang.String)
-	 */
-	@Override
-	public void userRegistered(String email) {
-		// TODO Auto-generated method stub
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.admin.client.handler.UsersEventHandler#userRegistrationFailed(com.willshex.gson.json.service.shared.Error)
-	 */
-	@Override
-	public void userRegistrationFailed(Error error) {
-		// TODO Auto-generated method stub
-
+	public void userLoginFailed(Error error) {
+		// TODO: remove items that should not be there when there is no user
 	}
 
 }

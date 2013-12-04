@@ -8,6 +8,7 @@
 package io.reflection.app.service.country;
 
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
@@ -30,7 +31,7 @@ final class CountryService implements ICountryService {
 	}
 
 	@Override
-	public Country getCountry(Long id) {
+	public Country getCountry(Long id) throws DataAccessException {
 		Country country = null;
 
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
@@ -57,8 +58,9 @@ final class CountryService implements ICountryService {
 	 * 
 	 * @param connection
 	 * @return
+	 * @throws DataAccessException 
 	 */
-	private Country toCountry(Connection connection) {
+	private Country toCountry(Connection connection) throws DataAccessException {
 		Country country = new Country();
 
 		country.id = connection.getCurrentRowLong("id");
@@ -97,7 +99,7 @@ final class CountryService implements ICountryService {
 	 * @see io.reflection.app.service.country.ICountryService#getA2CodeCountry(java.lang.String)
 	 */
 	@Override
-	public Country getA2CodeCountry(String a2Code) {
+	public Country getA2CodeCountry(String a2Code) throws DataAccessException {
 		Country country = null;
 
 		final String getA2CodeCountryQuery = String.format("SELECT * FROM `country` WHERE `a2code`='%s' AND `deleted`='n' LIMIT 1", addslashes(a2Code));
@@ -126,7 +128,7 @@ final class CountryService implements ICountryService {
 	 * @see io.reflection.app.service.country.ICountryService#getA3CodeCountry(java.lang.String)
 	 */
 	@Override
-	public Country getA3CodeCountry(String a3Code) {
+	public Country getA3CodeCountry(String a3Code) throws DataAccessException {
 		Country country = null;
 
 		final String getA3CodeCountryQuery = String.format("SELECT * FROM `country` WHERE `a3code`='%s' AND `deleted`='n' LIMIT 1", addslashes(a3Code));
@@ -155,7 +157,7 @@ final class CountryService implements ICountryService {
 	 * @see io.reflection.app.service.country.ICountryService#getNamedCountry(java.lang.String)
 	 */
 	@Override
-	public Country getNamedCountry(String name) {
+	public Country getNamedCountry(String name) throws DataAccessException {
 		Country country = null;
 
 		final String getNamedCountryQuery = String.format("SELECT * FROM `country` WHERE `name`='%s' AND `deleted`='n' LIMIT 1", addslashes(name));
@@ -184,7 +186,7 @@ final class CountryService implements ICountryService {
 	 * @see io.reflection.app.service.country.ICountryService#getStoreCountries(io.reflection.app.datatypes.Store, io.reflection.app.api.datatypes.Pager)
 	 */
 	@Override
-	public List<Country> getStoreCountries(Store store, Pager pager) {
+	public List<Country> getStoreCountries(Store store, Pager pager) throws DataAccessException {
 		List<Country> countries = new ArrayList<Country>();
 
 		String commaDelimitedCountryCodes = null;
@@ -228,7 +230,7 @@ final class CountryService implements ICountryService {
 	 * @see io.reflection.app.service.country.ICountryService#getCountries(io.reflection.app.api.datatypes.Pager)
 	 */
 	@Override
-	public List<Country> getCountries(Pager pager) {
+	public List<Country> getCountries(Pager pager) throws DataAccessException {
 		List<Country> countries = new ArrayList<Country>();
 
 		final String getCountriesQuery = String.format("SELECT * FROM `country` WHERE `deleted`='n' ORDER BY `relevance` ASC,`%s` %s,`a2code` ASC LIMIT %d, %d", pager.sortBy,

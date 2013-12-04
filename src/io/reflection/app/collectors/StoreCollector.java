@@ -1,5 +1,6 @@
 package io.reflection.app.collectors;
 
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.fetchfeed.FeedFetchServiceProvider;
 import io.reflection.app.shared.datatypes.FeedFetch;
@@ -36,11 +37,11 @@ public abstract class StoreCollector {
 	// return ret;
 	// }
 
-	protected List<Long> store(String data, String countryCode, String store, String type, Date date, String code) {
+	protected List<Long> store(String data, String countryCode, String store, String type, Date date, String code) throws DataAccessException {
 		return store(data, countryCode, store, type, date, code, false);
 	}
 
-	protected List<Long> store(String data, String countryCode, String store, String type, Date date, String code, boolean ingested) {
+	protected List<Long> store(String data, String countryCode, String store, String type, Date date, String code, boolean ingested) throws DataAccessException {
 
 		List<Long> ids = new ArrayList<Long>(4);
 

@@ -7,9 +7,9 @@
 //
 package io.reflection.app.admin.client.controller;
 
-import io.reflection.app.admin.client.handler.SessionEventHandler.UserLoggedIn;
-import io.reflection.app.admin.client.handler.SessionEventHandler.UserLoggedOut;
-import io.reflection.app.admin.client.handler.SessionEventHandler.UserLoginFailed;
+import io.reflection.app.admin.client.handler.user.SessionEventHandler.UserLoggedIn;
+import io.reflection.app.admin.client.handler.user.SessionEventHandler.UserLoggedOut;
+import io.reflection.app.admin.client.handler.user.SessionEventHandler.UserLoginFailed;
 import io.reflection.app.admin.client.helper.FormHelper;
 import io.reflection.app.api.core.client.CoreService;
 import io.reflection.app.api.core.shared.call.LoginRequest;

@@ -11,6 +11,7 @@ package io.reflection.app.service.fetchfeed;
 
 import java.util.List;
 
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.shared.datatypes.Country;
 import io.reflection.app.shared.datatypes.FeedFetch;
@@ -23,24 +24,24 @@ public interface IFeedFetchService extends IService {
 	 * @param id
 	 * @return
 	 */
-	public FeedFetch getFeedFetch(Long id);
+	public FeedFetch getFeedFetch(Long id) throws DataAccessException;
 
 	/**
 	 * @param feedFetch
 	 * @return
 	 */
-	public FeedFetch addFeedFetch(FeedFetch feedFetch);
+	public FeedFetch addFeedFetch(FeedFetch feedFetch) throws DataAccessException;
 
 	/**
 	 * @param feedFetch
 	 * @return
 	 */
-	public FeedFetch updateFeedFetch(FeedFetch feedFetch);
+	public FeedFetch updateFeedFetch(FeedFetch feedFetch) throws DataAccessException;
 
 	/**
 	 * @param feedFetch
 	 */
-	public void deleteFeedFetch(FeedFetch feedFetch);
+	public void deleteFeedFetch(FeedFetch feedFetch) throws DataAccessException;
 
 	/**
 	 * 
@@ -50,7 +51,7 @@ public interface IFeedFetchService extends IService {
 	 * @param pager
 	 * @return
 	 */
-	public List<FeedFetch> getFeedFetches(Country country, Store store, List<String> types, Pager pager);
+	public List<FeedFetch> getFeedFetches(Country country, Store store, List<String> types, Pager pager) throws DataAccessException;
 
 	/**
 	 * 
@@ -59,7 +60,7 @@ public interface IFeedFetchService extends IService {
 	 * @param types
 	 * @return
 	 */
-	public Long getFeedFetchesCount(Country country, Store store, List<String> types);
+	public Long getFeedFetchesCount(Country country, Store store, List<String> types) throws DataAccessException;
 
 	/**
 	 * 
@@ -69,7 +70,7 @@ public interface IFeedFetchService extends IService {
 	 * @param pager
 	 * @return
 	 */
-	public List<FeedFetch> getIngestedFeedFetches(Country country, Store store, List<String> types, Pager pager);
+	public List<FeedFetch> getIngestedFeedFetches(Country country, Store store, List<String> types, Pager pager) throws DataAccessException;
 
 	/**
 	 * 
@@ -78,7 +79,7 @@ public interface IFeedFetchService extends IService {
 	 * @param listType
 	 * @return
 	 */
-	public Long getIngestedFeedFetchesCount(Country country, Store store, List<String> listType);
+	public Long getIngestedFeedFetchesCount(Country country, Store store, List<String> listType) throws DataAccessException;
 
 	/**
 	 * @param store
@@ -87,7 +88,7 @@ public interface IFeedFetchService extends IService {
 	 * @param pager
 	 * @return
 	 */
-	public List<FeedFetch> getUningestedFeedFetches(Country country, Store store, List<String> types, Pager pager);
+	public List<FeedFetch> getUningestedFeedFetches(Country country, Store store, List<String> types, Pager pager) throws DataAccessException;
 
 	/**
 	 * 
@@ -96,7 +97,7 @@ public interface IFeedFetchService extends IService {
 	 * @param types
 	 * @return
 	 */
-	public Long getUningestedFeedFetchesCount(Country country, Store store, List<String> types);
+	public Long getUningestedFeedFetchesCount(Country country, Store store, List<String> types) throws DataAccessException;
 
 	/**
 	 * 
@@ -106,7 +107,7 @@ public interface IFeedFetchService extends IService {
 	 * @param code
 	 * @return
 	 */
-	public List<Long> getIngestableFeedFetchIds(Country country, Store store, String listType, String code);
+	public List<Long> getIngestableFeedFetchIds(Country country, Store store, String listType, String code) throws DataAccessException;
 
 	/**
 	 * 
@@ -116,7 +117,7 @@ public interface IFeedFetchService extends IService {
 	 * @param code
 	 * @return
 	 */
-	public Boolean isReadyToModel(Country country, Store store, List<String> types, String code);
+	public Boolean isReadyToModel(Country country, Store store, List<String> types, String code) throws DataAccessException;
 
 	/**
 	 * 
@@ -126,6 +127,6 @@ public interface IFeedFetchService extends IService {
 	 * @param code
 	 * @return
 	 */
-	public List<FeedFetch> getGatherCodeFeedFetches(Country country, Store store, List<String> types, String code);
+	public List<FeedFetch> getGatherCodeFeedFetches(Country country, Store store, List<String> types, String code) throws DataAccessException;
 
 }

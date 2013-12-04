@@ -7,6 +7,7 @@
 //
 package io.reflection.app;
 
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.predictors.Predictor;
 import io.reflection.app.predictors.PredictorFactory;
@@ -62,7 +63,11 @@ public class PerdictorServlet extends ContextAwareServlet {
 		Predictor perdictor = PredictorFactory.getPredictorForStore(store);
 
 		if (perdictor != null) {
-			perdictor.predictRevenueAndDownloads(country, type, code);
+			try {
+				perdictor.predictRevenueAndDownloads(country, type, code);
+			} catch (DataAccessException e) {
+				throw new RuntimeException(e);
+			}
 		} else {
 			if (LOG.isLoggable(Level.WARNING)) {
 				LOG.warning("Could not find Predictor for store [" + store + "]");

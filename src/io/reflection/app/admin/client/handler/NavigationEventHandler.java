@@ -20,6 +20,8 @@ public interface NavigationEventHandler extends EventHandler {
 
 	public static final GwtEvent.Type<NavigationEventHandler> TYPE = new GwtEvent.Type<NavigationEventHandler>();
 
+	public void navigationChanged(Stack stack);
+	
 	public class ChangedEvent extends GwtEvent<NavigationEventHandler> {
 
 		private Stack mStack;
@@ -48,7 +50,5 @@ public interface NavigationEventHandler extends EventHandler {
 			handler.navigationChanged(mStack);
 		}
 	}
-
-	public void navigationChanged(Stack stack);
 
 }

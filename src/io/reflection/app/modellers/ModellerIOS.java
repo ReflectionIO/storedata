@@ -8,6 +8,7 @@
 package io.reflection.app.modellers;
 
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.logging.GaeLevel;
@@ -117,7 +118,7 @@ public class ModellerIOS extends RenjinRModellerBase implements Modeller {
 	 * @see io.reflection.app.models.Model#modelVariables(java.lang.String, java.lang.String, java.util.Date)
 	 */
 	@Override
-	public void modelVariables(String country, String listType, String code) {
+	public void modelVariables(String country, String listType, String code) throws DataAccessException {
 		if (LOG.isLoggable(GaeLevel.TRACE)) {
 			LOG.log(GaeLevel.TRACE, "Entering...");
 		}
@@ -173,8 +174,9 @@ public class ModellerIOS extends RenjinRModellerBase implements Modeller {
 	 * @param store
 	 * @param listTypes
 	 * @param code
+	 * @throws DataAccessException
 	 */
-	private void alterFeedFetchStatus(Country country, Store store, List<String> listTypes, String code) {
+	private void alterFeedFetchStatus(Country country, Store store, List<String> listTypes, String code) throws DataAccessException {
 		List<FeedFetch> feeds = FeedFetchServiceProvider.provide().getGatherCodeFeedFetches(country, store, listTypes, code);
 
 		for (FeedFetch feedFetch : feeds) {
@@ -189,9 +191,10 @@ public class ModellerIOS extends RenjinRModellerBase implements Modeller {
 	 * @param listTypes
 	 * @param country
 	 * @param store
+	 * @throws DataAccessException
 	 * 
 	 */
-	private void persistValues(Country country, Store store, FormType form, String code) {
+	private void persistValues(Country country, Store store, FormType form, String code) throws DataAccessException {
 
 		ModelRun run = ModelRunServiceProvider.provide().getGatherCodeModelRun(country, store, form, code);
 
@@ -230,7 +233,7 @@ public class ModellerIOS extends RenjinRModellerBase implements Modeller {
 	}
 
 	private void put(String store, String country, List<String> listTypes, Date date, String priceQuery, String rVariable) throws ScriptException,
-			InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+			InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, DataAccessException {
 
 		ListVector.Builder builder = ListVector.newBuilder();
 		builder.setAttribute(Symbols.CLASS, new StringArrayVector("data.frame"));

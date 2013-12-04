@@ -7,27 +7,36 @@
 //
 package io.reflection.app.admin.client.page;
 
+import io.reflection.app.admin.client.controller.EventController;
 import io.reflection.app.admin.client.controller.NavigationController;
 import io.reflection.app.admin.client.controller.SessionController;
 import io.reflection.app.admin.client.controller.UserController;
+import io.reflection.app.admin.client.handler.user.UserPasswordChangedEventHandler;
+import io.reflection.app.admin.client.helper.AlertBoxHelper;
 import io.reflection.app.admin.client.helper.FormHelper;
+import io.reflection.app.admin.client.part.AlertBox;
+import io.reflection.app.admin.client.part.AlertBox.AlertBoxType;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.gson.json.service.shared.Error;
 
 /**
  * @author billy1380
  * 
  */
-public class ChangePasswordPage extends Composite {
+public class ChangePasswordPage extends Composite implements UserPasswordChangedEventHandler {
 
 	private static ChangePasswordPageUiBinder uiBinder = GWT.create(ChangePasswordPageUiBinder.class);
 
@@ -47,6 +56,12 @@ public class ChangePasswordPage extends Composite {
 	private String mPasswordError = null;
 	private String mNewPasswordError = null;
 
+	@UiField AlertBox mAlertBox;
+
+	@UiField FormPanel mForm;
+
+	private Long mUserId;
+
 	public ChangePasswordPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
@@ -54,13 +69,22 @@ public class ChangePasswordPage extends Composite {
 
 		mNewPassword.getElement().setAttribute("placeholder", "New Password");
 		mConfirmPassword.getElement().setAttribute("placeholder", "Confirm Password");
+
+		EventController.get().addHandlerToSource(UserPasswordChangedEventHandler.TYPE, UserController.get(), this);
 	}
 
 	@UiHandler("mChangePassword")
 	void onChangePassword(ClickEvent event) {
 		if (validate()) {
 			if (SessionController.get().isLoggedInUserAdmin()) {
-				UserController.get().setPassword(Long.valueOf(NavigationController.get().getStack().getParameter(0)), mNewPassword.getText());
+				mForm.setVisible(false);
+
+				AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Please wait", " - changing user password...", false).setVisible(
+						true);
+
+				mUserId = Long.valueOf(NavigationController.get().getStack().getParameter(0));
+
+				UserController.get().setPassword(mUserId, mNewPassword.getText());
 			} else {
 				SessionController.get().changePassword(mPassword.getText(), mNewPassword.getText());
 			}
@@ -117,20 +141,71 @@ public class ChangePasswordPage extends Composite {
 
 		return validated;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
 	 */
 	@Override
 	protected void onAttach() {
 		super.onAttach();
-		
+
+		resetForm();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.admin.client.handler.user.UserPasswordChangedEventHandler#userPasswordChanged(java.lang.Long)
+	 */
+	@Override
+	public void userPasswordChanged(Long userId) {
+
+		final String userIdString = userId.toString();
+
+		AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.SuccessAlertBoxType, false, "Password changed",
+				" - " + (SessionController.get().isLoggedInUserAdmin() ? "user with id " + userIdString : "you") + " can now login with new password.", false)
+				.setVisible(true);
+
+		Timer t = new Timer() {
+
+			@Override
+			public void run() {
+				History.newItem(SessionController.get().isLoggedInUserAdmin() ? "login" : "users");
+			}
+		};
+
+		t.schedule(2000);
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.admin.client.handler.user.UserPasswordChangedEventHandler#userPasswordChangeFailed(com.willshex.gson.json.service.shared.Error)
+	 */
+	@Override
+	public void userPasswordChangeFailed(Error error) {
+		AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.DangerAlertBoxType, false, "An error occured:", "(" + error.code + ") " + error.message, true)
+				.setVisible(true);
+
+		mForm.setVisible(true);
+	}
+
+	private void resetForm() {
+
 		mPassword.setText("");
 
 		mNewPassword.setText("");
 		mConfirmPassword.setText("");
-		
+
 		mPasswordGroup.setVisible(!SessionController.get().isLoggedInUserAdmin());
+
+		FormHelper.hideNote(mNewPasswordGroup, mNewPasswordNote);
+		FormHelper.hideNote(mPasswordGroup, mPasswordNote);
+
+		mAlertBox.setVisible(false);
 	}
 
 }

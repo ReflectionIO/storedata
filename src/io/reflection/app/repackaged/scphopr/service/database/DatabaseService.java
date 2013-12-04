@@ -7,6 +7,7 @@
 //
 package io.reflection.app.repackaged.scphopr.service.database;
 
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.service.ServiceType;
 
@@ -22,12 +23,12 @@ public class DatabaseService implements IDatabaseService {
 	}
 
 	@Override
-	public Connection getConnection(String server, String database, String username, String password) {
+	public Connection getConnection(String server, String database, String username, String password) throws DataAccessException {
 		return new Connection(server, database, username, password);
 	}
 
 	@Override
-	public Connection getNamedConnection(String name) {
+	public Connection getNamedConnection(String name) throws DataAccessException {
 		Connection connection = null;
 
 		String server = System.getProperty(DATABASE_SERVER_KEY), database = System.getProperty(DATABASE_CATALOGURE_KEY), username = System
@@ -38,7 +39,7 @@ public class DatabaseService implements IDatabaseService {
 	}
 
 	@Override
-	public Connection getAdminNamedConnection(String name) {
+	public Connection getAdminNamedConnection(String name) throws DataAccessException {
 		Connection connection = null;
 
 		String server = System.getProperty(DATABASE_SERVER_KEY), database = System.getProperty(DATABASE_CATALOGURE_KEY), username = System
@@ -49,7 +50,7 @@ public class DatabaseService implements IDatabaseService {
 	}
 
 	@Override
-	public Connection getCronNamedConnection(String name) {
+	public Connection getCronNamedConnection(String name) throws DataAccessException {
 		Connection connection = null;
 
 		String server = System.getProperty(DATABASE_SERVER_KEY), database = System.getProperty(DATABASE_CATALOGURE_KEY), username = System

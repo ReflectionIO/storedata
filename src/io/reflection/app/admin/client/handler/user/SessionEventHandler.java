@@ -5,7 +5,7 @@
 //  Created by William Shakour (billy1380) on 9 Oct 2013.
 //  Copyright © 2013 SPACEHOPPER STUDIOS LTD. All rights reserved.
 //
-package io.reflection.app.admin.client.handler;
+package io.reflection.app.admin.client.handler.user;
 
 import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.shared.datatypes.User;
@@ -25,9 +25,8 @@ public interface SessionEventHandler extends EventHandler {
 	public void userLoggedIn(User user, Session session);
 
 	public void userLoggedOut();
-	
-	public void userLoginFailed(Error error);
 
+	public void userLoginFailed(Error error);
 
 	public class UserLoggedIn extends GwtEvent<SessionEventHandler> {
 		private User mUser = null;
@@ -82,32 +81,34 @@ public interface SessionEventHandler extends EventHandler {
 			handler.userLoggedOut();
 		}
 	}
-	
+
 	public class UserLoginFailed extends GwtEvent<SessionEventHandler> {
 		private Error mError;
-		
+
 		public UserLoginFailed(Error error) {
 			mError = error;
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
 		 */
 		@Override
 		public com.google.gwt.event.shared.GwtEvent.Type<SessionEventHandler> getAssociatedType() {
-			return  TYPE;
+			return TYPE;
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
 		 */
 		@Override
 		protected void dispatch(SessionEventHandler handler) {
-			if (mError != null)
-				handler.userLoginFailed(mError);
+			if (mError != null) handler.userLoginFailed(mError);
 		}
-		
-		
+
 	}
 
 }

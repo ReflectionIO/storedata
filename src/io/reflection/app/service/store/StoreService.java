@@ -9,6 +9,7 @@ package io.reflection.app.service.store;
 
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
@@ -31,7 +32,7 @@ final class StoreService implements IStoreService {
 	}
 
 	@Override
-	public Store getStore(Long id) {
+	public Store getStore(Long id) throws DataAccessException {
 		Store store = null;
 
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
@@ -59,8 +60,9 @@ final class StoreService implements IStoreService {
 	 * 
 	 * @param connection
 	 * @return
+	 * @throws DataAccessException 
 	 */
-	private Store toStore(Connection connection) {
+	private Store toStore(Connection connection) throws DataAccessException {
 		Store store = new Store();
 		store.id = connection.getCurrentRowLong("id");
 		store.created = connection.getCurrentRowDateTime("created");
@@ -98,7 +100,7 @@ final class StoreService implements IStoreService {
 	 * @see io.reflection.app.service.store.IStoreService#getCountryStores(io.reflection.app.datatypes.Country, io.reflection.app.api.datatypes.Pager)
 	 */
 	@Override
-	public List<Store> getCountryStores(Country country, Pager pager) {
+	public List<Store> getCountryStores(Country country, Pager pager) throws DataAccessException {
 		List<Store> stores = new ArrayList<Store>();
 
 		String commaDelimitedStoreCodes = null;
@@ -141,7 +143,7 @@ final class StoreService implements IStoreService {
 	 * @see io.reflection.app.service.store.IStoreService#getStores(io.reflection.app.api.datatypes.Pager)
 	 */
 	@Override
-	public List<Store> getStores(Pager pager) {
+	public List<Store> getStores(Pager pager) throws DataAccessException {
 		List<Store> stores = new ArrayList<Store>();
 
 		final String getStoresQuery = String.format("SELECT * FROM `store` WHERE `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d", pager.sortBy,
@@ -185,7 +187,7 @@ final class StoreService implements IStoreService {
 	 * @see io.reflection.app.service.store.IStoreService#getA3CodeStore(java.lang.String)
 	 */
 	@Override
-	public Store getA3CodeStore(String a3Code) {
+	public Store getA3CodeStore(String a3Code) throws DataAccessException {
 		Store store = null;
 
 		final String getA3CodeQuery = String.format("SELECT * FROM `store` WHERE `a3code`='%s' AND `deleted`='n' LIMIT 1", addslashes(a3Code));

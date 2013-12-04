@@ -11,7 +11,7 @@ import io.reflection.app.admin.client.controller.EventController;
 import io.reflection.app.admin.client.controller.NavigationController;
 import io.reflection.app.admin.client.controller.NavigationController.Stack;
 import io.reflection.app.admin.client.controller.SessionController;
-import io.reflection.app.admin.client.handler.SessionEventHandler;
+import io.reflection.app.admin.client.handler.user.SessionEventHandler;
 import io.reflection.app.admin.client.helper.AlertBoxHelper;
 import io.reflection.app.admin.client.helper.FormHelper;
 import io.reflection.app.admin.client.part.AlertBox;

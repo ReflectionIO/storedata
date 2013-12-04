@@ -7,6 +7,7 @@
 //
 package io.reflection.app;
 
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.ingestors.Ingestor;
@@ -63,7 +64,11 @@ public class CollectorServlet extends HttpServlet {
 		Collector collector = CollectorFactory.getCollectorForStore(store);
 
 		if (collector != null) {
-			collected = collector.collect(country, type, code);
+			try {
+				collected = collector.collect(country, type, code);
+			} catch (DataAccessException e) {
+				throw new RuntimeException(e);
+			}
 		} else {
 			if (LOG.isLoggable(Level.WARNING)) {
 				LOG.warning("Could not find Collector for store [" + store + "]");
