@@ -14,6 +14,10 @@ import io.reflection.app.api.admin.shared.call.GetFeedFetchesRequest;
 import io.reflection.app.api.admin.shared.call.GetFeedFetchesResponse;
 import io.reflection.app.api.admin.shared.call.GetModelOutcomeRequest;
 import io.reflection.app.api.admin.shared.call.GetModelOutcomeResponse;
+import io.reflection.app.api.admin.shared.call.GetPermissionsRequest;
+import io.reflection.app.api.admin.shared.call.GetPermissionsResponse;
+import io.reflection.app.api.admin.shared.call.GetRolesRequest;
+import io.reflection.app.api.admin.shared.call.GetRolesResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersCountResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersRequest;
@@ -243,6 +247,50 @@ public final class AdminService extends JsonService {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					AssignRoleResponse outputParameter = new AssignRoleResponse();
+					parseResponse(response.getText(), outputParameter);
+					output.onSuccess(outputParameter);
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+				}
+			});
+		} catch (RequestException e) {
+			output.onFailure(e);
+		}
+	}
+
+	public static final String AdminMethodGetRoles = "GetRoles";
+
+	public void getRoles(GetRolesRequest input, final AsyncCallback<GetRolesResponse> output) {
+		try {
+			sendRequest(AdminMethodGetRoles, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					GetRolesResponse outputParameter = new GetRolesResponse();
+					parseResponse(response.getText(), outputParameter);
+					output.onSuccess(outputParameter);
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+				}
+			});
+		} catch (RequestException e) {
+			output.onFailure(e);
+		}
+	}
+
+	public static final String AdminMethodGetPermissions = "GetPermissions";
+
+	public void getPermissions(GetPermissionsRequest input, final AsyncCallback<GetPermissionsResponse> output) {
+		try {
+			sendRequest(AdminMethodGetPermissions, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					GetPermissionsResponse outputParameter = new GetPermissionsResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
 				}

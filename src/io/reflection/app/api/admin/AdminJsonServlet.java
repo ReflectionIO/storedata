@@ -11,6 +11,8 @@ package io.reflection.app.api.admin;
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
 import io.reflection.app.api.admin.shared.call.GetFeedFetchesRequest;
 import io.reflection.app.api.admin.shared.call.GetModelOutcomeRequest;
+import io.reflection.app.api.admin.shared.call.GetPermissionsRequest;
+import io.reflection.app.api.admin.shared.call.GetRolesRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersRequest;
 import io.reflection.app.api.admin.shared.call.SetPasswordRequest;
@@ -68,7 +70,16 @@ public final class AdminJsonServlet extends JsonServlet {
 			AssignRoleRequest input = new AssignRoleRequest();
 			input.fromJson(request);
 			output = service.assignRole(input).toString();
+		} else if ("GetRoles".equals(action)) {
+			GetRolesRequest input = new GetRolesRequest();
+			input.fromJson(request);
+			output = service.getRoles(input).toString();
+		} else if ("GetPermissions".equals(action)) {
+			GetPermissionsRequest input = new GetPermissionsRequest();
+			input.fromJson(request);
+			output = service.getPermissions(input).toString();
 		}
+
 		return output;
 	}
 }

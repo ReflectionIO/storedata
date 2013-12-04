@@ -15,6 +15,10 @@ import io.reflection.app.api.admin.shared.call.GetFeedFetchesRequest;
 import io.reflection.app.api.admin.shared.call.GetFeedFetchesResponse;
 import io.reflection.app.api.admin.shared.call.GetModelOutcomeRequest;
 import io.reflection.app.api.admin.shared.call.GetModelOutcomeResponse;
+import io.reflection.app.api.admin.shared.call.GetPermissionsRequest;
+import io.reflection.app.api.admin.shared.call.GetPermissionsResponse;
+import io.reflection.app.api.admin.shared.call.GetRolesRequest;
+import io.reflection.app.api.admin.shared.call.GetRolesResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersCountResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersRequest;
@@ -333,6 +337,32 @@ public final class Admin extends ActionHandler {
 			output.error = convertToErrorAndLog(LOG, e);
 		}
 		LOG.finer("Exiting assignRole");
+		return output;
+	}
+
+	public GetRolesResponse getRoles(GetRolesRequest input) {
+		LOG.finer("Entering getRoles");
+		GetRolesResponse output = new GetRolesResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getRoles");
+		return output;
+	}
+
+	public GetPermissionsResponse getPermissions(GetPermissionsRequest input) {
+		LOG.finer("Entering getPermissions");
+		GetPermissionsResponse output = new GetPermissionsResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getPermissions");
 		return output;
 	}
 }

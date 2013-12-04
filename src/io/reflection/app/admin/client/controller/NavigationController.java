@@ -11,8 +11,10 @@ import io.reflection.app.admin.client.handler.NavigationEventHandler;
 import io.reflection.app.admin.client.page.ChangePasswordPage;
 import io.reflection.app.admin.client.page.FeedBrowserPage;
 import io.reflection.app.admin.client.page.LoginPage;
+import io.reflection.app.admin.client.page.PermissionsPage;
 import io.reflection.app.admin.client.page.RanksPage;
 import io.reflection.app.admin.client.page.RegisterPage;
+import io.reflection.app.admin.client.page.RolesPage;
 import io.reflection.app.admin.client.page.UsersPage;
 import io.reflection.app.admin.client.part.Footer;
 import io.reflection.app.admin.client.part.Header;
@@ -35,6 +37,8 @@ public class NavigationController {
 	private LoginPage mLoginPage = null;
 	private RegisterPage mRegisterPage = null;
 	private ChangePasswordPage mChangePasswordPage = null;
+	private RolesPage mRolesPage = null;
+	private PermissionsPage mPermissionsPage = null;
 
 	private Header mHeader = null;
 	private Footer mFooter = null;
@@ -162,6 +166,28 @@ public class NavigationController {
 		}
 	}
 
+	public void addRolesPage() {
+		if (mRolesPage == null) {
+			mRolesPage = new RolesPage();
+		}
+
+		if (!mRolesPage.isAttached()) {
+			mPanel.clear();
+			mPanel.add(mRolesPage);
+		}
+	}
+
+	public void addPermissionsPage() {
+		if (mPermissionsPage == null) {
+			mPermissionsPage = new PermissionsPage();
+		}
+
+		if (!mPermissionsPage.isAttached()) {
+			mPanel.clear();
+			mPanel.add(mPermissionsPage);
+		}
+	}
+
 	/**
 	 * @param value
 	 */
@@ -203,6 +229,10 @@ public class NavigationController {
 			SessionController.get().logout();
 			History.newItem("login");
 			return;
+		} else if ("roles".equals(mStack.getPage())) {
+			addRolesPage();
+		} else if ("permissions".equals(mStack.getPage())) {
+			addPermissionsPage();
 		}
 
 		EventController.get().fireEventFromSource(new NavigationEventHandler.ChangedEvent(mStack), NavigationController.this);

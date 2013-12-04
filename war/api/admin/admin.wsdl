@@ -34,6 +34,12 @@
             
             <xsd:element name="AssignRoleInput" type="sda:AssignRoleRequest" />
             <xsd:element name="AssignRoleOutput" type="sda:AssignRoleResponse" />
+            
+            <xsd:element name="GetRolesInput" type="sda:GetRolesRequest" />
+            <xsd:element name="GetRolesOutput" type="sda:GetRolesResponse" />
+            
+            <xsd:element name="GetPermissionsInput" type="sda:GetPermissionsRequest" />
+            <xsd:element name="GetPermissionsOutput" type="sda:GetPermissionsResponse" />
 
             <xsd:complexType name="GetUsersRequest">
                 <xsd:complexContent>
@@ -243,6 +249,48 @@
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>
+            
+            <xsd:complexType name="GetRolesRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="pager" type="sd:Pager" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="GetRolesResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+                            <xsd:element name="roles" type="sd:Role" maxOccurs="unbounded" />
+                            <xsd:element name="pager" type="sd:Pager" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+            
+            <xsd:complexType name="GetPermissionsRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="pager" type="sd:Pager" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="GetPermissionsResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+                            <xsd:element name="permissions" type="sd:Permission" maxOccurs="unbounded" />
+                            <xsd:element name="pager" type="sd:Pager" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
 
         </xsd:schema>
     </wsdl:types>
@@ -316,6 +364,20 @@
     <wsdl:message name="AssignRoleResponse">
         <wsdl:part name="output" element="sda:AssignRoleOutput" />
     </wsdl:message>
+    
+    <wsdl:message name="GetRolesRequest">
+        <wsdl:part name="input" element="sda:GetRolesInput" />
+    </wsdl:message>
+    <wsdl:message name="GetRolesResponse">
+        <wsdl:part name="output" element="sda:GetRolesOutput" />
+    </wsdl:message>
+    
+    <wsdl:message name="GetPermissionsRequest">
+        <wsdl:part name="input" element="sda:GetPermissionsInput" />
+    </wsdl:message>
+    <wsdl:message name="GetPermissionsResponse">
+        <wsdl:part name="output" element="sda:GetPermissionsOutput" />
+    </wsdl:message>
 
     <wsdl:portType name="admin">
         <wsdl:operation name="GetUsers">
@@ -360,6 +422,16 @@
         <wsdl:operation name="AssignRole">
             <wsdl:input message="sda:AssignRoleRequest" />
             <wsdl:output message="sda:AssignRoleResponse" />
+        </wsdl:operation>
+        
+        <wsdl:operation name="GetRoles">
+            <wsdl:input message="sda:GetRolesRequest" />
+            <wsdl:output message="sda:GetRolesResponse" />
+        </wsdl:operation>
+        
+        <wsdl:operation name="GetPermissions">
+            <wsdl:input message="sda:GetPermissionsRequest" />
+            <wsdl:output message="sda:GetPermissionsResponse" />
         </wsdl:operation>
     </wsdl:portType>
     <wsdl:binding name="adminSOAP" type="sda:admin">
@@ -449,6 +521,26 @@
         
         <wsdl:operation name="AssignRole">
             <soap:operation soapAction="http://app.reflection.io/admin/AssignRole" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        
+        <wsdl:operation name="GetRoles">
+            <soap:operation soapAction="http://app.reflection.io/admin/GetRoles" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        
+        <wsdl:operation name="GetPermissions">
+            <soap:operation soapAction="http://app.reflection.io/admin/GetPermissions" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>

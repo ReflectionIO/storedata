@@ -108,7 +108,9 @@ public class UsersPage extends Composite {
 
 			@Override
 			public SafeHtml getValue(User object) {
-				return SafeHtmlUtils.fromTrustedString("<a href=\"mailto:" + object.username + "\">" + object.username + "</a>");
+				String s = SafeHtmlUtils.htmlEscape(object.username);
+				
+				return SafeHtmlUtils.fromTrustedString("<a href=\"mailto:" + s + "\">" + s + "</a>");
 			}
 		};
 

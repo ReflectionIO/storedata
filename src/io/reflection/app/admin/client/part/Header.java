@@ -9,8 +9,8 @@ package io.reflection.app.admin.client.part;
 
 import io.reflection.app.admin.client.controller.EventController;
 import io.reflection.app.admin.client.controller.NavigationController;
-import io.reflection.app.admin.client.controller.SessionController;
 import io.reflection.app.admin.client.controller.NavigationController.Stack;
+import io.reflection.app.admin.client.controller.SessionController;
 import io.reflection.app.admin.client.controller.UserController;
 import io.reflection.app.admin.client.handler.NavigationEventHandler;
 import io.reflection.app.admin.client.handler.user.SessionEventHandler;
@@ -61,6 +61,12 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	InlineHyperlink mLoginLink;
 	LIElement mLoginItem;
 
+	InlineHyperlink mRolesLink;
+	LIElement mRolesItem;
+
+	InlineHyperlink mPermissionsLink;
+	LIElement mPermissionsItem;
+
 	SpanElement mTotalUsers;
 
 	public Header() {
@@ -99,6 +105,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		deactivate(mRanksItem);
 		deactivate(mUsersItem);
 		deactivate(mLoginItem);
+		deactivate(mRolesItem);
+		deactivate(mPermissionsItem);
 	}
 
 	private void activateUsers() {
@@ -106,6 +114,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		deactivate(mRanksItem);
 		activate(mUsersItem);
 		deactivate(mLoginItem);
+		deactivate(mRolesItem);
+		deactivate(mPermissionsItem);
 	}
 
 	private void activateRanks() {
@@ -113,6 +123,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		deactivate(mFeedBrowserItem);
 		deactivate(mUsersItem);
 		deactivate(mLoginItem);
+		deactivate(mRolesItem);
+		deactivate(mPermissionsItem);
 	}
 
 	private void activateLogin() {
@@ -120,6 +132,26 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		deactivate(mFeedBrowserItem);
 		deactivate(mUsersItem);
 		activate(mLoginItem);
+		deactivate(mRolesItem);
+		deactivate(mPermissionsItem);
+	}
+
+	private void activateRoles() {
+		deactivate(mRanksItem);
+		deactivate(mFeedBrowserItem);
+		deactivate(mUsersItem);
+		deactivate(mLoginItem);
+		activate(mRolesItem);
+		deactivate(mPermissionsItem);
+	}
+
+	private void activatePermissions() {
+		deactivate(mRanksItem);
+		deactivate(mFeedBrowserItem);
+		deactivate(mUsersItem);
+		deactivate(mLoginItem);
+		deactivate(mRolesItem);
+		activate(mPermissionsItem);
 	}
 
 	/*
@@ -138,6 +170,10 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			activateUsers();
 		} else if ("login".equals(stack.getPage())) {
 			activateLogin();
+		} else if ("roles".equals(stack.getPage())) {
+			activateRoles();
+		} else if ("permissions".equals(stack.getPage())) {
+			activatePermissions();
 		} else {
 			deactivateAll();
 		}
@@ -175,6 +211,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	public void userLoggedIn(User user, Session session) {
 		addFeedBrowser();
 		addUsers();
+		addRoles();
+		addPermissions();
 		removeLogin();
 		addLogout();
 	}
@@ -189,6 +227,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		removeFeedBrowser();
 		removeUsers();
 		removeLogout();
+		removeRoles();
+		removePermissions();
 		addLogin();
 	}
 
@@ -268,6 +308,30 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		mNavList.appendChild(mLoginItem);
 	}
 
+	private void addRoles() {
+		if (mRolesItem == null) {
+			mRolesItem = Document.get().createLIElement();
+
+			mRolesLink = new InlineHyperlink("Roles", false, "roles");
+
+			mRolesItem.appendChild(mRolesLink.getElement());
+		}
+
+		mNavList.appendChild(mRolesItem);
+	}
+
+	private void addPermissions() {
+		if (mPermissionsItem == null) {
+			mPermissionsItem = Document.get().createLIElement();
+
+			mPermissionsLink = new InlineHyperlink("Permissions", false, "permissions");
+
+			mPermissionsItem.appendChild(mPermissionsLink.getElement());
+		}
+
+		mNavList.appendChild(mPermissionsItem);
+	}
+
 	/**
 	 * 
 	 */
@@ -304,11 +368,25 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		}
 	}
 
+	private void removeRoles() {
+		if (mRolesItem != null) {
+			mNavList.removeChild(mRolesItem);
+		}
+	}
+
+	private void removePermissions() {
+		if (mPermissionsItem != null) {
+			mNavList.removeChild(mPermissionsItem);
+		}
+	}
+
 	private void deactivateAll() {
 		deactivate(mRanksItem);
 		deactivate(mFeedBrowserItem);
 		deactivate(mRanksItem);
 		deactivate(mLoginItem);
+		deactivate(mRolesItem);
+		deactivate(mPermissionsItem);
 	}
 
 	/*
