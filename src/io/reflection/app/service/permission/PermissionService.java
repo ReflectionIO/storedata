@@ -11,12 +11,16 @@ package io.reflection.app.service.permission;
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
 import io.reflection.app.shared.datatypes.Permission;
+
+import java.util.ArrayList;
+import java.util.List;
 
 final class PermissionService implements IPermissionService {
 	public String getName() {
@@ -110,6 +114,96 @@ final class PermissionService implements IPermissionService {
 		}
 
 		return permission;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.permission.IPermissionService#getPermissions(io.reflection.app.api.shared.datatypes.Pager)
+	 */
+	@Override
+	public List<Permission> getPermissions(Pager pager) throws DataAccessException {
+		List<Permission> permissions = new ArrayList<Permission>();
+
+		IDatabaseService databaseService = DatabaseServiceProvider.provide();
+		Connection permissionConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypePermission.toString());
+
+		String getPermissionIdsQuery = "SELECT * FROM `permission` WHERE `deleted`='n'";
+
+		if (pager != null) {
+			String sortByQuery = "id";
+
+			if (pager.sortBy != null && ("code".equals(pager.sortBy) || "name".equals(pager.sortBy))) {
+				sortByQuery = pager.sortBy;
+			}
+
+			String sortDirectionQuery = "DESC";
+
+			if (pager.sortDirection != null) {
+				switch (pager.sortDirection) {
+				case SortDirectionTypeAscending:
+					sortDirectionQuery = "ASC";
+					break;
+				default:
+					break;
+				}
+			}
+
+			getPermissionIdsQuery += String.format(" ORDER BY `%s` %s", sortByQuery, sortDirectionQuery);
+		}
+
+		if (pager.start != null && pager.count != null) {
+			getPermissionIdsQuery += String.format(" LIMIT %d, %d", pager.start.longValue(), pager.count.longValue());
+		} else if (pager.count != null) {
+			getPermissionIdsQuery += String.format(" LIMIT %d", pager.count.longValue());
+		}
+		try {
+			permissionConnection.connect();
+			permissionConnection.executeQuery(getPermissionIdsQuery);
+
+			while (permissionConnection.fetchNextRow()) {
+				Permission permission = this.toPermission(permissionConnection);
+
+				if (permission != null) {
+					permissions.add(permission);
+				}
+			}
+		} finally {
+			if (permissionConnection != null) {
+				permissionConnection.disconnect();
+			}
+		}
+
+		return permissions;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.permission.IPermissionService#getPermissionsCount()
+	 */
+	@Override
+	public Long getPermissionsCount() throws DataAccessException {
+		Long permissionsCount = Long.valueOf(0);
+
+		Connection permissionConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypePermission.toString());
+
+		String getPermissionsCountQuery = "SELECT COUNT(`id`) AS `permissioncount` FROM `permission` WHERE `deleted`='n'";
+
+		try {
+			permissionConnection.connect();
+			permissionConnection.executeQuery(getPermissionsCountQuery);
+
+			if (permissionConnection.fetchNextRow()) {
+				permissionsCount = permissionConnection.getCurrentRowLong("permissioncount");
+			}
+		} finally {
+			if (permissionConnection != null) {
+				permissionConnection.disconnect();
+			}
+		}
+
+		return permissionsCount;
 	}
 
 }

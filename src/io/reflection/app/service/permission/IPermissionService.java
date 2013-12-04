@@ -8,7 +8,10 @@
 //
 package io.reflection.app.service.permission;
 
+import java.util.List;
+
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.shared.datatypes.Permission;
 
 import com.spacehopperstudios.service.IService;
@@ -42,5 +45,16 @@ public interface IPermissionService extends IService {
 	 * @return
 	 */
 	public Permission getNamedPermission(String name) throws DataAccessException;
+
+	/**
+	 * @param pager
+	 * @return
+	 */
+	public List<Permission> getPermissions(Pager pager) throws DataAccessException;
+
+	/**
+	 * @return
+	 */
+	public Long getPermissionsCount() throws DataAccessException;
 
 }

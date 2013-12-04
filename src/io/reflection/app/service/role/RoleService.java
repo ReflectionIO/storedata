@@ -11,12 +11,16 @@ package io.reflection.app.service.role;
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
 import io.reflection.app.shared.datatypes.Role;
+
+import java.util.ArrayList;
+import java.util.List;
 
 final class RoleService implements IRoleService {
 
@@ -52,7 +56,7 @@ final class RoleService implements IRoleService {
 	 * 
 	 * @param connection
 	 * @return
-	 * @throws DataAccessException 
+	 * @throws DataAccessException
 	 */
 	private Role toRole(Connection connection) throws DataAccessException {
 		Role role = new Role();
@@ -110,6 +114,96 @@ final class RoleService implements IRoleService {
 			}
 		}
 		return role;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.role.IRoleService#getRoles(io.reflection.app.api.shared.datatypes.Pager)
+	 */
+	@Override
+	public List<Role> getRoles(Pager pager) throws DataAccessException {
+		List<Role> roles = new ArrayList<Role>();
+
+		IDatabaseService databaseService = DatabaseServiceProvider.provide();
+		Connection roleConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeRole.toString());
+
+		String getRoleIdsQuery = "SELECT * FROM `role` WHERE `deleted`='n'";
+
+		if (pager != null) {
+			String sortByQuery = "id";
+
+			if (pager.sortBy != null && ("code".equals(pager.sortBy) || "name".equals(pager.sortBy))) {
+				sortByQuery = pager.sortBy;
+			}
+
+			String sortDirectionQuery = "DESC";
+
+			if (pager.sortDirection != null) {
+				switch (pager.sortDirection) {
+				case SortDirectionTypeAscending:
+					sortDirectionQuery = "ASC";
+					break;
+				default:
+					break;
+				}
+			}
+
+			getRoleIdsQuery += String.format(" ORDER BY `%s` %s", sortByQuery, sortDirectionQuery);
+		}
+
+		if (pager.start != null && pager.count != null) {
+			getRoleIdsQuery += String.format(" LIMIT %d, %d", pager.start.longValue(), pager.count.longValue());
+		} else if (pager.count != null) {
+			getRoleIdsQuery += String.format(" LIMIT %d", pager.count.longValue());
+		}
+		try {
+			roleConnection.connect();
+			roleConnection.executeQuery(getRoleIdsQuery);
+
+			while (roleConnection.fetchNextRow()) {
+				Role role = this.toRole(roleConnection);
+
+				if (role != null) {
+					roles.add(role);
+				}
+			}
+		} finally {
+			if (roleConnection != null) {
+				roleConnection.disconnect();
+			}
+		}
+
+		return roles;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.role.IRoleService#getRolesCount()
+	 */
+	@Override
+	public Long getRolesCount() throws DataAccessException {
+		Long rolesCount = Long.valueOf(0);
+
+		Connection roleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRole.toString());
+
+		String getRolesCountQuery = "SELECT COUNT(`id`) AS `rolecount` FROM `role` WHERE `deleted`='n'";
+
+		try {
+			roleConnection.connect();
+			roleConnection.executeQuery(getRolesCountQuery);
+
+			if (roleConnection.fetchNextRow()) {
+				rolesCount = roleConnection.getCurrentRowLong("rolecount");
+			}
+		} finally {
+			if (roleConnection != null) {
+				roleConnection.disconnect();
+			}
+		}
+
+		return rolesCount;
 	}
 
 }

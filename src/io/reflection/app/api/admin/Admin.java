@@ -45,6 +45,8 @@ import io.reflection.app.modellers.ModellerFactory;
 import io.reflection.app.predictors.Predictor;
 import io.reflection.app.predictors.PredictorFactory;
 import io.reflection.app.service.fetchfeed.FeedFetchServiceProvider;
+import io.reflection.app.service.permission.PermissionServiceProvider;
+import io.reflection.app.service.role.RoleServiceProvider;
 import io.reflection.app.service.user.UserServiceProvider;
 
 import java.util.List;
@@ -344,6 +346,14 @@ public final class Admin extends ActionHandler {
 		LOG.finer("Entering getRoles");
 		GetRolesResponse output = new GetRolesResponse();
 		try {
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			input.pager = ValidationHelper.validatePager(input.pager, "input");
+
+			output.roles = RoleServiceProvider.provide().getRoles(input.pager);
+			output.pager = input.pager;
+			updatePager(output.pager, output.roles, input.pager.totalCount == null ? RoleServiceProvider.provide().getRolesCount() : null);
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -357,6 +367,14 @@ public final class Admin extends ActionHandler {
 		LOG.finer("Entering getPermissions");
 		GetPermissionsResponse output = new GetPermissionsResponse();
 		try {
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			input.pager = ValidationHelper.validatePager(input.pager, "input");
+
+			output.permissions = PermissionServiceProvider.provide().getPermissions(input.pager);
+			output.pager = input.pager;
+			updatePager(output.pager, output.permissions, input.pager.totalCount == null ? PermissionServiceProvider.provide().getPermissionsCount() : null);
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
