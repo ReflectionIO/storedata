@@ -24,8 +24,6 @@ import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.shared.datatypes.Role;
 import io.reflection.app.shared.datatypes.User;
 
-import java.util.Date;
-
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -38,8 +36,6 @@ public class SessionController implements ServiceController {
 	private static SessionController mOne;
 
 	private static final String COOKIE_KEY_TOKEN = SessionController.class.getName() + ".token";
-	private static final long COOKIE_SHORT_DURATION = 1000 * 60 * 60 * 24 * 1;
-	// private static final long COOKIE_LONG_DURATION = 1000 * 60 * 60 * 24 * 30;
 
 	private User mLoggedIn = null;
 	private Session mSession = null;
@@ -68,7 +64,7 @@ public class SessionController implements ServiceController {
 			mSession = session;
 
 			if (mSession != null) {
-				Cookies.setCookie(COOKIE_KEY_TOKEN, mSession.token, new Date(System.currentTimeMillis() + COOKIE_SHORT_DURATION));
+				Cookies.setCookie(COOKIE_KEY_TOKEN, mSession.token, mSession.expires);
 			}
 		} else {
 			Cookies.removeCookie(COOKIE_KEY_TOKEN);
@@ -92,7 +88,7 @@ public class SessionController implements ServiceController {
 	 * @param username
 	 * @param password
 	 */
-	public void login(String username, String password) {
+	public void login(String username, String password, boolean longTerm) {
 		CoreService service = new CoreService();
 		service.setUrl(CORE_END_POINT);
 
@@ -101,6 +97,8 @@ public class SessionController implements ServiceController {
 
 		input.username = username;
 		input.password = password;
+
+		input.longTerm = Boolean.valueOf(longTerm);
 
 		service.login(input, new AsyncCallback<LoginResponse>() {
 
@@ -224,7 +222,7 @@ public class SessionController implements ServiceController {
 		input.session = new Session();
 		input.session.token = mSession.token;
 
-		input.idsOnly = Boolean.FALSE;
+		// input.idsOnly = Boolean.FALSE;
 
 		service.getRolesAndPermissions(input, new AsyncCallback<GetRolesAndPermissionsResponse>() {
 

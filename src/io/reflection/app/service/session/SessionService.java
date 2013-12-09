@@ -18,6 +18,13 @@ import io.reflection.app.service.ServiceType;
 import io.reflection.app.shared.datatypes.User;
 
 final class SessionService implements ISessionService {
+
+	// 20 minutes
+	private static final long SESSION_SHORT_DURATION = 60 * 20;
+
+	// approx 30 days
+	private static final long SESSION_LONG_DURATION = 60 * 60 * 24 * 30;
+
 	public String getName() {
 		return ServiceType.ServiceTypeSession.toString();
 	}
@@ -51,7 +58,7 @@ final class SessionService implements ISessionService {
 	 * 
 	 * @param connection
 	 * @return
-	 * @throws DataAccessException 
+	 * @throws DataAccessException
 	 */
 	private Session toSession(Connection connection) throws DataAccessException {
 		Session session = new Session();
@@ -70,7 +77,7 @@ final class SessionService implements ISessionService {
 
 	@Override
 	public Session addSession(Session session) throws DataAccessException {
-		return createUserSession(session.user);
+		return createUserSession(session.user, false);
 	}
 
 	@Override
@@ -93,20 +100,16 @@ final class SessionService implements ISessionService {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.service.session.ISessionService#createUserSession(io.reflection.app.shared.datatypes.User)
-	 */
 	@Override
-	public Session createUserSession(User user) throws DataAccessException {
+	public Session createUserSession(User user, Boolean longTerm) throws DataAccessException {
 		Session session = null;
 
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection sessionConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeSession.toString());
 
 		String createUserSessionQuery = String.format(
-				"INSERT INTO `session` (`userid`, `token`, `expires`) values (%d, UUID(), date_add(now(), interval 20 minute))", user.id.longValue());
+				"INSERT INTO `session` (`userid`, `token`, `expires`) VALUES (%d, UUID(), date_add(now(), INTERVAL %d SECOND))", user.id.longValue(),
+				longTerm == Boolean.TRUE ? SESSION_LONG_DURATION : SESSION_SHORT_DURATION);
 
 		try {
 			sessionConnection.connect();

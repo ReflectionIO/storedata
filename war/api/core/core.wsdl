@@ -200,6 +200,7 @@
                     <xsd:extension base="sd:Request">
                         <xsd:attribute type="xsd:string" name="username" />
                         <xsd:attribute type="xsd:string" name="password" />
+                        <xsd:attribute type="xsd:boolean" name="longTerm" />
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>

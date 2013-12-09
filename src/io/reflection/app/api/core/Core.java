@@ -539,7 +539,7 @@ public final class Core extends ActionHandler {
 						LOG.finer("Existing session not found, creating new session");
 					}
 
-					output.session = sessionService.createUserSession(user);
+					output.session = sessionService.createUserSession(user, input.longTerm);
 
 					if (output.session != null) {
 						output.session.user = user;

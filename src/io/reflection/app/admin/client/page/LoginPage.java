@@ -83,7 +83,7 @@ public class LoginPage extends Composite implements SessionEventHandler {
 			AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Please wait", " - verifying your username and password...", false)
 					.setVisible(true);
 
-			SessionController.get().login(mUsername.getText(), mPassword.getText());
+			SessionController.get().login(mUsername.getText(), mPassword.getText(), mRememberMe.getValue().booleanValue());
 		} else {
 			if (mUsernameError != null) {
 				FormHelper.showNote(true, mUsernameGroup, mUsernameNote, mUsernameError);

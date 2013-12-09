@@ -40,17 +40,20 @@ public interface ISessionService extends IService {
 
 	/**
 	 * Create user session
+	 * 
+	 * @param user
+	 * @param longTerm
+	 * @return
+	 */
+	public Session createUserSession(User user, Boolean longTerm) throws DataAccessException;
+
+	/**
+	 * Get user session
+	 * 
 	 * @param user
 	 * @return
 	 */
-    public Session createUserSession (User user) throws DataAccessException;
-
-    /**
-     * Get user session
-     * @param user
-     * @return
-     */
-    public Session getUserSession (User user) throws DataAccessException;
+	public Session getUserSession(User user) throws DataAccessException;
 
 	/**
 	 * @param token
