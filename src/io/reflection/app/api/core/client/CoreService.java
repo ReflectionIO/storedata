@@ -20,6 +20,8 @@ import io.reflection.app.api.core.shared.call.GetCountriesRequest;
 import io.reflection.app.api.core.shared.call.GetCountriesResponse;
 import io.reflection.app.api.core.shared.call.GetItemRanksRequest;
 import io.reflection.app.api.core.shared.call.GetItemRanksResponse;
+import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsRequest;
+import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsResponse;
 import io.reflection.app.api.core.shared.call.GetStoresRequest;
 import io.reflection.app.api.core.shared.call.GetStoresResponse;
 import io.reflection.app.api.core.shared.call.GetTopItemsRequest;
@@ -267,6 +269,28 @@ public final class CoreService extends JsonService {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					CheckUsernameResponse outputParameter = new CheckUsernameResponse();
+					parseResponse(response.getText(), outputParameter);
+					output.onSuccess(outputParameter);
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+				}
+			});
+		} catch (RequestException e) {
+			output.onFailure(e);
+		}
+	}
+
+	public static final String CoreMethodGetRolesAndPermissions = "GetRolesAndPermissions";
+
+	public void getRolesAndPermissions(GetRolesAndPermissionsRequest input, final AsyncCallback<GetRolesAndPermissionsResponse> output) {
+		try {
+			sendRequest(CoreMethodGetRolesAndPermissions, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					GetRolesAndPermissionsResponse outputParameter = new GetRolesAndPermissionsResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
 				}

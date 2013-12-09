@@ -25,18 +25,21 @@
 
             <xsd:element name="LoginInput" type="sdc:LoginRequest" />
             <xsd:element name="LoginOutput" type="sdc:LoginResponse" />
-            
+
             <xsd:element name="LogoutInput" type="sdc:LogoutRequest" />
             <xsd:element name="LogoutOutput" type="sdc:LogoutResponse" />
-            
+
             <xsd:element name="ChangePasswordInput" type="sdc:ChangePasswordRequest" />
             <xsd:element name="ChangePasswordOutput" type="sdc:ChangePasswordResponse" />
-            
+
             <xsd:element name="ChangeUserDetailsInput" type="sdc:ChangeUserDetailsRequest" />
             <xsd:element name="ChangeUserDetailsOutput" type="sdc:ChangeUserDetailsResponse" />
-            
+
             <xsd:element name="CheckUsernameInput" type="sdc:CheckUsernameRequest" />
             <xsd:element name="CheckUsernameOutput" type="sdc:CheckUsernameResponse" />
+
+            <xsd:element name="GetRolesAndPermissionsInput" type="sdc:GetRolesAndPermissionsRequest" />
+            <xsd:element name="GetRolesAndPermissionsOutput" type="sdc:GetRolesAndPermissionsResponse" />
 
             <xsd:complexType name="GetCountriesRequest">
                 <xsd:complexContent>
@@ -176,22 +179,22 @@
                     <xsd:extension base="sd:Response" />
                 </xsd:complexContent>
             </xsd:complexType>
-            
-			<xsd:complexType name="CheckUsernameRequest">
-				<xsd:complexContent>
-					<xsd:extension base="sd:Request">
-						<xsd:attribute use="required" name="username" type="xsd:string" />
-					</xsd:extension>
-				</xsd:complexContent>
-			</xsd:complexType>
-			<xsd:complexType name="CheckUsernameResponse">
-				<xsd:complexContent>
-					<xsd:extension base="sd:Response">
-						<xsd:attribute name="usernameInUse" type="xsd:boolean" />
-					</xsd:extension>
-				</xsd:complexContent>
-			</xsd:complexType>
-            
+
+            <xsd:complexType name="CheckUsernameRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:attribute use="required" name="username" type="xsd:string" />
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+            <xsd:complexType name="CheckUsernameResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:attribute name="usernameInUse" type="xsd:boolean" />
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
             <xsd:complexType name="LoginRequest">
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
@@ -209,7 +212,7 @@
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>
-            
+
             <xsd:complexType name="LogoutRequest">
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
@@ -222,7 +225,7 @@
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>
-            
+
             <xsd:complexType name="ChangePasswordRequest">
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
@@ -235,7 +238,7 @@
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>
-            
+
             <xsd:complexType name="ChangeUserDetailsRequest">
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
@@ -245,6 +248,27 @@
             <xsd:complexType name="ChangeUserDetailsResponse">
                 <xsd:complexContent>
                     <xsd:extension base="sd:Response">
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="GetRolesAndPermissionsRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:attribute name="idsOnly" type="xsd:boolean" default="true" />
+                        <xsd:attribute name="expandRoles" type="xsd:boolean" default="false" />
+                        <xsd:attribute name="rolesOnly" type="xsd:boolean" default="false" />
+                        <xsd:attribute name="permissionsOnly" type="xsd:boolean" default="false" />
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+            <xsd:complexType name="GetRolesAndPermissionsResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+                            <xsd:element name="roles" type="sd:Role" minOccurs="0" maxOccurs="unbounded" />
+                            <xsd:element name="permissions" type="sd:Permission" minOccurs="0" maxOccurs="unbounded" />
+                        </xsd:sequence>
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>
@@ -285,47 +309,54 @@
     <wsdl:message name="GetItemRanksResponse">
         <wsdl:part name="output" element="sdc:GetItemRanksOutput" />
     </wsdl:message>
-    
+
     <wsdl:message name="RegisterUserRequest">
         <wsdl:part name="input" element="sdc:RegisterUserInput" />
     </wsdl:message>
     <wsdl:message name="RegisterUserResponse">
         <wsdl:part name="output" element="sdc:RegisterUserOutput" />
     </wsdl:message>
-    
+
     <wsdl:message name="LoginRequest">
         <wsdl:part name="input" element="sdc:LoginInput" />
     </wsdl:message>
     <wsdl:message name="LoginResponse">
         <wsdl:part name="output" element="sdc:LoginOutput" />
     </wsdl:message>
-    
+
     <wsdl:message name="LogoutRequest">
         <wsdl:part name="input" element="sdc:LogoutInput" />
     </wsdl:message>
     <wsdl:message name="LogoutResponse">
         <wsdl:part name="output" element="sdc:LogoutOutput" />
-    </wsdl:message>           
-            
+    </wsdl:message>
+
     <wsdl:message name="ChangePasswordRequest">
         <wsdl:part name="input" element="sdc:ChangePasswordInput" />
     </wsdl:message>
     <wsdl:message name="ChangePasswordResponse">
         <wsdl:part name="output" element="sdc:ChangePasswordOutput" />
     </wsdl:message>
-    
+
     <wsdl:message name="ChangeUserDetailsRequest">
         <wsdl:part name="input" element="sdc:ChangeUserDetailsInput" />
     </wsdl:message>
     <wsdl:message name="ChangeUserDetailsResponse">
         <wsdl:part name="output" element="sdc:ChangeUserDetailsOutput" />
     </wsdl:message>
-    
+
     <wsdl:message name="CheckUsernameRequest">
         <wsdl:part name="input" element="sdc:CheckUsernameInput" />
     </wsdl:message>
     <wsdl:message name="CheckUsernameResponse">
         <wsdl:part name="output" element="sdc:CheckUsernameOutput" />
+    </wsdl:message>
+    
+    <wsdl:message name="GetRolesAndPermissionsRequest">
+        <wsdl:part name="input" element="sdc:GetRolesAndPermissionsInput" />
+    </wsdl:message>
+    <wsdl:message name="GetRolesAndPermissionsResponse">
+        <wsdl:part name="output" element="sdc:GetRolesAndPermissionsOutput" />
     </wsdl:message>
 
     <wsdl:portType name="core">
@@ -352,37 +383,41 @@
             <wsdl:input message="sdc:GetItemRanksRequest" />
             <wsdl:output message="sdc:GetItemRanksResponse" />
         </wsdl:operation>
-        
+
         <wsdl:operation name="RegisterUser">
             <wsdl:input message="sdc:RegisterUserRequest" />
             <wsdl:output message="sdc:RegisterUserResponse" />
         </wsdl:operation>
-        
+
         <wsdl:operation name="Login">
             <wsdl:input message="sdc:LoginRequest" />
             <wsdl:output message="sdc:LoginResponse" />
         </wsdl:operation>
-            
+
         <wsdl:operation name="Logout">
             <wsdl:input message="sdc:LogoutRequest" />
             <wsdl:output message="sdc:LogoutResponse" />
         </wsdl:operation>
-        
+
         <wsdl:operation name="ChangePassword">
             <wsdl:input message="sdc:ChangePasswordRequest" />
             <wsdl:output message="sdc:ChangePasswordResponse" />
         </wsdl:operation>
-        
+
         <wsdl:operation name="ChangeUserDetails">
             <wsdl:input message="sdc:ChangeUserDetailsRequest" />
             <wsdl:output message="sdc:ChangeUserDetailsResponse" />
         </wsdl:operation>
-        
+
         <wsdl:operation name="CheckUsername">
             <wsdl:input message="sdc:CheckUsernameRequest" />
             <wsdl:output message="sdc:CheckUsernameResponse" />
         </wsdl:operation>
-        
+
+        <wsdl:operation name="GetRolesAndPermissions">
+            <wsdl:input message="sdc:GetRolesAndPermissionsRequest" />
+            <wsdl:output message="sdc:GetRolesAndPermissionsResponse" />
+        </wsdl:operation>
 
     </wsdl:portType>
     <wsdl:binding name="coreSOAP" type="sdc:core">
@@ -434,7 +469,7 @@
                 <soap:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
-        
+
         <wsdl:operation name="RegisterUser">
             <soap:operation soapAction="http://app.reflection.io/core/RegisterUser" />
             <wsdl:input>
@@ -444,7 +479,7 @@
                 <soap:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
-        
+
         <wsdl:operation name="Login">
             <soap:operation soapAction="http://app.reflection.io/core/Login" />
             <wsdl:input>
@@ -454,7 +489,7 @@
                 <soap:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
-        
+
         <wsdl:operation name="Logout">
             <soap:operation soapAction="http://app.reflection.io/core/Logout" />
             <wsdl:input>
@@ -464,7 +499,7 @@
                 <soap:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
-        
+
         <wsdl:operation name="ChangePassword">
             <soap:operation soapAction="http://app.reflection.io/core/ChangePassword" />
             <wsdl:input>
@@ -474,7 +509,7 @@
                 <soap:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
-        
+
         <wsdl:operation name="ChangeUserDetails">
             <soap:operation soapAction="http://app.reflection.io/core/ChangeUserDetails" />
             <wsdl:input>
@@ -484,9 +519,19 @@
                 <soap:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
-        
+
         <wsdl:operation name="CheckUsername">
             <soap:operation soapAction="http://app.reflection.io/core/CheckUsername" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        
+        <wsdl:operation name="GetRolesAndPermissions">
+            <soap:operation soapAction="http://app.reflection.io/core/GetRolesAndPermissions" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>

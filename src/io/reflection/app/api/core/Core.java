@@ -20,6 +20,8 @@ import io.reflection.app.api.core.shared.call.GetCountriesRequest;
 import io.reflection.app.api.core.shared.call.GetCountriesResponse;
 import io.reflection.app.api.core.shared.call.GetItemRanksRequest;
 import io.reflection.app.api.core.shared.call.GetItemRanksResponse;
+import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsRequest;
+import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsResponse;
 import io.reflection.app.api.core.shared.call.GetStoresRequest;
 import io.reflection.app.api.core.shared.call.GetStoresResponse;
 import io.reflection.app.api.core.shared.call.GetTopItemsRequest;
@@ -37,7 +39,9 @@ import io.reflection.app.input.ValidationError;
 import io.reflection.app.input.ValidationHelper;
 import io.reflection.app.service.country.CountryServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
+import io.reflection.app.service.permission.PermissionServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
+import io.reflection.app.service.role.RoleServiceProvider;
 import io.reflection.app.service.session.ISessionService;
 import io.reflection.app.service.session.SessionServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
@@ -636,6 +640,41 @@ public final class Core extends ActionHandler {
 		return output;
 	}
 
+	public GetRolesAndPermissionsResponse getRolesAndPermissions(GetRolesAndPermissionsRequest input) {
+		LOG.finer("Entering getRolesAndPermissions");
+		GetRolesAndPermissionsResponse output = new GetRolesAndPermissionsResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
+						ValidationError.InvalidValueNull.getMessage("GetRolesAndPermissionsResponse: input"));
+
+			input.session = ValidationHelper.validateSession(input.session, "input.session");
+
+			if (input.permissionsOnly != Boolean.TRUE) {
+				output.roles = UserServiceProvider.provide().getRoles(input.session.user);
+
+				if (output.roles != null && input.idsOnly == Boolean.FALSE) {
+					RoleServiceProvider.provide().inflateRoles(output.roles);
+				}
+			}
+
+			if (input.rolesOnly != Boolean.TRUE) {
+				output.permissions = UserServiceProvider.provide().getPermissions(input.session.user);
+
+				if (output.permissions != null && input.idsOnly == Boolean.FALSE) {
+					PermissionServiceProvider.provide().inflatePermissions(output.permissions);
+				}
+			}
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getRolesAndPermissions");
+		return output;
+	}
+
 	private String getFreeListName(Store store, String type) {
 		String listName = null;
 
@@ -678,4 +717,5 @@ public final class Core extends ActionHandler {
 
 		return listName;
 	}
+
 }

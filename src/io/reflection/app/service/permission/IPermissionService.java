@@ -57,4 +57,17 @@ public interface IPermissionService extends IService {
 	 */
 	public Long getPermissionsCount() throws DataAccessException;
 
+	/**
+	 * @param permissions
+	 * @return
+	 */
+	public List<Permission> getIdPermissionsBatch(List<Long> permissionIds) throws DataAccessException;
+
+	/**
+	 * 
+	 * @param permissions
+	 * @throws DataAccessException
+	 */
+	public void inflatePermissions(List<Permission> permissions) throws DataAccessException;
+
 }

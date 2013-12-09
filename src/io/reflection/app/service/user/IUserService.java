@@ -128,4 +128,16 @@ public interface IUserService extends IService {
 	 */
 	public Boolean hasPermission(User user, Permission permission) throws DataAccessException;
 
+	/**
+	 * @param user
+	 * @return
+	 */
+	public List<Role> getRoles(User user) throws DataAccessException;
+
+	/**
+	 * @param user
+	 * @return
+	 */
+	public List<Permission> getPermissions(User user) throws DataAccessException;
+
 }

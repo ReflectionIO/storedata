@@ -31,7 +31,7 @@ public abstract class DataType extends Jsonable {
 	/**
 	 * created date
 	 */
-	public Date created = new Date();
+	public Date created = null;
 
 	// @Index(IfNotDefault.class) public String deleted = "n";
 

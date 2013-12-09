@@ -13,6 +13,7 @@ import io.reflection.app.api.core.shared.call.CheckUsernameRequest;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetCountriesRequest;
 import io.reflection.app.api.core.shared.call.GetItemRanksRequest;
+import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsRequest;
 import io.reflection.app.api.core.shared.call.GetStoresRequest;
 import io.reflection.app.api.core.shared.call.GetTopItemsRequest;
 import io.reflection.app.api.core.shared.call.LoginRequest;
@@ -73,6 +74,10 @@ public final class CoreJsonServlet extends JsonServlet {
 			CheckUsernameRequest input = new CheckUsernameRequest();
 			input.fromJson(request);
 			output = service.checkUsername(input).toString();
+		} else if ("GetRolesAndPermissions".equals(action)) {
+			GetRolesAndPermissionsRequest input = new GetRolesAndPermissionsRequest();
+			input.fromJson(request);
+			output = service.getRolesAndPermissions(input).toString();
 		}
 
 		return output;

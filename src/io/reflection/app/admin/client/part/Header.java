@@ -25,8 +25,12 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.UListElement;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
@@ -55,9 +59,6 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	InlineHyperlink mUsersLink;
 	LIElement mUsersItem;
 
-	InlineHyperlink mLogoutLink;
-	LIElement mLogoutItem;
-
 	InlineHyperlink mLoginLink;
 	LIElement mLoginItem;
 
@@ -68,6 +69,19 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	LIElement mPermissionsItem;
 
 	SpanElement mTotalUsers;
+
+	@UiField LIElement mAccountDropdown;
+
+	@UiField Anchor mAccountButton;
+	
+	@UiField InlineHyperlink mLogoutLink;
+	@UiField LIElement mLogoutItem;
+	
+	@UiField InlineHyperlink mChangeDetailsLink;
+	@UiField LIElement mChangeDetailsItem;
+	
+	@UiField InlineHyperlink mChangePasswordLink;
+	@UiField LIElement mChangePasswordItem;
 
 	public Header() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -84,7 +98,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 		EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this);
 		EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this);
-
+		
 		addLogin();
 	}
 
@@ -214,7 +228,14 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		addRoles();
 		addPermissions();
 		removeLogin();
-		addLogout();
+//		addLogout();
+
+		mAccountButton.getElement().setInnerHTML(
+				"<img class=\"img-rounded\" src=\"http://www.gravatar.com/avatar/" + SafeHtmlUtils.htmlEscape(user.avatar) + "?s=30&d=identicon\" /> "
+						+ SafeHtmlUtils.htmlEscape(user.forename + " " + user.surname) + " <b class=\"caret\"></b>");
+		
+		mChangePasswordLink.setTargetHistoryToken("users/changepassword/" + user.id.toString());
+		mChangeDetailsLink.setTargetHistoryToken("users/changedetails/" + user.id.toString());
 	}
 
 	/*
@@ -226,26 +247,26 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	public void userLoggedOut() {
 		removeFeedBrowser();
 		removeUsers();
-		removeLogout();
+//		removeLogout();
 		removeRoles();
 		removePermissions();
 		addLogin();
 	}
 
-	/**
-	 * 
-	 */
-	private void addLogout() {
-		if (mLogoutItem == null) {
-			mLogoutItem = Document.get().createLIElement();
-
-			mLogoutLink = new InlineHyperlink("Sign Out", false, "logout");
-
-			mLogoutItem.appendChild(mLogoutLink.getElement());
-		}
-
-		mNavList.appendChild(mLogoutItem);
-	}
+//	/**
+//	 * 
+//	 */
+//	private void addLogout() {
+//		if (mLogoutItem == null) {
+//			mLogoutItem = Document.get().createLIElement();
+//
+//			mLogoutLink = new InlineHyperlink("Sign Out", false, "logout");
+//
+//			mLogoutItem.appendChild(mLogoutLink.getElement());
+//		}
+//
+//		mNavList.appendChild(mLogoutItem);
+//	}
 
 	/**
 	 * 
@@ -341,14 +362,14 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		}
 	}
 
-	/**
-	 * 
-	 */
-	private void removeLogout() {
-		if (mLogoutItem != null) {
-			mNavList.removeChild(mLogoutItem);
-		}
-	}
+//	/**
+//	 * 
+//	 */
+//	private void removeLogout() {
+//		if (mLogoutItem != null) {
+//			mNavList.removeChild(mLogoutItem);
+//		}
+//	}
 
 	/**
 	 * 
@@ -396,7 +417,32 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	 */
 	@Override
 	public void userLoginFailed(Error error) {
-		// TODO: remove items that should not be there when there is no user
+		userLoggedOut();
+	}
+
+	@UiHandler("mAccountButton")
+	void onAccountButtonClicked(ClickEvent event) {
+		toggleMenu();
+	}
+
+	private void toggleMenu() {
+		if (isMenuOpen()) {
+			closeMenu();
+		} else {
+			openMenu();
+		}
+	}
+
+	private boolean isMenuOpen() {
+		return mAccountDropdown.getClassName().contains("open");
+	}
+
+	private void openMenu() {
+		mAccountDropdown.addClassName("open");
+	}
+
+	private void closeMenu() {
+		mAccountDropdown.removeClassName("open");
 	}
 
 }

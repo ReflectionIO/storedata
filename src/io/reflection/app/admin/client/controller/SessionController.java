@@ -10,13 +10,18 @@ package io.reflection.app.admin.client.controller;
 import io.reflection.app.admin.client.handler.user.SessionEventHandler.UserLoggedIn;
 import io.reflection.app.admin.client.handler.user.SessionEventHandler.UserLoggedOut;
 import io.reflection.app.admin.client.handler.user.SessionEventHandler.UserLoginFailed;
+import io.reflection.app.admin.client.handler.user.UserPowersEventHandler.GetUserPowersFailed;
+import io.reflection.app.admin.client.handler.user.UserPowersEventHandler.GotUserPowers;
 import io.reflection.app.admin.client.helper.FormHelper;
 import io.reflection.app.api.core.client.CoreService;
+import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsRequest;
+import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsResponse;
 import io.reflection.app.api.core.shared.call.LoginRequest;
 import io.reflection.app.api.core.shared.call.LoginResponse;
 import io.reflection.app.api.core.shared.call.LogoutRequest;
 import io.reflection.app.api.core.shared.call.LogoutResponse;
 import io.reflection.app.api.shared.datatypes.Session;
+import io.reflection.app.shared.datatypes.Role;
 import io.reflection.app.shared.datatypes.User;
 
 import java.util.Date;
@@ -59,16 +64,6 @@ public class SessionController implements ServiceController {
 
 	private void setLoggedInUser(User user, Session session) {
 
-		if (mLoggedIn != user) {
-			mLoggedIn = user;
-
-			if (mLoggedIn == null) {
-				EventController.get().fireEventFromSource(new UserLoggedOut(), SessionController.this);
-			} else {
-				EventController.get().fireEventFromSource(new UserLoggedIn(mLoggedIn, mSession), SessionController.this);
-			}
-		}
-
 		if (mSession != session) {
 			mSession = session;
 
@@ -78,6 +73,19 @@ public class SessionController implements ServiceController {
 		} else {
 			Cookies.removeCookie(COOKIE_KEY_TOKEN);
 		}
+
+		if (mLoggedIn != user) {
+			mLoggedIn = user;
+
+			if (mLoggedIn == null) {
+				EventController.get().fireEventFromSource(new UserLoggedOut(), SessionController.this);
+			} else {
+				EventController.get().fireEventFromSource(new UserLoggedIn(mLoggedIn, mSession), SessionController.this);
+
+				getUserPowers();
+			}
+		}
+
 	}
 
 	/**
@@ -141,7 +149,24 @@ public class SessionController implements ServiceController {
 	 * @return
 	 */
 	public boolean isLoggedInUserAdmin() {
-		return true;
+		return hasRole(mLoggedIn, 1);
+	}
+
+	public boolean hasRole(User user, long id) {
+		boolean hasRole = false;
+
+		if (user != null && user.roles != null) {
+			for (Role role : user.roles) {
+				if (role.id != null) {
+					if (role.id.longValue() == id) {
+						hasRole = true;
+						break;
+					}
+				}
+			}
+		}
+
+		return hasRole;
 	}
 
 	/**
@@ -186,5 +211,43 @@ public class SessionController implements ServiceController {
 				}
 			});
 		}
+	}
+
+	public void getUserPowers() {
+		CoreService service = new CoreService();
+
+		service.setUrl(CORE_END_POINT);
+
+		final GetRolesAndPermissionsRequest input = new GetRolesAndPermissionsRequest();
+		input.accessCode = ACCESS_CODE;
+
+		input.session = new Session();
+		input.session.token = mSession.token;
+
+		input.idsOnly = Boolean.FALSE;
+
+		service.getRolesAndPermissions(input, new AsyncCallback<GetRolesAndPermissionsResponse>() {
+
+			@Override
+			public void onSuccess(GetRolesAndPermissionsResponse output) {
+				if (output.status == StatusType.StatusTypeSuccess) {
+					if (mSession != null && mSession.token != null && input.session != null && input.session.token != null
+							&& mSession.token.equals(input.session.token)) {
+						mLoggedIn.roles = output.roles;
+						mLoggedIn.permissions = output.permissions;
+
+						EventController.get().fireEventFromSource(new GotUserPowers(mLoggedIn, mLoggedIn.roles, mLoggedIn.permissions), SessionController.this);
+					}
+				} else {
+					EventController.get().fireEventFromSource(new GetUserPowersFailed(output.error), SessionController.this);
+				}
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				EventController.get().fireEventFromSource(new GetUserPowersFailed(FormHelper.convertToError(caught)), SessionController.this);
+			}
+		});
+
 	}
 }

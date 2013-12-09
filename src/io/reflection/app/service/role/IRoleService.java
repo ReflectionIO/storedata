@@ -8,11 +8,11 @@
 //
 package io.reflection.app.service.role;
 
-import java.util.List;
-
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.shared.datatypes.Role;
+
+import java.util.List;
 
 import com.spacehopperstudios.service.IService;
 
@@ -56,5 +56,17 @@ public interface IRoleService extends IService {
 	 * @return
 	 */
 	public Long getRolesCount() throws DataAccessException;
+
+	/**
+	 * @param roles
+	 * @return
+	 */
+	public List<Role> getIdRoles(List<Long> roleIds) throws DataAccessException;
+
+	/**
+	 * @param roles
+	 * @throws DataAccessException
+	 */
+	public void inflateRoles(List<Role> roles) throws DataAccessException;
 
 }

@@ -1,6 +1,6 @@
 @CHARSET "UTF-8";
 
-@external pagination, active, btn-primary, active, open, dropdown-toggle;
+@external pagination, active, btn-primary, active, open, dropdown-toggle, dropdown-menu;
 
 a {
 	cursor: pointer;
@@ -20,6 +20,10 @@ a:hover, a:focus, a:active, a.active {
 .pagination > .active > span:focus {
 	background-color: #9780E4;
 	border-color: #9780E4;
+}
+
+.dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus {
+	background-color: #9780E4;
 }
 
 .btn-primary {

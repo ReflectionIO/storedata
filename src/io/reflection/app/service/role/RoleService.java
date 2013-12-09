@@ -20,7 +20,9 @@ import io.reflection.app.service.ServiceType;
 import io.reflection.app.shared.datatypes.Role;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 final class RoleService implements IRoleService {
 
@@ -62,14 +64,24 @@ final class RoleService implements IRoleService {
 		Role role = new Role();
 
 		role.id = connection.getCurrentRowLong("id");
+
+		toRole(connection, role);
+
+		return role;
+	}
+
+	/**
+	 * @param connection
+	 * @param role
+	 * @throws DataAccessException
+	 */
+	private void toRole(Connection connection, Role role) throws DataAccessException {
 		role.created = connection.getCurrentRowDateTime("created");
 		role.deleted = connection.getCurrentRowString("deleted");
 
 		role.code = stripslashes(connection.getCurrentRowString("code"));
 		role.description = stripslashes(connection.getCurrentRowString("description"));
 		role.name = stripslashes(connection.getCurrentRowString("name"));
-
-		return role;
 	}
 
 	@Override
@@ -204,6 +216,74 @@ final class RoleService implements IRoleService {
 		}
 
 		return rolesCount;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.role.IRoleService#getIdRoles(java.util.List)
+	 */
+	@Override
+	public List<Role> getIdRoles(List<Long> roleIds) throws DataAccessException {
+		throw new UnsupportedOperationException();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.role.IRoleService#inflateRoles(java.util.List)
+	 */
+	@Override
+	public void inflateRoles(List<Role> roles) throws DataAccessException {
+		if (roles != null && roles.size() > 0) {
+			Map<Long, Role> lookup = new HashMap<Long, Role>();
+
+			StringBuffer getRolesQuery = new StringBuffer("SELECT * FROM `role` WHERE `id`");
+
+			if (roles.size() == 1) {
+				getRolesQuery.append("=");
+				getRolesQuery.append(roles.get(0).id);
+
+				lookup.put(roles.get(0).id, roles.get(0));
+			} else {
+				boolean first = true;
+
+				for (Role role : roles) {
+					if (!first) {
+						getRolesQuery.append(",");
+					} else {
+						getRolesQuery.append(" IN (");
+						first = false;
+					}
+
+					getRolesQuery.append(role.id.toString());
+
+					lookup.put(role.id, role);
+				}
+
+				getRolesQuery.append(")");
+			}
+
+			getRolesQuery.append(" AND `deleted`='n'");
+
+			IDatabaseService databaseService = DatabaseServiceProvider.provide();
+			Connection roleConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeRole.toString());
+
+			try {
+				roleConnection.connect();
+				roleConnection.executeQuery(getRolesQuery.toString());
+
+				if (roleConnection.fetchNextRow()) {
+					Role role = lookup.get(roleConnection.getCurrentRowLong("id"));
+
+					toRole(roleConnection, role);
+				}
+			} finally {
+				if (roleConnection != null) {
+					roleConnection.disconnect();
+				}
+			}
+		}
 	}
 
 }

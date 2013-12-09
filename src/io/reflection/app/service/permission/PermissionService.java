@@ -20,7 +20,9 @@ import io.reflection.app.service.ServiceType;
 import io.reflection.app.shared.datatypes.Permission;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 final class PermissionService implements IPermissionService {
 	public String getName() {
@@ -62,14 +64,24 @@ final class PermissionService implements IPermissionService {
 		Permission permission = new Permission();
 
 		permission.id = connection.getCurrentRowLong("id");
+
+		toPermission(connection, permission);
+
+		return permission;
+	}
+
+	/**
+	 * @param connection
+	 * @param permission
+	 * @throws DataAccessException
+	 */
+	private void toPermission(Connection connection, Permission permission) throws DataAccessException {
 		permission.created = connection.getCurrentRowDateTime("created");
 		permission.deleted = connection.getCurrentRowString("deleted");
 
 		permission.code = stripslashes(connection.getCurrentRowString("code"));
 		permission.description = stripslashes(connection.getCurrentRowString("description"));
 		permission.name = stripslashes(connection.getCurrentRowString("name"));
-
-		return permission;
 	}
 
 	@Override
@@ -204,6 +216,75 @@ final class PermissionService implements IPermissionService {
 		}
 
 		return permissionsCount;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.permission.IPermissionService#getIdPermissionsBatch(java.util.List)
+	 */
+	@Override
+	public List<Permission> getIdPermissionsBatch(List<Long> permissionIds) throws DataAccessException {
+		throw new UnsupportedOperationException();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.permission.IPermissionService#inflatePermissions(java.util.List)
+	 */
+	@Override
+	public void inflatePermissions(List<Permission> permissions) throws DataAccessException {
+		if (permissions != null && permissions.size() > 0) {
+			Map<Long, Permission> lookup = new HashMap<Long, Permission>();
+
+			StringBuffer getPermissionsQuery = new StringBuffer("SELECT * FROM `permission` WHERE `id`");
+
+			if (permissions.size() == 1) {
+				getPermissionsQuery.append("=");
+				getPermissionsQuery.append(permissions.get(0).id);
+
+				lookup.put(permissions.get(0).id, permissions.get(0));
+			} else {
+				boolean first = true;
+
+				for (Permission permission : permissions) {
+					if (!first) {
+						getPermissionsQuery.append(",");
+					} else {
+						getPermissionsQuery.append(" IN (");
+						first = false;
+					}
+
+					getPermissionsQuery.append(permission.id.toString());
+
+					lookup.put(permission.id, permission);
+				}
+
+				getPermissionsQuery.append(")");
+			}
+
+			getPermissionsQuery.append(" AND `deleted`='n'");
+
+			IDatabaseService databaseService = DatabaseServiceProvider.provide();
+			Connection permissionConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypePermission.toString());
+
+			try {
+				permissionConnection.connect();
+				permissionConnection.executeQuery(getPermissionsQuery.toString());
+
+				if (permissionConnection.fetchNextRow()) {
+					Permission permission = lookup.get(permissionConnection.getCurrentRowLong("id"));
+
+					toPermission(permissionConnection, permission);
+				}
+			} finally {
+				if (permissionConnection != null) {
+					permissionConnection.disconnect();
+				}
+			}
+		}
+
 	}
 
 }

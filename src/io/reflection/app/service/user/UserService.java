@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.spacehopperstudios.utility.StringUtils;
+
 final class UserService implements IUserService {
 
 	private static final String SALT = "salt.username.magic";
@@ -80,8 +82,8 @@ final class UserService implements IUserService {
 		// NOTE: salt is added then the password is sha1-ed
 		String addUserQuery = String.format(
 				"INSERT INTO `user` (`forename`, `surname`, `username`, `password`, `avatar`, `company`) VALUES ('%s', '%s', '%s', '%s', %s, '%s')",
-				addslashes(user.forename), addslashes(user.surname), addslashes(user.username), sha1Hash(SALT + user.password), user.avatar == null ? "NULL"
-						: "'" + addslashes(user.avatar) + "'", addslashes(user.company));
+				addslashes(user.forename), addslashes(user.surname), addslashes(user.username), sha1Hash(SALT + user.password),
+				user.avatar == null ? StringUtils.md5Hash(user.username.trim().toLowerCase()) : "'" + addslashes(user.avatar) + "'", addslashes(user.company));
 		try {
 			userConnection.connect();
 			userConnection.executeQuery(addUserQuery);
@@ -627,6 +629,74 @@ final class UserService implements IUserService {
 		}
 
 		return hasUserPermission;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.user.IUserService#getRoles(io.reflection.app.shared.datatypes.User)
+	 */
+	@Override
+	public List<Role> getRoles(User user) throws DataAccessException {
+		List<Role> roles = new ArrayList<Role>();
+
+		IDatabaseService databaseService = DatabaseServiceProvider.provide();
+		Connection userConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
+
+		String getRoleIdsQuery = String.format("SELECT `roleid` FROM `userrole` WHERE `userid`=%d AND `deleted`='n'", user.id.longValue());
+
+		try {
+			userConnection.connect();
+			userConnection.executeQuery(getRoleIdsQuery);
+
+			while (userConnection.fetchNextRow()) {
+				Role role = new Role();
+
+				role.id = userConnection.getCurrentRowLong("roleid");
+
+				roles.add(role);
+			}
+		} finally {
+			if (userConnection != null) {
+				userConnection.disconnect();
+			}
+		}
+
+		return roles;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.user.IUserService#getPermissions(io.reflection.app.shared.datatypes.User)
+	 */
+	@Override
+	public List<Permission> getPermissions(User user) throws DataAccessException {
+		List<Permission> permissions = new ArrayList<Permission>();
+
+		IDatabaseService databaseService = DatabaseServiceProvider.provide();
+		Connection userConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
+
+		String getPermissionIdsQuery = String.format("SELECT `permissionid` FROM `userpermission` WHERE `userid`=%d AND `deleted`='n'", user.id.longValue());
+
+		try {
+			userConnection.connect();
+			userConnection.executeQuery(getPermissionIdsQuery);
+
+			while (userConnection.fetchNextRow()) {
+				Permission permission = new Permission();
+
+				permission.id = userConnection.getCurrentRowLong("permissionid");
+
+				permissions.add(permission);
+			}
+		} finally {
+			if (userConnection != null) {
+				userConnection.disconnect();
+			}
+		}
+
+		return permissions;
 	}
 
 }
