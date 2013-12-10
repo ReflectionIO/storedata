@@ -82,8 +82,9 @@ final class UserService implements IUserService {
 		// NOTE: salt is added then the password is sha1-ed
 		String addUserQuery = String.format(
 				"INSERT INTO `user` (`forename`, `surname`, `username`, `password`, `avatar`, `company`) VALUES ('%s', '%s', '%s', '%s', %s, '%s')",
-				addslashes(user.forename), addslashes(user.surname), addslashes(user.username), sha1Hash(SALT + user.password),
-				user.avatar == null ? StringUtils.md5Hash(user.username.trim().toLowerCase()) : "'" + addslashes(user.avatar) + "'", addslashes(user.company));
+				addslashes(user.forename), addslashes(user.surname), addslashes(user.username), sha1Hash(SALT + user.password), user.avatar == null ? "'"
+						+ addslashes(StringUtils.md5Hash(user.username.trim().toLowerCase())) + "'" : "'" + addslashes(user.avatar) + "'",
+				addslashes(user.company));
 		try {
 			userConnection.connect();
 			userConnection.executeQuery(addUserQuery);
@@ -241,8 +242,9 @@ final class UserService implements IUserService {
 		Connection userConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
 		String updateUserQuery = String.format("UPDATE `user` SET `forename`='%s', `surname`='%s', `username`='%s', `avatar`=%s, `company`='%s' WHERE `id`=%d",
-				addslashes(user.forename), addslashes(user.surname), addslashes(user.username), user.avatar == null ? "NULL" : "'" + addslashes(user.avatar)
-						+ "'", addslashes(user.company), user.id.longValue());
+				addslashes(user.forename), addslashes(user.surname), addslashes(user.username),
+				user.avatar == null ? "'" + addslashes(StringUtils.md5Hash(user.username.trim().toLowerCase())) + "'" : "'" + addslashes(user.avatar) + "'",
+				addslashes(user.company), user.id.longValue());
 		try {
 			userConnection.connect();
 			userConnection.executeQuery(updateUserQuery);
