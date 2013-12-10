@@ -11,6 +11,7 @@
         <g:HTMLPanel styleName="btn-group">
             <g:InlineHyperlink styleName="btn btn-default" text="Assign password" visible="false" ui:field="mAssignPassword" />
             <g:InlineHyperlink styleName="btn btn-default" text="Make admin" visible="false" ui:field="mMakeAdmin" />
+            <g:InlineHyperlink styleName="btn btn-default" text="Change details" visible="false" ui:field="mChangeDetails" />
         </g:HTMLPanel>
 
 

@@ -8,6 +8,7 @@
 package io.reflection.app.admin.client.controller;
 
 import io.reflection.app.admin.client.handler.NavigationEventHandler;
+import io.reflection.app.admin.client.page.ChangeDetailsPage;
 import io.reflection.app.admin.client.page.ChangePasswordPage;
 import io.reflection.app.admin.client.page.FeedBrowserPage;
 import io.reflection.app.admin.client.page.LoginPage;
@@ -39,6 +40,7 @@ public class NavigationController {
 	private ChangePasswordPage mChangePasswordPage = null;
 	private RolesPage mRolesPage = null;
 	private PermissionsPage mPermissionsPage = null;
+	private ChangeDetailsPage mChangeDetailsPage = null;
 
 	private Header mHeader = null;
 	private Footer mFooter = null;
@@ -165,6 +167,17 @@ public class NavigationController {
 			mPanel.add(mChangePasswordPage);
 		}
 	}
+	
+	public void addChangeDetailsPage() {
+		if (mChangeDetailsPage == null) {
+			mChangeDetailsPage = new ChangeDetailsPage();
+		}
+
+		if (!mChangeDetailsPage.isAttached()) {
+			mPanel.clear();
+			mPanel.add(mChangeDetailsPage);
+		}
+	}
 
 	public void addRolesPage() {
 		if (mRolesPage == null) {
@@ -208,6 +221,8 @@ public class NavigationController {
 				addUsersPage();
 			} else if ("changepassword".equals(mStack.getAction())) {
 				addChangePasswordPage();
+			} else if ("changedetails".equals(mStack.getAction())) {
+				addChangeDetailsPage();
 			} else if ("assignrole".equals(mStack.getAction())) {
 				String userId = mStack.getParameter(0);
 				String roleName = mStack.getParameter(1);

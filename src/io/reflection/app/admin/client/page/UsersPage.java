@@ -45,6 +45,7 @@ public class UsersPage extends Composite {
 
 	@UiField InlineHyperlink mAssignPassword;
 	@UiField InlineHyperlink mMakeAdmin;
+	@UiField InlineHyperlink mChangeDetails;
 
 	public UsersPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -60,6 +61,7 @@ public class UsersPage extends Composite {
 
 				mAssignPassword.setVisible(selected != null);
 				mMakeAdmin.setVisible(selected != null);
+				mChangeDetails.setVisible(selected != null);
 
 				if (selected != null) {
 					mAssignPassword.setTargetHistoryToken("users/changepassword/" + selected.id.toString());
@@ -68,6 +70,11 @@ public class UsersPage extends Composite {
 				if (selected != null) {
 					mMakeAdmin.setTargetHistoryToken("users/assignrole/" + selected.id.toString() + "/admin");
 				}
+				
+				if (selected != null) {
+					mChangeDetails.setTargetHistoryToken("users/changedetails/" + selected.id.toString());
+				}
+
 			}
 		});
 		mUsers.setSelectionModel(s);

@@ -31,7 +31,9 @@ import io.reflection.app.shared.datatypes.Role;
 import io.reflection.app.shared.datatypes.User;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -50,6 +52,8 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 	private List<User> mUsers = new ArrayList<User>();
 	private long mCount = -1;
 	private Pager mPager;
+
+	private Map<Long, User> mUserLookup = new HashMap<Long, User>();
 
 	private static UserController mOne = null;
 
@@ -84,6 +88,8 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 				if (result.status == StatusType.StatusTypeSuccess) {
 					if (result.users != null) {
 						mUsers.addAll(result.users);
+
+						addToLookup(result.users);
 					}
 
 					if (result.pager != null) {
@@ -290,6 +296,16 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 				EventController.get().fireEventFromSource(new UserRegistrationFailed(e), UserController.this);
 			}
 		});
+	}
+
+	private void addToLookup(List<User> users) {
+		for (User user : users) {
+			mUserLookup.put(user.id, user);
+		}
+	}
+
+	public User getUser(Long id) {
+		return mUserLookup.get(id);
 	}
 
 }
