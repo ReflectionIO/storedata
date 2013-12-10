@@ -2,6 +2,8 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:with field='res' type='io.reflection.app.admin.client.res.Images' />
     <ui:style>
+    	@external navbar-nav;
+    
         .header {
         	background: #272833;
         }
@@ -10,15 +12,16 @@
         	vertical-align: bottom;
         }
         
-        .anchor {
-        	overflow: visible;
+        .navbar-nav > li > a.anchor {
+        	padding-top: 10px;
+        	padding-bottom: 10px;
         }
         
-        .anchor img {
-        	margin-left: 10px;
-        	position: relative;
-        	top: -5px;
-        }
+        .navbar-nav > li > a.anchor img {
+			margin-left: 5px;
+		}
+        
+        
     </ui:style>
     <g:HTMLPanel ui:field="pnlHeader" styleName="navbar navbar-inverse navbar-fixed-top {style.header}">
         <div class="container">

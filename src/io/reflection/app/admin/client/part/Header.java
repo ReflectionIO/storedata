@@ -267,8 +267,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	private void addAccount(User user) {
 		// should really be using DOM so that these objects are not repeatedly created
 		mAccountButton.getElement().setInnerHTML(
-				"<img class=\"img-rounded pull-right\" src=\"" + UriUtils.sanitizeUri("http://www.gravatar.com/avatar/" + user.avatar + "?s=30&d=identicon") + "\" /><span class=\"pull-right\">"
-						+ SafeHtmlUtils.htmlEscape(user.forename + " " + user.surname) + " <b class=\"caret\"></b></span>");
+				"<span>" + SafeHtmlUtils.htmlEscape(user.forename + " " + user.surname) + " <b class=\"caret\"></b></span><img class=\"img-rounded\" src=\""
+						+ UriUtils.sanitizeUri("http://www.gravatar.com/avatar/" + user.avatar + "?s=30&d=identicon") + "\" />");
 
 		mChangePasswordLink.setTargetHistoryToken("users/changepassword/" + user.id.toString());
 		mChangeDetailsLink.setTargetHistoryToken("users/changedetails/" + user.id.toString());
