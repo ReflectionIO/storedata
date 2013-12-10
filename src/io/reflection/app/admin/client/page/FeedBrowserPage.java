@@ -64,9 +64,9 @@ public class FeedBrowserPage extends Composite {
 			public void onSelectionChange(SelectionChangeEvent event) {
 				FeedFetch selected = s.getSelectedObject();
 
-				mIngest.setEnabled(selected != null);
-				mModel.setEnabled(selected != null);
-				mPredict.setEnabled(selected != null);
+				mIngest.setVisible(selected != null);
+				mModel.setVisible(selected != null);
+				mPredict.setVisible(selected != null);
 			}
 		});
 		mFeeds.setSelectionModel(s);
