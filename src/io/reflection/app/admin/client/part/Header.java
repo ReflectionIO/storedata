@@ -101,7 +101,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		EventController.get().addHandlerToSource(UserPowersEventHandler.TYPE, SessionController.get(), this);
 
 		createItemList();
-		
+
 		removeAccount();
 		removeAdmin();
 
@@ -208,12 +208,6 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 		removeLogin();
 
-		if (UserController.get().getUsersCount() >= 0) {
-			mTotalUsers.setInnerText(Long.toString(UserController.get().getUsersCount()));
-		} else {
-			UserController.get().fetchUsersCount();
-		}
-
 		addAdmin();
 
 		addAccount(user);
@@ -259,6 +253,12 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 	private void addAdmin() {
 		if (SessionController.get().isLoggedInUserAdmin()) {
+			if (UserController.get().getUsersCount() >= 0) {
+				mTotalUsers.setInnerText(Long.toString(UserController.get().getUsersCount()));
+			} else {
+				UserController.get().fetchUsersCount();
+			}
+
 			mNavList.getParentElement().appendChild(mAdminList);
 		}
 	}
