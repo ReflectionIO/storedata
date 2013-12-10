@@ -15,7 +15,6 @@
         }
         
         .anchor img {
-        	float: right;
         	margin-left: 10px;
         	position: relative;
         	top: -5px;
@@ -24,7 +23,7 @@
     <g:HTMLPanel ui:field="pnlHeader" styleName="navbar navbar-inverse navbar-fixed-top {style.header}">
         <div class="container">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <button type="button" class="navbar-toggle">
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
@@ -37,9 +36,6 @@
                 <ul class="nav navbar-nav" ui:field="mNavList">
                     <li ui:field="mRanksItem">
                         <g:InlineHyperlink ui:field="mRanksLink" targetHistoryToken="ranks">Ranks</g:InlineHyperlink>
-                    </li>
-                    <li ui:field="mLoginItem">
-                        <g:InlineHyperlink ui:field="mLoginLink" targetHistoryToken="login">Sign In</g:InlineHyperlink>
                     </li>
                 </ul>
                 <ul class="nav navbar-nav" ui:field="mAdminList">
@@ -67,6 +63,9 @@
                     </li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right" ui:field="mAccountList">
+                    <li ui:field="mLoginItem">
+                        <g:InlineHyperlink ui:field="mLoginLink" targetHistoryToken="login">Sign In</g:InlineHyperlink>
+                    </li>
                     <li ui:field="mAccountDropdown" class="dropdown">
                         <g:Anchor styleName="dropdown-toggle {style.anchor}" ui:field="mAccountButton" />
                         <ul class="dropdown-menu">

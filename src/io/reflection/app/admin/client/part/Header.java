@@ -29,6 +29,7 @@ import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
+import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
@@ -231,7 +232,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	 * 
 	 */
 	private void addLogin() {
-		mNavList.appendChild(mLoginItem);
+		mAccountList.appendChild(mLoginItem);
 	}
 
 	/**
@@ -264,14 +265,15 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	}
 
 	private void addAccount(User user) {
+		// should really be using DOM so that these objects are not repeatedly created
 		mAccountButton.getElement().setInnerHTML(
-				"<img class=\"img-rounded\" src=\"http://www.gravatar.com/avatar/" + SafeHtmlUtils.htmlEscape(user.avatar) + "?s=30&d=identicon\" /> "
-						+ SafeHtmlUtils.htmlEscape(user.forename + " " + user.surname) + " <b class=\"caret\"></b>");
+				"<img class=\"img-rounded pull-right\" src=\"" + UriUtils.sanitizeUri("http://www.gravatar.com/avatar/" + user.avatar + "?s=30&d=identicon") + "\" /><span class=\"pull-right\">"
+						+ SafeHtmlUtils.htmlEscape(user.forename + " " + user.surname) + " <b class=\"caret\"></b></span>");
 
 		mChangePasswordLink.setTargetHistoryToken("users/changepassword/" + user.id.toString());
 		mChangeDetailsLink.setTargetHistoryToken("users/changedetails/" + user.id.toString());
 
-		mNavList.getParentElement().appendChild(mAccountList);
+		mAccountList.appendChild(mAccountDropdown);
 	}
 
 	private void removeAdmin() {
@@ -279,7 +281,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	}
 
 	private void removeAccount() {
-		mAccountList.removeFromParent();
+		mAccountDropdown.removeFromParent();
 	}
 
 	/*
