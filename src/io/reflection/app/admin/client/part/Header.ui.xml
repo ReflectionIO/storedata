@@ -38,11 +38,37 @@
                     <li ui:field="mRanksItem">
                         <g:InlineHyperlink ui:field="mRanksLink" targetHistoryToken="ranks">Ranks</g:InlineHyperlink>
                     </li>
+                    <li ui:field="mLoginItem">
+                        <g:InlineHyperlink ui:field="mLoginLink" targetHistoryToken="login">Sign In</g:InlineHyperlink>
+                    </li>
                 </ul>
-                <ul class="nav navbar-nav navbar-right" ui:field="mNavListRight">
+                <ul class="nav navbar-nav" ui:field="mAdminList">
+                    <li ui:field="mAdminDropdown" class="dropdown">
+                        <g:Anchor styleName="dropdown-toggle" ui:field="mAdminButton" />
+                        <ul class="dropdown-menu">
+                            <li ui:field="mFeedBrowserItem">
+                                <g:InlineHyperlink ui:field="mFeedBrowserLink" targetHistoryToken="feedbrowser">Feed Browser</g:InlineHyperlink>
+                            </li>
+                            <li class="divider"></li>
+                            <li ui:field="mUsersItem">
+                                <g:InlineHyperlink ui:field="mUsersLink" targetHistoryToken="users">
+                                    Users
+                                    <span ui:field="mTotalUsers" class="badge">1+</span>
+                                </g:InlineHyperlink>
+                            </li>
+                            <li class="divider"></li>
+                            <li ui:field="mRolesItem">
+                                <g:InlineHyperlink ui:field="mRolesLink" targetHistoryToken="roles">Roles</g:InlineHyperlink>
+                            </li>
+                            <li ui:field="mPermissionsItem">
+                                <g:InlineHyperlink ui:field="mPermissionsLink" targetHistoryToken="permissions">Permissions</g:InlineHyperlink>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right" ui:field="mAccountList">
                     <li ui:field="mAccountDropdown" class="dropdown">
-                        <g:Anchor styleName="dropdown-toggle {style.anchor}" ui:field="mAccountButton">
-                        </g:Anchor>
+                        <g:Anchor styleName="dropdown-toggle {style.anchor}" ui:field="mAccountButton" />
                         <ul class="dropdown-menu">
                             <li ui:field="mChangeDetailsItem">
                                 <g:InlineHyperlink ui:field="mChangeDetailsLink" text="Change Details" />

@@ -14,22 +14,23 @@ import io.reflection.app.admin.client.controller.SessionController;
 import io.reflection.app.admin.client.controller.UserController;
 import io.reflection.app.admin.client.handler.NavigationEventHandler;
 import io.reflection.app.admin.client.handler.user.SessionEventHandler;
+import io.reflection.app.admin.client.handler.user.UserPowersEventHandler;
 import io.reflection.app.admin.client.handler.user.UsersEventHandler;
 import io.reflection.app.api.shared.datatypes.Session;
+import io.reflection.app.shared.datatypes.Permission;
+import io.reflection.app.shared.datatypes.Role;
 import io.reflection.app.shared.datatypes.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.UListElement;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineHyperlink;
@@ -40,7 +41,7 @@ import com.willshex.gson.json.service.shared.Error;
  * @author billy1380
  * 
  */
-public class Header extends Composite implements UsersEventHandler, NavigationEventHandler, SessionEventHandler {
+public class Header extends Composite implements UsersEventHandler, NavigationEventHandler, SessionEventHandler, UserPowersEventHandler {
 
 	private static HeaderUiBinder uiBinder = GWT.create(HeaderUiBinder.class);
 
@@ -52,54 +53,73 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@UiField LIElement mRanksItem;
 
 	@UiField UListElement mNavList;
+	@UiField UListElement mAdminList;
+	@UiField UListElement mAccountList;
 
-	InlineHyperlink mFeedBrowserLink;
-	LIElement mFeedBrowserItem;
+	@UiField InlineHyperlink mFeedBrowserLink;
+	@UiField LIElement mFeedBrowserItem;
 
-	InlineHyperlink mUsersLink;
-	LIElement mUsersItem;
+	@UiField InlineHyperlink mUsersLink;
+	@UiField LIElement mUsersItem;
 
-	InlineHyperlink mLoginLink;
-	LIElement mLoginItem;
+	@UiField InlineHyperlink mLoginLink;
+	@UiField LIElement mLoginItem;
 
-	InlineHyperlink mRolesLink;
-	LIElement mRolesItem;
+	@UiField InlineHyperlink mRolesLink;
+	@UiField LIElement mRolesItem;
 
-	InlineHyperlink mPermissionsLink;
-	LIElement mPermissionsItem;
+	@UiField InlineHyperlink mPermissionsLink;
+	@UiField LIElement mPermissionsItem;
 
-	SpanElement mTotalUsers;
+	@UiField SpanElement mTotalUsers;
 
 	@UiField LIElement mAccountDropdown;
-
 	@UiField Anchor mAccountButton;
-	
+
+	@UiField LIElement mAdminDropdown;
+	@UiField Anchor mAdminButton;
+
 	@UiField InlineHyperlink mLogoutLink;
 	@UiField LIElement mLogoutItem;
-	
+
 	@UiField InlineHyperlink mChangeDetailsLink;
 	@UiField LIElement mChangeDetailsItem;
-	
+
 	@UiField InlineHyperlink mChangePasswordLink;
 	@UiField LIElement mChangePasswordItem;
+
+	private List<LIElement> mItems;
 
 	public Header() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		mRanksItem.addClassName(ACTIVE_STYLE_NAME);
+		mAdminButton.setHTML("Admin <b class=\"caret\"></b>");
 
 		EventController.get().addHandlerToSource(UsersEventHandler.TYPE, UserController.get(), this);
-
-		// if (UserController.get().getUsersCount() >= 0) {
-		// mTotalUsers.setInnerText(Long.toString(UserController.get().getUsersCount()));
-		// } else {
-		// UserController.get().fetchUsersCount();
-		// }
-
 		EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this);
 		EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this);
+		EventController.get().addHandlerToSource(UserPowersEventHandler.TYPE, SessionController.get(), this);
+
+		createItemList();
 		
-		addLogin();
+		removeAccount();
+		removeAdmin();
+
+	}
+
+	private void createItemList() {
+		if (mItems == null) {
+			mItems = new ArrayList<LIElement>();
+
+			mItems.add(mFeedBrowserItem);
+			mItems.add(mRanksItem);
+			mItems.add(mUsersItem);
+			mItems.add(mLoginItem);
+			mItems.add(mRolesItem);
+			mItems.add(mPermissionsItem);
+			mItems.add(mChangeDetailsItem);
+			mItems.add(mChangePasswordItem);
+		}
 	}
 
 	private void activate(LIElement item) {
@@ -114,58 +134,14 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		}
 	}
 
-	private void activateFeedBrowser() {
-		activate(mFeedBrowserItem);
-		deactivate(mRanksItem);
-		deactivate(mUsersItem);
-		deactivate(mLoginItem);
-		deactivate(mRolesItem);
-		deactivate(mPermissionsItem);
-	}
-
-	private void activateUsers() {
-		deactivate(mFeedBrowserItem);
-		deactivate(mRanksItem);
-		activate(mUsersItem);
-		deactivate(mLoginItem);
-		deactivate(mRolesItem);
-		deactivate(mPermissionsItem);
-	}
-
-	private void activateRanks() {
-		activate(mRanksItem);
-		deactivate(mFeedBrowserItem);
-		deactivate(mUsersItem);
-		deactivate(mLoginItem);
-		deactivate(mRolesItem);
-		deactivate(mPermissionsItem);
-	}
-
-	private void activateLogin() {
-		deactivate(mRanksItem);
-		deactivate(mFeedBrowserItem);
-		deactivate(mUsersItem);
-		activate(mLoginItem);
-		deactivate(mRolesItem);
-		deactivate(mPermissionsItem);
-	}
-
-	private void activateRoles() {
-		deactivate(mRanksItem);
-		deactivate(mFeedBrowserItem);
-		deactivate(mUsersItem);
-		deactivate(mLoginItem);
-		activate(mRolesItem);
-		deactivate(mPermissionsItem);
-	}
-
-	private void activatePermissions() {
-		deactivate(mRanksItem);
-		deactivate(mFeedBrowserItem);
-		deactivate(mUsersItem);
-		deactivate(mLoginItem);
-		deactivate(mRolesItem);
-		activate(mPermissionsItem);
+	private void highlight(LIElement item) {
+		for (LIElement c : mItems) {
+			if (c == item) {
+				activate(c);
+			} else {
+				deactivate(c);
+			}
+		}
 	}
 
 	/*
@@ -177,19 +153,25 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@Override
 	public void navigationChanged(Stack stack) {
 		if ("ranks".equals(stack.getPage())) {
-			activateRanks();
+			highlight(mRanksItem);
 		} else if ("feedbrowser".equals(stack.getPage())) {
-			activateFeedBrowser();
+			highlight(mFeedBrowserItem);
 		} else if ("users".equals(stack.getPage())) {
-			activateUsers();
+			if (stack.getAction() == null) {
+				highlight(mUsersItem);
+			} else if (stack.getAction().equals("changedetails")) {
+				highlight(mChangeDetailsItem);
+			} else if (stack.getAction().equals("changepassword")) {
+				highlight(mChangePasswordItem);
+			}
 		} else if ("login".equals(stack.getPage())) {
-			activateLogin();
+			highlight(mLoginItem);
 		} else if ("roles".equals(stack.getPage())) {
-			activateRoles();
+			highlight(mRolesItem);
 		} else if ("permissions".equals(stack.getPage())) {
-			activatePermissions();
+			highlight(mPermissionsItem);
 		} else {
-			deactivateAll();
+			highlight(null);
 		}
 	}
 
@@ -223,19 +205,18 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	 */
 	@Override
 	public void userLoggedIn(User user, Session session) {
-		addFeedBrowser();
-		addUsers();
-		addRoles();
-		addPermissions();
-		removeLogin();
-//		addLogout();
 
-		mAccountButton.getElement().setInnerHTML(
-				"<img class=\"img-rounded\" src=\"http://www.gravatar.com/avatar/" + SafeHtmlUtils.htmlEscape(user.avatar) + "?s=30&d=identicon\" /> "
-						+ SafeHtmlUtils.htmlEscape(user.forename + " " + user.surname) + " <b class=\"caret\"></b>");
-		
-		mChangePasswordLink.setTargetHistoryToken("users/changepassword/" + user.id.toString());
-		mChangeDetailsLink.setTargetHistoryToken("users/changedetails/" + user.id.toString());
+		removeLogin();
+
+		if (UserController.get().getUsersCount() >= 0) {
+			mTotalUsers.setInnerText(Long.toString(UserController.get().getUsersCount()));
+		} else {
+			UserController.get().fetchUsersCount();
+		}
+
+		addAdmin();
+
+		addAccount(user);
 	}
 
 	/*
@@ -245,169 +226,25 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	 */
 	@Override
 	public void userLoggedOut() {
-		removeFeedBrowser();
-		removeUsers();
-//		removeLogout();
-		removeRoles();
-		removePermissions();
+		removeAdmin();
+
+		removeAccount();
+
 		addLogin();
-	}
-
-//	/**
-//	 * 
-//	 */
-//	private void addLogout() {
-//		if (mLogoutItem == null) {
-//			mLogoutItem = Document.get().createLIElement();
-//
-//			mLogoutLink = new InlineHyperlink("Sign Out", false, "logout");
-//
-//			mLogoutItem.appendChild(mLogoutLink.getElement());
-//		}
-//
-//		mNavList.appendChild(mLogoutItem);
-//	}
-
-	/**
-	 * 
-	 */
-	private void addUsers() {
-		if (mUsersItem == null) {
-			mUsersItem = Document.get().createLIElement();
-
-			mUsersLink = new InlineHyperlink("", "users");
-
-			mTotalUsers = Document.get().createSpanElement();
-
-			if (UserController.get().getUsersCount() >= 0) {
-				mTotalUsers.setInnerText(Long.toString(UserController.get().getUsersCount()));
-			} else {
-				mTotalUsers.setInnerText("1+");
-
-				UserController.get().fetchUsersCount();
-			}
-
-			mTotalUsers.addClassName("badge");
-
-			mUsersLink.setText("Users ");
-			mUsersLink.getElement().appendChild(mTotalUsers);
-
-			mUsersItem.appendChild(mUsersLink.getElement());
-		}
-
-		mNavList.appendChild(mUsersItem);
-
-	}
-
-	/**
-	 * 
-	 */
-	private void addFeedBrowser() {
-		if (mFeedBrowserItem == null) {
-			mFeedBrowserItem = Document.get().createLIElement();
-
-			mFeedBrowserLink = new InlineHyperlink("Feed Browser", false, "feedbrowser");
-
-			mFeedBrowserItem.appendChild(mFeedBrowserLink.getElement());
-		}
-
-		mNavList.appendChild(mFeedBrowserItem);
 	}
 
 	/**
 	 * 
 	 */
 	private void addLogin() {
-		if (mLoginItem == null) {
-			mLoginItem = Document.get().createLIElement();
-
-			mLoginLink = new InlineHyperlink("Sign In", false, "login");
-
-			mLoginItem.appendChild(mLoginLink.getElement());
-		}
-
 		mNavList.appendChild(mLoginItem);
-	}
-
-	private void addRoles() {
-		if (mRolesItem == null) {
-			mRolesItem = Document.get().createLIElement();
-
-			mRolesLink = new InlineHyperlink("Roles", false, "roles");
-
-			mRolesItem.appendChild(mRolesLink.getElement());
-		}
-
-		mNavList.appendChild(mRolesItem);
-	}
-
-	private void addPermissions() {
-		if (mPermissionsItem == null) {
-			mPermissionsItem = Document.get().createLIElement();
-
-			mPermissionsLink = new InlineHyperlink("Permissions", false, "permissions");
-
-			mPermissionsItem.appendChild(mPermissionsLink.getElement());
-		}
-
-		mNavList.appendChild(mPermissionsItem);
 	}
 
 	/**
 	 * 
 	 */
 	private void removeLogin() {
-		if (mLoginItem != null) {
-			mNavList.removeChild(mLoginItem);
-		}
-	}
-
-//	/**
-//	 * 
-//	 */
-//	private void removeLogout() {
-//		if (mLogoutItem != null) {
-//			mNavList.removeChild(mLogoutItem);
-//		}
-//	}
-
-	/**
-	 * 
-	 */
-	private void removeUsers() {
-		if (mUsersItem != null) {
-			mNavList.removeChild(mUsersItem);
-		}
-	}
-
-	/**
-	 * 
-	 */
-	private void removeFeedBrowser() {
-		if (mFeedBrowserItem != null) {
-			mNavList.removeChild(mFeedBrowserItem);
-		}
-	}
-
-	private void removeRoles() {
-		if (mRolesItem != null) {
-			mNavList.removeChild(mRolesItem);
-		}
-	}
-
-	private void removePermissions() {
-		if (mPermissionsItem != null) {
-			mNavList.removeChild(mPermissionsItem);
-		}
-	}
-
-	private void deactivateAll() {
-		deactivate(mRanksItem);
-		deactivate(mFeedBrowserItem);
-		deactivate(mRanksItem);
-		deactivate(mLoginItem);
-		deactivate(mRolesItem);
-		deactivate(mPermissionsItem);
+		mLoginItem.removeFromParent();
 	}
 
 	/*
@@ -420,29 +257,50 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		userLoggedOut();
 	}
 
-	@UiHandler("mAccountButton")
-	void onAccountButtonClicked(ClickEvent event) {
-		toggleMenu();
-	}
-
-	private void toggleMenu() {
-		if (isMenuOpen()) {
-			closeMenu();
-		} else {
-			openMenu();
+	private void addAdmin() {
+		if (SessionController.get().isLoggedInUserAdmin()) {
+			mNavList.getParentElement().appendChild(mAdminList);
 		}
 	}
 
-	private boolean isMenuOpen() {
-		return mAccountDropdown.getClassName().contains("open");
+	private void addAccount(User user) {
+		mAccountButton.getElement().setInnerHTML(
+				"<img class=\"img-rounded\" src=\"http://www.gravatar.com/avatar/" + SafeHtmlUtils.htmlEscape(user.avatar) + "?s=30&d=identicon\" /> "
+						+ SafeHtmlUtils.htmlEscape(user.forename + " " + user.surname) + " <b class=\"caret\"></b>");
+
+		mChangePasswordLink.setTargetHistoryToken("users/changepassword/" + user.id.toString());
+		mChangeDetailsLink.setTargetHistoryToken("users/changedetails/" + user.id.toString());
+
+		mNavList.getParentElement().appendChild(mAccountList);
 	}
 
-	private void openMenu() {
-		mAccountDropdown.addClassName("open");
+	private void removeAdmin() {
+		mAdminList.removeFromParent();
 	}
 
-	private void closeMenu() {
-		mAccountDropdown.removeClassName("open");
+	private void removeAccount() {
+		mAccountList.removeFromParent();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.admin.client.handler.user.UserPowersEventHandler#gotUserPowers(io.reflection.app.shared.datatypes.User, java.util.List,
+	 * java.util.List)
+	 */
+	@Override
+	public void gotUserPowers(User user, List<Role> roles, List<Permission> permissions) {
+		addAdmin();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.admin.client.handler.user.UserPowersEventHandler#getGetUserPowersFailed(com.willshex.gson.json.service.shared.Error)
+	 */
+	@Override
+	public void getGetUserPowersFailed(Error error) {
+		removeAdmin();
 	}
 
 }
