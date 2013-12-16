@@ -230,6 +230,8 @@
             <xsd:complexType name="ChangePasswordRequest">
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
+                        <xsd:attribute name="password" type="xsd:string" />
+                        <xsd:attribute name="newPassword" type="xsd:string" />
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>

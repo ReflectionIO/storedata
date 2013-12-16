@@ -10,10 +10,14 @@ package io.reflection.app.admin.client.controller;
 import io.reflection.app.admin.client.handler.user.SessionEventHandler.UserLoggedIn;
 import io.reflection.app.admin.client.handler.user.SessionEventHandler.UserLoggedOut;
 import io.reflection.app.admin.client.handler.user.SessionEventHandler.UserLoginFailed;
+import io.reflection.app.admin.client.handler.user.UserPasswordChangedEventHandler.UserPasswordChangeFailed;
+import io.reflection.app.admin.client.handler.user.UserPasswordChangedEventHandler.UserPasswordChanged;
 import io.reflection.app.admin.client.handler.user.UserPowersEventHandler.GetUserPowersFailed;
 import io.reflection.app.admin.client.handler.user.UserPowersEventHandler.GotUserPowers;
 import io.reflection.app.admin.client.helper.FormHelper;
 import io.reflection.app.api.core.client.CoreService;
+import io.reflection.app.api.core.shared.call.ChangePasswordRequest;
+import io.reflection.app.api.core.shared.call.ChangePasswordResponse;
 import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsRequest;
 import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsResponse;
 import io.reflection.app.api.core.shared.call.LoginRequest;
@@ -26,6 +30,7 @@ import io.reflection.app.shared.datatypes.User;
 
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.willshex.gson.json.service.shared.Error;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**
@@ -173,7 +178,39 @@ public class SessionController implements ServiceController {
 	 * @param newPassword
 	 */
 	public void changePassword(String password, String newPassword) {
+		CoreService service = new CoreService();
+		service.setUrl(CORE_END_POINT);
 
+		final ChangePasswordRequest input = new ChangePasswordRequest();
+		input.accessCode = ACCESS_CODE;
+
+		input.password = password;
+		input.newPassword = newPassword;
+
+		input.session = new Session();
+		input.session.token = mSession.token;
+
+		service.changePassword(input, new AsyncCallback<ChangePasswordResponse>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Error e = new Error();
+
+				e.code = Integer.valueOf(-1);
+				e.message = caught.getMessage();
+
+				EventController.get().fireEventFromSource(new UserPasswordChangeFailed(e), SessionController.this);
+			}
+
+			@Override
+			public void onSuccess(ChangePasswordResponse output) {
+				if (output.status == StatusType.StatusTypeSuccess) {
+					EventController.get().fireEventFromSource(new UserPasswordChanged(mLoggedIn.id), SessionController.this);
+				} else {
+					EventController.get().fireEventFromSource(new UserPasswordChangeFailed(output.error), SessionController.this);
+				}
+			}
+		});
 	}
 
 	private void restoreSession() {

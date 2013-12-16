@@ -23,7 +23,7 @@ public enum ValidationError {
 	
 	SearchQueryNull(100006, "Invalid value null search query for String: %s.query"),
 	
-	PagerStartLargerThanTotal(100007, "Invalid value for start, should be less than totalCount for Pager: %.pager"),
+	PagerStartLargerThanTotal(100007, "Invalid value for start, should be less than totalCount for Pager: %s.pager"),
 	PagerStartNegative(100008, "Invalid negative value for Long: %s.pager.start"),
 	PagerCountTooSmall(100009, "Invalid 0 or negative value for Long: %s.pager.count"),
 	PagerCountTooLarge(100010, "Invalid value, maximum count should be <= 30 Long: %s.pager.count"),
@@ -63,14 +63,18 @@ public enum ValidationError {
 	SessionNull(100033, "Invalid value null for Session: %s"),
 	SessionNotFound(100034, "Session not found Session: %s"),
 	SessionNoLookup(100035, "Invalid session lookup, need either id or token for Session: %s"),
+	
+	InvalidCredentials(100036, "Invalid credentials, either the username (e-mail) or password are incorrect"),
+	IncorrectPasswordForChange(100037, "Incorrect current password for user: %s"),
+	InvalidPasswordSameAsCurrent(100038, "Invalid password, current and new passwords are identical: %s"),
 
-	GetCountriesNeedsStoreOrQuery(100101, "GetCountries call should either have a store or a query. To get all countries use * for the query"),
+	GetCountriesNeedsStoreOrQuery(100101, "GetCountries call should either have a store or a query. To get all countries use * for the query: %s"),
 
-	GetStoresNeedsCountryOrQuery(100201, "GetStores call should either have a country or a query. To get all stores use * for the query"),
+	GetStoresNeedsCountryOrQuery(100201, "GetStores call should either have a country or a query. To get all stores use * for the query: %s"),
 
 	// lookup service
 	LookupApplicationNeedsInternalOrExternalId(100301,
-			"LookupApplication should have at least one internal or external application id, you can also add multiple ids of each type"),
+			"LookupApplication should have at least one internal or external application id, you can also add multiple ids of each type: %s"),
 	
 	;
 
@@ -86,12 +90,16 @@ public enum ValidationError {
 		return code;
 	}
 
+	public String getMessage() {
+		return message;
+	}
+	
 	public String getMessage(String parent) {
-		return String.format(message, parent == null ? "" : parent);
+		return String.format(message, parent == null ? "?" : parent);
 	}
 	
 	public String getMessage(String parent, int minValue, int maxValue) {
-		return String.format(message, parent == null ? "" : parent, minValue, maxValue);
+		return String.format(message, parent == null ? "?" : parent, minValue, maxValue);
 	}
 
 }

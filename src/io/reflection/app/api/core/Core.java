@@ -524,7 +524,8 @@ public final class Core extends ActionHandler {
 
 				User user = userService.getLoginUser(input.username, input.password);
 
-				if (user == null) throw new Exception("Invalid credentials - no user found in");
+				if (user == null)
+					throw new InputValidationException(ValidationError.InvalidCredentials.getCode(), ValidationError.InvalidCredentials.getMessage());
 
 				ISessionService sessionService = SessionServiceProvider.provide();
 
@@ -582,6 +583,32 @@ public final class Core extends ActionHandler {
 		LOG.finer("Entering changePassword");
 		ChangePasswordResponse output = new ChangePasswordResponse();
 		try {
+			if (input == null)
+				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
+						ValidationError.InvalidValueNull.getMessage("ChangePasswordRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
+			input.session = ValidationHelper.validateSession(input.session, "input.session");
+
+			input.password = ValidationHelper.validatePassword(input.password, "input.password");
+
+			User sessionUser = UserServiceProvider.provide().getUser(input.session.user.id);
+
+			User credentialUser = UserServiceProvider.provide().getLoginUser(sessionUser.username, input.password);
+
+			if (credentialUser == null)
+				throw new InputValidationException(ValidationError.IncorrectPasswordForChange.getCode(),
+						ValidationError.IncorrectPasswordForChange.getMessage("input.password"));
+
+			input.newPassword = ValidationHelper.validatePassword(input.newPassword, "input.newPassword");
+
+			if (input.newPassword.equals(input.password))
+				throw new InputValidationException(ValidationError.InvalidPasswordSameAsCurrent.getCode(),
+						ValidationError.InvalidPasswordSameAsCurrent.getMessage("input.newPassword"));
+
+			UserServiceProvider.provide().updateUserPassword(input.session.user, input.newPassword);
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;

@@ -71,17 +71,18 @@ public class ChangePasswordPage extends Composite implements UserPasswordChanged
 		mConfirmPassword.getElement().setAttribute("placeholder", "Confirm Password");
 
 		EventController.get().addHandlerToSource(UserPasswordChangedEventHandler.TYPE, UserController.get(), this);
+		EventController.get().addHandlerToSource(UserPasswordChangedEventHandler.TYPE, SessionController.get(), this);
 	}
 
 	@UiHandler("mChangePassword")
 	void onChangePassword(ClickEvent event) {
 		if (validate()) {
+			mForm.setVisible(false);
+
+			AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Please wait", " - changing user password...", false)
+					.setVisible(true);
+
 			if (SessionController.get().isLoggedInUserAdmin()) {
-				mForm.setVisible(false);
-
-				AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Please wait", " - changing user password...", false).setVisible(
-						true);
-
 				mUserId = Long.valueOf(NavigationController.get().getStack().getParameter(0));
 
 				UserController.get().setPassword(mUserId, mNewPassword.getText());
@@ -172,7 +173,7 @@ public class ChangePasswordPage extends Composite implements UserPasswordChanged
 
 			@Override
 			public void run() {
-				History.newItem(SessionController.get().isLoggedInUserAdmin() ? "login" : "users");
+				History.newItem(SessionController.get().isLoggedInUserAdmin() ? "users" : "logout");
 			}
 		};
 
@@ -206,6 +207,8 @@ public class ChangePasswordPage extends Composite implements UserPasswordChanged
 		FormHelper.hideNote(mPasswordGroup, mPasswordNote);
 
 		mAlertBox.setVisible(false);
+		
+		mForm.setVisible(true);
 	}
 
 }
