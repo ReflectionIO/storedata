@@ -201,7 +201,7 @@ public class LoginPage extends Composite implements SessionEventHandler {
 		mForm.setVisible(true);
 		mUsername.setText("");
 		mPassword.setText("");
-		mRememberMe.setValue(Boolean.FALSE);
+		mRememberMe.setValue(Boolean.TRUE);
 
 		FormHelper.hideNote(mUsernameGroup, mUsernameNote);
 		FormHelper.hideNote(mPasswordGroup, mPasswordNote);
