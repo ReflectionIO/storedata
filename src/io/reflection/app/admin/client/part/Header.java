@@ -53,6 +53,9 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@UiField InlineHyperlink mRanksLink;
 	@UiField LIElement mRanksItem;
 
+	@UiField LIElement mUpgradeAccountItem;
+	@UiField InlineHyperlink mUpgradeAccountLink;
+
 	@UiField UListElement mNavList;
 	@UiField UListElement mAdminList;
 	@UiField UListElement mAccountList;
@@ -89,6 +92,9 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@UiField InlineHyperlink mChangePasswordLink;
 	@UiField LIElement mChangePasswordItem;
 
+	@UiField LIElement mLinkedAccountsItem;
+	@UiField InlineHyperlink mLinkedAccountsLink;
+
 	private List<LIElement> mItems;
 
 	public Header() {
@@ -103,6 +109,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 		createItemList();
 
+		removeUpgrade();
 		removeAccount();
 		removeAdmin();
 
@@ -120,6 +127,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			mItems.add(mPermissionsItem);
 			mItems.add(mChangeDetailsItem);
 			mItems.add(mChangePasswordItem);
+			mItems.add(mUpgradeAccountItem);
+			mItems.add(mLinkedAccountsItem);
 		}
 	}
 
@@ -160,10 +169,12 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		} else if ("users".equals(stack.getPage())) {
 			if (stack.getAction() == null) {
 				highlight(mUsersItem);
-			} else if (stack.getAction().equals("changedetails")) {
+			} else if ("changedetails".equals(stack.getAction())) {
 				highlight(mChangeDetailsItem);
-			} else if (stack.getAction().equals("changepassword")) {
+			} else if ("changepassword".equals(stack.getAction())) {
 				highlight(mChangePasswordItem);
+			} else if ("linkedaccounts".equals(stack.getAction())) {
+				highlight(mLinkedAccountsItem);
 			}
 		} else if ("login".equals(stack.getPage())) {
 			highlight(mLoginItem);
@@ -171,6 +182,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			highlight(mRolesItem);
 		} else if ("permissions".equals(stack.getPage())) {
 			highlight(mPermissionsItem);
+		} else if ("upgrade".equals(stack.getPage())) {
+			highlight(mUpgradeAccountItem);
 		} else {
 			highlight(null);
 		}
@@ -226,6 +239,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		removeAccount();
 
 		addLogin();
+
+		removeUpgrade();
 	}
 
 	/**
@@ -272,6 +287,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 		mChangePasswordLink.setTargetHistoryToken("users/changepassword/" + user.id.toString());
 		mChangeDetailsLink.setTargetHistoryToken("users/changedetails/" + user.id.toString());
+		mLinkedAccountsLink.setTargetHistoryToken("users/linkedaccounts/" + user.id.toString());
 
 		mAccountList.appendChild(mAccountDropdown);
 	}
@@ -293,6 +309,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@Override
 	public void gotUserPowers(User user, List<Role> roles, List<Permission> permissions) {
 		addAdmin();
+
+		addUpgrade();
 	}
 
 	/*
@@ -303,6 +321,18 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@Override
 	public void getGetUserPowersFailed(Error error) {
 		removeAdmin();
+	}
+
+	public void removeUpgrade() {
+		mUpgradeAccountItem.removeFromParent();
+	}
+
+	public void addUpgrade() {
+		if (SessionController.get().getLoggedInUser().roles == null || SessionController.get().getLoggedInUser().roles.size() == 0) {
+			mNavList.appendChild(mUpgradeAccountItem);
+		} else {
+			removeUpgrade();
+		}
 	}
 
 }

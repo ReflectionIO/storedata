@@ -2,8 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:with field='res' type='io.reflection.app.admin.client.res.Images' />
     <ui:style>
-    	@external navbar-nav;
-    
+        @external navbar-nav;
         .header {
         	background: #272833;
         }
@@ -12,16 +11,14 @@
         	vertical-align: bottom;
         }
         
-        .navbar-nav > li > a.anchor {
+        .navbar-nav>li>a.anchor {
         	padding-top: 10px;
         	padding-bottom: 10px;
         }
         
-        .navbar-nav > li > a.anchor img {
-			margin-left: 5px;
-		}
-        
-        
+        .navbar-nav>li>a.anchor img {
+        	margin-left: 5px;
+        }
     </ui:style>
     <g:HTMLPanel ui:field="pnlHeader" styleName="navbar navbar-inverse navbar-fixed-top {style.header}">
         <div class="container">
@@ -39,6 +36,10 @@
                 <ul class="nav navbar-nav" ui:field="mNavList">
                     <li ui:field="mRanksItem">
                         <g:InlineHyperlink ui:field="mRanksLink" targetHistoryToken="ranks">Ranks</g:InlineHyperlink>
+                    </li>
+
+                    <li ui:field="mUpgradeAccountItem">
+                        <g:InlineHyperlink targetHistoryToken="upgrade" ui:field="mUpgradeAccountLink" text="Upgrade" />
                     </li>
                 </ul>
                 <ul class="nav navbar-nav" ui:field="mAdminList">
@@ -72,6 +73,10 @@
                     <li ui:field="mAccountDropdown" class="dropdown">
                         <g:Anchor styleName="dropdown-toggle {style.anchor}" ui:field="mAccountButton" />
                         <ul class="dropdown-menu">
+                            <li ui:field="mLinkedAccountsItem">
+                                <g:InlineHyperlink ui:field="mLinkedAccountsLink" text="Linked accounts" />
+                            </li>
+                            <li class="divider"></li>
                             <li ui:field="mChangeDetailsItem">
                                 <g:InlineHyperlink ui:field="mChangeDetailsLink" text="Change Details" />
                             </li>

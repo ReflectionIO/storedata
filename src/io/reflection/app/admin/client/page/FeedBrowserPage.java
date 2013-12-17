@@ -47,7 +47,7 @@ public class FeedBrowserPage extends Composite {
 	@UiField ListBox mAppStore;
 	@UiField ListBox mListType;
 	@UiField ListBox mCountry;
-	
+
 	@UiField Button mIngest;
 	@UiField Button mModel;
 	@UiField Button mPredict;
@@ -64,9 +64,15 @@ public class FeedBrowserPage extends Composite {
 			public void onSelectionChange(SelectionChangeEvent event) {
 				FeedFetch selected = s.getSelectedObject();
 
-				mIngest.setVisible(selected != null);
-				mModel.setVisible(selected != null);
-				mPredict.setVisible(selected != null);
+				if (selected != null) {
+					mIngest.removeStyleName("disabled");
+					mModel.removeStyleName("disabled");
+					mPredict.removeStyleName("disabled");
+				} else {
+					mIngest.addStyleName("disabled");
+					mModel.addStyleName("disabled");
+					mPredict.addStyleName("disabled");
+				}
 			}
 		});
 		mFeeds.setSelectionModel(s);
@@ -85,7 +91,7 @@ public class FeedBrowserPage extends Composite {
 	 * 
 	 */
 	private void addFeedColumns() {
-		
+
 		mFeeds.addColumn(new TextColumn<FeedFetch>() {
 
 			@Override
@@ -126,32 +132,31 @@ public class FeedBrowserPage extends Composite {
 		FilterController.get().setCountry(mCountry.getValue(mCountry.getSelectedIndex()));
 	}
 
-	
 	@UiHandler("mIngest")
 	void onIngestClicked(ClickEvent event) {
 		@SuppressWarnings("unchecked")
-		FeedFetch selected = ((SingleSelectionModel<FeedFetch>)mFeeds.getSelectionModel()).getSelectedObject();
-		
+		FeedFetch selected = ((SingleSelectionModel<FeedFetch>) mFeeds.getSelectionModel()).getSelectedObject();
+
 		if (selected != null) {
 			FeedFetchController.get().ingest(selected.code);
 		}
 	}
-	
+
 	@UiHandler("mModel")
 	void onModelClicked(ClickEvent event) {
 		@SuppressWarnings("unchecked")
-		FeedFetch selected = ((SingleSelectionModel<FeedFetch>)mFeeds.getSelectionModel()).getSelectedObject();
-		
+		FeedFetch selected = ((SingleSelectionModel<FeedFetch>) mFeeds.getSelectionModel()).getSelectedObject();
+
 		if (selected != null) {
 			FeedFetchController.get().model(selected.code);
 		}
 	}
-	
+
 	@UiHandler("mPredict")
 	void onPredictClicked(ClickEvent event) {
 		@SuppressWarnings("unchecked")
-		FeedFetch selected = ((SingleSelectionModel<FeedFetch>)mFeeds.getSelectionModel()).getSelectedObject();
-		
+		FeedFetch selected = ((SingleSelectionModel<FeedFetch>) mFeeds.getSelectionModel()).getSelectedObject();
+
 		if (selected != null) {
 			FeedFetchController.get().predict(selected.code);
 		}

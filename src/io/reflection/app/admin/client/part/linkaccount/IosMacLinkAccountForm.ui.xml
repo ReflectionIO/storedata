@@ -1,0 +1,31 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+    <ui:style>
+        .noteDetail {
+        	font-size: smaller;
+        	margin-top: 5px;
+        }
+        
+        .justify {
+			text-align: justify;
+		}
+    </ui:style>
+    <g:HTMLPanel>
+
+        <p class="text-muted {style.justify}">To link your iOS or Mac OS X account, enter your iTunes Connect username and password in the form below. Once we can access the data you will be able
+            to track your application data as part of our <strong>FREE</strong> developer package.</p>
+
+        <g:HTMLPanel ui:field="mUsernameGroup" styleName="form-group">
+            <label>Username</label>
+            <g:TextBox styleName="form-control input-lg" ui:field="mUsername" />
+            <g:HTMLPanel ui:field="mUsernameNote" visible="false" styleName="{style.noteDetail}" />
+        </g:HTMLPanel>
+
+        <g:HTMLPanel ui:field="mPasswordGroup" styleName="form-group">
+            <label>Password</label>
+            <g:PasswordTextBox styleName="form-control input-lg" ui:field="mPassword" />
+            <g:HTMLPanel ui:field="mPasswordNote" visible="false" styleName="{style.noteDetail}" />
+        </g:HTMLPanel>
+
+    </g:HTMLPanel>
+</ui:UiBinder> 

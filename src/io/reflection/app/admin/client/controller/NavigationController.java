@@ -11,11 +11,13 @@ import io.reflection.app.admin.client.handler.NavigationEventHandler;
 import io.reflection.app.admin.client.page.ChangeDetailsPage;
 import io.reflection.app.admin.client.page.ChangePasswordPage;
 import io.reflection.app.admin.client.page.FeedBrowserPage;
+import io.reflection.app.admin.client.page.LinkedAccountsPage;
 import io.reflection.app.admin.client.page.LoginPage;
 import io.reflection.app.admin.client.page.PermissionsPage;
 import io.reflection.app.admin.client.page.RanksPage;
 import io.reflection.app.admin.client.page.RegisterPage;
 import io.reflection.app.admin.client.page.RolesPage;
+import io.reflection.app.admin.client.page.UpgradePage;
 import io.reflection.app.admin.client.page.UsersPage;
 import io.reflection.app.admin.client.part.Footer;
 import io.reflection.app.admin.client.part.Header;
@@ -41,6 +43,8 @@ public class NavigationController {
 	private RolesPage mRolesPage = null;
 	private PermissionsPage mPermissionsPage = null;
 	private ChangeDetailsPage mChangeDetailsPage = null;
+	private UpgradePage mUpgradePage = null;
+	private LinkedAccountsPage mLinkedAccountsPage = null;
 
 	private Header mHeader = null;
 	private Footer mFooter = null;
@@ -167,7 +171,7 @@ public class NavigationController {
 			mPanel.add(mChangePasswordPage);
 		}
 	}
-	
+
 	public void addChangeDetailsPage() {
 		if (mChangeDetailsPage == null) {
 			mChangeDetailsPage = new ChangeDetailsPage();
@@ -201,6 +205,28 @@ public class NavigationController {
 		}
 	}
 
+	public void addUpgradePage() {
+		if (mUpgradePage == null) {
+			mUpgradePage = new UpgradePage();
+		}
+
+		if (!mUpgradePage.isAttached()) {
+			mPanel.clear();
+			mPanel.add(mUpgradePage);
+		}
+	}
+
+	public void addLinkAccountsPage() {
+		if (mLinkedAccountsPage == null) {
+			mLinkedAccountsPage = new LinkedAccountsPage();
+		}
+
+		if (!mLinkedAccountsPage.isAttached()) {
+			mPanel.clear();
+			mPanel.add(mLinkedAccountsPage);
+		}
+	}
+
 	/**
 	 * @param value
 	 */
@@ -223,6 +249,8 @@ public class NavigationController {
 				addChangePasswordPage();
 			} else if ("changedetails".equals(mStack.getAction())) {
 				addChangeDetailsPage();
+			} else if ("linkedaccounts".equals(mStack.getAction())) {
+				addLinkAccountsPage();
 			} else if ("assignrole".equals(mStack.getAction())) {
 				String userId = mStack.getParameter(0);
 				String roleName = mStack.getParameter(1);
@@ -248,6 +276,8 @@ public class NavigationController {
 			addRolesPage();
 		} else if ("permissions".equals(mStack.getPage())) {
 			addPermissionsPage();
+		} else if ("upgrade".equals(mStack.getPage())) {
+			addUpgradePage();
 		}
 
 		EventController.get().fireEventFromSource(new NavigationEventHandler.ChangedEvent(mStack), NavigationController.this);

@@ -2,19 +2,22 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.admin.client.part"
     xmlns:c="urn:import:com.google.gwt.user.cellview.client">
     <ui:style>
-        /* Add CSS here. See the GWT docs on UI Binder for more details */
+        .toolbar_spacing {
+        	padding-top: 10px;
+        	padding-bottom: 10px;
+        }
     </ui:style>
     <g:HTMLPanel>
-        <!-- Add GWT widgets here. Enter < and hit Ctrl-Space to auto-complete widget names. The ui:field attribute binds an element to a field in the owner class. 
-            See the GWT docs on UI Binder for more details. -->
-        <h2>Feed Browser</h2>
 
-        <p>12-hourly feeds</p>
+        <h2>
+            Feed Browser
+            <small>12-hourly feeds</small>
+        </h2>
 
-        <g:HTMLPanel styleName="btn-group">
-            <g:Button styleName="btn btn-default" text="Ingest" visible="false" ui:field="mIngest" />
-            <g:Button styleName="btn btn-default" text="Model" visible="false" ui:field="mModel" />
-            <g:Button styleName="btn btn-default" text="Predict" visible="false" ui:field="mPredict" />
+        <g:HTMLPanel styleName="btn-group {style.toolbar_spacing}">
+            <g:Button styleName="btn btn-default disabled" text="Ingest" ui:field="mIngest" />
+            <g:Button styleName="btn btn-default disabled" text="Model" ui:field="mModel" />
+            <g:Button styleName="btn btn-default disabled" text="Predict" ui:field="mPredict" />
         </g:HTMLPanel>
 
         <div class="row">

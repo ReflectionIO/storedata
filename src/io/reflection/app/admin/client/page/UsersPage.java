@@ -59,9 +59,15 @@ public class UsersPage extends Composite {
 			public void onSelectionChange(SelectionChangeEvent event) {
 				User selected = s.getSelectedObject();
 
-				mAssignPassword.setVisible(selected != null);
-				mMakeAdmin.setVisible(selected != null);
-				mChangeDetails.setVisible(selected != null);
+				if (selected != null) {
+					mAssignPassword.removeStyleName("disabled");
+					mMakeAdmin.removeStyleName("disabled");
+					mChangeDetails.removeStyleName("disabled");
+				} else {
+					mAssignPassword.addStyleName("disabled");
+					mMakeAdmin.addStyleName("disabled");
+					mChangeDetails.addStyleName("disabled");
+				}
 
 				if (selected != null) {
 					mAssignPassword.setTargetHistoryToken("users/changepassword/" + selected.id.toString());
