@@ -75,7 +75,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 		if (mPager == null) {
 			mPager = new Pager();
-			mPager.count = STEP;
+			mPager.count = SHORT_STEP;
 			mPager.start = Long.valueOf(0);
 			mPager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
 		}

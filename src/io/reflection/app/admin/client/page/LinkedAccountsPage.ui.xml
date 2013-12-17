@@ -12,9 +12,9 @@
 
         <g:HTMLPanel styleName="btn-group {style.toolbar_spacing}">
             <g:InlineHyperlink styleName="btn btn-default" text="iOS/Mac" ui:field="mIosMacLink" />
-            <g:InlineHyperlink styleName="btn btn-default disabled" text="Google Play" ui:field="mPlay" />
-            <g:InlineHyperlink styleName="btn btn-default disabled" text="Amazon" ui:field="mAmazon" />
-            <g:InlineHyperlink styleName="btn btn-default disabled" text="Windows" ui:field="mWindowsPhone" />
+            <g:InlineHyperlink styleName="btn btn-default disabled" text="Google Play" ui:field="mPlayLink" />
+            <g:InlineHyperlink styleName="btn btn-default disabled" text="Amazon" ui:field="mAmazonLink" />
+            <g:InlineHyperlink styleName="btn btn-default disabled" text="Windows" ui:field="mWindowsPhoneLink" />
         </g:HTMLPanel>
 
         <p:AlertBox ui:field="mAlertBox" visible="false" />
