@@ -14,6 +14,8 @@
             <small>12-hourly feeds</small>
         </h2>
 
+        <p:Breadcrumbs ui:field="mBreadcrumbs" path="..." />
+
         <g:HTMLPanel styleName="btn-group {style.toolbar_spacing}">
             <g:Button styleName="btn btn-default disabled" text="Ingest" ui:field="mIngest" />
             <g:Button styleName="btn btn-default disabled" text="Model" ui:field="mModel" />
@@ -31,13 +33,7 @@
 
             <g:FormPanel>
                 <g:HTMLPanel styleName="well sidebar-nav col-sm-3">
-                    <g:HTMLPanel styleName="form-group">
-                        <label>App Store</label>
-                        <g:ListBox styleName="form-control" ui:field="mAppStore">
-                            <g:item value="iph">iPhone</g:item>
-                            <g:item value="ipa">iPad</g:item>
-                        </g:ListBox>
-                    </g:HTMLPanel>
+                    
 
                     <g:HTMLPanel styleName="form-group">
                         <label>Overview</label>
@@ -57,6 +53,14 @@
                             <g:item value="cn">China</g:item>
                             <g:item value="de">Germany</g:item>
                             <g:item value="fr">France</g:item>
+                        </g:ListBox>
+                    </g:HTMLPanel>
+                    
+                    <g:HTMLPanel styleName="form-group">
+                        <label>App Store</label>
+                        <g:ListBox styleName="form-control" ui:field="mAppStore">
+                            <g:item value="iph">iPhone</g:item>
+                            <g:item value="ipa">iPad</g:item>
                         </g:ListBox>
                     </g:HTMLPanel>
 

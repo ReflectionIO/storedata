@@ -6,12 +6,16 @@
     <g:HTMLPanel styleName="well sidebar-nav col-md-3">
         <g:FormPanel>
             <g:HTMLPanel>
+                
                 <g:HTMLPanel styleName="form-group">
-                    <label>App Store</label>
-                    <g:ListBox styleName="form-control" ui:field="mAppStore">
-                        <g:item value="iph">iPhone</g:item>
-                        <g:item value="ipa">iPad</g:item>
-                    </g:ListBox>
+                    <label>Date</label>
+                    <!--<input type="text" id="datepicker"> -->
+                    <div class="input-group">
+                        <d:DateBox styleName="form-control" ui:field="mDate" />
+                        <span class="input-group-addon">
+                            <i class="glyphicon glyphicon-calendar"></i>
+                        </span>
+                    </div>
                 </g:HTMLPanel>
 
                 <g:HTMLPanel styleName="form-group">
@@ -35,15 +39,14 @@
                     </g:ListBox>
                 </g:HTMLPanel>
 
+                
+                
                 <g:HTMLPanel styleName="form-group">
-                    <label>Date</label>
-                    <!--<input type="text" id="datepicker"> -->
-                    <div class="input-group">
-                        <d:DateBox styleName="form-control" ui:field="mDate" />
-                        <span class="input-group-addon">
-                            <i class="glyphicon glyphicon-calendar"></i>
-                        </span>
-                    </div>
+                    <label>App Store</label>
+                    <g:ListBox styleName="form-control" ui:field="mAppStore">
+                        <g:item value="iph">iPhone</g:item>
+                        <g:item value="ipa">iPad</g:item>
+                    </g:ListBox>
                 </g:HTMLPanel>
 
                 <!-- <g:HTMLPanel styleName="form-group"><label>Category</label> <g:ListBox styleName="form-control" id="category"> <g:item>All Categories</g:item> 

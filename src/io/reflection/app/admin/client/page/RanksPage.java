@@ -9,16 +9,21 @@ package io.reflection.app.admin.client.page;
 
 import io.reflection.app.admin.client.cell.MiniAppCell;
 import io.reflection.app.admin.client.controller.EventController;
+import io.reflection.app.admin.client.controller.FilterController;
 import io.reflection.app.admin.client.controller.RankController;
 import io.reflection.app.admin.client.controller.ServiceController;
+import io.reflection.app.admin.client.handler.FilterEventHandler;
 import io.reflection.app.admin.client.handler.RanksEventHandler;
 import io.reflection.app.admin.client.part.BootstrapGwtCellTable;
+import io.reflection.app.admin.client.part.Breadcrumbs;
 import io.reflection.app.admin.client.part.PageSizePager;
+import io.reflection.app.admin.client.part.RankFilter;
 import io.reflection.app.admin.client.part.datatypes.RanksGroup;
 import io.reflection.app.shared.datatypes.Item;
 import io.reflection.app.shared.datatypes.Rank;
 
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -34,7 +39,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author billy1380
  * 
  */
-public class RanksPage extends Composite implements RanksEventHandler {
+public class RanksPage extends Composite implements RanksEventHandler, FilterEventHandler {
 
 	private static RanksPageUiBinder uiBinder = GWT.create(RanksPageUiBinder.class);
 
@@ -42,6 +47,10 @@ public class RanksPage extends Composite implements RanksEventHandler {
 
 	@UiField(provided = true) CellTable<RanksGroup> mRanks = new CellTable<RanksGroup>(ServiceController.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) PageSizePager mPager = new PageSizePager(ServiceController.STEP_VALUE);
+
+	@UiField RankFilter mFilter;
+
+	@UiField Breadcrumbs mBreadcrumbs;
 
 	public RanksPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -97,14 +106,25 @@ public class RanksPage extends Composite implements RanksEventHandler {
 		mRanks.addColumn(grossing, grossingHeader);
 
 		EventController.get().addHandlerToSource(RanksEventHandler.TYPE, RankController.get(), this);
-		
+		EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this);
+
 		RankController.get().addDataDisplay(mRanks);
 		mPager.setDisplay(mRanks);
-		
-		
+
+		refreshBreadcrumbs();
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * 
+	 */
+	private void refreshBreadcrumbs() {
+		mBreadcrumbs.clear();
+		mBreadcrumbs.push(mFilter.getStore(), mFilter.getCountry(), mFilter.getListType(), mFilter.getDisplayDate(), "Ranks");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.admin.client.handler.RanksEventHandler#receivedRanks(java.lang.String, java.util.List)
 	 */
 	@Override
@@ -112,11 +132,33 @@ public class RanksPage extends Composite implements RanksEventHandler {
 		mPager.setLoading(false);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.admin.client.handler.RanksEventHandler#fetchingRanks()
 	 */
 	@Override
 	public void fetchingRanks() {
 		mPager.setLoading(true);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.admin.client.handler.FilterEventHandler#filterParamChanged(java.lang.String, java.lang.Object, java.lang.Object)
+	 */
+	@Override
+	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
+		refreshBreadcrumbs();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.admin.client.handler.FilterEventHandler#filterParamsChanged(java.util.Map, java.util.Map)
+	 */
+	@Override
+	public void filterParamsChanged(Map<String, ?> currentValues, Map<String, ?> previousValues) {
+		refreshBreadcrumbs();
 	}
 }

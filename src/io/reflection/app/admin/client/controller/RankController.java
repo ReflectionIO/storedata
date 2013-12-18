@@ -7,6 +7,7 @@
 //
 package io.reflection.app.admin.client.controller;
 
+import io.reflection.app.admin.client.handler.FilterEventHandler;
 import io.reflection.app.admin.client.handler.RanksEventHandler.FetchingRanks;
 import io.reflection.app.admin.client.handler.RanksEventHandler.ReceivedRanks;
 import io.reflection.app.admin.client.part.datatypes.RanksGroup;
@@ -17,7 +18,6 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.shared.datatypes.Item;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,14 +33,14 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class RankController extends AsyncDataProvider<RanksGroup> implements ServiceController {
+public class RankController extends AsyncDataProvider<RanksGroup> implements ServiceController, FilterEventHandler {
 
 	private static RankController mOne = null;
 
 	private Map<String, Item> mItemLookup = new HashMap<String, Item>();
 
 	private List<RanksGroup> mRows = null;
-	
+
 	private Pager mPager;
 
 	public static RankController get() {
@@ -49,6 +49,10 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 		}
 
 		return mOne;
+	}
+
+	private RankController() {
+		EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this);
 	}
 
 	public void fetchTopItems() {
@@ -61,7 +65,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 		input.country = FilterController.get().getCountry();
 
 		input.listType = FilterController.get().getListTypes().get(0);
-		input.on = new Date();
+		input.on = FilterController.get().getStartDate();
 
 		if (mPager == null) {
 			mPager = new Pager();
@@ -90,11 +94,11 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 					EventController.get().fireEventFromSource(new ReceivedRanks("free" + input.listType, output.freeRanks), RankController.this);
 					EventController.get().fireEventFromSource(new ReceivedRanks("paid" + input.listType, output.paidRanks), RankController.this);
 					EventController.get().fireEventFromSource(new ReceivedRanks("grossing" + input.listType, output.grossingRanks), RankController.this);
-					
+
 					if (mRows == null) {
 						mRows = new ArrayList<RanksGroup>();
 					}
-					
+
 					int count = output.freeRanks.size();
 					RanksGroup r;
 					for (int i = 0; i < count; i++) {
@@ -103,7 +107,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 						r.paid = output.paidRanks.get(i);
 						r.grossing = output.grossingRanks.get(i);
 					}
-					
+
 					updateRowCount(mPager.totalCount.intValue(), true);
 					updateRowData(0, mRows);
 				}
@@ -114,7 +118,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 				Window.alert("Error");
 			}
 		});
-		
+
 		EventController.get().fireEventFromSource(new FetchingRanks(), RankController.this);
 	}
 
@@ -122,12 +126,14 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 		return mItemLookup.get(externalId);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.google.gwt.view.client.AbstractDataProvider#onRangeChanged(com.google.gwt.view.client.HasData)
 	 */
 	@Override
 	protected void onRangeChanged(HasData<RanksGroup> display) {
-		
+
 		Range r = display.getVisibleRange();
 
 		int start = r.getStart();
@@ -138,5 +144,38 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 		} else {
 			updateRowData(start, mRows.subList(start, end));
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.admin.client.handler.FilterEventHandler#filterParamChanged(java.lang.String, java.lang.Object, java.lang.Object)
+	 */
+	@Override
+	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
+		mPager = null;
+		mRows = null;
+
+		updateRowData(0, new ArrayList<RanksGroup>());
+		updateRowCount(0, false);
+
+		fetchTopItems();
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.admin.client.handler.FilterEventHandler#filterParamsChanged(java.util.Map, java.util.Map)
+	 */
+	@Override
+	public void filterParamsChanged(Map<String, ?> currentValues, Map<String, ?> previousValues) {
+		mPager = null;
+		mRows = null;
+
+		updateRowData(0, new ArrayList<RanksGroup>());
+		updateRowCount(0, false);
+
+		fetchTopItems();
 	}
 }

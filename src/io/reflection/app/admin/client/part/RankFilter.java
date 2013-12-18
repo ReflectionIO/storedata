@@ -14,11 +14,14 @@ import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.logical.shared.ShowRangeEvent;
 import com.google.gwt.event.logical.shared.ShowRangeHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -76,7 +79,7 @@ public class RankFilter extends Composite {
 				mDate.getDatePicker().setTransientEnabledOnDates(false, dates);
 			}
 		});
-		
+
 		FilterController.get().start();
 		FilterController.get().setStore(mAppStore.getValue(mAppStore.getSelectedIndex()));
 		FilterController.get().setListType(mListType.getValue(mListType.getSelectedIndex()));
@@ -84,6 +87,62 @@ public class RankFilter extends Composite {
 		FilterController.get().setStartDate(mDate.getValue());
 		FilterController.get().commit();
 
+	}
+
+	@UiHandler("mAppStore")
+	void onAppStoreValueChanged(ChangeEvent event) {
+		FilterController.get().setStore(mAppStore.getValue(mAppStore.getSelectedIndex()));
+	}
+
+	@UiHandler("mListType")
+	void onListTypeValueChanged(ChangeEvent event) {
+		FilterController.get().setListType(mListType.getValue(mListType.getSelectedIndex()));
+	}
+
+	@UiHandler("mCountry")
+	void onCountryValueChanged(ChangeEvent event) {
+		FilterController.get().setCountry(mCountry.getValue(mCountry.getSelectedIndex()));
+	}
+
+	@UiHandler("mDate")
+	void onDateValueChanged(ValueChangeEvent<Date> event) {
+		FilterController.get().setStartDate(mDate.getValue());
+	}
+
+	/**
+	 * @return
+	 */
+	public String getStore() {
+		return mAppStore.getItemText(mAppStore.getSelectedIndex());
+	}
+
+	/**
+	 * @return
+	 */
+	public String getCountry() {
+		return mCountry.getItemText(mCountry.getSelectedIndex());
+	}
+
+	/**
+	 * @return
+	 */
+	public String getListType() {
+		return mListType.getItemText(mListType.getSelectedIndex());
+	}
+
+	public String getDisplayDate() {
+		return getDisplayDate("d MMM");
+	}
+
+	public String getDisplayDate(String format) {
+		return DateTimeFormat.getFormat(format).format(getDate());
+	}
+
+	/**
+	 * @return
+	 */
+	public Date getDate() {
+		return mDate.getValue();
 	}
 
 }

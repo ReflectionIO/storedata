@@ -7,10 +7,15 @@
 //
 package io.reflection.app.admin.client.page;
 
+import java.util.Map;
+
+import io.reflection.app.admin.client.controller.EventController;
 import io.reflection.app.admin.client.controller.FeedFetchController;
 import io.reflection.app.admin.client.controller.FilterController;
 import io.reflection.app.admin.client.controller.ServiceController;
+import io.reflection.app.admin.client.handler.FilterEventHandler;
 import io.reflection.app.admin.client.part.BootstrapGwtCellTable;
+import io.reflection.app.admin.client.part.Breadcrumbs;
 import io.reflection.app.admin.client.part.SimplePager;
 import io.reflection.app.shared.datatypes.FeedFetch;
 
@@ -35,7 +40,7 @@ import com.google.gwt.view.client.SingleSelectionModel;
  * @author billy1380
  * 
  */
-public class FeedBrowserPage extends Composite {
+public class FeedBrowserPage extends Composite implements FilterEventHandler {
 
 	private static FeedBrowserPageUiBinder uiBinder = GWT.create(FeedBrowserPageUiBinder.class);
 
@@ -51,6 +56,8 @@ public class FeedBrowserPage extends Composite {
 	@UiField Button mIngest;
 	@UiField Button mModel;
 	@UiField Button mPredict;
+
+	@UiField Breadcrumbs mBreadcrumbs;
 
 	public FeedBrowserPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -80,11 +87,23 @@ public class FeedBrowserPage extends Composite {
 		FeedFetchController.get().addDataDisplay(mFeeds);
 		mPager.setDisplay(mFeeds);
 
+		EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this);
+		
 		FilterController.get().start();
 		FilterController.get().setStore(mAppStore.getValue(mAppStore.getSelectedIndex()));
 		FilterController.get().setListType(mListType.getValue(mListType.getSelectedIndex()));
 		FilterController.get().setCountry(mCountry.getValue(mCountry.getSelectedIndex()));
 		FilterController.get().commit();
+
+	}
+
+	/**
+	 * 
+	 */
+	private void refreshBreadcrumbs() {
+		mBreadcrumbs.clear();
+		mBreadcrumbs.push(mAppStore.getItemText(mAppStore.getSelectedIndex()), mCountry.getItemText(mCountry.getSelectedIndex()),
+				mListType.getItemText(mListType.getSelectedIndex()), "Feeds");
 	}
 
 	/**
@@ -160,5 +179,21 @@ public class FeedBrowserPage extends Composite {
 		if (selected != null) {
 			FeedFetchController.get().predict(selected.code);
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.admin.client.handler.FilterEventHandler#filterParamChanged(java.lang.String, java.lang.Object, java.lang.Object)
+	 */
+	@Override
+	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
+		refreshBreadcrumbs();
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.admin.client.handler.FilterEventHandler#filterParamsChanged(java.util.Map, java.util.Map)
+	 */
+	@Override
+	public void filterParamsChanged(Map<String, ?> currentValues, Map<String, ?> previousValues) {
+		refreshBreadcrumbs();
 	}
 }

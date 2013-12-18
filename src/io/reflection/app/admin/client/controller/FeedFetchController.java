@@ -152,6 +152,9 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 		mPager = null;
 		mRows = null;
 
+		updateRowData(0, new ArrayList<FeedFetch>());
+		updateRowCount(0, false);
+		
 		fetchFeedFetches();
 	}
 	
