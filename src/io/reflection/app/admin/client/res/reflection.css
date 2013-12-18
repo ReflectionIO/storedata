@@ -38,6 +38,7 @@ a:hover, a:focus, a:active, a.active {
 .dropdown-menu>.active>a:hover,
 .dropdown-menu>.active>a:focus {
 	background-color: #9780E4;
+	color: #FFF;
 }
 
 .badge {
