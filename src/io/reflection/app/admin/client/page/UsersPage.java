@@ -40,7 +40,7 @@ public class UsersPage extends Composite {
 
 	interface UsersPageUiBinder extends UiBinder<Widget, UsersPage> {}
 
-	@UiField(provided = true) CellTable<User> mUsers = new CellTable<User>(ServiceController.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true) CellTable<User> mUsers = new CellTable<User>(ServiceController.SHORT_STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) SimplePager mPager = new SimplePager(false, false);
 
 	@UiField InlineHyperlink mAssignPassword;
