@@ -94,6 +94,8 @@ public class FeedBrowserPage extends Composite implements FilterEventHandler {
 		FilterController.get().setListType(mListType.getValue(mListType.getSelectedIndex()));
 		FilterController.get().setCountry(mCountry.getValue(mCountry.getSelectedIndex()));
 		FilterController.get().commit();
+		
+		refreshBreadcrumbs();
 
 	}
 
