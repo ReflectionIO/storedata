@@ -134,7 +134,7 @@ public class RegisterPage extends Composite implements UserRegisteredEventHandle
 			mUsernameError = "Too short (6 - 255)";
 			validated = false;
 		} else if (username.length() > 255) {
-			mUsernameError = "Too long (6 -255)";
+			mUsernameError = "Too long (6 - 255)";
 			validated = false;
 		} else {
 			mUsernameError = null;
@@ -161,11 +161,11 @@ public class RegisterPage extends Composite implements UserRegisteredEventHandle
 		if (forename == null || forename.length() == 0) {
 			mForenameError = "Cannot be empty";
 			validated = false;
-		} else if (forename.length() < 6) {
-			mForenameError = "Too short (6 - 255)";
+		} else if (forename.length() < 2) {
+			mForenameError = "Too short (2 - 255)";
 			validated = false;
 		} else if (forename.length() > 255) {
-			mForenameError = "Too long (6 -255)";
+			mForenameError = "Too long (2 - 255)";
 			validated = false;
 		} else {
 			mForenameError = null;
@@ -175,11 +175,11 @@ public class RegisterPage extends Composite implements UserRegisteredEventHandle
 		if (surname == null || surname.length() == 0) {
 			mSurnameError = "Cannot be empty";
 			validated = false;
-		} else if (surname.length() < 6) {
-			mSurnameError = "Too short (6 - 255)";
+		} else if (surname.length() < 2) {
+			mSurnameError = "Too short (2 - 255)";
 			validated = false;
 		} else if (surname.length() > 255) {
-			mSurnameError = "Too long (6 -255)";
+			mSurnameError = "Too long (2 - 255)";
 			validated = false;
 		} else {
 			mSurnameError = null;
@@ -189,11 +189,11 @@ public class RegisterPage extends Composite implements UserRegisteredEventHandle
 		if (company == null || company.length() == 0) {
 			mCompanyError = "Cannot be empty";
 			validated = false;
-		} else if (company.length() < 6) {
-			mCompanyError = "Too short (6 - 255)";
+		} else if (company.length() < 2) {
+			mCompanyError = "Too short (2 - 255)";
 			validated = false;
 		} else if (company.length() > 255) {
-			mCompanyError = "Too long (6 -255)";
+			mCompanyError = "Too long (2 - 255)";
 			validated = false;
 		} else {
 			mCompanyError = null;
