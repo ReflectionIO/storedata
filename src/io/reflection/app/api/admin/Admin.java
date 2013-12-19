@@ -9,6 +9,8 @@
 package io.reflection.app.api.admin;
 
 import static io.reflection.app.api.PagerHelper.updatePager;
+import io.reflection.app.api.ApiError;
+import io.reflection.app.api.ValidationHelper;
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
 import io.reflection.app.api.admin.shared.call.AssignRoleResponse;
 import io.reflection.app.api.admin.shared.call.GetFeedFetchesRequest;
@@ -38,8 +40,6 @@ import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.ingestors.Ingestor;
 import io.reflection.app.ingestors.IngestorFactory;
-import io.reflection.app.input.ValidationError;
-import io.reflection.app.input.ValidationHelper;
 import io.reflection.app.modellers.Modeller;
 import io.reflection.app.modellers.ModellerFactory;
 import io.reflection.app.predictors.Predictor;
@@ -64,10 +64,13 @@ public final class Admin extends ActionHandler {
 		GetUsersResponse output = new GetUsersResponse();
 		try {
 			if (input == null)
-				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
-						ValidationError.InvalidValueNull.getMessage("GetUsersRequest: input"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("GetUsersRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			input.session = ValidationHelper.validateSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
@@ -89,10 +92,13 @@ public final class Admin extends ActionHandler {
 		GetUsersCountResponse output = new GetUsersCountResponse();
 		try {
 			if (input == null)
-				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
-						ValidationError.InvalidValueNull.getMessage("GetUsersCountRequest: input"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("GetUsersCountRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			input.session = ValidationHelper.validateSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
 
 			output.count = UserServiceProvider.provide().getUsersCount();
 
@@ -109,6 +115,15 @@ public final class Admin extends ActionHandler {
 		LOG.finer("Entering getModelOutcome");
 		GetModelOutcomeResponse output = new GetModelOutcomeResponse();
 		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("GetModelOutcomeRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			input.session = ValidationHelper.validateSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -123,11 +138,14 @@ public final class Admin extends ActionHandler {
 		GetFeedFetchesResponse output = new GetFeedFetchesResponse();
 		try {
 			if (input == null)
-				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
-						ValidationError.InvalidValueNull.getMessage("GetFeedFetchesRequest: input"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("GetFeedFetchesRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
+			input.session = ValidationHelper.validateSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
+			
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
 			if (input.pager.sortBy == null) {
@@ -163,6 +181,15 @@ public final class Admin extends ActionHandler {
 		LOG.finer("Entering triggerGather");
 		TriggerGatherResponse output = new TriggerGatherResponse();
 		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("TriggerGatherRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			input.session = ValidationHelper.validateSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -177,10 +204,13 @@ public final class Admin extends ActionHandler {
 		TriggerIngestResponse output = new TriggerIngestResponse();
 		try {
 			if (input == null)
-				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
-						ValidationError.InvalidValueNull.getMessage("TriggerModelRequest: input"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("TriggerModelRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			input.session = ValidationHelper.validateSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
 
 			input.country = ValidationHelper.validateCountry(input.country, "input");
 
@@ -209,10 +239,13 @@ public final class Admin extends ActionHandler {
 		TriggerModelResponse output = new TriggerModelResponse();
 		try {
 			if (input == null)
-				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
-						ValidationError.InvalidValueNull.getMessage("TriggerModelRequest: input"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("TriggerModelRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			input.session = ValidationHelper.validateSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
 
 			input.country = ValidationHelper.validateCountry(input.country, "input");
 
@@ -231,8 +264,8 @@ public final class Admin extends ActionHandler {
 			}
 
 			if (type == null)
-				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
-						ValidationError.InvalidValueNull.getMessage("should contain a grossing list name List: input.listType"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+						ApiError.InvalidValueNull.getMessage("should contain a grossing list name List: input.listType"));
 
 			Modeller model = ModellerFactory.getModellerForStore(input.store.a3Code);
 			model.enqueue(input.country.a2Code, type, input.code);
@@ -251,10 +284,13 @@ public final class Admin extends ActionHandler {
 		TriggerPredictResponse output = new TriggerPredictResponse();
 		try {
 			if (input == null)
-				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
-						ValidationError.InvalidValueNull.getMessage("TriggerModelRequest: input"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("TriggerModelRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			input.session = ValidationHelper.validateSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
 
 			input.country = ValidationHelper.validateCountry(input.country, "input");
 
@@ -273,8 +309,8 @@ public final class Admin extends ActionHandler {
 			}
 
 			if (type == null)
-				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
-						ValidationError.InvalidValueNull.getMessage("should contain a grossing list name List: input.listType"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+						ApiError.InvalidValueNull.getMessage("should contain a grossing list name List: input.listType"));
 
 			Predictor predictor = PredictorFactory.getPredictorForStore(input.store.a3Code);
 
@@ -295,10 +331,13 @@ public final class Admin extends ActionHandler {
 
 		try {
 			if (input == null)
-				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
-						ValidationError.InvalidValueNull.getMessage("SetPasswordRequest: input"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("SetPasswordRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
+			input.session = ValidationHelper.validateSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
 
 			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
 
@@ -321,9 +360,13 @@ public final class Admin extends ActionHandler {
 		AssignRoleResponse output = new AssignRoleResponse();
 		try {
 			if (input == null)
-				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
-						ValidationError.InvalidValueNull.getMessage("AssignRoleRequest: input"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("AssignRoleRequest: input"));
+
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
+			input.session = ValidationHelper.validateSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
 
 			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
 
@@ -346,7 +389,14 @@ public final class Admin extends ActionHandler {
 		LOG.finer("Entering getRoles");
 		GetRolesResponse output = new GetRolesResponse();
 		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("GetRolesRequest: input"));
+
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			input.session = ValidationHelper.validateSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
@@ -367,7 +417,14 @@ public final class Admin extends ActionHandler {
 		LOG.finer("Entering getPermissions");
 		GetPermissionsResponse output = new GetPermissionsResponse();
 		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("GetPermissionsRequest: input"));
+
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			input.session = ValidationHelper.validateSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 

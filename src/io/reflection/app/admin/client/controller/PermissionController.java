@@ -52,6 +52,8 @@ public class PermissionController extends AsyncDataProvider<Permission> implemen
 
 		final GetPermissionsRequest input = new GetPermissionsRequest();
 		input.accessCode = ACCESS_CODE;
+		
+		input.session = SessionController.get().getSessionForApiCall();
 
 		if (mPager == null) {
 			mPager = new Pager();

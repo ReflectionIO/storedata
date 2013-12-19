@@ -52,6 +52,8 @@ public class RoleController extends AsyncDataProvider<Role> implements ServiceCo
 
 		final GetRolesRequest input = new GetRolesRequest();
 		input.accessCode = ACCESS_CODE;
+		
+		input.session = SessionController.get().getSessionForApiCall();
 
 		if (mPager == null) {
 			mPager = new Pager();

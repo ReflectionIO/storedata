@@ -184,11 +184,11 @@ public class SessionController implements ServiceController {
 		final ChangePasswordRequest input = new ChangePasswordRequest();
 		input.accessCode = ACCESS_CODE;
 
-		input.password = password;
-		input.newPassword = newPassword;
-
 		input.session = new Session();
 		input.session.token = mSession.token;
+
+		input.password = password;
+		input.newPassword = newPassword;
 
 		service.changePassword(input, new AsyncCallback<ChangePasswordResponse>() {
 
@@ -284,5 +284,25 @@ public class SessionController implements ServiceController {
 			}
 		});
 
+	}
+
+	/**
+	 * @return
+	 */
+	public Session getSessionForApiCall() {
+		Session session = null;
+		if (mSession != null && mSession.token != null) {
+			session = new Session();
+			session.token = mSession.token;
+		} else {
+			String token = Cookies.getCookie(COOKIE_KEY_TOKEN);
+
+			if (token != null) {
+				session = new Session();
+				session.token = token;
+			}
+		}
+
+		return session;
 	}
 }

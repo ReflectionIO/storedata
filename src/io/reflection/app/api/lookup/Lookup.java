@@ -8,10 +8,10 @@
 //
 package io.reflection.app.api.lookup;
 
+import io.reflection.app.api.ApiError;
+import io.reflection.app.api.ValidationHelper;
 import io.reflection.app.api.lookup.shared.call.LookupApplicationRequest;
 import io.reflection.app.api.lookup.shared.call.LookupApplicationResponse;
-import io.reflection.app.input.ValidationError;
-import io.reflection.app.input.ValidationHelper;
 import io.reflection.app.service.application.ApplicationServiceProvider;
 import io.reflection.app.shared.datatypes.Application;
 
@@ -31,8 +31,8 @@ public final class Lookup extends ActionHandler {
 		LookupApplicationResponse output = new LookupApplicationResponse();
 		try {
 			if (input == null)
-				throw new InputValidationException(ValidationError.LookupApplicationNeedsInternalOrExternalId.getCode(),
-						ValidationError.LookupApplicationNeedsInternalOrExternalId.getMessage("LookupApplicationRequest: input"));
+				throw new InputValidationException(ApiError.LookupApplicationNeedsInternalOrExternalId.getCode(),
+						ApiError.LookupApplicationNeedsInternalOrExternalId.getMessage("LookupApplicationRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
@@ -40,8 +40,8 @@ public final class Lookup extends ActionHandler {
 			boolean isExternalIdsLookup = (input.externalIds != null && input.externalIds.size() > 0);
 
 			if (!isExternalIdsLookup && !isInternalIdsLookup)
-				throw new InputValidationException(ValidationError.LookupApplicationNeedsInternalOrExternalId.getCode(),
-						ValidationError.LookupApplicationNeedsInternalOrExternalId.getMessage("LookupApplicationRequest: input"));
+				throw new InputValidationException(ApiError.LookupApplicationNeedsInternalOrExternalId.getCode(),
+						ApiError.LookupApplicationNeedsInternalOrExternalId.getMessage("LookupApplicationRequest: input"));
 
 			output.applications = new ArrayList<Application>();
 

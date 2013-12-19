@@ -8,6 +8,8 @@
 package io.reflection.app.api.core;
 
 import static io.reflection.app.api.PagerHelper.updatePager;
+import io.reflection.app.api.ApiError;
+import io.reflection.app.api.ValidationHelper;
 import io.reflection.app.api.core.shared.call.ChangePasswordRequest;
 import io.reflection.app.api.core.shared.call.ChangePasswordResponse;
 import io.reflection.app.api.core.shared.call.ChangeUserDetailsRequest;
@@ -32,11 +34,10 @@ import io.reflection.app.api.core.shared.call.LogoutRequest;
 import io.reflection.app.api.core.shared.call.LogoutResponse;
 import io.reflection.app.api.core.shared.call.RegisterUserRequest;
 import io.reflection.app.api.core.shared.call.RegisterUserResponse;
+import io.reflection.app.api.exception.AuthenticationException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.collectors.CollectorIOS;
-import io.reflection.app.input.ValidationError;
-import io.reflection.app.input.ValidationHelper;
 import io.reflection.app.service.country.CountryServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
@@ -73,8 +74,8 @@ public final class Core extends ActionHandler {
 		GetCountriesResponse output = new GetCountriesResponse();
 		try {
 			if (input == null)
-				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
-						ValidationError.InvalidValueNull.getMessage("GetCountriesRequest: input"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+						ApiError.InvalidValueNull.getMessage("GetCountriesRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
@@ -112,8 +113,8 @@ public final class Core extends ActionHandler {
 				} else {
 					countries = CountryServiceProvider.provide().searchCountries(input.query, input.pager);
 				}
-			} else throw new InputValidationException(ValidationError.GetCountriesNeedsStoreOrQuery.getCode(),
-					ValidationError.GetCountriesNeedsStoreOrQuery.getMessage("input"));
+			} else throw new InputValidationException(ApiError.GetCountriesNeedsStoreOrQuery.getCode(),
+					ApiError.GetCountriesNeedsStoreOrQuery.getMessage("input"));
 
 			if (countries != null) {
 				output.countries = countries;
@@ -135,8 +136,8 @@ public final class Core extends ActionHandler {
 		GetStoresResponse output = new GetStoresResponse();
 		try {
 			if (input == null)
-				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
-						ValidationError.InvalidValueNull.getMessage("GetStoresRequest: input"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+						ApiError.InvalidValueNull.getMessage("GetStoresRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
@@ -174,8 +175,8 @@ public final class Core extends ActionHandler {
 				} else {
 					stores = StoreServiceProvider.provide().searchStores(input.query, input.pager);
 				}
-			} else throw new InputValidationException(ValidationError.GetStoresNeedsCountryOrQuery.getCode(),
-					ValidationError.GetStoresNeedsCountryOrQuery.getMessage("input"));
+			} else throw new InputValidationException(ApiError.GetStoresNeedsCountryOrQuery.getCode(),
+					ApiError.GetStoresNeedsCountryOrQuery.getMessage("input"));
 
 			if (stores != null) {
 				output.stores = stores;
@@ -197,8 +198,8 @@ public final class Core extends ActionHandler {
 		GetTopItemsResponse output = new GetTopItemsResponse();
 		try {
 			if (input == null)
-				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
-						ValidationError.InvalidValueNull.getMessage("GetTopItemsRequest: input"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+						ApiError.InvalidValueNull.getMessage("GetTopItemsRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
@@ -211,17 +212,17 @@ public final class Core extends ActionHandler {
 			input.country = ValidationHelper.validateCountry(input.country, "input");
 
 			if (input.listType == null)
-				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
-						ValidationError.InvalidValueNull.getMessage("String: input.listType"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+						ApiError.InvalidValueNull.getMessage("String: input.listType"));
 
 			if (input.on == null)
-				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(), ValidationError.InvalidValueNull.getMessage("Date: input.on"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("Date: input.on"));
 
 			input.store = ValidationHelper.validateStore(input.store, "input");
 
 			if (input.store == null)
-				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
-						ValidationError.InvalidValueNull.getMessage("Store: input.store"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+						ApiError.InvalidValueNull.getMessage("Store: input.store"));
 
 			input.listType = ValidationHelper.validateListType(input.listType, input.store);
 
@@ -272,8 +273,8 @@ public final class Core extends ActionHandler {
 
 		try {
 			if (input == null)
-				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
-						ValidationError.InvalidValueNull.getMessage("GetAllTopItemsRequest: input"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+						ApiError.InvalidValueNull.getMessage("GetAllTopItemsRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
@@ -286,17 +287,17 @@ public final class Core extends ActionHandler {
 			input.country = ValidationHelper.validateCountry(input.country, "input");
 
 			if (input.listType == null)
-				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
-						ValidationError.InvalidValueNull.getMessage("String: input.listType"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+						ApiError.InvalidValueNull.getMessage("String: input.listType"));
 
 			if (input.on == null)
-				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(), ValidationError.InvalidValueNull.getMessage("Date: input.on"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("Date: input.on"));
 
 			input.store = ValidationHelper.validateStore(input.store, "input");
 
 			if (input.store == null)
-				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
-						ValidationError.InvalidValueNull.getMessage("Store: input.store"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+						ApiError.InvalidValueNull.getMessage("Store: input.store"));
 
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(input.on);
@@ -405,8 +406,8 @@ public final class Core extends ActionHandler {
 		GetItemRanksResponse output = new GetItemRanksResponse();
 		try {
 			if (input == null)
-				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
-						ValidationError.InvalidValueNull.getMessage("GetItemRanksRequest: input"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+						ApiError.InvalidValueNull.getMessage("GetItemRanksRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
@@ -425,8 +426,8 @@ public final class Core extends ActionHandler {
 			input.country = ValidationHelper.validateCountry(input.country, "input");
 
 			if (input.listType == null)
-				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
-						ValidationError.InvalidValueNull.getMessage("String: input.listType"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+						ApiError.InvalidValueNull.getMessage("String: input.listType"));
 
 			Calendar cal = Calendar.getInstance();
 
@@ -445,8 +446,8 @@ public final class Core extends ActionHandler {
 			long diffDays = diff / (24 * 60 * 60 * 1000);
 
 			if (diffDays > 60 || diffDays < 0)
-				throw new InputValidationException(ValidationError.DateRangeOutOfBounds.getCode(),
-						ValidationError.DateRangeOutOfBounds.getMessage("0-60 days: input.end - input.start"));
+				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
+						ApiError.DateRangeOutOfBounds.getMessage("0-60 days: input.end - input.start"));
 
 			output.ranks = RankServiceProvider.provide().getItemRanks(input.country, store, input.listType, input.item, input.start, input.end, input.pager);
 
@@ -471,8 +472,8 @@ public final class Core extends ActionHandler {
 		RegisterUserResponse output = new RegisterUserResponse();
 		try {
 			if (input == null)
-				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
-						ValidationError.InvalidValueNull.getMessage("RegisterUserRequest: input"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+						ApiError.InvalidValueNull.getMessage("RegisterUserRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
@@ -502,8 +503,8 @@ public final class Core extends ActionHandler {
 
 		try {
 			if (input == null)
-				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
-						ValidationError.InvalidValueNull.getMessage("LoginRequest: input"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+						ApiError.InvalidValueNull.getMessage("LoginRequest: input"));
 
 			boolean foundToken = false;
 
@@ -513,19 +514,19 @@ public final class Core extends ActionHandler {
 
 			if (!foundToken) {
 				if (input.username == null)
-					throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
-							ValidationError.InvalidValueNull.getMessage("String: input.username"));
+					throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+							ApiError.InvalidValueNull.getMessage("String: input.username"));
 
 				if (input.password == null)
-					throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
-							ValidationError.InvalidValueNull.getMessage("String: input.password"));
+					throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+							ApiError.InvalidValueNull.getMessage("String: input.password"));
 
 				IUserService userService = UserServiceProvider.provide();
 
 				User user = userService.getLoginUser(input.username, input.password);
 
 				if (user == null)
-					throw new InputValidationException(ValidationError.InvalidCredentials.getCode(), ValidationError.InvalidCredentials.getMessage());
+					throw new AuthenticationException(input.username);
 
 				ISessionService sessionService = SessionServiceProvider.provide();
 
@@ -545,7 +546,7 @@ public final class Core extends ActionHandler {
 					if (output.session != null) {
 						output.session.user = user;
 					} else {
-						// FIXME: throw an exception
+						throw new Exception("Unexpected blank session after creating user session.");
 					}
 				} else {
 					output.session.user = user;
@@ -584,8 +585,8 @@ public final class Core extends ActionHandler {
 		ChangePasswordResponse output = new ChangePasswordResponse();
 		try {
 			if (input == null)
-				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
-						ValidationError.InvalidValueNull.getMessage("ChangePasswordRequest: input"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+						ApiError.InvalidValueNull.getMessage("ChangePasswordRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
@@ -598,14 +599,14 @@ public final class Core extends ActionHandler {
 			User credentialUser = UserServiceProvider.provide().getLoginUser(sessionUser.username, input.password);
 
 			if (credentialUser == null)
-				throw new InputValidationException(ValidationError.IncorrectPasswordForChange.getCode(),
-						ValidationError.IncorrectPasswordForChange.getMessage("input.password"));
+				throw new InputValidationException(ApiError.IncorrectPasswordForChange.getCode(),
+						ApiError.IncorrectPasswordForChange.getMessage("input.password"));
 
 			input.newPassword = ValidationHelper.validatePassword(input.newPassword, "input.newPassword");
 
 			if (input.newPassword.equals(input.password))
-				throw new InputValidationException(ValidationError.InvalidPasswordSameAsCurrent.getCode(),
-						ValidationError.InvalidPasswordSameAsCurrent.getMessage("input.newPassword"));
+				throw new InputValidationException(ApiError.InvalidPasswordSameAsCurrent.getCode(),
+						ApiError.InvalidPasswordSameAsCurrent.getMessage("input.newPassword"));
 
 			UserServiceProvider.provide().updateUserPassword(input.session.user, input.newPassword);
 
@@ -672,8 +673,8 @@ public final class Core extends ActionHandler {
 		GetRolesAndPermissionsResponse output = new GetRolesAndPermissionsResponse();
 		try {
 			if (input == null)
-				throw new InputValidationException(ValidationError.InvalidValueNull.getCode(),
-						ValidationError.InvalidValueNull.getMessage("GetRolesAndPermissionsResponse: input"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+						ApiError.InvalidValueNull.getMessage("GetRolesAndPermissionsResponse: input"));
 
 			input.session = ValidationHelper.validateSession(input.session, "input.session");
 

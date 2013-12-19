@@ -5,8 +5,9 @@
 //  Created by William Shakour on 5 Jul 2013.
 //  Copyright © 2013 SPACEHOPPER STUDIOS LTD. All rights reserved.
 //
-package io.reflection.app.input;
+package io.reflection.app.api;
 
+import io.reflection.app.api.exception.AuthorisationException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.collectors.Collector;
@@ -44,11 +45,10 @@ public class ValidationHelper {
 	 * @throws InputValidationException
 	 */
 	public static String validateAccessCode(String accessCode, String parent) throws InputValidationException {
-		if (accessCode == null)
-			throw new InputValidationException(ValidationError.AccessCodeNull.getCode(), ValidationError.AccessCodeNull.getMessage(parent));
+		if (accessCode == null) throw new InputValidationException(ApiError.AccessCodeNull.getCode(), ApiError.AccessCodeNull.getMessage(parent));
 
 		if (!accessCode.matches("([0-9a-f]{8})-([0-9a-f]{4})-([0-9a-f]{4})-([0-9a-f]{4})-([0-9a-f]{12})"))
-			throw new InputValidationException(ValidationError.TokenNoMatch.getCode(), ValidationError.TokenNoMatch.getMessage(parent));
+			throw new InputValidationException(ApiError.TokenNoMatch.getCode(), ApiError.TokenNoMatch.getMessage(parent));
 
 		// if all is good look it up
 
@@ -56,20 +56,20 @@ public class ValidationHelper {
 	}
 
 	public static User validateAlphaUser(User user, String parent) throws InputValidationException {
-		if (user == null) throw new InputValidationException(ValidationError.UserNull.getCode(), ValidationError.UserNull.getMessage(parent));
+		if (user == null) throw new InputValidationException(ApiError.UserNull.getCode(), ApiError.UserNull.getMessage(parent));
 
 		if (user.forename == null || (user.forename = user.forename.trim()).length() == 0)
-			throw new InputValidationException(ValidationError.StringNull.getCode(), ValidationError.StringNull.getMessage(parent + ".forename"));
+			throw new InputValidationException(ApiError.StringNull.getCode(), ApiError.StringNull.getMessage(parent + ".forename"));
 		if (user.surname == null || (user.surname = user.surname.trim()).length() == 0)
-			throw new InputValidationException(ValidationError.StringNull.getCode(), ValidationError.StringNull.getMessage(parent + ".surname"));
+			throw new InputValidationException(ApiError.StringNull.getCode(), ApiError.StringNull.getMessage(parent + ".surname"));
 		if (user.company == null || (user.company = user.company.trim()).length() == 0)
-			throw new InputValidationException(ValidationError.StringNull.getCode(), ValidationError.StringNull.getMessage(parent + ".company"));
+			throw new InputValidationException(ApiError.StringNull.getCode(), ApiError.StringNull.getMessage(parent + ".company"));
 
 		if (user.username == null || (user.username = user.username.trim()).length() == 0)
-			throw new InputValidationException(ValidationError.StringNull.getCode(), ValidationError.StringNull.getMessage(parent + ".username"));
+			throw new InputValidationException(ApiError.StringNull.getCode(), ApiError.StringNull.getMessage(parent + ".username"));
 
 		if (!user.username.matches("^([\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4})?$"))
-			throw new InputValidationException(ValidationError.BadEmailFormat.getCode(), ValidationError.BadEmailFormat.getMessage(parent + ".username"));
+			throw new InputValidationException(ApiError.BadEmailFormat.getCode(), ApiError.BadEmailFormat.getMessage(parent + ".username"));
 
 		return user;
 
@@ -83,7 +83,7 @@ public class ValidationHelper {
 	 * @throws InputValidationException
 	 */
 	public static Store validateStore(Store store, String parent) throws ServiceException {
-		if (store == null) throw new InputValidationException(ValidationError.StoreNull.getCode(), ValidationError.StoreNull.getMessage(parent));
+		if (store == null) throw new InputValidationException(ApiError.StoreNull.getCode(), ApiError.StoreNull.getMessage(parent));
 
 		boolean isIdLookup = false, isA3CodeLookup = false, isNameLookup = false;
 
@@ -95,8 +95,8 @@ public class ValidationHelper {
 			isNameLookup = true;
 		}
 
-		if (!(isIdLookup || isA3CodeLookup || isNameLookup)) { throw new InputValidationException(ValidationError.StoreNoLookup.getCode(),
-				ValidationError.StoreNoLookup.getMessage(parent)); }
+		if (!(isIdLookup || isA3CodeLookup || isNameLookup)) { throw new InputValidationException(ApiError.StoreNoLookup.getCode(),
+				ApiError.StoreNoLookup.getMessage(parent)); }
 
 		Store lookupStore = null;
 		if (isIdLookup) {
@@ -107,7 +107,7 @@ public class ValidationHelper {
 			lookupStore = StoreServiceProvider.provide().getNamedStore(store.name);
 		}
 
-		if (lookupStore == null) throw new InputValidationException(ValidationError.StoreNotFound.getCode(), ValidationError.StoreNotFound.getMessage(parent));
+		if (lookupStore == null) throw new InputValidationException(ApiError.StoreNotFound.getCode(), ApiError.StoreNotFound.getMessage(parent));
 
 		return lookupStore;
 	}
@@ -120,7 +120,7 @@ public class ValidationHelper {
 	 * @throws InputValidationException
 	 */
 	public static String validateQuery(String query, String parent) throws InputValidationException {
-		if (query == null) throw new InputValidationException(ValidationError.SearchQueryNull.getCode(), ValidationError.SearchQueryNull.getMessage(parent));
+		if (query == null) throw new InputValidationException(ApiError.SearchQueryNull.getCode(), ApiError.SearchQueryNull.getMessage(parent));
 
 		return query;
 	}
@@ -144,21 +144,19 @@ public class ValidationHelper {
 
 		if (pager.start == null) pager.start = Long.valueOf(0);
 
-		if (pager.start < 0)
-			throw new InputValidationException(ValidationError.PagerStartNegative.getCode(), ValidationError.PagerStartNegative.getMessage(parent));
+		if (pager.start < 0) throw new InputValidationException(ApiError.PagerStartNegative.getCode(), ApiError.PagerStartNegative.getMessage(parent));
 
 		if (pager.count == null) pager.count = Long.valueOf(0);
 
 		if (pager.count.intValue() <= 0)
-			throw new InputValidationException(ValidationError.PagerCountTooSmall.getCode(), ValidationError.PagerCountTooSmall.getMessage(parent));
+			throw new InputValidationException(ApiError.PagerCountTooSmall.getCode(), ApiError.PagerCountTooSmall.getMessage(parent));
 
 		// TODO: for now this is disabled until we sort something out for it
 		// if (pager.count.intValue() > 30)
-		// throw new InputValidationException(ValidationError.PagerCountTooLarge.getCode(), ValidationError.PagerCountTooLarge.getMessage(parent));
+		// throw new InputValidationException(ApiError.PagerCountTooLarge.getCode(), ApiError.PagerCountTooLarge.getMessage(parent));
 
 		if (pager.start != null && pager.totalCount != null && pager.start.longValue() > pager.totalCount.longValue())
-			throw new InputValidationException(ValidationError.PagerStartLargerThanTotal.getCode(),
-					ValidationError.PagerStartLargerThanTotal.getMessage(parent));
+			throw new InputValidationException(ApiError.PagerStartLargerThanTotal.getCode(), ApiError.PagerStartLargerThanTotal.getMessage(parent));
 
 		return pager;
 	}
@@ -172,7 +170,7 @@ public class ValidationHelper {
 	 */
 	public static Country validateCountry(Country country, String parent) throws ServiceException {
 
-		if (country == null) throw new InputValidationException(ValidationError.CountryNull.getCode(), ValidationError.CountryNull.getMessage(parent));
+		if (country == null) throw new InputValidationException(ApiError.CountryNull.getCode(), ApiError.CountryNull.getMessage(parent));
 
 		boolean isIdLookup = false, isA2CodeLookup = false, isNameLookup = false;
 
@@ -185,7 +183,7 @@ public class ValidationHelper {
 		}
 
 		if (!(isIdLookup || isA2CodeLookup || isNameLookup))
-			throw new InputValidationException(ValidationError.CountryNoLookup.getCode(), ValidationError.CountryNoLookup.getMessage(parent));
+			throw new InputValidationException(ApiError.CountryNoLookup.getCode(), ApiError.CountryNoLookup.getMessage(parent));
 
 		Country lookupCountry = null;
 		if (isIdLookup) {
@@ -196,8 +194,7 @@ public class ValidationHelper {
 			lookupCountry = CountryServiceProvider.provide().getNamedCountry(country.name);
 		}
 
-		if (lookupCountry == null)
-			throw new InputValidationException(ValidationError.CountryNotFound.getCode(), ValidationError.CountryNotFound.getMessage(parent));
+		if (lookupCountry == null) throw new InputValidationException(ApiError.CountryNotFound.getCode(), ApiError.CountryNotFound.getMessage(parent));
 
 		return lookupCountry;
 	}
@@ -209,7 +206,7 @@ public class ValidationHelper {
 	 * @throws InputValidationException
 	 */
 	public static Item validateItem(Item item, String parent) throws ServiceException {
-		if (item == null) throw new InputValidationException(ValidationError.ItemNull.getCode(), ValidationError.ItemNull.getMessage(parent));
+		if (item == null) throw new InputValidationException(ApiError.ItemNull.getCode(), ApiError.ItemNull.getMessage(parent));
 
 		Store itemStore = new Store();
 		itemStore.a3Code = item.source;
@@ -229,7 +226,7 @@ public class ValidationHelper {
 		}
 
 		if (!(isIdLookup || isIntIdLookup || isExtIdLookup))
-			throw new InputValidationException(ValidationError.ItemNoLookup.getCode(), ValidationError.ItemNoLookup.getMessage(parent));
+			throw new InputValidationException(ApiError.ItemNoLookup.getCode(), ApiError.ItemNoLookup.getMessage(parent));
 
 		Item lookupItem = null;
 		if (isIdLookup) {
@@ -240,7 +237,7 @@ public class ValidationHelper {
 			lookupItem = ItemServiceProvider.provide().getInternalIdItem(item.internalId);
 		}
 
-		if (lookupItem == null) throw new InputValidationException(ValidationError.ItemNotFound.getCode(), ValidationError.ItemNotFound.getMessage(parent));
+		if (lookupItem == null) throw new InputValidationException(ApiError.ItemNotFound.getCode(), ApiError.ItemNotFound.getMessage(parent));
 
 		return lookupItem;
 	}
@@ -265,8 +262,7 @@ public class ValidationHelper {
 	 */
 	public static List<String> validateListTypes(List<String> listTypes, Store store, String parent) throws InputValidationException {
 		if (listTypes == null)
-			throw new InputValidationException(ValidationError.InvalidValueNull.getCode(), ValidationError.InvalidValueNull.getMessage("List: " + parent
-					+ ".listType"));
+			throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("List: " + parent + ".listType"));
 
 		String validatedListType, listType;
 		StringBuffer badListTypes = new StringBuffer();
@@ -288,8 +284,7 @@ public class ValidationHelper {
 		}
 
 		if (listTypes.size() == 0)
-			throw new InputValidationException(ValidationError.ListTypeNotFound.getCode(), ValidationError.ListTypeNotFound.getMessage("String: " + parent
-					+ ".listTypes"));
+			throw new InputValidationException(ApiError.ListTypeNotFound.getCode(), ApiError.ListTypeNotFound.getMessage("String: " + parent + ".listTypes"));
 
 		return listTypes;
 	}
@@ -302,7 +297,7 @@ public class ValidationHelper {
 	 * @throws InputValidationException
 	 */
 	public static User validateExistingUser(User user, String parent) throws ServiceException {
-		if (user == null) throw new InputValidationException(ValidationError.UserNull.getCode(), ValidationError.UserNull.getMessage(parent));
+		if (user == null) throw new InputValidationException(ApiError.UserNull.getCode(), ApiError.UserNull.getMessage(parent));
 
 		boolean isIdLookup = false, isNameLookup = false;
 
@@ -312,8 +307,7 @@ public class ValidationHelper {
 			isNameLookup = true;
 		}
 
-		if (!(isIdLookup || isNameLookup)) { throw new InputValidationException(ValidationError.UserNoLookup.getCode(),
-				ValidationError.UserNoLookup.getMessage(parent)); }
+		if (!(isIdLookup || isNameLookup)) { throw new InputValidationException(ApiError.UserNoLookup.getCode(), ApiError.UserNoLookup.getMessage(parent)); }
 
 		User lookupUser = null;
 		if (isIdLookup) {
@@ -322,7 +316,7 @@ public class ValidationHelper {
 			lookupUser = UserServiceProvider.provide().getUsernameUser(user.username);
 		}
 
-		if (lookupUser == null) throw new InputValidationException(ValidationError.UserNotFound.getCode(), ValidationError.UserNotFound.getMessage(parent));
+		if (lookupUser == null) throw new InputValidationException(ApiError.UserNotFound.getCode(), ApiError.UserNotFound.getMessage(parent));
 
 		return lookupUser;
 	}
@@ -335,7 +329,7 @@ public class ValidationHelper {
 	 * @throws InputValidationException
 	 */
 	public static User validateRegisteringUser(User user, String parent) throws InputValidationException {
-		if (user == null) throw new InputValidationException(ValidationError.UserNull.getCode(), ValidationError.UserNull.getMessage(parent));
+		if (user == null) throw new InputValidationException(ApiError.UserNull.getCode(), ApiError.UserNull.getMessage(parent));
 
 		return user;
 	}
@@ -349,7 +343,7 @@ public class ValidationHelper {
 	 */
 	public static String validatePassword(String password, String parent) throws InputValidationException {
 		if (password == null || password.length() == 0)
-			throw new InputValidationException(ValidationError.StringNull.getCode(), ValidationError.StringNull.getMessage(parent));
+			throw new InputValidationException(ApiError.StringNull.getCode(), ApiError.StringNull.getMessage(parent));
 
 		password = validateStringLength(password, parent, 6, 100);
 
@@ -367,12 +361,10 @@ public class ValidationHelper {
 	 */
 	public static String validateStringLength(String value, String parent, int minLenth, int maxLength) throws InputValidationException {
 		if (value.length() < minLenth)
-			throw new InputValidationException(ValidationError.InvalidStringTooShort.getCode(), ValidationError.InvalidStringTooShort.getMessage(parent,
-					minLenth, maxLength));
+			throw new InputValidationException(ApiError.InvalidStringTooShort.getCode(), ApiError.InvalidStringTooShort.getMessage(parent, minLenth, maxLength));
 
 		if (value.length() > maxLength)
-			throw new InputValidationException(ValidationError.InvalidStringTooLong.getCode(), ValidationError.InvalidStringTooLong.getMessage(parent,
-					minLenth, maxLength));
+			throw new InputValidationException(ApiError.InvalidStringTooLong.getCode(), ApiError.InvalidStringTooLong.getMessage(parent, minLenth, maxLength));
 
 		return value;
 	}
@@ -385,7 +377,7 @@ public class ValidationHelper {
 	 * @throws InputValidationException
 	 */
 	public static Role validateRole(Role role, String parent) throws ServiceException {
-		if (role == null) throw new InputValidationException(ValidationError.RoleNull.getCode(), ValidationError.RoleNull.getMessage(parent));
+		if (role == null) throw new InputValidationException(ApiError.RoleNull.getCode(), ApiError.RoleNull.getMessage(parent));
 
 		boolean isIdLookup = false, isNameLookup = false;
 
@@ -395,8 +387,7 @@ public class ValidationHelper {
 			isNameLookup = true;
 		}
 
-		if (!(isIdLookup || isNameLookup)) { throw new InputValidationException(ValidationError.RoleNoLookup.getCode(),
-				ValidationError.RoleNoLookup.getMessage(parent)); }
+		if (!(isIdLookup || isNameLookup)) { throw new InputValidationException(ApiError.RoleNoLookup.getCode(), ApiError.RoleNoLookup.getMessage(parent)); }
 
 		Role lookupRole = null;
 		if (isIdLookup) {
@@ -405,7 +396,7 @@ public class ValidationHelper {
 			lookupRole = RoleServiceProvider.provide().getNamedRole(role.name);
 		}
 
-		if (lookupRole == null) throw new InputValidationException(ValidationError.RoleNotFound.getCode(), ValidationError.RoleNotFound.getMessage(parent));
+		if (lookupRole == null) throw new InputValidationException(ApiError.RoleNotFound.getCode(), ApiError.RoleNotFound.getMessage(parent));
 
 		return lookupRole;
 	}
@@ -418,8 +409,7 @@ public class ValidationHelper {
 	 * @throws InputValidationException
 	 */
 	public static Permission validatePermission(Permission permission, String parent) throws ServiceException {
-		if (permission == null)
-			throw new InputValidationException(ValidationError.PermissionNull.getCode(), ValidationError.PermissionNull.getMessage(parent));
+		if (permission == null) throw new InputValidationException(ApiError.PermissionNull.getCode(), ApiError.PermissionNull.getMessage(parent));
 
 		boolean isIdLookup = false, isNameLookup = false;
 
@@ -430,7 +420,7 @@ public class ValidationHelper {
 		}
 
 		if (!(isIdLookup || isNameLookup))
-			throw new InputValidationException(ValidationError.PermissionNoLookup.getCode(), ValidationError.PermissionNoLookup.getMessage(parent));
+			throw new InputValidationException(ApiError.PermissionNoLookup.getCode(), ApiError.PermissionNoLookup.getMessage(parent));
 
 		Permission lookupPermission = null;
 		if (isIdLookup) {
@@ -440,7 +430,7 @@ public class ValidationHelper {
 		}
 
 		if (lookupPermission == null)
-			throw new InputValidationException(ValidationError.PermissionNotFound.getCode(), ValidationError.PermissionNotFound.getMessage(parent));
+			throw new InputValidationException(ApiError.PermissionNotFound.getCode(), ApiError.PermissionNotFound.getMessage(parent));
 
 		return lookupPermission;
 	}
@@ -452,10 +442,10 @@ public class ValidationHelper {
 	 */
 	public static String validateToken(String token, String parent) throws InputValidationException {
 
-		if (token == null) throw new InputValidationException(ValidationError.StringNull.getCode(), ValidationError.StringNull.getMessage(parent));
+		if (token == null) throw new InputValidationException(ApiError.StringNull.getCode(), ApiError.StringNull.getMessage(parent));
 
 		if (!token.matches("([0-9a-f]{8})-([0-9a-f]{4})-([0-9a-f]{4})-([0-9a-f]{4})-([0-9a-f]{12})"))
-			throw new InputValidationException(ValidationError.TokenNoMatch.getCode(), ValidationError.TokenNoMatch.getMessage(parent));
+			throw new InputValidationException(ApiError.TokenNoMatch.getCode(), ApiError.TokenNoMatch.getMessage(parent));
 
 		return token;
 	}
@@ -466,7 +456,7 @@ public class ValidationHelper {
 	 */
 	public static Session validateSession(Session session, String parent) throws ServiceException {
 
-		if (session == null) throw new InputValidationException(ValidationError.SessionNull.getCode(), ValidationError.SessionNull.getMessage(parent));
+		if (session == null) throw new InputValidationException(ApiError.SessionNull.getCode(), ApiError.SessionNull.getMessage(parent));
 
 		boolean isIdLookup = false, isTokenLookup = false;
 
@@ -477,23 +467,33 @@ public class ValidationHelper {
 		}
 
 		if (!(isIdLookup || isTokenLookup))
-			throw new InputValidationException(ValidationError.SessionNoLookup.getCode(), ValidationError.SessionNoLookup.getMessage(parent));
+			throw new InputValidationException(ApiError.SessionNoLookup.getCode(), ApiError.SessionNoLookup.getMessage(parent));
 
 		Session lookupSession = null;
 		if (isIdLookup) {
 			lookupSession = SessionServiceProvider.provide().getSession(session.id);
 
-			if (lookupSession == null)
-				throw new InputValidationException(ValidationError.SessionNotFound.getCode(), ValidationError.SessionNotFound.getMessage(parent));
+			if (lookupSession == null) throw new InputValidationException(ApiError.SessionNotFound.getCode(), ApiError.SessionNotFound.getMessage(parent));
 		} else if (isTokenLookup) {
 			session.token = validateToken(session.token, parent + ".token");
 
 			lookupSession = SessionServiceProvider.provide().getTokenSession(session.token);
 
-			if (lookupSession == null)
-				throw new InputValidationException(ValidationError.SessionNotFound.getCode(), ValidationError.SessionNotFound.getMessage(parent));
+			if (lookupSession == null) throw new InputValidationException(ApiError.SessionNotFound.getCode(), ApiError.SessionNotFound.getMessage(parent));
 		}
 
 		return lookupSession;
+	}
+
+	public static void validateAuthorised(User user, Role... roles) throws ServiceException {
+		for (Role role : roles) {
+			if (!UserServiceProvider.provide().hasRole(user, role)) throw new AuthorisationException(user, roles);
+		}
+	}
+
+	public static void validateAuthorised(User user, Permission... permissions) throws ServiceException {
+		for (Permission permission : permissions) {
+			if (!UserServiceProvider.provide().hasPermission(user, permission)) throw new AuthorisationException(user, permissions);
+		}
 	}
 }

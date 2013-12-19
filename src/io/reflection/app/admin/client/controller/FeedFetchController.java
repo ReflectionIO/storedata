@@ -61,6 +61,8 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 
 		final GetFeedFetchesRequest input = new GetFeedFetchesRequest();
 		input.accessCode = ACCESS_CODE;
+		
+		input.session = SessionController.get().getSessionForApiCall();
 
 		if (mPager == null) {
 			mPager = new Pager();
@@ -165,6 +167,8 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 		final TriggerModelRequest input = new TriggerModelRequest();
 		input.accessCode = ACCESS_CODE;
 		
+		input.session = SessionController.get().getSessionForApiCall();
+		
 		input.country = FilterController.get().getCountry();
 		input.store = FilterController.get().getStore();
 		input.listTypes = FilterController.get().getAllListTypes();
@@ -195,6 +199,8 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 
 		final TriggerIngestRequest input = new TriggerIngestRequest();
 		input.accessCode = ACCESS_CODE;
+		
+		input.session = SessionController.get().getSessionForApiCall();
 		
 		input.country = FilterController.get().getCountry();
 		input.store = FilterController.get().getStore();
@@ -227,6 +233,8 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 
 		final TriggerPredictRequest input = new TriggerPredictRequest();
 		input.accessCode = ACCESS_CODE;
+		
+		input.session = SessionController.get().getSessionForApiCall();
 		
 		input.country = FilterController.get().getCountry();
 		input.store = FilterController.get().getStore();

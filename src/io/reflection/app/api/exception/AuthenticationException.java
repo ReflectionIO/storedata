@@ -7,7 +7,7 @@
 //
 package io.reflection.app.api.exception;
 
-import io.reflection.app.shared.datatypes.User;
+import io.reflection.app.api.ApiError;
 
 import com.willshex.gson.json.service.server.ServiceException;
 
@@ -18,16 +18,16 @@ import com.willshex.gson.json.service.server.ServiceException;
 @SuppressWarnings("serial")
 public class AuthenticationException extends ServiceException {
 
-	private User mUser;
+	private String mUsername;
 
 	/**
 	 * 
 	 * @param user
 	 */
-	public AuthenticationException(User user) {
-		super(200000, "User could not be authenticated.");
+	public AuthenticationException(String username) {
+		super(ApiError.InvalidCredentials.getCode(), ApiError.InvalidCredentials.getMessage());
 
-		mUser = user;
+		mUsername = username;
 	}
 
 	/*
@@ -48,15 +48,9 @@ public class AuthenticationException extends ServiceException {
 		description.append("]");
 		description.append(", user[");
 
-		if (mUser.id != null) {
-			description.append("id=");
-			description.append(mUser.id.toString());
-			description.append(",");
-		}
-
-		if (mUser.username != null) {
+		if (mUsername != null) {
 			description.append("username=");
-			description.append(mUser.username);
+			description.append(mUsername);
 		}
 
 		description.append("]");

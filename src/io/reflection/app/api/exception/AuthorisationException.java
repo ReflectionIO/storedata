@@ -1,5 +1,5 @@
 //
-//  AuthroisationException.java
+//  AuthorisationException.java
 //  storedata
 //
 //  Created by William Shakour (billy1380) on 4 Dec 2013.
@@ -7,13 +7,14 @@
 //
 package io.reflection.app.api.exception;
 
+import io.reflection.app.api.ApiError;
 import io.reflection.app.shared.datatypes.Role;
+import io.reflection.app.shared.datatypes.Permission;
 import io.reflection.app.shared.datatypes.User;
 
 import java.util.Arrays;
 import java.util.List;
 
-import com.google.apphosting.api.search.AclPb.Entry.Permission;
 import com.willshex.gson.json.service.server.ServiceException;
 
 /**
@@ -21,7 +22,7 @@ import com.willshex.gson.json.service.server.ServiceException;
  * 
  */
 @SuppressWarnings("serial")
-public class AuthroisationException extends ServiceException {
+public class AuthorisationException extends ServiceException {
 
 	private User mUser;
 	private List<Permission> mPermissions;
@@ -32,8 +33,8 @@ public class AuthroisationException extends ServiceException {
 	 * @param user
 	 * @param permission
 	 */
-	public AuthroisationException(User user, Permission... permission) {
-		super(300000, "User does not have required permissions");
+	public AuthorisationException(User user, Permission... permission) {
+		super(ApiError.MissingPermissions.getCode(), ApiError.MissingPermissions.getMessage());
 
 		mUser = user;
 
@@ -49,8 +50,8 @@ public class AuthroisationException extends ServiceException {
 	 * @param user
 	 * @param role
 	 */
-	public AuthroisationException(User user, Role... role) {
-		super(300001, "User does not have required role");
+	public AuthorisationException(User user, Role... role) {
+		super(ApiError.MissingRoles.getCode(), ApiError.MissingRoles.getMessage());
 
 		mUser = user;
 
@@ -59,8 +60,8 @@ public class AuthroisationException extends ServiceException {
 		}
 	}
 
-	public AuthroisationException(User user, List<Role> roles, List<Permission> permissions) {
-		super(300002, "User does not have required roles and/or permissions");
+	public AuthorisationException(User user, List<Role> roles, List<Permission> permissions) {
+		super(ApiError.MissingRolesAndOrPermissions.getCode(), ApiError.MissingRolesAndOrPermissions.getMessage());
 
 		mUser = user;
 		mRoles = roles;
@@ -99,11 +100,21 @@ public class AuthroisationException extends ServiceException {
 		description.append("]");
 
 		if (mPermissions != null) {
-
+			description.append(" permissions [");
+			for (Permission permission : mPermissions) {
+				description.append(permission.name);
+				description.append(",");
+			}
+			description.append("]");
 		}
 
 		if (mRoles != null) {
-
+			description.append(" roles [");
+			for (Role role : mRoles) {
+				description.append(role.name);
+				description.append(",");
+			}
+			description.append("]");
 		}
 
 		return description.toString();
