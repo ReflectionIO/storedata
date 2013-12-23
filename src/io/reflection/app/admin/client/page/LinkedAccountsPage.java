@@ -7,10 +7,14 @@
 //
 package io.reflection.app.admin.client.page;
 
+import io.reflection.app.admin.client.controller.EventController;
 import io.reflection.app.admin.client.controller.NavigationController;
+import io.reflection.app.admin.client.controller.NavigationController.Stack;
+import io.reflection.app.admin.client.handler.NavigationEventHandler;
 import io.reflection.app.admin.client.helper.AlertBoxHelper;
 import io.reflection.app.admin.client.part.AlertBox;
 import io.reflection.app.admin.client.part.AlertBox.AlertBoxType;
+import io.reflection.app.admin.client.part.linkaccount.IosMacLinkAccountForm;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.SpanElement;
@@ -27,7 +31,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author billy1380
  * 
  */
-public class LinkedAccountsPage extends Composite {
+public class LinkedAccountsPage extends Composite implements NavigationEventHandler {
 
 	private static LinkedAccountsPageUiBinder uiBinder = GWT.create(LinkedAccountsPageUiBinder.class);
 
@@ -42,6 +46,8 @@ public class LinkedAccountsPage extends Composite {
 
 	@UiField FormPanel mForm;
 
+	@UiField IosMacLinkAccountForm mIosMacForm;
+
 	public LinkedAccountsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
@@ -50,9 +56,9 @@ public class LinkedAccountsPage extends Composite {
 
 		addSoonTag(mPlayLink);
 
-		mIosMacLink.setTargetHistoryToken("users/linkedaccounts/" + NavigationController.get().getStack().getParameter(0) + "/iosmac");
+		// mIosMacLink.setTargetHistoryToken("users/linkedaccounts/" + NavigationController.get().getStack().getParameter(0) + "/iosmac");
 
-		mForm.setVisible(true);
+		EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this);
 	}
 
 	/**
@@ -65,6 +71,36 @@ public class LinkedAccountsPage extends Composite {
 		s.addClassName("label-danger");
 		s.getStyle().setMarginLeft(10.0, Unit.PX);
 		link.getElement().appendChild(s);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.admin.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.admin.client.controller.NavigationController.Stack)
+	 */
+	@Override
+	public void navigationChanged(Stack stack) {
+
+		if (NavigationController.get().getStack().getParameter(0) != null) {
+			mIosMacLink.setTargetHistoryToken("users/linkedaccounts/" + NavigationController.get().getStack().getParameter(0) + "/iosmac");
+
+			String accountType;
+			if ((accountType = NavigationController.get().getStack().getParameter(1)) != null) {
+
+				if ("iosmac".equals(accountType)) {
+					mIosMacForm.setVisible(true);
+					mForm.setVisible(true);
+				} else {
+					mIosMacForm.setVisible(false);
+					mForm.setVisible(false);
+				}
+			} else {
+				mIosMacForm.setVisible(false);
+				mForm.setVisible(false);
+			}
+		}
+
 	}
 
 }
