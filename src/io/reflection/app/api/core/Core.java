@@ -22,12 +22,18 @@ import io.reflection.app.api.core.shared.call.GetCountriesRequest;
 import io.reflection.app.api.core.shared.call.GetCountriesResponse;
 import io.reflection.app.api.core.shared.call.GetItemRanksRequest;
 import io.reflection.app.api.core.shared.call.GetItemRanksResponse;
+import io.reflection.app.api.core.shared.call.GetLinkedAccountItemsRequest;
+import io.reflection.app.api.core.shared.call.GetLinkedAccountItemsResponse;
+import io.reflection.app.api.core.shared.call.GetLinkedAccountsRequest;
+import io.reflection.app.api.core.shared.call.GetLinkedAccountsResponse;
 import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsRequest;
 import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsResponse;
 import io.reflection.app.api.core.shared.call.GetStoresRequest;
 import io.reflection.app.api.core.shared.call.GetStoresResponse;
 import io.reflection.app.api.core.shared.call.GetTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetTopItemsResponse;
+import io.reflection.app.api.core.shared.call.LinkAccountRequest;
+import io.reflection.app.api.core.shared.call.LinkAccountResponse;
 import io.reflection.app.api.core.shared.call.LoginRequest;
 import io.reflection.app.api.core.shared.call.LoginResponse;
 import io.reflection.app.api.core.shared.call.LogoutRequest;
@@ -74,8 +80,7 @@ public final class Core extends ActionHandler {
 		GetCountriesResponse output = new GetCountriesResponse();
 		try {
 			if (input == null)
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
-						ApiError.InvalidValueNull.getMessage("GetCountriesRequest: input"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("GetCountriesRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
@@ -136,8 +141,7 @@ public final class Core extends ActionHandler {
 		GetStoresResponse output = new GetStoresResponse();
 		try {
 			if (input == null)
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
-						ApiError.InvalidValueNull.getMessage("GetStoresRequest: input"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("GetStoresRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
@@ -198,8 +202,7 @@ public final class Core extends ActionHandler {
 		GetTopItemsResponse output = new GetTopItemsResponse();
 		try {
 			if (input == null)
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
-						ApiError.InvalidValueNull.getMessage("GetTopItemsRequest: input"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("GetTopItemsRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
@@ -212,8 +215,7 @@ public final class Core extends ActionHandler {
 			input.country = ValidationHelper.validateCountry(input.country, "input");
 
 			if (input.listType == null)
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
-						ApiError.InvalidValueNull.getMessage("String: input.listType"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("String: input.listType"));
 
 			if (input.on == null)
 				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("Date: input.on"));
@@ -221,8 +223,7 @@ public final class Core extends ActionHandler {
 			input.store = ValidationHelper.validateStore(input.store, "input");
 
 			if (input.store == null)
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
-						ApiError.InvalidValueNull.getMessage("Store: input.store"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("Store: input.store"));
 
 			input.listType = ValidationHelper.validateListType(input.listType, input.store);
 
@@ -273,8 +274,7 @@ public final class Core extends ActionHandler {
 
 		try {
 			if (input == null)
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
-						ApiError.InvalidValueNull.getMessage("GetAllTopItemsRequest: input"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("GetAllTopItemsRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
@@ -287,8 +287,7 @@ public final class Core extends ActionHandler {
 			input.country = ValidationHelper.validateCountry(input.country, "input");
 
 			if (input.listType == null)
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
-						ApiError.InvalidValueNull.getMessage("String: input.listType"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("String: input.listType"));
 
 			if (input.on == null)
 				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("Date: input.on"));
@@ -296,8 +295,7 @@ public final class Core extends ActionHandler {
 			input.store = ValidationHelper.validateStore(input.store, "input");
 
 			if (input.store == null)
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
-						ApiError.InvalidValueNull.getMessage("Store: input.store"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("Store: input.store"));
 
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(input.on);
@@ -406,8 +404,7 @@ public final class Core extends ActionHandler {
 		GetItemRanksResponse output = new GetItemRanksResponse();
 		try {
 			if (input == null)
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
-						ApiError.InvalidValueNull.getMessage("GetItemRanksRequest: input"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("GetItemRanksRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
@@ -426,8 +423,7 @@ public final class Core extends ActionHandler {
 			input.country = ValidationHelper.validateCountry(input.country, "input");
 
 			if (input.listType == null)
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
-						ApiError.InvalidValueNull.getMessage("String: input.listType"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("String: input.listType"));
 
 			Calendar cal = Calendar.getInstance();
 
@@ -472,8 +468,7 @@ public final class Core extends ActionHandler {
 		RegisterUserResponse output = new RegisterUserResponse();
 		try {
 			if (input == null)
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
-						ApiError.InvalidValueNull.getMessage("RegisterUserRequest: input"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("RegisterUserRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
@@ -503,8 +498,7 @@ public final class Core extends ActionHandler {
 
 		try {
 			if (input == null)
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
-						ApiError.InvalidValueNull.getMessage("LoginRequest: input"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("LoginRequest: input"));
 
 			boolean foundToken = false;
 
@@ -514,19 +508,16 @@ public final class Core extends ActionHandler {
 
 			if (!foundToken) {
 				if (input.username == null)
-					throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
-							ApiError.InvalidValueNull.getMessage("String: input.username"));
+					throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("String: input.username"));
 
 				if (input.password == null)
-					throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
-							ApiError.InvalidValueNull.getMessage("String: input.password"));
+					throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("String: input.password"));
 
 				IUserService userService = UserServiceProvider.provide();
 
 				User user = userService.getLoginUser(input.username, input.password);
 
-				if (user == null)
-					throw new AuthenticationException(input.username);
+				if (user == null) throw new AuthenticationException(input.username);
 
 				ISessionService sessionService = SessionServiceProvider.provide();
 
@@ -585,8 +576,7 @@ public final class Core extends ActionHandler {
 		ChangePasswordResponse output = new ChangePasswordResponse();
 		try {
 			if (input == null)
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
-						ApiError.InvalidValueNull.getMessage("ChangePasswordRequest: input"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("ChangePasswordRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
@@ -700,6 +690,45 @@ public final class Core extends ActionHandler {
 			output.error = convertToErrorAndLog(LOG, e);
 		}
 		LOG.finer("Exiting getRolesAndPermissions");
+		return output;
+	}
+
+	public GetLinkedAccountsResponse getLinkedAccounts(GetLinkedAccountsRequest input) {
+		LOG.finer("Entering getLinkedAccounts");
+		GetLinkedAccountsResponse output = new GetLinkedAccountsResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getLinkedAccounts");
+		return output;
+	}
+
+	public GetLinkedAccountItemsResponse getLinkedAccountItems(GetLinkedAccountItemsRequest input) {
+		LOG.finer("Entering getLinkedAccountItems");
+		GetLinkedAccountItemsResponse output = new GetLinkedAccountItemsResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getLinkedAccountItems");
+		return output;
+	}
+
+	public LinkAccountResponse linkAccount(LinkAccountRequest input) {
+		LOG.finer("Entering linkAccount");
+		LinkAccountResponse output = new LinkAccountResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting linkAccount");
 		return output;
 	}
 

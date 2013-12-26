@@ -473,3 +473,38 @@ INSERT INTO `role` (`name`, `description`, `code`) VALUES
 ('developer', 'can view data intended for developers', 'DEV'),
 ('premium', 'can view all application data', 'PRE'),
 ('alpha', 'can view data intended for alpha users', 'ALF')$$
+
+CREATE TABLE `dataaccount` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `sourceid` int(11) NOT NULL,
+  `username` varchar(1000) NOT NULL,
+  `password` varchar(1000) NOT NULL,
+  `deleted` enum('y','n') DEFAULT 'n',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+CREATE TABLE `datasource` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `a3code` char(3) DEFAULT NULL,
+  `name` varchar(1000) DEFAULT NULL,
+  `url` varchar(4096) DEFAULT NULL,
+  `deleted` enum('y','n') DEFAULT 'n',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+INSERT INTO `rio`.`datasource` (`a3code`,`name`,`url`) VALUES
+('ITC', 'iTunes Connect', 'http://itunesconnect.apple.com');
+
+CREATE TABLE `userdataaccount` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `dataaccountid` int(11) NOT NULL,
+  `userid` int(11) NOT NULL,
+  `deleted` enum('y','n') DEFAULT 'n',
+  PRIMARY KEY (`id`),
+  KEY `index_userid` (`userid`),
+  KEY `index_dataaccountid` (`dataaccountid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+

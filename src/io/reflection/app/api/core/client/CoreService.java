@@ -20,12 +20,18 @@ import io.reflection.app.api.core.shared.call.GetCountriesRequest;
 import io.reflection.app.api.core.shared.call.GetCountriesResponse;
 import io.reflection.app.api.core.shared.call.GetItemRanksRequest;
 import io.reflection.app.api.core.shared.call.GetItemRanksResponse;
+import io.reflection.app.api.core.shared.call.GetLinkedAccountItemsRequest;
+import io.reflection.app.api.core.shared.call.GetLinkedAccountItemsResponse;
+import io.reflection.app.api.core.shared.call.GetLinkedAccountsRequest;
+import io.reflection.app.api.core.shared.call.GetLinkedAccountsResponse;
 import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsRequest;
 import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsResponse;
 import io.reflection.app.api.core.shared.call.GetStoresRequest;
 import io.reflection.app.api.core.shared.call.GetStoresResponse;
 import io.reflection.app.api.core.shared.call.GetTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetTopItemsResponse;
+import io.reflection.app.api.core.shared.call.LinkAccountRequest;
+import io.reflection.app.api.core.shared.call.LinkAccountResponse;
 import io.reflection.app.api.core.shared.call.LoginRequest;
 import io.reflection.app.api.core.shared.call.LoginResponse;
 import io.reflection.app.api.core.shared.call.LogoutRequest;
@@ -291,6 +297,72 @@ public final class CoreService extends JsonService {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					GetRolesAndPermissionsResponse outputParameter = new GetRolesAndPermissionsResponse();
+					parseResponse(response.getText(), outputParameter);
+					output.onSuccess(outputParameter);
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+				}
+			});
+		} catch (RequestException e) {
+			output.onFailure(e);
+		}
+	}
+
+	public static final String CoreMethodGetLinkedAccounts = "GetLinkedAccounts";
+
+	public void getLinkedAccounts(GetLinkedAccountsRequest input, final AsyncCallback<GetLinkedAccountsResponse> output) {
+		try {
+			sendRequest(CoreMethodGetLinkedAccounts, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					GetLinkedAccountsResponse outputParameter = new GetLinkedAccountsResponse();
+					parseResponse(response.getText(), outputParameter);
+					output.onSuccess(outputParameter);
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+				}
+			});
+		} catch (RequestException e) {
+			output.onFailure(e);
+		}
+	}
+
+	public static final String CoreMethodGetLinkedAccountItems = "GetLinkedAccountItems";
+
+	public void getLinkedAccountItems(GetLinkedAccountItemsRequest input, final AsyncCallback<GetLinkedAccountItemsResponse> output) {
+		try {
+			sendRequest(CoreMethodGetLinkedAccountItems, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					GetLinkedAccountItemsResponse outputParameter = new GetLinkedAccountItemsResponse();
+					parseResponse(response.getText(), outputParameter);
+					output.onSuccess(outputParameter);
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+				}
+			});
+		} catch (RequestException e) {
+			output.onFailure(e);
+		}
+	}
+
+	public static final String CoreMethodLinkAccount = "LinkAccount";
+
+	public void linkAccount(LinkAccountRequest input, final AsyncCallback<LinkAccountResponse> output) {
+		try {
+			sendRequest(CoreMethodLinkAccount, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					LinkAccountResponse outputParameter = new LinkAccountResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
 				}

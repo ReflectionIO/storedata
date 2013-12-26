@@ -13,9 +13,12 @@ import io.reflection.app.api.core.shared.call.CheckUsernameRequest;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetCountriesRequest;
 import io.reflection.app.api.core.shared.call.GetItemRanksRequest;
+import io.reflection.app.api.core.shared.call.GetLinkedAccountItemsRequest;
+import io.reflection.app.api.core.shared.call.GetLinkedAccountsRequest;
 import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsRequest;
 import io.reflection.app.api.core.shared.call.GetStoresRequest;
 import io.reflection.app.api.core.shared.call.GetTopItemsRequest;
+import io.reflection.app.api.core.shared.call.LinkAccountRequest;
 import io.reflection.app.api.core.shared.call.LoginRequest;
 import io.reflection.app.api.core.shared.call.LogoutRequest;
 import io.reflection.app.api.core.shared.call.RegisterUserRequest;
@@ -78,8 +81,19 @@ public final class CoreJsonServlet extends JsonServlet {
 			GetRolesAndPermissionsRequest input = new GetRolesAndPermissionsRequest();
 			input.fromJson(request);
 			output = service.getRolesAndPermissions(input).toString();
+		} else if ("GetLinkedAccounts".equals(action)) {
+			GetLinkedAccountsRequest input = new GetLinkedAccountsRequest();
+			input.fromJson(request);
+			output = service.getLinkedAccounts(input).toString();
+		} else if ("GetLinkedAccountItems".equals(action)) {
+			GetLinkedAccountItemsRequest input = new GetLinkedAccountItemsRequest();
+			input.fromJson(request);
+			output = service.getLinkedAccountItems(input).toString();
+		} else if ("LinkAccount".equals(action)) {
+			LinkAccountRequest input = new LinkAccountRequest();
+			input.fromJson(request);
+			output = service.linkAccount(input).toString();
 		}
-
 		return output;
 	}
 }
