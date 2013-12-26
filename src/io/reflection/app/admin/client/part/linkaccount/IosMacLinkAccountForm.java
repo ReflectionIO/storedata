@@ -18,9 +18,9 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author billy1380
- *
+ * 
  */
-public class IosMacLinkAccountForm extends Composite {
+public class IosMacLinkAccountForm extends Composite implements LinkableAccountFields {
 
 	private static IosMacLinkAccountFormUiBinder uiBinder = GWT.create(IosMacLinkAccountFormUiBinder.class);
 
@@ -35,12 +35,32 @@ public class IosMacLinkAccountForm extends Composite {
 	@UiField HTMLPanel mPasswordGroup;
 	@UiField HTMLPanel mPasswordNote;
 	String mPasswordError;
-	
+
 	public IosMacLinkAccountForm() {
 		initWidget(uiBinder.createAndBindUi(this));
-		
+
 		mUsername.getElement().setAttribute("placeholder", "iTunes Connect Username");
 		mPassword.getElement().setAttribute("placeholder", "iTunes Connect Password");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.admin.client.part.linkaccount.LinkableAccountFields#validate()
+	 */
+	@Override
+	public boolean validate() {
+		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.admin.client.part.linkaccount.LinkableAccountFields#getAccountTypeName()
+	 */
+	@Override
+	public String getAccountTypeName() {
+		return "iOS/Mac (iTunes connect)";
 	}
 
 }

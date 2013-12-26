@@ -15,15 +15,19 @@ import io.reflection.app.admin.client.helper.AlertBoxHelper;
 import io.reflection.app.admin.client.part.AlertBox;
 import io.reflection.app.admin.client.part.AlertBox.AlertBoxType;
 import io.reflection.app.admin.client.part.linkaccount.IosMacLinkAccountForm;
+import io.reflection.app.admin.client.part.linkaccount.LinkableAccountFields;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -45,14 +49,18 @@ public class LinkedAccountsPage extends Composite implements NavigationEventHand
 	@UiField InlineHyperlink mWindowsPhoneLink;
 
 	@UiField FormPanel mForm;
-
+	@UiField HTMLPanel mToolbar;
 	@UiField IosMacLinkAccountForm mIosMacForm;
+
+	private LinkableAccountFields mLinkableAccount;
+
+	// private String mAccountType;
 
 	public LinkedAccountsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, false, "None", " - You currently have no linked accounts.", false).setVisible(
-				true);
+		AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.WarningAlertBoxType, false, "No accounts found", " - You currently have no linked accounts.",
+				false).setVisible(true);
 
 		addSoonTag(mPlayLink);
 
@@ -82,14 +90,17 @@ public class LinkedAccountsPage extends Composite implements NavigationEventHand
 	@Override
 	public void navigationChanged(Stack stack) {
 
+		mLinkableAccount = null;
+
 		if (NavigationController.get().getStack().getParameter(0) != null) {
+
 			mIosMacLink.setTargetHistoryToken("users/linkedaccounts/" + NavigationController.get().getStack().getParameter(0) + "/iosmac");
 
 			String accountType;
 			if ((accountType = NavigationController.get().getStack().getParameter(1)) != null) {
-
 				if ("iosmac".equals(accountType)) {
 					mIosMacForm.setVisible(true);
+					mLinkableAccount = mIosMacForm;
 					mForm.setVisible(true);
 				} else {
 					mIosMacForm.setVisible(false);
@@ -101,6 +112,20 @@ public class LinkedAccountsPage extends Composite implements NavigationEventHand
 			}
 		}
 
+	}
+
+	@UiHandler("mLinkAccount")
+	void onLinkAccount(ClickEvent event) {
+		if (mLinkableAccount.validate()) {
+			mForm.setVisible(false);
+			mToolbar.setVisible(false);
+
+			AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Please wait",
+					" - linking " + mLinkableAccount.getAccountTypeName() + " account...", false).setVisible(true);
+
+		} else {
+
+		}
 	}
 
 }

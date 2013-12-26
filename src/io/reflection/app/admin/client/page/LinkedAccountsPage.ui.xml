@@ -10,7 +10,7 @@
     <g:HTMLPanel>
         <h2>Linked Account(s)</h2>
 
-        <g:HTMLPanel styleName="btn-group {style.toolbar_spacing}">
+        <g:HTMLPanel ui:field="mToolbar" styleName="btn-group {style.toolbar_spacing}">
             <g:InlineHyperlink styleName="btn btn-default" text="iOS/Mac" ui:field="mIosMacLink" />
             <g:InlineHyperlink styleName="btn btn-default disabled" text="Google Play" ui:field="mPlayLink" />
             <g:InlineHyperlink styleName="btn btn-default disabled" text="Amazon" ui:field="mAmazonLink" />

@@ -138,6 +138,7 @@
                 <xsd:sequence>
                     <xsd:element name="permissions" type="Permission" maxOccurs="unbounded" minOccurs="0" />
                     <xsd:element name="roles" type="Role" maxOccurs="unbounded" minOccurs="0" />
+                    <xsd:element name="linkedAccounts" type="DataAccount" maxOccurs="unbounded" minOccurs="0" />
                 </xsd:sequence>
 
                 <xsd:attribute type="xsd:string" name="forename" />
@@ -149,6 +150,30 @@
                 <xsd:attribute type="xsd:dateTime" name="lastLoggedIn" />
                 <xsd:attribute type="xsd:string" name="verified" />
                 <xsd:attribute type="xsd:dateTime" name="expires" />
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="DataAccount">
+        <xsd:complexContent>
+            <xsd:extension base="DataType">
+                <xsd:sequence>
+                    <xsd:element name="source" type="DataSource" />
+                    <xsd:element name="items" type="Item" minOccurs="0" maxOccurs="unbounded" />
+                </xsd:sequence>
+
+                <xsd:attribute type="xsd:string" name="username" />
+                <xsd:attribute type="xsd:string" name="password" />
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="DataSource">
+        <xsd:complexContent>
+            <xsd:extension base="DataType">
+                <xsd:attribute name="a3Code" type="xsd:string" />
+                <xsd:attribute name="name" type="xsd:string" />
+                <xsd:attribute name="url" type="xsd:string" />
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
@@ -205,7 +230,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="Session">
         <xsd:complexContent>
             <xsd:extension base="DataType">
