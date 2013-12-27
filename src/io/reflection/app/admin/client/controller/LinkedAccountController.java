@@ -10,9 +10,10 @@ package io.reflection.app.admin.client.controller;
 import io.reflection.app.api.core.client.CoreService;
 import io.reflection.app.api.core.shared.call.LinkAccountRequest;
 import io.reflection.app.api.core.shared.call.LinkAccountResponse;
+import io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler.LinkAccountFailure;
+import io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler.LinkAccountSuccess;
 import io.reflection.app.shared.datatypes.DataSource;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
@@ -34,7 +35,7 @@ public class LinkedAccountController implements ServiceController {
 		CoreService service = new CoreService();
 		service.setUrl(CORE_END_POINT);
 
-		LinkAccountRequest input = new LinkAccountRequest();
+		final LinkAccountRequest input = new LinkAccountRequest();
 		input.accessCode = ACCESS_CODE;
 
 		input.session = SessionController.get().getSessionForApiCall();
@@ -51,14 +52,12 @@ public class LinkedAccountController implements ServiceController {
 
 			@Override
 			public void onSuccess(LinkAccountResponse output) {
-				Window.alert("success");
-
+				EventController.get().fireEventFromSource(new LinkAccountSuccess(input, output), LinkedAccountController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				Window.alert("failure");
-
+				EventController.get().fireEventFromSource(new LinkAccountFailure(input, caught), LinkedAccountController.this);
 			}
 		});
 
