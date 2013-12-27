@@ -100,7 +100,9 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	public Header() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		mAdminButton.setHTML("Admin <b class=\"caret\"></b>");
+		mAdminButton.setHTML(mAdminButton.getText() + " <b class=\"caret\"></b>");
+		mLogoutLink.setHTML(mLogoutLink.getText() + " <b class=\"glyphicon glyphicon-log-out\"></b>");
+		mLoginLink.setHTML(mLoginLink.getText() + " <b class=\"glyphicon glyphicon-log-in\"></b>");
 
 		EventController.get().addHandlerToSource(UsersEventHandler.TYPE, UserController.get(), this);
 		EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this);

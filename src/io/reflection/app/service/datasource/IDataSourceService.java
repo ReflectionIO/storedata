@@ -37,4 +37,18 @@ public interface IDataSourceService extends IService {
 	 */
 	public void deleteDataSource(DataSource dataSource) throws DataAccessException;
 
+	/**
+	 * @param name
+	 * @return
+	 */
+	public DataSource getNamedDataSource(String name) throws DataAccessException;
+	
+	/**
+	 * 
+	 * @param a3Code
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public DataSource getA3CodeDataSource(String a3Code) throws DataAccessException;
+
 }

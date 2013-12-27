@@ -13,6 +13,7 @@ import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.service.country.CountryServiceProvider;
+import io.reflection.app.service.datasource.DataSourceServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
 import io.reflection.app.service.role.RoleServiceProvider;
@@ -20,6 +21,7 @@ import io.reflection.app.service.session.SessionServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.datatypes.Country;
+import io.reflection.app.shared.datatypes.DataSource;
 import io.reflection.app.shared.datatypes.Item;
 import io.reflection.app.shared.datatypes.Permission;
 import io.reflection.app.shared.datatypes.Role;
@@ -495,5 +497,42 @@ public class ValidationHelper {
 		for (Permission permission : permissions) {
 			if (!UserServiceProvider.provide().hasPermission(user, permission)) throw new AuthorisationException(user, permissions);
 		}
+	}
+
+	/**
+	 * @param source
+	 * @param string
+	 * @return
+	 * @throws InputValidationException
+	 */
+	public static DataSource validateDataSource(DataSource dataSource, String parent) throws ServiceException {
+		if (dataSource == null) throw new InputValidationException(ApiError.DataSourceNull.getCode(), ApiError.DataSourceNull.getMessage(parent));
+
+		boolean isIdLookup = false, isA3CodeLookup = false, isNameLookup = false;
+
+		if (dataSource.id != null) {
+			isIdLookup = true;
+		} else if (dataSource.a3Code != null) {
+			isA3CodeLookup = true;
+		} else if (dataSource.name != null) {
+			isNameLookup = true;
+		}
+
+		if (!(isIdLookup || isNameLookup))
+			throw new InputValidationException(ApiError.DataSourceNoLookup.getCode(), ApiError.DataSourceNoLookup.getMessage(parent));
+
+		DataSource lookupDataSource = null;
+		if (isIdLookup) {
+			lookupDataSource = DataSourceServiceProvider.provide().getDataSource(dataSource.id);
+		} else if (isA3CodeLookup) {
+			lookupDataSource = DataSourceServiceProvider.provide().getA3CodeDataSource(dataSource.a3Code);
+		} else if (isNameLookup) {
+			lookupDataSource = DataSourceServiceProvider.provide().getNamedDataSource(dataSource.name);
+		}
+
+		if (lookupDataSource == null)
+			throw new InputValidationException(ApiError.DataSourceNotFound.getCode(), ApiError.DataSourceNotFound.getMessage(parent));
+
+		return lookupDataSource;
 	}
 }

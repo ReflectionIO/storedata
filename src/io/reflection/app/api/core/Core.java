@@ -45,6 +45,7 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.collectors.CollectorIOS;
 import io.reflection.app.service.country.CountryServiceProvider;
+import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
@@ -723,6 +724,25 @@ public final class Core extends ActionHandler {
 		LOG.finer("Entering linkAccount");
 		LinkAccountResponse output = new LinkAccountResponse();
 		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("LinkAccountResponse: input"));
+
+			input.session = ValidationHelper.validateSession(input.session, "input.session");
+
+			input.source = ValidationHelper.validateDataSource(input.source, "input.source");
+
+			if (input.username == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("input.username"));
+
+			input.username = ValidationHelper.validateStringLength(input.username, "input.username", 2, 255);
+
+			if (input.password == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("input.password"));
+
+			input.password = ValidationHelper.validateStringLength(input.password, "input.password", 2, 1000);
+
+			output.account = DataAccountServiceProvider.provide().addDataAccount(input.source, input.username, input.password);
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;

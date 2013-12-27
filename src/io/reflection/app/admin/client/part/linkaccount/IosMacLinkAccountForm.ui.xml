@@ -7,13 +7,17 @@
         }
         
         .justify {
-			text-align: justify;
-		}
+        	text-align: justify;
+        }
     </ui:style>
     <g:HTMLPanel>
 
-        <p class="text-muted {style.justify}">To link your iOS or Mac OS X account, enter your iTunes Connect username and password in the form below. Once we can access the data you will be able
-            to track your application data as part of our <strong>FREE</strong> developer package.</p>
+        <p class="text-muted {style.justify}">
+            To link your iOS or Mac OS X account, enter your iTunes Connect username and password in the form below. Once we can access the data you will be able
+            to track your application data as part of our
+            <strong>FREE</strong>
+            developer package.
+        </p>
 
         <g:HTMLPanel ui:field="mUsernameGroup" styleName="form-group">
             <label>Username</label>

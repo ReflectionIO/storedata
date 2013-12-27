@@ -59,8 +59,38 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	 * @see io.reflection.app.admin.client.part.linkaccount.LinkableAccountFields#getAccountTypeName()
 	 */
 	@Override
-	public String getAccountTypeName() {
+	public String getAccountSourceName() {
 		return "iOS/Mac (iTunes connect)";
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.admin.client.part.linkaccount.LinkableAccountFields#getAccountSourceId()
+	 */
+	@Override
+	public Long getAccountSourceId() {
+		return Long.valueOf(1);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.admin.client.part.linkaccount.LinkableAccountFields#getUsername()
+	 */
+	@Override
+	public String getUsername() {
+		return mUsername.getText();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.admin.client.part.linkaccount.LinkableAccountFields#getPassword()
+	 */
+	@Override
+	public String getPassword() {
+		return mPassword.getText();
 	}
 
 }

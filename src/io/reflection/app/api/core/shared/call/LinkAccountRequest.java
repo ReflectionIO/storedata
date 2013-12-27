@@ -9,31 +9,50 @@
 package io.reflection.app.api.core.shared.call;
 
 import io.reflection.app.api.shared.datatypes.Request;
-import io.reflection.app.shared.datatypes.DataAccount;
+import io.reflection.app.shared.datatypes.DataSource;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 public class LinkAccountRequest extends Request {
-	public DataAccount account;
+	public DataSource source;
+	public String username;
+	public String password;
 
 	@Override
 	public JsonObject toJson() {
 		JsonObject object = super.toJson();
-		JsonElement jsonAccount = account == null ? JsonNull.INSTANCE : account.toJson();
-		object.add("account", jsonAccount);
+		JsonElement jsonSource = source == null ? JsonNull.INSTANCE : source.toJson();
+		object.add("source", jsonSource);
+		JsonElement jsonUsername = username == null ? JsonNull.INSTANCE : new JsonPrimitive(username);
+		object.add("username", jsonUsername);
+		JsonElement jsonPassword = password == null ? JsonNull.INSTANCE : new JsonPrimitive(password);
+		object.add("password", jsonPassword);
 		return object;
 	}
 
 	@Override
 	public void fromJson(JsonObject jsonObject) {
 		super.fromJson(jsonObject);
-		if (jsonObject.has("account")) {
-			JsonElement jsonAccount = jsonObject.get("account");
-			if (jsonAccount != null) {
-				account = new DataAccount();
-				account.fromJson(jsonAccount.getAsJsonObject());
+		if (jsonObject.has("source")) {
+			JsonElement jsonSource = jsonObject.get("source");
+			if (jsonSource != null) {
+				source = new DataSource();
+				source.fromJson(jsonSource.getAsJsonObject());
+			}
+		}
+		if (jsonObject.has("username")) {
+			JsonElement jsonUsername = jsonObject.get("username");
+			if (jsonUsername != null) {
+				username = jsonUsername.getAsString();
+			}
+		}
+		if (jsonObject.has("password")) {
+			JsonElement jsonPassword = jsonObject.get("password");
+			if (jsonPassword != null) {
+				password = jsonPassword.getAsString();
 			}
 		}
 	}

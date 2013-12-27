@@ -67,6 +67,10 @@ public enum ApiError {
 	IncorrectPasswordForChange(100037, "Incorrect current password for user: %s"),
 	InvalidPasswordSameAsCurrent(100038, "Invalid password, current and new passwords are identical: %s"),
 
+	DataSourceNull(100039, "Invalid value null for DataSource: %s"),
+	DataSourceNotFound(100040, "Data source not found DataSource: %s"),
+	DataSourceNoLookup(100041, "Invalid data source lookup, need either id, a3Code or name for DataSource: %s"),
+
 	GetCountriesNeedsStoreOrQuery(100101, "GetCountries call should either have a store or a query. To get all countries use * for the query: %s"),
 
 	GetStoresNeedsCountryOrQuery(100201, "GetStores call should either have a country or a query. To get all stores use * for the query: %s"),

@@ -8,6 +8,7 @@
 package io.reflection.app.admin.client.page;
 
 import io.reflection.app.admin.client.controller.EventController;
+import io.reflection.app.admin.client.controller.LinkedAccountController;
 import io.reflection.app.admin.client.controller.NavigationController;
 import io.reflection.app.admin.client.controller.NavigationController.Stack;
 import io.reflection.app.admin.client.handler.NavigationEventHandler;
@@ -121,8 +122,9 @@ public class LinkedAccountsPage extends Composite implements NavigationEventHand
 			mToolbar.setVisible(false);
 
 			AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Please wait",
-					" - linking " + mLinkableAccount.getAccountTypeName() + " account...", false).setVisible(true);
+					" - linking " + mLinkableAccount.getAccountSourceName() + " account...", false).setVisible(true);
 
+			LinkedAccountController.get().linkAccount(mLinkableAccount.getAccountSourceId(), mLinkableAccount.getUsername(), mLinkableAccount.getPassword());
 		} else {
 
 		}

@@ -8,15 +8,31 @@
 //
 package io.reflection.app.service.dataaccount;
 
+import static com.spacehopperstudios.utility.StringUtils.addslashes;
+import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
 import io.reflection.app.shared.datatypes.DataAccount;
+import io.reflection.app.shared.datatypes.DataSource;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import com.google.appengine.api.taskqueue.Queue;
+import com.google.appengine.api.taskqueue.QueueFactory;
+import com.google.appengine.api.taskqueue.TaskOptions;
+import com.google.appengine.api.taskqueue.TaskOptions.Method;
+import com.google.appengine.api.taskqueue.TransientFailureException;
 
 final class DataAccountService implements IDataAccountService {
+
+	private static final Logger LOG = Logger.getLogger(DataAccountService.class.getName());
+
 	public String getName() {
 		return ServiceType.ServiceTypeDataAccount.toString();
 	}
@@ -53,12 +69,91 @@ final class DataAccountService implements IDataAccountService {
 	private DataAccount toDataAccount(Connection connection) throws DataAccessException {
 		DataAccount dataAccount = new DataAccount();
 		dataAccount.id = connection.getCurrentRowLong("id");
+		dataAccount.created = connection.getCurrentRowDateTime("created");
+		dataAccount.deleted = connection.getCurrentRowString("deleted");
+
+		dataAccount.source = new DataSource();
+		dataAccount.source.id = connection.getCurrentRowLong("sourceid");
+
+		dataAccount.username = stripslashes(connection.getCurrentRowString("username"));
+		dataAccount.password = stripslashes(connection.getCurrentRowString("password"));
+		
 		return dataAccount;
 	}
 
 	@Override
-	public DataAccount addDataAccount(DataAccount dataAccount) {
-		throw new UnsupportedOperationException();
+	public DataAccount addDataAccount(DataAccount dataAccount) throws DataAccessException {
+		DataAccount addedDataAccount = null;
+
+		final String addDataAccountQuery = String.format("INSERT INTO `dataaccount` (`sourceid`,`username`,`password`) VALUES (%d,'%s','%s')",
+				dataAccount.source.id, addslashes(dataAccount.username), addslashes(dataAccount.password));
+
+		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
+
+		try {
+			dataAccountConnection.connect();
+			dataAccountConnection.executeQuery(addDataAccountQuery);
+
+			if (dataAccountConnection.getAffectedRowCount() > 0) {
+				addedDataAccount = getDataAccount(Long.valueOf(dataAccountConnection.getInsertedId()));
+
+				if (addedDataAccount == null) {
+					addedDataAccount = dataAccount;
+					addedDataAccount.id = Long.valueOf(dataAccountConnection.getInsertedId());
+				}
+			}
+		} finally {
+			if (dataAccountConnection != null) {
+				dataAccountConnection.disconnect();
+			}
+		}
+
+		if (addedDataAccount != null) {
+			enqueue(addedDataAccount, 30);
+		}
+
+		return addedDataAccount;
+	}
+
+	/**
+	 * @param dataAccount
+	 * @param days
+	 */
+	private void enqueue(DataAccount dataAccount, int days) {
+		if (LOG.isLoggable(GaeLevel.TRACE)) {
+			LOG.log(GaeLevel.TRACE, "Entering...");
+		}
+
+		try {
+			Queue queue = QueueFactory.getQueue("dataaccountgather");
+
+			TaskOptions options = TaskOptions.Builder.withUrl("/dataaccountgather").method(Method.POST);
+			options.param("accountId", dataAccount.id.toString());
+			options.param("days", Integer.toString(days));
+			try {
+				queue.add(options);
+			} catch (TransientFailureException ex) {
+
+				if (LOG.isLoggable(Level.WARNING)) {
+					LOG.warning(String.format("Could not queue a message because of [%s] - will retry it once", ex.toString()));
+				}
+
+				// retry once
+				try {
+					queue.add(options);
+				} catch (TransientFailureException reEx) {
+					if (LOG.isLoggable(Level.SEVERE)) {
+						LOG.log(Level.SEVERE,
+								String.format("Retry of with payload [%s] failed while adding to queue [%s] twice", options.toString(), queue.getQueueName()),
+								reEx);
+					}
+				}
+			}
+		} finally {
+			if (LOG.isLoggable(GaeLevel.TRACE)) {
+				LOG.log(GaeLevel.TRACE, "Exiting...");
+			}
+		}
 	}
 
 	@Override
@@ -69,6 +164,22 @@ final class DataAccountService implements IDataAccountService {
 	@Override
 	public void deleteDataAccount(DataAccount dataAccount) {
 		throw new UnsupportedOperationException();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.dataaccount.IDataAccountService#addDataAccount(io.reflection.app.shared.datatypes.DataSource, java.lang.String,
+	 * java.lang.String)
+	 */
+	@Override
+	public DataAccount addDataAccount(DataSource dataSource, String username, String password) throws DataAccessException {
+		DataAccount dataAccount = new DataAccount();
+		dataAccount.source = dataSource;
+		dataAccount.username = username;
+		dataAccount.password = password;
+
+		return addDataAccount(dataAccount);
 	}
 
 }

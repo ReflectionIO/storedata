@@ -14,5 +14,11 @@ package io.reflection.app.admin.client.part.linkaccount;
 public interface LinkableAccountFields {
 	boolean validate();
 
-	String getAccountTypeName();
+	String getAccountSourceName();
+
+	Long getAccountSourceId();
+
+	String getUsername();
+
+	String getPassword();
 }

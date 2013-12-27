@@ -85,4 +85,14 @@
 			<task-retry-limit>0</task-retry-limit>
 		</retry-parameters>
 	</queue>
+    <queue>
+        <name>dataaccountgather</name>
+        <rate>20/s</rate>
+        <bucket-size>10</bucket-size>
+        <max-concurrent-requests>20</max-concurrent-requests>
+        <retry-parameters>
+            <task-retry-limit>5</task-retry-limit>
+        </retry-parameters>
+    </queue>
+    
 </queue-entries>

@@ -8,18 +8,33 @@
 //
 package io.reflection.app.api.core.shared.call;
 
+import io.reflection.app.shared.datatypes.DataAccount;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.willshex.gson.json.service.shared.Response;
 
 public class LinkAccountResponse extends Response {
+	public DataAccount account;
+
 	@Override
 	public JsonObject toJson() {
 		JsonObject object = super.toJson();
+		JsonElement jsonAccount = account == null ? JsonNull.INSTANCE : account.toJson();
+		object.add("account", jsonAccount);
 		return object;
 	}
 
 	@Override
 	public void fromJson(JsonObject jsonObject) {
 		super.fromJson(jsonObject);
+		if (jsonObject.has("account")) {
+			JsonElement jsonAccount = jsonObject.get("account");
+			if (jsonAccount != null) {
+				account = new DataAccount();
+				account.fromJson(jsonAccount.getAsJsonObject());
+			}
+		}
 	}
 }
