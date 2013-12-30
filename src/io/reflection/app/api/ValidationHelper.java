@@ -13,6 +13,7 @@ import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.service.country.CountryServiceProvider;
+import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.datasource.DataSourceServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
@@ -21,6 +22,7 @@ import io.reflection.app.service.session.SessionServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.datatypes.Country;
+import io.reflection.app.shared.datatypes.DataAccount;
 import io.reflection.app.shared.datatypes.DataSource;
 import io.reflection.app.shared.datatypes.Item;
 import io.reflection.app.shared.datatypes.Permission;
@@ -534,5 +536,26 @@ public class ValidationHelper {
 			throw new InputValidationException(ApiError.DataSourceNotFound.getCode(), ApiError.DataSourceNotFound.getMessage(parent));
 
 		return lookupDataSource;
+	}
+
+	/**
+	 * 
+	 * @param dataAccount
+	 * @param parent
+	 * @return
+	 * @throws ServiceException
+	 */
+	public static DataAccount validateDataAccount(DataAccount dataAccount, String parent) throws ServiceException {
+		if (dataAccount == null) throw new InputValidationException(ApiError.DataAccountNull.getCode(), ApiError.DataAccountNull.getMessage(parent));
+
+		if (dataAccount.id == null)
+			throw new InputValidationException(ApiError.DataAccountNoLookup.getCode(), ApiError.DataAccountNoLookup.getMessage(parent));
+
+		DataAccount lookupDataAccount = DataAccountServiceProvider.provide().getDataAccount(dataAccount.id);
+
+		if (lookupDataAccount == null)
+			throw new InputValidationException(ApiError.DataAccountNotFound.getCode(), ApiError.DataSourceNotFound.getMessage(parent));
+
+		return null;
 	}
 }

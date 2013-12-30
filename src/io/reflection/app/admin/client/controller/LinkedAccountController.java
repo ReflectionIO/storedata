@@ -8,19 +8,33 @@
 package io.reflection.app.admin.client.controller;
 
 import io.reflection.app.api.core.client.CoreService;
+import io.reflection.app.api.core.shared.call.GetLinkedAccountsRequest;
+import io.reflection.app.api.core.shared.call.GetLinkedAccountsResponse;
 import io.reflection.app.api.core.shared.call.LinkAccountRequest;
 import io.reflection.app.api.core.shared.call.LinkAccountResponse;
+import io.reflection.app.api.core.shared.call.event.GetLinkedAccountsEventHandler;
 import io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler.LinkAccountFailure;
 import io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler.LinkAccountSuccess;
+import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.shared.datatypes.DataAccount;
 import io.reflection.app.shared.datatypes.DataSource;
 
+import java.util.List;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author billy1380
  * 
  */
 public class LinkedAccountController implements ServiceController {
+
+	private List<DataAccount> mLinkedAccounts;
+	private long mCount = -1;
+	private Pager mPager;
+
 	private static LinkedAccountController mOne = null;
 
 	public static LinkedAccountController get() {
@@ -61,5 +75,71 @@ public class LinkedAccountController implements ServiceController {
 			}
 		});
 
+	}
+
+	/**
+	 * 
+	 */
+	public List<DataAccount> getLinkedAccounts() {
+		return mLinkedAccounts;
+	}
+
+	public long getLinkedAccountsCount() {
+		return mCount;
+	}
+
+	public void fetchLinkedAccounts() {
+		CoreService service = new CoreService();
+		service.setUrl(CORE_END_POINT);
+
+		final GetLinkedAccountsRequest input = new GetLinkedAccountsRequest();
+		input.accessCode = ACCESS_CODE;
+
+		input.session = SessionController.get().getSessionForApiCall();
+
+		if (mPager == null) {
+			mPager = new Pager();
+			mPager.count = STEP;
+			mPager.start = Long.valueOf(0);
+			mPager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
+		}
+		input.pager = mPager;
+
+		service.getLinkedAccounts(input, new AsyncCallback<GetLinkedAccountsResponse>() {
+
+			@Override
+			public void onSuccess(GetLinkedAccountsResponse output) {
+				if (output.status == StatusType.StatusTypeSuccess) {
+					if (output.linkedAccounts != null) {
+						mLinkedAccounts.addAll(output.linkedAccounts);
+					}
+
+					if (output.pager != null) {
+						mPager = output.pager;
+
+						if (mPager.totalCount != null) {
+							mCount = mPager.totalCount.longValue();
+						}
+					}
+
+//					updateRowCount((int) mCount, true);
+//					updateRowData(
+//							input.pager.start.intValue(),
+//							mLinkedAccounts.subList(input.pager.start.intValue(),
+//									Math.min(input.pager.start.intValue() + input.pager.count.intValue(), mPager.totalCount.intValue())));
+				}
+
+				EventController.get().fireEventFromSource(new GetLinkedAccountsEventHandler.GetLinkedAccountsSuccess(input, output), LinkedAccountController.this);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+
+			}
+		});
+	}
+
+	public boolean hasLinkedAccounts() {
+		return mPager != null || mLinkedAccounts.size() > 0;
 	}
 }

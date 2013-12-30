@@ -10,6 +10,8 @@ package io.reflection.app.admin.client.helper;
 import io.reflection.app.admin.client.part.AlertBox;
 import io.reflection.app.admin.client.part.AlertBox.AlertBoxType;
 
+import com.willshex.gson.json.service.shared.Error;
+
 /**
  * @author billy1380
  * 
@@ -25,6 +27,11 @@ public class AlertBoxHelper {
 		a.setCanDismiss(canDismiss);
 
 		return a;
+	}
+
+	public static void showError(AlertBox a, Error error) {
+		AlertBoxHelper.configureAlert(a, AlertBoxType.DangerAlertBoxType, false, "An Error Occured",
+				" - " + (error == null ? "no additional details" : "(" + error.code.toString() + ") " + error.message), true).setVisible(true);
 	}
 
 }

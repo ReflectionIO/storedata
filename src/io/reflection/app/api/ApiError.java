@@ -71,6 +71,10 @@ public enum ApiError {
 	DataSourceNotFound(100040, "Data source not found DataSource: %s"),
 	DataSourceNoLookup(100041, "Invalid data source lookup, need either id, a3Code or name for DataSource: %s"),
 
+	DataAccountNull(100042, "Invalid value null for DataAccount: %s"),
+	DataAccountNotFound(100043, "Data account not found DataAccount: %s"),
+	DataAccountNoLookup(100044, "Invalid data account lookup, no id provided for DataAccount: %s"),
+	
 	GetCountriesNeedsStoreOrQuery(100101, "GetCountries call should either have a store or a query. To get all countries use * for the query: %s"),
 
 	GetStoresNeedsCountryOrQuery(100201, "GetStores call should either have a country or a query. To get all stores use * for the query: %s"),
@@ -106,7 +110,7 @@ public enum ApiError {
 	}
 
 	public String getMessage(String parent, int minValue, int maxValue) {
-		return String.format(message, parent == null ? "?" : parent, minValue, maxValue);
+		return String.format(message, minValue, maxValue, parent == null ? "?" : parent);
 	}
 
 }

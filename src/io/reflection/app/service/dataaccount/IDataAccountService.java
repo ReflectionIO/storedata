@@ -8,7 +8,10 @@
 //
 package io.reflection.app.service.dataaccount;
 
+import java.util.List;
+
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.shared.datatypes.DataAccount;
 import io.reflection.app.shared.datatypes.DataSource;
 
@@ -51,5 +54,19 @@ public interface IDataAccountService extends IService {
 	 * @throws DataAccessException
 	 */
 	public void deleteDataAccount(DataAccount dataAccount) throws DataAccessException;
+
+	/**
+	 * @param pager
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<DataAccount> getDataAccounts(Pager pager) throws DataAccessException;
+
+	/**
+	 * 
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public Long getDataAccountsCount() throws DataAccessException;
 
 }

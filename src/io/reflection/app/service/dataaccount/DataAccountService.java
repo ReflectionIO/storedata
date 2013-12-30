@@ -11,6 +11,7 @@ package io.reflection.app.service.dataaccount;
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
@@ -20,6 +21,7 @@ import io.reflection.app.service.ServiceType;
 import io.reflection.app.shared.datatypes.DataAccount;
 import io.reflection.app.shared.datatypes.DataSource;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -175,11 +177,30 @@ final class DataAccountService implements IDataAccountService {
 	@Override
 	public DataAccount addDataAccount(DataSource dataSource, String username, String password) throws DataAccessException {
 		DataAccount dataAccount = new DataAccount();
+		
 		dataAccount.source = dataSource;
 		dataAccount.username = username;
 		dataAccount.password = password;
 
 		return addDataAccount(dataAccount);
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getDataAccounts(io.reflection.app.api.shared.datatypes.Pager)
+	 */
+	@Override
+	public List<DataAccount> getDataAccounts(Pager pager) throws DataAccessException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getDataAccountsCount()
+	 */
+	@Override
+	public Long getDataAccountsCount() throws DataAccessException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

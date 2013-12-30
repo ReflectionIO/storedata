@@ -50,6 +50,7 @@ import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
 import io.reflection.app.service.role.RoleServiceProvider;
+import io.reflection.app.service.sale.SaleServiceProvider;
 import io.reflection.app.service.session.ISessionService;
 import io.reflection.app.service.session.SessionServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
@@ -501,6 +502,8 @@ public final class Core extends ActionHandler {
 			if (input == null)
 				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("LoginRequest: input"));
 
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
 			boolean foundToken = false;
 
 			if (input.session != null && input.session.token != null && !input.session.token.equals("")) {
@@ -563,6 +566,15 @@ public final class Core extends ActionHandler {
 		LOG.finer("Entering logout");
 		LogoutResponse output = new LogoutResponse();
 		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("LogoutRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
+			input.session = ValidationHelper.validateSession(input.session, "input.session");
+
+			SessionServiceProvider.provide().deleteSession(input.session);
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -614,6 +626,13 @@ public final class Core extends ActionHandler {
 		LOG.finer("Entering changeUserDetails");
 		ChangeUserDetailsResponse output = new ChangeUserDetailsResponse();
 		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("ChangeUserDetailsRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
+			input.session = ValidationHelper.validateSession(input.session, "input.session");
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -627,6 +646,12 @@ public final class Core extends ActionHandler {
 		LOG.finer("Entering checkUsername");
 		CheckUsernameResponse output = new CheckUsernameResponse();
 		try {
+
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("CheckUsernameRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
 			IUserService userService = UserServiceProvider.provide();
 
 			Long userCount = userService.searchUsersCount(input.username);
@@ -667,6 +692,8 @@ public final class Core extends ActionHandler {
 				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
 						ApiError.InvalidValueNull.getMessage("GetRolesAndPermissionsResponse: input"));
 
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
 			input.session = ValidationHelper.validateSession(input.session, "input.session");
 
 			if (input.permissionsOnly != Boolean.TRUE) {
@@ -697,7 +724,30 @@ public final class Core extends ActionHandler {
 	public GetLinkedAccountsResponse getLinkedAccounts(GetLinkedAccountsRequest input) {
 		LOG.finer("Entering getLinkedAccounts");
 		GetLinkedAccountsResponse output = new GetLinkedAccountsResponse();
+		
 		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("GetLinkedAccountsRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
+			input.session = ValidationHelper.validateSession(input.session, "input.session");
+
+			input.pager = ValidationHelper.validatePager(input.pager, "input");
+
+			if (input.pager.sortBy == null) {
+				input.pager.sortBy = "created";
+			}
+
+			if (input.pager.sortDirection == null) {
+				input.pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
+			}
+
+			output.linkedAccounts = DataAccountServiceProvider.provide().getDataAccounts(input.pager);
+
+			output.pager = input.pager;
+			updatePager(output.pager, output.linkedAccounts, input.pager.totalCount == null ? DataAccountServiceProvider.provide().getDataAccountsCount() : null);
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -711,6 +761,29 @@ public final class Core extends ActionHandler {
 		LOG.finer("Entering getLinkedAccountItems");
 		GetLinkedAccountItemsResponse output = new GetLinkedAccountItemsResponse();
 		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+						ApiError.InvalidValueNull.getMessage("GetLinkedAccountItemsRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
+			input.session = ValidationHelper.validateSession(input.session, "input.session");
+			
+			input.linkedAccount = ValidationHelper.validateDataAccount(input.linkedAccount, "input.linkedAccount");
+			
+			if (input.pager.sortBy == null) {
+				input.pager.sortBy = "created";
+			}
+
+			if (input.pager.sortDirection == null) {
+				input.pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
+			}
+
+			output.items = SaleServiceProvider.provide().getDataAccountItems(input.linkedAccount, input.pager);
+
+			output.pager = input.pager;
+			updatePager(output.pager, output.items, input.pager.totalCount == null ? SaleServiceProvider.provide().getDataAccountItemsCount() : null);
+			
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -726,6 +799,8 @@ public final class Core extends ActionHandler {
 		try {
 			if (input == null)
 				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("LinkAccountResponse: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
 			input.session = ValidationHelper.validateSession(input.session, "input.session");
 

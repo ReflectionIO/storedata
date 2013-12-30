@@ -25,7 +25,8 @@ public enum DatabaseType {
 	DatabaseTypePermission("permission"),
 	DatabaseTypeRole("role"),
 	DatabaseTypeDataSource("datasource"),
-	DatabaseTypeDataAccount("dataaccount");
+	DatabaseTypeDataAccount("dataaccount"),
+	DatabaseTypeSale("sale");
 
 	private String value;
 	private static Map<String, DatabaseType> valueLookup = null;

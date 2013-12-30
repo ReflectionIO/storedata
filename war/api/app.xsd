@@ -94,6 +94,42 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
+    
+    <xsd:complexType name="Sale">
+        <xsd:complexContent>
+            <xsd:extension base="DataType">
+                <xsd:sequence>
+                    <xsd:element name="account" type="DataAccount" />
+                    <xsd:element name="item" type="Item" />
+                    <xsd:element name="country" type="Country" />
+                </xsd:sequence>
+                <xsd:attribute name="sku" type="xsd:string" />
+                
+                <xsd:attribute name="developer" type="xsd:string" />
+                <xsd:attribute name="title" type="xsd:string" />
+                
+                <xsd:attribute name="version" type="xsd:string" />
+                
+                <xsd:attribute name="typeIdentifier" type="xsd:string" />
+                
+                <xsd:attribute name="units" type="xsd:string" />
+                <xsd:attribute name="proceeds" type="xsd:int" />
+                <xsd:attribute name="currency" type="xsd:string" />
+                <xsd:attribute name="begin" type="xsd:date" />
+                <xsd:attribute name="end" type="xsd:date" />
+                <xsd:attribute name="customerCurrency" type="xsd:string" />
+                <xsd:attribute name="customerPrice" type="xsd:int" />
+                <xsd:attribute name="promoCode" type="xsd:string" />
+                
+                <xsd:attribute name="parentIdentifier" type="xsd:string" />
+                
+                <xsd:attribute name="subscription" type="xsd:string" />
+                <xsd:attribute name="period" type="xsd:string" />
+                
+                <xsd:attribute name="category" type="xsd:string" />
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
 
     <xsd:complexType name="Store">
         <xsd:complexContent>

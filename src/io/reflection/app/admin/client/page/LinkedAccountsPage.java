@@ -13,10 +13,17 @@ import io.reflection.app.admin.client.controller.NavigationController;
 import io.reflection.app.admin.client.controller.NavigationController.Stack;
 import io.reflection.app.admin.client.handler.NavigationEventHandler;
 import io.reflection.app.admin.client.helper.AlertBoxHelper;
+import io.reflection.app.admin.client.helper.FormHelper;
 import io.reflection.app.admin.client.part.AlertBox;
 import io.reflection.app.admin.client.part.AlertBox.AlertBoxType;
 import io.reflection.app.admin.client.part.linkaccount.IosMacLinkAccountForm;
 import io.reflection.app.admin.client.part.linkaccount.LinkableAccountFields;
+import io.reflection.app.api.core.shared.call.GetLinkedAccountsRequest;
+import io.reflection.app.api.core.shared.call.GetLinkedAccountsResponse;
+import io.reflection.app.api.core.shared.call.LinkAccountRequest;
+import io.reflection.app.api.core.shared.call.LinkAccountResponse;
+import io.reflection.app.api.core.shared.call.event.GetLinkedAccountsEventHandler;
+import io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.SpanElement;
@@ -31,12 +38,14 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.gson.json.service.shared.Error;
+import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author billy1380
  * 
  */
-public class LinkedAccountsPage extends Composite implements NavigationEventHandler {
+public class LinkedAccountsPage extends Composite implements NavigationEventHandler, LinkAccountEventHandler, GetLinkedAccountsEventHandler {
 
 	private static LinkedAccountsPageUiBinder uiBinder = GWT.create(LinkedAccountsPageUiBinder.class);
 
@@ -60,14 +69,17 @@ public class LinkedAccountsPage extends Composite implements NavigationEventHand
 	public LinkedAccountsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.WarningAlertBoxType, false, "No accounts found", " - You currently have no linked accounts.",
-				false).setVisible(true);
-
 		addSoonTag(mPlayLink);
 
 		// mIosMacLink.setTargetHistoryToken("users/linkedaccounts/" + NavigationController.get().getStack().getParameter(0) + "/iosmac");
 
 		EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this);
+		EventController.get().addHandlerToSource(LinkAccountEventHandler.TYPE, LinkedAccountController.get(), this);
+		EventController.get().addHandlerToSource(GetLinkedAccountsEventHandler.TYPE, LinkedAccountController.get(), this);
+
+		showNoLinkedAccounts();
+
+		LinkedAccountController.get().fetchLinkedAccounts();
 	}
 
 	/**
@@ -130,4 +142,73 @@ public class LinkedAccountsPage extends Composite implements NavigationEventHand
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler#linkAccountSuccess(io.reflection.app.api.core.shared.call.LinkAccountRequest,
+	 * io.reflection.app.api.core.shared.call.LinkAccountResponse)
+	 */
+	@Override
+	public void linkAccountSuccess(LinkAccountRequest input, LinkAccountResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess) {
+			AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Account added, please wait",
+					" - getting updating linked accounts. Please note that linked account data will not be available immediatly please check back regularly.",
+					false).setVisible(true);
+
+			LinkedAccountController.get().fetchLinkedAccounts();
+		} else {
+			showError(output.error);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler#linkAccountFailure(io.reflection.app.api.core.shared.call.LinkAccountRequest,
+	 * java.lang.Throwable)
+	 */
+	@Override
+	public void linkAccountFailure(LinkAccountRequest input, Throwable caught) {
+		showError(FormHelper.convertToError(caught));
+	}
+
+	private void showError(Error e) {
+		AlertBoxHelper.showError(mAlertBox, e);
+
+		mForm.setVisible(true);
+		mToolbar.setVisible(true);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.core.shared.call.event.GetLinkedAccountsEventHandler#getLinkedAccountsSuccess(io.reflection.app.api.core.shared.call.
+	 * GetLinkedAccountsRequest, io.reflection.app.api.core.shared.call.GetLinkedAccountsResponse)
+	 */
+	@Override
+	public void getLinkedAccountsSuccess(GetLinkedAccountsRequest input, GetLinkedAccountsResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess) {
+			if (LinkedAccountController.get().getLinkedAccountsCount() == 0) {
+				showNoLinkedAccounts();
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.core.shared.call.event.GetLinkedAccountsEventHandler#getLinkedAccountsFailure(io.reflection.app.api.core.shared.call.
+	 * GetLinkedAccountsRequest, java.lang.Throwable)
+	 */
+	@Override
+	public void getLinkedAccountsFailure(GetLinkedAccountsRequest input, Throwable caught) {
+		if (LinkedAccountController.get().getLinkedAccounts() == null || LinkedAccountController.get().getLinkedAccounts().size() == 0) {
+			showNoLinkedAccounts();
+		}
+	}
+
+	private void showNoLinkedAccounts() {
+		AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.WarningAlertBoxType, false, "No accounts found", " - You currently have no linked accounts.",
+				false).setVisible(true);
+	}
 }
