@@ -360,6 +360,21 @@ function getTopItems(listType, listID) {
 
                 //var idLookupString = "";
 
+                // console.log("...............");
+                // var d = data.ranks[0];
+                // var retrievedDate = new Date(d.date);
+                // var activeDate = new Date(date);
+                // console.log("retrieved date = " + retrievedDate);
+                // console.log("active date = " + activeDate);
+
+                // if (retrievedDate.getUTCDate() == activeDate.getUTCDate() ) {
+
+                // }
+                // else {
+                //   alert("ignore this retrieved date: " + retrievedDate);
+                //   return;
+                // }
+
                 var len = data.items.length;
 
                 var currentLookup = new Object();
