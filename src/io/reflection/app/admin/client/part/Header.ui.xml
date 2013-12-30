@@ -44,7 +44,7 @@
                 </ul>
                 <ul class="nav navbar-nav" ui:field="mAdminList">
                     <li ui:field="mAdminDropdown" class="dropdown">
-                        <g:Anchor styleName="dropdown-toggle" ui:field="mAdminButton" />
+                        <g:Anchor styleName="dropdown-toggle" ui:field="mAdminButton" text="Admin" />
                         <ul class="dropdown-menu">
                             <li ui:field="mFeedBrowserItem">
                                 <g:InlineHyperlink ui:field="mFeedBrowserLink" targetHistoryToken="feedbrowser">Feed Browser</g:InlineHyperlink>
