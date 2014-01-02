@@ -78,8 +78,8 @@ $(window).bind('hashchange', function() {
 
     // note: this is called when the system constructs the hash as well when you go back
     // only execute the code if the player has hit the back button
-    console.log("std hash = " + storedHash);
-    console.log("new hash = " + newHash);
+    // console.log("std hash = " + storedHash);
+    // console.log("new hash = " + newHash);
     if (storedHash != newHash) {
       //do your stuff based on the comparison of newHash to storedHash
       if (newHash != null && newHash.length > 0) {
@@ -248,6 +248,26 @@ $("#load_more_all, #load_more_single").click(function () {
     pageStartAll += maxRows;
     createTableRows();
     getTopItemsAll();
+});
+
+// when the user presses a nav button
+$(".btn").click(function () {
+
+    var value = $(this).attr("value");
+
+    //alert(value);
+
+    if (value.indexOf("overview_") != -1) {
+
+        overviewType = value.split("_")[1];
+
+        updateHash();
+
+        //history.pushState({id: 'SOME ID'}, '', 'myurl.html');
+
+        updateLeaderboard();
+    }
+
 });
 
 

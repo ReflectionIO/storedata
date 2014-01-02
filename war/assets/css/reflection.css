@@ -1,6 +1,6 @@
 body {
-  padding-top: 70px;
-  padding-bottom: 40px;
+  padding-top: 60px;
+  padding-bottom: 38px;
 }
 
 .sidebar-heading {
@@ -37,14 +37,19 @@ body {
 }
 
 .game-icon-heading {
-	float: left;
+	margin-left:15px;
 	width: 75px;
 	height: 75px;
 }
 
 .game-text-heading {
-	padding-left: 15px;
+	margin-left: 15px;
 	font-size: medium;
+}
+
+.game-overview-stats {
+	padding-left: 15px;
+	margin-top: 15px;
 }
 
 #reportrange {

@@ -53,114 +53,88 @@
 
       <div class="container">
         <div class="row">
-          <div class="col-md-4">
-            <img class="game-icon-heading" src="../assets/img/icon_placeholder_75x75.png">
-            <div>
-              <span class="game-text-heading" id="app-name">App Name<br></span>
-              <span class="game-text-heading text-muted" id="publisher-name">Publisher</span>
-            </div>
-          </div>
-          <div class="col-md-2">
-            <center>
-              <div>2680</div>
-              <div>Downloads today</div>
-              <div>(Globally)</div>
-            </center>
-          </div>
-          <div class="col-md-2">
-            <center>
-              <div>$42,672</div>
-              <div>Revenue today</div>
-              <div>(Globally)</div>
-            </center>
-          </div>
-          <div class="col-md-2">
-            <center>
-              <div>3 star</div>
-              <div>Rating today</div>
-              <div>(Globally)</div>
-            </center>
-          </div>
-          <div class="col-md-2">
-            <center>
-              <div>Vist the Appstore</div>
-              <div>More info</div>
-            </center>
-          </div>
-        </div>
-      </div>
 
-      <div class="container" style="padding-top:15px">
-        <div class="row">
           <div class="col-md-3">
-
-            <div class="well sidebar-nav">
-              
-                <!--
-                <form class="bs-example">
-                  <h4>History</h4>
-                  <select class="form-control" id="history">
-                    <option value="history_rank">Rank</option>
-                    <option value="history_downloads">Downloads</option>
-                    <option value="history_revenue">Revenue</option>
-                  </select>
-                </form>
-                -->
-
-                <h4>Charts</h4>
-                <!--<button type="button" class="btn btn-default btn-lg btn-block" value="overview">Overview</button>-->
-                <button type="button" class="btn btn-default btn-lg btn-block" value="history_rank">Ranking</button>
-                <button type="button" class="btn btn-default btn-lg btn-block" value="history_revenue">Revenue</button>
-                <button type="button" class="btn btn-default btn-lg btn-block" value="history_downloads">Downloads</button>
+            <div class="well sidebar-nav"> 
+              <div class="row">
+                <img class="game-icon-heading" src="../assets/img/icon_placeholder_75x75.png" style="float:none;margin-left:15px">
+                <div class="game-text-heading" id="app-name">App Name</div>
+                <div class="game-text-heading text-muted" id="publisher-name">Publisher</div>
               </div>
-            
-        </div>
-
-        <div class="col-md-9 col-md-offset-3" style="float:none" id="graph-container">
-            <div id="reportrange" class="pull-right">
-              <i class="glyphicon glyphicon-calendar icon-large"></i>
-              <span><!--September 14, 2013 - October 14, 2013--></span> <b class="caret"></b>
+              <p></p>
+              <div class="row game-overview-stats">
+                <div>2680</div>
+                <div>Downloads today</div>
+                <div>(Globally)</div>
+              </div>
+              <div class="row game-overview-stats">
+                <div>$42,672</div>
+                <div>Revenue today</div>
+                <div>(Globally)</div>
+              </div>
+              <div class="row game-overview-stats">
+                <div>3 star</div>
+                <div>Rating today</div>
+                <div>(Globally)</div>
+              </div>
+              <div class="row game-overview-stats">
+                <div>Vist the Appstore</div>
+                <div>More info</div>
+              </div>
             </div>
+          </div>
 
-          <div id="graph" class="loader-container" style="display:none"></div>
-          <div id="loader" class="loader-container"><img src="../assets/img/loader.gif"></div>
-        </div>
+          <div class="col-md-9 col-md-offset-3" style="float:none">
+            <button type="button" class="btn btn-default btn-lg" value="history_rank" style="width:33%">Ranking</button>
+            <button type="button" class="btn btn-default btn-lg" value="history_revenue" style="width:33%">Revenue</button>
+            <button type="button" class="btn btn-default btn-lg" value="history_downloads" style="width:33%">Downloads</button>
+          </div>
 
-        <div class="col-md-9 col-md-offset-3" style="float:none; padding-top:50px">
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th>Country</th>
-                <th>% of total revenue</th>
-                <th></th>
-                <th>Paid</th>
-                <th>IAP</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>United Kingdom</td>
-                <td></td>
-                <td>61%</td>
-                <td>$34,174</td>
-                <td>$15.43</td>
-              </tr>
-              <tr>
-                <td>United States</td>
-                <td></td>
-                <td>22%</td>
-                <td>$24,334</td>
-                <td>$20.65</td>
-              </tr>
-              <tr>
-                <td>Germany</td>
-                <td></td>
-                <td>10%</td>
-                <td>$9,653</td>
-                <td>$67.56</td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="col-md-9 col-md-offset-3" style="float:none; padding-top:50px" id="graph-container">
+              <div id="reportrange" class="pull-right">
+                <i class="glyphicon glyphicon-calendar icon-large"></i>
+                <span><!--September 14, 2013 - October 14, 2013--></span> <b class="caret"></b>
+              </div>
+
+            <div id="graph" class="loader-container" style="display:none"></div>
+            <div id="loader" class="loader-container"><img src="../assets/img/loader.gif"></div>
+          </div>
+
+          <div class="col-md-9 col-md-offset-3" style="float:none; padding-top:50px">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Country</th>
+                  <th>% of total revenue</th>
+                  <th></th>
+                  <th>Paid</th>
+                  <th>IAP</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>United Kingdom</td>
+                  <td></td>
+                  <td>61%</td>
+                  <td>$34,174</td>
+                  <td>$15.43</td>
+                </tr>
+                <tr>
+                  <td>United States</td>
+                  <td></td>
+                  <td>22%</td>
+                  <td>$24,334</td>
+                  <td>$20.65</td>
+                </tr>
+                <tr>
+                  <td>Germany</td>
+                  <td></td>
+                  <td>10%</td>
+                  <td>$9,653</td>
+                  <td>$67.56</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
   
 

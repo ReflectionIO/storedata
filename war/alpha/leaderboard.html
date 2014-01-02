@@ -75,6 +75,7 @@
                     <option value="appstore_ipad">iPad</option>
                     <!--<option>Google Play</option>-->
                   </select>
+                  <!--
                   <h4>Overview</h4>
                   <select class="form-control" id="overview">
                     <option value="overview_all">All</option>
@@ -82,6 +83,7 @@
                     <option value="overview_free">Free</option>
                     <option value="overview_grossing">Grossing</option>
                   </select>
+                  -->
                   <h4>Country</h4>
                   <select class="form-control" id="country">
                     <option value="us">United States</option>
@@ -163,7 +165,14 @@
           -->
         </div>
 
-        <div class="col-md-9 col-md-offset-3" style="float:none; display:none;" id="leaderboard-single">
+        <div class="col-md-9 col-md-offset-3" style="float:none">
+            <button type="button" class="btn btn-default btn-lg" value="overview_all" style="width:24%">All</button>
+            <button type="button" class="btn btn-default btn-lg" value="overview_paid" style="width:24%">Paid</button>
+            <button type="button" class="btn btn-default btn-lg" value="overview_free" style="width:24%">Free</button>
+            <button type="button" class="btn btn-default btn-lg" value="overview_grossing" style="width:24%">Grossing</button>
+        </div>
+
+        <div class="col-md-9 col-md-offset-3" style="float:none; display:none; padding-top:30px" id="leaderboard-single">
          <table class="table table-hover" id="table-detail">
           <thead>
             <tr>
@@ -196,7 +205,7 @@
          <center><button type="button" data-loading-text="Loading..." class="btn btn-default" id="load_more_single">Load more</button></center>
       </div>
 
-      <div class="col-md-9 col-md-offset-3" style="float:none;" id="leaderboard-all">
+      <div class="col-md-9 col-md-offset-3" style="float:none; padding-top:30px" id="leaderboard-all">
        <table class="table table-hover" id="table-charts">
         <thead>
           <tr>
