@@ -18,7 +18,7 @@ import com.google.gson.JsonPrimitive;
 public class Sale extends DataType {
 	public DataAccount account;
 	public Item item;
-	public Country country;
+	public String country;
 	public String sku;
 	public String developer;
 	public String title;
@@ -44,7 +44,7 @@ public class Sale extends DataType {
 		object.add("account", jsonAccount);
 		JsonElement jsonItem = item == null ? JsonNull.INSTANCE : item.toJson();
 		object.add("item", jsonItem);
-		JsonElement jsonCountry = country == null ? JsonNull.INSTANCE : country.toJson();
+		JsonElement jsonCountry = country == null ? JsonNull.INSTANCE : new JsonPrimitive(country);
 		object.add("country", jsonCountry);
 		JsonElement jsonSku = sku == null ? JsonNull.INSTANCE : new JsonPrimitive(sku);
 		object.add("sku", jsonSku);
@@ -103,8 +103,7 @@ public class Sale extends DataType {
 		if (jsonObject.has("country")) {
 			JsonElement jsonCountry = jsonObject.get("country");
 			if (jsonCountry != null) {
-				country = new Country();
-				country.fromJson(jsonCountry.getAsJsonObject());
+				country = jsonCountry.getAsString();
 			}
 		}
 		if (jsonObject.has("sku")) {

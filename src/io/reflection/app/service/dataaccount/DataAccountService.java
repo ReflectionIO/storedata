@@ -79,7 +79,8 @@ final class DataAccountService implements IDataAccountService {
 
 		dataAccount.username = stripslashes(connection.getCurrentRowString("username"));
 		dataAccount.password = stripslashes(connection.getCurrentRowString("password"));
-		
+		dataAccount.properties = stripslashes(connection.getCurrentRowString("properties"));
+
 		return dataAccount;
 	}
 
@@ -87,8 +88,9 @@ final class DataAccountService implements IDataAccountService {
 	public DataAccount addDataAccount(DataAccount dataAccount) throws DataAccessException {
 		DataAccount addedDataAccount = null;
 
-		final String addDataAccountQuery = String.format("INSERT INTO `dataaccount` (`sourceid`,`username`,`password`) VALUES (%d,'%s','%s')",
-				dataAccount.source.id, addslashes(dataAccount.username), addslashes(dataAccount.password));
+		final String addDataAccountQuery = String.format(
+				"INSERT INTO `dataaccount` (`sourceid`,`username`,`password`,`properties`) VALUES (%d,'%s','%s','%s')", dataAccount.source.id,
+				addslashes(dataAccount.username), addslashes(dataAccount.password), addslashes(dataAccount.properties));
 
 		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
@@ -132,6 +134,7 @@ final class DataAccountService implements IDataAccountService {
 			TaskOptions options = TaskOptions.Builder.withUrl("/dataaccountgather").method(Method.POST);
 			options.param("accountId", dataAccount.id.toString());
 			options.param("days", Integer.toString(days));
+
 			try {
 				queue.add(options);
 			} catch (TransientFailureException ex) {
@@ -177,7 +180,7 @@ final class DataAccountService implements IDataAccountService {
 	@Override
 	public DataAccount addDataAccount(DataSource dataSource, String username, String password) throws DataAccessException {
 		DataAccount dataAccount = new DataAccount();
-		
+
 		dataAccount.source = dataSource;
 		dataAccount.username = username;
 		dataAccount.password = password;
@@ -185,7 +188,9 @@ final class DataAccountService implements IDataAccountService {
 		return addDataAccount(dataAccount);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getDataAccounts(io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
@@ -194,7 +199,9 @@ final class DataAccountService implements IDataAccountService {
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getDataAccountsCount()
 	 */
 	@Override

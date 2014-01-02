@@ -8,8 +8,8 @@
 //
 package io.reflection.app.service.sale;
 
-import java.util.List;
-
+import static com.spacehopperstudios.utility.StringUtils.addslashes;
+import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
@@ -20,6 +20,8 @@ import io.reflection.app.service.ServiceType;
 import io.reflection.app.shared.datatypes.DataAccount;
 import io.reflection.app.shared.datatypes.Item;
 import io.reflection.app.shared.datatypes.Sale;
+
+import java.util.List;
 
 final class SaleService implements ISaleService {
 	public String getName() {
@@ -33,7 +35,7 @@ final class SaleService implements ISaleService {
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection saleConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
 
-		String getSaleQuery = String.format("select * from `sale` where `deleted`='n' and `id`='%d' limit 1", id.longValue());
+		String getSaleQuery = String.format("SELECT * FROM `sale` WHERE `deleted`='n' AND `id`='%d' LIMIT 1", id.longValue());
 		try {
 			saleConnection.connect();
 			saleConnection.executeQuery(getSaleQuery);
@@ -59,12 +61,72 @@ final class SaleService implements ISaleService {
 	private Sale toSale(Connection connection) throws DataAccessException {
 		Sale sale = new Sale();
 		sale.id = connection.getCurrentRowLong("id");
+		sale.created = connection.getCurrentRowDateTime("created");
+		sale.deleted = connection.getCurrentRowString("deleted");
+
+		sale.account = new DataAccount();
+		sale.account.id = connection.getCurrentRowLong("accountid");
+
+		sale.item = new Item();
+		sale.item.id = connection.getCurrentRowLong("itemid");
+
+		sale.country = stripslashes(connection.getCurrentRowString("country"));
+		sale.sku = stripslashes(connection.getCurrentRowString("sku"));
+		sale.developer = stripslashes(connection.getCurrentRowString("developer"));
+		sale.title = stripslashes(connection.getCurrentRowString("title"));
+		sale.version = stripslashes(connection.getCurrentRowString("version"));
+		sale.typeIdentifier = stripslashes(connection.getCurrentRowString("typeidentifier"));
+		sale.units = stripslashes(connection.getCurrentRowString("units"));
+		sale.proceeds = connection.getCurrentRowInteger("proceeds");
+		sale.currency = stripslashes(connection.getCurrentRowString("currency"));
+		sale.begin = connection.getCurrentRowDateTime("begin");
+		sale.end = connection.getCurrentRowDateTime("end");
+		sale.customerCurrency = stripslashes(connection.getCurrentRowString("customercurrency"));
+		sale.customerPrice = connection.getCurrentRowInteger("customerprice");
+		sale.promoCode = stripslashes(connection.getCurrentRowString("promocode"));
+		sale.parentIdentifier = stripslashes(connection.getCurrentRowString("parentidentifier"));
+		sale.subscription = stripslashes(connection.getCurrentRowString("subscription"));
+		sale.period = stripslashes(connection.getCurrentRowString("period"));
+		sale.category = stripslashes(connection.getCurrentRowString("category"));
+
 		return sale;
 	}
 
 	@Override
 	public Sale addSale(Sale sale) throws DataAccessException {
-		throw new UnsupportedOperationException();
+		Sale addedSale = null;
+
+		// TODO: sort out nullable values
+
+		final String addSaleQuery = String
+				.format("INSERT INTO `sale` (`accountid`,`itemid`,`country`,`sku`,`developer`,`title`,`version`,`typeidentifier`,`units`,`proceeds`,`currency`,`begin`,`end`,`customercurrency`,`customerprice`,`promocode`,`parentidentifier`,`subscription`,`period`,`category`) VALUES (%d,%d,'%s','%s','%s','%s','%s','%s','%s',%d,'%s',FROM_UNIXTIME(%d),FROM_UNIXTIME(%d),'%s',%d,'%s','%s','%s','%s','%s');",
+						sale.account.id.longValue(), sale.item.id.longValue(), addslashes(sale.country), addslashes(sale.sku), addslashes(sale.developer),
+						addslashes(sale.title), addslashes(sale.version), addslashes(sale.typeIdentifier), addslashes(sale.units), sale.proceeds.intValue(),
+						addslashes(sale.currency), sale.begin.getTime() / 1000, sale.end.getTime() / 1000, addslashes(sale.customerCurrency),
+						sale.customerPrice.intValue(), addslashes(sale.promoCode), addslashes(sale.parentIdentifier), addslashes(sale.subscription),
+						addslashes(sale.period), addslashes(sale.category));
+
+		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
+
+		try {
+			saleConnection.connect();
+			saleConnection.executeQuery(addSaleQuery);
+
+			if (saleConnection.getAffectedRowCount() > 0) {
+				addedSale = getSale(Long.valueOf(saleConnection.getInsertedId()));
+
+				if (addedSale == null) {
+					addedSale = sale;
+					addedSale.id = Long.valueOf(saleConnection.getInsertedId());
+				}
+			}
+		} finally {
+			if (saleConnection != null) {
+				saleConnection.disconnect();
+			}
+		}
+
+		return addedSale;
 	}
 
 	@Override
@@ -77,8 +139,11 @@ final class SaleService implements ISaleService {
 		throw new UnsupportedOperationException();
 	}
 
-	/* (non-Javadoc)
-	 * @see io.reflection.app.service.sale.ISaleService#getDataAccountItems(io.reflection.app.shared.datatypes.DataAccount, io.reflection.app.api.shared.datatypes.Pager)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.sale.ISaleService#getDataAccountItems(io.reflection.app.shared.datatypes.DataAccount,
+	 * io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
 	public List<Item> getDataAccountItems(DataAccount linkedAccount, Pager pager) throws DataAccessException {
@@ -86,7 +151,9 @@ final class SaleService implements ISaleService {
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.service.sale.ISaleService#getDataAccountItemsCount()
 	 */
 	@Override

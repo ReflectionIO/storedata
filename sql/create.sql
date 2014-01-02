@@ -480,6 +480,7 @@ CREATE TABLE `dataaccount` (
   `sourceid` int(11) NOT NULL,
   `username` varchar(255) NOT NULL,
   `password` varchar(1000) NOT NULL,
+  `properties` text,
   `deleted` enum('y','n') DEFAULT 'n',
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_username` (`username`)
