@@ -45,7 +45,7 @@ public class LinkedAccountController implements ServiceController {
 		return mOne;
 	}
 
-	public void linkAccount(Long sourceId, String username, String password) {
+	public void linkAccount(Long sourceId, String username, String password, String properties) {
 		CoreService service = new CoreService();
 		service.setUrl(CORE_END_POINT);
 
@@ -56,6 +56,7 @@ public class LinkedAccountController implements ServiceController {
 
 		input.username = username;
 		input.password = password;
+		input.properties = properties;
 
 		DataSource source = new DataSource();
 		source.id = sourceId;

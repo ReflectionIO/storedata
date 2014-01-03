@@ -136,7 +136,8 @@ public class LinkedAccountsPage extends Composite implements NavigationEventHand
 			AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Please wait",
 					" - linking " + mLinkableAccount.getAccountSourceName() + " account...", false).setVisible(true);
 
-			LinkedAccountController.get().linkAccount(mLinkableAccount.getAccountSourceId(), mLinkableAccount.getUsername(), mLinkableAccount.getPassword());
+			LinkedAccountController.get().linkAccount(mLinkableAccount.getAccountSourceId(), mLinkableAccount.getUsername(), mLinkableAccount.getPassword(),
+					mLinkableAccount.getProperties());
 		} else {
 
 		}

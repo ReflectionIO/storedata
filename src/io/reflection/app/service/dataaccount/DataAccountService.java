@@ -21,6 +21,8 @@ import io.reflection.app.service.ServiceType;
 import io.reflection.app.shared.datatypes.DataAccount;
 import io.reflection.app.shared.datatypes.DataSource;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,7 +48,7 @@ final class DataAccountService implements IDataAccountService {
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection dataAccountConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
-		String getDataAccountQuery = String.format("select * from `dataAccount` where `deleted`='n' and `id`='%d' limit 1", id.longValue());
+		String getDataAccountQuery = String.format("select * from `dataaccount` where `deleted`='n' and `id`='%d' limit 1", id.longValue());
 		try {
 			dataAccountConnection.connect();
 			dataAccountConnection.executeQuery(getDataAccountQuery);
@@ -130,27 +132,35 @@ final class DataAccountService implements IDataAccountService {
 
 		try {
 			Queue queue = QueueFactory.getQueue("dataaccountgather");
+			Calendar c = Calendar.getInstance();
 
-			TaskOptions options = TaskOptions.Builder.withUrl("/dataaccountgather").method(Method.POST);
-			options.param("accountId", dataAccount.id.toString());
-			options.param("days", Integer.toString(days));
+			for (int i = 0; i < days; i++) {
+				TaskOptions options = TaskOptions.Builder.withUrl("/dataaccountgather").method(Method.POST);
 
-			try {
-				queue.add(options);
-			} catch (TransientFailureException ex) {
+				options.param("accountId", dataAccount.id.toString());
 
-				if (LOG.isLoggable(Level.WARNING)) {
-					LOG.warning(String.format("Could not queue a message because of [%s] - will retry it once", ex.toString()));
-				}
+				c.setTime(new Date());
+				c.add(Calendar.DAY_OF_MONTH, -i);
 
-				// retry once
+				options.param("date", Long.toString(c.getTime().getTime()));
+
 				try {
 					queue.add(options);
-				} catch (TransientFailureException reEx) {
-					if (LOG.isLoggable(Level.SEVERE)) {
-						LOG.log(Level.SEVERE,
-								String.format("Retry of with payload [%s] failed while adding to queue [%s] twice", options.toString(), queue.getQueueName()),
-								reEx);
+				} catch (TransientFailureException ex) {
+
+					if (LOG.isLoggable(Level.WARNING)) {
+						LOG.warning(String.format("Could not queue a message because of [%s] - will retry it once", ex.toString()));
+					}
+
+					// retry once
+					try {
+						queue.add(options);
+					} catch (TransientFailureException reEx) {
+						if (LOG.isLoggable(Level.SEVERE)) {
+							LOG.log(Level.SEVERE,
+									String.format("Retry of with payload [%s] failed while adding to queue [%s] twice", options.toString(),
+											queue.getQueueName()), reEx);
+						}
 					}
 				}
 			}
@@ -174,23 +184,6 @@ final class DataAccountService implements IDataAccountService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.service.dataaccount.IDataAccountService#addDataAccount(io.reflection.app.shared.datatypes.DataSource, java.lang.String,
-	 * java.lang.String)
-	 */
-	@Override
-	public DataAccount addDataAccount(DataSource dataSource, String username, String password) throws DataAccessException {
-		DataAccount dataAccount = new DataAccount();
-
-		dataAccount.source = dataSource;
-		dataAccount.username = username;
-		dataAccount.password = password;
-
-		return addDataAccount(dataAccount);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getDataAccounts(io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
@@ -208,6 +201,24 @@ final class DataAccountService implements IDataAccountService {
 	public Long getDataAccountsCount() throws DataAccessException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.dataaccount.IDataAccountService#addDataAccount(io.reflection.app.shared.datatypes.DataSource, java.lang.String,
+	 * java.lang.String, java.lang.String)
+	 */
+	@Override
+	public DataAccount addDataAccount(DataSource dataSource, String username, String password, String properties) throws DataAccessException {
+		DataAccount dataAccount = new DataAccount();
+
+		dataAccount.source = dataSource;
+		dataAccount.username = username;
+		dataAccount.password = password;
+		dataAccount.properties = properties;
+
+		return addDataAccount(dataAccount);
 	}
 
 }

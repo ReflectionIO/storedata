@@ -42,7 +42,7 @@
 
                 <ul class="{style.other_options}">
                     <li>
-                        <g:InlineHyperlink ui:field="mRegister" text="Create Account" targetHistoryToken="register" />
+                        <g:InlineHyperlink ui:field="mRegister" text="Sign Up" targetHistoryToken="register" />
                     </li>
                     <li>
                         <g:InlineHyperlink ui:field="mForgotPassword" text="Forgot Password" targetHistoryToken="forgotpassword" />

@@ -12,6 +12,8 @@ import io.reflection.app.shared.datatypes.DataAccount;
 
 import java.util.Date;
 
+import com.willshex.gson.json.service.server.ServiceException;
+
 /**
  * @author billy1380
  * 
@@ -20,9 +22,15 @@ public interface DataAccountCollector {
 
 	/**
 	 * @param dataAccount
-	 * @param begin
-	 * @param end
+	 * @param date
 	 */
-	void collect(DataAccount dataAccount, Date begin, Date end);
+	void collect(DataAccount dataAccount, Date date);
+
+	/**
+	 * 
+	 * @param properties
+	 * @throws ServiceException
+	 */
+	void validateProperties(String properties) throws ServiceException;
 
 }

@@ -69,6 +69,9 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@UiField InlineHyperlink mLoginLink;
 	@UiField LIElement mLoginItem;
 
+	@UiField InlineHyperlink mRegisterLink;
+	@UiField LIElement mRegisterItem;
+
 	@UiField InlineHyperlink mRolesLink;
 	@UiField LIElement mRolesItem;
 
@@ -125,6 +128,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			mItems.add(mRanksItem);
 			mItems.add(mUsersItem);
 			mItems.add(mLoginItem);
+			mItems.add(mRegisterItem);
 			mItems.add(mRolesItem);
 			mItems.add(mPermissionsItem);
 			mItems.add(mChangeDetailsItem);
@@ -180,6 +184,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			}
 		} else if ("login".equals(stack.getPage())) {
 			highlight(mLoginItem);
+		} else if ("register".equals(stack.getPage())) {
+			highlight(mRegisterItem);
 		} else if ("roles".equals(stack.getPage())) {
 			highlight(mRolesItem);
 		} else if ("permissions".equals(stack.getPage())) {
@@ -224,6 +230,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 		removeLogin();
 
+		removeRegister();
+		
 		addAdmin();
 
 		addAccount(user);
@@ -242,6 +250,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 		addLogin();
 
+		addRegister();
+
 		removeUpgrade();
 	}
 
@@ -257,6 +267,14 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	 */
 	private void removeLogin() {
 		mLoginItem.removeFromParent();
+	}
+
+	private void addRegister() {
+		mAccountList.appendChild(mRegisterItem);
+	}
+
+	private void removeRegister() {
+		mRegisterItem.removeFromParent();
 	}
 
 	/*

@@ -7,6 +7,7 @@
 //
 package io.reflection.app.admin.client.part.linkaccount;
 
+import com.google.gson.*;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -15,6 +16,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.gson.json.shared.Convert;
 
 /**
  * @author billy1380
@@ -36,11 +38,18 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	@UiField HTMLPanel mPasswordNote;
 	String mPasswordError;
 
+	@UiField TextBox mVendorId;
+	@UiField HTMLPanel mVendorIdGroup;
+	@UiField HTMLPanel mVendorIdNote;
+	String mVendorIdError;
+
 	public IosMacLinkAccountForm() {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		mUsername.getElement().setAttribute("placeholder", "iTunes Connect Username");
 		mPassword.getElement().setAttribute("placeholder", "iTunes Connect Password");
+		mVendorId.getElement().setAttribute("placeholder", "Vendor number (8xxxxxxx)");
+
 	}
 
 	/*
@@ -91,6 +100,25 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	@Override
 	public String getPassword() {
 		return mPassword.getText();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.admin.client.part.linkaccount.LinkableAccountFields#getProperties()
+	 */
+	@Override
+	public String getProperties() {
+		JsonObject properties = new JsonObject();
+		JsonArray vendors = new JsonArray();
+
+		JsonPrimitive vendor = new JsonPrimitive(mVendorId.getText());
+
+		vendors.add(vendor);
+
+		properties.add("vendors", vendors);
+		
+		return Convert.fromJsonObject(properties);
 	}
 
 }

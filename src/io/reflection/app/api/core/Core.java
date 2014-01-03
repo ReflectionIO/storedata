@@ -8,6 +8,7 @@
 package io.reflection.app.api.core;
 
 import static io.reflection.app.api.PagerHelper.updatePager;
+import io.reflection.app.accountdatacollectors.DataAccountCollectorFactory;
 import io.reflection.app.api.ApiError;
 import io.reflection.app.api.ValidationHelper;
 import io.reflection.app.api.core.shared.call.ChangePasswordRequest;
@@ -724,7 +725,7 @@ public final class Core extends ActionHandler {
 	public GetLinkedAccountsResponse getLinkedAccounts(GetLinkedAccountsRequest input) {
 		LOG.finer("Entering getLinkedAccounts");
 		GetLinkedAccountsResponse output = new GetLinkedAccountsResponse();
-		
+
 		try {
 			if (input == null)
 				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("GetLinkedAccountsRequest: input"));
@@ -746,7 +747,8 @@ public final class Core extends ActionHandler {
 			output.linkedAccounts = DataAccountServiceProvider.provide().getDataAccounts(input.pager);
 
 			output.pager = input.pager;
-			updatePager(output.pager, output.linkedAccounts, input.pager.totalCount == null ? DataAccountServiceProvider.provide().getDataAccountsCount() : null);
+			updatePager(output.pager, output.linkedAccounts, input.pager.totalCount == null ? DataAccountServiceProvider.provide().getDataAccountsCount()
+					: null);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -768,9 +770,9 @@ public final class Core extends ActionHandler {
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
 			input.session = ValidationHelper.validateSession(input.session, "input.session");
-			
+
 			input.linkedAccount = ValidationHelper.validateDataAccount(input.linkedAccount, "input.linkedAccount");
-			
+
 			if (input.pager.sortBy == null) {
 				input.pager.sortBy = "created";
 			}
@@ -783,7 +785,7 @@ public final class Core extends ActionHandler {
 
 			output.pager = input.pager;
 			updatePager(output.pager, output.items, input.pager.totalCount == null ? SaleServiceProvider.provide().getDataAccountItemsCount() : null);
-			
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -816,7 +818,9 @@ public final class Core extends ActionHandler {
 
 			input.password = ValidationHelper.validateStringLength(input.password, "input.password", 2, 1000);
 
-			output.account = DataAccountServiceProvider.provide().addDataAccount(input.source, input.username, input.password);
+			DataAccountCollectorFactory.getCollectorForSource(input.source.a3Code).validateProperties(input.properties);
+			
+			output.account = DataAccountServiceProvider.provide().addDataAccount(input.source, input.username, input.password, input.properties);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {

@@ -335,12 +335,10 @@
                     <xsd:extension base="sd:Request">
                         <xsd:sequence>
                             <xsd:element name="source" type="sd:DataSource" />
-                            
-                            <xsd:element name="keys" type="xsd:string" maxOccurs="unbounded" />
-                            <xsd:element name="values" type="xsd:string" maxOccurs="unbounded" />
                         </xsd:sequence>
                         <xsd:attribute name="username" type="xsd:string" />
                         <xsd:attribute name="password" type="xsd:string" />
+                        <xsd:attribute name="properties" type="xsd:string" />
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>

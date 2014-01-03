@@ -40,7 +40,7 @@ public interface IDataAccountService extends IService {
 	 * @return
 	 * @throws DataAccessException
 	 */
-	public DataAccount addDataAccount(DataSource dataSource, String username, String password) throws DataAccessException;
+	public DataAccount addDataAccount(DataSource dataSource, String username, String password, String properties) throws DataAccessException;
 
 	/**
 	 * @param dataAccount

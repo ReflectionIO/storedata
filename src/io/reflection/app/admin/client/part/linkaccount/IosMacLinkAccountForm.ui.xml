@@ -30,6 +30,12 @@
             <g:PasswordTextBox styleName="form-control input-lg" ui:field="mPassword" />
             <g:HTMLPanel ui:field="mPasswordNote" visible="false" styleName="{style.noteDetail}" />
         </g:HTMLPanel>
+        
+        <g:HTMLPanel ui:field="mVendorIdGroup" styleName="form-group">
+            <label>Vendor number</label>
+            <g:TextBox styleName="form-control input-lg" ui:field="mVendorId" />
+            <g:HTMLPanel ui:field="mVendorIdNote" visible="false" styleName="{style.noteDetail}" />
+        </g:HTMLPanel>
 
     </g:HTMLPanel>
 </ui:UiBinder> 

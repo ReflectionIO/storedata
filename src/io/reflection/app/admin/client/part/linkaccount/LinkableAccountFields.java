@@ -21,4 +21,6 @@ public interface LinkableAccountFields {
 	String getUsername();
 
 	String getPassword();
+
+	String getProperties();
 }
