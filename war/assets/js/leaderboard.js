@@ -21,6 +21,7 @@ var rankList = {
 // buttons
 var btnLoadAll = $("#load_more_all");
 var btnLoadSingle = $("#load_more_single");
+var btnOverview = $("#overview_all");
 
 $(document).ready(function () {
 
@@ -69,6 +70,10 @@ $(document).ready(function () {
     // show the load more button "loading..."
     btnLoadAll.button('loading');
     btnLoadSingle.button('loading');
+
+    // "click" the correct overview button
+    btnOverview = $("#overview_" + overviewType)
+    btnOverview.addClass("active");
 
 });
 
@@ -135,7 +140,8 @@ $(window).bind('hashchange', function() {
       // highlightOverviewButton();
 
       highlightOptionButton("#appstore", "appstore_" + store);
-      highlightOptionButton("#overview", "overview_" + overviewType);
+      // highlightOptionButton("#overview", "overview_" + overviewType);
+      highlightOverviewButton();
       highlightOptionButton("#country", country);
 
       // update the date picker with the new date
@@ -251,22 +257,24 @@ $("#load_more_all, #load_more_single").click(function () {
 });
 
 // when the user presses a nav button
-$(".btn").click(function () {
+$("#overview_all, #overview_paid, #overview_free, #overview_grossing").click(function () {
 
-    var value = $(this).attr("value");
+    
+    btnOverview.removeClass("active");
 
-    //alert(value);
+    btnOverview = $(this);
 
-    if (value.indexOf("overview_") != -1) {
+    btnOverview.addClass( "active" );
 
-        overviewType = value.split("_")[1];
+    var id = $(this).attr('id');
 
-        updateHash();
+    overviewType = id.split("_")[1];
 
-        //history.pushState({id: 'SOME ID'}, '', 'myurl.html');
+    updateHash();
 
-        updateLeaderboard();
-    }
+    //history.pushState({id: 'SOME ID'}, '', 'myurl.html');
+
+    updateLeaderboard();
 
 });
 
@@ -782,6 +790,21 @@ function updateTableSingle(chartdata, listType, listID) {
         }
         i++;
       });
+
+  }
+
+  function highlightOverviewButton() {
+
+    // var btnl = $("overview_"+overviewType);
+    // alert(btnOverview.attr("value") + " " + "overview_"+overviewType);
+
+    $("#overview_all").removeClass("active");
+    $("#overview_paid").removeClass("active");
+    $("#overview_free").removeClass("active");
+    $("#overview_grossing").removeClass("active");
+
+    btnOverview = $("#overview_"+overviewType);
+    btnOverview.addClass("active");
 
   }
 

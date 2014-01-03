@@ -9,6 +9,8 @@ var chartLoaded = false;
 var startDate;
 var endDate;
 
+var btnOverview;
+
 
 $(document).ready(function(){
 
@@ -30,6 +32,9 @@ $(document).ready(function(){
     $('#publisher-name').html(publisher);
 
     getItemsRank();
+
+    btnOverview = $("#history_rank");
+    btnOverview.addClass("active");
 
  });
 
@@ -56,23 +61,41 @@ $('#reportrange').daterangepicker(
     }
 );
 
+// // when the user presses a nav button
+// $(".btn").click(function () {
+
+//     var value = $(this).attr("value");
+
+//     if (value == "overview") {
+        
+//     }
+//     else {
+//         // $('#graph-container').toggle();
+
+//         var itemArray = value.split("_");
+//         selectedGraph = itemArray[1]; 
+
+//         loadChart(historyList[selectedGraph]);
+        
+//     }
+
+// });
+
 // when the user presses a nav button
-$(".btn").click(function () {
+$("#history_rank, #history_revenue, #history_downloads").click(function () {
 
-    var value = $(this).attr("value");
+    btnOverview.removeClass("active");
 
-    if (value == "overview") {
-        
-    }
-    else {
-        // $('#graph-container').toggle();
+    btnOverview = $(this);
 
-        var itemArray = value.split("_");
-        selectedGraph = itemArray[1]; 
+    btnOverview.addClass( "active" );
 
-        loadChart(historyList[selectedGraph]);
-        
-    }
+    var id = $(this).attr('id');
+
+    var itemArray = id.split("_");
+    selectedGraph = itemArray[1]; 
+
+    loadChart(historyList[selectedGraph]);
 
 });
 

@@ -164,15 +164,21 @@
             </div>
           -->
         </div>
-
-        <div class="col-md-9 col-md-offset-3" style="float:none">
-            <button type="button" class="btn btn-default btn-lg" value="overview_all" style="width:24%">All</button>
-            <button type="button" class="btn btn-default btn-lg" value="overview_paid" style="width:24%">Paid</button>
-            <button type="button" class="btn btn-default btn-lg" value="overview_free" style="width:24%">Free</button>
-            <button type="button" class="btn btn-default btn-lg" value="overview_grossing" style="width:24%">Grossing</button>
+<!--
+        <div class="btn-group">
+          <button type="button" class="btn btn-default">Left</button>
+          <button type="button" class="btn btn-default">Middle</button>
+          <button type="button" class="btn btn-default">Right</button>
+        </div>
+-->
+        <div class="col-md-9 col-md-offset-3 btn-group toggle-group">
+            <button type="button" class="btn btn-default btn-lg" id ="overview_all" style="width:25%">All</button>
+            <button type="button" class="btn btn-default btn-lg" id="overview_paid" style="width:25%">Paid</button>
+            <button type="button" class="btn btn-default btn-lg" id="overview_free" style="width:25%">Free</button>
+            <button type="button" class="btn btn-default btn-lg" id="overview_grossing" style="width:25%">Grossing</button>
         </div>
 
-        <div class="col-md-9 col-md-offset-3" style="float:none; display:none; padding-top:30px" id="leaderboard-single">
+        <div class="col-md-9 col-md-offset-3" style="float:none; display:none" id="leaderboard-single">
          <table class="table table-hover" id="table-detail">
           <thead>
             <tr>
@@ -205,7 +211,7 @@
          <center><button type="button" data-loading-text="Loading..." class="btn btn-default" id="load_more_single">Load more</button></center>
       </div>
 
-      <div class="col-md-9 col-md-offset-3" style="float:none; padding-top:30px" id="leaderboard-all">
+      <div class="col-md-9 col-md-offset-3" style="float:none" id="leaderboard-all">
        <table class="table table-hover" id="table-charts">
         <thead>
           <tr>
