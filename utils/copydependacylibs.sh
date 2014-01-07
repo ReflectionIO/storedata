@@ -59,7 +59,7 @@ cp ~/.m2/repository/org/renjin/cran/zoo/1.7-9-SNAPSHOT/zoo-1.7-9-SNAPSHOT.jar ~/
 cp ~/.m2/repository/org/renjin/cran/lattice/0.20-15-SNAPSHOT/lattice-0.20-15-SNAPSHOT.jar ~/Documents/EclipseProjects/storedata/war/WEB-INF/lib
 cp ~/.m2/repository/org/renjin/grid/0.7.0-RC7-SNAPSHOT/grid-0.7.0-RC7-SNAPSHOT.jar ~/Documents/EclipseProjects/storedata/war/WEB-INF/lib
 cp ~/.m2/repository/mysql/mysql-connector-java/5.1.26/mysql-connector-java-5.1.26.jar ~/Documents/EclipseProjects/storedata/war/WEB-INF/lib
-cp ~/.m2/repository.gson/gson-gwt/1.0/gson-gwt-1.0.jar ~/Documents/EclipseProjects/storedata/war/WEB-INF/lib
+cp ~/.m2/repository/gson/gson-gwt/1.0/gson-gwt-1.0.jar ~/Documents/EclipseProjects/storedata/war/WEB-INF/lib
 cp ~/.m2/repository/spchopr/gson/1.0/gson-1.0.jar ~/Documents/EclipseProjects/storedata/war/WEB-INF/lib
 cp ~/.m2/repository/spchopr/gson.json.service/1.0/gson.json.service-1.0.jar ~/Documents/EclipseProjects/storedata/war/WEB-INF/lib
 cp ~/.m2/repository/spchopr/gson.json.service_appengine/1.0/gson.json.service_appengine-1.0.jar ~/Documents/EclipseProjects/storedata/war/WEB-INF/lib
