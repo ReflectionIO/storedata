@@ -6,13 +6,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/spchopr.utility.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/spchopr.gson.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/spchopr.gson.json.service_appengine.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/spchopr.gson.json.service.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/spchopr.service_appengine.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/spchopr.service.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/gson-gwt-1.0.jar"/>
 	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
