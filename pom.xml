@@ -101,6 +101,41 @@
             <artifactId>guava</artifactId>
             <version>RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>gson</groupId>
+            <artifactId>gson-gwt</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>spchopr</groupId>
+            <artifactId>gson</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>spchopr</groupId>
+            <artifactId>service</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>spchopr</groupId>
+            <artifactId>gson.json.service_appengine</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>spchopr</groupId>
+            <artifactId>gson.json.service</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>spchopr</groupId>
+            <artifactId>service_appengine</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>spchopr</groupId>
+            <artifactId>utility</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
     <repositories>
         <repository>
