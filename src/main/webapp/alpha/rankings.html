@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Rankings</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- bootstrap -->
+    <link href="../assets/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="../assets/js/bootstrap.min.js"></script>
+
+    <!-- jchartfx -->
+    <link rel="stylesheet" type="text/css" href="../assets/css/jchartfx.css" />
+    <script type="text/javascript" src="../assets/js/jchartfx.system.js"></script>
+    <script type="text/javascript" src="../assets/js/jchartfx.coreBasic.js"></script>    
+    <script type="text/javascript" src="../assets/js/jchartfx.animation.js"></script>   
+
+    <!-- purl -->
+    <script type="text/javascript" src="../assets/js/purl.js"></script>  
+
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <select>
+              <option>iPhone</option>
+              <option>iPad</option>
+          </select>
+          <select>
+              <option>United States</option>
+              <option>United Kingdom</option>
+              <option>Australia</option>
+          </select>
+          <select>
+              <option>Last 7 days</option>
+              <option>Last 14 days</option>
+              <option>Last 30 days</option>
+          </select>
+      </div>
+      <div class="row-fluid">
+        <div id="ChartDiv" style="width:600px;height:400px;display:inline-block"></div>
+    </div>
+
+</div>
+<!--<script type="text/javascript">
+$.getJSON("GetItemsRank.json", function(data){
+            
+            items = data.ranks;
+            console.log(items);
+            /* loop through array */
+            $.each(items, function(index, d){           
+                d.date = new Date(d.date);
+                d.position++;
+            });
+ 
+            loadChart();
+            
+        }).error(function(jqXHR, textStatus, errorThrown){ /* assign handler */
+            /* alert(jqXHR.responseText) */
+            alert("error occurred!");
+        });
+    </script>-->
+    <script type="text/javascript">
+
+        var items = [];
+        var chart1;
+
+        window.onload = function () {
+
+            console.log($.url().param("itemId"));
+
+            getItemsRank();
+
+        }
+
+        function getItemsRank() {
+
+            /*$.post("GetItemsRank.json", 
+
+                function(data) {
+
+                    items = data.ranks;
+
+                    
+                    $.each(items, function(index, d){           
+                        d.date = new Date(d.date);
+                        d.position++;
+                    });
+
+                    loadChart();
+
+                }, 
+
+                "json");*/
+            
+                // to do a gather run this: http://127.0.0.1:8888/dev/devhelper?action=gather&store=ios&cron=yes
+                // to check on it go here: http://127.0.0.1:8888/_ah/admin and click on "Task Queues"
+                var externalId = $.url().param("itemId"); //"com.gameloft.despicableme2";
+                var listType = $.url().param("type");
+                var country = $.url().param("country");
+
+                var requestString = "{'accessCode':'b72b4e32-1062-4cc7-bc6b-52498ee10f09','item':{'source':'ios','externalId':"+externalId+"},'listType':'"+listType+"','country':{'a2Code':'"+country+"'}}";
+
+                $.ajax({
+                        type: "POST",
+                        url: "../core",
+                        data: { action: "GetItemRanks", request: requestString },
+                        //contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function(data) {
+                            
+                            $.each(data.ranks, function(index, item){    
+                                // only use the specific "type" of list e.g. topfreeapplications, topfreeipadapplications
+                                if (item.type == type) {
+                                    item.date = new Date(item.date);
+                                    item.position++;
+                                    console.log(item);
+                                    items.push(item);
+                                };       
+                                
+                            });
+
+                            loadChart();
+                        }
+                });
+        }
+
+        function loadChart() {        
+
+            chart1 = new cfx.Chart();
+            //chart1.getAnimations().getLoad().setEnabled(true);
+
+            var axisY = chart1.getAxisY();
+            //axisY.setMin(0);
+            //axisY.setMax(500);
+            chart1.setGallery(cfx.Gallery.Area);
+            chart1.getData().setSeries(2);
+            var series1 = chart1.getSeries().getItem(0);
+            var series2 = chart1.getSeries().getItem(1);
+            series2.setColor("#801702D1");
+            series2.getBorder().setWidth(4);
+            series1.setGallery(cfx.Gallery.Lines);
+
+            var legBox = chart1.getLegendBox();
+            legBox.setDock(cfx.DockArea.Bottom);
+            legBox.setContentLayout(cfx.ContentLayout.Center);
+
+
+            //----Assign data fields--------
+
+            var fields = chart1.getDataSourceSettings().getFields();
+            var field1 = new cfx.FieldMap();
+            var field2 = new cfx.FieldMap();
+            //var field3 = new cfx.FieldMap();
+            //var field4 = new cfx.FieldMap();
+
+            /*field1.setName("Date");
+            field1.setUsage(cfx.FieldUsage.XValue);
+            fields.add(field1);
+
+            field2.setName("Value");
+            field2.setUsage(cfx.FieldUsage.Value);
+            field2.setDisplayName("Estimated position");
+            fields.add(field2);
+
+            field4.setName("LowerLimit");
+            field4.setUsage(cfx.FieldUsage.FromValue);
+            fields.add(field4);
+
+            field3.setName("UpperLimit");
+            field3.setDisplayName("Error margin");
+            field3.setUsage(cfx.FieldUsage.Value);
+            fields.add(field3);*/
+
+            field1.setName("date");
+            field1.setUsage(cfx.FieldUsage.XValue);
+            fields.add(field1);
+
+            field2.setName("position");
+            field2.setUsage(cfx.FieldUsage.Value);
+            fields.add(field2);
+
+            //--- Set zero to the top of the screen ---
+            chart1.getAxisY().setInverted(true);
+
+            //----Set Sample Data------------
+            chart1.setDataSource(items);
+
+            var chartDiv = document.getElementById('ChartDiv');
+            chart1.create(chartDiv);    
+
+        }
+        
+    </script>
+
+</body>
+</html>

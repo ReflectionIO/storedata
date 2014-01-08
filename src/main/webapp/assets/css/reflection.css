@@ -1,0 +1,90 @@
+body {
+  padding-top: 60px;
+  padding-bottom: 38px;
+}
+
+.sidebar-heading {
+
+}
+
+.toggle-group {
+	float:none; 
+	display:block; 
+	margin-bottom:65px;
+}
+
+.game-rank {
+  text-align:center !important; 
+  vertical-align:middle !important;
+}
+
+.game-icon, .game-icon2 {
+  float: left;
+  width:45px;
+  height:45px;
+}
+
+.game-text {
+  padding-left:15px;
+}
+
+.game-name, .game-publisher, .game-name2, .game-publisher2 {
+  padding-left:15px;
+  font-size: small;
+}
+
+.rank-col {
+	text-align:center; 
+	width:10%;
+}
+
+.leaderboard-col {
+	width:30%;
+}
+
+.game-icon-heading {
+	margin-left:15px;
+	width: 75px;
+	height: 75px;
+}
+
+.game-text-heading {
+	margin-left: 15px;
+	font-size: medium;
+}
+
+.game-overview-stats {
+	padding-left: 15px;
+	margin-top: 15px;
+}
+
+#reportrange {
+	background: #ffffff;
+	-webkit-box-shadow: 0 1px 3px rgba(0,0,0,.25), inset 0 -1px 0 rgba(0,0,0,.1);
+	-moz-box-shadow: 0 1px 3px rgba(0,0,0,.25), inset 0 -1px 0 rgba(0,0,0,.1);
+	box-shadow: 0 1px 3px rgba(0,0,0,.25), inset 0 -1px 0 rgba(0,0,0,.1);
+	color: #333333;
+	padding: 8px;
+	line-height: 18px;
+	cursor: pointer;
+}
+#reportrange .caret {
+	margin-top: 8px;
+	margin-left: 2px;
+}
+#reportrange span {
+	padding-left: 3px;
+}
+
+.loader-container {
+  min-width: 500px;
+  height: 500px; 
+  line-height: 500px; /* should match height */
+  text-align: center;
+  width: 100%;
+  display:inline-block;
+}
+
+.loader-container > img {
+  vertical-align: middle;
+}

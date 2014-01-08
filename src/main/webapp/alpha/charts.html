@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Charts</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Bootstrap -->
+  <link href="../assets/css/bootstrap.min.css" rel="stylesheet" media="screen">
+  <!--<link href="../assets/css/bootstrap-responsive.css" rel="stylesheet">-->
+  <script src="http://code.jquery.com/jquery.js"></script>
+  <script src="../assets/js/bootstrap.min.js"></script>
+
+  <!-- DatePicker -->
+  <script src="../assets/js/bootstrap-datepicker.js"></script>
+   <link href="../assets/css/datepicker.css" rel="stylesheet" media="screen">
+  
+  <style type="text/css">
+    body {
+      padding-top: 20px;
+      padding-bottom: 40px;
+    }
+    .sidebar-nav {
+      padding: 9px 0;
+    }
+
+    .nav-tabs > li, .nav-pills > li {
+      float:none;
+      display:inline-block;
+      *display:inline; /* ie7 fix */
+      zoom:1; /* hasLayout ie7 trigger */
+    }
+
+    .nav-tabs, .nav-pills {
+      text-align:center;
+    }
+
+    @media (max-width: 980px) {
+      /* Enable use of floated navbar text */
+      .navbar-text.pull-right {
+        float: none;
+        padding-left: 5px;
+        padding-right: 5px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container-fluid">
+    <div class="row-fluid" style="text-align: center">
+      <div class="tabbable"> <!-- Only required for left/right tabs -->
+        <ul class="nav nav-tabs">
+          <li class="active"><a href="#tab1" data-toggle="tab">iPhone</a></li>
+          <li><a href="#tab2" data-toggle="tab">iPad</a></li>
+          <li><a href="#tab3" data-toggle="tab">Google Play</a></li>
+          <li><a href="#tab4" data-toggle="tab">Amazon</a></li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="tab1">
+            <h3>iPhone - United States</h3>
+          </div>
+          <div class="tab-pane" id="tab2">
+            <h3>iPad - United States</h3>
+          </div>
+          <div class="tab-pane" id="tab3">
+            <h3>Google Play - United States</h3>
+          </div>
+          <div class="tab-pane" id="tab4">
+            <h3>Amazon - United States</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="span2">
+        <div class="input-append date" id="datepicker" data-date-format="dd-mm-yyyy">
+          <!--<input type="text" class="span12"><span class="add-on"><i class="icon-th"></i></span>-->
+          <input class="span12" size="16" type="text"><span class="add-on"><i class="icon-th"></i></span>
+        </div>
+        <div class="well sidebar-nav">
+          <!--<div class="well" style="max-width: 340px; padding: 8px 0;">-->
+          <ul class="nav nav-list">
+            <li class="nav-header">Countries</li>
+            <li class="active"><a href="#">United States</a></li>
+            <li><a href="#">United Kingdom</a></li>
+            <li><a href="#">Australia</a></li>
+            <li class="divider"></li>
+          </ul>
+          <ul class="nav nav-list">
+            <li class="nav-header">Categories</li>
+            <li class="active"><a href="#">Books</a></li>
+            <li><a href="#">Business</a></li>
+            <li><a href="#">Overall</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="span10">
+        <table class="table table-striped table-hover" id="table-charts">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Free</th>
+              <th>Paid</th>
+              <th>Grossing</th>
+            </tr>
+          </thead>
+          <tbody>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+<script type="text/javascript">
+  
+  var maxItems = 10;
+  // var date = new Date().getTime();
+  // var date = new Date(2013, 6, 5).getTime();
+  var date = new Date(2013, 6, 18).getTime();
+
+  // --------------- EVENTS ---------------
+  $(document).ready(function(){
+
+      createDate();
+
+      getCountries();
+      getStores();
+
+      // create the overview chart for free, paid, and grossing
+      createTable();
+
+      getTopItemsAll();
+
+  });
+
+  $('#datepicker').datepicker()
+    .on('changeDate', function(e){
+        //alert(e.date.toString());
+        //alert(e.date.getTime());
+        date = e.date.getTime();
+        getTopItemsAll();
+    });
+
+  // --------------- METHODS ---------------
+  function convertDate(d) {
+    function pad2(n) {
+        return n > 9 ? n : '0' + n;
+    }
+    var year = d.getUTCFullYear();
+    var month = d.getUTCMonth() + 1;  // months start at zero
+    var day = d.getUTCDate();
+
+    return pad2(day) + '-' + pad2(month) + '-' + year;
+}
+
+  function createDate() {
+    $('#datepicker').datepicker({
+      format: "dd-mm-yyyy",
+      endDate: convertDate(new Date()),
+      //autoclose: true,
+      todayHighlight: true
+    });
+    /*$('#sandbox-container .input-append.date').datepicker({
+      format: "dd/mm/yy",
+      endDate: "21/07/13",
+      autoclose: true,
+      todayHighlight: true
+    });*/
+  }
+
+  function getCountries() {
+
+    var requestString = "{'accessCode':'b72b4e32-1062-4cc7-bc6b-52498ee10f09','store':{'a3Code':'ios'}}";
+
+    $.ajax({
+      type: "POST",
+      url: "../core",
+      data: { action: "GetCountries", request: requestString },
+              //contentType: "application/json; charset=utf-8",
+              dataType: "json",
+              success: function(data) {
+                console.log(data);
+                  $.each(data.countries, function(index, item){           
+                        console.log(item.name);
+                  });
+              }
+      });
+  }
+
+  function getStores() {
+
+      var requestString = "{'accessCode':'b72b4e32-1062-4cc7-bc6b-52498ee10f09','country':{'a2Code':'us'}}";
+
+      $.ajax({
+      type: "POST",
+      url: "../core",
+      data: { action: "GetStores", request: requestString },
+              //contentType: "application/json; charset=utf-8",
+              dataType: "json",
+              success: function(data) {
+                console.log(data);
+                $.each(data.stores, function(index, item){           
+                        console.log(item.name);
+                  });
+                  
+              }
+      });
+  }
+
+  function getTopItemsAll() {
+
+      getTopItemsFree();
+      getTopItemsPaid();
+      getTopItemsGrossing();
+
+  }
+
+  function getTopItemsFree() {
+      getTopItems("topfreeapplications");
+  }
+
+  function getTopItemsPaid() {
+      getTopItems("toppaidapplications");
+  }
+
+  function getTopItemsGrossing() {
+      getTopItems("topgrossingapplications");
+  }
+
+  function getTopItems(listType) {
+
+            /*$.post("GetItemsRank.json", 
+
+                function(data) {
+
+                    items = data.ranks;
+
+                    
+                    $.each(data.ranks, function(index, d){           
+                        d.date = new Date(d.date);
+                        d.position++;
+                    });
+
+                    loadChart();
+
+                }, 
+
+                "json");*/
+
+              //var date;
+              //var date = new Date(2010, 6, 26).getTime() / 1000;
+              //var date = new Date().getTime() / 1000;
+              //var date = 1373041735000; //1375657200000
+              //date = new Date(2013, 6, 5).getTime(); // year, month, day:  note: month starts from zero 
+              //date = new Date(2013, 6, 18).getTime();
+              //date = new Date().getTime();
+
+               var requestString = "{'accessCode':'b72b4e32-1062-4cc7-bc6b-52498ee10f09','country':{'a2Code':'us'},'listType':"+listType+",'on':"+date+",'store':{'a3Code':'ios'}}";
+
+               $.ajax({
+                        type: "POST",
+                        url: "../core",
+                        data: { action: "GetTopItems", request: requestString },
+                        //contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function(data) {
+                            /*
+                            $.each(data.ranks, function(index, item){           
+                                item.date = new Date(item.date);
+                                item.position++;
+                            });
+                            */
+
+                            //loadTable();
+                            updateTable(data.ranks, listType);
+                        }
+                });
+        }
+
+  function createTable() {
+
+      var maxRows = maxItems;
+
+      // create the required number of rows
+      for (var i = 0; i < maxRows; i++) {
+        $('#table-charts > tbody:last').append('<tr id=pos'+i+'></tr>');
+      };
+
+      // create the numbers
+      for (var i = 0; i < maxRows; i++) {
+        $('#pos'+i).append('<td style="text-align: center">'+(i+1)+'</td>');
+      };
+
+      
+      // add to the free charts
+      for (var i = 0; i < maxRows; i++) {
+        $('#pos'+i).append('<td id="topfreeapplications'+i+'">blank</td>');
+      };
+
+      // add to the paid charts
+      for (var i = 0; i < maxRows; i++) {
+        $('#pos'+i).append('<td id="toppaidapplications'+i+'">blank</td>');
+      };
+
+      // add to the top grossing charts
+      for (var i = 0; i < maxRows; i++) {
+        $('#pos'+i).append('<td id="topgrossingapplications'+i+'">blank</td>');
+      };
+
+  }
+
+  function updateTable(chartdata, listType) {
+
+      var maxRows = chartdata.length;
+
+      // for now just assume that the country is 'us'
+      var country = 'us';
+      
+      for (var i = 0; i < maxRows; i++) {
+        $('td#'+listType+i).replaceWith('<td id="'+listType+i+'"><a href="rankings.html?itemId='+chartdata[i].itemId+'&type='+listType+'&country='+country+'">'+chartdata[i].itemId+'</a></td>');
+      };
+
+  }
+
+</script>
+</body>
+</html>
