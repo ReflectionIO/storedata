@@ -9,7 +9,7 @@
 package io.reflection.app.api.admin.shared.call;
 
 import io.reflection.app.api.shared.datatypes.Pager;
-import io.reflection.app.shared.datatypes.User;
+import io.reflection.app.datatypes.shared.User;
 
 import java.util.ArrayList;
 import java.util.List;

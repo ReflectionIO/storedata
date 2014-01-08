@@ -10,8 +10,8 @@ package io.reflection.app.service.application;
 
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.lookup.shared.datatypes.LookupDetailType;
-import io.reflection.app.shared.datatypes.Application;
-import io.reflection.app.shared.datatypes.Store;
+import io.reflection.app.datatypes.shared.Application;
+import io.reflection.app.datatypes.shared.Store;
 
 import java.util.List;
 

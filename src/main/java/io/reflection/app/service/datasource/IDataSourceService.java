@@ -9,7 +9,7 @@
 package io.reflection.app.service.datasource;
 
 import io.reflection.app.api.exception.DataAccessException;
-import io.reflection.app.shared.datatypes.DataSource;
+import io.reflection.app.datatypes.shared.DataSource;
 
 import com.spacehopperstudios.service.IService;
 

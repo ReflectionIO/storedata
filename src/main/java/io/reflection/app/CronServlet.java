@@ -10,9 +10,9 @@ package io.reflection.app;
 import static io.reflection.app.objectify.PersistenceService.ofy;
 import io.reflection.app.collectors.CollectorAmazon;
 import io.reflection.app.collectors.CollectorIOS;
+import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.logging.GaeLevel;
-import io.reflection.app.shared.datatypes.Item;
-import io.reflection.app.shared.datatypes.Rank;
 
 import java.io.IOException;
 import java.util.logging.Level;

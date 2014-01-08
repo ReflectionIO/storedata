@@ -10,7 +10,7 @@ package io.reflection.app;
 import io.reflection.app.api.core.Core;
 import io.reflection.app.api.core.shared.call.RegisterUserRequest;
 import io.reflection.app.api.core.shared.call.RegisterUserResponse;
-import io.reflection.app.shared.datatypes.User;
+import io.reflection.app.datatypes.shared.User;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

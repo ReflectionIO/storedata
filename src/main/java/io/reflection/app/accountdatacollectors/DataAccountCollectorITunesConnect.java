@@ -8,8 +8,8 @@
 //
 package io.reflection.app.accountdatacollectors;
 
+import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.logging.GaeLevel;
-import io.reflection.app.shared.datatypes.DataAccount;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

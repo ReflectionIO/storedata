@@ -12,8 +12,8 @@ import io.reflection.app.api.ApiError;
 import io.reflection.app.api.ValidationHelper;
 import io.reflection.app.api.lookup.shared.call.LookupApplicationRequest;
 import io.reflection.app.api.lookup.shared.call.LookupApplicationResponse;
+import io.reflection.app.datatypes.shared.Application;
 import io.reflection.app.service.application.ApplicationServiceProvider;
-import io.reflection.app.shared.datatypes.Application;
 
 import java.util.ArrayList;
 import java.util.List;

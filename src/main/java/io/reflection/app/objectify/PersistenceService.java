@@ -7,8 +7,8 @@
 //
 package io.reflection.app.objectify;
 
-import io.reflection.app.shared.datatypes.Item;
-import io.reflection.app.shared.datatypes.Rank;
+import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.datatypes.shared.Rank;
 
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;

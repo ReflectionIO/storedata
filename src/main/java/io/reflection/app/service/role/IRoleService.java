@@ -10,7 +10,7 @@ package io.reflection.app.service.role;
 
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
-import io.reflection.app.shared.datatypes.Role;
+import io.reflection.app.datatypes.shared.Role;
 
 import java.util.List;
 

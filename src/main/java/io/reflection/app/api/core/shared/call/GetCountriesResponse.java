@@ -8,7 +8,7 @@
 package io.reflection.app.api.core.shared.call;
 
 import io.reflection.app.api.shared.datatypes.Pager;
-import io.reflection.app.shared.datatypes.Country;
+import io.reflection.app.datatypes.shared.Country;
 
 import java.util.ArrayList;
 import java.util.List;

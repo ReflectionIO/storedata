@@ -9,8 +9,8 @@ package io.reflection.app.api.core.shared.call;
 
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.Request;
-import io.reflection.app.shared.datatypes.Country;
-import io.reflection.app.shared.datatypes.Store;
+import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.Store;
 
 import java.util.Date;
 

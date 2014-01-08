@@ -8,7 +8,7 @@
 package io.reflection.app.modellers;
 
 import io.reflection.app.api.exception.DataAccessException;
-import io.reflection.app.shared.datatypes.FormType;
+import io.reflection.app.datatypes.shared.FormType;
 
 /**
  * @author billy1380

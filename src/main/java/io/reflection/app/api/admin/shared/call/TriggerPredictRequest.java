@@ -8,9 +8,6 @@
 //
 package io.reflection.app.api.admin.shared.call;
 
-import io.reflection.app.shared.datatypes.Country;
-import io.reflection.app.shared.datatypes.Store;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +16,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+
 import io.reflection.app.api.shared.datatypes.Request;
+import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.Store;
 
 public class TriggerPredictRequest extends Request {
 	public Country country;

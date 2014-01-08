@@ -3,8 +3,8 @@
  */
 package io.reflection.app.ingestors;
 
+import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.logging.GaeLevel;
-import io.reflection.app.shared.datatypes.Item;
 
 import java.util.ArrayList;
 import java.util.List;

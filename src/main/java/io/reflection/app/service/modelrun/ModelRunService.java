@@ -11,15 +11,15 @@ package io.reflection.app.service.modelrun;
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.FormType;
+import io.reflection.app.datatypes.shared.ModelRun;
+import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
-import io.reflection.app.shared.datatypes.Country;
-import io.reflection.app.shared.datatypes.FormType;
-import io.reflection.app.shared.datatypes.ModelRun;
-import io.reflection.app.shared.datatypes.Store;
 
 final class ModelRunService implements IModelRunService {
 	public String getName() {

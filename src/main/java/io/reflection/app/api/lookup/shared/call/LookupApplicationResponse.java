@@ -8,7 +8,7 @@
 //
 package io.reflection.app.api.lookup.shared.call;
 
-import io.reflection.app.shared.datatypes.Application;
+import io.reflection.app.datatypes.shared.Application;
 
 import java.util.ArrayList;
 import java.util.List;

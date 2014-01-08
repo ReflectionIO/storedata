@@ -11,7 +11,7 @@ package io.reflection.app.service.item;
 import java.util.List;
 
 import io.reflection.app.api.exception.DataAccessException;
-import io.reflection.app.shared.datatypes.Item;
+import io.reflection.app.datatypes.shared.Item;
 
 import com.spacehopperstudios.service.IService;
 

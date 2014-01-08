@@ -11,11 +11,11 @@ package io.reflection.app;
 import io.reflection.app.accountdatacollectors.DataAccountCollector;
 import io.reflection.app.accountdatacollectors.DataAccountCollectorFactory;
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.datatypes.shared.DataAccount;
+import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.datasource.DataSourceServiceProvider;
-import io.reflection.app.shared.datatypes.DataAccount;
-import io.reflection.app.shared.datatypes.DataSource;
 
 import java.io.IOException;
 import java.util.Date;

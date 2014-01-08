@@ -16,22 +16,8 @@
         <appengine.target.version>1.8.8</appengine.target.version>
     </properties>
     <profiles>
-        <!--profile>
-            <id>mysql</id>
-            <build>
-                <filters>
-                    <filter>global.properties</filter>
-                </filters>
-            </build>
-            <dependencies>
-                <dependency>
-                    <groupId>mysql</groupId>
-                    <artifactId>mysql-connector-java</artifactId>
-                    <version>5.1.22</version>
-                    <scope>runtime</scope>
-                </dependency>
-            </dependencies>
-        </profile-->
+        <!--profile> <id>mysql</id> <build> <filters> <filter>global.properties</filter> </filters> </build> <dependencies> <dependency> <groupId>mysql</groupId> 
+            <artifactId>mysql-connector-java</artifactId> <version>5.1.22</version> <scope>runtime</scope> </dependency> </dependencies> </profile -->
         <profile>
             <id>production</id>
             <activation>
@@ -112,10 +98,6 @@
             <scope>test</scope>
         </dependency>
 
-
-
-
-
         <dependency>
             <groupId>com.googlecode.objectify</groupId>
             <artifactId>objectify</artifactId>
@@ -135,7 +117,7 @@
             <groupId>com.google.appengine.tools</groupId>
             <artifactId>appengine-mapreduce</artifactId>
             <version>RELEASE</version>
-            <!-- Mapreduce depends on guava min version 14.0 and max version 14.99. But it also depends on appengine-gcs-client which depends on guava version 15.
+            <!-- Mapreduce depends on guava min version 14.0 and max version 14.99. But it also depends on appengine-gcs-client which depends on guava version 15. 
                 To resolve this dependency conflict we ignore the mapreduce guava dependency. -->
             <exclusions>
                 <exclusion>
@@ -198,6 +180,18 @@
             <version>1.0</version>
         </dependency>
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>bedatadriven-public</id>
+            <name>Bedatadriven Public Repo</name>
+            <url>http://nexus.bedatadriven.com/content/groups/public</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -215,8 +209,12 @@
     <build>
         <!-- Generate compiled stuff in the folder used for developing mode -->
         <outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
-                                   
+
         <plugins>
+            <plugin>
+                <groupId>com.google.appengine</groupId>
+                <artifactId>appengine-maven-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -248,8 +246,7 @@
                         </goals>
                     </execution>
                 </executions>
-                <!-- Plugin configuration. There are many available options, see gwt-maven-plugin
-                    documentation at codehaus.org -->
+                <!-- Plugin configuration. There are many available options, see gwt-maven-plugin documentation at codehaus.org -->
                 <configuration>
                     <runTarget>index.html</runTarget>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
@@ -272,9 +269,11 @@
                     <groupId>com.google.appengine</groupId>
                     <artifactId>appengine-maven-plugin</artifactId>
                     <version>${appengine.target.version}</version>
+                    <configuration>
+                        <port>8888</port>
+                    </configuration>
                 </plugin>
-                <!--This plugin's configuration is used to store Eclipse m2e settings
-                    only. It has no influence on the Maven build itself. -->
+                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
                 <plugin>
                     <groupId>org.eclipse.m2e</groupId>
                     <artifactId>lifecycle-mapping</artifactId>
@@ -296,7 +295,7 @@
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
-                                        <ignore/>
+                                        <ignore />
                                     </action>
                                 </pluginExecution>
                             </pluginExecutions>
