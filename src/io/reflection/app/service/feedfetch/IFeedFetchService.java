@@ -7,7 +7,7 @@
 //  Copyrights © 2013 reflection.io. All rights reserved.
 //
 
-package io.reflection.app.service.fetchfeed;
+package io.reflection.app.service.feedfetch;
 
 import java.util.List;
 
