@@ -6,7 +6,7 @@
 //  Copyrights © 2013 SPACEHOPPER STUDIOS LTD. All rights reserved.
 //  Copyrights © 2013 reflection.io. All rights reserved.
 //
-package io.reflection.app.service.fetchfeed;
+package io.reflection.app.service.feedfetch;
 
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;

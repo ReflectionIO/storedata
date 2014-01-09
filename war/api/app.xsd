@@ -216,6 +216,14 @@
         </xsd:complexContent>
     </xsd:complexType>
 
+    <xsd:complexType name="DataAccountFetch">
+        <xsd:complexContent>
+            <xsd:extension base="DataType">
+                <xsd:attribute name="status" type="DataAccountFetchStatusType" />
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
     <xsd:simpleType name="PermissionTypeType">
         <xsd:restriction base="xsd:string">
             <xsd:enumeration value="User" />
@@ -335,6 +343,14 @@
             <xsd:enumeration value="ingested" />
             <xsd:enumeration value="modelled" />
             <xsd:enumeration value="predicted" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="DataAccountFetchStatusType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="gathered" />
+            <xsd:enumeration value="empty" />
+            <xsd:enumeration value="ingested" />
         </xsd:restriction>
     </xsd:simpleType>
 

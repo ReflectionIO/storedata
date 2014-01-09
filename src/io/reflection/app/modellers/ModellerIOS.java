@@ -16,7 +16,7 @@ import io.reflection.app.renjin.RenjinRModellerBase;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
-import io.reflection.app.service.fetchfeed.FeedFetchServiceProvider;
+import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.modelrun.ModelRunServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
 import io.reflection.app.shared.datatypes.Country;

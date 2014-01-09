@@ -15,7 +15,7 @@
                             <xsd:element name="internalIds" type="xsd:string" maxOccurs="unbounded" />
                             <xsd:element name="externalIds" type="xsd:string" maxOccurs="unbounded" />
                         </xsd:sequence>
-                        <xsd:attribute name="detail" type="LookupDetailType" />
+                        <xsd:attribute name="detail" type="riol:LookupDetailType" />
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>

@@ -21,7 +21,7 @@
             <xsd:element name="GetItemRanksOutput" type="sdc:GetItemRanksResponse" />
 
             <xsd:element name="RegisterUserInput" type="sdc:RegisterUserRequest" />
-            <xsd:element name="RegisterUserOutput" type="sdc:RegisterUsersResponse" />
+            <xsd:element name="RegisterUserOutput" type="sdc:RegisterUserResponse" />
 
             <xsd:element name="LoginInput" type="sdc:LoginRequest" />
             <xsd:element name="LoginOutput" type="sdc:LoginResponse" />

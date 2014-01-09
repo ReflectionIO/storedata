@@ -15,7 +15,7 @@ import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.collectors.StoreCollector;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.modellers.ModellerFactory;
-import io.reflection.app.service.fetchfeed.FeedFetchServiceProvider;
+import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
 import io.reflection.app.shared.datatypes.Country;
