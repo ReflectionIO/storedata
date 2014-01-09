@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions name="riol" targetNamespace="http://app.reflection.io/lookup" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:riol="http://app.reflection.io/lookup"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <wsdl:types>
+        <xsd:schema targetNamespace="http://app.reflection.io/lookup" xmlns:sd="http://app.reflection.io">
+            <xsd:import schemaLocation="../app.xsd" namespace="http://app.reflection.io" />
+
+            <xsd:element name="LookupApplicationInput" type="riol:LookupApplicationRequest" />
+            <xsd:element name="LookupApplicationOutput" type="riol:LookupApplicationResponse" />
+
+            <xsd:complexType name="LookupApplicationRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="internalIds" type="xsd:string" maxOccurs="unbounded" />
+                            <xsd:element name="externalIds" type="xsd:string" maxOccurs="unbounded" />
+                        </xsd:sequence>
+                        <xsd:attribute name="detail" type="LookupDetailType" />
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="LookupApplicationResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+                            <xsd:element type="sd:Application" name="applications" maxOccurs="unbounded" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:simpleType name="LookupDetailType">
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="short" />
+                    <xsd:enumeration value="medium" />
+                    <xsd:enumeration value="detailed" />
+                </xsd:restriction>
+            </xsd:simpleType>
+
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="LookupApplicationRequest">
+        <wsdl:part element="riol:LookupApplicationInput" name="input" />
+    </wsdl:message>
+    <wsdl:message name="LookupApplicationResponse">
+        <wsdl:part element="riol:LookupApplicationOutput" name="output" />
+    </wsdl:message>
+    <wsdl:portType name="lookup">
+        <wsdl:operation name="LookupApplication">
+            <wsdl:input message="riol:LookupApplicationRequest" />
+            <wsdl:output message="riol:LookupApplicationResponse" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="lookupSOAP" type="riol:lookup">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+        <wsdl:operation name="LookupApplication">
+            <soap:operation soapAction="http://app.reflection.io/lookup/LookupApplication" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="lookup">
+        <wsdl:port name="lookupSOAP" binding="riol:lookupSOAP">
+            <soap:address location="http://app.reflection.io/lookup/" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

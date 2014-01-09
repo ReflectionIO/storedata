@@ -1,101 +1,43 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
     <modelVersion>4.0.0</modelVersion>
+    <groupId>io.reflection.appcollector</groupId>
+    <artifactId>storedatacollector</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
-    <version>1.0-SNAPSHOT</version>
-    <artifactId>storedata</artifactId>
-    <groupId>io.reflection.app</groupId>
+    <build>
+        <sourceDirectory>src</sourceDirectory>
+        <resources>
+            <resource>
+                <directory>src</directory>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </resource>
+        </resources>
 
-    <properties>
-        <!-- Convenience property to set the GWT version -->
-        <gwtVersion>2.6.0-rc3</gwtVersion>
-        <!-- GWT needs at least java 1.5 -->
-        <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <appengine.target.version>1.8.8</appengine.target.version>
-    </properties>
-    <profiles>
-        <profile>
-            <id>production</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <rdbms.password>sooth28@duns</rdbms.password>
-                <rdbms.user>rio_app_user</rdbms.user>
-                <rdbms.database>rio</rdbms.database>
-                <rdbms.hosted.instance>storedatacollector:reflectiondb</rdbms.hosted.instance>
-                <rdbms.server>hosted</rdbms.server>
-                <datastore.default_high_rep_job_policy_unapplied_job_pct>50</datastore.default_high_rep_job_policy_unapplied_job_pct>
-            </properties>
-        </profile>
-    </profiles>
-
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.0</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.google.appengine</groupId>
+                <artifactId>appengine-maven-plugin</artifactId>
+                <version>1.8.1</version>
+            </plugin>
+        </plugins>
+        <directory>war/WEB-INF/</directory>
+    </build>
     <dependencies>
-        <!-- Compile/runtime dependencies -->
         <dependency>
             <groupId>com.google.appengine</groupId>
             <artifactId>appengine-api-1.0-sdk</artifactId>
-            <version>${appengine.target.version}</version>
+            <version>1.8.6</version>
         </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.5</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>jstl</groupId>
-            <artifactId>jstl</artifactId>
-            <version>1.2</version>
-        </dependency>
-
-        <!-- Test Dependencies -->
-        <dependency>
-            <groupId>com.google.appengine</groupId>
-            <artifactId>appengine-testing</artifactId>
-            <version>${appengine.target.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.appengine</groupId>
-            <artifactId>appengine-api-stubs</artifactId>
-            <version>${appengine.target.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-servlet</artifactId>
-            <version>${gwtVersion}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-            <version>${gwtVersion}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.7</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>1.0.0.GA</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>1.0.0.GA</version>
-            <classifier>sources</classifier>
-            <scope>test</scope>
-        </dependency>
-
         <dependency>
             <groupId>com.googlecode.objectify</groupId>
             <artifactId>objectify</artifactId>
@@ -105,6 +47,12 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.2.4</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.google.appengine.tools</groupId>
@@ -124,10 +72,12 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
         <dependency>
             <groupId>org.renjin</groupId>
             <artifactId>renjin-appengine</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.renjin.cran</groupId>
             <artifactId>truncreg</artifactId>
@@ -146,6 +96,11 @@
             <groupId>gson</groupId>
             <artifactId>gson-gwt</artifactId>
             <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-servlet</artifactId>
+            <version>2.5.1</version>
         </dependency>
         <dependency>
             <groupId>spchopr</groupId>
@@ -178,18 +133,13 @@
             <version>1.0</version>
         </dependency>
     </dependencies>
-
     <repositories>
         <repository>
-            <id>bedatadriven-public</id>
-            <name>Bedatadriven Public Repo</name>
-            <url>http://nexus.bedatadriven.com/content/groups/public</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
+            <id>bedatadriven</id>
+            <name>bedatadriven public repo</name>
+            <url>http://nexus.bedatadriven.com/content/groups/public/</url>
         </repository>
     </repositories>
-
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -197,6 +147,7 @@
                 <artifactId>renjin-appengine</artifactId>
                 <version>0.7.0-RC7-SNAPSHOT</version>
             </dependency>
+
             <dependency>
                 <groupId>org.renjin.cran</groupId>
                 <artifactId>truncreg</artifactId>
@@ -204,103 +155,4 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-    <build>
-        <!-- Generate compiled stuff in the folder used for developing mode -->
-        <outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
-
-        <plugins>
-            <plugin>
-                <groupId>com.google.appengine</groupId>
-                <artifactId>appengine-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.3</version>
-                <configuration>
-                    <archiveClasses>true</archiveClasses>
-                    <webResources>
-                        <!-- in order to interpolate version from pom into appengine-web.xml -->
-                        <resource>
-                            <directory>${basedir}/src/main/webapp/WEB-INF</directory>
-                            <filtering>true</filtering>
-                            <targetPath>WEB-INF</targetPath>
-                        </resource>
-                    </webResources>
-                </configuration>
-            </plugin>
-            <!-- GWT Maven Plugin -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>gwt-maven-plugin</artifactId>
-                <version>2.6.0-rc3</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>compile</goal>
-                            <goal>test</goal>
-                            <goal>i18n</goal>
-                            <goal>generateAsync</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <!-- Plugin configuration. There are many available options, see gwt-maven-plugin documentation at codehaus.org -->
-                <configuration>
-                    <runTarget>index.html</runTarget>
-                    <hostedWebapp>${webappDirectory}</hostedWebapp>
-                    <i18nMessagesBundle>io.reflection.app.client.Messages</i18nMessagesBundle>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.0</version>
-                <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                </configuration>
-            </plugin>
-        </plugins>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>com.google.appengine</groupId>
-                    <artifactId>appengine-maven-plugin</artifactId>
-                    <version>${appengine.target.version}</version>
-                    <configuration>
-                        <port>8888</port>
-                    </configuration>
-                </plugin>
-                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
-                <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>org.codehaus.mojo</groupId>
-                                        <artifactId>
-                                            gwt-maven-plugin
-                                        </artifactId>
-                                        <versionRange>
-                                            [2.6.0-rc3,)
-                                        </versionRange>
-                                        <goals>
-                                            <goal>i18n</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore />
-                                    </action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
 </project>
