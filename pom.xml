@@ -16,8 +16,6 @@
         <appengine.target.version>1.8.8</appengine.target.version>
     </properties>
     <profiles>
-        <!--profile> <id>mysql</id> <build> <filters> <filter>global.properties</filter> </filters> </build> <dependencies> <dependency> <groupId>mysql</groupId> 
-            <artifactId>mysql-connector-java</artifactId> <version>5.1.22</version> <scope>runtime</scope> </dependency> </dependencies> </profile -->
         <profile>
             <id>production</id>
             <activation>
