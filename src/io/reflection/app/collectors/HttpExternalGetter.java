@@ -55,7 +55,7 @@ public class HttpExternalGetter {
 				if (content == null || content.length == 0) {
 					LOG.log(Level.SEVERE, String.format("Response for [%s] was empty", url.toString()));
 				} else {
-					data = new String(content);
+					data = new String(content, "UTF-8");
 
 					if (LOG.isLoggable(Level.INFO)) {
 						LOG.info(String.format("Recievend [%d] bytes for request", content.length));
