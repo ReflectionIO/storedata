@@ -377,10 +377,10 @@
     </wsdl:message>
 
     <wsdl:message name="GetAllTopItemsRequest">
-        <wsdl:part name="input" element="sdc:GetTopItemsInput" />
+        <wsdl:part name="input" element="sdc:GetAllTopItemsInput" />
     </wsdl:message>
     <wsdl:message name="GetAllTopItemsResponse">
-        <wsdl:part name="output" element="sdc:GetTopItemsOutput" />
+        <wsdl:part name="output" element="sdc:GetAllTopItemsOutput" />
     </wsdl:message>
 
     <wsdl:message name="GetItemRanksRequest">

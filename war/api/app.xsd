@@ -220,6 +220,8 @@
         <xsd:complexContent>
             <xsd:extension base="DataType">
                 <xsd:attribute name="status" type="DataAccountFetchStatusType" />
+                <xsd:attribute name="data" type="xsd:string" />
+                <xsd:attribute name="date" type="xsd:dateTime" />
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>

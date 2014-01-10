@@ -29,7 +29,8 @@ public enum ServiceType {
 	ServiceTypeSession("session"),
 	ServiceTypeDataSource("datasource"),
 	ServiceTypeDataAccount("dataaccount"),
-	ServiceTypeSale("sale");
+	ServiceTypeSale("sale"),
+	ServiceTypeDataAccountFetch("dataaccountfetch");
 
 	private String value;
 	private static Map<String, ServiceType> valueLookup = null;
