@@ -8,22 +8,25 @@
 //
 package io.reflection.app.accountdatacollectors;
 
+import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.logging.GaeLevel;
-import io.reflection.app.shared.datatypes.DataAccount;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Logger;
 
-import com.google.appengine.api.urlfetch.URLFetchService;
-import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
+import com.google.appengine.tools.cloudstorage.GcsFileOptions;
+import com.google.appengine.tools.cloudstorage.GcsFilename;
+import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
+import com.google.appengine.tools.cloudstorage.GcsService;
+import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -37,6 +40,8 @@ import com.willshex.gson.json.shared.Convert;
  * 
  */
 public class DataAccountCollectorITunesConnect implements DataAccountCollector {
+
+	public static final String ACCOUNT_DATA_BUCKET_KEY = "account.data.bucket";
 
 	private static final Logger LOG = Logger.getLogger(DataAccountCollectorITunesConnect.class.getName());
 
@@ -108,8 +113,6 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 			LOG.info(String.format("Getting data from itunes connect for data account [%d] and date [%s]", dataAccount.id.longValue(), dateParameter));
 		}
 
-		URLFetchService fetcher = URLFetchServiceFactory.getURLFetchService();
-
 		URL url;
 		try {
 			url = new URL("https://reportingitc.apple.com/autoingestion.tft?");
@@ -144,7 +147,7 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 						LOG.warning(String.format("itunes connect return error message [%s] while trying to obtain data with request [%s] ", error, data));
 					}
 				} else if (connection.getHeaderField("filename") != null) {
-					getFile(connection);
+					getFile(dataAccount, connection);
 				}
 			}
 
@@ -193,25 +196,29 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 		return vendorId;
 	}
 
-	private static void getFile(HttpURLConnection paramHttpURLConnection) throws IOException {
+	private static void getFile(DataAccount account, HttpURLConnection paramHttpURLConnection) throws IOException {
 		String str = paramHttpURLConnection.getHeaderField("filename");
 		int i = 0;
-
+		boolean downloaded = false;
 		BufferedInputStream localBufferedInputStream = null;
 		BufferedOutputStream localBufferedOutputStream = null;
+		GcsOutputChannel writeChannel = null;
 
 		try {
 			localBufferedInputStream = new BufferedInputStream(paramHttpURLConnection.getInputStream());
 
-			// localBufferedOutputStream = new BufferedOutputStream(new FileOutputStream(str));
+			GcsService fileService = GcsServiceFactory.createGcsService();
+			GcsFilename fileName = new GcsFilename(System.getProperty(ACCOUNT_DATA_BUCKET_KEY), account.id.toString() + "/" + str);
 
-			byte[] arrayOfByte = new byte[1024];
+			writeChannel = fileService.createOrReplace(fileName, GcsFileOptions.getDefaultInstance());
+			byte[] byteBuffer = new byte[1024];
 
-			while ((i = localBufferedInputStream.read(arrayOfByte)) != -1) {
-				localBufferedOutputStream.write(arrayOfByte, 0, i);
+			while ((i = localBufferedInputStream.read(byteBuffer)) != -1) {
+				writeChannel.write(ByteBuffer.wrap(byteBuffer, 0, i));
 			}
-		} finally {
 
+			downloaded = true;
+		} finally {
 			if (localBufferedInputStream != null) {
 				localBufferedInputStream.close();
 			}
@@ -219,10 +226,18 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 			if (localBufferedOutputStream != null) {
 				localBufferedOutputStream.close();
 			}
+
+			if (writeChannel != null) {
+				writeChannel.close();
+			}
 		}
 
-		if (LOG.isLoggable(GaeLevel.INFO)) {
-			LOG.warning("File Downloaded Successfully");
+		if (downloaded) {
+			if (LOG.isLoggable(GaeLevel.INFO)) {
+				LOG.warning("File Downloaded Successfully");
+			}
+
+			// TODO: store a refernce to the files somewhere
 		}
 	}
 }
