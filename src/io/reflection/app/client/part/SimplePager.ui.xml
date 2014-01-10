@@ -1,0 +1,40 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+    <ui:style>
+        .compensateTop {
+        	top: 1px;
+        }
+    </ui:style>
+    <g:HTMLPanel>
+        <ul ui:field="mList" class="pagination">
+            <li ui:field="mFirstPageItem" class="disabled">
+                <g:Anchor ui:field="mFirstPage" styleName="glyphicon glyphicon-fast-backward">
+                    <span />
+                </g:Anchor>
+            </li>
+            <li ui:field="mPrevPageItem" class="disabled">
+                <g:Anchor ui:field="mPrevPage" styleName="glyphicon glyphicon-arrow-left">
+                    <span />
+                </g:Anchor>
+            </li>
+            <li>
+                <span ui:field="mLabel" class="{style.compensateTop}" />
+            </li>
+            <li ui:field="mNextPageItem" class="disabled">
+                <g:Anchor ui:field="mNextPage" styleName="glyphicon glyphicon-arrow-right">
+                    <span />
+                </g:Anchor>
+            </li>
+            <li ui:field="mFastForwardItem" class="disabled">
+                <g:Anchor ui:field="mFastForward" styleName="glyphicon glyphicon-forward">
+                    <span />
+                </g:Anchor>
+            </li>
+            <li ui:field="mLastPageItem" class="disabled">
+                <g:Anchor ui:field="mLastPage" styleName="glyphicon glyphicon-fast-forward">
+                    <span />
+                </g:Anchor>
+            </li>
+        </ul>
+    </g:HTMLPanel>
+</ui:UiBinder> 

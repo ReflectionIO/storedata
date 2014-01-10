@@ -8,7 +8,7 @@
 //
 package io.reflection.app.api.admin.shared.call;
 
-import io.reflection.app.shared.datatypes.ModelRun;
+import io.reflection.app.datatypes.shared.ModelRun;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;

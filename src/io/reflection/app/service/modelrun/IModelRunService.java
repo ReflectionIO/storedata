@@ -9,10 +9,10 @@
 package io.reflection.app.service.modelrun;
 
 import io.reflection.app.api.exception.DataAccessException;
-import io.reflection.app.shared.datatypes.Country;
-import io.reflection.app.shared.datatypes.FormType;
-import io.reflection.app.shared.datatypes.ModelRun;
-import io.reflection.app.shared.datatypes.Store;
+import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.FormType;
+import io.reflection.app.datatypes.shared.ModelRun;
+import io.reflection.app.datatypes.shared.Store;
 
 import com.spacehopperstudios.service.IService;
 

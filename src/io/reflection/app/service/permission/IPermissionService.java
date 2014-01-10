@@ -12,7 +12,7 @@ import java.util.List;
 
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
-import io.reflection.app.shared.datatypes.Permission;
+import io.reflection.app.datatypes.shared.Permission;
 
 import com.spacehopperstudios.service.IService;
 

@@ -10,7 +10,7 @@ package io.reflection.app.service.session;
 
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Session;
-import io.reflection.app.shared.datatypes.User;
+import io.reflection.app.datatypes.shared.User;
 
 import com.spacehopperstudios.service.IService;
 

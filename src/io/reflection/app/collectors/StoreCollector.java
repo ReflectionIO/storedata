@@ -1,9 +1,9 @@
 package io.reflection.app.collectors;
 
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
-import io.reflection.app.shared.datatypes.FeedFetch;
 
 import java.io.BufferedWriter;
 import java.io.IOException;

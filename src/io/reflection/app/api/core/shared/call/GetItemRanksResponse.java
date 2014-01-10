@@ -9,8 +9,8 @@
 package io.reflection.app.api.core.shared.call;
 
 import io.reflection.app.api.shared.datatypes.Pager;
-import io.reflection.app.shared.datatypes.Item;
-import io.reflection.app.shared.datatypes.Rank;
+import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.datatypes.shared.Rank;
 
 import java.util.ArrayList;
 import java.util.List;

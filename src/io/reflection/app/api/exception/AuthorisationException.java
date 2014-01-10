@@ -8,9 +8,9 @@
 package io.reflection.app.api.exception;
 
 import io.reflection.app.api.ApiError;
-import io.reflection.app.shared.datatypes.Role;
-import io.reflection.app.shared.datatypes.Permission;
-import io.reflection.app.shared.datatypes.User;
+import io.reflection.app.datatypes.shared.Permission;
+import io.reflection.app.datatypes.shared.Role;
+import io.reflection.app.datatypes.shared.User;
 
 import java.util.Arrays;
 import java.util.List;

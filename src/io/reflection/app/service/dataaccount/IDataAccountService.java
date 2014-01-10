@@ -12,8 +12,8 @@ import java.util.List;
 
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
-import io.reflection.app.shared.datatypes.DataAccount;
-import io.reflection.app.shared.datatypes.DataSource;
+import io.reflection.app.datatypes.shared.DataAccount;
+import io.reflection.app.datatypes.shared.DataSource;
 
 import com.spacehopperstudios.service.IService;
 

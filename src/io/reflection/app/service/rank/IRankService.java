@@ -9,10 +9,10 @@ package io.reflection.app.service.rank;
 
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
-import io.reflection.app.shared.datatypes.Country;
-import io.reflection.app.shared.datatypes.Item;
-import io.reflection.app.shared.datatypes.Rank;
-import io.reflection.app.shared.datatypes.Store;
+import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.datatypes.shared.Rank;
+import io.reflection.app.datatypes.shared.Store;
 
 import java.util.Date;
 import java.util.List;

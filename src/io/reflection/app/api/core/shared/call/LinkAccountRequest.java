@@ -9,7 +9,7 @@
 package io.reflection.app.api.core.shared.call;
 
 import io.reflection.app.api.shared.datatypes.Request;
-import io.reflection.app.shared.datatypes.DataSource;
+import io.reflection.app.datatypes.shared.DataSource;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;

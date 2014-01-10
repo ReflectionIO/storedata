@@ -8,8 +8,8 @@
 //
 package io.reflection.app.api.shared.datatypes;
 
-import io.reflection.app.shared.datatypes.DataType;
-import io.reflection.app.shared.datatypes.User;
+import io.reflection.app.datatypes.shared.DataType;
+import io.reflection.app.datatypes.shared.User;
 
 import java.util.Date;
 

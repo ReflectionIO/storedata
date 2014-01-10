@@ -9,7 +9,7 @@
 package io.reflection.app.service.dataaccountfetch;
 
 import io.reflection.app.api.exception.DataAccessException;
-import io.reflection.app.shared.datatypes.DataAccountFetch;
+import io.reflection.app.datatypes.shared.DataAccountFetch;
 
 import com.spacehopperstudios.service.IService;
 

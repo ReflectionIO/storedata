@@ -8,8 +8,8 @@
 //
 package io.reflection.app.api.core.shared.call;
 
-import io.reflection.app.shared.datatypes.Permission;
-import io.reflection.app.shared.datatypes.Role;
+import io.reflection.app.datatypes.shared.Permission;
+import io.reflection.app.datatypes.shared.Role;
 
 import java.util.ArrayList;
 import java.util.List;

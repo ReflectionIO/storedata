@@ -8,7 +8,7 @@
 //
 package io.reflection.app.accountdatacollectors;
 
-import io.reflection.app.shared.datatypes.DataAccount;
+import io.reflection.app.datatypes.shared.DataAccount;
 
 import java.util.Date;
 

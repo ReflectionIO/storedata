@@ -12,9 +12,9 @@ import java.util.List;
 
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
-import io.reflection.app.shared.datatypes.DataAccount;
-import io.reflection.app.shared.datatypes.Item;
-import io.reflection.app.shared.datatypes.Sale;
+import io.reflection.app.datatypes.shared.DataAccount;
+import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.datatypes.shared.Sale;
 
 import com.spacehopperstudios.service.IService;
 
