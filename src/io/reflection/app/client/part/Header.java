@@ -10,9 +10,9 @@ package io.reflection.app.client.part;
 import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.UserController;
-import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.handler.user.SessionEventHandler;
 import io.reflection.app.client.handler.user.UserPowersEventHandler;
@@ -28,13 +28,16 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.UListElement;
+import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineHyperlink;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.Error;
 
@@ -98,6 +101,9 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@UiField LIElement mLinkedAccountsItem;
 	@UiField InlineHyperlink mLinkedAccountsLink;
 
+	@UiField TextBox mQuery;
+	@UiField InlineHyperlink mSearch;
+
 	private List<LIElement> mItems;
 
 	public Header() {
@@ -106,6 +112,9 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		mAdminButton.setHTML(mAdminButton.getText() + " <b class=\"caret\"></b>");
 		mLogoutLink.setHTML(mLogoutLink.getText() + " <b class=\"glyphicon glyphicon-log-out\"></b>");
 		mLoginLink.setHTML(mLoginLink.getText() + " <b class=\"glyphicon glyphicon-log-in\"></b>");
+
+		mQuery.getElement().setAttribute("placeholder", "Search of an app");
+		mSearch.setHTML("<b class=\"glyphicon glyphicon-search\"></b>");
 
 		EventController.get().addHandlerToSource(UsersEventHandler.TYPE, UserController.get(), this);
 		EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this);
@@ -163,8 +172,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * io.reflection.app.client.event.NavigationChanged.Handler#navigationChanged(io.reflection.app.admin.client.controller.NavigationController.Stack)
+	 * @see io.reflection.app.client.event.NavigationChanged.Handler#navigationChanged(io.reflection.app.admin.client.controller.NavigationController.Stack)
 	 */
 	@Override
 	public void navigationChanged(Stack stack) {
@@ -231,7 +239,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		removeLogin();
 
 		removeRegister();
-		
+
 		addAdmin();
 
 		addAccount(user);
@@ -323,8 +331,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.client.handler.user.UserPowersEventHandler#gotUserPowers(io.reflection.app.shared.datatypes.User, java.util.List,
-	 * java.util.List)
+	 * @see io.reflection.app.client.handler.user.UserPowersEventHandler#gotUserPowers(io.reflection.app.shared.datatypes.User, java.util.List, java.util.List)
 	 */
 	@Override
 	public void gotUserPowers(User user, List<Role> roles, List<Permission> permissions) {
@@ -353,6 +360,11 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		} else {
 			removeUpgrade();
 		}
+	}
+
+	@UiHandler("mQuery")
+	void onQueryChanged(ChangeEvent event) {
+		mSearch.setTargetHistoryToken("search/query/" + mQuery.getText());
 	}
 
 }

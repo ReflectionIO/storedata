@@ -11,12 +11,14 @@ import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.page.ChangeDetailsPage;
 import io.reflection.app.client.page.ChangePasswordPage;
 import io.reflection.app.client.page.FeedBrowserPage;
+import io.reflection.app.client.page.ItemPage;
 import io.reflection.app.client.page.LinkedAccountsPage;
 import io.reflection.app.client.page.LoginPage;
 import io.reflection.app.client.page.PermissionsPage;
 import io.reflection.app.client.page.RanksPage;
 import io.reflection.app.client.page.RegisterPage;
 import io.reflection.app.client.page.RolesPage;
+import io.reflection.app.client.page.SearchPage;
 import io.reflection.app.client.page.UpgradePage;
 import io.reflection.app.client.page.UsersPage;
 import io.reflection.app.client.part.Footer;
@@ -34,6 +36,7 @@ public class NavigationController {
 	private static NavigationController mOne = null;
 
 	private HTMLPanel mPanel = null;
+
 	private RanksPage mRanksPage = null;
 	private FeedBrowserPage mFeedBrowserPage = null;
 	private UsersPage mUsersPage = null;
@@ -45,6 +48,8 @@ public class NavigationController {
 	private ChangeDetailsPage mChangeDetailsPage = null;
 	private UpgradePage mUpgradePage = null;
 	private LinkedAccountsPage mLinkedAccountsPage = null;
+	private SearchPage mSearchPage = null;
+	private ItemPage mItemPage = null;
 
 	private Header mHeader = null;
 	private Footer mFooter = null;
@@ -226,6 +231,28 @@ public class NavigationController {
 			mPanel.add(mLinkedAccountsPage);
 		}
 	}
+	
+	public void addSearchPage() {
+		if (mSearchPage == null) {
+			mSearchPage = new SearchPage();
+		}
+
+		if (!mSearchPage.isAttached()) {
+			mPanel.clear();
+			mPanel.add(mSearchPage);
+		}
+	}
+	
+	public void addItemPage() {
+		if (mItemPage == null) {
+			mItemPage = new ItemPage();
+		}
+
+		if (!mItemPage.isAttached()) {
+			mPanel.clear();
+			mPanel.add(mItemPage);
+		}
+	}
 
 	/**
 	 * @param value
@@ -278,6 +305,10 @@ public class NavigationController {
 			addPermissionsPage();
 		} else if ("upgrade".equals(mStack.getPage())) {
 			addUpgradePage();
+		} else if ("search".equals(mStack.getPage())) {
+			addSearchPage();
+		} else if ("item".equals(mStack.getPage())) {
+			addItemPage();
 		}
 
 		EventController.get().fireEventFromSource(new NavigationEventHandler.ChangedEvent(mStack), NavigationController.this);

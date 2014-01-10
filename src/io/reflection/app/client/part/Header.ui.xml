@@ -93,6 +93,14 @@
                         </ul>
                     </li>
                 </ul>
+                <g:FormPanel styleName="navbar-form navbar-right">
+                    <g:HTMLPanel>
+                        <g:HTMLPanel styleName="form-group">
+                            <g:TextBox styleName="form-control" ui:field="mQuery" />
+                        </g:HTMLPanel>
+                        <g:InlineHyperlink styleName="btn btn-default" ui:field="mSearch" targetHistoryToken="search/query" />
+                    </g:HTMLPanel>
+                </g:FormPanel>
 
             </div><!--/.nav-collapse -->
         </div>

@@ -29,6 +29,7 @@
 	<property name="gather.ios.topgrossingipadapplications" value="https://itunes.apple.com/%s/rss/topgrossingipadapplications/limit=400/json" />
 	
 	<property name="gather.bucket" value="gather" />
+    <property name="account.data.bucket" value="gather/accounts" />
 	
 	<property name="db.connection.server" value="storedatacollector:reflectiondb" />
     <!-- <property name="db.connection.server" value="173.194.104.108" /> -->
