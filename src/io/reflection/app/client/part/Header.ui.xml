@@ -20,6 +20,10 @@
     	margin-left: 5px;
     }
     
+    .searchBox {
+		margin: 0 10px;
+    }
+    
     .searchBox .btn {
     	border-radius: 0 4px 4px 0;
     	background-color: #080808;
@@ -50,7 +54,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="">
+                <a class="navbar-brand" href="#home">
                     <g:Image styleName="{style.alignToImage}" resource="{res.logo}" />&nbsp;&nbsp;Reflection
                 </a>
             </div>

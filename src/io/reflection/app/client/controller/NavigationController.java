@@ -23,6 +23,7 @@ import io.reflection.app.client.page.UpgradePage;
 import io.reflection.app.client.page.UsersPage;
 import io.reflection.app.client.part.Footer;
 import io.reflection.app.client.part.Header;
+import io.reflection.app.client.part.HomePage;
 
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -50,6 +51,7 @@ public class NavigationController {
 	private LinkedAccountsPage mLinkedAccountsPage = null;
 	private SearchPage mSearchPage = null;
 	private ItemPage mItemPage = null;
+	private HomePage mHomePage = null;
 
 	private Header mHeader = null;
 	private Footer mFooter = null;
@@ -231,7 +233,7 @@ public class NavigationController {
 			mPanel.add(mLinkedAccountsPage);
 		}
 	}
-	
+
 	public void addSearchPage() {
 		if (mSearchPage == null) {
 			mSearchPage = new SearchPage();
@@ -242,7 +244,7 @@ public class NavigationController {
 			mPanel.add(mSearchPage);
 		}
 	}
-	
+
 	public void addItemPage() {
 		if (mItemPage == null) {
 			mItemPage = new ItemPage();
@@ -254,13 +256,24 @@ public class NavigationController {
 		}
 	}
 
+	public void addHomePage() {
+		if (mHomePage == null) {
+			mHomePage = new HomePage();
+		}
+
+		if (!mHomePage.isAttached()) {
+			mPanel.clear();
+			mPanel.add(mHomePage);
+		}
+	}
+
 	/**
 	 * @param value
 	 */
 	public void addPage(String value) {
 
 		if (value == null || value.length() == 0) {
-			value = "ranks";
+			value = "home";
 		}
 
 		mStack = Stack.parse(value);
@@ -309,6 +322,8 @@ public class NavigationController {
 			addSearchPage();
 		} else if ("item".equals(mStack.getPage())) {
 			addItemPage();
+		} else {
+			addHomePage();
 		}
 
 		EventController.get().fireEventFromSource(new NavigationEventHandler.ChangedEvent(mStack), NavigationController.this);

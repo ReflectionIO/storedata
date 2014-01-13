@@ -256,9 +256,9 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 		removeAccount();
 
-		addLogin();
-
 		addRegister();
+		
+		addLogin();
 
 		removeUpgrade();
 	}
