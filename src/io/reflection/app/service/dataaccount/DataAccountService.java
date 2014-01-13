@@ -12,8 +12,10 @@ import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
+import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
@@ -21,6 +23,7 @@ import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -32,6 +35,7 @@ import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.google.appengine.api.taskqueue.TransientFailureException;
+import com.spacehopperstudios.utility.StringUtils;
 
 final class DataAccountService implements IDataAccountService {
 
@@ -188,8 +192,35 @@ final class DataAccountService implements IDataAccountService {
 	 */
 	@Override
 	public List<DataAccount> getDataAccounts(Pager pager) throws DataAccessException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		List<DataAccount> dataAccounts = new ArrayList<DataAccount>();
+
+		String getDataAccountsQuery = String.format(
+				"SELECT * FROM `dataaccount` WHERE `deleted`='n' ORDER BY `%s` %s LIMIT %d,%d",
+				pager.sortBy,
+				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
+				pager.start,
+				pager.count);
+
+		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
+
+		try {
+			dataAccountConnection.connect();
+			dataAccountConnection.executeQuery(getDataAccountsQuery);
+			while (dataAccountConnection.fetchNextRow()) {
+				DataAccount dataAccount = toDataAccount(dataAccountConnection);
+
+				if (dataAccount != null) {
+					dataAccounts.add(dataAccount);
+				}
+			}
+		} finally {
+			if (dataAccountConnection != null) {
+				dataAccountConnection.disconnect();
+			}
+		}
+
+		return dataAccounts;
 	}
 
 	/*
