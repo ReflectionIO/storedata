@@ -113,7 +113,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		mLogoutLink.setHTML(mLogoutLink.getText() + " <b class=\"glyphicon glyphicon-log-out\"></b>");
 		mLoginLink.setHTML(mLoginLink.getText() + " <b class=\"glyphicon glyphicon-log-in\"></b>");
 
-		mQuery.getElement().setAttribute("placeholder", "Search of an app");
+		mQuery.getElement().setAttribute("placeholder", "Search for any app");
 		mSearch.setHTML("<b class=\"glyphicon glyphicon-search\"></b>");
 
 		EventController.get().addHandlerToSource(UsersEventHandler.TYPE, UserController.get(), this);
@@ -310,7 +310,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	private void addAccount(User user) {
 		// should really be using DOM so that these objects are not repeatedly created
 		mAccountButton.getElement().setInnerHTML(
-				"<span>" + SafeHtmlUtils.htmlEscape(user.forename + " " + user.surname) + " <b class=\"caret\"></b></span><img class=\"img-rounded\" src=\""
+				"<span>" + SafeHtmlUtils.htmlEscape(user.forename + " " + user.surname) + " <b class=\"caret\"></b></span><img class=\"img-circle\" src=\""
 						+ UriUtils.sanitizeUri("http://www.gravatar.com/avatar/" + user.avatar + "?s=30&d=identicon") + "\" />");
 
 		mChangePasswordLink.setTargetHistoryToken("users/changepassword/" + user.id.toString());

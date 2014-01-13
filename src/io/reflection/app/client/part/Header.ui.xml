@@ -2,7 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:with field='res' type='io.reflection.app.client.res.Images' />
     <ui:style>
-    @external navbar-nav;
+    @external navbar-nav, btn, form-control;
     .header {
     	background: #272833;
     }
@@ -19,6 +19,28 @@
     .navbar-nav>li>a.anchor img {
     	margin-left: 5px;
     }
+    
+    .searchBox .btn {
+    	border-radius: 0 4px 4px 0;
+    	background-color: #080808;
+    	color: white;
+    	border-color: #080808;
+    }
+    
+    .searchBox .form-control {
+    	border-radius: 4px 0 0 4px;
+    	background-color: #080808;
+    	color: white;
+    	border-color: #080808;
+    }
+    
+    .searchBox .form-control:focus {
+		border-color: #9780E4;
+	}
+    
+    .searchBox span {
+		float: left;
+	}
     </ui:style>
     <g:HTMLPanel ui:field="pnlHeader" styleName="navbar navbar-inverse navbar-fixed-top {style.header}">
         <div class="container">
@@ -94,11 +116,13 @@
                     </li>
                 </ul>
                 <g:FormPanel styleName="navbar-form navbar-right">
-                    <g:HTMLPanel>
-                        <g:HTMLPanel styleName="form-group">
+                    <g:HTMLPanel styleName="{style.searchBox}">
+                        <span class="form-group">
                             <g:TextBox styleName="form-control" ui:field="mQuery" />
-                        </g:HTMLPanel>
-                        <g:InlineHyperlink styleName="btn btn-default" ui:field="mSearch" targetHistoryToken="search/query" />
+                        </span>
+                        <span>
+                            <g:InlineHyperlink styleName="btn btn-default" ui:field="mSearch" targetHistoryToken="search/query" />
+                        </span>
                     </g:HTMLPanel>
                 </g:FormPanel>
 

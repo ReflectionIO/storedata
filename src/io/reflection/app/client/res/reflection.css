@@ -1,6 +1,6 @@
 @CHARSET "UTF-8";
 
-@external pagination, active, btn-primary, active, open, dropdown-toggle, dropdown-menu, badge, dropdown, nav, navbar-inverse, navbar-nav, caret;
+@external pagination, active, btn-primary, active, open, dropdown-toggle, dropdown-menu, badge, dropdown, nav, navbar-inverse, navbar-nav, caret, form-control;
 
 a {
 	cursor: pointer;
@@ -74,4 +74,11 @@ a:hover, a:focus, a:active, a.active {
 .navbar-inverse .navbar-nav>.dropdown:hover>a:focus.caret {
 	border-top-color: #FFF;
     border-bottom-color: #FFF;
+}
+
+.form-control:focus {
+  border-color: #9780E4;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(151, 128, 228, 0.6);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(151, 128, 228, 0.6);
 }
