@@ -15,7 +15,6 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
-import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
@@ -35,7 +34,6 @@ import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.google.appengine.api.taskqueue.TransientFailureException;
-import com.spacehopperstudios.utility.StringUtils;
 
 final class DataAccountService implements IDataAccountService {
 
@@ -192,21 +190,18 @@ final class DataAccountService implements IDataAccountService {
 	 */
 	@Override
 	public List<DataAccount> getDataAccounts(Pager pager) throws DataAccessException {
-		
+
 		List<DataAccount> dataAccounts = new ArrayList<DataAccount>();
 
-		String getDataAccountsQuery = String.format(
-				"SELECT * FROM `dataaccount` WHERE `deleted`='n' ORDER BY `%s` %s LIMIT %d,%d",
-				pager.sortBy,
-				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
-				pager.start,
-				pager.count);
+		String getDataAccountsQuery = String.format("SELECT * FROM `dataaccount` WHERE `deleted`='n' ORDER BY `%s` %s LIMIT %d,%d", pager.sortBy,
+				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
 
 		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
 		try {
 			dataAccountConnection.connect();
 			dataAccountConnection.executeQuery(getDataAccountsQuery);
+
 			while (dataAccountConnection.fetchNextRow()) {
 				DataAccount dataAccount = toDataAccount(dataAccountConnection);
 
@@ -230,8 +225,27 @@ final class DataAccountService implements IDataAccountService {
 	 */
 	@Override
 	public Long getDataAccountsCount() throws DataAccessException {
-		// TODO Auto-generated method stub
-		return null;
+		Long dataAccountsCount = Long.valueOf(0);
+
+		String getDataAccountsCountQuery = String.format("SELECT count(1) as `count` FROM `dataaccount` WHERE `deleted`='n' LIMIT 1");
+
+		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
+
+		try {
+			dataAccountConnection.connect();
+			dataAccountConnection.executeQuery(getDataAccountsCountQuery);
+
+			if (dataAccountConnection.fetchNextRow()) {
+				dataAccountsCount = dataAccountConnection.getCurrentRowLong("count");
+			}
+		} finally {
+			if (dataAccountConnection != null) {
+				dataAccountConnection.disconnect();
+			}
+		}
+
+		return dataAccountsCount;
+
 	}
 
 	/*
