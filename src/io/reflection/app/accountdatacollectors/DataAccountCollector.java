@@ -8,6 +8,7 @@
 //
 package io.reflection.app.accountdatacollectors;
 
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.datatypes.shared.DataAccount;
 
 import java.util.Date;
@@ -24,7 +25,7 @@ public interface DataAccountCollector {
 	 * @param dataAccount
 	 * @param date
 	 */
-	void collect(DataAccount dataAccount, Date date);
+	void collect(DataAccount dataAccount, Date date) throws DataAccessException;
 
 	/**
 	 * 

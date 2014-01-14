@@ -219,6 +219,9 @@
     <xsd:complexType name="DataAccountFetch">
         <xsd:complexContent>
             <xsd:extension base="DataType">
+                <xsd:sequence>
+                    <xsd:element name="linkedAccount" type="DataAccount" />
+                </xsd:sequence>
                 <xsd:attribute name="status" type="DataAccountFetchStatusType" />
                 <xsd:attribute name="data" type="xsd:string" />
                 <xsd:attribute name="date" type="xsd:dateTime" />
@@ -352,6 +355,7 @@
         <xsd:restriction base="xsd:string">
             <xsd:enumeration value="gathered" />
             <xsd:enumeration value="empty" />
+            <xsd:enumeration value="error" />
             <xsd:enumeration value="ingested" />
         </xsd:restriction>
     </xsd:simpleType>

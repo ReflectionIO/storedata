@@ -136,7 +136,7 @@ final class DataAccountService implements IDataAccountService {
 			Queue queue = QueueFactory.getQueue("dataaccountgather");
 			Calendar c = Calendar.getInstance();
 
-			for (int i = 0; i < days; i++) {
+			for (int i = 1; i <= days; i++) {
 				TaskOptions options = TaskOptions.Builder.withUrl("/dataaccountgather").method(Method.POST);
 
 				options.param("accountId", dataAccount.id.toString());

@@ -120,7 +120,7 @@ final class FeedFetchService implements IFeedFetchService {
 		FeedFetch updatedFeedFetch = null;
 
 		final String updateFeedFetchQuery = String.format(
-				"UPDATE `feedfetch` SET `country`='%s',data='%s',date=FROM_UNIXTIME(%d),`store`='%s',type='%s',code='%s',status='%s' WHERE `id`=%d",
+				"UPDATE `feedfetch` SET `country`='%s',`data`='%s',`date`=FROM_UNIXTIME(%d),`store`='%s',`type`='%s',`code`='%s',`status`='%s' WHERE `id`=%d",
 				addslashes(feedFetch.country), addslashes(feedFetch.data), feedFetch.date.getTime() / 1000, addslashes(feedFetch.store),
 				addslashes(feedFetch.type), addslashes(feedFetch.code), feedFetch.status.toString(), feedFetch.id.longValue());
 

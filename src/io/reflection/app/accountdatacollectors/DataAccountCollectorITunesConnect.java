@@ -8,8 +8,12 @@
 //
 package io.reflection.app.accountdatacollectors;
 
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.datatypes.shared.DataAccount;
+import io.reflection.app.datatypes.shared.DataAccountFetch;
+import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
 import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -68,10 +72,12 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 
 			JsonElement element = jsonProperties.get("vendors");
 
+			// TODO: throw a better exception
 			if (element == null) throw new InputValidationException(-1, "");
 
 			JsonArray vendors = element.getAsJsonArray();
 
+			// TODO: throw a better exception
 			if (vendors == null) throw new InputValidationException(-1, "");
 
 			for (int i = 0; i < vendors.size(); i++) {
@@ -80,9 +86,11 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 				if (element != null) {
 					String vendor = element.getAsString();
 
+					// TODO: throw a better exception
 					if (vendor == null) throw new InputValidationException(-1, "");
 
 					// e.g. 80012345
+					// TODO: throw a better exception
 					if (!vendor.matches("8[0-9]{7}")) throw new InputValidationException(-1, "");
 				}
 			}
@@ -92,6 +100,7 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 				LOG.log(GaeLevel.WARNING, String.format("Error parsing properties [%s] properties", properties), pe);
 			}
 
+			// TODO: throw a better exception
 			throw new InputValidationException(-1, "");
 		}
 	}
@@ -102,7 +111,7 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 	 * @see io.reflection.app.accountdatacollectors.DataAccountCollector#collect(io.reflection.app.shared.datatypes.DataAccount, java.util.Date)
 	 */
 	@Override
-	public void collect(DataAccount dataAccount, Date date) {
+	public void collect(DataAccount dataAccount, Date date) throws DataAccessException {
 		String dateParameter = (new SimpleDateFormat("yyyyMMdd")).format(date);
 
 		if (LOG.isLoggable(GaeLevel.INFO)) {
@@ -137,17 +146,35 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 				localOutputStreamWriter.flush();
 				localOutputStreamWriter.close();
 
+				DataAccountFetch dataAccountFetch = new DataAccountFetch();
+				dataAccountFetch.date = date;
+				dataAccountFetch.linkedAccount = dataAccount;
+
 				String error = null;
 				if ((error = connection.getHeaderField("ERRORMSG")) != null) {
 					if (LOG.isLoggable(GaeLevel.WARNING)) {
 						LOG.warning(String.format("itunes connect return error message [%s] while trying to obtain data with request [%s] ", error, data));
 					}
+
+					dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeError;
+					dataAccountFetch.data = error;
 				} else if (connection.getHeaderField("filename") != null) {
-					getFile(dataAccount, connection);
+					String cloudFileName = getFile(dataAccount, connection);
+
+					if (cloudFileName != null) {
+						dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered;
+						dataAccountFetch.data = cloudFileName;
+					} else {
+						dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeEmpty;
+					}
+				} else {
+					dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeEmpty;
 				}
+
+				DataAccountFetchServiceProvider.provide().addDataAccountFetch(dataAccountFetch);
 			}
 
-		} catch (Exception e) {
+		} catch (IOException e) {
 			LOG.log(GaeLevel.SEVERE,
 					String.format("Exception throw while obtaining file for data account [%d] and date [%s]", dataAccount.id.longValue(), dateParameter), e);
 		}
@@ -192,13 +219,15 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 		return vendorId;
 	}
 
-	private static void getFile(DataAccount account, HttpURLConnection paramHttpURLConnection) throws IOException {
+	private static String getFile(DataAccount account, HttpURLConnection paramHttpURLConnection) throws IOException {
 		String str = paramHttpURLConnection.getHeaderField("filename");
 		int i = 0;
-		boolean downloaded = false;
+
 		BufferedInputStream localBufferedInputStream = null;
 		BufferedOutputStream localBufferedOutputStream = null;
 		GcsOutputChannel writeChannel = null;
+
+		String cloudStorageFileName;
 
 		try {
 			localBufferedInputStream = new BufferedInputStream(paramHttpURLConnection.getInputStream());
@@ -213,7 +242,12 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 				writeChannel.write(ByteBuffer.wrap(byteBuffer, 0, i));
 			}
 
-			downloaded = true;
+			if (LOG.isLoggable(GaeLevel.INFO)) {
+				LOG.warning("File Downloaded Successfully");
+			}
+
+			cloudStorageFileName = "/gs/" + fileName.getBucketName() + "/" + fileName.getObjectName();
+
 		} finally {
 			if (localBufferedInputStream != null) {
 				localBufferedInputStream.close();
@@ -228,12 +262,6 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 			}
 		}
 
-		if (downloaded) {
-			if (LOG.isLoggable(GaeLevel.INFO)) {
-				LOG.warning("File Downloaded Successfully");
-			}
-
-			// TODO: store a refernce to the files somewhere
-		}
+		return cloudStorageFileName;
 	}
 }
