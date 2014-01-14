@@ -42,4 +42,21 @@ public class DateRange {
 		return mToDate;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+
+		if (obj instanceof DateRange) {
+			DateRange dateRangeObj = (DateRange) obj;
+
+			return this.getFrom().equals(dateRangeObj.getFrom()) && this.getTo().equals(dateRangeObj.getTo());
+		}
+
+		return super.equals(obj);
+	}
+
 }

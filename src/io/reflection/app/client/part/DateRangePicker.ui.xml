@@ -1,10 +1,13 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.user.datepicker.client">
     <ui:style>
+    .inline {
+    	display: inline-block;
+    }
     </ui:style>
     <g:HTMLPanel>
-    
-    
-    
+        <d:DatePicker styleName="gwt-DatePicker {style.inline}" ui:field="mFromPicker" />
+        <d:DatePicker styleName="gwt-DatePicker {style.inline}" ui:field="mToPicker" />
     </g:HTMLPanel>
+
 </ui:UiBinder> 

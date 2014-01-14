@@ -72,7 +72,9 @@
 
 .datePickerDayIsDisabled {
 	color: #AAAAAA;
-	font-style: italic
+	font-style: italic;
+	cursor: not-allowed;
+	
 }
 
 .datePickerDayIsHighlighted {
