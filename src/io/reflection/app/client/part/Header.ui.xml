@@ -20,9 +20,9 @@
     	margin-left: 5px;
     }
     
-    .searchBox {
+    /* .searchBox {
 		margin: 0 10px;
-    }
+    } */
     
     .searchBox .btn {
     	border-radius: 0 4px 4px 0;
@@ -129,6 +129,7 @@
                         </span>
                     </g:HTMLPanel>
                 </g:FormPanel>
+                <span />
 
             </div><!--/.nav-collapse -->
         </div>

@@ -20,6 +20,7 @@ import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -112,6 +113,10 @@ public class LinkedAccountController implements ServiceController {
 			public void onSuccess(GetLinkedAccountsResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
 					if (output.linkedAccounts != null) {
+						if (mLinkedAccounts == null) {
+							mLinkedAccounts = new ArrayList<DataAccount>();
+						}
+
 						mLinkedAccounts.addAll(output.linkedAccounts);
 					}
 
@@ -123,14 +128,15 @@ public class LinkedAccountController implements ServiceController {
 						}
 					}
 
-//					updateRowCount((int) mCount, true);
-//					updateRowData(
-//							input.pager.start.intValue(),
-//							mLinkedAccounts.subList(input.pager.start.intValue(),
-//									Math.min(input.pager.start.intValue() + input.pager.count.intValue(), mPager.totalCount.intValue())));
+					// updateRowCount((int) mCount, true);
+					// updateRowData(
+					// input.pager.start.intValue(),
+					// mLinkedAccounts.subList(input.pager.start.intValue(),
+					// Math.min(input.pager.start.intValue() + input.pager.count.intValue(), mPager.totalCount.intValue())));
 				}
 
-				EventController.get().fireEventFromSource(new GetLinkedAccountsEventHandler.GetLinkedAccountsSuccess(input, output), LinkedAccountController.this);
+				EventController.get().fireEventFromSource(new GetLinkedAccountsEventHandler.GetLinkedAccountsSuccess(input, output),
+						LinkedAccountController.this);
 			}
 
 			@Override
