@@ -12,12 +12,14 @@ import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
+import io.reflection.app.service.permission.PermissionServiceProvider;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -284,6 +286,41 @@ final class RoleService implements IRoleService {
 				}
 			}
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.role.IRoleService#getRolePermissions(io.reflection.app.datatypes.shared.Role)
+	 */
+	@Override
+	public List<Permission> getPermissions(Role role) throws DataAccessException {
+		List<Permission> rolePermissions = new ArrayList<Permission>();
+
+		String getRolePermissionsQuery = String.format("SELECT `id` FROM `rolepermission` WHERE `roleid`=%d", role.id.longValue());
+
+		Connection roleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRole.toString());
+
+		try {
+			roleConnection.connect();
+			roleConnection.executeQuery(getRolePermissionsQuery);
+
+			while (roleConnection.fetchNextRow()) {
+				Long id = roleConnection.getCurrentRowLong("id");
+
+				Permission p = PermissionServiceProvider.provide().getPermission(id);
+
+				if (p != null) {
+					rolePermissions.add(p);
+				}
+			}
+		} finally {
+			if (roleConnection != null) {
+				roleConnection.disconnect();
+			}
+		}
+
+		return rolePermissions;
 	}
 
 }

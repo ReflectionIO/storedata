@@ -46,7 +46,9 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.collectors.CollectorIOS;
 import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Rank;
+import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.service.country.CountryServiceProvider;
@@ -271,6 +273,10 @@ public final class Core extends ActionHandler {
 		return output;
 	}
 
+	private final static String FULL_RANK_VIEW_CODE = "FRV";
+	private final static int SESSIONLESS_MAX_ITEMS = 10;
+	private final static int PERMISSIONLESS_MAX_ITEMS = 25;
+
 	public GetAllTopItemsResponse getAllTopItems(GetAllTopItemsRequest input) {
 		LOG.finer("Entering getAllTopItems");
 		GetAllTopItemsResponse output = new GetAllTopItemsResponse();
@@ -281,10 +287,48 @@ public final class Core extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
+			boolean loggedIn = false;
+			boolean canSeeFullList = false;
+
+			if (input.session != null) {
+				input.session = ValidationHelper.validateSession(input.session, "input.session");
+
+				if (input.session != null) {
+					loggedIn = true;
+
+					List<Role> roles = UserServiceProvider.provide().getRoles(input.session.user);
+
+					List<Permission> permissions;
+
+					for (Role role : roles) {
+						permissions = RoleServiceProvider.provide().getPermissions(role);
+
+						for (Permission permission : permissions) {
+							if (FULL_RANK_VIEW_CODE.equals(permission.code)) {
+								canSeeFullList = true;
+								break;
+							}
+						}
+
+						if (canSeeFullList) {
+							break;
+						}
+					}
+				}
+			}
+
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
 			if (input.pager.sortDirection == null) {
 				input.pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
+			}
+
+			boolean skip = false;
+
+			if (!loggedIn) {
+
+			} else if (!canSeeFullList) {
+
 			}
 
 			input.country = ValidationHelper.validateCountry(input.country, "input");
@@ -819,7 +863,7 @@ public final class Core extends ActionHandler {
 			input.password = ValidationHelper.validateStringLength(input.password, "input.password", 2, 1000);
 
 			DataAccountCollectorFactory.getCollectorForSource(input.source.a3Code).validateProperties(input.properties);
-			
+
 			output.account = DataAccountServiceProvider.provide().addDataAccount(input.source, input.username, input.password, input.properties);
 
 			output.status = StatusType.StatusTypeSuccess;

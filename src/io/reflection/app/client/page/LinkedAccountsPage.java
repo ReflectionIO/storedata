@@ -62,6 +62,8 @@ public class LinkedAccountsPage extends Composite implements NavigationEventHand
 	@UiField HTMLPanel mToolbar;
 	@UiField IosMacLinkAccountForm mIosMacForm;
 
+	// @UiField(provided = true) CellTree mAccounts;
+
 	private LinkableAccountFields mLinkableAccount;
 
 	// private String mAccountType;
@@ -71,7 +73,8 @@ public class LinkedAccountsPage extends Composite implements NavigationEventHand
 
 		addSoonTag(mPlayLink);
 
-		// mIosMacLink.setTargetHistoryToken("users/linkedaccounts/" + NavigationController.get().getStack().getParameter(0) + "/iosmac");
+		// mIosMacLink.setTargetHistoryToken("users/linkedaccounts/" +
+		// NavigationController.get().getStack().getParameter(0) + "/iosmac");
 
 		EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this);
 		EventController.get().addHandlerToSource(LinkAccountEventHandler.TYPE, LinkedAccountController.get(), this);
@@ -80,6 +83,10 @@ public class LinkedAccountsPage extends Composite implements NavigationEventHand
 		showNoLinkedAccounts();
 
 		LinkedAccountController.get().fetchLinkedAccounts();
+
+//		CellTree.Resources res = GWT.create(CellTree.BasicResources.class);
+//		mAccounts = new CellTree(LinkedAccountController.get(), null, res);
+//		mAccounts.setAnimationEnabled(true);
 	}
 
 	/**
@@ -97,8 +104,7 @@ public class LinkedAccountsPage extends Composite implements NavigationEventHand
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.admin.client.controller.NavigationController.Stack)
+	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged (io.reflection.app.admin.client.controller.NavigationController.Stack)
 	 */
 	@Override
 	public void navigationChanged(Stack stack) {
@@ -146,7 +152,7 @@ public class LinkedAccountsPage extends Composite implements NavigationEventHand
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler#linkAccountSuccess(io.reflection.app.api.core.shared.call.LinkAccountRequest,
+	 * @see io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler# linkAccountSuccess (io.reflection.app.api.core.shared.call.LinkAccountRequest,
 	 * io.reflection.app.api.core.shared.call.LinkAccountResponse)
 	 */
 	@Override
@@ -165,7 +171,7 @@ public class LinkedAccountsPage extends Composite implements NavigationEventHand
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler#linkAccountFailure(io.reflection.app.api.core.shared.call.LinkAccountRequest,
+	 * @see io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler# linkAccountFailure (io.reflection.app.api.core.shared.call.LinkAccountRequest,
 	 * java.lang.Throwable)
 	 */
 	@Override
@@ -183,7 +189,7 @@ public class LinkedAccountsPage extends Composite implements NavigationEventHand
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.api.core.shared.call.event.GetLinkedAccountsEventHandler#getLinkedAccountsSuccess(io.reflection.app.api.core.shared.call.
+	 * @see io.reflection.app.api.core.shared.call.event.GetLinkedAccountsEventHandler #getLinkedAccountsSuccess(io.reflection.app.api.core.shared.call.
 	 * GetLinkedAccountsRequest, io.reflection.app.api.core.shared.call.GetLinkedAccountsResponse)
 	 */
 	@Override
@@ -198,7 +204,7 @@ public class LinkedAccountsPage extends Composite implements NavigationEventHand
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.api.core.shared.call.event.GetLinkedAccountsEventHandler#getLinkedAccountsFailure(io.reflection.app.api.core.shared.call.
+	 * @see io.reflection.app.api.core.shared.call.event.GetLinkedAccountsEventHandler #getLinkedAccountsFailure(io.reflection.app.api.core.shared.call.
 	 * GetLinkedAccountsRequest, java.lang.Throwable)
 	 */
 	@Override

@@ -11,6 +11,7 @@ import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.page.ChangeDetailsPage;
 import io.reflection.app.client.page.ChangePasswordPage;
 import io.reflection.app.client.page.FeedBrowserPage;
+import io.reflection.app.client.page.HomePage;
 import io.reflection.app.client.page.ItemPage;
 import io.reflection.app.client.page.LinkedAccountsPage;
 import io.reflection.app.client.page.LoginPage;
@@ -23,7 +24,6 @@ import io.reflection.app.client.page.UpgradePage;
 import io.reflection.app.client.page.UsersPage;
 import io.reflection.app.client.part.Footer;
 import io.reflection.app.client.part.Header;
-import io.reflection.app.client.part.HomePage;
 
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.HTMLPanel;

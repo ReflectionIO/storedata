@@ -10,6 +10,7 @@ package io.reflection.app.service.role;
 
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 
 import java.util.List;
@@ -68,5 +69,7 @@ public interface IRoleService extends IService {
 	 * @throws DataAccessException
 	 */
 	public void inflateRoles(List<Role> roles) throws DataAccessException;
+
+	public List<Permission> getPermissions(Role role) throws DataAccessException;
 
 }

@@ -38,7 +38,7 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection dataAccountFetchConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeDataAccountFetch.toString());
 
-		String getDataAccountFetchQuery = String.format("SELECT * FROM `dataAccountFetch` WHERE `deleted`='n' AND `id`='%d' LIMIT 1", id.longValue());
+		String getDataAccountFetchQuery = String.format("SELECT * FROM `dataaccountfetch` WHERE `deleted`='n' AND `id`='%d' LIMIT 1", id.longValue());
 		try {
 			dataAccountFetchConnection.connect();
 			dataAccountFetchConnection.executeQuery(getDataAccountFetchQuery);

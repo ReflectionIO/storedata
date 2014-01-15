@@ -19,18 +19,22 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
+import io.reflection.app.datatypes.shared.Item;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.view.client.AsyncDataProvider;
+import com.google.gwt.view.client.HasData;
+import com.google.gwt.view.client.TreeViewModel;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author billy1380
  * 
  */
-public class LinkedAccountController implements ServiceController {
+public class LinkedAccountController extends AsyncDataProvider<DataAccount> implements ServiceController, TreeViewModel {
 
 	private List<DataAccount> mLinkedAccounts;
 	private long mCount = -1;
@@ -90,7 +94,7 @@ public class LinkedAccountController implements ServiceController {
 		return mCount;
 	}
 
-	public void fetchLinkedAccounts() {
+	public void fetchLinkedAccounts() { 
 		CoreService service = new CoreService();
 		service.setUrl(CORE_END_POINT);
 
@@ -132,7 +136,9 @@ public class LinkedAccountController implements ServiceController {
 					// updateRowData(
 					// input.pager.start.intValue(),
 					// mLinkedAccounts.subList(input.pager.start.intValue(),
-					// Math.min(input.pager.start.intValue() + input.pager.count.intValue(), mPager.totalCount.intValue())));
+					// Math.min(input.pager.start.intValue() +
+					// input.pager.count.intValue(),
+					// mPager.totalCount.intValue())));
 				}
 
 				EventController.get().fireEventFromSource(new GetLinkedAccountsEventHandler.GetLinkedAccountsSuccess(input, output),
@@ -148,5 +154,42 @@ public class LinkedAccountController implements ServiceController {
 
 	public boolean hasLinkedAccounts() {
 		return mPager != null || mLinkedAccounts.size() > 0;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.view.client.TreeViewModel#getNodeInfo(java.lang.Object)
+	 */
+	@Override
+	public <T> NodeInfo<?> getNodeInfo(T value) {
+		if (value == null) {
+			// return new DefaultNodeInfo<DataAccount>();
+		} else if (value instanceof DataAccount) {
+			// return new DefaultNodeInfo<Item>();
+		}
+
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.view.client.TreeViewModel#isLeaf(java.lang.Object)
+	 */
+	@Override
+	public boolean isLeaf(Object value) {
+		return value != null && value instanceof Item;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.view.client.AbstractDataProvider#onRangeChanged(com.google .gwt.view.client.HasData)
+	 */
+	@Override
+	protected void onRangeChanged(HasData<DataAccount> display) {
+		// TODO Auto-generated method stub
+
 	}
 }

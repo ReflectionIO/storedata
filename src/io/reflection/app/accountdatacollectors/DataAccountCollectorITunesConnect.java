@@ -112,6 +112,9 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 	 */
 	@Override
 	public void collect(DataAccount dataAccount, Date date) throws DataAccessException {
+		
+		if (true) return;
+		
 		String dateParameter = (new SimpleDateFormat("yyyyMMdd")).format(date);
 
 		if (LOG.isLoggable(GaeLevel.INFO)) {
