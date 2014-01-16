@@ -7,21 +7,30 @@
 //
 package io.reflection.app.client.page;
 
+import io.reflection.app.api.admin.shared.call.event.IsAuthorisedEventHandler;
+import io.reflection.app.api.core.shared.call.IsAuthorisedRequest;
+import io.reflection.app.api.core.shared.call.IsAuthorisedResponse;
+import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.client.cell.MiniAppCell;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.RankController;
 import io.reflection.app.client.controller.ServiceController;
+import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.RanksEventHandler;
+import io.reflection.app.client.handler.user.SessionEventHandler;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.Breadcrumbs;
 import io.reflection.app.client.part.PageSizePager;
 import io.reflection.app.client.part.RankFilter;
 import io.reflection.app.client.part.datatypes.RanksGroup;
 import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Rank;
+import io.reflection.app.datatypes.shared.User;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -33,13 +42,16 @@ import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.gson.json.service.shared.Error;
+import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author billy1380
  * 
  */
-public class RanksPage extends Composite implements RanksEventHandler, FilterEventHandler {
+public class RanksPage extends Composite implements RanksEventHandler, FilterEventHandler, SessionEventHandler, IsAuthorisedEventHandler {
 
 	private static RanksPageUiBinder uiBinder = GWT.create(RanksPageUiBinder.class);
 
@@ -51,6 +63,7 @@ public class RanksPage extends Composite implements RanksEventHandler, FilterEve
 	@UiField RankFilter mFilter;
 
 	@UiField Breadcrumbs mBreadcrumbs;
+	@UiField InlineHyperlink mRedirect;
 
 	public RanksPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -107,6 +120,8 @@ public class RanksPage extends Composite implements RanksEventHandler, FilterEve
 
 		EventController.get().addHandlerToSource(RanksEventHandler.TYPE, RankController.get(), this);
 		EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this);
+		EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this);
+		EventController.get().addHandlerToSource(IsAuthorisedEventHandler.TYPE, SessionController.get(), this);
 
 		RankController.get().addDataDisplay(mRanks);
 		mPager.setDisplay(mRanks);
@@ -161,4 +176,83 @@ public class RanksPage extends Composite implements RanksEventHandler, FilterEve
 	public void filterParamsChanged(Map<String, ?> currentValues, Map<String, ?> previousValues) {
 		refreshBreadcrumbs();
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoggedIn(io.reflection.app.datatypes.shared.User,
+	 * io.reflection.app.api.shared.datatypes.Session)
+	 */
+	@Override
+	public void userLoggedIn(User user, Session session) {
+		RankController.get().reset();
+
+		List<Permission> permissions = new ArrayList<Permission>();
+
+		Permission p = new Permission();
+		// p.code = "FRV";
+		p.id = Long.valueOf(1);
+		permissions.add(p);
+
+		SessionController.get().fetchAuthorisation(null, permissions);
+		
+		mRedirect.setTargetHistoryToken("upgrade");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoggedOut()
+	 */
+	@Override
+	public void userLoggedOut() {
+		RankController.get().reset();
+		mPager.setVisible(false);
+		mRedirect.setVisible(true);
+		mRedirect.setTargetHistoryToken("login");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoginFailed(com.willshex.gson.json.service.shared.Error)
+	 */
+	@Override
+	public void userLoginFailed(Error error) {}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.api.admin.shared.call.event.IsAuthorisedEventHandler#isAuthorisedSuccess(io.reflection.app.api.core.shared.call.IsAuthorisedRequest,
+	 * io.reflection.app.api.core.shared.call.IsAuthorisedResponse)
+	 */
+	@Override
+	public void isAuthorisedSuccess(IsAuthorisedRequest input, IsAuthorisedResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess && output.authorised == Boolean.TRUE) {
+			if (input.permissions != null) {
+				for (Permission p : input.permissions) {
+					if (p.id != null && p.id != null) {
+						mPager.setVisible(true);
+						mRedirect.setVisible(false);
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.api.admin.shared.call.event.IsAuthorisedEventHandler#isAuthorisedFailure(io.reflection.app.api.core.shared.call.IsAuthorisedRequest,
+	 * java.lang.Throwable)
+	 */
+	@Override
+	public void isAuthorisedFailure(IsAuthorisedRequest input, Throwable caught) {}
+
+	/*
+	 * 
+	 */
 }

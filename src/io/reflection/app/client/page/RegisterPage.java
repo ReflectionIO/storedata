@@ -95,27 +95,37 @@ public class RegisterPage extends Composite implements UserRegisteredEventHandle
 		} else {
 			if (mUsernameError != null) {
 				FormHelper.showNote(true, mUsernameGroup, mUsernameNote, mUsernameError);
+			} else {
+				FormHelper.hideNote(mUsernameGroup, mUsernameNote);
 			}
 
 			if (mPasswordError != null) {
 				FormHelper.showNote(true, mPasswordGroup, mPasswordNote, mPasswordError);
+			} else {
+				FormHelper.hideNote(mPasswordGroup, mPasswordNote);
 			}
 
 			if (mForenameError != null) {
 				FormHelper.showNote(true, mForenameGroup, mForenameNote, mForenameError);
+			} else {
+				FormHelper.hideNote(mForenameGroup, mForenameNote);
 			}
 
 			if (mSurnameError != null) {
 				FormHelper.showNote(true, mSurnameGroup, mSurnameNote, mSurnameError);
+			} else {
+				FormHelper.hideNote(mSurnameGroup, mSurnameNote);
 			}
 
 			if (mCompanyError != null) {
 				FormHelper.showNote(true, mCompanyGroup, mCompanyNote, mCompanyError);
+			} else {
+				FormHelper.hideNote(mCompanyGroup, mCompanyNote);
 			}
 		}
 	}
 
-	boolean validate() {
+	private boolean validate() {
 		boolean validated = true;
 
 		String username = mUsername.getText();

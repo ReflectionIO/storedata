@@ -72,7 +72,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 		final GetUsersRequest input = new GetUsersRequest();
 		input.accessCode = ACCESS_CODE;
-		
+
 		input.session = SessionController.get().getSessionForApiCall();
 
 		if (mPager == null) {
@@ -161,7 +161,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 		final GetUsersCountRequest input = new GetUsersCountRequest();
 		input.accessCode = ACCESS_CODE;
-		
+
 		input.session = SessionController.get().getSessionForApiCall();
 
 		service.getUsersCount(input, new AsyncCallback<GetUsersCountResponse>() {
@@ -193,7 +193,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		input.accessCode = ACCESS_CODE;
 
 		input.session = SessionController.get().getSessionForApiCall();
-		
+
 		input.role = new Role();
 		input.role.name = "admin";
 
@@ -226,7 +226,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 		final SetPasswordRequest input = new SetPasswordRequest();
 		input.accessCode = ACCESS_CODE;
-		
+
 		input.session = SessionController.get().getSessionForApiCall();
 
 		input.password = newPassword;

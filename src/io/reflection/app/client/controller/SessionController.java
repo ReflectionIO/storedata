@@ -7,11 +7,16 @@
 //
 package io.reflection.app.client.controller;
 
+import io.reflection.app.api.admin.shared.call.event.IsAuthorisedEventHandler;
 import io.reflection.app.api.core.client.CoreService;
 import io.reflection.app.api.core.shared.call.ChangePasswordRequest;
 import io.reflection.app.api.core.shared.call.ChangePasswordResponse;
+import io.reflection.app.api.core.shared.call.ChangeUserDetailsRequest;
+import io.reflection.app.api.core.shared.call.ChangeUserDetailsResponse;
 import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsRequest;
 import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsResponse;
+import io.reflection.app.api.core.shared.call.IsAuthorisedRequest;
+import io.reflection.app.api.core.shared.call.IsAuthorisedResponse;
 import io.reflection.app.api.core.shared.call.LoginRequest;
 import io.reflection.app.api.core.shared.call.LoginResponse;
 import io.reflection.app.api.core.shared.call.LogoutRequest;
@@ -25,8 +30,11 @@ import io.reflection.app.client.handler.user.UserPasswordChangedEventHandler.Use
 import io.reflection.app.client.handler.user.UserPowersEventHandler.GetUserPowersFailed;
 import io.reflection.app.client.handler.user.UserPowersEventHandler.GotUserPowers;
 import io.reflection.app.client.helper.FormHelper;
+import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
+
+import java.util.List;
 
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -67,10 +75,10 @@ public class SessionController implements ServiceController {
 
 		if (mSession != session) {
 			mSession = session;
+		}
 
-			if (mSession != null) {
-				Cookies.setCookie(COOKIE_KEY_TOKEN, mSession.token, mSession.expires);
-			}
+		if (mSession != null) {
+			Cookies.setCookie(COOKIE_KEY_TOKEN, mSession.token, mSession.expires);
 		} else {
 			Cookies.removeCookie(COOKIE_KEY_TOKEN);
 		}
@@ -213,6 +221,55 @@ public class SessionController implements ServiceController {
 		});
 	}
 
+	/**
+	 * @param username
+	 * @param forename
+	 * @param surname
+	 * @param company
+	 */
+	public void changeUserDetails(String username, String forename, String surname, String company) {
+		CoreService service = new CoreService();
+		service.setUrl(CORE_END_POINT);
+
+		final ChangeUserDetailsRequest input = new ChangeUserDetailsRequest();
+		input.accessCode = ACCESS_CODE;
+
+		input.session = SessionController.get().getSessionForApiCall();
+
+		input.user = new User();
+
+		input.user.id = mSession.user.id;
+
+		input.user.company = company;
+		input.user.forename = forename;
+		input.user.surname = surname;
+		input.user.username = username;
+
+		service.changeUserDetails(input, new AsyncCallback<ChangeUserDetailsResponse>() {
+
+			@Override
+			public void onSuccess(ChangeUserDetailsResponse output) {
+				if (output.status == StatusType.StatusTypeSuccess) {
+					mSession.user.username = input.user.username;
+					mSession.user.forename = input.user.forename;
+					mSession.user.surname = input.user.surname;
+					mSession.user.company = input.user.company;
+
+					// tell everyone
+				} else {
+					// tell everyone
+				}
+
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				// tell everyone
+			}
+		});
+
+	}
+
 	private void restoreSession() {
 		String token = Cookies.getCookie(COOKIE_KEY_TOKEN);
 
@@ -304,5 +361,33 @@ public class SessionController implements ServiceController {
 		}
 
 		return session;
+	}
+
+	public void fetchAuthorisation(List<Role> roles, List<Permission> permissions) {
+		CoreService service = new CoreService();
+
+		service.setUrl(CORE_END_POINT);
+
+		final IsAuthorisedRequest input = new IsAuthorisedRequest();
+		input.accessCode = ACCESS_CODE;
+
+		input.session = new Session();
+		input.session.token = mSession.token;
+
+		input.roles = roles;
+		input.permissions = permissions;
+
+		service.isAuthorised(input, new AsyncCallback<IsAuthorisedResponse>() {
+
+			@Override
+			public void onSuccess(IsAuthorisedResponse output) {
+				EventController.get().fireEventFromSource(new IsAuthorisedEventHandler.IsAuthorisedSuccess(input, output), SessionController.this);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				EventController.get().fireEventFromSource(new IsAuthorisedEventHandler.IsAuthorisedFailure(input, caught), SessionController.this);
+			}
+		});
 	}
 }

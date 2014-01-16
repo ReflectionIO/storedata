@@ -30,6 +30,8 @@ import io.reflection.app.api.core.shared.call.GetStoresRequest;
 import io.reflection.app.api.core.shared.call.GetStoresResponse;
 import io.reflection.app.api.core.shared.call.GetTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetTopItemsResponse;
+import io.reflection.app.api.core.shared.call.IsAuthorisedRequest;
+import io.reflection.app.api.core.shared.call.IsAuthorisedResponse;
 import io.reflection.app.api.core.shared.call.LinkAccountRequest;
 import io.reflection.app.api.core.shared.call.LinkAccountResponse;
 import io.reflection.app.api.core.shared.call.LoginRequest;
@@ -363,6 +365,28 @@ public final class CoreService extends JsonService {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					LinkAccountResponse outputParameter = new LinkAccountResponse();
+					parseResponse(response.getText(), outputParameter);
+					output.onSuccess(outputParameter);
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+				}
+			});
+		} catch (RequestException e) {
+			output.onFailure(e);
+		}
+	}
+
+	public static final String CoreMethodIsAuthorised = "IsAuthorised";
+
+	public void isAuthorised(IsAuthorisedRequest input, final AsyncCallback<IsAuthorisedResponse> output) {
+		try {
+			sendRequest(CoreMethodIsAuthorised, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					IsAuthorisedResponse outputParameter = new IsAuthorisedResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
 				}

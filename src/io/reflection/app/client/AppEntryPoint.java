@@ -10,8 +10,6 @@ package io.reflection.app.client;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.res.Styles;
 
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -33,13 +31,7 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 	public void onModuleLoad() {
 		super.onModuleLoad();
 
-		History.addValueChangeHandler(new ValueChangeHandler<String>() {
-
-			@Override
-			public void onValueChange(ValueChangeEvent<String> event) {
-				NavigationController.get().addPage(event.getValue());
-			}
-		});
+		History.addValueChangeHandler(NavigationController.get());
 
 		makeContainer();
 
@@ -58,7 +50,7 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 
 	private void makeContainer() {
 		Styles.INSTANCE.reflection().ensureInjected();
-		
+
 		mContainer = new HTMLPanel("");
 		mContainer.getElement().setId("container");
 		RootPanel.get().add(mContainer);

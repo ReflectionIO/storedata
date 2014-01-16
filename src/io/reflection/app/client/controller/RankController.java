@@ -62,6 +62,8 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 		final GetAllTopItemsRequest input = new GetAllTopItemsRequest();
 		input.accessCode = ACCESS_CODE;
 
+		input.session = SessionController.get().getSessionForApiCall();
+
 		input.country = FilterController.get().getCountry();
 
 		input.listType = FilterController.get().getListTypes().get(0);
@@ -170,6 +172,12 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 	 */
 	@Override
 	public void filterParamsChanged(Map<String, ?> currentValues, Map<String, ?> previousValues) {
+		reset();
+	}
+
+	public void reset() {
+		mItemLookup.clear();
+
 		mPager = null;
 		mRows = null;
 

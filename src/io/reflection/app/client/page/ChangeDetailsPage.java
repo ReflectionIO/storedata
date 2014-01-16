@@ -9,18 +9,22 @@ package io.reflection.app.client.page;
 
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.UserController;
-import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.AlertBoxHelper;
+import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.part.AlertBox;
 import io.reflection.app.client.part.AlertBox.AlertBoxType;
 import io.reflection.app.datatypes.shared.User;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -61,6 +65,8 @@ public class ChangeDetailsPage extends Composite implements NavigationEventHandl
 
 	@UiField FormPanel mForm;
 
+	@UiField Button mChangeDetails;
+
 	private User mUser;
 
 	public ChangeDetailsPage() {
@@ -75,11 +81,53 @@ public class ChangeDetailsPage extends Composite implements NavigationEventHandl
 
 	}
 
+	@UiHandler("mChangeDetails")
+	void onChangeDetailsClicked(ClickEvent event) {
+		if (validate()) {
+			mForm.setVisible(false);
+
+			AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Please wait", " - creating user account...", false).setVisible(true);
+
+			SessionController.get().changeUserDetails(mUsername.getText(), mForename.getText(), mSurname.getText(), mCompany.getText());
+		} else {
+			if (mUsernameError != null) {
+				FormHelper.showNote(true, mUsernameGroup, mUsernameNote, mUsernameError);
+			} else {
+				FormHelper.hideNote(mUsernameGroup, mUsernameNote);
+			}
+
+			if (mForenameError != null) {
+				FormHelper.showNote(true, mForenameGroup, mForenameNote, mForenameError);
+			} else {
+				FormHelper.hideNote(mForenameGroup, mForenameNote);
+			}
+
+			if (mSurnameError != null) {
+				FormHelper.showNote(true, mSurnameGroup, mSurnameNote, mSurnameError);
+			} else {
+				FormHelper.hideNote(mSurnameGroup, mSurnameNote);
+			}
+
+			if (mCompanyError != null) {
+				FormHelper.showNote(true, mCompanyGroup, mCompanyNote, mCompanyError);
+			} else {
+				FormHelper.hideNote(mCompanyGroup, mCompanyNote);
+			}
+		}
+	}
+
 	private void resetForm() {
 		mUsername.setText("");
 		mForename.setText("");
 		mSurname.setText("");
 		mCompany.setText("");
+
+		FormHelper.hideNote(mUsernameGroup, mUsernameNote);
+		FormHelper.hideNote(mForenameGroup, mForenameNote);
+		FormHelper.hideNote(mSurnameGroup, mSurnameNote);
+		FormHelper.hideNote(mCompanyGroup, mCompanyNote);
+
+		mAlertBox.setVisible(false);
 	}
 
 	private void fillForm() {
@@ -132,11 +180,20 @@ public class ChangeDetailsPage extends Composite implements NavigationEventHandl
 		}
 	}
 
+	private boolean validate() {
+
+		mUsernameError = "Error";
+		mForenameError = "Error";
+		mSurnameError = "Error";
+		mCompanyError = "Error";
+
+		return true;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.admin.client.controller.NavigationController.Stack)
+	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.admin.client.controller.NavigationController.Stack)
 	 */
 	@Override
 	public void navigationChanged(Stack stack) {

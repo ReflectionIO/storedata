@@ -18,6 +18,7 @@ import io.reflection.app.api.core.shared.call.GetLinkedAccountsRequest;
 import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsRequest;
 import io.reflection.app.api.core.shared.call.GetStoresRequest;
 import io.reflection.app.api.core.shared.call.GetTopItemsRequest;
+import io.reflection.app.api.core.shared.call.IsAuthorisedRequest;
 import io.reflection.app.api.core.shared.call.LinkAccountRequest;
 import io.reflection.app.api.core.shared.call.LoginRequest;
 import io.reflection.app.api.core.shared.call.LogoutRequest;
@@ -93,6 +94,10 @@ public final class CoreJsonServlet extends JsonServlet {
 			LinkAccountRequest input = new LinkAccountRequest();
 			input.fromJson(request);
 			output = service.linkAccount(input).toString();
+		} else if ("IsAuthorised".equals(action)) {
+			IsAuthorisedRequest input = new IsAuthorisedRequest();
+			input.fromJson(request);
+			output = service.isAuthorised(input).toString();
 		}
 		return output;
 	}

@@ -33,6 +33,8 @@ import io.reflection.app.api.core.shared.call.GetStoresRequest;
 import io.reflection.app.api.core.shared.call.GetStoresResponse;
 import io.reflection.app.api.core.shared.call.GetTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetTopItemsResponse;
+import io.reflection.app.api.core.shared.call.IsAuthorisedRequest;
+import io.reflection.app.api.core.shared.call.IsAuthorisedResponse;
 import io.reflection.app.api.core.shared.call.LinkAccountRequest;
 import io.reflection.app.api.core.shared.call.LinkAccountResponse;
 import io.reflection.app.api.core.shared.call.LoginRequest;
@@ -51,6 +53,7 @@ import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.country.CountryServiceProvider;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
@@ -75,6 +78,7 @@ import java.util.logging.Logger;
 
 import com.willshex.gson.json.service.server.ActionHandler;
 import com.willshex.gson.json.service.server.InputValidationException;
+import com.willshex.gson.json.service.server.ServiceException;
 import com.willshex.gson.json.service.shared.StatusType;
 
 public final class Core extends ActionHandler {
@@ -324,118 +328,123 @@ public final class Core extends ActionHandler {
 			}
 
 			boolean skip = false;
+			int maxLimit = !loggedIn ? SESSIONLESS_MAX_ITEMS : (!canSeeFullList ? PERMISSIONLESS_MAX_ITEMS : -1);
 
-			if (!loggedIn) {
-
-			} else if (!canSeeFullList) {
-
+			if (!loggedIn || !canSeeFullList) {
+				if (input.pager.start.longValue() > maxLimit) {
+					skip = true;
+				} else if (input.pager.count.longValue() + input.pager.start.longValue() > maxLimit) {
+					input.pager.count = Long.valueOf(maxLimit - input.pager.start.longValue());
+				}
 			}
 
-			input.country = ValidationHelper.validateCountry(input.country, "input");
+			if (!skip) {
+				input.country = ValidationHelper.validateCountry(input.country, "input");
 
-			if (input.listType == null)
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("String: input.listType"));
+				if (input.listType == null)
+					throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("String: input.listType"));
 
-			if (input.on == null)
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("Date: input.on"));
+				if (input.on == null)
+					throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("Date: input.on"));
 
-			input.store = ValidationHelper.validateStore(input.store, "input");
+				input.store = ValidationHelper.validateStore(input.store, "input");
 
-			if (input.store == null)
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("Store: input.store"));
+				if (input.store == null)
+					throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("Store: input.store"));
 
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(input.on);
-			cal.set(Calendar.HOUR_OF_DAY, 0);
-			cal.set(Calendar.MINUTE, 0);
-			cal.set(Calendar.SECOND, 0);
-			cal.set(Calendar.MILLISECOND, 1);
-			Date end = cal.getTime();
-			cal.add(Calendar.DAY_OF_YEAR, -1);
-			Date start = cal.getTime();
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(input.on);
+				cal.set(Calendar.HOUR_OF_DAY, 0);
+				cal.set(Calendar.MINUTE, 0);
+				cal.set(Calendar.SECOND, 0);
+				cal.set(Calendar.MILLISECOND, 1);
+				Date end = cal.getTime();
+				cal.add(Calendar.DAY_OF_YEAR, -1);
+				Date start = cal.getTime();
 
-			List<String> itemIds = new ArrayList<String>();
-			final Map<String, Rank> lookup = new HashMap<String, Rank>();
+				List<String> itemIds = new ArrayList<String>();
+				final Map<String, Rank> lookup = new HashMap<String, Rank>();
 
-			String freeListType;
-			String code = null;
+				String freeListType;
+				String code = null;
 
-			List<Rank> ranks = RankServiceProvider.provide().getRanks(input.country, input.store, freeListType = getFreeListName(input.store, input.listType),
-					start, end, input.pager);
+				List<Rank> ranks = RankServiceProvider.provide().getRanks(input.country, input.store,
+						freeListType = getFreeListName(input.store, input.listType), start, end, input.pager);
 
-			if (ranks != null && ranks.size() != 0) {
-				for (Rank rank : ranks) {
-					if (!lookup.containsKey(rank.itemId)) {
-						itemIds.add(rank.itemId);
-						lookup.put(rank.itemId, rank);
+				if (ranks != null && ranks.size() != 0) {
+					for (Rank rank : ranks) {
+						if (!lookup.containsKey(rank.itemId)) {
+							itemIds.add(rank.itemId);
+							lookup.put(rank.itemId, rank);
+						}
 					}
-				}
 
-				if (code == null) {
-					code = ranks.get(0).code;
-				}
-
-				output.freeRanks = ranks;
-			}
-
-			if (code == null) {
-				ranks = RankServiceProvider.provide().getRanks(input.country, input.store, getPaidListName(input.store, input.listType), start, end,
-						input.pager);
-			} else {
-				ranks = RankServiceProvider.provide().getGatherCodeRanks(input.country, input.store, getPaidListName(input.store, input.listType), code,
-						input.pager, false);
-			}
-
-			if (ranks != null && ranks.size() != 0) {
-				for (Rank rank : ranks) {
-					if (!lookup.containsKey(rank.itemId)) {
-						itemIds.add(rank.itemId);
-						lookup.put(rank.itemId, rank);
+					if (code == null) {
+						code = ranks.get(0).code;
 					}
+
+					output.freeRanks = ranks;
 				}
 
 				if (code == null) {
-					code = ranks.get(0).code;
-				}
-
-				output.paidRanks = ranks;
-			}
-
-			if (code == null) {
-				ranks = RankServiceProvider.provide().getRanks(input.country, input.store, getGrossingListName(input.store, input.listType), start, end,
-						input.pager);
-			} else {
-				ranks = RankServiceProvider.provide().getGatherCodeRanks(input.country, input.store, getGrossingListName(input.store, input.listType), code,
-						input.pager, false);
-			}
-
-			if (ranks != null && ranks.size() != 0) {
-				for (Rank rank : ranks) {
-					if (!lookup.containsKey(rank.itemId)) {
-						itemIds.add(rank.itemId);
-						lookup.put(rank.itemId, rank);
-					}
-				}
-
-				if (code == null) {
-					code = ranks.get(0).code;
-				}
-
-				output.grossingRanks = ranks;
-			}
-
-			output.items = ItemServiceProvider.provide().getExternalIdItemBatch(itemIds);
-
-			output.pager = input.pager;
-			if (input.pager.totalCount == null) {
-				if (code == null) {
-					input.pager.totalCount = RankServiceProvider.provide().getRanksCount(input.country, input.store, freeListType, start, end);
+					ranks = RankServiceProvider.provide().getRanks(input.country, input.store, getPaidListName(input.store, input.listType), start, end,
+							input.pager);
 				} else {
-					input.pager.totalCount = RankServiceProvider.provide().getGatherCodeRanksCount(input.country, input.store, freeListType, code);
+					ranks = RankServiceProvider.provide().getGatherCodeRanks(input.country, input.store, getPaidListName(input.store, input.listType), code,
+							input.pager, false);
 				}
-			}
 
-			updatePager(output.pager, output.freeRanks, input.pager.totalCount);
+				if (ranks != null && ranks.size() != 0) {
+					for (Rank rank : ranks) {
+						if (!lookup.containsKey(rank.itemId)) {
+							itemIds.add(rank.itemId);
+							lookup.put(rank.itemId, rank);
+						}
+					}
+
+					if (code == null) {
+						code = ranks.get(0).code;
+					}
+
+					output.paidRanks = ranks;
+				}
+
+				if (code == null) {
+					ranks = RankServiceProvider.provide().getRanks(input.country, input.store, getGrossingListName(input.store, input.listType), start, end,
+							input.pager);
+				} else {
+					ranks = RankServiceProvider.provide().getGatherCodeRanks(input.country, input.store, getGrossingListName(input.store, input.listType),
+							code, input.pager, false);
+				}
+
+				if (ranks != null && ranks.size() != 0) {
+					for (Rank rank : ranks) {
+						if (!lookup.containsKey(rank.itemId)) {
+							itemIds.add(rank.itemId);
+							lookup.put(rank.itemId, rank);
+						}
+					}
+
+					if (code == null) {
+						code = ranks.get(0).code;
+					}
+
+					output.grossingRanks = ranks;
+				}
+
+				output.items = ItemServiceProvider.provide().getExternalIdItemBatch(itemIds);
+
+				output.pager = input.pager;
+				if (input.pager.totalCount == null) {
+					if (code == null) {
+						input.pager.totalCount = RankServiceProvider.provide().getRanksCount(input.country, input.store, freeListType, start, end);
+					} else {
+						input.pager.totalCount = RankServiceProvider.provide().getGatherCodeRanksCount(input.country, input.store, freeListType, code);
+					}
+				}
+
+				updatePager(output.pager, output.freeRanks, input.pager.totalCount);
+			}
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -678,6 +687,16 @@ public final class Core extends ActionHandler {
 
 			input.session = ValidationHelper.validateSession(input.session, "input.session");
 
+			if (input.user.id.longValue() != input.session.user.id.longValue()) throw new ServiceException(-1, "User and session user do not match");
+
+			input.user = ValidationHelper.validateRegisteringUser(input.user, "input.user");
+
+			User user = UserServiceProvider.provide().updateUser(input.user);
+
+			if (LOG.isLoggable(GaeLevel.DEBUG)) {
+				LOG.fine(String.format("User with user id [%d] details updated", user.id));
+			}
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -872,6 +891,81 @@ public final class Core extends ActionHandler {
 			output.error = convertToErrorAndLog(LOG, e);
 		}
 		LOG.finer("Exiting linkAccount");
+		return output;
+	}
+
+	public IsAuthorisedResponse isAuthorised(IsAuthorisedRequest input) {
+		LOG.finer("Entering isAuthorised");
+		IsAuthorisedResponse output = new IsAuthorisedResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("LinkAccountResponse: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
+			input.session = ValidationHelper.validateSession(input.session, "input.session");
+
+			// input.roles = ValidationHelper.validateRoles(input.roles, "input.roles");
+
+			// input.permissions = ValidationHelper.validatePermissions(input.permissions, "input.permissions");
+
+			List<Role> roles = UserServiceProvider.provide().getRoles(input.session.user);
+
+			// check the roles
+			if (input.roles != null) {
+				for (Role inputRole : input.roles) {
+					boolean foundRole = false;
+
+					for (Role userRole : roles) {
+						if (userRole.id.longValue() == inputRole.id.longValue()) {
+							foundRole = true;
+							break;
+						}
+					}
+
+					if (!foundRole) {
+						output.authorised = Boolean.FALSE;
+						break;
+					}
+				}
+			}
+
+			if (input.permissions != null && output.authorised != Boolean.FALSE) {
+				List<Permission> permissions = new ArrayList<Permission>();
+
+				for (Role role : roles) {
+					permissions.addAll(RoleServiceProvider.provide().getPermissions(role));
+				}
+
+				permissions.addAll(UserServiceProvider.provide().getPermissions(input.session.user));
+
+				for (Permission inputPermission : input.permissions) {
+					boolean foundPermission = false;
+
+					for (Permission userPermission : permissions) {
+						if (userPermission.id.longValue() == inputPermission.id.longValue()) {
+							foundPermission = true;
+							break;
+						}
+					}
+
+					if (!foundPermission) {
+						output.authorised = Boolean.FALSE;
+						break;
+					}
+				}
+			}
+
+			if (output.authorised != Boolean.FALSE) {
+				output.authorised = Boolean.TRUE;
+			}
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting isAuthorised");
 		return output;
 	}
 

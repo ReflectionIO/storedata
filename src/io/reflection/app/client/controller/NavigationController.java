@@ -25,6 +25,8 @@ import io.reflection.app.client.page.UsersPage;
 import io.reflection.app.client.part.Footer;
 import io.reflection.app.client.part.Header;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -33,7 +35,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author billy1380
  * 
  */
-public class NavigationController {
+public class NavigationController implements ValueChangeHandler<String> {
 	private static NavigationController mOne = null;
 
 	private HTMLPanel mPanel = null;
@@ -370,5 +372,15 @@ public class NavigationController {
 
 	public Stack getStack() {
 		return mStack;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.event.logical.shared.ValueChangeHandler#onValueChange(com.google.gwt.event.logical.shared.ValueChangeEvent)
+	 */
+	@Override
+	public void onValueChange(ValueChangeEvent<String> event) {
+		addPage(event.getValue());
 	}
 }
