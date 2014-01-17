@@ -22,6 +22,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.HasRows;
 import com.google.gwt.view.client.Range;
+import com.google.gwt.user.client.Window;
 
 /**
  * @author billy1380
@@ -58,35 +59,52 @@ public class PageSizePager extends AbstractPager {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		this.increment = increment;
+		
+		if (this.increment == -1) {
+			//go to login
+			mShowMore.addClickHandler(new ClickHandler() {
+				public void onClick(ClickEvent event) {
+					Window.alert("go to login page");
+				}
+			});			
+		} else if (this.increment == -2) {
+			//go to upgrade
+			mShowMore.addClickHandler(new ClickHandler() {
+				public void onClick(ClickEvent event) {
+					Window.alert("go to upgrade page");
+				}
+			});			
+		} else {
 
-		// Show more button.
-		mShowMore.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				if (((Anchor) event.getSource()).isEnabled()) {
-					// Display should be non-null, but we check defensively.
-					HasRows display = getDisplay();
-					if (display != null) {
-						Range range = display.getVisibleRange();
-						int pageSize = Math.min(range.getLength() + increment, display.getRowCount() + (display.isRowCountExact() ? 0 : increment));
-						display.setVisibleRange(range.getStart(), pageSize);
+			// Show more button.
+			mShowMore.addClickHandler(new ClickHandler() {
+				public void onClick(ClickEvent event) {
+					if (((Anchor) event.getSource()).isEnabled()) {
+						// Display should be non-null, but we check defensively.
+						HasRows display = getDisplay();
+						if (display != null) {
+							Range range = display.getVisibleRange();
+							int pageSize = Math.min(range.getLength() + increment, display.getRowCount() + (display.isRowCountExact() ? 0 : increment));
+							display.setVisibleRange(range.getStart(), pageSize);
+						}
 					}
 				}
-			}
-		});
-		mShowLess.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				if (((Anchor) event.getSource()).isEnabled()) {
-					// Display should be non-null, but we check defensively.
-					HasRows display = getDisplay();
-					if (display != null) {
-						Range range = display.getVisibleRange();
-						int pageSize = Math.max(range.getLength() - increment, increment);
-						display.setVisibleRange(range.getStart(), pageSize);
+			});
+			mShowLess.addClickHandler(new ClickHandler() {
+				public void onClick(ClickEvent event) {
+					if (((Anchor) event.getSource()).isEnabled()) {
+						// Display should be non-null, but we check defensively.
+						HasRows display = getDisplay();
+						if (display != null) {
+							Range range = display.getVisibleRange();
+							int pageSize = Math.max(range.getLength() - increment, increment);
+							display.setVisibleRange(range.getStart(), pageSize);
+						}
 					}
 				}
-			}
-		});
-
+			});
+		
+		}
 		// Hide the buttons by default.
 		setDisplay(null);
 	}
@@ -116,6 +134,10 @@ public class PageSizePager extends AbstractPager {
 		boolean hasMore = !display.isRowCountExact() || pageSize < display.getRowCount();
 		mShowLess.setVisible(hasLess);
 		mShowMore.setVisible(hasMore);
+		
+		//set the exception in case of redirect to login or upgrade page 
+		if (this.increment == -1 || this.increment == -2)
+			mShowLess.setVisible(false);
 
 		if (mLoading) {
 			processLoading();

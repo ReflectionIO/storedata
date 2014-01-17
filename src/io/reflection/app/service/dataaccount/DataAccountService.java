@@ -50,7 +50,8 @@ final class DataAccountService implements IDataAccountService {
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection dataAccountConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
-		String getDataAccountQuery = String.format("select * from `dataaccount` where `deleted`='n' and `id`='%d' limit 1", id.longValue());
+		String getDataAccountQuery = String.format("select `sourceid`,`username`, convert(aes_decrypt(`password`,UNHEX('F3229A0B371ED2D9441B830D21A390C3')), CHAR(1000)) as `password`,`properties`,`id`,`deleted`,`created` from `dataaccount` where `deleted`='n' and `id`='%d' limit 1", id.longValue());
+		
 		try {
 			dataAccountConnection.connect();
 			dataAccountConnection.executeQuery(getDataAccountQuery);
@@ -93,9 +94,9 @@ final class DataAccountService implements IDataAccountService {
 		DataAccount addedDataAccount = null;
 
 		final String addDataAccountQuery = String.format(
-				"INSERT INTO `dataaccount` (`sourceid`,`username`,`password`,`properties`) VALUES (%d,'%s','%s','%s')", dataAccount.source.id,
+				"INSERT INTO `dataaccount` (`sourceid`,`username`,`password`,`properties`) VALUES (%d,'%s',AES_ENCRYPT('%s',UNHEX('F3229A0B371ED2D9441B830D21A390C3')),'%s')", dataAccount.source.id,
 				addslashes(dataAccount.username), addslashes(dataAccount.password), addslashes(dataAccount.properties));
-
+		 
 		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
 		try {
@@ -174,8 +175,41 @@ final class DataAccountService implements IDataAccountService {
 	}
 
 	@Override
-	public DataAccount updateDataAccount(DataAccount dataAccount) {
-		throw new UnsupportedOperationException();
+	public DataAccount updateDataAccount(DataAccount dataAccount) throws DataAccessException {
+
+		DataAccount updDataAccount = null;
+		
+		//TODO: the username is unique and it doesn't possible to update it
+		
+		final String updDataAccountQuery = String.format(
+				"UPDATE `dataaccount` SET `password` = AES_ENCRYPT('%s',UNHEX('F3229A0B371ED2D9441B830D21A390C3')), `properties` ='%s' WHERE `id` ='%d'",
+				addslashes(dataAccount.password), addslashes(dataAccount.properties), dataAccount.source.id);
+
+		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
+
+		try {
+			dataAccountConnection.connect();
+			dataAccountConnection.executeQuery(updDataAccountQuery);
+
+			if (dataAccountConnection.getAffectedRowCount() > 0) {
+				updDataAccount = getDataAccount(Long.valueOf(dataAccountConnection.getInsertedId()));
+
+				if (updDataAccount == null) {
+					updDataAccount = dataAccount;
+					updDataAccount.id = Long.valueOf(dataAccountConnection.getInsertedId());
+				}
+			}
+		} finally {
+			if (dataAccountConnection != null) {
+				dataAccountConnection.disconnect();
+			}
+		}
+
+		if (updDataAccount != null) {
+			enqueue(updDataAccount, 30);
+		}
+
+		return updDataAccount;		
 	}
 
 	@Override
