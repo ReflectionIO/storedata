@@ -69,4 +69,13 @@ public interface IDataAccountService extends IService {
 	 */
 	public Long getDataAccountsCount() throws DataAccessException;
 
+	/**
+	 * 
+	 * @param pager
+	 * @param ids
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<DataAccount> getIdsDataAccounts(List<Long> ids, Pager pager) throws DataAccessException;
+
 }

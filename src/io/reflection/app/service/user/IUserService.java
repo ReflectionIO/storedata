@@ -10,6 +10,8 @@ package io.reflection.app.service.user;
 
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.datatypes.shared.DataAccount;
+import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
@@ -139,5 +141,29 @@ public interface IUserService extends IService {
 	 * @return
 	 */
 	public List<Permission> getPermissions(User user) throws DataAccessException;
+
+	/**
+	 * @param user
+	 * @param source
+	 * @param username
+	 * @param password
+	 * @param properties
+	 * @return
+	 */
+	public DataAccount addDataAccount(User user, DataSource datasource, String username, String password, String properties) throws DataAccessException;
+	
+	/**
+	 * @param pager
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<DataAccount> getDataAccounts(User user, Pager pager) throws DataAccessException;
+
+	/**
+	 * 
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public Long getDataAccountsCount(User user) throws DataAccessException;
 
 }

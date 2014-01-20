@@ -39,6 +39,12 @@ final class DataAccountService implements IDataAccountService {
 
 	private static final Logger LOG = Logger.getLogger(DataAccountService.class.getName());
 
+	private static final String KEY_PART_1 = "F54E1A22";
+	private static final String KEY_PART_2 = "395D";
+	private static final String KEY_PART_3 = "42B8";
+	private static final String KEY_PART_4 = "9002";
+	private static final String KEY_PART_5 = "61E14A750D98";
+
 	public String getName() {
 		return ServiceType.ServiceTypeDataAccount.toString();
 	}
@@ -50,8 +56,10 @@ final class DataAccountService implements IDataAccountService {
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection dataAccountConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
-		String getDataAccountQuery = String.format("select `sourceid`,`username`, convert(aes_decrypt(`password`,UNHEX('F3229A0B371ED2D9441B830D21A390C3')), CHAR(1000)) as `password`,`properties`,`id`,`deleted`,`created` from `dataaccount` where `deleted`='n' and `id`='%d' limit 1", id.longValue());
-		
+		String getDataAccountQuery = String
+				.format("SELECT `sourceid`,`username`, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) as `password`,`properties`,`id`,`deleted`,`created` FROM `dataaccount` where `deleted`='n' AND `id`='%d' LIMIT 1",
+						key(), id.longValue());
+
 		try {
 			dataAccountConnection.connect();
 			dataAccountConnection.executeQuery(getDataAccountQuery);
@@ -89,14 +97,18 @@ final class DataAccountService implements IDataAccountService {
 		return dataAccount;
 	}
 
+	private String key() {
+		return KEY_PART_1 + KEY_PART_2 + KEY_PART_3 + KEY_PART_4 + KEY_PART_5;
+	}
+
 	@Override
 	public DataAccount addDataAccount(DataAccount dataAccount) throws DataAccessException {
 		DataAccount addedDataAccount = null;
 
 		final String addDataAccountQuery = String.format(
-				"INSERT INTO `dataaccount` (`sourceid`,`username`,`password`,`properties`) VALUES (%d,'%s',AES_ENCRYPT('%s',UNHEX('F3229A0B371ED2D9441B830D21A390C3')),'%s')", dataAccount.source.id,
-				addslashes(dataAccount.username), addslashes(dataAccount.password), addslashes(dataAccount.properties));
-		 
+				"INSERT INTO `dataaccount` (`sourceid`,`username`,`password`,`properties`) VALUES (%d,'%s',AES_ENCRYPT('%s',UNHEX('%s')),'%s')",
+				dataAccount.source.id, addslashes(dataAccount.username), addslashes(dataAccount.password), key(), addslashes(dataAccount.properties));
+
 		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
 		try {
@@ -178,12 +190,12 @@ final class DataAccountService implements IDataAccountService {
 	public DataAccount updateDataAccount(DataAccount dataAccount) throws DataAccessException {
 
 		DataAccount updDataAccount = null;
-		
-		//TODO: the username is unique and it doesn't possible to update it
-		
+
+		// TODO: the username is unique and it isn't possible to update it
+
 		final String updDataAccountQuery = String.format(
-				"UPDATE `dataaccount` SET `password` = AES_ENCRYPT('%s',UNHEX('F3229A0B371ED2D9441B830D21A390C3')), `properties` ='%s' WHERE `id` ='%d'",
-				addslashes(dataAccount.password), addslashes(dataAccount.properties), dataAccount.source.id);
+				"UPDATE `dataaccount` SET `password` = AES_ENCRYPT('%s',UNHEX('%s')), `properties` ='%s' WHERE `id` ='%d'", addslashes(dataAccount.password),
+				key(), addslashes(dataAccount.properties), dataAccount.source.id);
 
 		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
@@ -209,7 +221,7 @@ final class DataAccountService implements IDataAccountService {
 			enqueue(updDataAccount, 30);
 		}
 
-		return updDataAccount;		
+		return updDataAccount;
 	}
 
 	@Override
@@ -261,7 +273,7 @@ final class DataAccountService implements IDataAccountService {
 	public Long getDataAccountsCount() throws DataAccessException {
 		Long dataAccountsCount = Long.valueOf(0);
 
-		String getDataAccountsCountQuery = String.format("SELECT count(1) as `count` FROM `dataaccount` WHERE `deleted`='n' LIMIT 1");
+		String getDataAccountsCountQuery = String.format("SELECT count(1) AS `count` FROM `dataaccount` WHERE `deleted`='n' LIMIT 1");
 
 		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
@@ -298,6 +310,15 @@ final class DataAccountService implements IDataAccountService {
 		dataAccount.properties = properties;
 
 		return addDataAccount(dataAccount);
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getIdsDataAccounts(java.util.List, io.reflection.app.api.shared.datatypes.Pager)
+	 */
+	@Override
+	public List<DataAccount> getIdsDataAccounts(List<Long> ids, Pager pager) throws DataAccessException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

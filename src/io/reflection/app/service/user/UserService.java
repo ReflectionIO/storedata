@@ -12,6 +12,8 @@ import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.sha1Hash;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.datatypes.shared.DataAccount;
+import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
@@ -20,6 +22,7 @@ import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProv
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
+import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -701,4 +704,54 @@ final class UserService implements IUserService {
 		return permissions;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.user.IUserService#addDataAccount(io.reflection.app.datatypes.shared.User, io.reflection.app.datatypes.shared.DataSource,
+	 * java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public DataAccount addDataAccount(User user, DataSource dataSource, String username, String password, String properties) throws DataAccessException {
+		DataAccount addedDataAccount = DataAccountServiceProvider.provide().addDataAccount(dataSource, username, password, properties);
+
+		if (addedDataAccount != null) {
+			String addDataAccountQuery = String.format("INSERT INTO `userdataaccount` (`dataaccountid`,`userid`) VALUES (%d, %d)",
+					addedDataAccount.id.longValue(), user.id.longValue());
+
+			Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
+
+			try {
+				userConnection.connect();
+				userConnection.executeQuery(addDataAccountQuery);
+
+				if (userConnection.getAffectedRowCount() > 0) {
+					// added the user account successfully
+				}
+			} finally {
+				if (userConnection != null) {
+					userConnection.disconnect();
+				}
+			}
+		}
+
+		return addedDataAccount;
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.user.IUserService#getDataAccounts(io.reflection.app.datatypes.shared.User, io.reflection.app.api.shared.datatypes.Pager)
+	 */
+	@Override
+	public List<DataAccount> getDataAccounts(User user, Pager pager) throws DataAccessException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.user.IUserService#getDataAccountsCount(io.reflection.app.datatypes.shared.User)
+	 */
+	@Override
+	public Long getDataAccountsCount(User user) throws DataAccessException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

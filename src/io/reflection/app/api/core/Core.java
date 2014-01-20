@@ -883,7 +883,7 @@ public final class Core extends ActionHandler {
 
 			DataAccountCollectorFactory.getCollectorForSource(input.source.a3Code).validateProperties(input.properties);
 
-			output.account = DataAccountServiceProvider.provide().addDataAccount(input.source, input.username, input.password, input.properties);
+			output.account = UserServiceProvider.provide().addDataAccount(input.session.user, input.source, input.username, input.password, input.properties);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
