@@ -538,3 +538,13 @@ CREATE TABLE `sale` (
   KEY `index_dataaccountid` (`dataaccountid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
 
+CREATE TABLE `dataaccountfetch` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `linkedaccountid` int(11) DEFAULT NULL,
+  `status` enum('gathered','empty','error','ingested') NOT NULL DEFAULT 'gathered',
+  `data` longtext,
+  `date` datetime NOT NULL,
+  `deleted` enum('y','n') DEFAULT 'n',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
