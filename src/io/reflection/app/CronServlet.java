@@ -8,13 +8,19 @@
 package io.reflection.app;
 
 import static io.reflection.app.objectify.PersistenceService.ofy;
+import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.collectors.CollectorAmazon;
 import io.reflection.app.collectors.CollectorIOS;
+import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
+import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -67,6 +73,7 @@ public class CronServlet extends HttpServlet {
 
 		String store = req.getParameter("store");
 		String deleteSome = req.getParameter("deletesome");
+		String action = req.getParameter("action");
 		int count = 0;
 
 		if (store != null) {
@@ -79,7 +86,7 @@ public class CronServlet extends HttpServlet {
 			} else if ("play".equals(store.toLowerCase())) {
 				// google play store
 			}
-			
+
 			if (LOG.isLoggable(Level.INFO)) {
 				LOG.info(String.format("%d Tasks added successfully", count));
 			}
@@ -93,9 +100,38 @@ public class CronServlet extends HttpServlet {
 				ofy().delete().keys(query.iterable());
 				count = 200;
 			}
-			
+
 			if (LOG.isLoggable(Level.INFO)) {
 				LOG.info(String.format("%d %ss deleted successfully", count, deleteSome));
+			}
+		} else if (action != null) {
+			if ("dataaccountgather".equals(action)) {
+
+				Pager pager = new Pager();
+				pager.count = Long.valueOf(100);
+
+				try {
+
+					// get the total number of accounts there are
+					pager.totalCount = DataAccountServiceProvider.provide().getDataAccountsCount();
+
+					// get data accounts 100 at a time
+					for (pager.start = Long.valueOf(0); pager.start.longValue() < pager.totalCount.longValue(); pager.start = Long.valueOf(pager.start
+							.longValue() + pager.count.longValue())) {
+						List<DataAccount> dataAccounts = DataAccountServiceProvider.provide().getDataAccounts(pager);
+
+						for (DataAccount dataAccount : dataAccounts) {
+
+							// if the account has some erros then don't bother otherwise enqueue a message to do a gather for it
+							if (DataAccountFetchServiceProvider.provide().isFetchable(dataAccount) == Boolean.TRUE) {
+								DataAccountServiceProvider.provide().triggerDataAccountFetch(dataAccount);
+							}
+						}
+
+					}
+				} catch (DataAccessException daEx) {
+					throw new RuntimeException(daEx);
+				}
 			}
 		}
 

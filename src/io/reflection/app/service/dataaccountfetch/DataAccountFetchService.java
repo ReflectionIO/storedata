@@ -149,4 +149,13 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 		throw new UnsupportedOperationException();
 	}
 
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.dataaccountfetch.IDataAccountFetchService#isFetchable(io.reflection.app.datatypes.shared.DataAccount)
+	 */
+	@Override
+	public Boolean isFetchable(DataAccount dataAccount) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

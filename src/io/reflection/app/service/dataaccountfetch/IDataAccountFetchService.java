@@ -9,6 +9,7 @@
 package io.reflection.app.service.dataaccountfetch;
 
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
 
 import com.spacehopperstudios.service.IService;
@@ -33,8 +34,18 @@ public interface IDataAccountFetchService extends IService {
 	public DataAccountFetch updateDataAccountFetch(DataAccountFetch dataAccountFetch) throws DataAccessException;
 
 	/**
+	 * 
 	 * @param dataAccountFetch
+	 * @throws DataAccessException
 	 */
 	public void deleteDataAccountFetch(DataAccountFetch dataAccountFetch) throws DataAccessException;
+
+	/**
+	 * Checks whether there have been any errors in the last few (?) fetches of an account
+	 * @param dataAccount
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public Boolean isFetchable(DataAccount dataAccount) throws DataAccessException;
 
 }

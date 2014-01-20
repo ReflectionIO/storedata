@@ -312,13 +312,25 @@ final class DataAccountService implements IDataAccountService {
 		return addDataAccount(dataAccount);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getIdsDataAccounts(java.util.List, io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
 	public List<DataAccount> getIdsDataAccounts(List<Long> ids, Pager pager) throws DataAccessException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.dataaccount.IDataAccountService#triggerDataAccountFetch(io.reflection.app.datatypes.shared.DataAccount)
+	 */
+	@Override
+	public void triggerDataAccountFetch(DataAccount dataAccount) {
+		// TODO: enqueue messages for the number of days since the last success or 30 days
 	}
 
 }
