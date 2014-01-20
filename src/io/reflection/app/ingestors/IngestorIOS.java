@@ -29,6 +29,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.channels.Channels;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -111,9 +112,10 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 	 * @param stored
 	 * @param grouped
 	 * @param combined
-	 * @throws DataAccessException 
+	 * @throws DataAccessException
 	 */
-	private void extractItemRanks(List<FeedFetch> stored, final Map<Date, Map<Integer, FeedFetch>> grouped, Map<Date, String> combined) throws DataAccessException {
+	private void extractItemRanks(List<FeedFetch> stored, final Map<Date, Map<Integer, FeedFetch>> grouped, Map<Date, String> combined)
+			throws DataAccessException {
 
 		if (LOG.isLoggable(GaeLevel.DEBUG)) {
 			LOG.log(GaeLevel.DEBUG, "Extracting item ranks");
@@ -213,25 +215,47 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 
 			List<Item> foundItems = ItemServiceProvider.provide().getExternalIdItemBatch(itemIds);
 			List<Item> newItems = new ArrayList<Item>();
+			List<Item> updateItems = new ArrayList<Item>();
 
+			Calendar cal = Calendar.getInstance();
 			boolean found = false;
+			boolean update = false;
+
+			cal.setTime(new Date());
+			cal.add(Calendar.DAY_OF_YEAR, -30);
+
 			for (Item addItem : addItems) {
 				found = false;
+				update = false;
 
 				for (Item foundItem : foundItems) {
 					if (foundItem.externalId.equals(addItem.externalId)) {
-						found = true;
-						break;
+						if (foundItem.added.before(cal.getTime())) {
+							addItem.id = foundItem.id;
+							update = true;
+							break;
+						} else {
+							found = true;
+							break;
+						}
 					}
 				}
 
 				if (!found) {
 					newItems.add(addItem);
 				}
+
+				if (update) {
+					updateItems.add(addItem);
+				}
 			}
 
 			if (newItems.size() > 0) {
 				ItemServiceProvider.provide().addItemsBatch(newItems);
+			}
+
+			for (Item updateItem : updateItems) {
+				ItemServiceProvider.provide().updateItem(updateItem);
 			}
 
 			if (LOG.isLoggable(GaeLevel.DEBUG)) {
