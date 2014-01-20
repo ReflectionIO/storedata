@@ -86,9 +86,9 @@ public class ChangeDetailsPage extends Composite implements NavigationEventHandl
 		mCompany.getElement().setAttribute("placeholder", "Company");
 
 		EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this);
-		
+
 		EventController.get().addHandlerToSource(ChangeUserDetailsEventHandler.TYPE, SessionController.get(), this);
-		
+
 		mUsername.addKeyPressHandler(this);
 		mForename.addKeyPressHandler(this);
 		mSurname.addKeyPressHandler(this);
@@ -212,10 +212,12 @@ public class ChangeDetailsPage extends Composite implements NavigationEventHandl
 	 */
 	@Override
 	public void navigationChanged(Stack stack) {
-		changedUser();
+		if (stack != null && "users".equals(stack.getPage()) && "changedetails".equals(stack.getAction())) {
+			changedUser();
 
-		mForename.setFocus(true);
-		mForename.setCursorPos(mForename.getText().length());
+			mForename.setFocus(true);
+			mForename.setCursorPos(mForename.getText().length());
+		}
 	}
 
 	/*
