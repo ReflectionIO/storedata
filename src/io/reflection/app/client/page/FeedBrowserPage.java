@@ -88,13 +88,13 @@ public class FeedBrowserPage extends Composite implements FilterEventHandler {
 		mPager.setDisplay(mFeeds);
 
 		EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this);
-		
+
 		FilterController.get().start();
 		FilterController.get().setStore(mAppStore.getValue(mAppStore.getSelectedIndex()));
 		FilterController.get().setListType(mListType.getValue(mListType.getSelectedIndex()));
 		FilterController.get().setCountry(mCountry.getValue(mCountry.getSelectedIndex()));
 		FilterController.get().commit();
-		
+
 		refreshBreadcrumbs();
 
 	}
@@ -183,7 +183,9 @@ public class FeedBrowserPage extends Composite implements FilterEventHandler {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamChanged(java.lang.String, java.lang.Object, java.lang.Object)
 	 */
 	@Override
@@ -191,7 +193,9 @@ public class FeedBrowserPage extends Composite implements FilterEventHandler {
 		refreshBreadcrumbs();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamsChanged(java.util.Map, java.util.Map)
 	 */
 	@Override

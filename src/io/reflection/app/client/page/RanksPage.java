@@ -195,7 +195,7 @@ public class RanksPage extends Composite implements RanksEventHandler, FilterEve
 		permissions.add(p);
 
 		SessionController.get().fetchAuthorisation(null, permissions);
-		
+
 		mRedirect.setTargetHistoryToken("upgrade");
 	}
 

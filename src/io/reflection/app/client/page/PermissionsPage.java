@@ -43,7 +43,7 @@ public class PermissionsPage extends Composite {
 		PermissionController.get().addDataDisplay(mPermissions);
 		mPager.setDisplay(mPermissions);
 	}
-	
+
 	private void addPermissionColumns() {
 		TextColumn<Permission> code = new TextColumn<Permission>() {
 

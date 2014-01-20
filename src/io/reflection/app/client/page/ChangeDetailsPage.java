@@ -7,6 +7,9 @@
 //
 package io.reflection.app.client.page;
 
+import io.reflection.app.api.core.shared.call.ChangeUserDetailsRequest;
+import io.reflection.app.api.core.shared.call.ChangeUserDetailsResponse;
+import io.reflection.app.api.core.shared.call.event.ChangeUserDetailsEventHandler;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
@@ -21,6 +24,9 @@ import io.reflection.app.datatypes.shared.User;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -30,12 +36,14 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.gson.json.service.shared.StatusType;
+import com.willshex.gson.json.service.shared.Error;
 
 /**
  * @author billy1380
  * 
  */
-public class ChangeDetailsPage extends Composite implements NavigationEventHandler {
+public class ChangeDetailsPage extends Composite implements NavigationEventHandler, KeyPressHandler, ChangeUserDetailsEventHandler {
 
 	private static ChangeDetailsPageUiBinder uiBinder = GWT.create(ChangeDetailsPageUiBinder.class);
 
@@ -78,6 +86,13 @@ public class ChangeDetailsPage extends Composite implements NavigationEventHandl
 		mCompany.getElement().setAttribute("placeholder", "Company");
 
 		EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this);
+		
+		EventController.get().addHandlerToSource(ChangeUserDetailsEventHandler.TYPE, SessionController.get(), this);
+		
+		mUsername.addKeyPressHandler(this);
+		mForename.addKeyPressHandler(this);
+		mSurname.addKeyPressHandler(this);
+		mCompany.addKeyPressHandler(this);
 
 	}
 
@@ -86,7 +101,7 @@ public class ChangeDetailsPage extends Composite implements NavigationEventHandl
 		if (validate()) {
 			mForm.setVisible(false);
 
-			AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Please wait", " - creating user account...", false).setVisible(true);
+			AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Please wait", " - changing user details...", false).setVisible(true);
 
 			SessionController.get().changeUserDetails(mUsername.getText(), mForename.getText(), mSurname.getText(), mCompany.getText());
 		} else {
@@ -193,11 +208,67 @@ public class ChangeDetailsPage extends Composite implements NavigationEventHandl
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.admin.client.controller.NavigationController.Stack)
+	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged (io.reflection.app.admin.client.controller.NavigationController.Stack)
 	 */
 	@Override
 	public void navigationChanged(Stack stack) {
 		changedUser();
+
+		mForename.setFocus(true);
+		mForename.setCursorPos(mForename.getText().length());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.event.dom.client.KeyPressHandler#onKeyPress(com.google .gwt.event.dom.client.KeyPressEvent)
+	 */
+	@Override
+	public void onKeyPress(KeyPressEvent event) {
+		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
+			mChangeDetails.click();
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.core.shared.call.event.ChangeUserDetailsEventHandler#changeUserDetailsSuccess(io.reflection.app.api.core.shared.call.
+	 * ChangeUserDetailsRequest, io.reflection.app.api.core.shared.call.ChangeUserDetailsResponse)
+	 */
+	@Override
+	public void changeUserDetailsSuccess(ChangeUserDetailsRequest input, ChangeUserDetailsResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess) {
+			AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.SuccessAlertBoxType, false, "Details changed", " - user details successfully changed", true)
+					.setVisible(true);
+		} else {
+			AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.DangerAlertBoxType, false, "An error occured:",
+					"(" + output.error.code + ") " + output.error.message, true).setVisible(true);
+		}
+
+		mForm.setVisible(true);
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.core.shared.call.event.ChangeUserDetailsEventHandler#changeUserDetailsFailure(io.reflection.app.api.core.shared.call.
+	 * ChangeUserDetailsRequest, java.lang.Throwable)
+	 */
+	@Override
+	public void changeUserDetailsFailure(ChangeUserDetailsRequest input, Throwable caught) {
+		if (!mForm.isVisible()) {
+			Error error = FormHelper.convertToError(caught);
+
+			AlertBoxHelper
+					.configureAlert(mAlertBox, AlertBoxType.DangerAlertBoxType, false, "An error occured:", "(" + error.code + ") " + error.message, true)
+					.setVisible(true);
+
+			mForm.setVisible(true);
+		}
+
 	}
 
 }

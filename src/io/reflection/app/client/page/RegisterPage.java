@@ -223,6 +223,8 @@ public class RegisterPage extends Composite implements UserRegisteredEventHandle
 		super.onAttach();
 
 		resetForm();
+
+		mForename.setFocus(true);
 	}
 
 	private void resetForm() {

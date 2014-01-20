@@ -21,7 +21,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
-
 public class SearchPage extends Composite implements NavigationEventHandler {
 
 	private static SearchPageUiBinder uiBinder = GWT.create(SearchPageUiBinder.class);

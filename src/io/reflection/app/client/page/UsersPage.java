@@ -76,7 +76,7 @@ public class UsersPage extends Composite {
 				if (selected != null) {
 					mMakeAdmin.setTargetHistoryToken("users/assignrole/" + selected.id.toString() + "/admin");
 				}
-				
+
 				if (selected != null) {
 					mChangeDetails.setTargetHistoryToken("users/changedetails/" + selected.id.toString());
 				}
@@ -122,7 +122,7 @@ public class UsersPage extends Composite {
 			@Override
 			public SafeHtml getValue(User object) {
 				String s = SafeHtmlUtils.htmlEscape(object.username);
-				
+
 				return SafeHtmlUtils.fromTrustedString("<a href=\"mailto:" + s + "\">" + s + "</a>");
 			}
 		};

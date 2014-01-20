@@ -21,11 +21,15 @@ import io.reflection.app.datatypes.shared.User;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -40,7 +44,7 @@ import com.willshex.gson.json.service.shared.Error;
  * @author billy1380
  * 
  */
-public class LoginPage extends Composite implements SessionEventHandler {
+public class LoginPage extends Composite implements SessionEventHandler, KeyPressHandler {
 
 	private static LoginPageUiBinder uiBinder = GWT.create(LoginPageUiBinder.class);
 
@@ -57,7 +61,9 @@ public class LoginPage extends Composite implements SessionEventHandler {
 	@UiField HTMLPanel mPasswordNote;
 
 	@UiField CheckBox mRememberMe;
-
+	
+	@UiField Button mLogin;
+	
 	@UiField InlineHyperlink mRegister;
 	@UiField InlineHyperlink mForgotPassword;
 
@@ -73,6 +79,9 @@ public class LoginPage extends Composite implements SessionEventHandler {
 		mPassword.getElement().setAttribute("placeholder", "Password");
 
 		EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this);
+		
+		mUsername.addKeyPressHandler(this);
+		mPassword.addKeyPressHandler(this);
 	}
 
 	@UiHandler("mLogin")
@@ -147,6 +156,8 @@ public class LoginPage extends Composite implements SessionEventHandler {
 		if (s != null && s.hasAction()) {
 			mUsername.setText(s.getAction());
 		}
+		
+		mUsername.setFocus(true);
 	}
 
 	/*
@@ -207,5 +218,16 @@ public class LoginPage extends Composite implements SessionEventHandler {
 		FormHelper.hideNote(mPasswordGroup, mPasswordNote);
 
 		mAlertBox.setVisible(false);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.google.gwt.event.dom.client.KeyPressHandler#onKeyPress(com.google.gwt.event.dom.client.KeyPressEvent)
+	 */
+	@Override
+	public void onKeyPress(KeyPressEvent event) {
+		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER){
+			mLogin.click();
+		}
+		
 	}
 }

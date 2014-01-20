@@ -84,9 +84,9 @@ public class LinkedAccountsPage extends Composite implements NavigationEventHand
 
 		LinkedAccountController.get().fetchLinkedAccounts();
 
-//		CellTree.Resources res = GWT.create(CellTree.BasicResources.class);
-//		mAccounts = new CellTree(LinkedAccountController.get(), null, res);
-//		mAccounts.setAnimationEnabled(true);
+		// CellTree.Resources res = GWT.create(CellTree.BasicResources.class);
+		// mAccounts = new CellTree(LinkedAccountController.get(), null, res);
+		// mAccounts.setAnimationEnabled(true);
 	}
 
 	/**
