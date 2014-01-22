@@ -13,6 +13,8 @@ package io.reflection.app.api;
  */
 public enum ApiError {
 
+	JsonParseException(100000, "Invalid Json, could not be parsed"),
+
 	AccessCodeNull(100001, "Invalid value null for String: %s.accessCode"),
 
 	TokenNoMatch(100002, "Invalid value does not match scheme for String: %s"),
@@ -74,7 +76,7 @@ public enum ApiError {
 	DataAccountNull(100042, "Invalid value null for DataAccount: %s"),
 	DataAccountNotFound(100043, "Data account not found DataAccount: %s"),
 	DataAccountNoLookup(100044, "Invalid data account lookup, no id provided for DataAccount: %s"),
-	
+
 	GetCountriesNeedsStoreOrQuery(100101, "GetCountries call should either have a store or a query. To get all countries use * for the query: %s"),
 
 	GetStoresNeedsCountryOrQuery(100201, "GetStores call should either have a country or a query. To get all stores use * for the query: %s"),
@@ -83,11 +85,13 @@ public enum ApiError {
 	LookupApplicationNeedsInternalOrExternalId(100301,
 			"LookupApplication should have at least one internal or external application id, you can also add multiple ids of each type: %s"),
 
-	InvalidCredentials(200000, "Invalid credentials, either the username (e-mail) or password are incorrect"),
+	InvalidCredentials(100400, "Invalid credentials, either the username (e-mail) or password are incorrect"),
 
-	MissingPermissions(300000, "User does not have required permissions"),
-	MissingRoles(300001, "User does not have required role"),
-	MissingRolesAndOrPermissions(300002, "User does not have required roles and/or permissions"), ;
+	MissingPermissions(100500, "User does not have required permissions"),
+	MissingRoles(100501, "User does not have required role"),
+	MissingRolesAndOrPermissions(100502, "User does not have required roles and/or permissions"),
+
+	;
 
 	private int code;
 	private String message;

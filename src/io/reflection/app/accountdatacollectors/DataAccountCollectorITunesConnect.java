@@ -8,6 +8,7 @@
 //
 package io.reflection.app.accountdatacollectors;
 
+import io.reflection.app.api.ApiError;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
@@ -72,13 +73,13 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 
 			JsonElement element = jsonProperties.get("vendors");
 
-			// TODO: throw a better exception
-			if (element == null) throw new InputValidationException(-1, "");
+			if (element == null)
+				throw new InputValidationException(ITunesValidationError.NullVendorsArray.getCode(), ITunesValidationError.NullVendorsArray.getMessage());
 
 			JsonArray vendors = element.getAsJsonArray();
 
-			// TODO: throw a better exception
-			if (vendors == null) throw new InputValidationException(-1, "");
+			if (vendors == null)
+				throw new InputValidationException(ITunesValidationError.VendorsNotArray.getCode(), ITunesValidationError.VendorsNotArray.getMessage());
 
 			for (int i = 0; i < vendors.size(); i++) {
 				element = vendors.get(i);
@@ -86,12 +87,13 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 				if (element != null) {
 					String vendor = element.getAsString();
 
-					// TODO: throw a better exception
-					if (vendor == null) throw new InputValidationException(-1, "");
+					if (vendor == null)
+						throw new InputValidationException(ITunesValidationError.NullVendorId.getCode(), ITunesValidationError.NullVendorId.getMessage());
 
 					// e.g. 80012345
-					// TODO: throw a better exception
-					if (!vendor.matches("8[0-9]{7}")) throw new InputValidationException(-1, "");
+					if (!vendor.matches("8[0-9]{7}"))
+						throw new InputValidationException(ITunesValidationError.BadVendorIdFormat.getCode(),
+								ITunesValidationError.BadVendorIdFormat.getMessage());
 				}
 			}
 
@@ -100,8 +102,7 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 				LOG.log(GaeLevel.WARNING, String.format("Error parsing properties [%s] properties", properties), pe);
 			}
 
-			// TODO: throw a better exception
-			throw new InputValidationException(-1, "");
+			throw new InputValidationException(ApiError.JsonParseException.getCode(), ApiError.JsonParseException.getMessage());
 		}
 	}
 
@@ -112,9 +113,9 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 	 */
 	@Override
 	public void collect(DataAccount dataAccount, Date date) throws DataAccessException {
-		
+
 		if (true) return;
-		
+
 		String dateParameter = (new SimpleDateFormat("yyyyMMdd")).format(date);
 
 		if (LOG.isLoggable(GaeLevel.INFO)) {
