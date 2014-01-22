@@ -15,4 +15,9 @@
         <description>Removes some items</description>
         <schedule>every 12 hours from 05:10 to 17:10</schedule>
     </cron>
+    <cron>
+        <url>/cron?process=accounts</url>
+        <description>Gather data account (linked account data)</description>
+        <schedule>every day 00:01</schedule>
+    </cron>
 </cronentries> 

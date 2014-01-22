@@ -8,6 +8,8 @@
 //
 package io.reflection.app.accountdatacollectors;
 
+import io.reflection.app.accountdataingestors.DataAccountIngestor;
+import io.reflection.app.accountdataingestors.DataAccountIngestorFactory;
 import io.reflection.app.api.ApiError;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.datatypes.shared.DataAccount;
@@ -114,8 +116,6 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 	@Override
 	public void collect(DataAccount dataAccount, Date date) throws DataAccessException {
 
-		if (true) return;
-
 		String dateParameter = (new SimpleDateFormat("yyyyMMdd")).format(date);
 
 		if (LOG.isLoggable(GaeLevel.INFO)) {
@@ -157,10 +157,20 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 				String error = null;
 				if ((error = connection.getHeaderField("ERRORMSG")) != null) {
 					if (LOG.isLoggable(GaeLevel.WARNING)) {
+						if (data != null) {
+							// remove the password for the purposes of logging
+							data.replace(dataAccount.password, "**********");
+						}
+
 						LOG.warning(String.format("itunes connect return error message [%s] while trying to obtain data with request [%s] ", error, data));
 					}
 
-					dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeError;
+					if (error.startsWith("There are no reports")) {
+						dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeEmpty;
+					} else {
+						dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeError;
+					}
+
 					dataAccountFetch.data = error;
 				} else if (connection.getHeaderField("filename") != null) {
 					String cloudFileName = getFile(dataAccount, connection);
@@ -172,10 +182,19 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 						dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeEmpty;
 					}
 				} else {
+					// this should not occur (and is more likely to be an error than an empty result)
+
 					dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeEmpty;
 				}
 
-				DataAccountFetchServiceProvider.provide().addDataAccountFetch(dataAccountFetch);
+				dataAccountFetch = DataAccountFetchServiceProvider.provide().addDataAccountFetch(dataAccountFetch);
+
+				if (dataAccountFetch != null && dataAccountFetch.status == DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered) {
+					// once the data is collected
+					DataAccountIngestor ingestor = DataAccountIngestorFactory.getIngestorForSource(dataAccount.source.a3Code);
+
+					ingestor.enqueue(dataAccountFetch);
+				}
 			}
 
 		} catch (IOException e) {

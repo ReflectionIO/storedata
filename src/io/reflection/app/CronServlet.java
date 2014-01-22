@@ -73,7 +73,7 @@ public class CronServlet extends HttpServlet {
 
 		String store = req.getParameter("store");
 		String deleteSome = req.getParameter("deletesome");
-		String action = req.getParameter("action");
+		String process = req.getParameter("process");
 		int count = 0;
 
 		if (store != null) {
@@ -104,8 +104,8 @@ public class CronServlet extends HttpServlet {
 			if (LOG.isLoggable(Level.INFO)) {
 				LOG.info(String.format("%d %ss deleted successfully", count, deleteSome));
 			}
-		} else if (action != null) {
-			if ("dataaccountgather".equals(action)) {
+		} else if (process != null) {
+			if ("accounts".equals(process)) {
 
 				Pager pager = new Pager();
 				pager.count = Long.valueOf(100);
@@ -121,8 +121,8 @@ public class CronServlet extends HttpServlet {
 						List<DataAccount> dataAccounts = DataAccountServiceProvider.provide().getDataAccounts(pager);
 
 						for (DataAccount dataAccount : dataAccounts) {
-
 							// if the account has some erros then don't bother otherwise enqueue a message to do a gather for it
+
 							if (DataAccountFetchServiceProvider.provide().isFetchable(dataAccount) == Boolean.TRUE) {
 								DataAccountServiceProvider.provide().triggerDataAccountFetch(dataAccount);
 							}

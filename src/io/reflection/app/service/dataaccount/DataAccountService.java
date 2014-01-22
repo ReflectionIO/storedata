@@ -57,7 +57,7 @@ final class DataAccountService implements IDataAccountService {
 		Connection dataAccountConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
 		String getDataAccountQuery = String
-				.format("SELECT `sourceid`,`username`, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) as `password`,`properties`,`id`,`deleted`,`created` FROM `dataaccount` where `deleted`='n' AND `id`='%d' LIMIT 1",
+				.format("SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` FROM `dataaccount` WHERE `deleted`='n' AND `id`='%d' LIMIT 1",
 						key(), id.longValue());
 
 		try {
@@ -91,7 +91,8 @@ final class DataAccountService implements IDataAccountService {
 		dataAccount.source.id = connection.getCurrentRowLong("sourceid");
 
 		dataAccount.username = stripslashes(connection.getCurrentRowString("username"));
-		dataAccount.password = stripslashes(connection.getCurrentRowString("password"));
+		dataAccount.password = stripslashes(connection.getCurrentRowString("clearpassword")); // column name is password but all select queries should return
+																								// decrypted password as clearpassword
 		dataAccount.properties = stripslashes(connection.getCurrentRowString("properties"));
 
 		return dataAccount;
@@ -194,7 +195,7 @@ final class DataAccountService implements IDataAccountService {
 		// TODO: the username is unique and it isn't possible to update it
 
 		final String updDataAccountQuery = String.format(
-				"UPDATE `dataaccount` SET `password` = AES_ENCRYPT('%s',UNHEX('%s')), `properties` ='%s' WHERE `id` ='%d'", addslashes(dataAccount.password),
+				"UPDATE `dataaccount` SET `password` = AES_ENCRYPT('%s',UNHEX('%s')), `properties`='%s' WHERE `id`='%d'", addslashes(dataAccount.password),
 				key(), addslashes(dataAccount.properties), dataAccount.source.id);
 
 		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
@@ -239,8 +240,10 @@ final class DataAccountService implements IDataAccountService {
 
 		List<DataAccount> dataAccounts = new ArrayList<DataAccount>();
 
-		String getDataAccountsQuery = String.format("SELECT * FROM `dataaccount` WHERE `deleted`='n' ORDER BY `%s` %s LIMIT %d,%d", pager.sortBy,
-				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
+		String getDataAccountsQuery = String
+				.format("SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` FROM `dataaccount` WHERE `deleted`='n' ORDER BY `%s` %s LIMIT %d,%d",
+						key(), pager.sortBy == null ? "id" : pager.sortBy,
+						pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
 
 		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
@@ -319,8 +322,44 @@ final class DataAccountService implements IDataAccountService {
 	 */
 	@Override
 	public List<DataAccount> getIdsDataAccounts(List<Long> ids, Pager pager) throws DataAccessException {
-		// TODO Auto-generated method stub
-		return null;
+		List<DataAccount> dataAccounts = new ArrayList<DataAccount>();
+
+		StringBuffer joinedIds = new StringBuffer();
+
+		for (Long id : ids) {
+			if (joinedIds.length() != 0) {
+				joinedIds.append(",");
+			}
+
+			joinedIds.append(id.toString());
+		}
+
+		String getIdsDataAccountsQuery = String
+				.format("SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` FROM `dataaccount` WHERE `id` in (%s)  ORDER BY `%s` %s LIMIT %d,%d",
+						key(), joinedIds, pager.sortBy, pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start,
+						pager.count);
+
+		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
+
+		try {
+			dataAccountConnection.connect();
+			dataAccountConnection.executeQuery(getIdsDataAccountsQuery);
+
+			while (dataAccountConnection.fetchNextRow()) {
+				DataAccount dataAccount = toDataAccount(dataAccountConnection);
+
+				if (dataAccount != null) {
+					dataAccounts.add(dataAccount);
+				}
+			}
+
+		} finally {
+			if (dataAccountConnection != null) {
+				dataAccountConnection.disconnect();
+			}
+		}
+
+		return dataAccounts;
 	}
 
 	/*
@@ -330,7 +369,8 @@ final class DataAccountService implements IDataAccountService {
 	 */
 	@Override
 	public void triggerDataAccountFetch(DataAccount dataAccount) {
-		// TODO: enqueue messages for the number of days since the last success or 30 days
+		// TODO: enqueue messages for the number of days since the last success or 30 days - for now we just enqueue the last day
+		enqueue(dataAccount, 1);
 	}
 
 }

@@ -68,6 +68,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
         <servlet-name>Data Account Gather</servlet-name>
         <servlet-class>io.reflection.app.DataAccountGatherServlet</servlet-class>
     </servlet>
+    
+    <servlet>
+        <servlet-name>Data Account Ingest</servlet-name>
+        <servlet-class>io.reflection.app.DataAccountIngestServlet</servlet-class>
+    </servlet>
 
 	<servlet-mapping>
 		<servlet-name>Cron Tasks</servlet-name>
@@ -126,6 +131,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
     <servlet-mapping>
         <servlet-name>Data Account Gather</servlet-name>
         <url-pattern>/dataaccountgather</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>Data Account Ingest</servlet-name>
+        <url-pattern>/dataaccountingest</url-pattern>
     </servlet-mapping>
 
 	<servlet>

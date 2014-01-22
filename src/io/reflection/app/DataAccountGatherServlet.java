@@ -81,12 +81,23 @@ public class DataAccountGatherServlet extends ContextAwareServlet {
 
 					DataSource dataSource = DataSourceServiceProvider.provide().getDataSource(account.source.id);
 
-					DataAccountCollector collector = DataAccountCollectorFactory.getCollectorForSource(dataSource.a3Code);
+					if (dataSource != null) {
+						account.source = dataSource;
 
-					if (collector != null) {
-						collector.collect(account, date);
+						DataAccountCollector collector = DataAccountCollectorFactory.getCollectorForSource(dataSource.a3Code);
+
+						if (collector != null) {
+							collector.collect(account, date);
+
+						} else {
+							if (LOG.isLoggable(GaeLevel.WARNING)) {
+								LOG.log(GaeLevel.WARNING, "Could not find a collector for [%s]", dataSource.a3Code);
+							}
+						}
 					} else {
-						LOG.log(GaeLevel.WARNING, "Could not find a collector for %s", dataSource.a3Code);
+						if (LOG.isLoggable(GaeLevel.WARNING)) {
+							LOG.log(GaeLevel.WARNING, "Could not find a data source for id [%d]", account.source.id.longValue());
+						}
 					}
 
 				}
