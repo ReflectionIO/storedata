@@ -130,6 +130,26 @@ final class SaleService implements ISaleService {
 	}
 
 	@Override
+	public boolean addMultipleSale(String multipleInsertQuery) throws DataAccessException {
+
+		boolean flagOK = false;
+		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
+		try {
+			saleConnection.connect();
+			saleConnection.executeQuery(multipleInsertQuery);
+			if (saleConnection.getAffectedRowCount() > 0) {
+				flagOK = true;
+			}
+		} finally {
+			if (saleConnection != null) {
+				saleConnection.disconnect();
+			}
+		}
+
+		return flagOK;
+	}
+	
+	@Override
 	public Sale updateSale(Sale sale) throws DataAccessException {
 		throw new UnsupportedOperationException();
 	}

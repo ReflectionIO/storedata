@@ -54,4 +54,11 @@ public interface ISaleService extends IService {
 	 */
 	public Long getDataAccountItemsCount() throws DataAccessException;
 
+	/**
+	 * @param multipleInsertQuery
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public boolean addMultipleSale(String multipleInsertQuery) throws DataAccessException;
+
 }
