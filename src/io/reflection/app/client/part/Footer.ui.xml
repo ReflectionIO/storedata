@@ -1,15 +1,127 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+    <ui:with field='res' type='io.reflection.app.client.res.Images' />
     <ui:style>
-        /* Add CSS here. See the GWT docs on UI Binder for more details */
+    @external footer;
+    .logo {
+    	font-size: 18px;
+    	line-height: 18px;
+    	vertical-align: middle;
+    	padding-bottom: 20px;
+    	display: block;
+    }
+    
+    .footer {
+    	padding-top: 40px;
+    	background-color: #272833;
+    	color: white;
+    }
+    
+    .centerText {
+    	text-align: center;
+    }
+    
+    .footer a {
+    	color: white;
+    }
+    
+    .footer a:HOVER {
+    	color: #9780e4;
+    }
+    
+    .social {
+    	padding: 0;
+    	margin: 10px 0 50px 0;
+    }
+    
+    .social li {
+    	display: inline;
+    	font-size: 25px;
+    }
+    
+    .navbar {
+    	list-style: none;
+    	padding: 0;
+    	margin-bottom: 50px;
+    }
+    
+    .navbar li {
+    	display: inline;
+    	font-size: 12px;
+    	margin: 0 10px;
+    }
+
+    .navbar li a {
+    	color: #999999;
+    }
+    
+    .navbar li a:HOVER {
+    	color: white;
+    }
+    
+    .copyright {
+		font-size: 10px;
+    }
     </ui:style>
     <g:HTMLPanel>
-        <hr />
         <footer class="footer">
-            <div class="container">
-                copyright &copy; <a href="http://www.reflection.io" target="_blank">Reflection.io Ltd.</a> 2013
+            <div class="container {style.centerText}">
+
+                <a class="{style.logo}" href="#home">
+                    <g:Image resource="{res.logo}" />&nbsp;&nbsp;Reflection
+                </a>
+
+                <ul class="{style.navbar}">
+                    <li>
+                        <a href="#ranks">Leaderboard</a>
+                    </li>
+                    <li>
+                        <a href="#home">Product</a>
+                    </li>
+                    <li>
+                        <a href="#upgrade">Pricing</a>
+                    </li>
+                    <li>
+                        <a href="#about">About Us</a>
+                    </li>
+                    <li>
+                        <a href="#careers">Careers</a>
+                    </li>
+                    <li>
+                        <a href="#blog">Blog</a>
+                    </li>
+                    <li>
+                        <a href="#forum">Forum</a>
+                    </li>
+                    <li>
+                        <a href="#terms">Terms and Conditions</a>
+                    </li>
+                    <li>
+                        <a href="#privacy">Privacy</a>
+                    </li>
+                    <li>
+                        <a href="#cookies">Cookies</a>
+                    </li>
+                </ul>
+
+                <div class="{style.copyright}">
+                    &copy; Copyright
+                    <span ui:field="mYear">2013</span>
+                    <a href="http://www.reflection.io" target="_blank">Reflection.io</a>, All Rights Reserved
+                </div>
+                <ul class="{style.social}">
+                    <li>
+                        <a href="https://www.facebook.com/reflection.io" target="_blank">
+                            <b class="icon-facebook-squared"></b>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="http://www.linkedin.com/company/reflection-io-ltd" target="_blank">
+                            <b class="icon-linkedin-squared"></b>
+                        </a>
+                    </li>
+                </ul>
             </div>
         </footer>
-        <br />
     </g:HTMLPanel>
 </ui:UiBinder> 
