@@ -309,12 +309,9 @@ final class ItemService implements IItemService {
 	public Long getQueryItemsCount(String query) throws DataAccessException {
 
 		Long itemCount = Long.valueOf(0);
-
 		String getDataAccountsCountQuery = String
-				.format("SELECT count(1) as `itemscount` FROM `item` WHERE `name`=%s", query);
-
+				.format("SELECT count(1) as `itemscount` FROM `item` WHERE `externalid` LIKE '%%%1$s%%' OR `name` LIKE '%%%1$s%%' OR `creatorname` LIKE  '%%%1$s%%'", query);
 		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
-
 		try {
 			itemConnection.connect();
 			itemConnection.executeQuery(getDataAccountsCountQuery);
@@ -327,7 +324,6 @@ final class ItemService implements IItemService {
 				itemConnection.disconnect();
 			}
 		}
-
 		return itemCount;
 	}
 	
@@ -335,13 +331,11 @@ final class ItemService implements IItemService {
 	public List<Item> getQueryItems(String query, Pager pager) throws DataAccessException {
 		
 		List<Item> items = new ArrayList<Item>();
-
-		String getDataItemQuery = String.format("SELECT * FROM `item` WHERE `name`=%s ORDER BY %s %s LIMIT %d, %d", 
+		String getDataItemQuery = String.format("SELECT * FROM `item` WHERE `externalid` LIKE '%%%1$s%%' OR `name` LIKE '%%%1$s%%' OR `creator` LIKE  '%%%1$s%%' ORDER BY %s %s LIMIT %d, %d", 
 				query, pager.sortBy == null ? "id" : pager.sortBy, pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
-				pager.start == null ? 0 : pager.start.longValue(), pager.count == null ? 25 : pager.count.longValue());
+				pager.start == null ? Pager.DEFAULT_START.longValue() : pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue() : pager.count.longValue());
 
 		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
-
 		try {
 			itemConnection.connect();
 			itemConnection.executeQuery(getDataItemQuery);
@@ -358,7 +352,6 @@ final class ItemService implements IItemService {
 				itemConnection.disconnect();
 			}
 		}
-
 		return items;
-	}
+	}	
 }

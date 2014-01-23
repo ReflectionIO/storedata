@@ -130,15 +130,4 @@ public class SaleImport {
 		return queryHeader + queryValues.substring(0, queryValues.length() - 1) + ";";
 	}
 
-	//Tempoary main, to test the new methods
-	public static void main(String[] args) throws Exception {
-		SaleImport t = new SaleImport();
-				
-		 List<List<String>> listValueCSV = t.gZippedCSV2List("C:/Users/Altimario/Downloads/S_D_85024027_20140114.txt.gz", "\\t");
-		 List<Sale>listSale = t.fromCVS2ListSale(listValueCSV); 
-		 String multipleInsertQuery = t.composeQueryInsertSale(listSale);
-		 System.out.println(multipleInsertQuery);
-		 
-	}
-
 }
