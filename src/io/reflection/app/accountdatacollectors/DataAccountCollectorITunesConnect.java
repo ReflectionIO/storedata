@@ -48,8 +48,6 @@ import com.willshex.gson.json.shared.Convert;
  */
 public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 
-	public static final String ACCOUNT_DATA_BUCKET_KEY = "account.data.bucket";
-
 	private static final Logger LOG = Logger.getLogger(DataAccountCollectorITunesConnect.class.getName());
 
 	private static final String USERNAME_KEY = "USERNAME";

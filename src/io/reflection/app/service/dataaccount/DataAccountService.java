@@ -335,7 +335,7 @@ final class DataAccountService implements IDataAccountService {
 		}
 
 		String getIdsDataAccountsQuery = String
-				.format("SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` FROM `dataaccount` WHERE `id` in (%s)  ORDER BY `%s` %s LIMIT %d,%d",
+				.format("SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` FROM `dataaccount` WHERE `id` in (%s) AND `deleted`='n' ORDER BY `%s` %s LIMIT %d,%d",
 						key(), joinedIds, pager.sortBy == null ? "id" : pager.sortBy,
 						pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
 						pager.start == null ? 0 : pager.start.longValue(), pager.count == null ? 25 : pager.count.longValue());

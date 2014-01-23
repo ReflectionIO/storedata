@@ -76,6 +76,12 @@ public interface IItemService extends IService {
 	 * @return
 	 * @throws DataAccessException
 	 */
-	public Long getQueryItemsCount(String query) throws DataAccessException;	
+	public Long getQueryItemsCount(String query) throws DataAccessException;
+
+	/**
+	 * @param itemIds
+	 * @return
+	 */
+	public List<Item> getInternalIdItemBatch(List<String> itemIds) throws DataAccessException;
 
 }

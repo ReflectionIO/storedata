@@ -15,6 +15,7 @@ import io.reflection.app.datatypes.shared.DataAccountFetch;
 import com.spacehopperstudios.service.IService;
 
 public interface IDataAccountFetchService extends IService {
+
 	/**
 	 * @param id
 	 * @return
@@ -42,6 +43,7 @@ public interface IDataAccountFetchService extends IService {
 
 	/**
 	 * Checks whether there have been any errors in the last few (?) fetches of an account
+	 * 
 	 * @param dataAccount
 	 * @return
 	 * @throws DataAccessException

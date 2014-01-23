@@ -158,7 +158,7 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 	public Boolean isFetchable(DataAccount dataAccount) {
 
 		// for now we are assuming that all accounts are fetchable, if that changes we can add some selection criteria here that limit the number of accounts
-		// that we gather e.g. if the last n-gathers on the account have failed. We will probably need a mechanism to access the failure messages - if the 
+		// that we gather e.g. if the last n-gathers on the account have failed. We will probably need a mechanism to access the failure messages - if the
 		// messages are password related then the user might have updated their password: it can get really messy here
 		return Boolean.TRUE;
 	}

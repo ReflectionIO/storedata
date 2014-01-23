@@ -13,14 +13,12 @@ import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
-import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
-import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -303,15 +301,16 @@ final class ItemService implements IItemService {
 
 		return addedItemCount;
 	}
-	
 
 	@Override
 	public Long getQueryItemsCount(String query) throws DataAccessException {
 
 		Long itemCount = Long.valueOf(0);
 		String getDataAccountsCountQuery = String
-				.format("SELECT count(1) as `itemscount` FROM `item` WHERE `externalid` LIKE '%%%1$s%%' OR `name` LIKE '%%%1$s%%' OR `creatorname` LIKE  '%%%1$s%%'", query);
+				.format("SELECT count(1) AS `itemscount` FROM `item` WHERE (`externalid` LIKE '%%%1$s%%' OR `name` LIKE '%%%1$s%%' OR `creatorname` LIKE  '%%%1$s%%') AND `deleted`='n'",
+						query);
 		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
+
 		try {
 			itemConnection.connect();
 			itemConnection.executeQuery(getDataAccountsCountQuery);
@@ -324,18 +323,23 @@ final class ItemService implements IItemService {
 				itemConnection.disconnect();
 			}
 		}
+
 		return itemCount;
 	}
-	
+
 	@Override
 	public List<Item> getQueryItems(String query, Pager pager) throws DataAccessException {
-		
+
 		List<Item> items = new ArrayList<Item>();
-		String getDataItemQuery = String.format("SELECT * FROM `item` WHERE `externalid` LIKE '%%%1$s%%' OR `name` LIKE '%%%1$s%%' OR `creator` LIKE  '%%%1$s%%' ORDER BY %s %s LIMIT %d, %d", 
-				query, pager.sortBy == null ? "id" : pager.sortBy, pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
-				pager.start == null ? Pager.DEFAULT_START.longValue() : pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue() : pager.count.longValue());
+		String getDataItemQuery = String
+				.format("SELECT * FROM `item` WHERE (`externalid` LIKE '%%%1$s%%' OR `name` LIKE '%%%1$s%%' OR `creator` LIKE '%%%1$s%%') AND `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d",
+						query, pager.sortBy == null ? "id" : pager.sortBy,
+						pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
+						pager.start == null ? Pager.DEFAULT_START.longValue() : pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue()
+								: pager.count.longValue());
 
 		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
+
 		try {
 			itemConnection.connect();
 			itemConnection.executeQuery(getDataItemQuery);
@@ -352,6 +356,48 @@ final class ItemService implements IItemService {
 				itemConnection.disconnect();
 			}
 		}
+
 		return items;
-	}	
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.item.IItemService#getInternalIdItemBatch(java.util.List)
+	 */
+	@Override
+	public List<Item> getInternalIdItemBatch(List<String> itemIds) throws DataAccessException {
+		List<Item> items = new ArrayList<Item>();
+
+		String commaDelimitedItemIds = null;
+
+		if (itemIds != null && itemIds.size() > 0) {
+			commaDelimitedItemIds = StringUtils.join(itemIds, "','");
+		}
+
+		if (commaDelimitedItemIds != null && commaDelimitedItemIds.length() != 0) {
+			String getExternalIdItemBatchQuery = String.format("SELECT * FROM `item` WHERE `internalid` IN ('%s') AND `deleted`='n'", commaDelimitedItemIds);
+
+			Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
+
+			try {
+				itemConnection.connect();
+				itemConnection.executeQuery(getExternalIdItemBatchQuery);
+
+				while (itemConnection.fetchNextRow()) {
+					Item item = toItem(itemConnection);
+
+					if (item != null) {
+						items.add(item);
+					}
+				}
+			} finally {
+				if (itemConnection != null) {
+					itemConnection.disconnect();
+				}
+			}
+		}
+
+		return items;
+	}
 }

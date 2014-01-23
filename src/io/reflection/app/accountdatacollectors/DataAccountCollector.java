@@ -21,6 +21,8 @@ import com.willshex.gson.json.service.server.ServiceException;
  */
 public interface DataAccountCollector {
 
+	public static final String ACCOUNT_DATA_BUCKET_KEY = "account.data.bucket";
+
 	/**
 	 * @param dataAccount
 	 * @param date
