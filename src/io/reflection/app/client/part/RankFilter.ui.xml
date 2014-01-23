@@ -13,7 +13,7 @@
                     <div class="input-group">
                         <d:DateBox styleName="form-control" ui:field="mDate" />
                         <span class="input-group-addon">
-                            <i class="glyphicon glyphicon-calendar"></i>
+                            <i class="icon-calendar"></i>
                         </span>
                     </div>
                 </g:HTMLPanel>
