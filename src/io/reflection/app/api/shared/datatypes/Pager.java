@@ -14,6 +14,11 @@ import com.google.gson.JsonPrimitive;
 import com.willshex.gson.json.shared.Jsonable;
 
 public class Pager extends Jsonable {
+
+	public static final String DEFAULT_SORT_BY = "id";
+	public static final Long DEFAULT_START = Long.valueOf(0);
+	public static final Long DEFAULT_COUNT = Long.valueOf(25);
+
 	public Long start;
 	public Long count;
 	public String sortBy;
