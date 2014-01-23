@@ -99,7 +99,7 @@ final class SaleService implements ISaleService {
 		// TODO: sort out nullable values
 
 		final String addSaleQuery = String
-				.format("INSERT INTO `sale` (`accountid`,`itemid`,`country`,`sku`,`developer`,`title`,`version`,`typeidentifier`,`units`,`proceeds`,`currency`,`begin`,`end`,`customercurrency`,`customerprice`,`promocode`,`parentidentifier`,`subscription`,`period`,`category`) VALUES (%d,%d,'%s','%s','%s','%s','%s','%s','%s',%d,'%s',FROM_UNIXTIME(%d),FROM_UNIXTIME(%d),'%s',%d,'%s','%s','%s','%s','%s');",
+				.format("INSERT INTO `sale` (`accountid`,`itemid`,`country`,`sku`,`developer`,`title`,`version`,`typeidentifier`,`units`,`proceeds`,`currency`,`begin`,`end`,`customercurrency`,`customerprice`,`promocode`,`parentidentifier`,`subscription`,`period`,`category`) VALUES (%d,%d,'%s','%s','%s','%s','%s','%s','%s',%d,'%s',FROM_UNIXTIME(%d),FROM_UNIXTIME(%d),'%s',%d,'%s','%s','%s','%s','%s')",
 						sale.account.id.longValue(), sale.item.id.longValue(), addslashes(sale.country), addslashes(sale.sku), addslashes(sale.developer),
 						addslashes(sale.title), addslashes(sale.version), addslashes(sale.typeIdentifier), addslashes(sale.units), sale.proceeds.intValue(),
 						addslashes(sale.currency), sale.begin.getTime() / 1000, sale.end.getTime() / 1000, addslashes(sale.customerCurrency),
@@ -130,26 +130,6 @@ final class SaleService implements ISaleService {
 	}
 
 	@Override
-	public boolean addMultipleSale(String multipleInsertQuery) throws DataAccessException {
-
-		boolean flagOK = false;
-		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
-		try {
-			saleConnection.connect();
-			saleConnection.executeQuery(multipleInsertQuery);
-			if (saleConnection.getAffectedRowCount() > 0) {
-				flagOK = true;
-			}
-		} finally {
-			if (saleConnection != null) {
-				saleConnection.disconnect();
-			}
-		}
-
-		return flagOK;
-	}
-	
-	@Override
 	public Sale updateSale(Sale sale) throws DataAccessException {
 		throw new UnsupportedOperationException();
 	}
@@ -166,7 +146,7 @@ final class SaleService implements ISaleService {
 	 * io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
-	public List<Item> getDataAccountItems(DataAccount linkedAccount, Pager pager) throws DataAccessException {
+	public List<Item> getDataAccountItems(DataAccount dataAccount, Pager pager) throws DataAccessException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -182,4 +162,49 @@ final class SaleService implements ISaleService {
 		return null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.sale.ISaleService#addSalesBatch(java.util.List)
+	 */
+	@Override
+	public Long addSalesBatch(List<Sale> sales) throws DataAccessException {
+		Long addedSalesBatchCount = Long.valueOf(0);
+
+		// TODO: sort out nullable values
+
+		StringBuffer addSalesBatchQuery = new StringBuffer();
+
+		addSalesBatchQuery
+				.append("INSERT INTO `sale` (`accountid`,`itemid`,`country`,`sku`,`developer`,`title`,`version`,`typeidentifier`,`units`,`proceeds`,`currency`,`begin`,`end`,`customercurrency`,`customerprice`,`promocode`,`parentidentifier`,`subscription`,`period`,`category`) VALUES");
+
+		for (Sale sale : sales) {
+			if (addSalesBatchQuery.charAt(addSalesBatchQuery.length() - 1) != 'S') {
+				addSalesBatchQuery.append(",");
+			}
+
+			addSalesBatchQuery.append(String.format(
+					"(%d,%d,'%s','%s','%s','%s','%s','%s','%s',%d,'%s',FROM_UNIXTIME(%d),FROM_UNIXTIME(%d),'%s',%d,'%s','%s','%s','%s','%s')",
+					sale.account.id.longValue(), sale.item.id.longValue(), addslashes(sale.country), addslashes(sale.sku), addslashes(sale.developer),
+					addslashes(sale.title), addslashes(sale.version), addslashes(sale.typeIdentifier), addslashes(sale.units), sale.proceeds.intValue(),
+					addslashes(sale.currency), sale.begin.getTime() / 1000, sale.end.getTime() / 1000, addslashes(sale.customerCurrency),
+					sale.customerPrice.intValue(), addslashes(sale.promoCode), addslashes(sale.parentIdentifier), addslashes(sale.subscription),
+					addslashes(sale.period), addslashes(sale.category)));
+		}
+
+		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
+
+		try {
+			saleConnection.connect();
+			saleConnection.executeQuery(addSalesBatchQuery.toString());
+
+			addedSalesBatchCount = Long.valueOf(saleConnection.getAffectedRowCount());
+		} finally {
+			if (saleConnection != null) {
+				saleConnection.disconnect();
+			}
+		}
+
+		return addedSalesBatchCount;
+	}
 }

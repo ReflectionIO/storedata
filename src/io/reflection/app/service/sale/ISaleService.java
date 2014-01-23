@@ -8,13 +8,13 @@
 //
 package io.reflection.app.service.sale;
 
-import java.util.List;
-
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Sale;
+
+import java.util.List;
 
 import com.spacehopperstudios.service.IService;
 
@@ -47,7 +47,7 @@ public interface ISaleService extends IService {
 	 * @param pager
 	 * @return
 	 */
-	public List<Item> getDataAccountItems(DataAccount linkedAccount, Pager pager) throws DataAccessException;
+	public List<Item> getDataAccountItems(DataAccount dataAccount, Pager pager) throws DataAccessException;
 
 	/**
 	 * @return
@@ -55,10 +55,10 @@ public interface ISaleService extends IService {
 	public Long getDataAccountItemsCount() throws DataAccessException;
 
 	/**
-	 * @param multipleInsertQuery
+	 * @param sales
 	 * @return
 	 * @throws DataAccessException
 	 */
-	public boolean addMultipleSale(String multipleInsertQuery) throws DataAccessException;
+	public Long addSalesBatch(List<Sale> sales) throws DataAccessException;
 
 }
