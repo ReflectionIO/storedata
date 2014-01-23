@@ -68,7 +68,7 @@ public class RankFilter extends Composite {
 
 				dates.clear();
 				Date curr = start;
-				while (curr.getTime() < end.getTime()) {
+				while (curr.getTime() <= end.getTime()) {
 					if (curr.getTime() > now.getTime() || curr.getTime() < 1356998401000l) {
 						dates.add(curr);
 					}
