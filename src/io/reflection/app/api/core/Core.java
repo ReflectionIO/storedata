@@ -55,7 +55,6 @@ import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.country.CountryServiceProvider;
-import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
@@ -807,11 +806,11 @@ public final class Core extends ActionHandler {
 				input.pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
 			}
 
-			output.linkedAccounts = DataAccountServiceProvider.provide().getDataAccounts(input.pager);
+			output.linkedAccounts = UserServiceProvider.provide().getDataAccounts(input.session.user, input.pager);
 
 			output.pager = input.pager;
-			updatePager(output.pager, output.linkedAccounts, input.pager.totalCount == null ? DataAccountServiceProvider.provide().getDataAccountsCount()
-					: null);
+			updatePager(output.pager, output.linkedAccounts,
+					input.pager.totalCount == null ? UserServiceProvider.provide().getDataAccountsCount(input.session.user) : null);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {

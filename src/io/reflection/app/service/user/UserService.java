@@ -12,6 +12,7 @@ import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.sha1Hash;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.Permission;
@@ -737,21 +738,71 @@ final class UserService implements IUserService {
 		return addedDataAccount;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#getDataAccounts(io.reflection.app.datatypes.shared.User, io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
 	public List<DataAccount> getDataAccounts(User user, Pager pager) throws DataAccessException {
-		// TODO Auto-generated method stub
-		return null;
+
+		List<Long> accountIds = new ArrayList<Long>();
+
+		String getDataAccountIdsQuery = String.format("SELECT `accountid` FROM `userdataaccount` WHERE `userid`=%d ORDER BY %s %s LIMIT %d, %d", user.id
+				.longValue(), pager.sortBy == null ? "id" : pager.sortBy, pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
+				pager.start == null ? 0 : pager.start.longValue(), pager.count == null ? 25 : pager.count.longValue());
+
+		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
+
+		try {
+			userConnection.connect();
+			userConnection.executeQuery(getDataAccountIdsQuery);
+
+			while (userConnection.fetchNextRow()) {
+				Long accountId = userConnection.getCurrentRowLong("accountid");
+
+				if (accountId != null) {
+					accountIds.add(accountId);
+				}
+			}
+		} finally {
+			if (userConnection != null) {
+				userConnection.disconnect();
+			}
+		}
+
+		List<DataAccount> dataAccounts = DataAccountServiceProvider.provide().getIdsDataAccounts(accountIds, pager);
+
+		return dataAccounts;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#getDataAccountsCount(io.reflection.app.datatypes.shared.User)
 	 */
 	@Override
 	public Long getDataAccountsCount(User user) throws DataAccessException {
-		// TODO Auto-generated method stub
-		return null;
+		Long dataAccountsCount = Long.valueOf(0);
+
+		String getDataAccountsCountQuery = String
+				.format("SELECT count(1) as `dataaccountscount` FROM `userdataaccount` WHERE `userid`=%d", user.id.longValue());
+
+		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
+
+		try {
+			userConnection.connect();
+			userConnection.executeQuery(getDataAccountsCountQuery);
+
+			if (userConnection.fetchNextRow()) {
+				dataAccountsCount = userConnection.getCurrentRowLong("dataaccountscount");
+			}
+		} finally {
+			if (userConnection != null) {
+				userConnection.disconnect();
+			}
+		}
+
+		return dataAccountsCount;
 	}
 }
