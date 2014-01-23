@@ -11,6 +11,7 @@ package io.reflection.app.service.item;
 import java.util.List;
 
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.Item;
 
 import com.spacehopperstudios.service.IService;
@@ -62,5 +63,19 @@ public interface IItemService extends IService {
 	 * @return
 	 */
 	public Long addItemsBatch(List<Item> items) throws DataAccessException;
+
+	/**
+	 * @param query
+	 * @param pager
+	 * @return
+	 */
+	public List<Item> getQueryItems(String query, Pager pager) throws DataAccessException;
+
+	/**
+	 * @param query
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public Long getQueryItemsCount(String query) throws DataAccessException;	
 
 }

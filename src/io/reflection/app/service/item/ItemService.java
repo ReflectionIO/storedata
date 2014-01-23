@@ -11,12 +11,16 @@ package io.reflection.app.service.item;
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
+import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -299,5 +303,62 @@ final class ItemService implements IItemService {
 
 		return addedItemCount;
 	}
+	
 
+	@Override
+	public Long getQueryItemsCount(String query) throws DataAccessException {
+
+		Long itemCount = Long.valueOf(0);
+
+		String getDataAccountsCountQuery = String
+				.format("SELECT count(1) as `itemscount` FROM `item` WHERE `name`=%s", query);
+
+		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
+
+		try {
+			itemConnection.connect();
+			itemConnection.executeQuery(getDataAccountsCountQuery);
+
+			if (itemConnection.fetchNextRow()) {
+				itemCount = itemConnection.getCurrentRowLong("itemscount");
+			}
+		} finally {
+			if (itemConnection != null) {
+				itemConnection.disconnect();
+			}
+		}
+
+		return itemCount;
+	}
+	
+	@Override
+	public List<Item> getQueryItems(String query, Pager pager) throws DataAccessException {
+		
+		List<Item> items = new ArrayList<Item>();
+
+		String getDataItemQuery = String.format("SELECT * FROM `item` WHERE `name`=%s ORDER BY %s %s LIMIT %d, %d", 
+				query, pager.sortBy == null ? "id" : pager.sortBy, pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
+				pager.start == null ? 0 : pager.start.longValue(), pager.count == null ? 25 : pager.count.longValue());
+
+		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
+
+		try {
+			itemConnection.connect();
+			itemConnection.executeQuery(getDataItemQuery);
+
+			while (itemConnection.fetchNextRow()) {
+				Item item = toItem(itemConnection);
+
+				if (item != null) {
+					items.add(item);
+				}
+			}
+		} finally {
+			if (itemConnection != null) {
+				itemConnection.disconnect();
+			}
+		}
+
+		return items;
+	}
 }
