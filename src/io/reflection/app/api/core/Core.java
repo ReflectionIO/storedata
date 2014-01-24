@@ -846,7 +846,8 @@ public final class Core extends ActionHandler {
 			output.items = SaleServiceProvider.provide().getDataAccountItems(input.linkedAccount, input.pager);
 
 			output.pager = input.pager;
-			updatePager(output.pager, output.items, input.pager.totalCount == null ? SaleServiceProvider.provide().getDataAccountItemsCount() : null);
+			updatePager(output.pager, output.items, input.pager.totalCount == null ? SaleServiceProvider.provide()
+					.getDataAccountItemsCount(input.linkedAccount) : null);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
