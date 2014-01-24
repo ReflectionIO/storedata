@@ -47,6 +47,28 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 
 	private static final Logger LOG = Logger.getLogger(DataAccountIngestorITunesConnect.class.getName());
 
+	@SuppressWarnings("unused") private static final int PROVIDER_INDEX = 0; // seems to always be apple
+	@SuppressWarnings("unused") private static final int PROVIDER_COUNTRY_INDEX = 1; // seems to always be US
+	private static final int SKU_INDEX = 2;
+	private static final int DEVELOPER_INDEX = 3;
+	private static final int TITLE_INDEX = 4;
+	private static final int VERSION_INDEX = 5;
+	private static final int PRODUCT_TYPE_IDENTIFIER_INDEX = 6;
+	private static final int UNITS_INDEX = 7;
+	private static final int DEVELOPER_PROCEEDS_INDEX = 8;
+	private static final int BEGIN_DATE_INDEX = 9;
+	private static final int END_DATE_INDEX = 10;
+	private static final int CUSTOMER_CURRENCY_INDEX = 12;
+	private static final int COUNTRY_CODE_INDEX = 13;
+	private static final int CURRENCY_OF_PROCEEDS_INDEX = 14;
+	private static final int APPLE_IDENTIFIER_INDEX = 15;
+	private static final int CUSTOMER_PRICE_INDEX = 16;
+	private static final int PROMO_CODE_INDEX = 17;
+	private static final int PARENT_IDENTIFIER_INDEX = 18;
+	private static final int SUBSCRIPTION_INDEX = 19;
+	private static final int PERIOD_INDEX = 20;
+	private static final int CATEGORY_INDEX = 21;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -144,41 +166,44 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 
 			sale = new Sale();
 
-			SimpleDateFormat sdf = new SimpleDateFormat("mm/dd/yyyy", Locale.ENGLISH);
+			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
 
 			sale.item = new Item();
-			sale.item.externalId = split[14];
+			sale.item.internalId = split[APPLE_IDENTIFIER_INDEX];
 
 			sale.account = fetch.linkedAccount;
 
-			sale.country = split[1];
-			sale.sku = split[2];
-			sale.developer = split[3];
-			sale.title = split[4];
-			sale.version = split[5];
-			sale.typeIdentifier = split[6];
-			sale.units = split[7];
-			// sale.proceeds=Integer.parseInt(split[8)]; //is it an integer?
-			sale.proceeds = 1; // TODO temporary
+			// sale.proceeds split[PROVIDER_INDEX];
+			// split[PROVIDER_COUNTRY_INDEX];
+			sale.sku = split[SKU_INDEX];
+			sale.developer = split[DEVELOPER_INDEX];
+			sale.title = split[TITLE_INDEX];
+			sale.version = split[VERSION_INDEX];
+			sale.typeIdentifier = split[PRODUCT_TYPE_IDENTIFIER_INDEX];
+			sale.units = Integer.parseInt(split[UNITS_INDEX]);
+			sale.proceeds = Integer.valueOf((int) (100.0f * Float.parseFloat(split[DEVELOPER_PROCEEDS_INDEX])));
 
 			try {
-				sale.begin = sdf.parse(split[9]);
-				sale.end = sdf.parse(split[10]);
+				sale.begin = sdf.parse(split[BEGIN_DATE_INDEX]);
+				sale.end = sdf.parse(split[END_DATE_INDEX]);
 			} catch (ParseException e) {
 				LOG.log(GaeLevel.SEVERE, String.format("Exception throw while obtaining file for data account [%d]", fetch.id.longValue()), e);
 			}
 
-			sale.currency = split[11];
-			// sale.xxx=split[12]; //TODO temporary, it's the country code but the data are not present in the db
-			sale.customerCurrency = split[13]; // TODO temporary, I'm not sure
+			sale.customerCurrency = split[CUSTOMER_CURRENCY_INDEX];
+			sale.country = split[COUNTRY_CODE_INDEX];
+			sale.currency = split[CURRENCY_OF_PROCEEDS_INDEX];
 
-			// sale.customerPrice=Integer.parseInt(split[15)]; //is the number integer?
-			sale.customerPrice = 1; // TODO temporary
-			sale.promoCode = split[15];
-			sale.parentIdentifier = split[17];
-			sale.subscription = split[18];
-			sale.period = split[19];
-			sale.category = split[20];
+			sale.item = new Item();
+			sale.item.internalId = split[APPLE_IDENTIFIER_INDEX];
+
+			sale.customerPrice = Integer.valueOf((int) (100.0f * Float.parseFloat(split[CUSTOMER_PRICE_INDEX])));
+			sale.promoCode = split[PROMO_CODE_INDEX];
+			sale.parentIdentifier = split[PARENT_IDENTIFIER_INDEX];
+			sale.subscription = split[SUBSCRIPTION_INDEX];
+			sale.period = split[PERIOD_INDEX];
+			sale.category = split[CATEGORY_INDEX];
+
 		}
 
 		return sale;

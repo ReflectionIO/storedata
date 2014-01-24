@@ -24,7 +24,7 @@ public class Sale extends DataType {
 	public String title;
 	public String version;
 	public String typeIdentifier;
-	public String units;
+	public Integer units;
 	public Integer proceeds;
 	public String currency;
 	public Date begin;
@@ -139,7 +139,7 @@ public class Sale extends DataType {
 		if (jsonObject.has("units")) {
 			JsonElement jsonUnits = jsonObject.get("units");
 			if (jsonUnits != null) {
-				units = jsonUnits.getAsString();
+				units = Integer.valueOf(jsonUnits.getAsInt());
 			}
 		}
 		if (jsonObject.has("proceeds")) {

@@ -79,7 +79,7 @@ final class SaleService implements ISaleService {
 		sale.title = stripslashes(connection.getCurrentRowString("title"));
 		sale.version = stripslashes(connection.getCurrentRowString("version"));
 		sale.typeIdentifier = stripslashes(connection.getCurrentRowString("typeidentifier"));
-		sale.units = stripslashes(connection.getCurrentRowString("units"));
+		sale.units = connection.getCurrentRowInteger("units");
 		sale.proceeds = connection.getCurrentRowInteger("proceeds");
 		sale.currency = stripslashes(connection.getCurrentRowString("currency"));
 		sale.begin = connection.getCurrentRowDateTime("begin");
@@ -102,9 +102,9 @@ final class SaleService implements ISaleService {
 		// TODO: sort out nullable values
 
 		final String addSaleQuery = String
-				.format("INSERT INTO `sale` (`accountid`,`itemid`,`country`,`sku`,`developer`,`title`,`version`,`typeidentifier`,`units`,`proceeds`,`currency`,`begin`,`end`,`customercurrency`,`customerprice`,`promocode`,`parentidentifier`,`subscription`,`period`,`category`) VALUES (%d,%d,'%s','%s','%s','%s','%s','%s','%s',%d,'%s',FROM_UNIXTIME(%d),FROM_UNIXTIME(%d),'%s',%d,'%s','%s','%s','%s','%s')",
+				.format("INSERT INTO `sale` (`accountid`,`itemid`,`country`,`sku`,`developer`,`title`,`version`,`typeidentifier`,`units`,`proceeds`,`currency`,`begin`,`end`,`customercurrency`,`customerprice`,`promocode`,`parentidentifier`,`subscription`,`period`,`category`) VALUES (%d,%d,'%s','%s','%s','%s','%s','%s',%d,%d,'%s',FROM_UNIXTIME(%d),FROM_UNIXTIME(%d),'%s',%d,'%s','%s','%s','%s','%s')",
 						sale.account.id.longValue(), sale.item.id.longValue(), addslashes(sale.country), addslashes(sale.sku), addslashes(sale.developer),
-						addslashes(sale.title), addslashes(sale.version), addslashes(sale.typeIdentifier), addslashes(sale.units), sale.proceeds.intValue(),
+						addslashes(sale.title), addslashes(sale.version), addslashes(sale.typeIdentifier), sale.units.intValue(), sale.proceeds.intValue(),
 						addslashes(sale.currency), sale.begin.getTime() / 1000, sale.end.getTime() / 1000, addslashes(sale.customerCurrency),
 						sale.customerPrice.intValue(), addslashes(sale.promoCode), addslashes(sale.parentIdentifier), addslashes(sale.subscription),
 						addslashes(sale.period), addslashes(sale.category));
@@ -152,7 +152,7 @@ final class SaleService implements ISaleService {
 	public List<Item> getDataAccountItems(DataAccount dataAccount, Pager pager) throws DataAccessException {
 
 		List<String> sales = new ArrayList<String>();
-		
+
 		String getSaleQuery = String.format("SELECT `itemid` FROM `sale` WHERE `dataaccountid`=%d AND `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d",
 				dataAccount.id.longValue(), pager.sortBy == null ? "id" : pager.sortBy,
 				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start == null ? Pager.DEFAULT_START.longValue()
@@ -232,9 +232,9 @@ final class SaleService implements ISaleService {
 			}
 
 			addSalesBatchQuery.append(String.format(
-					"(%d,%d,'%s','%s','%s','%s','%s','%s','%s',%d,'%s',FROM_UNIXTIME(%d),FROM_UNIXTIME(%d),'%s',%d,'%s','%s','%s','%s','%s')",
+					"(%d,%d,'%s','%s','%s','%s','%s','%s',%d,%d,'%s',FROM_UNIXTIME(%d),FROM_UNIXTIME(%d),'%s',%d,'%s','%s','%s','%s','%s')",
 					sale.account.id.longValue(), sale.item.id.longValue(), addslashes(sale.country), addslashes(sale.sku), addslashes(sale.developer),
-					addslashes(sale.title), addslashes(sale.version), addslashes(sale.typeIdentifier), addslashes(sale.units), sale.proceeds.intValue(),
+					addslashes(sale.title), addslashes(sale.version), addslashes(sale.typeIdentifier), sale.units.intValue(), sale.proceeds.intValue(),
 					addslashes(sale.currency), sale.begin.getTime() / 1000, sale.end.getTime() / 1000, addslashes(sale.customerCurrency),
 					sale.customerPrice.intValue(), addslashes(sale.promoCode), addslashes(sale.parentIdentifier), addslashes(sale.subscription),
 					addslashes(sale.period), addslashes(sale.category)));

@@ -113,7 +113,7 @@
 
                 <xsd:attribute name="typeIdentifier" type="xsd:string" />
 
-                <xsd:attribute name="units" type="xsd:string" />
+                <xsd:attribute name="units" type="xsd:int" />
                 <xsd:attribute name="proceeds" type="xsd:int" />
                 <xsd:attribute name="currency" type="xsd:string" />
                 <xsd:attribute name="begin" type="xsd:date" />
