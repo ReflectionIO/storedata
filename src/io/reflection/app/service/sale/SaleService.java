@@ -12,6 +12,7 @@ import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Sale;
@@ -20,8 +21,12 @@ import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProv
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
+import io.reflection.app.service.item.ItemServiceProvider;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.google.appengine.spi.ServiceProvider;
 
 final class SaleService implements ISaleService {
 	public String getName() {
@@ -147,8 +152,36 @@ final class SaleService implements ISaleService {
 	 */
 	@Override
 	public List<Item> getDataAccountItems(DataAccount dataAccount, Pager pager) throws DataAccessException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		List<String> sales = new ArrayList<String>();
+		String getSaleQuery = String
+				.format("SELECT `itemid` FROM `sale` WHERE dataaccountid='%d' AND `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d",
+						dataAccount.id.longValue(), pager.sortBy == null ? "id" : pager.sortBy,
+						pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
+						pager.start == null ? Pager.DEFAULT_START.longValue() : pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue()
+								: pager.count.longValue());
+
+		IDatabaseService databaseService = DatabaseServiceProvider.provide();
+		Connection saleConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
+
+		try {
+			saleConnection.connect();
+			saleConnection.executeQuery(getSaleQuery);
+
+			while (saleConnection.fetchNextRow()) {
+				Sale sale = toSale(saleConnection);
+
+				if (sale != null) {
+					sales.add(sale.item.toString());
+				}
+			}
+		} finally {
+			if (saleConnection != null) {
+				saleConnection.disconnect();
+			}
+		}
+		
+		return ItemServiceProvider.provide().getInternalIdItemBatch(sales);
 	}
 
 	/*
@@ -157,9 +190,28 @@ final class SaleService implements ISaleService {
 	 * @see io.reflection.app.service.sale.ISaleService#getDataAccountItemsCount()
 	 */
 	@Override
-	public Long getDataAccountItemsCount() throws DataAccessException {
-		// TODO Auto-generated method stub
-		return null;
+	public Long getDataAccountItemsCount(DataAccount dataAccount) throws DataAccessException {
+
+		Long dataCount = Long.valueOf(0);
+		String getDataAccountsCountQuery = String
+				.format("SELECT COUNT(DISTINCT `itemid`) AS datacount FROM `sale` WHERE `deleted`='n' AND `dataaccountid`='%d' ",
+						dataAccount.id.longValue());		
+
+		Connection dataConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
+		try {
+			dataConnection.connect();
+			dataConnection.executeQuery(getDataAccountsCountQuery);
+
+			if (dataConnection.fetchNextRow()) {
+				dataCount = dataConnection.getCurrentRowLong("datacount");
+			}
+		} finally {
+			if (dataConnection != null) {
+				dataConnection.disconnect();
+			}
+		}
+
+		return dataCount;		
 	}
 
 	/*

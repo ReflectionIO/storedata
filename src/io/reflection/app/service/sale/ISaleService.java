@@ -52,7 +52,7 @@ public interface ISaleService extends IService {
 	/**
 	 * @return
 	 */
-	public Long getDataAccountItemsCount() throws DataAccessException;
+	public Long getDataAccountItemsCount(DataAccount dataAccount) throws DataAccessException;
 
 	/**
 	 * @param sales
