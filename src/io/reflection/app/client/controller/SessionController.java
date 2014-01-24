@@ -21,6 +21,7 @@ import io.reflection.app.api.core.shared.call.LoginRequest;
 import io.reflection.app.api.core.shared.call.LoginResponse;
 import io.reflection.app.api.core.shared.call.LogoutRequest;
 import io.reflection.app.api.core.shared.call.LogoutResponse;
+import io.reflection.app.api.core.shared.call.event.ChangeUserDetailsEventHandler;
 import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.client.handler.user.SessionEventHandler.UserLoggedIn;
 import io.reflection.app.client.handler.user.SessionEventHandler.UserLoggedOut;
@@ -255,16 +256,14 @@ public class SessionController implements ServiceController {
 					mSession.user.surname = input.user.surname;
 					mSession.user.company = input.user.company;
 
-					// tell everyone
-				} else {
-					// tell everyone
 				}
 
+				EventController.get().fireEventFromSource(new ChangeUserDetailsEventHandler.ChangeUserDetailsSuccess(input, output), SessionController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				// tell everyone
+				EventController.get().fireEventFromSource(new ChangeUserDetailsEventHandler.ChangeUserDetailsFailure(input, caught), SessionController.this);
 			}
 		});
 
