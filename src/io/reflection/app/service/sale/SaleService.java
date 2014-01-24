@@ -26,8 +26,6 @@ import io.reflection.app.service.item.ItemServiceProvider;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.appengine.spi.ServiceProvider;
-
 final class SaleService implements ISaleService {
 	public String getName() {
 		return ServiceType.ServiceTypeSale.toString();
@@ -152,14 +150,13 @@ final class SaleService implements ISaleService {
 	 */
 	@Override
 	public List<Item> getDataAccountItems(DataAccount dataAccount, Pager pager) throws DataAccessException {
-		
+
 		List<String> sales = new ArrayList<String>();
-		String getSaleQuery = String
-				.format("SELECT `itemid` FROM `sale` WHERE dataaccountid='%d' AND `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d",
-						dataAccount.id.longValue(), pager.sortBy == null ? "id" : pager.sortBy,
-						pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
-						pager.start == null ? Pager.DEFAULT_START.longValue() : pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue()
-								: pager.count.longValue());
+		
+		String getSaleQuery = String.format("SELECT `itemid` FROM `sale` WHERE `dataaccountid`=%d AND `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d",
+				dataAccount.id.longValue(), pager.sortBy == null ? "id" : pager.sortBy,
+				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start == null ? Pager.DEFAULT_START.longValue()
+						: pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue() : pager.count.longValue());
 
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection saleConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
@@ -180,7 +177,7 @@ final class SaleService implements ISaleService {
 				saleConnection.disconnect();
 			}
 		}
-		
+
 		return ItemServiceProvider.provide().getInternalIdItemBatch(sales);
 	}
 
@@ -193,9 +190,8 @@ final class SaleService implements ISaleService {
 	public Long getDataAccountItemsCount(DataAccount dataAccount) throws DataAccessException {
 
 		Long dataCount = Long.valueOf(0);
-		String getDataAccountsCountQuery = String
-				.format("SELECT COUNT(DISTINCT `itemid`) AS datacount FROM `sale` WHERE `deleted`='n' AND `dataaccountid`='%d' ",
-						dataAccount.id.longValue());		
+		String getDataAccountsCountQuery = String.format(
+				"SELECT COUNT(DISTINCT `itemid`) AS `datacount` FROM `sale` WHERE `deleted`='n' AND `dataaccountid`=%d ", dataAccount.id.longValue());
 
 		Connection dataConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
 		try {
@@ -211,7 +207,7 @@ final class SaleService implements ISaleService {
 			}
 		}
 
-		return dataCount;		
+		return dataCount;
 	}
 
 	/*
