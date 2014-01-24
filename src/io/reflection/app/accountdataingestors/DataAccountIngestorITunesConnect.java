@@ -7,6 +7,7 @@
 //
 package io.reflection.app.accountdataingestors;
 
+import io.reflection.app.accountdatacollectors.DataAccountCollector;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
@@ -58,16 +59,16 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 	private static final int DEVELOPER_PROCEEDS_INDEX = 8;
 	private static final int BEGIN_DATE_INDEX = 9;
 	private static final int END_DATE_INDEX = 10;
-	private static final int CUSTOMER_CURRENCY_INDEX = 12;
-	private static final int COUNTRY_CODE_INDEX = 13;
-	private static final int CURRENCY_OF_PROCEEDS_INDEX = 14;
-	private static final int APPLE_IDENTIFIER_INDEX = 15;
-	private static final int CUSTOMER_PRICE_INDEX = 16;
-	private static final int PROMO_CODE_INDEX = 17;
-	private static final int PARENT_IDENTIFIER_INDEX = 18;
-	private static final int SUBSCRIPTION_INDEX = 19;
-	private static final int PERIOD_INDEX = 20;
-	private static final int CATEGORY_INDEX = 21;
+	private static final int CUSTOMER_CURRENCY_INDEX = 11;
+	private static final int COUNTRY_CODE_INDEX = 12;
+	private static final int CURRENCY_OF_PROCEEDS_INDEX = 13;
+	private static final int APPLE_IDENTIFIER_INDEX = 14;
+	private static final int CUSTOMER_PRICE_INDEX = 15;
+	private static final int PROMO_CODE_INDEX = 16;
+	private static final int PARENT_IDENTIFIER_INDEX = 17;
+	private static final int SUBSCRIPTION_INDEX = 18;
+	private static final int PERIOD_INDEX = 19;
+	private static final int CATEGORY_INDEX = 20;
 
 	/*
 	 * (non-Javadoc)
@@ -88,14 +89,13 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 
 					fetch = DataAccountFetchServiceProvider.provide().updateDataAccountFetch(fetch);
 				}
-
-			} catch (IOException e) {
-				LOG.log(GaeLevel.SEVERE, String.format("Exception throw while parsing file for data account fetch [%d]", fetch.id.longValue()), e);
 			} catch (DataAccessException e) {
-				LOG.log(GaeLevel.SEVERE, String.format("Exception throw while ingesting file for data account fetch [%d]", fetch.id.longValue()), e);
+				LOG.log(GaeLevel.SEVERE, String.format("Exception occured while ingesting file for data account fetch [%d]", fetch.id.longValue()), e);
+			} catch (IOException e) {
+				LOG.log(GaeLevel.SEVERE, String.format("Exception occured while parsing sales for data account fetch [%d]", fetch.id.longValue()), e);
 			}
 		} else {
-			LOG.log(GaeLevel.INFO,
+			LOG.log(GaeLevel.WARNING,
 					String.format("Could not ingest data account fetch [%d] because it has status", fetch.id.longValue(), fetch.status.toString()));
 		}
 	}
@@ -103,6 +103,7 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 	/**
 	 * @param fetch
 	 * @return
+	 * @throws IOException
 	 */
 	private List<Sale> convertFetchToSales(DataAccountFetch fetch) throws IOException {
 
@@ -112,16 +113,20 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 		String bucketName = null;
 		String fileName = null;
 
+		String gatherBucketName = System.getProperty(DataAccountCollector.ACCOUNT_DATA_BUCKET_KEY);
+
+		if (path.contains(gatherBucketName)) {
+			bucketName = gatherBucketName;
+		}
+
 		if (path.startsWith("/gs/")) {
 			path = path.replace("/gs/", "");
 		}
 
-		int indexOfLastSlash = path.lastIndexOf('/');
+		fileName = path.replace(bucketName, "");
 
-		if (indexOfLastSlash != -1) {
-			fileName = path.substring(indexOfLastSlash + 1);
-
-			bucketName = path.substring(0, indexOfLastSlash);
+		if (fileName.startsWith("/")) {
+			fileName = fileName.substring(1);
 		}
 
 		if (bucketName != null && fileName != null) {
@@ -129,29 +134,50 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 			GcsFilename cloudFileName = new GcsFilename(bucketName, fileName);
 
 			String line;
-			BufferedReader stream = null;
+			BufferedReader reader = null;
+			GcsInputChannel readChannel = null;
+			GZIPInputStream gzipInputStream = null;
 
 			try {
-				GcsInputChannel channel = fileService.openReadChannel(cloudFileName, 0);
+				readChannel = fileService.openReadChannel(cloudFileName, 0);
 
-				GZIPInputStream gzip = new GZIPInputStream(Channels.newInputStream(channel));
+				gzipInputStream = new GZIPInputStream(Channels.newInputStream(readChannel));
 
-				BufferedReader csvFile = new BufferedReader(new InputStreamReader(gzip));
-
-				stream = new BufferedReader(csvFile);
+				reader = new BufferedReader(new InputStreamReader(gzipInputStream));
 
 				sales = new ArrayList<Sale>();
 
-				while ((line = stream.readLine()) != null) {
-					Sale sale = convertToSale(line, fetch);
+				while ((line = reader.readLine()) != null) {
 
-					if (sale != null) {
-						sales.add(sale);
+					if (!line.startsWith("Provider")) {
+						Sale sale = convertToSale(line, fetch);
+
+						if (sale != null) {
+							sales.add(sale);
+						}
 					}
 				}
 
 			} finally {
-				stream.close();
+				if (reader != null) {
+					try {
+						reader.close();
+					} catch (IOException e) {
+						LOG.log(GaeLevel.WARNING, "Exception occured while closing reader", e);
+					}
+				}
+
+				if (gzipInputStream != null) {
+					try {
+						gzipInputStream.close();
+					} catch (IOException e) {
+						LOG.log(GaeLevel.WARNING, "Exception occured while closing gzip stream", e);
+					}
+				}
+
+				if (readChannel != null) {
+					readChannel.close();
+				}
 			}
 
 		}
@@ -181,13 +207,21 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 			sale.version = split[VERSION_INDEX];
 			sale.typeIdentifier = split[PRODUCT_TYPE_IDENTIFIER_INDEX];
 			sale.units = Integer.parseInt(split[UNITS_INDEX]);
-			sale.proceeds = Integer.valueOf((int) (100.0f * Float.parseFloat(split[DEVELOPER_PROCEEDS_INDEX])));
+
+			float proceeds = 0;
+			try {
+				proceeds = Float.parseFloat(split[DEVELOPER_PROCEEDS_INDEX]);
+			} catch (NumberFormatException e) {
+				LOG.log(GaeLevel.WARNING, String.format("Exception occured while obtaining file for data account [%d]", fetch.id.longValue()), e);
+			}
+
+			sale.proceeds = Integer.valueOf((int) (100.0f * proceeds));
 
 			try {
 				sale.begin = sdf.parse(split[BEGIN_DATE_INDEX]);
 				sale.end = sdf.parse(split[END_DATE_INDEX]);
 			} catch (ParseException e) {
-				LOG.log(GaeLevel.SEVERE, String.format("Exception throw while obtaining file for data account [%d]", fetch.id.longValue()), e);
+				LOG.log(GaeLevel.WARNING, String.format("Exception occured while obtaining file for data account [%d]", fetch.id.longValue()), e);
 			}
 
 			sale.customerCurrency = split[CUSTOMER_CURRENCY_INDEX];
@@ -197,7 +231,14 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 			sale.item = new Item();
 			sale.item.internalId = split[APPLE_IDENTIFIER_INDEX];
 
-			sale.customerPrice = Integer.valueOf((int) (100.0f * Float.parseFloat(split[CUSTOMER_PRICE_INDEX])));
+			float customerPrice = 0;
+			try {
+				customerPrice = Float.parseFloat(split[CUSTOMER_PRICE_INDEX]);
+			} catch (NumberFormatException e) {
+				LOG.log(GaeLevel.WARNING, String.format("Exception occured while obtaining file for data account [%d]", fetch.id.longValue()), e);
+			}
+
+			sale.customerPrice = Integer.valueOf((int) (100.0f * customerPrice));
 			sale.promoCode = split[PROMO_CODE_INDEX];
 			sale.parentIdentifier = split[PARENT_IDENTIFIER_INDEX];
 			sale.subscription = split[SUBSCRIPTION_INDEX];

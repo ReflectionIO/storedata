@@ -68,7 +68,7 @@ final class SaleService implements ISaleService {
 		sale.deleted = connection.getCurrentRowString("deleted");
 
 		sale.account = new DataAccount();
-		sale.account.id = connection.getCurrentRowLong("accountid");
+		sale.account.id = connection.getCurrentRowLong("dataaccountid");
 
 		sale.item = new Item();
 		sale.item.id = connection.getCurrentRowLong("itemid");
@@ -102,7 +102,7 @@ final class SaleService implements ISaleService {
 		// TODO: sort out nullable values
 
 		final String addSaleQuery = String
-				.format("INSERT INTO `sale` (`accountid`,`itemid`,`country`,`sku`,`developer`,`title`,`version`,`typeidentifier`,`units`,`proceeds`,`currency`,`begin`,`end`,`customercurrency`,`customerprice`,`promocode`,`parentidentifier`,`subscription`,`period`,`category`) VALUES (%d,%d,'%s','%s','%s','%s','%s','%s',%d,%d,'%s',FROM_UNIXTIME(%d),FROM_UNIXTIME(%d),'%s',%d,'%s','%s','%s','%s','%s')",
+				.format("INSERT INTO `sale` (`dataaccountid`,`itemid`,`country`,`sku`,`developer`,`title`,`version`,`typeidentifier`,`units`,`proceeds`,`currency`,`begin`,`end`,`customercurrency`,`customerprice`,`promocode`,`parentidentifier`,`subscription`,`period`,`category`) VALUES (%d,%d,'%s','%s','%s','%s','%s','%s',%d,%d,'%s',FROM_UNIXTIME(%d),FROM_UNIXTIME(%d),'%s',%d,'%s','%s','%s','%s','%s')",
 						sale.account.id.longValue(), sale.item.id.longValue(), addslashes(sale.country), addslashes(sale.sku), addslashes(sale.developer),
 						addslashes(sale.title), addslashes(sale.version), addslashes(sale.typeIdentifier), sale.units.intValue(), sale.proceeds.intValue(),
 						addslashes(sale.currency), sale.begin.getTime() / 1000, sale.end.getTime() / 1000, addslashes(sale.customerCurrency),
@@ -151,7 +151,7 @@ final class SaleService implements ISaleService {
 	@Override
 	public List<Item> getDataAccountItems(DataAccount dataAccount, Pager pager) throws DataAccessException {
 
-		List<String> sales = new ArrayList<String>();
+		List<String> itemIds = new ArrayList<String>();
 
 		String getSaleQuery = String.format("SELECT `itemid` FROM `sale` WHERE `dataaccountid`=%d AND `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d",
 				dataAccount.id.longValue(), pager.sortBy == null ? "id" : pager.sortBy,
@@ -169,7 +169,7 @@ final class SaleService implements ISaleService {
 				Sale sale = toSale(saleConnection);
 
 				if (sale != null) {
-					sales.add(sale.item.toString());
+					itemIds.add(sale.item.toString());
 				}
 			}
 		} finally {
@@ -178,7 +178,7 @@ final class SaleService implements ISaleService {
 			}
 		}
 
-		return ItemServiceProvider.provide().getInternalIdItemBatch(sales);
+		return itemIds.size() == 0 ? new ArrayList<Item>() : ItemServiceProvider.provide().getInternalIdItemBatch(itemIds);
 	}
 
 	/*
@@ -224,7 +224,7 @@ final class SaleService implements ISaleService {
 		StringBuffer addSalesBatchQuery = new StringBuffer();
 
 		addSalesBatchQuery
-				.append("INSERT INTO `sale` (`accountid`,`itemid`,`country`,`sku`,`developer`,`title`,`version`,`typeidentifier`,`units`,`proceeds`,`currency`,`begin`,`end`,`customercurrency`,`customerprice`,`promocode`,`parentidentifier`,`subscription`,`period`,`category`) VALUES");
+				.append("INSERT INTO `sale` (`dataaccountid`,`itemid`,`country`,`sku`,`developer`,`title`,`version`,`typeidentifier`,`units`,`proceeds`,`currency`,`begin`,`end`,`customercurrency`,`customerprice`,`promocode`,`parentidentifier`,`subscription`,`period`,`category`) VALUES");
 
 		for (Sale sale : sales) {
 			if (addSalesBatchQuery.charAt(addSalesBatchQuery.length() - 1) != 'S') {
@@ -232,8 +232,8 @@ final class SaleService implements ISaleService {
 			}
 
 			addSalesBatchQuery.append(String.format(
-					"(%d,%d,'%s','%s','%s','%s','%s','%s',%d,%d,'%s',FROM_UNIXTIME(%d),FROM_UNIXTIME(%d),'%s',%d,'%s','%s','%s','%s','%s')",
-					sale.account.id.longValue(), sale.item.id.longValue(), addslashes(sale.country), addslashes(sale.sku), addslashes(sale.developer),
+					"(%d,%s,'%s','%s','%s','%s','%s','%s',%d,%d,'%s',FROM_UNIXTIME(%d),FROM_UNIXTIME(%d),'%s',%d,'%s','%s','%s','%s','%s')",
+					sale.account.id.longValue(), sale.item.internalId == null ? "NULL" : "'" + sale.item.internalId + "'", addslashes(sale.country), addslashes(sale.sku), addslashes(sale.developer),
 					addslashes(sale.title), addslashes(sale.version), addslashes(sale.typeIdentifier), sale.units.intValue(), sale.proceeds.intValue(),
 					addslashes(sale.currency), sale.begin.getTime() / 1000, sale.end.getTime() / 1000, addslashes(sale.customerCurrency),
 					sale.customerPrice.intValue(), addslashes(sale.promoCode), addslashes(sale.parentIdentifier), addslashes(sale.subscription),

@@ -771,9 +771,7 @@ final class UserService implements IUserService {
 			}
 		}
 
-		List<DataAccount> dataAccounts = DataAccountServiceProvider.provide().getIdsDataAccounts(accountIds, pager);
-
-		return dataAccounts;
+		return accountIds.size() == 0 ? new ArrayList<DataAccount>() : DataAccountServiceProvider.provide().getIdsDataAccounts(accountIds, pager);
 	}
 
 	/*

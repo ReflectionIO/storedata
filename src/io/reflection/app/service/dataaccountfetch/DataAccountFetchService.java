@@ -74,6 +74,7 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 			dataAccountFetch.data = dataAccountFetch.data.replaceFirst(DEV_PREFIX, "");
 		}
 
+		dataAccountFetch.date = connection.getCurrentRowDateTime("date");
 		dataAccountFetch.status = DataAccountFetchStatusType.fromString(connection.getCurrentRowString("status"));
 
 		dataAccountFetch.linkedAccount = new DataAccount();
