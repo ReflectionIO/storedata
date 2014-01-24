@@ -21,7 +21,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -39,7 +38,7 @@ import com.willshex.gson.json.service.shared.Error;
  * @author billy1380
  * 
  */
-public class ChangePasswordPage extends Composite implements UserPasswordChangedEventHandler, KeyPressHandler {
+public class ChangePasswordPage extends Composite implements UserPasswordChangedEventHandler {
 
 	private static ChangePasswordPageUiBinder uiBinder = GWT.create(ChangePasswordPageUiBinder.class);
 
@@ -75,9 +74,7 @@ public class ChangePasswordPage extends Composite implements UserPasswordChanged
 
 		EventController.get().addHandlerToSource(UserPasswordChangedEventHandler.TYPE, UserController.get(), this);
 		EventController.get().addHandlerToSource(UserPasswordChangedEventHandler.TYPE, SessionController.get(), this);
-	
-		mPassword.addKeyPressHandler(this);
-		mNewPassword.addKeyPressHandler(this);
+
 	}
 
 	@UiHandler("mChangePassword")
@@ -103,6 +100,18 @@ public class ChangePasswordPage extends Composite implements UserPasswordChanged
 			if (mNewPasswordError != null) {
 				FormHelper.showNote(true, mNewPasswordGroup, mNewPasswordNote, mNewPasswordError);
 			}
+		}
+	}
+
+	/**
+	 * Fire the change password button when pressing the 'enter' key on one of the change password form fields
+	 * 
+	 * @param event
+	 */
+	@UiHandler({ "mPassword", "mNewPassword" })
+	void onEnterKeyPressChangePasswordFields(KeyPressEvent event) {
+		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
+			mChangePassword.click();
 		}
 	}
 
@@ -159,11 +168,9 @@ public class ChangePasswordPage extends Composite implements UserPasswordChanged
 		super.onAttach();
 
 		resetForm();
-			
-		if (SessionController.get().isLoggedInUserAdmin())
-			mNewPassword.setFocus(true);
-		else
-			mPassword.setFocus(true);
+
+		if (SessionController.get().isLoggedInUserAdmin()) mNewPassword.setFocus(true);
+		else mPassword.setFocus(true);
 	}
 
 	/*
@@ -220,18 +227,6 @@ public class ChangePasswordPage extends Composite implements UserPasswordChanged
 		mAlertBox.setVisible(false);
 
 		mForm.setVisible(true);
-	}
-
-	/* (non-Javadoc)
-	 * @see com.google.gwt.event.dom.client.KeyPressHandler#onKeyPress(com.google.gwt.event.dom.client.KeyPressEvent)
-	 */
-	@Override
-	public void onKeyPress(KeyPressEvent event) {
-		mPassword.setVisible(false);
-		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER){
-			mChangePassword.click();
-		}
-		
 	}
 
 }

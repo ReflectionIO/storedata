@@ -10,8 +10,8 @@ package io.reflection.app.client.page;
 import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.NavigationController;
-import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.NavigationController.Stack;
+import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.user.SessionEventHandler;
 import io.reflection.app.client.helper.AlertBoxHelper;
 import io.reflection.app.client.helper.FormHelper;
@@ -23,7 +23,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -44,7 +43,7 @@ import com.willshex.gson.json.service.shared.Error;
  * @author billy1380
  * 
  */
-public class LoginPage extends Composite implements SessionEventHandler, KeyPressHandler {
+public class LoginPage extends Composite implements SessionEventHandler {
 
 	private static LoginPageUiBinder uiBinder = GWT.create(LoginPageUiBinder.class);
 
@@ -61,9 +60,9 @@ public class LoginPage extends Composite implements SessionEventHandler, KeyPres
 	@UiField HTMLPanel mPasswordNote;
 
 	@UiField CheckBox mRememberMe;
-	
+
 	@UiField Button mLogin;
-	
+
 	@UiField InlineHyperlink mRegister;
 	@UiField InlineHyperlink mForgotPassword;
 
@@ -79,9 +78,7 @@ public class LoginPage extends Composite implements SessionEventHandler, KeyPres
 		mPassword.getElement().setAttribute("placeholder", "Password");
 
 		EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this);
-		
-		mUsername.addKeyPressHandler(this);
-		mPassword.addKeyPressHandler(this);
+
 	}
 
 	@UiHandler("mLogin")
@@ -101,6 +98,18 @@ public class LoginPage extends Composite implements SessionEventHandler, KeyPres
 			if (mPasswordError != null) {
 				FormHelper.showNote(true, mPasswordGroup, mPasswordNote, mPasswordError);
 			}
+		}
+	}
+
+	/**
+	 * Fire the login button when pressing the 'enter' key on one of the login form fields
+	 * 
+	 * @param event
+	 */
+	@UiHandler({ "mUsername", "mPassword" })
+	void onEnterKeyPressLoginFields(KeyPressEvent event) {
+		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
+			mLogin.click();
 		}
 	}
 
@@ -156,7 +165,7 @@ public class LoginPage extends Composite implements SessionEventHandler, KeyPres
 		if (s != null && s.hasAction()) {
 			mUsername.setText(s.getAction());
 		}
-		
+
 		mUsername.setFocus(true);
 	}
 
@@ -220,14 +229,4 @@ public class LoginPage extends Composite implements SessionEventHandler, KeyPres
 		mAlertBox.setVisible(false);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.google.gwt.event.dom.client.KeyPressHandler#onKeyPress(com.google.gwt.event.dom.client.KeyPressEvent)
-	 */
-	@Override
-	public void onKeyPress(KeyPressEvent event) {
-		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER){
-			mLogin.click();
-		}
-		
-	}
 }

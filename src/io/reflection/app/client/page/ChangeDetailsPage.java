@@ -26,7 +26,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -36,14 +35,14 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
-import com.willshex.gson.json.service.shared.StatusType;
 import com.willshex.gson.json.service.shared.Error;
+import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author billy1380
  * 
  */
-public class ChangeDetailsPage extends Composite implements NavigationEventHandler, KeyPressHandler, ChangeUserDetailsEventHandler {
+public class ChangeDetailsPage extends Composite implements NavigationEventHandler, ChangeUserDetailsEventHandler {
 
 	private static ChangeDetailsPageUiBinder uiBinder = GWT.create(ChangeDetailsPageUiBinder.class);
 
@@ -89,11 +88,6 @@ public class ChangeDetailsPage extends Composite implements NavigationEventHandl
 
 		EventController.get().addHandlerToSource(ChangeUserDetailsEventHandler.TYPE, SessionController.get(), this);
 
-		mUsername.addKeyPressHandler(this);
-		mForename.addKeyPressHandler(this);
-		mSurname.addKeyPressHandler(this);
-		mCompany.addKeyPressHandler(this);
-
 	}
 
 	@UiHandler("mChangeDetails")
@@ -128,6 +122,18 @@ public class ChangeDetailsPage extends Composite implements NavigationEventHandl
 			} else {
 				FormHelper.hideNote(mCompanyGroup, mCompanyNote);
 			}
+		}
+	}
+
+	/**
+	 * Fire the change details button when pressing the 'enter' key on one of the change details form fields
+	 * 
+	 * @param event
+	 */
+	@UiHandler({ "mUsername", "mForename", "mSurname", "mCompany" })
+	void onEnterKeyPressChangeDetailsFields(KeyPressEvent event) {
+		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
+			mChangeDetails.click();
 		}
 	}
 
@@ -218,19 +224,6 @@ public class ChangeDetailsPage extends Composite implements NavigationEventHandl
 			mForename.setFocus(true);
 			mForename.setCursorPos(mForename.getText().length());
 		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.event.dom.client.KeyPressHandler#onKeyPress(com.google .gwt.event.dom.client.KeyPressEvent)
-	 */
-	@Override
-	public void onKeyPress(KeyPressEvent event) {
-		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
-			mChangeDetails.click();
-		}
-
 	}
 
 	/*

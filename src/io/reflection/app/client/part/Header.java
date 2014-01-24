@@ -29,11 +29,14 @@ import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineHyperlink;
@@ -127,6 +130,23 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		removeAccount();
 		removeAdmin();
 
+	}
+
+	/**
+	 * Fire the search button when pressing the 'enter' key on the search field, adding a associated token to the history
+	 * 
+	 * @param event
+	 */
+	@UiHandler("mQuery")
+	void onEnterKeyPressSearchField(KeyPressEvent event) {
+		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
+			History.newItem(mSearch.getTargetHistoryToken());
+		}
+	}
+
+	@UiHandler("mQuery")
+	void onQueryChanged(ChangeEvent event) {
+		mSearch.setTargetHistoryToken("search/query/" + mQuery.getText());
 	}
 
 	private void createItemList() {
@@ -257,7 +277,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		removeAccount();
 
 		addRegister();
-		
+
 		addLogin();
 
 		removeUpgrade();
@@ -360,11 +380,6 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		} else {
 			removeUpgrade();
 		}
-	}
-
-	@UiHandler("mQuery")
-	void onQueryChanged(ChangeEvent event) {
-		mSearch.setTargetHistoryToken("search/query/" + mQuery.getText());
 	}
 
 }
