@@ -93,10 +93,13 @@ public class LoginPage extends Composite implements SessionEventHandler {
 		} else {
 			if (mUsernameError != null) {
 				FormHelper.showNote(true, mUsernameGroup, mUsernameNote, mUsernameError);
+			} else {
+				FormHelper.hideNote(mUsernameGroup, mUsernameNote);
 			}
-
 			if (mPasswordError != null) {
 				FormHelper.showNote(true, mPasswordGroup, mPasswordNote, mPasswordError);
+			} else {
+				FormHelper.hideNote(mPasswordGroup, mPasswordNote);
 			}
 		}
 	}
@@ -115,18 +118,21 @@ public class LoginPage extends Composite implements SessionEventHandler {
 
 	boolean validate() {
 		boolean validated = true;
-
+		// Retrieve fields to validate
 		String username = mUsername.getText();
 		String password = mPassword.getText();
-
+		// Check fields constraints
 		if (username == null || username.length() == 0) {
 			mUsernameError = "Cannot be empty";
 			validated = false;
 		} else if (username.length() < 6) {
-			mUsernameError = "Too short (6 - 255)";
+			mUsernameError = "Too short (minimum 6 characters)";
 			validated = false;
 		} else if (username.length() > 255) {
-			mUsernameError = "Too long (6 -255)";
+			mUsernameError = "Too long (maximum 255 characters)";
+			validated = false;
+		} else if (!username.matches(FormHelper.EMAILPATTERN)) {
+			mUsernameError = "Invalid email address";
 			validated = false;
 		} else {
 			mUsernameError = null;
@@ -137,10 +143,10 @@ public class LoginPage extends Composite implements SessionEventHandler {
 			mPasswordError = "Cannot be empty";
 			validated = false;
 		} else if (password.length() < 6) {
-			mPasswordError = "Too short (6-100)";
+			mPasswordError = "Too short (minimum 6 characters)";
 			validated = false;
-		} else if (password.length() > 100) {
-			mPasswordError = "Too long (6 - 100)";
+		} else if (password.length() > 64) {
+			mPasswordError = "Too long (maximum 64 characters)";
 			validated = false;
 		} else {
 			mPasswordError = null;
@@ -161,12 +167,13 @@ public class LoginPage extends Composite implements SessionEventHandler {
 
 		resetForm();
 
+		mUsername.setFocus(true);
+
 		Stack s = NavigationController.get().getStack();
 		if (s != null && s.hasAction()) {
 			mUsername.setText(s.getAction());
 		}
 
-		mUsername.setFocus(true);
 	}
 
 	/*

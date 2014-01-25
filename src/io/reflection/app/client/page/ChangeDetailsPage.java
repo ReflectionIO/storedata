@@ -90,6 +90,18 @@ public class ChangeDetailsPage extends Composite implements NavigationEventHandl
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
+	 */
+	@Override
+	protected void onAttach() {
+		super.onAttach();
+
+		resetForm();
+	}
+
 	@UiHandler("mChangeDetails")
 	void onChangeDetailsClicked(ClickEvent event) {
 		if (validate()) {
@@ -201,14 +213,79 @@ public class ChangeDetailsPage extends Composite implements NavigationEventHandl
 		}
 	}
 
+	/**
+	 * Check if every field of the form is valid and return true
+	 * 
+	 * @return Boolean validated
+	 */
 	private boolean validate() {
+		boolean validated = true;
+		// Retrieve fields to validate
+		String forename = mForename.getText();
+		String surname = mSurname.getText();
+		String company = mCompany.getText();
+		String username = mUsername.getText();
+		// Check fields constraints
+		if (username == null || username.length() == 0) {
+			mUsernameError = "Cannot be empty";
+			validated = false;
+		} else if (username.length() < 6) {
+			mUsernameError = "Too short (minimum 6 characters)";
+			validated = false;
+		} else if (username.length() > 255) {
+			mUsernameError = "Too long (maximum 255 characters)";
+			validated = false;
+		} else if (!username.matches(FormHelper.EMAILPATTERN)) {
+			mUsernameError = "Invalid email address";
+			validated = false;
+		} else {
+			mUsernameError = null;
+			validated = validated && true;
+		}
 
-		mUsernameError = "Error";
-		mForenameError = "Error";
-		mSurnameError = "Error";
-		mCompanyError = "Error";
+		if (forename == null || forename.length() == 0) {
+			mForenameError = "Cannot be empty";
+			validated = false;
+		} else if (forename.length() < 2) {
+			mForenameError = "Too short (minimum 2 characters)";
+			validated = false;
+		} else if (forename.length() > 30) {
+			mForenameError = "Too long (maximum 30 characters)";
+			validated = false;
+		} else {
+			mForenameError = null;
+			validated = validated && true;
+		}
 
-		return true;
+		if (surname == null || surname.length() == 0) {
+			mSurnameError = "Cannot be empty";
+			validated = false;
+		} else if (surname.length() < 2) {
+			mSurnameError = "(minimum 2 characters)";
+			validated = false;
+		} else if (surname.length() > 30) {
+			mSurnameError = "Too long (maximum 30 characters)";
+			validated = false;
+		} else {
+			mSurnameError = null;
+			validated = validated && true;
+		}
+
+		if (company == null || company.length() == 0) {
+			mCompanyError = "Cannot be empty";
+			validated = false;
+		} else if (company.length() < 2) {
+			mCompanyError = "(minimum 2 characters)";
+			validated = false;
+		} else if (company.length() > 255) {
+			mCompanyError = "Too long (maximum 255 characters)";
+			validated = false;
+		} else {
+			mCompanyError = null;
+			validated = validated && true;
+		}
+
+		return validated;
 	}
 
 	/*

@@ -55,6 +55,7 @@ public class ChangePasswordPage extends Composite implements UserPasswordChanged
 
 	@UiField Button mChangePassword;
 
+	// Error definition during validation
 	private String mPasswordError = null;
 	private String mNewPasswordError = null;
 
@@ -82,6 +83,8 @@ public class ChangePasswordPage extends Composite implements UserPasswordChanged
 		if (validate()) {
 			mForm.setVisible(false);
 
+			// TODO check if the password is correct
+
 			AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Please wait", " - changing user password...", false)
 					.setVisible(true);
 
@@ -95,10 +98,13 @@ public class ChangePasswordPage extends Composite implements UserPasswordChanged
 		} else {
 			if (mPasswordError != null) {
 				FormHelper.showNote(true, mPasswordGroup, mPasswordNote, mPasswordError);
+			} else {
+				FormHelper.hideNote(mPasswordGroup, mPasswordNote);
 			}
-
 			if (mNewPasswordError != null) {
 				FormHelper.showNote(true, mNewPasswordGroup, mNewPasswordNote, mNewPasswordError);
+			} else {
+				FormHelper.hideNote(mNewPasswordGroup, mNewPasswordNote);
 			}
 		}
 	}
@@ -108,28 +114,33 @@ public class ChangePasswordPage extends Composite implements UserPasswordChanged
 	 * 
 	 * @param event
 	 */
-	@UiHandler({ "mPassword", "mNewPassword" })
+	@UiHandler({ "mPassword", "mNewPassword", "mConfirmPassword" })
 	void onEnterKeyPressChangePasswordFields(KeyPressEvent event) {
 		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
 			mChangePassword.click();
 		}
 	}
 
+	/**
+	 * Check if every field of the form is valid and return true
+	 * 
+	 * @return Boolean validated
+	 */
 	boolean validate() {
 		boolean validated = true;
-
+		// Retrieve fields to validate
 		String newPassword = mNewPassword.getText();
 		String confirmPassword = mConfirmPassword.getText();
 		String password = mPassword.getText();
-
+		// Check password constraints for normal user
 		if (newPassword == null || newPassword.length() == 0) {
 			mNewPasswordError = "Cannot be empty";
 			validated = false;
 		} else if (newPassword.length() < 6) {
-			mNewPasswordError = "Too short (6-100)";
+			mNewPasswordError = "Too short (minimum 6 characters)";
 			validated = false;
-		} else if (newPassword.length() > 100) {
-			mNewPasswordError = "Too long (6 - 100)";
+		} else if (newPassword.length() > 64) {
+			mNewPasswordError = "Too long (maximum 64 characters)";
 			validated = false;
 		} else if (!newPassword.equals(confirmPassword)) {
 			mNewPasswordError = "Password and confirmation should match";
@@ -138,16 +149,19 @@ public class ChangePasswordPage extends Composite implements UserPasswordChanged
 			mNewPasswordError = null;
 			validated = validated && true;
 		}
-
+		// Check password constraints for admin user
 		if (!SessionController.get().isLoggedInUserAdmin()) {
 			if (password == null || password.length() == 0) {
 				mPasswordError = "Cannot be empty";
 				validated = false;
 			} else if (password.length() < 6) {
-				mPasswordError = "Too short (6-100)";
+				mPasswordError = "Too short (minimum 6 characters)";
 				validated = false;
-			} else if (password.length() > 100) {
-				mPasswordError = "Too long (6 - 100)";
+			} else if (password.length() > 64) {
+				mPasswordError = "Too long (maximum 64 characters)";
+				validated = false;
+			} else if (!newPassword.equals(confirmPassword)) {
+				mNewPasswordError = "Password and confirmation should match";
 				validated = false;
 			} else {
 				mPasswordError = null;
