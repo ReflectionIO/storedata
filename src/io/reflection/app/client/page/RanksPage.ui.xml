@@ -2,27 +2,49 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
     xmlns:c="urn:import:com.google.gwt.user.cellview.client">
     <ui:style>
+    @external nav,nav-tabs,nav-justified;
+    .tabs {
+    	margin-bottom: 20px;
+    }
     
+    .nav.nav-tabs.nav-justified.tabs>li>a {
+    	text-align: left;
+    }
     </ui:style>
     <g:HTMLPanel>
 
         <h2>Ranks</h2>
 
-        <p:Breadcrumbs ui:field="mBreadcrumbs" path="..." />
+        <div class="container">
+            <div class="row">
 
-        <div class="row">
+                <p:RankFilter ui:field="mFilter" />
 
-            <div class="col-md-9">
+                <div class="col-md-9">
+                    <ul class="nav nav-tabs nav-justified {style.tabs}">
+                        <li ui:field="mAllItem">
+                            <g:InlineHyperlink ui:field="mAll" targetHistoryToken="ranks">Overview / All</g:InlineHyperlink>
+                        </li>
+                        <li ui:field="mPaidItem">
+                            <g:InlineHyperlink ui:field="mPaid" targetHistoryToken="ranks">Paid</g:InlineHyperlink>
+                        </li>
+                        <li ui:field="mFreeItem">
+                            <g:InlineHyperlink ui:field="mFree" targetHistoryToken="ranks">Free</g:InlineHyperlink>
+                        </li>
+                        <li ui:field="mGrossingItem">
+                            <g:InlineHyperlink ui:field="mGrossing" targetHistoryToken="ranks">Grossing</g:InlineHyperlink>
+                        </li>
+                    </ul>
 
-                <c:CellTable ui:field="mRanks" styleName="table table-hover table-striped" />
+                    <p:Breadcrumbs ui:field="mBreadcrumbs" path="..." />
 
-                <p:PageSizePager ui:field="mPager" visible="false" />
+                    <c:CellTable ui:field="mRanks" styleName="table table-hover table-striped" />
 
-                <g:InlineHyperlink text="Show More" styleName="btn btn-default" ui:field="mRedirect" />
+                    <p:PageSizePager ui:field="mPager" visible="false" />
+
+                    <g:InlineHyperlink text="Show More" styleName="btn btn-default" ui:field="mRedirect" />
+                </div>
             </div>
-
-            <p:RankFilter ui:field="mFilter" />
-
         </div>
     </g:HTMLPanel>
 </ui:UiBinder> 

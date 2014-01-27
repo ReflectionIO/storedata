@@ -1,14 +1,19 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.user.datepicker.client">
     <ui:style>
-        /* Add CSS here. See the GWT docs on UI Binder for more details */
+    .moreMargin {
+		margin-right: 0.2em;
+    }
     </ui:style>
     <g:HTMLPanel styleName="well sidebar-nav col-md-3">
         <g:FormPanel>
             <g:HTMLPanel>
-                
+
                 <g:HTMLPanel styleName="form-group">
-                    <label>Date</label>
+                    <label>
+                        <i class="icon-calendar"></i>
+                        Date
+                    </label>
                     <!--<input type="text" id="datepicker"> -->
                     <div class="input-group">
                         <d:DateBox styleName="form-control" ui:field="mDate" />
@@ -18,18 +23,14 @@
                     </div>
                 </g:HTMLPanel>
 
-                <g:HTMLPanel styleName="form-group">
-                    <label>Overview</label>
-                    <g:ListBox styleName="form-control" ui:field="mListType">
-                        <g:item value="all">All</g:item>
-                        <g:item value="paid">Paid</g:item>
-                        <g:item value="free">Free</g:item>
-                        <g:item value="grossing">Grossing</g:item>
-                    </g:ListBox>
-                </g:HTMLPanel>
+                <!-- <g:HTMLPanel styleName="form-group"> <label>Overview</label> <g:ListBox styleName="form-control" ui:field="mListType"> <g:item value="all">All</g:item> 
+                    <g:item value="paid">Paid</g:item> <g:item value="free">Free</g:item> <g:item value="grossing">Grossing</g:item> </g:ListBox> </g:HTMLPanel> -->
 
                 <g:HTMLPanel styleName="form-group">
-                    <label>Country</label>
+                    <label>
+                        <i class="icon-globe"></i>
+                        Country
+                    </label>
                     <g:ListBox styleName="form-control" ui:field="mCountry">
                         <g:item value="us">United States</g:item>
                         <g:item value="gb">United Kingdom</g:item>
@@ -39,10 +40,12 @@
                     </g:ListBox>
                 </g:HTMLPanel>
 
-                
-                
+
                 <g:HTMLPanel styleName="form-group">
-                    <label>App Store</label>
+                    <label>
+                        <i class="glyphicon glyphicon-folder-open {style.moreMargin}"></i>
+                        App Store
+                    </label>
                     <g:ListBox styleName="form-control" ui:field="mAppStore">
                         <g:item value="iph">iPhone</g:item>
                         <g:item value="ipa">iPad</g:item>

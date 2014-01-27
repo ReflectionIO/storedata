@@ -29,5 +29,8 @@
 
     <!-- Specify the paths for translatable code -->
     <source path='client' />
+    
+    <set-configuration-property name="devModeRedirectEnabled" value="true" />
+    <add-linker name="xsiframe" />
 
 </module>

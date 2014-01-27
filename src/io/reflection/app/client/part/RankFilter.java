@@ -40,7 +40,7 @@ public class RankFilter extends Composite {
 
 	@UiField DateBox mDate;
 	@UiField ListBox mAppStore;
-	@UiField ListBox mListType;
+	// @UiField ListBox mListType;
 	@UiField ListBox mCountry;
 
 	/**
@@ -82,7 +82,7 @@ public class RankFilter extends Composite {
 
 		FilterController.get().start();
 		FilterController.get().setStore(mAppStore.getValue(mAppStore.getSelectedIndex()));
-		FilterController.get().setListType(mListType.getValue(mListType.getSelectedIndex()));
+		// FilterController.get().setListType(mListType.getValue(mListType.getSelectedIndex()));
 		FilterController.get().setCountry(mCountry.getValue(mCountry.getSelectedIndex()));
 		FilterController.get().setStartDate(mDate.getValue());
 		FilterController.get().commit();
@@ -94,10 +94,10 @@ public class RankFilter extends Composite {
 		FilterController.get().setStore(mAppStore.getValue(mAppStore.getSelectedIndex()));
 	}
 
-	@UiHandler("mListType")
-	void onListTypeValueChanged(ChangeEvent event) {
-		FilterController.get().setListType(mListType.getValue(mListType.getSelectedIndex()));
-	}
+	// @UiHandler("mListType")
+	// void onListTypeValueChanged(ChangeEvent event) {
+	// FilterController.get().setListType(mListType.getValue(mListType.getSelectedIndex()));
+	// }
 
 	@UiHandler("mCountry")
 	void onCountryValueChanged(ChangeEvent event) {
@@ -121,13 +121,6 @@ public class RankFilter extends Composite {
 	 */
 	public String getCountry() {
 		return mCountry.getItemText(mCountry.getSelectedIndex());
-	}
-
-	/**
-	 * @return
-	 */
-	public String getListType() {
-		return mListType.getItemText(mListType.getSelectedIndex());
 	}
 
 	public String getDisplayDate() {
