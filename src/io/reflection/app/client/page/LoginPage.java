@@ -116,7 +116,7 @@ public class LoginPage extends Composite implements SessionEventHandler {
 		}
 	}
 
-	boolean validate() {
+	private boolean validate() {
 		boolean validated = true;
 		// Retrieve fields to validate
 		String username = mUsername.getText();
@@ -131,7 +131,7 @@ public class LoginPage extends Composite implements SessionEventHandler {
 		} else if (username.length() > 255) {
 			mUsernameError = "Too long (maximum 255 characters)";
 			validated = false;
-		} else if (!username.matches(FormHelper.EMAILPATTERN)) {
+		} else if (!username.matches(FormHelper.EMAIL_PATTERN)) {
 			mUsernameError = "Invalid email address";
 			validated = false;
 		} else {

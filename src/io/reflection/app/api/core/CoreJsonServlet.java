@@ -23,6 +23,7 @@ import io.reflection.app.api.core.shared.call.LinkAccountRequest;
 import io.reflection.app.api.core.shared.call.LoginRequest;
 import io.reflection.app.api.core.shared.call.LogoutRequest;
 import io.reflection.app.api.core.shared.call.RegisterUserRequest;
+import io.reflection.app.api.core.shared.call.SearchForItemRequest;
 
 import com.google.gson.JsonObject;
 import com.willshex.gson.json.service.server.JsonServlet;
@@ -98,6 +99,10 @@ public final class CoreJsonServlet extends JsonServlet {
 			IsAuthorisedRequest input = new IsAuthorisedRequest();
 			input.fromJson(request);
 			output = service.isAuthorised(input).toString();
+		} else if ("SearchForItem".equals(action)) {
+			SearchForItemRequest input = new SearchForItemRequest();
+			input.fromJson(request);
+			output = service.searchForItem(input).toString();
 		}
 		return output;
 	}

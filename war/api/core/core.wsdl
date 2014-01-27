@@ -53,6 +53,9 @@
             <xsd:element name="IsAuthorisedInput" type="sdc:IsAuthorisedRequest" />
             <xsd:element name="IsAuthorisedOutput" type="sdc:IsAuthorisedResponse" />
 
+            <xsd:element name="SearchForItemInput" type="sdc:SearchForItemRequest" />
+            <xsd:element name="SearchForItemOutput" type="sdc:SearchForItemResponse" />
+
             <xsd:complexType name="GetCountriesRequest">
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
@@ -378,6 +381,28 @@
                 </xsd:complexContent>
             </xsd:complexType>
 
+            <xsd:complexType name="SearchForItemRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="pager" type="sd:Pager" />
+                        </xsd:sequence>
+                        <xsd:attribute name="query" type="xsd:string" />
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="SearchForItemResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+                            <xsd:element name="items" type="sd:Item" maxOccurs="unbounded" />
+                            <xsd:element name="pager" type="sd:Pager" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
         </xsd:schema>
     </wsdl:types>
 
@@ -492,6 +517,13 @@
         <wsdl:part name="output" element="sdc:IsAuthorisedOutput" />
     </wsdl:message>
 
+    <wsdl:message name="SearchForItemRequest">
+        <wsdl:part name="input" element="sdc:SearchForItemInput" />
+    </wsdl:message>
+    <wsdl:message name="SearchForItemResponse">
+        <wsdl:part name="output" element="sdc:SearchForItemOutput" />
+    </wsdl:message>
+
     <wsdl:portType name="core">
         <wsdl:operation name="GetCountries">
             <wsdl:input message="sdc:GetCountriesRequest" />
@@ -570,6 +602,11 @@
         <wsdl:operation name="IsAuthorised">
             <wsdl:input message="sdc:IsAuthorisedRequest" />
             <wsdl:output message="sdc:IsAuthorisedResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="SearchForItem">
+            <wsdl:input message="sdc:SearchForItemRequest" />
+            <wsdl:output message="sdc:SearchForItemResponse" />
         </wsdl:operation>
 
     </wsdl:portType>
@@ -725,6 +762,16 @@
 
         <wsdl:operation name="IsAuthorised">
             <soap:operation soapAction="http://app.reflection.io/core/IsAuthorised" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="SearchForItem">
+            <soap:operation soapAction="http://app.reflection.io/core/SearchForItem" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>

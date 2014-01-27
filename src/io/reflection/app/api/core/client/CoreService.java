@@ -40,6 +40,8 @@ import io.reflection.app.api.core.shared.call.LogoutRequest;
 import io.reflection.app.api.core.shared.call.LogoutResponse;
 import io.reflection.app.api.core.shared.call.RegisterUserRequest;
 import io.reflection.app.api.core.shared.call.RegisterUserResponse;
+import io.reflection.app.api.core.shared.call.SearchForItemRequest;
+import io.reflection.app.api.core.shared.call.SearchForItemResponse;
 
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
@@ -387,6 +389,28 @@ public final class CoreService extends JsonService {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					IsAuthorisedResponse outputParameter = new IsAuthorisedResponse();
+					parseResponse(response.getText(), outputParameter);
+					output.onSuccess(outputParameter);
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+				}
+			});
+		} catch (RequestException e) {
+			output.onFailure(e);
+		}
+	}
+
+	public static final String CoreMethodSearchForItem = "SearchForItem";
+
+	public void searchForItem(SearchForItemRequest input, final AsyncCallback<SearchForItemResponse> output) {
+		try {
+			sendRequest(CoreMethodSearchForItem, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					SearchForItemResponse outputParameter = new SearchForItemResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
 				}

@@ -43,6 +43,8 @@ import io.reflection.app.api.core.shared.call.LogoutRequest;
 import io.reflection.app.api.core.shared.call.LogoutResponse;
 import io.reflection.app.api.core.shared.call.RegisterUserRequest;
 import io.reflection.app.api.core.shared.call.RegisterUserResponse;
+import io.reflection.app.api.core.shared.call.SearchForItemRequest;
+import io.reflection.app.api.core.shared.call.SearchForItemResponse;
 import io.reflection.app.api.exception.AuthenticationException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
@@ -1010,6 +1012,20 @@ public final class Core extends ActionHandler {
 		}
 
 		return listName;
+	}
+
+	public SearchForItemResponse searchForItem(SearchForItemRequest input) {
+		LOG.finer("Entering searchForItem");
+		SearchForItemResponse output = new SearchForItemResponse();
+		try {
+			
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting searchForItem");
+		return output;
 	}
 
 }

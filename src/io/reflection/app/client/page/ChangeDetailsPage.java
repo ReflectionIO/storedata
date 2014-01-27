@@ -235,7 +235,7 @@ public class ChangeDetailsPage extends Composite implements NavigationEventHandl
 		} else if (username.length() > 255) {
 			mUsernameError = "Too long (maximum 255 characters)";
 			validated = false;
-		} else if (!username.matches(FormHelper.EMAILPATTERN)) {
+		} else if (!username.matches(FormHelper.EMAIL_PATTERN)) {
 			mUsernameError = "Invalid email address";
 			validated = false;
 		} else {
