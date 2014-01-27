@@ -4,8 +4,14 @@
     .moreMargin {
 		margin-right: 0.2em;
     }
+    
+    .pageTitle {
+		padding-bottom: 30px;
+    }
     </ui:style>
     <g:HTMLPanel styleName="well sidebar-nav col-md-3">
+        <h2 class="{style.pageTitle}">Leaderboard</h2>
+    
         <g:FormPanel>
             <g:HTMLPanel>
 

@@ -4,8 +4,16 @@
     
     </ui:style>
     <g:HTMLPanel>
-        <h2>Item</h2>
 
         <p:AlertBox ui:field="mAlertBox" visible="false" />
+
+        <div class="container">
+            <div class="row">
+
+
+                <p:ItemFilter ui:field="mFilter" />
+
+            </div>
+        </div>
     </g:HTMLPanel>
 </ui:UiBinder> 

@@ -20,6 +20,7 @@ import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.RanksEventHandler;
 import io.reflection.app.client.handler.user.SessionEventHandler;
+import io.reflection.app.client.part.AlertBox;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.Breadcrumbs;
 import io.reflection.app.client.part.PageSizePager;
@@ -61,6 +62,8 @@ public class RanksPage extends Composite implements RanksEventHandler, FilterEve
 
 	interface RanksPageUiBinder extends UiBinder<Widget, RanksPage> {}
 
+	@UiField AlertBox mAlertBox;
+
 	@UiField(provided = true) CellTable<RanksGroup> mRanks = new CellTable<RanksGroup>(ServiceController.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) PageSizePager mPager = new PageSizePager(ServiceController.STEP_VALUE);
 
@@ -84,6 +87,10 @@ public class RanksPage extends Composite implements RanksEventHandler, FilterEve
 	private Column<RanksGroup, Item> mGrossingColumn;
 	private Column<RanksGroup, Item> mFreeColumn;
 	private Column<RanksGroup, Item> mPaidColumn;
+	private TextColumn<RanksGroup> mPriceColumn;
+	private TextColumn<RanksGroup> mDownloadsColumn;
+	private TextColumn<RanksGroup> mRevenueColumn;
+	private TextColumn<RanksGroup> mIapColumn;
 
 	private static final String ALL_LIST_TYPE = "all";
 	private static final String FREE_LIST_TYPE = "free";
@@ -91,6 +98,13 @@ public class RanksPage extends Composite implements RanksEventHandler, FilterEve
 	private static final String GROSSING_LIST_TYPE = "grossing";
 
 	private Map<String, LIElement> mTabs = new HashMap<String, LIElement>();
+	private TextHeader mPriceHeader;
+	private TextHeader mPaidHeader;
+	private TextHeader mFreeHeader;
+	private TextHeader mGrossingHeader;
+	private TextHeader mDownloadsHeader;
+	private TextHeader mRevenueHeader;
+	private TextHeader mIapHeader;
 
 	public RanksPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -149,21 +163,75 @@ public class RanksPage extends Composite implements RanksEventHandler, FilterEve
 			}
 		};
 
+		mPriceColumn = new TextColumn<RanksGroup>() {
+
+			@Override
+			public String getValue(RanksGroup object) {
+				return rankForListType(object).price.toString();
+			}
+
+		};
+		mDownloadsColumn = new TextColumn<RanksGroup>() {
+
+			@Override
+			public String getValue(RanksGroup object) {
+				return rankForListType(object).downloads.toString();
+			}
+
+		};
+		mRevenueColumn = new TextColumn<RanksGroup>() {
+
+			@Override
+			public String getValue(RanksGroup object) {
+				return rankForListType(object).revenue.toString();
+			}
+
+		};
+		mIapColumn = new TextColumn<RanksGroup>() {
+
+			@Override
+			public String getValue(RanksGroup object) {
+				String jsonProperties = RankController.get().lookupItem(rankForListType(object).itemId).properties;
+
+				return jsonProperties == null ? "?" : jsonProperties;
+			}
+
+		};
+
 		TextHeader rankHeader = new TextHeader("Rank");
-		rankHeader.setHeaderStyleNames("col-md-1");
+		rankHeader.setHeaderStyleNames("col-xs-1");
 		mRanks.addColumn(position, rankHeader);
 
-		TextHeader paidHeader = new TextHeader("Paid");
-		paidHeader.setHeaderStyleNames("col-md-3");
-		mRanks.addColumn(mPaidColumn, paidHeader);
+		mPaidHeader = new TextHeader("Paid");
+		mRanks.addColumn(mPaidColumn, mPaidHeader);
 
-		TextHeader freeHeader = new TextHeader("Free");
-		freeHeader.setHeaderStyleNames("col-md-3");
-		mRanks.addColumn(mFreeColumn, freeHeader);
+		mFreeHeader = new TextHeader("Free");
+		mRanks.addColumn(mFreeColumn, mFreeHeader);
 
-		TextHeader grossingHeader = new TextHeader("Grossing");
-		grossingHeader.setHeaderStyleNames("col-md-3");
-		mRanks.addColumn(mGrossingColumn, grossingHeader);
+		mGrossingHeader = new TextHeader("Grossing");
+		mRanks.addColumn(mGrossingColumn, mGrossingHeader);
+
+		mPriceHeader = new TextHeader("Price");
+		mDownloadsHeader = new TextHeader("Downloads");
+		mRevenueHeader = new TextHeader("Revenue");
+		mIapHeader = new TextHeader("IAP");
+
+	}
+
+	/**
+	 * @param object
+	 * @return
+	 */
+	protected Rank rankForListType(RanksGroup object) {
+		Rank rank = object.grossing;
+
+		if (FREE_LIST_TYPE.equals(mListType)) {
+			rank = object.free;
+		} else if (PAID_LIST_TYPE.equals(mListType)) {
+			rank = object.paid;
+		}
+
+		return rank;
 	}
 
 	/**
@@ -320,21 +388,40 @@ public class RanksPage extends Composite implements RanksEventHandler, FilterEve
 	private void refreshRanks() {
 
 		if (ALL_LIST_TYPE.equals(mListType)) {
-			addColumn(mPaidColumn, "Paid", 1);
-			addColumn(mFreeColumn, "Free", 2);
-			addColumn(mGrossingColumn, "Grossing", 3);
+			addColumn(mGrossingColumn, mGrossingHeader, 1);
+			addColumn(mFreeColumn, mFreeHeader, 1);
+			addColumn(mPaidColumn, mPaidHeader, 1);
+			removeColumn(mPriceColumn);
+			removeColumn(mDownloadsColumn);
+			removeColumn(mRevenueColumn);
+			removeColumn(mIapColumn);
 		} else if (FREE_LIST_TYPE.equals(mListType)) {
 			removeColumn(mPaidColumn);
 			removeColumn(mGrossingColumn);
-			addColumn(mFreeColumn, "Free", 1);
+			addColumn(mFreeColumn, mFreeHeader, 1);
+
+			addColumn(mPriceColumn, mPriceHeader, 2);
+			addColumn(mDownloadsColumn, mDownloadsHeader, 3);
+			addColumn(mRevenueColumn, mRevenueHeader, 4);
+			addColumn(mIapColumn, mIapHeader, 5);
 		} else if (PAID_LIST_TYPE.equals(mListType)) {
-			addColumn(mPaidColumn, "Paid", 1);
 			removeColumn(mFreeColumn);
 			removeColumn(mGrossingColumn);
+			addColumn(mPaidColumn, mPaidHeader, 1);
+
+			addColumn(mPriceColumn, mPriceHeader, 2);
+			addColumn(mDownloadsColumn, mDownloadsHeader, 3);
+			addColumn(mRevenueColumn, mRevenueHeader, 4);
+			addColumn(mIapColumn, mIapHeader, 5);
 		} else if (GROSSING_LIST_TYPE.equals(mListType)) {
 			removeColumn(mPaidColumn);
 			removeColumn(mFreeColumn);
-			addColumn(mGrossingColumn, "Grossing", 1);
+			addColumn(mGrossingColumn, mGrossingHeader, 1);
+
+			addColumn(mPriceColumn, mPriceHeader, 2);
+			addColumn(mDownloadsColumn, mDownloadsHeader, 3);
+			addColumn(mRevenueColumn, mRevenueHeader, 4);
+			addColumn(mIapColumn, mIapHeader, 5);
 		}
 
 	}
@@ -347,11 +434,11 @@ public class RanksPage extends Composite implements RanksEventHandler, FilterEve
 		}
 	}
 
-	private void addColumn(Column<RanksGroup, ?> column, String header, int index) {
+	private void addColumn(Column<RanksGroup, ?> column, TextHeader header, int index) {
 		int currentIndex = mRanks.getColumnIndex(column);
 
 		if (currentIndex == -1) {
-			mRanks.insertColumn(1, column, new TextHeader(header));
+			mRanks.insertColumn(index, column, header);
 		}
 	}
 
