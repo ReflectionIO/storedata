@@ -17,6 +17,7 @@ import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
+import io.reflection.app.client.handler.EnterPressedEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.AlertBoxHelper;
 import io.reflection.app.client.helper.FormHelper;
@@ -29,9 +30,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -49,7 +47,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class LinkedAccountsPage extends Composite implements NavigationEventHandler, LinkAccountEventHandler, GetLinkedAccountsEventHandler, KeyPressHandler {
+public class LinkedAccountsPage extends Composite implements NavigationEventHandler, LinkAccountEventHandler, GetLinkedAccountsEventHandler {
 
 	private static LinkedAccountsPageUiBinder uiBinder = GWT.create(LinkedAccountsPageUiBinder.class);
 
@@ -126,11 +124,13 @@ public class LinkedAccountsPage extends Composite implements NavigationEventHand
 				if ("iosmac".equals(accountType)) {
 					mForm.setVisible(true);
 					mLinkableAccount = mIosMacForm;
+					mLinkableAccount.setOnEnterPressed(new EnterPressedEventHandler() {
+						public void onEnterPressed() {
+							mLinkAccount.click();
+						}
+					});
 					mIosMacForm.setVisible(true);
-					mIosMacForm.getUsernameElement().setFocus(true);
-					mIosMacForm.getUsernameElement().addKeyPressHandler(this);
-					mIosMacForm.getPasswordElement().addKeyPressHandler(this);
-					mIosMacForm.getVendorElement().addKeyPressHandler(this);
+					mLinkableAccount.getFirstToFocus().setFocus(true);
 				} else {
 					mIosMacForm.setVisible(false);
 					mForm.setVisible(false);
@@ -139,13 +139,6 @@ public class LinkedAccountsPage extends Composite implements NavigationEventHand
 				mIosMacForm.setVisible(false);
 				mForm.setVisible(false);
 			}
-		}
-	}
-
-	@Override
-	public void onKeyPress(KeyPressEvent event) {
-		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
-			mLinkAccount.click();
 		}
 	}
 

@@ -7,11 +7,19 @@
 //
 package io.reflection.app.client.part.linkaccount;
 
-import com.google.gson.*;
+import io.reflection.app.client.handler.EnterPressedEventHandler;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
@@ -42,6 +50,7 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	@UiField HTMLPanel mVendorIdGroup;
 	@UiField HTMLPanel mVendorIdNote;
 	String mVendorIdError;
+	private EnterPressedEventHandler mEnterHandler;
 
 	public IosMacLinkAccountForm() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -65,16 +74,11 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 		}
 	}
 
-	public TextBox getUsernameElement() {
-		return mUsername;
-	}
-
-	public TextBox getPasswordElement() {
-		return mPassword;
-	}
-
-	public TextBox getVendorElement() {
-		return mVendorId;
+	@UiHandler({ "mUsername", "mPassword", "mVendorId" })
+	void onKeyPressed(KeyPressEvent e) {
+		if (mEnterHandler != null && e.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
+			mEnterHandler.onEnterPressed();
+		}
 	}
 
 	/*
@@ -144,6 +148,26 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 		properties.add("vendors", vendors);
 
 		return Convert.fromJsonObject(properties);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.part.linkaccount.LinkableAccountFields#setOnEnterPressed(io.reflection.app.client.handler.EnterPressedEventHandler)
+	 */
+	@Override
+	public void setOnEnterPressed(EnterPressedEventHandler handler) {
+		mEnterHandler = handler;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.part.linkaccount.LinkableAccountFields#getFirstToFocus()
+	 */
+	@Override
+	public Focusable getFirstToFocus() {
+		return mUsername;
 	}
 
 }
