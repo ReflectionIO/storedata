@@ -52,6 +52,31 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 
 	}
 
+	/**
+	 * Set the focus on 'mUsername' field when this part of the page is set to visible
+	 * 
+	 * @see com.google.gwt.user.client.ui.UIObject#setVisible(boolean)
+	 */
+	@Override
+	public void setVisible(boolean visible) {
+		super.setVisible(visible);
+		if (visible == Boolean.TRUE) {
+			// mUsername.setFocus(true);
+		}
+	}
+
+	public TextBox getUsernameElement() {
+		return mUsername;
+	}
+
+	public TextBox getPasswordElement() {
+		return mPassword;
+	}
+
+	public TextBox getVendorElement() {
+		return mVendorId;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -117,7 +142,7 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 		vendors.add(vendor);
 
 		properties.add("vendors", vendors);
-		
+
 		return Convert.fromJsonObject(properties);
 	}
 
