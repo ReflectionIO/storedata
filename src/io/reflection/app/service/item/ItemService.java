@@ -332,11 +332,12 @@ final class ItemService implements IItemService {
 
 		List<Item> items = new ArrayList<Item>();
 		String getDataItemQuery = String
-				.format("SELECT * FROM `item` WHERE (`externalid` LIKE '%%%1$s%%' OR `name` LIKE '%%%1$s%%' OR `creator` LIKE '%%%1$s%%') AND `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d",
-						query, pager.sortBy == null ? "id" : pager.sortBy,
+				.format("SELECT * FROM `item` WHERE (`externalid` LIKE '%%%1$s%%' OR `name` LIKE '%%%1$s%%' OR `created` LIKE '%%%1$s%%') AND `deleted`='n' ORDER BY `%2$s` %3$s LIMIT %4$s, %5$s",
+						query, 
+						pager.sortBy == null ? "id" : pager.sortBy,
 						pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
-						pager.start == null ? Pager.DEFAULT_START.longValue() : pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue()
-								: pager.count.longValue());
+						pager.start == null ? Pager.DEFAULT_START.longValue() : pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue() : pager.count.longValue()
+						);
 
 		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
 
