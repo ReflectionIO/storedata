@@ -135,7 +135,7 @@ public class LoginPage extends Composite implements SessionEventHandler {
 		} else if (username.length() > 255) {
 			mUsernameError = "Too long (maximum 255 characters)";
 			validated = false;
-		} else if (!FormHelper.regExpEmailChecker.test(username)) {
+		} else if (!FormHelper.isValidEmail(username)) {
 			mUsernameError = "Invalid email address";
 			validated = false;
 		} else {

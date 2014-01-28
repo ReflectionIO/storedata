@@ -18,7 +18,11 @@ import com.willshex.gson.json.service.shared.Error;
 public class FormHelper {
 
 	private static String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-	public static RegExp regExpEmailChecker = RegExp.compile(FormHelper.EMAIL_PATTERN);
+	private static RegExp REG_EXP_EMAIL_CHECKER = RegExp.compile(FormHelper.EMAIL_PATTERN);
+	
+	public static boolean isValidEmail (String toValidate){
+		return REG_EXP_EMAIL_CHECKER.test(toValidate);
+	}
 	
 	public static void showNote(boolean isError, HTMLPanel group, HTMLPanel note, String text) {
 		if (group != null) {
