@@ -19,11 +19,11 @@ public class FormHelper {
 
 	private static String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 	private static RegExp REG_EXP_EMAIL_CHECKER = RegExp.compile(FormHelper.EMAIL_PATTERN);
-	
-	public static boolean isValidEmail (String toValidate){
+
+	public static boolean isValidEmail(String toValidate) {
 		return REG_EXP_EMAIL_CHECKER.test(toValidate);
 	}
-	
+
 	public static void showNote(boolean isError, HTMLPanel group, HTMLPanel note, String text) {
 		if (group != null) {
 			if (isError) {
