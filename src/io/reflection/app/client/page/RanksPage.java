@@ -14,6 +14,7 @@ import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.client.cell.MiniAppCell;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.controller.ItemController;
 import io.reflection.app.client.controller.RankController;
 import io.reflection.app.client.controller.ServiceController;
 import io.reflection.app.client.controller.SessionController;
@@ -143,7 +144,7 @@ public class RanksPage extends Composite implements RanksEventHandler, FilterEve
 
 			@Override
 			public Item getValue(RanksGroup object) {
-				return RankController.get().lookupItem(object.paid.itemId);
+				return ItemController.get().lookupItem(object.paid.itemId);
 			}
 		};
 
@@ -151,7 +152,7 @@ public class RanksPage extends Composite implements RanksEventHandler, FilterEve
 
 			@Override
 			public Item getValue(RanksGroup object) {
-				return RankController.get().lookupItem(object.free.itemId);
+				return ItemController.get().lookupItem(object.free.itemId);
 			}
 		};
 
@@ -159,7 +160,7 @@ public class RanksPage extends Composite implements RanksEventHandler, FilterEve
 
 			@Override
 			public Item getValue(RanksGroup object) {
-				return RankController.get().lookupItem(object.grossing.itemId);
+				return ItemController.get().lookupItem(object.grossing.itemId);
 			}
 		};
 
@@ -191,7 +192,7 @@ public class RanksPage extends Composite implements RanksEventHandler, FilterEve
 
 			@Override
 			public String getValue(RanksGroup object) {
-				String jsonProperties = RankController.get().lookupItem(rankForListType(object).itemId).properties;
+				String jsonProperties = ItemController.get().lookupItem(rankForListType(object).itemId).properties;
 
 				return jsonProperties == null ? "?" : jsonProperties;
 			}

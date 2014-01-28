@@ -10,25 +10,12 @@
     }
     </ui:style>
     <g:HTMLPanel styleName="well sidebar-nav col-md-3">
-        <g:Image />
+        <g:Image ui:field="mImage" styleName="img-rounded" />
 
-        <h2 ui:field="mTitle" class="{style.pageTitle}">Item</h2>
+        <h2 ui:field="mTitle">Item</h2>
 
-        <g:FormPanel>
-            <g:HTMLPanel>
+        <h3 ui:field="mCreatorName" class="{style.pageTitle} text-muted">By Creator</h3>
 
-                <g:HTMLPanel styleName="form-group">
-                    <label>
-                        <i class="glyphicon glyphicon-folder-open {style.moreMargin}"></i>
-                        App Store
-                    </label>
-                    <g:ListBox styleName="form-control" ui:field="mAppStore">
-                        <g:item value="iph">iPhone</g:item>
-                        <g:item value="ipa">iPad</g:item>
-                    </g:ListBox>
-                </g:HTMLPanel>
 
-            </g:HTMLPanel>
-        </g:FormPanel>
     </g:HTMLPanel>
 </ui:UiBinder> 

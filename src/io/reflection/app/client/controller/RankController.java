@@ -15,10 +15,8 @@ import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.RanksEventHandler.FetchingRanks;
 import io.reflection.app.client.handler.RanksEventHandler.ReceivedRanks;
 import io.reflection.app.client.part.datatypes.RanksGroup;
-import io.reflection.app.datatypes.shared.Item;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,8 +34,6 @@ import com.willshex.gson.json.service.shared.StatusType;
 public class RankController extends AsyncDataProvider<RanksGroup> implements ServiceController, FilterEventHandler {
 
 	private static RankController mOne = null;
-
-	private Map<String, Item> mItemLookup = new HashMap<String, Item>();
 
 	private List<RanksGroup> mRows = null;
 
@@ -88,9 +84,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 					}
 
 					if (output.items != null) {
-						for (Item item : output.items) {
-							mItemLookup.put(item.externalId, item);
-						}
+						ItemController.get().addItemsToLookup(output.items);
 					}
 
 					EventController.get().fireEventFromSource(new ReceivedRanks("free" + input.listType, output.freeRanks), RankController.this);
@@ -124,9 +118,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 		EventController.get().fireEventFromSource(new FetchingRanks(), RankController.this);
 	}
 
-	public Item lookupItem(String externalId) {
-		return mItemLookup.get(externalId);
-	}
+	
 
 	/*
 	 * (non-Javadoc)
@@ -162,7 +154,6 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 		updateRowCount(0, false);
 
 		fetchTopItems();
-
 	}
 
 	/*
@@ -176,7 +167,6 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 	}
 
 	public void reset() {
-		mItemLookup.clear();
 
 		mPager = null;
 		mRows = null;
@@ -186,4 +176,6 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 		fetchTopItems();
 	}
+	
+	
 }
