@@ -73,7 +73,7 @@ public class RanksPage extends Composite implements RanksEventHandler, FilterEve
 	@UiField Breadcrumbs mBreadcrumbs;
 	@UiField InlineHyperlink mRedirect;
 
-	String mListType = ALL_LIST_TYPE;
+	private String mListType = ALL_LIST_TYPE;
 
 	@UiField InlineHyperlink mAll;
 	@UiField InlineHyperlink mFree;

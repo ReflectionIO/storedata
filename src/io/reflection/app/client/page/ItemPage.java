@@ -7,6 +7,9 @@
 //
 package io.reflection.app.client.page;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import io.reflection.app.api.admin.shared.call.event.SearchForItemEventHandler;
 import io.reflection.app.api.core.shared.call.SearchForItemRequest;
 import io.reflection.app.api.core.shared.call.SearchForItemResponse;
@@ -22,9 +25,13 @@ import io.reflection.app.client.part.ItemFilter;
 import io.reflection.app.datatypes.shared.Item;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
 
@@ -37,10 +44,30 @@ public class ItemPage extends Composite implements NavigationEventHandler, Searc
 	@UiField AlertBox mAlertBox;
 	@UiField ItemFilter mFilter;
 
-	String mItemExternalId;
+	@UiField InlineHyperlink mRevenue;
+	@UiField InlineHyperlink mDownloads;
+	@UiField InlineHyperlink mRanking;
+
+	@UiField LIElement mRevenueItem;
+	@UiField LIElement mDownloadsItem;
+	@UiField LIElement mRankingItem;
+
+	private String mItemExternalId;
+
+	private String mChartType = REVENUE_CHART_TYPE;
+
+	private static final String REVENUE_CHART_TYPE = "revenue";
+	private static final String DOWNLOADS_CHART_TYPE = "downloads";
+	private static final String RANKING_CHART_TYPE = "ranking";
+
+	private Map<String, LIElement> mTabs = new HashMap<String, LIElement>();
 
 	public ItemPage() {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		mTabs.put(REVENUE_CHART_TYPE, mRevenueItem);
+		mTabs.put(DOWNLOADS_CHART_TYPE, mDownloadsItem);
+		mTabs.put(RANKING_CHART_TYPE, mRankingItem);
 
 		EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this);
 		EventController.get().addHandlerToSource(SearchForItemEventHandler.TYPE, ItemController.get(), this);
@@ -55,13 +82,15 @@ public class ItemPage extends Composite implements NavigationEventHandler, Searc
 
 				Item item = null;
 
+				mRevenue.setTargetHistoryToken("item/view/" + mItemExternalId);
+				mDownloads.setTargetHistoryToken("item/view/" + mItemExternalId);
+				mRanking.setTargetHistoryToken("item/view/" + mItemExternalId);
+
 				if ((item = ItemController.get().lookupItem(mItemExternalId)) != null) {
 					displayItemDetails(item);
 				} else {
 					AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Getting details", " - This will only take a few seconds...",
 							false).setVisible(true);
-
-					mFilter.setVisible(false);
 				}
 
 				// AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.SuccessAlertBoxType, false, "Item",
@@ -81,8 +110,6 @@ public class ItemPage extends Composite implements NavigationEventHandler, Searc
 		mFilter.setName(item.name);
 		mFilter.setImage(item.largeImage);
 		mFilter.setCreatorName(item.creatorName);
-		
-		mFilter.setVisible(true);
 	}
 
 	/*
@@ -102,6 +129,9 @@ public class ItemPage extends Composite implements NavigationEventHandler, Searc
 			if (output.items != null) for (Item item : output.items) {
 				if (mItemExternalId.equals(item.externalId)) {
 					displayItemDetails(item);
+					
+					refreshTabs();
+					
 					found = true;
 					break;
 				}
@@ -128,6 +158,34 @@ public class ItemPage extends Composite implements NavigationEventHandler, Searc
 			AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.DangerAlertBoxType, false, "Item", " - We could not find the requrested item!", false)
 					.setVisible(true);
 		}
+	}
+
+	@UiHandler({ "mRevenue", "mDownloads", "mRanking" })
+	void onClicked(ClickEvent e) {
+		boolean changed = false;
+
+		if (e.getSource() == mRevenue && !REVENUE_CHART_TYPE.equals(mChartType)) {
+			mChartType = REVENUE_CHART_TYPE;
+			changed = true;
+		} else if (e.getSource() == mDownloads && !DOWNLOADS_CHART_TYPE.equals(mChartType)) {
+			mChartType = DOWNLOADS_CHART_TYPE;
+			changed = true;
+		} else if (e.getSource() == mRanking && !RANKING_CHART_TYPE.equals(mChartType)) {
+			mChartType = RANKING_CHART_TYPE;
+			changed = true;
+		}
+
+		if (changed) {
+			refreshTabs();
+		}
+	}
+
+	private void refreshTabs() {
+		for (String key : mTabs.keySet()) {
+			mTabs.get(key).removeClassName("active");
+		}
+
+		mTabs.get(mChartType).addClassName("active");
 	}
 
 }

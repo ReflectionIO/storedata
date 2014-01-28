@@ -1,7 +1,18 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part">
     <ui:style>
+    @external nav,nav-tabs,nav-justified;
+    .tabs {
+    	margin-bottom: 20px;
+    }
     
+    .nav.nav-tabs.nav-justified.tabs>li>a {
+    	text-align: left;
+    }
+    
+    .floatRight {
+    	float: right;
+    }
     </ui:style>
     <g:HTMLPanel>
 
@@ -10,9 +21,30 @@
         <div class="container">
             <div class="row">
 
-
                 <p:ItemFilter ui:field="mFilter" />
 
+                <div class="col-md-9">
+                    <ul class="nav nav-tabs nav-justified {style.tabs}">
+                        <li ui:field="mRevenueItem">
+                            <g:InlineHyperlink ui:field="mRevenue">
+                                Revenue
+                                <i class="{style.floatRight} icon-money"></i>
+                            </g:InlineHyperlink>
+                        </li>
+                        <li ui:field="mDownloadsItem">
+                            <g:InlineHyperlink ui:field="mDownloads">
+                                Downloads
+                                <i class="{style.floatRight} icon-download"></i>
+                            </g:InlineHyperlink>
+                        </li>
+                        <li ui:field="mRankingItem">
+                            <g:InlineHyperlink ui:field="mRanking">
+                                Ranking
+                                <i class="{style.floatRight} icon-list-numbered"></i>
+                            </g:InlineHyperlink>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </g:HTMLPanel>

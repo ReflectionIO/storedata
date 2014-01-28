@@ -7,12 +7,14 @@
 //
 package io.reflection.app.client;
 
+import io.reflection.app.client.charts.GwtCanvasBasedCanvasFactory;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.res.Styles;
 
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.googlecode.gchart.client.GChart;
 
 /**
  * @author billy1380
@@ -31,6 +33,8 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 	public void onModuleLoad() {
 		super.onModuleLoad();
 
+		GChart.setCanvasFactory(new GwtCanvasBasedCanvasFactory());
+		
 		History.addValueChangeHandler(NavigationController.get());
 
 		makeContainer();
