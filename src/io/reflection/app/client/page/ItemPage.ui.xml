@@ -23,7 +23,7 @@
 
                 <p:ItemSidePanel ui:field="mSidePanel" />
 
-                <div class="col-md-9">
+                <div class="col-sm-9">
                     <ul class="nav nav-tabs nav-justified {style.tabs}">
                         <li ui:field="mRevenueItem">
                             <g:InlineHyperlink ui:field="mRevenue">
@@ -44,6 +44,12 @@
                             </g:InlineHyperlink>
                         </li>
                     </ul>
+                    
+                    <p:ItemTopPanel ui:field="mTopPanel" >
+                        
+                    
+                    </p:ItemTopPanel>
+                    
                 </div>
             </div>
         </div>
