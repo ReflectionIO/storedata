@@ -1020,7 +1020,9 @@ public final class Core extends ActionHandler {
 		try {
 			if (input == null)
 				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("SearchForItemResponse: input"));
-
+			
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+			input.session = ValidationHelper.validateSession(input.session, "input.session");
 			input.query = ValidationHelper.validateQuery(input.query, "input");
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 			output.items = ItemServiceProvider.provide().getQueryItems(input.query,input.pager);
