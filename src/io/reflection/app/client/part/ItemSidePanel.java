@@ -1,5 +1,5 @@
 //
-//  ItemFilter.java
+//  ItemSidePanel.java
 //  storedata
 //
 //  Created by William Shakour (billy1380) on 27 Jan 2014.
@@ -19,17 +19,17 @@ import com.google.gwt.user.client.ui.Widget;
  * @author billy1380
  * 
  */
-public class ItemFilter extends Composite {
+public class ItemSidePanel extends Composite {
 
-	private static ItemFilterUiBinder uiBinder = GWT.create(ItemFilterUiBinder.class);
+	private static ItemSidePanelUiBinder uiBinder = GWT.create(ItemSidePanelUiBinder.class);
 
-	interface ItemFilterUiBinder extends UiBinder<Widget, ItemFilter> {}
+	interface ItemSidePanelUiBinder extends UiBinder<Widget, ItemSidePanel> {}
 
 	@UiField HeadingElement mTitle;
 	@UiField Image mImage;
 	@UiField HeadingElement mCreatorName;
 
-	public ItemFilter() {
+	public ItemSidePanel() {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 

@@ -25,7 +25,7 @@ import io.reflection.app.client.part.AlertBox;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.Breadcrumbs;
 import io.reflection.app.client.part.PageSizePager;
-import io.reflection.app.client.part.RankFilter;
+import io.reflection.app.client.part.RankSidePanel;
 import io.reflection.app.client.part.datatypes.RanksGroup;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Permission;
@@ -68,7 +68,7 @@ public class RanksPage extends Composite implements RanksEventHandler, FilterEve
 	@UiField(provided = true) CellTable<RanksGroup> mRanks = new CellTable<RanksGroup>(ServiceController.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) PageSizePager mPager = new PageSizePager(ServiceController.STEP_VALUE);
 
-	@UiField RankFilter mFilter;
+	@UiField RankSidePanel mSidePanel;
 
 	@UiField Breadcrumbs mBreadcrumbs;
 	@UiField InlineHyperlink mRedirect;
@@ -240,7 +240,7 @@ public class RanksPage extends Composite implements RanksEventHandler, FilterEve
 	 */
 	private void refreshBreadcrumbs() {
 		mBreadcrumbs.clear();
-		mBreadcrumbs.push(mFilter.getStore(), mFilter.getCountry(), mListType.substring(0, 1).toUpperCase() + mListType.substring(1), mFilter.getDisplayDate(),
+		mBreadcrumbs.push(mSidePanel.getStore(), mSidePanel.getCountry(), mListType.substring(0, 1).toUpperCase() + mListType.substring(1), mSidePanel.getDisplayDate(),
 				"Ranks");
 	}
 

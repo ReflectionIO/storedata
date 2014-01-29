@@ -21,7 +21,7 @@
         <div class="container">
             <div class="row">
 
-                <p:ItemFilter ui:field="mFilter" />
+                <p:ItemSidePanel ui:field="mSidePanel" />
 
                 <div class="col-md-9">
                     <ul class="nav nav-tabs nav-justified {style.tabs}">

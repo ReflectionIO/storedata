@@ -32,11 +32,11 @@ import com.google.gwt.user.datepicker.client.DateBox.DefaultFormat;
  * @author billy1380
  * 
  */
-public class RankFilter extends Composite {
+public class RankSidePanel extends Composite {
 
-	private static RankFilterUiBinder uiBinder = GWT.create(RankFilterUiBinder.class);
+	private static RankSidePanelUiBinder uiBinder = GWT.create(RankSidePanelUiBinder.class);
 
-	interface RankFilterUiBinder extends UiBinder<Widget, RankFilter> {}
+	interface RankSidePanelUiBinder extends UiBinder<Widget, RankSidePanel> {}
 
 	@UiField DateBox mDate;
 	@UiField ListBox mAppStore;
@@ -48,7 +48,7 @@ public class RankFilter extends Composite {
 	 * <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:**user's package**"> <g:**UserClassName**>Hello!</g:**UserClassName>
 	 * </ui:UiBinder> Note that depending on the widget that is used, it may be necessary to implement HasHTML instead of HasText.
 	 */
-	public RankFilter() {
+	public RankSidePanel() {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		BootstrapGwtDatePicker.INSTANCE.styles().ensureInjected();

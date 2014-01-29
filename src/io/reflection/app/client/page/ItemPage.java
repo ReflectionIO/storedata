@@ -21,7 +21,7 @@ import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.AlertBoxHelper;
 import io.reflection.app.client.part.AlertBox;
 import io.reflection.app.client.part.AlertBox.AlertBoxType;
-import io.reflection.app.client.part.ItemFilter;
+import io.reflection.app.client.part.ItemSidePanel;
 import io.reflection.app.datatypes.shared.Item;
 
 import com.google.gwt.core.client.GWT;
@@ -42,7 +42,7 @@ public class ItemPage extends Composite implements NavigationEventHandler, Searc
 	interface ItemPageUiBinder extends UiBinder<Widget, ItemPage> {}
 
 	@UiField AlertBox mAlertBox;
-	@UiField ItemFilter mFilter;
+	@UiField ItemSidePanel mSidePanel;
 
 	@UiField InlineHyperlink mRevenue;
 	@UiField InlineHyperlink mDownloads;
@@ -107,9 +107,9 @@ public class ItemPage extends Composite implements NavigationEventHandler, Searc
 	private void displayItemDetails(Item item) {
 		mAlertBox.setVisible(false);
 
-		mFilter.setName(item.name);
-		mFilter.setImage(item.largeImage);
-		mFilter.setCreatorName(item.creatorName);
+		mSidePanel.setName(item.name);
+		mSidePanel.setImage(item.largeImage);
+		mSidePanel.setCreatorName(item.creatorName);
 	}
 
 	/*
