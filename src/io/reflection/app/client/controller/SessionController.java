@@ -141,6 +141,8 @@ public class SessionController implements ServiceController {
 		final LogoutRequest input = new LogoutRequest();
 		input.accessCode = ACCESS_CODE;
 
+		input.session = getSessionForApiCall();
+
 		service.logout(input, new AsyncCallback<LogoutResponse>() {
 
 			@Override
