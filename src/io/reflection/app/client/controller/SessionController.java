@@ -85,9 +85,9 @@ public class SessionController implements ServiceController {
 		}
 
 		if (mLoggedIn != user) {
-			mLoggedIn = user;
+			mLoggedIn = user; // used if changed person
 
-			if (mLoggedIn == null) {
+			if (mLoggedIn == null) { // used if previous logged out
 				EventController.get().fireEventFromSource(new UserLoggedOut(), SessionController.this);
 			} else {
 				EventController.get().fireEventFromSource(new UserLoggedIn(mLoggedIn, mSession), SessionController.this);
@@ -365,30 +365,33 @@ public class SessionController implements ServiceController {
 	}
 
 	public void fetchAuthorisation(List<Role> roles, List<Permission> permissions) {
-		CoreService service = new CoreService();
+		if (mSession != null && mLoggedIn != null) {
+			CoreService service = new CoreService();
 
-		service.setUrl(CORE_END_POINT);
+			service.setUrl(CORE_END_POINT);
 
-		final IsAuthorisedRequest input = new IsAuthorisedRequest();
-		input.accessCode = ACCESS_CODE;
+			final IsAuthorisedRequest input = new IsAuthorisedRequest();
+			input.accessCode = ACCESS_CODE;
 
-		input.session = new Session();
-		input.session.token = mSession.token;
+			input.session = new Session();
+			input.session.token = mSession.token;
 
-		input.roles = roles;
-		input.permissions = permissions;
+			input.roles = roles;
+			input.permissions = permissions;
 
-		service.isAuthorised(input, new AsyncCallback<IsAuthorisedResponse>() {
+			service.isAuthorised(input, new AsyncCallback<IsAuthorisedResponse>() {
 
-			@Override
-			public void onSuccess(IsAuthorisedResponse output) {
-				EventController.get().fireEventFromSource(new IsAuthorisedEventHandler.IsAuthorisedSuccess(input, output), SessionController.this);
-			}
+				@Override
+				public void onSuccess(IsAuthorisedResponse output) {
+					EventController.get().fireEventFromSource(new IsAuthorisedEventHandler.IsAuthorisedSuccess(input, output), SessionController.this);
+				}
 
-			@Override
-			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new IsAuthorisedEventHandler.IsAuthorisedFailure(input, caught), SessionController.this);
-			}
-		});
+				@Override
+				public void onFailure(Throwable caught) {
+					EventController.get().fireEventFromSource(new IsAuthorisedEventHandler.IsAuthorisedFailure(input, caught), SessionController.this);
+				}
+			});
+		}
+
 	}
 }

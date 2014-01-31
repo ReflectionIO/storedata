@@ -84,7 +84,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 					}
 
 					if (output.items != null) {
-						ItemController.get().addItemsToLookup(output.items);
+						ItemController.get().addItemsToLookup(output.items); //caching
 					}
 
 					EventController.get().fireEventFromSource(new ReceivedRanks("free" + input.listType, output.freeRanks), RankController.this);

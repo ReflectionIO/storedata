@@ -15,10 +15,13 @@ import io.reflection.app.client.cell.MiniAppCell;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.ItemController;
+import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.RankController;
 import io.reflection.app.client.controller.ServiceController;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.FilterEventHandler;
+import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.handler.RanksEventHandler;
 import io.reflection.app.client.handler.user.SessionEventHandler;
 import io.reflection.app.client.part.AlertBox;
@@ -57,7 +60,8 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class RanksPage extends Composite implements RanksEventHandler, FilterEventHandler, SessionEventHandler, IsAuthorisedEventHandler {
+public class RanksPage extends Composite implements RanksEventHandler, FilterEventHandler, SessionEventHandler, IsAuthorisedEventHandler,
+		NavigationEventHandler {
 
 	private static RanksPageUiBinder uiBinder = GWT.create(RanksPageUiBinder.class);
 
@@ -121,6 +125,7 @@ public class RanksPage extends Composite implements RanksEventHandler, FilterEve
 		EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this);
 		EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this);
 		EventController.get().addHandlerToSource(IsAuthorisedEventHandler.TYPE, SessionController.get(), this);
+		EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this);
 
 		RankController.get().addDataDisplay(mRanks);
 		mPager.setDisplay(mRanks);
@@ -240,8 +245,8 @@ public class RanksPage extends Composite implements RanksEventHandler, FilterEve
 	 */
 	private void refreshBreadcrumbs() {
 		mBreadcrumbs.clear();
-		mBreadcrumbs.push(mSidePanel.getStore(), mSidePanel.getCountry(), mListType.substring(0, 1).toUpperCase() + mListType.substring(1), mSidePanel.getDisplayDate(),
-				"Ranks");
+		mBreadcrumbs.push(mSidePanel.getStore(), mSidePanel.getCountry(), mListType.substring(0, 1).toUpperCase() + mListType.substring(1),
+				mSidePanel.getDisplayDate(), "Ranks");
 	}
 
 	/*
@@ -294,16 +299,8 @@ public class RanksPage extends Composite implements RanksEventHandler, FilterEve
 	public void userLoggedIn(User user, Session session) {
 		RankController.get().reset();
 
-		List<Permission> permissions = new ArrayList<Permission>();
+		checkPermissions();
 
-		Permission p = new Permission();
-		// p.code = "FRV";
-		p.id = Long.valueOf(1);
-		permissions.add(p);
-
-		SessionController.get().fetchAuthorisation(null, permissions);
-
-		mRedirect.setTargetHistoryToken("upgrade");
 	}
 
 	/*
@@ -342,7 +339,6 @@ public class RanksPage extends Composite implements RanksEventHandler, FilterEve
 					if (p.id != null && p.id != null) {
 						mPager.setVisible(true);
 						mRedirect.setVisible(false);
-						break;
 					}
 				}
 			}
@@ -450,4 +446,32 @@ public class RanksPage extends Composite implements RanksEventHandler, FilterEve
 
 		mTabs.get(mListType).addClassName("active");
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack)
+	 */
+	@Override
+	public void navigationChanged(Stack stack) {
+
+		if ("ranks".equals(stack.getPage())) {
+			checkPermissions();
+		}
+
+	}
+
+	private void checkPermissions() {
+		List<Permission> permissions = new ArrayList<Permission>();
+
+		Permission p = new Permission();
+		// p.code = "FRV";
+		p.id = Long.valueOf(1);
+		permissions.add(p);
+
+		SessionController.get().fetchAuthorisation(null, permissions);
+
+		mRedirect.setTargetHistoryToken("upgrade");
+	}
+
 }
