@@ -155,4 +155,99 @@ final class CategoryService implements ICategoryService {
 		return categories;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.category.ICategoryService#getParentCategories(io.reflection.app.datatypes.shared.Category,
+	 * io.reflection.app.api.shared.datatypes.Pager)
+	 */
+	@Override
+	public List<Category> getParentCategories(Category parent, Pager pager) throws DataAccessException {
+		List<Category> categories = new ArrayList<Category>();
+
+		String getStoreParentCategoriesQuery = String.format("SELECT * FROM `category` WHERE `parentid`=%d AND `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d",
+				parent.id.longValue(), pager.sortBy == null ? "id" : pager.sortBy, pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC"
+						: "DESC", pager.start == null ? Pager.DEFAULT_START.longValue() : pager.start.longValue(),
+				pager.count == null ? Pager.DEFAULT_COUNT.longValue() : pager.count.longValue());
+
+		Connection categoryConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeCategory.toString());
+
+		try {
+			categoryConnection.connect();
+			categoryConnection.executeQuery(getStoreParentCategoriesQuery);
+
+			while (categoryConnection.fetchNextRow()) {
+				Category category = toCategory(categoryConnection);
+
+				if (category != null) {
+					categories.add(category);
+				}
+			}
+		} finally {
+			if (categoryConnection != null) {
+				categoryConnection.disconnect();
+			}
+		}
+
+		return categories;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.category.ICategoryService#getParentCategoriesCount(io.reflection.app.datatypes.shared.Category)
+	 */
+	@Override
+	public Long getParentCategoriesCount(Category parent) throws DataAccessException {
+		Long categoriesCount = Long.valueOf(0);
+
+		String getStoreParentCategoriesQuery = String.format("SELECT count(1) as `categoriescount` FROM `category` WHERE `deleted`='n' AND `parentid`=%d",
+				parent.id.longValue());
+
+		Connection categoryConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeCategory.toString());
+
+		try {
+			categoryConnection.connect();
+			categoryConnection.executeQuery(getStoreParentCategoriesQuery);
+
+			if (categoryConnection.fetchNextRow()) {
+				categoriesCount = categoryConnection.getCurrentRowLong("categoriescount");
+			}
+		} finally {
+			if (categoryConnection != null) {
+				categoryConnection.disconnect();
+			}
+		}
+
+		return categoriesCount;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.category.ICategoryService#getAllCategory(io.reflection.app.datatypes.shared.Store)
+	 */
+	@Override
+	public Category getAllCategory(Store store) throws DataAccessException {
+		Category category = null;
+		
+		String getAllCategoryQuery = String.format("SELECT * FROM `category` WHERE `deleted`='n' AND `store`='%s' AND `parentid` IS NULL LIMIT 1", store.a3Code);
+		
+		Connection categoryConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeCategory.toString());
+		
+		try {
+			categoryConnection.connect();
+			categoryConnection.executeQuery(getAllCategoryQuery);
+
+			if (categoryConnection.fetchNextRow()) {
+				category = toCategory(categoryConnection);
+			}
+		} finally {
+			if (categoryConnection != null) {
+				categoryConnection.disconnect();
+			}
+		}
+		return category;
+	}
+
 }

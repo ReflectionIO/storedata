@@ -41,7 +41,6 @@ public interface ICategoryService extends IService {
 	 */
 	public void deleteCategory(Category category) throws DataAccessException;
 
-
 	/**
 	 * 
 	 * @param store
@@ -58,5 +57,15 @@ public interface ICategoryService extends IService {
 	 * @throws DataAccessException
 	 */
 	public Long getStoreCategoriesCount(Store store) throws DataAccessException;
+
+	public List<Category> getParentCategories(Category parent, Pager pager) throws DataAccessException;
+
+	public Long getParentCategoriesCount(Category parent) throws DataAccessException;
+
+	/**
+	 * @param store
+	 * @return
+	 */
+	public Category getAllCategory(Store store) throws DataAccessException;
 
 }

@@ -54,6 +54,7 @@ CREATE TABLE `rank` (
   `revenue` int(11) DEFAULT NULL,
   `downloads` int(11) DEFAULT NULL,
   `code` varchar(100) DEFAULT NULL,
+  `categoryid` int(11) NOT NULL DEFAULT '24',
   `deleted` enum('y','n') DEFAULT 'n',
   PRIMARY KEY (`id`),
   KEY `index_code` (`code`),
@@ -89,6 +90,7 @@ CREATE TABLE `feedfetch` (
   `oldkey` bigint(20) DEFAULT NULL,
   `type` varchar(1000) DEFAULT NULL,
   `code` varchar(100) DEFAULT NULL,
+  `categoryid` int(11) NOT NULL DEFAULT '24',
   `deleted` enum('y','n') DEFAULT 'n',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8$$

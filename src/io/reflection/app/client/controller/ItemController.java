@@ -47,7 +47,6 @@ public class ItemController implements ServiceController {
 		return mOne;
 	}
 
-
 	/**
 	 * Retrieve the list of items based on the user query
 	 * 
@@ -64,7 +63,7 @@ public class ItemController implements ServiceController {
 
 		return searchResults;
 	}
-	
+
 	/**
 	 * Retrieve (and cache) items when the users executes a search
 	 * 
@@ -129,7 +128,6 @@ public class ItemController implements ServiceController {
 		return mLookupPager;
 	}
 
-
 	/**
 	 * Retrieve an item, looking first in the cache or in the DB in case of miss
 	 * 
@@ -187,7 +185,6 @@ public class ItemController implements ServiceController {
 		});
 	}
 
-
 	public void reset() {
 		mItemCache.clear(); // Clear Items cache when user logs out
 
@@ -206,5 +203,4 @@ public class ItemController implements ServiceController {
 		}
 	}
 
-	
 }

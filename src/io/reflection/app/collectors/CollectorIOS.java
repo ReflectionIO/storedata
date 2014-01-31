@@ -87,6 +87,9 @@ public class CollectorIOS extends StoreCollector implements Collector {
 
 					count++;
 				}
+				
+				// TODO: enque the categories for each country
+				
 
 			}
 		} finally {
