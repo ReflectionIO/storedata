@@ -69,14 +69,14 @@ public interface IItemService extends IService {
 	 * @param pager
 	 * @return
 	 */
-	public List<Item> getQueryItems(String query, Pager pager) throws DataAccessException;
+	public List<Item> searchItems(String query, Pager pager) throws DataAccessException;
 
 	/**
 	 * @param query
 	 * @return
 	 * @throws DataAccessException
 	 */
-	public Long getQueryItemsCount(String query) throws DataAccessException;
+	public Long searchItemsCount(String query) throws DataAccessException;
 
 	/**
 	 * @param itemIds

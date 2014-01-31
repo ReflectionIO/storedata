@@ -42,7 +42,7 @@ public interface IStoreService extends IService {
 
 	/**
 	 * @param country
-	 * @param pager 
+	 * @param pager
 	 * @return
 	 */
 	public List<Store> getCountryStores(Country country, Pager pager) throws DataAccessException;
@@ -73,7 +73,9 @@ public interface IStoreService extends IService {
 	public Store getNamedStore(String name) throws DataAccessException;
 
 	/**
+	 * 
 	 * @return
+	 * @throws DataAccessException
 	 */
 	public long getStoresCount() throws DataAccessException;
 

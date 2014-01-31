@@ -60,6 +60,20 @@
         </xsd:complexContent>
     </xsd:complexType>
 
+    <xsd:complexType name="Category">
+        <xsd:complexContent>
+            <xsd:extension base="DataType">
+                <xsd:sequence>
+                    <xsd:element name="parent" type="Category" />
+                </xsd:sequence>
+
+                <xsd:attribute name="internalId" type="xsd:long" />
+                <xsd:attribute name="name" type="xsd:string" />
+                <xsd:attribute name="store" type="xsd:string" />
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
     <xsd:complexType name="ItemRankSummary">
         <xsd:complexContent>
             <xsd:extension base="DataType">

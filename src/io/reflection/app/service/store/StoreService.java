@@ -60,7 +60,7 @@ final class StoreService implements IStoreService {
 	 * 
 	 * @param connection
 	 * @return
-	 * @throws DataAccessException 
+	 * @throws DataAccessException
 	 */
 	private Store toStore(Connection connection) throws DataAccessException {
 		Store store = new Store();
@@ -177,7 +177,7 @@ final class StoreService implements IStoreService {
 	 */
 	@Override
 	public List<Store> searchStores(String query, Pager pager) {
-		// TODO Auto-generated method stub searchStores
+		// LATER Auto-generated method stub searchStores
 		return null;
 	}
 

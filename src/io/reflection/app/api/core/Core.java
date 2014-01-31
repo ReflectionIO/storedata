@@ -1025,7 +1025,7 @@ public final class Core extends ActionHandler {
 			input.session = ValidationHelper.validateSession(input.session, "input.session");
 			input.query = ValidationHelper.validateQuery(input.query, "input");
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
-			output.items = ItemServiceProvider.provide().getQueryItems(input.query,input.pager);
+			output.items = ItemServiceProvider.provide().searchItems(input.query,input.pager);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;

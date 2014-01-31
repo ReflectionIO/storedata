@@ -548,3 +548,14 @@ CREATE TABLE `dataaccountfetch` (
   `deleted` enum('y','n') DEFAULT 'n',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+CREATE TABLE `category` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `internalid` int(11) DEFAULT NULL,
+  `name` varchar(1000) DEFAULT NULL,
+  `parentid` int(11) DEFAULT NULL,
+  `store` char(3) DEFAULT NULL,
+  `deleted` enum('y','n') DEFAULT 'n',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$

@@ -303,7 +303,7 @@ final class ItemService implements IItemService {
 	}
 
 	@Override
-	public Long getQueryItemsCount(String query) throws DataAccessException {
+	public Long searchItemsCount(String query) throws DataAccessException {
 
 		Long itemCount = Long.valueOf(0);
 		String getDataAccountsCountQuery = String
@@ -328,11 +328,11 @@ final class ItemService implements IItemService {
 	}
 
 	@Override
-	public List<Item> getQueryItems(String query, Pager pager) throws DataAccessException {
+	public List<Item> searchItems(String query, Pager pager) throws DataAccessException {
 
 		List<Item> items = new ArrayList<Item>();
 		String getDataItemQuery = String
-				.format("SELECT * FROM `item` WHERE (`externalid` LIKE '%%%1$s%%' OR `name` LIKE '%%%1$s%%' OR `creatorname` LIKE '%%%1$s%%') AND `deleted`='n' ORDER BY `%2$s` %3$s LIMIT %4$s, %5$s",
+				.format("SELECT * FROM `item` WHERE (`externalid` LIKE '%%%1$s%%' OR `name` LIKE '%%%1$s%%' OR `creatorname` LIKE '%%%1$s%%') AND `deleted`='n' ORDER BY `%2$s` %3$s LIMIT %4$d, %5$d",
 						query, pager.sortBy == null ? "id" : pager.sortBy,
 						pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
 						pager.start == null ? Pager.DEFAULT_START.longValue() : pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue() : pager.count.longValue());
