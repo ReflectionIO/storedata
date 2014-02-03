@@ -8,6 +8,7 @@
 package io.reflection.app.client.part.linkaccount;
 
 import io.reflection.app.client.handler.EnterPressedEventHandler;
+import io.reflection.app.client.helper.FormHelper;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -74,6 +75,11 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 		}
 	}
 
+	/**
+	 * On pressing key on form fields 
+	 * 
+	 * @param e
+	 */
 	@UiHandler({ "mUsername", "mPassword", "mVendorId" })
 	void onKeyPressed(KeyPressEvent e) {
 		if (mEnterHandler != null && e.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
@@ -81,14 +87,61 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Validate linked account fields
 	 * 
 	 * @see io.reflection.app.admin.client.part.linkaccount.LinkableAccountFields#validate()
 	 */
 	@Override
 	public boolean validate() {
-		return true;
+		boolean validated = true;
+		// Retrieve fields to validate
+		String username = mUsername.getText();
+		String password = mPassword.getText();
+		String vendorId = mVendorId.getText();
+
+		// Check fields constraints
+		if (username == null || username.length() == 0) {
+			mUsernameError = "Cannot be empty";
+			validated = false;
+		} else if (username.length() < 6) {
+			mUsernameError = "Too short (minimum 6 characters)";
+			validated = false;
+		} else if (username.length() > 255) {
+			mUsernameError = "Too long (maximum 255 characters)";
+			validated = false;
+		} else if (!FormHelper.isValidEmail(username)) {
+			mUsernameError = "Invalid email address";
+			validated = false;
+		} else {
+			mUsernameError = null;
+			validated = validated && true;
+		}
+
+		if (password == null || password.length() == 0) {
+			mPasswordError = "Cannot be empty";
+			validated = false;
+			/*
+			 * } else if (password.length() < 6) { mPasswordError = "Too short (minimum 6 characters)"; validated = false; } else if (password.length() > 64) {
+			 * mPasswordError = "Too long (maximum 64 characters)"; validated = false;
+			 */// depend by data account
+		} else {
+			mPasswordError = null;
+			validated = validated && true;
+		}
+
+		if (vendorId == null || vendorId.length() == 0) {
+			mVendorIdError = "Cannot be empty";
+			validated = false;
+		} else if (!FormHelper.isValidAppleVendorId(vendorId)) {
+			mVendorIdError = "Invalid vendor id";
+			validated = false;
+		} else {
+			mVendorIdError = null;
+			validated = validated && true;
+		}
+
+		return validated;
 	}
 
 	/*
@@ -168,6 +221,31 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	@Override
 	public Focusable getFirstToFocus() {
 		return mUsername;
+	}
+
+	/**
+	 * Show the errors in the form note in case validation failed
+	 * 
+	 * @see io.reflection.app.client.part.linkaccount.LinkableAccountFields#setFormErrors()
+	 */
+	@Override
+	public void setFormErrors() {
+		if (mUsernameError != null) {
+			FormHelper.showNote(true, mUsernameGroup, mUsernameNote, mUsernameError);
+		} else {
+			FormHelper.hideNote(mUsernameGroup, mUsernameNote);
+		}
+		if (mPasswordError != null) {
+			FormHelper.showNote(true, mPasswordGroup, mPasswordNote, mPasswordError);
+		} else {
+			FormHelper.hideNote(mPasswordGroup, mPasswordNote);
+		}
+		if (mVendorIdError != null) {
+			FormHelper.showNote(true, mVendorIdGroup, mVendorIdNote, mVendorIdError);
+		} else {
+			FormHelper.hideNote(mVendorIdGroup, mVendorIdNote);
+		}
+
 	}
 
 }

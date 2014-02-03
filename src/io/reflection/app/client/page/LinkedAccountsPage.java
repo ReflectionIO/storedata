@@ -154,7 +154,7 @@ public class LinkedAccountsPage extends Composite implements NavigationEventHand
 			LinkedAccountController.get().linkAccount(mLinkableAccount.getAccountSourceId(), mLinkableAccount.getUsername(), mLinkableAccount.getPassword(),
 					mLinkableAccount.getProperties());
 		} else {
-
+			mLinkableAccount.setFormErrors();
 		}
 	}
 
