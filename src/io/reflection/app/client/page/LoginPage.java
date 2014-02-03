@@ -89,7 +89,7 @@ public class LoginPage extends Composite implements SessionEventHandler {
 			AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Please wait", " - verifying your username and password...", false)
 					.setVisible(true);
 
-			SessionController.get().login(mUsername.getText(), mPassword.getText(), mRememberMe.getValue().booleanValue());
+			SessionController.get().login(mUsername.getText(), mPassword.getText(), mRememberMe.getValue().booleanValue()); // Execute user login
 		} else {
 			if (mUsernameError != null) {
 				FormHelper.showNote(true, mUsernameGroup, mUsernameNote, mUsernameError);
@@ -117,14 +117,12 @@ public class LoginPage extends Composite implements SessionEventHandler {
 	}
 
 	private boolean validate() {
-		
-		
-		
+
 		boolean validated = true;
 		// Retrieve fields to validate
 		String username = mUsername.getText();
 		String password = mPassword.getText();
-		
+
 		// Check fields constraints
 		if (username == null || username.length() == 0) {
 			mUsernameError = "Cannot be empty";
@@ -195,7 +193,7 @@ public class LoginPage extends Composite implements SessionEventHandler {
 
 			@Override
 			public void run() {
-				History.newItem("ranks");
+				History.newItem("ranks"); // After login is successful, redirect to leader-board page
 			}
 		};
 

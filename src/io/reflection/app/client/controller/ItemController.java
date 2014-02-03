@@ -129,23 +129,6 @@ public class ItemController implements ServiceController {
 	}
 
 	/**
-	 * Retrieve an item, looking first in the cache or in the DB in case of miss
-	 * 
-	 * @param externalId
-	 *            id of the item to retrieve
-	 * @return the item
-	 */
-	public Item lookupItem(String externalId) {
-		Item item = mItemCache.get(externalId);
-
-		if (item == null) {
-			fetchItem(externalId);
-		}
-
-		return item;
-	}
-
-	/**
 	 * Retrieve the item, identified by external id, from DB (it happens in case of cache miss)
 	 * 
 	 * @param externalId
@@ -185,9 +168,11 @@ public class ItemController implements ServiceController {
 		});
 	}
 
-	public void reset() {
-		mItemCache.clear(); // Clear Items cache when user logs out
-
+	/**
+	 * Clear Items cache when user logs out
+	 */
+	public void clearItemCache() {
+		mItemCache.clear();
 	}
 
 	/**
@@ -201,6 +186,23 @@ public class ItemController implements ServiceController {
 		for (Item item : items) {
 			mItemCache.put(item.externalId, item);
 		}
+	}
+
+	/**
+	 * Retrieve an item, looking first in the cache or in the DB in case of miss
+	 * 
+	 * @param externalId
+	 *            id of the item to retrieve
+	 * @return the item
+	 */
+	public Item lookupItem(String externalId) {
+		Item item = mItemCache.get(externalId);
+
+		if (item == null) {
+			fetchItem(externalId);
+		}
+
+		return item;
 	}
 
 }

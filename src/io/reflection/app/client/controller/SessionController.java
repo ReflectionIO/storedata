@@ -35,7 +35,9 @@ import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -49,15 +51,18 @@ import com.willshex.gson.json.service.shared.StatusType;
 public class SessionController implements ServiceController {
 	private static SessionController mOne;
 
+	// Cache roles and permissions meanwhile user is logged in
+	private Map<Long, Role> mRoleCache = new HashMap<Long, Role>(); // Role.id : Role
+	private Map<Long, Permission> mPermissionCache = new HashMap<Long, Permission>(); // Permission.id : Permission
+
 	private static final String COOKIE_KEY_TOKEN = SessionController.class.getName() + ".token";
 
-	private User mLoggedIn = null;
+	private User mLoggedInUser = null;
 	private Session mSession = null;
 
 	public static SessionController get() {
 		if (mOne == null) {
 			mOne = new SessionController();
-
 			mOne.restoreSession();
 		}
 
@@ -65,40 +70,16 @@ public class SessionController implements ServiceController {
 	}
 
 	public User getLoggedInUser() {
-		return mLoggedIn;
+		return mLoggedInUser;
 	}
 
 	public Session getSession() {
 		return mSession;
 	}
 
-	private void setLoggedInUser(User user, Session session) {
-
-		if (mSession != session) {
-			mSession = session;
-		}
-
-		if (mSession != null) {
-			Cookies.setCookie(COOKIE_KEY_TOKEN, mSession.token, mSession.expires);
-		} else {
-			Cookies.removeCookie(COOKIE_KEY_TOKEN);
-		}
-
-		if (mLoggedIn != user) {
-			mLoggedIn = user; // used if changed person
-
-			if (mLoggedIn == null) { // used if previous logged out
-				EventController.get().fireEventFromSource(new UserLoggedOut(), SessionController.this);
-			} else {
-				EventController.get().fireEventFromSource(new UserLoggedIn(mLoggedIn, mSession), SessionController.this);
-
-				getUserPowers();
-			}
-		}
-
-	}
-
 	/**
+	 * Execute user login
+	 * 
 	 * @param username
 	 * @param password
 	 */
@@ -125,7 +106,7 @@ public class SessionController implements ServiceController {
 			public void onSuccess(LoginResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
 					if (output.session != null && output.session.user != null) {
-						setLoggedInUser(output.session.user, output.session);
+						setLoggedInUser(output.session.user, output.session); // Set User
 					}
 				} else {
 					EventController.get().fireEventFromSource(new UserLoginFailed(output.error), SessionController.this);
@@ -134,6 +115,99 @@ public class SessionController implements ServiceController {
 		});
 	}
 
+	/**
+	 * Set User after login was successful
+	 * 
+	 * @param user
+	 * @param session
+	 */
+	private void setLoggedInUser(User user, Session session) {
+
+		if (mSession != session) {
+			mSession = session;
+		}
+
+		if (mSession != null) {
+			Cookies.setCookie(COOKIE_KEY_TOKEN, mSession.token, mSession.expires);
+		} else {
+			Cookies.removeCookie(COOKIE_KEY_TOKEN);
+		}
+
+		if (mLoggedInUser != user) {
+			mLoggedInUser = user; // used if changed person
+
+			if (mLoggedInUser == null) { // used if previous logged out
+				EventController.get().fireEventFromSource(new UserLoggedOut(), SessionController.this);
+			} else {
+				EventController.get().fireEventFromSource(new UserLoggedIn(mLoggedInUser, mSession), SessionController.this); // Fire user logged in event
+
+				setUserRolesAndPermissions(); // Set user roles and permissions after user successfully logged in
+			}
+		}
+
+	}
+
+	/**
+	 * Retrieve user roles and permissions from DB and set them
+	 */
+	private void setUserRolesAndPermissions() {
+		CoreService service = new CoreService();
+
+		service.setUrl(CORE_END_POINT);
+
+		final GetRolesAndPermissionsRequest input = new GetRolesAndPermissionsRequest();
+		input.accessCode = ACCESS_CODE;
+
+		input.session = new Session();
+		input.session.token = mSession.token;
+
+		// input.idsOnly = Boolean.FALSE;
+
+		// Ask roles and permissions for the user
+		service.getRolesAndPermissions(input, new AsyncCallback<GetRolesAndPermissionsResponse>() {
+
+			@Override
+			public void onSuccess(GetRolesAndPermissionsResponse output) {
+				if (output.status == StatusType.StatusTypeSuccess) {
+					if (mSession != null && mSession.token != null && input.session != null && input.session.token != null
+							&& mSession.token.equals(input.session.token)) {
+
+						mLoggedInUser.roles = output.roles;
+						mLoggedInUser.permissions = output.permissions;
+
+						// Add retrieved roles into cache
+						if (output.roles != null) {
+							for (Role role : output.roles) {
+								mRoleCache.put(role.id, role);
+							}
+						}
+
+						// Add retrieved permissions into cache
+						if (output.permissions != null) {
+							for (Permission permission : output.permissions) {
+								mPermissionCache.put(permission.id, permission);
+							}
+						}
+
+						EventController.get().fireEventFromSource(new GotUserPowers(mLoggedInUser, mLoggedInUser.roles, mLoggedInUser.permissions),
+								SessionController.this);
+					}
+				} else {
+					EventController.get().fireEventFromSource(new GetUserPowersFailed(output.error), SessionController.this);
+				}
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				EventController.get().fireEventFromSource(new GetUserPowersFailed(FormHelper.convertToError(caught)), SessionController.this);
+			}
+		});
+
+	}
+
+	/**
+	 * Release the session and clear user data
+	 */
 	public void logout() {
 		CoreService service = new CoreService();
 		service.setUrl(CORE_END_POINT);
@@ -148,6 +222,7 @@ public class SessionController implements ServiceController {
 			@Override
 			public void onSuccess(LogoutResponse output) {
 				Cookies.removeCookie(COOKIE_KEY_TOKEN);
+
 			}
 
 			@Override
@@ -157,15 +232,26 @@ public class SessionController implements ServiceController {
 		});
 
 		setLoggedInUser(null, null);
+		ItemController.get().clearItemCache();
+		clearRolePermissionCache();
 	}
 
 	/**
+	 * Is the user logged in as administrator
+	 * 
 	 * @return
 	 */
 	public boolean isLoggedInUserAdmin() {
-		return hasRole(mLoggedIn, 1);
+		return hasRole(mLoggedInUser, 1);
 	}
 
+	/**
+	 * If the user has a specific role
+	 * 
+	 * @param user
+	 * @param id
+	 * @return Boolean hasRole
+	 */
 	public boolean hasRole(User user, long id) {
 		boolean hasRole = false;
 
@@ -184,6 +270,31 @@ public class SessionController implements ServiceController {
 	}
 
 	/**
+	 * Retrieve a role from the cache
+	 * 
+	 * @param Id
+	 *            id of the role to retrieve
+	 * @return the role
+	 */
+	public Role lookupRole(String id) {
+		Role role = mRoleCache.get(id);
+		return role;
+	}
+
+	/**
+	 * Retrieve a permission from the cache
+	 * 
+	 * @param Id
+	 *            id of the permission to retrieve
+	 * @return the permission
+	 */
+	public Permission lookupPermission(String id) {
+		Permission permission = mPermissionCache.get(id);
+		return permission;
+	}
+
+	/**
+	 * Change the user password
 	 * 
 	 * @param password
 	 * @param newPassword
@@ -216,7 +327,7 @@ public class SessionController implements ServiceController {
 			@Override
 			public void onSuccess(ChangePasswordResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
-					EventController.get().fireEventFromSource(new UserPasswordChanged(mLoggedIn.id), SessionController.this);
+					EventController.get().fireEventFromSource(new UserPasswordChanged(mLoggedInUser.id), SessionController.this);
 				} else {
 					EventController.get().fireEventFromSource(new UserPasswordChangeFailed(output.error), SessionController.this);
 				}
@@ -225,6 +336,8 @@ public class SessionController implements ServiceController {
 	}
 
 	/**
+	 * Change the user details
+	 * 
 	 * @param username
 	 * @param forename
 	 * @param surname
@@ -268,7 +381,6 @@ public class SessionController implements ServiceController {
 				EventController.get().fireEventFromSource(new ChangeUserDetailsEventHandler.ChangeUserDetailsFailure(input, caught), SessionController.this);
 			}
 		});
-
 	}
 
 	private void restoreSession() {
@@ -306,44 +418,6 @@ public class SessionController implements ServiceController {
 		}
 	}
 
-	public void getUserPowers() {
-		CoreService service = new CoreService();
-
-		service.setUrl(CORE_END_POINT);
-
-		final GetRolesAndPermissionsRequest input = new GetRolesAndPermissionsRequest();
-		input.accessCode = ACCESS_CODE;
-
-		input.session = new Session();
-		input.session.token = mSession.token;
-
-		// input.idsOnly = Boolean.FALSE;
-
-		service.getRolesAndPermissions(input, new AsyncCallback<GetRolesAndPermissionsResponse>() {
-
-			@Override
-			public void onSuccess(GetRolesAndPermissionsResponse output) {
-				if (output.status == StatusType.StatusTypeSuccess) {
-					if (mSession != null && mSession.token != null && input.session != null && input.session.token != null
-							&& mSession.token.equals(input.session.token)) {
-						mLoggedIn.roles = output.roles;
-						mLoggedIn.permissions = output.permissions;
-
-						EventController.get().fireEventFromSource(new GotUserPowers(mLoggedIn, mLoggedIn.roles, mLoggedIn.permissions), SessionController.this);
-					}
-				} else {
-					EventController.get().fireEventFromSource(new GetUserPowersFailed(output.error), SessionController.this);
-				}
-			}
-
-			@Override
-			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new GetUserPowersFailed(FormHelper.convertToError(caught)), SessionController.this);
-			}
-		});
-
-	}
-
 	/**
 	 * @return
 	 */
@@ -364,8 +438,14 @@ public class SessionController implements ServiceController {
 		return session;
 	}
 
+	/**
+	 * Check if the user has the necessary authorization
+	 * 
+	 * @param roles
+	 * @param permissions
+	 */
 	public void fetchAuthorisation(List<Role> roles, List<Permission> permissions) {
-		if (mSession != null && mLoggedIn != null) {
+		if (mSession != null && mLoggedInUser != null) {
 			CoreService service = new CoreService();
 
 			service.setUrl(CORE_END_POINT);
@@ -394,4 +474,13 @@ public class SessionController implements ServiceController {
 		}
 
 	}
+
+	/**
+	 * Clear Roles and Permissions cache when user logs out
+	 */
+	public void clearRolePermissionCache() {
+		mRoleCache.clear();
+		mPermissionCache.clear();
+	}
+
 }
