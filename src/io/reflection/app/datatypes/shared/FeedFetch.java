@@ -37,16 +37,23 @@ public class FeedFetch extends DataType {
 	public String code;
 
 	public FeedFetchStatusType status;
+	public Category category;
+
+	public Boolean ingested;
 
 	@Override
 	public JsonObject toJson() {
 		JsonObject object = super.toJson();
+		JsonElement jsonCategory = category == null ? JsonNull.INSTANCE : category.toJson();
+		object.add("category", jsonCategory);
 		JsonElement jsonCountry = country == null ? JsonNull.INSTANCE : new JsonPrimitive(country);
 		object.add("country", jsonCountry);
 		JsonElement jsonData = data == null ? JsonNull.INSTANCE : new JsonPrimitive(data);
 		object.add("data", jsonData);
 		JsonElement jsonDate = date == null ? JsonNull.INSTANCE : new JsonPrimitive(date.getTime());
 		object.add("date", jsonDate);
+		JsonElement jsonIngested = ingested == null ? JsonNull.INSTANCE : new JsonPrimitive(ingested);
+		object.add("ingested", jsonIngested);
 		JsonElement jsonStore = store == null ? JsonNull.INSTANCE : new JsonPrimitive(store);
 		object.add("store", jsonStore);
 		JsonElement jsonPart = part == null ? JsonNull.INSTANCE : new JsonPrimitive(part);
@@ -65,6 +72,13 @@ public class FeedFetch extends DataType {
 	@Override
 	public void fromJson(JsonObject jsonObject) {
 		super.fromJson(jsonObject);
+		if (jsonObject.has("category")) {
+			JsonElement jsonCategory = jsonObject.get("category");
+			if (jsonCategory != null) {
+				category = new Category();
+				category.fromJson(jsonCategory.getAsJsonObject());
+			}
+		}
 		if (jsonObject.has("country")) {
 			JsonElement jsonCountry = jsonObject.get("country");
 			if (jsonCountry != null) {
@@ -81,6 +95,12 @@ public class FeedFetch extends DataType {
 			JsonElement jsonDate = jsonObject.get("date");
 			if (jsonDate != null) {
 				date = new Date(jsonDate.getAsLong());
+			}
+		}
+		if (jsonObject.has("ingested")) {
+			JsonElement jsonIngested = jsonObject.get("ingested");
+			if (jsonIngested != null) {
+				ingested = Boolean.valueOf(jsonIngested.getAsBoolean());
 			}
 		}
 		if (jsonObject.has("store")) {
@@ -120,5 +140,4 @@ public class FeedFetch extends DataType {
 			}
 		}
 	}
-
 }

@@ -10,6 +10,9 @@
     <xsd:complexType name="FeedFetch">
         <xsd:complexContent>
             <xsd:extension base="DataType">
+                <xsd:sequence>
+                    <xsd:element name="category" type="Category"></xsd:element>
+                </xsd:sequence>
                 <xsd:attribute name="country" type="xsd:string" />
                 <xsd:attribute name="data" type="xsd:string" />
                 <xsd:attribute name="date" type="xsd:dateTime" />
@@ -93,6 +96,9 @@
     <xsd:complexType name="Rank">
         <xsd:complexContent>
             <xsd:extension base="DataType">
+                <xsd:sequence>
+                    <xsd:element name="category" type="Category" />
+                </xsd:sequence>
                 <xsd:attribute name="position" type="xsd:int" />
                 <xsd:attribute name="grossingPosition" type="xsd:int" />
                 <xsd:attribute name="itemId" type="xsd:string" />

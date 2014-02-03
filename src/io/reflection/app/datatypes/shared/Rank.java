@@ -42,12 +42,16 @@ public class Rank extends DataType {
 
 	public String code;
 
+	public Category category;
+
 	public Float revenue;
 	public Integer downloads;
 
 	@Override
 	public JsonObject toJson() {
 		JsonObject object = super.toJson();
+		JsonElement jsonCategory = category == null ? JsonNull.INSTANCE : category.toJson();
+		object.add("category", jsonCategory);
 		JsonElement jsonPosition = position == null ? JsonNull.INSTANCE : new JsonPrimitive(position);
 		object.add("position", jsonPosition);
 		JsonElement jsonGrossingPosition = grossingPosition == null ? JsonNull.INSTANCE : new JsonPrimitive(grossingPosition);
@@ -78,6 +82,13 @@ public class Rank extends DataType {
 	@Override
 	public void fromJson(JsonObject jsonObject) {
 		super.fromJson(jsonObject);
+		if (jsonObject.has("category")) {
+			JsonElement jsonCategory = jsonObject.get("category");
+			if (jsonCategory != null) {
+				category = new Category();
+				category.fromJson(jsonCategory.getAsJsonObject());
+			}
+		}
 		if (jsonObject.has("position")) {
 			JsonElement jsonPosition = jsonObject.get("position");
 			if (jsonPosition != null) {
