@@ -76,6 +76,12 @@ public enum ApiError {
 	DataAccountNull(100042, "Invalid value null for DataAccount: %s"),
 	DataAccountNotFound(100043, "Data account not found DataAccount: %s"),
 	DataAccountNoLookup(100044, "Invalid data account lookup, no id provided for DataAccount: %s"),
+	
+	CategoryNull(100045, "Invalid value null for Category: %s"),
+	CategoryNotFound(100046, "Category not found Category: %s"),
+	CategoryNoLookup(100047, "Invalid category lookup, either an id or a store and an internal id should be provided for Category: %s"),
+	
+	CategoryStoreMismatch(100048, "The category store does not a store in another parameter for Category: %s"),
 
 	GetCountriesNeedsStoreOrQuery(100101, "GetCountries call should either have a store or a query. To get all countries use * for the query: %s"),
 

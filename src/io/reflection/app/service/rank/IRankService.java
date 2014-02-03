@@ -9,6 +9,7 @@ package io.reflection.app.service.rank;
 
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
@@ -56,13 +57,14 @@ public interface IRankService extends IService {
 	/**
 	 * @param country
 	 * @param store
+	 * @param category
 	 * @param listType
 	 * @param after
 	 * @param before
 	 * @param pager
 	 * @return
 	 */
-	public List<Rank> getRanks(Country country, Store store, String listType, Date after, Date before, Pager pager) throws DataAccessException;
+	public List<Rank> getRanks(Country country, Store store, Category category, String listType, Date after, Date before, Pager pager) throws DataAccessException;
 
 	/**
 	 * @param country
@@ -79,12 +81,13 @@ public interface IRankService extends IService {
 	/**
 	 * @param country
 	 * @param store
+	 * @param category
 	 * @param listType
 	 * @param after
 	 * @param before
 	 * @return
 	 */
-	public Long getRanksCount(Country country, Store store, String listType, Date after, Date before) throws DataAccessException;
+	public Long getRanksCount(Country country, Store store, Category category, String listType, Date after, Date before) throws DataAccessException;
 
 	/**
 	 * @param item
@@ -102,24 +105,26 @@ public interface IRankService extends IService {
 	 * 
 	 * @param country
 	 * @param store
+	 * @param category
 	 * @param listType
 	 * @param code
 	 * @param pager
 	 * @param ignoreGrossingRank
 	 * @return
 	 */
-	public List<Rank> getGatherCodeRanks(Country country, Store store, String listType, String code, Pager pager, boolean ignoreGrossingRank)
+	public List<Rank> getGatherCodeRanks(Country country, Store store, Category category, String listType, String code, Pager pager, boolean ignoreGrossingRank)
 			throws DataAccessException;
 
 	/**
 	 * 
 	 * @param country
 	 * @param store
+	 * @param category
 	 * @param listType
 	 * @param code
 	 * @return
 	 */
-	public Long getGatherCodeRanksCount(Country country, Store store, String listType, String code) throws DataAccessException;
+	public Long getGatherCodeRanksCount(Country country, Store store, Category category, String listType, String code) throws DataAccessException;
 
 	/**
 	 * @param code

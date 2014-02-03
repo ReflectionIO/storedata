@@ -14,6 +14,7 @@ import java.util.List;
 public interface Collector {
 
 	public static final String ENQUEUE_GATHER_FORMAT = "/gather?store=%s&country=%s&type=%s&code=%s";
+	public static final String ENQUEUE_GATHER_CATEGORY_FORMAT = "/gather?store=%s&country=%s&type=%s&category=%d&code=%s";
 
 	/**
 	 * Collects data for
@@ -22,10 +23,12 @@ public interface Collector {
 	 *            the store country
 	 * @param type
 	 *            top paid, top free top grossing etc
+	 * @param category
+	 *            the category id for items (in db terms this is the internal id in the category column)
 	 * @param code
 	 *            ties all items in a single gather such that top grossing and top paid and top free entries can be married
 	 */
-	List<Long> collect(String country, String type, String code) throws DataAccessException;
+	List<Long> collect(String country, String type, String category, String code) throws DataAccessException;
 
 	/**
 	 * Puts a message in the queue for each list for each country

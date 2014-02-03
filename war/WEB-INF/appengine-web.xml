@@ -27,6 +27,8 @@
 	<property name="gather.ios.topfreeipadapplications" value="https://itunes.apple.com/%s/rss/topfreeipadapplications/limit=400/json" />
 	<property name="gather.ios.toppaidipadapplications" value="https://itunes.apple.com/%s/rss/toppaidipadapplications/limit=400/json" />
 	<property name="gather.ios.topgrossingipadapplications" value="https://itunes.apple.com/%s/rss/topgrossingipadapplications/limit=400/json" />
+    
+    <property name="gather.ios.category.feed.url" value="https://itunes.apple.com/%s/rss/%s/limit=400/genre=%d/json" />
 	
 	<property name="gather.bucket" value="gather" />
     <property name="account.data.bucket" value="gather/accounts" />

@@ -68,4 +68,12 @@ public interface ICategoryService extends IService {
 	 */
 	public Category getAllCategory(Store store) throws DataAccessException;
 
+	/**
+	 * @param store
+	 * @param internalId
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public Category getInternalIdCategory(Store store, Long internalId) throws DataAccessException;
+
 }

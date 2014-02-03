@@ -2,7 +2,9 @@ package io.reflection.app.collectors;
 
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.datatypes.shared.FeedFetch;
+import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 
 import java.io.BufferedWriter;
@@ -37,11 +39,13 @@ public abstract class StoreCollector {
 	// return ret;
 	// }
 
-	protected List<Long> store(String data, String countryCode, String store, String type, Date date, String code) throws DataAccessException {
-		return store(data, countryCode, store, type, date, code, false);
+	protected List<Long> store(String data, String countryCode, String store, String type, Long categoryInternalId, Date date, String code)
+			throws DataAccessException {
+		return store(data, countryCode, store, type, categoryInternalId, date, code, false);
 	}
 
-	protected List<Long> store(String data, String countryCode, String store, String type, Date date, String code, boolean ingested) throws DataAccessException {
+	protected List<Long> store(String data, String countryCode, String store, String type, Long categoryInternalId, Date date, String code, boolean ingested)
+			throws DataAccessException {
 
 		List<Long> ids = new ArrayList<Long>(4);
 
@@ -50,14 +54,27 @@ public abstract class StoreCollector {
 		}
 
 		GcsService fileService = GcsServiceFactory.createGcsService();
-		GcsFilename fileName = new GcsFilename(System.getProperty(GATHER_BUCKET_KEY), store + "/" + countryCode + "_" + type + "_" + code);
+
+		String filePath = null;
+
+		if (categoryInternalId == null) {
+			filePath = store + "/" + countryCode + "_" + type + "_" + code;
+		} else {
+			filePath = store + "/" + countryCode + "/" + categoryInternalId.toString() + "/" + type + "_" + code;
+		}
+
+		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			LOG.log(GaeLevel.DEBUG, String.format("File name [%s]", filePath));
+		}
+
+		GcsFilename gcsFileName = new GcsFilename(System.getProperty(GATHER_BUCKET_KEY), filePath);
 
 		boolean blob = false;
 		GcsOutputChannel writeChannel = null;
 		BufferedWriter writer = null;
 
 		try {
-			writeChannel = fileService.createOrReplace(fileName, new GcsFileOptions.Builder().mimeType("application/json").build());
+			writeChannel = fileService.createOrReplace(gcsFileName, new GcsFileOptions.Builder().mimeType("application/json").build());
 
 			writer = new BufferedWriter(Channels.newWriter(writeChannel, "UTF8"));
 			writer.write(data);
@@ -87,7 +104,7 @@ public abstract class StoreCollector {
 
 		if (blob) {
 			FeedFetch feed = new FeedFetch();
-			String fileNameForEntitiy = "/gs/" + fileName.getBucketName() + "/" + fileName.getObjectName();
+			String fileNameForEntitiy = "/gs/" + gcsFileName.getBucketName() + "/" + gcsFileName.getObjectName();
 
 			if (LOG.isLoggable(GaeLevel.DEBUG)) {
 				LOG.log(GaeLevel.DEBUG, String.format("Saving as blob @ [%s]", fileNameForEntitiy));
@@ -102,6 +119,15 @@ public abstract class StoreCollector {
 			// entity.ingested = Boolean.valueOf(ingested);
 			feed.code = code;
 
+			Store s = new Store();
+			s.a3Code = store;
+
+			if (categoryInternalId != null) {
+				feed.category = CategoryServiceProvider.provide().getInternalIdCategory(s, categoryInternalId);
+			} else {
+				feed.category = CategoryServiceProvider.provide().getAllCategory(s);
+			}
+
 			feed = FeedFetchServiceProvider.provide().addFeedFetch(feed);
 			ids.add(feed.id);
 
@@ -114,6 +140,15 @@ public abstract class StoreCollector {
 			feed.type = type;
 			feed.date = date;
 			feed.code = code;
+
+			Store s = new Store();
+			s.a3Code = store;
+
+			if (categoryInternalId != null) {
+				feed.category = CategoryServiceProvider.provide().getInternalIdCategory(s, categoryInternalId);
+			} else {
+				feed.category = CategoryServiceProvider.provide().getAllCategory(s);
+			}
 
 			feed = FeedFetchServiceProvider.provide().addFeedFetch(feed);
 			ids.add(feed.id);

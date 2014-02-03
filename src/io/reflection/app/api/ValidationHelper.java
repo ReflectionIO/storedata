@@ -12,6 +12,7 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
+import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
@@ -20,6 +21,7 @@ import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.country.CountryServiceProvider;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.datasource.DataSourceServiceProvider;
@@ -520,7 +522,7 @@ public class ValidationHelper {
 			isNameLookup = true;
 		}
 
-		if (!(isIdLookup || isNameLookup))
+		if (!(isIdLookup || isA3CodeLookup || isNameLookup))
 			throw new InputValidationException(ApiError.DataSourceNoLookup.getCode(), ApiError.DataSourceNoLookup.getMessage(parent));
 
 		DataSource lookupDataSource = null;
@@ -556,6 +558,40 @@ public class ValidationHelper {
 		if (lookupDataAccount == null)
 			throw new InputValidationException(ApiError.DataAccountNotFound.getCode(), ApiError.DataSourceNotFound.getMessage(parent));
 
-		return null;
+		return lookupDataAccount;
 	}
+
+	public static Category validateCategory(Category category, String parent) throws ServiceException {
+		if (category == null) throw new InputValidationException(ApiError.CategoryNull.getCode(), ApiError.CategoryNull.getMessage(parent));
+
+		boolean isIdLookup = false, isStoreInternalIdLookup = false;
+
+		Store store = null;
+
+		if (category.id != null) {
+			isIdLookup = true;
+		} else if (category.internalId != null && category.store != null) {
+			store = new Store();
+			store.a3Code = category.store;
+
+			store = validateStore(store, parent + ".store");
+
+			isStoreInternalIdLookup = true;
+		}
+
+		if (!(isIdLookup || isStoreInternalIdLookup))
+			throw new InputValidationException(ApiError.CategoryNoLookup.getCode(), ApiError.CategoryNoLookup.getMessage(parent));
+
+		Category lookupCategory = null;
+		if (isIdLookup) {
+			lookupCategory = CategoryServiceProvider.provide().getCategory(category.id);
+		} else if (isStoreInternalIdLookup) {
+			lookupCategory = CategoryServiceProvider.provide().getInternalIdCategory(store, category.internalId);
+		}
+
+		if (lookupCategory == null) throw new InputValidationException(ApiError.CategoryNotFound.getCode(), ApiError.CategoryNotFound.getMessage(parent));
+
+		return lookupCategory;
+	}
+
 }

@@ -14,6 +14,7 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
+import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
@@ -87,6 +88,9 @@ final class RankService implements IRankService {
 		rank.revenue = Float.valueOf((float) connection.getCurrentRowLong("revenue").longValue() / 100.0f);
 		rank.downloads = connection.getCurrentRowInteger("downloads");
 
+		rank.category = new Category();
+		rank.category.id = connection.getCurrentRowLong("categoryid");
+
 		return rank;
 	}
 
@@ -95,11 +99,11 @@ final class RankService implements IRankService {
 		Rank addedRank = null;
 
 		final String addeRankQuery = String
-				.format("INSERT INTO `rank` (`position`,`grossingposition`,`itemid`,`type`,`country`,`date`,`source`,`price`,`currency`,`code`,`revenue`,`downloads`) VALUES (%d,%d,'%s','%s','%s',FROM_UNIXTIME(%d),'%s',%d,'%s','%s',%s,%s)",
+				.format("INSERT INTO `rank` (`position`,`grossingposition`,`itemid`,`type`,`country`,`date`,`source`,`price`,`currency`,`categoryid`,`code`,`revenue`,`downloads`) VALUES (%d,%d,'%s','%s','%s',FROM_UNIXTIME(%d),'%s',%d,'%s',%d,'%s',%s,%s)",
 						rank.position.longValue(), rank.grossingPosition.longValue(), addslashes(rank.itemId), addslashes(rank.type), addslashes(rank.country),
 						rank.date.getTime() / 1000, addslashes(rank.source), (int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency),
-						addslashes(rank.code), rank.revenue == null ? "NULL" : rank.revenue.floatValue() * 100, rank.downloads == null ? "NULL"
-								: rank.downloads.intValue());
+						rank.category.id.longValue(), addslashes(rank.code), rank.revenue == null ? "NULL" : rank.revenue.floatValue() * 100,
+						rank.downloads == null ? "NULL" : rank.downloads.intValue());
 
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
@@ -129,11 +133,11 @@ final class RankService implements IRankService {
 		Rank updatedRank = null;
 
 		final String updateRankQuery = String
-				.format("UPDATE `rank` SET `position`=%d,`grossingposition`=%d,`itemid`='%s',`type`='%s',`country`='%s',`date`=FROM_UNIXTIME(%d),`source`='%s',`price`=%d,`currency`='%s',`code`='%s',`revenue`=%s,`downloads`=%s WHERE `id`=%d;",
+				.format("UPDATE `rank` SET `position`=%d,`grossingposition`=%d,`itemid`='%s',`type`='%s',`country`='%s',`date`=FROM_UNIXTIME(%d),`source`='%s',`price`=%d,`currency`='%s',`categoryid`=%d,`code`='%s',`revenue`=%s,`downloads`=%s WHERE `id`=%d;",
 						rank.position.longValue(), rank.grossingPosition.longValue(), addslashes(rank.itemId), addslashes(rank.type), addslashes(rank.country),
 						rank.date.getTime() / 1000, addslashes(rank.source), (int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency),
-						addslashes(rank.code), rank.revenue == null ? "NULL" : rank.revenue.floatValue() * 100, rank.downloads == null ? "NULL"
-								: rank.downloads.intValue(), rank.id.longValue());
+						rank.category.id.longValue(), addslashes(rank.code), rank.revenue == null ? "NULL" : rank.revenue.floatValue() * 100,
+						rank.downloads == null ? "NULL" : rank.downloads.intValue(), rank.id.longValue());
 
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
@@ -202,17 +206,18 @@ final class RankService implements IRankService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.service.rank.IRankService#getRanks(io.reflection.app.datatypes.Country, io.reflection.app.datatypes.Store, java.lang.String,
-	 * java.util.Date, java.util.Date, io.reflection.app.api.datatypes.Pager)
+	 * @see io.reflection.app.service.rank.IRankService#getRanks(io.reflection.app.datatypes.Country, io.reflection.app.datatypes.Store,
+	 * io.reflection.app.datatypes.Category, java.lang.String, java.util.Date, java.util.Date, io.reflection.app.api.datatypes.Pager)
 	 */
 	@Override
-	public List<Rank> getRanks(Country country, Store store, String listType, Date after, Date before, Pager pager) throws DataAccessException {
+	public List<Rank> getRanks(Country country, Store store, Category category, String listType, Date after, Date before, Pager pager)
+			throws DataAccessException {
 		List<Rank> ranks = new ArrayList<Rank>();
 
 		String code = getGatherCode(country, store, after, before);
 
 		if (code != null) {
-			ranks.addAll(getGatherCodeRanks(country, store, listType, code, pager, false));
+			ranks.addAll(getGatherCodeRanks(country, store, category, listType, code, pager, false));
 		}
 
 		return ranks;
@@ -335,13 +340,13 @@ final class RankService implements IRankService {
 	 * @see io.reflection.app.service.rank.IRankService#getRanksCount(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date)
 	 */
 	@Override
-	public Long getRanksCount(Country country, Store store, String listType, Date after, Date before) throws DataAccessException {
+	public Long getRanksCount(Country country, Store store, Category category, String listType, Date after, Date before) throws DataAccessException {
 		Long ranksCount = Long.valueOf(0);
 
 		String code = getGatherCode(country, store, after, before);
 
 		if (code != null) {
-			ranksCount = getGatherCodeRanksCount(country, store, listType, code);
+			ranksCount = getGatherCodeRanksCount(country, store, category, listType, code);
 		}
 
 		return ranksCount;
@@ -389,7 +394,7 @@ final class RankService implements IRankService {
 		StringBuffer addRanksBatchQuery = new StringBuffer();
 
 		addRanksBatchQuery
-				.append("INSERT INTO `rank` (`position`,`grossingposition`,`itemid`,`type`,`country`,`date`,`source`,`price`,`currency`,`code`,`revenue`,`downloads`) VALUES ");
+				.append("INSERT INTO `rank` (`position`,`grossingposition`,`itemid`,`type`,`country`,`date`,`source`,`price`,`currency`,`categoryid`,`code`,`revenue`,`downloads`) VALUES ");
 
 		boolean addComma = false;
 		for (Rank rank : ranks) {
@@ -397,10 +402,11 @@ final class RankService implements IRankService {
 				addRanksBatchQuery.append(",");
 			}
 
-			addRanksBatchQuery.append(String.format("(%d,%d,'%s','%s','%s',FROM_UNIXTIME(%d),'%s',%d,'%s','%s',%s,%s)", rank.position.longValue(),
+			addRanksBatchQuery.append(String.format("(%d,%d,'%s','%s','%s',FROM_UNIXTIME(%d),'%s',%d,'%s',%d,'%s',%s,%s)", rank.position.longValue(),
 					rank.grossingPosition.longValue(), addslashes(rank.itemId), addslashes(rank.type), addslashes(rank.country), rank.date.getTime() / 1000,
-					addslashes(rank.source), (int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency), addslashes(rank.code),
-					rank.revenue == null ? "NULL" : rank.revenue.floatValue() * 100, rank.downloads == null ? "NULL" : rank.downloads.intValue()));
+					addslashes(rank.source), (int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency), rank.category.id.longValue(),
+					addslashes(rank.code), rank.revenue == null ? "NULL" : rank.revenue.floatValue() * 100,
+					rank.downloads == null ? "NULL" : rank.downloads.intValue()));
 			addComma = true;
 		}
 
@@ -426,10 +432,11 @@ final class RankService implements IRankService {
 	 * (non-Javadoc)
 	 * 
 	 * @see io.reflection.app.service.rank.IRankService#getGatherCodeRanksCount(io.reflection.app.shared.datatypes.Country,
-	 * io.reflection.app.shared.datatypes.Store, java.lang.String, java.lang.String, io.reflection.app.api.shared.datatypes.Pager)
+	 * io.reflection.app.shared.datatypes.Store, io.reflection.app.shared.datatypes.Category, java.lang.String, java.lang.String,
+	 * io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
-	public Long getGatherCodeRanksCount(Country country, Store store, String listType, String code) throws DataAccessException {
+	public Long getGatherCodeRanksCount(Country country, Store store, Category category, String listType, String code) throws DataAccessException {
 		Long ranksCount = Long.valueOf(0);
 
 		Collector collector = CollectorFactory.getCollectorForStore(store.a3Code);
@@ -450,9 +457,10 @@ final class RankService implements IRankService {
 			typesQueryPart = "`type` IN ('" + StringUtils.join(types, "','") + "')";
 		}
 
-		String getRanksCountQuery = String.format(
-				"SELECT COUNT(1) AS `count` FROM `rank` WHERE %s AND `country`='%s' AND `source`='%s' AND `code`='%s' AND %s `deleted`='n'", typesQueryPart,
-				addslashes(country.a2Code), addslashes(store.a3Code), code, isGrossing ? "`grossingposition`<>0 AND" : "");
+		String getRanksCountQuery = String
+				.format("SELECT COUNT(1) AS `count` FROM `rank` WHERE %s AND `country`='%s' AND `source`='%s' AND `categoryid`=%d AND `code`='%s' AND %s `deleted`='n'",
+						typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), code,
+						isGrossing ? "`grossingposition`<>0 AND" : "");
 
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
@@ -511,7 +519,7 @@ final class RankService implements IRankService {
 	public Long updateRanksBatch(List<Rank> updateRanks) throws DataAccessException {
 		long ranksCount = 0;
 
-		final String updateRanksBatchQueryFormat = "UPDATE `rank` SET `position`=%d,`grossingposition`=%d,`itemid`='%s',`type`='%s',`country`='%s',`date`=FROM_UNIXTIME(%d),`source`='%s',`price`=%d,`currency`='%s',`code`='%s',`revenue`=%s,`downloads`=%s WHERE `id`=%d;";
+		final String updateRanksBatchQueryFormat = "UPDATE `rank` SET `position`=%d,`grossingposition`=%d,`itemid`='%s',`type`='%s',`country`='%s',`date`=FROM_UNIXTIME(%d),`source`='%s',`price`=%d,`currency`='%s',`categoryid`=%d,`code`='%s',`revenue`=%s,`downloads`=%s WHERE `id`=%d;";
 
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
@@ -522,8 +530,9 @@ final class RankService implements IRankService {
 			for (Rank rank : updateRanks) {
 				updateRanksBatchQuery = String.format(updateRanksBatchQueryFormat, rank.position.longValue(), rank.grossingPosition.longValue(),
 						addslashes(rank.itemId), addslashes(rank.type), addslashes(rank.country), rank.date.getTime() / 1000, addslashes(rank.source),
-						(int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency), addslashes(rank.code), rank.revenue == null ? "NULL"
-								: rank.revenue.floatValue() * 100, rank.downloads == null ? "NULL" : rank.downloads.intValue(), rank.id.longValue());
+						(int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency), rank.category.id.longValue(), addslashes(rank.code),
+						rank.revenue == null ? "NULL" : rank.revenue.floatValue() * 100, rank.downloads == null ? "NULL" : rank.downloads.intValue(),
+						rank.id.longValue());
 
 				rankConnection.executeQuery(updateRanksBatchQuery);
 
@@ -544,10 +553,10 @@ final class RankService implements IRankService {
 	 * (non-Javadoc)
 	 * 
 	 * @see io.reflection.app.service.rank.IRankService#getGatherCodeRanks(io.reflection.app.shared.datatypes.Country, io.reflection.app.shared.datatypes.Store,
-	 * java.lang.String, java.lang.String, io.reflection.app.api.shared.datatypes.Pager, boolean)
+	 * io.reflection.app.shared.datatypes.Category java.lang.String, java.lang.String, io.reflection.app.api.shared.datatypes.Pager, boolean)
 	 */
 	@Override
-	public List<Rank> getGatherCodeRanks(Country country, Store store, String listType, String code, Pager pager, boolean ignoreGrossingRank)
+	public List<Rank> getGatherCodeRanks(Country country, Store store, Category category, String listType, String code, Pager pager, boolean ignoreGrossingRank)
 			throws DataAccessException {
 		List<Rank> ranks = new ArrayList<Rank>();
 
@@ -578,8 +587,8 @@ final class RankService implements IRankService {
 		}
 
 		String getCountryStoreTypeRanksQuery = String
-				.format("SELECT * FROM `rank` WHERE %s AND `country`='%s' AND `source`='%s' AND `code`='%s' AND %s `deleted`='n' ORDER BY `%s` %s,`date` DESC LIMIT %d,%d",
-						typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), code,
+				.format("SELECT * FROM `rank` WHERE %s AND `country`='%s' AND `source`='%s' AND `categoryid`=%d AND `code`='%s' AND %s `deleted`='n' ORDER BY `%s` %s,`date` DESC LIMIT %d,%d",
+						typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), code,
 						isGrossing && !ignoreGrossingRank ? "`grossingposition`<>0 AND" : "", pager.sortBy,
 						pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
 

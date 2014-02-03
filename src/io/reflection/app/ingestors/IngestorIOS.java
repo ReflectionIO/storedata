@@ -97,7 +97,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 				}
 
 				if (first) {
-					store(combined.get(date), feedFetch.country, feedFetch.store, feedFetch.type, feedFetch.date, feedFetch.code, true);
+					store(combined.get(date), feedFetch.country, feedFetch.store, feedFetch.type, null, feedFetch.date, feedFetch.code, true);
 					first = false;
 				}
 
@@ -153,7 +153,8 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			pager.start = Long.valueOf(0);
 			pager.count = new Long(Long.MAX_VALUE);
 
-			List<Rank> foundRanks = RankServiceProvider.provide().getGatherCodeRanks(country, store, firstFeedFetch.type, firstFeedFetch.code, pager, true);
+			List<Rank> foundRanks = RankServiceProvider.provide().getGatherCodeRanks(country, store, firstFeedFetch.category, firstFeedFetch.type,
+					firstFeedFetch.code, pager, true);
 
 			Map<String, Rank> lookup = indexRanks(foundRanks);
 			List<String> itemIds = new ArrayList<String>();
@@ -177,6 +178,8 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 				rank.price = item.price;
 				rank.source = firstFeedFetch.store;
 				rank.type = firstFeedFetch.type;
+
+				rank.category = firstFeedFetch.category;
 
 				if ((existing = lookup.get(constructKey(rank))) != null) {
 					rank = existing;
@@ -317,7 +320,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 	 * @return
 	 */
 	private String constructKey(Rank rank) {
-		return rank.code + rank.source + rank.country + rank.itemId;
+		return rank.code + rank.source + rank.country + rank.category.id.toString() + rank.itemId;
 	}
 
 	private Map<Date, Map<Integer, FeedFetch>> groupDataByDate(List<FeedFetch> entities) {

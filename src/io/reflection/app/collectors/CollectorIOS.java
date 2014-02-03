@@ -4,7 +4,12 @@
 package io.reflection.app.collectors;
 
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.datatypes.shared.Category;
+import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.service.category.CategoryServiceProvider;
+import io.reflection.app.service.store.StoreServiceProvider;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,6 +40,7 @@ public class CollectorIOS extends StoreCollector implements Collector {
 	private static final String COUNTRIES_KEY = "gather.ios.countries";
 
 	private static final String KEY_FORMAT = "gather.ios.%s";
+	private static final String KEY_CATEGORY_FEED = "gather.ios.category.feed.url";
 
 	public static final String TOP_FREE_APPS = "topfreeapplications";
 	public static final String TOP_PAID_APPS = "toppaidapplications";
@@ -87,11 +93,50 @@ public class CollectorIOS extends StoreCollector implements Collector {
 
 					count++;
 				}
-				
-				// TODO: enque the categories for each country
-				
+
+				// when we have gathered all the counties feeds we do the same but for each category
+				try {
+					Store store = StoreServiceProvider.provide().getA3CodeStore(IOS_STORE_A3);
+
+					// get the parent category all which references all lower categories
+					Category all = CategoryServiceProvider.provide().getAllCategory(store);
+
+					List<Category> categories = null;
+
+					if (all != null) {
+						Pager p = new Pager();
+						p.start = Pager.DEFAULT_START;
+						p.sortBy = Pager.DEFAULT_SORT_BY;
+						p.count = CategoryServiceProvider.provide().getParentCategoriesCount(all);
+
+						if (p.count != null && p.count.longValue() > 0) {
+							categories = CategoryServiceProvider.provide().getParentCategories(all, p);
+
+							if (categories != null && categories.size() > 0) {
+								// if we have some categories iterate through all the countries again
+								for (String countryCode : splitCountries) {
+
+									// for each category
+									for (Category category : categories) {
+										enqueue(queue, countryCode, TOP_FREE_APPS, category.internalId, code);
+										enqueue(queue, countryCode, TOP_PAID_APPS, category.internalId, code);
+										enqueue(queue, countryCode, TOP_GROSSING_APPS, category.internalId, code);
+										enqueue(queue, countryCode, TOP_FREE_IPAD_APPS, category.internalId, code);
+										enqueue(queue, countryCode, TOP_PAID_IPAD_APPS, category.internalId, code);
+										enqueue(queue, countryCode, TOP_GROSSING_IPAD_APPS, category.internalId, code);
+
+										count++;
+									}
+								}
+							}
+						}
+					}
+				} catch (DataAccessException dae) {
+					LOG.log(GaeLevel.SEVERE, "A database error occured attempting to enqueue category top feeds for gathering phase", dae);
+				}
 
 			}
+
 		} finally {
 			if (LOG.isLoggable(GaeLevel.TRACE)) {
 				LOG.log(GaeLevel.TRACE, "Exiting...");
@@ -107,17 +152,28 @@ public class CollectorIOS extends StoreCollector implements Collector {
 	 * @see io.reflection.appcollector.collectors.DataCollector#collect()
 	 */
 	@Override
-	public List<Long> collect(String country, String type, String code) throws DataAccessException {
+	public List<Long> collect(String country, String type, String category, String code) throws DataAccessException {
 		if (LOG.isLoggable(GaeLevel.TRACE)) {
 			LOG.log(GaeLevel.TRACE, "Entering...");
 		}
 
 		String data;
 		List<Long> ids = null;
+		Long categoryInternalId = null;
 
 		try {
 
-			data = get(country, type);
+			if (category != null) {
+				try {
+					categoryInternalId = Long.parseLong(category);
+				} catch (NumberFormatException ne) {
+					if (LOG.isLoggable(GaeLevel.DEBUG)) {
+						LOG.log(GaeLevel.DEBUG, String.format("Could not parse category to long [%s]", category), ne);
+					}
+				}
+			}
+
+			data = get(country, type, categoryInternalId);
 
 			if (data != null && data.length() > 0) {
 				// before storeing the data make sure that it is a valid json object
@@ -125,7 +181,7 @@ public class CollectorIOS extends StoreCollector implements Collector {
 
 				if (parsed == null) { throw new RuntimeException("The data could not be parsed or parsing it returned a null json object"); }
 
-				ids = store(data, country, IOS_STORE_A3, type, new Date(), code);
+				ids = store(data, country, IOS_STORE_A3, type, categoryInternalId, new Date(), code);
 			} else {
 				if (LOG.isLoggable(GaeLevel.TRACE)) {
 					LOG.log(GaeLevel.TRACE, "Obtained data was empty for country [" + country + "], type [" + type + "] and code [" + code + "]");
@@ -141,25 +197,56 @@ public class CollectorIOS extends StoreCollector implements Collector {
 		return ids;
 	}
 
-	private String get(String countryCode, String type) {
+	private String get(String countryCode, String type, Long categoryInternalId) {
 		if (LOG.isLoggable(GaeLevel.DEBUG)) {
-			LOG.log(GaeLevel.DEBUG, String.format("Getting data for [%s] and type [%s]", countryCode, type));
+			LOG.log(GaeLevel.DEBUG, String.format("Getting data for [%s] and type [%s] and category [%s]", countryCode, type,
+					categoryInternalId == null ? "null" : categoryInternalId.toString()));
 		}
 
-		String key = String.format(KEY_FORMAT, type);
+		String key = null;
+
+		if (categoryInternalId == null) {
+			key = String.format(KEY_FORMAT, type);
+		} else {
+			key = KEY_CATEGORY_FEED;
+		}
 
 		if (LOG.isLoggable(GaeLevel.DEBUG)) {
 			LOG.log(GaeLevel.DEBUG, String.format("key is [%s]", key));
 		}
 
-		String endpoint = String.format(System.getProperty(key), countryCode);
+		String endPoint = null;
 
-		return HttpExternalGetter.getData(endpoint);
+		String propertyValue = System.getProperty(key);
+
+		if (categoryInternalId == null) {
+			endPoint = String.format(propertyValue, countryCode);
+		} else {
+			endPoint = String.format(propertyValue, countryCode, type, categoryInternalId.longValue());
+		}
+
+		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			LOG.log(GaeLevel.DEBUG, String.format("end point is [%s]", endPoint));
+		}
+
+		return HttpExternalGetter.getData(endPoint);
 	}
 
 	private void enqueue(Queue queue, String country, String type, String code) {
+		enqueue(queue, country, type, null, code);
+	}
+
+	private void enqueue(Queue queue, String country, String type, Long categoryInternalId, String code) {
 		try {
-			queue.add(TaskOptions.Builder.withUrl(String.format(ENQUEUE_GATHER_FORMAT, IOS_STORE_A3, country, type, code)).method(Method.GET));
+			String url = null;
+
+			if (categoryInternalId == null) {
+				url = String.format(ENQUEUE_GATHER_FORMAT, IOS_STORE_A3, country, type, code);
+			} else {
+				url = String.format(ENQUEUE_GATHER_CATEGORY_FORMAT, IOS_STORE_A3, country, type, categoryInternalId.longValue(), code);
+			}
+
+			queue.add(TaskOptions.Builder.withUrl(url).method(Method.GET));
 		} catch (TransientFailureException ex) {
 
 			if (LOG.isLoggable(Level.WARNING)) {

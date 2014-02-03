@@ -58,6 +58,7 @@ public class CollectorServlet extends HttpServlet {
 		String country = req.getParameter("country");
 		String type = req.getParameter("type");
 		String code = req.getParameter("code");
+		String category = req.getParameter("category");
 
 		List<Long> collected = null;
 
@@ -65,7 +66,7 @@ public class CollectorServlet extends HttpServlet {
 
 		if (collector != null) {
 			try {
-				collected = collector.collect(country, type, code);
+				collected = collector.collect(country, type, category, code);
 			} catch (DataAccessException e) {
 				throw new RuntimeException(e);
 			}

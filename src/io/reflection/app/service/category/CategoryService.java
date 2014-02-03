@@ -230,11 +230,12 @@ final class CategoryService implements ICategoryService {
 	@Override
 	public Category getAllCategory(Store store) throws DataAccessException {
 		Category category = null;
-		
-		String getAllCategoryQuery = String.format("SELECT * FROM `category` WHERE `deleted`='n' AND `store`='%s' AND `parentid` IS NULL LIMIT 1", store.a3Code);
-		
+
+		String getAllCategoryQuery = String
+				.format("SELECT * FROM `category` WHERE `deleted`='n' AND `store`='%s' AND `parentid` IS NULL LIMIT 1", store.a3Code);
+
 		Connection categoryConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeCategory.toString());
-		
+
 		try {
 			categoryConnection.connect();
 			categoryConnection.executeQuery(getAllCategoryQuery);
@@ -250,4 +251,33 @@ final class CategoryService implements ICategoryService {
 		return category;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.category.ICategoryService#getInternalIdCategory(io.reflection.app.datatypes.shared.Store, java.lang.Long)
+	 */
+	@Override
+	public Category getInternalIdCategory(Store store, Long internalId) throws DataAccessException {
+		Category category = null;
+
+		String getInternalIdCategoryQuery = String.format("SELECT * FROM `category` WHERE `deleted`='n' AND `store`='%s' AND `internalid`=%d LIMIT 1",
+				store.a3Code, internalId);
+
+		Connection categoryConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeCategory.toString());
+
+		try {
+			categoryConnection.connect();
+			categoryConnection.executeQuery(getInternalIdCategoryQuery);
+
+			if (categoryConnection.fetchNextRow()) {
+				category = toCategory(categoryConnection);
+			}
+		} finally {
+			if (categoryConnection != null) {
+				categoryConnection.disconnect();
+			}
+		}
+
+		return category;
+	}
 }

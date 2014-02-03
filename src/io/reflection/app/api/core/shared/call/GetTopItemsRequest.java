@@ -9,6 +9,7 @@ package io.reflection.app.api.core.shared.call;
 
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.Request;
+import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.Store;
 
@@ -22,6 +23,7 @@ import com.google.gson.JsonPrimitive;
 public class GetTopItemsRequest extends Request {
 	public Country country;
 	public Store store;
+	public Category category;
 	public Pager pager;
 	public String listType;
 	public Date on;
@@ -33,6 +35,8 @@ public class GetTopItemsRequest extends Request {
 		object.add("country", jsonCountry);
 		JsonElement jsonStore = store == null ? JsonNull.INSTANCE : store.toJson();
 		object.add("store", jsonStore);
+		JsonElement jsonCategory = category == null ? JsonNull.INSTANCE : category.toJson();
+		object.add("category", jsonCategory);
 		JsonElement jsonPager = pager == null ? JsonNull.INSTANCE : pager.toJson();
 		object.add("pager", jsonPager);
 		JsonElement jsonListType = listType == null ? JsonNull.INSTANCE : new JsonPrimitive(listType);
@@ -57,6 +61,13 @@ public class GetTopItemsRequest extends Request {
 			if (jsonStore != null) {
 				store = new Store();
 				store.fromJson(jsonStore.getAsJsonObject());
+			}
+		}
+		if (jsonObject.has("category")) {
+			JsonElement jsonCategory = jsonObject.get("category");
+			if (jsonCategory != null) {
+				category = new Category();
+				category.fromJson(jsonCategory.getAsJsonObject());
 			}
 		}
 		if (jsonObject.has("pager")) {

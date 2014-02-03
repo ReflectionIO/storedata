@@ -27,7 +27,7 @@ public class CategoryServiceTest extends DatabaseTest {
 
 	@Test
 	public void testGetAllStoreCategories() throws DataAccessException {
-		setupDatabaseConnectionSystemProperties();
+		setupLocalDatabaseConnectionSystemProperties();
 
 		Store store = StoreServiceProvider.provide().getA3CodeStore("ios");
 
@@ -47,7 +47,7 @@ public class CategoryServiceTest extends DatabaseTest {
 	
 	@Test
 	public void testGetExcludingAllStoreCategories() throws DataAccessException {
-		setupDatabaseConnectionSystemProperties();
+		setupLocalDatabaseConnectionSystemProperties();
 		
 		Store store = StoreServiceProvider.provide().getA3CodeStore("ios");
 		

@@ -10,6 +10,7 @@ package io.reflection.app.predictors;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.apple.ItemPropertyLookupServlet;
+import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.FormType;
 import io.reflection.app.datatypes.shared.Item;
@@ -20,6 +21,7 @@ import io.reflection.app.helpers.ItemPropertyWrapper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.modellers.Modeller;
 import io.reflection.app.modellers.ModellerFactory;
+import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.modelrun.ModelRunServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
@@ -144,7 +146,9 @@ public class PredictorIOS implements Predictor {
 		FormType form = modeller.getForm(type);
 		ModelRun modelRun = ModelRunServiceProvider.provide().getGatherCodeModelRun(c, s, form, code);
 
-		List<Rank> foundRanks = RankServiceProvider.provide().getGatherCodeRanks(c, s, type, code, p, false);
+		Category category = CategoryServiceProvider.provide().getAllCategory(s); 
+		
+		List<Rank> foundRanks = RankServiceProvider.provide().getGatherCodeRanks(c, s, category, type, code, p, false);
 		Map<String, Item> lookup = lookupItemsForRanks(foundRanks);
 
 		Item item = null;
