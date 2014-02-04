@@ -13,6 +13,7 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.collectors.StoreCollector;
+import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.FeedFetchStatusType;
@@ -21,6 +22,7 @@ import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.modellers.ModellerFactory;
+import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
@@ -295,7 +297,12 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 				FeedFetchServiceProvider.provide().updateFeedFetch(current);
 			}
 
-			if (isGrossing) {
+			Store s = new Store();
+			s.a3Code = IOS_STORE_A3;
+			Category all = CategoryServiceProvider.provide().getAllCategory(s);
+		
+			// only run the model based on the "all" category, right now category data is not modelled
+			if (isGrossing && firstFeedFetch.category.id.longValue() == all.id.longValue()) {
 				ModellerFactory.getModellerForStore(IOS_STORE_A3).enqueue(firstFeedFetch.country, firstFeedFetch.type, firstFeedFetch.code);
 			}
 		}
