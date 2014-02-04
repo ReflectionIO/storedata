@@ -104,15 +104,12 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 		if (username == null || username.length() == 0) {
 			mUsernameError = "Cannot be empty";
 			validated = false;
-		} else if (username.length() < 6) {
+		/*} else if (username.length() < 6) {
 			mUsernameError = "Too short (minimum 6 characters)";
 			validated = false;
 		} else if (username.length() > 255) {
 			mUsernameError = "Too long (maximum 255 characters)";
-			validated = false;
-		} else if (!FormHelper.isValidEmail(username)) {
-			mUsernameError = "Invalid email address";
-			validated = false;
+			validated = false; */
 		} else {
 			mUsernameError = null;
 			validated = validated && true;
