@@ -106,6 +106,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 	@UiField TextBox mQuery;
 	@UiField InlineHyperlink mSearch;
+	
+	@UiField Anchor featureRequestButton;
 
 	private List<LIElement> mItems;
 
@@ -115,6 +117,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		mAdminButton.setHTML(mAdminButton.getText() + " <b class=\"caret\"></b>");
 		mLogoutLink.setHTML(mLogoutLink.getText() + " <b class=\"glyphicon glyphicon-log-out\"></b>");
 		mLoginLink.setHTML(mLoginLink.getText() + " <b class=\"glyphicon glyphicon-log-in\"></b>");
+		featureRequestButton.setHTML("<b class=\"glyphicon glyphicon-comment\"></b> " + featureRequestButton.getText());
 
 		mQuery.getElement().setAttribute("placeholder", "Search for any app");
 		mSearch.setHTML("<b class=\"glyphicon glyphicon-search\"></b>");
