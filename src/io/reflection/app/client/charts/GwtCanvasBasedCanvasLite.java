@@ -18,6 +18,7 @@ import com.googlecode.gchart.client.GChartCanvasLite;
  * @author billy1380
  * 
  */
+@SuppressWarnings("deprecation")
 public final class GwtCanvasBasedCanvasLite extends Widget implements GChartCanvasLite {
 
 	private Canvas mCanvas;

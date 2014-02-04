@@ -42,6 +42,7 @@ public class RankSidePanel extends Composite {
 	@UiField ListBox mAppStore;
 	// @UiField ListBox mListType;
 	@UiField ListBox mCountry;
+	@UiField ListBox category;
 
 	public RankSidePanel() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -103,6 +104,11 @@ public class RankSidePanel extends Composite {
 	void onDateValueChanged(ValueChangeEvent<Date> event) {
 		FilterController.get().setStartDate(mDate.getValue());
 	}
+	
+	@UiHandler("category")
+	void onCategoryValueChanged(ChangeEvent event) {
+		FilterController.get().setCategory(getCatgegory());
+	}
 
 	/**
 	 * @return
@@ -124,6 +130,10 @@ public class RankSidePanel extends Composite {
 
 	public String getDisplayDate(String format) {
 		return DateTimeFormat.getFormat(format).format(getDate());
+	}
+
+	public Long getCatgegory() {
+		return Long.valueOf(category.getValue(category.getSelectedIndex()));
 	}
 
 	/**

@@ -8,6 +8,7 @@
 package io.reflection.app.client.controller;
 
 import io.reflection.app.client.handler.FilterEventHandler;
+import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.Store;
 
@@ -28,6 +29,7 @@ public class FilterController {
 	private static final String LIST_TYPE_KEY = "list.type";
 	private static final String START_DATE_KEY = "start.date";
 	private static final String END_DATE_KEY = "end.date";
+	private static final String CATEGORY_KEY = "category";
 
 	private static FilterController mOne = null;
 
@@ -175,10 +177,8 @@ public class FilterController {
 
 				mPreviousValues.put(END_DATE_KEY, previousEndDate);
 			} else {
-				EventController.get()
-						.fireEventFromSource(
-								new FilterEventHandler.ChangedFilterParameter<Date>(END_DATE_KEY, (Date) mCurrentValues.get(END_DATE_KEY),
-										previousEndDate), this);
+				EventController.get().fireEventFromSource(
+						new FilterEventHandler.ChangedFilterParameter<Date>(END_DATE_KEY, (Date) mCurrentValues.get(END_DATE_KEY), previousEndDate), this);
 			}
 		}
 	}
@@ -217,5 +217,36 @@ public class FilterController {
 		}
 
 		mPreviousValues = null;
+	}
+
+	/**
+	 * @param value
+	 */
+	public void setCategory(Long value) {
+		if (value != null && !value.equals(mCurrentValues.get(CATEGORY_KEY))) {
+			Category previousCategory = (Category) mCurrentValues.get(CATEGORY_KEY);
+			Category category = new Category();
+			category.id = value;
+			mCurrentValues.put(CATEGORY_KEY, category);
+
+			if (mInTransaction) {
+				if (mPreviousValues == null) {
+					mPreviousValues = new HashMap<String, Object>();
+				}
+
+				mPreviousValues.put(CATEGORY_KEY, previousCategory);
+			} else {
+				EventController.get().fireEventFromSource(
+						new FilterEventHandler.ChangedFilterParameter<Category>(CATEGORY_KEY, (Category) mCurrentValues.get(CATEGORY_KEY), previousCategory),
+						this);
+			}
+		}
+	}
+
+	/**
+	 * @return
+	 */
+	public Category getCategory() {
+		return (Category) mCurrentValues.get(CATEGORY_KEY);
 	}
 }
