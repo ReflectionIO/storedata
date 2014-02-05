@@ -16,7 +16,10 @@ import com.google.gwt.resources.client.CssResource;
  *
  */
 public interface Styles extends ClientBundle {
-	public interface ReflectionStyles extends CssResource {}
+	public interface ReflectionStyles extends CssResource {
+		String highlightRange();
+		String highlightRangeBoundaries();
+	}
 
 	public static final Styles INSTANCE = GWT.create(Styles.class);
 

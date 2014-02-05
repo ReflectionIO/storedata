@@ -19,9 +19,6 @@ public class DateRange {
 	private Date mToDate;
 
 	public Date getFrom() {
-		if (mFromDate == null) {
-			mFromDate = new Date();
-		}
 
 		return mFromDate;
 	}
@@ -35,9 +32,6 @@ public class DateRange {
 	}
 
 	public Date getTo() {
-		if (mToDate == null) {
-			mToDate = new Date();
-		}
 
 		return mToDate;
 	}

@@ -8,6 +8,7 @@
 package io.reflection.app.client.part;
 
 import io.reflection.app.client.part.datatypes.DateRange;
+import io.reflection.app.client.res.Styles.ReflectionStyles;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,6 +39,8 @@ import com.google.gwt.user.datepicker.client.DatePicker;
  */
 public class DateRangePicker extends Composite implements HasValue<DateRange>, IsEditor<LeafValueEditor<DateRange>> {
 
+	@UiField ReflectionStyles style;
+
 	private static DateRangePickerUiBinder uiBinder = GWT.create(DateRangePickerUiBinder.class);
 
 	interface DateRangePickerUiBinder extends UiBinder<Widget, DateRangePicker> {}
@@ -60,7 +63,7 @@ public class DateRangePicker extends Composite implements HasValue<DateRange>, I
 
 		// initialize today and set it at midnight, since when pick the today date from DatePicker is set to noon, and the after function doesn't work
 		// as expected in the morning
-		today = setDateAtNoon(today);
+		today = normalizeDate(today);
 
 		mValue.setTo(today);
 		mToPicker.setValue(mValue.getTo(), false);
@@ -69,9 +72,9 @@ public class DateRangePicker extends Composite implements HasValue<DateRange>, I
 		CalendarUtil.addMonthsToDate(oneMonthAgo, -1);
 		mValue.setFrom(oneMonthAgo);
 		mFromPicker.setValue(mValue.getFrom(), false);
-		
+
 		mFromPicker.setCurrentMonth(oneMonthAgo); // Show the current selected month
-		
+
 		/**
 		 * Function called when the DatePicker is refreshed, e.g. first load or every time the month changes
 		 */
@@ -79,37 +82,83 @@ public class DateRangePicker extends Composite implements HasValue<DateRange>, I
 
 			@Override
 			public void onShowRange(ShowRangeEvent<Date> event) {
-
 				styleDatePickerFrom();
-				
+				highlightRange();
 			}
 		});
-
 		mToPicker.addShowRangeHandler(new ShowRangeHandler<Date>() {
-			
+
 			@Override
 			public void onShowRange(ShowRangeEvent<Date> event) {
 				styleDatePickerTo();
-
+				highlightRange();
 			}
 		});
 
 	}
 
 	/**
-	 * Set the date at noon, being sure the milliseconds are set at zero.
+	 * Normalize the date being sure the milliseconds are set at zero.
 	 * 
-	 * @param date Date to be set at noon
-	 * @return temp The new date set at noon 
+	 * @param date
+	 *            Date to be set at noon
+	 * @return temp The new date set at noon
 	 */
 	@SuppressWarnings("deprecation")
-	private Date setDateAtNoon(Date date) {
+	private Date normalizeDate(Date date) {
 		Date newDate = new Date(0L);
 		newDate.setDate(date.getDate());
 		newDate.setMonth(date.getMonth());
 		newDate.setYear(date.getYear());
 		newDate.setHours(0);
 		return newDate;
+	}
+
+	/**
+	 * Add highlighted style to current range in both Datepicker
+	 */
+	private void highlightRange() {
+		mFromPicker.addStyleToDates(style.highlightRangeBoundaries(), mValue.getFrom());
+		mFromPicker.addStyleToDates(style.highlightRangeBoundaries(), mValue.getTo());
+		mToPicker.addStyleToDates(style.highlightRangeBoundaries(), mValue.getFrom());
+		mToPicker.addStyleToDates(style.highlightRangeBoundaries(), mValue.getTo());
+
+		Date highlightDate = normalizeDate(mValue.getFrom());
+		CalendarUtil.addDaysToDate(highlightDate, 1);
+		while (highlightDate.before(mValue.getTo())) {
+
+			mFromPicker.addStyleToDates(style.highlightRange(), highlightDate);
+			mToPicker.addStyleToDates(style.highlightRange(), highlightDate);
+			CalendarUtil.addDaysToDate(highlightDate, 1);
+		}
+	}
+
+	/**
+	 * Remove highlighted style from From Datepicker
+	 */
+	private void resetHighlightRangeFromPicker() {
+		Date firstShownOnCalendarToPicker = normalizeDate(mFromPicker.getFirstDate());
+		Date lastShownOnCalendarToPicker = normalizeDate(mFromPicker.getLastDate());
+
+		while (firstShownOnCalendarToPicker.before(lastShownOnCalendarToPicker) || firstShownOnCalendarToPicker.equals(lastShownOnCalendarToPicker)) {
+			mFromPicker.removeStyleFromDates(style.highlightRange(), firstShownOnCalendarToPicker);
+			mFromPicker.removeStyleFromDates(style.highlightRangeBoundaries(), firstShownOnCalendarToPicker);
+			CalendarUtil.addDaysToDate(firstShownOnCalendarToPicker, 1);
+		}
+	}
+
+	/**
+	 * Remove highlighted style from To Datepicker
+	 */
+	private void resetHighlightRangeToPicker() {
+		Date firstShownOnCalendarToPicker = normalizeDate(mToPicker.getFirstDate());
+		Date lastShownOnCalendarToPicker = normalizeDate(mToPicker.getLastDate());
+
+		while (firstShownOnCalendarToPicker.before(lastShownOnCalendarToPicker) || firstShownOnCalendarToPicker.equals(lastShownOnCalendarToPicker)) {
+			mToPicker.removeStyleFromDates(style.highlightRange(), firstShownOnCalendarToPicker);
+			mToPicker.removeStyleFromDates(style.highlightRangeBoundaries(), firstShownOnCalendarToPicker);
+			CalendarUtil.addDaysToDate(firstShownOnCalendarToPicker, 1);
+		}
 	}
 
 	/*
@@ -165,22 +214,31 @@ public class DateRangePicker extends Composite implements HasValue<DateRange>, I
 	 */
 	@UiHandler("mFromPicker")
 	void onChangedSelectedValueFrom(ValueChangeEvent<Date> event) {
-		Date dateClicked = setDateAtNoon(event.getValue());
-		if (dateClicked.after(setDateAtNoon(mToPicker.getValue()))) {
+		Date dateClicked = normalizeDate(event.getValue());
+		if (dateClicked.after(normalizeDate(mToPicker.getValue()))) {
 			Window.alert("Date not valid");
+			mFromPicker.setValue(normalizeDate(mValue.getFrom()));
+			mFromPicker.setCurrentMonth(mValue.getFrom());
+
 		} else {
 
 			mValue.setFrom(dateClicked);
-
 			styleDatePickerTo();
+			resetHighlightRangeFromPicker();
+			resetHighlightRangeToPicker();
+
+			highlightRange();
 		}
 	}
 
+	/**
+	 * Style Datepicker To
+	 */
 	private void styleDatePickerTo() {
 		enableDateRangeToPicker();
 
-		Date firstShownOnCalendar = setDateAtNoon(mToPicker.getFirstDate());
-		Date lastShownOnCalendar = setDateAtNoon(mToPicker.getLastDate());
+		Date firstShownOnCalendar = normalizeDate(mToPicker.getFirstDate());
+		Date lastShownOnCalendar = normalizeDate(mToPicker.getLastDate());
 
 		List<Date> dates = new ArrayList<Date>();
 
@@ -188,16 +246,16 @@ public class DateRangePicker extends Composite implements HasValue<DateRange>, I
 		while ((firstShownOnCalendar.before(lastShownOnCalendar) || firstShownOnCalendar.equals(lastShownOnCalendar))
 				&& firstShownOnCalendar.before(mValue.getFrom())) {
 
-			dates.add(setDateAtNoon(firstShownOnCalendar));
+			dates.add(normalizeDate(firstShownOnCalendar));
 			CalendarUtil.addDaysToDate(firstShownOnCalendar, 1);
 		}
 
-		firstShownOnCalendar = setDateAtNoon(mToPicker.getFirstDate());
+		firstShownOnCalendar = normalizeDate(mToPicker.getFirstDate());
 
 		// disable future dates
 		while ((lastShownOnCalendar.after(firstShownOnCalendar) || firstShownOnCalendar.equals(lastShownOnCalendar)) && lastShownOnCalendar.after(today)) {
 
-			dates.add(setDateAtNoon(lastShownOnCalendar));
+			dates.add(normalizeDate(lastShownOnCalendar));
 			CalendarUtil.addDaysToDate(lastShownOnCalendar, -1);
 		}
 
@@ -210,34 +268,37 @@ public class DateRangePicker extends Composite implements HasValue<DateRange>, I
 	 */
 	@UiHandler("mToPicker")
 	void onChangedSelectedValueToOnPressFrom(ValueChangeEvent<Date> event) {
-		Date dateClicked = setDateAtNoon(event.getValue());
-		if (dateClicked.before(setDateAtNoon(mFromPicker.getValue())) || dateClicked.after(today)) {
+		Date dateClicked = normalizeDate(event.getValue());
+		if (dateClicked.before(normalizeDate(mFromPicker.getValue())) || dateClicked.after(today)) {
 			Window.alert("Date not valid");
+			mToPicker.setValue(normalizeDate(mValue.getTo()));
+			mToPicker.setCurrentMonth(mValue.getTo());
 		} else {
-
 			mValue.setTo(dateClicked);
-
 			styleDatePickerFrom();
+			resetHighlightRangeFromPicker();
+			resetHighlightRangeToPicker();
+
+			highlightRange();
 		}
 	}
 
 	/**
-	 * 
+	 * Style Datepicker From
 	 */
 	private void styleDatePickerFrom() {
 		enableDateRangeFromPicker();
 
-		Date firstShownOnCalendar = setDateAtNoon(mFromPicker.getFirstDate());
-		Date lastShownOnCalendar = setDateAtNoon(mFromPicker.getLastDate());
+		Date firstShownOnCalendar = normalizeDate(mFromPicker.getFirstDate());
+		Date lastShownOnCalendar = normalizeDate(mFromPicker.getLastDate());
 
 		List<Date> dates = new ArrayList<Date>();
-		
+
 		// disable dates after the selected To date
 		while ((lastShownOnCalendar.after(firstShownOnCalendar) || lastShownOnCalendar.equals(firstShownOnCalendar))
 				&& lastShownOnCalendar.after(mValue.getTo())) {
 
-			dates.add(setDateAtNoon(lastShownOnCalendar));
-
+			dates.add(normalizeDate(lastShownOnCalendar));
 			CalendarUtil.addDaysToDate(lastShownOnCalendar, -1);
 		}
 
@@ -249,35 +310,33 @@ public class DateRangePicker extends Composite implements HasValue<DateRange>, I
 	 * Enable every date in the showed month
 	 */
 	private void enableDateRangeFromPicker() {
-		List<Date> datesFromPicker = new ArrayList<Date>();
+		List<Date> dates = new ArrayList<Date>();
 
-		Date firstShownOnCalendarFromPicker = setDateAtNoon(mFromPicker.getFirstDate());
-		Date lastShownOnCalendarFromPicker = setDateAtNoon(mFromPicker.getLastDate());
+		Date firstShownOnCalendarFromPicker = normalizeDate(mFromPicker.getFirstDate());
+		Date lastShownOnCalendarFromPicker = normalizeDate(mFromPicker.getLastDate());
 		while (firstShownOnCalendarFromPicker.before(lastShownOnCalendarFromPicker) || firstShownOnCalendarFromPicker.equals(lastShownOnCalendarFromPicker)) {
-			datesFromPicker.add(setDateAtNoon(firstShownOnCalendarFromPicker));
+			dates.add(normalizeDate(firstShownOnCalendarFromPicker));
 			CalendarUtil.addDaysToDate(firstShownOnCalendarFromPicker, 1);
 		}
-		mFromPicker.setTransientEnabledOnDates(true, datesFromPicker);
+		mFromPicker.setTransientEnabledOnDates(true, dates);
+		resetHighlightRangeFromPicker();
 	}
 
 	/**
 	 * Enable every date in the showed month
 	 */
 	private void enableDateRangeToPicker() {
-		List<Date> datesToPicker = new ArrayList<Date>();
+		List<Date> dates = new ArrayList<Date>();
 
-		// Window.alert("firstShown: " + mToPicker.getFirstDate().toString() + "	-	lastShown: " + mToPicker.getLastDate().toString());
-
-		Date firstShownOnCalendarToPicker = setDateAtNoon(mToPicker.getFirstDate());
-		Date lastShownOnCalendarToPicker = setDateAtNoon(mToPicker.getLastDate());
-
-		// Window.alert("firstShown: " + firstShownOnCalendarToPicker + "		lastShown: " + lastShownOnCalendarToPicker);
+		Date firstShownOnCalendarToPicker = normalizeDate(mToPicker.getFirstDate());
+		Date lastShownOnCalendarToPicker = normalizeDate(mToPicker.getLastDate());
 
 		while (firstShownOnCalendarToPicker.before(lastShownOnCalendarToPicker) || firstShownOnCalendarToPicker.equals(lastShownOnCalendarToPicker)) {
-			datesToPicker.add(setDateAtNoon(firstShownOnCalendarToPicker));
+			dates.add(normalizeDate(firstShownOnCalendarToPicker));
 			CalendarUtil.addDaysToDate(firstShownOnCalendarToPicker, 1);
 		}
-		mToPicker.setTransientEnabledOnDates(true, datesToPicker);
+		mToPicker.setTransientEnabledOnDates(true, dates);
+		resetHighlightRangeToPicker();
 	}
 
 	/*

@@ -1,11 +1,14 @@
 @CHARSET "UTF-8";
 
-@external container, pagination, active, btn-primary, active, open, dropdown-toggle, dropdown-menu, badge, dropdown, nav, navbar-inverse, navbar-nav, caret, form-control;
+@external ciccio, container, pagination, active, btn-primary, active, open, dropdown-toggle, dropdown-menu, badge, dropdown, nav, navbar-inverse, navbar-nav, caret, form-control;
 
 a {
 	cursor: pointer;
     color: #9780E4;
 }
+
+.highlightRange {}
+.highlightRangeBoundaries{}
 
 a:hover, a:focus, a:active, a.active {
 	text-decoration: none;
