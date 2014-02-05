@@ -58,6 +58,10 @@
     	vertical-align: super;
     }
     
+    .navbar-header>a:HOVER>.label-default {
+        background-color: #9780E4;
+    }
+    
     .helpUs {
     	padding: 5px 20px;
     	text-align: justify;
@@ -157,7 +161,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="tel:+44 (0) 7929 635 487" target="_blank" class="{style.moreMargin}">
+                                <a href="callto:+44 (0) 7929 635 487" target="_blank" class="{style.moreMargin}">
                                     <b class="glyphicon glyphicon-earphone"></b>
                                     +44 (0) 7929 635 487
                                 </a>
