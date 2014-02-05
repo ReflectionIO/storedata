@@ -52,7 +52,6 @@
     .navbar-header>a>.label-default {
     	font-size: 10px;
     	background-color: #676b88;
-    	margin-left: 10px;
     	color: #101010;
     	padding: 1px 3px;
     	font-weight: normal;
