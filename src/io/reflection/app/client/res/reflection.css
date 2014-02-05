@@ -1,6 +1,6 @@
 @CHARSET "UTF-8";
 
-@external ciccio, container, pagination, active, btn-primary, active, open, dropdown-toggle, dropdown-menu, badge, dropdown, nav, navbar-inverse, navbar-nav, caret, form-control;
+@external container, pagination, active, btn-primary, active, open, dropdown-toggle, dropdown-menu, badge, dropdown, nav, navbar-inverse, navbar-nav, caret, form-control;
 
 a {
 	cursor: pointer;
