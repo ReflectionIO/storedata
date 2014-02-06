@@ -44,12 +44,11 @@
                             </g:InlineHyperlink>
                         </li>
                     </ul>
-                    
-                    <p:ItemTopPanel ui:field="mTopPanel" >
-                        
-                    
-                    </p:ItemTopPanel>
-                    
+
+                    <p:ItemTopPanel ui:field="mTopPanel" />
+
+                    <p:RankChart />
+
                 </div>
             </div>
         </div>

@@ -33,7 +33,7 @@
 
     <queue>
         <name>gather</name>
-        <rate>20/s</rate>
+        <rate>10/s</rate>
         <bucket-size>10</bucket-size>
         <max-concurrent-requests>20</max-concurrent-requests>
         <retry-parameters>
@@ -42,8 +42,8 @@
     </queue>
     <queue>
         <name>ingest</name>
-        <rate>20/s</rate>
-        <bucket-size>100</bucket-size>
+        <rate>10/s</rate>
+        <bucket-size>10</bucket-size>
         <max-concurrent-requests>20</max-concurrent-requests>
         <retry-parameters>
             <task-retry-limit>5</task-retry-limit>
