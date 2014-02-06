@@ -11,12 +11,6 @@
 	.nav.nav-tabs.nav-justified.tabs>li>a {
 		text-align: left;
 	}
-	
-	.centrate {
-		display: block;
-		margin: 0px auto;
-		width: 120px;
-	}
 	</ui:style>
 	<g:HTMLPanel>
 
@@ -53,8 +47,10 @@
 
 					<p:PageSizePager ui:field="mPager" visible="false" />
 
-					<g:InlineHyperlink text="Show More"
-						styleName="btn btn-default {style.centrate}" ui:field="mRedirect" />
+					<div style="text-align: center">
+						<g:InlineHyperlink text="Show More" styleName="btn btn-default"
+							ui:field="mRedirect" />
+					</div>
 				</div>
 			</div>
 		</div>

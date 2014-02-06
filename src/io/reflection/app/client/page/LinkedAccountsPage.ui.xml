@@ -1,41 +1,75 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
-	xmlns:l="urn:import:io.reflection.app.client.part.linkaccount" xmlns:c="urn:import:com.google.gwt.user.cellview.client">
+	xmlns:l="urn:import:io.reflection.app.client.part.linkaccount" xmlns:c="urn:import:com.google.gwt.user.cellview.client"
+	xmlns:d="urn:import:com.google.gwt.dom.client">
 	<ui:style>
 	.toolbar_spacing {
 		padding-top: 10px;
 		padding-bottom: 10px;
 	}
-	</ui:style>
-	<g:HTMLPanel>
-		<h2>Linked Account(s)</h2>
-
-		<g:HTMLPanel ui:field="mToolbar" styleName="btn-group {style.toolbar_spacing}">
-			<g:InlineHyperlink styleName="btn btn-default"
-				text="iOS/Mac" ui:field="mIosMacLink" />
-			<g:InlineHyperlink styleName="btn btn-default disabled"
-				text="Google Play" ui:field="mPlayLink" />
-			<g:InlineHyperlink styleName="btn btn-default disabled"
-				text="Amazon" ui:field="mAmazonLink" />
-			<g:InlineHyperlink styleName="btn btn-default disabled"
-				text="Windows" ui:field="mWindowsPhoneLink" />
-		</g:HTMLPanel>
-
-		<p:AlertBox ui:field="mAlertBox" visible="false" />
-
-		<!-- <c:CellTree ui:field="mAccounts" /> -->
-
-		<g:FormPanel ui:field="mForm" visible="false">
-			<g:HTMLPanel styleName="col-sm-offset-4 col-sm-4">
-				<l:IosMacLinkAccountForm ui:field="mIosMacForm" />
-
-				<g:Button ui:field="mLinkAccount" styleName="btn btn-lg btn-primary btn-block"
-					text="Link Account" />
-			</g:HTMLPanel>
-		</g:FormPanel>
-		
-
 	
+	.pageTitle {
+		padding-bottom: 30px;
+	}
+	</ui:style>
+
+
+	<g:HTMLPanel>
+
+		<div class="container">
+			<div class="row">
+
+				<g:HTMLPanel ui:field="mSidePanel" styleName="well sidebar-nav col-md-3">
+
+					<h3>My Apps</h3>
+
+					<h4 ui:field="mCreatorName" class="{style.pageTitle} text-muted">Creator</h4>
+
+					<a>Overview</a>
+					<hr />
+					<a>Linked Accounts</a>
+					<hr />
+
+				</g:HTMLPanel>
+
+				<div class="col-sm-9">
+											
+
+					<g:HTMLPanel styleName="well well-sm">
+						<h4>Linked Accounts</h4>
+					</g:HTMLPanel>
+
+					<div style="text-align: center">
+					<g:Button text="Link Another Account" styleName="btn btn-default"></g:Button>
+					</div>
+					<g:HTMLPanel ui:field="mToolbar"
+						styleName="btn-group {style.toolbar_spacing}">
+						<g:InlineHyperlink styleName="btn btn-default"
+							text="iOS/Mac" ui:field="mIosMacLink" />
+						<g:InlineHyperlink styleName="btn btn-default disabled"
+							text="Google Play" ui:field="mPlayLink" />
+						<g:InlineHyperlink styleName="btn btn-default disabled"
+							text="Amazon" ui:field="mAmazonLink" />
+						<g:InlineHyperlink styleName="btn btn-default disabled"
+							text="Windows" ui:field="mWindowsPhoneLink" />
+					</g:HTMLPanel>
+
+					<p:AlertBox ui:field="mAlertBox" visible="false" />
+
+					<!-- <c:CellTree ui:field="mAccounts" /> -->
+
+					<g:FormPanel ui:field="mForm" visible="false">
+						<g:HTMLPanel styleName="col-sm-offset-4 col-sm-4">
+							<l:IosMacLinkAccountForm ui:field="mIosMacForm" />
+
+							<g:Button ui:field="mLinkAccount" styleName="btn btn-lg btn-primary btn-block"
+								text="Link Account" />
+						</g:HTMLPanel>
+					</g:FormPanel>
+				</div>
+			</div>
+		</div>
+
 	</g:HTMLPanel>
 </ui:UiBinder> 

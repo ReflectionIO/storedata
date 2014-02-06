@@ -66,6 +66,8 @@ public class LinkedAccountsPage extends Composite implements NavigationEventHand
 
 	@UiField Button mLinkAccount;
 
+	@UiField HTMLPanel mSidePanel;
+
 	// @UiField(provided = true) CellTree mAccounts;
 
 	private LinkableAccountFields mLinkableAccount;
@@ -91,6 +93,8 @@ public class LinkedAccountsPage extends Composite implements NavigationEventHand
 		// CellTree.Resources res = GWT.create(CellTree.BasicResources.class);
 		// mAccounts = new CellTree(LinkedAccountController.get(), null, res);
 		// mAccounts.setAnimationEnabled(true);
+		
+		
 	}
 
 	/**
