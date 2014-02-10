@@ -7,22 +7,27 @@
 //
 package io.reflection.app.client.page;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import io.reflection.app.api.admin.shared.call.event.SearchForItemEventHandler;
+import io.reflection.app.api.core.shared.call.GetItemRanksRequest;
+import io.reflection.app.api.core.shared.call.GetItemRanksResponse;
 import io.reflection.app.api.core.shared.call.SearchForItemRequest;
 import io.reflection.app.api.core.shared.call.SearchForItemResponse;
+import io.reflection.app.api.core.shared.call.event.GetItemRanksEventHandler;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.ItemController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
+import io.reflection.app.client.controller.RankController;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.AlertBoxHelper;
 import io.reflection.app.client.part.AlertBox;
+import io.reflection.app.client.part.RankChart;
 import io.reflection.app.client.part.AlertBox.AlertBoxType;
 import io.reflection.app.client.part.ItemSidePanel;
 import io.reflection.app.datatypes.shared.Item;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.LIElement;
@@ -35,7 +40,7 @@ import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
 
-public class ItemPage extends Composite implements NavigationEventHandler, SearchForItemEventHandler {
+public class ItemPage extends Composite implements NavigationEventHandler, SearchForItemEventHandler, GetItemRanksEventHandler {
 
 	private static ItemPageUiBinder uiBinder = GWT.create(ItemPageUiBinder.class);
 
@@ -51,6 +56,8 @@ public class ItemPage extends Composite implements NavigationEventHandler, Searc
 	@UiField LIElement mRevenueItem;
 	@UiField LIElement mDownloadsItem;
 	@UiField LIElement mRankingItem;
+
+	@UiField RankChart historyChart;
 
 	private String mItemExternalId;
 
@@ -71,6 +78,7 @@ public class ItemPage extends Composite implements NavigationEventHandler, Searc
 
 		EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this);
 		EventController.get().addHandlerToSource(SearchForItemEventHandler.TYPE, ItemController.get(), this);
+		EventController.get().addHandlerToSource(GetItemRanksEventHandler.TYPE, RankController.get(), this);
 	}
 
 	@Override
@@ -88,6 +96,10 @@ public class ItemPage extends Composite implements NavigationEventHandler, Searc
 
 				if ((item = ItemController.get().lookupItem(mItemExternalId)) != null) {
 					displayItemDetails(item);
+
+					refreshTabs();
+
+					getHistoryChartData(item);
 				} else {
 					AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Getting details", " - This will only take a few seconds...",
 							false).setVisible(true);
@@ -99,7 +111,6 @@ public class ItemPage extends Composite implements NavigationEventHandler, Searc
 				AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.DangerAlertBoxType, false, "Item", " - We did not find the requrested item!", false)
 						.setVisible(true);
 			}
-
 		}
 
 	}
@@ -126,17 +137,20 @@ public class ItemPage extends Composite implements NavigationEventHandler, Searc
 		if (mItemExternalId != null && mItemExternalId.equals(input.query) && output.status == StatusType.StatusTypeSuccess) {
 
 			// for now we don't lookup the item again... because it causes an infinite loop of lookup failure
-			if (output.items != null) for (Item item : output.items) {
-				if (mItemExternalId.equals(item.externalId)) {
-					displayItemDetails(item);
-					
-					refreshTabs();
-					
-					found = true;
-					break;
+			if (output.items != null) {
+				for (Item item : output.items) {
+					if (mItemExternalId.equals(item.externalId)) {
+						displayItemDetails(item);
+
+						refreshTabs();
+
+						getHistoryChartData(item);
+
+						found = true;
+						break;
+					}
 				}
 			}
-
 		}
 
 		if (!found) {
@@ -186,6 +200,48 @@ public class ItemPage extends Composite implements NavigationEventHandler, Searc
 		}
 
 		mTabs.get(mChartType).addClassName("active");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.api.core.shared.call.event.GetItemRanksEventHandler#getItemRanksSuccess(io.reflection.app.api.core.shared.call.GetItemRanksRequest,
+	 * io.reflection.app.api.core.shared.call.GetItemRanksResponse)
+	 */
+	@Override
+	public void getItemRanksSuccess(GetItemRanksRequest input, GetItemRanksResponse output) {
+		if (output != null && output.status == StatusType.StatusTypeSuccess && output.ranks != null && output.ranks.size() > 0) {
+			historyChart.setData(output.ranks);
+			
+			mAlertBox.setVisible(false);
+		} else {
+			AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.WarningAlertBoxType, false, "Warning", " - Item rank history could not be obtained!", false)
+					.setVisible(true);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.api.core.shared.call.event.GetItemRanksEventHandler#getItemRanksFailure(io.reflection.app.api.core.shared.call.GetItemRanksRequest,
+	 * java.lang.Throwable)
+	 */
+	@Override
+	public void getItemRanksFailure(GetItemRanksRequest input, Throwable caught) {
+		AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.DangerAlertBoxType, false, "Error", " - An error occured fetching item history!", false)
+				.setVisible(true);
+	}
+
+	private void getHistoryChartData(Item item) {
+		AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Getting History",
+				" - Please wait while we fetch the rank history for the selected item", false).setVisible(true);
+
+		RankController.get().fetchItemRanks(item);
+
+		historyChart.setLoading(true);
+
 	}
 
 }

@@ -8,6 +8,7 @@
 package io.reflection.app.client.part;
 
 import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.helper.FormHelper;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,6 +26,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.google.gwt.user.datepicker.client.DateBox;
 import com.google.gwt.user.datepicker.client.DateBox.DefaultFormat;
 
@@ -50,7 +52,6 @@ public class RankSidePanel extends Composite {
 		BootstrapGwtDatePicker.INSTANCE.styles().ensureInjected();
 
 		mDate.setFormat(new DefaultFormat(DateTimeFormat.getFormat("dd-MM-yyyy")));
-		mDate.setValue(new Date());
 
 		final List<Date> dates = new ArrayList<Date>();
 
@@ -76,12 +77,10 @@ public class RankSidePanel extends Composite {
 			}
 		});
 
-		FilterController.get().start();
-		FilterController.get().setStore(mAppStore.getValue(mAppStore.getSelectedIndex()));
-		// FilterController.get().setListType(mListType.getValue(mListType.getSelectedIndex()));
-		FilterController.get().setCountry(mCountry.getValue(mCountry.getSelectedIndex()));
-		FilterController.get().setStartDate(mDate.getValue());
-		FilterController.get().commit();
+		mAppStore.setSelectedIndex(FormHelper.getItemIndex(mAppStore, FilterController.get().getStore().a3Code));
+		mDate.setValue(FilterController.get().getStartDate());
+		mCountry.setSelectedIndex(FormHelper.getItemIndex(mCountry, FilterController.get().getCountry().a2Code));
+		category.setSelectedIndex(FormHelper.getItemIndex(category, FilterController.get().getCategory().id.toString()));
 
 	}
 
@@ -102,9 +101,14 @@ public class RankSidePanel extends Composite {
 
 	@UiHandler("mDate")
 	void onDateValueChanged(ValueChangeEvent<Date> event) {
+		FilterController.get().start();
 		FilterController.get().setStartDate(mDate.getValue());
+		Date endDate = new Date(mDate.getValue().getTime());
+		CalendarUtil.addDaysToDate(endDate, 10);
+		FilterController.get().setEndDate(endDate);
+		FilterController.get().commit();
 	}
-	
+
 	@UiHandler("category")
 	void onCategoryValueChanged(ChangeEvent event) {
 		FilterController.get().setCategory(getCatgegory());

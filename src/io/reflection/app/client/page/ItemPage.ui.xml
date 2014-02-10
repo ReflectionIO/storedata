@@ -47,7 +47,7 @@
 
                     <p:ItemTopPanel ui:field="mTopPanel" />
 
-                    <p:RankChart />
+                    <p:RankChart ui:field="historyChart" />
 
                 </div>
             </div>

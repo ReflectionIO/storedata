@@ -503,6 +503,18 @@ public final class Core extends ActionHandler {
 			if (input.listType == null)
 				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("String: input.listType"));
 
+			Store store = StoreServiceProvider.provide().getA3CodeStore(input.item.source);
+			
+			// right now category
+			if (input.category == null) {
+				input.category = CategoryServiceProvider.provide().getAllCategory(store);
+			} else {
+				input.category = ValidationHelper.validateCategory(input.category, "input.category");
+
+				if (!input.item.source.equals(input.category.store))
+					throw new InputValidationException(ApiError.CategoryStoreMismatch.getCode(), ApiError.CategoryStoreMismatch.getMessage("input.category"));
+			}
+
 			Calendar cal = Calendar.getInstance();
 
 			if (input.end == null) input.end = cal.getTime();
@@ -513,7 +525,6 @@ public final class Core extends ActionHandler {
 				input.start = cal.getTime();
 			}
 
-			Store store = StoreServiceProvider.provide().getA3CodeStore(input.item.source);
 			input.listType = ValidationHelper.validateListType(input.listType, store);
 
 			long diff = input.end.getTime() - input.start.getTime();

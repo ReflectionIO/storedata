@@ -268,7 +268,7 @@ public class ValidationHelper {
 	 */
 	public static List<String> validateListTypes(List<String> listTypes, Store store, String parent) throws InputValidationException {
 		if (listTypes == null)
-			throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("List: " + parent + ".listType"));
+			throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("List: " + parent));
 
 		String validatedListType, listType;
 		StringBuffer badListTypes = new StringBuffer();

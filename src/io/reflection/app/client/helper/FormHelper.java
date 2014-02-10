@@ -9,6 +9,7 @@ package io.reflection.app.client.helper;
 
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.ListBox;
 import com.willshex.gson.json.service.shared.Error;
 
 /**
@@ -19,14 +20,14 @@ public class FormHelper {
 
 	private static String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 	private static RegExp REG_EXP_EMAIL_CHECKER = RegExp.compile(FormHelper.EMAIL_PATTERN);
-	
+
 	private static String APPLE_VENDOR_ID_PATTERN = "^8[0-9]{7}$"; // 8 followed by seven numbers of any value
 	private static RegExp REG_EXP_APPLE_VENDOR_ID_CHECKER = RegExp.compile(FormHelper.APPLE_VENDOR_ID_PATTERN);
 
 	public static boolean isValidEmail(String toValidate) {
 		return REG_EXP_EMAIL_CHECKER.test(toValidate);
 	}
-	
+
 	public static boolean isValidAppleVendorId(String toValidate) {
 		return REG_EXP_APPLE_VENDOR_ID_CHECKER.test(toValidate);
 	}
@@ -74,4 +75,25 @@ public class FormHelper {
 
 		return e;
 	}
+
+	/**
+	 * @param listBox
+	 * @param value
+	 * @return
+	 */
+	public static int getItemIndex(ListBox listBox, String value) {
+		int index = -1;
+		int count = listBox.getItemCount();
+
+		for (int i = 0; i < count; i++) {
+			if (listBox.getValue(i).equals(value)) {
+				index = i;
+
+				break;
+			}
+		}
+
+		return index;
+	}
+
 }

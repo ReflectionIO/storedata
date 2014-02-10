@@ -160,7 +160,7 @@ public final class Admin extends ActionHandler {
 
 			input.store = ValidationHelper.validateStore(input.store, "input");
 
-			input.listTypes = ValidationHelper.validateListTypes(input.listTypes, input.store, "input");
+			input.listTypes = ValidationHelper.validateListTypes(input.listTypes, input.store, "input.listTypes");
 
 			output.feedFetches = FeedFetchServiceProvider.provide().getFeedFetches(input.country, input.store, input.listTypes, input.pager);
 

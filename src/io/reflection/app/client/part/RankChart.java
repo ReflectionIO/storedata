@@ -7,57 +7,16 @@
 //
 package io.reflection.app.client.part;
 
+import io.reflection.app.datatypes.shared.Rank;
+
+import java.util.List;
+
 import com.googlecode.gchart.client.GChart;
 
 public class RankChart extends GChart {
 
 	private final int WIDTH = 780;
 	private final int HEIGHT = 350;
-
-	void updateCurves() {
-
-		double x = 1360177938000.0;
-		getCurve(0).addPoint(x, 10);
-		x += 86400000.0;
-		getCurve(0).addPoint(x, 11);
-		x += 86400000.0;
-		getCurve(0).addPoint(x, 12);
-		x += 86400000.0;
-		getCurve(0).addPoint(x, 13);
-		x += 86400000.0;
-		getCurve(0).addPoint(x, 14);
-		x += 86400000.0;
-		getCurve(0).addPoint(x, 15);
-		x += 86400000.0;
-		getCurve(0).addPoint(x, 16);
-		x += 86400000.0;
-		getCurve(0).addPoint(x, 17);
-		x += 86400000.0;
-		getCurve(0).addPoint(x, 18);
-		x += 86400000.0;
-		getCurve(0).addPoint(x, 19);
-		x += 86400000.0;
-		getCurve(0).addPoint(x, 20);
-		x += 86400000.0;
-		getCurve(0).addPoint(x, 21);
-		x += 86400000.0;
-		getCurve(0).addPoint(x, 22);
-		x += 86400000.0;
-		getCurve(0).addPoint(x, 23);
-		x += 86400000.0;
-		getCurve(0).addPoint(x, 24);
-		x += 86400000.0;
-		getCurve(0).addPoint(x, 15);
-		x += 86400000.0;
-		getCurve(0).addPoint(x, 14);
-		x += 86400000.0;
-		getCurve(0).addPoint(x, 35);
-		x += 86400000.0;
-		getCurve(0).addPoint(x, 10);
-		x += 86400000.0;
-		getCurve(0).addPoint(x, 5);
-
-	}
 
 	public RankChart() {
 		setChartSize(WIDTH, HEIGHT);
@@ -114,8 +73,22 @@ public class RankChart extends GChart {
 		// so only point-to-mouse x-distance matters for hit testing
 		getCurve().getSymbol().setDistanceMetric(1, 0);
 
-		updateCurves();
+	}
 
+	public void setData(List<Rank> ranks) {
+		
+		Curve c = getCurve();
+		
+		for (Rank rank : ranks) {
+			c.addPoint(rank.date.getTime(), rank.position.intValue());	
+		}
+		
 		update();
+		
+		setLoading(false);
+	}
+
+	public void setLoading(boolean loading) {
+
 	}
 }

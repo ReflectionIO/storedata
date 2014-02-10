@@ -158,6 +158,7 @@
                         <xsd:sequence>
                             <xsd:element name="item" type="sd:Item" />
                             <xsd:element name="country" type="sd:Country" />
+                            <xsd:element name="category" type="sd:Category" />
                             <xsd:element name="pager" type="sd:Pager" />
                         </xsd:sequence>
 

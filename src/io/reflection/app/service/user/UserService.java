@@ -188,7 +188,7 @@ final class UserService implements IUserService {
 		Connection userConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
 		String searchUsersCountQuery = String.format(
-				"SELECT COUNT(`id`) AS `usercount` FROM `user` WHERE `username` LIKE '%%1$s%' OR `forename` LIKE '%%1$s%' OR `surname` LIKE '%1$ss%'",
+				"SELECT COUNT(1) AS `usercount` FROM `user` WHERE `username` LIKE '%%1$s%' OR `forename` LIKE '%%1$s%' OR `surname` LIKE '%1$ss%'",
 				addslashes(mask));
 
 		try {
@@ -391,7 +391,7 @@ final class UserService implements IUserService {
 
 		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
-		String getUsersCountQuery = "SELECT COUNT(`id`) AS `usercount` FROM `user` WHERE `deleted`='n'";
+		String getUsersCountQuery = "SELECT COUNT(1) AS `usercount` FROM `user` WHERE `deleted`='n'";
 
 		try {
 			userConnection.connect();

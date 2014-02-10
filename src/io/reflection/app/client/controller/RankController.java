@@ -10,11 +10,16 @@ package io.reflection.app.client.controller;
 import io.reflection.app.api.core.client.CoreService;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
+import io.reflection.app.api.core.shared.call.GetItemRanksRequest;
+import io.reflection.app.api.core.shared.call.GetItemRanksResponse;
+import io.reflection.app.api.core.shared.call.event.GetItemRanksEventHandler;
 import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.RanksEventHandler.FetchingRanks;
 import io.reflection.app.client.handler.RanksEventHandler.ReceivedRanks;
 import io.reflection.app.client.part.datatypes.RanksGroup;
+import io.reflection.app.datatypes.shared.Item;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +68,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 		input.country = FilterController.get().getCountry(); // Get country from filter
 
 		input.listType = FilterController.get().getListTypes().get(0); // Get item type (paid, free, grossing)
+		
 		input.on = FilterController.get().getStartDate(); // Get start date from filter
 
 		input.category = FilterController.get().getCategory();
@@ -123,6 +129,45 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 		});
 
 		EventController.get().fireEventFromSource(new FetchingRanks(), RankController.this);
+	}
+	
+	public void fetchItemRanks(Item item) {
+		CoreService service = new CoreService();
+		service.setUrl(CORE_END_POINT);
+		
+		final GetItemRanksRequest input = new GetItemRanksRequest();
+		input.accessCode = ACCESS_CODE;
+		
+		input.session = SessionController.get().getSessionForApiCall();
+		input.country = FilterController.get().getCountry();
+		
+		input.start = FilterController.get().getStartDate();
+		input.end = FilterController.get().getEndDate();
+		
+		input.category = FilterController.get().getCategory();
+		
+		input.item = item;
+		input.listType = FilterController.get().getListTypes().get(1);
+		
+		input.pager = new Pager();
+		input.pager.start = Long.valueOf(0);
+		input.pager.count = Long.valueOf(10000);
+		input.pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
+		input.pager.sortBy = "date";
+		
+		service.getItemRanks(input, new AsyncCallback<GetItemRanksResponse>() {
+			
+			@Override
+			public void onSuccess(GetItemRanksResponse output) {
+				EventController.get().fireEventFromSource(new GetItemRanksEventHandler.GetItemRanksSuccess(input, output), RankController.this);
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				EventController.get().fireEventFromSource(new GetItemRanksEventHandler.GetItemRanksFailure(input, caught), RankController.this);
+			}
+		});
+		
 	}
 
 	/*
