@@ -18,8 +18,10 @@ import io.reflection.app.client.page.LoginPage;
 import io.reflection.app.client.page.PermissionsPage;
 import io.reflection.app.client.page.RanksPage;
 import io.reflection.app.client.page.RegisterPage;
+import io.reflection.app.client.page.RequestInvitePage;
 import io.reflection.app.client.page.RolesPage;
 import io.reflection.app.client.page.SearchPage;
+import io.reflection.app.client.page.ThankYouPage;
 import io.reflection.app.client.page.UpgradePage;
 import io.reflection.app.client.page.UsersPage;
 import io.reflection.app.client.part.Footer;
@@ -54,6 +56,8 @@ public class NavigationController implements ValueChangeHandler<String> {
 	private SearchPage mSearchPage = null;
 	private ItemPage mItemPage = null;
 	private HomePage mHomePage = null;
+	private RequestInvitePage mRequestInvitePage = null;
+	private ThankYouPage mThankYouPage = null;
 
 	private Header mHeader = null;
 	private Footer mFooter = null;
@@ -268,6 +272,28 @@ public class NavigationController implements ValueChangeHandler<String> {
 			mPanel.add(mHomePage);
 		}
 	}
+	
+	public void addRequestInvitePage() {
+		if (mRequestInvitePage == null) {
+			mRequestInvitePage = new RequestInvitePage();
+		}
+
+		if (!mRequestInvitePage.isAttached()) {
+			mPanel.clear();
+			mPanel.add(mRequestInvitePage);
+		}
+	}
+	
+	public void addThankYouPage() {
+		if (mThankYouPage == null) {
+			mThankYouPage = new ThankYouPage();
+		}
+
+		if (!mThankYouPage.isAttached()) {
+			mPanel.clear();
+			mPanel.add(mThankYouPage);
+		}
+	}
 
 	/**
 	 * @param value
@@ -324,6 +350,10 @@ public class NavigationController implements ValueChangeHandler<String> {
 			addSearchPage();
 		} else if ("item".equals(mStack.getPage())) {
 			addItemPage();
+		} else if ("requestinvite".equals(mStack.getPage())) {
+			addRequestInvitePage();
+		} else if ("thankyou".equals(mStack.getPage())) {
+			addThankYouPage();		
 		} else {
 			addHomePage();
 		}
