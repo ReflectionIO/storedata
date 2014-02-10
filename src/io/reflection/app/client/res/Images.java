@@ -32,4 +32,13 @@ public interface Images extends ClientBundle {
 	
 	@Source("spinnertableeven.gif")
 	ImageResource spinnerTableEven();
+	
+	@Source("alarmclock.png")
+	ImageResource alarmClock();
+	
+	@Source("clipboard.png")
+	ImageResource clipboard();
+	
+	@Source("tick.png")
+	ImageResource tick();
 }
