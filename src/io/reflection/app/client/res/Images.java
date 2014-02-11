@@ -41,4 +41,20 @@ public interface Images extends ClientBundle {
 	
 	@Source("tick.png")
 	ImageResource tick();
+
+	@Source("welcomelogo.png")
+	ImageResource welcomeLogo();
+	
+	@Source("linkaccount.png")
+	ImageResource linkAccount();
+
+	@Source("buttonarrowwhite.png")
+	ImageResource buttonArrowWhite();
+	
+	@Source("buttonlinkedaccount.png")
+	ImageResource buttonLinkedAccount();
+	
+	@Source("buttonlogin.png")
+	ImageResource buttonLogin();
+	
 }

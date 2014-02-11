@@ -16,6 +16,10 @@
 		margin-top: 20px;
 	}
 	
+	.marginTop30 {
+		margin-top: 30px;
+	}
+	
 	.marginTop40 {
 		margin-top: 40px;
 	}
@@ -44,103 +48,106 @@
 		width: 60px;
 		margin-left: 5px;
 	}
-	
 	</ui:style>
 	<g:HTMLPanel>
 
 		<div class="container">
 			<div class="row">
 
+				<g:HTMLPanel ui:field="mPanel">
+					<g:HTMLPanel styleName="col-md-6 {style.marginTopInfo}">
+						<h2>Powerful market intelligence for the global dev community</h2>
+						<p style="margin-top: 40px; margin-bottom: 40px">Reflection will be in Private Beta early April 2014. We
+							are
+							inviting a select group of developers and publishers to help
+							us
+							build our dataset to disrupt current incumbents.</p>
 
-				<g:HTMLPanel styleName="col-md-6 {style.marginTopInfo}">
-					<h2>Powerful market intelligence for the global dev community</h2>
-					<p style="margin-top: 40px; margin-bottom: 40px">Reflection will be in Private Beta early April 2014. We
-						are
-						inviting a select group of developers and publishers to help us
-						build our dataset to disrupt current incumbents.</p>
+
+						<g:Image resource="{images.alarmClock}" styleName="col-md-2 {style.image1}" />
+						<h4 class="col-md-offset-2">Benefits of getting in early</h4>
+						<p class="col-md-offset-2">
+							Ability to request features such as forecasting and trends
+							<br />
+							Free global rank, revenue and dawnload intelligence
+						</p>
+
+						<g:Image resource="{images.clipboard}"
+							styleName="col-md-2 {style.marginTop40} {style.image2}" />
+						<h4 class="col-md-offset-2" style="margin-top: 40px">What we need</h4>
+						<p class="col-md-offset-2">
+							Linking your store account so we can expand our dataset
+							<br />Input
+							on current &amp; future product features
+						</p>
+
+					</g:HTMLPanel>
+
+					<g:FormPanel styleName="well col-md-5 {style.marginTopForm}">
 
 
-					<g:Image resource="{images.alarmClock}" styleName="col-md-2 {style.image1}" />
-					<h4 class="col-md-offset-2">Benefits of getting in early</h4>
-					<p class="col-md-offset-2">
-						Ability to request features such as forecasting and trends
-						<br />
-						Free global rank, revenue and dawnload intelligence
-					</p>
+						<g:HTMLPanel styleName="{style.marginTop20}">
+							<h4 class="text-center">Request Invite</h4>
+							<g:HTMLPanel styleName="col-md-10 col-md-offset-1  {style.marginTop20}">
 
-					<g:Image resource="{images.clipboard}" styleName="col-md-2 {style.marginTop40} {style.image2}" />
-					<h4 class="col-md-offset-2" style="margin-top: 40px">What we need</h4>
-					<p class="col-md-offset-2">
-						Linking your store account so we can expand our dataset
-						<br />Input
-						on current &amp; future product features
-					</p>
+								<g:HTMLPanel ui:field="mForenameGroup" styleName="form-group">
+									<label>First name</label>
+									<g:TextBox styleName="form-control {style.marginTop5}"
+										ui:field="mForename" />
+									<g:HTMLPanel ui:field="mForenameNote" visible="false"
+										styleName="{style.noteDetail}" />
+								</g:HTMLPanel>
 
-				</g:HTMLPanel>
+								<g:HTMLPanel ui:field="mSurnameGroup" styleName="form-group">
+									<label>Last name</label>
+									<g:TextBox styleName="form-control {style.marginTop5}"
+										ui:field="mSurname" />
+									<g:HTMLPanel ui:field="mSurnameNote" visible="false"
+										styleName="{style.noteDetail}" />
+								</g:HTMLPanel>
 
-				<g:HTMLPanel styleName="well col-md-5 {style.marginTopForm}">
-					<h4 class="text-center">Request Invite</h4>
+								<g:HTMLPanel ui:field="mCompanyGroup" styleName="form-group">
+									<label>Company</label>
+									<g:TextBox styleName="form-control {style.marginTop5}"
+										ui:field="mCompany" />
+									<g:HTMLPanel ui:field="mCompanyNote" visible="false"
+										styleName="{style.noteDetail}" />
+								</g:HTMLPanel>
 
-					<g:FormPanel ui:field="mForm" styleName="{style.marginTop20}">
-						<g:HTMLPanel styleName="col-md-10 col-md-offset-1">
+								<g:HTMLPanel ui:field="mEmailGroup" styleName="form-group">
+									<label>Email</label>
+									<g:TextBox styleName="form-control {style.marginTop5}"
+										ui:field="mEmail" />
+									<g:HTMLPanel ui:field="mEmailNote" visible="false"
+										styleName="{style.noteDetail}" />
+								</g:HTMLPanel>
 
-							<g:HTMLPanel ui:field="mForenameGroup" styleName="form-group">
-								<label>First name</label>
-								<g:TextBox styleName="form-control {style.marginTop5}"
-									ui:field="mForename" />
-								<g:HTMLPanel ui:field="mForenameNote" visible="false"
-									styleName="{style.noteDetail}" />
+								<g:HTMLPanel ui:field="mPasswordGroup" styleName="form-group">
+									<label>Password</label>
+									<g:PasswordTextBox styleName="form-control {style.marginTop5}"
+										ui:field="mPassword" />
+									<g:HTMLPanel ui:field="mPasswordNote" visible="false"
+										styleName="{style.noteDetail}" />
+								</g:HTMLPanel>
+								<g:CheckBox ui:field="mTermAndCond"
+									styleName="checkbox {style.marginBottom40}">
+									I agree to the
+									<a>terms and conditions</a>
+								</g:CheckBox>
+
+
+								<g:Button ui:field="mRequestInvite"
+									styleName="btn btn-lg btn-primary btn-block {style.marginBottom50}">
+									Submit
+								</g:Button>
+
+
+
+
 							</g:HTMLPanel>
-
-							<g:HTMLPanel ui:field="mSurnameGroup" styleName="form-group">
-								<label>Last name</label>
-								<g:TextBox styleName="form-control {style.marginTop5}"
-									ui:field="mSurname" />
-								<g:HTMLPanel ui:field="mSurnameNote" visible="false"
-									styleName="{style.noteDetail}" />
-							</g:HTMLPanel>
-
-							<g:HTMLPanel ui:field="mCompanyGroup" styleName="form-group">
-								<label>Company</label>
-								<g:TextBox styleName="form-control {style.marginTop5}"
-									ui:field="mCompany" />
-								<g:HTMLPanel ui:field="mCompanyNote" visible="false"
-									styleName="{style.noteDetail}" />
-							</g:HTMLPanel>
-
-							<g:HTMLPanel ui:field="mEmailGroup" styleName="form-group">
-								<label>Email</label>
-								<g:TextBox styleName="form-control {style.marginTop5}"
-									ui:field="mEmail" />
-								<g:HTMLPanel ui:field="mEmailNote" visible="false"
-									styleName="{style.noteDetail}" />
-							</g:HTMLPanel>
-
-							<g:HTMLPanel ui:field="mPasswordGroup" styleName="form-group">
-								<label>Password</label>
-								<g:PasswordTextBox styleName="form-control {style.marginTop5}"
-									ui:field="mPassword" />
-								<g:HTMLPanel ui:field="mPasswordNote" visible="false"
-									styleName="{style.noteDetail}" />
-							</g:HTMLPanel>
-							<g:CheckBox ui:field="mTermAndCond" styleName="checkbox {style.marginBottom40}">
-								I agree to the
-								<a>terms and conditions</a>
-							</g:CheckBox>
-
-
-							<g:Button ui:field="mRequestInvite"
-								styleName="btn btn-lg btn-primary btn-block {style.marginBottom50}">
-								Submit
-							</g:Button>
-
-
-
-
 						</g:HTMLPanel>
 					</g:FormPanel>
 				</g:HTMLPanel>
-
 			</div>
 		</div>
 

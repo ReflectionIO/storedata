@@ -13,6 +13,7 @@ import io.reflection.app.client.page.ChangePasswordPage;
 import io.reflection.app.client.page.FeedBrowserPage;
 import io.reflection.app.client.page.HomePage;
 import io.reflection.app.client.page.ItemPage;
+import io.reflection.app.client.page.LinkItunesPage;
 import io.reflection.app.client.page.LinkedAccountsPage;
 import io.reflection.app.client.page.LoginPage;
 import io.reflection.app.client.page.PermissionsPage;
@@ -24,6 +25,7 @@ import io.reflection.app.client.page.SearchPage;
 import io.reflection.app.client.page.ThankYouPage;
 import io.reflection.app.client.page.UpgradePage;
 import io.reflection.app.client.page.UsersPage;
+import io.reflection.app.client.page.WelcomePage;
 import io.reflection.app.client.part.Footer;
 import io.reflection.app.client.part.Header;
 
@@ -58,6 +60,8 @@ public class NavigationController implements ValueChangeHandler<String> {
 	private HomePage mHomePage = null;
 	private RequestInvitePage mRequestInvitePage = null;
 	private ThankYouPage mThankYouPage = null;
+	private WelcomePage mWelcomePage = null;
+	private LinkItunesPage mLinkItunesPage = null;
 
 	private Header mHeader = null;
 	private Footer mFooter = null;
@@ -295,6 +299,28 @@ public class NavigationController implements ValueChangeHandler<String> {
 		}
 	}
 
+	public void addWelcomePage() {
+		if (mWelcomePage == null) {
+			mWelcomePage = new WelcomePage();
+		}
+
+		if (!mWelcomePage.isAttached()) {
+			mPanel.clear();
+			mPanel.add(mWelcomePage);
+		}
+	}	
+
+	public void addLinkItunesPage() {
+		if (mLinkItunesPage == null) {
+			mLinkItunesPage = new LinkItunesPage();
+		}
+
+		if (!mLinkItunesPage.isAttached()) {
+			mPanel.clear();
+			mPanel.add(mLinkItunesPage);
+		}
+	}	
+	
 	/**
 	 * @param value
 	 */
@@ -353,7 +379,11 @@ public class NavigationController implements ValueChangeHandler<String> {
 		} else if ("requestinvite".equals(mStack.getPage())) {
 			addRequestInvitePage();
 		} else if ("thankyou".equals(mStack.getPage())) {
-			addThankYouPage();		
+			addThankYouPage();
+		} else if ("welcome".equals(mStack.getPage())) {
+			addWelcomePage();		
+		} else if ("linkitunes".equals(mStack.getPage())) {
+			addLinkItunesPage();			
 		} else {
 			addHomePage();
 		}
