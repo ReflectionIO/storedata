@@ -32,62 +32,58 @@
 		margin-top: 5px;
 	}
 	</ui:style>
-	<g:HTMLPanel>
-		<div class="container">
-			<div class="row">
+	<g:HTMLPanel styleName="container"> <!-- Override container-fluid assigned in NavigationController -->
 
-				<g:HTMLPanel ui:field="mPanel">
-					<g:HTMLPanel styleName="col-md-7 text-center  {style.marginTopInfo}">
-						<g:Image resource="{images.linkAccount}" />
-						<h2 style="margin-top: 60px">Please link your iTunes Connect account</h2>
-						<p style="margin-top: 40px; margin-bottom: 40px">bla bla bla bla bla bla</p>
+		<g:HTMLPanel ui:field="mPanel" styleName="row col-md-12">
+			<g:HTMLPanel styleName="col-md-7 text-center  {style.marginTopInfo}">
+				<g:Image resource="{images.linkAccount}" />
+				<h2 style="margin-top: 60px">Please link your iTunes Connect account</h2>
+				<p style="margin-top: 40px; margin-bottom: 40px">bla bla bla bla bla bla</p>
 
 
+
+
+			</g:HTMLPanel>
+
+
+
+			<g:FormPanel styleName="well col-md-5 {style.marginTopForm}">
+
+				<g:HTMLPanel styleName="{style.marginTop20}">
+					<h4 class="text-center">
+						Link Your iTunes Account
+					</h4>
+					<g:HTMLPanel styleName="col-md-10 col-md-offset-1 {style.marginTop20}">
+
+						<g:HTMLPanel ui:field="mAccountUsernameGroup"
+							styleName="form-group">
+							<label>Account Username</label>
+							<g:TextBox styleName="form-control  {style.marginTop5}"
+								ui:field="mAccountUsername" />
+							<g:HTMLPanel styleName="{style.noteDetail}" ui:field="mAccountUsernameNote"
+								visible="false" />
+						</g:HTMLPanel>
+
+						<g:HTMLPanel ui:field="mPasswordGroup" styleName="form-group">
+							<label>Password</label>
+							<g:PasswordTextBox styleName="form-control  {style.marginTop5}"
+								ui:field="mPassword" />
+							<g:HTMLPanel styleName="{style.noteDetail}" ui:field="mPasswordNote"
+								visible="false" />
+						</g:HTMLPanel>
+
+
+
+						<g:Button ui:field="mLinkAccount"
+							styleName="btn btn-lg btn-primary btn-block {style.marginBottomForm} {style.marginTop30}">
+							Link Account
+						</g:Button>
 
 
 					</g:HTMLPanel>
-
-
-
-					<g:FormPanel styleName="well col-md-5 {style.marginTopForm}">
-
-						<g:HTMLPanel styleName="{style.marginTop20}">
-							<h4 class="text-center">
-								Link Your iTunes Account
-							</h4>
-							<g:HTMLPanel styleName="col-md-10 col-md-offset-1 {style.marginTop20}">
-
-								<g:HTMLPanel ui:field="mAccountUsernameGroup"
-									styleName="form-group">
-									<label>Account Username</label>
-									<g:TextBox styleName="form-control  {style.marginTop5}"
-										ui:field="mAccountUsername" />
-									<g:HTMLPanel styleName="{style.noteDetail}"
-										ui:field="mAccountUsernameNote" visible="false" />
-								</g:HTMLPanel>
-
-								<g:HTMLPanel ui:field="mPasswordGroup" styleName="form-group">
-									<label>Password</label>
-									<g:PasswordTextBox styleName="form-control  {style.marginTop5}"
-										ui:field="mPassword" />
-									<g:HTMLPanel styleName="{style.noteDetail}"
-										ui:field="mPasswordNote" visible="false" />
-								</g:HTMLPanel>
-
-
-
-								<g:Button ui:field="mLinkAccount"
-									styleName="btn btn-lg btn-primary btn-block {style.marginBottomForm} {style.marginTop30}">
-									Link Account
-								</g:Button>
-
-
-							</g:HTMLPanel>
-						</g:HTMLPanel>
-					</g:FormPanel>
 				</g:HTMLPanel>
-			</div>
-		</div>
+			</g:FormPanel>
+		</g:HTMLPanel>
 
 	</g:HTMLPanel>
 </ui:UiBinder> 

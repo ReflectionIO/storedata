@@ -57,4 +57,7 @@ public interface Images extends ClientBundle {
 	@Source("buttonlogin.png")
 	ImageResource buttonLogin();
 	
+	@Source("trowel.png")
+	ImageResource trowel();
+	
 }

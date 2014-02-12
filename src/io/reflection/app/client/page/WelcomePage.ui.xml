@@ -32,11 +32,10 @@
 		margin-top: 5px;
 	}
 	</ui:style>
-	<g:HTMLPanel>
-		<div class="container">
-			<div class="row">
+	<g:HTMLPanel styleName="container"> <!-- Override container-fluid assigned in NavigationController -->
 
-				<g:HTMLPanel ui:field="mPanel">
+				<g:HTMLPanel ui:field="mPanel" styleName="row col-md-12">
+				
 					<g:HTMLPanel styleName="col-md-5 text-center  {style.marginTopInfo}">
 						<g:Image resource="{images.welcomeLogo}" />
 						<h2>Hello! Welcome to Reflection</h2>
@@ -51,9 +50,9 @@
 
 					</g:HTMLPanel>
 
-					<div class="col-md-1"></div>
+					
 
-					<g:FormPanel styleName="well col-md-5 {style.marginTopForm}">
+					<g:FormPanel styleName="well col-md-5 col-md-offset-1 {style.marginTopForm} ">
 
 						<g:HTMLPanel styleName="{style.marginTop20}">
 							<h4 class="text-center">
@@ -94,7 +93,6 @@
 						</g:HTMLPanel>
 					</g:FormPanel>
 				</g:HTMLPanel>
-			</div>
-		</div>
+		
 	</g:HTMLPanel>
 </ui:UiBinder> 
