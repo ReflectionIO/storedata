@@ -63,7 +63,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 		input.listType = FilterController.get().getListTypes().get(0); // Get item type (paid, free, grossing)
 
-		input.on = FilterController.get().getStartDate(); // Get start date from filter
+		input.on = FilterController.get().getEndDate(); // Get start date from filter
 
 		input.category = FilterController.get().getCategory();
 

@@ -110,4 +110,11 @@ ALTER TABLE `user` CHANGE `avatar` `avatar` varchar(4096) CHARACTER SET utf8mb4 
 ALTER TABLE `user` CHANGE `company` `company` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci$$
 ALTER TABLE `user` CHANGE `password` `password` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci$$
 
-ALTER TABLE `rank` DROP INDEX `index_categoryid`, ADD INDEX `indexitemid` (`itemid`(191) ASC), ADD INDEX `indexcountry` (`country` ASC), ADD INDEX `indextype` (`type` ASC) ADD INDEX `indexposition` (`position` ASC), ADD INDEX `indexgrossingpossition` (`grossingposition` ASC), ADD INDEX `indexcodeb` USING BTREE (`code` ASC)$$
+ALTER TABLE `rank` DROP INDEX `index_categoryid`, 
+ADD INDEX `indexitemid` (`itemid`(191) ASC), 
+ADD INDEX `indexcountry` (`country` ASC), 
+ADD INDEX `indextype` (`type` ASC) 
+ADD INDEX `indexposition` (`position` ASC), 
+ADD INDEX `indexgrossingpossition` (`grossingposition` ASC), 
+ADD INDEX `indexcodeb` USING BTREE (`code` ASC),
+CHANGE COLUMN `code` `code` CHAR(36) CHARACTER SET 'utf8mb4' NULL DEFAULT NULL$$

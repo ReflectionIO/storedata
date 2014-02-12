@@ -26,7 +26,6 @@ import io.reflection.app.client.part.RankChart;
 import io.reflection.app.client.part.datatypes.ItemRevenue;
 import io.reflection.app.datatypes.shared.Item;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,7 +41,6 @@ import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.willshex.gson.json.service.shared.StatusType;
 
 public class ItemPage extends Page implements NavigationEventHandler, GetItemRanksEventHandler {
@@ -169,15 +167,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				
 				String mode = stack.getParameter(1);
 				
-				FilterController.get().start();
-				Date startDate = FilterController.get().getStartDate();
-				FilterController.get().setEndDate(startDate);
-				Date newStartDate = new Date(startDate.getTime());
-				CalendarUtil.addDaysToDate(newStartDate, -10);
-				FilterController.get().setStartDate(newStartDate);
 				FilterController.get().setListType(mode);
-				FilterController.get().commit();
-
+				
 				Item item = null;
 
 				mRevenue.setTargetHistoryToken("item/view/" + mItemExternalId + "/" + mode);
