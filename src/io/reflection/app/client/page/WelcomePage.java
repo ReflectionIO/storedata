@@ -23,7 +23,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.TextBox;
@@ -34,7 +33,7 @@ import com.willshex.gson.json.service.shared.Error;
  * @author stefanocapuzzi
  * 
  */
-public class WelcomePage extends Composite  implements SessionEventHandler {
+public class WelcomePage extends Page implements SessionEventHandler {
 
 	private static WelcomePageUiBinder uiBinder = GWT.create(WelcomePageUiBinder.class);
 
@@ -57,15 +56,13 @@ public class WelcomePage extends Composite  implements SessionEventHandler {
 	Images images = GWT.create(Images.class);
 	Image imageButton = new Image(images.buttonLogin());
 	final String imageButtonLink = "<img style=\"vertical-align: -2px;\" src=\"" + imageButton.getUrl() + "\"/>";
-	
+
 	public WelcomePage() {
 		initWidget(uiBinder.createAndBindUi(this));
-		
+
 		mLogin.setHTML(mLogin.getText() + "&nbsp;&nbsp;" + imageButtonLink);
 		mEmail.getElement().setAttribute("placeholder", "Email");
 		mPassword.getElement().setAttribute("placeholder", "Password");
-		
-		EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this);
 	}
 
 	/*
@@ -76,7 +73,11 @@ public class WelcomePage extends Composite  implements SessionEventHandler {
 	@Override
 	protected void onAttach() {
 		super.onAttach();
+
+		register(EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
+
 		resetForm();
+
 		mEmail.setFocus(true);
 	}
 
@@ -96,7 +97,7 @@ public class WelcomePage extends Composite  implements SessionEventHandler {
 	void onLoginClicked(ClickEvent event) {
 		if (validate()) {
 			mPanel.setVisible(false);
-			//SessionController.get().login(mEmail.getText(), mPassword.getText(), mRememberMe.getValue().booleanValue()); // Execute user login
+			// SessionController.get().login(mEmail.getText(), mPassword.getText(), mRememberMe.getValue().booleanValue()); // Execute user login
 		} else {
 			if (mEmailError != null) {
 				FormHelper.showNote(true, mEmailGroup, mEmailNote, mEmailError);
@@ -163,16 +164,21 @@ public class WelcomePage extends Composite  implements SessionEventHandler {
 		// mAlertBox.setVisible(false);
 	}
 
-	/* (non-Javadoc)
-	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoggedIn(io.reflection.app.datatypes.shared.User, io.reflection.app.api.shared.datatypes.Session)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoggedIn(io.reflection.app.datatypes.shared.User,
+	 * io.reflection.app.api.shared.datatypes.Session)
 	 */
 	@Override
 	public void userLoggedIn(User user, Session session) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoggedOut()
 	 */
 	@Override
@@ -180,13 +186,15 @@ public class WelcomePage extends Composite  implements SessionEventHandler {
 		resetForm();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoginFailed(com.willshex.gson.json.service.shared.Error)
 	 */
 	@Override
 	public void userLoginFailed(Error error) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

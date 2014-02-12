@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.part;
 
+import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 
 import java.util.List;
@@ -17,6 +18,9 @@ public class RankChart extends GChart {
 
 	private final int WIDTH = 780;
 	private final int HEIGHT = 350;
+
+	private Curve curve;
+	private Item item;
 
 	public RankChart() {
 		setChartSize(WIDTH, HEIGHT);
@@ -45,50 +49,58 @@ public class RankChart extends GChart {
 
 		addCurve();
 
-		getCurve().getSymbol().setSymbolType(SymbolType.LINE);
+		curve = getCurve();
 
-		getCurve().getSymbol().setBorderColor("#9780E4");
-		getCurve().getSymbol().setBorderStyle("solid");
-		getCurve().getSymbol().setFillThickness(2);
+		curve.getSymbol().setSymbolType(SymbolType.LINE);
 
-		getCurve().getSymbol().setBorderWidth(2);
-		getCurve().getSymbol().setWidth(15);
-		getCurve().getSymbol().setHeight(15);
+		curve.getSymbol().setBorderColor("#9780E4");
+		curve.getSymbol().setBorderStyle("solid");
+		curve.getSymbol().setFillThickness(2);
 
-		getCurve().getSymbol().setHoverSelectionWidth(1);
-		getCurve().getSymbol().setHoverSelectionBorderColor("silver");
+		curve.getSymbol().setBorderWidth(2);
+		curve.getSymbol().setWidth(15);
+		curve.getSymbol().setHeight(15);
+
+		curve.getSymbol().setHoverSelectionWidth(1);
+		curve.getSymbol().setHoverSelectionBorderColor("silver");
 		// use a vertical line for the selection cursor
-		getCurve().getSymbol().setHoverSelectionSymbolType(SymbolType.XGRIDLINE);
+		curve.getSymbol().setHoverSelectionSymbolType(SymbolType.XGRIDLINE);
 		// with annotation on top of this line (above chart)
-		// getCurve().getSymbol().setHoverAnnotationSymbolType(SymbolType.BOX_EAST);
-		getCurve().getSymbol().setHoverLocation(AnnotationLocation.EAST);
+		// curve.getSymbol().setHoverAnnotationSymbolType(SymbolType.BOX_EAST);
+		curve.getSymbol().setHoverLocation(AnnotationLocation.EAST);
 
-		getCurve().getSymbol().setHoverYShift(10);
-		getCurve().getSymbol().setHoverXShift(5);
+		curve.getSymbol().setHoverYShift(10);
+		curve.getSymbol().setHoverXShift(5);
 
-		getCurve().getSymbol().setHoverWidget(new RankHover());
+		curve.getSymbol().setHoverWidget(new RankHover());
 
 		// tall brush so it touches independent of mouse y position
-		getCurve().getSymbol().setBrushSize(25, 200);
+		curve.getSymbol().setBrushSize(25, 200);
 		// so only point-to-mouse x-distance matters for hit testing
-		getCurve().getSymbol().setDistanceMetric(1, 0);
+		curve.getSymbol().setDistanceMetric(1, 0);
 
 	}
 
-	public void setData(List<Rank> ranks) {
-		
-		Curve c = getCurve();
-		
-		for (Rank rank : ranks) {
-			c.addPoint(rank.date.getTime(), rank.position.intValue());	
+	public void setData(Item item, List<Rank> ranks) {
+
+		if (this.item == null || item.id.longValue() != this.item.id.longValue()) {
+			curve.clearPoints();
+			this.item = item;
+
+			for (Rank rank : ranks) {
+				curve.addPoint(rank.date.getTime(), rank.position.intValue());
+			}
+
+			setLoading(false);
+
+			update();
 		}
-		
-		update();
-		
-		setLoading(false);
+
 	}
 
 	public void setLoading(boolean loading) {
+
+		curve.setVisible(!loading);
 
 	}
 }

@@ -50,7 +50,6 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TextHeader;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.Error;
@@ -60,8 +59,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class RanksPage extends Composite implements RanksEventHandler, FilterEventHandler, SessionEventHandler, IsAuthorisedEventHandler,
-		NavigationEventHandler {
+public class RanksPage extends Page implements RanksEventHandler, FilterEventHandler, SessionEventHandler, IsAuthorisedEventHandler, NavigationEventHandler {
 
 	private static RanksPageUiBinder uiBinder = GWT.create(RanksPageUiBinder.class);
 
@@ -120,12 +118,6 @@ public class RanksPage extends Composite implements RanksEventHandler, FilterEve
 		mTabs.put(FREE_LIST_TYPE, mFreeItem);
 		mTabs.put(PAID_LIST_TYPE, mPaidItem);
 		mTabs.put(GROSSING_LIST_TYPE, mGrossingItem);
-
-		EventController.get().addHandlerToSource(RanksEventHandler.TYPE, RankController.get(), this);
-		EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this);
-		EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this);
-		EventController.get().addHandlerToSource(IsAuthorisedEventHandler.TYPE, SessionController.get(), this);
-		EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this);
 
 		RankController.get().addDataDisplay(mRanks);
 		mPager.setDisplay(mRanks);
@@ -218,9 +210,16 @@ public class RanksPage extends Composite implements RanksEventHandler, FilterEve
 		mRanks.addColumn(mGrossingColumn, mGrossingHeader);
 
 		mPriceHeader = new TextHeader("Price");
+		mRanks.addColumn(mPriceColumn, mPriceHeader);
+
 		mDownloadsHeader = new TextHeader("Downloads");
+		mRanks.addColumn(mDownloadsColumn, mDownloadsHeader);
+
 		mRevenueHeader = new TextHeader("Revenue");
+		mRanks.addColumn(mRevenueColumn, mRevenueHeader);
+
 		mIapHeader = new TextHeader("IAP");
+		mRanks.addColumn(mIapColumn, mIapHeader);
 
 	}
 
@@ -276,6 +275,8 @@ public class RanksPage extends Composite implements RanksEventHandler, FilterEve
 	 */
 	@Override
 	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
+		RankController.get().reset();
+
 		refreshBreadcrumbs();
 	}
 
@@ -286,6 +287,8 @@ public class RanksPage extends Composite implements RanksEventHandler, FilterEve
 	 */
 	@Override
 	public void filterParamsChanged(Map<String, ?> currentValues, Map<String, ?> previousValues) {
+		RankController.get().reset();
+
 		refreshBreadcrumbs();
 	}
 
@@ -300,7 +303,6 @@ public class RanksPage extends Composite implements RanksEventHandler, FilterEve
 		RankController.get().reset();
 
 		checkPermissions();
-
 	}
 
 	/*
@@ -424,19 +426,19 @@ public class RanksPage extends Composite implements RanksEventHandler, FilterEve
 	}
 
 	private void removeColumn(Column<RanksGroup, ?> column) {
-		int currentIndex = mRanks.getColumnIndex(column);
-
-		if (currentIndex != -1) {
-			mRanks.removeColumn(column);
-		}
+		// int currentIndex = mRanks.getColumnIndex(column);
+		//
+		// if (currentIndex != -1) {
+		// mRanks.removeColumn(column);
+		// }
 	}
 
 	private void addColumn(Column<RanksGroup, ?> column, TextHeader header, int index) {
-		int currentIndex = mRanks.getColumnIndex(column);
-
-		if (currentIndex == -1) {
-			mRanks.insertColumn(index, column, header);
-		}
+		// int currentIndex = mRanks.getColumnIndex(column);
+		//
+		// if (currentIndex == -1) {
+		// mRanks.insertColumn(index, column, header);
+		// }
 	}
 
 	private void refreshTabs() {
@@ -472,6 +474,22 @@ public class RanksPage extends Composite implements RanksEventHandler, FilterEve
 		SessionController.get().fetchAuthorisation(null, permissions);
 
 		mRedirect.setTargetHistoryToken("upgrade");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
+	 */
+	@Override
+	protected void onAttach() {
+		super.onAttach();
+
+		register(EventController.get().addHandlerToSource(RanksEventHandler.TYPE, RankController.get(), this));
+		register(EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
+		register(EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
+		register(EventController.get().addHandlerToSource(IsAuthorisedEventHandler.TYPE, SessionController.get(), this));
+		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 	}
 
 }

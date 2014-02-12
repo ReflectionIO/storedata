@@ -9,14 +9,13 @@ package io.reflection.app.client.page;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author billy1380
  * 
  */
-public class HomePage extends Composite {
+public class HomePage extends Page {
 
 	private static HomePageUiBinder uiBinder = GWT.create(HomePageUiBinder.class);
 

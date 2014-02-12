@@ -7,8 +7,15 @@
 //
 package io.reflection.app.client.part;
 
+import io.reflection.app.client.controller.StoreController;
+import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.datatypes.shared.Store;
+
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.HeadingElement;
+import com.google.gwt.dom.client.ParagraphElement;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
@@ -29,21 +36,25 @@ public class ItemSidePanel extends Composite {
 	@UiField Image mImage;
 	@UiField HeadingElement mCreatorName;
 
+	@UiField SpanElement storeName;
+	@UiField AnchorElement viewInStore;
+	@UiField ParagraphElement price;
+
 	public ItemSidePanel() {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
-	public void setName(String name) {
-		mTitle.setInnerText(name);
-	}
+	public void setItem(Item item) {
+		mTitle.setInnerText(item.name);
+		mCreatorName.setInnerText("By " + item.creatorName);
+		mImage.setUrl(item.largeImage);
 
-	public void setCreatorName(String creatorName) {
-		mCreatorName.setInnerText("By " + creatorName);
+		Store s = StoreController.get().getStore(item.source);
+		storeName.setInnerHTML(s == null ? item.source : s.name);
 
-	}
+		viewInStore.setHref(StoreController.get().getExternalUri(item));
 
-	public void setImage(String imageUrl) {
-		mImage.setUrl(imageUrl);
+		price.setInnerHTML(item.price == 0 ? "Free" : item.currency + " " + item.price);
 	}
 
 }

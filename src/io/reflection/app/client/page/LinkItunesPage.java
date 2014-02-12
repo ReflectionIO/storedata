@@ -18,7 +18,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.TextBox;
@@ -28,7 +27,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author stefanocapuzzi
  * 
  */
-public class LinkItunesPage extends Composite {
+public class LinkItunesPage extends Page {
 
 	private static LinkItunesPageUiBinder uiBinder = GWT.create(LinkItunesPageUiBinder.class);
 

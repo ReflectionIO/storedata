@@ -44,16 +44,16 @@
         <name>ingest</name>
         <rate>10/s</rate>
         <bucket-size>10</bucket-size>
-        <max-concurrent-requests>20</max-concurrent-requests>
+        <max-concurrent-requests>2</max-concurrent-requests>
         <retry-parameters>
-            <task-retry-limit>5</task-retry-limit>
+            <task-retry-limit>10</task-retry-limit>
         </retry-parameters>
     </queue>
     <queue>
         <name>model</name>
         <rate>100/s</rate>
         <bucket-size>100</bucket-size>
-        <max-concurrent-requests>100</max-concurrent-requests>
+        <max-concurrent-requests>2</max-concurrent-requests>
         <retry-parameters>
             <task-retry-limit>5</task-retry-limit>
         </retry-parameters>
@@ -62,7 +62,7 @@
         <name>predict</name>
         <rate>100/s</rate>
         <bucket-size>100</bucket-size>
-        <max-concurrent-requests>100</max-concurrent-requests>
+        <max-concurrent-requests>2</max-concurrent-requests>
         <retry-parameters>
             <task-retry-limit>5</task-retry-limit>
         </retry-parameters>

@@ -18,8 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gwt.user.datepicker.client.CalendarUtil;
-
 /**
  * @author billy1380
  * 
@@ -43,22 +41,17 @@ public class FilterController {
 	public static FilterController get() {
 		if (mOne == null) {
 			mOne = new FilterController();
-			
-			mOne.setup();
 		}
 
 		return mOne;
 	}
 
-	private void setup() {
+	private FilterController() {
 		start();
 		setStore(StoreController.IPHONE_A3_CODE);
 		setListType("all");
 		setCountry("us");
-		Date startDate = new Date();
-		CalendarUtil.addDaysToDate(startDate, -10);
-		setStartDate(startDate);
-		setEndDate(new Date());
+		setStartDate(new Date());
 		setCategory(Long.valueOf(24));
 		commit();
 	}

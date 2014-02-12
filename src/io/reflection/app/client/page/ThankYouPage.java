@@ -9,14 +9,13 @@ package io.reflection.app.client.page;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author stefanocapuzzi
  *
  */
-public class ThankYouPage extends Composite {
+public class ThankYouPage extends Page {
 
 	private static ThankYouPageUiBinder uiBinder = GWT.create(ThankYouPageUiBinder.class);
 

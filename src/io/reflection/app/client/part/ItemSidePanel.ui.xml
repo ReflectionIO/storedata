@@ -20,7 +20,7 @@
 
         <h3 ui:field="mCreatorName" class="{style.pageTitle} text-muted">By Creator</h3>
 
-        <p ui:field="mPrice">$0.99 + in-App purchases</p>
+        <p ui:field="price">$0.99 + in-App purchases</p>
 
         <hr />
 
@@ -48,16 +48,16 @@
 
         <hr />
 
-        <a class="btn btn-primary col-xs-12">
+        <!-- <a class="btn btn-primary col-xs-12">
             More Info
             <i class="icon-plus"></i>
-        </a>
+        </a> -->
 
         <br />
 
-        <a class="col-xs-12 {style.viewIn} text-center">
+        <a class="col-xs-12 {style.viewIn} text-center" target="_blank" ui:field="viewInStore">
             View in the
-            <span ui:field="mStoreName">Appstore</span>
+            <span ui:field="storeName">Appstore</span>
             <i class="icon-link-ext"></i>
         </a>
 

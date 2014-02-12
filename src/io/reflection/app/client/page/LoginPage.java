@@ -30,7 +30,6 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHyperlink;
@@ -43,7 +42,7 @@ import com.willshex.gson.json.service.shared.Error;
  * @author billy1380
  * 
  */
-public class LoginPage extends Composite implements SessionEventHandler {
+public class LoginPage extends Page implements SessionEventHandler {
 
 	private static LoginPageUiBinder uiBinder = GWT.create(LoginPageUiBinder.class);
 
@@ -76,8 +75,6 @@ public class LoginPage extends Composite implements SessionEventHandler {
 
 		mUsername.getElement().setAttribute("placeholder", "Email address");
 		mPassword.getElement().setAttribute("placeholder", "Password");
-
-		EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this);
 
 	}
 
@@ -167,6 +164,8 @@ public class LoginPage extends Composite implements SessionEventHandler {
 	protected void onAttach() {
 		super.onAttach();
 
+		register(EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
+		
 		resetForm();
 
 		mUsername.setFocus(true);

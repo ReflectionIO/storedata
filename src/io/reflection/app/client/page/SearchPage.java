@@ -25,10 +25,9 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
-public class SearchPage extends Composite implements NavigationEventHandler, SearchForItemEventHandler {
+public class SearchPage extends Page implements NavigationEventHandler, SearchForItemEventHandler {
 
 	private static SearchPageUiBinder uiBinder = GWT.create(SearchPageUiBinder.class);
 
@@ -40,9 +39,19 @@ public class SearchPage extends Composite implements NavigationEventHandler, Sea
 
 	public SearchPage() {
 		initWidget(uiBinder.createAndBindUi(this));
+	}
 
-		EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this);
-		EventController.get().addHandlerToSource(SearchForItemEventHandler.TYPE, ItemController.get(), this);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
+	 */
+	@Override
+	protected void onAttach() {
+		super.onAttach();
+
+		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+		register(EventController.get().addHandlerToSource(SearchForItemEventHandler.TYPE, ItemController.get(), this));
 	}
 
 	/*

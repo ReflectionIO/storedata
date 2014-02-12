@@ -19,7 +19,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.TextBox;
@@ -29,7 +28,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Stefano Capuzzi
  * 
  */
-public class RequestInvitePage extends Composite {
+public class RequestInvitePage extends Page {
 
 	private static RequestInvitePageUiBinder uiBinder = GWT.create(RequestInvitePageUiBinder.class);
 
@@ -90,7 +89,9 @@ public class RequestInvitePage extends Composite {
 	@Override
 	protected void onAttach() {
 		super.onAttach();
+		
 		resetForm();
+		
 		mForename.setFocus(true);
 	}
 

@@ -27,7 +27,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
@@ -38,7 +37,7 @@ import com.willshex.gson.json.service.shared.Error;
  * @author billy1380
  * 
  */
-public class ChangePasswordPage extends Composite implements UserPasswordChangedEventHandler {
+public class ChangePasswordPage extends Page implements UserPasswordChangedEventHandler {
 
 	private static ChangePasswordPageUiBinder uiBinder = GWT.create(ChangePasswordPageUiBinder.class);
 
@@ -72,9 +71,6 @@ public class ChangePasswordPage extends Composite implements UserPasswordChanged
 
 		mNewPassword.getElement().setAttribute("placeholder", "New Password");
 		mConfirmPassword.getElement().setAttribute("placeholder", "Confirm Password");
-
-		EventController.get().addHandlerToSource(UserPasswordChangedEventHandler.TYPE, UserController.get(), this);
-		EventController.get().addHandlerToSource(UserPasswordChangedEventHandler.TYPE, SessionController.get(), this);
 
 	}
 
@@ -181,10 +177,16 @@ public class ChangePasswordPage extends Composite implements UserPasswordChanged
 	protected void onAttach() {
 		super.onAttach();
 
+		register(EventController.get().addHandlerToSource(UserPasswordChangedEventHandler.TYPE, UserController.get(), this));
+		register(EventController.get().addHandlerToSource(UserPasswordChangedEventHandler.TYPE, SessionController.get(), this));
+
 		resetForm();
 
-		if (SessionController.get().isLoggedInUserAdmin()) mNewPassword.setFocus(true);
-		else mPassword.setFocus(true);
+		if (SessionController.get().isLoggedInUserAdmin()) {
+			mNewPassword.setFocus(true);
+		} else {
+			mPassword.setFocus(true);
+		}
 	}
 
 	/*

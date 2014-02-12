@@ -30,7 +30,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -42,7 +41,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class ChangeDetailsPage extends Composite implements NavigationEventHandler, ChangeUserDetailsEventHandler {
+public class ChangeDetailsPage extends Page implements NavigationEventHandler, ChangeUserDetailsEventHandler {
 
 	private static ChangeDetailsPageUiBinder uiBinder = GWT.create(ChangeDetailsPageUiBinder.class);
 
@@ -84,10 +83,6 @@ public class ChangeDetailsPage extends Composite implements NavigationEventHandl
 		mSurname.getElement().setAttribute("placeholder", "Last name");
 		mCompany.getElement().setAttribute("placeholder", "Company");
 
-		EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this);
-
-		EventController.get().addHandlerToSource(ChangeUserDetailsEventHandler.TYPE, SessionController.get(), this);
-
 	}
 
 	/*
@@ -98,6 +93,9 @@ public class ChangeDetailsPage extends Composite implements NavigationEventHandl
 	@Override
 	protected void onAttach() {
 		super.onAttach();
+
+		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+		register(EventController.get().addHandlerToSource(ChangeUserDetailsEventHandler.TYPE, SessionController.get(), this));
 
 		resetForm();
 	}

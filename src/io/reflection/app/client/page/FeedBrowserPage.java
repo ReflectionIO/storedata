@@ -7,8 +7,6 @@
 //
 package io.reflection.app.client.page;
 
-import java.util.Map;
-
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FeedFetchController;
 import io.reflection.app.client.controller.FilterController;
@@ -18,6 +16,8 @@ import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.Breadcrumbs;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.datatypes.shared.FeedFetch;
+
+import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -29,7 +29,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
@@ -40,7 +39,7 @@ import com.google.gwt.view.client.SingleSelectionModel;
  * @author billy1380
  * 
  */
-public class FeedBrowserPage extends Composite implements FilterEventHandler {
+public class FeedBrowserPage extends Page implements FilterEventHandler {
 
 	private static FeedBrowserPageUiBinder uiBinder = GWT.create(FeedBrowserPageUiBinder.class);
 
@@ -87,12 +86,20 @@ public class FeedBrowserPage extends Composite implements FilterEventHandler {
 		FeedFetchController.get().addDataDisplay(mFeeds);
 		mPager.setDisplay(mFeeds);
 
-		EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this);
-
 		refreshBreadcrumbs();
 
 	}
 
+	/* (non-Javadoc)
+	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
+	 */
+	@Override
+	protected void onAttach() {
+		super.onAttach();
+		
+		register(EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
+	}
+	
 	/**
 	 * 
 	 */

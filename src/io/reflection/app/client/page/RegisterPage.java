@@ -25,7 +25,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
@@ -37,7 +36,7 @@ import com.willshex.gson.json.service.shared.Error;
  * @author billy1380
  * 
  */
-public class RegisterPage extends Composite implements UserRegisteredEventHandler {
+public class RegisterPage extends Page implements UserRegisteredEventHandler {
 
 	private static RegisterPageUiBinder uiBinder = GWT.create(RegisterPageUiBinder.class);
 
@@ -84,8 +83,6 @@ public class RegisterPage extends Composite implements UserRegisteredEventHandle
 		mForename.getElement().setAttribute("placeholder", "First name");
 		mSurname.getElement().setAttribute("placeholder", "Last name");
 		mCompany.getElement().setAttribute("placeholder", "Company");
-
-		EventController.get().addHandlerToSource(UserRegisteredEventHandler.TYPE, UserController.get(), this);
 
 	}
 
@@ -241,6 +238,8 @@ public class RegisterPage extends Composite implements UserRegisteredEventHandle
 	@Override
 	protected void onAttach() {
 		super.onAttach();
+
+		register(EventController.get().addHandlerToSource(UserRegisteredEventHandler.TYPE, UserController.get(), this));
 
 		resetForm();
 

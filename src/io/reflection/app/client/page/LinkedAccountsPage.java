@@ -35,7 +35,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHyperlink;
@@ -47,7 +46,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class LinkedAccountsPage extends Composite implements NavigationEventHandler, LinkAccountEventHandler, GetLinkedAccountsEventHandler {
+public class LinkedAccountsPage extends Page implements NavigationEventHandler, LinkAccountEventHandler, GetLinkedAccountsEventHandler {
 
 	private static LinkedAccountsPageUiBinder uiBinder = GWT.create(LinkedAccountsPageUiBinder.class);
 
@@ -82,10 +81,6 @@ public class LinkedAccountsPage extends Composite implements NavigationEventHand
 		// mIosMacLink.setTargetHistoryToken("users/linkedaccounts/" +
 		// NavigationController.get().getStack().getParameter(0) + "/iosmac");
 
-		EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this);
-		EventController.get().addHandlerToSource(LinkAccountEventHandler.TYPE, LinkedAccountController.get(), this);
-		EventController.get().addHandlerToSource(GetLinkedAccountsEventHandler.TYPE, LinkedAccountController.get(), this);
-
 		showNoLinkedAccounts();
 
 		LinkedAccountController.get().fetchLinkedAccounts();
@@ -93,10 +88,21 @@ public class LinkedAccountsPage extends Composite implements NavigationEventHand
 		// CellTree.Resources res = GWT.create(CellTree.BasicResources.class);
 		// mAccounts = new CellTree(LinkedAccountController.get(), null, res);
 		// mAccounts.setAnimationEnabled(true);
-		
-		
+
 	}
 
+	/* (non-Javadoc)
+	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
+	 */
+	@Override
+	protected void onAttach() {
+		super.onAttach();
+		
+		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+		register(EventController.get().addHandlerToSource(LinkAccountEventHandler.TYPE, LinkedAccountController.get(), this));
+		register(EventController.get().addHandlerToSource(GetLinkedAccountsEventHandler.TYPE, LinkedAccountController.get(), this));
+	}
+	
 	/**
 	 * @param link
 	 */

@@ -19,14 +19,13 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TextHeader;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author billy1380
  * 
  */
-public class PermissionsPage extends Composite {
+public class PermissionsPage extends Page {
 
 	private static PermissionsPageUiBinder uiBinder = GWT.create(PermissionsPageUiBinder.class);
 

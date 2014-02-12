@@ -23,7 +23,6 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TextHeader;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
@@ -34,7 +33,7 @@ import com.google.gwt.view.client.SingleSelectionModel;
  * @author billy1380
  * 
  */
-public class UsersPage extends Composite {
+public class UsersPage extends Page {
 
 	private static UsersPageUiBinder uiBinder = GWT.create(UsersPageUiBinder.class);
 

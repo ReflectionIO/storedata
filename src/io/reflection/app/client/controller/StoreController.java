@@ -11,11 +11,14 @@ import io.reflection.app.api.core.client.CoreService;
 import io.reflection.app.api.core.shared.call.GetStoresRequest;
 import io.reflection.app.api.core.shared.call.GetStoresResponse;
 import io.reflection.app.client.handler.StoresEventHandler;
+import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Store;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gwt.safehtml.shared.SafeUri;
+import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -28,6 +31,8 @@ public class StoreController implements ServiceController {
 
 	public static final String IPHONE_A3_CODE = "iph";
 	public static final String IPAD_A3_CODE = "ipa";
+	
+	public static final String IOS_A3_CODE = "ios";
 
 	private static StoreController mOne = null;
 
@@ -63,7 +68,7 @@ public class StoreController implements ServiceController {
 
 						Store iosStore = null;
 						for (Store store : result.stores) {
-							if ("ios".equals(store.a3Code)) {
+							if (IOS_A3_CODE.equals(store.a3Code)) {
 								iosStore = store;
 							}
 
@@ -93,8 +98,8 @@ public class StoreController implements ServiceController {
 
 							result.stores.add(iphone);
 
-							mStoreLookup.put(ipad.a3Code, mStoreLookup.get("ios"));
-							mStoreLookup.put(iphone.a3Code, mStoreLookup.get("ios"));
+							mStoreLookup.put(ipad.a3Code, mStoreLookup.get(IOS_A3_CODE));
+							mStoreLookup.put(iphone.a3Code, mStoreLookup.get(IOS_A3_CODE));
 
 							result.stores.remove(iosStore);
 
@@ -125,12 +130,26 @@ public class StoreController implements ServiceController {
 			store = new Store();
 
 			if (IPAD_A3_CODE.equalsIgnoreCase(code) || IPHONE_A3_CODE.equalsIgnoreCase(code)) {
-				store.a3Code = "ios";
+				store.a3Code = IOS_A3_CODE;
 			} else {
 				store.a3Code = code;
 			}
 		}
 
 		return store;
+	}
+
+	/**
+	 * @param item
+	 * @return
+	 */
+	public SafeUri getExternalUri(Item item) {
+		SafeUri externalUri = null;
+		
+		if (IOS_A3_CODE.equals(item.source)) {
+			externalUri = UriUtils.fromString("http://itunes.apple.com/app/id" + item.internalId);
+		} 
+		
+		return externalUri;
 	}
 }

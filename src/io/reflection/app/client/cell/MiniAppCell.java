@@ -21,7 +21,7 @@ import com.google.gwt.uibinder.client.UiRenderer;
 public class MiniAppCell extends AbstractCell<Item> {
 
 	interface MiniAppCellRenderer extends UiRenderer {
-		void render(SafeHtmlBuilder sb, String name, String creatorName, String smallImage, String itemId);
+		void render(SafeHtmlBuilder sb, String name, String creatorName, String smallImage, String itemId, String type);
 	}
 
 	private static MiniAppCellRenderer RENDERER = GWT.create(MiniAppCellRenderer.class);
@@ -30,19 +30,36 @@ public class MiniAppCell extends AbstractCell<Item> {
 	public void render(Context context, Item value, SafeHtmlBuilder builder) {
 		String name = value.name;
 
-		if (name.length() > 20) {
-			name = name.substring(0, 20);
+		if (name.length() > 17) {
+			name = name.substring(0, 17);
 			name += "...";
 		}
 		
 		String creatorName = value.creatorName;
 		
-		if (creatorName.length() > 20) {
-			creatorName = creatorName.substring(0, 20);
+		if (creatorName.length() > 17) {
+			creatorName = creatorName.substring(0, 17);
 			creatorName += "...";
 		}
+		
+		String type = "";
+		
+		switch (context.getColumn()) {
+		case 1:
+			type = "paid";
+			break;
+		case 2:
+			type = "free";
+			break;
+		case 3:
+			type = "grossing";
+			break;
 
-		RENDERER.render(builder, name, creatorName, value.smallImage, value.externalId);
+		default:
+			break;
+		}
+
+		RENDERER.render(builder, name, creatorName, value.smallImage, value.externalId, type);
 	}
 
 }

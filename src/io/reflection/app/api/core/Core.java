@@ -275,7 +275,7 @@ public final class Core extends ActionHandler {
 						output.pager,
 						output.ranks,
 						input.pager.totalCount == null ? RankServiceProvider.provide().getRanksCount(input.country, input.store, input.category,
-								input.listType, start, end) : null);
+								input.listType, start, end) : input.pager.totalCount);
 			}
 
 			output.status = StatusType.StatusTypeSuccess;
@@ -400,7 +400,7 @@ public final class Core extends ActionHandler {
 					}
 
 					if (code == null) {
-						code = ranks.get(0).code;
+						code = latestCode(ranks);
 					}
 
 					output.freeRanks = ranks;
@@ -423,7 +423,7 @@ public final class Core extends ActionHandler {
 					}
 
 					if (code == null) {
-						code = ranks.get(0).code;
+						code = latestCode(ranks);
 					}
 
 					output.paidRanks = ranks;
@@ -446,7 +446,7 @@ public final class Core extends ActionHandler {
 					}
 
 					if (code == null) {
-						code = ranks.get(0).code;
+						code = latestCode(ranks);
 					}
 
 					output.grossingRanks = ranks;
@@ -463,6 +463,7 @@ public final class Core extends ActionHandler {
 						input.pager.totalCount = RankServiceProvider.provide().getGatherCodeRanksCount(input.country, input.store, input.category,
 								freeListType, code);
 					}
+					input.pager.totalCount = Long.valueOf(400);
 				}
 
 				updatePager(output.pager, output.freeRanks, input.pager.totalCount);
@@ -475,6 +476,23 @@ public final class Core extends ActionHandler {
 		}
 		LOG.finer("Exiting getAllTopItems");
 		return output;
+	}
+
+	private String latestCode(List<Rank> ranks) {
+		String code = null;
+
+		if (ranks != null) {
+			Date latest = null;
+
+			for (Rank rank : ranks) {
+				if (latest == null || (rank.date.getTime() > latest.getTime())) {
+					latest = rank.date;
+					code = rank.code;
+				}
+			}
+		}
+
+		return code;
 	}
 
 	public GetItemRanksResponse getItemRanks(GetItemRanksRequest input) {
@@ -504,7 +522,7 @@ public final class Core extends ActionHandler {
 				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("String: input.listType"));
 
 			Store store = StoreServiceProvider.provide().getA3CodeStore(input.item.source);
-			
+
 			// right now category
 			if (input.category == null) {
 				input.category = CategoryServiceProvider.provide().getAllCategory(store);
