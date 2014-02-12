@@ -20,8 +20,10 @@ import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.AlertBoxHelper;
 import io.reflection.app.client.part.AlertBox;
 import io.reflection.app.client.part.AlertBox.AlertBoxType;
+import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.ItemSidePanel;
 import io.reflection.app.client.part.RankChart;
+import io.reflection.app.client.part.datatypes.ItemRevenue;
 import io.reflection.app.datatypes.shared.Item;
 
 import java.util.Date;
@@ -29,11 +31,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
@@ -57,10 +63,13 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField LIElement mRankingItem;
 
 	@UiField RankChart historyChart;
+	
+	@UiField(provided = true) CellTable<ItemRevenue> revenue = new CellTable<ItemRevenue>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
 
 	private String mItemExternalId;
-
-	private String mChartType = REVENUE_CHART_TYPE;
+	private String mChartType = RANKING_CHART_TYPE;
+	
+	private RankChart.Mode mode;
 
 	private static final String REVENUE_CHART_TYPE = "revenue";
 	private static final String DOWNLOADS_CHART_TYPE = "downloads";
@@ -71,9 +80,70 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	public ItemPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
+		createColumns();
+		
 		mTabs.put(REVENUE_CHART_TYPE, mRevenueItem);
 		mTabs.put(DOWNLOADS_CHART_TYPE, mDownloadsItem);
 		mTabs.put(RANKING_CHART_TYPE, mRankingItem);
+		
+	}
+	
+	private void createColumns() {
+		TextColumn<ItemRevenue> countryColumn = new TextColumn<ItemRevenue>() {
+
+			@Override
+			public String getValue(ItemRevenue object) {
+				return object.countryName;
+			}
+
+		};
+
+		TextColumn<ItemRevenue> percentageColumn = new TextColumn<ItemRevenue>() {
+			
+			@Override
+			public String getValue(ItemRevenue object) {
+				return object.percentage.toString();
+			}
+		};
+		
+		TextColumn<ItemRevenue> paidColumn = new TextColumn<ItemRevenue>() {
+			
+			@Override
+			public String getValue(ItemRevenue object) {
+				return object.currency + " " + Double.toString(object.paid.doubleValue() / 100);
+			}
+		}; 
+		
+		TextColumn<ItemRevenue> iapColumn = new TextColumn<ItemRevenue>() {
+			
+			@Override
+			public String getValue(ItemRevenue object) {
+				return object.currency + " " + Double.toString(object.iap.doubleValue() / 100);
+			}
+		};
+		
+		TextColumn<ItemRevenue> totalColumn = new TextColumn<ItemRevenue>() {
+			
+			@Override
+			public String getValue(ItemRevenue object) {
+				return object.currency + " " + Double.toString(object.total.doubleValue() / 100);
+			}
+		};
+
+		TextHeader countryHeader = new TextHeader("Country");
+		revenue.addColumn(countryColumn, countryHeader);
+
+		TextHeader percentageHeader = new TextHeader("% total revenue");
+		revenue.addColumn(percentageColumn, percentageHeader);
+
+		TextHeader paidHeader = new TextHeader("Paid");
+		revenue.addColumn(paidColumn, paidHeader);
+
+		TextHeader iapHeader = new TextHeader("IAP");
+		revenue.addColumn(iapColumn, iapHeader);
+
+		TextHeader totalHeader = new TextHeader("Total");
+		revenue.addColumn(totalColumn, totalHeader);
 	}
 
 	/*
@@ -94,20 +164,25 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	public void navigationChanged(Stack stack) {
 		if (stack != null && "item".equals(stack.getPage())) {
 			if ("view".equals(stack.getAction()) && (mItemExternalId = stack.getParameter(0)) != null) {
+				Document.get().setScrollLeft(0);
+				Document.get().setScrollTop(0);
+				
+				String mode = stack.getParameter(1);
+				
 				FilterController.get().start();
 				Date startDate = FilterController.get().getStartDate();
 				FilterController.get().setEndDate(startDate);
 				Date newStartDate = new Date(startDate.getTime());
 				CalendarUtil.addDaysToDate(newStartDate, -10);
 				FilterController.get().setStartDate(newStartDate);
-				FilterController.get().setListType(stack.getParameter(1));
+				FilterController.get().setListType(mode);
 				FilterController.get().commit();
 
 				Item item = null;
 
-				mRevenue.setTargetHistoryToken("item/view/" + mItemExternalId);
-				mDownloads.setTargetHistoryToken("item/view/" + mItemExternalId);
-				mRanking.setTargetHistoryToken("item/view/" + mItemExternalId);
+				mRevenue.setTargetHistoryToken("item/view/" + mItemExternalId + "/" + mode);
+				mDownloads.setTargetHistoryToken("item/view/" + mItemExternalId + "/" + mode);
+				mRanking.setTargetHistoryToken("item/view/" + mItemExternalId + "/" + mode);
 
 				if ((item = ItemController.get().lookupItem(mItemExternalId)) != null) {
 					displayItemDetails(item);
@@ -119,6 +194,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 					AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Getting details", " - This will only take a few seconds...",
 							false).setVisible(true);
 				}
+				
+				this.mode = RankChart.Mode.fromString(mode);
 				
 				getHistoryChartData(item);
 
@@ -233,7 +310,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 			refreshTabs();
 
-			historyChart.setData(output.item, output.ranks);
+			historyChart.setData(output.item, output.ranks, mode);
 
 			mAlertBox.setVisible(false);
 		} else {
@@ -258,10 +335,10 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	private void getHistoryChartData(Item item) {
 		AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Getting History",
 				" - Please wait while we fetch the rank history for the selected item", false).setVisible(true);
+		
+		historyChart.setLoading(true);
 
 		RankController.get().fetchItemRanks(item);
-
-		historyChart.setLoading(true);
 
 	}
 

@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.part;
 
+import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 
@@ -16,11 +17,31 @@ import com.googlecode.gchart.client.GChart;
 
 public class RankChart extends GChart {
 
+	public enum Mode {
+		PositionMode,
+		GrossingPositionMode;
+
+		/**
+		 * @param value
+		 * @return
+		 */
+		public static Mode fromString(String value) {
+			Mode mode = null;
+
+			if ("grossing".equals(value)) {
+				mode = GrossingPositionMode;
+			} else if ("free".equals(value) || "paid".equals(value)) {
+				mode = PositionMode;
+			}
+
+			return mode;
+		}
+	}
+
 	private final int WIDTH = 780;
 	private final int HEIGHT = 350;
 
 	private Curve curve;
-	private Item item;
 
 	public RankChart() {
 		setChartSize(WIDTH, HEIGHT);
@@ -81,26 +102,62 @@ public class RankChart extends GChart {
 
 	}
 
-	public void setData(Item item, List<Rank> ranks) {
+	public void setData(Item item, List<Rank> ranks, Mode mode) {
 
-		if (this.item == null || item.id.longValue() != this.item.id.longValue()) {
-			curve.clearPoints();
-			this.item = item;
+		int minY = 400, maxY = 0;
+		int position;
+		for (Rank rank : ranks) {
+			position = mode == Mode.PositionMode ? rank.position.intValue() : rank.grossingPosition.intValue();
 
-			for (Rank rank : ranks) {
-				curve.addPoint(rank.date.getTime(), rank.position.intValue());
+			if (position < minY) {
+				minY = position;
 			}
 
-			setLoading(false);
+			if (position > maxY) {
+				maxY = position;
+			}
 
-			update();
+			curve.addPoint(rank.date.getTime(), position);
 		}
+
+		if (minY == maxY) {
+			minY -= 4;
+			maxY += 3;
+		}
+
+		if (minY < 1) {
+			maxY += (4 - minY);
+			minY = 1;
+		}
+
+		getYAxis().setAxisMin(maxY);
+		getYAxis().setAxisMax(minY);
+
+		// int diffY = (maxY - minY) + 1;
+
+		getYAxis().setTickCount(8);
+
+		setLoading(false);
 
 	}
 
 	public void setLoading(boolean loading) {
 
-		curve.setVisible(!loading);
+		if (curve != null) {
+			curve.setVisible(!loading);
 
+			if (loading) {
+				curve.clearPoints();
+
+				getXAxis().setAxisMax(FilterController.get().getStartDate().getTime());
+				getXAxis().setAxisMin(FilterController.get().getEndDate().getTime());
+
+				getYAxis().setAxisMax(1);
+				getYAxis().setAxisMin(400);
+				getYAxis().setTickCount(8);
+			}
+
+			update();
+		}
 	}
 }

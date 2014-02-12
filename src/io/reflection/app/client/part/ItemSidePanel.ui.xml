@@ -10,8 +10,9 @@
     }
     
     .viewIn {
-		margin-top: 20px;
-	}
+    	/*margin-top: 20px;*/
+    	
+    }
     </ui:style>
     <g:HTMLPanel styleName="well sidebar-nav col-md-3">
         <g:Image ui:field="mImage" styleName="img-rounded" />
@@ -33,27 +34,26 @@
         </div>
 
         <br />
-        
-        <h4><i class="icon-money"></i>Global Revenue</h4>
-        
-        <p class="text-right lead">$42,672</p>
-        
-        <h4><i class="icon-download"></i>Global Downloads</h4>
-        
-        <p class="text-right lead">203,786</p>
-        
-        <h4><i class="icon-star-empty"></i>Customer Rating</h4>
-        
-        <p>4/5<span class="pull-right"><i class="icon-star-empty"></i><i class="icon-star"></i><i class="icon-star"></i><i class="icon-star"></i><i class="icon-star"></i></span></p>
 
+        <h4>
+            <i class="icon-money"></i>
+            Global Revenue
+        </h4>
+
+        <p class="text-right lead">$42,672</p>
+
+        <h4>
+            <i class="icon-download"></i>
+            Global Downloads
+        </h4>
+
+        <p class="text-right lead">203,786</p>
+
+        <!-- <h4><i class="icon-star-empty"></i>Customer Rating</h4> <p>4/5<span class="pull-right"><i class="icon-star-empty"></i><i class="icon-star"></i><i class="icon-star"></i><i 
+            class="icon-star"></i><i class="icon-star"></i></span></p> -->
         <hr />
 
-        <!-- <a class="btn btn-primary col-xs-12">
-            More Info
-            <i class="icon-plus"></i>
-        </a> -->
-
-        <br />
+        <!-- <a class="btn btn-primary col-xs-12"> More Info <i class="icon-plus"></i> </a> <br /> -->
 
         <a class="col-xs-12 {style.viewIn} text-center" target="_blank" ui:field="viewInStore">
             View in the

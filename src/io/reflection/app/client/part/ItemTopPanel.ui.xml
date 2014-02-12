@@ -17,8 +17,8 @@
                 </div>
 
                 <g:ListBox styleName="form-control" ui:field="mAppStore">
-                    <g:item value="iph">iPhone</g:item>
-                    <g:item value="ipa">iPad</g:item>
+                    <g:item value="iph">iPhone Store</g:item>
+                    <g:item value="ipa">iPad Store</g:item>
                 </g:ListBox>
 
                 <g:ListBox styleName="form-control" ui:field="mCountry">
@@ -29,7 +29,7 @@
                     <g:item value="fr">France</g:item>
                 </g:ListBox>
 
-                <div class="btn-group btn-group-xs">
+                <!-- <div class="btn-group btn-group-xs">
                     <g:InlineHyperlink ui:field="m1Month" styleName="btn btn-default active">1m</g:InlineHyperlink>
                     <g:InlineHyperlink ui:field="m3Months" styleName="btn btn-default">3m</g:InlineHyperlink>
                     <g:InlineHyperlink ui:field="m6Months" styleName="btn btn-default">6m</g:InlineHyperlink>
@@ -43,7 +43,7 @@
                         Standard
                     </g:InlineHyperlink>
                     <g:InlineHyperlink ui:field="mCumulative" styleName="btn btn-default">Cumulative</g:InlineHyperlink>
-                </div>
+                </div> -->
 
             </g:HTMLPanel>
         </g:FormPanel>

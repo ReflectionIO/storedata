@@ -10,6 +10,7 @@ package io.reflection.app.client.controller;
 import io.reflection.app.api.core.client.CoreService;
 import io.reflection.app.api.core.shared.call.GetStoresRequest;
 import io.reflection.app.api.core.shared.call.GetStoresResponse;
+import io.reflection.app.api.core.shared.call.event.GetStoresEventHandler;
 import io.reflection.app.client.handler.StoresEventHandler;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Store;
@@ -19,7 +20,6 @@ import java.util.Map;
 
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.safehtml.shared.UriUtils;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.willshex.gson.json.service.shared.StatusType;
 
@@ -113,8 +113,7 @@ public class StoreController implements ServiceController {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				Window.alert("Error");
-
+				EventController.get().fireEventFromSource(new GetStoresEventHandler.GetStoresFailure(input, caught), StoreController.this);
 			}
 		});
 	}
@@ -126,7 +125,7 @@ public class StoreController implements ServiceController {
 	public Store getStore(String code) {
 		Store store = null;
 
-		if (code != null && (mStoreLookup == null || (store = mStoreLookup.get(code)) != null)) {
+		if (code != null && (mStoreLookup == null || (store = mStoreLookup.get(code)) == null)) {
 			store = new Store();
 
 			if (IPAD_A3_CODE.equalsIgnoreCase(code) || IPHONE_A3_CODE.equalsIgnoreCase(code)) {

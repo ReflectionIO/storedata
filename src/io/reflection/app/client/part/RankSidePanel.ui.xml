@@ -53,8 +53,8 @@
                         App Store
                     </label>
                     <g:ListBox styleName="form-control" ui:field="mAppStore">
-                        <g:item value="iph">iPhone</g:item>
-                        <g:item value="ipa">iPad</g:item>
+                        <g:item value="iph">iPhone Store</g:item>
+                        <g:item value="ipa">iPad Store</g:item>
                     </g:ListBox>
                 </g:HTMLPanel>
 

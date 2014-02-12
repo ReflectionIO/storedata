@@ -50,7 +50,7 @@ public class ItemSidePanel extends Composite {
 		mImage.setUrl(item.largeImage);
 
 		Store s = StoreController.get().getStore(item.source);
-		storeName.setInnerHTML(s == null ? item.source : s.name);
+		storeName.setInnerHTML((s == null || s.name == null || s.name.length() == 0) ? item.source.toUpperCase() + " Store": s.name);
 
 		viewInStore.setHref(StoreController.get().getExternalUri(item));
 

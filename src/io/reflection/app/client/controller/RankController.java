@@ -81,6 +81,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 			@Override
 			public void onSuccess(GetAllTopItemsResponse output) {
+				
 				if (output.status == StatusType.StatusTypeSuccess) {
 					if (output.pager != null) {
 						mPager = output.pager;// Set pager as the one received from the server
@@ -140,7 +141,9 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 		input.category = FilterController.get().getCategory();
 
-		input.item = item;
+		input.item = new Item();
+		input.item.externalId = item.externalId;
+		input.item.source = item.source;
 		input.listType = FilterController.get().getListTypes().get(0);
 
 		input.pager = new Pager();
@@ -195,7 +198,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 		updateRowData(0, new ArrayList<RanksGroup>());
 		updateRowCount(0, false);
-
+		
 		fetchTopItems();
 	}
 
