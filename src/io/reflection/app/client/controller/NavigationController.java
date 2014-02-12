@@ -18,6 +18,7 @@ import io.reflection.app.client.page.LinkedAccountsPage;
 import io.reflection.app.client.page.LoginPage;
 import io.reflection.app.client.page.PermissionsPage;
 import io.reflection.app.client.page.RanksPage;
+import io.reflection.app.client.page.ReadyToStartPage;
 import io.reflection.app.client.page.RegisterPage;
 import io.reflection.app.client.page.RequestInvitePage;
 import io.reflection.app.client.page.RolesPage;
@@ -62,6 +63,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 	private ThankYouPage mThankYouPage = null;
 	private WelcomePage mWelcomePage = null;
 	private LinkItunesPage mLinkItunesPage = null;
+	private ReadyToStartPage mReadyToStartPage = null;
 
 	private Header mHeader = null;
 	private Footer mFooter = null;
@@ -118,7 +120,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 
 		if (mPanel == null) {
 			mPanel = new HTMLPanel("<!-- pages go here -->");
-			mPanel.setStyleName("container");
+			mPanel.setStyleName("container-fluid");
 			mPanel.getElement().setAttribute("style", "padding: 70px 0px 40px 0px;");
 		}
 
@@ -319,7 +321,18 @@ public class NavigationController implements ValueChangeHandler<String> {
 			mPanel.clear();
 			mPanel.add(mLinkItunesPage);
 		}
-	}	
+	}
+	
+	public void addReadyToStartPage() {
+		if (mReadyToStartPage == null) {
+			mReadyToStartPage = new ReadyToStartPage();
+		}
+
+		if (!mReadyToStartPage.isAttached()) {
+			mPanel.clear();
+			mPanel.add(mReadyToStartPage);
+		}
+	}
 	
 	/**
 	 * @param value
@@ -383,7 +396,9 @@ public class NavigationController implements ValueChangeHandler<String> {
 		} else if ("welcome".equals(mStack.getPage())) {
 			addWelcomePage();		
 		} else if ("linkitunes".equals(mStack.getPage())) {
-			addLinkItunesPage();			
+			addLinkItunesPage();
+		} else if ("readytostart".equals(mStack.getPage())) {
+			addReadyToStartPage();				
 		} else {
 			addHomePage();
 		}
