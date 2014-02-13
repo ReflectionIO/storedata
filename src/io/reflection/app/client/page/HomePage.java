@@ -26,7 +26,6 @@ public class HomePage extends Page {
 
 	interface HomePageUiBinder extends UiBinder<Widget, HomePage> {}
 
-	@UiField Button bottone = new Button();
 	@UiField Button bottone2 = new Button();
 	@UiField Button bottone3 = new Button();
 	@UiField Button bottone4 = new Button();
@@ -35,11 +34,6 @@ public class HomePage extends Page {
 	public HomePage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-	}
-
-	@UiHandler("bottone")
-	void cliccato(ClickEvent event) {
-		History.newItem("requestinvite");
 	}
 
 	@UiHandler("bottone2")

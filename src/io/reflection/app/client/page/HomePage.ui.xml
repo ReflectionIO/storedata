@@ -5,7 +5,6 @@
     </ui:style>
     <g:HTMLPanel styleName="container">
     
-    <g:Button ui:field="bottone">Request Invite</g:Button>
     <g:Button ui:field="bottone2">Thank you</g:Button>
     <g:Button ui:field="bottone3">Welcome</g:Button>
     <g:Button ui:field="bottone4">iTunes Link</g:Button>
