@@ -8,7 +8,12 @@
 package io.reflection.app.client.page;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -21,8 +26,42 @@ public class HomePage extends Page {
 
 	interface HomePageUiBinder extends UiBinder<Widget, HomePage> {}
 
+	@UiField Button bottone = new Button();
+	@UiField Button bottone2 = new Button();
+	@UiField Button bottone3 = new Button();
+	@UiField Button bottone4 = new Button();
+	@UiField Button bottone5 = new Button();
+	
 	public HomePage() {
 		initWidget(uiBinder.createAndBindUi(this));
-	}
+		
+			initWidget(uiBinder.createAndBindUi(this));
+		}
+
+		@UiHandler("bottone")
+		void cliccato(ClickEvent event) {
+			History.newItem("requestinvite");
+		}
+
+		@UiHandler("bottone2")
+		void cliccato2(ClickEvent event) {
+			History.newItem("thankyou");
+		}
+
+		@UiHandler("bottone3")
+		void cliccato3(ClickEvent event) {
+			History.newItem("welcome");
+		}
+
+		@UiHandler("bottone4")
+		void cliccato4(ClickEvent event) {
+			History.newItem("linkitunes");
+		}
+
+		@UiHandler("bottone5")
+		void cliccato5(ClickEvent event) {
+			History.newItem("readytostart");
+		}
+
 
 }
