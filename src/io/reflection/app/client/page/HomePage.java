@@ -31,37 +31,35 @@ public class HomePage extends Page {
 	@UiField Button bottone3 = new Button();
 	@UiField Button bottone4 = new Button();
 	@UiField Button bottone5 = new Button();
-	
+
 	public HomePage() {
 		initWidget(uiBinder.createAndBindUi(this));
-		
-			initWidget(uiBinder.createAndBindUi(this));
-		}
 
-		@UiHandler("bottone")
-		void cliccato(ClickEvent event) {
-			History.newItem("requestinvite");
-		}
+	}
 
-		@UiHandler("bottone2")
-		void cliccato2(ClickEvent event) {
-			History.newItem("thankyou");
-		}
+	@UiHandler("bottone")
+	void cliccato(ClickEvent event) {
+		History.newItem("requestinvite");
+	}
 
-		@UiHandler("bottone3")
-		void cliccato3(ClickEvent event) {
-			History.newItem("welcome");
-		}
+	@UiHandler("bottone2")
+	void cliccato2(ClickEvent event) {
+		History.newItem("thankyou");
+	}
 
-		@UiHandler("bottone4")
-		void cliccato4(ClickEvent event) {
-			History.newItem("linkitunes");
-		}
+	@UiHandler("bottone3")
+	void cliccato3(ClickEvent event) {
+		History.newItem("welcome");
+	}
 
-		@UiHandler("bottone5")
-		void cliccato5(ClickEvent event) {
-			History.newItem("readytostart");
-		}
+	@UiHandler("bottone4")
+	void cliccato4(ClickEvent event) {
+		History.newItem("linkitunes");
+	}
 
+	@UiHandler("bottone5")
+	void cliccato5(ClickEvent event) {
+		History.newItem("readytostart");
+	}
 
 }
