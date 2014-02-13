@@ -9,7 +9,7 @@
 	</ui:style>
 	<g:HTMLPanel styleName="text-center {style.HtmlPanelStyle}"> <!-- CONTAINER-FLUID style -->
 
-		<div class="jumbotron col-md-12" style="padding-top: 60px; padding-bottom: 40px;">
+		<div class="jumbotron" style="padding-top: 60px; padding-bottom: 40px;">
 
 			<g:Image resource="{images.tick}" />
 
@@ -17,45 +17,47 @@
 
 			<h4 style="margin-bottom: 100px;">
 				Start by exploring the top charting apps in the
-				<a>Leaderboard</a>
+				<g:InlineHyperlink ui:field="mLeaderboard">Leaderboard</g:InlineHyperlink>
 				<br />
 				It will take a short while to add your apps to the My Apps section,
 				<br />
-				we will notify you by email when ready
+				we'll notify you by email when they're ready
 			</h4>
 
 		</div>
 
 
 
-		<div class="col-md-12" style="margin-top:50px; margin-bottom: 100px;">
-			<div class="col-md-2  col-md-offset-3">
-				<g:Image resource="{images.trowel}"></g:Image>
-				<h3>Remember, it's beta!</h3>
-				<p>
-					Our responsive web app is still under development so use this
-					opportunity to help shape a product that will disrupt the app
-					intelligence industry
-				</p>
-			</div>
-			<div class="col-md-2">
-				<g:Image resource="{images.trowel}"></g:Image>
-				<h3>We want your input</h3>
-				<p>
-					Our goal is to provide the most insightful and accurate
-					intelligence for the global dev community and we want your input to
-					help make it happen
-				</p>
-			</div>
-			<div class="col-md-2">
-				<g:Image resource="{images.trowel}"></g:Image>
-				<h3>Request features</h3>
-				<p>
-					As a member of the private beta you can request the features you
-					would most like to see in the final product
-				</p>
+		<div class="container" style="margin-top:50px; margin-bottom: 100px;">
+			<div class="row">
+				<div class="col-md-4">
+					<g:Image resource="{images.trowel}"></g:Image>
+					<h3>Remember, it's beta!</h3>
+					<p>
+						Our responsive web app is still under development so use this
+						opportunity to help shape a product that will disrupt the app
+						intelligence industry
+					</p>
+				</div>
+				<div class="col-md-4">
+					<g:Image resource="{images.bubble}"></g:Image>
+					<h3>We want your input</h3>
+					<p>
+						Our goal is to provide the most insightful and accurate
+						intelligence for the global dev community and we want your input
+						to
+						help make it happen
+					</p>
+				</div>
+				<div class="col-md-4">
+					<g:Image resource="{images.cog}"></g:Image>
+					<h3>Request features</h3>
+					<p>
+						As a member of the private beta you can request the features you
+						would most like to see in the final product
+					</p>
+				</div>
 			</div>
 		</div>
-
 	</g:HTMLPanel>
 </ui:UiBinder> 

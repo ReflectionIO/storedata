@@ -34,24 +34,47 @@
 	</ui:style>
 	<g:HTMLPanel styleName="container"> <!-- Override container-fluid assigned in NavigationController -->
 
-		<g:HTMLPanel ui:field="mPanel" styleName="row col-md-12">
-			<g:HTMLPanel styleName="col-md-7 text-center  {style.marginTopInfo}">
+		<g:HTMLPanel ui:field="mPanel" styleName="row">
+			<div class="col-md-6 text-center" style="margin-top: 80px;">
+
 				<g:Image resource="{images.linkAccount}" />
-				<h2 style="margin-top: 60px">Please link your iTunes Connect account</h2>
-				<p style="margin-top: 40px; margin-bottom: 40px">bla bla bla bla bla bla</p>
+				<h2 style="margin-top: 30px;  margin-bottom: 70px;">Please link your iTunes Connect account</h2>
+
+				<g:Image resource="{images.linkAccountProgress}" />
+
+				<div>
+					<div class="col-md-4">
+						<h3>
+							Step 1
+						</h3>
+						<p>Sign in with your account to get started</p>
+					</div>
+					<div class="col-md-4">
+						<h3 style="color: #9780E4">
+							Step 2
+						</h3>
+						<p>Link your iTunes Connect account</p>
+					</div>
+					<div class="col-md-4">
+						<h3>
+							Step 3
+						</h3>
+						<p>Done. Welcome to the private beta</p>
+					</div>
+				</div>
 
 
 
 
-			</g:HTMLPanel>
+			</div>
 
 
 
-			<g:FormPanel styleName="well col-md-5 {style.marginTopForm}">
+			<g:FormPanel styleName="well col-md-5 col-md-offset-1 {style.marginTopForm}">
 
 				<g:HTMLPanel styleName="{style.marginTop20}">
 					<h4 class="text-center">
-						Link Your iTunes Account
+						Link Your iTunes Connect Account
 					</h4>
 					<g:HTMLPanel styleName="col-md-10 col-md-offset-1 {style.marginTop20}">
 
@@ -72,6 +95,13 @@
 								visible="false" />
 						</g:HTMLPanel>
 
+						<g:HTMLPanel ui:field="mVendorIdGroup" styleName="form-group">
+							<label>Vendor number</label>
+							<g:TextBox styleName="form-control {style.marginTop5}"
+								ui:field="mVendorId" />
+							<g:HTMLPanel styleName="{style.noteDetail}" ui:field="mVendorIdNote"
+								visible="false" />
+						</g:HTMLPanel>
 
 
 						<g:Button ui:field="mLinkAccount"

@@ -2,7 +2,7 @@
 //  ThankYouPage.java
 //  storedata
 //
-//  Created by William Shakour (stefanocapuzzi) on 10 Feb 2014.
+//  Created by Stefano Capuzzi on 10 Feb 2014.
 //  Copyright © 2014 Reflection.io Ltd. All rights reserved.
 //
 package io.reflection.app.client.page;
@@ -13,7 +13,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author stefanocapuzzi
- *
+ * 
  */
 public class ThankYouPage extends Page {
 

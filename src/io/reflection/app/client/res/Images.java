@@ -23,41 +23,53 @@ public interface Images extends ClientBundle {
 
 	@Source("spinner.gif")
 	ImageResource spinner();
-	
+
 	@Source("spinnerinfo.gif")
 	ImageResource spinnerInfo();
-	
+
 	@Source("spinnertableodd.gif")
 	ImageResource spinnerTableOdd();
-	
+
 	@Source("spinnertableeven.gif")
 	ImageResource spinnerTableEven();
-	
+
 	@Source("alarmclock.png")
 	ImageResource alarmClock();
-	
+
 	@Source("clipboard.png")
 	ImageResource clipboard();
-	
+
 	@Source("tick.png")
 	ImageResource tick();
 
 	@Source("welcomelogo.png")
 	ImageResource welcomeLogo();
-	
+
 	@Source("linkaccount.png")
 	ImageResource linkAccount();
 
 	@Source("buttonarrowwhite.png")
 	ImageResource buttonArrowWhite();
-	
+
 	@Source("buttonlinkedaccount.png")
 	ImageResource buttonLinkedAccount();
-	
+
 	@Source("buttonlogin.png")
 	ImageResource buttonLogin();
-	
+
+	@Source("welcomeprogress.png")
+	ImageResource welcomeProgress();
+
+	@Source("linkaccountprogress.png")
+	ImageResource linkAccountProgress();
+
 	@Source("trowel.png")
 	ImageResource trowel();
-	
+
+	@Source("bubble.png")
+	ImageResource bubble();
+
+	@Source("cog.png")
+	ImageResource cog();
+
 }

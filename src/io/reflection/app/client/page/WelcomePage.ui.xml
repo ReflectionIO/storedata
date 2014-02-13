@@ -8,11 +8,7 @@
 		margin-top: 5px;
 	}
 	
-	.marginTopInfo {
-		margin-top: 130px;
-	}
-	
-	.marginTopForm {
+	.marginTop {
 		margin-top: 80px;
 	}
 	
@@ -34,65 +30,88 @@
 	</ui:style>
 	<g:HTMLPanel styleName="container"> <!-- Override container-fluid assigned in NavigationController -->
 
-				<g:HTMLPanel ui:field="mPanel" styleName="row col-md-12">
-				
-					<g:HTMLPanel styleName="col-md-5 text-center  {style.marginTopInfo}">
-						<g:Image resource="{images.welcomeLogo}" />
-						<h2>Hello! Welcome to Reflection</h2>
-						<p style="margin-top: 40px; margin-bottom: 40px">Congratulations on becoming part of our private beta.
-							Our goal is to provide the most insightful and accurate
-							intelligence for the global dev community and you can help us to
-							achieve this.</p>
-						<p>Log in into our account get started</p>
+		<g:HTMLPanel ui:field="mPanel" styleName="row">
+
+			<div class="col-md-6 text-center" style="margin-top: 80px;">
+				<h2>Hello! Welcome to Reflection</h2>
+				<p style="margin-top: 40px; margin-bottom: 70px">Congratulations on becoming part of our private beta.
+					Our
+					goal is to provide the most insightful and accurate
+					app intelligence
+					and you can help us to
+					achieve this.</p>
+
+				<g:Image resource="{images.welcomeProgress}" />
+
+				<div>
+					<div class="col-md-4">
+						<h3 style="color: #9780E4">
+							Step 1
+						</h3>
+						<p>Sign in with your account to get started</p>
+					</div>
+					<div class="col-md-4">
+						<h3>
+							Step 2
+						</h3>
+						<p>Link your iTunes Connect account</p>
+					</div>
+					<div class="col-md-4">
+						<h3>
+							Step 3
+						</h3>
+						<p>Done. Welcome to the private beta</p>
+					</div>
+				</div>
 
 
 
+
+			</div>
+
+
+
+			<g:FormPanel styleName="row well col-md-5 col-md-offset-1 {style.marginTop} ">
+
+				<g:HTMLPanel styleName="{style.marginTop20}">
+					<h4 class="text-center">
+						Log in and get started
+					</h4>
+
+					<g:HTMLPanel styleName="col-md-10 col-md-offset-1 {style.marginTop20}">
+
+						<g:HTMLPanel ui:field="mEmailGroup" styleName="form-group">
+							<label>Email Address</label>
+							<g:TextBox styleName="form-control  {style.marginTop5}"
+								ui:field="mEmail" />
+							<g:HTMLPanel styleName="{style.noteDetail}" ui:field="mEmailNote"
+								visible="false" />
+						</g:HTMLPanel>
+
+						<g:HTMLPanel ui:field="mPasswordGroup" styleName="form-group">
+							<label>Password</label>
+							<g:PasswordTextBox styleName="form-control  {style.marginTop5}"
+								ui:field="mPassword" />
+							<g:HTMLPanel styleName="{style.noteDetail}" ui:field="mPasswordNote"
+								visible="false" />
+						</g:HTMLPanel>
+
+
+
+						<g:Button ui:field="mLogin"
+							styleName="btn btn-lg btn-primary btn-block {style.marginBottomForm} {style.marginTop30}">
+							Log In
+						</g:Button>
+
+						<h6 class="text-center" style="margin-bottom: 40px">
+							I've forgotten my
+							<g:InlineHyperlink ui:field="mForgotPassword">Password</g:InlineHyperlink>
+						</h6>
 
 					</g:HTMLPanel>
-
-					
-
-					<g:FormPanel styleName="well col-md-5 col-md-offset-1 {style.marginTopForm} ">
-
-						<g:HTMLPanel styleName="{style.marginTop20}">
-							<h4 class="text-center">
-								Log in and get started
-							</h4>
-
-							<g:HTMLPanel styleName="col-md-10 col-md-offset-1 {style.marginTop20}">
-
-								<g:HTMLPanel ui:field="mEmailGroup" styleName="form-group">
-									<label>Email Address</label>
-									<g:TextBox styleName="form-control  {style.marginTop5}"
-										ui:field="mEmail" />
-									<g:HTMLPanel styleName="{style.noteDetail}"
-										ui:field="mEmailNote" visible="false" />
-								</g:HTMLPanel>
-
-								<g:HTMLPanel ui:field="mPasswordGroup" styleName="form-group">
-									<label>Password</label>
-									<g:PasswordTextBox styleName="form-control  {style.marginTop5}"
-										ui:field="mPassword" />
-									<g:HTMLPanel styleName="{style.noteDetail}"
-										ui:field="mPasswordNote" visible="false" />
-								</g:HTMLPanel>
-
-
-
-								<g:Button ui:field="mLogin"
-									styleName="btn btn-lg btn-primary btn-block {style.marginBottomForm} {style.marginTop30}">
-									Log In
-								</g:Button>
-
-								<h6 class="text-center" style="margin-bottom: 40px">
-									I've forgotten my
-									<a>Username or Password</a>
-								</h6>
-
-							</g:HTMLPanel>
-						</g:HTMLPanel>
-					</g:FormPanel>
 				</g:HTMLPanel>
-		
+			</g:FormPanel>
+		</g:HTMLPanel>
+
 	</g:HTMLPanel>
 </ui:UiBinder> 

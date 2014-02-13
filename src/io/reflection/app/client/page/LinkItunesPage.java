@@ -45,6 +45,11 @@ public class LinkItunesPage extends Page {
 	@UiField HTMLPanel mPasswordNote;
 	private String mPasswordError;
 
+	@UiField TextBox mVendorId;
+	@UiField HTMLPanel mVendorIdGroup;
+	@UiField HTMLPanel mVendorIdNote;
+	private String mVendorIdError;
+
 	@UiField Button mLinkAccount;
 
 	Images images = GWT.create(Images.class);
@@ -57,6 +62,7 @@ public class LinkItunesPage extends Page {
 		mLinkAccount.setHTML(mLinkAccount.getText() + "&nbsp;&nbsp;" + imageButtonLink);
 		mAccountUsername.getElement().setAttribute("placeholder", "Account Username");
 		mPassword.getElement().setAttribute("placeholder", "Password");
+		mVendorId.getElement().setAttribute("placeholder", "Vendor number (8xxxxxxx)");
 	}
 
 	/*
@@ -76,7 +82,7 @@ public class LinkItunesPage extends Page {
 	 * 
 	 * @param event
 	 */
-	@UiHandler({ "mAccountUsername", "mPassword" })
+	@UiHandler({ "mAccountUsername", "mPassword", "mVendorId" })
 	void onEnterKeyPressLoginFields(KeyPressEvent event) {
 		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
 			mLinkAccount.click();
@@ -99,6 +105,11 @@ public class LinkItunesPage extends Page {
 			} else {
 				FormHelper.hideNote(mPasswordGroup, mPasswordNote);
 			}
+			if (mVendorIdError != null) {
+				FormHelper.showNote(true, mVendorIdGroup, mVendorIdNote, mVendorIdError);
+			} else {
+				FormHelper.hideNote(mVendorIdGroup, mVendorIdNote);
+			}
 		}
 	}
 
@@ -108,6 +119,7 @@ public class LinkItunesPage extends Page {
 		// Retrieve fields to validate
 		String accountUsername = mAccountUsername.getText();
 		String password = mPassword.getText();
+		String vendorId = mVendorId.getText();
 
 		// Check fields constraints
 		if (accountUsername == null || accountUsername.length() == 0) {
@@ -136,6 +148,17 @@ public class LinkItunesPage extends Page {
 			validated = validated && true;
 		}
 
+		if (vendorId == null || vendorId.length() == 0) {
+			mVendorIdError = "Cannot be empty";
+			validated = false;
+		} else if (!FormHelper.isValidAppleVendorId(vendorId)) {
+			mVendorIdError = "Invalid vendor id";
+			validated = false;
+		} else {
+			mVendorIdError = null;
+			validated = validated && true;
+		}
+
 		return validated;
 	}
 
@@ -143,8 +166,10 @@ public class LinkItunesPage extends Page {
 		mPanel.setVisible(true);
 		mAccountUsername.setText("");
 		mPassword.setText("");
+		mVendorId.setText("");
 		FormHelper.hideNote(mAccountUsernameGroup, mAccountUsernameNote);
 		FormHelper.hideNote(mPasswordGroup, mPasswordNote);
+		FormHelper.hideNote(mVendorIdGroup, mVendorIdNote);
 
 		// mAlertBox.setVisible(false);
 	}

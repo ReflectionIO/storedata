@@ -25,6 +25,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.Error;
@@ -50,6 +51,8 @@ public class WelcomePage extends Page implements SessionEventHandler {
 	@UiField HTMLPanel mPasswordGroup;
 	@UiField HTMLPanel mPasswordNote;
 	private String mPasswordError = null;
+
+	@UiField InlineHyperlink mForgotPassword;
 
 	@UiField Button mLogin;
 
