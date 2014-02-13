@@ -30,7 +30,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -162,8 +161,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	public void navigationChanged(Stack stack) {
 		if (stack != null && "item".equals(stack.getPage())) {
 			if ("view".equals(stack.getAction()) && (mItemExternalId = stack.getParameter(0)) != null) {
-				Document.get().setScrollLeft(0);
-				Document.get().setScrollTop(0);
+//				Document.get().setScrollLeft(0);
+//				Document.get().setScrollTop(0);
 				
 				String mode = stack.getParameter(1);
 				

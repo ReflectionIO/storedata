@@ -78,7 +78,7 @@ public class RankSidePanel extends Composite {
 		});
 
 		mAppStore.setSelectedIndex(FormHelper.getItemIndex(mAppStore, FilterController.get().getStore().a3Code));
-		mDate.setValue(FilterController.get().getStartDate());
+		mDate.setValue(FilterController.get().getEndDate());
 		mCountry.setSelectedIndex(FormHelper.getItemIndex(mCountry, FilterController.get().getCountry().a2Code));
 		category.setSelectedIndex(FormHelper.getItemIndex(category, FilterController.get().getCategory().id.toString()));
 
@@ -102,10 +102,10 @@ public class RankSidePanel extends Composite {
 	@UiHandler("mDate")
 	void onDateValueChanged(ValueChangeEvent<Date> event) {
 		FilterController.get().start();
-		FilterController.get().setStartDate(mDate.getValue());
-		Date endDate = new Date(mDate.getValue().getTime());
-		CalendarUtil.addDaysToDate(endDate, 10);
-		FilterController.get().setEndDate(endDate);
+		FilterController.get().setEndDate(mDate.getValue());
+		Date startDate = new Date(mDate.getValue().getTime());
+		CalendarUtil.addDaysToDate(startDate, -10);
+		FilterController.get().setStartDate(startDate);
 		FilterController.get().commit();
 	}
 

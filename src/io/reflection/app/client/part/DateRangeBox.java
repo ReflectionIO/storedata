@@ -7,23 +7,22 @@
 //
 package io.reflection.app.client.part;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.datepicker.client.DateBox;
 
 /**
  * @author billy1380
  *
  */
-public class DateRangeBox extends Composite {
+public class DateRangeBox extends DateBox {
 
-	private static DateRangeBoxUiBinder uiBinder = GWT.create(DateRangeBoxUiBinder.class);
+//	private static DateRangeBoxUiBinder uiBinder = GWT.create(DateRangeBoxUiBinder.class);
 
 	interface DateRangeBoxUiBinder extends UiBinder<Widget, DateRangeBox> {}
 
-	public DateRangeBox() {
-		initWidget(uiBinder.createAndBindUi(this));
-	}
+//	public DateRangeBox() {
+//		initWidget(uiBinder.createAndBindUi(this));
+//	}
 
 }

@@ -74,7 +74,7 @@ public class RankChart extends GChart {
 
 		curve.getSymbol().setSymbolType(SymbolType.LINE);
 
-		curve.getSymbol().setBorderColor("#9780E4");
+		curve.getSymbol().setBorderColor("#6D69C5");
 		curve.getSymbol().setBorderStyle("solid");
 		curve.getSymbol().setFillThickness(2);
 
@@ -149,8 +149,8 @@ public class RankChart extends GChart {
 			if (loading) {
 				curve.clearPoints();
 
-				getXAxis().setAxisMax(FilterController.get().getStartDate().getTime());
-				getXAxis().setAxisMin(FilterController.get().getEndDate().getTime());
+				getXAxis().setAxisMax(FilterController.get().getEndDate().getTime());
+				getXAxis().setAxisMin(FilterController.get().getStartDate().getTime());
 
 				getYAxis().setAxisMax(1);
 				getYAxis().setAxisMin(400);

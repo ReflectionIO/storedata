@@ -258,7 +258,7 @@ final class RankService implements IRankService {
 		}
 
 		String getCountryStoreTypeRanksQuery = String
-				.format("SELECT * FROM `rank` WHERE %s AND `country`='%s' AND `source`='%s' AND `itemid`='%s' AND %s %s `deleted`='n' ORDER BY `date` ASC, `%s` %s LIMIT %d,%d",
+				.format("SELECT * FROM `rank` WHERE %s AND `country`='%s' AND `source`='%s' AND `itemid`='%s' AND `categoryid`=24 AND %s %s `deleted`='n' ORDER BY `date` ASC, `%s` %s LIMIT %d,%d",
 						typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), addslashes(item.externalId), beforeAfterQuery(before, after),
 						isGrossing ? "`grossingposition`<>0 AND" : "", pager.sortBy,
 						pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);

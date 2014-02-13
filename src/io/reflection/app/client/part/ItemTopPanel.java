@@ -7,16 +7,21 @@
 //
 package io.reflection.app.client.part;
 
+import io.reflection.app.client.controller.FilterController;
+
 import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.datepicker.client.DateBox;
+import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.google.gwt.user.datepicker.client.DateBox.DefaultFormat;
 
 /**
@@ -29,7 +34,7 @@ public class ItemTopPanel extends Composite {
 
 	interface ItemTopPanelUiBinder extends UiBinder<Widget, ItemTopPanel> {}
 
-	@UiField DateBox mDate;
+	@UiField DateRangeBox mDateRange;
 	@UiField ListBox mAppStore;
 	// @UiField ListBox mListType;
 	@UiField ListBox mCountry;
@@ -39,9 +44,28 @@ public class ItemTopPanel extends Composite {
 
 		BootstrapGwtDatePicker.INSTANCE.styles().ensureInjected();
 
-		mDate.setFormat(new DefaultFormat(DateTimeFormat.getFormat("dd-MM-yyyy")));
-		mDate.setValue(new Date());
-
+		mDateRange.setFormat(new DefaultFormat(DateTimeFormat.getFormat("dd-MM-yyyy")));
+		mDateRange.setValue(new Date());
+	}
+	
+	@UiHandler("mAppStore")
+	void onAppStoreValueChanged(ChangeEvent event) {
+		FilterController.get().setStore(mAppStore.getValue(mAppStore.getSelectedIndex()));
+	}
+	
+	@UiHandler("mCountry")
+	void onCountryValueChanged(ChangeEvent event) {
+		FilterController.get().setCountry(mCountry.getValue(mCountry.getSelectedIndex()));
+	}
+	
+	@UiHandler("mDateRange")
+	void onDateValueChanged(ValueChangeEvent<Date> event) {
+		FilterController.get().start();
+		FilterController.get().setEndDate(mDateRange.getValue());
+		Date startDate = new Date(mDateRange.getValue().getTime());
+		CalendarUtil.addDaysToDate(startDate, -10);
+		FilterController.get().setStartDate(startDate);
+		FilterController.get().commit();
 	}
 
 }

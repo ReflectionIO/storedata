@@ -38,7 +38,7 @@
     }
     
     .searchBox .form-control:focus {
-    	border-color: #9780E4;
+    	border-color: #6D69C5;
     }
     
     .searchBox span {
@@ -59,7 +59,7 @@
     }
     
     .navbar-header>a:HOVER>.label-default {
-        background-color: #9780E4;
+        background-color: #6D69C5;
     }
     
     .helpUs {

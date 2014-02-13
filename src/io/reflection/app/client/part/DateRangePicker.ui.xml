@@ -8,7 +8,7 @@
 	}
 	
 	.highlightRange {
-		background: #9780E4;
+		background: #6D69C5;
 		border-color: #3071A9;
 		color: white;
 	}
@@ -16,7 +16,7 @@
 	.highlightRangeBoundaries {
 		color: #fff;
 		font-weight: bold;
-		background: #9780E4;
+		background: #6D69C5;
 		border-color: #3071A9;
 		-webkit-border-radius: 4px;
 		-moz-border-radius: 4px;

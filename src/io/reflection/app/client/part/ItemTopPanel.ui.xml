@@ -1,5 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.user.datepicker.client">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.user.datepicker.client"
+    xmlns:p="urn:import:io.reflection.app.client.part">
     <ui:style>
     .inlineTable {
     	display: inline-table;
@@ -10,7 +11,7 @@
         <g:FormPanel styleName="form-inline">
             <g:HTMLPanel>
                 <div class="{style.inlineTable} input-group col-sm-3">
-                    <d:DateBox styleName="form-control" ui:field="mDate" />
+                    <p:DateRangeBox styleName="form-control" ui:field="mDateRange" />
                     <span class="input-group-addon">
                         <i class="icon-calendar"></i>
                     </span>
@@ -29,21 +30,11 @@
                     <g:item value="fr">France</g:item>
                 </g:ListBox>
 
-                <!-- <div class="btn-group btn-group-xs">
-                    <g:InlineHyperlink ui:field="m1Month" styleName="btn btn-default active">1m</g:InlineHyperlink>
-                    <g:InlineHyperlink ui:field="m3Months" styleName="btn btn-default">3m</g:InlineHyperlink>
-                    <g:InlineHyperlink ui:field="m6Months" styleName="btn btn-default">6m</g:InlineHyperlink>
-                    <g:InlineHyperlink ui:field="m1Year" styleName="btn btn-default">1y</g:InlineHyperlink>
-                    <g:InlineHyperlink ui:field="mAllTime" styleName="btn btn-default">All</g:InlineHyperlink>
-                </div>
-
-                <div class="btn-group btn-group-xs">
-                    <g:InlineHyperlink ui:field="mStandard" styleName="btn btn-default active">
-                        <span class="caret"></span>
-                        Standard
-                    </g:InlineHyperlink>
-                    <g:InlineHyperlink ui:field="mCumulative" styleName="btn btn-default">Cumulative</g:InlineHyperlink>
-                </div> -->
+                <!-- <div class="btn-group btn-group-xs"> <g:InlineHyperlink ui:field="m1Month" styleName="btn btn-default active">1m</g:InlineHyperlink> <g:InlineHyperlink 
+                    ui:field="m3Months" styleName="btn btn-default">3m</g:InlineHyperlink> <g:InlineHyperlink ui:field="m6Months" styleName="btn btn-default">6m</g:InlineHyperlink> 
+                    <g:InlineHyperlink ui:field="m1Year" styleName="btn btn-default">1y</g:InlineHyperlink> <g:InlineHyperlink ui:field="mAllTime" styleName="btn btn-default">All</g:InlineHyperlink> 
+                    </div> <div class="btn-group btn-group-xs"> <g:InlineHyperlink ui:field="mStandard" styleName="btn btn-default active"> <span class="caret"></span> Standard </g:InlineHyperlink> 
+                    <g:InlineHyperlink ui:field="mCumulative" styleName="btn btn-default">Cumulative</g:InlineHyperlink> </div> -->
 
             </g:HTMLPanel>
         </g:FormPanel>
