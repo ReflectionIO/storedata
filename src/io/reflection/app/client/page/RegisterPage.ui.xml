@@ -1,72 +1,165 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part">
-    <ui:style>
-        @external form-control;
-        
-        .noteDetail {
-        	font-size: smaller;
-        	margin-top: 5px;
-        }
-        
-        .passwordTop {
-        	border-bottom-left-radius: 0;
-        	border-bottom-right-radius: 0;
-        	margin-bottom: -1px;
-        	position: relative;
-        }
-        
-        .passwordBottom {
-        	border-top-left-radius: 0;
-        	border-top-right-radius: 0;
-        	position: relative;
-        }
-        
-        .form-control:focus {
-        	z-index: 2;
-        }
-        
-    </ui:style>
-    <g:HTMLPanel>
-        <h2>Create Account</h2>
-        
-        <p:AlertBox ui:field="mAlertBox" visible="false" />
-        
-        <g:FormPanel ui:field="mForm">
-            <g:HTMLPanel styleName="col-sm-offset-4 col-sm-4">
-                <g:HTMLPanel ui:field="mForenameGroup" styleName="form-group">
-                    <label>First name</label>
-                    <g:TextBox styleName="form-control input-lg" ui:field="mForename" />
-                    <g:HTMLPanel ui:field="mForenameNote" visible="false" styleName="{style.noteDetail}" />
-                </g:HTMLPanel>
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part">
+	<ui:with field='images' type='io.reflection.app.client.res.Images' />
+	<ui:style>
+	.noteDetail {
+		font-size: smaller;
+		margin-top: 5px;
+	}
+	
+	.marginTop5 {
+		margin-top: 5px;
+	}
+	
+	.marginTop20 {
+		margin-top: 20px;
+	}
+	
+	.marginTop30 {
+		margin-top: 30px;
+	}
+	
+	.marginTop40 {
+		margin-top: 40px;
+	}
+	
+	.marginTopForm {
+		margin-top: 80px;
+	}
+	
+	.marginBottom50 {
+		margin-bottom: 50px;
+	}
+	
+	.marginBottom40 {
+		margin-bottom: 40px;
+	}
+	
+	.image1 {
+		width: 75px;
+	}
+	
+	.image2 {
+		width: 60px;
+		margin-left: 5px;
+	}
+	
+	.marginLeftForm {
+		margin-left: 40px;
+	}
+	</ui:style>
+	<g:HTMLPanel styleName="container"> <!-- Override container-fluid assigned in NavigationController -->
+		<p:AlertBox ui:field="mAlertBox" visible="false" />
+		<g:HTMLPanel ui:field="mPanel" styleName="row col-md-12">
+			<div class="col-md-6" style="margin-top: 130px;">
+				<h2>Powerful market intelligence for the global development
+					community</h2>
+				<p style="margin-top: 40px; margin-bottom: 40px">
+					Reflection is currently in Private Beta. We have invited
+					a select
+					group of developers and publishers to get a first hand
+					look.
+				</p>
+				<g:Image resource="{images.alarmClock}" styleName="col-md-2 text-center {style.image1}" />
+				<h4 class="col-md-offset-2">Benefits of getting in early</h4>
+				<p class="col-md-offset-2">
+					Ability to request any additional feature based on our
+					data, such as forecasting and trends.
+				</p>
+				<p class="col-md-offset-2">
+					Revenue and dawnload intelligence as well as any premium
+					features
+					for free.
+				</p>
 
-                <g:HTMLPanel ui:field="mSurnameGroup" styleName="form-group">
-                    <label>Last name</label>
-                    <g:TextBox styleName="form-control input-lg" ui:field="mSurname" />
-                    <g:HTMLPanel ui:field="mSurnameNote" visible="false" styleName="{style.noteDetail}" />
-                </g:HTMLPanel>
+				<g:Image resource="{images.clipboard}"
+					styleName="col-md-2 {style.marginTop40} {style.image2}" />
+				<h4 class="col-md-offset-2" style="margin-top: 40px">What we need</h4>
+				<p class="col-md-offset-2">
+					Linking your store account so we can expand our dataset
+					<br />
+					Input on current &amp; future product features
+				</p>
 
-                <g:HTMLPanel ui:field="mCompanyGroup" styleName="form-group">
-                    <label>Company</label>
-                    <g:TextBox styleName="form-control input-lg" ui:field="mCompany" />
-                    <g:HTMLPanel ui:field="mCompanyNote" visible="false" styleName="{style.noteDetail}" />
-                </g:HTMLPanel>
+			</div>
 
-                <g:HTMLPanel ui:field="mUsernameGroup" styleName="form-group">
-                    <label>Username</label>
-                    <g:TextBox styleName="form-control input-lg" ui:field="mUsername" />
-                    <g:HTMLPanel ui:field="mUsernameNote" visible="false" styleName="{style.noteDetail}" />
-                </g:HTMLPanel>
+			<g:FormPanel
+				styleName="well col-md-5 {style.marginTopForm} {style.marginLeftForm}">
 
-                <g:HTMLPanel ui:field="mPasswordGroup" styleName="form-group">
-                    <label>Password</label>
-                    <g:PasswordTextBox styleName="form-control input-lg {style.passwordTop}" ui:field="mPassword" />
-                    <g:PasswordTextBox styleName="form-control input-lg {style.passwordBottom}" ui:field="mConfirmPassword" />
-                    <g:HTMLPanel ui:field="mPasswordNote" visible="false" styleName="{style.noteDetail}" />
-                </g:HTMLPanel>
 
-                <g:Button ui:field="mRegister" styleName="btn btn-lg btn-primary btn-block" text="Sign up" />
+				<g:HTMLPanel styleName="{style.marginTop20}">
+					<h4 class="text-center">Request Invite</h4>
+					<g:HTMLPanel styleName="col-md-10 col-md-offset-1  {style.marginTop20}">
 
-            </g:HTMLPanel>
-        </g:FormPanel>
-    </g:HTMLPanel>
+						<g:HTMLPanel ui:field="mForenameGroup" styleName="form-group">
+							<label>First name</label>
+							<g:TextBox styleName="form-control {style.marginTop5}"
+								ui:field="mForename" />
+							<g:HTMLPanel ui:field="mForenameNote" visible="false"
+								styleName="{style.noteDetail}" />
+						</g:HTMLPanel>
+
+						<g:HTMLPanel ui:field="mSurnameGroup" styleName="form-group">
+							<label>Last name</label>
+							<g:TextBox styleName="form-control {style.marginTop5}"
+								ui:field="mSurname" />
+							<g:HTMLPanel ui:field="mSurnameNote" visible="false"
+								styleName="{style.noteDetail}" />
+						</g:HTMLPanel>
+
+						<g:HTMLPanel ui:field="mCompanyGroup" styleName="form-group">
+							<label>Company</label>
+							<g:TextBox styleName="form-control {style.marginTop5}"
+								ui:field="mCompany" />
+							<g:HTMLPanel ui:field="mCompanyNote" visible="false"
+								styleName="{style.noteDetail}" />
+						</g:HTMLPanel>
+
+						<g:HTMLPanel ui:field="mEmailGroup" styleName="form-group">
+							<label>Email</label>
+							<g:TextBox styleName="form-control {style.marginTop5}"
+								ui:field="mEmail" />
+							<g:HTMLPanel ui:field="mEmailNote" visible="false"
+								styleName="{style.noteDetail}" />
+						</g:HTMLPanel>
+
+						<g:HTMLPanel ui:field="mPasswordGroup" styleName="form-group">
+							<label>Password</label>
+							<g:PasswordTextBox styleName="form-control {style.marginTop5}"
+								ui:field="mPassword" />
+							<g:HTMLPanel ui:field="mPasswordNote" visible="false"
+								styleName="{style.noteDetail}" />
+						</g:HTMLPanel>
+
+
+
+
+						<g:HTMLPanel styleName="checkbox {style.marginBottom40}">
+							<label>
+								<g:CheckBox ui:field="mTermAndCond" />
+								I agree to the
+								<g:InlineHyperlink ui:field="mTermAndCondLink">terms and
+									conditions</g:InlineHyperlink>
+							</label>
+						</g:HTMLPanel>
+
+
+
+
+						<g:Button ui:field="mRegister"
+							styleName="btn btn-lg btn-primary btn-block {style.marginBottom50}">
+							Submit
+						</g:Button>
+
+
+
+
+					</g:HTMLPanel>
+				</g:HTMLPanel>
+			</g:FormPanel>
+		</g:HTMLPanel>
+
+
+	</g:HTMLPanel>
 </ui:UiBinder> 

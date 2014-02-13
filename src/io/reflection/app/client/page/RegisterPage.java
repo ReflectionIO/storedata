@@ -14,6 +14,7 @@ import io.reflection.app.client.helper.AlertBoxHelper;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.part.AlertBox;
 import io.reflection.app.client.part.AlertBox.AlertBoxType;
+import io.reflection.app.client.res.Images;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -25,9 +26,10 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.PasswordTextBox;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.Error;
@@ -42,56 +44,69 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler {
 
 	interface RegisterPageUiBinder extends UiBinder<Widget, RegisterPage> {}
 
-	@UiField TextBox mUsername;
-	@UiField HTMLPanel mUsernameGroup;
-	@UiField HTMLPanel mUsernameNote;
-	String mUsernameError;
-
-	@UiField PasswordTextBox mPassword;
-	@UiField PasswordTextBox mConfirmPassword;
-	@UiField HTMLPanel mPasswordGroup;
-	@UiField HTMLPanel mPasswordNote;
-	String mPasswordError;
+	@UiField HTMLPanel mPanel;
 
 	@UiField TextBox mForename;
 	@UiField HTMLPanel mForenameGroup;
 	@UiField HTMLPanel mForenameNote;
-	String mForenameError;
+	private String mForenameError;
 
 	@UiField TextBox mSurname;
 	@UiField HTMLPanel mSurnameGroup;
 	@UiField HTMLPanel mSurnameNote;
-	String mSurnameError;
+	private String mSurnameError;
 
 	@UiField TextBox mCompany;
 	@UiField HTMLPanel mCompanyGroup;
 	@UiField HTMLPanel mCompanyNote;
-	String mCompanyError;
+	private String mCompanyError;
 
+	@UiField TextBox mEmail;
+	@UiField HTMLPanel mEmailGroup;
+	@UiField HTMLPanel mEmailNote;
+	private String mEmailError;
+
+	@UiField TextBox mPassword;
+	@UiField HTMLPanel mPasswordGroup;
+	@UiField HTMLPanel mPasswordNote;
+	private String mPasswordError;
+
+	@UiField CheckBox mTermAndCond;
+	@UiField InlineHyperlink mTermAndCondLink;
+	
 	@UiField Button mRegister;
-
+	
 	@UiField AlertBox mAlertBox;
+	
+	Images images = GWT.create(Images.class);
+	Image imageButton = new Image(images.buttonArrowWhite());
+	final String imageButtonLink = "<img style=\"vertical-align: 1px;\" src=\"" + imageButton.getUrl() + "\"/>";
 
-	@UiField FormPanel mForm;
 
 	public RegisterPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		mUsername.getElement().setAttribute("placeholder", "Email Address");
-		mPassword.getElement().setAttribute("placeholder", "Password");
-		mConfirmPassword.getElement().setAttribute("placeholder", "Confirm Password");
-		mForename.getElement().setAttribute("placeholder", "First name");
-		mSurname.getElement().setAttribute("placeholder", "Last name");
+		mRegister.setHTML(mRegister.getText() + "&nbsp;&nbsp;" + imageButtonLink);
+		mForename.getElement().setAttribute("placeholder", "Forename");
+		mSurname.getElement().setAttribute("placeholder", "Surname");
 		mCompany.getElement().setAttribute("placeholder", "Company");
+		mEmail.getElement().setAttribute("placeholder", "Email");
+		mPassword.getElement().setAttribute("placeholder", "Password");
 
 	}
 
+
+	@UiHandler("mTermAndCondLink")
+	void onClickTermsAndConditions(ClickEvent event){
+		
+	}
+	
 	/**
 	 * Fire the register button when pressing the 'enter' key on one of the register form fields
 	 * 
 	 * @param event
 	 */
-	@UiHandler({ "mUsername", "mPassword", "mConfirmPassword", "mForename", "mSurname", "mCompany" })
+	@UiHandler({ "mForename", "mSurname", "mCompany", "mEmail", "mPassword" })
 	void onEnterKeyPressRegisterFields(KeyPressEvent event) {
 		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
 			mRegister.click();
@@ -101,11 +116,11 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler {
 	@UiHandler("mRegister")
 	void onRegisterClicked(ClickEvent event) {
 		if (validate()) {
-			mForm.setVisible(false);
+			mPanel.setVisible(false);
 
 			AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Please wait", " - creating user account...", false).setVisible(true);
 
-			UserController.get().registerUser(mUsername.getText(), mPassword.getText(), mForename.getText(), mSurname.getText(), mCompany.getText());
+			UserController.get().registerUser(mEmail.getText(), mPassword.getText(), mForename.getText(), mSurname.getText(), mCompany.getText());
 		} else {
 			if (mForenameError != null) {
 				FormHelper.showNote(true, mForenameGroup, mForenameNote, mForenameError);
@@ -122,10 +137,10 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler {
 			} else {
 				FormHelper.hideNote(mCompanyGroup, mCompanyNote);
 			}
-			if (mUsernameError != null) {
-				FormHelper.showNote(true, mUsernameGroup, mUsernameNote, mUsernameError);
+			if (mEmailError != null) {
+				FormHelper.showNote(true, mEmailGroup, mEmailNote, mEmailError);
 			} else {
-				FormHelper.hideNote(mUsernameGroup, mUsernameNote);
+				FormHelper.hideNote(mEmailGroup, mEmailNote);
 			}
 			if (mPasswordError != null) {
 				FormHelper.showNote(true, mPasswordGroup, mPasswordNote, mPasswordError);
@@ -141,50 +156,16 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler {
 	 * @return Boolean validated
 	 */
 	private boolean validate() {
+
 		boolean validated = true;
 		// Retrieve fields to validate
 		String forename = mForename.getText();
 		String surname = mSurname.getText();
 		String company = mCompany.getText();
-		String username = mUsername.getText();
+		String email = mEmail.getText();
 		String password = mPassword.getText();
-		String confirmPassword = mConfirmPassword.getText();
 
 		// Check fields constraints
-		if (username == null || username.length() == 0) {
-			mUsernameError = "Cannot be empty";
-			validated = false;
-		} else if (username.length() < 6) {
-			mUsernameError = "Too short (minimum 6 characters)";
-			validated = false;
-		} else if (username.length() > 255) {
-			mUsernameError = "Too long (maximum 255 characters)";
-			validated = false;
-		} else if (!FormHelper.isValidEmail(username)) {
-			mUsernameError = "Invalid email address";
-			validated = false;
-		} else {
-			mUsernameError = null;
-			validated = validated && true;
-		}
-
-		if (password == null || password.length() == 0) {
-			mPasswordError = "Cannot be empty";
-			validated = false;
-		} else if (password.length() < 6) {
-			mPasswordError = "Too short (minimum 6 characters)";
-			validated = false;
-		} else if (password.length() > 64) {
-			mPasswordError = "Too long (maximum 64 characters)";
-			validated = false;
-		} else if (!password.equals(confirmPassword)) {
-			mPasswordError = "Password and confirmation should match";
-			validated = false;
-		} else {
-			mPasswordError = null;
-			validated = validated && true;
-		}
-
 		if (forename == null || forename.length() == 0) {
 			mForenameError = "Cannot be empty";
 			validated = false;
@@ -198,7 +179,6 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler {
 			mForenameError = null;
 			validated = validated && true;
 		}
-
 		if (surname == null || surname.length() == 0) {
 			mSurnameError = "Cannot be empty";
 			validated = false;
@@ -212,7 +192,6 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler {
 			mSurnameError = null;
 			validated = validated && true;
 		}
-
 		if (company == null || company.length() == 0) {
 			mCompanyError = "Cannot be empty";
 			validated = false;
@@ -226,9 +205,40 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler {
 			mCompanyError = null;
 			validated = validated && true;
 		}
+		if (email == null || email.length() == 0) {
+			mEmailError = "Cannot be empty";
+			validated = false;
+		} else if (email.length() < 6) {
+			mEmailError = "Too short (minimum 6 characters)";
+			validated = false;
+		} else if (email.length() > 255) {
+			mEmailError = "Too long (maximum 255 characters)";
+			validated = false;
+		} else if (!FormHelper.isValidEmail(email)) {
+			mEmailError = "Invalid email address";
+			validated = false;
+		} else {
+			mEmailError = null;
+			validated = validated && true;
+		}
+
+		if (password == null || password.length() == 0) {
+			mPasswordError = "Cannot be empty";
+			validated = false;
+		} else if (password.length() < 6) {
+			mPasswordError = "Too short (minimum 6 characters)";
+			validated = false;
+		} else if (password.length() > 64) {
+			mPasswordError = "Too long (maximum 64 characters)";
+			validated = false;
+		} else {
+			mPasswordError = null;
+			validated = validated && true;
+		}
 
 		return validated;
 	}
+
 
 	/*
 	 * (non-Javadoc)
@@ -247,18 +257,17 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler {
 	}
 
 	private void resetForm() {
-		mUsername.setText("");
-		mPassword.setText("");
-		mConfirmPassword.setText("");
+		mPanel.setVisible(true);
 		mForename.setText("");
 		mSurname.setText("");
 		mCompany.setText("");
-
-		FormHelper.hideNote(mUsernameGroup, mUsernameNote);
-		FormHelper.hideNote(mPasswordGroup, mPasswordNote);
+		mEmail.setText("");
+		mPassword.setText("");
 		FormHelper.hideNote(mForenameGroup, mForenameNote);
 		FormHelper.hideNote(mSurnameGroup, mSurnameNote);
 		FormHelper.hideNote(mCompanyGroup, mCompanyNote);
+		FormHelper.hideNote(mEmailGroup, mEmailNote);
+		FormHelper.hideNote(mPasswordGroup, mPasswordNote);
 
 		mAlertBox.setVisible(false);
 	}
@@ -297,7 +306,7 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler {
 		AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.DangerAlertBoxType, false, "An error occured:", "(" + error.code + ") " + error.message, true)
 				.setVisible(true);
 
-		mForm.setVisible(true);
+		mPanel.setVisible(true);
 	}
 
 }
