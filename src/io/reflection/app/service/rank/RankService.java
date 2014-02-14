@@ -612,4 +612,61 @@ final class RankService implements IRankService {
 
 		return ranks;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.rank.IRankService#getAllRanks(io.reflection.app.datatypes.shared.Country, io.reflection.app.datatypes.shared.Store,
+	 * io.reflection.app.datatypes.shared.Category, java.lang.String, java.util.Date, java.util.Date)
+	 */
+	@Override
+	public List<Rank> getAllRanks(Country country, Store store, Category category, String listType, Date start, Date end) throws DataAccessException {
+		List<Rank> ranks = new ArrayList<Rank>();
+
+		String code = getGatherCode(country, store, start, end);
+		
+		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+
+		Collector collector = CollectorFactory.getCollectorForStore(store.a3Code);
+		boolean isGrossing = collector.isGrossing(listType);
+
+		List<String> types = new ArrayList<String>();
+
+		if (isGrossing) {
+			types.addAll(collector.getCounterpartTypes(listType));
+		}
+
+		types.add(addslashes(listType));
+
+		String typesQueryPart = null;
+		if (types.size() == 1) {
+			typesQueryPart = String.format("`type`='%s'", types.get(0));
+		} else {
+			typesQueryPart = "`type` IN ('" + StringUtils.join(types, "','") + "')";
+		}
+
+		String getCountryStoreTypeRanksQuery = String
+				.format("SELECT * FROM `rank` WHERE %s AND `country`='%s' AND `source`='%s' AND `categoryid`=%d AND `code`='%s' AND `deleted`='n' LIMIT 0, 3000",
+						typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), code);
+
+		try {
+			rankConnection.connect();
+			rankConnection.executeQuery(getCountryStoreTypeRanksQuery);
+
+			while (rankConnection.fetchNextRow()) {
+				Rank rank = toRank(rankConnection);
+
+				if (rank != null) {
+					ranks.add(rank);
+				}
+			}
+
+		} finally {
+			if (rankConnection != null) {
+				rankConnection.disconnect();
+			}
+		}
+
+		return ranks;
+	}
 }

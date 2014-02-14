@@ -16,6 +16,9 @@
 
 package io.reflection.app.shared.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * SparseArrays map integers to Objects. Unlike a normal array of Objects, there can be gaps in the indices. It is intended to be more efficient than using a
  * HashMap to map Integers to Objects.
@@ -336,5 +339,18 @@ public class SparseArray<E> implements Cloneable {
 
 	private static int idealIntArraySize(int need) {
 		return idealByteArraySize(need * 4) / 4;
+	}
+	
+	public List<E> toList() {
+		List<E> list = new ArrayList<E>(mSize);
+		
+		int key = 0;
+		for(int i = 0; i < mSize; i++) {
+		   key = keyAt(i);
+		   list.add(get(key));
+		}
+		
+		return list;
+		
 	}
 }

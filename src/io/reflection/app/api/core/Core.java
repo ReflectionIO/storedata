@@ -68,6 +68,7 @@ import io.reflection.app.service.session.SessionServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.service.user.IUserService;
 import io.reflection.app.service.user.UserServiceProvider;
+import io.reflection.app.shared.util.SparseArray;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -385,84 +386,44 @@ public final class Core extends ActionHandler {
 				List<String> itemIds = new ArrayList<String>();
 				final Map<String, Rank> lookup = new HashMap<String, Rank>();
 
-				String freeListType;
-				String code = null;
-
-				List<Rank> ranks = RankServiceProvider.provide().getRanks(input.country, input.store, input.category,
-						freeListType = getFreeListName(input.store, input.listType), start, end, input.pager);
+				List<Rank> ranks = RankServiceProvider.provide().getAllRanks(input.country, input.store, input.category,
+						getGrossingListName(input.store, input.listType), start, end);
 
 				if (ranks != null && ranks.size() != 0) {
+					SparseArray<Rank> free = new SparseArray<>();
+					SparseArray<Rank> paid = new SparseArray<>();
+					SparseArray<Rank> grossing = new SparseArray<>();
+
 					for (Rank rank : ranks) {
 						if (!lookup.containsKey(rank.itemId)) {
 							itemIds.add(rank.itemId);
 							lookup.put(rank.itemId, rank);
 						}
-					}
 
-					if (code == null) {
-						code = latestCode(ranks);
-					}
+						if (rank.price.floatValue() == 0 && rank.position.intValue() > 0) {
+							free.append(rank.position.intValue(), rank);
+						}
 
-					output.freeRanks = ranks;
-				}
+						if (rank.price.floatValue() != 0 && rank.position.intValue() > 0) {
+							paid.append(rank.position.intValue(), rank);
+						}
 
-				if (code == null) {
-					ranks = RankServiceProvider.provide().getRanks(input.country, input.store, input.category, getPaidListName(input.store, input.listType),
-							start, end, input.pager);
-				} else {
-					ranks = RankServiceProvider.provide().getGatherCodeRanks(input.country, input.store, input.category,
-							getPaidListName(input.store, input.listType), code, input.pager, false);
-				}
-
-				if (ranks != null && ranks.size() != 0) {
-					for (Rank rank : ranks) {
-						if (!lookup.containsKey(rank.itemId)) {
-							itemIds.add(rank.itemId);
-							lookup.put(rank.itemId, rank);
+						if (rank.grossingPosition.intValue() != 0) {
+							grossing.append(rank.grossingPosition.intValue(), rank);
 						}
 					}
-
-					if (code == null) {
-						code = latestCode(ranks);
-					}
-
-					output.paidRanks = ranks;
-				}
-
-				if (code == null) {
-					ranks = RankServiceProvider.provide().getRanks(input.country, input.store, input.category,
-							getGrossingListName(input.store, input.listType), start, end, input.pager);
-				} else {
-					ranks = RankServiceProvider.provide().getGatherCodeRanks(input.country, input.store, input.category,
-							getGrossingListName(input.store, input.listType), code, input.pager, false);
-				}
-
-				if (ranks != null && ranks.size() != 0) {
-					for (Rank rank : ranks) {
-						if (!lookup.containsKey(rank.itemId)) {
-							itemIds.add(rank.itemId);
-							lookup.put(rank.itemId, rank);
-						}
-					}
-
-					if (code == null) {
-						code = latestCode(ranks);
-					}
-
-					output.grossingRanks = ranks;
+					
+					output.freeRanks = free.toList();
+					output.paidRanks = paid.toList();
+					output.grossingRanks = grossing.toList();
 				}
 
 				output.items = ItemServiceProvider.provide().getExternalIdItemBatch(itemIds);
 
 				output.pager = input.pager;
+
 				if (input.pager.totalCount == null && input.pager.boundless != Boolean.TRUE) {
-					if (code == null) {
-						input.pager.totalCount = RankServiceProvider.provide().getRanksCount(input.country, input.store, input.category, freeListType, start,
-								end);
-					} else {
-						input.pager.totalCount = RankServiceProvider.provide().getGatherCodeRanksCount(input.country, input.store, input.category,
-								freeListType, code);
-					}
+					input.pager.totalCount = Long.valueOf(output.freeRanks.size());
 				}
 
 				updatePager(output.pager, output.freeRanks, input.pager.totalCount);
@@ -477,22 +438,22 @@ public final class Core extends ActionHandler {
 		return output;
 	}
 
-	private String latestCode(List<Rank> ranks) {
-		String code = null;
-
-		if (ranks != null) {
-			Date latest = null;
-
-			for (Rank rank : ranks) {
-				if (latest == null || (rank.date.getTime() > latest.getTime())) {
-					latest = rank.date;
-					code = rank.code;
-				}
-			}
-		}
-
-		return code;
-	}
+//	private String latestCode(List<Rank> ranks) {
+//		String code = null;
+//
+//		if (ranks != null) {
+//			Date latest = null;
+//
+//			for (Rank rank : ranks) {
+//				if (latest == null || (rank.date.getTime() > latest.getTime())) {
+//					latest = rank.date;
+//					code = rank.code;
+//				}
+//			}
+//		}
+//
+//		return code;
+//	}
 
 	public GetItemRanksResponse getItemRanks(GetItemRanksRequest input) {
 		LOG.finer("Entering getItemRanks");
@@ -1020,34 +981,34 @@ public final class Core extends ActionHandler {
 		return output;
 	}
 
-	private String getFreeListName(Store store, String type) {
-		String listName = null;
-
-		if ("ios".equalsIgnoreCase(store.a3Code)) {
-			if ("ipad".equalsIgnoreCase(type)) {
-				listName = CollectorIOS.TOP_FREE_IPAD_APPS;
-			} else {
-				listName = CollectorIOS.TOP_FREE_APPS;
-			}
-		}
-
-		return listName;
-	}
-
-	private String getPaidListName(Store store, String type) {
-		String listName = null;
-
-		if ("ios".equalsIgnoreCase(store.a3Code)) {
-			if ("ipad".equalsIgnoreCase(type)) {
-				listName = CollectorIOS.TOP_PAID_IPAD_APPS;
-			} else {
-				listName = CollectorIOS.TOP_PAID_APPS;
-			}
-		}
-
-		return listName;
-
-	}
+//	private String getFreeListName(Store store, String type) {
+//		String listName = null;
+//
+//		if ("ios".equalsIgnoreCase(store.a3Code)) {
+//			if ("ipad".equalsIgnoreCase(type)) {
+//				listName = CollectorIOS.TOP_FREE_IPAD_APPS;
+//			} else {
+//				listName = CollectorIOS.TOP_FREE_APPS;
+//			}
+//		}
+//
+//		return listName;
+//	}
+//
+//	private String getPaidListName(Store store, String type) {
+//		String listName = null;
+//
+//		if ("ios".equalsIgnoreCase(store.a3Code)) {
+//			if ("ipad".equalsIgnoreCase(type)) {
+//				listName = CollectorIOS.TOP_PAID_IPAD_APPS;
+//			} else {
+//				listName = CollectorIOS.TOP_PAID_APPS;
+//			}
+//		}
+//
+//		return listName;
+//
+//	}
 
 	private String getGrossingListName(Store store, String type) {
 		String listName = null;
