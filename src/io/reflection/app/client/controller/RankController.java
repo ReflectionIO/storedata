@@ -12,21 +12,24 @@ import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
 import io.reflection.app.api.core.shared.call.GetItemRanksRequest;
 import io.reflection.app.api.core.shared.call.GetItemRanksResponse;
+import io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler.GetAllTopItemsFailure;
 import io.reflection.app.api.core.shared.call.event.GetItemRanksEventHandler;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.client.handler.RanksEventHandler.FetchingRanks;
 import io.reflection.app.client.handler.RanksEventHandler.ReceivedRanks;
+import io.reflection.app.client.part.datatypes.ItemRevenue;
 import io.reflection.app.client.part.datatypes.RanksGroup;
 import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.datatypes.shared.Rank;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
+import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.Range;
 import com.willshex.gson.json.service.shared.StatusType;
 
@@ -39,8 +42,9 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 	private static RankController mOne = null;
 
 	private List<RanksGroup> mRows = null;
-
 	private Pager mPager;
+
+	private ListDataProvider<ItemRevenue> itemRevenueData = new ListDataProvider<ItemRevenue>();
 
 	public static RankController get() {
 		if (mOne == null) {
@@ -73,7 +77,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 			mPager.start = Long.valueOf(0);
 			mPager.boundless = Boolean.TRUE;
 		}
-		
+
 		input.pager = mPager; // Set pager used to retrieve and format the wished items (start, number of elements, sorting order)
 
 		input.store = FilterController.get().getStore(); // Get store (iPhone, iPad ...)
@@ -83,7 +87,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 			@Override
 			public void onSuccess(GetAllTopItemsResponse output) {
-				
+
 				if (output.status == StatusType.StatusTypeSuccess) {
 					if (output.pager != null) {
 						mPager = output.pager;// Set pager as the one received from the server
@@ -113,7 +117,8 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 						r.grossing = output.grossingRanks.get(i);
 					}
 
-//					updateRowCount(mPager.totalCount.intValue(), true); // Inform the displays of the total number of items that are available. @params the new
+					// updateRowCount(mPager.totalCount.intValue(), true); // Inform the displays of the total number of items that are available. @params the
+					// new
 					// total row count, true if the count is exact, false if it is an estimate
 					updateRowData(0, mRows); // Inform the displays of the new data. @params Start index, data values
 				}
@@ -121,7 +126,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 			@Override
 			public void onFailure(Throwable caught) {
-				Window.alert("Error");
+				EventController.get().fireEventFromSource(new GetAllTopItemsFailure(input, caught), RankController.this);
 			}
 		});
 
@@ -160,6 +165,34 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 			public void onSuccess(GetItemRanksResponse output) {
 				if (output != null && output.status == StatusType.StatusTypeSuccess && output.item != null) {
 					ItemController.get().addItemToCache(output.item);
+
+					float paid = 0, iap = 0;
+					ItemRevenue itemRevenue = null;
+
+					if (itemRevenueData.getList().size() == 0) {
+						itemRevenue = new ItemRevenue();
+						itemRevenueData.getList().add(itemRevenue);
+					} else {
+						itemRevenue = itemRevenueData.getList().get(0);
+					}
+
+					float rankPaid;
+					for (Rank rank : output.ranks) {
+						if (rank.downloads != null && rank.revenue != null) {
+							paid += (rankPaid = (float) rank.downloads.intValue() * rank.price.floatValue());
+							iap += (rank.revenue.floatValue() - rankPaid);
+						}
+					}
+
+					itemRevenue.countryFlag = CountryController.get().getCountryFlat(input.country.a2Code);
+					itemRevenue.countryName = CountryController.get().getCountry(input.country.a2Code).name;
+					itemRevenue.currency = output.ranks.get(0).currency;
+					itemRevenue.iap = Float.valueOf(iap);
+					itemRevenue.paid = Float.valueOf(paid);
+					itemRevenue.percentage = Float.valueOf(100.0f);
+					itemRevenue.total = Float.valueOf(iap + paid);
+
+					itemRevenueData.refresh();
 				}
 
 				EventController.get().fireEventFromSource(new GetItemRanksEventHandler.GetItemRanksSuccess(input, output), RankController.this);
@@ -200,8 +233,15 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 		updateRowData(0, new ArrayList<RanksGroup>());
 		updateRowCount(0, false);
-		
+
 		fetchTopItems();
+	}
+
+	/**
+	 * @return
+	 */
+	public ListDataProvider<ItemRevenue> getItemRevenueDataProvider() {
+		return itemRevenueData;
 	}
 
 }

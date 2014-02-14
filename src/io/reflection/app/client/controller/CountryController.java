@@ -19,6 +19,7 @@ import java.util.Map;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Image;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**
@@ -90,5 +91,13 @@ public class CountryController implements ServiceController {
 		}
 
 		return country;
+	}
+
+	/**
+	 * @param a2Code
+	 * @return
+	 */
+	public Image getCountryFlat(String a2Code) {
+		return new Image();
 	}
 }

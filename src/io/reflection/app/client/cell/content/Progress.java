@@ -12,5 +12,6 @@ package io.reflection.app.client.cell.content;
  *
  */
 public interface Progress {
-
+	public float getPart();
+	public float getTotal();
 }

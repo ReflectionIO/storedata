@@ -17,8 +17,8 @@ public class ItemRevenue {
 	public Image countryFlag;
 	public String countryName;
 	public Float percentage;
-	public Long paid;
-	public Long iap;
-	public Long total;
+	public Float paid;
+	public Float iap;
+	public Float total;
 	public String currency;
 }

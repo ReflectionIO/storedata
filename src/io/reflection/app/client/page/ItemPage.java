@@ -10,6 +10,8 @@ package io.reflection.app.client.page;
 import io.reflection.app.api.core.shared.call.GetItemRanksRequest;
 import io.reflection.app.api.core.shared.call.GetItemRanksResponse;
 import io.reflection.app.api.core.shared.call.event.GetItemRanksEventHandler;
+import io.reflection.app.client.cell.ProgressBarCell;
+import io.reflection.app.client.cell.content.PercentageProgress;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.ItemController;
@@ -39,6 +41,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.ui.InlineHyperlink;
@@ -87,6 +90,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		mTabs.put(REVENUE_CHART_TYPE, mRevenueItem);
 		mTabs.put(DOWNLOADS_CHART_TYPE, mDownloadsItem);
 		mTabs.put(RANKING_CHART_TYPE, mRankingItem);
+		
+		RankController.get().getItemRevenueDataProvider().addDataDisplay(revenue);
 
 	}
 
@@ -100,12 +105,13 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 		};
 
-		TextColumn<ItemRevenue> percentageColumn = new TextColumn<ItemRevenue>() {
+		Column<ItemRevenue, PercentageProgress> percentageColumn = new Column<ItemRevenue, PercentageProgress>(new ProgressBarCell<PercentageProgress>()) {
 
 			@Override
-			public String getValue(ItemRevenue object) {
-				return object.percentage.toString();
+			public PercentageProgress getValue(ItemRevenue object) {
+				return new PercentageProgress(object.percentage.floatValue());
 			}
+
 		};
 
 		TextColumn<ItemRevenue> paidColumn = new TextColumn<ItemRevenue>() {
@@ -302,19 +308,23 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	 */
 	@Override
 	public void getItemRanksSuccess(GetItemRanksRequest input, GetItemRanksResponse output) {
-		if (output != null && output.status == StatusType.StatusTypeSuccess && output.ranks != null && output.ranks.size() > 0) {
-			item = output.item;
+		if (output != null && output.status == StatusType.StatusTypeSuccess) {
+			if (output.ranks != null && output.ranks.size() > 0) {
+				item = output.item;
 
-			displayItemDetails();
+				displayItemDetails();
 
-			refreshTabs();
+				refreshTabs();
 
-			historyChart.setData(output.item, output.ranks, rankingType);
+				historyChart.setData(output.item, output.ranks, rankingType);
 
-			mAlertBox.setVisible(false);
+				mAlertBox.setVisible(false);
+			} else {
+				AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.WarningAlertBoxType, false, "Warning", " - Item rank history could not be obtained!",
+						false).setVisible(true);
+			}
 		} else {
-			AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.WarningAlertBoxType, false, "Warning", " - Item rank history could not be obtained!", false)
-					.setVisible(true);
+			// do nothing
 		}
 	}
 

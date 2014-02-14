@@ -8,6 +8,7 @@
 package io.reflection.app.client.part;
 
 import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 
@@ -84,9 +85,11 @@ public class RankChart extends GChart {
 		curve.getSymbol().setBorderStyle("solid");
 		curve.getSymbol().setFillThickness(2);
 
-		curve.getSymbol().setBorderWidth(2);
-		curve.getSymbol().setWidth(15);
-		curve.getSymbol().setHeight(15);
+		curve.getSymbol().setBorderWidth(0);
+		curve.getSymbol().setWidth(12);
+		curve.getSymbol().setHeight(12);
+		
+		curve.getSymbol().setImageURL(Images.INSTANCE.symbol().getSafeUri().asString());
 
 		curve.getSymbol().setHoverSelectionWidth(1);
 		curve.getSymbol().setHoverSelectionBorderColor("silver");

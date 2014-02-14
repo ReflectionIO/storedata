@@ -3,7 +3,7 @@
 //  storedata
 //
 //  Created by William Shakour (billy1380) on 25 Nov 2013.
-//  Copyright © 2013 SPACEHOPPER STUDIOS LTD. All rights reserved.
+//  Copyright �� 2013 SPACEHOPPER STUDIOS LTD. All rights reserved.
 //
 package io.reflection.app.client.controller;
 
@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.willshex.gson.json.service.shared.Error;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -63,12 +64,15 @@ public class SessionController implements ServiceController {
 	public static SessionController get() {
 		if (mOne == null) {
 			mOne = new SessionController();
-			mOne.restoreSession();
 		}
 
 		return mOne;
 	}
 
+	private SessionController() {
+		restoreSession();
+	}
+	
 	public User getLoggedInUser() {
 		return mLoggedInUser;
 	}
@@ -406,6 +410,10 @@ public class SessionController implements ServiceController {
 							setLoggedInUser(output.session.user, output.session);
 						}
 					} else {
+						if (output.error != null && output.error.code.intValue() == 100034) {
+							History.newItem("login/timeout");
+						}
+						
 						EventController.get().fireEventFromSource(new UserLoginFailed(output.error), SessionController.this);
 					}
 				}
