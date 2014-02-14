@@ -13,8 +13,13 @@
     	/*margin-top: 20px;*/
     	
     }
+    
+    .hideOverflow {
+	   overflow: hidden;
+    }
+    
     </ui:style>
-    <g:HTMLPanel styleName="well sidebar-nav col-md-3">
+    <g:HTMLPanel styleName="well sidebar-nav col-md-3 {style.hideOverflow}">
         <g:Image ui:field="mImage" styleName="img-rounded" />
 
         <h2 ui:field="mTitle">Item</h2>

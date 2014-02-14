@@ -76,12 +76,8 @@ public class RankSidePanel extends Composite {
 				mDate.getDatePicker().setTransientEnabledOnDates(false, dates);
 			}
 		});
-
-		mAppStore.setSelectedIndex(FormHelper.getItemIndex(mAppStore, FilterController.get().getStore().a3Code));
-		mDate.setValue(FilterController.get().getEndDate());
-		mCountry.setSelectedIndex(FormHelper.getItemIndex(mCountry, FilterController.get().getCountry().a2Code));
-		category.setSelectedIndex(FormHelper.getItemIndex(category, FilterController.get().getCategory().id.toString()));
-
+		
+		updateFromFilter();
 	}
 
 	@UiHandler("mAppStore")
@@ -133,7 +129,8 @@ public class RankSidePanel extends Composite {
 	}
 
 	public String getDisplayDate(String format) {
-		return DateTimeFormat.getFormat(format).format(getDate());
+		Date date = getDate();
+		return date == null ? "" : DateTimeFormat.getFormat(format).format(getDate());
 	}
 
 	public Long getCatgegory() {
@@ -145,6 +142,15 @@ public class RankSidePanel extends Composite {
 	 */
 	public Date getDate() {
 		return mDate.getValue();
+	}
+
+	private void updateFromFilter() {
+		FilterController.get().start();
+		mAppStore.setSelectedIndex(FormHelper.getItemIndex(mAppStore, FilterController.get().getStoreA3Code()));
+		mDate.setValue(FilterController.get().getEndDate());
+		mCountry.setSelectedIndex(FormHelper.getItemIndex(mCountry, FilterController.get().getCountry().a2Code));
+		category.setSelectedIndex(FormHelper.getItemIndex(category, FilterController.get().getCategory().id.toString()));
+		FilterController.get().commit();
 	}
 
 }

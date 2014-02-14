@@ -16,13 +16,16 @@ import io.reflection.app.client.controller.ItemController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.RankController;
+import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.AlertBoxHelper;
 import io.reflection.app.client.part.AlertBox;
 import io.reflection.app.client.part.AlertBox.AlertBoxType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.ItemSidePanel;
+import io.reflection.app.client.part.ItemTopPanel;
 import io.reflection.app.client.part.RankChart;
+import io.reflection.app.client.part.RankChart.RankingType;
 import io.reflection.app.client.part.datatypes.ItemRevenue;
 import io.reflection.app.datatypes.shared.Item;
 
@@ -42,7 +45,7 @@ import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
 
-public class ItemPage extends Page implements NavigationEventHandler, GetItemRanksEventHandler {
+public class ItemPage extends Page implements NavigationEventHandler, GetItemRanksEventHandler, FilterEventHandler {
 
 	private static ItemPageUiBinder uiBinder = GWT.create(ItemPageUiBinder.class);
 
@@ -50,6 +53,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 	@UiField AlertBox mAlertBox;
 	@UiField ItemSidePanel mSidePanel;
+	@UiField ItemTopPanel mTopPanel;
 
 	@UiField InlineHyperlink mRevenue;
 	@UiField InlineHyperlink mDownloads;
@@ -60,13 +64,14 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField LIElement mRankingItem;
 
 	@UiField RankChart historyChart;
-	
+
 	@UiField(provided = true) CellTable<ItemRevenue> revenue = new CellTable<ItemRevenue>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
 
 	private String mItemExternalId;
 	private String mChartType = RANKING_CHART_TYPE;
-	
-	private RankChart.Mode mode;
+
+	private RankingType rankingType;
+	private Item item;
 
 	private static final String REVENUE_CHART_TYPE = "revenue";
 	private static final String DOWNLOADS_CHART_TYPE = "downloads";
@@ -78,13 +83,13 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		initWidget(uiBinder.createAndBindUi(this));
 
 		createColumns();
-		
+
 		mTabs.put(REVENUE_CHART_TYPE, mRevenueItem);
 		mTabs.put(DOWNLOADS_CHART_TYPE, mDownloadsItem);
 		mTabs.put(RANKING_CHART_TYPE, mRankingItem);
-		
+
 	}
-	
+
 	private void createColumns() {
 		TextColumn<ItemRevenue> countryColumn = new TextColumn<ItemRevenue>() {
 
@@ -96,31 +101,31 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		};
 
 		TextColumn<ItemRevenue> percentageColumn = new TextColumn<ItemRevenue>() {
-			
+
 			@Override
 			public String getValue(ItemRevenue object) {
 				return object.percentage.toString();
 			}
 		};
-		
+
 		TextColumn<ItemRevenue> paidColumn = new TextColumn<ItemRevenue>() {
-			
+
 			@Override
 			public String getValue(ItemRevenue object) {
 				return object.currency + " " + Double.toString(object.paid.doubleValue() / 100);
 			}
-		}; 
-		
+		};
+
 		TextColumn<ItemRevenue> iapColumn = new TextColumn<ItemRevenue>() {
-			
+
 			@Override
 			public String getValue(ItemRevenue object) {
 				return object.currency + " " + Double.toString(object.iap.doubleValue() / 100);
 			}
 		};
-		
+
 		TextColumn<ItemRevenue> totalColumn = new TextColumn<ItemRevenue>() {
-			
+
 			@Override
 			public String getValue(ItemRevenue object) {
 				return object.currency + " " + Double.toString(object.total.doubleValue() / 100);
@@ -154,40 +159,42 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		// register(EventController.get().addHandlerToSource(SearchForItemEventHandler.TYPE, ItemController.get(), this));
+		register(EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
 		register(EventController.get().addHandlerToSource(GetItemRanksEventHandler.TYPE, RankController.get(), this));
+
 	}
 
 	@Override
 	public void navigationChanged(Stack stack) {
 		if (stack != null && "item".equals(stack.getPage())) {
 			if ("view".equals(stack.getAction()) && (mItemExternalId = stack.getParameter(0)) != null) {
-//				Document.get().setScrollLeft(0);
-//				Document.get().setScrollTop(0);
-				
+				// Document.get().setScrollLeft(0);
+				// Document.get().setScrollTop(0);
+
 				String mode = stack.getParameter(1);
-				
+
 				FilterController.get().setListType(mode);
-				
-				Item item = null;
+
+				item = null;
 
 				mRevenue.setTargetHistoryToken("item/view/" + mItemExternalId + "/" + mode);
 				mDownloads.setTargetHistoryToken("item/view/" + mItemExternalId + "/" + mode);
 				mRanking.setTargetHistoryToken("item/view/" + mItemExternalId + "/" + mode);
 
 				if ((item = ItemController.get().lookupItem(mItemExternalId)) != null) {
-					displayItemDetails(item);
+					displayItemDetails();
 				} else {
 					item = new Item();
 					item.externalId = mItemExternalId;
 					item.source = FilterController.get().getStore().a3Code;
-					
+
 					AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Getting details", " - This will only take a few seconds...",
 							false).setVisible(true);
 				}
-				
-				this.mode = RankChart.Mode.fromString(mode);
-				
-				getHistoryChartData(item);
+
+				rankingType = RankingType.fromString(mode);
+
+				getHistoryChartData();
 
 				// AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.SuccessAlertBoxType, false, "Item",
 				// " - Normally we would display items details for (" + view + ").", false).setVisible(true);
@@ -199,7 +206,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 	}
 
-	private void displayItemDetails(Item item) {
+	private void displayItemDetails() {
 		mAlertBox.setVisible(false);
 
 		mSidePanel.setItem(item);
@@ -296,11 +303,13 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public void getItemRanksSuccess(GetItemRanksRequest input, GetItemRanksResponse output) {
 		if (output != null && output.status == StatusType.StatusTypeSuccess && output.ranks != null && output.ranks.size() > 0) {
-			displayItemDetails(output.item);
+			item = output.item;
+
+			displayItemDetails();
 
 			refreshTabs();
 
-			historyChart.setData(output.item, output.ranks, mode);
+			historyChart.setData(output.item, output.ranks, rankingType);
 
 			mAlertBox.setVisible(false);
 		} else {
@@ -322,14 +331,35 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				.setVisible(true);
 	}
 
-	private void getHistoryChartData(Item item) {
-		AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Getting History",
-				" - Please wait while we fetch the rank history for the selected item", false).setVisible(true);
-		
-		historyChart.setLoading(true);
+	private void getHistoryChartData() {
+		if (item != null) {
+			AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Getting History",
+					" - Please wait while we fetch the rank history for the selected item", false).setVisible(true);
 
-		RankController.get().fetchItemRanks(item);
+			historyChart.setLoading(true);
 
+			RankController.get().fetchItemRanks(item);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamChanged(java.lang.String, java.lang.Object, java.lang.Object)
+	 */
+	@Override
+	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
+		getHistoryChartData();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamsChanged(java.util.Map, java.util.Map)
+	 */
+	@Override
+	public void filterParamsChanged(Map<String, ?> currentValues, Map<String, ?> previousValues) {
+		getHistoryChartData();
 	}
 
 }

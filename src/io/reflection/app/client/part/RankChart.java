@@ -17,21 +17,27 @@ import com.googlecode.gchart.client.GChart;
 
 public class RankChart extends GChart {
 
-	public enum Mode {
-		PositionMode,
-		GrossingPositionMode;
+	public enum XAxisDataType {
+		RevenueXAxisDataType,
+		DownloadsXAxisDataType,
+		RankingXAxisDataType;
+	}
+
+	public enum RankingType {
+		PositionRankingType,
+		GrossingPositionRankingType;
 
 		/**
 		 * @param value
 		 * @return
 		 */
-		public static Mode fromString(String value) {
-			Mode mode = null;
+		public static RankingType fromString(String value) {
+			RankingType mode = null;
 
 			if ("grossing".equals(value)) {
-				mode = GrossingPositionMode;
+				mode = GrossingPositionRankingType;
 			} else if ("free".equals(value) || "paid".equals(value)) {
-				mode = PositionMode;
+				mode = PositionRankingType;
 			}
 
 			return mode;
@@ -93,7 +99,10 @@ public class RankChart extends GChart {
 		curve.getSymbol().setHoverYShift(10);
 		curve.getSymbol().setHoverXShift(5);
 
-		curve.getSymbol().setHoverWidget(new RankHover());
+		RankHover hoverWidget = new RankHover();
+		hoverWidget.setXAxisDataType(XAxisDataType.RankingXAxisDataType);
+		
+		curve.getSymbol().setHoverWidget(hoverWidget);
 
 		// tall brush so it touches independent of mouse y position
 		curve.getSymbol().setBrushSize(25, 200);
@@ -102,12 +111,12 @@ public class RankChart extends GChart {
 
 	}
 
-	public void setData(Item item, List<Rank> ranks, Mode mode) {
+	public void setData(Item item, List<Rank> ranks, RankingType mode) {
 
 		int minY = 400, maxY = 0;
 		int position;
 		for (Rank rank : ranks) {
-			position = mode == Mode.PositionMode ? rank.position.intValue() : rank.grossingPosition.intValue();
+			position = mode == RankingType.PositionRankingType ? rank.position.intValue() : rank.grossingPosition.intValue();
 
 			if (position < minY) {
 				minY = position;
@@ -160,4 +169,5 @@ public class RankChart extends GChart {
 			update();
 		}
 	}
+
 }

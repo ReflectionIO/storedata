@@ -346,6 +346,7 @@
         <xsd:attribute name="sortBy" type="xsd:string" />
         <xsd:attribute name="sortDirection" type="SortDirectionType" />
         <xsd:attribute name="totalCount" type="xsd:long" />
+        <xsd:attribute name="boundless" type="xsd:boolean" />
     </xsd:complexType>
 
     <xsd:simpleType name="SortDirectionType">

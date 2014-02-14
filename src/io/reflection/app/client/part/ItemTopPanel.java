@@ -8,6 +8,7 @@
 package io.reflection.app.client.part;
 
 import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.helper.FormHelper;
 
 import java.util.Date;
 
@@ -46,6 +47,8 @@ public class ItemTopPanel extends Composite {
 
 		mDateRange.setFormat(new DefaultFormat(DateTimeFormat.getFormat("dd-MM-yyyy")));
 		mDateRange.setValue(new Date());
+		
+		updateFromFilter();
 	}
 	
 	@UiHandler("mAppStore")
@@ -65,6 +68,14 @@ public class ItemTopPanel extends Composite {
 		Date startDate = new Date(mDateRange.getValue().getTime());
 		CalendarUtil.addDaysToDate(startDate, -10);
 		FilterController.get().setStartDate(startDate);
+		FilterController.get().commit();
+	}
+
+	private void updateFromFilter() {
+		FilterController.get().start();
+		mAppStore.setSelectedIndex(FormHelper.getItemIndex(mAppStore, FilterController.get().getStoreA3Code()));
+		mDateRange.setValue(FilterController.get().getEndDate());
+		mCountry.setSelectedIndex(FormHelper.getItemIndex(mCountry, FilterController.get().getCountry().a2Code));
 		FilterController.get().commit();
 	}
 

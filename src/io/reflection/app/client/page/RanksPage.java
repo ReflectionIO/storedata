@@ -121,10 +121,6 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 
 		RankController.get().addDataDisplay(mRanks);
 		mPager.setDisplay(mRanks);
-
-		refreshBreadcrumbs();
-
-		refreshTabs();
 	}
 
 	private void createColumns() {
@@ -209,17 +205,17 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 		mGrossingHeader = new TextHeader("Grossing");
 		mRanks.addColumn(mGrossingColumn, mGrossingHeader);
 
-		mPriceHeader = new TextHeader("Price");
-		mRanks.addColumn(mPriceColumn, mPriceHeader);
-
-		mDownloadsHeader = new TextHeader("Downloads");
-		mRanks.addColumn(mDownloadsColumn, mDownloadsHeader);
-
-		mRevenueHeader = new TextHeader("Revenue");
-		mRanks.addColumn(mRevenueColumn, mRevenueHeader);
-
-		mIapHeader = new TextHeader("IAP");
-		mRanks.addColumn(mIapColumn, mIapHeader);
+//		mPriceHeader = new TextHeader("Price");
+//		mRanks.addColumn(mPriceColumn, mPriceHeader);
+//
+//		mDownloadsHeader = new TextHeader("Downloads");
+//		mRanks.addColumn(mDownloadsColumn, mDownloadsHeader);
+//
+//		mRevenueHeader = new TextHeader("Revenue");
+//		mRanks.addColumn(mRevenueColumn, mRevenueHeader);
+//
+//		mIapHeader = new TextHeader("IAP");
+//		mRanks.addColumn(mIapColumn, mIapHeader);
 
 	}
 
@@ -484,12 +480,17 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 	@Override
 	protected void onAttach() {
 		super.onAttach();
-
+		
 		register(EventController.get().addHandlerToSource(RanksEventHandler.TYPE, RankController.get(), this));
 		register(EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
 		register(EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
 		register(EventController.get().addHandlerToSource(IsAuthorisedEventHandler.TYPE, SessionController.get(), this));
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+		
+		refreshBreadcrumbs();
+
+		refreshTabs();
+
 	}
 
 }

@@ -35,7 +35,7 @@ public class FilterController {
 
 	private static FilterController mOne = null;
 
-	private boolean mInTransaction = false;
+	private int mInTransaction = 0;
 
 	private Map<String, Object> mPreviousValues;
 	private Map<String, Object> mCurrentValues = new HashMap<String, Object>();
@@ -66,15 +66,15 @@ public class FilterController {
 			String previousStore = (String) mCurrentValues.get(STORE_KEY);
 			mCurrentValues.put(STORE_KEY, store);
 
-			if (mInTransaction) {
+			if (mInTransaction == 0) {
+				EventController.get().fireEventFromSource(
+						new FilterEventHandler.ChangedFilterParameter<String>(STORE_KEY, (String) mCurrentValues.get(STORE_KEY), previousStore), this);
+			} else {
 				if (mPreviousValues == null) {
 					mPreviousValues = new HashMap<String, Object>();
 				}
 
 				mPreviousValues.put(STORE_KEY, previousStore);
-			} else {
-				EventController.get().fireEventFromSource(
-						new FilterEventHandler.ChangedFilterParameter<String>(STORE_KEY, (String) mCurrentValues.get(STORE_KEY), previousStore), this);
 			}
 		}
 	}
@@ -84,15 +84,15 @@ public class FilterController {
 			String previousCountry = (String) mCurrentValues.get(COUNTRY_KEY);
 			mCurrentValues.put(COUNTRY_KEY, country);
 
-			if (mInTransaction) {
+			if (mInTransaction == 0) {
+				EventController.get().fireEventFromSource(
+						new FilterEventHandler.ChangedFilterParameter<String>(COUNTRY_KEY, (String) mCurrentValues.get(COUNTRY_KEY), previousCountry), this);
+			} else {
 				if (mPreviousValues == null) {
 					mPreviousValues = new HashMap<String, Object>();
 				}
 
 				mPreviousValues.put(COUNTRY_KEY, previousCountry);
-			} else {
-				EventController.get().fireEventFromSource(
-						new FilterEventHandler.ChangedFilterParameter<String>(COUNTRY_KEY, (String) mCurrentValues.get(COUNTRY_KEY), previousCountry), this);
 			}
 		}
 	}
@@ -102,16 +102,16 @@ public class FilterController {
 			String previousListType = (String) mCurrentValues.get(LIST_TYPE_KEY);
 			mCurrentValues.put(LIST_TYPE_KEY, listType);
 
-			if (mInTransaction) {
+			if (mInTransaction == 0) {
+				EventController.get().fireEventFromSource(
+						new FilterEventHandler.ChangedFilterParameter<String>(LIST_TYPE_KEY, (String) mCurrentValues.get(LIST_TYPE_KEY), previousListType),
+						this);
+			} else {
 				if (mPreviousValues == null) {
 					mPreviousValues = new HashMap<String, Object>();
 				}
 
 				mPreviousValues.put(LIST_TYPE_KEY, previousListType);
-			} else {
-				EventController.get().fireEventFromSource(
-						new FilterEventHandler.ChangedFilterParameter<String>(LIST_TYPE_KEY, (String) mCurrentValues.get(LIST_TYPE_KEY), previousListType),
-						this);
 			}
 		}
 	}
@@ -165,18 +165,19 @@ public class FilterController {
 			Date previousStartDate = (Date) mCurrentValues.get(START_DATE_KEY);
 			mCurrentValues.put(START_DATE_KEY, value);
 
-			if (mInTransaction) {
+			if (mInTransaction == 0) {
+				EventController.get()
+						.fireEventFromSource(
+								new FilterEventHandler.ChangedFilterParameter<Date>(START_DATE_KEY, (Date) mCurrentValues.get(START_DATE_KEY),
+										previousStartDate), this);
+			} else {
 				if (mPreviousValues == null) {
 					mPreviousValues = new HashMap<String, Object>();
 				}
 
 				mPreviousValues.put(START_DATE_KEY, previousStartDate);
-			} else {
-				EventController.get()
-						.fireEventFromSource(
-								new FilterEventHandler.ChangedFilterParameter<Date>(START_DATE_KEY, (Date) mCurrentValues.get(START_DATE_KEY),
-										previousStartDate), this);
 			}
+
 		}
 	}
 
@@ -185,15 +186,15 @@ public class FilterController {
 			Date previousEndDate = (Date) mCurrentValues.get(END_DATE_KEY);
 			mCurrentValues.put(END_DATE_KEY, value);
 
-			if (mInTransaction) {
+			if (mInTransaction == 0) {
+				EventController.get().fireEventFromSource(
+						new FilterEventHandler.ChangedFilterParameter<Date>(END_DATE_KEY, (Date) mCurrentValues.get(END_DATE_KEY), previousEndDate), this);
+			} else {
 				if (mPreviousValues == null) {
 					mPreviousValues = new HashMap<String, Object>();
 				}
 
 				mPreviousValues.put(END_DATE_KEY, previousEndDate);
-			} else {
-				EventController.get().fireEventFromSource(
-						new FilterEventHandler.ChangedFilterParameter<Date>(END_DATE_KEY, (Date) mCurrentValues.get(END_DATE_KEY), previousEndDate), this);
 			}
 		}
 	}
@@ -218,20 +219,22 @@ public class FilterController {
 	 * 
 	 */
 	public void start() {
-		mInTransaction = true;
+		mInTransaction++;
 	}
 
 	/**
 	 * 
 	 */
 	public void commit() {
-		mInTransaction = false;
+		mInTransaction--;
 
-		if (mPreviousValues != null) {
-			EventController.get().fireEventFromSource(new FilterEventHandler.ChangedFilterParameters(mCurrentValues, mPreviousValues), this);
+		if (mInTransaction == 0) {
+			if (mPreviousValues != null) {
+				EventController.get().fireEventFromSource(new FilterEventHandler.ChangedFilterParameters(mCurrentValues, mPreviousValues), this);
+			}
+
+			mPreviousValues = null;
 		}
-
-		mPreviousValues = null;
 	}
 
 	/**
@@ -244,16 +247,17 @@ public class FilterController {
 			category.id = value;
 			mCurrentValues.put(CATEGORY_KEY, category);
 
-			if (mInTransaction) {
+			if (mInTransaction == 0) {
+				EventController.get().fireEventFromSource(
+						new FilterEventHandler.ChangedFilterParameter<Category>(CATEGORY_KEY, (Category) mCurrentValues.get(CATEGORY_KEY), previousCategory),
+						this);
+			} else {
 				if (mPreviousValues == null) {
 					mPreviousValues = new HashMap<String, Object>();
 				}
 
 				mPreviousValues.put(CATEGORY_KEY, previousCategory);
-			} else {
-				EventController.get().fireEventFromSource(
-						new FilterEventHandler.ChangedFilterParameter<Category>(CATEGORY_KEY, (Category) mCurrentValues.get(CATEGORY_KEY), previousCategory),
-						this);
+
 			}
 		}
 	}
@@ -263,5 +267,28 @@ public class FilterController {
 	 */
 	public Category getCategory() {
 		return (Category) mCurrentValues.get(CATEGORY_KEY);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		String filter = "";
+
+		for (String key : mCurrentValues.keySet()) {
+			filter += key + "/" + mCurrentValues.get(key).toString() + "/";
+		}
+
+		return filter;
+	}
+
+	/**
+	 * @return
+	 */
+	public String getStoreA3Code() {
+		return (String) mCurrentValues.get(STORE_KEY);
 	}
 }

@@ -8,6 +8,8 @@
 //
 package io.reflection.app.client.part;
 
+import io.reflection.app.client.part.RankChart.XAxisDataType;
+
 import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
@@ -33,6 +35,9 @@ public class RankHover extends Composite implements HoverUpdateable {
 	@UiField DivElement date;
 	@UiField DivElement detail;
 
+	private RankChart.XAxisDataType dataType;
+	private String currency;
+
 	public RankHover() {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
@@ -55,6 +60,18 @@ public class RankHover extends Composite implements HoverUpdateable {
 	@Override
 	public void hoverUpdate(Point hoveredOver) {
 		date.setInnerHTML(DateTimeFormat.getFormat("MMM d, yyyy").format(new Date((long) hoveredOver.getX())));
-		detail.setInnerHTML("$" + hoveredOver.getY());
+		if (dataType == XAxisDataType.RevenueXAxisDataType) {
+			detail.setInnerHTML(currency + " " + Double.toString(hoveredOver.getY()));
+		} else {
+			detail.setInnerHTML(Double.toString(hoveredOver.getY()));
+		}
+	}
+
+	public void setXAxisDataType(XAxisDataType value) {
+		dataType = value;
+	}
+
+	public void setCurrency(String value) {
+		currency = value;
 	}
 }

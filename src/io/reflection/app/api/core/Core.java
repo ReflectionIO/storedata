@@ -455,7 +455,7 @@ public final class Core extends ActionHandler {
 				output.items = ItemServiceProvider.provide().getExternalIdItemBatch(itemIds);
 
 				output.pager = input.pager;
-				if (input.pager.totalCount == null) {
+				if (input.pager.totalCount == null && input.pager.boundless != Boolean.TRUE) {
 					if (code == null) {
 						input.pager.totalCount = RankServiceProvider.provide().getRanksCount(input.country, input.store, input.category, freeListType, start,
 								end);
@@ -463,7 +463,6 @@ public final class Core extends ActionHandler {
 						input.pager.totalCount = RankServiceProvider.provide().getGatherCodeRanksCount(input.country, input.store, input.category,
 								freeListType, code);
 					}
-					input.pager.totalCount = Long.valueOf(400);
 				}
 
 				updatePager(output.pager, output.freeRanks, input.pager.totalCount);

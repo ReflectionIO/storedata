@@ -71,7 +71,9 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 			mPager = new Pager();
 			mPager.count = STEP;
 			mPager.start = Long.valueOf(0);
+			mPager.boundless = Boolean.TRUE;
 		}
+		
 		input.pager = mPager; // Set pager used to retrieve and format the wished items (start, number of elements, sorting order)
 
 		input.store = FilterController.get().getStore(); // Get store (iPhone, iPad ...)
@@ -111,7 +113,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 						r.grossing = output.grossingRanks.get(i);
 					}
 
-					updateRowCount(mPager.totalCount.intValue(), true); // Inform the displays of the total number of items that are available. @params the new
+//					updateRowCount(mPager.totalCount.intValue(), true); // Inform the displays of the total number of items that are available. @params the new
 					// total row count, true if the count is exact, false if it is an estimate
 					updateRowData(0, mRows); // Inform the displays of the new data. @params Start index, data values
 				}

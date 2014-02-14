@@ -24,6 +24,7 @@ public class Pager extends Jsonable {
 	public String sortBy;
 	public SortDirectionType sortDirection;
 	public Long totalCount;
+	public Boolean boundless;
 
 	@Override
 	public JsonObject toJson() {
@@ -38,6 +39,8 @@ public class Pager extends Jsonable {
 		object.add("sortDirection", jsonSortDirection);
 		JsonElement jsonTotalCount = totalCount == null ? JsonNull.INSTANCE : new JsonPrimitive(totalCount);
 		object.add("totalCount", jsonTotalCount);
+		JsonElement jsonBoundless = boundless == null ? JsonNull.INSTANCE : new JsonPrimitive(boundless);
+		object.add("boundless", jsonBoundless);
 		return object;
 	}
 
@@ -72,6 +75,12 @@ public class Pager extends Jsonable {
 			JsonElement jsonTotalCount = jsonObject.get("totalCount");
 			if (jsonTotalCount != null) {
 				totalCount = Long.valueOf(jsonTotalCount.getAsLong());
+			}
+		}
+		if (jsonObject.has("boundless")) {
+			JsonElement jsonBoundless = jsonObject.get("boundless");
+			if (jsonBoundless != null) {
+				boundless = Boolean.valueOf(jsonBoundless.getAsBoolean());
 			}
 		}
 	}
