@@ -62,9 +62,11 @@ public class RankHover extends Composite implements HoverUpdateable {
 	public void hoverUpdate(Point hoveredOver) {
 		date.setInnerHTML(DateTimeFormat.getFormat("MMM d, yyyy").format(new Date((long) hoveredOver.getX())));
 		if (dataType == XAxisDataType.RevenueXAxisDataType) {
-			detail.setInnerHTML(currency + " " + Double.toString(hoveredOver.getY()));
-		} else {
-			detail.setInnerHTML(Double.toString(hoveredOver.getY()));
+			detail.setInnerHTML("Revenue: " + currency + " " + Double.toString(hoveredOver.getY()));
+		} else if (dataType == XAxisDataType.DownloadsXAxisDataType) {
+			detail.setInnerHTML("Downloads: "  + Double.toString(hoveredOver.getY()));
+		} else if (dataType == XAxisDataType.RankingXAxisDataType) {
+			detail.setInnerHTML("Rank: "  + Double.toString(hoveredOver.getY()));
 		}
 	}
 
