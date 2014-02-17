@@ -1,55 +1,46 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part">
-    <ui:style>
-        .noteDetail {
-        	font-size: smaller;
-        	margin-top: 5px;
-        }
-        
-        .other_options {
-			padding: 0;
-			margin: 0;
-        }
-        
-        .other_options li {
-        	list-style: none;
-        }
-    </ui:style>
-    <g:HTMLPanel>
-        <h2>Sign In</h2>
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
+	xmlns:l="urn:import:io.reflection.app.client.part.login">
+	<ui:style>
+	.noteDetail {
+		font-size: smaller;
+		margin-top: 5px;
+	}
+	
+	.other_options {
+		padding: 0;
+		margin: 0;
+	}
+	
+	.other_options li {
+		list-style: none;
+	}
+	
+	.panelPart {
+		margin-top: 80px;
+	}
+	</ui:style>
+	<g:HTMLPanel styleName="container">  <!-- Override container-fluid assigned in NavigationController -->
 
-        <p:AlertBox ui:field="mAlertBox" visible="false" />
+		<p:AlertBox ui:field="mAlertBox" visible="false" />
 
-        <g:FormPanel ui:field="mForm">
-            <g:HTMLPanel styleName="col-sm-offset-4 col-sm-4">
-                <g:HTMLPanel ui:field="mUsernameGroup" styleName="form-group">
-                    <label>Username</label>
-                    <g:TextBox styleName="form-control input-lg" ui:field="mUsername" />
-                    <g:HTMLPanel ui:field="mUsernameNote" visible="false" styleName="{style.noteDetail}" />
-                </g:HTMLPanel>
+		<div class="row">
 
-                <g:HTMLPanel ui:field="mPasswordGroup" styleName="form-group">
-                    <label>Password</label>
-                    <g:PasswordTextBox styleName="form-control input-lg" ui:field="mPassword" />
-                    <g:HTMLPanel ui:field="mPasswordNote" visible="false" styleName="{style.noteDetail}" />
-                </g:HTMLPanel>
 
-                <g:CheckBox text="remember me" ui:field="mRememberMe" styleName="checkbox" checked="true" />
+			<l:LoginForm ui:field="mLoginForm"
+				styleName="col-sm-6 col-sm-offset-3 {style.panelPart}" />
 
-                <g:Button ui:field="mLogin" styleName="btn btn-lg btn-primary btn-block" text="Sign in" />
 
-                <br />
 
-                <ul class="{style.other_options}">
-                    <li>
-                        <g:InlineHyperlink ui:field="mRegister" text="Sign Up" targetHistoryToken="register" />
-                    </li>
-                    <li>
-                        <g:InlineHyperlink ui:field="mForgotPassword" text="Forgot Password" targetHistoryToken="forgotpassword" />
-                    </li>
-                </ul>
 
-            </g:HTMLPanel>
-        </g:FormPanel>
-    </g:HTMLPanel>
+			<l:WelcomePanel ui:field="mWelcomePanel" styleName="col-md-12 {style.panelPart}"
+				visible="false" />
+
+
+		</div>
+
+
+
+	</g:HTMLPanel>
 </ui:UiBinder> 

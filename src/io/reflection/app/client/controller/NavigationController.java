@@ -25,7 +25,6 @@ import io.reflection.app.client.page.SearchPage;
 import io.reflection.app.client.page.ThankYouPage;
 import io.reflection.app.client.page.UpgradePage;
 import io.reflection.app.client.page.UsersPage;
-import io.reflection.app.client.page.WelcomePage;
 import io.reflection.app.client.part.Footer;
 import io.reflection.app.client.part.Header;
 
@@ -59,7 +58,6 @@ public class NavigationController implements ValueChangeHandler<String> {
 	private ItemPage mItemPage = null;
 	private HomePage mHomePage = null;
 	private ThankYouPage mThankYouPage = null;
-	private WelcomePage mWelcomePage = null;
 	private LinkItunesPage mLinkItunesPage = null;
 	private ReadyToStartPage mReadyToStartPage = null;
 
@@ -126,7 +124,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 	}
 
 	/**
-	 * 
+	 * Creates the page and add it to the main panel
 	 */
 	public void addRanksPage() {
 		if (mRanksPage == null) {
@@ -140,9 +138,6 @@ public class NavigationController implements ValueChangeHandler<String> {
 
 	}
 
-	/**
-	 * 
-	 */
 	public void addFeedBrowserPage() {
 		if (mFeedBrowserPage == null) {
 			mFeedBrowserPage = new FeedBrowserPage();
@@ -288,17 +283,6 @@ public class NavigationController implements ValueChangeHandler<String> {
 		}
 	}
 
-	public void addWelcomePage() {
-		if (mWelcomePage == null) {
-			mWelcomePage = new WelcomePage();
-		}
-
-		if (!mWelcomePage.isAttached()) {
-			mPanel.clear();
-			mPanel.add(mWelcomePage);
-		}
-	}	
-
 	public void addLinkItunesPage() {
 		if (mLinkItunesPage == null) {
 			mLinkItunesPage = new LinkItunesPage();
@@ -378,8 +362,6 @@ public class NavigationController implements ValueChangeHandler<String> {
 			addItemPage();
 		} else if ("thankyou".equals(mStack.getPage())) {
 			addThankYouPage();
-		} else if ("welcome".equals(mStack.getPage())) {
-			addWelcomePage();		
 		} else if ("linkitunes".equals(mStack.getPage())) {
 			addLinkItunesPage();
 		} else if ("readytostart".equals(mStack.getPage())) {

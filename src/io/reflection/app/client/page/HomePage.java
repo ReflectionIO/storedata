@@ -27,7 +27,6 @@ public class HomePage extends Page {
 	interface HomePageUiBinder extends UiBinder<Widget, HomePage> {}
 
 	@UiField Button bottone2 = new Button();
-	@UiField Button bottone3 = new Button();
 	@UiField Button bottone4 = new Button();
 	@UiField Button bottone5 = new Button();
 
@@ -39,11 +38,6 @@ public class HomePage extends Page {
 	@UiHandler("bottone2")
 	void cliccato2(ClickEvent event) {
 		History.newItem("thankyou");
-	}
-
-	@UiHandler("bottone3")
-	void cliccato3(ClickEvent event) {
-		History.newItem("welcome");
 	}
 
 	@UiHandler("bottone4")

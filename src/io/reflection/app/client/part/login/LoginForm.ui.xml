@@ -1,0 +1,71 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style>
+	.noteDetail {
+		font-size: smaller;
+		margin-top: 5px;
+	}
+	
+	.marginTop30 {
+		margin-top: 30px;
+	}
+	
+	.marginTop20 {
+		margin-top: 20px;
+	}
+	
+	.marginBottomForm {
+		margin-bottom: 30px;
+	}
+	
+	.marginTop5 {
+		margin-top: 5px;
+	}
+	</ui:style>
+	<g:HTMLPanel>
+		<g:FormPanel styleName="well col-sm-12">
+
+			<g:HTMLPanel styleName="{style.marginTop20}">
+				<h4 class="text-center">
+					Log in and get started
+				</h4>
+
+				<g:HTMLPanel styleName="col-sm-10 col-sm-offset-1 {style.marginTop20}">
+
+					<g:HTMLPanel ui:field="mEmailGroup" styleName="form-group">
+						<label>Email Address</label>
+						<g:TextBox styleName="form-control  {style.marginTop5}"
+							ui:field="mEmail" />
+						<g:HTMLPanel styleName="{style.noteDetail}" ui:field="mEmailNote"
+							visible="false" />
+					</g:HTMLPanel>
+
+					<g:HTMLPanel ui:field="mPasswordGroup" styleName="form-group">
+						<label>Password</label>
+						<g:PasswordTextBox styleName="form-control  {style.marginTop5}"
+							ui:field="mPassword" />
+						<g:HTMLPanel styleName="{style.noteDetail}" ui:field="mPasswordNote"
+							visible="false" />
+					</g:HTMLPanel>
+
+
+					<g:CheckBox ui:field="mRememberMe"></g:CheckBox>
+
+
+					<g:Button ui:field="mLogin"
+						styleName="btn btn-lg btn-primary btn-block {style.marginBottomForm} {style.marginTop30}">
+						Log In
+					</g:Button>
+
+					<h6 class="text-center" style="margin-bottom: 40px">
+						I've forgotten my
+						<g:InlineHyperlink ui:field="mForgotPassword">Password</g:InlineHyperlink>
+					</h6>
+
+				</g:HTMLPanel>
+			</g:HTMLPanel>
+		</g:FormPanel>
+
+	</g:HTMLPanel>
+</ui:UiBinder> 
