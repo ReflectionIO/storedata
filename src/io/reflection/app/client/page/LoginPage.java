@@ -19,6 +19,7 @@ import io.reflection.app.client.part.login.WelcomePanel;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -33,6 +34,8 @@ public class LoginPage extends Page implements NavigationEventHandler {
 
 	@UiField WelcomePanel mWelcomePanel; // Welcome panel, showed when action 'welcome' is in the stack
 
+	@UiField HTMLPanel mDefaultLogin;
+	
 	@UiField LoginForm mLoginForm; // Usual login panel
 
 	@UiField AlertBox mAlertBox;
@@ -69,7 +72,8 @@ public class LoginPage extends Page implements NavigationEventHandler {
 		super.onAttach();
 
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
-
+		
+		
 	}
 
 	/*
@@ -83,15 +87,15 @@ public class LoginPage extends Page implements NavigationEventHandler {
 		if (s != null && s.hasAction()) {
 			if (s.getAction().equals("welcome")) { // If action == 'welcome', show the Welcome panel
 				mWelcomePanel.setVisible(true);
-				mLoginForm.setVisible(false);
+				mDefaultLogin.setVisible(false);
 			} else if (FormHelper.isValidEmail(s.getAction())) { // If action == email (user has been just registered to the system) attach him email to field
 				mWelcomePanel.setVisible(false);
-				mLoginForm.setVisible(true);
+				mDefaultLogin.setVisible(true);
 				mLoginForm.getEmail().setText(s.getAction());
 			}
 		} else {
 			mWelcomePanel.setVisible(false);
-			mLoginForm.setVisible(true);
+			mDefaultLogin.setVisible(true);
 		}
 
 	}

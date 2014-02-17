@@ -25,24 +25,12 @@ public class HomePage extends Page {
 	private static HomePageUiBinder uiBinder = GWT.create(HomePageUiBinder.class);
 
 	interface HomePageUiBinder extends UiBinder<Widget, HomePage> {}
-
-	@UiField Button bottone2 = new Button();
-	@UiField Button bottone4 = new Button();
+	
 	@UiField Button bottone5 = new Button();
 
 	public HomePage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-	}
-
-	@UiHandler("bottone2")
-	void cliccato2(ClickEvent event) {
-		History.newItem("thankyou");
-	}
-
-	@UiHandler("bottone4")
-	void cliccato4(ClickEvent event) {
-		History.newItem("linkitunes");
 	}
 
 	@UiHandler("bottone5")

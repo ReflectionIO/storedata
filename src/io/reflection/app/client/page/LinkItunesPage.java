@@ -17,6 +17,7 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -93,7 +94,7 @@ public class LinkItunesPage extends Page {
 	void onLinkAccountClicked(ClickEvent event) {
 		if (validate()) {
 			mPanel.setVisible(false);
-
+			History.newItem("thankyou");
 		} else {
 			if (mAccountUsernameError != null) {
 				FormHelper.showNote(true, mAccountUsernameGroup, mAccountUsernameNote, mAccountUsernameError);

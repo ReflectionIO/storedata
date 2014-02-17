@@ -1,0 +1,63 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:with field='images' type='io.reflection.app.client.res.Images' />
+	<ui:style>
+	.HtmlPanelStyle {
+		margin-top: -20px;
+	}
+	</ui:style>
+	<g:HTMLPanel styleName="text-center {style.HtmlPanelStyle}"> <!-- CONTAINER-FLUID style -->
+
+		<div class="jumbotron" style="padding-top: 60px; padding-bottom: 40px;">
+
+			<g:Image resource="{images.tick}" />
+
+			<h2 style="margin-top: 60px; margin-bottom: 20px;">That's it! You're ready to start using Reflection</h2>
+
+			<h4 style="margin-bottom: 100px;">
+				Start by exploring the top charting apps in the
+				<g:InlineHyperlink ui:field="mLeaderboard">Leaderboard</g:InlineHyperlink>
+				<br />
+				It will take a short while to add your apps to the My Apps section,
+				<br />
+				we'll notify you by email when they're ready
+			</h4>
+
+		</div>
+
+
+
+		<div class="container" style="margin-top:50px; margin-bottom: 100px;">
+			<div class="row">
+				<div class="col-md-4">
+					<g:Image resource="{images.trowel}"></g:Image>
+					<h3>Remember, it's beta!</h3>
+					<p>
+						Our responsive web app is still under development so use this
+						opportunity to help shape a product that will disrupt the app
+						intelligence industry
+					</p>
+				</div>
+				<div class="col-md-4">
+					<g:Image resource="{images.bubble}"></g:Image>
+					<h3>We want your input</h3>
+					<p>
+						Our goal is to provide the most insightful and accurate
+						intelligence for the global dev community and we want your input
+						to
+						help make it happen
+					</p>
+				</div>
+				<div class="col-md-4">
+					<g:Image resource="{images.cog}"></g:Image>
+					<h3>Request features</h3>
+					<p>
+						As a member of the private beta you can request the features you
+						would most like to see in the final product
+					</p>
+				</div>
+			</div>
+		</div>
+	</g:HTMLPanel>
+</ui:UiBinder> 

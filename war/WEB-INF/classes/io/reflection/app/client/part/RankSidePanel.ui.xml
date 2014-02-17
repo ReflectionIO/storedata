@@ -1,0 +1,99 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.user.datepicker.client">
+    <ui:style>
+    .moreMargin {
+    	margin-right: 0.2em;
+    }
+    
+    .pageTitle {
+    	padding-bottom: 30px;
+    }
+    </ui:style>
+    <g:HTMLPanel styleName="well sidebar-nav col-md-3">
+        <h2 class="{style.pageTitle}">Leaderboard</h2>
+
+        <g:FormPanel>
+            <g:HTMLPanel>
+
+                <g:HTMLPanel styleName="form-group">
+                    <label>
+                        <i class="icon-calendar"></i>
+                        Date
+                    </label>
+                    <!--<input type="text" id="datepicker"> -->
+                    <div class="input-group">
+                        <d:DateBox styleName="form-control" ui:field="mDate" />
+                        <span class="input-group-addon">
+                            <i class="icon-calendar"></i>
+                        </span>
+                    </div>
+                </g:HTMLPanel>
+
+                <!-- <g:HTMLPanel styleName="form-group"> <label>Overview</label> <g:ListBox styleName="form-control" ui:field="mListType"> <g:item value="all">All</g:item> 
+                    <g:item value="paid">Paid</g:item> <g:item value="free">Free</g:item> <g:item value="grossing">Grossing</g:item> </g:ListBox> </g:HTMLPanel> -->
+
+                <g:HTMLPanel styleName="form-group">
+                    <label>
+                        <i class="icon-globe"></i>
+                        Country
+                    </label>
+                    <g:ListBox styleName="form-control" ui:field="mCountry">
+                        <g:item value="us">United States</g:item>
+                        <g:item value="gb">United Kingdom</g:item>
+                        <g:item value="cn">China</g:item>
+                        <g:item value="de">Germany</g:item>
+                        <g:item value="fr">France</g:item>
+                    </g:ListBox>
+                </g:HTMLPanel>
+
+
+                <g:HTMLPanel styleName="form-group">
+                    <label>
+                        <i class="glyphicon glyphicon-shopping-cart {style.moreMargin}"></i>
+                        App Store
+                    </label>
+                    <g:ListBox styleName="form-control" ui:field="mAppStore">
+                        <g:item value="iph">iPhone Store</g:item>
+                        <g:item value="ipa">iPad Store</g:item>
+                    </g:ListBox>
+                </g:HTMLPanel>
+
+                <g:HTMLPanel styleName="form-group">
+                    <label>
+                        <i class="glyphicon glyphicon-folder-open {style.moreMargin}"></i>
+                        Category
+                    </label>
+                    <g:ListBox styleName="form-control" ui:field="category">
+                        <g:item value="24">All</g:item>
+                        <g:item value="19">Book</g:item>
+                        <g:item value="1"> Business</g:item>
+                        <g:item value="22">Catalogs</g:item>
+                        <g:item value="18">Education</g:item>
+                        <g:item value="17">Entertainment</g:item>
+                        <g:item value="16">Finance</g:item>
+                        <g:item value="23">Food &amp; Drink</g:item>
+                        <g:item value="15">Games</g:item>
+                        <g:item value="14">Health &amp; Fitness</g:item>
+                        <g:item value="13">Lifestyle</g:item>
+                        <g:item value="20">Medical</g:item>
+                        <g:item value="12">Music</g:item>
+                        <g:item value="11">Navigation</g:item>
+                        <g:item value="10">News</g:item>
+                        <g:item value="21">Newsstand</g:item>
+                        <g:item value="9"> Photo &amp; Video</g:item>
+                        <g:item value="8"> Productivity</g:item>
+                        <g:item value="7"> Reference</g:item>
+                        <g:item value="6"> Social Networking</g:item>
+                        <g:item value="5"> Sports</g:item>
+                        <g:item value="4"> Travel</g:item>
+                        <g:item value="3"> Utilities</g:item>
+                        <g:item value="2"> Weather</g:item>
+                    </g:ListBox>
+                </g:HTMLPanel>
+
+                <!-- <g:HTMLPanel styleName="form-group"><label>Category</label> <g:ListBox styleName="form-control" id="category"> <g:item>All Categories</g:item> 
+                    <g:item>Games</g:item> <g:item>Entertainment</g:item> <g:item>Health &amp; Fitness</g:item></g:ListBox> </g:HTMLPanel> -->
+            </g:HTMLPanel>
+        </g:FormPanel>
+    </g:HTMLPanel>
+</ui:UiBinder> 

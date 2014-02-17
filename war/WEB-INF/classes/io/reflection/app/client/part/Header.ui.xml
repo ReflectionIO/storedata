@@ -1,0 +1,187 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+    <ui:with field='res' type='io.reflection.app.client.res.Images' />
+    <ui:style>
+    @external navbar-nav, btn, form-control,navbar-header,label-default;
+    .header {
+    	background: #272833;
+    }
+    
+    .alignToImage {
+    	vertical-align: bottom;
+    }
+    
+    .navbar-nav>li>a.anchor {
+    	padding-top: 10px;
+    	padding-bottom: 10px;
+    }
+    
+    .navbar-nav>li>a.anchor img {
+    	margin-left: 5px;
+    }
+    
+    /* .searchBox {
+            		margin: 0 10px;
+                } */
+    .searchBox .btn {
+    	border-radius: 0 4px 4px 0;
+    	background-color: #080808;
+    	color: white;
+    	border-color: #080808;
+    }
+    
+    .searchBox .form-control {
+    	border-radius: 4px 0 0 4px;
+    	background-color: #080808;
+    	color: white;
+    	border-color: #080808;
+    }
+    
+    .searchBox .form-control:focus {
+    	border-color: #6D69C5;
+    }
+    
+    .searchBox span {
+    	float: left;
+    }
+    
+    .moreMargin>b {
+    	margin-right: 0.2em;
+    }
+    
+    .navbar-header>a>.label-default {
+    	font-size: 10px;
+    	background-color: #676b88;
+    	color: #101010;
+    	padding: 1px 3px;
+    	font-weight: normal;
+    	vertical-align: super;
+    }
+    
+    .navbar-header>a:HOVER>.label-default {
+        background-color: #6D69C5;
+    }
+    
+    .helpUs {
+    	padding: 5px 20px;
+    	text-align: justify;
+    }
+    
+    .widerMenu {
+		width: 250px;
+	}
+    </ui:style>
+    <g:HTMLPanel ui:field="pnlHeader" styleName="navbar navbar-inverse navbar-fixed-top {style.header}">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#home">
+                    <g:Image styleName="{style.alignToImage}" resource="{res.logo}" />&nbsp;&nbsp;Reflection
+                    <span class="label label-default">beta</span>
+                </a>
+            </div>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav" ui:field="mNavList">
+                    <li ui:field="mRanksItem">
+                        <g:InlineHyperlink ui:field="mRanksLink" targetHistoryToken="ranks">Leaderboard</g:InlineHyperlink>
+                    </li>
+
+                    <li ui:field="mUpgradeAccountItem">
+                        <g:InlineHyperlink targetHistoryToken="upgrade" ui:field="mUpgradeAccountLink" text="Pricing" />
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav" ui:field="mAdminList">
+                    <li ui:field="mAdminDropdown" class="dropdown">
+                        <g:Anchor styleName="dropdown-toggle" ui:field="mAdminButton" text="Admin" />
+                        <ul class="dropdown-menu">
+                            <li ui:field="mFeedBrowserItem">
+                                <g:InlineHyperlink ui:field="mFeedBrowserLink" targetHistoryToken="feedbrowser">Feed Browser</g:InlineHyperlink>
+                            </li>
+                            <li class="divider"></li>
+                            <li ui:field="mUsersItem">
+                                <g:InlineHyperlink ui:field="mUsersLink" targetHistoryToken="users">
+                                    Users
+                                    <span ui:field="mTotalUsers" class="badge">1+</span>
+                                </g:InlineHyperlink>
+                            </li>
+                            <li class="divider"></li>
+                            <li ui:field="mRolesItem">
+                                <g:InlineHyperlink ui:field="mRolesLink" targetHistoryToken="roles">Roles</g:InlineHyperlink>
+                            </li>
+                            <li ui:field="mPermissionsItem">
+                                <g:InlineHyperlink ui:field="mPermissionsLink" targetHistoryToken="permissions">Permissions</g:InlineHyperlink>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right" ui:field="mAccountList">
+                    <li ui:field="mRegisterItem">
+                        <g:InlineHyperlink ui:field="mRegisterLink" targetHistoryToken="register">Sign Up</g:InlineHyperlink>
+                    </li>
+                    <li ui:field="mLoginItem">
+                        <g:InlineHyperlink ui:field="mLoginLink" targetHistoryToken="login">Log In</g:InlineHyperlink>
+                    </li>
+                    <li ui:field="mAccountDropdown" class="dropdown">
+                        <g:Anchor styleName="dropdown-toggle {style.anchor}" ui:field="mAccountButton" />
+                        <ul class="dropdown-menu">
+                            <li ui:field="mLinkedAccountsItem">
+                                <g:InlineHyperlink ui:field="mLinkedAccountsLink" text="Linked accounts" />
+                            </li>
+                            <li class="divider"></li>
+                            <li ui:field="mChangeDetailsItem">
+                                <g:InlineHyperlink ui:field="mChangeDetailsLink" text="Change Details" />
+                            </li>
+                            <li ui:field="mChangePasswordItem">
+                                <g:InlineHyperlink ui:field="mChangePasswordLink" text="Change Password" />
+                            </li>
+                            <li class="divider"></li>
+                            <li ui:field="mLogoutItem">
+                                <g:InlineHyperlink targetHistoryToken="logout" ui:field="mLogoutLink" text="Sign Out" />
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <g:Anchor styleName="dropdown-toggle {style.moreMargin}" ui:field="featureRequestButton" text="Feature Requests" />
+                        <ul class="dropdown-menu {style.widerMenu}">
+                            <li class="{style.helpUs}">
+                                Help us develop a truly disruptive and groundbreaking tool. contact us and request the features you would most like to
+                                see as part of the ﬁnal product
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="mailto:gustaf@reflection.io" target="_blank" class="{style.moreMargin}">
+                                    <b class="glyphicon glyphicon-envelope"></b>
+                                    gustaf@reflection.io
+                                </a>
+                            </li>
+                            <li>
+                                <a href="callto:+44 (0) 7929 635 487" target="_blank" class="{style.moreMargin}">
+                                    <b class="glyphicon glyphicon-earphone"></b>
+                                    +44 (0) 7929 635 487
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <g:FormPanel styleName="navbar-form navbar-right">
+                    <g:HTMLPanel styleName="{style.searchBox}">
+                        <span class="form-group">
+                            <g:TextBox styleName="form-control" ui:field="mQuery" />
+                        </span>
+                        <span>
+                            <g:InlineHyperlink styleName="btn btn-default" ui:field="mSearch" targetHistoryToken="search/query" />
+                        </span>
+                    </g:HTMLPanel>
+                </g:FormPanel>
+                <span />
+
+            </div><!--/.nav-collapse -->
+        </div>
+    </g:HTMLPanel>
+</ui:UiBinder> 

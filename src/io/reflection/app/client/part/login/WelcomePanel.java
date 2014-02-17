@@ -47,7 +47,7 @@ public class WelcomePanel extends Page implements SessionEventHandler {
 		super.onAttach();
 
 		register(EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
-
+		
 	}
 
 	/*

@@ -1,0 +1,67 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
+    xmlns:c="urn:import:com.google.gwt.user.cellview.client">
+    <ui:style>
+    @external nav,nav-tabs,nav-justified;
+    .tabs {
+    	margin-bottom: 20px;
+    }
+    
+    .nav.nav-tabs.nav-justified.tabs>li>a {
+    	text-align: left;
+    }
+    
+    .floatRight {
+    	float: right;
+    }
+    
+    .pushDown {
+        margin-top: 20px; 
+	}
+    </ui:style>
+    <g:HTMLPanel>
+
+        <p:AlertBox ui:field="mAlertBox" visible="false" />
+
+        <div class="container">
+            <div class="row">
+
+                <p:ItemSidePanel ui:field="mSidePanel" />
+
+                <div class="col-sm-9">
+                    <ul class="nav nav-tabs nav-justified {style.tabs}">
+                        <li ui:field="mRevenueItem">
+                            <g:InlineHyperlink ui:field="mRevenue">
+                                Revenue
+                                <i class="{style.floatRight} icon-money"></i>
+                            </g:InlineHyperlink>
+                        </li>
+                        <li ui:field="mDownloadsItem">
+                            <g:InlineHyperlink ui:field="mDownloads">
+                                Downloads
+                                <i class="{style.floatRight} icon-download"></i>
+                            </g:InlineHyperlink>
+                        </li>
+                        <li ui:field="mRankingItem">
+                            <g:InlineHyperlink ui:field="mRanking">
+                                Ranking
+                                <i class="{style.floatRight} icon-list-numbered"></i>
+                            </g:InlineHyperlink>
+                        </li>
+                    </ul>
+
+                    <p:ItemTopPanel ui:field="mTopPanel" />
+
+                    <p:RankChart ui:field="historyChart" />
+
+                    <c:CellTable ui:field="revenue" styleName="table table-hover table-striped {style.pushDown}"></c:CellTable>
+
+                    <div class="well">
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </g:HTMLPanel>
+</ui:UiBinder> 

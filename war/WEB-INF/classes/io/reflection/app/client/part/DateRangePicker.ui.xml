@@ -1,0 +1,34 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.user.datepicker.client">
+
+	<ui:style type="io.reflection.app.client.res.Styles.ReflectionStyles">
+	.inline {
+		display: inline-block;
+	}
+	
+	.highlightRange {
+		background: #6D69C5;
+		border-color: #3071A9;
+		color: white;
+	}
+	
+	.highlightRangeBoundaries {
+		color: #fff;
+		font-weight: bold;
+		background: #6D69C5;
+		border-color: #3071A9;
+		-webkit-border-radius: 4px;
+		-moz-border-radius: 4px;
+		border-radius: 4px;
+	}
+	</ui:style>
+
+	<g:HTMLPanel>
+		<d:DatePicker styleName="gwt-DatePicker {style.inline}"
+			ui:field="mFromPicker" />
+		<d:DatePicker styleName="gwt-DatePicker {style.inline}"
+			ui:field="mToPicker" />
+	</g:HTMLPanel>
+
+</ui:UiBinder> 

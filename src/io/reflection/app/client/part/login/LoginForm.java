@@ -83,6 +83,7 @@ public class LoginForm extends Page implements SessionEventHandler {
 		resetForm();
 		register(EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
 		mEmail.setFocus(true);
+		
 	}
 
 	public TextBox getEmail() {
@@ -187,7 +188,7 @@ public class LoginForm extends Page implements SessionEventHandler {
 
 			@Override
 			public void run() {
-				History.newItem("ranks"); // After login is successful, redirect to leader-board page
+				History.newItem("linkitunes"); // After login is successful, redirect to leader-board page
 			}
 		};
 
