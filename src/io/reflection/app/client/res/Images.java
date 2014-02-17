@@ -71,8 +71,5 @@ public interface Images extends ClientBundle {
 
 	@Source("cog.png")
 	ImageResource cog();
-	
-	@Source("symbol.png")
-	ImageResource symbol();
 
 }

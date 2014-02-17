@@ -21,6 +21,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.gchart.client.GChart.Curve.Point;
 import com.googlecode.gchart.client.HoverUpdateable;
+import com.google.gwt.dom.client.Style;
 
 /**
  * @author billy1380
@@ -73,5 +74,11 @@ public class RankHover extends Composite implements HoverUpdateable {
 
 	public void setCurrency(String value) {
 		currency = value;
+	}
+	
+	public void setCssColor(String value) {
+		Style s = getElement().getStyle();
+
+		s.setBorderColor(value);
 	}
 }

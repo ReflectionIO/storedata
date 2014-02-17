@@ -8,7 +8,7 @@
     
     .box {
         background: white;
-        border-left: solid 10px #6D69C5;
+        border-left: solid 10px red;
         padding: 10px 15px;
         -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.25);
         box-shadow: 0 1px 3px rgba(0,0,0,.25);

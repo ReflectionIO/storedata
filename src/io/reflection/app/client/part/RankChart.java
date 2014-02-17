@@ -8,7 +8,7 @@
 package io.reflection.app.client.part;
 
 import io.reflection.app.client.controller.FilterController;
-import io.reflection.app.client.res.Images;
+import io.reflection.app.client.res.charts.Images;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 
@@ -45,8 +45,28 @@ public class RankChart extends GChart {
 		}
 	}
 
-	private final int WIDTH = 780;
-	private final int HEIGHT = 350;
+	public enum Colour {
+		PurpleColour("#6D69C5", Images.INSTANCE.purpleCirle().getSafeUri().asString()), ;
+
+		private String Colour;
+		private String imageUrl;
+
+		private Colour(String Colour, String imageUrl) {
+			this.Colour = Colour;
+			this.imageUrl = imageUrl;
+		}
+
+		public String getImageUrl() {
+			return imageUrl;
+		}
+
+		public String getColour() {
+			return Colour;
+		}
+	}
+
+	private static final int WIDTH = 780;
+	private static final int HEIGHT = 350;
 
 	private Curve curve;
 
@@ -81,15 +101,15 @@ public class RankChart extends GChart {
 
 		curve.getSymbol().setSymbolType(SymbolType.LINE);
 
-		curve.getSymbol().setBorderColor("#6D69C5");
+		curve.getSymbol().setBorderColor(Colour.PurpleColour.getColour());
 		curve.getSymbol().setBorderStyle("solid");
 		curve.getSymbol().setFillThickness(2);
 
 		curve.getSymbol().setBorderWidth(0);
 		curve.getSymbol().setWidth(12);
 		curve.getSymbol().setHeight(12);
-		
-		curve.getSymbol().setImageURL(Images.INSTANCE.symbol().getSafeUri().asString());
+
+		curve.getSymbol().setImageURL(Colour.PurpleColour.getImageUrl());
 
 		curve.getSymbol().setHoverSelectionWidth(1);
 		curve.getSymbol().setHoverSelectionBorderColor("silver");
@@ -103,8 +123,9 @@ public class RankChart extends GChart {
 		curve.getSymbol().setHoverXShift(5);
 
 		RankHover hoverWidget = new RankHover();
+		hoverWidget.setCssColor(Colour.PurpleColour.getColour());
 		hoverWidget.setXAxisDataType(XAxisDataType.RankingXAxisDataType);
-		
+
 		curve.getSymbol().setHoverWidget(hoverWidget);
 
 		// tall brush so it touches independent of mouse y position
@@ -116,7 +137,7 @@ public class RankChart extends GChart {
 
 	public void setData(Item item, List<Rank> ranks, RankingType mode) {
 
-		int minY = 400, maxY = 0;
+		int minY = 10000, maxY = 0;
 		int position;
 		for (Rank rank : ranks) {
 			position = mode == RankingType.PositionRankingType ? rank.position.intValue() : rank.grossingPosition.intValue();
@@ -132,15 +153,9 @@ public class RankChart extends GChart {
 			curve.addPoint(rank.date.getTime(), position);
 		}
 
-		if (minY == maxY) {
-			minY -= 4;
-			maxY += 3;
-		}
+		int factor = (int) ((float) (maxY - minY) / 7.0f) + 1;
 
-		if (minY < 1) {
-			maxY += (4 - minY);
-			minY = 1;
-		}
+		maxY = minY + (7 * factor);
 
 		getYAxis().setAxisMin(maxY);
 		getYAxis().setAxisMax(minY);
@@ -165,7 +180,7 @@ public class RankChart extends GChart {
 				getXAxis().setAxisMin(FilterController.get().getStartDate().getTime());
 
 				getYAxis().setAxisMax(1);
-				getYAxis().setAxisMin(400);
+				getYAxis().setAxisMin(8);
 				getYAxis().setTickCount(8);
 			}
 
