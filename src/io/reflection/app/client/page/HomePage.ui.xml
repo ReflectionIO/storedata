@@ -7,6 +7,8 @@
     
     <g:Button ui:field="bottone5">Ready to start</g:Button>
     
+    <g:Button ui:field="bottone6">MyApps</g:Button>
+    
         <h1>Reflection.io</h1>
         <h2>Powerful market intelligence for the global app market.</h2>
         <p>Make smarter business decisions. Access revenue, download and rank data for any app in the store.</p>

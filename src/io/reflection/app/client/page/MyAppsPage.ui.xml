@@ -1,0 +1,25 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:m="urn:import:io.reflection.app.client.part.myapps">
+	<ui:style>
+	.HtmlPanelStyle {
+		margin-top: -20px;
+	}
+	</ui:style>
+	<g:HTMLPanel styleName=""> <!-- CONTAINER-FLUID style -->
+		<div class="row" style="margin-right: 20px;">
+
+
+			<m:MyAppsSidePanel styleName="col-md-2 well {style.HtmlPanelStyle}" />
+
+			<m:Overview styleName="col-md-10" />
+
+
+		</div>
+
+
+
+
+	</g:HTMLPanel>
+</ui:UiBinder> 

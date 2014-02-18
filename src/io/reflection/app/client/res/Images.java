@@ -71,5 +71,14 @@ public interface Images extends ClientBundle {
 
 	@Source("cog.png")
 	ImageResource cog();
+	
+	@Source("app1.png")
+	ImageResource app1();
+	
+	@Source("app2.png")
+	ImageResource app2();
+	
+	@Source("app3.png")
+	ImageResource app3();
 
 }

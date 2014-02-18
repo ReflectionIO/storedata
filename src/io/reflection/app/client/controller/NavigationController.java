@@ -16,6 +16,7 @@ import io.reflection.app.client.page.ItemPage;
 import io.reflection.app.client.page.LinkItunesPage;
 import io.reflection.app.client.page.LinkedAccountsPage;
 import io.reflection.app.client.page.LoginPage;
+import io.reflection.app.client.page.MyAppsPage;
 import io.reflection.app.client.page.PermissionsPage;
 import io.reflection.app.client.page.RanksPage;
 import io.reflection.app.client.page.ReadyToStartPage;
@@ -60,6 +61,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 	private ThankYouPage mThankYouPage = null;
 	private LinkItunesPage mLinkItunesPage = null;
 	private ReadyToStartPage mReadyToStartPage = null;
+	private MyAppsPage mMyAppsPage = null;
 
 	private Header mHeader = null;
 	private Footer mFooter = null;
@@ -304,6 +306,17 @@ public class NavigationController implements ValueChangeHandler<String> {
 			mPanel.add(mReadyToStartPage);
 		}
 	}
+
+	public void addMyAppsPage() {
+		if (mMyAppsPage == null) {
+			mMyAppsPage = new MyAppsPage();
+		}
+
+		if (!mMyAppsPage.isAttached()) {
+			mPanel.clear();
+			mPanel.add(mMyAppsPage);
+		}
+	}
 	
 	/**
 	 * @param value
@@ -365,7 +378,9 @@ public class NavigationController implements ValueChangeHandler<String> {
 		} else if ("linkitunes".equals(mStack.getPage())) {
 			addLinkItunesPage();
 		} else if ("readytostart".equals(mStack.getPage())) {
-			addReadyToStartPage();				
+			addReadyToStartPage();
+		} else if ("myapps".equals(mStack.getPage())) {
+			addMyAppsPage();
 		} else {
 			addHomePage();
 		}
