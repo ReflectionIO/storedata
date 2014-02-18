@@ -15,18 +15,23 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
+import io.reflection.app.datatypes.shared.EmailTemplate;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.helpers.EmailHelper;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
+import io.reflection.app.service.emailtemplate.EmailTemplateServiceProvider;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,6 +40,8 @@ import com.spacehopperstudios.utility.StringUtils;
 final class UserService implements IUserService {
 
 	private static final String SALT = "salt.username.magic";
+	private static final long PASSWORD_EMAIL_TEMPLATE_ID = 4;
+	
 	private static final Logger LOG = Logger.getLogger(UserService.class.getName());
 
 	public String getName() {
@@ -223,7 +230,15 @@ final class UserService implements IUserService {
 			userConnection.executeQuery(updateUserPasswordQuery);
 
 			if (userConnection.getAffectedRowCount() > 0) {
-				// TODO: send email notification to the user that their password has been changed
+				Map<String, Object> values = new HashMap<String, Object>();
+				values.put("user", user);
+				
+				EmailTemplate template = EmailTemplateServiceProvider.provide().getEmailTemplate(Long.valueOf(PASSWORD_EMAIL_TEMPLATE_ID));
+				String body = EmailHelper.inflate(values, template.body);
+				
+				if (!EmailHelper.sendEmail(template.from, user.username, user.forename + " " + user.surname, template.subject, body)) {
+					LOG.severe(String.format("Failed to notify user [%d] of password change", user.id.longValue()));
+				}
 			}
 		} finally {
 			if (userConnection != null) {
@@ -467,15 +482,17 @@ final class UserService implements IUserService {
 		User user = new User();
 
 		user.id = connection.getCurrentRowLong("id");
+		user.created = connection.getCurrentRowDateTime("created");
+		user.deleted = connection.getCurrentRowString("deleted");
+		
 		user.forename = connection.getCurrentRowString("forename");
 		user.surname = connection.getCurrentRowString("surname");
 		user.username = connection.getCurrentRowString("username");
 		user.lastLoggedIn = connection.getCurrentRowDateTime("lastloggedin");
 		user.avatar = connection.getCurrentRowString("avatar");
 		user.company = connection.getCurrentRowString("company");
-		user.created = connection.getCurrentRowDateTime("created");
-		user.deleted = connection.getCurrentRowString("deleted");
 		user.verified = connection.getCurrentRowString("verified");
+		user.code = connection.getCurrentRowString("code");
 
 		return user;
 	}
@@ -775,7 +792,7 @@ final class UserService implements IUserService {
 	}
 
 	/*
-	 * (non-Javadoc)
+	 * (non-Javadoc)/
 	 * 
 	 * @see io.reflection.app.service.user.IUserService#getDataAccountsCount(io.reflection.app.datatypes.shared.User)
 	 */
@@ -784,7 +801,7 @@ final class UserService implements IUserService {
 		Long dataAccountsCount = Long.valueOf(0);
 
 		String getDataAccountsCountQuery = String
-				.format("SELECT count(1) as `dataaccountscount` FROM `userdataaccount` WHERE `userid`=%d", user.id.longValue());
+				.format("SELECT count(1) AS `dataaccountscount` FROM `userdataaccount` WHERE `userid`=%d", user.id.longValue());
 
 		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 

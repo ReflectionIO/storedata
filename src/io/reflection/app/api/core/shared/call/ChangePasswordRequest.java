@@ -16,12 +16,15 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 public class ChangePasswordRequest extends Request {
+	public String resetCode;
 	public String password;
 	public String newPassword;
 
 	@Override
 	public JsonObject toJson() {
 		JsonObject object = super.toJson();
+		JsonElement jsonResetCode = resetCode == null ? JsonNull.INSTANCE : new JsonPrimitive(resetCode);
+		object.add("resetCode", jsonResetCode);
 		JsonElement jsonPassword = password == null ? JsonNull.INSTANCE : new JsonPrimitive(password);
 		object.add("password", jsonPassword);
 		JsonElement jsonNewPassword = newPassword == null ? JsonNull.INSTANCE : new JsonPrimitive(newPassword);
@@ -32,6 +35,12 @@ public class ChangePasswordRequest extends Request {
 	@Override
 	public void fromJson(JsonObject jsonObject) {
 		super.fromJson(jsonObject);
+		if (jsonObject.has("resetCode")) {
+			JsonElement jsonResetCode = jsonObject.get("resetCode");
+			if (jsonResetCode != null) {
+				resetCode = jsonResetCode.getAsString();
+			}
+		}
 		if (jsonObject.has("password")) {
 			JsonElement jsonPassword = jsonObject.get("password");
 			if (jsonPassword != null) {

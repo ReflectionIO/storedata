@@ -31,7 +31,9 @@ public enum ServiceType {
 	ServiceTypeDataAccount("dataaccount"),
 	ServiceTypeSale("sale"),
 	ServiceTypeDataAccountFetch("dataaccountfetch"),
-	ServiceTypeCategory("category");
+	ServiceTypeCategory("category"),
+	ServiceTypeResource("resource"),
+	ServiceTypeEmailTemplate("emailtemplate");
 
 	private String value;
 	private static Map<String, ServiceType> valueLookup = null;

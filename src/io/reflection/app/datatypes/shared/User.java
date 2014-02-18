@@ -21,6 +21,7 @@ import com.google.gson.JsonPrimitive;
 public class User extends DataType {
 	public List<Permission> permissions;
 	public List<Role> roles;
+	public List<DataAccount> linkedAccounts;
 	public String forename;
 	public String surname;
 	public String username;
@@ -29,6 +30,7 @@ public class User extends DataType {
 	public String password;
 	public Date lastLoggedIn;
 	public String verified;
+	public String code;
 	public Date expires;
 
 	@Override
@@ -52,6 +54,15 @@ public class User extends DataType {
 			}
 		}
 		object.add("roles", jsonRoles);
+		JsonElement jsonLinkedAccounts = JsonNull.INSTANCE;
+		if (linkedAccounts != null) {
+			jsonLinkedAccounts = new JsonArray();
+			for (int i = 0; i < linkedAccounts.size(); i++) {
+				JsonElement jsonLinkedAccountsItem = linkedAccounts.get(i) == null ? JsonNull.INSTANCE : linkedAccounts.get(i).toJson();
+				((JsonArray) jsonLinkedAccounts).add(jsonLinkedAccountsItem);
+			}
+		}
+		object.add("linkedAccounts", jsonLinkedAccounts);
 		JsonElement jsonForename = forename == null ? JsonNull.INSTANCE : new JsonPrimitive(forename);
 		object.add("forename", jsonForename);
 		JsonElement jsonSurname = surname == null ? JsonNull.INSTANCE : new JsonPrimitive(surname);
@@ -68,6 +79,8 @@ public class User extends DataType {
 		object.add("lastLoggedIn", jsonLastLoggedIn);
 		JsonElement jsonVerified = verified == null ? JsonNull.INSTANCE : new JsonPrimitive(verified);
 		object.add("verified", jsonVerified);
+		JsonElement jsonCode = code == null ? JsonNull.INSTANCE : new JsonPrimitive(code);
+		object.add("code", jsonCode);
 		JsonElement jsonExpires = expires == null ? JsonNull.INSTANCE : new JsonPrimitive(expires.getTime());
 		object.add("expires", jsonExpires);
 		return object;
@@ -99,6 +112,20 @@ public class User extends DataType {
 					if (jsonRoles.getAsJsonArray().get(i) != null) {
 						(item = new Role()).fromJson(jsonRoles.getAsJsonArray().get(i).getAsJsonObject());
 						roles.add(item);
+					}
+				}
+			}
+		}
+
+		if (jsonObject.has("linkedAccounts")) {
+			JsonElement jsonLinkedAccounts = jsonObject.get("linkedAccounts");
+			if (jsonLinkedAccounts != null) {
+				linkedAccounts = new ArrayList<DataAccount>();
+				DataAccount item = null;
+				for (int i = 0; i < jsonLinkedAccounts.getAsJsonArray().size(); i++) {
+					if (jsonLinkedAccounts.getAsJsonArray().get(i) != null) {
+						(item = new DataAccount()).fromJson(jsonLinkedAccounts.getAsJsonArray().get(i).getAsJsonObject());
+						linkedAccounts.add(item);
 					}
 				}
 			}
@@ -150,6 +177,12 @@ public class User extends DataType {
 			JsonElement jsonVerified = jsonObject.get("verified");
 			if (jsonVerified != null) {
 				verified = jsonVerified.getAsString();
+			}
+		}
+		if (jsonObject.has("code")) {
+			JsonElement jsonCode = jsonObject.get("code");
+			if (jsonCode != null) {
+				code = jsonCode.getAsString();
 			}
 		}
 		if (jsonObject.has("expires")) {

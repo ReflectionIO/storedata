@@ -17,6 +17,8 @@ import io.reflection.app.api.core.shared.call.ChangeUserDetailsRequest;
 import io.reflection.app.api.core.shared.call.ChangeUserDetailsResponse;
 import io.reflection.app.api.core.shared.call.CheckUsernameRequest;
 import io.reflection.app.api.core.shared.call.CheckUsernameResponse;
+import io.reflection.app.api.core.shared.call.ForgotPasswordRequest;
+import io.reflection.app.api.core.shared.call.ForgotPasswordResponse;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
 import io.reflection.app.api.core.shared.call.GetCountriesRequest;
@@ -412,7 +414,7 @@ public final class Core extends ActionHandler {
 							grossing.append(rank.grossingPosition.intValue(), rank);
 						}
 					}
-					
+
 					output.freeRanks = free.toList();
 					output.paidRanks = paid.toList();
 					output.grossingRanks = grossing.toList();
@@ -438,22 +440,22 @@ public final class Core extends ActionHandler {
 		return output;
 	}
 
-//	private String latestCode(List<Rank> ranks) {
-//		String code = null;
-//
-//		if (ranks != null) {
-//			Date latest = null;
-//
-//			for (Rank rank : ranks) {
-//				if (latest == null || (rank.date.getTime() > latest.getTime())) {
-//					latest = rank.date;
-//					code = rank.code;
-//				}
-//			}
-//		}
-//
-//		return code;
-//	}
+	// private String latestCode(List<Rank> ranks) {
+	// String code = null;
+	//
+	// if (ranks != null) {
+	// Date latest = null;
+	//
+	// for (Rank rank : ranks) {
+	// if (latest == null || (rank.date.getTime() > latest.getTime())) {
+	// latest = rank.date;
+	// code = rank.code;
+	// }
+	// }
+	// }
+	//
+	// return code;
+	// }
 
 	public GetItemRanksResponse getItemRanks(GetItemRanksRequest input) {
 		LOG.finer("Entering getItemRanks");
@@ -676,7 +678,7 @@ public final class Core extends ActionHandler {
 				throw new InputValidationException(ApiError.InvalidPasswordSameAsCurrent.getCode(),
 						ApiError.InvalidPasswordSameAsCurrent.getMessage("input.newPassword"));
 
-			UserServiceProvider.provide().updateUserPassword(input.session.user, input.newPassword);
+			UserServiceProvider.provide().updateUserPassword(sessionUser, input.newPassword);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -981,34 +983,34 @@ public final class Core extends ActionHandler {
 		return output;
 	}
 
-//	private String getFreeListName(Store store, String type) {
-//		String listName = null;
-//
-//		if ("ios".equalsIgnoreCase(store.a3Code)) {
-//			if ("ipad".equalsIgnoreCase(type)) {
-//				listName = CollectorIOS.TOP_FREE_IPAD_APPS;
-//			} else {
-//				listName = CollectorIOS.TOP_FREE_APPS;
-//			}
-//		}
-//
-//		return listName;
-//	}
-//
-//	private String getPaidListName(Store store, String type) {
-//		String listName = null;
-//
-//		if ("ios".equalsIgnoreCase(store.a3Code)) {
-//			if ("ipad".equalsIgnoreCase(type)) {
-//				listName = CollectorIOS.TOP_PAID_IPAD_APPS;
-//			} else {
-//				listName = CollectorIOS.TOP_PAID_APPS;
-//			}
-//		}
-//
-//		return listName;
-//
-//	}
+	// private String getFreeListName(Store store, String type) {
+	// String listName = null;
+	//
+	// if ("ios".equalsIgnoreCase(store.a3Code)) {
+	// if ("ipad".equalsIgnoreCase(type)) {
+	// listName = CollectorIOS.TOP_FREE_IPAD_APPS;
+	// } else {
+	// listName = CollectorIOS.TOP_FREE_APPS;
+	// }
+	// }
+	//
+	// return listName;
+	// }
+	//
+	// private String getPaidListName(Store store, String type) {
+	// String listName = null;
+	//
+	// if ("ios".equalsIgnoreCase(store.a3Code)) {
+	// if ("ipad".equalsIgnoreCase(type)) {
+	// listName = CollectorIOS.TOP_PAID_IPAD_APPS;
+	// } else {
+	// listName = CollectorIOS.TOP_PAID_APPS;
+	// }
+	// }
+	//
+	// return listName;
+	//
+	// }
 
 	private String getGrossingListName(Store store, String type) {
 		String listName = null;
@@ -1029,7 +1031,7 @@ public final class Core extends ActionHandler {
 		SearchForItemResponse output = new SearchForItemResponse();
 		try {
 			if (input == null)
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("SearchForItemResponse: input"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("SearchForItemRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 			input.session = ValidationHelper.validateSession(input.session, "input.session");
@@ -1045,4 +1047,29 @@ public final class Core extends ActionHandler {
 		return output;
 	}
 
+	public ForgotPasswordResponse forgotPassword(ForgotPasswordRequest input) {
+		LOG.finer("Entering forgotPassword");
+		ForgotPasswordResponse output = new ForgotPasswordResponse();
+		try {
+
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("ForgotPasswordRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
+			input.username = ValidationHelper.validateEmail(input.username, true, "input.username");
+			
+			User user = UserServiceProvider.provide().getUsernameUser(input.username);
+			
+			if (user == null) throw new InputValidationException(ApiError.UserNotFound.getCode(), ApiError.UserNotFound.getMessage("input.username"));
+			
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting forgotPassword");
+		return output;
+	}
 }

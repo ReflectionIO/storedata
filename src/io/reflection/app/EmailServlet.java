@@ -7,24 +7,15 @@
 //
 package io.reflection.app;
 
+import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.api.core.Core;
 import io.reflection.app.api.core.shared.call.RegisterUserRequest;
 import io.reflection.app.api.core.shared.call.RegisterUserResponse;
 import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.helpers.EmailHelper;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -32,16 +23,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.willshex.gson.json.service.shared.StatusType;
 
-import static com.spacehopperstudios.utility.StringUtils.stripslashes;
-
 /**
  * @author billy1380
  * 
  */
 @SuppressWarnings("serial")
 public class EmailServlet extends HttpServlet {
-
-	private static final Logger LOG = Logger.getLogger(EmailServlet.class.getName());
 
 	/*
 	 * (non-Javadoc)
@@ -140,7 +127,7 @@ public class EmailServlet extends HttpServlet {
 					+ "We are working hard to create a functional, relevant and beautiful service for app market intelligence. We can't wait to share it with you.\r\n\r\n"
 					+ "Stay tuned,\r\n\r\n" + "The Reflection Team\r\n" + "www.reflection.io";
 
-			if (sendEmail(emailTo, name, "Thank you", body)) {
+			if (EmailHelper.sendEmail("hello@reflection.io", emailTo, name, "Thank you", body)) {
 				resp.getOutputStream().write(1);
 			} else {
 				resp.getOutputStream().write(0);
@@ -189,49 +176,16 @@ public class EmailServlet extends HttpServlet {
 			}
 		}
 
-//		String emailTo = "hello@reflection.io";
 		String emailTo = "hello@reflection.io";
 
 		String subject = "Contact Form Submission from " + name;
 
 		String body = "Name: " + name + " \r\nEmail: " + email + "\r\nMessage: " + message + "\r\n";
 
-		if (sendEmail(emailTo, "Reflection", subject, body)) {
+		if (EmailHelper.sendEmail("hello@reflection.io (Reflection)", emailTo, "Reflection", subject, body)) {
 			resp.getOutputStream().write(1);
 		} else {
 			resp.getOutputStream().write(0);
 		}
-	}
-
-	private boolean sendEmail(String to, String name, String subject, String body) throws UnsupportedEncodingException {
-		boolean sent = false;
-
-		Properties props = new Properties();
-		Session session = Session.getDefaultInstance(props, null);
-
-		try {
-			Message msg = new MimeMessage(session);
-			msg.setFrom(new InternetAddress("hello@reflection.io", "Reflection"));
-
-			msg.addRecipient(Message.RecipientType.TO, new InternetAddress(to, name));
-
-			msg.setSubject(subject);
-			msg.setText(body);
-			Transport.send(msg);
-
-			if (LOG.isLoggable(Level.INFO)) {
-				LOG.info("Contact email sent successfully.");
-			}
-
-			sent = true;
-		} catch (AddressException e) {
-			LOG.log(Level.SEVERE, "Error sending email", e);
-			sent = false;
-		} catch (MessagingException e) {
-			LOG.log(Level.SEVERE, "Error sending email", e);
-			sent = false;
-		}
-
-		return sent;
 	}
 }

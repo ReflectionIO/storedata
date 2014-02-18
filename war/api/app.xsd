@@ -206,6 +206,7 @@
                 <xsd:attribute type="xsd:string" name="password" />
                 <xsd:attribute type="xsd:dateTime" name="lastLoggedIn" />
                 <xsd:attribute type="xsd:string" name="verified" />
+                <xsd:attribute type="xsd:string" name="code" />
                 <xsd:attribute type="xsd:dateTime" name="expires" />
             </xsd:extension>
         </xsd:complexContent>
@@ -302,6 +303,28 @@
         </xsd:complexContent>
     </xsd:complexType>
 
+    <xsd:complexType name="Resource">
+        <xsd:complexContent>
+            <xsd:extension base="DataType">
+                <xsd:attribute name="name" type="xsd:string" />
+                <xsd:attribute name="type" type="ResourceTypeType" />
+                <xsd:attribute name="properties" type="xsd:string" />
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="EmailTemplate">
+        <xsd:complexContent>
+            <xsd:extension base="DataType">
+                <xsd:attribute name="from" type="xsd:string" />
+                <xsd:attribute name="body" type="xsd:string" />
+                <xsd:attribute name="subject" type="xsd:string" />
+                <xsd:attribute name="format" type="EmailFormatType" />
+                <xsd:attribute name="type" type="EmailTypeType" />
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
     <xsd:complexType name="Session">
         <xsd:complexContent>
             <xsd:extension base="DataType">
@@ -378,6 +401,30 @@
             <xsd:enumeration value="empty" />
             <xsd:enumeration value="error" />
             <xsd:enumeration value="ingested" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="EmailFormatType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="plainText" />
+            <xsd:enumeration value="html" />
+            <xsd:enumeration value="rtf" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="EmailTypeType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="system" />
+            <xsd:enumeration value="promotional" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="ResourceTypeType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="image" />
+            <xsd:enumeration value="googleCloudServiceImage" />
+            <xsd:enumeration value="youtubeVideo" />
+            <xsd:enumeration value="html5Video" />
         </xsd:restriction>
     </xsd:simpleType>
 

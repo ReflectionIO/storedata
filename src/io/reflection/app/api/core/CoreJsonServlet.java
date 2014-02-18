@@ -10,6 +10,7 @@ package io.reflection.app.api.core;
 import io.reflection.app.api.core.shared.call.ChangePasswordRequest;
 import io.reflection.app.api.core.shared.call.ChangeUserDetailsRequest;
 import io.reflection.app.api.core.shared.call.CheckUsernameRequest;
+import io.reflection.app.api.core.shared.call.ForgotPasswordRequest;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetCountriesRequest;
 import io.reflection.app.api.core.shared.call.GetItemRanksRequest;
@@ -103,6 +104,10 @@ public final class CoreJsonServlet extends JsonServlet {
 			SearchForItemRequest input = new SearchForItemRequest();
 			input.fromJson(request);
 			output = service.searchForItem(input).toString();
+		} else if ("ForgotPassword".equals(action)) {
+			ForgotPasswordRequest input = new ForgotPasswordRequest();
+			input.fromJson(request);
+			output = service.forgotPassword(input).toString();
 		}
 		return output;
 	}

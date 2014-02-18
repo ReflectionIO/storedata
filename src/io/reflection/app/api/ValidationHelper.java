@@ -10,6 +10,7 @@ package io.reflection.app.api;
 import io.reflection.app.api.exception.AuthorisationException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.Session;
+import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.shared.Category;
@@ -61,7 +62,7 @@ public class ValidationHelper {
 		return accessCode;
 	}
 
-	public static User validateAlphaUser(User user, String parent) throws InputValidationException {
+	public static User validateAlphaUser(User user, String parent) throws ServiceException {
 		if (user == null) throw new InputValidationException(ApiError.UserNull.getCode(), ApiError.UserNull.getMessage(parent));
 
 		if (user.forename == null || (user.forename = user.forename.trim()).length() == 0)
@@ -71,14 +72,9 @@ public class ValidationHelper {
 		if (user.company == null || (user.company = user.company.trim()).length() == 0)
 			throw new InputValidationException(ApiError.StringNull.getCode(), ApiError.StringNull.getMessage(parent + ".company"));
 
-		if (user.username == null || (user.username = user.username.trim()).length() == 0)
-			throw new InputValidationException(ApiError.StringNull.getCode(), ApiError.StringNull.getMessage(parent + ".username"));
-
-		if (!user.username.matches("^([\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4})?$"))
-			throw new InputValidationException(ApiError.BadEmailFormat.getCode(), ApiError.BadEmailFormat.getMessage(parent + ".username"));
+		user.username = validateEmail(user.username, false, parent + ".username");
 
 		return user;
-
 	}
 
 	/**
@@ -592,6 +588,25 @@ public class ValidationHelper {
 		if (lookupCategory == null) throw new InputValidationException(ApiError.CategoryNotFound.getCode(), ApiError.CategoryNotFound.getMessage(parent));
 
 		return lookupCategory;
+	}
+
+	/**
+	 * @param email
+	 * @param isNullable
+	 * @param parent
+	 * @return
+	 */
+	public static String validateEmail(String email, boolean isNullable, String parent) throws ServiceException {
+
+		if (!isNullable) {
+			if (email == null || (email = email.trim()).length() == 0)
+				throw new InputValidationException(ApiError.StringNull.getCode(), ApiError.StringNull.getMessage(parent));
+		}
+
+		if (!email.matches(FormHelper.EMAIL_PATTERN))
+			throw new InputValidationException(ApiError.BadEmailFormat.getCode(), ApiError.BadEmailFormat.getMessage(parent));
+
+		return email;
 	}
 
 }
