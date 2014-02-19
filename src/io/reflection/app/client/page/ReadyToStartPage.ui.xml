@@ -17,7 +17,7 @@
 
 			<h4 style="margin-bottom: 100px;">
 				Start by exploring the top charting apps in the
-				<g:InlineHyperlink ui:field="mLeaderboard">Leaderboard</g:InlineHyperlink>
+				<g:InlineHyperlink ui:field="mLeaderboard" targetHistoryToken="ranks" >Leaderboard</g:InlineHyperlink>
 				<br />
 				It will take a short while to add your apps to the My Apps section,
 				<br />

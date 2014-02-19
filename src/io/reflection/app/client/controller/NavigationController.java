@@ -8,26 +8,13 @@
 package io.reflection.app.client.controller;
 
 import io.reflection.app.client.handler.NavigationEventHandler;
-import io.reflection.app.client.page.ChangeDetailsPage;
-import io.reflection.app.client.page.ChangePasswordPage;
-import io.reflection.app.client.page.FeedBrowserPage;
-import io.reflection.app.client.page.HomePage;
-import io.reflection.app.client.page.ItemPage;
-import io.reflection.app.client.page.LinkItunesPage;
-import io.reflection.app.client.page.LinkedAccountsPage;
-import io.reflection.app.client.page.LoginPage;
-import io.reflection.app.client.page.MyAppsPage;
-import io.reflection.app.client.page.PermissionsPage;
-import io.reflection.app.client.page.RanksPage;
-import io.reflection.app.client.page.ReadyToStartPage;
-import io.reflection.app.client.page.RegisterPage;
-import io.reflection.app.client.page.RolesPage;
-import io.reflection.app.client.page.SearchPage;
-import io.reflection.app.client.page.ThankYouPage;
-import io.reflection.app.client.page.UpgradePage;
-import io.reflection.app.client.page.UsersPage;
+import io.reflection.app.client.page.Page;
+import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.Footer;
 import io.reflection.app.client.part.Header;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -44,24 +31,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 
 	private HTMLPanel mPanel = null;
 
-	private RanksPage mRanksPage = null;
-	private FeedBrowserPage mFeedBrowserPage = null;
-	private UsersPage mUsersPage = null;
-	private LoginPage mLoginPage = null;
-	private RegisterPage mRegisterPage = null;
-	private ChangePasswordPage mChangePasswordPage = null;
-	private RolesPage mRolesPage = null;
-	private PermissionsPage mPermissionsPage = null;
-	private ChangeDetailsPage mChangeDetailsPage = null;
-	private UpgradePage mUpgradePage = null;
-	private LinkedAccountsPage mLinkedAccountsPage = null;
-	private SearchPage mSearchPage = null;
-	private ItemPage mItemPage = null;
-	private HomePage mHomePage = null;
-	private ThankYouPage mThankYouPage = null;
-	private LinkItunesPage mLinkItunesPage = null;
-	private ReadyToStartPage mReadyToStartPage = null;
-	private MyAppsPage mMyAppsPage = null;
+	private Map<String, Page> pages = new HashMap<String, Page>();
 
 	private Header mHeader = null;
 	private Footer mFooter = null;
@@ -125,264 +95,56 @@ public class NavigationController implements ValueChangeHandler<String> {
 		return mPanel;
 	}
 
-	/**
-	 * Creates the page and add it to the main panel
-	 */
-	public void addRanksPage() {
-		if (mRanksPage == null) {
-			mRanksPage = new RanksPage();
+	private void attachPage(PageType type) {
+		Page page = null;
+
+		if ((page = pages.get(type.toString())) == null) {
+			pages.put(type.toString(), page = type.create());
 		}
 
-		if (!mRanksPage.isAttached()) {
+		if (!page.isAttached()) {
 			mPanel.clear();
-			mPanel.add(mRanksPage);
-		} else {}
-
-	}
-
-	public void addFeedBrowserPage() {
-		if (mFeedBrowserPage == null) {
-			mFeedBrowserPage = new FeedBrowserPage();
-		}
-
-		if (!mFeedBrowserPage.isAttached()) {
-			mPanel.clear();
-			mPanel.add(mFeedBrowserPage);
-		} else {}
-
-	}
-
-	public void addLoginPage() {
-		if (mLoginPage == null) {
-			mLoginPage = new LoginPage();
-		}
-
-		if (!mLoginPage.isAttached()) {
-			mPanel.clear();
-			mPanel.add(mLoginPage);
-		} else {}
-
-	}
-
-	public void addRegisterPage() {
-		if (mRegisterPage == null) {
-			mRegisterPage = new RegisterPage();
-		}
-
-		if (!mRegisterPage.isAttached()) {
-			mPanel.clear();
-			mPanel.add(mRegisterPage);
+			mPanel.add(page);
 		} else {}
 	}
 
-	public void addChangePasswordPage() {
-		if (mChangePasswordPage == null) {
-			mChangePasswordPage = new ChangePasswordPage();
-		}
-
-		if (!mChangePasswordPage.isAttached()) {
-			mPanel.clear();
-			mPanel.add(mChangePasswordPage);
-		}
-	}
-
-	public void addChangeDetailsPage() {
-		if (mChangeDetailsPage == null) {
-			mChangeDetailsPage = new ChangeDetailsPage();
-		}
-
-		if (!mChangeDetailsPage.isAttached()) {
-			mPanel.clear();
-			mPanel.add(mChangeDetailsPage);
-		}
-	}
-
-	public void addRolesPage() {
-		if (mRolesPage == null) {
-			mRolesPage = new RolesPage();
-		}
-
-		if (!mRolesPage.isAttached()) {
-			mPanel.clear();
-			mPanel.add(mRolesPage);
-		}
-	}
-
-	public void addPermissionsPage() {
-		if (mPermissionsPage == null) {
-			mPermissionsPage = new PermissionsPage();
-		}
-
-		if (!mPermissionsPage.isAttached()) {
-			mPanel.clear();
-			mPanel.add(mPermissionsPage);
-		}
-	}
-
-	public void addUpgradePage() {
-		if (mUpgradePage == null) {
-			mUpgradePage = new UpgradePage();
-		}
-
-		if (!mUpgradePage.isAttached()) {
-			mPanel.clear();
-			mPanel.add(mUpgradePage);
-		}
-	}
-
-	public void addLinkAccountsPage() {
-		if (mLinkedAccountsPage == null) {
-			mLinkedAccountsPage = new LinkedAccountsPage();
-		}
-
-		if (!mLinkedAccountsPage.isAttached()) {
-			mPanel.clear();
-			mPanel.add(mLinkedAccountsPage);
-		}
-	}
-
-	public void addSearchPage() {
-		if (mSearchPage == null) {
-			mSearchPage = new SearchPage();
-		}
-
-		if (!mSearchPage.isAttached()) {
-			mPanel.clear();
-			mPanel.add(mSearchPage);
-		}
-	}
-
-	public void addItemPage() {
-		if (mItemPage == null) {
-			mItemPage = new ItemPage();
-		}
-
-		if (!mItemPage.isAttached()) {
-			mPanel.clear();
-			mPanel.add(mItemPage);
-		}
-	}
-
-	public void addHomePage() {
-		if (mHomePage == null) {
-			mHomePage = new HomePage();
-		}
-
-		if (!mHomePage.isAttached()) {
-			mPanel.clear();
-			mPanel.add(mHomePage);
-		}
-	}
-	
-	public void addThankYouPage() {
-		if (mThankYouPage == null) {
-			mThankYouPage = new ThankYouPage();
-		}
-
-		if (!mThankYouPage.isAttached()) {
-			mPanel.clear();
-			mPanel.add(mThankYouPage);
-		}
-	}
-
-	public void addLinkItunesPage() {
-		if (mLinkItunesPage == null) {
-			mLinkItunesPage = new LinkItunesPage();
-		}
-
-		if (!mLinkItunesPage.isAttached()) {
-			mPanel.clear();
-			mPanel.add(mLinkItunesPage);
-		}
-	}
-	
-	public void addReadyToStartPage() {
-		if (mReadyToStartPage == null) {
-			mReadyToStartPage = new ReadyToStartPage();
-		}
-
-		if (!mReadyToStartPage.isAttached()) {
-			mPanel.clear();
-			mPanel.add(mReadyToStartPage);
-		}
-	}
-
-	public void addMyAppsPage() {
-		if (mMyAppsPage == null) {
-			mMyAppsPage = new MyAppsPage();
-		}
-
-		if (!mMyAppsPage.isAttached()) {
-			mPanel.clear();
-			mPanel.add(mMyAppsPage);
-		}
-	}
-	
 	/**
 	 * @param value
 	 */
 	public void addPage(String value) {
 
 		if (value == null || value.length() == 0) {
-			value = "home";
+			value = PageType.HomePageType.toString();
 		}
 
 		mStack = Stack.parse(value);
 
-		if ("ranks".equals(mStack.getPage())) {
-			addRanksPage();
-		} else if ("feedbrowser".equals(mStack.getPage())) {
-			addFeedBrowserPage();
-		} else if ("users".equals(mStack.getPage())) {
+		if (PageType.UsersPageType.equals(mStack.getPage())) {
 			if (mStack.getAction() == null) {
-				addUsersPage();
-			} else if ("changepassword".equals(mStack.getAction())) {
-				addChangePasswordPage();
-			} else if ("changedetails".equals(mStack.getAction())) {
-				addChangeDetailsPage();
-			} else if ("linkedaccounts".equals(mStack.getAction())) {
-				addLinkAccountsPage();
+				attachPage(PageType.UsersPageType);
 			} else if ("assignrole".equals(mStack.getAction())) {
 				String userId = mStack.getParameter(0);
 				String roleName = mStack.getParameter(1);
 
+				// TODO: this should not really be here
 				if (userId != null) {
 					if (roleName.equalsIgnoreCase("admin")) {
 						UserController.get().makeAdmin(Long.valueOf(userId));
 					}
 				}
 
-				History.newItem("users");
+				History.newItem(PageType.UsersPageType.toString());
+
 				return;
+			} else {
+				attachPage(PageType.fromString(mStack.getAction()));
 			}
-		} else if ("login".equals(mStack.getPage())) {
-			addLoginPage();
-		} else if ("register".equals(mStack.getPage())) {
-			addRegisterPage();
 		} else if ("logout".equals(mStack.getPage())) {
 			SessionController.get().logout();
-			History.newItem("login");
+			History.newItem(PageType.LoginPageType.toString());
 			return;
-		} else if ("roles".equals(mStack.getPage())) {
-			addRolesPage();
-		} else if ("permissions".equals(mStack.getPage())) {
-			addPermissionsPage();
-		} else if ("upgrade".equals(mStack.getPage())) {
-			addUpgradePage();
-		} else if ("search".equals(mStack.getPage())) {
-			addSearchPage();
-		} else if ("item".equals(mStack.getPage())) {
-			addItemPage();
-		} else if ("thankyou".equals(mStack.getPage())) {
-			addThankYouPage();
-		} else if ("linkitunes".equals(mStack.getPage())) {
-			addLinkItunesPage();
-		} else if ("readytostart".equals(mStack.getPage())) {
-			addReadyToStartPage();
-		} else if ("myapps".equals(mStack.getPage())) {
-			addMyAppsPage();
 		} else {
-			addHomePage();
+			attachPage(PageType.fromString(mStack.getPage()));
 		}
 
 		EventController.get().fireEventFromSource(new NavigationEventHandler.ChangedEvent(mStack), NavigationController.this);
@@ -410,21 +172,6 @@ public class NavigationController implements ValueChangeHandler<String> {
 
 	public String getCurrentPage() {
 		return mStack.getPage();
-	}
-
-	/**
-	 * 
-	 */
-	public void addUsersPage() {
-		if (mUsersPage == null) {
-			mUsersPage = new UsersPage();
-		}
-
-		if (!mUsersPage.isAttached()) {
-			mPanel.clear();
-			mPanel.add(mUsersPage);
-		} else {}
-
 	}
 
 	public Stack getStack() {
