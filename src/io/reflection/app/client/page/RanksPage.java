@@ -50,6 +50,7 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TextHeader;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.Error;
@@ -453,8 +454,12 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 	@Override
 	public void navigationChanged(Stack stack) {
 
-		if ("ranks".equals(stack.getPage())) {
+		if (PageType.RanksPageType.equals(stack.getPage())) {
 			checkPermissions();
+			
+			if (stack.getAction() == null || !"view".equals(stack.getAction())) {
+				History.newItem(PageType.RanksPageType + "/view" + FilterController.get().toRankFilterString());
+			}
 		}
 
 	}

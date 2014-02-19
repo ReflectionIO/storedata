@@ -48,6 +48,7 @@ public class EmailHelper {
 					magic.setLength(0);
 				} else {
 					email.append('$');
+					email.append(c);
 				}
 
 				foundDolar = false;

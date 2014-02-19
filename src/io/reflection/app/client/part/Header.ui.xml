@@ -2,74 +2,74 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:with field='res' type='io.reflection.app.client.res.Images' />
     <ui:style>
-    @external navbar-nav, btn, form-control,navbar-header,label-default;
-    .header {
-    	background: #272833;
-    }
-    
-    .alignToImage {
-    	vertical-align: bottom;
-    }
-    
-    .navbar-nav>li>a.anchor {
-    	padding-top: 10px;
-    	padding-bottom: 10px;
-    }
-    
-    .navbar-nav>li>a.anchor img {
-    	margin-left: 5px;
-    }
-    
-    /* .searchBox {
-            		margin: 0 10px;
-                } */
-    .searchBox .btn {
-    	border-radius: 0 4px 4px 0;
-    	background-color: #080808;
-    	color: white;
-    	border-color: #080808;
-    }
-    
-    .searchBox .form-control {
-    	border-radius: 4px 0 0 4px;
-    	background-color: #080808;
-    	color: white;
-    	border-color: #080808;
-    }
-    
-    .searchBox .form-control:focus {
-    	border-color: #6D69C5;
-    }
-    
-    .searchBox span {
-    	float: left;
-    }
-    
-    .moreMargin>b {
-    	margin-right: 0.2em;
-    }
-    
-    .navbar-header>a>.label-default {
-    	font-size: 10px;
-    	background-color: #676b88;
-    	color: #101010;
-    	padding: 1px 3px;
-    	font-weight: normal;
-    	vertical-align: super;
-    }
-    
-    .navbar-header>a:HOVER>.label-default {
+        @external navbar-nav, btn, form-control,navbar-header,label-default;
+        .header {
+        background: #272833;
+        }
+
+        .alignToImage {
+        vertical-align: bottom;
+        }
+
+        .navbar-nav>li>a.anchor {
+        padding-top: 10px;
+        padding-bottom: 10px;
+        }
+
+        .navbar-nav>li>a.anchor img {
+        margin-left: 5px;
+        }
+
+        /* .searchBox {
+        margin: 0 10px;
+        } */
+        .searchBox .btn {
+        border-radius: 0 4px 4px 0;
+        background-color: #080808;
+        color: white;
+        border-color: #080808;
+        }
+
+        .searchBox .form-control {
+        border-radius: 4px 0 0 4px;
+        background-color: #080808;
+        color: white;
+        border-color: #080808;
+        }
+
+        .searchBox .form-control:focus {
+        border-color: #6D69C5;
+        }
+
+        .searchBox span {
+        float: left;
+        }
+
+        .moreMargin>b {
+        margin-right: 0.2em;
+        }
+
+        .navbar-header>a>.label-default {
+        font-size: 10px;
+        background-color: #676b88;
+        color: #101010;
+        padding: 1px 3px;
+        font-weight: normal;
+        vertical-align: super;
+        }
+
+        .navbar-header>a:HOVER>.label-default {
         background-color: #6D69C5;
-    }
-    
-    .helpUs {
-    	padding: 5px 20px;
-    	text-align: justify;
-    }
-    
-    .widerMenu {
-		width: 250px;
-	}
+        }
+
+        .helpUs {
+        padding: 5px 20px;
+        text-align: justify;
+        }
+
+        .widerMenu {
+        width: 250px;
+        }
     </ui:style>
     <g:HTMLPanel ui:field="pnlHeader" styleName="navbar navbar-inverse navbar-fixed-top {style.header}">
         <div class="container">
@@ -89,7 +89,7 @@
                     <li ui:field="mRanksItem">
                         <g:InlineHyperlink ui:field="mRanksLink" targetHistoryToken="ranks">Leaderboard</g:InlineHyperlink>
                     </li>
-                    
+
                     <li ui:field="myAppsItem">
                         <g:InlineHyperlink ui:field="myAppsLink" targetHistoryToken="myapps">My Apps</g:InlineHyperlink>
                     </li>
@@ -118,6 +118,10 @@
                             </li>
                             <li ui:field="mPermissionsItem">
                                 <g:InlineHyperlink ui:field="mPermissionsLink" targetHistoryToken="permissions">Permissions</g:InlineHyperlink>
+                            </li>
+                            <li class="divider"></li>
+                            <li ui:field="emailTemplatesItem">
+                                <g:InlineHyperlink ui:field="emailTemplatesLink" targetHistoryToken="emailtemplates">Email Templates</g:InlineHyperlink>
                             </li>
                         </ul>
                     </li>

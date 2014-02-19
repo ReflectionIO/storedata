@@ -28,9 +28,9 @@ public class FilterController {
 
 	public static final String STORE_KEY = "store";
 	public static final String COUNTRY_KEY = "country";
-	private static final String LIST_TYPE_KEY = "list.type";
-	private static final String START_DATE_KEY = "start.date";
-	private static final String END_DATE_KEY = "end.date";
+	private static final String LIST_TYPE_KEY = "listtype";
+	private static final String START_DATE_KEY = "startdate";
+	private static final String END_DATE_KEY = "enddate";
 	private static final String CATEGORY_KEY = "category";
 
 	private static FilterController mOne = null;
@@ -54,7 +54,7 @@ public class FilterController {
 		setListType("all");
 		setCountry("us");
 		setEndDate(new Date());
-		Date startDate = new Date(getEndDate().getTime());
+		Date startDate = getEndDate();
 		CalendarUtil.addDaysToDate(startDate, -10);
 		setStartDate(startDate);
 		setCategory(Long.valueOf(24));
@@ -124,6 +124,10 @@ public class FilterController {
 		return CountryController.get().getCountry((String) mCurrentValues.get(COUNTRY_KEY));
 	}
 
+	public String getCountryA2Code() {
+		return (String) mCurrentValues.get(COUNTRY_KEY);
+	}
+
 	public List<String> getListTypes() {
 		List<String> types = new ArrayList<String>();
 
@@ -153,23 +157,45 @@ public class FilterController {
 	}
 
 	public Date getStartDate() {
-		return (Date) mCurrentValues.get(START_DATE_KEY);
+		Long startTime = (Long) mCurrentValues.get(START_DATE_KEY);
+
+		Date startDate = null;
+
+		if (startTime != null) {
+			startDate = new Date(startTime.longValue());
+		}
+
+		return startDate;
 	}
 
 	public Date getEndDate() {
-		return (Date) mCurrentValues.get(END_DATE_KEY);
+		Long endTime = (Long) mCurrentValues.get(END_DATE_KEY);
+
+		Date endDate = null;
+
+		if (endTime != null) {
+			endDate = new Date(endTime.longValue());
+		}
+
+		return endDate;
 	}
 
 	public void setStartDate(Date value) {
-		if (value != null && !value.equals(mCurrentValues.get(START_DATE_KEY))) {
-			Date previousStartDate = (Date) mCurrentValues.get(START_DATE_KEY);
-			mCurrentValues.put(START_DATE_KEY, value);
+		Long previousStartTime = (Long) mCurrentValues.get(START_DATE_KEY);
+
+		if (value != null && (previousStartTime == null || value.getTime() != previousStartTime.longValue())) {
+			Date previousStartDate = null;
+
+			if (previousStartTime != null) {
+				previousStartDate = new Date(previousStartTime.longValue());
+			}
+
+			mCurrentValues.put(START_DATE_KEY, Long.valueOf(value.getTime()));
 
 			if (mInTransaction == 0) {
-				EventController.get()
-						.fireEventFromSource(
-								new FilterEventHandler.ChangedFilterParameter<Date>(START_DATE_KEY, (Date) mCurrentValues.get(START_DATE_KEY),
-										previousStartDate), this);
+				EventController.get().fireEventFromSource(
+						new FilterEventHandler.ChangedFilterParameter<Date>(START_DATE_KEY, new Date(((Long) mCurrentValues.get(START_DATE_KEY)).longValue()),
+								previousStartDate), this);
 			} else {
 				if (mPreviousValues == null) {
 					mPreviousValues = new HashMap<String, Object>();
@@ -182,13 +208,21 @@ public class FilterController {
 	}
 
 	public void setEndDate(Date value) {
-		if (value != null && !value.equals(mCurrentValues.get(END_DATE_KEY))) {
-			Date previousEndDate = (Date) mCurrentValues.get(END_DATE_KEY);
-			mCurrentValues.put(END_DATE_KEY, value);
+		Long previousEndTime = (Long) mCurrentValues.get(END_DATE_KEY);
+
+		if (value != null && (previousEndTime == null || value.getTime() != previousEndTime.longValue())) {
+			Date previousEndDate = null;
+
+			if (previousEndTime != null) {
+				previousEndDate = new Date(previousEndTime.longValue());
+			}
+
+			mCurrentValues.put(END_DATE_KEY, Long.valueOf(value.getTime()));
 
 			if (mInTransaction == 0) {
 				EventController.get().fireEventFromSource(
-						new FilterEventHandler.ChangedFilterParameter<Date>(END_DATE_KEY, (Date) mCurrentValues.get(END_DATE_KEY), previousEndDate), this);
+						new FilterEventHandler.ChangedFilterParameter<Date>(END_DATE_KEY, new Date(((Long) mCurrentValues.get(END_DATE_KEY)).longValue()),
+								previousEndDate), this);
 			} else {
 				if (mPreviousValues == null) {
 					mPreviousValues = new HashMap<String, Object>();
@@ -242,10 +276,16 @@ public class FilterController {
 	 */
 	public void setCategory(Long value) {
 		if (value != null && !value.equals(mCurrentValues.get(CATEGORY_KEY))) {
-			Category previousCategory = (Category) mCurrentValues.get(CATEGORY_KEY);
-			Category category = new Category();
-			category.id = value;
-			mCurrentValues.put(CATEGORY_KEY, category);
+			Long previousCategoryId = (Long) mCurrentValues.get(CATEGORY_KEY);
+
+			Category previousCategory = null;
+
+			if (previousCategoryId != null) {
+				previousCategory = new Category();
+				previousCategory.id = previousCategoryId;
+			}
+
+			mCurrentValues.put(CATEGORY_KEY, value);
 
 			if (mInTransaction == 0) {
 				EventController.get().fireEventFromSource(
@@ -266,24 +306,32 @@ public class FilterController {
 	 * @return
 	 */
 	public Category getCategory() {
-		return (Category) mCurrentValues.get(CATEGORY_KEY);
-	}
+		Long categoryId = (Long) mCurrentValues.get(CATEGORY_KEY);
+		Category category = null;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		String filter = "";
-
-		for (String key : mCurrentValues.keySet()) {
-			filter += key + "/" + mCurrentValues.get(key).toString() + "/";
+		if (categoryId != null) {
+			category = new Category();
+			category.id = categoryId;
 		}
 
-		return filter;
+		return category;
 	}
+
+	// /*
+	// * (non-Javadoc)
+	// *
+	// * @see java.lang.Object#toString()
+	// */
+	// @Override
+	// public String toString() {
+	// String filter = "/";
+	//
+	// for (String key : mCurrentValues.keySet()) {
+	// filter += mCurrentValues.get(key).toString() + "/";
+	// }
+	//
+	// return filter;
+	// }
 
 	/**
 	 * @return
@@ -291,4 +339,37 @@ public class FilterController {
 	public String getStoreA3Code() {
 		return (String) mCurrentValues.get(STORE_KEY);
 	}
+
+	// /**
+	// * @param stack
+	// * @return
+	// */
+	// public boolean fromStack(Stack stack) {
+	// return false;
+	// }
+
+	public String toRankFilterString() {
+		List<String> listTypes = getListTypes();
+		String listType;
+
+		if (listTypes.size() > 1) {
+			listType = "all";
+		} else {
+			listType = listTypes.get(0);
+		}
+
+		return "/" + getStoreA3Code() + "/" + getCountryA2Code() + "/" + getCategory().id.toString() + "/" + listType + "/" + getEndTime();
+	}
+
+	/**
+	 * @return
+	 */
+	public Long getEndTime() {
+		return (Long) mCurrentValues.get(END_DATE_KEY);
+	}
+
+	public Long getStartTime() {
+		return (Long) mCurrentValues.get(START_DATE_KEY);
+	}
+
 }
