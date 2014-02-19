@@ -7,26 +7,33 @@
 //
 package io.reflection.app.client.page;
 
+import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
+import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.handler.user.SessionEventHandler;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.part.AlertBox;
 import io.reflection.app.client.part.login.LoginForm;
 import io.reflection.app.client.part.login.WelcomePanel;
+import io.reflection.app.datatypes.shared.User;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.gson.json.service.shared.Error;
 
 /**
  * @author billy1380
  * 
  */
-public class LoginPage extends Page implements NavigationEventHandler {
+public class LoginPage extends Page implements NavigationEventHandler, SessionEventHandler {
 
 	private static LoginPageUiBinder uiBinder = GWT.create(LoginPageUiBinder.class);
 
@@ -35,7 +42,7 @@ public class LoginPage extends Page implements NavigationEventHandler {
 	@UiField WelcomePanel mWelcomePanel; // Welcome panel, showed when action 'welcome' is in the stack
 
 	@UiField HTMLPanel mDefaultLogin;
-	
+
 	@UiField LoginForm mLoginForm; // Usual login panel
 
 	@UiField AlertBox mAlertBox;
@@ -72,8 +79,7 @@ public class LoginPage extends Page implements NavigationEventHandler {
 		super.onAttach();
 
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
-		
-		
+		register(EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
 	}
 
 	/*
@@ -99,4 +105,52 @@ public class LoginPage extends Page implements NavigationEventHandler {
 		}
 
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.SessionEventHandler#userLoggedIn(io.reflection.app.shared.datatypes.User,
+	 * io.reflection.app.api.shared.datatypes.Session)
+	 */
+	@Override
+	public void userLoggedIn(User user, Session session) {
+		// AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.SuccessAlertBoxType, false, "Login Successfull",
+		// user.forename != null && user.forename.length() != 0 ? " - welcome back " + user.forename + "." : "", false).setVisible(true);
+
+		Timer t = new Timer() {
+
+			@Override
+			public void run() {
+				History.newItem("linkitunes"); // After login is successful, redirect to leader-board page
+			}
+		};
+
+		t.schedule(2000);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.SessionEventHandler#userLoggedOut()
+	 */
+	@Override
+	public void userLoggedOut() {
+		// resetForm();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.SessionEventHandler#userLoginFailed(com.willshex.gson.json.service.shared.Error)
+	 */
+	@Override
+	public void userLoginFailed(Error error) {
+		if (!this.isVisible()) {
+			// AlertBoxHelper
+			// .configureAlert(mAlertBox, AlertBoxType.DangerAlertBoxType, false, "An error occured:", "(" + error.code + ") " + error.message, true)
+			// .setVisible(true);
+
+		}
+	}
+
 }

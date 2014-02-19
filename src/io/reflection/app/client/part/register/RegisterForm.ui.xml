@@ -1,0 +1,103 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style>
+	.marginTop5 {
+		margin-top: 5px;
+	}
+	
+	.marginTop20 {
+		margin-top: 20px;
+	}
+	
+	
+	
+	.noteDetail {
+		font-size: smaller;
+		margin-top: 5px;
+	}
+	.marginBottom50 {
+		margin-bottom: 50px;
+	}
+	
+	.marginBottom40 {
+		margin-bottom: 40px;
+	}
+	
+	</ui:style>
+	<g:HTMLPanel>
+		<g:FormPanel styleName="well col-md-12">
+
+
+			<g:HTMLPanel styleName="{style.marginTop20}">
+				<h4 class="text-center">Request Invite</h4>
+				<g:HTMLPanel styleName="col-md-10 col-md-offset-1  {style.marginTop20}">
+
+					<g:HTMLPanel ui:field="mForenameGroup" styleName="form-group">
+						<label>First name</label>
+						<g:TextBox styleName="form-control {style.marginTop5}"
+							ui:field="mForename" />
+						<g:HTMLPanel ui:field="mForenameNote" visible="false"
+							styleName="{style.noteDetail}" />
+					</g:HTMLPanel>
+
+					<g:HTMLPanel ui:field="mSurnameGroup" styleName="form-group">
+						<label>Last name</label>
+						<g:TextBox styleName="form-control {style.marginTop5}"
+							ui:field="mSurname" />
+						<g:HTMLPanel ui:field="mSurnameNote" visible="false"
+							styleName="{style.noteDetail}" />
+					</g:HTMLPanel>
+
+					<g:HTMLPanel ui:field="mCompanyGroup" styleName="form-group">
+						<label>Company</label>
+						<g:TextBox styleName="form-control {style.marginTop5}"
+							ui:field="mCompany" />
+						<g:HTMLPanel ui:field="mCompanyNote" visible="false"
+							styleName="{style.noteDetail}" />
+					</g:HTMLPanel>
+
+					<g:HTMLPanel ui:field="mEmailGroup" styleName="form-group">
+						<label>Email</label>
+						<g:TextBox styleName="form-control {style.marginTop5}"
+							ui:field="mEmail" />
+						<g:HTMLPanel ui:field="mEmailNote" visible="false"
+							styleName="{style.noteDetail}" />
+					</g:HTMLPanel>
+
+					<g:HTMLPanel ui:field="mPasswordGroup" styleName="form-group">
+						<label>Password</label>
+						<g:PasswordTextBox styleName="form-control {style.marginTop5}"
+							ui:field="mPassword" />
+						<g:HTMLPanel ui:field="mPasswordNote" visible="false"
+							styleName="{style.noteDetail}" />
+					</g:HTMLPanel>
+
+
+
+
+					<g:HTMLPanel styleName="checkbox {style.marginBottom40}">
+						<label>
+							<g:CheckBox ui:field="mTermAndCond" />
+							I agree to the
+							<g:InlineHyperlink ui:field="mTermAndCondLink">terms and
+								conditions</g:InlineHyperlink>
+						</label>
+					</g:HTMLPanel>
+
+
+
+
+					<g:Button ui:field="mRegister"
+						styleName="btn btn-lg btn-primary btn-block {style.marginBottom50}">
+						Submit
+					</g:Button>
+
+
+
+
+				</g:HTMLPanel>
+			</g:HTMLPanel>
+		</g:FormPanel>
+	</g:HTMLPanel>
+</ui:UiBinder> 

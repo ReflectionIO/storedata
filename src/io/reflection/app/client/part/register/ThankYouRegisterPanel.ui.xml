@@ -1,0 +1,38 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:with field='images' type='io.reflection.app.client.res.Images' />
+	<ui:style>
+	.paddingForm {
+		padding-top: 80px;
+		padding-bottom: 230px;
+	}
+	
+	.marginImage {
+		margin-bottom: 30px;
+	}
+	</ui:style>
+	<g:HTMLPanel>
+		<g:FormPanel styleName="well col-md-12 {style.paddingForm}">
+
+
+			<g:HTMLPanel styleName="text-center {style.marginImage}">
+				<g:Image resource="{images.tick}" />
+				<h3 style="margin-top: 40px; margin-bottom: 40px;">
+					Thank you for your request
+				</h3>
+				<p style="margin-bottom: 30px;">We just need to verify your details, which will take a
+					few
+					minutes. We'll send you a notification email once your accont is
+					up
+					and running.</p>
+				<p>
+					Only companies that have been previously invited will be approved.
+					If you have any issues please email
+					<a href="mailto:beta@reflection.io">beta@reflection.io</a>
+				</p>
+
+			</g:HTMLPanel>
+		</g:FormPanel>
+	</g:HTMLPanel>
+</ui:UiBinder> 
