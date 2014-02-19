@@ -80,5 +80,14 @@ public interface Images extends ClientBundle {
 	
 	@Source("app3.png")
 	ImageResource app3();
+	
+	@Source("questionmark.png")
+	ImageResource questionMark();
+	
+	@Source("greentick.png")
+	ImageResource greenTick();
+	
+	@Source("emailsent.png")
+	ImageResource emailSent();
 
 }

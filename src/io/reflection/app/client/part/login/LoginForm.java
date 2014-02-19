@@ -21,6 +21,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
@@ -37,6 +38,13 @@ public class LoginForm extends Composite {
 
 	interface LoginFormUiBinder extends UiBinder<Widget, LoginForm> {}
 
+	@UiField FormPanel mLoginForm;
+	@UiField FormPanel mForgotPasswordForm;
+	@UiField HTMLPanel mForgotPasswordReminder;
+	
+	@UiField TextBox mEmailForgotPassword;
+	@UiField Button mSubmitForgotPassword;
+	
 	@UiField TextBox mEmail;
 	@UiField HTMLPanel mEmailGroup;
 	@UiField HTMLPanel mEmailNote;
@@ -48,9 +56,7 @@ public class LoginForm extends Composite {
 	private String mPasswordError = null;
 
 	@UiField CheckBox mRememberMe;
-
 	@UiField InlineHyperlink mForgotPassword;
-
 	@UiField Button mLogin;
 
 	Images images = GWT.create(Images.class);
@@ -74,7 +80,12 @@ public class LoginForm extends Composite {
 	protected void onAttach() {
 		super.onAttach();
 		resetForm();
-
+		
+		if (!mLoginForm.isVisible()){
+			mLoginForm.setVisible(true);
+			mForgotPasswordForm.setVisible(false);
+			mForgotPasswordReminder.setVisible(false);
+		}
 		mEmail.setFocus(true);
 
 	}
@@ -165,5 +176,19 @@ public class LoginForm extends Composite {
 
 		// mAlertBox.setVisible(false);
 	}
+	
+	@UiHandler("mForgotPassword")
+	void onForgotPasswordClick(ClickEvent event){		
+		mLoginForm.setVisible(false);
+		mForgotPasswordForm.setVisible(true);
+	}
+	
+	@UiHandler("mSubmitForgotPassword")
+	void onSubmitForgotPasswordClick(ClickEvent event){
+		mForgotPasswordForm.setVisible(false);
+		mForgotPasswordReminder.setVisible(true);
+	}
+	
+	
 
 }

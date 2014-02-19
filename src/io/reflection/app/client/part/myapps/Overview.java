@@ -34,7 +34,7 @@ public class Overview extends Composite {
 
 	interface OverviewUiBinder extends UiBinder<Widget, Overview> {}
 
-	@UiField(provided = true) CellTable<FakeData> mApps = new CellTable<Overview.FakeData>(10,BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true) CellTable<FakeData> mApps = new CellTable<Overview.FakeData>(10, BootstrapGwtCellTable.INSTANCE);
 
 	Images images = GWT.create(Images.class);
 
@@ -62,19 +62,18 @@ public class Overview extends Composite {
 	public Overview() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		fakeData = Arrays.asList(
-				new FakeData(new Integer("22"), images.app1(), new String("Free"), new Long("108"), new Double(213), images.app3()),
-				new FakeData(new Integer("22"), images.app2(), new String("Free"), new Long("108"), new Double(213), images.app2()),
-				new FakeData(new Integer("22"), images.app3(), new String("Free"), new Long("108"), new Double(213), images.app1()),
-				new FakeData(new Integer("22"), images.app1(), new String("Free"), new Long("108"), new Double(213), images.app3()),
-				new FakeData(new Integer("22"), images.app2(), new String("Free"), new Long("108"), new Double(213), images.app2()),
-				new FakeData(new Integer("22"), images.app3(), new String("Free"), new Long("108"), new Double(213), images.app1()),
-				new FakeData(new Integer("22"), images.app1(), new String("Free"), new Long("108"), new Double(213), images.app3()),
-				new FakeData(new Integer("22"), images.app2(), new String("Free"), new Long("108"), new Double(213), images.app2()),
-				new FakeData(new Integer("22"), images.app3(), new String("Free"), new Long("108"), new Double(213), images.app1()),
-				new FakeData(new Integer("22"), images.app1(), new String("Free"), new Long("108"), new Double(213), images.app3()),
-				new FakeData(new Integer("22"), images.app2(), new String("Free"), new Long("108"), new Double(213), images.app2()),
-				new FakeData(new Integer("22"), images.app3(), new String("Free"), new Long("108"), new Double(213), images.app1()));
+		fakeData = Arrays.asList(new FakeData(new Integer("22"), images.app1(), new String("Free"), new Long("108"), new Double(213), images.greenTick()),
+				new FakeData(new Integer("22"), images.app2(), new String("Free"), new Long("108"), new Double(213), images.greenTick()), new FakeData(
+						new Integer("22"), images.app3(), new String("Free"), new Long("108"), new Double(213), images.greenTick()), new FakeData(new Integer(
+						"22"), images.app1(), new String("Free"), new Long("108"), new Double(213), images.greenTick()),
+				new FakeData(new Integer("22"), images.app2(), new String("Free"), new Long("108"), new Double(213), images.greenTick()), new FakeData(
+						new Integer("22"), images.app3(), new String("Free"), new Long("108"), new Double(213), images.greenTick()), new FakeData(new Integer(
+						"22"), images.app1(), new String("Free"), new Long("108"), new Double(213), images.greenTick()),
+				new FakeData(new Integer("22"), images.app2(), new String("Free"), new Long("108"), new Double(213), images.greenTick()), new FakeData(
+						new Integer("22"), images.app3(), new String("Free"), new Long("108"), new Double(213), images.greenTick()), new FakeData(new Integer(
+						"22"), images.app1(), new String("Free"), new Long("108"), new Double(213), images.greenTick()),
+				new FakeData(new Integer("22"), images.app2(), new String("Free"), new Long("108"), new Double(213), images.greenTick()), new FakeData(
+						new Integer("22"), images.app3(), new String("Free"), new Long("108"), new Double(213), images.greenTick()));
 
 		TextColumn<FakeData> columnRank = new TextColumn<FakeData>() {
 			@Override
@@ -85,11 +84,11 @@ public class Overview extends Composite {
 		mApps.addColumn(columnRank, "Rank");
 
 		ImageResourceCell imgCell = new ImageResourceCell();
-		Column<FakeData,ImageResource> columnAppDetails = new Column<FakeData,ImageResource>(imgCell) {
+		Column<FakeData, ImageResource> columnAppDetails = new Column<FakeData, ImageResource>(imgCell) {
 
 			@Override
 			public ImageResource getValue(FakeData object) {
-				
+
 				return object.image;
 			}
 		};
@@ -114,17 +113,17 @@ public class Overview extends Composite {
 		TextColumn<FakeData> columnRevenue = new TextColumn<FakeData>() {
 			@Override
 			public String getValue(FakeData object) {
-				return "$ "+object.revenue.toString();
+				return "$ " + object.revenue.toString();
 			}
 		};
 		mApps.addColumn(columnRevenue, "Revenue");
 
 		ImageResourceCell imgIapCell = new ImageResourceCell();
-		Column<FakeData,ImageResource> columnIap = new Column<FakeData,ImageResource>(imgIapCell) {
+		Column<FakeData, ImageResource> columnIap = new Column<FakeData, ImageResource>(imgIapCell) {
 
 			@Override
 			public ImageResource getValue(FakeData object) {
-				
+
 				return object.iap;
 			}
 		};
