@@ -37,10 +37,5 @@ public class HomePage extends Page {
 	void cliccato5(ClickEvent event) {
 		History.newItem("readytostart");
 	}
-	
-	@UiHandler("bottone6")
-	void cliccato6(ClickEvent event) {
-		History.newItem("myapps");
-	}
 
 }

@@ -17,6 +17,7 @@ import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.handler.user.SessionEventHandler;
 import io.reflection.app.client.handler.user.UserPowersEventHandler;
 import io.reflection.app.client.handler.user.UsersEventHandler;
+import io.reflection.app.client.page.PageType;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
@@ -58,6 +59,9 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 	@UiField InlineHyperlink mRanksLink;
 	@UiField LIElement mRanksItem;
+	
+	@UiField InlineHyperlink myAppsLink;
+	@UiField LIElement myAppsItem;
 
 	@UiField LIElement mUpgradeAccountItem;
 	@UiField InlineHyperlink mUpgradeAccountLink;
@@ -132,6 +136,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		removeUpgrade();
 		removeAccount();
 		removeAdmin();
+		removeMyApps();
 
 	}
 
@@ -158,6 +163,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 			mItems.add(mFeedBrowserItem);
 			mItems.add(mRanksItem);
+			mItems.add(myAppsItem);
 			mItems.add(mUsersItem);
 			mItems.add(mLoginItem);
 			mItems.add(mRegisterItem);
@@ -201,6 +207,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	public void navigationChanged(Stack stack) {
 		if ("ranks".equals(stack.getPage())) {
 			highlight(mRanksItem);
+		} else if (PageType.MyAppsPageType.equals(stack.getPage())) {
+			highlight(myAppsItem);
 		} else if ("feedbrowser".equals(stack.getPage())) {
 			highlight(mFeedBrowserItem);
 		} else if ("users".equals(stack.getPage())) {
@@ -284,6 +292,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		addLogin();
 
 		removeUpgrade();
+		
+		removeMyApps();
 	}
 
 	/**
@@ -361,6 +371,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		addAdmin();
 
 		addUpgrade();
+		
+		addMyApps();
 	}
 
 	/*
@@ -383,6 +395,14 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		} else {
 			removeUpgrade();
 		}
+	}
+	
+	public void removeMyApps() {
+		myAppsItem.removeFromParent();
+	}
+
+	public void addMyApps() {
+		mNavList.appendChild(myAppsItem);
 	}
 
 }

@@ -89,6 +89,10 @@
                     <li ui:field="mRanksItem">
                         <g:InlineHyperlink ui:field="mRanksLink" targetHistoryToken="ranks">Leaderboard</g:InlineHyperlink>
                     </li>
+                    
+                    <li ui:field="myAppsItem">
+                        <g:InlineHyperlink ui:field="myAppsLink" targetHistoryToken="myapps">My Apps</g:InlineHyperlink>
+                    </li>
 
                     <li ui:field="mUpgradeAccountItem">
                         <g:InlineHyperlink targetHistoryToken="upgrade" ui:field="mUpgradeAccountLink" text="Pricing" />

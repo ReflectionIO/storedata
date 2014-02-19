@@ -1,14 +1,12 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:style>
-    
+
     </ui:style>
     <g:HTMLPanel styleName="container">
-    
-    <g:Button ui:field="bottone5">Ready to start</g:Button>
-    
-    <g:Button ui:field="bottone6">MyApps</g:Button>
-    
+
+        <g:Button ui:field="bottone5">Ready to start</g:Button>
+
         <h1>Reflection.io</h1>
         <h2>Powerful market intelligence for the global app market.</h2>
         <p>Make smarter business decisions. Access revenue, download and rank data for any app in the store.</p>
@@ -30,7 +28,8 @@
             <li>
                 <h3>Powerful Statistical Model</h3>
                 We have created an algorithm that statistically paints a very accurate picture of the stores based on public rank and
-                private download and revenue
+                private download and
+                revenue
                 data.
             </li>
 
@@ -55,7 +54,8 @@
 
         <h2>Make Smarter Decisions</h2>
 
-        <p>Analyse daily revenue, downloads and rank for the Top 400 apps in any country &amp; category. Make smart business, marketing and development decisions
+        <p>Analyse daily revenue, downloads and rank for the Top 400 apps in any country &amp; category. Make smart business, marketing and development
+            decisions
             by
             comparing the performance of similar apps.</p>
 
@@ -63,7 +63,8 @@
 
         <p>We’re a core team of talented engineers and designers with over 35 years of combined experience in the web and mobile space.</p>
 
-        <p>We were tired of how expensive and cumbersome it was to get up to date and accurate information about apps and the app market so we decided to create a
+        <p>We were tired of how expensive and cumbersome it was to get up to date and accurate information about apps and the app market so we decided to create
+            a
             better service ourselves.</p>
 
         <h3>Work with Reflection</h3>
@@ -87,7 +88,8 @@
             </li>
             <li>
                 <h3>Chi Dire</h3>
-                Chi has more than 20 years experience coding apps and services for small to global brands. With more than 600 apps across his devices, he thought
+                Chi has more than 20 years experience coding apps and services for small to global brands. With more than 600 apps across his devices, he
+                thought
                 it was time to
                 try and make sense of it all.
             </li>
