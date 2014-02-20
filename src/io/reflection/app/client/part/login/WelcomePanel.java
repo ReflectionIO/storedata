@@ -2,7 +2,7 @@
 //  WelcomePanel.java
 //  storedata
 //
-//  Created by William Shakour (stefanocapuzzi) on 14 Feb 2014.
+//  Created by Stefano Capuzzi on 14 Feb 2014.
 //  Copyright © 2014 Reflection.io Ltd. All rights reserved.
 //
 package io.reflection.app.client.part.login;
@@ -45,9 +45,8 @@ public class WelcomePanel extends Page implements SessionEventHandler {
 	@Override
 	protected void onAttach() {
 		super.onAttach();
-
+		mLoginForm.setLoginTitle("Log in to get started");
 		register(EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
-		
 	}
 
 	/*

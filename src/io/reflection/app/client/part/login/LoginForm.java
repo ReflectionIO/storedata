@@ -7,11 +7,14 @@
 //
 package io.reflection.app.client.part.login;
 
+import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.SessionController;
+import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.res.Images;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
@@ -40,15 +43,19 @@ public class LoginForm extends Composite {
 
 	@UiField FormPanel mLoginForm;
 	@UiField FormPanel mForgotPasswordForm;
-	@UiField HTMLPanel mForgotPasswordReminder;
-	
-	@UiField TextBox mEmailForgotPassword;
-	@UiField Button mSubmitForgotPassword;
-	
+	@UiField EmailRemainderPanel mForgotPasswordReminder;
+
+	@UiField HeadingElement mLoginTitle;
+
 	@UiField TextBox mEmail;
 	@UiField HTMLPanel mEmailGroup;
 	@UiField HTMLPanel mEmailNote;
 	private String mEmailError = null;
+
+	@UiField TextBox mEmailForgotPassword;
+	@UiField HTMLPanel mEmailForgotPasswordGroup;
+	@UiField HTMLPanel mEmailForgotPasswordNote;
+	private String mEmailForgotPasswordError = null;
 
 	@UiField TextBox mPassword;
 	@UiField HTMLPanel mPasswordGroup;
@@ -57,18 +64,27 @@ public class LoginForm extends Composite {
 
 	@UiField CheckBox mRememberMe;
 	@UiField InlineHyperlink mForgotPassword;
+
 	@UiField Button mLogin;
+	@UiField Button mSubmitForgotPassword;
 
 	Images images = GWT.create(Images.class);
 	Image imageButton = new Image(images.buttonLogin());
 	final String imageButtonLink = "<img style=\"vertical-align: -2px;\" src=\"" + imageButton.getUrl() + "\"/>";
+	Image imageButton2 = new Image(images.buttonArrowWhite());
+	final String imageButtonLink2 = "<img style=\"vertical-align: 1px;\" src=\"" + imageButton2.getUrl() + "\"/>";
 
 	public LoginForm() {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		mLogin.setHTML(mLogin.getText() + "&nbsp;&nbsp;" + imageButtonLink);
+		mSubmitForgotPassword.setHTML(mSubmitForgotPassword.getText() + "&nbsp;&nbsp;" + imageButtonLink2);
 		mEmail.getElement().setAttribute("placeholder", "Email");
 		mPassword.getElement().setAttribute("placeholder", "Password");
+	}
+
+	public void setLoginTitle(String title) {
+		mLoginTitle.setInnerText(title);
 	}
 
 	/*
@@ -79,12 +95,14 @@ public class LoginForm extends Composite {
 	@Override
 	protected void onAttach() {
 		super.onAttach();
-		resetForm();
-		
-		if (!mLoginForm.isVisible()){
+		resetLoginForm();
+		resetForgotPasswordForm();
+
+		if (!mLoginForm.isVisible()) {
 			mLoginForm.setVisible(true);
 			mForgotPasswordForm.setVisible(false);
 			mForgotPasswordReminder.setVisible(false);
+
 		}
 		mEmail.setFocus(true);
 
@@ -106,10 +124,19 @@ public class LoginForm extends Composite {
 		}
 	}
 
+	@UiHandler("mEmailForgotPassword")
+	void onEnterKeyPressForgotPassword(KeyPressEvent event) {
+		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
+			mSubmitForgotPassword.click();
+		}
+	}
+
 	@UiHandler("mLogin")
 	void onLoginClicked(ClickEvent event) {
 		if (validate()) {
-			this.setVisible(false);
+			FormHelper.hideNote(mEmailGroup, mEmailNote);
+			FormHelper.hideNote(mPasswordGroup, mPasswordNote);
+			disableLoginForm();
 			SessionController.get().login(mEmail.getText(), mPassword.getText(), mRememberMe.getValue().booleanValue()); // Execute user login
 		} else {
 			if (mEmailError != null) {
@@ -167,28 +194,89 @@ public class LoginForm extends Composite {
 		return validated;
 	}
 
-	private void resetForm() {
+	@UiHandler("mSubmitForgotPassword")
+	void onSubmitForgotPasswordClick(ClickEvent event) {
+		if (validateForgotPassword()) {
+			mForgotPasswordForm.setVisible(false);
+			mForgotPasswordReminder.setVisible(true);
+			FormHelper.hideNote(mEmailForgotPasswordGroup, mEmailForgotPasswordNote);
+			mSubmitForgotPassword.setEnabled(false);
+		} else {
+			FormHelper.showNote(true, mEmailForgotPasswordGroup, mEmailForgotPasswordNote, mEmailForgotPasswordError);
+		}
+	}
+
+	private boolean validateForgotPassword() {
+		boolean validated = true;
+		String email = mEmailForgotPassword.getText();
+		if (email == null || email.length() == 0) {
+			mEmailForgotPasswordError = "Cannot be empty";
+			validated = false;
+		} else if (email.length() < 6) {
+			mEmailForgotPasswordError = "Too short (minimum 6 characters)";
+			validated = false;
+		} else if (email.length() > 255) {
+			mEmailForgotPasswordError = "Too long (maximum 255 characters)";
+			validated = false;
+		} else if (!FormHelper.isValidEmail(email)) {
+			mEmailForgotPasswordError = "Invalid email address";
+			validated = false;
+		} else {
+			mEmailForgotPasswordError = null;
+			validated = validated && true;
+		}
+		return validated;
+	}
+
+	private void resetLoginForm() {
 		// mPanel.setVisible(true);
+		mEmail.setEnabled(true);
 		mEmail.setText("");
+		mPassword.setEnabled(true);
 		mPassword.setText("");
+		mRememberMe.setEnabled(true);
+		mLogin.setEnabled(true);
+
 		FormHelper.hideNote(mEmailGroup, mEmailNote);
 		FormHelper.hideNote(mPasswordGroup, mPasswordNote);
-
 		// mAlertBox.setVisible(false);
 	}
-	
+
+	private void resetForgotPasswordForm() {
+		mEmailForgotPassword.setEnabled(true);
+		mEmailForgotPassword.setText("");
+		mSubmitForgotPassword.setEnabled(true);
+		FormHelper.hideNote(mEmailForgotPasswordGroup, mEmailForgotPasswordNote);
+	}
+
+	private void disableLoginForm() {
+		mEmail.setEnabled(false);
+		mEmail.setFocus(false);
+		mPassword.setEnabled(false);
+		mPassword.setFocus(false);
+		mRememberMe.setEnabled(false);
+		mLogin.setEnabled(false);
+	}
+
 	@UiHandler("mForgotPassword")
-	void onForgotPasswordClick(ClickEvent event){		
+	void onForgotPasswordClick(ClickEvent event) {
+		Stack s = NavigationController.get().getStack();
+		if (s != null && s.hasAction()) {
+			if (s.getAction().equals("welcome")) {
+				mForgotPassword.setTargetHistoryToken("login/welcome");
+			} else if (FormHelper.isValidEmail(s.getAction())) {
+				mForgotPassword.setTargetHistoryToken("login/" + s.getAction());
+				mEmailForgotPassword.setText(s.getAction());
+			} else {
+				mForgotPassword.setTargetHistoryToken("login");
+			}
+		} else {
+			mForgotPassword.setTargetHistoryToken("login");
+		}
 		mLoginForm.setVisible(false);
 		mForgotPasswordForm.setVisible(true);
+		mSubmitForgotPassword.setEnabled(true);
+		mEmailForgotPassword.setFocus(true);
 	}
-	
-	@UiHandler("mSubmitForgotPassword")
-	void onSubmitForgotPasswordClick(ClickEvent event){
-		mForgotPasswordForm.setVisible(false);
-		mForgotPasswordReminder.setVisible(true);
-	}
-	
-	
 
 }

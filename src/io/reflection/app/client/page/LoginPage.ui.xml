@@ -76,8 +76,7 @@
 				</div>
 
 
-				<l:LoginForm ui:field="mLoginForm"
-					styleName="col-md-5 col-md-offset-1" />
+				<l:LoginForm ui:field="mLoginForm" styleName="col-md-5 col-md-offset-1 well" />
 
 			</g:HTMLPanel>
 

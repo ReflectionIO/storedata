@@ -7,8 +7,10 @@
 //
 package io.reflection.app.client.part.myapps;
 
+import io.reflection.app.client.cell.MiniAppCell;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.res.Images;
+import io.reflection.app.datatypes.shared.Item;
 
 import java.util.Arrays;
 import java.util.List;
@@ -42,16 +44,16 @@ public class Overview extends Composite {
 
 	private static class FakeData {
 		private Integer rank;
-		private ImageResource image;
+		private Item appDetails;
 		private String price;
 		private Long downloads;
 		private Double revenue;
 		private ImageResource iap;
 
-		public FakeData(Integer rank, ImageResource image, String price, Long downloads, Double revenue, ImageResource iap) {
+		public FakeData(Integer rank, Item appDetails, String price, Long downloads, Double revenue, ImageResource iap) {
 
 			this.rank = rank;
-			this.image = image;
+			this.appDetails = appDetails;
 			this.price = price;
 			this.downloads = downloads;
 			this.revenue = revenue;
@@ -62,18 +64,24 @@ public class Overview extends Composite {
 	public Overview() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		fakeData = Arrays.asList(new FakeData(new Integer("22"), images.app1(), new String("Free"), new Long("108"), new Double(213), images.greenTick()),
-				new FakeData(new Integer("22"), images.app2(), new String("Free"), new Long("108"), new Double(213), images.greenTick()), new FakeData(
-						new Integer("22"), images.app3(), new String("Free"), new Long("108"), new Double(213), images.greenTick()), new FakeData(new Integer(
-						"22"), images.app1(), new String("Free"), new Long("108"), new Double(213), images.greenTick()),
-				new FakeData(new Integer("22"), images.app2(), new String("Free"), new Long("108"), new Double(213), images.greenTick()), new FakeData(
-						new Integer("22"), images.app3(), new String("Free"), new Long("108"), new Double(213), images.greenTick()), new FakeData(new Integer(
-						"22"), images.app1(), new String("Free"), new Long("108"), new Double(213), images.greenTick()),
-				new FakeData(new Integer("22"), images.app2(), new String("Free"), new Long("108"), new Double(213), images.greenTick()), new FakeData(
-						new Integer("22"), images.app3(), new String("Free"), new Long("108"), new Double(213), images.greenTick()), new FakeData(new Integer(
-						"22"), images.app1(), new String("Free"), new Long("108"), new Double(213), images.greenTick()),
-				new FakeData(new Integer("22"), images.app2(), new String("Free"), new Long("108"), new Double(213), images.greenTick()), new FakeData(
-						new Integer("22"), images.app3(), new String("Free"), new Long("108"), new Double(213), images.greenTick()));
+		Item item = new Item();
+		item.creatorName = "Creator Name";
+		item.name = "App Name";
+		item.smallImage = "link";
+		item.type = "asd";
+		item.externalId = "asd";
+
+		fakeData = Arrays.asList(new FakeData(new Integer("22"), item, new String("Free"), new Long("108"), new Double(213), images.greenTick()), new FakeData(
+				new Integer("22"), item, new String("Free"), new Long("108"), new Double(213), images.greenTick()), new FakeData(new Integer("22"), item,
+				new String("Free"), new Long("108"), new Double(213), images.greenTick()), new FakeData(new Integer("22"), item, new String("Free"), new Long(
+				"108"), new Double(213), images.greenTick()), new FakeData(new Integer("22"), item, new String("Free"), new Long("108"), new Double(213),
+				images.greenTick()), new FakeData(new Integer("22"), item, new String("Free"), new Long("108"), new Double(213), images.greenTick()),
+				new FakeData(new Integer("22"), item, new String("Free"), new Long("108"), new Double(213), images.greenTick()), new FakeData(
+						new Integer("22"), item, new String("Free"), new Long("108"), new Double(213), images.greenTick()), new FakeData(new Integer("22"),
+						item, new String("Free"), new Long("108"), new Double(213), images.greenTick()), new FakeData(new Integer("22"), item, new String(
+						"Free"), new Long("108"), new Double(213), images.greenTick()), new FakeData(new Integer("22"), item, new String("Free"), new Long(
+						"108"), new Double(213), images.greenTick()), new FakeData(new Integer("22"), item, new String("Free"), new Long("108"),
+						new Double(213), images.greenTick()));
 
 		TextColumn<FakeData> columnRank = new TextColumn<FakeData>() {
 			@Override
@@ -83,16 +91,13 @@ public class Overview extends Composite {
 		};
 		mApps.addColumn(columnRank, "Rank");
 
-		ImageResourceCell imgCell = new ImageResourceCell();
-		Column<FakeData, ImageResource> columnAppDetails = new Column<FakeData, ImageResource>(imgCell) {
-
+		Column<FakeData, Item> PaidColumn = new Column<FakeData, Item>(new MiniAppCell()) {
 			@Override
-			public ImageResource getValue(FakeData object) {
-
-				return object.image;
+			public Item getValue(FakeData object) {
+				return object.appDetails;
 			}
 		};
-		mApps.addColumn(columnAppDetails, "App Details");
+		mApps.addColumn(PaidColumn, "App Details");
 
 		TextColumn<FakeData> columnPrice = new TextColumn<FakeData>() {
 			@Override
@@ -123,7 +128,6 @@ public class Overview extends Composite {
 
 			@Override
 			public ImageResource getValue(FakeData object) {
-
 				return object.iap;
 			}
 		};

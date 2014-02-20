@@ -52,17 +52,6 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 
 	}
 
-	/*
-	 * @UiHandler("mLogin") void onLoginClicked(ClickEvent event) { if (validate()) { mForm.setVisible(false);
-	 * 
-	 * AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Please wait", " - verifying your username and password...", false)
-	 * .setVisible(true);
-	 * 
-	 * SessionController.get().login(mUsername.getText(), mPassword.getText(), mRememberMe.getValue().booleanValue()); // Execute user login } else { if
-	 * (mUsernameError != null) { FormHelper.showNote(true, mUsernameGroup, mUsernameNote, mUsernameError); } else { FormHelper.hideNote(mUsernameGroup,
-	 * mUsernameNote); } if (mPasswordError != null) { FormHelper.showNote(true, mPasswordGroup, mPasswordNote, mPasswordError); } else {
-	 * FormHelper.hideNote(mPasswordGroup, mPasswordNote); } } }
-	 */
 	/**
 	 * Fire the login button when pressing the 'enter' key on one of the login form fields
 	 * 
@@ -76,7 +65,8 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 	 */
 	@Override
 	protected void onAttach() {
-		super.onAttach();		
+
+		super.onAttach();
 
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
@@ -95,13 +85,16 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 				mWelcomePanel.setVisible(true);
 				mDefaultLogin.setVisible(false);
 			} else if (FormHelper.isValidEmail(s.getAction())) { // If action == email (user has been just registered to the system) attach him email to field
+				mLoginForm.setLoginTitle("Log in to your account");
 				mWelcomePanel.setVisible(false);
 				mDefaultLogin.setVisible(true);
 				mLoginForm.getEmail().setText(s.getAction());
 			}
 		} else {
+			mLoginForm.setLoginTitle("Log in to your account");
 			mWelcomePanel.setVisible(false);
 			mDefaultLogin.setVisible(true);
+
 		}
 
 	}
