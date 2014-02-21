@@ -25,21 +25,27 @@
 
             <xsd:element name="TriggerModelInput" type="sda:TriggerModelRequest" />
             <xsd:element name="TriggerModelOutput" type="sda:TriggerModelResponse" />
-            
+
             <xsd:element name="TriggerPredictInput" type="sda:TriggerPredictRequest" />
             <xsd:element name="TriggerPredictOutput" type="sda:TriggerPredictResponse" />
-            
+
             <xsd:element name="SetPasswordInput" type="sda:SetPasswordRequest" />
             <xsd:element name="SetPasswordOutput" type="sda:SetPasswordResponse" />
-            
+
             <xsd:element name="AssignRoleInput" type="sda:AssignRoleRequest" />
             <xsd:element name="AssignRoleOutput" type="sda:AssignRoleResponse" />
-            
+
             <xsd:element name="GetRolesInput" type="sda:GetRolesRequest" />
             <xsd:element name="GetRolesOutput" type="sda:GetRolesResponse" />
-            
+
             <xsd:element name="GetPermissionsInput" type="sda:GetPermissionsRequest" />
             <xsd:element name="GetPermissionsOutput" type="sda:GetPermissionsResponse" />
+
+            <xsd:element name="GetEmailTemplatesInput" type="sda:GetEmailTemplatesRequest" />
+            <xsd:element name="GetEmailTemplatesOutput" type="sda:GetEmailTemplatesResponse" />
+
+            <xsd:element name="SendEmailInput" type="sda:SendEmailRequest" />
+            <xsd:element name="SendEmailOutput" type="sda:SendEmailResponse" />
 
             <xsd:complexType name="GetUsersRequest">
                 <xsd:complexContent>
@@ -190,7 +196,7 @@
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>
-            
+
             <xsd:complexType name="TriggerPredictRequest">
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
@@ -213,7 +219,7 @@
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>
-            
+
             <xsd:complexType name="SetPasswordRequest">
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
@@ -231,7 +237,7 @@
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>
-            
+
             <xsd:complexType name="AssignRoleRequest">
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
@@ -249,7 +255,7 @@
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>
-            
+
             <xsd:complexType name="GetRolesRequest">
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
@@ -270,7 +276,7 @@
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>
-            
+
             <xsd:complexType name="GetPermissionsRequest">
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
@@ -289,6 +295,45 @@
                             <xsd:element name="pager" type="sd:Pager" />
                         </xsd:sequence>
                     </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="GetEmailTemplatesRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="pager" type="sd:Pager" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="GetEmailTemplatesResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+                            <xsd:element name="templates" type="sd:EmailTemplate" maxOccurs="unbounded" />
+                            <xsd:element name="pager" type="sd:Pager" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="SendEmailRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="template" type="sd:EmailTemplate" />
+                            <xsd:element name="toUser" type="sd:User" />
+                        </xsd:sequence>
+                        <xsd:attribute name="toAddress" type="xsd:string" />
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="SendEmailResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response" />
                 </xsd:complexContent>
             </xsd:complexType>
 
@@ -343,40 +388,54 @@
     <wsdl:message name="TriggerModelResponse">
         <wsdl:part name="output" element="sda:TriggerModelOutput" />
     </wsdl:message>
-    
+
     <wsdl:message name="TriggerPredictRequest">
         <wsdl:part name="input" element="sda:TriggerPredictInput" />
     </wsdl:message>
     <wsdl:message name="TriggerPredictResponse">
         <wsdl:part name="output" element="sda:TriggerPredictOutput" />
     </wsdl:message>
-    
+
     <wsdl:message name="SetPasswordRequest">
         <wsdl:part name="input" element="sda:SetPasswordInput" />
     </wsdl:message>
     <wsdl:message name="SetPasswordResponse">
         <wsdl:part name="output" element="sda:SetPasswordOutput" />
     </wsdl:message>
-    
+
     <wsdl:message name="AssignRoleRequest">
         <wsdl:part name="input" element="sda:AssignRoleInput" />
     </wsdl:message>
     <wsdl:message name="AssignRoleResponse">
         <wsdl:part name="output" element="sda:AssignRoleOutput" />
     </wsdl:message>
-    
+
     <wsdl:message name="GetRolesRequest">
         <wsdl:part name="input" element="sda:GetRolesInput" />
     </wsdl:message>
     <wsdl:message name="GetRolesResponse">
         <wsdl:part name="output" element="sda:GetRolesOutput" />
     </wsdl:message>
-    
+
     <wsdl:message name="GetPermissionsRequest">
         <wsdl:part name="input" element="sda:GetPermissionsInput" />
     </wsdl:message>
     <wsdl:message name="GetPermissionsResponse">
         <wsdl:part name="output" element="sda:GetPermissionsOutput" />
+    </wsdl:message>
+    
+    <wsdl:message name="GetEmailTemplatesRequest">
+        <wsdl:part name="input" element="sda:GetEmailTemplatesInput" />
+    </wsdl:message>
+    <wsdl:message name="GetEmailTemplatesResponse">
+        <wsdl:part name="output" element="sda:GetEmailTemplatesOutput" />
+    </wsdl:message>
+    
+    <wsdl:message name="SendEmailRequest">
+        <wsdl:part name="input" element="sda:SendEmailInput" />
+    </wsdl:message>
+    <wsdl:message name="SendEmailResponse">
+        <wsdl:part name="output" element="sda:SendEmailOutput" />
     </wsdl:message>
 
     <wsdl:portType name="admin">
@@ -408,30 +467,40 @@
             <wsdl:input message="sda:TriggerModelRequest" />
             <wsdl:output message="sda:TriggerModelResponse" />
         </wsdl:operation>
-        
+
         <wsdl:operation name="TriggerPredict">
             <wsdl:input message="sda:TriggerPredictRequest" />
             <wsdl:output message="sda:TriggerPredictResponse" />
         </wsdl:operation>
-        
+
         <wsdl:operation name="SetPassword">
             <wsdl:input message="sda:SetPasswordRequest" />
             <wsdl:output message="sda:SetPasswordResponse" />
         </wsdl:operation>
-        
+
         <wsdl:operation name="AssignRole">
             <wsdl:input message="sda:AssignRoleRequest" />
             <wsdl:output message="sda:AssignRoleResponse" />
         </wsdl:operation>
-        
+
         <wsdl:operation name="GetRoles">
             <wsdl:input message="sda:GetRolesRequest" />
             <wsdl:output message="sda:GetRolesResponse" />
         </wsdl:operation>
-        
+
         <wsdl:operation name="GetPermissions">
             <wsdl:input message="sda:GetPermissionsRequest" />
             <wsdl:output message="sda:GetPermissionsResponse" />
+        </wsdl:operation>
+        
+        <wsdl:operation name="GetEmailTemplates">
+            <wsdl:input message="sda:GetEmailTemplatesRequest" />
+            <wsdl:output message="sda:GetEmailTemplatesResponse" />
+        </wsdl:operation>
+        
+        <wsdl:operation name="SendEmail">
+            <wsdl:input message="sda:SendEmailRequest" />
+            <wsdl:output message="sda:SendEmailResponse" />
         </wsdl:operation>
     </wsdl:portType>
     <wsdl:binding name="adminSOAP" type="sda:admin">
@@ -508,7 +577,7 @@
                 <soap:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
-        
+
         <wsdl:operation name="SetPassword">
             <soap:operation soapAction="http://app.reflection.io/admin/SetPassword" />
             <wsdl:input>
@@ -518,7 +587,7 @@
                 <soap:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
-        
+
         <wsdl:operation name="AssignRole">
             <soap:operation soapAction="http://app.reflection.io/admin/AssignRole" />
             <wsdl:input>
@@ -528,7 +597,7 @@
                 <soap:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
-        
+
         <wsdl:operation name="GetRoles">
             <soap:operation soapAction="http://app.reflection.io/admin/GetRoles" />
             <wsdl:input>
@@ -538,9 +607,29 @@
                 <soap:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
-        
+
         <wsdl:operation name="GetPermissions">
             <soap:operation soapAction="http://app.reflection.io/admin/GetPermissions" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        
+        <wsdl:operation name="GetEmailTemplates">
+            <soap:operation soapAction="http://app.reflection.io/admin/GetEmailTemplates" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        
+        <wsdl:operation name="SendEmail">
+            <soap:operation soapAction="http://app.reflection.io/admin/SendEmail" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>

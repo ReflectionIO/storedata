@@ -13,6 +13,8 @@ import io.reflection.app.api.ApiError;
 import io.reflection.app.api.ValidationHelper;
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
 import io.reflection.app.api.admin.shared.call.AssignRoleResponse;
+import io.reflection.app.api.admin.shared.call.GetEmailTemplatesRequest;
+import io.reflection.app.api.admin.shared.call.GetEmailTemplatesResponse;
 import io.reflection.app.api.admin.shared.call.GetFeedFetchesRequest;
 import io.reflection.app.api.admin.shared.call.GetFeedFetchesResponse;
 import io.reflection.app.api.admin.shared.call.GetModelOutcomeRequest;
@@ -25,6 +27,8 @@ import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersCountResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersResponse;
+import io.reflection.app.api.admin.shared.call.SendEmailRequest;
+import io.reflection.app.api.admin.shared.call.SendEmailResponse;
 import io.reflection.app.api.admin.shared.call.SetPasswordRequest;
 import io.reflection.app.api.admin.shared.call.SetPasswordResponse;
 import io.reflection.app.api.admin.shared.call.TriggerGatherRequest;
@@ -44,6 +48,7 @@ import io.reflection.app.modellers.Modeller;
 import io.reflection.app.modellers.ModellerFactory;
 import io.reflection.app.predictors.Predictor;
 import io.reflection.app.predictors.PredictorFactory;
+import io.reflection.app.service.emailtemplate.EmailTemplateServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
 import io.reflection.app.service.role.RoleServiceProvider;
@@ -145,7 +150,7 @@ public final class Admin extends ActionHandler {
 			input.session = ValidationHelper.validateSession(input.session, "input.session");
 
 			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
-			
+
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
 			if (input.pager.sortBy == null) {
@@ -440,4 +445,65 @@ public final class Admin extends ActionHandler {
 		LOG.finer("Exiting getPermissions");
 		return output;
 	}
+
+	public GetEmailTemplatesResponse getEmailTemplates(GetEmailTemplatesRequest input) {
+		LOG.finer("Entering getEmailTemplates");
+		GetEmailTemplatesResponse output = new GetEmailTemplatesResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("GetEmailTemplatesRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			input.session = ValidationHelper.validateSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
+			
+			input.pager = ValidationHelper.validatePager(input.pager, "input");
+
+			output.templates = EmailTemplateServiceProvider.provide().getEmailTemplates(input.pager);
+			output.pager = input.pager;
+			updatePager(output.pager, output.templates, input.pager.totalCount == null ? EmailTemplateServiceProvider.provide().getEmailTemplatesCount() : null);
+			
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getEmailTemplates");
+		return output;
+	}
+
+	public SendEmailResponse sendEmail(SendEmailRequest input) {
+		LOG.finer("Entering sendEmail");
+		SendEmailResponse output = new SendEmailResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("SendEmailRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			input.session = ValidationHelper.validateSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
+			
+			input.toAddress = ValidationHelper.validateEmail(input.toAddress, true, "input.toAddress");
+			
+			if (input.toAddress == null) {
+				input.toUser = ValidationHelper.validateExistingUser(input.toUser, "input.toUser");
+			}
+			
+			input.template = ValidationHelper.validateExistingEmailTemplate(input.template, "input.template");
+			
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting sendEmail");
+		return output;
+	}
+	
+	
+	
 }

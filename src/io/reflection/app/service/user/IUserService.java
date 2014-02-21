@@ -166,4 +166,9 @@ public interface IUserService extends IService {
 	 */
 	public Long getDataAccountsCount(User user) throws DataAccessException;
 
+	/**
+	 * @return
+	 */
+	public User getDataAccountOwner(DataAccount dataAccount) throws DataAccessException;
+
 }

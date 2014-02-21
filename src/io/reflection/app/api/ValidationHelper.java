@@ -17,6 +17,7 @@ import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
+import io.reflection.app.datatypes.shared.EmailTemplate;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
@@ -26,6 +27,7 @@ import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.country.CountryServiceProvider;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.datasource.DataSourceServiceProvider;
+import io.reflection.app.service.emailtemplate.EmailTemplateServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
 import io.reflection.app.service.role.RoleServiceProvider;
@@ -607,6 +609,25 @@ public class ValidationHelper {
 			throw new InputValidationException(ApiError.BadEmailFormat.getCode(), ApiError.BadEmailFormat.getMessage(parent));
 
 		return email;
+	}
+
+	/**
+	 * @param emailTemplate
+	 * @param string
+	 * @return
+	 */
+	public static EmailTemplate validateExistingEmailTemplate(EmailTemplate emailTemplate, String parent) throws ServiceException {
+		if (emailTemplate == null) throw new InputValidationException(ApiError.EmailTemplateNull.getCode(), ApiError.EmailTemplateNull.getMessage(parent));
+
+		if (emailTemplate.id == null)
+			throw new InputValidationException(ApiError.EmailTemplateNoLookup.getCode(), ApiError.EmailTemplateNoLookup.getMessage(parent));
+
+		EmailTemplate lookupEmailTemplate = EmailTemplateServiceProvider.provide().getEmailTemplate(emailTemplate.id);
+
+		if (lookupEmailTemplate == null)
+			throw new InputValidationException(ApiError.EmailTemplateNotFound.getCode(), ApiError.EmailTemplateNotFound.getMessage(parent));
+
+		return lookupEmailTemplate;
 	}
 
 }

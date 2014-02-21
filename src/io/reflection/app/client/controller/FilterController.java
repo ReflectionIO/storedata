@@ -55,7 +55,7 @@ public class FilterController {
 		setCountry("us");
 		setEndDate(new Date());
 		Date startDate = getEndDate();
-		CalendarUtil.addDaysToDate(startDate, -10);
+		CalendarUtil.addDaysToDate(startDate, -30);
 		setStartDate(startDate);
 		setCategory(Long.valueOf(24));
 		commit();

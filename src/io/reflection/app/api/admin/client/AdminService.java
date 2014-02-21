@@ -10,6 +10,8 @@ package io.reflection.app.api.admin.client;
 
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
 import io.reflection.app.api.admin.shared.call.AssignRoleResponse;
+import io.reflection.app.api.admin.shared.call.GetEmailTemplatesRequest;
+import io.reflection.app.api.admin.shared.call.GetEmailTemplatesResponse;
 import io.reflection.app.api.admin.shared.call.GetFeedFetchesRequest;
 import io.reflection.app.api.admin.shared.call.GetFeedFetchesResponse;
 import io.reflection.app.api.admin.shared.call.GetModelOutcomeRequest;
@@ -22,6 +24,8 @@ import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersCountResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersResponse;
+import io.reflection.app.api.admin.shared.call.SendEmailRequest;
+import io.reflection.app.api.admin.shared.call.SendEmailResponse;
 import io.reflection.app.api.admin.shared.call.SetPasswordRequest;
 import io.reflection.app.api.admin.shared.call.SetPasswordResponse;
 import io.reflection.app.api.admin.shared.call.TriggerGatherRequest;
@@ -291,6 +295,50 @@ public final class AdminService extends JsonService {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					GetPermissionsResponse outputParameter = new GetPermissionsResponse();
+					parseResponse(response.getText(), outputParameter);
+					output.onSuccess(outputParameter);
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+				}
+			});
+		} catch (RequestException e) {
+			output.onFailure(e);
+		}
+	}
+
+	public static final String AdminMethodGetEmailTemplates = "GetEmailTemplates";
+
+	public void getEmailTemplates(GetEmailTemplatesRequest input, final AsyncCallback<GetEmailTemplatesResponse> output) {
+		try {
+			sendRequest(AdminMethodGetEmailTemplates, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					GetEmailTemplatesResponse outputParameter = new GetEmailTemplatesResponse();
+					parseResponse(response.getText(), outputParameter);
+					output.onSuccess(outputParameter);
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+				}
+			});
+		} catch (RequestException e) {
+			output.onFailure(e);
+		}
+	}
+
+	public static final String AdminMethodSendEmail = "SendEmail";
+
+	public void sendEmail(SendEmailRequest input, final AsyncCallback<SendEmailResponse> output) {
+		try {
+			sendRequest(AdminMethodSendEmail, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					SendEmailResponse outputParameter = new SendEmailResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
 				}

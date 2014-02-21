@@ -13,12 +13,19 @@ import io.reflection.app.accountdatacollectors.DataAccountCollectorFactory;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
+import io.reflection.app.datatypes.shared.EmailTemplate;
+import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.helpers.EmailHelper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.datasource.DataSourceServiceProvider;
+import io.reflection.app.service.emailtemplate.EmailTemplateServiceProvider;
+import io.reflection.app.service.user.UserServiceProvider;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -65,6 +72,7 @@ public class DataAccountGatherServlet extends ContextAwareServlet {
 
 		String accountIdParameter = REQUEST.get().getParameter("accountId");
 		String dateParameter = REQUEST.get().getParameter("date");
+		String notifyParameter = REQUEST.get().getParameter("notify");
 
 		if (accountIdParameter != null) {
 			try {
@@ -87,7 +95,20 @@ public class DataAccountGatherServlet extends ContextAwareServlet {
 						DataAccountCollector collector = DataAccountCollectorFactory.getCollectorForSource(dataSource.a3Code);
 
 						if (collector != null) {
-							collector.collect(account, date);
+							boolean status = collector.collect(account, date);
+
+							if (status && notifyParameter != null && Boolean.parseBoolean(notifyParameter)) {
+								EmailTemplate template = EmailTemplateServiceProvider.provide().getEmailTemplate(Long.valueOf(5));
+
+								Map<String, Object> parameters = new HashMap<String, Object>();
+
+								User user = UserServiceProvider.provide().getDataAccountOwner(account);
+								parameters.put("user", user);
+
+								String body = EmailHelper.inflate(parameters, template.body);
+
+								EmailHelper.sendEmail(template.from, user.username, user.forename + " " + user.surname, template.subject, body);
+							}
 
 						} else {
 							if (LOG.isLoggable(GaeLevel.WARNING)) {

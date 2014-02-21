@@ -7,8 +7,12 @@
 //
 package io.reflection.app.client.part;
 
+import java.util.Date;
+
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -22,8 +26,13 @@ public class Footer extends Composite {
 
 	interface FooterUiBinder extends UiBinder<Widget, Footer> {}
 
+	@UiField SpanElement mYear;
+
+	@SuppressWarnings("deprecation")
 	public Footer() {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		mYear.setInnerHTML(Integer.toString(1900 + (new Date()).getYear()));
 	}
 
 }

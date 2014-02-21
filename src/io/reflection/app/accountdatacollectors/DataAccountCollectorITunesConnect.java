@@ -112,13 +112,15 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 	 * @see io.reflection.app.accountdatacollectors.DataAccountCollector#collect(io.reflection.app.shared.datatypes.DataAccount, java.util.Date)
 	 */
 	@Override
-	public void collect(DataAccount dataAccount, Date date) throws DataAccessException {
+	public boolean collect(DataAccount dataAccount, Date date) throws DataAccessException {
 
 		String dateParameter = (new SimpleDateFormat("yyyyMMdd")).format(date);
 
 		if (LOG.isLoggable(GaeLevel.INFO)) {
 			LOG.info(String.format("Getting data from itunes connect for data account [%d] and date [%s]", dataAccount.id.longValue(), dateParameter));
 		}
+		
+		boolean success = true;
 
 		URL url;
 		try {
@@ -179,10 +181,14 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 					} else {
 						dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeEmpty;
 					}
+					
+					success = true;
 				} else {
 					// this should not occur (and is more likely to be an error than an empty result)
 
 					dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeEmpty;
+					
+					success = true;
 				}
 
 				dataAccountFetch = DataAccountFetchServiceProvider.provide().addDataAccountFetch(dataAccountFetch);
@@ -190,7 +196,7 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 				if (dataAccountFetch != null && dataAccountFetch.status == DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered) {
 					// once the data is collected
 					DataAccountIngestor ingestor = DataAccountIngestorFactory.getIngestorForSource(dataAccount.source.a3Code);
-
+					
 					ingestor.enqueue(dataAccountFetch);
 				}
 			}
@@ -199,8 +205,27 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 			LOG.log(GaeLevel.SEVERE,
 					String.format("Exception throw while obtaining file for data account [%d] and date [%s]", dataAccount.id.longValue(), dateParameter), e);
 		}
+		
+		return success;
 
 	}
+
+//	/**
+//	 * THIS CODE HAS TO BE REMOVED AFTER THE CLOSED BETA
+//	 * 
+//	 * @throws DataAccessException 
+//	 * 
+//	 */
+//	private void BETA_GrantAccess(DataAccount dataAccount) throws DataAccessException {
+//		User owner = UserServiceProvider.provide().getDataAccountOwner(dataAccount);
+//		
+//		Role betaUser = new Role();
+//		betaUser.id = new Long(5);
+//		
+//		if (!UserServiceProvider.provide().hasRole(owner, betaUser)) {
+//			UserServiceProvider.provide().assignRole(owner, betaUser);
+//		}
+//	}
 
 	/**
 	 * Gets the first vendor id in a properties string containing a json object

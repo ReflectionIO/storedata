@@ -9,12 +9,14 @@
 package io.reflection.app.api.admin;
 
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
+import io.reflection.app.api.admin.shared.call.GetEmailTemplatesRequest;
 import io.reflection.app.api.admin.shared.call.GetFeedFetchesRequest;
 import io.reflection.app.api.admin.shared.call.GetModelOutcomeRequest;
 import io.reflection.app.api.admin.shared.call.GetPermissionsRequest;
 import io.reflection.app.api.admin.shared.call.GetRolesRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersRequest;
+import io.reflection.app.api.admin.shared.call.SendEmailRequest;
 import io.reflection.app.api.admin.shared.call.SetPasswordRequest;
 import io.reflection.app.api.admin.shared.call.TriggerGatherRequest;
 import io.reflection.app.api.admin.shared.call.TriggerIngestRequest;
@@ -78,6 +80,14 @@ public final class AdminJsonServlet extends JsonServlet {
 			GetPermissionsRequest input = new GetPermissionsRequest();
 			input.fromJson(request);
 			output = service.getPermissions(input).toString();
+		} else if ("GetEmailTemplates".equals(action)) {
+			GetEmailTemplatesRequest input = new GetEmailTemplatesRequest();
+			input.fromJson(request);
+			output = service.getEmailTemplates(input).toString();
+		} else if ("SendEmail".equals(action)) {
+			SendEmailRequest input = new SendEmailRequest();
+			input.fromJson(request);
+			output = service.sendEmail(input).toString();
 		}
 
 		return output;

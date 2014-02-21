@@ -41,7 +41,7 @@ final class UserService implements IUserService {
 
 	private static final String SALT = "salt.username.magic";
 	private static final long PASSWORD_EMAIL_TEMPLATE_ID = 4;
-	
+
 	private static final Logger LOG = Logger.getLogger(UserService.class.getName());
 
 	public String getName() {
@@ -232,10 +232,10 @@ final class UserService implements IUserService {
 			if (userConnection.getAffectedRowCount() > 0) {
 				Map<String, Object> values = new HashMap<String, Object>();
 				values.put("user", user);
-				
+
 				EmailTemplate template = EmailTemplateServiceProvider.provide().getEmailTemplate(Long.valueOf(PASSWORD_EMAIL_TEMPLATE_ID));
 				String body = EmailHelper.inflate(values, template.body);
-				
+
 				if (!EmailHelper.sendEmail(template.from, user.username, user.forename + " " + user.surname, template.subject, body)) {
 					LOG.severe(String.format("Failed to notify user [%d] of password change", user.id.longValue()));
 				}
@@ -484,7 +484,7 @@ final class UserService implements IUserService {
 		user.id = connection.getCurrentRowLong("id");
 		user.created = connection.getCurrentRowDateTime("created");
 		user.deleted = connection.getCurrentRowString("deleted");
-		
+
 		user.forename = connection.getCurrentRowString("forename");
 		user.surname = connection.getCurrentRowString("surname");
 		user.username = connection.getCurrentRowString("username");
@@ -546,6 +546,22 @@ final class UserService implements IUserService {
 				if (LOG.isLoggable(Level.INFO)) {
 					LOG.info(String.format("Role with roleid [%d] was added to user with userid [%d]", role.id.longValue(), user.id.longValue()));
 				}
+
+				// if (role.id == Long.valueOf(5) && "BT1".equals(role.code)) {
+				// EmailTemplate template = EmailTemplateServiceProvider.provide().getEmailTemplate(Long.valueOf(2));
+				//
+				// Map<String, Object> parameters = new HashMap<String, Object>();
+				//
+				// if (user.forename == null) {
+				// user = getUser(user.id);
+				// }
+				//
+				// parameters.put("user", user);
+				//
+				// String body = EmailHelper.inflate(parameters, template.body);
+				//
+				// EmailHelper.sendEmail(from, to, name, subject, body);
+				// }
 			} else {
 				if (LOG.isLoggable(Level.WARNING)) {
 					LOG.warning(String.format("Role with roleid [%d] was NOT added to user with userid [%d]", role.id.longValue(), user.id.longValue()));
@@ -819,5 +835,37 @@ final class UserService implements IUserService {
 		}
 
 		return dataAccountsCount;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.user.IUserService#getDataAccountOwner(io.reflection.app.datatypes.shared.DataAccount)
+	 */
+	@Override
+	public User getDataAccountOwner(DataAccount dataAccount) throws DataAccessException {
+		User owner = null;
+
+		String getDataAccountOwnerQuery = String.format("SELECT `userid` FROM `userdataaccount` WHERE `deleted`='n' AND `dataaccountid`=%d LIMIT 1",
+				dataAccount.id.longValue());
+
+		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
+
+		try {
+			userConnection.connect();
+			userConnection.executeQuery(getDataAccountOwnerQuery);
+
+			if (userConnection.fetchNextRow()) {
+				Long userId = userConnection.getCurrentRowLong("userid");
+				owner = getUser(userId);
+			}
+
+		} finally {
+			if (userConnection != null) {
+				userConnection.disconnect();
+			}
+		}
+
+		return owner;
 	}
 }

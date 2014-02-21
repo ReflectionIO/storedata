@@ -100,7 +100,7 @@ public class RankSidePanel extends Composite {
 		FilterController.get().start();
 		FilterController.get().setEndDate(mDate.getValue());
 		Date startDate = new Date(mDate.getValue().getTime());
-		CalendarUtil.addDaysToDate(startDate, -10);
+		CalendarUtil.addDaysToDate(startDate, -30);
 		FilterController.get().setStartDate(startDate);
 		FilterController.get().commit();
 	}

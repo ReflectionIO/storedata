@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum EmailFormatType {
-	EmailFormatTypePlainText("plainText"),
+	EmailFormatTypePlainText("plaintext"),
 	EmailFormatTypeHtml("html"),
 	EmailFormatTypeRtf("rtf"), ;
 	private String value;

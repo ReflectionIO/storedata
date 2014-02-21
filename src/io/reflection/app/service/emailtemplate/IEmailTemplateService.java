@@ -9,7 +9,10 @@
 package io.reflection.app.service.emailtemplate;
 
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.EmailTemplate;
+
+import java.util.List;
 
 import com.spacehopperstudios.service.IService;
 
@@ -36,5 +39,11 @@ public interface IEmailTemplateService extends IService {
 	 * @param emailTemplate
 	 */
 	public void deleteEmailTemplate(EmailTemplate emailTemplate) throws DataAccessException;
+	
+	public List<EmailTemplate> getEmailTemplates(Pager pager) throws DataAccessException;
+	
+	public Long getEmailTemplatesCount() throws DataAccessException;
+	
+	
 
 }

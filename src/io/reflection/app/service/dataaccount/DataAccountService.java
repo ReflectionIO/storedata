@@ -131,7 +131,7 @@ final class DataAccountService implements IDataAccountService {
 		}
 
 		if (addedDataAccount != null) {
-			enqueue(addedDataAccount, 30);
+			enqueue(addedDataAccount, 30, true);
 		}
 
 		return addedDataAccount;
@@ -141,7 +141,7 @@ final class DataAccountService implements IDataAccountService {
 	 * @param dataAccount
 	 * @param days
 	 */
-	private void enqueue(DataAccount dataAccount, int days) {
+	private void enqueue(DataAccount dataAccount, int days, boolean add) {
 		if (LOG.isLoggable(GaeLevel.TRACE)) {
 			LOG.log(GaeLevel.TRACE, "Entering...");
 		}
@@ -159,6 +159,10 @@ final class DataAccountService implements IDataAccountService {
 				c.add(Calendar.DAY_OF_MONTH, -i);
 
 				options.param("date", Long.toString(c.getTime().getTime()));
+				
+				if (add && i == days) {
+					options.param("notify", Boolean.toString(true));
+				}
 
 				try {
 					queue.add(options);
@@ -219,7 +223,7 @@ final class DataAccountService implements IDataAccountService {
 		}
 
 		if (updDataAccount != null) {
-			enqueue(updDataAccount, 30);
+			enqueue(updDataAccount, 30, false);
 		}
 
 		return updDataAccount;
@@ -371,7 +375,7 @@ final class DataAccountService implements IDataAccountService {
 	@Override
 	public void triggerDataAccountFetch(DataAccount dataAccount) {
 		// TODO: enqueue messages for the number of days since the last success or 30 days - for now we just enqueue the last day
-		enqueue(dataAccount, 1);
+		enqueue(dataAccount, 1, false);
 	}
 
 }

@@ -200,7 +200,7 @@ final class PermissionService implements IPermissionService {
 
 		Connection permissionConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypePermission.toString());
 
-		String getPermissionsCountQuery = "SELECT COUNT(`id`) AS `permissioncount` FROM `permission` WHERE `deleted`='n'";
+		String getPermissionsCountQuery = "SELECT count(1) AS `permissioncount` FROM `permission` WHERE `deleted`='n'";
 
 		try {
 			permissionConnection.connect();

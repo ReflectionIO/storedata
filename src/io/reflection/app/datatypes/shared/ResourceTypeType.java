@@ -13,9 +13,9 @@ import java.util.Map;
 
 public enum ResourceTypeType {
 	ResourceTypeTypeImage("image"),
-	ResourceTypeTypeGoogleCloudServiceImage("googleCloudServiceImage"),
-	ResourceTypeTypeYoutubeVideo("youtubeVideo"),
-	ResourceTypeTypeHtml5Video("html5Video"), ;
+	ResourceTypeTypeGoogleCloudServiceImage("googlecloudserviceimage"),
+	ResourceTypeTypeYoutubeVideo("youtubevideo"),
+	ResourceTypeTypeHtml5Video("html5video"), ;
 	private String value;
 	private static Map<String, ResourceTypeType> valueLookup = null;
 

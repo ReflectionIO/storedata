@@ -66,7 +66,7 @@ public class ItemTopPanel extends Composite {
 		FilterController.get().start();
 		FilterController.get().setEndDate(mDateRange.getValue());
 		Date startDate = new Date(mDateRange.getValue().getTime());
-		CalendarUtil.addDaysToDate(startDate, -10);
+		CalendarUtil.addDaysToDate(startDate, -30);
 		FilterController.get().setStartDate(startDate);
 		FilterController.get().commit();
 	}

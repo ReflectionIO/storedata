@@ -118,7 +118,7 @@
                 <div class="row">
                     <div class="{style.copyright} pull-left">
                         &copy; Copyright
-                        <span ui:field="mYear">2013</span>
+                        <span ui:field="mYear"></span>
                         <a href="http://www.reflection.io" target="_blank">Reflection.io</a>, All Rights Reserved
                     </div>
                     <ul class="{style.social} pull-right">

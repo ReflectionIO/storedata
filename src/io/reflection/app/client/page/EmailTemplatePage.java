@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.page;
 
+import io.reflection.app.client.controller.EmailTemplateController;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
@@ -42,6 +43,9 @@ public class EmailTemplatePage extends Page implements NavigationEventHandler {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		addEmailTemplateColumns();
+		
+		EmailTemplateController.get().addDataDisplay(emailTemplates);
+		pager.setDisplay(emailTemplates);
 	}
 
 	public void addEmailTemplateColumns() {
@@ -106,7 +110,9 @@ public class EmailTemplatePage extends Page implements NavigationEventHandler {
 	 */
 	@Override
 	public void navigationChanged(Stack stack) {
-		if ("emailtemplate".equals(stack.getPage()) && "view".equals(stack.getAction())) {}
+		if ("emailtemplate".equals(stack.getPage()) && "view".equals(stack.getAction())) {
+			
+		}
 	}
 
 	/*

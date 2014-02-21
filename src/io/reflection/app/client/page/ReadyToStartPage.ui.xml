@@ -15,7 +15,7 @@
 
 			<h2 style="margin-top: 60px; margin-bottom: 20px;">That's it! You're ready to start using Reflection</h2>
 
-			<h4 style="margin-bottom: 100px;">
+			<h4 style="margin-bottom: 100px; font-weight: normal;">
 				Start by exploring the top charting apps in the
 				<g:InlineHyperlink ui:field="mLeaderboard" targetHistoryToken="ranks" >Leaderboard</g:InlineHyperlink>
 				<br />
