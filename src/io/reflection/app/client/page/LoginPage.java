@@ -128,7 +128,7 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 	 */
 	@Override
 	public void userLoggedOut() {
-		// resetForm();
+
 	}
 
 	/*

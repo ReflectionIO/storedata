@@ -65,11 +65,11 @@ public class Overview extends Composite {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		Item item = new Item();
-		item.creatorName = "Creator Name";
-		item.name = "App Name";
-		item.smallImage = "link";
-		item.type = "asd";
-		item.externalId = "asd";
+		item.creatorName = "Mojang";
+		item.name = "Minecraft";
+		item.smallImage = "http://a1592.phobos.apple.com/us/r30/Purple/v4/94/98/2f/94982fe2-4cec-8a02-fbf6-6fe0851276e2/mzl.nlynfkyw.53x53-50.png";
+		item.type = "free";
+		item.externalId = "1";
 
 		fakeData = Arrays.asList(new FakeData(new Integer("22"), item, new String("Free"), new Long("108"), new Double(213), images.greenTick()), new FakeData(
 				new Integer("22"), item, new String("Free"), new Long("108"), new Double(213), images.greenTick()), new FakeData(new Integer("22"), item,
