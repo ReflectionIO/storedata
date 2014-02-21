@@ -94,7 +94,7 @@ public class LinkItunesPage extends Page {
 	void onLinkAccountClicked(ClickEvent event) {
 		if (validate()) {
 			mPanel.setVisible(false);
-			History.newItem("thankyou");
+			History.newItem("readytostart");
 		} else {
 			if (mAccountUsernameError != null) {
 				FormHelper.showNote(true, mAccountUsernameGroup, mAccountUsernameNote, mAccountUsernameError);

@@ -8,8 +8,8 @@
 package io.reflection.app.client.part.login;
 
 import io.reflection.app.client.controller.NavigationController;
-import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.NavigationController.Stack;
+import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.res.Images;
 
@@ -43,7 +43,7 @@ public class LoginForm extends Composite {
 
 	@UiField FormPanel mLoginForm;
 	@UiField FormPanel mForgotPasswordForm;
-	@UiField EmailRemainderPanel mForgotPasswordReminder;
+	@UiField HTMLPanel mForgotPasswordReminder;
 
 	@UiField HeadingElement mLoginTitle;
 

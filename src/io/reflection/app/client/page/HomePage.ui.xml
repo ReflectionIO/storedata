@@ -4,8 +4,8 @@
 
     </ui:style>
     <g:HTMLPanel styleName="container">
-
-        <g:Button ui:field="bottone5">Ready to start</g:Button>
+        
+        <g:Button ui:field="bottone6">Ready to start</g:Button>
 
         <h1>Reflection.io</h1>
         <h2>Powerful market intelligence for the global app market.</h2>

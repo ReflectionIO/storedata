@@ -26,15 +26,15 @@ public class HomePage extends Page {
 
 	interface HomePageUiBinder extends UiBinder<Widget, HomePage> {}
 	
-	@UiField Button bottone5 = new Button();
+	@UiField Button bottone6 = new Button();
 
 	public HomePage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
 	}
 
-	@UiHandler("bottone5")
-	void cliccato5(ClickEvent event) {
+	@UiHandler("bottone6")
+	void cliccato6(ClickEvent event) {
 		History.newItem("readytostart");
 	}
 

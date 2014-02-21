@@ -29,7 +29,6 @@ public enum PageType {
 	SearchPageType("search"),
 	ItemPageType("item"),
 	HomePageType("home"),
-	ThankYouPageType("thankyou"),
 	LinkItunesPageType("linkitunes"),
 	ReadyToStartPageType("readytostart"),
 	MyAppsPageType("myapps"),
@@ -110,9 +109,6 @@ public enum PageType {
 			break;
 		case HomePageType:
 			page = new HomePage();
-			break;
-		case ThankYouPageType:
-			page = new ThankYouPage();
 			break;
 		case LinkItunesPageType:
 			page = new LinkItunesPage();
