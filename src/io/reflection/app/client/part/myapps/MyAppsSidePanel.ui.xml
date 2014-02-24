@@ -7,11 +7,11 @@
 	}
 	</ui:style>
 	<g:HTMLPanel>
-		<div class="col-md-10 col-md-offset-1">
+		<div class="col-md-12">
 
 			<h3>My Apps</h3>
 
-			<h4 ui:field="mCreatorName" class="{style.pageTitle} text-muted">Creator</h4>
+			<h6 ui:field="mCreatorName" class="{style.pageTitle} text-muted">Creator</h6>
 
 			<a>Overview</a>
 			<hr />

@@ -72,14 +72,8 @@ public interface Images extends ClientBundle {
 	@Source("cog.png")
 	ImageResource cog();
 	
-	@Source("app1.png")
-	ImageResource app1();
-	
-	@Source("app2.png")
-	ImageResource app2();
-	
-	@Source("app3.png")
-	ImageResource app3();
+	@Source("clock.png")
+	ImageResource clock();
 	
 	@Source("questionmark.png")
 	ImageResource questionMark();
@@ -89,5 +83,22 @@ public interface Images extends ClientBundle {
 	
 	@Source("emailsent.png")
 	ImageResource emailSent();
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	@Source("app1.png")
+	ImageResource app1();
+	
+	@Source("app2.png")
+	ImageResource app2();
+	
+	@Source("app3.png")
+	ImageResource app3();
 
 }

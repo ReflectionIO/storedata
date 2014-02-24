@@ -29,8 +29,8 @@
 		<p:AlertBox ui:field="mAlertBox" visible="false" />
 		<g:HTMLPanel ui:field="mPanel" styleName="row col-md-12">
 			<div class="col-md-6" style="margin-top: 130px;">
-				<h2>Powerful market intelligence for the global development
-					community</h2>
+				<h1>Powerful market intelligence for the global development
+					community</h1>
 				<p style="margin-top: 40px; margin-bottom: 40px">
 					Reflection is currently in Private Beta. We have invited
 					a select
@@ -38,7 +38,7 @@
 					look.
 				</p>
 				<g:Image resource="{images.alarmClock}" styleName="col-md-2 text-center {style.image1}" />
-				<h4 class="col-md-offset-2">Benefits of getting in early</h4>
+				<h3 class="col-md-offset-2">Benefits of getting in early</h3>
 				<p class="col-md-offset-2">
 					Ability to request any additional feature based on our
 					data, such as forecasting and trends.
@@ -51,7 +51,7 @@
 
 				<g:Image resource="{images.clipboard}"
 					styleName="col-md-2 {style.marginTop40} {style.image2}" />
-				<h4 class="col-md-offset-2" style="margin-top: 40px">What we need</h4>
+				<h3 class="col-md-offset-2" style="margin-top: 40px">What we need</h3>
 				<p class="col-md-offset-2">
 					Linking your store account so we can expand our dataset
 					<br />

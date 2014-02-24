@@ -3,14 +3,14 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.user.datepicker.client"
 	xmlns:cell="urn:import:com.google.gwt.user.cellview.client">
 	<ui:style>
-	/* Add CSS here. See the GWT docs on UI Binder for more details */
+	
 	</ui:style>
 	<g:HTMLPanel>
 
 		<g:HTMLPanel styleName="well well-sm col-md-12">
 
 
-			<h4 class="col-md-2">Overview</h4>
+			<h5 class="col-md-2">Overview</h5>
 
 			<div class="col-md-10 text-right">
 

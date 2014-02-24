@@ -11,48 +11,50 @@
 	.nav.nav-tabs.nav-justified.tabs>li>a {
 		text-align: left;
 	}
+	
+	.HtmlPanelStyle {
+		margin-top: -20px;
+	}
 	</ui:style>
-	<g:HTMLPanel>
+	<g:HTMLPanel> <!-- CONTAINER-FLUID style -->
 
-		<p:AlertBox ui:field="mAlertBox" visible="false" />
+		<div class="row" style="margin-right: 20px;">
 
-		<div class="container">
-			<div class="row">
+			<p:RankSidePanel ui:field="mSidePanel"
+				styleName="col-md-2 well {style.HtmlPanelStyle}" />
 
-				<p:RankSidePanel ui:field="mSidePanel" />
+			<div class="col-md-10">
+				<ul class="nav nav-tabs nav-justified {style.tabs}">
+					<li ui:field="mAllItem">
+						<g:InlineHyperlink ui:field="mAll"
+							targetHistoryToken="ranks">Overview / All</g:InlineHyperlink>
+					</li>
+					<li ui:field="mPaidItem">
+						<g:InlineHyperlink ui:field="mPaid"
+							targetHistoryToken="ranks">Paid</g:InlineHyperlink>
+					</li>
+					<li ui:field="mFreeItem">
+						<g:InlineHyperlink ui:field="mFree"
+							targetHistoryToken="ranks">Free</g:InlineHyperlink>
+					</li>
+					<li ui:field="mGrossingItem">
+						<g:InlineHyperlink ui:field="mGrossing"
+							targetHistoryToken="ranks">Grossing</g:InlineHyperlink>
+					</li>
+				</ul>
 
-				<div class="col-md-9">
-					<ul class="nav nav-tabs nav-justified {style.tabs}">
-						<li ui:field="mAllItem">
-							<g:InlineHyperlink ui:field="mAll"
-								targetHistoryToken="ranks">Overview / All</g:InlineHyperlink>
-						</li>
-						<li ui:field="mPaidItem">
-							<g:InlineHyperlink ui:field="mPaid"
-								targetHistoryToken="ranks">Paid</g:InlineHyperlink>
-						</li>
-						<li ui:field="mFreeItem">
-							<g:InlineHyperlink ui:field="mFree"
-								targetHistoryToken="ranks">Free</g:InlineHyperlink>
-						</li>
-						<li ui:field="mGrossingItem">
-							<g:InlineHyperlink ui:field="mGrossing"
-								targetHistoryToken="ranks">Grossing</g:InlineHyperlink>
-						</li>
-					</ul>
+				<p:Breadcrumbs ui:field="mBreadcrumbs" path="..." />
 
-					<p:Breadcrumbs ui:field="mBreadcrumbs" path="..." />
+				<c:CellTable ui:field="mRanks" styleName="table table-hover table-striped" />
 
-					<c:CellTable ui:field="mRanks" styleName="table table-hover table-striped" />
+				<p:PageSizePager ui:field="mPager" visible="false" />
 
-					<p:PageSizePager ui:field="mPager" visible="false" />
-
-					<div style="text-align: center">
-						<g:InlineHyperlink text="Show More" styleName="btn btn-default"
-							ui:field="mRedirect" />
-					</div>
+				<div style="text-align: center">
+					<g:InlineHyperlink text="Show More" styleName="btn btn-default"
+						ui:field="mRedirect" />
 				</div>
 			</div>
 		</div>
+
 	</g:HTMLPanel>
 </ui:UiBinder> 

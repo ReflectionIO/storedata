@@ -7,14 +7,20 @@
 		margin-top: -20px;
 	}
 	</ui:style>
-	<g:HTMLPanel styleName=""> <!-- CONTAINER-FLUID style -->
-		<div class="row" style="margin-right: 20px;">
+	<g:HTMLPanel> <!-- CONTAINER-FLUID style -->
+		<div class="row" style="margin-right: 10px;">
 
 
-			<m:MyAppsSidePanel styleName="col-md-2 well {style.HtmlPanelStyle}" />
+			<m:MyAppsSidePanel ui:field="mMyAppsSidePanel" styleName="col-md-2 well {style.HtmlPanelStyle}" />
 
-			<m:Overview styleName="col-md-10" />
-
+			<m:Overview ui:field="mOverview" styleName="col-md-10"/>
+			
+			<m:OverviewWaiting ui:field="mOverviewWaiting" styleName="col-md-10"  visible="false" />
+						
+			
+			<m:LinkedAccountsWaiting ui:field="mLinkedAccountsWaiting" styleName="col-md-10"  visible="false" />
+			
+			
 
 		</div>
 
