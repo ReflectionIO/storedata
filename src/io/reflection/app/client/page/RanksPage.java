@@ -24,7 +24,6 @@ import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.handler.RanksEventHandler;
 import io.reflection.app.client.handler.user.SessionEventHandler;
-import io.reflection.app.client.part.AlertBox;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.Breadcrumbs;
 import io.reflection.app.client.part.PageSizePager;
@@ -65,8 +64,6 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 	private static RanksPageUiBinder uiBinder = GWT.create(RanksPageUiBinder.class);
 
 	interface RanksPageUiBinder extends UiBinder<Widget, RanksPage> {}
-
-	@UiField AlertBox mAlertBox;
 
 	@UiField(provided = true) CellTable<RanksGroup> mRanks = new CellTable<RanksGroup>(ServiceController.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) PageSizePager mPager = new PageSizePager(ServiceController.STEP_VALUE);

@@ -18,7 +18,7 @@
 	</ui:style>
 	<g:HTMLPanel> <!-- CONTAINER-FLUID style -->
 
-		<div class="row" style="margin-right: 20px;">
+		<div class="row" style="margin-right: 10px;">
 
 			<p:RankSidePanel ui:field="mSidePanel"
 				styleName="col-md-2 well {style.HtmlPanelStyle}" />

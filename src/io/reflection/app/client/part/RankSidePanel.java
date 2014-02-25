@@ -16,6 +16,7 @@ import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ShowRangeEvent;
 import com.google.gwt.event.logical.shared.ShowRangeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -25,6 +26,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.google.gwt.user.datepicker.client.DateBox;
@@ -45,6 +47,9 @@ public class RankSidePanel extends Composite {
 	// @UiField ListBox mListType;
 	@UiField ListBox mCountry;
 	@UiField ListBox category;
+	@UiField RadioButton mDailyDataRevenue;
+	@UiField RadioButton mDailyDataDownloads;
+	
 
 	public RankSidePanel() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -108,6 +113,16 @@ public class RankSidePanel extends Composite {
 	@UiHandler("category")
 	void onCategoryValueChanged(ChangeEvent event) {
 		FilterController.get().setCategory(getCatgegory());
+	}
+	
+	@UiHandler("mDailyDataRevenue")
+	void onDailyDataRevenueSelected(ClickEvent event){
+		FilterController.get().setDailyData("Revenue");
+	}
+	
+	@UiHandler("mDailyDataDownloads")
+	void onDailyDataDownloadsSelected(ClickEvent event){
+		FilterController.get().setDailyData("Downloads");
 	}
 
 	/**

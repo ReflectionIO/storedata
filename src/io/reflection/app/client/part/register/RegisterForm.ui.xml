@@ -79,7 +79,7 @@
 					<g:HTMLPanel styleName="checkbox {style.marginBottom40}">
 						<label>
 							<g:CheckBox ui:field="mTermAndCond" />
-							I agree to the
+							<span style="font-size: 14px">I agree to the</span>
 							<g:InlineHyperlink ui:field="mTermAndCondLink">terms and
 								conditions</g:InlineHyperlink>
 						</label>

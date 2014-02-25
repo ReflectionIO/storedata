@@ -27,7 +27,7 @@
 	</ui:style>
 	<g:HTMLPanel styleName="container"> <!-- Override container-fluid assigned in NavigationController -->
 		<p:AlertBox ui:field="mAlertBox" visible="false" />
-		<g:HTMLPanel ui:field="mPanel" styleName="row col-md-12">
+		<g:HTMLPanel ui:field="mPanel" styleName="row">
 			<div class="col-md-6" style="margin-top: 130px;">
 				<h1>Powerful market intelligence for the global development
 					community</h1>
