@@ -21,7 +21,7 @@ import com.google.gwt.uibinder.client.UiRenderer;
 public class MiniAppCell extends AbstractCell<Item> {
 
 	interface MiniAppCellRenderer extends UiRenderer {
-		void render(SafeHtmlBuilder sb, String name, String creatorName, String smallImage, String itemId, String type);
+		void render(SafeHtmlBuilder sb, String name, String creatorName, String smallImage, String itemId, String type, String dailyData);
 	}
 
 	private static MiniAppCellRenderer RENDERER = GWT.create(MiniAppCellRenderer.class);
@@ -58,8 +58,10 @@ public class MiniAppCell extends AbstractCell<Item> {
 		default:
 			break;
 		}
+		
+		String dailyData = "daily data";
 
-		RENDERER.render(builder, name, creatorName, value.smallImage, value.externalId, type);
+		RENDERER.render(builder, name, creatorName, value.smallImage, value.externalId, type, dailyData);
 	}
 
 }

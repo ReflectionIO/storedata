@@ -32,6 +32,7 @@ public class FilterController {
 	private static final String START_DATE_KEY = "startdate";
 	private static final String END_DATE_KEY = "enddate";
 	private static final String CATEGORY_KEY = "category";
+	private static final String DAILY_DATA_KEY = "dailydata";
 
 	private static FilterController mOne = null;
 
@@ -97,6 +98,24 @@ public class FilterController {
 		}
 	}
 
+	public void setDailyData(String dailydata) {
+		if (dailydata != null && !dailydata.equals(mCurrentValues.get(DAILY_DATA_KEY))) {
+			String previousDailyData = (String) mCurrentValues.get(DAILY_DATA_KEY);
+			mCurrentValues.put(DAILY_DATA_KEY, dailydata);
+
+			if (mInTransaction == 0) {
+				EventController.get().fireEventFromSource(
+						new FilterEventHandler.ChangedFilterParameter<String>(DAILY_DATA_KEY, (String) mCurrentValues.get(DAILY_DATA_KEY), previousDailyData), this);
+			} else {
+				if (mPreviousValues == null) {
+					mPreviousValues = new HashMap<String, Object>();
+				}
+
+				mPreviousValues.put(DAILY_DATA_KEY, previousDailyData);
+			}
+		}
+	}
+	
 	public void setListType(String listType) {
 		if (listType != null && !listType.equals(mCurrentValues.get(LIST_TYPE_KEY))) {
 			String previousListType = (String) mCurrentValues.get(LIST_TYPE_KEY);
