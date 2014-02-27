@@ -61,6 +61,8 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 		final GetAllTopItemsRequest input = new GetAllTopItemsRequest(); // JSON Item request, containing the fields used to query the Item table on the DB
 		input.accessCode = ACCESS_CODE;
 
+		input.dailyData = FilterController.get().getDailyData();
+
 		input.session = SessionController.get().getSessionForApiCall(); // Get JSON session, create it if not exists and set cookie
 
 		input.country = FilterController.get().getCountry(); // Get country from filter
@@ -139,6 +141,8 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 		final GetItemRanksRequest input = new GetItemRanksRequest();
 		input.accessCode = ACCESS_CODE;
+
+		input.dailyData = FilterController.get().getDailyData();
 
 		input.session = SessionController.get().getSessionForApiCall();
 		input.country = FilterController.get().getCountry();

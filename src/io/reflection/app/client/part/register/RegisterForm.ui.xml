@@ -10,12 +10,11 @@
 		margin-top: 20px;
 	}
 	
-	
-	
 	.noteDetail {
 		font-size: smaller;
 		margin-top: 5px;
 	}
+	
 	.marginBottom50 {
 		margin-bottom: 50px;
 	}
@@ -23,7 +22,6 @@
 	.marginBottom40 {
 		margin-bottom: 40px;
 	}
-	
 	</ui:style>
 	<g:HTMLPanel>
 		<g:FormPanel styleName="well col-md-12">
@@ -31,7 +29,7 @@
 
 			<g:HTMLPanel styleName="{style.marginTop20}">
 				<h4 class="text-center">Request Invite</h4>
-				<g:HTMLPanel styleName="col-md-10 col-md-offset-1  {style.marginTop20}">
+				<g:HTMLPanel styleName="col-md-12 {style.marginTop20}">
 
 					<g:HTMLPanel ui:field="mForenameGroup" styleName="form-group">
 						<label>First name</label>

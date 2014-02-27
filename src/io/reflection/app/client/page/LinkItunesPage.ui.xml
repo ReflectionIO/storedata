@@ -35,34 +35,38 @@
 	<g:HTMLPanel styleName="container"> <!-- Override container-fluid assigned in NavigationController -->
 
 		<g:HTMLPanel ui:field="mPanel" styleName="row">
-			<div class="col-md-6 text-center" style="margin-top: 80px;">
+
+			<div class="col-md-6 text-center" style="margin-top: 90px;">
 
 				<g:Image resource="{images.linkAccount}" />
-				<h2 style="margin-top: 30px;  margin-bottom: 70px;">Please link your iTunes Connect account</h2>
+				<h1
+					style="margin-top: 40px;  margin-bottom: 70px; margin-left:50px; margin-right: 50px;">Please link your iTunes Connect account</h1>
 
 				<g:Image resource="{images.linkAccountProgress}" />
 
 				<div>
 					<div class="col-md-4">
-						<h3>
+						<h3 style="margin-top: 30px;">
 							Step 1
 						</h3>
-						<p>Sign in with your account to get started</p>
+						<p
+							style="font-family: Lato; font-size: 14px; margin-top: 20px; padding-left: 7px; padding-right: 7px;">Sign in to your account to get started</p>
 					</div>
 					<div class="col-md-4">
-						<h3 style="color: #9780E4">
+						<h3 style="color: #9780E4;  margin-top: 30px;">
 							Step 2
 						</h3>
-						<p>Link your iTunes Connect account</p>
+						<p
+							style="font-family: Lato; font-size: 14px; margin-top: 20px; padding-left: 10px; padding-right: 10px;">Link your iTunes Connect account</p>
 					</div>
 					<div class="col-md-4">
-						<h3>
+						<h3 style=" margin-top: 30px;">
 							Step 3
 						</h3>
-						<p>Done. Welcome to the private beta</p>
+						<p
+							style="font-family: Lato; font-size: 14px; margin-top: 20px; padding-left: 10px; padding-right: 10px;">Done. Welcome to the private beta</p>
 					</div>
 				</div>
-
 
 
 

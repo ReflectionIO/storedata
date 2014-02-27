@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.cell;
 
+import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.datatypes.shared.Item;
 
 import com.google.gwt.cell.client.AbstractCell;
@@ -34,16 +35,16 @@ public class MiniAppCell extends AbstractCell<Item> {
 			name = name.substring(0, 17);
 			name += "...";
 		}
-		
+
 		String creatorName = value.creatorName;
-		
+
 		if (creatorName.length() > 17) {
 			creatorName = creatorName.substring(0, 17);
 			creatorName += "...";
 		}
-		
+
 		String type = "";
-		
+
 		switch (context.getColumn()) {
 		case 1:
 			type = "paid";
@@ -58,8 +59,8 @@ public class MiniAppCell extends AbstractCell<Item> {
 		default:
 			break;
 		}
-		
-		String dailyData = "daily data";
+
+		String dailyData = FilterController.get().getDailyData();
 
 		RENDERER.render(builder, name, creatorName, value.smallImage, value.externalId, type, dailyData);
 	}

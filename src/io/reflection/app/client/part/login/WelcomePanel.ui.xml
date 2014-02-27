@@ -9,34 +9,38 @@
 	<g:HTMLPanel>
 
 		<div class="col-md-6 text-center">
-			<h2>Hello! Welcome to Reflection</h2>
-			<p style="margin-top: 40px; margin-bottom: 70px">Congratulations on becoming part of our private beta.
+			<h1>Welcome to Reflection</h1>
+			<p
+				style="margin-top: 40px; margin-bottom: 70px; margin-left: 30px; margin-right: 30px;">Congratulations on becoming part of our private beta.
 				Our
-				goal is to provide the most insightful and accurate
+				goal
+				is to provide the most insightful and accurate
 				app intelligence
-				and you can help us to
+				and
+				you can help us to
 				achieve this.</p>
 
 			<g:Image resource="{images.welcomeProgress}" />
 
 			<div>
 				<div class="col-md-4">
-					<h3 style="color: #9780E4">
+					<h3 style="color: #9780E4;  margin-top: 30px;">
 						Step 1
 					</h3>
-					<p>Sign in with your account to get started</p>
+					<p style="font-family: Lato; font-size: 14px; margin-top: 20px;">Sign in to your account to get started</p>
 				</div>
 				<div class="col-md-4">
-					<h3>
+					<h3 style=" margin-top: 30px;">
 						Step 2
 					</h3>
-					<p>Link your iTunes Connect account</p>
+					<p style="font-family: Lato; font-size: 14px; margin-top: 20px;">Link your iTunes Connect account</p>
 				</div>
 				<div class="col-md-4">
-					<h3>
+					<h3 style=" margin-top: 30px;">
 						Step 3
 					</h3>
-					<p>Done. Welcome to the private beta</p>
+					<p
+						style="font-family: Lato; font-size: 14px; margin-top: 20px; padding-left: 10px; padding-right: 10px;">Done. Welcome to the private beta</p>
 				</div>
 			</div>
 

@@ -65,8 +65,6 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 	@UiField Button mLinkAccount;
 
-	@UiField HTMLPanel mSidePanel;
-
 	// @UiField(provided = true) CellTree mAccounts;
 
 	private LinkableAccountFields mLinkableAccount;
@@ -91,18 +89,20 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
 	 */
 	@Override
 	protected void onAttach() {
 		super.onAttach();
-		
+
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(EventController.get().addHandlerToSource(LinkAccountEventHandler.TYPE, LinkedAccountController.get(), this));
 		register(EventController.get().addHandlerToSource(GetLinkedAccountsEventHandler.TYPE, LinkedAccountController.get(), this));
 	}
-	
+
 	/**
 	 * @param link
 	 */

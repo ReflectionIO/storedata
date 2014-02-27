@@ -1,50 +1,50 @@
 @CHARSET "UTF-8";
 
 @external gwt-RadioButton, hr, container, pagination, active, btn-primary, active, open, dropdown-toggle, dropdown-menu, badge, dropdown, nav, navbar-inverse, navbar-nav, caret, form-control;
-.gwt-RadioButton label{
+.gwt-RadioButton label {
 	font-size: 12px;
 	font-weight: normal;
-	margin-left: 4px; 
+	margin-left: 4px;
 }
 
-label{
+label {
 	font-weight: normal;
 	font-size: 16px;
 	font-family: Oxygen;
 }
 
-p{
+p {
 	font-weight: regular;
 	font-size: 16px;
 	font-family: Lato;
 }
 
-h1, h2, h3, h4, h5, h6{
+h1,h2,h3,h4,h5,h6 {
 	font-family: Oxygen;
 }
 
 /* Forms title */
-h6 { 
+h6 {
 	font-weight: regular;
 	font-size: 16px;
 }
 
-h5 { 
+h5 {
 	font-weight: bold;
 	font-size: 18px;
 }
 
-h4 { 
+h4 {
 	font-weight: bold;
 	font-size: 20px;
 }
 
-h3{
+h3 {
 	font-weight: bold;
 	font-size: 22px;
 }
 
-h1 { 
+h1 {
 	font-weight: bold;
 	font-size: 32px;
 }
@@ -59,7 +59,6 @@ a {
 	cursor: pointer;
 	color: #6D69C5;
 	font-family: Oxygen;
-	font-weight: bold;
 	font-size: 14px;
 }
 

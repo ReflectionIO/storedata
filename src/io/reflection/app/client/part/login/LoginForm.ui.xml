@@ -9,6 +9,10 @@
 		margin-top: 5px;
 	}
 	
+	.marginTop50 {
+		margin-top: 50px;
+	}
+	
 	.marginTop30 {
 		margin-top: 30px;
 	}
@@ -30,8 +34,11 @@
 	}
 	
 	.reminder {
-		padding-top: 50px;
-		padding-bottom: 100px;
+		padding-top: 80px;
+	}
+	
+	.passLink {
+		font-size: 13px;
 	}
 	</ui:style>
 	<g:HTMLPanel>
@@ -41,7 +48,7 @@
 				<h4 class="text-center" ui:field="mLoginTitle">
 				</h4>
 
-				<g:HTMLPanel styleName="col-sm-10 col-sm-offset-1 {style.marginTop20}">
+				<g:HTMLPanel styleName="col-sm-12 {style.marginTop20}">
 
 					<g:HTMLPanel ui:field="mEmailGroup" styleName="form-group">
 						<label>Email Address</label>
@@ -60,8 +67,10 @@
 					</g:HTMLPanel>
 
 
-					<g:CheckBox ui:field="mRememberMe" styleName="checkbox"
-						text="Remember me" />
+					<g:CheckBox ui:field="mRememberMe" styleName="checkbox">
+						<span style="font-size: 14px">Remember me</span>
+					</g:CheckBox>
+
 
 
 					<g:Button ui:field="mLogin"
@@ -69,9 +78,10 @@
 						Log In
 					</g:Button>
 
-					<h6 class="text-center" style="margin-bottom: 40px">
+					<h6 class="text-center" style="margin-bottom: 40px; font-size: 13px;">
 						I've forgotten my
-						<g:InlineHyperlink ui:field="mForgotPassword">Password</g:InlineHyperlink>
+						<g:InlineHyperlink ui:field="mForgotPassword"
+							styleName="{style.passLink}">Password</g:InlineHyperlink>
 					</h6>
 
 				</g:HTMLPanel>
@@ -82,7 +92,7 @@
 		<g:FormPanel ui:field="mForgotPasswordForm" styleName="col-sm-12"
 			visible="false">
 
-			<g:HTMLPanel styleName="col-sm-10 col-sm-offset-1 {style.marginTop20}">
+			<g:HTMLPanel styleName="col-sm-12 {style.marginTop20}">
 				<h4 class="text-center" style="padding-bottom: 30px;">
 					Forgot your details?
 				</h4>
@@ -104,20 +114,21 @@
 					</g:HTMLPanel>
 
 					<g:Button ui:field="mSubmitForgotPassword"
-						styleName="btn btn-lg btn-primary btn-block {style.marginBottomForm} {style.marginTop30}">
+						styleName="btn btn-lg btn-primary btn-block {style.marginBottomForm} {style.marginTop50}">
 						Submit
 					</g:Button>
 
 				</g:HTMLPanel>
 			</g:HTMLPanel>
-			
+
 		</g:FormPanel>
 
 
 		<g:HTMLPanel ui:field="mForgotPasswordReminder"
-			styleName="col-sm-10 col-sm-offset-1 text-center {style.reminder}" visible="false">
+			styleName="col-sm-10 col-sm-offset-1 text-center {style.reminder}"
+			visible="false">
 			<g:Image resource="{images.emailSent}" />
-			<h4 style="margin-top: 30px; margin-bottom: 30px;">Reminder on it's way</h4>
+			<h4 style="margin-top: 40px; margin-bottom: 40px;">Reminder on it's way</h4>
 			<p>We've sent a reminder email to the address you specified, it
 				should
 				be with you in a few moments</p>

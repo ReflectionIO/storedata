@@ -8,10 +8,6 @@
 		padding-top: 10px;
 		padding-bottom: 10px;
 	}
-	
-	.pageTitle {
-		padding-bottom: 30px;
-	}
 	</ui:style>
 
 
@@ -20,28 +16,17 @@
 		<div class="container">
 			<div class="row">
 
-				<g:HTMLPanel ui:field="mSidePanel" styleName="well col-md-3">
 
-					<h3>My Apps</h3>
-
-					<h4 ui:field="mCreatorName" class="{style.pageTitle} text-muted">Creator</h4>
-
-					<a>Overview</a>
-					<hr />
-					<a>Linked Accounts</a>
-					<hr />
-
-				</g:HTMLPanel>
 
 				<div class="col-sm-9">
-											
+
 
 					<g:HTMLPanel styleName="well well-sm">
 						<h4>Linked Accounts</h4>
 					</g:HTMLPanel>
 
 					<div style="text-align: center">
-					<g:Button text="Link Another Account" styleName="btn btn-default"></g:Button>
+						<g:Button text="Link Another Account" styleName="btn btn-default"></g:Button>
 					</div>
 					<g:HTMLPanel ui:field="mToolbar"
 						styleName="btn-group {style.toolbar_spacing}">

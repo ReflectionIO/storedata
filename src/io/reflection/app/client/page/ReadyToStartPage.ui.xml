@@ -24,7 +24,7 @@
 					style="font-size: 32px; font-family: Oxygen; font-weight: bold; margin-top: 60px; margin-bottom: 20px;">That's it! You're ready to start using Reflection</span>
 
 				<span class="col-xs-12"
-					style="line-height: 25px; font-size: 18px; font-family: Lato; font-weight: normal; margin-bottom: 100px;">
+					style="line-height: 27px; font-size: 18px; font-family: Lato; font-weight: normal; margin-bottom: 100px;">
 					Start by exploring the top charting apps in the
 					<g:InlineHyperlink ui:field="mLeaderboard"
 						styleName="{style.hyperlink}" targetHistoryToken="ranks">Leaderboard</g:InlineHyperlink>
@@ -45,7 +45,8 @@
 					<h3>Remember, it's beta!</h3>
 					<p>
 						Our web app is still under development so use this
-						opportunity to help shape the product you would like to see
+						opportunity to
+						help shape the product you would like to see
 					</p>
 				</div>
 				<div class="col-md-4" style="padding-left: 55px; padding-right: 55px;">
@@ -53,14 +54,17 @@
 					<h3>We want your input</h3>
 					<p>
 						Our goal is to provide the most insightful and accurate
-						app intelligence. Help us make that happen
+						app
+						intelligence. Help us make that happen
 					</p>
 				</div>
 				<div class="col-md-4" style="padding-left: 60px; padding-right: 60px;">
 					<g:Image resource="{images.cog}"></g:Image>
 					<h3>Request features</h3>
 					<p>
-						As a member of the private beta you can request features you feel would add value. Click the Request Feature button in the menu bar to get started
+						As a member of the private beta you can request features you
+						feel would add value. Click the Request Feature button in the menu
+						bar to get started
 					</p>
 				</div>
 			</div>

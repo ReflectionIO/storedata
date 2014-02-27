@@ -81,6 +81,7 @@ public class LoginForm extends Composite {
 		mSubmitForgotPassword.setHTML(mSubmitForgotPassword.getText() + "&nbsp;&nbsp;" + imageButtonLink2);
 		mEmail.getElement().setAttribute("placeholder", "Email");
 		mPassword.getElement().setAttribute("placeholder", "Password");
+		mEmailForgotPassword.getElement().setAttribute("placeholder", "Email");
 	}
 
 	public void setLoginTitle(String title) {
@@ -254,7 +255,7 @@ public class LoginForm extends Composite {
 		mEmail.setFocus(false);
 		mPassword.setEnabled(false);
 		mPassword.setFocus(false);
-		mRememberMe.setEnabled(false);		
+		mRememberMe.setEnabled(false);
 		mLogin.setEnabled(false);
 	}
 

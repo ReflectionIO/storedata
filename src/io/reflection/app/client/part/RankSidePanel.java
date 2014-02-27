@@ -49,7 +49,6 @@ public class RankSidePanel extends Composite {
 	@UiField ListBox category;
 	@UiField RadioButton mDailyDataRevenue;
 	@UiField RadioButton mDailyDataDownloads;
-	
 
 	public RankSidePanel() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -81,7 +80,7 @@ public class RankSidePanel extends Composite {
 				mDate.getDatePicker().setTransientEnabledOnDates(false, dates);
 			}
 		});
-		
+
 		updateFromFilter();
 	}
 
@@ -114,14 +113,14 @@ public class RankSidePanel extends Composite {
 	void onCategoryValueChanged(ChangeEvent event) {
 		FilterController.get().setCategory(getCatgegory());
 	}
-	
+
 	@UiHandler("mDailyDataRevenue")
-	void onDailyDataRevenueSelected(ClickEvent event){
+	void onDailyDataRevenueSelected(ClickEvent event) {
 		FilterController.get().setDailyData("Revenue");
 	}
-	
+
 	@UiHandler("mDailyDataDownloads")
-	void onDailyDataDownloadsSelected(ClickEvent event){
+	void onDailyDataDownloadsSelected(ClickEvent event) {
 		FilterController.get().setDailyData("Downloads");
 	}
 
@@ -165,6 +164,7 @@ public class RankSidePanel extends Composite {
 		mDate.setValue(FilterController.get().getEndDate());
 		mCountry.setSelectedIndex(FormHelper.getItemIndex(mCountry, FilterController.get().getCountry().a2Code));
 		category.setSelectedIndex(FormHelper.getItemIndex(category, FilterController.get().getCategory().id.toString()));
+
 		FilterController.get().commit();
 	}
 

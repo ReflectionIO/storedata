@@ -31,7 +31,7 @@
 			<div class="col-md-6" style="margin-top: 130px;">
 				<h1>Powerful market intelligence for the global development
 					community</h1>
-				<p style="margin-top: 40px; margin-bottom: 40px">
+				<p style="margin-top: 40px; margin-bottom: 50px">
 					Reflection is currently in Private Beta. We have invited
 					a select
 					group of developers and publishers to get a first hand
@@ -39,8 +39,9 @@
 				</p>
 				<g:Image resource="{images.alarmClock}" styleName="col-md-2 text-center {style.image1}" />
 				<h3 class="col-md-offset-2">Benefits of getting in early</h3>
-				<p class="col-md-offset-2">
-					Ability to request any additional feature based on our
+				<p class="col-md-offset-2" style="margin-top: 20px; margin-bottom: 20px;">
+					Ability to request any additional
+					feature based on our
 					data, such as forecasting and trends.
 				</p>
 				<p class="col-md-offset-2">
@@ -51,8 +52,8 @@
 
 				<g:Image resource="{images.clipboard}"
 					styleName="col-md-2 {style.marginTop40} {style.image2}" />
-				<h3 class="col-md-offset-2" style="margin-top: 40px">What we need</h3>
-				<p class="col-md-offset-2">
+				<h3 class="col-md-offset-2" style="margin-top: 50px">What we need</h3>
+				<p class="col-md-offset-2" style="margin-top: 20px;">
 					Linking your store account so we can expand our dataset
 					<br />
 					Input on current &amp; future product features
