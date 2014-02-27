@@ -29,6 +29,7 @@ public class GetItemRanksRequest extends Request {
 	public Date start;
 	public Date end;
 	public String listType;
+	public String dailyData;
 
 	@Override
 	public JsonObject toJson() {
@@ -47,6 +48,8 @@ public class GetItemRanksRequest extends Request {
 		object.add("end", jsonEnd);
 		JsonElement jsonListType = listType == null ? JsonNull.INSTANCE : new JsonPrimitive(listType);
 		object.add("listType", jsonListType);
+		JsonElement jsonDailyData = dailyData == null ? JsonNull.INSTANCE : new JsonPrimitive(dailyData);
+		object.add("dailyData", jsonDailyData);
 		return object;
 	}
 
@@ -97,6 +100,12 @@ public class GetItemRanksRequest extends Request {
 			JsonElement jsonListType = jsonObject.get("listType");
 			if (jsonListType != null) {
 				listType = jsonListType.getAsString();
+			}
+		}
+		if (jsonObject.has("dailyData")) {
+			JsonElement jsonDailyData = jsonObject.get("dailyData");
+			if (jsonDailyData != null) {
+				dailyData = jsonDailyData.getAsString();
 			}
 		}
 	}

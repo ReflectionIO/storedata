@@ -27,6 +27,7 @@ public class GetTopItemsRequest extends Request {
 	public Pager pager;
 	public String listType;
 	public Date on;
+	public String dailyData;
 
 	@Override
 	public JsonObject toJson() {
@@ -43,6 +44,8 @@ public class GetTopItemsRequest extends Request {
 		object.add("listType", jsonListType);
 		JsonElement jsonOn = on == null ? JsonNull.INSTANCE : new JsonPrimitive(on.getTime());
 		object.add("on", jsonOn);
+		JsonElement jsonDailyData = dailyData == null ? JsonNull.INSTANCE : new JsonPrimitive(dailyData);
+		object.add("dailyData", jsonDailyData);
 		return object;
 	}
 
@@ -87,6 +90,12 @@ public class GetTopItemsRequest extends Request {
 			JsonElement jsonOn = jsonObject.get("on");
 			if (jsonOn != null) {
 				on = new Date(jsonOn.getAsLong());
+			}
+		}
+		if (jsonObject.has("dailyData")) {
+			JsonElement jsonDailyData = jsonObject.get("dailyData");
+			if (jsonDailyData != null) {
+				dailyData = jsonDailyData.getAsString();
 			}
 		}
 	}
