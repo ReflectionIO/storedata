@@ -4,8 +4,9 @@
 	xmlns:r="urn:import:io.reflection.app.client.part.register">
 	<ui:with field='images' type='io.reflection.app.client.res.Images' />
 	<ui:style>
-	.marginTopForm {
+	.panel {
 		margin-top: 80px;
+		height: 608;		
 	}
 	
 	.marginTop40 {
@@ -62,10 +63,10 @@
 			</div>
 
 			<r:RegisterForm ui:field="mRegisterForm"
-				styleName="col-md-5 col-md-offset-1 {style.marginTopForm}" />
+				styleName="col-md-5 col-md-offset-1 {style.panel}" />
 
 			<r:ThankYouRegisterPanel ui:field="mThankYouRegisterPanel"
-				styleName="col-md-5 col-md-offset-1 {style.marginTopForm}" visible="false" />
+				styleName="col-md-5 col-md-offset-1 {style.panel}" visible="false" />
 
 
 		</g:HTMLPanel>

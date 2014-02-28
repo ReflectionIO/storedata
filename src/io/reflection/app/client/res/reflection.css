@@ -7,12 +7,6 @@
 	margin-left: 4px;
 }
 
-label {
-	font-weight: normal;
-	font-size: 16px;
-	font-family: Oxygen;
-}
-
 p {
 	font-weight: regular;
 	font-size: 16px;
@@ -84,6 +78,7 @@ a:hover,a:focus,a:active,a.active {
 .btn-primary {
 	background-color: #6D69C5;
 	border-color: #8873CD;
+	height: 56px;
 }
 
 .btn-primary:hover,.btn-primary:focus,.btn-primary:active,.btn-primary.active,.open .dropdown-toggle.btn-primary
@@ -127,6 +122,10 @@ a:hover,a:focus,a:active,a.active {
 	{
 	border-top-color: #FFF;
 	border-bottom-color: #FFF;
+}
+
+.form-control {
+	height: 36px;
 }
 
 .form-control:focus {

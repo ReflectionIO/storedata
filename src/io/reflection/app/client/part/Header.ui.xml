@@ -71,17 +71,16 @@
         width: 250px;
         }
     </ui:style>
-    <g:HTMLPanel ui:field="pnlHeader" styleName="navbar navbar-inverse navbar-fixed-top {style.header}">
-        <div class="container">
+    <g:HTMLPanel ui:field="pnlHeader" styleName="navbar navbar-inverse navbar-fixed-top {style.header}">        
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle">
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#home">
-                    <g:Image styleName="{style.alignToImage}" resource="{res.logo}" />&nbsp;&nbsp;Reflection
-                    <span class="label label-default">beta</span>
+                <a class="navbar-brand" href="#home" style="margin-left: 5px;">
+                    <g:Image styleName="{style.alignToImage}" resource="{res.logo}" />&nbsp;&nbsp;<span style="color: white;">Reflection</span>
+                    <span class="label label-default" style="font-weight: bold; font-style: italic;">beta&nbsp;&nbsp;<i class="glyphicon glyphicon-lock"></i></span>
                 </a>
             </div>
             <div class="collapse navbar-collapse">
@@ -190,6 +189,6 @@
                 <span />
 
             </div><!--/.nav-collapse -->
-        </div>
+
     </g:HTMLPanel>
 </ui:UiBinder> 

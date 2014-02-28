@@ -2,8 +2,8 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:style>
-	.marginTop5 {
-		margin-top: 5px;
+	.marginFormControl {
+		
 	}
 	
 	.marginTop20 {
@@ -15,16 +15,22 @@
 		margin-top: 5px;
 	}
 	
-	.marginBottom50 {
-		margin-bottom: 50px;
+	.marginCheckbox {
+		margin-top: 0px;
+		margin-bottom: 0px;
 	}
 	
-	.marginBottom40 {
-		margin-bottom: 40px;
+	.button {
+		margin-bottom: 26px;
+	}
+	
+	.form {
+		padding-left: 39px;
+		padding-right: 39px;
 	}
 	</ui:style>
 	<g:HTMLPanel>
-		<g:FormPanel styleName="well col-md-12">
+		<g:FormPanel styleName="well col-md-12 {style.form}">
 
 
 			<g:HTMLPanel styleName="{style.marginTop20}">
@@ -32,40 +38,41 @@
 				<g:HTMLPanel styleName="col-md-12 {style.marginTop20}">
 
 					<g:HTMLPanel ui:field="mForenameGroup" styleName="form-group">
-						<label>First name</label>
-						<g:TextBox styleName="form-control {style.marginTop5}"
+						<label
+							style="font-weight: normal; font-size: 16px; font-family: Oxygen;">First name</label>
+						<g:TextBox styleName="form-control {style.marginFormControl}"
 							ui:field="mForename" />
 						<g:HTMLPanel ui:field="mForenameNote" visible="false"
 							styleName="{style.noteDetail}" />
 					</g:HTMLPanel>
 
 					<g:HTMLPanel ui:field="mSurnameGroup" styleName="form-group">
-						<label>Last name</label>
-						<g:TextBox styleName="form-control {style.marginTop5}"
+						<label style="font-weight: normal; font-size: 16px; font-family: Oxygen;">Last name</label>
+						<g:TextBox styleName="form-control {style.marginFormControl}"
 							ui:field="mSurname" />
 						<g:HTMLPanel ui:field="mSurnameNote" visible="false"
 							styleName="{style.noteDetail}" />
 					</g:HTMLPanel>
 
 					<g:HTMLPanel ui:field="mCompanyGroup" styleName="form-group">
-						<label>Company</label>
-						<g:TextBox styleName="form-control {style.marginTop5}"
+						<label style="font-weight: normal; font-size: 16px; font-family: Oxygen;">Company</label>
+						<g:TextBox styleName="form-control {style.marginFormControl}"
 							ui:field="mCompany" />
 						<g:HTMLPanel ui:field="mCompanyNote" visible="false"
 							styleName="{style.noteDetail}" />
 					</g:HTMLPanel>
 
 					<g:HTMLPanel ui:field="mEmailGroup" styleName="form-group">
-						<label>Email</label>
-						<g:TextBox styleName="form-control {style.marginTop5}"
+						<label style="font-weight: normal; font-size: 16px; font-family: Oxygen;">Email</label>
+						<g:TextBox styleName="form-control {style.marginFormControl}"
 							ui:field="mEmail" />
 						<g:HTMLPanel ui:field="mEmailNote" visible="false"
 							styleName="{style.noteDetail}" />
 					</g:HTMLPanel>
 
 					<g:HTMLPanel ui:field="mPasswordGroup" styleName="form-group">
-						<label>Password</label>
-						<g:PasswordTextBox styleName="form-control {style.marginTop5}"
+						<label style="font-weight: normal; font-size: 16px; font-family: Oxygen;">Password</label>
+						<g:PasswordTextBox styleName="form-control {style.marginFormControl}"
 							ui:field="mPassword" />
 						<g:HTMLPanel ui:field="mPasswordNote" visible="false"
 							styleName="{style.noteDetail}" />
@@ -74,9 +81,9 @@
 
 
 
-					<g:HTMLPanel styleName="checkbox {style.marginBottom40}">
+					<g:HTMLPanel styleName="checkbox {style.marginCheckbox}">
 						<label>
-							<g:CheckBox ui:field="mTermAndCond" />
+							<g:CheckBox ui:field="mTermAndCond" styleName="{style.marginCheckbox}" />
 							<span style="font-size: 14px">I agree to the</span>
 							<g:InlineHyperlink ui:field="mTermAndCondLink">terms and
 								conditions</g:InlineHyperlink>
@@ -87,7 +94,7 @@
 
 
 					<g:Button ui:field="mRegister"
-						styleName="btn btn-lg btn-primary btn-block {style.marginBottom50}">
+						styleName="btn btn-lg btn-primary btn-block {style.button}">
 						Submit
 					</g:Button>
 
