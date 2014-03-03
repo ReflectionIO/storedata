@@ -5,10 +5,15 @@
 	<ui:with field='images' type='io.reflection.app.client.res.Images' />
 	<ui:style>
 	.panel {
-		margin-top: 80px;
+		margin-top: 120px;
 		height: 650px;
 		width: 430px;
 		padding: 0px;
+	}
+	
+	
+	.mainPanel {
+		margin-top: 120px;
 	}
 	
 	.marginTop40 {
@@ -31,44 +36,14 @@
 	<g:HTMLPanel styleName="container"> <!-- Override container-fluid assigned in NavigationController -->
 		<p:AlertBox ui:field="mAlertBox" visible="false" />
 		<g:HTMLPanel ui:field="mPanel" styleName="row">
-			<div class="col-md-6" style="margin-top: 130px;">
-				<h1>Powerful market intelligence for the global development
-					community</h1>
-				<p style="margin-top: 40px; margin-bottom: 50px">
-					Reflection is currently in Private Beta. We have invited
-					a select
-					group of developers and publishers to get a first hand
-					look.
-				</p>
-				<g:Image resource="{images.alarmClock}" styleName="col-md-2 text-center {style.image1}" />
-				<h3 class="col-md-offset-2">Benefits of getting in early</h3>
-				<p class="col-md-offset-2" style="margin-top: 20px; margin-bottom: 20px;">
-					Ability to request any additional
-					feature based on our
-					data, such as forecasting and trends.
-				</p>
-				<p class="col-md-offset-2">
-					Revenue and dawnload intelligence as well as any premium
-					features
-					for free.
-				</p>
 
-				<g:Image resource="{images.clipboard}"
-					styleName="col-md-2 {style.marginTop40} {style.image2}" />
-				<h3 class="col-md-offset-2" style="margin-top: 50px">What we need</h3>
-				<p class="col-md-offset-2" style="margin-top: 20px;">
-					Linking your store account so we can expand our dataset
-					<br />
-					Input on current &amp; future product features
-				</p>
-
-			</div>
+			<p:LoginRegisterPanel styleName="col-md-6 {style.mainPanel}" />
 
 			<r:RegisterForm ui:field="mRegisterForm"
 				styleName="col-md-5 col-md-offset-1 well {style.panel}" />
 
 			<r:ThankYouRegisterPanel ui:field="mThankYouRegisterPanel"
-				styleName="col-md-5 col-md-offset-1 well {style.panel}" visible="false" />
+				styleName="col-md-5 col-md-offset-1 well" visible="false" />
 
 
 		</g:HTMLPanel>
