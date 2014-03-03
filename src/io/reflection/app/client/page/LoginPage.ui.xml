@@ -2,7 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
 	xmlns:l="urn:import:io.reflection.app.client.part.login">
-	<ui:with field='images' type='io.reflection.app.client.res.Images' />
+
 	<ui:style>
 	.noteDetail {
 		font-size: smaller;
@@ -18,21 +18,19 @@
 		list-style: none;
 	}
 	
-	.panelPart {
+	.panel {
 		margin-top: 80px;
 	}
 	
-	.image1 {
-		width: 75px;
+	.mainPanel {
+		margin-top: 120px;
 	}
 	
-	.image2 {
-		width: 60px;
-		margin-left: 5px;
-	}
-	
-	.marginTop40 {
-		margin-top: 40px;
+	.form {
+		width: 430px;
+		padding: 0px;
+		height: 415px;
+		margin-top: 120px;
 	}
 	</ui:style>
 	<g:HTMLPanel styleName="container">  <!-- Override container-fluid assigned in NavigationController -->
@@ -41,48 +39,20 @@
 
 		<div class="row">
 
-			<g:HTMLPanel ui:field="mDefaultLogin" styleName="{style.panelPart}">
-
-				<div class="col-md-6">
-					<h1>Powerful market intelligence for the global development
-						community</h1>
-					<p style="margin-top: 40px; margin-bottom: 40px">
-						Reflection is currently in Private Beta. We have invited
-						a select
-						group of developers and publishers to get a first hand
-						look.
-					</p>
-					<g:Image resource="{images.alarmClock}" styleName="col-md-2 text-center {style.image1}" />
-					<h3 class="col-md-offset-2">Benefits of getting in early</h3>
-					<p class="col-md-offset-2">
-						Ability to request any additional feature based on our
-						data, such as forecasting and trends.
-					</p>
-					<p class="col-md-offset-2">
-						Revenue and dawnload intelligence as well as any premium
-						features
-						for free.
-					</p>
-
-					<g:Image resource="{images.clipboard}"
-						styleName="col-md-2 {style.marginTop40} {style.image2}" />
-					<h3 class="col-md-offset-2" style="margin-top: 40px">What we need</h3>
-					<p class="col-md-offset-2">
-						Linking your store account so we can expand our dataset
-						<br />
-						Input on current &amp; future product features
-					</p>
-
-				</div>
+			<g:HTMLPanel ui:field="mDefaultLogin">
 
 
-				<l:LoginForm ui:field="mLoginForm" styleName="col-md-5 col-md-offset-1 well" />
+				<p:LoginRegisterPanel styleName="col-md-6 {style.mainPanel}" />
+
+
+				<l:LoginForm ui:field="mLoginForm"
+					styleName="col-md-5 col-md-offset-1 well {style.form}" />
 
 			</g:HTMLPanel>
 
 
 
-			<l:WelcomePanel ui:field="mWelcomePanel" styleName="col-md-12 {style.panelPart}"
+			<l:WelcomePanel ui:field="mWelcomePanel" styleName="col-md-12 {style.panel}"
 				visible="false" />
 
 
