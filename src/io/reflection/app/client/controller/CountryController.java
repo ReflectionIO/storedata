@@ -14,6 +14,7 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.client.handler.CountriesEventHandler;
 import io.reflection.app.datatypes.shared.Country;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,6 +40,28 @@ public class CountryController implements ServiceController {
 		return mOne;
 	}
 
+	
+	public CountryController() {
+		mCountryLookup = new HashMap<String, Country>();
+		
+		addCountry("us", "United States");
+		addCountry("gb", "United Kingdom");
+		addCountry("cn", "China");
+		addCountry("de", "Germany");
+		addCountry("fr", "France");
+	}
+	
+	private void addCountry(String a2Code, String name) {
+		Country country = new Country();
+		country.a2Code = a2Code;
+		country.name = name;
+		
+		country.stores = new ArrayList<String>();
+		country.stores.add("ios");
+		
+		mCountryLookup.put(country.a2Code, country);
+	}
+	
 	public void fetchAllCountries() {
 		CoreService service = new CoreService();
 		service.setUrl(CORE_END_POINT);
