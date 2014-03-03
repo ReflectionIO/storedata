@@ -4,9 +4,31 @@
 
 	<ui:with field='images' type='io.reflection.app.client.res.Images' />
 	<ui:style>
+	.form {
+		padding-left: 55px;
+		padding-right: 55px;
+	}
+	
 	.noteDetail {
 		font-size: smaller;
 		margin-top: 5px;
+	}
+	
+	.formGroup {
+		margin-bottom: 10px;
+	}
+	
+	.marginFormControl {
+		margin-top: 5px;
+	}
+	
+	.checkbox {
+		margin-top: 15px;
+	}
+	
+	.button {
+		margin-bottom: 26px;
+		margin-top: 40px;
 	}
 	
 	.marginTop50 {
@@ -42,43 +64,49 @@
 	}
 	</ui:style>
 	<g:HTMLPanel>
-		<g:FormPanel ui:field="mLoginForm" styleName="col-sm-12">
+		<g:FormPanel ui:field="mLoginForm" styleName="{style.form}">
 
 			<g:HTMLPanel styleName="{style.marginTop20}">
 				<h4 class="text-center" ui:field="mLoginTitle">
 				</h4>
 
-				<g:HTMLPanel styleName="col-sm-12 {style.marginTop20}">
+				<g:HTMLPanel styleName="{style.marginTop20}">
 
-					<g:HTMLPanel ui:field="mEmailGroup" styleName="form-group">
-						<label>Email Address</label>
-						<g:TextBox styleName="form-control  {style.marginTop5}"
+					<g:HTMLPanel ui:field="mEmailGroup" styleName="form-group {style.formGroup}">
+						<label
+							style="font-weight: normal; font-size: 16px; font-family: Oxygen;">Email Address</label>
+						<g:TextBox styleName="form-control  {style.marginFormControl}"
 							ui:field="mEmail" />
 						<g:HTMLPanel styleName="{style.noteDetail}" ui:field="mEmailNote"
 							visible="false" />
 					</g:HTMLPanel>
 
-					<g:HTMLPanel ui:field="mPasswordGroup" styleName="form-group">
-						<label>Password</label>
-						<g:PasswordTextBox styleName="form-control  {style.marginTop5}"
+					<g:HTMLPanel ui:field="mPasswordGroup" styleName="form-group {style.formGroup}">
+						<label
+							style="font-weight: normal; font-size: 16px; font-family: Oxygen;">Password</label>
+						<g:PasswordTextBox styleName="form-control  {style.marginFormControl}"
 							ui:field="mPassword" />
 						<g:HTMLPanel styleName="{style.noteDetail}" ui:field="mPasswordNote"
 							visible="false" />
 					</g:HTMLPanel>
 
 
-					<g:CheckBox ui:field="mRememberMe" styleName="checkbox">
-						<span style="font-size: 14px">Remember me</span>
-					</g:CheckBox>
 
+					<g:HTMLPanel styleName="checkbox {style.checkbox}">
+						<label>
+							<g:CheckBox ui:field="mRememberMe" />
+							<span style="font-size: 14px">Remember me</span>
+						</label>
+					</g:HTMLPanel>
 
 
 					<g:Button ui:field="mLogin"
-						styleName="btn btn-lg btn-primary btn-block {style.marginBottomForm} {style.marginTop30}">
+						styleName="btn btn-lg btn-primary btn-block {style.button}">
 						Log In
 					</g:Button>
 
-					<h6 class="text-center" style="margin-bottom: 40px; font-size: 13px;">
+					<h6 class="text-center"
+						style="margin-bottom: 40px; font-size: 13px;  font-family: Avenir;">
 						I've forgotten my
 						<g:InlineHyperlink ui:field="mForgotPassword"
 							styleName="{style.passLink}">Password</g:InlineHyperlink>

@@ -2,8 +2,17 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:style>
+	.form {
+		padding-left: 55px;
+		padding-right: 55px;
+	}
+	
+	.formGroup {
+		margin-bottom: 10px;
+	}
+	
 	.marginFormControl {
-		
+		margin-top: 5px;
 	}
 	
 	.marginTop20 {
@@ -12,32 +21,25 @@
 	
 	.noteDetail {
 		font-size: smaller;
-		margin-top: 5px;
 	}
 	
-	.marginCheckbox {
-		margin-top: 0px;
-		margin-bottom: 0px;
+	.checkbox {
+		margin-top: 15px;
 	}
 	
 	.button {
-		margin-bottom: 26px;
-	}
-	
-	.form {
-		padding-left: 39px;
-		padding-right: 39px;
+		margin-top: 40px;
 	}
 	</ui:style>
 	<g:HTMLPanel>
-		<g:FormPanel styleName="well col-md-12 {style.form}">
+		<g:FormPanel styleName=" {style.form}">
 
 
 			<g:HTMLPanel styleName="{style.marginTop20}">
 				<h4 class="text-center">Request Invite</h4>
-				<g:HTMLPanel styleName="col-md-12 {style.marginTop20}">
+				<g:HTMLPanel styleName=" {style.marginTop20}">
 
-					<g:HTMLPanel ui:field="mForenameGroup" styleName="form-group">
+					<g:HTMLPanel ui:field="mForenameGroup" styleName="form-group {style.formGroup}">
 						<label
 							style="font-weight: normal; font-size: 16px; font-family: Oxygen;">First name</label>
 						<g:TextBox styleName="form-control {style.marginFormControl}"
@@ -46,32 +48,36 @@
 							styleName="{style.noteDetail}" />
 					</g:HTMLPanel>
 
-					<g:HTMLPanel ui:field="mSurnameGroup" styleName="form-group">
-						<label style="font-weight: normal; font-size: 16px; font-family: Oxygen;">Last name</label>
+					<g:HTMLPanel ui:field="mSurnameGroup" styleName="form-group {style.formGroup}">
+						<label
+							style="font-weight: normal; font-size: 16px; font-family: Oxygen;">Last name</label>
 						<g:TextBox styleName="form-control {style.marginFormControl}"
 							ui:field="mSurname" />
 						<g:HTMLPanel ui:field="mSurnameNote" visible="false"
 							styleName="{style.noteDetail}" />
 					</g:HTMLPanel>
 
-					<g:HTMLPanel ui:field="mCompanyGroup" styleName="form-group">
-						<label style="font-weight: normal; font-size: 16px; font-family: Oxygen;">Company</label>
+					<g:HTMLPanel ui:field="mCompanyGroup" styleName="form-group {style.formGroup}">
+						<label
+							style="font-weight: normal; font-size: 16px; font-family: Oxygen;">Company</label>
 						<g:TextBox styleName="form-control {style.marginFormControl}"
 							ui:field="mCompany" />
 						<g:HTMLPanel ui:field="mCompanyNote" visible="false"
 							styleName="{style.noteDetail}" />
 					</g:HTMLPanel>
 
-					<g:HTMLPanel ui:field="mEmailGroup" styleName="form-group">
-						<label style="font-weight: normal; font-size: 16px; font-family: Oxygen;">Email</label>
+					<g:HTMLPanel ui:field="mEmailGroup" styleName="form-group {style.formGroup}">
+						<label
+							style="font-weight: normal; font-size: 16px; font-family: Oxygen;">Email</label>
 						<g:TextBox styleName="form-control {style.marginFormControl}"
 							ui:field="mEmail" />
 						<g:HTMLPanel ui:field="mEmailNote" visible="false"
 							styleName="{style.noteDetail}" />
 					</g:HTMLPanel>
 
-					<g:HTMLPanel ui:field="mPasswordGroup" styleName="form-group">
-						<label style="font-weight: normal; font-size: 16px; font-family: Oxygen;">Password</label>
+					<g:HTMLPanel ui:field="mPasswordGroup" styleName="form-group {style.formGroup}">
+						<label
+							style="font-weight: normal; font-size: 16px; font-family: Oxygen;">Password</label>
 						<g:PasswordTextBox styleName="form-control {style.marginFormControl}"
 							ui:field="mPassword" />
 						<g:HTMLPanel ui:field="mPasswordNote" visible="false"
@@ -81,9 +87,9 @@
 
 
 
-					<g:HTMLPanel styleName="checkbox {style.marginCheckbox}">
+					<g:HTMLPanel styleName="checkbox {style.checkbox}">
 						<label>
-							<g:CheckBox ui:field="mTermAndCond" styleName="{style.marginCheckbox}" />
+							<g:CheckBox ui:field="mTermAndCond" />
 							<span style="font-size: 14px">I agree to the</span>
 							<g:InlineHyperlink ui:field="mTermAndCondLink">terms and
 								conditions</g:InlineHyperlink>

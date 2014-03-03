@@ -75,8 +75,8 @@ public class RegisterForm extends Composite {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		mRegister.setHTML(mRegister.getText() + "&nbsp;&nbsp;" + imageButtonLink);
-		mForename.getElement().setAttribute("placeholder", "Forename");
-		mSurname.getElement().setAttribute("placeholder", "Surname");
+		mForename.getElement().setAttribute("placeholder", "First name");
+		mSurname.getElement().setAttribute("placeholder", "Last name");
 		mCompany.getElement().setAttribute("placeholder", "Company");
 		mEmail.getElement().setAttribute("placeholder", "Email");
 		mPassword.getElement().setAttribute("placeholder", "Password");

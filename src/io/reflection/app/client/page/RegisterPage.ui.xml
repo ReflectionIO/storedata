@@ -6,7 +6,9 @@
 	<ui:style>
 	.panel {
 		margin-top: 80px;
-		height: 608;		
+		height: 650px;
+		width: 430px;
+		padding: 0px;
 	}
 	
 	.marginTop40 {
@@ -63,10 +65,10 @@
 			</div>
 
 			<r:RegisterForm ui:field="mRegisterForm"
-				styleName="col-md-5 col-md-offset-1 {style.panel}" />
+				styleName="col-md-5 col-md-offset-1 well {style.panel}" />
 
 			<r:ThankYouRegisterPanel ui:field="mThankYouRegisterPanel"
-				styleName="col-md-5 col-md-offset-1 {style.panel}" visible="false" />
+				styleName="col-md-5 col-md-offset-1 well {style.panel}" visible="false" />
 
 
 		</g:HTMLPanel>

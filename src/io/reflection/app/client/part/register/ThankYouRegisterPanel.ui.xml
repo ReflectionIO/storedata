@@ -3,15 +3,14 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:with field='images' type='io.reflection.app.client.res.Images' />
 	<ui:style>
-	.paddingForm {
-		padding-top: 80px;
-		height: 680px;
-		padding-left: 60px;
-		padding-right: 60px;
+	.form {
+		padding-left: 45px;
+		padding-right: 45px;
+		padding-top: 87px;
 	}
 	</ui:style>
 	<g:HTMLPanel>
-		<g:HTMLPanel styleName="well col-md-12 {style.paddingForm} text-center">
+		<g:HTMLPanel styleName="{style.form} text-center">
 
 
 
