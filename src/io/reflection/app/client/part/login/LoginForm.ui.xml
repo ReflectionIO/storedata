@@ -1,62 +1,103 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
-
 	<ui:with field='images' type='io.reflection.app.client.res.Images' />
 	<ui:style>
+	@external .gwt-TabBar, .gwt-TabBarFirst, .gwt-TabBarRest, .gwt-TabPanel, .gwt-TabPanelBottom, .gwt-TabBarItem, .gwt-TabBarItem-selected;
 	.form {
-		padding-left: 55px;
-		padding-right: 55px;
-	}
-	
-	.noteDetail {
-		font-size: smaller;
-		margin-top: 5px;
+		padding-left: 52px;
+		padding-right: 52px;
 	}
 	
 	.formGroup {
-		margin-bottom: 10px;
+		margin-bottom: 8px;
 	}
 	
 	.marginFormControl {
 		margin-top: 5px;
 	}
 	
+	.noteDetail {
+		font-size: smaller;
+	}
+	
 	.checkbox {
 		margin-top: 15px;
 	}
 	
-	.button {
-		margin-bottom: 26px;
-		margin-top: 40px;
+	.hyper {
+		font-weight: normal;
+		font-size: 14px;
+		line-height: 14px;
+		letter-spacing: 0px;
+		font-family: Oxygen;
+		color: #6d69c5;
 	}
 	
-	.marginTop50 {
-		margin-top: 50px;
+	.buttonRegister {
+		margin-top: 30px;
+		margin-bottom: 40px;
 	}
 	
-	.marginTop30 {
+	.buttonLogin {
 		margin-top: 30px;
 	}
 	
-	.marginTop20 {
-		margin-top: 20px;
+	.gwt-TabPanel {
+		
 	}
 	
-	.marginTop10 {
-		margin-top: 10px;
+	.gwt-TabPanelBottom {
+		/*border: 1px solid green;*/
+		
 	}
 	
-	.marginBottomForm {
-		margin-bottom: 30px;
+	.gwt-TabBar {
+		height: 69px;
+		margin-bottom: 20px;
 	}
 	
-	.marginTop5 {
-		margin-top: 5px;
+	.gwt-TabBarFirst {
+		margin: 0px;
+		padding: 0px;
+		width: 0px;
 	}
 	
-	.reminder {
-		padding-top: 80px;
+	.gwt-TabBarRest {
+		margin: 0px;
+		padding: 0px;
+		width: 0px;
+	}
+	
+	.gwt-TabBarItem {
+		width: 214px;
+		text-align: center;
+		font-weight: normal;
+		font-size: 20px;
+		line-height: 30px;
+		letter-spacing: 0px;
+		font-family: Oxygen;
+		color: #37383b;
+		background-color: #efefef;
+		height: 69px;
+		padding-top: 18px;
+		cursor: pointer;
+		outline: 0;
+	}
+	
+	.gwt-TabBarItem:hover {
+		color: #1bc79f;
+	}
+	
+	.gwt-TabBarItem-selected {
+		font-weight: bold;
+		color: #0e0e1f;
+		background-color: #fafafa;
+	}
+	
+	.gwt-TabBarItem-selected:hover {
+		font-weight: bold;
+		color: #0e0e1f;
 	}
 	
 	.passLink {
@@ -64,103 +105,155 @@
 	}
 	</ui:style>
 	<g:HTMLPanel>
-		<g:FormPanel ui:field="mLoginForm" styleName="{style.form}">
 
-			<g:HTMLPanel styleName="{style.marginTop20}">
-				<h4 class="text-center" ui:field="mLoginTitle">
-				</h4>
+		<g:TabPanel ui:field="mTabPanel" styleName="col-md-12">
 
-				<g:HTMLPanel styleName="{style.marginTop20}">
+			<g:Tab text="Request invite">
+				<g:FormPanel styleName=" {style.form}">
+					<g:HTMLPanel>
+						<g:HTMLPanel>
+							<g:HTMLPanel ui:field="mForenameGroupRegister"
+								styleName="form-group {style.formGroup}">
+								<label>First name</label>
+								<g:TextBox styleName="form-control {style.marginFormControl}"
+									ui:field="mForenameRegister" />
+								<g:HTMLPanel ui:field="mForenameNoteRegister"
+									visible="false" styleName="{style.noteDetail}" />
+							</g:HTMLPanel>
 
-					<g:HTMLPanel ui:field="mEmailGroup" styleName="form-group {style.formGroup}">
-						<label
-							style="font-weight: normal; font-size: 16px; font-family: Oxygen;">Email Address</label>
-						<g:TextBox styleName="form-control  {style.marginFormControl}"
-							ui:field="mEmail" />
-						<g:HTMLPanel styleName="{style.noteDetail}" ui:field="mEmailNote"
-							visible="false" />
+							<g:HTMLPanel ui:field="mSurnameGroupRegister"
+								styleName="form-group {style.formGroup}">
+								<label>Last name</label>
+								<g:TextBox styleName="form-control {style.marginFormControl}"
+									ui:field="mSurnameRegister" />
+								<g:HTMLPanel ui:field="mSurnameNoteRegister"
+									visible="false" styleName="{style.noteDetail}" />
+							</g:HTMLPanel>
+
+							<g:HTMLPanel ui:field="mCompanyGroupRegister"
+								styleName="form-group {style.formGroup}">
+								<label>Company</label>
+								<g:TextBox styleName="form-control {style.marginFormControl}"
+									ui:field="mCompanyRegister" />
+								<g:HTMLPanel ui:field="mCompanyNoteRegister"
+									visible="false" styleName="{style.noteDetail}" />
+							</g:HTMLPanel>
+
+							<g:HTMLPanel ui:field="mEmailGroupRegister"
+								styleName="form-group {style.formGroup}">
+								<label>Email</label>
+								<g:TextBox styleName="form-control {style.marginFormControl}"
+									ui:field="mEmailRegister" />
+								<g:HTMLPanel ui:field="mEmailNoteRegister" visible="false"
+									styleName="{style.noteDetail}" />
+							</g:HTMLPanel>
+
+							<g:HTMLPanel ui:field="mPasswordGroupRegister"
+								styleName="form-group {style.formGroup}">
+								<label>Password</label>
+								<g:PasswordTextBox styleName="form-control {style.marginFormControl}"
+									ui:field="mPasswordRegister" />
+								<g:HTMLPanel ui:field="mPasswordNoteRegister"
+									visible="false" styleName="{style.noteDetail}" />
+							</g:HTMLPanel>
+
+							<g:HTMLPanel styleName="checkbox {style.checkbox}">
+								<label>
+									<g:CheckBox ui:field="mTermAndCond" />
+									<span
+										style="font-size: 14px; font-face: Oxygen; font-weight: normal; color: #58595d;">I agree to the</span>
+									<g:InlineHyperlink ui:field="mTermAndCondLink"
+										styleName="{style.hyper}">terms and
+										conditions</g:InlineHyperlink>
+								</label>
+							</g:HTMLPanel>
+							<g:Button ui:field="mRegister"
+								styleName="btn btn-lg btn-primary btn-block {style.buttonRegister}">
+								Submit
+							</g:Button>
+						</g:HTMLPanel>
 					</g:HTMLPanel>
+				</g:FormPanel>
+			</g:Tab>
 
-					<g:HTMLPanel ui:field="mPasswordGroup" styleName="form-group {style.formGroup}">
-						<label
-							style="font-weight: normal; font-size: 16px; font-family: Oxygen;">Password</label>
-						<g:PasswordTextBox styleName="form-control  {style.marginFormControl}"
-							ui:field="mPassword" />
-						<g:HTMLPanel styleName="{style.noteDetail}" ui:field="mPasswordNote"
-							visible="false" />
+			<g:Tab text="Log In">
+				<g:HTMLPanel>
+					<g:FormPanel ui:field="mLoginForm" styleName="{style.form}">
+						<g:HTMLPanel>
+							<g:HTMLPanel>
+
+								<g:HTMLPanel ui:field="mEmailGroupLogin" styleName="form-group {style.formGroup}">
+									<label>Email Address</label>
+									<g:TextBox styleName="form-control  {style.marginFormControl}"
+										ui:field="mEmailLogin" />
+									<g:HTMLPanel styleName="{style.noteDetail}"
+										ui:field="mEmailNoteLogin" visible="false" />
+								</g:HTMLPanel>
+								<g:HTMLPanel ui:field="mPasswordGroupLogin"
+									styleName="form-group {style.formGroup}">
+									<label>Password</label>
+									<g:PasswordTextBox styleName="form-control  {style.marginFormControl}"
+										ui:field="mPasswordLogin" />
+									<g:HTMLPanel styleName="{style.noteDetail}"
+										ui:field="mPasswordNoteLogin" visible="false" />
+								</g:HTMLPanel>
+								<g:HTMLPanel styleName="checkbox {style.checkbox}">
+									<label>
+										<g:CheckBox ui:field="mRememberMe" />
+										<span style="font-size: 14px">Remember me</span>
+									</label>
+								</g:HTMLPanel>
+								<g:Button ui:field="mLogin"
+									styleName="btn btn-lg btn-primary btn-block {style.buttonLogin}">
+									Log In
+								</g:Button>
+								<h6 class="text-center"
+									style="margin-bottom: 40px; font-size: 13px;  font-family: Avenir;">
+									I've forgotten my
+									<g:InlineHyperlink ui:field="mForgotPassword"
+										styleName="{style.passLink}">Password</g:InlineHyperlink>
+								</h6>
+							</g:HTMLPanel>
+						</g:HTMLPanel>
+					</g:FormPanel>
+
+					<g:FormPanel ui:field="mForgotPasswordForm" styleName="{style.form}"
+						visible="false">
+						<g:HTMLPanel>
+							<h4 class="text-center" style="padding-bottom: 30px;">
+								Forgot your details?
+							</h4>
+							<p>Enter your email address below and we'll send you a
+								reminder
+								email</p>
+							<hr />
+							<g:HTMLPanel>
+								<g:HTMLPanel ui:field="mEmailForgotPasswordGroup"
+									styleName="form-group">
+									<label>Email Address</label>
+									<g:TextBox styleName="form-control" ui:field="mEmailForgotPassword" />
+									<g:HTMLPanel styleName="{style.noteDetail}"
+										ui:field="mEmailForgotPasswordNote" visible="false" />
+								</g:HTMLPanel>
+								<g:Button ui:field="mSubmitForgotPassword" styleName="btn btn-lg btn-primary btn-block">
+									Submit
+								</g:Button>
+							</g:HTMLPanel>
+						</g:HTMLPanel>
+					</g:FormPanel>
+
+					<g:HTMLPanel ui:field="mForgotPasswordReminder"
+						styleName="{style.form} text-center" visible="false">
+						<g:Image resource="{images.emailSent}" />
+						<h4 style="margin-top: 40px; margin-bottom: 40px;">Reminder on it's way</h4>
+						<p>We've sent a reminder email to the address you specified, it
+							should
+							be with you in a few moments</p>
 					</g:HTMLPanel>
-
-
-
-					<g:HTMLPanel styleName="checkbox {style.checkbox}">
-						<label>
-							<g:CheckBox ui:field="mRememberMe" />
-							<span style="font-size: 14px">Remember me</span>
-						</label>
-					</g:HTMLPanel>
-
-
-					<g:Button ui:field="mLogin"
-						styleName="btn btn-lg btn-primary btn-block {style.button}">
-						Log In
-					</g:Button>
-
-					<h6 class="text-center"
-						style="margin-bottom: 40px; font-size: 13px;  font-family: Avenir;">
-						I've forgotten my
-						<g:InlineHyperlink ui:field="mForgotPassword"
-							styleName="{style.passLink}">Password</g:InlineHyperlink>
-					</h6>
-
 				</g:HTMLPanel>
-			</g:HTMLPanel>
-		</g:FormPanel>
+			</g:Tab>
 
-
-		<g:FormPanel ui:field="mForgotPasswordForm" styleName="{style.form}"
-			visible="false">
-
-			<g:HTMLPanel styleName="{style.marginTop20}">
-				<h4 class="text-center" style="padding-bottom: 30px;">
-					Forgot your details?
-				</h4>
-
-				<p>Enter your email address below and we'll send you a
-					reminder email</p>
-
-				<hr />
-
-				<g:HTMLPanel styleName=" {style.marginTop10}">
-
-					<g:HTMLPanel ui:field="mEmailForgotPasswordGroup"
-						styleName="form-group">
-						<label>Email Address</label>
-						<g:TextBox styleName="form-control  {style.marginTop5}"
-							ui:field="mEmailForgotPassword" />
-						<g:HTMLPanel styleName="{style.noteDetail}" ui:field="mEmailForgotPasswordNote"
-							visible="false" />
-					</g:HTMLPanel>
-
-					<g:Button ui:field="mSubmitForgotPassword"
-						styleName="btn btn-lg btn-primary btn-block {style.marginBottomForm} {style.marginTop50}">
-						Submit
-					</g:Button>
-
-				</g:HTMLPanel>
-			</g:HTMLPanel>
-
-		</g:FormPanel>
-
-
-		<g:HTMLPanel ui:field="mForgotPasswordReminder"
-			styleName="{style.form} text-center {style.reminder}"
-			visible="false">
-			<g:Image resource="{images.emailSent}" />
-			<h4 style="margin-top: 40px; margin-bottom: 40px;">Reminder on it's way</h4>
-			<p>We've sent a reminder email to the address you specified, it
-				should
-				be with you in a few moments</p>
-		</g:HTMLPanel>
+		</g:TabPanel>
 
 
 

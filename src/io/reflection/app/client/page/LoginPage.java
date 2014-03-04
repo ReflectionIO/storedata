@@ -85,13 +85,11 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 				mWelcomePanel.setVisible(true);
 				mDefaultLogin.setVisible(false);
 			} else if (FormHelper.isValidEmail(s.getAction())) { // If action == email (user has been just registered to the system) attach him email to field
-				mLoginForm.setLoginTitle("Log in to your account");
 				mWelcomePanel.setVisible(false);
 				mDefaultLogin.setVisible(true);
 				mLoginForm.getEmail().setText(s.getAction());
 			}
 		} else {
-			mLoginForm.setLoginTitle("Log in to your account");
 			mWelcomePanel.setVisible(false);
 			mDefaultLogin.setVisible(true);
 

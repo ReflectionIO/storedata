@@ -28,8 +28,7 @@
 	
 	.form {
 		width: 430px;
-		padding: 0px;
-		height: 415px;
+		padding: 0px;		
 		margin-top: 120px;
 	}
 	</ui:style>

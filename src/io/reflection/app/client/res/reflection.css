@@ -1,20 +1,37 @@
 @CHARSET "UTF-8";
 
-@external gwt-RadioButton, hr, container, pagination, active, btn-primary, active, open, dropdown-toggle, dropdown-menu, badge, dropdown, nav, navbar-inverse, navbar-nav, caret, form-control;
+@external well, form-group, gwt-RadioButton, hr, container, pagination, btn-primary, btn-primary:hover, active, open, dropdown-toggle, dropdown-menu, badge, dropdown, nav, navbar-inverse, navbar-nav, caret, form-control;
+.well {
+	background-color: #fafafa;
+}
+
 .gwt-RadioButton label {
 	font-size: 12px;
 	font-weight: normal;
 	margin-left: 4px;
 }
 
+.form-group label {
+	font-weight: normal;
+	font-size: 16px;
+	font-family: Oxygen;
+	color: #58595d;
+	line-height: 30px;
+	letter-spacing: 0px;
+}
+
 p {
 	font-weight: regular;
 	font-size: 16px;
 	font-family: Lato;
+	color: #63656a;
+	line-height: 26px;
+	letter-spacing: 0px;
 }
 
 h1,h2,h3,h4,h5,h6 {
 	font-family: Oxygen;
+	color: #0e0e1f;
 }
 
 /* Forms title */
@@ -31,16 +48,22 @@ h5 {
 h4 {
 	font-weight: bold;
 	font-size: 20px;
+	line-height: 30px;
+	letter-spacing: 0px;
 }
 
 h3 {
 	font-weight: bold;
 	font-size: 22px;
+	line-height: 30px;
+	letter-spacing: 0px;
 }
 
 h1 {
 	font-weight: bold;
 	font-size: 32px;
+	line-height: 40px;
+	letter-spacing: 0px;
 }
 
 hr {
@@ -66,7 +89,7 @@ a {
 
 a:hover,a:focus,a:active,a.active {
 	text-decoration: none;
-	color: #272833;
+	color: #1bc79f;
 }
 
 .pagination>.active>a,.pagination>.active>span,.pagination>.active>a:hover,.pagination>.active>span:hover,.pagination>.active>a:focus,.pagination>.active>span:focus
@@ -76,15 +99,22 @@ a:hover,a:focus,a:active,a.active {
 }
 
 .btn-primary {
-	background-color: #6D69C5;
+	background-color: #6561c0;
 	border-color: #8873CD;
 	height: 56px;
+	border-radius: 4px;
+	/* Fade effect */
+	-o-transition: .5s;
+	-ms-transition: .5s;
+	-moz-transition: .5s;
+	-webkit-transition: .5s;
+	transition: .5s;
 }
 
 .btn-primary:hover,.btn-primary:focus,.btn-primary:active,.btn-primary.active,.open .dropdown-toggle.btn-primary
 	{
-	background-color: #272833;
-	border-color: #3D3D47;
+	background-color: #1bc79f;
+	border: 0px;
 }
 
 .dropdown-menu>li>a:hover,.dropdown-menu>li>a:focus,.dropdown-menu>.active>a,.dropdown-menu>.active>a:hover,.dropdown-menu>.active>a:focus

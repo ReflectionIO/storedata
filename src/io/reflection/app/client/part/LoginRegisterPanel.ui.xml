@@ -8,44 +8,47 @@
 	}
 	
 	.image1 {
-		width: 75px;
+		width: 73px;		
+		margin-top: 2px; 
+		margin-left: -12px;
 	}
 	
 	.image2 {
+		margin-top: 34px;
 		width: 60px;
-		margin-left: 5px;
+		margin-left: -12px;		
 	}
 	</ui:style>
 	<g:HTMLPanel>
-		
-			<h1>Powerful market intelligence for the global development
-				community</h1>
-			<p style="margin-top: 40px; margin-bottom: 40px">
-				Reflection is currently in Private Beta. We have invited
-				a select
-				group of developers and publishers to get a first hand
-				look.
-			</p>
-			<g:Image resource="{images.alarmClock}" styleName="col-md-2 text-center {style.image1}" />
-			<h3 class="col-md-offset-2">Benefits of getting in early</h3>
-			<p class="col-md-offset-2">
-				Ability to request any additional feature based on our
-				data, such as forecasting and trends.
-			</p>
-			<p class="col-md-offset-2">
-				Revenue and dawnload intelligence as well as any premium
-				features
-				for free.
-			</p>
 
-			<g:Image resource="{images.clipboard}"
-				styleName="col-md-2 {style.marginTop40} {style.image2}" />
-			<h3 class="col-md-offset-2" style="margin-top: 40px">What we need</h3>
-			<p class="col-md-offset-2">
-				Linking your store account so we can expand our dataset
-				<br />
-				Input on current &amp; future product features
-			</p>
-		
+		<h1>Powerful market intelligence for the global development
+			community</h1>
+		<p style="margin-top: 40px; margin-bottom: 40px">
+			Reflection is currently in Private Beta. We have invited
+			a select
+			group of developers and publishers to get a first hand
+			look.
+		</p>
+		<g:Image resource="{images.alarmClock}" styleName="col-md-2 text-center {style.image1}" />
+		<h3 class="col-md-offset-2" style="padding-bottom:13px;">Benefits of getting in early</h3>
+		<p class="col-md-offset-2">
+			Ability to request any additional feature based on our
+			data, such as forecasting and trends.
+		</p>
+		<p class="col-md-offset-2">
+			Revenue and dawnload intelligence as well as any premium
+			features
+			for free.
+		</p>
+
+		<g:Image resource="{images.clipboard}"
+			styleName="col-md-2 {style.marginTop40} {style.image2}" />
+		<h3 class="col-md-offset-2" style="margin-top: 40px; padding-bottom:13px;">What we need</h3>
+		<p class="col-md-offset-2">
+			Linking your store account so we can expand our dataset
+			<br />
+			Input on current &amp; future product features
+		</p>
+
 	</g:HTMLPanel>
 </ui:UiBinder> 

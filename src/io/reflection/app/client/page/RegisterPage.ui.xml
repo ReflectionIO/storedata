@@ -6,11 +6,13 @@
 	<ui:style>
 	.panel {
 		margin-top: 120px;
-		height: 650px;
 		width: 430px;
 		padding: 0px;
 	}
 	
+	.thankYou {
+		margin-top: 120px;
+	}
 	
 	.mainPanel {
 		margin-top: 120px;
@@ -43,7 +45,7 @@
 				styleName="col-md-5 col-md-offset-1 well {style.panel}" />
 
 			<r:ThankYouRegisterPanel ui:field="mThankYouRegisterPanel"
-				styleName="col-md-5 col-md-offset-1 well" visible="false" />
+				styleName="col-md-5 col-md-offset-1 well {style.thankYou}" visible="false" />
 
 
 		</g:HTMLPanel>

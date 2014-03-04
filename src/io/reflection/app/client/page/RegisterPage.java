@@ -42,6 +42,7 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler {
 	public RegisterPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
+		
 	}
 
 	/**

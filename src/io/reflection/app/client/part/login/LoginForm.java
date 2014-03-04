@@ -14,10 +14,10 @@ import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.res.Images;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
+import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -41,15 +42,16 @@ public class LoginForm extends Composite {
 
 	interface LoginFormUiBinder extends UiBinder<Widget, LoginForm> {}
 
+	@UiField TabPanel mTabPanel;
+
+	// Login fields
 	@UiField FormPanel mLoginForm;
 	@UiField FormPanel mForgotPasswordForm;
 	@UiField HTMLPanel mForgotPasswordReminder;
 
-	@UiField HeadingElement mLoginTitle;
-
-	@UiField TextBox mEmail;
-	@UiField HTMLPanel mEmailGroup;
-	@UiField HTMLPanel mEmailNote;
+	@UiField TextBox mEmailLogin;
+	@UiField HTMLPanel mEmailGroupLogin;
+	@UiField HTMLPanel mEmailNoteLogin;
 	private String mEmailError = null;
 
 	@UiField TextBox mEmailForgotPassword;
@@ -57,10 +59,10 @@ public class LoginForm extends Composite {
 	@UiField HTMLPanel mEmailForgotPasswordNote;
 	private String mEmailForgotPasswordError = null;
 
-	@UiField TextBox mPassword;
-	@UiField HTMLPanel mPasswordGroup;
-	@UiField HTMLPanel mPasswordNote;
-	private String mPasswordError = null;
+	@UiField TextBox mPasswordLogin;
+	@UiField HTMLPanel mPasswordGroupLogin;
+	@UiField HTMLPanel mPasswordNoteLogin;
+	private String mPasswordErrorLogin = null;
 
 	@UiField CheckBox mRememberMe;
 	@UiField InlineHyperlink mForgotPassword;
@@ -68,24 +70,71 @@ public class LoginForm extends Composite {
 	@UiField Button mLogin;
 	@UiField Button mSubmitForgotPassword;
 
+	// Register fields
+	@UiField TextBox mForenameRegister;
+	@UiField HTMLPanel mForenameGroupRegister;
+	@UiField HTMLPanel mForenameNoteRegister;
+	private String mForenameErrorRegister;
+
+	@UiField TextBox mSurnameRegister;
+	@UiField HTMLPanel mSurnameGroupRegister;
+	@UiField HTMLPanel mSurnameNoteRegister;
+	private String mSurnameErrorRegister;
+
+	@UiField TextBox mCompanyRegister;
+	@UiField HTMLPanel mCompanyGroupRegister;
+	@UiField HTMLPanel mCompanyNoteRegister;
+	private String mCompanyErrorRegister;
+
+	@UiField TextBox mEmailRegister;
+	@UiField HTMLPanel mEmailGroupRegister;
+	@UiField HTMLPanel mEmailNoteRegister;
+	private String mEmailErrorRegister;
+
+	@UiField TextBox mPasswordRegister;
+	@UiField HTMLPanel mPasswordGroupRegister;
+	@UiField HTMLPanel mPasswordNoteRegister;
+	private String mPasswordErrorRegister;
+
+	@UiField CheckBox mTermAndCond;
+	@UiField InlineHyperlink mTermAndCondLink;
+
+	@UiField Button mRegister;
+
 	Images images = GWT.create(Images.class);
-	Image imageButton = new Image(images.buttonLogin());
-	final String imageButtonLink = "<img style=\"vertical-align: -2px;\" src=\"" + imageButton.getUrl() + "\"/>";
-	Image imageButton2 = new Image(images.buttonArrowWhite());
-	final String imageButtonLink2 = "<img style=\"vertical-align: 1px;\" src=\"" + imageButton2.getUrl() + "\"/>";
+	Image imageButtonLogin = new Image(images.buttonLogin());
+	final String imageButtonLoginLink = "<img style=\"vertical-align: -2px;\" src=\"" + imageButtonLogin.getUrl() + "\"/>";
+	Image imageButtonLogin2 = new Image(images.buttonArrowWhite());
+	final String imageButtonLoginLink2 = "<img style=\"vertical-align: 1px;\" src=\"" + imageButtonLogin2.getUrl() + "\"/>";
+	Image imageButtonRegister = new Image(images.buttonArrowWhite());
+	final String imageButtonRegisterLink = "<img style=\"vertical-align: 1px;\" src=\"" + imageButtonRegister.getUrl() + "\"/>";
 
 	public LoginForm() {
 		initWidget(uiBinder.createAndBindUi(this));
-
-		mLogin.setHTML(mLogin.getText() + "&nbsp;&nbsp;" + imageButtonLink);
-		mSubmitForgotPassword.setHTML(mSubmitForgotPassword.getText() + "&nbsp;&nbsp;" + imageButtonLink2);
-		mEmail.getElement().setAttribute("placeholder", "Email");
-		mPassword.getElement().setAttribute("placeholder", "Password");
+		
+		mRegister.setHTML(mRegister.getText() + "&nbsp;&nbsp;" + imageButtonRegisterLink);
+		mForenameRegister.getElement().setAttribute("placeholder", "First name");
+		mSurnameRegister.getElement().setAttribute("placeholder", "Last name");
+		mCompanyRegister.getElement().setAttribute("placeholder", "Company");
+		mEmailRegister.getElement().setAttribute("placeholder", "Email");
+		mPasswordRegister.getElement().setAttribute("placeholder", "Password");
+		
+		mLogin.setHTML(mLogin.getText() + "&nbsp;&nbsp;" + imageButtonLoginLink);
+		mSubmitForgotPassword.setHTML(mSubmitForgotPassword.getText() + "&nbsp;&nbsp;" + imageButtonLoginLink2);
+		mEmailLogin.getElement().setAttribute("placeholder", "Email");
+		mPasswordLogin.getElement().setAttribute("placeholder", "Password");
 		mEmailForgotPassword.getElement().setAttribute("placeholder", "Email");
+
+		mTabPanel.selectTab(1); // Select Log In Tab
 	}
 
-	public void setLoginTitle(String title) {
-		mLoginTitle.setInnerText(title);
+	@UiHandler("mTabPanel")
+	void onLoginTabSelected(SelectionEvent<Integer> event) {
+		if (event.getSelectedItem() == 0) {
+			mForenameRegister.setFocus(true);
+		} else {
+			mEmailLogin.setFocus(true);
+		}
 	}
 
 	/*
@@ -105,12 +154,11 @@ public class LoginForm extends Composite {
 			mForgotPasswordReminder.setVisible(false);
 
 		}
-		mEmail.setFocus(true);
-
+		mEmailLogin.setFocus(true);
 	}
 
 	public TextBox getEmail() {
-		return mEmail;
+		return mEmailLogin;
 	}
 
 	/**
@@ -118,7 +166,7 @@ public class LoginForm extends Composite {
 	 * 
 	 * @param event
 	 */
-	@UiHandler({ "mEmail", "mPassword" })
+	@UiHandler({ "mEmailLogin", "mPasswordLogin" })
 	void onEnterKeyPressLoginFields(KeyPressEvent event) {
 		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
 			mLogin.click();
@@ -135,20 +183,20 @@ public class LoginForm extends Composite {
 	@UiHandler("mLogin")
 	void onLoginClicked(ClickEvent event) {
 		if (validate()) {
-			FormHelper.hideNote(mEmailGroup, mEmailNote);
-			FormHelper.hideNote(mPasswordGroup, mPasswordNote);
+			FormHelper.hideNote(mEmailGroupLogin, mEmailNoteLogin);
+			FormHelper.hideNote(mPasswordGroupLogin, mPasswordNoteLogin);
 			disableLoginForm();
-			SessionController.get().login(mEmail.getText(), mPassword.getText(), mRememberMe.getValue().booleanValue()); // Execute user login
+			SessionController.get().login(mEmailLogin.getText(), mPasswordLogin.getText(), mRememberMe.getValue().booleanValue()); // Execute user login
 		} else {
 			if (mEmailError != null) {
-				FormHelper.showNote(true, mEmailGroup, mEmailNote, mEmailError);
+				FormHelper.showNote(true, mEmailGroupLogin, mEmailNoteLogin, mEmailError);
 			} else {
-				FormHelper.hideNote(mEmailGroup, mEmailNote);
+				FormHelper.hideNote(mEmailGroupLogin, mEmailNoteLogin);
 			}
-			if (mPasswordError != null) {
-				FormHelper.showNote(true, mPasswordGroup, mPasswordNote, mPasswordError);
+			if (mPasswordErrorLogin != null) {
+				FormHelper.showNote(true, mPasswordGroupLogin, mPasswordNoteLogin, mPasswordErrorLogin);
 			} else {
-				FormHelper.hideNote(mPasswordGroup, mPasswordNote);
+				FormHelper.hideNote(mPasswordGroupLogin, mPasswordNoteLogin);
 			}
 		}
 	}
@@ -157,8 +205,8 @@ public class LoginForm extends Composite {
 
 		boolean validated = true;
 		// Retrieve fields to validate
-		String email = mEmail.getText();
-		String password = mPassword.getText();
+		String email = mEmailLogin.getText();
+		String password = mPasswordLogin.getText();
 
 		// Check fields constraints
 		if (email == null || email.length() == 0) {
@@ -179,16 +227,16 @@ public class LoginForm extends Composite {
 		}
 
 		if (password == null || password.length() == 0) {
-			mPasswordError = "Cannot be empty";
+			mPasswordErrorLogin = "Cannot be empty";
 			validated = false;
 		} else if (password.length() < 6) {
-			mPasswordError = "Too short (minimum 6 characters)";
+			mPasswordErrorLogin = "Too short (minimum 6 characters)";
 			validated = false;
 		} else if (password.length() > 64) {
-			mPasswordError = "Too long (maximum 64 characters)";
+			mPasswordErrorLogin = "Too long (maximum 64 characters)";
 			validated = false;
 		} else {
-			mPasswordError = null;
+			mPasswordErrorLogin = null;
 			validated = validated && true;
 		}
 
@@ -231,15 +279,15 @@ public class LoginForm extends Composite {
 
 	private void resetLoginForm() {
 		// mPanel.setVisible(true);
-		mEmail.setEnabled(true);
-		mEmail.setText("");
-		mPassword.setEnabled(true);
-		mPassword.setText("");
+		mEmailLogin.setEnabled(true);
+		mEmailLogin.setText("");
+		mPasswordLogin.setEnabled(true);
+		mPasswordLogin.setText("");
 		mRememberMe.setEnabled(true);
 		mLogin.setEnabled(true);
 
-		FormHelper.hideNote(mEmailGroup, mEmailNote);
-		FormHelper.hideNote(mPasswordGroup, mPasswordNote);
+		FormHelper.hideNote(mEmailGroupLogin, mEmailNoteLogin);
+		FormHelper.hideNote(mPasswordGroupLogin, mPasswordNoteLogin);
 		// mAlertBox.setVisible(false);
 	}
 
@@ -251,10 +299,10 @@ public class LoginForm extends Composite {
 	}
 
 	private void disableLoginForm() {
-		mEmail.setEnabled(false);
-		mEmail.setFocus(false);
-		mPassword.setEnabled(false);
-		mPassword.setFocus(false);
+		mEmailLogin.setEnabled(false);
+		mEmailLogin.setFocus(false);
+		mPasswordLogin.setEnabled(false);
+		mPasswordLogin.setFocus(false);
 		mRememberMe.setEnabled(false);
 		mLogin.setEnabled(false);
 	}
@@ -280,4 +328,12 @@ public class LoginForm extends Composite {
 		mEmailForgotPassword.setFocus(true);
 	}
 
+	// Register functions
+	@UiHandler({ "mForenameRegister", "mSurnameRegister", "mCompanyRegister", "mEmailRegister", "mPasswordRegister" })
+	void onEnterKeyPressRegisterFields(KeyPressEvent event) {
+		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
+			mRegister.click();
+		}
+	}
+	
 }

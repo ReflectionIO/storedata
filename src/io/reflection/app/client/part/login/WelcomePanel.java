@@ -45,7 +45,6 @@ public class WelcomePanel extends Page implements SessionEventHandler {
 	@Override
 	protected void onAttach() {
 		super.onAttach();
-		mLoginForm.setLoginTitle("Log in to get started");
 		register(EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
 	}
 
