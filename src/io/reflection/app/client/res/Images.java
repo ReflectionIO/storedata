@@ -84,8 +84,29 @@ public interface Images extends ClientBundle {
 	@Source("emailsent.png")
 	ImageResource emailSent();
 	
+	@Source("footerdownarrow.png")
+	ImageResource footerDownArrow();
 	
+	@Source("footeruparrow.png")
+	ImageResource footerUpArrow();
 	
+	@Source("facebook.png")
+	ImageResource facebook();
+	
+	@Source("facebookhover.png")
+	ImageResource facebookHover();
+	
+	@Source("twitter.png")
+	ImageResource twitter();
+	
+	@Source("twitterhover.png")
+	ImageResource twitterHover();
+	
+	@Source("linkedin.png")
+	ImageResource linkedin();
+	
+	@Source("linkedinhover.png")
+	ImageResource linkedinHover();
 	
 	
 	

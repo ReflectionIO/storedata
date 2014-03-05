@@ -1,140 +1,111 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
-    <ui:with field='res' type='io.reflection.app.client.res.Images' />
-    <ui:style>
-    @external icon-facebook-squared,icon-linkedin-squared;
-    .logo {
-    	font-size: 18px;
-    	line-height: 18px;
-    	vertical-align: middle;
-    	padding-bottom: 20px;
-    	display: block;
-    	color: #272833;
-    }
-    
-    .footer {
-    	padding-top: 40px;
-    }
-    
-    .footer a {
-    	/* color: white; */
-    	
-    }
-    
-    .footer a:HOVER {
-    	/* color: #6D69C5; */
-    	
-    }
-    
-    .social li {
-    	display: inline;
-    	font-size: 25px;
-    }
-    
-    .navbar {
-    	list-style: none;
-    	padding: 0;
-    	margin-bottom: 30px;
-    }
-    
-    .navbar li {
-    	display: inline;
-    	font-size: 12px;
-    	margin-right: 10px;
-    }
-    
-    .navbar li a {
-    	color: #999999;
-    }
-    
-    .navbar li a:HOVER {
-    	color: #272833;
-    }
-    
-    .copyright {
-    	font-size: 10px;
-    }
-    
-    .social a .icon-facebook-squared {
-    	color: #3B5998;
-    }
-    
-    .social a .icon-linkedin-squared {
-    	color: #4875B4;
-    }
-    
-    .social a:HOVER .icon-facebook-squared {
-    	color: #3B5998;
-    }
-    
-    .social a:HOVER .icon-linkedin-squared {
-    	color: #4875B4;
-    }
-    </ui:style>
-    <g:HTMLPanel>
-        <footer class="{style.footer}">
-            <div class="container">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:with field='res' type='io.reflection.app.client.res.Images' />
+	<ui:style>
+	.footer {
+		position: fixed;
+		width: 100%;
+		margin-top: 40px;
+		padding-left: 25px;
+		padding-right: 25px;
+		bottom: 0;
+		border-top: 1px solid #d9dce0;
+		background-color: #ffffff;
+	}
+	
+	.upPanel {
+		height: 40px;
+		padding-top: 8px;
+	}
+	
+	.downPanel {
+		height: 125px;
+		text-align: center;
+	}
+	
+	.downPanel:ACTIVE {
+		transition: opacity 1s ease-out;
+	}
+	
+	.logo {
+		display: block;
+		margin-left: 0px;
+		margin-right: auto;
+	}
+	
+	.arrow {
+		display: block;
+		margin-left: auto;
+		margin-right: auto;
+	}
+	
+	.arrow:hover {
+		cursor: pointer;
+	}
+	</ui:style>
+	<g:HTMLPanel>
 
-                <div class="row">
-                    <a class="{style.logo}" href="#home">
-                        <g:Image resource="{res.logo}" />&nbsp;&nbsp;Reflection
-                    </a>
-                </div>
-                <div class="row">
-                    <ul class="{style.navbar}">
-                        <li>
-                            <a href="#ranks">Leaderboard</a>
-                        </li>
-                        <li>
-                            <a href="#home">Product</a>
-                        </li>
-                        <li>
-                            <a href="#upgrade">Pricing</a>
-                        </li>
-                        <li>
-                            <a href="#about">About Us</a>
-                        </li>
-                        <li>
-                            <a href="#careers">Careers</a>
-                        </li>
-                        <li>
-                            <a href="#blog">Blog</a>
-                        </li>
-                        <li>
-                            <a href="#forum">Forum</a>
-                        </li>
-                        <li>
-                            <a href="#terms">Terms and Conditions</a>
-                        </li>
-                        <li>
-                            <a href="#privacy">Privacy</a>
-                        </li>
-                        <li>
-                            <a href="#cookies">Cookies</a>
-                        </li>
-                    </ul>
-                </div>
+		<footer class="{style.footer}">
+			<g:HTMLPanel styleName="{style.upPanel}">
+				<div style="float: left;width:20px;">
+					<g:Image resource="{res.logo}" styleName="{style.logo}" />
+				</div>
+				<div style="margin:0 auto;width:20px;margin-top: 7px;">
+					<g:Image ui:field="mDownArrow" resource="{res.footerDownArrow}"
+						styleName="{style.arrow}" visible="false" />
+					<g:Image ui:field="mUpArrow" resource="{res.footerUpArrow}"
+						styleName="{style.arrow}" />
+				</div>
+				<div style="margin-top: -12px; float: right;width:290px;">
+					<span style="display: block; font-size: 13px; color: #63656a;">
+						©Copyright
+						<span ui:field="mYear"></span>
+						Reflection. All Rights Reserved
+					</span>
+				</div>
+			</g:HTMLPanel>
 
-                <div class="row">
-                    <div class="{style.copyright} pull-left">
-                        &copy; Copyright
-                        <span ui:field="mYear"></span>
-                        <a href="http://www.reflection.io" target="_blank">Reflection.io</a>, All Rights Reserved
-                    </div>
-                    <ul class="{style.social} pull-right">
-                        <li>
-                            <a href="https://www.facebook.com/reflection.io" target="_blank">
-                                <b class="icon-facebook-squared"></b>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="http://www.linkedin.com/company/reflection-io-ltd" target="_blank">
-                                <b class="icon-linkedin-squared"></b>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </footer>
-    </g:HTMLPanel>
+			<g:HTMLPanel ui:field="mDownPanel" styleName="{style.downPanel}"
+				visible="false">
+
+				<div style="width: 100%; padding-top:20px; padding-bottom: 40px;">
+					<g:InlineHyperlink targetHistoryToken="ranks">Leaderboard</g:InlineHyperlink>
+					&nbsp;&nbsp;&nbsp;
+					<g:InlineHyperlink targetHistoryToken="">Terms and
+						Conditions</g:InlineHyperlink>
+					&nbsp;&nbsp;&nbsp;
+					<g:InlineHyperlink targetHistoryToken="">Privacy
+						Policy</g:InlineHyperlink>
+				</div>
+
+				<div style="width: 100%;">
+
+					<a href="https://www.facebook.com/reflection.io" target="_blank">
+						<g:Image resource="{res.facebook}" ui:field="mFacebook" />
+						<g:Image resource="{res.facebookHover}" ui:field="mFacebookHover"
+							visible="false" />
+					</a>
+					&nbsp;&nbsp;&nbsp;
+					<a href="http://www.linkedin.com/company/reflection-io-ltd" target="_blank">
+						<g:Image resource="{res.linkedin}" ui:field="mLinkedin" />
+						<g:Image resource="{res.linkedinHover}" ui:field="mLinkedinHover"
+							visible="false" />
+					</a>
+					&nbsp;&nbsp;&nbsp;
+					<a href="#" target="_blank">
+						<g:Image resource="{res.twitter}" ui:field="mTwitter" />
+						<g:Image resource="{res.twitterHover}" ui:field="mTwitterHover"
+							visible="false" />
+					</a>
+
+				</div>
+
+			</g:HTMLPanel>
+
+		</footer>
+
+	</g:HTMLPanel>
+
+
 </ui:UiBinder> 

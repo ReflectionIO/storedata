@@ -59,9 +59,13 @@ h3 {
 	letter-spacing: 0px;
 }
 
+h2 {
+
+}
+
 h1 {
 	font-weight: bold;
-	font-size: 32px;
+	font-size: 34px;
 	line-height: 40px;
 	letter-spacing: 0px;
 }
@@ -114,7 +118,7 @@ a:hover,a:focus,a:active,a.active {
 .btn-primary:hover,.btn-primary:focus,.btn-primary:active,.btn-primary.active,.open .dropdown-toggle.btn-primary
 	{
 	background-color: #1bc79f;
-	border: 0px;
+	border-color: #1bc79f;
 }
 
 .dropdown-menu>li>a:hover,.dropdown-menu>li>a:focus,.dropdown-menu>.active>a,.dropdown-menu>.active>a:hover,.dropdown-menu>.active>a:focus
