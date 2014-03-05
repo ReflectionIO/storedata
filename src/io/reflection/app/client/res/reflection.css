@@ -1,6 +1,6 @@
 @CHARSET "UTF-8";
 
-@external well, form-group, gwt-RadioButton, hr, container, pagination, btn-primary, btn-primary:hover, active, open, dropdown-toggle, dropdown-menu, badge, dropdown, nav, navbar-inverse, navbar-nav, caret, form-control;
+@external well, form-group, gwt-RadioButton, hr, navbar-fixed-top, navbar, container, pagination, btn-primary, btn-primary:hover, active, open, dropdown-toggle, dropdown-menu, badge, dropdown, nav, navbar-inverse, navbar-nav, caret, form-control;
 .well {
 	background-color: #fafafa;
 }
@@ -60,7 +60,7 @@ h3 {
 }
 
 h2 {
-
+	
 }
 
 h1 {
@@ -131,6 +131,10 @@ a:hover,a:focus,a:active,a.active {
 	background-color: #474949;
 }
 
+.navbar-inverse .navbar-nav > li > a {
+	color: #8d8ea1;
+}
+
 /* emulates .open click */
 .dropdown:hover .dropdown-menu,.dropdown:focus .dropdown-menu {
 	display: block;
@@ -139,13 +143,18 @@ a:hover,a:focus,a:active,a.active {
 .navbar-inverse .navbar-nav>.dropdown:hover>a,.navbar-inverse .navbar-nav>.dropdown:hover>a:hover,.navbar-inverse .navbar-nav>.dropdown:hover>a:focus
 	{
 	color: #FFF;
-	background-color: #080808;
+	background-color: #272833;
 }
+
+.navbar-inverse .navbar-nav>.active>a,.navbar-inverse .navbar-nav>.active>a:hover,.navbar-inverse .navbar-nav>.active>a:focus
+	{
+	background-color: #272833;
+}
+.navbar .navbar-inverse .navbar-fixed-top
 
 .nav .dropdown:hover>a,.nav .dropdown:hover>a:hover,.nav .dropdown:hover>a:focus
 	{
-	background-color: #EEE;
-	border-color: #428BCA;
+	background-color: #272833;
 }
 
 .dropdown:hover>a {
