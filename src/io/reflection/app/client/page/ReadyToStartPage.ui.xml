@@ -11,20 +11,22 @@
 		font-size: 18px;
 		font-family: Lato;
 		font-weight: normal;
+		color: #6d69c5;
 	}
+	
 	</ui:style>
 	<g:HTMLPanel styleName="text-center {style.HtmlPanelStyle}"> <!-- CONTAINER-FLUID style -->
 
-		<div class="jumbotron row" style="padding-top: 60px; padding-bottom: 40px;"> <!-- ! JUMBOTRON OVERRRIDES THE STYLES ! -->
+		<div class="jumbotron row" style="padding-top: 105px; padding-bottom: 135px;"> <!-- ! JUMBOTRON OVERRRIDES THE STYLES ! -->
 			<div class="col-xs-12">
 
-				<g:Image resource="{images.tick}" />
+				<g:Image resource="{images.tick}"/>
 
 				<span class="col-xs-12"
-					style="font-size: 32px; font-family: Oxygen; font-weight: bold; margin-top: 60px; margin-bottom: 20px;">That's it! You're ready to start using Reflection</span>
+					style="font-size: 34px; font-family: Oxygen; font-weight: bold; padding-top: 40px; padding-bottom: 25px;">That's it! You're ready to start using Reflection</span>
 
 				<span class="col-xs-12"
-					style="line-height: 27px; font-size: 18px; font-family: Lato; font-weight: normal; margin-bottom: 100px;">
+					style="line-height: 26px; font-size: 18px; font-family: Lato; font-weight: normal; color: #63656a;">
 					Start by exploring the top charting apps in the
 					<g:InlineHyperlink ui:field="mLeaderboard"
 						styleName="{style.hyperlink}" targetHistoryToken="ranks">Leaderboard</g:InlineHyperlink>
