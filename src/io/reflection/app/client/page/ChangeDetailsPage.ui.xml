@@ -2,50 +2,81 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part">
 	<ui:style>
+
+	
 	.noteDetail {
 		font-size: smaller;
 		margin-top: 5px;
 	}
+	
+	.form {
+		padding-left: 25px;
+		padding-right: 25px;		
+		width: 320px;	
+	}
+	.button{margin-top: 35px;}
 	</ui:style>
-	<g:HTMLPanel styleName="container"> <!-- Override container-fluid assigned in NavigationController -->
-		<h2 class="text-center">Change Details</h2>
+	<g:HTMLPanel>
+		<div class="row" style="margin-right: 10px;">
 
-		<p:AlertBox ui:field="mAlertBox" visible="false" />
+			<div class="col-md-2 well"
+				style="margin-top: -20px;  padding-left: 35px; padding-right: 25px;">
 
-		<g:FormPanel ui:field="mForm" styleName="col-md-6 col-md-offset-3 well">
-			<g:HTMLPanel styleName="col-md-10 col-md-offset-1 ">
-				<g:HTMLPanel ui:field="mForenameGroup" styleName="form-group">
-					<label>First name</label>
-					<g:TextBox styleName="form-control input-lg" ui:field="mForename" />
-					<g:HTMLPanel ui:field="mForenameNote" visible="false"
-						styleName="{style.noteDetail}" />
+				<h3 style="margin-bottom: 30px;">Account Settings</h3>
+
+				<a style="color: black;">Personal details</a>
+				<hr />
+				<a>Change password</a>
+				<hr />
+
+			</div>
+
+			<div class="col-md-10">
+				<g:HTMLPanel styleName="well well-sm col-md-12">
+
+					<h5>Personal details</h5>
+
 				</g:HTMLPanel>
 
-				<g:HTMLPanel ui:field="mSurnameGroup" styleName="form-group">
-					<label>Last name</label>
-					<g:TextBox styleName="form-control input-lg" ui:field="mSurname" />
-					<g:HTMLPanel ui:field="mSurnameNote" visible="false"
-						styleName="{style.noteDetail}" />
-				</g:HTMLPanel>
+				<p:AlertBox ui:field="mAlertBox" visible="false" />
 
-				<g:HTMLPanel ui:field="mCompanyGroup" styleName="form-group">
-					<label>Company</label>
-					<g:TextBox styleName="form-control input-lg" ui:field="mCompany" />
-					<g:HTMLPanel ui:field="mCompanyNote" visible="false"
-						styleName="{style.noteDetail}" />
-				</g:HTMLPanel>
+				<g:FormPanel ui:field="mForm" styleName="{style.form}">
+					<g:HTMLPanel>
+						<g:HTMLPanel ui:field="mForenameGroup" styleName="form-group">
+							<label>First name</label>
+							<g:TextBox styleName="form-control input-lg" ui:field="mForename" />
+							<g:HTMLPanel ui:field="mForenameNote" visible="false"
+								styleName="{style.noteDetail}" />
+						</g:HTMLPanel>
 
-				<g:HTMLPanel ui:field="mUsernameGroup" styleName="form-group">
-					<label>Username</label>
-					<g:TextBox styleName="form-control input-lg" ui:field="mUsername" />
-					<g:HTMLPanel ui:field="mUsernameNote" visible="false"
-						styleName="{style.noteDetail}" />
-				</g:HTMLPanel>
+						<g:HTMLPanel ui:field="mSurnameGroup" styleName="form-group">
+							<label>Last name</label>
+							<g:TextBox styleName="form-control input-lg" ui:field="mSurname" />
+							<g:HTMLPanel ui:field="mSurnameNote" visible="false"
+								styleName="{style.noteDetail}" />
+						</g:HTMLPanel>
 
-				<g:Button ui:field="mChangeDetails" styleName="btn btn-lg btn-primary btn-block"
-					text="Apply" />
+						<g:HTMLPanel ui:field="mCompanyGroup" styleName="form-group">
+							<label>Company</label>
+							<g:TextBox styleName="form-control input-lg" ui:field="mCompany" />
+							<g:HTMLPanel ui:field="mCompanyNote" visible="false"
+								styleName="{style.noteDetail}" />
+						</g:HTMLPanel>
 
-			</g:HTMLPanel>
-		</g:FormPanel>
+						<g:HTMLPanel ui:field="mUsernameGroup" styleName="form-group">
+							<label>Email</label>
+							<g:TextBox styleName="form-control input-lg" ui:field="mUsername" />
+							<g:HTMLPanel ui:field="mUsernameNote" visible="false"
+								styleName="{style.noteDetail}" />
+						</g:HTMLPanel>
+
+						<g:Button ui:field="mChangeDetails" styleName="btn btn-lg btn-primary btn-block {style.button}"
+							text="Update" />
+
+					</g:HTMLPanel>
+				</g:FormPanel>
+
+			</div>
+		</div>
 	</g:HTMLPanel>
 </ui:UiBinder> 

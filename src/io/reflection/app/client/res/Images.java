@@ -87,8 +87,14 @@ public interface Images extends ClientBundle {
 	@Source("footerdownarrow.png")
 	ImageResource footerDownArrow();
 	
+	@Source("footerdownarrowhover.png")
+	ImageResource footerDownArrowHover();
+	
 	@Source("footeruparrow.png")
 	ImageResource footerUpArrow();
+	
+	@Source("footeruparrowhover.png")
+	ImageResource footerUpArrowHover();
 	
 	@Source("facebook.png")
 	ImageResource facebook();
