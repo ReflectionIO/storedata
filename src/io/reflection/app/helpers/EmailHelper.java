@@ -32,15 +32,15 @@ public class EmailHelper {
 
 	private static final Logger LOG = Logger.getLogger(EmailHelper.class.getName());
 
-	public static String inflate(Map<String, ?> values, String templateBody) {
+	public static String inflate(Map<String, ?> values, String string) {
 		StringBuffer email = new StringBuffer();
 
-		int count = templateBody.length();
+		int count = string.length();
 
 		boolean foundDolar = false, foundStart = false;
 		StringBuffer magic = new StringBuffer();
 		for (int i = 0; i < count; i++) {
-			char c = templateBody.charAt(i);
+			char c = string.charAt(i);
 
 			if (foundDolar) {
 				if (c == '{') {
@@ -59,7 +59,7 @@ public class EmailHelper {
 
 				String[] path = null;
 				if (magic.length() > 0) {
-					path = magic.toString().split(".");
+					path = magic.toString().split("\\.");
 				}
 
 				Object o = null;
@@ -128,9 +128,10 @@ public class EmailHelper {
 		Field field = null;
 		for (int i = 0; i < fields.length; i++) {
 			field = fields[i];
-			if (field.isAccessible() && propertyName.equals(field.getName())) {
+			if (propertyName.equals(field.getName())) {
 				try {
 					value = field.get(object);
+					break;
 				} catch (IllegalArgumentException e) {
 					LOG.log(GaeLevel.SEVERE, String.format("Error accessing field [%s]", field.getName()), e);
 				} catch (IllegalAccessException e) {

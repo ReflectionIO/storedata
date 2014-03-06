@@ -170,5 +170,9 @@ public interface IUserService extends IService {
 	 * @return
 	 */
 	public User getDataAccountOwner(DataAccount dataAccount) throws DataAccessException;
+	
+	public void markForReset(User user) throws DataAccessException;
+	
+	public User getResetCodeUser(String code) throws DataAccessException;
 
 }

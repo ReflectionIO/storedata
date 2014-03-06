@@ -13,6 +13,8 @@ import io.reflection.app.api.core.shared.call.ChangePasswordRequest;
 import io.reflection.app.api.core.shared.call.ChangePasswordResponse;
 import io.reflection.app.api.core.shared.call.ChangeUserDetailsRequest;
 import io.reflection.app.api.core.shared.call.ChangeUserDetailsResponse;
+import io.reflection.app.api.core.shared.call.ForgotPasswordRequest;
+import io.reflection.app.api.core.shared.call.ForgotPasswordResponse;
 import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsRequest;
 import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsResponse;
 import io.reflection.app.api.core.shared.call.IsAuthorisedRequest;
@@ -22,6 +24,7 @@ import io.reflection.app.api.core.shared.call.LoginResponse;
 import io.reflection.app.api.core.shared.call.LogoutRequest;
 import io.reflection.app.api.core.shared.call.LogoutResponse;
 import io.reflection.app.api.core.shared.call.event.ChangeUserDetailsEventHandler;
+import io.reflection.app.api.core.shared.call.event.ForgotPasswordEventHandler;
 import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.client.handler.user.SessionEventHandler.UserLoggedIn;
 import io.reflection.app.client.handler.user.SessionEventHandler.UserLoggedOut;
@@ -489,6 +492,32 @@ public class SessionController implements ServiceController {
 	public void clearRolePermissionCache() {
 		mRoleCache.clear();
 		mPermissionCache.clear();
+	}
+	
+	public void forgotPassword(String username) {
+		if (mSession == null && mLoggedInUser == null) {
+			CoreService service = new CoreService();
+
+			service.setUrl(CORE_END_POINT);
+
+			final ForgotPasswordRequest input = new ForgotPasswordRequest();
+			input.accessCode = ACCESS_CODE;
+
+			input.username = username;
+
+			service.forgotPassword(input, new AsyncCallback<ForgotPasswordResponse>() {
+
+				@Override
+				public void onSuccess(ForgotPasswordResponse output) {
+					EventController.get().fireEventFromSource(new ForgotPasswordEventHandler.ForgotPasswordSuccess(input, output), SessionController.this);
+				}
+
+				@Override
+				public void onFailure(Throwable caught) {
+					EventController.get().fireEventFromSource(new ForgotPasswordEventHandler.ForgotPasswordFailure(input, caught), SessionController.this);
+				}
+			});
+		}
 	}
 
 }

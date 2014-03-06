@@ -22,7 +22,6 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -67,9 +66,7 @@ public class RegisterForm extends Composite {
 
 	@UiField Button mRegister;
 
-	Images images = GWT.create(Images.class);
-	Image imageButton = new Image(images.buttonArrowWhite());
-	final String imageButtonLink = "<img style=\"vertical-align: 1px;\" src=\"" + imageButton.getUrl() + "\"/>";
+	final String imageButtonLink = "<img style=\"vertical-align: 1px;\" src=\"" + Images.INSTANCE.buttonArrowWhite().getSafeUri().asString() + "\"/>";
 
 	public RegisterForm() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -241,6 +238,7 @@ public class RegisterForm extends Composite {
 		mCompany.setText("");
 		mEmail.setText("");
 		mPassword.setText("");
+		
 		FormHelper.hideNote(mForenameGroup, mForenameNote);
 		FormHelper.hideNote(mSurnameGroup, mSurnameNote);
 		FormHelper.hideNote(mCompanyGroup, mCompanyNote);

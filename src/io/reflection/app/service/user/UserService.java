@@ -20,6 +20,7 @@ import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.helpers.EmailHelper;
+import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
@@ -223,7 +224,8 @@ final class UserService implements IUserService {
 	public void updateUserPassword(User user, String newPassword) throws DataAccessException {
 		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
-		String updateUserPasswordQuery = String.format("UPDATE `user` SET `password`='%s' WHERE `id`=%d", sha1Hash(SALT + newPassword), user.id.longValue());
+		String updateUserPasswordQuery = String.format("UPDATE `user` SET `password`='%s', `code`=NULL WHERE `id`=%d", sha1Hash(SALT + newPassword),
+				user.id.longValue());
 
 		try {
 			userConnection.connect();
@@ -547,21 +549,22 @@ final class UserService implements IUserService {
 					LOG.info(String.format("Role with roleid [%d] was added to user with userid [%d]", role.id.longValue(), user.id.longValue()));
 				}
 
-				// if (role.id == Long.valueOf(5) && "BT1".equals(role.code)) {
-				// EmailTemplate template = EmailTemplateServiceProvider.provide().getEmailTemplate(Long.valueOf(2));
-				//
-				// Map<String, Object> parameters = new HashMap<String, Object>();
-				//
-				// if (user.forename == null) {
-				// user = getUser(user.id);
-				// }
-				//
-				// parameters.put("user", user);
-				//
-				// String body = EmailHelper.inflate(parameters, template.body);
-				//
-				// EmailHelper.sendEmail(from, to, name, subject, body);
-				// }
+				if (role.id == Long.valueOf(5) && "BT1".equals(role.code)) {
+					EmailTemplate template = EmailTemplateServiceProvider.provide().getEmailTemplate(Long.valueOf(2));
+
+					Map<String, Object> parameters = new HashMap<String, Object>();
+
+					if (user.forename == null) {
+						user = getUser(user.id);
+					}
+
+					parameters.put("user", user);
+
+					String body = EmailHelper.inflate(parameters, template.body);
+					String subject = EmailHelper.inflate(parameters, template.subject);
+
+					EmailHelper.sendEmail(template.from, user.username, user.forename + " " + user.surname, subject, body);
+				}
 			} else {
 				if (LOG.isLoggable(Level.WARNING)) {
 					LOG.warning(String.format("Role with roleid [%d] was NOT added to user with userid [%d]", role.id.longValue(), user.id.longValue()));
@@ -867,5 +870,97 @@ final class UserService implements IUserService {
 		}
 
 		return owner;
+	}
+
+	/**
+	 * @param connection
+	 * @param user
+	 * @return
+	 */
+	private String getUserResetCode(Connection connection, User user) throws DataAccessException {
+		String resetCode = null;
+
+		String getUserResetCodeQuery = String.format("SELECT CAST(`code` AS CHAR) AS `resetcode` FROM `user` WHERE `deleted`='n' AND `id`=%d LIMIT 1", user.id.longValue());
+
+		connection.executeQuery(getUserResetCodeQuery);
+
+		if (connection.fetchNextRow()) {
+			resetCode = connection.getCurrentRowString("resetcode");
+		}
+
+		return resetCode;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.user.IUserService#getResetCodeUser(java.lang.String)
+	 */
+	@Override
+	public User getResetCodeUser(String code) throws DataAccessException {
+		User user = null;
+
+		String getResetCodeUserQuery = String.format("SELECT * FROM `user` WHERE `code`=CAST('%s' AS BINARY) AND `deleted`='n' LIMIT 1", code);
+
+		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
+
+		try {
+			userConnection.connect();
+			userConnection.executeQuery(getResetCodeUserQuery);
+
+			if (userConnection.fetchNextRow()) {
+				user = toUser(userConnection);
+			}
+
+		} finally {
+			if (userConnection != null) {
+				userConnection.disconnect();
+			}
+		}
+
+		return user;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.user.IUserService#markForReset(io.reflection.app.datatypes.shared.User)
+	 */
+	@Override
+	public void markForReset(User user) throws DataAccessException {
+
+		String markForResetQuery = String.format("UPDATE `user` SET `code`=CAST(UUID() AS BINARY) WHERE `deleted`='n' AND `id`=%d", user.id.longValue());
+
+		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
+
+		try {
+			userConnection.connect();
+			userConnection.executeQuery(markForResetQuery);
+
+			if (userConnection.getAffectedRowCount() > 0) {
+				String resetCode = getUserResetCode(userConnection, user);
+				
+				Map<String, Object> values = new HashMap<String, Object>();
+				
+				values.put("user", user);
+				values.put("resetLink", "http://www.reflection.io/internal/#changepassword/reset/" + resetCode);
+				
+				if (LOG.isLoggable(GaeLevel.DEBUG)) {
+					LOG.fine(String.format("Sending reset code url [%s] to [%s]", values.get("resetLink"), user.username));
+				}
+				
+				EmailTemplate template = EmailTemplateServiceProvider.provide().getEmailTemplate(Long.valueOf(3));
+				
+				String body = EmailHelper.inflate(values, template.body);
+				String subject = EmailHelper.inflate(values, template.subject);
+				
+				EmailHelper.sendEmail(template.from, user.username, user.forename + " " + user.surname, subject, body);
+			}
+
+		} finally {
+			if (userConnection != null) {
+				userConnection.disconnect();
+			}
+		}
 	}
 }

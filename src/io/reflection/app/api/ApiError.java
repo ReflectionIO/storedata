@@ -87,6 +87,8 @@ public enum ApiError {
 	EmailTemplateNoLookup(100050, "Invalid email template lookup, an id should be provided for EmailTemplate: %s"),
 	EmailTemplateNotFound(100051, "Email template not found EmailTemplate: %s"),
 
+	InvalidPasswordResetCode(100055, "Invalid reset code String: %s"),
+	
 	GetCountriesNeedsStoreOrQuery(100101, "GetCountries call should either have a store or a query. To get all countries use * for the query: %s"),
 
 	GetStoresNeedsCountryOrQuery(100201, "GetStores call should either have a country or a query. To get all stores use * for the query: %s"),

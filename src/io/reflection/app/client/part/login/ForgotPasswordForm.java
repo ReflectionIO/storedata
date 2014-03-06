@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.part.login;
 
+import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.res.Images;
 
@@ -35,7 +36,6 @@ public class ForgotPasswordForm extends Composite {
 	interface ForgotPasswordFormUiBinder extends UiBinder<Widget, ForgotPasswordForm> {}
 	
 	@UiField FormPanel mForm;
-	@UiField HTMLPanel mReminder;
 	
 	@UiField TextBox mEmail;
 	@UiField HTMLPanel mEmailGroup;
@@ -56,10 +56,9 @@ public class ForgotPasswordForm extends Composite {
 	@UiHandler("mSubmit")
 	void onSubmitClick(ClickEvent event) {
 		if (validate()) {
-			mForm.setVisible(false);
-			mReminder.setVisible(true);
 			FormHelper.hideNote(mEmailGroup, mEmailNote);
-			mSubmit.setEnabled(false);
+			disableForm();
+			SessionController.get().forgotPassword(mEmail.getText());
 		} else {
 			FormHelper.showNote(true, mEmailGroup, mEmailNote, mEmailError);
 		}
@@ -73,6 +72,8 @@ public class ForgotPasswordForm extends Composite {
 		super.onAttach();
 		
 		resetForm();
+		
+		mEmail.setFocus(true);
 	}
 	
 	@UiHandler("mEmail")
@@ -109,6 +110,12 @@ public class ForgotPasswordForm extends Composite {
 		mEmail.setText("");
 		mSubmit.setEnabled(true);
 		FormHelper.hideNote(mEmailGroup, mEmailNote);
+	}
+	
+	private void disableForm() {
+		mEmail.setEnabled(false);
+		mEmail.setFocus(false);
+		mSubmit.setEnabled(false);
 	}
 	
 }

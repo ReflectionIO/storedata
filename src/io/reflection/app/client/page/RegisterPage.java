@@ -8,7 +8,10 @@
 package io.reflection.app.client.page;
 
 import io.reflection.app.client.controller.EventController;
+import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.UserController;
+import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.handler.user.UserRegisteredEventHandler;
 import io.reflection.app.client.part.AlertBox;
 import io.reflection.app.client.part.register.RegisterForm;
@@ -25,7 +28,7 @@ import com.willshex.gson.json.service.shared.Error;
  * @author billy1380
  * 
  */
-public class RegisterPage extends Page implements UserRegisteredEventHandler {
+public class RegisterPage extends Page implements UserRegisteredEventHandler, NavigationEventHandler {
 
 	private static RegisterPageUiBinder uiBinder = GWT.create(RegisterPageUiBinder.class);
 
@@ -41,15 +44,7 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler {
 
 	public RegisterPage() {
 		initWidget(uiBinder.createAndBindUi(this));
-
-		
 	}
-
-	/**
-	 * Fire the register button when pressing the 'enter' key on one of the register form fields
-	 * 
-	 * @param event
-	 */
 
 	/*
 	 * (non-Javadoc)
@@ -61,7 +56,7 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler {
 		super.onAttach();
 
 		register(EventController.get().addHandlerToSource(UserRegisteredEventHandler.TYPE, UserController.get(), this));
-
+		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 	}
 
 	/*
@@ -100,6 +95,15 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler {
 		// true).setVisible(true);
 
 		// mPanel.setVisible(true);
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack)
+	 */
+	@Override
+	public void navigationChanged(Stack stack) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

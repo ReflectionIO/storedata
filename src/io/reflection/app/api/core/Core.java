@@ -660,25 +660,38 @@ public final class Core extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
-			input.session = ValidationHelper.validateSession(input.session, "input.session");
+			boolean reset = (input.resetCode != null);
+
+			if (!reset) {
+				input.session = ValidationHelper.validateSession(input.session, "input.session");
+			}
 
 			input.password = ValidationHelper.validatePassword(input.password, "input.password");
 
-			User sessionUser = UserServiceProvider.provide().getUser(input.session.user.id);
+			User user = null;
 
-			User credentialUser = UserServiceProvider.provide().getLoginUser(sessionUser.username, input.password);
-
-			if (credentialUser == null)
-				throw new InputValidationException(ApiError.IncorrectPasswordForChange.getCode(),
-						ApiError.IncorrectPasswordForChange.getMessage("input.password"));
+			if (reset) {
+				user = UserServiceProvider.provide().getResetCodeUser(input.resetCode);
+				
+				if (user == null)
+					throw new InputValidationException(ApiError.InvalidPasswordResetCode.getCode(),
+							ApiError.InvalidPasswordResetCode.getMessage("input.resetCode"));
+			} else {
+				User sessionUser = UserServiceProvider.provide().getUser(input.session.user.id);
+				user = UserServiceProvider.provide().getLoginUser(sessionUser.username, input.password);
+				
+				if (user == null)
+					throw new InputValidationException(ApiError.IncorrectPasswordForChange.getCode(),
+							ApiError.IncorrectPasswordForChange.getMessage("input.password"));
+			}
 
 			input.newPassword = ValidationHelper.validatePassword(input.newPassword, "input.newPassword");
 
-			if (input.newPassword.equals(input.password))
+			if (!reset && input.newPassword.equals(input.password))
 				throw new InputValidationException(ApiError.InvalidPasswordSameAsCurrent.getCode(),
 						ApiError.InvalidPasswordSameAsCurrent.getMessage("input.newPassword"));
 
-			UserServiceProvider.provide().updateUserPassword(sessionUser, input.newPassword);
+			UserServiceProvider.provide().updateUserPassword(user, input.newPassword);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -1051,18 +1064,18 @@ public final class Core extends ActionHandler {
 		LOG.finer("Entering forgotPassword");
 		ForgotPasswordResponse output = new ForgotPasswordResponse();
 		try {
-
 			if (input == null)
 				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("ForgotPasswordRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
 			input.username = ValidationHelper.validateEmail(input.username, true, "input.username");
-			
+
 			User user = UserServiceProvider.provide().getUsernameUser(input.username);
-			
+
 			if (user == null) throw new InputValidationException(ApiError.UserNotFound.getCode(), ApiError.UserNotFound.getMessage("input.username"));
 			
+			UserServiceProvider.provide().markForReset(user);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {

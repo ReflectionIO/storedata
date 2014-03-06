@@ -32,7 +32,8 @@ public enum PageType {
 	LinkItunesPageType("linkitunes"),
 	ReadyToStartPageType("readytostart"),
 	MyAppsPageType("myapps"),
-	EmailTemplatesPage("emailtemplates");
+	EmailTemplatesPage("emailtemplates"),
+	ForgotPasswordPage("forgotpassword"), ;
 
 	private String value;
 	private static Map<String, PageType> valueLookup = null;
@@ -121,6 +122,9 @@ public enum PageType {
 			break;
 		case EmailTemplatesPage:
 			page = new EmailTemplatePage();
+			break;
+		case ForgotPasswordPage:
+			page = new ForgotPasswordPage();
 			break;
 		}
 
