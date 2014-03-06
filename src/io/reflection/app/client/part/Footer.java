@@ -38,13 +38,16 @@ public class Footer extends Composite {
 
 	@UiField Image mDownArrow;
 	@UiField Image mUpArrow;
-	
+
+	@UiField Image mDownArrowHover;
+	@UiField Image mUpArrowHover;
+
 	@UiField Image mFacebook;
 	@UiField Image mFacebookHover;
-	
+
 	@UiField Image mLinkedin;
 	@UiField Image mLinkedinHover;
-	
+
 	@UiField Image mTwitter;
 	@UiField Image mTwitterHover;
 
@@ -55,52 +58,82 @@ public class Footer extends Composite {
 		mYear.setInnerHTML(Integer.toString(1900 + (new Date()).getYear()));
 	}
 
-	@UiHandler("mDownArrow")
-	void onDownArrowClick(ClickEvent event) {
+	@UiHandler("mDownArrowHover")
+	void onDownArrowHoverClick(ClickEvent event) {
 		mDownArrow.setVisible(false);
+		mDownArrowHover.setVisible(false);
 		mUpArrow.setVisible(true);
 		mDownPanel.setVisible(false);
 	}
 
-	@UiHandler("mUpArrow")
-	void onUpArrowClick(ClickEvent event) {
+	@UiHandler("mDownArrow")
+	void onMouseOverDownArrow(MouseOverEvent event) {
+		mDownArrow.setVisible(false);
+		mDownArrowHover.setVisible(true);
+	}
+
+	@UiHandler("mDownArrowHover")
+	void onMouseOutDownArrow(MouseOutEvent event) {
+		if (mDownPanel.isVisible()) {
+			mDownArrowHover.setVisible(false);
+			mDownArrow.setVisible(true);
+		}
+	}
+
+	@UiHandler("mUpArrowHover")
+	void onUpArrowHoverClick(ClickEvent event) {
 		mUpArrow.setVisible(false);
+		mUpArrowHover.setVisible(false);
 		mDownArrow.setVisible(true);
 		mDownPanel.setVisible(true);
 	}
 
+	@UiHandler("mUpArrow")
+	void onMouseOverUpArrow(MouseOverEvent event) {
+		mUpArrow.setVisible(false);
+		mUpArrowHover.setVisible(true);
+	}
+
+	@UiHandler("mUpArrowHover")
+	void onMouseOutUpArrow(MouseOutEvent event) {
+		if (!mDownPanel.isVisible()) {
+			mUpArrowHover.setVisible(false);
+			mUpArrow.setVisible(true);
+		}
+	}
+
 	@UiHandler("mFacebook")
-	void onMouseOverFacebook(MouseOverEvent event){
+	void onMouseOverFacebook(MouseOverEvent event) {
 		mFacebook.setVisible(false);
 		mFacebookHover.setVisible(true);
 	}
-	
+
 	@UiHandler("mFacebookHover")
-	void onMouseOutFacebook(MouseOutEvent event){
+	void onMouseOutFacebook(MouseOutEvent event) {
 		mFacebookHover.setVisible(false);
 		mFacebook.setVisible(true);
 	}
-	
+
 	@UiHandler("mLinkedin")
-	void onMouseOverLinkedin(MouseOverEvent event){
+	void onMouseOverLinkedin(MouseOverEvent event) {
 		mLinkedin.setVisible(false);
 		mLinkedinHover.setVisible(true);
 	}
-	
+
 	@UiHandler("mLinkedinHover")
-	void onMouseOutLinkedin(MouseOutEvent event){
+	void onMouseOutLinkedin(MouseOutEvent event) {
 		mLinkedinHover.setVisible(false);
 		mLinkedin.setVisible(true);
 	}
-	
+
 	@UiHandler("mTwitter")
-	void onMouseOverTwitter(MouseOverEvent event){
+	void onMouseOverTwitter(MouseOverEvent event) {
 		mTwitter.setVisible(false);
 		mTwitterHover.setVisible(true);
 	}
-	
+
 	@UiHandler("mTwitterHover")
-	void onMouseOutTwitter(MouseOutEvent event){
+	void onMouseOutTwitter(MouseOutEvent event) {
 		mTwitterHover.setVisible(false);
 		mTwitter.setVisible(true);
 	}

@@ -43,6 +43,8 @@
 	.arrow:hover {
 		cursor: pointer;
 	}
+	
+
 	</ui:style>
 	<g:HTMLPanel>
 
@@ -56,6 +58,11 @@
 						styleName="{style.arrow}" visible="false" />
 					<g:Image ui:field="mUpArrow" resource="{res.footerUpArrow}"
 						styleName="{style.arrow}" />
+					<g:Image ui:field="mDownArrowHover" resource="{res.footerDownArrowHover}"
+						styleName="{style.arrow}" visible="false" />
+					<g:Image ui:field="mUpArrowHover" resource="{res.footerUpArrowHover}"
+						styleName="{style.arrow}" visible="false" />
+
 				</div>
 				<div style="margin-top: -12px; float: right;width:290px;">
 					<span style="display: block; font-size: 13px; color: #63656a;">
@@ -87,7 +94,8 @@
 							visible="false" />
 					</a>
 					&nbsp;&nbsp;&nbsp;
-					<a href="http://www.linkedin.com/company/reflection-io-ltd" target="_blank">
+					<a href="http://www.linkedin.com/company/reflection-io-ltd"
+						target="_blank">
 						<g:Image resource="{res.linkedin}" ui:field="mLinkedin" />
 						<g:Image resource="{res.linkedinHover}" ui:field="mLinkedinHover"
 							visible="false" />
