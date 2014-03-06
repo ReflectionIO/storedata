@@ -7,6 +7,9 @@
 //
 package io.reflection.app.client.part;
 
+import io.reflection.app.api.core.shared.call.ChangeUserDetailsRequest;
+import io.reflection.app.api.core.shared.call.ChangeUserDetailsResponse;
+import io.reflection.app.api.core.shared.call.event.ChangeUserDetailsEventHandler;
 import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.NavigationController;
@@ -44,12 +47,14 @@ import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.Error;
+import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author billy1380
  * 
  */
-public class Header extends Composite implements UsersEventHandler, NavigationEventHandler, SessionEventHandler, UserPowersEventHandler {
+public class Header extends Composite implements UsersEventHandler, NavigationEventHandler, SessionEventHandler, UserPowersEventHandler,
+		ChangeUserDetailsEventHandler {
 
 	private static HeaderUiBinder uiBinder = GWT.create(HeaderUiBinder.class);
 
@@ -59,7 +64,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 	@UiField InlineHyperlink mRanksLink;
 	@UiField LIElement mRanksItem;
-	
+
 	@UiField InlineHyperlink myAppsLink;
 	@UiField LIElement myAppsItem;
 
@@ -110,7 +115,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 	@UiField TextBox mQuery;
 	@UiField InlineHyperlink mSearch;
-	
+
 	@UiField Anchor featureRequestButton;
 
 	private List<LIElement> mItems;
@@ -130,6 +135,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this);
 		EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this);
 		EventController.get().addHandlerToSource(UserPowersEventHandler.TYPE, SessionController.get(), this);
+		EventController.get().addHandlerToSource(ChangeUserDetailsEventHandler.TYPE, SessionController.get(), this);
 
 		createItemList();
 
@@ -292,7 +298,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		addLogin();
 
 		removeUpgrade();
-		
+
 		removeMyApps();
 	}
 
@@ -371,7 +377,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		addAdmin();
 
 		addUpgrade();
-		
+
 		addMyApps();
 	}
 
@@ -396,7 +402,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			removeUpgrade();
 		}
 	}
-	
+
 	public void removeMyApps() {
 		myAppsItem.removeFromParent();
 	}
@@ -404,5 +410,27 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	public void addMyApps() {
 		mNavList.appendChild(myAppsItem);
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.core.shared.call.event.ChangeUserDetailsEventHandler#changeUserDetailsSuccess(io.reflection.app.api.core.shared.call.
+	 * ChangeUserDetailsRequest, io.reflection.app.api.core.shared.call.ChangeUserDetailsResponse)
+	 */
+	@Override
+	public void changeUserDetailsSuccess(ChangeUserDetailsRequest input, ChangeUserDetailsResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess) {
+			addAccount(SessionController.get().getLoggedInUser());
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.core.shared.call.event.ChangeUserDetailsEventHandler#changeUserDetailsFailure(io.reflection.app.api.core.shared.call.
+	 * ChangeUserDetailsRequest, java.lang.Throwable)
+	 */
+	@Override
+	public void changeUserDetailsFailure(ChangeUserDetailsRequest input, Throwable caught) {}
 
 }

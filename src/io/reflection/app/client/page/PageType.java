@@ -33,7 +33,8 @@ public enum PageType {
 	ReadyToStartPageType("readytostart"),
 	MyAppsPageType("myapps"),
 	EmailTemplatesPage("emailtemplates"),
-	ForgotPasswordPage("forgotpassword"), ;
+	ForgotPasswordPage("forgotpassword"),
+	ResetPasswordPage("resetpassword"), ;
 
 	private String value;
 	private static Map<String, PageType> valueLookup = null;
@@ -125,6 +126,9 @@ public enum PageType {
 			break;
 		case ForgotPasswordPage:
 			page = new ForgotPasswordPage();
+			break;
+		case ResetPasswordPage:
+			page = new ResetPasswordPage();
 			break;
 		}
 

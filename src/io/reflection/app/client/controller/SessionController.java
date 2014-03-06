@@ -23,6 +23,7 @@ import io.reflection.app.api.core.shared.call.LoginRequest;
 import io.reflection.app.api.core.shared.call.LoginResponse;
 import io.reflection.app.api.core.shared.call.LogoutRequest;
 import io.reflection.app.api.core.shared.call.LogoutResponse;
+import io.reflection.app.api.core.shared.call.event.ChangePasswordEventHandler;
 import io.reflection.app.api.core.shared.call.event.ChangeUserDetailsEventHandler;
 import io.reflection.app.api.core.shared.call.event.ForgotPasswordEventHandler;
 import io.reflection.app.api.shared.datatypes.Session;
@@ -75,7 +76,7 @@ public class SessionController implements ServiceController {
 	private SessionController() {
 		restoreSession();
 	}
-	
+
 	public User getLoggedInUser() {
 		return mLoggedInUser;
 	}
@@ -343,6 +344,39 @@ public class SessionController implements ServiceController {
 	}
 
 	/**
+	 * Reset the user password
+	 * 
+	 * @param code
+	 * @param newPassword
+	 */
+	public void resetPassword(String code, String newPassword) {
+		CoreService service = new CoreService();
+		service.setUrl(CORE_END_POINT);
+
+		final ChangePasswordRequest input = new ChangePasswordRequest();
+		input.accessCode = ACCESS_CODE;
+
+		// input.session = new Session();
+		// input.session.user = mSession.token;
+
+		input.resetCode = code;
+		input.newPassword = newPassword;
+
+		service.changePassword(input, new AsyncCallback<ChangePasswordResponse>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				EventController.get().fireEventFromSource(new ChangePasswordEventHandler.ChangePasswordFailure(input, caught), SessionController.this);
+			}
+
+			@Override
+			public void onSuccess(ChangePasswordResponse output) {
+				EventController.get().fireEventFromSource(new ChangePasswordEventHandler.ChangePasswordSuccess(input, output), SessionController.this);
+			}
+		});
+	}
+
+	/**
 	 * Change the user details
 	 * 
 	 * @param username
@@ -416,7 +450,7 @@ public class SessionController implements ServiceController {
 						if (output.error != null && output.error.code.intValue() == 100034) {
 							History.newItem("login/timeout");
 						}
-						
+
 						EventController.get().fireEventFromSource(new UserLoginFailed(output.error), SessionController.this);
 					}
 				}
@@ -493,7 +527,7 @@ public class SessionController implements ServiceController {
 		mRoleCache.clear();
 		mPermissionCache.clear();
 	}
-	
+
 	public void forgotPassword(String username) {
 		if (mSession == null && mLoggedInUser == null) {
 			CoreService service = new CoreService();

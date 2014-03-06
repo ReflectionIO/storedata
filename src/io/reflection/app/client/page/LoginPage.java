@@ -24,7 +24,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.Error;
@@ -39,6 +38,8 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 
 	interface LoginPageUiBinder extends UiBinder<Widget, LoginPage> {}
 
+	private static final String WELCOME_ACTION_NAME = "welcome";
+	
 	@UiField WelcomePanel mWelcomePanel; // Welcome panel, showed when action 'welcome' is in the stack
 
 	@UiField HTMLPanel mDefaultLogin;
@@ -51,12 +52,6 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 		initWidget(uiBinder.createAndBindUi(this));
 
 	}
-
-	/**
-	 * Fire the login button when pressing the 'enter' key on one of the login form fields
-	 * 
-	 * @param event
-	 */
 
 	/*
 	 * (non-Javadoc)
@@ -81,7 +76,7 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 	public void navigationChanged(Stack stack) {
 		Stack s = NavigationController.get().getStack();
 		if (s != null && s.hasAction()) {
-			if (s.getAction().equals("welcome")) { // If action == 'welcome', show the Welcome panel
+			if (WELCOME_ACTION_NAME.equals(s.getAction())) { // If action == 'welcome', show the Welcome panel
 				mWelcomePanel.setVisible(true);
 				mDefaultLogin.setVisible(false);
 			} else if (FormHelper.isValidEmail(s.getAction())) { // If action == email (user has been just registered to the system) attach him email to field
@@ -108,15 +103,8 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 		// AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.SuccessAlertBoxType, false, "Login Successfull",
 		// user.forename != null && user.forename.length() != 0 ? " - welcome back " + user.forename + "." : "", false).setVisible(true);
 
-		Timer t = new Timer() {
-
-			@Override
-			public void run() {
-				History.newItem("linkitunes"); // After login is successful, redirect to leader-board page
-			}
-		};
-
-		t.schedule(2000);
+		// TODO: we should not be doing this for all users
+		History.newItem("linkitunes");
 	}
 
 	/*

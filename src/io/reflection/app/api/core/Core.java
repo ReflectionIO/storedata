@@ -664,9 +664,8 @@ public final class Core extends ActionHandler {
 
 			if (!reset) {
 				input.session = ValidationHelper.validateSession(input.session, "input.session");
+				input.password = ValidationHelper.validatePassword(input.password, "input.password");
 			}
-
-			input.password = ValidationHelper.validatePassword(input.password, "input.password");
 
 			User user = null;
 
