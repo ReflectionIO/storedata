@@ -1,6 +1,6 @@
 @CHARSET "UTF-8";
 
-@external well, form-group, gwt-RadioButton, hr, navbar-fixed-top, navbar, container, pagination, btn-primary, btn-primary:hover, active, open, dropdown-toggle, dropdown-menu, badge, dropdown, nav, navbar-inverse, navbar-nav, caret, form-control;
+@external nav-tabs, nav-justified, ranks, loginregister, well, form-group, gwt-RadioButton, hr, navbar-fixed-top, navbar, container, pagination, btn-primary, btn-primary:hover, active, open, dropdown-toggle, dropdown-menu, badge, dropdown, nav, navbar-inverse, navbar-nav, caret, form-control;
 .well {
 	background-color: #fafafa;
 }
@@ -131,7 +131,7 @@ a:hover,a:focus,a:active,a.active {
 	background-color: #474949;
 }
 
-.navbar-inverse .navbar-nav > li > a {
+.navbar-inverse .navbar-nav>li>a {
 	color: #8d8ea1;
 }
 
@@ -150,6 +150,7 @@ a:hover,a:focus,a:active,a.active {
 	{
 	background-color: #272833;
 }
+
 .navbar .navbar-inverse .navbar-fixed-top
 
 .nav .dropdown:hover>a,.nav .dropdown:hover>a:hover,.nav .dropdown:hover>a:focus
@@ -165,6 +166,52 @@ a:hover,a:focus,a:active,a.active {
 	{
 	border-top-color: #FFF;
 	border-bottom-color: #FFF;
+}
+
+/* Tabs Rank */
+.nav-tabs.nav-justified.ranks>li>a {
+	background-color: #f6f6f6;
+	height: 65px;
+	font-size: 18px;
+	padding-top: 17px;
+	border-radius: 0px;
+	border: 1px solid #d9dce0;
+	outline: 0;
+	color: #2f2f39;
+	text-align: left;
+	padding-left: 30px;
+}
+
+.nav-tabs.nav-justified.ranks>.active>a,.nav-tabs.nav-justified.ranks>.active>a:hover,.nav-tabs.nav-justified.ranks>.active>a:focus
+	{
+	background-color: #ffffff;
+	font-weight: bold;
+	border: 0px;
+}
+
+/* Tabs Login/Register */
+.nav-tabs.nav-justified.loginregister>li>a {
+	background-color: #efefef;
+	height: 65px;
+	font-size: 18px;
+	padding-top: 17px;
+	border-radius: 0px;
+	border: 1px solid #d9dce0;
+	outline: 0;
+	text-align: center;
+	color: #37383b;
+}
+
+.nav-tabs.nav-justified.loginregister>li>a:hover {
+	color: #1bc79f;
+}
+
+.nav-tabs.nav-justified.loginregister>.active>a,.nav-tabs.nav-justified.loginregister>.active>a:hover,.nav-tabs.nav-justified.loginregister>.active>a:focus
+	{
+	background-color: #fafafa;
+	font-weight: bold;
+	border: 0px;
+	color: #0e0e1f;
 }
 
 .form-control {

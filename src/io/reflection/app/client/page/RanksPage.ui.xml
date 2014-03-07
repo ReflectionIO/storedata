@@ -3,14 +3,16 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
 	xmlns:c="urn:import:com.google.gwt.user.cellview.client">
 	<ui:style>
-	@external nav,nav-tabs,nav-justified;
+	
 	.tabs {
 		margin-bottom: 20px;
+		
 	}
 	
-	.nav.nav-tabs.nav-justified.tabs>li>a {
-		text-align: left;
-	}
+
+
+
+	
 	
 	.HtmlPanelStyle {
 		margin-top: -20px;
@@ -18,13 +20,13 @@
 	</ui:style>
 	<g:HTMLPanel> <!-- CONTAINER-FLUID style -->
 
-		<div class="row" style="margin-right: 10px;">
+		<div class="row" style="margin-right: -38px;">
 
 			<p:RankSidePanel ui:field="mSidePanel"
 				styleName="col-md-2 well {style.HtmlPanelStyle}" />
 
-			<div class="col-md-10">
-				<ul class="nav nav-tabs nav-justified {style.tabs}">
+			<div class="col-md-10" style="margin-left: -16px;">
+				<ul class="nav nav-tabs nav-justified ranks" style="margin-top: -10px;">
 					<li ui:field="mAllItem">
 						<g:InlineHyperlink ui:field="mAll"
 							targetHistoryToken="ranks">Overview / All</g:InlineHyperlink>
@@ -43,16 +45,19 @@
 					</li>
 				</ul>
 
-				<p:Breadcrumbs ui:field="mBreadcrumbs" path="..." />
+				<div style="margin-left: 20px; margin-right: 25px;">
 
-				<c:CellTable ui:field="mRanks" styleName="table table-hover table-striped" />
+					<c:CellTable ui:field="mRanks" styleName="table table-hover table-striped" />
 
-				<p:PageSizePager ui:field="mPager" visible="false" />
+					<p:PageSizePager ui:field="mPager" visible="false" />
 
-				<div style="text-align: center">
-					<g:InlineHyperlink text="Show More" styleName="btn btn-default"
-						ui:field="mRedirect" />
+					<div style="text-align: center">
+						<g:InlineHyperlink text="Show More" styleName="btn btn-default"
+							ui:field="mRedirect" />
+					</div>
+
 				</div>
+
 			</div>
 		</div>
 

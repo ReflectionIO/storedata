@@ -25,7 +25,6 @@ import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.handler.RanksEventHandler;
 import io.reflection.app.client.handler.user.SessionEventHandler;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
-import io.reflection.app.client.part.Breadcrumbs;
 import io.reflection.app.client.part.PageSizePager;
 import io.reflection.app.client.part.RankSidePanel;
 import io.reflection.app.client.part.datatypes.RanksGroup;
@@ -70,7 +69,6 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 
 	@UiField RankSidePanel mSidePanel;
 
-	@UiField Breadcrumbs mBreadcrumbs;
 	@UiField InlineHyperlink mRedirect;
 
 	private String mListType = ALL_LIST_TYPE;
@@ -233,15 +231,6 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 		return rank;
 	}
 
-	/**
-	 * 
-	 */
-	private void refreshBreadcrumbs() {
-		mBreadcrumbs.clear();
-		mBreadcrumbs.push(mSidePanel.getStore(), mSidePanel.getCountry(), mListType.substring(0, 1).toUpperCase() + mListType.substring(1),
-				mSidePanel.getDisplayDate(), "Ranks");
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -271,7 +260,7 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
 		RankController.get().reset();
 
-		refreshBreadcrumbs();
+	
 	}
 
 	/*
@@ -283,7 +272,7 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 	public void filterParamsChanged(Map<String, ?> currentValues, Map<String, ?> previousValues) {
 		RankController.get().reset();
 
-		refreshBreadcrumbs();
+		
 	}
 
 	/*
@@ -370,7 +359,7 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 		}
 
 		if (changed) {
-			refreshBreadcrumbs();
+			
 
 			refreshTabs();
 
@@ -489,7 +478,7 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 		register(EventController.get().addHandlerToSource(IsAuthorisedEventHandler.TYPE, SessionController.get(), this));
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		
-		refreshBreadcrumbs();
+		
 
 		refreshTabs();
 
