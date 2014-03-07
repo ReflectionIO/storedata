@@ -1,11 +1,11 @@
 //
-//  Overview.java
+//  MyAppsOverviewPage.java
 //  storedata
 //
-//  Created by Stefano Capuzzi on 18 Feb 2014.
+//  Created by William Shakour (stefanocapuzzi) on 7 Mar 2014.
 //  Copyright © 2014 Reflection.io Ltd. All rights reserved.
 //
-package io.reflection.app.client.part.myapps;
+package io.reflection.app.client.page;
 
 import io.reflection.app.client.cell.MiniAppCell;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
@@ -23,20 +23,19 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author stefanocapuzzi
  * 
  */
-public class Overview extends Composite {
+public class MyAppsOverviewPage extends Page {
 
-	private static OverviewUiBinder uiBinder = GWT.create(OverviewUiBinder.class);
+	private static MyAppsOverviewPageUiBinder uiBinder = GWT.create(MyAppsOverviewPageUiBinder.class);
 
-	interface OverviewUiBinder extends UiBinder<Widget, Overview> {}
+	interface MyAppsOverviewPageUiBinder extends UiBinder<Widget, MyAppsOverviewPage> {}
 
-	@UiField(provided = true) CellTable<FakeData> mApps = new CellTable<Overview.FakeData>(10, BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true) CellTable<FakeData> mApps = new CellTable<MyAppsOverviewPage.FakeData>(10, BootstrapGwtCellTable.INSTANCE);
 
 	Images images = GWT.create(Images.class);
 
@@ -61,7 +60,7 @@ public class Overview extends Composite {
 		}
 	}
 
-	public Overview() {
+	public MyAppsOverviewPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		Item item = new Item();

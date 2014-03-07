@@ -213,7 +213,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	public void navigationChanged(Stack stack) {
 		if ("ranks".equals(stack.getPage())) {
 			highlight(mRanksItem);
-		} else if (PageType.MyAppsPageType.equals(stack.getPage())) {
+		} else if (PageType.MyAppsOverviewPageType.equals(stack.getPage())) {
 			highlight(myAppsItem);
 		} else if ("feedbrowser".equals(stack.getPage())) {
 			highlight(mFeedBrowserItem);

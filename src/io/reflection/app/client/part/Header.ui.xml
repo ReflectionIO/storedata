@@ -99,7 +99,7 @@
 
 				<li ui:field="myAppsItem">
 					<g:InlineHyperlink ui:field="myAppsLink"
-						targetHistoryToken="myapps">My Apps</g:InlineHyperlink>
+						targetHistoryToken="myappsoverview">My Apps</g:InlineHyperlink>
 				</li>
 
 				<li ui:field="mUpgradeAccountItem">

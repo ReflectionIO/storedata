@@ -22,10 +22,11 @@
 	.downPanel {
 		height: 125px;
 		text-align: center;
-	}
-	
-	.downPanel:ACTIVE {
-		transition: opacity 1s ease-out;
+		-o-transition: .5s;
+	-ms-transition: .5s;
+	-moz-transition: .5s;
+	-webkit-transition: .5s;
+	transition: .5s;
 	}
 	
 	.logo {
