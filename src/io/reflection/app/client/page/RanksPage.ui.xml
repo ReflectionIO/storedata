@@ -16,7 +16,7 @@
 
 			<p:RankSidePanel ui:field="mSidePanel" styleName="col-md-2 well {style.HtmlPanelStyle}" />
 
-			<div class="col-md-10" style="margin-left: -16px;">
+			<div class="col-md-10" style="margin-left: -15px;">
 				<ul class="nav nav-tabs nav-justified ranks" style="margin-top: -10px;">
 					<li ui:field="mAllItem">
 						<g:InlineHyperlink ui:field="mAll" targetHistoryToken="ranks">Overview / All</g:InlineHyperlink>
@@ -32,7 +32,7 @@
 					</li>
 				</ul>
 
-				<div style="margin-left: 20px; margin-right: 25px;">
+				<div style="margin-left: 20px; margin-right: 25px; margin-top: 20px;">
 
 					<c:CellTable ui:field="mRanks" styleName="table table-hover table-striped" />
 

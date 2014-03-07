@@ -133,6 +133,7 @@ a:hover,a:focus,a:active,a.active {
 
 .navbar-inverse .navbar-nav>li>a {
 	color: #8d8ea1;
+	outline: 0;
 }
 
 /* emulates .open click */
@@ -151,7 +152,9 @@ a:hover,a:focus,a:active,a.active {
 	background-color: #272833;
 }
 
-.navbar .navbar-inverse .navbar-fixed-top
+.navbar .navbar-inverse .navbar-fixed-top{
+	outline: 0;
+}
 
 .nav .dropdown:hover>a,.nav .dropdown:hover>a:hover,.nav .dropdown:hover>a:focus
 	{
@@ -219,7 +222,7 @@ a:hover,a:focus,a:active,a.active {
 .nav-pills.nav-stacked>li>a {
 	background-color: #fafafa;
 	outline: 0;
-	COLOR: #0e0e1f;
+	color: #0e0e1f;
 }
 
 .nav-pills.nav-stacked>li>a:hover {

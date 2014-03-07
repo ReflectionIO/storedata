@@ -1,72 +1,75 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
-    <ui:style>
-    .moreMargin {
-    	margin-right: 0.2em;
-    }
-    
-    .pageTitle {
-    	padding-bottom: 30px;
-    }
-    
-    .viewIn {
-    	/*margin-top: 20px;*/
-    	
-    }
-    
-    .hideOverflow {
-	   overflow: hidden;
-    }
-    
-    </ui:style>
-    <g:HTMLPanel styleName="well sidebar-nav col-md-3 {style.hideOverflow}">
-        <g:Image ui:field="mImage" styleName="img-rounded" />
+<ui:with field='images' type='io.reflection.app.client.res.Images' />
+	<ui:style>
+	.moreMargin {
+		margin-right: 0.2em;
+	}
+	
+	.pageTitle {
+		padding-bottom: 30px;
+	}
+	
+	.viewIn {
+		/*margin-top: 20px;*/
+		
+	}
+	
+	.panel {
+		overflow: hidden;
+		margin-top: -20px;
+		padding-left: 35px;
+		padding-right: 25px;
+	}
+	</ui:style>
+	<g:HTMLPanel styleName="well sidebar-nav col-md-2 {style.panel}">
+		<g:Image resource="{images.app1}" ui:field="mImage" styleName="img-rounded" />
 
-        <h2 ui:field="mTitle">Item</h2>
+		<h2 ui:field="mTitle">Item</h2>
 
-        <h3 ui:field="mCreatorName" class="{style.pageTitle} text-muted">By Creator</h3>
+		<h3 ui:field="mCreatorName" class="{style.pageTitle} text-muted">By Creator</h3>
 
-        <p ui:field="price">$0.99 + in-App purchases</p>
+		<p ui:field="price">$0.99 + in-App purchases</p>
 
-        <hr />
+		<hr />
 
-        <div class="btn-group btn-group-xs btn-group-justified">
-            <g:InlineHyperlink ui:field="mToday" styleName="btn btn-default active">
-                <span class="caret"></span>
-                Today
-            </g:InlineHyperlink>
-            <g:InlineHyperlink ui:field="mThisMonth" styleName="btn btn-default">This Month</g:InlineHyperlink>
-        </div>
+		<div class="btn-group btn-group-xs btn-group-justified">
+			<g:InlineHyperlink ui:field="mToday" styleName="btn btn-default active">
+				<span class="caret"></span>
+				Today
+			</g:InlineHyperlink>
+			<g:InlineHyperlink ui:field="mThisMonth" styleName="btn btn-default">This Month</g:InlineHyperlink>
+		</div>
 
-        <br />
+		<br />
 
-        <h4>
-            <i class="icon-money"></i>
-            Global Revenue
-        </h4>
+		<h4>
+			<i class="icon-money"></i>
+			Global Revenue
+		</h4>
 
-        <p class="text-right lead">$42,672</p>
+		<p class="text-right lead">$42,672</p>
 
-        <h4>
-            <i class="icon-download"></i>
-            Global Downloads
-        </h4>
+		<h4>
+			<i class="icon-download"></i>
+			Global Downloads
+		</h4>
 
-        <p class="text-right lead">203,786</p>
+		<p class="text-right lead">203,786</p>
 
-        <!-- <h4><i class="icon-star-empty"></i>Customer Rating</h4> <p>4/5<span class="pull-right"><i class="icon-star-empty"></i><i class="icon-star"></i><i class="icon-star"></i><i 
-            class="icon-star"></i><i class="icon-star"></i></span></p> -->
-        <hr />
+		<!-- <h4><i class="icon-star-empty"></i>Customer Rating</h4> <p>4/5<span class="pull-right"><i class="icon-star-empty"></i><i class="icon-star"></i><i class="icon-star"></i><i 
+			class="icon-star"></i><i class="icon-star"></i></span></p> -->
+		<hr />
 
-        <!-- <a class="btn btn-primary col-xs-12"> More Info <i class="icon-plus"></i> </a> <br /> -->
+		<!-- <a class="btn btn-primary col-xs-12"> More Info <i class="icon-plus"></i> </a> <br /> -->
 
-        <a class="col-xs-12 {style.viewIn} text-center" target="_blank" ui:field="viewInStore">
-            View in the
-            <span ui:field="storeName">Appstore</span>
-            <i class="icon-link-ext"></i>
-        </a>
+		<a class="col-xs-12 {style.viewIn} text-center" target="_blank" ui:field="viewInStore">
+			View in the
+			<span ui:field="storeName">Appstore</span>
+			<i class="icon-link-ext"></i>
+		</a>
 
 
-    </g:HTMLPanel>
+	</g:HTMLPanel>
 
 </ui:UiBinder> 
