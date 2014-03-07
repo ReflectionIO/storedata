@@ -7,6 +7,7 @@
 //
 package io.reflection.app.helpers;
 
+import io.reflection.app.datatypes.shared.EmailFormatType;
 import io.reflection.app.logging.GaeLevel;
 
 import java.io.UnsupportedEncodingException;
@@ -84,7 +85,17 @@ public class EmailHelper {
 		return email.toString();
 	}
 
-	public static boolean sendEmail(String from, String to, String name, String subject, String body) {
+	/**
+	 * Sends an email
+	 * @param from our email address (the alias is always Reflection for now
+	 * @param to the recipient email address
+	 * @param name the recipient name
+	 * @param subject the message subject
+	 * @param body the message body
+	 * @param format 
+	 * @return
+	 */
+	public static boolean sendEmail(String from, String to, String name, String subject, String body, EmailFormatType format) {
 		boolean sent = false;
 
 		Properties props = new Properties();
@@ -99,7 +110,16 @@ public class EmailHelper {
 			msg.addRecipient(Message.RecipientType.TO, new InternetAddress(to, name));
 
 			msg.setSubject(subject);
-			msg.setText(body);
+			
+			switch (format) {
+			case EmailFormatTypeHtml:
+				msg.setContent(body, "text/html");
+				break;
+			default:
+				msg.setText(body);
+				break;
+			}
+			
 			Transport.send(msg);
 
 			if (LOG.isLoggable(Level.INFO)) {

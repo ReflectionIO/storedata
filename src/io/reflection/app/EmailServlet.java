@@ -11,6 +11,7 @@ import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.api.core.Core;
 import io.reflection.app.api.core.shared.call.RegisterUserRequest;
 import io.reflection.app.api.core.shared.call.RegisterUserResponse;
+import io.reflection.app.datatypes.shared.EmailFormatType;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.helpers.EmailHelper;
 
@@ -127,7 +128,7 @@ public class EmailServlet extends HttpServlet {
 					+ "We are working hard to create a functional, relevant and beautiful service for app market intelligence. We can't wait to share it with you.\r\n\r\n"
 					+ "Stay tuned,\r\n\r\n" + "The Reflection Team\r\n" + "www.reflection.io";
 
-			if (EmailHelper.sendEmail("hello@reflection.io", emailTo, name, "Thank you", body)) {
+			if (EmailHelper.sendEmail("hello@reflection.io", emailTo, name, "Thank you", body, EmailFormatType.EmailFormatTypePlainText)) {
 				resp.getOutputStream().write(1);
 			} else {
 				resp.getOutputStream().write(0);
@@ -182,7 +183,7 @@ public class EmailServlet extends HttpServlet {
 
 		String body = "Name: " + name + " \r\nEmail: " + email + "\r\nMessage: " + message + "\r\n";
 
-		if (EmailHelper.sendEmail("hello@reflection.io (Reflection)", emailTo, "Reflection", subject, body)) {
+		if (EmailHelper.sendEmail("hello@reflection.io (Reflection)", emailTo, "Reflection", subject, body, EmailFormatType.EmailFormatTypePlainText)) {
 			resp.getOutputStream().write(1);
 		} else {
 			resp.getOutputStream().write(0);

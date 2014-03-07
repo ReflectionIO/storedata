@@ -383,21 +383,25 @@ public class ValidationHelper {
 	public static Role validateRole(Role role, String parent) throws ServiceException {
 		if (role == null) throw new InputValidationException(ApiError.RoleNull.getCode(), ApiError.RoleNull.getMessage(parent));
 
-		boolean isIdLookup = false, isNameLookup = false;
+		boolean isIdLookup = false, isCodeLookup = false, isNameLookup = false;
 
 		if (role.id != null) {
 			isIdLookup = true;
 		} else if (role.name != null) {
 			isNameLookup = true;
+		} else if (role.code != null) {
+			isCodeLookup = true;
 		}
 
-		if (!(isIdLookup || isNameLookup)) { throw new InputValidationException(ApiError.RoleNoLookup.getCode(), ApiError.RoleNoLookup.getMessage(parent)); }
+		if (!(isIdLookup || isNameLookup || isCodeLookup)) { throw new InputValidationException(ApiError.RoleNoLookup.getCode(), ApiError.RoleNoLookup.getMessage(parent)); }
 
 		Role lookupRole = null;
 		if (isIdLookup) {
 			lookupRole = RoleServiceProvider.provide().getRole(role.id);
 		} else if (isNameLookup) {
 			lookupRole = RoleServiceProvider.provide().getNamedRole(role.name);
+		} else if (isCodeLookup) {
+			lookupRole = RoleServiceProvider.provide().getCodeRole(role.code);
 		}
 
 		if (lookupRole == null) throw new InputValidationException(ApiError.RoleNotFound.getCode(), ApiError.RoleNotFound.getMessage(parent));

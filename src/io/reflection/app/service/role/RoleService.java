@@ -323,4 +323,31 @@ final class RoleService implements IRoleService {
 		return rolePermissions;
 	}
 
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.role.IRoleService#getCodeRole(java.lang.String)
+	 */
+	@Override
+	public Role getCodeRole(String code) throws DataAccessException {
+		Role role = null;
+
+		IDatabaseService databaseService = DatabaseServiceProvider.provide();
+		Connection roleConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeRole.toString());
+
+		String getCodeRoleQuery = String.format("SELECT * FROM `role` WHERE `deleted`='n' AND `code`='%s' LIMIT 1", addslashes(code));
+
+		try {
+			roleConnection.connect();
+			roleConnection.executeQuery(getCodeRoleQuery);
+
+			if (roleConnection.fetchNextRow()) {
+				role = toRole(roleConnection);
+			}
+		} finally {
+			if (roleConnection != null) {
+				roleConnection.disconnect();
+			}
+		}
+		return role;
+	}
+
 }

@@ -16,6 +16,7 @@ import io.reflection.app.api.admin.shared.call.GetUsersRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersResponse;
 import io.reflection.app.api.admin.shared.call.SetPasswordRequest;
 import io.reflection.app.api.admin.shared.call.SetPasswordResponse;
+import io.reflection.app.api.admin.shared.call.event.AssignRoleEventHandler;
 import io.reflection.app.api.core.client.CoreService;
 import io.reflection.app.api.core.shared.call.RegisterUserRequest;
 import io.reflection.app.api.core.shared.call.RegisterUserResponse;
@@ -183,7 +184,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 	}
 
 	/**
-	 * @param selected
+	 * @param userId
 	 */
 	public void makeAdmin(Long userId) {
 		AdminService service = new AdminService();
@@ -195,7 +196,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		input.session = SessionController.get().getSessionForApiCall();
 
 		input.role = new Role();
-		input.role.name = "admin";
+		input.role.code = "ADM";
 
 		input.user = new User();
 		input.user.id = userId;
@@ -212,6 +213,39 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 			@Override
 			public void onFailure(Throwable caught) {
 
+			}
+		});
+	}
+	
+	/**
+	 * Adds BT1 role to the user (this is the role code designated to the first closed beta)
+	 * @param userId The id of the user to add to the closed beta
+	 */
+	public void makeBeta(Long userId) {
+		AdminService service = new AdminService();
+		service.setUrl(ADMIN_END_POINT);
+
+		final AssignRoleRequest input = new AssignRoleRequest();
+		input.accessCode = ACCESS_CODE;
+
+		input.session = SessionController.get().getSessionForApiCall();
+
+		input.role = new Role();
+		input.role.code = "BT1";
+
+		input.user = new User();
+		input.user.id = userId;
+
+		service.assignRole(input, new AsyncCallback<AssignRoleResponse>() {
+
+			@Override
+			public void onSuccess(AssignRoleResponse output) {
+				EventController.get().fireEventFromSource(new AssignRoleEventHandler.AssignRoleSuccess(input, output), UserController.this);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				EventController.get().fireEventFromSource(new AssignRoleEventHandler.AssignRoleFailure(input, caught), UserController.this);
 			}
 		});
 	}

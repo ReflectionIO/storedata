@@ -107,7 +107,7 @@ public class DataAccountGatherServlet extends ContextAwareServlet {
 
 								String body = EmailHelper.inflate(parameters, template.body);
 
-								EmailHelper.sendEmail(template.from, user.username, user.forename + " " + user.surname, template.subject, body);
+								EmailHelper.sendEmail(template.from, user.username, user.forename + " " + user.surname, template.subject, body, template.format);
 							}
 
 						} else {

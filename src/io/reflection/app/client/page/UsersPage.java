@@ -43,9 +43,10 @@ public class UsersPage extends Page {
 	@UiField(provided = true) SimplePager mPager = new SimplePager(false, false);
 
 	@UiField InlineHyperlink mAssignPassword;
-	@UiField InlineHyperlink mMakeAdmin;
-	@UiField InlineHyperlink addToBeta;
+	@UiField InlineHyperlink mMakeAdmin;	
 	@UiField InlineHyperlink mChangeDetails;
+	
+	@UiField InlineHyperlink addToBeta;
 
 	public UsersPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -63,10 +64,14 @@ public class UsersPage extends Page {
 					mAssignPassword.removeStyleName("disabled");
 					mMakeAdmin.removeStyleName("disabled");
 					mChangeDetails.removeStyleName("disabled");
+					
+					addToBeta.removeStyleName("disabled");
 				} else {
 					mAssignPassword.addStyleName("disabled");
 					mMakeAdmin.addStyleName("disabled");
 					mChangeDetails.addStyleName("disabled");
+					
+					addToBeta.addStyleName("disabled");
 				}
 
 				if (selected != null) {
@@ -79,6 +84,10 @@ public class UsersPage extends Page {
 
 				if (selected != null) {
 					mChangeDetails.setTargetHistoryToken("users/changedetails/" + selected.id.toString());
+				}
+				
+				if (selected != null) {
+					addToBeta.setTargetHistoryToken("users/assignrole/" + selected.id.toString() + "/beta");
 				}
 
 			}

@@ -91,7 +91,7 @@
                     Log In
                 </g:Button>
 
-                <div class="text-center" style="margin-bottom: 40px; font-size: 13px;  font-family: Avenir;">
+                <div class="text-center" style="margin-bottom: 40px; font-size: 13px;">
                     I've forgotten my
                     <g:InlineHyperlink ui:field="mForgotPassword" styleName="{style.passLink}" targetHistoryToken="forgotpassword">Password</g:InlineHyperlink>
                 </div>

@@ -126,10 +126,12 @@ public class NavigationController implements ValueChangeHandler<String> {
 				String userId = mStack.getParameter(0);
 				String roleName = mStack.getParameter(1);
 
-				// TODO: this should not really be here
+				// TODO: this should not really be here (and the navigation controller should probably not be responsible for actions)
 				if (userId != null) {
 					if (roleName.equalsIgnoreCase("admin")) {
 						UserController.get().makeAdmin(Long.valueOf(userId));
+					} else if (roleName.equals("beta")) {
+						UserController.get().makeBeta(Long.valueOf(userId));
 					}
 				}
 
