@@ -63,6 +63,9 @@ public class RegisterForm extends Composite {
 
 	@UiField CheckBox mTermAndCond;
 	@UiField InlineHyperlink mTermAndCondLink;
+	@UiField HTMLPanel termAndCondGroup;
+	@UiField HTMLPanel termAndCondNote;
+	private String termAndCondError;
 
 	@UiField Button mRegister;
 
@@ -139,6 +142,11 @@ public class RegisterForm extends Composite {
 				FormHelper.showNote(true, mPasswordGroup, mPasswordNote, mPasswordError);
 			} else {
 				FormHelper.hideNote(mPasswordGroup, mPasswordNote);
+			}
+			if (termAndCondError != null) {
+				FormHelper.showNote(true, termAndCondGroup, termAndCondNote, termAndCondError);
+			} else {
+				FormHelper.hideNote(termAndCondGroup, termAndCondNote);
 			}
 		}
 	}
@@ -229,6 +237,14 @@ public class RegisterForm extends Composite {
 			validated = validated && true;
 		}
 
+		if (mTermAndCond.getValue() == Boolean.FALSE) {
+			termAndCondError = "Must accept terms and conditions";
+			validated = false;
+		} else {
+			termAndCondError = null;
+			validated = validated && true;
+		}
+		
 		return validated;
 	}
 
@@ -244,6 +260,7 @@ public class RegisterForm extends Composite {
 		FormHelper.hideNote(mCompanyGroup, mCompanyNote);
 		FormHelper.hideNote(mEmailGroup, mEmailNote);
 		FormHelper.hideNote(mPasswordGroup, mPasswordNote);
+		FormHelper.hideNote(termAndCondGroup, termAndCondNote);
 
 		// mAlertBox.setVisible(false);
 	}

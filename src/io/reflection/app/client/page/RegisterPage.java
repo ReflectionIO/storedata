@@ -57,6 +57,9 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Na
 
 		register(EventController.get().addHandlerToSource(UserRegisteredEventHandler.TYPE, UserController.get(), this));
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+		
+		mRegisterForm.setVisible(true);
+		mThankYouRegisterPanel.setVisible(false);
 	}
 
 	/*
@@ -97,13 +100,12 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Na
 		// mPanel.setVisible(true);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack)
 	 */
 	@Override
-	public void navigationChanged(Stack stack) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void navigationChanged(Stack stack) {}
 
 }

@@ -65,13 +65,14 @@
                     <g:HTMLPanel ui:field="mPasswordNote" visible="false" styleName="{style.noteDetail}" />
                 </g:HTMLPanel>
 
-                <g:HTMLPanel styleName="checkbox {style.checkbox}">
+                <g:HTMLPanel ui:field="termAndCondGroup" styleName="checkbox {style.checkbox}">
                     <label>
                         <g:CheckBox ui:field="mTermAndCond" />
                         <span style="font-size: 14px">I agree to the</span>
                         <g:InlineHyperlink ui:field="mTermAndCondLink">terms and
                             conditions</g:InlineHyperlink>
                     </label>
+                    <g:HTMLPanel ui:field="termAndCondNote" visible="false" styleName="{style.noteDetail}" />
                 </g:HTMLPanel>
 
                 <g:Button ui:field="mRegister" styleName="btn btn-lg btn-primary btn-block {style.button}">

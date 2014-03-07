@@ -943,7 +943,7 @@ final class UserService implements IUserService {
 				Map<String, Object> values = new HashMap<String, Object>();
 				
 				values.put("user", user);
-				values.put("resetLink", String.format("https://www.reflection.io/internal/#resetpassword/%d/%s", user.id.longValue(), resetCode));
+				values.put("resetLink", String.format("http://www.reflection.io/internal/#resetpassword/%d/%s", user.id.longValue(), resetCode));
 				
 				if (LOG.isLoggable(GaeLevel.DEBUG)) {
 					LOG.fine(String.format("Sending reset code url [%s] to [%s]", values.get("resetLink"), user.username));

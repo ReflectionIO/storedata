@@ -3,18 +3,13 @@
     xmlns:r="urn:import:io.reflection.app.client.part.register">
     <ui:with field='images' type='io.reflection.app.client.res.Images' />
     <ui:style>
-    
-    .thankYou {
-    	margin-top: 120px;
-    }
-    
     .mainPanel {
     	margin-top: 120px;
     }
     
     .form {
-        padding: 0px;
-        margin-top: 120px;
+    	padding: 0px;
+    	margin-top: 120px;
     }
     </ui:style>
     <g:HTMLPanel styleName="container"> <!-- Override container-fluid assigned in NavigationController -->
@@ -35,14 +30,9 @@
                 </ul>
 
                 <r:RegisterForm ui:field="mRegisterForm" />
+
+                <r:ThankYouRegisterPanel ui:field="mThankYouRegisterPanel" visible="false" />
             </g:HTMLPanel>
-
-            <r:ThankYouRegisterPanel ui:field="mThankYouRegisterPanel" styleName="col-md-5 col-md-offset-1 well {style.thankYou}"
-                visible="false" />
-
-
         </g:HTMLPanel>
-
-
     </g:HTMLPanel>
 </ui:UiBinder> 
