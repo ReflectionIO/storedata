@@ -549,21 +549,8 @@ final class UserService implements IUserService {
 					LOG.info(String.format("Role with roleid [%d] was added to user with userid [%d]", role.id.longValue(), user.id.longValue()));
 				}
 
-				if (role.id == Long.valueOf(5) && "BT1".equals(role.code)) {
-					EmailTemplate template = EmailTemplateServiceProvider.provide().getEmailTemplate(Long.valueOf(2));
-
-					Map<String, Object> parameters = new HashMap<String, Object>();
-
-					if (user.forename == null) {
-						user = getUser(user.id);
-					}
-
-					parameters.put("user", user);
-
-					String body = EmailHelper.inflate(parameters, template.body);
-					String subject = EmailHelper.inflate(parameters, template.subject);
-
-					EmailHelper.sendEmail(template.from, user.username, user.forename + " " + user.surname, subject, body, template.format);
+				if (role.id == Long.valueOf(5) || "BT1".equals(role.code)) {
+					markForEmailAction(user, "register/complete", 2);
 				}
 			} else {
 				if (LOG.isLoggable(Level.WARNING)) {
@@ -877,36 +864,37 @@ final class UserService implements IUserService {
 	 * @param user
 	 * @return
 	 */
-	private String getUserResetCode(Connection connection, User user) throws DataAccessException {
-		String resetCode = null;
+	private String getUserActionCode(Connection connection, User user) throws DataAccessException {
+		String actionCode = null;
 
-		String getUserResetCodeQuery = String.format("SELECT CAST(`code` AS CHAR) AS `resetcode` FROM `user` WHERE `deleted`='n' AND `id`=%d LIMIT 1", user.id.longValue());
+		String getUserActionCodeQuery = String.format("SELECT CAST(`code` AS CHAR) AS `actioncode` FROM `user` WHERE `deleted`='n' AND `id`=%d LIMIT 1",
+				user.id.longValue());
 
-		connection.executeQuery(getUserResetCodeQuery);
+		connection.executeQuery(getUserActionCodeQuery);
 
 		if (connection.fetchNextRow()) {
-			resetCode = connection.getCurrentRowString("resetcode");
+			actionCode = connection.getCurrentRowString("actioncode");
 		}
 
-		return resetCode;
+		return actionCode;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.service.user.IUserService#getResetCodeUser(java.lang.String)
+	 * @see io.reflection.app.service.user.IUserService#getActionCodeUser(java.lang.String)
 	 */
 	@Override
-	public User getResetCodeUser(String code) throws DataAccessException {
+	public User getActionCodeUser(String code) throws DataAccessException {
 		User user = null;
 
-		String getResetCodeUserQuery = String.format("SELECT * FROM `user` WHERE `code`=CAST('%s' AS BINARY) AND `deleted`='n' LIMIT 1", code);
+		String getActionCodeUserQuery = String.format("SELECT * FROM `user` WHERE `code`=CAST('%s' AS BINARY) AND `deleted`='n' LIMIT 1", addslashes(code));
 
 		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
 		try {
 			userConnection.connect();
-			userConnection.executeQuery(getResetCodeUserQuery);
+			userConnection.executeQuery(getActionCodeUserQuery);
 
 			if (userConnection.fetchNextRow()) {
 				user = toUser(userConnection);
@@ -928,32 +916,39 @@ final class UserService implements IUserService {
 	 */
 	@Override
 	public void markForReset(User user) throws DataAccessException {
+		markForEmailAction(user, "resetpassword", 3);
+	}
 
-		String markForResetQuery = String.format("UPDATE `user` SET `code`=CAST(UUID() AS BINARY) WHERE `deleted`='n' AND `id`=%d", user.id.longValue());
+	private void markForEmailAction(User user, String pageAction, long templateId) throws DataAccessException {
+		String markForEmailActionQuery = String.format("UPDATE `user` SET `code`=CAST(UUID() AS BINARY) WHERE `deleted`='n' AND `id`=%d", user.id.longValue());
 
 		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
 		try {
 			userConnection.connect();
-			userConnection.executeQuery(markForResetQuery);
+			userConnection.executeQuery(markForEmailActionQuery);
 
 			if (userConnection.getAffectedRowCount() > 0) {
-				String resetCode = getUserResetCode(userConnection, user);
-				
+				String code = getUserActionCode(userConnection, user);
+
 				Map<String, Object> values = new HashMap<String, Object>();
-				
-				values.put("user", user);
-				values.put("resetLink", String.format("http://www.reflection.io/internal/#resetpassword/%d/%s", user.id.longValue(), resetCode));
-				
-				if (LOG.isLoggable(GaeLevel.DEBUG)) {
-					LOG.fine(String.format("Sending reset code url [%s] to [%s]", values.get("resetLink"), user.username));
+
+				if (user.forename == null) {
+					user = getUser(user.id);
 				}
-				
-				EmailTemplate template = EmailTemplateServiceProvider.provide().getEmailTemplate(Long.valueOf(3));
-				
+
+				values.put("user", user);
+				values.put("link", String.format("http://www.reflection.io/internal/#%s/%d/%s", pageAction, user.id.longValue(), code));
+
+				if (LOG.isLoggable(GaeLevel.DEBUG)) {
+					LOG.fine(String.format("Sending action code url [%s] to [%s]", values.get("link"), user.username));
+				}
+
+				EmailTemplate template = EmailTemplateServiceProvider.provide().getEmailTemplate(Long.valueOf(templateId));
+
 				String body = EmailHelper.inflate(values, template.body);
 				String subject = EmailHelper.inflate(values, template.subject);
-				
+
 				EmailHelper.sendEmail(template.from, user.username, user.forename + " " + user.surname, subject, body, template.format);
 			}
 

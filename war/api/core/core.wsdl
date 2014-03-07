@@ -59,6 +59,9 @@
             <xsd:element name="ForgotPasswordInput" type="sdc:ForgotPasswordRequest" />
             <xsd:element name="ForgotPasswordOutput" type="sdc:ForgotPasswordResponse" />
 
+            <xsd:element name="GetUserDetailsInput" type="sdc:GetUserDetailsRequest" />
+            <xsd:element name="GetUserDetailsOutput" type="sdc:GetUserDetailsResponse" />
+
             <xsd:complexType name="GetCountriesRequest">
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
@@ -423,6 +426,25 @@
                 </xsd:complexContent>
             </xsd:complexType>
 
+            <xsd:complexType name="GetUserDetailsRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:attribute name="userId" type="xsd:long" />
+                        <xsd:attribute name="actionCode" type="xsd:string" use="optional" />
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="GetUserDetailsResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+                            <xsd:element name="user" type="sd:User" maxOccurs="1" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
         </xsd:schema>
     </wsdl:types>
 
@@ -551,6 +573,13 @@
         <wsdl:part name="output" element="sdc:ForgotPasswordOutput" />
     </wsdl:message>
 
+    <wsdl:message name="GetUserDetailsRequest">
+        <wsdl:part name="input" element="sdc:GetUserDetailsInput" />
+    </wsdl:message>
+    <wsdl:message name="GetUserDetailsResponse">
+        <wsdl:part name="output" element="sdc:GetUserDetailsOutput" />
+    </wsdl:message>
+
     <wsdl:portType name="core">
         <wsdl:operation name="GetCountries">
             <wsdl:input message="sdc:GetCountriesRequest" />
@@ -639,6 +668,11 @@
         <wsdl:operation name="ForgotPassword">
             <wsdl:input message="sdc:ForgotPasswordRequest" />
             <wsdl:output message="sdc:ForgotPasswordResponse" />
+        </wsdl:operation>
+        
+        <wsdl:operation name="GetUserDetails">
+            <wsdl:input message="sdc:GetUserDetailsRequest" />
+            <wsdl:output message="sdc:GetUserDetailsResponse" />
         </wsdl:operation>
 
     </wsdl:portType>
@@ -814,6 +848,16 @@
 
         <wsdl:operation name="ForgotPassword">
             <soap:operation soapAction="http://app.reflection.io/core/ForgotPassword" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        
+        <wsdl:operation name="GetUserDetails">
+            <soap:operation soapAction="http://app.reflection.io/core/GetUserDetails" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>

@@ -57,6 +57,7 @@ public class RegisterForm extends Composite {
 	private String mEmailError;
 
 	@UiField TextBox mPassword;
+	@UiField TextBox confirmPassword;
 	@UiField HTMLPanel mPasswordGroup;
 	@UiField HTMLPanel mPasswordNote;
 	private String mPasswordError;
@@ -80,6 +81,7 @@ public class RegisterForm extends Composite {
 		mCompany.getElement().setAttribute("placeholder", "Company");
 		mEmail.getElement().setAttribute("placeholder", "Email");
 		mPassword.getElement().setAttribute("placeholder", "Password");
+		confirmPassword.getElement().setAttribute("placeholder", "Confirm password");
 
 	}
 
@@ -244,17 +246,47 @@ public class RegisterForm extends Composite {
 			termAndCondError = null;
 			validated = validated && true;
 		}
-		
+
 		return validated;
+	}
+
+	public void setUsername(String value) {
+		mEmail.setText(value);
+		mEmail.setEnabled(false);
+	}
+
+	public void setForename(String value) {
+		mForename.setText(value);
+		mForename.setEnabled(false);
+	}
+
+	public void setSurname(String value) {
+		mSurname.setText(value);
+		mSurname.setEnabled(false);
+	}
+
+	public void setCompany(String value) {
+		mCompany.setText(value);
+		mCompany.setEnabled(false);
 	}
 
 	private void resetForm() {
 		mForename.setText("");
+		mForename.setEnabled(true);
+
 		mSurname.setText("");
+		mSurname.setEnabled(true);
+
 		mCompany.setText("");
+		mCompany.setEnabled(true);
+
 		mEmail.setText("");
+		mEmail.setEnabled(true);
+
 		mPassword.setText("");
-		
+
+		confirmPassword.setText("");
+
 		FormHelper.hideNote(mForenameGroup, mForenameNote);
 		FormHelper.hideNote(mSurnameGroup, mSurnameNote);
 		FormHelper.hideNote(mCompanyGroup, mCompanyNote);
@@ -263,6 +295,13 @@ public class RegisterForm extends Composite {
 		FormHelper.hideNote(termAndCondGroup, termAndCondNote);
 
 		// mAlertBox.setVisible(false);
+	}
+
+	/**
+	 * @param value
+	 */
+	public void setEnabled(boolean value) {
+
 	}
 
 }

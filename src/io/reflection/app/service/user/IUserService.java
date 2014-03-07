@@ -173,6 +173,6 @@ public interface IUserService extends IService {
 	
 	public void markForReset(User user) throws DataAccessException;
 	
-	public User getResetCodeUser(String code) throws DataAccessException;
+	public User getActionCodeUser(String code) throws DataAccessException;
 
 }

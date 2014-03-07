@@ -18,8 +18,11 @@ import io.reflection.app.api.admin.shared.call.SetPasswordRequest;
 import io.reflection.app.api.admin.shared.call.SetPasswordResponse;
 import io.reflection.app.api.admin.shared.call.event.AssignRoleEventHandler;
 import io.reflection.app.api.core.client.CoreService;
+import io.reflection.app.api.core.shared.call.GetUserDetailsRequest;
+import io.reflection.app.api.core.shared.call.GetUserDetailsResponse;
 import io.reflection.app.api.core.shared.call.RegisterUserRequest;
 import io.reflection.app.api.core.shared.call.RegisterUserResponse;
+import io.reflection.app.api.core.shared.call.event.GetUserDetailsEventHandler;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.client.handler.user.UserPasswordChangedEventHandler.UserPasswordChangeFailed;
@@ -216,10 +219,12 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 			}
 		});
 	}
-	
+
 	/**
 	 * Adds BT1 role to the user (this is the role code designated to the first closed beta)
-	 * @param userId The id of the user to add to the closed beta
+	 * 
+	 * @param userId
+	 *            The id of the user to add to the closed beta
 	 */
 	public void makeBeta(Long userId) {
 		AdminService service = new AdminService();
@@ -348,6 +353,71 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 	public User getUser(Long id) {
 		return mUserLookup.get(id);
+	}
+
+	/**
+	 * Fetches user details from the server. Details of fetched user (if the call is successful) will be broadcast on the event bus.
+	 * 
+	 * @param id
+	 *            The user Id to fetch the details for
+	 */
+	public void fetchUser(Long id) {
+		CoreService service = new CoreService();
+		service.setUrl(CORE_END_POINT);
+
+		final GetUserDetailsRequest input = new GetUserDetailsRequest();
+		input.accessCode = ACCESS_CODE;
+
+		input.session = SessionController.get().getSessionForApiCall();
+
+		input.userId = id;
+
+		service.getUserDetails(input, new AsyncCallback<GetUserDetailsResponse>() {
+
+			@Override
+			public void onSuccess(GetUserDetailsResponse output) {
+				EventController.get().fireEventFromSource(new GetUserDetailsEventHandler.GetUserDetailsSuccess(input, output), UserController.this);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				EventController.get().fireEventFromSource(new GetUserDetailsEventHandler.GetUserDetailsFailure(input, caught), UserController.this);
+			}
+		});
+	}
+
+	/**
+	 * Fetches user details from the server. Details of fetched user (if the call is successful) will be broadcast on the event bus.
+	 * 
+	 * @param actionCode
+	 *            action code for the user to fetch
+	 */
+	public void fetchUser(String actionCode) {
+		CoreService service = new CoreService();
+		service.setUrl(CORE_END_POINT);
+
+		final GetUserDetailsRequest input = new GetUserDetailsRequest();
+		input.accessCode = ACCESS_CODE;
+
+		input.actionCode = actionCode;
+
+		service.getUserDetails(input, new AsyncCallback<GetUserDetailsResponse>() {
+
+			@Override
+			public void onSuccess(GetUserDetailsResponse output) {
+
+				if (output.status == StatusType.StatusTypeSuccess && output.user != null) {
+					mUserLookup.put(output.user.id, output.user);
+				}
+
+				EventController.get().fireEventFromSource(new GetUserDetailsEventHandler.GetUserDetailsSuccess(input, output), UserController.this);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				EventController.get().fireEventFromSource(new GetUserDetailsEventHandler.GetUserDetailsFailure(input, caught), UserController.this);
+			}
+		});
 	}
 
 }

@@ -62,6 +62,8 @@
                 <g:HTMLPanel ui:field="mPasswordGroup" styleName="form-group {style.formGroup}">
                     <label style="font-weight: normal; font-size: 16px; font-family: Oxygen;">Password</label>
                     <g:PasswordTextBox styleName="form-control {style.marginFormControl}" ui:field="mPassword" />
+                    <label style="font-weight: normal; font-size: 16px; font-family: Oxygen;">Confirm Password</label>
+                    <g:PasswordTextBox styleName="form-control {style.marginFormControl}" ui:field="confirmPassword" />
                     <g:HTMLPanel ui:field="mPasswordNote" visible="false" styleName="{style.noteDetail}" />
                 </g:HTMLPanel>
 

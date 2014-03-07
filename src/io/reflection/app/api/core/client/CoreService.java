@@ -32,6 +32,8 @@ import io.reflection.app.api.core.shared.call.GetStoresRequest;
 import io.reflection.app.api.core.shared.call.GetStoresResponse;
 import io.reflection.app.api.core.shared.call.GetTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetTopItemsResponse;
+import io.reflection.app.api.core.shared.call.GetUserDetailsRequest;
+import io.reflection.app.api.core.shared.call.GetUserDetailsResponse;
 import io.reflection.app.api.core.shared.call.IsAuthorisedRequest;
 import io.reflection.app.api.core.shared.call.IsAuthorisedResponse;
 import io.reflection.app.api.core.shared.call.LinkAccountRequest;
@@ -435,6 +437,28 @@ public final class CoreService extends JsonService {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					ForgotPasswordResponse outputParameter = new ForgotPasswordResponse();
+					parseResponse(response.getText(), outputParameter);
+					output.onSuccess(outputParameter);
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+				}
+			});
+		} catch (RequestException e) {
+			output.onFailure(e);
+		}
+	}
+
+	public static final String CoreMethodGetUserDetails = "GetUserDetails";
+
+	public void getUserDetails(GetUserDetailsRequest input, final AsyncCallback<GetUserDetailsResponse> output) {
+		try {
+			sendRequest(CoreMethodGetUserDetails, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					GetUserDetailsResponse outputParameter = new GetUserDetailsResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
 				}

@@ -19,6 +19,7 @@ import io.reflection.app.api.core.shared.call.GetLinkedAccountsRequest;
 import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsRequest;
 import io.reflection.app.api.core.shared.call.GetStoresRequest;
 import io.reflection.app.api.core.shared.call.GetTopItemsRequest;
+import io.reflection.app.api.core.shared.call.GetUserDetailsRequest;
 import io.reflection.app.api.core.shared.call.IsAuthorisedRequest;
 import io.reflection.app.api.core.shared.call.LinkAccountRequest;
 import io.reflection.app.api.core.shared.call.LoginRequest;
@@ -108,6 +109,10 @@ public final class CoreJsonServlet extends JsonServlet {
 			ForgotPasswordRequest input = new ForgotPasswordRequest();
 			input.fromJson(request);
 			output = service.forgotPassword(input).toString();
+		} else if ("GetUserDetails".equals(action)) {
+			GetUserDetailsRequest input = new GetUserDetailsRequest();
+			input.fromJson(request);
+			output = service.getUserDetails(input).toString();
 		}
 		return output;
 	}

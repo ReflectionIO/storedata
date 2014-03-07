@@ -35,6 +35,8 @@ import io.reflection.app.api.core.shared.call.GetStoresRequest;
 import io.reflection.app.api.core.shared.call.GetStoresResponse;
 import io.reflection.app.api.core.shared.call.GetTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetTopItemsResponse;
+import io.reflection.app.api.core.shared.call.GetUserDetailsRequest;
+import io.reflection.app.api.core.shared.call.GetUserDetailsResponse;
 import io.reflection.app.api.core.shared.call.IsAuthorisedRequest;
 import io.reflection.app.api.core.shared.call.IsAuthorisedResponse;
 import io.reflection.app.api.core.shared.call.LinkAccountRequest;
@@ -660,25 +662,25 @@ public final class Core extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
-			boolean reset = (input.resetCode != null);
+			boolean isReset = (input.resetCode != null);
 
-			if (!reset) {
+			if (!isReset) {
 				input.session = ValidationHelper.validateSession(input.session, "input.session");
 				input.password = ValidationHelper.validatePassword(input.password, "input.password");
 			}
 
 			User user = null;
 
-			if (reset) {
-				user = UserServiceProvider.provide().getResetCodeUser(input.resetCode);
-				
+			if (isReset) {
+				user = UserServiceProvider.provide().getActionCodeUser(input.resetCode);
+
 				if (user == null)
-					throw new InputValidationException(ApiError.InvalidPasswordResetCode.getCode(),
-							ApiError.InvalidPasswordResetCode.getMessage("input.resetCode"));
+					throw new InputValidationException(ApiError.InvalidPasswordActionCode.getCode(),
+							ApiError.InvalidPasswordActionCode.getMessage("input.resetCode"));
 			} else {
 				User sessionUser = UserServiceProvider.provide().getUser(input.session.user.id);
 				user = UserServiceProvider.provide().getLoginUser(sessionUser.username, input.password);
-				
+
 				if (user == null)
 					throw new InputValidationException(ApiError.IncorrectPasswordForChange.getCode(),
 							ApiError.IncorrectPasswordForChange.getMessage("input.password"));
@@ -686,7 +688,7 @@ public final class Core extends ActionHandler {
 
 			input.newPassword = ValidationHelper.validatePassword(input.newPassword, "input.newPassword");
 
-			if (!reset && input.newPassword.equals(input.password))
+			if (!isReset && input.newPassword.equals(input.password))
 				throw new InputValidationException(ApiError.InvalidPasswordSameAsCurrent.getCode(),
 						ApiError.InvalidPasswordSameAsCurrent.getMessage("input.newPassword"));
 
@@ -1046,10 +1048,15 @@ public final class Core extends ActionHandler {
 				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("SearchForItemRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
 			input.session = ValidationHelper.validateSession(input.session, "input.session");
+
 			input.query = ValidationHelper.validateQuery(input.query, "input");
+
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
+
 			output.items = ItemServiceProvider.provide().searchItems(input.query, input.pager);
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -1073,7 +1080,7 @@ public final class Core extends ActionHandler {
 			User user = UserServiceProvider.provide().getUsernameUser(input.username);
 
 			if (user == null) throw new InputValidationException(ApiError.UserNotFound.getCode(), ApiError.UserNotFound.getMessage("input.username"));
-			
+
 			UserServiceProvider.provide().markForReset(user);
 
 			output.status = StatusType.StatusTypeSuccess;
@@ -1082,6 +1089,50 @@ public final class Core extends ActionHandler {
 			output.error = convertToErrorAndLog(LOG, e);
 		}
 		LOG.finer("Exiting forgotPassword");
+		return output;
+	}
+
+	public GetUserDetailsResponse getUserDetails(GetUserDetailsRequest input) {
+		LOG.finer("Entering getUserDetails");
+		GetUserDetailsResponse output = new GetUserDetailsResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("GetUserDetailsRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
+			boolean isAction = input.actionCode != null;
+
+			if (!isAction) {
+				input.session = ValidationHelper.validateSession(input.session, "input.session");
+
+				if (input.userId == null)
+					throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+							ApiError.InvalidValueNull.getMessage("Long: input.userId"));
+			}
+
+			if (isAction) {
+				output.user = UserServiceProvider.provide().getActionCodeUser(input.actionCode);
+
+				if (output.user == null)
+					throw new InputValidationException(ApiError.InvalidPasswordActionCode.getCode(),
+							ApiError.InvalidPasswordActionCode.getMessage("input.actionCode"));
+			} else {
+				User sessionUser = UserServiceProvider.provide().getUser(input.session.user.id);
+
+				if (input.userId != sessionUser.id) {
+					ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
+				}
+
+				output.user = sessionUser;
+			}
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getUserDetails");
 		return output;
 	}
 }
