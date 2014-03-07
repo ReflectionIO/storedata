@@ -44,6 +44,7 @@ public class UsersPage extends Page {
 
 	@UiField InlineHyperlink mAssignPassword;
 	@UiField InlineHyperlink mMakeAdmin;
+	@UiField InlineHyperlink addToBeta;
 	@UiField InlineHyperlink mChangeDetails;
 
 	public UsersPage() {
