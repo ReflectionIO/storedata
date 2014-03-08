@@ -23,7 +23,6 @@ import io.reflection.app.datatypes.shared.User;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.Error;
@@ -39,7 +38,7 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 	interface LoginPageUiBinder extends UiBinder<Widget, LoginPage> {}
 
 	private static final String WELCOME_ACTION_NAME = "welcome";
-	
+
 	@UiField WelcomePanel mWelcomePanel; // Welcome panel, showed when action 'welcome' is in the stack
 
 	@UiField HTMLPanel mDefaultLogin;
@@ -104,7 +103,7 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 		// user.forename != null && user.forename.length() != 0 ? " - welcome back " + user.forename + "." : "", false).setVisible(true);
 
 		// TODO: we should not be doing this for all users
-		History.newItem("linkitunes");
+		PageType.LinkItunesPageType.show();
 	}
 
 	/*

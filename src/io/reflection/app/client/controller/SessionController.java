@@ -35,6 +35,7 @@ import io.reflection.app.client.handler.user.UserPasswordChangedEventHandler.Use
 import io.reflection.app.client.handler.user.UserPowersEventHandler.GetUserPowersFailed;
 import io.reflection.app.client.handler.user.UserPowersEventHandler.GotUserPowers;
 import io.reflection.app.client.helper.FormHelper;
+import io.reflection.app.client.page.PageType;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
@@ -44,7 +45,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.user.client.Cookies;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.willshex.gson.json.service.shared.Error;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -448,7 +448,7 @@ public class SessionController implements ServiceController {
 						}
 					} else {
 						if (output.error != null && output.error.code.intValue() == 100034) {
-							History.newItem("login/timeout");
+							PageType.LoginPageType.show("timeout");
 						}
 
 						EventController.get().fireEventFromSource(new UserLoginFailed(output.error), SessionController.this);

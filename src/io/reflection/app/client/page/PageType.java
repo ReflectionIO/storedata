@@ -7,8 +7,12 @@
 //
 package io.reflection.app.client.page;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.google.gwt.user.client.History;
+import com.spacehopperstudios.utility.StringUtils;
 
 /**
  * @author billy1380
@@ -124,7 +128,7 @@ public enum PageType {
 			break;
 		case MyAppsLinkedAccountsPageType:
 			page = new MyAppsLinkedAccountsPage();
-			break;	
+			break;
 		case EmailTemplatesPage:
 			page = new EmailTemplatePage();
 			break;
@@ -137,5 +141,15 @@ public enum PageType {
 		}
 
 		return page;
+	}
+
+	public void show() {
+		History.newItem(toString());
+	}
+
+	public void show(String... params) {
+		String joinedParams = StringUtils.join(Arrays.asList(params), "/");
+
+		History.newItem(toString() + "/" + joinedParams);
 	}
 }

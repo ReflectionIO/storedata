@@ -30,7 +30,6 @@ import io.reflection.app.datatypes.shared.User;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.Error;
@@ -98,7 +97,7 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 		 * 
 		 * Timer t = new Timer() {
 		 * 
-		 * @Override public void run() { History.newItem("login/" + username); } };
+		 * @Override public void run() { PageType.LoginPageType.show(username); } };
 		 * 
 		 * t.schedule(2000);
 		 */
@@ -209,7 +208,7 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 	@Override
 	public void userLoggedIn(User user, Session session) {
 		if (user != null && session != null) {
-			History.newItem("linkitunes");
+			PageType.LinkItunesPageType.show();
 		}
 	}
 

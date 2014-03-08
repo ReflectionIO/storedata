@@ -20,7 +20,6 @@ import io.reflection.app.client.part.login.ResetPasswordForm;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
 
@@ -82,7 +81,7 @@ public class ResetPasswordPage extends Page implements ChangePasswordEventHandle
 	@Override
 	public void changePasswordSuccess(ChangePasswordRequest input, ChangePasswordResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			History.newItem("login");
+			PageType.LoginPageType.show();
 		} else {
 			// TODO: the error panel
 			form.enableForm();

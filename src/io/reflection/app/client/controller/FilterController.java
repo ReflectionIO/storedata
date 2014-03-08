@@ -389,7 +389,7 @@ public class FilterController {
 			listType = listTypes.get(0);
 		}
 
-		return "/" + getStoreA3Code() + "/" + getCountryA2Code() + "/" + getCategory().id.toString() + "/" + listType + "/" + getEndTime();
+		return getStoreA3Code() + "/" + getCountryA2Code() + "/" + getCategory().id.toString() + "/" + listType + "/" + getEndTime();
 	}
 
 	/**

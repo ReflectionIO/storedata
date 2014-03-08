@@ -7,63 +7,55 @@
 //
 package io.reflection.app.client.page;
 
-import io.reflection.app.client.helper.FormHelper;
+import io.reflection.app.api.core.shared.call.LinkAccountRequest;
+import io.reflection.app.api.core.shared.call.LinkAccountResponse;
+import io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler;
+import io.reflection.app.client.controller.EventController;
+import io.reflection.app.client.controller.LinkedAccountController;
+import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.controller.NavigationController.Stack;
+import io.reflection.app.client.handler.EnterPressedEventHandler;
+import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.part.linkaccount.IosMacLinkAccountForm;
+import io.reflection.app.client.part.linkaccount.LinkableAccountFields;
 import io.reflection.app.client.res.Images;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author stefanocapuzzi
  * 
  */
-public class LinkItunesPage extends Page {
+public class LinkItunesPage extends Page implements NavigationEventHandler, LinkAccountEventHandler {
 
 	private static LinkItunesPageUiBinder uiBinder = GWT.create(LinkItunesPageUiBinder.class);
 
 	interface LinkItunesPageUiBinder extends UiBinder<Widget, LinkItunesPage> {}
 
 	@UiField HTMLPanel mPanel;
+	@UiField FormPanel form;
 
-	@UiField TextBox mAccountUsername;
-	@UiField HTMLPanel mAccountUsernameGroup;
-	@UiField HTMLPanel mAccountUsernameNote;
-	private String mAccountUsernameError;
-
-	@UiField TextBox mPassword;
-	@UiField HTMLPanel mPasswordGroup;
-	@UiField HTMLPanel mPasswordNote;
-	private String mPasswordError;
-
-	@UiField TextBox mVendorId;
-	@UiField HTMLPanel mVendorIdGroup;
-	@UiField HTMLPanel mVendorIdNote;
-	private String mVendorIdError;
+	@UiField IosMacLinkAccountForm mIosMacForm;
 
 	@UiField Button mLinkAccount;
 
-	Images images = GWT.create(Images.class);
-	Image imageButton = new Image(images.buttonLinkedAccount());
-	final String imageButtonLink = "<img style=\"vertical-align: 1px;\" src=\"" + imageButton.getUrl() + "\"/>";
+	final String imageButtonLink = "<img style=\"vertical-align: 1px;\" src=\"" + Images.INSTANCE.buttonLinkedAccount().getSafeUri().asString() + "\"/>";
+
+	private LinkableAccountFields mLinkableAccount;
 
 	public LinkItunesPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		mLinkAccount.setHTML(mLinkAccount.getText() + "&nbsp;&nbsp;" + imageButtonLink);
-		mAccountUsername.getElement().setAttribute("placeholder", "Account Username");
-		mPassword.getElement().setAttribute("placeholder", "Password");
-		mVendorId.getElement().setAttribute("placeholder", "Vendor number (8xxxxxxx)");
 	}
 
 	/*
@@ -74,104 +66,62 @@ public class LinkItunesPage extends Page {
 	@Override
 	protected void onAttach() {
 		super.onAttach();
-		resetForm();
-		mAccountUsername.setFocus(true);
-	}
 
-	/**
-	 * Fire the button when pressing the 'enter' key on one of the form fields
-	 * 
-	 * @param event
-	 */
-	@UiHandler({ "mAccountUsername", "mPassword", "mVendorId" })
-	void onEnterKeyPressLoginFields(KeyPressEvent event) {
-		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
-			mLinkAccount.click();
-		}
+		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+		register(EventController.get().addHandlerToSource(LinkAccountEventHandler.TYPE, LinkedAccountController.get(), this));
 	}
 
 	@UiHandler("mLinkAccount")
 	void onLinkAccountClicked(ClickEvent event) {
-		if (validate()) {
-			mPanel.setVisible(false);
-			History.newItem("readytostart");
+		if (mLinkableAccount.validate()) {
+			form.setVisible(false);
+
+			LinkedAccountController.get().linkAccount(mLinkableAccount.getAccountSourceId(), mLinkableAccount.getUsername(), mLinkableAccount.getPassword(),
+					mLinkableAccount.getProperties());
 		} else {
-			if (mAccountUsernameError != null) {
-				FormHelper.showNote(true, mAccountUsernameGroup, mAccountUsernameNote, mAccountUsernameError);
-			} else {
-				FormHelper.hideNote(mAccountUsernameGroup, mAccountUsernameNote);
-			}
-			if (mPasswordError != null) {
-				FormHelper.showNote(true, mPasswordGroup, mPasswordNote, mPasswordError);
-			} else {
-				FormHelper.hideNote(mPasswordGroup, mPasswordNote);
-			}
-			if (mVendorIdError != null) {
-				FormHelper.showNote(true, mVendorIdGroup, mVendorIdNote, mVendorIdError);
-			} else {
-				FormHelper.hideNote(mVendorIdGroup, mVendorIdNote);
-			}
+			mLinkableAccount.setFormErrors();
 		}
 	}
 
-	private boolean validate() {
-
-		boolean validated = true;
-		// Retrieve fields to validate
-		String accountUsername = mAccountUsername.getText();
-		String password = mPassword.getText();
-		String vendorId = mVendorId.getText();
-
-		// Check fields constraints
-		if (accountUsername == null || accountUsername.length() == 0) {
-			mAccountUsernameError = "Cannot be empty";
-			validated = false;
-			/**
-			 * } else if (accountUsername.length() < 6) { mAccountUsernameError = "Too short (minimum 6 characters)"; validated = false; } else if
-			 * (accountUsername.length() > 255) { mAccountUsernameError = "Too long (maximum 255 characters)"; validated = false;
-			 */
-		} else {
-			mAccountUsernameError = null;
-			validated = validated && true;
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler#linkAccountSuccess(io.reflection.app.api.core.shared.call.LinkAccountRequest,
+	 * io.reflection.app.api.core.shared.call.LinkAccountResponse)
+	 */
+	@Override
+	public void linkAccountSuccess(LinkAccountRequest input, LinkAccountResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess) {
+			PageType.ReadyToStartPageType.show();
 		}
-
-		if (password == null || password.length() == 0) {
-			mPasswordError = "Cannot be empty";
-			validated = false;
-		} else if (password.length() < 6) {
-			mPasswordError = "Too short (minimum 6 characters)";
-			validated = false;
-		} else if (password.length() > 64) {
-			mPasswordError = "Too long (maximum 64 characters)";
-			validated = false;
-		} else {
-			mPasswordError = null;
-			validated = validated && true;
-		}
-
-		if (vendorId == null || vendorId.length() == 0) {
-			mVendorIdError = "Cannot be empty";
-			validated = false;
-		} else if (!FormHelper.isValidAppleVendorId(vendorId)) {
-			mVendorIdError = "Invalid vendor id";
-			validated = false;
-		} else {
-			mVendorIdError = null;
-			validated = validated && true;
-		}
-
-		return validated;
 	}
 
-	private void resetForm() {
-		mPanel.setVisible(true);
-		mAccountUsername.setText("");
-		mPassword.setText("");
-		mVendorId.setText("");
-		FormHelper.hideNote(mAccountUsernameGroup, mAccountUsernameNote);
-		FormHelper.hideNote(mPasswordGroup, mPasswordNote);
-		FormHelper.hideNote(mVendorIdGroup, mVendorIdNote);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler#linkAccountFailure(io.reflection.app.api.core.shared.call.LinkAccountRequest,
+	 * java.lang.Throwable)
+	 */
+	@Override
+	public void linkAccountFailure(LinkAccountRequest input, Throwable caught) {}
 
-		// mAlertBox.setVisible(false);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack)
+	 */
+	@Override
+	public void navigationChanged(Stack stack) {
+		mLinkableAccount = mIosMacForm;
+
+		mLinkableAccount.setOnEnterPressed(new EnterPressedEventHandler() {
+			public void onEnterPressed() {
+				mLinkAccount.click();
+			}
+		});
+
+		mIosMacForm.setVisible(true);
+		mLinkableAccount.getFirstToFocus().setFocus(true);
 	}
+
 }

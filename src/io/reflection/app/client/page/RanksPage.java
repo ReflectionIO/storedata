@@ -48,7 +48,6 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TextHeader;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.Error;
@@ -201,17 +200,17 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 		mGrossingHeader = new TextHeader("Grossing");
 		mRanks.addColumn(mGrossingColumn, mGrossingHeader);
 
-//		mPriceHeader = new TextHeader("Price");
-//		mRanks.addColumn(mPriceColumn, mPriceHeader);
-//
-//		mDownloadsHeader = new TextHeader("Downloads");
-//		mRanks.addColumn(mDownloadsColumn, mDownloadsHeader);
-//
-//		mRevenueHeader = new TextHeader("Revenue");
-//		mRanks.addColumn(mRevenueColumn, mRevenueHeader);
-//
-//		mIapHeader = new TextHeader("IAP");
-//		mRanks.addColumn(mIapColumn, mIapHeader);
+		// mPriceHeader = new TextHeader("Price");
+		// mRanks.addColumn(mPriceColumn, mPriceHeader);
+		//
+		// mDownloadsHeader = new TextHeader("Downloads");
+		// mRanks.addColumn(mDownloadsColumn, mDownloadsHeader);
+		//
+		// mRevenueHeader = new TextHeader("Revenue");
+		// mRanks.addColumn(mRevenueColumn, mRevenueHeader);
+		//
+		// mIapHeader = new TextHeader("IAP");
+		// mRanks.addColumn(mIapColumn, mIapHeader);
 
 	}
 
@@ -260,7 +259,6 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
 		RankController.get().reset();
 
-	
 	}
 
 	/*
@@ -272,7 +270,6 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 	public void filterParamsChanged(Map<String, ?> currentValues, Map<String, ?> previousValues) {
 		RankController.get().reset();
 
-		
 	}
 
 	/*
@@ -359,7 +356,6 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 		}
 
 		if (changed) {
-			
 
 			refreshTabs();
 
@@ -442,9 +438,9 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 
 		if (PageType.RanksPageType.equals(stack.getPage())) {
 			checkPermissions();
-			
+
 			if (stack.getAction() == null || !"view".equals(stack.getAction())) {
-				History.newItem(PageType.RanksPageType + "/view" + FilterController.get().toRankFilterString());
+				PageType.RanksPageType.show("view", FilterController.get().toRankFilterString());
 			}
 		}
 
@@ -471,14 +467,12 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 	@Override
 	protected void onAttach() {
 		super.onAttach();
-		
+
 		register(EventController.get().addHandlerToSource(RanksEventHandler.TYPE, RankController.get(), this));
 		register(EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
 		register(EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
 		register(EventController.get().addHandlerToSource(IsAuthorisedEventHandler.TYPE, SessionController.get(), this));
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
-		
-		
 
 		refreshTabs();
 

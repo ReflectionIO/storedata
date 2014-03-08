@@ -24,7 +24,6 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -207,7 +206,11 @@ public class ChangePasswordPage extends Page implements UserPasswordChangedEvent
 
 			@Override
 			public void run() {
-				History.newItem(SessionController.get().isLoggedInUserAdmin() ? "users" : "logout");
+				if (SessionController.get().isLoggedInUserAdmin()) {
+					PageType.UsersPageType.show();
+				} else {
+					PageType.LoginPageType.show();
+				}
 			}
 		};
 

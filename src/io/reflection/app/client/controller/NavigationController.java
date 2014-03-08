@@ -18,7 +18,6 @@ import java.util.Map;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -135,7 +134,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 					}
 				}
 
-				History.newItem(PageType.UsersPageType.toString());
+				PageType.UsersPageType.show();
 
 				return;
 			} else {
@@ -143,7 +142,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 			}
 		} else if ("logout".equals(mStack.getPage())) {
 			SessionController.get().logout();
-			History.newItem(PageType.LoginPageType.toString());
+			PageType.LoginPageType.show();
 			return;
 		} else {
 			attachPage(PageType.fromString(mStack.getPage()));

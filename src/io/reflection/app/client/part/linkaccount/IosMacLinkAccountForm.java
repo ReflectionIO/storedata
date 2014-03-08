@@ -37,10 +37,10 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 
 	interface IosMacLinkAccountFormUiBinder extends UiBinder<Widget, IosMacLinkAccountForm> {}
 
-	@UiField TextBox mUsername;
-	@UiField HTMLPanel mUsernameGroup;
-	@UiField HTMLPanel mUsernameNote;
-	String mUsernameError;
+	@UiField TextBox mAccountUsername;
+	@UiField HTMLPanel mAccountUsernameGroup;
+	@UiField HTMLPanel mAccountUsernameNote;
+	String mAccountUsernameError;
 
 	@UiField PasswordTextBox mPassword;
 	@UiField HTMLPanel mPasswordGroup;
@@ -51,19 +51,22 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	@UiField HTMLPanel mVendorIdGroup;
 	@UiField HTMLPanel mVendorIdNote;
 	String mVendorIdError;
+
 	private EnterPressedEventHandler mEnterHandler;
+
+	
 
 	public IosMacLinkAccountForm() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		mUsername.getElement().setAttribute("placeholder", "iTunes Connect Username");
+		mAccountUsername.getElement().setAttribute("placeholder", "iTunes Connect Username");
 		mPassword.getElement().setAttribute("placeholder", "iTunes Connect Password");
 		mVendorId.getElement().setAttribute("placeholder", "Vendor number (8xxxxxxx)");
 
 	}
 
 	/**
-	 * Set the focus on 'mUsername' field when this part of the page is set to visible
+	 * Set the focus on 'mAccountUsername' field when this part of the page is set to visible
 	 * 
 	 * @see com.google.gwt.user.client.ui.UIObject#setVisible(boolean)
 	 */
@@ -71,16 +74,16 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 		if (visible == Boolean.TRUE) {
-			// mUsername.setFocus(true);
+			// mAccountUsername.setFocus(true);
 		}
 	}
 
 	/**
-	 * On pressing key on form fields 
+	 * On pressing key on form fields
 	 * 
 	 * @param e
 	 */
-	@UiHandler({ "mUsername", "mPassword", "mVendorId" })
+	@UiHandler({ "mAccountUsername", "mPassword", "mVendorId" })
 	void onKeyPressed(KeyPressEvent e) {
 		if (mEnterHandler != null && e.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
 			mEnterHandler.onEnterPressed();
@@ -96,22 +99,20 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	public boolean validate() {
 		boolean validated = true;
 		// Retrieve fields to validate
-		String username = mUsername.getText();
+		String username = mAccountUsername.getText();
 		String password = mPassword.getText();
 		String vendorId = mVendorId.getText();
 
 		// Check fields constraints
 		if (username == null || username.length() == 0) {
-			mUsernameError = "Cannot be empty";
+			mAccountUsernameError = "Cannot be empty";
 			validated = false;
-		/*} else if (username.length() < 6) {
-			mUsernameError = "Too short (minimum 6 characters)";
-			validated = false;
-		} else if (username.length() > 255) {
-			mUsernameError = "Too long (maximum 255 characters)";
-			validated = false; */
+			/*
+			 * } else if (username.length() < 6) { mAccountUsernameError = "Too short (minimum 6 characters)"; validated = false; } else if (username.length() > 255) {
+			 * mAccountUsernameError = "Too long (maximum 255 characters)"; validated = false;
+			 */
 		} else {
-			mUsernameError = null;
+			mAccountUsernameError = null;
 			validated = validated && true;
 		}
 
@@ -168,7 +169,7 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	 */
 	@Override
 	public String getUsername() {
-		return mUsername.getText();
+		return mAccountUsername.getText();
 	}
 
 	/*
@@ -217,7 +218,7 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	 */
 	@Override
 	public Focusable getFirstToFocus() {
-		return mUsername;
+		return mAccountUsername;
 	}
 
 	/**
@@ -227,10 +228,10 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	 */
 	@Override
 	public void setFormErrors() {
-		if (mUsernameError != null) {
-			FormHelper.showNote(true, mUsernameGroup, mUsernameNote, mUsernameError);
+		if (mAccountUsernameError != null) {
+			FormHelper.showNote(true, mAccountUsernameGroup, mAccountUsernameNote, mAccountUsernameError);
 		} else {
-			FormHelper.hideNote(mUsernameGroup, mUsernameNote);
+			FormHelper.hideNote(mAccountUsernameGroup, mAccountUsernameNote);
 		}
 		if (mPasswordError != null) {
 			FormHelper.showNote(true, mPasswordGroup, mPasswordNote, mPasswordError);
