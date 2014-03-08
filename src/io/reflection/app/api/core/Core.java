@@ -543,16 +543,36 @@ public final class Core extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
+			boolean isAction = input.actionCode != null;
+
 			if (input.accessCode.equalsIgnoreCase("b72b4e32-1062-4cc7-bc6b-52498ee10f09")) {
 				// use the email servlet code to determine whether they are an alpha user
-				input.user = ValidationHelper.validateAlphaUser(input.user, "input");
+				input.user = ValidationHelper.validateAlphaUser(input.user, "input.user");
 			} else {
-				input.user = ValidationHelper.validateRegisteringUser(input.user, "input.user");
+				if (isAction) {
+					input.user.password = ValidationHelper.validatePassword(input.user.password, "input.user.password");
+				} else {
+					input.user = ValidationHelper.validateRegisteringUser(input.user, "input.user");
+				}
 			}
 
-			User user = UserServiceProvider.provide().addUser(input.user);
+			User user = null;
 
-			LOG.info(String.format("Added user with name [%s %s] and email [%s],", user.forename, user.surname, user.username));
+			if (isAction) {
+				user = UserServiceProvider.provide().getActionCodeUser(input.actionCode);
+
+				if (user == null)
+					throw new InputValidationException(ApiError.InvalidActionCode.getCode(), ApiError.InvalidActionCode.getMessage("input.actionCode"));
+
+				UserServiceProvider.provide().updateUserPassword(user, input.user.password, Boolean.FALSE);
+
+				LOG.info(String.format("Completed user registeration for user [%s %s] and email [%s] and action code [%s]", user.forename, user.surname,
+						user.username, input.actionCode));
+			} else {
+				user = UserServiceProvider.provide().addUser(input.user);
+
+				LOG.info(String.format("Added user with name [%s %s] and email [%s],", user.forename, user.surname, user.username));
+			}
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -675,8 +695,7 @@ public final class Core extends ActionHandler {
 				user = UserServiceProvider.provide().getActionCodeUser(input.resetCode);
 
 				if (user == null)
-					throw new InputValidationException(ApiError.InvalidPasswordActionCode.getCode(),
-							ApiError.InvalidPasswordActionCode.getMessage("input.resetCode"));
+					throw new InputValidationException(ApiError.InvalidActionCode.getCode(), ApiError.InvalidActionCode.getMessage("input.resetCode"));
 			} else {
 				User sessionUser = UserServiceProvider.provide().getUser(input.session.user.id);
 				user = UserServiceProvider.provide().getLoginUser(sessionUser.username, input.password);
@@ -1107,16 +1126,14 @@ public final class Core extends ActionHandler {
 				input.session = ValidationHelper.validateSession(input.session, "input.session");
 
 				if (input.userId == null)
-					throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
-							ApiError.InvalidValueNull.getMessage("Long: input.userId"));
+					throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("Long: input.userId"));
 			}
 
 			if (isAction) {
 				output.user = UserServiceProvider.provide().getActionCodeUser(input.actionCode);
 
 				if (output.user == null)
-					throw new InputValidationException(ApiError.InvalidPasswordActionCode.getCode(),
-							ApiError.InvalidPasswordActionCode.getMessage("input.actionCode"));
+					throw new InputValidationException(ApiError.InvalidActionCode.getCode(), ApiError.InvalidActionCode.getMessage("input.actionCode"));
 			} else {
 				User sessionUser = UserServiceProvider.provide().getUser(input.session.user.id);
 

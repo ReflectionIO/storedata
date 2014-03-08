@@ -193,6 +193,7 @@
                         <xsd:sequence>
                             <xsd:element name="user" type="sd:User" maxOccurs="1" />
                         </xsd:sequence>
+                        <xsd:attribute name="actionCode" type="xsd:string" use="optional" />
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>
@@ -669,7 +670,7 @@
             <wsdl:input message="sdc:ForgotPasswordRequest" />
             <wsdl:output message="sdc:ForgotPasswordResponse" />
         </wsdl:operation>
-        
+
         <wsdl:operation name="GetUserDetails">
             <wsdl:input message="sdc:GetUserDetailsRequest" />
             <wsdl:output message="sdc:GetUserDetailsResponse" />
@@ -855,7 +856,7 @@
                 <soap:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
-        
+
         <wsdl:operation name="GetUserDetails">
             <soap:operation soapAction="http://app.reflection.io/core/GetUserDetails" />
             <wsdl:input>

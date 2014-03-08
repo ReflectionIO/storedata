@@ -71,6 +71,8 @@ public class RegisterForm extends Composite {
 	@UiField Button mRegister;
 
 	final String imageButtonLink = "<img style=\"vertical-align: 1px;\" src=\"" + Images.INSTANCE.buttonArrowWhite().getSafeUri().asString() + "\"/>";
+	
+	private String actionCode;
 
 	public RegisterForm() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -99,7 +101,7 @@ public class RegisterForm extends Composite {
 		mForename.setFocus(true);
 	}
 
-	@UiHandler({ "mForename", "mSurname", "mCompany", "mEmail", "mPassword" })
+	@UiHandler({ "mForename", "mSurname", "mCompany", "mEmail", "mPassword", "confirmPassword" })
 	void onEnterKeyPressRegisterFields(KeyPressEvent event) {
 		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
 			mRegister.click();
@@ -110,14 +112,20 @@ public class RegisterForm extends Composite {
 	void onRegisterClicked(ClickEvent event) {
 		if (validate()) {
 
-			mRegister.setText("Registration in progress..");
+//			mRegister.setText("Registration in progress..");
 
 			// TODO Checking effect
 
 			// AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Please wait", " - creating user account...",
 			// false).setVisible(true);
+			
+			setEnabled(false);
 
-			UserController.get().registerUser(mEmail.getText(), mPassword.getText(), mForename.getText(), mSurname.getText(), mCompany.getText());
+			if (actionCode == null) { 
+				UserController.get().registerUser(mEmail.getText(), mPassword.getText(), mForename.getText(), mSurname.getText(), mCompany.getText());
+			} else {
+				UserController.get().registerUser(actionCode, mPassword.getText());
+			}
 
 		} else {
 			if (mForenameError != null) {
@@ -167,6 +175,7 @@ public class RegisterForm extends Composite {
 		String company = mCompany.getText();
 		String email = mEmail.getText();
 		String password = mPassword.getText();
+		String confirmPasswordValue = confirmPassword.getText();
 
 		// Check fields constraints
 		if (forename == null || forename.length() == 0) {
@@ -234,6 +243,9 @@ public class RegisterForm extends Composite {
 		} else if (password.length() > 64) {
 			mPasswordError = "Too long (maximum 64 characters)";
 			validated = false;
+		} else if (!password.equals(confirmPasswordValue)) {
+			mPasswordError = "Password and confirmation should match";
+			validated = false;
 		} else {
 			mPasswordError = null;
 			validated = validated && true;
@@ -269,23 +281,26 @@ public class RegisterForm extends Composite {
 		mCompany.setText(value);
 		mCompany.setEnabled(false);
 	}
+	
+	public void setActionCode(String value) {
+		actionCode = value;
+	}
 
-	private void resetForm() {
+	public void resetForm() {
 		mForename.setText("");
-		mForename.setEnabled(true);
-
 		mSurname.setText("");
-		mSurname.setEnabled(true);
-
 		mCompany.setText("");
-		mCompany.setEnabled(true);
-
 		mEmail.setText("");
-		mEmail.setEnabled(true);
+		
+		actionCode = null;
 
+		setEnabled(true);
+		
 		mPassword.setText("");
 
 		confirmPassword.setText("");
+		
+		mTermAndCond.setValue(Boolean.FALSE);
 
 		FormHelper.hideNote(mForenameGroup, mForenameNote);
 		FormHelper.hideNote(mSurnameGroup, mSurnameNote);
@@ -301,7 +316,14 @@ public class RegisterForm extends Composite {
 	 * @param value
 	 */
 	public void setEnabled(boolean value) {
-
+		mForename.setEnabled(value);
+		mSurname.setEnabled(value);
+		mCompany.setEnabled(value);
+		mEmail.setEnabled(value);
+		mPassword.setEnabled(value);
+		confirmPassword.setEnabled(value);
+		
+		mRegister.setEnabled(value);
 	}
 
 }

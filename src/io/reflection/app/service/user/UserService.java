@@ -222,32 +222,7 @@ final class UserService implements IUserService {
 	 */
 	@Override
 	public void updateUserPassword(User user, String newPassword) throws DataAccessException {
-		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
-
-		String updateUserPasswordQuery = String.format("UPDATE `user` SET `password`='%s', `code`=NULL WHERE `id`=%d", sha1Hash(SALT + newPassword),
-				user.id.longValue());
-
-		try {
-			userConnection.connect();
-			userConnection.executeQuery(updateUserPasswordQuery);
-
-			if (userConnection.getAffectedRowCount() > 0) {
-				Map<String, Object> values = new HashMap<String, Object>();
-				values.put("user", user);
-
-				EmailTemplate template = EmailTemplateServiceProvider.provide().getEmailTemplate(Long.valueOf(PASSWORD_EMAIL_TEMPLATE_ID));
-				String body = EmailHelper.inflate(values, template.body);
-
-				if (!EmailHelper.sendEmail(template.from, user.username, user.forename + " " + user.surname, template.subject, body, template.format)) {
-					LOG.severe(String.format("Failed to notify user [%d] of password change", user.id.longValue()));
-				}
-			}
-		} finally {
-			if (userConnection != null) {
-				userConnection.disconnect();
-			}
-		}
-
+		updateUserPassword(user, newPassword, Boolean.TRUE);
 	}
 
 	/*
@@ -957,5 +932,40 @@ final class UserService implements IUserService {
 				userConnection.disconnect();
 			}
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.user.IUserService#updateUserPassword(io.reflection.app.datatypes.shared.User, java.lang.String, java.lang.Boolean)
+	 */
+	@Override
+	public void updateUserPassword(User user, String newPassword, Boolean notify) throws DataAccessException {
+		String updateUserPasswordQuery = String.format("UPDATE `user` SET `password`='%s', `code`=NULL WHERE `id`=%d", sha1Hash(SALT + newPassword),
+				user.id.longValue());
+
+		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
+
+		try {
+			userConnection.connect();
+			userConnection.executeQuery(updateUserPasswordQuery);
+
+			if (userConnection.getAffectedRowCount() > 0 && notify == Boolean.TRUE) {
+				Map<String, Object> values = new HashMap<String, Object>();
+				values.put("user", user);
+
+				EmailTemplate template = EmailTemplateServiceProvider.provide().getEmailTemplate(Long.valueOf(PASSWORD_EMAIL_TEMPLATE_ID));
+				String body = EmailHelper.inflate(values, template.body);
+
+				if (!EmailHelper.sendEmail(template.from, user.username, user.forename + " " + user.surname, template.subject, body, template.format)) {
+					LOG.severe(String.format("Failed to notify user [%d] of password change", user.id.longValue()));
+				}
+			}
+		} finally {
+			if (userConnection != null) {
+				userConnection.disconnect();
+			}
+		}
+
 	}
 }

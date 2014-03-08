@@ -335,6 +335,18 @@ public class ValidationHelper {
 	public static User validateRegisteringUser(User user, String parent) throws InputValidationException {
 		if (user == null) throw new InputValidationException(ApiError.UserNull.getCode(), ApiError.UserNull.getMessage(parent));
 
+		user.username = validateEmail(user.username, false, parent + ".username");
+
+		if (user.forename == null) throw new InputValidationException(ApiError.StringNull.getCode(), ApiError.StringNull.getMessage(parent + ".forename"));
+
+		if (user.surname == null)
+			throw new InputValidationException(ApiError.StringNull.getCode(), ApiError.StringNull.getMessage(parent + ".surname"));
+
+		if (user.company == null)
+			throw new InputValidationException(ApiError.StringNull.getCode(), ApiError.StringNull.getMessage(parent + ".company"));
+
+		user.password = validatePassword(user.password, parent + ".password");
+
 		return user;
 	}
 
@@ -393,7 +405,8 @@ public class ValidationHelper {
 			isCodeLookup = true;
 		}
 
-		if (!(isIdLookup || isNameLookup || isCodeLookup)) { throw new InputValidationException(ApiError.RoleNoLookup.getCode(), ApiError.RoleNoLookup.getMessage(parent)); }
+		if (!(isIdLookup || isNameLookup || isCodeLookup)) { throw new InputValidationException(ApiError.RoleNoLookup.getCode(),
+				ApiError.RoleNoLookup.getMessage(parent)); }
 
 		Role lookupRole = null;
 		if (isIdLookup) {
@@ -602,7 +615,7 @@ public class ValidationHelper {
 	 * @param parent
 	 * @return
 	 */
-	public static String validateEmail(String email, boolean isNullable, String parent) throws ServiceException {
+	public static String validateEmail(String email, boolean isNullable, String parent) throws InputValidationException {
 
 		if (!isNullable) {
 			if (email == null || (email = email.trim()).length() == 0)

@@ -14,15 +14,19 @@ import io.reflection.app.datatypes.shared.User;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 public class RegisterUserRequest extends Request {
 	public User user;
+	public String actionCode;
 
 	@Override
 	public JsonObject toJson() {
 		JsonObject object = super.toJson();
 		JsonElement jsonUser = user == null ? JsonNull.INSTANCE : user.toJson();
 		object.add("user", jsonUser);
+		JsonElement jsonActionCode = actionCode == null ? JsonNull.INSTANCE : new JsonPrimitive(actionCode);
+		object.add("actionCode", jsonActionCode);
 		return object;
 	}
 
@@ -34,6 +38,12 @@ public class RegisterUserRequest extends Request {
 			if (jsonUser != null) {
 				user = new User();
 				user.fromJson(jsonUser.getAsJsonObject());
+			}
+		}
+		if (jsonObject.has("actionCode")) {
+			JsonElement jsonActionCode = jsonObject.get("actionCode");
+			if (jsonActionCode != null) {
+				actionCode = jsonActionCode.getAsString();
 			}
 		}
 	}

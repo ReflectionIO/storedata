@@ -23,6 +23,7 @@ import io.reflection.app.api.core.shared.call.GetUserDetailsResponse;
 import io.reflection.app.api.core.shared.call.RegisterUserRequest;
 import io.reflection.app.api.core.shared.call.RegisterUserResponse;
 import io.reflection.app.api.core.shared.call.event.GetUserDetailsEventHandler;
+import io.reflection.app.api.core.shared.call.event.RegisterUserEventHandler;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.client.handler.user.UserPasswordChangedEventHandler.UserPasswordChangeFailed;
@@ -341,6 +342,40 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 				e.message = caught.getMessage();
 
 				EventController.get().fireEventFromSource(new UserRegistrationFailed(e), UserController.this);
+			}
+		});
+	}
+	
+	/**
+	 * 
+	 * @param username
+	 * @param password
+	 * @param forename
+	 * @param surname
+	 * @param company
+	 */
+	public void registerUser(String actionCode, String password) {
+		CoreService service = new CoreService();
+		service.setUrl(CORE_END_POINT);
+
+		final RegisterUserRequest input = new RegisterUserRequest();
+		input.accessCode = ACCESS_CODE;
+
+		input.user = new User();
+		input.user.password = password;
+		
+		input.actionCode = actionCode;
+
+		service.registerUser(input, new AsyncCallback<RegisterUserResponse>() {
+
+			@Override
+			public void onSuccess(RegisterUserResponse output) {
+				EventController.get().fireEventFromSource(new RegisterUserEventHandler.RegisterUserSuccess(input, output), UserController.this);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				EventController.get().fireEvent(new RegisterUserEventHandler.RegisterUserFailure(input, caught));
 			}
 		});
 	}

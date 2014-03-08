@@ -61,6 +61,15 @@ public interface IUserService extends IService {
 	/**
 	 * 
 	 * @param user
+	 * @param newPassword
+	 * @param notify
+	 * @throws DataAccessException
+	 */
+	public void updateUserPassword(User user, String newPassword, Boolean notify) throws DataAccessException;
+
+	/**
+	 * 
+	 * @param user
 	 * @return
 	 */
 	public User updateUser(User user) throws DataAccessException;
@@ -151,7 +160,7 @@ public interface IUserService extends IService {
 	 * @return
 	 */
 	public DataAccount addDataAccount(User user, DataSource datasource, String username, String password, String properties) throws DataAccessException;
-	
+
 	/**
 	 * @param pager
 	 * @return
@@ -170,9 +179,22 @@ public interface IUserService extends IService {
 	 * @return
 	 */
 	public User getDataAccountOwner(DataAccount dataAccount) throws DataAccessException;
-	
+
+	/**
+	 * Marks the user with a reset code and sends an email notification to the user with the assigned action code
+	 * 
+	 * @param user
+	 * @throws DataAccessException
+	 */
 	public void markForReset(User user) throws DataAccessException;
-	
+
+	/**
+	 * Gets the user for a given action code. Current usage include reset code and add to private beta code
+	 * 
+	 * @param code
+	 * @return
+	 * @throws DataAccessException
+	 */
 	public User getActionCodeUser(String code) throws DataAccessException;
 
 }

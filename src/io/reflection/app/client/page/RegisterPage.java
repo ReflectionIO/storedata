@@ -9,20 +9,28 @@ package io.reflection.app.client.page;
 
 import io.reflection.app.api.core.shared.call.GetUserDetailsRequest;
 import io.reflection.app.api.core.shared.call.GetUserDetailsResponse;
+import io.reflection.app.api.core.shared.call.RegisterUserRequest;
+import io.reflection.app.api.core.shared.call.RegisterUserResponse;
 import io.reflection.app.api.core.shared.call.event.GetUserDetailsEventHandler;
+import io.reflection.app.api.core.shared.call.event.RegisterUserEventHandler;
+import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
+import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.UserController;
 import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.handler.user.SessionEventHandler;
 import io.reflection.app.client.handler.user.UserRegisteredEventHandler;
 import io.reflection.app.client.part.AlertBox;
 import io.reflection.app.client.part.register.RegisterForm;
 import io.reflection.app.client.part.register.ThankYouRegisterPanel;
+import io.reflection.app.datatypes.shared.User;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.Error;
@@ -32,7 +40,8 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class RegisterPage extends Page implements UserRegisteredEventHandler, NavigationEventHandler, GetUserDetailsEventHandler {
+public class RegisterPage extends Page implements UserRegisteredEventHandler, RegisterUserEventHandler, NavigationEventHandler, GetUserDetailsEventHandler,
+		SessionEventHandler {
 
 	private static RegisterPageUiBinder uiBinder = GWT.create(RegisterPageUiBinder.class);
 
@@ -48,6 +57,8 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Na
 	@UiField ThankYouRegisterPanel mThankYouRegisterPanel;
 
 	@UiField AlertBox mAlertBox;
+
+	private String username;
 
 	public RegisterPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -65,6 +76,8 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Na
 		register(EventController.get().addHandlerToSource(UserRegisteredEventHandler.TYPE, UserController.get(), this));
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(EventController.get().addHandlerToSource(GetUserDetailsEventHandler.TYPE, UserController.get(), this));
+		register(EventController.get().addHandlerToSource(RegisterUserEventHandler.TYPE, UserController.get(), this));
+		register(EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
 
 		mRegisterForm.setVisible(true);
 		mThankYouRegisterPanel.setVisible(false);
@@ -115,12 +128,16 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Na
 	 */
 	@Override
 	public void navigationChanged(Stack stack) {
-		String code = null;
+		String actionCode = null;
 
-		if (COMPLETE_ACTION_NAME.equals(stack.getAction()) && (code = stack.getParameter(CODE_PARAMETER_INDEX)) != null) {
-			mRegisterForm.setEnabled(true);
-			
-			UserController.get().fetchUser(code);
+		if (COMPLETE_ACTION_NAME.equals(stack.getAction()) && (actionCode = stack.getParameter(CODE_PARAMETER_INDEX)) != null) {
+			mRegisterForm.setEnabled(false);
+
+			UserController.get().fetchUser(actionCode);
+		} else {
+			username = null;
+
+			mRegisterForm.resetForm();
 		}
 	}
 
@@ -138,11 +155,13 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Na
 
 			if (output.user != null) {
 				mRegisterForm.setEnabled(true);
-				
-				mRegisterForm.setUsername(output.user.username);
+
+				mRegisterForm.setUsername(username = output.user.username);
 				mRegisterForm.setForename(output.user.forename);
 				mRegisterForm.setSurname(output.user.surname);
 				mRegisterForm.setCompany(output.user.company);
+
+				mRegisterForm.setActionCode(input.actionCode);
 			}
 		}
 	}
@@ -156,5 +175,60 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Na
 	 */
 	@Override
 	public void getUserDetailsFailure(GetUserDetailsRequest input, Throwable caught) {}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.api.core.shared.call.event.RegisterUserEventHandler#registerUserSuccess(io.reflection.app.api.core.shared.call.RegisterUserRequest,
+	 * io.reflection.app.api.core.shared.call.RegisterUserResponse)
+	 */
+	@Override
+	public void registerUserSuccess(RegisterUserRequest input, RegisterUserResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess) {
+			SessionController.get().login(username, input.user.password, true);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.api.core.shared.call.event.RegisterUserEventHandler#registerUserFailure(io.reflection.app.api.core.shared.call.RegisterUserRequest,
+	 * java.lang.Throwable)
+	 */
+	@Override
+	public void registerUserFailure(RegisterUserRequest input, Throwable caught) {}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoggedIn(io.reflection.app.datatypes.shared.User,
+	 * io.reflection.app.api.shared.datatypes.Session)
+	 */
+	@Override
+	public void userLoggedIn(User user, Session session) {
+		if (user != null && session != null) {
+			History.newItem("linkitunes");
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoggedOut()
+	 */
+	@Override
+	public void userLoggedOut() {}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoginFailed(com.willshex.gson.json.service.shared.Error)
+	 */
+	@Override
+	public void userLoginFailed(Error error) {
+		// TODO: check the error code and if it is a permissions issue redirect to the closed beta page
+	}
 
 }
