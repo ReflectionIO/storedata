@@ -136,6 +136,10 @@ public class RankChart extends GChart {
 	}
 
 	public void setData(Item item, List<Rank> ranks, RankingType mode) {
+		
+		if (curve != null) {
+			curve.clearPoints();
+		}
 
 		int minY = 10000, maxY = 0;
 		int position;
