@@ -1,6 +1,5 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
-<ui:with field='images' type='io.reflection.app.client.res.Images' />
 	<ui:style>
 	.moreMargin {
 		margin-right: 0.2em;
@@ -11,8 +10,6 @@
 	}
 	
 	.viewIn {
-		/*margin-top: 20px;*/
-		
 	}
 	
 	.panel {
@@ -23,7 +20,7 @@
 	}
 	</ui:style>
 	<g:HTMLPanel styleName="well sidebar-nav col-md-2 {style.panel}">
-		<g:Image resource="{images.app1}" ui:field="mImage" styleName="img-rounded" />
+		<g:Image ui:field="mImage" styleName="img-rounded" />
 
 		<h2 ui:field="mTitle">Item</h2>
 
