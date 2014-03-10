@@ -28,6 +28,7 @@ import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.PageSizePager;
 import io.reflection.app.client.part.RankSidePanel;
 import io.reflection.app.client.part.datatypes.RanksGroup;
+import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Rank;
@@ -38,9 +39,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.cell.client.ImageResourceCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -88,7 +91,7 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 	private TextColumn<RanksGroup> mPriceColumn;
 	private TextColumn<RanksGroup> mDownloadsColumn;
 	private TextColumn<RanksGroup> mRevenueColumn;
-	private TextColumn<RanksGroup> mIapColumn;
+	private Column<RanksGroup, ImageResource> mIapColumn;
 
 	private static final String ALL_LIST_TYPE = "all";
 	private static final String FREE_LIST_TYPE = "free";
@@ -96,19 +99,22 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 	private static final String GROSSING_LIST_TYPE = "grossing";
 
 	private Map<String, LIElement> mTabs = new HashMap<String, LIElement>();
-	private TextHeader mPriceHeader;
+
 	private TextHeader mPaidHeader;
 	private TextHeader mFreeHeader;
 	private TextHeader mGrossingHeader;
+
 	private TextHeader mDownloadsHeader;
 	private TextHeader mRevenueHeader;
 	private TextHeader mIapHeader;
+	private TextHeader mPriceHeader;
 
 	public RanksPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		createColumns();
 
+		
 		mTabs.put(ALL_LIST_TYPE, mAllItem);
 		mTabs.put(FREE_LIST_TYPE, mFreeItem);
 		mTabs.put(PAID_LIST_TYPE, mPaidItem);
@@ -116,6 +122,8 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 
 		RankController.get().addDataDisplay(mRanks);
 		mPager.setDisplay(mRanks);
+		
+		refreshRanks();
 	}
 
 	private void createColumns() {
@@ -156,7 +164,8 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 
 			@Override
 			public String getValue(RanksGroup object) {
-				return rankForListType(object).price.toString();
+				Rank rank = rankForListType(object); 
+				return rank.price.floatValue() == 0.0f ? "Free" : rank.currency + " " + rank.price.toString();
 			}
 
 		};
@@ -176,13 +185,15 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 			}
 
 		};
-		mIapColumn = new TextColumn<RanksGroup>() {
+
+		mIapColumn = new Column<RanksGroup, ImageResource>(new ImageResourceCell()) {
 
 			@Override
-			public String getValue(RanksGroup object) {
-				String jsonProperties = ItemController.get().lookupItem(rankForListType(object).itemId).properties;
-
-				return jsonProperties == null ? "?" : jsonProperties;
+			public ImageResource getValue(RanksGroup object) {
+				//String jsonProperties = ItemController.get().lookupItem(rankForListType(object).itemId).properties;
+				//String imageName = jsonProperties == null ? "?" : jsonProperties;
+				
+				return Images.INSTANCE.greenTick();
 			}
 
 		};
@@ -192,25 +203,18 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 		mRanks.addColumn(position, rankHeader);
 
 		mPaidHeader = new TextHeader("Paid");
-		mRanks.addColumn(mPaidColumn, mPaidHeader);
 
 		mFreeHeader = new TextHeader("Free");
-		mRanks.addColumn(mFreeColumn, mFreeHeader);
 
 		mGrossingHeader = new TextHeader("Grossing");
-		mRanks.addColumn(mGrossingColumn, mGrossingHeader);
 
-		// mPriceHeader = new TextHeader("Price");
-		// mRanks.addColumn(mPriceColumn, mPriceHeader);
-		//
-		// mDownloadsHeader = new TextHeader("Downloads");
-		// mRanks.addColumn(mDownloadsColumn, mDownloadsHeader);
-		//
-		// mRevenueHeader = new TextHeader("Revenue");
-		// mRanks.addColumn(mRevenueColumn, mRevenueHeader);
-		//
-		// mIapHeader = new TextHeader("IAP");
-		// mRanks.addColumn(mIapColumn, mIapHeader);
+		mPriceHeader = new TextHeader("Price");
+
+		mDownloadsHeader = new TextHeader("Downloads");
+
+		mRevenueHeader = new TextHeader("Revenue");
+
+		mIapHeader = new TextHeader("IAP");
 
 	}
 
@@ -366,58 +370,62 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 	private void refreshRanks() {
 
 		if (ALL_LIST_TYPE.equals(mListType)) {
-			addColumn(mGrossingColumn, mGrossingHeader, 1);
-			addColumn(mFreeColumn, mFreeHeader, 1);
-			addColumn(mPaidColumn, mPaidHeader, 1);
-			removeColumn(mPriceColumn);
-			removeColumn(mDownloadsColumn);
-			removeColumn(mRevenueColumn);
-			removeColumn(mIapColumn);
+			removeAllColumns();
+			addColumn(mPaidColumn, mPaidHeader);
+			addColumn(mFreeColumn, mFreeHeader);
+			addColumn(mGrossingColumn, mGrossingHeader);
 		} else if (FREE_LIST_TYPE.equals(mListType)) {
-			removeColumn(mPaidColumn);
-			removeColumn(mGrossingColumn);
-			addColumn(mFreeColumn, mFreeHeader, 1);
+			removeAllColumns();
 
-			addColumn(mPriceColumn, mPriceHeader, 2);
-			addColumn(mDownloadsColumn, mDownloadsHeader, 3);
-			addColumn(mRevenueColumn, mRevenueHeader, 4);
-			addColumn(mIapColumn, mIapHeader, 5);
+			addColumn(mFreeColumn, mFreeHeader);
+
+			addColumn(mPriceColumn, mPriceHeader);
+			addColumn(mDownloadsColumn, mDownloadsHeader);
+			addColumn(mRevenueColumn, mRevenueHeader);
+			addColumn(mIapColumn, mIapHeader);
 		} else if (PAID_LIST_TYPE.equals(mListType)) {
-			removeColumn(mFreeColumn);
-			removeColumn(mGrossingColumn);
-			addColumn(mPaidColumn, mPaidHeader, 1);
+			removeAllColumns();
 
-			addColumn(mPriceColumn, mPriceHeader, 2);
-			addColumn(mDownloadsColumn, mDownloadsHeader, 3);
-			addColumn(mRevenueColumn, mRevenueHeader, 4);
-			addColumn(mIapColumn, mIapHeader, 5);
+			addColumn(mPaidColumn, mPaidHeader);
+
+			addColumn(mPriceColumn, mPriceHeader);
+			addColumn(mDownloadsColumn, mDownloadsHeader);
+			addColumn(mRevenueColumn, mRevenueHeader);
+			addColumn(mIapColumn, mIapHeader);
 		} else if (GROSSING_LIST_TYPE.equals(mListType)) {
-			removeColumn(mPaidColumn);
-			removeColumn(mFreeColumn);
-			addColumn(mGrossingColumn, mGrossingHeader, 1);
+			removeAllColumns();
 
-			addColumn(mPriceColumn, mPriceHeader, 2);
-			addColumn(mDownloadsColumn, mDownloadsHeader, 3);
-			addColumn(mRevenueColumn, mRevenueHeader, 4);
-			addColumn(mIapColumn, mIapHeader, 5);
+			addColumn(mGrossingColumn, mGrossingHeader);
+
+			addColumn(mPriceColumn, mPriceHeader);
+			addColumn(mDownloadsColumn, mDownloadsHeader);
+			addColumn(mRevenueColumn, mRevenueHeader);
+			addColumn(mIapColumn, mIapHeader);
 		}
 
 	}
 
 	private void removeColumn(Column<RanksGroup, ?> column) {
-		// int currentIndex = mRanks.getColumnIndex(column);
-		//
-		// if (currentIndex != -1) {
-		// mRanks.removeColumn(column);
-		// }
+		int currentIndex = mRanks.getColumnIndex(column);
+
+		if (currentIndex != -1) {
+			mRanks.removeColumn(column);
+		}
 	}
 
-	private void addColumn(Column<RanksGroup, ?> column, TextHeader header, int index) {
-		// int currentIndex = mRanks.getColumnIndex(column);
-		//
-		// if (currentIndex == -1) {
-		// mRanks.insertColumn(index, column, header);
-		// }
+	private void removeAllColumns() {
+		removeColumn(mFreeColumn);
+		removeColumn(mPaidColumn);
+		removeColumn(mGrossingColumn);
+
+		removeColumn(mPriceColumn);
+		removeColumn(mRevenueColumn);
+		removeColumn(mDownloadsColumn);
+		removeColumn(mIapColumn);
+	}
+
+	private void addColumn(Column<RanksGroup, ?> column, TextHeader header) {
+		mRanks.addColumn(column, header);
 	}
 
 	private void refreshTabs() {
