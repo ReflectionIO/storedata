@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.cell;
 
+import static io.reflection.app.client.controller.FilterController.*;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.datatypes.shared.Item;
 
@@ -22,7 +23,7 @@ import com.google.gwt.uibinder.client.UiRenderer;
 public class MiniAppCell extends AbstractCell<Item> {
 
 	interface MiniAppCellRenderer extends UiRenderer {
-		void render(SafeHtmlBuilder sb, String name, String creatorName, String smallImage, String itemId, String type, String dailyData);
+		void render(SafeHtmlBuilder sb, String name, String creatorName, String smallImage, String itemId, String dailyData, String filter);
 	}
 
 	private static MiniAppCellRenderer RENDERER = GWT.create(MiniAppCellRenderer.class);
@@ -43,26 +44,15 @@ public class MiniAppCell extends AbstractCell<Item> {
 			creatorName += "...";
 		}
 
-		String type = "";
-
-		switch (context.getColumn()) {
-		case 1:
-			type = "paid";
-			break;
-		case 2:
-			type = "free";
-			break;
-		case 3:
-			type = "grossing";
-			break;
-
-		default:
-			break;
+		String dailyDataType = FilterController.get().getDailyData(), dailyData;
+		
+		if (REVENUE_DAILY_DATA_TYPE.equals(dailyDataType)) {
+			dailyData = "0";
+		} else {
+			dailyData = "USD 0";
 		}
-
-		String dailyData = FilterController.get().getDailyData();
-
-		RENDERER.render(builder, name, creatorName, value.smallImage, value.externalId, type, dailyData);
+		
+		RENDERER.render(builder, name, creatorName, value.smallImage, value.externalId, dailyData, FilterController.get().toItemFilterString());
 	}
 
 }

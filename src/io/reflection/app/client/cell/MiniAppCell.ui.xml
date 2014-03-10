@@ -4,8 +4,8 @@
 	<ui:with field='smallImage' type='java.lang.String' />
 	<ui:with field='creatorName' type='java.lang.String' />
 	<ui:with field='itemId' type='java.lang.String' />
-	<ui:with field='type' type='java.lang.String' />
-	<ui:with field='dailyData' type='java.lang.String' />
+    <ui:with field='dailyData' type='java.lang.String' />
+	<ui:with field='filter' type='java.lang.String' />
 
 	<ui:style>
 	.image {
@@ -24,7 +24,7 @@
 		<img class="img-rounded {style.image}" src="{smallImage}" />
 		<div class="{style.description} col-md-9">
 			<span>
-				<a href="#item/view/{itemId}/{type}">
+				<a href="#item/view/{itemId}/{filter}">
 					<ui:text from="{name}" />
 				</a>
 				<br />

@@ -7,6 +7,12 @@
 //
 package io.reflection.app.client.page;
 
+import static io.reflection.app.client.controller.FilterController.FREE_LIST_TYPE;
+import static io.reflection.app.client.controller.FilterController.GROSSING_LIST_TYPE;
+import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
+import static io.reflection.app.client.controller.FilterController.PAID_LIST_TYPE;
+import static io.reflection.app.client.controller.FilterController.LIST_TYPE_KEY;
+import static io.reflection.app.client.controller.FilterController.DAILY_DATA_KEY;
 import io.reflection.app.api.admin.shared.call.event.IsAuthorisedEventHandler;
 import io.reflection.app.api.core.shared.call.IsAuthorisedRequest;
 import io.reflection.app.api.core.shared.call.IsAuthorisedResponse;
@@ -73,8 +79,6 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 
 	@UiField InlineHyperlink mRedirect;
 
-	private String mListType = ALL_LIST_TYPE;
-
 	@UiField InlineHyperlink mAll;
 	@UiField InlineHyperlink mFree;
 	@UiField InlineHyperlink mGrossing;
@@ -93,11 +97,6 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 	private TextColumn<RanksGroup> mRevenueColumn;
 	private Column<RanksGroup, ImageResource> mIapColumn;
 
-	private static final String ALL_LIST_TYPE = "all";
-	private static final String FREE_LIST_TYPE = "free";
-	private static final String PAID_LIST_TYPE = "paid";
-	private static final String GROSSING_LIST_TYPE = "grossing";
-
 	private Map<String, LIElement> mTabs = new HashMap<String, LIElement>();
 
 	private TextHeader mPaidHeader;
@@ -114,15 +113,14 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 
 		createColumns();
 
-		
-		mTabs.put(ALL_LIST_TYPE, mAllItem);
+		mTabs.put(OVERALL_LIST_TYPE, mAllItem);
 		mTabs.put(FREE_LIST_TYPE, mFreeItem);
 		mTabs.put(PAID_LIST_TYPE, mPaidItem);
 		mTabs.put(GROSSING_LIST_TYPE, mGrossingItem);
 
 		RankController.get().addDataDisplay(mRanks);
 		mPager.setDisplay(mRanks);
-		
+
 		refreshRanks();
 	}
 
@@ -164,7 +162,7 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 
 			@Override
 			public String getValue(RanksGroup object) {
-				Rank rank = rankForListType(object); 
+				Rank rank = rankForListType(object);
 				return rank.price.floatValue() == 0.0f ? "Free" : rank.currency + " " + rank.price.toString();
 			}
 
@@ -190,9 +188,9 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 
 			@Override
 			public ImageResource getValue(RanksGroup object) {
-				//String jsonProperties = ItemController.get().lookupItem(rankForListType(object).itemId).properties;
-				//String imageName = jsonProperties == null ? "?" : jsonProperties;
-				
+				// String jsonProperties = ItemController.get().lookupItem(rankForListType(object).itemId).properties;
+				// String imageName = jsonProperties == null ? "?" : jsonProperties;
+
 				return Images.INSTANCE.greenTick();
 			}
 
@@ -225,9 +223,11 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 	protected Rank rankForListType(RanksGroup object) {
 		Rank rank = object.grossing;
 
-		if (FREE_LIST_TYPE.equals(mListType)) {
+		String listType = FilterController.get().getListType();
+
+		if (FREE_LIST_TYPE.equals(listType)) {
 			rank = object.free;
-		} else if (PAID_LIST_TYPE.equals(mListType)) {
+		} else if (PAID_LIST_TYPE.equals(listType)) {
 			rank = object.paid;
 		}
 
@@ -261,7 +261,14 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 	 */
 	@Override
 	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
-		RankController.get().reset();
+		boolean foundDailyData = false;
+		if (name != null && !LIST_TYPE_KEY.equals(name) && !(foundDailyData = DAILY_DATA_KEY.equals(name))) {
+			RankController.get().reset();
+		}
+
+		if (foundDailyData) {
+			mRanks.redraw();
+		}
 
 	}
 
@@ -272,8 +279,20 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 	 */
 	@Override
 	public void filterParamsChanged(Map<String, ?> currentValues, Map<String, ?> previousValues) {
-		RankController.get().reset();
+		boolean foundResetFilterValues = false, foundDailyData = false;
 
+		for (String name : currentValues.keySet()) {
+			if (!LIST_TYPE_KEY.equals(name) && !(foundDailyData = DAILY_DATA_KEY.equals(name))) {
+				foundResetFilterValues = true;
+				break;
+			}
+		}
+
+		if (foundResetFilterValues) {
+			RankController.get().reset();
+		} else if (foundDailyData) {
+			mRanks.redraw();
+		}
 	}
 
 	/*
@@ -299,7 +318,7 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 		RankController.get().reset();
 		mPager.setVisible(false);
 		mRedirect.setVisible(true);
-		mRedirect.setTargetHistoryToken("login");
+		mRedirect.setTargetHistoryToken(PageType.LoginPageType.toString());
 	}
 
 	/*
@@ -345,17 +364,19 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 	void onClicked(ClickEvent e) {
 		boolean changed = false;
 
-		if (e.getSource() == mAll && !ALL_LIST_TYPE.equals(mListType)) {
-			mListType = ALL_LIST_TYPE;
+		String listType = FilterController.get().getListType();
+
+		if (e.getSource() == mAll && !OVERALL_LIST_TYPE.equals(listType)) {
+			FilterController.get().setListType(OVERALL_LIST_TYPE);
 			changed = true;
-		} else if (e.getSource() == mFree && !FREE_LIST_TYPE.equals(mListType)) {
-			mListType = FREE_LIST_TYPE;
+		} else if (e.getSource() == mFree && !FREE_LIST_TYPE.equals(listType)) {
+			FilterController.get().setListType(FREE_LIST_TYPE);
 			changed = true;
-		} else if (e.getSource() == mPaid && !PAID_LIST_TYPE.equals(mListType)) {
-			mListType = PAID_LIST_TYPE;
+		} else if (e.getSource() == mPaid && !PAID_LIST_TYPE.equals(listType)) {
+			FilterController.get().setListType(PAID_LIST_TYPE);
 			changed = true;
-		} else if (e.getSource() == mGrossing && !GROSSING_LIST_TYPE.equals(mListType)) {
-			mListType = GROSSING_LIST_TYPE;
+		} else if (e.getSource() == mGrossing && !GROSSING_LIST_TYPE.equals(listType)) {
+			FilterController.get().setListType(GROSSING_LIST_TYPE);
 			changed = true;
 		}
 
@@ -369,12 +390,14 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 
 	private void refreshRanks() {
 
-		if (ALL_LIST_TYPE.equals(mListType)) {
+		String listType = FilterController.get().getListType();
+
+		if (OVERALL_LIST_TYPE.equals(listType)) {
 			removeAllColumns();
 			addColumn(mPaidColumn, mPaidHeader);
 			addColumn(mFreeColumn, mFreeHeader);
 			addColumn(mGrossingColumn, mGrossingHeader);
-		} else if (FREE_LIST_TYPE.equals(mListType)) {
+		} else if (FREE_LIST_TYPE.equals(listType)) {
 			removeAllColumns();
 
 			addColumn(mFreeColumn, mFreeHeader);
@@ -383,7 +406,7 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 			addColumn(mDownloadsColumn, mDownloadsHeader);
 			addColumn(mRevenueColumn, mRevenueHeader);
 			addColumn(mIapColumn, mIapHeader);
-		} else if (PAID_LIST_TYPE.equals(mListType)) {
+		} else if (PAID_LIST_TYPE.equals(listType)) {
 			removeAllColumns();
 
 			addColumn(mPaidColumn, mPaidHeader);
@@ -392,7 +415,7 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 			addColumn(mDownloadsColumn, mDownloadsHeader);
 			addColumn(mRevenueColumn, mRevenueHeader);
 			addColumn(mIapColumn, mIapHeader);
-		} else if (GROSSING_LIST_TYPE.equals(mListType)) {
+		} else if (GROSSING_LIST_TYPE.equals(listType)) {
 			removeAllColumns();
 
 			addColumn(mGrossingColumn, mGrossingHeader);
@@ -433,7 +456,7 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 			mTabs.get(key).removeClassName("active");
 		}
 
-		mTabs.get(mListType).addClassName("active");
+		mTabs.get(FilterController.get().getListType()).addClassName("active");
 	}
 
 	/*
@@ -464,7 +487,7 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 
 		SessionController.get().fetchAuthorisation(null, permissions);
 
-		mRedirect.setTargetHistoryToken("upgrade");
+		mRedirect.setTargetHistoryToken(PageType.UpgradePageType.toString());
 	}
 
 	/*

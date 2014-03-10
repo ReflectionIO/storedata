@@ -38,7 +38,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * 
  */
 public class RankController extends AsyncDataProvider<RanksGroup> implements ServiceController {
-
+	
 	private static RankController mOne = null;
 
 	private List<RanksGroup> mRows = null;

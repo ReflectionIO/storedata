@@ -7,6 +7,8 @@
 //
 package io.reflection.app.client.part;
 
+import static io.reflection.app.client.controller.FilterController.DOWNLOADS_DAILY_DATA_TYPE;
+import static io.reflection.app.client.controller.FilterController.REVENUE_DAILY_DATA_TYPE;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.helper.FormHelper;
 
@@ -116,12 +118,12 @@ public class RankSidePanel extends Composite {
 
 	@UiHandler("mDailyDataRevenue")
 	void onDailyDataRevenueSelected(ClickEvent event) {
-		FilterController.get().setDailyData("Revenue");
+		FilterController.get().setDailyData(REVENUE_DAILY_DATA_TYPE);
 	}
 
 	@UiHandler("mDailyDataDownloads")
 	void onDailyDataDownloadsSelected(ClickEvent event) {
-		FilterController.get().setDailyData("Downloads");
+		FilterController.get().setDailyData(DOWNLOADS_DAILY_DATA_TYPE);
 	}
 
 	/**

@@ -28,11 +28,28 @@ public class FilterController {
 
 	public static final String STORE_KEY = "store";
 	public static final String COUNTRY_KEY = "country";
-	private static final String LIST_TYPE_KEY = "listtype";
+	public static final String LIST_TYPE_KEY = "listtype";
 	private static final String START_DATE_KEY = "startdate";
 	private static final String END_DATE_KEY = "enddate";
 	private static final String CATEGORY_KEY = "category";
-	private static final String DAILY_DATA_KEY = "dailyData";
+	public static final String DAILY_DATA_KEY = "dailydata";
+	public static final String CHART_TYPE_KEY = "charttype";
+	public static final String SUMMARY_TYPE_KEY = "summarytype";
+
+	public static final String OVERALL_LIST_TYPE = "all";
+	public static final String FREE_LIST_TYPE = "free";
+	public static final String PAID_LIST_TYPE = "paid";
+	public static final String GROSSING_LIST_TYPE = "grossing";
+
+	public static final String REVENUE_DAILY_DATA_TYPE = "revenue";
+	public static final String DOWNLOADS_DAILY_DATA_TYPE = "downloads";
+
+	public static final String REVENUE_CHART_TYPE = "revenue";
+	public static final String DOWNLOADS_CHART_TYPE = "downloads";
+	public static final String RANKING_CHART_TYPE = "ranking";
+
+	public static final String TODAY_SUMMARY_TYPE = "today";
+	public static final String MONTH_SUMMARY_TYPE = "month";
 
 	private static FilterController mOne = null;
 
@@ -52,14 +69,16 @@ public class FilterController {
 	private FilterController() {
 		start();
 		setStore(StoreController.IPHONE_A3_CODE);
-		setListType("all");
+		setListType(OVERALL_LIST_TYPE);
 		setCountry("us");
 		setEndDate(new Date());
 		Date startDate = getEndDate();
 		CalendarUtil.addDaysToDate(startDate, -30);
 		setStartDate(startDate);
 		setCategory(Long.valueOf(24));
-		setDailyData("Revenue");
+		setDailyData(REVENUE_DAILY_DATA_TYPE);
+		setChartType(RANKING_CHART_TYPE);
+		setSummaryType(TODAY_SUMMARY_TYPE);
 		commit();
 	}
 
@@ -163,21 +182,21 @@ public class FilterController {
 		List<String> types = new ArrayList<String>();
 
 		if (StoreController.IPHONE_A3_CODE.equals(mCurrentValues.get(STORE_KEY))) {
-			if ("paid".equals(mCurrentValues.get(LIST_TYPE_KEY)) || "all".equals(mCurrentValues.get(LIST_TYPE_KEY))) {
+			if (PAID_LIST_TYPE.equals(mCurrentValues.get(LIST_TYPE_KEY)) || OVERALL_LIST_TYPE.equals(mCurrentValues.get(LIST_TYPE_KEY))) {
 				types.add("toppaidapplications");
 			}
 
-			if ("free".equals(mCurrentValues.get(LIST_TYPE_KEY)) || "all".equals(mCurrentValues.get(LIST_TYPE_KEY))) {
+			if (FREE_LIST_TYPE.equals(mCurrentValues.get(LIST_TYPE_KEY)) || OVERALL_LIST_TYPE.equals(mCurrentValues.get(LIST_TYPE_KEY))) {
 				types.add("topfreeapplications");
 			}
 
 			types.add("topgrossingapplications");
 		} else if (StoreController.IPAD_A3_CODE.equals(mCurrentValues.get(STORE_KEY))) {
-			if ("paid".equals(mCurrentValues.get(LIST_TYPE_KEY)) || "all".equals(mCurrentValues.get(LIST_TYPE_KEY))) {
+			if (PAID_LIST_TYPE.equals(mCurrentValues.get(LIST_TYPE_KEY)) || OVERALL_LIST_TYPE.equals(mCurrentValues.get(LIST_TYPE_KEY))) {
 				types.add("toppaidipadapplications");
 			}
 
-			if ("free".equals(mCurrentValues.get(LIST_TYPE_KEY)) || "all".equals(mCurrentValues.get(LIST_TYPE_KEY))) {
+			if (FREE_LIST_TYPE.equals(mCurrentValues.get(LIST_TYPE_KEY)) || OVERALL_LIST_TYPE.equals(mCurrentValues.get(LIST_TYPE_KEY))) {
 				types.add("topfreeipadapplications");
 			}
 
@@ -185,6 +204,10 @@ public class FilterController {
 		}
 
 		return types;
+	}
+
+	public String getListType() {
+		return (String) mCurrentValues.get(LIST_TYPE_KEY);
 	}
 
 	public Date getStartDate() {
@@ -380,16 +403,8 @@ public class FilterController {
 	// }
 
 	public String toRankFilterString() {
-		List<String> listTypes = getListTypes();
-		String listType;
-
-		if (listTypes.size() > 1) {
-			listType = "all";
-		} else {
-			listType = listTypes.get(0);
-		}
-
-		return getStoreA3Code() + "/" + getCountryA2Code() + "/" + getCategory().id.toString() + "/" + listType + "/" + getEndTime();
+		return getStoreA3Code() + "/" + getCountryA2Code() + "/" + getCategory().id.toString() + "/" + getListType() + "/" + getEndTime() + "/"
+				+ getDailyData();
 	}
 
 	/**
@@ -401,6 +416,61 @@ public class FilterController {
 
 	public Long getStartTime() {
 		return (Long) mCurrentValues.get(START_DATE_KEY);
+	}
+
+	public String getChartType() {
+		return (String) mCurrentValues.get(CHART_TYPE_KEY);
+	}
+
+	public void setChartType(String value) {
+		if (value != null && !value.equals(mCurrentValues.get(CHART_TYPE_KEY))) {
+			String previousListType = (String) mCurrentValues.get(CHART_TYPE_KEY);
+			mCurrentValues.put(CHART_TYPE_KEY, value);
+
+			if (mInTransaction == 0) {
+				EventController.get().fireEventFromSource(
+						new FilterEventHandler.ChangedFilterParameter<String>(CHART_TYPE_KEY, (String) mCurrentValues.get(CHART_TYPE_KEY), previousListType),
+						this);
+			} else {
+				if (mPreviousValues == null) {
+					mPreviousValues = new HashMap<String, Object>();
+				}
+
+				mPreviousValues.put(CHART_TYPE_KEY, previousListType);
+			}
+		}
+	}
+
+	public String getSummaryType() {
+		return (String) mCurrentValues.get(SUMMARY_TYPE_KEY);
+	}
+
+	public void setSummaryType(String value) {
+		if (value != null && !value.equals(mCurrentValues.get(SUMMARY_TYPE_KEY))) {
+			String previousListType = (String) mCurrentValues.get(SUMMARY_TYPE_KEY);
+			mCurrentValues.put(SUMMARY_TYPE_KEY, value);
+
+			if (mInTransaction == 0) {
+				EventController.get()
+						.fireEventFromSource(
+								new FilterEventHandler.ChangedFilterParameter<String>(SUMMARY_TYPE_KEY, (String) mCurrentValues.get(SUMMARY_TYPE_KEY),
+										previousListType), this);
+			} else {
+				if (mPreviousValues == null) {
+					mPreviousValues = new HashMap<String, Object>();
+				}
+
+				mPreviousValues.put(SUMMARY_TYPE_KEY, previousListType);
+			}
+		}
+	}
+
+	/**
+	 * @return
+	 */
+	public String toItemFilterString() {
+		return getStoreA3Code() + "/" + getCountryA2Code() + "/" + getCategory().id.toString() + "/" + getListType() + "/" + getStartTime() + "/"
+				+ getEndTime() + "/" + getChartType() + "/" + getSummaryType();
 	}
 
 }

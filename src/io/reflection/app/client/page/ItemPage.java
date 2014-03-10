@@ -7,6 +7,9 @@
 //
 package io.reflection.app.client.page;
 
+import static io.reflection.app.client.controller.FilterController.DOWNLOADS_CHART_TYPE;
+import static io.reflection.app.client.controller.FilterController.RANKING_CHART_TYPE;
+import static io.reflection.app.client.controller.FilterController.REVENUE_CHART_TYPE;
 import io.reflection.app.api.core.shared.call.GetItemRanksRequest;
 import io.reflection.app.api.core.shared.call.GetItemRanksResponse;
 import io.reflection.app.api.core.shared.call.event.GetItemRanksEventHandler;
@@ -71,14 +74,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField(provided = true) CellTable<ItemRevenue> revenue = new CellTable<ItemRevenue>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
 
 	private String mItemExternalId;
-	private String mChartType = RANKING_CHART_TYPE;
 
 	private RankingType rankingType;
 	private Item item;
-
-	private static final String REVENUE_CHART_TYPE = "revenue";
-	private static final String DOWNLOADS_CHART_TYPE = "downloads";
-	private static final String RANKING_CHART_TYPE = "ranking";
 
 	private Map<String, LIElement> mTabs = new HashMap<String, LIElement>();
 
@@ -90,7 +88,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		mTabs.put(REVENUE_CHART_TYPE, mRevenueItem);
 		mTabs.put(DOWNLOADS_CHART_TYPE, mDownloadsItem);
 		mTabs.put(RANKING_CHART_TYPE, mRankingItem);
-		
+
 		RankController.get().getItemRevenueDataProvider().addDataDisplay(revenue);
 
 	}
@@ -275,14 +273,16 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	void onClicked(ClickEvent e) {
 		boolean changed = false;
 
-		if (e.getSource() == mRevenue && !REVENUE_CHART_TYPE.equals(mChartType)) {
-			mChartType = REVENUE_CHART_TYPE;
+		String chartType = FilterController.get().getChartType();
+
+		if (e.getSource() == mRevenue && !REVENUE_CHART_TYPE.equals(chartType)) {
+			chartType = REVENUE_CHART_TYPE;
 			changed = true;
-		} else if (e.getSource() == mDownloads && !DOWNLOADS_CHART_TYPE.equals(mChartType)) {
-			mChartType = DOWNLOADS_CHART_TYPE;
+		} else if (e.getSource() == mDownloads && !DOWNLOADS_CHART_TYPE.equals(chartType)) {
+			chartType = DOWNLOADS_CHART_TYPE;
 			changed = true;
-		} else if (e.getSource() == mRanking && !RANKING_CHART_TYPE.equals(mChartType)) {
-			mChartType = RANKING_CHART_TYPE;
+		} else if (e.getSource() == mRanking && !RANKING_CHART_TYPE.equals(chartType)) {
+			chartType = RANKING_CHART_TYPE;
 			changed = true;
 		}
 
@@ -296,7 +296,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			mTabs.get(key).removeClassName("active");
 		}
 
-		mTabs.get(mChartType).addClassName("active");
+		mTabs.get(FilterController.get().getChartType()).addClassName("active");
 	}
 
 	/*
