@@ -1,6 +1,43 @@
 @CHARSET "UTF-8";
 
-@external nav-pills, nav-stacked, nav-tabs, nav-justified, ranks, loginregister, well, form-group, gwt-RadioButton, hr, navbar-fixed-top, navbar, container, pagination, btn-primary, btn-primary:hover, active, open, dropdown-toggle, dropdown-menu, badge, dropdown, nav, navbar-inverse, navbar-nav, caret, form-control;
+@external divider, dropdown-menu, side, divider-vertical, nav-pills, nav-stacked, nav-tabs, nav-justified, ranks, loginregister, well, form-group, gwt-RadioButton, hr, navbar-fixed-top, navbar, container, pagination, btn-primary, btn-primary:hover, active, open, dropdown-toggle, dropdown-menu, badge, dropdown, nav, navbar-inverse, navbar-nav, caret, form-control;
+.dropdown-menu.side {
+	background-clip: padding-box;
+	border: 0px;
+	border-radius: 0px;
+	display: none;
+	float: none;
+	font-size: 14px;
+	left: auto;
+	list-style: none outside none;
+	margin: 0px;
+	position: fixed;
+	top: 40px;
+	padding-top: 30px;
+	padding-left: 35px;
+	padding-right: 35px;
+	z-index: 1000;
+	height: 100%;
+	width: 320px;
+	right: 0px;
+	background-color: #272733;
+}
+
+.dropdown-menu.side>li>a, .dropdown-menu.side>li>a:FOCUS {
+	background-color: #272733;
+	color: #8d8ea1;
+	outline: 0;
+}
+
+.dropdown-menu.side>li>a:HOVER {
+	background-color: #272733;
+	color: #1bc79f;
+}
+
+.dropdown-menu.side>.active>a, .dropdown-menu.side>.active>a:FOCUS, .dropdown-menu.side>.active>a:HOVER {
+	color: #ffffff;
+}
+
 .well {
 	background-color: #fafafa;
 }
@@ -71,8 +108,8 @@ h1 {
 }
 
 hr {
-	color: #AAA;
-	background-color: #AAA;
+	color: #353847;
+	background-color: #353847;
 	height: 1px;
 }
 
@@ -91,7 +128,7 @@ a {
 	
 }
 
-a:hover,a:focus,a:active,a.active {
+a:hover,a:focus,a:active {
 	text-decoration: none;
 	color: #1bc79f;
 }
@@ -152,7 +189,7 @@ a:hover,a:focus,a:active,a.active {
 	background-color: #272833;
 }
 
-.navbar .navbar-inverse .navbar-fixed-top{
+.navbar .navbar-inverse .navbar-fixed-top {
 	outline: 0;
 }
 
@@ -191,6 +228,31 @@ a:hover,a:focus,a:active,a.active {
 	font-weight: bold;
 	border: 0px;
 	color: #0e0e1f;
+}
+
+/* Navbar vertical divider */
+.navbar .divider-vertical {
+	height: 30px;
+	margin: 10px 9px;
+	border-right: 1px solid #454757;
+	border-left: 1px solid #454757;
+}
+
+.navbar-inverse .divider-vertical {
+	border-right-color: #454757;
+	border-left-color: #454757;
+}
+
+@media ( max-width : 767px) {
+	.navbar-collapse .nav>.divider-vertical {
+		display: none;
+	}
+}
+
+.divider{
+	border-color: #353847;
+	background-color: #353847;
+	color: #353847;
 }
 
 /* Tabs Login/Register */

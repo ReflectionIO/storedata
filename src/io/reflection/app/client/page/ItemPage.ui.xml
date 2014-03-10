@@ -16,52 +16,52 @@
     }
     
     .pushDown {
-        margin-top: 20px; 
-	}
+    	margin-top: 20px;
+    }
     </ui:style>
     <g:HTMLPanel>
 
-        
-
-        
-            <div class="row" style="margin-right: 10px;">
-
-                <p:ItemSidePanel ui:field="mSidePanel" />
-
-                <div class="col-sm-10">
-                    <ul class="nav nav-tabs nav-justified ranks {style.tabs}">
-                        <li ui:field="mRevenueItem">
-                            <g:InlineHyperlink ui:field="mRevenue">
-                                Revenue
-                                <i class="{style.floatRight} icon-money"></i>
-                            </g:InlineHyperlink>
-                        </li>
-                        <li ui:field="mDownloadsItem">
-                            <g:InlineHyperlink ui:field="mDownloads">
-                                Downloads
-                                <i class="{style.floatRight} icon-download"></i>
-                            </g:InlineHyperlink>
-                        </li>
-                        <li ui:field="mRankingItem">
-                            <g:InlineHyperlink ui:field="mRanking">
-                                Ranking
-                                <i class="{style.floatRight} icon-list-numbered"></i>
-                            </g:InlineHyperlink>
-                        </li>
-                    </ul>
-
-                    <p:ItemTopPanel ui:field="mTopPanel" />
-
-                    <p:RankChart ui:field="historyChart" />
-
-                    <c:CellTable ui:field="revenue" styleName="table table-hover table-striped {style.pushDown}"></c:CellTable>
-
-                    <div class="well">
-                    </div>
 
 
+
+        <div class="row" style="margin-right: 10px;">
+
+            <p:ItemSidePanel ui:field="mSidePanel" />
+
+            <div class="col-sm-10">
+                <ul class="nav nav-tabs nav-justified ranks {style.tabs}">
+                    <li ui:field="mRevenueItem">
+                        <g:InlineHyperlink ui:field="mRevenue">
+                            Revenue
+                            <i class="{style.floatRight} icon-money"></i>
+                        </g:InlineHyperlink>
+                    </li>
+                    <li ui:field="mDownloadsItem">
+                        <g:InlineHyperlink ui:field="mDownloads">
+                            Downloads
+                            <i class="{style.floatRight} icon-download"></i>
+                        </g:InlineHyperlink>
+                    </li>
+                    <li ui:field="mRankingItem">
+                        <g:InlineHyperlink ui:field="mRanking">
+                            Ranking
+                            <i class="{style.floatRight} icon-list-numbered"></i>
+                        </g:InlineHyperlink>
+                    </li>
+                </ul>
+
+                <p:ItemTopPanel ui:field="mTopPanel" />
+
+                <p:RankChart ui:field="historyChart" />
+
+                <c:CellTable ui:field="revenue" styleName="table table-hover table-striped {style.pushDown}"></c:CellTable>
+
+                <div class="well">
                 </div>
+
+
             </div>
+        </div>
         <p:AlertBox ui:field="mAlertBox" visible="false" />
     </g:HTMLPanel>
 </ui:UiBinder> 

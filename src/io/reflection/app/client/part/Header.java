@@ -35,8 +35,6 @@ import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
-import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -104,11 +102,11 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@UiField InlineHyperlink mLogoutLink;
 	@UiField LIElement mLogoutItem;
 
-	@UiField InlineHyperlink mChangeDetailsLink;
-	@UiField LIElement mChangeDetailsItem;
+	@UiField InlineHyperlink mMyAppsLink;
+	@UiField LIElement mMyAppsItem;
 
-	@UiField InlineHyperlink mChangePasswordLink;
-	@UiField LIElement mChangePasswordItem;
+	@UiField InlineHyperlink mAccountSettingsLink;
+	@UiField LIElement mAccountSettingsItem;
 
 	@UiField LIElement mLinkedAccountsItem;
 	@UiField InlineHyperlink mLinkedAccountsLink;
@@ -118,15 +116,15 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 	@UiField Anchor featureRequestButton;
 
+	@UiField UListElement mFeatureRequest;
+
 	private List<LIElement> mItems;
 
 	public Header() {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		mAdminButton.setHTML(mAdminButton.getText() + " <b class=\"caret\"></b>");
-		mLogoutLink.setHTML(mLogoutLink.getText() + " <b class=\"glyphicon glyphicon-log-out\"></b>");
 		mLoginLink.setHTML(mLoginLink.getText() + " <b class=\"glyphicon glyphicon-log-in\"></b>");
-		featureRequestButton.setHTML("<b class=\"glyphicon glyphicon-comment\"></b> " + featureRequestButton.getText());
 
 		mQuery.getElement().setAttribute("placeholder", "Search for any app");
 		mSearch.setHTML("<b class=\"glyphicon glyphicon-search\"></b>");
@@ -175,8 +173,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			mItems.add(mRegisterItem);
 			mItems.add(mRolesItem);
 			mItems.add(mPermissionsItem);
-			mItems.add(mChangeDetailsItem);
-			mItems.add(mChangePasswordItem);
+			mItems.add(mAccountSettingsItem);
+			mItems.add(mMyAppsItem);
 			mItems.add(mUpgradeAccountItem);
 			mItems.add(mLinkedAccountsItem);
 		}
@@ -220,12 +218,12 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		} else if ("users".equals(stack.getPage())) {
 			if (stack.getAction() == null) {
 				highlight(mUsersItem);
-			} else if ("changedetails".equals(stack.getAction())) {
-				highlight(mChangeDetailsItem);
-			} else if ("changepassword".equals(stack.getAction())) {
-				highlight(mChangePasswordItem);
+			} else if ("myappsoverview".equals(stack.getAction())) {
+				highlight(mMyAppsItem);
 			} else if ("linkedaccounts".equals(stack.getAction())) {
 				highlight(mLinkedAccountsItem);
+			} else if ("changedetails".equals(stack.getAction())) {
+				highlight(mAccountSettingsItem);
 			}
 		} else if ("login".equals(stack.getPage())) {
 			highlight(mLoginItem);
@@ -273,13 +271,24 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@Override
 	public void userLoggedIn(User user, Session session) {
 
-		removeLogin();
+		// removeLogin();
 
-		removeRegister();
+		// removeRegister();
 
 		addAdmin();
 
 		addAccount(user);
+
+		addLeaderboard();
+
+		addFeatureRequest();
+	}
+
+	/**
+	 * 
+	 */
+	private void addFeatureRequest() {
+		mFeatureRequest.setAttribute("style", "display: inline");
 	}
 
 	/*
@@ -293,36 +302,39 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 		removeAccount();
 
-		addRegister();
+		// addRegister();
 
-		addLogin();
+		// addLogin();
 
 		removeUpgrade();
 
 		removeMyApps();
+
+		removeLeaderboard();
+
+		removeFeatureRequest();
 	}
 
 	/**
 	 * 
 	 */
-	private void addLogin() {
-		mAccountList.appendChild(mLoginItem);
+	private void removeFeatureRequest() {
+		mFeatureRequest.setAttribute("style", "display: none");
+
 	}
 
 	/**
 	 * 
+	 private void addLogin() { mAccountList.appendChild(mLoginItem); }
 	 */
-	private void removeLogin() {
-		mLoginItem.removeFromParent();
-	}
-
-	private void addRegister() {
-		mAccountList.appendChild(mRegisterItem);
-	}
-
-	private void removeRegister() {
-		mRegisterItem.removeFromParent();
-	}
+	/**
+	 * 
+	 private void removeLogin() { mLoginItem.removeFromParent(); }
+	 * 
+	 * private void addRegister() { mAccountList.appendChild(mRegisterItem); }
+	 * 
+	 * private void removeRegister() { mRegisterItem.removeFromParent(); }
+	 */
 
 	/*
 	 * (non-Javadoc)
@@ -346,14 +358,17 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		}
 	}
 
-	private void addAccount(User user) {
-		// should really be using DOM so that these objects are not repeatedly created
-		mAccountButton.getElement().setInnerHTML(
-				"<span>" + SafeHtmlUtils.htmlEscape(user.forename + " " + user.surname) + " <b class=\"caret\"></b></span><img class=\"img-circle\" src=\""
-						+ UriUtils.sanitizeUri("http://www.gravatar.com/avatar/" + user.avatar + "?s=30&d=identicon") + "\" />");
+	private void addLeaderboard() {
+		mRanksItem.setAttribute("style", "display: inline");
+	}
 
-		mChangePasswordLink.setTargetHistoryToken("users/changepassword/" + user.id.toString());
-		mChangeDetailsLink.setTargetHistoryToken("users/changedetails/" + user.id.toString());
+	private void removeLeaderboard() {
+		mRanksItem.setAttribute("style", "display: none");
+	}
+
+	private void addAccount(User user) {
+
+		mAccountSettingsLink.setTargetHistoryToken("users/changedetails/" + user.id.toString());
 		mLinkedAccountsLink.setTargetHistoryToken("users/linkedaccounts/" + user.id.toString());
 
 		mAccountList.appendChild(mAccountDropdown);
