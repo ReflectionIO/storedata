@@ -7,6 +7,11 @@
 //
 package io.reflection.app.client.controller;
 
+import io.reflection.app.api.admin.client.AdminService;
+import io.reflection.app.api.admin.shared.call.GetItemsRequest;
+import io.reflection.app.api.admin.shared.call.GetItemsResponse;
+import io.reflection.app.api.admin.shared.call.event.GetItemsEventHandler.GetItemsFailure;
+import io.reflection.app.api.admin.shared.call.event.GetItemsEventHandler.GetItemsSuccess;
 import io.reflection.app.api.admin.shared.call.event.SearchForItemEventHandler.SearchForItemFailure;
 import io.reflection.app.api.admin.shared.call.event.SearchForItemEventHandler.SearchForItemSuccess;
 import io.reflection.app.api.core.client.CoreService;
@@ -21,13 +26,16 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.view.client.AsyncDataProvider;
+import com.google.gwt.view.client.HasData;
+import com.google.gwt.view.client.Range;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author billy1380
  * 
  */
-public class ItemController implements ServiceController {
+public class ItemController extends AsyncDataProvider<Item> implements ServiceController {
 
 	private static ItemController mOne = null;
 
@@ -35,7 +43,11 @@ public class ItemController implements ServiceController {
 
 	private Map<String, List<Item>> mItemsSearchCache = new HashMap<String, List<Item>>(); // Cache of user searches
 
-//	private Pager mLookupPager; // Lookup server calls pager
+	private List<Item> rows;
+	private long count = 0;
+	private Pager pager = null;
+
+	// private Pager mLookupPager; // Lookup server calls pager
 	private Pager mSearchPager; // User search calls pager
 
 	public static ItemController get() {
@@ -94,9 +106,7 @@ public class ItemController implements ServiceController {
 
 					// Add retrieved items into item cache
 					if (output.items != null) {
-						for (Item item : output.items) {
-							mItemCache.put(item.externalId, item);
-						}
+						addItemsToCache(output.items);
 						// Add retrieved items into search items cache ( Map<"query", List<Item>> )
 						mItemsSearchCache.put(input.query, output.items == null ? new ArrayList<Item>() : output.items);
 					}
@@ -112,60 +122,117 @@ public class ItemController implements ServiceController {
 		});
 	}
 
-//	/**
-//	 * @return
-//	 */
-//	private Pager lookupPager() {
-//		if (mLookupPager == null) {
-//			mLookupPager = new Pager();
-//			mLookupPager.start = Long.valueOf(0);
-//			mLookupPager.count = Long.valueOf(1);
-//			mLookupPager.sortBy = "externalid";
-//			mLookupPager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
-//		}
-//
-//		return mLookupPager;
-//	}
-//
-//	/**
-//	 * Retrieve the item, identified by external id, from DB (it happens in case of cache miss)
-//	 * 
-//	 * @param externalId
-//	 */
-//	private void fetchItem(String externalId) {
-//		CoreService service = new CoreService();
-//		service.setUrl(CORE_END_POINT);
-//
-//		final SearchForItemRequest input = new SearchForItemRequest();
-//		input.accessCode = ACCESS_CODE;
-//
-//		input.session = SessionController.get().getSessionForApiCall();
-//		input.query = externalId;
-//
-//		input.pager = lookupPager();
-//
-//		service.searchForItem(input, new AsyncCallback<SearchForItemResponse>() {
-//
-//			@Override
-//			public void onSuccess(SearchForItemResponse output) {
-//				if (output != null && output.status == StatusType.StatusTypeSuccess) {
-//
-//					if (output.items != null) {
-//						for (Item item : output.items) {
-//							mItemCache.put(item.externalId, item); // Add item to cache
-//						}
-//					}
-//				}
-//
-//				EventController.get().fireEventFromSource(new SearchForItemSuccess(input, output), ItemController.this);
-//			}
-//
-//			@Override
-//			public void onFailure(Throwable caught) {
-//				EventController.get().fireEventFromSource(new SearchForItemFailure(input, caught), ItemController.this);
-//			}
-//		});
-//	}
+	/**
+	 * Retrieves and caches items. This method is only used from the admin system and requires admin privileges to run
+	 */
+	private void fetchItems() {
+		AdminService service = new AdminService();
+		service.setUrl(ADMIN_END_POINT);
+
+		final GetItemsRequest input = new GetItemsRequest();
+		input.accessCode = ACCESS_CODE;
+
+		input.session = SessionController.get().getSessionForApiCall();
+
+		if (pager == null) {
+			pager = new Pager();
+			pager.count = SHORT_STEP;
+			pager.start = Long.valueOf(0);
+		}
+		input.pager = pager;
+
+		service.getItems(input, new AsyncCallback<GetItemsResponse>() {
+
+			@Override
+			public void onSuccess(GetItemsResponse output) {
+				if (output != null && output.status == StatusType.StatusTypeSuccess) {
+
+					if (output.items != null) {
+						addItemsToCache(output.items);
+					}
+				}
+				
+				if (output.pager != null) {
+					pager = output.pager;
+
+					if (pager.totalCount != null) {
+						count = pager.totalCount.longValue();
+					}
+				}
+
+				if (rows == null) {
+					rows = new ArrayList<Item>();
+				}
+
+				rows.addAll(output.items);
+
+				updateRowData(0, rows);
+				updateRowCount((int) count, true);
+
+				EventController.get().fireEventFromSource(new GetItemsSuccess(input, output), ItemController.this);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				EventController.get().fireEventFromSource(new GetItemsFailure(input, caught), ItemController.this);
+			}
+		});
+	}
+
+	// /**
+	// * @return
+	// */
+	// private Pager lookupPager() {
+	// if (mLookupPager == null) {
+	// mLookupPager = new Pager();
+	// mLookupPager.start = Long.valueOf(0);
+	// mLookupPager.count = Long.valueOf(1);
+	// mLookupPager.sortBy = "externalid";
+	// mLookupPager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
+	// }
+	//
+	// return mLookupPager;
+	// }
+	//
+	// /**
+	// * Retrieve the item, identified by external id, from DB (it happens in case of cache miss)
+	// *
+	// * @param externalId
+	// */
+	// private void fetchItem(String externalId) {
+	// CoreService service = new CoreService();
+	// service.setUrl(CORE_END_POINT);
+	//
+	// final SearchForItemRequest input = new SearchForItemRequest();
+	// input.accessCode = ACCESS_CODE;
+	//
+	// input.session = SessionController.get().getSessionForApiCall();
+	// input.query = externalId;
+	//
+	// input.pager = lookupPager();
+	//
+	// service.searchForItem(input, new AsyncCallback<SearchForItemResponse>() {
+	//
+	// @Override
+	// public void onSuccess(SearchForItemResponse output) {
+	// if (output != null && output.status == StatusType.StatusTypeSuccess) {
+	//
+	// if (output.items != null) {
+	// for (Item item : output.items) {
+	// mItemCache.put(item.externalId, item); // Add item to cache
+	// }
+	// }
+	// }
+	//
+	// EventController.get().fireEventFromSource(new SearchForItemSuccess(input, output), ItemController.this);
+	// }
+	//
+	// @Override
+	// public void onFailure(Throwable caught) {
+	// EventController.get().fireEventFromSource(new SearchForItemFailure(input, caught), ItemController.this);
+	// }
+	// });
+	// }
 
 	/**
 	 * Clear Items cache when user logs out
@@ -211,7 +278,25 @@ public class ItemController implements ServiceController {
 		if (item != null) {
 			mItemCache.put(item.externalId, item);
 		}
+	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.view.client.AbstractDataProvider#onRangeChanged(com.google.gwt.view.client.HasData)
+	 */
+	@Override
+	protected void onRangeChanged(HasData<Item> display) {
+		Range r = display.getVisibleRange();
+
+		int start = r.getStart();
+		int end = start + r.getLength();
+
+		if (rows == null || end > rows.size()) {
+			fetchItems();
+		} else {
+			updateRowData(start, rows.subList(start, end));
+		}
 	}
 
 }

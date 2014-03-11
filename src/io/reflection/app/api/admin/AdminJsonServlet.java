@@ -11,6 +11,7 @@ package io.reflection.app.api.admin;
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
 import io.reflection.app.api.admin.shared.call.GetEmailTemplatesRequest;
 import io.reflection.app.api.admin.shared.call.GetFeedFetchesRequest;
+import io.reflection.app.api.admin.shared.call.GetItemsRequest;
 import io.reflection.app.api.admin.shared.call.GetModelOutcomeRequest;
 import io.reflection.app.api.admin.shared.call.GetPermissionsRequest;
 import io.reflection.app.api.admin.shared.call.GetRolesRequest;
@@ -88,6 +89,10 @@ public final class AdminJsonServlet extends JsonServlet {
 			SendEmailRequest input = new SendEmailRequest();
 			input.fromJson(request);
 			output = service.sendEmail(input).toString();
+		} else if ("GetItems".equals(action)) {
+			GetItemsRequest input = new GetItemsRequest();
+			input.fromJson(request);
+			output = service.getItems(input).toString();
 		}
 
 		return output;

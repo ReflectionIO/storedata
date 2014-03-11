@@ -14,6 +14,8 @@ import io.reflection.app.api.admin.shared.call.GetEmailTemplatesRequest;
 import io.reflection.app.api.admin.shared.call.GetEmailTemplatesResponse;
 import io.reflection.app.api.admin.shared.call.GetFeedFetchesRequest;
 import io.reflection.app.api.admin.shared.call.GetFeedFetchesResponse;
+import io.reflection.app.api.admin.shared.call.GetItemsRequest;
+import io.reflection.app.api.admin.shared.call.GetItemsResponse;
 import io.reflection.app.api.admin.shared.call.GetModelOutcomeRequest;
 import io.reflection.app.api.admin.shared.call.GetModelOutcomeResponse;
 import io.reflection.app.api.admin.shared.call.GetPermissionsRequest;
@@ -339,6 +341,28 @@ public final class AdminService extends JsonService {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					SendEmailResponse outputParameter = new SendEmailResponse();
+					parseResponse(response.getText(), outputParameter);
+					output.onSuccess(outputParameter);
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+				}
+			});
+		} catch (RequestException e) {
+			output.onFailure(e);
+		}
+	}
+
+	public static final String AdminMethodGetItems = "GetItems";
+
+	public void getItems(GetItemsRequest input, final AsyncCallback<GetItemsResponse> output) {
+		try {
+			sendRequest(AdminMethodGetItems, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					GetItemsResponse outputParameter = new GetItemsResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
 				}

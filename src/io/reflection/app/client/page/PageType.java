@@ -36,12 +36,14 @@ public enum PageType {
 	LinkItunesPageType("linkitunes"),
 	ReadyToStartPageType("readytostart"),
 	MyAppsOverviewPageType("myappsoverview"),
-	EmailTemplatesPage("emailtemplates"),
-	ForgotPasswordPage("forgotpassword"),
-	ResetPasswordPage("resetpassword"), ;
+	EmailTemplatesPageType("emailtemplates"),
+	ForgotPasswordPageType("forgotpassword"),
+	ResetPasswordPageType("resetpassword"),
+	ItemsPageType("items"), ;
 
 	private String value;
 	private static Map<String, PageType> valueLookup = null;
+	private HomePage defaultPage = null;
 
 	public String toString() {
 		return value;
@@ -113,9 +115,6 @@ public enum PageType {
 		case ItemPageType:
 			page = new ItemPage();
 			break;
-		case HomePageType:
-			page = new HomePage();
-			break;
 		case LinkItunesPageType:
 			page = new LinkItunesPage();
 			break;
@@ -125,14 +124,24 @@ public enum PageType {
 		case MyAppsOverviewPageType:
 			page = new MyAppsOverviewPage();
 			break;
-		case EmailTemplatesPage:
+		case EmailTemplatesPageType:
 			page = new EmailTemplatePage();
 			break;
-		case ForgotPasswordPage:
+		case ForgotPasswordPageType:
 			page = new ForgotPasswordPage();
 			break;
-		case ResetPasswordPage:
+		case ResetPasswordPageType:
 			page = new ResetPasswordPage();
+			break;
+		case ItemsPageType:
+			page = new ItemsPage();
+			break;
+		case HomePageType:
+		default:
+			if (defaultPage == null) {
+				defaultPage = new HomePage();
+			}
+			page = defaultPage;
 			break;
 		}
 

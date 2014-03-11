@@ -20,9 +20,6 @@
     	
     }
     
-    /* .searchBox {
-                    			        margin: 0 10px;
-                    			        } */
     .searchBox .btn {
     	border-radius: 0 4px 4px 0;
     	background-color: #080808;
@@ -119,6 +116,10 @@
                         <li ui:field="emailTemplatesItem">
                             <g:InlineHyperlink ui:field="emailTemplatesLink" targetHistoryToken="emailtemplates">Email Templates</g:InlineHyperlink>
                         </li>
+                        <li class="divider"></li>
+                        <li ui:field="itemsItem">
+                            <g:InlineHyperlink ui:field="itemsLink" targetHistoryToken="items">Items</g:InlineHyperlink>
+                        </li>
                     </ul>
                 </li>
             </ul>
@@ -176,7 +177,6 @@
                     </g:Anchor>
                     <ul class="dropdown-menu side">
                         <li style="text-align: justify; font-size: 14px;">
-                        
                             Help us develop a truly groundbreaking intelligence tool. Contact
                             us if you have feedback or if you would like to see any
                             additional feature that you feel can add value. We're here to help.

@@ -61,6 +61,9 @@
 
             <xsd:element name="GetUserDetailsInput" type="sdc:GetUserDetailsRequest" />
             <xsd:element name="GetUserDetailsOutput" type="sdc:GetUserDetailsResponse" />
+            
+            <xsd:element name="GetCategoriesInput" type="sdc:GetCategoriesRequest" />
+            <xsd:element name="GetCategoriesOutput" type="sdc:GetCategoriesResponse" />
 
             <xsd:complexType name="GetCountriesRequest">
                 <xsd:complexContent>
@@ -445,6 +448,27 @@
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>
+            
+            <xsd:complexType name="GetCategoriesRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="pager" type="sd:Pager" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="GetCategoriesResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+                            <xsd:element name="categories" type="sd:Category" maxOccurs="unbounded" />
+                            <xsd:element name="pager" type="sd:Pager" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
 
         </xsd:schema>
     </wsdl:types>
@@ -580,12 +604,20 @@
     <wsdl:message name="GetUserDetailsResponse">
         <wsdl:part name="output" element="sdc:GetUserDetailsOutput" />
     </wsdl:message>
+    
+    <wsdl:message name="GetCategoriesRequest">
+        <wsdl:part name="input" element="sdc:GetCategoriesInput" />
+    </wsdl:message>
+    <wsdl:message name="GetCategoriesResponse">
+        <wsdl:part name="output" element="sdc:GetCategoriesOutput" />
+    </wsdl:message>
 
     <wsdl:portType name="core">
         <wsdl:operation name="GetCountries">
             <wsdl:input message="sdc:GetCountriesRequest" />
             <wsdl:output message="sdc:GetCountriesResponse" />
         </wsdl:operation>
+        
         <wsdl:operation name="GetStores">
             <wsdl:input message="sdc:GetStoresRequest" />
             <wsdl:output message="sdc:GetStoresResponse" />
@@ -675,6 +707,11 @@
             <wsdl:input message="sdc:GetUserDetailsRequest" />
             <wsdl:output message="sdc:GetUserDetailsResponse" />
         </wsdl:operation>
+        
+        <wsdl:operation name="GetCategories">
+            <wsdl:input message="sdc:GetCategoriesRequest" />
+            <wsdl:output message="sdc:GetCategoriesResponse" />
+        </wsdl:operation>
 
     </wsdl:portType>
     <wsdl:binding name="coreSOAP" type="sdc:core">
@@ -688,6 +725,7 @@
                 <soap:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
+        
         <wsdl:operation name="GetStores">
             <soap:operation soapAction="http://app.reflection.io/core/GetStores" />
             <wsdl:input>
@@ -859,6 +897,16 @@
 
         <wsdl:operation name="GetUserDetails">
             <soap:operation soapAction="http://app.reflection.io/core/GetUserDetails" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        
+         <wsdl:operation name="GetCategories">
+            <soap:operation soapAction="http://app.reflection.io/core/GetCategories" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>

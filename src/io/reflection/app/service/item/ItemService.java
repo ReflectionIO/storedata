@@ -335,7 +335,8 @@ final class ItemService implements IItemService {
 				.format("SELECT * FROM `item` WHERE (`externalid` LIKE '%%%1$s%%' OR `name` LIKE '%%%1$s%%' OR `creatorname` LIKE '%%%1$s%%') AND `deleted`='n' ORDER BY `%2$s` %3$s LIMIT %4$d, %5$d",
 						query, pager.sortBy == null ? "id" : pager.sortBy,
 						pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
-						pager.start == null ? Pager.DEFAULT_START.longValue() : pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue() : pager.count.longValue());
+						pager.start == null ? Pager.DEFAULT_START.longValue() : pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue()
+								: pager.count.longValue());
 
 		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
 
@@ -398,5 +399,95 @@ final class ItemService implements IItemService {
 		}
 
 		return items;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.item.IItemService#getItems(io.reflection.app.api.shared.datatypes.Pager)
+	 */
+	@Override
+	public List<Item> getItems(Pager pager) throws DataAccessException {
+		List<Item> items = new ArrayList<Item>();
+
+		IDatabaseService databaseService = DatabaseServiceProvider.provide();
+		Connection itemConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
+
+		String getItemIdsQuery = "SELECT * FROM `item` WHERE `deleted`='n'";
+
+		if (pager != null) {
+			String sortByQuery = "id";
+
+			if (pager.sortBy != null && ("internalid".equals(pager.sortBy) || "externalid".equals(pager.sortBy))) {
+				sortByQuery = pager.sortBy;
+			}
+
+			String sortDirectionQuery = "DESC";
+
+			if (pager.sortDirection != null) {
+				switch (pager.sortDirection) {
+				case SortDirectionTypeAscending:
+					sortDirectionQuery = "ASC";
+					break;
+				default:
+					break;
+				}
+			}
+
+			getItemIdsQuery += String.format(" ORDER BY `%s` %s", sortByQuery, sortDirectionQuery);
+		}
+
+		if (pager.start != null && pager.count != null) {
+			getItemIdsQuery += String.format(" LIMIT %d, %d", pager.start.longValue(), pager.count.longValue());
+		} else if (pager.count != null) {
+			getItemIdsQuery += String.format(" LIMIT %d", pager.count.longValue());
+		}
+		try {
+			itemConnection.connect();
+			itemConnection.executeQuery(getItemIdsQuery);
+
+			while (itemConnection.fetchNextRow()) {
+				Item item = this.toItem(itemConnection);
+
+				if (item != null) {
+					items.add(item);
+				}
+			}
+		} finally {
+			if (itemConnection != null) {
+				itemConnection.disconnect();
+			}
+		}
+
+		return items;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.item.IItemService#getItemsCount()
+	 */
+	@Override
+	public Long getItemsCount() throws DataAccessException {
+		Long itemsCount = Long.valueOf(0);
+
+		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
+
+		String getItemsCountQuery = "SELECT count(1) AS `itemcount` FROM `item` WHERE `deleted`='n'";
+
+		try {
+			itemConnection.connect();
+			itemConnection.executeQuery(getItemsCountQuery);
+
+			if (itemConnection.fetchNextRow()) {
+				itemsCount = itemConnection.getCurrentRowLong("itemcount");
+			}
+		} finally {
+			if (itemConnection != null) {
+				itemConnection.disconnect();
+			}
+		}
+		
+		return itemsCount;
 	}
 }

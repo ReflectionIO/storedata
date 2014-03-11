@@ -90,7 +90,13 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 	@UiField InlineHyperlink mPermissionsLink;
 	@UiField LIElement mPermissionsItem;
-
+	
+	@UiField InlineHyperlink emailTemplatesLink;
+	@UiField LIElement emailTemplatesItem;
+	
+	@UiField InlineHyperlink itemsLink;
+	@UiField LIElement itemsItem;
+	
 	@UiField SpanElement mTotalUsers;
 
 	@UiField LIElement mAccountDropdown;
@@ -173,6 +179,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			mItems.add(mRegisterItem);
 			mItems.add(mRolesItem);
 			mItems.add(mPermissionsItem);
+			mItems.add(emailTemplatesItem);
+			mItems.add(itemsItem);
 			mItems.add(mAccountSettingsItem);
 			mItems.add(mMyAppsItem);
 			mItems.add(mUpgradeAccountItem);
@@ -235,6 +243,10 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			highlight(mPermissionsItem);
 		} else if ("upgrade".equals(stack.getPage())) {
 			highlight(mUpgradeAccountItem);
+		} else if (PageType.EmailTemplatesPageType.equals(stack.getPage())) {
+			highlight(emailTemplatesItem);
+		} else if (PageType.ItemsPageType.equals(stack.getPage())) {
+			highlight(itemsItem);
 		} else {
 			highlight(null);
 		}

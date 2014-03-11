@@ -17,6 +17,8 @@ import io.reflection.app.api.admin.shared.call.GetEmailTemplatesRequest;
 import io.reflection.app.api.admin.shared.call.GetEmailTemplatesResponse;
 import io.reflection.app.api.admin.shared.call.GetFeedFetchesRequest;
 import io.reflection.app.api.admin.shared.call.GetFeedFetchesResponse;
+import io.reflection.app.api.admin.shared.call.GetItemsRequest;
+import io.reflection.app.api.admin.shared.call.GetItemsResponse;
 import io.reflection.app.api.admin.shared.call.GetModelOutcomeRequest;
 import io.reflection.app.api.admin.shared.call.GetModelOutcomeResponse;
 import io.reflection.app.api.admin.shared.call.GetPermissionsRequest;
@@ -50,6 +52,7 @@ import io.reflection.app.predictors.Predictor;
 import io.reflection.app.predictors.PredictorFactory;
 import io.reflection.app.service.emailtemplate.EmailTemplateServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
+import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
 import io.reflection.app.service.role.RoleServiceProvider;
 import io.reflection.app.service.user.UserServiceProvider;
@@ -458,18 +461,19 @@ public final class Admin extends ActionHandler {
 			input.session = ValidationHelper.validateSession(input.session, "input.session");
 
 			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
-			
+
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
 			output.templates = EmailTemplateServiceProvider.provide().getEmailTemplates(input.pager);
 			output.pager = input.pager;
 			updatePager(output.pager, output.templates, input.pager.totalCount == null ? EmailTemplateServiceProvider.provide().getEmailTemplatesCount() : null);
-			
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
 			output.error = convertToErrorAndLog(LOG, e);
 		}
+		
 		LOG.finer("Exiting getEmailTemplates");
 		return output;
 	}
@@ -486,15 +490,15 @@ public final class Admin extends ActionHandler {
 			input.session = ValidationHelper.validateSession(input.session, "input.session");
 
 			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
-			
+
 			input.toAddress = ValidationHelper.validateEmail(input.toAddress, true, "input.toAddress");
-			
+
 			if (input.toAddress == null) {
 				input.toUser = ValidationHelper.validateExistingUser(input.toUser, "input.toUser");
 			}
-			
+
 			input.template = ValidationHelper.validateExistingEmailTemplate(input.template, "input.template");
-			
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -503,7 +507,34 @@ public final class Admin extends ActionHandler {
 		LOG.finer("Exiting sendEmail");
 		return output;
 	}
-	
-	
-	
+
+	public GetItemsResponse getItems(GetItemsRequest input) {
+		LOG.finer("Entering getItems");
+		GetItemsResponse output = new GetItemsResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("GetItemsRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			input.session = ValidationHelper.validateSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
+			
+			input.pager = ValidationHelper.validatePager(input.pager, "input");
+
+			output.items = ItemServiceProvider.provide().getItems(input.pager);
+			output.pager = input.pager;
+			updatePager(output.pager, output.items, input.pager.totalCount == null ? ItemServiceProvider.provide().getItemsCount() : null);
+			
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		
+		LOG.finer("Exiting getItems");
+		return output;
+	}
+
 }

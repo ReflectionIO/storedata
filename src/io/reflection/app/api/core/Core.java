@@ -21,6 +21,8 @@ import io.reflection.app.api.core.shared.call.ForgotPasswordRequest;
 import io.reflection.app.api.core.shared.call.ForgotPasswordResponse;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
+import io.reflection.app.api.core.shared.call.GetCategoriesRequest;
+import io.reflection.app.api.core.shared.call.GetCategoriesResponse;
 import io.reflection.app.api.core.shared.call.GetCountriesRequest;
 import io.reflection.app.api.core.shared.call.GetCountriesResponse;
 import io.reflection.app.api.core.shared.call.GetItemRanksRequest;
@@ -1150,6 +1152,19 @@ public final class Core extends ActionHandler {
 			output.error = convertToErrorAndLog(LOG, e);
 		}
 		LOG.finer("Exiting getUserDetails");
+		return output;
+	}
+
+	public GetCategoriesResponse getCategories(GetCategoriesRequest input) {
+		LOG.finer("Entering getCategories");
+		GetCategoriesResponse output = new GetCategoriesResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getCategories");
 		return output;
 	}
 }

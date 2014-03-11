@@ -84,4 +84,15 @@ public interface IItemService extends IService {
 	 */
 	public List<Item> getInternalIdItemBatch(List<String> itemIds) throws DataAccessException;
 
+	/**
+	 * @param pager
+	 * @return
+	 */
+	public List<Item> getItems(Pager pager) throws DataAccessException;
+
+	/**
+	 * @return
+	 */
+	public Long getItemsCount() throws DataAccessException;
+
 }

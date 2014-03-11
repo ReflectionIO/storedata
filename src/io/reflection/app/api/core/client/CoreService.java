@@ -18,6 +18,8 @@ import io.reflection.app.api.core.shared.call.ForgotPasswordRequest;
 import io.reflection.app.api.core.shared.call.ForgotPasswordResponse;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
+import io.reflection.app.api.core.shared.call.GetCategoriesRequest;
+import io.reflection.app.api.core.shared.call.GetCategoriesResponse;
 import io.reflection.app.api.core.shared.call.GetCountriesRequest;
 import io.reflection.app.api.core.shared.call.GetCountriesResponse;
 import io.reflection.app.api.core.shared.call.GetItemRanksRequest;
@@ -459,6 +461,28 @@ public final class CoreService extends JsonService {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					GetUserDetailsResponse outputParameter = new GetUserDetailsResponse();
+					parseResponse(response.getText(), outputParameter);
+					output.onSuccess(outputParameter);
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+				}
+			});
+		} catch (RequestException e) {
+			output.onFailure(e);
+		}
+	}
+
+	public static final String CoreMethodGetCategories = "GetCategories";
+
+	public void getCategories(GetCategoriesRequest input, final AsyncCallback<GetCategoriesResponse> output) {
+		try {
+			sendRequest(CoreMethodGetCategories, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					GetCategoriesResponse outputParameter = new GetCategoriesResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
 				}

@@ -21,7 +21,7 @@
                 <xsd:attribute name="part" type="xsd:int" />
                 <xsd:attribute name="totalParts" type="xsd:int" />
                 <xsd:attribute name="type" type="xsd:string" />
-                <xsd:attribute name="code" type="xsd:string" />
+                <xsd:attribute name="code" type="xsd:long" />
                 <xsd:attribute name="status" type="FeedFetchStatusType" />
             </xsd:extension>
         </xsd:complexContent>
@@ -108,7 +108,7 @@
                 <xsd:attribute name="source" type="xsd:string" />
                 <xsd:attribute name="price" type="xsd:float" />
                 <xsd:attribute name="currency" type="xsd:string" />
-                <xsd:attribute name="code" type="xsd:string" />
+                <xsd:attribute name="code" type="xsd:long" />
                 <xsd:attribute name="revenue" type="xsd:float" />
                 <xsd:attribute name="downloads" type="xsd:int" />
             </xsd:extension>
@@ -206,8 +206,8 @@
                 <xsd:attribute type="xsd:string" name="password" />
                 <xsd:attribute type="xsd:dateTime" name="lastLoggedIn" />
                 <xsd:attribute type="xsd:string" name="verified" />
-                <xsd:attribute type="xsd:string" name="code" />
                 <xsd:attribute type="xsd:dateTime" name="expires" />
+                <xsd:attribute type="xsd:string" name="code" />
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
@@ -286,7 +286,7 @@
             <xsd:extension base="DataType">
                 <xsd:attribute name="country" type="xsd:string" />
                 <xsd:attribute name="store" type="xsd:string" />
-                <xsd:attribute name="code" type="xsd:string" />
+                <xsd:attribute name="code" type="xsd:long" />
                 <xsd:attribute name="form" type="FormType" />
                 <xsd:attribute name="grossingA" type="xsd:double" />
                 <xsd:attribute name="paidA" type="xsd:double" />

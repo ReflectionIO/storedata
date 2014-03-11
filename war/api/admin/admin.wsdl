@@ -47,6 +47,9 @@
             <xsd:element name="SendEmailInput" type="sda:SendEmailRequest" />
             <xsd:element name="SendEmailOutput" type="sda:SendEmailResponse" />
 
+            <xsd:element name="GetItemsInput" type="sda:GetItemsRequest" />
+            <xsd:element name="GetItemsOutput" type="sda:GetItemsResponse" />
+
             <xsd:complexType name="GetUsersRequest">
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
@@ -89,7 +92,7 @@
                             <xsd:element name="country" type="sd:Country" />
                             <xsd:element name="store" type="sd:Store" />
                         </xsd:sequence>
-                        <xsd:attribute name="code" type="xsd:string" />
+                        <xsd:attribute name="code" type="xsd:long" />
                         <xsd:attribute name="listType" type="xsd:string" />
                     </xsd:extension>
                 </xsd:complexContent>
@@ -137,7 +140,7 @@
                             <xsd:element name="store" type="sd:Store" />
                             <xsd:element name="listTypes" type="xsd:string" maxOccurs="unbounded" />
                         </xsd:sequence>
-                        <xsd:attribute name="code" type="xsd:string" />
+                        <xsd:attribute name="code" type="xsd:long" />
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>
@@ -159,7 +162,7 @@
                             <xsd:element name="store" type="sd:Store" />
                             <xsd:element name="listTypes" type="xsd:string" maxOccurs="unbounded" />
                         </xsd:sequence>
-                        <xsd:attribute name="code" type="xsd:string" />
+                        <xsd:attribute name="code" type="xsd:long" />
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>
@@ -182,7 +185,7 @@
                             <xsd:element name="store" type="sd:Store" />
                             <xsd:element name="listTypes" type="xsd:string" maxOccurs="unbounded" />
                         </xsd:sequence>
-                        <xsd:attribute name="code" type="xsd:string" />
+                        <xsd:attribute name="code" type="xsd:long" />
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>
@@ -205,7 +208,7 @@
                             <xsd:element name="store" type="sd:Store" />
                             <xsd:element name="listTypes" type="xsd:string" maxOccurs="unbounded" />
                         </xsd:sequence>
-                        <xsd:attribute name="code" type="xsd:string" />
+                        <xsd:attribute name="code" type="xsd:long" />
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>
@@ -337,6 +340,27 @@
                 </xsd:complexContent>
             </xsd:complexType>
 
+            <xsd:complexType name="GetItemsRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="pager" type="sd:Pager" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="GetItemsResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+                            <xsd:element name="items" type="sd:Item" maxOccurs="unbounded" />
+                            <xsd:element name="pager" type="sd:Pager" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
         </xsd:schema>
     </wsdl:types>
 
@@ -423,19 +447,26 @@
     <wsdl:message name="GetPermissionsResponse">
         <wsdl:part name="output" element="sda:GetPermissionsOutput" />
     </wsdl:message>
-    
+
     <wsdl:message name="GetEmailTemplatesRequest">
         <wsdl:part name="input" element="sda:GetEmailTemplatesInput" />
     </wsdl:message>
     <wsdl:message name="GetEmailTemplatesResponse">
         <wsdl:part name="output" element="sda:GetEmailTemplatesOutput" />
     </wsdl:message>
-    
+
     <wsdl:message name="SendEmailRequest">
         <wsdl:part name="input" element="sda:SendEmailInput" />
     </wsdl:message>
     <wsdl:message name="SendEmailResponse">
         <wsdl:part name="output" element="sda:SendEmailOutput" />
+    </wsdl:message>
+
+    <wsdl:message name="GetItemsRequest">
+        <wsdl:part name="input" element="sda:GetItemsInput" />
+    </wsdl:message>
+    <wsdl:message name="GetItemsResponse">
+        <wsdl:part name="output" element="sda:GetItemsOutput" />
     </wsdl:message>
 
     <wsdl:portType name="admin">
@@ -492,15 +523,20 @@
             <wsdl:input message="sda:GetPermissionsRequest" />
             <wsdl:output message="sda:GetPermissionsResponse" />
         </wsdl:operation>
-        
+
         <wsdl:operation name="GetEmailTemplates">
             <wsdl:input message="sda:GetEmailTemplatesRequest" />
             <wsdl:output message="sda:GetEmailTemplatesResponse" />
         </wsdl:operation>
-        
+
         <wsdl:operation name="SendEmail">
             <wsdl:input message="sda:SendEmailRequest" />
             <wsdl:output message="sda:SendEmailResponse" />
+        </wsdl:operation>
+        
+        <wsdl:operation name="GetItems">
+            <wsdl:input message="sda:GetItemsRequest" />
+            <wsdl:output message="sda:GetItemsResponse" />
         </wsdl:operation>
     </wsdl:portType>
     <wsdl:binding name="adminSOAP" type="sda:admin">
@@ -617,7 +653,7 @@
                 <soap:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
-        
+
         <wsdl:operation name="GetEmailTemplates">
             <soap:operation soapAction="http://app.reflection.io/admin/GetEmailTemplates" />
             <wsdl:input>
@@ -627,7 +663,7 @@
                 <soap:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
-        
+
         <wsdl:operation name="SendEmail">
             <soap:operation soapAction="http://app.reflection.io/admin/SendEmail" />
             <wsdl:input>
@@ -637,6 +673,17 @@
                 <soap:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
+       
+       <wsdl:operation name="GetItems">
+            <soap:operation soapAction="http://app.reflection.io/admin/GetItems" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+         
     </wsdl:binding>
     <wsdl:service name="admin">
         <wsdl:port name="adminSOAP" binding="sda:adminSOAP">

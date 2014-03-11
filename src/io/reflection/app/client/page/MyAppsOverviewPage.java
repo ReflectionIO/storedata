@@ -10,6 +10,7 @@ package io.reflection.app.client.page;
 import io.reflection.app.client.cell.MiniAppCell;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
+import io.reflection.app.client.part.BootstrapGwtDatePicker;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.Item;
 
@@ -80,6 +81,8 @@ public class MyAppsOverviewPage extends Page {
 	public MyAppsOverviewPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
+		BootstrapGwtDatePicker.INSTANCE.styles().ensureInjected();
+		
 		Item item = new Item();
 		item.creatorName = "Mojang";
 		item.name = "Minecraft";
