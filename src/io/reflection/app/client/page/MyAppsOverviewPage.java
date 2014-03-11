@@ -8,6 +8,7 @@
 package io.reflection.app.client.page;
 
 import io.reflection.app.client.cell.MiniAppCell;
+import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.Item;
@@ -23,6 +24,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -36,6 +38,8 @@ public class MyAppsOverviewPage extends Page {
 	interface MyAppsOverviewPageUiBinder extends UiBinder<Widget, MyAppsOverviewPage> {}
 
 	@UiField(provided = true) CellTable<FakeData> mApps = new CellTable<MyAppsOverviewPage.FakeData>(10, BootstrapGwtCellTable.INSTANCE);
+
+	@UiField InlineHyperlink mLinkedAccountsLink;
 
 	Images images = GWT.create(Images.class);
 
@@ -62,6 +66,8 @@ public class MyAppsOverviewPage extends Page {
 
 	public MyAppsOverviewPage() {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		mLinkedAccountsLink.setTargetHistoryToken("users/linkedaccounts/" + SessionController.get().getLoggedInUser().id.toString());
 
 		Item item = new Item();
 		item.creatorName = "Mojang";

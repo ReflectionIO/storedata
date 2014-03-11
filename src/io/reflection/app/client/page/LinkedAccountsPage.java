@@ -13,18 +13,18 @@ import io.reflection.app.api.core.shared.call.LinkAccountRequest;
 import io.reflection.app.api.core.shared.call.LinkAccountResponse;
 import io.reflection.app.api.core.shared.call.event.GetLinkedAccountsEventHandler;
 import io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler;
+import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.handler.EnterPressedEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
-import io.reflection.app.client.helper.AlertBoxHelper;
+import io.reflection.app.client.handler.user.SessionEventHandler;
 import io.reflection.app.client.helper.FormHelper;
-import io.reflection.app.client.part.AlertBox;
-import io.reflection.app.client.part.AlertBox.AlertBoxType;
 import io.reflection.app.client.part.linkaccount.IosMacLinkAccountForm;
 import io.reflection.app.client.part.linkaccount.LinkableAccountFields;
+import io.reflection.app.datatypes.shared.User;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.SpanElement;
@@ -46,18 +46,17 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class LinkedAccountsPage extends Page implements NavigationEventHandler, LinkAccountEventHandler, GetLinkedAccountsEventHandler {
+public class LinkedAccountsPage extends Page implements NavigationEventHandler, LinkAccountEventHandler, GetLinkedAccountsEventHandler, SessionEventHandler {
 
 	private static LinkedAccountsPageUiBinder uiBinder = GWT.create(LinkedAccountsPageUiBinder.class);
 
 	interface LinkedAccountsPageUiBinder extends UiBinder<Widget, LinkedAccountsPage> {}
 
-	@UiField AlertBox mAlertBox;
-
 	@UiField InlineHyperlink mIosMacLink;
 	@UiField InlineHyperlink mPlayLink;
 	@UiField InlineHyperlink mAmazonLink;
 	@UiField InlineHyperlink mWindowsPhoneLink;
+	@UiField InlineHyperlink mMyAppsLink;
 
 	@UiField FormPanel mForm;
 	@UiField HTMLPanel mToolbar;
@@ -158,9 +157,6 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 			mForm.setVisible(false);
 			mToolbar.setVisible(false);
 
-			AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Please wait",
-					" - linking " + mLinkableAccount.getAccountSourceName() + " account...", false).setVisible(true);
-
 			LinkedAccountController.get().linkAccount(mLinkableAccount.getAccountSourceId(), mLinkableAccount.getUsername(), mLinkableAccount.getPassword(),
 					mLinkableAccount.getProperties());
 		} else {
@@ -177,9 +173,6 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	@Override
 	public void linkAccountSuccess(LinkAccountRequest input, LinkAccountResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Account added, please wait",
-					" - getting updating linked accounts. Please note that linked account data will not be available immediatly please check back regularly.",
-					false).setVisible(true);
 
 			LinkedAccountController.get().fetchLinkedAccounts();
 		} else {
@@ -199,7 +192,6 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	}
 
 	private void showError(Error e) {
-		AlertBoxHelper.showError(mAlertBox, e);
 
 		mForm.setVisible(true);
 		mToolbar.setVisible(true);
@@ -234,7 +226,38 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	}
 
 	private void showNoLinkedAccounts() {
-		AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.WarningAlertBoxType, false, "No accounts found", " - You currently have no linked accounts.",
-				false).setVisible(true);
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoggedIn(io.reflection.app.datatypes.shared.User,
+	 * io.reflection.app.api.shared.datatypes.Session)
+	 */
+	@Override
+	public void userLoggedIn(User user, Session session) {
+		// TODO Add My Apps Link
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoggedOut()
+	 */
+	@Override
+	public void userLoggedOut() {
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoginFailed(com.willshex.gson.json.service.shared.Error)
+	 */
+	@Override
+	public void userLoginFailed(Error error) {
+
 	}
 }
