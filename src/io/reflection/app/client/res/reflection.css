@@ -13,7 +13,7 @@
 	margin: 0px;
 	position: fixed;
 	top: 40px;
-	padding-top: 30px;
+	padding-top: 50px;
 	padding-left: 35px;
 	padding-right: 35px;
 	z-index: 1000;
@@ -27,6 +27,8 @@
 	background-color: #272733;
 	color: #8d8ea1;
 	outline: 0;
+	line-height: 30px;
+	padding: 3px 0px;
 }
 
 .dropdown-menu.side>li>a:HOVER {
@@ -107,11 +109,13 @@ h1 {
 	letter-spacing: 0px;
 }
 
-hr {
-	color: #353847;
-	background-color: #353847;
+hr {	
+	background-color: #d6d6d6;
+	color: #d6d6d6;
+	border-color: #d6d6d6;
 	height: 1px;
 }
+
 
 a {
 	cursor: pointer;
@@ -247,12 +251,6 @@ a:hover,a:focus,a:active {
 	.navbar-collapse .nav>.divider-vertical {
 		display: none;
 	}
-}
-
-.divider{
-	border-color: #353847;
-	background-color: #353847;
-	color: #353847;
 }
 
 /* Tabs Login/Register */

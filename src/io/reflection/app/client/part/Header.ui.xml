@@ -21,8 +21,8 @@
     }
     
     /* .searchBox {
-                			        margin: 0 10px;
-                			        } */
+                    			        margin: 0 10px;
+                    			        } */
     .searchBox .btn {
     	border-radius: 0 4px 4px 0;
     	background-color: #080808;
@@ -45,10 +45,6 @@
     	float: left;
     }
     
-    .moreMargin>b {
-    	margin-right: 0.2em;
-    }
-    
     .navbar-header>a>.label-default {
     	font-size: 10px;
     	background-color: #676b88;
@@ -61,7 +57,6 @@
     .navbar-header>a:HOVER>.label-default {
     	background-color: #1bc79f;
     }
-
     
     .widerMenu {
     	width: 250px;
@@ -143,18 +138,30 @@
                     </g:Anchor>
                     <ul class="dropdown-menu side">
                         <li ui:field="mMyAppsItem">
-                            <g:InlineHyperlink ui:field="mMyAppsLink"><i class="glyphicon glyphicon-th" style="margin-right: 20px"></i>My apps</g:InlineHyperlink>
+                            <g:InlineHyperlink ui:field="mMyAppsLink">
+                                <i class="glyphicon glyphicon-th" style="margin-right: 20px"></i>
+                                My apps
+                            </g:InlineHyperlink>
                         </li>
                         <li ui:field="mLinkedAccountsItem">
-                            <g:InlineHyperlink ui:field="mLinkedAccountsLink"><i class="glyphicon glyphicon-link" style="margin-right: 20px"></i>My linked accounts</g:InlineHyperlink>
+                            <g:InlineHyperlink ui:field="mLinkedAccountsLink">
+                                <i class="glyphicon glyphicon-link" style="margin-right: 20px"></i>
+                                My linked accounts
+                            </g:InlineHyperlink>
                         </li>
-                        <li class="divider"></li>
+                        <hr style="height:1px; border:none; color:#363845; background-color:#363845; margin-top: 10px; margin-bottom: 10px;"></hr>
                         <li ui:field="mAccountSettingsItem">
-                            <g:InlineHyperlink ui:field="mAccountSettingsLink"><i class="glyphicon glyphicon-cog" style="margin-right: 20px"></i>Account settings</g:InlineHyperlink>
-                        </li>                        
-                        <li class="divider"></li>
+                            <g:InlineHyperlink ui:field="mAccountSettingsLink">
+                                <i class="glyphicon glyphicon-cog" style="margin-right: 20px"></i>
+                                Account settings
+                            </g:InlineHyperlink>
+                        </li>
+                        <hr style="height:1px; border:none; color:#363845; background-color:#363845; margin-top: 10px; margin-bottom: 10px;"></hr>
                         <li ui:field="mLogoutItem">
-                            <g:InlineHyperlink targetHistoryToken="logout" ui:field="mLogoutLink"><i class="glyphicon glyphicon-log-out" style="margin-right: 20px"></i>Sign out</g:InlineHyperlink>
+                            <g:InlineHyperlink targetHistoryToken="logout" ui:field="mLogoutLink">
+                                <i class="glyphicon glyphicon-log-out" style="margin-right: 20px"></i>
+                                Sign out
+                            </g:InlineHyperlink>
                         </li>
                     </ul>
                 </li>
@@ -163,27 +170,27 @@
             <!-- Feature Request -->
             <ul class="nav navbar-nav navbar-right" style="display: none;" ui:field="mFeatureRequest">
                 <li class="dropdown">
-                    <g:Anchor styleName="dropdown-toggle {style.moreMargin}" ui:field="featureRequestButton">
+                    <g:Anchor styleName="dropdown-toggle" ui:field="featureRequestButton">
                         <i class="glyphicon glyphicon-comment" style="margin-right: 10px"></i>
                         Feature Requests
                     </g:Anchor>
                     <ul class="dropdown-menu side">
-                        <li>
-                            Help us develop a truly disruptive and groundbreaking tool. contact
-                            us and request the features you would most like to
-                            see as
-                            part of the ﬁnal product
+                        <li style="text-align: justify; font-size: 14px;">
+                        
+                            Help us develop a truly groundbreaking intelligence tool. Contact
+                            us if you have feedback or if you would like to see any
+                            additional feature that you feel can add value. We're here to help.
                         </li>
-                        <li class="divider"></li>
+                        <hr style="height:1px; border:none; color:#363845; background-color:#363845;"></hr>
                         <li>
-                            <a href="mailto:gustaf@reflection.io" target="_blank" class="{style.moreMargin}">
-                                <b class="glyphicon glyphicon-envelope"></b>
+                            <a href="mailto:gustaf@reflection.io" target="_blank">
+                                <i class="glyphicon glyphicon-envelope" style="margin-right: 15px"></i>
                                 gustaf@reflection.io
                             </a>
                         </li>
                         <li>
-                            <a href="callto:+44 (0) 7929 635 487" target="_blank" class="{style.moreMargin}">
-                                <b class="glyphicon glyphicon-earphone"></b>
+                            <a href="callto:+44 (0) 7929 635 487" target="_blank">
+                                <i class="glyphicon glyphicon-earphone" style="margin-right: 15px"></i>
                                 +44 (0) 7929 635 487
                             </a>
                         </li>
