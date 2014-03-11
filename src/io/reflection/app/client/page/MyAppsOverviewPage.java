@@ -40,6 +40,7 @@ public class MyAppsOverviewPage extends Page {
 	@UiField(provided = true) CellTable<FakeData> mApps = new CellTable<MyAppsOverviewPage.FakeData>(10, BootstrapGwtCellTable.INSTANCE);
 
 	@UiField InlineHyperlink mLinkedAccountsLink;
+	@UiField InlineHyperlink mMyAppsLink;
 
 	Images images = GWT.create(Images.class);
 
@@ -64,10 +65,20 @@ public class MyAppsOverviewPage extends Page {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
+	 */
+	@Override
+	protected void onAttach() {
+		super.onAttach();
+		mLinkedAccountsLink.setTargetHistoryToken("users/linkedaccounts/" + SessionController.get().getLoggedInUser().id.toString());
+		mMyAppsLink.setTargetHistoryToken("users/myapps/" + SessionController.get().getLoggedInUser().id.toString());
+	}
+
 	public MyAppsOverviewPage() {
 		initWidget(uiBinder.createAndBindUi(this));
-
-		mLinkedAccountsLink.setTargetHistoryToken("users/linkedaccounts/" + SessionController.get().getLoggedInUser().id.toString());
 
 		Item item = new Item();
 		item.creatorName = "Mojang";

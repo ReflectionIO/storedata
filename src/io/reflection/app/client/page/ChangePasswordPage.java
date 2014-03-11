@@ -28,6 +28,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.Error;
@@ -57,6 +58,9 @@ public class ChangePasswordPage extends Page implements UserPasswordChangedEvent
 	private String mPasswordError = null;
 	private String mNewPasswordError = null;
 
+	@UiField InlineHyperlink mChangeDetailsLink;
+	@UiField InlineHyperlink mChangePasswordLink;
+
 	@UiField AlertBox mAlertBox;
 
 	@UiField FormPanel mForm;
@@ -67,7 +71,6 @@ public class ChangePasswordPage extends Page implements UserPasswordChangedEvent
 		initWidget(uiBinder.createAndBindUi(this));
 
 		mPassword.getElement().setAttribute("placeholder", "Current Password");
-
 		mNewPassword.getElement().setAttribute("placeholder", "New Password");
 		mConfirmPassword.getElement().setAttribute("placeholder", "Confirm Password");
 
@@ -178,7 +181,8 @@ public class ChangePasswordPage extends Page implements UserPasswordChangedEvent
 
 		register(EventController.get().addHandlerToSource(UserPasswordChangedEventHandler.TYPE, UserController.get(), this));
 		register(EventController.get().addHandlerToSource(UserPasswordChangedEventHandler.TYPE, SessionController.get(), this));
-
+		mChangeDetailsLink.setTargetHistoryToken("users/changedetails/" + SessionController.get().getLoggedInUser().id.toString());
+		mChangePasswordLink.setTargetHistoryToken("users/changepassword/" + SessionController.get().getLoggedInUser().id.toString());
 		resetForm();
 
 		if (SessionController.get().isLoggedInUserAdmin()) {

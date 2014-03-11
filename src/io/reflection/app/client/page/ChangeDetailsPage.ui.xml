@@ -17,25 +17,25 @@
     }
     </ui:style>
     <g:HTMLPanel>
-        <div class="row" style="margin-right: 10px;">
+        <div class="row">
 
-            <div class="col-md-2 well" style="margin-top: -20px;  padding-left: 35px; padding-right: 25px;">
+            <div class="sidepanel col-md-2 well">
 
                 <h3 style="margin-bottom: 30px;">Account Settings</h3>
                 <ul class="nav nav-pills nav-stacked">
                     <li class="active">
-                        <g:InlineHyperlink targetHistoryToken="changedetails">Personal details</g:InlineHyperlink>
+                        <g:InlineHyperlink ui:field="mChangeDetailsLink">Personal details</g:InlineHyperlink>
                     </li>
                     <hr />
                     <li>
-                        <g:InlineHyperlink targetHistoryToken="changepassword">Change password</g:InlineHyperlink>
+                        <g:InlineHyperlink ui:field="mChangePasswordLink">Change password</g:InlineHyperlink>
                     </li>
                     <hr />
                 </ul>
             </div>
 
             <div class="col-md-10">
-                <g:HTMLPanel styleName="well well-sm col-md-12">
+                <g:HTMLPanel styleName="well well-sm well-title col-md-12">
                     <div style="float: left;">
                         <h5>Personal details</h5>
                     </div>

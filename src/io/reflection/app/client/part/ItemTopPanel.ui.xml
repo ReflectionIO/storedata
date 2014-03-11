@@ -31,9 +31,9 @@
                 </g:ListBox>
 
                 <!-- <div class="btn-group btn-group-xs"> <g:InlineHyperlink ui:field="m1Month" styleName="btn btn-default active">1m</g:InlineHyperlink> <g:InlineHyperlink 
-                    ui:field="m3Months" styleName="btn btn-default">3m</g:InlineHyperlink> <g:InlineHyperlink ui:field="m6Months" styleName="btn btn-default">6m</g:InlineHyperlink> 
-                    <g:InlineHyperlink ui:field="m1Year" styleName="btn btn-default">1y</g:InlineHyperlink> <g:InlineHyperlink ui:field="mAllTime" styleName="btn btn-default">All</g:InlineHyperlink> 
-                    </div> <div class="btn-group btn-group-xs"> <g:InlineHyperlink ui:field="mStandard" styleName="btn btn-default active"> <span class="caret"></span> Standard </g:InlineHyperlink> 
+                    ui:field="m3Months" styleName="btn btn-default">3m</g:InlineHyperlink> <g:InlineHyperlink ui:field="m6Months" styleName="btn btn-default">6m</g:InlineHyperlink> <g:InlineHyperlink 
+                    ui:field="m1Year" styleName="btn btn-default">1y</g:InlineHyperlink> <g:InlineHyperlink ui:field="mAllTime" styleName="btn btn-default">All</g:InlineHyperlink> </div> 
+                    <div class="btn-group btn-group-xs"> <g:InlineHyperlink ui:field="mStandard" styleName="btn btn-default active"> <span class="caret"></span> Standard </g:InlineHyperlink> 
                     <g:InlineHyperlink ui:field="mCumulative" styleName="btn btn-default">Cumulative</g:InlineHyperlink> </div> -->
 
             </g:HTMLPanel>

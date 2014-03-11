@@ -10,7 +10,7 @@
 		padding-bottom: 30px;
 	}
 	</ui:style>
-	<g:HTMLPanel styleName="well sidebar-nav col-md-3">
+	<g:HTMLPanel styleName="sidebar-nav">
 		<div class="col-md-12">
 
 			<h3 class="{style.pageTitle}">Leaderboard</h3>

@@ -1,80 +1,83 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.user.datepicker.client"
-	xmlns:cell="urn:import:com.google.gwt.user.cellview.client">
-	<ui:style>
-	.pageTitle {
-		padding-bottom: 30px;
-	}
-	</ui:style>
-	<g:HTMLPanel>
-		<div class="row" style="margin-right: 20px;">
+    xmlns:cell="urn:import:com.google.gwt.user.cellview.client">
+    <ui:style>
+    .pageTitle {
+    	padding-bottom: 30px;
+    }
+    </ui:style>
+    <g:HTMLPanel>
+        <div class="row">
 
-			<div class="col-md-2 well" style="margin-top: -20px;   padding-left: 35px; padding-right: 25px;">
+            <div class="sidepanel col-md-2 well">
 
-				<h3>My Apps</h3>
+                <h3>My Apps</h3>
 
-				<h6 ui:field="mCreatorName" class="{style.pageTitle} text-muted">Creator</h6>
-				<ul class="nav nav-pills nav-stacked">
-					<li class="active">
-						<g:InlineHyperlink>Overview</g:InlineHyperlink>
-					</li>
-					<hr />
-					<li>
-						<g:InlineHyperlink ui:field="mLinkedAccountsLink">Linked Accounts</g:InlineHyperlink>
-					</li>
-					<hr />
-				</ul>
-			</div>
+                <h6 ui:field="mCreatorName" class="{style.pageTitle} text-muted">Creator</h6>
+                <ul class="nav nav-pills nav-stacked">
+                    <li class="active">
+                        <g:InlineHyperlink ui:field="mMyAppsLink">Overview</g:InlineHyperlink>
+                    </li>
+                    <hr />
+                    <li>
+                        <g:InlineHyperlink ui:field="mLinkedAccountsLink">Linked Accounts</g:InlineHyperlink>
+                    </li>
+                    <hr />
+                </ul>
+            </div>
 
-			<div class="col-md-10">
+            <div class="col-md-10">
 
-				<div class="col-md-12 well well-sm">
+                <div class="col-md-12 well well-sm well-title">
 
-					<div style="float: left;">
+                    <div style="float: left;">
 
-						<h5>Overview</h5>
-					</div>
+                        <h5>Overview</h5>
+                    </div>
 
-					<div style="float: right;">
-						<g:ListBox ui:field="mAppStore">
-							<g:item value="iph">iPhone Store</g:item>
-							<g:item value="ipa">iPad Store</g:item>
-						</g:ListBox>
+                    <div style="float: right;">
+                        <g:ListBox ui:field="mAppStore">
+                            <g:item value="iph">iPhone Store</g:item>
+                            <g:item value="ipa">iPad Store</g:item>
+                        </g:ListBox>
 
-						<g:ListBox ui:field="mCountry">
-							<g:item value="us">United States</g:item>
-							<g:item value="gb">United Kingdom</g:item>
-							<g:item value="cn">China</g:item>
-							<g:item value="de">Germany</g:item>
-							<g:item value="fr">France</g:item>
-						</g:ListBox>
+                        <g:ListBox ui:field="mCountry">
+                            <g:item value="us">United States</g:item>
+                            <g:item value="gb">United Kingdom</g:item>
+                            <g:item value="cn">China</g:item>
+                            <g:item value="de">Germany</g:item>
+                            <g:item value="fr">France</g:item>
+                        </g:ListBox>
 
-						<d:DateBox styleName="" ui:field="mDate" />
-						<span>
-							<i class="icon-calendar"></i>
-						</span>
-
-						<g:RadioButton name="range" text="Day" checked="true" />
-						<g:RadioButton name="range" text="Week" />
-						<g:RadioButton name="range" text="Month" />
+                        <d:DateBox styleName="" ui:field="mDate" />
+                        <span>
+                            <i class="icon-calendar"></i>
+                        </span>
 
 
-
-					</div>
-
-				</div>
-
-				<div class="col-md-12">
-					<cell:CellTable ui:field="mApps" styleName="table table-hover table-striped" />
-				</div>
-
-			</div>
+                        <div class="btn-group ">
+                            <g:InlineHyperlink ui:field="mToday" styleName="btn btn-default active">Day</g:InlineHyperlink>
+                            <g:InlineHyperlink ui:field="mThisWeek" styleName="btn btn-default">Week</g:InlineHyperlink>
+                            <g:InlineHyperlink ui:field="mThisMonth" styleName="btn btn-default">Month</g:InlineHyperlink>
+                        </div>
 
 
 
+                    </div>
+
+                </div>
+
+                <div class="col-md-12">
+                    <cell:CellTable ui:field="mApps" styleName="table table-hover table-striped" />
+                </div>
+
+            </div>
 
 
 
-		</div>
-	</g:HTMLPanel>
+
+
+
+        </div>
+    </g:HTMLPanel>
 </ui:UiBinder> 

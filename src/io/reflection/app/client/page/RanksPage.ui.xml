@@ -2,22 +2,16 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
     xmlns:c="urn:import:com.google.gwt.user.cellview.client">
     <ui:style>
-    .tabs {
-    	margin-bottom: 20px;
-    }
     
-    .HtmlPanelStyle {
-    	margin-top: -20px;
-    }
     </ui:style>
     <g:HTMLPanel> <!-- CONTAINER-FLUID style -->
 
-        <div class="row" style="margin-right: -38px;">
+        <div class="row">
 
-            <p:RankSidePanel ui:field="mSidePanel" styleName="col-md-2 well {style.HtmlPanelStyle}" />
+            <p:RankSidePanel ui:field="mSidePanel" styleName="sidepanel col-md-2 well" />
 
-            <div class="col-md-10" style="margin-left: -15px;">
-                <ul class="nav nav-tabs nav-justified ranks" style="margin-top: -10px;">
+            <div class="col-md-10" style="padding-left: 0px; padding-right: 0px;">
+                <ul class="nav nav-tabs nav-justified ranks">
                     <li ui:field="mAllItem">
                         <g:InlineHyperlink ui:field="mAll" targetHistoryToken="ranks">Overview / All</g:InlineHyperlink>
                     </li>

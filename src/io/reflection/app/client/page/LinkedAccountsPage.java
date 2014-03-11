@@ -17,6 +17,7 @@ import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.handler.EnterPressedEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
@@ -56,7 +57,9 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	@UiField InlineHyperlink mPlayLink;
 	@UiField InlineHyperlink mAmazonLink;
 	@UiField InlineHyperlink mWindowsPhoneLink;
+
 	@UiField InlineHyperlink mMyAppsLink;
+	@UiField InlineHyperlink mLinkedAccountsLink;
 
 	@UiField FormPanel mForm;
 	@UiField HTMLPanel mToolbar;
@@ -72,6 +75,8 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 	public LinkedAccountsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		mLinkedAccountsLink.setTargetHistoryToken("users/linkedaccounts/" + SessionController.get().getLoggedInUser().id.toString());
 
 		addSoonTag(mPlayLink);
 

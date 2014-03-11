@@ -4,7 +4,7 @@
     <ui:style>
     @external navbar-nav, btn, form-control,navbar-header,label-default;
     .header {
-    	background: #272833;
+    	background: #272733;
     	padding-left: 8px;
     	padding-right: 8px;
     	padding-top: 5px;

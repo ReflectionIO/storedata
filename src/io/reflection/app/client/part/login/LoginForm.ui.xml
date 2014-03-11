@@ -28,28 +28,12 @@
     	margin-top: 40px;
     }
     
-    .marginTop50 {
-    	margin-top: 50px;
-    }
-    
-    .marginTop30 {
-    	margin-top: 30px;
-    }
-    
     .marginTop20 {
     	margin-top: 20px;
     }
     
-    .marginTop10 {
-    	margin-top: 10px;
-    }
-    
     .marginBottomForm {
     	margin-bottom: 30px;
-    }
-    
-    .marginTop5 {
-    	margin-top: 5px;
     }
     
     .reminder {

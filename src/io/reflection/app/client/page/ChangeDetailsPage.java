@@ -26,12 +26,14 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.Error;
@@ -69,6 +71,9 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 
 	@UiField AlertBox mAlertBox;
 
+	@UiField InlineHyperlink mChangePasswordLink;
+	@UiField InlineHyperlink mChangeDetailsLink;
+
 	@UiField FormPanel mForm;
 
 	@UiField Button mChangeDetails;
@@ -97,7 +102,12 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(EventController.get().addHandlerToSource(ChangeUserDetailsEventHandler.TYPE, SessionController.get(), this));
 
+		mChangeDetailsLink.setTargetHistoryToken("users/changedetails/" + SessionController.get().getLoggedInUser().id.toString());
+		mChangePasswordLink.setTargetHistoryToken("users/changepassword/" + SessionController.get().getLoggedInUser().id.toString());
+
 		resetForm();
+
+		mChangeDetails.setEnabled(false);
 	}
 
 	@UiHandler("mChangeDetails")
@@ -144,6 +154,16 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	void onEnterKeyPressChangeDetailsFields(KeyPressEvent event) {
 		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
 			mChangeDetails.click();
+		}
+	}
+
+	@UiHandler({ "mUsername", "mForename", "mSurname", "mCompany" })
+	void onFieldsModified(KeyUpEvent event) {
+		if (!mUsername.getValue().equals(mUser.username) || !mForename.getValue().equals(mUser.forename) || !mSurname.getValue().equals(mUser.surname)
+				|| !mCompany.getValue().equals(mUser.company)) {
+			mChangeDetails.setEnabled(true);
+		} else {
+			mChangeDetails.setEnabled(false);
 		}
 	}
 
