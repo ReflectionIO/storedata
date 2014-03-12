@@ -342,9 +342,11 @@ public class FilterController {
 			mCurrentValues.put(CATEGORY_KEY, value);
 
 			if (mInTransaction == 0) {
+				Long currentCategoryId = (Long) mCurrentValues.get(CATEGORY_KEY);
+				Category currentCategory = new Category();
+				currentCategory.id = currentCategoryId;
 				EventController.get().fireEventFromSource(
-						new FilterEventHandler.ChangedFilterParameter<Category>(CATEGORY_KEY, (Category) mCurrentValues.get(CATEGORY_KEY), previousCategory),
-						this);
+						new FilterEventHandler.ChangedFilterParameter<Category>(CATEGORY_KEY, currentCategory, previousCategory), this);
 			} else {
 				if (mPreviousValues == null) {
 					mPreviousValues = new HashMap<String, Object>();

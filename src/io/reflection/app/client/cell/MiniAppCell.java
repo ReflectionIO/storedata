@@ -47,9 +47,9 @@ public class MiniAppCell extends AbstractCell<Item> {
 		String dailyDataType = FilterController.get().getDailyData(), dailyData;
 		
 		if (REVENUE_DAILY_DATA_TYPE.equals(dailyDataType)) {
-			dailyData = "0";
-		} else {
 			dailyData = "USD 0";
+		} else {
+			dailyData = "0";
 		}
 		
 		RENDERER.render(builder, name, creatorName, value.smallImage, value.externalId, dailyData, FilterController.get().toItemFilterString());

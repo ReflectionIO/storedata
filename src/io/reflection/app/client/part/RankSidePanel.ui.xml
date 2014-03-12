@@ -103,15 +103,10 @@
 						</label>
 						<br />
 						<div style="display: inline-block; margin-right: 10px;">
-							<g:RadioButton ui:field="mDailyDataRevenue" name="dailydata" checked="true">
-								<label>Revenue</label>
-
-							</g:RadioButton>
+							<g:RadioButton ui:field="mDailyDataRevenue" name="dailydata" checked="true">Revenue</g:RadioButton>
 						</div>
 						<div style="display: inline-block">						
-							<g:RadioButton ui:field="mDailyDataDownloads" name="dailydata">
-								<label>Downloads</label>
-							</g:RadioButton>
+							<g:RadioButton ui:field="mDailyDataDownloads" name="dailydata">Downloads</g:RadioButton>
 						</div>
 
 					</g:HTMLPanel>

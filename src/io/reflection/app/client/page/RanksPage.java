@@ -267,6 +267,7 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 		}
 
 		if (foundDailyData) {
+			PageType.RanksPageType.show("view/" + FilterController.get().toRankFilterString());
 			mRanks.redraw();
 		}
 
@@ -291,6 +292,7 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 		if (foundResetFilterValues) {
 			RankController.get().reset();
 		} else if (foundDailyData) {
+			PageType.RanksPageType.show("view/" + FilterController.get().toRankFilterString());
 			mRanks.redraw();
 		}
 	}
