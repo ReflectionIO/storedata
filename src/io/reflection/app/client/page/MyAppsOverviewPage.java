@@ -13,6 +13,7 @@ import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.BootstrapGwtDatePicker;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.datatypes.shared.User;
 
 import java.util.Arrays;
 import java.util.List;
@@ -74,15 +75,20 @@ public class MyAppsOverviewPage extends Page {
 	@Override
 	protected void onAttach() {
 		super.onAttach();
-		mLinkedAccountsLink.setTargetHistoryToken("users/linkedaccounts/" + SessionController.get().getLoggedInUser().id.toString());
-		mMyAppsLink.setTargetHistoryToken("users/myapps/" + SessionController.get().getLoggedInUser().id.toString());
+
+		User user = SessionController.get().getLoggedInUser();
+		
+		if (user != null) {
+			mLinkedAccountsLink.setTargetHistoryToken("users/linkedaccounts/" + user.id.toString());
+			mMyAppsLink.setTargetHistoryToken("users/myapps/" + user.id.toString());
+		}
 	}
 
 	public MyAppsOverviewPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		BootstrapGwtDatePicker.INSTANCE.styles().ensureInjected();
-		
+
 		Item item = new Item();
 		item.creatorName = "Mojang";
 		item.name = "Minecraft";
