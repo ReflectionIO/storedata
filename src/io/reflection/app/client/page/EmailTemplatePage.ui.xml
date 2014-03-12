@@ -4,6 +4,7 @@
     <ui:style>
     </ui:style>
     <g:HTMLPanel>
+        <h2>Email Templates</h2>
 
         <c:CellTable ui:field="emailTemplates" styleName="table table-hover table-striped" />
 
