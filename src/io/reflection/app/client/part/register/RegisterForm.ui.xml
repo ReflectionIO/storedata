@@ -1,11 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:style>
-    
-    .checkbox {
-    	margin-top: 15px;
-    }
-    
     </ui:style>
     <g:HTMLPanel>
         <g:FormPanel styleName="form">
@@ -43,13 +38,15 @@
                     <g:HTMLPanel ui:field="mPasswordNote" visible="false" styleName="noteDetail" />
                 </g:HTMLPanel>
 
-                <g:HTMLPanel ui:field="termAndCondGroup" styleName="checkbox {style.checkbox}">
-                    <label>
+                <g:HTMLPanel ui:field="termAndCondGroup">
+                    <p class="p-small">
                         <g:CheckBox ui:field="mTermAndCond" />
-                        <span style="font-size: 14px">I agree to the</span>
-                        <g:InlineHyperlink ui:field="mTermAndCondLink">terms and
-                            conditions</g:InlineHyperlink>
-                    </label>
+                        I agree to the
+                        <g:InlineHyperlink ui:field="mTermAndCondLink">
+                            <span class="p-small">terms and
+                                conditions</span>
+                        </g:InlineHyperlink>
+                    </p>
                     <g:HTMLPanel ui:field="termAndCondNote" visible="false" styleName="noteDetail" />
                 </g:HTMLPanel>
 

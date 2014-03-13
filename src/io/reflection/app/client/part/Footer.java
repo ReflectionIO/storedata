@@ -7,6 +7,8 @@
 //
 package io.reflection.app.client.part;
 
+import io.reflection.app.client.res.Images;
+
 import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
@@ -32,24 +34,16 @@ public class Footer extends Composite {
 
 	interface FooterUiBinder extends UiBinder<Widget, Footer> {}
 
-	@UiField HTMLPanel mDownPanel;
+	@UiField HTMLPanel mFooter;
 
 	@UiField SpanElement mYear;
 
 	@UiField Image mDownArrow;
 	@UiField Image mUpArrow;
 
-	@UiField Image mDownArrowHover;
-	@UiField Image mUpArrowHover;
-
 	@UiField Image mFacebook;
-	@UiField Image mFacebookHover;
-
 	@UiField Image mLinkedin;
-	@UiField Image mLinkedinHover;
-
 	@UiField Image mTwitter;
-	@UiField Image mTwitterHover;
 
 	@SuppressWarnings("deprecation")
 	public Footer() {
@@ -58,83 +52,67 @@ public class Footer extends Composite {
 		mYear.setInnerHTML(Integer.toString(1900 + (new Date()).getYear()));
 	}
 
-	@UiHandler("mDownArrowHover")
-	void onDownArrowHoverClick(ClickEvent event) {
-		mDownArrow.setVisible(false);
-		mDownArrowHover.setVisible(false);
-		mUpArrow.setVisible(true);
-		mDownPanel.setVisible(false);
+	@UiHandler("mUpArrow")
+	void onMouseOverUpArrow(MouseOverEvent event) {
+		mUpArrow.setResource(Images.INSTANCE.footerUpArrowHover());
+	}
+
+	@UiHandler("mUpArrow")
+	void onMouseOutUpArrow(MouseOutEvent event) {
+		mUpArrow.setResource(Images.INSTANCE.footerUpArrow());
+	}
+
+	@UiHandler("mUpArrow")
+	void onClickUpArrow(ClickEvent event) {
+		mUpArrow.setVisible(false);
+		mDownArrow.setVisible(true);
+		mFooter.getElement().setAttribute("style", "bottom: 0px;");
 	}
 
 	@UiHandler("mDownArrow")
 	void onMouseOverDownArrow(MouseOverEvent event) {
-		mDownArrow.setVisible(false);
-		mDownArrowHover.setVisible(true);
+		mDownArrow.setResource(Images.INSTANCE.footerDownArrowHover());
 	}
 
-	@UiHandler("mDownArrowHover")
+	@UiHandler("mDownArrow")
 	void onMouseOutDownArrow(MouseOutEvent event) {
-		if (mDownPanel.isVisible()) {
-			mDownArrowHover.setVisible(false);
-			mDownArrow.setVisible(true);
-		}
+		mDownArrow.setResource(Images.INSTANCE.footerDownArrow());
 	}
 
-	@UiHandler("mUpArrowHover")
-	void onUpArrowHoverClick(ClickEvent event) {
-		mUpArrow.setVisible(false);
-		mUpArrowHover.setVisible(false);
-		mDownArrow.setVisible(true);
-		mDownPanel.setVisible(true);
-	}
-
-	@UiHandler("mUpArrow")
-	void onMouseOverUpArrow(MouseOverEvent event) {
-		mUpArrow.setVisible(false);
-		mUpArrowHover.setVisible(true);
-	}
-
-	@UiHandler("mUpArrowHover")
-	void onMouseOutUpArrow(MouseOutEvent event) {
-		if (!mDownPanel.isVisible()) {
-			mUpArrowHover.setVisible(false);
-			mUpArrow.setVisible(true);
-		}
+	@UiHandler("mDownArrow")
+	void onClickDownArrow(ClickEvent event) {
+		mDownArrow.setVisible(false);
+		mUpArrow.setVisible(true);
+		mFooter.getElement().setAttribute("style", "bottom: -125px;");
 	}
 
 	@UiHandler("mFacebook")
 	void onMouseOverFacebook(MouseOverEvent event) {
-		mFacebook.setVisible(false);
-		mFacebookHover.setVisible(true);
+		mFacebook.setResource(Images.INSTANCE.facebookHover());
 	}
 
-	@UiHandler("mFacebookHover")
+	@UiHandler("mFacebook")
 	void onMouseOutFacebook(MouseOutEvent event) {
-		mFacebookHover.setVisible(false);
-		mFacebook.setVisible(true);
+		mFacebook.setResource(Images.INSTANCE.facebook());
 	}
 
 	@UiHandler("mLinkedin")
 	void onMouseOverLinkedin(MouseOverEvent event) {
-		mLinkedin.setVisible(false);
-		mLinkedinHover.setVisible(true);
+		mLinkedin.setResource(Images.INSTANCE.linkedinHover());
 	}
 
-	@UiHandler("mLinkedinHover")
+	@UiHandler("mLinkedin")
 	void onMouseOutLinkedin(MouseOutEvent event) {
-		mLinkedinHover.setVisible(false);
-		mLinkedin.setVisible(true);
+		mLinkedin.setResource(Images.INSTANCE.linkedin());
 	}
 
 	@UiHandler("mTwitter")
 	void onMouseOverTwitter(MouseOverEvent event) {
-		mTwitter.setVisible(false);
-		mTwitterHover.setVisible(true);
+		mTwitter.setResource(Images.INSTANCE.twitterHover());
 	}
 
-	@UiHandler("mTwitterHover")
+	@UiHandler("mTwitter")
 	void onMouseOutTwitter(MouseOutEvent event) {
-		mTwitterHover.setVisible(false);
-		mTwitter.setVisible(true);
+		mTwitter.setResource(Images.INSTANCE.twitter());
 	}
 }
