@@ -1,70 +1,46 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:style>
-    .form {
-    	padding-left: 55px;
-    	padding-right: 55px;
-    }
-    
-    .formGroup {
-    	margin-bottom: 10px;
-    }
-    
-    .marginFormControl {
-    	margin-top: 5px;
-    }
-    
-    .marginTop20 {
-    	margin-top: 20px;
-    }
-    
-    .noteDetail {
-    	font-size: smaller;
-    }
     
     .checkbox {
     	margin-top: 15px;
     }
     
-    .button {
-    	margin-bottom: 26px;
-    	margin-top: 40px;
-    }
     </ui:style>
     <g:HTMLPanel>
-        <g:FormPanel styleName=" {style.form}">
+        <g:FormPanel styleName="form">
 
-            <g:HTMLPanel styleName="{style.marginTop20}">
-                <g:HTMLPanel ui:field="mForenameGroup" styleName="form-group {style.formGroup}">
-                    <label style="font-weight: normal; font-size: 16px; font-family: Oxygen;">First name</label>
-                    <g:TextBox styleName="form-control {style.marginFormControl}" ui:field="mForename" />
-                    <g:HTMLPanel ui:field="mForenameNote" visible="false" styleName="{style.noteDetail}" />
+            <g:HTMLPanel>
+                <g:HTMLPanel ui:field="mForenameGroup" styleName="form-group">
+                    <label>First name</label>
+                    <g:TextBox styleName="form-control" ui:field="mForename" />
+                    <g:HTMLPanel ui:field="mForenameNote" visible="false" styleName="noteDetail" />
                 </g:HTMLPanel>
 
-                <g:HTMLPanel ui:field="mSurnameGroup" styleName="form-group {style.formGroup}">
-                    <label style="font-weight: normal; font-size: 16px; font-family: Oxygen;">Last name</label>
-                    <g:TextBox styleName="form-control {style.marginFormControl}" ui:field="mSurname" />
-                    <g:HTMLPanel ui:field="mSurnameNote" visible="false" styleName="{style.noteDetail}" />
+                <g:HTMLPanel ui:field="mSurnameGroup" styleName="form-group">
+                    <label>Last name</label>
+                    <g:TextBox styleName="form-control" ui:field="mSurname" />
+                    <g:HTMLPanel ui:field="mSurnameNote" visible="false" styleName="noteDetail" />
                 </g:HTMLPanel>
 
-                <g:HTMLPanel ui:field="mCompanyGroup" styleName="form-group {style.formGroup}">
-                    <label style="font-weight: normal; font-size: 16px; font-family: Oxygen;">Company</label>
-                    <g:TextBox styleName="form-control {style.marginFormControl}" ui:field="mCompany" />
-                    <g:HTMLPanel ui:field="mCompanyNote" visible="false" styleName="{style.noteDetail}" />
+                <g:HTMLPanel ui:field="mCompanyGroup" styleName="form-group">
+                    <label>Company</label>
+                    <g:TextBox styleName="form-control" ui:field="mCompany" />
+                    <g:HTMLPanel ui:field="mCompanyNote" visible="false" styleName="noteDetail" />
                 </g:HTMLPanel>
 
-                <g:HTMLPanel ui:field="mEmailGroup" styleName="form-group {style.formGroup}">
-                    <label style="font-weight: normal; font-size: 16px; font-family: Oxygen;">Email</label>
-                    <g:TextBox styleName="form-control {style.marginFormControl}" ui:field="mEmail" />
-                    <g:HTMLPanel ui:field="mEmailNote" visible="false" styleName="{style.noteDetail}" />
+                <g:HTMLPanel ui:field="mEmailGroup" styleName="form-group">
+                    <label>Email</label>
+                    <g:TextBox styleName="form-control" ui:field="mEmail" />
+                    <g:HTMLPanel ui:field="mEmailNote" visible="false" styleName="noteDetail" />
                 </g:HTMLPanel>
 
-                <g:HTMLPanel ui:field="mPasswordGroup" styleName="form-group {style.formGroup}">
-                    <label style="font-weight: normal; font-size: 16px; font-family: Oxygen;">Password</label>
-                    <g:PasswordTextBox styleName="form-control {style.marginFormControl}" ui:field="mPassword" />
-                    <label style="font-weight: normal; font-size: 16px; font-family: Oxygen;">Confirm Password</label>
-                    <g:PasswordTextBox styleName="form-control {style.marginFormControl}" ui:field="confirmPassword" />
-                    <g:HTMLPanel ui:field="mPasswordNote" visible="false" styleName="{style.noteDetail}" />
+                <g:HTMLPanel ui:field="mPasswordGroup" styleName="form-group">
+                    <label>Password</label>
+                    <g:PasswordTextBox styleName="form-control" ui:field="mPassword" />
+                    <label>Confirm Password</label>
+                    <g:PasswordTextBox styleName="form-control" ui:field="confirmPassword" />
+                    <g:HTMLPanel ui:field="mPasswordNote" visible="false" styleName="noteDetail" />
                 </g:HTMLPanel>
 
                 <g:HTMLPanel ui:field="termAndCondGroup" styleName="checkbox {style.checkbox}">
@@ -74,10 +50,10 @@
                         <g:InlineHyperlink ui:field="mTermAndCondLink">terms and
                             conditions</g:InlineHyperlink>
                     </label>
-                    <g:HTMLPanel ui:field="termAndCondNote" visible="false" styleName="{style.noteDetail}" />
+                    <g:HTMLPanel ui:field="termAndCondNote" visible="false" styleName="noteDetail" />
                 </g:HTMLPanel>
 
-                <g:Button ui:field="mRegister" styleName="btn btn-lg btn-primary btn-block {style.button}">
+                <g:Button ui:field="mRegister" styleName="btn btn-lg btn-primary btn-block">
                     Submit
                 </g:Button>
 

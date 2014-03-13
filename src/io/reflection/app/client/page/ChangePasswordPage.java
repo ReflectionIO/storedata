@@ -21,6 +21,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -119,6 +120,23 @@ public class ChangePasswordPage extends Page implements UserPasswordChangedEvent
 		}
 	}
 
+	@UiHandler({ "mPassword", "mNewPassword", "mConfirmPassword" })
+	void onFieldsModified(KeyUpEvent event) {
+		if (!SessionController.get().isLoggedInUserAdmin()) {
+			if (!mPassword.getValue().isEmpty() && !mNewPassword.getValue().isEmpty() && !mConfirmPassword.getValue().isEmpty()) {
+				mChangePassword.setEnabled(true);
+			} else {
+				mChangePassword.setEnabled(false);
+			}
+		} else {
+			if (!mNewPassword.getValue().isEmpty() && !mConfirmPassword.getValue().isEmpty()) {
+				mChangePassword.setEnabled(true);
+			} else {
+				mChangePassword.setEnabled(false);
+			}
+		}
+	}
+
 	/**
 	 * Check if every field of the form is valid and return true
 	 * 
@@ -184,7 +202,7 @@ public class ChangePasswordPage extends Page implements UserPasswordChangedEvent
 		mChangeDetailsLink.setTargetHistoryToken("users/changedetails/" + SessionController.get().getLoggedInUser().id.toString());
 		mChangePasswordLink.setTargetHistoryToken("users/changepassword/" + SessionController.get().getLoggedInUser().id.toString());
 		resetForm();
-
+		mChangePassword.setEnabled(false);
 		if (SessionController.get().isLoggedInUserAdmin()) {
 			mNewPassword.setFocus(true);
 		} else {

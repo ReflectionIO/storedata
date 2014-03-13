@@ -1,6 +1,128 @@
 @CHARSET "UTF-8";
 
-@external toppanel, sidepanel, btn-group, btn-default, row, divider, dropdown-menu, side, divider-vertical, nav-pills, nav-stacked, nav-tabs, nav-justified, ranks, loginregister, well, well-title, form-group, gwt-RadioButton, hr, navbar-fixed-top, navbar, container, pagination, btn-primary, btn-primary:hover, active, open, dropdown-toggle, dropdown-menu, badge, dropdown, nav, navbar-inverse, navbar-nav, caret, form-control;
+@external p-small, form, formEdit, noteDetail, label, gwt-DateBox, gwt-ListBox, toppanel, sidepanel, btn-group, btn-default, row, divider, dropdown-menu, side, divider-vertical, nav-pills, nav-stacked, nav-tabs, nav-justified, ranks, loginregister, well, well-title, form-group, gwt-RadioButton, hr, navbar-fixed-top, navbar, container, pagination, btn-primary, btn-primary, disabled btn-primary:hover, active, open, dropdown-toggle, dropdown-menu, badge, dropdown, nav, navbar-inverse, navbar-nav, caret, form-control;
+	/* Colors palette: Purple #6d69c5; DarkBlue 272933; Gold #eabc3e; LightGrey: #f8f9f9; Green: #1bc79f; Blue: #3357cc; Red: #e73c48; */
+/* Forms */
+.form {
+	padding-left: 55px;
+	padding-right: 55px;
+	margin-top: 30px;
+}
+
+.form>div {
+	margin-top: 20px;
+	margin-bottom: 40px;
+}
+
+.form button {
+	margin-bottom: 20px;
+	margin-top: 30px;
+}
+
+.formEdit {
+	padding-left: 25px;
+	padding-right: 25px;
+	width: 320px;
+}
+
+.formEdit button {
+	margin-top: 30px;
+}
+
+.form-group {
+	margin-bottom: 10px;
+}
+
+.noteDetail {
+	font-size: smaller;
+	margin-top: 5px;
+}
+
+.form-control {
+	height: 36px;
+	margin-top: 5px;
+	font-size: 16px;
+	color: #434346;
+	font-weight: 400;
+	font-family: 'Lato', sans-serif;
+	line-height: 24px;
+}
+
+.form-control:focus {
+	border-color: #6d69c5;
+	outline: 0;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px
+		rgba(151, 128, 228, 0.6);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px
+		rgba(151, 128, 228, 0.6);
+}
+
+/* Date Box */
+.gwt-DateBox {
+	height: 34px;
+	width: 180px;
+	background: -webkit-linear-gradient(#f6f7f9, #eeeff1);
+	/* For Safari 5.1 to 6.0 */
+	background: -o-linear-gradient(#f6f7f9, #eeeff1);
+	/* For Opera 11.1 to 12.0 */
+	background: -moz-linear-gradient(#f6f7f9, #eeeff1);
+	/* For Firefox 3.6 to 15 */
+	background: linear-gradient(#f6f7f9, #eeeff1); /* Standard syntax */
+	color: #434346;
+	padding-left: 12px;
+	padding-top: 5px;
+	margin-right: 0px;
+	border-top-left-radius: 4px;
+	border-bottom-left-radius: 4px;
+	box-shadow: none;
+	border: 1px solid #d5d6da;
+	outline: 0;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	cursor: pointer;
+}
+
+/* List Box */
+.gwt-ListBox {
+	display: inline-block;
+	color: #434346;
+	height: 34px;
+	width: 160px;
+	background: -webkit-linear-gradient(#f6f7f9, #eeeff1);
+	/* For Safari 5.1 to 6.0 */
+	background: -o-linear-gradient(#f6f7f9, #eeeff1);
+	/* For Opera 11.1 to 12.0 */
+	background: -moz-linear-gradient(#f6f7f9, #eeeff1);
+	/* For Firefox 3.6 to 15 */
+	background: linear-gradient(#f6f7f9, #eeeff1); /* Standard syntax */
+	margin: 0px;
+	margin-left: 7px;
+	padding-left: 12px;
+	padding-top: 5px;
+	margin-right: 7px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	box-shadow: none;
+	border: 1px solid #d5d6da;
+	outline: 0;
+	display: inline-block;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	cursor: pointer;
+}
+
+.gwt-ListBox>option {
+	color: #434346;
+	outline: 0;
+	height: 34px;
+	padding-left: 12px;
+	padding-top: 7px;
+	box-shadow: none;
+}
+
 .row {
 	margin-left: 0px;
 	margin-right: 0px;
@@ -72,64 +194,51 @@
 	margin-left: 4px;
 }
 
-.form-group label {
-	font-weight: normal;
-	font-size: 16px;
-	font-family: Oxygen;
-	color: #58595d;
-	line-height: 30px;
-	letter-spacing: 0px;
-}
-
 /* TEXT */
 p {
-	font-weight: regular;
+	font-weight: 400;
 	font-size: 16px;
-	font-family: Lato;
+	font-family: 'Lato', sans-serif;
 	color: #63656a;
-	line-height: 26px;
-	letter-spacing: 0px;
+	line-height: 24px;
+}
+
+p.p-small {
+	font-weight: 400;
+	font-size: 14px;
+	font-family: 'Lato', sans-serif;
+	line-height: 22px;
 }
 
 h1,h2,h3,h4,h5,h6 {
-	font-family: Oxygen;
+	font-family: 'Source Sans Pro', sans-serif;
 	color: #0e0e1f;
+	font-weight: 600;
 }
 
 /* Forms title */
 h6 {
-	font-weight: regular;
 	font-size: 16px;
 }
 
 h5 {
-	font-weight: bold;
 	font-size: 18px;
 }
 
 h4 {
-	font-weight: bold;
 	font-size: 20px;
-	line-height: 30px;
-	letter-spacing: 0px;
 }
 
 h3 {
-	font-weight: bold;
-	font-size: 22px;
-	line-height: 30px;
-	letter-spacing: 0px;
+	font-size: 24px;
 }
 
 h2 {
-	
+	font-size: 28px;
 }
 
 h1 {
-	font-weight: bold;
 	font-size: 34px;
-	line-height: 40px;
-	letter-spacing: 0px;
 }
 
 hr {
@@ -139,11 +248,24 @@ hr {
 	height: 1px;
 }
 
+label {
+	font-weight: 400;
+	font-size: 18px;
+	font-family: 'Source Sans Pro', sans-serif;
+	color: #58595d;
+	line-height: 30px;
+}
+
 a {
 	cursor: pointer;
 	color: #6D69C5;
 	font-family: Oxygen;
 	font-size: 14px;
+}
+
+a:hover,a:focus,a:active {
+	text-decoration: none;
+	color: #1bc79f;
 }
 
 .highlightRange {
@@ -152,11 +274,6 @@ a {
 
 .highlightRangeBoundaries {
 	
-}
-
-a:hover,a:focus,a:active {
-	text-decoration: none;
-	color: #1bc79f;
 }
 
 .pagination>.active>a,.pagination>.active>span,.pagination>.active>a:hover,.pagination>.active>span:hover,.pagination>.active>a:focus,.pagination>.active>span:focus
@@ -203,8 +320,14 @@ a:hover,a:focus,a:active {
 	background: #1bc79f;
 }
 
+.btn-primary.disabled,.btn-primary[disabled],fieldset[disabled] .btn-primary,.btn-primary.disabled:hover,.btn-primary[disabled]:hover,fieldset[disabled] .btn-primary:hover,.btn-primary.disabled:focus,.btn-primary[disabled]:focus,fieldset[disabled] .btn-primary:focus,.btn-primary.disabled:active,.btn-primary[disabled]:active,fieldset[disabled] .btn-primary:active,.btn-primary.disabled.active,.btn-primary.active[disabled],fieldset[disabled] .btn-primary.active
+	{
+	background-color: #dedede;
+	border-color: #dedede;
+}
 /* Dropdown */
-.dropdown-menu>li>a:hover,.dropdown-menu>li>a:focus,.dropdown-menu>.active>a,.dropdown-menu>.active>a:hover,.dropdown-menu>.active>a:focus
+.
+dropdown-menu>li>a: hover,.dropdown-menu>li>a:focus,.dropdown-menu>.active>a,.dropdown-menu>.active>a:hover,.dropdown-menu>.active>a:focus
 	{
 	background-color: #6D69C5;
 	color: #FFF;
@@ -340,18 +463,4 @@ a:hover,a:focus,a:active {
 	{
 	color: #6e69b0;
 	background-color: #fafafa;
-}
-
-/* Form */
-.form-control {
-	height: 36px;
-}
-
-.form-control:focus {
-	border-color: #6D69C5;
-	outline: 0;
-	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px
-		rgba(151, 128, 228, 0.6);
-	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px
-		rgba(151, 128, 228, 0.6);
 }

@@ -34,30 +34,31 @@
                         <h3 style="margin-top: 30px;">
                             Step 1
                         </h3>
-                        <p style="font-family: Lato; font-size: 14px; margin-top: 20px; padding-left: 7px; padding-right: 7px;">Sign in to your account to get started</p>
+                        <p class="p-small" style="margin-top: 20px; padding-left: 5px; padding-right: 5px;">Sign in to your account to get started</p>
                     </div>
                     <div class="col-md-4">
                         <h3 style="color: #6D69C5;  margin-top: 30px;">
                             Step 2
                         </h3>
-                        <p style="font-family: Lato; font-size: 14px; margin-top: 20px; padding-left: 10px; padding-right: 10px;">Link your iTunes Connect account</p>
+                        <p class="p-small" style="margin-top: 20px; padding-left: 10px; padding-right: 10px;">Link your iTunes Connect account</p>
                     </div>
                     <div class="col-md-4">
                         <h3 style=" margin-top: 30px;">
                             Step 3
                         </h3>
-                        <p style="font-family: Lato; font-size: 14px; margin-top: 20px; padding-left: 10px; padding-right: 10px;">Done. Welcome to the private beta</p>
+                        <p class="p-small" style="margin-top: 20px; padding-left: 10px; padding-right: 10px;">Done. Welcome to the private beta</p>
                     </div>
                 </div>
 
             </div>
 
-            <g:FormPanel styleName="well col-md-5 col-md-offset-1 {style.marginTopForm}">
+            <g:HTMLPanel styleName="well col-md-5 col-md-offset-1 {style.marginTopForm}">
 
                 <g:HTMLPanel styleName="{style.marginTop20}">
                     <h4 class="text-center">
                         Link Your iTunes Connect Account
                     </h4>
+                    
                     <g:FormPanel ui:field="form">
                         <g:HTMLPanel styleName="col-md-10 col-md-offset-1 {style.marginTop20}">
                             <l:IosMacLinkAccountForm ui:field="mIosMacForm" />
@@ -69,7 +70,7 @@
                     </g:FormPanel>
 
                 </g:HTMLPanel>
-            </g:FormPanel>
+            </g:HTMLPanel>
         </g:HTMLPanel>
 
     </g:HTMLPanel>

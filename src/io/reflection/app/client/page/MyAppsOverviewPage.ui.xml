@@ -36,10 +36,14 @@
                     </div>
 
                     <div style="float: right;">
+
+
                         <g:ListBox ui:field="mAppStore">
                             <g:item value="iph">iPhone Store</g:item>
                             <g:item value="ipa">iPad Store</g:item>
+                            <g:item>Google Play</g:item>
                         </g:ListBox>
+
 
                         <g:ListBox ui:field="mCountry">
                             <g:item value="us">United States</g:item>
@@ -49,19 +53,16 @@
                             <g:item value="fr">France</g:item>
                         </g:ListBox>
 
-                        <d:DateBox styleName="" ui:field="mDate" />
+                        <d:DateBox ui:field="mDate"/>
                         <span>
                             <i class="icon-calendar"></i>
                         </span>
 
-
-                        <div class="btn-group ">
-                            <g:InlineHyperlink ui:field="mToday" styleName="btn btn-default active">Day</g:InlineHyperlink>
-                            <g:InlineHyperlink ui:field="mThisWeek" styleName="btn btn-default">Week</g:InlineHyperlink>
-                            <g:InlineHyperlink ui:field="mThisMonth" styleName="btn btn-default">Month</g:InlineHyperlink>
+                        <div class="btn-group" style="margin-left: 7px;">
+                            <g:InlineHyperlink ui:field="mToday" styleName="btn btn-default active" targetHistoryToken="myappsoverview">Day</g:InlineHyperlink>
+                            <g:InlineHyperlink ui:field="mThisWeek" styleName="btn btn-default" targetHistoryToken="myappsoverview">Week</g:InlineHyperlink>
+                            <g:InlineHyperlink ui:field="mThisMonth" styleName="btn btn-default" targetHistoryToken="myappsoverview">Month</g:InlineHyperlink>
                         </div>
-
-
 
                     </div>
 
