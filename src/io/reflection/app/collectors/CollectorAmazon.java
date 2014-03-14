@@ -22,7 +22,7 @@ public class CollectorAmazon extends StoreCollector implements Collector {
 	}
 	
 	@Override
-	public List<Long> collect(String country, String type, String category, String code) {
+	public List<Long> collect(String country, String type, String category, Long code) {
 //		<?php
 //
 //				//Enter your IDs

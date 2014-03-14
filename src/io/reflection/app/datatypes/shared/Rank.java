@@ -40,7 +40,7 @@ public class Rank extends DataType {
 
 	public String currency;
 
-	public String code;
+	public Long code;
 
 	public Category category;
 
@@ -146,7 +146,7 @@ public class Rank extends DataType {
 		if (jsonObject.has("code")) {
 			JsonElement jsonCode = jsonObject.get("code");
 			if (jsonCode != null) {
-				code = jsonCode.getAsString();
+				code = Long.valueOf(jsonCode.getAsLong());
 			}
 		}
 		if (jsonObject.has("revenue")) {

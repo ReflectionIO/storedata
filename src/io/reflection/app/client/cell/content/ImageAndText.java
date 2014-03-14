@@ -7,10 +7,13 @@
 //
 package io.reflection.app.client.cell.content;
 
+
 /**
  * @author billy1380
- *
+ * 
  */
 public interface ImageAndText {
+	String getImageStyleName();
 
+	String getText();
 }

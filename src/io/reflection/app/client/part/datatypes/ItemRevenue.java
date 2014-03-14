@@ -7,14 +7,13 @@
 //
 package io.reflection.app.client.part.datatypes;
 
-import com.google.gwt.user.client.ui.Image;
 
 /**
  * @author billy1380
  *
  */
 public class ItemRevenue {
-	public Image countryFlag;
+	public String countryFlagStyleName;
 	public String countryName;
 	public Float percentage;
 	public Float paid;

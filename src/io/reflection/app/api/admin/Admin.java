@@ -9,7 +9,6 @@
 package io.reflection.app.api.admin;
 
 import static io.reflection.app.api.PagerHelper.updatePager;
-import io.reflection.app.api.ApiError;
 import io.reflection.app.api.ValidationHelper;
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
 import io.reflection.app.api.admin.shared.call.AssignRoleResponse;
@@ -41,6 +40,7 @@ import io.reflection.app.api.admin.shared.call.TriggerModelRequest;
 import io.reflection.app.api.admin.shared.call.TriggerModelResponse;
 import io.reflection.app.api.admin.shared.call.TriggerPredictRequest;
 import io.reflection.app.api.admin.shared.call.TriggerPredictResponse;
+import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;

@@ -25,7 +25,7 @@ public class TriggerModelRequest extends Request {
 	public Country country;
 	public Store store;
 	public List<String> listTypes;
-	public String code;
+	public Long code;
 
 	@Override
 	public JsonObject toJson() {
@@ -82,7 +82,7 @@ public class TriggerModelRequest extends Request {
 		if (jsonObject.has("code")) {
 			JsonElement jsonCode = jsonObject.get("code");
 			if (jsonCode != null) {
-				code = jsonCode.getAsString();
+				code = Long.valueOf(jsonCode.getAsLong());
 			}
 		}
 	}

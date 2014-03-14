@@ -13,7 +13,9 @@ import static io.reflection.app.client.controller.FilterController.REVENUE_CHART
 import io.reflection.app.api.core.shared.call.GetItemRanksRequest;
 import io.reflection.app.api.core.shared.call.GetItemRanksResponse;
 import io.reflection.app.api.core.shared.call.event.GetItemRanksEventHandler;
+import io.reflection.app.client.cell.ImageAndTextCell;
 import io.reflection.app.client.cell.ProgressBarCell;
+import io.reflection.app.client.cell.content.ConcreteImageAndText;
 import io.reflection.app.client.cell.content.PercentageProgress;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FilterController;
@@ -32,6 +34,7 @@ import io.reflection.app.client.part.ItemTopPanel;
 import io.reflection.app.client.part.RankChart;
 import io.reflection.app.client.part.RankChart.RankingType;
 import io.reflection.app.client.part.datatypes.ItemRevenue;
+import io.reflection.app.client.res.flags.Styles;
 import io.reflection.app.datatypes.shared.Item;
 
 import java.util.HashMap;
@@ -56,6 +59,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	private static ItemPageUiBinder uiBinder = GWT.create(ItemPageUiBinder.class);
 
 	interface ItemPageUiBinder extends UiBinder<Widget, ItemPage> {}
+
+	private static final int LIST_TYPE_PARAMETER_INDEX = 4;
 
 	@UiField AlertBox mAlertBox;
 	@UiField ItemSidePanel mSidePanel;
@@ -83,6 +88,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	public ItemPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
+		Styles.INSTANCE.flags().ensureInjected();
+
 		createColumns();
 
 		mTabs.put(REVENUE_CHART_TYPE, mRevenueItem);
@@ -94,13 +101,13 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	}
 
 	private void createColumns() {
-		TextColumn<ItemRevenue> countryColumn = new TextColumn<ItemRevenue>() {
+
+		Column<ItemRevenue, ConcreteImageAndText> countryColumn = new Column<ItemRevenue, ConcreteImageAndText>(new ImageAndTextCell<ConcreteImageAndText>()) {
 
 			@Override
-			public String getValue(ItemRevenue object) {
-				return object.countryName;
+			public ConcreteImageAndText getValue(ItemRevenue object) {
+				return new ConcreteImageAndText(object.countryFlagStyleName, object.countryName);
 			}
-
 		};
 
 		Column<ItemRevenue, PercentageProgress> percentageColumn = new Column<ItemRevenue, PercentageProgress>(new ProgressBarCell<PercentageProgress>()) {
@@ -175,15 +182,14 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				// Document.get().setScrollLeft(0);
 				// Document.get().setScrollTop(0);
 
-				String mode = stack.getParameter(1);
-
-				FilterController.get().setListType(mode);
+				String listType = stack.getParameter(LIST_TYPE_PARAMETER_INDEX);
+				FilterController.get().setListType(listType);
 
 				item = null;
 
-				mRevenue.setTargetHistoryToken("item/view/" + mItemExternalId + "/" + mode);
-				mDownloads.setTargetHistoryToken("item/view/" + mItemExternalId + "/" + mode);
-				mRanking.setTargetHistoryToken("item/view/" + mItemExternalId + "/" + mode);
+				mRevenue.setTargetHistoryToken("item/view/" + mItemExternalId + "/" + listType);
+				mDownloads.setTargetHistoryToken("item/view/" + mItemExternalId + "/" + listType);
+				mRanking.setTargetHistoryToken("item/view/" + mItemExternalId + "/" + listType);
 
 				if ((item = ItemController.get().lookupItem(mItemExternalId)) != null) {
 					displayItemDetails();
@@ -196,7 +202,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 							false).setVisible(true);
 				}
 
-				rankingType = RankingType.fromString(mode);
+				rankingType = RankingType.fromString(listType);
 
 				getHistoryChartData();
 

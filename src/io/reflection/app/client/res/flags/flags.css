@@ -1,0 +1,40 @@
+@sprite .cn {
+	gwt-image: "spriteSheet";
+	display: inline-block;
+	width: 26px;
+	height: 26px;
+	background-position: -2px -58px;
+}
+
+@sprite .de {
+	gwt-image: "spriteSheet";
+	display: inline-block;
+	width: 26px;
+	height: 26px;
+	background-position: -30px -30px;
+}
+
+@sprite .fr {
+	gwt-image: "spriteSheet";
+	display: inline-block;
+	overflow: hidden;
+	width: 26px;
+	height: 26px;
+	background-position: -2px -30px;
+}
+
+@sprite .gb {
+	gwt-image: "spriteSheet";
+	overflow: hidden;
+	width: 26px;
+	height: 26px;
+	background-position: -30px -2px;
+}
+
+@sprite .us {
+	gwt-image: "spriteSheet";
+	display: inline-block;
+	width: 26px;
+	height: 26px;
+	background-position: -2px -2px;
+}

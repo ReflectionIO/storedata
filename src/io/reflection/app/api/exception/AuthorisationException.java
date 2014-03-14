@@ -7,7 +7,7 @@
 //
 package io.reflection.app.api.exception;
 
-import io.reflection.app.api.ApiError;
+import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;

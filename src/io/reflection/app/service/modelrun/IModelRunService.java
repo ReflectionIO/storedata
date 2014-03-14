@@ -47,6 +47,6 @@ public interface IModelRunService extends IService {
 	 * @param code
 	 * @return
 	 */
-	public ModelRun getGatherCodeModelRun(Country country, Store store, FormType form, String code) throws DataAccessException;
+	public ModelRun getGatherCodeModelRun(Country country, Store store, FormType form, Long code) throws DataAccessException;
 
 }

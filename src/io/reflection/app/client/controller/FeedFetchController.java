@@ -16,14 +16,13 @@ import io.reflection.app.api.admin.shared.call.TriggerModelRequest;
 import io.reflection.app.api.admin.shared.call.TriggerModelResponse;
 import io.reflection.app.api.admin.shared.call.TriggerPredictRequest;
 import io.reflection.app.api.admin.shared.call.TriggerPredictResponse;
+import io.reflection.app.api.admin.shared.call.event.GetFeedFetchesEventHandler.GetFeedFetchesFailure;
+import io.reflection.app.api.admin.shared.call.event.GetFeedFetchesEventHandler.GetFeedFetchesSuccess;
 import io.reflection.app.api.shared.datatypes.Pager;
-import io.reflection.app.client.handler.FeedFetchesEventHandler;
-import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.datatypes.shared.FeedFetch;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -36,11 +35,10 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements ServiceController, FilterEventHandler {
+public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements ServiceController {
 	private static FeedFetchController mOne = null;
 
 	private List<FeedFetch> mRows = null;
-
 	private Pager mPager;
 
 	public static FeedFetchController get() {
@@ -51,17 +49,13 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 		return mOne;
 	}
 
-	private FeedFetchController() {
-		EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this);
-	}
-	
 	public void fetchFeedFetches() {
 		AdminService service = new AdminService();
 		service.setUrl(ADMIN_END_POINT);
 
 		final GetFeedFetchesRequest input = new GetFeedFetchesRequest();
 		input.accessCode = ACCESS_CODE;
-		
+
 		input.session = SessionController.get().getSessionForApiCall();
 
 		if (mPager == null) {
@@ -69,8 +63,9 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 			mPager.count = SHORT_STEP;
 			mPager.start = Long.valueOf(0);
 		}
+
 		input.pager = mPager;
-		
+
 		input.country = FilterController.get().getCountry();
 		input.store = FilterController.get().getStore();
 		input.listTypes = FilterController.get().getListTypes();
@@ -86,9 +81,6 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 								mPager = output.pager;
 							}
 
-							EventController.get().fireEventFromSource(new FeedFetchesEventHandler.ReceivedFeedFetches(output.feedFetches),
-									FeedFetchController.this);
-
 							if (mRows == null) {
 								mRows = new ArrayList<FeedFetch>();
 							}
@@ -99,11 +91,13 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 							updateRowCount(mPager.totalCount.intValue(), true);
 						}
 					}
+
+					EventController.get().fireEventFromSource(new GetFeedFetchesSuccess(input, output), FeedFetchController.this);
 				}
 
 				@Override
 				public void onFailure(Throwable caught) {
-					Window.alert(caught.getMessage());
+					EventController.get().fireEventFromSource(new GetFeedFetchesFailure(input, caught), FeedFetchController.this);
 				}
 			});
 		}
@@ -128,61 +122,37 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamChanged(java.lang.String, java.lang.Object, java.lang.Object)
-	 */
-	@Override
-	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
-		mPager = null;
-		mRows = null;
-		
-		updateRowData(0, new ArrayList<FeedFetch>());
-		updateRowCount(0, false);
-
-		fetchFeedFetches();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamsChanged(java.util.Map, java.util.Map)
-	 */
-	@Override
-	public void filterParamsChanged(Map<String, ?> currentValues, Map<String, ?> previousValues) {
+	public void reset() {
 		mPager = null;
 		mRows = null;
 
 		updateRowData(0, new ArrayList<FeedFetch>());
 		updateRowCount(0, false);
-		
-		fetchFeedFetches();
 	}
-	
-	public void model(String code) {
+
+	public void model(Long code) {
 		AdminService service = new AdminService();
 		service.setUrl(ADMIN_END_POINT);
 
 		final TriggerModelRequest input = new TriggerModelRequest();
 		input.accessCode = ACCESS_CODE;
-		
+
 		input.session = SessionController.get().getSessionForApiCall();
-		
+
 		input.country = FilterController.get().getCountry();
 		input.store = FilterController.get().getStore();
 		input.listTypes = FilterController.get().getAllListTypes();
 		input.code = code;
-	
+
 		service.triggerModel(input, new AsyncCallback<TriggerModelResponse>() {
-			
+
 			@Override
 			public void onSuccess(TriggerModelResponse output) {
-				if (output.status == StatusType.StatusTypeFailure && output.error != null) { 
+				if (output.status == StatusType.StatusTypeFailure && output.error != null) {
 					Window.alert(output.error.message);
 				}
 			}
-			
+
 			@Override
 			public void onFailure(Throwable caught) {
 				Window.alert(caught.getMessage());
@@ -193,63 +163,63 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 	/**
 	 * @param code
 	 */
-	public void ingest(String code) {
+	public void ingest(Long code) {
 		AdminService service = new AdminService();
 		service.setUrl(ADMIN_END_POINT);
 
 		final TriggerIngestRequest input = new TriggerIngestRequest();
 		input.accessCode = ACCESS_CODE;
-		
+
 		input.session = SessionController.get().getSessionForApiCall();
-		
+
 		input.country = FilterController.get().getCountry();
 		input.store = FilterController.get().getStore();
 		input.listTypes = FilterController.get().getAllListTypes();
 		input.code = code;
-	
+
 		service.triggerIngest(input, new AsyncCallback<TriggerIngestResponse>() {
-			
+
 			@Override
 			public void onSuccess(TriggerIngestResponse output) {
-				if (output.status == StatusType.StatusTypeFailure && output.error != null) { 
+				if (output.status == StatusType.StatusTypeFailure && output.error != null) {
 					Window.alert(output.error.message);
 				}
 			}
-			
+
 			@Override
 			public void onFailure(Throwable caught) {
 				Window.alert(caught.getMessage());
 			}
 		});
-		
+
 	}
 
 	/**
 	 * @param code
 	 */
-	public void predict(String code) {
+	public void predict(Long code) {
 		AdminService service = new AdminService();
 		service.setUrl(ADMIN_END_POINT);
 
 		final TriggerPredictRequest input = new TriggerPredictRequest();
 		input.accessCode = ACCESS_CODE;
-		
+
 		input.session = SessionController.get().getSessionForApiCall();
-		
+
 		input.country = FilterController.get().getCountry();
 		input.store = FilterController.get().getStore();
 		input.listTypes = FilterController.get().getAllListTypes();
 		input.code = code;
-	
+
 		service.triggerPredict(input, new AsyncCallback<TriggerPredictResponse>() {
-			
+
 			@Override
 			public void onSuccess(TriggerPredictResponse output) {
-				if (output.status == StatusType.StatusTypeFailure && output.error != null) { 
+				if (output.status == StatusType.StatusTypeFailure && output.error != null) {
 					Window.alert(output.error.message);
 				}
 			}
-			
+
 			@Override
 			public void onFailure(Throwable caught) {
 				Window.alert(caught.getMessage());

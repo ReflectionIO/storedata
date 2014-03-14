@@ -67,7 +67,7 @@ final class ModelRunService implements IModelRunService {
 		modelRun.country = stripslashes(connection.getCurrentRowString("country"));
 		modelRun.store = stripslashes(connection.getCurrentRowString("store"));
 
-		modelRun.code = stripslashes(connection.getCurrentRowString("code"));
+		modelRun.code = connection.getCurrentRowLong("code2");
 		modelRun.form = FormType.fromString(connection.getCurrentRowString("form"));
 		modelRun.grossingA = connection.getCurrentRowDouble("grossinga");
 		modelRun.paidA = connection.getCurrentRowDouble("paida");
@@ -89,8 +89,8 @@ final class ModelRunService implements IModelRunService {
 		ModelRun addedModelRun = null;
 
 		final String addModelRunQuery = String
-				.format("INSERT INTO `modelrun` (`country`,`store`,`code`,`form`,`grossinga`,`paida`,`bratio`,`totaldownloads`,`paidb`,`grossingb`,`paidaiap`,`grossingaiap`,`freea`,`theta`,`freeb`) VALUES ('%s','%s','%s','%s',%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f);",
-						addslashes(modelRun.country), addslashes(modelRun.store), addslashes(modelRun.code), modelRun.form.toString(),
+				.format("INSERT INTO `modelrun` (`country`,`store`,`code2`,`form`,`grossinga`,`paida`,`bratio`,`totaldownloads`,`paidb`,`grossingb`,`paidaiap`,`grossingaiap`,`freea`,`theta`,`freeb`) VALUES ('%s','%s',%d,'%s',%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f);",
+						addslashes(modelRun.country), addslashes(modelRun.store), modelRun.code.longValue(), modelRun.form.toString(),
 						modelRun.grossingA.doubleValue(), modelRun.paidA.doubleValue(), modelRun.bRatio.doubleValue(), modelRun.totalDownloads.doubleValue(),
 						modelRun.paidB.doubleValue(), modelRun.grossingB.doubleValue(), modelRun.paidAIap.doubleValue(), modelRun.grossingAIap.doubleValue(),
 						modelRun.freeA.doubleValue(), modelRun.theta.doubleValue(), modelRun.freeB.doubleValue());
@@ -123,8 +123,8 @@ final class ModelRunService implements IModelRunService {
 		ModelRun updatedModelRun = null;
 
 		final String updateModelRunQuery = String
-				.format("UPDATE `modelrun` SET `country`='%s',`store`='%s',`code`='%s',`form`='%s',`grossinga`=%f,`paida`=%f,`bratio`=%f,`totaldownloads`=%f,`paidb`=%f,`grossingb`=%f,`paidaiap`=%f,`grossingaiap`=%f,`freea`=%f,`theta`=%f,`freeb`=%f WHERE `id`=%d AND `deleted`='n';",
-						addslashes(modelRun.country), addslashes(modelRun.store), addslashes(modelRun.code), modelRun.form.toString(),
+				.format("UPDATE `modelrun` SET `country`='%s',`store`='%s',`code2`=%d,`form`='%s',`grossinga`=%f,`paida`=%f,`bratio`=%f,`totaldownloads`=%f,`paidb`=%f,`grossingb`=%f,`paidaiap`=%f,`grossingaiap`=%f,`freea`=%f,`theta`=%f,`freeb`=%f WHERE `id`=%d AND `deleted`='n';",
+						addslashes(modelRun.country), addslashes(modelRun.store), modelRun.code.longValue(), modelRun.form.toString(),
 						modelRun.grossingA.doubleValue(), modelRun.paidA.doubleValue(), modelRun.bRatio.doubleValue(), modelRun.totalDownloads.doubleValue(),
 						modelRun.paidB.doubleValue(), modelRun.grossingB.doubleValue(), modelRun.paidAIap.doubleValue(), modelRun.grossingAIap.doubleValue(),
 						modelRun.freeA.doubleValue(), modelRun.theta.doubleValue(), modelRun.freeB.doubleValue(), modelRun.id.longValue());
@@ -159,15 +159,15 @@ final class ModelRunService implements IModelRunService {
 	 * (non-Javadoc)
 	 * 
 	 * @see io.reflection.app.service.modelrun.IModelRunService#getGatherCodeModelRun(java.lang.String, java.lang.String,
-	 * io.reflection.app.shared.datatypes.FormType, java.lang.String)
+	 * io.reflection.app.shared.datatypes.FormType, java.lang.Long)
 	 */
 	@Override
-	public ModelRun getGatherCodeModelRun(Country country, Store store, FormType form, String code) throws DataAccessException {
+	public ModelRun getGatherCodeModelRun(Country country, Store store, FormType form, Long code) throws DataAccessException {
 		ModelRun modelRun = null;
 
 		final String getGatherCodeModelRunQuery = String.format(
-				"SELECT * FROM `modelrun` WHERE `store`='%s' AND `country`='%s' AND `form`='%s' AND `code`='%s'", addslashes(store.a3Code),
-				addslashes(country.a2Code), form.toString(), addslashes(code));
+				"SELECT * FROM `modelrun` WHERE `store`='%s' AND `country`='%s' AND `form`='%s' AND `code2`=%d", addslashes(store.a3Code),
+				addslashes(country.a2Code), form.toString(), code.longValue());
 
 		Connection modelRunConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeModelRun.toString());
 

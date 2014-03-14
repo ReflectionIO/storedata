@@ -9,7 +9,6 @@ package io.reflection.app.api.core;
 
 import static io.reflection.app.api.PagerHelper.updatePager;
 import io.reflection.app.accountdatacollectors.DataAccountCollectorFactory;
-import io.reflection.app.api.ApiError;
 import io.reflection.app.api.ValidationHelper;
 import io.reflection.app.api.core.shared.call.ChangePasswordRequest;
 import io.reflection.app.api.core.shared.call.ChangePasswordResponse;
@@ -52,6 +51,7 @@ import io.reflection.app.api.core.shared.call.RegisterUserResponse;
 import io.reflection.app.api.core.shared.call.SearchForItemRequest;
 import io.reflection.app.api.core.shared.call.SearchForItemResponse;
 import io.reflection.app.api.exception.AuthenticationException;
+import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.collectors.CollectorIOS;

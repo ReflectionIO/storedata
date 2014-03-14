@@ -10,8 +10,8 @@ package io.reflection.app.client.controller;
 import io.reflection.app.api.core.client.CoreService;
 import io.reflection.app.api.core.shared.call.GetStoresRequest;
 import io.reflection.app.api.core.shared.call.GetStoresResponse;
-import io.reflection.app.api.core.shared.call.event.GetStoresEventHandler;
-import io.reflection.app.client.handler.StoresEventHandler;
+import io.reflection.app.api.core.shared.call.event.GetStoresEventHandler.GetStoresFailure;
+import io.reflection.app.api.core.shared.call.event.GetStoresEventHandler.GetStoresSuccess;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Store;
 
@@ -31,7 +31,7 @@ public class StoreController implements ServiceController {
 
 	public static final String IPHONE_A3_CODE = "iph";
 	public static final String IPAD_A3_CODE = "ipa";
-	
+
 	public static final String IOS_A3_CODE = "ios";
 
 	private static StoreController mOne = null;
@@ -58,16 +58,16 @@ public class StoreController implements ServiceController {
 		service.getStores(input, new AsyncCallback<GetStoresResponse>() {
 
 			@Override
-			public void onSuccess(GetStoresResponse result) {
-				if (result.status == StatusType.StatusTypeSuccess) {
-					if (result.stores != null && result.stores.size() > 0) {
+			public void onSuccess(GetStoresResponse output) {
+				if (output.status == StatusType.StatusTypeSuccess) {
+					if (output.stores != null && output.stores.size() > 0) {
 
 						if (mStoreLookup == null) {
 							mStoreLookup = new HashMap<String, Store>();
 						}
 
 						Store iosStore = null;
-						for (Store store : result.stores) {
+						for (Store store : output.stores) {
 							if (IOS_A3_CODE.equals(store.a3Code)) {
 								iosStore = store;
 							}
@@ -85,7 +85,7 @@ public class StoreController implements ServiceController {
 							ipad.name = "iPad Store";
 							ipad.url = iosStore.url;
 
-							result.stores.add(ipad);
+							output.stores.add(ipad);
 
 							Store iphone = new Store();
 							iphone.a3Code = IPHONE_A3_CODE;
@@ -96,24 +96,23 @@ public class StoreController implements ServiceController {
 							iphone.name = "iPhone Store";
 							iphone.url = iosStore.url;
 
-							result.stores.add(iphone);
+							output.stores.add(iphone);
 
 							mStoreLookup.put(ipad.a3Code, mStoreLookup.get(IOS_A3_CODE));
 							mStoreLookup.put(iphone.a3Code, mStoreLookup.get(IOS_A3_CODE));
 
-							result.stores.remove(iosStore);
+							output.stores.remove(iosStore);
 
 						}
-
-						EventController.get().fireEventFromSource(new StoresEventHandler.ReceivedStores(result.stores), StoreController.this);
 					}
 				}
 
+				EventController.get().fireEventFromSource(new GetStoresSuccess(input, output), StoreController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new GetStoresEventHandler.GetStoresFailure(input, caught), StoreController.this);
+				EventController.get().fireEventFromSource(new GetStoresFailure(input, caught), StoreController.this);
 			}
 		});
 	}
@@ -144,11 +143,11 @@ public class StoreController implements ServiceController {
 	 */
 	public SafeUri getExternalUri(Item item) {
 		SafeUri externalUri = null;
-		
+
 		if (IOS_A3_CODE.equals(item.source)) {
 			externalUri = UriUtils.fromString("http://itunes.apple.com/app/id" + item.internalId);
-		} 
-		
+		}
+
 		return externalUri;
 	}
 }

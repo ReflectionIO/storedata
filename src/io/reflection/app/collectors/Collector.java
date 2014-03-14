@@ -13,8 +13,8 @@ import java.util.List;
  */
 public interface Collector {
 
-	public static final String ENQUEUE_GATHER_FORMAT = "/gather?store=%s&country=%s&type=%s&code=%s";
-	public static final String ENQUEUE_GATHER_CATEGORY_FORMAT = "/gather?store=%s&country=%s&type=%s&category=%d&code=%s";
+	public static final String ENQUEUE_GATHER_FORMAT = "/gather?store=%s&country=%s&type=%s&code=%d";
+	public static final String ENQUEUE_GATHER_CATEGORY_FORMAT = "/gather?store=%s&country=%s&type=%s&category=%d&code=%d";
 
 	/**
 	 * Collects data for
@@ -28,7 +28,7 @@ public interface Collector {
 	 * @param code
 	 *            ties all items in a single gather such that top grossing and top paid and top free entries can be married
 	 */
-	List<Long> collect(String country, String type, String category, String code) throws DataAccessException;
+	List<Long> collect(String country, String type, String category, Long code) throws DataAccessException;
 
 	/**
 	 * Puts a message in the queue for each list for each country

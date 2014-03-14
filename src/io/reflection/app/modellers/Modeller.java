@@ -16,9 +16,9 @@ import io.reflection.app.datatypes.shared.FormType;
  */
 public interface Modeller {
 
-	void enqueue(String country, String type, String code);
+	void enqueue(String country, String type, Long code);
 
-	void modelVariables(String country, String type, String code) throws DataAccessException ;
+	void modelVariables(String country, String type, Long code) throws DataAccessException ;
 
 	FormType getForm(String type);
 

@@ -58,7 +58,8 @@ public class PerdictorServlet extends ContextAwareServlet {
 		String country = REQUEST.get().getParameter("country");
 		String store = REQUEST.get().getParameter("store");
 		String type = REQUEST.get().getParameter("type");
-		String code = REQUEST.get().getParameter("code");
+		String codeParam = REQUEST.get().getParameter("code");
+		Long code = codeParam == null ? null : Long.valueOf(codeParam);
 
 		Predictor perdictor = PredictorFactory.getPredictorForStore(store);
 

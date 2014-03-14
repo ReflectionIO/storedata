@@ -5,7 +5,7 @@
 //  Created by William Shakour on 5 Jul 2013.
 //  Copyright © 2013 SPACEHOPPER STUDIOS LTD. All rights reserved.
 //
-package io.reflection.app.api;
+package io.reflection.app.api.shared;
 
 /**
  * @author billy1380

@@ -470,9 +470,9 @@ public class FilterController {
 	/**
 	 * @return
 	 */
-	public String toItemFilterString() {
-		return getStoreA3Code() + "/" + getCountryA2Code() + "/" + getCategory().id.toString() + "/" + getListType() + "/" + getStartTime() + "/"
-				+ getEndTime() + "/" + getChartType() + "/" + getSummaryType();
+	public String toItemFilterString(String listType) {
+		return getStoreA3Code() + "/" + getCountryA2Code() + "/" + getCategory().id.toString() + "/" + listType + "/" + getStartTime() + "/" + getEndTime()
+				+ "/" + getChartType() + "/" + getSummaryType();
 	}
 
 }

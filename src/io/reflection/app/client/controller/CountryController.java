@@ -10,17 +10,17 @@ package io.reflection.app.client.controller;
 import io.reflection.app.api.core.client.CoreService;
 import io.reflection.app.api.core.shared.call.GetCountriesRequest;
 import io.reflection.app.api.core.shared.call.GetCountriesResponse;
+import io.reflection.app.api.core.shared.call.event.GetCountriesEventHandler.GetCountriesFailure;
+import io.reflection.app.api.core.shared.call.event.GetCountriesEventHandler.GetCountriesSuccess;
 import io.reflection.app.api.shared.datatypes.Pager;
-import io.reflection.app.client.handler.CountriesEventHandler;
+import io.reflection.app.client.res.flags.Styles;
 import io.reflection.app.datatypes.shared.Country;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Image;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**
@@ -40,28 +40,27 @@ public class CountryController implements ServiceController {
 		return mOne;
 	}
 
-	
 	public CountryController() {
 		mCountryLookup = new HashMap<String, Country>();
-		
+
 		addCountry("us", "United States");
 		addCountry("gb", "United Kingdom");
 		addCountry("cn", "China");
 		addCountry("de", "Germany");
 		addCountry("fr", "France");
 	}
-	
+
 	private void addCountry(String a2Code, String name) {
 		Country country = new Country();
 		country.a2Code = a2Code;
 		country.name = name;
-		
+
 		country.stores = new ArrayList<String>();
 		country.stores.add("ios");
-		
+
 		mCountryLookup.put(country.a2Code, country);
 	}
-	
+
 	public void fetchAllCountries() {
 		CoreService service = new CoreService();
 		service.setUrl(CORE_END_POINT);
@@ -77,27 +76,26 @@ public class CountryController implements ServiceController {
 		service.getCountries(input, new AsyncCallback<GetCountriesResponse>() {
 
 			@Override
-			public void onSuccess(GetCountriesResponse result) {
-				if (result.status == StatusType.StatusTypeSuccess) {
-					if (result.countries != null && result.countries.size() > 0) {
+			public void onSuccess(GetCountriesResponse output) {
+				if (output.status == StatusType.StatusTypeSuccess) {
+					if (output.countries != null && output.countries.size() > 0) {
 
 						if (mCountryLookup == null) {
 							mCountryLookup = new HashMap<String, Country>();
 						}
 
-						for (Country country : result.countries) {
+						for (Country country : output.countries) {
 							mCountryLookup.put(country.a2Code, country);
 						}
-
-						EventController.get().fireEventFromSource(new CountriesEventHandler.ReceivedCountries(result.countries), CountryController.this);
 					}
 				}
+
+				EventController.get().fireEventFromSource(new GetCountriesSuccess(input, output), CountryController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				Window.alert("Error");
-
+				EventController.get().fireEventFromSource(new GetCountriesFailure(input, caught), CountryController.this);
 			}
 		});
 	}
@@ -120,7 +118,21 @@ public class CountryController implements ServiceController {
 	 * @param a2Code
 	 * @return
 	 */
-	public Image getCountryFlat(String a2Code) {
-		return new Image();
+	public String getCountryFlag(String a2Code) {
+		String styleName = null;
+
+		if ("us".equals(a2Code)) {
+			styleName = Styles.INSTANCE.flags().us();
+		} else if ("gb".equals(a2Code)) {
+			styleName = Styles.INSTANCE.flags().gb();
+		} else if ("cn".equals(a2Code)) {
+			styleName = Styles.INSTANCE.flags().cn();
+		} else if ("de".equals(a2Code)) {
+			styleName = Styles.INSTANCE.flags().de();
+		} else if ("fr".equals(a2Code)) {
+			styleName = Styles.INSTANCE.flags().fr();
+		}
+
+		return styleName;
 	}
 }

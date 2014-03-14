@@ -10,15 +10,15 @@ package io.reflection.app.client.controller;
 import io.reflection.app.api.admin.client.AdminService;
 import io.reflection.app.api.admin.shared.call.GetPermissionsRequest;
 import io.reflection.app.api.admin.shared.call.GetPermissionsResponse;
+import io.reflection.app.api.admin.shared.call.event.GetPermissionsEventHandler.GetPermissionsFailure;
+import io.reflection.app.api.admin.shared.call.event.GetPermissionsEventHandler.GetPermissionsSuccess;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
-import io.reflection.app.client.handler.PermissionsEventHandler.ReceivedPermissions;
 import io.reflection.app.datatypes.shared.Permission;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
@@ -52,7 +52,7 @@ public class PermissionController extends AsyncDataProvider<Permission> implemen
 
 		final GetPermissionsRequest input = new GetPermissionsRequest();
 		input.accessCode = ACCESS_CODE;
-		
+
 		input.session = SessionController.get().getSessionForApiCall();
 
 		if (mPager == null) {
@@ -66,14 +66,14 @@ public class PermissionController extends AsyncDataProvider<Permission> implemen
 		service.getPermissions(input, new AsyncCallback<GetPermissionsResponse>() {
 
 			@Override
-			public void onSuccess(GetPermissionsResponse result) {
-				if (result.status == StatusType.StatusTypeSuccess) {
-					if (result.permissions != null) {
-						mPermissions.addAll(result.permissions);
+			public void onSuccess(GetPermissionsResponse output) {
+				if (output.status == StatusType.StatusTypeSuccess) {
+					if (output.permissions != null) {
+						mPermissions.addAll(output.permissions);
 					}
 
-					if (result.pager != null) {
-						mPager = result.pager;
+					if (output.pager != null) {
+						mPager = output.pager;
 
 						if (mPager.totalCount != null) {
 							mCount = mPager.totalCount.longValue();
@@ -85,14 +85,14 @@ public class PermissionController extends AsyncDataProvider<Permission> implemen
 							input.pager.start.intValue(),
 							mPermissions.subList(input.pager.start.intValue(),
 									Math.min(input.pager.start.intValue() + input.pager.count.intValue(), mPager.totalCount.intValue())));
-
-					EventController.get().fireEventFromSource(new ReceivedPermissions(result.permissions), PermissionController.this);
 				}
+
+				EventController.get().fireEventFromSource(new GetPermissionsSuccess(input, output), PermissionController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				Window.alert("Error");
+				EventController.get().fireEventFromSource(new GetPermissionsFailure(input, caught), PermissionController.this);
 			}
 		});
 	}

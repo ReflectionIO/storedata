@@ -57,7 +57,10 @@ public class CollectorServlet extends HttpServlet {
 		String store = req.getParameter("store");
 		String country = req.getParameter("country");
 		String type = req.getParameter("type");
-		String code = req.getParameter("code");
+		
+		String codeParam = req.getParameter("code");
+		Long code = codeParam == null ? null : Long.valueOf(codeParam);
+		
 		String category = req.getParameter("category");
 
 		List<Long> collected = null;

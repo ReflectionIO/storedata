@@ -51,6 +51,7 @@ public class FeedBrowserPage extends Page implements FilterEventHandler {
 	@UiField ListBox mAppStore;
 	@UiField ListBox mListType;
 	@UiField ListBox mCountry;
+	@UiField ListBox category;
 
 	@UiField Button mIngest;
 	@UiField Button mModel;
@@ -118,7 +119,7 @@ public class FeedBrowserPage extends Page implements FilterEventHandler {
 
 			@Override
 			public String getValue(FeedFetch object) {
-				return object.code;
+				return object.code.toString();
 			}
 		}, "Code");
 
@@ -152,6 +153,11 @@ public class FeedBrowserPage extends Page implements FilterEventHandler {
 	@UiHandler("mCountry")
 	void onCountryValueChanged(ChangeEvent event) {
 		FilterController.get().setCountry(mCountry.getValue(mCountry.getSelectedIndex()));
+	}
+	
+	@UiHandler("category")
+	void onCategoryValueChanged(ChangeEvent event) {
+		FilterController.get().setCategory(Long.valueOf(category.getValue(category.getSelectedIndex())));
 	}
 
 	@UiHandler("mIngest")

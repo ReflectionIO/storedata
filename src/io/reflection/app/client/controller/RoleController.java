@@ -10,15 +10,15 @@ package io.reflection.app.client.controller;
 import io.reflection.app.api.admin.client.AdminService;
 import io.reflection.app.api.admin.shared.call.GetRolesRequest;
 import io.reflection.app.api.admin.shared.call.GetRolesResponse;
+import io.reflection.app.api.admin.shared.call.event.GetRolesEventHandler.GetRolesFailure;
+import io.reflection.app.api.admin.shared.call.event.GetRolesEventHandler.GetRolesSuccess;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
-import io.reflection.app.client.handler.RolesEventHandler.ReceivedRoles;
 import io.reflection.app.datatypes.shared.Role;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
@@ -52,7 +52,7 @@ public class RoleController extends AsyncDataProvider<Role> implements ServiceCo
 
 		final GetRolesRequest input = new GetRolesRequest();
 		input.accessCode = ACCESS_CODE;
-		
+
 		input.session = SessionController.get().getSessionForApiCall();
 
 		if (mPager == null) {
@@ -66,14 +66,14 @@ public class RoleController extends AsyncDataProvider<Role> implements ServiceCo
 		service.getRoles(input, new AsyncCallback<GetRolesResponse>() {
 
 			@Override
-			public void onSuccess(GetRolesResponse result) {
-				if (result.status == StatusType.StatusTypeSuccess) {
-					if (result.roles != null) {
-						mRoles.addAll(result.roles);
+			public void onSuccess(GetRolesResponse output) {
+				if (output.status == StatusType.StatusTypeSuccess) {
+					if (output.roles != null) {
+						mRoles.addAll(output.roles);
 					}
 
-					if (result.pager != null) {
-						mPager = result.pager;
+					if (output.pager != null) {
+						mPager = output.pager;
 
 						if (mPager.totalCount != null) {
 							mCount = mPager.totalCount.longValue();
@@ -85,14 +85,14 @@ public class RoleController extends AsyncDataProvider<Role> implements ServiceCo
 							input.pager.start.intValue(),
 							mRoles.subList(input.pager.start.intValue(),
 									Math.min(input.pager.start.intValue() + input.pager.count.intValue(), mPager.totalCount.intValue())));
-
-					EventController.get().fireEventFromSource(new ReceivedRoles(result.roles), RoleController.this);
 				}
+
+				EventController.get().fireEventFromSource(new GetRolesSuccess(input, output), RoleController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				Window.alert("Error");
+				EventController.get().fireEventFromSource(new GetRolesFailure(input, caught), RoleController.this);
 			}
 		});
 	}

@@ -52,10 +52,10 @@ public class PredictorIOS implements Predictor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.predictors.Predictor#enqueue(java.lang.String, java.lang.String, java.lang.String)
+	 * @see io.reflection.app.predictors.Predictor#enqueue(java.lang.String, java.lang.String, java.lang.Long)
 	 */
 	@Override
-	public void enqueue(String country, String type, String code) {
+	public void enqueue(String country, String type, Long code) {
 		if (LOG.isLoggable(GaeLevel.TRACE)) {
 			LOG.log(GaeLevel.TRACE, "Entering...");
 		}
@@ -67,7 +67,7 @@ public class PredictorIOS implements Predictor {
 			options.param("country", country);
 			options.param("store", IOS_STORE_A3);
 			options.param("type", type);
-			options.param("code", code);
+			options.param("code", code.toString());
 
 			try {
 				queue.add(options);
@@ -126,10 +126,10 @@ public class PredictorIOS implements Predictor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.predictors.Predictor#predictRevenueAndDownloads(java.lang.String, java.lang.String, java.lang.String)
+	 * @see io.reflection.app.predictors.Predictor#predictRevenueAndDownloads(java.lang.String, java.lang.String, java.lang.Long)
 	 */
 	@Override
-	public void predictRevenueAndDownloads(String country, String type, String code) throws DataAccessException {
+	public void predictRevenueAndDownloads(String country, String type, Long code) throws DataAccessException {
 
 		Country c = new Country();
 		c.a2Code = country;
@@ -146,8 +146,8 @@ public class PredictorIOS implements Predictor {
 		FormType form = modeller.getForm(type);
 		ModelRun modelRun = ModelRunServiceProvider.provide().getGatherCodeModelRun(c, s, form, code);
 
-		Category category = CategoryServiceProvider.provide().getAllCategory(s); 
-		
+		Category category = CategoryServiceProvider.provide().getAllCategory(s);
+
 		List<Rank> foundRanks = RankServiceProvider.provide().getGatherCodeRanks(c, s, category, type, code, p, false);
 		Map<String, Item> lookup = lookupItemsForRanks(foundRanks);
 

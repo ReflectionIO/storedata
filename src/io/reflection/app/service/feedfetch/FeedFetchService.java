@@ -72,7 +72,7 @@ final class FeedFetchService implements IFeedFetchService {
 		feedFetch.created = connection.getCurrentRowDateTime("created");
 		feedFetch.deleted = connection.getCurrentRowString("deleted");
 
-		feedFetch.code = stripslashes(connection.getCurrentRowString("code"));
+		feedFetch.code = connection.getCurrentRowLong("code2");
 		feedFetch.country = stripslashes(connection.getCurrentRowString("country"));
 		feedFetch.data = stripslashes(connection.getCurrentRowString("data"));
 		feedFetch.date = connection.getCurrentRowDateTime("date");
@@ -91,9 +91,9 @@ final class FeedFetchService implements IFeedFetchService {
 		FeedFetch addedFeedFetch = null;
 
 		final String addFeedFetchQuery = String
-				.format("INSERT INTO `feedfetch` (`country`,`data`,`date`,`store`,`type`,`categoryid`,`code`, `oldkey`) VALUES ('%s','%s',FROM_UNIXTIME(%d),'%s','%s',%d,'%s',%s)",
+				.format("INSERT INTO `feedfetch` (`country`,`data`,`date`,`store`,`type`,`categoryid`,`code2`, `oldkey`) VALUES ('%s','%s',FROM_UNIXTIME(%d),'%s','%s',%d,%d,%s)",
 						addslashes(feedFetch.country), addslashes(feedFetch.data), feedFetch.date.getTime() / 1000, addslashes(feedFetch.store),
-						addslashes(feedFetch.type), feedFetch.category.id.longValue(), addslashes(feedFetch.code),
+						addslashes(feedFetch.type), feedFetch.category.id.longValue(), feedFetch.code.longValue(),
 						SystemProperty.environment.value() == SystemProperty.Environment.Value.Development ? "-1" : "NULL");
 
 		Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
@@ -124,9 +124,9 @@ final class FeedFetchService implements IFeedFetchService {
 		FeedFetch updatedFeedFetch = null;
 
 		final String updateFeedFetchQuery = String
-				.format("UPDATE `feedfetch` SET `country`='%s',`data`='%s',`date`=FROM_UNIXTIME(%d),`store`='%s',`type`='%s',`categoryid`=%d,`code`='%s',`status`='%s' WHERE `id`=%d",
+				.format("UPDATE `feedfetch` SET `country`='%s',`data`='%s',`date`=FROM_UNIXTIME(%d),`store`='%s',`type`='%s',`categoryid`=%d,`code2`=%d,`status`='%s' WHERE `id`=%d",
 						addslashes(feedFetch.country), addslashes(feedFetch.data), feedFetch.date.getTime() / 1000, addslashes(feedFetch.store),
-						addslashes(feedFetch.type), feedFetch.id.longValue(), addslashes(feedFetch.code), feedFetch.status.toString(), feedFetch.id.longValue());
+						addslashes(feedFetch.type), feedFetch.id.longValue(), feedFetch.code.longValue(), feedFetch.status.toString(), feedFetch.id.longValue());
 
 		Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
 
@@ -266,7 +266,7 @@ final class FeedFetchService implements IFeedFetchService {
 		}
 
 		String getIngestedFeedFetchesQuery = String
-				.format("SELECT `f`.* FROM `feedfetch` `f` LEFT JOIN `rank` `r` ON `f`.`code`=`r`.`code` WHERE `f`.`store`='%s' AND `f`.`country`='%s' AND `f`.%s AND `r`.`code` IS%sNULL AND `f`.`deleted`='n' ORDER BY `f`.`date` DESC LIMIT %d,%d",
+				.format("SELECT `f`.* FROM `feedfetch` `f` LEFT JOIN `rank` `r` ON `f`.`code2`=`r`.`code2` WHERE `f`.`store`='%s' AND `f`.`country`='%s' AND `f`.%s AND `r`.`code2` IS%sNULL AND `f`.`deleted`='n' ORDER BY `f`.`date` DESC LIMIT %d,%d",
 						store.a3Code, country.a2Code, typesQueryPart, ingested ? " NOT " : " ", pager.start, pager.count);
 
 		Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
@@ -321,7 +321,7 @@ final class FeedFetchService implements IFeedFetchService {
 		}
 
 		String getIngestedFeedFetchesQuery = String
-				.format("SELECT count(1) as `count` FROM `feedfetch` `f` LEFT JOIN `rank` `r` ON `f`.`code`=`r`.`code` WHERE `f`.`store`='%s' AND `f`.`country`='%s' AND `f`.%s AND `r`.`code` IS%sNULL AND `f`.`deleted`='n'",
+				.format("SELECT count(1) as `count` FROM `feedfetch` `f` LEFT JOIN `rank` `r` ON `f`.`code2`=`r`.`code2` WHERE `f`.`store`='%s' AND `f`.`country`='%s' AND `f`.%s AND `r`.`code2` IS%sNULL AND `f`.`deleted`='n'",
 						store.a3Code, country.a2Code, typesQueryPart, ingested ? " NOT " : " ");
 
 		Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
@@ -368,14 +368,15 @@ final class FeedFetchService implements IFeedFetchService {
 	 * (non-Javadoc)
 	 * 
 	 * @see io.reflection.app.service.fetchfeed.IFeedFetchService#getIngestableFeedFetchIds( io.reflection.app.shared.datatypes.Country,
-	 * io.reflection.app.shared.datatypes.Store,java.lang.String, java.lang.String)
+	 * io.reflection.app.shared.datatypes.Store,java.lang.String, java.lang.Long)
 	 */
 	@Override
-	public List<Long> getIngestableFeedFetchIds(Country country, Store store, String type, String code) throws DataAccessException {
+	public List<Long> getIngestableFeedFetchIds(Country country, Store store, String type, Long code) throws DataAccessException {
 		List<Long> feedFetchIds = new ArrayList<Long>();
 
 		final String getIngestableFeedFetchIdsQuery = String.format(
-				"SELECT `id` FROM `feedfetch` WHERE `store`='%s' AND `country`='%s' AND `type`='%s' AND `code`='%s'", store.a3Code, country.a2Code, type, code);
+				"SELECT `id` FROM `feedfetch` WHERE `store`='%s' AND `country`='%s' AND `type`='%s' AND `code2`=%d", store.a3Code, country.a2Code, type,
+				code.longValue());
 
 		Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
 
@@ -403,10 +404,10 @@ final class FeedFetchService implements IFeedFetchService {
 	 * (non-Javadoc)
 	 * 
 	 * @see io.reflection.app.service.fetchfeed.IFeedFetchService#isReadyToModel( io.reflection.app.shared.datatypes.Country,
-	 * io.reflection.app.shared.datatypes.Store,java.util.List, java.lang.String)
+	 * io.reflection.app.shared.datatypes.Store,java.util.List, java.lang.Long)
 	 */
 	@Override
-	public Boolean isReadyToModel(Country country, Store store, List<String> types, String code) throws DataAccessException {
+	public Boolean isReadyToModel(Country country, Store store, List<String> types, Long code) throws DataAccessException {
 		Boolean isReadyToModel = Boolean.FALSE;
 
 		String typesQueryPart = null;
@@ -419,8 +420,8 @@ final class FeedFetchService implements IFeedFetchService {
 		}
 
 		String isReadyToModelQuery = String
-				.format("SELECT count(1) AS `count` FROM `feedfetch` WHERE `store`='%s' AND `country`='%s' AND %s AND `code`='%s' AND `status`<>'gathered' AND `deleted`='n'",
-						stripslashes(store.a3Code), stripslashes(country.a2Code), typesQueryPart, stripslashes(code));
+				.format("SELECT count(1) AS `count` FROM `feedfetch` WHERE `store`='%s' AND `country`='%s' AND %s AND `code2`=%d AND `status`<>'gathered' AND `deleted`='n'",
+						stripslashes(store.a3Code), stripslashes(country.a2Code), typesQueryPart, code.longValue());
 
 		Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
 
@@ -450,10 +451,10 @@ final class FeedFetchService implements IFeedFetchService {
 	 * (non-Javadoc)
 	 * 
 	 * @see io.reflection.app.service.fetchfeed.IFeedFetchService#getGatherCodeFeedFetches( io.reflection.app.shared.datatypes.Country,
-	 * io.reflection.app.shared.datatypes.Store,java.util.List, java.lang.String)
+	 * io.reflection.app.shared.datatypes.Store,java.util.List, java.lang.Long)
 	 */
 	@Override
-	public List<FeedFetch> getGatherCodeFeedFetches(Country country, Store store, List<String> types, String code) throws DataAccessException {
+	public List<FeedFetch> getGatherCodeFeedFetches(Country country, Store store, List<String> types, Long code) throws DataAccessException {
 		List<FeedFetch> feedFetches = new ArrayList<FeedFetch>();
 
 		String typesQueryPart = null;
@@ -464,8 +465,8 @@ final class FeedFetchService implements IFeedFetchService {
 		}
 
 		final String getGatherCodeFeedFetchesQuery = String.format(
-				"SELECT * FROM `feedfetch` WHERE `store`='%s' AND `country`='%s' AND %s AND `code`='%s' AND `deleted`='n'", store.a3Code, country.a2Code,
-				typesQueryPart, code);
+				"SELECT * FROM `feedfetch` WHERE `store`='%s' AND `country`='%s' AND %s AND `code2`=%d AND `deleted`='n'", store.a3Code, country.a2Code,
+				typesQueryPart, code.longValue());
 
 		Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
 
@@ -488,5 +489,34 @@ final class FeedFetchService implements IFeedFetchService {
 		}
 
 		return feedFetches;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.feedfetch.IFeedFetchService#getCode()
+	 */
+	@Override
+	public Long getCode() throws DataAccessException {
+		Long code = null;
+
+		String getCodeQuery = "INSERT INTO `feedfetchcode` (`id`) VALUES (DEFAULT)";
+
+		Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
+
+		try {
+			feedFetchConnection.connect();
+			feedFetchConnection.executeQuery(getCodeQuery);
+
+			if (feedFetchConnection.getAffectedRowCount() > 0) {
+				code = Long.valueOf(feedFetchConnection.getInsertedId());
+			}
+		} finally {
+			if (feedFetchConnection != null) {
+				feedFetchConnection.disconnect();
+			}
+		}
+
+		return code;
 	}
 }

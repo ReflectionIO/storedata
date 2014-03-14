@@ -7,12 +7,12 @@
 //
 package io.reflection.app.client.part;
 
+import io.reflection.app.api.core.shared.call.GetCountriesRequest;
+import io.reflection.app.api.core.shared.call.GetCountriesResponse;
+import io.reflection.app.api.core.shared.call.event.GetCountriesEventHandler;
 import io.reflection.app.client.controller.CountryController;
 import io.reflection.app.client.controller.EventController;
-import io.reflection.app.client.handler.CountriesEventHandler;
 import io.reflection.app.datatypes.shared.Country;
-
-import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -21,12 +21,13 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author billy1380
  * 
  */
-public class CountryWell extends Composite implements CountriesEventHandler {
+public class CountryWell extends Composite implements GetCountriesEventHandler {
 
 	private static CountryWellUiBinder uiBinder = GWT.create(CountryWellUiBinder.class);
 
@@ -35,16 +36,11 @@ public class CountryWell extends Composite implements CountriesEventHandler {
 	@UiField Hyperlink mMore;
 	@UiField HTMLPanel mMainCountries;
 	@UiField HTMLPanel mMoreCountries;
-	
-	/**
-	 * Because this class has a default constructor, it can be used as a binder template. In other words, it can be used in other *.ui.xml files as follows:
-	 * <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:**user's package**"> <g:**UserClassName**>Hello!</g:**UserClassName>
-	 * </ui:UiBinder> Note that depending on the widget that is used, it may be necessary to implement HasHTML instead of HasText.
-	 */
+
 	public CountryWell() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		EventController.get().addHandlerToSource(CountriesEventHandler.TYPE, CountryController.get(), this);
+		EventController.get().addHandlerToSource(GetCountriesEventHandler.TYPE, CountryController.get(), this);
 
 		CountryController.get().fetchAllCountries();
 	}
@@ -52,23 +48,37 @@ public class CountryWell extends Composite implements CountriesEventHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.client.event.handler.ReceivedCountriesEventHandler#receivedCountries(java.util.List)
+	 * @see
+	 * io.reflection.app.api.core.shared.call.event.GetCountriesEventHandler#getCountriesSuccess(io.reflection.app.api.core.shared.call.GetCountriesRequest,
+	 * io.reflection.app.api.core.shared.call.GetCountriesResponse)
 	 */
 	@Override
-	public void receivedCountries(List<Country> countries) {
-		mMainCountries.clear();
+	public void getCountriesSuccess(GetCountriesRequest input, GetCountriesResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess && output.countries != null) {
+			mMainCountries.clear();
 
-		int i = 0;
-		HTMLPanel row = null;
-		for (Country country : countries) {
-			if (i++ % 4 == 0) {
-				row = new HTMLPanel("");
-				row.setStyleName("row");
-				mMainCountries.add(row);
+			int i = 0;
+			HTMLPanel row = null;
+			for (Country country : output.countries) {
+				if (i++ % 4 == 0) {
+					row = new HTMLPanel("");
+					row.setStyleName("row");
+					mMainCountries.add(row);
+				}
+
+				row.add(new MiniCountry(country));
 			}
-
-			row.add(new MiniCountry(country));
 		}
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.api.core.shared.call.event.GetCountriesEventHandler#getCountriesFailure(io.reflection.app.api.core.shared.call.GetCountriesRequest,
+	 * java.lang.Throwable)
+	 */
+	@Override
+	public void getCountriesFailure(GetCountriesRequest input, Throwable caught) {}
 
 }

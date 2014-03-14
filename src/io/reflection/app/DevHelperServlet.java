@@ -19,6 +19,7 @@ import io.reflection.app.mapreduce.RankCountReducer;
 import io.reflection.app.mapreduce.TopAndGrossingMapper;
 import io.reflection.app.mapreduce.TotalRankedItemsCountMapper;
 import io.reflection.app.service.application.ApplicationServiceProvider;
+import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.setup.CountriesInstaller;
 import io.reflection.app.setup.StoresInstaller;
@@ -36,7 +37,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -230,26 +230,30 @@ public class DevHelperServlet extends HttpServlet {
 				if (startDate != null) {
 					int i = 0;
 
-					String code = UUID.randomUUID().toString();
-					for (FeedFetch feed : ofy().load().type(FeedFetch.class).filter("date >=", startDate).filter("date <", endDate)
-							.offset(Integer.parseInt(start)).limit(Integer.parseInt(count)).iterable()) {
+					try {
+						Long code = FeedFetchServiceProvider.provide().getCode();
+						for (FeedFetch feed : ofy().load().type(FeedFetch.class).filter("date >=", startDate).filter("date <", endDate)
+								.offset(Integer.parseInt(start)).limit(Integer.parseInt(count)).iterable()) {
 
-						if (feed.code == null || feed.code.isEmpty()) {
+							if (feed.code == null) {
 
-							feed.code = code;
-							ofy().save().entity(feed);
+								feed.code = code;
+								ofy().save().entity(feed);
 
-							if (LOG.isLoggable(GaeLevel.TRACE)) {
-								LOG.log(GaeLevel.TRACE, String.format("Added code [%s] to entity [%d]", feed.code, feed.id.longValue()));
+								if (LOG.isLoggable(GaeLevel.TRACE)) {
+									LOG.log(GaeLevel.TRACE, String.format("Added code [%s] to entity [%d]", feed.code, feed.id.longValue()));
+								}
+
+								i++;
+							} else {
+								if (LOG.isLoggable(GaeLevel.TRACE)) {
+									LOG.log(GaeLevel.TRACE, String.format("Entity [%d] has code [%s]", feed.id.longValue(), feed.code));
+								}
 							}
 
-							i++;
-						} else {
-							if (LOG.isLoggable(GaeLevel.TRACE)) {
-								LOG.log(GaeLevel.TRACE, String.format("Entity [%d] has code [%s]", feed.id.longValue(), feed.code));
-							}
 						}
-
+					} catch (DataAccessException dae) {
+						LOG.log(GaeLevel.SEVERE, "A database error occured attempting to to get an id code for gather enqueing", dae);
 					}
 
 					if (LOG.isLoggable(GaeLevel.DEBUG)) {
@@ -477,10 +481,10 @@ public class DevHelperServlet extends HttpServlet {
 				Calendar cal = Calendar.getInstance();
 				cal.add(Calendar.DAY_OF_YEAR, -30);
 
-				Map<String, Rank> paid = new HashMap<String, Rank>();
-				Map<String, Rank> grossing = new HashMap<String, Rank>();
+				Map<Long, Rank> paid = new HashMap<Long, Rank>();
+				Map<Long, Rank> grossing = new HashMap<Long, Rank>();
 
-				List<String> codes = new ArrayList<String>();
+				List<Long> codes = new ArrayList<Long>();
 
 				Query<Rank> query = ofy().load().type(Rank.class).filter("source =", "ios").filter("type =", CollectorIOS.TOP_PAID_APPS)
 						.filter("date >", cal.getTime()).filter("itemId = ", itemId).offset(Integer.parseInt(start)).limit(Integer.parseInt(count));
@@ -506,7 +510,7 @@ public class DevHelperServlet extends HttpServlet {
 
 				Rank grossingItem, paidItem;
 				Rank masterItem;
-				for (String code : codes) {
+				for (Long code : codes) {
 					grossingItem = grossing.get(code);
 					paidItem = paid.get(code);
 

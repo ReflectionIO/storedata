@@ -13,11 +13,10 @@ import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
 import io.reflection.app.api.core.shared.call.GetItemRanksRequest;
 import io.reflection.app.api.core.shared.call.GetItemRanksResponse;
 import io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler.GetAllTopItemsFailure;
+import io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler.GetAllTopItemsSuccess;
 import io.reflection.app.api.core.shared.call.event.GetItemRanksEventHandler;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
-import io.reflection.app.client.handler.RanksEventHandler.FetchingRanks;
-import io.reflection.app.client.handler.RanksEventHandler.ReceivedRanks;
 import io.reflection.app.client.part.datatypes.ItemRevenue;
 import io.reflection.app.client.part.datatypes.RanksGroup;
 import io.reflection.app.datatypes.shared.Item;
@@ -38,7 +37,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * 
  */
 public class RankController extends AsyncDataProvider<RanksGroup> implements ServiceController {
-	
+
 	private static RankController mOne = null;
 
 	private List<RanksGroup> mRows = null;
@@ -100,17 +99,22 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 					if (output.items != null) {
 						ItemController.get().addItemsToCache(output.items); // caching items
 					}
-					// Fires the ReceivedRanks event to the handlers listening to the event's type. Received ranks assign list type and List<Rank>
-					EventController.get().fireEventFromSource(new ReceivedRanks("free" + input.listType, output.freeRanks), RankController.this);
-					EventController.get().fireEventFromSource(new ReceivedRanks("paid" + input.listType, output.paidRanks), RankController.this);
-					EventController.get().fireEventFromSource(new ReceivedRanks("grossing" + input.listType, output.grossingRanks), RankController.this);
+					// // Fires the ReceivedRanks event to the handlers listening to the event's type. Received ranks assign list type and List<Rank>
+					// EventController.get().fireEventFromSource(new ReceivedRanks("free" + input.listType, output.freeRanks), RankController.this);
+					// EventController.get().fireEventFromSource(new ReceivedRanks("paid" + input.listType, output.paidRanks), RankController.this);
+					// EventController.get().fireEventFromSource(new ReceivedRanks("grossing" + input.listType, output.grossingRanks), RankController.this);
 
 					// Add list of retrieved items
 					if (mRows == null) {
 						mRows = new ArrayList<RanksGroup>();
 					}
 
-					int count = output.freeRanks.size(); // Number of item rows in the rank
+					int count = 0;
+
+					if (output.freeRanks != null) {
+						count = output.freeRanks.size(); // Number of item rows in the rank
+					}
+
 					RanksGroup r;
 					for (int i = 0; i < count; i++) {
 						mRows.add(r = new RanksGroup());
@@ -124,6 +128,8 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 					// total row count, true if the count is exact, false if it is an estimate
 					updateRowData(0, mRows); // Inform the displays of the new data. @params Start index, data values
 				}
+
+				EventController.get().fireEventFromSource(new GetAllTopItemsSuccess(input, output), RankController.this);
 			}
 
 			@Override
@@ -132,10 +138,10 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 			}
 		});
 
-		EventController.get().fireEventFromSource(new FetchingRanks(), RankController.this);
+		// EventController.get().fireEventFromSource(new FetchingRanks(), RankController.this);
 	}
 
-	public void fetchItemRanks(Item item) {
+	public void fetchItemRanks(final Item item) {
 		CoreService service = new CoreService();
 		service.setUrl(CORE_END_POINT);
 
@@ -180,17 +186,28 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 						itemRevenue = itemRevenueData.getList().get(0);
 					}
 
-					float rankPaid;
-					for (Rank rank : output.ranks) {
-						if (rank.downloads != null && rank.revenue != null) {
-							paid += (rankPaid = (float) rank.downloads.intValue() * rank.price.floatValue());
-							iap += (rank.revenue.floatValue() - rankPaid);
+					float rankPaid = 0;
+
+					if (output.ranks != null) {
+						for (Rank rank : output.ranks) {
+							if (rank.downloads != null && rank.revenue != null) {
+								paid += (rankPaid = (float) rank.downloads.intValue() * rank.price.floatValue());
+								iap += (rank.revenue.floatValue() - rankPaid);
+							}
 						}
 					}
 
-					itemRevenue.countryFlag = CountryController.get().getCountryFlat(input.country.a2Code);
+					itemRevenue.countryFlagStyleName = CountryController.get().getCountryFlag(input.country.a2Code);
 					itemRevenue.countryName = CountryController.get().getCountry(input.country.a2Code).name;
-					itemRevenue.currency = output.ranks.get(0).currency;
+					
+					if (output.ranks != null) {
+						itemRevenue.currency = output.ranks.get(0).currency;
+					} else if (output.item.currency != null) {
+						itemRevenue.currency = output.item.currency;
+					} else if (item.currency != null) {
+						itemRevenue.currency = item.currency;	
+					}
+					
 					itemRevenue.iap = Float.valueOf(iap);
 					itemRevenue.paid = Float.valueOf(paid);
 					itemRevenue.percentage = Float.valueOf(100.0f);

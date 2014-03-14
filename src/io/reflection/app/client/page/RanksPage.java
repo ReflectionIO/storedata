@@ -7,12 +7,12 @@
 //
 package io.reflection.app.client.page;
 
+import static io.reflection.app.client.controller.FilterController.DAILY_DATA_KEY;
 import static io.reflection.app.client.controller.FilterController.FREE_LIST_TYPE;
 import static io.reflection.app.client.controller.FilterController.GROSSING_LIST_TYPE;
+import static io.reflection.app.client.controller.FilterController.LIST_TYPE_KEY;
 import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
 import static io.reflection.app.client.controller.FilterController.PAID_LIST_TYPE;
-import static io.reflection.app.client.controller.FilterController.LIST_TYPE_KEY;
-import static io.reflection.app.client.controller.FilterController.DAILY_DATA_KEY;
 import io.reflection.app.api.admin.shared.call.event.IsAuthorisedEventHandler;
 import io.reflection.app.api.core.shared.call.IsAuthorisedRequest;
 import io.reflection.app.api.core.shared.call.IsAuthorisedResponse;
@@ -28,7 +28,6 @@ import io.reflection.app.client.controller.ServiceController;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
-import io.reflection.app.client.handler.RanksEventHandler;
 import io.reflection.app.client.handler.user.SessionEventHandler;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.PageSizePager;
@@ -66,7 +65,8 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class RanksPage extends Page implements RanksEventHandler, FilterEventHandler, SessionEventHandler, IsAuthorisedEventHandler, NavigationEventHandler {
+public class RanksPage extends Page implements FilterEventHandler, SessionEventHandler, IsAuthorisedEventHandler,
+		NavigationEventHandler {
 
 	private static RanksPageUiBinder uiBinder = GWT.create(RanksPageUiBinder.class);
 
@@ -120,8 +120,6 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 
 		RankController.get().addDataDisplay(mRanks);
 		mPager.setDisplay(mRanks);
-
-		refreshRanks();
 	}
 
 	private void createColumns() {
@@ -232,26 +230,6 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 		}
 
 		return rank;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.RanksEventHandler#receivedRanks(java.lang.String, java.util.List)
-	 */
-	@Override
-	public void receivedRanks(String listType, List<Rank> ranks) {
-		mPager.setLoading(false);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.RanksEventHandler#fetchingRanks()
-	 */
-	@Override
-	public void fetchingRanks() {
-		mPager.setLoading(true);
 	}
 
 	/*
@@ -383,9 +361,7 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 		}
 
 		if (changed) {
-
 			refreshTabs();
-
 			refreshRanks();
 		}
 	}
@@ -458,7 +434,11 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 			mTabs.get(key).removeClassName("active");
 		}
 
-		mTabs.get(FilterController.get().getListType()).addClassName("active");
+		LIElement selected = mTabs.get(FilterController.get().getListType());
+
+		if (selected != null) {
+			selected.addClassName("active");
+		}
 	}
 
 	/*
@@ -474,6 +454,10 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 
 			if (stack.getAction() == null || !"view".equals(stack.getAction())) {
 				PageType.RanksPageType.show("view", FilterController.get().toRankFilterString());
+			} else {
+				refreshTabs();
+
+				refreshRanks();
 			}
 		}
 
@@ -501,13 +485,10 @@ public class RanksPage extends Page implements RanksEventHandler, FilterEventHan
 	protected void onAttach() {
 		super.onAttach();
 
-		register(EventController.get().addHandlerToSource(RanksEventHandler.TYPE, RankController.get(), this));
 		register(EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
 		register(EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
 		register(EventController.get().addHandlerToSource(IsAuthorisedEventHandler.TYPE, SessionController.get(), this));
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
-
-		refreshTabs();
 
 	}
 

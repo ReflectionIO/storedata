@@ -72,7 +72,7 @@ public class ModellerIOS extends RenjinRModellerBase implements Modeller {
 	 * @see io.reflection.app.modellers.Modeller#enqueue(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void enqueue(String country, String type, String code) {
+	public void enqueue(String country, String type, Long code) {
 		if (LOG.isLoggable(GaeLevel.TRACE)) {
 			LOG.log(GaeLevel.TRACE, "Entering...");
 		}
@@ -84,7 +84,7 @@ public class ModellerIOS extends RenjinRModellerBase implements Modeller {
 			options.param("store", STORE);
 			options.param("country", country);
 			options.param("type", type);
-			options.param("code", code);
+			options.param("code", code.toString());
 
 			try {
 				queue.add(options);
@@ -115,10 +115,10 @@ public class ModellerIOS extends RenjinRModellerBase implements Modeller {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.models.Model#modelVariables(java.lang.String, java.lang.String, java.util.Date)
+	 * @see io.reflection.app.models.Model#modelVariables(java.lang.String, java.lang.String, java.lang.Long)
 	 */
 	@Override
-	public void modelVariables(String country, String listType, String code) throws DataAccessException {
+	public void modelVariables(String country, String listType, Long code) throws DataAccessException {
 		if (LOG.isLoggable(GaeLevel.TRACE)) {
 			LOG.log(GaeLevel.TRACE, "Entering...");
 		}
@@ -176,7 +176,7 @@ public class ModellerIOS extends RenjinRModellerBase implements Modeller {
 	 * @param code
 	 * @throws DataAccessException
 	 */
-	private void alterFeedFetchStatus(Country country, Store store, List<String> listTypes, String code) throws DataAccessException {
+	private void alterFeedFetchStatus(Country country, Store store, List<String> listTypes, Long code) throws DataAccessException {
 		List<FeedFetch> feeds = FeedFetchServiceProvider.provide().getGatherCodeFeedFetches(country, store, listTypes, code);
 
 		for (FeedFetch feedFetch : feeds) {
@@ -194,7 +194,7 @@ public class ModellerIOS extends RenjinRModellerBase implements Modeller {
 	 * @throws DataAccessException
 	 * 
 	 */
-	private void persistValues(Country country, Store store, FormType form, String code) throws DataAccessException {
+	private void persistValues(Country country, Store store, FormType form, Long code) throws DataAccessException {
 
 		ModelRun run = ModelRunServiceProvider.provide().getGatherCodeModelRun(country, store, form, code);
 

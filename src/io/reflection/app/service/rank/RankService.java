@@ -74,7 +74,7 @@ final class RankService implements IRankService {
 		rank.created = connection.getCurrentRowDateTime("created");
 		rank.deleted = connection.getCurrentRowString("deleted");
 
-		rank.code = stripslashes(connection.getCurrentRowString("code"));
+		rank.code = connection.getCurrentRowLong("code2");
 		rank.country = stripslashes(connection.getCurrentRowString("country"));
 		rank.currency = stripslashes(connection.getCurrentRowString("currency"));
 		rank.date = connection.getCurrentRowDateTime("date");
@@ -99,10 +99,10 @@ final class RankService implements IRankService {
 		Rank addedRank = null;
 
 		final String addeRankQuery = String
-				.format("INSERT INTO `rank` (`position`,`grossingposition`,`itemid`,`type`,`country`,`date`,`source`,`price`,`currency`,`categoryid`,`code`,`revenue`,`downloads`) VALUES (%d,%d,'%s','%s','%s',FROM_UNIXTIME(%d),'%s',%d,'%s',%d,'%s',%s,%s)",
+				.format("INSERT INTO `rank` (`position`,`grossingposition`,`itemid`,`type`,`country`,`date`,`source`,`price`,`currency`,`categoryid`,`code2`,`revenue`,`downloads`) VALUES (%d,%d,'%s','%s','%s',FROM_UNIXTIME(%d),'%s',%d,'%s',%d,%d,%s,%s)",
 						rank.position.longValue(), rank.grossingPosition.longValue(), addslashes(rank.itemId), addslashes(rank.type), addslashes(rank.country),
 						rank.date.getTime() / 1000, addslashes(rank.source), (int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency),
-						rank.category.id.longValue(), addslashes(rank.code), rank.revenue == null ? "NULL" : rank.revenue.floatValue() * 100,
+						rank.category.id.longValue(), rank.code.longValue(), rank.revenue == null ? "NULL" : rank.revenue.floatValue() * 100,
 						rank.downloads == null ? "NULL" : rank.downloads.intValue());
 
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
@@ -133,10 +133,10 @@ final class RankService implements IRankService {
 		Rank updatedRank = null;
 
 		final String updateRankQuery = String
-				.format("UPDATE `rank` SET `position`=%d,`grossingposition`=%d,`itemid`='%s',`type`='%s',`country`='%s',`date`=FROM_UNIXTIME(%d),`source`='%s',`price`=%d,`currency`='%s',`categoryid`=%d,`code`='%s',`revenue`=%s,`downloads`=%s WHERE `id`=%d;",
+				.format("UPDATE `rank` SET `position`=%d,`grossingposition`=%d,`itemid`='%s',`type`='%s',`country`='%s',`date`=FROM_UNIXTIME(%d),`source`='%s',`price`=%d,`currency`='%s',`categoryid`=%d,`code2`=%d,`revenue`=%s,`downloads`=%s WHERE `id`=%d;",
 						rank.position.longValue(), rank.grossingPosition.longValue(), addslashes(rank.itemId), addslashes(rank.type), addslashes(rank.country),
 						rank.date.getTime() / 1000, addslashes(rank.source), (int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency),
-						rank.category.id.longValue(), addslashes(rank.code), rank.revenue == null ? "NULL" : rank.revenue.floatValue() * 100,
+						rank.category.id.longValue(), rank.code.longValue(), rank.revenue == null ? "NULL" : rank.revenue.floatValue() * 100,
 						rank.downloads == null ? "NULL" : rank.downloads.intValue(), rank.id.longValue());
 
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
@@ -171,7 +171,7 @@ final class RankService implements IRankService {
 	 * @see io.reflection.app.service.rank.IRankService#getItemGatherCodeRank(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public Rank getItemGatherCodeRank(String itemId, String code, String store, String country, List<String> possibleTypes) throws DataAccessException {
+	public Rank getItemGatherCodeRank(String itemId, Long code, String store, String country, List<String> possibleTypes) throws DataAccessException {
 		Rank rank = null;
 
 		String typesQueryPart = null;
@@ -182,8 +182,8 @@ final class RankService implements IRankService {
 		}
 
 		final String getItemGatherCodeRankQuery = String.format(
-				"SELECT * FROM `rank` WHERE `itemid`='%s' AND `code`='%s' AND `source`='%s' AND `country`='%s' AND %s AND `deleted`='n' LIMIT 1", itemId, code,
-				store, country, typesQueryPart);
+				"SELECT * FROM `rank` WHERE `itemid`='%s' AND `code2`=%d AND `source`='%s' AND `country`='%s' AND %s AND `deleted`='n' LIMIT 1", itemId,
+				code.longValue(), store, country, typesQueryPart);
 
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
@@ -214,7 +214,7 @@ final class RankService implements IRankService {
 			throws DataAccessException {
 		List<Rank> ranks = new ArrayList<Rank>();
 
-		String code = getGatherCode(country, store, after, before);
+		Long code = getGatherCode(country, store, after, before);
 
 		if (code != null) {
 			ranks.addAll(getGatherCodeRanks(country, store, category, listType, code, pager, false));
@@ -285,8 +285,8 @@ final class RankService implements IRankService {
 		return ranks;
 	}
 
-	private String getGatherCode(Country country, Store store, Date after, Date before) throws DataAccessException {
-		String code = null;
+	private Long getGatherCode(Country country, Store store, Date after, Date before) throws DataAccessException {
+		Long code = null;
 
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
@@ -294,13 +294,13 @@ final class RankService implements IRankService {
 
 			rankConnection.connect();
 			String getGatherCode = String.format(
-					"SELECT `code` FROM `rank` WHERE `country`='%s' AND `source`='%s' AND %s `deleted`='n' ORDER BY `date` DESC LIMIT 1",
+					"SELECT `code2` FROM `rank` WHERE `country`='%s' AND `source`='%s' AND %s `deleted`='n' ORDER BY `date` DESC LIMIT 1",
 					addslashes(country.a2Code), addslashes(store.a3Code), beforeAfterQuery(before, after));
 
 			rankConnection.executeQuery(getGatherCode);
 
 			if (rankConnection.fetchNextRow()) {
-				code = rankConnection.getCurrentRowString("code");
+				code = rankConnection.getCurrentRowLong("code2");
 			}
 		} finally {
 			if (rankConnection != null) {
@@ -343,7 +343,7 @@ final class RankService implements IRankService {
 	public Long getRanksCount(Country country, Store store, Category category, String listType, Date after, Date before) throws DataAccessException {
 		Long ranksCount = Long.valueOf(0);
 
-		String code = getGatherCode(country, store, after, before);
+		Long code = getGatherCode(country, store, after, before);
 
 		if (code != null) {
 			ranksCount = getGatherCodeRanksCount(country, store, category, listType, code);
@@ -394,7 +394,7 @@ final class RankService implements IRankService {
 		StringBuffer addRanksBatchQuery = new StringBuffer();
 
 		addRanksBatchQuery
-				.append("INSERT INTO `rank` (`position`,`grossingposition`,`itemid`,`type`,`country`,`date`,`source`,`price`,`currency`,`categoryid`,`code`,`revenue`,`downloads`) VALUES ");
+				.append("INSERT INTO `rank` (`position`,`grossingposition`,`itemid`,`type`,`country`,`date`,`source`,`price`,`currency`,`categoryid`,`code2`,`revenue`,`downloads`) VALUES ");
 
 		boolean addComma = false;
 		for (Rank rank : ranks) {
@@ -402,10 +402,10 @@ final class RankService implements IRankService {
 				addRanksBatchQuery.append(",");
 			}
 
-			addRanksBatchQuery.append(String.format("(%d,%d,'%s','%s','%s',FROM_UNIXTIME(%d),'%s',%d,'%s',%d,'%s',%s,%s)", rank.position.longValue(),
+			addRanksBatchQuery.append(String.format("(%d,%d,'%s','%s','%s',FROM_UNIXTIME(%d),'%s',%d,'%s',%d,%d,%s,%s)", rank.position.longValue(),
 					rank.grossingPosition.longValue(), addslashes(rank.itemId), addslashes(rank.type), addslashes(rank.country), rank.date.getTime() / 1000,
 					addslashes(rank.source), (int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency), rank.category.id.longValue(),
-					addslashes(rank.code), rank.revenue == null ? "NULL" : rank.revenue.floatValue() * 100,
+					rank.code.longValue(), rank.revenue == null ? "NULL" : rank.revenue.floatValue() * 100,
 					rank.downloads == null ? "NULL" : rank.downloads.intValue()));
 			addComma = true;
 		}
@@ -432,11 +432,10 @@ final class RankService implements IRankService {
 	 * (non-Javadoc)
 	 * 
 	 * @see io.reflection.app.service.rank.IRankService#getGatherCodeRanksCount(io.reflection.app.shared.datatypes.Country,
-	 * io.reflection.app.shared.datatypes.Store, io.reflection.app.shared.datatypes.Category, java.lang.String, java.lang.String,
-	 * io.reflection.app.api.shared.datatypes.Pager)
+	 * io.reflection.app.shared.datatypes.Store, io.reflection.app.shared.datatypes.Category, java.lang.String, java.lang.Long)
 	 */
 	@Override
-	public Long getGatherCodeRanksCount(Country country, Store store, Category category, String listType, String code) throws DataAccessException {
+	public Long getGatherCodeRanksCount(Country country, Store store, Category category, String listType, Long code) throws DataAccessException {
 		Long ranksCount = Long.valueOf(0);
 
 		Collector collector = CollectorFactory.getCollectorForStore(store.a3Code);
@@ -458,8 +457,8 @@ final class RankService implements IRankService {
 		}
 
 		String getRanksCountQuery = String
-				.format("SELECT COUNT(1) AS `count` FROM `rank` WHERE %s AND `country`='%s' AND `source`='%s' AND `categoryid`=%d AND `code`='%s' AND %s `deleted`='n'",
-						typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), code,
+				.format("SELECT COUNT(1) AS `count` FROM `rank` WHERE %s AND `country`='%s' AND `source`='%s' AND `categoryid`=%d AND `code2`=%d AND %s `deleted`='n'",
+						typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), code.longValue(),
 						isGrossing ? "`grossingposition`<>0 AND" : "");
 
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
@@ -484,13 +483,13 @@ final class RankService implements IRankService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.service.rank.IRankService#getCodeLastRankDate(java.lang.String)
+	 * @see io.reflection.app.service.rank.IRankService#getCodeLastRankDate(java.lang.Long)
 	 */
 	@Override
-	public Date getCodeLastRankDate(String code) throws DataAccessException {
+	public Date getCodeLastRankDate(Long code) throws DataAccessException {
 		Date date = null;
 
-		String getCodeLastRankDateQuery = String.format("SELECT `date` FROM `rank` WHERE `code`='%s' ORDER BY `date` DESC LIMIT 1", code);
+		String getCodeLastRankDateQuery = String.format("SELECT `date` FROM `rank` WHERE `code2`=%d ORDER BY `date` DESC LIMIT 1", code.longValue());
 
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
@@ -519,7 +518,7 @@ final class RankService implements IRankService {
 	public Long updateRanksBatch(List<Rank> updateRanks) throws DataAccessException {
 		long ranksCount = 0;
 
-		final String updateRanksBatchQueryFormat = "UPDATE `rank` SET `position`=%d,`grossingposition`=%d,`itemid`='%s',`type`='%s',`country`='%s',`date`=FROM_UNIXTIME(%d),`source`='%s',`price`=%d,`currency`='%s',`categoryid`=%d,`code`='%s',`revenue`=%s,`downloads`=%s WHERE `id`=%d;";
+		final String updateRanksBatchQueryFormat = "UPDATE `rank` SET `position`=%d,`grossingposition`=%d,`itemid`='%s',`type`='%s',`country`='%s',`date`=FROM_UNIXTIME(%d),`source`='%s',`price`=%d,`currency`='%s',`categoryid`=%d,`code2`=%d,`revenue`=%s,`downloads`=%s WHERE `id`=%d;";
 
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
@@ -530,7 +529,7 @@ final class RankService implements IRankService {
 			for (Rank rank : updateRanks) {
 				updateRanksBatchQuery = String.format(updateRanksBatchQueryFormat, rank.position.longValue(), rank.grossingPosition.longValue(),
 						addslashes(rank.itemId), addslashes(rank.type), addslashes(rank.country), rank.date.getTime() / 1000, addslashes(rank.source),
-						(int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency), rank.category.id.longValue(), addslashes(rank.code),
+						(int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency), rank.category.id.longValue(), rank.code.longValue(),
 						rank.revenue == null ? "NULL" : rank.revenue.floatValue() * 100, rank.downloads == null ? "NULL" : rank.downloads.intValue(),
 						rank.id.longValue());
 
@@ -553,10 +552,10 @@ final class RankService implements IRankService {
 	 * (non-Javadoc)
 	 * 
 	 * @see io.reflection.app.service.rank.IRankService#getGatherCodeRanks(io.reflection.app.shared.datatypes.Country, io.reflection.app.shared.datatypes.Store,
-	 * io.reflection.app.shared.datatypes.Category java.lang.String, java.lang.String, io.reflection.app.api.shared.datatypes.Pager, boolean)
+	 * io.reflection.app.shared.datatypes.Category java.lang.String, java.lang.Long, io.reflection.app.api.shared.datatypes.Pager, boolean)
 	 */
 	@Override
-	public List<Rank> getGatherCodeRanks(Country country, Store store, Category category, String listType, String code, Pager pager, boolean ignoreGrossingRank)
+	public List<Rank> getGatherCodeRanks(Country country, Store store, Category category, String listType, Long code, Pager pager, boolean ignoreGrossingRank)
 			throws DataAccessException {
 		List<Rank> ranks = new ArrayList<Rank>();
 
@@ -587,8 +586,8 @@ final class RankService implements IRankService {
 		}
 
 		String getCountryStoreTypeRanksQuery = String
-				.format("SELECT * FROM `rank` WHERE %s AND `country`='%s' AND `source`='%s' AND `categoryid`=%d AND `code`='%s' AND %s `deleted`='n' ORDER BY `%s` %s,`date` DESC LIMIT %d,%d",
-						typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), code,
+				.format("SELECT * FROM `rank` WHERE %s AND `country`='%s' AND `source`='%s' AND `categoryid`=%d AND `code2`=%d AND %s `deleted`='n' ORDER BY `%s` %s,`date` DESC LIMIT %d,%d",
+						typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), code.longValue(),
 						isGrossing && !ignoreGrossingRank ? "`grossingposition`<>0 AND" : "", pager.sortBy,
 						pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
 
@@ -623,8 +622,8 @@ final class RankService implements IRankService {
 	public List<Rank> getAllRanks(Country country, Store store, Category category, String listType, Date start, Date end) throws DataAccessException {
 		List<Rank> ranks = new ArrayList<Rank>();
 
-		String code = getGatherCode(country, store, start, end);
-		
+		Long code = getGatherCode(country, store, start, end);
+
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
 		Collector collector = CollectorFactory.getCollectorForStore(store.a3Code);
@@ -645,9 +644,9 @@ final class RankService implements IRankService {
 			typesQueryPart = "`type` IN ('" + StringUtils.join(types, "','") + "')";
 		}
 
-		String getCountryStoreTypeRanksQuery = String
-				.format("SELECT * FROM `rank` WHERE %s AND `country`='%s' AND `source`='%s' AND `categoryid`=%d AND `code`='%s' AND `deleted`='n' LIMIT 0, 3000",
-						typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), code);
+		String getCountryStoreTypeRanksQuery = String.format(
+				"SELECT * FROM `rank` WHERE %s AND `country`='%s' AND `source`='%s' AND `categoryid`=%d AND `code2`=%d AND `deleted`='n' LIMIT 0, 3000",
+				typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), code.longValue());
 
 		try {
 			rankConnection.connect();

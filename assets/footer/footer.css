@@ -1,0 +1,25 @@
+/* ----------------------------------------------------
+   created with http://www.codeandweb.com/texturepacker 
+   ----------------------------------------------------
+   $TexturePacker:SmartUpdate:f5c04733a19067f4211e31f40f65a971:1/1$
+   ----------------------------------------------------
+
+   usage: <span class="{-spritename-} sprite"></span>
+
+   replace {-spritename-} with the sprite you like to use
+
+*/
+
+.sprite {display:inline-block; overflow:hidden; background-repeat: no-repeat;background-image:url(footer.png);}
+
+.Footer_Down_Arrow {width:15px; height:8px; background-position: -19px -109px}
+.Footer_Down_Arrow_Hover {width:15px; height:8px; background-position: -19px -99px}
+.Footer_R_Logo {width:18px; height:19px; background-position: -2px -78px}
+.Footer_Up_Arrow {width:15px; height:8px; background-position: -2px -109px}
+.Footer_Up_Arrow_Hover {width:15px; height:8px; background-position: -2px -99px}
+.Social_Facebook_Active {width:24px; height:24px; background-position: -28px -52px}
+.Social_Facebook_Hover {width:24px; height:24px; background-position: -2px -52px}
+.Social_LinkedIn_Active {width:24px; height:24px; background-position: -28px -26px}
+.Social_LinkedIn_Hover {width:24px; height:24px; background-position: -2px -26px}
+.Social_Twitter_Active {width:28px; height:22px; background-position: -32px -2px}
+.Social_Twitter_Hover {width:28px; height:22px; background-position: -2px -2px}

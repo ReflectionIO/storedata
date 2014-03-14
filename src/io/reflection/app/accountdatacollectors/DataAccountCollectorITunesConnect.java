@@ -10,8 +10,8 @@ package io.reflection.app.accountdatacollectors;
 
 import io.reflection.app.accountdataingestors.DataAccountIngestor;
 import io.reflection.app.accountdataingestors.DataAccountIngestorFactory;
-import io.reflection.app.api.ApiError;
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;

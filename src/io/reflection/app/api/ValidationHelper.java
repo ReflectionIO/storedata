@@ -8,6 +8,7 @@
 package io.reflection.app.api;
 
 import io.reflection.app.api.exception.AuthorisationException;
+import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.client.helper.FormHelper;

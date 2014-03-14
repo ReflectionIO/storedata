@@ -7,12 +7,12 @@
 //
 package io.reflection.app.client.part;
 
+import io.reflection.app.api.core.shared.call.GetStoresRequest;
+import io.reflection.app.api.core.shared.call.GetStoresResponse;
+import io.reflection.app.api.core.shared.call.event.GetStoresEventHandler;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.StoreController;
-import io.reflection.app.client.handler.StoresEventHandler;
 import io.reflection.app.datatypes.shared.Store;
-
-import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -23,12 +23,13 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author billy1380
  * 
  */
-public class StoreWell extends Composite implements StoresEventHandler {
+public class StoreWell extends Composite implements GetStoresEventHandler {
 
 	private static StoreWellUiBinder uiBinder = GWT.create(StoreWellUiBinder.class);
 
@@ -46,37 +47,49 @@ public class StoreWell extends Composite implements StoresEventHandler {
 	public StoreWell() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		EventController.get().addHandlerToSource(StoresEventHandler.TYPE, StoreController.get(), this);
+		EventController.get().addHandlerToSource(GetStoresEventHandler.TYPE, StoreController.get(), this);
 
 		StoreController.get().fetchAllStores();
 
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.event.handler.ReceivedStoresEventHandler#receivedStores(java.util.List)
-	 */
-	@Override
-	public void receivedStores(List<Store> stores) {
-		mMainStores.clear();
-
-		int i = 0;
-		HTMLPanel row = null;
-		for (Store store : stores) {
-			if (i++ % 4 == 0) {
-				row = new HTMLPanel("");
-				row.setStyleName("row");
-				mMainStores.add(row);
-			}
-
-			row.add(new MiniStore(store));
-		}
 	}
 
 	@UiHandler("mMore")
 	public void onMoreClicked(ClickEvent event) {
 		// NOTE: we do not have enough stores for this yet
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.core.shared.call.event.GetStoresEventHandler#getStoresSuccess(io.reflection.app.api.core.shared.call.GetStoresRequest,
+	 * io.reflection.app.api.core.shared.call.GetStoresResponse)
+	 */
+	@Override
+	public void getStoresSuccess(GetStoresRequest input, GetStoresResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess && output.stores != null) {
+			mMainStores.clear();
+
+			int i = 0;
+			HTMLPanel row = null;
+			for (Store store : output.stores) {
+				if (i++ % 4 == 0) {
+					row = new HTMLPanel("");
+					row.setStyleName("row");
+					mMainStores.add(row);
+				}
+
+				row.add(new MiniStore(store));
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.core.shared.call.event.GetStoresEventHandler#getStoresFailure(io.reflection.app.api.core.shared.call.GetStoresRequest,
+	 * java.lang.Throwable)
+	 */
+	@Override
+	public void getStoresFailure(GetStoresRequest input, Throwable caught) {}
 
 }

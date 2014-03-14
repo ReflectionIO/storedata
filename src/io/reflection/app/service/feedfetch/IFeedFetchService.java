@@ -9,13 +9,13 @@
 
 package io.reflection.app.service.feedfetch;
 
-import java.util.List;
-
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.Store;
+
+import java.util.List;
 
 import com.spacehopperstudios.service.IService;
 
@@ -107,7 +107,7 @@ public interface IFeedFetchService extends IService {
 	 * @param code
 	 * @return
 	 */
-	public List<Long> getIngestableFeedFetchIds(Country country, Store store, String listType, String code) throws DataAccessException;
+	public List<Long> getIngestableFeedFetchIds(Country country, Store store, String listType, Long code) throws DataAccessException;
 
 	/**
 	 * 
@@ -117,7 +117,7 @@ public interface IFeedFetchService extends IService {
 	 * @param code
 	 * @return
 	 */
-	public Boolean isReadyToModel(Country country, Store store, List<String> types, String code) throws DataAccessException;
+	public Boolean isReadyToModel(Country country, Store store, List<String> types, Long code) throws DataAccessException;
 
 	/**
 	 * 
@@ -127,6 +127,14 @@ public interface IFeedFetchService extends IService {
 	 * @param code
 	 * @return
 	 */
-	public List<FeedFetch> getGatherCodeFeedFetches(Country country, Store store, List<String> types, String code) throws DataAccessException;
+	public List<FeedFetch> getGatherCodeFeedFetches(Country country, Store store, List<String> types, Long code) throws DataAccessException;
+
+	/**
+	 * Gets a feed fetch code instead of an guid
+	 * 
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public Long getCode() throws DataAccessException;
 
 }

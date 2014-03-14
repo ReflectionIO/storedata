@@ -45,14 +45,30 @@ public class MiniAppCell extends AbstractCell<Item> {
 		}
 
 		String dailyDataType = FilterController.get().getDailyData(), dailyData;
-		
+
 		if (REVENUE_DAILY_DATA_TYPE.equals(dailyDataType)) {
 			dailyData = "USD 0";
 		} else {
 			dailyData = "0";
 		}
-		
-		RENDERER.render(builder, name, creatorName, value.smallImage, value.externalId, dailyData, FilterController.get().toItemFilterString());
+
+		String mode = FilterController.get().getListType();
+
+		if (FilterController.OVERALL_LIST_TYPE.equals(mode)) {
+			switch (context.getColumn()) {
+			case 1:
+				mode = FilterController.PAID_LIST_TYPE;
+				break;
+			case 2:
+				mode = FilterController.FREE_LIST_TYPE;
+				break;
+			case 3:
+				mode = FilterController.GROSSING_LIST_TYPE;
+				break;
+			}
+		}
+
+		RENDERER.render(builder, name, creatorName, value.smallImage, value.externalId, dailyData, FilterController.get().toItemFilterString(mode));
 	}
 
 }

@@ -15,13 +15,13 @@ import io.reflection.app.api.exception.DataAccessException;
  * 
  */
 public interface Predictor {
-	void enqueue(String country, String type, String code);
+	void enqueue(String country, String type, Long code);
 
 	/**
 	 * @param country
 	 * @param type
 	 * @param code
 	 */
-	void predictRevenueAndDownloads(String country, String type, String code) throws DataAccessException;
+	void predictRevenueAndDownloads(String country, String type, Long code) throws DataAccessException;
 
 }

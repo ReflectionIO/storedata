@@ -39,12 +39,12 @@ public abstract class StoreCollector {
 	// return ret;
 	// }
 
-	protected List<Long> store(String data, String countryCode, String store, String type, Long categoryInternalId, Date date, String code)
+	protected List<Long> store(String data, String countryCode, String store, String type, Long categoryInternalId, Date date, Long code)
 			throws DataAccessException {
 		return store(data, countryCode, store, type, categoryInternalId, date, code, false);
 	}
 
-	protected List<Long> store(String data, String countryCode, String store, String type, Long categoryInternalId, Date date, String code, boolean ingested)
+	protected List<Long> store(String data, String countryCode, String store, String type, Long categoryInternalId, Date date, Long code, boolean ingested)
 			throws DataAccessException {
 
 		List<Long> ids = new ArrayList<Long>(4);
@@ -58,9 +58,9 @@ public abstract class StoreCollector {
 		String filePath = null;
 
 		if (categoryInternalId == null) {
-			filePath = store + "/" + countryCode + "_" + type + "_" + code;
+			filePath = store + "/" + countryCode + "_" + type + "_" + code.toString();
 		} else {
-			filePath = store + "/" + countryCode + "/" + categoryInternalId.toString() + "/" + type + "_" + code;
+			filePath = store + "/" + countryCode + "/" + categoryInternalId.toString() + "/" + type + "_" + code.toString();
 		}
 
 		if (LOG.isLoggable(GaeLevel.DEBUG)) {

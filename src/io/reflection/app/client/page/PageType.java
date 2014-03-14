@@ -39,7 +39,9 @@ public enum PageType {
 	EmailTemplatesPageType("emailtemplates"),
 	ForgotPasswordPageType("forgotpassword"),
 	ResetPasswordPageType("resetpassword"),
-	ItemsPageType("items"), ;
+	ItemsPageType("items"),
+	PolicyType("policy"),
+	TermsPage("terms"), ;
 
 	private String value;
 	private static Map<String, PageType> valueLookup = null;
@@ -135,6 +137,12 @@ public enum PageType {
 			break;
 		case ItemsPageType:
 			page = new ItemsPage();
+			break;
+		case TermsPage:
+			page = new TermsPage();
+			break;
+		case PolicyType:
+			page = new PolicyPage();
 			break;
 		case HomePageType:
 		default:

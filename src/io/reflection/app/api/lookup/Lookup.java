@@ -8,10 +8,10 @@
 //
 package io.reflection.app.api.lookup;
 
-import io.reflection.app.api.ApiError;
 import io.reflection.app.api.ValidationHelper;
 import io.reflection.app.api.lookup.shared.call.LookupApplicationRequest;
 import io.reflection.app.api.lookup.shared.call.LookupApplicationResponse;
+import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.datatypes.shared.Application;
 import io.reflection.app.service.application.ApplicationServiceProvider;
 

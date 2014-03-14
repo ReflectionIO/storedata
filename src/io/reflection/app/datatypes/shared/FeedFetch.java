@@ -34,7 +34,7 @@ public class FeedFetch extends DataType {
 
 	@Index public String type;
 
-	public String code;
+	public Long code;
 
 	public FeedFetchStatusType status;
 	public Category category;
@@ -130,7 +130,7 @@ public class FeedFetch extends DataType {
 		if (jsonObject.has("code")) {
 			JsonElement jsonCode = jsonObject.get("code");
 			if (jsonCode != null) {
-				code = jsonCode.getAsString();
+				code = Long.valueOf(jsonCode.getAsLong());
 			}
 		}
 		if (jsonObject.has("status")) {

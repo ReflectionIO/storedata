@@ -7,7 +7,7 @@
 //
 package io.reflection.app.api.exception;
 
-import io.reflection.app.api.ApiError;
+import io.reflection.app.api.shared.ApiError;
 
 import com.willshex.gson.json.service.server.ServiceException;
 
