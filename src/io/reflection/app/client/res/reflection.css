@@ -416,12 +416,6 @@ dropdown-menu>li>a: hover,.dropdown-menu>li>a:focus,.dropdown-menu>.active>a,.dr
 	border-left-color: #454757;
 }
 
-@media ( max-width : 767px) {
-	.navbar-collapse .nav>.divider-vertical {
-		display: none;
-	}
-}
-
 /* Tabs Login/Register */
 .nav-tabs.nav-justified.loginregister>li>a {
 	background-color: #efefef;
