@@ -257,9 +257,10 @@ label {
 }
 
 a {
+	font-weight: 400;
+	font-family: 'Lato', sans-serif;
 	cursor: pointer;
-	color: #6D69C5;
-	font-family: Oxygen;
+	color: #6D69C5;	
 	font-size: 14px;
 }
 
@@ -326,8 +327,8 @@ a:hover,a:focus,a:active {
 	border-color: #dedede;
 }
 /* Dropdown */
-.
-dropdown-menu>li>a: hover,.dropdown-menu>li>a:focus,.dropdown-menu>.active>a,.dropdown-menu>.active>a:hover,.dropdown-menu>.active>a:focus
+
+.dropdown-menu>li>a: hover,.dropdown-menu>li>a:focus,.dropdown-menu>.active>a,.dropdown-menu>.active>a:hover,.dropdown-menu>.active>a:focus
 	{
 	background-color: #6D69C5;
 	color: #FFF;
