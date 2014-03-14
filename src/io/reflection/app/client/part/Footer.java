@@ -7,15 +7,13 @@
 //
 package io.reflection.app.client.part;
 
-import io.reflection.app.client.res.Images;
+import io.reflection.app.client.res.Styles;
 
 import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -38,81 +36,30 @@ public class Footer extends Composite {
 
 	@UiField SpanElement mYear;
 
-	@UiField Image mDownArrow;
-	@UiField Image mUpArrow;
-
-	@UiField Image mFacebook;
-	@UiField Image mLinkedin;
-	@UiField Image mTwitter;
+	@UiField Image mArrow;
 
 	@SuppressWarnings("deprecation")
 	public Footer() {
 		initWidget(uiBinder.createAndBindUi(this));
 
+		Styles.INSTANCE.reflection().ensureInjected();
+
+		mFooter.getElement().setAttribute("style", "bottom: -125px");		
+
 		mYear.setInnerHTML(Integer.toString(1900 + (new Date()).getYear()));
 	}
 
-	@UiHandler("mUpArrow")
-	void onMouseOverUpArrow(MouseOverEvent event) {
-		mUpArrow.setResource(Images.INSTANCE.footerUpArrowHover());
+	@UiHandler("mArrow")
+	void onClickArrow(ClickEvent event) {
+		if (mFooter.getElement().getStyle().getBottom().equals("-125px")) {
+			mArrow.setStylePrimaryName(Styles.INSTANCE.reflection().footerDownArrow());
+			mFooter.getElement().setAttribute("style", "bottom: 0px;");
+
+		} else {
+			mArrow.setStylePrimaryName(Styles.INSTANCE.reflection().footerUpArrow());
+			mFooter.getElement().setAttribute("style", "bottom: -125px;");
+		}
+
 	}
 
-	@UiHandler("mUpArrow")
-	void onMouseOutUpArrow(MouseOutEvent event) {
-		mUpArrow.setResource(Images.INSTANCE.footerUpArrow());
-	}
-
-	@UiHandler("mUpArrow")
-	void onClickUpArrow(ClickEvent event) {
-		mUpArrow.setVisible(false);
-		mDownArrow.setVisible(true);
-		mFooter.getElement().setAttribute("style", "bottom: 0px;");
-	}
-
-	@UiHandler("mDownArrow")
-	void onMouseOverDownArrow(MouseOverEvent event) {
-		mDownArrow.setResource(Images.INSTANCE.footerDownArrowHover());
-	}
-
-	@UiHandler("mDownArrow")
-	void onMouseOutDownArrow(MouseOutEvent event) {
-		mDownArrow.setResource(Images.INSTANCE.footerDownArrow());
-	}
-
-	@UiHandler("mDownArrow")
-	void onClickDownArrow(ClickEvent event) {
-		mDownArrow.setVisible(false);
-		mUpArrow.setVisible(true);
-		mFooter.getElement().setAttribute("style", "bottom: -125px;");
-	}
-
-	@UiHandler("mFacebook")
-	void onMouseOverFacebook(MouseOverEvent event) {
-		mFacebook.setResource(Images.INSTANCE.facebookHover());
-	}
-
-	@UiHandler("mFacebook")
-	void onMouseOutFacebook(MouseOutEvent event) {
-		mFacebook.setResource(Images.INSTANCE.facebook());
-	}
-
-	@UiHandler("mLinkedin")
-	void onMouseOverLinkedin(MouseOverEvent event) {
-		mLinkedin.setResource(Images.INSTANCE.linkedinHover());
-	}
-
-	@UiHandler("mLinkedin")
-	void onMouseOutLinkedin(MouseOutEvent event) {
-		mLinkedin.setResource(Images.INSTANCE.linkedin());
-	}
-
-	@UiHandler("mTwitter")
-	void onMouseOverTwitter(MouseOverEvent event) {
-		mTwitter.setResource(Images.INSTANCE.twitterHover());
-	}
-
-	@UiHandler("mTwitter")
-	void onMouseOutTwitter(MouseOutEvent event) {
-		mTwitter.setResource(Images.INSTANCE.twitter());
-	}
 }

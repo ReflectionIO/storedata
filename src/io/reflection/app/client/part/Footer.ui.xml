@@ -1,6 +1,9 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+
     <ui:with field='res' type='io.reflection.app.client.res.Images' />
+    <ui:with field='styles' type='io.reflection.app.client.res.Styles' />
+
     <ui:style>
     .footer {
     	position: fixed;
@@ -11,7 +14,6 @@
     	padding-right: 25px;
     	border-top: 1px solid #d9dce0;
     	background-color: #ffffff;
-    	bottom: -125px;
     	/* Fade effect */
     	-o-transition: .5s;
     	-ms-transition: .5s;
@@ -45,17 +47,21 @@
     .arrow:hover {
     	cursor: pointer;
     }
+    
+    .sideMargin {
+    	margin-left: 15px;
+    	margin-right: 15px;
+    }
     </ui:style>
 
 
     <g:HTMLPanel styleName="{style.footer}" ui:field="mFooter">
         <g:HTMLPanel styleName="{style.upPanel}">
             <div style="float: left;width:20px;">
-                <g:Image resource="{res.logo}" styleName="{style.logo}" />
+                <span class="{styles.reflection.footerLogo}"></span>
             </div>
             <div style="margin:0 auto;width:20px;margin-top: 7px;">
-                <g:Image ui:field="mUpArrow" resource="{res.footerUpArrow}" styleName="{style.arrow}" />
-                <g:Image ui:field="mDownArrow" resource="{res.footerDownArrow}" styleName="{style.arrow}" visible="false" />
+                <g:Image ui:field="mArrow" styleName="{styles.reflection.footerUpArrow} {style.arrow}" />
             </div>
             <div style="margin-top: -12px; float: right;width:290px;">
                 <span style="display: block; font-size: 13px; color: #63656a;">
@@ -71,7 +77,7 @@
             <div style="width: 100%; padding-top:20px; padding-bottom: 40px;">
                 <g:InlineHyperlink targetHistoryToken="ranks">Leaderboard</g:InlineHyperlink>
                 &nbsp;&nbsp;&nbsp;
-                <g:InlineHyperlink targetHistoryToken="">Terms and
+                <g:InlineHyperlink targetHistoryToken="" styleName="{style.sideMargin}">Terms and
                     Conditions</g:InlineHyperlink>
                 &nbsp;&nbsp;&nbsp;
                 <g:InlineHyperlink targetHistoryToken="">Privacy
@@ -81,14 +87,18 @@
             <div style="width: 100%;">
 
                 <a href="https://www.facebook.com/reflection.io" target="_blank">
-                    <g:Image resource="{res.facebook}" ui:field="mFacebook" />
+                    <span class="{styles.reflection.footerFacebook}"></span>
                 </a>
-                <a href="http://www.linkedin.com/company/reflection-io-ltd" target="_blank" style="margin-left: 15px; margin-right: 15px;">
-                    <g:Image resource="{res.linkedin}" ui:field="mLinkedin" />
+                <a href="http://www.linkedin.com/company/reflection-io-ltd" target="_blank" class="{style.sideMargin}">
+                    <span class="{styles.reflection.footerLinkedin}"></span>
                 </a>
                 <a href="https://twitter.com/ReflectiveTweet" target="_blank">
-                    <g:Image resource="{res.twitter}" ui:field="mTwitter" />
+                    <span class="{styles.reflection.footerTwitter}"></span>
                 </a>
+
+
+
+
 
             </div>
 
