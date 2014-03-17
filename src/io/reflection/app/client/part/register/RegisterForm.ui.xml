@@ -40,14 +40,12 @@
                 </g:HTMLPanel>
 
                 <g:HTMLPanel ui:field="termAndCondGroup">
-                    <p class="p-small">
-                        <g:CheckBox ui:field="mTermAndCond">
-                            I agree to the
-                            <a href="#terms">
-                                <span class="p-small">terms and conditions</span>
-                            </a>
-                        </g:CheckBox>
-                    </p>
+                    <g:CheckBox ui:field="mTermAndCond">
+                        I agree to the
+                        <a href="#terms">
+                            terms and conditions
+                        </a>
+                    </g:CheckBox>
                     <g:HTMLPanel ui:field="termAndCondNote" visible="false" styleName="noteDetail" />
                 </g:HTMLPanel>
 

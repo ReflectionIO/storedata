@@ -1,6 +1,6 @@
 @CHARSET "UTF-8";
 
-@external p-small, form, formEdit, noteDetail, label, gwt-DateBox, gwt-ListBox, toppanel, sidepanel, btn-group, btn-default, row, divider, dropdown-menu, side, divider-vertical, nav-pills, nav-stacked, nav-tabs, nav-justified, ranks, loginregister, well, well-title, form-group, gwt-RadioButton, hr, navbar-fixed-top, navbar, container, pagination, btn-primary, btn-primary, disabled btn-primary:hover, active, open, dropdown-toggle, dropdown-menu, badge, dropdown, nav, navbar-inverse, navbar-nav, caret, form-control;
+@external p-small, form, formEdit, noteDetail, label, gwt-CheckBox, gwt-DateBox, gwt-ListBox, toppanel, sidepanel, btn-group, btn-default, row, divider, dropdown-menu, side, divider-vertical, nav-pills, nav-stacked, nav-tabs, nav-justified, ranks, loginregister, well, well-title, form-group, gwt-RadioButton, hr, navbar-fixed-top, navbar, container, pagination, btn-primary, btn-primary, disabled btn-primary:hover, active, open, dropdown-toggle, dropdown-menu, badge, dropdown, nav, navbar-inverse, navbar-nav, caret, form-control;
 	/* Colors palette: Purple #6d69c5; DarkBlue 272933; Gold #eabc3e; LightGrey: #f8f9f9; Green: #1bc79f; Blue: #3357cc; Red: #e73c48; */
 /* Forms */
 .form {
@@ -194,6 +194,20 @@
 	margin-left: 4px;
 }
 
+.gwt-CheckBox input{
+	outline: 0;
+	cursor: pointer;
+}
+
+.gwt-CheckBox label {
+	padding-left: 8px;
+	font-weight: 400;
+	font-size: 14px;
+	font-family: 'Lato', sans-serif;
+	line-height: 22px;
+	cursor: pointer;
+}
+
 /* TEXT */
 p {
 	font-weight: 400;
@@ -260,6 +274,7 @@ a {
 	font-weight: 400;
 	font-family: 'Lato', sans-serif;
 	cursor: pointer;
+	line-height: 22px;
 	color: #6D69C5;
 	font-size: 14px;
 	outline: 0;

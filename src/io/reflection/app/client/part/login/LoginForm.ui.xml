@@ -25,14 +25,11 @@
                     <g:HTMLPanel styleName="noteDetail" ui:field="mPasswordNote" visible="false" />
                 </g:HTMLPanel>
 
-
-
                 <g:HTMLPanel>
-                    <p class="p-small">
-                        <g:CheckBox ui:field="mRememberMe">Remember me</g:CheckBox>
-                    </p>
+                    <g:CheckBox ui:field="mRememberMe">
+                        Remember me
+                    </g:CheckBox>
                 </g:HTMLPanel>
-
 
                 <g:Button ui:field="mLogin" styleName="btn btn-lg btn-primary btn-block">
                     Log In
