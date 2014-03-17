@@ -1,0 +1,56 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part.text">
+    <ui:style>
+    .textArea {
+    	height: 200px;
+    }
+    </ui:style>
+    <g:HTMLPanel>
+        <h2>Add Post</h2>
+
+        <g:FormPanel ui:field="form" styleName="row">
+            <g:HTMLPanel styleName="col-md-4">
+                <g:HTMLPanel ui:field="titleGroup" styleName="form-group">
+                    <label>Title</label>
+                    <g:TextBox styleName="form-control" ui:field="title" />
+                    <g:HTMLPanel styleName="noteDetail" ui:field="titleNote" visible="false" />
+                </g:HTMLPanel>
+
+                <g:HTMLPanel>
+                    <g:CheckBox ui:field="visible">Visible without direct link</g:CheckBox>
+                </g:HTMLPanel>
+
+                <g:HTMLPanel ui:field="descriptionGroup" styleName="form-group">
+                    <label>Description</label>
+                    <p:RichTextToolbar ui:field="descriptionToolbar" />
+                    <g:RichTextArea ui:field="descriptionText" styleName="form-control {style.textArea}" />
+                    <g:HTMLPanel styleName="noteDetail" ui:field="descriptionNote" visible="false" />
+                </g:HTMLPanel>
+
+                <g:HTMLPanel ui:field="contentGroup" styleName="form-group">
+                    <label>Content</label>
+                    <p:RichTextToolbar ui:field="contentToolbar" />
+                    <g:RichTextArea ui:field="contentText" styleName="form-control {style.textArea}" />
+                    <g:HTMLPanel styleName="noteDetail" ui:field="contentNote" visible="false" />
+                </g:HTMLPanel>
+
+                <g:HTMLPanel ui:field="tagsGroup" styleName="form-group">
+                    <label>Tags</label>
+                    <g:TextBox styleName="form-control" ui:field="tags" />
+                    <g:HTMLPanel styleName="noteDetail" ui:field="tagsNote" visible="false" />
+                </g:HTMLPanel>
+
+                <g:HTMLPanel>
+                    <g:CheckBox ui:field="publish">Publish on submit</g:CheckBox>
+                </g:HTMLPanel>
+
+                <g:Button ui:field="submit" styleName="btn btn-lg btn-primary btn-block">
+                    Submit
+                </g:Button>
+
+            </g:HTMLPanel>
+
+        </g:FormPanel>
+
+    </g:HTMLPanel>
+</ui:UiBinder> 

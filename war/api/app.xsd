@@ -325,6 +325,32 @@
         </xsd:complexContent>
     </xsd:complexType>
 
+    <xsd:complexType name="Post">
+        <xsd:complexContent>
+            <xsd:extension base="DataType">
+                <xsd:sequence>
+                    <xsd:element name="author" type="User" />
+                    <xsd:element name="tags" type="Tag" minOccurs="0" maxOccurs="unbounded" />
+                </xsd:sequence>
+                <xsd:attribute name="published" type="xsd:dateTime" use="optional" />
+                <xsd:attribute name="title" type="xsd:string" use="required" />
+                <xsd:attribute name="description" type="xsd:string" use="required" />
+                <xsd:attribute name="content" type="xsd:string" use="required" />
+                <xsd:attribute name="version" type="xsd:int" use="required" />
+                <xsd:attribute name="visible" type="xsd:boolean" use="required" />
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="Tag">
+        <xsd:complexContent>
+            <xsd:extension base="DataType">
+                <xsd:attribute name="name" type="xsd:string" use="required" />
+                <xsd:attribute name="description" type="xsd:string" use="required" />
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
     <xsd:complexType name="Session">
         <xsd:complexContent>
             <xsd:extension base="DataType">

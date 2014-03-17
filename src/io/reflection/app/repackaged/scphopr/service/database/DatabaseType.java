@@ -30,7 +30,9 @@ public enum DatabaseType {
 	DatabaseTypeDataAccountFetch("dataaccountfetch"),
 	DatabaseTypeCategory("category"),
 	DatabaseTypeResource("resource"),
-	DatabaseTypeEmailTemplate("emailtemplate");
+	DatabaseTypeEmailTemplate("emailtemplate"),
+	DatabaseTypePost("post"),
+	DatabaseTypeTag("tag"), ;
 
 	private String value;
 	private static Map<String, DatabaseType> valueLookup = null;

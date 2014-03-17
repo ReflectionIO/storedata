@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions name="blog" targetNamespace="http://app.reflection.io/blog" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:sdb="http://app.reflection.io/blog"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <wsdl:types>
+        <xsd:schema targetNamespace="http://app.reflection.io/blog" xmlns:sd="http://app.reflection.io">
+            <xsd:import schemaLocation="../app.xsd" namespace="http://app.reflection.io" />
+
+            <xsd:element name="GetPostsInput" type="sdb:GetPostsRequest" />
+            <xsd:element name="GetPostsOutput" type="sdb:GetPostsResponse" />
+
+            <xsd:element name="GetPostInput" type="sdb:GetPostRequest" />
+            <xsd:element name="GetPostOutput" type="sdb:GetPostResponse" />
+
+            <xsd:element name="AssignTagsInput" type="sdb:AssignTagsRequest" />
+            <xsd:element name="AssignTagsOutput" type="sdb:AssignTagsResponse" />
+
+            <xsd:element name="UpdatePostInput" type="sdb:UpdatePostRequest" />
+            <xsd:element name="UpdatePostOutput" type="sdb:UpdatePostResponse" />
+
+            <xsd:element name="CreatePostInput" type="sdb:CreatePostRequest" />
+            <xsd:element name="CreatePostOutput" type="sdb:CreatePostResponse" />
+
+            <xsd:complexType name="GetPostsRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="pager" type="sd:Pager" />
+                        </xsd:sequence>
+                        <xsd:attribute name="includeContents" type="xsd:boolean" />
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="GetPostsResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+                            <xsd:element name="posts" type="sd:Post" maxOccurs="unbounded" />
+                            <xsd:element name="pager" type="sd:Pager" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="GetPostRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:attribute name="id" type="xsd:long" />
+                        <xsd:attribute name="title" type="xsd:string" />
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="GetPostResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+                            <xsd:element name="post" type="sd:Post" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="AssignTagsRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="post" type="sd:Post" />
+                            <xsd:element name="tags" type="sd:Tag" maxOccurs="unbounded" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="AssignTagsResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="UpdatePostRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="post" type="sd:Post" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="UpdatePostResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="CreatePostRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="tags" type="sd:Tag" minOccurs="0" maxOccurs="unbounded" />
+                        </xsd:sequence>
+                        <xsd:attribute name="title" type="xsd:string" />
+                        <xsd:attribute name="description" type="xsd:string" />
+                        <xsd:attribute name="content" type="xsd:string" />
+                        <xsd:attribute name="publish" type="xsd:boolean" />
+                        <xsd:attribute name="visible" type="xsd:boolean" />
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="CreatePostResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+        </xsd:schema>
+    </wsdl:types>
+
+    <wsdl:message name="GetPostsRequest">
+        <wsdl:part name="input" element="sdb:GetPostsInput" />
+    </wsdl:message>
+    <wsdl:message name="GetPostsResponse">
+        <wsdl:part name="output" element="sdb:GetPostsOutput" />
+    </wsdl:message>
+
+    <wsdl:message name="GetPostRequest">
+        <wsdl:part name="input" element="sdb:GetPostInput" />
+    </wsdl:message>
+    <wsdl:message name="GetPostResponse">
+        <wsdl:part name="output" element="sdb:GetPostOutput" />
+    </wsdl:message>
+
+    <wsdl:message name="AssignTagsRequest">
+        <wsdl:part name="input" element="sdb:AssignTagsInput" />
+    </wsdl:message>
+    <wsdl:message name="AssignTagsResponse">
+        <wsdl:part name="output" element="sdb:AssignTagsOutput" />
+    </wsdl:message>
+
+    <wsdl:message name="UpdatePostRequest">
+        <wsdl:part name="input" element="sdb:UpdatePostInput" />
+    </wsdl:message>
+    <wsdl:message name="UpdatePostResponse">
+        <wsdl:part name="output" element="sdb:UpdatePostOutput" />
+    </wsdl:message>
+
+    <wsdl:message name="CreatePostRequest">
+        <wsdl:part name="input" element="sdb:CreatePostInput" />
+    </wsdl:message>
+    <wsdl:message name="CreatePostResponse">
+        <wsdl:part name="output" element="sdb:CreatePostOutput" />
+    </wsdl:message>
+
+    <wsdl:portType name="blog">
+        <wsdl:operation name="GetPosts">
+            <wsdl:input message="sdb:GetPostsRequest" />
+            <wsdl:output message="sdb:GetPostsResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="GetPost">
+            <wsdl:input message="sdb:GetPostRequest" />
+            <wsdl:output message="sdb:GetPostResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="AssignTags">
+            <wsdl:input message="sdb:AssignTagsRequest" />
+            <wsdl:output message="sdb:AssignTagsResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="UpdatePost">
+            <wsdl:input message="sdb:UpdatePostRequest" />
+            <wsdl:output message="sdb:UpdatePostResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="CreatePost">
+            <wsdl:input message="sdb:CreatePostRequest" />
+            <wsdl:output message="sdb:CreatePostResponse" />
+        </wsdl:operation>
+
+    </wsdl:portType>
+    <wsdl:binding name="blogSOAP" type="sdb:blog">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+        <wsdl:operation name="GetPosts">
+            <soap:operation soapAction="http://app.reflection.io/blog/GetPosts" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="GetPost">
+            <soap:operation soapAction="http://app.reflection.io/blog/GetPost" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="AssignTags">
+            <soap:operation soapAction="http://app.reflection.io/blog/AssignTags" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="UpdatePost">
+            <soap:operation soapAction="http://app.reflection.io/blog/UpdatePost" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="CreatePost">
+            <soap:operation soapAction="http://app.reflection.io/blog/CreatePost" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+
+    </wsdl:binding>
+    <wsdl:service name="blog">
+        <wsdl:port name="blogSOAP" binding="sdb:blogSOAP">
+            <soap:address location="http://app.reflection.io/blog/" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

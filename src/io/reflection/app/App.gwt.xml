@@ -15,6 +15,7 @@
     <inherits name="io.reflection.app.datatypes.DataTypes"/>
     <inherits name="io.reflection.app.api.core.Core" />
     <inherits name="io.reflection.app.api.admin.Admin" />
+    <inherits name="io.reflection.app.api.blog.Blog" />
 
     <!-- Inherit the default GWT style sheet. You can change -->
     <!-- the theme of your GWT application by uncommenting -->

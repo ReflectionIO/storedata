@@ -1,0 +1,99 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+    <ui:style>
+    
+    </ui:style>
+    <g:HTMLPanel>
+        <g:HTMLPanel>
+            <g:HTMLPanel styleName="btn-group">
+                <g:Button styleName="btn btn-default" ui:field="bold" />
+                <g:Button styleName="btn btn-default" ui:field="italic" />
+                <g:Button styleName="btn btn-default" ui:field="underline" />
+                <g:Button styleName="btn btn-default" ui:field="strikethrough" />
+            </g:HTMLPanel>
+
+            <g:HTMLPanel styleName="btn-group">
+                <g:Button styleName="btn btn-default" ui:field="superscript" />
+                <g:Button styleName="btn btn-default" ui:field="subscript" />
+            </g:HTMLPanel>
+
+            <g:HTMLPanel styleName="btn-group">
+                <g:PushButton styleName="btn btn-default" ui:field="justifyLeft" />
+                <g:PushButton styleName="btn btn-default" ui:field="justifyCenter" />
+                <g:PushButton styleName="btn btn-default" ui:field="justifyRight" />
+            </g:HTMLPanel>
+
+            <g:HTMLPanel styleName="btn-group">
+                <g:PushButton styleName="btn btn-default" ui:field="indent" />
+                <g:PushButton styleName="btn btn-default" ui:field="outdent" />
+            </g:HTMLPanel>
+
+            <g:HTMLPanel styleName="btn-group">
+                <g:PushButton styleName="btn btn-default" ui:field="hr" />
+            </g:HTMLPanel>
+
+            <g:HTMLPanel styleName="btn-group">
+                <g:PushButton styleName="btn btn-default" ui:field="ol" />
+                <g:PushButton styleName="btn btn-default" ui:field="ul" />
+            </g:HTMLPanel>
+
+            <g:HTMLPanel styleName="btn-group">
+                <g:PushButton styleName="btn btn-default" ui:field="insertImage" />
+            </g:HTMLPanel>
+
+            <g:HTMLPanel styleName="btn-group">
+                <g:PushButton styleName="btn btn-default" ui:field="createLink" />
+                <g:PushButton styleName="btn btn-default" ui:field="removeLink" />
+            </g:HTMLPanel>
+
+            <g:HTMLPanel styleName="btn-group">
+                <g:PushButton styleName="btn btn-default" ui:field="removeFormat" />
+            </g:HTMLPanel>
+
+        </g:HTMLPanel>
+
+        <g:HTMLPanel styleName="form-group form-inline">
+            <g:ListBox styleName="form-control" ui:field="backColors">
+                <g:item value="">Background</g:item>
+                <g:item value="White">White</g:item>
+                <g:item value="Black">Black</g:item>
+                <g:item value="Red">Red</g:item>
+                <g:item value="Green">Green</g:item>
+                <g:item value="Yellow">Yellow</g:item>
+                <g:item value="Blue">Blue</g:item>
+            </g:ListBox>
+
+            <g:ListBox styleName="form-control" ui:field="foreColors">
+                <g:item value="">Foreground</g:item>
+                <g:item value="White">White</g:item>
+                <g:item value="Black">Black</g:item>
+                <g:item value="Red">Red</g:item>
+                <g:item value="Green">Green</g:item>
+                <g:item value="Yellow">Yellow</g:item>
+                <g:item value="Blue">Blue</g:item>
+            </g:ListBox>
+
+            <g:ListBox styleName="form-control" ui:field="fonts">
+                <g:item value="">Font</g:item>
+                <g:item value="">Normal</g:item>
+                <g:item value="Times New Roman">Times New Roman</g:item>
+                <g:item value="Arial">Arial</g:item>
+                <g:item value="Courier New">Courier New</g:item>
+                <g:item value="Georgia">Georgia</g:item>
+                <g:item value="Trebuchet">Trebuchet</g:item>
+                <g:item value="Verdana">Verdana</g:item>
+            </g:ListBox>
+
+            <g:ListBox styleName="form-control" ui:field="fontSizes">
+                <g:item value="Size">Size</g:item>
+                <g:item value="XX-Small">XX-Small</g:item>
+                <g:item value="X-Small">X-Small</g:item>
+                <g:item value="Small">Small</g:item>
+                <g:item value="Medium">Medium</g:item>
+                <g:item value="Large">Large</g:item>
+                <g:item value="X-Large">X-Large</g:item>
+                <g:item value="XX-Large">XX-Large</g:item>
+            </g:ListBox>
+        </g:HTMLPanel>
+    </g:HTMLPanel>
+</ui:UiBinder> 

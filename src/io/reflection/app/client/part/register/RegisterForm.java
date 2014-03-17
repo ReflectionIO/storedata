@@ -22,7 +22,6 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -63,7 +62,6 @@ public class RegisterForm extends Composite {
 	private String mPasswordError;
 
 	@UiField CheckBox mTermAndCond;
-	@UiField InlineHyperlink mTermAndCondLink;
 	@UiField HTMLPanel termAndCondGroup;
 	@UiField HTMLPanel termAndCondNote;
 	private String termAndCondError;
@@ -101,7 +99,7 @@ public class RegisterForm extends Composite {
 		mForename.setFocus(true);
 	}
 
-	@UiHandler({ "mForename", "mSurname", "mCompany", "mEmail", "mPassword", "confirmPassword" })
+	@UiHandler({ "mForename", "mSurname", "mCompany", "mEmail", "mPassword", "confirmPassword", "mTermAndCond" })
 	void onEnterKeyPressRegisterFields(KeyPressEvent event) {
 		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
 			mRegister.click();

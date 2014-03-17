@@ -8,7 +8,7 @@
 
         <c:CellTable ui:field="emailTemplates" styleName="table table-hover table-striped" />
 
-        <p:SimplePager ui:field="pager" rangeLimited="true" />
+        <p:SimplePager ui:field="pager" rangeLimited="false" />
 
     </g:HTMLPanel>
 </ui:UiBinder> 

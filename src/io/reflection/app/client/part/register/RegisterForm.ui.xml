@@ -1,6 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:style>
+    
     </ui:style>
     <g:HTMLPanel>
         <g:FormPanel styleName="form">
@@ -40,12 +41,12 @@
 
                 <g:HTMLPanel ui:field="termAndCondGroup">
                     <p class="p-small">
-                        <g:CheckBox ui:field="mTermAndCond" />
-                        I agree to the
-                        <g:InlineHyperlink ui:field="mTermAndCondLink">
-                            <span class="p-small">terms and
-                                conditions</span>
-                        </g:InlineHyperlink>
+                        <g:CheckBox ui:field="mTermAndCond">
+                            I agree to the
+                            <a href="#terms">
+                                <span class="p-small">terms and conditions</span>
+                            </a>
+                        </g:CheckBox>
                     </p>
                     <g:HTMLPanel ui:field="termAndCondNote" visible="false" styleName="noteDetail" />
                 </g:HTMLPanel>

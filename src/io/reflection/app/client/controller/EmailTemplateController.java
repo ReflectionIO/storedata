@@ -85,9 +85,9 @@ public class EmailTemplateController extends AsyncDataProvider<EmailTemplate> im
 							input.pager.start.intValue(),
 							mEmailTemplates.subList(input.pager.start.intValue(),
 									Math.min(input.pager.start.intValue() + input.pager.count.intValue(), mPager.totalCount.intValue())));
-
-					EventController.get().fireEventFromSource(new GetEmailTemplatesSuccess(input, output), EmailTemplateController.this);
 				}
+
+				EventController.get().fireEventFromSource(new GetEmailTemplatesSuccess(input, output), EmailTemplateController.this);
 			}
 
 			@Override

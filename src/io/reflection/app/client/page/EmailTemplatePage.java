@@ -42,13 +42,13 @@ public class EmailTemplatePage extends Page implements NavigationEventHandler {
 	public EmailTemplatePage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		addEmailTemplateColumns();
+		addColumns();
 		
 		EmailTemplateController.get().addDataDisplay(emailTemplates);
 		pager.setDisplay(emailTemplates);
 	}
 
-	public void addEmailTemplateColumns() {
+	public void addColumns() {
 		TextColumn<EmailTemplate> idColumn = new TextColumn<EmailTemplate>() {
 
 			@Override

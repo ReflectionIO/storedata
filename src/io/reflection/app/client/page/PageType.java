@@ -7,6 +7,11 @@
 //
 package io.reflection.app.client.page;
 
+import io.reflection.app.client.page.blog.AdminPage;
+import io.reflection.app.client.page.blog.EditPostPage;
+import io.reflection.app.client.page.blog.PostPage;
+import io.reflection.app.client.page.blog.PostsPage;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,7 +46,11 @@ public enum PageType {
 	ResetPasswordPageType("resetpassword"),
 	ItemsPageType("items"),
 	PolicyType("policy"),
-	TermsPage("terms"), ;
+	TermsPage("terms"),
+	BlogAdmin("blogadmin"),
+	BlogPosts("blog"),
+	BlogPost("blogpost"),
+	BlogEditPost("blogedit"), ;
 
 	private String value;
 	private static Map<String, PageType> valueLookup = null;
@@ -143,6 +152,18 @@ public enum PageType {
 			break;
 		case PolicyType:
 			page = new PolicyPage();
+			break;
+		case BlogAdmin:
+			page = new AdminPage();
+			break;
+		case BlogEditPost:
+			page = new EditPostPage();
+			break;
+		case BlogPost:
+			page = new PostPage();
+			break;
+		case BlogPosts:
+			page = new PostsPage();
 			break;
 		case HomePageType:
 		default:

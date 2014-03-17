@@ -50,6 +50,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	</servlet>
     
     <servlet>
+        <servlet-name>Blog api</servlet-name>
+        <servlet-class>io.reflection.app.api.blog.BlogJsonServlet</servlet-class>
+    </servlet>
+    
+    <servlet>
         <servlet-name>Admin api</servlet-name>
         <servlet-class>io.reflection.app.api.admin.AdminJsonServlet</servlet-class>
     </servlet>
@@ -116,6 +121,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
     <servlet-mapping>
         <servlet-name>Admin api</servlet-name>
         <url-pattern>/admin</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>Blog api</servlet-name>
+        <url-pattern>/blog</url-pattern>
     </servlet-mapping>
 	
 	<servlet-mapping>
