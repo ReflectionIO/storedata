@@ -9,6 +9,7 @@
 package io.reflection.app.service.post;
 
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
+import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.Post;
@@ -73,12 +74,12 @@ final class PostService implements IPostService {
 		post.tags = getTags(post.id);
 
 		if (includeContents) {
-			post.content = connection.getCurrentRowString("content");
+			post.content = stripslashes(connection.getCurrentRowString("content"));
 		}
 
-		post.description = connection.getCurrentRowString("description");
+		post.description = stripslashes(connection.getCurrentRowString("description"));
 		post.published = connection.getCurrentRowDateTime("published");
-		post.title = connection.getCurrentRowString("title");
+		post.title = stripslashes(connection.getCurrentRowString("title"));
 
 		post.author = new User();
 		post.author.id = connection.getCurrentRowLong("authorid");
@@ -156,7 +157,7 @@ final class PostService implements IPostService {
 		}
 
 		getPostsQuery += " FROM `post` WHERE `deleted`='n'";
-		
+
 		if (onlyVisible == null || onlyVisible.booleanValue()) {
 			getPostsQuery += " AND `visible`>0";
 		}
@@ -245,7 +246,7 @@ final class PostService implements IPostService {
 		if (onlyVisible == null || onlyVisible.booleanValue()) {
 			getPostsCountQuery += " AND `visible`>0";
 		}
-		
+
 		try {
 			postConnection.connect();
 			postConnection.executeQuery(getPostsCountQuery);

@@ -186,4 +186,12 @@ public enum PageType {
 
 		History.newItem(toString() + "/" + joinedParams);
 	}
+
+	/**
+	 * @param page
+	 * @return
+	 */
+	public boolean is(String page) {
+		return value.equals(page);
+	}
 }

@@ -22,7 +22,10 @@ import io.reflection.app.api.blog.shared.call.UpdatePostRequest;
 import io.reflection.app.api.blog.shared.call.UpdatePostResponse;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.datatypes.shared.Post;
+import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.service.post.PostServiceProvider;
+import io.reflection.app.service.user.UserServiceProvider;
+import io.reflection.app.shared.util.SparseArray;
 
 import java.util.Date;
 import java.util.logging.Logger;
@@ -53,6 +56,16 @@ public final class Blog extends ActionHandler {
 			Boolean onlyVisible = Boolean.FALSE;
 
 			output.posts = PostServiceProvider.provide().getPosts(onlyVisible, input.includeContents, input.pager);
+
+			SparseArray<User> users = new SparseArray<User>();
+
+			for (Post post : output.posts) {
+				if (users.get(post.author.id.intValue()) == null) {
+					users.put(post.author.id.intValue(), UserServiceProvider.provide().getUser(post.author.id));
+				}
+
+				post.author = users.get(post.author.id.intValue());
+			}
 
 			output.pager = input.pager;
 			updatePager(output.pager, output.posts, input.pager.totalCount == null ? PostServiceProvider.provide().getPostsCount(onlyVisible)
