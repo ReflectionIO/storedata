@@ -21,23 +21,29 @@ import com.willshex.gson.json.service.client.JsonService;
 public final class LookupService extends JsonService {
 	public static final String LookupMethodLookupApplication = "LookupApplication";
 
-	public void lookupApplication(LookupApplicationRequest input, final AsyncCallback<LookupApplicationResponse> output) {
+	public Request lookupApplication(final LookupApplicationRequest input, final AsyncCallback<LookupApplicationResponse> output) {
+		Request handle = null;
 		try {
-			sendRequest(LookupMethodLookupApplication, input, new RequestCallback() {
+			handle = sendRequest(LookupMethodLookupApplication, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					LookupApplicationResponse outputParameter = new LookupApplicationResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
+					onCallSuccess(LookupService.this, LookupMethodLookupApplication, input, outputParameter);
 				}
 
 				@Override
 				public void onError(Request request, Throwable exception) {
 					output.onFailure(exception);
+					onCallFailure(LookupService.this, LookupMethodLookupApplication, input, exception);
 				}
 			});
+			onCallStart(LookupService.this, LookupMethodLookupApplication, input, handle);
 		} catch (RequestException e) {
 			output.onFailure(e);
+			onCallFailure(LookupService.this, LookupMethodLookupApplication, input, e);
 		}
+		return handle;
 	}
 }

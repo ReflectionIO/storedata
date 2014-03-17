@@ -35,7 +35,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements ServiceController {
+public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements ServiceConstants {
 	private static FeedFetchController mOne = null;
 
 	private List<FeedFetch> mRows = null;
@@ -50,8 +50,7 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 	}
 
 	public void fetchFeedFetches() {
-		AdminService service = new AdminService();
-		service.setUrl(ADMIN_END_POINT);
+		AdminService service = ServiceCreator.createAdminService();
 
 		final GetFeedFetchesRequest input = new GetFeedFetchesRequest();
 		input.accessCode = ACCESS_CODE;
@@ -131,8 +130,7 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 	}
 
 	public void model(Long code) {
-		AdminService service = new AdminService();
-		service.setUrl(ADMIN_END_POINT);
+		AdminService service = ServiceCreator.createAdminService();
 
 		final TriggerModelRequest input = new TriggerModelRequest();
 		input.accessCode = ACCESS_CODE;
@@ -164,8 +162,7 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 	 * @param code
 	 */
 	public void ingest(Long code) {
-		AdminService service = new AdminService();
-		service.setUrl(ADMIN_END_POINT);
+		AdminService service = ServiceCreator.createAdminService();
 
 		final TriggerIngestRequest input = new TriggerIngestRequest();
 		input.accessCode = ACCESS_CODE;
@@ -198,9 +195,7 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 	 * @param code
 	 */
 	public void predict(Long code) {
-		AdminService service = new AdminService();
-		service.setUrl(ADMIN_END_POINT);
-
+		AdminService service = ServiceCreator.createAdminService();
 		final TriggerPredictRequest input = new TriggerPredictRequest();
 		input.accessCode = ACCESS_CODE;
 

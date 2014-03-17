@@ -34,7 +34,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class LinkedAccountController extends AsyncDataProvider<DataAccount> implements ServiceController, TreeViewModel {
+public class LinkedAccountController extends AsyncDataProvider<DataAccount> implements ServiceConstants, TreeViewModel {
 
 	private List<DataAccount> mLinkedAccounts;
 	private long mCount = -1;
@@ -51,8 +51,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 	}
 
 	public void linkAccount(Long sourceId, String username, String password, String properties) {
-		CoreService service = new CoreService();
-		service.setUrl(CORE_END_POINT);
+		CoreService service = ServiceCreator.createCoreService();
 
 		final LinkAccountRequest input = new LinkAccountRequest();
 		input.accessCode = ACCESS_CODE;
@@ -95,8 +94,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 	}
 
 	public void fetchLinkedAccounts() { 
-		CoreService service = new CoreService();
-		service.setUrl(CORE_END_POINT);
+		CoreService service = ServiceCreator.createCoreService();
 
 		final GetLinkedAccountsRequest input = new GetLinkedAccountsRequest();
 		input.accessCode = ACCESS_CODE;

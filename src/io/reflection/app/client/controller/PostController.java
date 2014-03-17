@@ -34,7 +34,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class PostController extends AsyncDataProvider<Post> implements ServiceController {
+public class PostController extends AsyncDataProvider<Post> implements ServiceConstants {
 
 	private List<Post> posts = new ArrayList<Post>();
 	private long count = 0;
@@ -52,8 +52,7 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 
 	private void fetchPosts() {
 
-		BlogService service = new BlogService();
-		service.setUrl(BLOG_END_POINT);
+		BlogService service = ServiceCreator.createBlogService();
 
 		final GetPostsRequest input = new GetPostsRequest();
 		input.accessCode = ACCESS_CODE;
@@ -156,8 +155,7 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 	 * @param tags
 	 */
 	public void createPost(String title, Boolean visible, String description, String content, Boolean publish, String tags) {
-		BlogService service = new BlogService();
-		service.setUrl(BLOG_END_POINT);
+		BlogService service = ServiceCreator.createBlogService();
 
 		final CreatePostRequest input = new CreatePostRequest();
 		input.accessCode = ACCESS_CODE;

@@ -8,7 +8,7 @@
 package io.reflection.app.client.page;
 
 import io.reflection.app.client.controller.ItemController;
-import io.reflection.app.client.controller.ServiceController;
+import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.datatypes.shared.Item;
@@ -33,7 +33,7 @@ public class ItemsPage extends Page {
 
 	interface ItemsPageUiBinder extends UiBinder<Widget, ItemsPage> {}
 
-	@UiField(provided = true) CellTable<Item> items = new CellTable<Item>(ServiceController.SHORT_STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true) CellTable<Item> items = new CellTable<Item>(ServiceConstants.SHORT_STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) SimplePager pager = new SimplePager(false, false);
 
 	public ItemsPage() {

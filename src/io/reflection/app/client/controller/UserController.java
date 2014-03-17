@@ -52,7 +52,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class UserController extends AsyncDataProvider<User> implements ServiceController {
+public class UserController extends AsyncDataProvider<User> implements ServiceConstants {
 
 	private List<User> mUsers = new ArrayList<User>();
 	private long mCount = -1;
@@ -72,8 +72,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 	private void fetchUsers() {
 
-		AdminService service = new AdminService();
-		service.setUrl(ADMIN_END_POINT);
+		AdminService service = ServiceCreator.createAdminService();
 
 		final GetUsersRequest input = new GetUsersRequest();
 		input.accessCode = ACCESS_CODE;
@@ -161,8 +160,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 	 * 
 	 */
 	public void fetchUsersCount() {
-		AdminService service = new AdminService();
-		service.setUrl(ADMIN_END_POINT);
+		AdminService service = ServiceCreator.createAdminService();
 
 		final GetUsersCountRequest input = new GetUsersCountRequest();
 		input.accessCode = ACCESS_CODE;
@@ -191,8 +189,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 	 * @param userId
 	 */
 	public void makeAdmin(Long userId) {
-		AdminService service = new AdminService();
-		service.setUrl(ADMIN_END_POINT);
+		AdminService service = ServiceCreator.createAdminService();
 
 		final AssignRoleRequest input = new AssignRoleRequest();
 		input.accessCode = ACCESS_CODE;
@@ -228,8 +225,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 	 *            The id of the user to add to the closed beta
 	 */
 	public void makeBeta(Long userId) {
-		AdminService service = new AdminService();
-		service.setUrl(ADMIN_END_POINT);
+		AdminService service = ServiceCreator.createAdminService();
 
 		final AssignRoleRequest input = new AssignRoleRequest();
 		input.accessCode = ACCESS_CODE;
@@ -261,8 +257,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 	 * @param text
 	 */
 	public void setPassword(Long userId, String newPassword) {
-		AdminService service = new AdminService();
-		service.setUrl(ADMIN_END_POINT);
+		AdminService service = ServiceCreator.createAdminService();
 
 		final SetPasswordRequest input = new SetPasswordRequest();
 		input.accessCode = ACCESS_CODE;
@@ -307,8 +302,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 	 * @param company
 	 */
 	public void registerUser(String username, String password, String forename, String surname, String company) {
-		CoreService service = new CoreService();
-		service.setUrl(CORE_END_POINT);
+		CoreService service = ServiceCreator.createCoreService();
 
 		RegisterUserRequest input = new RegisterUserRequest();
 		input.accessCode = ACCESS_CODE;
@@ -355,8 +349,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 	 * @param company
 	 */
 	public void registerUser(String actionCode, String password) {
-		CoreService service = new CoreService();
-		service.setUrl(CORE_END_POINT);
+		CoreService service = ServiceCreator.createCoreService();
 
 		final RegisterUserRequest input = new RegisterUserRequest();
 		input.accessCode = ACCESS_CODE;
@@ -397,8 +390,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 	 *            The user Id to fetch the details for
 	 */
 	public void fetchUser(Long id) {
-		CoreService service = new CoreService();
-		service.setUrl(CORE_END_POINT);
+		CoreService service = ServiceCreator.createCoreService();
 
 		final GetUserDetailsRequest input = new GetUserDetailsRequest();
 		input.accessCode = ACCESS_CODE;
@@ -428,8 +420,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 	 *            action code for the user to fetch
 	 */
 	public void fetchUser(String actionCode) {
-		CoreService service = new CoreService();
-		service.setUrl(CORE_END_POINT);
+		CoreService service = ServiceCreator.createCoreService();
 
 		final GetUserDetailsRequest input = new GetUserDetailsRequest();
 		input.accessCode = ACCESS_CODE;

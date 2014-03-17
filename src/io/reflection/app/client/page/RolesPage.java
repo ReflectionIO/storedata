@@ -8,7 +8,7 @@
 package io.reflection.app.client.page;
 
 import io.reflection.app.client.controller.RoleController;
-import io.reflection.app.client.controller.ServiceController;
+import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.datatypes.shared.Role;
@@ -31,7 +31,7 @@ public class RolesPage extends Page {
 
 	interface RolesPageUiBinder extends UiBinder<Widget, RolesPage> {}
 
-	@UiField(provided = true) CellTable<Role> mRoles = new CellTable<Role>(ServiceController.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true) CellTable<Role> mRoles = new CellTable<Role>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) SimplePager mPager = new SimplePager(false, false);
 
 	public RolesPage() {

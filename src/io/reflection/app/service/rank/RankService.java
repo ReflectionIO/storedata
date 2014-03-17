@@ -319,13 +319,17 @@ final class RankService implements IRankService {
 	private String beforeAfterQuery(Date before, Date after) {
 		StringBuffer buffer = new StringBuffer();
 
-		if (after != null) {
+		if (before != null && after != null) {
+			buffer.append("`date` BETWEEN (FROM_UNIXTIME(");
+			buffer.append(after.getTime() / 1000);
+			buffer.append(") AND FROM_UNIXTIME(");
+			buffer.append(before.getTime() / 1000);
+			buffer.append(")) AND ");
+		} else if (after != null && before == null) {
 			buffer.append("`date`>=FROM_UNIXTIME(");
 			buffer.append(after.getTime() / 1000);
 			buffer.append(") AND ");
-		}
-
-		if (before != null) {
+		} else if (before != null && after == null) {
 			buffer.append("`date`<FROM_UNIXTIME(");
 			buffer.append(before.getTime() / 1000);
 			buffer.append(") AND ");
@@ -456,10 +460,10 @@ final class RankService implements IRankService {
 			typesQueryPart = "`type` IN ('" + StringUtils.join(types, "','") + "')";
 		}
 
-		String getRanksCountQuery = String
-				.format("SELECT COUNT(1) AS `count` FROM `rank` WHERE %s AND `country`='%s' AND `source`='%s' AND `categoryid`=%d AND `code2`=%d AND %s `deleted`='n'",
-						typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), code.longValue(),
-						isGrossing ? "`grossingposition`<>0 AND" : "");
+		String getRanksCountQuery = String.format(
+				"SELECT COUNT(1) AS `count` FROM `rank` WHERE %s AND `country`='%s' AND `source`='%s' AND `categoryid`=%d AND `code2`=%d AND %s `deleted`='n'",
+				typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), code.longValue(),
+				isGrossing ? "`grossingposition`<>0 AND" : "");
 
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
@@ -587,8 +591,8 @@ final class RankService implements IRankService {
 
 		String getCountryStoreTypeRanksQuery = String
 				.format("SELECT * FROM `rank` WHERE %s AND `country`='%s' AND `source`='%s' AND `categoryid`=%d AND `code2`=%d AND %s `deleted`='n' ORDER BY `%s` %s,`date` DESC LIMIT %d,%d",
-						typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), code.longValue(),
-						isGrossing && !ignoreGrossingRank ? "`grossingposition`<>0 AND" : "", pager.sortBy,
+						typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), code.longValue(), isGrossing
+								&& !ignoreGrossingRank ? "`grossingposition`<>0 AND" : "", pager.sortBy,
 						pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
 
 		try {
@@ -645,7 +649,7 @@ final class RankService implements IRankService {
 		}
 
 		String getCountryStoreTypeRanksQuery = String.format(
-				"SELECT * FROM `rank` WHERE %s AND `country`='%s' AND `source`='%s' AND `categoryid`=%d AND `code2`=%d AND `deleted`='n' LIMIT 0, 3000",
+				"SELECT * FROM `rank` WHERE %s AND `country`='%s' AND `source`='%s' AND `categoryid`=%d AND `code2`=%d AND `deleted`='n'",
 				typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), code.longValue());
 
 		try {

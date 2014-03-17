@@ -29,111 +29,141 @@ import com.willshex.gson.json.service.client.JsonService;
 public final class BlogService extends JsonService {
 	public static final String BlogMethodGetPosts = "GetPosts";
 
-	public void getPosts(GetPostsRequest input, final AsyncCallback<GetPostsResponse> output) {
+	public Request getPosts(final GetPostsRequest input, final AsyncCallback<GetPostsResponse> output) {
+		Request handle = null;
 		try {
-			sendRequest(BlogMethodGetPosts, input, new RequestCallback() {
+			handle = sendRequest(BlogMethodGetPosts, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					GetPostsResponse outputParameter = new GetPostsResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
+					onCallSuccess(BlogService.this, BlogMethodGetPosts, input, outputParameter);
 				}
 
 				@Override
 				public void onError(Request request, Throwable exception) {
 					output.onFailure(exception);
+					onCallFailure(BlogService.this, BlogMethodGetPosts, input, exception);
 				}
 			});
+			onCallStart(BlogService.this, BlogMethodGetPosts, input, handle);
 		} catch (RequestException e) {
 			output.onFailure(e);
+			onCallFailure(BlogService.this, BlogMethodGetPosts, input, e);
 		}
+		return handle;
 	}
 
 	public static final String BlogMethodGetPost = "GetPost";
 
-	public void getPost(GetPostRequest input, final AsyncCallback<GetPostResponse> output) {
+	public Request getPost(final GetPostRequest input, final AsyncCallback<GetPostResponse> output) {
+		Request handle = null;
 		try {
-			sendRequest(BlogMethodGetPost, input, new RequestCallback() {
+			handle = sendRequest(BlogMethodGetPost, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					GetPostResponse outputParameter = new GetPostResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
+					onCallSuccess(BlogService.this, BlogMethodGetPost, input, outputParameter);
 				}
 
 				@Override
 				public void onError(Request request, Throwable exception) {
 					output.onFailure(exception);
+					onCallFailure(BlogService.this, BlogMethodGetPost, input, exception);
 				}
 			});
+			onCallStart(BlogService.this, BlogMethodGetPost, input, handle);
 		} catch (RequestException e) {
 			output.onFailure(e);
+			onCallFailure(BlogService.this, BlogMethodGetPost, input, e);
 		}
+		return handle;
 	}
 
 	public static final String BlogMethodAssignTags = "AssignTags";
 
-	public void assignTags(AssignTagsRequest input, final AsyncCallback<AssignTagsResponse> output) {
+	public Request assignTags(final AssignTagsRequest input, final AsyncCallback<AssignTagsResponse> output) {
+		Request handle = null;
 		try {
-			sendRequest(BlogMethodAssignTags, input, new RequestCallback() {
+			handle = sendRequest(BlogMethodAssignTags, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					AssignTagsResponse outputParameter = new AssignTagsResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
+					onCallSuccess(BlogService.this, BlogMethodAssignTags, input, outputParameter);
 				}
 
 				@Override
 				public void onError(Request request, Throwable exception) {
 					output.onFailure(exception);
+					onCallFailure(BlogService.this, BlogMethodAssignTags, input, exception);
 				}
 			});
+			onCallStart(BlogService.this, BlogMethodAssignTags, input, handle);
 		} catch (RequestException e) {
 			output.onFailure(e);
+			onCallFailure(BlogService.this, BlogMethodAssignTags, input, e);
 		}
+		return handle;
 	}
 
 	public static final String BlogMethodUpdatePost = "UpdatePost";
 
-	public void updatePost(UpdatePostRequest input, final AsyncCallback<UpdatePostResponse> output) {
+	public Request updatePost(final UpdatePostRequest input, final AsyncCallback<UpdatePostResponse> output) {
+		Request handle = null;
 		try {
-			sendRequest(BlogMethodUpdatePost, input, new RequestCallback() {
+			handle = sendRequest(BlogMethodUpdatePost, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					UpdatePostResponse outputParameter = new UpdatePostResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
+					onCallSuccess(BlogService.this, BlogMethodUpdatePost, input, outputParameter);
 				}
 
 				@Override
 				public void onError(Request request, Throwable exception) {
 					output.onFailure(exception);
+					onCallFailure(BlogService.this, BlogMethodUpdatePost, input, exception);
 				}
 			});
+			onCallStart(BlogService.this, BlogMethodUpdatePost, input, handle);
 		} catch (RequestException e) {
 			output.onFailure(e);
+			onCallFailure(BlogService.this, BlogMethodUpdatePost, input, e);
 		}
+		return handle;
 	}
 
 	public static final String BlogMethodCreatePost = "CreatePost";
 
-	public void createPost(CreatePostRequest input, final AsyncCallback<CreatePostResponse> output) {
+	public Request createPost(final CreatePostRequest input, final AsyncCallback<CreatePostResponse> output) {
+		Request handle = null;
 		try {
-			sendRequest(BlogMethodCreatePost, input, new RequestCallback() {
+			handle = sendRequest(BlogMethodCreatePost, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					CreatePostResponse outputParameter = new CreatePostResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
+					onCallSuccess(BlogService.this, BlogMethodCreatePost, input, outputParameter);
 				}
 
 				@Override
 				public void onError(Request request, Throwable exception) {
 					output.onFailure(exception);
+					onCallFailure(BlogService.this, BlogMethodCreatePost, input, exception);
 				}
 			});
+			onCallStart(BlogService.this, BlogMethodCreatePost, input, handle);
 		} catch (RequestException e) {
 			output.onFailure(e);
+			onCallFailure(BlogService.this, BlogMethodCreatePost, input, e);
 		}
+		return handle;
 	}
 }

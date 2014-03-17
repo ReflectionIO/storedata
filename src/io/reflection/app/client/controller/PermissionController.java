@@ -29,7 +29,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class PermissionController extends AsyncDataProvider<Permission> implements ServiceController {
+public class PermissionController extends AsyncDataProvider<Permission> implements ServiceConstants {
 
 	private List<Permission> mPermissions = new ArrayList<Permission>();
 	private long mCount = -1;
@@ -47,8 +47,7 @@ public class PermissionController extends AsyncDataProvider<Permission> implemen
 
 	private void fetchPermissions() {
 
-		AdminService service = new AdminService();
-		service.setUrl(ADMIN_END_POINT);
+		AdminService service = ServiceCreator.createAdminService();
 
 		final GetPermissionsRequest input = new GetPermissionsRequest();
 		input.accessCode = ACCESS_CODE;

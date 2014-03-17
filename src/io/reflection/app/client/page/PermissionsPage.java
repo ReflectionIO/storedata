@@ -8,7 +8,7 @@
 package io.reflection.app.client.page;
 
 import io.reflection.app.client.controller.PermissionController;
-import io.reflection.app.client.controller.ServiceController;
+import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.datatypes.shared.Permission;
@@ -31,7 +31,7 @@ public class PermissionsPage extends Page {
 
 	interface PermissionsPageUiBinder extends UiBinder<Widget, PermissionsPage> {}
 
-	@UiField(provided = true) CellTable<Permission> mPermissions = new CellTable<Permission>(ServiceController.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true) CellTable<Permission> mPermissions = new CellTable<Permission>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) SimplePager mPager = new SimplePager(false, false);
 
 	public PermissionsPage() {

@@ -9,6 +9,7 @@ package io.reflection.app.client;
 
 import io.reflection.app.client.charts.GwtCanvasBasedCanvasFactory;
 import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.part.SuperAlertBox;
 import io.reflection.app.client.res.Styles;
 
 import com.google.gwt.user.client.History;
@@ -34,10 +35,12 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 		super.onModuleLoad();
 
 		GChart.setCanvasFactory(new GwtCanvasBasedCanvasFactory());
-		
+
 		History.addValueChangeHandler(NavigationController.get());
 
 		makeContainer();
+
+		SuperAlertBox.start();
 
 		// add header
 		mContainer.add(NavigationController.get().getHeader());

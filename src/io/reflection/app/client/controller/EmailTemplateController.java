@@ -29,7 +29,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class EmailTemplateController extends AsyncDataProvider<EmailTemplate> implements ServiceController {
+public class EmailTemplateController extends AsyncDataProvider<EmailTemplate> implements ServiceConstants {
 
 	private List<EmailTemplate> mEmailTemplates = new ArrayList<EmailTemplate>();
 	private long mCount = -1;
@@ -47,8 +47,7 @@ public class EmailTemplateController extends AsyncDataProvider<EmailTemplate> im
 
 	private void fetchEmailTemplates() {
 
-		AdminService service = new AdminService();
-		service.setUrl(ADMIN_END_POINT);
+		AdminService service = ServiceCreator.createAdminService();
 
 		final GetEmailTemplatesRequest input = new GetEmailTemplatesRequest();
 		input.accessCode = ACCESS_CODE;

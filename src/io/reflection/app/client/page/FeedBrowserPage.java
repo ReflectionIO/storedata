@@ -10,7 +10,7 @@ package io.reflection.app.client.page;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FeedFetchController;
 import io.reflection.app.client.controller.FilterController;
-import io.reflection.app.client.controller.ServiceController;
+import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.Breadcrumbs;
@@ -45,7 +45,7 @@ public class FeedBrowserPage extends Page implements FilterEventHandler {
 
 	interface FeedBrowserPageUiBinder extends UiBinder<Widget, FeedBrowserPage> {}
 
-	@UiField(provided = true) CellTable<FeedFetch> mFeeds = new CellTable<FeedFetch>(ServiceController.SHORT_STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true) CellTable<FeedFetch> mFeeds = new CellTable<FeedFetch>(ServiceConstants.SHORT_STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) SimplePager mPager = new SimplePager(false, false);
 
 	@UiField ListBox mAppStore;

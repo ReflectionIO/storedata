@@ -36,7 +36,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class RankController extends AsyncDataProvider<RanksGroup> implements ServiceController {
+public class RankController extends AsyncDataProvider<RanksGroup> implements ServiceConstants {
 
 	private static RankController mOne = null;
 
@@ -54,8 +54,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 	}
 
 	public void fetchTopItems() {
-		CoreService service = new CoreService();
-		service.setUrl(CORE_END_POINT);
+		CoreService service = ServiceCreator.createCoreService();
 
 		final GetAllTopItemsRequest input = new GetAllTopItemsRequest(); // JSON Item request, containing the fields used to query the Item table on the DB
 		input.accessCode = ACCESS_CODE;
@@ -142,8 +141,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 	}
 
 	public void fetchItemRanks(final Item item) {
-		CoreService service = new CoreService();
-		service.setUrl(CORE_END_POINT);
+		CoreService service = ServiceCreator.createCoreService();
 
 		final GetItemRanksRequest input = new GetItemRanksRequest();
 		input.accessCode = ACCESS_CODE;

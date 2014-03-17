@@ -11,7 +11,7 @@ import io.reflection.app.client.controller.EmailTemplateController;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
-import io.reflection.app.client.controller.ServiceController;
+import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.SimplePager;
@@ -35,7 +35,7 @@ public class EmailTemplatePage extends Page implements NavigationEventHandler {
 
 	interface EmailTemplatePageUiBinder extends UiBinder<Widget, EmailTemplatePage> {}
 
-	@UiField(provided = true) CellTable<EmailTemplate> emailTemplates = new CellTable<EmailTemplate>(ServiceController.SHORT_STEP_VALUE,
+	@UiField(provided = true) CellTable<EmailTemplate> emailTemplates = new CellTable<EmailTemplate>(ServiceConstants.SHORT_STEP_VALUE,
 			BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) SimplePager pager = new SimplePager(false, false);
 

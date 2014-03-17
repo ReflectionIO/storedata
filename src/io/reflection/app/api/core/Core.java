@@ -392,13 +392,13 @@ public final class Core extends ActionHandler {
 				List<String> itemIds = new ArrayList<String>();
 				final Map<String, Rank> lookup = new HashMap<String, Rank>();
 
-				List<Rank> ranks = RankServiceProvider.provide().getAllRanks(input.country, input.store, input.category,
-						getGrossingListName(input.store, input.listType), start, end);
+				List<Rank> ranks = RankServiceProvider.provide().getRanks(input.country, input.store, input.category,
+						getGrossingListName(input.store, input.listType), start, end, input.pager);
 
 				if (ranks != null && ranks.size() != 0) {
-					SparseArray<Rank> free = new SparseArray<>();
-					SparseArray<Rank> paid = new SparseArray<>();
-					SparseArray<Rank> grossing = new SparseArray<>();
+					SparseArray<Rank> free = new SparseArray<Rank>();
+					SparseArray<Rank> paid = new SparseArray<Rank>();
+					SparseArray<Rank> grossing = new SparseArray<Rank>();
 
 					for (Rank rank : ranks) {
 						if (!lookup.containsKey(rank.itemId)) {

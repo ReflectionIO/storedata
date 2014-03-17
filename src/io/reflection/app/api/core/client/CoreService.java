@@ -59,441 +59,561 @@ import com.willshex.gson.json.service.client.JsonService;
 public final class CoreService extends JsonService {
 	public static final String CoreMethodGetCountries = "GetCountries";
 
-	public void getCountries(GetCountriesRequest input, final AsyncCallback<GetCountriesResponse> output) {
+	public Request getCountries(final GetCountriesRequest input, final AsyncCallback<GetCountriesResponse> output) {
+		Request handle = null;
 		try {
-			sendRequest(CoreMethodGetCountries, input, new RequestCallback() {
+			handle = sendRequest(CoreMethodGetCountries, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					GetCountriesResponse outputParameter = new GetCountriesResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
+					onCallSuccess(CoreService.this, CoreMethodGetCountries, input, outputParameter);
 				}
 
 				@Override
 				public void onError(Request request, Throwable exception) {
 					output.onFailure(exception);
+					onCallFailure(CoreService.this, CoreMethodGetCountries, input, exception);
 				}
 			});
+			onCallStart(CoreService.this, CoreMethodGetCountries, input, handle);
 		} catch (RequestException e) {
 			output.onFailure(e);
+			onCallFailure(CoreService.this, CoreMethodGetCountries, input, e);
 		}
+		return handle;
 	}
 
 	public static final String CoreMethodGetStores = "GetStores";
 
-	public void getStores(GetStoresRequest input, final AsyncCallback<GetStoresResponse> output) {
+	public Request getStores(final GetStoresRequest input, final AsyncCallback<GetStoresResponse> output) {
+		Request handle = null;
 		try {
-			sendRequest(CoreMethodGetStores, input, new RequestCallback() {
+			handle = sendRequest(CoreMethodGetStores, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					GetStoresResponse outputParameter = new GetStoresResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
+					onCallSuccess(CoreService.this, CoreMethodGetStores, input, outputParameter);
 				}
 
 				@Override
 				public void onError(Request request, Throwable exception) {
 					output.onFailure(exception);
+					onCallFailure(CoreService.this, CoreMethodGetStores, input, exception);
 				}
 			});
+			onCallStart(CoreService.this, CoreMethodGetStores, input, handle);
 		} catch (RequestException e) {
 			output.onFailure(e);
+			onCallFailure(CoreService.this, CoreMethodGetStores, input, e);
 		}
+		return handle;
 	}
 
 	public static final String CoreMethodGetTopItems = "GetTopItems";
 
-	public void getTopItems(GetTopItemsRequest input, final AsyncCallback<GetTopItemsResponse> output) {
+	public Request getTopItems(final GetTopItemsRequest input, final AsyncCallback<GetTopItemsResponse> output) {
+		Request handle = null;
 		try {
-			sendRequest(CoreMethodGetTopItems, input, new RequestCallback() {
+			handle = sendRequest(CoreMethodGetTopItems, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					GetTopItemsResponse outputParameter = new GetTopItemsResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
+					onCallSuccess(CoreService.this, CoreMethodGetTopItems, input, outputParameter);
 				}
 
 				@Override
 				public void onError(Request request, Throwable exception) {
 					output.onFailure(exception);
+					onCallFailure(CoreService.this, CoreMethodGetTopItems, input, exception);
 				}
 			});
+			onCallStart(CoreService.this, CoreMethodGetTopItems, input, handle);
 		} catch (RequestException e) {
 			output.onFailure(e);
+			onCallFailure(CoreService.this, CoreMethodGetTopItems, input, e);
 		}
+		return handle;
 	}
 
 	public static final String CoreMethodGetAllTopItems = "GetAllTopItems";
 
-	public void getAllTopItems(GetAllTopItemsRequest input, final AsyncCallback<GetAllTopItemsResponse> output) {
+	public Request getAllTopItems(final GetAllTopItemsRequest input, final AsyncCallback<GetAllTopItemsResponse> output) {
+		Request handle = null;
 		try {
-			sendRequest(CoreMethodGetAllTopItems, input, new RequestCallback() {
+			handle = sendRequest(CoreMethodGetAllTopItems, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					GetAllTopItemsResponse outputParameter = new GetAllTopItemsResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
+					onCallSuccess(CoreService.this, CoreMethodGetAllTopItems, input, outputParameter);
 				}
 
 				@Override
 				public void onError(Request request, Throwable exception) {
 					output.onFailure(exception);
+					onCallFailure(CoreService.this, CoreMethodGetAllTopItems, input, exception);
 				}
 			});
+			onCallStart(CoreService.this, CoreMethodGetAllTopItems, input, handle);
 		} catch (RequestException e) {
 			output.onFailure(e);
+			onCallFailure(CoreService.this, CoreMethodGetAllTopItems, input, e);
 		}
+		return handle;
 	}
 
 	public static final String CoreMethodGetItemRanks = "GetItemRanks";
 
-	public void getItemRanks(GetItemRanksRequest input, final AsyncCallback<GetItemRanksResponse> output) {
+	public Request getItemRanks(final GetItemRanksRequest input, final AsyncCallback<GetItemRanksResponse> output) {
+		Request handle = null;
 		try {
-			sendRequest(CoreMethodGetItemRanks, input, new RequestCallback() {
+			handle = sendRequest(CoreMethodGetItemRanks, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					GetItemRanksResponse outputParameter = new GetItemRanksResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
+					onCallSuccess(CoreService.this, CoreMethodGetItemRanks, input, outputParameter);
 				}
 
 				@Override
 				public void onError(Request request, Throwable exception) {
 					output.onFailure(exception);
+					onCallFailure(CoreService.this, CoreMethodGetItemRanks, input, exception);
 				}
 			});
+			onCallStart(CoreService.this, CoreMethodGetItemRanks, input, handle);
 		} catch (RequestException e) {
 			output.onFailure(e);
+			onCallFailure(CoreService.this, CoreMethodGetItemRanks, input, e);
 		}
+		return handle;
 	}
 
 	public static final String CoreMethodRegisterUser = "RegisterUser";
 
-	public void registerUser(RegisterUserRequest input, final AsyncCallback<RegisterUserResponse> output) {
+	public Request registerUser(final RegisterUserRequest input, final AsyncCallback<RegisterUserResponse> output) {
+		Request handle = null;
 		try {
-			sendRequest(CoreMethodRegisterUser, input, new RequestCallback() {
+			handle = sendRequest(CoreMethodRegisterUser, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					RegisterUserResponse outputParameter = new RegisterUserResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
+					onCallSuccess(CoreService.this, CoreMethodRegisterUser, input, outputParameter);
 				}
 
 				@Override
 				public void onError(Request request, Throwable exception) {
 					output.onFailure(exception);
+					onCallFailure(CoreService.this, CoreMethodRegisterUser, input, exception);
 				}
 			});
+			onCallStart(CoreService.this, CoreMethodRegisterUser, input, handle);
 		} catch (RequestException e) {
 			output.onFailure(e);
+			onCallFailure(CoreService.this, CoreMethodRegisterUser, input, e);
 		}
+		return handle;
 	}
 
 	public static final String CoreMethodLogin = "Login";
 
-	public void login(LoginRequest input, final AsyncCallback<LoginResponse> output) {
+	public Request login(final LoginRequest input, final AsyncCallback<LoginResponse> output) {
+		Request handle = null;
 		try {
-			sendRequest(CoreMethodLogin, input, new RequestCallback() {
+			handle = sendRequest(CoreMethodLogin, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					LoginResponse outputParameter = new LoginResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
+					onCallSuccess(CoreService.this, CoreMethodLogin, input, outputParameter);
 				}
 
 				@Override
 				public void onError(Request request, Throwable exception) {
 					output.onFailure(exception);
+					onCallFailure(CoreService.this, CoreMethodLogin, input, exception);
 				}
 			});
+			onCallStart(CoreService.this, CoreMethodLogin, input, handle);
 		} catch (RequestException e) {
 			output.onFailure(e);
+			onCallFailure(CoreService.this, CoreMethodLogin, input, e);
 		}
+		return handle;
 	}
 
 	public static final String CoreMethodLogout = "Logout";
 
-	public void logout(LogoutRequest input, final AsyncCallback<LogoutResponse> output) {
+	public Request logout(final LogoutRequest input, final AsyncCallback<LogoutResponse> output) {
+		Request handle = null;
 		try {
-			sendRequest(CoreMethodLogout, input, new RequestCallback() {
+			handle = sendRequest(CoreMethodLogout, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					LogoutResponse outputParameter = new LogoutResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
+					onCallSuccess(CoreService.this, CoreMethodLogout, input, outputParameter);
 				}
 
 				@Override
 				public void onError(Request request, Throwable exception) {
 					output.onFailure(exception);
+					onCallFailure(CoreService.this, CoreMethodLogout, input, exception);
 				}
 			});
+			onCallStart(CoreService.this, CoreMethodLogout, input, handle);
 		} catch (RequestException e) {
 			output.onFailure(e);
+			onCallFailure(CoreService.this, CoreMethodLogout, input, e);
 		}
+		return handle;
 	}
 
 	public static final String CoreMethodChangePassword = "ChangePassword";
 
-	public void changePassword(ChangePasswordRequest input, final AsyncCallback<ChangePasswordResponse> output) {
+	public Request changePassword(final ChangePasswordRequest input, final AsyncCallback<ChangePasswordResponse> output) {
+		Request handle = null;
 		try {
-			sendRequest(CoreMethodChangePassword, input, new RequestCallback() {
+			handle = sendRequest(CoreMethodChangePassword, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					ChangePasswordResponse outputParameter = new ChangePasswordResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
+					onCallSuccess(CoreService.this, CoreMethodChangePassword, input, outputParameter);
 				}
 
 				@Override
 				public void onError(Request request, Throwable exception) {
 					output.onFailure(exception);
+					onCallFailure(CoreService.this, CoreMethodChangePassword, input, exception);
 				}
 			});
+			onCallStart(CoreService.this, CoreMethodChangePassword, input, handle);
 		} catch (RequestException e) {
 			output.onFailure(e);
+			onCallFailure(CoreService.this, CoreMethodChangePassword, input, e);
 		}
+		return handle;
 	}
 
 	public static final String CoreMethodChangeUserDetails = "ChangeUserDetails";
 
-	public void changeUserDetails(ChangeUserDetailsRequest input, final AsyncCallback<ChangeUserDetailsResponse> output) {
+	public Request changeUserDetails(final ChangeUserDetailsRequest input, final AsyncCallback<ChangeUserDetailsResponse> output) {
+		Request handle = null;
 		try {
-			sendRequest(CoreMethodChangeUserDetails, input, new RequestCallback() {
+			handle = sendRequest(CoreMethodChangeUserDetails, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					ChangeUserDetailsResponse outputParameter = new ChangeUserDetailsResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
+					onCallSuccess(CoreService.this, CoreMethodChangeUserDetails, input, outputParameter);
 				}
 
 				@Override
 				public void onError(Request request, Throwable exception) {
 					output.onFailure(exception);
+					onCallFailure(CoreService.this, CoreMethodChangeUserDetails, input, exception);
 				}
 			});
+			onCallStart(CoreService.this, CoreMethodChangeUserDetails, input, handle);
 		} catch (RequestException e) {
 			output.onFailure(e);
+			onCallFailure(CoreService.this, CoreMethodChangeUserDetails, input, e);
 		}
+		return handle;
 	}
 
 	public static final String CoreMethodCheckUsername = "CheckUsername";
 
-	public void checkUsername(CheckUsernameRequest input, final AsyncCallback<CheckUsernameResponse> output) {
+	public Request checkUsername(final CheckUsernameRequest input, final AsyncCallback<CheckUsernameResponse> output) {
+		Request handle = null;
 		try {
-			sendRequest(CoreMethodCheckUsername, input, new RequestCallback() {
+			handle = sendRequest(CoreMethodCheckUsername, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					CheckUsernameResponse outputParameter = new CheckUsernameResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
+					onCallSuccess(CoreService.this, CoreMethodCheckUsername, input, outputParameter);
 				}
 
 				@Override
 				public void onError(Request request, Throwable exception) {
 					output.onFailure(exception);
+					onCallFailure(CoreService.this, CoreMethodCheckUsername, input, exception);
 				}
 			});
+			onCallStart(CoreService.this, CoreMethodCheckUsername, input, handle);
 		} catch (RequestException e) {
 			output.onFailure(e);
+			onCallFailure(CoreService.this, CoreMethodCheckUsername, input, e);
 		}
+		return handle;
 	}
 
 	public static final String CoreMethodGetRolesAndPermissions = "GetRolesAndPermissions";
 
-	public void getRolesAndPermissions(GetRolesAndPermissionsRequest input, final AsyncCallback<GetRolesAndPermissionsResponse> output) {
+	public Request getRolesAndPermissions(final GetRolesAndPermissionsRequest input, final AsyncCallback<GetRolesAndPermissionsResponse> output) {
+		Request handle = null;
 		try {
-			sendRequest(CoreMethodGetRolesAndPermissions, input, new RequestCallback() {
+			handle = sendRequest(CoreMethodGetRolesAndPermissions, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					GetRolesAndPermissionsResponse outputParameter = new GetRolesAndPermissionsResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
+					onCallSuccess(CoreService.this, CoreMethodGetRolesAndPermissions, input, outputParameter);
 				}
 
 				@Override
 				public void onError(Request request, Throwable exception) {
 					output.onFailure(exception);
+					onCallFailure(CoreService.this, CoreMethodGetRolesAndPermissions, input, exception);
 				}
 			});
+			onCallStart(CoreService.this, CoreMethodGetRolesAndPermissions, input, handle);
 		} catch (RequestException e) {
 			output.onFailure(e);
+			onCallFailure(CoreService.this, CoreMethodGetRolesAndPermissions, input, e);
 		}
+		return handle;
 	}
 
 	public static final String CoreMethodGetLinkedAccounts = "GetLinkedAccounts";
 
-	public void getLinkedAccounts(GetLinkedAccountsRequest input, final AsyncCallback<GetLinkedAccountsResponse> output) {
+	public Request getLinkedAccounts(final GetLinkedAccountsRequest input, final AsyncCallback<GetLinkedAccountsResponse> output) {
+		Request handle = null;
 		try {
-			sendRequest(CoreMethodGetLinkedAccounts, input, new RequestCallback() {
+			handle = sendRequest(CoreMethodGetLinkedAccounts, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					GetLinkedAccountsResponse outputParameter = new GetLinkedAccountsResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
+					onCallSuccess(CoreService.this, CoreMethodGetLinkedAccounts, input, outputParameter);
 				}
 
 				@Override
 				public void onError(Request request, Throwable exception) {
 					output.onFailure(exception);
+					onCallFailure(CoreService.this, CoreMethodGetLinkedAccounts, input, exception);
 				}
 			});
+			onCallStart(CoreService.this, CoreMethodGetLinkedAccounts, input, handle);
 		} catch (RequestException e) {
 			output.onFailure(e);
+			onCallFailure(CoreService.this, CoreMethodGetLinkedAccounts, input, e);
 		}
+		return handle;
 	}
 
 	public static final String CoreMethodGetLinkedAccountItems = "GetLinkedAccountItems";
 
-	public void getLinkedAccountItems(GetLinkedAccountItemsRequest input, final AsyncCallback<GetLinkedAccountItemsResponse> output) {
+	public Request getLinkedAccountItems(final GetLinkedAccountItemsRequest input, final AsyncCallback<GetLinkedAccountItemsResponse> output) {
+		Request handle = null;
 		try {
-			sendRequest(CoreMethodGetLinkedAccountItems, input, new RequestCallback() {
+			handle = sendRequest(CoreMethodGetLinkedAccountItems, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					GetLinkedAccountItemsResponse outputParameter = new GetLinkedAccountItemsResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
+					onCallSuccess(CoreService.this, CoreMethodGetLinkedAccountItems, input, outputParameter);
 				}
 
 				@Override
 				public void onError(Request request, Throwable exception) {
 					output.onFailure(exception);
+					onCallFailure(CoreService.this, CoreMethodGetLinkedAccountItems, input, exception);
 				}
 			});
+			onCallStart(CoreService.this, CoreMethodGetLinkedAccountItems, input, handle);
 		} catch (RequestException e) {
 			output.onFailure(e);
+			onCallFailure(CoreService.this, CoreMethodGetLinkedAccountItems, input, e);
 		}
+		return handle;
 	}
 
 	public static final String CoreMethodLinkAccount = "LinkAccount";
 
-	public void linkAccount(LinkAccountRequest input, final AsyncCallback<LinkAccountResponse> output) {
+	public Request linkAccount(final LinkAccountRequest input, final AsyncCallback<LinkAccountResponse> output) {
+		Request handle = null;
 		try {
-			sendRequest(CoreMethodLinkAccount, input, new RequestCallback() {
+			handle = sendRequest(CoreMethodLinkAccount, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					LinkAccountResponse outputParameter = new LinkAccountResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
+					onCallSuccess(CoreService.this, CoreMethodLinkAccount, input, outputParameter);
 				}
 
 				@Override
 				public void onError(Request request, Throwable exception) {
 					output.onFailure(exception);
+					onCallFailure(CoreService.this, CoreMethodLinkAccount, input, exception);
 				}
 			});
+			onCallStart(CoreService.this, CoreMethodLinkAccount, input, handle);
 		} catch (RequestException e) {
 			output.onFailure(e);
+			onCallFailure(CoreService.this, CoreMethodLinkAccount, input, e);
 		}
+		return handle;
 	}
 
 	public static final String CoreMethodIsAuthorised = "IsAuthorised";
 
-	public void isAuthorised(IsAuthorisedRequest input, final AsyncCallback<IsAuthorisedResponse> output) {
+	public Request isAuthorised(final IsAuthorisedRequest input, final AsyncCallback<IsAuthorisedResponse> output) {
+		Request handle = null;
 		try {
-			sendRequest(CoreMethodIsAuthorised, input, new RequestCallback() {
+			handle = sendRequest(CoreMethodIsAuthorised, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					IsAuthorisedResponse outputParameter = new IsAuthorisedResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
+					onCallSuccess(CoreService.this, CoreMethodIsAuthorised, input, outputParameter);
 				}
 
 				@Override
 				public void onError(Request request, Throwable exception) {
 					output.onFailure(exception);
+					onCallFailure(CoreService.this, CoreMethodIsAuthorised, input, exception);
 				}
 			});
+			onCallStart(CoreService.this, CoreMethodIsAuthorised, input, handle);
 		} catch (RequestException e) {
 			output.onFailure(e);
+			onCallFailure(CoreService.this, CoreMethodIsAuthorised, input, e);
 		}
+		return handle;
 	}
 
 	public static final String CoreMethodSearchForItem = "SearchForItem";
 
-	public void searchForItem(SearchForItemRequest input, final AsyncCallback<SearchForItemResponse> output) {
+	public Request searchForItem(final SearchForItemRequest input, final AsyncCallback<SearchForItemResponse> output) {
+		Request handle = null;
 		try {
-			sendRequest(CoreMethodSearchForItem, input, new RequestCallback() {
+			handle = sendRequest(CoreMethodSearchForItem, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					SearchForItemResponse outputParameter = new SearchForItemResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
+					onCallSuccess(CoreService.this, CoreMethodSearchForItem, input, outputParameter);
 				}
 
 				@Override
 				public void onError(Request request, Throwable exception) {
 					output.onFailure(exception);
+					onCallFailure(CoreService.this, CoreMethodSearchForItem, input, exception);
 				}
 			});
+			onCallStart(CoreService.this, CoreMethodSearchForItem, input, handle);
 		} catch (RequestException e) {
 			output.onFailure(e);
+			onCallFailure(CoreService.this, CoreMethodSearchForItem, input, e);
 		}
+		return handle;
 	}
 
 	public static final String CoreMethodForgotPassword = "ForgotPassword";
 
-	public void forgotPassword(ForgotPasswordRequest input, final AsyncCallback<ForgotPasswordResponse> output) {
+	public Request forgotPassword(final ForgotPasswordRequest input, final AsyncCallback<ForgotPasswordResponse> output) {
+		Request handle = null;
 		try {
-			sendRequest(CoreMethodForgotPassword, input, new RequestCallback() {
+			handle = sendRequest(CoreMethodForgotPassword, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					ForgotPasswordResponse outputParameter = new ForgotPasswordResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
+					onCallSuccess(CoreService.this, CoreMethodForgotPassword, input, outputParameter);
 				}
 
 				@Override
 				public void onError(Request request, Throwable exception) {
 					output.onFailure(exception);
+					onCallFailure(CoreService.this, CoreMethodForgotPassword, input, exception);
 				}
 			});
+			onCallStart(CoreService.this, CoreMethodForgotPassword, input, handle);
 		} catch (RequestException e) {
 			output.onFailure(e);
+			onCallFailure(CoreService.this, CoreMethodForgotPassword, input, e);
 		}
+		return handle;
 	}
 
 	public static final String CoreMethodGetUserDetails = "GetUserDetails";
 
-	public void getUserDetails(GetUserDetailsRequest input, final AsyncCallback<GetUserDetailsResponse> output) {
+	public Request getUserDetails(final GetUserDetailsRequest input, final AsyncCallback<GetUserDetailsResponse> output) {
+		Request handle = null;
 		try {
-			sendRequest(CoreMethodGetUserDetails, input, new RequestCallback() {
+			handle = sendRequest(CoreMethodGetUserDetails, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					GetUserDetailsResponse outputParameter = new GetUserDetailsResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
+					onCallSuccess(CoreService.this, CoreMethodGetUserDetails, input, outputParameter);
 				}
 
 				@Override
 				public void onError(Request request, Throwable exception) {
 					output.onFailure(exception);
+					onCallFailure(CoreService.this, CoreMethodGetUserDetails, input, exception);
 				}
 			});
+			onCallStart(CoreService.this, CoreMethodGetUserDetails, input, handle);
 		} catch (RequestException e) {
 			output.onFailure(e);
+			onCallFailure(CoreService.this, CoreMethodGetUserDetails, input, e);
 		}
+		return handle;
 	}
 
 	public static final String CoreMethodGetCategories = "GetCategories";
 
-	public void getCategories(GetCategoriesRequest input, final AsyncCallback<GetCategoriesResponse> output) {
+	public Request getCategories(final GetCategoriesRequest input, final AsyncCallback<GetCategoriesResponse> output) {
+		Request handle = null;
 		try {
-			sendRequest(CoreMethodGetCategories, input, new RequestCallback() {
+			handle = sendRequest(CoreMethodGetCategories, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					GetCategoriesResponse outputParameter = new GetCategoriesResponse();
 					parseResponse(response.getText(), outputParameter);
 					output.onSuccess(outputParameter);
+					onCallSuccess(CoreService.this, CoreMethodGetCategories, input, outputParameter);
 				}
 
 				@Override
 				public void onError(Request request, Throwable exception) {
 					output.onFailure(exception);
+					onCallFailure(CoreService.this, CoreMethodGetCategories, input, exception);
 				}
 			});
+			onCallStart(CoreService.this, CoreMethodGetCategories, input, handle);
 		} catch (RequestException e) {
 			output.onFailure(e);
+			onCallFailure(CoreService.this, CoreMethodGetCategories, input, e);
 		}
+		return handle;
 	}
 }

@@ -37,7 +37,7 @@ final class SessionService implements ISessionService {
 		Connection sessionConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeSession.toString());
 
 		String getSessionQuery = String.format(
-				"SELECT * FROM `session` WHERE `id`='%d' AND `expires` > NOW() AND `deleted`='n' ORDER BY `expires` DESC LIMIT 1", id.longValue());
+				"SELECT *, CAST(`token` AS CHAR) AS `chartoken` FROM `session` WHERE `id`='%d' AND `expires` > NOW() AND `deleted`='n' ORDER BY `expires` DESC LIMIT 1", id.longValue());
 		try {
 			sessionConnection.connect();
 			sessionConnection.executeQuery(getSessionQuery);
@@ -68,7 +68,7 @@ final class SessionService implements ISessionService {
 		session.deleted = connection.getCurrentRowString("deleted");
 
 		session.expires = connection.getCurrentRowDateTime("expires");
-		session.token = connection.getCurrentRowString("token");
+		session.token = connection.getCurrentRowString("chartoken");
 		session.user = new User();
 		session.user.id = connection.getCurrentRowLong("userid");
 
@@ -108,8 +108,8 @@ final class SessionService implements ISessionService {
 		Connection sessionConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeSession.toString());
 
 		String createUserSessionQuery = String.format(
-				"INSERT INTO `session` (`userid`, `token`, `expires`) VALUES (%d, UUID(), date_add(now(), INTERVAL %d SECOND))", user.id.longValue(),
-				longTerm == Boolean.TRUE ? SESSION_LONG_DURATION : SESSION_SHORT_DURATION);
+				"INSERT INTO `session` (`userid`, `token`, `expires`) VALUES (%d, CAST(UUID() AS BINARY), date_add(now(), INTERVAL %d SECOND))",
+				user.id.longValue(), longTerm == Boolean.TRUE ? SESSION_LONG_DURATION : SESSION_SHORT_DURATION);
 
 		try {
 			sessionConnection.connect();
@@ -173,7 +173,7 @@ final class SessionService implements ISessionService {
 		Connection sessionConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeSession.toString());
 
 		String getUserSessionQuery = String.format(
-				"SELECT * FROM `session` WHERE `token`='%s' AND `expires` > NOW() AND `deleted`='n' ORDER BY `expires` DESC LIMIT 1", token);
+				"SELECT *, CAST(`token` AS CHAR) AS `chartoken` FROM `session` WHERE `token`=CAST('%s' AS BINARY) AND `expires` > NOW() AND `deleted`='n' ORDER BY `expires` DESC LIMIT 1", token);
 
 		try {
 			sessionConnection.connect();

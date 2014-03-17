@@ -27,7 +27,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class StoreController implements ServiceController {
+public class StoreController implements ServiceConstants {
 
 	public static final String IPHONE_A3_CODE = "iph";
 	public static final String IPAD_A3_CODE = "ipa";
@@ -47,8 +47,7 @@ public class StoreController implements ServiceController {
 	}
 
 	public void fetchAllStores() {
-		CoreService service = new CoreService();
-		service.setUrl(CORE_END_POINT);
+		CoreService service = ServiceCreator.createCoreService();
 
 		final GetStoresRequest input = new GetStoresRequest();
 		input.accessCode = ACCESS_CODE;

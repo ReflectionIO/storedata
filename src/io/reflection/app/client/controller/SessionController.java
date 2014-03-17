@@ -26,6 +26,8 @@ import io.reflection.app.api.core.shared.call.LogoutResponse;
 import io.reflection.app.api.core.shared.call.event.ChangePasswordEventHandler;
 import io.reflection.app.api.core.shared.call.event.ChangeUserDetailsEventHandler;
 import io.reflection.app.api.core.shared.call.event.ForgotPasswordEventHandler;
+import io.reflection.app.api.core.shared.call.event.LoginEventHandler.LoginFailure;
+import io.reflection.app.api.core.shared.call.event.LoginEventHandler.LoginSuccess;
 import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.client.handler.user.SessionEventHandler.UserLoggedIn;
 import io.reflection.app.client.handler.user.SessionEventHandler.UserLoggedOut;
@@ -53,7 +55,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class SessionController implements ServiceController {
+public class SessionController implements ServiceConstants {
 	private static SessionController mOne;
 
 	// Cache roles and permissions meanwhile user is logged in
@@ -92,8 +94,7 @@ public class SessionController implements ServiceController {
 	 * @param password
 	 */
 	public void login(String username, String password, boolean longTerm) {
-		CoreService service = new CoreService();
-		service.setUrl(CORE_END_POINT);
+		CoreService service = ServiceCreator.createCoreService();
 
 		final LoginRequest input = new LoginRequest();
 		input.accessCode = ACCESS_CODE;
@@ -108,6 +109,7 @@ public class SessionController implements ServiceController {
 			@Override
 			public void onFailure(Throwable caught) {
 				EventController.get().fireEventFromSource(new UserLoginFailed(FormHelper.convertToError(caught)), SessionController.this);
+				EventController.get().fireEventFromSource(new LoginFailure(input, caught), SessionController.this);
 			}
 
 			@Override
@@ -119,6 +121,8 @@ public class SessionController implements ServiceController {
 				} else {
 					EventController.get().fireEventFromSource(new UserLoginFailed(output.error), SessionController.this);
 				}
+				
+				EventController.get().fireEventFromSource(new LoginSuccess(input, output), SessionController.this);
 			}
 		});
 	}
@@ -159,9 +163,7 @@ public class SessionController implements ServiceController {
 	 * Retrieve user roles and permissions from DB and set them
 	 */
 	private void setUserRolesAndPermissions() {
-		CoreService service = new CoreService();
-
-		service.setUrl(CORE_END_POINT);
+		CoreService service = ServiceCreator.createCoreService();
 
 		final GetRolesAndPermissionsRequest input = new GetRolesAndPermissionsRequest();
 		input.accessCode = ACCESS_CODE;
@@ -217,8 +219,7 @@ public class SessionController implements ServiceController {
 	 * Release the session and clear user data
 	 */
 	public void logout() {
-		CoreService service = new CoreService();
-		service.setUrl(CORE_END_POINT);
+		CoreService service = ServiceCreator.createCoreService();
 
 		final LogoutRequest input = new LogoutRequest();
 		input.accessCode = ACCESS_CODE;
@@ -308,8 +309,7 @@ public class SessionController implements ServiceController {
 	 * @param newPassword
 	 */
 	public void changePassword(String password, String newPassword) {
-		CoreService service = new CoreService();
-		service.setUrl(CORE_END_POINT);
+		CoreService service = ServiceCreator.createCoreService();
 
 		final ChangePasswordRequest input = new ChangePasswordRequest();
 		input.accessCode = ACCESS_CODE;
@@ -350,8 +350,7 @@ public class SessionController implements ServiceController {
 	 * @param newPassword
 	 */
 	public void resetPassword(String code, String newPassword) {
-		CoreService service = new CoreService();
-		service.setUrl(CORE_END_POINT);
+		CoreService service = ServiceCreator.createCoreService();
 
 		final ChangePasswordRequest input = new ChangePasswordRequest();
 		input.accessCode = ACCESS_CODE;
@@ -385,9 +384,7 @@ public class SessionController implements ServiceController {
 	 * @param company
 	 */
 	public void changeUserDetails(String username, String forename, String surname, String company) {
-		CoreService service = new CoreService();
-		service.setUrl(CORE_END_POINT);
-
+		CoreService service = ServiceCreator.createCoreService();
 		final ChangeUserDetailsRequest input = new ChangeUserDetailsRequest();
 		input.accessCode = ACCESS_CODE;
 
@@ -428,8 +425,7 @@ public class SessionController implements ServiceController {
 		String token = Cookies.getCookie(COOKIE_KEY_TOKEN);
 
 		if (token != null) {
-			CoreService core = new CoreService();
-			core.setUrl(CORE_END_POINT);
+			CoreService core = ServiceCreator.createCoreService();
 
 			LoginRequest input = new LoginRequest();
 			input.accessCode = ACCESS_CODE;
@@ -491,9 +487,7 @@ public class SessionController implements ServiceController {
 	 */
 	public void fetchAuthorisation(List<Role> roles, List<Permission> permissions) {
 		if (mSession != null && mLoggedInUser != null) {
-			CoreService service = new CoreService();
-
-			service.setUrl(CORE_END_POINT);
+			CoreService service = ServiceCreator.createCoreService();
 
 			final IsAuthorisedRequest input = new IsAuthorisedRequest();
 			input.accessCode = ACCESS_CODE;
@@ -530,9 +524,7 @@ public class SessionController implements ServiceController {
 
 	public void forgotPassword(String username) {
 		if (mSession == null && mLoggedInUser == null) {
-			CoreService service = new CoreService();
-
-			service.setUrl(CORE_END_POINT);
+			CoreService service = ServiceCreator.createCoreService();
 
 			final ForgotPasswordRequest input = new ForgotPasswordRequest();
 			input.accessCode = ACCESS_CODE;

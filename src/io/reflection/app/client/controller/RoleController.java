@@ -29,7 +29,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class RoleController extends AsyncDataProvider<Role> implements ServiceController {
+public class RoleController extends AsyncDataProvider<Role> implements ServiceConstants {
 
 	private List<Role> mRoles = new ArrayList<Role>();
 	private long mCount = -1;
@@ -47,8 +47,7 @@ public class RoleController extends AsyncDataProvider<Role> implements ServiceCo
 
 	private void fetchRoles() {
 
-		AdminService service = new AdminService();
-		service.setUrl(ADMIN_END_POINT);
+		AdminService service = ServiceCreator.createAdminService();
 
 		final GetRolesRequest input = new GetRolesRequest();
 		input.accessCode = ACCESS_CODE;

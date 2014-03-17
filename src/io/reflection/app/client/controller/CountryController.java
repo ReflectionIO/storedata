@@ -27,7 +27,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class CountryController implements ServiceController {
+public class CountryController implements ServiceConstants {
 	private static CountryController mOne = null;
 
 	private Map<String, Country> mCountryLookup = null;
@@ -62,8 +62,7 @@ public class CountryController implements ServiceController {
 	}
 
 	public void fetchAllCountries() {
-		CoreService service = new CoreService();
-		service.setUrl(CORE_END_POINT);
+		CoreService service = ServiceCreator.createCoreService();
 
 		final GetCountriesRequest input = new GetCountriesRequest();
 		input.accessCode = ACCESS_CODE;

@@ -8,7 +8,7 @@
 package io.reflection.app.client.page.blog;
 
 import io.reflection.app.client.controller.PostController;
-import io.reflection.app.client.controller.ServiceController;
+import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
@@ -40,7 +40,7 @@ public class AdminPage extends Page {
 
 	interface AdminPageUiBinder extends UiBinder<Widget, AdminPage> {}
 
-	@UiField(provided = true) CellTable<Post> posts = new CellTable<Post>(ServiceController.SHORT_STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true) CellTable<Post> posts = new CellTable<Post>(ServiceConstants.SHORT_STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) SimplePager pager = new SimplePager(false, false);
 
 	public AdminPage() {

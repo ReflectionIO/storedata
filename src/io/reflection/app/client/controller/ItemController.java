@@ -35,7 +35,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class ItemController extends AsyncDataProvider<Item> implements ServiceController {
+public class ItemController extends AsyncDataProvider<Item> implements ServiceConstants {
 
 	private static ItemController mOne = null;
 
@@ -81,8 +81,7 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 	 * @param query
 	 */
 	private void fetchItemsQuery(String query) {
-		CoreService service = new CoreService();
-		service.setUrl(CORE_END_POINT);
+		CoreService service = ServiceCreator.createCoreService();
 
 		final SearchForItemRequest input = new SearchForItemRequest();
 		input.accessCode = ACCESS_CODE;
@@ -126,8 +125,7 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 	 * Retrieves and caches items. This method is only used from the admin system and requires admin privileges to run
 	 */
 	private void fetchItems() {
-		AdminService service = new AdminService();
-		service.setUrl(ADMIN_END_POINT);
+		AdminService service = ServiceCreator.createAdminService();
 
 		final GetItemsRequest input = new GetItemsRequest();
 		input.accessCode = ACCESS_CODE;
@@ -151,7 +149,7 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 						addItemsToCache(output.items);
 					}
 				}
-				
+
 				if (output.pager != null) {
 					pager = output.pager;
 
@@ -200,8 +198,7 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 	// * @param externalId
 	// */
 	// private void fetchItem(String externalId) {
-	// CoreService service = new CoreService();
-	// service.setUrl(CORE_END_POINT);
+	// CoreService service = ServiceCreator.createCoreService();
 	//
 	// final SearchForItemRequest input = new SearchForItemRequest();
 	// input.accessCode = ACCESS_CODE;
