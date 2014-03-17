@@ -244,8 +244,9 @@ public class RanksPage extends Page implements FilterEventHandler, SessionEventH
 			RankController.get().reset();
 		}
 
+		PageType.RanksPageType.show("view/" + FilterController.get().toRankFilterString());
+		
 		if (foundDailyData) {
-			PageType.RanksPageType.show("view/" + FilterController.get().toRankFilterString());
 			mRanks.redraw();
 		}
 
