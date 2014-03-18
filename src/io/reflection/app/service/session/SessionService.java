@@ -142,7 +142,7 @@ final class SessionService implements ISessionService {
 		Connection sessionConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeSession.toString());
 
 		String getUserSessionQuery = String.format(
-				"SELECT * FROM `session` WHERE `userid`=%d AND `expires` > NOW() AND `deleted`='n' ORDER BY `expires` DESC LIMIT 1", user.id.longValue());
+				"SELECT *, CAST(`token` AS CHAR) AS `chartoken` FROM `session` WHERE `userid`=%d AND `expires` > NOW() AND `deleted`='n' ORDER BY `expires` DESC LIMIT 1", user.id.longValue());
 
 		try {
 			sessionConnection.connect();
