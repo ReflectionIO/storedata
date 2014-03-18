@@ -11,9 +11,6 @@
             <xsd:element name="GetPostInput" type="sdb:GetPostRequest" />
             <xsd:element name="GetPostOutput" type="sdb:GetPostResponse" />
 
-            <xsd:element name="AssignTagsInput" type="sdb:AssignTagsRequest" />
-            <xsd:element name="AssignTagsOutput" type="sdb:AssignTagsResponse" />
-
             <xsd:element name="UpdatePostInput" type="sdb:UpdatePostRequest" />
             <xsd:element name="UpdatePostOutput" type="sdb:UpdatePostResponse" />
 
@@ -61,30 +58,13 @@
                 </xsd:complexContent>
             </xsd:complexType>
 
-            <xsd:complexType name="AssignTagsRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="post" type="sd:Post" />
-                            <xsd:element name="tags" type="sd:Tag" maxOccurs="unbounded" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="AssignTagsResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
             <xsd:complexType name="UpdatePostRequest">
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
                         <xsd:sequence>
                             <xsd:element name="post" type="sd:Post" />
                         </xsd:sequence>
+                        <xsd:attribute name="publish" type="xsd:boolean" />
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>
@@ -102,7 +82,7 @@
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
                         <xsd:sequence>
-                            <xsd:element name="tags" type="sd:Tag" minOccurs="0" maxOccurs="unbounded" />
+                            <xsd:element name="tags" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
                         </xsd:sequence>
                         <xsd:attribute name="title" type="xsd:string" />
                         <xsd:attribute name="description" type="xsd:string" />
@@ -139,13 +119,6 @@
         <wsdl:part name="output" element="sdb:GetPostOutput" />
     </wsdl:message>
 
-    <wsdl:message name="AssignTagsRequest">
-        <wsdl:part name="input" element="sdb:AssignTagsInput" />
-    </wsdl:message>
-    <wsdl:message name="AssignTagsResponse">
-        <wsdl:part name="output" element="sdb:AssignTagsOutput" />
-    </wsdl:message>
-
     <wsdl:message name="UpdatePostRequest">
         <wsdl:part name="input" element="sdb:UpdatePostInput" />
     </wsdl:message>
@@ -169,11 +142,6 @@
         <wsdl:operation name="GetPost">
             <wsdl:input message="sdb:GetPostRequest" />
             <wsdl:output message="sdb:GetPostResponse" />
-        </wsdl:operation>
-
-        <wsdl:operation name="AssignTags">
-            <wsdl:input message="sdb:AssignTagsRequest" />
-            <wsdl:output message="sdb:AssignTagsResponse" />
         </wsdl:operation>
 
         <wsdl:operation name="UpdatePost">
@@ -201,16 +169,6 @@
 
         <wsdl:operation name="GetPost">
             <soap:operation soapAction="http://app.reflection.io/blog/GetPost" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-
-        <wsdl:operation name="AssignTags">
-            <soap:operation soapAction="http://app.reflection.io/blog/AssignTags" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
