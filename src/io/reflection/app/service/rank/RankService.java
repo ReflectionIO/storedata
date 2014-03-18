@@ -320,7 +320,7 @@ final class RankService implements IRankService {
 		StringBuffer buffer = new StringBuffer();
 
 		if (before != null && after != null) {
-			buffer.append("`date` BETWEEN (FROM_UNIXTIME(");
+			buffer.append("(`date` BETWEEN FROM_UNIXTIME(");
 			buffer.append(after.getTime() / 1000);
 			buffer.append(") AND FROM_UNIXTIME(");
 			buffer.append(before.getTime() / 1000);
