@@ -17,6 +17,9 @@ import java.util.List;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -30,7 +33,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class SuperAlertBox implements JsonServiceCallEventHandler {
+public class SuperAlertBox implements JsonServiceCallEventHandler, CloseHandler<AlertBox> {
 
 	private static SuperAlertBox one = null;
 
@@ -41,8 +44,10 @@ public class SuperAlertBox implements JsonServiceCallEventHandler {
 	}
 
 	private HTMLPanel container;
+
 	List<Request> requests = new ArrayList<Request>();
 	List<AlertBox> alertBoxes = new ArrayList<AlertBox>();
+	List<HandlerRegistration> registrations = new ArrayList<HandlerRegistration>();
 
 	private SuperAlertBox() {
 		addContainer();
@@ -74,8 +79,7 @@ public class SuperAlertBox implements JsonServiceCallEventHandler {
 	}
 
 	private void removeAlertBox(AlertBox alertBox) {
-		alertBoxes.remove(alertBox);
-		container.remove(alertBox);
+		alertBox.dismiss();
 	}
 
 	private AlertBox getAlertBox(Request request) {
@@ -92,6 +96,8 @@ public class SuperAlertBox implements JsonServiceCallEventHandler {
 	public void startCall(Request request, String callName, String endPoint) {
 		AlertBox alertBox = addAlertBox(request);
 		AlertBoxHelper.configureAlert(alertBox, AlertBoxType.InfoAlertBoxType, true, callName, endPoint, false);
+		HandlerRegistration registration = alertBox.addCloseHandler(this);
+		registrations.add(registration);
 	}
 
 	public void callSuccess(String callName, final Request request, Response response) {
@@ -118,7 +124,7 @@ public class SuperAlertBox implements JsonServiceCallEventHandler {
 
 		if (alertBox != null) {
 			AlertBoxHelper.configureAlert(alertBox, AlertBoxType.DangerAlertBoxType, false, callName, "Failed with exception [" + caught.toString() + "]!",
-					false);
+					true);
 		}
 	}
 
@@ -128,7 +134,7 @@ public class SuperAlertBox implements JsonServiceCallEventHandler {
 		if (alertBox != null) {
 			AlertBoxHelper.configureAlert(alertBox, AlertBoxType.DangerAlertBoxType, false, callName,
 					response.error == null ? "Failed with unknown error, no code or message!" : "Failed with code [" + response.error.code.toString()
-							+ "] and message [" + response.error.message + "]!", false);
+							+ "] and message [" + response.error.message + "]!", true);
 		}
 	}
 
@@ -167,6 +173,25 @@ public class SuperAlertBox implements JsonServiceCallEventHandler {
 	@Override
 	public void jsonServiceCallFailure(JsonService origin, String callName, Request input, Throwable caught) {
 		callFailure(callName, input, caught);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.event.logical.shared.CloseHandler#onClose(com.google.gwt.event.logical.shared.CloseEvent)
+	 */
+	@Override
+	public void onClose(CloseEvent<AlertBox> event) {
+		int i = alertBoxes.indexOf(event.getTarget());
+
+		if (i >= 0) {
+			HandlerRegistration registration = registrations.remove(i);
+			registration.removeHandler();
+
+			alertBoxes.remove(i);
+
+			container.remove(event.getTarget());
+		}
 	}
 
 }

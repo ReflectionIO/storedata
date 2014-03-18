@@ -12,6 +12,10 @@ import io.reflection.app.client.res.Images;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.logical.shared.HasCloseHandlers;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -24,7 +28,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author billy1380
  * 
  */
-public class AlertBox extends Composite {
+public class AlertBox extends Composite implements HasCloseHandlers<AlertBox> {
 
 	private static AlertBoxUiBinder uiBinder = GWT.create(AlertBoxUiBinder.class);
 
@@ -131,6 +135,23 @@ public class AlertBox extends Composite {
 	@UiHandler("mClose")
 	void onCloseClicked(ClickEvent e) {
 		setVisible(false);
+
+		CloseEvent.fire(this, this, false);
 	}
 
+	public void dismiss() {
+		setVisible(false);
+
+		CloseEvent.fire(this, this, true);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.event.logical.shared.HasCloseHandlers#addCloseHandler(com.google.gwt.event.logical.shared.CloseHandler)
+	 */
+	@Override
+	public HandlerRegistration addCloseHandler(CloseHandler<AlertBox> handler) {
+		return this.addHandler(handler, CloseEvent.getType());
+	}
 }

@@ -392,8 +392,8 @@ public final class Core extends ActionHandler {
 				List<String> itemIds = new ArrayList<String>();
 				final Map<String, Rank> lookup = new HashMap<String, Rank>();
 
-				List<Rank> ranks = RankServiceProvider.provide().getRanks(input.country, input.store, input.category,
-						getGrossingListName(input.store, input.listType), start, end, input.pager);
+				List<Rank> ranks = RankServiceProvider.provide().getAllRanks(input.country, input.store, input.category,
+						getGrossingListName(input.store, input.listType), start, end);
 
 				if (ranks != null && ranks.size() != 0) {
 					SparseArray<Rank> free = new SparseArray<Rank>();

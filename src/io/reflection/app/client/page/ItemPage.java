@@ -217,7 +217,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	}
 
 	private void displayItemDetails() {
-		mAlertBox.setVisible(false);
+		mAlertBox.dismiss();
 
 		mSidePanel.setItem(item);
 	}
@@ -324,7 +324,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 				historyChart.setData(output.item, output.ranks, rankingType);
 
-				mAlertBox.setVisible(false);
+				mAlertBox.dismiss();
 			} else {
 				AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.WarningAlertBoxType, false, "Warning", " - Item rank history could not be obtained!",
 						false).setVisible(true);
