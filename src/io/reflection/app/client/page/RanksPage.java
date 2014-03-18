@@ -13,9 +13,6 @@ import static io.reflection.app.client.controller.FilterController.GROSSING_LIST
 import static io.reflection.app.client.controller.FilterController.LIST_TYPE_KEY;
 import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
 import static io.reflection.app.client.controller.FilterController.PAID_LIST_TYPE;
-import io.reflection.app.api.admin.shared.call.event.IsAuthorisedEventHandler;
-import io.reflection.app.api.core.shared.call.IsAuthorisedRequest;
-import io.reflection.app.api.core.shared.call.IsAuthorisedResponse;
 import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.client.cell.MiniAppCell;
 import io.reflection.app.client.controller.EventController;
@@ -35,13 +32,10 @@ import io.reflection.app.client.part.RankSidePanel;
 import io.reflection.app.client.part.datatypes.RanksGroup;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.Item;
-import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.User;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.cell.client.ImageResourceCell;
@@ -59,13 +53,12 @@ import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.Error;
-import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author billy1380
  * 
  */
-public class RanksPage extends Page implements FilterEventHandler, SessionEventHandler, IsAuthorisedEventHandler,
+public class RanksPage extends Page implements FilterEventHandler, SessionEventHandler, // IsAuthorisedEventHandler,
 		NavigationEventHandler {
 
 	private static RanksPageUiBinder uiBinder = GWT.create(RanksPageUiBinder.class);
@@ -245,7 +238,7 @@ public class RanksPage extends Page implements FilterEventHandler, SessionEventH
 		}
 
 		PageType.RanksPageType.show("view/" + FilterController.get().toRankFilterString());
-		
+
 		if (foundDailyData) {
 			mRanks.redraw();
 		}
@@ -286,7 +279,7 @@ public class RanksPage extends Page implements FilterEventHandler, SessionEventH
 	public void userLoggedIn(User user, Session session) {
 		RankController.get().reset();
 
-		checkPermissions();
+		// checkPermissions();
 	}
 
 	/*
@@ -310,36 +303,36 @@ public class RanksPage extends Page implements FilterEventHandler, SessionEventH
 	@Override
 	public void userLoginFailed(Error error) {}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * io.reflection.app.api.admin.shared.call.event.IsAuthorisedEventHandler#isAuthorisedSuccess(io.reflection.app.api.core.shared.call.IsAuthorisedRequest,
-	 * io.reflection.app.api.core.shared.call.IsAuthorisedResponse)
-	 */
-	@Override
-	public void isAuthorisedSuccess(IsAuthorisedRequest input, IsAuthorisedResponse output) {
-		if (output.status == StatusType.StatusTypeSuccess && output.authorised == Boolean.TRUE) {
-			if (input.permissions != null) {
-				for (Permission p : input.permissions) {
-					if (p.id != null && p.id != null) {
-						mPager.setVisible(true);
-						mRedirect.setVisible(false);
-					}
-				}
-			}
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * io.reflection.app.api.admin.shared.call.event.IsAuthorisedEventHandler#isAuthorisedFailure(io.reflection.app.api.core.shared.call.IsAuthorisedRequest,
-	 * java.lang.Throwable)
-	 */
-	@Override
-	public void isAuthorisedFailure(IsAuthorisedRequest input, Throwable caught) {}
+//	/*
+//	 * (non-Javadoc)
+//	 * 
+//	 * @see
+//	 * io.reflection.app.api.admin.shared.call.event.IsAuthorisedEventHandler#isAuthorisedSuccess(io.reflection.app.api.core.shared.call.IsAuthorisedRequest,
+//	 * io.reflection.app.api.core.shared.call.IsAuthorisedResponse)
+//	 */
+//	@Override
+//	public void isAuthorisedSuccess(IsAuthorisedRequest input, IsAuthorisedResponse output) {
+//		if (output.status == StatusType.StatusTypeSuccess && output.authorised == Boolean.TRUE) {
+//			if (input.permissions != null) {
+//				for (Permission p : input.permissions) {
+//					if (p.id != null && p.id != null) {
+//						mPager.setVisible(true);
+//						mRedirect.setVisible(false);
+//					}
+//				}
+//			}
+//		}
+//	}
+//
+//	/*
+//	 * (non-Javadoc)
+//	 * 
+//	 * @see
+//	 * io.reflection.app.api.admin.shared.call.event.IsAuthorisedEventHandler#isAuthorisedFailure(io.reflection.app.api.core.shared.call.IsAuthorisedRequest,
+//	 * java.lang.Throwable)
+//	 */
+//	@Override
+//	public void isAuthorisedFailure(IsAuthorisedRequest input, Throwable caught) {}
 
 	@UiHandler({ "mAll", "mFree", "mGrossing", "mPaid" })
 	void onClicked(ClickEvent e) {
@@ -451,7 +444,7 @@ public class RanksPage extends Page implements FilterEventHandler, SessionEventH
 	public void navigationChanged(Stack stack) {
 
 		if (PageType.RanksPageType.equals(stack.getPage())) {
-			checkPermissions();
+			// checkPermissions();
 
 			if (stack.getAction() == null || !"view".equals(stack.getAction())) {
 				PageType.RanksPageType.show("view", FilterController.get().toRankFilterString());
@@ -464,18 +457,18 @@ public class RanksPage extends Page implements FilterEventHandler, SessionEventH
 
 	}
 
-	private void checkPermissions() {
-		List<Permission> permissions = new ArrayList<Permission>();
-
-		Permission p = new Permission();
-		// p.code = "FRV";
-		p.id = Long.valueOf(1);
-		permissions.add(p);
-
-		SessionController.get().fetchAuthorisation(null, permissions);
-
-		mRedirect.setTargetHistoryToken(PageType.UpgradePageType.toString());
-	}
+	// private void checkPermissions() {
+	// List<Permission> permissions = new ArrayList<Permission>();
+	//
+	// Permission p = new Permission();
+	// // p.code = "FRV";
+	// p.id = Long.valueOf(1);
+	// permissions.add(p);
+	//
+	// SessionController.get().fetchAuthorisation(null, permissions);
+	//
+	// mRedirect.setTargetHistoryToken(PageType.UpgradePageType.toString());
+	// }
 
 	/*
 	 * (non-Javadoc)
@@ -488,7 +481,7 @@ public class RanksPage extends Page implements FilterEventHandler, SessionEventH
 
 		register(EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
 		register(EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
-		register(EventController.get().addHandlerToSource(IsAuthorisedEventHandler.TYPE, SessionController.get(), this));
+		// register(EventController.get().addHandlerToSource(IsAuthorisedEventHandler.TYPE, SessionController.get(), this));
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 
 	}

@@ -38,7 +38,7 @@ import com.willshex.gson.json.service.shared.StatusType;
 public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements ServiceConstants {
 	private static FeedFetchController mOne = null;
 
-	private List<FeedFetch> mRows = null;
+	private List<FeedFetch> mRows = new ArrayList<FeedFetch>();
 	private Pager mPager;
 
 	public static FeedFetchController get() {
@@ -80,10 +80,6 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 								mPager = output.pager;
 							}
 
-							if (mRows == null) {
-								mRows = new ArrayList<FeedFetch>();
-							}
-
 							mRows.addAll(output.feedFetches);
 
 							updateRowData(0, mRows);
@@ -123,9 +119,9 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 
 	public void reset() {
 		mPager = null;
-		mRows = null;
+		mRows.clear();
 
-		updateRowData(0, new ArrayList<FeedFetch>());
+		updateRowData(0, mRows);
 		updateRowCount(0, false);
 	}
 

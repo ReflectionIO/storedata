@@ -10,16 +10,25 @@ package io.reflection.app.client.controller;
 import io.reflection.app.api.blog.client.BlogService;
 import io.reflection.app.api.blog.shared.call.CreatePostRequest;
 import io.reflection.app.api.blog.shared.call.CreatePostResponse;
+import io.reflection.app.api.blog.shared.call.GetPostRequest;
+import io.reflection.app.api.blog.shared.call.GetPostResponse;
 import io.reflection.app.api.blog.shared.call.GetPostsRequest;
 import io.reflection.app.api.blog.shared.call.GetPostsResponse;
+import io.reflection.app.api.blog.shared.call.UpdatePostRequest;
+import io.reflection.app.api.blog.shared.call.UpdatePostResponse;
 import io.reflection.app.api.blog.shared.call.event.CreatePostEventHandler.CreatePostFailure;
 import io.reflection.app.api.blog.shared.call.event.CreatePostEventHandler.CreatePostSuccess;
+import io.reflection.app.api.blog.shared.call.event.GetPostEventHandler.GetPostFailure;
+import io.reflection.app.api.blog.shared.call.event.GetPostEventHandler.GetPostSuccess;
 import io.reflection.app.api.blog.shared.call.event.GetPostsEventHandler.GetPostsFailure;
 import io.reflection.app.api.blog.shared.call.event.GetPostsEventHandler.GetPostsSuccess;
+import io.reflection.app.api.blog.shared.call.event.UpdatePostEventHandler.UpdatePostFailure;
+import io.reflection.app.api.blog.shared.call.event.UpdatePostEventHandler.UpdatePostSuccess;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.datatypes.shared.Post;
-import io.reflection.app.datatypes.shared.Tag;
+import io.reflection.app.shared.util.SparseArray;
+import io.reflection.app.shared.util.TagHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +48,7 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 	private List<Post> posts = new ArrayList<Post>();
 	private long count = 0;
 	private Pager pager;
+	private SparseArray<Post> postLookup = null;
 
 	private static PostController one = null;
 
@@ -102,7 +112,44 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 		});
 	}
 
+	private void fetchPost(Long id) {
+		BlogService service = ServiceCreator.createBlogService();
+
+		final GetPostRequest input = new GetPostRequest();
+		input.accessCode = ACCESS_CODE;
+
+		input.session = SessionController.get().getSessionForApiCall();
+		input.id = id;
+
+		service.getPost(input, new AsyncCallback<GetPostResponse>() {
+
+			@Override
+			public void onSuccess(GetPostResponse output) {
+				if (output.status == StatusType.StatusTypeSuccess) {
+					if (output.post != null) {
+						if (postLookup == null) {
+							postLookup = new SparseArray<Post>();
+						}
+
+						postLookup.put(output.post.id.intValue(), output.post);
+					}
+				}
+
+				EventController.get().fireEventFromSource(new GetPostSuccess(input, output), PostController.this);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				EventController.get().fireEventFromSource(new GetPostFailure(input, caught), PostController.this);
+			}
+		});
+	}
+
 	public List<Post> getPosts() {
+		if (pager == null) {
+			fetchPosts();
+		}
+
 		return posts;
 	}
 
@@ -135,15 +182,48 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 
 	/**
 	 * 
-	 * @param postId
+	 * @param id
 	 * @param title
 	 * @param description
 	 * @param content
 	 * @param publish
 	 * @param tags
 	 */
-	public void updatePost(Long postId, String title, Boolean visible, String description, String content, Boolean publish, String tags) {
+	public void updatePost(Long id, String title, Boolean visible, String description, String content, Boolean publish, String tags) {
+		BlogService service = ServiceCreator.createBlogService();
 
+		final UpdatePostRequest input = new UpdatePostRequest();
+		input.accessCode = ACCESS_CODE;
+
+		input.session = SessionController.get().getSessionForApiCall();
+		input.post = postLookup.get(id.intValue());
+
+		input.post.title = title;
+		input.post.description = description;
+		input.post.content = content;
+
+		input.publish = publish;
+
+		input.post.visible = visible;
+
+		input.post.tags = TagHelper.convertToTagList(tags);
+
+		service.updatePost(input, new AsyncCallback<UpdatePostResponse>() {
+
+			@Override
+			public void onSuccess(UpdatePostResponse output) {
+				if (output.status == StatusType.StatusTypeSuccess) {
+					reset();
+				}
+
+				EventController.get().fireEventFromSource(new UpdatePostSuccess(input, output), PostController.this);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				EventController.get().fireEventFromSource(new UpdatePostFailure(input, caught), PostController.this);
+			}
+		});
 	}
 
 	/**
@@ -167,7 +247,7 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 		input.publish = publish;
 		input.visible = visible;
 
-		input.tags = convertToTags(tags);
+		input.tags = TagHelper.convertToTagList(tags);
 
 		service.createPost(input, new AsyncCallback<CreatePostResponse>() {
 
@@ -185,43 +265,31 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 		});
 	}
 
-	/**
-	 * @param tags
-	 * @return
-	 */
-	private List<Tag> convertToTags(String tags) {
-		List<Tag> tagList = null;
-
-		if (tags != null && tags.length() == 0) {
-			String[] splitTags = tags.split(",");
-
-			for (String item : splitTags) {
-				String trimmed = item.trim().toLowerCase();
-
-				if (trimmed.length() > 0) {
-					if (tagList != null) {
-						tagList = new ArrayList<Tag>();
-					}
-
-					Tag tag = new Tag();
-					tag.name = trimmed;
-
-					tagList.add(tag);
-				}
-			}
-		}
-
-		return tagList;
-	}
-
 	public void reset() {
 		pager = null;
-		posts = null;
+		posts.clear();
 
-		updateRowData(0, new ArrayList<Post>());
+		updateRowData(0, posts);
 		updateRowCount(0, false);
 
 		fetchPosts();
 	}
 
+	/**
+	 * @param id
+	 * @return
+	 */
+	public Post getPost(Long id) {
+		Post post = null;
+
+		if (postLookup != null) {
+			post = postLookup.get(id.intValue());
+		}
+
+		if (post == null) {
+			fetchPost(id);
+		}
+
+		return post;
+	}
 }

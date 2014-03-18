@@ -11,6 +11,7 @@ import io.reflection.app.client.controller.PostController;
 import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.page.Page;
+import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.datatypes.shared.Post;
@@ -108,7 +109,7 @@ public class AdminPage extends Page {
 		};
 
 		posts.addColumn(dateColumn, "Date");
-		
+
 		TextColumn<Post> publishedColumn = new TextColumn<Post>() {
 
 			@Override
@@ -125,11 +126,11 @@ public class AdminPage extends Page {
 			public SafeHtml getValue(Post object) {
 				String s = object.id.toString();
 
-				return SafeHtmlUtils.fromTrustedString("<a href=\"#blogedit/edit/" + s + "\" class=\"btn btn-xs btn-default\">Edit</a>");
+				return SafeHtmlUtils.fromTrustedString("<a href=\"#" + PageType.BlogEditPost.toString() + "/change/" + s
+						+ "\" class=\"btn btn-xs btn-default\">Edit</a>");
 			}
 		};
 
 		posts.addColumn(editColumn);
 	}
-
 }

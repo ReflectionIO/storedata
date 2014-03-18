@@ -8,7 +8,6 @@
 //
 package io.reflection.app.api.blog;
 
-import io.reflection.app.api.blog.shared.call.AssignTagsRequest;
 import io.reflection.app.api.blog.shared.call.CreatePostRequest;
 import io.reflection.app.api.blog.shared.call.GetPostRequest;
 import io.reflection.app.api.blog.shared.call.GetPostsRequest;
@@ -31,10 +30,6 @@ public final class BlogJsonServlet extends JsonServlet {
 			GetPostRequest input = new GetPostRequest();
 			input.fromJson(request);
 			output = service.getPost(input).toString();
-		} else if ("AssignTags".equals(action)) {
-			AssignTagsRequest input = new AssignTagsRequest();
-			input.fromJson(request);
-			output = service.assignTags(input).toString();
 		} else if ("UpdatePost".equals(action)) {
 			UpdatePostRequest input = new UpdatePostRequest();
 			input.fromJson(request);

@@ -8,8 +8,6 @@
 //
 package io.reflection.app.api.blog.client;
 
-import io.reflection.app.api.blog.shared.call.AssignTagsRequest;
-import io.reflection.app.api.blog.shared.call.AssignTagsResponse;
 import io.reflection.app.api.blog.shared.call.CreatePostRequest;
 import io.reflection.app.api.blog.shared.call.CreatePostResponse;
 import io.reflection.app.api.blog.shared.call.GetPostRequest;
@@ -79,34 +77,6 @@ public final class BlogService extends JsonService {
 		} catch (RequestException e) {
 			output.onFailure(e);
 			onCallFailure(BlogService.this, BlogMethodGetPost, input, e);
-		}
-		return handle;
-	}
-
-	public static final String BlogMethodAssignTags = "AssignTags";
-
-	public Request assignTags(final AssignTagsRequest input, final AsyncCallback<AssignTagsResponse> output) {
-		Request handle = null;
-		try {
-			handle = sendRequest(BlogMethodAssignTags, input, new RequestCallback() {
-				@Override
-				public void onResponseReceived(Request request, Response response) {
-					AssignTagsResponse outputParameter = new AssignTagsResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(BlogService.this, BlogMethodAssignTags, input, outputParameter);
-				}
-
-				@Override
-				public void onError(Request request, Throwable exception) {
-					output.onFailure(exception);
-					onCallFailure(BlogService.this, BlogMethodAssignTags, input, exception);
-				}
-			});
-			onCallStart(BlogService.this, BlogMethodAssignTags, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(BlogService.this, BlogMethodAssignTags, input, e);
 		}
 		return handle;
 	}

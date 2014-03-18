@@ -40,7 +40,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 	private static RankController mOne = null;
 
-	private List<RanksGroup> mRows = null;
+	private List<RanksGroup> mRows = new ArrayList<RanksGroup>();
 	private Pager mPager;
 
 	private ListDataProvider<ItemRevenue> itemRevenueData = new ListDataProvider<ItemRevenue>();
@@ -102,11 +102,6 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 					// EventController.get().fireEventFromSource(new ReceivedRanks("free" + input.listType, output.freeRanks), RankController.this);
 					// EventController.get().fireEventFromSource(new ReceivedRanks("paid" + input.listType, output.paidRanks), RankController.this);
 					// EventController.get().fireEventFromSource(new ReceivedRanks("grossing" + input.listType, output.grossingRanks), RankController.this);
-
-					// Add list of retrieved items
-					if (mRows == null) {
-						mRows = new ArrayList<RanksGroup>();
-					}
 
 					int count = 0;
 
@@ -197,15 +192,15 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 					itemRevenue.countryFlagStyleName = CountryController.get().getCountryFlag(input.country.a2Code);
 					itemRevenue.countryName = CountryController.get().getCountry(input.country.a2Code).name;
-					
+
 					if (output.ranks != null) {
 						itemRevenue.currency = output.ranks.get(0).currency;
 					} else if (output.item.currency != null) {
 						itemRevenue.currency = output.item.currency;
 					} else if (item.currency != null) {
-						itemRevenue.currency = item.currency;	
+						itemRevenue.currency = item.currency;
 					}
-					
+
 					itemRevenue.iap = Float.valueOf(iap);
 					itemRevenue.paid = Float.valueOf(paid);
 					itemRevenue.percentage = Float.valueOf(100.0f);
@@ -248,9 +243,9 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 	public void reset() {
 
 		mPager = null;
-		mRows = null;
+		mRows.clear();
 
-		updateRowData(0, new ArrayList<RanksGroup>());
+		updateRowData(0, mRows);
 		updateRowCount(0, false);
 
 		fetchTopItems();

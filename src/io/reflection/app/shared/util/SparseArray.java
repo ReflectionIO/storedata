@@ -23,7 +23,7 @@ import java.util.List;
  * SparseArrays map integers to Objects. Unlike a normal array of Objects, there can be gaps in the indices. It is intended to be more efficient than using a
  * HashMap to map Integers to Objects.
  */
-public class SparseArray<E> implements Cloneable {
+public class SparseArray<E> /* implements Cloneable */{
 	private static final Object DELETED = new Object();
 	private boolean mGarbage = false;
 
@@ -49,19 +49,19 @@ public class SparseArray<E> implements Cloneable {
 		mSize = 0;
 	}
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public SparseArray<E> clone() {
-		SparseArray<E> clone = null;
-		try {
-			clone = (SparseArray<E>) super.clone();
-			clone.mKeys = mKeys.clone();
-			clone.mValues = mValues.clone();
-		} catch (CloneNotSupportedException cnse) {
-			/* ignore */
-		}
-		return clone;
-	}
+	// @Override
+	// @SuppressWarnings("unchecked")
+	// public SparseArray<E> clone() {
+	// SparseArray<E> clone = null;
+	// try {
+	// clone = (SparseArray<E>) super.clone();
+	// clone.mKeys = mKeys.clone();
+	// clone.mValues = mValues.clone();
+	// } catch (CloneNotSupportedException cnse) {
+	// /* ignore */
+	// }
+	// return clone;
+	// }
 
 	/**
 	 * Gets the Object mapped from the specified key, or <code>null</code> if no such mapping has been made.
@@ -340,17 +340,17 @@ public class SparseArray<E> implements Cloneable {
 	private static int idealIntArraySize(int need) {
 		return idealByteArraySize(need * 4) / 4;
 	}
-	
+
 	public List<E> toList() {
 		List<E> list = new ArrayList<E>(mSize);
-		
+
 		int key = 0;
-		for(int i = 0; i < mSize; i++) {
-		   key = keyAt(i);
-		   list.add(get(key));
+		for (int i = 0; i < mSize; i++) {
+			key = keyAt(i);
+			list.add(get(key));
 		}
-		
+
 		return list;
-		
+
 	}
 }

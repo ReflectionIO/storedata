@@ -9,17 +9,18 @@
 package io.reflection.app.service.post;
 
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
+import static com.spacehopperstudios.utility.StringUtils.join;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.Post;
-import io.reflection.app.datatypes.shared.Tag;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
+import io.reflection.app.shared.util.TagHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,7 @@ final class PostService implements IPostService {
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection postConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypePost.toString());
 
-		String getPostQuery = String.format("SELECT * FROM `post` WHERE `deleted`='n' AND `id`='%d' LIMIT 1", id.longValue());
+		String getPostQuery = String.format("SELECT * FROM `post` WHERE `deleted`='n' AND `id`=%d LIMIT 1", id.longValue());
 		try {
 			postConnection.connect();
 			postConnection.executeQuery(getPostQuery);
@@ -71,7 +72,7 @@ final class PostService implements IPostService {
 		post.created = connection.getCurrentRowDateTime("created");
 		post.deleted = connection.getCurrentRowString("deleted");
 
-		post.tags = getTags(post.id);
+		post.tags = TagHelper.convertToTagList(stripslashes(connection.getCurrentRowString("tags")));
 
 		if (includeContents) {
 			post.content = stripslashes(connection.getCurrentRowString("content"));
@@ -90,14 +91,6 @@ final class PostService implements IPostService {
 		return post;
 	}
 
-	/**
-	 * @param id
-	 * @return
-	 */
-	private List<Tag> getTags(Long id) {
-		return null;
-	}
-
 	@Override
 	public Post addPost(Post post) throws DataAccessException {
 		Post addedPost = null;
@@ -106,9 +99,10 @@ final class PostService implements IPostService {
 		Connection postConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypePost.toString());
 
 		String addPostQuery = String.format(
-				"INSERT INTO `post` (`authorid`, `title`, `description`, `content`, `published`, `visible`) VALUES (%d, '%s', '%s', '%s', %s, %d)",
+				"INSERT INTO `post` (`authorid`,`title`,`description`,`content`,`published`,`visible`,`tags`) VALUES (%d,'%s','%s','%s',%s,%d,%s)",
 				post.author.id.longValue(), addslashes(post.title), addslashes(post.description), addslashes(post.content), post.published == null ? "NULL"
-						: String.format("FROM_UNIXTIME(%d)", post.published.getTime()), post.visible == null ? 0 : (post.visible.booleanValue() ? 1 : 0));
+						: String.format("FROM_UNIXTIME(%d)", post.published.getTime()), post.visible == null ? 0 : (post.visible.booleanValue() ? 1 : 0),
+				post.tags == null ? "NULL" : "'" + addslashes(join(post.tags)) + "'");
 		try {
 			postConnection.connect();
 			postConnection.executeQuery(addPostQuery);
@@ -127,7 +121,38 @@ final class PostService implements IPostService {
 
 	@Override
 	public Post updatePost(Post post) throws DataAccessException {
-		throw new UnsupportedOperationException();
+		Post updatedPost = null;
+		boolean changed = false;
+
+		IDatabaseService databaseService = DatabaseServiceProvider.provide();
+		Connection postConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypePost.toString());
+
+		String updatePostQuery = String
+				.format("UPDATE `post` SET `title`='%s',`description`='%s',`content`='%s',`published`=%s,`visible`=%d,`tags`=%s WHERE `id`=%d AND `deleted`='n'",
+						addslashes(post.title), addslashes(post.description), addslashes(post.content),
+						post.published == null ? "NULL" : String.format("FROM_UNIXTIME(%d)", post.published.getTime()), post.visible == null ? 0
+								: (post.visible.booleanValue() ? 1 : 0), post.tags == null ? "NULL" : "'" + addslashes(join(post.tags)) + "'", post.id
+								.longValue());
+		try {
+			postConnection.connect();
+			postConnection.executeQuery(updatePostQuery);
+
+			if (postConnection.getAffectedRowCount() > 0) {
+				changed = true;
+			}
+		} finally {
+			if (postConnection != null) {
+				postConnection.disconnect();
+			}
+		}
+
+		if (changed) {
+			updatedPost = getPost(post.id);
+		} else {
+			updatedPost = post;
+		}
+
+		return updatedPost;
 	}
 
 	@Override
@@ -153,7 +178,7 @@ final class PostService implements IPostService {
 			getPostsQuery = "SELECT *";
 		} else {
 			// no content column
-			getPostsQuery = "SELECT `id`,`created`,`authorid`, `published`,`title`,`description`,`version`,`visible`,`deleted`";
+			getPostsQuery = "SELECT `id`,`created`,`authorid`, `published`,`title`,`description`,`visible`,`tags`,`deleted`";
 		}
 
 		getPostsQuery += " FROM `post` WHERE `deleted`='n'";
@@ -213,21 +238,31 @@ final class PostService implements IPostService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.service.post.IPostService#assignTags(io.reflection.app.datatypes.shared.Post, java.util.List)
-	 */
-	@Override
-	public void assignTags(Post post, List<Tag> tags) throws DataAccessException {
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see io.reflection.app.service.post.IPostService#getTitlePost(java.lang.String)
 	 */
 	@Override
 	public Post getTitlePost(String title) throws DataAccessException {
-		return null;
+		Post post = null;
+
+		IDatabaseService databaseService = DatabaseServiceProvider.provide();
+		Connection postConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypePost.toString());
+
+		String getTitlePostQuery = String.format("SELECT * FROM `post` WHERE `deleted`='n' AND `title`='%s' LIMIT 1", addslashes(title));
+
+		try {
+			postConnection.connect();
+			postConnection.executeQuery(getTitlePostQuery);
+
+			if (postConnection.fetchNextRow()) {
+				post = toPost(postConnection);
+			}
+		} finally {
+			if (postConnection != null) {
+				postConnection.disconnect();
+			}
+		}
+
+		return post;
 	}
 
 	/*

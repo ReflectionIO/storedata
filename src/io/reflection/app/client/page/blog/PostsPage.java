@@ -7,6 +7,9 @@
 //
 package io.reflection.app.client.page.blog;
 
+import io.reflection.app.api.blog.shared.call.GetPostsRequest;
+import io.reflection.app.api.blog.shared.call.GetPostsResponse;
+import io.reflection.app.api.blog.shared.call.event.GetPostsEventHandler;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
@@ -26,7 +29,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author billy1380
  * 
  */
-public class PostsPage extends Page implements NavigationEventHandler {
+public class PostsPage extends Page implements NavigationEventHandler, GetPostsEventHandler {
 
 	private static PostsPageUiBinder uiBinder = GWT.create(PostsPageUiBinder.class);
 
@@ -48,6 +51,7 @@ public class PostsPage extends Page implements NavigationEventHandler {
 		super.onAttach();
 
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+		register(EventController.get().addHandlerToSource(GetPostsEventHandler.TYPE, PostController.get(), this));
 	}
 
 	/*
@@ -57,6 +61,13 @@ public class PostsPage extends Page implements NavigationEventHandler {
 	 */
 	@Override
 	public void navigationChanged(Stack stack) {
+		showPosts();
+	}
+
+	/**
+	 * 
+	 */
+	private void showPosts() {
 		posts.clear();
 
 		if (PostController.get().getPosts() != null) {
@@ -68,7 +79,28 @@ public class PostsPage extends Page implements NavigationEventHandler {
 				posts.add(summary);
 				// }
 			}
-		}
+		} else {}
+
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.blog.shared.call.event.GetPostsEventHandler#getPostsSuccess(io.reflection.app.api.blog.shared.call.GetPostsRequest,
+	 * io.reflection.app.api.blog.shared.call.GetPostsResponse)
+	 */
+	@Override
+	public void getPostsSuccess(GetPostsRequest input, GetPostsResponse output) {
+		showPosts();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.blog.shared.call.event.GetPostsEventHandler#getPostsFailure(io.reflection.app.api.blog.shared.call.GetPostsRequest,
+	 * java.lang.Throwable)
+	 */
+	@Override
+	public void getPostsFailure(GetPostsRequest input, Throwable caught) {}
 
 }

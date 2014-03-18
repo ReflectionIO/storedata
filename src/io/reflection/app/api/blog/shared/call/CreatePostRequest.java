@@ -9,7 +9,6 @@
 package io.reflection.app.api.blog.shared.call;
 
 import io.reflection.app.api.shared.datatypes.Request;
-import io.reflection.app.datatypes.shared.Tag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +20,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 public class CreatePostRequest extends Request {
-	public List<Tag> tags;
+	public List<String> tags;
 	public String title;
 	public String description;
 	public String content;
@@ -35,7 +34,7 @@ public class CreatePostRequest extends Request {
 		if (tags != null) {
 			jsonTags = new JsonArray();
 			for (int i = 0; i < tags.size(); i++) {
-				JsonElement jsonTagsItem = tags.get(i) == null ? JsonNull.INSTANCE : tags.get(i).toJson();
+				JsonElement jsonTagsItem = tags.get(i) == null ? JsonNull.INSTANCE : new JsonPrimitive(tags.get(i));
 				((JsonArray) jsonTags).add(jsonTagsItem);
 			}
 		}
@@ -59,11 +58,11 @@ public class CreatePostRequest extends Request {
 		if (jsonObject.has("tags")) {
 			JsonElement jsonTags = jsonObject.get("tags");
 			if (jsonTags != null) {
-				tags = new ArrayList<Tag>();
-				Tag item = null;
+				tags = new ArrayList<String>();
+				String item = null;
 				for (int i = 0; i < jsonTags.getAsJsonArray().size(); i++) {
 					if (jsonTags.getAsJsonArray().get(i) != null) {
-						(item = new Tag()).fromJson(jsonTags.getAsJsonArray().get(i).getAsJsonObject());
+						item = jsonTags.getAsJsonArray().get(i).getAsString();
 						tags.add(item);
 					}
 				}

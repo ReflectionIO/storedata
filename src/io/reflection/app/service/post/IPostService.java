@@ -11,7 +11,6 @@ package io.reflection.app.service.post;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.Post;
-import io.reflection.app.datatypes.shared.Tag;
 
 import java.util.List;
 
@@ -44,13 +43,6 @@ public interface IPostService extends IService {
 	 * @throws DataAccessException
 	 */
 	public void deletePost(Post post) throws DataAccessException;
-
-	/**
-	 * @param post
-	 * @param tag
-	 * @throws DataAccessException
-	 */
-	public void assignTags(Post post, List<Tag> tags) throws DataAccessException;
 
 	/**
 	 * @param onlyVisible

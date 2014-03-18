@@ -20,12 +20,11 @@ import com.google.gson.JsonPrimitive;
 
 public class Post extends DataType {
 	public User author;
-	public List<Tag> tags;
+	public List<String> tags;
 	public Date published;
 	public String title;
 	public String description;
 	public String content;
-	public Integer version;
 	public Boolean visible;
 
 	@Override
@@ -37,7 +36,7 @@ public class Post extends DataType {
 		if (tags != null) {
 			jsonTags = new JsonArray();
 			for (int i = 0; i < tags.size(); i++) {
-				JsonElement jsonTagsItem = tags.get(i) == null ? JsonNull.INSTANCE : tags.get(i).toJson();
+				JsonElement jsonTagsItem = tags.get(i) == null ? JsonNull.INSTANCE : new JsonPrimitive(tags.get(i));
 				((JsonArray) jsonTags).add(jsonTagsItem);
 			}
 		}
@@ -50,8 +49,6 @@ public class Post extends DataType {
 		object.add("description", jsonDescription);
 		JsonElement jsonContent = content == null ? JsonNull.INSTANCE : new JsonPrimitive(content);
 		object.add("content", jsonContent);
-		JsonElement jsonVersion = version == null ? JsonNull.INSTANCE : new JsonPrimitive(version);
-		object.add("version", jsonVersion);
 		JsonElement jsonVisible = visible == null ? JsonNull.INSTANCE : new JsonPrimitive(visible);
 		object.add("visible", jsonVisible);
 		return object;
@@ -70,11 +67,11 @@ public class Post extends DataType {
 		if (jsonObject.has("tags")) {
 			JsonElement jsonTags = jsonObject.get("tags");
 			if (jsonTags != null) {
-				tags = new ArrayList<Tag>();
-				Tag item = null;
+				tags = new ArrayList<String>();
+				String item = null;
 				for (int i = 0; i < jsonTags.getAsJsonArray().size(); i++) {
 					if (jsonTags.getAsJsonArray().get(i) != null) {
-						(item = new Tag()).fromJson(jsonTags.getAsJsonArray().get(i).getAsJsonObject());
+						item = jsonTags.getAsJsonArray().get(i).getAsString();
 						tags.add(item);
 					}
 				}
@@ -103,12 +100,6 @@ public class Post extends DataType {
 			JsonElement jsonContent = jsonObject.get("content");
 			if (jsonContent != null) {
 				content = jsonContent.getAsString();
-			}
-		}
-		if (jsonObject.has("version")) {
-			JsonElement jsonVersion = jsonObject.get("version");
-			if (jsonVersion != null) {
-				version = Integer.valueOf(jsonVersion.getAsInt());
 			}
 		}
 		if (jsonObject.has("visible")) {

@@ -10,8 +10,6 @@ package io.reflection.app.api.blog;
 
 import static io.reflection.app.api.PagerHelper.updatePager;
 import io.reflection.app.api.ValidationHelper;
-import io.reflection.app.api.blog.shared.call.AssignTagsRequest;
-import io.reflection.app.api.blog.shared.call.AssignTagsResponse;
 import io.reflection.app.api.blog.shared.call.CreatePostRequest;
 import io.reflection.app.api.blog.shared.call.CreatePostResponse;
 import io.reflection.app.api.blog.shared.call.GetPostRequest;
@@ -115,28 +113,6 @@ public final class Blog extends ActionHandler {
 		return output;
 	}
 
-	public AssignTagsResponse assignTags(AssignTagsRequest input) {
-		LOG.finer("Entering assignTags");
-		AssignTagsResponse output = new AssignTagsResponse();
-		try {
-			if (input == null)
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("AssignTagsRequest: input"));
-
-			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
-
-			input.session = ValidationHelper.validateSession(input.session, "input.session");
-
-			PostServiceProvider.provide().assignTags(input.post, input.tags);
-
-			output.status = StatusType.StatusTypeSuccess;
-		} catch (Exception e) {
-			output.status = StatusType.StatusTypeFailure;
-			output.error = convertToErrorAndLog(LOG, e);
-		}
-		LOG.finer("Exiting assignTags");
-		return output;
-	}
-
 	public UpdatePostResponse updatePost(UpdatePostRequest input) {
 		LOG.finer("Entering updatePost");
 		UpdatePostResponse output = new UpdatePostResponse();
@@ -182,9 +158,9 @@ public final class Blog extends ActionHandler {
 			}
 
 			post.visible = (input.visible == null ? Boolean.FALSE : input.visible);
+			post.tags = input.tags;
 
-			Post addedPost = PostServiceProvider.provide().addPost(post);
-			PostServiceProvider.provide().assignTags(addedPost, input.tags);
+			PostServiceProvider.provide().addPost(post);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {

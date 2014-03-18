@@ -36,25 +36,25 @@ public class AlertBox extends Composite {
 		WarningAlertBoxType,
 		DangerAlertBoxType
 	}
-	
+
 	private AlertBoxType mType;
-	
+
 	@UiField SpanElement mText;
 	@UiField SpanElement mDetail;
 	@UiField Button mClose;
-	
+
 	@UiField Image mSpinner;
 
 	public AlertBox() {
 		initWidget(uiBinder.createAndBindUi(this));
-		
+
 		mClose.getElement().setInnerHTML("&times;");
 		mSpinner.setResource(Images.INSTANCE.spinnerInfo());
 	}
 
 	public void setCanDismiss(boolean value) {
 		mClose.setVisible(value);
-		
+
 		if (value) {
 			addStyleName("alert-dismissable");
 		} else {
@@ -68,8 +68,8 @@ public class AlertBox extends Composite {
 
 	public void setType(AlertBoxType type) {
 		mType = type;
-		
-		switch(mType) {
+
+		switch (mType) {
 		case DangerAlertBoxType:
 			removeStyleName("alert-success");
 			addStyleName("alert-danger");
@@ -96,7 +96,7 @@ public class AlertBox extends Composite {
 			break;
 		}
 	}
-	
+
 	public AlertBoxType getType() {
 		return mType;
 	}
@@ -107,31 +107,30 @@ public class AlertBox extends Composite {
 			setType(AlertBoxType.InfoAlertBoxType);
 		}
 	}
-	
+
 	public boolean getLoading() {
 		return mSpinner.isVisible();
 	}
-	
+
 	public void setText(String text) {
 		mText.setInnerText(text);
 	}
-	
+
 	public String getText() {
 		return mText.getInnerText();
 	}
-	
+
 	public void setDetail(String detail) {
 		mDetail.setInnerText(detail);
 	}
-	
+
 	public String getDetail() {
 		return mDetail.getInnerText();
 	}
-	
+
 	@UiHandler("mClose")
 	void onCloseClicked(ClickEvent e) {
 		setVisible(false);
 	}
-	
 
 }
