@@ -7,11 +7,13 @@
 //
 package io.reflection.app.client.controller;
 
+import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.Footer;
 import io.reflection.app.client.part.Header;
+import io.reflection.app.datatypes.shared.User;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,12 +22,16 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.gson.json.service.client.JsonService;
+import com.willshex.gson.json.service.client.JsonServiceCallEventHandler;
+import com.willshex.gson.json.service.shared.Request;
+import com.willshex.gson.json.service.shared.Response;
 
 /**
  * @author billy1380
  * 
  */
-public class NavigationController implements ValueChangeHandler<String> {
+public class NavigationController implements ValueChangeHandler<String>, JsonServiceCallEventHandler {
 	private static NavigationController mOne = null;
 
 	private HTMLPanel mPanel = null;
@@ -36,6 +42,9 @@ public class NavigationController implements ValueChangeHandler<String> {
 	private Footer mFooter = null;
 
 	private Stack mStack;
+
+	private String timeoutPage = null;
+	private User timeoutUser = null;
 
 	public static class Stack {
 		private String[] mParts;
@@ -70,6 +79,10 @@ public class NavigationController implements ValueChangeHandler<String> {
 		public boolean hasPage() {
 			return getPage() != null;
 		}
+	}
+
+	private NavigationController() {
+		EventController.get().addHandler(JsonServiceCallEventHandler.TYPE, this);
 	}
 
 	public static NavigationController get() {
@@ -188,4 +201,70 @@ public class NavigationController implements ValueChangeHandler<String> {
 	public void onValueChange(ValueChangeEvent<String> event) {
 		addPage(event.getValue());
 	}
+
+	/**
+	 * Get the last visited page before timeout error
+	 * 
+	 * @return
+	 */
+	public String getTimeoutPage() {
+		return timeoutPage;
+	}
+	
+	/**
+	 * Get the logged user before timeout error
+	 * 
+	 * @return
+	 */
+	public User getTimeoutUser() {
+		return timeoutUser;
+	}
+
+	public void clearTimeoutData() {
+		timeoutPage = null;
+		timeoutUser = null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.willshex.gson.json.service.client.JsonServiceCallEventHandler#jsonServiceCallStart(com.willshex.gson.json.service.client.JsonService,
+	 * java.lang.String, com.willshex.gson.json.service.shared.Request, com.google.gwt.http.client.Request)
+	 */
+	@Override
+	public void jsonServiceCallStart(JsonService origin, String callName, Request input, com.google.gwt.http.client.Request handle) {}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.willshex.gson.json.service.client.JsonServiceCallEventHandler#jsonServiceCallSuccess(com.willshex.gson.json.service.client.JsonService,
+	 * java.lang.String, com.willshex.gson.json.service.shared.Request, com.willshex.gson.json.service.shared.Response)
+	 */
+	@Override
+	public void jsonServiceCallSuccess(JsonService origin, String callName, Request input, Response output) {
+		if (output.error != null) {
+			// Session error redirection
+			if (output.error.code.intValue() == ApiError.SessionNull.getCode() || output.error.code.intValue() == ApiError.SessionNotFound.getCode()
+					|| output.error.code.intValue() == ApiError.SessionNoLookup.getCode()) {
+				timeoutPage = this.getStack().getPage();
+				if (this.getStack().getAction() != null) {
+					timeoutPage += "/" + this.getStack().getAction();
+					if (this.getStack().getParameter(0) != null) {
+						timeoutPage += "/" + this.getStack().getParameter(0);
+					}
+				}
+				PageType.LoginPageType.show("timeout");
+			}
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.willshex.gson.json.service.client.JsonServiceCallEventHandler#jsonServiceCallFailure(com.willshex.gson.json.service.client.JsonService,
+	 * java.lang.String, com.willshex.gson.json.service.shared.Request, java.lang.Throwable)
+	 */
+	@Override
+	public void jsonServiceCallFailure(JsonService origin, String callName, Request input, Throwable caught) {}
 }

@@ -23,6 +23,7 @@ import io.reflection.app.datatypes.shared.User;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.Error;
@@ -99,11 +100,19 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 	 */
 	@Override
 	public void userLoggedIn(User user, Session session) {
-		// AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.SuccessAlertBoxType, false, "Login Successfull",
-		// user.forename != null && user.forename.length() != 0 ? " - welcome back " + user.forename + "." : "", false).setVisible(true);
 
 		// TODO: we should not be doing this for all users
-		PageType.LinkItunesPageType.show();
+		if (NavigationController.get().getTimeoutPage() == null) { // No coming from timeout
+			PageType.LinkItunesPageType.show();
+		} else { // Coming from timeout
+			if (user.equals(NavigationController.get().getTimeoutUser())) { // User is the same that generated timeout
+				History.newItem(NavigationController.get().getTimeoutPage());
+			} else {
+					// TODO
+			}
+			NavigationController.get().clearTimeoutData();
+		}
+
 	}
 
 	/*
