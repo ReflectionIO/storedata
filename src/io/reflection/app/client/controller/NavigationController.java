@@ -13,7 +13,6 @@ import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.Footer;
 import io.reflection.app.client.part.Header;
-import io.reflection.app.datatypes.shared.User;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,7 +43,7 @@ public class NavigationController implements ValueChangeHandler<String>, JsonSer
 	private Stack mStack;
 
 	private String timeoutPage = null;
-	private User timeoutUser = null;
+	private String timeoutUsername = null;
 
 	public static class Stack {
 		private String[] mParts;
@@ -210,19 +209,19 @@ public class NavigationController implements ValueChangeHandler<String>, JsonSer
 	public String getTimeoutPage() {
 		return timeoutPage;
 	}
-	
+
 	/**
 	 * Get the logged user before timeout error
 	 * 
 	 * @return
 	 */
-	public User getTimeoutUser() {
-		return timeoutUser;
+	public String getTimeoutUsername() {
+		return timeoutUsername;
 	}
 
 	public void clearTimeoutData() {
 		timeoutPage = null;
-		timeoutUser = null;
+		timeoutUsername = null;
 	}
 
 	/*
@@ -253,6 +252,7 @@ public class NavigationController implements ValueChangeHandler<String>, JsonSer
 						timeoutPage += "/" + this.getStack().getParameter(0);
 					}
 				}
+				timeoutUsername = SessionController.get().getLoggedInUser().username;
 				PageType.LoginPageType.show("timeout");
 			}
 		}

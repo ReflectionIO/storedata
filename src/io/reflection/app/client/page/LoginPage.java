@@ -102,13 +102,16 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 	public void userLoggedIn(User user, Session session) {
 
 		// TODO: we should not be doing this for all users
+
 		if (NavigationController.get().getTimeoutPage() == null) { // No coming from timeout
 			PageType.LinkItunesPageType.show();
 		} else { // Coming from timeout
-			if (user.equals(NavigationController.get().getTimeoutUser())) { // User is the same that generated timeout
+			if (user.username.equals(NavigationController.get().getTimeoutUsername())) { // User is the same that generated timeout
 				History.newItem(NavigationController.get().getTimeoutPage());
+
 			} else {
-					// TODO
+				// TODO
+				PageType.LinkItunesPageType.show();
 			}
 			NavigationController.get().clearTimeoutData();
 		}
