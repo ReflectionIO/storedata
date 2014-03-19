@@ -95,7 +95,7 @@ public class SuperAlertBox implements JsonServiceCallEventHandler, CloseHandler<
 
 	public void startCall(Request request, String callName, String endPoint) {
 		AlertBox alertBox = addAlertBox(request);
-		AlertBoxHelper.configureAlert(alertBox, AlertBoxType.InfoAlertBoxType, true, callName, endPoint, false);
+		AlertBoxHelper.configureAlert(alertBox, AlertBoxType.InfoAlertBoxType, true, callName, endPoint, true);
 		HandlerRegistration registration = alertBox.addCloseHandler(this);
 		registrations.add(registration);
 	}

@@ -1,0 +1,18 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+    <ui:style>
+    .link {
+    	margin-right: 10px;
+    }
+    .smaller {
+		font-size: 8pt;
+	}
+    </ui:style>
+    <g:HTMLPanel>
+        <g:InlineHyperlink ui:field="link" targetHistoryToken="#tag/view" styleName="{style.link}">
+            <span class="glyphicon glyphicon glyphicon-tag {style.smaller}"></span>
+            <span ui:field="name">Name</span>
+        </g:InlineHyperlink>
+        <g:Button ui:field="close" styleName="close" visible="false" />
+    </g:HTMLPanel>
+</ui:UiBinder> 

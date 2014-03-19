@@ -21,7 +21,9 @@ import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.willshex.gson.json.service.client.HttpException;
 import com.willshex.gson.json.service.client.JsonService;
 
 public final class BlogService extends JsonService {
@@ -33,10 +35,15 @@ public final class BlogService extends JsonService {
 			handle = sendRequest(BlogMethodGetPosts, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					GetPostsResponse outputParameter = new GetPostsResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(BlogService.this, BlogMethodGetPosts, input, outputParameter);
+					try {
+						GetPostsResponse outputParameter = new GetPostsResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(BlogService.this, BlogMethodGetPosts, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(BlogService.this, BlogMethodGetPosts, input, exception);
+					}
 				}
 
 				@Override
@@ -46,9 +53,9 @@ public final class BlogService extends JsonService {
 				}
 			});
 			onCallStart(BlogService.this, BlogMethodGetPosts, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(BlogService.this, BlogMethodGetPosts, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(BlogService.this, BlogMethodGetPosts, input, exception);
 		}
 		return handle;
 	}
@@ -61,10 +68,15 @@ public final class BlogService extends JsonService {
 			handle = sendRequest(BlogMethodGetPost, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					GetPostResponse outputParameter = new GetPostResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(BlogService.this, BlogMethodGetPost, input, outputParameter);
+					try {
+						GetPostResponse outputParameter = new GetPostResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(BlogService.this, BlogMethodGetPost, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(BlogService.this, BlogMethodGetPost, input, exception);
+					}
 				}
 
 				@Override
@@ -74,9 +86,9 @@ public final class BlogService extends JsonService {
 				}
 			});
 			onCallStart(BlogService.this, BlogMethodGetPost, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(BlogService.this, BlogMethodGetPost, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(BlogService.this, BlogMethodGetPost, input, exception);
 		}
 		return handle;
 	}
@@ -89,10 +101,15 @@ public final class BlogService extends JsonService {
 			handle = sendRequest(BlogMethodUpdatePost, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					UpdatePostResponse outputParameter = new UpdatePostResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(BlogService.this, BlogMethodUpdatePost, input, outputParameter);
+					try {
+						UpdatePostResponse outputParameter = new UpdatePostResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(BlogService.this, BlogMethodUpdatePost, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(BlogService.this, BlogMethodUpdatePost, input, exception);
+					}
 				}
 
 				@Override
@@ -102,9 +119,9 @@ public final class BlogService extends JsonService {
 				}
 			});
 			onCallStart(BlogService.this, BlogMethodUpdatePost, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(BlogService.this, BlogMethodUpdatePost, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(BlogService.this, BlogMethodUpdatePost, input, exception);
 		}
 		return handle;
 	}
@@ -117,10 +134,15 @@ public final class BlogService extends JsonService {
 			handle = sendRequest(BlogMethodCreatePost, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					CreatePostResponse outputParameter = new CreatePostResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(BlogService.this, BlogMethodCreatePost, input, outputParameter);
+					try {
+						CreatePostResponse outputParameter = new CreatePostResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(BlogService.this, BlogMethodCreatePost, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(BlogService.this, BlogMethodCreatePost, input, exception);
+					}
 				}
 
 				@Override
@@ -130,9 +152,9 @@ public final class BlogService extends JsonService {
 				}
 			});
 			onCallStart(BlogService.this, BlogMethodCreatePost, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(BlogService.this, BlogMethodCreatePost, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(BlogService.this, BlogMethodCreatePost, input, exception);
 		}
 		return handle;
 	}

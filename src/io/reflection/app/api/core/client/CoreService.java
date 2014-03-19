@@ -53,7 +53,9 @@ import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.willshex.gson.json.service.client.HttpException;
 import com.willshex.gson.json.service.client.JsonService;
 
 public final class CoreService extends JsonService {
@@ -65,10 +67,15 @@ public final class CoreService extends JsonService {
 			handle = sendRequest(CoreMethodGetCountries, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					GetCountriesResponse outputParameter = new GetCountriesResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(CoreService.this, CoreMethodGetCountries, input, outputParameter);
+					try {
+						GetCountriesResponse outputParameter = new GetCountriesResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(CoreService.this, CoreMethodGetCountries, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(CoreService.this, CoreMethodGetCountries, input, exception);
+					}
 				}
 
 				@Override
@@ -78,9 +85,9 @@ public final class CoreService extends JsonService {
 				}
 			});
 			onCallStart(CoreService.this, CoreMethodGetCountries, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(CoreService.this, CoreMethodGetCountries, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(CoreService.this, CoreMethodGetCountries, input, exception);
 		}
 		return handle;
 	}
@@ -93,10 +100,15 @@ public final class CoreService extends JsonService {
 			handle = sendRequest(CoreMethodGetStores, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					GetStoresResponse outputParameter = new GetStoresResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(CoreService.this, CoreMethodGetStores, input, outputParameter);
+					try {
+						GetStoresResponse outputParameter = new GetStoresResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(CoreService.this, CoreMethodGetStores, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(CoreService.this, CoreMethodGetStores, input, exception);
+					}
 				}
 
 				@Override
@@ -106,9 +118,9 @@ public final class CoreService extends JsonService {
 				}
 			});
 			onCallStart(CoreService.this, CoreMethodGetStores, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(CoreService.this, CoreMethodGetStores, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(CoreService.this, CoreMethodGetStores, input, exception);
 		}
 		return handle;
 	}
@@ -121,10 +133,15 @@ public final class CoreService extends JsonService {
 			handle = sendRequest(CoreMethodGetTopItems, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					GetTopItemsResponse outputParameter = new GetTopItemsResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(CoreService.this, CoreMethodGetTopItems, input, outputParameter);
+					try {
+						GetTopItemsResponse outputParameter = new GetTopItemsResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(CoreService.this, CoreMethodGetTopItems, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(CoreService.this, CoreMethodGetTopItems, input, exception);
+					}
 				}
 
 				@Override
@@ -134,9 +151,9 @@ public final class CoreService extends JsonService {
 				}
 			});
 			onCallStart(CoreService.this, CoreMethodGetTopItems, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(CoreService.this, CoreMethodGetTopItems, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(CoreService.this, CoreMethodGetTopItems, input, exception);
 		}
 		return handle;
 	}
@@ -149,10 +166,15 @@ public final class CoreService extends JsonService {
 			handle = sendRequest(CoreMethodGetAllTopItems, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					GetAllTopItemsResponse outputParameter = new GetAllTopItemsResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(CoreService.this, CoreMethodGetAllTopItems, input, outputParameter);
+					try {
+						GetAllTopItemsResponse outputParameter = new GetAllTopItemsResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(CoreService.this, CoreMethodGetAllTopItems, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(CoreService.this, CoreMethodGetAllTopItems, input, exception);
+					}
 				}
 
 				@Override
@@ -162,9 +184,9 @@ public final class CoreService extends JsonService {
 				}
 			});
 			onCallStart(CoreService.this, CoreMethodGetAllTopItems, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(CoreService.this, CoreMethodGetAllTopItems, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(CoreService.this, CoreMethodGetAllTopItems, input, exception);
 		}
 		return handle;
 	}
@@ -177,10 +199,15 @@ public final class CoreService extends JsonService {
 			handle = sendRequest(CoreMethodGetItemRanks, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					GetItemRanksResponse outputParameter = new GetItemRanksResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(CoreService.this, CoreMethodGetItemRanks, input, outputParameter);
+					try {
+						GetItemRanksResponse outputParameter = new GetItemRanksResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(CoreService.this, CoreMethodGetItemRanks, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(CoreService.this, CoreMethodGetItemRanks, input, exception);
+					}
 				}
 
 				@Override
@@ -190,9 +217,9 @@ public final class CoreService extends JsonService {
 				}
 			});
 			onCallStart(CoreService.this, CoreMethodGetItemRanks, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(CoreService.this, CoreMethodGetItemRanks, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(CoreService.this, CoreMethodGetItemRanks, input, exception);
 		}
 		return handle;
 	}
@@ -205,10 +232,15 @@ public final class CoreService extends JsonService {
 			handle = sendRequest(CoreMethodRegisterUser, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					RegisterUserResponse outputParameter = new RegisterUserResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(CoreService.this, CoreMethodRegisterUser, input, outputParameter);
+					try {
+						RegisterUserResponse outputParameter = new RegisterUserResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(CoreService.this, CoreMethodRegisterUser, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(CoreService.this, CoreMethodRegisterUser, input, exception);
+					}
 				}
 
 				@Override
@@ -218,9 +250,9 @@ public final class CoreService extends JsonService {
 				}
 			});
 			onCallStart(CoreService.this, CoreMethodRegisterUser, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(CoreService.this, CoreMethodRegisterUser, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(CoreService.this, CoreMethodRegisterUser, input, exception);
 		}
 		return handle;
 	}
@@ -233,10 +265,15 @@ public final class CoreService extends JsonService {
 			handle = sendRequest(CoreMethodLogin, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					LoginResponse outputParameter = new LoginResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(CoreService.this, CoreMethodLogin, input, outputParameter);
+					try {
+						LoginResponse outputParameter = new LoginResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(CoreService.this, CoreMethodLogin, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(CoreService.this, CoreMethodLogin, input, exception);
+					}
 				}
 
 				@Override
@@ -246,9 +283,9 @@ public final class CoreService extends JsonService {
 				}
 			});
 			onCallStart(CoreService.this, CoreMethodLogin, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(CoreService.this, CoreMethodLogin, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(CoreService.this, CoreMethodLogin, input, exception);
 		}
 		return handle;
 	}
@@ -261,10 +298,15 @@ public final class CoreService extends JsonService {
 			handle = sendRequest(CoreMethodLogout, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					LogoutResponse outputParameter = new LogoutResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(CoreService.this, CoreMethodLogout, input, outputParameter);
+					try {
+						LogoutResponse outputParameter = new LogoutResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(CoreService.this, CoreMethodLogout, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(CoreService.this, CoreMethodLogout, input, exception);
+					}
 				}
 
 				@Override
@@ -274,9 +316,9 @@ public final class CoreService extends JsonService {
 				}
 			});
 			onCallStart(CoreService.this, CoreMethodLogout, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(CoreService.this, CoreMethodLogout, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(CoreService.this, CoreMethodLogout, input, exception);
 		}
 		return handle;
 	}
@@ -289,10 +331,15 @@ public final class CoreService extends JsonService {
 			handle = sendRequest(CoreMethodChangePassword, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					ChangePasswordResponse outputParameter = new ChangePasswordResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(CoreService.this, CoreMethodChangePassword, input, outputParameter);
+					try {
+						ChangePasswordResponse outputParameter = new ChangePasswordResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(CoreService.this, CoreMethodChangePassword, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(CoreService.this, CoreMethodChangePassword, input, exception);
+					}
 				}
 
 				@Override
@@ -302,9 +349,9 @@ public final class CoreService extends JsonService {
 				}
 			});
 			onCallStart(CoreService.this, CoreMethodChangePassword, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(CoreService.this, CoreMethodChangePassword, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(CoreService.this, CoreMethodChangePassword, input, exception);
 		}
 		return handle;
 	}
@@ -317,10 +364,15 @@ public final class CoreService extends JsonService {
 			handle = sendRequest(CoreMethodChangeUserDetails, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					ChangeUserDetailsResponse outputParameter = new ChangeUserDetailsResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(CoreService.this, CoreMethodChangeUserDetails, input, outputParameter);
+					try {
+						ChangeUserDetailsResponse outputParameter = new ChangeUserDetailsResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(CoreService.this, CoreMethodChangeUserDetails, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(CoreService.this, CoreMethodChangeUserDetails, input, exception);
+					}
 				}
 
 				@Override
@@ -330,9 +382,9 @@ public final class CoreService extends JsonService {
 				}
 			});
 			onCallStart(CoreService.this, CoreMethodChangeUserDetails, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(CoreService.this, CoreMethodChangeUserDetails, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(CoreService.this, CoreMethodChangeUserDetails, input, exception);
 		}
 		return handle;
 	}
@@ -345,10 +397,15 @@ public final class CoreService extends JsonService {
 			handle = sendRequest(CoreMethodCheckUsername, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					CheckUsernameResponse outputParameter = new CheckUsernameResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(CoreService.this, CoreMethodCheckUsername, input, outputParameter);
+					try {
+						CheckUsernameResponse outputParameter = new CheckUsernameResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(CoreService.this, CoreMethodCheckUsername, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(CoreService.this, CoreMethodCheckUsername, input, exception);
+					}
 				}
 
 				@Override
@@ -358,9 +415,9 @@ public final class CoreService extends JsonService {
 				}
 			});
 			onCallStart(CoreService.this, CoreMethodCheckUsername, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(CoreService.this, CoreMethodCheckUsername, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(CoreService.this, CoreMethodCheckUsername, input, exception);
 		}
 		return handle;
 	}
@@ -373,10 +430,15 @@ public final class CoreService extends JsonService {
 			handle = sendRequest(CoreMethodGetRolesAndPermissions, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					GetRolesAndPermissionsResponse outputParameter = new GetRolesAndPermissionsResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(CoreService.this, CoreMethodGetRolesAndPermissions, input, outputParameter);
+					try {
+						GetRolesAndPermissionsResponse outputParameter = new GetRolesAndPermissionsResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(CoreService.this, CoreMethodGetRolesAndPermissions, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(CoreService.this, CoreMethodGetRolesAndPermissions, input, exception);
+					}
 				}
 
 				@Override
@@ -386,9 +448,9 @@ public final class CoreService extends JsonService {
 				}
 			});
 			onCallStart(CoreService.this, CoreMethodGetRolesAndPermissions, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(CoreService.this, CoreMethodGetRolesAndPermissions, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(CoreService.this, CoreMethodGetRolesAndPermissions, input, exception);
 		}
 		return handle;
 	}
@@ -401,10 +463,15 @@ public final class CoreService extends JsonService {
 			handle = sendRequest(CoreMethodGetLinkedAccounts, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					GetLinkedAccountsResponse outputParameter = new GetLinkedAccountsResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(CoreService.this, CoreMethodGetLinkedAccounts, input, outputParameter);
+					try {
+						GetLinkedAccountsResponse outputParameter = new GetLinkedAccountsResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(CoreService.this, CoreMethodGetLinkedAccounts, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(CoreService.this, CoreMethodGetLinkedAccounts, input, exception);
+					}
 				}
 
 				@Override
@@ -414,9 +481,9 @@ public final class CoreService extends JsonService {
 				}
 			});
 			onCallStart(CoreService.this, CoreMethodGetLinkedAccounts, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(CoreService.this, CoreMethodGetLinkedAccounts, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(CoreService.this, CoreMethodGetLinkedAccounts, input, exception);
 		}
 		return handle;
 	}
@@ -429,10 +496,15 @@ public final class CoreService extends JsonService {
 			handle = sendRequest(CoreMethodGetLinkedAccountItems, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					GetLinkedAccountItemsResponse outputParameter = new GetLinkedAccountItemsResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(CoreService.this, CoreMethodGetLinkedAccountItems, input, outputParameter);
+					try {
+						GetLinkedAccountItemsResponse outputParameter = new GetLinkedAccountItemsResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(CoreService.this, CoreMethodGetLinkedAccountItems, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(CoreService.this, CoreMethodGetLinkedAccountItems, input, exception);
+					}
 				}
 
 				@Override
@@ -442,9 +514,9 @@ public final class CoreService extends JsonService {
 				}
 			});
 			onCallStart(CoreService.this, CoreMethodGetLinkedAccountItems, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(CoreService.this, CoreMethodGetLinkedAccountItems, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(CoreService.this, CoreMethodGetLinkedAccountItems, input, exception);
 		}
 		return handle;
 	}
@@ -457,10 +529,15 @@ public final class CoreService extends JsonService {
 			handle = sendRequest(CoreMethodLinkAccount, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					LinkAccountResponse outputParameter = new LinkAccountResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(CoreService.this, CoreMethodLinkAccount, input, outputParameter);
+					try {
+						LinkAccountResponse outputParameter = new LinkAccountResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(CoreService.this, CoreMethodLinkAccount, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(CoreService.this, CoreMethodLinkAccount, input, exception);
+					}
 				}
 
 				@Override
@@ -470,9 +547,9 @@ public final class CoreService extends JsonService {
 				}
 			});
 			onCallStart(CoreService.this, CoreMethodLinkAccount, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(CoreService.this, CoreMethodLinkAccount, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(CoreService.this, CoreMethodLinkAccount, input, exception);
 		}
 		return handle;
 	}
@@ -485,10 +562,15 @@ public final class CoreService extends JsonService {
 			handle = sendRequest(CoreMethodIsAuthorised, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					IsAuthorisedResponse outputParameter = new IsAuthorisedResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(CoreService.this, CoreMethodIsAuthorised, input, outputParameter);
+					try {
+						IsAuthorisedResponse outputParameter = new IsAuthorisedResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(CoreService.this, CoreMethodIsAuthorised, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(CoreService.this, CoreMethodIsAuthorised, input, exception);
+					}
 				}
 
 				@Override
@@ -498,9 +580,9 @@ public final class CoreService extends JsonService {
 				}
 			});
 			onCallStart(CoreService.this, CoreMethodIsAuthorised, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(CoreService.this, CoreMethodIsAuthorised, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(CoreService.this, CoreMethodIsAuthorised, input, exception);
 		}
 		return handle;
 	}
@@ -513,10 +595,15 @@ public final class CoreService extends JsonService {
 			handle = sendRequest(CoreMethodSearchForItem, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					SearchForItemResponse outputParameter = new SearchForItemResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(CoreService.this, CoreMethodSearchForItem, input, outputParameter);
+					try {
+						SearchForItemResponse outputParameter = new SearchForItemResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(CoreService.this, CoreMethodSearchForItem, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(CoreService.this, CoreMethodSearchForItem, input, exception);
+					}
 				}
 
 				@Override
@@ -526,9 +613,9 @@ public final class CoreService extends JsonService {
 				}
 			});
 			onCallStart(CoreService.this, CoreMethodSearchForItem, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(CoreService.this, CoreMethodSearchForItem, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(CoreService.this, CoreMethodSearchForItem, input, exception);
 		}
 		return handle;
 	}
@@ -541,10 +628,15 @@ public final class CoreService extends JsonService {
 			handle = sendRequest(CoreMethodForgotPassword, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					ForgotPasswordResponse outputParameter = new ForgotPasswordResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(CoreService.this, CoreMethodForgotPassword, input, outputParameter);
+					try {
+						ForgotPasswordResponse outputParameter = new ForgotPasswordResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(CoreService.this, CoreMethodForgotPassword, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(CoreService.this, CoreMethodForgotPassword, input, exception);
+					}
 				}
 
 				@Override
@@ -554,9 +646,9 @@ public final class CoreService extends JsonService {
 				}
 			});
 			onCallStart(CoreService.this, CoreMethodForgotPassword, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(CoreService.this, CoreMethodForgotPassword, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(CoreService.this, CoreMethodForgotPassword, input, exception);
 		}
 		return handle;
 	}
@@ -569,10 +661,15 @@ public final class CoreService extends JsonService {
 			handle = sendRequest(CoreMethodGetUserDetails, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					GetUserDetailsResponse outputParameter = new GetUserDetailsResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(CoreService.this, CoreMethodGetUserDetails, input, outputParameter);
+					try {
+						GetUserDetailsResponse outputParameter = new GetUserDetailsResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(CoreService.this, CoreMethodGetUserDetails, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(CoreService.this, CoreMethodGetUserDetails, input, exception);
+					}
 				}
 
 				@Override
@@ -582,9 +679,9 @@ public final class CoreService extends JsonService {
 				}
 			});
 			onCallStart(CoreService.this, CoreMethodGetUserDetails, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(CoreService.this, CoreMethodGetUserDetails, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(CoreService.this, CoreMethodGetUserDetails, input, exception);
 		}
 		return handle;
 	}
@@ -597,10 +694,15 @@ public final class CoreService extends JsonService {
 			handle = sendRequest(CoreMethodGetCategories, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					GetCategoriesResponse outputParameter = new GetCategoriesResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(CoreService.this, CoreMethodGetCategories, input, outputParameter);
+					try {
+						GetCategoriesResponse outputParameter = new GetCategoriesResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(CoreService.this, CoreMethodGetCategories, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(CoreService.this, CoreMethodGetCategories, input, exception);
+					}
 				}
 
 				@Override
@@ -610,9 +712,9 @@ public final class CoreService extends JsonService {
 				}
 			});
 			onCallStart(CoreService.this, CoreMethodGetCategories, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(CoreService.this, CoreMethodGetCategories, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(CoreService.this, CoreMethodGetCategories, input, exception);
 		}
 		return handle;
 	}

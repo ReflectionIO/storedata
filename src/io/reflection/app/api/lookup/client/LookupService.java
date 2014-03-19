@@ -15,7 +15,9 @@ import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.willshex.gson.json.service.client.HttpException;
 import com.willshex.gson.json.service.client.JsonService;
 
 public final class LookupService extends JsonService {
@@ -27,10 +29,15 @@ public final class LookupService extends JsonService {
 			handle = sendRequest(LookupMethodLookupApplication, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					LookupApplicationResponse outputParameter = new LookupApplicationResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(LookupService.this, LookupMethodLookupApplication, input, outputParameter);
+					try {
+						LookupApplicationResponse outputParameter = new LookupApplicationResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(LookupService.this, LookupMethodLookupApplication, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(LookupService.this, LookupMethodLookupApplication, input, exception);
+					}
 				}
 
 				@Override
@@ -40,9 +47,9 @@ public final class LookupService extends JsonService {
 				}
 			});
 			onCallStart(LookupService.this, LookupMethodLookupApplication, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(LookupService.this, LookupMethodLookupApplication, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(LookupService.this, LookupMethodLookupApplication, input, exception);
 		}
 		return handle;
 	}

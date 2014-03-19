@@ -43,7 +43,9 @@ import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.willshex.gson.json.service.client.HttpException;
 import com.willshex.gson.json.service.client.JsonService;
 
 public final class AdminService extends JsonService {
@@ -55,10 +57,15 @@ public final class AdminService extends JsonService {
 			handle = sendRequest(AdminMethodGetUsers, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					GetUsersResponse outputParameter = new GetUsersResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(AdminService.this, AdminMethodGetUsers, input, outputParameter);
+					try {
+						GetUsersResponse outputParameter = new GetUsersResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodGetUsers, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodGetUsers, input, exception);
+					}
 				}
 
 				@Override
@@ -68,9 +75,9 @@ public final class AdminService extends JsonService {
 				}
 			});
 			onCallStart(AdminService.this, AdminMethodGetUsers, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(AdminService.this, AdminMethodGetUsers, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodGetUsers, input, exception);
 		}
 		return handle;
 	}
@@ -83,10 +90,15 @@ public final class AdminService extends JsonService {
 			handle = sendRequest(AdminMethodGetUsersCount, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					GetUsersCountResponse outputParameter = new GetUsersCountResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(AdminService.this, AdminMethodGetUsersCount, input, outputParameter);
+					try {
+						GetUsersCountResponse outputParameter = new GetUsersCountResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodGetUsersCount, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodGetUsersCount, input, exception);
+					}
 				}
 
 				@Override
@@ -96,9 +108,9 @@ public final class AdminService extends JsonService {
 				}
 			});
 			onCallStart(AdminService.this, AdminMethodGetUsersCount, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(AdminService.this, AdminMethodGetUsersCount, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodGetUsersCount, input, exception);
 		}
 		return handle;
 	}
@@ -111,10 +123,15 @@ public final class AdminService extends JsonService {
 			handle = sendRequest(AdminMethodGetModelOutcome, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					GetModelOutcomeResponse outputParameter = new GetModelOutcomeResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(AdminService.this, AdminMethodGetModelOutcome, input, outputParameter);
+					try {
+						GetModelOutcomeResponse outputParameter = new GetModelOutcomeResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodGetModelOutcome, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodGetModelOutcome, input, exception);
+					}
 				}
 
 				@Override
@@ -124,9 +141,9 @@ public final class AdminService extends JsonService {
 				}
 			});
 			onCallStart(AdminService.this, AdminMethodGetModelOutcome, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(AdminService.this, AdminMethodGetModelOutcome, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodGetModelOutcome, input, exception);
 		}
 		return handle;
 	}
@@ -139,10 +156,15 @@ public final class AdminService extends JsonService {
 			handle = sendRequest(AdminMethodGetFeedFetches, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					GetFeedFetchesResponse outputParameter = new GetFeedFetchesResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(AdminService.this, AdminMethodGetFeedFetches, input, outputParameter);
+					try {
+						GetFeedFetchesResponse outputParameter = new GetFeedFetchesResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodGetFeedFetches, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodGetFeedFetches, input, exception);
+					}
 				}
 
 				@Override
@@ -152,9 +174,9 @@ public final class AdminService extends JsonService {
 				}
 			});
 			onCallStart(AdminService.this, AdminMethodGetFeedFetches, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(AdminService.this, AdminMethodGetFeedFetches, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodGetFeedFetches, input, exception);
 		}
 		return handle;
 	}
@@ -167,10 +189,15 @@ public final class AdminService extends JsonService {
 			handle = sendRequest(AdminMethodTriggerGather, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					TriggerGatherResponse outputParameter = new TriggerGatherResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(AdminService.this, AdminMethodTriggerGather, input, outputParameter);
+					try {
+						TriggerGatherResponse outputParameter = new TriggerGatherResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodTriggerGather, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodTriggerGather, input, exception);
+					}
 				}
 
 				@Override
@@ -180,9 +207,9 @@ public final class AdminService extends JsonService {
 				}
 			});
 			onCallStart(AdminService.this, AdminMethodTriggerGather, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(AdminService.this, AdminMethodTriggerGather, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodTriggerGather, input, exception);
 		}
 		return handle;
 	}
@@ -195,10 +222,15 @@ public final class AdminService extends JsonService {
 			handle = sendRequest(AdminMethodTriggerIngest, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					TriggerIngestResponse outputParameter = new TriggerIngestResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(AdminService.this, AdminMethodTriggerIngest, input, outputParameter);
+					try {
+						TriggerIngestResponse outputParameter = new TriggerIngestResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodTriggerIngest, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodTriggerIngest, input, exception);
+					}
 				}
 
 				@Override
@@ -208,9 +240,9 @@ public final class AdminService extends JsonService {
 				}
 			});
 			onCallStart(AdminService.this, AdminMethodTriggerIngest, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(AdminService.this, AdminMethodTriggerIngest, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodTriggerIngest, input, exception);
 		}
 		return handle;
 	}
@@ -223,10 +255,15 @@ public final class AdminService extends JsonService {
 			handle = sendRequest(AdminMethodTriggerModel, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					TriggerModelResponse outputParameter = new TriggerModelResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(AdminService.this, AdminMethodTriggerModel, input, outputParameter);
+					try {
+						TriggerModelResponse outputParameter = new TriggerModelResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodTriggerModel, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodTriggerModel, input, exception);
+					}
 				}
 
 				@Override
@@ -236,9 +273,9 @@ public final class AdminService extends JsonService {
 				}
 			});
 			onCallStart(AdminService.this, AdminMethodTriggerModel, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(AdminService.this, AdminMethodTriggerModel, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodTriggerModel, input, exception);
 		}
 		return handle;
 	}
@@ -251,10 +288,15 @@ public final class AdminService extends JsonService {
 			handle = sendRequest(AdminMethodTriggerPredict, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					TriggerPredictResponse outputParameter = new TriggerPredictResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(AdminService.this, AdminMethodTriggerPredict, input, outputParameter);
+					try {
+						TriggerPredictResponse outputParameter = new TriggerPredictResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodTriggerPredict, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodTriggerPredict, input, exception);
+					}
 				}
 
 				@Override
@@ -264,9 +306,9 @@ public final class AdminService extends JsonService {
 				}
 			});
 			onCallStart(AdminService.this, AdminMethodTriggerPredict, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(AdminService.this, AdminMethodTriggerPredict, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodTriggerPredict, input, exception);
 		}
 		return handle;
 	}
@@ -279,10 +321,15 @@ public final class AdminService extends JsonService {
 			handle = sendRequest(AdminMethodSetPassword, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					SetPasswordResponse outputParameter = new SetPasswordResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(AdminService.this, AdminMethodSetPassword, input, outputParameter);
+					try {
+						SetPasswordResponse outputParameter = new SetPasswordResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodSetPassword, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodSetPassword, input, exception);
+					}
 				}
 
 				@Override
@@ -292,9 +339,9 @@ public final class AdminService extends JsonService {
 				}
 			});
 			onCallStart(AdminService.this, AdminMethodSetPassword, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(AdminService.this, AdminMethodSetPassword, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodSetPassword, input, exception);
 		}
 		return handle;
 	}
@@ -307,10 +354,15 @@ public final class AdminService extends JsonService {
 			handle = sendRequest(AdminMethodAssignRole, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					AssignRoleResponse outputParameter = new AssignRoleResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(AdminService.this, AdminMethodAssignRole, input, outputParameter);
+					try {
+						AssignRoleResponse outputParameter = new AssignRoleResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodAssignRole, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodAssignRole, input, exception);
+					}
 				}
 
 				@Override
@@ -320,9 +372,9 @@ public final class AdminService extends JsonService {
 				}
 			});
 			onCallStart(AdminService.this, AdminMethodAssignRole, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(AdminService.this, AdminMethodAssignRole, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodAssignRole, input, exception);
 		}
 		return handle;
 	}
@@ -335,10 +387,15 @@ public final class AdminService extends JsonService {
 			handle = sendRequest(AdminMethodGetRoles, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					GetRolesResponse outputParameter = new GetRolesResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(AdminService.this, AdminMethodGetRoles, input, outputParameter);
+					try {
+						GetRolesResponse outputParameter = new GetRolesResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodGetRoles, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodGetRoles, input, exception);
+					}
 				}
 
 				@Override
@@ -348,9 +405,9 @@ public final class AdminService extends JsonService {
 				}
 			});
 			onCallStart(AdminService.this, AdminMethodGetRoles, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(AdminService.this, AdminMethodGetRoles, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodGetRoles, input, exception);
 		}
 		return handle;
 	}
@@ -363,10 +420,15 @@ public final class AdminService extends JsonService {
 			handle = sendRequest(AdminMethodGetPermissions, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					GetPermissionsResponse outputParameter = new GetPermissionsResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(AdminService.this, AdminMethodGetPermissions, input, outputParameter);
+					try {
+						GetPermissionsResponse outputParameter = new GetPermissionsResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodGetPermissions, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodGetPermissions, input, exception);
+					}
 				}
 
 				@Override
@@ -376,9 +438,9 @@ public final class AdminService extends JsonService {
 				}
 			});
 			onCallStart(AdminService.this, AdminMethodGetPermissions, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(AdminService.this, AdminMethodGetPermissions, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodGetPermissions, input, exception);
 		}
 		return handle;
 	}
@@ -391,10 +453,15 @@ public final class AdminService extends JsonService {
 			handle = sendRequest(AdminMethodGetEmailTemplates, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					GetEmailTemplatesResponse outputParameter = new GetEmailTemplatesResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(AdminService.this, AdminMethodGetEmailTemplates, input, outputParameter);
+					try {
+						GetEmailTemplatesResponse outputParameter = new GetEmailTemplatesResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodGetEmailTemplates, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodGetEmailTemplates, input, exception);
+					}
 				}
 
 				@Override
@@ -404,9 +471,9 @@ public final class AdminService extends JsonService {
 				}
 			});
 			onCallStart(AdminService.this, AdminMethodGetEmailTemplates, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(AdminService.this, AdminMethodGetEmailTemplates, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodGetEmailTemplates, input, exception);
 		}
 		return handle;
 	}
@@ -419,10 +486,15 @@ public final class AdminService extends JsonService {
 			handle = sendRequest(AdminMethodSendEmail, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					SendEmailResponse outputParameter = new SendEmailResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(AdminService.this, AdminMethodSendEmail, input, outputParameter);
+					try {
+						SendEmailResponse outputParameter = new SendEmailResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodSendEmail, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodSendEmail, input, exception);
+					}
 				}
 
 				@Override
@@ -432,9 +504,9 @@ public final class AdminService extends JsonService {
 				}
 			});
 			onCallStart(AdminService.this, AdminMethodSendEmail, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(AdminService.this, AdminMethodSendEmail, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodSendEmail, input, exception);
 		}
 		return handle;
 	}
@@ -447,10 +519,15 @@ public final class AdminService extends JsonService {
 			handle = sendRequest(AdminMethodGetItems, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					GetItemsResponse outputParameter = new GetItemsResponse();
-					parseResponse(response.getText(), outputParameter);
-					output.onSuccess(outputParameter);
-					onCallSuccess(AdminService.this, AdminMethodGetItems, input, outputParameter);
+					try {
+						GetItemsResponse outputParameter = new GetItemsResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodGetItems, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodGetItems, input, exception);
+					}
 				}
 
 				@Override
@@ -460,9 +537,9 @@ public final class AdminService extends JsonService {
 				}
 			});
 			onCallStart(AdminService.this, AdminMethodGetItems, input, handle);
-		} catch (RequestException e) {
-			output.onFailure(e);
-			onCallFailure(AdminService.this, AdminMethodGetItems, input, e);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodGetItems, input, exception);
 		}
 		return handle;
 	}
