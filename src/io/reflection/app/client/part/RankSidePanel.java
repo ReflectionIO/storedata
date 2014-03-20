@@ -27,6 +27,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
@@ -51,6 +52,8 @@ public class RankSidePanel extends Composite {
 	@UiField ListBox category;
 	@UiField RadioButton mDailyDataRevenue;
 	@UiField RadioButton mDailyDataDownloads;
+
+	@UiField HTMLPanel dailyDataRadio;
 
 	public RankSidePanel() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -168,6 +171,14 @@ public class RankSidePanel extends Composite {
 		category.setSelectedIndex(FormHelper.getItemIndex(category, FilterController.get().getCategory().id.toString()));
 
 		FilterController.get().commit();
+	}
+
+	public void setDataFilterVisible(boolean visible) {
+		if (visible) {
+			dailyDataRadio.setVisible(true);
+		} else {
+			dailyDataRadio.setVisible(false);
+		}
 	}
 
 }

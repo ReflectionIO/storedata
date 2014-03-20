@@ -96,12 +96,12 @@
 						</g:ListBox>
 					</g:HTMLPanel>
 
-					<g:HTMLPanel styleName="form-group">
+					<g:HTMLPanel styleName="form-group" ui:field="dailyDataRadio">
 						<label>
 							<i class="glyphicon glyphicon-stats"></i>
 							Daily Data
 						</label>
-						<br />
+						<br />                        
 						<div style="display: inline-block; margin-right: 10px;">
 							<g:RadioButton ui:field="mDailyDataRevenue" name="dailydata" checked="true">Revenue</g:RadioButton>
 						</div>

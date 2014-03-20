@@ -110,7 +110,7 @@ public class RanksPage extends Page implements FilterEventHandler, SessionEventH
 		mTabs.put(FREE_LIST_TYPE, mFreeItem);
 		mTabs.put(PAID_LIST_TYPE, mPaidItem);
 		mTabs.put(GROSSING_LIST_TYPE, mGrossingItem);
-		
+
 		RankController.get().addDataDisplay(mRanks);
 		mPager.setDisplay(mRanks);
 	}
@@ -139,6 +139,7 @@ public class RanksPage extends Page implements FilterEventHandler, SessionEventH
 			public Rank getValue(RanksGroup object) {
 				return object.free;
 			}
+
 		};
 
 		mGrossingColumn = new Column<RanksGroup, Rank>(new AppRankCell()) {
@@ -243,6 +244,13 @@ public class RanksPage extends Page implements FilterEventHandler, SessionEventH
 			mRanks.redraw();
 		}
 
+		if (currentValue.toString().equals("paid") || currentValue.toString().equals("free") || currentValue.toString().equals("grossing")) {
+			mSidePanel.setDataFilterVisible(false);
+
+		} else if (currentValue.toString().equals("all")) {
+			mSidePanel.setDataFilterVisible(true);
+		}
+
 	}
 
 	/*
@@ -267,6 +275,7 @@ public class RanksPage extends Page implements FilterEventHandler, SessionEventH
 			PageType.RanksPageType.show("view/" + FilterController.get().toRankFilterString());
 			mRanks.redraw();
 		}
+
 	}
 
 	/*

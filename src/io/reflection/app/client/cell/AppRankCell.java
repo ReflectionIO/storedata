@@ -38,7 +38,7 @@ public class AppRankCell extends AbstractCell<Rank> {
 		Item item = ItemController.get().lookupItem(value.itemId);
 
 		String dailyDataType = FilterController.get().getDailyData(), dailyData;
-		String display = "inline-block";
+		String display = "default";
 
 		if (REVENUE_DAILY_DATA_TYPE.equals(dailyDataType)) {
 			dailyData = FormattingHelper.getCurrencySymbol(value.currency) + " " + value.revenue;
@@ -61,6 +61,7 @@ public class AppRankCell extends AbstractCell<Rank> {
 				mode = FilterController.GROSSING_LIST_TYPE;
 				break;
 			}
+			display = "default";
 		} else {
 			display = "none";
 		}
