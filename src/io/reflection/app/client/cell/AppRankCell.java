@@ -26,7 +26,7 @@ import com.google.gwt.uibinder.client.UiRenderer;
 public class AppRankCell extends AbstractCell<Rank> {
 
 	interface AppRankCellRenderer extends UiRenderer {
-		void render(SafeHtmlBuilder sb, String name, String creatorName, String smallImage, String externalId, String dailyData, String filter);
+		void render(SafeHtmlBuilder sb, String name, String creatorName, String smallImage, String externalId, String dailyData, String filter, String displayDailyData);
 	}
 
 	private static AppRankCellRenderer RENDERER = GWT.create(AppRankCellRenderer.class);
@@ -37,10 +37,9 @@ public class AppRankCell extends AbstractCell<Rank> {
 		Item item = ItemController.get().lookupItem(value.itemId);
 		
 		String name = item.name; 		
-		
 		String creatorName = item.creatorName;				
-
 		String dailyDataType = FilterController.get().getDailyData(), dailyData;
+		String display = "inline-block";
 
 		if (REVENUE_DAILY_DATA_TYPE.equals(dailyDataType)) {
 			dailyData = FormattingHelper.getCurrencySymbol(value.currency) + " " + value.revenue;
@@ -63,8 +62,11 @@ public class AppRankCell extends AbstractCell<Rank> {
 				mode = FilterController.GROSSING_LIST_TYPE;
 				break;
 			}
+		} else {
+			display = "none";
 		}
+		
 
-		RENDERER.render(builder, name, creatorName, item.smallImage, item.externalId, dailyData, FilterController.get().toItemFilterString(mode));
+		RENDERER.render(builder, name, creatorName, item.smallImage, item.externalId, dailyData, FilterController.get().toItemFilterString(mode), display);
 	}
 }
