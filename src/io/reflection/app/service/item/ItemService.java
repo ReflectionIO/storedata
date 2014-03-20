@@ -22,10 +22,28 @@ import io.reflection.app.service.ServiceType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
 
+import com.google.appengine.api.memcache.AsyncMemcacheService;
+import com.google.appengine.api.memcache.ErrorHandlers;
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.spacehopperstudios.utility.StringUtils;
 
 final class ItemService implements IItemService {
+
+	private MemcacheService syncCache;
+	private AsyncMemcacheService asyncCache;
+
+	public ItemService() {
+		syncCache = MemcacheServiceFactory.getMemcacheService();
+		syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.WARNING));
+
+		asyncCache = MemcacheServiceFactory.getAsyncMemcacheService();
+		asyncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.WARNING));
+	}
+
 	public String getName() {
 		return ServiceType.ServiceTypeItem.toString();
 	}
@@ -34,21 +52,33 @@ final class ItemService implements IItemService {
 	public Item getItem(Long id) throws DataAccessException {
 		Item item = null;
 
-		IDatabaseService databaseService = DatabaseServiceProvider.provide();
-		Connection itemConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
+		String memcacheKey = getName() + ".id." + id;
+		String jsonString = (String) syncCache.get(memcacheKey);
 
-		String getItemQuery = String.format("SELECT * FROM `item` WHERE `deleted`='n' AND `id`=%d LIMIT 1", id.longValue());
-		try {
-			itemConnection.connect();
-			itemConnection.executeQuery(getItemQuery);
+		if (jsonString == null) {
+			IDatabaseService databaseService = DatabaseServiceProvider.provide();
+			Connection itemConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
 
-			if (itemConnection.fetchNextRow()) {
-				item = toItem(itemConnection);
+			String getItemQuery = String.format("SELECT * FROM `item` WHERE `deleted`='n' AND `id`=%d LIMIT 1", id.longValue());
+			try {
+				itemConnection.connect();
+				itemConnection.executeQuery(getItemQuery);
+
+				if (itemConnection.fetchNextRow()) {
+					item = toItem(itemConnection);
+				}
+			} finally {
+				if (itemConnection != null) {
+					itemConnection.disconnect();
+				}
 			}
-		} finally {
-			if (itemConnection != null) {
-				itemConnection.disconnect();
+
+			if (item != null) {
+				asyncCache.put(memcacheKey, item.toString());
 			}
+		} else {
+			item = new Item();
+			item.fromJson(jsonString);
 		}
 
 		return item;
@@ -139,6 +169,10 @@ final class ItemService implements IItemService {
 			itemConnection.executeQuery(updateItemQuery);
 
 			if (itemConnection.getAffectedRowCount() > 0) {
+
+				String memcacheKey = getName() + "." + item.id;
+				asyncCache.delete(memcacheKey);
+
 				updatedItem = getItem(item.id);
 			} else {
 				updatedItem = item;
@@ -167,20 +201,30 @@ final class ItemService implements IItemService {
 	public Item getExternalIdItem(String externalId) throws DataAccessException {
 		Item item = null;
 
-		final String getExternalIdItemQuery = String.format("SELECT * FROM `item` WHERE `externalid` = '%s' and `deleted`='n'", addslashes(externalId));
-		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
+		String memcacheKey = getName() + ".external." + externalId;
+		String jsonString = (String) syncCache.get(memcacheKey);
 
-		try {
-			itemConnection.connect();
-			itemConnection.executeQuery(getExternalIdItemQuery);
+		if (jsonString == null) {
+			final String getExternalIdItemQuery = String.format("SELECT * FROM `item` WHERE `externalid`='%s' AND `deleted`='n'", addslashes(externalId));
+			Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
 
-			if (itemConnection.fetchNextRow()) {
-				item = toItem(itemConnection);
+			try {
+				itemConnection.connect();
+				itemConnection.executeQuery(getExternalIdItemQuery);
+
+				if (itemConnection.fetchNextRow()) {
+					item = toItem(itemConnection);
+
+					asyncCache.put(memcacheKey, item.toString());
+				}
+			} finally {
+				if (itemConnection != null) {
+					itemConnection.disconnect();
+				}
 			}
-		} finally {
-			if (itemConnection != null) {
-				itemConnection.disconnect();
-			}
+		} else {
+			item = new Item();
+			item.fromJson(jsonString);
 		}
 
 		return item;
@@ -195,21 +239,31 @@ final class ItemService implements IItemService {
 	public Item getInternalIdItem(String internalId) throws DataAccessException {
 		Item item = null;
 
-		final String getInternalIdItemQuery = String.format("SELECT * FROM `item` WHERE `internalid`='%s' and `deleted`='n'", addslashes(internalId));
+		String memcacheKey = getName() + ".internal." + internalId;
+		String jsonString = (String) syncCache.get(memcacheKey);
 
-		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
+		if (jsonString == null) {
+			final String getInternalIdItemQuery = String.format("SELECT * FROM `item` WHERE `internalid`='%s' and `deleted`='n'", addslashes(internalId));
 
-		try {
-			itemConnection.connect();
-			itemConnection.executeQuery(getInternalIdItemQuery);
+			Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
 
-			if (itemConnection.fetchNextRow()) {
-				item = toItem(itemConnection);
+			try {
+				itemConnection.connect();
+				itemConnection.executeQuery(getInternalIdItemQuery);
+
+				if (itemConnection.fetchNextRow()) {
+					item = toItem(itemConnection);
+
+					asyncCache.put(memcacheKey, item.toString());
+				}
+			} finally {
+				if (itemConnection != null) {
+					itemConnection.disconnect();
+				}
 			}
-		} finally {
-			if (itemConnection != null) {
-				itemConnection.disconnect();
-			}
+		} else {
+			item = new Item();
+			item.fromJson(jsonString);
 		}
 
 		return item;
@@ -227,28 +281,58 @@ final class ItemService implements IItemService {
 		String commaDelimitedItemIds = null;
 
 		if (itemIds != null && itemIds.size() > 0) {
-			commaDelimitedItemIds = StringUtils.join(itemIds, "','");
-		}
+			List<String> keys = new ArrayList<String>();
+			String memcacheKey = null;
+			for (String externalId : itemIds) {
+				memcacheKey = getName() + ".external." + externalId;
+				keys.add(memcacheKey);
+			}
 
-		if (commaDelimitedItemIds != null && commaDelimitedItemIds.length() != 0) {
-			String getExternalIdItemBatchQuery = String.format("SELECT * FROM `item` WHERE `externalid` IN ('%s') and `deleted`='n'", commaDelimitedItemIds);
+			Map<String, Object> jsonStrings = syncCache.getAll(keys);
+			String jsonString;
+			List<String> notFoundItems = new ArrayList<String>();
+			Item item = null;
+			for (String externalId : itemIds) {
+				memcacheKey = getName() + ".external." + externalId;
+				jsonString = (String) jsonStrings.get(memcacheKey);
+				if (jsonString != null) {
+					item = new Item();
+					item.fromJson(jsonString);
 
-			Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
-
-			try {
-				itemConnection.connect();
-				itemConnection.executeQuery(getExternalIdItemBatchQuery);
-
-				while (itemConnection.fetchNextRow()) {
-					Item item = toItem(itemConnection);
-
-					if (item != null) {
-						items.add(item);
-					}
+					items.add(item);
+				} else {
+					notFoundItems.add(externalId);
 				}
-			} finally {
-				if (itemConnection != null) {
-					itemConnection.disconnect();
+			}
+
+			if (notFoundItems.size() > 0) {
+				commaDelimitedItemIds = StringUtils.join(notFoundItems, "','");
+
+				if (commaDelimitedItemIds != null && commaDelimitedItemIds.length() != 0) {
+					String getExternalIdItemBatchQuery = String.format("SELECT * FROM `item` WHERE `externalid` IN ('%s') and `deleted`='n'",
+							commaDelimitedItemIds);
+
+					Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
+
+					try {
+						itemConnection.connect();
+						itemConnection.executeQuery(getExternalIdItemBatchQuery);
+
+						while (itemConnection.fetchNextRow()) {
+							item = toItem(itemConnection);
+
+							if (item != null) {
+								items.add(item);
+
+								memcacheKey = getName() + ".external." + item.externalId;
+								asyncCache.put(memcacheKey, item.toString());
+							}
+						}
+					} finally {
+						if (itemConnection != null) {
+							itemConnection.disconnect();
+						}
+					}
 				}
 			}
 		}
@@ -305,22 +389,28 @@ final class ItemService implements IItemService {
 	@Override
 	public Long searchItemsCount(String query) throws DataAccessException {
 
-		Long itemCount = Long.valueOf(0);
-		String getDataAccountsCountQuery = String
-				.format("SELECT count(1) AS `itemscount` FROM `item` WHERE (`externalid` LIKE '%%%1$s%%' OR `name` LIKE '%%%1$s%%' OR `creatorname` LIKE  '%%%1$s%%') AND `deleted`='n'",
-						query);
-		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
+		String memcacheKey = getName() + query + ".count";
+		Long itemCount = (Long) syncCache.get(memcacheKey);
 
-		try {
-			itemConnection.connect();
-			itemConnection.executeQuery(getDataAccountsCountQuery);
+		if (itemCount == null) {
+			String getDataAccountsCountQuery = String
+					.format("SELECT count(1) AS `itemscount` FROM `item` WHERE (`externalid` LIKE '%%%1$s%%' OR `name` LIKE '%%%1$s%%' OR `creatorname` LIKE  '%%%1$s%%') AND `deleted`='n'",
+							query);
+			Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
 
-			if (itemConnection.fetchNextRow()) {
-				itemCount = itemConnection.getCurrentRowLong("itemscount");
-			}
-		} finally {
-			if (itemConnection != null) {
-				itemConnection.disconnect();
+			try {
+				itemConnection.connect();
+				itemConnection.executeQuery(getDataAccountsCountQuery);
+
+				if (itemConnection.fetchNextRow()) {
+					itemCount = itemConnection.getCurrentRowLong("itemscount");
+
+					asyncCache.put(memcacheKey, itemCount);
+				}
+			} finally {
+				if (itemConnection != null) {
+					itemConnection.disconnect();
+				}
 			}
 		}
 
@@ -471,23 +561,30 @@ final class ItemService implements IItemService {
 	public Long getItemsCount() throws DataAccessException {
 		Long itemsCount = Long.valueOf(0);
 
-		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
+		String memcacheKey = getName() + ".count";
+		Long itemCount = (Long) syncCache.get(memcacheKey);
 
-		String getItemsCountQuery = "SELECT count(1) AS `itemcount` FROM `item` WHERE `deleted`='n'";
+		if (itemCount == null) {
+			Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
 
-		try {
-			itemConnection.connect();
-			itemConnection.executeQuery(getItemsCountQuery);
+			String getItemsCountQuery = "SELECT count(1) AS `itemcount` FROM `item` WHERE `deleted`='n'";
 
-			if (itemConnection.fetchNextRow()) {
-				itemsCount = itemConnection.getCurrentRowLong("itemcount");
-			}
-		} finally {
-			if (itemConnection != null) {
-				itemConnection.disconnect();
+			try {
+				itemConnection.connect();
+				itemConnection.executeQuery(getItemsCountQuery);
+
+				if (itemConnection.fetchNextRow()) {
+					itemsCount = itemConnection.getCurrentRowLong("itemcount");
+
+					asyncCache.put(memcacheKey, itemCount);
+				}
+			} finally {
+				if (itemConnection != null) {
+					itemConnection.disconnect();
+				}
 			}
 		}
-		
+
 		return itemsCount;
 	}
 }
