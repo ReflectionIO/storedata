@@ -35,6 +35,7 @@ import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Timer;
@@ -51,6 +52,14 @@ public class LoadingPage extends Page implements NavigationEventHandler, LoginEv
 	private static LoadingPageUiBinder uiBinder = GWT.create(LoadingPageUiBinder.class);
 
 	interface LoadingPageUiBinder extends UiBinder<Widget, LoadingPage> {}
+
+	interface LoadingPageStyle extends CssResource {
+		String purpleBar();
+
+		String instantBar();
+	}
+
+	@UiField LoadingPageStyle style;
 
 	@UiField ParagraphElement task;
 	@UiField DivElement bar;
@@ -140,20 +149,17 @@ public class LoadingPage extends Page implements NavigationEventHandler, LoginEv
 	private void resetProgressBar() {
 		setProgress("Loading", 0, tasks.size());
 		bar.getParentElement().setClassName("progress progress-striped active");
-		bar.getStyle().setBackgroundColor("#6D69C5");
+		bar.setClassName("progress-bar " + style.purpleBar());
 	}
 
 	private void setProgressBarError() {
 		bar.getParentElement().setClassName("progress");
-		bar.setClassName("progress-bar progress-bar-danger");
-		bar.getStyle().setBackgroundColor("");
+		bar.setClassName("progress-bar progress-bar-danger " + style.instantBar());
 	}
 
 	private void setProgressBarComplete() {
 		bar.getParentElement().setClassName("progress");
-		bar.setClassName("progress-bar progress-bar-success");
-
-		bar.getStyle().setBackgroundColor("");
+		bar.setClassName("progress-bar progress-bar-success " + style.instantBar());
 	}
 
 	/**
@@ -186,8 +192,8 @@ public class LoadingPage extends Page implements NavigationEventHandler, LoginEv
 			setProgress(taskNames.get(i), i + 1, tasks.size());
 			tasks.get(i).run();
 		} else {
-			setProgress(":) Done!", 1, 1);
 			setProgressBarComplete();
+			setProgress("Done! :)", 1, 1);
 
 			(new Timer() {
 				@Override
@@ -227,6 +233,8 @@ public class LoadingPage extends Page implements NavigationEventHandler, LoginEv
 	public void getCountriesSuccess(GetCountriesRequest input, GetCountriesResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			runTask(++current);
+		} else {
+			showRefreshToRetryMessage();
 		}
 	}
 
@@ -252,6 +260,8 @@ public class LoadingPage extends Page implements NavigationEventHandler, LoginEv
 	public void getStoresSuccess(GetStoresRequest input, GetStoresResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			runTask(++current);
+		} else {
+			showRefreshToRetryMessage();
 		}
 	}
 
@@ -277,6 +287,8 @@ public class LoadingPage extends Page implements NavigationEventHandler, LoginEv
 	public void getRolesAndPermissionsSuccess(GetRolesAndPermissionsRequest input, GetRolesAndPermissionsResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			runTask(++current);
+		} else {
+			showRefreshToRetryMessage();
 		}
 	}
 
@@ -306,6 +318,8 @@ public class LoadingPage extends Page implements NavigationEventHandler, LoginEv
 			}
 
 			runTask(++current);
+		} else {
+			showRefreshToRetryMessage();
 		}
 	}
 
@@ -321,7 +335,7 @@ public class LoadingPage extends Page implements NavigationEventHandler, LoginEv
 	}
 
 	private void showRefreshToRetryMessage() {
-		setProgress(":'( An error occured - Press refresh to retry!", 1, 1);
 		setProgressBarError();
+		setProgress("An error occured - Press refresh to retry! :'(", 1, 1);
 	}
 }

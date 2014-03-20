@@ -102,7 +102,6 @@ public class SuperAlertBox implements JsonServiceCallEventHandler, CloseHandler<
 
 	public void callSuccess(String callName, final Request request, Response response) {
 		final AlertBox alertBox = getAlertBox(request);
-		requests.remove(request);
 
 		if (alertBox != null) {
 			AlertBoxHelper.configureAlert(alertBox, AlertBoxType.SuccessAlertBoxType, false, callName, "Returned success!", true);
@@ -121,7 +120,6 @@ public class SuperAlertBox implements JsonServiceCallEventHandler, CloseHandler<
 
 	public void callFailure(String callName, Request request, Throwable caught) {
 		AlertBox alertBox = getAlertBox(request);
-		requests.remove(request);
 
 		if (alertBox != null) {
 			AlertBoxHelper.configureAlert(alertBox, AlertBoxType.DangerAlertBoxType, false, callName, "Failed with exception [" + caught.toString() + "]!",
@@ -131,7 +129,6 @@ public class SuperAlertBox implements JsonServiceCallEventHandler, CloseHandler<
 
 	public void callFailure(String callName, Request request, Response response) {
 		AlertBox alertBox = getAlertBox(request);
-		requests.remove(request);
 
 		if (alertBox != null) {
 			AlertBoxHelper.configureAlert(alertBox, AlertBoxType.DangerAlertBoxType, false, callName,
@@ -192,7 +189,7 @@ public class SuperAlertBox implements JsonServiceCallEventHandler, CloseHandler<
 			registration.removeHandler();
 
 			alertBoxes.remove(i);
-			
+			requests.remove(i);
 			container.remove(alertBox);
 		}
 	}

@@ -1,6 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
-    <ui:style>
+    <ui:style type="io.reflection.app.client.page.LoadingPage.LoadingPageStyle">
     @external .progress;
     .progress {
     	height: 15px;
@@ -16,12 +16,21 @@
     .container {
     	margin-top: 100px;
     }
+    
+    .purpleBar {
+    	background-color: #6D69C5;
+    }
+    
+    .instantBar {
+    	-webkit-transition: none;
+    	transition: none;
+    }
     </ui:style>
     <g:HTMLPanel styleName="container {style.container}">
         <p ui:field="task" class="row {style.task}">Loading...</p>
         <div class="col-sm-8 col-sm-offset-2">
             <div class="progress progress-striped active">
-                <div class="progress-bar" ui:field="bar">
+                <div class="progress-bar {style.purpleBar}" ui:field="bar">
                     <span class="sr-only" ui:field="description"></span>
                 </div>
             </div>
