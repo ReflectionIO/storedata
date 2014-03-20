@@ -57,6 +57,8 @@ public class LoadingPage extends Page implements NavigationEventHandler, LoginEv
 		String purpleBar();
 
 		String instantBar();
+		
+		String thinner();
 	}
 
 	@UiField LoadingPageStyle style;
@@ -148,17 +150,20 @@ public class LoadingPage extends Page implements NavigationEventHandler, LoginEv
 	 */
 	private void resetProgressBar() {
 		setProgress("Loading", 0, tasks.size());
-		bar.getParentElement().setClassName("progress progress-striped active");
+		bar.getParentElement().addClassName("progress-striped");
+		bar.getParentElement().addClassName("active");
 		bar.setClassName("progress-bar " + style.purpleBar());
 	}
 
 	private void setProgressBarError() {
-		bar.getParentElement().setClassName("progress");
+		bar.getParentElement().removeClassName("progress-striped");
+		bar.getParentElement().removeClassName("active");
 		bar.setClassName("progress-bar progress-bar-danger " + style.instantBar());
 	}
 
 	private void setProgressBarComplete() {
-		bar.getParentElement().setClassName("progress");
+		bar.getParentElement().removeClassName("progress-striped");
+		bar.getParentElement().removeClassName("active");
 		bar.setClassName("progress-bar progress-bar-success " + style.instantBar());
 	}
 

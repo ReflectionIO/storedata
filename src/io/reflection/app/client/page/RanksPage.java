@@ -13,7 +13,6 @@ import static io.reflection.app.client.controller.FilterController.GROSSING_LIST
 import static io.reflection.app.client.controller.FilterController.LIST_TYPE_KEY;
 import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
 import static io.reflection.app.client.controller.FilterController.PAID_LIST_TYPE;
-import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.client.cell.AppRankCell;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FilterController;
@@ -24,7 +23,6 @@ import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
-import io.reflection.app.client.handler.user.SessionEventHandler;
 import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.PageSizePager;
@@ -32,7 +30,6 @@ import io.reflection.app.client.part.RankSidePanel;
 import io.reflection.app.client.part.datatypes.RanksGroup;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.Rank;
-import io.reflection.app.datatypes.shared.User;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,13 +48,12 @@ import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
-import com.willshex.gson.json.service.shared.Error;
 
 /**
  * @author billy1380
  * 
  */
-public class RanksPage extends Page implements FilterEventHandler, SessionEventHandler, // IsAuthorisedEventHandler,
+public class RanksPage extends Page implements FilterEventHandler, // SessionEventHandler, IsAuthorisedEventHandler,
 		NavigationEventHandler {
 
 	private static RanksPageUiBinder uiBinder = GWT.create(RanksPageUiBinder.class);
@@ -278,40 +274,40 @@ public class RanksPage extends Page implements FilterEventHandler, SessionEventH
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoggedIn(io.reflection.app.datatypes.shared.User,
-	 * io.reflection.app.api.shared.datatypes.Session)
-	 */
-	@Override
-	public void userLoggedIn(User user, Session session) {
-		RankController.get().reset();
-
-		// checkPermissions();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoggedOut()
-	 */
-	@Override
-	public void userLoggedOut() {
-		RankController.get().reset();
-		mPager.setVisible(false);
-		mRedirect.setVisible(true);
-		mRedirect.setTargetHistoryToken(PageType.LoginPageType.toString());
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoginFailed(com.willshex.gson.json.service.shared.Error)
-	 */
-	@Override
-	public void userLoginFailed(Error error) {}
-
+	// /*
+	// * (non-Javadoc)
+	// *
+	// * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoggedIn(io.reflection.app.datatypes.shared.User,
+	// * io.reflection.app.api.shared.datatypes.Session)
+	// */
+	// @Override
+	// public void userLoggedIn(User user, Session session) {
+	// RankController.get().reset();
+	//
+	// // checkPermissions();
+	// }
+	//
+	// /*
+	// * (non-Javadoc)
+	// *
+	// * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoggedOut()
+	// */
+	// @Override
+	// public void userLoggedOut() {
+	// RankController.get().reset();
+	// mPager.setVisible(false);
+	// mRedirect.setVisible(true);
+	// mRedirect.setTargetHistoryToken(PageType.LoginPageType.toString());
+	// }
+	//
+	// /*
+	// * (non-Javadoc)
+	// *
+	// * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoginFailed(com.willshex.gson.json.service.shared.Error)
+	// */
+	// @Override
+	// public void userLoginFailed(Error error) {}
+	//
 	// /*
 	// * (non-Javadoc)
 	// *
@@ -489,10 +485,14 @@ public class RanksPage extends Page implements FilterEventHandler, SessionEventH
 		super.onAttach();
 
 		register(EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
-		register(EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
+		// register(EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
 		// register(EventController.get().addHandlerToSource(IsAuthorisedEventHandler.TYPE, SessionController.get(), this));
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 
-	}
+		boolean hasPermission = SessionController.get().loggedInUserHas(SessionController.FULL_RANK_VIEW_PERMISSION_ID);
+		
+		mPager.setVisible(hasPermission);
+		mRedirect.setVisible(!hasPermission);
 
+	}
 }

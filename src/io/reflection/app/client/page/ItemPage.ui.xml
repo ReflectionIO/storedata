@@ -11,15 +11,9 @@
     }
     </ui:style>
     <g:HTMLPanel>
-
-
-
-
+    
         <div class="row">
-
             <p:ItemSidePanel ui:field="mSidePanel" styleName="sidepanel col-md-2 well" />
-
-
 
             <div class="col-md-10" style="padding-left: 0px; padding-right: 0px;">
                 <ul class="nav nav-tabs nav-justified ranks">

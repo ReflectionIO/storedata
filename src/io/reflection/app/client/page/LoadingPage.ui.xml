@@ -1,8 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:style type="io.reflection.app.client.page.LoadingPage.LoadingPageStyle">
-    @external .progress;
-    .progress {
+    .thinner {
     	height: 15px;
     }
     
@@ -29,7 +28,7 @@
     <g:HTMLPanel styleName="container {style.container}">
         <p ui:field="task" class="row {style.task}">Loading...</p>
         <div class="col-sm-8 col-sm-offset-2">
-            <div class="progress progress-striped active">
+            <div class="{style.thinner} progress">
                 <div class="progress-bar {style.purpleBar}" ui:field="bar">
                     <span class="sr-only" ui:field="description"></span>
                 </div>

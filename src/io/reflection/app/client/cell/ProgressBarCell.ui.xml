@@ -4,19 +4,18 @@
     <ui:with field="volumeMax" type="java.lang.String" />
     <ui:with field="percentage" type="java.lang.String" />
     <ui:with field="text" type="java.lang.String" />
-    
-    <ui:style>
-		@external progress-bar;
-		
-		.progress-bar {
-			background-color: #6D69C5;
-		}
-	</ui:style>
 
-	<div class="progress">
-		<div class="progress-bar" role="progressbar" aria-valuenow="{volume}"
-			aria-valuemin="0" aria-valuemax="{volumeMax}" style="width: {percentage}%;">
-			<span><ui:text from="{text}" /></span>
-		</div>
-	</div>
+    <ui:style>
+    .purpleProgressBar {
+    	background-color: #6D69C5;
+    }
+    </ui:style>
+
+    <div class="progress">
+        <div class="progress-bar {style.purpleProgressBar}" aria-valuenow="{volume}" aria-valuemin="0" aria-valuemax="{volumeMax}" style="width: {percentage}%;">
+            <span>
+                <ui:text from="{text}" />
+            </span>
+        </div>
+    </div>
 </ui:UiBinder>

@@ -26,6 +26,7 @@ import io.reflection.app.client.controller.RankController;
 import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.AlertBoxHelper;
+import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.client.part.AlertBox;
 import io.reflection.app.client.part.AlertBox.AlertBoxType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
@@ -123,7 +124,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 			@Override
 			public String getValue(ItemRevenue object) {
-				return object.currency + " " + Double.toString(object.paid.doubleValue() / 100);
+				return FormattingHelper.getCurrencySymbol(object.currency) + " " + Double.toString(object.paid.doubleValue() / 100.0);
 			}
 		};
 
@@ -131,7 +132,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 			@Override
 			public String getValue(ItemRevenue object) {
-				return object.currency + " " + Double.toString(object.iap.doubleValue() / 100);
+				return FormattingHelper.getCurrencySymbol(object.currency) + " " + Double.toString(object.iap.doubleValue() / 100.0);
 			}
 		};
 
@@ -139,7 +140,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 			@Override
 			public String getValue(ItemRevenue object) {
-				return object.currency + " " + Double.toString(object.total.doubleValue() / 100);
+				return FormattingHelper.getCurrencySymbol(object.currency) + " " + Double.toString(object.total.doubleValue() / 100.0);
 			}
 		};
 
