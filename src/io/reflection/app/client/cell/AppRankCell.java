@@ -26,18 +26,17 @@ import com.google.gwt.uibinder.client.UiRenderer;
 public class AppRankCell extends AbstractCell<Rank> {
 
 	interface AppRankCellRenderer extends UiRenderer {
-		void render(SafeHtmlBuilder sb, String name, String creatorName, String smallImage, String externalId, String dailyData, String filter, String displayDailyData);
+		void render(SafeHtmlBuilder sb, String name, String creatorName, String smallImage, String itemId, String dailyData, String filter,
+				String displayDailyData);
 	}
 
 	private static AppRankCellRenderer RENDERER = GWT.create(AppRankCellRenderer.class);
 
 	@Override
-	public void render(Context context, Rank value, SafeHtmlBuilder builder) {		
-		
+	public void render(Context context, Rank value, SafeHtmlBuilder builder) {
+
 		Item item = ItemController.get().lookupItem(value.itemId);
-		
-		String name = item.name; 		
-		String creatorName = item.creatorName;				
+
 		String dailyDataType = FilterController.get().getDailyData(), dailyData;
 		String display = "inline-block";
 
@@ -65,8 +64,8 @@ public class AppRankCell extends AbstractCell<Rank> {
 		} else {
 			display = "none";
 		}
-		
 
-		RENDERER.render(builder, name, creatorName, item.smallImage, item.externalId, dailyData, FilterController.get().toItemFilterString(mode), display);
+		RENDERER.render(builder, item.name, item.creatorName, item.smallImage, item.externalId, dailyData, FilterController.get().toItemFilterString(mode),
+				display);
 	}
 }
