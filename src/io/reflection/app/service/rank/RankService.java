@@ -26,8 +26,11 @@ import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.spacehopperstudios.utility.StringUtils;
 
@@ -269,11 +272,29 @@ final class RankService implements IRankService {
 			rankConnection.connect();
 			rankConnection.executeQuery(getCountryStoreTypeRanksQuery);
 
-			while (rankConnection.fetchNextRow()) {
-				Rank rank = toRank(rankConnection);
+			Map<Date, Rank> ranksLookup = new HashMap<Date, Rank>();
+			Date date;
+			Calendar cal = Calendar.getInstance();
 
-				if (rank != null) {
-					ranks.add(rank);
+			while (rankConnection.fetchNextRow()) {
+				// strip out duplicates for date
+
+				date = rankConnection.getCurrentRowDateTime("date");
+
+				cal.setTime(date);
+				cal.set(Calendar.HOUR_OF_DAY, 0);
+				cal.set(Calendar.MINUTE, 0);
+				cal.set(Calendar.SECOND, 0);
+				cal.set(Calendar.MILLISECOND, 0);
+				date = cal.getTime();
+
+				if (ranksLookup.get(date) == null) {
+					Rank rank = toRank(rankConnection);
+
+					if (rank != null) {
+						ranks.add(rank);
+						ranksLookup.put(date, rank);
+					}
 				}
 			}
 		} finally {
@@ -649,8 +670,8 @@ final class RankService implements IRankService {
 		}
 
 		String getCountryStoreTypeRanksQuery = String.format(
-				"SELECT * FROM `rank` WHERE %s AND `country`='%s' AND `source`='%s' AND `categoryid`=%d AND `code2`=%d AND `deleted`='n'",
-				typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), code.longValue());
+				"SELECT * FROM `rank` WHERE %s AND `country`='%s' AND `source`='%s' AND `categoryid`=%d AND `code2`=%d AND `deleted`='n'", typesQueryPart,
+				addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), code.longValue());
 
 		try {
 			rankConnection.connect();
