@@ -44,8 +44,6 @@ public class MyAppsOverviewPage extends Page {
 	@UiField InlineHyperlink mLinkedAccountsLink;
 	@UiField InlineHyperlink mMyAppsLink;
 
-	Images images = GWT.create(Images.class);
-
 	private static List<FakeData> fakeData;
 
 	private static class FakeData {
@@ -77,7 +75,7 @@ public class MyAppsOverviewPage extends Page {
 		super.onAttach();
 
 		User user = SessionController.get().getLoggedInUser();
-		
+
 		if (user != null) {
 			mLinkedAccountsLink.setTargetHistoryToken("users/linkedaccounts/" + user.id.toString());
 			mMyAppsLink.setTargetHistoryToken("users/myapps/" + user.id.toString());
@@ -96,17 +94,18 @@ public class MyAppsOverviewPage extends Page {
 		item.type = "free";
 		item.externalId = "1";
 
-		fakeData = Arrays.asList(new FakeData(new Integer("22"), item, new String("Free"), new Long("108"), new Double(213), images.greenTick()), new FakeData(
-				new Integer("22"), item, new String("Free"), new Long("108"), new Double(213), images.greenTick()), new FakeData(new Integer("22"), item,
-				new String("Free"), new Long("108"), new Double(213), images.greenTick()), new FakeData(new Integer("22"), item, new String("Free"), new Long(
-				"108"), new Double(213), images.greenTick()), new FakeData(new Integer("22"), item, new String("Free"), new Long("108"), new Double(213),
-				images.greenTick()), new FakeData(new Integer("22"), item, new String("Free"), new Long("108"), new Double(213), images.greenTick()),
-				new FakeData(new Integer("22"), item, new String("Free"), new Long("108"), new Double(213), images.greenTick()), new FakeData(
-						new Integer("22"), item, new String("Free"), new Long("108"), new Double(213), images.greenTick()), new FakeData(new Integer("22"),
-						item, new String("Free"), new Long("108"), new Double(213), images.greenTick()), new FakeData(new Integer("22"), item, new String(
-						"Free"), new Long("108"), new Double(213), images.greenTick()), new FakeData(new Integer("22"), item, new String("Free"), new Long(
-						"108"), new Double(213), images.greenTick()), new FakeData(new Integer("22"), item, new String("Free"), new Long("108"),
-						new Double(213), images.greenTick()));
+		fakeData = Arrays.asList(new FakeData(new Integer("22"), item, new String("Free"), new Long("108"), new Double(213), Images.INSTANCE.greenTick()),
+				new FakeData(new Integer("22"), item, new String("Free"), new Long("108"), new Double(213), Images.INSTANCE.greenTick()), new FakeData(
+						new Integer("22"), item, new String("Free"), new Long("108"), new Double(213), Images.INSTANCE.greenTick()), new FakeData(new Integer(
+						"22"), item, new String("Free"), new Long("108"), new Double(213), Images.INSTANCE.greenTick()), new FakeData(new Integer("22"), item,
+						new String("Free"), new Long("108"), new Double(213), Images.INSTANCE.greenTick()), new FakeData(new Integer("22"), item, new String(
+						"Free"), new Long("108"), new Double(213), Images.INSTANCE.greenTick()), new FakeData(new Integer("22"), item, new String("Free"),
+						new Long("108"), new Double(213), Images.INSTANCE.greenTick()), new FakeData(new Integer("22"), item, new String("Free"), new Long(
+						"108"), new Double(213), Images.INSTANCE.greenTick()), new FakeData(new Integer("22"), item, new String("Free"), new Long("108"),
+						new Double(213), Images.INSTANCE.greenTick()), new FakeData(new Integer("22"), item, new String("Free"), new Long("108"), new Double(
+						213), Images.INSTANCE.greenTick()), new FakeData(new Integer("22"), item, new String("Free"), new Long("108"), new Double(213),
+						Images.INSTANCE.greenTick()), new FakeData(new Integer("22"), item, new String("Free"), new Long("108"), new Double(213),
+						Images.INSTANCE.greenTick()));
 
 		TextColumn<FakeData> columnRank = new TextColumn<FakeData>() {
 			@Override

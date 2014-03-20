@@ -4,6 +4,8 @@
     <ui:with field="smallImage" type="java.lang.String" />
     <ui:with field="creatorName" type="java.lang.String" />
     <ui:with field="itemId" type="java.lang.String" />
+    <ui:with field="dailyData" type="java.lang.String" />
+    <ui:with field="filter" type="java.lang.String" />
 
     <ui:style>
     .image {
@@ -22,13 +24,18 @@
         <img class="img-rounded {style.image}" src="{smallImage}" />
         <div class="{style.description} col-md-9">
             <span>
-                <a href="#item/view/{itemId}" class="breakWords">
+                <a href="#item/view/{itemId}/{filter}" class="breakWords">
                     <ui:text from="{name}" />
                 </a>
                 <br />
             </span>
             <span class="text-muted breakWords">
                 <ui:text from="{creatorName}" />
+            </span>
+            <br />
+            <span>
+                <i class="glyphicon glyphicon-align-right"></i>
+                <ui:text from="{dailyData}" />
             </span>
         </div>
     </div>

@@ -14,10 +14,9 @@ import static io.reflection.app.client.controller.FilterController.LIST_TYPE_KEY
 import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
 import static io.reflection.app.client.controller.FilterController.PAID_LIST_TYPE;
 import io.reflection.app.api.shared.datatypes.Session;
-import io.reflection.app.client.cell.MiniAppCell;
+import io.reflection.app.client.cell.AppRankCell;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FilterController;
-import io.reflection.app.client.controller.ItemController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.RankController;
@@ -26,12 +25,12 @@ import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.handler.user.SessionEventHandler;
+import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.PageSizePager;
 import io.reflection.app.client.part.RankSidePanel;
 import io.reflection.app.client.part.datatypes.RanksGroup;
 import io.reflection.app.client.res.Images;
-import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.User;
 
@@ -82,9 +81,10 @@ public class RanksPage extends Page implements FilterEventHandler, SessionEventH
 	@UiField LIElement mGrossingItem;
 	@UiField LIElement mPaidItem;
 
-	private Column<RanksGroup, Item> mGrossingColumn;
-	private Column<RanksGroup, Item> mFreeColumn;
-	private Column<RanksGroup, Item> mPaidColumn;
+	private Column<RanksGroup, Rank> mGrossingColumn;
+	private Column<RanksGroup, Rank> mFreeColumn;
+	private Column<RanksGroup, Rank> mPaidColumn;
+
 	private TextColumn<RanksGroup> mPriceColumn;
 	private TextColumn<RanksGroup> mDownloadsColumn;
 	private TextColumn<RanksGroup> mRevenueColumn;
@@ -110,7 +110,7 @@ public class RanksPage extends Page implements FilterEventHandler, SessionEventH
 		mTabs.put(FREE_LIST_TYPE, mFreeItem);
 		mTabs.put(PAID_LIST_TYPE, mPaidItem);
 		mTabs.put(GROSSING_LIST_TYPE, mGrossingItem);
-
+		
 		RankController.get().addDataDisplay(mRanks);
 		mPager.setDisplay(mRanks);
 	}
@@ -125,27 +125,27 @@ public class RanksPage extends Page implements FilterEventHandler, SessionEventH
 
 		};
 
-		mPaidColumn = new Column<RanksGroup, Item>(new MiniAppCell()) {
+		mPaidColumn = new Column<RanksGroup, Rank>(new AppRankCell()) {
 
 			@Override
-			public Item getValue(RanksGroup object) {
-				return ItemController.get().lookupItem(object.paid.itemId);
+			public Rank getValue(RanksGroup object) {
+				return object.paid;
 			}
 		};
 
-		mFreeColumn = new Column<RanksGroup, Item>(new MiniAppCell()) {
+		mFreeColumn = new Column<RanksGroup, Rank>(new AppRankCell()) {
 
 			@Override
-			public Item getValue(RanksGroup object) {
-				return ItemController.get().lookupItem(object.free.itemId);
+			public Rank getValue(RanksGroup object) {
+				return object.free;
 			}
 		};
 
-		mGrossingColumn = new Column<RanksGroup, Item>(new MiniAppCell()) {
+		mGrossingColumn = new Column<RanksGroup, Rank>(new AppRankCell()) {
 
 			@Override
-			public Item getValue(RanksGroup object) {
-				return ItemController.get().lookupItem(object.grossing.itemId);
+			public Rank getValue(RanksGroup object) {
+				return object.grossing;
 			}
 		};
 
@@ -154,7 +154,7 @@ public class RanksPage extends Page implements FilterEventHandler, SessionEventH
 			@Override
 			public String getValue(RanksGroup object) {
 				Rank rank = rankForListType(object);
-				return rank.price.floatValue() == 0.0f ? "Free" : rank.currency + " " + rank.price.toString();
+				return rank.price.floatValue() == 0.0f ? "Free" : FormattingHelper.getCurrencySymbol(rank.currency) + " " + rank.price.toString();
 			}
 
 		};
@@ -303,36 +303,36 @@ public class RanksPage extends Page implements FilterEventHandler, SessionEventH
 	@Override
 	public void userLoginFailed(Error error) {}
 
-//	/*
-//	 * (non-Javadoc)
-//	 * 
-//	 * @see
-//	 * io.reflection.app.api.admin.shared.call.event.IsAuthorisedEventHandler#isAuthorisedSuccess(io.reflection.app.api.core.shared.call.IsAuthorisedRequest,
-//	 * io.reflection.app.api.core.shared.call.IsAuthorisedResponse)
-//	 */
-//	@Override
-//	public void isAuthorisedSuccess(IsAuthorisedRequest input, IsAuthorisedResponse output) {
-//		if (output.status == StatusType.StatusTypeSuccess && output.authorised == Boolean.TRUE) {
-//			if (input.permissions != null) {
-//				for (Permission p : input.permissions) {
-//					if (p.id != null && p.id != null) {
-//						mPager.setVisible(true);
-//						mRedirect.setVisible(false);
-//					}
-//				}
-//			}
-//		}
-//	}
-//
-//	/*
-//	 * (non-Javadoc)
-//	 * 
-//	 * @see
-//	 * io.reflection.app.api.admin.shared.call.event.IsAuthorisedEventHandler#isAuthorisedFailure(io.reflection.app.api.core.shared.call.IsAuthorisedRequest,
-//	 * java.lang.Throwable)
-//	 */
-//	@Override
-//	public void isAuthorisedFailure(IsAuthorisedRequest input, Throwable caught) {}
+	// /*
+	// * (non-Javadoc)
+	// *
+	// * @see
+	// * io.reflection.app.api.admin.shared.call.event.IsAuthorisedEventHandler#isAuthorisedSuccess(io.reflection.app.api.core.shared.call.IsAuthorisedRequest,
+	// * io.reflection.app.api.core.shared.call.IsAuthorisedResponse)
+	// */
+	// @Override
+	// public void isAuthorisedSuccess(IsAuthorisedRequest input, IsAuthorisedResponse output) {
+	// if (output.status == StatusType.StatusTypeSuccess && output.authorised == Boolean.TRUE) {
+	// if (input.permissions != null) {
+	// for (Permission p : input.permissions) {
+	// if (p.id != null && p.id != null) {
+	// mPager.setVisible(true);
+	// mRedirect.setVisible(false);
+	// }
+	// }
+	// }
+	// }
+	// }
+	//
+	// /*
+	// * (non-Javadoc)
+	// *
+	// * @see
+	// * io.reflection.app.api.admin.shared.call.event.IsAuthorisedEventHandler#isAuthorisedFailure(io.reflection.app.api.core.shared.call.IsAuthorisedRequest,
+	// * java.lang.Throwable)
+	// */
+	// @Override
+	// public void isAuthorisedFailure(IsAuthorisedRequest input, Throwable caught) {}
 
 	@UiHandler({ "mAll", "mFree", "mGrossing", "mPaid" })
 	void onClicked(ClickEvent e) {

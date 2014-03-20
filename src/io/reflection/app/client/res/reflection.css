@@ -1,6 +1,6 @@
 @CHARSET "UTF-8";
 
-@external p-small, form, formEdit, noteDetail, label, gwt-CheckBox, gwt-DateBox, gwt-ListBox, toppanel, sidepanel, btn-group, btn-default, row, divider, dropdown-menu, side, divider-vertical, nav-pills, nav-stacked, nav-tabs, nav-justified, ranks, loginregister, well, well-title, form-group, gwt-RadioButton, hr, navbar-fixed-top, navbar, container, pagination, btn-primary, btn-primary, disabled btn-primary:hover, active, open, dropdown-toggle, dropdown-menu, badge, dropdown, nav, navbar-inverse, navbar-nav, caret, form-control;
+@external breakWords, p-small, form, formEdit, noteDetail, label, gwt-CheckBox, gwt-DateBox, gwt-ListBox, toppanel, sidepanel, btn-group, btn-default, row, divider, dropdown-menu, side, divider-vertical, nav-pills, nav-stacked, nav-tabs, nav-justified, ranks, loginregister, well, well-title, form-group, gwt-RadioButton, hr, navbar-fixed-top, navbar, container, pagination, btn-primary, btn-primary, disabled btn-primary:hover, active, open, dropdown-toggle, dropdown-menu, badge, dropdown, nav, navbar-inverse, navbar-nav, caret, form-control;
 	/* Colors palette: Purple #6d69c5; DarkBlue 272933; Gold #eabc3e; LightGrey: #f8f9f9; Green: #1bc79f; Blue: #3357cc; Red: #e73c48; */
 /* Forms */
 .form {
@@ -194,7 +194,7 @@
 	margin-left: 4px;
 }
 
-.gwt-CheckBox input{
+.gwt-CheckBox input {
 	outline: 0;
 	cursor: pointer;
 }
@@ -283,6 +283,10 @@ a {
 a:hover,a:focus,a:active {
 	text-decoration: none;
 	color: #1bc79f;
+}
+
+.breakWords {
+	word-wrap: break-word;
 }
 
 .highlightRange {
