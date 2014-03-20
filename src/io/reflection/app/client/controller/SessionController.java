@@ -66,6 +66,9 @@ public class SessionController implements ServiceConstants {
 
 	private static final String COOKIE_KEY_TOKEN = SessionController.class.getName() + ".token";
 
+	public static final long ADMIN_ROLE_ID = 1;
+	public static final long FULL_RANK_VIEW_PERMISSION_ID = 1;
+
 	private User mLoggedInUser = null;
 	private Session mSession = null;
 
@@ -255,7 +258,29 @@ public class SessionController implements ServiceConstants {
 	 * @return
 	 */
 	public boolean isLoggedInUserAdmin() {
-		return hasRole(mLoggedInUser, 1);
+		return hasRole(mLoggedInUser, ADMIN_ROLE_ID);
+	}
+
+	/**
+	 * Returns true if the user is a role with a given id
+	 * 
+	 * @param id
+	 *            rank id
+	 * @return
+	 */
+	public boolean loggedInUserIs(Long id) {
+		return hasRole(mLoggedInUser, id);
+	}
+
+	/**
+	 * Returns true if the user has a permission with a given id
+	 * 
+	 * @param id
+	 *            permission id
+	 * @return
+	 */
+	public boolean loggedInUserHas(Long id) {
+		return hasPermission(mLoggedInUser, id);
 	}
 
 	/**
@@ -270,16 +295,29 @@ public class SessionController implements ServiceConstants {
 
 		if (user != null && user.roles != null) {
 			for (Role role : user.roles) {
-				if (role.id != null) {
-					if (role.id.longValue() == id) {
-						hasRole = true;
-						break;
-					}
+				if (role.id != null && role.id.longValue() == id) {
+					hasRole = true;
+					break;
 				}
 			}
 		}
 
 		return hasRole;
+	}
+
+	public boolean hasPermission(User user, long id) {
+		boolean hasPermission = hasRole(user, ADMIN_ROLE_ID);
+
+		if (!hasPermission && user != null && user.permissions != null) {
+			for (Permission permission : user.permissions) {
+				if (permission.id != null && permission.id.longValue() == id) {
+					hasPermission = true;
+					break;
+				}
+			}
+		}
+
+		return hasPermission;
 	}
 
 	/**

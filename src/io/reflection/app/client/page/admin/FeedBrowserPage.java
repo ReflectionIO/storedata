@@ -12,6 +12,7 @@ import io.reflection.app.client.controller.FeedFetchController;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.handler.FilterEventHandler;
+import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.Breadcrumbs;
@@ -50,9 +51,10 @@ public class FeedBrowserPage extends Page implements FilterEventHandler {
 	@UiField(provided = true) SimplePager mPager = new SimplePager(false, false);
 
 	@UiField ListBox mAppStore;
-	@UiField ListBox mListType;
 	@UiField ListBox mCountry;
 	@UiField ListBox category;
+	
+	@UiField ListBox mListType;
 
 	@UiField Button mIngest;
 	@UiField Button mModel;
@@ -64,6 +66,10 @@ public class FeedBrowserPage extends Page implements FilterEventHandler {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		addFeedColumns();
+		
+		FilterHelper.addStores(mAppStore);
+		FilterHelper.addCountries(mCountry);
+		FilterHelper.addCategories(category);
 
 		final SingleSelectionModel<FeedFetch> s = new SingleSelectionModel<FeedFetch>();
 		s.addSelectionChangeHandler(new Handler() {

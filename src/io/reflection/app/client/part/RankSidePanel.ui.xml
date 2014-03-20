@@ -43,11 +43,6 @@
 							Country
 						</label>
 						<g:ListBox styleName="form-control" ui:field="mCountry">
-							<g:item value="us">United States</g:item>
-							<g:item value="gb">United Kingdom</g:item>
-							<g:item value="cn">China</g:item>
-							<g:item value="de">Germany</g:item>
-							<g:item value="fr">France</g:item>
 						</g:ListBox>
 					</g:HTMLPanel>
 
@@ -58,8 +53,6 @@
 							App Store
 						</label>
 						<g:ListBox styleName="form-control" ui:field="mAppStore">
-							<g:item value="iph">iPhone Store</g:item>
-							<g:item value="ipa">iPad Store</g:item>
 						</g:ListBox>
 					</g:HTMLPanel>
 

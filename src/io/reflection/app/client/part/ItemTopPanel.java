@@ -8,6 +8,7 @@
 package io.reflection.app.client.part;
 
 import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
 
 import java.util.Date;
@@ -45,22 +46,25 @@ public class ItemTopPanel extends Composite {
 
 		BootstrapGwtDatePicker.INSTANCE.styles().ensureInjected();
 
+		FilterHelper.addStores(mAppStore);
+		FilterHelper.addCountries(mCountry);
+
 		mDateRange.setFormat(new DefaultFormat(DateTimeFormat.getFormat("dd-MM-yyyy")));
 		mDateRange.setValue(new Date());
-		
+
 		updateFromFilter();
 	}
-	
+
 	@UiHandler("mAppStore")
 	void onAppStoreValueChanged(ChangeEvent event) {
 		FilterController.get().setStore(mAppStore.getValue(mAppStore.getSelectedIndex()));
 	}
-	
+
 	@UiHandler("mCountry")
 	void onCountryValueChanged(ChangeEvent event) {
 		FilterController.get().setCountry(mCountry.getValue(mCountry.getSelectedIndex()));
 	}
-	
+
 	@UiHandler("mDateRange")
 	void onDateValueChanged(ValueChangeEvent<Date> event) {
 		FilterController.get().start();

@@ -8,6 +8,7 @@
 package io.reflection.app.client.part;
 
 import io.reflection.app.client.controller.StoreController;
+import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Store;
 
@@ -50,11 +51,11 @@ public class ItemSidePanel extends Composite {
 		mImage.setUrl(item.largeImage);
 
 		Store s = StoreController.get().getStore(item.source);
-		storeName.setInnerHTML((s == null || s.name == null || s.name.length() == 0) ? item.source.toUpperCase() + " Store": s.name);
+		storeName.setInnerHTML((s == null || s.name == null || s.name.length() == 0) ? item.source.toUpperCase() + " Store" : s.name);
 
 		viewInStore.setHref(StoreController.get().getExternalUri(item));
 
-		price.setInnerHTML(item.price == 0 ? "Free" : item.currency + " " + item.price);
+		price.setInnerHTML(item.price == 0 ? "Free" : FormattingHelper.getCurrencySymbol(item.currency) + " " + item.price);
 	}
 
 }

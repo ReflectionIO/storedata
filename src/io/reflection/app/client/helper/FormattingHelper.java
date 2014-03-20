@@ -7,21 +7,41 @@
 //
 package io.reflection.app.client.helper;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author stefanocapuzzi
  * 
  */
 public class FormattingHelper {
 
-	public static String getCurrencySymbol(String currency) {		
-		if ("USD".equals(currency)) {
-			return "$";
-		} else if ("EUR".equals(currency)) {
-			return "€";
-		} else if ("CNY".equals(currency)) {
-			return "¥";
-		} else {
-			return currency;
+	private static Map<String, String> currencySymbolLookup = null;
+
+	/**
+	 * Returns a currency sumbol or code if none are found
+	 * @param currency
+	 * @return
+	 */
+	public static String getCurrencySymbol(String currency) {
+
+		if (currencySymbolLookup == null) {
+			setup();
+		}
+
+		String symbol = currencySymbolLookup.get(currency);
+
+		return symbol == null ? currency : symbol;
+	}
+
+	public static void setup() {
+		if (currencySymbolLookup == null) {
+			currencySymbolLookup = new HashMap<String, String>();
+
+			currencySymbolLookup.put("USD", "$");
+			currencySymbolLookup.put("EUR", "€");
+			currencySymbolLookup.put("CNY", "¥");
+			currencySymbolLookup.put("GBP", "£");
 		}
 	}
 }

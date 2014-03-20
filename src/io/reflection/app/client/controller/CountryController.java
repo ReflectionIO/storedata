@@ -77,6 +77,8 @@ public class CountryController implements ServiceConstants {
 						for (Country country : output.countries) {
 							mCountryLookup.put(country.a2Code, country);
 						}
+						
+						countries = output.countries;
 					}
 				}
 
@@ -139,6 +141,7 @@ public class CountryController implements ServiceConstants {
 	}
 
 	public List<Country> getCountries() {
-		return countries;
+		// only return first 5 items (for now)
+		return countries.subList(0, 5);
 	}
 }

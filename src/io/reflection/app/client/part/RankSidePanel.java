@@ -10,6 +10,7 @@ package io.reflection.app.client.part;
 import static io.reflection.app.client.controller.FilterController.DOWNLOADS_DAILY_DATA_TYPE;
 import static io.reflection.app.client.controller.FilterController.REVENUE_DAILY_DATA_TYPE;
 import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
 
 import java.util.ArrayList;
@@ -63,6 +64,10 @@ public class RankSidePanel extends Composite {
 		mDate.setFormat(new DefaultFormat(DateTimeFormat.getFormat("dd-MM-yyyy")));
 
 		final List<Date> dates = new ArrayList<Date>();
+
+		FilterHelper.addStores(mAppStore);
+		FilterHelper.addCountries(mCountry);
+		FilterHelper.addCategories(category);
 
 		mDate.getDatePicker().addShowRangeHandler(new ShowRangeHandler<Date>() {
 
