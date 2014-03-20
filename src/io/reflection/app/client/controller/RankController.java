@@ -17,6 +17,7 @@ import io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler.G
 import io.reflection.app.api.core.shared.call.event.GetItemRanksEventHandler;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.client.helper.ApiCallHelper;
 import io.reflection.app.client.part.datatypes.ItemRevenue;
 import io.reflection.app.client.part.datatypes.RanksGroup;
 import io.reflection.app.datatypes.shared.Item;
@@ -63,7 +64,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 		input.session = SessionController.get().getSessionForApiCall(); // Get JSON session, create it if not exists and set cookie
 
-		input.country = FilterController.get().getCountry(); // Get country from filter
+		input.country = ApiCallHelper.createCountryForApiCall(FilterController.get().getCountry()); // Get country from filter
 
 		input.listType = FilterController.get().getListTypes().get(0); // Get item type (paid, free, grossing)
 
@@ -80,7 +81,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 		input.pager = mPager; // Set pager used to retrieve and format the wished items (start, number of elements, sorting order)
 
-		input.store = FilterController.get().getStore(); // Get store (iPhone, iPad ...)
+		input.store = ApiCallHelper.createStoreForApiCall(FilterController.get().getStore()); // Get store (iPhone, iPad ...)
 
 		// Call to retrieve top items from DB. The response contains List<Rank> for the 3 rank types (free, paid, grossing) , a List<Item> and a Pager
 		service.getAllTopItems(input, new AsyncCallback<GetAllTopItemsResponse>() {
@@ -144,7 +145,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 		input.dailyData = FilterController.get().getDailyData();
 
 		input.session = SessionController.get().getSessionForApiCall();
-		input.country = FilterController.get().getCountry();
+		input.country = ApiCallHelper.createCountryForApiCall(FilterController.get().getCountry());
 
 		input.start = FilterController.get().getStartDate();
 		input.end = FilterController.get().getEndDate();

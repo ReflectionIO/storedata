@@ -19,6 +19,7 @@ import io.reflection.app.api.admin.shared.call.TriggerPredictResponse;
 import io.reflection.app.api.admin.shared.call.event.GetFeedFetchesEventHandler.GetFeedFetchesFailure;
 import io.reflection.app.api.admin.shared.call.event.GetFeedFetchesEventHandler.GetFeedFetchesSuccess;
 import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.client.helper.ApiCallHelper;
 import io.reflection.app.datatypes.shared.FeedFetch;
 
 import java.util.ArrayList;
@@ -65,8 +66,8 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 
 		input.pager = mPager;
 
-		input.country = FilterController.get().getCountry();
-		input.store = FilterController.get().getStore();
+		input.country = ApiCallHelper.createCountryForApiCall(FilterController.get().getCountry());
+		input.store = ApiCallHelper.createStoreForApiCall(FilterController.get().getStore());
 		input.listTypes = FilterController.get().getListTypes();
 
 		if (input.country != null && input.store != null && input.listTypes != null) {
@@ -133,8 +134,8 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 
 		input.session = SessionController.get().getSessionForApiCall();
 
-		input.country = FilterController.get().getCountry();
-		input.store = FilterController.get().getStore();
+		input.country = ApiCallHelper.createCountryForApiCall(FilterController.get().getCountry());;
+		input.store = ApiCallHelper.createStoreForApiCall(FilterController.get().getStore());
 		input.listTypes = FilterController.get().getAllListTypes();
 		input.code = code;
 
@@ -165,8 +166,8 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 
 		input.session = SessionController.get().getSessionForApiCall();
 
-		input.country = FilterController.get().getCountry();
-		input.store = FilterController.get().getStore();
+		input.country = ApiCallHelper.createCountryForApiCall(FilterController.get().getCountry());;
+		input.store = ApiCallHelper.createStoreForApiCall(FilterController.get().getStore());
 		input.listTypes = FilterController.get().getAllListTypes();
 		input.code = code;
 
@@ -197,8 +198,8 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 
 		input.session = SessionController.get().getSessionForApiCall();
 
-		input.country = FilterController.get().getCountry();
-		input.store = FilterController.get().getStore();
+		input.country = ApiCallHelper.createCountryForApiCall(FilterController.get().getCountry());;
+		input.store = ApiCallHelper.createStoreForApiCall(FilterController.get().getStore());
 		input.listTypes = FilterController.get().getAllListTypes();
 		input.code = code;
 
