@@ -13,13 +13,14 @@ import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -36,7 +37,9 @@ public class Footer extends Composite {
 
 	@UiField SpanElement mYear;
 
-	@UiField Image mArrow;
+	@UiField Anchor mArrow;
+	
+	private boolean open;
 
 	@SuppressWarnings("deprecation")
 	public Footer() {
@@ -44,22 +47,23 @@ public class Footer extends Composite {
 
 		Styles.INSTANCE.reflection().ensureInjected();
 
-		mFooter.getElement().setAttribute("style", "bottom: -125px");		
+		open = false;
+		mFooter.getElement().getStyle().setBottom(-125, Unit.PX);
 
 		mYear.setInnerHTML(Integer.toString(1900 + (new Date()).getYear()));
 	}
 
 	@UiHandler("mArrow")
 	void onClickArrow(ClickEvent event) {
-		if (mFooter.getElement().getStyle().getBottom().equals("-125px")) {
-			mArrow.setStylePrimaryName(Styles.INSTANCE.reflection().footerDownArrow());
-			mFooter.getElement().setAttribute("style", "bottom: 0px;");
-
+		if (open) {
+			mArrow.setStyleName(Styles.INSTANCE.reflection().footerUpArrow());
+			mFooter.getElement().getStyle().setBottom(-125, Unit.PX);
 		} else {
-			mArrow.setStylePrimaryName(Styles.INSTANCE.reflection().footerUpArrow());
-			mFooter.getElement().setAttribute("style", "bottom: -125px;");
+			mArrow.setStyleName(Styles.INSTANCE.reflection().footerDownArrow());
+			mFooter.getElement().getStyle().setBottom(0, Unit.PX);
 		}
-
+		
+		open = !open;
 	}
 
 }

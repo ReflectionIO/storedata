@@ -26,6 +26,8 @@ import io.reflection.app.api.core.shared.call.LogoutResponse;
 import io.reflection.app.api.core.shared.call.event.ChangePasswordEventHandler;
 import io.reflection.app.api.core.shared.call.event.ChangeUserDetailsEventHandler;
 import io.reflection.app.api.core.shared.call.event.ForgotPasswordEventHandler;
+import io.reflection.app.api.core.shared.call.event.GetRolesAndPermissionsEventHandler.GetRolesAndPermissionsFailure;
+import io.reflection.app.api.core.shared.call.event.GetRolesAndPermissionsEventHandler.GetRolesAndPermissionsSuccess;
 import io.reflection.app.api.core.shared.call.event.LoginEventHandler.LoginFailure;
 import io.reflection.app.api.core.shared.call.event.LoginEventHandler.LoginSuccess;
 import io.reflection.app.api.shared.datatypes.Session;
@@ -75,10 +77,6 @@ public class SessionController implements ServiceConstants {
 		return mOne;
 	}
 
-	private SessionController() {
-		restoreSession();
-	}
-
 	public User getLoggedInUser() {
 		return mLoggedInUser;
 	}
@@ -107,12 +105,6 @@ public class SessionController implements ServiceConstants {
 		service.login(input, new AsyncCallback<LoginResponse>() {
 
 			@Override
-			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new UserLoginFailed(FormHelper.convertToError(caught)), SessionController.this);
-				EventController.get().fireEventFromSource(new LoginFailure(input, caught), SessionController.this);
-			}
-
-			@Override
 			public void onSuccess(LoginResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
 					if (output.session != null && output.session.user != null) {
@@ -121,8 +113,14 @@ public class SessionController implements ServiceConstants {
 				} else {
 					EventController.get().fireEventFromSource(new UserLoginFailed(output.error), SessionController.this);
 				}
-				
+
 				EventController.get().fireEventFromSource(new LoginSuccess(input, output), SessionController.this);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				EventController.get().fireEventFromSource(new UserLoginFailed(FormHelper.convertToError(caught)), SessionController.this);
+				EventController.get().fireEventFromSource(new LoginFailure(input, caught), SessionController.this);
 			}
 		});
 	}
@@ -152,8 +150,6 @@ public class SessionController implements ServiceConstants {
 				EventController.get().fireEventFromSource(new UserLoggedOut(), SessionController.this);
 			} else {
 				EventController.get().fireEventFromSource(new UserLoggedIn(mLoggedInUser, mSession), SessionController.this); // Fire user logged in event
-
-				setUserRolesAndPermissions(); // Set user roles and permissions after user successfully logged in
 			}
 		}
 
@@ -162,57 +158,65 @@ public class SessionController implements ServiceConstants {
 	/**
 	 * Retrieve user roles and permissions from DB and set them
 	 */
-	private void setUserRolesAndPermissions() {
-		CoreService service = ServiceCreator.createCoreService();
+	public boolean prefetchRolesAndPermissions() {
+		boolean attemptPrefetch;
+		Session session;
 
-		final GetRolesAndPermissionsRequest input = new GetRolesAndPermissionsRequest();
-		input.accessCode = ACCESS_CODE;
+		if (attemptPrefetch = ((session = getSessionForApiCall()) != null)) {
+			CoreService service = ServiceCreator.createCoreService();
 
-		input.session = new Session();
-		input.session.token = mSession.token;
+			final GetRolesAndPermissionsRequest input = new GetRolesAndPermissionsRequest();
+			input.accessCode = ACCESS_CODE;
 
-		// input.idsOnly = Boolean.FALSE;
+			input.session = session;
 
-		// Ask roles and permissions for the user
-		service.getRolesAndPermissions(input, new AsyncCallback<GetRolesAndPermissionsResponse>() {
+			// input.idsOnly = Boolean.FALSE;
 
-			@Override
-			public void onSuccess(GetRolesAndPermissionsResponse output) {
-				if (output.status == StatusType.StatusTypeSuccess) {
-					if (mSession != null && mSession.token != null && input.session != null && input.session.token != null
-							&& mSession.token.equals(input.session.token)) {
+			// Ask roles and permissions for the user
+			service.getRolesAndPermissions(input, new AsyncCallback<GetRolesAndPermissionsResponse>() {
 
-						mLoggedInUser.roles = output.roles;
-						mLoggedInUser.permissions = output.permissions;
+				@Override
+				public void onSuccess(GetRolesAndPermissionsResponse output) {
+					if (output.status == StatusType.StatusTypeSuccess) {
+						if (mSession != null && mSession.token != null && input.session != null && input.session.token != null
+								&& mSession.token.equals(input.session.token)) {
 
-						// Add retrieved roles into cache
-						if (output.roles != null) {
-							for (Role role : output.roles) {
-								mRoleCache.put(role.id, role);
+							mLoggedInUser.roles = output.roles;
+							mLoggedInUser.permissions = output.permissions;
+
+							// Add retrieved roles into cache
+							if (output.roles != null) {
+								for (Role role : output.roles) {
+									mRoleCache.put(role.id, role);
+								}
 							}
-						}
 
-						// Add retrieved permissions into cache
-						if (output.permissions != null) {
-							for (Permission permission : output.permissions) {
-								mPermissionCache.put(permission.id, permission);
+							// Add retrieved permissions into cache
+							if (output.permissions != null) {
+								for (Permission permission : output.permissions) {
+									mPermissionCache.put(permission.id, permission);
+								}
 							}
-						}
 
-						EventController.get().fireEventFromSource(new GotUserPowers(mLoggedInUser, mLoggedInUser.roles, mLoggedInUser.permissions),
-								SessionController.this);
+							EventController.get().fireEventFromSource(new GotUserPowers(mLoggedInUser, mLoggedInUser.roles, mLoggedInUser.permissions),
+									SessionController.this);
+						}
+					} else {
+						EventController.get().fireEventFromSource(new GetUserPowersFailed(output.error), SessionController.this);
 					}
-				} else {
-					EventController.get().fireEventFromSource(new GetUserPowersFailed(output.error), SessionController.this);
+
+					EventController.get().fireEventFromSource(new GetRolesAndPermissionsSuccess(input, output), SessionController.this);
 				}
-			}
 
-			@Override
-			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new GetUserPowersFailed(FormHelper.convertToError(caught)), SessionController.this);
-			}
-		});
+				@Override
+				public void onFailure(Throwable caught) {
+					EventController.get().fireEventFromSource(new GetUserPowersFailed(FormHelper.convertToError(caught)), SessionController.this);
+					EventController.get().fireEventFromSource(new GetRolesAndPermissionsFailure(input, caught), SessionController.this);
+				}
+			});
+		}
 
+		return attemptPrefetch;
 	}
 
 	/**
@@ -421,13 +425,15 @@ public class SessionController implements ServiceConstants {
 		});
 	}
 
-	private void restoreSession() {
+	public boolean restoreSession() {
+		boolean attemptRestore;
+
 		String token = Cookies.getCookie(COOKIE_KEY_TOKEN);
 
-		if (token != null) {
+		if (attemptRestore = (token != null)) {
 			CoreService core = ServiceCreator.createCoreService();
 
-			LoginRequest input = new LoginRequest();
+			final LoginRequest input = new LoginRequest();
 			input.accessCode = ACCESS_CODE;
 
 			input.session = new Session();
@@ -449,14 +455,20 @@ public class SessionController implements ServiceConstants {
 
 						EventController.get().fireEventFromSource(new UserLoginFailed(output.error), SessionController.this);
 					}
+
+					EventController.get().fireEventFromSource(new LoginSuccess(input, output), SessionController.this);
 				}
 
 				@Override
 				public void onFailure(Throwable caught) {
 					EventController.get().fireEventFromSource(new UserLoginFailed(FormHelper.convertToError(caught)), SessionController.this);
+
+					EventController.get().fireEventFromSource(new LoginFailure(input, caught), SessionController.this);
 				}
 			});
 		}
+
+		return attemptRestore;
 	}
 
 	/**

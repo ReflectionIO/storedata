@@ -7,6 +7,12 @@
 //
 package io.reflection.app.client.page;
 
+import io.reflection.app.client.page.admin.EmailTemplatePage;
+import io.reflection.app.client.page.admin.FeedBrowserPage;
+import io.reflection.app.client.page.admin.ItemsPage;
+import io.reflection.app.client.page.admin.PermissionsPage;
+import io.reflection.app.client.page.admin.RolesPage;
+import io.reflection.app.client.page.admin.UsersPage;
 import io.reflection.app.client.page.blog.AdminPage;
 import io.reflection.app.client.page.blog.EditPostPage;
 import io.reflection.app.client.page.blog.PostPage;
@@ -46,11 +52,12 @@ public enum PageType {
 	ResetPasswordPageType("resetpassword"),
 	ItemsPageType("items"),
 	PolicyType("policy"),
-	TermsPage("terms"),
-	BlogAdmin("blogadmin"),
-	BlogPosts("blog"),
-	BlogPost("blogpost"),
-	BlogEditPost("blogedit"), ;
+	TermsPageType("terms"),
+	BlogAdminType("blogadmin"),
+	BlogPostsType("blog"),
+	BlogPostType("blogpost"),
+	BlogEditPost("blogedit"),
+	LoadingPageType("loading"), ;
 
 	private String value;
 	private static Map<String, PageType> valueLookup = null;
@@ -147,23 +154,26 @@ public enum PageType {
 		case ItemsPageType:
 			page = new ItemsPage();
 			break;
-		case TermsPage:
+		case TermsPageType:
 			page = new TermsPage();
 			break;
 		case PolicyType:
 			page = new PolicyPage();
 			break;
-		case BlogAdmin:
+		case BlogAdminType:
 			page = new AdminPage();
 			break;
 		case BlogEditPost:
 			page = new EditPostPage();
 			break;
-		case BlogPost:
+		case BlogPostType:
 			page = new PostPage();
 			break;
-		case BlogPosts:
+		case BlogPostsType:
 			page = new PostsPage();
+			break;
+		case LoadingPageType:
+			page = new LoadingPage();
 			break;
 		case HomePageType:
 		default:
@@ -187,11 +197,13 @@ public enum PageType {
 		History.newItem(toString() + "/" + joinedParams);
 	}
 
-	/**
-	 * @param page
-	 * @return
-	 */
-	public boolean is(String page) {
-		return value.equals(page);
-	}
+//	public Stack toStack() {
+//		return NavigationController.Stack.parse(toString());
+//	}
+//
+//	public Stack toStack(String... params) {
+//		String joinedParams = StringUtils.join(Arrays.asList(params), "/");
+//		return NavigationController.Stack.parse(toString() + "/" + joinedParams);
+//	}
+
 }

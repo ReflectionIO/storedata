@@ -16,8 +16,8 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.client.res.flags.Styles;
 import io.reflection.app.datatypes.shared.Country;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -31,6 +31,7 @@ public class CountryController implements ServiceConstants {
 	private static CountryController mOne = null;
 
 	private Map<String, Country> mCountryLookup = null;
+	private List<Country> countries = null;
 
 	public static CountryController get() {
 		if (mOne == null) {
@@ -40,28 +41,18 @@ public class CountryController implements ServiceConstants {
 		return mOne;
 	}
 
-	public CountryController() {
-		mCountryLookup = new HashMap<String, Country>();
+	// private void addCountry(String a2Code, String name) {
+	// Country country = new Country();
+	// country.a2Code = a2Code;
+	// country.name = name;
+	//
+	// country.stores = new ArrayList<String>();
+	// country.stores.add("ios");
+	//
+	// mCountryLookup.put(country.a2Code, country);
+	// }
 
-		addCountry("us", "United States");
-		addCountry("gb", "United Kingdom");
-		addCountry("cn", "China");
-		addCountry("de", "Germany");
-		addCountry("fr", "France");
-	}
-
-	private void addCountry(String a2Code, String name) {
-		Country country = new Country();
-		country.a2Code = a2Code;
-		country.name = name;
-
-		country.stores = new ArrayList<String>();
-		country.stores.add("ios");
-
-		mCountryLookup.put(country.a2Code, country);
-	}
-
-	public void fetchAllCountries() {
+	private void fetchAllCountries() {
 		CoreService service = ServiceCreator.createCoreService();
 
 		final GetCountriesRequest input = new GetCountriesRequest();
@@ -133,5 +124,21 @@ public class CountryController implements ServiceConstants {
 		}
 
 		return styleName;
+	}
+
+	/**
+	 * @return
+	 */
+	public boolean prefetchCountries() {
+		boolean attemptPrefetch = (countries == null || countries.size() == 0);
+		if (attemptPrefetch) {
+			fetchAllCountries();
+		}
+
+		return attemptPrefetch;
+	}
+
+	public List<Country> getCountries() {
+		return countries;
 	}
 }

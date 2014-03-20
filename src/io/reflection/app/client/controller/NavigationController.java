@@ -42,6 +42,8 @@ public class NavigationController implements ValueChangeHandler<String>, JsonSer
 
 	private Stack mStack;
 
+	private String intended = null;
+
 	private String timeoutPage = null;
 	private String timeoutUsername = null;
 
@@ -123,12 +125,23 @@ public class NavigationController implements ValueChangeHandler<String>, JsonSer
 	 * @param value
 	 */
 	public void addPage(String value) {
-
-		if (value == null || value.length() == 0) {
-			value = PageType.HomePageType.toString();
+		// we have just landed here, we have no stack and no intended target
+		if (mStack == null && intended == null) {
+			intended = value;
+			value = PageType.LoadingPageType.toString();
 		}
 
-		mStack = Stack.parse(value);
+		Stack s = Stack.parse(value);
+
+		if (intended != null && intended.equals(s.getPage())) {
+			intended = null;
+		}
+
+		addStack(s);
+	}
+
+	private void addStack(Stack value) {
+		mStack = value;
 
 		if (PageType.UsersPageType.equals(mStack.getPage())) {
 			if (mStack.getAction() == null) {
@@ -198,7 +211,13 @@ public class NavigationController implements ValueChangeHandler<String>, JsonSer
 	 */
 	@Override
 	public void onValueChange(ValueChangeEvent<String> event) {
-		addPage(event.getValue());
+		String value = event.getValue();
+
+		if (value == null || value.length() == 0 || PageType.LoadingPageType.equals(value)) {
+			PageType.HomePageType.show();
+		} else {
+			addPage(value);
+		}
 	}
 
 	/**
@@ -222,6 +241,21 @@ public class NavigationController implements ValueChangeHandler<String>, JsonSer
 	public void clearTimeoutData() {
 		timeoutPage = null;
 		timeoutUsername = null;
+	}
+
+	public void showIntendedPage() {
+		if (intended == null) {
+			PageType.HomePageType.show();
+		} else {
+			addPage(intended);
+		}
+	}
+
+	/**
+	 * @return
+	 */
+	public String getIntendedPage() {
+		return intended;
 	}
 
 	/*

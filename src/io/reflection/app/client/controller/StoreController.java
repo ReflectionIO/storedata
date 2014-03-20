@@ -16,6 +16,7 @@ import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Store;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.safehtml.shared.SafeUri;
@@ -37,6 +38,7 @@ public class StoreController implements ServiceConstants {
 	private static StoreController mOne = null;
 
 	private Map<String, Store> mStoreLookup = null;
+	private List<Store> stores;
 
 	public static StoreController get() {
 		if (mOne == null) {
@@ -46,7 +48,7 @@ public class StoreController implements ServiceConstants {
 		return mOne;
 	}
 
-	public void fetchAllStores() {
+	private void fetchAllStores() {
 		CoreService service = ServiceCreator.createCoreService();
 
 		final GetStoresRequest input = new GetStoresRequest();
@@ -61,6 +63,8 @@ public class StoreController implements ServiceConstants {
 				if (output.status == StatusType.StatusTypeSuccess) {
 					if (output.stores != null && output.stores.size() > 0) {
 
+						stores = output.stores;
+						
 						if (mStoreLookup == null) {
 							mStoreLookup = new HashMap<String, Store>();
 						}
@@ -101,7 +105,6 @@ public class StoreController implements ServiceConstants {
 							mStoreLookup.put(iphone.a3Code, mStoreLookup.get(IOS_A3_CODE));
 
 							output.stores.remove(iosStore);
-
 						}
 					}
 				}
@@ -148,5 +151,25 @@ public class StoreController implements ServiceConstants {
 		}
 
 		return externalUri;
+	}
+
+	/**
+	 * @return
+	 */
+	public boolean prefetchStores() {
+		boolean attemptPrefetch;
+
+		if (attemptPrefetch = (mStoreLookup == null || mStoreLookup.size() == 0)) {
+			fetchAllStores();
+		}
+
+		return attemptPrefetch;
+	}
+
+	/**
+	 * @return
+	 */
+	public List<Store> getStores() {
+		return stores;
 	}
 }
