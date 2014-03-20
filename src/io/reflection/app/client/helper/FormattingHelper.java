@@ -13,15 +13,15 @@ package io.reflection.app.client.helper;
  */
 public class FormattingHelper {
 
-	public static String getCurrencySymbol(String currency) {
-		if (currency.equals("USD")) {
+	public static String getCurrencySymbol(String currency) {		
+		if ("USD".equals(currency)) {
 			return "$";
-		} else if (currency.equals("EUR")) {
+		} else if ("EUR".equals(currency)) {
 			return "€";
-		} else if (currency.equals("CNY")) {
+		} else if ("CNY".equals(currency)) {
 			return "¥";
 		} else {
-			return "?";
+			return currency;
 		}
 	}
 }
