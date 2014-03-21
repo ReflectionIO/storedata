@@ -40,6 +40,8 @@ public class CronServlet extends HttpServlet {
 
 	private static final Logger LOG = Logger.getLogger(CronServlet.class.getName());
 
+	private static final int DELETE_COUNT = 1000;
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -92,13 +94,13 @@ public class CronServlet extends HttpServlet {
 			}
 		} else if (deleteSome != null) {
 			if ("Rank".equals(deleteSome)) {
-				QueryKeys<Rank> query = ofy().load().type(Rank.class).limit(200).keys();
+				QueryKeys<Rank> query = ofy().load().type(Rank.class).limit(DELETE_COUNT).keys();
 				ofy().delete().keys(query.iterable());
-				count = 200;
+				count = DELETE_COUNT;
 			} else if ("Item".equals(deleteSome)) {
-				QueryKeys<Item> query = ofy().load().type(Item.class).limit(100).keys();
+				QueryKeys<Item> query = ofy().load().type(Item.class).limit(DELETE_COUNT).keys();
 				ofy().delete().keys(query.iterable());
-				count = 200;
+				count = DELETE_COUNT;
 			}
 
 			if (LOG.isLoggable(Level.INFO)) {

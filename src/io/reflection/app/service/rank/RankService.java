@@ -31,12 +31,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 
-import com.google.appengine.api.memcache.AsyncMemcacheService;
-import com.google.appengine.api.memcache.ErrorHandlers;
-import com.google.appengine.api.memcache.MemcacheService;
-import com.google.appengine.api.memcache.MemcacheServiceFactory;
+import co.spchopr.persistentmap.PersistentMap;
+import co.spchopr.persistentmap.PersistentMapFactory;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -45,16 +43,7 @@ import com.spacehopperstudios.utility.StringUtils;
 
 final class RankService implements IRankService {
 
-	private MemcacheService syncCache;
-	private AsyncMemcacheService asyncCache;
-
-	public RankService() {
-		syncCache = MemcacheServiceFactory.getMemcacheService();
-		syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.WARNING));
-
-		asyncCache = MemcacheServiceFactory.getAsyncMemcacheService();
-		asyncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.WARNING));
-	}
+	private PersistentMap cache = PersistentMapFactory.createObjectify();
 
 	public String getName() {
 		return ServiceType.ServiceTypeRank.toString();
@@ -65,7 +54,7 @@ final class RankService implements IRankService {
 		Rank rank = null;
 
 		String memcacheKey = getName() + ".id." + id;
-		String jsonString = (String) syncCache.get(memcacheKey);
+		String jsonString = (String) cache.get(memcacheKey);
 
 		if (jsonString == null) {
 			IDatabaseService databaseService = DatabaseServiceProvider.provide();
@@ -179,7 +168,7 @@ final class RankService implements IRankService {
 
 			if (rankConnection.getAffectedRowCount() > 0) {
 				String memcacheKey = getName() + ".id." + rank.id;
-				asyncCache.delete(memcacheKey);
+				cache.delete(memcacheKey);
 
 				updatedRank = getRank(rank.id);
 			} else {
@@ -210,7 +199,7 @@ final class RankService implements IRankService {
 		Rank rank = null;
 
 		String memcacheKey = getName() + ".itemgathercoderank." + itemId + country + "." + store + "." + StringUtils.join(possibleTypes, ".") + "." + code;
-		String jsonString = (String) syncCache.get(memcacheKey);
+		String jsonString = (String) cache.get(memcacheKey);
 
 		if (jsonString == null) {
 
@@ -291,7 +280,7 @@ final class RankService implements IRankService {
 		String memcacheKey = getName() + ".itemranks." + "." + item.id.toString() + country.a2Code + "." + store.a3Code + "." + StringUtils.join(types, ".")
 				+ "." + (before == null ? "none" : before.getTime()) + "." + (after == null ? "none" : after.getTime()) + "." + pager.start + "." + pager.count
 				+ "." + pager.sortDirection + "." + pager.sortBy + ".";
-		String itemRanksString = (String) syncCache.get(memcacheKey);
+		String itemRanksString = (String) cache.get(memcacheKey);
 
 		if (itemRanksString == null) {
 			String typesQueryPart = null;
@@ -350,7 +339,7 @@ final class RankService implements IRankService {
 					for (Rank rank : ranks) {
 						jsonArray.add(rank.toJson());
 					}
-					asyncCache.put(memcacheKey, JsonUtils.cleanJson(jsonArray.toString()));
+					cache.put(memcacheKey, JsonUtils.cleanJson(jsonArray.toString()));
 				}
 			} finally {
 				if (rankConnection != null) {
@@ -375,7 +364,7 @@ final class RankService implements IRankService {
 
 		String memcacheKey = getName() + ".gathercode." + country.a2Code + "." + store.a3Code + "." + (after == null ? "none" : after.getTime()) + "."
 				+ (before == null ? "none" : before.getTime());
-		code = (Long) syncCache.get(memcacheKey);
+		code = (Long) cache.get(memcacheKey);
 
 		if (code == null) {
 			Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
@@ -390,7 +379,7 @@ final class RankService implements IRankService {
 
 				if (rankConnection.fetchNextRow()) {
 					code = rankConnection.getCurrentRowLong("code2");
-					asyncCache.put(memcacheKey, code);
+					cache.put(memcacheKey, code);
 				}
 			} finally {
 				if (rankConnection != null) {
@@ -546,7 +535,7 @@ final class RankService implements IRankService {
 
 		String memcacheKey = getName() + ".gathercoderankscount." + code.toString() + "." + country.a2Code + "." + store.a3Code + "." + category.id.toString()
 				+ "." + StringUtils.join(types, ".");
-		ranksCount = (Long) syncCache.get(memcacheKey);
+		ranksCount = (Long) cache.get(memcacheKey);
 
 		if (ranksCount == null) {
 			String typesQueryPart = null;
@@ -569,7 +558,7 @@ final class RankService implements IRankService {
 
 				if (rankConnection.fetchNextRow()) {
 					ranksCount = rankConnection.getCurrentRowLong("count");
-					asyncCache.put(memcacheKey, ranksCount);
+					cache.put(memcacheKey, ranksCount);
 				}
 
 			} finally {
@@ -639,7 +628,7 @@ final class RankService implements IRankService {
 
 				if (rankConnection.getAffectedRowCount() > 0) {
 					String memcacheKey = getName() + ".id." + rank.id;
-					asyncCache.delete(memcacheKey);
+					cache.delete(memcacheKey);
 
 					ranksCount++;
 				}
@@ -740,7 +729,7 @@ final class RankService implements IRankService {
 
 		String memcacheKey = getName() + ".allranks." + country.a2Code + "." + store.a3Code + "." + category.id.toString() + "." + StringUtils.join(types, ".")
 				+ "." + (start == null ? "none" : start.getTime()) + "." + (end == null ? "none" : end.getTime());
-		String allRanksString = (String) syncCache.get(memcacheKey);
+		String allRanksString = (String) cache.get(memcacheKey);
 
 		if (allRanksString == null) {
 			String typesQueryPart = null;
@@ -774,7 +763,7 @@ final class RankService implements IRankService {
 					for (Rank rank : ranks) {
 						jsonArray.add(rank.toJson());
 					}
-					asyncCache.put(memcacheKey, JsonUtils.cleanJson(jsonArray.toString()));
+					cache.put(memcacheKey, JsonUtils.cleanJson(jsonArray.toString()));
 				}
 
 			} finally {
