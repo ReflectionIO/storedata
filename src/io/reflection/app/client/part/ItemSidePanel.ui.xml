@@ -8,13 +8,18 @@
     .pageTitle {
     	padding-bottom: 30px;
     }
+    
+    .hideOverflow {
+		overflow: hidden;
+	}
+	
     </ui:style>
     <g:HTMLPanel styleName="sidebar-nav">
         <g:Image ui:field="mImage" styleName="img-rounded" />
 
-        <h2 ui:field="mTitle">Item</h2>
+        <h2 ui:field="mTitle" class="{style.hideOverflow}">Item</h2>
 
-        <h3 ui:field="mCreatorName" class="{style.pageTitle} text-muted">By Creator</h3>
+        <h3 ui:field="mCreatorName" class="{style.pageTitle} {style.hideOverflow} text-muted">By Creator</h3>
 
         <p ui:field="price">$0.99 + in-App purchases</p>
 

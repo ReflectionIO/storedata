@@ -31,10 +31,31 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
+import com.google.appengine.api.memcache.AsyncMemcacheService;
+import com.google.appengine.api.memcache.ErrorHandlers;
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.spacehopperstudios.utility.JsonUtils;
 import com.spacehopperstudios.utility.StringUtils;
 
 final class RankService implements IRankService {
+
+	private MemcacheService syncCache;
+	private AsyncMemcacheService asyncCache;
+
+	public RankService() {
+		syncCache = MemcacheServiceFactory.getMemcacheService();
+		syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.WARNING));
+
+		asyncCache = MemcacheServiceFactory.getAsyncMemcacheService();
+		asyncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.WARNING));
+	}
+
 	public String getName() {
 		return ServiceType.ServiceTypeRank.toString();
 	}
@@ -43,22 +64,30 @@ final class RankService implements IRankService {
 	public Rank getRank(Long id) throws DataAccessException {
 		Rank rank = null;
 
-		IDatabaseService databaseService = DatabaseServiceProvider.provide();
-		Connection rankConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+		String memcacheKey = getName() + ".id." + id;
+		String jsonString = (String) syncCache.get(memcacheKey);
 
-		final String getRankQuery = String.format("SELECT * FROM `rank` WHERE `deleted`='n' AND `id`=%d LIMIT 1", id.longValue());
+		if (jsonString == null) {
+			IDatabaseService databaseService = DatabaseServiceProvider.provide();
+			Connection rankConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
-		try {
-			rankConnection.connect();
-			rankConnection.executeQuery(getRankQuery);
+			final String getRankQuery = String.format("SELECT * FROM `rank` WHERE `deleted`='n' AND `id`=%d LIMIT 1", id.longValue());
 
-			if (rankConnection.fetchNextRow()) {
-				rank = toRank(rankConnection);
+			try {
+				rankConnection.connect();
+				rankConnection.executeQuery(getRankQuery);
+
+				if (rankConnection.fetchNextRow()) {
+					rank = toRank(rankConnection);
+				}
+			} finally {
+				if (rankConnection != null) {
+					rankConnection.disconnect();
+				}
 			}
-		} finally {
-			if (rankConnection != null) {
-				rankConnection.disconnect();
-			}
+		} else {
+			rank = new Rank();
+			rank.fromJson(jsonString);
 		}
 		return rank;
 	}
@@ -149,6 +178,9 @@ final class RankService implements IRankService {
 			rankConnection.executeQuery(updateRankQuery);
 
 			if (rankConnection.getAffectedRowCount() > 0) {
+				String memcacheKey = getName() + ".id." + rank.id;
+				asyncCache.delete(memcacheKey);
+
 				updatedRank = getRank(rank.id);
 			} else {
 				updatedRank = rank;
@@ -177,30 +209,39 @@ final class RankService implements IRankService {
 	public Rank getItemGatherCodeRank(String itemId, Long code, String store, String country, List<String> possibleTypes) throws DataAccessException {
 		Rank rank = null;
 
-		String typesQueryPart = null;
-		if (possibleTypes.size() == 1) {
-			typesQueryPart = String.format("`type`='%s'", possibleTypes.get(0));
+		String memcacheKey = getName() + ".itemgathercoderank." + itemId + country + "." + store + "." + StringUtils.join(possibleTypes, ".") + "." + code;
+		String jsonString = (String) syncCache.get(memcacheKey);
+
+		if (jsonString == null) {
+
+			String typesQueryPart = null;
+			if (possibleTypes.size() == 1) {
+				typesQueryPart = String.format("`type`='%s'", possibleTypes.get(0));
+			} else {
+				typesQueryPart = "`type` IN ('" + StringUtils.join(possibleTypes, "','") + "')";
+			}
+
+			final String getItemGatherCodeRankQuery = String.format(
+					"SELECT * FROM `rank` WHERE `itemid`='%s' AND `code2`=%d AND `source`='%s' AND `country`='%s' AND %s AND `deleted`='n' LIMIT 1", itemId,
+					code.longValue(), store, country, typesQueryPart);
+
+			Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+
+			try {
+				rankConnection.connect();
+				rankConnection.executeQuery(getItemGatherCodeRankQuery);
+
+				if (rankConnection.fetchNextRow()) {
+					rank = toRank(rankConnection);
+				}
+			} finally {
+				if (rankConnection != null) {
+					rankConnection.disconnect();
+				}
+			}
 		} else {
-			typesQueryPart = "`type` IN ('" + StringUtils.join(possibleTypes, "','") + "')";
-		}
-
-		final String getItemGatherCodeRankQuery = String.format(
-				"SELECT * FROM `rank` WHERE `itemid`='%s' AND `code2`=%d AND `source`='%s' AND `country`='%s' AND %s AND `deleted`='n' LIMIT 1", itemId,
-				code.longValue(), store, country, typesQueryPart);
-
-		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
-
-		try {
-			rankConnection.connect();
-			rankConnection.executeQuery(getItemGatherCodeRankQuery);
-
-			if (rankConnection.fetchNextRow()) {
-				rank = toRank(rankConnection);
-			}
-		} finally {
-			if (rankConnection != null) {
-				rankConnection.disconnect();
-			}
+			rank = new Rank();
+			rank.fromJson(jsonString);
 		}
 
 		return rank;
@@ -247,59 +288,82 @@ final class RankService implements IRankService {
 
 		types.add(addslashes(listType));
 
-		String typesQueryPart = null;
-		if (types.size() == 1) {
-			typesQueryPart = String.format("`type`='%s'", types.get(0));
-		} else {
-			typesQueryPart = "`type` IN ('" + StringUtils.join(types, "','") + "')";
-		}
+		String memcacheKey = getName() + ".itemranks." + "." + item.id.toString() + country.a2Code + "." + store.a3Code + "." + StringUtils.join(types, ".")
+				+ "." + (before == null ? "none" : before.getTime()) + "." + (after == null ? "none" : after.getTime()) + "." + pager.start + "." + pager.count
+				+ "." + pager.sortDirection + "." + pager.sortBy + ".";
+		String itemRanksString = (String) syncCache.get(memcacheKey);
 
-		if (isGrossing) {
-			pager.sortBy = "grossingposition";
-		} else {
-			pager.sortBy = "position";
-		}
+		if (itemRanksString == null) {
+			String typesQueryPart = null;
+			if (types.size() == 1) {
+				typesQueryPart = String.format("`type`='%s'", types.get(0));
+			} else {
+				typesQueryPart = "`type` IN ('" + StringUtils.join(types, "','") + "')";
+			}
 
-		String getCountryStoreTypeRanksQuery = String
-				.format("SELECT * FROM `rank` WHERE %s AND `country`='%s' AND `source`='%s' AND `itemid`='%s' AND `categoryid`=24 AND %s %s `deleted`='n' ORDER BY `date` ASC, `%s` %s LIMIT %d,%d",
-						typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), addslashes(item.externalId), beforeAfterQuery(before, after),
-						isGrossing ? "`grossingposition`<>0 AND" : "", pager.sortBy,
-						pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
+			if (isGrossing) {
+				pager.sortBy = "grossingposition";
+			} else {
+				pager.sortBy = "position";
+			}
 
-		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+			String getCountryStoreTypeRanksQuery = String
+					.format("SELECT * FROM `rank` WHERE %s AND `country`='%s' AND `source`='%s' AND `itemid`='%s' AND `categoryid`=24 AND %s %s `deleted`='n' ORDER BY `date` ASC, `%s` %s LIMIT %d,%d",
+							typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), addslashes(item.externalId), beforeAfterQuery(before, after),
+							isGrossing ? "`grossingposition`<>0 AND" : "", pager.sortBy,
+							pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
 
-		try {
-			rankConnection.connect();
-			rankConnection.executeQuery(getCountryStoreTypeRanksQuery);
+			Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
-			Map<Date, Rank> ranksLookup = new HashMap<Date, Rank>();
-			Date date;
-			Calendar cal = Calendar.getInstance();
+			try {
+				rankConnection.connect();
+				rankConnection.executeQuery(getCountryStoreTypeRanksQuery);
 
-			while (rankConnection.fetchNextRow()) {
-				// strip out duplicates for date
+				Map<Date, Rank> ranksLookup = new HashMap<Date, Rank>();
+				Date date;
+				Calendar cal = Calendar.getInstance();
 
-				date = rankConnection.getCurrentRowDateTime("date");
+				while (rankConnection.fetchNextRow()) {
+					// strip out duplicates for date
 
-				cal.setTime(date);
-				cal.set(Calendar.HOUR_OF_DAY, 0);
-				cal.set(Calendar.MINUTE, 0);
-				cal.set(Calendar.SECOND, 0);
-				cal.set(Calendar.MILLISECOND, 0);
-				date = cal.getTime();
+					date = rankConnection.getCurrentRowDateTime("date");
 
-				if (ranksLookup.get(date) == null) {
-					Rank rank = toRank(rankConnection);
+					cal.setTime(date);
+					cal.set(Calendar.HOUR_OF_DAY, 0);
+					cal.set(Calendar.MINUTE, 0);
+					cal.set(Calendar.SECOND, 0);
+					cal.set(Calendar.MILLISECOND, 0);
+					date = cal.getTime();
 
-					if (rank != null) {
-						ranks.add(rank);
-						ranksLookup.put(date, rank);
+					if (ranksLookup.get(date) == null) {
+						Rank rank = toRank(rankConnection);
+
+						if (rank != null) {
+							ranks.add(rank);
+							ranksLookup.put(date, rank);
+						}
 					}
 				}
+
+				if (ranks.size() > 0) {
+					JsonArray jsonArray = new JsonArray();
+					for (Rank rank : ranks) {
+						jsonArray.add(rank.toJson());
+					}
+					asyncCache.put(memcacheKey, JsonUtils.cleanJson(jsonArray.toString()));
+				}
+			} finally {
+				if (rankConnection != null) {
+					rankConnection.disconnect();
+				}
 			}
-		} finally {
-			if (rankConnection != null) {
-				rankConnection.disconnect();
+		} else {
+			JsonArray parsed = (JsonArray) new JsonParser().parse(itemRanksString);
+			Rank rank;
+			for (JsonElement jsonElement : parsed) {
+				rank = new Rank();
+				rank.fromJson(jsonElement.getAsJsonObject());
+				ranks.add(rank);
 			}
 		}
 
@@ -309,23 +373,29 @@ final class RankService implements IRankService {
 	private Long getGatherCode(Country country, Store store, Date after, Date before) throws DataAccessException {
 		Long code = null;
 
-		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+		String memcacheKey = getName() + ".gathercode." + country.a2Code + "." + store.a3Code + "." + (after == null ? "none" : after.getTime()) + "."
+				+ (before == null ? "none" : before.getTime());
+		code = (Long) syncCache.get(memcacheKey);
 
-		try {
+		if (code == null) {
+			Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
-			rankConnection.connect();
-			String getGatherCode = String.format(
-					"SELECT `code2` FROM `rank` WHERE `country`='%s' AND `source`='%s' AND %s `deleted`='n' ORDER BY `date` DESC LIMIT 1",
-					addslashes(country.a2Code), addslashes(store.a3Code), beforeAfterQuery(before, after));
+			try {
+				rankConnection.connect();
+				String getGatherCode = String.format(
+						"SELECT `code2` FROM `rank` WHERE `country`='%s' AND `source`='%s' AND %s `deleted`='n' ORDER BY `date` DESC LIMIT 1",
+						addslashes(country.a2Code), addslashes(store.a3Code), beforeAfterQuery(before, after));
 
-			rankConnection.executeQuery(getGatherCode);
+				rankConnection.executeQuery(getGatherCode);
 
-			if (rankConnection.fetchNextRow()) {
-				code = rankConnection.getCurrentRowLong("code2");
-			}
-		} finally {
-			if (rankConnection != null) {
-				rankConnection.disconnect();
+				if (rankConnection.fetchNextRow()) {
+					code = rankConnection.getCurrentRowLong("code2");
+					asyncCache.put(memcacheKey, code);
+				}
+			} finally {
+				if (rankConnection != null) {
+					rankConnection.disconnect();
+				}
 			}
 		}
 
@@ -461,7 +531,7 @@ final class RankService implements IRankService {
 	 */
 	@Override
 	public Long getGatherCodeRanksCount(Country country, Store store, Category category, String listType, Long code) throws DataAccessException {
-		Long ranksCount = Long.valueOf(0);
+		Long ranksCount = null;
 
 		Collector collector = CollectorFactory.getCollectorForStore(store.a3Code);
 		boolean isGrossing = collector.isGrossing(listType);
@@ -474,31 +544,38 @@ final class RankService implements IRankService {
 
 		types.add(addslashes(listType));
 
-		String typesQueryPart = null;
-		if (types.size() == 1) {
-			typesQueryPart = String.format("`type`='%s'", types.get(0));
-		} else {
-			typesQueryPart = "`type` IN ('" + StringUtils.join(types, "','") + "')";
-		}
+		String memcacheKey = getName() + ".gathercoderankscount." + code.toString() + "." + country.a2Code + "." + store.a3Code + "." + category.id.toString()
+				+ "." + StringUtils.join(types, ".");
+		ranksCount = (Long) syncCache.get(memcacheKey);
 
-		String getRanksCountQuery = String.format(
-				"SELECT COUNT(1) AS `count` FROM `rank` WHERE %s AND `country`='%s' AND `source`='%s' AND `categoryid`=%d AND `code2`=%d AND %s `deleted`='n'",
-				typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), code.longValue(),
-				isGrossing ? "`grossingposition`<>0 AND" : "");
-
-		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
-
-		try {
-			rankConnection.connect();
-			rankConnection.executeQuery(getRanksCountQuery);
-
-			if (rankConnection.fetchNextRow()) {
-				ranksCount = rankConnection.getCurrentRowLong("count");
+		if (ranksCount == null) {
+			String typesQueryPart = null;
+			if (types.size() == 1) {
+				typesQueryPart = String.format("`type`='%s'", types.get(0));
+			} else {
+				typesQueryPart = "`type` IN ('" + StringUtils.join(types, "','") + "')";
 			}
 
-		} finally {
-			if (rankConnection != null) {
-				rankConnection.disconnect();
+			String getRanksCountQuery = String
+					.format("SELECT COUNT(1) AS `count` FROM `rank` WHERE %s AND `country`='%s' AND `source`='%s' AND `categoryid`=%d AND `code2`=%d AND %s `deleted`='n'",
+							typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), code.longValue(),
+							isGrossing ? "`grossingposition`<>0 AND" : "");
+
+			Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+
+			try {
+				rankConnection.connect();
+				rankConnection.executeQuery(getRanksCountQuery);
+
+				if (rankConnection.fetchNextRow()) {
+					ranksCount = rankConnection.getCurrentRowLong("count");
+					asyncCache.put(memcacheKey, ranksCount);
+				}
+
+			} finally {
+				if (rankConnection != null) {
+					rankConnection.disconnect();
+				}
 			}
 		}
 
@@ -561,6 +638,9 @@ final class RankService implements IRankService {
 				rankConnection.executeQuery(updateRanksBatchQuery);
 
 				if (rankConnection.getAffectedRowCount() > 0) {
+					String memcacheKey = getName() + ".id." + rank.id;
+					asyncCache.delete(memcacheKey);
+
 					ranksCount++;
 				}
 			}
@@ -647,10 +727,6 @@ final class RankService implements IRankService {
 	public List<Rank> getAllRanks(Country country, Store store, Category category, String listType, Date start, Date end) throws DataAccessException {
 		List<Rank> ranks = new ArrayList<Rank>();
 
-		Long code = getGatherCode(country, store, start, end);
-
-		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
-
 		Collector collector = CollectorFactory.getCollectorForStore(store.a3Code);
 		boolean isGrossing = collector.isGrossing(listType);
 
@@ -662,32 +738,57 @@ final class RankService implements IRankService {
 
 		types.add(addslashes(listType));
 
-		String typesQueryPart = null;
-		if (types.size() == 1) {
-			typesQueryPart = String.format("`type`='%s'", types.get(0));
-		} else {
-			typesQueryPart = "`type` IN ('" + StringUtils.join(types, "','") + "')";
-		}
+		String memcacheKey = getName() + ".allranks." + country.a2Code + "." + store.a3Code + "." + category.id.toString() + "." + StringUtils.join(types, ".")
+				+ "." + (start == null ? "none" : start.getTime()) + "." + (end == null ? "none" : end.getTime());
+		String allRanksString = (String) syncCache.get(memcacheKey);
 
-		String getCountryStoreTypeRanksQuery = String.format(
-				"SELECT * FROM `rank` WHERE %s AND `country`='%s' AND `source`='%s' AND `categoryid`=%d AND `code2`=%d AND `deleted`='n'", typesQueryPart,
-				addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), code.longValue());
-
-		try {
-			rankConnection.connect();
-			rankConnection.executeQuery(getCountryStoreTypeRanksQuery);
-
-			while (rankConnection.fetchNextRow()) {
-				Rank rank = toRank(rankConnection);
-
-				if (rank != null) {
-					ranks.add(rank);
-				}
+		if (allRanksString == null) {
+			String typesQueryPart = null;
+			if (types.size() == 1) {
+				typesQueryPart = String.format("`type`='%s'", types.get(0));
+			} else {
+				typesQueryPart = "`type` IN ('" + StringUtils.join(types, "','") + "')";
 			}
 
-		} finally {
-			if (rankConnection != null) {
-				rankConnection.disconnect();
+			Long code = getGatherCode(country, store, start, end);
+
+			Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+			String getCountryStoreTypeRanksQuery = String.format(
+					"SELECT * FROM `rank` WHERE %s AND `country`='%s' AND `source`='%s' AND `categoryid`=%d AND `code2`=%d AND `deleted`='n'", typesQueryPart,
+					addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), code.longValue());
+
+			try {
+				rankConnection.connect();
+				rankConnection.executeQuery(getCountryStoreTypeRanksQuery);
+
+				while (rankConnection.fetchNextRow()) {
+					Rank rank = toRank(rankConnection);
+
+					if (rank != null) {
+						ranks.add(rank);
+					}
+				}
+
+				if (ranks.size() > 0) {
+					JsonArray jsonArray = new JsonArray();
+					for (Rank rank : ranks) {
+						jsonArray.add(rank.toJson());
+					}
+					asyncCache.put(memcacheKey, JsonUtils.cleanJson(jsonArray.toString()));
+				}
+
+			} finally {
+				if (rankConnection != null) {
+					rankConnection.disconnect();
+				}
+			}
+		} else {
+			JsonArray parsed = (JsonArray) new JsonParser().parse(allRanksString);
+			Rank rank;
+			for (JsonElement jsonElement : parsed) {
+				rank = new Rank();
+				rank.fromJson(jsonElement.getAsJsonObject());
+				ranks.add(rank);
 			}
 		}
 

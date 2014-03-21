@@ -170,7 +170,7 @@ final class ItemService implements IItemService {
 
 			if (itemConnection.getAffectedRowCount() > 0) {
 
-				String memcacheKey = getName() + "." + item.id;
+				String memcacheKey = getName() + ".id." + item.id;
 				asyncCache.delete(memcacheKey);
 
 				updatedItem = getItem(item.id);
