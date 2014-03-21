@@ -7,30 +7,29 @@
 //
 package io.reflection.app.client.controller;
 
-import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.Footer;
 import io.reflection.app.client.part.Header;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.willshex.gson.json.service.client.JsonService;
-import com.willshex.gson.json.service.client.JsonServiceCallEventHandler;
-import com.willshex.gson.json.service.shared.Request;
-import com.willshex.gson.json.service.shared.Response;
+import com.spacehopperstudios.utility.StringUtils;
 
 /**
  * @author billy1380
  * 
  */
-public class NavigationController implements ValueChangeHandler<String>, JsonServiceCallEventHandler {
+public class NavigationController implements ValueChangeHandler<String> {
 	private static NavigationController mOne = null;
 
 	private HTMLPanel mPanel = null;
@@ -43,9 +42,6 @@ public class NavigationController implements ValueChangeHandler<String>, JsonSer
 	private Stack mStack;
 
 	private String intended = null;
-
-	private String timeoutPage = null;
-	private String timeoutUsername = null;
 
 	public static class Stack {
 		private String[] mParts;
@@ -80,10 +76,27 @@ public class NavigationController implements ValueChangeHandler<String>, JsonSer
 		public boolean hasPage() {
 			return getPage() != null;
 		}
-	}
 
-	private NavigationController() {
-		EventController.get().addHandler(JsonServiceCallEventHandler.TYPE, this);
+		@Override
+		public String toString() {
+			if (mParts == null) {
+				return "";
+			} else {
+				return StringUtils.join(Arrays.asList(mParts), "/");
+			}
+		}
+
+		public String toString(int fromPart) {
+			if (mParts == null) {
+				return "";
+			} else {
+				List<String> subParts = new ArrayList<String>();
+				for (int i = fromPart; i < mParts.length; i++) {
+					subParts.add(mParts[i]);
+				}
+				return StringUtils.join(subParts, "/");
+			}
+		}
 	}
 
 	public static NavigationController get() {
@@ -131,13 +144,25 @@ public class NavigationController implements ValueChangeHandler<String>, JsonSer
 			value = PageType.LoadingPageType.toString();
 		}
 
+		// Coming from a previous timeout
+		if (SessionController.get().getTimeoutUsername() != null && SessionController.get().getSession() != null) {
+			// The user had changed, invalid intended page
+			if (!SessionController.get().getLoggedInUser().username.equals(SessionController.get().getTimeoutUsername())) {
+				intended = null;
+				value = "home";
+			}
+			SessionController.get().clearTimeoutUsername();
+		}
+
 		Stack s = Stack.parse(value);
 
-		if (intended != null && intended.equals(s.getPage())) {
+		// Intended equals to current page, then clear intended
+		if (intended != null && intended.equals(s.toString())) {
 			intended = null;
 		}
 
 		addStack(s);
+
 	}
 
 	private void addStack(Stack value) {
@@ -174,6 +199,7 @@ public class NavigationController implements ValueChangeHandler<String>, JsonSer
 		}
 
 		EventController.get().fireEventFromSource(new NavigationEventHandler.ChangedEvent(mStack), NavigationController.this);
+
 	}
 
 	/**
@@ -220,29 +246,6 @@ public class NavigationController implements ValueChangeHandler<String>, JsonSer
 		}
 	}
 
-	/**
-	 * Get the last visited page before timeout error
-	 * 
-	 * @return
-	 */
-	public String getTimeoutPage() {
-		return timeoutPage;
-	}
-
-	/**
-	 * Get the logged user before timeout error
-	 * 
-	 * @return
-	 */
-	public String getTimeoutUsername() {
-		return timeoutUsername;
-	}
-
-	public void clearTimeoutData() {
-		timeoutPage = null;
-		timeoutUsername = null;
-	}
-
 	public void showIntendedPage() {
 		if (intended == null) {
 			PageType.HomePageType.show();
@@ -258,47 +261,8 @@ public class NavigationController implements ValueChangeHandler<String>, JsonSer
 		return intended;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.json.service.client.JsonServiceCallEventHandler#jsonServiceCallStart(com.willshex.gson.json.service.client.JsonService,
-	 * java.lang.String, com.willshex.gson.json.service.shared.Request, com.google.gwt.http.client.Request)
-	 */
-	@Override
-	public void jsonServiceCallStart(JsonService origin, String callName, Request input, com.google.gwt.http.client.Request handle) {}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.json.service.client.JsonServiceCallEventHandler#jsonServiceCallSuccess(com.willshex.gson.json.service.client.JsonService,
-	 * java.lang.String, com.willshex.gson.json.service.shared.Request, com.willshex.gson.json.service.shared.Response)
-	 */
-	@Override
-	public void jsonServiceCallSuccess(JsonService origin, String callName, Request input, Response output) {
-		if (output.error != null) {
-			// Session error redirection
-			if (output.error.code.intValue() == ApiError.SessionNull.getCode() || output.error.code.intValue() == ApiError.SessionNotFound.getCode()
-					|| output.error.code.intValue() == ApiError.SessionNoLookup.getCode()) {
-				timeoutPage = this.getStack().getPage();
-				if (this.getStack().getAction() != null) {
-					timeoutPage += "/" + this.getStack().getAction();
-					if (this.getStack().getParameter(0) != null) {
-						timeoutPage += "/" + this.getStack().getParameter(0);
-					}
-				}
-				timeoutUsername = SessionController.get().getLoggedInUser().username;
-				PageType.LoginPageType.show("timeout");
-			}
-		}
-
+	public void setLastIntendedPage() {
+		intended = mStack.toString();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.json.service.client.JsonServiceCallEventHandler#jsonServiceCallFailure(com.willshex.gson.json.service.client.JsonService,
-	 * java.lang.String, com.willshex.gson.json.service.shared.Request, java.lang.Throwable)
-	 */
-	@Override
-	public void jsonServiceCallFailure(JsonService origin, String callName, Request input, Throwable caught) {}
 }

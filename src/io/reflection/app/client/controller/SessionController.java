@@ -30,6 +30,7 @@ import io.reflection.app.api.core.shared.call.event.GetRolesAndPermissionsEventH
 import io.reflection.app.api.core.shared.call.event.GetRolesAndPermissionsEventHandler.GetRolesAndPermissionsSuccess;
 import io.reflection.app.api.core.shared.call.event.LoginEventHandler.LoginFailure;
 import io.reflection.app.api.core.shared.call.event.LoginEventHandler.LoginSuccess;
+import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.client.handler.user.SessionEventHandler.UserLoggedIn;
 import io.reflection.app.client.handler.user.SessionEventHandler.UserLoggedOut;
@@ -50,14 +51,18 @@ import java.util.Map;
 
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.willshex.gson.json.service.client.JsonService;
+import com.willshex.gson.json.service.client.JsonServiceCallEventHandler;
 import com.willshex.gson.json.service.shared.Error;
+import com.willshex.gson.json.service.shared.Request;
+import com.willshex.gson.json.service.shared.Response;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author billy1380
  * 
  */
-public class SessionController implements ServiceConstants {
+public class SessionController implements ServiceConstants, JsonServiceCallEventHandler {
 	private static SessionController mOne;
 
 	// Cache roles and permissions meanwhile user is logged in
@@ -71,6 +76,12 @@ public class SessionController implements ServiceConstants {
 
 	private User mLoggedInUser = null;
 	private Session mSession = null;
+
+	private String timeoutUsername = null;
+
+	private SessionController() {
+		EventController.get().addHandler(JsonServiceCallEventHandler.TYPE, this);
+	}
 
 	public static SessionController get() {
 		if (mOne == null) {
@@ -595,5 +606,57 @@ public class SessionController implements ServiceConstants {
 			});
 		}
 	}
+
+	public String getTimeoutUsername() {
+		return timeoutUsername;
+	}
+
+	public void clearTimeoutUsername() {
+		timeoutUsername = null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.willshex.gson.json.service.client.JsonServiceCallEventHandler#jsonServiceCallStart(com.willshex.gson.json.service.client.JsonService,
+	 * java.lang.String, com.willshex.gson.json.service.shared.Request, com.google.gwt.http.client.Request)
+	 */
+	@Override
+	public void jsonServiceCallStart(JsonService origin, String callName, Request input, com.google.gwt.http.client.Request handle) {}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.willshex.gson.json.service.client.JsonServiceCallEventHandler#jsonServiceCallSuccess(com.willshex.gson.json.service.client.JsonService,
+	 * java.lang.String, com.willshex.gson.json.service.shared.Request, com.willshex.gson.json.service.shared.Response)
+	 */
+	@Override
+	public void jsonServiceCallSuccess(JsonService origin, String callName, Request input, Response output) {
+		if (output.error != null) {
+			// Session error redirection
+			if (output.error.code.intValue() == ApiError.SessionNull.getCode() || output.error.code.intValue() == ApiError.SessionNotFound.getCode()
+					|| output.error.code.intValue() == ApiError.SessionNoLookup.getCode()) {
+
+				timeoutUsername = mLoggedInUser.username; // Save Username logged in during timeout
+
+				mSession = null; // Set session as invalid
+
+				NavigationController.get().setLastIntendedPage(); // Save last page clicked before timeout
+
+				PageType.LoginPageType.show("timeout");
+
+			}
+		}
+				
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.willshex.gson.json.service.client.JsonServiceCallEventHandler#jsonServiceCallFailure(com.willshex.gson.json.service.client.JsonService,
+	 * java.lang.String, com.willshex.gson.json.service.shared.Request, java.lang.Throwable)
+	 */
+	@Override
+	public void jsonServiceCallFailure(JsonService origin, String callName, Request input, Throwable caught) {}
 
 }

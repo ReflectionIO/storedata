@@ -98,7 +98,7 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 	 * io.reflection.app.api.shared.datatypes.Session)
 	 */
 	@Override
-	public void userLoggedIn(User user, Session session) {
+	public void userLoggedIn(User user, Session session) {		
 		NavigationController.get().addPage(PageType.LoadingPageType.toString());
 	}
 
