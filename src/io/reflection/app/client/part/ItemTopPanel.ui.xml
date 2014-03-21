@@ -2,26 +2,29 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.user.datepicker.client"
     xmlns:p="urn:import:io.reflection.app.client.part">
     <ui:style>
-    .inlineTable {
-    	display: inline-table;
-    }
+    
     </ui:style>
     <g:HTMLPanel styleName="well well-sm">
 
         <g:FormPanel styleName="form-inline">
             <g:HTMLPanel>
-                <div class="{style.inlineTable} input-group col-sm-3">
-                    <p:DateRangeBox styleName="form-control" ui:field="mDateRange" />
-                    <span class="input-group-addon">
-                        <i class="icon-calendar"></i>
-                    </span>
+                <div class="form-group col-sm-3">
+                    <div class="input-group ">
+                        <p:DateRangeBox styleName="form-control" ui:field="mDateRange" />
+                        
+                        <span class="input-group-addon">
+                            <i class="icon-calendar"></i>
+                        </span>
+                    </div>
                 </div>
 
-                <g:ListBox styleName="form-control" ui:field="mAppStore">
-                </g:ListBox>
+                <div class="form-group">
+                    <g:ListBox styleName="form-control" ui:field="mAppStore" />
+                </div>
 
-                <g:ListBox styleName="form-control" ui:field="mCountry">
-                </g:ListBox>
+                <div class="form-group">
+                    <g:ListBox styleName="form-control" ui:field="mCountry" />
+                </div>
 
                 <!-- <div class="btn-group btn-group-xs"> <g:InlineHyperlink ui:field="m1Month" styleName="btn btn-default active">1m</g:InlineHyperlink> <g:InlineHyperlink 
                     ui:field="m3Months" styleName="btn btn-default">3m</g:InlineHyperlink> <g:InlineHyperlink ui:field="m6Months" styleName="btn btn-default">6m</g:InlineHyperlink> <g:InlineHyperlink 
