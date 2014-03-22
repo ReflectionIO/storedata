@@ -44,7 +44,9 @@ public final class Blog extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
-			input.session = ValidationHelper.validateSession(input.session, "input.session");
+			if (input.session != null) {
+				input.session = ValidationHelper.validateSession(input.session, "input.session");
+			}
 
 			if (input.includeContents == null) {
 				input.includeContents = Boolean.FALSE;
@@ -87,7 +89,7 @@ public final class Blog extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
-			input.session = ValidationHelper.validateSession(input.session, "input.session");
+			if (input.session != null) input.session = ValidationHelper.validateSession(input.session, "input.session");
 
 			boolean isIdLookup = false, isTitleLookup = false;
 			if (input.id != null) {
@@ -133,6 +135,7 @@ public final class Blog extends ActionHandler {
 			output.status = StatusType.StatusTypeFailure;
 			output.error = convertToErrorAndLog(LOG, e);
 		}
+
 		LOG.finer("Exiting updatePost");
 		return output;
 	}
