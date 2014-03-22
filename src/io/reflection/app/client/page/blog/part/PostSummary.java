@@ -12,13 +12,11 @@ import io.reflection.app.datatypes.shared.Post;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.dom.client.SpanElement;
-import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -41,7 +39,7 @@ public class PostSummary extends Composite {
 
 	@UiField InlineHyperlink readMore;
 
-	@UiField HTMLPanel tags;
+	// @UiField HTMLPanel tags;
 
 	public PostSummary() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -64,19 +62,19 @@ public class PostSummary extends Composite {
 
 			readMore.setTargetHistoryToken("blogpost/view/" + post.id.toString());
 
-			if (tags.getWidgetCount() > 0) {
-				tags.clear();
-			}
-
-			if (post.tags != null) {
-				DisplayTag displayTag;
-				for (String tag : post.tags) {
-					displayTag = new DisplayTag();
-					displayTag.setName(tag);
-					displayTag.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-					tags.add(displayTag);
-				}
-			}
+			// if (tags.getWidgetCount() > 0) {
+			// tags.clear();
+			// }
+			//
+			// if (post.tags != null) {
+			// DisplayTag displayTag;
+			// for (String tag : post.tags) {
+			// displayTag = new DisplayTag();
+			// displayTag.setName(tag);
+			// displayTag.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+			// tags.add(displayTag);
+			// }
+			// }
 		}
 	}
 

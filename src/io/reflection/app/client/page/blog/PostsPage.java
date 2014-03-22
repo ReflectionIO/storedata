@@ -7,6 +7,8 @@
 //
 package io.reflection.app.client.page.blog;
 
+import java.util.List;
+
 import io.reflection.app.api.blog.shared.call.GetPostsRequest;
 import io.reflection.app.api.blog.shared.call.GetPostsResponse;
 import io.reflection.app.api.blog.shared.call.event.GetPostsEventHandler;
@@ -70,8 +72,9 @@ public class PostsPage extends Page implements NavigationEventHandler, GetPostsE
 	private void showPosts() {
 		posts.clear();
 
-		if (PostController.get().getPosts() != null) {
-			for (Post post : PostController.get().getPosts()) {
+		List<Post> data;
+		if ((data = PostController.get().getPosts()) != null) {
+			for (Post post : data) {
 				// if (post.published != null && post.visible == Boolean.TRUE) {
 				PostSummary summary = new PostSummary();
 				summary.setPost(post);

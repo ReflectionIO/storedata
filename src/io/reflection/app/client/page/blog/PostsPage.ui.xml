@@ -5,10 +5,14 @@
     	font-weight: inherit;
     	font-size: inherit;
     }
+    
+    .heading {
+		text-transform: uppercase;
+	}
     </ui:style>
     <g:HTMLPanel>
         <g:HTMLPanel styleName="container">
-            <h2>Blog</h2>
+            <h2 class="{style.heading}">Blog</h2>
 
             <g:HTMLPanel ui:field="posts" styleName="{style.posts}" />
 

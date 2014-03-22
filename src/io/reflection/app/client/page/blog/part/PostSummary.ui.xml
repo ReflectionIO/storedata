@@ -16,9 +16,10 @@
             <span ui:field="author"></span>
         </p>
         <p ui:field="description"></p>
-        <g:InlineHyperlink ui:field="readMore">Read More</g:InlineHyperlink>
         
-        <g:HTMLPanel ui:field="tags" />
+        <g:InlineHyperlink ui:field="readMore">Read More</g:InlineHyperlink>
+
+        <!-- <g:HTMLPanel ui:field="tags" /> -->
 
     </g:HTMLPanel>
 </ui:UiBinder> 

@@ -104,6 +104,8 @@ public final class Blog extends ActionHandler {
 				output.post = PostServiceProvider.provide().getTitlePost(input.title);
 			}
 
+			output.post.author = UserServiceProvider.provide().getUser(output.post.author.id);
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;

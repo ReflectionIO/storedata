@@ -74,32 +74,32 @@ public class RichTextToolbar extends Composite {
 	public RichTextToolbar() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		bold.getElement().setInnerHTML("<span class=\"glyphicon glyphicon-bold\"></span>");
-		italic.getElement().setInnerHTML("<span class=\"glyphicon glyphicon-italic\"></span>");
-		underline.setText("underline");
-		strikethrough.setText("strike through");
+		bold.getElement().setInnerHTML("<span class=\"icon-bold\"></span>");
+		italic.getElement().setInnerHTML("<span class=\"icon-italic\"></span>");
+		underline.getElement().setInnerHTML("<span class=\"icon-underline\"></span>");
+		strikethrough.getElement().setInnerHTML("<span class=\"icon-strike\"></span>");
 
-		superscript.setText("super");
-		subscript.setText("sub");
+		superscript.getElement().setInnerHTML("<span class=\"icon-superscript\"></span>");
+		subscript.getElement().setInnerHTML("<span class=\"icon-subscript\"></span>");
 
-		justifyLeft.getElement().setInnerHTML("<span class=\"glyphicon glyphicon-align-left\"></span>");
-		justifyCenter.getElement().setInnerHTML("<span class=\"glyphicon glyphicon-align-center\"></span>");
-		justifyRight.getElement().setInnerHTML("<span class=\"glyphicon glyphicon-align-right\"></span>");
+		justifyLeft.getElement().setInnerHTML("<span class=\"icon-align-left\"></span>");
+		justifyCenter.getElement().setInnerHTML("<span class=\"icon-align-center\"></span>");
+		justifyRight.getElement().setInnerHTML("<span class=\"icon-align-right\"></span>");
 
-		indent.getElement().setInnerHTML("<span class=\"glyphicon glyphicon-indent-right\"></span>");
-		outdent.getElement().setInnerHTML("<span class=\"glyphicon glyphicon-indent-left\"></span>");
+		indent.getElement().setInnerHTML("<span class=\"icon-indent-right\"></span>");
+		outdent.getElement().setInnerHTML("<span class=\"icon-indent-left\"></span>");
 
-		hr.getElement().setInnerHTML("<span class=\"glyphicon glyphicon-minus\"></span>");
+		hr.getElement().setInnerHTML("<span class=\"icon-minus\"></span>");
 
-		ol.setText("ordered list");
-		ul.getElement().setInnerHTML("<span class=\"glyphicon glyphicon-list\"></span>");
+		ol.getElement().setInnerHTML("<span class=\"icon-list-numbered\"></span>");
+		ul.getElement().setInnerHTML("<span class=\"icon-list\"></span>");
 
-		insertImage.getElement().setInnerHTML("<span class=\"glyphicon glyphicon-picture\"></span>");
+		insertImage.getElement().setInnerHTML("<span class=\"icon-picture\"></span>");
 
-		createLink.getElement().setInnerHTML("<span class=\"glyphicon glyphicon-link\"></span>");
-		removeLink.setText("unlink");
+		createLink.getElement().setInnerHTML("<span class=\"icon-link\"></span>");
+		removeLink.getElement().setInnerHTML("<span class=\"icon-unlink\"></span>");
 
-		removeFormat.getElement().setInnerHTML("<span class=\"glyphicon glyphicon-ban-circle\"></span>");
+		removeFormat.getElement().setInnerHTML("<span class=\"icon-eraser\"></span>");
 	}
 
 	@UiHandler({ "backColors", "foreColors", "fonts", "fontSizes" })
@@ -239,7 +239,7 @@ public class RichTextToolbar extends Composite {
 					}
 				}
 			});
-			
+
 			richTextClickRegistration = this.richText.addClickHandler(new ClickHandler() {
 
 				@Override

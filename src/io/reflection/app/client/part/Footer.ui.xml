@@ -76,10 +76,10 @@
             <div style="width: 100%; padding-top:20px; padding-bottom: 40px;">
                 <g:InlineHyperlink targetHistoryToken="ranks">Leaderboard</g:InlineHyperlink>
                 &nbsp;&nbsp;&nbsp;
-                <g:InlineHyperlink targetHistoryToken="" styleName="{style.sideMargin}">Terms and
+                <g:InlineHyperlink targetHistoryToken="terms" styleName="{style.sideMargin}">Terms and
                     Conditions</g:InlineHyperlink>
                 &nbsp;&nbsp;&nbsp;
-                <g:InlineHyperlink targetHistoryToken="">Privacy
+                <g:InlineHyperlink targetHistoryToken="policy">Privacy
                     Policy</g:InlineHyperlink>
             </div>
 

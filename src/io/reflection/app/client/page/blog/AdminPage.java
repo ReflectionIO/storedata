@@ -28,7 +28,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
-import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -63,9 +62,6 @@ public class AdminPage extends Page {
 
 		};
 
-		TextHeader idHeader = new TextHeader("Id");
-		posts.addColumn(idColumn, idHeader);
-
 		TextColumn<Post> authorColumn = new TextColumn<Post>() {
 
 			@Override
@@ -77,9 +73,6 @@ public class AdminPage extends Page {
 
 		};
 
-		TextHeader authorHeader = new TextHeader("Author");
-		posts.addColumn(authorColumn, authorHeader);
-
 		TextColumn<Post> titleColumn = new TextColumn<Post>() {
 
 			@Override
@@ -88,7 +81,6 @@ public class AdminPage extends Page {
 			}
 
 		};
-		posts.addColumn(titleColumn, "Title");
 
 		TextColumn<Post> visibleColumn = new TextColumn<Post>() {
 
@@ -98,8 +90,6 @@ public class AdminPage extends Page {
 			}
 		};
 
-		posts.addColumn(visibleColumn, "Visible");
-
 		TextColumn<Post> dateColumn = new TextColumn<Post>() {
 
 			@Override
@@ -108,8 +98,6 @@ public class AdminPage extends Page {
 			}
 		};
 
-		posts.addColumn(dateColumn, "Date");
-
 		TextColumn<Post> publishedColumn = new TextColumn<Post>() {
 
 			@Override
@@ -117,8 +105,6 @@ public class AdminPage extends Page {
 				return object.published == null ? "No" : DateTimeFormat.getFormat(PredefinedFormat.DATE_FULL).format(object.published);
 			}
 		};
-
-		posts.addColumn(publishedColumn, "Published");
 
 		Column<Post, SafeHtml> editColumn = new Column<Post, SafeHtml>(new SafeHtmlCell()) {
 
@@ -131,6 +117,24 @@ public class AdminPage extends Page {
 			}
 		};
 
+		Column<Post, SafeHtml> viewColumn = new Column<Post, SafeHtml>(new SafeHtmlCell()) {
+
+			@Override
+			public SafeHtml getValue(Post object) {
+				String s = object.id.toString();
+
+				return SafeHtmlUtils.fromTrustedString("<a href=\"#" + PageType.BlogPostType.toString() + "/view/" + s
+						+ "\" class=\"btn btn-xs btn-default\">View</a>");
+			}
+		};
+
+		posts.addColumn(idColumn, "Id");
+		posts.addColumn(authorColumn, "Author");
+		posts.addColumn(titleColumn, "Title");
+		posts.addColumn(visibleColumn, "Visible");
+		posts.addColumn(dateColumn, "Date");
+		posts.addColumn(publishedColumn, "Published");
 		posts.addColumn(editColumn);
+		posts.addColumn(viewColumn);
 	}
 }

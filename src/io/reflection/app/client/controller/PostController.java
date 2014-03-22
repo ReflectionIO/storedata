@@ -175,9 +175,9 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 
 		if (end > posts.size()) {
 			fetchPosts();
-		} else {
-			updateRowData(start, posts.subList(start, end));
 		}
+
+		updateRowData(start, posts.size() == 0 ? posts : posts.subList(start, Math.min(posts.size(), end)));
 	}
 
 	/**

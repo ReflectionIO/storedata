@@ -85,6 +85,8 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(EventController.get().addHandlerToSource(CreatePostEventHandler.TYPE, PostController.get(), this));
 		register(EventController.get().addHandlerToSource(GetPostEventHandler.TYPE, PostController.get(), this));
+		
+		resetForm();
 	}
 
 	/*
