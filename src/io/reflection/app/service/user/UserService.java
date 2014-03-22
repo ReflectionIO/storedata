@@ -28,6 +28,7 @@ import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.emailtemplate.EmailTemplateServiceProvider;
+import io.reflection.app.shared.util.FormattingHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -924,7 +925,7 @@ final class UserService implements IUserService {
 				String body = EmailHelper.inflate(values, template.body);
 				String subject = EmailHelper.inflate(values, template.subject);
 
-				EmailHelper.sendEmail(template.from, user.username, user.forename + " " + user.surname, subject, body, template.format);
+				EmailHelper.sendEmail(template.from, user.username, FormattingHelper.getUserName(user), subject, body, template.format);
 			}
 
 		} finally {
@@ -957,7 +958,7 @@ final class UserService implements IUserService {
 				EmailTemplate template = EmailTemplateServiceProvider.provide().getEmailTemplate(Long.valueOf(PASSWORD_EMAIL_TEMPLATE_ID));
 				String body = EmailHelper.inflate(values, template.body);
 
-				if (!EmailHelper.sendEmail(template.from, user.username, user.forename + " " + user.surname, template.subject, body, template.format)) {
+				if (!EmailHelper.sendEmail(template.from, user.username, FormattingHelper.getUserName(user), template.subject, body, template.format)) {
 					LOG.severe(String.format("Failed to notify user [%d] of password change", user.id.longValue()));
 				}
 			}

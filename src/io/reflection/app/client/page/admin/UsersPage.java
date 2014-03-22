@@ -13,6 +13,7 @@ import io.reflection.app.client.page.Page;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.shared.util.FormattingHelper;
 
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
@@ -44,9 +45,9 @@ public class UsersPage extends Page {
 	@UiField(provided = true) SimplePager mPager = new SimplePager(false, false);
 
 	@UiField InlineHyperlink mAssignPassword;
-	@UiField InlineHyperlink mMakeAdmin;	
+	@UiField InlineHyperlink mMakeAdmin;
 	@UiField InlineHyperlink mChangeDetails;
-	
+
 	@UiField InlineHyperlink addToBeta;
 
 	public UsersPage() {
@@ -65,13 +66,13 @@ public class UsersPage extends Page {
 					mAssignPassword.removeStyleName("disabled");
 					mMakeAdmin.removeStyleName("disabled");
 					mChangeDetails.removeStyleName("disabled");
-					
+
 					addToBeta.removeStyleName("disabled");
 				} else {
 					mAssignPassword.addStyleName("disabled");
 					mMakeAdmin.addStyleName("disabled");
 					mChangeDetails.addStyleName("disabled");
-					
+
 					addToBeta.addStyleName("disabled");
 				}
 
@@ -86,7 +87,7 @@ public class UsersPage extends Page {
 				if (selected != null) {
 					mChangeDetails.setTargetHistoryToken("users/changedetails/" + selected.id.toString());
 				}
-				
+
 				if (selected != null) {
 					addToBeta.setTargetHistoryToken("users/assignrole/" + selected.id.toString() + "/beta");
 				}
@@ -105,7 +106,7 @@ public class UsersPage extends Page {
 
 			@Override
 			public String getValue(User object) {
-				return object.forename + " " + object.surname;
+				return FormattingHelper.getUserName(object);
 			}
 
 		};

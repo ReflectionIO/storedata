@@ -5,7 +5,9 @@
 //  Created by Stefano Capuzzi on 20 Mar 2014.
 //  Copyright © 2014 Reflection.io Ltd. All rights reserved.
 //
-package io.reflection.app.client.helper;
+package io.reflection.app.shared.util;
+
+import io.reflection.app.datatypes.shared.User;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,11 +22,11 @@ public class FormattingHelper {
 
 	/**
 	 * Returns a currency sumbol or code if none are found
+	 * 
 	 * @param currency
 	 * @return
 	 */
 	public static String getCurrencySymbol(String currency) {
-
 		if (currencySymbolLookup == null) {
 			setup();
 		}
@@ -43,5 +45,9 @@ public class FormattingHelper {
 			currencySymbolLookup.put("CNY", "¥");
 			currencySymbolLookup.put("GBP", "£");
 		}
+	}
+
+	public static String getUserName(User user) {
+		return user.forename + " " + user.surname;
 	}
 }

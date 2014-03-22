@@ -16,6 +16,7 @@ import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.datatypes.shared.Post;
 import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.shared.util.FormattingHelper;
 
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
@@ -68,7 +69,7 @@ public class AdminPage extends Page {
 			public String getValue(Post object) {
 				User loggedIn = SessionController.get().getLoggedInUser();
 
-				return loggedIn != null && object.author.id == loggedIn.id ? "Me" : object.author.toString();
+				return loggedIn != null && object.author.id == loggedIn.id ? "Me" : FormattingHelper.getUserName(object.author);
 			}
 
 		};

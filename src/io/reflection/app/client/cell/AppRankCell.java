@@ -10,9 +10,9 @@ package io.reflection.app.client.cell;
 import static io.reflection.app.client.controller.FilterController.REVENUE_DAILY_DATA_TYPE;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.ItemController;
-import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
+import io.reflection.app.shared.util.FormattingHelper;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;

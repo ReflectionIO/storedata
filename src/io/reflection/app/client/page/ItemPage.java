@@ -26,7 +26,6 @@ import io.reflection.app.client.controller.RankController;
 import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.AlertBoxHelper;
-import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.client.part.AlertBox;
 import io.reflection.app.client.part.AlertBox.AlertBoxType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
@@ -37,6 +36,7 @@ import io.reflection.app.client.part.RankChart.RankingType;
 import io.reflection.app.client.part.datatypes.ItemRevenue;
 import io.reflection.app.client.res.flags.Styles;
 import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.shared.util.FormattingHelper;
 
 import java.util.HashMap;
 import java.util.Map;

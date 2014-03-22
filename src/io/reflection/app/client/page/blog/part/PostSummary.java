@@ -8,6 +8,7 @@
 package io.reflection.app.client.page.blog.part;
 
 import io.reflection.app.datatypes.shared.Post;
+import io.reflection.app.shared.util.FormattingHelper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.ParagraphElement;
@@ -56,7 +57,7 @@ public class PostSummary extends Composite {
 				date.setInnerText("TBD");
 			}
 
-			author.setInnerText(post.author.forename + " " + post.author.surname);
+			author.setInnerText(FormattingHelper.getUserName(post.author));
 
 			description.setInnerHTML(post.description);
 

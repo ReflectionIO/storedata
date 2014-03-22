@@ -21,6 +21,7 @@ import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.datasource.DataSourceServiceProvider;
 import io.reflection.app.service.emailtemplate.EmailTemplateServiceProvider;
 import io.reflection.app.service.user.UserServiceProvider;
+import io.reflection.app.shared.util.FormattingHelper;
 
 import java.io.IOException;
 import java.util.Date;
@@ -107,7 +108,8 @@ public class DataAccountGatherServlet extends ContextAwareServlet {
 
 								String body = EmailHelper.inflate(parameters, template.body);
 
-								EmailHelper.sendEmail(template.from, user.username, user.forename + " " + user.surname, template.subject, body, template.format);
+								EmailHelper
+										.sendEmail(template.from, user.username, FormattingHelper.getUserName(user), template.subject, body, template.format);
 							}
 
 						} else {

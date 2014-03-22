@@ -18,6 +18,7 @@ import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.blog.part.DisplayTag;
 import io.reflection.app.datatypes.shared.Post;
+import io.reflection.app.shared.util.FormattingHelper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
@@ -109,7 +110,7 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 	 */
 	private void show(Post post) {
 		title.setInnerText(post.title);
-		author.setInnerText(post.author.forename + " " + post.author.surname);
+		author.setInnerText(FormattingHelper.getUserName(post.author));
 
 		if (post.published != null) {
 			date.setInnerText(DateTimeFormat.getFormat(PredefinedFormat.DATE_FULL).format(post.published));
