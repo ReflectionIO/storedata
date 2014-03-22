@@ -277,9 +277,9 @@ final class RankService implements IRankService {
 
 		types.add(addslashes(listType));
 
-		String memcacheKey = getName() + ".itemranks." + "." + item.id.toString() + country.a2Code + "." + store.a3Code + "." + StringUtils.join(types, ".")
+		String memcacheKey = getName() + ".itemranks." + item.id.toString() + "." + country.a2Code + "." + store.a3Code + "." + StringUtils.join(types, ".")
 				+ "." + (before == null ? "none" : before.getTime()) + "." + (after == null ? "none" : after.getTime()) + "." + pager.start + "." + pager.count
-				+ "." + pager.sortDirection + "." + pager.sortBy + ".";
+				+ "." + pager.sortDirection + "." + pager.sortBy;
 		String itemRanksString = (String) cache.get(memcacheKey);
 
 		if (itemRanksString == null) {
