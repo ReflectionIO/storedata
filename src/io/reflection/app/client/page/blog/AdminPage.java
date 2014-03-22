@@ -112,7 +112,7 @@ public class AdminPage extends Page {
 			public SafeHtml getValue(Post object) {
 				String s = object.id.toString();
 
-				return SafeHtmlUtils.fromTrustedString("<a href=\"#" + PageType.BlogEditPost.toString() + "/change/" + s
+				return SafeHtmlUtils.fromTrustedString("<a href=\"#" + PageType.BlogEditPostPageType.toString() + "/change/" + s
 						+ "\" class=\"btn btn-xs btn-default\">Edit</a>");
 			}
 		};
@@ -123,8 +123,19 @@ public class AdminPage extends Page {
 			public SafeHtml getValue(Post object) {
 				String s = object.id.toString();
 
-				return SafeHtmlUtils.fromTrustedString("<a href=\"#" + PageType.BlogPostType.toString() + "/view/" + s
+				return SafeHtmlUtils.fromTrustedString("<a href=\"#" + PageType.BlogPostPageType.toString() + "/view/" + s
 						+ "\" class=\"btn btn-xs btn-default\">View</a>");
+			}
+		};
+
+		Column<Post, SafeHtml> deleteColumn = new Column<Post, SafeHtml>(new SafeHtmlCell()) {
+
+			@Override
+			public SafeHtml getValue(Post object) {
+				String s = object.id.toString();
+
+				return SafeHtmlUtils.fromTrustedString("<a href=\"#" + PageType.BlogEditPostPageType.toString() + "/delete/" + s
+						+ "\" class=\"btn btn-xs btn-danger\">Delete</a>");
 			}
 		};
 
@@ -136,5 +147,6 @@ public class AdminPage extends Page {
 		posts.addColumn(publishedColumn, "Published");
 		posts.addColumn(editColumn);
 		posts.addColumn(viewColumn);
+		posts.addColumn(deleteColumn);
 	}
 }

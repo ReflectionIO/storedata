@@ -4,9 +4,13 @@
     span[class ^="icon-"]:before,span[class *=" icon-"]:before {
     	margin: 0;
     }
+    
+    .toolbar {
+		margin-bottom: 5px;
+	}
     </ui:style>
     <g:HTMLPanel>
-        <g:HTMLPanel>
+        <g:HTMLPanel styleName="{style.toolbar}">
             <g:HTMLPanel styleName="btn-group">
                 <g:Button styleName="btn btn-default" ui:field="bold" />
                 <g:Button styleName="btn btn-default" ui:field="italic" />

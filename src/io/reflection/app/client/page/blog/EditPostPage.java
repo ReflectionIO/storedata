@@ -11,8 +11,11 @@ import io.reflection.app.api.blog.shared.call.CreatePostRequest;
 import io.reflection.app.api.blog.shared.call.CreatePostResponse;
 import io.reflection.app.api.blog.shared.call.GetPostRequest;
 import io.reflection.app.api.blog.shared.call.GetPostResponse;
+import io.reflection.app.api.blog.shared.call.UpdatePostRequest;
+import io.reflection.app.api.blog.shared.call.UpdatePostResponse;
 import io.reflection.app.api.blog.shared.call.event.CreatePostEventHandler;
 import io.reflection.app.api.blog.shared.call.event.GetPostEventHandler;
+import io.reflection.app.api.blog.shared.call.event.UpdatePostEventHandler;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
@@ -39,7 +42,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class EditPostPage extends Page implements NavigationEventHandler, CreatePostEventHandler, GetPostEventHandler {
+public class EditPostPage extends Page implements NavigationEventHandler, CreatePostEventHandler, GetPostEventHandler, UpdatePostEventHandler {
 
 	private static EditPostPageUiBinder uiBinder = GWT.create(EditPostPageUiBinder.class);
 
@@ -85,7 +88,8 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(EventController.get().addHandlerToSource(CreatePostEventHandler.TYPE, PostController.get(), this));
 		register(EventController.get().addHandlerToSource(GetPostEventHandler.TYPE, PostController.get(), this));
-		
+		register(EventController.get().addHandlerToSource(UpdatePostEventHandler.TYPE, PostController.get(), this));
+
 		resetForm();
 	}
 
@@ -178,7 +182,7 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 	public void createPostSuccess(CreatePostRequest input, CreatePostResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			PostController.get().reset();
-			PageType.BlogEditPost.show();
+			PageType.BlogEditPostPageType.show();
 		}
 	}
 
@@ -212,5 +216,30 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 	 */
 	@Override
 	public void getPostFailure(GetPostRequest input, Throwable caught) {}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.blog.shared.call.event.UpdatePostEventHandler#updatePostSuccess(io.reflection.app.api.blog.shared.call.UpdatePostRequest,
+	 * io.reflection.app.api.blog.shared.call.UpdatePostResponse)
+	 */
+	@Override
+	public void updatePostSuccess(UpdatePostRequest input, UpdatePostResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess && postId != null) {
+			PageType.BlogPostPageType.show("view", postId.toString());
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.blog.shared.call.event.UpdatePostEventHandler#updatePostFailure(io.reflection.app.api.blog.shared.call.UpdatePostRequest,
+	 * java.lang.Throwable)
+	 */
+	@Override
+	public void updatePostFailure(UpdatePostRequest input, Throwable caught) {
+
+	}
 
 }

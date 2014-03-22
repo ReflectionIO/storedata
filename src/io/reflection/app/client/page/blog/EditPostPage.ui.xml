@@ -6,51 +6,52 @@
     }
     </ui:style>
     <g:HTMLPanel>
-        <h2>Add Post</h2>
+        <div class="container">
+            <h2>Add Post</h2>
 
-        <g:FormPanel ui:field="form" styleName="row">
-            <g:HTMLPanel styleName="col-md-4">
-                <g:HTMLPanel ui:field="titleGroup" styleName="form-group">
-                    <label>Title</label>
-                    <g:TextBox styleName="form-control" ui:field="title" />
-                    <g:HTMLPanel styleName="noteDetail" ui:field="titleNote" visible="false" />
-                </g:HTMLPanel>
-
+            <g:FormPanel ui:field="form">
                 <g:HTMLPanel>
-                    <g:CheckBox ui:field="visible">Visible without direct link</g:CheckBox>
+                    <g:HTMLPanel ui:field="titleGroup" styleName="form-group">
+                        <label>Title</label>
+                        <g:TextBox styleName="form-control" ui:field="title" />
+                        <g:HTMLPanel styleName="noteDetail" ui:field="titleNote" visible="false" />
+                    </g:HTMLPanel>
+
+                    <g:HTMLPanel>
+                        <g:CheckBox ui:field="visible">Visible without direct link</g:CheckBox>
+                    </g:HTMLPanel>
+
+                    <g:HTMLPanel ui:field="descriptionGroup" styleName="form-group">
+                        <label>Description</label>
+                        <p:RichTextToolbar ui:field="descriptionToolbar" />
+                        <g:RichTextArea ui:field="descriptionText" styleName="form-control {style.textArea}" />
+                        <g:HTMLPanel styleName="noteDetail" ui:field="descriptionNote" visible="false" />
+                    </g:HTMLPanel>
+
+                    <g:HTMLPanel ui:field="contentGroup" styleName="form-group">
+                        <label>Content</label>
+                        <p:RichTextToolbar ui:field="contentToolbar" />
+                        <g:RichTextArea ui:field="contentText" styleName="form-control {style.textArea}" />
+                        <g:HTMLPanel styleName="noteDetail" ui:field="contentNote" visible="false" />
+                    </g:HTMLPanel>
+
+                    <g:HTMLPanel ui:field="tagsGroup" styleName="form-group">
+                        <label>Tags</label>
+                        <g:TextBox styleName="form-control" ui:field="tags" />
+                        <g:HTMLPanel styleName="noteDetail" ui:field="tagsNote" visible="false" />
+                    </g:HTMLPanel>
+
+                    <g:HTMLPanel>
+                        <g:CheckBox ui:field="publish">Publish on submit</g:CheckBox>
+                    </g:HTMLPanel>
+
+                    <g:Button ui:field="submit" styleName="btn btn-lg btn-primary col-sm-4 col-sm-offset-4">
+                        Submit
+                    </g:Button>
+
                 </g:HTMLPanel>
 
-                <g:HTMLPanel ui:field="descriptionGroup" styleName="form-group">
-                    <label>Description</label>
-                    <p:RichTextToolbar ui:field="descriptionToolbar" />
-                    <g:RichTextArea ui:field="descriptionText" styleName="form-control {style.textArea}" />
-                    <g:HTMLPanel styleName="noteDetail" ui:field="descriptionNote" visible="false" />
-                </g:HTMLPanel>
-
-                <g:HTMLPanel ui:field="contentGroup" styleName="form-group">
-                    <label>Content</label>
-                    <p:RichTextToolbar ui:field="contentToolbar" />
-                    <g:RichTextArea ui:field="contentText" styleName="form-control {style.textArea}" />
-                    <g:HTMLPanel styleName="noteDetail" ui:field="contentNote" visible="false" />
-                </g:HTMLPanel>
-
-                <g:HTMLPanel ui:field="tagsGroup" styleName="form-group">
-                    <label>Tags</label>
-                    <g:TextBox styleName="form-control" ui:field="tags" />
-                    <g:HTMLPanel styleName="noteDetail" ui:field="tagsNote" visible="false" />
-                </g:HTMLPanel>
-
-                <g:HTMLPanel>
-                    <g:CheckBox ui:field="publish">Publish on submit</g:CheckBox>
-                </g:HTMLPanel>
-
-                <g:Button ui:field="submit" styleName="btn btn-lg btn-primary btn-block">
-                    Submit
-                </g:Button>
-
-            </g:HTMLPanel>
-
-        </g:FormPanel>
-
+            </g:FormPanel>
+        </div>
     </g:HTMLPanel>
 </ui:UiBinder> 

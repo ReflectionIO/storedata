@@ -51,12 +51,12 @@ public enum PageType {
 	ForgotPasswordPageType("forgotpassword"),
 	ResetPasswordPageType("resetpassword"),
 	ItemsPageType("items"),
-	PolicyType("policy"),
+	PolicyPageType("policy"),
 	TermsPageType("terms"),
-	BlogAdminType("blogadmin"),
-	BlogPostsType("blog"),
-	BlogPostType("blogpost"),
-	BlogEditPost("blogedit"),
+	BlogAdminPageType("blogadmin"),
+	BlogPostsPageType("blog"),
+	BlogPostPageType("blogpost"),
+	BlogEditPostPageType("blogedit"),
 	LoadingPageType("loading"), ;
 
 	private String value;
@@ -157,19 +157,19 @@ public enum PageType {
 		case TermsPageType:
 			page = new TermsPage();
 			break;
-		case PolicyType:
+		case PolicyPageType:
 			page = new PolicyPage();
 			break;
-		case BlogAdminType:
+		case BlogAdminPageType:
 			page = new AdminPage();
 			break;
-		case BlogEditPost:
+		case BlogEditPostPageType:
 			page = new EditPostPage();
 			break;
-		case BlogPostType:
+		case BlogPostPageType:
 			page = new PostPage();
 			break;
-		case BlogPostsType:
+		case BlogPostsPageType:
 			page = new PostsPage();
 			break;
 		case LoadingPageType:
