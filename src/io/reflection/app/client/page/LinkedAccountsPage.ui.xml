@@ -23,7 +23,7 @@
                 <h6 ui:field="mCreatorName" class="{style.pageTitle} text-muted">Creator</h6>
                 <ul class="nav nav-pills nav-stacked">
                     <li>
-                        <g:InlineHyperlink ui:field="mMyAppsLink" targetHistoryToken="myappsoverview">Overview</g:InlineHyperlink>
+                        <g:InlineHyperlink ui:field="mMyAppsLink">Overview</g:InlineHyperlink>
                     </li>
                     <hr />
                     <li class="active">

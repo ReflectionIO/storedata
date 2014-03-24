@@ -33,13 +33,13 @@ import com.google.gwt.user.client.ui.Widget;
  * @author stefanocapuzzi
  * 
  */
-public class MyAppsOverviewPage extends Page {
+public class MyAppsPage extends Page {
 
-	private static MyAppsOverviewPageUiBinder uiBinder = GWT.create(MyAppsOverviewPageUiBinder.class);
+	private static MyAppsPageUiBinder uiBinder = GWT.create(MyAppsPageUiBinder.class);
 
-	interface MyAppsOverviewPageUiBinder extends UiBinder<Widget, MyAppsOverviewPage> {}
+	interface MyAppsPageUiBinder extends UiBinder<Widget, MyAppsPage> {}
 
-	@UiField(provided = true) CellTable<FakeData> mApps = new CellTable<MyAppsOverviewPage.FakeData>(10, BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true) CellTable<FakeData> mApps = new CellTable<MyAppsPage.FakeData>(10, BootstrapGwtCellTable.INSTANCE);
 
 	@UiField InlineHyperlink mLinkedAccountsLink;
 	@UiField InlineHyperlink mMyAppsLink;
@@ -82,7 +82,7 @@ public class MyAppsOverviewPage extends Page {
 		}
 	}
 
-	public MyAppsOverviewPage() {
+	public MyAppsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		BootstrapGwtDatePicker.INSTANCE.styles().ensureInjected();

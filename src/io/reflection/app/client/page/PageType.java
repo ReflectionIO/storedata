@@ -46,7 +46,7 @@ public enum PageType {
 	HomePageType("home"),
 	LinkItunesPageType("linkitunes"),
 	ReadyToStartPageType("readytostart"),
-	MyAppsOverviewPageType("myappsoverview"),
+	MyAppsPageType("myapps"),
 	EmailTemplatesPageType("emailtemplates"),
 	ForgotPasswordPageType("forgotpassword"),
 	ResetPasswordPageType("resetpassword"),
@@ -139,8 +139,8 @@ public enum PageType {
 		case ReadyToStartPageType:
 			page = new ReadyToStartPage();
 			break;
-		case MyAppsOverviewPageType:
-			page = new MyAppsOverviewPage();
+		case MyAppsPageType:
+			page = new MyAppsPage();
 			break;
 		case EmailTemplatesPageType:
 			page = new EmailTemplatePage();

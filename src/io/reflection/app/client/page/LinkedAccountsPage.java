@@ -77,6 +77,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		initWidget(uiBinder.createAndBindUi(this));
 
 		mLinkedAccountsLink.setTargetHistoryToken("users/linkedaccounts/" + SessionController.get().getLoggedInUser().id.toString());
+		mMyAppsLink.setTargetHistoryToken("users/myapps/" + SessionController.get().getLoggedInUser().id.toString());
 
 		addSoonTag(mPlayLink);
 

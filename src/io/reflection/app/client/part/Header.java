@@ -218,15 +218,13 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@Override
 	public void navigationChanged(Stack stack) {
 		if ("ranks".equals(stack.getPage())) {
-			highlight(mRanksItem);
-		} else if (PageType.MyAppsOverviewPageType.equals(stack.getPage())) {
-			highlight(myAppsItem);
+			highlight(mRanksItem);		
 		} else if ("feedbrowser".equals(stack.getPage())) {
 			highlight(mFeedBrowserItem);
 		} else if ("users".equals(stack.getPage())) {
 			if (stack.getAction() == null) {
 				highlight(mUsersItem);
-			} else if ("myappsoverview".equals(stack.getAction())) {
+			} else if ("myapps".equals(stack.getAction())) {
 				highlight(mMyAppsItem);
 			} else if ("linkedaccounts".equals(stack.getAction())) {
 				highlight(mLinkedAccountsItem);
@@ -379,8 +377,10 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	}
 
 	private void addAccount(User user) {
-
+		
+		
 		mAccountSettingsLink.setTargetHistoryToken("users/changedetails/" + user.id.toString());
+		mMyAppsLink.setTargetHistoryToken("users/myapps/" + user.id.toString());
 		mLinkedAccountsLink.setTargetHistoryToken("users/linkedaccounts/" + user.id.toString());
 
 		mAccountList.appendChild(mAccountDropdown);
