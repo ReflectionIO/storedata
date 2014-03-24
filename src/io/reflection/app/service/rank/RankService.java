@@ -44,6 +44,7 @@ import com.spacehopperstudios.utility.StringUtils;
 final class RankService implements IRankService {
 
 	private PersistentMap cache = PersistentMapFactory.createObjectify();
+	Calendar cal = Calendar.getInstance();
 
 	public String getName() {
 		return ServiceType.ServiceTypeRank.toString();
@@ -339,7 +340,10 @@ final class RankService implements IRankService {
 					for (Rank rank : ranks) {
 						jsonArray.add(rank.toJson());
 					}
-					cache.put(memcacheKey, JsonUtils.cleanJson(jsonArray.toString()));
+
+					cal.setTime(new Date());
+					cal.add(Calendar.DAY_OF_MONTH, 20);
+					cache.put(memcacheKey, JsonUtils.cleanJson(jsonArray.toString()), cal.getTime());
 				}
 			} finally {
 				if (rankConnection != null) {
@@ -379,7 +383,9 @@ final class RankService implements IRankService {
 
 				if (rankConnection.fetchNextRow()) {
 					code = rankConnection.getCurrentRowLong("code2");
-					cache.put(memcacheKey, code);
+					cal.setTime(new Date());
+					cal.add(Calendar.DAY_OF_MONTH, 20);
+					cache.put(memcacheKey, code, cal.getTime());
 				}
 			} finally {
 				if (rankConnection != null) {
@@ -558,7 +564,9 @@ final class RankService implements IRankService {
 
 				if (rankConnection.fetchNextRow()) {
 					ranksCount = rankConnection.getCurrentRowLong("count");
-					cache.put(memcacheKey, ranksCount);
+					cal.setTime(new Date());
+					cal.add(Calendar.DAY_OF_MONTH, 20);
+					cache.put(memcacheKey, ranksCount, cal.getTime());
 				}
 
 			} finally {
@@ -763,7 +771,10 @@ final class RankService implements IRankService {
 					for (Rank rank : ranks) {
 						jsonArray.add(rank.toJson());
 					}
-					cache.put(memcacheKey, JsonUtils.cleanJson(jsonArray.toString()));
+					
+					cal.setTime(new Date());
+					cal.add(Calendar.DAY_OF_MONTH, 20);
+					cache.put(memcacheKey, JsonUtils.cleanJson(jsonArray.toString()), cal.getTime());
 				}
 
 			} finally {

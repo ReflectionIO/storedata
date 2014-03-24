@@ -22,6 +22,10 @@ import io.reflection.app.client.page.blog.part.PostSummary;
 import io.reflection.app.datatypes.shared.Post;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.HeadElement;
+import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -38,9 +42,25 @@ public class PostsPage extends Page implements NavigationEventHandler, GetPostsE
 	interface PostsPageUiBinder extends UiBinder<Widget, PostsPage> {}
 
 	@UiField HTMLPanel posts;
+	private Element atomLink;
+	private Element head;
 
 	public PostsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		NodeList<Element> nodes = Document.get().getElementsByTagName("head");
+		if (nodes != null && nodes.getLength() > 0) {
+			head = HeadElement.as(nodes.getItem(0));
+			createAtomLink();
+		}
+	}
+
+	public void createAtomLink() {
+		atomLink = Document.get().createElement("link");
+		atomLink.setAttribute("rel", "alternate");
+		atomLink.setAttribute("type", "application/atom+xml");
+		atomLink.setAttribute("title", "Blog");
+		atomLink.setAttribute("href", "blogatom");
 	}
 
 	/*
@@ -54,6 +74,24 @@ public class PostsPage extends Page implements NavigationEventHandler, GetPostsE
 
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(EventController.get().addHandlerToSource(GetPostsEventHandler.TYPE, PostController.get(), this));
+
+		if (head != null) {
+			head.appendChild(atomLink);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.page.Page#onDetach()
+	 */
+	@Override
+	protected void onDetach() {
+		if (head != null) {
+			head.removeChild(atomLink);
+		}
+
+		super.onDetach();
 	}
 
 	/*
