@@ -348,6 +348,53 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
+    
+    <xsd:complexType name="Forum">
+        <xsd:complexContent>
+            <xsd:extension base="DataType">
+                <xsd:sequence>
+                    <xsd:element name="members" type="User" />
+                    <xsd:element name="creator" type="User" />
+                    <xsd:element name="tags" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
+                </xsd:sequence>
+                <xsd:attribute name="title" type="xsd:string" use="required" />
+                <xsd:attribute name="description" type="xsd:string" use="required" />
+                <xsd:attribute name="type" type="ForumTypeType" use="required" />
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="Topic">
+        <xsd:complexContent>
+            <xsd:extension base="DataType">
+                <xsd:sequence>
+                    <xsd:element name="author" type="User" />
+                    <xsd:element name="tags" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
+                    <xsd:element name="replies" type="Reply" maxOccurs="unbounded" />
+                </xsd:sequence>
+                <xsd:attribute name="title" type="xsd:string" use="required" />
+                <xsd:attribute name="content" type="xsd:string" use="required" />
+                <xsd:attribute name="hot" type="xsd:boolean" />
+                <xsd:attribute name="sticky" type="xsd:boolean" />
+                <xsd:attribute name="flagged" type="xsd:boolean" />
+                <xsd:attribute name="locked" type="xsd:boolean" />
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="Reply">
+        <xsd:complexContent>
+            <xsd:extension base="DataType">
+                <xsd:sequence>
+                    <xsd:element name="author" type="User" />
+                    <xsd:element name="topic" type="Topic" />
+                </xsd:sequence>
+                <xsd:attribute name="content" type="xsd:string" use="required" />
+                <xsd:attribute name="flagged" type="xsd:boolean" />
+                <xsd:attribute name="solution" type="xsd:boolean" />
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
 
     <xsd:complexType name="Session">
         <xsd:complexContent>
@@ -449,6 +496,14 @@
             <xsd:enumeration value="googlecloudserviceimage" />
             <xsd:enumeration value="youtubevideo" />
             <xsd:enumeration value="html5video" />
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:simpleType name="ForumTypeType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="anonymous" />
+            <xsd:enumeration value="public" />
+            <xsd:enumeration value="private" />
         </xsd:restriction>
     </xsd:simpleType>
 
