@@ -17,8 +17,10 @@ import io.reflection.app.client.page.blog.AdminPage;
 import io.reflection.app.client.page.blog.EditPostPage;
 import io.reflection.app.client.page.blog.PostPage;
 import io.reflection.app.client.page.blog.PostsPage;
+import io.reflection.app.datatypes.shared.Permission;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,45 +32,70 @@ import com.spacehopperstudios.utility.StringUtils;
  * 
  */
 public enum PageType {
-	RanksPageType("ranks"),
-	FeedBrowserPageType("feedbrowser"),
-	UsersPageType("users"),
-	LoginPageType("login"),
-	RegisterPageType("register"),
-	ChangePasswordPageType("changepassword"),
-	RolesPageType("roles"),
-	PermissionsPageType("permissions"),
-	ChangeDetailsPageType("changedetails"),
-	UpgradePageType("upgrade"),
-	LinkedAccountsPageType("linkedaccounts"),
-	SearchPageType("search"),
-	ItemPageType("item"),
-	HomePageType("home"),
-	LinkItunesPageType("linkitunes"),
-	ReadyToStartPageType("readytostart"),
-	MyAppsPageType("myapps"),
-	EmailTemplatesPageType("emailtemplates"),
-	ForgotPasswordPageType("forgotpassword"),
-	ResetPasswordPageType("resetpassword"),
-	ItemsPageType("items"),
-	PolicyPageType("policy"),
-	TermsPageType("terms"),
-	BlogAdminPageType("blogadmin"),
-	BlogPostsPageType("blog"),
-	BlogPostPageType("blogpost"),
-	BlogEditPostPageType("blogedit"),
-	LoadingPageType("loading"), ;
+	// navigable
+	RanksPageType("ranks", true),
+	FeedBrowserPageType("feedbrowser", true, "MFB"),
+	UsersPageType("users", true, "MUS"),
+	LoginPageType("login", false),
+	RegisterPageType("register", false),
+	ChangePasswordPageType("changepassword", true),
+	RolesPageType("roles", true, "MRL"),
+	PermissionsPageType("permissions", true, "MPR"),
+	ChangeDetailsPageType("changedetails", true),
+	UpgradePageType("upgrade", false),
+	LinkedAccountsPageType("linkedaccounts", true),
+	SearchPageType("search", true),
+	ItemPageType("item", true),
+	HomePageType("home", false),
+	LinkItunesPageType("linkitunes", true),
+	ReadyToStartPageType("readytostart", true),
+	MyAppsPageType("myapps", true),
+	EmailTemplatesPageType("emailtemplates", true, "MET"),
+	ForgotPasswordPageType("forgotpassword", false),
+	ResetPasswordPageType("resetpassword", false),
+	ItemsPageType("items", true, "MIT"),
+	PolicyPageType("policy", false),
+	TermsPageType("terms", false),
+	BlogAdminPageType("blogadmin", true, "MBL"),
+	BlogPostsPageType("blog", false),
+	BlogPostPageType("blogpost", false),
+	BlogEditPostPageType("blogedit", true, "BLE", "BLU"),
+
+	// Non navigable
+	LoadingPageType("loading", false), ;
 
 	private String value;
 	private static Map<String, PageType> valueLookup = null;
 	private HomePage defaultPage = null;
+	private Map<String, Permission> requiredPermissions;
+	private boolean navigable;
+	private boolean requiresAuthentication;
+
+	private PageType(String value, boolean showable) {
+		this.value = value;
+		this.navigable = showable;
+		requiredPermissions = null;
+	}
+
+	private PageType(String value, boolean requiresAuthentication, String... requiredPermissionCode) {
+		this.value = value;
+		this.navigable = true;
+		this.requiresAuthentication = requiresAuthentication;
+
+		if (requiredPermissionCode != null && requiredPermissionCode.length > 0) {
+			requiredPermissions = new HashMap<String, Permission>();
+
+			Permission p;
+			for (String code : requiredPermissionCode) {
+				p = new Permission();
+				p.code = code;
+				requiredPermissions.put(code, p);
+			}
+		}
+	}
 
 	public String toString() {
 		return value;
-	}
-
-	private PageType(String value) {
-		this.value = value;
 	}
 
 	public static PageType fromString(String value) {
@@ -81,6 +108,18 @@ public enum PageType {
 		}
 
 		return valueLookup.get(value);
+	}
+
+	public boolean requiresLogin() {
+		return requiresAuthentication;
+	}
+
+	public Collection<Permission> getRequiredPermissions() {
+		return requiredPermissions == null ? null : requiredPermissions.values();
+	}
+
+	public Collection<String> getRequiredPermissionCodes() {
+		return requiredPermissions == null ? null : requiredPermissions.keySet();
 	}
 
 	public boolean equals(String value) {
@@ -188,22 +227,20 @@ public enum PageType {
 	}
 
 	public void show() {
+		if (!navigable) throw showableError();
+
 		History.newItem(toString());
 	}
 
 	public void show(String... params) {
-		String joinedParams = StringUtils.join(Arrays.asList(params), "/");
+		if (!navigable) throw showableError();
 
+		String joinedParams = StringUtils.join(Arrays.asList(params), "/");
 		History.newItem(toString() + "/" + joinedParams);
 	}
 
-//	public Stack toStack() {
-//		return NavigationController.Stack.parse(toString());
-//	}
-//
-//	public Stack toStack(String... params) {
-//		String joinedParams = StringUtils.join(Arrays.asList(params), "/");
-//		return NavigationController.Stack.parse(toString() + "/" + joinedParams);
-//	}
+	private RuntimeException showableError() {
+		return new RuntimeException("Cannot show/redirect to page [" + toString() + "] because it is not showable. Should be added directly to DOM");
+	}
 
 }

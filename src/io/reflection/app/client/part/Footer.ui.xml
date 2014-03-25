@@ -62,7 +62,7 @@
             <div style="margin:0 auto;width:20px;">
                 <g:Anchor ui:field="mArrow" styleName="{styles.reflection.footerUpArrow} {style.arrow}" />
             </div>
-            <div style="margin-top: -12px; float: right;width:290px;">
+            <div style="margin-top:-18px; float:right; width:290px;">
                 <span style="display: block; font-size: 13px; color: #63656a;">
                     &copy; Copyright
                     <span ui:field="mYear"></span>
