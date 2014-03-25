@@ -1,5 +1,5 @@
 //
-//  MyAppsOverviewPage.java
+//  MyAppsPage.java
 //  storedata
 //
 //  Created by William Shakour (stefanocapuzzi) on 7 Mar 2014.

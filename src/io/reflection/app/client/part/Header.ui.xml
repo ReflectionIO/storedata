@@ -83,7 +83,11 @@
                 </li>
 
                 <li ui:field="myAppsItem">
-                    <g:InlineHyperlink ui:field="myAppsLink" targetHistoryToken="myappsoverview">My apps</g:InlineHyperlink>
+                    <g:InlineHyperlink ui:field="myAppsLink" targetHistoryToken="myapps">My apps</g:InlineHyperlink>
+                </li>
+
+                <li ui:field="blogItem">
+                    <g:InlineHyperlink ui:field="blogLink" targetHistoryToken="blog">Blog</g:InlineHyperlink>
                 </li>
 
                 <li ui:field="mUpgradeAccountItem">

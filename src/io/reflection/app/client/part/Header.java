@@ -63,6 +63,9 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@UiField InlineHyperlink mRanksLink;
 	@UiField LIElement mRanksItem;
 
+	@UiField InlineHyperlink blogLink;
+	@UiField LIElement blogItem;
+
 	@UiField InlineHyperlink myAppsLink;
 	@UiField LIElement myAppsItem;
 
@@ -90,13 +93,13 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 	@UiField InlineHyperlink mPermissionsLink;
 	@UiField LIElement mPermissionsItem;
-	
+
 	@UiField InlineHyperlink emailTemplatesLink;
 	@UiField LIElement emailTemplatesItem;
-	
+
 	@UiField InlineHyperlink itemsLink;
 	@UiField LIElement itemsItem;
-	
+
 	@UiField SpanElement mTotalUsers;
 
 	@UiField LIElement mAccountDropdown;
@@ -185,6 +188,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			mItems.add(mMyAppsItem);
 			mItems.add(mUpgradeAccountItem);
 			mItems.add(mLinkedAccountsItem);
+			mItems.add(blogItem);
 		}
 	}
 
@@ -218,7 +222,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@Override
 	public void navigationChanged(Stack stack) {
 		if ("ranks".equals(stack.getPage())) {
-			highlight(mRanksItem);		
+			highlight(mRanksItem);
 		} else if ("feedbrowser".equals(stack.getPage())) {
 			highlight(mFeedBrowserItem);
 		} else if ("users".equals(stack.getPage())) {
@@ -245,6 +249,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			highlight(emailTemplatesItem);
 		} else if (PageType.ItemsPageType.equals(stack.getPage())) {
 			highlight(itemsItem);
+		} else if (PageType.BlogPostsPageType.equals(stack.getPage()) || PageType.BlogPostPageType.equals(stack.getPage())) {
+			highlight(blogItem);
 		} else {
 			highlight(null);
 		}
@@ -377,8 +383,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	}
 
 	private void addAccount(User user) {
-		
-		
+
 		mAccountSettingsLink.setTargetHistoryToken("users/changedetails/" + user.id.toString());
 		mMyAppsLink.setTargetHistoryToken("users/myapps/" + user.id.toString());
 		mLinkedAccountsLink.setTargetHistoryToken("users/linkedaccounts/" + user.id.toString());
