@@ -101,20 +101,12 @@ public class SuperAlertBox implements JsonServiceCallEventHandler, CloseHandler<
 	}
 
 	public void callSuccess(String callName, final Request request, Response response) {
-		final AlertBox alertBox = getAlertBox(request);
+		AlertBox alertBox = getAlertBox(request);
 
 		if (alertBox != null) {
 			AlertBoxHelper.configureAlert(alertBox, AlertBoxType.SuccessAlertBoxType, false, callName, "Returned success!", true);
 
-			Timer t = new Timer() {
-
-				@Override
-				public void run() {
-					removeAlertBox(alertBox);
-				}
-			};
-
-			t.schedule(2000);
+			closeAfter(alertBox, 2);
 		}
 	}
 
@@ -124,7 +116,26 @@ public class SuperAlertBox implements JsonServiceCallEventHandler, CloseHandler<
 		if (alertBox != null) {
 			AlertBoxHelper.configureAlert(alertBox, AlertBoxType.DangerAlertBoxType, false, callName, "Failed with exception [" + caught.toString() + "]!",
 					true);
+
+			closeAfter(alertBox, 5);
 		}
+	}
+
+	/**
+	 * @param alertBox
+	 * @param i
+	 */
+	private void closeAfter(final AlertBox alertBox, int i) {
+		Timer t = new Timer() {
+
+			@Override
+			public void run() {
+				removeAlertBox(alertBox);
+			}
+		};
+
+		t.schedule(i * 1000);
+
 	}
 
 	public void callFailure(String callName, Request request, Response response) {
@@ -134,6 +145,8 @@ public class SuperAlertBox implements JsonServiceCallEventHandler, CloseHandler<
 			AlertBoxHelper.configureAlert(alertBox, AlertBoxType.DangerAlertBoxType, false, callName,
 					response.error == null ? "Failed with unknown error, no code or message!" : "Failed with code [" + response.error.code.toString()
 							+ "] and message [" + response.error.message + "]!", true);
+
+			closeAfter(alertBox, 5);
 		}
 	}
 

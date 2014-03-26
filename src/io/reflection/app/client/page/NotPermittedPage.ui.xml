@@ -1,12 +1,18 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:style>
-    
+    .strong {
+    	font-weight: bold;
+    }
     </ui:style>
     <g:HTMLPanel>
         <div class="container">
-            <h2>No permissions</h2>
-            <p>You don't have enough permissions to view the selected page.</p>
+            <h2>Not permitted</h2>
+            <p>
+                You don't have enough permissions to view the selected page (
+                <span ui:field="page" class="{style.strong}">unknown</span>
+                ).
+            </p>
 
             <g:InlineHyperlink text="Go Back" ui:field="back" styleName="btn btn-primary btn-lg" />
         </div>

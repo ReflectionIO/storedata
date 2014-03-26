@@ -13,6 +13,7 @@ import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.handler.NavigationEventHandler;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.InlineHyperlink;
@@ -29,6 +30,7 @@ public class NotPermittedPage extends Page implements NavigationEventHandler {
 	interface NotPermittedPageUiBinder extends UiBinder<Widget, NotPermittedPage> {}
 
 	@UiField InlineHyperlink back;
+	@UiField SpanElement page;
 
 	public NotPermittedPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -56,6 +58,7 @@ public class NotPermittedPage extends Page implements NavigationEventHandler {
 	public void navigationChanged(Stack previous, Stack current) {
 		if (current.hasPrevious()) {
 			back.setTargetHistoryToken(current.getPrevious().toString());
+			page.setInnerText(current.getAction() == null ? "unknown" : current.getAction().replace(":", "/"));
 		} else {
 			back.setTargetHistoryToken(PageType.HomePageType.toString());
 		}

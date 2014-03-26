@@ -121,6 +121,10 @@ public enum PageType {
 		return requiresAuthentication;
 	}
 
+	public boolean isNavigable() {
+		return navigable;
+	}
+
 	public Collection<Permission> getRequiredPermissions() {
 		return requiredPermissions == null ? null : requiredPermissions.values();
 	}

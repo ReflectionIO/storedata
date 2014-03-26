@@ -108,12 +108,16 @@ public class NavigationController implements ValueChangeHandler<String> {
 			return mParts == null ? "" : StringUtils.join(Arrays.asList(mParts).subList(fromPart, mParts.length), "/");
 		}
 
+		public String asParameter() {
+			return allParts.replace("/", ":");
+		}
+
 		public String asNextParameter() {
-			return NEXT_KEY + allParts.replace("/", ":");
+			return NEXT_KEY + asParameter();
 		}
 
 		public String asPreviousParameter() {
-			return PREVIOUS_KEY + allParts.replace("/", ":");
+			return PREVIOUS_KEY + asParameter();
 		}
 
 		/**
@@ -203,46 +207,50 @@ public class NavigationController implements ValueChangeHandler<String> {
 		} else {
 			PageType stackPage = PageType.fromString(page);
 
-			if (PageType.UsersPageType == stackPage) {
+			if (stackPage == null || !stackPage.isNavigable()) {
+				stackPage = PageType.HomePageType;
+			} else if (PageType.UsersPageType == stackPage) {
 				if (value.hasAction()) {
 					stackPage = PageType.fromString(value.getAction());
 				}
 			}
 
-			if (stackPage != null) {
-				boolean doAttach = false;
+			boolean doAttach = false;
 
-					if (SessionController.get().isValidSession()) {
-						if (loaded) {
-							if (stackPage.requiresLogin() || SessionController.get().isLoggedInUserAdmin() || SessionController.get().isAuthorised(stackPage.getRequiredPermissions())) {
-								doAttach = true;
-							} else {
-								PageType.NotPermittedPageType.show(mStack.asPreviousParameter());
-							}
-						} else {
-							setLastIntendedPage(value);
-							stackPage = PageType.LoadingPageType;
-							value = new Stack(stackPage.toString());
-							doAttach = true;
-							loaded = true;
-						}
+			if (SessionController.get().isValidSession()) {
+				if (loaded) {
+					if (!stackPage.requiresLogin() || SessionController.get().isLoggedInUserAdmin()
+							|| SessionController.get().isAuthorised(stackPage.getRequiredPermissions())) {
+						doAttach = true;
 					} else {
-						if (stackPage.requiresLogin()) {
-							PageType.LoginPageType.show(value.asNextParameter());
-						} else {
-							doAttach = true;
+						if (!PageType.NotPermittedPageType.equals(mStack.getPage())) {
+							PageType.NotPermittedPageType.show(value.asParameter(), mStack.asPreviousParameter());
 						}
 					}
-
-				if (doAttach) {
-					Stack previous = mStack;
-					mStack = value;
-					attachPage(stackPage);
-
-					EventController.get().fireEventFromSource(new NavigationEventHandler.ChangedEvent(previous, mStack), NavigationController.this);
+				} else {
+					setLastIntendedPage(value);
+					stackPage = PageType.LoadingPageType;
+					value = new Stack(stackPage.toString());
+					doAttach = true;
+					loaded = true;
+				}
+			} else {
+				if (stackPage.requiresLogin()) {
+					PageType.LoginPageType.show(value.asNextParameter());
+				} else {
+					doAttach = true;
 				}
 			}
+
+			if (doAttach) {
+				Stack previous = mStack;
+				mStack = value;
+
+				attachPage(stackPage);
+				EventController.get().fireEventFromSource(new NavigationEventHandler.ChangedEvent(previous, mStack), NavigationController.this);
+			}
 		}
+
 	}
 
 	/**
@@ -280,13 +288,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 	 */
 	@Override
 	public void onValueChange(ValueChangeEvent<String> event) {
-		String value = event.getValue();
-
-		if (value == null || value.length() == 0) {
-			addPage(PageType.HomePageType.toString());
-		} else {
-			addPage(value);
-		}
+		addPage(event.getValue());
 	}
 
 	public void showIntendedPage() {
