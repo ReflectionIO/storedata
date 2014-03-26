@@ -309,11 +309,12 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged (io.reflection.app.admin.client.controller.NavigationController.Stack)
+	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
+	 * io.reflection.app.client.controller.NavigationController.Stack)
 	 */
 	@Override
-	public void navigationChanged(Stack stack) {
-		if (stack != null && "users".equals(stack.getPage()) && "changedetails".equals(stack.getAction())) {
+	public void navigationChanged(Stack previous, Stack current) {
+		if (current != null && "users".equals(current.getPage()) && "changedetails".equals(current.getAction())) {
 			changedUser();
 
 			mForename.setFocus(true);

@@ -108,10 +108,11 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack)
+	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
+	 * io.reflection.app.client.controller.NavigationController.Stack)
 	 */
 	@Override
-	public void navigationChanged(Stack stack) {
+	public void navigationChanged(Stack previous, Stack current) {
 		mLinkableAccount = mIosMacForm;
 
 		mLinkableAccount.setOnEnterPressed(new EnterPressedEventHandler() {

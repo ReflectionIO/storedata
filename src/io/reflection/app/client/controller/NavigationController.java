@@ -13,10 +13,8 @@ import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.Footer;
 import io.reflection.app.client.part.Header;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -43,11 +41,35 @@ public class NavigationController implements ValueChangeHandler<String> {
 
 	private String intended = null;
 
+	private boolean loaded = false;
+
 	public static class Stack {
+		public static final String NEXT_KEY = "nextgoto:";
+		public static final String PREVIOUS_KEY = "prevgoto:";
+
+		private String allParts;
 		private String[] mParts;
 
+		private Stack previous;
+		private Stack next;
+
 		private Stack(String value) {
-			mParts = value.split("/");
+			if (value != null) {
+				allParts = value;
+				mParts = allParts.split("/");
+
+				for (String part : mParts) {
+					if (next == null && part.startsWith(NEXT_KEY)) {
+						next = new Stack(part.replace(NEXT_KEY, "").replace(":", "/"));
+					}
+
+					if (previous == null && part.startsWith(PREVIOUS_KEY)) {
+						previous = new Stack(part.replace(PREVIOUS_KEY, "").replace(":", "/"));
+					}
+
+					if (next != null && previous != null) break;
+				}
+			}
 		}
 
 		public String getPage() {
@@ -79,23 +101,47 @@ public class NavigationController implements ValueChangeHandler<String> {
 
 		@Override
 		public String toString() {
-			if (mParts == null) {
-				return "";
-			} else {
-				return StringUtils.join(Arrays.asList(mParts), "/");
-			}
+			return allParts;
 		}
 
 		public String toString(int fromPart) {
-			if (mParts == null) {
-				return "";
-			} else {
-				List<String> subParts = new ArrayList<String>();
-				for (int i = fromPart; i < mParts.length; i++) {
-					subParts.add(mParts[i]);
-				}
-				return StringUtils.join(subParts, "/");
-			}
+			return mParts == null ? "" : StringUtils.join(Arrays.asList(mParts).subList(fromPart, mParts.length), "/");
+		}
+
+		public String asNextParameter() {
+			return NEXT_KEY + allParts.replace("/", ":");
+		}
+
+		public String asPreviousParameter() {
+			return PREVIOUS_KEY + allParts.replace("/", ":");
+		}
+
+		/**
+		 * @return
+		 */
+		public boolean hasNext() {
+			return next != null;
+		}
+
+		/**
+		 * @return
+		 */
+		public Stack getNext() {
+			return next;
+		}
+
+		/**
+		 * @return
+		 */
+		public boolean hasPrevious() {
+			return previous != null;
+		}
+
+		/**
+		 * @return
+		 */
+		public Stack getPrevious() {
+			return previous;
 		}
 	}
 
@@ -138,68 +184,65 @@ public class NavigationController implements ValueChangeHandler<String> {
 	 * @param value
 	 */
 	public void addPage(String value) {
-		// we have just landed here, we have no stack and no intended target
-		if (mStack == null && intended == null) {
-			intended = value;
-			value = PageType.LoadingPageType.toString();
-		}
-
-		// Coming from a previous timeout
-		if (SessionController.get().getTimeoutUsername() != null && SessionController.get().getSession() != null) {
-			// The user had changed, invalid intended page
-			if (!SessionController.get().getLoggedInUser().username.equals(SessionController.get().getTimeoutUsername())) {
-				intended = null;
-				value = "home";
-			}
-			SessionController.get().clearTimeoutUsername();
-		}
-
 		Stack s = Stack.parse(value);
 
-		// Intended equals to current page, then clear intended
 		if (intended != null && intended.equals(s.toString())) {
 			intended = null;
 		}
 
 		addStack(s);
-
 	}
 
 	private void addStack(Stack value) {
-		mStack = value;
+		String page = value.getPage();
 
-		if (PageType.UsersPageType.equals(mStack.getPage())) {
-			if (mStack.getAction() == null) {
-				attachPage(PageType.UsersPageType);
-			} else if ("assignrole".equals(mStack.getAction())) {
-				String userId = mStack.getParameter(0);
-				String roleName = mStack.getParameter(1);
-
-				// TODO: this should not really be here (and the navigation controller should probably not be responsible for actions)
-				if (userId != null) {
-					if (roleName.equalsIgnoreCase("admin")) {
-						UserController.get().makeAdmin(Long.valueOf(userId));
-					} else if (roleName.equals("beta")) {
-						UserController.get().makeBeta(Long.valueOf(userId));
-					}
-				}
-
-				PageType.UsersPageType.show();
-
-				return;
-			} else {
-				attachPage(PageType.fromString(mStack.getAction()));
-			}
-		} else if ("logout".equals(mStack.getPage())) {
+		if ("logout".equals(page)) {
 			SessionController.get().logout();
+			loaded = false;
 			PageType.LoginPageType.show();
-			return;
 		} else {
-			attachPage(PageType.fromString(mStack.getPage()));
+			PageType stackPage = PageType.fromString(page);
+
+			if (PageType.UsersPageType == stackPage) {
+				if (value.hasAction()) {
+					stackPage = PageType.fromString(value.getAction());
+				}
+			}
+
+			if (stackPage != null) {
+				boolean doAttach = false;
+
+					if (SessionController.get().isValidSession()) {
+						if (loaded) {
+							if (stackPage.requiresLogin() || SessionController.get().isLoggedInUserAdmin() || SessionController.get().isAuthorised(stackPage.getRequiredPermissions())) {
+								doAttach = true;
+							} else {
+								PageType.NotPermittedPageType.show(mStack.asPreviousParameter());
+							}
+						} else {
+							setLastIntendedPage(value);
+							stackPage = PageType.LoadingPageType;
+							value = new Stack(stackPage.toString());
+							doAttach = true;
+							loaded = true;
+						}
+					} else {
+						if (stackPage.requiresLogin()) {
+							PageType.LoginPageType.show(value.asNextParameter());
+						} else {
+							doAttach = true;
+						}
+					}
+
+				if (doAttach) {
+					Stack previous = mStack;
+					mStack = value;
+					attachPage(stackPage);
+
+					EventController.get().fireEventFromSource(new NavigationEventHandler.ChangedEvent(previous, mStack), NavigationController.this);
+				}
+			}
 		}
-
-		EventController.get().fireEventFromSource(new NavigationEventHandler.ChangedEvent(mStack), NavigationController.this);
-
 	}
 
 	/**
@@ -239,8 +282,8 @@ public class NavigationController implements ValueChangeHandler<String> {
 	public void onValueChange(ValueChangeEvent<String> event) {
 		String value = event.getValue();
 
-		if (value == null || value.length() == 0 || PageType.LoadingPageType.equals(value)) {
-			PageType.HomePageType.show();
+		if (value == null || value.length() == 0) {
+			addPage(PageType.HomePageType.toString());
 		} else {
 			addPage(value);
 		}
@@ -248,21 +291,30 @@ public class NavigationController implements ValueChangeHandler<String> {
 
 	public void showIntendedPage() {
 		if (intended == null) {
-			PageType.HomePageType.show();
+			addPage(PageType.HomePageType.toString());
 		} else {
 			addPage(intended);
 		}
 	}
 
-	/**
-	 * @return
-	 */
-	public String getIntendedPage() {
-		return intended;
+	public void setLastIntendedPage(Stack value) {
+		intended = value.toString();
 	}
 
-	public void setLastIntendedPage() {
-		intended = mStack.toString();
+	public void showNext() {
+		if (mStack.hasNext()) {
+			PageType.fromString(mStack.getNext().getPage()).show(mStack.getNext().toString(1));
+		} else {
+			PageType.HomePageType.show();
+		}
+	}
+
+	public void showPrevious() {
+		if (mStack.hasPrevious()) {
+			PageType.fromString(mStack.getPrevious().getPage()).show(mStack.getPrevious().toString(1));
+		} else {
+			PageType.HomePageType.show();
+		}
 	}
 
 }

@@ -34,13 +34,13 @@ import com.spacehopperstudios.utility.StringUtils;
 public enum PageType {
 	// navigable
 	RanksPageType("ranks", true),
-	FeedBrowserPageType("feedbrowser", true, "MFB"),
-	UsersPageType("users", true, "MUS"),
+	FeedBrowserPageType("feedbrowser", "MFF"),
+	UsersPageType("users", "MUS"),
 	LoginPageType("login", false),
 	RegisterPageType("register", false),
 	ChangePasswordPageType("changepassword", true),
-	RolesPageType("roles", true, "MRL"),
-	PermissionsPageType("permissions", true, "MPR"),
+	RolesPageType("roles", "MRL"),
+	PermissionsPageType("permissions", "MPR"),
 	ChangeDetailsPageType("changedetails", true),
 	UpgradePageType("upgrade", false),
 	LinkedAccountsPageType("linkedaccounts", true),
@@ -50,19 +50,20 @@ public enum PageType {
 	LinkItunesPageType("linkitunes", true),
 	ReadyToStartPageType("readytostart", true),
 	MyAppsPageType("myapps", true),
-	EmailTemplatesPageType("emailtemplates", true, "MET"),
+	EmailTemplatesPageType("emailtemplates", "MET"),
 	ForgotPasswordPageType("forgotpassword", false),
 	ResetPasswordPageType("resetpassword", false),
-	ItemsPageType("items", true, "MIT"),
+	ItemsPageType("items", "MIT"),
 	PolicyPageType("policy", false),
 	TermsPageType("terms", false),
-	BlogAdminPageType("blogadmin", true, "MBL"),
+	BlogAdminPageType("blogadmin", "MBL"),
 	BlogPostsPageType("blog", false),
 	BlogPostPageType("blogpost", false),
-	BlogEditPostPageType("blogedit", true, "BLE", "BLU"),
+	BlogEditPostPageType("blogedit", "BLE", "BLU"),
+	NotPermittedPageType("notpermitted", false),
 
 	// Non navigable
-	LoadingPageType("loading", false), ;
+	LoadingPageType("loading"), ;
 
 	private String value;
 	private static Map<String, PageType> valueLookup = null;
@@ -71,16 +72,22 @@ public enum PageType {
 	private boolean navigable;
 	private boolean requiresAuthentication;
 
-	private PageType(String value, boolean showable) {
-		this.value = value;
-		this.navigable = showable;
-		requiredPermissions = null;
-	}
-
-	private PageType(String value, boolean requiresAuthentication, String... requiredPermissionCode) {
+	private PageType(String value, boolean requiresAuthentication) {
 		this.value = value;
 		this.navigable = true;
 		this.requiresAuthentication = requiresAuthentication;
+	}
+
+	private PageType(String value) {
+		this.value = value;
+		this.navigable = false;
+		this.requiresAuthentication = false;
+	}
+
+	private PageType(String value, String... requiredPermissionCode) {
+		this.value = value;
+		this.navigable = true;
+		this.requiresAuthentication = true;
 
 		if (requiredPermissionCode != null && requiredPermissionCode.length > 0) {
 			requiredPermissions = new HashMap<String, Permission>();
@@ -214,6 +221,9 @@ public enum PageType {
 		case LoadingPageType:
 			page = new LoadingPage();
 			break;
+		case NotPermittedPageType:
+			page = new NotPermittedPage();
+			break;
 		case HomePageType:
 		default:
 			if (defaultPage == null) {
@@ -227,20 +237,25 @@ public enum PageType {
 	}
 
 	public void show() {
-		if (!navigable) throw showableError();
+		if (!navigable) throw navigableError();
 
 		History.newItem(toString());
 	}
 
 	public void show(String... params) {
-		if (!navigable) throw showableError();
+		if (!navigable) throw navigableError();
 
 		String joinedParams = StringUtils.join(Arrays.asList(params), "/");
-		History.newItem(toString() + "/" + joinedParams);
+
+		if (joinedParams == null || joinedParams.length() == 0) {
+			History.newItem(toString());
+		} else {
+			History.newItem(toString() + "/" + joinedParams);
+		}
 	}
 
-	private RuntimeException showableError() {
-		return new RuntimeException("Cannot show/redirect to page [" + toString() + "] because it is not showable. Should be added directly to DOM");
+	private RuntimeException navigableError() {
+		return new RuntimeException("Cannot show/redirect to page [" + toString() + "] because it is not navigable. Should be added directly to DOM");
 	}
 
 }

@@ -176,14 +176,20 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
+	 * io.reflection.app.client.controller.NavigationController.Stack)
+	 */
 	@Override
-	public void navigationChanged(Stack stack) {
-		if (stack != null && "item".equals(stack.getPage())) {
-			if ("view".equals(stack.getAction()) && (mItemExternalId = stack.getParameter(0)) != null) {
+	public void navigationChanged(Stack previous, Stack current) {
+		if (current != null && "item".equals(current.getPage())) {
+			if ("view".equals(current.getAction()) && (mItemExternalId = current.getParameter(0)) != null) {
 				// Document.get().setScrollLeft(0);
 				// Document.get().setScrollTop(0);
 
-				String listType = stack.getParameter(LIST_TYPE_PARAMETER_INDEX);
+				String listType = current.getParameter(LIST_TYPE_PARAMETER_INDEX);
 				FilterController.get().setListType(listType);
 
 				item = null;

@@ -58,7 +58,7 @@ public class LoginForm extends Composite {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		mLogin.setHTML(mLogin.getText() + "&nbsp;&nbsp;" + imageButtonLink);
-		
+
 		mEmail.getElement().setAttribute("placeholder", "Email");
 		mPassword.getElement().setAttribute("placeholder", "Password");
 	}
@@ -71,19 +71,20 @@ public class LoginForm extends Composite {
 	@Override
 	protected void onAttach() {
 		super.onAttach();
-		
+
 		resetForm();
 
 		if (!mLogin.isVisible()) {
 			mLogin.setVisible(true);
 		}
-		
-		mEmail.setFocus(true);
 
 	}
 
-	public TextBox getEmail() {
-		return mEmail;
+	public void setUsername(String value) {
+		if (value != null && value.length() > 0) {
+			mEmail.setText(value);
+			mPassword.setFocus(true);
+		}
 	}
 
 	/**
@@ -103,7 +104,7 @@ public class LoginForm extends Composite {
 		if (validate()) {
 			FormHelper.hideNote(mEmailGroup, mEmailNote);
 			FormHelper.hideNote(mPasswordGroup, mPasswordNote);
-			disableForm();
+			setEnabled(false);
 			SessionController.get().login(mEmail.getText(), mPassword.getText(), mRememberMe.getValue().booleanValue()); // Execute user login
 		} else {
 			if (mEmailError != null) {
@@ -160,28 +161,30 @@ public class LoginForm extends Composite {
 
 		return validated;
 	}
-	
+
 	private void resetForm() {
-		// mPanel.setVisible(true);
-		mEmail.setEnabled(true);
+		setEnabled(true);
+
 		mEmail.setText("");
-		mPassword.setEnabled(true);
+		mEmail.setFocus(true);
+
 		mPassword.setText("");
-		mRememberMe.setEnabled(true);
-		mLogin.setEnabled(true);
 
 		FormHelper.hideNote(mEmailGroup, mEmailNote);
 		FormHelper.hideNote(mPasswordGroup, mPasswordNote);
-		// mAlertBox.setVisible(false);
-	}	
+	}
 
-	private void disableForm() {
-		mEmail.setEnabled(false);
-		mEmail.setFocus(false);
-		mPassword.setEnabled(false);
-		mPassword.setFocus(false);
-		mRememberMe.setEnabled(false);
-		mLogin.setEnabled(false);
+	public void setEnabled(boolean value) {
+		mEmail.setEnabled(value);
+		mEmail.setFocus(value);
+
+		mPassword.setEnabled(value);
+		if (!value) {
+			mPassword.setFocus(value);
+		}
+
+		mRememberMe.setEnabled(value);
+		mLogin.setEnabled(value);
 	}
 
 }

@@ -122,6 +122,9 @@
                         <li ui:field="emailTemplatesItem">
                             <g:InlineHyperlink ui:field="emailTemplatesLink" targetHistoryToken="emailtemplates">Email Templates</g:InlineHyperlink>
                         </li>
+                        <li ui:field="blogAdminItem">
+                            <g:InlineHyperlink ui:field="blogAdminLink" targetHistoryToken="blogadmin">Blog</g:InlineHyperlink>
+                        </li>
                     </ul>
                 </li>
             </ul>

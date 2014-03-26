@@ -70,7 +70,7 @@ public class LoadingPage extends Page implements NavigationEventHandler, LoginEv
 	private List<Runnable> tasks = new ArrayList<Runnable>();
 	private List<String> taskNames = new ArrayList<String>();
 
-	private int current;
+	private int currentTaskIndex;
 
 	public LoadingPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -82,7 +82,7 @@ public class LoadingPage extends Page implements NavigationEventHandler, LoginEv
 				boolean attemptRestoreSession = SessionController.get().restoreSession();
 
 				if (!attemptRestoreSession) {
-					runTask(++current);
+					runTask(++currentTaskIndex);
 				}
 			}
 		}, "Restoring user session...");
@@ -95,7 +95,7 @@ public class LoadingPage extends Page implements NavigationEventHandler, LoginEv
 				boolean attemptPreload = SessionController.get().prefetchRolesAndPermissions();
 
 				if (!attemptPreload) {
-					runTask(++current);
+					runTask(++currentTaskIndex);
 				}
 			}
 		}, "Loading user account...");
@@ -107,7 +107,7 @@ public class LoadingPage extends Page implements NavigationEventHandler, LoginEv
 				boolean attemptPreload = CountryController.get().prefetchCountries();
 
 				if (!attemptPreload) {
-					runTask(++current);
+					runTask(++currentTaskIndex);
 				}
 			}
 		}, "Loading countries...");
@@ -119,7 +119,7 @@ public class LoadingPage extends Page implements NavigationEventHandler, LoginEv
 				boolean attemptPreload = StoreController.get().prefetchStores();
 
 				if (!attemptPreload) {
-					runTask(++current);
+					runTask(++currentTaskIndex);
 				}
 			}
 		}, "Loading stores...");
@@ -137,6 +137,8 @@ public class LoadingPage extends Page implements NavigationEventHandler, LoginEv
 		super.onAttach();
 
 		resetProgressBar();
+		
+		currentTaskIndex = 0;
 
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(EventController.get().addHandlerToSource(LoginEventHandler.TYPE, SessionController.get(), this));
@@ -177,15 +179,13 @@ public class LoadingPage extends Page implements NavigationEventHandler, LoginEv
 		taskNames.add(taskName);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack)
+	/* (non-Javadoc)
+	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack, io.reflection.app.client.controller.NavigationController.Stack)
 	 */
 	@Override
-	public void navigationChanged(Stack stack) {
-		if (PageType.LoadingPageType.equals(stack.getPage())) {
-			runTask(current);
+	public void navigationChanged(Stack previous, Stack current) {
+		if (PageType.LoadingPageType.equals(current.getPage())) {
+			runTask(currentTaskIndex);
 		}
 	}
 
@@ -203,11 +203,7 @@ public class LoadingPage extends Page implements NavigationEventHandler, LoginEv
 			(new Timer() {
 				@Override
 				public void run() {
-					if (SessionController.get().getLoggedInUser() != null || PageType.LoginPageType.equals(NavigationController.get().getIntendedPage())) {
-						NavigationController.get().showIntendedPage();
-					} else {
-						PageType.LoginPageType.show();
-					}
+					NavigationController.get().showIntendedPage();
 				}
 			}).schedule(600);
 
@@ -237,7 +233,7 @@ public class LoadingPage extends Page implements NavigationEventHandler, LoginEv
 	@Override
 	public void getCountriesSuccess(GetCountriesRequest input, GetCountriesResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			runTask(++current);
+			runTask(++currentTaskIndex);
 		} else {
 			showRefreshToRetryMessage();
 		}
@@ -264,7 +260,7 @@ public class LoadingPage extends Page implements NavigationEventHandler, LoginEv
 	@Override
 	public void getStoresSuccess(GetStoresRequest input, GetStoresResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			runTask(++current);
+			runTask(++currentTaskIndex);
 		} else {
 			showRefreshToRetryMessage();
 		}
@@ -291,7 +287,7 @@ public class LoadingPage extends Page implements NavigationEventHandler, LoginEv
 	@Override
 	public void getRolesAndPermissionsSuccess(GetRolesAndPermissionsRequest input, GetRolesAndPermissionsResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			runTask(++current);
+			runTask(++currentTaskIndex);
 		} else {
 			showRefreshToRetryMessage();
 		}
@@ -319,10 +315,10 @@ public class LoadingPage extends Page implements NavigationEventHandler, LoginEv
 	public void loginSuccess(LoginRequest input, LoginResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			if (SessionController.get().getLoggedInUser() != null) {
-				current = 0;
+				currentTaskIndex = 0;
 			}
 
-			runTask(++current);
+			runTask(++currentTaskIndex);
 		} else {
 			showRefreshToRetryMessage();
 		}

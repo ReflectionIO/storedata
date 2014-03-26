@@ -59,11 +59,12 @@ public class ResetPasswordPage extends Page implements ChangePasswordEventHandle
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack)
+	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
+	 * io.reflection.app.client.controller.NavigationController.Stack)
 	 */
 	@Override
-	public void navigationChanged(Stack stack) {
-		String resetCode = stack.getParameter(0);
+	public void navigationChanged(Stack previous, Stack current) {
+		String resetCode = current.getParameter(0);
 
 		if (resetCode != null && resetCode.length() > 0) {
 			form.setResetCode(resetCode);

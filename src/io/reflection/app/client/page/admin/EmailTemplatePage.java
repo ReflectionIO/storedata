@@ -44,7 +44,7 @@ public class EmailTemplatePage extends Page implements NavigationEventHandler {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		addColumns();
-		
+
 		EmailTemplateController.get().addDataDisplay(emailTemplates);
 		pager.setDisplay(emailTemplates);
 	}
@@ -107,12 +107,13 @@ public class EmailTemplatePage extends Page implements NavigationEventHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack)
+	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
+	 * io.reflection.app.client.controller.NavigationController.Stack)
 	 */
 	@Override
-	public void navigationChanged(Stack stack) {
-		if ("emailtemplate".equals(stack.getPage()) && "view".equals(stack.getAction())) {
-			
+	public void navigationChanged(Stack previous, Stack current) {
+		if ("emailtemplate".equals(current.getPage()) && "view".equals(current.getAction())) {
+
 		}
 	}
 

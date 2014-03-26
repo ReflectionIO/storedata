@@ -443,15 +443,16 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack)
+	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
+	 * io.reflection.app.client.controller.NavigationController.Stack)
 	 */
 	@Override
-	public void navigationChanged(Stack stack) {
+	public void navigationChanged(Stack previous, Stack current) {
 
-		if (PageType.RanksPageType.equals(stack.getPage())) {
+		if (PageType.RanksPageType.equals(current.getPage())) {
 			// checkPermissions();
 
-			if (stack.getAction() == null || !"view".equals(stack.getAction())) {
+			if (current.getAction() == null || !"view".equals(current.getAction())) {
 				PageType.RanksPageType.show("view", FilterController.get().toRankFilterString());
 			} else {
 				refreshTabs();

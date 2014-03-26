@@ -217,39 +217,40 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.client.event.NavigationChanged.Handler#navigationChanged(io.reflection.app.admin.client.controller.NavigationController.Stack)
+	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
+	 * io.reflection.app.client.controller.NavigationController.Stack)
 	 */
 	@Override
-	public void navigationChanged(Stack stack) {
-		if ("ranks".equals(stack.getPage())) {
+	public void navigationChanged(Stack previous, Stack current) {
+		if ("ranks".equals(current.getPage())) {
 			highlight(mRanksItem);
-		} else if ("feedbrowser".equals(stack.getPage())) {
+		} else if ("feedbrowser".equals(current.getPage())) {
 			highlight(mFeedBrowserItem);
-		} else if ("users".equals(stack.getPage())) {
-			if (stack.getAction() == null) {
+		} else if ("users".equals(current.getPage())) {
+			if (current.getAction() == null) {
 				highlight(mUsersItem);
-			} else if ("myapps".equals(stack.getAction())) {
+			} else if ("myapps".equals(current.getAction())) {
 				highlight(mMyAppsItem);
-			} else if ("linkedaccounts".equals(stack.getAction())) {
+			} else if ("linkedaccounts".equals(current.getAction())) {
 				highlight(mLinkedAccountsItem);
-			} else if ("changedetails".equals(stack.getAction())) {
+			} else if ("changedetails".equals(current.getAction())) {
 				highlight(mAccountSettingsItem);
 			}
-		} else if ("login".equals(stack.getPage())) {
+		} else if ("login".equals(current.getPage())) {
 			highlight(mLoginItem);
-		} else if ("register".equals(stack.getPage())) {
+		} else if ("register".equals(current.getPage())) {
 			highlight(mRegisterItem);
-		} else if ("roles".equals(stack.getPage())) {
+		} else if ("roles".equals(current.getPage())) {
 			highlight(mRolesItem);
-		} else if ("permissions".equals(stack.getPage())) {
+		} else if ("permissions".equals(current.getPage())) {
 			highlight(mPermissionsItem);
-		} else if ("upgrade".equals(stack.getPage())) {
+		} else if ("upgrade".equals(current.getPage())) {
 			highlight(mUpgradeAccountItem);
-		} else if (PageType.EmailTemplatesPageType.equals(stack.getPage())) {
+		} else if (PageType.EmailTemplatesPageType.equals(current.getPage())) {
 			highlight(emailTemplatesItem);
-		} else if (PageType.ItemsPageType.equals(stack.getPage())) {
+		} else if (PageType.ItemsPageType.equals(current.getPage())) {
 			highlight(itemsItem);
-		} else if (PageType.BlogPostsPageType.equals(stack.getPage()) || PageType.BlogPostPageType.equals(stack.getPage())) {
+		} else if (PageType.BlogPostsPageType.equals(current.getPage()) || PageType.BlogPostPageType.equals(current.getPage())) {
 			highlight(blogItem);
 		} else {
 			highlight(null);
@@ -371,6 +372,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			}
 
 			mNavList.getParentElement().appendChild(mAdminList);
+		} else {
+			removeAdmin();
 		}
 	}
 

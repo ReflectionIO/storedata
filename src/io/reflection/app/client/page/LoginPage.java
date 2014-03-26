@@ -69,26 +69,44 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack)
+	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
+	 * io.reflection.app.client.controller.NavigationController.Stack)
 	 */
 	@Override
-	public void navigationChanged(Stack stack) {
+	public void navigationChanged(Stack previous, Stack current) {
 		Stack s = NavigationController.get().getStack();
 		if (s != null && s.hasAction()) {
 			if (WELCOME_ACTION_NAME.equals(s.getAction())) { // If action == 'welcome', show the Welcome panel
 				mWelcomePanel.setVisible(true);
 				mDefaultLogin.setVisible(false);
-			} else if (FormHelper.isValidEmail(s.getAction())) { // If action == email (user has been just registered to the system) attach him email to field
-				mWelcomePanel.setVisible(false);
-				mDefaultLogin.setVisible(true);
-				mLoginForm.getEmail().setText(s.getAction());
+			} else { // If action == email (user has been just registered to the system) attach him email to field
+				String email = getEmail(s.getAction());
+
+				if (email == null) {
+					email = getEmail(s.getParameter(0));
+				}
+
+				if (email != null) {
+					mWelcomePanel.setVisible(false);
+					mDefaultLogin.setVisible(true);
+					mLoginForm.setUsername(email);
+				}
 			}
 		} else {
 			mWelcomePanel.setVisible(false);
 			mDefaultLogin.setVisible(true);
 
 		}
+	}
 
+	public String getEmail(String value) {
+		String email = null;
+
+		if (value != null && value.length() > 0 && FormHelper.isValidEmail(value)) {
+			email = value;
+		}
+
+		return email;
 	}
 
 	/*
@@ -98,8 +116,8 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 	 * io.reflection.app.api.shared.datatypes.Session)
 	 */
 	@Override
-	public void userLoggedIn(User user, Session session) {		
-		NavigationController.get().addPage(PageType.LoadingPageType.toString());
+	public void userLoggedIn(User user, Session session) {
+		NavigationController.get().showNext();
 	}
 
 	/*
@@ -119,12 +137,6 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 	 */
 	@Override
 	public void userLoginFailed(Error error) {
-		if (!this.isVisible()) {
-			// AlertBoxHelper
-			// .configureAlert(mAlertBox, AlertBoxType.DangerAlertBoxType, false, "An error occured:", "(" + error.code + ") " + error.message, true)
-			// .setVisible(true);
-
-		}
+		mLoginForm.setEnabled(true);
 	}
-
 }

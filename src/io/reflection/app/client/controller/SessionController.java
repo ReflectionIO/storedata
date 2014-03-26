@@ -32,6 +32,7 @@ import io.reflection.app.api.core.shared.call.event.LoginEventHandler.LoginFailu
 import io.reflection.app.api.core.shared.call.event.LoginEventHandler.LoginSuccess;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.api.shared.datatypes.Session;
+import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.handler.user.SessionEventHandler.UserLoggedIn;
 import io.reflection.app.client.handler.user.SessionEventHandler.UserLoggedOut;
 import io.reflection.app.client.handler.user.SessionEventHandler.UserLoginFailed;
@@ -45,6 +46,8 @@ import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
 
+import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,8 +79,6 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 
 	private User mLoggedInUser = null;
 	private Session mSession = null;
-
-	private String timeoutUsername = null;
 
 	private SessionController() {
 		EventController.get().addHandler(JsonServiceCallEventHandler.TYPE, this);
@@ -259,7 +260,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 		});
 
 		setLoggedInUser(null, null);
-		ItemController.get().clearItemCache();
+		// ItemController.get().clearItemCache();
 		clearRolePermissionCache();
 	}
 
@@ -441,7 +442,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 		final ChangeUserDetailsRequest input = new ChangeUserDetailsRequest();
 		input.accessCode = ACCESS_CODE;
 
-		input.session = SessionController.get().getSessionForApiCall();
+		input.session = getSessionForApiCall();
 
 		input.user = new User();
 
@@ -498,10 +499,6 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 							setLoggedInUser(output.session.user, output.session);
 						}
 					} else {
-						if (output.error != null && output.error.code.intValue() == 100034) {
-							PageType.LoginPageType.show("timeout");
-						}
-
 						EventController.get().fireEventFromSource(new UserLoginFailed(output.error), SessionController.this);
 					}
 
@@ -607,14 +604,6 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 		}
 	}
 
-	public String getTimeoutUsername() {
-		return timeoutUsername;
-	}
-
-	public void clearTimeoutUsername() {
-		timeoutUsername = null;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -637,17 +626,23 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 			if (output.error.code.intValue() == ApiError.SessionNull.getCode() || output.error.code.intValue() == ApiError.SessionNotFound.getCode()
 					|| output.error.code.intValue() == ApiError.SessionNoLookup.getCode()) {
 
-				timeoutUsername = mLoggedInUser.username; // Save Username logged in during timeout
-
 				mSession = null; // Set session as invalid
 
-				NavigationController.get().setLastIntendedPage(); // Save last page clicked before timeout
+				String loginParams = "timeout";
+				Stack s = NavigationController.get().getStack();
 
-				PageType.LoginPageType.show("timeout");
+				if (mLoggedInUser != null && mLoggedInUser.username != null) {
+					loginParams += "/" + mLoggedInUser.username;
+				}
 
+				if (s != null) {
+					loginParams += "/" + s.asNextParameter();
+				}
+
+				PageType.LoginPageType.show(loginParams);
 			}
 		}
-				
+
 	}
 
 	/*
@@ -658,5 +653,35 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	 */
 	@Override
 	public void jsonServiceCallFailure(JsonService origin, String callName, Request input, Throwable caught) {}
+
+	/**
+	 * @return
+	 */
+	public boolean isValidSession() {
+		return getSessionForApiCall() != null && (mSession == null || (mSession.expires != null && mSession.expires.getTime() > (new Date()).getTime()));
+	}
+
+	/**
+	 * @param requiredPermissions
+	 * @return
+	 */
+	public boolean isAuthorised(Collection<Permission> requiredPermissions) {
+		boolean authorised = false;
+
+		if (isValidSession() && mPermissionCache != null) {
+			if (requiredPermissions == null || requiredPermissions.size() == 0) {
+				authorised = true;
+			} else {
+				for (Permission permission : requiredPermissions) {
+					if (permission.code != null && mPermissionCache.get(permission.code) != null) {
+						authorised = true;
+						break;
+					}
+				}
+			}
+		}
+
+		return authorised;
+	}
 
 }

@@ -57,13 +57,14 @@ public class SearchPage extends Page implements NavigationEventHandler, SearchFo
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack)
+	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
+	 * io.reflection.app.client.controller.NavigationController.Stack)
 	 */
 	@Override
-	public void navigationChanged(Stack stack) {
+	public void navigationChanged(Stack previous, Stack current) {
 
-		if (stack != null && "search".equals(stack.getPage())) {
-			if ("query".equals(stack.getAction()) && (mQuery = stack.getParameter(0)) != null) {
+		if (current != null && "search".equals(current.getPage())) {
+			if ("query".equals(current.getAction()) && (mQuery = current.getParameter(0)) != null) {
 				List<Item> items = ItemController.get().searchForItems(mQuery);
 
 				if (items != null) {

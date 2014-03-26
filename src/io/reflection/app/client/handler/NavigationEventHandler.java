@@ -20,14 +20,16 @@ public interface NavigationEventHandler extends EventHandler {
 
 	public static final GwtEvent.Type<NavigationEventHandler> TYPE = new GwtEvent.Type<NavigationEventHandler>();
 
-	public void navigationChanged(Stack stack);
-	
+	public void navigationChanged(Stack previous, Stack current);
+
 	public class ChangedEvent extends GwtEvent<NavigationEventHandler> {
 
 		private Stack mStack;
+		private Stack previous;
 
-		public ChangedEvent(Stack stack) {
-			mStack = stack;
+		public ChangedEvent(Stack previous, Stack current) {
+			mStack = current;
+			this.previous = previous;
 		}
 
 		/*
@@ -47,7 +49,7 @@ public interface NavigationEventHandler extends EventHandler {
 		 */
 		@Override
 		protected void dispatch(NavigationEventHandler handler) {
-			handler.navigationChanged(mStack);
+			handler.navigationChanged(previous, mStack);
 		}
 	}
 

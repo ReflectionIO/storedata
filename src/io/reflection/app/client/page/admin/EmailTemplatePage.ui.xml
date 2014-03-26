@@ -4,11 +4,12 @@
     <ui:style>
     </ui:style>
     <g:HTMLPanel>
-        <h2>Email Templates</h2>
+        <div class="container">
+            <h2>Email Templates</h2>
 
-        <c:CellTable ui:field="emailTemplates" styleName="table table-hover table-striped" />
+            <c:CellTable ui:field="emailTemplates" styleName="table table-hover table-striped" />
 
-        <p:SimplePager ui:field="pager" rangeLimited="true" />
-
+            <p:SimplePager ui:field="pager" rangeLimited="true" />
+        </div>
     </g:HTMLPanel>
 </ui:UiBinder> 

@@ -123,19 +123,19 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged (io.reflection.app.admin.client.controller.NavigationController.Stack)
+	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
+	 * io.reflection.app.client.controller.NavigationController.Stack)
 	 */
 	@Override
-	public void navigationChanged(Stack stack) {
-
+	public void navigationChanged(Stack previous, Stack current) {
 		mLinkableAccount = null;
 
-		if (NavigationController.get().getStack().getParameter(0) != null) {
+		if (current.getParameter(0) != null) {
 
-			mIosMacLink.setTargetHistoryToken("users/linkedaccounts/" + NavigationController.get().getStack().getParameter(0) + "/iosmac");
+			mIosMacLink.setTargetHistoryToken("users/linkedaccounts/" + current.getParameter(0) + "/iosmac");
 
 			String accountType;
-			if ((accountType = NavigationController.get().getStack().getParameter(1)) != null) {
+			if ((accountType = current.getParameter(1)) != null) {
 				if ("iosmac".equals(accountType)) {
 					mForm.setVisible(true);
 					mLinkableAccount = mIosMacForm;

@@ -326,7 +326,6 @@ a:hover,a:focus,a:active {
 .btn-primary {
 	background-color: #6d69c5;
 	border-color: #8873CD;
-	height: 56px;
 	border-radius: 4px;
 	/* Fade effect */
 	-o-transition: .5s;

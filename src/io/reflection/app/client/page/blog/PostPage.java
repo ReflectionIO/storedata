@@ -78,13 +78,14 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack)
+	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
+	 * io.reflection.app.client.controller.NavigationController.Stack)
 	 */
 	@Override
-	public void navigationChanged(Stack stack) {
-		if (stack.getAction() != null) {
-			if (MORE_ACTION_NAME.equals(stack.getAction())) {
-				String postIdValue = stack.getParameter(POST_ID_PARAMETER_INDEX);
+	public void navigationChanged(Stack previous, Stack current) {
+		if (current.getAction() != null) {
+			if (MORE_ACTION_NAME.equals(current.getAction())) {
+				String postIdValue = current.getParameter(POST_ID_PARAMETER_INDEX);
 
 				if (postIdValue != null) {
 					postId = null;

@@ -123,13 +123,14 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack)
+	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
+	 * io.reflection.app.client.controller.NavigationController.Stack)
 	 */
 	@Override
-	public void navigationChanged(Stack stack) {
+	public void navigationChanged(Stack previous, Stack current) {
 		String actionCode = null;
 
-		if (COMPLETE_ACTION_NAME.equals(stack.getAction()) && (actionCode = stack.getParameter(CODE_PARAMETER_INDEX)) != null) {
+		if (COMPLETE_ACTION_NAME.equals(current.getAction()) && (actionCode = current.getParameter(CODE_PARAMETER_INDEX)) != null) {
 			mRegisterForm.setEnabled(false);
 
 			UserController.get().fetchUser(actionCode);

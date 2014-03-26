@@ -96,13 +96,14 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack)
+	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
+	 * io.reflection.app.client.controller.NavigationController.Stack)
 	 */
 	@Override
-	public void navigationChanged(Stack stack) {
-		if (stack.getAction() != null) {
-			if (CHANGE_ACTION_NAME.equals(stack.getAction())) {
-				String postIdValue = stack.getParameter(POST_ID_PARAMETER_INDEX);
+	public void navigationChanged(Stack previous, Stack current) {
+		if (current.getAction() != null) {
+			if (CHANGE_ACTION_NAME.equals(current.getAction())) {
+				String postIdValue = current.getParameter(POST_ID_PARAMETER_INDEX);
 
 				if (postIdValue != null) {
 					postId = null;
@@ -119,7 +120,7 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 						}
 					}
 				}
-			} else if (NEW_ACTION_NAME.equals(stack.getAction())) {
+			} else if (NEW_ACTION_NAME.equals(current.getAction())) {
 				resetForm();
 			}
 		}

@@ -4,12 +4,12 @@
     <ui:style>
     </ui:style>
     <g:HTMLPanel>
+        <div class="container">
+            <h2>Permissions</h2>
 
-        <h2>Permissions</h2>
+            <c:CellTable ui:field="mPermissions" styleName="table table-hover table-striped" />
 
-        <c:CellTable ui:field="mPermissions" styleName="table table-hover table-striped" />
-
-        <p:SimplePager ui:field="mPager" />
-
+            <p:SimplePager ui:field="mPager" />
+        </div>
     </g:HTMLPanel>
 </ui:UiBinder> 

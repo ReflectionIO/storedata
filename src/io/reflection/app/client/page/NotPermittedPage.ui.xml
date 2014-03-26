@@ -4,6 +4,11 @@
     
     </ui:style>
     <g:HTMLPanel>
+        <div class="container">
+            <h2>No permissions</h2>
+            <p>You don't have enough permissions to view the selected page.</p>
 
+            <g:InlineHyperlink text="Go Back" ui:field="back" styleName="btn btn-primary btn-lg" />
+        </div>
     </g:HTMLPanel>
 </ui:UiBinder> 
