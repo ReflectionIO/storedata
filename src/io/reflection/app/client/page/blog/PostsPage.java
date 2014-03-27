@@ -83,6 +83,16 @@ public class PostsPage extends Page implements NavigationEventHandler, GetPostsE
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see io.reflection.app.client.page.Page#getTitle()
+	 */
+	@Override
+	public String getTitle() {
+		return "Reflection.io: Blog";
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.client.page.Page#onDetach()
 	 */
 	@Override

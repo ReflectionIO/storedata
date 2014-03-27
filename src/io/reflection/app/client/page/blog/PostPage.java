@@ -78,6 +78,16 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see io.reflection.app.client.page.Page#getTitle()
+	 */
+	@Override
+	public String getTitle() {
+		return "Reflection.io: Blog";
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
 	 * io.reflection.app.client.controller.NavigationController.Stack)
 	 */
@@ -137,6 +147,10 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 
 		setLoading(false);
 
+		if (true) {
+			installDisqus();
+		}
+
 	}
 
 	private void setLoading(boolean value) {
@@ -165,5 +179,18 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 	 */
 	@Override
 	public void getPostFailure(GetPostRequest input, Throwable caught) {}
+
+	private static native void installDisqus() /*-{
+		$wnd.disqus_shortname = 'reflectionio';
+
+		($wnd.installDisqus = function() {
+			var dsq = $wnd.document.createElement('script');
+			dsq.type = 'text/javascript';
+			dsq.async = true;
+			dsq.src = '//' + $wnd.disqus_shortname + '.disqus.com/embed.js';
+			($wnd.document.getElementsByTagName('head')[0] || $wnd.document
+					.getElementsByTagName('body')[0]).appendChild(dsq);
+		})();
+	}-*/;
 
 }

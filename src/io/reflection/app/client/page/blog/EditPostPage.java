@@ -92,6 +92,16 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 
 		resetForm();
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.page.Page#getTitle()
+	 */
+	@Override
+	public String getTitle() {
+		return "Reflection.io: Blog";
+	}
 
 	/*
 	 * (non-Javadoc)

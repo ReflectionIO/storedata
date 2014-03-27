@@ -5,12 +5,17 @@
     	font-size: smaller;
     }
     
-    .topGap {
+    .blog {
+    	font-size: 12pt;
+    }
+    
+    .gap {
     	margin-top: 20px;
+    	margin-bottom: 20px;
     }
     </ui:style>
     <g:HTMLPanel>
-        <div class="container">
+        <div class="container {style.blog}">
             <h2 ui:field="title"></h2>
 
             <p class="text-muted {style.smaller}">
@@ -22,7 +27,14 @@
 
             <div ui:field="content" />
 
-            <g:HTMLPanel ui:field="tags" styleName="{style.topGap}" />
+            <g:HTMLPanel ui:field="tags" styleName="{style.gap}" />
+
+            <div id="disqus_thread"></div>
+            <a href="http://disqus.com" class="dsq-brlink">
+                comments powered by
+                <span class="logo-disqus">Disqus</span>
+            </a>
+
         </div>
 
     </g:HTMLPanel>
