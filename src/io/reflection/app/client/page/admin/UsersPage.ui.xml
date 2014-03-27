@@ -12,13 +12,7 @@
             <h2>Users</h2>
 
             <g:HTMLPanel styleName="btn-group {style.toolbar_spacing}">
-                <g:InlineHyperlink styleName="btn btn-default disabled" text="Assign password" ui:field="mAssignPassword" />
-                <g:InlineHyperlink styleName="btn btn-default disabled" text="Make admin" ui:field="mMakeAdmin" />
-                <g:InlineHyperlink styleName="btn btn-default disabled" text="Change details" ui:field="mChangeDetails" />
-            </g:HTMLPanel>
-
-            <g:HTMLPanel styleName="btn-group {style.toolbar_spacing}">
-                <g:InlineHyperlink styleName="btn btn-default disabled" text="Add to Beta" ui:field="addToBeta" />
+                <g:InlineHyperlink styleName="btn btn-default" text="Add user" ui:field="addUser" targetHistoryToken="register" />
             </g:HTMLPanel>
 
             <c:CellTable ui:field="mUsers" styleName="table table-hover table-striped" />

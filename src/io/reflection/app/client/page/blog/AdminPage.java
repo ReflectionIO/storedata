@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.page.blog;
 
+import io.reflection.app.client.cell.StyledButtonCell;
 import io.reflection.app.client.controller.PostController;
 import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.SessionController;
@@ -18,6 +19,7 @@ import io.reflection.app.datatypes.shared.Post;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.shared.util.FormattingHelper;
 
+import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -107,7 +109,8 @@ public class AdminPage extends Page {
 			}
 		};
 
-		Column<Post, SafeHtml> editColumn = new Column<Post, SafeHtml>(new SafeHtmlCell()) {
+		SafeHtmlCell prototype = new SafeHtmlCell();
+		Column<Post, SafeHtml> editColumn = new Column<Post, SafeHtml>(prototype) {
 
 			@Override
 			public SafeHtml getValue(Post object) {
@@ -118,7 +121,7 @@ public class AdminPage extends Page {
 			}
 		};
 
-		Column<Post, SafeHtml> viewColumn = new Column<Post, SafeHtml>(new SafeHtmlCell()) {
+		Column<Post, SafeHtml> viewColumn = new Column<Post, SafeHtml>(prototype) {
 
 			@Override
 			public SafeHtml getValue(Post object) {
@@ -129,16 +132,21 @@ public class AdminPage extends Page {
 			}
 		};
 
-		Column<Post, SafeHtml> deleteColumn = new Column<Post, SafeHtml>(new SafeHtmlCell()) {
+		StyledButtonCell prototype1 = new StyledButtonCell("btn", "btn-xs", "btn-danger");
+		Column<Post, String> deleteColumn = new Column<Post, String>(prototype1) {
 
 			@Override
-			public SafeHtml getValue(Post object) {
-				String s = object.id.toString();
-
-				return SafeHtmlUtils.fromTrustedString("<a href=\"#" + PageType.BlogEditPostPageType.toString() + "/delete/" + s
-						+ "\" class=\"btn btn-xs btn-danger\">Delete</a>");
+			public String getValue(Post object) {
+				return "Delete";
 			}
 		};
+		deleteColumn.setFieldUpdater(new FieldUpdater<Post, String>() {
+
+			@Override
+			public void update(int index, Post object, String value) {
+
+			}
+		});
 
 		posts.addColumn(idColumn, "Id");
 		posts.addColumn(authorColumn, "Author");

@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.page.admin;
 
+import io.reflection.app.client.cell.StyledButtonCell;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FeedFetchController;
 import io.reflection.app.client.controller.FilterController;
@@ -21,21 +22,18 @@ import io.reflection.app.datatypes.shared.FeedFetch;
 
 import java.util.Map;
 
+import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.view.client.SelectionChangeEvent;
-import com.google.gwt.view.client.SelectionChangeEvent.Handler;
-import com.google.gwt.view.client.SingleSelectionModel;
 
 /**
  * @author billy1380
@@ -53,43 +51,39 @@ public class FeedBrowserPage extends Page implements FilterEventHandler {
 	@UiField ListBox mAppStore;
 	@UiField ListBox mCountry;
 	@UiField ListBox category;
-	
-	@UiField ListBox mListType;
 
-	@UiField Button mIngest;
-	@UiField Button mModel;
-	@UiField Button mPredict;
+	@UiField ListBox mListType;
 
 	@UiField Breadcrumbs mBreadcrumbs;
 
 	public FeedBrowserPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		addFeedColumns();
-		
+		createColumns();
+
 		FilterHelper.addStores(mAppStore);
 		FilterHelper.addCountries(mCountry);
 		FilterHelper.addCategories(category);
 
-		final SingleSelectionModel<FeedFetch> s = new SingleSelectionModel<FeedFetch>();
-		s.addSelectionChangeHandler(new Handler() {
-
-			@Override
-			public void onSelectionChange(SelectionChangeEvent event) {
-				FeedFetch selected = s.getSelectedObject();
-
-				if (selected != null) {
-					mIngest.removeStyleName("disabled");
-					mModel.removeStyleName("disabled");
-					mPredict.removeStyleName("disabled");
-				} else {
-					mIngest.addStyleName("disabled");
-					mModel.addStyleName("disabled");
-					mPredict.addStyleName("disabled");
-				}
-			}
-		});
-		mFeeds.setSelectionModel(s);
+		// final SingleSelectionModel<FeedFetch> s = new SingleSelectionModel<FeedFetch>();
+		// s.addSelectionChangeHandler(new Handler() {
+		//
+		// @Override
+		// public void onSelectionChange(SelectionChangeEvent event) {
+		// FeedFetch selected = s.getSelectedObject();
+		//
+		// if (selected != null) {
+		// mIngest.removeStyleName("disabled");
+		// mModel.removeStyleName("disabled");
+		// mPredict.removeStyleName("disabled");
+		// } else {
+		// mIngest.addStyleName("disabled");
+		// mModel.addStyleName("disabled");
+		// mPredict.addStyleName("disabled");
+		// }
+		// }
+		// });
+		// mFeeds.setSelectionModel(s);
 
 		FeedFetchController.get().addDataDisplay(mFeeds);
 		mPager.setDisplay(mFeeds);
@@ -98,16 +92,18 @@ public class FeedBrowserPage extends Page implements FilterEventHandler {
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
 	 */
 	@Override
 	protected void onAttach() {
 		super.onAttach();
-		
+
 		register(EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -120,7 +116,15 @@ public class FeedBrowserPage extends Page implements FilterEventHandler {
 	/**
 	 * 
 	 */
-	private void addFeedColumns() {
+	private void createColumns() {
+
+		mFeeds.addColumn(new TextColumn<FeedFetch>() {
+
+			@Override
+			public String getValue(FeedFetch object) {
+				return object.id.toString();
+			}
+		}, "Id");
 
 		mFeeds.addColumn(new TextColumn<FeedFetch>() {
 
@@ -145,6 +149,63 @@ public class FeedBrowserPage extends Page implements FilterEventHandler {
 				return object.type;
 			}
 		}, "Type");
+
+		FieldUpdater<FeedFetch, String> onClick = new FieldUpdater<FeedFetch, String>() {
+
+			@Override
+			public void update(int index, FeedFetch object, String value) {
+				switch (value) {
+				case "ingest":
+					FeedFetchController.get().ingest(object.code);
+					break;
+				case "model":
+					FeedFetchController.get().model(object.code);
+					break;
+				case "predict":
+					FeedFetchController.get().predict(object.code);
+					break;
+				}
+			}
+		};
+
+		StyledButtonCell prototype = new StyledButtonCell("btn", "btn-xs", "btn-default"); 
+
+		Column<FeedFetch, String> ingest = new Column<FeedFetch, String>(prototype) {
+
+			@Override
+			public String getValue(FeedFetch object) {
+				return "ingest";
+			}
+
+		};
+
+		ingest.setFieldUpdater(onClick);
+
+		Column<FeedFetch, String> model = new Column<FeedFetch, String>(prototype) {
+
+			@Override
+			public String getValue(FeedFetch object) {
+				return "model";
+			}
+
+		};
+
+		model.setFieldUpdater(onClick);
+
+		Column<FeedFetch, String> predict = new Column<FeedFetch, String>(prototype) {
+
+			@Override
+			public String getValue(FeedFetch object) {
+				return "predict";
+			}
+
+		};
+
+		predict.setFieldUpdater(onClick);
+
+		mFeeds.addColumn(ingest);
+		mFeeds.addColumn(model);
+		mFeeds.addColumn(predict);
 	}
 
 	@UiHandler("mAppStore")
@@ -161,40 +222,10 @@ public class FeedBrowserPage extends Page implements FilterEventHandler {
 	void onCountryValueChanged(ChangeEvent event) {
 		FilterController.get().setCountry(mCountry.getValue(mCountry.getSelectedIndex()));
 	}
-	
+
 	@UiHandler("category")
 	void onCategoryValueChanged(ChangeEvent event) {
 		FilterController.get().setCategory(Long.valueOf(category.getValue(category.getSelectedIndex())));
-	}
-
-	@UiHandler("mIngest")
-	void onIngestClicked(ClickEvent event) {
-		@SuppressWarnings("unchecked")
-		FeedFetch selected = ((SingleSelectionModel<FeedFetch>) mFeeds.getSelectionModel()).getSelectedObject();
-
-		if (selected != null) {
-			FeedFetchController.get().ingest(selected.code);
-		}
-	}
-
-	@UiHandler("mModel")
-	void onModelClicked(ClickEvent event) {
-		@SuppressWarnings("unchecked")
-		FeedFetch selected = ((SingleSelectionModel<FeedFetch>) mFeeds.getSelectionModel()).getSelectedObject();
-
-		if (selected != null) {
-			FeedFetchController.get().model(selected.code);
-		}
-	}
-
-	@UiHandler("mPredict")
-	void onPredictClicked(ClickEvent event) {
-		@SuppressWarnings("unchecked")
-		FeedFetch selected = ((SingleSelectionModel<FeedFetch>) mFeeds.getSelectionModel()).getSelectedObject();
-
-		if (selected != null) {
-			FeedFetchController.get().predict(selected.code);
-		}
 	}
 
 	/*

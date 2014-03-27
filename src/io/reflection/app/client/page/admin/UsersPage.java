@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.page.admin;
 
+import io.reflection.app.client.cell.StyledButtonCell;
 import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.UserController;
 import io.reflection.app.client.page.Page;
@@ -15,6 +16,7 @@ import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.shared.util.FormattingHelper;
 
+import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -25,11 +27,7 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TextHeader;
-import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.view.client.SelectionChangeEvent;
-import com.google.gwt.view.client.SelectionChangeEvent.Handler;
-import com.google.gwt.view.client.SingleSelectionModel;
 
 /**
  * @author billy1380
@@ -44,64 +42,17 @@ public class UsersPage extends Page {
 	@UiField(provided = true) CellTable<User> mUsers = new CellTable<User>(ServiceConstants.SHORT_STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) SimplePager mPager = new SimplePager(false, false);
 
-	@UiField InlineHyperlink mAssignPassword;
-	@UiField InlineHyperlink mMakeAdmin;
-	@UiField InlineHyperlink mChangeDetails;
-
-	@UiField InlineHyperlink addToBeta;
-
 	public UsersPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		addUserColumns();
-
-		final SingleSelectionModel<User> s = new SingleSelectionModel<User>();
-		s.addSelectionChangeHandler(new Handler() {
-
-			@Override
-			public void onSelectionChange(SelectionChangeEvent event) {
-				User selected = s.getSelectedObject();
-
-				if (selected != null) {
-					mAssignPassword.removeStyleName("disabled");
-					mMakeAdmin.removeStyleName("disabled");
-					mChangeDetails.removeStyleName("disabled");
-
-					addToBeta.removeStyleName("disabled");
-				} else {
-					mAssignPassword.addStyleName("disabled");
-					mMakeAdmin.addStyleName("disabled");
-					mChangeDetails.addStyleName("disabled");
-
-					addToBeta.addStyleName("disabled");
-				}
-
-				if (selected != null) {
-					mAssignPassword.setTargetHistoryToken("users/changepassword/" + selected.id.toString());
-				}
-
-				if (selected != null) {
-					mMakeAdmin.setTargetHistoryToken("users/assignrole/" + selected.id.toString() + "/admin");
-				}
-
-				if (selected != null) {
-					mChangeDetails.setTargetHistoryToken("users/changedetails/" + selected.id.toString());
-				}
-
-				if (selected != null) {
-					addToBeta.setTargetHistoryToken("users/assignrole/" + selected.id.toString() + "/beta");
-				}
-
-			}
-		});
-		mUsers.setSelectionModel(s);
+		createColumns();
 
 		UserController.get().addDataDisplay(mUsers);
 		mPager.setDisplay(mUsers);
 
 	}
 
-	private void addUserColumns() {
+	private void createColumns() {
 		TextColumn<User> name = new TextColumn<User>() {
 
 			@Override
@@ -141,8 +92,79 @@ public class UsersPage extends Page {
 		TextHeader emailHeader = new TextHeader("E-mail");
 		emailHeader.setHeaderStyleNames("col-md-3");
 		mUsers.addColumn(email, emailHeader);
-	}
 
+		SafeHtmlCell prototype = new SafeHtmlCell();
+		Column<User, SafeHtml> assignPassword = new Column<User, SafeHtml>(prototype) {
+
+			@Override
+			public SafeHtml getValue(User object) {
+				return SafeHtmlUtils.fromTrustedString("<a href=\"#users/changepassword/" + object.id.toString()
+						+ "\" class=\"btn btn-xs btn-default\">Assign password</a>");
+			}
+		};
+
+		Column<User, SafeHtml> changeDetails = new Column<User, SafeHtml>(prototype) {
+
+			@Override
+			public SafeHtml getValue(User object) {
+				return SafeHtmlUtils.fromTrustedString("<a href=\"#users/changedetails/" + object.id.toString()
+						+ "\" class=\"btn btn-xs btn-default\">Change details</a>");
+			}
+		};
+
+		FieldUpdater<User, String> action = new FieldUpdater<User, String>() {
+
+			@Override
+			public void update(int index, User object, String value) {
+				switch (value) {
+				case "Make admin":
+					UserController.get().makeAdmin(object.id);
+					break;
+				case "Add to beta":
+					UserController.get().makeBeta(object.id);
+					break;
+				case "Delete":
+					UserController.get().delete(object.id);
+					break;
+				}
+			}
+		};
+
+		StyledButtonCell prototype1 = new StyledButtonCell("btn", "btn-xs", "btn-default");
+		Column<User, String> makeAdmin = new Column<User, String>(prototype1) {
+
+			@Override
+			public String getValue(User object) {
+				return "Make admin";
+			}
+		};
+		makeAdmin.setFieldUpdater(action);
+
+		Column<User, String> addToBeta = new Column<User, String>(prototype1) {
+
+			@Override
+			public String getValue(User object) {
+				return "Add to beta";
+			}
+		};
+		addToBeta.setFieldUpdater(action);
+
+		StyledButtonCell prototype2 = new StyledButtonCell("btn", "btn-xs", "btn-danger");
+		Column<User, String> delete = new Column<User, String>(prototype2) {
+
+			@Override
+			public String getValue(User object) {
+				return "Delete";
+			}
+		};
+		delete.setFieldUpdater(action);
+
+		mUsers.addColumn(assignPassword);
+		mUsers.addColumn(changeDetails);
+		mUsers.addColumn(makeAdmin);
+		mUsers.addColumn(addToBeta);
+		mUsers.addColumn(delete);
+	}
 	//
 	// String userId = mStack.getParameter(0);
 	// String roleName = mStack.getParameter(1);

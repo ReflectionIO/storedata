@@ -219,6 +219,15 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 	}
 
 	/**
+	 * Deletes user with a give id
+	 * 
+	 * @param userId
+	 */
+	public void delete(Long userId) {
+
+	}
+
+	/**
 	 * Adds BT1 role to the user (this is the role code designated to the first closed beta)
 	 * 
 	 * @param userId
@@ -339,7 +348,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 			}
 		});
 	}
-	
+
 	/**
 	 * 
 	 * @param username
@@ -356,7 +365,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 		input.user = new User();
 		input.user.password = password;
-		
+
 		input.actionCode = actionCode;
 
 		service.registerUser(input, new AsyncCallback<RegisterUserResponse>() {
