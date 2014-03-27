@@ -83,7 +83,7 @@
                 </li>
 
                 <li ui:field="myAppsItem">
-                    <g:InlineHyperlink ui:field="myAppsLink" targetHistoryToken="myapps">My apps</g:InlineHyperlink>
+                    <g:InlineHyperlink ui:field="myAppsLink">My apps</g:InlineHyperlink>
                 </li>
 
                 <li ui:field="blogItem">
@@ -144,7 +144,7 @@
                     </g:Anchor>
                     <ul class="dropdown-menu side">
                         <li ui:field="mMyAppsItem">
-                            <g:InlineHyperlink ui:field="mMyAppsLink">
+                            <g:InlineHyperlink ui:field="myAppsAccountLink">
                                 <i class="glyphicon glyphicon-th" style="margin-right: 20px"></i>
                                 My apps
                             </g:InlineHyperlink>

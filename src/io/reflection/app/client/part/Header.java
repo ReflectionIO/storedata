@@ -111,7 +111,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@UiField InlineHyperlink mLogoutLink;
 	@UiField LIElement mLogoutItem;
 
-	@UiField InlineHyperlink mMyAppsLink;
+	@UiField InlineHyperlink myAppsAccountLink;
 	@UiField LIElement mMyAppsItem;
 
 	@UiField InlineHyperlink mAccountSettingsLink;
@@ -388,7 +388,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	private void addAccount(User user) {
 
 		mAccountSettingsLink.setTargetHistoryToken("users/changedetails/" + user.id.toString());
-		mMyAppsLink.setTargetHistoryToken("users/myapps/" + user.id.toString());
+		myAppsLink.setTargetHistoryToken("users/myapps/" + user.id.toString());
+		myAppsAccountLink.setTargetHistoryToken("users/myapps/" + user.id.toString());
 		mLinkedAccountsLink.setTargetHistoryToken("users/linkedaccounts/" + user.id.toString());
 
 		mAccountList.appendChild(mAccountDropdown);
