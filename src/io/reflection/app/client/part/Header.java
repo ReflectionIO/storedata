@@ -288,7 +288,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@Override
 	public void userLoggedIn(User user, Session session) {
 
-		// removeLogin();
+		removeLogin();
 
 		// removeRegister();
 
@@ -321,7 +321,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 		// addRegister();
 
-		// addLogin();
+		addLogin();
 
 		removeUpgrade();
 
@@ -340,18 +340,21 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 	}
 
-	/**
-	 * 
-	 private void addLogin() { mAccountList.appendChild(mLoginItem); }
-	 */
-	/**
-	 * 
-	 private void removeLogin() { mLoginItem.removeFromParent(); }
-	 * 
-	 * private void addRegister() { mAccountList.appendChild(mRegisterItem); }
-	 * 
-	 * private void removeRegister() { mRegisterItem.removeFromParent(); }
-	 */
+	private void addLogin() {
+		mAccountList.appendChild(mLoginItem);
+	}
+
+	private void removeLogin() {
+		mLoginItem.removeFromParent();
+	}
+
+//	private void addRegister() {
+//		mAccountList.appendChild(mRegisterItem);
+//	}
+//
+//	private void removeRegister() {
+//		mRegisterItem.removeFromParent();
+//	}
 
 	/*
 	 * (non-Javadoc)

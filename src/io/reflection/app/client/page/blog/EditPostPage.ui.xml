@@ -21,6 +21,14 @@
                         <g:CheckBox ui:field="visible">Visible without direct link</g:CheckBox>
                     </g:HTMLPanel>
 
+                    <g:HTMLPanel>
+                        <g:CheckBox ui:field="commentsEnabled">
+                            Enable
+                            <a href="http://disqus.com" target="_blank">disqus.com</a>
+                            comments
+                        </g:CheckBox>
+                    </g:HTMLPanel>
+
                     <g:HTMLPanel ui:field="descriptionGroup" styleName="form-group">
                         <label>Description</label>
                         <p:RichTextToolbar ui:field="descriptionToolbar" />

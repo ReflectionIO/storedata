@@ -14,6 +14,7 @@ import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.PostController;
+import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.blog.part.DisplayTag;
@@ -22,6 +23,7 @@ import io.reflection.app.shared.util.FormattingHelper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Display;
@@ -51,10 +53,12 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 	@UiField SpanElement author;
 
 	@UiField HTMLPanel tags;
+	DivElement comments;
 
 	@UiField DivElement content;
 
 	private Long postId;
+	private boolean installed;
 
 	public PostPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -71,6 +75,8 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(EventController.get().addHandlerToSource(GetPostEventHandler.TYPE, PostController.get(), this));
+
+		comments = DivElement.as(Document.get().getElementById("disqus_thread"));
 
 		setLoading(true);
 	}
@@ -147,8 +153,23 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 
 		setLoading(false);
 
-		if (true) {
-			installDisqus();
+		if (post.commentsEnabled == Boolean.TRUE) {
+			String identifier = "post" + post.id.toString();
+			String url = ServiceConstants.BLOG_END_POINT + "?i=post&nja=" + MORE_ACTION_NAME + "&ii=" + post.id.toString();
+			String title = post.title;
+			String tag = post.tags == null || post.tags.size() == 0 ? "reflection.io" : post.tags.get(0);
+
+			comments.getStyle().clearDisplay();
+
+			if (!installed) {
+
+				installDisqus(identifier, url, title, tag);
+				installed = true;
+			} else {
+				resetDisqus(identifier, url, title, tag);
+			}
+		} else {
+			comments.getStyle().setDisplay(Display.NONE);
 		}
 
 	}
@@ -180,8 +201,13 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 	@Override
 	public void getPostFailure(GetPostRequest input, Throwable caught) {}
 
-	private static native void installDisqus() /*-{
+	private static native void installDisqus(String postId, String url, String title, String category) /*-{
 		$wnd.disqus_shortname = 'reflectionio';
+
+		$wnd.disqus_identifier = postId;
+		$wnd.disqus_url = url;
+		$wnd.disqus_title = title;
+		$wnd.disqus_category_id = category;
 
 		($wnd.installDisqus = function() {
 			var dsq = $wnd.document.createElement('script');
@@ -191,6 +217,21 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 			($wnd.document.getElementsByTagName('head')[0] || $wnd.document
 					.getElementsByTagName('body')[0]).appendChild(dsq);
 		})();
+
+		$wnd.reset = function(resetPostId, resetUrl, resetTitle, resetCategory) {
+			$wnd.DISQUS.reset({
+				reload : true,
+				config : function() {
+					this.page.identifier = resetPostId;
+					this.page.url = resetUrl;
+					this.page.title = resetTitle;
+					this.page.category_id = resetCategory;
+				}
+			});
+		};
 	}-*/;
 
+	private static native void resetDisqus(String postId, String url, String title, String category) /*-{
+		$wnd.reset(postId, url, title, category);
+	}-*/;
 }

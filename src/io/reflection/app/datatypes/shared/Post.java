@@ -26,6 +26,7 @@ public class Post extends DataType {
 	public String description;
 	public String content;
 	public Boolean visible;
+	public Boolean commentsEnabled;
 
 	@Override
 	public JsonObject toJson() {
@@ -51,6 +52,8 @@ public class Post extends DataType {
 		object.add("content", jsonContent);
 		JsonElement jsonVisible = visible == null ? JsonNull.INSTANCE : new JsonPrimitive(visible);
 		object.add("visible", jsonVisible);
+		JsonElement jsonCommentsEnabled = commentsEnabled == null ? JsonNull.INSTANCE : new JsonPrimitive(commentsEnabled);
+		object.add("commentsEnabled", jsonCommentsEnabled);
 		return object;
 	}
 
@@ -106,6 +109,12 @@ public class Post extends DataType {
 			JsonElement jsonVisible = jsonObject.get("visible");
 			if (jsonVisible != null) {
 				visible = Boolean.valueOf(jsonVisible.getAsBoolean());
+			}
+		}
+		if (jsonObject.has("commentsEnabled")) {
+			JsonElement jsonCommentsEnabled = jsonObject.get("commentsEnabled");
+			if (jsonCommentsEnabled != null) {
+				commentsEnabled = Boolean.valueOf(jsonCommentsEnabled.getAsBoolean());
 			}
 		}
 	}

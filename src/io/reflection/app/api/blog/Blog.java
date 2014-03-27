@@ -151,21 +151,16 @@ public final class Blog extends ActionHandler {
 
 			input.session = ValidationHelper.validateSession(input.session, "input.session");
 
-			Post post = new Post();
-			post.title = input.title;
-
-			post.description = input.description;
-			post.content = input.content;
-			post.author = input.session.user;
+			// TODO: validate post
 
 			if (input.publish == Boolean.TRUE) {
-				post.published = new Date();
+				input.post.published = new Date();
 			}
 
-			post.visible = (input.visible == null ? Boolean.FALSE : input.visible);
-			post.tags = input.tags;
+			input.post.visible = (input.post.visible == null ? Boolean.FALSE : input.post.visible);
+			input.post.commentsEnabled = (input.post.commentsEnabled == null ? Boolean.FALSE : input.post.commentsEnabled);
 
-			PostServiceProvider.provide().addPost(post);
+			PostServiceProvider.provide().addPost(input.post);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {

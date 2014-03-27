@@ -134,7 +134,7 @@
                 <li ui:field="mRegisterItem" style="display: none">
                     <g:InlineHyperlink ui:field="mRegisterLink" targetHistoryToken="register">Sign Up</g:InlineHyperlink>
                 </li>
-                <li ui:field="mLoginItem" style="display: none">
+                <li ui:field="mLoginItem">
                     <g:InlineHyperlink ui:field="mLoginLink" targetHistoryToken="login">Log In</g:InlineHyperlink>
                 </li>
                 <li ui:field="mAccountDropdown" class="dropdown">

@@ -336,7 +336,8 @@
                 <xsd:attribute name="title" type="xsd:string" use="required" />
                 <xsd:attribute name="description" type="xsd:string" use="required" />
                 <xsd:attribute name="content" type="xsd:string" use="required" />
-                <xsd:attribute name="visible" type="xsd:boolean" use="required" />
+                <xsd:attribute name="visible" type="xsd:boolean" />
+                <xsd:attribute name="commentsEnabled" type="xsd:boolean" />
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
@@ -348,7 +349,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="Forum">
         <xsd:complexContent>
             <xsd:extension base="DataType">
@@ -363,7 +364,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="Topic">
         <xsd:complexContent>
             <xsd:extension base="DataType">
@@ -381,7 +382,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="Reply">
         <xsd:complexContent>
             <xsd:extension base="DataType">
@@ -498,7 +499,7 @@
             <xsd:enumeration value="html5video" />
         </xsd:restriction>
     </xsd:simpleType>
-    
+
     <xsd:simpleType name="ForumTypeType">
         <xsd:restriction base="xsd:string">
             <xsd:enumeration value="anonymous" />

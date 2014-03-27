@@ -57,6 +57,7 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 
 	@UiField CheckBox publish;
 	@UiField CheckBox visible;
+	@UiField CheckBox commentsEnabled;
 
 	@UiField RichTextToolbar descriptionToolbar;
 	@UiField RichTextArea descriptionText;
@@ -92,7 +93,7 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 
 		resetForm();
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -142,6 +143,7 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 	private void show(Post post) {
 		title.setText(post.title);
 		visible.setValue(post.visible);
+		commentsEnabled.setValue(post.commentsEnabled);
 
 		descriptionText.setHTML(post.description);
 		contentText.setHTML(post.content);
@@ -157,11 +159,11 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 	void onSubmit(ClickEvent e) {
 		if (validate()) {
 			if (postId != null) {
-				PostController.get().updatePost(postId, title.getText(), visible.getValue(), descriptionText.getHTML(), contentText.getHTML(),
-						publish.getValue(), tags.getText());
+				PostController.get().updatePost(postId, title.getText(), visible.getValue(), commentsEnabled.getValue(), descriptionText.getHTML(),
+						contentText.getHTML(), publish.getValue(), tags.getText());
 			} else {
-				PostController.get().createPost(title.getText(), visible.getValue(), descriptionText.getHTML(), contentText.getHTML(), publish.getValue(),
-						tags.getText());
+				PostController.get().createPost(title.getText(), visible.getValue(), commentsEnabled.getValue(), descriptionText.getHTML(),
+						contentText.getHTML(), publish.getValue(), tags.getText());
 			}
 		}
 	}

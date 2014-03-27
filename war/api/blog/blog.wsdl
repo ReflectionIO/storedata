@@ -82,13 +82,9 @@
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
                         <xsd:sequence>
-                            <xsd:element name="tags" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
+                            <xsd:element name="post" type="sd:Post" />
                         </xsd:sequence>
-                        <xsd:attribute name="title" type="xsd:string" />
-                        <xsd:attribute name="description" type="xsd:string" />
-                        <xsd:attribute name="content" type="xsd:string" />
                         <xsd:attribute name="publish" type="xsd:boolean" />
-                        <xsd:attribute name="visible" type="xsd:boolean" />
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>

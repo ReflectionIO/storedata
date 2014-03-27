@@ -184,12 +184,14 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 	 * 
 	 * @param id
 	 * @param title
+	 * @param visible
+	 * @param commentsEnabled
 	 * @param description
 	 * @param content
 	 * @param publish
 	 * @param tags
 	 */
-	public void updatePost(Long id, String title, Boolean visible, String description, String content, Boolean publish, String tags) {
+	public void updatePost(Long id, String title, Boolean visible, Boolean commentsEnabled, String description, String content, Boolean publish, String tags) {
 		BlogService service = ServiceCreator.createBlogService();
 
 		final UpdatePostRequest input = new UpdatePostRequest();
@@ -205,6 +207,7 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 		input.publish = publish;
 
 		input.post.visible = visible;
+		input.post.commentsEnabled = commentsEnabled;
 
 		input.post.tags = TagHelper.convertToTagList(tags);
 
@@ -229,25 +232,31 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 	/**
 	 * 
 	 * @param title
+	 * @param visible
+	 * @param commentsEnabled
 	 * @param description
 	 * @param content
 	 * @param publish
 	 * @param tags
 	 */
-	public void createPost(String title, Boolean visible, String description, String content, Boolean publish, String tags) {
+	public void createPost(String title, Boolean visible, Boolean commentsEnabled, String description, String content, Boolean publish, String tags) {
 		BlogService service = ServiceCreator.createBlogService();
 
 		final CreatePostRequest input = new CreatePostRequest();
 		input.accessCode = ACCESS_CODE;
 
 		input.session = SessionController.get().getSessionForApiCall();
-		input.title = title;
-		input.description = description;
-		input.content = content;
-		input.publish = publish;
-		input.visible = visible;
 
-		input.tags = TagHelper.convertToTagList(tags);
+		input.post = new Post();
+
+		input.post.title = title;
+		input.post.description = description;
+		input.post.content = content;
+		input.publish = publish;
+		input.post.visible = visible;
+		input.post.commentsEnabled = commentsEnabled;
+
+		input.post.tags = TagHelper.convertToTagList(tags);
 
 		service.createPost(input, new AsyncCallback<CreatePostResponse>() {
 
