@@ -128,6 +128,10 @@ public final class Blog extends ActionHandler {
 
 			input.session = ValidationHelper.validateSession(input.session, "input.session");
 
+			if (input.publish == Boolean.TRUE) {
+				input.post.published = new Date();
+			}
+			
 			PostServiceProvider.provide().updatePost(input.post);
 
 			output.status = StatusType.StatusTypeSuccess;
@@ -153,6 +157,8 @@ public final class Blog extends ActionHandler {
 
 			// TODO: validate post
 
+			input.post.author = input.session.user;
+			
 			if (input.publish == Boolean.TRUE) {
 				input.post.published = new Date();
 			}

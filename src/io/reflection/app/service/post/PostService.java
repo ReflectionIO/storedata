@@ -102,9 +102,9 @@ final class PostService implements IPostService {
 		Connection postConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypePost.toString());
 
 		String addPostQuery = String
-				.format("INSERT INTO `post` (`authorid`,`title`,`description`,`content`,`published`,`visible`,`tags`,`commentsenabled`) VALUES (%d,'%s','%s','%s',%s,%d,%s)",
+				.format("INSERT INTO `post` (`authorid`,`title`,`description`,`content`,`published`,`visible`,`tags`,`commentsenabled`) VALUES (%d,'%s','%s','%s',%s,%d,%s,%d)",
 						post.author.id.longValue(), addslashes(post.title), addslashes(post.description), addslashes(post.content),
-						post.published == null ? "NULL" : String.format("FROM_UNIXTIME(%d)", post.published.getTime()), post.visible == null ? 0
+						post.published == null ? "NULL" : String.format("FROM_UNIXTIME(%d)", post.published.getTime() / 1000), post.visible == null ? 0
 								: (post.visible.booleanValue() ? 1 : 0), post.tags == null ? "NULL" : "'" + addslashes(join(post.tags)) + "'",
 						post.commentsEnabled == null ? 0 : (post.commentsEnabled.booleanValue() ? 1 : 0));
 		try {
@@ -134,7 +134,7 @@ final class PostService implements IPostService {
 		String updatePostQuery = String
 				.format("UPDATE `post` SET `title`='%s',`description`='%s',`content`='%s',`published`=%s,`visible`=%d,`tags`=%s,`commentsenabled`=%d WHERE `id`=%d AND `deleted`='n'",
 						addslashes(post.title), addslashes(post.description), addslashes(post.content),
-						post.published == null ? "NULL" : String.format("FROM_UNIXTIME(%d)", post.published.getTime()), post.visible == null ? 0
+						post.published == null ? "NULL" : String.format("FROM_UNIXTIME(%d)", post.published.getTime() / 1000), post.visible == null ? 0
 								: (post.visible.booleanValue() ? 1 : 0), post.tags == null ? "NULL" : "'" + addslashes(join(post.tags)) + "'",
 						post.commentsEnabled == null ? 0 : (post.commentsEnabled.booleanValue() ? 1 : 0), post.id.longValue());
 		try {
