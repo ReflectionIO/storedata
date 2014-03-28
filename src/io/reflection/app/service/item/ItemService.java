@@ -21,20 +21,31 @@ import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
-import co.spchopr.persistentmap.PersistentMap;
-import co.spchopr.persistentmap.PersistentMapFactory;
-
+import com.google.appengine.api.memcache.AsyncMemcacheService;
+import com.google.appengine.api.memcache.ErrorHandlers;
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.spacehopperstudios.utility.StringUtils;
 
 final class ItemService implements IItemService {
 
-	private PersistentMap cache = PersistentMapFactory.createObjectify();
-	private Calendar cal = Calendar.getInstance();
+	// private PersistentMap cache = PersistentMapFactory.createObjectify();
+	// private Calendar cal = Calendar.getInstance();
+
+	private MemcacheService syncCache;
+	private AsyncMemcacheService asyncCache;
+
+	public ItemService() {
+		syncCache = MemcacheServiceFactory.getMemcacheService();
+		syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.WARNING));
+
+		asyncCache = MemcacheServiceFactory.getAsyncMemcacheService();
+		asyncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.WARNING));
+	}
 
 	public String getName() {
 		return ServiceType.ServiceTypeItem.toString();
@@ -45,7 +56,7 @@ final class ItemService implements IItemService {
 		Item item = null;
 
 		String memcacheKey = getName() + ".id." + id;
-		String jsonString = (String) cache.get(memcacheKey);
+		String jsonString = (String) syncCache.get(memcacheKey);
 
 		if (jsonString == null) {
 			IDatabaseService databaseService = DatabaseServiceProvider.provide();
@@ -66,9 +77,11 @@ final class ItemService implements IItemService {
 			}
 
 			if (item != null) {
-				cal.setTime(new Date());
-				cal.add(Calendar.DAY_OF_MONTH, 20);
-				cache.put(memcacheKey, item.toString(), cal.getTime());
+				// cal.setTime(new Date());
+				// cal.add(Calendar.DAY_OF_MONTH, 20);
+				// asyncCache.put(memcacheKey, item.toString(), cal.getTime());
+				asyncCache.put(memcacheKey, item.toString());
+
 			}
 		} else {
 			item = new Item();
@@ -165,7 +178,7 @@ final class ItemService implements IItemService {
 			if (itemConnection.getAffectedRowCount() > 0) {
 
 				String memcacheKey = getName() + ".id." + item.id;
-				cache.delete(memcacheKey);
+				asyncCache.delete(memcacheKey);
 
 				updatedItem = getItem(item.id);
 			} else {
@@ -196,7 +209,7 @@ final class ItemService implements IItemService {
 		Item item = null;
 
 		String memcacheKey = getName() + ".external." + externalId;
-		String jsonString = (String) cache.get(memcacheKey);
+		String jsonString = (String) syncCache.get(memcacheKey);
 
 		if (jsonString == null) {
 			final String getExternalIdItemQuery = String.format("SELECT * FROM `item` WHERE `externalid`='%s' AND `deleted`='n'", addslashes(externalId));
@@ -209,9 +222,10 @@ final class ItemService implements IItemService {
 				if (itemConnection.fetchNextRow()) {
 					item = toItem(itemConnection);
 
-					cal.setTime(new Date());
-					cal.add(Calendar.DAY_OF_MONTH, 20);
-					cache.put(memcacheKey, item.toString(), cal.getTime());
+					// cal.setTime(new Date());
+					// cal.add(Calendar.DAY_OF_MONTH, 20);
+					// asyncCache.put(memcacheKey, item.toString(), cal.getTime());
+					asyncCache.put(memcacheKey, item.toString());
 				}
 			} finally {
 				if (itemConnection != null) {
@@ -236,7 +250,7 @@ final class ItemService implements IItemService {
 		Item item = null;
 
 		String memcacheKey = getName() + ".internal." + internalId;
-		String jsonString = (String) cache.get(memcacheKey);
+		String jsonString = (String) syncCache.get(memcacheKey);
 
 		if (jsonString == null) {
 			final String getInternalIdItemQuery = String.format("SELECT * FROM `item` WHERE `internalid`='%s' and `deleted`='n'", addslashes(internalId));
@@ -250,9 +264,10 @@ final class ItemService implements IItemService {
 				if (itemConnection.fetchNextRow()) {
 					item = toItem(itemConnection);
 
-					cal.setTime(new Date());
-					cal.add(Calendar.DAY_OF_MONTH, 20);
-					cache.put(memcacheKey, item.toString(), cal.getTime());
+					// cal.setTime(new Date());
+					// cal.add(Calendar.DAY_OF_MONTH, 20);
+					// cache.put(memcacheKey, item.toString(), cal.getTime());
+					asyncCache.put(memcacheKey, item.toString());
 				}
 			} finally {
 				if (itemConnection != null) {
@@ -286,7 +301,7 @@ final class ItemService implements IItemService {
 				keys.add(memcacheKey);
 			}
 
-			Map<String, Object> jsonStrings = cache.getAll(keys);
+			Map<String, Object> jsonStrings = syncCache.getAll(keys);
 			String jsonString;
 			List<String> notFoundItems = new ArrayList<String>();
 			Item item = null;
@@ -324,9 +339,10 @@ final class ItemService implements IItemService {
 
 								memcacheKey = getName() + ".external." + item.externalId;
 
-								cal.setTime(new Date());
-								cal.add(Calendar.DAY_OF_MONTH, 20);
-								cache.put(memcacheKey, item.toString(), cal.getTime());
+								// cal.setTime(new Date());
+								// cal.add(Calendar.DAY_OF_MONTH, 20);
+								// cache.put(memcacheKey, item.toString(), cal.getTime());
+								asyncCache.put(memcacheKey, item.toString());
 							}
 						}
 					} finally {
@@ -391,7 +407,7 @@ final class ItemService implements IItemService {
 	public Long searchItemsCount(String query) throws DataAccessException {
 
 		String memcacheKey = getName() + query + ".count";
-		Long itemCount = (Long) cache.get(memcacheKey);
+		Long itemCount = (Long) syncCache.get(memcacheKey);
 
 		if (itemCount == null) {
 			String getDataAccountsCountQuery = String
@@ -406,9 +422,10 @@ final class ItemService implements IItemService {
 				if (itemConnection.fetchNextRow()) {
 					itemCount = itemConnection.getCurrentRowLong("itemscount");
 
-					cal.setTime(new Date());
-					cal.add(Calendar.DAY_OF_MONTH, 20);
-					cache.put(memcacheKey, itemCount, cal.getTime());
+					// cal.setTime(new Date());
+					// cal.add(Calendar.DAY_OF_MONTH, 20);
+					// cache.put(memcacheKey, itemCount, cal.getTime());
+					asyncCache.put(memcacheKey, itemCount);
 				}
 			} finally {
 				if (itemConnection != null) {
@@ -565,7 +582,7 @@ final class ItemService implements IItemService {
 		Long itemsCount = Long.valueOf(0);
 
 		String memcacheKey = getName() + ".count";
-		Long itemCount = (Long) cache.get(memcacheKey);
+		Long itemCount = (Long) syncCache.get(memcacheKey);
 
 		if (itemCount == null) {
 			Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
@@ -579,9 +596,10 @@ final class ItemService implements IItemService {
 				if (itemConnection.fetchNextRow()) {
 					itemsCount = itemConnection.getCurrentRowLong("itemcount");
 
-					cal.setTime(new Date());
-					cal.add(Calendar.DAY_OF_MONTH, 20);
-					cache.put(memcacheKey, itemCount, cal.getTime());
+					// cal.setTime(new Date());
+					// cal.add(Calendar.DAY_OF_MONTH, 20);
+					// cache.put(memcacheKey, itemCount, cal.getTime());
+					asyncCache.put(memcacheKey, itemCount);
 				}
 			} finally {
 				if (itemConnection != null) {
