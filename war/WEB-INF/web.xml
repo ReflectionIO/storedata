@@ -78,6 +78,16 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
         <servlet-name>Data Account Ingest</servlet-name>
         <servlet-class>io.reflection.app.DataAccountIngestServlet</servlet-class>
     </servlet>
+    
+        <servlet>
+        <servlet-name>Go To</servlet-name>
+        <servlet-class>io.reflection.app.GoToServlet</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>Rss</servlet-name>
+        <servlet-class>io.reflection.app.RssServlet</servlet-class>
+    </servlet>
 
 	<servlet-mapping>
 		<servlet-name>Cron Tasks</servlet-name>
@@ -110,22 +120,22 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
     
 	<servlet-mapping>
 	    <servlet-name>Core api</servlet-name>
-	    <url-pattern>/core</url-pattern>
+	    <url-pattern>/api/core</url-pattern>
 	</servlet-mapping>
 	
 	<servlet-mapping>
 	    <servlet-name>Lookup api</servlet-name>
-	    <url-pattern>/lookup</url-pattern>
+	    <url-pattern>/api/lookup</url-pattern>
 	</servlet-mapping>
     
     <servlet-mapping>
         <servlet-name>Admin api</servlet-name>
-        <url-pattern>/admin</url-pattern>
+        <url-pattern>/api/admin</url-pattern>
     </servlet-mapping>
     
     <servlet-mapping>
         <servlet-name>Blog api</servlet-name>
-        <url-pattern>/blog</url-pattern>
+        <url-pattern>/api/blog</url-pattern>
     </servlet-mapping>
 	
 	<servlet-mapping>
@@ -146,6 +156,16 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
     <servlet-mapping>
         <servlet-name>Data Account Ingest</servlet-name>
         <url-pattern>/dataaccountingest</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>Go To</servlet-name>
+        <url-pattern>/goto</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>Rss</servlet-name>
+        <url-pattern>/rss</url-pattern>
     </servlet-mapping>
 
 	<servlet>
@@ -207,7 +227,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
     <role-name>admin</role-name>
   </auth-constraint>
 </security-constraint>
-
 
 <security-constraint>
   <web-resource-collection>

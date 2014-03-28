@@ -19,13 +19,17 @@ public interface ServiceConstants {
 
 	public static final String PROTOCOL = Window.Location.getProtocol();
 
-	public static final String CORE_END_POINT = PROTOCOL + "//" + HOST + "/core";
+	public static final String GOTO_END_POINT = PROTOCOL + "//" + HOST + "/goto";
 
-	public static final String ADMIN_END_POINT = PROTOCOL + "//" + HOST + "/admin";
+	public static final String RSS_END_POINT = PROTOCOL + "//" + HOST + "/rss";
 
-	public static final String BLOG_END_POINT = PROTOCOL + "//" + HOST + "/blog";
+	public static final String CORE_END_POINT = PROTOCOL + "//" + HOST + "/api/core";
 
-	public static final String LOOKUP_END_POINT = PROTOCOL + "//" + HOST + "/lookup";
+	public static final String ADMIN_END_POINT = PROTOCOL + "//" + HOST + "/api/admin";
+
+	public static final String BLOG_END_POINT = PROTOCOL + "//" + HOST + "/api/blog";
+
+	public static final String LOOKUP_END_POINT = PROTOCOL + "//" + HOST + "/api/lookup";
 
 	public static final String ACCESS_CODE = "765ea1ba-177d-4a01-bbe9-a4e74d10e83c";
 
