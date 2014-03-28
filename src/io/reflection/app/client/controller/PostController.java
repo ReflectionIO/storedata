@@ -10,6 +10,8 @@ package io.reflection.app.client.controller;
 import io.reflection.app.api.blog.client.BlogService;
 import io.reflection.app.api.blog.shared.call.CreatePostRequest;
 import io.reflection.app.api.blog.shared.call.CreatePostResponse;
+import io.reflection.app.api.blog.shared.call.DeletePostRequest;
+import io.reflection.app.api.blog.shared.call.DeletePostResponse;
 import io.reflection.app.api.blog.shared.call.GetPostRequest;
 import io.reflection.app.api.blog.shared.call.GetPostResponse;
 import io.reflection.app.api.blog.shared.call.GetPostsRequest;
@@ -18,6 +20,8 @@ import io.reflection.app.api.blog.shared.call.UpdatePostRequest;
 import io.reflection.app.api.blog.shared.call.UpdatePostResponse;
 import io.reflection.app.api.blog.shared.call.event.CreatePostEventHandler.CreatePostFailure;
 import io.reflection.app.api.blog.shared.call.event.CreatePostEventHandler.CreatePostSuccess;
+import io.reflection.app.api.blog.shared.call.event.DeletePostEventHandler.DeletePostFailure;
+import io.reflection.app.api.blog.shared.call.event.DeletePostEventHandler.DeletePostSuccess;
 import io.reflection.app.api.blog.shared.call.event.GetPostEventHandler.GetPostFailure;
 import io.reflection.app.api.blog.shared.call.event.GetPostEventHandler.GetPostSuccess;
 import io.reflection.app.api.blog.shared.call.event.GetPostsEventHandler.GetPostsFailure;
@@ -300,5 +304,32 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 		}
 
 		return post;
+	}
+
+	public void deletePost(Long postId) {
+		BlogService service = ServiceCreator.createBlogService();
+
+		final DeletePostRequest input = new DeletePostRequest();
+		input.accessCode = ACCESS_CODE;
+
+		input.session = SessionController.get().getSessionForApiCall();
+
+		input.post = new Post();
+		input.post.id = postId;
+
+		service.deletePost(input, new AsyncCallback<DeletePostResponse>() {
+
+			@Override
+			public void onSuccess(DeletePostResponse output) {
+				if (output.status == StatusType.StatusTypeSuccess) {}
+
+				EventController.get().fireEventFromSource(new DeletePostSuccess(input, output), PostController.this);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				EventController.get().fireEventFromSource(new DeletePostFailure(input, caught), PostController.this);
+			}
+		});
 	}
 }

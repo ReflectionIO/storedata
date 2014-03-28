@@ -12,6 +12,8 @@ import static io.reflection.app.api.PagerHelper.updatePager;
 import io.reflection.app.api.ValidationHelper;
 import io.reflection.app.api.blog.shared.call.CreatePostRequest;
 import io.reflection.app.api.blog.shared.call.CreatePostResponse;
+import io.reflection.app.api.blog.shared.call.DeletePostRequest;
+import io.reflection.app.api.blog.shared.call.DeletePostResponse;
 import io.reflection.app.api.blog.shared.call.GetPostRequest;
 import io.reflection.app.api.blog.shared.call.GetPostResponse;
 import io.reflection.app.api.blog.shared.call.GetPostsRequest;
@@ -33,6 +35,7 @@ import com.willshex.gson.json.service.server.InputValidationException;
 import com.willshex.gson.json.service.shared.StatusType;
 
 public final class Blog extends ActionHandler {
+
 	private static final Logger LOG = Logger.getLogger(Blog.class.getName());
 
 	public GetPostsResponse getPosts(GetPostsRequest input) {
@@ -128,10 +131,12 @@ public final class Blog extends ActionHandler {
 
 			input.session = ValidationHelper.validateSession(input.session, "input.session");
 
+			// TODO: check permissions
+
 			if (input.publish == Boolean.TRUE) {
 				input.post.published = new Date();
 			}
-			
+
 			PostServiceProvider.provide().updatePost(input.post);
 
 			output.status = StatusType.StatusTypeSuccess;
@@ -155,10 +160,12 @@ public final class Blog extends ActionHandler {
 
 			input.session = ValidationHelper.validateSession(input.session, "input.session");
 
-			// TODO: validate post
+			// TODO: check permissions
+
+			input.post = ValidationHelper.validateNewPost(input.post, "input.post");
 
 			input.post.author = input.session.user;
-			
+
 			if (input.publish == Boolean.TRUE) {
 				input.post.published = new Date();
 			}
@@ -176,4 +183,30 @@ public final class Blog extends ActionHandler {
 		LOG.finer("Exiting createPost");
 		return output;
 	}
+
+	public DeletePostResponse deletePost(DeletePostRequest input) {
+		LOG.finer("Entering deletePost");
+		DeletePostResponse output = new DeletePostResponse();
+		try {
+
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("CreatePostRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
+			input.session = ValidationHelper.validateSession(input.session, "input.session");
+
+			input.post = ValidationHelper.validateExistingPost(input.post, "input.post");
+
+			PostServiceProvider.provide().deletePost(input.post);
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting deletePost");
+		return output;
+	}
+
 }

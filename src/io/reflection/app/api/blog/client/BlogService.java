@@ -10,6 +10,8 @@ package io.reflection.app.api.blog.client;
 
 import io.reflection.app.api.blog.shared.call.CreatePostRequest;
 import io.reflection.app.api.blog.shared.call.CreatePostResponse;
+import io.reflection.app.api.blog.shared.call.DeletePostRequest;
+import io.reflection.app.api.blog.shared.call.DeletePostResponse;
 import io.reflection.app.api.blog.shared.call.GetPostRequest;
 import io.reflection.app.api.blog.shared.call.GetPostResponse;
 import io.reflection.app.api.blog.shared.call.GetPostsRequest;
@@ -158,4 +160,38 @@ public final class BlogService extends JsonService {
 		}
 		return handle;
 	}
+
+	public static final String BlogMethodDeletePost = "DeletePost";
+
+	public Request deletePost(final DeletePostRequest input, final AsyncCallback<DeletePostResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(BlogMethodDeletePost, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						DeletePostResponse outputParameter = new DeletePostResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(BlogService.this, BlogMethodDeletePost, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(BlogService.this, BlogMethodDeletePost, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(BlogService.this, BlogMethodDeletePost, input, exception);
+				}
+			});
+			onCallStart(BlogService.this, BlogMethodDeletePost, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(BlogService.this, BlogMethodDeletePost, input, exception);
+		}
+		return handle;
+	}
+
 }

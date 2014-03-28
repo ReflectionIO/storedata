@@ -14,7 +14,6 @@ import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.PostController;
-import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.blog.part.DisplayTag;
@@ -155,7 +154,7 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 
 		if (post.commentsEnabled == Boolean.TRUE) {
 			String identifier = "post" + post.id.toString();
-			String url = ServiceConstants.GOTO_END_POINT + "?s=blog&i=post&nja=" + MORE_ACTION_NAME + "&ii=" + post.id.toString();
+			String url = GWT.getHostPageBaseURL() + "#blogpost/view/" + post.id + "/";
 			String title = post.title;
 			String tag = post.tags == null || post.tags.size() == 0 ? "reflection.io" : post.tags.get(0);
 

@@ -144,7 +144,7 @@ public class AdminPage extends Page {
 
 			@Override
 			public void update(int index, Post object, String value) {
-
+				PostController.get().deletePost(object.id);
 			}
 		});
 

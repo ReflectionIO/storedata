@@ -21,6 +21,7 @@ import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.EmailTemplate;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Permission;
+import io.reflection.app.datatypes.shared.Post;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.datatypes.shared.User;
@@ -340,11 +341,9 @@ public class ValidationHelper {
 
 		if (user.forename == null) throw new InputValidationException(ApiError.StringNull.getCode(), ApiError.StringNull.getMessage(parent + ".forename"));
 
-		if (user.surname == null)
-			throw new InputValidationException(ApiError.StringNull.getCode(), ApiError.StringNull.getMessage(parent + ".surname"));
+		if (user.surname == null) throw new InputValidationException(ApiError.StringNull.getCode(), ApiError.StringNull.getMessage(parent + ".surname"));
 
-		if (user.company == null)
-			throw new InputValidationException(ApiError.StringNull.getCode(), ApiError.StringNull.getMessage(parent + ".company"));
+		if (user.company == null) throw new InputValidationException(ApiError.StringNull.getCode(), ApiError.StringNull.getMessage(parent + ".company"));
 
 		user.password = validatePassword(user.password, parent + ".password");
 
@@ -646,6 +645,16 @@ public class ValidationHelper {
 			throw new InputValidationException(ApiError.EmailTemplateNotFound.getCode(), ApiError.EmailTemplateNotFound.getMessage(parent));
 
 		return lookupEmailTemplate;
+	}
+
+	public static Post validateExistingPost(Post post, String parent) throws ServiceException {
+		// TODO: validate
+		return post;
+	}
+
+	public static Post validateNewPost(Post post, String parent) throws ServiceException {
+		// TODO: validate
+		return post;
 	}
 
 }

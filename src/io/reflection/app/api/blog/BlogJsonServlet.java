@@ -9,6 +9,7 @@
 package io.reflection.app.api.blog;
 
 import io.reflection.app.api.blog.shared.call.CreatePostRequest;
+import io.reflection.app.api.blog.shared.call.DeletePostRequest;
 import io.reflection.app.api.blog.shared.call.GetPostRequest;
 import io.reflection.app.api.blog.shared.call.GetPostsRequest;
 import io.reflection.app.api.blog.shared.call.UpdatePostRequest;
@@ -38,6 +39,10 @@ public final class BlogJsonServlet extends JsonServlet {
 			CreatePostRequest input = new CreatePostRequest();
 			input.fromJson(request);
 			output = service.createPost(input).toString();
+		} else if ("DeletePost".equals(action)) {
+			DeletePostRequest input = new DeletePostRequest();
+			input.fromJson(request);
+			output = service.deletePost(input).toString();
 		}
 		return output;
 	}

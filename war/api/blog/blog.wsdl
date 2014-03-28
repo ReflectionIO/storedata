@@ -17,6 +17,9 @@
             <xsd:element name="CreatePostInput" type="sdb:CreatePostRequest" />
             <xsd:element name="CreatePostOutput" type="sdb:CreatePostResponse" />
 
+            <xsd:element name="DeletePostInput" type="sdb:DeletePostRequest" />
+            <xsd:element name="DeletePostOutput" type="sdb:DeletePostResponse" />
+
             <xsd:complexType name="GetPostsRequest">
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
@@ -98,6 +101,25 @@
                 </xsd:complexContent>
             </xsd:complexType>
 
+            <xsd:complexType name="DeletePostRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="post" type="sd:Post" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="DeletePostResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
         </xsd:schema>
     </wsdl:types>
 
@@ -129,6 +151,13 @@
         <wsdl:part name="output" element="sdb:CreatePostOutput" />
     </wsdl:message>
 
+    <wsdl:message name="DeletePostRequest">
+        <wsdl:part name="input" element="sdb:DeletePostInput" />
+    </wsdl:message>
+    <wsdl:message name="DeletePostResponse">
+        <wsdl:part name="output" element="sdb:DeletePostOutput" />
+    </wsdl:message>
+
     <wsdl:portType name="blog">
         <wsdl:operation name="GetPosts">
             <wsdl:input message="sdb:GetPostsRequest" />
@@ -148,6 +177,11 @@
         <wsdl:operation name="CreatePost">
             <wsdl:input message="sdb:CreatePostRequest" />
             <wsdl:output message="sdb:CreatePostResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="DeletePost">
+            <wsdl:input message="sdb:DeletePostRequest" />
+            <wsdl:output message="sdb:DeletePostResponse" />
         </wsdl:operation>
 
     </wsdl:portType>
@@ -193,6 +227,16 @@
             </wsdl:output>
         </wsdl:operation>
 
+        <wsdl:operation name="DeletePost">
+            <soap:operation soapAction="http://app.reflection.io/blog/DeletePost" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        
     </wsdl:binding>
     <wsdl:service name="blog">
         <wsdl:port name="blogSOAP" binding="sdb:blogSOAP">
