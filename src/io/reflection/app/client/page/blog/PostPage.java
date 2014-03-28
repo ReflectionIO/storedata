@@ -155,7 +155,7 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 
 		if (post.commentsEnabled == Boolean.TRUE) {
 			String identifier = "post" + post.id.toString();
-			String url = ServiceConstants.BLOG_END_POINT + "?i=post&nja=" + MORE_ACTION_NAME + "&ii=" + post.id.toString();
+			String url = ServiceConstants.GOTO_END_POINT + "?s=blog&i=post&nja=" + MORE_ACTION_NAME + "&ii=" + post.id.toString();
 			String title = post.title;
 			String tag = post.tags == null || post.tags.size() == 0 ? "reflection.io" : post.tags.get(0);
 
