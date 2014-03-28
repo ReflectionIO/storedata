@@ -12,6 +12,7 @@ import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.Footer;
 import io.reflection.app.client.part.Header;
+import io.reflection.app.datatypes.shared.User;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -236,7 +237,16 @@ public class NavigationController implements ValueChangeHandler<String> {
 				}
 			} else {
 				if (stackPage.requiresLogin()) {
-					PageType.LoginPageType.show(value.asNextParameter());
+					String loginParams = "";
+
+					User user = SessionController.get().getLoggedInUser();
+					if (user != null && user.username != null) {
+						loginParams += user.username + "/";
+					}
+
+					loginParams += value.asNextParameter();
+
+					PageType.LoginPageType.show(loginParams);
 				} else {
 					doAttach = true;
 				}

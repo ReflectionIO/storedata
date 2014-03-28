@@ -9,9 +9,14 @@
     .pushDown {
     	margin-top: 20px;
     }
+    
+    .loading {
+    	z-index: 1;
+    	top: 100px;
+    }
     </ui:style>
     <g:HTMLPanel>
-    
+
         <div class="row">
             <p:ItemSidePanel ui:field="mSidePanel" styleName="sidepanel col-md-2 well" />
 
@@ -38,8 +43,9 @@
                 </ul>
                 <div style="margin-left: 20px; margin-right: 25px; margin-top: 20px;">
 
-
                     <p:ItemTopPanel ui:field="mTopPanel" />
+
+                    <p:CircleProgressBar visible="false" ui:field="loader" styleName="{style.loading} col-sm-offset-5 col-sm-2" />
 
                     <p:RankChart ui:field="historyChart" />
 
@@ -48,6 +54,6 @@
                 </div>
             </div>
         </div>
-        <p:AlertBox ui:field="mAlertBox" visible="false" />
+        <!-- <p:AlertBox ui:field="mAlertBox" visible="false" /> -->
     </g:HTMLPanel>
 </ui:UiBinder> 

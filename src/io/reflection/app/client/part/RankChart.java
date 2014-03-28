@@ -14,9 +14,65 @@ import io.reflection.app.datatypes.shared.Rank;
 
 import java.util.List;
 
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.googlecode.gchart.client.GChart;
 
 public class RankChart extends GChart {
+
+	private HandlerRegistration resizeRegistration;
+	private ResizeHandler resizeHandler = new ResizeHandler() {
+
+		Timer resizeTimer = new Timer() {
+			@Override
+			public void run() {
+				resize();
+			}
+		};
+
+		@Override
+		public void onResize(ResizeEvent event) {
+			resizeTimer.cancel();
+			resizeTimer.schedule(250);
+		}
+	};
+
+	private void resize() {
+		setChartSize((int) (((double) getParent().getElement().getClientWidth() * (10.0 / 12.0)) - 120.0), 350);
+		update();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
+	 */
+
+	@Override
+	protected void onAttach() {
+		super.onAttach();
+
+		resize();
+
+		resizeRegistration = Window.addResizeHandler(resizeHandler);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.Composite#onDetach()
+	 */
+	@Override
+	protected void onDetach() {
+		if (resizeRegistration != null) {
+			resizeRegistration.removeHandler();
+		}
+
+		super.onDetach();
+	}
 
 	public enum XAxisDataType {
 		RevenueXAxisDataType,
@@ -65,13 +121,9 @@ public class RankChart extends GChart {
 		}
 	}
 
-	private static final int WIDTH = 780;
-	private static final int HEIGHT = 350;
-
 	private Curve curve;
 
 	public RankChart() {
-		setChartSize(WIDTH, HEIGHT);
 
 		setBorderStyle("none");
 
@@ -136,7 +188,7 @@ public class RankChart extends GChart {
 	}
 
 	public void setData(Item item, List<Rank> ranks, RankingType mode) {
-		
+
 		if (curve != null) {
 			curve.clearPoints();
 		}

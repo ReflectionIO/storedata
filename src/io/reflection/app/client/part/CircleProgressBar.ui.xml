@@ -1,0 +1,107 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+    <ui:style>
+    .arc1,.arc2 {
+    	border-top-left-radius: 100%;
+    	width: 75px;
+    	height: 75px;
+    	-moz-transform-origin: right bottom;
+    	-webkit-transform-origin: right bottom;
+    	transform-origin: right bottom;
+    	position: absolute;
+    	-moz-transform: rotate(-45deg);
+    	-webkit-transform: rotate(-45deg);
+    	transform: rotate(-45deg);
+    }
+    
+    .arc1 {
+		background-color: rgba(101, 98,189, .75);
+    	animation: arc1 1s infinite linear;
+    	-moz-animation: arc1 1s infinite linear;
+    	-webkit-animation: arc1 1s infinite linear;
+    }
+    
+    .arc2 {
+		background-color: #6c69c5;
+    	animation: arc1 5s infinite linear;
+    	-moz-animation: arc1 5s infinite linear;
+    	-webkit-animation: arc1 5s infinite linear;
+    }
+    
+    @\-moz-keyframes arc1 /* Firefox */ { 
+		100% {
+    		-moz-transform: rotate(315deg);
+    	}
+    }
+    
+    @\-webkit-keyframes arc1 /* Safari and Chrome */ {
+		100% {
+    		-webkit-transform: rotate(315deg);
+    		transform: rotate(315deg);
+    	}
+    }
+    
+    @keyframes arc1 {
+		100% {
+    		-webkit-transform: rotate(315deg);
+    		transform: rotate(315deg);
+    	}
+	}
+    
+    .arc-overlay {
+    	width: 120px;
+    	height: 120px;
+    	background: white;
+    	padding-left: 32px;
+    	box-sizing: border-box;
+    	-moz-box-sizing: border-box;
+    	line-height: 100px;
+    	font-weight: 400;
+    	font-size: 22px;
+    	border-radius: 100px;
+    	position: absolute;
+    	z-index: 5;
+    	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    	top: 15px;
+    	left: 15px;
+    }
+    
+    .arc-wrapper {
+    	width: 150px;
+    	height: 150px;
+    	border-radius: 100%;
+    	background: #f4f4f4;
+    	overflow: hidden;
+    	position: absolute;
+    }
+    
+    .arc-hider {
+    	width: 170px;
+    	height: 170px;
+    	border-radius: 100%;
+    	border: 10px solid white;
+    	position: absolute;
+    	z-index: 5;
+    	box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.1);
+    	left: -10px;
+    	top: -10px;
+    }
+    
+    .arc-container {
+		position: relative;
+		width: 150px;
+		height: 150px;
+	}
+    
+    </ui:style>
+    <g:HTMLPanel>
+        <div class="{style.arc-container}">
+            <div class="{style.arc-hider}" />
+            <div class="{style.arc-overlay}" />
+            <div class="{style.arc-wrapper}">
+                <div class="{style.arc2}" />
+                <div class="{style.arc1}" />
+            </div>
+        </div>
+    </g:HTMLPanel>
+</ui:UiBinder> 
