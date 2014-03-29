@@ -16,6 +16,7 @@ import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.PostController;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.page.Page;
+import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.page.blog.part.DisplayTag;
 import io.reflection.app.datatypes.shared.Post;
 import io.reflection.app.shared.util.FormattingHelper;
@@ -154,14 +155,13 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 
 		if (post.commentsEnabled == Boolean.TRUE) {
 			String identifier = "post" + post.id.toString();
-			String url = GWT.getHostPageBaseURL() + "#blogpost/view/" + post.id + "/";
+			String url = GWT.getHostPageBaseURL() + "#!" + PageType.BlogPostPageType.toString() + "/view/" + post.id;
 			String title = post.title;
 			String tag = post.tags == null || post.tags.size() == 0 ? "reflection.io" : post.tags.get(0);
 
 			comments.getStyle().clearDisplay();
 
 			if (!installed) {
-
 				installDisqus(identifier, url, title, tag);
 				installed = true;
 			} else {
