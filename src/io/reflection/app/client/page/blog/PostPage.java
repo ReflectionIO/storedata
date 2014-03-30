@@ -18,6 +18,8 @@ import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.page.blog.part.DisplayTag;
+import io.reflection.app.client.part.CircleProgressBar;
+import io.reflection.app.client.part.ReflectionProgressBar;
 import io.reflection.app.datatypes.shared.Post;
 import io.reflection.app.shared.util.FormattingHelper;
 
@@ -27,6 +29,7 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -45,6 +48,12 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 
 	interface PostPageUiBinder extends UiBinder<Widget, PostPage> {}
 
+	private enum LoadingType {
+		CompleteLoadingType,
+		PartialLoadingType,
+		NoneLoadingType
+	}
+
 	private static final int POST_ID_PARAMETER_INDEX = 0;
 	private static final String MORE_ACTION_NAME = "view";
 
@@ -56,6 +65,7 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 	DivElement comments;
 
 	@UiField DivElement content;
+	@UiField ReflectionProgressBar progress;
 
 	private Long postId;
 	private boolean installed;
@@ -76,9 +86,10 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(EventController.get().addHandlerToSource(GetPostEventHandler.TYPE, PostController.get(), this));
 
+		// this is not a uifield because it requires html id
 		comments = DivElement.as(Document.get().getElementById("disqus_thread"));
 
-		setLoading(true);
+		setLoading(LoadingType.CompleteLoadingType);
 	}
 
 	/*
@@ -113,6 +124,14 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 					if (postId != null) {
 						Post post = PostController.get().getPost(postId);
 
+						if (post == null) {
+							post = PostController.get().getPostPart(postId);
+
+							if (post != null) {
+								setLoading(LoadingType.PartialLoadingType);
+							}
+						}
+
 						if (post != null) {
 							show(post);
 						}
@@ -135,8 +154,6 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 			date.setInnerText("TBD");
 		}
 
-		content.setInnerHTML(post.content);
-
 		if (tags.getWidgetCount() > 0) {
 			tags.clear();
 		}
@@ -151,31 +168,55 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 			}
 		}
 
-		setLoading(false);
+		if (post.content != null) {
+			content.setInnerHTML(post.content);
 
-		if (post.commentsEnabled == Boolean.TRUE) {
-			String identifier = "post" + post.id.toString();
-			String url = GWT.getHostPageBaseURL() + "#!" + PageType.BlogPostPageType.toString() + "/view/" + post.id;
-			String title = post.title;
-			String tag = post.tags == null || post.tags.size() == 0 ? "reflection.io" : post.tags.get(0);
+			setLoading(LoadingType.NoneLoadingType);
 
-			comments.getStyle().clearDisplay();
+			if (post.commentsEnabled == Boolean.TRUE) {
+				String identifier = "post" + post.id.toString();
+				String url = GWT.getHostPageBaseURL() + "#!" + PageType.BlogPostPageType.toString() + "/view/" + post.id;
+				String title = post.title;
+				String tag = post.tags == null || post.tags.size() == 0 ? "reflection.io" : post.tags.get(0);
 
-			if (!installed) {
-				installDisqus(identifier, url, title, tag);
-				installed = true;
-			} else {
-				resetDisqus(identifier, url, title, tag);
+				if (!installed) {
+					installDisqus(identifier, url, title, tag);
+					installed = true;
+				} else {
+					resetDisqus(identifier, url, title, tag);
+				}
 			}
-		} else {
-			comments.getStyle().setDisplay(Display.NONE);
 		}
 
 	}
 
-	private void setLoading(boolean value) {
-		// for now just hide the page
-		setVisible(!value);
+	private void setLoading(LoadingType value) {
+		switch (value) {
+		case CompleteLoadingType:
+			progress.setVisible(true);
+			progress.getElement().getStyle().setPaddingTop(30, Unit.PX);
+			title.getStyle().setDisplay(Display.NONE);
+			author.getParentElement().getStyle().setDisplay(Display.NONE);
+			content.getStyle().setDisplay(Display.NONE);
+			comments.getStyle().setDisplay(Display.NONE);
+			break;
+		case PartialLoadingType:
+			progress.setVisible(true);
+			progress.getElement().getStyle().clearPaddingTop();
+			title.getStyle().clearDisplay();
+			author.getParentElement().getStyle().clearDisplay();
+			content.getStyle().setDisplay(Display.NONE);
+			comments.getStyle().setDisplay(Display.NONE);
+			break;
+		case NoneLoadingType:
+			progress.setVisible(false);
+			progress.getElement().getStyle().clearPaddingTop();
+			title.getStyle().clearDisplay();
+			author.getParentElement().getStyle().clearDisplay();
+			content.getStyle().clearDisplay();
+			comments.getStyle().clearDisplay();
+			break;
+		}
 	}
 
 	/*

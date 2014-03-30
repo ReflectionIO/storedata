@@ -1,13 +1,22 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
+    xmlns:c="urn:import:com.google.gwt.user.cellview.client">
     <ui:style>
-    
+    .centered {
+    	text-align: center;
+    }
     </ui:style>
     <g:HTMLPanel>
         <g:HTMLPanel styleName="container">
             <h2>Blog</h2>
 
-            <g:HTMLPanel ui:field="posts" />
+            <div class="row">
+                <c:CellList ui:field="posts" />
+            </div>
+
+            <div class="row">
+                <p:PageSizePager ui:field="pager" />
+            </div>
 
         </g:HTMLPanel>
     </g:HTMLPanel>

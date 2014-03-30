@@ -7,18 +7,13 @@
 //
 package io.reflection.app.client.page.blog;
 
-import java.util.List;
-
-import io.reflection.app.api.blog.shared.call.GetPostsRequest;
-import io.reflection.app.api.blog.shared.call.GetPostsResponse;
-import io.reflection.app.api.blog.shared.call.event.GetPostsEventHandler;
-import io.reflection.app.client.controller.EventController;
-import io.reflection.app.client.controller.NavigationController;
-import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.PostController;
-import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.page.Page;
-import io.reflection.app.client.page.blog.part.PostSummary;
+import io.reflection.app.client.page.blog.part.PostSummaryCell;
+import io.reflection.app.client.part.BootstrapGwtCellList;
+import io.reflection.app.client.part.PageSizePager;
+import io.reflection.app.client.part.ReflectionProgressBar;
 import io.reflection.app.datatypes.shared.Post;
 
 import com.google.gwt.core.client.GWT;
@@ -26,22 +21,25 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadElement;
 import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.dom.client.Style.TextAlign;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author billy1380
  * 
  */
-public class PostsPage extends Page implements NavigationEventHandler, GetPostsEventHandler {
+public class PostsPage extends Page {
 
 	private static PostsPageUiBinder uiBinder = GWT.create(PostsPageUiBinder.class);
 
 	interface PostsPageUiBinder extends UiBinder<Widget, PostsPage> {}
 
-	@UiField HTMLPanel posts;
+	@UiField(provided = true) CellList<Post> posts = new CellList<Post>(new PostSummaryCell(), BootstrapGwtCellList.INSTANCE);
+	@UiField(provided = true) PageSizePager pager = new PageSizePager(ServiceConstants.SHORT_STEP_VALUE);
+
 	private Element atomLink;
 	private Element head;
 
@@ -53,6 +51,15 @@ public class PostsPage extends Page implements NavigationEventHandler, GetPostsE
 			head = HeadElement.as(nodes.getItem(0));
 			createAtomLink();
 		}
+
+		ReflectionProgressBar progress = new ReflectionProgressBar();
+		progress.getElement().getStyle().setTextAlign(TextAlign.CENTER);
+
+		posts.setPageSize(ServiceConstants.SHORT_STEP_VALUE);
+		posts.setLoadingIndicator(progress);
+
+		PostController.get().addDataDisplay(posts);
+		pager.setDisplay(posts);
 	}
 
 	public void createAtomLink() {
@@ -71,9 +78,6 @@ public class PostsPage extends Page implements NavigationEventHandler, GetPostsE
 	@Override
 	protected void onAttach() {
 		super.onAttach();
-
-		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
-		register(EventController.get().addHandlerToSource(GetPostsEventHandler.TYPE, PostController.get(), this));
 
 		if (head != null) {
 			head.appendChild(atomLink);
@@ -103,56 +107,5 @@ public class PostsPage extends Page implements NavigationEventHandler, GetPostsE
 
 		super.onDetach();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
-	 * io.reflection.app.client.controller.NavigationController.Stack)
-	 */
-	@Override
-	public void navigationChanged(Stack previous, Stack current) {
-		showPosts();
-	}
-
-	/**
-	 * 
-	 */
-	private void showPosts() {
-		posts.clear();
-
-		List<Post> data;
-		if ((data = PostController.get().getPosts()) != null) {
-			for (Post post : data) {
-				// if (post.published != null && post.visible == Boolean.TRUE) {
-				PostSummary summary = new PostSummary();
-				summary.setPost(post);
-
-				posts.add(summary);
-				// }
-			}
-		} else {}
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.api.blog.shared.call.event.GetPostsEventHandler#getPostsSuccess(io.reflection.app.api.blog.shared.call.GetPostsRequest,
-	 * io.reflection.app.api.blog.shared.call.GetPostsResponse)
-	 */
-	@Override
-	public void getPostsSuccess(GetPostsRequest input, GetPostsResponse output) {
-		showPosts();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.api.blog.shared.call.event.GetPostsEventHandler#getPostsFailure(io.reflection.app.api.blog.shared.call.GetPostsRequest,
-	 * java.lang.Throwable)
-	 */
-	@Override
-	public void getPostsFailure(GetPostsRequest input, Throwable caught) {}
 
 }

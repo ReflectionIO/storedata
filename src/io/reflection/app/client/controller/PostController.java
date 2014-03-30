@@ -53,6 +53,7 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 	private long count = 0;
 	private Pager pager;
 	private SparseArray<Post> postLookup = null;
+	private SparseArray<Post> postsLookup = null;
 
 	private static PostController one = null;
 
@@ -89,6 +90,14 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 				if (output.status == StatusType.StatusTypeSuccess) {
 					if (output.posts != null) {
 						posts.addAll(output.posts);
+
+						if (postsLookup == null) {
+							postsLookup = new SparseArray<Post>();
+						}
+
+						for (Post post : output.posts) {
+							postsLookup.put(post.id.intValue(), post);
+						}
 					}
 
 					if (output.pager != null) {
@@ -301,6 +310,16 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 
 		if (post == null) {
 			fetchPost(id);
+		}
+
+		return post;
+	}
+
+	public Post getPostPart(Long id) {
+		Post post = null;
+
+		if (postsLookup != null) {
+			post = postsLookup.get(id.intValue());
 		}
 
 		return post;

@@ -1,0 +1,130 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+    <ui:style>
+    .bar {
+    	background-color: #6d69c5;
+    	width: 20px;
+    	height: 100%;
+    	border-radius: 10px;
+    	animation: arc1 infinite linear;
+    	-moz-animation: arc1 infinite linear;
+    	-webkit-animation: arc1 infinite linear;
+    	position: relative;
+    	left: -20px;
+    }
+    
+    .outer {
+    	height: 12px;
+    	border-radius: 10px;
+    	box-shadow: inset 0px 0px 10px rgba(0, 0, 0, .1);
+    	box-sizing: border-box;
+    	-moz-box-sizing: border-box;
+    	margin: 4px 0;
+    	overflow: hidden;
+    }
+    
+    .r1 {
+    	width: 85px;
+    }
+    
+    .r2 {
+    	width: 100px;
+    }
+    
+    .r3 {
+    	width: 85px;
+    }
+    
+    .r4 {
+    	width: 65px;
+    }
+    
+    .r5 {
+    	width: 85px;
+    }
+    
+    .r6 {
+    	width: 100px;
+    }
+    
+    @\-moz-keyframes arc1 /* Firefox */ { 
+		100% {
+    		left: 100%;
+    	}
+    }
+    
+    @\-webkit-keyframes arc1 /* Safari and Chrome */ { 
+		100% {
+    		left: 100%;
+    	}
+    }
+    
+    @keyframes arc1 { 
+		100% {
+    		left: 100%;
+    	}
+    }
+    
+    .r1 .bar {
+    	animation-duration: 2s;
+    	-webkit-animation-duration: 2s;
+    	-moz-animation-duration: 2s;
+    }
+    
+    .r2 .bar {
+    	animation-duration: 1s;
+    	-webkit-animation-duration: 1s;
+    	-moz-animation-duration: 1s;
+    }
+    
+    .r3 .bar {
+    	animation-duration: 3s;
+    	-webkit-animation-duration: 3s;
+    	-moz-animation-duration: 3s;
+    }
+    
+    .r4 .bar {
+    	animation-duration: .5s;
+    	-webkit-animation-duration: .5s;
+    	-moz-animation-duration: .5s;
+    }
+    
+    .r5 .bar {
+    	animation-duration: 1s;
+    	-webkit-animation-duration: 1s;
+    	-moz-animation-duration: 1s;
+    }
+    
+    .r6 .bar {
+    	animation-duration: 3s;
+    	-webkit-animation-duration: 3s;
+    	-moz-animation-duration: 3s;
+    }
+    
+    .loading {
+		display: inline-block;
+	}
+    </ui:style>
+    <g:HTMLPanel>
+        <div class="{style.loading}">
+            <div class="{style.outer} {style.r1}">
+                <div class="{style.bar}"></div>
+            </div>
+            <div class="{style.outer} {style.r2}">
+                <div class="{style.bar}"></div>
+            </div>
+            <div class="{style.outer} {style.r3}">
+                <div class="{style.bar}"></div>
+            </div>
+            <div class="{style.outer} {style.r4}">
+                <div class="{style.bar}"></div>
+            </div>
+            <div class="{style.outer} {style.r5}">
+                <div class="{style.bar}"></div>
+            </div>
+            <div class="{style.outer} {style.r6}">
+                <div class="{style.bar}"></div>
+            </div>
+        </div>
+    </g:HTMLPanel>
+</ui:UiBinder> 

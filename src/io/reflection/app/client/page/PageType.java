@@ -105,6 +105,27 @@ public enum PageType {
 		return value;
 	}
 
+	public String toString(String... params) {
+		String asString;
+		String joinedParams = StringUtils.join(Arrays.asList(params), "/");
+
+		if (joinedParams == null || joinedParams.length() == 0) {
+			asString = toString();
+		} else {
+			asString = toString() + "/" + joinedParams;
+		}
+
+		return asString;
+	}
+
+	public String asTargetToken() {
+		return "#" + toString();
+	}
+
+	public String asTargetToken(String... params) {
+		return "#" + toString(params);
+	}
+
 	public static PageType fromString(String value) {
 		if (valueLookup == null) {
 			valueLookup = new HashMap<String, PageType>();
@@ -249,13 +270,7 @@ public enum PageType {
 	public void show(String... params) {
 		if (!navigable) throw navigableError();
 
-		String joinedParams = StringUtils.join(Arrays.asList(params), "/");
-
-		if (joinedParams == null || joinedParams.length() == 0) {
-			History.newItem(toString());
-		} else {
-			History.newItem(toString() + "/" + joinedParams);
-		}
+		History.newItem(toString(params));
 	}
 
 	private RuntimeException navigableError() {

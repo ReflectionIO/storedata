@@ -13,6 +13,10 @@
     .loading {
     	z-index: 1;
     	top: 100px;
+    	text-align: center;
+    	position: relative;
+    	float: left;
+		width: 100%;
     }
     </ui:style>
     <g:HTMLPanel>
@@ -45,7 +49,7 @@
 
                     <p:ItemTopPanel ui:field="mTopPanel" />
 
-                    <p:CircleProgressBar visible="false" ui:field="loader" styleName="{style.loading} col-sm-offset-5 col-sm-2" />
+                    <p:CircleProgressBar visible="false" ui:field="loader" styleName="{style.loading}" />
 
                     <p:RankChart ui:field="historyChart" />
 

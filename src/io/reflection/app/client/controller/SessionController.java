@@ -140,6 +140,16 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 		});
 	}
 
+	@SuppressWarnings("deprecation")
+	private void updateSessionExpiryWithTimezone() {
+		if (mSession.expires != null) {
+			long time = mSession.expires.getTime();
+			time -= mSession.expires.getTimezoneOffset() * 60 * 1000;
+
+			mSession.expires = new Date(time);
+		}
+	}
+
 	/**
 	 * Set User after login was successful
 	 * 
@@ -150,12 +160,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 
 		if (mSession != session) {
 			mSession = session;
-			
-			long time = mSession.expires.getTime();
-			@SuppressWarnings("deprecation")
-			time -= mSession.expires.getTimezoneOffset() * 60 * 1000;
-			
-			mSession.expires = new Date(time);
+			updateSessionExpiryWithTimezone();
 		}
 
 		if (mSession != null) {

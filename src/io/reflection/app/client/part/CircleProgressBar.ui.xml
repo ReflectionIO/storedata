@@ -93,8 +93,12 @@
 		height: 150px;
 	}
     
+    .loading {
+		display: inline-block;
+    }
     </ui:style>
     <g:HTMLPanel>
+    <div class="{style.loading}">
         <div class="{style.arc-container}">
             <div class="{style.arc-hider}" />
             <div class="{style.arc-overlay}" />
@@ -103,5 +107,6 @@
                 <div class="{style.arc1}" />
             </div>
         </div>
-    </g:HTMLPanel>
+    </div>
+</g:HTMLPanel>
 </ui:UiBinder> 

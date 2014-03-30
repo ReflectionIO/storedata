@@ -1,5 +1,5 @@
 //
-//  BootstrapGwtCellTable.java
+//  BootstrapGwtSimplePager.java
 //  storedata
 //
 //  Created by William Shakour (billy1380) on 3 Oct 2013.
