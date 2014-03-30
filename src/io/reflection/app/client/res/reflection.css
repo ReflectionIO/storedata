@@ -398,9 +398,6 @@ a:hover,a:focus,a:active {
 }
 
 /* Tabs Rank */
-.nav-tabs.nav-justified.ranks {
-	margin-top: -10px;
-}
 
 .nav-tabs.nav-justified.ranks>li>a {
 	background-color: #f6f6f6;

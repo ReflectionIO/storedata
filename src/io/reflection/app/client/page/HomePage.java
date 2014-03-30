@@ -7,10 +7,7 @@
 //
 package io.reflection.app.client.page;
 
-import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.NavigationController;
-import io.reflection.app.client.controller.NavigationController.Stack;
-import io.reflection.app.client.handler.NavigationEventHandler;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;

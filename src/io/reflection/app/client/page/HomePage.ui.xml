@@ -4,7 +4,6 @@
     @external btn, text-muted, carousel, carousel-inner, item, carousel-control, right, left, carousel-indicators, active, glyphicon;
     .logo {
     	background: url("../images/logo.png") no-repeat center;
-    	padding-left: 80px;
     	text-indent: -100000px;
     	overflow: hidden;
     }

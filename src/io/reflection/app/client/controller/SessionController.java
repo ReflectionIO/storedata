@@ -150,6 +150,12 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 
 		if (mSession != session) {
 			mSession = session;
+			
+			long time = mSession.expires.getTime();
+			@SuppressWarnings("deprecation")
+			time -= mSession.expires.getTimezoneOffset() * 60 * 1000;
+			
+			mSession.expires = new Date(time);
 		}
 
 		if (mSession != null) {
