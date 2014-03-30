@@ -1,7 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:style>
-    @external text-muted, carousel, carousel-inner, item, carousel-control, right, left, carousel-indicators, active, glyphicon;
+    @external btn, text-muted, carousel, carousel-inner, item, carousel-control, right, left, carousel-indicators, active, glyphicon;
     .logo {
     	background: url("../images/logo.png") no-repeat center;
     	padding-left: 80px;
@@ -36,7 +36,7 @@
     }
     
     .arrow a:hover {
-    	color: #6d69c5;
+    	color: white;
     }
     
     .centered {
@@ -64,13 +64,17 @@
     .carousel-control.right {
     	background-image: none;
     	text-shadow: none;
-    	color: silver;
+    	color: #d9dce0;
     }
     
     .carousel-control.left {
     	background-image: none;
     	text-shadow: none;
-    	color: silver;
+    	color: #d9dce0;
+    }
+    
+    .carousel-control.left>.glyphicon {
+    	margin-left: 0px;
     }
     
     .carousel-indicators li {
@@ -126,252 +130,289 @@
     .insideData h2 {
     	color: white;
     }
+    
+    .contactFormField label {
+    	display: none;
+    }
+    
+    .social {
+    	border-top: 1px solid #d9dce0;
+    }
+    
+    .social a {
+    	color: #8587a1;
+    	font-size: 40px;
+    }
+    
+    .social a:hover {
+    	color: #272833;
+    }
+    
+    .home .btn {
+    	text-transform: uppercase;
+    	font-size: 15px;
+    	padding: 20px;
+    }
     </ui:style>
     <g:HTMLPanel>
-
-        <div ui:field="firstPage" class="jumbotron {style.custom}">
-            <div class="container {style.centered} {style.moveDownALittle}">
-                <h1 class="{style.logo}">Reflection</h1>
-                <div class="row {style.moveDownALittle}">
-                    <h2>Powerful market intelligence for the global app market.</h2>
-                    <p class="text-muted">Make smarter business decisions. Access revenue, download and rank data for any app in the store.</p>
-                    <g:InlineHyperlink targetHistoryToken="register" text="Request Invite" styleName="btn btn-lg btn-primary {style.moveDownALittle}" />
-                    <g:Hyperlink targetHistoryToken="home/features" styleName="{style.arrow} {style.moveDown}">
-                        <i class="glyphicon glyphicon-chevron-down" />
-                    </g:Hyperlink>
+        <div class="{style.home}">
+            <div ui:field="firstPage" class="jumbotron {style.custom}">
+                <div class="container {style.centered} {style.moveDownALittle}">
+                    <h1 class="{style.logo}">Reflection</h1>
+                    <div class="row {style.moveDownALittle}">
+                        <h2>Powerful market intelligence for the global app market.</h2>
+                        <p class="text-muted">Make smarter business decisions. Access revenue, download and rank data for any app in the store.</p>
+                        <g:InlineHyperlink targetHistoryToken="register" text="Request Invite" styleName="btn btn-lg btn-primary {style.moveDownALittle}" />
+                        <div class="{style.arrow} {style.moveDown}">
+                            <g:Anchor ui:field="gotoFeatures">
+                                <i class="glyphicon glyphicon-chevron-down" />
+                            </g:Anchor>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="{style.centered} container {style.moveDown}">
-            <div class="row">
-                <h2>Features</h2>
-                <p class="text-muted">We're launching soon with detailed revenue, rank and download data for apps on the iPhone and iPad stores.</p>
+            <div class="{style.centered} container {style.moveDown}" ui:field="features">
+                <div class="row">
+                    <h2>Features</h2>
+                    <p class="text-muted">We're launching soon with detailed revenue, rank and download data for apps on the iPhone and iPad stores.</p>
+                </div>
+
+                <div class="row {style.moveDown}">
+                    <div class="col-sm-4">
+                        <img src="../images/statistical_128.png" alt="Revenue feature" class="{style.featureImage}" />
+                        <h3>Revenue &amp; Download Data</h3>
+                        <p class="text-muted">Analyse historical revenue, download and rank information for any app to base your business decisions on.</p>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <img src="../images/global_128.png" alt="Leaderboard feature" class="{style.featureImage}" />
+                        <h3>Global App Leaderboard</h3>
+                        <p class="text-muted">View revenue and download data for the Top 400 apps in any country, in any category, at any time.</p>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <img src="../images/historical_128.png" alt="Model feature" class="{style.featureImage}" />
+                        <h3>Powerful Statistical Model</h3>
+                        <p class="text-muted">We have created an algorithm that statistically paints a very accurate picture of the stores based on public rank and
+                            private
+                            download and
+                            revenue
+                            data.</p>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-sm-4 col-sm">
+                        <img src="../images/stores_128.png" alt="Stores feature" class="{style.featureImage}" />
+                        <h3>Supported Stores</h3>
+                        <p class="text-muted">We will launch with the iPhone and iPad stores and will then work hard to add all
+                            major stores starting with Google Play.</p>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <img src="../images/search_128.png" alt="Search feature" class="{style.featureImage}" />
+                        <h3>Comprehensive Search</h3>
+                        <p class="text-muted">Search for any app to see its revenue, download and rank history for any
+                            country and date range.</p>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <img src="../images/beautiful_128.png" alt="Functional feature" class="{style.featureImage}" />
+                        <h3>Beautiful &amp; Functional</h3>
+                        <p class="text-muted">Access meaningful market intelligence wherever you are on any device through our
+                            easy to use web app.</p>
+                    </div>
+                </div>
             </div>
 
-            <div class="row {style.moveDown}">
-                <div class="col-sm-4">
-                    <img src="../images/statistical_128.png" alt="Revenue feature" class="{style.featureImage}" />
-                    <h3>Revenue &amp; Download Data</h3>
-                    <p class="text-muted">Analyse historical revenue, download and rank information for any app to base your business decisions on.</p>
-                </div>
+            <div class="container-fluid  {style.whiteSmoke} {style.moveDown}">
+                <div class="{style.centered} container {style.moveDown}">
+                    <div class="row">
+                        <div class="col-sm-6 col-sm-offset-3">
+                            <h2>Make Smarter Decisions</h2>
 
-                <div class="col-sm-4">
-                    <img src="../images/global_128.png" alt="Leaderboard feature" class="{style.featureImage}" />
-                    <h3>Global App Leaderboard</h3>
-                    <p class="text-muted">View revenue and download data for the Top 400 apps in any country, in any category, at any time.</p>
-                </div>
-
-                <div class="col-sm-4">
-                    <img src="../images/historical_128.png" alt="Model feature" class="{style.featureImage}" />
-                    <h3>Powerful Statistical Model</h3>
-                    <p class="text-muted">We have created an algorithm that statistically paints a very accurate picture of the stores based on public rank and
-                        private
-                        download and
-                        revenue
-                        data.</p>
+                            <p class="text-muted">Analyse daily revenue, downloads and rank for the Top 400 apps in any country &amp; category. Make smart business,
+                                marketing
+                                and
+                                development
+                                decisions
+                                by
+                                comparing the performance of similar apps.</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="carousel">
+                            <!-- Indicators -->
+                            <ol class="carousel-indicators">
+                                <li class="active"></li>
+                                <li class=""></li>
+                                <li class=""></li>
+                            </ol>
+                            <div class="carousel-inner">
+                                <div class="item active">
+                                    <img src="../images/leaderboard.png" alt="Leaderboard" />
+                                </div>
+                                <div class="item">
+                                    <img src="../images/revenue_history.png" alt="Revenue History" />
+                                </div>
+                                <div class="item">
+                                    <img src="../images/download_history.png" alt="Download History" />
+                                </div>
+                            </div>
+                            <g:Anchor styleName="left carousel-control" ui:field="carouselLeft">
+                                <span class="glyphicon glyphicon-chevron-left"></span>
+                            </g:Anchor>
+                            <g:Anchor styleName="right carousel-control" ui:field="carouselRight">
+                                <span class="glyphicon glyphicon-chevron-right"></span>
+                            </g:Anchor>
+                        </div>
+                    </div>
                 </div>
 
             </div>
-            <div class="row">
-                <div class="col-sm-4 col-sm">
-                    <img src="../images/stores_128.png" alt="Stores feature" class="{style.featureImage}" />
-                    <h3>Supported Stores</h3>
-                    <p class="text-muted">We will launch with the iPhone and iPad stores and will then work hard to add all
-                        major stores starting with Google Play.</p>
-                </div>
+            <div class="container {style.moveDown}">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h2>About Us</h2>
 
-                <div class="col-sm-4">
-                    <img src="../images/search_128.png" alt="Search feature" class="{style.featureImage}" />
-                    <h3>Comprehensive Search</h3>
-                    <p class="text-muted">Search for any app to see its revenue, download and rank history for any
-                        country and date range.</p>
-                </div>
+                        <p class="text-muted">We’re a core team of talented engineers and designers with over 35 years of combined experience in the web and mobile space.</p>
 
-                <div class="col-sm-4">
-                    <img src="../images/beautiful_128.png" alt="Functional feature" class="{style.featureImage}" />
-                    <h3>Beautiful &amp; Functional</h3>
-                    <p class="text-muted">Access meaningful market intelligence wherever you are on any device through our
-                        easy to use web app.</p>
+                        <p class="text-muted">We were tired of how expensive and cumbersome it was to get up to date and accurate information about apps and the app market
+                            so we
+                            decided
+                            to
+                            create
+                            a
+                            better service ourselves.</p>
+
+                        <h3>Work with Reflection</h3>
+
+
+                        <p class="text-muted">Our small and passionate start-up is growing. If you're a self-starter, would love to be part of a growing start-up and have
+                            what
+                            it takes
+                            to
+                            get
+                            things done, we’d like to hear from you.</p>
+
+                        <g:Button ui:field="workWithUs" styleName="{style.moveDownALittle} btn btn-lg btn-default" text="Work With Us" />
+
+                    </div>
+                    <ul class="col-sm-6 {style.people}">
+                        <li>
+                            <h5>William Shakour</h5>
+                            <p class="text-muted">Originally from Sudan, William has written code for a large variety of devices and platforms - ranging from phones to
+                                servers
+                                and
+                                everything
+                                in-between. When he is not
+                                making sense of app data he loves to write mobile games.</p>
+                        </li>
+                        <li>
+                            <h5>Gustaf Leksell</h5>
+                            <p class="text-muted">Before founding Reflection, Gustaf led Business Development for Games at BBC Worldwide. He has lived and worked in Seoul,
+                                Shanghai and
+                                Austin
+                                where he designed &amp;
+                                produced successful mobile and online games.</p>
+                        </li>
+                        <li>
+                            <h5>Chi Dire</h5>
+                            <p class="text-muted">Chi has more than 20 years experience coding apps and services for small to global brands. With more than 600 apps across
+                                his
+                                devices,
+                                he
+                                thought
+                                it was time to
+                                try and make sense of it all.</p>
+                        </li>
+                    </ul>
                 </div>
             </div>
-        </div>
+            <div class="{style.centered} container-fluid {style.moveDown} {style.data}">
+                <div class="row {style.insideData}">
+                    <h2>Need data for reports or articles? Reference us and get it for free.</h2>
 
-        <div class="container-fluid  {style.whiteSmoke} {style.moveDown}">
+                    <g:Button ui:field="getInTouch" styleName="btn btn-lg btn-default {style.moveDownALittle}" text="Get In Touch" />
+                </div>
+            </div>
             <div class="{style.centered} container {style.moveDown}">
+
                 <div class="row">
                     <div class="col-sm-6 col-sm-offset-3">
-                        <h2>Make Smarter Decisions</h2>
+                        <h2>Contact us</h2>
 
-                        <p class="text-muted">Analyse daily revenue, downloads and rank for the Top 400 apps in any country &amp; category. Make smart business, marketing
-                            and
-                            development
-                            decisions
-                            by
-                            comparing the performance of similar apps.</p>
+                        <p class="text-muted">
+                            If you have any inquiries please get in touch using the form below, or send an email to
+                            <strong>hello at reflection.io</strong>
+                        </p>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="carousel">
-                        <!-- Indicators -->
-                        <ol class="carousel-indicators">
-                            <li class="active"></li>
-                            <li class=""></li>
-                            <li class=""></li>
-                        </ol>
-                        <div class="carousel-inner">
-                            <div class="item active">
-                                <img src="../images/leaderboard.png" alt="Leaderboard" />
-                            </div>
-                            <div class="item">
-                                <img src="../images/revenue_history.png" alt="Revenue History" />
-                            </div>
-                            <div class="item">
-                                <img src="../images/download_history.png" alt="Download History" />
-                            </div>
+
+                <div class="row {style.moveDownALittle}">
+                    <g:FormPanel>
+                        <g:HTMLPanel styleName="col-sm-6 col-sm-offset-3">
+
+                            <g:HTMLPanel ui:field="nameGroup" styleName="form-group {style.contactFormField}">
+                                <label>First name</label>
+                                <g:TextBox styleName="form-control" ui:field="name" />
+                                <g:HTMLPanel ui:field="nameNote" visible="false" styleName="noteDetail" />
+                            </g:HTMLPanel>
+
+                            <g:HTMLPanel ui:field="emailGroup" styleName="form-group {style.contactFormField}">
+                                <label>Email</label>
+                                <g:TextBox styleName="form-control" ui:field="email" />
+                                <g:HTMLPanel ui:field="emailNote" visible="false" styleName="noteDetail" />
+                            </g:HTMLPanel>
+
+                            <g:HTMLPanel ui:field="messageGroup" styleName="form-group {style.contactFormField}">
+                                <label>Message</label>
+                                <g:TextArea styleName="form-control" ui:field="message" visibleLines="4" />
+                                <g:HTMLPanel ui:field="messageNote" visible="false" styleName="noteDetail" />
+                            </g:HTMLPanel>
+
+                            <g:Button ui:field="submit" styleName="btn btn-lg btn-primary btn-block {style.moveDownALittle}">
+                                Submit
+                            </g:Button>
+
+                        </g:HTMLPanel>
+                    </g:FormPanel>
+                </div>
+                <div class="row {style.moveDown}">
+                    <div class="col-sm-6 col-sm-offset-3">
+                        <div class="col-sm-4 {style.contact}">
+                            <span class="glyphicon glyphicon-envelope" />
+                            <h5>Mail</h5>
+                            <p class="text-muted">hello at reflection.io</p>
+                            <p class="text-muted">careers at reflection.io</p>
                         </div>
-                        <a class="left carousel-control">
-                            <span class="glyphicon glyphicon-chevron-left"></span>
-                        </a>
-                        <a class="right carousel-control">
-                            <span class="glyphicon glyphicon-chevron-right"></span>
-                        </a>
+                        <div class="col-sm-4 {style.contact}">
+                            <span class="glyphicon glyphicon-map-marker" />
+                            <h5>Location</h5>
+                            <p class="text-muted">79 Wardour Street</p>
+                            <p class="text-muted">London, W1D 6QB</p>
+                        </div>
+                        <div class="col-sm-4 {style.contact}">
+                            <span class="glyphicon glyphicon-earphone" />
+                            <h5>Contact</h5>
+                            <p class="text-muted">+44 (0) 20 7851 8645</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-        </div>
-        <div class="container {style.moveDown}">
-            <div class="row">
-                <div class="col-sm-6">
-                    <h2>About Us</h2>
-
-                    <p class="text-muted">We’re a core team of talented engineers and designers with over 35 years of combined experience in the web and mobile space.</p>
-
-                    <p class="text-muted">We were tired of how expensive and cumbersome it was to get up to date and accurate information about apps and the app market so we
-                        decided
-                        to
-                        create
-                        a
-                        better service ourselves.</p>
-
-                    <h3>Work with Reflection</h3>
-
-
-                    <p class="text-muted">Our small and passionate start-up is growing. If you're a self-starter, would love to be part of a growing start-up and have what
-                        it takes
-                        to
-                        get
-                        things done, we’d like to hear from you.</p>
-
-                    <g:Button ui:field="workWithUs" styleName="{style.moveDownALittle} btn btn-lg btn-default" text="Work With Us" />
-
-                </div>
-                <ul class="col-sm-6 {style.people}">
-                    <li>
-                        <h5>William Shakour</h5>
-                        <p class="text-muted">Originally from Sudan, William has written code for a large variety of devices and platforms - ranging from phones to servers
-                            and
-                            everything
-                            in-between. When he is not
-                            making sense of app data he loves to write mobile games.</p>
-                    </li>
-                    <li>
-                        <h5>Gustaf Leksell</h5>
-                        <p class="text-muted">Before founding Reflection, Gustaf led Business Development for Games at BBC Worldwide. He has lived and worked in Seoul,
-                            Shanghai and
-                            Austin
-                            where he designed &amp;
-                            produced successful mobile and online games.</p>
-                    </li>
-                    <li>
-                        <h5>Chi Dire</h5>
-                        <p class="text-muted">Chi has more than 20 years experience coding apps and services for small to global brands. With more than 600 apps across his
-                            devices,
-                            he
-                            thought
-                            it was time to
-                            try and make sense of it all.</p>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div class="{style.centered} container-fluid {style.moveDown} {style.data}">
-            <div class="row {style.insideData}">
-                <h2>Need data for reports or articles? Reference us and get it for free.</h2>
-
-                <g:Button ui:field="getInTouch" styleName="btn btn-lg btn-default {style.moveDownALittle}" text="Get In Touch" />
-            </div>
-        </div>
-        <div class="{style.centered} container {style.moveDown}">
-
-            <div class="row">
-                <div class="col-sm-6 col-sm-offset-3">
-                    <h2>Contact us</h2>
-
-                    <p class="text-muted">
-                        If you have any inquiries please get in touch using the form below, or send an email to
-                        <strong>hello at reflection.io</strong>
-                    </p>
-                </div>
-            </div>
-
-            <div class="row {style.moveDownALittle}">
-                <g:FormPanel>
-                    <g:HTMLPanel styleName="col-sm-6 col-sm-offset-3">
-
-                        <g:HTMLPanel ui:field="nameGroup" styleName="form-group">
-                            <label>First name</label>
-                            <g:TextBox styleName="form-control" ui:field="name" />
-                            <g:HTMLPanel ui:field="nameNote" visible="false" styleName="noteDetail" />
-                        </g:HTMLPanel>
-
-                        <g:HTMLPanel ui:field="emailGroup" styleName="form-group">
-                            <label>Email</label>
-                            <g:TextBox styleName="form-control" ui:field="email" />
-                            <g:HTMLPanel ui:field="emailNote" visible="false" styleName="noteDetail" />
-                        </g:HTMLPanel>
-
-                        <g:HTMLPanel ui:field="messageGroup" styleName="form-group">
-                            <label>Message</label>
-                            <g:TextArea styleName="form-control" ui:field="message" />
-                            <g:HTMLPanel ui:field="messageNote" visible="false" styleName="noteDetail" />
-                        </g:HTMLPanel>
-
-                        <g:Button ui:field="submit" styleName="btn btn-lg btn-primary btn-block">
-                            Submit
-                        </g:Button>
-
-                    </g:HTMLPanel>
-                </g:FormPanel>
-            </div>
-            <div class="row {style.moveDown}">
-                <div class="col-sm-6 col-sm-offset-3">
-                    <div class="col-sm-4 {style.contact}">
-                        <span class="glyphicon glyphicon-envelope" />
-                        <h5>Mail</h5>
-                        <p class="text-muted">hello at reflection.io</p>
-                        <p class="text-muted">careers at reflection.io</p>
+                <div class="row {style.moveDown}">
+                    <div class="col-sm-6 col-sm-offset-3 {style.social}">
+                        <div class="col-sm-2 col-sm-offset-4 {style.moveDownALittle}">
+                            <a href="https://www.facebook.com/reflection.io" target="_blank">
+                                <span class="icon-facebook-squared" />
+                            </a>
+                        </div>
+                        <div class="col-sm-2 {style.moveDownALittle}">
+                            <a href="http://www.linkedin.com/company/reflection-io-ltd" target="_blank">
+                                <span class="icon-linkedin-squared" />
+                            </a>
+                        </div>
                     </div>
-                    <div class="col-sm-4 {style.contact}">
-                        <span class="glyphicon glyphicon-map-marker" />
-                        <h5>Location</h5>
-                        <p class="text-muted">79 Wardour Street</p>
-                        <p class="text-muted">London, W1D 6QB</p>
-                    </div>
-                    <div class="col-sm-4 {style.contact}">
-                        <span class="glyphicon glyphicon-earphone" />
-                        <h5>Contact</h5>
-                        <p class="text-muted">+44 (0) 20 7851 8645</p>
-                    </div>
-                </div>
-            </div>
-            <div class="row {style.moveDownALittle}">
-                <div class="col-sm-6 col-sm-offset-3">
-                    <a href="https://www.facebook.com/reflection.io" target="_blank">facebook</a>
-                </div>
-                <div class="col-sm-6 col-sm-offset-3">
-                    <a href="http://www.linkedin.com/company/reflection-io-ltd" target="_blank">linkedIn</a>
                 </div>
             </div>
         </div>

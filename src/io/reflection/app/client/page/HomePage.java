@@ -7,20 +7,27 @@
 //
 package io.reflection.app.client.page;
 
+import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.controller.NavigationController.Stack;
+import io.reflection.app.client.handler.NavigationEventHandler;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ScrollEvent;
 import com.google.gwt.user.client.Window.ScrollHandler;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.TextArea;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -34,11 +41,21 @@ public class HomePage extends Page {
 	interface HomePageUiBinder extends UiBinder<Widget, HomePage> {}
 
 	@UiField DivElement firstPage;
-	private HandlerRegistration scrollHandlerRegistration;
-	private HandlerRegistration resizeHandlerRegistration;
+	@UiField DivElement features;
+	@UiField TextBox name;
+	@UiField TextBox email;
+	@UiField TextArea message;
+	@UiField Anchor gotoFeatures;
+	@UiField Anchor carouselRight;
+	@UiField Anchor carouselLeft;
+	private Timer scrollTimer;
 
 	public HomePage() {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		name.getElement().setAttribute("placeholder", "Name");
+		email.getElement().setAttribute("placeholder", "Email Address");
+		message.getElement().setAttribute("placeholder", "Message");
 	}
 
 	/*
@@ -56,7 +73,7 @@ public class HomePage extends Page {
 
 		firstPage.getStyle().setHeight(Window.getClientHeight(), Unit.PX);
 
-		scrollHandlerRegistration = Window.addWindowScrollHandler(new ScrollHandler() {
+		register(Window.addWindowScrollHandler(new ScrollHandler() {
 
 			@Override
 			public void onWindowScroll(ScrollEvent event) {
@@ -67,10 +84,14 @@ public class HomePage extends Page {
 					NavigationController.get().getHeader().getElement().getStyle().setTop(-60, Unit.PX);
 					NavigationController.get().getFooter().getElement().getStyle().setHeight(0, Unit.PX);
 				}
-			}
-		});
 
-		resizeHandlerRegistration = Window.addResizeHandler(new ResizeHandler() {
+				if (event.getScrollTop() < 0) {
+					PageType.HomePageType.show();
+				}
+			}
+		}));
+
+		register(Window.addResizeHandler(new ResizeHandler() {
 
 			Timer resizeTimer = new Timer() {
 				@Override
@@ -84,7 +105,7 @@ public class HomePage extends Page {
 				resizeTimer.cancel();
 				resizeTimer.schedule(250);
 			}
-		});
+		}));
 	}
 
 	/*
@@ -94,14 +115,54 @@ public class HomePage extends Page {
 	 */
 	@Override
 	protected void onDetach() {
+		if (scrollTimer != null) {
+			scrollTimer.cancel();
+		}
+
 		super.onDetach();
 
 		NavigationController.get().getHeader().getElement().getStyle().setTop(0, Unit.PX);
 		NavigationController.get().getPageHolderPanel().getElement().getStyle().setPaddingTop(60, Unit.PX);
 		NavigationController.get().getFooter().getElement().getStyle().clearHeight();
+	}
 
-		scrollHandlerRegistration.removeHandler();
-		resizeHandlerRegistration.removeHandler();
+	@UiHandler({ "gotoFeatures", "carouselLeft", "carouselRight" })
+	void onClickHandler(ClickEvent e) {
+		if (e.getSource() == gotoFeatures) {
+			if (scrollTimer == null) {
+				scrollTimer = new Timer() {
+
+					int distance = 0;
+
+					@Override
+					public void run() {
+						int top = Window.getScrollTop();
+						int featureTop = features.getAbsoluteTop() - 60;
+
+						if (top < featureTop) {
+							distance = (int) (((double) featureTop - (double) top) / 3.0);
+
+							if (distance < 4) {
+								distance = 4;
+							}
+
+							Window.scrollTo(0, top + distance);
+						} else {
+							Window.scrollTo(0, featureTop);
+							this.cancel();
+						}
+					}
+				};
+			} else {
+				scrollTimer.cancel();
+			}
+
+			scrollTimer.scheduleRepeating(50);
+		} else if (e.getSource() == carouselLeft) {
+
+		} else if (e.getSource() == carouselRight) {
+
+		}
 	}
 
 }
