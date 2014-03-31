@@ -569,6 +569,7 @@ a:hover,a:focus,a:active {
 	background-position: -2px -181px;
 }
 
+@sprite
 .unknownAppLarge {
 	gwt-image: "unknownSprite";
 	display: inline-block;
@@ -579,6 +580,7 @@ a:hover,a:focus,a:active {
 	background-position: -2px -2px
 }
 
+@sprite
 .unknownAppMedium {
 	gwt-image: "unknownSprite";
 	display: inline-block;
@@ -588,3 +590,5 @@ a:hover,a:focus,a:active {
 	height: 75px;
 	background-position: -2px -104px
 }
+
+.unknownAppSmall, .unknownAppMedium, .unknownAppLarge {}

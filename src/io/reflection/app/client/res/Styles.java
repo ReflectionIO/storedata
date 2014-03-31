@@ -44,9 +44,6 @@ public interface Styles extends ClientBundle {
 
 	public static final Styles INSTANCE = GWT.create(Styles.class);
 
-	@Source("reflection.css")
-	ReflectionStyles reflection();
-
 	@Source("footersprite.png")
 	@ImageOptions(repeatStyle = RepeatStyle.None)
 	ImageResource footerSprite();
@@ -54,5 +51,8 @@ public interface Styles extends ClientBundle {
 	@Source("unknownsprite.png")
 	@ImageOptions(repeatStyle = RepeatStyle.None)
 	ImageResource unkownSprite();
+	
+	@Source("reflection.css")
+	ReflectionStyles reflection();
 
 }
