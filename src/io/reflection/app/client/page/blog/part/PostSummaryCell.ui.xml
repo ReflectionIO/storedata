@@ -1,6 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder">
-    <ui:with field="link" type="java.lang.String" />
+    <ui:with field="link" type="com.google.gwt.safehtml.shared.SafeUri" />
     <ui:with field="title" type="java.lang.String" />
     <ui:with field="description" type="java.lang.String" />
     <ui:with field="author" type="java.lang.String" />

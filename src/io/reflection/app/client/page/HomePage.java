@@ -100,7 +100,7 @@ public class HomePage extends Page {
 			@Override
 			public void onResize(ResizeEvent event) {
 				resizeTimer.cancel();
-				resizeTimer.schedule(250);
+				resizeTimer.schedule((int) (1000.0 / 30.0));
 			}
 		}));
 	}

@@ -6,14 +6,14 @@
     	width: 20px;
     	height: 100%;
     	border-radius: 10px;
-    	animation: arc1 infinite linear;
-    	-moz-animation: arc1 infinite linear;
-    	-webkit-animation: arc1 infinite linear;
+    	animation: barAnimation infinite linear;
+    	-moz-animation: barAnimation infinite linear;
+    	-webkit-animation: barAnimation infinite linear;
     	position: relative;
     	left: -20px;
     }
     
-    .outer {
+    .r1, .r2, .r3, .r4, .r5, .r6 {
     	height: 12px;
     	border-radius: 10px;
     	box-shadow: inset 0px 0px 10px rgba(0, 0, 0, .1);
@@ -47,19 +47,19 @@
     	width: 100px;
     }
     
-    @\-moz-keyframes arc1 /* Firefox */ { 
+    @\-moz-keyframes barAnimation { 
 		100% {
     		left: 100%;
     	}
     }
     
-    @\-webkit-keyframes arc1 /* Safari and Chrome */ { 
+    @\-webkit-keyframes barAnimation { 
 		100% {
     		left: 100%;
     	}
     }
     
-    @keyframes arc1 { 
+    @keyframes barAnimation { 
 		100% {
     		left: 100%;
     	}
@@ -107,22 +107,22 @@
     </ui:style>
     <g:HTMLPanel>
         <div class="{style.loading}">
-            <div class="{style.outer} {style.r1}">
+            <div class="{style.r1}">
                 <div class="{style.bar}"></div>
             </div>
-            <div class="{style.outer} {style.r2}">
+            <div class="{style.r2}">
                 <div class="{style.bar}"></div>
             </div>
-            <div class="{style.outer} {style.r3}">
+            <div class="{style.r3}">
                 <div class="{style.bar}"></div>
             </div>
-            <div class="{style.outer} {style.r4}">
+            <div class="{style.r4}">
                 <div class="{style.bar}"></div>
             </div>
-            <div class="{style.outer} {style.r5}">
+            <div class="{style.r5}">
                 <div class="{style.bar}"></div>
             </div>
-            <div class="{style.outer} {style.r6}">
+            <div class="{style.r6}">
                 <div class="{style.bar}"></div>
             </div>
         </div>

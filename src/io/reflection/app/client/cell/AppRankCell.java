@@ -10,13 +10,19 @@ package io.reflection.app.client.cell;
 import static io.reflection.app.client.controller.FilterController.REVENUE_DAILY_DATA_TYPE;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.ItemController;
+import io.reflection.app.client.page.PageType;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.shared.util.FormattingHelper;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.safecss.shared.SafeStyles;
+import com.google.gwt.safecss.shared.SafeStylesUtils;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.safehtml.shared.SafeUri;
+import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiRenderer;
 
 /**
@@ -26,8 +32,7 @@ import com.google.gwt.uibinder.client.UiRenderer;
 public class AppRankCell extends AbstractCell<Rank> {
 
 	interface AppRankCellRenderer extends UiRenderer {
-		void render(SafeHtmlBuilder sb, String name, String creatorName, String smallImage, String itemId, String dailyData, String filter,
-				String displayDailyData);
+		void render(SafeHtmlBuilder sb, String name, String creatorName, SafeUri smallImage, SafeUri link, String dailyData, String displayDailyData);
 	}
 
 	private static AppRankCellRenderer RENDERER = GWT.create(AppRankCellRenderer.class);
@@ -38,15 +43,14 @@ public class AppRankCell extends AbstractCell<Rank> {
 		Item item = ItemController.get().lookupItem(value.itemId);
 
 		String dailyDataType = FilterController.get().getDailyData(), dailyData;
-		String display = "default";
 
 		if (REVENUE_DAILY_DATA_TYPE.equals(dailyDataType)) {
 			dailyData = FormattingHelper.getCurrencySymbol(value.currency) + " " + value.revenue;
-
 		} else {
 			dailyData = value.downloads.toString();
 		}
 
+		SafeStyles display;
 		String mode = FilterController.get().getListType();
 
 		if (FilterController.OVERALL_LIST_TYPE.equals(mode)) {
@@ -61,12 +65,15 @@ public class AppRankCell extends AbstractCell<Rank> {
 				mode = FilterController.GROSSING_LIST_TYPE;
 				break;
 			}
-			display = "default";
+			
+			display = SafeStylesUtils.fromTrustedString("");
 		} else {
-			display = "none";
+			display = SafeStylesUtils.forDisplay(Display.NONE);
 		}
 
-		RENDERER.render(builder, item.name, item.creatorName, item.smallImage, item.externalId, dailyData, FilterController.get().toItemFilterString(mode),
-				display);
+		SafeUri link = UriUtils.fromString(PageType.ItemPageType.asTargetToken("view", item.externalId, FilterController.get().toItemFilterString(mode)));
+		SafeUri smallImage = UriUtils.fromString(item.smallImage);
+
+		RENDERER.render(builder, item.name, item.creatorName, smallImage, link, dailyData, display.asString());
 	}
 }

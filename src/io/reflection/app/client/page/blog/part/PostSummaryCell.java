@@ -16,6 +16,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.safehtml.shared.SafeUri;
+import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiRenderer;
 
 /**
@@ -25,14 +27,14 @@ import com.google.gwt.uibinder.client.UiRenderer;
 public class PostSummaryCell extends AbstractCell<Post> {
 
 	interface PostSummaryCellRenderer extends UiRenderer {
-		void render(SafeHtmlBuilder sb, String link, String title, String description, String author, String published);
+		void render(SafeHtmlBuilder sb, SafeUri link, String title, String description, String author, String published);
 	}
 
 	private static PostSummaryCellRenderer RENDERER = GWT.create(PostSummaryCellRenderer.class);
 
 	@Override
 	public void render(Context context, Post value, SafeHtmlBuilder builder) {
-		String link = PageType.BlogPostPageType.asTargetToken("view", value.id.toString());
+		SafeUri link = UriUtils.fromString(PageType.BlogPostPageType.asTargetToken("view", value.id.toString()));
 		String published = "TBD";
 
 		if (value.published != null) {

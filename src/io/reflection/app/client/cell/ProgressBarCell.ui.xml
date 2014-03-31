@@ -12,7 +12,7 @@
     </ui:style>
 
     <div class="progress">
-        <div class="progress-bar {style.purpleProgressBar}" aria-valuenow="{volume}" aria-valuemin="0" aria-valuemax="{volumeMax}" style="width: {percentage}%;">
+        <div style="{percentage}" class="progress-bar {style.purpleProgressBar}" aria-valuenow="{volume}" aria-valuemin="0" aria-valuemax="{volumeMax}">
             <span>
                 <ui:text from="{text}" />
             </span>

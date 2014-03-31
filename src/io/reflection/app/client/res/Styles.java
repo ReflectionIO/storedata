@@ -20,9 +20,6 @@ import com.google.gwt.resources.client.ImageResource.RepeatStyle;
  */
 public interface Styles extends ClientBundle {
 	public interface ReflectionStyles extends CssResource {
-		String highlightRange();
-
-		String highlightRangeBoundaries();
 
 		String footerFacebook();
 
@@ -35,6 +32,8 @@ public interface Styles extends ClientBundle {
 		String footerUpArrow();
 
 		String footerDownArrow();
+		
+		String breakWords();
 	}
 
 	public static final Styles INSTANCE = GWT.create(Styles.class);

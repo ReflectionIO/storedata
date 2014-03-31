@@ -18,7 +18,6 @@ import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.page.blog.part.DisplayTag;
-import io.reflection.app.client.part.CircleProgressBar;
 import io.reflection.app.client.part.ReflectionProgressBar;
 import io.reflection.app.datatypes.shared.Post;
 import io.reflection.app.shared.util.FormattingHelper;

@@ -1,7 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:style>
-    .arc1,.arc2 {
+    .arc1, .arc2 {
     	border-top-left-radius: 100%;
     	width: 75px;
     	height: 75px;
@@ -15,33 +15,33 @@
     }
     
     .arc1 {
-		background-color: rgba(101, 98,189, .75);
-    	animation: arc1 1s infinite linear;
-    	-moz-animation: arc1 1s infinite linear;
-    	-webkit-animation: arc1 1s infinite linear;
+		background-color: #6c69c5;
+    	animation: arcAnimation 5s infinite linear;
+    	-moz-animation: arcAnimation 5s infinite linear;
+    	-webkit-animation: arcAnimation 5s infinite linear;
     }
     
     .arc2 {
-		background-color: #6c69c5;
-    	animation: arc1 5s infinite linear;
-    	-moz-animation: arc1 5s infinite linear;
-    	-webkit-animation: arc1 5s infinite linear;
+		background-color: rgba(101, 98,189, .75);
+    	animation: arcAnimation 1s infinite linear;
+    	-moz-animation: arcAnimation 1s infinite linear;
+    	-webkit-animation: arcAnimation 1s infinite linear;
     }
     
-    @\-moz-keyframes arc1 /* Firefox */ { 
+    @\-moz-keyframes arcAnimation { 
 		100% {
     		-moz-transform: rotate(315deg);
     	}
     }
     
-    @\-webkit-keyframes arc1 /* Safari and Chrome */ {
+    @\-webkit-keyframes arcAnimation {
 		100% {
     		-webkit-transform: rotate(315deg);
     		transform: rotate(315deg);
     	}
     }
     
-    @keyframes arc1 {
+    @keyframes arcAnimation {
 		100% {
     		-webkit-transform: rotate(315deg);
     		transform: rotate(315deg);

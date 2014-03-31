@@ -8,7 +8,6 @@
 package io.reflection.app.client.part;
 
 import io.reflection.app.client.part.datatypes.DateRange;
-import io.reflection.app.client.res.Styles.ReflectionStyles;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,10 +22,10 @@ import com.google.gwt.event.logical.shared.ShowRangeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
@@ -39,7 +38,17 @@ import com.google.gwt.user.datepicker.client.DatePicker;
  */
 public class DateRangePicker extends Composite implements HasValue<DateRange>, IsEditor<LeafValueEditor<DateRange>> {
 
-	@UiField ReflectionStyles style;
+	public interface Style extends CssResource {
+		String inline();
+
+		String highlightRange();
+
+		String fromHighlightRangeBoundary();
+		
+		String toHighlightRangeBoundary();
+	}
+
+	@UiField Style style;
 
 	private static DateRangePickerUiBinder uiBinder = GWT.create(DateRangePickerUiBinder.class);
 
@@ -60,6 +69,10 @@ public class DateRangePicker extends Composite implements HasValue<DateRange>, I
 		initWidget(uiBinder.createAndBindUi(this));
 
 		BootstrapGwtDatePicker.INSTANCE.styles().ensureInjected();
+
+		// add styles so they don't trash existing styles
+		mFromPicker.addStyleName(style.inline());
+		mToPicker.addStyleName(style.inline());
 
 		// initialize today and set it at midnight, since when pick the today date from DatePicker is set to noon, and the after function doesn't work
 		// as expected in the morning
@@ -118,15 +131,14 @@ public class DateRangePicker extends Composite implements HasValue<DateRange>, I
 	 * Add highlighted style to current range in both Datepicker
 	 */
 	private void highlightRange() {
-		mFromPicker.addStyleToDates(style.highlightRangeBoundaries(), mValue.getFrom());
-		mFromPicker.addStyleToDates(style.highlightRangeBoundaries(), mValue.getTo());
-		mToPicker.addStyleToDates(style.highlightRangeBoundaries(), mValue.getFrom());
-		mToPicker.addStyleToDates(style.highlightRangeBoundaries(), mValue.getTo());
+		mFromPicker.addStyleToDates(style.fromHighlightRangeBoundary(), mValue.getFrom());
+		mFromPicker.addStyleToDates(style.toHighlightRangeBoundary(), mValue.getTo());
+		mToPicker.addStyleToDates(style.fromHighlightRangeBoundary(), mValue.getFrom());
+		mToPicker.addStyleToDates(style.toHighlightRangeBoundary(), mValue.getTo());
 
 		Date highlightDate = normalizeDate(mValue.getFrom());
 		CalendarUtil.addDaysToDate(highlightDate, 1);
 		while (highlightDate.before(mValue.getTo())) {
-
 			mFromPicker.addStyleToDates(style.highlightRange(), highlightDate);
 			mToPicker.addStyleToDates(style.highlightRange(), highlightDate);
 			CalendarUtil.addDaysToDate(highlightDate, 1);
@@ -142,7 +154,7 @@ public class DateRangePicker extends Composite implements HasValue<DateRange>, I
 
 		while (firstShownOnCalendarToPicker.before(lastShownOnCalendarToPicker) || firstShownOnCalendarToPicker.equals(lastShownOnCalendarToPicker)) {
 			mFromPicker.removeStyleFromDates(style.highlightRange(), firstShownOnCalendarToPicker);
-			mFromPicker.removeStyleFromDates(style.highlightRangeBoundaries(), firstShownOnCalendarToPicker);
+			mFromPicker.removeStyleFromDates(style.fromHighlightRangeBoundary(), firstShownOnCalendarToPicker);
 			CalendarUtil.addDaysToDate(firstShownOnCalendarToPicker, 1);
 		}
 	}
@@ -156,7 +168,7 @@ public class DateRangePicker extends Composite implements HasValue<DateRange>, I
 
 		while (firstShownOnCalendarToPicker.before(lastShownOnCalendarToPicker) || firstShownOnCalendarToPicker.equals(lastShownOnCalendarToPicker)) {
 			mToPicker.removeStyleFromDates(style.highlightRange(), firstShownOnCalendarToPicker);
-			mToPicker.removeStyleFromDates(style.highlightRangeBoundaries(), firstShownOnCalendarToPicker);
+			mToPicker.removeStyleFromDates(style.toHighlightRangeBoundary(), firstShownOnCalendarToPicker);
 			CalendarUtil.addDaysToDate(firstShownOnCalendarToPicker, 1);
 		}
 	}
@@ -216,12 +228,11 @@ public class DateRangePicker extends Composite implements HasValue<DateRange>, I
 	void onChangedSelectedValueFrom(ValueChangeEvent<Date> event) {
 		Date dateClicked = normalizeDate(event.getValue());
 		if (dateClicked.after(normalizeDate(mToPicker.getValue()))) {
-			Window.alert("Date not valid");
+//			Window.alert("Date not valid");
 			mFromPicker.setValue(normalizeDate(mValue.getFrom()));
 			mFromPicker.setCurrentMonth(mValue.getFrom());
-
+			
 		} else {
-
 			mValue.setFrom(dateClicked);
 			styleDatePickerTo();
 			resetHighlightRangeFromPicker();
@@ -270,7 +281,7 @@ public class DateRangePicker extends Composite implements HasValue<DateRange>, I
 	void onChangedSelectedValueToOnPressFrom(ValueChangeEvent<Date> event) {
 		Date dateClicked = normalizeDate(event.getValue());
 		if (dateClicked.before(normalizeDate(mFromPicker.getValue())) || dateClicked.after(today)) {
-			Window.alert("Date not valid");
+//			Window.alert("Date not valid");
 			mToPicker.setValue(normalizeDate(mValue.getTo()));
 			mToPicker.setCurrentMonth(mValue.getTo());
 		} else {
