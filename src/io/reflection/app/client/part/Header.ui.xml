@@ -1,5 +1,19 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+
+    <ui:import field="io.reflection.app.client.page.PageType.BlogPostsPageType" />
+    <ui:import field="io.reflection.app.client.page.PageType.UpgradePageType" />
+    <ui:import field="io.reflection.app.client.page.PageType.FeedBrowserPageType" />
+    <ui:import field="io.reflection.app.client.page.PageType.UsersPageType" />
+    <ui:import field="io.reflection.app.client.page.PageType.RolesPageType" />
+    <ui:import field="io.reflection.app.client.page.PageType.PermissionsPageType" />
+    <ui:import field="io.reflection.app.client.page.PageType.EmailTemplatesPageType" />
+    <ui:import field="io.reflection.app.client.page.PageType.BlogAdminPageType" />
+    <ui:import field="io.reflection.app.client.page.PageType.RegisterPageType" />
+    <ui:import field="io.reflection.app.client.page.PageType.LoginPageType" />
+    <ui:import field="io.reflection.app.client.page.PageType.SearchPageType" />
+    <ui:import field="io.reflection.app.client.page.PageType.HomePageType" />
+
     <ui:with field='res' type='io.reflection.app.client.res.Images' />
     <ui:style>
     @external navbar-nav, btn, form-control,navbar-header,label-default;
@@ -72,7 +86,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#home">
+            <a class="navbar-brand" href="{HomePageType.asHref}">
                 <g:Image styleName="{style.alignToImage}" resource="{res.logo}" />
                 <span style="color: white; margin-left: 10px;">Reflection</span>
                 <span class="label label-default" style="font-weight: bold; font-style: italic; display: inline-block; padding-right: 7px;">
@@ -85,7 +99,7 @@
             <!-- Left header part -->
             <ul class="nav navbar-nav" ui:field="mNavList">
                 <li ui:field="mRanksItem" style="display: none;">
-                    <g:InlineHyperlink ui:field="mRanksLink" targetHistoryToken="ranks">Leaderboard</g:InlineHyperlink>
+                    <g:InlineHyperlink ui:field="mRanksLink" targetHistoryToken="__ranks__">Leaderboard</g:InlineHyperlink>
                 </li>
 
                 <li ui:field="myAppsItem">
@@ -93,11 +107,11 @@
                 </li>
 
                 <li ui:field="blogItem">
-                    <g:InlineHyperlink ui:field="blogLink" targetHistoryToken="blog">Blog</g:InlineHyperlink>
+                    <g:InlineHyperlink ui:field="blogLink" targetHistoryToken="{BlogPostsPageType.asTargetHistoryToken}">Blog</g:InlineHyperlink>
                 </li>
 
                 <li ui:field="mUpgradeAccountItem">
-                    <g:InlineHyperlink targetHistoryToken="upgrade" ui:field="mUpgradeAccountLink" text="Pricing" />
+                    <g:InlineHyperlink targetHistoryToken="{UpgradePageType.asTargetHistoryToken}" ui:field="mUpgradeAccountLink" text="Pricing" />
                 </li>
             </ul>
             <!-- Admin panel -->
@@ -106,30 +120,30 @@
                     <g:Anchor styleName="dropdown-toggle" ui:field="mAdminButton" text="Admin" />
                     <ul class="dropdown-menu">
                         <li ui:field="mFeedBrowserItem">
-                            <g:InlineHyperlink ui:field="mFeedBrowserLink" targetHistoryToken="feedbrowser">Feed Browser</g:InlineHyperlink>
+                            <g:InlineHyperlink ui:field="mFeedBrowserLink" targetHistoryToken="{FeedBrowserPageType.asTargetHistoryToken}">Feed Browser</g:InlineHyperlink>
                         </li>
                         <li ui:field="itemsItem">
-                            <g:InlineHyperlink ui:field="itemsLink" targetHistoryToken="items">Items</g:InlineHyperlink>
+                            <g:InlineHyperlink ui:field="itemsLink" targetHistoryToken="__items__">Items</g:InlineHyperlink>
                         </li>
                         <li class="divider"></li>
                         <li ui:field="mUsersItem">
-                            <g:InlineHyperlink ui:field="mUsersLink" targetHistoryToken="users">
+                            <g:InlineHyperlink ui:field="mUsersLink" targetHistoryToken="{UsersPageType.asTargetHistoryToken}">
                                 Users
                                 <span ui:field="mTotalUsers" class="badge">1+</span>
                             </g:InlineHyperlink>
                         </li>
                         <li ui:field="mRolesItem">
-                            <g:InlineHyperlink ui:field="mRolesLink" targetHistoryToken="roles">Roles</g:InlineHyperlink>
+                            <g:InlineHyperlink ui:field="mRolesLink" targetHistoryToken="{RolesPageType.asTargetHistoryToken}">Roles</g:InlineHyperlink>
                         </li>
                         <li ui:field="mPermissionsItem">
-                            <g:InlineHyperlink ui:field="mPermissionsLink" targetHistoryToken="permissions">Permissions</g:InlineHyperlink>
+                            <g:InlineHyperlink ui:field="mPermissionsLink" targetHistoryToken="{PermissionsPageType.asTargetHistoryToken}">Permissions</g:InlineHyperlink>
                         </li>
                         <li class="divider"></li>
                         <li ui:field="emailTemplatesItem">
-                            <g:InlineHyperlink ui:field="emailTemplatesLink" targetHistoryToken="emailtemplates">Email Templates</g:InlineHyperlink>
+                            <g:InlineHyperlink ui:field="emailTemplatesLink" targetHistoryToken="{EmailTemplatesPageType.asTargetHistoryToken}">Email Templates</g:InlineHyperlink>
                         </li>
                         <li ui:field="blogAdminItem">
-                            <g:InlineHyperlink ui:field="blogAdminLink" targetHistoryToken="blogadmin">Blog</g:InlineHyperlink>
+                            <g:InlineHyperlink ui:field="blogAdminLink" targetHistoryToken="{BlogAdminPageType.asTargetHistoryToken}">Blog</g:InlineHyperlink>
                         </li>
                     </ul>
                 </li>
@@ -138,10 +152,10 @@
             <!-- Account Panel -->
             <ul class="nav navbar-nav navbar-right" ui:field="mAccountList">
                 <li ui:field="mRegisterItem" style="display: none">
-                    <g:InlineHyperlink ui:field="mRegisterLink" targetHistoryToken="register">Sign Up</g:InlineHyperlink>
+                    <g:InlineHyperlink ui:field="mRegisterLink" targetHistoryToken="{RegisterPageType.asTargetHistoryToken}">Sign Up</g:InlineHyperlink>
                 </li>
                 <li ui:field="mLoginItem">
-                    <g:InlineHyperlink ui:field="mLoginLink" targetHistoryToken="login">Log In</g:InlineHyperlink>
+                    <g:InlineHyperlink ui:field="mLoginLink" targetHistoryToken="{LoginPageType.asTargetHistoryToken}">Log In</g:InlineHyperlink>
                 </li>
                 <li ui:field="mAccountDropdown" class="dropdown">
                     <g:Anchor styleName="dropdown-toggle" ui:field="mAccountButton">
@@ -216,7 +230,7 @@
                         <g:TextBox styleName="form-control" ui:field="mQuery" />
                     </span>
                     <span>
-                        <g:InlineHyperlink styleName="btn btn-default" ui:field="mSearch" targetHistoryToken="search/query" />
+                        <g:InlineHyperlink styleName="btn btn-default" ui:field="mSearch" targetHistoryToken="{SearchPageType.asTargetHistoryToken}/query" />
                     </span>
                 </g:HTMLPanel>
             </g:FormPanel>

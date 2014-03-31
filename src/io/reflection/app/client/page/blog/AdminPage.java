@@ -116,7 +116,7 @@ public class AdminPage extends Page {
 			public SafeHtml getValue(Post object) {
 				String s = object.id.toString();
 
-				return SafeHtmlUtils.fromTrustedString("<a href=\"#" + PageType.BlogEditPostPageType.toString() + "/change/" + s
+				return SafeHtmlUtils.fromTrustedString("<a href=\"" + PageType.BlogEditPostPageType.asHref("change", s)
 						+ "\" class=\"btn btn-xs btn-default\">Edit</a>");
 			}
 		};

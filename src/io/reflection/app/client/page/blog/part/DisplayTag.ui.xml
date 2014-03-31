@@ -1,5 +1,8 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+    
+    <ui:import field="io.reflection.app.client.page.PageType.RegisterPageType" />
+
     <ui:style>
     .link {
     	margin-right: 10px;
@@ -9,7 +12,7 @@
 	}
     </ui:style>
     <g:HTMLPanel>
-        <g:InlineHyperlink ui:field="link" targetHistoryToken="#tag/view" styleName="{style.link}">
+        <g:InlineHyperlink ui:field="link" styleName="{style.link}">
             <span class="glyphicon glyphicon glyphicon-tag {style.smaller}"></span>
             <span ui:field="name">Name</span>
         </g:InlineHyperlink>

@@ -26,6 +26,9 @@ import com.google.gwt.user.datepicker.client.CalendarUtil;
  */
 public class FilterController {
 
+	public static final String ITEM_FILTER_KEY = "itemfilter:";
+	public static final String RANK_FILTER_KEY = "rankfilter:";
+
 	public static final String STORE_KEY = "store";
 	public static final String COUNTRY_KEY = "country";
 	public static final String LIST_TYPE_KEY = "listtype";
@@ -53,11 +56,6 @@ public class FilterController {
 
 	private static FilterController mOne = null;
 
-	private int mInTransaction = 0;
-
-	private Map<String, Object> mPreviousValues;
-	private Map<String, Object> mCurrentValues = new HashMap<String, Object>();
-
 	public static FilterController get() {
 		if (mOne == null) {
 			mOne = new FilterController();
@@ -65,6 +63,11 @@ public class FilterController {
 
 		return mOne;
 	}
+
+	private int mInTransaction = 0;
+
+	private Map<String, Object> mPreviousValues;
+	private Map<String, Object> mCurrentValues = new HashMap<String, Object>();
 
 	private FilterController() {
 		start();
@@ -373,22 +376,6 @@ public class FilterController {
 		return category;
 	}
 
-	// /*
-	// * (non-Javadoc)
-	// *
-	// * @see java.lang.Object#toString()
-	// */
-	// @Override
-	// public String toString() {
-	// String filter = "/";
-	//
-	// for (String key : mCurrentValues.keySet()) {
-	// filter += mCurrentValues.get(key).toString() + "/";
-	// }
-	//
-	// return filter;
-	// }
-
 	/**
 	 * @return
 	 */
@@ -396,17 +383,9 @@ public class FilterController {
 		return (String) mCurrentValues.get(STORE_KEY);
 	}
 
-	// /**
-	// * @param stack
-	// * @return
-	// */
-	// public boolean fromStack(Stack stack) {
-	// return false;
-	// }
-
-	public String toRankFilterString() {
-		return getStoreA3Code() + "/" + getCountryA2Code() + "/" + getCategory().id.toString() + "/" + getListType() + "/" + getEndTime() + "/"
-				+ getDailyData();
+	public String asRankFilterString() {
+		return RANK_FILTER_KEY + getStoreA3Code() + ":" + getCountryA2Code() + ":" + getCategory().id.toString() + ":" + getListType() + ":" + getEndTime()
+				+ ":" + getDailyData();
 	}
 
 	/**
@@ -470,9 +449,27 @@ public class FilterController {
 	/**
 	 * @return
 	 */
-	public String toItemFilterString(String listType) {
-		return getStoreA3Code() + "/" + getCountryA2Code() + "/" + getCategory().id.toString() + "/" + listType + "/" + getStartTime() + "/" + getEndTime()
-				+ "/" + getChartType() + "/" + getSummaryType();
+	public String asItemFilterString(String listType) {
+		return ITEM_FILTER_KEY + getStoreA3Code() + ":" + getCountryA2Code() + ":" + getCategory().id.toString() + ":" + listType + ":" + getStartTime() + ":"
+				+ getEndTime() + ":" + getChartType() + ":" + getSummaryType();
 	}
 
+	public void fromString(String filter) {
+		if (filter != null) {
+			String[] splitFilter = filter.split(":");
+
+			if (splitFilter != null && splitFilter.length > 0) {
+				switch (splitFilter[0]) {
+				case ITEM_FILTER_KEY:
+					start();
+					commit();
+					break;
+				case RANK_FILTER_KEY:
+					start();
+					commit();
+					break;
+				}
+			}
+		}
+	}
 }

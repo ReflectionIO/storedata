@@ -167,7 +167,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 	@UiHandler("mQuery")
 	void onQueryChanged(ChangeEvent event) {
-		mSearch.setTargetHistoryToken("search/query/" + mQuery.getText());
+		mSearch.setTargetHistoryToken(PageType.SearchPageType.asTargetHistoryToken("query", mQuery.getText()));
 	}
 
 	private void createItemList() {
@@ -222,29 +222,29 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	 */
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
-		if ("ranks".equals(current.getPage())) {
+		if (PageType.RanksPageType.equals(current.getPage())) {
 			highlight(mRanksItem);
-		} else if ("feedbrowser".equals(current.getPage())) {
+		} else if (PageType.FeedBrowserPageType.equals(current.getPage())) {
 			highlight(mFeedBrowserItem);
-		} else if ("users".equals(current.getPage())) {
+		} else if (PageType.UsersPageType.equals(current.getPage())) {
 			if (current.getAction() == null) {
 				highlight(mUsersItem);
-			} else if ("myapps".equals(current.getAction())) {
+			} else if (PageType.MyAppsPageType.equals(current.getAction())) {
 				highlight(mMyAppsItem);
-			} else if ("linkedaccounts".equals(current.getAction())) {
+			} else if (PageType.LinkedAccountsPageType.equals(current.getAction())) {
 				highlight(mLinkedAccountsItem);
-			} else if ("changedetails".equals(current.getAction())) {
+			} else if (PageType.ChangeDetailsPageType.equals(current.getAction())) {
 				highlight(mAccountSettingsItem);
 			}
-		} else if ("login".equals(current.getPage())) {
+		} else if (PageType.LoginPageType.equals(current.getPage())) {
 			highlight(mLoginItem);
-		} else if ("register".equals(current.getPage())) {
+		} else if (PageType.RegisterPageType.equals(current.getPage())) {
 			highlight(mRegisterItem);
-		} else if ("roles".equals(current.getPage())) {
+		} else if (PageType.RolesPageType.equals(current.getPage())) {
 			highlight(mRolesItem);
-		} else if ("permissions".equals(current.getPage())) {
+		} else if (PageType.PermissionsPageType.equals(current.getPage())) {
 			highlight(mPermissionsItem);
-		} else if ("upgrade".equals(current.getPage())) {
+		} else if (PageType.UpgradePageType.equals(current.getPage())) {
 			highlight(mUpgradeAccountItem);
 		} else if (PageType.EmailTemplatesPageType.equals(current.getPage())) {
 			highlight(emailTemplatesItem);
@@ -348,13 +348,13 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		mLoginItem.removeFromParent();
 	}
 
-//	private void addRegister() {
-//		mAccountList.appendChild(mRegisterItem);
-//	}
-//
-//	private void removeRegister() {
-//		mRegisterItem.removeFromParent();
-//	}
+	// private void addRegister() {
+	// mAccountList.appendChild(mRegisterItem);
+	// }
+	//
+	// private void removeRegister() {
+	// mRegisterItem.removeFromParent();
+	// }
 
 	/*
 	 * (non-Javadoc)
@@ -390,10 +390,10 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 	private void addAccount(User user) {
 
-		mAccountSettingsLink.setTargetHistoryToken("users/changedetails/" + user.id.toString());
-		myAppsLink.setTargetHistoryToken("users/myapps/" + user.id.toString());
-		myAppsAccountLink.setTargetHistoryToken("users/myapps/" + user.id.toString());
-		mLinkedAccountsLink.setTargetHistoryToken("users/linkedaccounts/" + user.id.toString());
+		mAccountSettingsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("changedetails", user.id.toString()));
+		myAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("myapps", user.id.toString()));
+		myAppsAccountLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("myapps", user.id.toString()));
+		mLinkedAccountsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("linkedaccounts", user.id.toString()));
 
 		mAccountList.appendChild(mAccountDropdown);
 	}

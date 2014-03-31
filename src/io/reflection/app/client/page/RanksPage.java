@@ -234,7 +234,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			RankController.get().reset();
 		}
 
-		PageType.RanksPageType.show("view/" + FilterController.get().toRankFilterString());
+		PageType.RanksPageType.show("view", FilterController.get().asRankFilterString());
 
 		if (foundDailyData) {
 			mRanks.redraw();
@@ -268,7 +268,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		if (foundResetFilterValues) {
 			RankController.get().reset();
 		} else if (foundDailyData) {
-			PageType.RanksPageType.show("view/" + FilterController.get().toRankFilterString());
+			PageType.RanksPageType.show("view", FilterController.get().asRankFilterString());
 			mRanks.redraw();
 		}
 
@@ -453,7 +453,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			// checkPermissions();
 
 			if (current.getAction() == null || !"view".equals(current.getAction())) {
-				PageType.RanksPageType.show("view", FilterController.get().toRankFilterString());
+				PageType.RanksPageType.show("view", FilterController.get().asRankFilterString());
 			} else {
 				refreshTabs();
 
@@ -491,7 +491,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 
 		boolean hasPermission = SessionController.get().loggedInUserHas(SessionController.FULL_RANK_VIEW_PERMISSION_ID);
-		
+
 		mPager.setVisible(hasPermission);
 		mRedirect.setVisible(!hasPermission);
 

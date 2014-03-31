@@ -1,6 +1,9 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
+    <ui:import field="io.reflection.app.client.page.PageType.TermsPageType" />
+    <ui:import field="io.reflection.app.client.page.PageType.PolicyPageType" />
+
     <ui:with field='styles' type='io.reflection.app.client.res.Styles' />
 
     <ui:style>
@@ -74,12 +77,12 @@
         <g:HTMLPanel styleName="{style.downPanel}">
 
             <div style="width: 100%; padding-top:20px; padding-bottom: 40px;">
-                <g:InlineHyperlink targetHistoryToken="ranks">Leaderboard</g:InlineHyperlink>
+                <g:InlineHyperlink targetHistoryToken="__ranks__">Leaderboard</g:InlineHyperlink>
                 &nbsp;&nbsp;&nbsp;
-                <g:InlineHyperlink targetHistoryToken="terms" styleName="{style.sideMargin}">Terms and
+                <g:InlineHyperlink targetHistoryToken="{TermsPageType.asTargetHistoryToken}" styleName="{style.sideMargin}">Terms and
                     Conditions</g:InlineHyperlink>
                 &nbsp;&nbsp;&nbsp;
-                <g:InlineHyperlink targetHistoryToken="policy">Privacy
+                <g:InlineHyperlink targetHistoryToken="{PolicyPageType.asTargetHistoryToken}">Privacy
                     Policy</g:InlineHyperlink>
             </div>
 

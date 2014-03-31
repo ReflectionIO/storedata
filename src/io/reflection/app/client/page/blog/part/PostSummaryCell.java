@@ -34,7 +34,7 @@ public class PostSummaryCell extends AbstractCell<Post> {
 
 	@Override
 	public void render(Context context, Post value, SafeHtmlBuilder builder) {
-		SafeUri link = UriUtils.fromString(PageType.BlogPostPageType.asTargetToken("view", value.id.toString()));
+		SafeUri link = UriUtils.fromString(PageType.BlogPostPageType.asHref("view", value.id.toString()));
 		String published = "TBD";
 
 		if (value.published != null) {

@@ -2,8 +2,10 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
     xmlns:l="urn:import:io.reflection.app.client.part.login">
 
-    <ui:style>
+    <ui:import field="io.reflection.app.client.page.PageType.RegisterPageType" />
+    <ui:import field="io.reflection.app.client.page.PageType.LoginPageType" />
 
+    <ui:style>
     .noteDetail {
     	font-size: smaller;
     	margin-top: 5px;
@@ -31,38 +33,24 @@
     	margin-top: 120px;
     }
     </ui:style>
-    <g:HTMLPanel styleName="container">  <!-- Override container-fluid assigned in NavigationController -->
-
+    <g:HTMLPanel styleName="container">
         <p:AlertBox ui:field="mAlertBox" visible="false" />
-
         <div class="row">
-
             <g:HTMLPanel ui:field="mDefaultLogin">
-
-
                 <p:LoginRegisterPanel styleName="col-md-6 {style.mainPanel}" />
-
-
                 <g:HTMLPanel styleName="col-md-5 col-md-offset-1 well {style.form}">
                     <ul class="nav nav-tabs nav-justified loginregister">
                         <li ui:field="registerItem">
-                            <g:InlineHyperlink ui:field="register" targetHistoryToken="register">Request invite</g:InlineHyperlink>
+                            <g:InlineHyperlink ui:field="register" targetHistoryToken="{RegisterPageType.asTargetHistoryToken}">Request invite</g:InlineHyperlink>
                         </li>
                         <li ui:field="loginItem" class="active">
-                            <g:InlineHyperlink ui:field="login" targetHistoryToken="login">Log in</g:InlineHyperlink>
+                            <g:InlineHyperlink ui:field="login" targetHistoryToken="{LoginPageType.asTargetHistoryToken}">Log in</g:InlineHyperlink>
                         </li>
                     </ul>
-
                     <l:LoginForm ui:field="mLoginForm" />
                 </g:HTMLPanel>
-
             </g:HTMLPanel>
-
             <l:WelcomePanel ui:field="mWelcomePanel" styleName="col-md-12 {style.panel}" visible="false" />
-
         </div>
-
-
-
     </g:HTMLPanel>
 </ui:UiBinder> 

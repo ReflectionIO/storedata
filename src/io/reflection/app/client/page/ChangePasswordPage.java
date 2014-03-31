@@ -199,8 +199,10 @@ public class ChangePasswordPage extends Page implements UserPasswordChangedEvent
 
 		register(EventController.get().addHandlerToSource(UserPasswordChangedEventHandler.TYPE, UserController.get(), this));
 		register(EventController.get().addHandlerToSource(UserPasswordChangedEventHandler.TYPE, SessionController.get(), this));
-		mChangeDetailsLink.setTargetHistoryToken("users/changedetails/" + SessionController.get().getLoggedInUser().id.toString());
-		mChangePasswordLink.setTargetHistoryToken("users/changepassword/" + SessionController.get().getLoggedInUser().id.toString());
+		mChangeDetailsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("changedetails",
+				SessionController.get().getLoggedInUser().id.toString()));
+		mChangePasswordLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("changepassword",
+				SessionController.get().getLoggedInUser().id.toString()));
 		resetForm();
 		mChangePassword.setEnabled(false);
 		if (SessionController.get().isLoggedInUserAdmin()) {

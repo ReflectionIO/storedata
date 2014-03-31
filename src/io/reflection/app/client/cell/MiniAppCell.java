@@ -32,7 +32,7 @@ public class MiniAppCell extends AbstractCell<Item> {
 	@Override
 	public void render(Context context, Item value, SafeHtmlBuilder builder) {
 
-		SafeUri link = UriUtils.fromString(PageType.ItemPageType.asTargetToken("view", value.externalId));
+		SafeUri link = UriUtils.fromString(PageType.ItemPageType.asHref("view", value.externalId));
 		SafeUri smallImage = UriUtils.fromString(value.smallImage);
 
 		RENDERER.render(builder, value.name, value.creatorName, smallImage, link);

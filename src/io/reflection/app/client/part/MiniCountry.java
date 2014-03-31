@@ -44,7 +44,8 @@ public class MiniCountry extends Composite {
 		mCountry = country;
 
 		mName.setText(mCountry.name);
-		mName.setTargetHistoryToken(NavigationController.get().getCurrentPage() + "/" + mCountry.a2Code);
+		// FIXME: this is not going to work... modally or not
+		mName.setTargetHistoryToken(NavigationController.get().getCurrentPage().asTargetHistoryToken(mCountry.a2Code));
 	}
 
 }

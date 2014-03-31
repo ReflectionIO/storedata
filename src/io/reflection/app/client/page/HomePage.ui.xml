@@ -1,5 +1,8 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+
+    <ui:import field="io.reflection.app.client.page.PageType.RegisterPageType" />
+    
     <ui:style>
     @external btn, text-muted, carousel, carousel-inner, item, carousel-control, right, left, carousel-indicators, active, glyphicon;
     .logo {
@@ -161,7 +164,7 @@
                     <div class="row {style.moveDownALittle}">
                         <h2>Powerful market intelligence for the global app market.</h2>
                         <p class="text-muted">Make smarter business decisions. Access revenue, download and rank data for any app in the store.</p>
-                        <g:InlineHyperlink targetHistoryToken="register" text="Request Invite" styleName="btn btn-lg btn-primary {style.moveDownALittle}" />
+                        <g:InlineHyperlink targetHistoryToken="{RegisterPageType.asTargetHistoryToken}" text="Request Invite" styleName="btn btn-lg btn-primary {style.moveDownALittle}" />
                         <div class="{style.arrow} {style.moveDown}">
                             <g:Anchor ui:field="gotoFeatures">
                                 <i class="glyphicon glyphicon-chevron-down" />

@@ -63,7 +63,7 @@ public class SearchPage extends Page implements NavigationEventHandler, SearchFo
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
 
-		if (current != null && "search".equals(current.getPage())) {
+		if (current != null && PageType.SearchPageType.equals(current.getPage())) {
 			if ("query".equals(current.getAction()) && (mQuery = current.getParameter(0)) != null) {
 				List<Item> items = ItemController.get().searchForItems(mQuery);
 

@@ -44,7 +44,8 @@ public class MiniStore extends Composite {
 		mStore = store;
 
 		mName.setText(mStore.name);
-		mName.setTargetHistoryToken(NavigationController.get().getCurrentPage() + "/" + mStore.a3Code);
+		// FIXME: this is not going to work... modally or not
+		mName.setTargetHistoryToken(NavigationController.get().getCurrentPage().asTargetHistoryToken(mStore.a3Code));
 	}
 
 }

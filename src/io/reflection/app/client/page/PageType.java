@@ -58,6 +58,7 @@ public enum PageType {
 	PolicyPageType("policy", false),
 	TermsPageType("terms", false),
 	BlogAdminPageType("blogadmin", "MBL"),
+	BlogTagPageType("blogtag", false),
 	BlogPostsPageType("blog", false),
 	BlogPostPageType("blogpost", false),
 	BlogEditPostPageType("blogedit", "BLE", "BLU"),
@@ -120,15 +121,25 @@ public enum PageType {
 		return asString;
 	}
 
-	public String asTargetToken() {
-		return "#" + toString();
+	public String asHref() {
+		return "#!" + toString();
 	}
 
-	public String asTargetToken(String... params) {
-		return "#" + toString(params);
+	public String asHref(String... params) {
+		return "#!" + toString(params);
+	}
+
+	public String asTargetHistoryToken() {
+		return "!" + toString();
+	}
+
+	public String asTargetHistoryToken(String... params) {
+		return "!" + toString(params);
 	}
 
 	public static PageType fromString(String value) {
+		value = stripExclamation(value);
+
 		if (valueLookup == null) {
 			valueLookup = new HashMap<String, PageType>();
 
@@ -137,7 +148,7 @@ public enum PageType {
 			}
 		}
 
-		return valueLookup.get(value);
+		return value == null ? null : valueLookup.get(value);
 	}
 
 	public boolean requiresLogin() {
@@ -157,6 +168,8 @@ public enum PageType {
 	}
 
 	public boolean equals(String value) {
+		value = stripExclamation(value);
+
 		return this.value.equals(value);
 	}
 
@@ -269,17 +282,26 @@ public enum PageType {
 	public void show() {
 		if (!navigable) throw navigableError();
 
-		History.newItem(toString());
+		History.newItem(asTargetHistoryToken());
 	}
 
 	public void show(String... params) {
 		if (!navigable) throw navigableError();
 
-		History.newItem(toString(params));
+		History.newItem(asTargetHistoryToken(params));
 	}
 
 	private RuntimeException navigableError() {
-		return new RuntimeException("Cannot show/redirect to page [" + toString() + "] because it is not navigable. Should be added directly to DOM");
+		return new RuntimeException("Cannot show/redirect to page [" + asTargetHistoryToken()
+				+ "] because it is not navigable. Should be added directly to DOM");
+	}
+
+	private static String stripExclamation(String value) {
+		if (value != null && value.length() > 0 && value.charAt(0) == '!') {
+			value = value.substring(1);
+		}
+
+		return value;
 	}
 
 }

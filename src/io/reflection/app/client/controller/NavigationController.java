@@ -164,7 +164,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 	public Widget getPageHolderPanel() {
 
 		if (mPanel == null) {
-			mPanel = new HTMLPanel("<!-- pages go here -->");
+			mPanel = new HTMLPanel("");
 			mPanel.setStyleName("container-fluid");
 			mPanel.getElement().setAttribute("style", "padding: 60px 0px 60px 0px;");
 		}
@@ -281,8 +281,8 @@ public class NavigationController implements ValueChangeHandler<String> {
 		return mFooter;
 	}
 
-	public String getCurrentPage() {
-		return mStack.getPage();
+	public PageType getCurrentPage() {
+		return PageType.fromString(mStack.getPage());
 	}
 
 	public Stack getStack() {

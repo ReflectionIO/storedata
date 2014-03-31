@@ -61,7 +61,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 	private static final int LIST_TYPE_PARAMETER_INDEX = 4;
 
-//	@UiField AlertBox mAlertBox;
+	// @UiField AlertBox mAlertBox;
 	@UiField ItemSidePanel mSidePanel;
 	@UiField ItemTopPanel mTopPanel;
 
@@ -183,7 +183,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	 */
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
-		if (current != null && "item".equals(current.getPage())) {
+		if (current != null && PageType.ItemPageType.equals(current.getPage())) {
 			if ("view".equals(current.getAction()) && (mItemExternalId = current.getParameter(0)) != null) {
 				// Document.get().setScrollLeft(0);
 				// Document.get().setScrollTop(0);
@@ -193,9 +193,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 				item = null;
 
-				mRevenue.setTargetHistoryToken("item/view/" + mItemExternalId + "/" + listType);
-				mDownloads.setTargetHistoryToken("item/view/" + mItemExternalId + "/" + listType);
-				mRanking.setTargetHistoryToken("item/view/" + mItemExternalId + "/" + listType);
+				mRevenue.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken("view", mItemExternalId, listType));
+				mDownloads.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken("view", mItemExternalId, listType));
+				mRanking.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken("view", mItemExternalId, listType));
 
 				if ((item = ItemController.get().lookupItem(mItemExternalId)) != null) {
 					displayItemDetails();
@@ -204,8 +204,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 					item.externalId = mItemExternalId;
 					item.source = FilterController.get().getStore().a3Code;
 
-//					AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Getting details", " - This will only take a few seconds...",
-//							false).setVisible(true);
+					// AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Getting details",
+					// " - This will only take a few seconds...",
+					// false).setVisible(true);
 				}
 
 				rankingType = RankingType.fromString(listType);
@@ -215,15 +216,15 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				// AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.SuccessAlertBoxType, false, "Item",
 				// " - Normally we would display items details for (" + view + ").", false).setVisible(true);
 			} else {
-//				AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.DangerAlertBoxType, false, "Item", " - We did not find the requrested item!", false)
-//						.setVisible(true);
+				// AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.DangerAlertBoxType, false, "Item", " - We did not find the requrested item!", false)
+				// .setVisible(true);
 			}
 		}
 
 	}
 
 	private void displayItemDetails() {
-//		mAlertBox.dismiss();
+		// mAlertBox.dismiss();
 
 		mSidePanel.setItem(item);
 	}
@@ -330,16 +331,16 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 				historyChart.setData(output.item, output.ranks, rankingType);
 
-//				mAlertBox.dismiss();
-			} 
-//				else {
-//				AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.WarningAlertBoxType, false, "Warning", " - Item rank history could not be obtained!",
-//						false).setVisible(true);
-//			}
+				// mAlertBox.dismiss();
+			}
+			// else {
+			// AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.WarningAlertBoxType, false, "Warning", " - Item rank history could not be obtained!",
+			// false).setVisible(true);
+			// }
 		} else {
 			// do nothing
 		}
-		
+
 		loader.setVisible(false);
 	}
 
@@ -352,14 +353,14 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	 */
 	@Override
 	public void getItemRanksFailure(GetItemRanksRequest input, Throwable caught) {
-//		AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.DangerAlertBoxType, false, "Error", " - An error occured fetching item history!", false)
-//				.setVisible(true);
+		// AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.DangerAlertBoxType, false, "Error", " - An error occured fetching item history!", false)
+		// .setVisible(true);
 	}
 
 	private void getHistoryChartData() {
 		if (item != null) {
-//			AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Getting History",
-//					" - Please wait while we fetch the rank history for the selected item", false).setVisible(true);
+			// AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Getting History",
+			// " - Please wait while we fetch the rank history for the selected item", false).setVisible(true);
 
 			historyChart.setLoading(true);
 			loader.setVisible(true);

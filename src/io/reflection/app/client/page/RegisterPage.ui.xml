@@ -1,38 +1,42 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
-	xmlns:r="urn:import:io.reflection.app.client.part.register">
-	<ui:with field='images' type='io.reflection.app.client.res.Images' />
-	<ui:style>
-	.mainPanel {
-		margin-top: 120px;
-	}
-	
-	.form {
-		padding: 0px;
-		margin-top: 120px;
-	}
-	</ui:style>
-	<g:HTMLPanel styleName="container"> <!-- Override container-fluid assigned in NavigationController -->
-		<p:AlertBox ui:field="mAlertBox" visible="false" />
-		<g:HTMLPanel ui:field="mPanel" styleName="row">
+    xmlns:r="urn:import:io.reflection.app.client.part.register">
 
-			<p:LoginRegisterPanel styleName="col-md-6 {style.mainPanel}" />
+    <ui:import field="io.reflection.app.client.page.PageType.RegisterPageType" />
+    <ui:import field="io.reflection.app.client.page.PageType.LoginPageType" />
 
-			<g:HTMLPanel styleName="col-md-5 col-md-offset-1 well {style.form}">
+    <ui:with field='images' type='io.reflection.app.client.res.Images' />
+    <ui:style>
+    .mainPanel {
+    	margin-top: 120px;
+    }
+    
+    .form {
+    	padding: 0px;
+    	margin-top: 120px;
+    }
+    </ui:style>
+    <g:HTMLPanel styleName="container">
+        <p:AlertBox ui:field="mAlertBox" visible="false" />
+        <g:HTMLPanel ui:field="mPanel" styleName="row">
 
-				<ul class="nav nav-tabs nav-justified loginregister">
-					<li ui:field="registerItem" class="active">
-						<g:InlineHyperlink ui:field="register" targetHistoryToken="register">Request invite</g:InlineHyperlink>
-					</li>
-					<li ui:field="loginItem">
-						<g:InlineHyperlink ui:field="login" targetHistoryToken="login">Log in</g:InlineHyperlink>
-					</li>
-				</ul>
+            <p:LoginRegisterPanel styleName="col-md-6 {style.mainPanel}" />
 
-				<r:RegisterForm ui:field="mRegisterForm" />
+            <g:HTMLPanel styleName="col-md-5 col-md-offset-1 well {style.form}">
 
-				<r:ThankYouRegisterPanel ui:field="mThankYouRegisterPanel" visible="false" />
-			</g:HTMLPanel>
-		</g:HTMLPanel>
-	</g:HTMLPanel>
+                <ul class="nav nav-tabs nav-justified loginregister">
+                    <li ui:field="registerItem" class="active">
+                        <g:InlineHyperlink ui:field="register" targetHistoryToken="{RegisterPageType.asTargetHistoryToken}">Request invite</g:InlineHyperlink>
+                    </li>
+                    <li ui:field="loginItem">
+                        <g:InlineHyperlink ui:field="login" targetHistoryToken="{LoginPageType.asTargetHistoryToken}">Log in</g:InlineHyperlink>
+                    </li>
+                </ul>
+
+                <r:RegisterForm ui:field="mRegisterForm" />
+
+                <r:ThankYouRegisterPanel ui:field="mThankYouRegisterPanel" visible="false" />
+            </g:HTMLPanel>
+        </g:HTMLPanel>
+    </g:HTMLPanel>
 </ui:UiBinder> 

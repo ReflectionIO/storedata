@@ -11,6 +11,7 @@ import io.reflection.app.client.cell.StyledButtonCell;
 import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.UserController;
 import io.reflection.app.client.page.Page;
+import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.datatypes.shared.User;
@@ -98,7 +99,7 @@ public class UsersPage extends Page {
 
 			@Override
 			public SafeHtml getValue(User object) {
-				return SafeHtmlUtils.fromTrustedString("<a href=\"#users/changepassword/" + object.id.toString()
+				return SafeHtmlUtils.fromTrustedString("<a href=\"" + PageType.UsersPageType.asHref("changepassword", object.id.toString())
 						+ "\" class=\"btn btn-xs btn-default\">Assign password</a>");
 			}
 		};

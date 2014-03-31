@@ -4,7 +4,7 @@
     <ui:style>
     
     </ui:style>
-    <g:HTMLPanel> <!-- CONTAINER-FLUID style -->
+    <g:HTMLPanel>
 
         <div class="row">
 
@@ -13,16 +13,16 @@
             <div class="col-md-10" style="padding-left: 0px; padding-right: 0px;">
                 <ul class="nav nav-tabs nav-justified ranks">
                     <li ui:field="mAllItem">
-                        <g:InlineHyperlink ui:field="mAll" targetHistoryToken="ranks">Overview / All</g:InlineHyperlink>
+                        <g:InlineHyperlink ui:field="mAll" targetHistoryToken="__ranks__">Overview / All</g:InlineHyperlink>
                     </li>
                     <li ui:field="mPaidItem">
-                        <g:InlineHyperlink ui:field="mPaid" targetHistoryToken="ranks">Paid</g:InlineHyperlink>
+                        <g:InlineHyperlink ui:field="mPaid" targetHistoryToken="__ranks__">Paid</g:InlineHyperlink>
                     </li>
                     <li ui:field="mFreeItem">
-                        <g:InlineHyperlink ui:field="mFree" targetHistoryToken="ranks">Free</g:InlineHyperlink>
+                        <g:InlineHyperlink ui:field="mFree" targetHistoryToken="__ranks__">Free</g:InlineHyperlink>
                     </li>
                     <li ui:field="mGrossingItem">
-                        <g:InlineHyperlink ui:field="mGrossing" targetHistoryToken="ranks">Grossing</g:InlineHyperlink>
+                        <g:InlineHyperlink ui:field="mGrossing" targetHistoryToken="__ranks__">Grossing</g:InlineHyperlink>
                     </li>
                 </ul>
 

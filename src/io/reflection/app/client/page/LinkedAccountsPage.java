@@ -17,8 +17,8 @@ import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.NavigationController;
-import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.NavigationController.Stack;
+import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.EnterPressedEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.handler.user.SessionEventHandler;
@@ -76,12 +76,13 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	public LinkedAccountsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		mLinkedAccountsLink.setTargetHistoryToken("users/linkedaccounts/" + SessionController.get().getLoggedInUser().id.toString());
-		mMyAppsLink.setTargetHistoryToken("users/myapps/" + SessionController.get().getLoggedInUser().id.toString());
+		mLinkedAccountsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("linkedaccounts",
+				SessionController.get().getLoggedInUser().id.toString()));
+		mMyAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("myapps", SessionController.get().getLoggedInUser().id.toString()));
 
 		addSoonTag(mPlayLink);
 
-		// mIosMacLink.setTargetHistoryToken("users/linkedaccounts/" +
+		// mIosMacLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("linkedaccounts" +
 		// NavigationController.get().getStack().getParameter(0) + "/iosmac");
 
 		showNoLinkedAccounts();
@@ -132,7 +133,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 		if (current.getParameter(0) != null) {
 
-			mIosMacLink.setTargetHistoryToken("users/linkedaccounts/" + current.getParameter(0) + "/iosmac");
+			mIosMacLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("linkedaccounts", current.getParameter(0), "iosmac"));
 
 			String accountType;
 			if ((accountType = current.getParameter(1)) != null) {

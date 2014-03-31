@@ -7,6 +7,8 @@
 //
 package io.reflection.app.client.page.blog.part;
 
+import io.reflection.app.client.page.PageType;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -37,7 +39,7 @@ public class DisplayTag extends Composite {
 	 */
 	public void setName(String tag) {
 		name.setInnerHTML(tag);
-		link.setTargetHistoryToken("tag/view/" + tag.replace(" ", "-"));
+		link.setTargetHistoryToken(PageType.BlogTagPageType.asTargetHistoryToken("view", tag.replace(" ", "-")));
 	}
 
 }

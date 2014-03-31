@@ -1,5 +1,8 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+    
+    <ui:import field="io.reflection.app.client.page.PageType.ForgotPasswordPageType" />
+
     <ui:style>
     .passwordLink {
     	font-weight: 400;
@@ -37,7 +40,7 @@
 
                 <p class="text-center p-small">
                     I've forgotten my
-                    <g:InlineHyperlink ui:field="mForgotPassword" targetHistoryToken="forgotpassword">
+                    <g:InlineHyperlink ui:field="mForgotPassword" targetHistoryToken="{ForgotPasswordPageType.asTargetHistoryToken}">
                         <span class="p-small">Password</span>
                     </g:InlineHyperlink>
                 </p>

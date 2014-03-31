@@ -77,8 +77,8 @@ public class MyAppsPage extends Page {
 		User user = SessionController.get().getLoggedInUser();
 
 		if (user != null) {
-			mLinkedAccountsLink.setTargetHistoryToken("users/linkedaccounts/" + user.id.toString());
-			mMyAppsLink.setTargetHistoryToken("users/myapps/" + user.id.toString());
+			mLinkedAccountsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("linkedaccounts", user.id.toString()));
+			mMyAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("myapps", user.id.toString()));
 		}
 	}
 

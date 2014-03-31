@@ -1,5 +1,8 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+
+    <ui:import field="io.reflection.app.client.page.PageType.TermsPageType" />
+
     <ui:style>
     
     </ui:style>
@@ -42,7 +45,7 @@
                 <g:HTMLPanel ui:field="termAndCondGroup">
                     <g:CheckBox ui:field="mTermAndCond">
                         I agree to the
-                        <a href="#terms">
+                        <a href="{TermsPageType.asHref}">
                             terms and conditions
                         </a>
                     </g:CheckBox>

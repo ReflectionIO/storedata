@@ -29,7 +29,7 @@
 					style="line-height: 26px; font-size: 18px; font-family: Lato; font-weight: normal; color: #63656a;">
 					Start by exploring the top charting apps in the
 					<g:InlineHyperlink ui:field="mLeaderboard"
-						styleName="{style.hyperlink}" targetHistoryToken="ranks">Leaderboard</g:InlineHyperlink>
+						styleName="{style.hyperlink}" targetHistoryToken="__ranks__">Leaderboard</g:InlineHyperlink>
 					<br />
 					It will take a short while to add your apps to the My Apps section,
 					<br />

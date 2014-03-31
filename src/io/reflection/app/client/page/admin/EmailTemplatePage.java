@@ -14,6 +14,7 @@ import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.page.Page;
+import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.datatypes.shared.EmailTemplate;
@@ -112,7 +113,7 @@ public class EmailTemplatePage extends Page implements NavigationEventHandler {
 	 */
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
-		if ("emailtemplate".equals(current.getPage()) && "view".equals(current.getAction())) {
+		if (PageType.EmailTemplatesPageType.equals(current.getPage()) && "view".equals(current.getAction())) {
 
 		}
 	}

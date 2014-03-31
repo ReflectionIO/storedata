@@ -102,8 +102,10 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(EventController.get().addHandlerToSource(ChangeUserDetailsEventHandler.TYPE, SessionController.get(), this));
 
-		mChangeDetailsLink.setTargetHistoryToken("users/changedetails/" + SessionController.get().getLoggedInUser().id.toString());
-		mChangePasswordLink.setTargetHistoryToken("users/changepassword/" + SessionController.get().getLoggedInUser().id.toString());
+		mChangeDetailsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("changedetails",
+				SessionController.get().getLoggedInUser().id.toString()));
+		mChangePasswordLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("changepassword",
+				SessionController.get().getLoggedInUser().id.toString()));
 
 		resetForm();
 
@@ -314,7 +316,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	 */
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
-		if (current != null && "users".equals(current.getPage()) && "changedetails".equals(current.getAction())) {
+		if (current != null && PageType.UsersPageType.equals(current.getPage()) && "changedetails".equals(current.getAction())) {
 			changedUser();
 
 			mForename.setFocus(true);
