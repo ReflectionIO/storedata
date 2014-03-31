@@ -123,6 +123,10 @@ public class CountryController implements ServiceConstants {
 			styleName = Styles.INSTANCE.flags().de();
 		} else if ("fr".equals(a2Code)) {
 			styleName = Styles.INSTANCE.flags().fr();
+		} else if ("jp".equals(a2Code)) {
+			styleName = Styles.INSTANCE.flags().jp();
+		} else if ("it".equals(a2Code)) {
+			styleName = Styles.INSTANCE.flags().it();
 		}
 
 		return styleName;
@@ -141,7 +145,7 @@ public class CountryController implements ServiceConstants {
 	}
 
 	public List<Country> getCountries() {
-		// only return first 5 items (for now)
-		return countries.subList(0, 5);
+		// only return first 7 items (for now)
+		return countries.subList(0, 7);
 	}
 }

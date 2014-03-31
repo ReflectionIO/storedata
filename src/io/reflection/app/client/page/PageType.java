@@ -17,6 +17,7 @@ import io.reflection.app.client.page.blog.AdminPage;
 import io.reflection.app.client.page.blog.EditPostPage;
 import io.reflection.app.client.page.blog.PostPage;
 import io.reflection.app.client.page.blog.PostsPage;
+import io.reflection.app.client.page.test.WidgetTestPage;
 import io.reflection.app.datatypes.shared.Permission;
 
 import java.util.Arrays;
@@ -61,6 +62,7 @@ public enum PageType {
 	BlogPostPageType("blogpost", false),
 	BlogEditPostPageType("blogedit", "BLE", "BLU"),
 	NotPermittedPageType("notpermitted", false),
+	WidgetTestPage("test", false),
 
 	// Non navigable
 	LoadingPageType("loading"), ;
@@ -248,6 +250,9 @@ public enum PageType {
 			break;
 		case NotPermittedPageType:
 			page = new NotPermittedPage();
+			break;
+		case WidgetTestPage:
+			page = new WidgetTestPage();
 			break;
 		case HomePageType:
 		default:

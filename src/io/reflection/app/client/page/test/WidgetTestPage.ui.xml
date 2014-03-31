@@ -1,0 +1,15 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part">
+    <ui:style>
+    
+    </ui:style>
+    <g:HTMLPanel>
+        <h2>Widget Testing</h2>
+        <p>This is our widget testing page... Developers will drop widgets here to test their layout before using it on the site pages.</p>
+        <p>Reflection.io dev team :)</p>
+
+        <p:CircleProgressBar></p:CircleProgressBar>
+        <p:ReflectionProgressBar></p:ReflectionProgressBar>
+        <p:DateRangePicker></p:DateRangePicker>
+    </g:HTMLPanel>
+</ui:UiBinder> 
