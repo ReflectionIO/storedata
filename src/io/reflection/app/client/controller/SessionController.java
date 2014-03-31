@@ -41,6 +41,7 @@ import io.reflection.app.client.handler.user.UserPasswordChangedEventHandler.Use
 import io.reflection.app.client.handler.user.UserPowersEventHandler.GetUserPowersFailed;
 import io.reflection.app.client.handler.user.UserPowersEventHandler.GotUserPowers;
 import io.reflection.app.client.helper.FormHelper;
+import io.reflection.app.client.page.LoadingPage;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
@@ -52,6 +53,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.gargoylesoftware.htmlunit.util.Cookie;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.willshex.gson.json.service.client.JsonService;
@@ -69,8 +71,8 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	private static SessionController mOne;
 
 	// Cache roles and permissions meanwhile user is logged in
-	private Map<Long, Role> mRoleCache = new HashMap<Long, Role>(); // Role.id : Role
-	private Map<Long, Permission> mPermissionCache = new HashMap<Long, Permission>(); // Permission.id : Permission
+	private Map<Long, Role> mRoleCache; // Role.id : Role
+	private Map<Long, Permission> mPermissionCache; // Permission.id : Permission
 
 	private static final String COOKIE_KEY_TOKEN = SessionController.class.getName() + ".token";
 
@@ -142,7 +144,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 
 	@SuppressWarnings("deprecation")
 	private void updateSessionExpiryWithTimezone() {
-		if (mSession.expires != null) {
+		if (mSession != null && mSession.expires != null) {
 			long time = mSession.expires.getTime();
 			time -= mSession.expires.getTimezoneOffset() * 60 * 1000;
 
@@ -210,6 +212,14 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 							mLoggedInUser.roles = output.roles;
 							mLoggedInUser.permissions = output.permissions;
 
+							if (mRoleCache == null) {
+								mRoleCache = new HashMap<Long, Role>();
+							}
+
+							if (mPermissionCache == null) {
+								mPermissionCache = new HashMap<Long, Permission>();
+							}
+
 							// Add retrieved roles into cache
 							if (output.roles != null) {
 								for (Role role : output.roles) {
@@ -270,9 +280,15 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 			}
 		});
 
+		makeSessionInvalid();
+		PageType.LoginPageType.show();
+	}
+
+	private void makeSessionInvalid() {
 		setLoggedInUser(null, null);
 		// ItemController.get().clearItemCache();
 		clearRolePermissionCache();
+		NavigationController.get().setNotLoaded();
 	}
 
 	/**
@@ -351,7 +367,12 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	 * @return the role
 	 */
 	public Role lookupRole(String id) {
-		Role role = mRoleCache.get(id);
+		Role role = null;
+
+		if (mRoleCache != null) {
+			role = mRoleCache.get(id);
+		}
+
 		return role;
 	}
 
@@ -363,7 +384,12 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	 * @return the permission
 	 */
 	public Permission lookupPermission(String id) {
-		Permission permission = mPermissionCache.get(id);
+		Permission permission = null;
+
+		if (mPermissionCache != null) {
+			permission = mPermissionCache.get(id);
+		}
+
 		return permission;
 	}
 
@@ -587,8 +613,15 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	 * Clear Roles and Permissions cache when user logs out
 	 */
 	public void clearRolePermissionCache() {
-		mRoleCache.clear();
-		mPermissionCache.clear();
+		if (mRoleCache != null) {
+			// mRoleCache.clear();
+			mRoleCache = null;
+		}
+
+		if (mPermissionCache != null) {
+			// mPermissionCache.clear();
+			mRoleCache = null;
+		}
 	}
 
 	public void forgotPassword(String username) {
@@ -637,8 +670,6 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 			if (output.error.code.intValue() == ApiError.SessionNull.getCode() || output.error.code.intValue() == ApiError.SessionNotFound.getCode()
 					|| output.error.code.intValue() == ApiError.SessionNoLookup.getCode()) {
 
-				mSession = null; // Set session as invalid
-
 				String loginParams = "timeout";
 				Stack s = NavigationController.get().getStack();
 
@@ -647,9 +678,13 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 				}
 
 				if (s != null) {
-					loginParams += "/" + s.asNextParameter();
+					String page = s.getPage();
+					if (page != null && !PageType.LoadingPageType.equals(page) && !PageType.LoginPageType.LoginPageType.equals(page)) {
+						loginParams += "/" + s.asNextParameter();
+					}
 				}
 
+				makeSessionInvalid();
 				PageType.LoginPageType.show(loginParams);
 			}
 		}

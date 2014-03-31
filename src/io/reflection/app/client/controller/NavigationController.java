@@ -202,9 +202,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 		String page = value.getPage();
 
 		if ("logout".equals(page)) {
-			SessionController.get().logout();
-			loaded = false;
-			PageType.LoginPageType.show();
+			SessionController.get().logout();			
 		} else {
 			PageType stackPage = PageType.fromString(page);
 
@@ -327,6 +325,13 @@ public class NavigationController implements ValueChangeHandler<String> {
 		} else {
 			PageType.HomePageType.show();
 		}
+	}
+
+	/**
+	 * 
+	 */
+	public void setNotLoaded() {
+		loaded = false;
 	}
 
 }
