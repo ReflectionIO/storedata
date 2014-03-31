@@ -1,7 +1,7 @@
 /* ----------------------------------------------------
    created with http://www.codeandweb.com/texturepacker 
    ----------------------------------------------------
-   $TexturePacker:SmartUpdate:89d92ce649933fbd8ad079a5cec43a71:1/1$
+   $TexturePacker:SmartUpdate:e8c7d231cbd8f237e8f664bb5842156c:1/1$
    ----------------------------------------------------
 
    usage: <span class="{-spritename-} sprite"></span>
@@ -12,8 +12,10 @@
 
 .sprite {display:inline-block; overflow:hidden; background-repeat: no-repeat;background-image:url(spritesheet.png);}
 
-.cn {width:26px; height:26px; background-position: -2px -58px}
-.de {width:26px; height:26px; background-position: -30px -30px}
-.fr {width:26px; height:26px; background-position: -2px -30px}
-.gb {width:26px; height:26px; background-position: -30px -2px}
+.cn {width:26px; height:26px; background-position: -2px -86px}
+.de {width:26px; height:26px; background-position: -30px -58px}
+.fr {width:26px; height:26px; background-position: -2px -58px}
+.gb {width:26px; height:26px; background-position: -30px -30px}
+.it {width:26px; height:26px; background-position: -2px -30px}
+.jp {width:26px; height:26px; background-position: -30px -2px}
 .us {width:26px; height:26px; background-position: -2px -2px}

@@ -1,40 +1,43 @@
-@sprite .cn {
-	gwt-image: "spriteSheet";
+@CHARSET "UTF-8";
+
+.cn,.de,.fr,.gb,.jp,.it,.us {
 	display: inline-block;
 	width: 26px;
 	height: 26px;
-	background-position: -2px -58px;
+}
+
+@sprite .cn {
+	gwt-image: "spriteSheet";
+	background-position: -2px -86px;
 }
 
 @sprite .de {
 	gwt-image: "spriteSheet";
-	display: inline-block;
-	width: 26px;
-	height: 26px;
-	background-position: -30px -30px;
+	background-position: -30px -58px;
 }
 
 @sprite .fr {
 	gwt-image: "spriteSheet";
 	display: inline-block;
-	overflow: hidden;
-	width: 26px;
-	height: 26px;
-	background-position: -2px -30px;
+	background-position: -2px -58px;
 }
 
 @sprite .gb {
 	gwt-image: "spriteSheet";
-	overflow: hidden;
-	width: 26px;
-	height: 26px;
+	background-position: -30px -30px;
+}
+
+@sprite .it {
+	gwt-image: "spriteSheet";
+	background-position: -2px -30px;
+}
+
+@sprite .jp {
+	gwt-image: "spriteSheet";
 	background-position: -30px -2px;
 }
 
 @sprite .us {
 	gwt-image: "spriteSheet";
-	display: inline-block;
-	width: 26px;
-	height: 26px;
 	background-position: -2px -2px;
 }

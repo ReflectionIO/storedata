@@ -27,6 +27,8 @@ public interface Styles extends ClientBundle {
 		String fr();
 		String gb();
 		String us();
+		String jp();
+		String it();
 	}
 	
 	@Source("flags.png")

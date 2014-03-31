@@ -22,7 +22,7 @@
         <key>dataFormat</key>
         <string>css</string>
         <key>textureFileName</key>
-        <filename>../../src/io/reflection/app/client/res/flags/spritesheet.png</filename>
+        <filename>../../src/io/reflection/app/client/res/flags/flags.png</filename>
         <key>flipPVR</key>
         <false/>
         <key>ditherType</key>
