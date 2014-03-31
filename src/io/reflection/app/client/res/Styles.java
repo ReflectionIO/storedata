@@ -32,8 +32,14 @@ public interface Styles extends ClientBundle {
 		String footerUpArrow();
 
 		String footerDownArrow();
-		
+
 		String breakWords();
+
+		String unknownAppSmall();
+
+		String unknownAppMedium();
+
+		String unknownAppLarge();
 	}
 
 	public static final Styles INSTANCE = GWT.create(Styles.class);
@@ -44,5 +50,9 @@ public interface Styles extends ClientBundle {
 	@Source("footersprite.png")
 	@ImageOptions(repeatStyle = RepeatStyle.None)
 	ImageResource footerSprite();
+
+	@Source("unknownsprite.png")
+	@ImageOptions(repeatStyle = RepeatStyle.None)
+	ImageResource unkownSprite();
 
 }

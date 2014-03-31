@@ -677,7 +677,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 
 				if (s != null) {
 					String page = s.getPage();
-					if (page != null && !PageType.LoadingPageType.equals(page) && !PageType.LoginPageType.LoginPageType.equals(page)) {
+					if (page != null && !PageType.LoadingPageType.equals(page) && !PageType.LoginPageType.equals(page)) {
 						loginParams += "/" + s.asNextParameter();
 					}
 				}

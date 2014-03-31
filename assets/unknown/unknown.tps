@@ -22,7 +22,7 @@
         <key>dataFormat</key>
         <string>css</string>
         <key>textureFileName</key>
-        <filename>../../src/io/reflection/app/client/res/footersprite.png</filename>
+        <filename>../../src/io/reflection/app/client/res/unknownsprite.png</filename>
         <key>flipPVR</key>
         <false/>
         <key>ditherType</key>
@@ -99,7 +99,7 @@
             <key>packageName</key>
             <string>Texture</string>
             <key>javaFileName</key>
-            <filename>footer.java</filename>
+            <filename>unknown.java</filename>
             <key>wrap</key>
             <struct type="AndEngineWrap">
                 <key>s</key>
@@ -111,7 +111,7 @@
             <enum type="AndEngine::MagFilter">MagLinear</enum>
         </struct>
         <key>dataFileName</key>
-        <filename>footer.css</filename>
+        <filename>unknown.css</filename>
         <key>multiPack</key>
         <false/>
         <key>mainExtension</key>

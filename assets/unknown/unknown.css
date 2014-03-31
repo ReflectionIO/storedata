@@ -1,0 +1,17 @@
+/* ----------------------------------------------------
+   created with http://www.codeandweb.com/texturepacker 
+   ----------------------------------------------------
+   $TexturePacker:SmartUpdate:d700f5de36f2345eb1c6cfcf67287e06:1/1$
+   ----------------------------------------------------
+
+   usage: <span class="{-spritename-} sprite"></span>
+
+   replace {-spritename-} with the sprite you like to use
+
+*/
+
+.sprite {display:inline-block; overflow:hidden; background-repeat: no-repeat;background-image:url(unknownsprite.png);}
+
+.No_Icon_100 {width:100px; height:100px; background-position: -2px -2px}
+.No_Icon_53 {width:53px; height:53px; background-position: -2px -181px}
+.No_Icon_75 {width:75px; height:75px; background-position: -2px -104px}

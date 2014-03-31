@@ -96,12 +96,6 @@ public interface Images extends ClientBundle {
 	@Source("footeruparrowhover.png")
 	ImageResource footerUpArrowHover();
 	
-	
-	
-	
-	
-	
-	
 	@Source("app1.png")
 	ImageResource app1();
 	

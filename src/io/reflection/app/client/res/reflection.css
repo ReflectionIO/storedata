@@ -395,7 +395,6 @@ a:hover,a:focus,a:active {
 }
 
 /* Tabs Rank */
-
 .nav-tabs.nav-justified.ranks>li>a {
 	background-color: #f6f6f6;
 	height: 65px;
@@ -557,4 +556,35 @@ a:hover,a:focus,a:active {
 	width: 18px;
 	height: 19px;
 	background-position: -2px -78px;
+}
+
+@sprite
+.unknownAppSmall {
+	gwt-image: "unknownSprite";
+	display: inline-block;
+	overflow: hidden;
+	background-repeat: no-repeat;
+	width: 53px;
+	height: 53px;
+	background-position: -2px -181px;
+}
+
+.unknownAppLarge {
+	gwt-image: "unknownSprite";
+	display: inline-block;
+	overflow: hidden;
+	background-repeat: no-repeat;
+	width: 100px;
+	height: 100px;
+	background-position: -2px -2px
+}
+
+.unknownAppMedium {
+	gwt-image: "unknownSprite";
+	display: inline-block;
+	overflow: hidden;
+	background-repeat: no-repeat;
+	width: 75px;
+	height: 75px;
+	background-position: -2px -104px
 }
