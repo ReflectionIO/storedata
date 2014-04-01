@@ -11,6 +11,7 @@ import io.reflection.app.client.cell.StyledButtonCell;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FeedFetchController;
 import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.helper.FilterHelper;
@@ -241,10 +242,10 @@ public class FeedBrowserPage extends Page implements FilterEventHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamsChanged(java.util.Map, java.util.Map)
+	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamsChanged(io.reflection.app.client.controller.FilterController.Filter, java.util.Map)
 	 */
 	@Override
-	public void filterParamsChanged(Map<String, ?> currentValues, Map<String, ?> previousValues) {
+	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
 		refreshBreadcrumbs();
 	}
 }

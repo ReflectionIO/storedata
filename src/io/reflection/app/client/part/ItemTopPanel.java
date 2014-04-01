@@ -77,9 +77,9 @@ public class ItemTopPanel extends Composite {
 
 	private void updateFromFilter() {
 		FilterController.get().start();
-		mAppStore.setSelectedIndex(FormHelper.getItemIndex(mAppStore, FilterController.get().getStoreA3Code()));
+		mAppStore.setSelectedIndex(FormHelper.getItemIndex(mAppStore, FilterController.get().getFilter().getStoreA3Code()));
 		mDateRange.setValue(FilterController.get().getEndDate());
-		mCountry.setSelectedIndex(FormHelper.getItemIndex(mCountry, FilterController.get().getCountry().a2Code));
+		mCountry.setSelectedIndex(FormHelper.getItemIndex(mCountry, FilterController.get().getFilter().getCountryA2Code()));
 		FilterController.get().commit();
 	}
 

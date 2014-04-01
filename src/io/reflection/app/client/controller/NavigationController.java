@@ -22,6 +22,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.googlecode.gwt.crypto.bouncycastle.util.encoders.Base64;
 import com.spacehopperstudios.utility.StringUtils;
 
 /**
@@ -60,12 +61,13 @@ public class NavigationController implements ValueChangeHandler<String> {
 				mParts = allParts.split("/");
 
 				for (String part : mParts) {
-					if (next == null && part.startsWith(NEXT_KEY)) {
-						next = new Stack(part.replace(NEXT_KEY, "").replace(":", "/"));
+					String[] parameters;
+					if (next == null && (parameters = Stack.decode(part, NEXT_KEY)) != null) {
+						next = new Stack(StringUtils.join(Arrays.asList(parameters), "/"));
 					}
 
-					if (previous == null && part.startsWith(PREVIOUS_KEY)) {
-						previous = new Stack(part.replace(PREVIOUS_KEY, "").replace(":", "/"));
+					if (previous == null && (parameters = Stack.decode(part, PREVIOUS_KEY)) != null) {
+						previous = new Stack(StringUtils.join(Arrays.asList(parameters), "/"));
 					}
 
 					if (next != null && previous != null) break;
@@ -110,15 +112,15 @@ public class NavigationController implements ValueChangeHandler<String> {
 		}
 
 		public String asParameter() {
-			return allParts.replace("/", ":");
+			return Stack.encode(null, allParts);
 		}
 
 		public String asNextParameter() {
-			return NEXT_KEY + asParameter();
+			return Stack.encode(NEXT_KEY, asParameter());
 		}
 
 		public String asPreviousParameter() {
-			return PREVIOUS_KEY + asParameter();
+			return Stack.encode(PREVIOUS_KEY, asParameter());
 		}
 
 		/**
@@ -147,6 +149,36 @@ public class NavigationController implements ValueChangeHandler<String> {
 		 */
 		public Stack getPrevious() {
 			return previous;
+		}
+
+		public static String encode(String name, String... values) {
+			String parameters = "";
+
+			if (values != null && values.length > 0) {
+				parameters = new String(Base64.encode(StringUtils.join(Arrays.asList(values), "/").getBytes()));
+			}
+
+			return (name == null || name.length() == 0) ? (name + parameters) : parameters;
+		}
+
+		public static String[] decode(String name, String encoded) {
+			String content;
+			String decoded;
+			String[] splitDecoded = null;
+
+			if (encoded != null && encoded.length() > 0 && encoded.startsWith(name)) {
+				content = encoded.substring(name.length());
+
+				if (content != null) {
+					decoded = new String(Base64.decode(content));
+
+					if (decoded.length() > 0) {
+						splitDecoded = decoded.split("/");
+					}
+				}
+			}
+
+			return splitDecoded;
 		}
 	}
 
@@ -202,7 +234,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 		String page = value.getPage();
 
 		if ("logout".equals(page)) {
-			SessionController.get().logout();			
+			SessionController.get().logout();
 		} else {
 			PageType stackPage = PageType.fromString(page);
 

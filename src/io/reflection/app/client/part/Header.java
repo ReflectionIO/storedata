@@ -12,10 +12,13 @@ import io.reflection.app.api.core.shared.call.ChangeUserDetailsResponse;
 import io.reflection.app.api.core.shared.call.event.ChangeUserDetailsEventHandler;
 import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.client.controller.EventController;
+import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.UserController;
+import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.handler.user.SessionEventHandler;
 import io.reflection.app.client.handler.user.UserPowersEventHandler;
@@ -27,6 +30,7 @@ import io.reflection.app.datatypes.shared.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.LIElement;
@@ -35,6 +39,7 @@ import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -52,7 +57,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * 
  */
 public class Header extends Composite implements UsersEventHandler, NavigationEventHandler, SessionEventHandler, UserPowersEventHandler,
-		ChangeUserDetailsEventHandler {
+		ChangeUserDetailsEventHandler, FilterEventHandler {
 
 	private static HeaderUiBinder uiBinder = GWT.create(HeaderUiBinder.class);
 
@@ -129,6 +134,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 	private List<LIElement> mItems;
 
+	private HandlerRegistration filterChangedRegistration;
+
 	public Header() {
 		initWidget(uiBinder.createAndBindUi(this));
 
@@ -151,6 +158,33 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		removeAdmin();
 		removeMyApps();
 
+		mRanksLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", FilterController.get().asRankFilterString()));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
+	 */
+	@Override
+	protected void onAttach() {
+		super.onAttach();
+
+		filterChangedRegistration = EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.Composite#onDetach()
+	 */
+	@Override
+	protected void onDetach() {
+		if (filterChangedRegistration != null) {
+			filterChangedRegistration.removeHandler();
+		}
+
+		super.onDetach();
 	}
 
 	/**
@@ -471,5 +505,25 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	 */
 	@Override
 	public void changeUserDetailsFailure(ChangeUserDetailsRequest input, Throwable caught) {}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamChanged(java.lang.String, java.lang.Object, java.lang.Object)
+	 */
+	@Override
+	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
+		mRanksLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", FilterController.get().asRankFilterString()));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamsChanged(io.reflection.app.client.controller.FilterController.Filter, java.util.Map)
+	 */
+	@Override
+	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
+		mRanksLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", FilterController.get().asRankFilterString()));
+	}
 
 }

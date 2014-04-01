@@ -19,6 +19,7 @@ import io.reflection.app.client.cell.content.ConcreteImageAndText;
 import io.reflection.app.client.cell.content.PercentageProgress;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.ItemController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
@@ -202,7 +203,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				} else {
 					item = new Item();
 					item.externalId = mItemExternalId;
-					item.source = FilterController.get().getStore().a3Code;
+					item.source = FilterController.get().getFilter().getStoreA3Code();
 
 					// AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Getting details",
 					// " - This will only take a few seconds...",
@@ -286,7 +287,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	void onClicked(ClickEvent e) {
 		boolean changed = false;
 
-		String chartType = FilterController.get().getChartType();
+		String chartType = FilterController.get().getFilter().getChartType();
 
 		if (e.getSource() == mRevenue && !REVENUE_CHART_TYPE.equals(chartType)) {
 			chartType = REVENUE_CHART_TYPE;
@@ -309,7 +310,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			mTabs.get(key).removeClassName("active");
 		}
 
-		mTabs.get(FilterController.get().getChartType()).addClassName("active");
+		mTabs.get(FilterController.get().getFilter().getChartType()).addClassName("active");
 	}
 
 	/*
@@ -382,10 +383,10 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamsChanged(java.util.Map, java.util.Map)
+	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamsChanged(io.reflection.app.client.controller.FilterController.Filter, java.util.Map)
 	 */
 	@Override
-	public void filterParamsChanged(Map<String, ?> currentValues, Map<String, ?> previousValues) {
+	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
 		getHistoryChartData();
 	}
 

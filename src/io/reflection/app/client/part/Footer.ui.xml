@@ -77,7 +77,7 @@
         <g:HTMLPanel styleName="{style.downPanel}">
 
             <div style="width: 100%; padding-top:20px; padding-bottom: 40px;">
-                <g:InlineHyperlink targetHistoryToken="__ranks__">Leaderboard</g:InlineHyperlink>
+                <g:InlineHyperlink ui:field="ranks">Leaderboard</g:InlineHyperlink>
                 &nbsp;&nbsp;&nbsp;
                 <g:InlineHyperlink targetHistoryToken="{TermsPageType.asTargetHistoryToken}" styleName="{style.sideMargin}">Terms and
                     Conditions</g:InlineHyperlink>

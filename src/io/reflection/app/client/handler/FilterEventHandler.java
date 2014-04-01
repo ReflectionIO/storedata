@@ -7,6 +7,8 @@
 //
 package io.reflection.app.client.handler;
 
+import io.reflection.app.client.controller.FilterController.Filter;
+
 import java.util.Map;
 
 import com.google.gwt.event.shared.EventHandler;
@@ -21,11 +23,12 @@ public interface FilterEventHandler extends EventHandler {
 	public static final GwtEvent.Type<FilterEventHandler> TYPE = new GwtEvent.Type<FilterEventHandler>();
 
 	public <T> void filterParamChanged(String name, T currentValue, T previousValue);
-	public void filterParamsChanged(Map<String, ?> currentValues, Map<String, ?> previousValues);
+	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues);
 
 	public class ChangedFilterParameter<T> extends GwtEvent<FilterEventHandler> {
 
 		private String mParamName;
+		
 		private T mCurrentValue;
 		private T mPreviousValue;
 
@@ -57,11 +60,11 @@ public interface FilterEventHandler extends EventHandler {
 	}
 	
 	public class ChangedFilterParameters extends GwtEvent<FilterEventHandler> {
-		private Map<String, ?> mCurrentValues;
+		private Filter mcurrentFilter;
 		private Map<String, ?> mPreviousValues;
 		
-		public ChangedFilterParameters(Map<String, ?> currentValues, Map<String, ?> previousValues) {
-			mCurrentValues = currentValues;
+		public ChangedFilterParameters(Filter currentFilter, Map<String, ?> previousValues) {
+			mcurrentFilter = currentFilter;
 			mPreviousValues = previousValues;
 		}
 		
@@ -77,7 +80,7 @@ public interface FilterEventHandler extends EventHandler {
 		 */
 		@Override
 		protected void dispatch(FilterEventHandler handler) {
-			handler.filterParamsChanged(mCurrentValues, mPreviousValues);
+			handler.filterParamsChanged(mcurrentFilter, mPreviousValues);
 		}
 	}
 

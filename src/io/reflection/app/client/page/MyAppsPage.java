@@ -11,6 +11,7 @@ import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_
 import io.reflection.app.client.cell.MiniAppCell;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.MyAppsController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
@@ -238,8 +239,8 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 	private void updateFromFilter() {
 		FilterController.get().start();
-		appStore.setSelectedIndex(FormHelper.getItemIndex(appStore, FilterController.get().getStoreA3Code()));
-		country.setSelectedIndex(FormHelper.getItemIndex(country, FilterController.get().getCountry().a2Code));
+		appStore.setSelectedIndex(FormHelper.getItemIndex(appStore, FilterController.get().getFilter().getStoreA3Code()));
+		country.setSelectedIndex(FormHelper.getItemIndex(country, FilterController.get().getFilter().getCountryA2Code()));
 		updateFilterDate();
 		FilterController.get().commit();
 	}
@@ -286,10 +287,10 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamsChanged(java.util.Map, java.util.Map)
+	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamsChanged(io.reflection.app.client.controller.FilterController.Filter, java.util.Map)
 	 */
 	@Override
-	public void filterParamsChanged(Map<String, ?> currentValues, Map<String, ?> previousValues) {
+	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
 
 	}
 

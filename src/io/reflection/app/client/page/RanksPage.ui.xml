@@ -1,6 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
     xmlns:c="urn:import:com.google.gwt.user.cellview.client">
+
     <ui:style>
     
     </ui:style>
@@ -13,16 +14,16 @@
             <div class="col-md-10" style="padding-left: 0px; padding-right: 0px;">
                 <ul class="nav nav-tabs nav-justified ranks">
                     <li ui:field="mAllItem">
-                        <g:InlineHyperlink ui:field="mAll" targetHistoryToken="__ranks__">Overview / All</g:InlineHyperlink>
+                        <g:InlineHyperlink ui:field="mAll">Overview / All</g:InlineHyperlink>
                     </li>
                     <li ui:field="mPaidItem">
-                        <g:InlineHyperlink ui:field="mPaid" targetHistoryToken="__ranks__">Paid</g:InlineHyperlink>
+                        <g:InlineHyperlink ui:field="mPaid">Paid</g:InlineHyperlink>
                     </li>
                     <li ui:field="mFreeItem">
-                        <g:InlineHyperlink ui:field="mFree" targetHistoryToken="__ranks__">Free</g:InlineHyperlink>
+                        <g:InlineHyperlink ui:field="mFree">Free</g:InlineHyperlink>
                     </li>
                     <li ui:field="mGrossingItem">
-                        <g:InlineHyperlink ui:field="mGrossing" targetHistoryToken="__ranks__">Grossing</g:InlineHyperlink>
+                        <g:InlineHyperlink ui:field="mGrossing">Grossing</g:InlineHyperlink>
                     </li>
                 </ul>
 

@@ -17,7 +17,6 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeUri;
-import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiRenderer;
 
 /**
@@ -34,7 +33,7 @@ public class PostSummaryCell extends AbstractCell<Post> {
 
 	@Override
 	public void render(Context context, Post value, SafeHtmlBuilder builder) {
-		SafeUri link = UriUtils.fromString(PageType.BlogPostPageType.asHref("view", value.id.toString()));
+		SafeUri link = PageType.BlogPostPageType.asHref("view", value.id.toString());
 		String published = "TBD";
 
 		if (value.published != null) {

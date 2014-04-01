@@ -58,7 +58,7 @@ public class NotPermittedPage extends Page implements NavigationEventHandler {
 	public void navigationChanged(Stack previous, Stack current) {
 		if (current.hasPrevious()) {
 			back.setTargetHistoryToken(current.getPrevious().toString());
-			page.setInnerText(current.getAction() == null ? "unknown" : current.getAction().replace(":", "/"));
+			page.setInnerText(current.getAction() == null ? "unknown" : current.getAction());
 		} else {
 			back.setTargetHistoryToken(PageType.HomePageType.toString());
 		}

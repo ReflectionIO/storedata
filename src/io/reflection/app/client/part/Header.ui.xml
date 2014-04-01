@@ -13,6 +13,7 @@
     <ui:import field="io.reflection.app.client.page.PageType.LoginPageType" />
     <ui:import field="io.reflection.app.client.page.PageType.SearchPageType" />
     <ui:import field="io.reflection.app.client.page.PageType.HomePageType" />
+    <ui:import field="io.reflection.app.client.page.PageType.ItemsPageType" />
 
     <ui:with field='res' type='io.reflection.app.client.res.Images' />
     <ui:style>
@@ -99,7 +100,7 @@
             <!-- Left header part -->
             <ul class="nav navbar-nav" ui:field="mNavList">
                 <li ui:field="mRanksItem" style="display: none;">
-                    <g:InlineHyperlink ui:field="mRanksLink" targetHistoryToken="__ranks__">Leaderboard</g:InlineHyperlink>
+                    <g:InlineHyperlink ui:field="mRanksLink">Leaderboard</g:InlineHyperlink>
                 </li>
 
                 <li ui:field="myAppsItem">
@@ -123,7 +124,7 @@
                             <g:InlineHyperlink ui:field="mFeedBrowserLink" targetHistoryToken="{FeedBrowserPageType.asTargetHistoryToken}">Feed Browser</g:InlineHyperlink>
                         </li>
                         <li ui:field="itemsItem">
-                            <g:InlineHyperlink ui:field="itemsLink" targetHistoryToken="__items__">Items</g:InlineHyperlink>
+                            <g:InlineHyperlink ui:field="itemsLink" targetHistoryToken="{ItemsPageType.asTargetHistoryToken}">Items</g:InlineHyperlink>
                         </li>
                         <li class="divider"></li>
                         <li ui:field="mUsersItem">

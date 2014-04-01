@@ -25,6 +25,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gwt.safehtml.shared.SafeUri;
+import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.user.client.History;
 import com.spacehopperstudios.utility.StringUtils;
 
@@ -121,12 +123,12 @@ public enum PageType {
 		return asString;
 	}
 
-	public String asHref() {
-		return "#!" + toString();
+	public SafeUri asHref() {
+		return UriUtils.fromString("#!" + toString());
 	}
 
-	public String asHref(String... params) {
-		return "#!" + toString(params);
+	public SafeUri asHref(String... params) {
+		return UriUtils.fromString("#!" + toString(params));
 	}
 
 	public String asTargetHistoryToken() {

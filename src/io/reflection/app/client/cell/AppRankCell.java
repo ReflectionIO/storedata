@@ -9,6 +9,7 @@ package io.reflection.app.client.cell;
 
 import static io.reflection.app.client.controller.FilterController.REVENUE_DAILY_DATA_TYPE;
 import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.ItemController;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.datatypes.shared.Item;
@@ -42,7 +43,7 @@ public class AppRankCell extends AbstractCell<Rank> {
 
 		Item item = ItemController.get().lookupItem(value.itemId);
 
-		String dailyDataType = FilterController.get().getDailyData(), dailyData;
+		String dailyDataType = FilterController.get().getFilter().getDailyData(), dailyData;
 
 		if (REVENUE_DAILY_DATA_TYPE.equals(dailyDataType)) {
 			dailyData = FormattingHelper.getCurrencySymbol(value.currency) + " " + value.revenue;
@@ -51,27 +52,30 @@ public class AppRankCell extends AbstractCell<Rank> {
 		}
 
 		SafeStyles display;
-		String mode = FilterController.get().getListType();
+		Filter filter = FilterController.get().getFilter();
 
-		if (FilterController.OVERALL_LIST_TYPE.equals(mode)) {
+		if (FilterController.OVERALL_LIST_TYPE.equals(filter.getListType())) {
 			switch (context.getColumn()) {
 			case 1:
-				mode = FilterController.PAID_LIST_TYPE;
+				filter = Filter.parse(filter.asItemFilterString());
+				filter.setListType(FilterController.PAID_LIST_TYPE);
 				break;
 			case 2:
-				mode = FilterController.FREE_LIST_TYPE;
+				filter = Filter.parse(filter.asItemFilterString());
+				filter.setListType(FilterController.FREE_LIST_TYPE);
 				break;
 			case 3:
-				mode = FilterController.GROSSING_LIST_TYPE;
+				filter = Filter.parse(filter.asItemFilterString());
+				filter.setListType(FilterController.GROSSING_LIST_TYPE);
 				break;
 			}
-			
+
 			display = SafeStylesUtils.fromTrustedString("");
 		} else {
 			display = SafeStylesUtils.forDisplay(Display.NONE);
 		}
 
-		SafeUri link = UriUtils.fromString(PageType.ItemPageType.asHref("view", item.externalId, FilterController.get().asItemFilterString(mode)));
+		SafeUri link = PageType.ItemPageType.asHref("view", item.externalId, filter.asItemFilterString());
 		SafeUri smallImage = UriUtils.fromString(item.smallImage);
 
 		RENDERER.render(builder, item.name, item.creatorName, smallImage, link, dailyData, display.asString());

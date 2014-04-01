@@ -16,6 +16,7 @@ import static io.reflection.app.client.controller.FilterController.PAID_LIST_TYP
 import io.reflection.app.client.cell.AppRankCell;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.RankController;
@@ -109,6 +110,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 		RankController.get().addDataDisplay(mRanks);
 		mPager.setDisplay(mRanks);
+
 	}
 
 	private void createColumns() {
@@ -211,7 +213,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	protected Rank rankForListType(RanksGroup object) {
 		Rank rank = object.grossing;
 
-		String listType = FilterController.get().getListType();
+		String listType = FilterController.get().getFilter().getListType();
 
 		if (FREE_LIST_TYPE.equals(listType)) {
 			rank = object.free;
@@ -252,13 +254,13 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamsChanged(java.util.Map, java.util.Map)
+	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamsChanged(io.reflection.app.client.controller.FilterController.Filter, java.util.Map)
 	 */
 	@Override
-	public void filterParamsChanged(Map<String, ?> currentValues, Map<String, ?> previousValues) {
+	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
 		boolean foundResetFilterValues = false, foundDailyData = false;
 
-		for (String name : currentValues.keySet()) {
+		for (String name : currentFilter.keySet()) {
 			if (!LIST_TYPE_KEY.equals(name) && !(foundDailyData = DAILY_DATA_KEY.equals(name))) {
 				foundResetFilterValues = true;
 				break;
@@ -343,7 +345,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	void onClicked(ClickEvent e) {
 		boolean changed = false;
 
-		String listType = FilterController.get().getListType();
+		String listType = FilterController.get().getFilter().getListType();
 
 		if (e.getSource() == mAll && !OVERALL_LIST_TYPE.equals(listType)) {
 			FilterController.get().setListType(OVERALL_LIST_TYPE);
@@ -367,7 +369,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 	private void refreshRanks() {
 
-		String listType = FilterController.get().getListType();
+		String listType = FilterController.get().getFilter().getListType();
 
 		if (OVERALL_LIST_TYPE.equals(listType)) {
 			removeAllColumns();
@@ -433,7 +435,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			mTabs.get(key).removeClassName("active");
 		}
 
-		LIElement selected = mTabs.get(FilterController.get().getListType());
+		LIElement selected = mTabs.get(FilterController.get().getFilter().getListType());
 
 		if (selected != null) {
 			selected.addClassName("active");
@@ -455,6 +457,22 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			if (current.getAction() == null || !"view".equals(current.getAction())) {
 				PageType.RanksPageType.show("view", FilterController.get().asRankFilterString());
 			} else {
+				Filter currentFilter = Filter.parse(FilterController.get().asRankFilterString());
+
+				if (currentFilter != null) {
+					currentFilter.setListType(OVERALL_LIST_TYPE);
+					mAll.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", currentFilter.asRankFilterString()));
+
+					currentFilter.setListType(PAID_LIST_TYPE);
+					mPaid.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", currentFilter.asRankFilterString()));
+
+					currentFilter.setListType(FREE_LIST_TYPE);
+					mFree.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", currentFilter.asRankFilterString()));
+
+					currentFilter.setListType(GROSSING_LIST_TYPE);
+					mGrossing.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", currentFilter.asRankFilterString()));
+				}
+
 				refreshTabs();
 
 				refreshRanks();
@@ -494,6 +512,5 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 		mPager.setVisible(hasPermission);
 		mRedirect.setVisible(!hasPermission);
-
 	}
 }

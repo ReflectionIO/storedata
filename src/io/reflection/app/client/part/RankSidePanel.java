@@ -170,10 +170,10 @@ public class RankSidePanel extends Composite {
 
 	private void updateFromFilter() {
 		FilterController.get().start();
-		mAppStore.setSelectedIndex(FormHelper.getItemIndex(mAppStore, FilterController.get().getStoreA3Code()));
+		mAppStore.setSelectedIndex(FormHelper.getItemIndex(mAppStore, FilterController.get().getFilter().getStoreA3Code()));
 		mDate.setValue(FilterController.get().getEndDate());
-		mCountry.setSelectedIndex(FormHelper.getItemIndex(mCountry, FilterController.get().getCountry().a2Code));
-		category.setSelectedIndex(FormHelper.getItemIndex(category, FilterController.get().getCategory().id.toString()));
+		mCountry.setSelectedIndex(FormHelper.getItemIndex(mCountry, FilterController.get().getFilter().getCountryA2Code()));
+		category.setSelectedIndex(FormHelper.getItemIndex(category, FilterController.get().getFilter().getCategoryId().toString()));
 
 		FilterController.get().commit();
 	}
