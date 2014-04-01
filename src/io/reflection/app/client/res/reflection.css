@@ -577,7 +577,7 @@ a:hover,a:focus,a:active {
 	background-repeat: no-repeat;
 	width: 100px;
 	height: 100px;
-	background-position: -2px -2px
+	background-position: -2px -2px;
 }
 
 @sprite
@@ -588,7 +588,7 @@ a:hover,a:focus,a:active {
 	background-repeat: no-repeat;
 	width: 75px;
 	height: 75px;
-	background-position: -2px -104px
+	background-position: -2px -104px;
 }
 
 .unknownAppSmall, .unknownAppMedium, .unknownAppLarge {}

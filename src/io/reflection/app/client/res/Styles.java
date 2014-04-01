@@ -50,7 +50,7 @@ public interface Styles extends ClientBundle {
 
 	@Source("unknownsprite.png")
 	@ImageOptions(repeatStyle = RepeatStyle.None)
-	ImageResource unkownSprite();
+	ImageResource unknownSprite();
 	
 	@Source("reflection.css")
 	ReflectionStyles reflection();
