@@ -3,7 +3,7 @@
     <ui:with field='styles' type='io.reflection.app.client.res.Styles' />
 
     <ui:with field="name" type="java.lang.String" />
-    <ui:with field="smallImage" type="com.google.gwt.safehtml.shared.SafeUri" />
+    <ui:with field="smallImage" type="java.lang.String" />
     <ui:with field="creatorName" type="java.lang.String" />
     <ui:with field="link" type="com.google.gwt.safehtml.shared.SafeUri" />
 

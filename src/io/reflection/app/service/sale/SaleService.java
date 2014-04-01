@@ -26,6 +26,8 @@ import io.reflection.app.service.item.ItemServiceProvider;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.spacehopperstudios.utility.StringUtils;
+
 final class SaleService implements ISaleService {
 	public String getName() {
 		return ServiceType.ServiceTypeSale.toString();
@@ -152,8 +154,10 @@ final class SaleService implements ISaleService {
 	public List<Item> getDataAccountItems(DataAccount dataAccount, Pager pager) throws DataAccessException {
 
 		List<String> itemIds = new ArrayList<String>();
+		List<String> itemIdsTop400 = new ArrayList<String>();
+		List<Item> items = new ArrayList<Item>();
 
-		String getSaleQuery = String.format("SELECT `itemid` FROM `sale` WHERE `dataaccountid`=%d AND `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d",
+		String getSaleQuery = String.format("SELECT DISTINCT `itemid` FROM `sale` WHERE `dataaccountid`=%d AND `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d",
 				dataAccount.id.longValue(), pager.sortBy == null ? "id" : pager.sortBy,
 				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start == null ? Pager.DEFAULT_START.longValue()
 						: pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue() : pager.count.longValue());
@@ -166,19 +170,57 @@ final class SaleService implements ISaleService {
 			saleConnection.executeQuery(getSaleQuery);
 
 			while (saleConnection.fetchNextRow()) {
-				Sale sale = toSale(saleConnection);
-
-				if (sale != null) {
-					itemIds.add(sale.item.toString());
-				}
+				itemIds.add(saleConnection.getCurrentRowString("itemid"));
 			}
+			items.addAll(ItemServiceProvider.provide().getInternalIdItemBatch(itemIds)); // add Items from items table (the ones in the top 400)
+			for (Item i : items) {
+				itemIdsTop400.add(i.internalId);
+			}
+
 		} finally {
 			if (saleConnection != null) {
 				saleConnection.disconnect();
 			}
 		}
 
-		return itemIds.size() == 0 ? new ArrayList<Item>() : ItemServiceProvider.provide().getInternalIdItemBatch(itemIds);
+		itemIds.removeAll(itemIdsTop400); // items out of the top 400
+
+		items.addAll(generateDummyItems(itemIds)); // get dummy items from sale table
+
+		return items;
+	}
+
+	private List<Item> generateDummyItems(List<String> itemId) throws DataAccessException {
+		List<Item> items = new ArrayList<Item>();
+
+		String typesQueryPart = null;
+		if (itemId.size() == 1) {
+			typesQueryPart = String.format("CAST(`itemid` AS BINARY)=CAST('%s' AS BINARY)", itemId.get(0));
+		} else {
+			typesQueryPart = "CAST(`itemid` AS BINARY) IN (CAST('" + StringUtils.join(itemId, "' AS BINARY),CAST('") + "' AS BINARY))";
+		}
+
+		String getSaleItemQuery = String.format("SELECT DISTINCT `title`,`developer` FROM `sale` WHERE %s AND `deleted`='n'", typesQueryPart);
+		IDatabaseService databaseService = DatabaseServiceProvider.provide();
+		Connection saleItemConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
+		try {
+			saleItemConnection.connect();
+			saleItemConnection.executeQuery(getSaleItemQuery);
+			while (saleItemConnection.fetchNextRow()) {
+				Item fake = new Item();
+				fake.creatorName = saleItemConnection.getCurrentRowString("developer");
+				fake.name = saleItemConnection.getCurrentRowString("title");
+				items.add(fake);
+			}
+
+		} finally {
+			if (saleItemConnection != null) {
+				saleItemConnection.disconnect();
+			}
+		}
+
+		return items;
+
 	}
 
 	/*
@@ -233,11 +275,11 @@ final class SaleService implements ISaleService {
 
 			addSalesBatchQuery.append(String.format(
 					"(%d,%s,'%s','%s','%s','%s','%s','%s',%d,%d,'%s',FROM_UNIXTIME(%d),FROM_UNIXTIME(%d),'%s',%d,'%s','%s','%s','%s','%s')",
-					sale.account.id.longValue(), sale.item.internalId == null ? "NULL" : "'" + sale.item.internalId + "'", addslashes(sale.country), addslashes(sale.sku), addslashes(sale.developer),
-					addslashes(sale.title), addslashes(sale.version), addslashes(sale.typeIdentifier), sale.units.intValue(), sale.proceeds.intValue(),
-					addslashes(sale.currency), sale.begin.getTime() / 1000, sale.end.getTime() / 1000, addslashes(sale.customerCurrency),
-					sale.customerPrice.intValue(), addslashes(sale.promoCode), addslashes(sale.parentIdentifier), addslashes(sale.subscription),
-					addslashes(sale.period), addslashes(sale.category)));
+					sale.account.id.longValue(), sale.item.internalId == null ? "NULL" : "'" + sale.item.internalId + "'", addslashes(sale.country),
+					addslashes(sale.sku), addslashes(sale.developer), addslashes(sale.title), addslashes(sale.version), addslashes(sale.typeIdentifier),
+					sale.units.intValue(), sale.proceeds.intValue(), addslashes(sale.currency), sale.begin.getTime() / 1000, sale.end.getTime() / 1000,
+					addslashes(sale.customerCurrency), sale.customerPrice.intValue(), addslashes(sale.promoCode), addslashes(sale.parentIdentifier),
+					addslashes(sale.subscription), addslashes(sale.period), addslashes(sale.category)));
 		}
 
 		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());

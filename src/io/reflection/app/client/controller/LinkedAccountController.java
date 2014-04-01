@@ -36,7 +36,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  */
 public class LinkedAccountController extends AsyncDataProvider<DataAccount> implements ServiceConstants, TreeViewModel {
 
-	private List<DataAccount> mLinkedAccounts;
+	private List<DataAccount> mLinkedAccounts = null;
 	private long mCount = -1;
 	private Pager mPager;
 
@@ -89,11 +89,18 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 		return mLinkedAccounts;
 	}
 
+	public void setLinkedAccounts(List<DataAccount> linkedAccounts) {
+		if (mLinkedAccounts == null) {
+			mLinkedAccounts = new ArrayList<DataAccount>();
+		}
+		mLinkedAccounts.addAll(linkedAccounts);
+	}
+
 	public long getLinkedAccountsCount() {
 		return mCount;
 	}
 
-	public void fetchLinkedAccounts() { 
+	public void fetchLinkedAccounts() {
 		CoreService service = ServiceCreator.createCoreService();
 
 		final GetLinkedAccountsRequest input = new GetLinkedAccountsRequest();
@@ -115,11 +122,8 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 			public void onSuccess(GetLinkedAccountsResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
 					if (output.linkedAccounts != null) {
-						if (mLinkedAccounts == null) {
-							mLinkedAccounts = new ArrayList<DataAccount>();
-						}
 
-						mLinkedAccounts.addAll(output.linkedAccounts);
+						setLinkedAccounts(output.linkedAccounts);
 					}
 
 					if (output.pager != null) {
@@ -145,13 +149,18 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 
 			@Override
 			public void onFailure(Throwable caught) {
-
+				EventController.get().fireEventFromSource(new GetLinkedAccountsEventHandler.GetLinkedAccountsFailure(input, caught),
+						LinkedAccountController.this);
 			}
 		});
 	}
 
 	public boolean hasLinkedAccounts() {
-		return mPager != null || mLinkedAccounts.size() > 0;
+		if (mLinkedAccounts == null) {
+			return false;
+		} else {
+			return mLinkedAccounts.size() > 0;
+		}
 	}
 
 	/*

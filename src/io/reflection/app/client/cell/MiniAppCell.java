@@ -24,7 +24,7 @@ import com.google.gwt.uibinder.client.UiRenderer;
 public class MiniAppCell extends AbstractCell<Item> {
 
 	interface MiniAppCellRenderer extends UiRenderer {
-		void render(SafeHtmlBuilder sb, String name, String creatorName, SafeUri smallImage, SafeUri link);
+		void render(SafeHtmlBuilder sb, String name, String creatorName, String smallImage, SafeUri link);
 	}
 
 	private static MiniAppCellRenderer RENDERER = GWT.create(MiniAppCellRenderer.class);
@@ -32,10 +32,13 @@ public class MiniAppCell extends AbstractCell<Item> {
 	@Override
 	public void render(Context context, Item value, SafeHtmlBuilder builder) {
 
-		SafeUri link = UriUtils.fromString(PageType.ItemPageType.asHref("view", value.externalId));
-		SafeUri smallImage = UriUtils.fromString(value.smallImage);
+		if (value.smallImage == null) {
+			value.smallImage = ""; // TODO add unknown image
+		}
 
-		RENDERER.render(builder, value.name, value.creatorName, smallImage, link);
+		SafeUri link = UriUtils.fromString(PageType.ItemPageType.asHref("view", value.externalId));
+
+		RENDERER.render(builder, value.name, value.creatorName, value.smallImage, link);
 	}
 
 }

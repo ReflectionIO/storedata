@@ -86,8 +86,14 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		// NavigationController.get().getStack().getParameter(0) + "/iosmac");
 
 		showNoLinkedAccounts();
-
-		LinkedAccountController.get().fetchLinkedAccounts();
+		
+		// Maybe move into controller
+		if (LinkedAccountController.get().hasLinkedAccounts()){
+			// TODO show linked account
+		}else{
+			LinkedAccountController.get().fetchLinkedAccounts();
+		}
+		
 
 		// CellTree.Resources res = GWT.create(CellTree.BasicResources.class);
 		// mAccounts = new CellTree(LinkedAccountController.get(), null, res);

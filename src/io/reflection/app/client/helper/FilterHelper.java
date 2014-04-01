@@ -12,6 +12,7 @@ import io.reflection.app.client.controller.StoreController;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.Store;
 
+import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.user.client.ui.ListBox;
@@ -42,4 +43,22 @@ public class FilterHelper {
 	}
 
 	public static void addCategories(ListBox list) {}
+	
+	/**
+	 * Normalize the date to midnight being sure the milliseconds are set at zero.
+	 * 
+	 * @param date
+	 *            Date to be set at noon
+	 * @return temp The new date set at noon
+	 */
+	@SuppressWarnings("deprecation")
+	public static Date normalizeDate(Date date) {
+		Date newDate = new Date(0L);
+		newDate.setDate(date.getDate());
+		newDate.setMonth(date.getMonth());
+		newDate.setYear(date.getYear());
+		newDate.setHours(0);
+		return newDate;
+	}
+	
 }
