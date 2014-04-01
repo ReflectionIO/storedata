@@ -8,6 +8,7 @@
     <!-- Inherit the core Web Toolkit stuff. -->
     <inherits name='com.google.gwt.user.User' />
     <inherits name="com.google.gwt.json.JSON" />
+    <inherits name="com.googlecode.gwt.crypto.Crypto" />
     <inherits name="com.willshex.gson.Json" />
     <inherits name="com.google.gson.Gson" />
     <inherits name="com.spacehopperstudios.Utility" />

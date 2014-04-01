@@ -45,7 +45,7 @@ public enum PageType {
 	RolesPageType("roles", "MRL"),
 	PermissionsPageType("permissions", "MPR"),
 	ChangeDetailsPageType("changedetails", true),
-	UpgradePageType("upgrade", false),
+	UpgradePageType("upgrade", true),
 	LinkedAccountsPageType("linkedaccounts", true),
 	SearchPageType("search", true),
 	ItemPageType("item", true),
