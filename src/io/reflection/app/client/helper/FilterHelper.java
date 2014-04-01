@@ -49,7 +49,7 @@ public class FilterHelper {
 	 * 
 	 * @param date
 	 *            Date to be set at noon
-	 * @return temp The new date set at noon
+	 * @return newDate The new date set at noon
 	 */
 	@SuppressWarnings("deprecation")
 	public static Date normalizeDate(Date date) {
