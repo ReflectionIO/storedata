@@ -273,9 +273,12 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamChanged(java.lang.String, java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {		
+	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
 		if (!name.equals("enddate")) {
 			appsTable.setVisibleRangeAndClearData(appsTable.getVisibleRange(), false);
+			if (appsTable.getRowCount() < 1) {
+				appsTable.setRowCount(1); // Force loading effect
+			}
 			MyAppsController.get().reset();
 		}
 	}
