@@ -329,6 +329,7 @@ final class RankService implements IRankService {
 						Rank rank = toRank(rankConnection);
 
 						if (rank != null) {
+							rank.date = date;
 							ranks.add(rank);
 							ranksLookup.put(date, rank);
 						}
