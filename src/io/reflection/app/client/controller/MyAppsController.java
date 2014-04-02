@@ -39,7 +39,7 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 
 	private static MyAppsController mOne = null;
 
-	private List<MyApp> rows = new ArrayList<MyApp>();
+	private List<MyApp> rows = null;
 	private Pager pager = new Pager();
 
 	public static MyAppsController get() {
@@ -54,7 +54,9 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 	}
 
 	public void getAllUserItems() {
-
+		if (rows == null) {
+			rows = new ArrayList<MyApp>();
+		}
 		if (LinkedAccountController.get().hasLinkedAccounts()) {
 			fetchLinkedAccountItems();
 		} else {
@@ -101,7 +103,7 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 		input.accessCode = ACCESS_CODE;
 		input.linkedAccount = LinkedAccountController.get().getLinkedAccounts().get(0); // TODO loop on linked accounts
 		input.session = SessionController.get().getSessionForApiCall();
-		input.pager = pager;
+		input.pager = pager;		
 
 		service.getLinkedAccountItems(input, new AsyncCallback<GetLinkedAccountItemsResponse>() {
 
@@ -110,14 +112,6 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 				if (output.status == StatusType.StatusTypeSuccess) {
 
 					int count = 0;
-
-					if (output.pager != null) {
-						pager = output.pager;
-
-						if (pager.totalCount != null) {
-							count = pager.totalCount.intValue();
-						}
-					}
 
 					if (output.items != null) {
 						count = output.items.size();
@@ -193,12 +187,8 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 	}
 
 	public void reset() {
-
-		rows.clear();
-		// updateRowData(0, rows);
-		updateRowCount(0, false);
+		rows = null;
 		getAllUserItems();
-
 	}
 
 	/*
@@ -208,6 +198,7 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 	 */
 	@Override
 	protected void onRangeChanged(HasData<MyApp> display) {
+
 		/*
 		 * Range r = display.getVisibleRange();
 		 * 
