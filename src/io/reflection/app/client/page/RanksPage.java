@@ -32,7 +32,6 @@ import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.shared.util.FormattingHelper;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,7 +47,6 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TextHeader;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -232,8 +230,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamChanged(java.lang.String, java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {		
-		Window.alert("1"+currentValue.toString()+" - "+previousValue.toString());
+	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
 		boolean foundDailyData = false;
 		if (name != null && !LIST_TYPE_KEY.equals(name) && !(foundDailyData = DAILY_DATA_KEY.equals(name))) {
 			RankController.get().reset();
@@ -260,10 +257,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamsChanged(io.reflection.app.client.controller.FilterController.Filter, java.util.Map)
 	 */
 	@Override
-	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {		
-		String start = new Date(currentFilter.getStartTime()).toString();
-		String end = new Date(currentFilter.getEndTime()).toString();
-		Window.alert("2 current: "+start+" - "+end+" - "+previousValues.toString());
+	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
 		boolean foundResetFilterValues = false, foundDailyData = false;
 
 		for (String name : currentFilter.keySet()) {
