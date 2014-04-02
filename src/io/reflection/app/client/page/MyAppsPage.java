@@ -208,7 +208,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	@UiHandler("date")
 	void onDateValueChanged(ValueChangeEvent<Date> event) {
 		// TODO disable future dates
-		updateFilterDate();		
+		updateFilterDate();
 	}
 
 	@UiHandler("rangeDay")
@@ -274,7 +274,10 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	 */
 	@Override
 	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
-		MyAppsController.get().reset();		
+		if (!name.equals("startdate")) {
+			appsTable.setVisibleRangeAndClearData(appsTable.getVisibleRange(), false);
+			MyAppsController.get().reset();
+		}
 	}
 
 	/*
@@ -283,8 +286,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamsChanged(io.reflection.app.client.controller.FilterController.Filter, java.util.Map)
 	 */
 	@Override
-	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {		
-	}
+	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {}
 
 	/*
 	 * (non-Javadoc)
