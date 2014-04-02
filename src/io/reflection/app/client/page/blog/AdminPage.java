@@ -116,7 +116,7 @@ public class AdminPage extends Page {
 			public SafeHtml getValue(Post object) {
 				String s = object.id.toString();
 
-				return SafeHtmlUtils.fromTrustedString("<a href=\"" + PageType.BlogEditPostPageType.asHref("change", s)
+				return SafeHtmlUtils.fromTrustedString("<a href=\"" + PageType.BlogEditPostPageType.asHref("change", s).toString()
 						+ "\" class=\"btn btn-xs btn-default\">Edit</a>");
 			}
 		};
@@ -127,7 +127,7 @@ public class AdminPage extends Page {
 			public SafeHtml getValue(Post object) {
 				String s = object.id.toString();
 
-				return SafeHtmlUtils.fromTrustedString("<a href=\"#" + PageType.BlogPostPageType.toString() + "/view/" + s
+				return SafeHtmlUtils.fromTrustedString("<a href=\"" + PageType.BlogPostPageType.asHref("view", s).toString()
 						+ "\" class=\"btn btn-xs btn-default\">View</a>");
 			}
 		};

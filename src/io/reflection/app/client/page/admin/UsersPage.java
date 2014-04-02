@@ -99,7 +99,7 @@ public class UsersPage extends Page {
 
 			@Override
 			public SafeHtml getValue(User object) {
-				return SafeHtmlUtils.fromTrustedString("<a href=\"" + PageType.UsersPageType.asHref("changepassword", object.id.toString())
+				return SafeHtmlUtils.fromTrustedString("<a href=\"" + PageType.UsersPageType.asHref("changepassword", object.id.toString()).toString()
 						+ "\" class=\"btn btn-xs btn-default\">Assign password</a>");
 			}
 		};
@@ -108,7 +108,7 @@ public class UsersPage extends Page {
 
 			@Override
 			public SafeHtml getValue(User object) {
-				return SafeHtmlUtils.fromTrustedString("<a href=\"#users/changedetails/" + object.id.toString()
+				return SafeHtmlUtils.fromTrustedString("<a href=\"" + PageType.UsersPageType.asHref("changedetails", object.id.toString()).toString()
 						+ "\" class=\"btn btn-xs btn-default\">Change details</a>");
 			}
 		};

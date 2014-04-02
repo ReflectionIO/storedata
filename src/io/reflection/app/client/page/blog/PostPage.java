@@ -174,7 +174,7 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 
 			if (post.commentsEnabled == Boolean.TRUE) {
 				String identifier = "post" + post.id.toString();
-				String url = GWT.getHostPageBaseURL() + PageType.BlogPostPageType.asHref("view", post.id.toString());
+				String url = GWT.getHostPageBaseURL() + PageType.BlogPostPageType.asHref("view", post.id.toString()).toString();
 				String title = post.title;
 				String tag = post.tags == null || post.tags.size() == 0 ? "reflection.io" : post.tags.get(0);
 
