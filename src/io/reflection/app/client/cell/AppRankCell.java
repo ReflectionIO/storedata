@@ -75,7 +75,7 @@ public class AppRankCell extends AbstractCell<Rank> {
 			display = SafeStylesUtils.forDisplay(Display.NONE);
 		}
 
-		SafeUri link = PageType.ItemPageType.asHref("view", item.externalId, filter.asItemFilterString());
+		SafeUri link = PageType.ItemPageType.asHref("view", item.externalId, FilterController.RANKING_CHART_TYPE, filter.asItemFilterString());
 		SafeUri smallImage = UriUtils.fromString(item.smallImage);
 
 		RENDERER.render(builder, item.name, item.creatorName, smallImage, link, dailyData, display.asString());

@@ -62,11 +62,11 @@ public class NavigationController implements ValueChangeHandler<String> {
 
 				for (String part : mParts) {
 					String[] parameters;
-					if (next == null && (parameters = Stack.decode(part, NEXT_KEY)) != null) {
+					if (next == null && (parameters = Stack.decode(NEXT_KEY, part)) != null) {
 						next = new Stack(StringUtils.join(Arrays.asList(parameters), "/"));
 					}
 
-					if (previous == null && (parameters = Stack.decode(part, PREVIOUS_KEY)) != null) {
+					if (previous == null && (parameters = Stack.decode(PREVIOUS_KEY, part)) != null) {
 						previous = new Stack(StringUtils.join(Arrays.asList(parameters), "/"));
 					}
 
@@ -116,11 +116,11 @@ public class NavigationController implements ValueChangeHandler<String> {
 		}
 
 		public String asNextParameter() {
-			return Stack.encode(NEXT_KEY, asParameter());
+			return Stack.encode(NEXT_KEY, allParts);
 		}
 
 		public String asPreviousParameter() {
-			return Stack.encode(PREVIOUS_KEY, asParameter());
+			return Stack.encode(PREVIOUS_KEY, allParts);
 		}
 
 		/**
@@ -158,7 +158,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 				parameters = new String(Base64.encode(StringUtils.join(Arrays.asList(values), "/").getBytes()));
 			}
 
-			return (name == null || name.length() == 0) ? (name + parameters) : parameters;
+			return (name == null || name.length() == 0) ? parameters : (name + parameters);
 		}
 
 		public static String[] decode(String name, String encoded) {
@@ -169,7 +169,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 			if (encoded != null && encoded.length() > 0 && encoded.startsWith(name)) {
 				content = encoded.substring(name.length());
 
-				if (content != null) {
+				if (content != null && content.length() > 0) {
 					decoded = new String(Base64.decode(content));
 
 					if (decoded.length() > 0) {

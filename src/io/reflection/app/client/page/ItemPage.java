@@ -60,7 +60,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 	interface ItemPageUiBinder extends UiBinder<Widget, ItemPage> {}
 
-	private static final int LIST_TYPE_PARAMETER_INDEX = 4;
+	private static final int FILTER_PARAMETER_INDEX = 2;
 
 	// @UiField AlertBox mAlertBox;
 	@UiField ItemSidePanel mSidePanel;
@@ -189,14 +189,17 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				// Document.get().setScrollLeft(0);
 				// Document.get().setScrollTop(0);
 
-				String listType = current.getParameter(LIST_TYPE_PARAMETER_INDEX);
-				FilterController.get().setListType(listType);
+				String filterParameter = current.getParameter(FILTER_PARAMETER_INDEX);
+				Filter f = Filter.parse(filterParameter);
 
 				item = null;
 
-				mRevenue.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken("view", mItemExternalId, listType));
-				mDownloads.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken("view", mItemExternalId, listType));
-				mRanking.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken("view", mItemExternalId, listType));
+				mRevenue.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken("view", mItemExternalId, FilterController.REVENUE_CHART_TYPE,
+						filterParameter));
+				mDownloads.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken("view", mItemExternalId, FilterController.DOWNLOADS_CHART_TYPE,
+						filterParameter));
+				mRanking.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken("view", mItemExternalId, FilterController.RANKING_CHART_TYPE,
+						filterParameter));
 
 				if ((item = ItemController.get().lookupItem(mItemExternalId)) != null) {
 					displayItemDetails();
@@ -210,7 +213,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 					// false).setVisible(true);
 				}
 
-				rankingType = RankingType.fromString(listType);
+				rankingType = RankingType.fromString(f.getListType());
 
 				getHistoryChartData();
 

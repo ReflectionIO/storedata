@@ -72,7 +72,7 @@ public class FilterController {
 
 			String[] splitDecoded;
 
-			if ((splitDecoded = Stack.decode(filter, ITEM_FILTER_KEY)) != null && splitDecoded.length == 8) {
+			if ((splitDecoded = Stack.decode(ITEM_FILTER_KEY, filter)) != null && splitDecoded.length == 8) {
 				parsed = new Filter();
 
 				parsed.setStoreA3Code(splitDecoded[0]);
@@ -83,7 +83,7 @@ public class FilterController {
 				parsed.setEndTime(Long.valueOf(splitDecoded[5]).longValue());
 				parsed.setChartType(splitDecoded[6]);
 				parsed.setSummaryType(splitDecoded[7]);
-			} else if ((splitDecoded = Stack.decode(filter, RANK_FILTER_KEY)) != null && splitDecoded.length == 6) {
+			} else if ((splitDecoded = Stack.decode(RANK_FILTER_KEY, filter)) != null && splitDecoded.length == 6) {
 				parsed = new Filter();
 
 				parsed.setStoreA3Code(splitDecoded[0]);
@@ -175,8 +175,8 @@ public class FilterController {
 		}
 
 		public String asItemFilterString() {
-			return Stack.encode(ITEM_FILTER_KEY, getStoreA3Code(), getCountryA2Code(), getCategoryId().toString(), getListType(), getStartTime()
-					.toString(), getEndTime().toString(), getChartType(), getSummaryType());
+			return Stack.encode(ITEM_FILTER_KEY, getStoreA3Code(), getCountryA2Code(), getCategoryId().toString(), getListType(), getStartTime().toString(),
+					getEndTime().toString(), getChartType(), getSummaryType());
 		}
 	}
 
