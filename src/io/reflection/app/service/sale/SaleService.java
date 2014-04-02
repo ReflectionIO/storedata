@@ -200,7 +200,7 @@ final class SaleService implements ISaleService {
 			typesQueryPart = "CAST(`itemid` AS BINARY) IN (CAST('" + StringUtils.join(itemId, "' AS BINARY),CAST('") + "' AS BINARY))";
 		}
 
-		String getSaleItemQuery = String.format("SELECT DISTINCT `title`,`developer` FROM `sale` WHERE %s AND `deleted`='n'", typesQueryPart);
+		String getSaleItemQuery = String.format("SELECT DISTINCT `title`,`developer`,`itemid`  FROM `sale` WHERE %s AND `deleted`='n'", typesQueryPart);
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection saleItemConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
 		try {
@@ -210,6 +210,7 @@ final class SaleService implements ISaleService {
 				Item fake = new Item();
 				fake.creatorName = saleItemConnection.getCurrentRowString("developer");
 				fake.name = saleItemConnection.getCurrentRowString("title");
+				fake.externalId = saleItemConnection.getCurrentRowString("itemid");
 				items.add(fake);
 			}
 
