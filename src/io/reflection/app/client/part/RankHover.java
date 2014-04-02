@@ -8,7 +8,7 @@
 //
 package io.reflection.app.client.part;
 
-import io.reflection.app.client.part.RankChart.XAxisDataType;
+import io.reflection.app.client.part.RankChart.YAxisDataType;
 
 import java.util.Date;
 
@@ -36,7 +36,7 @@ public class RankHover extends Composite implements HoverUpdateable {
 	@UiField DivElement date;
 	@UiField DivElement detail;
 
-	private RankChart.XAxisDataType dataType;
+	private RankChart.YAxisDataType dataType;
 	private String currency;
 
 	public RankHover() {
@@ -61,16 +61,16 @@ public class RankHover extends Composite implements HoverUpdateable {
 	@Override
 	public void hoverUpdate(Point hoveredOver) {
 		date.setInnerHTML(DateTimeFormat.getFormat("MMM d, yyyy").format(new Date((long) hoveredOver.getX())));
-		if (dataType == XAxisDataType.RevenueXAxisDataType) {
+		if (dataType == YAxisDataType.RevenueYAxisDataType) {
 			detail.setInnerHTML("Revenue: " + currency + " " + Double.toString(hoveredOver.getY()));
-		} else if (dataType == XAxisDataType.DownloadsXAxisDataType) {
+		} else if (dataType == YAxisDataType.DownloadsYAxisDataType) {
 			detail.setInnerHTML("Downloads: "  + Double.toString(hoveredOver.getY()));
-		} else if (dataType == XAxisDataType.RankingXAxisDataType) {
+		} else if (dataType == YAxisDataType.RankingYAxisDataType) {
 			detail.setInnerHTML("Rank: "  + Double.toString(hoveredOver.getY()));
 		}
 	}
 
-	public void setXAxisDataType(XAxisDataType value) {
+	public void setYAxisDataType(YAxisDataType value) {
 		dataType = value;
 	}
 

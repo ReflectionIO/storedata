@@ -11,7 +11,10 @@ import static io.reflection.app.client.controller.FilterController.REVENUE_DAILY
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.ItemController;
+import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.page.PageType;
+import io.reflection.app.client.page.RanksPage;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.shared.util.FormattingHelper;
@@ -43,7 +46,9 @@ public class AppRankCell extends AbstractCell<Rank> {
 
 		Item item = ItemController.get().lookupItem(value.itemId);
 
-		String dailyDataType = FilterController.get().getFilter().getDailyData(), dailyData;
+		Filter filter = FilterController.get().getFilter();
+
+		String dailyDataType = filter.getDailyData(), dailyData, listType = FilterController.OVERALL_LIST_TYPE;
 
 		if (REVENUE_DAILY_DATA_TYPE.equals(dailyDataType)) {
 			dailyData = FormattingHelper.getCurrencySymbol(value.currency) + " " + value.revenue;
@@ -51,10 +56,13 @@ public class AppRankCell extends AbstractCell<Rank> {
 			dailyData = value.downloads.toString();
 		}
 
-		SafeStyles display;
-		Filter filter = FilterController.get().getFilter();
+		Stack s = NavigationController.get().getStack();
+		if (s != null) {
+			listType = s.getParameter(RanksPage.SELECTED_TAB_PARAMETER_INDEX);
+		}
 
-		if (FilterController.OVERALL_LIST_TYPE.equals(filter.getListType())) {
+		SafeStyles display;
+		if (FilterController.OVERALL_LIST_TYPE.equals(listType)) {
 			switch (context.getColumn()) {
 			case 1:
 				filter = Filter.parse(filter.asItemFilterString());

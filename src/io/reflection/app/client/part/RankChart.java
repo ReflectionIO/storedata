@@ -7,6 +7,12 @@
 //
 package io.reflection.app.client.part;
 
+import static io.reflection.app.client.controller.FilterController.DOWNLOADS_CHART_TYPE;
+import static io.reflection.app.client.controller.FilterController.FREE_LIST_TYPE;
+import static io.reflection.app.client.controller.FilterController.GROSSING_LIST_TYPE;
+import static io.reflection.app.client.controller.FilterController.PAID_LIST_TYPE;
+import static io.reflection.app.client.controller.FilterController.RANKING_CHART_TYPE;
+import static io.reflection.app.client.controller.FilterController.REVENUE_CHART_TYPE;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.res.charts.Images;
 import io.reflection.app.datatypes.shared.Item;
@@ -74,10 +80,32 @@ public class RankChart extends GChart {
 		super.onDetach();
 	}
 
-	public enum XAxisDataType {
-		RevenueXAxisDataType,
-		DownloadsXAxisDataType,
-		RankingXAxisDataType;
+	public enum YAxisDataType {
+		RevenueYAxisDataType,
+		DownloadsYAxisDataType,
+		RankingYAxisDataType;
+
+		/**
+		 * @param value
+		 * @return
+		 */
+		public static YAxisDataType fromString(String value) {
+			YAxisDataType dataType = null;
+
+			switch (value) {
+			case RANKING_CHART_TYPE:
+				dataType = RankingYAxisDataType;
+				break;
+			case DOWNLOADS_CHART_TYPE:
+				dataType = DownloadsYAxisDataType;
+				break;
+			case REVENUE_CHART_TYPE:
+				dataType = RevenueYAxisDataType;
+				break;
+			}
+
+			return dataType;
+		}
 	}
 
 	public enum RankingType {
@@ -91,10 +119,14 @@ public class RankChart extends GChart {
 		public static RankingType fromString(String value) {
 			RankingType mode = null;
 
-			if ("grossing".equals(value)) {
+			switch (value) {
+			case GROSSING_LIST_TYPE:
 				mode = GrossingPositionRankingType;
-			} else if ("free".equals(value) || "paid".equals(value)) {
+				break;
+			case FREE_LIST_TYPE:
+			case PAID_LIST_TYPE:
 				mode = PositionRankingType;
+				break;
 			}
 
 			return mode;
@@ -176,7 +208,7 @@ public class RankChart extends GChart {
 
 		RankHover hoverWidget = new RankHover();
 		hoverWidget.setCssColor(Colour.PurpleColour.getColour());
-		hoverWidget.setXAxisDataType(XAxisDataType.RankingXAxisDataType);
+		hoverWidget.setYAxisDataType(YAxisDataType.RankingYAxisDataType);
 
 		curve.getSymbol().setHoverWidget(hoverWidget);
 
@@ -187,7 +219,7 @@ public class RankChart extends GChart {
 
 	}
 
-	public void setData(Item item, List<Rank> ranks, RankingType mode) {
+	public void setData(Item item, List<Rank> ranks, RankingType mode, YAxisDataType dataType) {
 
 		if (curve != null) {
 			curve.clearPoints();
@@ -219,6 +251,8 @@ public class RankChart extends GChart {
 		// int diffY = (maxY - minY) + 1;
 
 		getYAxis().setTickCount(8);
+
+		((RankHover) curve.getSymbol().getHoverWidget()).setYAxisDataType(dataType);
 
 		setLoading(false);
 

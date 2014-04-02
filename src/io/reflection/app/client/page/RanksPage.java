@@ -10,7 +10,6 @@ package io.reflection.app.client.page;
 import static io.reflection.app.client.controller.FilterController.DAILY_DATA_KEY;
 import static io.reflection.app.client.controller.FilterController.FREE_LIST_TYPE;
 import static io.reflection.app.client.controller.FilterController.GROSSING_LIST_TYPE;
-import static io.reflection.app.client.controller.FilterController.LIST_TYPE_KEY;
 import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
 import static io.reflection.app.client.controller.FilterController.PAID_LIST_TYPE;
 import io.reflection.app.client.cell.AppRankCell;
@@ -38,11 +37,9 @@ import java.util.Map;
 import com.google.gwt.cell.client.ImageResourceCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.LIElement;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
@@ -60,6 +57,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	private static RanksPageUiBinder uiBinder = GWT.create(RanksPageUiBinder.class);
 
 	interface RanksPageUiBinder extends UiBinder<Widget, RanksPage> {}
+
+	public static final int SELECTED_TAB_PARAMETER_INDEX = 0;
 
 	@UiField(provided = true) CellTable<RanksGroup> mRanks = new CellTable<RanksGroup>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) PageSizePager mPager = new PageSizePager(ServiceConstants.STEP_VALUE);
@@ -97,6 +96,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	private TextHeader mRevenueHeader;
 	private TextHeader mIapHeader;
 	private TextHeader mPriceHeader;
+
+	private String selectedTab = OVERALL_LIST_TYPE;
 
 	public RanksPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -213,11 +214,9 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	protected Rank rankForListType(RanksGroup object) {
 		Rank rank = object.grossing;
 
-		String listType = FilterController.get().getFilter().getListType();
-
-		if (FREE_LIST_TYPE.equals(listType)) {
+		if (FREE_LIST_TYPE.equals(selectedTab)) {
 			rank = object.free;
-		} else if (PAID_LIST_TYPE.equals(listType)) {
+		} else if (PAID_LIST_TYPE.equals(selectedTab)) {
 			rank = object.paid;
 		}
 
@@ -232,21 +231,14 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	@Override
 	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
 		boolean foundDailyData = false;
-		if (name != null && !LIST_TYPE_KEY.equals(name) && !(foundDailyData = DAILY_DATA_KEY.equals(name))) {
+		if (name != null && !(foundDailyData = DAILY_DATA_KEY.equals(name))) {
 			RankController.get().reset();
 		}
 
-		PageType.RanksPageType.show("view", FilterController.get().asRankFilterString());
+		PageType.RanksPageType.show("view", selectedTab, FilterController.get().asRankFilterString());
 
 		if (foundDailyData) {
 			mRanks.redraw();
-		}
-
-		if (currentValue.toString().equals("paid") || currentValue.toString().equals("free") || currentValue.toString().equals("grossing")) {
-			mSidePanel.setDataFilterVisible(false);
-
-		} else if (currentValue.toString().equals("all")) {
-			mSidePanel.setDataFilterVisible(true);
 		}
 
 	}
@@ -261,7 +253,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		boolean foundResetFilterValues = false, foundDailyData = false;
 
 		for (String name : currentFilter.keySet()) {
-			if (!LIST_TYPE_KEY.equals(name) && !(foundDailyData = DAILY_DATA_KEY.equals(name))) {
+			if (!(foundDailyData = DAILY_DATA_KEY.equals(name))) {
 				foundResetFilterValues = true;
 				break;
 			}
@@ -270,7 +262,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		if (foundResetFilterValues) {
 			RankController.get().reset();
 		} else if (foundDailyData) {
-			PageType.RanksPageType.show("view", FilterController.get().asRankFilterString());
+			PageType.RanksPageType.show("view", selectedTab, FilterController.get().asRankFilterString());
 			mRanks.redraw();
 		}
 
@@ -341,42 +333,14 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	// @Override
 	// public void isAuthorisedFailure(IsAuthorisedRequest input, Throwable caught) {}
 
-	@UiHandler({ "mAll", "mFree", "mGrossing", "mPaid" })
-	void onClicked(ClickEvent e) {
-		boolean changed = false;
-
-		String listType = FilterController.get().getFilter().getListType();
-
-		if (e.getSource() == mAll && !OVERALL_LIST_TYPE.equals(listType)) {
-			FilterController.get().setListType(OVERALL_LIST_TYPE);
-			changed = true;
-		} else if (e.getSource() == mFree && !FREE_LIST_TYPE.equals(listType)) {
-			FilterController.get().setListType(FREE_LIST_TYPE);
-			changed = true;
-		} else if (e.getSource() == mPaid && !PAID_LIST_TYPE.equals(listType)) {
-			FilterController.get().setListType(PAID_LIST_TYPE);
-			changed = true;
-		} else if (e.getSource() == mGrossing && !GROSSING_LIST_TYPE.equals(listType)) {
-			FilterController.get().setListType(GROSSING_LIST_TYPE);
-			changed = true;
-		}
-
-		if (changed) {
-			refreshTabs();
-			refreshRanks();
-		}
-	}
-
 	private void refreshRanks() {
 
-		String listType = FilterController.get().getFilter().getListType();
-
-		if (OVERALL_LIST_TYPE.equals(listType)) {
+		if (OVERALL_LIST_TYPE.equals(selectedTab)) {
 			removeAllColumns();
 			addColumn(mPaidColumn, mPaidHeader);
 			addColumn(mFreeColumn, mFreeHeader);
 			addColumn(mGrossingColumn, mGrossingHeader);
-		} else if (FREE_LIST_TYPE.equals(listType)) {
+		} else if (FREE_LIST_TYPE.equals(selectedTab)) {
 			removeAllColumns();
 
 			addColumn(mFreeColumn, mFreeHeader);
@@ -385,7 +349,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			addColumn(mDownloadsColumn, mDownloadsHeader);
 			addColumn(mRevenueColumn, mRevenueHeader);
 			addColumn(mIapColumn, mIapHeader);
-		} else if (PAID_LIST_TYPE.equals(listType)) {
+		} else if (PAID_LIST_TYPE.equals(selectedTab)) {
 			removeAllColumns();
 
 			addColumn(mPaidColumn, mPaidHeader);
@@ -394,7 +358,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			addColumn(mDownloadsColumn, mDownloadsHeader);
 			addColumn(mRevenueColumn, mRevenueHeader);
 			addColumn(mIapColumn, mIapHeader);
-		} else if (GROSSING_LIST_TYPE.equals(listType)) {
+		} else if (GROSSING_LIST_TYPE.equals(selectedTab)) {
 			removeAllColumns();
 
 			addColumn(mGrossingColumn, mGrossingHeader);
@@ -435,7 +399,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			mTabs.get(key).removeClassName("active");
 		}
 
-		LIElement selected = mTabs.get(FilterController.get().getFilter().getListType());
+		LIElement selected = mTabs.get(selectedTab);
 
 		if (selected != null) {
 			selected.addClassName("active");
@@ -455,30 +419,33 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			// checkPermissions();
 
 			if (current.getAction() == null || !"view".equals(current.getAction())) {
-				PageType.RanksPageType.show("view", FilterController.get().asRankFilterString());
+				PageType.RanksPageType.show("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString());
 			} else {
-				Filter currentFilter = Filter.parse(FilterController.get().asRankFilterString());
+				String currentFilter = FilterController.get().asRankFilterString();
 
-				if (currentFilter != null) {
-					currentFilter.setListType(OVERALL_LIST_TYPE);
-					mAll.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", currentFilter.asRankFilterString()));
-
-					currentFilter.setListType(PAID_LIST_TYPE);
-					mPaid.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", currentFilter.asRankFilterString()));
-
-					currentFilter.setListType(FREE_LIST_TYPE);
-					mFree.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", currentFilter.asRankFilterString()));
-
-					currentFilter.setListType(GROSSING_LIST_TYPE);
-					mGrossing.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", currentFilter.asRankFilterString()));
+				if (currentFilter != null && currentFilter.length() > 0) {
+					mAll.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, currentFilter));
+					mPaid.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", PAID_LIST_TYPE, currentFilter));
+					mFree.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", FREE_LIST_TYPE, currentFilter));
+					mGrossing.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", GROSSING_LIST_TYPE, currentFilter));
 				}
+
+				selectedTab = current.getParameter(SELECTED_TAB_PARAMETER_INDEX);
 
 				refreshTabs();
 
 				refreshRanks();
+
+				if (FREE_LIST_TYPE.equals(selectedTab) || PAID_LIST_TYPE.equals(selectedTab) || GROSSING_LIST_TYPE.equals(selectedTab)) {
+					mSidePanel.setDataFilterVisible(false);
+				} else {
+					mSidePanel.setDataFilterVisible(true);
+					selectedTab = OVERALL_LIST_TYPE;
+				}
+				
+				mSidePanel.updateFromFilter();
 			}
 		}
-
 	}
 
 	// private void checkPermissions() {

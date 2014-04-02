@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.part;
 
+import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
 import io.reflection.app.api.core.shared.call.ChangeUserDetailsRequest;
 import io.reflection.app.api.core.shared.call.ChangeUserDetailsResponse;
 import io.reflection.app.api.core.shared.call.event.ChangeUserDetailsEventHandler;
@@ -158,7 +159,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		removeAdmin();
 		removeMyApps();
 
-		mRanksLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", FilterController.get().asRankFilterString()));
+		mRanksLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
 	}
 
 	/*
@@ -513,7 +514,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	 */
 	@Override
 	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
-		mRanksLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", FilterController.get().asRankFilterString()));
+		mRanksLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
 	}
 
 	/*
@@ -523,7 +524,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	 */
 	@Override
 	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
-		mRanksLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", FilterController.get().asRankFilterString()));
+		mRanksLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
 	}
 
 }

@@ -8,6 +8,7 @@
 package io.reflection.app.client.page;
 
 import static io.reflection.app.client.controller.FilterController.DOWNLOADS_CHART_TYPE;
+import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
 import static io.reflection.app.client.controller.FilterController.RANKING_CHART_TYPE;
 import static io.reflection.app.client.controller.FilterController.REVENUE_CHART_TYPE;
 import io.reflection.app.api.core.shared.call.GetItemRanksRequest;
@@ -32,6 +33,7 @@ import io.reflection.app.client.part.ItemSidePanel;
 import io.reflection.app.client.part.ItemTopPanel;
 import io.reflection.app.client.part.RankChart;
 import io.reflection.app.client.part.RankChart.RankingType;
+import io.reflection.app.client.part.RankChart.YAxisDataType;
 import io.reflection.app.client.part.datatypes.ItemRevenue;
 import io.reflection.app.client.res.flags.Styles;
 import io.reflection.app.datatypes.shared.Item;
@@ -42,10 +44,8 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.LIElement;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
@@ -60,7 +60,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 	interface ItemPageUiBinder extends UiBinder<Widget, ItemPage> {}
 
-	private static final int FILTER_PARAMETER_INDEX = 2;
+	public static final int SELECTED_TAB_PARAMETER_INDEX = 1;
 
 	// @UiField AlertBox mAlertBox;
 	@UiField ItemSidePanel mSidePanel;
@@ -82,9 +82,12 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	private String mItemExternalId;
 
 	private RankingType rankingType;
+	private YAxisDataType dataType;
 	private Item item;
 
 	private Map<String, LIElement> mTabs = new HashMap<String, LIElement>();
+
+	private String selectedTab = RANKING_CHART_TYPE;
 
 	public ItemPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -186,20 +189,16 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	public void navigationChanged(Stack previous, Stack current) {
 		if (current != null && PageType.ItemPageType.equals(current.getPage())) {
 			if ("view".equals(current.getAction()) && (mItemExternalId = current.getParameter(0)) != null) {
-				// Document.get().setScrollLeft(0);
-				// Document.get().setScrollTop(0);
-
-				String filterParameter = current.getParameter(FILTER_PARAMETER_INDEX);
-				Filter f = Filter.parse(filterParameter);
-
 				item = null;
 
-				mRevenue.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken("view", mItemExternalId, FilterController.REVENUE_CHART_TYPE,
-						filterParameter));
-				mDownloads.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken("view", mItemExternalId, FilterController.DOWNLOADS_CHART_TYPE,
-						filterParameter));
-				mRanking.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken("view", mItemExternalId, FilterController.RANKING_CHART_TYPE,
-						filterParameter));
+				Filter f = FilterController.get().getFilter();
+				String currentFilter = f.asItemFilterString();
+
+				if (currentFilter != null && currentFilter.length() > 0) {
+					mRevenue.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken("view", mItemExternalId, REVENUE_CHART_TYPE, currentFilter));
+					mDownloads.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken("view", mItemExternalId, DOWNLOADS_CHART_TYPE, currentFilter));
+					mRanking.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken("view", mItemExternalId, RANKING_CHART_TYPE, currentFilter));
+				}
 
 				if ((item = ItemController.get().lookupItem(mItemExternalId)) != null) {
 					displayItemDetails();
@@ -213,15 +212,25 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 					// false).setVisible(true);
 				}
 
+				selectedTab = current.getParameter(SELECTED_TAB_PARAMETER_INDEX);
+
+				refreshTabs();
+
 				rankingType = RankingType.fromString(f.getListType());
+				dataType = YAxisDataType.fromString(selectedTab);
+
+				mTopPanel.updateFromFilter();
 
 				getHistoryChartData();
 
 				// AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.SuccessAlertBoxType, false, "Item",
 				// " - Normally we would display items details for (" + view + ").", false).setVisible(true);
+
 			} else {
 				// AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.DangerAlertBoxType, false, "Item", " - We did not find the requrested item!", false)
 				// .setVisible(true);
+
+				PageType.RanksPageType.show("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString());
 			}
 		}
 
@@ -286,34 +295,12 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	// }
 	// }
 
-	@UiHandler({ "mRevenue", "mDownloads", "mRanking" })
-	void onClicked(ClickEvent e) {
-		boolean changed = false;
-
-		String chartType = FilterController.get().getFilter().getChartType();
-
-		if (e.getSource() == mRevenue && !REVENUE_CHART_TYPE.equals(chartType)) {
-			chartType = REVENUE_CHART_TYPE;
-			changed = true;
-		} else if (e.getSource() == mDownloads && !DOWNLOADS_CHART_TYPE.equals(chartType)) {
-			chartType = DOWNLOADS_CHART_TYPE;
-			changed = true;
-		} else if (e.getSource() == mRanking && !RANKING_CHART_TYPE.equals(chartType)) {
-			chartType = RANKING_CHART_TYPE;
-			changed = true;
-		}
-
-		if (changed) {
-			refreshTabs();
-		}
-	}
-
 	private void refreshTabs() {
 		for (String key : mTabs.keySet()) {
 			mTabs.get(key).removeClassName("active");
 		}
 
-		mTabs.get(FilterController.get().getFilter().getChartType()).addClassName("active");
+		mTabs.get(selectedTab).addClassName("active");
 	}
 
 	/*
@@ -331,9 +318,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 				displayItemDetails();
 
-				refreshTabs();
-
-				historyChart.setData(output.item, output.ranks, rankingType);
+				historyChart.setData(output.item, output.ranks, rankingType, dataType);
 
 				// mAlertBox.dismiss();
 			}

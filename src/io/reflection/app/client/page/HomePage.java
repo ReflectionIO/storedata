@@ -11,6 +11,7 @@ import io.reflection.app.client.controller.NavigationController;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.OListElement;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -43,6 +44,8 @@ public class HomePage extends Page {
 	@UiField TextBox email;
 	@UiField TextArea message;
 	@UiField Anchor gotoFeatures;
+	@UiField OListElement carouselIndicators;
+	@UiField DivElement carouselContainer;
 	@UiField Anchor carouselRight;
 	@UiField Anchor carouselLeft;
 	private Timer scrollTimer;

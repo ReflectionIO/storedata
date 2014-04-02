@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.page;
 
+import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.NavigationController;
@@ -55,7 +56,7 @@ public class ReadyToStartPage extends Page implements NavigationEventHandler {
 	 */
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
-		ranks.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", FilterController.get().asRankFilterString()));
+		ranks.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
 	}
 
 }

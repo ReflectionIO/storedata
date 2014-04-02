@@ -246,12 +246,12 @@
                     <div class="row">
                         <div class="carousel">
                             <!-- Indicators -->
-                            <ol class="carousel-indicators">
+                            <ol class="carousel-indicators" ui:field="carouselIndicators">
                                 <li class="active"></li>
                                 <li class=""></li>
                                 <li class=""></li>
                             </ol>
-                            <div class="carousel-inner">
+                            <div class="carousel-inner" ui:field="carouselContainer">
                                 <div class="item active">
                                     <img src="../images/leaderboard.png" alt="Leaderboard" />
                                 </div>

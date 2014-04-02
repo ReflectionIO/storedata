@@ -83,15 +83,14 @@ public class FilterController {
 				parsed.setEndTime(Long.valueOf(splitDecoded[5]).longValue());
 				parsed.setChartType(splitDecoded[6]);
 				parsed.setSummaryType(splitDecoded[7]);
-			} else if ((splitDecoded = Stack.decode(RANK_FILTER_KEY, filter)) != null && splitDecoded.length == 6) {
+			} else if ((splitDecoded = Stack.decode(RANK_FILTER_KEY, filter)) != null && splitDecoded.length == 5) {
 				parsed = new Filter();
 
 				parsed.setStoreA3Code(splitDecoded[0]);
 				parsed.setCountryA2Code(splitDecoded[1]);
 				parsed.setCategoryId(Long.valueOf(splitDecoded[2]));
-				parsed.setListType(splitDecoded[3]);
-				parsed.setEndTime(Long.valueOf(splitDecoded[4]));
-				parsed.setDailyData(splitDecoded[5]);
+				parsed.setEndTime(Long.valueOf(splitDecoded[3]));
+				parsed.setDailyData(splitDecoded[4]);
 			}
 
 			return parsed;
@@ -170,13 +169,20 @@ public class FilterController {
 		}
 
 		public String asRankFilterString() {
-			return Stack.encode(RANK_FILTER_KEY, getStoreA3Code(), getCountryA2Code(), getCategoryId().toString(), getListType(), getEndTime().toString(),
-					getDailyData());
+			return Stack.encode(RANK_FILTER_KEY, getStoreA3Code(), getCountryA2Code(), getCategoryId().toString(), getEndTime().toString(), getDailyData());
 		}
 
 		public String asItemFilterString() {
 			return Stack.encode(ITEM_FILTER_KEY, getStoreA3Code(), getCountryA2Code(), getCategoryId().toString(), getListType(), getStartTime().toString(),
 					getEndTime().toString(), getChartType(), getSummaryType());
+		}
+
+		/**
+		 * @param part
+		 * @return
+		 */
+		public static boolean isFilter(String part) {
+			return false;
 		}
 	}
 
@@ -426,7 +432,7 @@ public class FilterController {
 		mInTransaction--;
 
 		if (mInTransaction == 0) {
-			if (mPreviousValues != null) {
+			if (mPreviousValues != null && mPreviousValues.size() > 0) {
 				EventController.get().fireEventFromSource(new FilterEventHandler.ChangedFilterParameters(mCurrentFilter, mPreviousValues), this);
 			}
 
@@ -524,5 +530,28 @@ public class FilterController {
 
 	public boolean isFilterParam(String parameter) {
 		return parameter != null && parameter.length() > 0 && (parameter.startsWith(RANK_FILTER_KEY) || parameter.startsWith(ITEM_FILTER_KEY));
+	}
+
+	/**
+	 * @param part
+	 */
+	public void fromParameter(String part) {
+		Filter parameterFitler = Filter.parse(part);
+
+		if (parameterFitler != null && parameterFitler.size() > 0) {
+			start();
+
+			setCategory(parameterFitler.getCategoryId());
+			setChartType(parameterFitler.getChartType());
+			setCountry(parameterFitler.getCountryA2Code());
+			setDailyData(parameterFitler.getDailyData());
+			setEndDate(parameterFitler.getEndTime() == null ? null : new Date(parameterFitler.getEndTime().longValue()));
+			setListType(parameterFitler.getListType());
+			setStartDate(parameterFitler.getStartTime() == null ? null : new Date(parameterFitler.getStartTime().longValue()));
+			setStore(parameterFitler.getStoreA3Code());
+			setSummaryType(parameterFitler.getSummaryType());
+
+			commit();
+		}
 	}
 }

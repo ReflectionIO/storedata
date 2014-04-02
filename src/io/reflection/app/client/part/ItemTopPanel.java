@@ -51,8 +51,6 @@ public class ItemTopPanel extends Composite {
 
 		mDateRange.setFormat(new DefaultFormat(DateTimeFormat.getFormat("dd-MM-yyyy")));
 		mDateRange.setValue(new Date());
-
-		updateFromFilter();
 	}
 
 	@UiHandler("mAppStore")
@@ -67,20 +65,20 @@ public class ItemTopPanel extends Composite {
 
 	@UiHandler("mDateRange")
 	void onDateValueChanged(ValueChangeEvent<Date> event) {
-		FilterController.get().start();
-		FilterController.get().setEndDate(mDateRange.getValue());
+		FilterController fc = FilterController.get();
+		
+		fc.start();
+		fc.setEndDate(mDateRange.getValue());
 		Date startDate = new Date(mDateRange.getValue().getTime());
 		CalendarUtil.addDaysToDate(startDate, -30);
-		FilterController.get().setStartDate(startDate);
-		FilterController.get().commit();
+		fc.setStartDate(startDate);
+		fc.commit();
 	}
 
-	private void updateFromFilter() {
-		FilterController.get().start();
+	public void updateFromFilter() {
 		mAppStore.setSelectedIndex(FormHelper.getItemIndex(mAppStore, FilterController.get().getFilter().getStoreA3Code()));
 		mDateRange.setValue(FilterController.get().getEndDate());
 		mCountry.setSelectedIndex(FormHelper.getItemIndex(mCountry, FilterController.get().getFilter().getCountryA2Code()));
-		FilterController.get().commit();
 	}
 
 }

@@ -61,16 +61,14 @@ public class RankSidePanel extends Composite {
 
 		BootstrapGwtDatePicker.INSTANCE.styles().ensureInjected();
 
-
-
 		final List<Date> dates = new ArrayList<Date>();
 
 		FilterHelper.addStores(mAppStore);
 		FilterHelper.addCountries(mCountry);
 		FilterHelper.addCategories(category);
-		
+
 		date.setFormat(new DefaultFormat(DateTimeFormat.getFormat("dd-MM-yyyy")));
-		
+
 		date.getDatePicker().addShowRangeHandler(new ShowRangeHandler<Date>() {
 
 			@Override
@@ -113,9 +111,15 @@ public class RankSidePanel extends Composite {
 
 	@UiHandler("date")
 	void onDateValueChanged(ValueChangeEvent<Date> event) {
-		FilterController.get().start();
-		updateFilterDate();
-		FilterController.get().commit();
+		FilterController fc = FilterController.get();
+
+		fc.start();
+		fc.setEndDate(event.getValue());
+		Date startDate = fc.getEndDate();
+		CalendarUtil.addDaysToDate(startDate, -30);
+		fc.setStartDate(startDate);
+		fc.commit();
+
 	}
 
 	@UiHandler("category")
@@ -167,22 +171,15 @@ public class RankSidePanel extends Composite {
 		return date.getValue();
 	}
 
-	private void updateFromFilter() {
-		FilterController.get().start();
-		mAppStore.setSelectedIndex(FormHelper.getItemIndex(mAppStore, FilterController.get().getFilter().getStoreA3Code()));
-		date.setValue(new Date());
-		updateFilterDate();
-		mCountry.setSelectedIndex(FormHelper.getItemIndex(mCountry, FilterController.get().getFilter().getCountryA2Code()));
-		category.setSelectedIndex(FormHelper.getItemIndex(category, FilterController.get().getFilter().getCategoryId().toString()));
-
-		FilterController.get().commit();
-	}
-	
-	private void updateFilterDate() {
-		FilterController.get().setEndDate(date.getValue());		
-		Date startDate = new Date(date.getValue().getTime());
-		CalendarUtil.addMonthsToDate(startDate, -1);
-		FilterController.get().setStartDate(startDate);
+	public void updateFromFilter() {
+		FilterController fc = FilterController.get();
+		
+		mAppStore.setSelectedIndex(FormHelper.getItemIndex(mAppStore, fc.getFilter().getStoreA3Code()));
+		long endTime = fc.getFilter().getEndTime().longValue();
+		Date endDate = new Date(endTime);
+		date.setValue(endDate);
+		mCountry.setSelectedIndex(FormHelper.getItemIndex(mCountry, fc.getFilter().getCountryA2Code()));
+		category.setSelectedIndex(FormHelper.getItemIndex(category, fc.getFilter().getCategoryId().toString()));
 	}
 
 	public void setDataFilterVisible(boolean visible) {

@@ -64,13 +64,11 @@ public class NavigationController implements ValueChangeHandler<String> {
 					String[] parameters;
 					if (next == null && (parameters = Stack.decode(NEXT_KEY, part)) != null) {
 						next = new Stack(StringUtils.join(Arrays.asList(parameters), "/"));
-					}
-
-					if (previous == null && (parameters = Stack.decode(PREVIOUS_KEY, part)) != null) {
+					} else if (previous == null && (parameters = Stack.decode(PREVIOUS_KEY, part)) != null) {
 						previous = new Stack(StringUtils.join(Arrays.asList(parameters), "/"));
+					} else {
+						FilterController.get().fromParameter(part);
 					}
-
-					if (next != null && previous != null) break;
 				}
 			}
 		}
