@@ -207,15 +207,8 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 	@UiHandler("date")
 	void onDateValueChanged(ValueChangeEvent<Date> event) {
-		/*
-		 * final List<Date> dates = new ArrayList<Date>(); Date start = event.getStart(); Date end = event.getEnd(); Date now = new Date();
-		 * 
-		 * dates.clear(); Date curr = start; while (curr.getTime() <= end.getTime()) { if (curr.getTime() > now.getTime() || curr.getTime() < 1356998401000l) {
-		 * dates.add(curr); } curr = new Date(curr.getTime() + 24l * 1000l * 60l * 60l); } date.getDatePicker().setTransientEnabledOnDates(false, dates);
-		 */
-		// FilterController.get().start();
-		updateFilterDate();
-		// FilterController.get().commit();
+		// TODO disable future dates
+		updateFilterDate();		
 	}
 
 	@UiHandler("rangeDay")
@@ -281,7 +274,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	 */
 	@Override
 	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
-		MyAppsController.get().reset();
+		MyAppsController.get().reset();		
 	}
 
 	/*
@@ -290,8 +283,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamsChanged(io.reflection.app.client.controller.FilterController.Filter, java.util.Map)
 	 */
 	@Override
-	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
-
+	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {		
 	}
 
 	/*

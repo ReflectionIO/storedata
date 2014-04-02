@@ -46,7 +46,7 @@ public class RankSidePanel extends Composite {
 
 	interface RankSidePanelUiBinder extends UiBinder<Widget, RankSidePanel> {}
 
-	@UiField DateBox mDate;
+	@UiField DateBox date;
 	@UiField ListBox mAppStore;
 	// @UiField ListBox mListType;
 	@UiField ListBox mCountry;
@@ -61,15 +61,17 @@ public class RankSidePanel extends Composite {
 
 		BootstrapGwtDatePicker.INSTANCE.styles().ensureInjected();
 
-		mDate.setFormat(new DefaultFormat(DateTimeFormat.getFormat("dd-MM-yyyy")));
+
 
 		final List<Date> dates = new ArrayList<Date>();
 
 		FilterHelper.addStores(mAppStore);
 		FilterHelper.addCountries(mCountry);
 		FilterHelper.addCategories(category);
-
-		mDate.getDatePicker().addShowRangeHandler(new ShowRangeHandler<Date>() {
+		
+		date.setFormat(new DefaultFormat(DateTimeFormat.getFormat("dd-MM-yyyy")));
+		
+		date.getDatePicker().addShowRangeHandler(new ShowRangeHandler<Date>() {
 
 			@Override
 			public void onShowRange(ShowRangeEvent<Date> event) {
@@ -87,7 +89,7 @@ public class RankSidePanel extends Composite {
 					curr = new Date(curr.getTime() + 24l * 1000l * 60l * 60l);
 				}
 
-				mDate.getDatePicker().setTransientEnabledOnDates(false, dates);
+				date.getDatePicker().setTransientEnabledOnDates(false, dates);
 			}
 		});
 
@@ -109,13 +111,10 @@ public class RankSidePanel extends Composite {
 		FilterController.get().setCountry(mCountry.getValue(mCountry.getSelectedIndex()));
 	}
 
-	@UiHandler("mDate")
+	@UiHandler("date")
 	void onDateValueChanged(ValueChangeEvent<Date> event) {
 		FilterController.get().start();
-		FilterController.get().setEndDate(mDate.getValue());
-		Date startDate = new Date(mDate.getValue().getTime());
-		CalendarUtil.addDaysToDate(startDate, -30);
-		FilterController.get().setStartDate(startDate);
+		updateFilterDate();
 		FilterController.get().commit();
 	}
 
@@ -165,17 +164,25 @@ public class RankSidePanel extends Composite {
 	 * @return
 	 */
 	public Date getDate() {
-		return mDate.getValue();
+		return date.getValue();
 	}
 
 	private void updateFromFilter() {
 		FilterController.get().start();
 		mAppStore.setSelectedIndex(FormHelper.getItemIndex(mAppStore, FilterController.get().getFilter().getStoreA3Code()));
-		mDate.setValue(FilterController.get().getEndDate());
+		date.setValue(new Date());
+		updateFilterDate();
 		mCountry.setSelectedIndex(FormHelper.getItemIndex(mCountry, FilterController.get().getFilter().getCountryA2Code()));
 		category.setSelectedIndex(FormHelper.getItemIndex(category, FilterController.get().getFilter().getCategoryId().toString()));
 
 		FilterController.get().commit();
+	}
+	
+	private void updateFilterDate() {
+		FilterController.get().setEndDate(date.getValue());		
+		Date startDate = new Date(date.getValue().getTime());
+		CalendarUtil.addMonthsToDate(startDate, -1);
+		FilterController.get().setStartDate(startDate);
 	}
 
 	public void setDataFilterVisible(boolean visible) {

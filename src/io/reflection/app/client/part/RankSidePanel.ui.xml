@@ -25,7 +25,7 @@
 						</label>
 						<!--<input type="text" id="datepicker"> -->
 						<div class="input-group">
-							<d:DateBox styleName="form-control" ui:field="mDate" />
+							<d:DateBox styleName="form-control" ui:field="date" />
 							<span class="input-group-addon">
 								<i class="icon-calendar"></i>
 							</span>
