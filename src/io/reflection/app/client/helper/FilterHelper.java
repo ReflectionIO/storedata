@@ -12,10 +12,13 @@ import io.reflection.app.client.controller.StoreController;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.Store;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.datepicker.client.CalendarUtil;
+import com.google.gwt.user.datepicker.client.DatePicker;
 
 /**
  * @author billy1380
@@ -43,7 +46,7 @@ public class FilterHelper {
 	}
 
 	public static void addCategories(ListBox list) {}
-	
+
 	/**
 	 * Normalize the date to midnight being sure the milliseconds are set at zero.
 	 * 
@@ -60,5 +63,25 @@ public class FilterHelper {
 		newDate.setHours(0);
 		return newDate;
 	}
-	
+
+	/**
+	 * 
+	 */
+	public static void disableOutOfRangeDates(DatePicker datePicker, Date startDate, Date endDate) {
+
+	}
+
+	public static void disableFutureDates(DatePicker datePicker) {
+		List<Date> dates = new ArrayList<Date>();
+		Date firstShownOnCalendar = CalendarUtil.copyDate(datePicker.getFirstDate());
+		Date lastShownOnCalendar = CalendarUtil.copyDate(datePicker.getLastDate());
+		Date today = normalizeDate(new Date());
+		while ((lastShownOnCalendar.after(firstShownOnCalendar) || firstShownOnCalendar.equals(lastShownOnCalendar)) && lastShownOnCalendar.after(today)) {
+			if (datePicker.isDateVisible(CalendarUtil.copyDate(lastShownOnCalendar))) {
+				dates.add(CalendarUtil.copyDate(lastShownOnCalendar));
+			}
+			CalendarUtil.addDaysToDate(lastShownOnCalendar, -1);
+		}
+		datePicker.setTransientEnabledOnDates(false, dates);
+	}
 }

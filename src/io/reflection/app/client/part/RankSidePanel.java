@@ -13,9 +13,7 @@ import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -61,8 +59,6 @@ public class RankSidePanel extends Composite {
 
 		BootstrapGwtDatePicker.INSTANCE.styles().ensureInjected();
 
-		final List<Date> dates = new ArrayList<Date>();
-
 		FilterHelper.addStores(mAppStore);
 		FilterHelper.addCountries(mCountry);
 		FilterHelper.addCategories(category);
@@ -73,21 +69,7 @@ public class RankSidePanel extends Composite {
 
 			@Override
 			public void onShowRange(ShowRangeEvent<Date> event) {
-				Date start = event.getStart();
-				Date end = event.getEnd();
-				Date now = new Date();
-
-				dates.clear();
-				Date curr = start;
-				while (curr.getTime() <= end.getTime()) {
-					if (curr.getTime() > now.getTime() || curr.getTime() < 1356998401000l) {
-						dates.add(curr);
-					}
-
-					curr = new Date(curr.getTime() + 24l * 1000l * 60l * 60l);
-				}
-
-				date.getDatePicker().setTransientEnabledOnDates(false, dates);
+				FilterHelper.disableFutureDates(date.getDatePicker());
 			}
 		});
 
@@ -173,7 +155,7 @@ public class RankSidePanel extends Composite {
 
 	public void updateFromFilter() {
 		FilterController fc = FilterController.get();
-		
+
 		mAppStore.setSelectedIndex(FormHelper.getItemIndex(mAppStore, fc.getFilter().getStoreA3Code()));
 		long endTime = fc.getFilter().getEndTime().longValue();
 		Date endDate = new Date(endTime);

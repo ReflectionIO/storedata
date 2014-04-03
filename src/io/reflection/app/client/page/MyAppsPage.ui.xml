@@ -45,7 +45,7 @@
                         <g:ListBox ui:field="country">
                         </g:ListBox>
 
-                        <d:DateBox ui:field="date" />
+                        <d:DateBox ui:field="dateBox" />
                         <span>
                             <i class="icon-calendar"></i>
                         </span>

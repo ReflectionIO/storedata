@@ -36,6 +36,8 @@ import com.google.gwt.cell.client.ImageResourceCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.logical.shared.ShowRangeEvent;
+import com.google.gwt.event.logical.shared.ShowRangeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.resources.client.ImageResource;
@@ -71,7 +73,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 	@UiField ListBox appStore;
 	@UiField ListBox country;
-	@UiField DateBox date;
+	@UiField DateBox dateBox;
 	@UiField RadioButton rangeDay;
 	@UiField RadioButton rangeWeek;
 	@UiField RadioButton rangeMonth;
@@ -95,17 +97,22 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		FilterHelper.addCountries(country);
 
 		FilterController.get().setListType(OVERALL_LIST_TYPE);
-		date.setFormat(new DefaultFormat(DateTimeFormat.getFormat("dd-MM-yyyy")));
+		dateBox.setFormat(new DefaultFormat(DateTimeFormat.getFormat("dd-MM-yyyy")));
 		Date d = FilterHelper.normalizeDate(new Date());
-		date.setValue(d);
+		dateBox.setValue(d);
 		updateFromFilter();
 
 		createColumns();
 
 		MyAppsController.get().addDataDisplay(appsTable);
 		MyAppsController.get().getAllUserItems();
-
-		// pager.setDisplay(appsTable);
+		
+		dateBox.getDatePicker().addShowRangeHandler(new ShowRangeHandler<Date>() {
+			@Override
+			public void onShowRange(ShowRangeEvent<Date> event) {
+				FilterHelper.disableFutureDates(dateBox.getDatePicker());
+			}
+		});
 
 	}
 
@@ -205,27 +212,26 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		FilterController.get().setCountry(country.getValue(country.getSelectedIndex()));
 	}
 
-	@UiHandler("date")
+	@UiHandler("dateBox")
 	void onDateValueChanged(ValueChangeEvent<Date> event) {
-		// TODO disable future dates
 		updateFilterDate();
 	}
 
 	@UiHandler("rangeDay")
 	void onRangeDayValueSelected(ClickEvent event) {
-		FilterController.get().setStartDate(date.getValue());
+		FilterController.get().setStartDate(dateBox.getValue());
 	}
 
 	@UiHandler("rangeWeek")
 	void onRangeWeekValueSelected(ClickEvent event) {
-		Date startDate = new Date(date.getValue().getTime());
+		Date startDate = new Date(dateBox.getValue().getTime());
 		CalendarUtil.addDaysToDate(startDate, -7);
 		FilterController.get().setStartDate(startDate);
 	}
 
 	@UiHandler("rangeMonth")
 	void onRangeMonthValueSelected(ClickEvent event) {
-		Date startDate = new Date(date.getValue().getTime());
+		Date startDate = new Date(dateBox.getValue().getTime());
 		CalendarUtil.addMonthsToDate(startDate, -1);
 		FilterController.get().setStartDate(startDate);
 	}
@@ -241,7 +247,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	public void setFiltersEnabled(boolean enable) {
 		appStore.setEnabled(enable);
 		country.setEnabled(enable);
-		date.setEnabled(enable);
+		dateBox.setEnabled(enable);
 		rangeDay.setEnabled(enable);
 		rangeWeek.setEnabled(enable);
 		rangeMonth.setEnabled(enable);
@@ -249,18 +255,18 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 	private void updateFilterDate() {
 
-		Date endDate = date.getValue();
+		Date endDate = dateBox.getValue();
 		CalendarUtil.addDaysToDate(endDate, 1); // add 1 day to the EndDate because from DatePicker is set at midnight
 		FilterController.get().setEndDate(endDate);
 
 		if (rangeDay.getValue()) {
-			FilterController.get().setStartDate(date.getValue());
+			FilterController.get().setStartDate(dateBox.getValue());
 		} else if (rangeWeek.getValue()) {
-			Date startDate = new Date(date.getValue().getTime());
+			Date startDate = new Date(dateBox.getValue().getTime());
 			CalendarUtil.addDaysToDate(startDate, -7);
 			FilterController.get().setStartDate(startDate);
 		} else {
-			Date startDate = new Date(date.getValue().getTime());
+			Date startDate = new Date(dateBox.getValue().getTime());
 			CalendarUtil.addMonthsToDate(startDate, -1);
 			FilterController.get().setStartDate(startDate);
 		}
