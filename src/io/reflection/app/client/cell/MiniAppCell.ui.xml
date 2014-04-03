@@ -3,8 +3,9 @@
     <ui:with field='styles' type='io.reflection.app.client.res.Styles' />
 
     <ui:with field="name" type="java.lang.String" />
-    <ui:with field="smallImage" type="com.google.gwt.safehtml.shared.SafeUri" />
     <ui:with field="creatorName" type="java.lang.String" />
+    <ui:with field="smallImage" type="com.google.gwt.safehtml.shared.SafeUri" />
+    <ui:with field="styleName" type="java.lang.String" />
     <ui:with field="link" type="com.google.gwt.safehtml.shared.SafeUri" />
 
     <ui:style>
@@ -18,10 +19,11 @@
     	overflow: hidden;
     	float: left;
     }
+    
     </ui:style>
 
     <div>
-        <img class="img-rounded {style.image}" src="{smallImage}" />
+        <img class="img-rounded {style.image} {styleName}" src="{smallImage}" />
         <div class="{style.description} col-md-9">
             <span>
                 <a href="{link}" class="{styles.reflection.breakWords}">

@@ -6,11 +6,6 @@ body {
 	font-family: 'Lato', sans-serif;
 }
 
-/* icons */
-span[class ^="icon-"]:before,span[class *=" icon-"]:before {
-	margin: 0;
-}
-
 /* Forms */
 .form {
 	padding-left: 55px;
@@ -561,37 +556,38 @@ a:hover,a:focus,a:active {
 	background-position: -2px -78px;
 }
 
-@sprite
-.unknownAppSmall {
-	gwt-image: "unknownSprite";
-	display: inline-block;
-	overflow: hidden;
-	background-repeat: no-repeat;
-	width: 53px;
-	height: 53px;
-	background-position: -2px -181px;
+
+@sprite .unknownAppSmall {
+    gwt-image: "unknownSprite";
+    display: inline-block;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    width: 53px;
+    height: 53px;
+    background-position: -2px -181px;
 }
 
-@sprite
-.unknownAppLarge {
-	gwt-image: "unknownSprite";
-	display: inline-block;
-	overflow: hidden;
-	background-repeat: no-repeat;
-	width: 100px;
-	height: 100px;
-	background-position: -2px -2px;
+@sprite .unknownAppLarge {
+    gwt-image: "unknownSprite";
+    display: inline-block;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    width: 100px;
+    height: 100px;
+    background-position: -2px -2px;
 }
 
-@sprite
-.unknownAppMedium {
-	gwt-image: "unknownSprite";
-	display: inline-block;
-	overflow: hidden;
-	background-repeat: no-repeat;
-	width: 75px;
-	height: 75px;
-	background-position: -2px -104px;
+@sprite .unknownAppMedium {
+    gwt-image: "unknownSprite";
+    display: inline-block;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    width: 75px;
+    height: 75px;
+    background-position: -2px -104px;
 }
 
-.unknownAppSmall, .unknownAppMedium, .unknownAppLarge {}
+/* icons - should always be the last because of issues with the gwt css compiler */
+span[class ^="icon-"]:before,span[class *=" icon-"]:before {
+    margin: 0;
+}
