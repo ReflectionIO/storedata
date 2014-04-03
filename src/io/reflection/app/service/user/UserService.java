@@ -43,6 +43,7 @@ final class UserService implements IUserService {
 
 	private static final String SALT = "salt.username.magic";
 	private static final long PASSWORD_EMAIL_TEMPLATE_ID = 4;
+	private static final long WELCOME_EMAIL_TEMPLATE_ID = 1;
 
 	private static final Logger LOG = Logger.getLogger(UserService.class.getName());
 
@@ -108,6 +109,16 @@ final class UserService implements IUserService {
 
 				addedUser = this.getUser(user.id);
 				addedUser.password = null;
+				
+				Map<String, Object> values = new HashMap<String, Object>();
+				values.put("user", addedUser);
+
+				EmailTemplate template = EmailTemplateServiceProvider.provide().getEmailTemplate(Long.valueOf(WELCOME_EMAIL_TEMPLATE_ID));
+				String body = EmailHelper.inflate(values, template.body);
+
+				if (!EmailHelper.sendEmail(template.from, user.username, FormattingHelper.getUserName(user), template.subject, body, template.format)) {
+					LOG.severe(String.format("Failed to welcome user [%d]", user.id.longValue()));
+				}
 			}
 		} finally {
 

@@ -117,22 +117,22 @@ public class EmailServlet extends HttpServlet {
 
 		if (output.status == StatusType.StatusTypeSuccess) {
 
-			String emailTo = input.user.username;
-
-			String name = input.user.forename + " " + surname;
-
-			String body = "Hi "
-					+ forename
-					+ ",\r\n\r\n"
-					+ "We have received your request to be invited to our beta starting early 2014.\r\n\r\n"
-					+ "We are working hard to create a functional, relevant and beautiful service for app market intelligence. We can't wait to share it with you.\r\n\r\n"
-					+ "Stay tuned,\r\n\r\n" + "The Reflection Team\r\n" + "www.reflection.io";
-
-			if (EmailHelper.sendEmail("hello@reflection.io", emailTo, name, "Thank you", body, EmailFormatType.EmailFormatTypePlainText)) {
+//			String emailTo = input.user.username;
+//
+//			String name = input.user.forename + " " + surname;
+//
+//			String body = "Hi "
+//					+ forename
+//					+ ",\r\n\r\n"
+//					+ "We have received your request to be invited to our beta starting early 2014.\r\n\r\n"
+//					+ "We are working hard to create a functional, relevant and beautiful service for app market intelligence. We can't wait to share it with you.\r\n\r\n"
+//					+ "Stay tuned,\r\n\r\n" + "The Reflection Team\r\n" + "www.reflection.io";
+//
+//			if (EmailHelper.sendEmail("hello@reflection.io", emailTo, name, "Thank you", body, EmailFormatType.EmailFormatTypePlainText)) {
 				resp.getOutputStream().write(1);
-			} else {
-				resp.getOutputStream().write(0);
-			}
+//			} else {
+//				resp.getOutputStream().write(0);
+//			}
 		} else {
 			resp.getOutputStream().write(0);
 		}
