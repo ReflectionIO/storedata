@@ -25,6 +25,11 @@ import com.google.gwt.user.datepicker.client.DatePicker;
  * 
  */
 public class FilterHelper {
+
+	public static Date getToday() {
+		return normalizeDate(new Date());
+	}
+
 	public static void addStores(ListBox list) {
 		List<Store> stores = StoreController.get().getStores();
 
@@ -65,23 +70,72 @@ public class FilterHelper {
 	}
 
 	/**
+	 * Disable dates between startDate and endDate
 	 * 
+	 * @param datePicker
+	 * @param startDate
+	 * @param endDate
 	 */
 	public static void disableOutOfRangeDates(DatePicker datePicker, Date startDate, Date endDate) {
 
+		// Enable all dates and reset all highlighted dates
+		List<Date> dates = new ArrayList<Date>();
+		Date firstShownOnCalendar = CalendarUtil.copyDate(datePicker.getFirstDate());
+		Date lastShownOnCalendar = CalendarUtil.copyDate(datePicker.getLastDate());
+		while (firstShownOnCalendar.before(lastShownOnCalendar) || CalendarUtil.isSameDate(firstShownOnCalendar, lastShownOnCalendar)) {
+			dates.add(CalendarUtil.copyDate(firstShownOnCalendar));
+			CalendarUtil.addDaysToDate(firstShownOnCalendar, 1);
+		}
+		datePicker.setTransientEnabledOnDates(true, dates);
+		dates.clear();
+		firstShownOnCalendar = CalendarUtil.copyDate(datePicker.getFirstDate());
+
+		// Disable dates before start date
+		if (startDate != null) {
+			while ((firstShownOnCalendar.before(lastShownOnCalendar) || CalendarUtil.isSameDate(firstShownOnCalendar, lastShownOnCalendar))
+					&& firstShownOnCalendar.before(startDate)) {
+				dates.add(CalendarUtil.copyDate(firstShownOnCalendar));
+				CalendarUtil.addDaysToDate(firstShownOnCalendar, 1);
+			}
+			datePicker.setTransientEnabledOnDates(false, dates);
+			dates.clear();
+			firstShownOnCalendar = CalendarUtil.copyDate(datePicker.getFirstDate());
+		}
+
+		// Disable dates after end date
+		if (endDate != null) {
+			firstShownOnCalendar = CalendarUtil.copyDate(datePicker.getFirstDate());
+			while ((lastShownOnCalendar.after(firstShownOnCalendar) || CalendarUtil.isSameDate(firstShownOnCalendar, lastShownOnCalendar))
+					&& lastShownOnCalendar.after(endDate)) {
+				dates.add(CalendarUtil.copyDate(lastShownOnCalendar));
+				CalendarUtil.addDaysToDate(lastShownOnCalendar, -1);
+			}
+			datePicker.setTransientEnabledOnDates(false, dates);
+			dates.clear();
+			lastShownOnCalendar = CalendarUtil.copyDate(datePicker.getLastDate());
+		}
+
 	}
 
+	/**
+	 * 
+	 * @param datePicker
+	 */
 	public static void disableFutureDates(DatePicker datePicker) {
+
 		List<Date> dates = new ArrayList<Date>();
 		Date firstShownOnCalendar = CalendarUtil.copyDate(datePicker.getFirstDate());
 		Date lastShownOnCalendar = CalendarUtil.copyDate(datePicker.getLastDate());
 		Date today = normalizeDate(new Date());
-		while ((lastShownOnCalendar.after(firstShownOnCalendar) || firstShownOnCalendar.equals(lastShownOnCalendar)) && lastShownOnCalendar.after(today)) {
+		while ((lastShownOnCalendar.after(firstShownOnCalendar) || CalendarUtil.isSameDate(firstShownOnCalendar, lastShownOnCalendar))
+				&& lastShownOnCalendar.after(today)) {
 			if (datePicker.isDateVisible(CalendarUtil.copyDate(lastShownOnCalendar))) {
 				dates.add(CalendarUtil.copyDate(lastShownOnCalendar));
 			}
 			CalendarUtil.addDaysToDate(lastShownOnCalendar, -1);
 		}
 		datePicker.setTransientEnabledOnDates(false, dates);
+
 	}
+
 }

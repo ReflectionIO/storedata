@@ -7,7 +7,11 @@
 //
 package io.reflection.app.client.part.datatypes;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import com.google.gwt.user.datepicker.client.CalendarUtil;
 
 /**
  * @author billy1380
@@ -18,11 +22,6 @@ public class DateRange {
 	private Date mFromDate;
 	private Date mToDate;
 
-	public Date getFrom() {
-
-		return mFromDate;
-	}
-
 	public void setFrom(Date value) {
 		mFromDate = value;
 	}
@@ -31,9 +30,37 @@ public class DateRange {
 		mToDate = value;
 	}
 
-	public Date getTo() {
+	public Date getFrom() {
+		return CalendarUtil.copyDate(mFromDate);
+	}
 
-		return mToDate;
+	public Date getTo() {
+		return CalendarUtil.copyDate(mToDate);
+	}
+
+	public int getDaysBetween() {
+		return CalendarUtil.getDaysBetween(mFromDate, mToDate);
+	}
+
+	public List<Date> getDatesBetween() {
+		List<Date> dates = new ArrayList<Date>();
+		Date date = CalendarUtil.copyDate(mFromDate);
+		CalendarUtil.addDaysToDate(date, 1);
+		while (date.before(mToDate)) {
+			dates.add(CalendarUtil.copyDate(date));
+			CalendarUtil.addDaysToDate(date, 1);
+		}
+		return dates;
+	}
+
+	public List<Date> getDates() {
+		List<Date> dates = new ArrayList<Date>();
+		Date date = CalendarUtil.copyDate(mFromDate);
+		while (date.before(mToDate) || CalendarUtil.isSameDate(date, mToDate)) {
+			dates.add(CalendarUtil.copyDate(date));
+			CalendarUtil.addDaysToDate(date, 1);
+		}
+		return dates;
 	}
 
 	/*
