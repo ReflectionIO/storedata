@@ -10,6 +10,7 @@ package io.reflection.app.client.controller;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.helper.FilterHelper;
+import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.Store;
@@ -559,5 +560,9 @@ public class FilterController {
 				commit();
 			}
 		}
+	}
+
+	public DateRange getDateRange() {
+		return FilterHelper.createRange(getStartDate(), getEndDate());
 	}
 }

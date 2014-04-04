@@ -9,6 +9,7 @@ package io.reflection.app.client.helper;
 
 import io.reflection.app.client.controller.CountryController;
 import io.reflection.app.client.controller.StoreController;
+import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.Store;
 
@@ -141,6 +142,42 @@ public class FilterHelper {
 		}
 		datePicker.setTransientEnabledOnDates(false, dates);
 
+	}
+
+	public static DateRange createRangeFromToday(int daysApart) {
+		DateRange dateRange = new DateRange();
+		Date from, to;
+
+		if (daysApart > 0) {
+			dateRange.setFrom(from = getToday());
+			to = CalendarUtil.copyDate(from);
+			CalendarUtil.addDaysToDate(to, daysApart);
+			dateRange.setTo(to);
+		} else {
+			dateRange.setTo(to = getToday());
+			from = CalendarUtil.copyDate(to);
+			CalendarUtil.addDaysToDate(from, -daysApart);
+			dateRange.setFrom(from);
+		}
+
+		return dateRange;
+	}
+
+	public static DateRange createRange(Date from, Date to) {
+		DateRange dateRange = new DateRange();
+
+		if (from == null) {
+			from = getToday();
+		}
+
+		if (to == null) {
+			to = getToday();
+		}
+
+		dateRange.setFrom(from);
+		dateRange.setTo(to);
+
+		return dateRange;
 	}
 
 }

@@ -257,8 +257,19 @@ public class DateRangePicker extends Composite implements HasValue<DateRange>, I
 	 */
 	@Override
 	public HandlerRegistration addValueChangeHandler(ValueChangeHandler<DateRange> handler) {
-		// TODO Auto-generated method stub
-		return null;
+		return addHandler(handler, ValueChangeEvent.getType());
+	}
+
+	public void setCurrentMonth(DateRange dateRange) {
+		if (dateRange != null) {
+			if (dateRange.getFrom() != null) {
+				mFromPicker.setCurrentMonth(dateRange.getFrom());
+			}
+
+			if (dateRange.getTo() != null) {
+				mToPicker.setCurrentMonth(dateRange.getTo());
+			}
+		}
 	}
 
 }

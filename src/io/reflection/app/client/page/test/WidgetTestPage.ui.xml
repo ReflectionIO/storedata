@@ -1,7 +1,9 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part">
     <ui:style>
-    
+    .moveDown {
+    	margin-top: 10px;
+    }
     </ui:style>
     <g:HTMLPanel>
         <h2>Widget Testing</h2>
@@ -11,5 +13,20 @@
         <p:CircleProgressBar></p:CircleProgressBar>
         <p:ReflectionProgressBar></p:ReflectionProgressBar>
         <p:DateRangePicker></p:DateRangePicker>
+
+        <g:FormPanel styleName="form {style.moveDown}">
+            <g:HTMLPanel>
+                <div class="form-group col-sm-3">
+                    <div class="input-group ">
+                        <p:DateRangeBox styleName="form-control" ui:field="dateRange" />
+
+                        <span class="input-group-addon">
+                            <i class="icon-calendar"></i>
+                        </span>
+                    </div>
+                </div>
+            </g:HTMLPanel>
+        </g:FormPanel>
+
     </g:HTMLPanel>
-</ui:UiBinder> 
+</ui:UiBinder>

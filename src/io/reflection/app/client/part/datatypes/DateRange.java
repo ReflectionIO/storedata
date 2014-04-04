@@ -71,13 +71,25 @@ public class DateRange {
 	@Override
 	public boolean equals(Object obj) {
 
-		if (obj instanceof DateRange) {
+		if (obj != null && obj instanceof DateRange) {
 			DateRange dateRangeObj = (DateRange) obj;
 
 			return this.getFrom().equals(dateRangeObj.getFrom()) && this.getTo().equals(dateRangeObj.getTo());
 		}
 
 		return super.equals(obj);
+	}
+
+	public static DateRange copy(DateRange value) {
+		DateRange range = null;
+
+		if (value != null) {
+			range = new DateRange();
+			range.setFrom(CalendarUtil.copyDate(value.getFrom()));
+			range.setTo(CalendarUtil.copyDate(value.getTo()));
+		}
+
+		return range;
 	}
 
 }
