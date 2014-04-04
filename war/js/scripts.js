@@ -3,7 +3,7 @@
 /*-----------------------------------------------------------------------------------*/
 
 /* Starting Animation on Load */
-$('<img/>').attr('src', 'http://placehold.it/1920x1080/1a1a1a/F4594E&amptext=1920x1080').load(function() {
+$('<img/>').attr('src', '../images/header_bg.png').load(function() {
 	jQuery('#logo').fadeIn(600, function() {
 		jQuery('h1').animate({opacity: '1', 'padding-top': '0'}, 500,function() {
 			jQuery('h2').animate({opacity: '1', 'padding-top': '0'}, 500,function() {
