@@ -2,41 +2,95 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.user.datepicker.client">
 
     <ui:style type="io.reflection.app.client.part.DateRangePicker.Style">
-    @external datePickerDay, datePickerWeekdayLabel, datePickerWeekendLabel, gwt-DatePicker,datePickerDayIsValue,datePickerDayIsToday;
+    @external datePickerDay, datePickerWeekdayLabel, datePickerWeekendLabel, gwt-DatePicker,datePickerDayIsValue,datePickerDayIsToday,datePickerDayIsHighlighted,datePickerDayIsFiller;
     .inline {
     	display: inline-block;
     }
     
-    .highlightRange.datePickerDay,.highlightRange.datePickerWeekdayLabel,.highlightRange.datePickerWeekendLabel
+    .highlightRange.datePickerDay,.highlightRange.datePickerWeekdayLabel,.highlightRange.datePickerWeekendLabel,.highlightRange.datePickerDayIsFiller
     	{
     	color: white;
+    	padding: 4px 7px;
     }
     
-    .highlightRange {
+    .highlightRange.datePickerDayIsHighlighted {
     	background: #6D69C5;
-    	border-color: #3071A9;
-    	color: white;
+    	border-color: #8873CD;
+    	-webkit-border-radius: 0;
+    	-moz-border-radius: 0;
+    	border-radius: 0;
+    }
+    
+    .highlightRange,
+    .highlightRange.datePickerDayIsFiller{
+		color: white;
+    	font-weight: bold;
+    	background: rgba(109, 105, 197, 0.75) /*#6D69C5*/;
+    	border-color: #8873CD;
+    	font-style: normal;
     }
     
     .fromHighlightRangeBoundary,.toHighlightRangeBoundary {
     	color: white;
     	font-weight: bold;
     	background: #6D69C5;
-    	border-color: #3071A9;
+    	border-color: #8873CD;
+    	font-style: normal;
     }
     
-    .fromHighlightRangeBoundary,.fromHighlightRangeBoundary.datePickerDayIsValue,.fromHighlightRangeBoundary.datePickerDayIsToday
+    .fromHighlightRangeBoundary,.fromHighlightRangeBoundary.datePickerDayIsValue,.fromHighlightRangeBoundary.datePickerDayIsFiller
     	{
+    	color: white;
+    	font-weight: bold;
+    	/*background: #6D69C5;
+    	border-color: #8873CD;*/
+    	font-style: normal;
     	-webkit-border-radius: 4px 0 0 4px;
     	-moz-border-radius: 4px 0 0 4px;
     	border-radius: 4px 0 0 4px;
     }
     
-    .toHighlightRangeBoundary,.toHighlightRangeBoundary.datePickerDayIsValue,.toHighlightRangeBoundary.datePickerDayIsToday
+    .toHighlightRangeBoundary,.toHighlightRangeBoundary.datePickerDayIsValue,.toHighlightRangeBoundary.datePickerDayIsFiller
     	{
+    	color: white;
+    	font-weight: bold;
+    	/*background: #6D69C5;
+    	border-color: #8873CD;*/
+    	font-style: normal;
     	-webkit-border-radius: 0 4px 4px 0;
     	-moz-border-radius: 0 4px 4px 0;
     	border-radius: 0 4px 4px 0;
+    }
+    
+    .toHighlightRangeBoundary.datePickerDayIsToday,
+    .fromHighlightRangeBoundary.datePickerDayIsToday,
+    .toHighlightRangeBoundary.datePickerDayIsToday.datePickerDayIsValue,
+    .fromHighlightRangeBoundary.datePickerDayIsToday.datePickerDayIsValue
+    	{
+    	color: white;
+    	font-weight: bold;
+    	font-style: normal;
+    	background: #474949;
+    	border-color: #474949;
+    }
+    
+    .toHighlightRangeBoundary.datePickerDayIsToday {
+    	-webkit-border-radius: 0 4px 4px 0;
+    	-moz-border-radius: 0 4px 4px 0;
+    	border-radius: 0 4px 4px 0;
+    }
+    
+    .fromHighlightRangeBoundary.datePickerDayIsToday {
+    	-webkit-border-radius: 4px 0 0 4px;
+    	-moz-border-radius: 4px 0 0 4px;
+    	border-radius: 4px 0 0 4px;
+    }
+    
+    .fromHighlightRangeBoundary.toHighlightRangeBoundary.datePickerDayIsToday
+    	{
+    	-webkit-border-radius: 4px;
+    	-moz-border-radius: 4px;
+    	border-radius: 4px;
     }
     
     .holder {
@@ -49,19 +103,15 @@
     	background-color: #fff;
     	border: 1px solid #ccc;
     	border: 1px solid rgba(0, 0, 0, 0.2);
-    	
     	-webkit-border-radius: 5px;
     	-moz-border-radius: 5px;
     	border-radius: 5px;
-    	
     	-webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
     	-moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
     	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    	
     	-webkit-background-clip: padding-box;
     	-moz-background-clip: padding;
     	background-clip: padding-box;
-    	
     	display: inline-block;
     }
     
