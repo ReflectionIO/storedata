@@ -9,6 +9,7 @@ package io.reflection.app.client.controller;
 
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.handler.FilterEventHandler;
+import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.Store;
@@ -33,9 +34,9 @@ public class FilterController {
 	public static final String STORE_KEY = "store";
 	public static final String COUNTRY_KEY = "country";
 	public static final String LIST_TYPE_KEY = "listtype";
-	private static final String START_DATE_KEY = "startdate";
-	private static final String END_DATE_KEY = "enddate";
-	private static final String CATEGORY_KEY = "category";
+	public static final String START_DATE_KEY = "startdate";
+	public static final String END_DATE_KEY = "enddate";
+	public static final String CATEGORY_KEY = "category";
 	public static final String DAILY_DATA_KEY = "dailydata";
 	public static final String CHART_TYPE_KEY = "charttype";
 	public static final String SUMMARY_TYPE_KEY = "summarytype";
@@ -352,6 +353,8 @@ public class FilterController {
 	public void setStartDate(Date value) {
 		Long previousStartTime = mCurrentFilter.getStartTime();
 
+		value = FilterHelper.normalizeDate(value);
+
 		if (value != null && (previousStartTime == null || value.getTime() != previousStartTime.longValue())) {
 			Date previousStartDate = null;
 
@@ -378,6 +381,8 @@ public class FilterController {
 
 	public void setEndDate(Date value) {
 		Long previousEndTime = mCurrentFilter.getEndTime();
+
+		value = FilterHelper.normalizeDate(value);
 
 		if (value != null && (previousEndTime == null || value.getTime() != previousEndTime.longValue())) {
 			Date previousEndDate = null;
@@ -432,11 +437,10 @@ public class FilterController {
 		mInTransaction--;
 
 		if (mInTransaction == 0) {
-			if (mPreviousValues != null && mPreviousValues.size() > 0) {
+			if (mPreviousValues != null) {
 				EventController.get().fireEventFromSource(new FilterEventHandler.ChangedFilterParameters(mCurrentFilter, mPreviousValues), this);
+				mPreviousValues = null;
 			}
-
-			mPreviousValues = null;
 		}
 	}
 
@@ -536,22 +540,24 @@ public class FilterController {
 	 * @param part
 	 */
 	public void fromParameter(String part) {
-		Filter parameterFitler = Filter.parse(part);
+		if (mPreviousValues == null) {
+			Filter parameterFitler = Filter.parse(part);
 
-		if (parameterFitler != null && parameterFitler.size() > 0) {
-			start();
+			if (parameterFitler != null && parameterFitler.size() > 0) {
+				start();
 
-			setCategory(parameterFitler.getCategoryId());
-			setChartType(parameterFitler.getChartType());
-			setCountry(parameterFitler.getCountryA2Code());
-			setDailyData(parameterFitler.getDailyData());
-			setEndDate(parameterFitler.getEndTime() == null ? null : new Date(parameterFitler.getEndTime().longValue()));
-			setListType(parameterFitler.getListType());
-			setStartDate(parameterFitler.getStartTime() == null ? null : new Date(parameterFitler.getStartTime().longValue()));
-			setStore(parameterFitler.getStoreA3Code());
-			setSummaryType(parameterFitler.getSummaryType());
+				setCategory(parameterFitler.getCategoryId());
+				setChartType(parameterFitler.getChartType());
+				setCountry(parameterFitler.getCountryA2Code());
+				setDailyData(parameterFitler.getDailyData());
+				setEndDate(parameterFitler.getEndTime() == null ? null : new Date(parameterFitler.getEndTime().longValue()));
+				setListType(parameterFitler.getListType());
+				setStartDate(parameterFitler.getStartTime() == null ? null : new Date(parameterFitler.getStartTime().longValue()));
+				setStore(parameterFitler.getStoreA3Code());
+				setSummaryType(parameterFitler.getSummaryType());
 
-			commit();
+				commit();
+			}
 		}
 	}
 }

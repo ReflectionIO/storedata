@@ -139,6 +139,9 @@ public class LoadingPage extends Page implements NavigationEventHandler, LoginEv
 		resetProgressBar();
 		
 		currentTaskIndex = 0;
+		
+		NavigationController.get().getHeader().getElement().getStyle().setTop(-60, Unit.PX);
+		NavigationController.get().getFooter().getElement().getStyle().setHeight(0, Unit.PX);
 
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(EventController.get().addHandlerToSource(LoginEventHandler.TYPE, SessionController.get(), this));
@@ -147,6 +150,18 @@ public class LoadingPage extends Page implements NavigationEventHandler, LoginEv
 		register(EventController.get().addHandlerToSource(GetStoresEventHandler.TYPE, StoreController.get(), this));
 	}
 
+	/* (non-Javadoc)
+	 * @see io.reflection.app.client.page.Page#onDetach()
+	 */
+	@Override
+	protected void onDetach() {
+
+		NavigationController.get().getHeader().getElement().getStyle().setTop(0, Unit.PX);
+		NavigationController.get().getFooter().getElement().getStyle().clearHeight();
+		
+		super.onDetach();
+	}
+	
 	/**
 	 * 
 	 */

@@ -103,7 +103,7 @@ public class HomePage extends Page {
 			@Override
 			public void onResize(ResizeEvent event) {
 				resizeTimer.cancel();
-				resizeTimer.schedule((int) (1000.0 / 30.0));
+				resizeTimer.schedule(250);
 			}
 		}));
 	}
@@ -157,7 +157,7 @@ public class HomePage extends Page {
 				scrollTimer.cancel();
 			}
 
-			scrollTimer.scheduleRepeating(50);
+			scrollTimer.scheduleRepeating((int) (1000.0 / 30.0));
 		} else if (e.getSource() == carouselLeft) {
 
 		} else if (e.getSource() == carouselRight) {

@@ -61,11 +61,16 @@ public class FilterHelper {
 	 */
 	@SuppressWarnings("deprecation")
 	public static Date normalizeDate(Date date) {
-		Date newDate = new Date(0L);
-		newDate.setDate(date.getDate());
-		newDate.setMonth(date.getMonth());
-		newDate.setYear(date.getYear());
-		newDate.setHours(0);
+		Date newDate = null;
+
+		if (date != null) {
+			newDate = new Date(0L);
+			newDate.setDate(date.getDate());
+			newDate.setMonth(date.getMonth());
+			newDate.setYear(date.getYear());
+			newDate.setHours(0);
+		}
+
 		return newDate;
 	}
 

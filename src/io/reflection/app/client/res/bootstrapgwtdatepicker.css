@@ -87,12 +87,12 @@
 
 .datePickerDayIsValueAndHighlighted {
 	background: #6D69C5;
-	border-color: #3071A9;
+	border-color: #8873CD;
 	color: white
 }
 
 .datePickerDayIsToday {
-	padding: 3px;
+	padding: 4px 7px;
 	color: #FFF;
 	background-color: #474949;
 	border-color: #474949;

@@ -365,7 +365,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	 */
 	@Override
 	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
-		getHistoryChartData();
+		if (NavigationController.get().getCurrentPage() == PageType.ItemPageType) {
+			PageType.ItemPageType.show("view", mItemExternalId, selectedTab, FilterController.get().asItemFilterString());
+		}
 	}
 
 	/*
@@ -375,7 +377,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	 */
 	@Override
 	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
-		getHistoryChartData();
+		if (NavigationController.get().getCurrentPage() == PageType.ItemPageType) {
+			PageType.ItemPageType.show("view", mItemExternalId, selectedTab, FilterController.get().asItemFilterString());
+		}
 	}
 
 }

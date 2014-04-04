@@ -22,7 +22,7 @@
     }
     
     .arc2 {
-		background-color: rgba(101, 98,189, .75);
+		background-color: rgba(109, 105, 197, 0.75);
     	animation: arcAnimation 1s infinite linear;
     	-moz-animation: arcAnimation 1s infinite linear;
     	-webkit-animation: arcAnimation 1s infinite linear;

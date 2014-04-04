@@ -7,11 +7,15 @@
 //
 package io.reflection.app.client.page;
 
+import static io.reflection.app.client.controller.FilterController.CATEGORY_KEY;
+import static io.reflection.app.client.controller.FilterController.COUNTRY_KEY;
 import static io.reflection.app.client.controller.FilterController.DAILY_DATA_KEY;
+import static io.reflection.app.client.controller.FilterController.END_DATE_KEY;
 import static io.reflection.app.client.controller.FilterController.FREE_LIST_TYPE;
 import static io.reflection.app.client.controller.FilterController.GROSSING_LIST_TYPE;
 import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
 import static io.reflection.app.client.controller.FilterController.PAID_LIST_TYPE;
+import static io.reflection.app.client.controller.FilterController.STORE_KEY;
 import io.reflection.app.client.cell.AppRankCell;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FilterController;
@@ -230,17 +234,21 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	 */
 	@Override
 	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
-		boolean foundDailyData = false;
-		if (name != null && !(foundDailyData = DAILY_DATA_KEY.equals(name))) {
-			RankController.get().reset();
+		if (NavigationController.get().getCurrentPage() == PageType.RanksPageType) {
+			boolean foundDailyData = false;
+			if (name != null
+					&& (COUNTRY_KEY.equals(name) || STORE_KEY.equals(name) || CATEGORY_KEY.equals(name) || END_DATE_KEY.equals(name) || (foundDailyData = DAILY_DATA_KEY
+							.equals(name)))) {
+
+				if (foundDailyData) {
+					mRanks.redraw();
+				} else {
+					RankController.get().reset();
+				}
+
+				PageType.RanksPageType.show("view", selectedTab, FilterController.get().asRankFilterString());
+			}
 		}
-
-		PageType.RanksPageType.show("view", selectedTab, FilterController.get().asRankFilterString());
-
-		if (foundDailyData) {
-			mRanks.redraw();
-		}
-
 	}
 
 	/*
@@ -250,20 +258,21 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	 */
 	@Override
 	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
-		boolean foundResetFilterValues = false, foundDailyData = false;
+		if (NavigationController.get().getCurrentPage() == PageType.RanksPageType) {
 
-		for (String name : currentFilter.keySet()) {
-			if (!(foundDailyData = DAILY_DATA_KEY.equals(name))) {
-				foundResetFilterValues = true;
-				break;
+			boolean foundDailyData = false;
+
+			if (previousValues.get(COUNTRY_KEY) != null || previousValues.get(STORE_KEY) != null || previousValues.get(CATEGORY_KEY) != null
+					|| previousValues.get(END_DATE_KEY) != null || (foundDailyData = (previousValues.get(DAILY_DATA_KEY) != null))) {
+
+				if (foundDailyData) {
+					mRanks.redraw();
+				} else {
+					RankController.get().reset();
+				}
+
+				PageType.RanksPageType.show("view", selectedTab, FilterController.get().asRankFilterString());
 			}
-		}
-
-		if (foundResetFilterValues) {
-			RankController.get().reset();
-		} else if (foundDailyData) {
-			PageType.RanksPageType.show("view", selectedTab, FilterController.get().asRankFilterString());
-			mRanks.redraw();
 		}
 
 	}
@@ -442,7 +451,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 					mSidePanel.setDataFilterVisible(true);
 					selectedTab = OVERALL_LIST_TYPE;
 				}
-				
+
 				mSidePanel.updateFromFilter();
 			}
 		}
