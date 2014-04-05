@@ -354,9 +354,10 @@
         <xsd:complexContent>
             <xsd:extension base="DataType">
                 <xsd:sequence>
-                    <xsd:element name="members" type="User" />
+                    <xsd:element name="members" type="User" minOccurs="0" maxOccurs="unbounded" />
                     <xsd:element name="creator" type="User" />
                     <xsd:element name="tags" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
+                    <xsd:element name="topics" type="Topic" minOccurs="0" maxOccurs="unbounded" />
                 </xsd:sequence>
                 <xsd:attribute name="title" type="xsd:string" use="required" />
                 <xsd:attribute name="description" type="xsd:string" use="required" />
@@ -372,12 +373,14 @@
                     <xsd:element name="author" type="User" />
                     <xsd:element name="tags" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
                     <xsd:element name="replies" type="Reply" maxOccurs="unbounded" />
+                    <xsd:element name="forum" type="Forum" />
+                    <xsd:element name="tags" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
                 </xsd:sequence>
                 <xsd:attribute name="title" type="xsd:string" use="required" />
                 <xsd:attribute name="content" type="xsd:string" use="required" />
-                <xsd:attribute name="hot" type="xsd:boolean" />
+                <xsd:attribute name="hot" type="xsd:int" />
                 <xsd:attribute name="sticky" type="xsd:boolean" />
-                <xsd:attribute name="flagged" type="xsd:boolean" />
+                <xsd:attribute name="flagged" type="xsd:int" />
                 <xsd:attribute name="locked" type="xsd:boolean" />
             </xsd:extension>
         </xsd:complexContent>
@@ -391,7 +394,7 @@
                     <xsd:element name="topic" type="Topic" />
                 </xsd:sequence>
                 <xsd:attribute name="content" type="xsd:string" use="required" />
-                <xsd:attribute name="flagged" type="xsd:boolean" />
+                <xsd:attribute name="flagged" type="xsd:int" />
                 <xsd:attribute name="solution" type="xsd:boolean" />
             </xsd:extension>
         </xsd:complexContent>
