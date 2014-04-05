@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions name="forum" targetNamespace="http://app.reflection.io/forum" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:sdf="http://app.reflection.io/forum"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <wsdl:types>
+        <xsd:schema targetNamespace="http://app.reflection.io/forum" xmlns:sd="http://app.reflection.io">
+            <xsd:import schemaLocation="../app.xsd" namespace="http://app.reflection.io" />
+
+            <xsd:element name="GetForumsInput" type="sdf:GetForumsRequest" />
+            <xsd:element name="GetForumsOutput" type="sdf:GetForumsResponse" />
+
+            <xsd:element name="GetTopicsInput" type="sdf:GetTopicsRequest" />
+            <xsd:element name="GetTopicsOutput" type="sdf:GetTopicsResponse" />
+
+            <xsd:element name="GetRepliesInput" type="sdf:GetRepliesRequest" />
+            <xsd:element name="GetRepliesOutput" type="sdf:GetRepliesResponse" />
+
+            <xsd:element name="CreateTopicInput" type="sdf:CreateTopicRequest" />
+            <xsd:element name="CreateTopicOutput" type="sdf:CreateTopicResponse" />
+
+            <xsd:element name="AddReplyInput" type="sdf:AddReplyRequest" />
+            <xsd:element name="AddReplyOutput" type="sdf:AddReplyResponse" />
+
+            <xsd:element name="UpdateTopicInput" type="sdf:UpdateTopicRequest" />
+            <xsd:element name="UpdateTopicOutput" type="sdf:UpdateTopicResponse" />
+
+            <xsd:element name="UpdateReplyInput" type="sdf:UpdateReplyRequest" />
+            <xsd:element name="UpdateReplyOutput" type="sdf:UpdateReplyResponse" />
+
+            <xsd:element name="DeleteTopicInput" type="sdf:DeleteTopicRequest" />
+            <xsd:element name="DeleteTopicOutput" type="sdf:DeleteTopicResponse" />
+
+            <xsd:element name="DeleteReplyInput" type="sdf:DeleteReplyRequest" />
+            <xsd:element name="DeleteReplyOutput" type="sdf:DeleteReplyResponse" />
+
+            <xsd:complexType name="GetForumsRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="pager" type="sd:Pager" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="GetForumsResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+                            <xsd:element name="forums" type="sd:Forum" maxOccurs="unbounded" />
+                            <xsd:element name="pager" type="sd:Pager" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="GetTopicsRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:attribute name="id" type="xsd:long" />
+                        <xsd:attribute name="title" type="xsd:string" />
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="GetTopicsResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+                            <xsd:element name="post" type="sd:Post" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="GetRepliesRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="post" type="sd:Post" />
+                        </xsd:sequence>
+                        <xsd:attribute name="publish" type="xsd:boolean" />
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="GetRepliesResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="CreateTopicRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="post" type="sd:Post" />
+                        </xsd:sequence>
+                        <xsd:attribute name="publish" type="xsd:boolean" />
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="CreateTopicResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="AddReplyRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="post" type="sd:Post" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="AddReplyResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="UpdateTopicRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="post" type="sd:Post" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="UpdateTopicResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="UpdateReplyRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="post" type="sd:Post" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="UpdateReplyResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="DeleteTopicRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="post" type="sd:Post" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="DeleteTopicResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="DeleteReplyRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="post" type="sd:Post" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="DeleteReplyResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+        </xsd:schema>
+    </wsdl:types>
+
+    <wsdl:message name="GetForumsRequest">
+        <wsdl:part name="input" element="sdf:GetForumsInput" />
+    </wsdl:message>
+    <wsdl:message name="GetForumsResponse">
+        <wsdl:part name="output" element="sdf:GetForumsOutput" />
+    </wsdl:message>
+
+    <wsdl:message name="GetTopicsRequest">
+        <wsdl:part name="input" element="sdf:GetTopicsInput" />
+    </wsdl:message>
+    <wsdl:message name="GetTopicsResponse">
+        <wsdl:part name="output" element="sdf:GetTopicsOutput" />
+    </wsdl:message>
+
+    <wsdl:message name="GetRepliesRequest">
+        <wsdl:part name="input" element="sdf:GetRepliesInput" />
+    </wsdl:message>
+    <wsdl:message name="GetRepliesResponse">
+        <wsdl:part name="output" element="sdf:GetRepliesOutput" />
+    </wsdl:message>
+
+    <wsdl:message name="CreateTopicRequest">
+        <wsdl:part name="input" element="sdf:CreateTopicInput" />
+    </wsdl:message>
+    <wsdl:message name="CreateTopicResponse">
+        <wsdl:part name="output" element="sdf:CreateTopicOutput" />
+    </wsdl:message>
+
+    <wsdl:message name="AddReplyRequest">
+        <wsdl:part name="input" element="sdf:AddReplyInput" />
+    </wsdl:message>
+    <wsdl:message name="AddReplyResponse">
+        <wsdl:part name="output" element="sdf:AddReplyOutput" />
+    </wsdl:message>
+
+    <wsdl:message name="UpdateTopicRequest">
+        <wsdl:part name="input" element="sdf:UpdateTopicInput" />
+    </wsdl:message>
+    <wsdl:message name="UpdateTopicResponse">
+        <wsdl:part name="output" element="sdf:UpdateTopicOutput" />
+    </wsdl:message>
+
+    <wsdl:message name="UpdateReplyRequest">
+        <wsdl:part name="input" element="sdf:UpdateReplyInput" />
+    </wsdl:message>
+    <wsdl:message name="UpdateReplyResponse">
+        <wsdl:part name="output" element="sdf:UpdateReplyOutput" />
+    </wsdl:message>
+
+    <wsdl:message name="DeleteTopicRequest">
+        <wsdl:part name="input" element="sdf:DeleteTopicInput" />
+    </wsdl:message>
+    <wsdl:message name="DeleteTopicResponse">
+        <wsdl:part name="output" element="sdf:DeleteTopicOutput" />
+    </wsdl:message>
+
+    <wsdl:message name="DeleteReplyRequest">
+        <wsdl:part name="input" element="sdf:DeleteReplyInput" />
+    </wsdl:message>
+    <wsdl:message name="DeleteReplyResponse">
+        <wsdl:part name="output" element="sdf:DeleteReplyOutput" />
+    </wsdl:message>
+
+    <wsdl:portType name="forum">
+        <wsdl:operation name="GetForums">
+            <wsdl:input message="sdf:GetForumsRequest" />
+            <wsdl:output message="sdf:GetForumsResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="GetTopics">
+            <wsdl:input message="sdf:GetTopicsRequest" />
+            <wsdl:output message="sdf:GetTopicsResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="GetReplies">
+            <wsdl:input message="sdf:GetRepliesRequest" />
+            <wsdl:output message="sdf:GetRepliesResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="CreateTopic">
+            <wsdl:input message="sdf:CreateTopicRequest" />
+            <wsdl:output message="sdf:CreateTopicResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="AddReply">
+            <wsdl:input message="sdf:AddReplyRequest" />
+            <wsdl:output message="sdf:AddReplyResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="UpdateTopic">
+            <wsdl:input message="sdf:UpdateTopicRequest" />
+            <wsdl:output message="sdf:UpdateTopicResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="UpdateReply">
+            <wsdl:input message="sdf:UpdateReplyRequest" />
+            <wsdl:output message="sdf:UpdateReplyResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="DeleteTopic">
+            <wsdl:input message="sdf:DeleteTopicRequest" />
+            <wsdl:output message="sdf:DeleteTopicResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="DeleteReply">
+            <wsdl:input message="sdf:DeleteReplyRequest" />
+            <wsdl:output message="sdf:DeleteReplyResponse" />
+        </wsdl:operation>
+
+    </wsdl:portType>
+    <wsdl:binding name="forumSOAP" type="sdf:forum">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+        <wsdl:operation name="GetForums">
+            <soap:operation soapAction="http://app.reflection.io/forum/GetForums" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="GetTopics">
+            <soap:operation soapAction="http://app.reflection.io/forum/GetTopics" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="GetReplies">
+            <soap:operation soapAction="http://app.reflection.io/forum/GetReplies" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="CreateTopic">
+            <soap:operation soapAction="http://app.reflection.io/forum/CreateTopic" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="AddReply">
+            <soap:operation soapAction="http://app.reflection.io/forum/AddReply" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="UpdateTopic">
+            <soap:operation soapAction="http://app.reflection.io/forum/UpdateTopic" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="UpdateReply">
+            <soap:operation soapAction="http://app.reflection.io/forum/UpdateReply" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="DeleteTopic">
+            <soap:operation soapAction="http://app.reflection.io/forum/DeleteTopic" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="DeleteReply">
+            <soap:operation soapAction="http://app.reflection.io/forum/DeleteReply" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+
+    </wsdl:binding>
+    <wsdl:service name="forum">
+        <wsdl:port name="forumSOAP" binding="sdf:forumSOAP">
+            <soap:address location="http://app.reflection.io/forum/" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

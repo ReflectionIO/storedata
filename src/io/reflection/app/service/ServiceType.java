@@ -35,7 +35,10 @@ public enum ServiceType {
 	ServiceTypeResource("resource"),
 	ServiceTypeEmailTemplate("emailtemplate"),
 	ServiceTypePost("post"),
-	ServiceTypeTag("tag"), ;
+	ServiceTypeTag("tag"),
+	ServiceTypeForum("forum"),
+	ServiceTypeTopic("topic"),
+	ServiceTypeReply("reply"), ;
 
 	private String value;
 	private static Map<String, ServiceType> valueLookup = null;

@@ -296,6 +296,24 @@ a:hover,a:focus,a:active {
 	border-color: #6D69C5;
 }
 
+.pagination>li>span {
+	color: black;
+}
+
+.pagination>li>a {
+	color: #6D69C5;
+}
+
+.pagination>li>a:hover,.pagination>li>a:focus {
+	color: #1bc79f;
+}
+
+.pagination>li>span:hover,.pagination>li>span:focus {
+	background: inherit;
+	color: black;
+}
+
+
 /* Buttons */
 .btn-group .btn-default,.btn-group .btn-default:FOCUS {
 	background-color: #f5f6f8;

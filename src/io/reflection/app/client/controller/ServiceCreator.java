@@ -10,6 +10,7 @@ package io.reflection.app.client.controller;
 import io.reflection.app.api.admin.client.AdminService;
 import io.reflection.app.api.blog.client.BlogService;
 import io.reflection.app.api.core.client.CoreService;
+import io.reflection.app.api.forum.client.ForumService;
 
 /**
  * @author billy1380
@@ -34,6 +35,13 @@ public class ServiceCreator implements ServiceConstants {
 	public static BlogService createBlogService() {
 		BlogService service = new BlogService();
 		service.setUrl(BLOG_END_POINT);
+		service.setBus(EventController.get());
+		return service;
+	}
+
+	public static ForumService createForumService() {
+		ForumService service = new ForumService();
+		service.setUrl(FORUM_END_POINT);
 		service.setBus(EventController.get());
 		return service;
 	}

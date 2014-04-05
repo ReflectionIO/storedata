@@ -31,6 +31,8 @@ public interface ServiceConstants {
 
 	public static final String LOOKUP_END_POINT = PROTOCOL + "//" + HOST + "/api/lookup";
 
+	public static final String FORUM_END_POINT = PROTOCOL + "//" + HOST + "/api/forum";
+
 	public static final String ACCESS_CODE = "765ea1ba-177d-4a01-bbe9-a4e74d10e83c";
 
 	public static final int STEP_VALUE = 25;

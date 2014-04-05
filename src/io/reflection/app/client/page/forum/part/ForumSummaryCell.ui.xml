@@ -1,0 +1,27 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder">
+    <ui:with field="link" type="com.google.gwt.safehtml.shared.SafeUri" />
+    <ui:with field="title" type="java.lang.String" />
+    <ui:with field="styleName" type="java.lang.String" />
+    <ui:with field="description" type="java.lang.String" />
+    <ui:with field="topics" type="java.lang.Integer" />
+
+    <ui:style>
+    .smaller {
+    	font-size: smaller;
+    }
+    </ui:style>
+
+    <a href="{link}" class="{styleName}">
+        <h4 class="list-group-item-heading">
+            <ui:text from="{title}" />
+        </h4>
+        <p class="list-group-item-text {style.smaller}">
+            <ui:text from="{description}" />
+        </p>
+        <p class="list-group-item-text">
+            <ui:text from="{topics.toString}" />
+            topics
+        </p>
+    </a>
+</ui:UiBinder>

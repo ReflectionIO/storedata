@@ -355,8 +355,7 @@
             <xsd:extension base="DataType">
                 <xsd:sequence>
                     <xsd:element name="members" type="User" minOccurs="0" maxOccurs="unbounded" />
-                    <xsd:element name="creator" type="User" />
-                    <xsd:element name="tags" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
+                    <xsd:element name="creator" type="User" minOccurs="1" />
                     <xsd:element name="topics" type="Topic" minOccurs="0" maxOccurs="unbounded" />
                 </xsd:sequence>
                 <xsd:attribute name="title" type="xsd:string" use="required" />
@@ -374,7 +373,6 @@
                     <xsd:element name="tags" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
                     <xsd:element name="replies" type="Reply" maxOccurs="unbounded" />
                     <xsd:element name="forum" type="Forum" />
-                    <xsd:element name="tags" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
                 </xsd:sequence>
                 <xsd:attribute name="title" type="xsd:string" use="required" />
                 <xsd:attribute name="content" type="xsd:string" use="required" />

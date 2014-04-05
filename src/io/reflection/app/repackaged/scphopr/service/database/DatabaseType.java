@@ -32,7 +32,10 @@ public enum DatabaseType {
 	DatabaseTypeResource("resource"),
 	DatabaseTypeEmailTemplate("emailtemplate"),
 	DatabaseTypePost("post"),
-	DatabaseTypeTag("tag"), ;
+	DatabaseTypeTag("tag"),
+	DatabaseTypeForum("forum"),
+	DatabaseTypeTopic("topic"),
+	DatabaseTypeReply("reply"), ;
 
 	private String value;
 	private static Map<String, DatabaseType> valueLookup = null;

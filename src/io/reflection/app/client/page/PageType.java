@@ -13,10 +13,13 @@ import io.reflection.app.client.page.admin.ItemsPage;
 import io.reflection.app.client.page.admin.PermissionsPage;
 import io.reflection.app.client.page.admin.RolesPage;
 import io.reflection.app.client.page.admin.UsersPage;
-import io.reflection.app.client.page.blog.AdminPage;
 import io.reflection.app.client.page.blog.EditPostPage;
+import io.reflection.app.client.page.blog.PostAdminPage;
 import io.reflection.app.client.page.blog.PostPage;
 import io.reflection.app.client.page.blog.PostsPage;
+import io.reflection.app.client.page.forum.AddTopicPage;
+import io.reflection.app.client.page.forum.ForumPage;
+import io.reflection.app.client.page.forum.TopicPage;
 import io.reflection.app.client.page.test.WidgetTestPage;
 import io.reflection.app.datatypes.shared.Permission;
 
@@ -66,6 +69,9 @@ public enum PageType {
 	BlogEditPostPageType("blogedit", "BLE", "BLU"),
 	NotPermittedPageType("notpermitted", false),
 	WidgetTestPage("test", false),
+	ForumPageType("forum", false),
+	ForumTopicPageType("forumtopic", false),
+	ForumAddTopicPageType("addtopic", false),
 
 	// Non navigable
 	LoadingPageType("loading"), ;
@@ -249,7 +255,7 @@ public enum PageType {
 			page = new PolicyPage();
 			break;
 		case BlogAdminPageType:
-			page = new AdminPage();
+			page = new PostAdminPage();
 			break;
 		case BlogEditPostPageType:
 			page = new EditPostPage();
@@ -268,6 +274,15 @@ public enum PageType {
 			break;
 		case WidgetTestPage:
 			page = new WidgetTestPage();
+			break;
+		case ForumPageType:
+			page = new ForumPage();
+			break;
+		case ForumTopicPageType:
+			page = new TopicPage();
+			break;
+		case ForumAddTopicPageType:
+			page = new AddTopicPage();
 			break;
 		case HomePageType:
 		default:

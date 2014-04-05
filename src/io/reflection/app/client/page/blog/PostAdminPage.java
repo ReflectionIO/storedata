@@ -1,5 +1,5 @@
 //
-//  AdminPage.java
+//  PostAdminPage.java
 //  storedata
 //
 //  Created by William Shakour (billy1380) on 16 Mar 2014.
@@ -37,16 +37,16 @@ import com.google.gwt.user.client.ui.Widget;
  * @author billy1380
  * 
  */
-public class AdminPage extends Page {
+public class PostAdminPage extends Page {
 
-	private static AdminPageUiBinder uiBinder = GWT.create(AdminPageUiBinder.class);
+	private static PostAdminPageUiBinder uiBinder = GWT.create(PostAdminPageUiBinder.class);
 
-	interface AdminPageUiBinder extends UiBinder<Widget, AdminPage> {}
+	interface PostAdminPageUiBinder extends UiBinder<Widget, PostAdminPage> {}
 
 	@UiField(provided = true) CellTable<Post> posts = new CellTable<Post>(ServiceConstants.SHORT_STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) SimplePager pager = new SimplePager(false, false);
 
-	public AdminPage() {
+	public PostAdminPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		createColumns();
