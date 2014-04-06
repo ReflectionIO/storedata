@@ -18,13 +18,13 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 public class Forum extends DataType {
-
 	public List<User> members;
 	public User creator;
 	public List<Topic> topics;
 	public String title;
 	public String description;
 	public ForumTypeType type;
+	public Integer numberOfTopics;
 
 	@Override
 	public JsonObject toJson() {
@@ -55,6 +55,8 @@ public class Forum extends DataType {
 		object.add("description", jsonDescription);
 		JsonElement jsonType = type == null ? JsonNull.INSTANCE : new JsonPrimitive(type.toString());
 		object.add("type", jsonType);
+		JsonElement jsonNumberOfTopics = numberOfTopics == null ? JsonNull.INSTANCE : new JsonPrimitive(numberOfTopics);
+		object.add("numberOfTopics", jsonNumberOfTopics);
 		return object;
 	}
 
@@ -112,6 +114,12 @@ public class Forum extends DataType {
 			JsonElement jsonType = jsonObject.get("type");
 			if (jsonType != null) {
 				type = ForumTypeType.fromString(jsonType.getAsString());
+			}
+		}
+		if (jsonObject.has("numberOfTopics")) {
+			JsonElement jsonNumberOfTopics = jsonObject.get("numberOfTopics");
+			if (jsonNumberOfTopics != null) {
+				numberOfTopics = Integer.valueOf(jsonNumberOfTopics.getAsInt());
 			}
 		}
 	}

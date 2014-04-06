@@ -9,6 +9,7 @@
 package io.reflection.app.service.user;
 
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
+import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import static com.spacehopperstudios.utility.StringUtils.sha1Hash;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
@@ -109,7 +110,7 @@ final class UserService implements IUserService {
 
 				addedUser = this.getUser(user.id);
 				addedUser.password = null;
-				
+
 				Map<String, Object> values = new HashMap<String, Object>();
 				values.put("user", addedUser);
 
@@ -474,14 +475,14 @@ final class UserService implements IUserService {
 		user.created = connection.getCurrentRowDateTime("created");
 		user.deleted = connection.getCurrentRowString("deleted");
 
-		user.forename = connection.getCurrentRowString("forename");
-		user.surname = connection.getCurrentRowString("surname");
-		user.username = connection.getCurrentRowString("username");
+		user.forename = stripslashes(connection.getCurrentRowString("forename"));
+		user.surname = stripslashes(connection.getCurrentRowString("surname"));
+		user.username = stripslashes(connection.getCurrentRowString("username"));
 		user.lastLoggedIn = connection.getCurrentRowDateTime("lastloggedin");
-		user.avatar = connection.getCurrentRowString("avatar");
-		user.company = connection.getCurrentRowString("company");
+		user.avatar = stripslashes(connection.getCurrentRowString("avatar"));
+		user.company = stripslashes(connection.getCurrentRowString("company"));
 		user.verified = connection.getCurrentRowString("verified");
-		user.code = connection.getCurrentRowString("code");
+		user.code = stripslashes(connection.getCurrentRowString("code"));
 
 		return user;
 	}

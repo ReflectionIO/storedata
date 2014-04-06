@@ -9,6 +9,7 @@
 package io.reflection.app.datatypes.shared;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.google.gson.JsonArray;
@@ -22,12 +23,15 @@ public class Topic extends DataType {
 	public List<String> tags;
 	public List<Reply> replies;
 	public Forum forum;
+	public User lastReplier;
 	public String title;
 	public String content;
-	public Integer hot;
+	public Integer heat;
 	public Boolean sticky;
 	public Integer flagged;
 	public Boolean locked;
+	public Date lastReplied;
+	public Integer numberOfReplies;
 
 	@Override
 	public JsonObject toJson() {
@@ -54,18 +58,24 @@ public class Topic extends DataType {
 		object.add("replies", jsonReplies);
 		JsonElement jsonForum = forum == null ? JsonNull.INSTANCE : forum.toJson();
 		object.add("forum", jsonForum);
+		JsonElement jsonLastReplier = lastReplier == null ? JsonNull.INSTANCE : lastReplier.toJson();
+		object.add("lastReplier", jsonLastReplier);
 		JsonElement jsonTitle = title == null ? JsonNull.INSTANCE : new JsonPrimitive(title);
 		object.add("title", jsonTitle);
 		JsonElement jsonContent = content == null ? JsonNull.INSTANCE : new JsonPrimitive(content);
 		object.add("content", jsonContent);
-		JsonElement jsonHot = hot == null ? JsonNull.INSTANCE : new JsonPrimitive(hot);
-		object.add("hot", jsonHot);
+		JsonElement jsonHeat = heat == null ? JsonNull.INSTANCE : new JsonPrimitive(heat);
+		object.add("heat", jsonHeat);
 		JsonElement jsonSticky = sticky == null ? JsonNull.INSTANCE : new JsonPrimitive(sticky);
 		object.add("sticky", jsonSticky);
 		JsonElement jsonFlagged = flagged == null ? JsonNull.INSTANCE : new JsonPrimitive(flagged);
 		object.add("flagged", jsonFlagged);
 		JsonElement jsonLocked = locked == null ? JsonNull.INSTANCE : new JsonPrimitive(locked);
 		object.add("locked", jsonLocked);
+		JsonElement jsonLastReplied = lastReplied == null ? JsonNull.INSTANCE : new JsonPrimitive(lastReplied.getTime());
+		object.add("lastReplied", jsonLastReplied);
+		JsonElement jsonNumberOfReplies = numberOfReplies == null ? JsonNull.INSTANCE : new JsonPrimitive(numberOfReplies);
+		object.add("numberOfReplies", jsonNumberOfReplies);
 		return object;
 	}
 
@@ -114,6 +124,13 @@ public class Topic extends DataType {
 				forum.fromJson(jsonForum.getAsJsonObject());
 			}
 		}
+		if (jsonObject.has("lastReplier")) {
+			JsonElement jsonLastReplier = jsonObject.get("lastReplier");
+			if (jsonLastReplier != null) {
+				lastReplier = new User();
+				lastReplier.fromJson(jsonLastReplier.getAsJsonObject());
+			}
+		}
 		if (jsonObject.has("title")) {
 			JsonElement jsonTitle = jsonObject.get("title");
 			if (jsonTitle != null) {
@@ -126,10 +143,10 @@ public class Topic extends DataType {
 				content = jsonContent.getAsString();
 			}
 		}
-		if (jsonObject.has("hot")) {
-			JsonElement jsonHot = jsonObject.get("hot");
-			if (jsonHot != null) {
-				hot = Integer.valueOf(jsonHot.getAsInt());
+		if (jsonObject.has("heat")) {
+			JsonElement jsonHeat = jsonObject.get("heat");
+			if (jsonHeat != null) {
+				heat = Integer.valueOf(jsonHeat.getAsInt());
 			}
 		}
 		if (jsonObject.has("sticky")) {
@@ -148,6 +165,18 @@ public class Topic extends DataType {
 			JsonElement jsonLocked = jsonObject.get("locked");
 			if (jsonLocked != null) {
 				locked = Boolean.valueOf(jsonLocked.getAsBoolean());
+			}
+		}
+		if (jsonObject.has("lastReplied")) {
+			JsonElement jsonLastReplied = jsonObject.get("lastReplied");
+			if (jsonLastReplied != null) {
+				lastReplied = new Date(jsonLastReplied.getAsLong());
+			}
+		}
+		if (jsonObject.has("numberOfReplies")) {
+			JsonElement jsonNumberOfReplies = jsonObject.get("numberOfReplies");
+			if (jsonNumberOfReplies != null) {
+				numberOfReplies = Integer.valueOf(jsonNumberOfReplies.getAsInt());
 			}
 		}
 	}

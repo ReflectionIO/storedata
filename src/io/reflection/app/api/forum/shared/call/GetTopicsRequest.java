@@ -8,40 +8,43 @@
 //
 package io.reflection.app.api.forum.shared.call;
 
+import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.Request;
+import io.reflection.app.datatypes.shared.Forum;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 
 public class GetTopicsRequest extends Request {
-	public Long id;
-	public String title;
+	public Forum forum;
+	public Pager pager;
 
 	@Override
 	public JsonObject toJson() {
 		JsonObject object = super.toJson();
-		JsonElement jsonId = id == null ? JsonNull.INSTANCE : new JsonPrimitive(id);
-		object.add("id", jsonId);
-		JsonElement jsonTitle = title == null ? JsonNull.INSTANCE : new JsonPrimitive(title);
-		object.add("title", jsonTitle);
+		JsonElement jsonForum = forum == null ? JsonNull.INSTANCE : forum.toJson();
+		object.add("forum", jsonForum);
+		JsonElement jsonPager = pager == null ? JsonNull.INSTANCE : pager.toJson();
+		object.add("pager", jsonPager);
 		return object;
 	}
 
 	@Override
 	public void fromJson(JsonObject jsonObject) {
 		super.fromJson(jsonObject);
-		if (jsonObject.has("id")) {
-			JsonElement jsonId = jsonObject.get("id");
-			if (jsonId != null) {
-				id = Long.valueOf(jsonId.getAsLong());
+		if (jsonObject.has("forum")) {
+			JsonElement jsonForum = jsonObject.get("forum");
+			if (jsonForum != null) {
+				forum = new Forum();
+				forum.fromJson(jsonForum.getAsJsonObject());
 			}
 		}
-		if (jsonObject.has("title")) {
-			JsonElement jsonTitle = jsonObject.get("title");
-			if (jsonTitle != null) {
-				title = jsonTitle.getAsString();
+		if (jsonObject.has("pager")) {
+			JsonElement jsonPager = jsonObject.get("pager");
+			if (jsonPager != null) {
+				pager = new Pager();
+				pager.fromJson(jsonPager.getAsJsonObject());
 			}
 		}
 	}

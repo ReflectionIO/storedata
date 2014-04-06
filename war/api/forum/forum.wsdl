@@ -56,8 +56,10 @@
             <xsd:complexType name="GetTopicsRequest">
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
-                        <xsd:attribute name="id" type="xsd:long" />
-                        <xsd:attribute name="title" type="xsd:string" />
+                        <xsd:sequence>
+                            <xsd:element name="forum" type="sd:Forum" />
+                            <xsd:element name="pager" type="sd:Pager" />
+                        </xsd:sequence>
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>
@@ -66,7 +68,8 @@
                 <xsd:complexContent>
                     <xsd:extension base="sd:Response">
                         <xsd:sequence>
-                            <xsd:element name="post" type="sd:Post" />
+                            <xsd:element name="topics" type="sd:Topic" maxOccurs="unbounded" />
+                            <xsd:element name="pager" type="sd:Pager" />
                         </xsd:sequence>
                     </xsd:extension>
                 </xsd:complexContent>

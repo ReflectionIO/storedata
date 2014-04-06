@@ -8,9 +8,11 @@
 package io.reflection.app.client.helper;
 
 import io.reflection.app.client.controller.CountryController;
+import io.reflection.app.client.controller.ForumController;
 import io.reflection.app.client.controller.StoreController;
 import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.Forum;
 import io.reflection.app.datatypes.shared.Store;
 
 import java.util.ArrayList;
@@ -52,6 +54,16 @@ public class FilterHelper {
 	}
 
 	public static void addCategories(ListBox list) {}
+
+	public static void addForums(ListBox list) {
+		List<Forum> forums = ForumController.get().getForums();
+
+		if (forums != null) {
+			for (Forum forum : forums) {
+				list.addItem(forum.title, forum.id.toString());
+			}
+		}
+	}
 
 	/**
 	 * Normalize the date to midnight being sure the milliseconds are set at zero.

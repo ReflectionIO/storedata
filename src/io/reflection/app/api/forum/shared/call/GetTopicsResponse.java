@@ -8,32 +8,61 @@
 //
 package io.reflection.app.api.forum.shared.call;
 
-import io.reflection.app.datatypes.shared.Post;
+import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.datatypes.shared.Topic;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.willshex.gson.json.service.shared.Response;
 
 public class GetTopicsResponse extends Response {
-	public Post post;
+	public List<Topic> topics;
+	public Pager pager;
 
 	@Override
 	public JsonObject toJson() {
 		JsonObject object = super.toJson();
-		JsonElement jsonPost = post == null ? JsonNull.INSTANCE : post.toJson();
-		object.add("post", jsonPost);
+		JsonElement jsonTopics = JsonNull.INSTANCE;
+		if (topics != null) {
+			jsonTopics = new JsonArray();
+			for (int i = 0; i < topics.size(); i++) {
+				JsonElement jsonTopicsItem = topics.get(i) == null ? JsonNull.INSTANCE : topics.get(i).toJson();
+				((JsonArray) jsonTopics).add(jsonTopicsItem);
+			}
+		}
+		object.add("topics", jsonTopics);
+		JsonElement jsonPager = pager == null ? JsonNull.INSTANCE : pager.toJson();
+		object.add("pager", jsonPager);
 		return object;
 	}
 
 	@Override
 	public void fromJson(JsonObject jsonObject) {
 		super.fromJson(jsonObject);
-		if (jsonObject.has("post")) {
-			JsonElement jsonPost = jsonObject.get("post");
-			if (jsonPost != null) {
-				post = new Post();
-				post.fromJson(jsonPost.getAsJsonObject());
+		if (jsonObject.has("topics")) {
+			JsonElement jsonTopics = jsonObject.get("topics");
+			if (jsonTopics != null) {
+				topics = new ArrayList<Topic>();
+				Topic item = null;
+				for (int i = 0; i < jsonTopics.getAsJsonArray().size(); i++) {
+					if (jsonTopics.getAsJsonArray().get(i) != null) {
+						(item = new Topic()).fromJson(jsonTopics.getAsJsonArray().get(i).getAsJsonObject());
+						topics.add(item);
+					}
+				}
+			}
+		}
+
+		if (jsonObject.has("pager")) {
+			JsonElement jsonPager = jsonObject.get("pager");
+			if (jsonPager != null) {
+				pager = new Pager();
+				pager.fromJson(jsonPager.getAsJsonObject());
 			}
 		}
 	}

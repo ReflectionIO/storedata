@@ -71,6 +71,8 @@ final class ForumService implements IForumService {
 
 		forum.type = ForumTypeType.fromString(connection.getCurrentRowString("type"));
 
+		forum.numberOfTopics = connection.getCurrentRowInteger("numberoftopics");
+
 		return forum;
 	}
 

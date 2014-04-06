@@ -9,6 +9,7 @@ package io.reflection.app.shared.util;
 
 import io.reflection.app.datatypes.shared.User;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,5 +50,58 @@ public class FormattingHelper {
 
 	public static String getUserName(User user) {
 		return user.forename + " " + user.surname;
+	}
+
+	public static String getTimeSince(Date date) {
+		return getTimeSince(date, true);
+	}
+	
+	public static String getTimeSince(Date date, boolean blur) {
+		String timeSince;
+
+		long time = date.getTime();
+		long timeNow = (new Date()).getTime();
+
+		double seconds = Math.floor((double) (timeNow - time) / 1000.0);
+
+		double interval;
+
+		if ((interval = Math.floor(seconds / 31536000.0)) > 1) {
+			timeSince = interval + " years ago";
+		} else if ((interval = Math.floor(seconds / 2592000.0)) > 1) {
+			timeSince = interval + " months ago";
+		} else if ((interval = Math.floor(seconds / 86400.0)) > 1) {
+			if (blur) {
+				if (interval < 2) {
+					timeSince = "yesterday";
+				} else if (interval > 7 && interval < 14) {
+					timeSince = "last week";
+				} else {
+					timeSince = interval + " days ago";
+				}
+			} else {
+				timeSince = interval + " days ago";
+			}
+		} else if ((interval = Math.floor(seconds / 3600.0)) > 1) {
+			if (blur) {
+				if (interval > 12) {
+					timeSince = "earlier today";
+				} else {
+					timeSince = interval + " hours ago";
+				}
+			} else {
+				timeSince = interval + " hours ago";
+			}
+		} else if ((interval = Math.floor(seconds / 60.0)) > 1) {
+			timeSince = interval + " minutes ago";
+		} else {
+			if (blur) {
+				timeSince = "less than a minute ago";
+			} else {
+				timeSince = Math.floor(seconds) + " seconds ago";
+			}
+		}
+
+		return timeSince;
 	}
 }

@@ -7,27 +7,39 @@
 //
 package io.reflection.app.client.controller;
 
+import io.reflection.app.api.forum.client.ForumService;
+import io.reflection.app.api.forum.shared.call.GetTopicsRequest;
+import io.reflection.app.api.forum.shared.call.GetTopicsResponse;
+import io.reflection.app.api.forum.shared.call.event.GetTopicsEventHandler.GetTopicsFailure;
+import io.reflection.app.api.forum.shared.call.event.GetTopicsEventHandler.GetTopicsSuccess;
 import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.datatypes.shared.Forum;
 import io.reflection.app.datatypes.shared.Topic;
 import io.reflection.app.shared.util.SparseArray;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
 import com.google.gwt.view.client.Range;
+import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author billy1380
  * 
  */
 public class TopicController extends AsyncDataProvider<Topic> implements ServiceConstants {
+
 	private List<Topic> topics = new ArrayList<Topic>();
 	private long count = 0;
 	private Pager pager;
 	private SparseArray<Topic> topicLookup = null;
 	private SparseArray<Topic> topicsLookup = null;
+
+	private Long forumId;
 
 	private static TopicController one = null;
 
@@ -41,62 +53,68 @@ public class TopicController extends AsyncDataProvider<Topic> implements Service
 
 	private void fetchTopics() {
 
-		// ForumService service = ServiceCreator.createForumService();
-		//
-		// final GetTopicsRequest input = new GetTopicsRequest();
-		// input.accessCode = ACCESS_CODE;
-		//
-		// input.session = SessionController.get().getSessionForApiCall();
-		// input.includeContents = Boolean.FALSE;
-		//
-		// if (pager == null) {
-		// pager = new Pager();
-		// pager.count = SHORT_STEP;
-		// pager.start = Long.valueOf(0);
-		// pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
-		// }
-		// input.pager = pager;
-		//
-		// service.getTopics(input, new AsyncCallback<GetTopicsResponse>() {
-		//
-		// @Override
-		// public void onSuccess(GetTopicsResponse output) {
-		// if (output.status == StatusType.StatusTypeSuccess) {
-		// if (output.topics != null) {
-		// topics.addAll(output.topics);
-		//
-		// if (topicsLookup == null) {
-		// topicsLookup = new SparseArray<Topic>();
-		// }
-		//
-		// for (Topic topic : output.topics) {
-		// topicsLookup.put(topic.id.intValue(), topic);
-		// }
-		// }
-		//
-		// if (output.pager != null) {
-		// pager = output.pager;
-		//
-		// if (pager.totalCount != null) {
-		// count = pager.totalCount.longValue();
-		// }
-		// }
-		//
-		// updateRowCount((int) count, true);
-		// updateRowData(
-		// input.pager.start.intValue(),
-		// topics.subList(input.pager.start.intValue(),
-		// Math.min(input.pager.start.intValue() + input.pager.count.intValue(), pager.totalCount.intValue())));
-		// }
-		//
-		// EventController.get().fireEventFromSource(new GetTopicsSuccess(input, output), TopicController.this);
-		// }
-		//
-		// @Override
-		// public void onFailure(Throwable caught) {
-		// EventController.get().fireEventFromSource(new GetTopicsFailure(input, caught), TopicController.this);
-		// }
-		// });
+		if (forumId != null) {
+
+			ForumService service = ServiceCreator.createForumService();
+
+			final GetTopicsRequest input = new GetTopicsRequest();
+			input.accessCode = ACCESS_CODE;
+
+			input.session = SessionController.get().getSessionForApiCall();
+
+			input.forum = new Forum();
+			input.forum.id = forumId;
+
+			if (pager == null) {
+				pager = new Pager();
+				pager.count = SHORT_STEP;
+				pager.start = Long.valueOf(0);
+				pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
+			}
+			input.pager = pager;
+
+			service.getTopics(input, new AsyncCallback<GetTopicsResponse>() {
+
+				@Override
+				public void onSuccess(GetTopicsResponse output) {
+					if (output.status == StatusType.StatusTypeSuccess) {
+						if (output.topics != null) {
+							topics.addAll(output.topics);
+
+							if (topicsLookup == null) {
+								topicsLookup = new SparseArray<Topic>();
+							}
+
+							for (Topic topic : output.topics) {
+								topicsLookup.put(topic.id.intValue(), topic);
+							}
+						}
+
+						if (output.pager != null) {
+							pager = output.pager;
+
+							if (pager.totalCount != null) {
+								count = pager.totalCount.longValue();
+							}
+						}
+
+						updateRowCount((int) count, true);
+						updateRowData(
+								input.pager.start.intValue(),
+								topics.subList(input.pager.start.intValue(),
+										Math.min(input.pager.start.intValue() + input.pager.count.intValue(), pager.totalCount.intValue())));
+					}
+
+					EventController.get().fireEventFromSource(new GetTopicsSuccess(input, output), TopicController.this);
+				}
+
+				@Override
+				public void onFailure(Throwable caught) {
+					EventController.get().fireEventFromSource(new GetTopicsFailure(input, caught), TopicController.this);
+				}
+			});
+		}
+
 	}
 
 	private void fetchTopic(Long id) {
@@ -132,7 +150,13 @@ public class TopicController extends AsyncDataProvider<Topic> implements Service
 		// });
 	}
 
-	public List<Topic> getTopics() {
+	public List<Topic> getTopics(Long forumId) {
+		if (this.forumId == null || this.forumId != forumId) {
+			this.forumId = forumId;
+
+			reset();
+		}
+
 		if (pager == null) {
 			fetchTopics();
 		}
@@ -330,7 +354,7 @@ public class TopicController extends AsyncDataProvider<Topic> implements Service
 	 * @return
 	 */
 	public Long getForumId() {
-		return Long.valueOf(1);
+		return forumId;
 	}
 
 }

@@ -38,6 +38,6 @@ public class ForumSummaryCell extends AbstractCell<Forum> {
 			styleName += " active";
 		}
 
-		RENDERER.render(builder, link, value.title, styleName, value.description, 10);
+		RENDERER.render(builder, link, value.title, styleName, value.description, value.numberOfTopics);
 	}
 }

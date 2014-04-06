@@ -361,6 +361,7 @@
                 <xsd:attribute name="title" type="xsd:string" use="required" />
                 <xsd:attribute name="description" type="xsd:string" use="required" />
                 <xsd:attribute name="type" type="ForumTypeType" use="required" />
+                <xsd:attribute name="numberOfTopics" type="xsd:int" />
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
@@ -373,13 +374,16 @@
                     <xsd:element name="tags" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
                     <xsd:element name="replies" type="Reply" maxOccurs="unbounded" />
                     <xsd:element name="forum" type="Forum" />
+                    <xsd:element name="lastReplier" type="User" />
                 </xsd:sequence>
                 <xsd:attribute name="title" type="xsd:string" use="required" />
                 <xsd:attribute name="content" type="xsd:string" use="required" />
-                <xsd:attribute name="hot" type="xsd:int" />
+                <xsd:attribute name="heat" type="xsd:int" />
                 <xsd:attribute name="sticky" type="xsd:boolean" />
                 <xsd:attribute name="flagged" type="xsd:int" />
                 <xsd:attribute name="locked" type="xsd:boolean" />
+                <xsd:attribute name="lastReplied" type="xsd:dateTime" />
+                <xsd:attribute name="numberOfReplies" type="xsd:int" />
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
