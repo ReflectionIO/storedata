@@ -134,6 +134,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@UiField UListElement mFeatureRequest;
 
 	private List<LIElement> mItems;
+	private List<LIElement> highlightedItems = new ArrayList<LIElement>();
 
 	private HandlerRegistration filterChangedRegistration;
 
@@ -229,23 +230,25 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 	private void activate(LIElement item) {
 		if (item != null) {
+			highlightedItems.add(item);
 			item.addClassName(ACTIVE_STYLE_NAME);
 		}
 	}
 
 	private void deactivate(LIElement item) {
 		if (item != null) {
+			highlightedItems.remove(item);
 			item.removeClassName(ACTIVE_STYLE_NAME);
 		}
 	}
 
 	private void highlight(List<LIElement> items) {
-		for (LIElement c : mItems) {
-			if (items.contains(c)) {
-				activate(c);
-			} else {
-				deactivate(c);
-			}
+		for (LIElement c : highlightedItems) {
+			deactivate(c);
+		}
+
+		for (LIElement c : items) {
+			activate(c);
 		}
 	}
 
@@ -429,8 +432,10 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	private void addAccount(User user) {
 
 		mAccountSettingsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("changedetails", user.id.toString()));
-		myAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("myapps", user.id.toString(), FilterController.get().asMyAppsFilterString()));
-		myAppsAccountLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("myapps", user.id.toString(), FilterController.get().asMyAppsFilterString()));
+		myAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("myapps", user.id.toString(), FilterController.get()
+				.asMyAppsFilterString()));
+		myAppsAccountLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("myapps", user.id.toString(), FilterController.get()
+				.asMyAppsFilterString()));
 		mLinkedAccountsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("linkedaccounts", user.id.toString()));
 
 		mAccountList.appendChild(mAccountDropdown);
