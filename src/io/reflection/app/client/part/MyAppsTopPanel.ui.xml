@@ -1,0 +1,48 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.user.datepicker.client"
+    xmlns:p="urn:import:io.reflection.app.client.part">
+    <ui:style>
+    
+    </ui:style>
+    <g:HTMLPanel styleName="well well-sm">
+
+        <g:FormPanel styleName="form-inline ">
+            <g:HTMLPanel>
+
+                <div class="form-group col-sm-2" style="margin-left: 30px; margin-right: 50px;">
+                    <h5>Overview</h5>
+                </div>
+
+                <div class="form-group">
+                    <g:ListBox styleName="form-control" ui:field="appStore" />
+                </div>
+
+                <div class="form-group">
+                    <g:ListBox styleName="form-control" ui:field="country" />
+                </div>
+
+                <div class="form-group col-sm-2">
+                    <div class="input-group ">
+                        <d:DateBox styleName="form-control" ui:field="dateBox" />
+
+                        <span class="input-group-addon">
+                            <i class="icon-calendar"></i>
+                        </span>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group" style="margin-left: 7px; margin-right: 10px; display: inline-block;">
+                    <g:RadioButton ui:field="rangeDay" styleName="form-control" name="dailydata" checked="true">Day</g:RadioButton>
+                    <g:RadioButton ui:field="rangeWeek" styleName="form-control" name="dailydata">Week</g:RadioButton>
+                    <g:RadioButton ui:field="rangeMonth" styleName="form-control" name="dailydata">Month</g:RadioButton>
+                </div>
+
+            </g:HTMLPanel>
+        </g:FormPanel>
+
+
+
+    </g:HTMLPanel>
+</ui:UiBinder> 
