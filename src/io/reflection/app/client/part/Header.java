@@ -242,13 +242,15 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		}
 	}
 
-	private void highlight(List<LIElement> items) {
+	private void highlight(LIElement... item) {
 		for (LIElement c : highlightedItems) {
 			deactivate(c);
 		}
 
-		for (LIElement c : items) {
-			activate(c);
+		if (item != null) {
+			for (LIElement c : item) {
+				activate(c);
+			}
 		}
 	}
 
@@ -260,42 +262,39 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	 */
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
-		List<LIElement> items = new ArrayList<LIElement>();
 		if (PageType.RanksPageType.equals(current.getPage())) {
-			items.add(mRanksItem);
+			highlight(mRanksItem);
 		} else if (PageType.FeedBrowserPageType.equals(current.getPage())) {
-			items.add(mFeedBrowserItem);
+			highlight(mFeedBrowserItem);
 		} else if (PageType.UsersPageType.equals(current.getPage())) {
 			if (current.getAction() == null) {
-				items.add(mUsersItem);
+				highlight(mUsersItem);
 			} else if (PageType.MyAppsPageType.equals(current.getAction())) {
-				items.add(myAppsAccountItem);
-				items.add(myAppsItem);
+				highlight(myAppsAccountItem, myAppsItem);
 			} else if (PageType.LinkedAccountsPageType.equals(current.getAction())) {
-				items.add(mLinkedAccountsItem);
+				highlight(mLinkedAccountsItem);
 			} else if (PageType.ChangeDetailsPageType.equals(current.getAction())) {
-				items.add(mAccountSettingsItem);
+				highlight(mAccountSettingsItem);
 			}
 		} else if (PageType.LoginPageType.equals(current.getPage())) {
-			items.add(mLoginItem);
+			highlight(mLoginItem);
 		} else if (PageType.RegisterPageType.equals(current.getPage())) {
-			items.add(mRegisterItem);
+			highlight(mRegisterItem);
 		} else if (PageType.RolesPageType.equals(current.getPage())) {
-			items.add(mRolesItem);
+			highlight(mRolesItem);
 		} else if (PageType.PermissionsPageType.equals(current.getPage())) {
-			items.add(mPermissionsItem);
+			highlight(mPermissionsItem);
 		} else if (PageType.UpgradePageType.equals(current.getPage())) {
-			items.add(mUpgradeAccountItem);
+			highlight(mUpgradeAccountItem);
 		} else if (PageType.EmailTemplatesPageType.equals(current.getPage())) {
-			items.add(emailTemplatesItem);
+			highlight(emailTemplatesItem);
 		} else if (PageType.ItemsPageType.equals(current.getPage())) {
-			items.add(itemsItem);
+			highlight(itemsItem);
 		} else if (PageType.BlogPostsPageType.equals(current.getPage()) || PageType.BlogPostPageType.equals(current.getPage())) {
-			items.add(blogItem);
+			highlight(blogItem);
 		} else {
-			items.add(null);
+			highlight();
 		}
-		highlight(items);
 	}
 
 	/*
