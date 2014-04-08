@@ -20,7 +20,8 @@
 
                 <g:Image resource="{images.tick}" />
 
-                <span class="col-xs-12" style="font-size: 34px; font-family: Oxygen; font-weight: bold; padding-top: 40px; padding-bottom: 25px;">That's it! You're ready to start using Reflection</span>
+                <span class="col-xs-12"
+                    style="font-size: 34px; font-family: 'Source Sans Pro', sans-serif;	color: #0e0e1f;	font-weight: 600; padding-top: 40px; padding-bottom: 25px;">That's it! You're ready to start using Reflection</span>
 
                 <span class="col-xs-12" style="line-height: 26px; font-size: 18px; font-family: Lato; font-weight: normal; color: #63656a;">
                     Start by exploring the top charting apps in the
@@ -59,7 +60,8 @@
                     <p>
                         As a member of the private beta you can request features you
                         feel would add value. Click the Request Feature button in the menu
-                        bar to get started
+                        bar to get
+                        started
                     </p>
                 </div>
             </div>
