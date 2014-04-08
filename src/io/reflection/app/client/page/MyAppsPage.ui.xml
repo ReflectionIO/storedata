@@ -27,50 +27,15 @@
             </div>
 
             <div class="col-md-10">
+                <div style="margin-left: 20px; margin-right: 25px; margin-top: 20px;">
 
-                <div class="col-md-12 well well-sm well-title">
+                    <p:MyAppsTopPanel ui:field="topPanel" />
 
-                    <div style="float: left;">
-
-                        <h5>Overview</h5>
-                    </div>
-
-                    <div style="float: right;">
-
-
-                        <g:ListBox ui:field="appStore">
-                        </g:ListBox>
-
-
-                        <g:ListBox ui:field="country">
-                        </g:ListBox>
-
-                        <d:DateBox ui:field="dateBox" />
-                        <span>
-                            <i class="icon-calendar"></i>
-                        </span>
-
-                        <div style="margin-left: 7px; margin-right: 10px; display: inline-block;">
-                            <g:RadioButton ui:field="rangeDay" name="dailydata" checked="true">Day</g:RadioButton>
-                            <g:RadioButton ui:field="rangeWeek" name="dailydata">Week</g:RadioButton>
-                            <g:RadioButton ui:field="rangeMonth" name="dailydata">Month</g:RadioButton>
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div class="col-md-12">
                     <cell:CellTable ui:field="appsTable" styleName="table table-hover table-striped" />
-                </div>
 
+                </div>
 
             </div>
-
-
-
-
-
 
         </div>
     </g:HTMLPanel>

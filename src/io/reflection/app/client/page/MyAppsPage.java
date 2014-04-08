@@ -19,41 +19,27 @@ import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
-import io.reflection.app.client.helper.FilterHelper;
-import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.BootstrapGwtDatePicker;
+import io.reflection.app.client.part.MyAppsTopPanel;
 import io.reflection.app.client.part.datatypes.MyApp;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.User;
 
-import java.util.Date;
 import java.util.Map;
 
 import com.google.gwt.cell.client.ImageResourceCell;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.logical.shared.ShowRangeEvent;
-import com.google.gwt.event.logical.shared.ShowRangeHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.InlineHyperlink;
-import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.datepicker.client.CalendarUtil;
-import com.google.gwt.user.datepicker.client.DateBox;
-import com.google.gwt.user.datepicker.client.DateBox.DefaultFormat;
 
 /**
  * @author stefanocapuzzi
@@ -68,15 +54,10 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	@UiField(provided = true) CellTable<MyApp> appsTable = new CellTable<MyApp>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 	// @UiField(provided = true) PageSizePager pager = new PageSizePager(ServiceConstants.STEP_VALUE);
 
+	@UiField MyAppsTopPanel topPanel;
+
 	@UiField InlineHyperlink mLinkedAccountsLink;
 	@UiField InlineHyperlink mMyAppsLink;
-
-	@UiField ListBox appStore;
-	@UiField ListBox country;
-	@UiField DateBox dateBox;
-	@UiField RadioButton rangeDay;
-	@UiField RadioButton rangeWeek;
-	@UiField RadioButton rangeMonth;
 
 	// Columns
 	private TextColumn<MyApp> columnRank;
@@ -93,26 +74,12 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 		Styles.INSTANCE.reflection().ensureInjected();
 
-		FilterHelper.addStores(appStore);
-		FilterHelper.addCountries(country);
-
 		FilterController.get().setListType(OVERALL_LIST_TYPE);
-		dateBox.setFormat(new DefaultFormat(DateTimeFormat.getFormat("dd-MM-yyyy")));
-		Date d = FilterHelper.normalizeDate(new Date());
-		dateBox.setValue(d);
-		updateFromFilter();
 
 		createColumns();
 
 		MyAppsController.get().addDataDisplay(appsTable);
 		MyAppsController.get().getAllUserItems();
-		
-		dateBox.getDatePicker().addShowRangeHandler(new ShowRangeHandler<Date>() {
-			@Override
-			public void onShowRange(ShowRangeEvent<Date> event) {
-				FilterHelper.disableFutureDates(dateBox.getDatePicker());
-			}
-		});
 
 	}
 
@@ -202,77 +169,6 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 	}
 
-	@UiHandler("appStore")
-	void onAppStoreValueChanged(ChangeEvent event) {
-		FilterController.get().setStore(appStore.getValue(appStore.getSelectedIndex()));
-	}
-
-	@UiHandler("country")
-	void onCountryValueChanged(ChangeEvent event) {
-		FilterController.get().setCountry(country.getValue(country.getSelectedIndex()));
-	}
-
-	@UiHandler("dateBox")
-	void onDateValueChanged(ValueChangeEvent<Date> event) {
-		updateFilterDate();
-	}
-
-	@UiHandler("rangeDay")
-	void onRangeDayValueSelected(ClickEvent event) {
-		FilterController.get().setStartDate(dateBox.getValue());
-	}
-
-	@UiHandler("rangeWeek")
-	void onRangeWeekValueSelected(ClickEvent event) {
-		Date startDate = new Date(dateBox.getValue().getTime());
-		CalendarUtil.addDaysToDate(startDate, -7);
-		FilterController.get().setStartDate(startDate);
-	}
-
-	@UiHandler("rangeMonth")
-	void onRangeMonthValueSelected(ClickEvent event) {
-		Date startDate = new Date(dateBox.getValue().getTime());
-		CalendarUtil.addMonthsToDate(startDate, -1);
-		FilterController.get().setStartDate(startDate);
-	}
-
-	private void updateFromFilter() {
-		FilterController.get().start();
-		appStore.setSelectedIndex(FormHelper.getItemIndex(appStore, FilterController.get().getFilter().getStoreA3Code()));
-		country.setSelectedIndex(FormHelper.getItemIndex(country, FilterController.get().getFilter().getCountryA2Code()));
-		updateFilterDate();
-		FilterController.get().commit();
-	}
-
-	public void setFiltersEnabled(boolean enable) {
-		appStore.setEnabled(enable);
-		country.setEnabled(enable);
-		dateBox.setEnabled(enable);
-		rangeDay.setEnabled(enable);
-		rangeWeek.setEnabled(enable);
-		rangeMonth.setEnabled(enable);
-	}
-
-	private void updateFilterDate() {
-
-		Date endDate = dateBox.getValue();
-		CalendarUtil.addDaysToDate(endDate, 1); // add 1 day to the EndDate because from DatePicker is set at midnight
-		FilterController.get().setEndDate(endDate);
-
-		if (rangeDay.getValue()) {
-			FilterController.get().setStartDate(dateBox.getValue());
-		} else if (rangeWeek.getValue()) {
-			Date startDate = new Date(dateBox.getValue().getTime());
-			CalendarUtil.addDaysToDate(startDate, -7);
-			FilterController.get().setStartDate(startDate);
-		} else {
-			Date startDate = new Date(dateBox.getValue().getTime());
-			CalendarUtil.addMonthsToDate(startDate, -1);
-			FilterController.get().setStartDate(startDate);
-		}
-
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -280,13 +176,15 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	 */
 	@Override
 	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
-		if (!name.equals("enddate")) {
-			appsTable.setVisibleRangeAndClearData(appsTable.getVisibleRange(), false);
-			if (appsTable.getRowCount() < 1) {
-				appsTable.setRowCount(1); // Force loading effect
-			}
-			MyAppsController.get().reset();
+
+		appsTable.setVisibleRangeAndClearData(appsTable.getVisibleRange(), false);
+		if (appsTable.getRowCount() < 1) {
+			appsTable.setRowCount(1); // Force loading effect
 		}
+		MyAppsController.get().reset();
+
+		PageType.MyAppsPageType.show("view", "all", FilterController.get().asMyAppsFilterString());
+
 	}
 
 	/*
@@ -305,7 +203,10 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	 */
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
+		if (PageType.MyAppsPageType.equals(current.getPage())) {
+			// checkPermissions();
 
+		}
 	}
 
 }

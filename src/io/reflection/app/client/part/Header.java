@@ -429,8 +429,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	private void addAccount(User user) {
 
 		mAccountSettingsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("changedetails", user.id.toString()));
-		myAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("myapps", user.id.toString()));
-		myAppsAccountLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("myapps", user.id.toString()));
+		myAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("myapps", user.id.toString(), FilterController.get().asMyAppsFilterString()));
+		myAppsAccountLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("myapps", user.id.toString(), FilterController.get().asMyAppsFilterString()));
 		mLinkedAccountsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("linkedaccounts", user.id.toString()));
 
 		mAccountList.appendChild(mAccountDropdown);

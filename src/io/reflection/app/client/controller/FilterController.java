@@ -31,6 +31,7 @@ public class FilterController {
 
 	public static final String ITEM_FILTER_KEY = "itemfilter:";
 	public static final String RANK_FILTER_KEY = "rankfilter:";
+	public static final String MYAPP_FILTER_KEY = "myappfilter:";
 
 	public static final String STORE_KEY = "store";
 	public static final String COUNTRY_KEY = "country";
@@ -177,6 +178,10 @@ public class FilterController {
 		public String asItemFilterString() {
 			return Stack.encode(ITEM_FILTER_KEY, getStoreA3Code(), getCountryA2Code(), getCategoryId().toString(), getListType(), getStartTime().toString(),
 					getEndTime().toString(), getChartType(), getSummaryType());
+		}
+
+		public String asMyAppsFilterString() {
+			return Stack.encode(MYAPP_FILTER_KEY, getStoreA3Code(), getCountryA2Code(), getStartTime().toString(), getEndTime().toString());
 		}
 
 		/**
@@ -531,6 +536,10 @@ public class FilterController {
 
 	public String asItemFilterString() {
 		return mCurrentFilter == null ? "" : mCurrentFilter.asItemFilterString();
+	}
+
+	public String asMyAppsFilterString() {
+		return mCurrentFilter == null ? "" : mCurrentFilter.asMyAppsFilterString();
 	}
 
 	public boolean isFilterParam(String parameter) {
