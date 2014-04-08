@@ -9,7 +9,11 @@
 package io.reflection.app.service.topic;
 
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.datatypes.shared.Forum;
 import io.reflection.app.datatypes.shared.Topic;
+
+import java.util.List;
 
 import com.spacehopperstudios.service.IService;
 
@@ -36,5 +40,18 @@ public interface ITopicService extends IService {
 	 * @param topic
 	 */
 	public void deleteTopic(Topic topic) throws DataAccessException;
+
+	/**
+	 * @param forum
+	 * @param pager
+	 * @return
+	 */
+	public List<Topic> getTopics(Forum forum, Pager pager) throws DataAccessException;
+
+	/**
+	 * @param forum
+	 * @return
+	 */
+	public Long getTopicsCount(Forum forum) throws DataAccessException;
 
 }

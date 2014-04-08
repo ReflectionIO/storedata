@@ -79,9 +79,9 @@
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
                         <xsd:sequence>
-                            <xsd:element name="post" type="sd:Post" />
+                            <xsd:element name="topic" type="sd:Topic" />
+                            <xsd:element name="pager" type="sd:Pager" />
                         </xsd:sequence>
-                        <xsd:attribute name="publish" type="xsd:boolean" />
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>
@@ -90,6 +90,8 @@
                 <xsd:complexContent>
                     <xsd:extension base="sd:Response">
                         <xsd:sequence>
+                            <xsd:element name="replies" type="sd:Reply" maxOccurs="unbounded" />
+                            <xsd:element name="pager" type="sd:Pager" />
                         </xsd:sequence>
                     </xsd:extension>
                 </xsd:complexContent>
@@ -99,9 +101,8 @@
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
                         <xsd:sequence>
-                            <xsd:element name="post" type="sd:Post" />
+                            <xsd:element name="topic" type="sd:Topic" />
                         </xsd:sequence>
-                        <xsd:attribute name="publish" type="xsd:boolean" />
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>
@@ -110,6 +111,7 @@
                 <xsd:complexContent>
                     <xsd:extension base="sd:Response">
                         <xsd:sequence>
+                            <xsd:element name="topic" type="sd:Topic" />
                         </xsd:sequence>
                     </xsd:extension>
                 </xsd:complexContent>
@@ -119,7 +121,7 @@
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
                         <xsd:sequence>
-                            <xsd:element name="post" type="sd:Post" />
+                            <xsd:element name="reply" type="sd:Reply" />
                         </xsd:sequence>
                     </xsd:extension>
                 </xsd:complexContent>
@@ -138,7 +140,7 @@
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
                         <xsd:sequence>
-                            <xsd:element name="post" type="sd:Post" />
+                            <xsd:element name="topic" type="sd:Topic" />
                         </xsd:sequence>
                     </xsd:extension>
                 </xsd:complexContent>
@@ -157,7 +159,7 @@
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
                         <xsd:sequence>
-                            <xsd:element name="post" type="sd:Post" />
+                            <xsd:element name="reply" type="sd:Reply" />
                         </xsd:sequence>
                     </xsd:extension>
                 </xsd:complexContent>
@@ -176,7 +178,7 @@
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
                         <xsd:sequence>
-                            <xsd:element name="post" type="sd:Post" />
+                            <xsd:element name="topic" type="sd:Topic" />
                         </xsd:sequence>
                     </xsd:extension>
                 </xsd:complexContent>
@@ -195,7 +197,7 @@
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
                         <xsd:sequence>
-                            <xsd:element name="post" type="sd:Post" />
+                            <xsd:element name="reply" type="sd:Reply" />
                         </xsd:sequence>
                     </xsd:extension>
                 </xsd:complexContent>

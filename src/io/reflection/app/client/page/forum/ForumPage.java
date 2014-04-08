@@ -226,5 +226,15 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 			}
 		}
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.page.Page#getTitle()
+	 */
+	@Override
+	public String getTitle() {
+		return "Reflection.io: Forum";
+	}
 
 }

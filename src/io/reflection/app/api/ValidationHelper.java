@@ -19,11 +19,14 @@ import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.EmailTemplate;
+import io.reflection.app.datatypes.shared.Forum;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Post;
+import io.reflection.app.datatypes.shared.Reply;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.Store;
+import io.reflection.app.datatypes.shared.Topic;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.country.CountryServiceProvider;
@@ -657,4 +660,28 @@ public class ValidationHelper {
 		return post;
 	}
 
+	public static Forum validateForum(Forum forum, String parent) throws ServiceException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static Topic validateExistingTopic(Topic topic, String parent) throws ServiceException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static Topic validateNewTopic(Topic topic, String parent) throws ServiceException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static Reply validateExistingReply(Reply reply, String parent) throws ServiceException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static Reply validateNewReply(Reply reply, String parent) throws ServiceException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -27,4 +27,14 @@ public class TopicPage extends Page {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.page.Page#getTitle()
+	 */
+	@Override
+	public String getTitle() {
+		return "Reflection.io: Forum";
+	}
+
 }

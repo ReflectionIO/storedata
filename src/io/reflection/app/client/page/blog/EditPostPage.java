@@ -251,8 +251,6 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 	 * java.lang.Throwable)
 	 */
 	@Override
-	public void updatePostFailure(UpdatePostRequest input, Throwable caught) {
-
-	}
+	public void updatePostFailure(UpdatePostRequest input, Throwable caught) {}
 
 }

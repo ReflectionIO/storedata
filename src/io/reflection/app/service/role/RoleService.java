@@ -142,7 +142,7 @@ final class RoleService implements IRoleService {
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection roleConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeRole.toString());
 
-		String getRoleIdsQuery = "SELECT * FROM `role` WHERE `deleted`='n'";
+		String getRolesQuery = "SELECT * FROM `role` WHERE `deleted`='n'";
 
 		if (pager != null) {
 			String sortByQuery = "id";
@@ -163,17 +163,17 @@ final class RoleService implements IRoleService {
 				}
 			}
 
-			getRoleIdsQuery += String.format(" ORDER BY `%s` %s", sortByQuery, sortDirectionQuery);
+			getRolesQuery += String.format(" ORDER BY `%s` %s", sortByQuery, sortDirectionQuery);
 		}
 
 		if (pager.start != null && pager.count != null) {
-			getRoleIdsQuery += String.format(" LIMIT %d, %d", pager.start.longValue(), pager.count.longValue());
+			getRolesQuery += String.format(" LIMIT %d, %d", pager.start.longValue(), pager.count.longValue());
 		} else if (pager.count != null) {
-			getRoleIdsQuery += String.format(" LIMIT %d", pager.count.longValue());
+			getRolesQuery += String.format(" LIMIT %d", pager.count.longValue());
 		}
 		try {
 			roleConnection.connect();
-			roleConnection.executeQuery(getRoleIdsQuery);
+			roleConnection.executeQuery(getRolesQuery);
 
 			while (roleConnection.fetchNextRow()) {
 				Role role = this.toRole(roleConnection);

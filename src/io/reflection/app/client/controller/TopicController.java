@@ -250,7 +250,7 @@ public class TopicController extends AsyncDataProvider<Topic> implements Service
 	 * @param publish
 	 * @param tags
 	 */
-	public void createTopic(String title, Boolean visible, Boolean commentsEnabled, String description, String content, Boolean publish, String tags) {
+	public void createTopic(String title, String content, String tags) {
 		// ForumService service = ServiceCreator.createForumService();
 		//
 		// final CreateTopicRequest input = new CreateTopicRequest();
