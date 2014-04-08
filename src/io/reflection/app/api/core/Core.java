@@ -1051,7 +1051,7 @@ public final class Core extends ActionHandler {
 		String listName = null;
 
 		if ("ios".equalsIgnoreCase(store.a3Code)) {
-			if ("ipad".equalsIgnoreCase(type)) {
+			if (type != null && type.contains("ipad") || type.toLowerCase().contains("ipad")) {
 				listName = CollectorIOS.TOP_GROSSING_IPAD_APPS;
 			} else {
 				listName = CollectorIOS.TOP_GROSSING_APPS;
