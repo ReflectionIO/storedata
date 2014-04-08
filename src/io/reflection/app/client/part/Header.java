@@ -118,7 +118,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@UiField LIElement mLogoutItem;
 
 	@UiField InlineHyperlink myAppsAccountLink;
-	@UiField LIElement mMyAppsItem;
+	@UiField LIElement myAppsAccountItem;
 
 	@UiField InlineHyperlink mAccountSettingsLink;
 	@UiField LIElement mAccountSettingsItem;
@@ -220,7 +220,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			mItems.add(emailTemplatesItem);
 			mItems.add(itemsItem);
 			mItems.add(mAccountSettingsItem);
-			mItems.add(mMyAppsItem);
+			mItems.add(myAppsAccountItem);
 			mItems.add(mUpgradeAccountItem);
 			mItems.add(mLinkedAccountsItem);
 			mItems.add(blogItem);
@@ -239,9 +239,9 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		}
 	}
 
-	private void highlight(LIElement item) {
+	private void highlight(List<LIElement> items) {
 		for (LIElement c : mItems) {
-			if (c == item) {
+			if (items.contains(c)) {
 				activate(c);
 			} else {
 				deactivate(c);
@@ -257,39 +257,42 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	 */
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
+		List<LIElement> items = new ArrayList<LIElement>();
 		if (PageType.RanksPageType.equals(current.getPage())) {
-			highlight(mRanksItem);
+			items.add(mRanksItem);
 		} else if (PageType.FeedBrowserPageType.equals(current.getPage())) {
-			highlight(mFeedBrowserItem);
+			items.add(mFeedBrowserItem);
 		} else if (PageType.UsersPageType.equals(current.getPage())) {
 			if (current.getAction() == null) {
-				highlight(mUsersItem);
+				items.add(mUsersItem);
 			} else if (PageType.MyAppsPageType.equals(current.getAction())) {
-				highlight(mMyAppsItem);
+				items.add(myAppsAccountItem);
+				items.add(myAppsItem);
 			} else if (PageType.LinkedAccountsPageType.equals(current.getAction())) {
-				highlight(mLinkedAccountsItem);
+				items.add(mLinkedAccountsItem);
 			} else if (PageType.ChangeDetailsPageType.equals(current.getAction())) {
-				highlight(mAccountSettingsItem);
+				items.add(mAccountSettingsItem);
 			}
 		} else if (PageType.LoginPageType.equals(current.getPage())) {
-			highlight(mLoginItem);
+			items.add(mLoginItem);
 		} else if (PageType.RegisterPageType.equals(current.getPage())) {
-			highlight(mRegisterItem);
+			items.add(mRegisterItem);
 		} else if (PageType.RolesPageType.equals(current.getPage())) {
-			highlight(mRolesItem);
+			items.add(mRolesItem);
 		} else if (PageType.PermissionsPageType.equals(current.getPage())) {
-			highlight(mPermissionsItem);
+			items.add(mPermissionsItem);
 		} else if (PageType.UpgradePageType.equals(current.getPage())) {
-			highlight(mUpgradeAccountItem);
+			items.add(mUpgradeAccountItem);
 		} else if (PageType.EmailTemplatesPageType.equals(current.getPage())) {
-			highlight(emailTemplatesItem);
+			items.add(emailTemplatesItem);
 		} else if (PageType.ItemsPageType.equals(current.getPage())) {
-			highlight(itemsItem);
+			items.add(itemsItem);
 		} else if (PageType.BlogPostsPageType.equals(current.getPage()) || PageType.BlogPostPageType.equals(current.getPage())) {
-			highlight(blogItem);
+			items.add(blogItem);
 		} else {
-			highlight(null);
+			items.add(null);
 		}
+		highlight(items);
 	}
 
 	/*

@@ -164,7 +164,7 @@
                         My Account
                     </g:Anchor>
                     <ul class="dropdown-menu side">
-                        <li ui:field="mMyAppsItem">
+                        <li ui:field="myAppsAccountItem">
                             <g:InlineHyperlink ui:field="myAppsAccountLink">
                                 <i class="glyphicon glyphicon-th" style="margin-right: 20px"></i>
                                 My apps
