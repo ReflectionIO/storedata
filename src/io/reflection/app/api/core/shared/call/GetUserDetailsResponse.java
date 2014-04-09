@@ -13,7 +13,7 @@ import io.reflection.app.datatypes.shared.User;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import com.willshex.gson.json.service.shared.Response;
+import io.reflection.app.api.shared.datatypes.Response;
 
 public class GetUserDetailsResponse extends Response {
 	public User user;

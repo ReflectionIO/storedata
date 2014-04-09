@@ -312,7 +312,7 @@ public final class Core extends ActionHandler {
 			boolean canSeeFullList = false;
 
 			if (input.session != null) {
-				input.session = ValidationHelper.validateSession(input.session, "input.session");
+				output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 				if (input.session != null) {
 					loggedIn = true;
@@ -635,13 +635,13 @@ public final class Core extends ActionHandler {
 						throw new Exception("Unexpected blank session after creating user session.");
 					}
 				} else {
+					output.session = SessionServiceProvider.provide().extendSession(output.session, ISessionService.SESSION_SHORT_DURATION);
 					output.session.user = user;
 				}
 			} else {
-				input.session = ValidationHelper.validateSession(input.session, "input.session");
-
-				output.session = input.session;
+				output.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 				output.session.user = UserServiceProvider.provide().getUser(input.session.user.id);
+
 			}
 
 			output.status = StatusType.StatusTypeSuccess;
@@ -662,9 +662,11 @@ public final class Core extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
-			input.session = ValidationHelper.validateSession(input.session, "input.session");
+			input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			SessionServiceProvider.provide().deleteSession(input.session);
+
+			output.session = null;
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -687,7 +689,7 @@ public final class Core extends ActionHandler {
 			boolean isReset = (input.resetCode != null);
 
 			if (!isReset) {
-				input.session = ValidationHelper.validateSession(input.session, "input.session");
+				output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 				input.password = ValidationHelper.validatePassword(input.password, "input.password");
 			}
 
@@ -733,7 +735,7 @@ public final class Core extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
-			input.session = ValidationHelper.validateSession(input.session, "input.session");
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			if (input.user.id.longValue() != input.session.user.id.longValue()) throw new ServiceException(-1, "User and session user do not match");
 
@@ -806,7 +808,7 @@ public final class Core extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
-			input.session = ValidationHelper.validateSession(input.session, "input.session");
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			if (input.permissionsOnly != Boolean.TRUE) {
 				output.roles = UserServiceProvider.provide().getRoles(input.session.user);
@@ -843,7 +845,7 @@ public final class Core extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
-			input.session = ValidationHelper.validateSession(input.session, "input.session");
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
@@ -880,7 +882,7 @@ public final class Core extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
-			input.session = ValidationHelper.validateSession(input.session, "input.session");
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			input.linkedAccount = ValidationHelper.validateDataAccount(input.linkedAccount, "input.linkedAccount");
 
@@ -916,7 +918,7 @@ public final class Core extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
-			input.session = ValidationHelper.validateSession(input.session, "input.session");
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			input.source = ValidationHelper.validateDataSource(input.source, "input.source");
 
@@ -952,7 +954,7 @@ public final class Core extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
-			input.session = ValidationHelper.validateSession(input.session, "input.session");
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			// input.roles = ValidationHelper.validateRoles(input.roles, "input.roles");
 
@@ -1070,7 +1072,7 @@ public final class Core extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
-			input.session = ValidationHelper.validateSession(input.session, "input.session");
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			input.query = ValidationHelper.validateQuery(input.query, "input");
 
@@ -1125,7 +1127,7 @@ public final class Core extends ActionHandler {
 			boolean isAction = input.actionCode != null;
 
 			if (!isAction) {
-				input.session = ValidationHelper.validateSession(input.session, "input.session");
+				output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 				if (input.userId == null)
 					throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("Long: input.userId"));

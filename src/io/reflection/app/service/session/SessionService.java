@@ -19,12 +19,6 @@ import io.reflection.app.service.ServiceType;
 
 final class SessionService implements ISessionService {
 
-	// 20 minutes
-	private static final long SESSION_SHORT_DURATION = 60 * 20;
-
-	// approx 30 days
-	private static final long SESSION_LONG_DURATION = 60 * 60 * 24 * 30;
-
 	public String getName() {
 		return ServiceType.ServiceTypeSession.toString();
 	}
@@ -36,8 +30,9 @@ final class SessionService implements ISessionService {
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection sessionConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeSession.toString());
 
-		String getSessionQuery = String.format(
-				"SELECT *, CAST(`token` AS CHAR) AS `chartoken` FROM `session` WHERE `id`='%d' AND `expires` > NOW() AND `deleted`='n' ORDER BY `expires` DESC LIMIT 1", id.longValue());
+		String getSessionQuery = String
+				.format("SELECT *, CAST(`token` AS CHAR) AS `chartoken` FROM `session` WHERE `id`='%d' AND `expires` > NOW() AND `deleted`='n' ORDER BY `expires` DESC LIMIT 1",
+						id.longValue());
 		try {
 			sessionConnection.connect();
 			sessionConnection.executeQuery(getSessionQuery);
@@ -141,8 +136,9 @@ final class SessionService implements ISessionService {
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection sessionConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeSession.toString());
 
-		String getUserSessionQuery = String.format(
-				"SELECT *, CAST(`token` AS CHAR) AS `chartoken` FROM `session` WHERE `userid`=%d AND `expires` > NOW() AND `deleted`='n' ORDER BY `expires` DESC LIMIT 1", user.id.longValue());
+		String getUserSessionQuery = String
+				.format("SELECT *, CAST(`token` AS CHAR) AS `chartoken` FROM `session` WHERE `userid`=%d AND `expires` > NOW() AND `deleted`='n' ORDER BY `expires` DESC LIMIT 1",
+						user.id.longValue());
 
 		try {
 			sessionConnection.connect();
@@ -172,8 +168,9 @@ final class SessionService implements ISessionService {
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection sessionConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeSession.toString());
 
-		String getUserSessionQuery = String.format(
-				"SELECT *, CAST(`token` AS CHAR) AS `chartoken` FROM `session` WHERE `token`=CAST('%s' AS BINARY) AND `expires` > NOW() AND `deleted`='n' ORDER BY `expires` DESC LIMIT 1", token);
+		String getUserSessionQuery = String
+				.format("SELECT *, CAST(`token` AS CHAR) AS `chartoken` FROM `session` WHERE `token`=CAST('%s' AS BINARY) AND `expires` > NOW() AND `deleted`='n' ORDER BY `expires` DESC LIMIT 1",
+						token);
 
 		try {
 			sessionConnection.connect();
@@ -189,6 +186,39 @@ final class SessionService implements ISessionService {
 		}
 
 		return session;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.session.ISessionService#extendSession(io.reflection.app.api.shared.datatypes.Session, java.lang.Long)
+	 */
+	@Override
+	public Session extendSession(Session session, Long duration) throws DataAccessException {
+		Session extendedSession = null;
+
+		IDatabaseService databaseService = DatabaseServiceProvider.provide();
+		Connection sessionConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeSession.toString());
+
+		String extendSessionQuery = String.format("UPDATE `session` SET `expires`=date_add(now(), INTERVAL %d SECOND) WHERE `id`=%d AND `deleted`='n'",
+				duration == null ? SESSION_SHORT_DURATION : duration.longValue(), session.id.longValue());
+
+		try {
+			sessionConnection.connect();
+			sessionConnection.executeQuery(extendSessionQuery);
+
+			if (sessionConnection.getAffectedRowCount() > 0) {
+				extendedSession = getSession(session.id);
+			} else {
+				extendedSession = session;
+			}
+		} finally {
+			if (sessionConnection != null) {
+				sessionConnection.disconnect();
+			}
+		}
+
+		return extendedSession;
 	}
 
 }

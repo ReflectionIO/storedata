@@ -48,7 +48,7 @@ public final class Blog extends ActionHandler {
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
 			if (input.session != null) {
-				input.session = ValidationHelper.validateSession(input.session, "input.session");
+				output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 			}
 
 			if (input.includeContents == null) {
@@ -92,7 +92,9 @@ public final class Blog extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
-			if (input.session != null) input.session = ValidationHelper.validateSession(input.session, "input.session");
+			if (input.session != null) {
+				output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+			}
 
 			boolean isIdLookup = false, isTitleLookup = false;
 			if (input.id != null) {
@@ -129,7 +131,7 @@ public final class Blog extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
-			input.session = ValidationHelper.validateSession(input.session, "input.session");
+			input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			// TODO: check permissions
 
@@ -158,7 +160,7 @@ public final class Blog extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
-			input.session = ValidationHelper.validateSession(input.session, "input.session");
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			// TODO: check permissions
 
@@ -194,7 +196,7 @@ public final class Blog extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
-			input.session = ValidationHelper.validateSession(input.session, "input.session");
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			input.post = ValidationHelper.validateExistingPost(input.post, "input.post");
 

@@ -9,7 +9,7 @@
 package io.reflection.app.api.admin.shared.call;
 
 import com.google.gson.JsonObject;
-import com.willshex.gson.json.service.shared.Response;
+import io.reflection.app.api.shared.datatypes.Response;
 
 public class TriggerModelResponse extends Response {
 	@Override

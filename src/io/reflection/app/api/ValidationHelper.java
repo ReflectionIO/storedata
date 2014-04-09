@@ -36,6 +36,7 @@ import io.reflection.app.service.emailtemplate.EmailTemplateServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
 import io.reflection.app.service.role.RoleServiceProvider;
+import io.reflection.app.service.session.ISessionService;
 import io.reflection.app.service.session.SessionServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.service.user.UserServiceProvider;
@@ -478,7 +479,7 @@ public class ValidationHelper {
 	 * @param session
 	 * @return
 	 */
-	public static Session validateSession(Session session, String parent) throws ServiceException {
+	public static Session validateAndExtendSession(Session session, String parent) throws ServiceException {
 
 		if (session == null) throw new InputValidationException(ApiError.SessionNull.getCode(), ApiError.SessionNull.getMessage(parent));
 
@@ -504,6 +505,10 @@ public class ValidationHelper {
 			lookupSession = SessionServiceProvider.provide().getTokenSession(session.token);
 
 			if (lookupSession == null) throw new InputValidationException(ApiError.SessionNotFound.getCode(), ApiError.SessionNotFound.getMessage(parent));
+		}
+
+		if (lookupSession != null) {
+			lookupSession = SessionServiceProvider.provide().extendSession(lookupSession, Long.valueOf(ISessionService.SESSION_SHORT_DURATION));
 		}
 
 		return lookupSession;

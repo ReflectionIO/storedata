@@ -9,7 +9,7 @@
 package io.reflection.app.api.forum.shared.call;
 
 import com.google.gson.JsonObject;
-import com.willshex.gson.json.service.shared.Response;
+import io.reflection.app.api.shared.datatypes.Response;
 
 public class AddReplyResponse extends Response {
 	@Override

@@ -19,7 +19,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import com.willshex.gson.json.service.shared.Response;
+import io.reflection.app.api.shared.datatypes.Response;
 
 public class GetItemRanksResponse extends Response {
 	public List<Rank> ranks;

@@ -16,6 +16,16 @@ import com.spacehopperstudios.service.IService;
 
 public interface ISessionService extends IService {
 	/**
+	 * 20 minutes in seconds
+	 */
+	public static final long SESSION_SHORT_DURATION = 60 * 20;
+
+	/**
+	 * Approximately 30 days in seconds
+	 */
+	public static final long SESSION_LONG_DURATION = 60 * 60 * 24 * 30;
+
+	/**
 	 * @param id
 	 * @return
 	 */
@@ -60,5 +70,12 @@ public interface ISessionService extends IService {
 	 * @return
 	 */
 	public Session getTokenSession(String token) throws DataAccessException;
+
+	/**
+	 * @param session
+	 * @param duration
+	 * @return
+	 */
+	public Session extendSession(Session session, Long sessionShortDuration) throws DataAccessException;
 
 }

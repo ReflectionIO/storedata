@@ -76,7 +76,7 @@ public final class Admin extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
-			input.session = ValidationHelper.validateSession(input.session, "input.session");
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
 
@@ -104,7 +104,7 @@ public final class Admin extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
-			input.session = ValidationHelper.validateSession(input.session, "input.session");
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
 
@@ -128,7 +128,7 @@ public final class Admin extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
-			input.session = ValidationHelper.validateSession(input.session, "input.session");
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
 
@@ -150,7 +150,7 @@ public final class Admin extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
-			input.session = ValidationHelper.validateSession(input.session, "input.session");
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
 
@@ -194,7 +194,7 @@ public final class Admin extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
-			input.session = ValidationHelper.validateSession(input.session, "input.session");
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
 
@@ -216,7 +216,7 @@ public final class Admin extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
-			input.session = ValidationHelper.validateSession(input.session, "input.session");
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
 
@@ -251,7 +251,7 @@ public final class Admin extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
-			input.session = ValidationHelper.validateSession(input.session, "input.session");
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
 
@@ -296,7 +296,7 @@ public final class Admin extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
-			input.session = ValidationHelper.validateSession(input.session, "input.session");
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
 
@@ -343,7 +343,7 @@ public final class Admin extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
-			input.session = ValidationHelper.validateSession(input.session, "input.session");
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
 
@@ -372,7 +372,7 @@ public final class Admin extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
-			input.session = ValidationHelper.validateSession(input.session, "input.session");
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
 
@@ -402,7 +402,7 @@ public final class Admin extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
-			input.session = ValidationHelper.validateSession(input.session, "input.session");
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
 
@@ -430,7 +430,7 @@ public final class Admin extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
-			input.session = ValidationHelper.validateSession(input.session, "input.session");
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
 
@@ -458,7 +458,7 @@ public final class Admin extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
-			input.session = ValidationHelper.validateSession(input.session, "input.session");
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
 
@@ -487,7 +487,7 @@ public final class Admin extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
-			input.session = ValidationHelper.validateSession(input.session, "input.session");
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
 
@@ -517,7 +517,7 @@ public final class Admin extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
-			input.session = ValidationHelper.validateSession(input.session, "input.session");
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
 			

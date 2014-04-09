@@ -663,7 +663,15 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	 */
 	@Override
 	public void jsonServiceCallSuccess(JsonService origin, String callName, Request input, Response output) {
-		if (output.error != null) {
+		if (output.error == null) {
+			if (output instanceof io.reflection.app.api.shared.datatypes.Response) {
+				io.reflection.app.api.shared.datatypes.Response sessionOutput = (io.reflection.app.api.shared.datatypes.Response) output;
+
+				if (sessionOutput.session != null) {
+					setLoggedInUser(mLoggedInUser, sessionOutput.session);
+				}
+			}
+		} else {
 			// Session error redirection
 			if (output.error.code.intValue() == ApiError.SessionNull.getCode() || output.error.code.intValue() == ApiError.SessionNotFound.getCode()
 					|| output.error.code.intValue() == ApiError.SessionNoLookup.getCode()) {
