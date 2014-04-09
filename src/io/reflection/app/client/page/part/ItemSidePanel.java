@@ -5,7 +5,7 @@
 //  Created by William Shakour (billy1380) on 27 Jan 2014.
 //  Copyright © 2014 Reflection.io Ltd. All rights reserved.
 //
-package io.reflection.app.client.part;
+package io.reflection.app.client.page.part;
 
 import io.reflection.app.client.controller.StoreController;
 import io.reflection.app.datatypes.shared.Item;

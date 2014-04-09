@@ -1,6 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
-    xmlns:l="urn:import:io.reflection.app.client.part.login">
+    xmlns:l="urn:import:io.reflection.app.client.part.login" xmlns:pp="urn:import:io.reflection.app.client.page.part">
 
     <ui:import field="io.reflection.app.client.page.PageType.RegisterPageType" />
     <ui:import field="io.reflection.app.client.page.PageType.LoginPageType" />
@@ -37,7 +37,7 @@
         <p:AlertBox ui:field="mAlertBox" visible="false" />
         <div class="row">
             <g:HTMLPanel ui:field="mDefaultLogin">
-                <p:LoginRegisterPanel styleName="col-md-6 {style.mainPanel}" />
+                <pp:LoginRegisterPanel styleName="col-md-6 {style.mainPanel}" />
                 <g:HTMLPanel styleName="col-md-5 col-md-offset-1 well {style.form}">
                     <ul class="nav nav-tabs nav-justified loginregister">
                         <li ui:field="registerItem">

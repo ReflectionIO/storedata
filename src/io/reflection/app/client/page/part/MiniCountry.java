@@ -1,14 +1,14 @@
 //
-//  MiniStore.java
+//  MiniCountry.java
 //  storedata
 //
-//  Created by William Shakour (billy1380) on 5 Oct 2013.
+//  Created by William Shakour (billy1380) on 18 Oct 2013.
 //  Copyright © 2013 SPACEHOPPER STUDIOS LTD. All rights reserved.
 //
-package io.reflection.app.client.part;
+package io.reflection.app.client.page.part;
 
 import io.reflection.app.client.controller.NavigationController;
-import io.reflection.app.datatypes.shared.Store;
+import io.reflection.app.datatypes.shared.Country;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -21,31 +21,31 @@ import com.google.gwt.user.client.ui.Widget;
  * @author billy1380
  * 
  */
-public class MiniStore extends Composite {
+public class MiniCountry extends Composite {
 
-	private static MiniStoreUiBinder uiBinder = GWT.create(MiniStoreUiBinder.class);
+	private static MiniCountryUiBinder uiBinder = GWT.create(MiniCountryUiBinder.class);
 
-	interface MiniStoreUiBinder extends UiBinder<Widget, MiniStore> {}
+	interface MiniCountryUiBinder extends UiBinder<Widget, MiniCountry> {}
 
-	private Store mStore;
+	private Country mCountry;
 
 	@UiField InlineHyperlink mName;
 
-	public MiniStore() {
+	public MiniCountry() {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
 	/**
 	 * @param store
 	 */
-	public MiniStore(Store store) {
+	public MiniCountry(Country country) {
 		this();
 
-		mStore = store;
+		mCountry = country;
 
-		mName.setText(mStore.name);
+		mName.setText(mCountry.name);
 		// FIXME: this is not going to work... modally or not
-		mName.setTargetHistoryToken(NavigationController.get().getCurrentPage().asTargetHistoryToken(mStore.a3Code));
+		mName.setTargetHistoryToken(NavigationController.get().getCurrentPage().asTargetHistoryToken(mCountry.a2Code));
 	}
 
 }

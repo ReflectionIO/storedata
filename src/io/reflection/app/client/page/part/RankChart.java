@@ -5,7 +5,7 @@
 //  Created by William Shakour (billy1380) on 6 Feb 2013.
 //  Copyright © 2014 Reflection.io ltd. All rights reserved.
 //
-package io.reflection.app.client.part;
+package io.reflection.app.client.page.part;
 
 import static io.reflection.app.client.controller.FilterController.DOWNLOADS_CHART_TYPE;
 import static io.reflection.app.client.controller.FilterController.FREE_LIST_TYPE;

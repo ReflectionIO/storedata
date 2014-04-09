@@ -5,13 +5,14 @@
 //  Created by William Shakour (billy1380) on 3 Oct 2013.
 //  Copyright © 2013 SPACEHOPPER STUDIOS LTD. All rights reserved.
 //
-package io.reflection.app.client.part;
+package io.reflection.app.client.page.part;
 
 import static io.reflection.app.client.controller.FilterController.DOWNLOADS_DAILY_DATA_TYPE;
 import static io.reflection.app.client.controller.FilterController.REVENUE_DAILY_DATA_TYPE;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
+import io.reflection.app.client.part.BootstrapGwtDatePicker;
 
 import java.util.Date;
 

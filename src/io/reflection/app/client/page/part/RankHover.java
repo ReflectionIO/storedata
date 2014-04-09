@@ -6,9 +6,9 @@
 //  Copyright © 2014 SPACEHOPPER STUDIOS LTD. All rights reserved.
 //  Copyright © 2014 Reflection.io Ltd. All rights reserved.
 //
-package io.reflection.app.client.part;
+package io.reflection.app.client.page.part;
 
-import io.reflection.app.client.part.RankChart.YAxisDataType;
+import io.reflection.app.client.page.part.RankChart.YAxisDataType;
 
 import java.util.Date;
 

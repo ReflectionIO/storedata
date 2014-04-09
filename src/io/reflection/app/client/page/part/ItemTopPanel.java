@@ -5,11 +5,13 @@
 //  Created by William Shakour (billy1380) on 29 Jan 2014.
 //  Copyright © 2014 Reflection.io Ltd. All rights reserved.
 //
-package io.reflection.app.client.part;
+package io.reflection.app.client.page.part;
 
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
+import io.reflection.app.client.part.BootstrapGwtDatePicker;
+import io.reflection.app.client.part.DateRangeBox;
 import io.reflection.app.client.part.DateRangeBox.DefaultFormat;
 import io.reflection.app.client.part.datatypes.DateRange;
 

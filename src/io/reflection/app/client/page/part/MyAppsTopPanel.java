@@ -5,7 +5,7 @@
 //  Created by Stefano Capuzzi on 4 Apr 2014.
 //  Copyright © 2014 Reflection.io Ltd. All rights reserved.
 //
-package io.reflection.app.client.part;
+package io.reflection.app.client.page.part;
 
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.helper.FilterHelper;

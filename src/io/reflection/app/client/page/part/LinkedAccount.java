@@ -5,7 +5,7 @@
 //  Created by William Shakour (billy1380) on 17 Dec 2013.
 //  Copyright © 2013 SPACEHOPPER STUDIOS LTD. All rights reserved.
 //
-package io.reflection.app.client.part;
+package io.reflection.app.client.page.part;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;

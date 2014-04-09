@@ -1,6 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
-    xmlns:c="urn:import:com.google.gwt.user.cellview.client">
+    xmlns:c="urn:import:com.google.gwt.user.cellview.client"  xmlns:pp="urn:import:io.reflection.app.client.page.part">
     <ui:style>
     .floatRight {
     	float: right;
@@ -22,7 +22,7 @@
     <g:HTMLPanel>
 
         <div class="row">
-            <p:ItemSidePanel ui:field="mSidePanel" styleName="sidepanel col-md-2 well" />
+            <pp:ItemSidePanel ui:field="mSidePanel" styleName="sidepanel col-md-2 well" />
 
             <div class="col-md-10" style="padding-left: 0px; padding-right: 0px;">
                 <ul class="nav nav-tabs nav-justified ranks">
@@ -47,11 +47,11 @@
                 </ul>
                 <div style="margin-left: 20px; margin-right: 25px; margin-top: 20px;">
 
-                    <p:ItemTopPanel ui:field="mTopPanel" />
+                    <pp:ItemTopPanel ui:field="mTopPanel" />
 
                     <p:CircleProgressBar visible="false" ui:field="loader" styleName="{style.loading}" />
 
-                    <p:RankChart ui:field="historyChart" />
+                    <pp:RankChart ui:field="historyChart" />
 
                     <c:CellTable ui:field="revenue" styleName="table table-hover table-striped {style.pushDown}"></c:CellTable>
 

@@ -8,6 +8,7 @@
 package io.reflection.app.client.part;
 
 import io.reflection.app.client.controller.StoreController;
+import io.reflection.app.client.page.part.MiniStore;
 import io.reflection.app.datatypes.shared.Store;
 
 import java.util.List;

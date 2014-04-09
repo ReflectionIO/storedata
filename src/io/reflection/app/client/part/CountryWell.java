@@ -8,6 +8,7 @@
 package io.reflection.app.client.part;
 
 import io.reflection.app.client.controller.CountryController;
+import io.reflection.app.client.page.part.MiniCountry;
 import io.reflection.app.datatypes.shared.Country;
 
 import java.util.List;
