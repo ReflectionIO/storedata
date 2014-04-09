@@ -243,7 +243,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	}
 
 	private void highlight(LIElement... item) {
-		for (LIElement c : highlightedItems) {
+		List<LIElement> list = new ArrayList<LIElement>(highlightedItems);
+		for (LIElement c : list) {
 			deactivate(c);
 		}
 
