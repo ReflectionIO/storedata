@@ -230,27 +230,26 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 	private void activate(LIElement item) {
 		if (item != null) {
-			highlightedItems.add(item);
 			item.addClassName(ACTIVE_STYLE_NAME);
 		}
 	}
 
 	private void deactivate(LIElement item) {
 		if (item != null) {
-			highlightedItems.remove(item);
 			item.removeClassName(ACTIVE_STYLE_NAME);
 		}
 	}
 
 	private void highlight(LIElement... item) {
-		List<LIElement> list = new ArrayList<LIElement>(highlightedItems);
-		for (LIElement c : list) {
+		for (LIElement c : highlightedItems) {
 			deactivate(c);
 		}
+		highlightedItems.clear();
 
 		if (item != null) {
 			for (LIElement c : item) {
 				activate(c);
+				highlightedItems.add(c);
 			}
 		}
 	}
