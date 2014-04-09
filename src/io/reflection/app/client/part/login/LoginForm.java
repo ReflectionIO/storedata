@@ -177,14 +177,15 @@ public class LoginForm extends Composite {
 	public void setEnabled(boolean value) {
 		mEmail.setEnabled(value);
 		mEmail.setFocus(value);
-
+		mRememberMe.setEnabled(value);
+		mLogin.setEnabled(value);
 		mPassword.setEnabled(value);
 		if (!value) {
+			mRememberMe.setFocus(false);
+			mLogin.setFocus(false);
 			mPassword.setFocus(value);
 		}
 
-		mRememberMe.setEnabled(value);
-		mLogin.setEnabled(value);
 	}
 
 }

@@ -74,13 +74,15 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 	@UiHandler("mLinkAccount")
 	void onLinkAccountClicked(ClickEvent event) {
 		if (mLinkableAccount.validate()) {
-			form.setVisible(false);
-
+			mLinkableAccount.setFormErrors();
+			mLinkableAccount.setEnabled(false);
+			mLinkAccount.setEnabled(false);
 			LinkedAccountController.get().linkAccount(mLinkableAccount.getAccountSourceId(), mLinkableAccount.getUsername(), mLinkableAccount.getPassword(),
-					mLinkableAccount.getProperties());
+					mLinkableAccount.getProperties()); // Link account
 		} else {
 			mLinkableAccount.setFormErrors();
 		}
+
 	}
 
 	/*
@@ -92,7 +94,12 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 	@Override
 	public void linkAccountSuccess(LinkAccountRequest input, LinkAccountResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
+			mLinkAccount.setEnabled(true);
+			mLinkableAccount.resetForm();
 			PageType.ReadyToStartPageType.show();
+		} else {
+			mLinkableAccount.setEnabled(true);
+			mLinkAccount.setEnabled(true);
 		}
 	}
 
@@ -103,7 +110,10 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 	 * java.lang.Throwable)
 	 */
 	@Override
-	public void linkAccountFailure(LinkAccountRequest input, Throwable caught) {}
+	public void linkAccountFailure(LinkAccountRequest input, Throwable caught) {
+		mLinkableAccount.resetForm();
+		mLinkAccount.setEnabled(true);
+	}
 
 	/*
 	 * (non-Javadoc)

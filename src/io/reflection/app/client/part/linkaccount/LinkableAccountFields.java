@@ -18,8 +18,6 @@ import io.reflection.app.client.handler.EnterPressedEventHandler;
 public interface LinkableAccountFields {
 	boolean validate();
 
-	void setFormErrors();
-
 	String getAccountSourceName();
 
 	Long getAccountSourceId();
@@ -30,8 +28,14 @@ public interface LinkableAccountFields {
 
 	String getProperties();
 
+	Focusable getFirstToFocus();
+
+	void setFormErrors();
+
 	void setOnEnterPressed(EnterPressedEventHandler handler);
 
-	Focusable getFirstToFocus();
+	void setEnabled(boolean enable);
+
+	void resetForm();
 
 }

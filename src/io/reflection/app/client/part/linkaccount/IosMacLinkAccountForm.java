@@ -54,8 +54,6 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 
 	private EnterPressedEventHandler mEnterHandler;
 
-	
-
 	public IosMacLinkAccountForm() {
 		initWidget(uiBinder.createAndBindUi(this));
 
@@ -108,8 +106,8 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 			mAccountUsernameError = "Cannot be empty";
 			validated = false;
 			/*
-			 * } else if (username.length() < 6) { mAccountUsernameError = "Too short (minimum 6 characters)"; validated = false; } else if (username.length() > 255) {
-			 * mAccountUsernameError = "Too long (maximum 255 characters)"; validated = false;
+			 * } else if (username.length() < 6) { mAccountUsernameError = "Too short (minimum 6 characters)"; validated = false; } else if (username.length() >
+			 * 255) { mAccountUsernameError = "Too long (maximum 255 characters)"; validated = false;
 			 */
 		} else {
 			mAccountUsernameError = null;
@@ -244,6 +242,43 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 			FormHelper.hideNote(mVendorIdGroup, mVendorIdNote);
 		}
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.part.linkaccount.LinkableAccountFields#setEnabled()
+	 */
+	@Override
+	public void setEnabled(boolean enabled) {
+		mAccountUsername.setEnabled(enabled);
+		mAccountUsername.setFocus(enabled);
+		mPassword.setEnabled(enabled);
+		mVendorId.setEnabled(enabled);
+		if (!enabled) {
+			mPassword.setFocus(false);
+			mVendorId.setFocus(false);
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.part.linkaccount.LinkableAccountFields#resetForm()
+	 */
+	@Override
+	public void resetForm() {
+		setEnabled(true);
+
+		mAccountUsername.setText("");
+		mAccountUsername.setFocus(true);
+		mPassword.setText("");
+		mVendorId.setText("");
+
+		FormHelper.hideNote(mAccountUsernameGroup, mAccountUsernameNote);
+		FormHelper.hideNote(mPasswordGroup, mPasswordNote);
+		FormHelper.hideNote(mVendorIdGroup, mVendorIdNote);
 	}
 
 }
