@@ -639,7 +639,7 @@ public final class Core extends ActionHandler {
 					output.session.user = user;
 				}
 			} else {
-				output.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+				output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 				output.session.user = UserServiceProvider.provide().getUser(input.session.user.id);
 
 			}
