@@ -2,7 +2,19 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.user.datepicker.client"
     xmlns:p="urn:import:io.reflection.app.client.part">
     <ui:style>
+    .radioButtons {
+    	display: inline-block;
+    	margin-left: 4px;
+    }
     
+    .radioButton {
+    	margin-left: 4px;
+    	font-size: 1.3em;
+    }
+    
+    .radioButton label {
+    	margin-left: 3px;
+    }
     </ui:style>
     <g:HTMLPanel styleName="well well-sm">
 
@@ -31,12 +43,10 @@
                     </div>
                 </div>
 
-
-
-                <div class="form-group" style="margin-left: 7px; margin-right: 10px; display: inline-block;">
-                    <g:RadioButton ui:field="rangeDay" styleName="form-control" name="dailydata" checked="true">Day</g:RadioButton>
-                    <g:RadioButton ui:field="rangeWeek" styleName="form-control" name="dailydata">Week</g:RadioButton>
-                    <g:RadioButton ui:field="rangeMonth" styleName="form-control" name="dailydata">Month</g:RadioButton>
+                <div class="form-group {style.radioButtons}">
+                    <g:RadioButton ui:field="rangeDay" styleName="{style.radioButton}" name="dailydata" checked="true">Day</g:RadioButton>
+                    <g:RadioButton ui:field="rangeWeek" styleName="{style.radioButton}" name="dailydata">Week</g:RadioButton>
+                    <g:RadioButton ui:field="rangeMonth" styleName="{style.radioButton}" name="dailydata">Month</g:RadioButton>
                 </div>
 
             </g:HTMLPanel>
