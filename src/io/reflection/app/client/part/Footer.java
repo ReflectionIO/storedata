@@ -28,7 +28,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -42,7 +42,7 @@ public class Footer extends Composite implements FilterEventHandler {
 
 	interface FooterUiBinder extends UiBinder<Widget, Footer> {}
 
-	@UiField HTMLPanel mFooter;
+	@UiField FocusPanel footer;
 	@UiField SpanElement mYear;
 	@UiField Anchor mArrow;
 	@UiField InlineHyperlink ranks;
@@ -57,7 +57,7 @@ public class Footer extends Composite implements FilterEventHandler {
 		Styles.INSTANCE.reflection().ensureInjected();
 
 		open = false;
-		mFooter.getElement().getStyle().setBottom(-125, Unit.PX);
+		footer.getElement().getStyle().setBottom(-125, Unit.PX);
 
 		mYear.setInnerHTML(Integer.toString(1900 + (new Date()).getYear()));
 
@@ -91,16 +91,15 @@ public class Footer extends Composite implements FilterEventHandler {
 		super.onDetach();
 	}
 
-	@UiHandler("mArrow")
-	void onClickArrow(ClickEvent event) {
+	@UiHandler("footer")
+	void onClickFooter(ClickEvent event) {
 		if (open) {
 			mArrow.setStyleName(Styles.INSTANCE.reflection().footerUpArrow());
-			mFooter.getElement().getStyle().setBottom(-125, Unit.PX);
+			footer.getElement().getStyle().setBottom(-125, Unit.PX);
 		} else {
 			mArrow.setStyleName(Styles.INSTANCE.reflection().footerDownArrow());
-			mFooter.getElement().getStyle().setBottom(0, Unit.PX);
+			footer.getElement().getStyle().setBottom(0, Unit.PX);
 		}
-
 		open = !open;
 	}
 

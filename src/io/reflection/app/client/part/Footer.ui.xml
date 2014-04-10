@@ -23,6 +23,7 @@
     	-webkit-transition: .3s;
     	transition: .3s;
     	z-index: 16;
+    	outline: 0;
     }
     
     .upPanel {
@@ -51,57 +52,58 @@
     }
     
     .sideMargin {
-    	margin-left: 15px;
-    	margin-right: 15px;
+    	margin-left: 25px;
+    	margin-right: 25px;
     }
     </ui:style>
 
 
-    <g:HTMLPanel styleName="{style.footer}" ui:field="mFooter">
-        <g:HTMLPanel styleName="{style.upPanel}">
-            <div style="float: left;width:20px;">
-                <span class="{styles.reflection.footerLogo}"></span>
-            </div>
-            <div style="margin:0 auto;width:20px;">
-                <g:Anchor ui:field="mArrow" styleName="{styles.reflection.footerUpArrow} {style.arrow}" />
-            </div>
-            <div style="margin-top:-18px; float:right; width:290px;">
-                <span style="display: block; font-size: 13px; color: #63656a;">
-                    &copy; Copyright
-                    <span ui:field="mYear"></span>
-                    Reflection. All Rights Reserved
-                </span>
-            </div>
+    <g:FocusPanel styleName="{style.footer}" ui:field="footer">
+        <g:HTMLPanel>
+            <g:HTMLPanel styleName="{style.upPanel}">
+                <div style="float: left;width:20px;">
+                    <span class="{styles.reflection.footerLogo}"></span>
+                </div>
+                <div style="margin:0 auto;width:20px;">
+                    <g:Anchor ui:field="mArrow" styleName="{styles.reflection.footerUpArrow} {style.arrow}" />
+                </div>
+                <div style="margin-top:-18px; float:right; width:290px;">
+                    <span style="display: block; font-size: 13px; color: #63656a;">
+                        &copy; Copyright
+                        <span ui:field="mYear"></span>
+                        Reflection. All Rights Reserved
+                    </span>
+                </div>
+            </g:HTMLPanel>
+
+            <g:HTMLPanel styleName="{style.downPanel}">
+
+                <div style="width: 100%; padding-top:20px; padding-bottom: 40px;">
+                    <g:InlineHyperlink ui:field="ranks">Leaderboard</g:InlineHyperlink>
+
+                    <g:InlineHyperlink targetHistoryToken="{TermsPageType.asTargetHistoryToken}" styleName="{style.sideMargin}">Terms and
+                        Conditions</g:InlineHyperlink>
+
+                    <g:InlineHyperlink targetHistoryToken="{PolicyPageType.asTargetHistoryToken}">Privacy
+                        Policy</g:InlineHyperlink>
+                </div>
+
+                <div style="width: 100%;">
+                    <a href="https://www.facebook.com/reflection.io" target="_blank">
+                        <span class="{styles.reflection.footerFacebook}"></span>
+                    </a>
+                    <a href="http://www.linkedin.com/company/reflection-io-ltd" target="_blank" class="{style.sideMargin}">
+                        <span class="{styles.reflection.footerLinkedin}"></span>
+                    </a>
+                    <a href="https://twitter.com/ReflectiveTweet" target="_blank">
+                        <span class="{styles.reflection.footerTwitter}"></span>
+                    </a>
+
+                </div>
+
+            </g:HTMLPanel>
         </g:HTMLPanel>
-
-        <g:HTMLPanel styleName="{style.downPanel}">
-
-            <div style="width: 100%; padding-top:20px; padding-bottom: 40px;">
-                <g:InlineHyperlink ui:field="ranks">Leaderboard</g:InlineHyperlink>
-                &nbsp;&nbsp;&nbsp;
-                <g:InlineHyperlink targetHistoryToken="{TermsPageType.asTargetHistoryToken}" styleName="{style.sideMargin}">Terms and
-                    Conditions</g:InlineHyperlink>
-                &nbsp;&nbsp;&nbsp;
-                <g:InlineHyperlink targetHistoryToken="{PolicyPageType.asTargetHistoryToken}">Privacy
-                    Policy</g:InlineHyperlink>
-            </div>
-
-            <div style="width: 100%;">
-                <a href="https://www.facebook.com/reflection.io" target="_blank">
-                    <span class="{styles.reflection.footerFacebook}"></span>
-                </a>
-                <a href="http://www.linkedin.com/company/reflection-io-ltd" target="_blank" class="{style.sideMargin}">
-                    <span class="{styles.reflection.footerLinkedin}"></span>
-                </a>
-                <a href="https://twitter.com/ReflectiveTweet" target="_blank">
-                    <span class="{styles.reflection.footerTwitter}"></span>
-                </a>
-
-            </div>
-
-        </g:HTMLPanel>
-
-    </g:HTMLPanel>
+    </g:FocusPanel>
 
 
 </ui:UiBinder> 
