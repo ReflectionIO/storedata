@@ -79,10 +79,10 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 				if (output.status == StatusType.StatusTypeSuccess) {
 					if (output.linkedAccounts != null) {
 						LinkedAccountController.get().setLinkedAccounts(output.linkedAccounts);
-
 						fetchLinkedAccountItems();
-					} else {
+					} else { // No linked accounts associated with this user 
 						updateRowCount(0, true);
+						// TODO Tell it to the user 
 					}
 
 				}
@@ -113,7 +113,7 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 
 					int count = 0;
 
-					if (output.items != null) {
+					if (output.items != null) { // There are items associated with this linked account
 						count = output.items.size();
 						MyApp myApp;
 						for (int i = 0; i < count; i++) {
@@ -127,6 +127,8 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 							}
 
 						}
+					} else { // No items associated with this linked account
+						updateRowCount(0, true);
 					}
 				}
 
