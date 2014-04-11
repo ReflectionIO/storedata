@@ -168,7 +168,7 @@ public class FilterHelper {
 		} else {
 			dateRange.setTo(to = getToday());
 			from = CalendarUtil.copyDate(to);
-			CalendarUtil.addDaysToDate(from, -daysApart);
+			CalendarUtil.addDaysToDate(from, daysApart);
 			dateRange.setFrom(from);
 		}
 
