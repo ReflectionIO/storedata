@@ -24,6 +24,9 @@ public class FormHelper {
 	private static final String APPLE_VENDOR_ID_PATTERN = "^8[0-9]{7}$"; // 8 followed by seven numbers of any value
 	private static final RegExp REG_EXP_APPLE_VENDOR_ID_CHECKER = RegExp.compile(FormHelper.APPLE_VENDOR_ID_PATTERN);
 
+	public static final String COMPLETE_ACTION_NAME = "complete";
+	public static final int CODE_PARAMETER_INDEX = 1;
+
 	public static boolean isValidEmail(String toValidate) {
 		return REG_EXP_EMAIL_CHECKER.test(toValidate);
 	}

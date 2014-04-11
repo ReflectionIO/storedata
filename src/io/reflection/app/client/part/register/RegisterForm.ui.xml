@@ -4,7 +4,9 @@
     <ui:import field="io.reflection.app.client.page.PageType.TermsPageType" />
 
     <ui:style>
-    
+    .password {
+    	margin-top: 7px;
+    }
     </ui:style>
     <g:HTMLPanel>
         <g:FormPanel styleName="form">
@@ -37,7 +39,7 @@
                 <g:HTMLPanel ui:field="mPasswordGroup" styleName="form-group">
                     <label>Password</label>
                     <g:PasswordTextBox styleName="form-control" ui:field="mPassword" />
-                    <label>Confirm Password</label>
+                    <label class="{style.password}">Confirm Password</label>
                     <g:PasswordTextBox styleName="form-control" ui:field="confirmPassword" />
                     <g:HTMLPanel ui:field="mPasswordNote" visible="false" styleName="noteDetail" />
                 </g:HTMLPanel>

@@ -547,8 +547,8 @@ public final class Core extends ActionHandler {
 
 			boolean isAction = input.actionCode != null;
 
-			if (input.accessCode.equalsIgnoreCase("b72b4e32-1062-4cc7-bc6b-52498ee10f09")) {
-				// use the email servlet code to determine whether they are an alpha user
+			if (input.accessCode.equalsIgnoreCase("b72b4e32-1062-4cc7-bc6b-52498ee10f09") || input.user.password == null || input.user.password.length() == 0) {
+				// Alpha user or Request invite
 				input.user = ValidationHelper.validateAlphaUser(input.user, "input.user");
 			} else {
 				if (isAction) {

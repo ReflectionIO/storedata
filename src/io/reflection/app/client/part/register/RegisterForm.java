@@ -68,8 +68,10 @@ public class RegisterForm extends Composite {
 
 	@UiField Button mRegister;
 
+	private boolean isRequestInvite;
+
 	final String imageButtonLink = "<img style=\"vertical-align: 1px;\" src=\"" + Images.INSTANCE.buttonArrowWhite().getSafeUri().asString() + "\"/>";
-	
+
 	private String actionCode;
 
 	public RegisterForm() {
@@ -96,7 +98,6 @@ public class RegisterForm extends Composite {
 
 		resetForm();
 
-		mForename.setFocus(true);
 	}
 
 	@UiHandler({ "mForename", "mSurname", "mCompany", "mEmail", "mPassword", "confirmPassword", "mTermAndCond" })
@@ -110,16 +111,16 @@ public class RegisterForm extends Composite {
 	void onRegisterClicked(ClickEvent event) {
 		if (validate()) {
 
-//			mRegister.setText("Registration in progress..");
+			// mRegister.setText("Registration in progress..");
 
 			// TODO Checking effect
 
 			// AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Please wait", " - creating user account...",
 			// false).setVisible(true);
-			
+
 			setEnabled(false);
 
-			if (actionCode == null) { 
+			if (actionCode == null) {
 				UserController.get().registerUser(mEmail.getText(), mPassword.getText(), mForename.getText(), mSurname.getText(), mCompany.getText());
 			} else {
 				UserController.get().registerUser(actionCode, mPassword.getText());
@@ -146,11 +147,13 @@ public class RegisterForm extends Composite {
 			} else {
 				FormHelper.hideNote(mEmailGroup, mEmailNote);
 			}
+
 			if (mPasswordError != null) {
 				FormHelper.showNote(true, mPasswordGroup, mPasswordNote, mPasswordError);
 			} else {
 				FormHelper.hideNote(mPasswordGroup, mPasswordNote);
 			}
+
 			if (termAndCondError != null) {
 				FormHelper.showNote(true, termAndCondGroup, termAndCondNote, termAndCondError);
 			} else {
@@ -232,21 +235,23 @@ public class RegisterForm extends Composite {
 			validated = validated && true;
 		}
 
-		if (password == null || password.length() == 0) {
-			mPasswordError = "Cannot be empty";
-			validated = false;
-		} else if (password.length() < 6) {
-			mPasswordError = "Too short (minimum 6 characters)";
-			validated = false;
-		} else if (password.length() > 64) {
-			mPasswordError = "Too long (maximum 64 characters)";
-			validated = false;
-		} else if (!password.equals(confirmPasswordValue)) {
-			mPasswordError = "Password and confirmation should match";
-			validated = false;
-		} else {
-			mPasswordError = null;
-			validated = validated && true;
+		if (!isRequestInvite) {
+			if (password == null || password.length() == 0) {
+				mPasswordError = "Cannot be empty";
+				validated = false;
+			} else if (password.length() < 6) {
+				mPasswordError = "Too short (minimum 6 characters)";
+				validated = false;
+			} else if (password.length() > 64) {
+				mPasswordError = "Too long (maximum 64 characters)";
+				validated = false;
+			} else if (!password.equals(confirmPasswordValue)) {
+				mPasswordError = "Password and confirmation should match";
+				validated = false;
+			} else {
+				mPasswordError = null;
+				validated = validated && true;
+			}
 		}
 
 		if (mTermAndCond.getValue() == Boolean.FALSE) {
@@ -279,7 +284,7 @@ public class RegisterForm extends Composite {
 		mCompany.setText(value);
 		mCompany.setEnabled(false);
 	}
-	
+
 	public void setActionCode(String value) {
 		actionCode = value;
 	}
@@ -289,25 +294,23 @@ public class RegisterForm extends Composite {
 		mSurname.setText("");
 		mCompany.setText("");
 		mEmail.setText("");
-		
-		actionCode = null;
-
-		setEnabled(true);
-		
 		mPassword.setText("");
-
 		confirmPassword.setText("");
-		
+		mForename.setFocus(false);
+		mSurname.setFocus(false);
+		mCompany.setFocus(false);
+		mEmail.setFocus(false);
+		mPassword.setFocus(false);
+		confirmPassword.setFocus(false);
 		mTermAndCond.setValue(Boolean.FALSE);
-
 		FormHelper.hideNote(mForenameGroup, mForenameNote);
 		FormHelper.hideNote(mSurnameGroup, mSurnameNote);
 		FormHelper.hideNote(mCompanyGroup, mCompanyNote);
 		FormHelper.hideNote(mEmailGroup, mEmailNote);
 		FormHelper.hideNote(mPasswordGroup, mPasswordNote);
 		FormHelper.hideNote(termAndCondGroup, termAndCondNote);
-
-		// mAlertBox.setVisible(false);
+		actionCode = null;
+		setEnabled(true);
 	}
 
 	/**
@@ -320,8 +323,20 @@ public class RegisterForm extends Composite {
 		mEmail.setEnabled(value);
 		mPassword.setEnabled(value);
 		confirmPassword.setEnabled(value);
-		
+		mTermAndCond.setEnabled(value);
 		mRegister.setEnabled(value);
+	}
+
+	public void setRequestInvite(boolean requestInvite) {
+		isRequestInvite = requestInvite;
+		if (requestInvite) {
+			mPasswordGroup.setVisible(false);
+			resetForm();
+			mForename.setFocus(true);
+		} else {
+			mPasswordGroup.setVisible(true);
+			mPassword.setFocus(true);
+		}
 	}
 
 }

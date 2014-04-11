@@ -24,6 +24,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.Error;
 
@@ -43,6 +44,7 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 
 	@UiField HTMLPanel mDefaultLogin;
 
+	@UiField InlineHyperlink register;
 	@UiField LoginForm mLoginForm; // Usual login panel
 
 	@UiField AlertBox mAlertBox;
@@ -61,6 +63,8 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 	protected void onAttach() {
 
 		super.onAttach();
+
+		register.setText("Request invite");
 
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
@@ -97,6 +101,16 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 			mDefaultLogin.setVisible(true);
 
 		}
+
+		// Set proper text for Register / Request invite panel
+		if (FormHelper.COMPLETE_ACTION_NAME.equals(previous.getAction()) && (previous.getParameter(FormHelper.CODE_PARAMETER_INDEX)) != null) { // Registration
+			register.setText("Register");
+			register.setTargetHistoryToken(previous.toString());
+		} else { // Request invite
+			register.setText("Request invite");
+			register.setTargetHistoryToken("register");
+		}
+
 	}
 
 	public String getEmail(String value) {

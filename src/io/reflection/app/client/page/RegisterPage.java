@@ -22,7 +22,7 @@ import io.reflection.app.client.controller.UserController;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.handler.user.SessionEventHandler;
 import io.reflection.app.client.handler.user.UserRegisteredEventHandler;
-import io.reflection.app.client.part.AlertBox;
+import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.part.register.RegisterForm;
 import io.reflection.app.client.part.register.ThankYouRegisterPanel;
 import io.reflection.app.datatypes.shared.User;
@@ -31,6 +31,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.Error;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -46,16 +47,12 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 
 	interface RegisterPageUiBinder extends UiBinder<Widget, RegisterPage> {}
 
-	private static final String COMPLETE_ACTION_NAME = "complete";
-	private static final int CODE_PARAMETER_INDEX = 1;
-
 	@UiField HTMLPanel mPanel;
 
+	@UiField InlineHyperlink register;
 	@UiField RegisterForm mRegisterForm;
 
 	@UiField ThankYouRegisterPanel mThankYouRegisterPanel;
-
-	@UiField AlertBox mAlertBox;
 
 	private String username;
 
@@ -130,14 +127,18 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 	public void navigationChanged(Stack previous, Stack current) {
 		String actionCode = null;
 
-		if (COMPLETE_ACTION_NAME.equals(current.getAction()) && (actionCode = current.getParameter(CODE_PARAMETER_INDEX)) != null) {
-			mRegisterForm.setEnabled(false);
-
-			UserController.get().fetchUser(actionCode);
-		} else {
-			username = null;
-
+		if (FormHelper.COMPLETE_ACTION_NAME.equals(current.getAction()) && (actionCode = current.getParameter(FormHelper.CODE_PARAMETER_INDEX)) != null) { // Registration
+			register.setText("Register");
+			register.setTargetHistoryToken(current.toString());
 			mRegisterForm.resetForm();
+			mRegisterForm.setEnabled(false);
+			UserController.get().fetchUser(actionCode);
+
+		} else { // Request invite
+			username = null;
+			register.setText("Request invite");
+			mRegisterForm.setRequestInvite(true);
+
 		}
 	}
 
@@ -162,6 +163,9 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 				mRegisterForm.setCompany(output.user.company);
 
 				mRegisterForm.setActionCode(input.actionCode);
+
+				mRegisterForm.setRequestInvite(false);
+
 			}
 		}
 	}

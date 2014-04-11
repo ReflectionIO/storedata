@@ -26,7 +26,7 @@
 
                 <ul class="nav nav-tabs nav-justified loginregister">
                     <li ui:field="registerItem" class="active">
-                        <g:InlineHyperlink ui:field="register" targetHistoryToken="{RegisterPageType.asTargetHistoryToken}">Request invite</g:InlineHyperlink>
+                        <g:InlineHyperlink ui:field="register" targetHistoryToken="{RegisterPageType.asTargetHistoryToken}"/>
                     </li>
                     <li ui:field="loginItem">
                         <g:InlineHyperlink ui:field="login" targetHistoryToken="{LoginPageType.asTargetHistoryToken}">Log in</g:InlineHyperlink>
