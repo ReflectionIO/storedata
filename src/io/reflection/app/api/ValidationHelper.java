@@ -41,6 +41,7 @@ import io.reflection.app.service.session.SessionServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.service.user.UserServiceProvider;
 
+import java.util.Date;
 import java.util.List;
 
 import com.willshex.gson.json.service.server.InputValidationException;
@@ -507,7 +508,8 @@ public class ValidationHelper {
 			if (lookupSession == null) throw new InputValidationException(ApiError.SessionNotFound.getCode(), ApiError.SessionNotFound.getMessage(parent));
 		}
 
-		if (lookupSession != null) {
+		if (lookupSession != null && lookupSession.expires != null
+				&& (lookupSession.expires.getTime() - (new Date()).getTime()) < ISessionService.SESSION_SHORT_DURATION * 1000) {
 			lookupSession = SessionServiceProvider.provide().extendSession(lookupSession, Long.valueOf(ISessionService.SESSION_SHORT_DURATION));
 		}
 
