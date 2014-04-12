@@ -85,8 +85,8 @@ public class DateRange {
 
 		if (value != null) {
 			range = new DateRange();
-			range.setFrom(CalendarUtil.copyDate(value.getFrom()));
-			range.setTo(CalendarUtil.copyDate(value.getTo()));
+			range.setFrom(value.getFrom());
+			range.setTo(value.getTo());
 		}
 
 		return range;

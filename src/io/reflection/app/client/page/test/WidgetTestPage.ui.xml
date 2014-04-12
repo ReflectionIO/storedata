@@ -4,29 +4,34 @@
     .moveDown {
     	margin-top: 10px;
     }
+    
+    .padBottom {
+    	padding-bottom: 1000px;
+    }
     </ui:style>
     <g:HTMLPanel>
-        <h2>Widget Testing</h2>
-        <p>This is our widget testing page... Developers will drop widgets here to test their layout before using it on the site pages.</p>
-        <p>Reflection.io dev team :)</p>
+        <div class="container {style.padBottom}">
+            <h2>Widget Testing</h2>
+            <p>This is our widget testing page... Developers will drop widgets here to test their layout before using it on the site pages.</p>
+            <p>Reflection.io dev team :)</p>
 
-        <p:CircleProgressBar></p:CircleProgressBar>
-        <p:ReflectionProgressBar></p:ReflectionProgressBar>
-        <p:DateRangePicker></p:DateRangePicker>
+            <p:CircleProgressBar></p:CircleProgressBar>
+            <p:ReflectionProgressBar></p:ReflectionProgressBar>
+            <p:DateRangePicker ui:field="picker1" />
 
-        <g:FormPanel styleName="form {style.moveDown}">
-            <g:HTMLPanel>
-                <div class="form-group col-sm-3">
-                    <div class="input-group ">
-                        <p:DateRangeBox styleName="form-control" ui:field="dateRange" />
+            <g:FormPanel styleName="form {style.moveDown}">
+                <g:HTMLPanel>
+                    <div class="form-group col-sm-3">
+                        <div class="input-group ">
+                            <p:DateRangeBox styleName="form-control" ui:field="dateRange" />
 
-                        <span class="input-group-addon">
-                            <i class="icon-calendar"></i>
-                        </span>
+                            <span class="input-group-addon">
+                                <i class="icon-calendar"></i>
+                            </span>
+                        </div>
                     </div>
-                </div>
-            </g:HTMLPanel>
-        </g:FormPanel>
-
+                </g:HTMLPanel>
+            </g:FormPanel>
+        </div>
     </g:HTMLPanel>
 </ui:UiBinder>

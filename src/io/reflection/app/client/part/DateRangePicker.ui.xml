@@ -2,7 +2,8 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.user.datepicker.client">
 
     <ui:style type="io.reflection.app.client.part.DateRangePicker.Style">
-    @external datePickerDay, datePickerWeekdayLabel, datePickerWeekendLabel, gwt-DatePicker,datePickerDayIsValue,datePickerDayIsToday,datePickerDayIsHighlighted,datePickerDayIsFiller;
+    @external datePickerDay, datePickerWeekdayLabel, datePickerWeekendLabel, gwt-DatePicker,datePickerDayIsValue,datePickerDayIsToday,datePickerDayIsHighlighted,datePickerDayIsFiller,row,list-group;
+    	/* inline style used on date pickers - this is done using add style so it does not trash existing styles on the containers*/
     .inline {
     	display: inline-block;
     }
@@ -21,9 +22,8 @@
     	border-radius: 0;
     }
     
-    .highlightRange,
-    .highlightRange.datePickerDayIsFiller{
-		color: white;
+    .highlightRange,.highlightRange.datePickerDayIsFiller {
+    	color: white;
     	font-weight: bold;
     	background: rgba(109, 105, 197, 0.75) /*#6D69C5*/;
     	border-color: #8873CD;
@@ -43,7 +43,7 @@
     	color: white;
     	font-weight: bold;
     	/*background: #6D69C5;
-    	border-color: #8873CD;*/
+                                                                            	border-color: #8873CD;*/
     	font-style: normal;
     	-webkit-border-radius: 4px 0 0 4px;
     	-moz-border-radius: 4px 0 0 4px;
@@ -55,17 +55,14 @@
     	color: white;
     	font-weight: bold;
     	/*background: #6D69C5;
-    	border-color: #8873CD;*/
+                                                                            	border-color: #8873CD;*/
     	font-style: normal;
     	-webkit-border-radius: 0 4px 4px 0;
     	-moz-border-radius: 0 4px 4px 0;
     	border-radius: 0 4px 4px 0;
     }
     
-    .toHighlightRangeBoundary.datePickerDayIsToday,
-    .fromHighlightRangeBoundary.datePickerDayIsToday,
-    .toHighlightRangeBoundary.datePickerDayIsToday.datePickerDayIsValue,
-    .fromHighlightRangeBoundary.datePickerDayIsToday.datePickerDayIsValue
+    .toHighlightRangeBoundary.datePickerDayIsToday,.fromHighlightRangeBoundary.datePickerDayIsToday,.toHighlightRangeBoundary.datePickerDayIsToday.datePickerDayIsValue,.fromHighlightRangeBoundary.datePickerDayIsToday.datePickerDayIsValue
     	{
     	color: white;
     	font-weight: bold;
@@ -96,7 +93,6 @@
     .holder {
     	border-collapse: separate;
     	cursor: default;
-    	min-width: 160px;
     	padding: 4px 4px;
     	margin: 2px 0 0;
     	list-style: none;
@@ -115,7 +111,7 @@
     	display: inline-block;
     }
     
-    .holder>.gwt-DatePicker {
+    .holder>.row>.gwt-DatePicker {
     	padding: 0;
     	margin: 0;
     	list-style: none;
@@ -131,12 +127,29 @@
     	-moz-background-clip: none;
     	background-clip: none;
     }
+    
+    .ranges {
+    	vertical-align: top;
+    	text-align: center;
+    }
+    
+    .holder>.row>.list-group {
+		margin-bottom: 0px;
+	}
     </ui:style>
 
     <g:HTMLPanel>
         <div class="{style.holder}">
-            <d:DatePicker ui:field="mFromPicker" />
-            <d:DatePicker ui:field="mToPicker" />
+            <div class="row">
+                <d:DatePicker ui:field="mFromPicker" />
+                <d:DatePicker ui:field="mToPicker" />
+                <g:HTMLPanel ui:field="ranges" styleName="{style.inline} {style.ranges} list-group">
+                </g:HTMLPanel>
+            </div>
+            <div class="row" ui:field="buttons">
+                <g:Button ui:field="apply" styleName="btn btn-primary">Apply</g:Button>
+                <g:Button ui:field="cancel" styleName="btn btn-default">Cancel</g:Button>
+            </div>
         </div>
     </g:HTMLPanel>
 

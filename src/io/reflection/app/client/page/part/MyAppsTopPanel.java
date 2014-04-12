@@ -10,27 +10,24 @@ package io.reflection.app.client.page.part;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
+import io.reflection.app.client.part.DateRangeBox;
+import io.reflection.app.client.part.DateRangeBox.DefaultFormat;
+import io.reflection.app.client.part.DateRangePicker.FixedDateRange;
+import io.reflection.app.client.part.datatypes.DateRange;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.logical.shared.ShowRangeEvent;
-import com.google.gwt.event.logical.shared.ShowRangeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.datepicker.client.CalendarUtil;
-import com.google.gwt.user.datepicker.client.DateBox;
-import com.google.gwt.user.datepicker.client.DateBox.DefaultFormat;
 
 /**
  * @author stefanocapuzzi
@@ -44,10 +41,7 @@ public class MyAppsTopPanel extends Composite {
 
 	@UiField ListBox appStore;
 	@UiField ListBox country;
-	@UiField DateBox dateBox;
-	@UiField RadioButton rangeDay;
-	@UiField RadioButton rangeWeek;
-	@UiField RadioButton rangeMonth;
+	@UiField DateRangeBox dateRangeBox;
 
 	/**
 	 * Because this class has a default constructor, it can be used as a binder template. In other words, it can be used in other *.ui.xml files as follows:
@@ -60,22 +54,53 @@ public class MyAppsTopPanel extends Composite {
 		FilterHelper.addStores(appStore);
 		FilterHelper.addCountries(country);
 
-		dateBox.setFormat(new DefaultFormat(DateTimeFormat.getFormat("dd-MM-yyyy")));
-		Date d = FilterHelper.normalizeDate(new Date());
-		dateBox.setValue(d);
-		dateBox.getDatePicker().addShowRangeHandler(new ShowRangeHandler<Date>() {
+		dateRangeBox.setFormat(new DefaultFormat(DateTimeFormat.getFormat("dd-MM-yyyy")));
+
+		List<FixedDateRange> ranges = new ArrayList<FixedDateRange>();
+		ranges.add(new FixedDateRange() {
+
 			@Override
-			public void onShowRange(ShowRangeEvent<Date> event) {
-				FilterHelper.disableFutureDates(dateBox.getDatePicker());
+			public String getName() {
+				return "Today";
+			}
+
+			@Override
+			public DateRange getDateRange() {
+				DateRange r = new DateRange();
+				r.setFrom(FilterHelper.getToday());
+				r.setTo(r.getFrom());
+				return r;
 			}
 		});
 
-		dateBox.getDatePicker().addValueChangeHandler(new ValueChangeHandler<Date>() {
+		ranges.add(new FixedDateRange() {
+
 			@Override
-			public void onValueChange(ValueChangeEvent<Date> event) {
-				updateFilterDate();
+			public String getName() {
+				return "Last Week";
+			}
+
+			@Override
+			public DateRange getDateRange() {
+				return FilterHelper.createRangeFromToday(-7);
 			}
 		});
+
+		ranges.add(new FixedDateRange() {
+
+			@Override
+			public String getName() {
+				return "Last 30 Days";
+			}
+
+			@Override
+			public DateRange getDateRange() {
+				return FilterHelper.createRangeFromToday(-30);
+			}
+		});
+
+		dateRangeBox.getDateRangePicker().addFixedRanges(ranges);
+		dateRangeBox.setValue(FilterHelper.createRangeFromToday(-30));
 
 		updateFromFilter();
 
@@ -91,50 +116,25 @@ public class MyAppsTopPanel extends Composite {
 		FilterController.get().setCountry(country.getValue(country.getSelectedIndex()));
 	}
 
-	@UiHandler("rangeDay")
-	void onRangeDayValueSelected(ClickEvent event) {
-		FilterController.get().setStartDate(dateBox.getValue());
-	}
-
-	@UiHandler("rangeWeek")
-	void onRangeWeekValueSelected(ClickEvent event) {
-		Date startDate = CalendarUtil.copyDate(dateBox.getValue());
-		CalendarUtil.addDaysToDate(startDate, -7);
-		FilterController.get().setStartDate(startDate);
-	}
-
-	@UiHandler("rangeMonth")
-	void onRangeMonthValueSelected(ClickEvent event) {
-		Date startDate = CalendarUtil.copyDate(dateBox.getValue());
-		CalendarUtil.addMonthsToDate(startDate, -1);
-		FilterController.get().setStartDate(startDate);
-	}
-
 	public void updateFromFilter() {
 		appStore.setSelectedIndex(FormHelper.getItemIndex(appStore, FilterController.get().getFilter().getStoreA3Code()));
+		DateRange range = new DateRange();
+
+		range.setFrom(FilterController.get().getStartDate());
+		range.setTo(FilterController.get().getEndDate());
+
+		dateRangeBox.setValue(range);
 		country.setSelectedIndex(FormHelper.getItemIndex(country, FilterController.get().getFilter().getCountryA2Code()));
-		updateFilterDate();
 	}
 
-	private void updateFilterDate() {
+	@UiHandler("dateRangeBox")
+	void onDateRangeValueChanged(ValueChangeEvent<DateRange> event) {
+		FilterController fc = FilterController.get();
 
-		Date endDate = dateBox.getValue();
-		CalendarUtil.addDaysToDate(endDate, 1); // add 1 day to the EndDate because from DatePicker is set at midnight
-		FilterController.get().setEndDate(endDate);
-
-		FilterController.get().start();
-		if (rangeDay.getValue()) {
-			FilterController.get().setStartDate(dateBox.getValue());
-		} else if (rangeWeek.getValue()) {
-			Date startDate = CalendarUtil.copyDate(dateBox.getValue());
-			CalendarUtil.addDaysToDate(startDate, -7);
-			FilterController.get().setStartDate(startDate);
-		} else {
-			Date startDate = CalendarUtil.copyDate(dateBox.getValue());
-			CalendarUtil.addMonthsToDate(startDate, -1);
-			FilterController.get().setStartDate(startDate);
-		}
-		FilterController.get().commit();
+		fc.start();
+		fc.setEndDate(event.getValue().getTo());
+		fc.setStartDate(event.getValue().getFrom());
+		fc.commit();
 	}
 
 }

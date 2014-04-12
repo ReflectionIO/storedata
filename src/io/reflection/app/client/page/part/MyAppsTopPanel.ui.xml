@@ -9,11 +9,16 @@
     
     .radioButton {
     	margin-left: 4px;
-    	font-size: 1.3em;
+    	font-size: 1.2em;
     }
     
     .radioButton label {
     	margin-left: 3px;
+    }
+    
+    .pageHeading {
+    	margin-left: 30px;
+    	margin-right: 50px;
     }
     </ui:style>
     <g:HTMLPanel styleName="well well-sm">
@@ -21,7 +26,7 @@
         <g:FormPanel styleName="form-inline ">
             <g:HTMLPanel>
 
-                <div class="form-group col-sm-2" style="margin-left: 30px; margin-right: 50px;">
+                <div class="form-group col-sm-2" style="{style.pageHeading}">
                     <h5>Overview</h5>
                 </div>
 
@@ -35,18 +40,12 @@
 
                 <div class="form-group col-sm-2">
                     <div class="input-group ">
-                        <d:DateBox styleName="form-control" ui:field="dateBox" />
+                        <p:DateRangeBox styleName="form-control" ui:field="dateRangeBox" />
 
                         <span class="input-group-addon">
                             <i class="icon-calendar"></i>
                         </span>
                     </div>
-                </div>
-
-                <div class="form-group {style.radioButtons}">
-                    <g:RadioButton ui:field="rangeDay" styleName="{style.radioButton}" name="dailydata" checked="true">Day</g:RadioButton>
-                    <g:RadioButton ui:field="rangeWeek" styleName="{style.radioButton}" name="dailydata">Week</g:RadioButton>
-                    <g:RadioButton ui:field="rangeMonth" styleName="{style.radioButton}" name="dailydata">Month</g:RadioButton>
                 </div>
 
             </g:HTMLPanel>

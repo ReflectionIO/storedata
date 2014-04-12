@@ -81,7 +81,7 @@ public class DateRangeBox extends Composite implements HasEnabled, HasValue<Date
 			if (dateRangeText != null && dateRangeText.length() > 0) {
 				String[] dateRangeParts = dateRangeText.split(DATE_RANGE_SPLITTER);
 
-				if (dateRangeParts != null && dateRangeParts.length != 2) {
+				if (dateRangeParts != null && dateRangeParts.length == 2) {
 					try {
 						from = dateTimeFormat.parse(dateRangeParts[0]);
 					} catch (IllegalArgumentException exception) {
