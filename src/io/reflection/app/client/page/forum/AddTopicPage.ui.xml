@@ -16,6 +16,10 @@
                         <g:HTMLPanel styleName="noteDetail" ui:field="titleNote" visible="false" />
                     </g:HTMLPanel>
 
+                    <g:HTMLPanel>
+                        <g:CheckBox ui:field="sticky" checked="false">Sticky (sticks to the top)</g:CheckBox>
+                    </g:HTMLPanel>
+
                     <g:HTMLPanel ui:field="contentGroup" styleName="form-group">
                         <label>Content</label>
                         <p:RichTextToolbar ui:field="contentToolbar" />
@@ -28,7 +32,7 @@
                         <g:ListBox styleName="form-control" ui:field="forums">
                         </g:ListBox>
                     </g:HTMLPanel>
-                    
+
                     <g:HTMLPanel ui:field="tagsGroup" styleName="form-group">
                         <label>Tags</label>
                         <g:TextBox styleName="form-control" ui:field="tags" />

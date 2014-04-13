@@ -669,26 +669,26 @@ public class ValidationHelper {
 
 	public static Forum validateForum(Forum forum, String parent) throws ServiceException {
 		// TODO Auto-generated method stub
-		return null;
+		return forum;
 	}
 
 	public static Topic validateExistingTopic(Topic topic, String parent) throws ServiceException {
 		// TODO Auto-generated method stub
-		return null;
+		return topic;
 	}
 
 	public static Topic validateNewTopic(Topic topic, String parent) throws ServiceException {
 		// TODO Auto-generated method stub
-		return null;
+		return topic;
 	}
 
 	public static Reply validateExistingReply(Reply reply, String parent) throws ServiceException {
 		// TODO Auto-generated method stub
-		return null;
+		return reply;
 	}
 
 	public static Reply validateNewReply(Reply reply, String parent) throws ServiceException {
 		// TODO Auto-generated method stub
-		return null;
+		return reply;
 	}
 }

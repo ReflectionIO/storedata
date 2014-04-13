@@ -8,6 +8,7 @@
 //
 package io.reflection.app.service.reply;
 
+import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.Reply;
@@ -79,7 +80,32 @@ final class ReplyService implements IReplyService {
 
 	@Override
 	public Reply addReply(Reply reply) throws DataAccessException {
-		throw new UnsupportedOperationException();
+		Reply addedReply = null;
+
+		final String addReplyQuery = String.format("INSERT INTO `reply` (`authorid`,`topicid`,`content`,`tags`) VALUES (%d,%d,'%s',NULL)",
+				reply.author.id.longValue(), reply.topic.id.longValue(), addslashes(reply.content));
+
+		Connection replyConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeReply.toString());
+
+		try {
+			replyConnection.connect();
+			replyConnection.executeQuery(addReplyQuery);
+
+			if (replyConnection.getAffectedRowCount() > 0) {
+				addedReply = getReply(Long.valueOf(replyConnection.getInsertedId()));
+
+				if (addedReply == null) {
+					addedReply = reply;
+					addedReply.id = Long.valueOf(replyConnection.getInsertedId());
+				}
+			}
+		} finally {
+			if (replyConnection != null) {
+				replyConnection.disconnect();
+			}
+		}
+
+		return addedReply;
 	}
 
 	@Override

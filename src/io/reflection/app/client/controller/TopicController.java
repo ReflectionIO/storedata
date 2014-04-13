@@ -8,8 +8,12 @@
 package io.reflection.app.client.controller;
 
 import io.reflection.app.api.forum.client.ForumService;
+import io.reflection.app.api.forum.shared.call.CreateTopicRequest;
+import io.reflection.app.api.forum.shared.call.CreateTopicResponse;
 import io.reflection.app.api.forum.shared.call.GetTopicsRequest;
 import io.reflection.app.api.forum.shared.call.GetTopicsResponse;
+import io.reflection.app.api.forum.shared.call.event.CreateTopicEventHandler.CreateTopicFailure;
+import io.reflection.app.api.forum.shared.call.event.CreateTopicEventHandler.CreateTopicSuccess;
 import io.reflection.app.api.forum.shared.call.event.GetTopicsEventHandler.GetTopicsFailure;
 import io.reflection.app.api.forum.shared.call.event.GetTopicsEventHandler.GetTopicsSuccess;
 import io.reflection.app.api.shared.datatypes.Pager;
@@ -17,6 +21,7 @@ import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.datatypes.shared.Forum;
 import io.reflection.app.datatypes.shared.Topic;
 import io.reflection.app.shared.util.SparseArray;
+import io.reflection.app.shared.util.TagHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -242,7 +247,9 @@ public class TopicController extends AsyncDataProvider<Topic> implements Service
 
 	/**
 	 * 
+	 * @param forumId
 	 * @param title
+	 * @param sticky
 	 * @param visible
 	 * @param commentsEnabled
 	 * @param description
@@ -250,39 +257,42 @@ public class TopicController extends AsyncDataProvider<Topic> implements Service
 	 * @param publish
 	 * @param tags
 	 */
-	public void createTopic(String title, String content, String tags) {
-		// ForumService service = ServiceCreator.createForumService();
-		//
-		// final CreateTopicRequest input = new CreateTopicRequest();
-		// input.accessCode = ACCESS_CODE;
-		//
-		// input.session = SessionController.get().getSessionForApiCall();
-		//
-		// input.topic = new Topic();
-		//
-		// input.topic.title = title;
-		// input.topic.description = description;
-		// input.topic.content = content;
-		// input.publish = publish;
-		// input.topic.visible = visible;
-		// input.topic.commentsEnabled = commentsEnabled;
-		//
-		// input.topic.tags = TagHelper.convertToTagList(tags);
-		//
-		// service.createTopic(input, new AsyncCallback<CreateTopicResponse>() {
-		//
-		// @Override
-		// public void onSuccess(CreateTopicResponse output) {
-		// if (output.status == StatusType.StatusTypeSuccess) {}
-		//
-		// EventController.get().fireEventFromSource(new CreateTopicSuccess(input, output), TopicController.this);
-		// }
-		//
-		// @Override
-		// public void onFailure(Throwable caught) {
-		// EventController.get().fireEventFromSource(new CreateTopicFailure(input, caught), TopicController.this);
-		// }
-		// });
+	public void createTopic(Long forumId, String title, Boolean sticky, String content, String tags) {
+		ForumService service = ServiceCreator.createForumService();
+
+		final CreateTopicRequest input = new CreateTopicRequest();
+		input.accessCode = ACCESS_CODE;
+
+		input.session = SessionController.get().getSessionForApiCall();
+
+		input.topic = new Topic();
+
+		input.topic.title = title;
+		input.topic.content = content;
+
+		input.topic.forum = new Forum();
+		input.topic.forum.id = this.forumId = forumId;
+
+		input.topic.tags = TagHelper.convertToTagList(tags);
+
+		input.topic.sticky = sticky;
+
+		service.createTopic(input, new AsyncCallback<CreateTopicResponse>() {
+
+			@Override
+			public void onSuccess(CreateTopicResponse output) {
+				if (output.status == StatusType.StatusTypeSuccess) {
+
+				}
+
+				EventController.get().fireEventFromSource(new CreateTopicSuccess(input, output), TopicController.this);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				EventController.get().fireEventFromSource(new CreateTopicFailure(input, caught), TopicController.this);
+			}
+		});
 	}
 
 	public void reset() {

@@ -51,7 +51,7 @@ public final class Forum extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
-			// input.session = ValidationHelper.validateSession(input.session, "input.session");
+			input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			// ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
 
@@ -79,7 +79,7 @@ public final class Forum extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
-			// input.session = ValidationHelper.validateSession(input.session, "input.session");
+			input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			// ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
 
@@ -110,7 +110,7 @@ public final class Forum extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
-			// input.session = ValidationHelper.validateSession(input.session, "input.session");
+			input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			// ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
 
@@ -143,13 +143,15 @@ public final class Forum extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
-			// input.session = ValidationHelper.validateSession(input.session, "input.session");
+			input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			// ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
 
+			input.topic.author = input.session.user;
+
 			input.topic = ValidationHelper.validateNewTopic(input.topic, "input.topic");
 
-			TopicServiceProvider.provide().addTopic(input.topic);
+			output.topic = TopicServiceProvider.provide().addTopic(input.topic);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -169,7 +171,7 @@ public final class Forum extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
-			// input.session = ValidationHelper.validateSession(input.session, "input.session");
+			input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			// ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
 
@@ -195,7 +197,7 @@ public final class Forum extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
-			// input.session = ValidationHelper.validateSession(input.session, "input.session");
+			input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			// ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
 
@@ -221,7 +223,7 @@ public final class Forum extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
-			// input.session = ValidationHelper.validateSession(input.session, "input.session");
+			input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			// ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
 
@@ -247,7 +249,7 @@ public final class Forum extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
-			// input.session = ValidationHelper.validateSession(input.session, "input.session");
+			input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			// ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
 
@@ -273,7 +275,7 @@ public final class Forum extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
-			// input.session = ValidationHelper.validateSession(input.session, "input.session");
+			input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			// ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
 

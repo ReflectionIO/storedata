@@ -8,6 +8,8 @@
 //
 package io.reflection.app.service.topic;
 
+import static com.spacehopperstudios.utility.StringUtils.addslashes;
+import static com.spacehopperstudios.utility.StringUtils.join;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
@@ -99,7 +101,34 @@ final class TopicService implements ITopicService {
 
 	@Override
 	public Topic addTopic(Topic topic) throws DataAccessException {
-		throw new UnsupportedOperationException();
+		Topic addedTopic = null;
+
+		final String addTopicQuery = String.format(
+				"INSERT INTO `topic` (`authorid`,`title`,`content`,`sticky`,`forumid`,`tags`) VALUES (%d,'%s','%s','%s',%d,%s)", topic.author.id.longValue(),
+				addslashes(topic.title), addslashes(topic.content), topic.sticky == null || !topic.sticky.booleanValue() ? "n" : "y",
+				topic.forum.id.longValue(), topic.tags == null ? "NULL" : "'" + addslashes(join(topic.tags)) + "'");
+
+		Connection topicConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeTopic.toString());
+
+		try {
+			topicConnection.connect();
+			topicConnection.executeQuery(addTopicQuery);
+
+			if (topicConnection.getAffectedRowCount() > 0) {
+				addedTopic = getTopic(Long.valueOf(topicConnection.getInsertedId()));
+
+				if (addedTopic == null) {
+					addedTopic = topic;
+					addedTopic.id = Long.valueOf(topicConnection.getInsertedId());
+				}
+			}
+		} finally {
+			if (topicConnection != null) {
+				topicConnection.disconnect();
+			}
+		}
+
+		return addedTopic;
 	}
 
 	@Override
