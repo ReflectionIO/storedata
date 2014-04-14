@@ -33,7 +33,7 @@
 
                     <p:PageSizePager ui:field="mPager" visible="false" />
 
-                    <div style="text-align: center">
+                    <div class="text-center">
                         <g:InlineHyperlink text="Show More" styleName="btn btn-default" ui:field="mRedirect" />
                     </div>
 
