@@ -651,6 +651,7 @@ public class DevHelperServlet extends HttpServlet {
 		return urlBase + "_ah/pipeline/status.html?root=" + pipelineId;
 	}
 
+	@SuppressWarnings("deprecation")
 	private MapReduceSettings getSettings() {
 		MapReduceSettings settings = new MapReduceSettings().setWorkerQueueName("mapreduce-workers").setControllerQueueName("default");
 		if (USE_BACKENDS) {
