@@ -18,6 +18,7 @@ import io.reflection.app.client.res.charts.Images;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 
+import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -25,6 +26,7 @@ import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.googlecode.gchart.client.GChart;
 
 public class RankChart extends GChart {
@@ -217,6 +219,11 @@ public class RankChart extends GChart {
 		// so only point-to-mouse x-distance matters for hit testing
 		curve.getSymbol().setDistanceMetric(1, 0);
 
+		// curve.setXShift(10);
+		// curve.setYShift(-10);
+
+		getYAxis().setOutOfBoundsMultiplier(.1);
+
 	}
 
 	public void setData(Item item, List<Rank> ranks, RankingType mode, YAxisDataType dataType) {
@@ -227,8 +234,9 @@ public class RankChart extends GChart {
 
 		int minY = 10000, maxY = 0;
 		int position;
+		Date lastDate = null;
 		for (Rank rank : ranks) {
-			position = mode == RankingType.PositionRankingType ? rank.position.intValue() : rank.grossingPosition.intValue();
+			position = (mode == RankingType.PositionRankingType ? rank.position.intValue() : rank.grossingPosition.intValue());
 
 			if (position < minY) {
 				minY = position;
@@ -238,7 +246,16 @@ public class RankChart extends GChart {
 				maxY = position;
 			}
 
-			curve.addPoint(rank.date.getTime(), position);
+			int gap = 0;
+			if (lastDate != null && (gap = CalendarUtil.getDaysBetween(lastDate, rank.date)) > 1) {
+				for (int i = 0; i < gap; i++) {
+					CalendarUtil.addDaysToDate(lastDate, 1);
+					curve.addPoint(lastDate.getTime(), 10000);
+				}
+			} else {
+				lastDate = rank.date;
+				curve.addPoint(rank.date.getTime(), position);
+			}
 		}
 
 		int factor = (int) ((float) (maxY - minY) / 7.0f) + 1;

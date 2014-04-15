@@ -319,6 +319,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				displayItemDetails();
 
 				historyChart.setData(output.item, output.ranks, rankingType, dataType);
+				mSidePanel.setPrice(output.ranks.get(0).currency, output.ranks.get(0).price);
 
 				// mAlertBox.dismiss();
 			}

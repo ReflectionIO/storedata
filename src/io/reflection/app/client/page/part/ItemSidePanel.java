@@ -55,7 +55,11 @@ public class ItemSidePanel extends Composite {
 
 		viewInStore.setHref(StoreController.get().getExternalUri(item));
 
-		price.setInnerHTML(item.price == 0 ? "Free" : FormattingHelper.getCurrencySymbol(item.currency) + " " + item.price);
+		price.setInnerHTML("...");
+	}
+
+	public void setPrice(String currency, Float value) {
+		price.setInnerHTML(value.floatValue() == 0 ? "Free" : FormattingHelper.getCurrencySymbol(currency) + " " + value);
 	}
 
 }
