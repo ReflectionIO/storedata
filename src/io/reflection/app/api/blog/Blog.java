@@ -48,7 +48,11 @@ public final class Blog extends ActionHandler {
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
 			if (input.session != null) {
-				output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+				try {
+					output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+				} catch (InputValidationException ex) {
+					output.session = input.session = null;
+				}
 			}
 
 			if (input.includeContents == null) {
@@ -93,7 +97,11 @@ public final class Blog extends ActionHandler {
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
 			if (input.session != null) {
-				output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+				try {
+					output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+				} catch (InputValidationException ex) {
+					output.session = input.session = null;
+				}
 			}
 
 			boolean isIdLookup = false, isTitleLookup = false;
