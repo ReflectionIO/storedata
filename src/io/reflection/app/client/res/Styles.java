@@ -40,6 +40,12 @@ public interface Styles extends ClientBundle {
 		String unknownAppMedium();
 
 		String unknownAppLarge();
+		
+		String linkedAccountClose();
+		
+		String linkedAccountMinus();
+		
+		String linkedAccountPlus();
 	}
 
 	public static final Styles INSTANCE = GWT.create(Styles.class);
@@ -51,6 +57,10 @@ public interface Styles extends ClientBundle {
 	@Source("unknownsprite.png")
 	@ImageOptions(repeatStyle = RepeatStyle.None)
 	ImageResource unknownSprite();
+	
+	@Source("linkedaccountssprite.png")
+	@ImageOptions(repeatStyle = RepeatStyle.None)
+	ImageResource linkedAccountSprite();
 	
 	@Source("reflection.css")
 	ReflectionStyles reflection();

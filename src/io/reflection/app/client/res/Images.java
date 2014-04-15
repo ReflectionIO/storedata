@@ -83,5 +83,5 @@ public interface Images extends ClientBundle {
 	
 	@Source("emailsent.png")
 	ImageResource emailSent();
-
+	
 }
