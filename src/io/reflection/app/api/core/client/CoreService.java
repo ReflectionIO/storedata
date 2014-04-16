@@ -24,12 +24,16 @@ import io.reflection.app.api.core.shared.call.GetCountriesRequest;
 import io.reflection.app.api.core.shared.call.GetCountriesResponse;
 import io.reflection.app.api.core.shared.call.GetItemRanksRequest;
 import io.reflection.app.api.core.shared.call.GetItemRanksResponse;
+import io.reflection.app.api.core.shared.call.GetItemSalesRequest;
+import io.reflection.app.api.core.shared.call.GetItemSalesResponse;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountItemsRequest;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountItemsResponse;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountsRequest;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountsResponse;
 import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsRequest;
 import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsResponse;
+import io.reflection.app.api.core.shared.call.GetSalesRequest;
+import io.reflection.app.api.core.shared.call.GetSalesResponse;
 import io.reflection.app.api.core.shared.call.GetStoresRequest;
 import io.reflection.app.api.core.shared.call.GetStoresResponse;
 import io.reflection.app.api.core.shared.call.GetTopItemsRequest;
@@ -715,6 +719,72 @@ public final class CoreService extends JsonService {
 		} catch (RequestException exception) {
 			output.onFailure(exception);
 			onCallFailure(CoreService.this, CoreMethodGetCategories, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String CoreMethodGetSales = "GetSales";
+
+	public Request getSales(final GetSalesRequest input, final AsyncCallback<GetSalesResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(CoreMethodGetSales, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						GetSalesResponse outputParameter = new GetSalesResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(CoreService.this, CoreMethodGetSales, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(CoreService.this, CoreMethodGetSales, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(CoreService.this, CoreMethodGetSales, input, exception);
+				}
+			});
+			onCallStart(CoreService.this, CoreMethodGetSales, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(CoreService.this, CoreMethodGetSales, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String CoreMethodGetItemSales = "GetItemSales";
+
+	public Request getItemSales(final GetItemSalesRequest input, final AsyncCallback<GetItemSalesResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(CoreMethodGetItemSales, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						GetItemSalesResponse outputParameter = new GetItemSalesResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(CoreService.this, CoreMethodGetItemSales, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(CoreService.this, CoreMethodGetItemSales, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(CoreService.this, CoreMethodGetItemSales, input, exception);
+				}
+			});
+			onCallStart(CoreService.this, CoreMethodGetItemSales, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(CoreService.this, CoreMethodGetItemSales, input, exception);
 		}
 		return handle;
 	}

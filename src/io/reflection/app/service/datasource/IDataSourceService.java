@@ -8,8 +8,11 @@
 //
 package io.reflection.app.service.datasource;
 
+import java.util.List;
+
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.datatypes.shared.DataSource;
+import io.reflection.app.datatypes.shared.Store;
 
 import com.spacehopperstudios.service.IService;
 
@@ -50,5 +53,11 @@ public interface IDataSourceService extends IService {
 	 * @throws DataAccessException
 	 */
 	public DataSource getA3CodeDataSource(String a3Code) throws DataAccessException;
+
+	/**
+	 * @param source
+	 * @return
+	 */
+	public List<Store> getStores(DataSource source);
 
 }

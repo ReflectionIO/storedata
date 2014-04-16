@@ -10,8 +10,12 @@ package io.reflection.app.service.datasource;
 
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
+
+import java.util.List;
+
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.datatypes.shared.DataSource;
+import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
@@ -138,6 +142,16 @@ final class DataSourceService implements IDataSourceService {
 		}
 
 		return dataSource;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.datasource.IDataSourceService#getStores(io.reflection.app.datatypes.shared.DataSource)
+	 */
+	@Override
+	public List<Store> getStores(DataSource source) {
+		return null;
 	}
 
 }
