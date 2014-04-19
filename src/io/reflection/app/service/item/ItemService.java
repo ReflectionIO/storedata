@@ -21,6 +21,7 @@ import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -285,10 +286,10 @@ final class ItemService implements IItemService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.service.item.IItemService#getExternalIdItemBatch(java.util.List)
+	 * @see io.reflection.app.service.item.IItemService#getExternalIdItemBatch(java.util.Collection)
 	 */
 	@Override
-	public List<Item> getExternalIdItemBatch(List<String> itemIds) throws DataAccessException {
+	public List<Item> getExternalIdItemBatch(Collection<String> itemIds) throws DataAccessException {
 		List<Item> items = new ArrayList<Item>();
 
 		String commaDelimitedItemIds = null;
@@ -360,10 +361,10 @@ final class ItemService implements IItemService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.service.item.IItemService#addItemsBatch(java.util.List)
+	 * @see io.reflection.app.service.item.IItemService#addItemsBatch(java.util.Collection)
 	 */
 	@Override
-	public Long addItemsBatch(List<Item> items) throws DataAccessException {
+	public Long addItemsBatch(Collection<Item> items) throws DataAccessException {
 		Long addedItemCount = Long.valueOf(0);
 
 		StringBuffer addItemsBatchQuery = new StringBuffer();
@@ -473,10 +474,10 @@ final class ItemService implements IItemService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.service.item.IItemService#getInternalIdItemBatch(java.util.List)
+	 * @see io.reflection.app.service.item.IItemService#getInternalIdItemBatch(java.util.Collection)
 	 */
 	@Override
-	public List<Item> getInternalIdItemBatch(List<String> itemIds) throws DataAccessException {
+	public List<Item> getInternalIdItemBatch(Collection<String> itemIds) throws DataAccessException {
 		List<Item> items = new ArrayList<Item>();
 
 		String commaDelimitedItemIds = null;

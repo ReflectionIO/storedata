@@ -356,7 +356,6 @@
                 </xsd:complexContent>
             </xsd:complexType>
 
-
             <xsd:complexType name="LinkAccountRequest">
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
@@ -498,6 +497,8 @@
                         <xsd:sequence>
                             <xsd:element name="sales" type="sd:Sale" maxOccurs="unbounded" />
                             <xsd:element name="pager" type="sd:Pager" />
+                            <xsd:element name="items" type="sd:Item" maxOccurs="unbounded" />
+                            <xsd:element name="dataSource" type="sd:DataSource" />
                         </xsd:sequence>
                     </xsd:extension>
                 </xsd:complexContent>
@@ -525,7 +526,7 @@
                             <xsd:element name="sales" type="sd:Sale" maxOccurs="unbounded" />
                             <xsd:element name="pager" type="sd:Pager" />
                             <xsd:element name="item" type="sd:Item" />
-                            <xsd:element name="dataAccount" type="sd:DataAccount" />
+                            <xsd:element name="linkedAccount" type="sd:DataAccount" />
                             <xsd:element name="dataSource" type="sd:DataSource" />
                         </xsd:sequence>
                     </xsd:extension>

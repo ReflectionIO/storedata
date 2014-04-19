@@ -22,6 +22,7 @@ import io.reflection.app.service.ServiceType;
 import io.reflection.app.service.permission.PermissionServiceProvider;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -223,20 +224,20 @@ final class RoleService implements IRoleService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.service.role.IRoleService#getIdRoles(java.util.List)
+	 * @see io.reflection.app.service.role.IRoleService#getIdRoles(java.util.Collection)
 	 */
 	@Override
-	public List<Role> getIdRoles(List<Long> roleIds) throws DataAccessException {
+	public List<Role> getIdRoles(Collection<Long> roleIds) throws DataAccessException {
 		throw new UnsupportedOperationException();
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.service.role.IRoleService#inflateRoles(java.util.List)
+	 * @see io.reflection.app.service.role.IRoleService#inflateRoles(java.util.Collection)
 	 */
 	@Override
-	public void inflateRoles(List<Role> roles) throws DataAccessException {
+	public void inflateRoles(Collection<Role> roles) throws DataAccessException {
 		if (roles != null && roles.size() > 0) {
 			Map<Long, Role> lookup = new HashMap<Long, Role>();
 
@@ -244,9 +245,12 @@ final class RoleService implements IRoleService {
 
 			if (roles.size() == 1) {
 				getRolesQuery.append("=");
-				getRolesQuery.append(roles.get(0).id);
 
-				lookup.put(roles.get(0).id, roles.get(0));
+				Role role = roles.iterator().next();
+
+				getRolesQuery.append(role.id);
+
+				lookup.put(role.id, role);
 			} else {
 				boolean first = true;
 
@@ -323,7 +327,9 @@ final class RoleService implements IRoleService {
 		return rolePermissions;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.service.role.IRoleService#getCodeRole(java.lang.String)
 	 */
 	@Override

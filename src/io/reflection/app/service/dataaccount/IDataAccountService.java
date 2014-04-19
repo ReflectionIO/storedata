@@ -8,12 +8,13 @@
 //
 package io.reflection.app.service.dataaccount;
 
-import java.util.List;
-
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
+
+import java.util.Collection;
+import java.util.List;
 
 import com.spacehopperstudios.service.IService;
 
@@ -76,7 +77,7 @@ public interface IDataAccountService extends IService {
 	 * @return
 	 * @throws DataAccessException
 	 */
-	public List<DataAccount> getIdsDataAccounts(List<Long> ids, Pager pager) throws DataAccessException;
+	public List<DataAccount> getIdsDataAccounts(Collection<Long> ids, Pager pager) throws DataAccessException;
 
 	/**
 	 * 

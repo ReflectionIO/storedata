@@ -27,6 +27,7 @@ import io.reflection.app.service.ServiceType;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -196,7 +197,7 @@ final class RankService implements IRankService {
 	 * @see io.reflection.app.service.rank.IRankService#getItemGatherCodeRank(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public Rank getItemGatherCodeRank(String itemId, Long code, String store, String country, List<String> possibleTypes) throws DataAccessException {
+	public Rank getItemGatherCodeRank(String itemId, Long code, String store, String country, Collection<String> possibleTypes) throws DataAccessException {
 		Rank rank = null;
 
 		String memcacheKey = getName() + ".itemgathercoderank." + itemId + country + "." + store + "." + StringUtils.join(possibleTypes, ".") + "." + code;
@@ -206,7 +207,7 @@ final class RankService implements IRankService {
 
 			String typesQueryPart = null;
 			if (possibleTypes.size() == 1) {
-				typesQueryPart = String.format("CAST(`type` AS BINARY)=CAST('%s' AS BINARY)", possibleTypes.get(0));
+				typesQueryPart = String.format("CAST(`type` AS BINARY)=CAST('%s' AS BINARY)", possibleTypes.iterator().next());
 			} else {
 				typesQueryPart = "CAST(`type` AS BINARY) IN (CAST('" + StringUtils.join(possibleTypes, "' AS BINARY),CAST('") + "' AS BINARY))";
 			}
@@ -476,10 +477,10 @@ final class RankService implements IRankService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.service.rank.IRankService#addRanksBatch(java.util.List)
+	 * @see io.reflection.app.service.rank.IRankService#addRanksBatch(java.util.Collection)
 	 */
 	@Override
-	public Long addRanksBatch(List<Rank> ranks) throws DataAccessException {
+	public Long addRanksBatch(Collection<Rank> ranks) throws DataAccessException {
 		Long addedRankCount = Long.valueOf(0);
 
 		StringBuffer addRanksBatchQuery = new StringBuffer();
@@ -612,10 +613,10 @@ final class RankService implements IRankService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.service.rank.IRankService#updateRanksBatch(java.util.List)
+	 * @see io.reflection.app.service.rank.IRankService#updateRanksBatch(java.util.Collection)
 	 */
 	@Override
-	public Long updateRanksBatch(List<Rank> updateRanks) throws DataAccessException {
+	public Long updateRanksBatch(Collection<Rank> updateRanks) throws DataAccessException {
 		long ranksCount = 0;
 
 		final String updateRanksBatchQueryFormat = "UPDATE `rank` SET `position`=%d,`grossingposition`=%d,`itemid`='%s',`type`='%s',`country`='%s',`date`=FROM_UNIXTIME(%d),`source`='%s',`price`=%d,`currency`='%s',`categoryid`=%d,`code2`=%d,`revenue`=%s,`downloads`=%s WHERE `id`=%d;";

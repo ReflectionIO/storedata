@@ -22,6 +22,7 @@ import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -124,11 +125,11 @@ final class ApplicationService implements IApplicationService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.service.application.IApplicationService#lookupInternalIdsApplication(java.util.List,
+	 * @see io.reflection.app.service.application.IApplicationService#lookupInternalIdsApplication(java.util.Collection,
 	 * io.reflection.app.api.lookup.datatypes.LookupDetailType)
 	 */
 	@Override
-	public List<Application> lookupInternalIdsApplication(List<String> internalIds, LookupDetailType detail) throws DataAccessException {
+	public List<Application> lookupInternalIdsApplication(Collection<String> internalIds, LookupDetailType detail) throws DataAccessException {
 		List<Application> applications = new ArrayList<Application>();
 
 		if (internalIds != null && internalIds.size() > 0) {
@@ -205,11 +206,11 @@ final class ApplicationService implements IApplicationService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.service.application.IApplicationService#lookupExternalIdsApplication(java.util.List,
+	 * @see io.reflection.app.service.application.IApplicationService#lookupExternalIdsApplication(java.util.Collection,
 	 * io.reflection.app.api.lookup.datatypes.LookupDetailType)
 	 */
 	@Override
-	public List<Application> lookupExternalIdsApplication(List<String> externalIds, LookupDetailType detail) throws DataAccessException {
+	public List<Application> lookupExternalIdsApplication(Collection<String> externalIds, LookupDetailType detail) throws DataAccessException {
 		List<Application> applications = new ArrayList<Application>();
 
 		if (externalIds != null && externalIds.size() > 0) {

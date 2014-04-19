@@ -63,6 +63,7 @@ import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Role;
+import io.reflection.app.datatypes.shared.Sale;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.logging.GaeLevel;
@@ -1246,11 +1247,23 @@ public final class Core extends ActionHandler {
 				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
 						ApiError.DateRangeOutOfBounds.getMessage("0-60 days: input.end - input.start"));
 
-			// TODO:
-			// output.sales = SaleServiceProvider.provide().getSales(input.country, input.category, input.linkedAccount, input.start, input.end, input.pager);
+			output.sales = SaleServiceProvider.provide().getSales(input.country, input.category, input.linkedAccount, input.start, input.end, input.pager);
 
 			if (input.pager.start.intValue() == 0) {
-				// TODO: add items lookup to output
+				Map<String, Sale> internalIds = null;
+
+				if (output.sales != null && output.sales.size() > 0) {
+
+					internalIds = new HashMap<String, Sale>();
+
+					for (Sale sale : output.sales) {
+						if (!internalIds.containsKey(sale.item.internalId)) {
+							internalIds.put(sale.item.internalId, sale);
+						}
+					}
+					
+					output.items = ItemServiceProvider.provide().getInternalIdItemBatch(internalIds.keySet());
+				}
 			}
 
 			output.pager = input.pager;

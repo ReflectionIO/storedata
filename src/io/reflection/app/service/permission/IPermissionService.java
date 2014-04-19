@@ -8,6 +8,7 @@
 //
 package io.reflection.app.service.permission;
 
+import java.util.Collection;
 import java.util.List;
 
 import io.reflection.app.api.exception.DataAccessException;
@@ -61,13 +62,13 @@ public interface IPermissionService extends IService {
 	 * @param permissions
 	 * @return
 	 */
-	public List<Permission> getIdPermissionsBatch(List<Long> permissionIds) throws DataAccessException;
+	public List<Permission> getIdPermissionsBatch(Collection<Long> permissionIds) throws DataAccessException;
 
 	/**
 	 * 
 	 * @param permissions
 	 * @throws DataAccessException
 	 */
-	public void inflatePermissions(List<Permission> permissions) throws DataAccessException;
+	public void inflatePermissions(Collection<Permission> permissions) throws DataAccessException;
 
 }

@@ -22,6 +22,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 public class GetSalesRequest extends Request {
+
 	public DataAccount linkedAccount;
 	public Country country;
 	public Category category;

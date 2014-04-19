@@ -8,11 +8,12 @@
 
 package io.reflection.app.service.item;
 
-import java.util.List;
-
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.Item;
+
+import java.util.Collection;
+import java.util.List;
 
 import com.spacehopperstudios.service.IService;
 
@@ -56,13 +57,13 @@ public interface IItemService extends IService {
 	 * @param itemIds
 	 * @return
 	 */
-	public List<Item> getExternalIdItemBatch(List<String> itemIds) throws DataAccessException;
+	public List<Item> getExternalIdItemBatch(Collection<String> itemIds) throws DataAccessException;
 
 	/**
 	 * @param items
 	 * @return
 	 */
-	public Long addItemsBatch(List<Item> items) throws DataAccessException;
+	public Long addItemsBatch(Collection<Item> items) throws DataAccessException;
 
 	/**
 	 * @param query
@@ -82,7 +83,7 @@ public interface IItemService extends IService {
 	 * @param itemIds
 	 * @return
 	 */
-	public List<Item> getInternalIdItemBatch(List<String> itemIds) throws DataAccessException;
+	public List<Item> getInternalIdItemBatch(Collection<String> itemIds) throws DataAccessException;
 
 	/**
 	 * @param pager

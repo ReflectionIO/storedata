@@ -75,5 +75,7 @@ public interface ICategoryService extends IService {
 	 * @throws DataAccessException
 	 */
 	public Category getInternalIdCategory(Store store, Long internalId) throws DataAccessException;
+	
+	
 
 }

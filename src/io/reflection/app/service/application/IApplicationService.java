@@ -13,6 +13,7 @@ import io.reflection.app.api.lookup.shared.datatypes.LookupDetailType;
 import io.reflection.app.datatypes.shared.Application;
 import io.reflection.app.datatypes.shared.Store;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.spacehopperstudios.service.IService;
@@ -45,14 +46,14 @@ public interface IApplicationService extends IService {
 	 * @param detail
 	 * @return
 	 */
-	public List<Application> lookupInternalIdsApplication(List<String> internalIds, LookupDetailType detail) throws DataAccessException;
+	public List<Application> lookupInternalIdsApplication(Collection<String> internalIds, LookupDetailType detail) throws DataAccessException;
 
 	/**
 	 * @param externalIds
 	 * @param detail
 	 * @return
 	 */
-	public List<Application> lookupExternalIdsApplication(List<String> externalIds, LookupDetailType detail) throws DataAccessException;
+	public List<Application> lookupExternalIdsApplication(Collection<String> externalIds, LookupDetailType detail) throws DataAccessException;
 
 	/**
 	 * 

@@ -15,6 +15,7 @@ import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.Store;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.spacehopperstudios.service.IService;
@@ -51,7 +52,7 @@ public interface IFeedFetchService extends IService {
 	 * @param pager
 	 * @return
 	 */
-	public List<FeedFetch> getFeedFetches(Country country, Store store, List<String> types, Pager pager) throws DataAccessException;
+	public List<FeedFetch> getFeedFetches(Country country, Store store, Collection<String> types, Pager pager) throws DataAccessException;
 
 	/**
 	 * 
@@ -60,7 +61,7 @@ public interface IFeedFetchService extends IService {
 	 * @param types
 	 * @return
 	 */
-	public Long getFeedFetchesCount(Country country, Store store, List<String> types) throws DataAccessException;
+	public Long getFeedFetchesCount(Country country, Store store, Collection<String> types) throws DataAccessException;
 
 	/**
 	 * 
@@ -70,7 +71,7 @@ public interface IFeedFetchService extends IService {
 	 * @param pager
 	 * @return
 	 */
-	public List<FeedFetch> getIngestedFeedFetches(Country country, Store store, List<String> types, Pager pager) throws DataAccessException;
+	public List<FeedFetch> getIngestedFeedFetches(Country country, Store store, Collection<String> types, Pager pager) throws DataAccessException;
 
 	/**
 	 * 
@@ -79,7 +80,7 @@ public interface IFeedFetchService extends IService {
 	 * @param listType
 	 * @return
 	 */
-	public Long getIngestedFeedFetchesCount(Country country, Store store, List<String> listType) throws DataAccessException;
+	public Long getIngestedFeedFetchesCount(Country country, Store store, Collection<String> listType) throws DataAccessException;
 
 	/**
 	 * @param store
@@ -88,7 +89,7 @@ public interface IFeedFetchService extends IService {
 	 * @param pager
 	 * @return
 	 */
-	public List<FeedFetch> getUningestedFeedFetches(Country country, Store store, List<String> types, Pager pager) throws DataAccessException;
+	public List<FeedFetch> getUningestedFeedFetches(Country country, Store store, Collection<String> types, Pager pager) throws DataAccessException;
 
 	/**
 	 * 
@@ -97,7 +98,7 @@ public interface IFeedFetchService extends IService {
 	 * @param types
 	 * @return
 	 */
-	public Long getUningestedFeedFetchesCount(Country country, Store store, List<String> types) throws DataAccessException;
+	public Long getUningestedFeedFetchesCount(Country country, Store store, Collection<String> types) throws DataAccessException;
 
 	/**
 	 * 
@@ -117,7 +118,7 @@ public interface IFeedFetchService extends IService {
 	 * @param code
 	 * @return
 	 */
-	public Boolean isReadyToModel(Country country, Store store, List<String> types, Long code) throws DataAccessException;
+	public Boolean isReadyToModel(Country country, Store store, Collection<String> types, Long code) throws DataAccessException;
 
 	/**
 	 * 
@@ -127,7 +128,7 @@ public interface IFeedFetchService extends IService {
 	 * @param code
 	 * @return
 	 */
-	public List<FeedFetch> getGatherCodeFeedFetches(Country country, Store store, List<String> types, Long code) throws DataAccessException;
+	public List<FeedFetch> getGatherCodeFeedFetches(Country country, Store store, Collection<String> types, Long code) throws DataAccessException;
 
 	/**
 	 * Gets a feed fetch code instead of an guid

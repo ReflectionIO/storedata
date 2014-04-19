@@ -20,6 +20,7 @@ import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -169,6 +170,7 @@ final class PermissionService implements IPermissionService {
 		} else if (pager.count != null) {
 			getPermissionIdsQuery += String.format(" LIMIT %d", pager.count.longValue());
 		}
+		
 		try {
 			permissionConnection.connect();
 			permissionConnection.executeQuery(getPermissionIdsQuery);
@@ -221,20 +223,20 @@ final class PermissionService implements IPermissionService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.service.permission.IPermissionService#getIdPermissionsBatch(java.util.List)
+	 * @see io.reflection.app.service.permission.IPermissionService#getIdPermissionsBatch(java.util.Collection)
 	 */
 	@Override
-	public List<Permission> getIdPermissionsBatch(List<Long> permissionIds) throws DataAccessException {
+	public List<Permission> getIdPermissionsBatch(Collection<Long> permissionIds) throws DataAccessException {
 		throw new UnsupportedOperationException();
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.service.permission.IPermissionService#inflatePermissions(java.util.List)
+	 * @see io.reflection.app.service.permission.IPermissionService#inflatePermissions(java.util.Collection)
 	 */
 	@Override
-	public void inflatePermissions(List<Permission> permissions) throws DataAccessException {
+	public void inflatePermissions(Collection<Permission> permissions) throws DataAccessException {
 		if (permissions != null && permissions.size() > 0) {
 			Map<Long, Permission> lookup = new HashMap<Long, Permission>();
 
@@ -242,9 +244,12 @@ final class PermissionService implements IPermissionService {
 
 			if (permissions.size() == 1) {
 				getPermissionsQuery.append("=");
-				getPermissionsQuery.append(permissions.get(0).id);
+				
+				Permission permission = permissions.iterator().next();
+				
+				getPermissionsQuery.append(permission.id);
 
-				lookup.put(permissions.get(0).id, permissions.get(0));
+				lookup.put(permission.id, permission);
 			} else {
 				boolean first = true;
 

@@ -15,6 +15,7 @@ import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -52,7 +53,7 @@ public interface IRankService extends IService {
 	 * @param store
 	 * @return
 	 */
-	public Rank getItemGatherCodeRank(String itemId, Long code, String store, String country, List<String> possibleTypes) throws DataAccessException;
+	public Rank getItemGatherCodeRank(String itemId, Long code, String store, String country, Collection<String> possibleTypes) throws DataAccessException;
 
 	/**
 	 * @param country
@@ -100,7 +101,7 @@ public interface IRankService extends IService {
 	 * @param ranks
 	 * @return
 	 */
-	public Long addRanksBatch(List<Rank> ranks) throws DataAccessException;
+	public Long addRanksBatch(Collection<Rank> ranks) throws DataAccessException;
 
 	/**
 	 * 
@@ -137,7 +138,7 @@ public interface IRankService extends IService {
 	 * @param updateRanks
 	 * @return
 	 */
-	public Long updateRanksBatch(List<Rank> updateRanks) throws DataAccessException;
+	public Long updateRanksBatch(Collection<Rank> updateRanks) throws DataAccessException;
 
 	/**
 	 * 

@@ -24,6 +24,7 @@ import io.reflection.app.service.ServiceType;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -322,10 +323,10 @@ final class DataAccountService implements IDataAccountService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getIdsDataAccounts(java.util.List, io.reflection.app.api.shared.datatypes.Pager)
+	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getIdsDataAccounts(java.util.Collection, io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
-	public List<DataAccount> getIdsDataAccounts(List<Long> ids, Pager pager) throws DataAccessException {
+	public List<DataAccount> getIdsDataAccounts(Collection<Long> ids, Pager pager) throws DataAccessException {
 		List<DataAccount> dataAccounts = new ArrayList<DataAccount>();
 
 		StringBuffer joinedIds = new StringBuffer();

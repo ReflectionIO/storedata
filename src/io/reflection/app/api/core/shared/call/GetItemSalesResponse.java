@@ -24,10 +24,11 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
 public class GetItemSalesResponse extends Response {
+
 	public List<Sale> sales;
 	public Pager pager;
 	public Item item;
-	public DataAccount dataAccount;
+	public DataAccount linkedAccount;
 	public DataSource dataSource;
 
 	@Override
@@ -46,8 +47,8 @@ public class GetItemSalesResponse extends Response {
 		object.add("pager", jsonPager);
 		JsonElement jsonItem = item == null ? JsonNull.INSTANCE : item.toJson();
 		object.add("item", jsonItem);
-		JsonElement jsonDataAccount = dataAccount == null ? JsonNull.INSTANCE : dataAccount.toJson();
-		object.add("dataAccount", jsonDataAccount);
+		JsonElement jsonLinkedAccount = linkedAccount == null ? JsonNull.INSTANCE : linkedAccount.toJson();
+		object.add("linkedAccount", jsonLinkedAccount);
 		JsonElement jsonDataSource = dataSource == null ? JsonNull.INSTANCE : dataSource.toJson();
 		object.add("dataSource", jsonDataSource);
 		return object;
@@ -84,11 +85,11 @@ public class GetItemSalesResponse extends Response {
 				item.fromJson(jsonItem.getAsJsonObject());
 			}
 		}
-		if (jsonObject.has("dataAccount")) {
-			JsonElement jsonDataAccount = jsonObject.get("dataAccount");
-			if (jsonDataAccount != null) {
-				dataAccount = new DataAccount();
-				dataAccount.fromJson(jsonDataAccount.getAsJsonObject());
+		if (jsonObject.has("linkedAccount")) {
+			JsonElement jsonLinkedAccount = jsonObject.get("linkedAccount");
+			if (jsonLinkedAccount != null) {
+				linkedAccount = new DataAccount();
+				linkedAccount.fromJson(jsonLinkedAccount.getAsJsonObject());
 			}
 		}
 		if (jsonObject.has("dataSource")) {
