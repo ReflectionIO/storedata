@@ -71,6 +71,12 @@
             <xsd:element name="GetItemSalesInput" type="sdc:GetItemSalesRequest" />
             <xsd:element name="GetItemSalesOutput" type="sdc:GetItemSalesResponse" />
 
+            <xsd:element name="GetSalesRanksInput" type="sdc:GetSalesRanksRequest" />
+            <xsd:element name="GetSalesRanksOutput" type="sdc:GetSalesRanksResponse" />
+
+            <xsd:element name="GetItemSalesRanksInput" type="sdc:GetItemSalesRanksRequest" />
+            <xsd:element name="GetItemSalesRanksOutput" type="sdc:GetItemSalesRanksResponse" />
+
             <xsd:complexType name="GetCountriesRequest">
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
@@ -533,6 +539,64 @@
                 </xsd:complexContent>
             </xsd:complexType>
 
+            <xsd:complexType name="GetSalesRanksRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="item" type="sd:Item" />
+                            <xsd:element name="country" type="sd:Country" />
+                            <xsd:element name="category" type="sd:Category" />
+                            <xsd:element name="pager" type="sd:Pager" />
+                        </xsd:sequence>
+                        <xsd:attribute name="start" type="xsd:dateTime" />
+                        <xsd:attribute name="end" type="xsd:dateTime" />
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="GetSalesRanksResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+                            <xsd:element name="sales" type="sd:Sale" maxOccurs="unbounded" />
+                            <xsd:element name="pager" type="sd:Pager" />
+                            <xsd:element name="item" type="sd:Item" />
+                            <xsd:element name="linkedAccount" type="sd:DataAccount" />
+                            <xsd:element name="dataSource" type="sd:DataSource" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="GetItemSalesRanksRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="item" type="sd:Item" />
+                            <xsd:element name="country" type="sd:Country" />
+                            <xsd:element name="category" type="sd:Category" />
+                            <xsd:element name="pager" type="sd:Pager" />
+                        </xsd:sequence>
+                        <xsd:attribute name="start" type="xsd:dateTime" />
+                        <xsd:attribute name="end" type="xsd:dateTime" />
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="GetItemSalesRanksResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+                            <xsd:element name="sales" type="sd:Sale" maxOccurs="unbounded" />
+                            <xsd:element name="pager" type="sd:Pager" />
+                            <xsd:element name="item" type="sd:Item" />
+                            <xsd:element name="linkedAccount" type="sd:DataAccount" />
+                            <xsd:element name="dataSource" type="sd:DataSource" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
         </xsd:schema>
     </wsdl:types>
 
@@ -689,6 +753,20 @@
         <wsdl:part name="output" element="sdc:GetItemSalesOutput" />
     </wsdl:message>
 
+    <wsdl:message name="GetSalesRanksRequest">
+        <wsdl:part name="input" element="sdc:GetSalesRanksInput" />
+    </wsdl:message>
+    <wsdl:message name="GetSalesRanksResponse">
+        <wsdl:part name="output" element="sdc:GetSalesRanksOutput" />
+    </wsdl:message>
+
+    <wsdl:message name="GetItemSalesRanksRequest">
+        <wsdl:part name="input" element="sdc:GetItemSalesRanksInput" />
+    </wsdl:message>
+    <wsdl:message name="GetItemSalesRanksResponse">
+        <wsdl:part name="output" element="sdc:GetItemSalesRanksOutput" />
+    </wsdl:message>
+
     <wsdl:portType name="core">
         <wsdl:operation name="GetCountries">
             <wsdl:input message="sdc:GetCountriesRequest" />
@@ -798,6 +876,16 @@
         <wsdl:operation name="GetItemSales">
             <wsdl:input message="sdc:GetItemSalesRequest" />
             <wsdl:output message="sdc:GetItemSalesResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="GetSalesRanks">
+            <wsdl:input message="sdc:GetSalesRanksRequest" />
+            <wsdl:output message="sdc:GetSalesRanksResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="GetItemSalesRanks">
+            <wsdl:input message="sdc:GetItemSalesRanksRequest" />
+            <wsdl:output message="sdc:GetItemSalesRanksResponse" />
         </wsdl:operation>
 
     </wsdl:portType>
@@ -1014,6 +1102,26 @@
 
         <wsdl:operation name="GetItemSales">
             <soap:operation soapAction="http://app.reflection.io/core/GetItemSales" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="GetSalesRanks">
+            <soap:operation soapAction="http://app.reflection.io/core/GetSalesRanks" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="GetItemSalesRanks">
+            <soap:operation soapAction="http://app.reflection.io/core/GetItemSalesRanks" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
