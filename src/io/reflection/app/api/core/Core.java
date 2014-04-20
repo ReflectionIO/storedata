@@ -26,6 +26,8 @@ import io.reflection.app.api.core.shared.call.GetCountriesRequest;
 import io.reflection.app.api.core.shared.call.GetCountriesResponse;
 import io.reflection.app.api.core.shared.call.GetItemRanksRequest;
 import io.reflection.app.api.core.shared.call.GetItemRanksResponse;
+import io.reflection.app.api.core.shared.call.GetItemSalesRanksRequest;
+import io.reflection.app.api.core.shared.call.GetItemSalesRanksResponse;
 import io.reflection.app.api.core.shared.call.GetItemSalesRequest;
 import io.reflection.app.api.core.shared.call.GetItemSalesResponse;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountItemsRequest;
@@ -34,6 +36,8 @@ import io.reflection.app.api.core.shared.call.GetLinkedAccountsRequest;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountsResponse;
 import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsRequest;
 import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsResponse;
+import io.reflection.app.api.core.shared.call.GetSalesRanksRequest;
+import io.reflection.app.api.core.shared.call.GetSalesRanksResponse;
 import io.reflection.app.api.core.shared.call.GetSalesRequest;
 import io.reflection.app.api.core.shared.call.GetSalesResponse;
 import io.reflection.app.api.core.shared.call.GetStoresRequest;
@@ -1261,7 +1265,7 @@ public final class Core extends ActionHandler {
 							internalIds.put(sale.item.internalId, sale);
 						}
 					}
-					
+
 					output.items = ItemServiceProvider.provide().getInternalIdItemBatch(internalIds.keySet());
 				}
 			}
@@ -1282,12 +1286,124 @@ public final class Core extends ActionHandler {
 		LOG.finer("Entering getItemSales");
 		GetItemSalesResponse output = new GetItemSalesResponse();
 		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("GetSalesRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			input.pager = ValidationHelper.validatePager(input.pager, "input");
+
+			if (input.pager.sortBy == null) {
+				input.pager.sortBy = "date";
+			}
+
+			if (input.pager.sortDirection == null) {
+				input.pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
+			}
+
+			input.country = ValidationHelper.validateCountry(input.country, "input");
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
 			output.error = convertToErrorAndLog(LOG, e);
 		}
 		LOG.finer("Exiting getItemSales");
+		return output;
+	}
+
+	public GetSalesRanksResponse getSalesRanks(GetSalesRanksRequest input) {
+		LOG.finer("Entering getSalesRanks");
+		GetSalesRanksResponse output = new GetSalesRanksResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("GetSalesRanksRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			input.pager = ValidationHelper.validatePager(input.pager, "input");
+
+			if (input.pager.sortBy == null) {
+				input.pager.sortBy = "date";
+			}
+
+			if (input.pager.sortDirection == null) {
+				input.pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
+			}
+
+			input.country = ValidationHelper.validateCountry(input.country, "input");
+
+			input.linkedAccount = ValidationHelper.validateDataAccount(input.linkedAccount, "input.linkedAccount");
+
+			List<Store> stores = DataSourceServiceProvider.provide().getStores(input.linkedAccount.source);
+
+			// right now category
+			if (input.category == null) {
+				// TODO:
+				// input.category = CategoryServiceProvider.provide().getAllCategory(stores);
+			} else {
+				input.category = ValidationHelper.validateCategory(input.category, "input.category");
+
+				boolean foundStore = false;
+
+				for (Store store : stores) {
+					if (store.a3Code.equals(input.category.store)) {
+						foundStore = true;
+						break;
+					}
+				}
+
+				if (!foundStore)
+					throw new InputValidationException(ApiError.CategoryStoreMismatch.getCode(), ApiError.CategoryStoreMismatch.getMessage("input.category"));
+			}
+
+			Calendar cal = Calendar.getInstance();
+
+			if (input.end == null) input.end = cal.getTime();
+
+			if (input.start == null) {
+				cal.setTime(input.end);
+				cal.add(Calendar.DAY_OF_YEAR, -30);
+				input.start = cal.getTime();
+			}
+
+			long diff = input.end.getTime() - input.start.getTime();
+			long diffDays = diff / (24 * 60 * 60 * 1000);
+
+			if (diffDays > 60 || diffDays < 0)
+				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
+						ApiError.DateRangeOutOfBounds.getMessage("0-60 days: input.end - input.start"));
+
+//			List<Sale> sales = SaleServiceProvider.provide().getSales(input.country, input.category, input.linkedAccount, input.start, input.end, input.pager);
+
+			// group sales by date
+			// get the model runs constants
+			// separate the purchases into iphone and ipad according to product type and list type
+
+			// add the numbers up to create ranks and then predict the position and the grossing possition
+
+			output.pager = input.pager;
+			updatePager(output.pager, output.ranks);
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getSalesRanks");
+		return output;
+	}
+
+	public GetItemSalesRanksResponse getItemSalesRanks(GetItemSalesRanksRequest input) {
+		LOG.finer("Entering getItemSalesRanks");
+		GetItemSalesRanksResponse output = new GetItemSalesRanksResponse();
+		try {
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getItemSalesRanks");
 		return output;
 	}
 }

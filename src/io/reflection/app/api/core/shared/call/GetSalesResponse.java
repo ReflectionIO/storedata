@@ -23,7 +23,7 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
 public class GetSalesResponse extends Response {
-
+	
 	public List<Sale> sales;
 	public Pager pager;
 	public List<Item> items;

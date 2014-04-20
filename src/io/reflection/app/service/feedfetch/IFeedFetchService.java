@@ -16,6 +16,7 @@ import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.Store;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import com.spacehopperstudios.service.IService;
@@ -137,5 +138,16 @@ public interface IFeedFetchService extends IService {
 	 * @throws DataAccessException
 	 */
 	public Long getCode() throws DataAccessException;
+	
+	/**
+	 * Gets the gather for the feed fetch
+	 * @param country
+	 * @param store
+	 * @param after
+	 * @param before
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public Long getGatherCode(Country country, Store store, Date after, Date before) throws DataAccessException;
 
 }

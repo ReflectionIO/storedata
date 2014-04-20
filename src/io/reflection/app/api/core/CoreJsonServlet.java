@@ -15,10 +15,12 @@ import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetCategoriesRequest;
 import io.reflection.app.api.core.shared.call.GetCountriesRequest;
 import io.reflection.app.api.core.shared.call.GetItemRanksRequest;
+import io.reflection.app.api.core.shared.call.GetItemSalesRanksRequest;
 import io.reflection.app.api.core.shared.call.GetItemSalesRequest;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountItemsRequest;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountsRequest;
 import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsRequest;
+import io.reflection.app.api.core.shared.call.GetSalesRanksRequest;
 import io.reflection.app.api.core.shared.call.GetSalesRequest;
 import io.reflection.app.api.core.shared.call.GetStoresRequest;
 import io.reflection.app.api.core.shared.call.GetTopItemsRequest;
@@ -35,11 +37,11 @@ import com.willshex.gson.json.service.server.JsonServlet;
 
 @SuppressWarnings("serial")
 public final class CoreJsonServlet extends JsonServlet {
+
 	@Override
 	protected String processAction(String action, JsonObject request) {
 		String output = "null";
 		Core service = new Core();
-
 		if ("GetCountries".equals(action)) {
 			GetCountriesRequest input = new GetCountriesRequest();
 			input.fromJson(request);
@@ -128,6 +130,14 @@ public final class CoreJsonServlet extends JsonServlet {
 			GetItemSalesRequest input = new GetItemSalesRequest();
 			input.fromJson(request);
 			output = service.getItemSales(input).toString();
+		} else if ("GetSalesRanks".equals(action)) {
+			GetSalesRanksRequest input = new GetSalesRanksRequest();
+			input.fromJson(request);
+			output = service.getSalesRanks(input).toString();
+		} else if ("GetItemSalesRanks".equals(action)) {
+			GetItemSalesRanksRequest input = new GetItemSalesRanksRequest();
+			input.fromJson(request);
+			output = service.getItemSalesRanks(input).toString();
 		}
 		return output;
 	}

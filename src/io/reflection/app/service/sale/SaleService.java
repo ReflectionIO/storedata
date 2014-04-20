@@ -319,7 +319,7 @@ final class SaleService implements ISaleService {
 		// (category relates to store by a3code)
 		// we are using end for date but we could equally use begin
 		String getSalesQuery = String
-				.format("SELECT * FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d (`end` BETWEEN FROM_UNIXTIME(%d) AND FROM_UNIXTIME(%d)) AND `deleted`='n'",
+				.format("SELECT * FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d AND (`end` BETWEEN FROM_UNIXTIME(%d) AND FROM_UNIXTIME(%d)) AND `deleted`='n'",
 						country.a2Code, 24, category.id.longValue(), category.name, linkedAccount.id.longValue(), start.getTime() / 1000, end.getTime() / 1000);
 
 		if (pager != null) {

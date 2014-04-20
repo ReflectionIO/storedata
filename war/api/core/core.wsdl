@@ -541,16 +541,15 @@
 
             <xsd:complexType name="GetSalesRanksRequest">
                 <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="item" type="sd:Item" />
-                            <xsd:element name="country" type="sd:Country" />
-                            <xsd:element name="category" type="sd:Category" />
-                            <xsd:element name="pager" type="sd:Pager" />
-                        </xsd:sequence>
-                        <xsd:attribute name="start" type="xsd:dateTime" />
-                        <xsd:attribute name="end" type="xsd:dateTime" />
-                    </xsd:extension>
+                    <xsd:sequence>
+                        <xsd:element name="linkedAccount" type="sd:DataAccount" />
+                        <xsd:element name="country" type="sd:Country" />
+                        <xsd:element name="category" type="sd:Category" />
+                        <xsd:element name="pager" type="sd:Pager" />
+                    </xsd:sequence>
+                    <xsd:attribute name="listType" type="xsd:string" />
+                    <xsd:attribute name="start" type="xsd:dateTime" />
+                    <xsd:attribute name="end" type="xsd:dateTime" />
                 </xsd:complexContent>
             </xsd:complexType>
 
@@ -560,8 +559,7 @@
                         <xsd:sequence>
                             <xsd:element name="sales" type="sd:Sale" maxOccurs="unbounded" />
                             <xsd:element name="pager" type="sd:Pager" />
-                            <xsd:element name="item" type="sd:Item" />
-                            <xsd:element name="linkedAccount" type="sd:DataAccount" />
+                            <xsd:element name="items" type="sd:Item" maxOccurs="unbounded" />
                             <xsd:element name="dataSource" type="sd:DataSource" />
                         </xsd:sequence>
                     </xsd:extension>
@@ -577,6 +575,7 @@
                             <xsd:element name="category" type="sd:Category" />
                             <xsd:element name="pager" type="sd:Pager" />
                         </xsd:sequence>
+                        <xsd:attribute name="listType" type="xsd:string" />
                         <xsd:attribute name="start" type="xsd:dateTime" />
                         <xsd:attribute name="end" type="xsd:dateTime" />
                     </xsd:extension>
@@ -587,7 +586,7 @@
                 <xsd:complexContent>
                     <xsd:extension base="sd:Response">
                         <xsd:sequence>
-                            <xsd:element name="sales" type="sd:Sale" maxOccurs="unbounded" />
+                            <xsd:element name="ranks" type="sd:Rank" maxOccurs="unbounded" />
                             <xsd:element name="pager" type="sd:Pager" />
                             <xsd:element name="item" type="sd:Item" />
                             <xsd:element name="linkedAccount" type="sd:DataAccount" />

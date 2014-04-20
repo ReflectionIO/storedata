@@ -8,20 +8,21 @@
 package io.reflection.app.client.controller;
 
 import io.reflection.app.api.core.client.CoreService;
-import io.reflection.app.api.core.shared.call.GetItemRanksRequest;
-import io.reflection.app.api.core.shared.call.GetItemRanksResponse;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountItemsRequest;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountItemsResponse;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountsRequest;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountsResponse;
-import io.reflection.app.api.core.shared.call.event.GetItemRanksEventHandler;
+import io.reflection.app.api.core.shared.call.GetSalesRequest;
+import io.reflection.app.api.core.shared.call.GetSalesResponse;
 import io.reflection.app.api.core.shared.call.event.GetLinkedAccountItemsEventHandler.GetLinkedAccountItemsFailure;
 import io.reflection.app.api.core.shared.call.event.GetLinkedAccountItemsEventHandler.GetLinkedAccountItemsSuccess;
 import io.reflection.app.api.core.shared.call.event.GetLinkedAccountsEventHandler;
+import io.reflection.app.api.core.shared.call.event.GetSalesEventHandler;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
-import io.reflection.app.client.helper.ApiCallHelper;
 import io.reflection.app.client.part.datatypes.MyApp;
+import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.shared.util.SparseArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +42,7 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 
 	private List<MyApp> rows = null;
 	private Pager pager = new Pager();
+	private SparseArray<MyApp> myAppsLookup = new SparseArray<MyApp>();
 
 	public static MyAppsController get() {
 		if (mOne == null) {
@@ -57,6 +59,9 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 		if (rows == null) {
 			rows = new ArrayList<MyApp>();
 		}
+
+		// TODO: this should also check the user type... if the user does not have a full listing permission... there is no point in attempting to get the
+		// linked accounts
 		if (LinkedAccountController.get().hasLinkedAccounts()) {
 			fetchLinkedAccountItems();
 		} else {
@@ -80,12 +85,13 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 					if (output.linkedAccounts != null) {
 						LinkedAccountController.get().setLinkedAccounts(output.linkedAccounts);
 						fetchLinkedAccountItems();
-					} else { // No linked accounts associated with this user 
+					} else { // No linked accounts associated with this user
 						updateRowCount(0, true);
-						// TODO Tell it to the user 
+						// TODO Tell it to the user
 					}
 
 				}
+
 				EventController.get().fireEventFromSource(new GetLinkedAccountsEventHandler.GetLinkedAccountsSuccess(input, output), MyAppsController.this);
 			}
 
@@ -103,29 +109,24 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 		input.accessCode = ACCESS_CODE;
 		input.linkedAccount = LinkedAccountController.get().getLinkedAccounts().get(0); // TODO loop on linked accounts
 		input.session = SessionController.get().getSessionForApiCall();
-		input.pager = pager;		
+		input.pager = pager;
 
 		service.getLinkedAccountItems(input, new AsyncCallback<GetLinkedAccountItemsResponse>() {
 
 			@Override
 			public void onSuccess(GetLinkedAccountItemsResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
-
-					int count = 0;
-
 					if (output.items != null) { // There are items associated with this linked account
-						count = output.items.size();
 						MyApp myApp;
-						for (int i = 0; i < count; i++) {
+
+						for (Item item : output.items) {
 							rows.add(myApp = new MyApp());
-							myApp.item = output.items.get(i);
+							myApp.item = item;
+							myAppsLookup.put((int) item.id.longValue(), myApp);
+						}
 
-							if (myApp.item.id != null) { // check if it's a dummy Item (out of top 400)
-								fetchItemRanks(myApp);
-							} else {
-								updateRowData(0, rows);
-							}
-
+						if (myAppsLookup.size() > 0) {
+							fetchSales();
 						}
 					} else { // No items associated with this linked account
 						updateRowCount(0, true);
@@ -142,51 +143,85 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 		});
 	}
 
-	private void fetchItemRanks(final MyApp myApp) {
+	private void fetchSales() {
 		CoreService service = ServiceCreator.createCoreService();
-		final GetItemRanksRequest input = new GetItemRanksRequest();
+
+		final GetSalesRequest input = new GetSalesRequest();
 		input.accessCode = ACCESS_CODE;
 		input.session = SessionController.get().getSessionForApiCall();
-		// input.pager = pager;
-		// input.category = FilterController.get().getCategory();
 
-		input.country = ApiCallHelper.createCountryForApiCall(FilterController.get().getCountry());
-
-		input.listType = FilterController.get().getListTypes().get(0);
-
-		input.item = myApp.item;
+		input.category = FilterController.get().getCategory();
+		input.country = FilterController.get().getCountry();
 		input.start = FilterController.get().getStartDate();
-
 		input.end = FilterController.get().getEndDate();
 
-		service.getItemRanks(input, new AsyncCallback<GetItemRanksResponse>() {
+		service.getSales(input, new AsyncCallback<GetSalesResponse>() {
 
 			@Override
-			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new GetItemRanksEventHandler.GetItemRanksFailure(input, caught), MyAppsController.this);
+			public void onSuccess(GetSalesResponse output) {
+				if (output != null && output.status == StatusType.StatusTypeSuccess && output.sales != null) {
+					ItemController.get().addItemsToCache(output.items);
 
-			}
+					// TODO: create some ranks based
 
-			@Override
-			public void onSuccess(GetItemRanksResponse output) {
-
-				if (output != null && output.status == StatusType.StatusTypeSuccess && output.item != null) {
-					ItemController.get().addItemToCache(output.item);
-					if (output.ranks != null) {
-						myApp.rank = output.ranks.get(0); // TODO loop on ranks
-					}
 					updateRowData(0, rows);
 				} else {
 					// updateRowCount(0, true);
 				}
 
-				EventController.get().fireEventFromSource(new GetItemRanksEventHandler.GetItemRanksSuccess(input, output), MyAppsController.this);
-
+				EventController.get().fireEventFromSource(new GetSalesEventHandler.GetSalesSuccess(input, output), MyAppsController.this);
 			}
 
+			@Override
+			public void onFailure(Throwable caught) {
+				EventController.get().fireEventFromSource(new GetSalesEventHandler.GetSalesFailure(input, caught), MyAppsController.this);
+			}
 		});
-
 	}
+
+	// private void fetchItemRanks(final MyApp myApp) {
+	// CoreService service = ServiceCreator.createCoreService();
+	// final GetItemRanksRequest input = new GetItemRanksRequest();
+	// input.accessCode = ACCESS_CODE;
+	// input.session = SessionController.get().getSessionForApiCall();
+	// // input.pager = pager;
+	// // input.category = FilterController.get().getCategory();
+	//
+	// input.country = ApiCallHelper.createCountryForApiCall(FilterController.get().getCountry());
+	//
+	// input.listType = FilterController.get().getListTypes().get(0);
+	//
+	// input.item = myApp.item;
+	// input.start = FilterController.get().getStartDate();
+	//
+	// input.end = FilterController.get().getEndDate();
+	//
+	// service.getItemRanks(input, new AsyncCallback<GetItemRanksResponse>() {
+	//
+	// @Override
+	// public void onFailure(Throwable caught) {
+	// EventController.get().fireEventFromSource(new GetItemRanksEventHandler.GetItemRanksFailure(input, caught), MyAppsController.this);
+	// }
+	//
+	// @Override
+	// public void onSuccess(GetItemRanksResponse output) {
+	//
+	// if (output != null && output.status == StatusType.StatusTypeSuccess && output.item != null) {
+	// ItemController.get().addItemToCache(output.item);
+	// if (output.ranks != null) {
+	// myApp.rank = output.ranks.get(0); // TODO loop on ranks
+	// }
+	// updateRowData(0, rows);
+	// } else {
+	// // updateRowCount(0, true);
+	// }
+	//
+	// EventController.get().fireEventFromSource(new GetItemRanksEventHandler.GetItemRanksSuccess(input, output), MyAppsController.this);
+	// }
+	//
+	// });
+	//
+	// }
 
 	public void reset() {
 		rows = null;

@@ -14,6 +14,8 @@ import io.reflection.app.datatypes.shared.FormType;
 import io.reflection.app.datatypes.shared.ModelRun;
 import io.reflection.app.datatypes.shared.Store;
 
+import java.util.Date;
+
 import com.spacehopperstudios.service.IService;
 
 public interface IModelRunService extends IService {
@@ -46,7 +48,20 @@ public interface IModelRunService extends IService {
 	 * @param listTypes
 	 * @param code
 	 * @return
+	 * @throws DataAccessException
 	 */
 	public ModelRun getGatherCodeModelRun(Country country, Store store, FormType form, Long code) throws DataAccessException;
+
+	/**
+	 * 
+	 * @param country
+	 * @param store
+	 * @param form
+	 * @param start
+	 * @param end
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public ModelRun getModelRun(Country country, Store store, FormType form, Date start, Date end) throws DataAccessException;
 
 }

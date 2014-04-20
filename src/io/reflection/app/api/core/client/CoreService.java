@@ -24,6 +24,8 @@ import io.reflection.app.api.core.shared.call.GetCountriesRequest;
 import io.reflection.app.api.core.shared.call.GetCountriesResponse;
 import io.reflection.app.api.core.shared.call.GetItemRanksRequest;
 import io.reflection.app.api.core.shared.call.GetItemRanksResponse;
+import io.reflection.app.api.core.shared.call.GetItemSalesRanksRequest;
+import io.reflection.app.api.core.shared.call.GetItemSalesRanksResponse;
 import io.reflection.app.api.core.shared.call.GetItemSalesRequest;
 import io.reflection.app.api.core.shared.call.GetItemSalesResponse;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountItemsRequest;
@@ -32,6 +34,8 @@ import io.reflection.app.api.core.shared.call.GetLinkedAccountsRequest;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountsResponse;
 import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsRequest;
 import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsResponse;
+import io.reflection.app.api.core.shared.call.GetSalesRanksRequest;
+import io.reflection.app.api.core.shared.call.GetSalesRanksResponse;
 import io.reflection.app.api.core.shared.call.GetSalesRequest;
 import io.reflection.app.api.core.shared.call.GetSalesResponse;
 import io.reflection.app.api.core.shared.call.GetStoresRequest;
@@ -785,6 +789,72 @@ public final class CoreService extends JsonService {
 		} catch (RequestException exception) {
 			output.onFailure(exception);
 			onCallFailure(CoreService.this, CoreMethodGetItemSales, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String CoreMethodGetSalesRanks = "GetSalesRanks";
+
+	public Request getSalesRanks(final GetSalesRanksRequest input, final AsyncCallback<GetSalesRanksResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(CoreMethodGetSalesRanks, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						GetSalesRanksResponse outputParameter = new GetSalesRanksResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(CoreService.this, CoreMethodGetSalesRanks, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(CoreService.this, CoreMethodGetSalesRanks, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(CoreService.this, CoreMethodGetSalesRanks, input, exception);
+				}
+			});
+			onCallStart(CoreService.this, CoreMethodGetSalesRanks, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(CoreService.this, CoreMethodGetSalesRanks, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String CoreMethodGetItemSalesRanks = "GetItemSalesRanks";
+
+	public Request getItemSalesRanks(final GetItemSalesRanksRequest input, final AsyncCallback<GetItemSalesRanksResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(CoreMethodGetItemSalesRanks, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						GetItemSalesRanksResponse outputParameter = new GetItemSalesRanksResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(CoreService.this, CoreMethodGetItemSalesRanks, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(CoreService.this, CoreMethodGetItemSalesRanks, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(CoreService.this, CoreMethodGetItemSalesRanks, input, exception);
+				}
+			});
+			onCallStart(CoreService.this, CoreMethodGetItemSalesRanks, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(CoreService.this, CoreMethodGetItemSalesRanks, input, exception);
 		}
 		return handle;
 	}

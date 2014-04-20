@@ -9,6 +9,7 @@ package io.reflection.app.service.rank;
 
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
+import static io.reflection.app.helpers.SqlQueryHelper.beforeAfterQuery;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
@@ -24,6 +25,7 @@ import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProv
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
+import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,7 +47,7 @@ import com.spacehopperstudios.utility.StringUtils;
 final class RankService implements IRankService {
 
 	private PersistentMap cache = PersistentMapFactory.createObjectify();
-	Calendar cal = Calendar.getInstance();
+	private Calendar cal = Calendar.getInstance();
 
 	public String getName() {
 		return ServiceType.ServiceTypeRank.toString();
@@ -80,6 +82,7 @@ final class RankService implements IRankService {
 			rank = new Rank();
 			rank.fromJson(jsonString);
 		}
+
 		return rank;
 	}
 
@@ -249,7 +252,7 @@ final class RankService implements IRankService {
 			throws DataAccessException {
 		List<Rank> ranks = new ArrayList<Rank>();
 
-		Long code = getGatherCode(country, store, after, before);
+		Long code = FeedFetchServiceProvider.provide().getGatherCode(country, store, after, before);
 
 		if (code != null) {
 			ranks.addAll(getGatherCodeRanks(country, store, category, listType, code, pager, false));
@@ -365,67 +368,6 @@ final class RankService implements IRankService {
 		return ranks;
 	}
 
-	private Long getGatherCode(Country country, Store store, Date after, Date before) throws DataAccessException {
-		Long code = null;
-
-		String memcacheKey = getName() + ".gathercode." + country.a2Code + "." + store.a3Code + "." + (after == null ? "none" : after.getTime()) + "."
-				+ (before == null ? "none" : before.getTime());
-		code = (Long) cache.get(memcacheKey);
-
-		if (code == null) {
-			Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
-
-			try {
-				rankConnection.connect();
-				String getGatherCode = String.format(
-						"SELECT `code2` FROM `rank` WHERE CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`source` AS BINARY)=CAST('%s' AS BINARY) AND %s `deleted`='n' ORDER BY `date` DESC LIMIT 1",
-						addslashes(country.a2Code), addslashes(store.a3Code), beforeAfterQuery(before, after));
-
-				rankConnection.executeQuery(getGatherCode);
-
-				if (rankConnection.fetchNextRow()) {
-					code = rankConnection.getCurrentRowLong("code2");
-					cal.setTime(new Date());
-					cal.add(Calendar.DAY_OF_MONTH, 20);
-					cache.put(memcacheKey, code, cal.getTime());
-				}
-			} finally {
-				if (rankConnection != null) {
-					rankConnection.disconnect();
-				}
-			}
-		}
-
-		return code;
-	}
-
-	/**
-	 * @param before
-	 * @param after
-	 * @return
-	 */
-	private String beforeAfterQuery(Date before, Date after) {
-		StringBuffer buffer = new StringBuffer();
-
-		if (before != null && after != null) {
-			buffer.append("(`date` BETWEEN FROM_UNIXTIME(");
-			buffer.append(after.getTime() / 1000);
-			buffer.append(") AND FROM_UNIXTIME(");
-			buffer.append(before.getTime() / 1000);
-			buffer.append(")) AND ");
-		} else if (after != null && before == null) {
-			buffer.append("`date`>=FROM_UNIXTIME(");
-			buffer.append(after.getTime() / 1000);
-			buffer.append(") AND ");
-		} else if (before != null && after == null) {
-			buffer.append("`date`<FROM_UNIXTIME(");
-			buffer.append(before.getTime() / 1000);
-			buffer.append(") AND ");
-		}
-
-		return buffer.toString();
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -435,7 +377,7 @@ final class RankService implements IRankService {
 	public Long getRanksCount(Country country, Store store, Category category, String listType, Date after, Date before) throws DataAccessException {
 		Long ranksCount = Long.valueOf(0);
 
-		Long code = getGatherCode(country, store, after, before);
+		Long code = FeedFetchServiceProvider.provide().getGatherCode(country, store, after, before);
 
 		if (code != null) {
 			ranksCount = getGatherCodeRanksCount(country, store, category, listType, code);
@@ -774,7 +716,7 @@ final class RankService implements IRankService {
 				typesQueryPart = "CAST(`type` AS BINARY) IN (CAST('" + StringUtils.join(types, "' AS BINARY),CAST('") + "' AS BINARY))";
 			}
 
-			Long code = getGatherCode(country, store, start, end);
+			Long code = FeedFetchServiceProvider.provide().getGatherCode(country, store, start, end);
 
 			Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 			String getCountryStoreTypeRanksQuery = String

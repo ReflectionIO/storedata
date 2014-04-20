@@ -10,6 +10,7 @@ package io.reflection.app.service.feedfetch;
 
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
+import static io.reflection.app.helpers.SqlQueryHelper.beforeAfterQuery;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
@@ -25,13 +26,22 @@ import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
+
+import co.spchopr.persistentmap.PersistentMap;
+import co.spchopr.persistentmap.PersistentMapFactory;
 
 import com.google.appengine.api.utils.SystemProperty;
 import com.spacehopperstudios.utility.StringUtils;
 
 final class FeedFetchService implements IFeedFetchService {
+	
+	private PersistentMap cache = PersistentMapFactory.createObjectify();
+	private Calendar cal = Calendar.getInstance();
+	
 	public String getName() {
 		return ServiceType.ServiceTypeFeedFetch.toString();
 	}
@@ -521,4 +531,46 @@ final class FeedFetchService implements IFeedFetchService {
 
 		return code;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.feedfetch.IFeedFetchService#getGatherCode(io.reflection.app.datatypes.shared.Country,
+	 * io.reflection.app.datatypes.shared.Store, java.util.Date, java.util.Date)
+	 */
+	@Override
+	public Long getGatherCode(Country country, Store store, Date after, Date before) throws DataAccessException {
+		Long code = null;
+
+		String memcacheKey = getName() + ".gathercode." + country.a2Code + "." + store.a3Code + "." + (after == null ? "none" : after.getTime()) + "."
+				+ (before == null ? "none" : before.getTime());
+		code = (Long) cache.get(memcacheKey);
+
+		if (code == null) {
+			Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+
+			try {
+				rankConnection.connect();
+				String getGatherCode = String
+						.format("SELECT `code2` FROM `rank` WHERE CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`source` AS BINARY)=CAST('%s' AS BINARY) AND %s `deleted`='n' ORDER BY `date` DESC LIMIT 1",
+								addslashes(country.a2Code), addslashes(store.a3Code), beforeAfterQuery(before, after));
+
+				rankConnection.executeQuery(getGatherCode);
+
+				if (rankConnection.fetchNextRow()) {
+					code = rankConnection.getCurrentRowLong("code2");
+					cal.setTime(new Date());
+					cal.add(Calendar.DAY_OF_MONTH, 20);
+					cache.put(memcacheKey, code, cal.getTime());
+				}
+			} finally {
+				if (rankConnection != null) {
+					rankConnection.disconnect();
+				}
+			}
+		}
+
+		return code;
+	}
+	
 }

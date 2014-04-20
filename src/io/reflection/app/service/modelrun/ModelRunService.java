@@ -20,8 +20,12 @@ import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProv
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
+import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
+
+import java.util.Date;
 
 final class ModelRunService implements IModelRunService {
+
 	public String getName() {
 		return ServiceType.ServiceTypeModelRun.toString();
 	}
@@ -174,6 +178,40 @@ final class ModelRunService implements IModelRunService {
 		try {
 			modelRunConnection.connect();
 			modelRunConnection.executeQuery(getGatherCodeModelRunQuery);
+
+			if (modelRunConnection.fetchNextRow()) {
+				modelRun = toModelRun(modelRunConnection);
+			}
+		} finally {
+			if (modelRunConnection != null) {
+				modelRunConnection.disconnect();
+			}
+		}
+
+		return modelRun;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.modelrun.IModelRunService#getModelRun(io.reflection.app.datatypes.shared.Country,
+	 * io.reflection.app.datatypes.shared.Store, io.reflection.app.datatypes.shared.FormType, java.util.Date, java.util.Date)
+	 */
+	@Override
+	public ModelRun getModelRun(Country country, Store store, FormType form, Date start, Date end) throws DataAccessException {
+		ModelRun modelRun = null;
+
+		Long code = FeedFetchServiceProvider.provide().getGatherCode(country, store, start, end);
+
+		String getModelRunQuery = String
+				.format("SELECT * FROM `modelrun` WHERE CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`store` AS BINARY)=CAST('%s' AS BINARY) AND `code2`=%d `deleted`='n' ORDER BY `id` DESC LIMIT 1",
+						addslashes(country.a2Code), addslashes(store.a3Code), code.longValue());
+
+		Connection modelRunConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeModelRun.toString());
+
+		try {
+			modelRunConnection.connect();
+			modelRunConnection.executeQuery(getModelRunQuery);
 
 			if (modelRunConnection.fetchNextRow()) {
 				modelRun = toModelRun(modelRunConnection);
