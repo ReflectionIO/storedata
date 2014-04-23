@@ -34,8 +34,8 @@ public class MiniAppCell extends AbstractCell<Item> {
 	@Override
 	public void render(Context context, Item value, SafeHtmlBuilder builder) {
 
-		SafeUri link = PageType.ItemPageType.asHref("view", value.externalId, FilterController.OVERALL_LIST_TYPE, FilterController.get().getFilter()
-				.asItemFilterString());
+		SafeUri link = PageType.ItemPageType.asHref("view", value.externalId == null ? value.internalId : value.externalId, FilterController.OVERALL_LIST_TYPE,
+				FilterController.get().getFilter().asItemFilterString());
 		SafeUri smallImage = UriUtils.fromString(value.smallImage == null ? "" : value.smallImage);
 
 		RENDERER.render(builder, value.name, value.creatorName, smallImage, Styles.INSTANCE.reflection().unknownAppSmall(), link);

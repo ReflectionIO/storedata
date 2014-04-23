@@ -12,20 +12,21 @@ import io.reflection.app.api.core.shared.call.GetLinkedAccountItemsRequest;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountItemsResponse;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountsRequest;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountsResponse;
-import io.reflection.app.api.core.shared.call.GetSalesRequest;
-import io.reflection.app.api.core.shared.call.GetSalesResponse;
+import io.reflection.app.api.core.shared.call.GetSalesRanksRequest;
+import io.reflection.app.api.core.shared.call.GetSalesRanksResponse;
 import io.reflection.app.api.core.shared.call.event.GetLinkedAccountItemsEventHandler.GetLinkedAccountItemsFailure;
 import io.reflection.app.api.core.shared.call.event.GetLinkedAccountItemsEventHandler.GetLinkedAccountItemsSuccess;
 import io.reflection.app.api.core.shared.call.event.GetLinkedAccountsEventHandler;
-import io.reflection.app.api.core.shared.call.event.GetSalesEventHandler;
+import io.reflection.app.api.core.shared.call.event.GetSalesRanksEventHandler;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.client.part.datatypes.MyApp;
 import io.reflection.app.datatypes.shared.Item;
-import io.reflection.app.shared.util.SparseArray;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.AsyncDataProvider;
@@ -42,7 +43,7 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 
 	private List<MyApp> rows = null;
 	private Pager pager = new Pager();
-	private SparseArray<MyApp> myAppsLookup = new SparseArray<MyApp>();
+	private Map<String, MyApp> myAppsLookup = new HashMap<String, MyApp>();
 
 	public static MyAppsController get() {
 		if (mOne == null) {
@@ -122,11 +123,13 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 						for (Item item : output.items) {
 							rows.add(myApp = new MyApp());
 							myApp.item = item;
-							myAppsLookup.put((int) item.id.longValue(), myApp);
+
+							myAppsLookup.put(item.externalId == null ? item.internalId : item.externalId, myApp);
 						}
 
 						if (myAppsLookup.size() > 0) {
-							fetchSales();
+							updateRowData(0, rows);
+							fetchSalesRank();
 						}
 					} else { // No items associated with this linked account
 						updateRowCount(0, true);
@@ -143,10 +146,10 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 		});
 	}
 
-	private void fetchSales() {
+	private void fetchSalesRank() {
 		CoreService service = ServiceCreator.createCoreService();
 
-		final GetSalesRequest input = new GetSalesRequest();
+		final GetSalesRanksRequest input = new GetSalesRanksRequest();
 		input.accessCode = ACCESS_CODE;
 		input.session = SessionController.get().getSessionForApiCall();
 
@@ -155,11 +158,11 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 		input.start = FilterController.get().getStartDate();
 		input.end = FilterController.get().getEndDate();
 
-		service.getSales(input, new AsyncCallback<GetSalesResponse>() {
+		service.getSalesRanks(input, new AsyncCallback<GetSalesRanksResponse>() {
 
 			@Override
-			public void onSuccess(GetSalesResponse output) {
-				if (output != null && output.status == StatusType.StatusTypeSuccess && output.sales != null) {
+			public void onSuccess(GetSalesRanksResponse output) {
+				if (output != null && output.status == StatusType.StatusTypeSuccess && output.ranks != null) {
 					ItemController.get().addItemsToCache(output.items);
 
 					// TODO: create some ranks based
@@ -169,12 +172,12 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 					// updateRowCount(0, true);
 				}
 
-				EventController.get().fireEventFromSource(new GetSalesEventHandler.GetSalesSuccess(input, output), MyAppsController.this);
+				EventController.get().fireEventFromSource(new GetSalesRanksEventHandler.GetSalesRanksSuccess(input, output), MyAppsController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new GetSalesEventHandler.GetSalesFailure(input, caught), MyAppsController.this);
+				EventController.get().fireEventFromSource(new GetSalesRanksEventHandler.GetSalesRanksFailure(input, caught), MyAppsController.this);
 			}
 		});
 	}

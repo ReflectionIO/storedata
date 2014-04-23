@@ -8,6 +8,9 @@
 package io.reflection.app.api.core;
 
 import static io.reflection.app.api.PagerHelper.updatePager;
+import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPAD_IOS;
+import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS;
+import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_UNIVERSAL_IOS;
 import io.reflection.app.accountdatacollectors.DataAccountCollectorFactory;
 import io.reflection.app.api.ValidationHelper;
 import io.reflection.app.api.core.shared.call.ChangePasswordRequest;
@@ -64,6 +67,8 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.collectors.CollectorIOS;
 import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.FormType;
+import io.reflection.app.datatypes.shared.ModelRun;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Role;
@@ -71,10 +76,12 @@ import io.reflection.app.datatypes.shared.Sale;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.modellers.ModellerFactory;
 import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.country.CountryServiceProvider;
 import io.reflection.app.service.datasource.DataSourceServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
+import io.reflection.app.service.modelrun.ModelRunServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
 import io.reflection.app.service.role.RoleServiceProvider;
@@ -86,6 +93,7 @@ import io.reflection.app.service.user.IUserService;
 import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.SparseArray;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -1337,6 +1345,9 @@ public final class Core extends ActionHandler {
 
 			List<Store> stores = DataSourceServiceProvider.provide().getStores(input.linkedAccount.source);
 
+			if (input.listType == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("String: input.listType"));
+
 			// right now category
 			if (input.category == null) {
 				// TODO:
@@ -1374,13 +1385,86 @@ public final class Core extends ActionHandler {
 				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
 						ApiError.DateRangeOutOfBounds.getMessage("0-60 days: input.end - input.start"));
 
-//			List<Sale> sales = SaleServiceProvider.provide().getSales(input.country, input.category, input.linkedAccount, input.start, input.end, input.pager);
+			List<Sale> sales = SaleServiceProvider.provide().getSales(input.country, input.category, input.linkedAccount, input.start, input.end, input.pager);
 
-			// group sales by date
-			// get the model runs constants
-			// separate the purchases into iphone and ipad according to product type and list type
+			if (sales.size() > 0) {
+				// group sales by date
+				Map<Date, List<Sale>> salesGroupByDate = new HashMap<Date, List<Sale>>();
+				List<Sale> dateSalesList = null;
+				Date key;
+				SimpleDateFormat keyFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-			// add the numbers up to create ranks and then predict the position and the grossing possition
+				Store defaultStore = stores.get(0);
+				FormType form = ModellerFactory.getModellerForStore(defaultStore.a3Code).getForm(input.listType);
+
+				for (Sale sale : sales) {
+					// only add items that are consistent with the product type
+					if (FREE_OR_PAID_APP_UNIVERSAL_IOS.equals(sale.typeIdentifier)
+							|| (form == FormType.FormTypeOther && FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier))
+							|| (form == FormType.FormTypeTablet && FREE_OR_PAID_APP_IPAD_IOS.equals(sale.typeIdentifier))) {
+
+						key = keyFormat.parse(keyFormat.format(sale.begin));
+						dateSalesList = salesGroupByDate.get(key);
+
+						if (dateSalesList == null) {
+							dateSalesList = new ArrayList<Sale>();
+							salesGroupByDate.put(key, dateSalesList);
+						}
+
+						dateSalesList.add(sale);
+					}
+				}
+
+				// get the model runs constants
+				List<ModelRun> modelRuns = ModelRunServiceProvider.provide().getDateModelRunBatch(input.country, defaultStore, form, salesGroupByDate.keySet());
+
+				if (modelRuns.size() > 0) {
+					// add the numbers up to create ranks and then predict the position and the grossing position
+
+					Rank rank;
+					for (ModelRun modelRun : modelRuns) {
+						key = keyFormat.parse(keyFormat.format(modelRun.created));
+
+						rank = new Rank();
+						output.ranks.add(rank);
+
+						sales = salesGroupByDate.get(key);
+
+						if (sales.size() > 0) {
+							int downloads = 0;
+							float revenue = 0;
+
+							boolean populatedCommon = false;
+							for (Sale sale : sales) {
+								if (!populatedCommon) {
+									rank.category = input.category;
+									rank.code = modelRun.code;
+									rank.country = input.country.a2Code;
+									rank.currency = sale.customerCurrency;
+									rank.price = Float.valueOf(((float) sale.customerPrice.intValue()) / 100.0f);
+									rank.date = key;
+									rank.created = key;
+									rank.itemId = sale.item.externalId;
+									rank.source = defaultStore.a3Code;
+									rank.type = input.listType;
+									populatedCommon = true;
+								}
+
+								revenue += ((float) sale.customerPrice.intValue()) / 100.0f;
+								downloads++;
+							}
+
+							rank.revenue = Float.valueOf(revenue);
+							rank.downloads = Integer.valueOf(downloads);
+
+							// TODO: use the mode to predict what rank that would be
+							// rank.grossingPosition;
+							// rank.position;
+						}
+					}
+				}
+
+			}
 
 			output.pager = input.pager;
 			updatePager(output.pager, output.ranks);

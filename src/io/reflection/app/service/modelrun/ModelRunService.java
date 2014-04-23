@@ -22,7 +22,10 @@ import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 final class ModelRunService implements IModelRunService {
 
@@ -223,6 +226,21 @@ final class ModelRunService implements IModelRunService {
 		}
 
 		return modelRun;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.modelrun.IModelRunService#getDateModelRunBatch(io.reflection.app.datatypes.shared.Country,
+	 * io.reflection.app.datatypes.shared.Store, io.reflection.app.datatypes.shared.FormType, java.util.Collection)
+	 */
+	@Override
+	public List<ModelRun> getDateModelRunBatch(Country country, Store store, FormType form, Collection<Date> dates) throws DataAccessException {
+		List<ModelRun> modelRuns = new ArrayList<ModelRun>();
+		
+		
+		
+		return modelRuns;
 	}
 
 }

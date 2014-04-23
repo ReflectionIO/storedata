@@ -26,7 +26,7 @@ import com.google.gson.JsonObject;
 public class GetSalesRanksResponse extends Response {
 	public List<Rank> ranks;
 	public Pager pager;
-	public Item item;
+	public List<Item> items;
 	public DataAccount linkedAccount;
 	public DataSource dataSource;
 
@@ -44,8 +44,15 @@ public class GetSalesRanksResponse extends Response {
 		object.add("ranks", jsonRanks);
 		JsonElement jsonPager = pager == null ? JsonNull.INSTANCE : pager.toJson();
 		object.add("pager", jsonPager);
-		JsonElement jsonItem = item == null ? JsonNull.INSTANCE : item.toJson();
-		object.add("item", jsonItem);
+		JsonElement jsonItems = JsonNull.INSTANCE;
+		if (items != null) {
+			jsonItems = new JsonArray();
+			for (int i = 0; i < items.size(); i++) {
+				JsonElement jsonItemsItem = items.get(i) == null ? JsonNull.INSTANCE : items.get(i).toJson();
+				((JsonArray) jsonItems).add(jsonItemsItem);
+			}
+		}
+		object.add("items", jsonItems);
 		JsonElement jsonLinkedAccount = linkedAccount == null ? JsonNull.INSTANCE : linkedAccount.toJson();
 		object.add("linkedAccount", jsonLinkedAccount);
 		JsonElement jsonDataSource = dataSource == null ? JsonNull.INSTANCE : dataSource.toJson();
@@ -77,13 +84,20 @@ public class GetSalesRanksResponse extends Response {
 				pager.fromJson(jsonPager.getAsJsonObject());
 			}
 		}
-		if (jsonObject.has("item")) {
-			JsonElement jsonItem = jsonObject.get("item");
-			if (jsonItem != null) {
-				item = new Item();
-				item.fromJson(jsonItem.getAsJsonObject());
+		if (jsonObject.has("items")) {
+			JsonElement jsonItems = jsonObject.get("items");
+			if (jsonItems != null) {
+				items = new ArrayList<Item>();
+				Item item = null;
+				for (int i = 0; i < jsonItems.getAsJsonArray().size(); i++) {
+					if (jsonItems.getAsJsonArray().get(i) != null) {
+						(item = new Item()).fromJson(jsonItems.getAsJsonArray().get(i).getAsJsonObject());
+						items.add(item);
+					}
+				}
 			}
 		}
+
 		if (jsonObject.has("linkedAccount")) {
 			JsonElement jsonLinkedAccount = jsonObject.get("linkedAccount");
 			if (jsonLinkedAccount != null) {

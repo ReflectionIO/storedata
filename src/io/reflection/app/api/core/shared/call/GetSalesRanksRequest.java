@@ -26,6 +26,7 @@ public class GetSalesRanksRequest extends Request {
 	public Country country;
 	public Category category;
 	public Pager pager;
+	public String listType;
 	public Date start;
 	public Date end;
 
@@ -40,6 +41,8 @@ public class GetSalesRanksRequest extends Request {
 		object.add("category", jsonCategory);
 		JsonElement jsonPager = pager == null ? JsonNull.INSTANCE : pager.toJson();
 		object.add("pager", jsonPager);
+		JsonElement jsonListType = listType == null ? JsonNull.INSTANCE : new JsonPrimitive(listType);
+		object.add("listType", jsonListType);
 		JsonElement jsonStart = start == null ? JsonNull.INSTANCE : new JsonPrimitive(start.getTime());
 		object.add("start", jsonStart);
 		JsonElement jsonEnd = end == null ? JsonNull.INSTANCE : new JsonPrimitive(end.getTime());
@@ -76,6 +79,12 @@ public class GetSalesRanksRequest extends Request {
 			if (jsonPager != null) {
 				pager = new Pager();
 				pager.fromJson(jsonPager.getAsJsonObject());
+			}
+		}
+		if (jsonObject.has("listType")) {
+			JsonElement jsonListType = jsonObject.get("listType");
+			if (jsonListType != null) {
+				listType = jsonListType.getAsString();
 			}
 		}
 		if (jsonObject.has("start")) {

@@ -77,7 +77,7 @@ final class SaleService implements ISaleService {
 		sale.account.id = connection.getCurrentRowLong("dataaccountid");
 
 		sale.item = new Item();
-		sale.item.id = connection.getCurrentRowLong("itemid");
+		sale.item.internalId = connection.getCurrentRowString("itemid");
 
 		sale.country = stripslashes(connection.getCurrentRowString("country"));
 		sale.sku = stripslashes(connection.getCurrentRowString("sku"));
@@ -213,11 +213,13 @@ final class SaleService implements ISaleService {
 			saleItemConnection.executeQuery(getSaleItemQuery);
 
 			while (saleItemConnection.fetchNextRow()) {
-				Item fake = new Item();
-				fake.creatorName = saleItemConnection.getCurrentRowString("developer");
-				fake.name = saleItemConnection.getCurrentRowString("title");
-				fake.externalId = saleItemConnection.getCurrentRowString("itemid");
-				items.add(fake);
+				Item mockItem = new Item();
+				
+				mockItem.creatorName = saleItemConnection.getCurrentRowString("developer");
+				mockItem.name = saleItemConnection.getCurrentRowString("title");
+				mockItem.internalId = saleItemConnection.getCurrentRowString("itemid");
+				
+				items.add(mockItem);
 			}
 
 		} finally {
