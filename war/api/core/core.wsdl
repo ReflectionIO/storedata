@@ -557,9 +557,10 @@
                 <xsd:complexContent>
                     <xsd:extension base="sd:Response">
                         <xsd:sequence>
-                            <xsd:element name="sales" type="sd:Sale" maxOccurs="unbounded" />
+                            <xsd:element name="ranks" type="sd:Rank" maxOccurs="unbounded" />
                             <xsd:element name="pager" type="sd:Pager" />
                             <xsd:element name="items" type="sd:Item" maxOccurs="unbounded" />
+                            <xsd:element name="linkedAccount" type="sd:DataAccount" />
                             <xsd:element name="dataSource" type="sd:DataSource" />
                         </xsd:sequence>
                     </xsd:extension>
