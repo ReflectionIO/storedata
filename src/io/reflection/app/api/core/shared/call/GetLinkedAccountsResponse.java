@@ -9,7 +9,9 @@
 package io.reflection.app.api.core.shared.call;
 
 import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.api.shared.datatypes.Response;
 import io.reflection.app.datatypes.shared.DataAccount;
+import io.reflection.app.datatypes.shared.DataSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,10 +20,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import io.reflection.app.api.shared.datatypes.Response;
 
 public class GetLinkedAccountsResponse extends Response {
 	public List<DataAccount> linkedAccounts;
+	public List<DataSource> dataSources;
 	public Pager pager;
 
 	@Override
@@ -36,6 +38,15 @@ public class GetLinkedAccountsResponse extends Response {
 			}
 		}
 		object.add("linkedAccounts", jsonLinkedAccounts);
+		JsonElement jsonDataSources = JsonNull.INSTANCE;
+		if (dataSources != null) {
+			jsonDataSources = new JsonArray();
+			for (int i = 0; i < dataSources.size(); i++) {
+				JsonElement jsonDataSourcesItem = dataSources.get(i) == null ? JsonNull.INSTANCE : dataSources.get(i).toJson();
+				((JsonArray) jsonDataSources).add(jsonDataSourcesItem);
+			}
+		}
+		object.add("dataSources", jsonDataSources);
 		JsonElement jsonPager = pager == null ? JsonNull.INSTANCE : pager.toJson();
 		object.add("pager", jsonPager);
 		return object;
@@ -53,6 +64,20 @@ public class GetLinkedAccountsResponse extends Response {
 					if (jsonLinkedAccounts.getAsJsonArray().get(i) != null) {
 						(item = new DataAccount()).fromJson(jsonLinkedAccounts.getAsJsonArray().get(i).getAsJsonObject());
 						linkedAccounts.add(item);
+					}
+				}
+			}
+		}
+
+		if (jsonObject.has("dataSources")) {
+			JsonElement jsonDataSources = jsonObject.get("dataSources");
+			if (jsonDataSources != null) {
+				dataSources = new ArrayList<DataSource>();
+				DataSource item = null;
+				for (int i = 0; i < jsonDataSources.getAsJsonArray().size(); i++) {
+					if (jsonDataSources.getAsJsonArray().get(i) != null) {
+						(item = new DataSource()).fromJson(jsonDataSources.getAsJsonArray().get(i).getAsJsonObject());
+						dataSources.add(item);
 					}
 				}
 			}

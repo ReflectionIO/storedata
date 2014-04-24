@@ -8,12 +8,16 @@
 //
 package io.reflection.app.api.core.client;
 
+import io.reflection.app.api.core.shared.call.UpdateLinkedAccountRequest;
+import io.reflection.app.api.core.shared.call.UpdateLinkedAccountResponse;
 import io.reflection.app.api.core.shared.call.ChangePasswordRequest;
 import io.reflection.app.api.core.shared.call.ChangePasswordResponse;
 import io.reflection.app.api.core.shared.call.ChangeUserDetailsRequest;
 import io.reflection.app.api.core.shared.call.ChangeUserDetailsResponse;
 import io.reflection.app.api.core.shared.call.CheckUsernameRequest;
 import io.reflection.app.api.core.shared.call.CheckUsernameResponse;
+import io.reflection.app.api.core.shared.call.DeleteLinkedAccountRequest;
+import io.reflection.app.api.core.shared.call.DeleteLinkedAccountResponse;
 import io.reflection.app.api.core.shared.call.ForgotPasswordRequest;
 import io.reflection.app.api.core.shared.call.ForgotPasswordResponse;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
@@ -393,6 +397,72 @@ public final class CoreService extends JsonService {
 		} catch (RequestException exception) {
 			output.onFailure(exception);
 			onCallFailure(CoreService.this, CoreMethodChangeUserDetails, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String CoreMethodUpdateLinkedAccount = "UpdateLinkedAccount";
+
+	public Request updateLinkedAccount(final UpdateLinkedAccountRequest input, final AsyncCallback<UpdateLinkedAccountResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(CoreMethodUpdateLinkedAccount, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						UpdateLinkedAccountResponse outputParameter = new UpdateLinkedAccountResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(CoreService.this, CoreMethodUpdateLinkedAccount, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(CoreService.this, CoreMethodUpdateLinkedAccount, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(CoreService.this, CoreMethodUpdateLinkedAccount, input, exception);
+				}
+			});
+			onCallStart(CoreService.this, CoreMethodUpdateLinkedAccount, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(CoreService.this, CoreMethodUpdateLinkedAccount, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String CoreMethodDeleteLinkedAccount = "DeleteLinkedAccount";
+
+	public Request deleteLinkedAccount(final DeleteLinkedAccountRequest input, final AsyncCallback<DeleteLinkedAccountResponse> output) {		
+		Request handle = null;		
+		try {
+			handle = sendRequest(CoreMethodDeleteLinkedAccount, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						DeleteLinkedAccountResponse outputParameter = new DeleteLinkedAccountResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(CoreService.this, CoreMethodDeleteLinkedAccount, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(CoreService.this, CoreMethodDeleteLinkedAccount, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(CoreService.this, CoreMethodDeleteLinkedAccount, input, exception);
+				}
+			});
+			onCallStart(CoreService.this, CoreMethodDeleteLinkedAccount, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(CoreService.this, CoreMethodDeleteLinkedAccount, input, exception);
 		}
 		return handle;
 	}

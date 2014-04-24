@@ -201,7 +201,7 @@ final class DataAccountService implements IDataAccountService {
 
 		final String updDataAccountQuery = String.format(
 				"UPDATE `dataaccount` SET `password` = AES_ENCRYPT('%s',UNHEX('%s')), `properties`='%s' WHERE `id`='%d'", addslashes(dataAccount.password),
-				key(), addslashes(dataAccount.properties), dataAccount.source.id);
+				key(), addslashes(dataAccount.properties), dataAccount.id.longValue());
 
 		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
@@ -231,8 +231,18 @@ final class DataAccountService implements IDataAccountService {
 	}
 
 	@Override
-	public void deleteDataAccount(DataAccount dataAccount) {
-		throw new UnsupportedOperationException();
+	public void deleteDataAccount(DataAccount dataAccount)  throws DataAccessException {
+		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
+
+		String deleteDataAccountQuery = String.format("UPDATE `dataaccount` SET `deleted`='y' WHERE `id`=%d", dataAccount.id.longValue());
+		try {
+			dataAccountConnection.connect();
+			dataAccountConnection.executeQuery(deleteDataAccountQuery);
+		} finally {
+			if (dataAccountConnection != null) {
+				dataAccountConnection.disconnect();
+			}
+		}
 	}
 
 	/*

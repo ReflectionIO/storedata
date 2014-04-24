@@ -7,9 +7,11 @@
 //
 package io.reflection.app.api.core;
 
+import io.reflection.app.api.core.shared.call.UpdateLinkedAccountRequest;
 import io.reflection.app.api.core.shared.call.ChangePasswordRequest;
 import io.reflection.app.api.core.shared.call.ChangeUserDetailsRequest;
 import io.reflection.app.api.core.shared.call.CheckUsernameRequest;
+import io.reflection.app.api.core.shared.call.DeleteLinkedAccountRequest;
 import io.reflection.app.api.core.shared.call.ForgotPasswordRequest;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetCategoriesRequest;
@@ -82,6 +84,14 @@ public final class CoreJsonServlet extends JsonServlet {
 			ChangeUserDetailsRequest input = new ChangeUserDetailsRequest();
 			input.fromJson(request);
 			output = service.changeUserDetails(input).toString();
+		} else if ("UpdateLinkedAccount".equals(action)) {
+			UpdateLinkedAccountRequest input = new UpdateLinkedAccountRequest();
+			input.fromJson(request);
+			output = service.updateLinkedAccount(input).toString();
+		} else if ("DeleteLinkedAccount".equals(action)) {
+			DeleteLinkedAccountRequest input = new DeleteLinkedAccountRequest();
+			input.fromJson(request);
+			output = service.deleteLinkedAccount(input).toString();
 		} else if ("CheckUsername".equals(action)) {
 			CheckUsernameRequest input = new CheckUsernameRequest();
 			input.fromJson(request);
