@@ -109,6 +109,14 @@ public class NavigationController implements ValueChangeHandler<String> {
 			return mParts == null ? "" : StringUtils.join(Arrays.asList(mParts).subList(fromPart, mParts.length), "/");
 		}
 
+		public String toString(String... param) {
+			return toString() + "/" + StringUtils.join(Arrays.asList(param), "/");
+		}
+
+		public String toString(int fromPart, String... param) {
+			return toString(fromPart) + "/" + StringUtils.join(Arrays.asList(param), "/");
+		}
+
 		public String asParameter() {
 			return Stack.encode(null, allParts);
 		}
