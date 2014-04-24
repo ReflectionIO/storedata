@@ -160,7 +160,7 @@ final class DataAccountService implements IDataAccountService {
 				c.add(Calendar.DAY_OF_MONTH, -i);
 
 				options.param("date", Long.toString(c.getTime().getTime()));
-				
+
 				if (add && i == days) {
 					options.param("notify", Boolean.toString(true));
 				}
@@ -197,11 +197,9 @@ final class DataAccountService implements IDataAccountService {
 
 		DataAccount updDataAccount = null;
 
-		// TODO: the username is unique and it isn't possible to update it
-
 		final String updDataAccountQuery = String.format(
-				"UPDATE `dataaccount` SET `password` = AES_ENCRYPT('%s',UNHEX('%s')), `properties`='%s' WHERE `id`='%d'", addslashes(dataAccount.password),
-				key(), addslashes(dataAccount.properties), dataAccount.id.longValue());
+				"UPDATE `dataaccount` SET `username`='%s', `password`=AES_ENCRYPT('%s',UNHEX('%s')), `properties`='%s' WHERE `id`='%d' AND `deleted`='n'",
+				addslashes(dataAccount.username), addslashes(dataAccount.password), key(), addslashes(dataAccount.properties), dataAccount.id.longValue());
 
 		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
@@ -231,13 +229,20 @@ final class DataAccountService implements IDataAccountService {
 	}
 
 	@Override
-	public void deleteDataAccount(DataAccount dataAccount)  throws DataAccessException {
+	public void deleteDataAccount(DataAccount dataAccount) throws DataAccessException {
 		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
-		String deleteDataAccountQuery = String.format("UPDATE `dataaccount` SET `deleted`='y' WHERE `id`=%d", dataAccount.id.longValue());
+		String deleteDataAccountQuery = String.format("UPDATE `dataaccount` SET `deleted`='y' WHERE `id`=%d AND `deleted`='n'", dataAccount.id.longValue());
+
 		try {
 			dataAccountConnection.connect();
 			dataAccountConnection.executeQuery(deleteDataAccountQuery);
+
+			if (dataAccountConnection.getAffectedRowCount() > 0) {
+				if (LOG.isLoggable(Level.INFO)) {
+					LOG.info(String.format("Account with id [%d] was marked as deleted", dataAccount.id.longValue()));
+				}
+			}
 		} finally {
 			if (dataAccountConnection != null) {
 				dataAccountConnection.disconnect();
