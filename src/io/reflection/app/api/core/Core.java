@@ -19,6 +19,8 @@ import io.reflection.app.api.core.shared.call.ChangeUserDetailsRequest;
 import io.reflection.app.api.core.shared.call.ChangeUserDetailsResponse;
 import io.reflection.app.api.core.shared.call.CheckUsernameRequest;
 import io.reflection.app.api.core.shared.call.CheckUsernameResponse;
+import io.reflection.app.api.core.shared.call.DeleteLinkedAccountRequest;
+import io.reflection.app.api.core.shared.call.DeleteLinkedAccountResponse;
 import io.reflection.app.api.core.shared.call.ForgotPasswordRequest;
 import io.reflection.app.api.core.shared.call.ForgotPasswordResponse;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
@@ -61,12 +63,16 @@ import io.reflection.app.api.core.shared.call.RegisterUserRequest;
 import io.reflection.app.api.core.shared.call.RegisterUserResponse;
 import io.reflection.app.api.core.shared.call.SearchForItemRequest;
 import io.reflection.app.api.core.shared.call.SearchForItemResponse;
+import io.reflection.app.api.core.shared.call.UpdateLinkedAccountRequest;
+import io.reflection.app.api.core.shared.call.UpdateLinkedAccountResponse;
 import io.reflection.app.api.exception.AuthenticationException;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.collectors.CollectorIOS;
 import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.DataAccount;
+import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.FormType;
 import io.reflection.app.datatypes.shared.ModelRun;
 import io.reflection.app.datatypes.shared.Permission;
@@ -79,6 +85,7 @@ import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.modellers.ModellerFactory;
 import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.country.CountryServiceProvider;
+import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.datasource.DataSourceServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.modelrun.ModelRunServiceProvider;
@@ -774,6 +781,68 @@ public final class Core extends ActionHandler {
 		return output;
 	}
 
+	public UpdateLinkedAccountResponse updateLinkedAccount(UpdateLinkedAccountRequest input) {
+		LOG.finer("Entering updateLinkedAccount");
+		UpdateLinkedAccountResponse output = new UpdateLinkedAccountResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+						ApiError.InvalidValueNull.getMessage("UpdateLinkedAccountRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			String properties = input.linkedAccount.properties;
+			String password = ValidationHelper.validatePassword(input.linkedAccount.password, "input.linkedAccount.password");
+
+			input.linkedAccount = ValidationHelper.validateDataAccount(input.linkedAccount, "input.linkedAccount");
+
+			input.linkedAccount.properties = properties;
+			input.linkedAccount.password = password;
+
+			DataAccount linkedAccount = DataAccountServiceProvider.provide().updateDataAccount(input.linkedAccount);
+
+			if (LOG.isLoggable(GaeLevel.DEBUG)) {
+				LOG.fine(String.format("Linked account with id [%d] details updated", linkedAccount.id));
+			}
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting updateLinkedAccount");
+		return output;
+	}
+
+	public DeleteLinkedAccountResponse deleteLinkedAccount(DeleteLinkedAccountRequest input) {
+		LOG.finer("Entering deleteLinkedAccount");
+		DeleteLinkedAccountResponse output = new DeleteLinkedAccountResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+						ApiError.InvalidValueNull.getMessage("DeleteLinkedAccountRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			DataAccountServiceProvider.provide().deleteDataAccount(input.linkedAccount);
+
+			if (LOG.isLoggable(GaeLevel.DEBUG)) {
+				LOG.fine(String.format("Linked account with id [%d] deleted", input.linkedAccount));
+			}
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting deleteLinkedAccount");
+		return output;
+	}
+
 	public CheckUsernameResponse checkUsername(CheckUsernameRequest input) {
 		LOG.finer("Entering checkUsername");
 		CheckUsernameResponse output = new CheckUsernameResponse();
@@ -876,6 +945,17 @@ public final class Core extends ActionHandler {
 			}
 
 			output.linkedAccounts = UserServiceProvider.provide().getDataAccounts(input.session.user, input.pager);
+
+			List<Long> dataSourceIds = new ArrayList<Long>();
+			for (DataAccount d : output.linkedAccounts) {
+				dataSourceIds.add(d.source.id);
+			}
+
+			if (dataSourceIds != null && dataSourceIds.size() > 0) {
+				List<DataSource> dataSources = DataSourceServiceProvider.provide().getDataSourceBatch(dataSourceIds);
+
+				output.dataSources = dataSources;
+			}
 
 			output.pager = input.pager;
 			updatePager(output.pager, output.linkedAccounts,
