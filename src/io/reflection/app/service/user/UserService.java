@@ -795,7 +795,7 @@ final class UserService implements IUserService {
 		Long dataAccountsCount = Long.valueOf(0);
 
 		String getDataAccountsCountQuery = String
-				.format("SELECT count(1) AS `dataaccountscount` FROM `userdataaccount` WHERE `userid`=%d", user.id.longValue());
+				.format("SELECT count(1) AS `dataaccountscount` FROM `userdataaccount` WHERE `deleted`='n' AND `userid`=%d", user.id.longValue());
 
 		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
