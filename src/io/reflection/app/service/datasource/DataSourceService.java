@@ -10,9 +10,6 @@ package io.reflection.app.service.datasource;
 
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
-
-import java.util.List;
-
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.Store;
@@ -21,6 +18,10 @@ import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProv
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 final class DataSourceService implements IDataSourceService {
 	public String getName() {
@@ -152,6 +153,54 @@ final class DataSourceService implements IDataSourceService {
 	@Override
 	public List<Store> getStores(DataSource source) {
 		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.datasource.IDataSourceService#getDataSourceBatch(java.util.List)
+	 */
+	@Override
+	public List<DataSource> getDataSourceBatch(Collection<Long> dataSourceIds) throws DataAccessException {
+		List<DataSource> dataSources = new ArrayList<DataSource>();
+
+		StringBuffer commaDelimitedDataSourceIds = new StringBuffer();
+
+		if (dataSourceIds != null && dataSourceIds.size() > 0) {
+			for (Long dataSourceId : dataSourceIds) {
+				if (commaDelimitedDataSourceIds.length() != 0) {
+					commaDelimitedDataSourceIds.append("','");
+				}
+
+				commaDelimitedDataSourceIds.append(dataSourceId);
+			}
+		}
+
+		if (commaDelimitedDataSourceIds != null && commaDelimitedDataSourceIds.length() != 0) {
+			String getDataSourceBatchQuery = String.format("SELECT * FROM `datasource` WHERE `deleted`='n' AND `id` IN ('%s')", commaDelimitedDataSourceIds);
+
+			Connection dataDourceConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataSource.toString());
+
+			try {
+				dataDourceConnection.connect();
+				dataDourceConnection.executeQuery(getDataSourceBatchQuery);
+
+				while (dataDourceConnection.fetchNextRow()) {
+					DataSource dataSource = toDataSource(dataDourceConnection);
+
+					if (dataSource != null) {
+						dataSources.add(dataSource);
+					}
+				}
+			} finally {
+				if (dataDourceConnection != null) {
+					dataDourceConnection.disconnect();
+				}
+			}
+		}
+
+		return dataSources;
+
 	}
 
 }
