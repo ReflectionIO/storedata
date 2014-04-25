@@ -28,14 +28,12 @@ public class Store extends DataType {
 	/**
 	 * Store 3 character alpha code
 	 */
-	@Index
-	public String a3Code;
+	@Index public String a3Code;
 
 	/**
 	 * Store name
 	 */
-	@Index
-	public String name;
+	@Index public String name;
 
 	/**
 	 * Store online url
@@ -43,6 +41,7 @@ public class Store extends DataType {
 	public String url;
 
 	public List<String> countries;
+	public String datasource;
 
 	@Override
 	public JsonObject toJson() {
@@ -62,6 +61,8 @@ public class Store extends DataType {
 		object.add("name", jsonName);
 		JsonElement jsonUrl = url == null ? JsonNull.INSTANCE : new JsonPrimitive(url);
 		object.add("url", jsonUrl);
+		JsonElement jsonDatasource = datasource == null ? JsonNull.INSTANCE : new JsonPrimitive(datasource);
+		object.add("datasource", jsonDatasource);
 		return object;
 	}
 
@@ -72,9 +73,11 @@ public class Store extends DataType {
 			JsonElement jsonCountries = jsonObject.get("countries");
 			if (jsonCountries != null) {
 				countries = new ArrayList<String>();
+				String item = null;
 				for (int i = 0; i < jsonCountries.getAsJsonArray().size(); i++) {
 					if (jsonCountries.getAsJsonArray().get(i) != null) {
-						countries.add(jsonCountries.getAsJsonArray().get(i).getAsString());
+						item = jsonCountries.getAsJsonArray().get(i).getAsString();
+						countries.add(item);
 					}
 				}
 			}
@@ -98,6 +101,11 @@ public class Store extends DataType {
 				url = jsonUrl.getAsString();
 			}
 		}
+		if (jsonObject.has("datasource")) {
+			JsonElement jsonDatasource = jsonObject.get("datasource");
+			if (jsonDatasource != null) {
+				datasource = jsonDatasource.getAsString();
+			}
+		}
 	}
-
 }

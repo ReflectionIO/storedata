@@ -10,7 +10,6 @@ package io.reflection.app.service.datasource;
 
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.datatypes.shared.DataSource;
-import io.reflection.app.datatypes.shared.Store;
 
 import java.util.Collection;
 import java.util.List;
@@ -63,10 +62,5 @@ public interface IDataSourceService extends IService {
 	 */
 	public DataSource getA3CodeDataSource(String a3Code) throws DataAccessException;
 
-	/**
-	 * @param source
-	 * @return
-	 */
-	public List<Store> getStores(DataSource source);
 
 }

@@ -116,7 +116,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		columnRank = new TextColumn<MyApp>() {
 			@Override
 			public String getValue(MyApp object) {
-				return (object.rank != null) ? object.rank.position.toString() : "-";
+				return (object.ranks != null) ? object.overallPosition : "-";
 			}
 		};
 		appsTable.addColumn(columnRank, "Rank");
@@ -132,7 +132,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		columnPrice = new TextColumn<MyApp>() {
 			@Override
 			public String getValue(MyApp object) {
-				return object.item.price.toString();
+				return object.overallPrice;
 			}
 		};
 		appsTable.addColumn(columnPrice, "Price");
@@ -140,7 +140,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		columnDownloads = new TextColumn<MyApp>() {
 			@Override
 			public String getValue(MyApp object) {
-				return (object.rank != null) ? object.rank.downloads.toString() : "-";
+				return (object.ranks != null) ? object.overallDownloads : "-";
 			}
 		};
 		appsTable.addColumn(columnDownloads, "Downloads");
@@ -148,7 +148,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		columnRevenue = new TextColumn<MyApp>() {
 			@Override
 			public String getValue(MyApp object) {
-				return (object.rank != null) ? object.rank.revenue.toString() : "-";
+				return (object.ranks != null) ? object.overallRevenue : "-";
 			}
 		};
 		appsTable.addColumn(columnRevenue, "Revenue");

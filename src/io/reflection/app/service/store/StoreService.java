@@ -13,6 +13,7 @@ import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
@@ -52,6 +53,7 @@ final class StoreService implements IStoreService {
 				storeConnection.disconnect();
 			}
 		}
+
 		return store;
 	}
 
@@ -72,6 +74,7 @@ final class StoreService implements IStoreService {
 		store.countries = Arrays.asList(connection.getCurrentRowString("countries").split(","));
 		store.name = stripslashes(connection.getCurrentRowString("name"));
 		store.url = stripslashes(connection.getCurrentRowString("url"));
+		store.datasource = stripslashes(connection.getCurrentRowString("datasource"));
 
 		return store;
 	}
@@ -217,7 +220,7 @@ final class StoreService implements IStoreService {
 	 */
 	@Override
 	public Store getNamedStore(String name) {
-		// TODO Auto-generated method stub getNameStore
+		// LATER Auto-generated method stub getNamedStore
 		return null;
 	}
 
@@ -233,6 +236,49 @@ final class StoreService implements IStoreService {
 		// LATER Auto-generated method stub getStoresCount
 
 		return count;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.store.IStoreService#getDataSourceStores(io.reflection.app.datatypes.shared.DataSource)
+	 */
+	@Override
+	public List<Store> getDataSourceStores(DataSource dataSource) throws DataAccessException {
+		List<Store> stores = new ArrayList<Store>();
+
+		String commaDelimitedStoreCodes = null;
+
+		if (dataSource.stores != null && dataSource.stores.size() > 0) {
+			commaDelimitedStoreCodes = StringUtils.join(dataSource.stores, "','");
+		}
+
+		if (commaDelimitedStoreCodes != null && commaDelimitedStoreCodes.length() != 0) {
+			// no pager support
+			String getCountryStoresQuery = String.format("SELECT * FROM `store` WHERE `a3code` IN ('%s') AND `deleted`='n'", commaDelimitedStoreCodes);
+
+			Connection storeConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeStore.toString());
+
+			try {
+				storeConnection.connect();
+				storeConnection.executeQuery(getCountryStoresQuery);
+
+				while (storeConnection.fetchNextRow()) {
+					Store store = toStore(storeConnection);
+
+					if (store != null) {
+						stores.add(store);
+					}
+
+				}
+			} finally {
+				if (storeConnection != null) {
+					storeConnection.disconnect();
+				}
+			}
+		}
+		
+		return stores;
 	}
 
 }

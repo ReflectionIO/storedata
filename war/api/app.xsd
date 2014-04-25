@@ -161,6 +161,7 @@
                 <xsd:attribute name="a3Code" type="xsd:string" />
                 <xsd:attribute name="name" type="xsd:string" />
                 <xsd:attribute name="url" type="xsd:string" />
+                <xsd:attribute name="datasource" type="xsd:string" />
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
@@ -230,6 +231,9 @@
     <xsd:complexType name="DataSource">
         <xsd:complexContent>
             <xsd:extension base="DataType">
+                <xsd:sequence>
+                    <xsd:element name="stores" type="xsd:string" maxOccurs="unbounded" />
+                </xsd:sequence>
                 <xsd:attribute name="a3Code" type="xsd:string" />
                 <xsd:attribute name="name" type="xsd:string" />
                 <xsd:attribute name="url" type="xsd:string" />

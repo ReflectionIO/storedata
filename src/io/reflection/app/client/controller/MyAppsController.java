@@ -22,6 +22,7 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.client.part.datatypes.MyApp;
 import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.datatypes.shared.Rank;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -129,7 +130,7 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 
 						if (myAppsLookup.size() > 0) {
 							updateRowData(0, rows);
-							fetchSalesRank();
+							fetchSalesRanks();
 						}
 					} else { // No items associated with this linked account
 						updateRowCount(0, true);
@@ -146,17 +147,20 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 		});
 	}
 
-	private void fetchSalesRank() {
+	private void fetchSalesRanks() {
 		CoreService service = ServiceCreator.createCoreService();
 
 		final GetSalesRanksRequest input = new GetSalesRanksRequest();
 		input.accessCode = ACCESS_CODE;
 		input.session = SessionController.get().getSessionForApiCall();
 
+		input.linkedAccount = LinkedAccountController.get().getLinkedAccounts().get(0); // TODO loop on linked accounts
+
 		input.category = FilterController.get().getCategory();
 		input.country = FilterController.get().getCountry();
 		input.start = FilterController.get().getStartDate();
 		input.end = FilterController.get().getEndDate();
+		input.listType = StoreController.IPAD_A3_CODE.equals(FilterController.get().getFilter().getStoreA3Code()) ? "ipad" : "";
 
 		service.getSalesRanks(input, new AsyncCallback<GetSalesRanksResponse>() {
 
@@ -165,11 +169,25 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 				if (output != null && output.status == StatusType.StatusTypeSuccess && output.ranks != null) {
 					ItemController.get().addItemsToCache(output.items);
 
-					// TODO: create some ranks based
+					MyApp app;
+					// ranks belong to various apps and each app can have multiple ranks depending on the time span (a rank per day)
+					for (Rank rank : output.ranks) {
+						app = myAppsLookup.get(rank.itemId);
+
+						if (app != null) {
+							if (app.ranks == null) {
+								app.ranks = new ArrayList<Rank>();
+							}
+
+							app.ranks.add(rank);
+							// TODO: this is bad do something else
+							app.updateOverallValues();
+						}
+					}
 
 					updateRowData(0, rows);
 				} else {
-					// updateRowCount(0, true);
+					// leave the rows as they are
 				}
 
 				EventController.get().fireEventFromSource(new GetSalesRanksEventHandler.GetSalesRanksSuccess(input, output), MyAppsController.this);

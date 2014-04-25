@@ -95,10 +95,8 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 					}
 
 					// Caching retrieved items
+					ItemController.get().addItemsToCache(output.items); // caching items
 
-					if (output.items != null) {
-						ItemController.get().addItemsToCache(output.items); // caching items
-					}
 					// // Fires the ReceivedRanks event to the handlers listening to the event's type. Received ranks assign list type and List<Rank>
 					// EventController.get().fireEventFromSource(new ReceivedRanks("free" + input.listType, output.freeRanks), RankController.this);
 					// EventController.get().fireEventFromSource(new ReceivedRanks("paid" + input.listType, output.paidRanks), RankController.this);

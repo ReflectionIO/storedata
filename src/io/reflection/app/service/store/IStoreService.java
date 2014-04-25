@@ -10,6 +10,7 @@ package io.reflection.app.service.store;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.Store;
 
 import java.util.List;
@@ -78,5 +79,13 @@ public interface IStoreService extends IService {
 	 * @throws DataAccessException
 	 */
 	public long getStoresCount() throws DataAccessException;
+	
+	/**
+	 * 
+	 * @param dataSource
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<Store> getDataSourceStores(DataSource dataSource) throws DataAccessException;
 
 }

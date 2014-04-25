@@ -107,6 +107,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -1300,7 +1301,12 @@ public final class Core extends ActionHandler {
 
 			input.linkedAccount = ValidationHelper.validateDataAccount(input.linkedAccount, "input.linkedAccount");
 
-			List<Store> stores = DataSourceServiceProvider.provide().getStores(input.linkedAccount.source);
+			// if we only have a partial data source get look it up - because it is required for getting the stores
+			if (input.linkedAccount.source.stores == null) {
+				input.linkedAccount.source = DataSourceServiceProvider.provide().getDataSource(input.linkedAccount.source.id);
+			}
+
+			List<Store> stores = StoreServiceProvider.provide().getDataSourceStores(input.linkedAccount.source);
 
 			// right now category
 			if (input.category == null) {
@@ -1423,7 +1429,12 @@ public final class Core extends ActionHandler {
 
 			input.linkedAccount = ValidationHelper.validateDataAccount(input.linkedAccount, "input.linkedAccount");
 
-			List<Store> stores = DataSourceServiceProvider.provide().getStores(input.linkedAccount.source);
+			// if we only have a partial data source get look it up - because it is required for getting the stores
+			if (input.linkedAccount.source.stores == null) {
+				input.linkedAccount.source = DataSourceServiceProvider.provide().getDataSource(input.linkedAccount.source.id);
+			}
+
+			List<Store> stores = StoreServiceProvider.provide().getDataSourceStores(input.linkedAccount.source);
 
 			if (input.listType == null)
 				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("String: input.listType"));
@@ -1498,52 +1509,73 @@ public final class Core extends ActionHandler {
 				// get the model runs constants
 				List<ModelRun> modelRuns = ModelRunServiceProvider.provide().getDateModelRunBatch(input.country, defaultStore, form, salesGroupByDate.keySet());
 
-				if (modelRuns.size() > 0) {
-					// add the numbers up to create ranks and then predict the position and the grossing position
+				Map<Date, ModelRun> modelRunLookup = new HashMap<Date, ModelRun>();
 
-					Rank rank;
-					for (ModelRun modelRun : modelRuns) {
-						key = keyFormat.parse(keyFormat.format(modelRun.created));
+				for (ModelRun modelRun : modelRuns) {
+					key = keyFormat.parse(keyFormat.format(modelRun.created));
 
-						rank = new Rank();
-						output.ranks.add(rank);
+					if (modelRunLookup.get(key) == null) {
+						modelRunLookup.put(key, modelRun);
+					}
+				}
 
-						sales = salesGroupByDate.get(key);
+				// add the numbers up to create ranks and then predict the position and the grossing position
 
-						if (sales.size() > 0) {
-							int downloads = 0;
-							float revenue = 0;
+				Rank rank;
+				ModelRun modelRun;
+				Set<Date> dates = salesGroupByDate.keySet();
+				List<Sale> salesGroup;
+				
+				output.ranks = new ArrayList<Rank>();
+				
+				for (Date salesGroupDate : dates) {
 
-							boolean populatedCommon = false;
-							for (Sale sale : sales) {
-								if (!populatedCommon) {
-									rank.category = input.category;
+					rank = new Rank();
+					
+					output.ranks.add(rank);
+
+					modelRun = modelRunLookup.get(salesGroupDate);
+					salesGroup = salesGroupByDate.get(salesGroupDate);
+
+					if (sales.size() > 0) {
+						int downloads = 0;
+						float revenue = 0;
+
+						boolean populatedCommon = false;
+						for (Sale sale : salesGroup) {
+							if (!populatedCommon) {
+								rank.category = input.category;
+
+								if (modelRun != null) {
 									rank.code = modelRun.code;
-									rank.country = input.country.a2Code;
-									rank.currency = sale.customerCurrency;
-									rank.price = Float.valueOf(((float) sale.customerPrice.intValue()) / 100.0f);
-									rank.date = key;
-									rank.created = key;
-									rank.itemId = sale.item.externalId;
-									rank.source = defaultStore.a3Code;
-									rank.type = input.listType;
-									populatedCommon = true;
 								}
 
-								revenue += ((float) sale.customerPrice.intValue()) / 100.0f;
-								downloads++;
+								rank.country = input.country.a2Code;
+								rank.currency = sale.customerCurrency;
+								rank.price = Float.valueOf(((float) sale.customerPrice.intValue()) / 100.0f);
+								rank.date = salesGroupDate;
+								rank.created = salesGroupDate;
+								rank.itemId = sale.item.internalId;
+								rank.source = defaultStore.a3Code;
+								rank.type = input.listType;
+								
+								populatedCommon = true;
 							}
 
-							rank.revenue = Float.valueOf(revenue);
-							rank.downloads = Integer.valueOf(downloads);
+							revenue += ((float) sale.customerPrice.intValue()) / 100.0f;
+							downloads++;
+						}
 
+						rank.revenue = Float.valueOf(revenue);
+						rank.downloads = Integer.valueOf(downloads);
+
+						if (modelRun != null) {
 							// TODO: use the mode to predict what rank that would be
 							// rank.grossingPosition;
 							// rank.position;
 						}
 					}
 				}
-
 			}
 
 			output.pager = input.pager;

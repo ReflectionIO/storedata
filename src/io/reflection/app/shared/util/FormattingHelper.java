@@ -48,6 +48,32 @@ public class FormattingHelper {
 		}
 	}
 
+	public static String getPrice(String currency, float price) {
+		String priceString;
+
+		if (price == 0) {
+			priceString = "free";
+		} else {
+			priceString = (currency == null ? "" : getCurrencySymbol(currency) + " ") + Float.toString(price);
+		}
+
+		return priceString;
+	}
+
+	public static String getPriceRange(String currency, float from, float to) {
+		String priceRangeString;
+
+		if (from == to) {
+			priceRangeString = getPrice(currency, from);
+		} else {
+			String fromString = getPrice(currency, from), toString = getPrice(currency, to);
+
+			priceRangeString = fromString + " - " + toString;
+		}
+
+		return priceRangeString;
+	}
+
 	public static String getUserName(User user) {
 		return user.forename + " " + user.surname;
 	}
@@ -55,7 +81,7 @@ public class FormattingHelper {
 	public static String getTimeSince(Date date) {
 		return getTimeSince(date, true);
 	}
-	
+
 	public static String getTimeSince(Date date, boolean blur) {
 		String timeSince;
 

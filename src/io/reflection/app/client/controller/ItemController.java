@@ -103,12 +103,10 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 			public void onSuccess(SearchForItemResponse output) {
 				if (output != null && output.status == StatusType.StatusTypeSuccess) {
 
-					// Add retrieved items into item cache
-					if (output.items != null) {
-						addItemsToCache(output.items);
-						// Add retrieved items into search items cache ( Map<"query", List<Item>> )
-						mItemsSearchCache.put(input.query, output.items == null ? new ArrayList<Item>() : output.items);
-					}
+					addItemsToCache(output.items);
+
+					// Add retrieved items into search items cache ( Map<"query", List<Item>> )
+					mItemsSearchCache.put(input.query, output.items == null ? new ArrayList<Item>() : output.items);
 				}
 
 				EventController.get().fireEventFromSource(new SearchForItemSuccess(input, output), ItemController.this);
@@ -144,10 +142,7 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 			@Override
 			public void onSuccess(GetItemsResponse output) {
 				if (output != null && output.status == StatusType.StatusTypeSuccess) {
-
-					if (output.items != null) {
-						addItemsToCache(output.items);
-					}
+					addItemsToCache(output.items);
 				}
 
 				if (output.pager != null) {
@@ -246,8 +241,10 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 	 * 
 	 */
 	public void addItemsToCache(List<Item> items) {
-		for (Item item : items) {
-			mItemCache.put(item.externalId, item);
+		if (items != null) {
+			for (Item item : items) {
+				mItemCache.put(item.externalId, item);
+			}
 		}
 	}
 

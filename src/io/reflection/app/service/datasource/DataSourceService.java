@@ -12,7 +12,6 @@ import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.datatypes.shared.DataSource;
-import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
@@ -20,6 +19,7 @@ import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -69,21 +69,26 @@ final class DataSourceService implements IDataSourceService {
 		dataSource.name = stripslashes(connection.getCurrentRowString("name"));
 		dataSource.url = stripslashes(connection.getCurrentRowString("url"));
 
+		dataSource.stores = Arrays.asList(stripslashes(connection.getCurrentRowString("stores")).split(","));
+
 		return dataSource;
 	}
 
 	@Override
 	public DataSource addDataSource(DataSource dataSource) {
+		// LATER Auto-generated method stub addDataSource
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public DataSource updateDataSource(DataSource dataSource) {
+		// LATER Auto-generated method stub updateDataSource
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void deleteDataSource(DataSource dataSource) {
+		// LATER Auto-generated method stub deleteDataSource
 		throw new UnsupportedOperationException();
 	}
 
@@ -143,16 +148,6 @@ final class DataSourceService implements IDataSourceService {
 		}
 
 		return dataSource;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.service.datasource.IDataSourceService#getStores(io.reflection.app.datatypes.shared.DataSource)
-	 */
-	@Override
-	public List<Store> getStores(DataSource source) {
-		return null;
 	}
 
 	/*
