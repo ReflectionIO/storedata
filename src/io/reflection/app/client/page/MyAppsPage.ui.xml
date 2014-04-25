@@ -5,6 +5,10 @@
     .pageTitle {
     	padding-bottom: 30px;
     }
+    
+    .topPanel {
+    	margin-top: 20px;
+    }
     </ui:style>
     <g:HTMLPanel>
         <div class="row">
@@ -26,16 +30,15 @@
                 </ul>
             </div>
 
-            <div class="col-md-10">
-                <div style="margin-left: 20px; margin-right: 25px; margin-top: 20px;">
+            <g:HTMLPanel styleName="col-md-10 ">
 
+                <g:HTMLPanel styleName="{style.topPanel}">
                     <pp:MyAppsTopPanel ui:field="topPanel" />
 
                     <cell:CellTable ui:field="appsTable" styleName="table table-hover table-striped" />
+                </g:HTMLPanel>
 
-                </div>
-
-            </div>
+            </g:HTMLPanel>
 
         </div>
     </g:HTMLPanel>

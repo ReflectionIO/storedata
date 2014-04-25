@@ -10,6 +10,23 @@
     	padding-top: 10px;
     	padding-bottom: 10px;
     }
+    
+    .loading {
+    	z-index: 1;
+    	top: 100px;
+    	text-align: center;
+    	position: relative;
+    	float: left;
+    	width: 100%;
+    }
+    
+    .topPanel {
+    	margin-top: 20px;
+    }
+    
+    .leftFloat {
+    	float: left;
+    }
     </ui:style>
 
 
@@ -34,34 +51,36 @@
             </div>
 
             <div class="col-md-10">
+                <g:HTMLPanel ui:field="linkedAccountsPanel">
+                    <g:HTMLPanel styleName="well well-sm well-title {style.topPanel}">
+                        <g:HTMLPanel styleName="{style.leftFloat}">
+                            <h5>Linked Accounts</h5>
+                        </g:HTMLPanel>
+                    </g:HTMLPanel>
 
-                <div class="col-md-12 well well-sm well-title">
-                    <div style="float: left;">
+                    <c:CellTable ui:field="linkedAccountsTable" styleName="table table-hover table-striped" />
 
-                        <h5>Linked Accounts</h5>
+                    <div class="text-center">
+                        <g:Button ui:field="addLinkedAccount" styleName="btn btn-primary btn-lg text-center" />
                     </div>
-                </div>
-
-
-                <g:HTMLPanel ui:field="mToolbar" styleName="btn-group {style.toolbar_spacing}">
-                    <g:InlineHyperlink styleName="btn btn-default" text="iOS/Mac" ui:field="mIosMacLink" />
-                    <g:InlineHyperlink styleName="btn btn-default disabled" text="Google Play" ui:field="mPlayLink" />
-                    <g:InlineHyperlink styleName="btn btn-default disabled" text="Amazon" ui:field="mAmazonLink" />
-                    <g:InlineHyperlink styleName="btn btn-default disabled" text="Windows" ui:field="mWindowsPhoneLink" />
                 </g:HTMLPanel>
 
-                <!-- <c:CellTree ui:field="mAccounts" /> -->
-
-                <g:FormPanel ui:field="mForm" visible="false">
-                    <g:HTMLPanel styleName="col-sm-offset-4 col-sm-4">
-                        <l:IosMacLinkAccountForm ui:field="mIosMacForm" />
-
-                        <g:Button ui:field="mLinkAccount" styleName="btn btn-lg btn-primary btn-block" text="Link Account" />
+                <g:HTMLPanel ui:field="linkedAccountForm" visible="false">
+                    <g:HTMLPanel ui:field="mToolbar" styleName="btn-group {style.toolbar_spacing}">
+                        <g:InlineHyperlink styleName="btn btn-default" text="iOS/Mac" ui:field="mIosMacLink" />
+                        <g:InlineHyperlink styleName="btn btn-default disabled" text="Google Play" ui:field="mPlayLink" />
+                        <g:InlineHyperlink styleName="btn btn-default 
+                    disabled" text="Amazon" ui:field="mAmazonLink" />
+                        <g:InlineHyperlink styleName="btn btn-default disabled" text="Windows" ui:field="mWindowsPhoneLink" />
                     </g:HTMLPanel>
-                </g:FormPanel>
-
-
-
+                    <g:FormPanel ui:field="mForm" visible="false">
+                        <g:HTMLPanel styleName="col-sm-offset-4 col-sm-4 well">
+                            <l:IosMacLinkAccountForm ui:field="mIosMacForm" />
+                            <g:Button ui:field="mLinkAccount" styleName="btn btn-lg btn-primary btn-block" text="Link Account" />
+                        </g:HTMLPanel>
+                    </g:FormPanel>
+                </g:HTMLPanel>
+                <p:CircleProgressBar visible="false" ui:field="loader" styleName="{style.loading}" />
 
             </div>
         </div>
