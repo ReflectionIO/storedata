@@ -169,6 +169,14 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	public String getUsername() {
 		return mAccountUsername.getText();
 	}
+	
+	public void setAccountUsername(String accountUsername) {
+		mAccountUsername.setValue(accountUsername);
+	}
+	
+	public void setVendorNumber(String vendorNumber) {
+		mVendorId.setValue(vendorNumber);
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -216,6 +224,9 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	 */
 	@Override
 	public Focusable getFirstToFocus() {
+		if(!mAccountUsername.isEnabled()){
+			return mPassword;
+		}
 		return mAccountUsername;
 	}
 
@@ -259,7 +270,11 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 			mPassword.setFocus(false);
 			mVendorId.setFocus(false);
 		}
-
+	}
+	
+	public void setAccountUsernameEnabled(boolean enabled) {
+		mAccountUsername.setEnabled(enabled);
+		mAccountUsername.setFocus(enabled);		
 	}
 
 	/*
