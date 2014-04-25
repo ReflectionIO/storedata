@@ -759,7 +759,7 @@ final class UserService implements IUserService {
 
 		List<Long> accountIds = new ArrayList<Long>();
 
-		String getDataAccountIdsQuery = String.format("SELECT `dataaccountid` FROM `userdataaccount` WHERE `userid`=%d ORDER BY `%s` %s LIMIT %d, %d", user.id
+		String getDataAccountIdsQuery = String.format("SELECT `dataaccountid` FROM `userdataaccount` WHERE `deleted`='n' AND `userid`=%d ORDER BY `%s` %s LIMIT %d, %d", user.id
 				.longValue(), pager.sortBy == null ? "id" : pager.sortBy, pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
 				pager.start == null ? 0 : pager.start.longValue(), pager.count == null ? 25 : pager.count.longValue());
 
