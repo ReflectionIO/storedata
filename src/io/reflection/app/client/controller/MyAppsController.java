@@ -169,6 +169,8 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 				if (output != null && output.status == StatusType.StatusTypeSuccess && output.ranks != null) {
 					ItemController.get().addItemsToCache(output.items);
 
+					List<MyApp> appList = new ArrayList<MyApp>();
+
 					MyApp app;
 					// ranks belong to various apps and each app can have multiple ranks depending on the time span (a rank per day)
 					for (Rank rank : output.ranks) {
@@ -180,9 +182,12 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 							}
 
 							app.ranks.add(rank);
-							// TODO: this is bad do something else
-							app.updateOverallValues();
+							appList.add(app);
 						}
+					}
+
+					for (MyApp myApp : appList) {
+						myApp.updateOverallValues();
 					}
 
 					updateRowData(0, rows);
