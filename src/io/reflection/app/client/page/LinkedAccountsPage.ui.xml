@@ -24,9 +24,6 @@
     	margin-top: 20px;
     }
     
-    .leftFloat {
-    	float: left;
-    }
     </ui:style>
 
 
@@ -53,7 +50,7 @@
             <div class="col-md-10">
                 <g:HTMLPanel ui:field="linkedAccountsPanel">
                     <g:HTMLPanel styleName="well well-sm well-title {style.topPanel}">
-                        <g:HTMLPanel styleName="{style.leftFloat}">
+                        <g:HTMLPanel styleName="pull-left">
                             <h5>Linked Accounts</h5>
                         </g:HTMLPanel>
                     </g:HTMLPanel>
