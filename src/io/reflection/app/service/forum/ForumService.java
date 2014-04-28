@@ -14,6 +14,7 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.Forum;
 import io.reflection.app.datatypes.shared.ForumTypeType;
 import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
@@ -22,8 +23,12 @@ import io.reflection.app.service.ServiceType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 final class ForumService implements IForumService {
+
+	private static final Logger LOG = Logger.getLogger(ForumService.class.getName());
+
 	public String getName() {
 		return ServiceType.ServiceTypeForum.toString();
 	}
@@ -179,6 +184,72 @@ final class ForumService implements IForumService {
 		}
 
 		return forums;
+	}
+
+	@Override
+	public Forum addTopic(Forum forum) throws DataAccessException {
+		String addTopicQuery = String.format("UPDATE `forum` SET `numberoftopics`=`numberoftopics`+1 WHERE `id`=%d AND `deleted`='n'", forum.id.longValue());
+
+		Connection forumConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeForum.toString());
+
+		try {
+			forumConnection.connect();
+			forumConnection.executeQuery(addTopicQuery);
+
+			if (forumConnection.getAffectedRowCount() > 0) {
+				if (LOG.isLoggable(GaeLevel.INFO)) {
+					LOG.info(String.format("Incremented topic count on forum with id [%d]", forum.id.longValue()));
+				}
+
+				if (forum.numberOfTopics != null) {
+					int numberOfTopics = forum.numberOfTopics.intValue();
+					forum.numberOfTopics = Integer.valueOf(numberOfTopics + 1);
+				}
+			} else {
+				if (LOG.isLoggable(GaeLevel.INFO)) {
+					LOG.warning(String.format("Could not increment topic count on forum with id [%d]", forum.id.longValue()));
+				}
+			}
+		} finally {
+			if (forumConnection != null) {
+				forumConnection.disconnect();
+			}
+		}
+
+		return forum;
+	}
+
+	@Override
+	public Forum removeTopic(Forum forum) throws DataAccessException {
+		String removeTopicQuery = String.format("UPDATE `forum` SET `numberoftopics`=`numberoftopics`-1 WHERE `id`=%d AND `deleted`='n'", forum.id.longValue());
+
+		Connection forumConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeForum.toString());
+
+		try {
+			forumConnection.connect();
+			forumConnection.executeQuery(removeTopicQuery);
+
+			if (forumConnection.getAffectedRowCount() > 0) {
+				if (LOG.isLoggable(GaeLevel.INFO)) {
+					LOG.info(String.format("Decremented topic count on forum with id [%d]", forum.id.longValue()));
+				}
+
+				if (forum.numberOfTopics != null) {
+					int numberOfTopics = forum.numberOfTopics.intValue();
+					forum.numberOfTopics = Integer.valueOf(numberOfTopics - 1);
+				}
+			} else {
+				if (LOG.isLoggable(GaeLevel.INFO)) {
+					LOG.warning(String.format("Could not decrement topic count on forum with id [%d]", forum.id.longValue()));
+				}
+			}
+		} finally {
+			if (forumConnection != null) {
+				forumConnection.disconnect();
+			}
+		}
+
+		return forum;
 	}
 
 }

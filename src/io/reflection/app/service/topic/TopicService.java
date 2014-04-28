@@ -15,18 +15,26 @@ import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.Forum;
 import io.reflection.app.datatypes.shared.Topic;
+import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
+import io.reflection.app.service.forum.ForumServiceProvider;
 import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.TagHelper;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 final class TopicService implements ITopicService {
+
+	private static final Logger LOG = Logger.getLogger(TopicService.class.getName());
+
 	public String getName() {
 		return ServiceType.ServiceTypeTopic.toString();
 	}
@@ -120,6 +128,8 @@ final class TopicService implements ITopicService {
 				if (addedTopic == null) {
 					addedTopic = topic;
 					addedTopic.id = Long.valueOf(topicConnection.getInsertedId());
+
+					addedTopic.forum = ForumServiceProvider.provide().addTopic(topic.forum);
 				}
 			}
 		} finally {
@@ -230,6 +240,88 @@ final class TopicService implements ITopicService {
 		}
 
 		return topicsCount;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.topic.ITopicService#addUserReply(io.reflection.app.datatypes.shared.Topic, io.reflection.app.datatypes.shared.User)
+	 */
+	@Override
+	public Topic addUserReply(Topic topic, User user) throws DataAccessException {
+		String addReplyQuery = String.format(
+				"UPDATE `topic` SET `numberofreplies`=`numberofreplies`+1, `lastreplierid`=%d, `lastreplied`=NOW() WHERE `id`=%d AND `deleted`='n'",
+				topic.id.longValue(), user.id.longValue());
+
+		Connection topicConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeTopic.toString());
+
+		try {
+			topicConnection.connect();
+			topicConnection.executeQuery(addReplyQuery);
+
+			if (topicConnection.getAffectedRowCount() > 0) {
+				if (LOG.isLoggable(GaeLevel.INFO)) {
+					LOG.info(String.format("Incremented reply count on topic with id [%d] and reply by user [%d]", topic.id.longValue(), user.id.longValue()));
+				}
+
+				if (topic.numberOfReplies != null) {
+					int numberOfReplies = topic.numberOfReplies.intValue();
+					topic.numberOfReplies = Integer.valueOf(numberOfReplies + 1);
+
+					topic.lastReplier = user;
+					topic.lastReplied = new Date();
+				}
+			} else {
+				if (LOG.isLoggable(GaeLevel.INFO)) {
+					LOG.warning(String.format("Could not increment reply count on topic with id [%d]", topic.id.longValue()));
+				}
+			}
+		} finally {
+			if (topicConnection != null) {
+				topicConnection.disconnect();
+			}
+		}
+
+		return topic;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.topic.ITopicService#removeReply(io.reflection.app.datatypes.shared.Topic)
+	 */
+	@Override
+	public Topic removeReply(Topic topic) throws DataAccessException {
+		String removeReplyQuery = String.format("UPDATE `topic` SET `numberorreplies`=`numberofreplies`-1 WHERE `id`=%d AND `deleted`='n'",
+				topic.id.longValue());
+
+		Connection topicConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeTopic.toString());
+
+		try {
+			topicConnection.connect();
+			topicConnection.executeQuery(removeReplyQuery);
+
+			if (topicConnection.getAffectedRowCount() > 0) {
+				if (LOG.isLoggable(GaeLevel.INFO)) {
+					LOG.info(String.format("Decremented reply count on topic with id [%d]", topic.id.longValue()));
+				}
+
+				if (topic.numberOfReplies != null) {
+					int numberOfReplies = topic.numberOfReplies.intValue();
+					topic.numberOfReplies = Integer.valueOf(numberOfReplies - 1);
+				}
+			} else {
+				if (LOG.isLoggable(GaeLevel.INFO)) {
+					LOG.warning(String.format("Could not decrement reply count on topic with id [%d]", topic.id.longValue()));
+				}
+			}
+		} finally {
+			if (topicConnection != null) {
+				topicConnection.disconnect();
+			}
+		}
+
+		return topic;
 	}
 
 }

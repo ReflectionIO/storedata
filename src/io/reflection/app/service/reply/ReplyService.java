@@ -18,6 +18,7 @@ import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProv
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
+import io.reflection.app.service.topic.TopicServiceProvider;
 import io.reflection.app.service.user.UserServiceProvider;
 
 import java.util.ArrayList;
@@ -97,6 +98,8 @@ final class ReplyService implements IReplyService {
 				if (addedReply == null) {
 					addedReply = reply;
 					addedReply.id = Long.valueOf(replyConnection.getInsertedId());
+
+					TopicServiceProvider.provide().addUserReply(addedReply.topic, addedReply.author);
 				}
 			}
 		} finally {

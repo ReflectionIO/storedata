@@ -51,4 +51,19 @@ public interface IForumService extends IService {
 	 */
 	public List<Forum> getForums(Pager pager) throws DataAccessException;
 
+	/**
+	 * 
+	 * @param forum
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public Forum addTopic(Forum forum) throws DataAccessException;
+
+	/**
+	 * 
+	 * @param forum
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public Forum removeTopic(Forum forum) throws DataAccessException;
 }

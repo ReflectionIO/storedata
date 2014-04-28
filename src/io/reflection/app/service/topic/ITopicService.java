@@ -12,6 +12,7 @@ import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.Forum;
 import io.reflection.app.datatypes.shared.Topic;
+import io.reflection.app.datatypes.shared.User;
 
 import java.util.List;
 
@@ -53,5 +54,24 @@ public interface ITopicService extends IService {
 	 * @return
 	 */
 	public Long getTopicsCount(Forum forum) throws DataAccessException;
+
+	/**
+	 * Increments the reply count on the topic and updates the last replied and last replier id values
+	 * 
+	 * @param topic
+	 * @param user
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public Topic addUserReply(Topic topic, User user) throws DataAccessException;
+
+	/**
+	 * Decrements the reply count
+	 * 
+	 * @param topic
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public Topic removeReply(Topic topic) throws DataAccessException;
 
 }
