@@ -105,10 +105,12 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 		if (username == null || username.length() == 0) {
 			mAccountUsernameError = "Cannot be empty";
 			validated = false;
-			/*
-			 * } else if (username.length() < 6) { mAccountUsernameError = "Too short (minimum 6 characters)"; validated = false; } else if (username.length() >
-			 * 255) { mAccountUsernameError = "Too long (maximum 255 characters)"; validated = false;
-			 */
+		} else if (username.length() < 2) {
+			mAccountUsernameError = "Too short";
+			validated = false;
+		} else if (username.length() > 255) {
+			mAccountUsernameError = "Too long";
+			validated = false;
 		} else {
 			mAccountUsernameError = null;
 			validated = validated && true;
@@ -117,10 +119,13 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 		if (password == null || password.length() == 0) {
 			mPasswordError = "Cannot be empty";
 			validated = false;
-			/*
-			 * } else if (password.length() < 6) { mPasswordError = "Too short (minimum 6 characters)"; validated = false; } else if (password.length() > 64) {
-			 * mPasswordError = "Too long (maximum 64 characters)"; validated = false;
-			 */// depend by data account
+
+		} else if (password.length() < 2) {
+			mPasswordError = "Too short";
+			validated = false;
+		} else if (password.length() > 64) {
+			mPasswordError = "Too long";
+			validated = false;
 		} else {
 			mPasswordError = null;
 			validated = validated && true;
