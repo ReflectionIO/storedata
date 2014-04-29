@@ -163,12 +163,15 @@ public class LoginForm extends Composite {
 
 	private void resetForm() {
 		setEnabled(true);
-
 		mEmail.setText("");
-		mEmail.setFocus(true);
-
 		mPassword.setText("");
+		if (mRememberMe.getValue().equals(Boolean.FALSE)) {
+			mRememberMe.setValue(Boolean.FALSE);
+		} else {
+			mRememberMe.setValue(Boolean.TRUE);
+		}
 		clearErrors();
+		mEmail.setFocus(true);
 	}
 
 	private void clearErrors() {
