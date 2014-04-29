@@ -102,8 +102,7 @@ public class LoginForm extends Composite {
 	@UiHandler("mLogin")
 	void onLoginClicked(ClickEvent event) {
 		if (validate()) {
-			FormHelper.hideNote(mEmailGroup, mEmailNote);
-			FormHelper.hideNote(mPasswordGroup, mPasswordNote);
+			clearErrors();
 			setEnabled(false);
 			SessionController.get().login(mEmail.getText(), mPassword.getText(), mRememberMe.getValue().booleanValue()); // Execute user login
 		} else {
@@ -169,7 +168,10 @@ public class LoginForm extends Composite {
 		mEmail.setFocus(true);
 
 		mPassword.setText("");
+		clearErrors();
+	}
 
+	private void clearErrors() {
 		FormHelper.hideNote(mEmailGroup, mEmailNote);
 		FormHelper.hideNote(mPasswordGroup, mPasswordNote);
 	}

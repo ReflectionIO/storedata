@@ -25,6 +25,7 @@ public class FormHelper {
 	private static final RegExp REG_EXP_APPLE_VENDOR_ID_CHECKER = RegExp.compile(FormHelper.APPLE_VENDOR_ID_PATTERN);
 
 	public static final String COMPLETE_ACTION_NAME = "complete";
+	public static final String REQUEST_INVITE_ACTION_NAME = "requestinvite";
 	public static final int CODE_PARAMETER_INDEX = 1;
 
 	public static boolean isValidEmail(String toValidate) {

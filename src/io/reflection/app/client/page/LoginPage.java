@@ -103,12 +103,19 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 		}
 
 		// Set proper text for Register / Request invite panel
-		if (FormHelper.COMPLETE_ACTION_NAME.equals(previous.getAction()) && (previous.getParameter(FormHelper.CODE_PARAMETER_INDEX)) != null) { // Registration
-			register.setText("Register");
-			register.setTargetHistoryToken(previous.toString());
-		} else { // Request invite
+		// Request invite label
+		if (previous != null && previous.getAction() != null && FormHelper.REQUEST_INVITE_ACTION_NAME.equals(previous.getAction())) {
 			register.setText("Request invite");
-			register.setTargetHistoryToken("register");
+			register.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken(FormHelper.REQUEST_INVITE_ACTION_NAME));
+		// Register label
+		} else {
+			register.setText("Register");
+			if (previous != null && previous.getAction() != null && FormHelper.COMPLETE_ACTION_NAME.equals(previous.getAction())
+					&& (previous.getParameter(FormHelper.CODE_PARAMETER_INDEX)) != null) {
+				register.setTargetHistoryToken(previous.toString());
+			} else {
+				register.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken());
+			}
 		}
 
 	}

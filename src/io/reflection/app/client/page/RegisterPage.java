@@ -111,10 +111,13 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 	 */
 	@Override
 	public void userRegistrationFailed(Error error) {
-		// AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.DangerAlertBoxType, false, "An error occured:", "(" + error.code + ") " + error.message,
-		// true).setVisible(true);
-
-		// mPanel.setVisible(true);
+		mRegisterForm.clearPasswordValue();
+		mRegisterForm.setTermAndCond(Boolean.FALSE);
+		mRegisterForm.setEnabled(true);
+		mRegisterForm.focusFirstActiveField();
+		if (error.code == 400000) {
+			// User already registered
+		}
 	}
 
 	/*
@@ -126,19 +129,26 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
 		String actionCode = null;
-
-		if (FormHelper.COMPLETE_ACTION_NAME.equals(current.getAction()) && (actionCode = current.getParameter(FormHelper.CODE_PARAMETER_INDEX)) != null) { // Registration
-			register.setText("Register");
-			register.setTargetHistoryToken(current.toString());
-			mRegisterForm.resetForm();
-			mRegisterForm.setEnabled(false);
-			UserController.get().fetchUser(actionCode);
-
-		} else { // Request invite
+		register.setTargetHistoryToken(current.toString());
+		// Request invite form
+		if (current.getAction() != null && FormHelper.REQUEST_INVITE_ACTION_NAME.equals(current.getAction())) {
 			username = null;
 			register.setText("Request invite");
-			mRegisterForm.setRequestInvite(true);
-
+			mRegisterForm.setRequestInvite(Boolean.TRUE);
+			// Register form
+		} else {
+			register.setText("Register");
+			mRegisterForm.setRequestInvite(Boolean.FALSE);
+			// Register after request invite
+			if (current.getAction() != null && FormHelper.COMPLETE_ACTION_NAME.equals(current.getAction())
+					&& (actionCode = current.getParameter(FormHelper.CODE_PARAMETER_INDEX)) != null) {
+				mRegisterForm.setEnabled(false);
+				UserController.get().fetchUser(actionCode);
+				// Default register
+			} else {
+				mRegisterForm.resetForm();
+				mRegisterForm.focusFirstActiveField();
+			}
 		}
 	}
 
@@ -152,21 +162,23 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 	@Override
 	public void getUserDetailsSuccess(GetUserDetailsRequest input, GetUserDetailsResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			mRegisterForm.setVisible(true);
-
+			mRegisterForm.setVisible(Boolean.TRUE);
 			if (output.user != null) {
-				mRegisterForm.setEnabled(true);
-
+				mRegisterForm.resetForm();
 				mRegisterForm.setUsername(username = output.user.username);
 				mRegisterForm.setForename(output.user.forename);
 				mRegisterForm.setSurname(output.user.surname);
 				mRegisterForm.setCompany(output.user.company);
-
 				mRegisterForm.setActionCode(input.actionCode);
-
-				mRegisterForm.setRequestInvite(false);
-
+				mRegisterForm.focusFirstActiveField();
 			}
+		} else {
+			mRegisterForm.resetForm();
+			mRegisterForm.focusFirstActiveField();
+			if (output.error.code == 100055) {
+				// User already registered after invitation request
+			}
+
 		}
 	}
 
@@ -178,7 +190,10 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 	 * , java.lang.Throwable)
 	 */
 	@Override
-	public void getUserDetailsFailure(GetUserDetailsRequest input, Throwable caught) {}
+	public void getUserDetailsFailure(GetUserDetailsRequest input, Throwable caught) {
+		mRegisterForm.resetForm();
+		mRegisterForm.focusFirstActiveField();
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -202,7 +217,9 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 	 * java.lang.Throwable)
 	 */
 	@Override
-	public void registerUserFailure(RegisterUserRequest input, Throwable caught) {}
+	public void registerUserFailure(RegisterUserRequest input, Throwable caught) {
+
+	}
 
 	/*
 	 * (non-Javadoc)
