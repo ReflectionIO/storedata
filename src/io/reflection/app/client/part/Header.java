@@ -15,6 +15,7 @@ import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.FilterController.Filter;
+import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.SessionController;
@@ -370,6 +371,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		removeLeaderboard();
 
 		removeFeatureRequest();
+
+		LinkedAccountController.get().reset();
 	}
 
 	/**

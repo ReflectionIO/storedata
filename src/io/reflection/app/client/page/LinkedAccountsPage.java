@@ -19,7 +19,6 @@ import io.reflection.app.api.core.shared.call.event.DeleteLinkedAccountEventHand
 import io.reflection.app.api.core.shared.call.event.GetLinkedAccountsEventHandler;
 import io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler;
 import io.reflection.app.api.core.shared.call.event.UpdateLinkedAccountEventHandler;
-import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.LinkedAccountController;
@@ -29,7 +28,6 @@ import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.EnterPressedEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
-import io.reflection.app.client.handler.user.SessionEventHandler;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.CircleProgressBar;
@@ -74,7 +72,7 @@ import com.willshex.gson.json.shared.Convert;
  * 
  */
 public class LinkedAccountsPage extends Page implements NavigationEventHandler, LinkAccountEventHandler, GetLinkedAccountsEventHandler,
-		DeleteLinkedAccountEventHandler, UpdateLinkedAccountEventHandler, SessionEventHandler {
+		DeleteLinkedAccountEventHandler, UpdateLinkedAccountEventHandler {
 
 	public static final int ACTION_PARAMETER = 1;
 	public static final int ACTION_PARAMETER_INDEX = 2;
@@ -156,7 +154,6 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		register(EventController.get().addHandlerToSource(GetLinkedAccountsEventHandler.TYPE, LinkedAccountController.get(), this));
 		register(EventController.get().addHandlerToSource(DeleteLinkedAccountEventHandler.TYPE, LinkedAccountController.get(), this));
 		register(EventController.get().addHandlerToSource(UpdateLinkedAccountEventHandler.TYPE, LinkedAccountController.get(), this));
-		register(EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
 	}
 
 	/**
@@ -536,35 +533,4 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoggedIn(io.reflection.app.datatypes.shared.User,
-	 * io.reflection.app.api.shared.datatypes.Session)
-	 */
-	@Override
-	public void userLoggedIn(User user, Session session) {
-		// TODO Add My Apps Link
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoggedOut()
-	 */
-	@Override
-	public void userLoggedOut() {
-		LinkedAccountController.get().reset();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoginFailed(com.willshex.gson.json.service.shared.Error)
-	 */
-	@Override
-	public void userLoginFailed(Error error) {
-
-	}
 }
