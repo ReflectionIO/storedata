@@ -269,7 +269,6 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 			@Override
 			public void onSuccess(LogoutResponse output) {
 				Cookies.removeCookie(COOKIE_KEY_TOKEN);
-
 			}
 
 			@Override
@@ -279,6 +278,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 		});
 
 		makeSessionInvalid();
+		LinkedAccountController.get().reset();
 		PageType.LoginPageType.show();
 	}
 
