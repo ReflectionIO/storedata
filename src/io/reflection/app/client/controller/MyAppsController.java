@@ -38,70 +38,72 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author stefanocapuzzi
  * 
  */
-public class MyAppsController extends AsyncDataProvider<MyApp> implements ServiceConstants {
+public class MyAppsController extends AsyncDataProvider<MyApp> implements ServiceConstants, GetLinkedAccountsEventHandler {
 
 	private static MyAppsController mOne = null;
 
 	private List<MyApp> rows = null;
-	private Pager pager = new Pager();
-	private Map<String, MyApp> myAppsLookup = new HashMap<String, MyApp>();
+	private Pager pager = null;
+	private List<MyApp> userItems = null;
+	private Map<String, MyApp> userItemsLookup = new HashMap<String, MyApp>();
 
 	public static MyAppsController get() {
 		if (mOne == null) {
 			mOne = new MyAppsController();
-			mOne.pager.count = STEP;
-			mOne.pager.start = Long.valueOf(0);
-			mOne.pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
 		}
 
 		return mOne;
 	}
 
-	public void getAllUserItems() {
-		if (rows == null) {
-			rows = new ArrayList<MyApp>();
-		}
-
+	public void showAllUserItems() {
+		updateRowCount(0, false); // Clear table and force loader
 		// TODO: this should also check the user type... if the user does not have a full listing permission... there is no point in attempting to get the
 		// linked accounts
-		if (LinkedAccountController.get().hasLinkedAccounts()) {
-			fetchLinkedAccountItems();
+		if (LinkedAccountController.get().isLinkedAccountFetched()) { // FetchLinkedAccount already called
+			if (LinkedAccountController.get().hasLinkedAccounts()) { // Linked accounts have been retrieved
+				if (hasUserItems()) {
+					updateRowData(0, rows);
+				} else {
+					fetchLinkedAccountItems();
+				}
+			} else {
+				updateRowCount(0, true);
+			}
 		} else {
-			fetchLinkedAccounts();
+			LinkedAccountController.get().fetchLinkedAccounts();
 		}
 	}
 
-	private void fetchLinkedAccounts() {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.core.shared.call.event.GetLinkedAccountsEventHandler#getLinkedAccountsSuccess(io.reflection.app.api.core.shared.call.
+	 * GetLinkedAccountsRequest, io.reflection.app.api.core.shared.call.GetLinkedAccountsResponse)
+	 */
+	@Override
+	public void getLinkedAccountsSuccess(GetLinkedAccountsRequest input, GetLinkedAccountsResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess) {
 
-		CoreService service = ServiceCreator.createCoreService();
-
-		final GetLinkedAccountsRequest input = new GetLinkedAccountsRequest();
-		input.accessCode = ACCESS_CODE;
-		input.session = SessionController.get().getSessionForApiCall();
-		input.pager = pager;
-
-		service.getLinkedAccounts(input, new AsyncCallback<GetLinkedAccountsResponse>() {
-			@Override
-			public void onSuccess(GetLinkedAccountsResponse output) {
-				if (output.status == StatusType.StatusTypeSuccess) {
-					if (output.linkedAccounts != null) {
-						LinkedAccountController.get().setLinkedAccounts(output.linkedAccounts);
-						fetchLinkedAccountItems();
-					} else { // No linked accounts associated with this user
-						updateRowCount(0, true);
-						// TODO Tell it to the user
-					}
-
-				}
-
-				EventController.get().fireEventFromSource(new GetLinkedAccountsEventHandler.GetLinkedAccountsSuccess(input, output), MyAppsController.this);
+			if (LinkedAccountController.get().hasLinkedAccounts()) {
+				fetchLinkedAccountItems();
+			} else { // No linked accounts associated with this user
+				updateRowCount(0, true);
 			}
 
-			@Override
-			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new GetLinkedAccountsEventHandler.GetLinkedAccountsFailure(input, caught), MyAppsController.this);
-			}
-		});
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.core.shared.call.event.GetLinkedAccountsEventHandler#getLinkedAccountsFailure(io.reflection.app.api.core.shared.call.
+	 * GetLinkedAccountsRequest, java.lang.Throwable)
+	 */
+	@Override
+	public void getLinkedAccountsFailure(GetLinkedAccountsRequest input, Throwable caught) {
+		// TODO Auto-generated method stub
+
 	}
 
 	private void fetchLinkedAccountItems() {
@@ -109,26 +111,44 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 
 		final GetLinkedAccountItemsRequest input = new GetLinkedAccountItemsRequest();
 		input.accessCode = ACCESS_CODE;
-		input.linkedAccount = LinkedAccountController.get().getLinkedAccounts().get(0); // TODO loop on linked accounts
 		input.session = SessionController.get().getSessionForApiCall();
+		if (pager == null) {
+			pager = new Pager();
+			pager.count = STEP;
+			pager.start = Long.valueOf(0);
+			pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
+		}
 		input.pager = pager;
+
+		if (rows == null) {
+			rows = new ArrayList<MyApp>();
+		}
+
+		if (userItems == null) {
+			userItems = new ArrayList<MyApp>();
+		}
+
+		input.linkedAccount = LinkedAccountController.get().getLinkedAccounts().get(0); // TODO loop on linked accounts
 
 		service.getLinkedAccountItems(input, new AsyncCallback<GetLinkedAccountItemsResponse>() {
 
 			@Override
 			public void onSuccess(GetLinkedAccountItemsResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
+
 					if (output.items != null) { // There are items associated with this linked account
+
 						MyApp myApp;
 
 						for (Item item : output.items) {
 							rows.add(myApp = new MyApp());
 							myApp.item = item;
 
-							myAppsLookup.put(item.externalId == null ? item.internalId : item.externalId, myApp);
+							userItemsLookup.put(item.externalId == null ? item.internalId : item.externalId, myApp);
+							userItems.add(myApp);
 						}
 
-						if (myAppsLookup.size() > 0) {
+						if (userItemsLookup.size() > 0) {
 							updateRowData(0, rows);
 							fetchSalesRanks();
 						}
@@ -174,7 +194,7 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 					MyApp app;
 					// ranks belong to various apps and each app can have multiple ranks depending on the time span (a rank per day)
 					for (Rank rank : output.ranks) {
-						app = myAppsLookup.get(rank.itemId);
+						app = userItemsLookup.get(rank.itemId);
 
 						if (app != null) {
 							if (app.ranks == null) {
@@ -249,9 +269,22 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 	//
 	// }
 
+	/**
+	 * 
+	 * @return
+	 */
+	public List<MyApp> getUserItems() {
+		return userItems;
+	}
+
+	public boolean hasUserItems() {
+		return !userItemsLookup.isEmpty();
+	}
+
 	public void reset() {
 		rows = null;
-		getAllUserItems();
+		userItems = null;
+		userItemsLookup.clear();
 	}
 
 	/*

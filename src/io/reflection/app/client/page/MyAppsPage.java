@@ -8,10 +8,12 @@
 package io.reflection.app.client.page;
 
 import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
+import io.reflection.app.api.core.shared.call.event.GetLinkedAccountsEventHandler;
 import io.reflection.app.client.cell.MiniAppCell;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.FilterController.Filter;
+import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.MyAppsController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
@@ -79,7 +81,6 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		createColumns();
 
 		MyAppsController.get().addDataDisplay(appsTable);
-		MyAppsController.get().getAllUserItems();
 
 	}
 
@@ -94,6 +95,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
+		register(EventController.get().addHandlerToSource(GetLinkedAccountsEventHandler.TYPE, LinkedAccountController.get(), MyAppsController.get()));
 
 		// boolean hasPermission = SessionController.get().loggedInUserHas(SessionController.);
 
@@ -103,8 +105,10 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		User user = SessionController.get().getLoggedInUser();
 
 		if (user != null) {
-			mLinkedAccountsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("linkedaccounts", user.id.toString()));
-			mMyAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("myapps", user.id.toString()));
+			mLinkedAccountsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(),
+					user.id.toString()));
+			mMyAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(),
+					FilterController.get().asMyAppsFilterString()));
 		}
 	}
 
@@ -176,15 +180,9 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	 */
 	@Override
 	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
-
 		appsTable.setVisibleRangeAndClearData(appsTable.getVisibleRange(), false);
-		if (appsTable.getRowCount() < 1) {
-			appsTable.setRowCount(1); // Force loading effect
-		}
 		MyAppsController.get().reset();
-
 		PageType.MyAppsPageType.show("view", "all", FilterController.get().asMyAppsFilterString());
-
 	}
 
 	/*
@@ -193,7 +191,11 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamsChanged(io.reflection.app.client.controller.FilterController.Filter, java.util.Map)
 	 */
 	@Override
-	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {}
+	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
+		appsTable.setVisibleRangeAndClearData(appsTable.getVisibleRange(), false);
+		MyAppsController.get().reset();
+		PageType.MyAppsPageType.show("view", "all", FilterController.get().asMyAppsFilterString());
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -203,10 +205,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	 */
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
-		if (PageType.MyAppsPageType.equals(current.getPage())) {
-			// checkPermissions();
-
-		}
+		MyAppsController.get().showAllUserItems();
 	}
 
 }

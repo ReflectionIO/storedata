@@ -799,13 +799,17 @@ public final class Core extends ActionHandler {
 
 			input.linkedAccount = ValidationHelper.validateDataAccount(input.linkedAccount, "input.linkedAccount");
 
+			// DataAccountCollectorFactory.getCollectorForSource(input.linkedAccount.source.a3Code).validateProperties(input.linkedAccount.properties);
+
 			input.linkedAccount.properties = properties;
 			input.linkedAccount.password = password;
+			if (password == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("input.linkedAccount.password"));
 
 			DataAccount linkedAccount = DataAccountServiceProvider.provide().updateDataAccount(input.linkedAccount);
 
 			if (LOG.isLoggable(GaeLevel.DEBUG)) {
-				LOG.fine(String.format("Linked account with id [%d] details updated", linkedAccount.id));
+				LOG.fine(String.format("Linked account with id [%d] details updated", linkedAccount.id.longValue()));
 			}
 
 			output.status = StatusType.StatusTypeSuccess;
@@ -832,7 +836,7 @@ public final class Core extends ActionHandler {
 			DataAccountServiceProvider.provide().deleteDataAccount(input.linkedAccount);
 
 			if (LOG.isLoggable(GaeLevel.DEBUG)) {
-				LOG.fine(String.format("Linked account with id [%d] deleted", input.linkedAccount));
+				LOG.fine(String.format("Linked account with id [%d] deleted", input.linkedAccount.id.longValue()));
 			}
 
 			output.status = StatusType.StatusTypeSuccess;
@@ -947,15 +951,16 @@ public final class Core extends ActionHandler {
 
 			output.linkedAccounts = UserServiceProvider.provide().getDataAccounts(input.session.user, input.pager);
 
-			List<Long> dataSourceIds = new ArrayList<Long>();
+			Map<Long, DataSource> dataSources = new HashMap<Long, DataSource>();
 			for (DataAccount d : output.linkedAccounts) {
-				dataSourceIds.add(d.source.id);
+				if (d.source.id != null) {
+					dataSources.put(d.source.id, null);
+				}
 			}
 
-			if (dataSourceIds != null && dataSourceIds.size() > 0) {
-				List<DataSource> dataSources = DataSourceServiceProvider.provide().getDataSourceBatch(dataSourceIds);
-
-				output.dataSources = dataSources;
+			if (dataSources != null && dataSources.size() > 0) {
+				List<DataSource> lookupDataSources = DataSourceServiceProvider.provide().getDataSourceBatch(dataSources.keySet());
+				output.dataSources = lookupDataSources;
 			}
 
 			output.pager = input.pager;
@@ -1525,13 +1530,13 @@ public final class Core extends ActionHandler {
 				ModelRun modelRun;
 				Set<Date> dates = salesGroupByDate.keySet();
 				List<Sale> salesGroup;
-				
+
 				output.ranks = new ArrayList<Rank>();
-				
+
 				for (Date salesGroupDate : dates) {
 
 					rank = new Rank();
-					
+
 					output.ranks.add(rank);
 
 					modelRun = modelRunLookup.get(salesGroupDate);
@@ -1558,7 +1563,7 @@ public final class Core extends ActionHandler {
 								rank.itemId = sale.item.internalId;
 								rank.source = defaultStore.a3Code;
 								rank.type = input.listType;
-								
+
 								populatedCommon = true;
 							}
 
