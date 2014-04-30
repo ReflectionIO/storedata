@@ -144,7 +144,7 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 							rows.add(myApp = new MyApp());
 							myApp.item = item;
 
-							userItemsLookup.put(item.externalId == null ? item.internalId : item.externalId, myApp);
+							userItemsLookup.put(item.internalId, myApp);
 							userItems.add(myApp);
 						}
 

@@ -301,7 +301,7 @@ public final class Core extends ActionHandler {
 				}
 
 				output.ranks = ranks;
-				output.items = ItemServiceProvider.provide().getExternalIdItemBatch(itemIds);
+				output.items = ItemServiceProvider.provide().getInternalIdItemBatch(itemIds);
 
 				output.pager = input.pager;
 				updatePager(
@@ -450,7 +450,7 @@ public final class Core extends ActionHandler {
 					output.grossingRanks = grossing.toList();
 				}
 
-				output.items = ItemServiceProvider.provide().getExternalIdItemBatch(itemIds);
+				output.items = ItemServiceProvider.provide().getInternalIdItemBatch(itemIds);
 
 				output.pager = input.pager;
 

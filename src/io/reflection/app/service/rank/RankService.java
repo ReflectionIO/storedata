@@ -303,7 +303,7 @@ final class RankService implements IRankService {
 
 			String getCountryStoreTypeRanksQuery = String
 					.format("SELECT * FROM `rank` WHERE %s AND CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`source` AS BINARY)=CAST('%s' AS BINARY) AND `itemid`='%s' AND `categoryid`=24 AND %s %s `deleted`='n' ORDER BY `date` ASC, `%s` %s LIMIT %d,%d",
-							typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), addslashes(item.externalId), beforeAfterQuery(before, after),
+							typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), addslashes(item.internalId), beforeAfterQuery(before, after),
 							isGrossing ? "`grossingposition`<>0 AND" : "", pager.sortBy,
 							pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
 
@@ -396,7 +396,7 @@ final class RankService implements IRankService {
 		Boolean hasGrossingRank = Boolean.FALSE;
 
 		String getItemHasGrossingRankQuery = String.format("SELECT `id` FROM `rank` WHERE itemid`='%s' AND `grossingposition`<>0 LIMIT 1",
-				addslashes(item.externalId));
+				addslashes(item.internalId));
 
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 

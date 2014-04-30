@@ -483,28 +483,62 @@ final class ItemService implements IItemService {
 		String commaDelimitedItemIds = null;
 
 		if (itemIds != null && itemIds.size() > 0) {
-			commaDelimitedItemIds = StringUtils.join(itemIds, "','");
-		}
+			List<String> keys = new ArrayList<String>();
+			String memcacheKey = null;
+			for (String internalId : itemIds) {
+				memcacheKey = getName() + ".internal." + internalId;
+				keys.add(memcacheKey);
+			}
 
-		if (commaDelimitedItemIds != null && commaDelimitedItemIds.length() != 0) {
-			String getExternalIdItemBatchQuery = String.format("SELECT * FROM `item` WHERE `internalid` IN ('%s') AND `deleted`='n'", commaDelimitedItemIds);
+			Map<String, Object> jsonStrings = syncCache.getAll(keys);
+			String jsonString;
+			List<String> notFoundItems = new ArrayList<String>();
+			Item item = null;
+			for (String internalId : itemIds) {
+				memcacheKey = getName() + ".internal." + internalId;
+				jsonString = (String) jsonStrings.get(memcacheKey);
+				if (jsonString != null) {
+					item = new Item();
+					item.fromJson(jsonString);
 
-			Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
-
-			try {
-				itemConnection.connect();
-				itemConnection.executeQuery(getExternalIdItemBatchQuery);
-
-				while (itemConnection.fetchNextRow()) {
-					Item item = toItem(itemConnection);
-
-					if (item != null) {
-						items.add(item);
-					}
+					items.add(item);
+				} else {
+					notFoundItems.add(internalId);
 				}
-			} finally {
-				if (itemConnection != null) {
-					itemConnection.disconnect();
+			}
+
+			if (notFoundItems.size() > 0) {
+				commaDelimitedItemIds = StringUtils.join(notFoundItems, "','");
+
+				if (commaDelimitedItemIds != null && commaDelimitedItemIds.length() != 0) {
+					String getInternalIdItemBatchQuery = String.format("SELECT * FROM `item` WHERE `internalid` IN ('%s') and `deleted`='n'",
+							commaDelimitedItemIds);
+
+					Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
+
+					try {
+						itemConnection.connect();
+						itemConnection.executeQuery(getInternalIdItemBatchQuery);
+
+						while (itemConnection.fetchNextRow()) {
+							item = toItem(itemConnection);
+
+							if (item != null) {
+								items.add(item);
+
+								memcacheKey = getName() + ".internal." + item.internalId;
+
+								// cal.setTime(new Date());
+								// cal.add(Calendar.DAY_OF_MONTH, 20);
+								// cache.put(memcacheKey, item.toString(), cal.getTime());
+								asyncCache.put(memcacheKey, item.toString());
+							}
+						}
+					} finally {
+						if (itemConnection != null) {
+							itemConnection.disconnect();
+						}
+					}
 				}
 			}
 		}

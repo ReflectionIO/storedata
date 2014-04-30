@@ -175,7 +175,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 				rank.country = firstFeedFetch.country;
 				rank.currency = item.currency;
 				rank.date = key;
-				rank.itemId = item.externalId;
+				rank.itemId = item.internalId;
 
 				rank.price = item.price;
 				rank.source = firstFeedFetch.store;
@@ -193,13 +193,13 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 					rank.position = Integer.valueOf(i + 1);
 				}
 
-				// PersisterBase.enqueue(item, Integer.valueOf(i + 1), item.externalId, firstFeedFetch.type, firstFeedFetch.store, firstFeedFetch.country, key,
+				// PersisterBase.enqueue(item, Integer.valueOf(i + 1), item.internalId, firstFeedFetch.type, firstFeedFetch.store, firstFeedFetch.country, key,
 				// item.price, item.currency, firstFeedFetch.code);
 
 				if (existing == null) {
 					addRanks.add(rank);
 					addItems.add(item);
-					itemIds.add(item.externalId);
+					itemIds.add(item.internalId);
 				} else {
 					updateRanks.add(rank);
 				}
@@ -218,7 +218,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			// ItemServiceProvider.provide().updateItemsBatch(updateItems);
 			// }
 
-			List<Item> foundItems = ItemServiceProvider.provide().getExternalIdItemBatch(itemIds);
+			List<Item> foundItems = ItemServiceProvider.provide().getInternalIdItemBatch(itemIds);
 			List<Item> newItems = new ArrayList<Item>();
 			List<Item> updateItems = new ArrayList<Item>();
 
@@ -234,7 +234,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 				update = false;
 
 				for (Item foundItem : foundItems) {
-					if (foundItem.externalId.equals(addItem.externalId)) {
+					if (foundItem.internalId.equals(addItem.internalId)) {
 						if (foundItem.added.before(cal.getTime())) {
 							addItem.id = foundItem.id;
 							update = true;

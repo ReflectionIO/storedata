@@ -178,7 +178,7 @@ public class CsvBlobReducer extends Reducer<String, String, ByteBuffer> {
 		Item item = (Item) memCacheService.get(rankItemKey);
 
 		if (item == null) {
-			item = ItemServiceProvider.provide().getExternalIdItem(rank.itemId);
+			item = ItemServiceProvider.provide().getInternalIdItem(rank.itemId);
 
 			if (item == null) {
 				throw new Exception("Could not find an item for this rank which is just, wrong!");

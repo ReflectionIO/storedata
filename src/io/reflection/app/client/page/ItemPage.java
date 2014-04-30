@@ -79,7 +79,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 	@UiField(provided = true) CellTable<ItemRevenue> revenue = new CellTable<ItemRevenue>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
 
-	private String mItemExternalId;
+	private String mItemInternalId;
 
 	private RankingType rankingType;
 	private YAxisDataType dataType;
@@ -188,23 +188,23 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
 		if (current != null && PageType.ItemPageType.equals(current.getPage())) {
-			if ("view".equals(current.getAction()) && (mItemExternalId = current.getParameter(0)) != null) {
+			if ("view".equals(current.getAction()) && (mItemInternalId = current.getParameter(0)) != null) {
 				item = null;
 
 				Filter f = FilterController.get().getFilter();
 				String currentFilter = f.asItemFilterString();
 
 				if (currentFilter != null && currentFilter.length() > 0) {
-					mRevenue.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken("view", mItemExternalId, REVENUE_CHART_TYPE, currentFilter));
-					mDownloads.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken("view", mItemExternalId, DOWNLOADS_CHART_TYPE, currentFilter));
-					mRanking.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken("view", mItemExternalId, RANKING_CHART_TYPE, currentFilter));
+					mRevenue.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken("view", mItemInternalId, REVENUE_CHART_TYPE, currentFilter));
+					mDownloads.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken("view", mItemInternalId, DOWNLOADS_CHART_TYPE, currentFilter));
+					mRanking.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken("view", mItemInternalId, RANKING_CHART_TYPE, currentFilter));
 				}
 
-				if ((item = ItemController.get().lookupItem(mItemExternalId)) != null) {
+				if ((item = ItemController.get().lookupItem(mItemInternalId)) != null) {
 					displayItemDetails();
 				} else {
 					item = new Item();
-					item.externalId = mItemExternalId;
+					item.internalId = mItemInternalId;
 					item.source = FilterController.get().getFilter().getStoreA3Code();
 
 					// AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Getting details",
@@ -254,12 +254,12 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	// public void searchForItemSuccess(SearchForItemRequest input, SearchForItemResponse output) {
 	// boolean found = false;
 	//
-	// if (mItemExternalId != null && mItemExternalId.equals(input.query) && output.status == StatusType.StatusTypeSuccess) {
+	// if (mItemInternalId != null && mItemInternalId.equals(input.query) && output.status == StatusType.StatusTypeSuccess) {
 	//
 	// // for now we don't lookup the item again... because it causes an infinite loop of lookup failure
 	// if (output.items != null) {
 	// for (Item item : output.items) {
-	// if (mItemExternalId.equals(item.externalId)) {
+	// if (mItemInternalId.equals(item.internalId)) {
 	// displayItemDetails(item);
 	//
 	// refreshTabs();
@@ -289,7 +289,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	// */
 	// @Override
 	// public void searchForItemFailure(SearchForItemRequest input, Throwable caught) {
-	// if (mItemExternalId != null && mItemExternalId.equals(input.query)) {
+	// if (mItemInternalId != null && mItemInternalId.equals(input.query)) {
 	// AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.DangerAlertBoxType, false, "Item", " - We could not find the requrested item!", false)
 	// .setVisible(true);
 	// }
@@ -367,7 +367,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
 		if (NavigationController.get().getCurrentPage() == PageType.ItemPageType) {
-			PageType.ItemPageType.show("view", mItemExternalId, selectedTab, FilterController.get().asItemFilterString());
+			PageType.ItemPageType.show("view", mItemInternalId, selectedTab, FilterController.get().asItemFilterString());
 		}
 	}
 
@@ -379,7 +379,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
 		if (NavigationController.get().getCurrentPage() == PageType.ItemPageType) {
-			PageType.ItemPageType.show("view", mItemExternalId, selectedTab, FilterController.get().asItemFilterString());
+			PageType.ItemPageType.show("view", mItemInternalId, selectedTab, FilterController.get().asItemFilterString());
 		}
 	}
 

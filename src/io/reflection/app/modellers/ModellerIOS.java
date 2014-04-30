@@ -250,7 +250,7 @@ public class ModellerIOS extends RenjinRModellerBase implements Modeller {
 
 		String query = String.format(
 				"SELECT `r`.`itemid`, `r`.`position`,`r`.`grossingposition`, `r`.`price`, `s`.`usesiap` FROM `rank` AS `r` JOIN `item` AS `i`"
-						+ " ON `i`.`externalid`=`r`.`itemid` LEFT JOIN `sup_application_iap` AS `s` ON `s`.`internalid`=`i`.`internalid`"
+						+ " ON `i`.`internalid`=`r`.`itemid` LEFT JOIN `sup_application_iap` AS `s` ON `s`.`internalid`=`i`.`internalid`"
 						+ " WHERE `r`.`country`='%s' AND `r`.`source`='%s' AND %s AND `r`.%s AND `date`<FROM_UNIXTIME(%d)" + " ORDER BY `date` DESC", country,
 				store, priceQuery, typesQueryPart, date.getTime() / 1000);
 

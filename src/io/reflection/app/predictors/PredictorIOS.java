@@ -113,10 +113,10 @@ public class PredictorIOS implements Predictor {
 		}
 
 		if (itemIds.size() > 0) {
-			List<Item> foundItems = ItemServiceProvider.provide().getExternalIdItemBatch(itemIds);
+			List<Item> foundItems = ItemServiceProvider.provide().getInternalIdItemBatch(itemIds);
 
 			for (Item item : foundItems) {
-				lookup.put(item.externalId, item);
+				lookup.put(item.internalId, item);
 			}
 		}
 

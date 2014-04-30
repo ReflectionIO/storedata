@@ -180,7 +180,7 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 	// mLookupPager = new Pager();
 	// mLookupPager.start = Long.valueOf(0);
 	// mLookupPager.count = Long.valueOf(1);
-	// mLookupPager.sortBy = "externalid";
+	// mLookupPager.sortBy = "internalid";
 	// mLookupPager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
 	// }
 	//
@@ -190,16 +190,16 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 	// /**
 	// * Retrieve the item, identified by external id, from DB (it happens in case of cache miss)
 	// *
-	// * @param externalId
+	// * @param internalId
 	// */
-	// private void fetchItem(String externalId) {
+	// private void fetchItem(String internalId) {
 	// CoreService service = ServiceCreator.createCoreService();
 	//
 	// final SearchForItemRequest input = new SearchForItemRequest();
 	// input.accessCode = ACCESS_CODE;
 	//
 	// input.session = SessionController.get().getSessionForApiCall();
-	// input.query = externalId;
+	// input.query = internalId;
 	//
 	// input.pager = lookupPager();
 	//
@@ -211,7 +211,7 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 	//
 	// if (output.items != null) {
 	// for (Item item : output.items) {
-	// mItemCache.put(item.externalId, item); // Add item to cache
+	// mItemCache.put(item.internalId, item); // Add item to cache
 	// }
 	// }
 	// }
@@ -243,7 +243,7 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 	public void addItemsToCache(List<Item> items) {
 		if (items != null) {
 			for (Item item : items) {
-				mItemCache.put(item.externalId, item);
+				mItemCache.put(item.internalId, item);
 			}
 		}
 	}
@@ -251,15 +251,15 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 	/**
 	 * Retrieve an item, looking first in the cache or in the DB in case of miss
 	 * 
-	 * @param externalId
+	 * @param internalId
 	 *            id of the item to retrieve
 	 * @return the item
 	 */
-	public Item lookupItem(String externalId) {
-		Item item = mItemCache.get(externalId);
+	public Item lookupItem(String internalId) {
+		Item item = mItemCache.get(internalId);
 
 		// if (item == null) {
-		// fetchItem(externalId);
+		// fetchItem(internalId);
 		// }
 
 		return item;
@@ -270,7 +270,7 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 	 */
 	public void addItemToCache(Item item) {
 		if (item != null) {
-			mItemCache.put(item.externalId, item);
+			mItemCache.put(item.internalId, item);
 		}
 	}
 
