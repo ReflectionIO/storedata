@@ -31,7 +31,6 @@ import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.CircleProgressBar;
-import io.reflection.app.client.part.datatypes.MyLinkedAccount;
 import io.reflection.app.client.part.linkaccount.IosMacLinkAccountForm;
 import io.reflection.app.client.part.linkaccount.LinkableAccountFields;
 import io.reflection.app.client.res.Images;
@@ -84,18 +83,18 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 	interface LinkedAccountsPageUiBinder extends UiBinder<Widget, LinkedAccountsPage> {}
 
-	@UiField(provided = true) CellTable<MyLinkedAccount> linkedAccountsTable = new CellTable<MyLinkedAccount>(ServiceConstants.STEP_VALUE,
+	@UiField(provided = true) CellTable<DataAccount> linkedAccountsTable = new CellTable<DataAccount>(ServiceConstants.STEP_VALUE,
 			BootstrapGwtCellTable.INSTANCE);
 
 	final String buttonAddHtml = "Link Account&nbsp;&nbsp;<img style=\"vertical-align: 1px;\" src=\""
 			+ Images.INSTANCE.buttonLinkedAccount().getSafeUri().asString() + "\"/>";
 	final String buttonEditHtml = "Save changes";
 
-	private TextColumn<MyLinkedAccount> columnAccountName;
-	private TextColumn<MyLinkedAccount> columnDateAdded;
-	private Column<MyLinkedAccount, SafeHtml> columnEdit;
-	private Column<MyLinkedAccount, SafeHtml> columnDelete;
-	private Column<MyLinkedAccount, SafeHtml> columnExpand;
+	private TextColumn<DataAccount> columnAccountName;
+	private TextColumn<DataAccount> columnDateAdded;
+	private Column<DataAccount, SafeHtml> columnEdit;
+	private Column<DataAccount, SafeHtml> columnDelete;
+	private Column<DataAccount, SafeHtml> columnExpand;
 
 	// Add linked account elements
 	@UiField HTMLPanel linkedAccountForm;
@@ -161,29 +160,29 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	 */
 	private void createColumns(final String userId) {
 
-		columnAccountName = new TextColumn<MyLinkedAccount>() {
+		columnAccountName = new TextColumn<DataAccount>() {
 			@Override
-			public String getValue(MyLinkedAccount object) {
+			public String getValue(DataAccount object) {
 				return (object.source != null) ? object.source.name : "-";
 			}
 		};
 		linkedAccountsTable.addColumn(columnAccountName, "Account Name");
 
-		columnDateAdded = new TextColumn<MyLinkedAccount>() {
+		columnDateAdded = new TextColumn<DataAccount>() {
 			@Override
-			public String getValue(MyLinkedAccount object) {
+			public String getValue(DataAccount object) {
 				DateTimeFormat dtf = DateTimeFormat.getFormat("dd/MM/yy");
 				return (object.source.created != null) ? dtf.format(object.source.created, null) : "-";
 			}
 		};
 		linkedAccountsTable.addColumn(columnDateAdded, "Date Added");
 
-		columnEdit = new Column<MyLinkedAccount, SafeHtml>(new SafeHtmlCell()) {
+		columnEdit = new Column<DataAccount, SafeHtml>(new SafeHtmlCell()) {
 			@Override
-			public SafeHtml getValue(MyLinkedAccount object) {
+			public SafeHtml getValue(DataAccount object) {
 				Anchor a = new Anchor();
-				a.setHref(PageType.UsersPageType.asHref(
-						PageType.LinkedAccountsPageType.toString(userId, EDIT_ACTION_PARAMETER_VALUE, object.dataAccount.id.toString())).asString());
+				a.setHref(PageType.UsersPageType.asHref(PageType.LinkedAccountsPageType.toString(userId, EDIT_ACTION_PARAMETER_VALUE, object.id.toString()))
+						.asString());
 				a.setText("Edit");
 				a.setStyleName("invisible");
 				SafeHtmlBuilder safeHtmlBuilder = new SafeHtmlBuilder();
@@ -194,12 +193,12 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		};
 		linkedAccountsTable.addColumn(columnEdit, "");
 
-		columnDelete = new Column<MyLinkedAccount, SafeHtml>(new SafeHtmlCell()) {
+		columnDelete = new Column<DataAccount, SafeHtml>(new SafeHtmlCell()) {
 			@Override
-			public SafeHtml getValue(MyLinkedAccount object) {
+			public SafeHtml getValue(DataAccount object) {
 				Anchor a = new Anchor();
-				a.setHref(PageType.UsersPageType.asHref(
-						PageType.LinkedAccountsPageType.toString(userId, DELETE_ACTION_PARAMETER_VALUE, object.dataAccount.id.toString())).asString());
+				a.setHref(PageType.UsersPageType.asHref(PageType.LinkedAccountsPageType.toString(userId, DELETE_ACTION_PARAMETER_VALUE, object.id.toString()))
+						.asString());
 				a.setText("Delete");
 				a.setStyleName("invisible");
 				SafeHtmlBuilder safeHtmlBuilder = new SafeHtmlBuilder();
@@ -210,9 +209,9 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		};
 		linkedAccountsTable.addColumn(columnDelete, "");
 
-		columnExpand = new Column<MyLinkedAccount, SafeHtml>(new SafeHtmlCell()) {
+		columnExpand = new Column<DataAccount, SafeHtml>(new SafeHtmlCell()) {
 			@Override
-			public SafeHtml getValue(MyLinkedAccount object) {
+			public SafeHtml getValue(DataAccount object) {
 				Anchor a = new Anchor();
 				a.setStyleName(Styles.INSTANCE.reflection().linkedAccountPlus());
 				SafeHtmlBuilder safeHtmlBuilder = new SafeHtmlBuilder();
@@ -230,7 +229,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	 * @param event
 	 */
 	@UiHandler("linkedAccountsTable")
-	void cellTableEvent(CellPreviewEvent<MyLinkedAccount> event) {
+	void cellTableEvent(CellPreviewEvent<DataAccount> event) {
 		if ("click".equals(event.getNativeEvent().getType()) && event.getColumn() == 4) {
 			// add visibility hidden in cell
 			Element expandElement = linkedAccountsTable.getRowElement(event.getIndex()).getCells().getItem(4).getElementsByTagName("a").getItem(0);

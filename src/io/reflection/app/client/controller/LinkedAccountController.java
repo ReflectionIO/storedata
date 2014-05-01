@@ -24,7 +24,6 @@ import io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler.Link
 import io.reflection.app.api.core.shared.call.event.UpdateLinkedAccountEventHandler;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
-import io.reflection.app.client.part.datatypes.MyLinkedAccount;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.Item;
@@ -45,7 +44,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class LinkedAccountController extends AsyncDataProvider<MyLinkedAccount> implements ServiceConstants, TreeViewModel {
+public class LinkedAccountController extends AsyncDataProvider<DataAccount> implements ServiceConstants, TreeViewModel {
 
 	private List<DataAccount> myDataAccounts = null;
 	private List<DataSource> myDataSources = null;
@@ -55,7 +54,7 @@ public class LinkedAccountController extends AsyncDataProvider<MyLinkedAccount> 
 
 	private long mCount = -1;
 
-	private List<MyLinkedAccount> rows = null;
+	private List<DataAccount> rows = null;
 	private Pager pager = null;
 
 	private static LinkedAccountController mOne = null;
@@ -98,7 +97,7 @@ public class LinkedAccountController extends AsyncDataProvider<MyLinkedAccount> 
 		input.pager = pager;
 
 		if (rows == null) {
-			rows = new ArrayList<MyLinkedAccount>();
+			rows = new ArrayList<DataAccount>();
 		}
 
 		if (myDataAccounts == null) {
@@ -128,11 +127,12 @@ public class LinkedAccountController extends AsyncDataProvider<MyLinkedAccount> 
 						addLinkedAccountToLookup(output.linkedAccounts);
 						addDataSourceToLookup(output.dataSources);
 
-						MyLinkedAccount myLinkedAccount;
+						DataAccount myLinkedAccount;
 						for (DataAccount da : output.linkedAccounts) {
-							rows.add(myLinkedAccount = new MyLinkedAccount());
-							myLinkedAccount.dataAccount = da;
+							myLinkedAccount = new DataAccount();
+							myLinkedAccount = da;
 							myLinkedAccount.source = getDataSource(da.source.id);
+							rows.add(myLinkedAccount);
 						}
 
 					}
@@ -369,7 +369,7 @@ public class LinkedAccountController extends AsyncDataProvider<MyLinkedAccount> 
 	 * @see com.google.gwt.view.client.AbstractDataProvider#onRangeChanged(com.google.gwt.view.client.HasData)
 	 */
 	@Override
-	protected void onRangeChanged(HasData<MyLinkedAccount> display) {
+	protected void onRangeChanged(HasData<DataAccount> display) {
 		Range r = display.getVisibleRange();
 
 		int start = r.getStart();
