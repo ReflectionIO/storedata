@@ -59,7 +59,6 @@ public class TopicController extends AsyncDataProvider<Topic> implements Service
 	private void fetchTopics() {
 
 		if (forumId != null) {
-
 			ForumService service = ServiceCreator.createForumService();
 
 			final GetTopicsRequest input = new GetTopicsRequest();

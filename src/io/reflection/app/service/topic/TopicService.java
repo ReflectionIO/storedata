@@ -128,9 +128,9 @@ final class TopicService implements ITopicService {
 				if (addedTopic == null) {
 					addedTopic = topic;
 					addedTopic.id = Long.valueOf(topicConnection.getInsertedId());
-
-					addedTopic.forum = ForumServiceProvider.provide().addTopic(topic.forum);
 				}
+				
+				addedTopic.forum = ForumServiceProvider.provide().addTopic(topic.forum);
 			}
 		} finally {
 			if (topicConnection != null) {

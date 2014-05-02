@@ -75,11 +75,11 @@ public class FormattingHelper {
 	}
 
 	public static String getUserName(User user) {
-		return user.forename + " " + user.surname;
+		return user == null ? "None" : user.forename + " " + user.surname;
 	}
 
 	public static String getTimeSince(Date date) {
-		return getTimeSince(date, true);
+		return date == null ? "" : getTimeSince(date, true);
 	}
 
 	public static String getTimeSince(Date date, boolean blur) {

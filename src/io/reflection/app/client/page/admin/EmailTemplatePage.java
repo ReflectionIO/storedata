@@ -19,10 +19,14 @@ import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.datatypes.shared.EmailTemplate;
 
+import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.ui.Widget;
@@ -74,7 +78,6 @@ public class EmailTemplatePage extends Page implements NavigationEventHandler {
 		};
 
 		TextHeader subjectHeader = new TextHeader("Subject");
-		subjectHeader.setHeaderStyleNames("col-xs-1");
 		emailTemplates.addColumn(subjectColumn, subjectHeader);
 
 		TextColumn<EmailTemplate> formatColumn = new TextColumn<EmailTemplate>() {
@@ -102,6 +105,19 @@ public class EmailTemplatePage extends Page implements NavigationEventHandler {
 		TextHeader typeHeader = new TextHeader("Type");
 		typeHeader.setHeaderStyleNames("col-xs-1");
 		emailTemplates.addColumn(typeColumn, typeHeader);
+
+		SafeHtmlCell prototype = new SafeHtmlCell();
+		Column<EmailTemplate, SafeHtml> editColumn = new Column<EmailTemplate, SafeHtml>(prototype) {
+
+			@Override
+			public SafeHtml getValue(EmailTemplate object) {
+				String s = object.id.toString();
+
+				return SafeHtmlUtils.fromTrustedString("<a href=\"" + PageType.EmailTemplatesPageType.asHref("change", s).asString()
+						+ "\" class=\"btn btn-xs btn-default\">Edit</a>");
+			}
+		};
+		emailTemplates.addColumn(editColumn);
 
 	}
 
