@@ -795,7 +795,7 @@ public final class Core extends ActionHandler {
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			String properties = input.linkedAccount.properties;
-			String password = ValidationHelper.validatePassword(input.linkedAccount.password, "input.linkedAccount.password");
+			String password = ValidationHelper.validateStringLength(input.linkedAccount.password, "input.linkedAccount.password", 2, 1000);
 
 			input.linkedAccount = ValidationHelper.validateDataAccount(input.linkedAccount, "input.linkedAccount");
 
