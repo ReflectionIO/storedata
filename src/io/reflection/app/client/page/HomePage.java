@@ -24,6 +24,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ScrollEvent;
 import com.google.gwt.user.client.Window.ScrollHandler;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -49,6 +50,7 @@ public class HomePage extends Page {
 	@UiField Anchor carouselRight;
 	@UiField Anchor carouselLeft;
 	private Timer scrollTimer;
+	@UiField InlineHyperlink requestInvite;
 
 	public HomePage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -56,6 +58,8 @@ public class HomePage extends Page {
 		name.getElement().setAttribute("placeholder", "Name");
 		email.getElement().setAttribute("placeholder", "Email Address");
 		message.getElement().setAttribute("placeholder", "Message");
+
+		requestInvite.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken("requestinvite"));
 	}
 
 	/*

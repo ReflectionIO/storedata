@@ -164,7 +164,7 @@
                     <div class="row {style.moveDownALittle}">
                         <h2>Powerful market intelligence for the global app market.</h2>
                         <p class="text-muted">Make smarter business decisions. Access revenue, download and rank data for any app in the store.</p>
-                        <g:InlineHyperlink targetHistoryToken="{RegisterPageType.asTargetHistoryToken}" text="Request Invite" styleName="btn btn-lg btn-primary {style.moveDownALittle}" />
+                        <g:InlineHyperlink ui:field="requestInvite" targetHistoryToken="{RegisterPageType.asTargetHistoryToken}" text="Request Invite" styleName="btn btn-lg btn-primary {style.moveDownALittle}" />
                         <div class="{style.arrow} {style.moveDown}">
                             <g:Anchor ui:field="gotoFeatures">
                                 <i class="glyphicon glyphicon-chevron-down" />
