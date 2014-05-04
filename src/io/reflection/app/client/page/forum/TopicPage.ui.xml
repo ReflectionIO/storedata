@@ -5,10 +5,12 @@
     </ui:style>
     <g:HTMLPanel>
 
-        <h2 ui:field="title"></h2>
-        <ul ui:field="notes">
-        </ul>
+        <div class="container">
+            <h2 ui:field="title"></h2>
+            <ul ui:field="notes">
+            </ul>
 
-        <c:CellList ui:field="messages" />
+            <c:CellList ui:field="messages" />
+        </div>
     </g:HTMLPanel>
 </ui:UiBinder> 

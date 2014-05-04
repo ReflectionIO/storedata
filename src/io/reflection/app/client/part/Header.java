@@ -143,7 +143,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 		mAdminButton.setHTML(mAdminButton.getText() + " <b class=\"caret\"></b>");
 		mLoginLink.setHTML(mLoginLink.getText() + " <b class=\"glyphicon glyphicon-log-in\"></b>");
-		mLoginLink.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken("requestinvite"));
+		mLoginLink.setTargetHistoryToken(PageType.LoginPageType.asTargetHistoryToken("requestinvite"));
 
 		mQuery.getElement().setAttribute("placeholder", "Search for any app");
 		mSearch.setHTML("<b class=\"glyphicon glyphicon-search\"></b>");

@@ -133,7 +133,7 @@ final class ReplyService implements IReplyService {
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection replyConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeReply.toString());
 
-		String getRepliesQuery = String.format("SELECT * FROM `reply` WHERE `forumid`=%d AND `deleted`='n'", topic.id.longValue());
+		String getRepliesQuery = String.format("SELECT * FROM `reply` WHERE `topicid`=%d AND `deleted`='n'", topic.id.longValue());
 
 		if (pager != null) {
 			String sortByQuery = "id";
@@ -193,7 +193,7 @@ final class ReplyService implements IReplyService {
 
 		Connection replyConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeReply.toString());
 
-		String getRepliesCountQuery = String.format("SELECT COUNT(`id`) AS `replycount` FROM `reply` WHERE `forumid`=%d AND `deleted`='n'",
+		String getRepliesCountQuery = String.format("SELECT COUNT(`id`) AS `replycount` FROM `reply` WHERE `topicid`=%d AND `deleted`='n'",
 				topic.id.longValue());
 
 		try {

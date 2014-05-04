@@ -1,0 +1,40 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder">
+    <ui:with field="authorName" type="java.lang.String" />
+    <ui:with field="content" type="com.google.gwt.safehtml.shared.SafeHtml" />
+    <ui:with field="created" type="java.lang.String" />
+
+    <ui:style>
+    .split {
+    	border-top: solid 1px;
+    	padding-top: 10px;
+    	margin-top: 10px;
+    }
+    </ui:style>
+
+    <div class="row">
+        <div class="col-sm-3">
+            <ui:text from="{authorName}" />
+        </div>
+
+        <div class="col-sm-9">
+            <div>
+                <ui:safehtml from="{content}" />
+            </div>
+            <div class="{style.split}">
+                <ui:text from="{created}" />
+                <div class="pull-right">
+                    <a href="edit" class="btn btn-default btn-xs">
+                        <i class="glyphicon glyphicon-pencil"></i>
+                        Edit
+                    </a>
+                    <a href="flag" class="btn btn-warning btn-xs">
+                        <i class="glyphicon glyphicon-flag"></i>
+                        Flag
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</ui:UiBinder>

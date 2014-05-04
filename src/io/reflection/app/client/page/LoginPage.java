@@ -51,7 +51,6 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 
 	public LoginPage() {
 		initWidget(uiBinder.createAndBindUi(this));
-
 	}
 
 	/*
@@ -104,10 +103,11 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 
 		// Set proper text for Register / Request invite panel
 		// Request invite label
-		if (previous != null && previous.getAction() != null && FormHelper.REQUEST_INVITE_ACTION_NAME.equals(previous.getAction())) {
+		if ((previous != null && previous.getAction() != null && FormHelper.REQUEST_INVITE_ACTION_NAME.equals(previous.getAction()))
+				|| (current != null && current.getAction() != null && FormHelper.REQUEST_INVITE_ACTION_NAME.equals(current.getAction()))) {
 			register.setText("Request invite");
 			register.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken(FormHelper.REQUEST_INVITE_ACTION_NAME));
-		// Register label
+			// Register label
 		} else {
 			register.setText("Register");
 			if (previous != null && previous.getAction() != null && FormHelper.COMPLETE_ACTION_NAME.equals(previous.getAction())

@@ -1,5 +1,5 @@
 //
-//  Message.java
+//  ForumMessage.java
 //  storedata
 //
 //  Created by William Shakour (billy1380) on 2 May 2014.
@@ -11,20 +11,22 @@ import io.reflection.app.datatypes.shared.Reply;
 import io.reflection.app.datatypes.shared.Topic;
 import io.reflection.app.datatypes.shared.User;
 
+import java.util.Date;
+
 /**
  * @author billy1380
  * 
  */
-public class Message {
+public class ForumMessage {
 	private Topic topic;
 	private Reply reply;
 
-	public void set(Object message) {
-		if (message instanceof Topic) {
-			topic = (Topic) message;
-		} else {
-			reply = (Reply) message;
-		}
+	public ForumMessage(Reply reply) {
+		this.reply = reply;
+	}
+
+	public ForumMessage(Topic topic) {
+		this.topic = topic;
 	}
 
 	public String getContent() {
@@ -33,6 +35,10 @@ public class Message {
 
 	public User getAuthor() {
 		return topic == null ? reply.author : topic.author;
+	}
+
+	public Date getCreated() {
+		return topic == null ? reply.created : topic.created;
 	}
 
 }

@@ -15,7 +15,9 @@ import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.uibinder.client.UiRenderer;
 
@@ -26,7 +28,7 @@ import com.google.gwt.uibinder.client.UiRenderer;
 public class PostSummaryCell extends AbstractCell<Post> {
 
 	interface PostSummaryCellRenderer extends UiRenderer {
-		void render(SafeHtmlBuilder sb, SafeUri link, String title, String description, String author, String published);
+		void render(SafeHtmlBuilder sb, SafeUri link, String title, SafeHtml description, String author, String published);
 	}
 
 	private static PostSummaryCellRenderer RENDERER = GWT.create(PostSummaryCellRenderer.class);
@@ -40,7 +42,7 @@ public class PostSummaryCell extends AbstractCell<Post> {
 			published = DateTimeFormat.getFormat(PredefinedFormat.DATE_FULL).format(value.published);
 		}
 
-		RENDERER.render(builder, link, value.title, value.description, FormattingHelper.getUserName(value.author), published);
+		RENDERER.render(builder, link, value.title, SafeHtmlUtils.fromTrustedString(value.description), FormattingHelper.getUserName(value.author), published);
 	}
 
 }

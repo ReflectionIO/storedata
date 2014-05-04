@@ -10,16 +10,22 @@ package io.reflection.app.client.page.forum;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
-import io.reflection.app.client.controller.ReplyController;
 import io.reflection.app.client.controller.TopicController;
+import io.reflection.app.client.dataprovider.ForumMessageProvider;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
-import io.reflection.app.client.page.forum.part.MessageCell;
+import io.reflection.app.client.page.forum.part.ForumMessageCell;
 import io.reflection.app.client.part.BootstrapGwtCellList;
-import io.reflection.app.client.part.datatypes.Message;
+import io.reflection.app.client.part.datatypes.ForumMessage;
+import io.reflection.app.datatypes.shared.Topic;
+import io.reflection.app.shared.util.FormattingHelper;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.HeadingElement;
+import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellList;
@@ -40,7 +46,10 @@ public class TopicPage extends Page implements NavigationEventHandler {
 
 	interface TopicPageUiBinder extends UiBinder<Widget, TopicPage> {}
 
-	@UiField(provided = true) CellList<Message> messages = new CellList<Message>(new MessageCell(), BootstrapGwtCellList.INSTANCE);
+	@UiField HeadingElement title;
+	@UiField UListElement notes;
+
+	@UiField(provided = true) CellList<ForumMessage> messages = new CellList<ForumMessage>(new ForumMessageCell(), BootstrapGwtCellList.INSTANCE);
 
 	public TopicPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -56,6 +65,7 @@ public class TopicPage extends Page implements NavigationEventHandler {
 		super.onAttach();
 
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+
 	}
 
 	/*
@@ -84,11 +94,40 @@ public class TopicPage extends Page implements NavigationEventHandler {
 				if ((topicIdString = current.getParameter(TOPIC_ID_PARAMETER_INDEX)) != null) {
 					topicId = Long.valueOf(topicIdString);
 
-					TopicController.get().getTopic(topicId);
+					Topic topic = TopicController.get().getTopic(topicId);
 
-					ReplyController.get().getReplies(topicId);
+					updateTopic(topic);
 				}
 			}
+		}
+	}
+
+	private void updateTopic(Topic topic) {
+		if (topic != null) {
+			title.setInnerHTML(topic.title);
+			notes.removeAllChildren();
+
+			LIElement author = Document.get().createLIElement();
+			author.setInnerHTML("Started " + FormattingHelper.getTimeSince(topic.created) + " by " + FormattingHelper.getUserName(topic.author));
+
+			notes.appendChild(author);
+
+			if (topic.numberOfReplies != null) {
+				LIElement replies = Document.get().createLIElement();
+				replies.setInnerHTML(topic.numberOfReplies.toString() + " replies");
+
+				notes.appendChild(replies);
+			}
+
+			if (topic.lastReplier != null) {
+				LIElement lastReplier = Document.get().createLIElement();
+				lastReplier.setInnerHTML("Latest reply from " + FormattingHelper.getUserName(topic.lastReplier));
+
+				notes.appendChild(lastReplier);
+			}
+
+			ForumMessageProvider dataProvider = new ForumMessageProvider(topic);
+			dataProvider.addDataDisplay(messages);
 		}
 	}
 

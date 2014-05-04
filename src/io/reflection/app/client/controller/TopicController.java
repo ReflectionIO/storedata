@@ -42,7 +42,6 @@ public class TopicController extends AsyncDataProvider<Topic> implements Service
 	private long count = 0;
 	private Pager pager;
 	private SparseArray<Topic> topicLookup = null;
-	private SparseArray<Topic> topicsLookup = null;
 
 	private Long forumId;
 
@@ -85,12 +84,12 @@ public class TopicController extends AsyncDataProvider<Topic> implements Service
 						if (output.topics != null) {
 							topics.addAll(output.topics);
 
-							if (topicsLookup == null) {
-								topicsLookup = new SparseArray<Topic>();
+							if (topicLookup == null) {
+								topicLookup = new SparseArray<Topic>();
 							}
 
 							for (Topic topic : output.topics) {
-								topicsLookup.put(topic.id.intValue(), topic);
+								topicLookup.put(topic.id.intValue(), topic);
 							}
 						}
 
@@ -325,8 +324,8 @@ public class TopicController extends AsyncDataProvider<Topic> implements Service
 	public Topic getTopicPart(Long id) {
 		Topic topic = null;
 
-		if (topicsLookup != null) {
-			topic = topicsLookup.get(id.intValue());
+		if (topicLookup != null) {
+			topic = topicLookup.get(id.intValue());
 		}
 
 		return topic;
