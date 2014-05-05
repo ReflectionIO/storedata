@@ -129,7 +129,7 @@ final class TopicService implements ITopicService {
 					addedTopic = topic;
 					addedTopic.id = Long.valueOf(topicConnection.getInsertedId());
 				}
-				
+
 				addedTopic.forum = ForumServiceProvider.provide().addTopic(topic.forum);
 			}
 		} finally {
@@ -163,7 +163,7 @@ final class TopicService implements ITopicService {
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection topicConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeTopic.toString());
 
-		String getTopicsQuery = String.format("SELECT * FROM `topic` WHERE `forumid`=%d AND `deleted`='n'", forum.id.longValue());
+		String getTopicsQuery = String.format("SELECT * FROM `topic` WHERE `forumid`=%d AND `deleted`='n' ORDER BY `sticky` ASC", forum.id.longValue());
 
 		if (pager != null) {
 			String sortByQuery = "id";
@@ -184,7 +184,7 @@ final class TopicService implements ITopicService {
 				}
 			}
 
-			getTopicsQuery += String.format(" ORDER BY `%s` %s", sortByQuery, sortDirectionQuery);
+			getTopicsQuery += String.format(",`%s` %s", sortByQuery, sortDirectionQuery);
 		}
 
 		if (pager.start != null && pager.count != null) {

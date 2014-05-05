@@ -57,7 +57,8 @@ public class ReplyController implements ServiceConstants {
 			pager = new Pager();
 			pager.count = SHORT_STEP;
 			pager.start = Long.valueOf(0);
-			pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
+			pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
+			pager.sortBy = "created";
 		}
 		input.pager = pager;
 

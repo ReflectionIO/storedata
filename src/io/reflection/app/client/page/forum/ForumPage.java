@@ -54,8 +54,8 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 	interface TopicTemplate extends SafeHtmlTemplates {
 		TopicTemplate INSTANCE = GWT.create(TopicTemplate.class);
 
-		@SafeHtmlTemplates.Template("<a href=\"{0}\"" + " style=\"{1}\">{2}</a> {3}")
-		SafeHtml topicLayout(String link, SafeStyles styles, SafeHtml title, SafeHtml pages);
+		@SafeHtmlTemplates.Template("<div>{0} <a href=\"{1}\"" + " style=\"{2}\">{3}</a></div><div>{4}</div>")
+		SafeHtml topicLayout(SafeHtml properties, String link, SafeStyles styles, SafeHtml title, SafeHtml pages);
 	}
 
 	private static ForumPageUiBinder uiBinder = GWT.create(ForumPageUiBinder.class);
@@ -79,35 +79,6 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 		TopicController.get().addDataDisplay(topics);
 		pager.setDisplay(topics);
 
-		// ListDataProvider<Topic> test = new ListDataProvider<Topic>();
-		// List<Topic> some = test.getList();
-		//
-		// Topic topic;
-		// for (int i = 0; i < 25; i++) {
-		// topic = new Topic();
-		// topic.id = Long.valueOf(i);
-		// topic.author = new User();
-		// topic.author.forename = "William";
-		// topic.author.surname = "Shakour";
-		// topic.content = "This is a very important " + i
-		// + " question and since this is the content then I should be able to waffle on about it for quite some time with no issues.";
-		// topic.title = topic.content.substring(0, 30);
-		// topic.flagged = Integer.valueOf(0);
-		// topic.forum = new Forum();
-		// topic.forum.id = Long.valueOf(1);
-		// topic.heat = Random.nextInt();
-		// topic.lastReplied = new Date();
-		// topic.lastReplier = new User();
-		// topic.lastReplier.forename = "Forename" + i;
-		// topic.lastReplier.surname = "Surname" + i;
-		// topic.locked = Boolean.FALSE;
-		// topic.numberOfReplies = Random.nextInt(100);
-		// topic.sticky = Boolean.valueOf(Random.nextInt(1) > 0);
-		//
-		// some.add(topic);
-		// }
-		// test.addDataDisplay(topics);
-
 		ForumController.get().addDataDisplay(forums);
 	}
 
@@ -116,7 +87,23 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 
 			@Override
 			public SafeHtml getValue(Topic object) {
-				return TopicTemplate.INSTANCE.topicLayout(PageType.ForumTopicPageType.asHref(TopicPage.VIEW_ACTION_PARAMETER_VALUE, object.id.toString()).asString(),
+
+				String properties = "";
+
+				if (object.locked != null && object.locked.booleanValue()) {
+					properties += "<i class=\"glyphicon glyphicon-lock\"></i> ";
+				}
+
+				if (object.heat != null && object.heat > 10) {
+					properties += "<i class=\"glyphicon glyphicon-fire\"></i> ";
+				}
+
+				if (object.sticky != null && object.sticky.booleanValue()) {
+					properties += "<i class=\"glyphicon glyphicon-pushpin\"></i> ";
+				}
+
+				return TopicTemplate.INSTANCE.topicLayout(SafeHtmlUtils.fromSafeConstant(properties),
+						PageType.ForumTopicPageType.asHref(TopicPage.VIEW_ACTION_PARAMETER_VALUE, object.id.toString()).asString(),
 						SafeStylesUtils.fromTrustedString(""), SafeHtmlUtils.fromString(object.title), SafeHtmlUtils.fromString("n pages"));
 			}
 		};

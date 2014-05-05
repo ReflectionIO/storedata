@@ -21,6 +21,7 @@ import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.page.forum.part.ForumMessageCell;
 import io.reflection.app.client.part.BootstrapGwtCellList;
+import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.part.datatypes.ForumMessage;
 import io.reflection.app.datatypes.shared.Topic;
 import io.reflection.app.shared.util.FormattingHelper;
@@ -29,6 +30,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -36,6 +38,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.Widget;
@@ -61,11 +64,16 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
 	@UiField(provided = true) CellList<ForumMessage> messages = new CellList<ForumMessage>(new ForumMessageCell(), BootstrapGwtCellList.INSTANCE);
 
+	@UiField Button reply;
 	@UiField Button post;
+
+	@UiField FormPanel replyForm;
 
 	@UiField HTMLPanel replyGroup;
 	@UiField RichTextArea replyText;
 	@UiField HTMLPanel replyNote;
+
+	@UiField SimplePager pager;
 
 	public TopicPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -92,6 +100,12 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 	@Override
 	public String getTitle() {
 		return "Reflection.io: Forum";
+	}
+
+	@UiHandler("reply")
+	void focusReplyClicked(ClickEvent event) {
+		replyText.setFocus(true);
+		Document.get().setScrollTop(replyText.getAbsoluteTop());
 	}
 
 	@UiHandler("post")
@@ -133,7 +147,23 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
 	private void updateTopic(Topic topic) {
 		if (topic != null) {
-			title.setInnerHTML(topic.title);
+
+			String properties = "";
+
+			boolean isLocked = topic.locked != null && topic.locked.booleanValue();
+			if (isLocked) {
+				properties += "<i class=\"glyphicon glyphicon-lock\"></i> ";
+			}
+
+			if (topic.heat != null && topic.heat > 10) {
+				properties += "<i class=\"glyphicon glyphicon-fire\"></i> ";
+			}
+
+			if (topic.sticky != null && topic.sticky.booleanValue()) {
+				properties += "<i class=\"glyphicon glyphicon-pushpin\"></i> ";
+			}
+
+			title.setInnerHTML(properties + topic.title);
 			notes.removeAllChildren();
 
 			LIElement author = Document.get().createLIElement();
@@ -157,6 +187,15 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
 			ForumMessageProvider dataProvider = new ForumMessageProvider(topic);
 			dataProvider.addDataDisplay(messages);
+			pager.setDisplay(messages);
+
+			replyForm.setVisible(!isLocked);
+
+			if (isLocked) {
+				reply.getElement().getParentElement().getStyle().setDisplay(Display.NONE);
+			} else {
+				reply.getElement().getParentElement().getStyle().clearDisplay();
+			}
 		}
 	}
 
@@ -180,8 +219,6 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 	 * java.lang.Throwable)
 	 */
 	@Override
-	public void getTopicFailure(GetTopicRequest input, Throwable caught) {
-
-	}
+	public void getTopicFailure(GetTopicRequest input, Throwable caught) {}
 
 }
