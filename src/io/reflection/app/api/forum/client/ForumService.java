@@ -20,6 +20,8 @@ import io.reflection.app.api.forum.shared.call.GetForumsRequest;
 import io.reflection.app.api.forum.shared.call.GetForumsResponse;
 import io.reflection.app.api.forum.shared.call.GetRepliesRequest;
 import io.reflection.app.api.forum.shared.call.GetRepliesResponse;
+import io.reflection.app.api.forum.shared.call.GetTopicRequest;
+import io.reflection.app.api.forum.shared.call.GetTopicResponse;
 import io.reflection.app.api.forum.shared.call.GetTopicsRequest;
 import io.reflection.app.api.forum.shared.call.GetTopicsResponse;
 import io.reflection.app.api.forum.shared.call.UpdateReplyRequest;
@@ -99,6 +101,39 @@ public final class ForumService extends JsonService {
 		} catch (RequestException exception) {
 			output.onFailure(exception);
 			onCallFailure(ForumService.this, ForumMethodGetTopics, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String ForumMethodGetTopic = "GetTopic";
+
+	public Request getTopic(final GetTopicRequest input, final AsyncCallback<GetTopicResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(ForumMethodGetTopic, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						GetTopicResponse outputParameter = new GetTopicResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(ForumService.this, ForumMethodGetTopic, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(ForumService.this, ForumMethodGetTopic, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(ForumService.this, ForumMethodGetTopic, input, exception);
+				}
+			});
+			onCallStart(ForumService.this, ForumMethodGetTopic, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(ForumService.this, ForumMethodGetTopic, input, exception);
 		}
 		return handle;
 	}

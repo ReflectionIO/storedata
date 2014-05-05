@@ -8,12 +8,17 @@
 package io.reflection.app.client.controller;
 
 import io.reflection.app.api.forum.client.ForumService;
+import io.reflection.app.api.forum.shared.call.AddReplyRequest;
+import io.reflection.app.api.forum.shared.call.AddReplyResponse;
 import io.reflection.app.api.forum.shared.call.GetRepliesRequest;
 import io.reflection.app.api.forum.shared.call.GetRepliesResponse;
+import io.reflection.app.api.forum.shared.call.event.AddReplyEventHandler.AddReplyFailure;
+import io.reflection.app.api.forum.shared.call.event.AddReplyEventHandler.AddReplySuccess;
 import io.reflection.app.api.forum.shared.call.event.GetRepliesEventHandler.GetRepliesFailure;
 import io.reflection.app.api.forum.shared.call.event.GetRepliesEventHandler.GetRepliesSuccess;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.datatypes.shared.Reply;
 import io.reflection.app.datatypes.shared.Topic;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -39,7 +44,6 @@ public class ReplyController implements ServiceConstants {
 	private Pager pager;
 
 	private void fetchReplies() {
-
 		ForumService service = ServiceCreator.createForumService();
 
 		final GetRepliesRequest input = new GetRepliesRequest();
@@ -96,4 +100,31 @@ public class ReplyController implements ServiceConstants {
 		pager = null;
 	}
 
+	public void addReply(Long topicId, String replyContent) {
+		ForumService service = ServiceCreator.createForumService();
+
+		final AddReplyRequest input = new AddReplyRequest();
+		input.accessCode = ACCESS_CODE;
+		input.session = SessionController.get().getSessionForApiCall();
+
+		input.reply = new Reply();
+		input.reply.author = SessionController.get().getLoggedInUser();
+		input.reply.content = replyContent;
+
+		input.reply.topic = new Topic();
+		input.reply.topic.id = topicId;
+
+		service.addReply(input, new AsyncCallback<AddReplyResponse>() {
+
+			@Override
+			public void onSuccess(AddReplyResponse output) {
+				EventController.get().fireEventFromSource(new AddReplySuccess(input, output), ReplyController.this);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				EventController.get().fireEventFromSource(new AddReplyFailure(input, caught), ReplyController.this);
+			}
+		});
+	}
 }

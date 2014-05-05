@@ -1,16 +1,45 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:com.google.gwt.user.cellview.client">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:com.google.gwt.user.cellview.client"
+    xmlns:p="urn:import:io.reflection.app.client.part.text">
     <ui:style>
+    .textArea {
+    	height: 200px;
+    }
     
+    .margins {
+    	margin-top: 10px;
+    	margin-bottom: 10px;
+    }
     </ui:style>
     <g:HTMLPanel>
 
         <div class="container">
             <h2 ui:field="title"></h2>
-            <ul ui:field="notes">
-            </ul>
+            <ul ui:field="notes" class="text-muted" />
 
-            <c:CellList ui:field="messages" />
+            <div class="row">
+                <div class="col-sm-10 col-sm-offset-2 btn-group">
+                    <a href="" class="btn btn-default">Reply</a>
+                </div>
+            </div>
+
+            <c:CellList ui:field="messages" styleName="{style.margins}" />
+
+            <g:FormPanel styleName="col-sm-10 col-sm-offset-2" ui:field="replyForm">
+                <g:HTMLPanel>
+
+                    <g:HTMLPanel ui:field="replyGroup" styleName="form-group">
+                        <label>Reply</label>
+                        <p:RichTextToolbar ui:field="replyToolbar" />
+                        <g:RichTextArea ui:field="replyText" styleName="form-control {style.textArea}" />
+                        <g:HTMLPanel styleName="noteDetail" ui:field="replyNote" visible="false" />
+                    </g:HTMLPanel>
+
+                    <g:Button ui:field="post" styleName="btn btn-lg btn-primary col-sm-4 col-sm-offset-4">
+                        Post
+                    </g:Button>
+                </g:HTMLPanel>
+            </g:FormPanel>
         </div>
     </g:HTMLPanel>
 </ui:UiBinder> 

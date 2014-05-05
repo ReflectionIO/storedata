@@ -10,10 +10,14 @@ package io.reflection.app.client.controller;
 import io.reflection.app.api.forum.client.ForumService;
 import io.reflection.app.api.forum.shared.call.CreateTopicRequest;
 import io.reflection.app.api.forum.shared.call.CreateTopicResponse;
+import io.reflection.app.api.forum.shared.call.GetTopicRequest;
+import io.reflection.app.api.forum.shared.call.GetTopicResponse;
 import io.reflection.app.api.forum.shared.call.GetTopicsRequest;
 import io.reflection.app.api.forum.shared.call.GetTopicsResponse;
 import io.reflection.app.api.forum.shared.call.event.CreateTopicEventHandler.CreateTopicFailure;
 import io.reflection.app.api.forum.shared.call.event.CreateTopicEventHandler.CreateTopicSuccess;
+import io.reflection.app.api.forum.shared.call.event.GetTopicEventHandler.GetTopicFailure;
+import io.reflection.app.api.forum.shared.call.event.GetTopicEventHandler.GetTopicSuccess;
 import io.reflection.app.api.forum.shared.call.event.GetTopicsEventHandler.GetTopicsFailure;
 import io.reflection.app.api.forum.shared.call.event.GetTopicsEventHandler.GetTopicsSuccess;
 import io.reflection.app.api.shared.datatypes.Pager;
@@ -120,37 +124,37 @@ public class TopicController extends AsyncDataProvider<Topic> implements Service
 
 	}
 
-	private void fetchTopic(Long id) {
-		// ForumService service = ServiceCreator.createForumService();
-		//
-		// final GetTopicRequest input = new GetTopicRequest();
-		// input.accessCode = ACCESS_CODE;
-		//
-		// input.session = SessionController.get().getSessionForApiCall();
-		// input.id = id;
-		//
-		// service.getTopic(input, new AsyncCallback<GetTopicResponse>() {
-		//
-		// @Override
-		// public void onSuccess(GetTopicResponse output) {
-		// if (output.status == StatusType.StatusTypeSuccess) {
-		// if (output.topic != null) {
-		// if (topicLookup == null) {
-		// topicLookup = new SparseArray<Topic>();
-		// }
-		//
-		// topicLookup.put(output.topic.id.intValue(), output.topic);
-		// }
-		// }
-		//
-		// EventController.get().fireEventFromSource(new GetTopicSuccess(input, output), TopicController.this);
-		// }
-		//
-		// @Override
-		// public void onFailure(Throwable caught) {
-		// EventController.get().fireEventFromSource(new GetTopicFailure(input, caught), TopicController.this);
-		// }
-		// });
+	private void fetchTopic(Long topicId) {
+		ForumService service = ServiceCreator.createForumService();
+
+		final GetTopicRequest input = new GetTopicRequest();
+		input.accessCode = ACCESS_CODE;
+
+		input.session = SessionController.get().getSessionForApiCall();
+		input.id = topicId;
+
+		service.getTopic(input, new AsyncCallback<GetTopicResponse>() {
+
+			@Override
+			public void onSuccess(GetTopicResponse output) {
+				if (output.status == StatusType.StatusTypeSuccess) {
+					if (output.topic != null) {
+						if (topicLookup == null) {
+							topicLookup = new SparseArray<Topic>();
+						}
+
+						topicLookup.put(output.topic.id.intValue(), output.topic);
+					}
+				}
+
+				EventController.get().fireEventFromSource(new GetTopicSuccess(input, output), TopicController.this);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				EventController.get().fireEventFromSource(new GetTopicFailure(input, caught), TopicController.this);
+			}
+		});
 	}
 
 	public List<Topic> getTopics(Long forumId) {

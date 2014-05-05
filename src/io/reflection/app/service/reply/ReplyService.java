@@ -98,9 +98,9 @@ final class ReplyService implements IReplyService {
 				if (addedReply == null) {
 					addedReply = reply;
 					addedReply.id = Long.valueOf(replyConnection.getInsertedId());
-
-					TopicServiceProvider.provide().addUserReply(addedReply.topic, addedReply.author);
 				}
+
+				addedReply.topic = TopicServiceProvider.provide().addUserReply(addedReply.topic, addedReply.author);
 			}
 		} finally {
 			if (replyConnection != null) {

@@ -153,7 +153,6 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
 		forums.clear();
 
 		FilterHelper.addForums(forums);
-
 	}
 
 	/*

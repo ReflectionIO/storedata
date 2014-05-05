@@ -22,6 +22,8 @@ import io.reflection.app.api.forum.shared.call.GetForumsRequest;
 import io.reflection.app.api.forum.shared.call.GetForumsResponse;
 import io.reflection.app.api.forum.shared.call.GetRepliesRequest;
 import io.reflection.app.api.forum.shared.call.GetRepliesResponse;
+import io.reflection.app.api.forum.shared.call.GetTopicRequest;
+import io.reflection.app.api.forum.shared.call.GetTopicResponse;
 import io.reflection.app.api.forum.shared.call.GetTopicsRequest;
 import io.reflection.app.api.forum.shared.call.GetTopicsResponse;
 import io.reflection.app.api.forum.shared.call.UpdateReplyRequest;
@@ -101,6 +103,33 @@ public final class Forum extends ActionHandler {
 		return output;
 	}
 
+	public GetTopicResponse getTopic(GetTopicRequest input) {
+		LOG.finer("Entering getTopic");
+		GetTopicResponse output = new GetTopicResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("GetTopicsRequest: input"));
+
+			if (input.id == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("Long: input.id"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			// ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
+
+			output.topic = TopicServiceProvider.provide().getTopic(input.id);
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getTopic");
+		return output;
+	}
+
 	public GetRepliesResponse getReplies(GetRepliesRequest input) {
 		LOG.finer("Entering getReplies");
 		GetRepliesResponse output = new GetRepliesResponse();
@@ -177,7 +206,7 @@ public final class Forum extends ActionHandler {
 
 			input.reply = ValidationHelper.validateNewReply(input.reply, "input.reply");
 
-			ReplyServiceProvider.provide().addReply(input.reply);
+			output.reply = ReplyServiceProvider.provide().addReply(input.reply);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {

@@ -8,18 +8,33 @@
 //
 package io.reflection.app.api.forum.shared.call;
 
-import com.google.gson.JsonObject;
 import io.reflection.app.api.shared.datatypes.Response;
+import io.reflection.app.datatypes.shared.Reply;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
 
 public class AddReplyResponse extends Response {
+	public Reply reply;
+
 	@Override
 	public JsonObject toJson() {
 		JsonObject object = super.toJson();
+		JsonElement jsonReply = reply == null ? JsonNull.INSTANCE : reply.toJson();
+		object.add("reply", jsonReply);
 		return object;
 	}
 
 	@Override
 	public void fromJson(JsonObject jsonObject) {
 		super.fromJson(jsonObject);
+		if (jsonObject.has("reply")) {
+			JsonElement jsonReply = jsonObject.get("reply");
+			if (jsonReply != null) {
+				reply = new Reply();
+				reply.fromJson(jsonReply.getAsJsonObject());
+			}
+		}
 	}
 }
