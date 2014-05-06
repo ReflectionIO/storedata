@@ -251,7 +251,7 @@ final class TopicService implements ITopicService {
 	public Topic addUserReply(Topic topic, User user) throws DataAccessException {
 		String addReplyQuery = String.format(
 				"UPDATE `topic` SET `numberofreplies`=`numberofreplies`+1, `lastreplierid`=%d, `lastreplied`=NOW() WHERE `id`=%d AND `deleted`='n'",
-				topic.id.longValue(), user.id.longValue());
+				user.id.longValue(), topic.id.longValue());
 
 		Connection topicConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeTopic.toString());
 
