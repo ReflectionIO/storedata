@@ -7,16 +7,21 @@
 //
 package io.reflection.app.client.page.forum;
 
+import io.reflection.app.api.forum.shared.call.AddReplyRequest;
+import io.reflection.app.api.forum.shared.call.AddReplyResponse;
 import io.reflection.app.api.forum.shared.call.GetTopicRequest;
 import io.reflection.app.api.forum.shared.call.GetTopicResponse;
+import io.reflection.app.api.forum.shared.call.event.AddReplyEventHandler;
 import io.reflection.app.api.forum.shared.call.event.GetTopicEventHandler;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.ReplyController;
 import io.reflection.app.client.controller.TopicController;
 import io.reflection.app.client.dataprovider.ForumMessageProvider;
 import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.page.forum.part.ForumMessageCell;
@@ -48,7 +53,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class TopicPage extends Page implements NavigationEventHandler, GetTopicEventHandler {
+public class TopicPage extends Page implements NavigationEventHandler, GetTopicEventHandler, AddReplyEventHandler {
 
 	private static TopicPageUiBinder uiBinder = GWT.create(TopicPageUiBinder.class);
 
@@ -75,8 +80,13 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
 	@UiField SimplePager pager;
 
+	private ForumMessageProvider dataProvider;
+
 	public TopicPage() {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		messages.setPageSize(ServiceConstants.SHORT_STEP_VALUE);
+		pager.setPageSize(ServiceConstants.SHORT_STEP_VALUE);
 	}
 
 	/*
@@ -90,6 +100,24 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(EventController.get().addHandlerToSource(GetTopicEventHandler.TYPE, TopicController.get(), this));
+
+		if (dataProvider != null) {
+			dataProvider.registerListeners();
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.page.Page#onDetach()
+	 */
+	@Override
+	protected void onDetach() {
+		super.onDetach();
+
+		if (dataProvider != null) {
+			dataProvider.unregisterListeners();
+		}
 	}
 
 	/*
@@ -112,13 +140,21 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 	void postReplyClicked(ClickEvent event) {
 		if (validate()) {
 			ReplyController.get().addReply(topicId, replyText.getHTML());
-		} else {
-
 		}
 	}
 
 	private boolean validate() {
-		return true;
+		boolean isValid = false;
+
+		// TODO should probably take into account quoted text
+		if (replyText.getHTML().trim().length() > 0) {
+			FormHelper.hideNote(replyGroup, replyNote);
+			isValid = true;
+		} else {
+			FormHelper.showNote(true, replyGroup, replyNote, "No reply text");
+		}
+
+		return isValid;
 	}
 
 	/*
@@ -130,7 +166,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
 
-		if (current != null && PageType.ForumTopicPageType.equals(current.getPage())) {
+		if (current != null && PageType.ForumThreadPageType.equals(current.getPage())) {
 			if (current.getAction() != null && VIEW_ACTION_PARAMETER_VALUE.equals(current.getAction())) {
 
 				String topicIdString;
@@ -185,7 +221,13 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 				notes.appendChild(lastReplier);
 			}
 
-			ForumMessageProvider dataProvider = new ForumMessageProvider(topic);
+			if (dataProvider != null) {
+				dataProvider.unregisterListeners();
+			}
+
+			dataProvider = new ForumMessageProvider(topic);
+			dataProvider.registerListeners();
+
 			dataProvider.addDataDisplay(messages);
 			pager.setDisplay(messages);
 
@@ -220,5 +262,27 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 	 */
 	@Override
 	public void getTopicFailure(GetTopicRequest input, Throwable caught) {}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.forum.shared.call.event.AddReplyEventHandler#addReplySuccess(io.reflection.app.api.forum.shared.call.AddReplyRequest,
+	 * io.reflection.app.api.forum.shared.call.AddReplyResponse)
+	 */
+	@Override
+	public void addReplySuccess(AddReplyRequest input, AddReplyResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess) {
+			replyText.setText("");
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.forum.shared.call.event.AddReplyEventHandler#addReplyFailure(io.reflection.app.api.forum.shared.call.AddReplyRequest,
+	 * java.lang.Throwable)
+	 */
+	@Override
+	public void addReplyFailure(AddReplyRequest input, Throwable caught) {}
 
 }

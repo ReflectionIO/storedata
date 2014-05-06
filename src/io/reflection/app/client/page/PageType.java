@@ -70,8 +70,8 @@ public enum PageType {
 	NotPermittedPageType("notpermitted", false),
 	WidgetTestPage("test", false),
 	ForumPageType("forum", false),
+	ForumThreadPageType("forumthread", false),
 	ForumTopicPageType("forumtopic", false),
-	ForumAddTopicPageType("addtopic", false),
 
 	// Non navigable
 	LoadingPageType("loading"), ;
@@ -278,10 +278,10 @@ public enum PageType {
 		case ForumPageType:
 			page = new ForumPage();
 			break;
-		case ForumTopicPageType:
+		case ForumThreadPageType:
 			page = new TopicPage();
 			break;
-		case ForumAddTopicPageType:
+		case ForumTopicPageType:
 			page = new AddTopicPage();
 			break;
 		case HomePageType:

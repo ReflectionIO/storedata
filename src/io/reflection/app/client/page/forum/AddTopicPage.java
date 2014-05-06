@@ -129,7 +129,7 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
 	public void createTopicSuccess(CreateTopicRequest input, CreateTopicResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			TopicController.get().reset();
-			PageType.ForumTopicPageType.show("view", output.topic.id.toString());
+			PageType.ForumThreadPageType.show("view", output.topic.id.toString());
 		}
 	}
 

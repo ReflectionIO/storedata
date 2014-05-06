@@ -7,17 +7,29 @@
 //
 package io.reflection.app.client.dataprovider;
 
+import io.reflection.app.api.forum.shared.call.AddReplyRequest;
+import io.reflection.app.api.forum.shared.call.AddReplyResponse;
 import io.reflection.app.api.forum.shared.call.GetRepliesRequest;
 import io.reflection.app.api.forum.shared.call.GetRepliesResponse;
+import io.reflection.app.api.forum.shared.call.UpdateReplyRequest;
+import io.reflection.app.api.forum.shared.call.UpdateReplyResponse;
+import io.reflection.app.api.forum.shared.call.UpdateTopicRequest;
+import io.reflection.app.api.forum.shared.call.UpdateTopicResponse;
+import io.reflection.app.api.forum.shared.call.event.AddReplyEventHandler;
 import io.reflection.app.api.forum.shared.call.event.GetRepliesEventHandler;
+import io.reflection.app.api.forum.shared.call.event.UpdateReplyEventHandler;
+import io.reflection.app.api.forum.shared.call.event.UpdateTopicEventHandler;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.ReplyController;
+import io.reflection.app.client.controller.TopicController;
 import io.reflection.app.client.part.datatypes.ForumMessage;
 import io.reflection.app.datatypes.shared.Reply;
 import io.reflection.app.datatypes.shared.Topic;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.view.client.AsyncDataProvider;
@@ -29,14 +41,17 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implements GetRepliesEventHandler {
+public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implements GetRepliesEventHandler, AddReplyEventHandler, UpdateTopicEventHandler,
+		UpdateReplyEventHandler {
 
-	private List<ForumMessage> rows = null;
+	private List<ForumMessage> rows = new ArrayList<ForumMessage>();
+	private Map<Long, Reply> replyLookup = new HashMap<Long, Reply>();
 	private Topic topic;
-	private HandlerRegistration registration;
+	private List<HandlerRegistration> registrations = new ArrayList<HandlerRegistration>();
+	private int start;
+	private int count;
 
 	public ForumMessageProvider(Topic topic) {
-		rows = new ArrayList<ForumMessage>();
 		rows.add(new ForumMessage(this.topic = topic));
 	}
 
@@ -53,22 +68,10 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
 		int end = start + r.getLength();
 
 		if (rows == null || end > rows.size()) {
-			registerListener();
 			ReplyController.get().getReplies(topic.id);
 		} else {
 			updateRowData(start, rows.subList(start, end));
 		}
-	}
-
-	/**
-	 * 
-	 */
-	private void registerListener() {
-		if (registration != null) {
-			unregisterListener();
-		}
-
-		registration = EventController.get().addHandlerToSource(GetRepliesEventHandler.TYPE, ReplyController.get(), this);
 	}
 
 	/*
@@ -83,27 +86,31 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
 			if (output.replies != null) {
 				for (Reply reply : output.replies) {
 					rows.add(new ForumMessage(reply));
+					replyLookup.put(reply.id, reply);
 				}
 			}
 
-			int start = input.pager.start.intValue() == 0 ? 0 : input.pager.start.intValue() + 1;
+			start = input.pager.start.intValue() == 0 ? 0 : input.pager.start.intValue() + 1;
+			count = input.pager.count.intValue();
 
 			updateRowCount(rows.size(), false);
-			updateRowData(start, rows.subList(start, Math.min(start + input.pager.count.intValue(), rows.size())));
+			updateRowData(start, rows.subList(start, Math.min(start + count, rows.size())));
 		}
-
-		unregisterListener();
 	}
 
-	/**
-	 * 
-	 */
-	private void unregisterListener() {
-		if (registration != null) {
+	public void registerListeners() {
+		registrations.add(EventController.get().addHandlerToSource(GetRepliesEventHandler.TYPE, ReplyController.get(), this));
+		registrations.add(EventController.get().addHandlerToSource(AddReplyEventHandler.TYPE, ReplyController.get(), this));
+		registrations.add(EventController.get().addHandlerToSource(UpdateTopicEventHandler.TYPE, TopicController.get(), this));
+		registrations.add(EventController.get().addHandlerToSource(UpdateReplyEventHandler.TYPE, ReplyController.get(), this));
+	}
+
+	public void unregisterListeners() {
+		for (HandlerRegistration registration : this.registrations) {
 			registration.removeHandler();
-			registration = null;
 		}
 
+		registrations.clear();
 	}
 
 	/*
@@ -113,8 +120,71 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
 	 * java.lang.Throwable)
 	 */
 	@Override
-	public void getRepliesFailure(GetRepliesRequest input, Throwable caught) {
+	public void getRepliesFailure(GetRepliesRequest input, Throwable caught) {}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.forum.shared.call.event.UpdateReplyEventHandler#updateReplySuccess(io.reflection.app.api.forum.shared.call.UpdateReplyRequest,
+	 * io.reflection.app.api.forum.shared.call.UpdateReplyResponse)
+	 */
+	@Override
+	public void updateReplySuccess(UpdateReplyRequest input, UpdateReplyResponse output) {
+		updateRowCount(rows.size(), false);
+		updateRowData(start, rows.subList(start, Math.min(start + count, rows.size())));
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.forum.shared.call.event.UpdateReplyEventHandler#updateReplyFailure(io.reflection.app.api.forum.shared.call.UpdateReplyRequest,
+	 * java.lang.Throwable)
+	 */
+	@Override
+	public void updateReplyFailure(UpdateReplyRequest input, Throwable caught) {}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.forum.shared.call.event.UpdateTopicEventHandler#updateTopicSuccess(io.reflection.app.api.forum.shared.call.UpdateTopicRequest,
+	 * io.reflection.app.api.forum.shared.call.UpdateTopicResponse)
+	 */
+	@Override
+	public void updateTopicSuccess(UpdateTopicRequest input, UpdateTopicResponse output) {
+		updateRowCount(rows.size(), false);
+		updateRowData(start, rows.subList(start, Math.min(start + count, rows.size())));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.forum.shared.call.event.UpdateTopicEventHandler#updateTopicFailure(io.reflection.app.api.forum.shared.call.UpdateTopicRequest,
+	 * java.lang.Throwable)
+	 */
+	@Override
+	public void updateTopicFailure(UpdateTopicRequest input, Throwable caught) {}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.forum.shared.call.event.AddReplyEventHandler#addReplySuccess(io.reflection.app.api.forum.shared.call.AddReplyRequest,
+	 * io.reflection.app.api.forum.shared.call.AddReplyResponse)
+	 */
+	@Override
+	public void addReplySuccess(AddReplyRequest input, AddReplyResponse output) {
+		rows.add(new ForumMessage(output.reply));
+
+		updateRowCount(rows.size(), false);
+		updateRowData(start, rows.subList(start, Math.min(start + count, rows.size())));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.forum.shared.call.event.AddReplyEventHandler#addReplyFailure(io.reflection.app.api.forum.shared.call.AddReplyRequest,
+	 * java.lang.Throwable)
+	 */
+	@Override
+	public void addReplyFailure(AddReplyRequest input, Throwable caught) {}
 
 }
