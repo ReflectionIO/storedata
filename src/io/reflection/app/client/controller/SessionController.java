@@ -281,7 +281,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 		LinkedAccountController.get().reset();
 		LinkedAccountController.get().resetAllLinkedAccounts();
 		MyAppsController.get().reset();
-		PageType.LoginPageType.show();
+		PageType.LoginPageType.show("requestinvite");
 	}
 
 	private void makeSessionInvalid() {
