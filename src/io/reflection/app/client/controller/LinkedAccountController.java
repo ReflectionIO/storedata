@@ -120,7 +120,11 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 							if (myAllDataAccounts == null) {
 								myAllDataAccounts = new ArrayList<DataAccount>();
 								myAllDataAccounts.addAll(rows);
-								pagerMaxCount.totalCount = pager.totalCount.longValue();
+								pagerMaxCount = new Pager();
+								pagerMaxCount.count = (long) Integer.MAX_VALUE;
+								pagerMaxCount.start = Long.valueOf(0);
+								pagerMaxCount.sortDirection = SortDirectionType.SortDirectionTypeDescending;								
+								pagerMaxCount.totalCount = pager.totalCount.longValue();								
 							}
 						}
 
