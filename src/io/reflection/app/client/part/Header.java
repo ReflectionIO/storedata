@@ -72,6 +72,9 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@UiField InlineHyperlink blogLink;
 	@UiField LIElement blogItem;
 
+	@UiField InlineHyperlink forumLink;
+	@UiField LIElement forumItem;
+
 	@UiField InlineHyperlink myAppsLink;
 	@UiField LIElement myAppsItem;
 
@@ -160,6 +163,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		removeAccount();
 		removeAdmin();
 		removeMyApps();
+		removeForum();
 
 		mRanksLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
 	}
@@ -226,6 +230,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			mItems.add(mUpgradeAccountItem);
 			mItems.add(mLinkedAccountsItem);
 			mItems.add(blogItem);
+			mItems.add(forumItem);
 		}
 	}
 
@@ -338,6 +343,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		addAccount(user);
 
 		addLeaderboard();
+		
+		addForum();
 
 		addFeatureRequest();
 	}
@@ -369,6 +376,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		removeMyApps();
 
 		removeLeaderboard();
+		
+		removeForum();
 
 		removeFeatureRequest();
 
@@ -428,6 +437,14 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 	private void removeLeaderboard() {
 		mRanksItem.setAttribute("style", "display: none");
+	}
+
+	private void addForum() {
+		forumItem.setAttribute("style", "display: inline");
+	}
+
+	private void removeForum() {
+		forumItem.setAttribute("style", "display: none");
 	}
 
 	private void addAccount(User user) {

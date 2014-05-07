@@ -1,6 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
+    <ui:import field="io.reflection.app.client.page.PageType.ForumPageType" />
     <ui:import field="io.reflection.app.client.page.PageType.BlogPostsPageType" />
     <ui:import field="io.reflection.app.client.page.PageType.UpgradePageType" />
     <ui:import field="io.reflection.app.client.page.PageType.FeedBrowserPageType" />
@@ -25,7 +26,6 @@
     	padding-top: 5px;
     	height: 60px;
     	color: #8d8ea1;
-    	
     	-o-transition: .3s;
     	-ms-transition: .3s;
     	-moz-transition: .3s;
@@ -109,6 +109,10 @@
 
                 <li ui:field="blogItem">
                     <g:InlineHyperlink ui:field="blogLink" targetHistoryToken="{BlogPostsPageType.asTargetHistoryToken}">Blog</g:InlineHyperlink>
+                </li>
+
+                <li ui:field="forumItem">
+                    <g:InlineHyperlink ui:field="forumLink" targetHistoryToken="{ForumPageType.asTargetHistoryToken}">Forum</g:InlineHyperlink>
                 </li>
 
                 <li ui:field="mUpgradeAccountItem">
