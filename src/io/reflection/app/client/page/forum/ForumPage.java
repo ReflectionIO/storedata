@@ -214,10 +214,14 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 
 			String selectedIdString;
 			if ((selectedIdString = current.getParameter(SELECTED_FORUM_PARAMETER_INDEX)) != null) {
-				selectedId = Long.valueOf(selectedIdString);
+				Long newSelectedId = Long.valueOf(selectedIdString);
 
-				TopicController.get().getTopics(selectedId);
-				forums.redraw();
+				if (selectedId == null || newSelectedId.longValue() != selectedId.longValue()) {
+					selectedId = newSelectedId;
+
+					TopicController.get().getTopics(selectedId);
+					forums.redraw();
+				}
 			}
 		}
 	}

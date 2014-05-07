@@ -119,6 +119,21 @@ public class ReplyController implements ServiceConstants {
 
 			@Override
 			public void onSuccess(AddReplyResponse output) {
+
+				if (output.status == StatusType.StatusTypeSuccess) {
+					if (pager != null && pager.totalCount != null) {
+						long totalCount = pager.totalCount.longValue();
+						pager.totalCount = Long.valueOf(totalCount++);
+					}
+
+					Topic topic = TopicController.get().getTopic(ReplyController.this.topicId);
+
+					if (topic != null) {
+						int numberOfReplies = topic.numberOfReplies.intValue();
+						topic.numberOfReplies = Integer.valueOf(numberOfReplies++);
+					}
+				}
+
 				EventController.get().fireEventFromSource(new AddReplySuccess(input, output), ReplyController.this);
 			}
 

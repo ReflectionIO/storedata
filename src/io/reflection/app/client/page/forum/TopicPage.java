@@ -100,6 +100,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(EventController.get().addHandlerToSource(GetTopicEventHandler.TYPE, TopicController.get(), this));
+		register(EventController.get().addHandlerToSource(AddReplyEventHandler.TYPE, ReplyController.get(), this));
 
 		if (dataProvider != null) {
 			dataProvider.registerListeners();

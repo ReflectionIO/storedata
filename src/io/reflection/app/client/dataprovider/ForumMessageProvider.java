@@ -50,6 +50,7 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
 	private List<HandlerRegistration> registrations = new ArrayList<HandlerRegistration>();
 	private int start;
 	private int count;
+	private int totalCount;
 
 	public ForumMessageProvider(Topic topic) {
 		rows.add(new ForumMessage(this.topic = topic));
@@ -92,9 +93,10 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
 
 			start = input.pager.start.intValue() == 0 ? 0 : input.pager.start.intValue() + 1;
 			count = input.pager.count.intValue();
+			totalCount = output.pager.totalCount.intValue() + 1;
 
-			updateRowCount(rows.size(), false);
-			updateRowData(start, rows.subList(start, Math.min(start + count, rows.size())));
+			updateRowCount(rows.size(), true);
+			updateRowData(start, rows.subList(start, Math.min(start + count, totalCount)));
 		}
 	}
 
@@ -130,8 +132,8 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
 	 */
 	@Override
 	public void updateReplySuccess(UpdateReplyRequest input, UpdateReplyResponse output) {
-		updateRowCount(rows.size(), false);
-		updateRowData(start, rows.subList(start, Math.min(start + count, rows.size())));
+		updateRowCount(rows.size(), true);
+		updateRowData(start, rows.subList(start, Math.min(start + count, totalCount)));
 	}
 
 	/*
@@ -151,8 +153,8 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
 	 */
 	@Override
 	public void updateTopicSuccess(UpdateTopicRequest input, UpdateTopicResponse output) {
-		updateRowCount(rows.size(), false);
-		updateRowData(start, rows.subList(start, Math.min(start + count, rows.size())));
+		updateRowCount(rows.size(), true);
+		updateRowData(start, rows.subList(start, Math.min(start + count, totalCount)));
 	}
 
 	/*
@@ -174,8 +176,9 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
 	public void addReplySuccess(AddReplyRequest input, AddReplyResponse output) {
 		rows.add(new ForumMessage(output.reply));
 
-		updateRowCount(rows.size(), false);
-		updateRowData(start, rows.subList(start, Math.min(start + count, rows.size())));
+		totalCount++;
+		updateRowCount(rows.size(), true);
+		updateRowData(start, rows.subList(start, Math.min(start + count, totalCount)));
 	}
 
 	/*

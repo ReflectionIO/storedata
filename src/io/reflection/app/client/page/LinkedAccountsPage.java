@@ -138,6 +138,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 		addSoonTag(mPlayLink);
 
+		linkedAccountsTable.setEmptyTableWidget(new HTMLPanel("No linked accounts found!"));
 		LinkedAccountController.get().addDataDisplay(linkedAccountsTable);
 		simplePager.setDisplay(linkedAccountsTable);
 
@@ -243,15 +244,15 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 			editElement.setClassName("show");
 			deleteElement.setClassName("show");
 		} else if (BrowserEvents.MOUSEOUT.equals(event.getNativeEvent().getType())) {
-			editElement.setClassName("invisible");
-			deleteElement.setClassName("invisible");
+				editElement.setClassName("invisible");
+				deleteElement.setClassName("invisible");
 		}
 
 		// TODO Use selection model to show Edit and Delete links if plus and minus images will be added
 
 		// expandElement.removeClassName(Styles.INSTANCE.reflection().linkedAccountMinus());
 		// expandElement.addClassName(Styles.INSTANCE.reflection().linkedAccountPlus());
-		// Use sprite for expander
+				// Use sprite for expander
 
 		// expandElement.removeClassName(Styles.INSTANCE.reflection().linkedAccountPlus());
 		// expandElement.addClassName(Styles.INSTANCE.reflection().linkedAccountMinus());
@@ -339,12 +340,12 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 			mLinkableAccount.getFirstToFocus().setFocus(true);
 
 			DataAccount linkedAccount = LinkedAccountController.get().getLinkedAccount(Long.valueOf(typeParameter));
-			mIosMacForm.setAccountUsername(linkedAccount.username);
-			JsonObject propertiesJson = Convert.toJsonObject(linkedAccount.properties);
-			mIosMacForm.setVendorNumber(propertiesJson.get("vendors").getAsString());
+					mIosMacForm.setAccountUsername(linkedAccount.username);
+					JsonObject propertiesJson = Convert.toJsonObject(linkedAccount.properties);
+					mIosMacForm.setVendorNumber(propertiesJson.get("vendors").getAsString());
 
 		} else if (isValidDeleteStack(actionParameter, typeParameter)) {
-			loader.setVisible(true);
+				loader.setVisible(true);
 			LinkedAccountController.get().deleteLinkedAccount(LinkedAccountController.get().getLinkedAccount(Long.valueOf(typeParameter)));
 		} else {
 			linkedAccountForm.setVisible(false);
@@ -357,7 +358,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	private boolean isValidEditStack(String actionParameter, String typeParameter) {
 		return (EDIT_ACTION_PARAMETER_VALUE.equals(actionParameter) && typeParameter != null && typeParameter.matches("[0-9]+") && LinkedAccountController
 				.get().getLinkedAccount(Long.valueOf(typeParameter)) != null) ? true : false;
-	}
+		}
 
 	private boolean isValidDeleteStack(String actionParameter, String typeParameter) {
 		return (DELETE_ACTION_PARAMETER_VALUE.equals(actionParameter) && typeParameter != null && typeParameter.matches("[0-9]+") && LinkedAccountController
@@ -401,6 +402,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 		if (output.status == StatusType.StatusTypeSuccess) {
 			User user = SessionController.get().getLoggedInUser();
+
 			PageType.UsersPageType.show(PageType.LinkedAccountsPageType.toString(user.id.toString()));
 		} else {
 			showError(output.error);
@@ -441,7 +443,9 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		loader.setVisible(false);
 		if (output.status == StatusType.StatusTypeSuccess) {
 			User user = SessionController.get().getLoggedInUser();
+
 			PageType.UsersPageType.show(PageType.LinkedAccountsPageType.toString(user.id.toString()));
+
 		} else {
 			showError(output.error);
 		}
@@ -520,6 +524,6 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	@Override
 	public void getLinkedAccountsFailure(GetLinkedAccountsRequest input, Throwable caught) {
 
-	}
+		}
 
 }

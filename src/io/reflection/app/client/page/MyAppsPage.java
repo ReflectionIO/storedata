@@ -41,6 +41,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -81,6 +82,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 		createColumns();
 
+		appsTable.setEmptyTableWidget(new HTMLPanel("No Apps found!"));
 		MyAppsController.get().addDataDisplay(appsTable);
 		pager.setDisplay(appsTable);
 

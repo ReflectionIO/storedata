@@ -157,7 +157,7 @@ public class ValidationHelper {
 
 		if (pager.start < 0) throw new InputValidationException(ApiError.PagerStartNegative.getCode(), ApiError.PagerStartNegative.getMessage(parent));
 
-		if (pager.count == null) pager.count = Long.valueOf(0);
+		if (pager.count == null) pager.count = Long.valueOf(10);
 
 		if (pager.count.intValue() <= 0)
 			throw new InputValidationException(ApiError.PagerCountTooSmall.getCode(), ApiError.PagerCountTooSmall.getMessage(parent));

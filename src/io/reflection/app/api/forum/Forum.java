@@ -153,8 +153,6 @@ public final class Forum extends ActionHandler {
 			updatePager(output.pager, output.replies, input.pager.totalCount == null ? ReplyServiceProvider.provide().getRepliesCount(input.topic) : null);
 
 			output.status = StatusType.StatusTypeSuccess;
-
-			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
 			output.error = convertToErrorAndLog(LOG, e);

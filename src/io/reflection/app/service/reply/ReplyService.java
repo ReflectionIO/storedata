@@ -193,7 +193,7 @@ final class ReplyService implements IReplyService {
 
 		Connection replyConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeReply.toString());
 
-		String getRepliesCountQuery = String.format("SELECT COUNT(`id`) AS `replycount` FROM `reply` WHERE `topicid`=%d AND `deleted`='n'",
+		String getRepliesCountQuery = String.format("SELECT COUNT(1) AS `replycount` FROM `reply` WHERE `topicid`=%d AND `deleted`='n'",
 				topic.id.longValue());
 
 		try {
