@@ -24,6 +24,7 @@ import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.page.part.MyAppsTopPanel;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.BootstrapGwtDatePicker;
+import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.part.datatypes.MyApp;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.client.res.Styles;
@@ -54,7 +55,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	interface MyAppsPageUiBinder extends UiBinder<Widget, MyAppsPage> {}
 
 	@UiField(provided = true) CellTable<MyApp> appsTable = new CellTable<MyApp>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
-	// @UiField(provided = true) PageSizePager pager = new PageSizePager(ServiceConstants.STEP_VALUE);
+	@UiField SimplePager pager;
 
 	@UiField MyAppsTopPanel topPanel;
 
@@ -81,6 +82,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		createColumns();
 
 		MyAppsController.get().addDataDisplay(appsTable);
+		pager.setDisplay(appsTable);
 
 	}
 
@@ -204,8 +206,6 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	 * io.reflection.app.client.controller.NavigationController.Stack)
 	 */
 	@Override
-	public void navigationChanged(Stack previous, Stack current) {
-		MyAppsController.get().showAllUserItems();
-	}
+	public void navigationChanged(Stack previous, Stack current) {}
 
 }

@@ -1040,6 +1040,8 @@ public final class Core extends ActionHandler {
 
 			output.account = UserServiceProvider.provide().addDataAccount(input.session.user, input.source, input.username, input.password, input.properties);
 
+			output.account.source = input.source;
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;

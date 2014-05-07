@@ -23,7 +23,6 @@
     .topPanel {
     	margin-top: 20px;
     }
-    
     </ui:style>
 
 
@@ -56,7 +55,7 @@
                     </g:HTMLPanel>
 
                     <c:CellTable ui:field="linkedAccountsTable" styleName="table table-hover table-striped" />
-
+                    <p:SimplePager ui:field="simplePager" styleName="text-center" visible="false" />
                     <div class="text-center">
                         <g:Button ui:field="addLinkedAccount" styleName="btn btn-primary btn-lg text-center" />
                     </div>

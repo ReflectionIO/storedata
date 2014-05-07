@@ -32,6 +32,7 @@ import java.util.Map;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
+import com.google.gwt.view.client.Range;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**
@@ -42,10 +43,11 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 
 	private static MyAppsController mOne = null;
 
-	private List<MyApp> rows = null;
+	private List<MyApp> rows = new ArrayList<MyApp>();
 	private Pager pager = null;
 	private List<MyApp> userItems = null;
 	private Map<String, MyApp> userItemsLookup = new HashMap<String, MyApp>();
+	private long mCount = -1;
 
 	public static MyAppsController get() {
 		if (mOne == null) {
@@ -59,10 +61,13 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 		updateRowCount(0, false); // Clear table and force loader
 		// TODO: this should also check the user type... if the user does not have a full listing permission... there is no point in attempting to get the
 		// linked accounts
-		if (LinkedAccountController.get().isLinkedAccountFetched()) { // FetchLinkedAccount already called
-			if (LinkedAccountController.get().hasLinkedAccounts()) { // Linked accounts have been retrieved
+
+		// All linked accounts have been already retrieved, either from MyApps page or from LinkedAccountsPage
+		if (LinkedAccountController.get().hasAllLinkedAccounts()) {
+			if (LinkedAccountController.get().getLinkedAccountsCount() > 0) {
 				if (hasUserItems()) {
-					updateRowData(0, rows);
+					updateRowCount((int) mCount, true);
+					updateRowData(0, rows.subList(0, Math.min(STEP.intValue(), pager.totalCount.intValue())));
 				} else {
 					fetchLinkedAccountItems();
 				}
@@ -70,7 +75,7 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 				updateRowCount(0, true);
 			}
 		} else {
-			LinkedAccountController.get().fetchLinkedAccounts();
+			LinkedAccountController.get().fetchAllLinkedAccounts();
 		}
 	}
 
@@ -83,13 +88,13 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 	@Override
 	public void getLinkedAccountsSuccess(GetLinkedAccountsRequest input, GetLinkedAccountsResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-
-			if (LinkedAccountController.get().hasLinkedAccounts()) {
-				fetchLinkedAccountItems();
-			} else { // No linked accounts associated with this user
-				updateRowCount(0, true);
+			if (output.pager.totalCount != null) {
+				if (LinkedAccountController.get().hasAllLinkedAccounts() && output.pager.totalCount > 0) {
+					fetchLinkedAccountItems();
+				} else { // No linked accounts associated with this user
+					updateRowCount(0, true);
+				}
 			}
-
 		}
 
 	}
@@ -120,21 +125,25 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 		}
 		input.pager = pager;
 
-		if (rows == null) {
-			rows = new ArrayList<MyApp>();
-		}
-
 		if (userItems == null) {
 			userItems = new ArrayList<MyApp>();
 		}
 
-		input.linkedAccount = LinkedAccountController.get().getLinkedAccounts().get(0); // TODO loop on linked accounts
+		input.linkedAccount = LinkedAccountController.get().getAllLinkedAccounts().get(0); // TODO loop on linked accounts
 
 		service.getLinkedAccountItems(input, new AsyncCallback<GetLinkedAccountItemsResponse>() {
 
 			@Override
 			public void onSuccess(GetLinkedAccountItemsResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
+
+					if (output.pager != null) {
+						pager = output.pager;
+
+						if (pager.totalCount != null) {
+							mCount = pager.totalCount.longValue();
+						}
+					}
 
 					if (output.items != null) { // There are items associated with this linked account
 
@@ -149,12 +158,15 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 						}
 
 						if (userItemsLookup.size() > 0) {
-							updateRowData(0, rows);
 							fetchSalesRanks();
 						}
-					} else { // No items associated with this linked account
-						updateRowCount(0, true);
 					}
+
+					updateRowCount((int) mCount, true);
+					updateRowData(
+							input.pager.start.intValue(),
+							rows.subList(input.pager.start.intValue(),
+									Math.min(input.pager.start.intValue() + input.pager.count.intValue(), pager.totalCount.intValue())));
 				}
 
 				EventController.get().fireEventFromSource(new GetLinkedAccountItemsSuccess(input, output), MyAppsController.this);
@@ -174,7 +186,7 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 		input.accessCode = ACCESS_CODE;
 		input.session = SessionController.get().getSessionForApiCall();
 
-		input.linkedAccount = LinkedAccountController.get().getLinkedAccounts().get(0); // TODO loop on linked accounts
+		input.linkedAccount = LinkedAccountController.get().getAllLinkedAccounts().get(0); // TODO loop on linked accounts
 
 		input.category = FilterController.get().getCategory();
 		input.country = FilterController.get().getCountry();
@@ -282,7 +294,7 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 	}
 
 	public void reset() {
-		rows = null;
+		rows.clear();
 		userItems = null;
 		userItemsLookup.clear();
 	}
@@ -294,14 +306,14 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 	 */
 	@Override
 	protected void onRangeChanged(HasData<MyApp> display) {
-
-		/*
-		 * Range r = display.getVisibleRange();
-		 * 
-		 * int start = r.getStart(); int end = start + r.getLength();
-		 * 
-		 * if (end > rows.size()) { getAllUserItems(); } else { updateRowData(start, rows.subList(start, end)); }
-		 */
+		Range r = display.getVisibleRange();
+		int start = r.getStart();
+		int end = start + r.getLength();
+		if (end > rows.size()) {
+			showAllUserItems();
+		} else {
+			updateRowData(start, rows.subList(start, end));
+		}
 	}
 
 }

@@ -232,13 +232,14 @@ final class DataAccountService implements IDataAccountService {
 	public void deleteDataAccount(DataAccount dataAccount) throws DataAccessException {
 		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
-		String deleteUserDataAccountQuery = String.format("UPDATE `userdataaccount` SET `deleted`='y' WHERE `dataaccountid`=%d AND `deleted`='n'", dataAccount.id.longValue());
-		String deleteDataAccountQuery = String.format("UPDATE `dataaccount` SET `deleted`='y' WHERE `id`=%d AND `deleted`='n'", dataAccount.id.longValue());		
+		String deleteUserDataAccountQuery = String.format("UPDATE `userdataaccount` SET `deleted`='y' WHERE `dataaccountid`=%d AND `deleted`='n'",
+				dataAccount.id.longValue());
+		String deleteDataAccountQuery = String.format("UPDATE `dataaccount` SET `deleted`='y' WHERE `id`=%d AND `deleted`='n'", dataAccount.id.longValue());
 
 		try {
 			dataAccountConnection.connect();
 			dataAccountConnection.executeQuery(deleteUserDataAccountQuery);
-			dataAccountConnection.executeQuery(deleteDataAccountQuery);			
+			dataAccountConnection.executeQuery(deleteDataAccountQuery);
 
 			if (dataAccountConnection.getAffectedRowCount() > 0) {
 				if (LOG.isLoggable(Level.INFO)) {
@@ -357,10 +358,9 @@ final class DataAccountService implements IDataAccountService {
 		}
 
 		String getIdsDataAccountsQuery = String
-				.format("SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` FROM `dataaccount` WHERE `id` in (%s) AND `deleted`='n' ORDER BY `%s` %s LIMIT %d,%d",
+				.format("SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` FROM `dataaccount` WHERE `id` in (%s) AND `deleted`='n' ORDER BY `%s` %s",
 						key(), joinedIds, pager.sortBy == null ? "id" : pager.sortBy,
-						pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
-						pager.start == null ? 0 : pager.start.longValue(), pager.count == null ? 25 : pager.count.longValue());
+						pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC");
 
 		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
