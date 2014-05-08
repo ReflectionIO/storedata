@@ -36,6 +36,7 @@ public final class Connection {
 	private long insertedId;
 	private boolean isTransactionMode;
 	private boolean isNative = false;
+	private String encoding = "utf8mb4";
 
 	private static final Logger LOG = Logger.getLogger(Connection.class.getName());
 
@@ -124,6 +125,7 @@ public final class Connection {
 			if (connection == null) {
 				connection = DriverManager.getConnection(url, username, password);
 				connection.setAutoCommit(!isTransactionMode);
+				executeQuery(String.format("SET NAMES \'%s\'", encoding));
 			}
 		} catch (SQLException ex) {
 			LOG.log(GaeLevel.SEVERE, "Error conneting to databse", ex);
