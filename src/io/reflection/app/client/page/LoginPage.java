@@ -45,12 +45,14 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 	@UiField HTMLPanel mDefaultLogin;
 
 	@UiField InlineHyperlink register;
+	@UiField InlineHyperlink login;
 	@UiField LoginForm mLoginForm; // Usual login panel
 
 	@UiField AlertBox mAlertBox;
 
 	public LoginPage() {
 		initWidget(uiBinder.createAndBindUi(this));
+		login.setTargetHistoryToken(PageType.LoginPageType.asTargetHistoryToken(FormHelper.REQUEST_INVITE_ACTION_NAME));
 	}
 
 	/*
