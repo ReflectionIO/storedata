@@ -1,9 +1,23 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:style>
-        
+    
     </ui:style>
+
+    <ui:import field="io.reflection.app.client.page.PageType.RegisterPageType" />
+
     <g:HTMLPanel>
-         <h2>Upgrade Your Account</h2>
+        <div class="container">
+            <h2>Upgrade Your Account</h2>
+
+            <p>We are currently not charging for the service and it is only open to users who have been invited to take part in our closed Beta</p>
+            <p>
+                To request an invite please
+                <a href="{RegisterPageType.asHref.asString}/requestinvite">click here</a>
+                .
+            </p>
+            <p>Thank you for your interest.</p>
+            <p>The Reflection team</p>
+        </div>
     </g:HTMLPanel>
 </ui:UiBinder> 
