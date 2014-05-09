@@ -25,6 +25,7 @@ import com.google.gwt.dom.client.Style.TextAlign;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellList;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -57,6 +58,7 @@ public class PostsPage extends Page {
 
 		posts.setPageSize(ServiceConstants.SHORT_STEP_VALUE);
 		posts.setLoadingIndicator(progress);
+		posts.setEmptyListWidget(new HTMLPanel("No posts found!"));
 
 		PostController.get().addDataDisplay(posts);
 		pager.setDisplay(posts);

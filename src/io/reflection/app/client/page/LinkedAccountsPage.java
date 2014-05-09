@@ -41,14 +41,12 @@ import io.reflection.app.datatypes.shared.User;
 import com.google.gson.JsonObject;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.BrowserEvents;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -56,7 +54,6 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -185,34 +182,28 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		columnEdit = new Column<DataAccount, SafeHtml>(new SafeHtmlCell()) {
 			@Override
 			public SafeHtml getValue(DataAccount object) {
-				Anchor a = new Anchor();
-				a.setHref(PageType.UsersPageType.asHref(PageType.LinkedAccountsPageType.toString(userId, EDIT_ACTION_PARAMETER_VALUE, object.id.toString()))
-						.asString());
-				a.setText("Edit");
-				a.setStyleName("invisible");
-				SafeHtmlBuilder safeHtmlBuilder = new SafeHtmlBuilder();
-				safeHtmlBuilder.appendHtmlConstant(a.toString());
-				return safeHtmlBuilder.toSafeHtml();
+				String id = object.id.toString();
+
+				return SafeHtmlUtils.fromTrustedString("<a href=\""
+						+ PageType.UsersPageType.asHref(PageType.LinkedAccountsPageType.toString(userId, EDIT_ACTION_PARAMETER_VALUE, id)).asString()
+						+ "\" class=\"btn btn-xs btn-default\">Edit</a>");
 			}
 
 		};
-		linkedAccountsTable.addColumn(columnEdit, "");
+		linkedAccountsTable.addColumn(columnEdit);
 
 		columnDelete = new Column<DataAccount, SafeHtml>(new SafeHtmlCell()) {
 			@Override
 			public SafeHtml getValue(DataAccount object) {
-				Anchor a = new Anchor();
-				a.setHref(PageType.UsersPageType.asHref(PageType.LinkedAccountsPageType.toString(userId, DELETE_ACTION_PARAMETER_VALUE, object.id.toString()))
-						.asString());
-				a.setText("Delete");
-				a.setStyleName("invisible");
-				SafeHtmlBuilder safeHtmlBuilder = new SafeHtmlBuilder();
-				safeHtmlBuilder.appendHtmlConstant(a.toString());
-				return safeHtmlBuilder.toSafeHtml();
+				String id = object.id.toString();
+
+				return SafeHtmlUtils.fromTrustedString("<a href=\""
+						+ PageType.UsersPageType.asHref(PageType.LinkedAccountsPageType.toString(userId, DELETE_ACTION_PARAMETER_VALUE, id)).asString()
+						+ "\" class=\"btn btn-xs btn-danger\">Delete</a>");
 			}
 
 		};
-		linkedAccountsTable.addColumn(columnDelete, "");
+		linkedAccountsTable.addColumn(columnDelete);
 
 		// columnExpand = new Column<DataAccount, SafeHtml>(new SafeHtmlCell()) {
 		// @Override
@@ -235,24 +226,24 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	 */
 	@UiHandler("linkedAccountsTable")
 	void cellTableEvent(CellPreviewEvent<DataAccount> event) {
-		int offset = linkedAccountsTable.getVisibleRange().getStart();
-		Element editElement = linkedAccountsTable.getRowElement(event.getIndex() - offset).getCells().getItem(2).getElementsByTagName("a").getItem(0);
-		Element deleteElement = linkedAccountsTable.getRowElement(event.getIndex() - offset).getCells().getItem(3).getElementsByTagName("a").getItem(0);
-		if (BrowserEvents.MOUSEOVER.equals(event.getNativeEvent().getType())) {
-			// add visibility hidden in cell
-			// Element expandElement = linkedAccountsTable.getRowElement(event.getIndex()).getCells().getItem(4).getElementsByTagName("a").getItem(0);
-			editElement.setClassName("show");
-			deleteElement.setClassName("show");
-		} else if (BrowserEvents.MOUSEOUT.equals(event.getNativeEvent().getType())) {
-				editElement.setClassName("invisible");
-				deleteElement.setClassName("invisible");
-		}
+		// int offset = linkedAccountsTable.getVisibleRange().getStart();
+		// Element editElement = linkedAccountsTable.getRowElement(event.getIndex() - offset).getCells().getItem(2).getElementsByTagName("a").getItem(0);
+		// Element deleteElement = linkedAccountsTable.getRowElement(event.getIndex() - offset).getCells().getItem(3).getElementsByTagName("a").getItem(0);
+		// if (BrowserEvents.MOUSEOVER.equals(event.getNativeEvent().getType())) {
+		// // add visibility hidden in cell
+		// // Element expandElement = linkedAccountsTable.getRowElement(event.getIndex()).getCells().getItem(4).getElementsByTagName("a").getItem(0);
+		// editElement.setClassName("show");
+		// deleteElement.setClassName("show");
+		// } else if (BrowserEvents.MOUSEOUT.equals(event.getNativeEvent().getType())) {
+		// editElement.setClassName("invisible");
+		// deleteElement.setClassName("invisible");
+		// }
 
 		// TODO Use selection model to show Edit and Delete links if plus and minus images will be added
 
 		// expandElement.removeClassName(Styles.INSTANCE.reflection().linkedAccountMinus());
 		// expandElement.addClassName(Styles.INSTANCE.reflection().linkedAccountPlus());
-				// Use sprite for expander
+		// Use sprite for expander
 
 		// expandElement.removeClassName(Styles.INSTANCE.reflection().linkedAccountPlus());
 		// expandElement.addClassName(Styles.INSTANCE.reflection().linkedAccountMinus());
@@ -340,12 +331,12 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 			mLinkableAccount.getFirstToFocus().setFocus(true);
 
 			DataAccount linkedAccount = LinkedAccountController.get().getLinkedAccount(Long.valueOf(typeParameter));
-					mIosMacForm.setAccountUsername(linkedAccount.username);
-					JsonObject propertiesJson = Convert.toJsonObject(linkedAccount.properties);
-					mIosMacForm.setVendorNumber(propertiesJson.get("vendors").getAsString());
+			mIosMacForm.setAccountUsername(linkedAccount.username);
+			JsonObject propertiesJson = Convert.toJsonObject(linkedAccount.properties);
+			mIosMacForm.setVendorNumber(propertiesJson.get("vendors").getAsString());
 
 		} else if (isValidDeleteStack(actionParameter, typeParameter)) {
-				loader.setVisible(true);
+			loader.setVisible(true);
 			LinkedAccountController.get().deleteLinkedAccount(LinkedAccountController.get().getLinkedAccount(Long.valueOf(typeParameter)));
 		} else {
 			linkedAccountForm.setVisible(false);
@@ -353,12 +344,13 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 			User user = SessionController.get().getLoggedInUser();
 			PageType.UsersPageType.show(PageType.LinkedAccountsPageType.toString(user.id.toString()));
 		}
+
 	}
 
 	private boolean isValidEditStack(String actionParameter, String typeParameter) {
 		return (EDIT_ACTION_PARAMETER_VALUE.equals(actionParameter) && typeParameter != null && typeParameter.matches("[0-9]+") && LinkedAccountController
 				.get().getLinkedAccount(Long.valueOf(typeParameter)) != null) ? true : false;
-		}
+	}
 
 	private boolean isValidDeleteStack(String actionParameter, String typeParameter) {
 		return (DELETE_ACTION_PARAMETER_VALUE.equals(actionParameter) && typeParameter != null && typeParameter.matches("[0-9]+") && LinkedAccountController
@@ -461,7 +453,6 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	@Override
 	public void deleteLinkedAccountFailure(DeleteLinkedAccountRequest input, Throwable caught) {
 		loader.setVisible(false);
-
 	}
 
 	/*
@@ -522,8 +513,6 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	 * GetLinkedAccountsRequest, java.lang.Throwable)
 	 */
 	@Override
-	public void getLinkedAccountsFailure(GetLinkedAccountsRequest input, Throwable caught) {
-
-		}
+	public void getLinkedAccountsFailure(GetLinkedAccountsRequest input, Throwable caught) {}
 
 }

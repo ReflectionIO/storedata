@@ -208,6 +208,8 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	 * io.reflection.app.client.controller.NavigationController.Stack)
 	 */
 	@Override
-	public void navigationChanged(Stack previous, Stack current) {}
+	public void navigationChanged(Stack previous, Stack current) {
+		// TODO: update the filter parameters from the navigation to cater for timeout scenarios etc
+	}
 
 }

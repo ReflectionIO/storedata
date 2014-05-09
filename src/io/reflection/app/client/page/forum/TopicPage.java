@@ -26,6 +26,7 @@ import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.page.forum.part.ForumMessageCell;
 import io.reflection.app.client.part.BootstrapGwtCellList;
+import io.reflection.app.client.part.ReflectionProgressBar;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.part.datatypes.ForumMessage;
 import io.reflection.app.datatypes.shared.Topic;
@@ -36,6 +37,7 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.Style.TextAlign;
 import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -85,7 +87,13 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 	public TopicPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
+		ReflectionProgressBar progress = new ReflectionProgressBar();
+		progress.getElement().getStyle().setTextAlign(TextAlign.CENTER);
+
 		messages.setPageSize(ServiceConstants.SHORT_STEP_VALUE);
+		messages.setLoadingIndicator(progress);
+		messages.setEmptyListWidget(new HTMLPanel("No messages found!"));
+
 		pager.setPageSize(ServiceConstants.SHORT_STEP_VALUE);
 	}
 
