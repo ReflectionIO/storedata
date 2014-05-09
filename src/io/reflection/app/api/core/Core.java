@@ -833,11 +833,32 @@ public final class Core extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			DataAccountServiceProvider.provide().deleteDataAccount(input.linkedAccount);
+			input.linkedAccount = ValidationHelper.validateDataAccount(input.linkedAccount, "input.linkedAccount");
 
-			if (LOG.isLoggable(GaeLevel.DEBUG)) {
-				LOG.fine(String.format("Linked account with id [%d] deleted", input.linkedAccount.id.longValue()));
-			}
+			boolean hasDataAccount = UserServiceProvider.provide().hasDataAccount(input.session.user, input.linkedAccount).booleanValue();
+
+			if (hasDataAccount) {
+				User user = UserServiceProvider.provide().getDataAccountOwner(input.linkedAccount);
+
+				if (user != null && user.id.longValue() == input.session.user.id.longValue()) {
+					UserServiceProvider.provide().deleteAllUsersDataAccount(input.linkedAccount);
+
+					DataAccountServiceProvider.provide().deleteDataAccount(input.linkedAccount);
+
+					if (LOG.isLoggable(GaeLevel.DEBUG)) {
+						LOG.finer(String.format("Linked account with id [%d] deleted by owner [%d]", input.linkedAccount.id.longValue(),
+								input.session.user.id.longValue()));
+					}
+				} else {
+					UserServiceProvider.provide().deleteDataAccount(input.session.user, input.linkedAccount);
+
+					if (LOG.isLoggable(GaeLevel.DEBUG)) {
+						LOG.finer(String.format("Linked account with id [%d] removed from user account [%d]", input.linkedAccount.id.longValue(),
+								input.session.user.id.longValue()));
+					}
+				}
+
+			} else throw new InputValidationException(ApiError.DataAccountUserMissmatch.getCode(), ApiError.DataAccountUserMissmatch.getMessage());
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {

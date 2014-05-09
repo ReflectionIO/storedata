@@ -105,6 +105,8 @@ public enum ApiError {
 	MissingRoles(100501, "User does not have required role"),
 	MissingRolesAndOrPermissions(100502, "User does not have required roles and/or permissions"),
 
+	DataAccountUserMissmatch(100601, "User does not own data account")
+
 	;
 
 	private static final RegExp PARAM_0 = RegExp.compile("\\{0\\}");

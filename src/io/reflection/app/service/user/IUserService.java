@@ -197,4 +197,24 @@ public interface IUserService extends IService {
 	 */
 	public User getActionCodeUser(String code) throws DataAccessException;
 
+	/**
+	 * @param user
+	 * @param dataAccount
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public Boolean hasDataAccount(User user, DataAccount dataAccount) throws DataAccessException;
+
+	/**
+	 * 
+	 * @param user
+	 * @param dataAccount
+	 * @throws DataAccessException
+	 */
+	public void deleteDataAccount(User user, DataAccount dataAccount) throws DataAccessException;
+
+	/**
+	 * @param dataAccount
+	 */
+	public void deleteAllUsersDataAccount(DataAccount dataAccount) throws DataAccessException;
 }

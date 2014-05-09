@@ -230,15 +230,11 @@ final class DataAccountService implements IDataAccountService {
 
 	@Override
 	public void deleteDataAccount(DataAccount dataAccount) throws DataAccessException {
-		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
-
-		String deleteUserDataAccountQuery = String.format("UPDATE `userdataaccount` SET `deleted`='y' WHERE `dataaccountid`=%d AND `deleted`='n'",
-				dataAccount.id.longValue());
 		String deleteDataAccountQuery = String.format("UPDATE `dataaccount` SET `deleted`='y' WHERE `id`=%d AND `deleted`='n'", dataAccount.id.longValue());
 
+		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 		try {
 			dataAccountConnection.connect();
-			dataAccountConnection.executeQuery(deleteUserDataAccountQuery);
 			dataAccountConnection.executeQuery(deleteDataAccountQuery);
 
 			if (dataAccountConnection.getAffectedRowCount() > 0) {

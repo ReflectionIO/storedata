@@ -9,8 +9,8 @@
 package io.reflection.app.service.user;
 
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
-import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import static com.spacehopperstudios.utility.StringUtils.sha1Hash;
+import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
@@ -756,11 +756,11 @@ final class UserService implements IUserService {
 	 */
 	@Override
 	public List<DataAccount> getDataAccounts(User user, Pager pager) throws DataAccessException {
-
 		List<Long> accountIds = new ArrayList<Long>();
 
-		String getDataAccountIdsQuery = String.format("SELECT `dataaccountid` FROM `userdataaccount` WHERE `deleted`='n' AND `userid`=%d ORDER BY `%s` %s LIMIT %d, %d", user.id
-				.longValue(), pager.sortBy == null ? "id" : pager.sortBy, pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
+		String getDataAccountIdsQuery = String.format(
+				"SELECT `dataaccountid` FROM `userdataaccount` WHERE `deleted`='n' AND `userid`=%d ORDER BY `%s` %s LIMIT %d, %d", user.id.longValue(),
+				pager.sortBy == null ? "id" : pager.sortBy, pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
 				pager.start == null ? 0 : pager.start.longValue(), pager.count == null ? 25 : pager.count.longValue());
 
 		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
@@ -794,8 +794,8 @@ final class UserService implements IUserService {
 	public Long getDataAccountsCount(User user) throws DataAccessException {
 		Long dataAccountsCount = Long.valueOf(0);
 
-		String getDataAccountsCountQuery = String
-				.format("SELECT count(1) AS `dataaccountscount` FROM `userdataaccount` WHERE `deleted`='n' AND `userid`=%d", user.id.longValue());
+		String getDataAccountsCountQuery = String.format("SELECT count(1) AS `dataaccountscount` FROM `userdataaccount` WHERE `deleted`='n' AND `userid`=%d",
+				user.id.longValue());
 
 		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
@@ -824,8 +824,8 @@ final class UserService implements IUserService {
 	public User getDataAccountOwner(DataAccount dataAccount) throws DataAccessException {
 		User owner = null;
 
-		String getDataAccountOwnerQuery = String.format("SELECT `userid` FROM `userdataaccount` WHERE `deleted`='n' AND `dataaccountid`=%d LIMIT 1",
-				dataAccount.id.longValue());
+		String getDataAccountOwnerQuery = String.format(
+				"SELECT `userid` FROM `userdataaccount` WHERE `dataaccountid`=%d AND `deleted`='n' ORDER BY `id` ASC LIMIT 1", dataAccount.id.longValue());
 
 		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
@@ -981,4 +981,92 @@ final class UserService implements IUserService {
 		}
 
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.user.IUserService#hasDataAccount(io.reflection.app.datatypes.shared.User, io.reflection.app.datatypes.shared.DataAccount)
+	 */
+	@Override
+	public Boolean hasDataAccount(User user, DataAccount dataAccount) throws DataAccessException {
+		Boolean hasDataAccount = Boolean.FALSE;
+
+		String hasDataAccountQuery = String.format(
+				"SELECT 1 FROM `userdataaccount` WHERE `dataaccountid`=%d AND `userid`=%d AND `deleted`='n' ORDER BY `id` ASC LIMIT 1",
+				dataAccount.id.longValue(), user.id.longValue());
+
+		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
+
+		try {
+			userConnection.connect();
+			userConnection.executeQuery(hasDataAccountQuery);
+
+			if (userConnection.fetchNextRow()) {
+				hasDataAccount = Boolean.TRUE;
+			}
+
+		} finally {
+			if (userConnection != null) {
+				userConnection.disconnect();
+			}
+		}
+
+		return hasDataAccount;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.user.IUserService#deleteDataAccount(io.reflection.app.datatypes.shared.User,
+	 * io.reflection.app.datatypes.shared.DataAccount)
+	 */
+	@Override
+	public void deleteDataAccount(User user, DataAccount dataAccount) throws DataAccessException {
+
+		String deleteDataAccountQuery = String.format("UPDATE `userdataaccount` SET `deleted`='y' WHERE `dataaccountid`=%d AND `userid`=%d AND `deleted`='n'",
+				dataAccount.id.longValue(), user.id.longValue());
+
+		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
+
+		try {
+			userConnection.connect();
+			userConnection.executeQuery(deleteDataAccountQuery);
+
+			if (userConnection.getAffectedRowCount() > 0) {
+				// log something
+			}
+		} finally {
+			if (userConnection != null) {
+				userConnection.disconnect();
+			}
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.user.IUserService#deleteAllUsersDataAccount(io.reflection.app.datatypes.shared.DataAccount)
+	 */
+	@Override
+	public void deleteAllUsersDataAccount(DataAccount dataAccount) throws DataAccessException {
+		String deleteAllUsersDataAccountQuery = String.format("UPDATE `userdataaccount` SET `deleted`='y' WHERE `dataaccountid`=%d AND `deleted`='n'",
+				dataAccount.id.longValue());
+
+		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
+
+		try {
+			userConnection.connect();
+			userConnection.executeQuery(deleteAllUsersDataAccountQuery);
+
+			if (userConnection.getAffectedRowCount() > 0) {
+				// log something
+			}
+		} finally {
+			if (userConnection != null) {
+				userConnection.disconnect();
+			}
+		}
+	}
+
 }
