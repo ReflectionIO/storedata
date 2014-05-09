@@ -37,6 +37,7 @@ import io.reflection.app.client.part.linkaccount.LinkableAccountFields;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.shared.util.FormattingHelper;
 
 import com.google.gson.JsonObject;
 import com.google.gwt.cell.client.SafeHtmlCell;
@@ -173,7 +174,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		columnDateAdded = new TextColumn<DataAccount>() {
 			@Override
 			public String getValue(DataAccount object) {
-				DateTimeFormat dtf = DateTimeFormat.getFormat("dd/MM/yy");
+				DateTimeFormat dtf = DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT);
 				return (object.source.created != null) ? dtf.format(object.created, null) : "-";
 			}
 		};

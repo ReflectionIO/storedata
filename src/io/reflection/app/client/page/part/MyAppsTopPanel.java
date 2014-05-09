@@ -14,6 +14,7 @@ import io.reflection.app.client.part.DateRangeBox;
 import io.reflection.app.client.part.DateRangeBox.DefaultFormat;
 import io.reflection.app.client.part.DateRangePicker.FixedDateRange;
 import io.reflection.app.client.part.datatypes.DateRange;
+import io.reflection.app.shared.util.FormattingHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +55,7 @@ public class MyAppsTopPanel extends Composite {
 		FilterHelper.addStores(appStore);
 		FilterHelper.addCountries(country);
 
-		dateRangeBox.setFormat(new DefaultFormat(DateTimeFormat.getFormat("dd-MM-yyyy")));
+		dateRangeBox.setFormat(new DefaultFormat(DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT)));
 
 		List<FixedDateRange> ranges = new ArrayList<FixedDateRange>();
 		ranges.add(new FixedDateRange() {

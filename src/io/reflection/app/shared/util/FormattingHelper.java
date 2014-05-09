@@ -19,6 +19,8 @@ import java.util.Map;
  */
 public class FormattingHelper {
 
+	public static final String DATE_FORMAT = "dd-MM-yyyy";
+
 	private static Map<String, String> currencySymbolLookup = null;
 
 	/**

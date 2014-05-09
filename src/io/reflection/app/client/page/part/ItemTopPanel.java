@@ -14,6 +14,7 @@ import io.reflection.app.client.part.BootstrapGwtDatePicker;
 import io.reflection.app.client.part.DateRangeBox;
 import io.reflection.app.client.part.DateRangeBox.DefaultFormat;
 import io.reflection.app.client.part.datatypes.DateRange;
+import io.reflection.app.shared.util.FormattingHelper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -49,7 +50,7 @@ public class ItemTopPanel extends Composite {
 		FilterHelper.addStores(mAppStore);
 		FilterHelper.addCountries(mCountry);
 
-		mDateRange.setFormat(new DefaultFormat(DateTimeFormat.getFormat("dd-MM-yyyy")));
+		mDateRange.setFormat(new DefaultFormat(DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT)));
 		mDateRange.setValue(FilterHelper.createRangeFromToday(-30));
 	}
 

@@ -13,6 +13,7 @@ import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.part.BootstrapGwtDatePicker;
+import io.reflection.app.shared.util.FormattingHelper;
 
 import java.util.Date;
 
@@ -64,7 +65,7 @@ public class RankSidePanel extends Composite {
 		FilterHelper.addCountries(mCountry);
 		FilterHelper.addCategories(category);
 
-		date.setFormat(new DefaultFormat(DateTimeFormat.getFormat("dd-MM-yyyy")));
+		date.setFormat(new DefaultFormat(DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT)));
 
 		date.getDatePicker().addShowRangeHandler(new ShowRangeHandler<Date>() {
 
