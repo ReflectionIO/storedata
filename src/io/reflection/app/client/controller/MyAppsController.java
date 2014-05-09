@@ -297,6 +297,9 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 		rows.clear();
 		userItems = null;
 		userItemsLookup.clear();
+
+		updateRowData(0, rows);
+		updateRowCount(0, false);
 	}
 
 	/*

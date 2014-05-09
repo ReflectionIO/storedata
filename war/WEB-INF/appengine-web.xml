@@ -10,7 +10,7 @@
 
   <!-- Configure java.util.logging -->
   <system-properties>
-  	<property name="connection.native" value="true" />
+  	<property name="connection.native" value="false" />
   
 	<property name="java.util.logging.config.file" value="WEB-INF/logging.properties" />
 	<property name="gather.ios.countries" value="us,gb,de,fr,cn,al,dz,ao,ai,ag,ar,am,au,at,az,bs,bh,bb,by,be,bz,bj,bm,bt,bo,bw,br,bn,bg,bf,kh,ca,cv,ky,td,cl,co,cg,cr,hr,cy,cz,dk,dm,do,ec,eg,sv,ee,fj,fi,gm,gh,gr,gd,gt,gw,gy,hn,hk,hu,is,in,id,ie,il,it,jm,jp,jo,kz,ke,kr,kw,kg,la,lv,lb,lr,lt,lu,mo,mk,mg,mw,my,ml,mt,mr,mu,mx,fm,md,mn,ms,mz,na,np,nl,nz,ni,ne,ng,no,om,pk,pw,pa,pg,py,pe,ph,pl,pt,qa,ro,ru,st,sa,sn,sc,sl,sg,sk,si,sb,za,es,lk,kn,lc,vc,sr,sz,se,ch,tw,tj,tz,th,tt,tn,tr,tm,tc,ug,ua,ae,uy,uz,ve,vn,vg,ye,zw" />
@@ -34,11 +34,12 @@
     <property name="account.data.bucket" value="gather/accounts" />
     <property name="uploaded.images.bucket" value="uploadedimages" />
 	
-	<!-- <property name="db.connection.server" value="storedatacollector:reflectiondb" /> -->
-    <property name="db.connection.server" value="173.194.104.108" />
+	<property name="db.connection.server" value="storedatacollector:reflectiondb" />
+    <!-- <property name="db.connection.server" value="173.194.104.108" /> -->
 	<!-- <property name="db.connection.server" value="localhost" /> -->
     <property name="db.connection.catalogue" value="rio" />
     <!-- <property name="db.connection.username" value="root" /> -->
+    <!-- <property name="db.connection.password" value="" /> -->
     <property name="db.connection.username" value="rio_app_user" />
     <property name="db.connection.password" value="sooth28@duns" />
 

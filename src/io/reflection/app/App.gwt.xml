@@ -29,9 +29,9 @@
 
     <!-- Other module inherits -->
     
-    <!-- <add-linker name="xsiframe"/>
+    <add-linker name="xsiframe"/>
     <set-configuration-property name="xsiframe.failIfScriptTag" value="false"/>
-    <set-configuration-property name="devModeRedirectEnabled" value="true"/> -->
+    <set-configuration-property name="devModeRedirectEnabled" value="true"/>
 
     <!-- Specify the app entry point class. -->
     <entry-point class='io.reflection.app.client.AppEntryPoint' />

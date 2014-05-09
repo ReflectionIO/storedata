@@ -123,8 +123,8 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 								pagerMaxCount = new Pager();
 								pagerMaxCount.count = (long) Integer.MAX_VALUE;
 								pagerMaxCount.start = Long.valueOf(0);
-								pagerMaxCount.sortDirection = SortDirectionType.SortDirectionTypeDescending;								
-								pagerMaxCount.totalCount = pager.totalCount.longValue();								
+								pagerMaxCount.sortDirection = SortDirectionType.SortDirectionTypeDescending;
+								pagerMaxCount.totalCount = pager.totalCount.longValue();
 							}
 						}
 
@@ -487,14 +487,18 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 	public void reset() {
 		myDataAccounts = null;
 		myDataSources = null;
-		dataAccountLookup.clear();
-		dataSourceLookup.clear();
-		pager = null;
-		rows.clear();
-	}
 
-	public void resetAllLinkedAccounts() {
 		myAllDataAccounts = null;
 		pagerMaxCount = null;
+
+		dataAccountLookup.clear();
+		dataSourceLookup.clear();
+
+		pager = null;
+
+		rows.clear();
+		
+		updateRowData(0, rows);
+		updateRowCount(0, false);
 	}
 }

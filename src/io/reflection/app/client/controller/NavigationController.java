@@ -14,8 +14,10 @@ import io.reflection.app.client.part.Footer;
 import io.reflection.app.client.part.Header;
 import io.reflection.app.datatypes.shared.User;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -370,6 +372,27 @@ public class NavigationController implements ValueChangeHandler<String> {
 	 */
 	public void setNotLoaded() {
 		loaded = false;
+	}
+
+	/**
+	 * Purges all pages that contain or rely on user data
+	 */
+	public void pugeUserPages() {
+		List<String> pagesToRemove = new ArrayList<String>();
+
+		for (String pageType : pages.keySet()) {
+			if (PageType.fromString(pageType).requiresLogin()) {
+				pagesToRemove.add(pageType);
+			}
+		}
+
+		for (String pageType : pagesToRemove) {
+			pages.remove(pageType);
+		}
+	}
+
+	public void purgeAllPages() {
+		pages.clear();
 	}
 
 }
