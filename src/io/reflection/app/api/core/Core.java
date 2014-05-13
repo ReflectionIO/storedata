@@ -1621,6 +1621,70 @@ public final class Core extends ActionHandler {
 		LOG.finer("Entering getItemSalesRanks");
 		GetItemSalesRanksResponse output = new GetItemSalesRanksResponse();
 		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("GetSalesRanksRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			input.pager = ValidationHelper.validatePager(input.pager, "input");
+
+			if (input.pager.sortBy == null) {
+				input.pager.sortBy = "date";
+			}
+
+			if (input.pager.sortDirection == null) {
+				input.pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
+			}
+
+			input.country = ValidationHelper.validateCountry(input.country, "input");
+
+			input.item = ValidationHelper.validateItem(input.item, "input.item");
+
+			DataAccount linkedAccount = SaleServiceProvider.provide().getDataAccount(input.item.internalId);
+
+			// if we only have a partial data source get look it up - because it is required for getting the stores
+			if (linkedAccount.source.stores == null) {
+				linkedAccount.source = DataSourceServiceProvider.provide().getDataSource(linkedAccount.source.id);
+			}
+
+			List<Store> stores = StoreServiceProvider.provide().getDataSourceStores(linkedAccount.source);
+
+			// right now category
+			if (input.category == null) {
+				// TODO:
+				// input.category = CategoryServiceProvider.provide().getAllCategory(stores);
+			} else {
+				input.category = ValidationHelper.validateCategory(input.category, "input.category");
+
+				boolean foundStore = false;
+
+				for (Store store : stores) {
+					if (store.a3Code.equals(input.category.store)) {
+						foundStore = true;
+						break;
+					}
+				}
+
+				if (!foundStore)
+					throw new InputValidationException(ApiError.CategoryStoreMismatch.getCode(), ApiError.CategoryStoreMismatch.getMessage("input.category"));
+			}
+
+			Calendar cal = Calendar.getInstance();
+
+			if (input.end == null) input.end = cal.getTime();
+
+			if (input.start == null) {
+				cal.setTime(input.end);
+				cal.add(Calendar.DAY_OF_YEAR, -30);
+				input.start = cal.getTime();
+			}
+
+			long diff = input.end.getTime() - input.start.getTime();
+			long diffDays = diff / (24 * 60 * 60 * 1000);
+
+			if (diffDays > 60 || diffDays < 0)
+				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
+						ApiError.DateRangeOutOfBounds.getMessage("0-60 days: input.end - input.start"));
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {

@@ -96,7 +96,6 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 				}
 			}
 		}
-
 	}
 
 	/*
@@ -106,10 +105,7 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 	 * GetLinkedAccountsRequest, java.lang.Throwable)
 	 */
 	@Override
-	public void getLinkedAccountsFailure(GetLinkedAccountsRequest input, Throwable caught) {
-		// TODO Auto-generated method stub
-
-	}
+	public void getLinkedAccountsFailure(GetLinkedAccountsRequest input, Throwable caught) {}
 
 	private void fetchLinkedAccountItems() {
 		CoreService service = ServiceCreator.createCoreService();

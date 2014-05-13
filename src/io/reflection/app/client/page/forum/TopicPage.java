@@ -212,7 +212,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 			notes.removeAllChildren();
 
 			LIElement author = Document.get().createLIElement();
-			author.setInnerHTML("Started " + FormattingHelper.getTimeSince(topic.created) + " by " + FormattingHelper.getUserName(topic.author));
+			author.setInnerHTML("Started " + FormattingHelper.getTimeSince(topic.created) + " by " + FormattingHelper.getUserLongName(topic.author));
 
 			notes.appendChild(author);
 
@@ -225,7 +225,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
 			if (topic.lastReplier != null) {
 				LIElement lastReplier = Document.get().createLIElement();
-				lastReplier.setInnerHTML("Latest reply from " + FormattingHelper.getUserName(topic.lastReplier));
+				lastReplier.setInnerHTML("Latest reply from " + FormattingHelper.getUserLongName(topic.lastReplier));
 
 				notes.appendChild(lastReplier);
 			}

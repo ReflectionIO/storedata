@@ -13,13 +13,17 @@ import static io.reflection.app.client.controller.FilterController.RANKING_CHART
 import static io.reflection.app.client.controller.FilterController.REVENUE_CHART_TYPE;
 import io.reflection.app.api.core.shared.call.GetItemRanksRequest;
 import io.reflection.app.api.core.shared.call.GetItemRanksResponse;
+import io.reflection.app.api.core.shared.call.GetItemSalesRequest;
+import io.reflection.app.api.core.shared.call.GetItemSalesResponse;
 import io.reflection.app.api.core.shared.call.event.GetItemRanksEventHandler;
+import io.reflection.app.api.core.shared.call.event.GetItemSalesEventHandler;
 import io.reflection.app.client.cell.ImageAndTextCell;
 import io.reflection.app.client.cell.ProgressBarCell;
 import io.reflection.app.client.cell.content.ConcreteImageAndText;
 import io.reflection.app.client.cell.content.PercentageProgress;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.ItemController;
 import io.reflection.app.client.controller.NavigationController;
@@ -54,7 +58,7 @@ import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
 
-public class ItemPage extends Page implements NavigationEventHandler, GetItemRanksEventHandler, FilterEventHandler {
+public class ItemPage extends Page implements NavigationEventHandler, GetItemRanksEventHandler, GetItemSalesEventHandler, FilterEventHandler {
 
 	private static ItemPageUiBinder uiBinder = GWT.create(ItemPageUiBinder.class);
 
@@ -176,6 +180,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		// register(EventController.get().addHandlerToSource(SearchForItemEventHandler.TYPE, ItemController.get(), this));
 		register(EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
 		register(EventController.get().addHandlerToSource(GetItemRanksEventHandler.TYPE, RankController.get(), this));
+		register(EventController.get().addHandlerToSource(GetItemSalesEventHandler.TYPE, RankController.get(), this));
 
 	}
 
@@ -347,6 +352,42 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		// .setVisible(true);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.api.core.shared.call.event.GetItemSalesEventHandler#getItemSalesSuccess(io.reflection.app.api.core.shared.call.GetItemSalesRequest,
+	 * io.reflection.app.api.core.shared.call.GetItemSalesResponse)
+	 */
+	@Override
+	public void getItemSalesSuccess(GetItemSalesRequest input, GetItemSalesResponse output) {
+		// if (output != null && output.status == StatusType.StatusTypeSuccess) {
+		// if (output.ranks != null && output.ranks.size() > 0) {
+		// item = output.item;
+		//
+		// displayItemDetails();
+		//
+		// historyChart.setData(output.item, output.ranks, rankingType, dataType);
+		// mSidePanel.setPrice(output.ranks.get(0).currency, output.ranks.get(0).price);
+		// }
+		// } else {
+		// // do nothing
+		// }
+
+		loader.setVisible(false);
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.api.core.shared.call.event.GetItemSalesEventHandler#getItemSalesFailure(io.reflection.app.api.core.shared.call.GetItemSalesRequest,
+	 * java.lang.Throwable)
+	 */
+	@Override
+	public void getItemSalesFailure(GetItemSalesRequest input, Throwable caught) {}
+
 	private void getHistoryChartData() {
 		if (item != null) {
 			// AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Getting History",
@@ -355,7 +396,11 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			historyChart.setLoading(true);
 			loader.setVisible(true);
 
-			RankController.get().fetchItemRanks(item);
+			if (LinkedAccountController.get().isLinkedAccountItem(item)) {
+				RankController.get().fetchItemSalesRanks(item);
+			} else {
+				RankController.get().fetchItemRanks(item);
+			}
 		}
 	}
 

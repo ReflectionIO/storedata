@@ -80,6 +80,15 @@ public class FormattingHelper {
 		return user == null ? "None" : user.forename + " " + user.surname;
 	}
 
+	public static String getUserLongName(User user) {
+		String longName = getUserName(user);
+
+		if (user != null && user.company != null & user.company.trim().length() > 0) {
+			longName += " (" + user.company.trim() + ")";
+		}
+		return longName;
+	}
+
 	public static String getTimeSince(Date date) {
 		return date == null ? "" : getTimeSince(date, true);
 	}

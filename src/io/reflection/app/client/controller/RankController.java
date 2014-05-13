@@ -12,9 +12,13 @@ import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
 import io.reflection.app.api.core.shared.call.GetItemRanksRequest;
 import io.reflection.app.api.core.shared.call.GetItemRanksResponse;
+import io.reflection.app.api.core.shared.call.GetItemSalesRanksRequest;
+import io.reflection.app.api.core.shared.call.GetItemSalesRanksResponse;
 import io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler.GetAllTopItemsFailure;
 import io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler.GetAllTopItemsSuccess;
 import io.reflection.app.api.core.shared.call.event.GetItemRanksEventHandler;
+import io.reflection.app.api.core.shared.call.event.GetItemSalesRanksEventHandler.GetItemSalesRanksFailure;
+import io.reflection.app.api.core.shared.call.event.GetItemSalesRanksEventHandler.GetItemSalesRanksSuccess;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.client.helper.ApiCallHelper;
@@ -132,6 +136,48 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 		});
 
 		// EventController.get().fireEventFromSource(new FetchingRanks(), RankController.this);
+	}
+
+	public void fetchItemSalesRanks(final Item item) {
+		CoreService service = ServiceCreator.createCoreService();
+
+		final GetItemSalesRanksRequest input = new GetItemSalesRanksRequest();
+		input.accessCode = ACCESS_CODE;
+
+		input.session = SessionController.get().getSessionForApiCall();
+		input.country = ApiCallHelper.createCountryForApiCall(FilterController.get().getCountry());
+
+		input.start = FilterController.get().getStartDate();
+		input.end = FilterController.get().getEndDate();
+
+		input.category = FilterController.get().getCategory();
+
+		input.item = new Item();
+		input.item.internalId = item.internalId;
+		input.item.source = ApiCallHelper.storeCodeForApiCall(item.source);
+
+		input.pager = new Pager();
+		input.pager.start = Long.valueOf(0);
+		input.pager.count = Long.valueOf(10000);
+		input.pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
+		input.pager.sortBy = "date";
+
+		service.getItemSalesRanks(input, new AsyncCallback<GetItemSalesRanksResponse>() {
+
+			@Override
+			public void onSuccess(GetItemSalesRanksResponse output) {
+				if (output.status == StatusType.StatusTypeSuccess) {
+
+				}
+
+				EventController.get().fireEventFromSource(new GetItemSalesRanksSuccess(input, output), RankController.this);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				EventController.get().fireEventFromSource(new GetItemSalesRanksFailure(input, caught), RankController.this);
+			}
+		});
 	}
 
 	public void fetchItemRanks(final Item item) {

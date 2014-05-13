@@ -37,7 +37,7 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 	 */
 	@Override
 	public void render(com.google.gwt.cell.client.Cell.Context context, ForumMessage value, SafeHtmlBuilder builder) {
-		RENDERER.render(builder, FormattingHelper.getUserName(value.getAuthor()), SafeHtmlUtils.fromTrustedString(value.getContent()), "Posted "
+		RENDERER.render(builder, FormattingHelper.getUserLongName(value.getAuthor()), SafeHtmlUtils.fromTrustedString(value.getContent()), "Posted "
 				+ FormattingHelper.getTimeSince(value.getCreated()));
 	}
 

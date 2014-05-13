@@ -36,6 +36,7 @@ import io.reflection.app.service.emailtemplate.EmailTemplateServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
 import io.reflection.app.service.role.RoleServiceProvider;
+import io.reflection.app.service.sale.SaleServiceProvider;
 import io.reflection.app.service.session.ISessionService;
 import io.reflection.app.service.session.SessionServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
@@ -245,7 +246,13 @@ public class ValidationHelper {
 		} else if (isExtIdLookup) {
 			lookupItem = ItemServiceProvider.provide().getExternalIdItem(item.externalId);
 		} else if (isIntIdLookup) {
+			// first try to get the item from the item table
 			lookupItem = ItemServiceProvider.provide().getInternalIdItem(item.internalId);
+
+			// if that fails try to get it from the the sales table
+			if (lookupItem == null) {
+				lookupItem = SaleServiceProvider.provide().getItem(item.internalId);
+			}
 		}
 
 		if (lookupItem == null) throw new InputValidationException(ApiError.ItemNotFound.getCode(), ApiError.ItemNotFound.getMessage(parent));

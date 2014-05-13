@@ -69,7 +69,6 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 	}
 
 	private void fetchLinkedAccounts() {
-
 		CoreService service = ServiceCreator.createCoreService();
 
 		final GetLinkedAccountsRequest input = new GetLinkedAccountsRequest();
@@ -497,8 +496,12 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 		pager = null;
 
 		rows.clear();
-		
+
 		updateRowData(0, rows);
 		updateRowCount(0, false);
+	}
+
+	public boolean isLinkedAccountItem(Item item) {
+		return false;
 	}
 }

@@ -23,6 +23,7 @@ import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProv
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
+import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 
 import java.util.ArrayList;
@@ -206,25 +207,21 @@ final class SaleService implements ISaleService {
 
 		String getSaleItemQuery = String.format("SELECT DISTINCT `title`,`developer`,`itemid` FROM `sale` WHERE %s AND `deleted`='n'", typesQueryPart);
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
-		Connection saleItemConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
+		Connection saleConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
 
 		try {
-			saleItemConnection.connect();
-			saleItemConnection.executeQuery(getSaleItemQuery);
+			saleConnection.connect();
+			saleConnection.executeQuery(getSaleItemQuery);
 
-			while (saleItemConnection.fetchNextRow()) {
-				Item mockItem = new Item();
-				
-				mockItem.creatorName = saleItemConnection.getCurrentRowString("developer");
-				mockItem.name = saleItemConnection.getCurrentRowString("title");
-				mockItem.internalId = saleItemConnection.getCurrentRowString("itemid");
-				
+			while (saleConnection.fetchNextRow()) {
+				Item mockItem = toMockItem(saleConnection);
+
 				items.add(mockItem);
 			}
 
 		} finally {
-			if (saleItemConnection != null) {
-				saleItemConnection.disconnect();
+			if (saleConnection != null) {
+				saleConnection.disconnect();
 			}
 		}
 
@@ -352,22 +349,22 @@ final class SaleService implements ISaleService {
 			getSalesQuery += String.format(" LIMIT %d", pager.count.longValue());
 		}
 
-		Connection salesConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
+		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
 
 		try {
-			salesConnection.connect();
-			salesConnection.executeQuery(getSalesQuery);
+			saleConnection.connect();
+			saleConnection.executeQuery(getSalesQuery);
 
-			while (salesConnection.fetchNextRow()) {
-				Sale sale = toSale(salesConnection);
+			while (saleConnection.fetchNextRow()) {
+				Sale sale = toSale(saleConnection);
 
 				if (sale != null) {
 					sales.add(sale);
 				}
 			}
 		} finally {
-			if (salesConnection != null) {
-				salesConnection.disconnect();
+			if (saleConnection != null) {
+				saleConnection.disconnect();
 			}
 		}
 
@@ -388,21 +385,88 @@ final class SaleService implements ISaleService {
 				.format("SELECT count(1) AS `salescount` FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d (`end` BETWEEN FROM_UNIXTIME(%d) AND FROM_UNIXTIME(%d)) AND `deleted`='n'",
 						country.a2Code, 24, category.id.longValue(), category.name, linkedAccount.id.longValue(), start.getTime() / 1000, end.getTime() / 1000);
 
-		Connection salesConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
+		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
 
 		try {
-			salesConnection.connect();
-			salesConnection.executeQuery(getSalesQuery);
+			saleConnection.connect();
+			saleConnection.executeQuery(getSalesQuery);
 
-			if (salesConnection.fetchNextRow()) {
-				salesCount = salesConnection.getCurrentRowLong("salescount");
+			if (saleConnection.fetchNextRow()) {
+				salesCount = saleConnection.getCurrentRowLong("salescount");
 			}
 		} finally {
-			if (salesConnection != null) {
-				salesConnection.disconnect();
+			if (saleConnection != null) {
+				saleConnection.disconnect();
 			}
 		}
 
 		return salesCount;
+	}
+
+	private Item toMockItem(Connection connection) throws DataAccessException {
+		Item mockItem = new Item();
+
+		mockItem.creatorName = connection.getCurrentRowString("developer");
+		mockItem.name = connection.getCurrentRowString("title");
+		mockItem.internalId = connection.getCurrentRowString("itemid");
+
+		return mockItem;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.sale.ISaleService#getItem(java.lang.String)
+	 */
+	@Override
+	public Item getItem(String itemId) throws DataAccessException {
+		Item item = null;
+
+		String getItemQuery = String.format("SELECT `developer`, `title`, `itemid` FROM `sale` WHERE `itemid`='%s' AND `deleted`='n' LIMIT 1", itemId);
+
+		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
+
+		try {
+			saleConnection.connect();
+			saleConnection.executeQuery(getItemQuery);
+
+			if (saleConnection.fetchNextRow()) {
+				item = toMockItem(saleConnection);
+			}
+		} finally {
+			if (saleConnection != null) {
+				saleConnection.disconnect();
+			}
+		}
+		return item;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.sale.ISaleService#getDataAccount(java.lang.String)
+	 */
+	@Override
+	public DataAccount getDataAccount(String itemId) throws DataAccessException {
+		DataAccount dataAccount = null;
+
+		String getDataAccountIdQuery = String.format("SELECT `dataaccountid` FROM `sale` WHERE `itemid`='%s' AND `deleted`='n' LIMIT 1", itemId);
+
+		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
+
+		try {
+			saleConnection.connect();
+			saleConnection.executeQuery(getDataAccountIdQuery);
+
+			if (saleConnection.fetchNextRow()) {
+				dataAccount = DataAccountServiceProvider.provide().getDataAccount(saleConnection.getCurrentRowLong("dataaccountid"));
+			}
+		} finally {
+			if (saleConnection != null) {
+				saleConnection.disconnect();
+			}
+		}
+
+		return dataAccount;
 	}
 }
