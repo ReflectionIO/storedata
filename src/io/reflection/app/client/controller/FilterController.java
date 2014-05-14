@@ -436,15 +436,22 @@ public class FilterController {
 		mInTransaction++;
 	}
 
+	public void commit() {
+		commit(true);
+	}
+
 	/**
 	 * 
 	 */
-	public void commit() {
+	public void commit(boolean fireEvents) {
 		mInTransaction--;
 
 		if (mInTransaction == 0) {
 			if (mPreviousValues != null) {
-				EventController.get().fireEventFromSource(new FilterEventHandler.ChangedFilterParameters(mCurrentFilter, mPreviousValues), this);
+				if (fireEvents) {
+					EventController.get().fireEventFromSource(new FilterEventHandler.ChangedFilterParameters(mCurrentFilter, mPreviousValues), this);
+				}
+
 				mPreviousValues = null;
 			}
 		}
