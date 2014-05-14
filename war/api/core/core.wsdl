@@ -34,10 +34,10 @@
 
             <xsd:element name="ChangeUserDetailsInput" type="sdc:ChangeUserDetailsRequest" />
             <xsd:element name="ChangeUserDetailsOutput" type="sdc:ChangeUserDetailsResponse" />
-            
+
             <xsd:element name="UpdateLinkedAccountInput" type="sdc:UpdateLinkedAccountRequest" />
             <xsd:element name="UpdateLinkedAccountOutput" type="sdc:UpdateLinkedAccountResponse" />
-            
+
             <xsd:element name="DeleteLinkedAccountInput" type="sdc:DeleteLinkedAccountRequest" />
             <xsd:element name="DeleteLinkedAccountOutput" type="sdc:DeleteLinkedAccountResponse" />
 
@@ -49,7 +49,7 @@
 
             <xsd:element name="GetLinkedAccountsInput" type="sdc:GetLinkedAccountsRequest" />
             <xsd:element name="GetLinkedAccountsOutput" type="sdc:GetLinkedAccountsResponse" />
-            
+
             <xsd:element name="GetLinkedAccountItemsInput" type="sdc:GetLinkedAccountItemsRequest" />
             <xsd:element name="GetLinkedAccountItemsOutput" type="sdc:GetLinkedAccountItemsResponse" />
 
@@ -302,7 +302,7 @@
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>
-            
+
             <xsd:complexType name="UpdateLinkedAccountRequest">
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
@@ -311,14 +311,14 @@
                         </xsd:sequence>
                     </xsd:extension>
                 </xsd:complexContent>
-            </xsd:complexType>            
+            </xsd:complexType>
             <xsd:complexType name="UpdateLinkedAccountResponse">
                 <xsd:complexContent>
                     <xsd:extension base="sd:Response">
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>
-            
+
             <xsd:complexType name="DeleteLinkedAccountRequest">
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
@@ -327,7 +327,7 @@
                         </xsd:sequence>
                     </xsd:extension>
                 </xsd:complexContent>
-            </xsd:complexType>            
+            </xsd:complexType>
             <xsd:complexType name="DeleteLinkedAccountResponse">
                 <xsd:complexContent>
                     <xsd:extension base="sd:Response">
@@ -580,15 +580,17 @@
 
             <xsd:complexType name="GetSalesRanksRequest">
                 <xsd:complexContent>
-                    <xsd:sequence>
-                        <xsd:element name="linkedAccount" type="sd:DataAccount" />
-                        <xsd:element name="country" type="sd:Country" />
-                        <xsd:element name="category" type="sd:Category" />
-                        <xsd:element name="pager" type="sd:Pager" />
-                    </xsd:sequence>
-                    <xsd:attribute name="listType" type="xsd:string" />
-                    <xsd:attribute name="start" type="xsd:dateTime" />
-                    <xsd:attribute name="end" type="xsd:dateTime" />
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="linkedAccount" type="sd:DataAccount" />
+                            <xsd:element name="country" type="sd:Country" />
+                            <xsd:element name="category" type="sd:Category" />
+                            <xsd:element name="pager" type="sd:Pager" />
+                        </xsd:sequence>
+                        <xsd:attribute name="listType" type="xsd:string" />
+                        <xsd:attribute name="start" type="xsd:dateTime" />
+                        <xsd:attribute name="end" type="xsd:dateTime" />
+                    </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>
 
@@ -707,14 +709,14 @@
     <wsdl:message name="ChangeUserDetailsResponse">
         <wsdl:part name="output" element="sdc:ChangeUserDetailsOutput" />
     </wsdl:message>
-    
+
     <wsdl:message name="UpdateLinkedAccountRequest">
         <wsdl:part name="input" element="sdc:UpdateLinkedAccountInput" />
     </wsdl:message>
     <wsdl:message name="UpdateLinkedAccountResponse">
         <wsdl:part name="output" element="sdc:UpdateLinkedAccountOutput" />
     </wsdl:message>
-    
+
     <wsdl:message name="DeleteLinkedAccountRequest">
         <wsdl:part name="input" element="sdc:DeleteLinkedAccountInput" />
     </wsdl:message>
@@ -870,16 +872,16 @@
             <wsdl:input message="sdc:ChangeUserDetailsRequest" />
             <wsdl:output message="sdc:ChangeUserDetailsResponse" />
         </wsdl:operation>
-        
+
         <wsdl:operation name="UpdateLinkedAccount">
             <wsdl:input message="sdc:UpdateLinkedAccountRequest" />
             <wsdl:output message="sdc:UpdateLinkedAccountResponse" />
         </wsdl:operation>
-        
+
         <wsdl:operation name="DeleteLinkedAccount">
             <wsdl:input message="sdc:DeleteLinkedAccountRequest" />
             <wsdl:output message="sdc:DeleteLinkedAccountResponse" />
-        </wsdl:operation>        
+        </wsdl:operation>
 
         <wsdl:operation name="CheckUsername">
             <wsdl:input message="sdc:CheckUsernameRequest" />
@@ -1052,7 +1054,7 @@
                 <soap:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
-        
+
         <wsdl:operation name="UpdateLinkedAccount">
             <soap:operation soapAction="http://app.reflection.io/core/UpdateLinkedAccount" />
             <wsdl:input>
@@ -1062,7 +1064,7 @@
                 <soap:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
-        
+
         <wsdl:operation name="DeleteLinkedAccount">
             <soap:operation soapAction="http://app.reflection.io/core/DeleteLinkedAccount" />
             <wsdl:input>
