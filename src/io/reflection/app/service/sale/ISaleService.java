@@ -103,6 +103,11 @@ public interface ISaleService extends IService {
 
 	public Long getSalesCount(Country country, Category category, DataAccount linkedAccount, Date start, Date end) throws DataAccessException;
 
+	public List<Sale> getItemSales(Item item, Country country, Category category, DataAccount linkedAccount, Date start, Date end, Pager pager)
+			throws DataAccessException;
+
+	public Long getItemSalesCount(Item item, Country country, Category category, DataAccount linkedAccount, Date start, Date end);
+
 	/**
 	 * Gets a "mock" item id based on the sales data
 	 * 

@@ -23,9 +23,9 @@ import io.reflection.app.client.cell.content.ConcreteImageAndText;
 import io.reflection.app.client.cell.content.PercentageProgress;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FilterController;
-import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.ItemController;
+import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.RankController;
@@ -361,18 +361,18 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	 */
 	@Override
 	public void getItemSalesSuccess(GetItemSalesRequest input, GetItemSalesResponse output) {
-		// if (output != null && output.status == StatusType.StatusTypeSuccess) {
-		// if (output.ranks != null && output.ranks.size() > 0) {
-		// item = output.item;
-		//
-		// displayItemDetails();
-		//
-		// historyChart.setData(output.item, output.ranks, rankingType, dataType);
-		// mSidePanel.setPrice(output.ranks.get(0).currency, output.ranks.get(0).price);
-		// }
-		// } else {
-		// // do nothing
-		// }
+		if (output != null && output.status == StatusType.StatusTypeSuccess) {
+			if (output.ranks != null && output.ranks.size() > 0) {
+				item = output.item;
+
+				displayItemDetails();
+
+				historyChart.setData(output.item, output.ranks, rankingType, dataType);
+				mSidePanel.setPrice(output.ranks.get(0).currency, output.ranks.get(0).price);
+			}
+		} else {
+			// do nothing
+		}
 
 		loader.setVisible(false);
 

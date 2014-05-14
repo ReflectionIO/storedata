@@ -13,7 +13,7 @@ import io.reflection.app.api.shared.datatypes.Response;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.Item;
-import io.reflection.app.datatypes.shared.Sale;
+import io.reflection.app.datatypes.shared.Rank;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +24,7 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
 public class GetItemSalesResponse extends Response {
-
-	public List<Sale> sales;
+	public List<Rank> ranks;
 	public Pager pager;
 	public Item item;
 	public DataAccount linkedAccount;
@@ -34,15 +33,15 @@ public class GetItemSalesResponse extends Response {
 	@Override
 	public JsonObject toJson() {
 		JsonObject object = super.toJson();
-		JsonElement jsonSales = JsonNull.INSTANCE;
-		if (sales != null) {
-			jsonSales = new JsonArray();
-			for (int i = 0; i < sales.size(); i++) {
-				JsonElement jsonSalesItem = sales.get(i) == null ? JsonNull.INSTANCE : sales.get(i).toJson();
-				((JsonArray) jsonSales).add(jsonSalesItem);
+		JsonElement jsonRanks = JsonNull.INSTANCE;
+		if (ranks != null) {
+			jsonRanks = new JsonArray();
+			for (int i = 0; i < ranks.size(); i++) {
+				JsonElement jsonRanksItem = ranks.get(i) == null ? JsonNull.INSTANCE : ranks.get(i).toJson();
+				((JsonArray) jsonRanks).add(jsonRanksItem);
 			}
 		}
-		object.add("sales", jsonSales);
+		object.add("ranks", jsonRanks);
 		JsonElement jsonPager = pager == null ? JsonNull.INSTANCE : pager.toJson();
 		object.add("pager", jsonPager);
 		JsonElement jsonItem = item == null ? JsonNull.INSTANCE : item.toJson();
@@ -57,15 +56,15 @@ public class GetItemSalesResponse extends Response {
 	@Override
 	public void fromJson(JsonObject jsonObject) {
 		super.fromJson(jsonObject);
-		if (jsonObject.has("sales")) {
-			JsonElement jsonSales = jsonObject.get("sales");
-			if (jsonSales != null) {
-				sales = new ArrayList<Sale>();
-				Sale item = null;
-				for (int i = 0; i < jsonSales.getAsJsonArray().size(); i++) {
-					if (jsonSales.getAsJsonArray().get(i) != null) {
-						(item = new Sale()).fromJson(jsonSales.getAsJsonArray().get(i).getAsJsonObject());
-						sales.add(item);
+		if (jsonObject.has("ranks")) {
+			JsonElement jsonRanks = jsonObject.get("ranks");
+			if (jsonRanks != null) {
+				ranks = new ArrayList<Rank>();
+				Rank item = null;
+				for (int i = 0; i < jsonRanks.getAsJsonArray().size(); i++) {
+					if (jsonRanks.getAsJsonArray().get(i) != null) {
+						(item = new Rank()).fromJson(jsonRanks.getAsJsonArray().get(i).getAsJsonObject());
+						ranks.add(item);
 					}
 				}
 			}

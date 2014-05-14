@@ -1649,6 +1649,9 @@ public final class Core extends ActionHandler {
 
 			List<Store> stores = StoreServiceProvider.provide().getDataSourceStores(linkedAccount.source);
 
+			if (input.listType == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("String: input.listType"));
+
 			// right now category
 			if (input.category == null) {
 				// TODO:
@@ -1685,6 +1688,112 @@ public final class Core extends ActionHandler {
 			if (diffDays > 60 || diffDays < 0)
 				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
 						ApiError.DateRangeOutOfBounds.getMessage("0-60 days: input.end - input.start"));
+
+			List<Sale> sales = SaleServiceProvider.provide().getSales(input.country, input.category, linkedAccount, input.start, input.end, input.pager);
+
+			if (sales.size() > 0) {
+				// group sales by date
+				Map<Date, List<Sale>> salesGroupByDate = new HashMap<Date, List<Sale>>();
+				List<Sale> dateSalesList = null;
+				Date key;
+				SimpleDateFormat keyFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+				Store defaultStore = stores.get(0);
+				FormType form = ModellerFactory.getModellerForStore(defaultStore.a3Code).getForm(input.listType);
+
+				for (Sale sale : sales) {
+					// only add items that are consistent with the product type
+					if (FREE_OR_PAID_APP_UNIVERSAL_IOS.equals(sale.typeIdentifier)
+							|| (form == FormType.FormTypeOther && FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier))
+							|| (form == FormType.FormTypeTablet && FREE_OR_PAID_APP_IPAD_IOS.equals(sale.typeIdentifier))) {
+
+						key = keyFormat.parse(keyFormat.format(sale.begin));
+						dateSalesList = salesGroupByDate.get(key);
+
+						if (dateSalesList == null) {
+							dateSalesList = new ArrayList<Sale>();
+							salesGroupByDate.put(key, dateSalesList);
+						}
+
+						dateSalesList.add(sale);
+					}
+				}
+
+				// get the model runs constants
+				List<ModelRun> modelRuns = ModelRunServiceProvider.provide().getDateModelRunBatch(input.country, defaultStore, form, salesGroupByDate.keySet());
+
+				Map<Date, ModelRun> modelRunLookup = new HashMap<Date, ModelRun>();
+
+				for (ModelRun modelRun : modelRuns) {
+					key = keyFormat.parse(keyFormat.format(modelRun.created));
+
+					if (modelRunLookup.get(key) == null) {
+						modelRunLookup.put(key, modelRun);
+					}
+				}
+
+				// add the numbers up to create ranks and then predict the position and the grossing position
+
+				Rank rank;
+				ModelRun modelRun;
+				Set<Date> dates = salesGroupByDate.keySet();
+				List<Sale> salesGroup;
+
+				output.ranks = new ArrayList<Rank>();
+
+				for (Date salesGroupDate : dates) {
+					rank = new Rank();
+
+					output.ranks.add(rank);
+
+					modelRun = modelRunLookup.get(salesGroupDate);
+					salesGroup = salesGroupByDate.get(salesGroupDate);
+
+					if (sales.size() > 0) {
+						int downloads = 0;
+						float revenue = 0;
+
+						boolean populatedCommon = false;
+						for (Sale sale : salesGroup) {
+							if (!populatedCommon) {
+								rank.category = input.category;
+
+								if (modelRun != null) {
+									rank.code = modelRun.code;
+								}
+
+								rank.country = input.country.a2Code;
+								rank.currency = sale.customerCurrency;
+								rank.price = Float.valueOf(((float) sale.customerPrice.intValue()) / 100.0f);
+								rank.date = salesGroupDate;
+								rank.created = salesGroupDate;
+								rank.itemId = sale.item.internalId;
+								rank.source = defaultStore.a3Code;
+								rank.type = input.listType;
+
+								populatedCommon = true;
+							}
+
+							revenue += ((float) sale.customerPrice.intValue()) / 100.0f;
+							downloads++;
+						}
+
+						rank.revenue = Float.valueOf(revenue);
+						rank.downloads = Integer.valueOf(downloads);
+
+						if (modelRun != null) {
+							// TODO: use the mode to predict what rank that would be
+							// rank.grossingPosition;
+							// rank.position;
+						}
+					}
+				}
+			}
+
+			output.item = input.item;
+			
+			output.pager = input.pager;
+			updatePager(output.pager, output.ranks);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {

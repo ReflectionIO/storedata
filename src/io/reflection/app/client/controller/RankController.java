@@ -152,6 +152,8 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 		input.category = FilterController.get().getCategory();
 
+		input.listType = FilterController.get().getListTypes().get(0);
+		
 		input.item = new Item();
 		input.item.internalId = item.internalId;
 		input.item.source = ApiCallHelper.storeCodeForApiCall(item.source);
