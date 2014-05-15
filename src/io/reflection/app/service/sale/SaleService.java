@@ -481,8 +481,29 @@ final class SaleService implements ISaleService {
 	 * io.reflection.app.datatypes.shared.Category, io.reflection.app.datatypes.shared.DataAccount, java.util.Date, java.util.Date)
 	 */
 	@Override
-	public Long getItemSalesCount(Item item, Country country, Category category, DataAccount linkedAccount, Date start, Date end) {
+	public Long getItemSalesCount(Item item, Country country, Category category, DataAccount linkedAccount, Date start, Date end) throws DataAccessException {
 		Long salesCount = Long.valueOf(0);
+
+		String getSalesQuery = String
+				.format("SELECT count(1) AS `salescount` FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d (`end` BETWEEN FROM_UNIXTIME(%d) AND FROM_UNIXTIME(%d)) AND `itemid`='%s' AND `deleted`='n'",
+						country.a2Code, 24, category.id.longValue(), category.name, linkedAccount.id.longValue(), start.getTime() / 1000, end.getTime() / 1000,
+						item.internalId);
+
+		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
+
+		try {
+			saleConnection.connect();
+			saleConnection.executeQuery(getSalesQuery);
+
+			if (saleConnection.fetchNextRow()) {
+				salesCount = saleConnection.getCurrentRowLong("salescount");
+			}
+		} finally {
+			if (saleConnection != null) {
+				saleConnection.disconnect();
+			}
+		}
+
 		return salesCount;
 	}
 

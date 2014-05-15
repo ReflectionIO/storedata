@@ -13,10 +13,10 @@ import static io.reflection.app.client.controller.FilterController.RANKING_CHART
 import static io.reflection.app.client.controller.FilterController.REVENUE_CHART_TYPE;
 import io.reflection.app.api.core.shared.call.GetItemRanksRequest;
 import io.reflection.app.api.core.shared.call.GetItemRanksResponse;
-import io.reflection.app.api.core.shared.call.GetItemSalesRequest;
-import io.reflection.app.api.core.shared.call.GetItemSalesResponse;
+import io.reflection.app.api.core.shared.call.GetItemSalesRanksRequest;
+import io.reflection.app.api.core.shared.call.GetItemSalesRanksResponse;
 import io.reflection.app.api.core.shared.call.event.GetItemRanksEventHandler;
-import io.reflection.app.api.core.shared.call.event.GetItemSalesEventHandler;
+import io.reflection.app.api.core.shared.call.event.GetItemSalesRanksEventHandler;
 import io.reflection.app.client.cell.ImageAndTextCell;
 import io.reflection.app.client.cell.ProgressBarCell;
 import io.reflection.app.client.cell.content.ConcreteImageAndText;
@@ -58,7 +58,7 @@ import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
 
-public class ItemPage extends Page implements NavigationEventHandler, GetItemRanksEventHandler, GetItemSalesEventHandler, FilterEventHandler {
+public class ItemPage extends Page implements NavigationEventHandler, GetItemRanksEventHandler, GetItemSalesRanksEventHandler, FilterEventHandler {
 
 	private static ItemPageUiBinder uiBinder = GWT.create(ItemPageUiBinder.class);
 
@@ -180,7 +180,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		// register(EventController.get().addHandlerToSource(SearchForItemEventHandler.TYPE, ItemController.get(), this));
 		register(EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
 		register(EventController.get().addHandlerToSource(GetItemRanksEventHandler.TYPE, RankController.get(), this));
-		register(EventController.get().addHandlerToSource(GetItemSalesEventHandler.TYPE, RankController.get(), this));
+		register(EventController.get().addHandlerToSource(GetItemSalesRanksEventHandler.TYPE, RankController.get(), this));
 
 	}
 
@@ -352,42 +352,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		// .setVisible(true);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * io.reflection.app.api.core.shared.call.event.GetItemSalesEventHandler#getItemSalesSuccess(io.reflection.app.api.core.shared.call.GetItemSalesRequest,
-	 * io.reflection.app.api.core.shared.call.GetItemSalesResponse)
-	 */
-	@Override
-	public void getItemSalesSuccess(GetItemSalesRequest input, GetItemSalesResponse output) {
-		if (output != null && output.status == StatusType.StatusTypeSuccess) {
-			if (output.ranks != null && output.ranks.size() > 0) {
-				item = output.item;
-
-				displayItemDetails();
-
-				historyChart.setData(output.item, output.ranks, rankingType, dataType);
-				mSidePanel.setPrice(output.ranks.get(0).currency, output.ranks.get(0).price);
-			}
-		} else {
-			// do nothing
-		}
-
-		loader.setVisible(false);
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * io.reflection.app.api.core.shared.call.event.GetItemSalesEventHandler#getItemSalesFailure(io.reflection.app.api.core.shared.call.GetItemSalesRequest,
-	 * java.lang.Throwable)
-	 */
-	@Override
-	public void getItemSalesFailure(GetItemSalesRequest input, Throwable caught) {}
-
 	private void getHistoryChartData() {
 		if (item != null) {
 			// AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Getting History",
@@ -427,5 +391,38 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			PageType.ItemPageType.show("view", mItemInternalId, selectedTab, FilterController.get().asItemFilterString());
 		}
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.core.shared.call.event.GetItemSalesRanksEventHandler#getItemSalesRanksSuccess(io.reflection.app.api.core.shared.call.
+	 * GetItemSalesRanksRequest, io.reflection.app.api.core.shared.call.GetItemSalesRanksResponse)
+	 */
+	@Override
+	public void getItemSalesRanksSuccess(GetItemSalesRanksRequest input, GetItemSalesRanksResponse output) {
+		if (output != null && output.status == StatusType.StatusTypeSuccess) {
+			if (output.ranks != null && output.ranks.size() > 0) {
+				item = output.item;
+
+				displayItemDetails();
+
+				historyChart.setData(output.item, output.ranks, rankingType, dataType);
+				mSidePanel.setPrice(output.ranks.get(0).currency, output.ranks.get(0).price);
+			}
+		} else {
+			// do nothing
+		}
+
+		loader.setVisible(false);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.core.shared.call.event.GetItemSalesRanksEventHandler#getItemSalesRanksFailure(io.reflection.app.api.core.shared.call.
+	 * GetItemSalesRanksRequest, java.lang.Throwable)
+	 */
+	@Override
+	public void getItemSalesRanksFailure(GetItemSalesRanksRequest input, Throwable caught) {}
 
 }

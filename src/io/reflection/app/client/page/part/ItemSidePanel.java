@@ -8,6 +8,7 @@
 package io.reflection.app.client.page.part;
 
 import io.reflection.app.client.controller.StoreController;
+import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.shared.util.FormattingHelper;
@@ -48,14 +49,21 @@ public class ItemSidePanel extends Composite {
 	public void setItem(Item item) {
 		mTitle.setInnerText(item.name);
 		mCreatorName.setInnerText("By " + item.creatorName);
-		mImage.setUrl(item.largeImage);
+
+		if (item.largeImage != null) {
+			mImage.setUrl(item.largeImage);
+			mImage.removeStyleName(Styles.INSTANCE.reflection().unknownAppLarge());
+		} else {
+			mImage.setUrl("");
+			mImage.addStyleName(Styles.INSTANCE.reflection().unknownAppLarge());
+		}
 
 		Store s = StoreController.get().getStore(item.source);
 		storeName.setInnerHTML((s == null || s.name == null || s.name.length() == 0) ? item.source.toUpperCase() + " Store" : s.name);
 
 		viewInStore.setHref(StoreController.get().getExternalUri(item));
 
-		price.setInnerHTML("...");
+		price.setInnerHTML("price + in-App purchases");
 	}
 
 	public void setPrice(String currency, Float value) {

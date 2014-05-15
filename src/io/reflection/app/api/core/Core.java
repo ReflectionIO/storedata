@@ -1699,6 +1699,7 @@ public final class Core extends ActionHandler {
 				SimpleDateFormat keyFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 				Store defaultStore = stores.get(0);
+				input.item.source = defaultStore.a3Code;
 				FormType form = ModellerFactory.getModellerForStore(defaultStore.a3Code).getForm(input.listType);
 
 				for (Sale sale : sales) {
@@ -1791,7 +1792,7 @@ public final class Core extends ActionHandler {
 			}
 
 			output.item = input.item;
-			
+
 			output.pager = input.pager;
 			updatePager(output.pager, output.ranks);
 
