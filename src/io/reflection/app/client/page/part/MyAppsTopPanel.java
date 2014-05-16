@@ -40,6 +40,7 @@ public class MyAppsTopPanel extends Composite {
 
 	interface MyAppsTopPanelUiBinder extends UiBinder<Widget, MyAppsTopPanel> {}
 
+	@UiField ListBox accountName;
 	@UiField ListBox appStore;
 	@UiField ListBox country;
 	@UiField DateRangeBox dateRangeBox;
@@ -107,6 +108,11 @@ public class MyAppsTopPanel extends Composite {
 
 	}
 
+	@UiHandler("accountName")
+	void onAccountNameChanged(ChangeEvent event) {
+		FilterController.get().setLinkedAccount(Long.valueOf(accountName.getValue(accountName.getSelectedIndex())));
+	}
+
 	@UiHandler("appStore")
 	void onAppStoreValueChanged(ChangeEvent event) {
 		FilterController.get().setStore(appStore.getValue(appStore.getSelectedIndex()));
@@ -118,14 +124,21 @@ public class MyAppsTopPanel extends Composite {
 	}
 
 	public void updateFromFilter() {
-		appStore.setSelectedIndex(FormHelper.getItemIndex(appStore, FilterController.get().getFilter().getStoreA3Code()));
+		FilterController fc = FilterController.get();
+
+		appStore.setSelectedIndex(FormHelper.getItemIndex(appStore, fc.getFilter().getStoreA3Code()));
 		DateRange range = new DateRange();
 
-		range.setFrom(FilterController.get().getStartDate());
-		range.setTo(FilterController.get().getEndDate());
+		range.setFrom(fc.getStartDate());
+		range.setTo(fc.getEndDate());
 
 		dateRangeBox.setValue(range);
-		country.setSelectedIndex(FormHelper.getItemIndex(country, FilterController.get().getFilter().getCountryA2Code()));
+		country.setSelectedIndex(FormHelper.getItemIndex(country, fc.getFilter().getCountryA2Code()));
+
+		if (fc.getFilter().getLinkedAccountId() > 0) {
+			accountName.setSelectedIndex(FormHelper.getItemIndex(accountName, fc.getFilter().getLinkedAccountId().toString()));
+		}
+
 	}
 
 	@UiHandler("dateRangeBox")
@@ -136,6 +149,11 @@ public class MyAppsTopPanel extends Composite {
 		fc.setEndDate(event.getValue().getTo());
 		fc.setStartDate(event.getValue().getFrom());
 		fc.commit();
+	}
+
+	public void fillAccountNameList() {
+		accountName.clear();
+		FilterHelper.addLinkedAccounts(accountName);
 	}
 
 }

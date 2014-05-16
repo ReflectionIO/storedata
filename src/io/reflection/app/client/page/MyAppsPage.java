@@ -8,6 +8,11 @@
 package io.reflection.app.client.page;
 
 import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
+import io.reflection.app.api.core.shared.call.GetLinkedAccountItemsRequest;
+import io.reflection.app.api.core.shared.call.GetLinkedAccountItemsResponse;
+import io.reflection.app.api.core.shared.call.GetLinkedAccountsRequest;
+import io.reflection.app.api.core.shared.call.GetLinkedAccountsResponse;
+import io.reflection.app.api.core.shared.call.event.GetLinkedAccountItemsEventHandler;
 import io.reflection.app.api.core.shared.call.event.GetLinkedAccountsEventHandler;
 import io.reflection.app.client.cell.MiniAppCell;
 import io.reflection.app.client.controller.EventController;
@@ -44,24 +49,29 @@ import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author stefanocapuzzi
  * 
  */
-public class MyAppsPage extends Page implements FilterEventHandler, NavigationEventHandler {
+public class MyAppsPage extends Page implements FilterEventHandler, NavigationEventHandler, GetLinkedAccountsEventHandler, GetLinkedAccountItemsEventHandler {
 
 	private static MyAppsPageUiBinder uiBinder = GWT.create(MyAppsPageUiBinder.class);
 
 	interface MyAppsPageUiBinder extends UiBinder<Widget, MyAppsPage> {}
 
 	@UiField(provided = true) CellTable<MyApp> appsTable = new CellTable<MyApp>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
-	@UiField SimplePager pager;
+	@UiField SimplePager simplePager;
 
 	@UiField MyAppsTopPanel topPanel;
 
 	@UiField InlineHyperlink mLinkedAccountsLink;
 	@UiField InlineHyperlink mMyAppsLink;
+
+	private User user = SessionController.get().getLoggedInUser();
+
+	long linkedAccountsCount = -1;
 
 	// Columns
 	private TextColumn<MyApp> columnRank;
@@ -84,7 +94,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 		appsTable.setEmptyTableWidget(new HTMLPanel("No Apps found!"));
 		MyAppsController.get().addDataDisplay(appsTable);
-		pager.setDisplay(appsTable);
+		simplePager.setDisplay(appsTable);
 
 	}
 
@@ -99,21 +109,13 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
-		register(EventController.get().addHandlerToSource(GetLinkedAccountsEventHandler.TYPE, LinkedAccountController.get(), MyAppsController.get()));
+		register(EventController.get().addHandlerToSource(GetLinkedAccountsEventHandler.TYPE, LinkedAccountController.get(), this));
 
 		// boolean hasPermission = SessionController.get().loggedInUserHas(SessionController.);
 
 		// pager.setVisible(hasPermission);
 		// redirect.setVisible(!hasPermission);
 
-		User user = SessionController.get().getLoggedInUser();
-
-		if (user != null) {
-			mLinkedAccountsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(),
-					user.id.toString()));
-			mMyAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(),
-					FilterController.get().asMyAppsFilterString()));
-		}
 	}
 
 	/**
@@ -140,7 +142,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		columnPrice = new TextColumn<MyApp>() {
 			@Override
 			public String getValue(MyApp object) {
-				return object.overallPrice;
+				return (object.overallPrice != null) ? object.overallPrice : "-";
 			}
 		};
 		appsTable.addColumn(columnPrice, "Price");
@@ -184,9 +186,13 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	 */
 	@Override
 	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
-		appsTable.setVisibleRangeAndClearData(appsTable.getVisibleRange(), false);
-		MyAppsController.get().reset();
-		PageType.MyAppsPageType.show("view", "all", FilterController.get().asMyAppsFilterString());
+		if (LinkedAccountController.get().hasLinkedAccounts() && LinkedAccountController.get().getLinkedAccountsCount() > 0) {
+			MyAppsController.get().reset();
+			MyAppsController.get().fetchLinkedAccountItems();
+		}
+		mMyAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController
+				.get().asMyAppsFilterString()));
+		PageType.UsersPageType.show(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController.get().asMyAppsFilterString());
 	}
 
 	/*
@@ -196,9 +202,13 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	 */
 	@Override
 	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
-		appsTable.setVisibleRangeAndClearData(appsTable.getVisibleRange(), false);
-		MyAppsController.get().reset();
-		PageType.MyAppsPageType.show("view", "all", FilterController.get().asMyAppsFilterString());
+		if (LinkedAccountController.get().hasLinkedAccounts() && LinkedAccountController.get().getLinkedAccountsCount() > 0) {
+			MyAppsController.get().reset();
+			MyAppsController.get().fetchLinkedAccountItems();
+		}
+		mMyAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController
+				.get().asMyAppsFilterString()));
+		PageType.UsersPageType.show(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController.get().asMyAppsFilterString());
 	}
 
 	/*
@@ -208,6 +218,104 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	 * io.reflection.app.client.controller.NavigationController.Stack)
 	 */
 	@Override
-	public void navigationChanged(Stack previous, Stack current) {}
+	public void navigationChanged(Stack previous, Stack current) {
+
+		user = SessionController.get().getLoggedInUser();
+
+		if (user != null) {
+			mLinkedAccountsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(),
+					user.id.toString()));
+		}
+
+		String currentFilter = FilterController.get().asMyAppsFilterString();
+		if (currentFilter != null && currentFilter.length() > 0) {
+			if (user != null) {
+				mMyAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(),
+						FilterController.get().asMyAppsFilterString()));
+			}
+		}
+
+		// Linked accounts retrieved in LinkedAccountPage but not here, or Check if Added or deleted a linked account
+		if ((linkedAccountsCount == -1 && LinkedAccountController.get().hasLinkedAccounts())
+				|| linkedAccountsCount != LinkedAccountController.get().getLinkedAccountsCount()) {
+			topPanel.fillAccountNameList();
+			linkedAccountsCount = LinkedAccountController.get().getLinkedAccountsCount();
+			if (LinkedAccountController.get().getLinkedAccountsCount() > 0) {
+				FilterController.get().setLinkedAccount(LinkedAccountController.get().getAllLinkedAccounts().get(0).id);
+			} else {
+				MyAppsController.get().reset();
+			}
+		}
+
+		topPanel.updateFromFilter();
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.core.shared.call.event.GetLinkedAccountsEventHandler#getLinkedAccountsSuccess(io.reflection.app.api.core.shared.call.
+	 * GetLinkedAccountsRequest, io.reflection.app.api.core.shared.call.GetLinkedAccountsResponse)
+	 */
+	@Override
+	public void getLinkedAccountsSuccess(GetLinkedAccountsRequest input, GetLinkedAccountsResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess) {
+			if (output.pager.totalCount != null) {
+				if (LinkedAccountController.get().hasLinkedAccounts()) {
+					topPanel.fillAccountNameList();
+					linkedAccountsCount = LinkedAccountController.get().getLinkedAccountsCount();
+					if (LinkedAccountController.get().getLinkedAccountsCount() > 0) {
+						FilterController.get().setLinkedAccount(LinkedAccountController.get().getAllLinkedAccounts().get(0).id);
+					} else {
+						MyAppsController.get().reset();
+					}
+				} else { // No linked accounts associated with this user
+					MyAppsController.get().reset();
+				}
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.core.shared.call.event.GetLinkedAccountsEventHandler#getLinkedAccountsFailure(io.reflection.app.api.core.shared.call.
+	 * GetLinkedAccountsRequest, java.lang.Throwable)
+	 */
+	@Override
+	public void getLinkedAccountsFailure(GetLinkedAccountsRequest input, Throwable caught) {
+		MyAppsController.get().reset();
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.core.shared.call.event.GetLinkedAccountItemsEventHandler#getLinkedAccountItemsSuccess(io.reflection.app.api.core.shared.call.
+	 * GetLinkedAccountItemsRequest, io.reflection.app.api.core.shared.call.GetLinkedAccountItemsResponse)
+	 */
+	@Override
+	public void getLinkedAccountItemsSuccess(GetLinkedAccountItemsRequest input, GetLinkedAccountItemsResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess) {
+			if (MyAppsController.get().getUserItemsCount() > output.pager.count) {
+				simplePager.setVisible(true);
+			} else {
+				simplePager.setVisible(false);
+			}
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.core.shared.call.event.GetLinkedAccountItemsEventHandler#getLinkedAccountItemsFailure(io.reflection.app.api.core.shared.call.
+	 * GetLinkedAccountItemsRequest, java.lang.Throwable)
+	 */
+	@Override
+	public void getLinkedAccountItemsFailure(GetLinkedAccountItemsRequest input, Throwable caught) {
+		MyAppsController.get().reset();
+
+	}
 
 }

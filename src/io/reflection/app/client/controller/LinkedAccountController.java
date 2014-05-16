@@ -37,7 +37,6 @@ import java.util.Map;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
-import com.google.gwt.view.client.Range;
 import com.google.gwt.view.client.TreeViewModel;
 import com.willshex.gson.json.service.shared.StatusType;
 
@@ -49,15 +48,13 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 
 	private List<DataAccount> myDataAccounts = null;
 	private List<DataSource> myDataSources = null;
-	private List<DataAccount> myAllDataAccounts = null;
-	private Map<String, DataSource> dataSourceLookup = new HashMap<String, DataSource>();
-	private Map<String, DataAccount> dataAccountLookup = new HashMap<String, DataAccount>();
+	private Map<String, DataSource> myDataSourceLookup = new HashMap<String, DataSource>();
+	private Map<String, DataAccount> myDataAccountLookup = new HashMap<String, DataAccount>();
 
 	private long mCount = -1;
 
 	private List<DataAccount> rows = new ArrayList<DataAccount>();
 	private Pager pager = null;
-	private Pager pagerMaxCount = null;
 
 	private static LinkedAccountController mOne = null;
 
@@ -68,7 +65,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 		return mOne;
 	}
 
-	private void fetchLinkedAccounts() {
+	public void fetchLinkedAccounts() {
 		CoreService service = ServiceCreator.createCoreService();
 
 		final GetLinkedAccountsRequest input = new GetLinkedAccountsRequest();
@@ -77,7 +74,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 
 		if (pager == null) {
 			pager = new Pager();
-			pager.count = SHORT_STEP;
+			pager.count = (long) Integer.MAX_VALUE;
 			pager.start = Long.valueOf(0);
 			pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
 		}
@@ -115,18 +112,6 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 							mCount = pager.totalCount.longValue();
 						}
 
-						if (hasAllLinkedAccounts()) {
-							if (myAllDataAccounts == null) {
-								myAllDataAccounts = new ArrayList<DataAccount>();
-								myAllDataAccounts.addAll(rows);
-								pagerMaxCount = new Pager();
-								pagerMaxCount.count = (long) Integer.MAX_VALUE;
-								pagerMaxCount.start = Long.valueOf(0);
-								pagerMaxCount.sortDirection = SortDirectionType.SortDirectionTypeDescending;
-								pagerMaxCount.totalCount = pager.totalCount.longValue();
-							}
-						}
-
 					}
 
 					updateRowCount((int) mCount, true);
@@ -147,58 +132,6 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 						LinkedAccountController.this);
 			}
 		});
-	}
-
-	public void fetchAllLinkedAccounts() {
-
-		CoreService service = ServiceCreator.createCoreService();
-
-		final GetLinkedAccountsRequest input = new GetLinkedAccountsRequest();
-		input.accessCode = ACCESS_CODE;
-		input.session = SessionController.get().getSessionForApiCall();
-
-		pagerMaxCount = new Pager();
-		pagerMaxCount.count = (long) Integer.MAX_VALUE;
-		pagerMaxCount.start = Long.valueOf(0);
-		pagerMaxCount.sortDirection = SortDirectionType.SortDirectionTypeDescending;
-
-		input.pager = pagerMaxCount;
-
-		myAllDataAccounts = new ArrayList<DataAccount>();
-
-		service.getLinkedAccounts(input, new AsyncCallback<GetLinkedAccountsResponse>() {
-
-			@Override
-			public void onSuccess(GetLinkedAccountsResponse output) {
-				if (output.status == StatusType.StatusTypeSuccess) {
-
-					if (output.linkedAccounts != null) {
-						DataAccount myLinkedAccount;
-						for (DataAccount da : output.linkedAccounts) {
-							myLinkedAccount = new DataAccount();
-							myLinkedAccount = da;
-							myLinkedAccount.source = getDataSource(da.source.id);
-							myAllDataAccounts.add(myLinkedAccount);
-						}
-					}
-
-					if (output.pager != null) {
-						pagerMaxCount = output.pager;
-					}
-
-				}
-
-				EventController.get().fireEventFromSource(new GetLinkedAccountsEventHandler.GetLinkedAccountsSuccess(input, output),
-						LinkedAccountController.this);
-			}
-
-			@Override
-			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new GetLinkedAccountsEventHandler.GetLinkedAccountsFailure(input, caught),
-						LinkedAccountController.this);
-			}
-		});
-
 	}
 
 	/**
@@ -231,11 +164,6 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 			@Override
 			public void onSuccess(LinkAccountResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
-					if (myAllDataAccounts != null && pagerMaxCount != null) {
-						myAllDataAccounts.add(output.account);
-						pagerMaxCount.totalCount = pagerMaxCount.totalCount + 1;
-						pagerMaxCount.start = Long.valueOf(0);
-					}
 					rows.add(output.account);
 					addLinkedAccountsToLookup(Arrays.asList(output.account));
 					addDataSourceToLookup(Arrays.asList(output.account.source));
@@ -287,10 +215,6 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 			@Override
 			public void onSuccess(UpdateLinkedAccountResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
-					if (myAllDataAccounts != null) {
-						myAllDataAccounts.get(myAllDataAccounts.indexOf(dataAccountLookup.get(input.linkedAccount.id.toString()))).password = input.linkedAccount.password;
-						myAllDataAccounts.get(myAllDataAccounts.indexOf(dataAccountLookup.get(input.linkedAccount.id.toString()))).properties = input.linkedAccount.properties;
-					}
 					updateLinkedAccountLookup(input.linkedAccount.id, input.linkedAccount.password, input.linkedAccount.properties);
 				}
 
@@ -326,12 +250,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 			@Override
 			public void onSuccess(DeleteLinkedAccountResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
-					if (myAllDataAccounts != null) {
-						myAllDataAccounts.remove(dataAccountLookup.get(input.linkedAccount.id.toString()));
-						pagerMaxCount.totalCount = pagerMaxCount.totalCount - 1;
-						pagerMaxCount.start = Long.valueOf(0);
-					}
-					rows.remove(dataAccountLookup.get(input.linkedAccount.id.toString()));
+					rows.remove(myDataAccountLookup.get(input.linkedAccount.id.toString()));
 					deleteLinkedAccountLookup(input.linkedAccount.id);
 					pager.totalCount = pager.totalCount - 1;
 					pager.start = Long.valueOf(0);
@@ -351,20 +270,24 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 	}
 
 	/**
-	 * Get all linked accounts
-	 * 
-	 * @return
-	 */
-	public List<DataAccount> getAllLinkedAccounts() {
-		return myAllDataAccounts;
-	}
-
-	/**
 	 * 
 	 * @return
 	 */
 	public long getLinkedAccountsCount() {
 		return mCount;
+	}
+
+	/**
+	 * Get all linked accounts
+	 * 
+	 * @return
+	 */
+	public List<DataAccount> getAllLinkedAccounts() {
+		return myDataAccounts;
+	}
+
+	public boolean hasLinkedAccounts() {
+		return mCount != -1;
 	}
 
 	/**
@@ -374,7 +297,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 	 * @return
 	 */
 	public DataAccount getLinkedAccount(Long linkedAccountId) {
-		return dataAccountLookup.get(linkedAccountId.toString());
+		return myDataAccountLookup.get(linkedAccountId.toString());
 	}
 
 	/**
@@ -384,7 +307,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 	 * @return
 	 */
 	public DataSource getDataSource(Long dataSourceId) {
-		return dataSourceLookup.get(dataSourceId.toString());
+		return myDataSourceLookup.get(dataSourceId.toString());
 	}
 
 	/**
@@ -394,7 +317,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 	 */
 	private void addLinkedAccountsToLookup(List<DataAccount> linkedAccounts) {
 		for (DataAccount dataAccount : linkedAccounts) {
-			dataAccountLookup.put(dataAccount.id.toString(), dataAccount);
+			myDataAccountLookup.put(dataAccount.id.toString(), dataAccount);
 			myDataAccounts.add(dataAccount);
 		}
 	}
@@ -407,10 +330,10 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 	 * @param properties
 	 */
 	private void updateLinkedAccountLookup(Long linkedAccountId, String password, String properties) {
-		myDataAccounts.get(myDataAccounts.indexOf(dataAccountLookup.get(linkedAccountId.toString()))).password = password;
-		myDataAccounts.get(myDataAccounts.indexOf(dataAccountLookup.get(linkedAccountId.toString()))).properties = properties;
-		dataAccountLookup.get(linkedAccountId.toString()).password = password;
-		dataAccountLookup.get(linkedAccountId.toString()).properties = properties;
+		myDataAccounts.get(myDataAccounts.indexOf(myDataAccountLookup.get(linkedAccountId.toString()))).password = password;
+		myDataAccounts.get(myDataAccounts.indexOf(myDataAccountLookup.get(linkedAccountId.toString()))).properties = properties;
+		myDataAccountLookup.get(linkedAccountId.toString()).password = password;
+		myDataAccountLookup.get(linkedAccountId.toString()).properties = properties;
 	}
 
 	/**
@@ -421,8 +344,8 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 	 * @param properties
 	 */
 	private void deleteLinkedAccountLookup(Long linkedAccountId) {
-		myDataAccounts.remove(dataAccountLookup.get(linkedAccountId.toString()));
-		dataAccountLookup.remove(linkedAccountId.toString());
+		myDataAccounts.remove(myDataAccountLookup.get(linkedAccountId.toString()));
+		myDataAccountLookup.remove(linkedAccountId.toString());
 	}
 
 	/**
@@ -431,7 +354,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 	 */
 	private void addDataSourceToLookup(List<DataSource> dataSources) {
 		for (DataSource dataSource : dataSources) {
-			dataSourceLookup.put(dataSource.id.toString(), dataSource);
+			myDataSourceLookup.put(dataSource.id.toString(), dataSource);
 			myDataSources.add(dataSource);
 		}
 	}
@@ -448,7 +371,6 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 		} else if (value instanceof DataAccount) {
 			// return new DefaultNodeInfo<Item>();
 		}
-
 		return null;
 	}
 
@@ -469,36 +391,31 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 	 */
 	@Override
 	protected void onRangeChanged(HasData<DataAccount> display) {
-		Range r = display.getVisibleRange();
-		int start = r.getStart();
-		int end = start + r.getLength();
-		if (end > rows.size()) {
+		// Range r = display.getVisibleRange();
+		// int start = r.getStart();
+		// int end = start + r.getLength();
+		if (!hasLinkedAccounts()) {
 			fetchLinkedAccounts();
 		} else {
-			updateRowData(start, rows.subList(start, end));
+			updateRowData(0, rows.subList(0, (int) getLinkedAccountsCount()));
 		}
-	}
 
-	public boolean hasAllLinkedAccounts() {
-		return (pager != null && pager.totalCount == rows.size()) || myAllDataAccounts != null;
 	}
 
 	public void reset() {
 		myDataAccounts = null;
 		myDataSources = null;
 
-		myAllDataAccounts = null;
-		pagerMaxCount = null;
-
-		dataAccountLookup.clear();
-		dataSourceLookup.clear();
+		myDataAccountLookup.clear();
+		myDataSourceLookup.clear();
 
 		pager = null;
-
+		mCount = -1;
 		rows.clear();
 
 		updateRowData(0, rows);
 		updateRowCount(0, false);
+
 	}
 
 	public boolean isLinkedAccountItem(Item item) {

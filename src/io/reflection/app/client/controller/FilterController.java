@@ -13,6 +13,7 @@ import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.Store;
 
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ public class FilterController {
 	public static final String RANK_FILTER_KEY = "rankfilter:";
 	public static final String MYAPP_FILTER_KEY = "myappfilter:";
 
+	public static final String LINKED_ACCOUNT_KEY = "linkedaccount";
 	public static final String STORE_KEY = "store";
 	public static final String COUNTRY_KEY = "country";
 	public static final String LIST_TYPE_KEY = "listtype";
@@ -94,9 +96,25 @@ public class FilterController {
 				parsed.setCategoryId(Long.valueOf(splitDecoded[2]));
 				parsed.setEndTime(Long.valueOf(splitDecoded[3]));
 				parsed.setDailyData(splitDecoded[4]);
+			} else if ((splitDecoded = Stack.decode(MYAPP_FILTER_KEY, filter)) != null && splitDecoded.length == 5) {
+				parsed = new Filter();
+
+				parsed.setStoreA3Code(splitDecoded[0]);
+				parsed.setCountryA2Code(splitDecoded[1]);
+				parsed.setStartTime(Long.valueOf(splitDecoded[2]));
+				parsed.setEndTime(Long.valueOf(splitDecoded[3]).longValue());
+				parsed.setLinkedAccountId(Long.valueOf(splitDecoded[4]));
 			}
 
 			return parsed;
+		}
+
+		public Long getLinkedAccountId() {
+			return (Long) get(LINKED_ACCOUNT_KEY);
+		}
+
+		public void setLinkedAccountId(Long value) {
+			put(LINKED_ACCOUNT_KEY, value);
 		}
 
 		public String getStoreA3Code() {
@@ -181,7 +199,8 @@ public class FilterController {
 		}
 
 		public String asMyAppsFilterString() {
-			return Stack.encode(MYAPP_FILTER_KEY, getStoreA3Code(), getCountryA2Code(), getStartTime().toString(), getEndTime().toString());
+			return Stack.encode(MYAPP_FILTER_KEY, getStoreA3Code(), getCountryA2Code(), getStartTime().toString(), getEndTime().toString(),
+					getLinkedAccountId().toString());
 		}
 
 		/**
@@ -200,6 +219,7 @@ public class FilterController {
 
 	private FilterController() {
 		start();
+		setLinkedAccount(Long.valueOf(0));
 		setStore(StoreController.IPHONE_A3_CODE);
 		setListType(OVERALL_LIST_TYPE);
 		setCountry("us");
@@ -216,6 +236,26 @@ public class FilterController {
 
 	public Filter getFilter() {
 		return mCurrentFilter;
+	}
+
+	public void setLinkedAccount(Long linkedAccountId) {
+
+		if (linkedAccountId != null && !linkedAccountId.equals(mCurrentFilter.getLinkedAccountId())) {
+			Long previousLinkedAccount = mCurrentFilter.getLinkedAccountId();
+			mCurrentFilter.setLinkedAccountId(linkedAccountId);
+
+			if (mInTransaction == 0) {
+				EventController.get().fireEventFromSource(
+						new FilterEventHandler.ChangedFilterParameter<Long>(LINKED_ACCOUNT_KEY, mCurrentFilter.getLinkedAccountId(), previousLinkedAccount),
+						this);
+			} else {
+				if (mPreviousValues == null) {
+					mPreviousValues = new HashMap<String, Object>();
+				}
+
+				mPreviousValues.put(LINKED_ACCOUNT_KEY, previousLinkedAccount);
+			}
+		}
 	}
 
 	/**
@@ -294,6 +334,10 @@ public class FilterController {
 				mPreviousValues.put(LIST_TYPE_KEY, previousListType);
 			}
 		}
+	}
+
+	public DataAccount getLinkedAccount() {
+		return LinkedAccountController.get().getLinkedAccount(Long.valueOf(mCurrentFilter.getLinkedAccountId()));
 	}
 
 	public Store getStore() {
@@ -563,6 +607,7 @@ public class FilterController {
 			if (parameterFitler != null && parameterFitler.size() > 0) {
 				start();
 
+				setLinkedAccount(parameterFitler.getLinkedAccountId());
 				setCategory(parameterFitler.getCategoryId());
 				setChartType(parameterFitler.getChartType());
 				setCountry(parameterFitler.getCountryA2Code());
@@ -581,4 +626,22 @@ public class FilterController {
 	public DateRange getDateRange() {
 		return FilterHelper.createRange(getStartDate(), getEndDate());
 	}
+
+	public void reset() {
+		start();
+		setLinkedAccount(Long.valueOf(0));
+		// setStore(StoreController.IPHONE_A3_CODE);
+		// setListType(OVERALL_LIST_TYPE);
+		// setCountry("us");
+		// setEndDate(new Date());
+		// Date startDate = getEndDate();
+		// CalendarUtil.addDaysToDate(startDate, -30);
+		// setStartDate(startDate);
+		// setCategory(Long.valueOf(24));
+		// setDailyData(REVENUE_DAILY_DATA_TYPE);
+		// setChartType(RANKING_CHART_TYPE);
+		// setSummaryType(TODAY_SUMMARY_TYPE);
+		commit(false);
+	}
+
 }

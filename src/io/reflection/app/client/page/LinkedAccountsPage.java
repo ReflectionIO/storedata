@@ -24,7 +24,6 @@ import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
-import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.EnterPressedEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
@@ -82,8 +81,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 	interface LinkedAccountsPageUiBinder extends UiBinder<Widget, LinkedAccountsPage> {}
 
-	@UiField(provided = true) CellTable<DataAccount> linkedAccountsTable = new CellTable<DataAccount>(ServiceConstants.SHORT_STEP_VALUE,
-			BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true) CellTable<DataAccount> linkedAccountsTable = new CellTable<DataAccount>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField SimplePager simplePager;
 
 	final String buttonAddHtml = "Link Account&nbsp;&nbsp;<img style=\"vertical-align: 1px;\" src=\""
@@ -91,6 +89,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	final String buttonEditHtml = "Save changes";
 
 	private TextColumn<DataAccount> columnAccountName;
+	private TextColumn<DataAccount> columnAccountType;
 	private TextColumn<DataAccount> columnDateAdded;
 	private Column<DataAccount, SafeHtml> columnEdit;
 	private Column<DataAccount, SafeHtml> columnDelete;
@@ -114,22 +113,14 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 	@UiField CircleProgressBar loader;
 
+	private User user = SessionController.get().getLoggedInUser();
+
 	private LinkableAccountFields mLinkableAccount;
 
 	public LinkedAccountsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		User user = SessionController.get().getLoggedInUser();
-
-		if (user != null) {
-			String userIdParameter = user.id.toString();
-
-			createColumns(user.id.toString());
-			mLinkedAccountsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(userIdParameter)));
-			mMyAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(userIdParameter, FilterController
-					.get().asMyAppsFilterString())));
-
-		}
+		createColumns();
 
 		addLinkedAccount.setHTML("Link Another Account&nbsp;&nbsp;<img style=\"vertical-align: 1px;\" src=\""
 				+ Images.INSTANCE.buttonLinkedAccount().getSafeUri().asString() + "\"/>");
@@ -161,15 +152,23 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	/**
 	 * Create and add the Linked Account Table columns and cells
 	 */
-	private void createColumns(final String userId) {
+	private void createColumns() {
 
 		columnAccountName = new TextColumn<DataAccount>() {
 			@Override
 			public String getValue(DataAccount object) {
-				return (object.source != null) ? object.source.name + " - " + object.username : "-";
+				return (object.source != null) ? object.source.name : "-";
 			}
 		};
 		linkedAccountsTable.addColumn(columnAccountName, "Account Name");
+
+		columnAccountType = new TextColumn<DataAccount>() {
+			@Override
+			public String getValue(DataAccount object) {
+				return (object.source != null) ? object.username : "-";
+			}
+		};
+		linkedAccountsTable.addColumn(columnAccountType, "Account Name");
 
 		columnDateAdded = new TextColumn<DataAccount>() {
 			@Override
@@ -186,8 +185,8 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 				String id = object.id.toString();
 
 				return SafeHtmlUtils.fromTrustedString("<a href=\""
-						+ PageType.UsersPageType.asHref(PageType.LinkedAccountsPageType.toString(userId, EDIT_ACTION_PARAMETER_VALUE, id)).asString()
-						+ "\" class=\"btn btn-xs btn-default\">Edit</a>");
+						+ PageType.UsersPageType.asHref(PageType.LinkedAccountsPageType.toString(user.id.toString(), EDIT_ACTION_PARAMETER_VALUE, id))
+								.asString() + "\" class=\"btn btn-xs btn-default\">Edit</a>");
 			}
 
 		};
@@ -199,8 +198,8 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 				String id = object.id.toString();
 
 				return SafeHtmlUtils.fromTrustedString("<a href=\""
-						+ PageType.UsersPageType.asHref(PageType.LinkedAccountsPageType.toString(userId, DELETE_ACTION_PARAMETER_VALUE, id)).asString()
-						+ "\" class=\"btn btn-xs btn-danger\">Delete</a>");
+						+ PageType.UsersPageType.asHref(PageType.LinkedAccountsPageType.toString(user.id.toString(), DELETE_ACTION_PARAMETER_VALUE, id))
+								.asString() + "\" class=\"btn btn-xs btn-danger\">Delete</a>");
 			}
 
 		};
@@ -227,6 +226,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	 */
 	@UiHandler("linkedAccountsTable")
 	void cellTableEvent(CellPreviewEvent<DataAccount> event) {
+
 		// int offset = linkedAccountsTable.getVisibleRange().getStart();
 		// Element editElement = linkedAccountsTable.getRowElement(event.getIndex() - offset).getCells().getItem(2).getElementsByTagName("a").getItem(0);
 		// Element deleteElement = linkedAccountsTable.getRowElement(event.getIndex() - offset).getCells().getItem(3).getElementsByTagName("a").getItem(0);
@@ -253,7 +253,6 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 	@UiHandler("addLinkedAccount")
 	void onAddLinkedAccountClicked(ClickEvent event) {
-		User user = SessionController.get().getLoggedInUser();
 		PageType.UsersPageType.show(PageType.LinkedAccountsPageType.toString(user.id.toString(), ADD_ACTION_PARAMETER_VALUE));
 	}
 
@@ -281,6 +280,22 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	 */
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
+
+		user = SessionController.get().getLoggedInUser();
+
+		if (user != null) {
+			mLinkedAccountsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(),
+					user.id.toString()));
+		}
+
+		String currentFilter = FilterController.get().asMyAppsFilterString();
+		if (currentFilter != null && currentFilter.length() > 0) {
+			if (user != null) {
+				mMyAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(),
+						FilterController.get().asMyAppsFilterString()));
+			}
+		}
+
 		mLinkableAccount = null;
 
 		String actionParameter = current.getParameter(ACTION_PARAMETER);
@@ -342,8 +357,9 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		} else {
 			linkedAccountForm.setVisible(false);
 			linkedAccountsPanel.setVisible(true);
-			User user = SessionController.get().getLoggedInUser();
-			PageType.UsersPageType.show(PageType.LinkedAccountsPageType.toString(user.id.toString()));
+			if (user != null) {
+				PageType.UsersPageType.show(PageType.LinkedAccountsPageType.toString(user.id.toString()));
+			}
 		}
 
 	}
@@ -394,7 +410,6 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		mLinkAccount.setEnabled(true);
 
 		if (output.status == StatusType.StatusTypeSuccess) {
-			User user = SessionController.get().getLoggedInUser();
 
 			PageType.UsersPageType.show(PageType.LinkedAccountsPageType.toString(user.id.toString()));
 		} else {
@@ -435,10 +450,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	public void deleteLinkedAccountSuccess(DeleteLinkedAccountRequest input, DeleteLinkedAccountResponse output) {
 		loader.setVisible(false);
 		if (output.status == StatusType.StatusTypeSuccess) {
-			User user = SessionController.get().getLoggedInUser();
-
 			PageType.UsersPageType.show(PageType.LinkedAccountsPageType.toString(user.id.toString()));
-
 		} else {
 			showError(output.error);
 		}
@@ -470,7 +482,6 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 		if (output.status == StatusType.StatusTypeSuccess) {
 			mLinkableAccount.resetForm();
-			User user = SessionController.get().getLoggedInUser();
 			PageType.UsersPageType.show(PageType.LinkedAccountsPageType.toString(user.id.toString()));
 		} else {
 			showError(output.error);

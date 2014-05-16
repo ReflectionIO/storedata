@@ -343,7 +343,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		addAccount(user);
 
 		addLeaderboard();
-		
+
 		addForum();
 
 		addFeatureRequest();
@@ -376,7 +376,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		removeMyApps();
 
 		removeLeaderboard();
-		
+
 		removeForum();
 
 		removeFeatureRequest();
@@ -449,12 +449,12 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 	private void addAccount(User user) {
 
-		mAccountSettingsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("changedetails", user.id.toString()));
-		myAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("myapps", user.id.toString(), FilterController.get()
-				.asMyAppsFilterString()));
-		myAppsAccountLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("myapps", user.id.toString(), FilterController.get()
-				.asMyAppsFilterString()));
-		mLinkedAccountsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("linkedaccounts", user.id.toString()));
+		mAccountSettingsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.ChangeDetailsPageType.toString(), user.id.toString()));
+		myAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController
+				.get().asMyAppsFilterString()));
+		myAppsAccountLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(),
+				FilterController.get().asMyAppsFilterString()));
+		mLinkedAccountsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(), user.id.toString()));
 
 		mAccountList.appendChild(mAccountDropdown);
 	}
@@ -541,6 +541,13 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@Override
 	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
 		mRanksLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
+		User user = SessionController.get().getLoggedInUser();
+		if (user != null) {
+			myAppsAccountLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(),
+					FilterController.get().asMyAppsFilterString()));
+			myAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(),
+					FilterController.get().asMyAppsFilterString()));
+		}
 	}
 
 	/*
@@ -551,6 +558,13 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@Override
 	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
 		mRanksLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
+		User user = SessionController.get().getLoggedInUser();
+		if (user != null) {
+			myAppsAccountLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(),
+					FilterController.get().asMyAppsFilterString()));
+			myAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(),
+					FilterController.get().asMyAppsFilterString()));
+		}
 	}
 
 }

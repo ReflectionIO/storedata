@@ -9,9 +9,11 @@ package io.reflection.app.client.helper;
 
 import io.reflection.app.client.controller.CountryController;
 import io.reflection.app.client.controller.ForumController;
+import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.StoreController;
 import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.Forum;
 import io.reflection.app.datatypes.shared.Store;
 
@@ -31,6 +33,16 @@ public class FilterHelper {
 
 	public static Date getToday() {
 		return normalizeDate(new Date());
+	}
+
+	public static void addLinkedAccounts(ListBox list) {
+		List<DataAccount> linkedAccounts = LinkedAccountController.get().getAllLinkedAccounts();
+
+		if (linkedAccounts != null) {
+			for (DataAccount linkedAccount : linkedAccounts) {
+				list.addItem(linkedAccount.username, linkedAccount.id.toString());
+			}
+		}
 	}
 
 	public static void addStores(ListBox list) {

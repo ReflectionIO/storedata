@@ -33,7 +33,7 @@
             <g:HTMLPanel styleName="col-md-10 {style.topPanel}">
                 <pp:MyAppsTopPanel ui:field="topPanel" />
                 <cell:CellTable ui:field="appsTable" styleName="table table-hover table-striped" />
-                <p:SimplePager ui:field="pager" styleName="text-center"/>
+                <p:SimplePager ui:field="simplePager" styleName="text-center" visible="false" />
             </g:HTMLPanel>
 
         </div>
