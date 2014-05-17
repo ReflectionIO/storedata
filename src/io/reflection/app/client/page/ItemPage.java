@@ -33,14 +33,15 @@ import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.page.part.ItemSidePanel;
 import io.reflection.app.client.page.part.ItemTopPanel;
-import io.reflection.app.client.page.part.RankChart;
-import io.reflection.app.client.page.part.RankChart.RankingType;
-import io.reflection.app.client.page.part.RankChart.YAxisDataType;
+import io.reflection.app.client.page.part.ItemChart;
+import io.reflection.app.client.page.part.ItemChart.RankingType;
+import io.reflection.app.client.page.part.ItemChart.YAxisDataType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.CircleProgressBar;
 import io.reflection.app.client.part.datatypes.ItemRevenue;
 import io.reflection.app.client.res.flags.Styles;
 import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.shared.util.FormattingHelper;
 
 import java.util.HashMap;
@@ -78,12 +79,12 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField LIElement mDownloadsItem;
 	@UiField LIElement mRankingItem;
 
-	@UiField RankChart historyChart;
+	@UiField ItemChart historyChart;
 	@UiField CircleProgressBar loader;
 
 	@UiField(provided = true) CellTable<ItemRevenue> revenue = new CellTable<ItemRevenue>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
 
-	private String mItemInternalId;
+	private String internalId;
 
 	private RankingType rankingType;
 	private YAxisDataType dataType;
@@ -92,6 +93,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	private Map<String, LIElement> mTabs = new HashMap<String, LIElement>();
 
 	private String selectedTab = RANKING_CHART_TYPE;
+
+	private String filterContents;
 
 	public ItemPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -131,7 +134,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 			@Override
 			public String getValue(ItemRevenue object) {
-				return FormattingHelper.getCurrencySymbol(object.currency) + " " + Double.toString(object.paid.doubleValue() / 100.0);
+				return FormattingHelper.getCurrencySymbol(object.currency) + " " + Double.toString(object.paid.doubleValue());
 			}
 		};
 
@@ -139,7 +142,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 			@Override
 			public String getValue(ItemRevenue object) {
-				return FormattingHelper.getCurrencySymbol(object.currency) + " " + Double.toString(object.iap.doubleValue() / 100.0);
+				return FormattingHelper.getCurrencySymbol(object.currency) + " " + Double.toString(object.iap.doubleValue());
 			}
 		};
 
@@ -147,7 +150,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 			@Override
 			public String getValue(ItemRevenue object) {
-				return FormattingHelper.getCurrencySymbol(object.currency) + " " + Double.toString(object.total.doubleValue() / 100.0);
+				return FormattingHelper.getCurrencySymbol(object.currency) + " " + Double.toString(object.total.doubleValue());
 			}
 		};
 
@@ -193,40 +196,65 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
 		if (current != null && PageType.ItemPageType.equals(current.getPage())) {
-			if ("view".equals(current.getAction()) && (mItemInternalId = current.getParameter(0)) != null) {
-				item = null;
+			if ("view".equals(current.getAction())) {
 
-				Filter f = FilterController.get().getFilter();
-				String currentFilter = f.asItemFilterString();
+				String newInternalId = current.getParameter(0);
+				boolean needsNewData = false;
 
-				if (currentFilter != null && currentFilter.length() > 0) {
-					mRevenue.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken("view", mItemInternalId, REVENUE_CHART_TYPE, currentFilter));
-					mDownloads.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken("view", mItemInternalId, DOWNLOADS_CHART_TYPE, currentFilter));
-					mRanking.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken("view", mItemInternalId, RANKING_CHART_TYPE, currentFilter));
+				if (internalId == null || !internalId.equals(newInternalId)) {
+					needsNewData = true;
+
+					internalId = newInternalId;
+
+					if ((item = ItemController.get().lookupItem(internalId)) != null) {
+						displayItemDetails(null);
+					} else {
+						item = new Item();
+						item.internalId = internalId;
+						item.source = FilterController.get().getFilter().getStoreA3Code();
+
+						// AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Getting details",
+						// " - This will only take a few seconds...",
+						// false).setVisible(true);
+
+						// TODO: reset all fields
+					}
 				}
 
-				if ((item = ItemController.get().lookupItem(mItemInternalId)) != null) {
-					displayItemDetails();
-				} else {
-					item = new Item();
-					item.internalId = mItemInternalId;
-					item.source = FilterController.get().getFilter().getStoreA3Code();
+				Filter newFilter = FilterController.get().getFilter();
+				String newFilterContents = newFilter.asItemFilterString();
 
-					// AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Getting details",
-					// " - This will only take a few seconds...",
-					// false).setVisible(true);
+				if (filterContents == null || !filterContents.equals(newFilterContents)) {
+					filterContents = newFilterContents;
+					mRevenue.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken("view", internalId, REVENUE_CHART_TYPE, filterContents));
+					mDownloads.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken("view", internalId, DOWNLOADS_CHART_TYPE, filterContents));
+					mRanking.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken("view", internalId, RANKING_CHART_TYPE, filterContents));
+
+					RankingType newRankingType = RankingType.fromString(newFilter.getListType());
+					if (rankingType == null || rankingType != newRankingType) {
+						rankingType = newRankingType;
+					}
+
+					needsNewData = true;
 				}
-
-				selectedTab = current.getParameter(SELECTED_TAB_PARAMETER_INDEX);
-
-				refreshTabs();
-
-				rankingType = RankingType.fromString(f.getListType());
-				dataType = YAxisDataType.fromString(selectedTab);
 
 				mTopPanel.updateFromFilter();
 
-				getHistoryChartData();
+				String newSelectedTab = current.getParameter(SELECTED_TAB_PARAMETER_INDEX);
+				if (selectedTab == null || !selectedTab.equals(newSelectedTab)) {
+					selectedTab = newSelectedTab;
+					refreshTabs();
+					dataType = YAxisDataType.fromString(selectedTab);
+
+					if (!needsNewData) {
+						historyChart.setDataType(dataType);
+						historyChart.drawData();
+					}
+				}
+
+				if (needsNewData) {
+					getHistoryChartData();
+				}
 
 				// AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.SuccessAlertBoxType, false, "Item",
 				// " - Normally we would display items details for (" + view + ").", false).setVisible(true);
@@ -241,10 +269,14 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 	}
 
-	private void displayItemDetails() {
+	private void displayItemDetails(Rank rank) {
 		// mAlertBox.dismiss();
 
 		mSidePanel.setItem(item);
+
+		if (rank != null) {
+			mSidePanel.setPrice(rank.currency, rank.price);
+		}
 	}
 
 	// /*
@@ -321,10 +353,13 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			if (output.ranks != null && output.ranks.size() > 0) {
 				item = output.item;
 
-				displayItemDetails();
+				displayItemDetails(output.ranks.get(0));
 
-				historyChart.setData(output.item, output.ranks, rankingType, dataType);
-				mSidePanel.setPrice(output.ranks.get(0).currency, output.ranks.get(0).price);
+				historyChart.setMode(rankingType);
+				historyChart.setDataType(dataType);
+
+				// redraw the graph with the new data
+				historyChart.setData(output.item, output.ranks);
 
 				// mAlertBox.dismiss();
 			}
@@ -376,7 +411,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
 		if (NavigationController.get().getCurrentPage() == PageType.ItemPageType) {
-			PageType.ItemPageType.show("view", mItemInternalId, selectedTab, FilterController.get().asItemFilterString());
+			PageType.ItemPageType.show("view", internalId, selectedTab, FilterController.get().asItemFilterString());
 		}
 	}
 
@@ -388,7 +423,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
 		if (NavigationController.get().getCurrentPage() == PageType.ItemPageType) {
-			PageType.ItemPageType.show("view", mItemInternalId, selectedTab, FilterController.get().asItemFilterString());
+			PageType.ItemPageType.show("view", internalId, selectedTab, FilterController.get().asItemFilterString());
 		}
 	}
 
@@ -404,10 +439,13 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			if (output.ranks != null && output.ranks.size() > 0) {
 				item = output.item;
 
-				displayItemDetails();
+				displayItemDetails(output.ranks.get(0));
 
-				historyChart.setData(output.item, output.ranks, rankingType, dataType);
-				mSidePanel.setPrice(output.ranks.get(0).currency, output.ranks.get(0).price);
+				historyChart.setMode(rankingType);
+				historyChart.setDataType(dataType);
+
+				// redraw the graph with the new data
+				historyChart.setData(output.item, output.ranks);
 			}
 		} else {
 			// do nothing

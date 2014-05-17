@@ -51,7 +51,7 @@
 
                     <p:CircleProgressBar visible="false" ui:field="loader" styleName="{style.loading}" />
 
-                    <pp:RankChart ui:field="historyChart" />
+                    <pp:ItemChart ui:field="historyChart" />
 
                     <c:CellTable ui:field="revenue" styleName="table table-hover table-striped {style.pushDown}"></c:CellTable>
 

@@ -20,6 +20,7 @@ import java.util.List;
 public class MyApp {
 
 	private static final String UNKNOWN_VALUE = "-";
+	private static final String NIL_VALUE = "0";
 
 	public Item item;
 
@@ -94,8 +95,8 @@ public class MyApp {
 
 		} else {
 			overallDownloads = UNKNOWN_VALUE;
-			overallRevenue = UNKNOWN_VALUE;
-			overallPrice = UNKNOWN_VALUE;
+			overallRevenue = NIL_VALUE;
+			overallPrice = NIL_VALUE;
 			overallPosition = UNKNOWN_VALUE;
 		}
 	}

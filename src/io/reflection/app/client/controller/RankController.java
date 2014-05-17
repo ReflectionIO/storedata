@@ -169,7 +169,46 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 			@Override
 			public void onSuccess(GetItemSalesRanksResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
+					ItemController.get().addItemToCache(output.item);
 
+					float paid = 0, iap = 0;
+					ItemRevenue itemRevenue = null;
+
+					if (itemRevenueData.getList().size() == 0) {
+						itemRevenue = new ItemRevenue();
+						itemRevenueData.getList().add(itemRevenue);
+					} else {
+						itemRevenue = itemRevenueData.getList().get(0);
+					}
+
+					float rankPaid = 0;
+
+					if (output.ranks != null) {
+						for (Rank rank : output.ranks) {
+							if (rank.downloads != null && rank.revenue != null) {
+								paid += (rankPaid = (float) rank.downloads.intValue() * rank.price.floatValue());
+								iap += (rank.revenue.floatValue() - rankPaid);
+							}
+						}
+					}
+
+					itemRevenue.countryFlagStyleName = CountryController.get().getCountryFlag(input.country.a2Code);
+					itemRevenue.countryName = CountryController.get().getCountry(input.country.a2Code).name;
+
+					if (output.ranks != null) {
+						itemRevenue.currency = output.ranks.get(0).currency;
+					} else if (output.item.currency != null) {
+						itemRevenue.currency = output.item.currency;
+					} else if (item.currency != null) {
+						itemRevenue.currency = item.currency;
+					}
+
+					itemRevenue.iap = Float.valueOf(iap);
+					itemRevenue.paid = Float.valueOf(paid);
+					itemRevenue.percentage = Float.valueOf(100.0f);
+					itemRevenue.total = Float.valueOf(iap + paid);
+
+					itemRevenueData.refresh();
 				}
 
 				EventController.get().fireEventFromSource(new GetItemSalesRanksSuccess(input, output), RankController.this);

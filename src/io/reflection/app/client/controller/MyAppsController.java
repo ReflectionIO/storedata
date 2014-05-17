@@ -165,6 +165,7 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 					for (MyApp myApp : appList) {
 						myApp.updateOverallValues();
 					}
+					
 					updateRowData(0, rows);
 				} else {
 					// leave the rows as they are

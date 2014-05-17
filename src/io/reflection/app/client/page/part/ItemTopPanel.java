@@ -75,14 +75,16 @@ public class ItemTopPanel extends Composite {
 	}
 
 	public void updateFromFilter() {
-		mAppStore.setSelectedIndex(FormHelper.getItemIndex(mAppStore, FilterController.get().getFilter().getStoreA3Code()));
+		FilterController fc = FilterController.get();
+
+		mAppStore.setSelectedIndex(FormHelper.getItemIndex(mAppStore, fc.getFilter().getStoreA3Code()));
 		DateRange range = new DateRange();
 
-		range.setFrom(FilterController.get().getStartDate());
-		range.setTo(FilterController.get().getEndDate());
+		range.setFrom(fc.getStartDate());
+		range.setTo(fc.getEndDate());
 
 		mDateRange.setValue(range);
-		mCountry.setSelectedIndex(FormHelper.getItemIndex(mCountry, FilterController.get().getFilter().getCountryA2Code()));
+		mCountry.setSelectedIndex(FormHelper.getItemIndex(mCountry, fc.getFilter().getCountryA2Code()));
 	}
 
 }

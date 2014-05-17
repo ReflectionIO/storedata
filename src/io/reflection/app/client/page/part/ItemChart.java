@@ -17,6 +17,7 @@ import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.res.charts.Images;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
+import io.reflection.app.shared.util.FormattingHelper;
 
 import java.util.Date;
 import java.util.List;
@@ -29,7 +30,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.googlecode.gchart.client.GChart;
 
-public class RankChart extends GChart {
+public class ItemChart extends GChart {
 
 	private HandlerRegistration resizeRegistration;
 	private ResizeHandler resizeHandler = new ResizeHandler() {
@@ -122,12 +123,13 @@ public class RankChart extends GChart {
 			RankingType mode = null;
 
 			switch (value) {
-			case GROSSING_LIST_TYPE:
-				mode = GrossingPositionRankingType;
-				break;
 			case FREE_LIST_TYPE:
 			case PAID_LIST_TYPE:
 				mode = PositionRankingType;
+				break;
+			case GROSSING_LIST_TYPE:
+			default:
+				mode = GrossingPositionRankingType;
 				break;
 			}
 
@@ -156,8 +158,14 @@ public class RankChart extends GChart {
 	}
 
 	private Curve curve;
+	private RankingType mode;
+	private YAxisDataType dataType;
 
-	public RankChart() {
+	// private Item item;
+
+	private List<Rank> ranks;
+
+	public ItemChart() {
 
 		setBorderStyle("none");
 
@@ -226,15 +234,76 @@ public class RankChart extends GChart {
 
 	}
 
-	public void setData(Item item, List<Rank> ranks, RankingType mode, YAxisDataType dataType) {
+	public void setMode(RankingType value) {
+		this.mode = value;
+	}
 
+	public void setDataType(YAxisDataType value) {
+		this.dataType = value;
+	}
+
+	public void drawData() {
 		if (curve != null) {
 			curve.clearPoints();
 		}
 
+		switch (dataType) {
+		case DownloadsYAxisDataType:
+			drawDownloads();
+			break;
+		case RevenueYAxisDataType:
+			drawRevenue();
+			break;
+		case RankingYAxisDataType:
+		default:
+			drawRanking();
+			break;
+		}
+
+		((RankHover) curve.getSymbol().getHoverWidget()).setYAxisDataType(dataType);
+
+		setLoading(false);
+	}
+
+	private void drawDownloads() {
+		Date lastDate = null;
+
+		for (Rank rank : ranks) {
+			int gap = 0;
+			if (lastDate != null && (gap = CalendarUtil.getDaysBetween(lastDate, rank.date)) > 1) {
+				for (int i = 0; i < gap; i++) {
+					CalendarUtil.addDaysToDate(lastDate, 1);
+					curve.addPoint(lastDate.getTime(), 10000);
+				}
+			} else {
+				lastDate = rank.date;
+				curve.addPoint(rank.date.getTime(), rank.downloads.intValue());
+			}
+		}
+	}
+
+	private void drawRevenue() {
+		Date lastDate = null;
+
+		for (Rank rank : ranks) {
+			int gap = 0;
+			if (lastDate != null && (gap = CalendarUtil.getDaysBetween(lastDate, rank.date)) > 1) {
+				for (int i = 0; i < gap; i++) {
+					CalendarUtil.addDaysToDate(lastDate, 1);
+					curve.addPoint(lastDate.getTime(), 10000);
+				}
+			} else {
+				lastDate = rank.date;
+				curve.addPoint(rank.date.getTime(), rank.revenue.floatValue());
+			}
+		}
+	}
+
+	private void drawRanking() {
 		int minY = 10000, maxY = 0;
 		int position;
 		Date lastDate = null;
+
 		for (Rank rank : ranks) {
 			position = (mode == RankingType.PositionRankingType ? rank.position.intValue() : rank.grossingPosition.intValue());
 
@@ -268,10 +337,18 @@ public class RankChart extends GChart {
 		// int diffY = (maxY - minY) + 1;
 
 		getYAxis().setTickCount(8);
+	}
 
-		((RankHover) curve.getSymbol().getHoverWidget()).setYAxisDataType(dataType);
+	public void setData(Item item, List<Rank> ranks) {
 
-		setLoading(false);
+		// this.item = item;
+		this.ranks = ranks;
+
+		if (this.ranks != null && this.ranks.size() > 0) {
+			((RankHover) curve.getSymbol().getHoverWidget()).setCurrency(FormattingHelper.getCurrencySymbol(this.ranks.get(0).currency));
+		}
+
+		drawData();
 
 	}
 
