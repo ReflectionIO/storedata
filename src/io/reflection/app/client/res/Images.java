@@ -21,6 +21,9 @@ public interface Images extends ClientBundle {
 	@Source("logo.png")
 	ImageResource logo();
 
+	@Source("reflectionlogobeta.png")
+	ImageResource reflectionLogoBeta();
+
 	@Source("spinner.gif")
 	ImageResource spinner();
 
@@ -71,17 +74,17 @@ public interface Images extends ClientBundle {
 
 	@Source("cog.png")
 	ImageResource cog();
-	
+
 	@Source("clock.png")
 	ImageResource clock();
-	
+
 	@Source("questionmark.png")
 	ImageResource questionMark();
-	
+
 	@Source("greentick.png")
 	ImageResource greenTick();
-	
+
 	@Source("emailsent.png")
 	ImageResource emailSent();
-	
+
 }
