@@ -21,13 +21,19 @@ import io.reflection.app.api.blog.shared.call.GetPostsResponse;
 import io.reflection.app.api.blog.shared.call.UpdatePostRequest;
 import io.reflection.app.api.blog.shared.call.UpdatePostResponse;
 import io.reflection.app.api.shared.ApiError;
+import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Post;
+import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.helpers.LookupHelper;
 import io.reflection.app.service.post.PostServiceProvider;
+import io.reflection.app.service.role.RoleServiceProvider;
 import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.SparseArray;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import com.willshex.gson.json.service.server.ActionHandler;
@@ -47,9 +53,24 @@ public final class Blog extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
+			List<Permission> permissions = null;
+			List<Role> roles = null;
+
 			if (input.session != null) {
 				try {
 					output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+					permissions = UserServiceProvider.provide().getPermissions(output.session.user);
+
+					roles = UserServiceProvider.provide().getRoles(output.session.user);
+
+					RoleServiceProvider.provide().inflateRoles(roles);
+
+					for (Role role : roles) {
+						if (role.permissions != null) {
+							permissions.addAll(role.permissions);
+						}
+					}
 				} catch (InputValidationException ex) {
 					output.session = input.session = null;
 				}
@@ -60,9 +81,21 @@ public final class Blog extends ActionHandler {
 			}
 
 			// TODO: check whether the user can see invisible items in list
-			Boolean onlyVisible = Boolean.FALSE;
+			Boolean showAll = Boolean.FALSE;
 
-			output.posts = PostServiceProvider.provide().getPosts(onlyVisible, input.includeContents, input.pager);
+			if (permissions != null && roles != null) {
+				Map<Long, Permission> permissionLookup = LookupHelper.makeLookup(permissions);
+				Map<Long, Role> roleLookup = LookupHelper.makeLookup(roles);
+
+				Long permissionListAny = Long.valueOf(17);
+				Long roleAdmin = Long.valueOf(1);
+
+				if (permissionLookup.containsKey(permissionListAny) || roleLookup.containsKey(roleAdmin)) {
+					showAll = Boolean.TRUE;
+				}
+			}
+
+			output.posts = PostServiceProvider.provide().getPosts(showAll, input.includeContents, input.pager);
 
 			SparseArray<User> users = new SparseArray<User>();
 
@@ -75,7 +108,7 @@ public final class Blog extends ActionHandler {
 			}
 
 			output.pager = input.pager;
-			updatePager(output.pager, output.posts, input.pager.totalCount == null ? PostServiceProvider.provide().getPostsCount(onlyVisible)
+			updatePager(output.pager, output.posts, input.pager.totalCount == null ? PostServiceProvider.provide().getPostsCount(showAll)
 					: input.pager.totalCount);
 
 			output.status = StatusType.StatusTypeSuccess;
@@ -207,6 +240,8 @@ public final class Blog extends ActionHandler {
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			input.post = ValidationHelper.validateExistingPost(input.post, "input.post");
+
+			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
 
 			PostServiceProvider.provide().deletePost(input.post);
 

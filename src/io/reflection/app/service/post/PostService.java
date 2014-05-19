@@ -15,6 +15,7 @@ import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.Post;
 import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
@@ -24,8 +25,12 @@ import io.reflection.app.shared.util.TagHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 final class PostService implements IPostService {
+
+	private static final Logger LOG = Logger.getLogger(PostService.class.getName());
+
 	public String getName() {
 		return ServiceType.ServiceTypePost.toString();
 	}
@@ -161,7 +166,24 @@ final class PostService implements IPostService {
 
 	@Override
 	public void deletePost(Post post) throws DataAccessException {
-		throw new UnsupportedOperationException();
+		String deletePostQuery = String.format("UPDATE `post` SET `deleted`='y' WHERE `id`=%d", post.id.longValue());
+
+		Connection postConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypePost.toString());
+
+		try {
+			postConnection.connect();
+			postConnection.executeQuery(deletePostQuery);
+
+			if (postConnection.getAffectedRowCount() > 0) {
+				if (LOG.isLoggable(GaeLevel.INFO)) {
+					LOG.info(String.format("Post with id [%d] was deleted", post.id.longValue()));
+				}
+			}
+		} finally {
+			if (postConnection != null) {
+				postConnection.disconnect();
+			}
+		}
 	}
 
 	/*
@@ -170,7 +192,7 @@ final class PostService implements IPostService {
 	 * @see io.reflection.app.service.post.IPostService#getPosts(java.lang.Boolean, java.lang.Boolean, io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
-	public List<Post> getPosts(Boolean onlyVisible, Boolean includeContents, Pager pager) throws DataAccessException {
+	public List<Post> getPosts(Boolean showAll, Boolean includeContents, Pager pager) throws DataAccessException {
 		List<Post> posts = new ArrayList<Post>();
 
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
@@ -187,7 +209,7 @@ final class PostService implements IPostService {
 
 		getPostsQuery += " FROM `post` WHERE `deleted`='n'";
 
-		if (onlyVisible == null || onlyVisible.booleanValue()) {
+		if (showAll == null || !showAll.booleanValue()) {
 			getPostsQuery += " AND `visible`>0";
 		}
 
@@ -275,14 +297,14 @@ final class PostService implements IPostService {
 	 * @see io.reflection.app.service.post.IPostService#getPostsCount(java.lang.Boolean)
 	 */
 	@Override
-	public Long getPostsCount(Boolean onlyVisible) throws DataAccessException {
+	public Long getPostsCount(Boolean showAll) throws DataAccessException {
 		Long postsCount = Long.valueOf(0);
 
 		Connection postConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypePost.toString());
 
 		String getPostsCountQuery = "SELECT count(1) AS `postcount` FROM `post` WHERE `deleted`='n'";
 
-		if (onlyVisible == null || onlyVisible.booleanValue()) {
+		if (showAll == null || !showAll.booleanValue()) {
 			getPostsCountQuery += " AND `visible`>0";
 		}
 

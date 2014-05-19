@@ -340,7 +340,21 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 
 			@Override
 			public void onSuccess(DeletePostResponse output) {
-				if (output.status == StatusType.StatusTypeSuccess) {}
+				if (output.status == StatusType.StatusTypeSuccess) {
+					Post post = postsLookup.get(input.post.id.intValue());
+
+					if (post != null) {
+						posts.remove(post);
+						count--;
+
+						pager.totalCount = Long.valueOf(pager.totalCount.longValue() - 1);
+
+						updateRowCount((int) count, true);
+						updateRowData(0, posts);
+					} else {
+						fetchPosts();
+					}
+				}
 
 				EventController.get().fireEventFromSource(new DeletePostSuccess(input, output), PostController.this);
 			}
