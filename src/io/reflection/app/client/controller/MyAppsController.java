@@ -165,7 +165,7 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 					for (MyApp myApp : appList) {
 						myApp.updateOverallValues();
 					}
-					
+
 					updateRowData(0, rows);
 				} else {
 					// leave the rows as they are
@@ -281,6 +281,23 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 		} else {
 			LinkedAccountController.get().fetchLinkedAccounts();
 			updateRowCount(0, false);
+		}
+	}
+
+	public Item getUserItem(String itemId) {
+		MyApp app = userItemsLookup.get(itemId);
+		return app == null ? null : app.item;
+	}
+
+	/**
+	 * @param item
+	 */
+	public void setUserItem(Item item) {
+		if (item != null && item.internalId != null) {
+			MyApp app = new MyApp();
+			app.item = item;
+
+			userItemsLookup.put(item.internalId, app);
 		}
 	}
 

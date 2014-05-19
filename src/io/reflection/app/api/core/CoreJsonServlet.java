@@ -7,7 +7,6 @@
 //
 package io.reflection.app.api.core;
 
-import io.reflection.app.api.core.shared.call.UpdateLinkedAccountRequest;
 import io.reflection.app.api.core.shared.call.ChangePasswordRequest;
 import io.reflection.app.api.core.shared.call.ChangeUserDetailsRequest;
 import io.reflection.app.api.core.shared.call.CheckUsernameRequest;
@@ -19,6 +18,7 @@ import io.reflection.app.api.core.shared.call.GetCountriesRequest;
 import io.reflection.app.api.core.shared.call.GetItemRanksRequest;
 import io.reflection.app.api.core.shared.call.GetItemSalesRanksRequest;
 import io.reflection.app.api.core.shared.call.GetItemSalesRequest;
+import io.reflection.app.api.core.shared.call.GetLinkedAccountItemRequest;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountItemsRequest;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountsRequest;
 import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsRequest;
@@ -33,6 +33,7 @@ import io.reflection.app.api.core.shared.call.LoginRequest;
 import io.reflection.app.api.core.shared.call.LogoutRequest;
 import io.reflection.app.api.core.shared.call.RegisterUserRequest;
 import io.reflection.app.api.core.shared.call.SearchForItemRequest;
+import io.reflection.app.api.core.shared.call.UpdateLinkedAccountRequest;
 
 import com.google.gson.JsonObject;
 import com.willshex.gson.json.service.server.JsonServlet;
@@ -148,6 +149,10 @@ public final class CoreJsonServlet extends JsonServlet {
 			GetItemSalesRanksRequest input = new GetItemSalesRanksRequest();
 			input.fromJson(request);
 			output = service.getItemSalesRanks(input).toString();
+		} else if ("GetLinkedAccountItem".equals(action)) {
+			GetLinkedAccountItemRequest input = new GetLinkedAccountItemRequest();
+			input.fromJson(request);
+			output = service.getLinkedAccountItem(input).toString();
 		}
 		return output;
 	}

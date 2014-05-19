@@ -83,6 +83,9 @@
             <xsd:element name="GetItemSalesRanksInput" type="sdc:GetItemSalesRanksRequest" />
             <xsd:element name="GetItemSalesRanksOutput" type="sdc:GetItemSalesRanksResponse" />
 
+            <xsd:element name="GetLinkedAccountItemInput" type="sdc:GetLinkedAccountItemRequest" />
+            <xsd:element name="GetLinkedAccountItemOutput" type="sdc:GetLinkedAccountItemResponse" />
+
             <xsd:complexType name="GetCountriesRequest">
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
@@ -638,6 +641,28 @@
                 </xsd:complexContent>
             </xsd:complexType>
 
+            <xsd:complexType name="GetLinkedAccountItemRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="item" type="sd:Item" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="GetLinkedAccountItemResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+                            <xsd:element name="item" type="sd:Item" />
+                            <xsd:element name="linkedAccount" type="sd:DataAccount" />
+                            <xsd:element name="dataSource" type="sd:DataSource" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
         </xsd:schema>
     </wsdl:types>
 
@@ -821,6 +846,13 @@
     <wsdl:message name="GetItemSalesRanksResponse">
         <wsdl:part name="output" element="sdc:GetItemSalesRanksOutput" />
     </wsdl:message>
+    
+    <wsdl:message name="GetLinkedAccountItemRequest">
+        <wsdl:part name="input" element="sdc:GetLinkedAccountItemInput" />
+    </wsdl:message>
+    <wsdl:message name="GetLinkedAccountItemResponse">
+        <wsdl:part name="output" element="sdc:GetLinkedAccountItemOutput" />
+    </wsdl:message>
 
     <wsdl:portType name="core">
         <wsdl:operation name="GetCountries">
@@ -951,6 +983,11 @@
         <wsdl:operation name="GetItemSalesRanks">
             <wsdl:input message="sdc:GetItemSalesRanksRequest" />
             <wsdl:output message="sdc:GetItemSalesRanksResponse" />
+        </wsdl:operation>
+        
+        <wsdl:operation name="GetLinkedAccountItem">
+            <wsdl:input message="sdc:GetLinkedAccountItemRequest" />
+            <wsdl:output message="sdc:GetLinkedAccountItemResponse" />
         </wsdl:operation>
 
     </wsdl:portType>
@@ -1207,6 +1244,16 @@
 
         <wsdl:operation name="GetItemSalesRanks">
             <soap:operation soapAction="http://app.reflection.io/core/GetItemSalesRanks" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        
+        <wsdl:operation name="GetLinkedAccountItem">
+            <soap:operation soapAction="http://app.reflection.io/core/GetLinkedAccountItem" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>

@@ -8,8 +8,6 @@
 //
 package io.reflection.app.api.core.client;
 
-import io.reflection.app.api.core.shared.call.UpdateLinkedAccountRequest;
-import io.reflection.app.api.core.shared.call.UpdateLinkedAccountResponse;
 import io.reflection.app.api.core.shared.call.ChangePasswordRequest;
 import io.reflection.app.api.core.shared.call.ChangePasswordResponse;
 import io.reflection.app.api.core.shared.call.ChangeUserDetailsRequest;
@@ -32,6 +30,8 @@ import io.reflection.app.api.core.shared.call.GetItemSalesRanksRequest;
 import io.reflection.app.api.core.shared.call.GetItemSalesRanksResponse;
 import io.reflection.app.api.core.shared.call.GetItemSalesRequest;
 import io.reflection.app.api.core.shared.call.GetItemSalesResponse;
+import io.reflection.app.api.core.shared.call.GetLinkedAccountItemRequest;
+import io.reflection.app.api.core.shared.call.GetLinkedAccountItemResponse;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountItemsRequest;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountItemsResponse;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountsRequest;
@@ -60,6 +60,8 @@ import io.reflection.app.api.core.shared.call.RegisterUserRequest;
 import io.reflection.app.api.core.shared.call.RegisterUserResponse;
 import io.reflection.app.api.core.shared.call.SearchForItemRequest;
 import io.reflection.app.api.core.shared.call.SearchForItemResponse;
+import io.reflection.app.api.core.shared.call.UpdateLinkedAccountRequest;
+import io.reflection.app.api.core.shared.call.UpdateLinkedAccountResponse;
 
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
@@ -436,8 +438,8 @@ public final class CoreService extends JsonService {
 
 	public static final String CoreMethodDeleteLinkedAccount = "DeleteLinkedAccount";
 
-	public Request deleteLinkedAccount(final DeleteLinkedAccountRequest input, final AsyncCallback<DeleteLinkedAccountResponse> output) {		
-		Request handle = null;		
+	public Request deleteLinkedAccount(final DeleteLinkedAccountRequest input, final AsyncCallback<DeleteLinkedAccountResponse> output) {
+		Request handle = null;
 		try {
 			handle = sendRequest(CoreMethodDeleteLinkedAccount, input, new RequestCallback() {
 				@Override
@@ -925,6 +927,39 @@ public final class CoreService extends JsonService {
 		} catch (RequestException exception) {
 			output.onFailure(exception);
 			onCallFailure(CoreService.this, CoreMethodGetItemSalesRanks, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String CoreMethodGetLinkedAccountItem = "GetLinkedAccountItem";
+
+	public Request getLinkedAccountItem(final GetLinkedAccountItemRequest input, final AsyncCallback<GetLinkedAccountItemResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(CoreMethodGetLinkedAccountItem, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						GetLinkedAccountItemResponse outputParameter = new GetLinkedAccountItemResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(CoreService.this, CoreMethodGetLinkedAccountItem, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(CoreService.this, CoreMethodGetLinkedAccountItem, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(CoreService.this, CoreMethodGetLinkedAccountItem, input, exception);
+				}
+			});
+			onCallStart(CoreService.this, CoreMethodGetLinkedAccountItem, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(CoreService.this, CoreMethodGetLinkedAccountItem, input, exception);
 		}
 		return handle;
 	}

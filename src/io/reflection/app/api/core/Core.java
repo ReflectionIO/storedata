@@ -38,6 +38,8 @@ import io.reflection.app.api.core.shared.call.GetItemSalesRanksRequest;
 import io.reflection.app.api.core.shared.call.GetItemSalesRanksResponse;
 import io.reflection.app.api.core.shared.call.GetItemSalesRequest;
 import io.reflection.app.api.core.shared.call.GetItemSalesResponse;
+import io.reflection.app.api.core.shared.call.GetLinkedAccountItemRequest;
+import io.reflection.app.api.core.shared.call.GetLinkedAccountItemResponse;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountItemsRequest;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountItemsResponse;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountsRequest;
@@ -1810,6 +1812,44 @@ public final class Core extends ActionHandler {
 			output.error = convertToErrorAndLog(LOG, e);
 		}
 		LOG.finer("Exiting getItemSalesRanks");
+		return output;
+	}
+
+	public GetLinkedAccountItemResponse getLinkedAccountItem(GetLinkedAccountItemRequest input) {
+		LOG.finer("Entering getLinkedAccountItem");
+		GetLinkedAccountItemResponse output = new GetLinkedAccountItemResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+						ApiError.InvalidValueNull.getMessage("GetLinkedAccountItemRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			input.item = ValidationHelper.validateItem(input.item, "input.item");
+
+			DataAccount linkedAccount = SaleServiceProvider.provide().getDataAccount(input.item.internalId);
+
+			if (linkedAccount != null) {
+				boolean hasLinkedAccount = UserServiceProvider.provide().hasDataAccount(input.session.user, linkedAccount);
+
+				if (hasLinkedAccount) {
+					output.item = input.item;
+					output.dataSource = linkedAccount.source;
+					output.linkedAccount = linkedAccount;
+
+					output.linkedAccount.source = new DataSource();
+					output.linkedAccount.source.id = output.dataSource.id;
+				}
+			}
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getLinkedAccountItem");
 		return output;
 	}
 }

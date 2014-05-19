@@ -10,6 +10,8 @@ package io.reflection.app.client.controller;
 import io.reflection.app.api.core.client.CoreService;
 import io.reflection.app.api.core.shared.call.DeleteLinkedAccountRequest;
 import io.reflection.app.api.core.shared.call.DeleteLinkedAccountResponse;
+import io.reflection.app.api.core.shared.call.GetLinkedAccountItemRequest;
+import io.reflection.app.api.core.shared.call.GetLinkedAccountItemResponse;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountsRequest;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountsResponse;
 import io.reflection.app.api.core.shared.call.LinkAccountRequest;
@@ -18,6 +20,7 @@ import io.reflection.app.api.core.shared.call.UpdateLinkedAccountRequest;
 import io.reflection.app.api.core.shared.call.UpdateLinkedAccountResponse;
 import io.reflection.app.api.core.shared.call.event.DeleteLinkedAccountEventHandler.DeleteLinkedAccountFailure;
 import io.reflection.app.api.core.shared.call.event.DeleteLinkedAccountEventHandler.DeleteLinkedAccountSuccess;
+import io.reflection.app.api.core.shared.call.event.GetLinkedAccountItemEventHandler;
 import io.reflection.app.api.core.shared.call.event.GetLinkedAccountsEventHandler;
 import io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler.LinkAccountFailure;
 import io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler.LinkAccountSuccess;
@@ -37,14 +40,13 @@ import java.util.Map;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
-import com.google.gwt.view.client.TreeViewModel;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author billy1380
  * 
  */
-public class LinkedAccountController extends AsyncDataProvider<DataAccount> implements ServiceConstants, TreeViewModel {
+public class LinkedAccountController extends AsyncDataProvider<DataAccount> implements ServiceConstants {
 
 	private List<DataAccount> myDataAccounts = null;
 	private List<DataSource> myDataSources = null;
@@ -362,31 +364,6 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.google.gwt.view.client.TreeViewModel#getNodeInfo(java.lang.Object)
-	 */
-	@Override
-	public <T> NodeInfo<?> getNodeInfo(T value) {
-		if (value == null) {
-			// return new DefaultNodeInfo<DataAccount>();
-		} else if (value instanceof DataAccount) {
-			// return new DefaultNodeInfo<Item>();
-		}
-		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.view.client.TreeViewModel#isLeaf(java.lang.Object)
-	 */
-	@Override
-	public boolean isLeaf(Object value) {
-		return value != null && value instanceof Item;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see com.google.gwt.view.client.AbstractDataProvider#onRangeChanged(com.google.gwt.view.client.HasData)
 	 */
 	@Override
@@ -418,7 +395,48 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 
 	}
 
-	public boolean isLinkedAccountItem(Item item) {
-		return false;
+	public Item getLinkedAccountItem(Item item) {
+		Item lookupItem = null;
+
+		if (item != null && item.internalId != null) {
+			lookupItem = MyAppsController.get().getUserItem(item.internalId);
+
+			if (lookupItem == null) {
+				fetchLinkedAccountItem(item.internalId);
+			}
+		}
+
+		return lookupItem;
+	}
+
+	public void fetchLinkedAccountItem(String itemInternalId) {
+		CoreService service = ServiceCreator.createCoreService();
+
+		final GetLinkedAccountItemRequest input = new GetLinkedAccountItemRequest();
+		input.accessCode = ACCESS_CODE;
+		input.session = SessionController.get().getSessionForApiCall();
+
+		input.item = new Item();
+		input.item.internalId = itemInternalId;
+		input.item.source = FilterController.get().getStore().a3Code;
+
+		service.getLinkedAccountItem(input, new AsyncCallback<GetLinkedAccountItemResponse>() {
+
+			@Override
+			public void onSuccess(GetLinkedAccountItemResponse output) {
+				if (output.status == StatusType.StatusTypeSuccess) {
+					MyAppsController.get().setUserItem(output.item);
+				}
+
+				EventController.get().fireEventFromSource(new GetLinkedAccountItemEventHandler.GetLinkedAccountItemSuccess(input, output),
+						LinkedAccountController.this);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				EventController.get().fireEventFromSource(new GetLinkedAccountItemEventHandler.GetLinkedAccountItemFailure(input, caught),
+						LinkedAccountController.this);
+			}
+		});
 	}
 }

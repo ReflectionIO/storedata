@@ -15,8 +15,11 @@ import io.reflection.app.api.core.shared.call.GetItemRanksRequest;
 import io.reflection.app.api.core.shared.call.GetItemRanksResponse;
 import io.reflection.app.api.core.shared.call.GetItemSalesRanksRequest;
 import io.reflection.app.api.core.shared.call.GetItemSalesRanksResponse;
+import io.reflection.app.api.core.shared.call.GetLinkedAccountItemRequest;
+import io.reflection.app.api.core.shared.call.GetLinkedAccountItemResponse;
 import io.reflection.app.api.core.shared.call.event.GetItemRanksEventHandler;
 import io.reflection.app.api.core.shared.call.event.GetItemSalesRanksEventHandler;
+import io.reflection.app.api.core.shared.call.event.GetLinkedAccountItemEventHandler;
 import io.reflection.app.client.cell.ImageAndTextCell;
 import io.reflection.app.client.cell.ProgressBarCell;
 import io.reflection.app.client.cell.content.ConcreteImageAndText;
@@ -59,7 +62,8 @@ import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
 
-public class ItemPage extends Page implements NavigationEventHandler, GetItemRanksEventHandler, GetItemSalesRanksEventHandler, FilterEventHandler {
+public class ItemPage extends Page implements NavigationEventHandler, GetItemRanksEventHandler, GetItemSalesRanksEventHandler, FilterEventHandler,
+		GetLinkedAccountItemEventHandler {
 
 	private static ItemPageUiBinder uiBinder = GWT.create(ItemPageUiBinder.class);
 
@@ -184,6 +188,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		register(EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
 		register(EventController.get().addHandlerToSource(GetItemRanksEventHandler.TYPE, RankController.get(), this));
 		register(EventController.get().addHandlerToSource(GetItemSalesRanksEventHandler.TYPE, RankController.get(), this));
+		register(EventController.get().addHandlerToSource(GetLinkedAccountItemEventHandler.TYPE, LinkedAccountController.get(), this));
 
 	}
 
@@ -199,10 +204,10 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			if ("view".equals(current.getAction())) {
 
 				String newInternalId = current.getParameter(0);
-				boolean needsNewData = false;
+				boolean isNewDataRequired = false;
 
 				if (internalId == null || !internalId.equals(newInternalId)) {
-					needsNewData = true;
+					isNewDataRequired = true;
 
 					internalId = newInternalId;
 
@@ -235,24 +240,27 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 						rankingType = newRankingType;
 					}
 
-					needsNewData = true;
+					isNewDataRequired = true;
 				}
 
 				mTopPanel.updateFromFilter();
 
 				String newSelectedTab = current.getParameter(SELECTED_TAB_PARAMETER_INDEX);
+				boolean isNewSelectedTab = false;
 				if (selectedTab == null || !selectedTab.equals(newSelectedTab)) {
 					selectedTab = newSelectedTab;
 					refreshTabs();
-					dataType = YAxisDataType.fromString(selectedTab);
-
-					if (!needsNewData) {
-						historyChart.setDataType(dataType);
-						historyChart.drawData();
-					}
+					isNewSelectedTab = true;
 				}
 
-				if (needsNewData) {
+				dataType = YAxisDataType.fromString(selectedTab);
+				historyChart.setDataType(dataType);
+
+				if (isNewSelectedTab && !isNewDataRequired) {
+					historyChart.drawData();
+				}
+
+				if (isNewDataRequired) {
 					getHistoryChartData();
 				}
 
@@ -395,10 +403,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			historyChart.setLoading(true);
 			loader.setVisible(true);
 
-			if (LinkedAccountController.get().isLinkedAccountItem(item)) {
+			if (LinkedAccountController.get().getLinkedAccountItem(item) != null) {
 				RankController.get().fetchItemSalesRanks(item);
-			} else {
-				RankController.get().fetchItemRanks(item);
 			}
 		}
 	}
@@ -462,5 +468,31 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	 */
 	@Override
 	public void getItemSalesRanksFailure(GetItemSalesRanksRequest input, Throwable caught) {}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.core.shared.call.event.GetLinkedAccountItemEventHandler#getLinkedAccountItemSuccess(io.reflection.app.api.core.shared.call.
+	 * GetLinkedAccountItemRequest, io.reflection.app.api.core.shared.call.GetLinkedAccountItemResponse)
+	 */
+	@Override
+	public void getLinkedAccountItemSuccess(GetLinkedAccountItemRequest input, GetLinkedAccountItemResponse output) {
+		if (item != null && input.item.internalId.equals(item.internalId) && output.status == StatusType.StatusTypeSuccess) {
+			if (output.item == null) {
+				RankController.get().fetchItemRanks(item);
+			} else {
+				RankController.get().fetchItemSalesRanks(item);
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.core.shared.call.event.GetLinkedAccountItemEventHandler#getLinkedAccountItemFailure(io.reflection.app.api.core.shared.call.
+	 * GetLinkedAccountItemRequest, java.lang.Throwable)
+	 */
+	@Override
+	public void getLinkedAccountItemFailure(GetLinkedAccountItemRequest input, Throwable caught) {}
 
 }
