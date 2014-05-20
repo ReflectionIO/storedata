@@ -20,20 +20,21 @@ import io.reflection.app.api.blog.shared.call.GetPostsRequest;
 import io.reflection.app.api.blog.shared.call.GetPostsResponse;
 import io.reflection.app.api.blog.shared.call.UpdatePostRequest;
 import io.reflection.app.api.blog.shared.call.UpdatePostResponse;
+import io.reflection.app.api.exception.AuthorisationException;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Post;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
-import io.reflection.app.helpers.LookupHelper;
 import io.reflection.app.service.post.PostServiceProvider;
 import io.reflection.app.service.role.RoleServiceProvider;
 import io.reflection.app.service.user.UserServiceProvider;
+import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.app.shared.util.SparseArray;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 import com.willshex.gson.json.service.server.ActionHandler;
@@ -53,22 +54,33 @@ public final class Blog extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
-			List<Permission> permissions = null;
-			List<Role> roles = null;
+			Boolean showAll = Boolean.FALSE;
 
 			if (input.session != null) {
 				try {
 					output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-					permissions = UserServiceProvider.provide().getPermissions(output.session.user);
+					final Permission permissionListAny = new Permission();
+					permissionListAny.id = Long.valueOf(17);
 
-					roles = UserServiceProvider.provide().getRoles(output.session.user);
+					final Role roleAdmin = new Role();
+					roleAdmin.id = Long.valueOf(1);
 
-					RoleServiceProvider.provide().inflateRoles(roles);
+					try {
+						ValidationHelper.validateAuthorised(input.session.user, permissionListAny);
 
-					for (Role role : roles) {
-						if (role.permissions != null) {
-							permissions.addAll(role.permissions);
+						showAll = Boolean.TRUE;
+					} catch (AuthorisationException aEx) {
+
+					}
+
+					if (!showAll.booleanValue()) {
+						try {
+							ValidationHelper.validateAuthorised(input.session.user, roleAdmin);
+
+							showAll = Boolean.TRUE;
+						} catch (AuthorisationException aEx) {
+
 						}
 					}
 				} catch (InputValidationException ex) {
@@ -78,21 +90,6 @@ public final class Blog extends ActionHandler {
 
 			if (input.includeContents == null) {
 				input.includeContents = Boolean.FALSE;
-			}
-
-			// TODO: check whether the user can see invisible items in list
-			Boolean showAll = Boolean.FALSE;
-
-			if (permissions != null && roles != null) {
-				Map<Long, Permission> permissionLookup = LookupHelper.makeLookup(permissions);
-				Map<Long, Role> roleLookup = LookupHelper.makeLookup(roles);
-
-				Long permissionListAny = Long.valueOf(17);
-				Long roleAdmin = Long.valueOf(1);
-
-				if (permissionLookup.containsKey(permissionListAny) || roleLookup.containsKey(roleAdmin)) {
-					showAll = Boolean.TRUE;
-				}
 			}
 
 			output.posts = PostServiceProvider.provide().getPosts(showAll, input.includeContents, input.pager);
@@ -203,7 +200,31 @@ public final class Blog extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			// TODO: check permissions
+			boolean isAuthorised = false;
+
+			List<Role> roles = new ArrayList<Role>();
+			roles.add(DataTypeHelper.createRole(Long.valueOf(1)));
+
+			List<Permission> permissions = new ArrayList<Permission>();
+			permissions.add(DataTypeHelper.createPermission(Long.valueOf(9)));
+
+			try {
+				ValidationHelper.validateAuthorised(input.session.user, roles.get(0));
+				isAuthorised = true;
+			} catch (AuthorisationException aEx) {
+
+			}
+
+			if (!isAuthorised) {
+				try {
+					ValidationHelper.validateAuthorised(input.session.user, permissions.get(0));
+					isAuthorised = true;
+				} catch (AuthorisationException aEx) {
+
+				}
+			}
+
+			if (!isAuthorised) throw new AuthorisationException(input.session.user, roles, permissions);
 
 			input.post = ValidationHelper.validateNewPost(input.post, "input.post");
 

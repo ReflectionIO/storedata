@@ -5,7 +5,7 @@
 //  Created by William Shakour (billy1380) on 19 May 2014.
 //  Copyright © 2014 Reflection.io Ltd. All rights reserved.
 //
-package io.reflection.app.helpers;
+package io.reflection.app.shared.util;
 
 import io.reflection.app.datatypes.shared.DataType;
 
