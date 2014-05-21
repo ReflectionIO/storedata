@@ -1,13 +1,25 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.user.datepicker.client"
     xmlns:p="urn:import:io.reflection.app.client.part" xmlns:cell="urn:import:com.google.gwt.user.cellview.client" xmlns:pp="urn:import:io.reflection.app.client.page.part">
-    <ui:style>
+    <ui:style type="io.reflection.app.client.page.MyAppsPage.MyAppsPageStyle">
     .pageTitle {
     	padding-bottom: 30px;
     }
     
     .topPanel {
     	margin-top: 20px;
+    }
+    
+    .red {
+    	color: red;
+    }
+    
+    .green {
+    	color: green;
+    }
+    
+    .silver {
+    	color: silver;
     }
     </ui:style>
     <g:HTMLPanel>

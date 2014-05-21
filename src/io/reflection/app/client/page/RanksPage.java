@@ -33,14 +33,12 @@ import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.PageSizePager;
 import io.reflection.app.client.part.datatypes.RanksGroup;
 import io.reflection.app.datatypes.shared.Rank;
+import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.app.shared.util.FormattingHelper;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.LIElement;
@@ -187,6 +185,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			}
 
 		};
+
 		mRevenueColumn = new TextColumn<RanksGroup>() {
 
 			@Override
@@ -204,33 +203,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 			@Override
 			public SafeHtml getValue(RanksGroup object) {
-
-				String jsonProperties = ItemController.get().lookupItem(rankForListType(object).itemId).properties;
-
-				SafeHtml usesIap = null;
-
-				if (jsonProperties != null) {
-					JsonElement propertiesJsonElement = (new JsonParser()).parse(jsonProperties);
-
-					if (propertiesJsonElement.isJsonObject()) {
-						JsonObject propertiesJsonObject = propertiesJsonElement.getAsJsonObject();
-						JsonElement usesIapJsonElement = propertiesJsonObject.get("usesIap");
-
-						if (usesIapJsonElement.isJsonPrimitive()) {
-							if (usesIapJsonElement.getAsBoolean()) {
-								usesIap = SafeHtmlUtils.fromSafeConstant(IAP_YES_HTML);
-							} else {
-								usesIap = SafeHtmlUtils.fromSafeConstant(IAP_NO_HTML);
-							}
-						}
-					}
-				}
-
-				if (usesIap == null) {
-					usesIap = SafeHtmlUtils.fromSafeConstant(IAP_DONT_KNOW_HTML);
-				}
-
-				return usesIap;
+				return SafeHtmlUtils.fromSafeConstant(DataTypeHelper.itemIapState(ItemController.get().lookupItem(rankForListType(object).itemId),
+						IAP_YES_HTML, IAP_NO_HTML, IAP_DONT_KNOW_HTML));
 			}
 
 		};

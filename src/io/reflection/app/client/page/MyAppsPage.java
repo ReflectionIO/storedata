@@ -31,16 +31,18 @@ import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.BootstrapGwtDatePicker;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.part.datatypes.MyApp;
-import io.reflection.app.client.res.Images;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.Map;
 
-import com.google.gwt.cell.client.ImageResourceCell;
+import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
@@ -61,6 +63,16 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 	interface MyAppsPageUiBinder extends UiBinder<Widget, MyAppsPage> {}
 
+	interface MyAppsPageStyle extends CssResource {
+		String red();
+
+		String green();
+
+		String silver();
+	}
+
+	@UiField MyAppsPageStyle style;
+
 	@UiField(provided = true) CellTable<MyApp> appsTable = new CellTable<MyApp>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField SimplePager simplePager;
 
@@ -79,7 +91,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	private TextColumn<MyApp> columnPrice;
 	private TextColumn<MyApp> columnDownloads;
 	private TextColumn<MyApp> columnRevenue;
-	private Column<MyApp, ImageResource> columnIap;
+	private Column<MyApp, SafeHtml> columnIap;
 
 	public MyAppsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -163,17 +175,17 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		};
 		appsTable.addColumn(columnRevenue, "Revenue");
 
-		ImageResourceCell imgIapCell = new ImageResourceCell();
-		columnIap = new Column<MyApp, ImageResource>(imgIapCell) {
-			@Override
-			public ImageResource getValue(MyApp object) {
-				// if (object.item.properties.){ TODO IAP image
-				return Images.INSTANCE.greenTick();
-				// }else{
-				// return Images.INSTANCE.;
-				// }
+		columnIap = new Column<MyApp, SafeHtml>(new SafeHtmlCell()) {
 
+			private final String IAP_DONT_KNOW_HTML = "<span class=\"glyphicon glyphicon-question-sign " + style.silver() + "\"></span>";
+			private final String IAP_YES_HTML = "<span class=\"glyphicon glyphicon-ok-sign " + style.green() + "\"></span>";
+			private final String IAP_NO_HTML = "<span class=\"glyphicon glyphicon-remove-sign " + style.red() + "\"></span>";
+
+			@Override
+			public SafeHtml getValue(MyApp object) {
+				return SafeHtmlUtils.fromSafeConstant(DataTypeHelper.itemIapState(object.item, IAP_YES_HTML, IAP_NO_HTML, IAP_DONT_KNOW_HTML));
 			}
+
 		};
 		appsTable.addColumn(columnIap, "IAP");
 
