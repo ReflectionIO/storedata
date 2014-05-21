@@ -247,6 +247,8 @@ public class ItemChart extends GChart {
 			curve.clearPoints();
 		}
 
+		((RankHover) curve.getSymbol().getHoverWidget()).setYAxisDataType(dataType);
+		
 		switch (dataType) {
 		case DownloadsYAxisDataType:
 			drawDownloads();
@@ -259,8 +261,6 @@ public class ItemChart extends GChart {
 			drawRanking();
 			break;
 		}
-
-		((RankHover) curve.getSymbol().getHoverWidget()).setYAxisDataType(dataType);
 
 		setLoading(false);
 	}
@@ -276,7 +276,7 @@ public class ItemChart extends GChart {
 					curve.addPoint(lastDate.getTime(), 10000);
 				}
 			} else {
-				lastDate = rank.date;
+				lastDate = CalendarUtil.copyDate(rank.date);
 				curve.addPoint(rank.date.getTime(), rank.downloads.intValue());
 			}
 		}
@@ -293,7 +293,7 @@ public class ItemChart extends GChart {
 					curve.addPoint(lastDate.getTime(), 10000);
 				}
 			} else {
-				lastDate = rank.date;
+				lastDate = CalendarUtil.copyDate(rank.date);
 				curve.addPoint(rank.date.getTime(), rank.revenue.floatValue());
 			}
 		}
@@ -322,7 +322,7 @@ public class ItemChart extends GChart {
 					curve.addPoint(lastDate.getTime(), 10000);
 				}
 			} else {
-				lastDate = rank.date;
+				lastDate = CalendarUtil.copyDate(rank.date);
 				curve.addPoint(rank.date.getTime(), position);
 			}
 		}
