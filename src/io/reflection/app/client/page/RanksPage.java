@@ -20,6 +20,7 @@ import io.reflection.app.client.cell.AppRankCell;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.FilterController.Filter;
+import io.reflection.app.client.controller.ItemController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.RankController;
@@ -31,17 +32,21 @@ import io.reflection.app.client.page.part.RankSidePanel;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.PageSizePager;
 import io.reflection.app.client.part.datatypes.RanksGroup;
-import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.shared.util.FormattingHelper;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.gwt.cell.client.ImageResourceCell;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.LIElement;
-import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
@@ -63,7 +68,17 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 	interface RanksPageUiBinder extends UiBinder<Widget, RanksPage> {}
 
+	interface RanksPageStyle extends CssResource {
+		String red();
+
+		String green();
+
+		String silver();
+	}
+
 	public static final int SELECTED_TAB_PARAMETER_INDEX = 0;
+
+	@UiField RanksPageStyle style;
 
 	@UiField(provided = true) CellTable<RanksGroup> mRanks = new CellTable<RanksGroup>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) PageSizePager mPager = new PageSizePager(ServiceConstants.STEP_VALUE);
@@ -89,7 +104,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	private TextColumn<RanksGroup> mPriceColumn;
 	private TextColumn<RanksGroup> mDownloadsColumn;
 	private TextColumn<RanksGroup> mRevenueColumn;
-	private Column<RanksGroup, ImageResource> mIapColumn;
+	private Column<RanksGroup, SafeHtml> mIapColumn;
 
 	private Map<String, LIElement> mTabs = new HashMap<String, LIElement>();
 
@@ -114,7 +129,6 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		mTabs.put(PAID_LIST_TYPE, mPaidItem);
 		mTabs.put(GROSSING_LIST_TYPE, mGrossingItem);
 
-		
 		mRanks.setEmptyTableWidget(new HTMLPanel("No ranking data for filter!"));
 		RankController.get().addDataDisplay(mRanks);
 		mPager.setDisplay(mRanks);
@@ -182,14 +196,41 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 		};
 
-		mIapColumn = new Column<RanksGroup, ImageResource>(new ImageResourceCell()) {
+		mIapColumn = new Column<RanksGroup, SafeHtml>(new SafeHtmlCell()) {
+
+			private final String IAP_DONT_KNOW_HTML = "<span class=\"glyphicon glyphicon-question-sign " + style.silver() + "\"></span>";
+			private final String IAP_YES_HTML = "<span class=\"glyphicon glyphicon-ok-sign " + style.green() + "\"></span>";
+			private final String IAP_NO_HTML = "<span class=\"glyphicon glyphicon-remove-sign " + style.red() + "\"></span>";
 
 			@Override
-			public ImageResource getValue(RanksGroup object) {
-				// String jsonProperties = ItemController.get().lookupItem(rankForListType(object).itemId).properties;
-				// String imageName = jsonProperties == null ? "?" : jsonProperties;
+			public SafeHtml getValue(RanksGroup object) {
 
-				return Images.INSTANCE.greenTick();
+				String jsonProperties = ItemController.get().lookupItem(rankForListType(object).itemId).properties;
+
+				SafeHtml usesIap = null;
+
+				if (jsonProperties != null) {
+					JsonElement propertiesJsonElement = (new JsonParser()).parse(jsonProperties);
+
+					if (propertiesJsonElement.isJsonObject()) {
+						JsonObject propertiesJsonObject = propertiesJsonElement.getAsJsonObject();
+						JsonElement usesIapJsonElement = propertiesJsonObject.get("usesIap");
+
+						if (usesIapJsonElement.isJsonPrimitive()) {
+							if (usesIapJsonElement.getAsBoolean()) {
+								usesIap = SafeHtmlUtils.fromSafeConstant(IAP_YES_HTML);
+							} else {
+								usesIap = SafeHtmlUtils.fromSafeConstant(IAP_NO_HTML);
+							}
+						}
+					}
+				}
+
+				if (usesIap == null) {
+					usesIap = SafeHtmlUtils.fromSafeConstant(IAP_DONT_KNOW_HTML);
+				}
+
+				return usesIap;
 			}
 
 		};
