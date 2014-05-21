@@ -11,6 +11,7 @@ import io.reflection.app.api.core.shared.call.ChangeUserDetailsRequest;
 import io.reflection.app.api.core.shared.call.ChangeUserDetailsResponse;
 import io.reflection.app.api.core.shared.call.event.ChangeUserDetailsEventHandler;
 import io.reflection.app.client.controller.EventController;
+import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.SessionController;
@@ -18,6 +19,7 @@ import io.reflection.app.client.controller.UserController;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.AlertBoxHelper;
 import io.reflection.app.client.helper.FormHelper;
+import io.reflection.app.client.page.part.MyAccountSidePanel;
 import io.reflection.app.client.part.AlertBox;
 import io.reflection.app.client.part.AlertBox.AlertBoxType;
 import io.reflection.app.datatypes.shared.User;
@@ -33,7 +35,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.Error;
@@ -48,6 +49,8 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	private static ChangeDetailsPageUiBinder uiBinder = GWT.create(ChangeDetailsPageUiBinder.class);
 
 	interface ChangeDetailsPageUiBinder extends UiBinder<Widget, ChangeDetailsPage> {}
+
+	@UiField MyAccountSidePanel myAccountSidePanel;
 
 	@UiField TextBox mUsername;
 	@UiField HTMLPanel mUsernameGroup;
@@ -70,9 +73,6 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	String mCompanyError;
 
 	@UiField AlertBox mAlertBox;
-
-	@UiField InlineHyperlink mChangePasswordLink;
-	@UiField InlineHyperlink mChangeDetailsLink;
 
 	@UiField FormPanel mForm;
 
@@ -102,14 +102,6 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(EventController.get().addHandlerToSource(ChangeUserDetailsEventHandler.TYPE, SessionController.get(), this));
 
-		mChangeDetailsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("changedetails",
-				SessionController.get().getLoggedInUser().id.toString()));
-		mChangePasswordLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("changepassword",
-				SessionController.get().getLoggedInUser().id.toString()));
-
-		resetForm();
-
-		mChangeDetails.setEnabled(false);
 	}
 
 	@UiHandler("mChangeDetails")
@@ -161,8 +153,8 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 
 	@UiHandler({ "mUsername", "mForename", "mSurname", "mCompany" })
 	void onFieldsModified(KeyUpEvent event) {
-		if (!mUsername.getValue().equals(mUser.username) || !mForename.getValue().equals(mUser.forename) || !mSurname.getValue().equals(mUser.surname)
-				|| !mCompany.getValue().equals(mUser.company)) {
+		if (!mUsername.getText().equals(mUser.username) || !mForename.getText().equals(mUser.forename) || !mSurname.getText().equals(mUser.surname)
+				|| !mCompany.getText().equals(mUser.company)) {
 			mChangeDetails.setEnabled(true);
 		} else {
 			mChangeDetails.setEnabled(false);
@@ -272,6 +264,9 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		} else if (forename.length() > 30) {
 			mForenameError = "Too long (maximum 30 characters)";
 			validated = false;
+		} else if (!FormHelper.isTrimmed(forename)) {
+			mForenameError = "Whitespaces not allowed either before or after the string";
+			validated = false;
 		} else {
 			mForenameError = null;
 			validated = validated && true;
@@ -286,6 +281,9 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		} else if (surname.length() > 30) {
 			mSurnameError = "Too long (maximum 30 characters)";
 			validated = false;
+		} else if (!FormHelper.isTrimmed(surname)) {
+			mSurnameError = "Whitespaces not allowed either before or after the string";
+			validated = false;
 		} else {
 			mSurnameError = null;
 			validated = validated && true;
@@ -299,6 +297,9 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 			validated = false;
 		} else if (company.length() > 255) {
 			mCompanyError = "Too long (maximum 255 characters)";
+			validated = false;
+		} else if (!FormHelper.isTrimmed(company)) {
+			mCompanyError = "Whitespaces not allowed either before or after the string";
 			validated = false;
 		} else {
 			mCompanyError = null;
@@ -316,9 +317,35 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	 */
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
-		if (current != null && PageType.UsersPageType.equals(current.getPage()) && "changedetails".equals(current.getAction())) {
+		if (current != null && PageType.UsersPageType.equals(current.getPage()) && PageType.ChangeDetailsPageType.equals(current.getAction())) {
+
 			changedUser();
 
+			myAccountSidePanel.setPersonalDetailsLinkActive();
+
+			if (mUser != null) {
+				myAccountSidePanel.getLinkedAccountsLink().setTargetHistoryToken(
+						PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(), mUser.id.toString()));
+
+				myAccountSidePanel.getCreatorNameLink().setInnerText(mUser.company);
+
+				myAccountSidePanel.getPersonalDetailsLink().setTargetHistoryToken(
+						PageType.UsersPageType.asTargetHistoryToken(PageType.ChangeDetailsPageType.toString(), mUser.id.toString()));
+
+				myAccountSidePanel.getChangePasswordLink().setTargetHistoryToken(
+						PageType.UsersPageType.asTargetHistoryToken(PageType.ChangePasswordPageType.toString(), mUser.id.toString()));
+			}
+
+			String currentFilter = FilterController.get().asMyAppsFilterString();
+			if (currentFilter != null && currentFilter.length() > 0) {
+				if (mUser != null) {
+					myAccountSidePanel.getMyAppsLink().setTargetHistoryToken(
+							PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), mUser.id.toString(), FilterController.get()
+									.asMyAppsFilterString()));
+				}
+			}
+
+			mChangeDetails.setEnabled(false);
 			mForename.setFocus(true);
 			mForename.setCursorPos(mForename.getText().length());
 		}
@@ -335,6 +362,13 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		if (output.status == StatusType.StatusTypeSuccess) {
 			AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.SuccessAlertBoxType, false, "Details changed", " - user details successfully changed", true)
 					.setVisible(true);
+			mUser = SessionController.get().getLoggedInUser();
+
+			myAccountSidePanel.getCreatorNameLink().setInnerText(mUser.company);
+
+			mChangeDetails.setEnabled(false);
+			mForename.setFocus(true);
+			mForename.setCursorPos(mForename.getText().length());
 		} else {
 			AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.DangerAlertBoxType, false, "An error occured:",
 					"(" + output.error.code + ") " + output.error.message, true).setVisible(true);

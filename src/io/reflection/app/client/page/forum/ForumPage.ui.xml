@@ -24,7 +24,7 @@
 
                     <c:CellTable styleName="table table-hover table-striped" ui:field="topics" />
 
-                    <p:SimplePager ui:field="pager"></p:SimplePager>
+                    <p:SimplePager styleName="text-center" ui:field="pager"></p:SimplePager>
                 </div>
             </div>
         </div>

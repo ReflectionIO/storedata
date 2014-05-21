@@ -54,9 +54,6 @@ public interface Images extends ClientBundle {
 	@Source("buttonarrowwhite.png")
 	ImageResource buttonArrowWhite();
 
-	@Source("buttonlinkedaccount.png")
-	ImageResource buttonLinkedAccount();
-
 	@Source("buttonlogin.png")
 	ImageResource buttonLogin();
 

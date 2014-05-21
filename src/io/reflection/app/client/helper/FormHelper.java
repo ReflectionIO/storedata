@@ -19,7 +19,10 @@ import com.willshex.gson.json.service.shared.Error;
 public class FormHelper {
 
 	public static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-	private static final RegExp REG_EXP_EMAIL_CHECKER = RegExp.compile(FormHelper.EMAIL_PATTERN);
+	private static final RegExp REG_EXP_EMAIL_CHECKER = RegExp.compile(EMAIL_PATTERN);
+
+	public static final String TRIM_PATTERN = "^[ \t]+|[ \t]+$";
+	private static final RegExp REG_EXP_TRIM_CHECKER = RegExp.compile(TRIM_PATTERN);
 
 	private static final String APPLE_VENDOR_ID_PATTERN = "^8[0-9]{7}$"; // 8 followed by seven numbers of any value
 	private static final RegExp REG_EXP_APPLE_VENDOR_ID_CHECKER = RegExp.compile(FormHelper.APPLE_VENDOR_ID_PATTERN);
@@ -30,6 +33,10 @@ public class FormHelper {
 
 	public static boolean isValidEmail(String toValidate) {
 		return REG_EXP_EMAIL_CHECKER.test(toValidate);
+	}
+
+	public static boolean isTrimmed(String toValidate) {
+		return !REG_EXP_TRIM_CHECKER.test(toValidate);
 	}
 
 	public static boolean isValidAppleVendorId(String toValidate) {

@@ -2,36 +2,15 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.user.datepicker.client"
     xmlns:p="urn:import:io.reflection.app.client.part" xmlns:cell="urn:import:com.google.gwt.user.cellview.client" xmlns:pp="urn:import:io.reflection.app.client.page.part">
     <ui:style>
-    .pageTitle {
-    	padding-bottom: 30px;
-    }
     
-    .topPanel {
-    	margin-top: 20px;
-    }
     </ui:style>
     <g:HTMLPanel>
         <div class="row">
 
-            <div class="sidepanel col-md-2 well">
+            <pp:MyAccountSidePanel ui:field="myAccountSidePanel" />
 
-                <h3>My Apps</h3>
-
-                <h6 ui:field="mCreatorName" class="{style.pageTitle} text-muted">Creator</h6>
-                <ul class="nav nav-pills nav-stacked">
-                    <li class="active">
-                        <g:InlineHyperlink ui:field="mMyAppsLink">Overview</g:InlineHyperlink>
-                    </li>
-                    <hr />
-                    <li>
-                        <g:InlineHyperlink ui:field="mLinkedAccountsLink">Linked Accounts</g:InlineHyperlink>
-                    </li>
-                    <hr />
-                </ul>
-            </div>
-
-            <g:HTMLPanel styleName="col-md-10 {style.topPanel}">
-                <pp:MyAppsTopPanel ui:field="topPanel" />
+            <g:HTMLPanel styleName="col-md-10 topPanel">
+                <pp:MyAppsTopPanel ui:field="myAppsTopPanel" />
                 <cell:CellTable ui:field="appsTable" styleName="table table-hover table-striped" />
                 <p:SimplePager ui:field="simplePager" styleName="text-center" visible="false" />
             </g:HTMLPanel>

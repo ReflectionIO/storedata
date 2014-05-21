@@ -18,69 +18,34 @@
 
     <ui:with field='res' type='io.reflection.app.client.res.Images' />
     <ui:style>
-    @external navbar-nav, btn, form-control,navbar-header,label-default;
-    .header {
-    	background: #272733;
-    	padding-left: 8px;
-    	padding-right: 8px;
-    	padding-top: 5px;
-    	height: 60px;
-    	color: #8d8ea1;
-    	-o-transition: .3s;
-    	-ms-transition: .3s;
-    	-moz-transition: .3s;
-    	-webkit-transition: .3s;
-    	transition: .3s;
-    }
-    
-    .alignToImage {
-    	vertical-align: bottom;
-    }
-    
-    .navbar-nav>li>a.anchor {
-    	
-    }
-    
-    .searchBox .btn {
-    	border-radius: 0 4px 4px 0;
-    	background-color: #080808;
-    	color: white;
-    	border-color: #080808;
-    }
-    
-    .searchBox .form-control {
-    	border-radius: 4px 0 0 4px;
-    	background-color: #080808;
-    	color: white;
-    	border-color: #080808;
-    }
-    
-    .searchBox .form-control:focus {
-    	border-color: #6D69C5;
-    }
-    
-    .searchBox span {
-    	float: left;
-    }
-    
-    .navbar-header>a>.label-default {
-    	font-size: 10px;
-    	background-color: #676b88;
-    	color: #101010;
-    	padding: 1px 3px;
-    	font-weight: normal;
-    	vertical-align: super;
-    }
-    
-    .navbar-header>a:HOVER>.label-default {
-    	background-color: #1bc79f;
-    }
-    
-    .widerMenu {
-    	width: 250px;
-    }
+    /*
+                                                    @external btn, form-control;
+                                                    .searchBox .btn {
+                                                    	border-radius: 0 4px 4px 0;
+                                                    	background-color: #080808;
+                                                    	color: white;
+                                                    	border-color: #080808;
+                                                    }
+                                                    
+                                                    .searchBox .form-control {
+                                                    	border-radius: 4px 0 0 4px;
+                                                    	background-color: #080808;
+                                                    	color: white;
+                                                    	border-color: #080808;
+                                                    }
+                                                    
+                                                    .searchBox .form-control:focus {
+                                                    	border-color: #6D69C5;
+                                                    }
+                                                    
+                                                    .searchBox span {
+                                                    	float: left;
+                                                    }
+                    */
     </ui:style>
-    <g:HTMLPanel ui:field="pnlHeader" styleName="navbar navbar-inverse navbar-fixed-top {style.header}">
+    <g:HTMLPanel ui:field="pnlHeader" styleName="header navbar navbar-inverse navbar-fixed-top">
+
+        <!-- Logo -->
         <div class="navbar-header">
             <button type="button" class="navbar-toggle">
                 <span class="icon-bar"></span>
@@ -88,24 +53,53 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="{HomePageType.asHref}">
-                <g:Image styleName="{style.alignToImage}" resource="{res.logo}" />
-                <span style="color: white; margin-left: 10px;">Reflection</span>
-                <span class="label label-default" style="font-weight: bold; font-style: italic; display: inline-block; padding-right: 7px;">
-                    beta
-                    <i class="glyphicon glyphicon-lock" style="padding-left: 5px;"></i>
-                </span>
+                <g:Image resource="{res.reflectionLogoBeta}" />
             </a>
         </div>
+
         <div class="collapse navbar-collapse">
-            <!-- Left header part -->
-            <ul class="nav navbar-nav" ui:field="mNavList">
-                <li ui:field="mRanksItem" style="display: none;">
-                    <g:InlineHyperlink ui:field="mRanksLink">Leaderboard</g:InlineHyperlink>
+
+            <ul class="nav navbar-nav" ui:field="navList">
+                <li ui:field="ranksItem">
+                    <g:InlineHyperlink ui:field="ranksLink">Leaderboard</g:InlineHyperlink>
                 </li>
 
-                <li ui:field="myAppsItem">
-                    <g:InlineHyperlink ui:field="myAppsLink">My apps</g:InlineHyperlink>
-                </li>
+                <!-- My Account Panel -->
+                <ul class="nav navbar-nav" ui:field="myAccountList">
+
+                    <li ui:field="myAccountDropdown" class="dropdown">
+                        <g:Anchor styleName="dropdown-toggle" ui:field="accountButton">
+                            My Account
+                            <span class="caret headerCaret"></span>
+                        </g:Anchor>
+                        <ul class="dropdown-menu">
+                            <li ui:field="myAppsItem">
+                                <g:InlineHyperlink ui:field="myAppsLink">
+                                    <i class="glyphicon glyphicon-th"></i>
+                                    My Apps
+                                </g:InlineHyperlink>
+                            </li>
+                            <li ui:field="linkedAccountsItem">
+                                <g:InlineHyperlink ui:field="linkedAccountsLink">
+                                    <i class="glyphicon glyphicon-link"></i>
+                                    Linked Accounts
+                                </g:InlineHyperlink>
+                            </li>
+                            <li ui:field="personalDetailsItem">
+                                <g:InlineHyperlink ui:field="personalDetailsLink">
+                                    <i class="glyphicon glyphicon-cog"></i>
+                                    Personal Details
+                                </g:InlineHyperlink>
+                            </li>
+                            <li ui:field="changePasswordItem">
+                                <g:InlineHyperlink ui:field="changePasswordLink">
+                                    <i class="glyphicon glyphicon-cog"></i>
+                                    Change Password
+                                </g:InlineHyperlink>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
 
                 <li ui:field="blogItem">
                     <g:InlineHyperlink ui:field="blogLink" targetHistoryToken="{BlogPostsPageType.asTargetHistoryToken}">Blog</g:InlineHyperlink>
@@ -115,33 +109,37 @@
                     <g:InlineHyperlink ui:field="forumLink" targetHistoryToken="{ForumPageType.asTargetHistoryToken}">Forum</g:InlineHyperlink>
                 </li>
 
-                <li ui:field="mUpgradeAccountItem">
-                    <g:InlineHyperlink targetHistoryToken="{UpgradePageType.asTargetHistoryToken}" ui:field="mUpgradeAccountLink" text="Pricing" />
+                <li ui:field="upgradeAccountItem">
+                    <g:InlineHyperlink targetHistoryToken="{UpgradePageType.asTargetHistoryToken}" ui:field="upgradeAccountLink" text="Pricing" />
                 </li>
             </ul>
+
             <!-- Admin panel -->
-            <ul class="nav navbar-nav" ui:field="mAdminList">
-                <li ui:field="mAdminDropdown" class="dropdown">
-                    <g:Anchor styleName="dropdown-toggle" ui:field="mAdminButton" text="Admin" />
+            <ul class="nav navbar-nav" ui:field="adminList">
+                <li ui:field="adminDropdown" class="dropdown">
+                    <g:Anchor styleName="dropdown-toggle" ui:field="adminButton">
+                        Admin
+                        <span class="caret"></span>
+                    </g:Anchor>
                     <ul class="dropdown-menu">
-                        <li ui:field="mFeedBrowserItem">
-                            <g:InlineHyperlink ui:field="mFeedBrowserLink" targetHistoryToken="{FeedBrowserPageType.asTargetHistoryToken}">Feed Browser</g:InlineHyperlink>
+                        <li ui:field="feedBrowserItem">
+                            <g:InlineHyperlink ui:field="feedBrowserLink" targetHistoryToken="{FeedBrowserPageType.asTargetHistoryToken}">Feed Browser</g:InlineHyperlink>
                         </li>
                         <li ui:field="itemsItem">
                             <g:InlineHyperlink ui:field="itemsLink" targetHistoryToken="{ItemsPageType.asTargetHistoryToken}">Items</g:InlineHyperlink>
                         </li>
                         <li class="divider"></li>
-                        <li ui:field="mUsersItem">
-                            <g:InlineHyperlink ui:field="mUsersLink" targetHistoryToken="{UsersPageType.asTargetHistoryToken}">
+                        <li ui:field="usersItem">
+                            <g:InlineHyperlink ui:field="usersLink" targetHistoryToken="{UsersPageType.asTargetHistoryToken}">
                                 Users
-                                <span ui:field="mTotalUsers" class="badge">1+</span>
+                                <span ui:field="totalUsers" class="badge">1+</span>
                             </g:InlineHyperlink>
                         </li>
-                        <li ui:field="mRolesItem">
-                            <g:InlineHyperlink ui:field="mRolesLink" targetHistoryToken="{RolesPageType.asTargetHistoryToken}">Roles</g:InlineHyperlink>
+                        <li ui:field="rolesItem">
+                            <g:InlineHyperlink ui:field="rolesLink" targetHistoryToken="{RolesPageType.asTargetHistoryToken}">Roles</g:InlineHyperlink>
                         </li>
-                        <li ui:field="mPermissionsItem">
-                            <g:InlineHyperlink ui:field="mPermissionsLink" targetHistoryToken="{PermissionsPageType.asTargetHistoryToken}">Permissions</g:InlineHyperlink>
+                        <li ui:field="permissionsItem">
+                            <g:InlineHyperlink ui:field="permissionsLink" targetHistoryToken="{PermissionsPageType.asTargetHistoryToken}">Permissions</g:InlineHyperlink>
                         </li>
                         <li class="divider"></li>
                         <li ui:field="emailTemplatesItem">
@@ -154,92 +152,45 @@
                 </li>
             </ul>
 
-            <!-- Account Panel -->
-            <ul class="nav navbar-nav navbar-right" ui:field="mAccountList">
-                <li ui:field="mRegisterItem" style="display: none">
-                    <g:InlineHyperlink ui:field="mRegisterLink" targetHistoryToken="{RegisterPageType.asTargetHistoryToken}">Sign Up</g:InlineHyperlink>
+            <!-- User name and Sign Out -->
+            <ul class="nav navbar-nav navbar-right" ui:field="userSignOut">
+                <li>
+                    <g:InlineHTML ui:field="userName" styleName="navbar-text" />
                 </li>
-                <li ui:field="mLoginItem">
-                    <g:InlineHyperlink ui:field="mLoginLink" targetHistoryToken="{LoginPageType.asTargetHistoryToken}">Log In</g:InlineHyperlink>
-                </li>
-                <li ui:field="mAccountDropdown" class="dropdown">
-                    <g:Anchor styleName="dropdown-toggle" ui:field="mAccountButton">
-                        <i class="glyphicon glyphicon-align-justify" style="margin-right: 10px"></i>
-                        My Account
-                    </g:Anchor>
-                    <ul class="dropdown-menu side">
-                        <li ui:field="myAppsAccountItem">
-                            <g:InlineHyperlink ui:field="myAppsAccountLink">
-                                <i class="glyphicon glyphicon-th" style="margin-right: 20px"></i>
-                                My apps
-                            </g:InlineHyperlink>
-                        </li>
-                        <li ui:field="mLinkedAccountsItem">
-                            <g:InlineHyperlink ui:field="mLinkedAccountsLink">
-                                <i class="glyphicon glyphicon-link" style="margin-right: 20px"></i>
-                                My linked accounts
-                            </g:InlineHyperlink>
-                        </li>
-                        <hr style="height:1px; border:none; color:#363845; background-color:#363845; margin-top: 10px; margin-bottom: 10px;"></hr>
-                        <li ui:field="mAccountSettingsItem">
-                            <g:InlineHyperlink ui:field="mAccountSettingsLink">
-                                <i class="glyphicon glyphicon-cog" style="margin-right: 20px"></i>
-                                Account settings
-                            </g:InlineHyperlink>
-                        </li>
-                        <hr style="height:1px; border:none; color:#363845; background-color:#363845; margin-top: 10px; margin-bottom: 10px;"></hr>
-                        <li ui:field="mLogoutItem">
-                            <g:InlineHyperlink targetHistoryToken="logout" ui:field="mLogoutLink">
-                                <i class="glyphicon glyphicon-log-out" style="margin-right: 20px"></i>
-                                Sign out
-                            </g:InlineHyperlink>
-                        </li>
-                    </ul>
+                <li class="divider-vertical"></li>
+                <li>
+                    <g:InlineHyperlink targetHistoryToken="logout">
+                        Sign Out
+                    </g:InlineHyperlink>
                 </li>
             </ul>
 
-            <!-- Feature Request -->
-            <ul class="nav navbar-nav navbar-right" style="display: none;" ui:field="mFeatureRequest">
-                <li class="dropdown">
-                    <g:Anchor styleName="dropdown-toggle" ui:field="featureRequestButton">
-                        <i class="glyphicon glyphicon-comment" style="margin-right: 10px"></i>
-                        Feature Requests
-                    </g:Anchor>
-                    <ul class="dropdown-menu side">
-                        <li style="text-align: justify; font-size: 14px;">
-                            Help us develop a truly groundbreaking intelligence tool. Contact
-                            us if you have feedback or if you would like to see any
-                            additional feature that you feel can add value. We're here to help.
-                        </li>
-                        <hr style="height:1px; border:none; color:#363845; background-color:#363845;"></hr>
-                        <li>
-                            <a href="mailto:gustaf@reflection.io" target="_blank">
-                                <i class="glyphicon glyphicon-envelope" style="margin-right: 15px"></i>
-                                gustaf@reflection.io
-                            </a>
-                        </li>
-                        <li>
-                            <a href="callto:+44 (0) 7929 635 487" target="_blank">
-                                <i class="glyphicon glyphicon-earphone" style="margin-right: 15px"></i>
-                                +44 (0) 7929 635 487
-                            </a>
-                        </li>
-                    </ul>
+
+            <ul class="nav navbar-nav navbar-right" ui:field="login">
+                <!-- <li ui:field="mRegisterItem"> <g:InlineHyperlink ui:field="mRegisterLink" targetHistoryToken="{RegisterPageType.asTargetHistoryToken}">Sign Up</g:InlineHyperlink> 
+                    </li> -->
+                <li ui:field="loginItem">
+                    <g:InlineHyperlink ui:field="loginLink" targetHistoryToken="{LoginPageType.asTargetHistoryToken}">
+                        Log In
+                        <b class="glyphicon glyphicon-log-in"></b>
+                    </g:InlineHyperlink>
                 </li>
-                <li class="divider-vertical"></li>
             </ul>
-            <!-- Search Box -->
-            <g:FormPanel styleName="navbar-form navbar-right" visible="false">
-                <g:HTMLPanel styleName="{style.searchBox}">
-                    <span class="form-group">
-                        <g:TextBox styleName="form-control" ui:field="mQuery" />
-                    </span>
-                    <span>
-                        <g:InlineHyperlink styleName="btn btn-default" ui:field="mSearch" targetHistoryToken="{SearchPageType.asTargetHistoryToken}/query" />
-                    </span>
-                </g:HTMLPanel>
-            </g:FormPanel>
-            <span />
+
+
+
+            <!-- Feature Request <ul class="nav navbar-nav navbar-right" style="display: none;" ui:field="mFeatureRequest"> <li class="dropdown"> <g:Anchor styleName="dropdown-toggle" 
+                ui:field="featureRequestButton"> <i class="glyphicon glyphicon-comment" style="margin-right: 10px"></i> Feature Requests </g:Anchor> <ul class="dropdown-menu"> <li 
+                style="text-align: justify; font-size: 14px;"> Help us develop a truly groundbreaking intelligence tool. Contact us if you have feedback or if you would like to see 
+                any additional feature that you feel can add value. We're here to help. </li> <hr style="height:1px; border:none; color:#363845; background-color:#363845;"></hr> <li> 
+                <a href="mailto:gustaf@reflection.io" target="_blank"> <i class="glyphicon glyphicon-envelope" style="margin-right: 15px"></i> gustaf@reflection.io </a> </li> <li> 
+                <a href="callto:+44 (0) 7929 635 487" target="_blank"> <i class="glyphicon glyphicon-earphone" style="margin-right: 15px"></i> +44 (0) 7929 635 487 </a> </li> </ul> 
+                </li> <li class="divider-vertical"></li> </ul> -->
+
+
+            <!-- Search Box <g:FormPanel styleName="navbar-form navbar-right" visible="false"> <g:HTMLPanel styleName="{style.searchBox}"> <span class="form-group"> 
+                <g:TextBox styleName="form-control" ui:field="mQuery" /> </span> <span> <g:InlineHyperlink styleName="btn btn-default" ui:field="mSearch" targetHistoryToken="{SearchPageType.asTargetHistoryToken}/query" 
+                /> </span> </g:HTMLPanel> </g:FormPanel> -->
 
         </div><!--/.nav-collapse -->
 

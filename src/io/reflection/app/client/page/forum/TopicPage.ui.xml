@@ -25,7 +25,7 @@
 
             <c:CellList ui:field="messages" styleName="{style.margins}" />
 
-            <a:SimplePager ui:field="pager" styleName="col-sm-offset-2" />
+            <a:SimplePager styleName="text-center" ui:field="pager" styleName="col-sm-offset-2" />
 
             <g:FormPanel styleName="col-sm-10 col-sm-offset-2" ui:field="replyForm">
                 <g:HTMLPanel>
