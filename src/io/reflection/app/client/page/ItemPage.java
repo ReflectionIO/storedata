@@ -96,7 +96,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 	private Map<String, LIElement> mTabs = new HashMap<String, LIElement>();
 
-	private String selectedTab = RANKING_CHART_TYPE;
+	private String selectedTab;
 
 	private String filterContents;
 
