@@ -9,6 +9,7 @@ package io.reflection.app.client.part.linkaccount;
 
 import io.reflection.app.client.handler.EnterPressedEventHandler;
 import io.reflection.app.client.helper.FormHelper;
+import io.reflection.app.client.page.PageType;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -22,6 +23,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -52,10 +54,14 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	@UiField HTMLPanel mVendorIdNote;
 	String mVendorIdError;
 
+	@UiField InlineHyperlink whatsThis;
+
 	private EnterPressedEventHandler mEnterHandler;
 
 	public IosMacLinkAccountForm() {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		whatsThis.setTargetHistoryToken(PageType.BlogPostPageType.toString("view/7"));
 
 		mAccountUsername.getElement().setAttribute("placeholder", "iTunes Connect Username");
 		mPassword.getElement().setAttribute("placeholder", "iTunes Connect Password");

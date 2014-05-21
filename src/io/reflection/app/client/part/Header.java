@@ -126,6 +126,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 	// @UiField TextBox mQuery;
 	// @UiField InlineHyperlink mSearch;
+	@UiField UListElement search;
 
 	@UiField UListElement userSignOut;
 	@UiField InlineHTML userName;
@@ -139,7 +140,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 	public Header() {
 		initWidget(uiBinder.createAndBindUi(this));
-		
+
 		loginLink.setTargetHistoryToken(PageType.LoginPageType.asTargetHistoryToken("requestinvite"));
 
 		// mQuery.getElement().setAttribute("placeholder", "Search for any app");
@@ -161,6 +162,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		// removeFeatureRequest();
 		// addRegister();
 		removeUpgrade();
+		removeSearch();
 		removeUserSignOut();
 		addLogin();
 
@@ -361,6 +363,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		addAdmin();
 		// addFeatureRequest();
 		// removeRegister();
+		addSearch();
 		addUserSignOut(user);
 		removeLogin();
 	}
@@ -384,6 +387,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		// removeFeatureRequest();
 		// addRegister();
 		removeUpgrade();
+		removeSearch();
 		removeUserSignOut();
 		addLogin();
 	}
@@ -430,6 +434,14 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		} else {
 			removeAdmin();
 		}
+	}
+
+	private void addSearch() {
+		show(search);
+	}
+
+	private void removeSearch() {
+		hide(search);
 	}
 
 	private void addUserSignOut(User user) {

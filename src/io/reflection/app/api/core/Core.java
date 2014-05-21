@@ -766,7 +766,9 @@ public final class Core extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			if (input.user.id.longValue() != input.session.user.id.longValue()) throw new ServiceException(-1, "User and session user do not match");			
+			if (input.user.id.longValue() != input.session.user.id.longValue()) throw new ServiceException(-1, "User and session user do not match");
+
+			ValidationHelper.validateExistingUser(input.user, "input.user");
 
 			User user = UserServiceProvider.provide().updateUser(input.user);
 

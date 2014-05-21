@@ -31,7 +31,7 @@
 
         <g:HTMLPanel ui:field="mVendorIdGroup" styleName="form-group">
             <label>Vendor ID</label>
-            <a href="#" class="{style.inlineAnchor}">What's this?</a>
+            <g:InlineHyperlink ui:field="whatsThis" styleName="{style.inlineAnchor}">What's this?</g:InlineHyperlink>
             <g:TextBox styleName="form-control {style.marginTop5}" ui:field="mVendorId" />
             <g:HTMLPanel styleName="{style.noteDetail}" ui:field="mVendorIdNote" visible="false" />
         </g:HTMLPanel>

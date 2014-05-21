@@ -107,6 +107,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	@UiHandler("mChangeDetails")
 	void onChangeDetailsClicked(ClickEvent event) {
 		if (validate()) {
+			clearErrors();
 			mForm.setVisible(false);
 
 			AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Please wait", " - changing user details...", false).setVisible(true);
@@ -137,6 +138,13 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 				FormHelper.hideNote(mCompanyGroup, mCompanyNote);
 			}
 		}
+	}
+
+	private void clearErrors() {
+		FormHelper.hideNote(mUsernameGroup, mUsernameNote);
+		FormHelper.hideNote(mForenameGroup, mForenameNote);
+		FormHelper.hideNote(mSurnameGroup, mSurnameNote);
+		FormHelper.hideNote(mCompanyGroup, mCompanyNote);
 	}
 
 	/**

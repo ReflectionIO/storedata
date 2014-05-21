@@ -98,10 +98,10 @@ public class ChangePasswordPage extends Page implements NavigationEventHandler, 
 
 	@UiHandler("mChangePassword")
 	void onChangePassword(ClickEvent event) {
-		if (validate()) {
-			mForm.setVisible(false);
 
-			// TODO check if the password is correct
+		if (validate()) {
+			clearErrors();
+			mForm.setVisible(false);
 
 			AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Please wait", " - changing user password...", false)
 					.setVisible(true);
@@ -125,6 +125,11 @@ public class ChangePasswordPage extends Page implements NavigationEventHandler, 
 				FormHelper.hideNote(mNewPasswordGroup, mNewPasswordNote);
 			}
 		}
+	}
+
+	private void clearErrors() {
+		FormHelper.hideNote(mPasswordGroup, mPasswordNote);
+		FormHelper.hideNote(mNewPasswordGroup, mNewPasswordNote);
 	}
 
 	/**
@@ -224,7 +229,9 @@ public class ChangePasswordPage extends Page implements NavigationEventHandler, 
 				" - " + (SessionController.get().isLoggedInUserAdmin() ? "user with id " + userIdString : "you") + " can now login with new password.", false)
 				.setVisible(true);
 
+		mChangePassword.setEnabled(false);
 		resetForm();
+		
 
 		if (SessionController.get().isLoggedInUserAdmin()) {
 			Timer t = new Timer() {
