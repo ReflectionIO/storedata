@@ -71,7 +71,7 @@ public class HomePage extends Page {
 	protected void onAttach() {
 		super.onAttach();
 
-		NavigationController.get().getHeader().getElement().getStyle().setTop(-60, Unit.PX);
+		NavigationController.get().getHeader().getElement().getStyle().setBorderColor("#272733");
 		NavigationController.get().getFooter().getElement().getStyle().setHeight(0, Unit.PX);
 		NavigationController.get().getPageHolderPanel().getElement().getStyle().setPaddingTop(0, Unit.PX);
 
@@ -82,10 +82,10 @@ public class HomePage extends Page {
 			@Override
 			public void onWindowScroll(ScrollEvent event) {
 				if (event.getScrollTop() > Window.getClientHeight()) {
-					NavigationController.get().getHeader().getElement().getStyle().setTop(0, Unit.PX);
+					NavigationController.get().getHeader().getElement().getStyle().clearBorderColor();
 					NavigationController.get().getFooter().getElement().getStyle().clearHeight();
 				} else {
-					NavigationController.get().getHeader().getElement().getStyle().setTop(-60, Unit.PX);
+					NavigationController.get().getHeader().getElement().getStyle().setBorderColor("#272733");
 					NavigationController.get().getFooter().getElement().getStyle().setHeight(0, Unit.PX);
 				}
 
@@ -125,7 +125,7 @@ public class HomePage extends Page {
 
 		super.onDetach();
 
-		NavigationController.get().getHeader().getElement().getStyle().setTop(0, Unit.PX);
+		NavigationController.get().getHeader().getElement().getStyle().clearBorderColor();
 		NavigationController.get().getPageHolderPanel().getElement().getStyle().setPaddingTop(60, Unit.PX);
 		NavigationController.get().getFooter().getElement().getStyle().clearHeight();
 	}
