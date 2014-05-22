@@ -2,19 +2,18 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
     <ui:import field="io.reflection.app.client.page.PageType.RegisterPageType" />
-    
+
     <ui:with field="global" type="io.reflection.app.client.res.Styles" />
-    
-    <ui:style  type="io.reflection.app.client.page.HomePage.HomePageStyle">
-       
-    @external btn, text-muted, carousel, carousel-inner, item, carousel-control, right, left, carousel-indicators, active, glyphicon;
+
+    <ui:style type="io.reflection.app.client.page.HomePage.HomePageStyle">
+    @external btn, text-muted, carousel, carousel-inner, item, carousel-control, right, left, carousel-indicators, active, glyphicon, icon-angle-right, icon-angle-left;
     .logo {
     	background: url("../images/logo.png") no-repeat center;
     	text-indent: -100000px;
     	overflow: hidden;
     }
     
-    .contact .icon, .contact .glyphicon {
+    .contact .icon,.contact .glyphicon {
     	font-size: 35px;
     	color: #7e72c9;
     }
@@ -25,7 +24,7 @@
     }
     
     .contact h5 {
-	   display:none;
+    	display: none;
     }
     
     .custom {
@@ -36,10 +35,10 @@
     	color: white;
     }
     
-    .home h1, .home h2 {
-	   font-size: 34px;
-        line-height: 40px;
-        font-weight: bolder;
+    .home h1,.home h2 {
+    	font-size: 34px;
+    	line-height: 40px;
+    	font-weight: bolder;
     }
     
     .custom .text-muted {
@@ -47,8 +46,8 @@
     }
     
     .home .text-muted {
-	   font-size: 16px;
-        line-height: 26px;
+    	font-size: 16px;
+    	line-height: 26px;
     }
     
     .arrow a {
@@ -75,16 +74,16 @@
     
     .feature img {
     	height: auto;
-        width: 50px;
+    	width: 50px;
     	opacity: .5;
     }
     
-    .feature:hover img, .feature:hover img {
-        opacity: 1;
+    .feature:hover img,.feature:hover img {
+    	opacity: 1;
     }
     
-    .feature:hover h3, .feature:active h3 {
-        color: #7e72c9;
+    .feature:hover h3,.feature:active h3 {
+    	color: #7e72c9;
     }
     
     .whiteSmoke {
@@ -103,8 +102,21 @@
     	color: #d9dce0;
     }
     
-    .carousel-control.left>.glyphicon {
-    	margin-left: 0px;
+    .carousel-control .icon-angle-left,.carousel-control .icon-angle-right {
+    	font-size: 60px;
+    	position: absolute;
+    	top: 50%;
+    	z-index: 5;
+    	display: inline-block;
+    	left: 25%;
+    }
+    
+    .carousel-control:hover .icon-angle-left, .carousel-control:focus .icon-angle-left {
+	   left: 15%;
+    }
+    
+    .carousel-control:hover .icon-angle-right, .carousel-control:foucs .icon-angle-right{
+       left: 35%;
     }
     
     .carousel-indicators li {
@@ -179,46 +191,45 @@
     }
     
     .home .btn {
-    	font-size: 16px;    	
+    	font-size: 16px;
     }
     
     .btnHollow {
-	   background: none;
-	   border: 2px solid;
-	   border-radius: 5px;
-	   padding: 20px 25px;
-	}
-	
-	.btnPurple {
-        color: white;
-        border-color: #7e72c9;
+    	background: none;
+    	border: 2px solid;
+    	border-radius: 5px;
+    	padding: 20px 25px;
+    }
+    
+    .btnPurple {
+    	color: white;
+    	border-color: #7e72c9;
     }
     
     .btnPurpleLBg {
-        color: #7e72c9;
-        border-color: #7e72c9;
+    	color: #7e72c9;
+    	border-color: #7e72c9;
     }
     
     .btnPurpleInv {
-        color: white;
-        border-color: white;
+    	color: white;
+    	border-color: white;
     }
     
-	.btnPurple:hover, .btnPurpleLBg:hover {
-	   color: white;
-	   background-color: #7e72c9;
-	}
-	
-	.btnPurpleInv:hover {
-       color: #7e72c9;
-       background-color: white;
+    .btnPurple:hover,.btnPurpleLBg:hover {
+    	color: white;
+    	background-color: #7e72c9;
     }
     
-	
-	.hide {
-	   display:none;
-	   opacity:0;
-	}
+    .btnPurpleInv:hover {
+    	color: #7e72c9;
+    	background-color: white;
+    }
+    
+    .hide {
+    	display: none;
+    	opacity: 0;
+    }
     </ui:style>
     <g:HTMLPanel>
         <div class="{style.home}">
@@ -227,8 +238,10 @@
                     <h1 class="{style.logo}">Reflection</h1>
                     <div class="row {style.moveDownALittle}">
                         <h2 class="{style.hide}" ui:field="homeHeading">Powerful market intelligence for the global app market.</h2>
-                        <p class="text-muted {style.moveDownALittle} {style.hide}" ui:field="homeDescription">Make smarter business decisions. Access revenue, download and rank data for any app in the store.</p>
-                        <g:InlineHyperlink ui:field="requestInvite" targetHistoryToken="{RegisterPageType.asTargetHistoryToken}" text="Request Invite" styleName="btn {style.btnPurple} {style.btnHollow} {style.moveDownALittle} {style.hide}" />
+                        <p class="text-muted {style.moveDownALittle} {style.hide}" ui:field="homeDescription">Make smarter business decisions. Access revenue, download and rank
+                            data for any app in the store.</p>
+                        <g:InlineHyperlink ui:field="requestInvite" targetHistoryToken="{RegisterPageType.asTargetHistoryToken}" text="Request Invite"
+                            styleName="btn {style.btnPurple} {style.btnHollow} {style.moveDownALittle} {style.hide}" />
                         <div class="{style.arrow} {style.moveDown}">
                             <g:Anchor ui:field="gotoFeatures" styleName="{global.reflection.smooth} {style.hide}">
                                 <spans class="icon-angle-down" />
@@ -326,11 +339,11 @@
                                     <img src="../images/download_history.png" alt="Download History" />
                                 </div>
                             </div>
-                            <g:Anchor styleName="left carousel-control" ui:field="carouselLeft">
-                                <span class="glyphicon glyphicon-chevron-left"></span>
+                            <g:Anchor styleName="left carousel-control {global.reflection.smooth}" ui:field="carouselLeft">
+                                <span class="icon-angle-left {global.reflection.smooth}"></span>
                             </g:Anchor>
-                            <g:Anchor styleName="right carousel-control" ui:field="carouselRight">
-                                <span class="glyphicon glyphicon-chevron-right"></span>
+                            <g:Anchor styleName="right carousel-control {global.reflection.smooth}" ui:field="carouselRight">
+                                <span class="icon-angle-right {global.reflection.smooth}"></span>
                             </g:Anchor>
                         </div>
                     </div>
@@ -403,7 +416,7 @@
                     <g:Button ui:field="getInTouch" styleName="btn {style.btnHollow} {style.btnPurpleInv} {style.moveDownALittle}" text="Get In Touch" />
                 </div>
             </div>
-            <div class="{style.centered} container {style.moveDown}">
+            <div class="{style.centered} container {style.moveDown}" ui:field="contact">
 
                 <div class="row">
                     <div class="col-sm-6 col-sm-offset-3">
@@ -469,12 +482,12 @@
                 <div class="row {style.moveDown}">
                     <div class="col-sm-6 col-sm-offset-3 {style.social}">
                         <div class="col-sm-2 col-sm-offset-4 {style.moveDownALittle}">
-                            <a href="https://www.facebook.com/reflection.io" target="_blank">
+                            <a href="https://www.facebook.com/reflection.io" target="_blank" class="{global.reflection.smooth}">
                                 <span class="icon-facebook" />
                             </a>
                         </div>
                         <div class="col-sm-2 {style.moveDownALittle}">
-                            <a href="http://www.linkedin.com/company/reflection-io-ltd" target="_blank">
+                            <a href="http://www.linkedin.com/company/reflection-io-ltd" target="_blank" class="{global.reflection.smooth}">
                                 <span class="icon-linkedin" />
                             </a>
                         </div>
