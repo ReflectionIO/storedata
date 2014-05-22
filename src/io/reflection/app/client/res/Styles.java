@@ -46,6 +46,8 @@ public interface Styles extends ClientBundle {
 		String linkedAccountMinus();
 		
 		String linkedAccountPlus();
+		
+		String smooth();
 	}
 
 	public static final Styles INSTANCE = GWT.create(Styles.class);

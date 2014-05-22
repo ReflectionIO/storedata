@@ -332,13 +332,13 @@ a:hover,a:focus,a:active {
 	background-color: #8e93a2;
 }
 
-.btn {
+.btn, .smooth {
 	/* Fade effect */
-	-o-transition: .5s;
-	-ms-transition: .5s;
-	-moz-transition: .5s;
-	-webkit-transition: .5s;
-	transition: .5s;
+	-o-transition: .4s;
+	-ms-transition: .4s;
+	-moz-transition: .4s;
+	-webkit-transition: .4s;
+	transition: .4s;
 }
 
 .btn-primary {

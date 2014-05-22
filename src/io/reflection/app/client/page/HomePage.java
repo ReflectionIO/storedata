@@ -11,11 +11,14 @@ import io.reflection.app.client.controller.NavigationController;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.OListElement;
+import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -39,18 +42,28 @@ public class HomePage extends Page {
 
 	interface HomePageUiBinder extends UiBinder<Widget, HomePage> {}
 
+	interface HomePageStyle extends CssResource {
+		String hide();
+	}
+
+	@UiField HomePageStyle style;
+
 	@UiField DivElement firstPage;
 	@UiField DivElement features;
 	@UiField TextBox name;
 	@UiField TextBox email;
 	@UiField TextArea message;
+
+	@UiField HeadingElement homeHeading;
+	@UiField ParagraphElement homeDescription;
+	@UiField InlineHyperlink requestInvite;
 	@UiField Anchor gotoFeatures;
+
 	@UiField OListElement carouselIndicators;
 	@UiField DivElement carouselContainer;
 	@UiField Anchor carouselRight;
 	@UiField Anchor carouselLeft;
 	private Timer scrollTimer;
-	@UiField InlineHyperlink requestInvite;
 
 	public HomePage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -60,6 +73,34 @@ public class HomePage extends Page {
 		message.getElement().setAttribute("placeholder", "Message");
 
 		requestInvite.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken("requestinvite"));
+
+		setupIntroSequence();
+	}
+
+	private void setupIntroSequence() {
+		homeHeading.removeClassName(style.hide());
+
+		(new Timer() {
+			@Override
+			public void run() {
+				homeDescription.removeClassName(style.hide());
+
+				(new Timer() {
+					@Override
+					public void run() {
+						requestInvite.getElement().removeClassName(style.hide());
+
+						(new Timer() {
+							@Override
+							public void run() {
+								gotoFeatures.getElement().removeClassName(style.hide());
+							}
+						}).schedule(500);
+					}
+				}).schedule(500);
+			}
+		}).schedule(600);
+
 	}
 
 	/*
