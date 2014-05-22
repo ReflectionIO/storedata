@@ -27,6 +27,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ScrollEvent;
 import com.google.gwt.user.client.Window.ScrollHandler;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
@@ -50,6 +51,7 @@ public class HomePage extends Page {
 
 	@UiField DivElement firstPage;
 	@UiField DivElement features;
+	@UiField DivElement contact;
 	@UiField TextBox name;
 	@UiField TextBox email;
 	@UiField TextArea message;
@@ -64,6 +66,11 @@ public class HomePage extends Page {
 	@UiField Anchor carouselRight;
 	@UiField Anchor carouselLeft;
 	private Timer scrollTimer;
+
+	@UiField Button workWithUs;
+	@UiField Button getInTouch;
+
+	private int destinationTop;
 
 	public HomePage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -171,43 +178,62 @@ public class HomePage extends Page {
 		NavigationController.get().getFooter().getElement().getStyle().clearHeight();
 	}
 
-	@UiHandler({ "gotoFeatures", "carouselLeft", "carouselRight" })
+	@UiHandler({ "gotoFeatures", "carouselLeft", "carouselRight", "workWithUs", "getInTouch" })
 	void onClickHandler(ClickEvent e) {
 		if (e.getSource() == gotoFeatures) {
 			if (scrollTimer == null) {
-				scrollTimer = new Timer() {
-
-					int distance = 0;
-
-					@Override
-					public void run() {
-						int top = Window.getScrollTop();
-						int featureTop = features.getAbsoluteTop() - 60;
-
-						if (top < featureTop) {
-							distance = (int) (((double) featureTop - (double) top) / 3.0);
-
-							if (distance < 4) {
-								distance = 4;
-							}
-
-							Window.scrollTo(0, top + distance);
-						} else {
-							Window.scrollTo(0, featureTop);
-							this.cancel();
-						}
-					}
-				};
+				createNewScrollTimer();
 			} else {
 				scrollTimer.cancel();
 			}
 
+			destinationTop = features.getAbsoluteTop() - 60;
 			scrollTimer.scheduleRepeating((int) (1000.0 / 30.0));
 		} else if (e.getSource() == carouselLeft) {
 
 		} else if (e.getSource() == carouselRight) {
 
+		} else if (e.getSource() == getInTouch || e.getSource() == workWithUs) {
+			if (scrollTimer == null) {
+				createNewScrollTimer();
+			} else {
+				scrollTimer.cancel();
+			}
+
+			destinationTop = contact.getAbsoluteTop();
+			scrollTimer.scheduleRepeating((int) (1000.0 / 30.0));
 		}
+	}
+
+	private void createNewScrollTimer() {
+		scrollTimer = new Timer() {
+
+			int distance = 0;
+
+			@Override
+			public void run() {
+				int top = Window.getScrollTop();
+
+				if (top < destinationTop) {
+					distance = (int) (((double) destinationTop - (double) top) / 3.0);
+
+					if (distance < 4) {
+						distance = 4;
+					}
+
+					Window.scrollTo(0, top + distance);
+
+					// top has not changed due scroll - if so we have probably hit the end of the page
+					int newTop = Window.getScrollTop();
+					if (newTop == top) {
+						destinationTop = top;
+					}
+				} else {
+					Window.scrollTo(0, destinationTop);
+					this.cancel();
+				}
+			}
+		};
 	}
 
 }
