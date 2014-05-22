@@ -180,6 +180,9 @@ public class RegisterForm extends Composite {
 		} else if (forenameValue.length() > 30) {
 			forenameError = "Too long (maximum 30 characters)";
 			validated = false;
+		} else if (!FormHelper.isTrimmed(forenameValue)) {
+			forenameError = "Whitespaces not allowed either before or after the string";
+			validated = false;
 		} else {
 			forenameError = null;
 			validated = validated && true;
@@ -193,6 +196,9 @@ public class RegisterForm extends Composite {
 		} else if (surnameValue.length() > 30) {
 			surnameError = "Too long (maximum 30 characters)";
 			validated = false;
+		} else if (!FormHelper.isTrimmed(surnameValue)) {
+			surnameError = "Whitespaces not allowed either before or after the string";
+			validated = false;
 		} else {
 			surnameError = null;
 			validated = validated && true;
@@ -205,6 +211,9 @@ public class RegisterForm extends Composite {
 			validated = false;
 		} else if (companyValue.length() > 255) {
 			companyError = "Too long (maximum 255 characters)";
+			validated = false;
+		} else if (!FormHelper.isTrimmed(companyValue)) {
+			companyError = "Whitespaces not allowed either before or after the string";
 			validated = false;
 		} else {
 			companyError = null;
@@ -239,6 +248,9 @@ public class RegisterForm extends Composite {
 				validated = false;
 			} else if (!passwordValue.equals(confirmPasswordValue)) {
 				passwordError = "Password and confirmation should match";
+				validated = false;
+			} else if (!FormHelper.isTrimmed(passwordValue)) {
+				passwordError = "Whitespaces not allowed either before or after the string";
 				validated = false;
 			} else {
 				passwordError = null;

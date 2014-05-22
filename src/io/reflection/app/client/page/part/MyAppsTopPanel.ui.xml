@@ -2,19 +2,6 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.user.datepicker.client"
     xmlns:p="urn:import:io.reflection.app.client.part">
     <ui:style>
-    .radioButtons {
-    	display: inline-block;
-    	margin-left: 4px;
-    }
-    
-    .radioButton {
-    	margin-left: 4px;
-    	font-size: 1.2em;
-    }
-    
-    .radioButton label {
-    	margin-left: 3px;
-    }
     
     .pageHeading {
     	margin-left: 30px;

@@ -20,7 +20,7 @@
 
             <c:CellTable ui:field="mUsers" styleName="table table-hover table-striped" />
 
-            <p:SimplePager ui:field="mPager" />
+            <p:SimplePager styleName="text-center" ui:field="mPager" />
         </div>
     </g:HTMLPanel>
 </ui:UiBinder> 

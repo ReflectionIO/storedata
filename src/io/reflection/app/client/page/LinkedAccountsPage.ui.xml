@@ -1,11 +1,8 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
-    xmlns:l="urn:import:io.reflection.app.client.part.linkaccount" xmlns:c="urn:import:com.google.gwt.user.cellview.client" xmlns:d="urn:import:com.google.gwt.dom.client">
+    xmlns:pp="urn:import:io.reflection.app.client.page.part" xmlns:l="urn:import:io.reflection.app.client.part.linkaccount" xmlns:c="urn:import:com.google.gwt.user.cellview.client"
+    xmlns:d="urn:import:com.google.gwt.dom.client">
     <ui:style>
-    .pageTitle {
-    	padding-bottom: 30px;
-    }
-    
     .toolbar_spacing {
     	padding-top: 10px;
     	padding-bottom: 10px;
@@ -20,57 +17,42 @@
     	width: 100%;
     }
     
-    .topPanel {
+    .backLink {
     	margin-top: 20px;
+    	margin-bottom: 20px;
+    	display: inline-block;
     }
     </ui:style>
 
 
     <g:HTMLPanel>
-        <div class="row">
+        <g:HTMLPanel styleName="row">
 
-            <div class="sidepanel col-md-2 well">
+            <pp:MyAccountSidePanel ui:field="myAccountSidePanel" />
 
-                <h3>My Apps</h3>
-
-                <h6 ui:field="mCreatorName" class="{style.pageTitle} text-muted">Creator</h6>
-                <ul class="nav nav-pills nav-stacked">
-                    <li>
-                        <g:InlineHyperlink ui:field="mMyAppsLink">Overview</g:InlineHyperlink>
-                    </li>
-                    <hr />
-                    <li class="active">
-                        <g:InlineHyperlink ui:field="mLinkedAccountsLink">Linked Accounts</g:InlineHyperlink>
-                    </li>
-                    <hr />
-                </ul>
-            </div>
-
-            <div class="col-md-10">
-                <g:HTMLPanel ui:field="linkedAccountsPanel">
-                    <g:HTMLPanel styleName="well well-sm well-title {style.topPanel}">
-                        <g:HTMLPanel styleName="pull-left">
-                            <h5>Linked Accounts</h5>
-                        </g:HTMLPanel>
+            <g:HTMLPanel styleName="col-md-10">
+                <g:HTMLPanel styleName="well well-sm well-title topPanel">
+                    <g:HTMLPanel styleName="pull-left">
+                        <h5>Linked Accounts</h5>
                     </g:HTMLPanel>
+                </g:HTMLPanel>
 
+                <g:HTMLPanel ui:field="linkedAccountsPanel">
                     <c:CellTable ui:field="linkedAccountsTable" styleName="table table-hover table-striped" />
                     <p:SimplePager ui:field="simplePager" styleName="text-center" visible="false" />
                     <div class="text-center">
-                        <g:Button ui:field="addLinkedAccount" styleName="btn btn-primary btn-lg text-center" />
+                        <g:Button ui:field="addLinkedAccount" styleName="btn btn-default btn-lg text-center" text="Link Another Account" />
                     </div>
                 </g:HTMLPanel>
 
                 <g:HTMLPanel ui:field="linkedAccountForm" visible="false">
-                    <g:HTMLPanel ui:field="mToolbar" styleName="btn-group {style.toolbar_spacing}">
-                        <g:InlineHyperlink styleName="btn btn-default" text="iOS/Mac" ui:field="mIosMacLink" />
-                        <g:InlineHyperlink styleName="btn btn-default disabled" text="Google Play" ui:field="mPlayLink" />
-                        <g:InlineHyperlink styleName="btn btn-default 
-                    disabled" text="Amazon" ui:field="mAmazonLink" />
-                        <g:InlineHyperlink styleName="btn btn-default disabled" text="Windows" ui:field="mWindowsPhoneLink" />
-                    </g:HTMLPanel>
-                    <g:FormPanel ui:field="mForm" visible="false">
-                        <g:HTMLPanel styleName="col-sm-offset-4 col-sm-4 well">
+
+                    <!-- <g:HTMLPanel ui:field="mToolbar" styleName="btn-group {style.toolbar_spacing}"> <g:InlineHyperlink styleName="btn btn-default" text="iOS/Mac" 
+                        ui:field="mIosMacLink" /> <g:InlineHyperlink styleName="btn btn-default disabled" text="Google Play" ui:field="mPlayLink" /> <g:InlineHyperlink styleName="btn btn-default 
+                        disabled" text="Amazon" ui:field="mAmazonLink" /> <g:InlineHyperlink styleName="btn btn-default disabled" text="Windows" ui:field="mWindowsPhoneLink" /> </g:HTMLPanel> -->
+                    <g:FormPanel ui:field="mForm" styleName="formEdit col-md-12" visible="false">
+                        <g:HTMLPanel>
+                            <g:InlineHyperlink ui:field="backLink" styleName="{style.backLink}">&#8592; Back to linked accounts</g:InlineHyperlink>
                             <l:IosMacLinkAccountForm ui:field="mIosMacForm" />
                             <g:Button ui:field="mLinkAccount" styleName="btn btn-lg btn-primary btn-block" text="Link Account" />
                         </g:HTMLPanel>
@@ -78,8 +60,8 @@
                 </g:HTMLPanel>
                 <p:CircleProgressBar visible="false" ui:field="loader" styleName="{style.loading}" />
 
-            </div>
-        </div>
+            </g:HTMLPanel>
+        </g:HTMLPanel>
 
 
     </g:HTMLPanel>

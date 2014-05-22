@@ -18,7 +18,6 @@ import io.reflection.app.client.handler.EnterPressedEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.part.linkaccount.IosMacLinkAccountForm;
 import io.reflection.app.client.part.linkaccount.LinkableAccountFields;
-import io.reflection.app.client.res.Images;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -48,14 +47,11 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 
 	@UiField Button mLinkAccount;
 
-	final String imageButtonLink = "<img style=\"vertical-align: 1px;\" src=\"" + Images.INSTANCE.buttonLinkedAccount().getSafeUri().asString() + "\"/>";
-
 	private LinkableAccountFields mLinkableAccount;
 
 	public LinkItunesPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		mLinkAccount.setHTML(mLinkAccount.getText() + "&nbsp;&nbsp;" + imageButtonLink);
 	}
 
 	/*

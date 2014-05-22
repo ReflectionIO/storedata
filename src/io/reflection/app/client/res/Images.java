@@ -54,9 +54,6 @@ public interface Images extends ClientBundle {
 	@Source("buttonarrowwhite.png")
 	ImageResource buttonArrowWhite();
 
-	@Source("buttonlinkedaccount.png")
-	ImageResource buttonLinkedAccount();
-
 	@Source("buttonlogin.png")
 	ImageResource buttonLogin();
 
@@ -86,5 +83,8 @@ public interface Images extends ClientBundle {
 
 	@Source("emailsent.png")
 	ImageResource emailSent();
+
+	@Source("searchplaceholder.jpg")
+	ImageResource searchPlaceholder();
 
 }
