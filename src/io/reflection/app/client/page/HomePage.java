@@ -8,6 +8,10 @@
 package io.reflection.app.client.page;
 
 import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.helper.AlertBoxHelper;
+import io.reflection.app.client.helper.FormHelper;
+import io.reflection.app.client.part.AlertBox;
+import io.reflection.app.client.part.AlertBox.AlertBoxType;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
@@ -18,6 +22,11 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -27,6 +36,8 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ScrollEvent;
 import com.google.gwt.user.client.Window.ScrollHandler;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
@@ -37,6 +48,8 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  */
 public class HomePage extends Page {
+
+	private final int DELTA = (int) (1000.0 / 30.0);
 
 	private static HomePageUiBinder uiBinder = GWT.create(HomePageUiBinder.class);
 
@@ -50,9 +63,33 @@ public class HomePage extends Page {
 
 	@UiField DivElement firstPage;
 	@UiField DivElement features;
+
+	@UiField Anchor revenueFeature;
+	@UiField Anchor leaderboardFeature;
+	@UiField Anchor modelFeature;
+	@UiField Anchor storesFeature;
+	@UiField Anchor searchFeature;
+	@UiField Anchor functionalFeature;
+
+	@UiField DivElement contact;
 	@UiField TextBox name;
+	@UiField HTMLPanel nameGroup;
+	@UiField HTMLPanel nameNote;
+	private String nameError;
+
 	@UiField TextBox email;
+	@UiField HTMLPanel emailGroup;
+	@UiField HTMLPanel emailNote;
+	private String emailError;
+
 	@UiField TextArea message;
+	@UiField HTMLPanel messageGroup;
+	@UiField HTMLPanel messageNote;
+	private String messageError;
+
+	@UiField Button submit;
+
+	@UiField AlertBox contactAlert;
 
 	@UiField HeadingElement homeHeading;
 	@UiField ParagraphElement homeDescription;
@@ -64,6 +101,11 @@ public class HomePage extends Page {
 	@UiField Anchor carouselRight;
 	@UiField Anchor carouselLeft;
 	private Timer scrollTimer;
+
+	@UiField Anchor workWithUs;
+	@UiField Anchor getInTouch;
+
+	private int destinationTop;
 
 	public HomePage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -171,43 +213,218 @@ public class HomePage extends Page {
 		NavigationController.get().getFooter().getElement().getStyle().clearHeight();
 	}
 
-	@UiHandler({ "gotoFeatures", "carouselLeft", "carouselRight" })
+	@UiHandler({ "gotoFeatures", "workWithUs", "getInTouch", "revenueFeature", "leaderboardFeature", "modelFeature", "storesFeature", "searchFeature",
+			"functionalFeature" })
 	void onClickHandler(ClickEvent e) {
-		if (e.getSource() == gotoFeatures) {
+		Object source = e.getSource();
+		if (source == gotoFeatures || source == revenueFeature || source == leaderboardFeature || source == modelFeature || source == storesFeature
+				|| source == searchFeature || source == functionalFeature) {
 			if (scrollTimer == null) {
-				scrollTimer = new Timer() {
-
-					int distance = 0;
-
-					@Override
-					public void run() {
-						int top = Window.getScrollTop();
-						int featureTop = features.getAbsoluteTop() - 60;
-
-						if (top < featureTop) {
-							distance = (int) (((double) featureTop - (double) top) / 3.0);
-
-							if (distance < 4) {
-								distance = 4;
-							}
-
-							Window.scrollTo(0, top + distance);
-						} else {
-							Window.scrollTo(0, featureTop);
-							this.cancel();
-						}
-					}
-				};
+				createNewScrollTimer();
 			} else {
 				scrollTimer.cancel();
 			}
 
-			scrollTimer.scheduleRepeating((int) (1000.0 / 30.0));
-		} else if (e.getSource() == carouselLeft) {
+			destinationTop = features.getAbsoluteTop() - 60;
+			scrollTimer.scheduleRepeating(DELTA);
+		} else if (source == getInTouch || source == workWithUs) {
+			if (scrollTimer == null) {
+				createNewScrollTimer();
+			} else {
+				scrollTimer.cancel();
+			}
 
-		} else if (e.getSource() == carouselRight) {
-
+			destinationTop = contact.getAbsoluteTop();
+			scrollTimer.scheduleRepeating(DELTA);
 		}
+	}
+
+	private void createNewScrollTimer() {
+		scrollTimer = new Timer() {
+
+			@Override
+			public void run() {
+				int top = Window.getScrollTop();
+
+				if (top != destinationTop) {
+					int distance = (int) (((double) destinationTop - (double) top) / 3.0);
+
+					if (Math.abs(distance) < 4) {
+						Window.scrollTo(0, destinationTop);
+					} else {
+						Window.scrollTo(0, top + distance);
+					}
+
+					// top has not changed due scroll - if so we have probably hit the end of the page
+					int newTop = Window.getScrollTop();
+					if (newTop == top) {
+						destinationTop = top;
+					}
+				} else {
+					Window.scrollTo(0, destinationTop);
+					this.cancel();
+				}
+			}
+		};
+	}
+
+	@UiHandler("submit")
+	void onSubmitClicked(ClickEvent e) {
+		contactAlert.setVisible(false);
+
+		if (validate()) {
+			clearErrors();
+
+			setEnabled(false);
+
+			RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, "/sendmail");
+			builder.setHeader("Content-type", "application/x-www-form-urlencoded");
+
+			StringBuilder sb = new StringBuilder();
+			sb.append("action=contact");
+
+			sb.append("&name=");
+			sb.append(name.getValue());
+
+			sb.append("&email=");
+			sb.append(email.getValue());
+
+			sb.append("&message=");
+			sb.append(message.getValue());
+
+			try {
+				AlertBoxHelper.configureAlert(contactAlert, AlertBoxType.InfoAlertBoxType, true, "Sending: ", "Sending message to Reflection.io...", false)
+						.setVisible(true);
+
+				/* Request response = */builder.sendRequest(sb.toString(), new RequestCallback() {
+
+					public void onError(Request request, Throwable exception) {
+						AlertBoxHelper.configureAlert(contactAlert, AlertBoxType.DangerAlertBoxType, false, "Error: ",
+								"An error occured while sending the message!", true).setVisible(true);
+
+						setEnabled(true);
+					}
+
+					public void onResponseReceived(Request request, Response response) {
+						if (response.getText() != null && response.getText().getBytes().length > 0 && response.getText().getBytes()[0] == 1) {
+							AlertBoxHelper.configureAlert(contactAlert, AlertBoxType.SuccessAlertBoxType, false, "Thanks: ", "We will get back to you soon.",
+									true).setVisible(true);
+
+							(new Timer() {
+								@Override
+								public void run() {
+									contactAlert.setVisible(false);
+								}
+							}).schedule(2000);
+
+							name.setValue("");
+							email.setValue("");
+							message.setValue("");
+						} else {
+							AlertBoxHelper.configureAlert(contactAlert, AlertBoxType.DangerAlertBoxType, false, "Error: ",
+									"An error occured while sending the message!", true).setVisible(true);
+						}
+
+						setEnabled(true);
+					}
+				});
+			} catch (RequestException re) {
+				AlertBoxHelper.configureAlert(contactAlert, AlertBoxType.DangerAlertBoxType, false, "Error: ", "An error occured while sending the message!",
+						true).setVisible(true);
+
+				setEnabled(true);
+			}
+
+		} else {
+			if (nameError != null) {
+				FormHelper.showNote(true, nameGroup, nameNote, nameError);
+			} else {
+				FormHelper.hideNote(nameGroup, nameNote);
+			}
+
+			if (emailError != null) {
+				FormHelper.showNote(true, emailGroup, emailNote, emailError);
+			} else {
+				FormHelper.hideNote(emailGroup, emailNote);
+			}
+
+			if (messageError != null) {
+				FormHelper.showNote(true, messageGroup, messageNote, messageError);
+			} else {
+				FormHelper.hideNote(messageGroup, messageNote);
+			}
+		}
+
+	}
+
+	private boolean validate() {
+		boolean validated = true;
+		// Retrieve fields to validate
+		String nameValue = name.getText();
+		String emailValue = email.getText();
+		String messageValue = message.getText();
+
+		// Check fields constraints
+		if (nameValue == null || nameValue.length() == 0) {
+			nameError = "Cannot be empty";
+			validated = false;
+		} else if (nameValue.length() < 2) {
+			nameError = "Too short (minimum 2 characters)";
+			validated = false;
+		} else if (nameValue.length() > 1000) {
+			nameError = "Too long (maximum 1000 characters)";
+			validated = false;
+		} else {
+			nameError = null;
+			validated = validated && true;
+		}
+
+		if (emailValue == null || emailValue.length() == 0) {
+			emailError = "Cannot be empty";
+			validated = false;
+		} else if (emailValue.length() < 6) {
+			emailError = "Too short (minimum 6 characters)";
+			validated = false;
+		} else if (emailValue.length() > 255) {
+			emailError = "Too long (maximum 255 characters)";
+			validated = false;
+		} else if (!FormHelper.isValidEmail(emailValue)) {
+			emailError = "Invalid email address";
+			validated = false;
+		} else {
+			emailError = null;
+			validated = validated && true;
+		}
+
+		if (messageValue == null || messageValue.length() == 0) {
+			messageError = "Cannot be empty";
+			validated = false;
+		} else if (messageValue.length() < 2) {
+			messageError = "(minimum 2 characters)";
+			validated = false;
+		} else if (messageValue.length() > 10000) {
+			messageError = "Too long (maximum 10000 characters)";
+			validated = false;
+		} else {
+			messageError = null;
+			validated = validated && true;
+		}
+
+		return validated;
+	}
+
+	public void setEnabled(boolean value) {
+		name.setEnabled(value);
+		email.setEnabled(value);
+		message.setEnabled(value);
+
+		submit.setEnabled(value);
+	}
+
+	private void clearErrors() {
+		FormHelper.hideNote(nameGroup, nameNote);
+		FormHelper.hideNote(emailGroup, emailNote);
+		FormHelper.hideNote(messageGroup, messageNote);
 	}
 
 }
