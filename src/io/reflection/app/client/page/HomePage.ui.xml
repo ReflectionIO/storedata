@@ -1,5 +1,5 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part">
 
     <ui:import field="io.reflection.app.client.page.PageType.RegisterPageType" />
     <ui:import field="io.reflection.app.client.page.PageType.HomePageType" />
@@ -454,9 +454,13 @@
                                 <g:HTMLPanel ui:field="messageNote" visible="false" styleName="noteDetail" />
                             </g:HTMLPanel>
 
+                            <g:Hidden ui:field="action" value="contact" name="action" />
+
                             <g:Button ui:field="submit" styleName="btn {style.btnHollow} {style.btnPurpleLBg} btn-block {style.moveDownALittle}">
                                 Submit
                             </g:Button>
+
+                            <p:AlertBox ui:field="contactAlert" visible="false" styleName="alert {style.moveDownALittle}" />
 
                         </g:HTMLPanel>
                     </g:FormPanel>

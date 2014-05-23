@@ -272,22 +272,22 @@ jQuery(document).ready(function() {
 	/*	Social
 	/*-----------------------------------------------------------------------------------*/
 	
-	/* Initalize Flickr Feed */
-	jQuery('#flickr').jflickrfeed({
-		limit: 12,
-		qstrings: {
-			id: '36587311@N08'
-		},
-		itemTemplate: '<div class="large-2 small-4 columns flickr-photo"><a href="{{image_b}}" target="_blank"><img src="{{image_m}}" alt="{{title}}" /></a></div>'
-	});
-	
-	/* Initalize Instagram Feed */
-	jQuery.fn.spectragram.accessData={accessToken:'2136707.12e2743.9576ae17af4e4ad4aebf6b72433c01fd',clientID:'12e27430fe054c72839c5f16f86177e1'};
-	
-	jQuery('#instagram').spectragram('getUserFeed',{
-	    query: 'alotofbradshaw',
-	    max: 12
-	});
+//	/* Initalize Flickr Feed */
+//	jQuery('#flickr').jflickrfeed({
+//		limit: 12,
+//		qstrings: {
+//			id: '36587311@N08'
+//		},
+//		itemTemplate: '<div class="large-2 small-4 columns flickr-photo"><a href="{{image_b}}" target="_blank"><img src="{{image_m}}" alt="{{title}}" /></a></div>'
+//	});
+//	
+//	/* Initalize Instagram Feed */
+//	jQuery.fn.spectragram.accessData={accessToken:'2136707.12e2743.9576ae17af4e4ad4aebf6b72433c01fd',clientID:'12e27430fe054c72839c5f16f86177e1'};
+//	
+//	jQuery('#instagram').spectragram('getUserFeed',{
+//	    query: 'alotofbradshaw',
+//	    max: 12
+//	});
 
 	
 	/* Click's on Social Feed Icon */	
