@@ -27,7 +27,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ScrollEvent;
 import com.google.gwt.user.client.Window.ScrollHandler;
 import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
@@ -38,6 +37,8 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  */
 public class HomePage extends Page {
+
+	private final int DELTA = (int) (1000.0 / 30.0);
 
 	private static HomePageUiBinder uiBinder = GWT.create(HomePageUiBinder.class);
 
@@ -51,6 +52,14 @@ public class HomePage extends Page {
 
 	@UiField DivElement firstPage;
 	@UiField DivElement features;
+
+	@UiField Anchor revenueFeature;
+	@UiField Anchor leaderboardFeature;
+	@UiField Anchor modelFeature;
+	@UiField Anchor storesFeature;
+	@UiField Anchor searchFeature;
+	@UiField Anchor functionalFeature;
+
 	@UiField DivElement contact;
 	@UiField TextBox name;
 	@UiField TextBox email;
@@ -67,8 +76,8 @@ public class HomePage extends Page {
 	@UiField Anchor carouselLeft;
 	private Timer scrollTimer;
 
-	@UiField Button workWithUs;
-	@UiField Button getInTouch;
+	@UiField Anchor workWithUs;
+	@UiField Anchor getInTouch;
 
 	private int destinationTop;
 
@@ -178,9 +187,12 @@ public class HomePage extends Page {
 		NavigationController.get().getFooter().getElement().getStyle().clearHeight();
 	}
 
-	@UiHandler({ "gotoFeatures", "carouselLeft", "carouselRight", "workWithUs", "getInTouch" })
+	@UiHandler({ "gotoFeatures", "workWithUs", "getInTouch", "revenueFeature", "leaderboardFeature", "modelFeature", "storesFeature", "searchFeature",
+			"functionalFeature" })
 	void onClickHandler(ClickEvent e) {
-		if (e.getSource() == gotoFeatures) {
+		Object source = e.getSource();
+		if (source == gotoFeatures || source == revenueFeature || source == leaderboardFeature || source == modelFeature || source == storesFeature
+				|| source == searchFeature || source == functionalFeature) {
 			if (scrollTimer == null) {
 				createNewScrollTimer();
 			} else {
@@ -188,12 +200,8 @@ public class HomePage extends Page {
 			}
 
 			destinationTop = features.getAbsoluteTop() - 60;
-			scrollTimer.scheduleRepeating((int) (1000.0 / 30.0));
-		} else if (e.getSource() == carouselLeft) {
-
-		} else if (e.getSource() == carouselRight) {
-
-		} else if (e.getSource() == getInTouch || e.getSource() == workWithUs) {
+			scrollTimer.scheduleRepeating(DELTA);
+		} else if (source == getInTouch || source == workWithUs) {
 			if (scrollTimer == null) {
 				createNewScrollTimer();
 			} else {
@@ -201,27 +209,25 @@ public class HomePage extends Page {
 			}
 
 			destinationTop = contact.getAbsoluteTop();
-			scrollTimer.scheduleRepeating((int) (1000.0 / 30.0));
+			scrollTimer.scheduleRepeating(DELTA);
 		}
 	}
 
 	private void createNewScrollTimer() {
 		scrollTimer = new Timer() {
 
-			int distance = 0;
-
 			@Override
 			public void run() {
 				int top = Window.getScrollTop();
 
-				if (top < destinationTop) {
-					distance = (int) (((double) destinationTop - (double) top) / 3.0);
+				if (top != destinationTop) {
+					int distance = (int) (((double) destinationTop - (double) top) / 3.0);
 
-					if (distance < 4) {
-						distance = 4;
+					if (Math.abs(distance) < 4) {
+						Window.scrollTo(0, destinationTop);
+					} else {
+						Window.scrollTo(0, top + distance);
 					}
-
-					Window.scrollTo(0, top + distance);
 
 					// top has not changed due scroll - if so we have probably hit the end of the page
 					int newTop = Window.getScrollTop();
