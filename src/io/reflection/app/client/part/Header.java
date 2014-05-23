@@ -471,11 +471,15 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	}
 
 	private void addForum() {
-		show(forumItem);
+		if (SessionController.get().isLoggedInUserAdmin()) {
+			navList.appendChild(forumItem);
+		} else {
+			removeForum();
+		}
 	}
 
 	private void removeForum() {
-		hide(forumItem);
+		forumItem.removeFromParent();
 	}
 
 	private void addMyAccount(User user) {
@@ -505,7 +509,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@Override
 	public void gotUserPowers(User user, List<Role> roles, List<Permission> permissions) {
 		addAdmin();
-
+		addForum();
 		addUpgrade();
 
 	}
