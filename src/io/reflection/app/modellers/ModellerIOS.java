@@ -11,6 +11,7 @@ import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
+import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.FeedFetchStatusType;
@@ -22,6 +23,7 @@ import io.reflection.app.renjin.RenjinRModellerBase;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
+import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.modelrun.ModelRunServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
@@ -246,13 +248,18 @@ public class ModellerIOS extends RenjinRModellerBase implements Modeller {
 			typesQueryPart = "`type` IN ('" + StringUtils.join(listTypes, "','") + "')";
 		}
 
+		Store s = new Store();
+		s.a3Code = STORE;
+
+		Category category = CategoryServiceProvider.provide().getAllCategory(s);
+
 		Connection connection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
 		String query = String.format(
 				"SELECT `r`.`itemid`, `r`.`position`,`r`.`grossingposition`, `r`.`price`, `s`.`usesiap` FROM `rank` AS `r` JOIN `item` AS `i`"
 						+ " ON `i`.`internalid`=`r`.`itemid` LEFT JOIN `sup_application_iap` AS `s` ON `s`.`internalid`=`i`.`internalid`"
-						+ " WHERE `r`.`country`='%s' AND `r`.`source`='%s' AND %s AND `r`.%s AND `date`<FROM_UNIXTIME(%d)" + " ORDER BY `date` DESC", country,
-				store, priceQuery, typesQueryPart, date.getTime() / 1000);
+						+ " WHERE `r`.`country`='%s' AND `r`.`category`=%d AND `r`.`source`='%s' AND %s AND `r`.%s AND `date`<FROM_UNIXTIME(%d)"
+						+ " ORDER BY `date` DESC", country, category.id.longValue(), store, priceQuery, typesQueryPart, date.getTime() / 1000);
 
 		StringVector.Builder itemIdBuilder = StringVector.newBuilder();
 		IntArrayVector.Builder topPositionBuilder = new IntArrayVector.Builder();
@@ -299,8 +306,8 @@ public class ModellerIOS extends RenjinRModellerBase implements Modeller {
 	}
 
 	private void runModelParts() throws ScriptException {
-		// runs the stage 1
-		InputStream stream = ModellerIOS.class.getResourceAsStream("../models/r/stage1.R");
+		// runs the model
+		InputStream stream = ModellerIOS.class.getResourceAsStream("../models/r/model.R");
 
 		InputStreamReader reader = new InputStreamReader(stream);
 		mEngine.eval(reader);
@@ -309,54 +316,14 @@ public class ModellerIOS extends RenjinRModellerBase implements Modeller {
 			LOG.log(GaeLevel.DEBUG, "ag: " + ((Vector) mEngine.get("ag")).asReal());
 			LOG.log(GaeLevel.DEBUG, "ap: " + ((Vector) mEngine.get("ap")).asReal());
 			LOG.log(GaeLevel.DEBUG, "b.ratio: " + ((Vector) mEngine.get("b.ratio")).asReal());
-		}
 
-		// runs stage 2
-		stream = ModellerIOS.class.getResourceAsStream("../models/r/stage2.R");
-		reader = new InputStreamReader(stream);
-		mEngine.eval(reader);
-
-		if (LOG.isLoggable(GaeLevel.DEBUG)) {
 			LOG.log(GaeLevel.DEBUG, "Dt: " + ((Vector) mEngine.get("Dt")).asReal());
 			LOG.log(GaeLevel.DEBUG, "bp: " + ((Vector) mEngine.get("bp")).asReal());
 			LOG.log(GaeLevel.DEBUG, "bg: " + ((Vector) mEngine.get("bg")).asReal());
 		}
 
-		// simulated data
-
-		if (LOG.isLoggable(GaeLevel.TRACE)) {
-			LOG.log(GaeLevel.TRACE, "my.labelled.df: " + mEngine.get("my.labelled.df"));
-		}
-
-		// // LOGGER.info("my.labelled.df: " + ((ListVector) engine.get("my.labelled.df")).toString());
-		// ListVector df = (ListVector) engine.get("my.labelled.df");
-		// StringArrayVector itemIds = (StringArrayVector) df.getElementAsSEXP(0);
-		// IntArrayVector topRanks = (IntArrayVector) df.getElementAsSEXP(1);
-		// IntArrayVector grossingRanks = (IntArrayVector) df.getElementAsSEXP(2);
-		// DoubleArrayVector prices = (DoubleArrayVector) df.getElementAsSEXP(3);
-		// DoubleArrayVector usesIaps = (DoubleArrayVector) df.getElementAsSEXP(4);
-		// SEXP totalDownloads = df.getElementAsSEXP(5);
-		// int count = totalDownloads.length();
-		// StringBuffer buffer = new StringBuffer();
-		// for (int i = 0; i < count; i++) {
-		// buffer.append(itemIds.getElementAsString(i));
-		// buffer.append(",");
-		// buffer.append(topRanks.getElementAsInt(i));
-		// buffer.append(",");
-		// buffer.append(grossingRanks.getElementAsInt(i));
-		// buffer.append(",");
-		// buffer.append(prices.getElementAsDouble(i));
-		// buffer.append(",");
-		// buffer.append(usesIaps.getElementAsLogical(i));
-		// buffer.append(",");
-		// buffer.append(totalDownloads.getElementAsSEXP(i).asReal());
-		// buffer.append("\r\n");
-		// }
-		// // ListVector itemIds = (ListVector) df.getElementAsObject(0);
-		// LOGGER.info("my.labelled.df: " + buffer);
-
-		// runs stage 3
-		stream = ModellerIOS.class.getResourceAsStream("../models/r/stage3.R");
+		// runs the model with Iap data
+		stream = ModellerIOS.class.getResourceAsStream("../models/r/modelIap.R");
 		reader = new InputStreamReader(stream);
 		mEngine.eval(reader);
 
@@ -367,8 +334,6 @@ public class ModellerIOS extends RenjinRModellerBase implements Modeller {
 			LOG.log(GaeLevel.DEBUG, "th: " + ((Vector) mEngine.get("th")).asReal());
 			LOG.log(GaeLevel.DEBUG, "bf: " + ((Vector) mEngine.get("bf")).asReal());
 		}
-
-		// String code = UUID.randomUUID().toString();
 	}
 
 	/*
