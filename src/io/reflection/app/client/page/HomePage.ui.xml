@@ -2,6 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
     <ui:import field="io.reflection.app.client.page.PageType.RegisterPageType" />
+    <ui:import field="io.reflection.app.client.page.PageType.HomePageType" />
 
     <ui:with field="global" type="io.reflection.app.client.res.Styles" />
 
@@ -27,18 +28,19 @@
     	display: none;
     }
     
+    .home h1,.home h2 {
+    	font-size: 34px;
+    	line-height: 40px;
+    	font-weight: bolder;
+    	color: #484a50;
+    }
+    
     .custom {
     	background: #272833 url("../images/header_bg.png") fixed repeat-x bottom;
     }
     
     .custom h1,.custom h2 {
     	color: white;
-    }
-    
-    .home h1,.home h2 {
-    	font-size: 34px;
-    	line-height: 40px;
-    	font-weight: bolder;
     }
     
     .custom .text-muted {
@@ -56,7 +58,7 @@
     	opacity: .5;
     }
     
-    .arrow a:hover {
+    .arrow a:hover,.arrow a:focus {
     	opacity: 1;
     }
     
@@ -78,11 +80,11 @@
     	opacity: .5;
     }
     
-    .feature:hover img,.feature:hover img {
+    .feature:hover img,.feature:focus img {
     	opacity: 1;
     }
     
-    .feature:hover h3,.feature:active h3 {
+    .feature:hover h3,.feature:focus h3 {
     	color: #7e72c9;
     }
     
@@ -111,12 +113,12 @@
     	left: 25%;
     }
     
-    .carousel-control:hover .icon-angle-left, .carousel-control:focus .icon-angle-left {
-	   left: 15%;
+    .carousel-control:hover .icon-angle-left,.carousel-control:focus .icon-angle-left {
+    	left: 15%;
     }
     
-    .carousel-control:hover .icon-angle-right, .carousel-control:foucs .icon-angle-right{
-       left: 35%;
+    .carousel-control:hover .icon-angle-right,.carousel-control:foucs .icon-angle-right {
+    	left: 35%;
     }
     
     .carousel-indicators li {
@@ -216,12 +218,12 @@
     	border-color: white;
     }
     
-    .btnPurple:hover,.btnPurpleLBg:hover {
+    .btnPurple:hover,.btnPurpleLBg:hover,.btnPurple:focus,.btnPurpleLBg:focus {
     	color: white;
     	background-color: #7e72c9;
     }
     
-    .btnPurpleInv:hover {
+    .btnPurpleInv:hover,.btnPurpleInv:focus {
     	color: #7e72c9;
     	background-color: white;
     }
@@ -243,7 +245,7 @@
                         <g:InlineHyperlink ui:field="requestInvite" targetHistoryToken="{RegisterPageType.asTargetHistoryToken}" text="Request Invite"
                             styleName="btn {style.btnPurple} {style.btnHollow} {style.moveDownALittle} {style.hide}" />
                         <div class="{style.arrow} {style.moveDown}">
-                            <g:Anchor ui:field="gotoFeatures" styleName="{global.reflection.smooth} {style.hide}">
+                            <g:Anchor ui:field="gotoFeatures" styleName="{global.reflection.smooth} {style.hide}" href="{HomePageType.asHref.asString}">
                                 <spans class="icon-angle-down" />
                             </g:Anchor>
                         </div>
@@ -258,19 +260,19 @@
                 </div>
 
                 <div class="row {style.moveDown}">
-                    <div class="col-sm-4 {global.reflection.smooth} {style.feature}">
+                    <g:Anchor ui:field="revenueFeature" styleName="col-sm-4 {global.reflection.smooth} {style.feature}" href="{HomePageType.asHref.asString}">
                         <img src="../images/statistical_128.png" alt="Revenue feature" />
                         <h3>Revenue &amp; Download Data</h3>
                         <p class="text-muted">Analyse historical revenue, download and rank information for any app to base your business decisions on.</p>
-                    </div>
+                    </g:Anchor>
 
-                    <div class="col-sm-4 {global.reflection.smooth} {style.feature}">
+                    <g:Anchor ui:field="leaderboardFeature" styleName="col-sm-4 {global.reflection.smooth} {style.feature}" href="{HomePageType.asHref.asString}">
                         <img src="../images/global_128.png" alt="Leaderboard feature" />
                         <h3>Global App Leaderboard</h3>
                         <p class="text-muted">View revenue and download data for the Top 400 apps in any country, in any category, at any time.</p>
-                    </div>
+                    </g:Anchor>
 
-                    <div class="col-sm-4 {global.reflection.smooth} {style.feature}">
+                    <g:Anchor ui:field="modelFeature" styleName="col-sm-4 {global.reflection.smooth} {style.feature}" href="{HomePageType.asHref.asString}">
                         <img src="../images/historical_128.png" alt="Model feature" />
                         <h3>Powerful Statistical Model</h3>
                         <p class="text-muted">We have created an algorithm that statistically paints a very accurate picture of the stores based on public rank and
@@ -278,30 +280,30 @@
                             download and
                             revenue
                             data.</p>
-                    </div>
+                    </g:Anchor>
 
                 </div>
                 <div class="row">
-                    <div class="col-sm-4 col-sm {global.reflection.smooth} {style.feature}">
+                    <g:Anchor ui:field="storesFeature" styleName="col-sm-4 col-sm {global.reflection.smooth} {style.feature}" href="{HomePageType.asHref.asString}">
                         <img src="../images/stores_128.png" alt="Stores feature" />
                         <h3>Supported Stores</h3>
                         <p class="text-muted">We will launch with the iPhone and iPad stores and will then work hard to add all
                             major stores starting with Google Play.</p>
-                    </div>
+                    </g:Anchor>
 
-                    <div class="col-sm-4 {global.reflection.smooth} {style.feature}">
+                    <g:Anchor ui:field="searchFeature" styleName="col-sm-4 {global.reflection.smooth} {style.feature}" href="{HomePageType.asHref.asString}">
                         <img src="../images/search_128.png" alt="Search feature" />
                         <h3>Comprehensive Search</h3>
                         <p class="text-muted">Search for any app to see its revenue, download and rank history for any
                             country and date range.</p>
-                    </div>
+                    </g:Anchor>
 
-                    <div class="col-sm-4 {global.reflection.smooth} {style.feature}">
+                    <g:Anchor ui:field="functionalFeature" styleName="col-sm-4 {global.reflection.smooth} {style.feature}" href="{HomePageType.asHref.asString}">
                         <img src="../images/beautiful_128.png" alt="Functional feature" />
                         <h3>Beautiful &amp; Functional</h3>
                         <p class="text-muted">Access meaningful market intelligence wherever you are on any device through our
                             easy to use web app.</p>
-                    </div>
+                    </g:Anchor>
                 </div>
             </div>
 
@@ -375,7 +377,8 @@
                             get
                             things done, we’d like to hear from you.</p>
 
-                        <g:Button ui:field="workWithUs" styleName="{style.moveDownALittle} btn {style.btnPurpleLBg} {style.btnHollow}" text="Work With Us" />
+                        <g:Anchor ui:field="workWithUs" styleName="{style.moveDownALittle} btn {style.btnPurpleLBg} {style.btnHollow}" href="{HomePageType.asHref.asString}">Work With
+                            Us</g:Anchor>
 
                     </div>
                     <ul class="col-sm-6 {style.people}">
@@ -413,7 +416,7 @@
                 <div class="row {style.insideData}">
                     <h2>Need data for reports or articles? Reference us and get it for free.</h2>
 
-                    <g:Button ui:field="getInTouch" styleName="btn {style.btnHollow} {style.btnPurpleInv} {style.moveDownALittle}" text="Get In Touch" />
+                    <g:Anchor ui:field="getInTouch" styleName="btn {style.btnHollow} {style.btnPurpleInv} {style.moveDownALittle}" href="{HomePageType.asHref.asString}">Get In Touch</g:Anchor>
                 </div>
             </div>
             <div class="{style.centered} container {style.moveDown}" ui:field="contact">
