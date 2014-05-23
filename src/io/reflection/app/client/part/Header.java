@@ -89,8 +89,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@UiField InlineHyperlink usersLink;
 	@UiField LIElement usersItem;
 
-	@UiField LIElement upgradeAccountItem;
-	@UiField InlineHyperlink upgradeAccountLink;
+	// @UiField LIElement upgradeAccountItem;
+	// @UiField InlineHyperlink upgradeAccountLink;
 
 	@UiField InlineHyperlink feedBrowserLink;
 	@UiField LIElement feedBrowserItem;
@@ -161,7 +161,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		removeAdmin();
 		// removeFeatureRequest();
 		// addRegister();
-		removeUpgrade();
+		// removeUpgrade();
 		removeSearch();
 		removeUserSignOut();
 		addLogin();
@@ -229,7 +229,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			items.add(permissionsItem);
 			items.add(emailTemplatesItem);
 			items.add(itemsItem);
-			items.add(upgradeAccountItem);
+			// items.add(upgradeAccountItem);
 			items.add(loginItem);
 			// items.add(mRegisterItem);
 		}
@@ -307,8 +307,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			highlight(adminDropdown, rolesItem);
 		} else if (PageType.PermissionsPageType.equals(current.getPage())) {
 			highlight(adminDropdown, permissionsItem);
-		} else if (PageType.UpgradePageType.equals(current.getPage())) {
-			highlight(upgradeAccountItem);
+			// } else if (PageType.UpgradePageType.equals(current.getPage())) {
+			// highlight(upgradeAccountItem);
 		} else if (PageType.EmailTemplatesPageType.equals(current.getPage())) {
 			highlight(adminDropdown, emailTemplatesItem);
 		} else if (PageType.ItemsPageType.equals(current.getPage())) {
@@ -386,7 +386,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		removeAdmin();
 		// removeFeatureRequest();
 		// addRegister();
-		removeUpgrade();
+		// removeUpgrade();
 		removeSearch();
 		removeUserSignOut();
 		addLogin();
@@ -510,7 +510,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	public void gotUserPowers(User user, List<Role> roles, List<Permission> permissions) {
 		addAdmin();
 		addForum();
-		addUpgrade();
+		// addUpgrade();
 
 	}
 
@@ -524,17 +524,17 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		removeAdmin();
 	}
 
-	public void removeUpgrade() {
-		upgradeAccountItem.removeFromParent();
-	}
-
-	public void addUpgrade() {
-		if (SessionController.get().getLoggedInUser().roles == null || SessionController.get().getLoggedInUser().roles.size() == 0) {
-			navList.appendChild(upgradeAccountItem);
-		} else {
-			removeUpgrade();
-		}
-	}
+	// public void removeUpgrade() {
+	// upgradeAccountItem.removeFromParent();
+	// }
+	//
+	// public void addUpgrade() {
+	// if (SessionController.get().getLoggedInUser().roles == null || SessionController.get().getLoggedInUser().roles.size() == 0) {
+	// navList.appendChild(upgradeAccountItem);
+	// } else {
+	// removeUpgrade();
+	// }
+	// }
 
 	/*
 	 * (non-Javadoc)
