@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.UListElement;
@@ -61,8 +61,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	interface HeaderUiBinder extends UiBinder<Widget, Header> {}
 
 	private static final String ACTIVE_STYLE_NAME = "active";
-	private static final String SHOW_INLINE_STYLE_NAME = "inline";
-	private static final String HIDE_STYLE_NAME = "hide";
+	// private static final String SHOW_INLINE_STYLE_NAME = "inline";
+	// private static final String HIDE_STYLE_NAME = "hide";
 
 	@UiField UListElement navList;
 
@@ -94,6 +94,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 	@UiField InlineHyperlink feedBrowserLink;
 	@UiField LIElement feedBrowserItem;
+
+	@UiField UListElement login;
 
 	@UiField InlineHyperlink loginLink;
 	@UiField LIElement loginItem;
@@ -132,6 +134,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@UiField InlineHTML userName;
 	// @UiField Anchor featureRequestButton;
 	// @UiField UListElement mFeatureRequest;
+
+	@UiField DivElement collapsableNavBar;
 
 	private List<LIElement> items;
 	private List<LIElement> highlightedItems = new ArrayList<LIElement>();
@@ -247,20 +251,6 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		}
 	}
 
-	private void show(Element element) {
-		if (element != null) {
-			element.removeClassName(HIDE_STYLE_NAME);
-			element.addClassName(SHOW_INLINE_STYLE_NAME);
-		}
-	}
-
-	private void hide(Element element) {
-		if (element != null) {
-			element.removeClassName(SHOW_INLINE_STYLE_NAME);
-			element.addClassName(HIDE_STYLE_NAME);
-		}
-	}
-
 	private void highlight(LIElement... item) {
 		for (LIElement c : highlightedItems) {
 			deactivate(c);
@@ -356,15 +346,29 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@Override
 	public void userLoggedIn(User user, Session session) {
 
+		removeLeaderboard();
 		addLeaderboard();
+
+		removeMyAccount();
 		addMyAccount(user);
+
+		removeBlog();
 		addBlog();
+
+		removeForum();
 		addForum();
+
+		removeAdmin();
 		addAdmin();
 		// addFeatureRequest();
 		// removeRegister();
-		addSearch();
+
+		removeUserSignOut();
 		addUserSignOut(user);
+		
+		removeSearch();
+		addSearch();		
+
 		removeLogin();
 	}
 
@@ -397,11 +401,11 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	// }
 
 	private void addLogin() {
-		show(loginItem);
+		collapsableNavBar.appendChild(login);
 	}
 
 	private void removeLogin() {
-		hide(loginItem);
+		collapsableNavBar.removeChild(login);
 	}
 
 	// private void addRegister() {
@@ -437,37 +441,37 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	}
 
 	private void addSearch() {
-		show(search);
+		collapsableNavBar.appendChild(search);
 	}
 
 	private void removeSearch() {
-		hide(search);
+		search.removeFromParent();
 	}
 
 	private void addUserSignOut(User user) {
 		userName.setText(user.forename + "  " + user.surname);
-		show(userSignOut);
+		collapsableNavBar.appendChild(userSignOut);
 	}
 
 	private void removeUserSignOut() {
 		userName.setText("");
-		hide(userSignOut);
+		userSignOut.removeFromParent();
 	}
 
 	private void addLeaderboard() {
-		show(ranksItem);
+		navList.appendChild(ranksItem);
 	}
 
 	private void removeLeaderboard() {
-		hide(ranksItem);
+		ranksItem.removeFromParent();
 	}
 
 	private void addBlog() {
-		show(blogItem);
+		navList.appendChild(blogItem);
 	}
 
 	private void removeBlog() {
-		hide(blogItem);
+		blogItem.removeFromParent();
 	}
 
 	private void addForum() {
@@ -490,7 +494,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		personalDetailsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.ChangeDetailsPageType.toString(), user.id.toString()));
 		changePasswordLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.ChangePasswordPageType.toString(), user.id.toString()));
 
-		myAccountList.appendChild(myAccountDropdown);
+		navList.appendChild(myAccountList);
 	}
 
 	private void removeAdmin() {
@@ -498,7 +502,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	}
 
 	private void removeMyAccount() {
-		myAccountDropdown.removeFromParent();
+		myAccountList.removeFromParent();
 	}
 
 	/*
