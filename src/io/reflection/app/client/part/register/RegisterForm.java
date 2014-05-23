@@ -256,14 +256,14 @@ public class RegisterForm extends Composite {
 				passwordError = null;
 				validated = validated && true;
 			}
-		}
 
-		if (termAndCond.getValue() == Boolean.FALSE) {
-			termAndCondError = "Must accept terms and conditions";
-			validated = false;
-		} else {
-			termAndCondError = null;
-			validated = validated && true;
+			if (termAndCond.getValue() == Boolean.FALSE) {
+				termAndCondError = "Must accept terms and conditions";
+				validated = false;
+			} else {
+				termAndCondError = null;
+				validated = validated && true;
+			}
 		}
 
 		return validated;
@@ -368,8 +368,10 @@ public class RegisterForm extends Composite {
 			resetForm();
 			focusFirstActiveField();
 			passwordGroup.setVisible(false);
+			termAndCondGroup.setVisible(false);
 		} else {
 			passwordGroup.setVisible(true);
+			termAndCondGroup.setVisible(true);
 		}
 	}
 
