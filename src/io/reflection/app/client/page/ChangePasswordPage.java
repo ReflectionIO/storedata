@@ -8,14 +8,19 @@
 package io.reflection.app.client.page;
 
 import io.reflection.app.client.controller.EventController;
+import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.UserController;
+import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.handler.user.UserPasswordChangedEventHandler;
 import io.reflection.app.client.helper.AlertBoxHelper;
 import io.reflection.app.client.helper.FormHelper;
+import io.reflection.app.client.page.part.MyAccountSidePanel;
 import io.reflection.app.client.part.AlertBox;
 import io.reflection.app.client.part.AlertBox.AlertBoxType;
+import io.reflection.app.datatypes.shared.User;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -29,7 +34,6 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.Error;
@@ -38,11 +42,15 @@ import com.willshex.gson.json.service.shared.Error;
  * @author billy1380
  * 
  */
-public class ChangePasswordPage extends Page implements UserPasswordChangedEventHandler {
+public class ChangePasswordPage extends Page implements NavigationEventHandler, UserPasswordChangedEventHandler {
 
 	private static ChangePasswordPageUiBinder uiBinder = GWT.create(ChangePasswordPageUiBinder.class);
 
 	interface ChangePasswordPageUiBinder extends UiBinder<Widget, ChangePasswordPage> {}
+
+	@UiField MyAccountSidePanel myAccountSidePanel;
+
+	private User user = SessionController.get().getLoggedInUser();
 
 	@UiField PasswordTextBox mPassword;
 	@UiField HTMLPanel mPasswordGroup;
@@ -59,9 +67,6 @@ public class ChangePasswordPage extends Page implements UserPasswordChangedEvent
 	private String mPasswordError = null;
 	private String mNewPasswordError = null;
 
-	@UiField InlineHyperlink mChangeDetailsLink;
-	@UiField InlineHyperlink mChangePasswordLink;
-
 	@UiField AlertBox mAlertBox;
 
 	@UiField FormPanel mForm;
@@ -71,18 +76,32 @@ public class ChangePasswordPage extends Page implements UserPasswordChangedEvent
 	public ChangePasswordPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		mPassword.getElement().setAttribute("placeholder", "Current Password");
-		mNewPassword.getElement().setAttribute("placeholder", "New Password");
-		mConfirmPassword.getElement().setAttribute("placeholder", "Confirm Password");
+		mPassword.getElement().setAttribute("placeholder", "Current password");
+		mNewPassword.getElement().setAttribute("placeholder", "New password");
+		mConfirmPassword.getElement().setAttribute("placeholder", "Confirm new password");
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
+	 */
+	@Override
+	protected void onAttach() {
+		super.onAttach();
+
+		register(EventController.get().addHandlerToSource(UserPasswordChangedEventHandler.TYPE, UserController.get(), this));
+		register(EventController.get().addHandlerToSource(UserPasswordChangedEventHandler.TYPE, SessionController.get(), this));
+		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 	}
 
 	@UiHandler("mChangePassword")
 	void onChangePassword(ClickEvent event) {
-		if (validate()) {
-			mForm.setVisible(false);
 
-			// TODO check if the password is correct
+		if (validate()) {
+			clearErrors();
+			mForm.setVisible(false);
 
 			AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Please wait", " - changing user password...", false)
 					.setVisible(true);
@@ -108,6 +127,11 @@ public class ChangePasswordPage extends Page implements UserPasswordChangedEvent
 		}
 	}
 
+	private void clearErrors() {
+		FormHelper.hideNote(mPasswordGroup, mPasswordNote);
+		FormHelper.hideNote(mNewPasswordGroup, mNewPasswordNote);
+	}
+
 	/**
 	 * Fire the change password button when pressing the 'enter' key on one of the change password form fields
 	 * 
@@ -123,13 +147,13 @@ public class ChangePasswordPage extends Page implements UserPasswordChangedEvent
 	@UiHandler({ "mPassword", "mNewPassword", "mConfirmPassword" })
 	void onFieldsModified(KeyUpEvent event) {
 		if (!SessionController.get().isLoggedInUserAdmin()) {
-			if (!mPassword.getValue().isEmpty() && !mNewPassword.getValue().isEmpty() && !mConfirmPassword.getValue().isEmpty()) {
+			if (!mPassword.getText().isEmpty() && !mNewPassword.getText().isEmpty() && !mConfirmPassword.getText().isEmpty()) {
 				mChangePassword.setEnabled(true);
 			} else {
 				mChangePassword.setEnabled(false);
 			}
 		} else {
-			if (!mNewPassword.getValue().isEmpty() && !mConfirmPassword.getValue().isEmpty()) {
+			if (!mNewPassword.getText().isEmpty() && !mConfirmPassword.getText().isEmpty()) {
 				mChangePassword.setEnabled(true);
 			} else {
 				mChangePassword.setEnabled(false);
@@ -161,11 +185,14 @@ public class ChangePasswordPage extends Page implements UserPasswordChangedEvent
 		} else if (!newPassword.equals(confirmPassword)) {
 			mNewPasswordError = "Password and confirmation should match";
 			validated = false;
+		} else if (!FormHelper.isTrimmed(newPassword)) {
+			mNewPasswordError = "Whitespaces not allowed either before or after the string";
+			validated = false;
 		} else {
 			mNewPasswordError = null;
 			validated = validated && true;
 		}
-		// Check password constraints for admin user
+		// Check password constraints for not admin user
 		if (!SessionController.get().isLoggedInUserAdmin()) {
 			if (password == null || password.length() == 0) {
 				mPasswordError = "Cannot be empty";
@@ -176,8 +203,8 @@ public class ChangePasswordPage extends Page implements UserPasswordChangedEvent
 			} else if (password.length() > 64) {
 				mPasswordError = "Too long (maximum 64 characters)";
 				validated = false;
-			} else if (!newPassword.equals(confirmPassword)) {
-				mNewPasswordError = "Password and confirmation should match";
+			} else if (!FormHelper.isTrimmed(password)) {
+				mPasswordError = "Whitespaces not allowed either before or after the string";
 				validated = false;
 			} else {
 				mPasswordError = null;
@@ -186,30 +213,6 @@ public class ChangePasswordPage extends Page implements UserPasswordChangedEvent
 		}
 
 		return validated;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
-	 */
-	@Override
-	protected void onAttach() {
-		super.onAttach();
-
-		register(EventController.get().addHandlerToSource(UserPasswordChangedEventHandler.TYPE, UserController.get(), this));
-		register(EventController.get().addHandlerToSource(UserPasswordChangedEventHandler.TYPE, SessionController.get(), this));
-		mChangeDetailsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("changedetails",
-				SessionController.get().getLoggedInUser().id.toString()));
-		mChangePasswordLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("changepassword",
-				SessionController.get().getLoggedInUser().id.toString()));
-		resetForm();
-		mChangePassword.setEnabled(false);
-		if (SessionController.get().isLoggedInUserAdmin()) {
-			mNewPassword.setFocus(true);
-		} else {
-			mPassword.setFocus(true);
-		}
 	}
 
 	/*
@@ -226,19 +229,23 @@ public class ChangePasswordPage extends Page implements UserPasswordChangedEvent
 				" - " + (SessionController.get().isLoggedInUserAdmin() ? "user with id " + userIdString : "you") + " can now login with new password.", false)
 				.setVisible(true);
 
-		Timer t = new Timer() {
+		mChangePassword.setEnabled(false);
+		resetForm();
+		
 
-			@Override
-			public void run() {
-				if (SessionController.get().isLoggedInUserAdmin()) {
+		if (SessionController.get().isLoggedInUserAdmin()) {
+			Timer t = new Timer() {
+
+				@Override
+				public void run() {
 					PageType.UsersPageType.show();
-				} else {
-					PageType.LoginPageType.show();
 				}
-			}
-		};
+			};
 
-		t.schedule(2000);
+			t.schedule(2000);
+		} else {
+			// TODO Inform user about success
+		}
 
 	}
 
@@ -252,7 +259,8 @@ public class ChangePasswordPage extends Page implements UserPasswordChangedEvent
 		AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.DangerAlertBoxType, false, "An error occured:", "(" + error.code + ") " + error.message, true)
 				.setVisible(true);
 
-		mForm.setVisible(true);
+		resetForm();
+
 	}
 
 	private void resetForm() {
@@ -270,6 +278,65 @@ public class ChangePasswordPage extends Page implements UserPasswordChangedEvent
 		mAlertBox.setVisible(false);
 
 		mForm.setVisible(true);
+
+		if (SessionController.get().isLoggedInUserAdmin()) {
+			mNewPassword.setFocus(true);
+		} else {
+			mPassword.setFocus(true);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
+	 * io.reflection.app.client.controller.NavigationController.Stack)
+	 */
+	@Override
+	public void navigationChanged(Stack previous, Stack current) {
+
+		myAccountSidePanel.setChangePasswordLinkActive();
+
+		user = SessionController.get().getLoggedInUser();
+
+		if (user != null) {
+			myAccountSidePanel.getLinkedAccountsLink().setTargetHistoryToken(
+					PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(), user.id.toString()));
+
+			myAccountSidePanel.getCreatorNameLink().setInnerText(user.company);
+
+			myAccountSidePanel.getPersonalDetailsLink().setTargetHistoryToken(
+					PageType.UsersPageType.asTargetHistoryToken(PageType.ChangeDetailsPageType.toString(), user.id.toString()));
+
+			myAccountSidePanel.getChangePasswordLink().setTargetHistoryToken(
+					PageType.UsersPageType.asTargetHistoryToken(PageType.ChangePasswordPageType.toString(), user.id.toString()));
+		}
+
+		String currentFilter = FilterController.get().asMyAppsFilterString();
+		if (currentFilter != null && currentFilter.length() > 0) {
+			if (user != null) {
+				myAccountSidePanel.getMyAppsLink().setTargetHistoryToken(
+						PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController.get()
+								.asMyAppsFilterString()));
+			}
+		}
+
+		resetForm();
+		mChangePassword.setEnabled(false);
+
+		if (user != null) {
+			myAccountSidePanel.getLinkedAccountsLink().setTargetHistoryToken(
+					PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(), user.id.toString()));
+
+			myAccountSidePanel.getCreatorNameLink().setInnerText(user.company);
+
+			myAccountSidePanel.getPersonalDetailsLink().setTargetHistoryToken(
+					PageType.UsersPageType.asTargetHistoryToken(PageType.ChangeDetailsPageType.toString(), user.id.toString()));
+
+			myAccountSidePanel.getChangePasswordLink().setTargetHistoryToken(
+					PageType.UsersPageType.asTargetHistoryToken(PageType.ChangePasswordPageType.toString(), user.id.toString()));
+		}
+
 	}
 
 }

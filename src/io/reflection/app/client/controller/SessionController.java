@@ -500,7 +500,10 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 					mSession.user.forename = input.user.forename;
 					mSession.user.surname = input.user.surname;
 					mSession.user.company = input.user.company;
-
+					mLoggedInUser.forename = mSession.user.forename;
+					mLoggedInUser.surname = mSession.user.surname;
+					mLoggedInUser.company = mSession.user.company;
+					mLoggedInUser.username = mSession.user.username;
 				}
 
 				EventController.get().fireEventFromSource(new ChangeUserDetailsEventHandler.ChangeUserDetailsSuccess(input, output), SessionController.this);

@@ -34,21 +34,17 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.UListElement;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.InlineHyperlink;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.Error;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -65,9 +61,23 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	interface HeaderUiBinder extends UiBinder<Widget, Header> {}
 
 	private static final String ACTIVE_STYLE_NAME = "active";
+	private static final String SHOW_INLINE_STYLE_NAME = "inline";
+	private static final String HIDE_STYLE_NAME = "hide";
 
-	@UiField InlineHyperlink mRanksLink;
-	@UiField LIElement mRanksItem;
+	@UiField UListElement navList;
+
+	@UiField InlineHyperlink ranksLink;
+	@UiField LIElement ranksItem;
+
+	@UiField UListElement myAccountList;
+	@UiField InlineHyperlink myAppsLink;
+	@UiField LIElement myAppsItem;
+	@UiField InlineHyperlink linkedAccountsLink;
+	@UiField LIElement linkedAccountsItem;
+	@UiField InlineHyperlink personalDetailsLink;
+	@UiField LIElement personalDetailsItem;
+	@UiField InlineHyperlink changePasswordLink;
+	@UiField LIElement changePasswordItem;
 
 	@UiField InlineHyperlink blogLink;
 	@UiField LIElement blogItem;
@@ -75,33 +85,27 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@UiField InlineHyperlink forumLink;
 	@UiField LIElement forumItem;
 
-	@UiField InlineHyperlink myAppsLink;
-	@UiField LIElement myAppsItem;
+	@UiField UListElement adminList;
+	@UiField InlineHyperlink usersLink;
+	@UiField LIElement usersItem;
 
-	@UiField LIElement mUpgradeAccountItem;
-	@UiField InlineHyperlink mUpgradeAccountLink;
+	@UiField LIElement upgradeAccountItem;
+	@UiField InlineHyperlink upgradeAccountLink;
 
-	@UiField UListElement mNavList;
-	@UiField UListElement mAdminList;
-	@UiField UListElement mAccountList;
+	@UiField InlineHyperlink feedBrowserLink;
+	@UiField LIElement feedBrowserItem;
 
-	@UiField InlineHyperlink mFeedBrowserLink;
-	@UiField LIElement mFeedBrowserItem;
+	@UiField InlineHyperlink loginLink;
+	@UiField LIElement loginItem;
 
-	@UiField InlineHyperlink mUsersLink;
-	@UiField LIElement mUsersItem;
+	// @UiField InlineHyperlink mRegisterLink;
+	// @UiField LIElement mRegisterItem;
 
-	@UiField InlineHyperlink mLoginLink;
-	@UiField LIElement mLoginItem;
+	@UiField InlineHyperlink rolesLink;
+	@UiField LIElement rolesItem;
 
-	@UiField InlineHyperlink mRegisterLink;
-	@UiField LIElement mRegisterItem;
-
-	@UiField InlineHyperlink mRolesLink;
-	@UiField LIElement mRolesItem;
-
-	@UiField InlineHyperlink mPermissionsLink;
-	@UiField LIElement mPermissionsItem;
+	@UiField InlineHyperlink permissionsLink;
+	@UiField LIElement permissionsItem;
 
 	@UiField InlineHyperlink emailTemplatesLink;
 	@UiField LIElement emailTemplatesItem;
@@ -109,34 +113,27 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@UiField InlineHyperlink itemsLink;
 	@UiField LIElement itemsItem;
 
-	@UiField SpanElement mTotalUsers;
+	@UiField InlineHyperlink blogAdminLink;
+	@UiField LIElement blogAdminItem;
 
-	@UiField LIElement mAccountDropdown;
-	@UiField Anchor mAccountButton;
+	@UiField SpanElement totalUsers;
 
-	@UiField LIElement mAdminDropdown;
-	@UiField Anchor mAdminButton;
+	@UiField LIElement myAccountDropdown;
+	@UiField Anchor accountButton;
 
-	@UiField InlineHyperlink mLogoutLink;
-	@UiField LIElement mLogoutItem;
+	@UiField LIElement adminDropdown;
+	@UiField Anchor adminButton;
 
-	@UiField InlineHyperlink myAppsAccountLink;
-	@UiField LIElement myAppsAccountItem;
+	// @UiField TextBox mQuery;
+	// @UiField InlineHyperlink mSearch;
+	@UiField UListElement search;
 
-	@UiField InlineHyperlink mAccountSettingsLink;
-	@UiField LIElement mAccountSettingsItem;
+	@UiField UListElement userSignOut;
+	@UiField InlineHTML userName;
+	// @UiField Anchor featureRequestButton;
+	// @UiField UListElement mFeatureRequest;
 
-	@UiField LIElement mLinkedAccountsItem;
-	@UiField InlineHyperlink mLinkedAccountsLink;
-
-	@UiField TextBox mQuery;
-	@UiField InlineHyperlink mSearch;
-
-	@UiField Anchor featureRequestButton;
-
-	@UiField UListElement mFeatureRequest;
-
-	private List<LIElement> mItems;
+	private List<LIElement> items;
 	private List<LIElement> highlightedItems = new ArrayList<LIElement>();
 
 	private HandlerRegistration filterChangedRegistration;
@@ -144,12 +141,10 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	public Header() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		mAdminButton.setHTML(mAdminButton.getText() + " <b class=\"caret\"></b>");
-		mLoginLink.setHTML(mLoginLink.getText() + " <b class=\"glyphicon glyphicon-log-in\"></b>");
-		mLoginLink.setTargetHistoryToken(PageType.LoginPageType.asTargetHistoryToken("requestinvite"));
+		loginLink.setTargetHistoryToken(PageType.LoginPageType.asTargetHistoryToken("requestinvite"));
 
-		mQuery.getElement().setAttribute("placeholder", "Search for any app");
-		mSearch.setHTML("<b class=\"glyphicon glyphicon-search\"></b>");
+		// mQuery.getElement().setAttribute("placeholder", "Search for any app");
+		// mSearch.setHTML("<b class=\"glyphicon glyphicon-search\"></b>");
 
 		EventController.get().addHandlerToSource(UsersEventHandler.TYPE, UserController.get(), this);
 		EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this);
@@ -159,13 +154,19 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 		createItemList();
 
-		removeUpgrade();
-		removeAccount();
-		removeAdmin();
-		removeMyApps();
+		removeLeaderboard();
+		removeMyAccount();
+		removeBlog();
 		removeForum();
+		removeAdmin();
+		// removeFeatureRequest();
+		// addRegister();
+		removeUpgrade();
+		removeSearch();
+		removeUserSignOut();
+		addLogin();
 
-		mRanksLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
+		ranksLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
 	}
 
 	/*
@@ -194,43 +195,43 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		super.onDetach();
 	}
 
-	/**
-	 * Fire the search button when pressing the 'enter' key on the search field, adding a associated token to the history
-	 * 
-	 * @param event
-	 */
-	@UiHandler("mQuery")
-	void onEnterKeyPressSearchField(KeyPressEvent event) {
-		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
-			History.newItem(mSearch.getTargetHistoryToken());
-		}
-	}
-
-	@UiHandler("mQuery")
-	void onQueryChanged(ChangeEvent event) {
-		mSearch.setTargetHistoryToken(PageType.SearchPageType.asTargetHistoryToken("query", mQuery.getText()));
-	}
+	// /**
+	// * Fire the search button when pressing the 'enter' key on the search field, adding a associated token to the history
+	// *
+	// * @param event
+	// */
+	// @UiHandler("mQuery")
+	// void onEnterKeyPressSearchField(KeyPressEvent event) {
+	// if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
+	// History.newItem(mSearch.getTargetHistoryToken());
+	// }
+	// }
+	//
+	// @UiHandler("mQuery")
+	// void onQueryChanged(ChangeEvent event) {
+	// mSearch.setTargetHistoryToken(PageType.SearchPageType.asTargetHistoryToken("query", mQuery.getText()));
+	// }
 
 	private void createItemList() {
-		if (mItems == null) {
-			mItems = new ArrayList<LIElement>();
+		if (items == null) {
+			items = new ArrayList<LIElement>();
 
-			mItems.add(mFeedBrowserItem);
-			mItems.add(mRanksItem);
-			mItems.add(myAppsItem);
-			mItems.add(mUsersItem);
-			mItems.add(mLoginItem);
-			mItems.add(mRegisterItem);
-			mItems.add(mRolesItem);
-			mItems.add(mPermissionsItem);
-			mItems.add(emailTemplatesItem);
-			mItems.add(itemsItem);
-			mItems.add(mAccountSettingsItem);
-			mItems.add(myAppsAccountItem);
-			mItems.add(mUpgradeAccountItem);
-			mItems.add(mLinkedAccountsItem);
-			mItems.add(blogItem);
-			mItems.add(forumItem);
+			items.add(ranksItem);
+			items.add(myAppsItem);
+			items.add(linkedAccountsItem);
+			items.add(personalDetailsItem);
+			items.add(changePasswordItem);
+			items.add(blogItem);
+			items.add(forumItem);
+			items.add(usersItem);
+			items.add(feedBrowserItem);
+			items.add(rolesItem);
+			items.add(permissionsItem);
+			items.add(emailTemplatesItem);
+			items.add(itemsItem);
+			items.add(upgradeAccountItem);
+			items.add(loginItem);
+			// items.add(mRegisterItem);
 		}
 	}
 
@@ -243,6 +244,20 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	private void deactivate(LIElement item) {
 		if (item != null) {
 			item.removeClassName(ACTIVE_STYLE_NAME);
+		}
+	}
+
+	private void show(Element element) {
+		if (element != null) {
+			element.removeClassName(HIDE_STYLE_NAME);
+			element.addClassName(SHOW_INLINE_STYLE_NAME);
+		}
+	}
+
+	private void hide(Element element) {
+		if (element != null) {
+			element.removeClassName(SHOW_INLINE_STYLE_NAME);
+			element.addClassName(HIDE_STYLE_NAME);
 		}
 	}
 
@@ -269,35 +284,42 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
 		if (PageType.RanksPageType.equals(current.getPage())) {
-			highlight(mRanksItem);
-		} else if (PageType.FeedBrowserPageType.equals(current.getPage())) {
-			highlight(mFeedBrowserItem);
+			highlight(ranksItem);
 		} else if (PageType.UsersPageType.equals(current.getPage())) {
 			if (current.getAction() == null) {
-				highlight(mUsersItem);
+				highlight(adminDropdown, usersItem);
 			} else if (PageType.MyAppsPageType.equals(current.getAction())) {
-				highlight(myAppsAccountItem, myAppsItem);
+				highlight(myAccountDropdown, myAppsItem);
 			} else if (PageType.LinkedAccountsPageType.equals(current.getAction())) {
-				highlight(mLinkedAccountsItem);
+				highlight(myAccountDropdown, linkedAccountsItem);
 			} else if (PageType.ChangeDetailsPageType.equals(current.getAction())) {
-				highlight(mAccountSettingsItem);
+				highlight(myAccountDropdown, personalDetailsItem);
+			} else if (PageType.ChangePasswordPageType.equals(current.getAction())) {
+				highlight(myAccountDropdown, changePasswordItem);
 			}
 		} else if (PageType.LoginPageType.equals(current.getPage())) {
-			highlight(mLoginItem);
-		} else if (PageType.RegisterPageType.equals(current.getPage())) {
-			highlight(mRegisterItem);
+			highlight(loginItem);
+			// } else if (PageType.RegisterPageType.equals(current.getPage())) {
+			// highlight(mRegisterItem);
+		} else if (PageType.FeedBrowserPageType.equals(current.getPage())) {
+			highlight(adminDropdown, feedBrowserItem);
 		} else if (PageType.RolesPageType.equals(current.getPage())) {
-			highlight(mRolesItem);
+			highlight(adminDropdown, rolesItem);
 		} else if (PageType.PermissionsPageType.equals(current.getPage())) {
-			highlight(mPermissionsItem);
+			highlight(adminDropdown, permissionsItem);
 		} else if (PageType.UpgradePageType.equals(current.getPage())) {
-			highlight(mUpgradeAccountItem);
+			highlight(upgradeAccountItem);
 		} else if (PageType.EmailTemplatesPageType.equals(current.getPage())) {
-			highlight(emailTemplatesItem);
+			highlight(adminDropdown, emailTemplatesItem);
 		} else if (PageType.ItemsPageType.equals(current.getPage())) {
-			highlight(itemsItem);
+			highlight(adminDropdown, itemsItem);
+		} else if (PageType.BlogAdminPageType.equals(current.getPage())) {
+			highlight(adminDropdown, blogAdminItem);
 		} else if (PageType.BlogPostsPageType.equals(current.getPage()) || PageType.BlogPostPageType.equals(current.getPage())) {
 			highlight(blogItem);
+		} else if (PageType.ForumPageType.equals(current.getPage()) || PageType.ForumThreadPageType.equals(current.getPage())
+				|| PageType.ForumTopicPageType.equals(current.getPage())) {
+			highlight(forumItem);
 		} else {
 			highlight();
 		}
@@ -320,8 +342,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	 */
 	@Override
 	public void receivedUsersCount(Long count) {
-		if (mTotalUsers != null) {
-			mTotalUsers.setInnerText(count.toString());
+		if (totalUsers != null) {
+			totalUsers.setInnerText(count.toString());
 		}
 
 	}
@@ -334,27 +356,21 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@Override
 	public void userLoggedIn(User user, Session session) {
 
-		removeLogin();
-
-		// removeRegister();
-
-		addAdmin();
-
-		addAccount(user);
-
 		addLeaderboard();
-
+		addMyAccount(user);
+		addBlog();
 		addForum();
-
-		addFeatureRequest();
+		addAdmin();
+		// addFeatureRequest();
+		// removeRegister();
+		addSearch();
+		addUserSignOut(user);
+		removeLogin();
 	}
 
-	/**
-	 * 
-	 */
-	private void addFeatureRequest() {
-		mFeatureRequest.setAttribute("style", "display: inline");
-	}
+	// private void addFeatureRequest() {
+	// mFeatureRequest.setAttribute("style", "display: inline");
+	// }
 
 	/*
 	 * (non-Javadoc)
@@ -363,40 +379,29 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	 */
 	@Override
 	public void userLoggedOut() {
-		removeAdmin();
-
-		removeAccount();
-
-		// addRegister();
-
-		addLogin();
-
-		removeUpgrade();
-
-		removeMyApps();
-
 		removeLeaderboard();
-
+		removeMyAccount();
+		removeBlog();
 		removeForum();
-
-		removeFeatureRequest();
-
+		removeAdmin();
+		// removeFeatureRequest();
+		// addRegister();
+		removeUpgrade();
+		removeSearch();
+		removeUserSignOut();
+		addLogin();
 	}
 
-	/**
-	 * 
-	 */
-	private void removeFeatureRequest() {
-		mFeatureRequest.setAttribute("style", "display: none");
-
-	}
+	// private void removeFeatureRequest() {
+	// mFeatureRequest.setAttribute("style", "display: none");
+	// }
 
 	private void addLogin() {
-		mAccountList.appendChild(mLoginItem);
+		show(loginItem);
 	}
 
 	private void removeLogin() {
-		mLoginItem.removeFromParent();
+		hide(loginItem);
 	}
 
 	// private void addRegister() {
@@ -420,51 +425,76 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	private void addAdmin() {
 		if (SessionController.get().isLoggedInUserAdmin()) {
 			if (UserController.get().getUsersCount() >= 0) {
-				mTotalUsers.setInnerText(Long.toString(UserController.get().getUsersCount()));
+				totalUsers.setInnerText(Long.toString(UserController.get().getUsersCount()));
 			} else {
 				UserController.get().fetchUsersCount();
 			}
 
-			mNavList.getParentElement().appendChild(mAdminList);
+			navList.getParentElement().appendChild(adminList);
 		} else {
 			removeAdmin();
 		}
 	}
 
+	private void addSearch() {
+		show(search);
+	}
+
+	private void removeSearch() {
+		hide(search);
+	}
+
+	private void addUserSignOut(User user) {
+		userName.setText(user.forename + "  " + user.surname);
+		show(userSignOut);
+	}
+
+	private void removeUserSignOut() {
+		userName.setText("");
+		hide(userSignOut);
+	}
+
 	private void addLeaderboard() {
-		mRanksItem.setAttribute("style", "display: inline");
+		show(ranksItem);
 	}
 
 	private void removeLeaderboard() {
-		mRanksItem.setAttribute("style", "display: none");
+		hide(ranksItem);
+	}
+
+	private void addBlog() {
+		show(blogItem);
+	}
+
+	private void removeBlog() {
+		hide(blogItem);
 	}
 
 	private void addForum() {
-		forumItem.setAttribute("style", "display: inline");
+		show(forumItem);
 	}
 
 	private void removeForum() {
-		forumItem.setAttribute("style", "display: none");
+		hide(forumItem);
 	}
 
-	private void addAccount(User user) {
+	private void addMyAccount(User user) {
 
-		mAccountSettingsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.ChangeDetailsPageType.toString(), user.id.toString()));
 		myAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController
 				.get().asMyAppsFilterString()));
-		myAppsAccountLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(),
-				FilterController.get().asMyAppsFilterString()));
-		mLinkedAccountsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(), user.id.toString()));
+		linkedAccountsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(), user.id.toString()));
+		personalDetailsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.ChangeDetailsPageType.toString(), user.id.toString()));
+		changePasswordLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.ChangePasswordPageType.toString(), user.id.toString()));
 
-		mAccountList.appendChild(mAccountDropdown);
+		myAccountList.appendChild(myAccountDropdown);
 	}
 
 	private void removeAdmin() {
-		mAdminList.removeFromParent();
+		adminList.removeFromParent();
 	}
 
-	private void removeAccount() {
-		mAccountDropdown.removeFromParent();
+	private void removeMyAccount() {
+		myAccountDropdown.removeFromParent();
 	}
 
 	/*
@@ -478,7 +508,6 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 		addUpgrade();
 
-		addMyApps();
 	}
 
 	/*
@@ -492,23 +521,15 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	}
 
 	public void removeUpgrade() {
-		mUpgradeAccountItem.removeFromParent();
+		upgradeAccountItem.removeFromParent();
 	}
 
 	public void addUpgrade() {
 		if (SessionController.get().getLoggedInUser().roles == null || SessionController.get().getLoggedInUser().roles.size() == 0) {
-			mNavList.appendChild(mUpgradeAccountItem);
+			navList.appendChild(upgradeAccountItem);
 		} else {
 			removeUpgrade();
 		}
-	}
-
-	public void removeMyApps() {
-		myAppsItem.removeFromParent();
-	}
-
-	public void addMyApps() {
-		mNavList.appendChild(myAppsItem);
 	}
 
 	/*
@@ -520,7 +541,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@Override
 	public void changeUserDetailsSuccess(ChangeUserDetailsRequest input, ChangeUserDetailsResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			addAccount(SessionController.get().getLoggedInUser());
+			addUserSignOut(SessionController.get().getLoggedInUser());
 		}
 	}
 
@@ -540,11 +561,9 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	 */
 	@Override
 	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
-		mRanksLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
+		ranksLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
 		User user = SessionController.get().getLoggedInUser();
 		if (user != null) {
-			myAppsAccountLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(),
-					FilterController.get().asMyAppsFilterString()));
 			myAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(),
 					FilterController.get().asMyAppsFilterString()));
 		}
@@ -557,11 +576,9 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	 */
 	@Override
 	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
-		mRanksLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
+		ranksLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
 		User user = SessionController.get().getLoggedInUser();
 		if (user != null) {
-			myAppsAccountLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(),
-					FilterController.get().asMyAppsFilterString()));
 			myAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(),
 					FilterController.get().asMyAppsFilterString()));
 		}

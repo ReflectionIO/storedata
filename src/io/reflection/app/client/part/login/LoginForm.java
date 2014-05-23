@@ -153,6 +153,9 @@ public class LoginForm extends Composite {
 		} else if (password.length() > 64) {
 			mPasswordError = "Too long (maximum 64 characters)";
 			validated = false;
+		} else if (!FormHelper.isTrimmed(password)) {
+			mPasswordError = "Whitespaces not allowed either before or after the string";
+			validated = false;
 		} else {
 			mPasswordError = null;
 			validated = validated && true;
