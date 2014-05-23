@@ -62,7 +62,7 @@
             </a>
         </div>
 
-        <div class="collapse navbar-collapse">
+        <div class="collapse navbar-collapse" ui:field="collapsableNavBar">
 
             <ul class="nav navbar-nav" ui:field="navList">
                 <li ui:field="ranksItem">
@@ -168,7 +168,6 @@
                 </li>
             </ul>
 
-
             <!-- User name and Sign Out -->
             <ul class="nav navbar-nav navbar-right" ui:field="userSignOut">
                 <li>
@@ -187,10 +186,6 @@
                     <g:Image resource="{res.searchPlaceholder}" styleName="navbar-text {style.searchBox}" />
                 </li>
             </ul>
-
-
-
-
 
             <!-- Feature Request <ul class="nav navbar-nav navbar-right" style="display: none;" ui:field="mFeatureRequest"> <li class="dropdown"> <g:Anchor styleName="dropdown-toggle" 
                 ui:field="featureRequestButton"> <i class="glyphicon glyphicon-comment" style="margin-right: 10px"></i> Feature Requests </g:Anchor> <ul class="dropdown-menu"> <li 
