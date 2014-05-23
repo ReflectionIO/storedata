@@ -24,29 +24,29 @@
     }
     
     /*
-                    @external btn, form-control;
-                    .searchBox .btn {
-                    	border-radius: 0 4px 4px 0;
-                    	background-color: #080808;
-                    	color: white;
-                    	border-color: #080808;
-                    }
-                    
-                    .searchBox .form-control {
-                    	border-radius: 4px 0 0 4px;
-                    	background-color: #080808;
-                    	color: white;
-                    	border-color: #080808;
-                    }
-                    
-                    .searchBox .form-control:focus {
-                    	border-color: #6D69C5;
-                    }
-                    
-                    .searchBox span {
-                    	float: left;
-                    }
-                    */
+                        @external btn, form-control;
+                        .searchBox .btn {
+                        	border-radius: 0 4px 4px 0;
+                        	background-color: #080808;
+                        	color: white;
+                        	border-color: #080808;
+                        }
+                        
+                        .searchBox .form-control {
+                        	border-radius: 4px 0 0 4px;
+                        	background-color: #080808;
+                        	color: white;
+                        	border-color: #080808;
+                        }
+                        
+                        .searchBox .form-control:focus {
+                        	border-color: #6D69C5;
+                        }
+                        
+                        .searchBox span {
+                        	float: left;
+                        }
+                        */
     </ui:style>
     <g:HTMLPanel ui:field="pnlHeader" styleName="header navbar navbar-inverse navbar-fixed-top">
 
@@ -114,9 +114,8 @@
                     <g:InlineHyperlink ui:field="forumLink" targetHistoryToken="{ForumPageType.asTargetHistoryToken}">Forum</g:InlineHyperlink>
                 </li>
 
-                <li ui:field="upgradeAccountItem">
-                    <g:InlineHyperlink targetHistoryToken="{UpgradePageType.asTargetHistoryToken}" ui:field="upgradeAccountLink" text="Pricing" />
-                </li>
+                <!-- <li ui:field="upgradeAccountItem"> <g:InlineHyperlink targetHistoryToken="{UpgradePageType.asTargetHistoryToken}" ui:field="upgradeAccountLink" 
+                    text="Pricing" /> </li> -->
             </ul>
 
             <!-- Admin panel -->
