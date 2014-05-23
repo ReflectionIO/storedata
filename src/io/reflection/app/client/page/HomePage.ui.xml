@@ -117,7 +117,7 @@
     	left: 15%;
     }
     
-    .carousel-control:hover .icon-angle-right,.carousel-control:foucs .icon-angle-right {
+    .carousel-control:hover .icon-angle-right,.carousel-control:focus .icon-angle-right {
     	left: 35%;
     }
     
