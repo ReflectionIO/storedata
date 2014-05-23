@@ -48,15 +48,4 @@
 		<nature>org.eclipse.wst.common.project.facet.core.nature</nature>
 		<nature>com.google.gwt.eclipse.core.gwtNature</nature>
 	</natures>
-	<filteredResources>
-		<filter>
-			<id>1400766060633</id>
-			<name></name>
-			<type>10</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-true-false-sdk</arguments>
-			</matcher>
-		</filter>
-	</filteredResources>
 </projectDescription>
