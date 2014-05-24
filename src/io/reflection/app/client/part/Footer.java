@@ -7,36 +7,27 @@
 //
 package io.reflection.app.client.part;
 
-import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
-import io.reflection.app.client.controller.EventController;
-import io.reflection.app.client.controller.FilterController;
-import io.reflection.app.client.controller.FilterController.Filter;
-import io.reflection.app.client.handler.FilterEventHandler;
-import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.res.Styles;
 
 import java.util.Date;
-import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FocusPanel;
-import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author billy1380
  * 
  */
-public class Footer extends Composite implements FilterEventHandler {
+public class Footer extends Composite /* implements FilterEventHandler */{
 
 	private static FooterUiBinder uiBinder = GWT.create(FooterUiBinder.class);
 
@@ -45,10 +36,12 @@ public class Footer extends Composite implements FilterEventHandler {
 	@UiField FocusPanel footer;
 	@UiField SpanElement mYear;
 	@UiField Anchor mArrow;
-	@UiField InlineHyperlink ranks;
+	// @UiField InlineHyperlink ranks;
 
 	private boolean open;
-	private HandlerRegistration filterChangedRegistration;
+//	private HandlerRegistration filterChangedRegistration;
+
+	private final int FOOTER_HIDDEN_BOTTOM = -40;
 
 	@SuppressWarnings("deprecation")
 	public Footer() {
@@ -57,11 +50,11 @@ public class Footer extends Composite implements FilterEventHandler {
 		Styles.INSTANCE.reflection().ensureInjected();
 
 		open = false;
-		footer.getElement().getStyle().setBottom(-125, Unit.PX);
+		footer.getElement().getStyle().setBottom(FOOTER_HIDDEN_BOTTOM, Unit.PX);
 
 		mYear.setInnerHTML(Integer.toString(1900 + (new Date()).getYear()));
 
-		ranks.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
+		// ranks.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
 	}
 
 	/*
@@ -73,7 +66,7 @@ public class Footer extends Composite implements FilterEventHandler {
 	protected void onAttach() {
 		super.onAttach();
 
-		filterChangedRegistration = EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this);
+		// filterChangedRegistration = EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this);
 	}
 
 	/*
@@ -84,9 +77,9 @@ public class Footer extends Composite implements FilterEventHandler {
 	@Override
 	protected void onDetach() {
 
-		if (filterChangedRegistration != null) {
-			filterChangedRegistration.removeHandler();
-		}
+//		if (filterChangedRegistration != null) {
+//			filterChangedRegistration.removeHandler();
+//		}
 
 		super.onDetach();
 	}
@@ -95,7 +88,7 @@ public class Footer extends Composite implements FilterEventHandler {
 	void onClickFooter(ClickEvent event) {
 		if (open) {
 			mArrow.setStyleName(Styles.INSTANCE.reflection().footerUpArrow());
-			footer.getElement().getStyle().setBottom(-125, Unit.PX);
+			footer.getElement().getStyle().setBottom(FOOTER_HIDDEN_BOTTOM, Unit.PX);
 		} else {
 			mArrow.setStyleName(Styles.INSTANCE.reflection().footerDownArrow());
 			footer.getElement().getStyle().setBottom(0, Unit.PX);
@@ -103,24 +96,25 @@ public class Footer extends Composite implements FilterEventHandler {
 		open = !open;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamChanged(java.lang.String, java.lang.Object, java.lang.Object)
-	 */
-	@Override
-	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
-		ranks.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamsChanged(io.reflection.app.client.controller.FilterController.Filter, java.util.Map)
-	 */
-	@Override
-	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
-		ranks.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
-	}
+	// /*
+	// * (non-Javadoc)
+	// *
+	// * @see io.reflection.app.client.handler.FilterEventHandler#filterParamChanged(java.lang.String, java.lang.Object, java.lang.Object)
+	// */
+	// @Override
+	// public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
+	// ranks.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
+	// }
+	//
+	// /*
+	// * (non-Javadoc)
+	// *
+	// * @see io.reflection.app.client.handler.FilterEventHandler#filterParamsChanged(io.reflection.app.client.controller.FilterController.Filter,
+	// java.util.Map)
+	// */
+	// @Override
+	// public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
+	// ranks.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
+	// }
 
 }
