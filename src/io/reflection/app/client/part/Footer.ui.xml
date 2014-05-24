@@ -4,24 +4,18 @@
     <ui:import field="io.reflection.app.client.page.PageType.TermsPageType" />
     <ui:import field="io.reflection.app.client.page.PageType.PolicyPageType" />
 
-    <ui:with field='styles' type='io.reflection.app.client.res.Styles' />
+    <ui:with field='global' type='io.reflection.app.client.res.Styles' />
 
     <ui:style>
     .footer {
     	position: fixed;
     	width: 100%;
-    	height: 165px;
+    	height: 80px;
     	margin-top: 40px;
     	padding-left: 25px;
     	padding-right: 25px;
     	border-top: 1px solid #d9dce0;
     	background-color: #ffffff;
-    	/* Slide effect */
-    	-o-transition: .3s;
-    	-ms-transition: .3s;
-    	-moz-transition: .3s;
-    	-webkit-transition: .3s;
-    	transition: .3s;
     	z-index: 16;
     	outline: 0;
     }
@@ -32,7 +26,6 @@
     }
     
     .downPanel {
-    	height: 125px;
     	text-align: center;
     }
     
@@ -58,14 +51,14 @@
     </ui:style>
 
 
-    <g:FocusPanel styleName="{style.footer}" ui:field="footer">
+    <g:FocusPanel styleName="{style.footer} {global.reflection.smooth}" ui:field="footer">
         <g:HTMLPanel>
             <g:HTMLPanel styleName="{style.upPanel}">
                 <div style="float: left;width:20px;">
-                    <span class="{styles.reflection.footerLogo}"></span>
+                    <span class="{global.reflection.footerLogo}"></span>
                 </div>
                 <div style="margin:0 auto;width:20px;">
-                    <g:Anchor ui:field="mArrow" styleName="{styles.reflection.footerUpArrow} {style.arrow}" />
+                    <g:Anchor ui:field="mArrow" styleName="{global.reflection.footerUpArrow} {style.arrow}" />
                 </div>
                 <div style="margin-top:-18px; float:right; width:290px;">
                     <span style="display: block; font-size: 13px; color: #63656a;">
@@ -78,7 +71,7 @@
 
             <g:HTMLPanel styleName="{style.downPanel}">
 
-                <div style="width: 100%; padding-top:20px; padding-bottom: 40px;">
+                <!-- <div style="width: 100%; padding-top:20px; padding-bottom: 40px;">
                     <g:InlineHyperlink ui:field="ranks">Leaderboard</g:InlineHyperlink>
 
                     <g:InlineHyperlink targetHistoryToken="{TermsPageType.asTargetHistoryToken}" styleName="{style.sideMargin}">Terms and
@@ -86,17 +79,17 @@
 
                     <g:InlineHyperlink targetHistoryToken="{PolicyPageType.asTargetHistoryToken}">Privacy
                         Policy</g:InlineHyperlink>
-                </div>
+                </div> -->
 
                 <div style="width: 100%;">
                     <a href="https://www.facebook.com/reflection.io" target="_blank">
-                        <span class="{styles.reflection.footerFacebook}"></span>
+                        <span class="{global.reflection.footerFacebook}"></span>
                     </a>
                     <a href="http://www.linkedin.com/company/reflection-io-ltd" target="_blank" class="{style.sideMargin}">
-                        <span class="{styles.reflection.footerLinkedin}"></span>
+                        <span class="{global.reflection.footerLinkedin}"></span>
                     </a>
                     <a href="https://twitter.com/reflectionio" target="_blank">
-                        <span class="{styles.reflection.footerTwitter}"></span>
+                        <span class="{global.reflection.footerTwitter}"></span>
                     </a>
 
                 </div>
