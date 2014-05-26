@@ -31,6 +31,7 @@ import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.page.part.MyAccountSidePanel;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.CircleProgressBar;
+import io.reflection.app.client.part.ConfirmationDialog;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.part.linkaccount.IosMacLinkAccountForm;
 import io.reflection.app.client.part.linkaccount.LinkableAccountFields;
@@ -117,6 +118,8 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 	private LinkableAccountFields mLinkableAccount;
 
+	private ConfirmationDialog confirmationDialog;
+
 	public LinkedAccountsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
@@ -127,7 +130,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		linkedAccountsTable.setEmptyTableWidget(new HTMLPanel("No linked accounts found!"));
 		LinkedAccountController.get().addDataDisplay(linkedAccountsTable);
 		simplePager.setDisplay(linkedAccountsTable);
-
+		confirmationDialog = new ConfirmationDialog("Delete linked account", "Are you sure you want to remove this linked account?");
 	}
 
 	/*
@@ -362,8 +365,11 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 			mIosMacForm.setVendorNumber(propertiesJson.get("vendors").getAsString());
 
 		} else if (isValidDeleteStack(actionParameter, typeParameter)) {
-			loader.setVisible(true);
-			LinkedAccountController.get().deleteLinkedAccount(LinkedAccountController.get().getLinkedAccount(Long.valueOf(typeParameter)));
+			confirmationDialog.center(); // bug because called on navigation
+
+			// loader.setVisible(true);
+			// LinkedAccountController.get().deleteLinkedAccount(LinkedAccountController.get().getLinkedAccount(Long.valueOf(typeParameter)));
+
 		} else {
 			linkedAccountForm.setVisible(false);
 			linkedAccountsPanel.setVisible(true);
