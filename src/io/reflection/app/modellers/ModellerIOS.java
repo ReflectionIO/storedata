@@ -92,7 +92,7 @@ public class ModellerIOS extends RenjinRModellerBase implements Modeller {
 			options.param("country", country);
 			options.param("type", type);
 			options.param("code", code.toString());
-			
+
 			options.header("Host", backendServerName);
 
 			try {
@@ -260,8 +260,6 @@ public class ModellerIOS extends RenjinRModellerBase implements Modeller {
 
 		Category category = CategoryServiceProvider.provide().getAllCategory(s);
 
-		Connection connection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
-
 		String query = String.format(
 				"SELECT `r`.`itemid`, `r`.`position`,`r`.`grossingposition`, `r`.`price`, `s`.`usesiap` FROM `rank` AS `r` JOIN `item` AS `i`"
 						+ " ON `i`.`internalid`=`r`.`itemid` LEFT JOIN `sup_application_iap` AS `s` ON `s`.`internalid`=`i`.`internalid`"
@@ -275,6 +273,8 @@ public class ModellerIOS extends RenjinRModellerBase implements Modeller {
 		LogicalArrayVector.Builder usesIapBuilder = new LogicalArrayVector.Builder();
 
 		int i = 0;
+
+		Connection connection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
 		try {
 
