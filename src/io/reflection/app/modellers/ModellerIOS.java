@@ -64,6 +64,7 @@ import com.spacehopperstudios.utility.StringUtils;
  * @author billy1380
  * 
  */
+@SuppressWarnings("deprecation")
 public class ModellerIOS extends RenjinRModellerBase implements Modeller {
 
 	private static final Logger LOG = Logger.getLogger(ModellerIOS.class.getName());
