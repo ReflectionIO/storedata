@@ -162,6 +162,14 @@ public interface IUserService extends IService {
 	public DataAccount addDataAccount(User user, DataSource datasource, String username, String password, String properties) throws DataAccessException;
 
 	/**
+	 * 
+	 * @param dataAccount
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public DataAccount restoreDataAccount(DataAccount dataAccount) throws DataAccessException;
+
+	/**
 	 * @param pager
 	 * @return
 	 * @throws DataAccessException
@@ -198,12 +206,31 @@ public interface IUserService extends IService {
 	public User getActionCodeUser(String code) throws DataAccessException;
 
 	/**
+	 * 
 	 * @param user
 	 * @param dataAccount
 	 * @return
 	 * @throws DataAccessException
 	 */
 	public Boolean hasDataAccount(User user, DataAccount dataAccount) throws DataAccessException;
+
+	/**
+	 * 
+	 * @param user
+	 * @param dataAccount
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public Boolean hasDeletedDataAccount(User user, DataAccount dataAccount) throws DataAccessException;
+
+	/**
+	 * 
+	 * @param user
+	 * @param username
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public DataAccount getDeletedDataAccount(User user, String username) throws DataAccessException;
 
 	/**
 	 * 

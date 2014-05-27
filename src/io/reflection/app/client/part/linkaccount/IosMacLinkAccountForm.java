@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.part.linkaccount;
 
+import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.handler.EnterPressedEventHandler;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.page.PageType;
@@ -116,6 +117,9 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 			validated = false;
 		} else if (username.length() > 255) {
 			mAccountUsernameError = "Too long";
+			validated = false;
+		} else if (LinkedAccountController.get().hasLinkedAccount(username)) {
+			mAccountUsernameError = "Linked account already exists";
 			validated = false;
 		} else {
 			mAccountUsernameError = null;

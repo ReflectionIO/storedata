@@ -76,6 +76,37 @@ final class DataAccountService implements IDataAccountService {
 		return dataAccount;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getDeletedDataAccount(java.lang.Long)
+	 */
+	@Override
+	public DataAccount getDeletedDataAccount(Long id) throws DataAccessException {
+		DataAccount deletedDataAccount = null;
+
+		IDatabaseService databaseService = DatabaseServiceProvider.provide();
+		Connection dataAccountConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
+
+		String getDataAccountQuery = String
+				.format("SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` FROM `dataaccount` WHERE `deleted`='y' AND `id`='%d' LIMIT 1",
+						key(), id.longValue());
+
+		try {
+			dataAccountConnection.connect();
+			dataAccountConnection.executeQuery(getDataAccountQuery);
+
+			if (dataAccountConnection.fetchNextRow()) {
+				deletedDataAccount = toDataAccount(dataAccountConnection);
+			}
+		} finally {
+			if (dataAccountConnection != null) {
+				dataAccountConnection.disconnect();
+			}
+		}
+		return deletedDataAccount;
+	}
+
 	/**
 	 * To dataAccount
 	 * 
@@ -226,6 +257,38 @@ final class DataAccountService implements IDataAccountService {
 		}
 
 		return updDataAccount;
+	}
+
+	@Override
+	public DataAccount restoreDataAccount(DataAccount dataAccount) throws DataAccessException {
+
+		DataAccount restoredDataAccount = null;
+
+		final String updDataAccountQuery = String
+				.format("UPDATE `dataaccount` SET `username`='%s', `created`=NOW(), `password`=AES_ENCRYPT('%s',UNHEX('%s')), `properties`='%s', `deleted`='n' WHERE `id`='%d' AND `deleted`='y'",
+						addslashes(dataAccount.username), addslashes(dataAccount.password), key(), addslashes(dataAccount.properties),
+						dataAccount.id.longValue());
+
+		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
+
+		try {
+			dataAccountConnection.connect();
+			dataAccountConnection.executeQuery(updDataAccountQuery);
+
+			if (dataAccountConnection.getAffectedRowCount() > 0) {
+				restoredDataAccount = getDataAccount(dataAccount.id);
+			}
+		} finally {
+			if (dataAccountConnection != null) {
+				dataAccountConnection.disconnect();
+			}
+		}
+
+		if (restoredDataAccount != null) {
+			enqueue(restoredDataAccount, 30, false);
+		}
+
+		return restoredDataAccount;
 	}
 
 	@Override

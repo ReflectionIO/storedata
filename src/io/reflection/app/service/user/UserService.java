@@ -752,6 +752,40 @@ final class UserService implements IUserService {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see io.reflection.app.service.user.IUserService#restoreDataAccount(io.reflection.app.datatypes.shared.User,
+	 * io.reflection.app.datatypes.shared.DataSource, java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public DataAccount restoreDataAccount(DataAccount dataAccount) throws DataAccessException {
+		DataAccount restoredDataAccount = DataAccountServiceProvider.provide().restoreDataAccount(dataAccount);
+
+		if (restoredDataAccount != null) {
+			// Not updating the created field
+			String restoreDataAccountQuery = String.format("UPDATE `userdataaccount` SET `deleted`='n' WHERE `dataaccountid`=%d AND `deleted`='y'",
+					restoredDataAccount.id.longValue());
+
+			Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
+
+			try {
+				userConnection.connect();
+				userConnection.executeQuery(restoreDataAccountQuery);
+
+				if (userConnection.getAffectedRowCount() > 0) {
+					// added the user account successfully
+				}
+			} finally {
+				if (userConnection != null) {
+					userConnection.disconnect();
+				}
+			}
+		}
+
+		return restoredDataAccount;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#getDataAccounts(io.reflection.app.datatypes.shared.User, io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
@@ -1012,6 +1046,79 @@ final class UserService implements IUserService {
 		}
 
 		return hasDataAccount;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.user.IUserService#hasDeletedDataAccount(io.reflection.app.datatypes.shared.User,
+	 * io.reflection.app.datatypes.shared.DataAccount)
+	 */
+	@Override
+	public Boolean hasDeletedDataAccount(User user, DataAccount dataAccount) throws DataAccessException {
+		Boolean hasDeletedDataAccount = Boolean.FALSE;
+
+		String hasDataAccountQuery = String.format(
+				"SELECT 1 FROM `userdataaccount` WHERE `dataaccountid`=%d AND `userid`=%d AND `deleted`='y' ORDER BY `id` ASC LIMIT 1",
+				dataAccount.id.longValue(), user.id.longValue());
+
+		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
+
+		try {
+			userConnection.connect();
+			userConnection.executeQuery(hasDataAccountQuery);
+
+			if (userConnection.fetchNextRow()) {
+				hasDeletedDataAccount = Boolean.TRUE;
+			}
+
+		} finally {
+			if (userConnection != null) {
+				userConnection.disconnect();
+			}
+		}
+
+		return hasDeletedDataAccount;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.user.IUserService#isDeletedDataAccount(io.reflection.app.datatypes.shared.User, java.lang.String)
+	 */
+	@Override
+	public DataAccount getDeletedDataAccount(User user, String username) throws DataAccessException {
+		DataAccount deletedDataAccount = null;
+
+		String getDeletedDataAccountIdQuery = String.format("SELECT `id` FROM `dataaccount` WHERE `username`='%s' AND `deleted`='y' LIMIT 1", username);
+
+		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
+
+		// Retrieve the id of the deleted linked account or null
+		Long deletedDataAccountId = null;
+		try {
+			userConnection.connect();
+			userConnection.executeQuery(getDeletedDataAccountIdQuery);
+
+			if (userConnection.fetchNextRow()) {
+				deletedDataAccountId = userConnection.getCurrentRowLong("id");
+			}
+
+		} finally {
+			if (userConnection != null) {
+				userConnection.disconnect();
+			}
+		}
+
+		if (deletedDataAccountId != null) {
+			DataAccount da = new DataAccount();
+			da.id = deletedDataAccountId;
+			if (hasDeletedDataAccount(user, da)) { // Check if the user it the owner of the deleted linked account
+				deletedDataAccount = DataAccountServiceProvider.provide().getDeletedDataAccount(da.id); // Get the deleted linked account
+			}
+		}
+
+		return deletedDataAccount;
 	}
 
 	/*

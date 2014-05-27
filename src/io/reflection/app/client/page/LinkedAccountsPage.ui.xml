@@ -41,7 +41,7 @@
                     <c:CellTable ui:field="linkedAccountsTable" styleName="table table-hover table-striped" />
                     <p:SimplePager ui:field="simplePager" styleName="text-center" visible="false" />
                     <div class="text-center">
-                        <g:Button ui:field="addLinkedAccount" styleName="btn btn-default btn-lg text-center" text="Link Another Account" />
+                        <g:Button ui:field="addLinkedAccount" styleName="btn btn-default btn-lg text-center" text="Link Another Account" visible="false" />
                     </div>
                 </g:HTMLPanel>
 

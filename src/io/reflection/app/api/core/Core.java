@@ -1064,7 +1064,21 @@ public final class Core extends ActionHandler {
 
 			DataAccountCollectorFactory.getCollectorForSource(input.source.a3Code).validateProperties(input.properties);
 
-			output.account = UserServiceProvider.provide().addDataAccount(input.session.user, input.source, input.username, input.password, input.properties);
+			DataAccount deletedDataAccount = UserServiceProvider.provide().getDeletedDataAccount(input.session.user, input.username);
+
+			if (deletedDataAccount != null) {
+
+				deletedDataAccount.password = input.password;
+
+				deletedDataAccount.properties = input.properties;
+
+ 				output.account = UserServiceProvider.provide().restoreDataAccount(deletedDataAccount);
+
+			} else {
+
+				output.account = UserServiceProvider.provide().addDataAccount(input.session.user, input.source, input.username, input.password,
+						input.properties);
+			}
 
 			output.account.source = input.source;
 

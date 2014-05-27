@@ -525,6 +525,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 			} else {
 				simplePager.setVisible(false);
 			}
+			addLinkedAccount.setVisible(true);
 		}
 	}
 
