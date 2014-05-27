@@ -7,6 +7,8 @@
 //
 package io.reflection.app.client.page;
 
+import java.util.Date;
+
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.helper.AlertBoxHelper;
 import io.reflection.app.client.helper.FormHelper;
@@ -15,9 +17,11 @@ import io.reflection.app.client.part.AlertBox.AlertBoxType;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.OListElement;
 import com.google.gwt.dom.client.ParagraphElement;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -31,6 +35,7 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ScrollEvent;
@@ -60,6 +65,8 @@ public class HomePage extends Page {
 	}
 
 	@UiField HomePageStyle style;
+
+	@UiField SpanElement year;
 
 	@UiField DivElement firstPage;
 	@UiField DivElement features;
@@ -104,9 +111,13 @@ public class HomePage extends Page {
 
 	@UiField Anchor workWithUs;
 	@UiField Anchor getInTouch;
+	@UiField Anchor gotoTop;
 
 	private int destinationTop;
 
+	private int selectedCarouselImage = 0;
+
+	@SuppressWarnings("deprecation")
 	public HomePage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
@@ -117,6 +128,8 @@ public class HomePage extends Page {
 		requestInvite.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken("requestinvite"));
 
 		setupIntroSequence();
+
+		year.setInnerHTML(Integer.toString(1900 + (new Date()).getYear()));
 	}
 
 	private void setupIntroSequence() {
@@ -166,10 +179,8 @@ public class HomePage extends Page {
 			public void onWindowScroll(ScrollEvent event) {
 				if (event.getScrollTop() > Window.getClientHeight()) {
 					NavigationController.get().getHeader().getElement().getStyle().clearBorderColor();
-					NavigationController.get().getFooter().getElement().getStyle().clearHeight();
 				} else {
 					NavigationController.get().getHeader().getElement().getStyle().setBorderColor("#272733");
-					NavigationController.get().getFooter().getElement().getStyle().setHeight(0, Unit.PX);
 				}
 
 				if (event.getScrollTop() < 0) {
@@ -213,8 +224,9 @@ public class HomePage extends Page {
 		NavigationController.get().getFooter().getElement().getStyle().clearHeight();
 	}
 
-	@UiHandler({ "gotoFeatures", "workWithUs", "getInTouch", "revenueFeature", "leaderboardFeature", "modelFeature", "storesFeature", "searchFeature",
-			"functionalFeature" })
+	@UiHandler({ "gotoFeatures", "workWithUs", "getInTouch", "gotoTop"
+	// , "revenueFeature", "leaderboardFeature", "modelFeature", "storesFeature", "searchFeature", "functionalFeature"
+	})
 	void onClickHandler(ClickEvent e) {
 		Object source = e.getSource();
 		if (source == gotoFeatures || source == revenueFeature || source == leaderboardFeature || source == modelFeature || source == storesFeature
@@ -236,6 +248,81 @@ public class HomePage extends Page {
 
 			destinationTop = contact.getAbsoluteTop();
 			scrollTimer.scheduleRepeating(DELTA);
+		} else if (source == gotoTop) {
+			if (scrollTimer == null) {
+				createNewScrollTimer();
+			} else {
+				scrollTimer.cancel();
+			}
+
+			destinationTop = getAbsoluteTop();
+			scrollTimer.scheduleRepeating(DELTA);
+		}
+	}
+
+	@UiHandler({ "carouselLeft", "carouselRight" })
+	void onCarouselArrowClickHandler(ClickEvent e) {
+		Object source = e.getSource();
+		// carouselIndicators
+		// carouselContainer
+
+		if (source == carouselLeft || source == carouselRight) {
+			final Element sourceHighlight = DOM.getChild(carouselIndicators, selectedCarouselImage);
+			final Element sourceImage = DOM.getChild(carouselContainer, selectedCarouselImage);
+
+			final Element destinationHighlight, destinationImage;
+
+			if (source == carouselLeft) {
+				sourceImage.addClassName("left");
+			} else if (source == carouselRight) {
+				sourceImage.addClassName("right");
+			}
+
+			Element nextHighlight;
+			Element nextImage;
+
+			if (source == carouselLeft) {
+				nextHighlight = DOM.getChild(carouselIndicators, selectedCarouselImage - 1);
+				nextImage = DOM.getChild(carouselContainer, selectedCarouselImage - 1);
+
+				if (sourceHighlight == null) {
+					selectedCarouselImage = DOM.getChildCount(carouselIndicators) - 1;
+				} else {
+					selectedCarouselImage--;
+				}
+
+			} else if (source == carouselRight) {
+				nextHighlight = DOM.getChild(carouselIndicators, selectedCarouselImage + 1);
+				nextImage = DOM.getChild(carouselContainer, selectedCarouselImage + 1);
+
+				if (sourceHighlight == null) {
+					selectedCarouselImage = 0;
+				} else {
+					selectedCarouselImage++;
+				}
+			}
+
+			destinationHighlight = DOM.getChild(carouselIndicators, selectedCarouselImage);
+			destinationImage = DOM.getChild(carouselContainer, selectedCarouselImage);
+
+			sourceImage.addClassName("next");
+			if (source == carouselLeft) {
+				sourceImage.addClassName("left");
+			} else if (source == carouselRight) {
+				sourceImage.addClassName("right");
+			}
+
+			(new Timer() {
+				@Override
+				public void run() {
+					sourceImage.removeClassName("next");
+					sourceImage.removeClassName("left");
+					sourceImage.removeClassName("right");
+
+					destinationHighlight.addClassName("active");
+					destinationImage.addClassName("active");
+				}
+			}).schedule(600);
 		}
 	}
 

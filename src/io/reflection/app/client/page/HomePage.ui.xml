@@ -7,7 +7,7 @@
     <ui:with field="global" type="io.reflection.app.client.res.Styles" />
 
     <ui:style type="io.reflection.app.client.page.HomePage.HomePageStyle">
-    @external btn, text-muted, carousel, carousel-inner, item, carousel-control, right, left, carousel-indicators, active, glyphicon, icon-angle-right, icon-angle-left;
+    @external btn, text-muted, carousel, carousel-inner, item, carousel-control, right, left, carousel-indicators, active, glyphicon, icon-angle-right, icon-angle-left,noteDetail;
     .logo {
     	background: url("../images/logo.png") no-repeat center;
     	text-indent: -100000px;
@@ -19,9 +19,13 @@
     	color: #7e72c9;
     }
     
-    .contact .text-muted {
+    .home .contact .text-muted {
     	font-size: 14px;
-    	line-height: 16px;
+    	line-height: 14px;
+    }
+    
+    .home .noteDetail {
+    	text-align: left;
     }
     
     .contact h5 {
@@ -31,7 +35,10 @@
     .home h1,.home h2 {
     	font-size: 34px;
     	line-height: 40px;
-    	font-weight: bolder;
+    	font-weight: 600;
+    }
+    
+    .offBlack {
     	color: #484a50;
     }
     
@@ -39,8 +46,9 @@
     	background: #272833 url("../images/header_bg.png") fixed repeat-x bottom;
     }
     
-    .custom h1,.custom h2 {
+    .home .custom h1,.custom h2 {
     	color: white;
+    	font-weight: 400;
     }
     
     .custom .text-muted {
@@ -67,7 +75,7 @@
     }
     
     .moveDown {
-    	margin-top: 100px;
+    	margin-top: 60px;
     }
     
     .moveDownALittle {
@@ -80,14 +88,23 @@
     	opacity: .5;
     }
     
-    .feature:hover img,.feature:focus img {
-    	opacity: 1;
+    .feature {
+    	padding-left: 30px;
+    	padding-right: 30px;
     }
     
-    .feature:hover h3,.feature:focus h3 {
-    	color: #7e72c9;
+    .features {
+    	margin-top: 60px;
+    	margin-bottom: 120px;
     }
     
+    /*.feature:hover img,.feature:focus img {
+                        	opacity: 1;
+                        }
+                        
+                        .feature:hover h3,.feature:focus h3 {
+                        	color: #7e72c9;
+                        }*/
     .whiteSmoke {
     	background: whitesmoke;
     }
@@ -141,7 +158,7 @@
     
     .carousel-inner>.item {
     	height: 540px;
-    	position: absolute;
+    	/* position: absolute; */
     	width: 100%;
     }
     
@@ -167,11 +184,11 @@
     }
     
     .insideData {
-    	margin-top: 100px;
-    	margin-bottom: 100px;
+    	margin-top: 60px;
+    	margin-bottom: 60px;
     }
     
-    .insideData h2 {
+    .insideData h3 {
     	color: white;
     }
     
@@ -236,7 +253,7 @@
     <g:HTMLPanel>
         <div class="{style.home}">
             <div ui:field="firstPage" class="jumbotron {style.custom}">
-                <div class="container {style.centered} {style.moveDownALittle}">
+                <div class="container {style.centered} {style.moveDown}">
                     <h1 class="{style.logo}">Reflection</h1>
                     <div class="row {style.moveDownALittle}">
                         <h2 class="{style.hide}" ui:field="homeHeading">Powerful market intelligence for the global app market.</h2>
@@ -253,28 +270,28 @@
                 </div>
             </div>
 
-            <div class="{style.centered} container {style.moveDown}" ui:field="features">
+            <div class="{style.centered} container {style.features}" ui:field="features">
                 <div class="row">
-                    <h2>Features</h2>
+                    <h2 class="{style.offBlack}">Features</h2>
                     <p class="text-muted {style.moveDownALittle}">We're launching soon with detailed revenue, rank and download data for apps on the iPhone and iPad stores.</p>
                 </div>
 
                 <div class="row {style.moveDown}">
                     <g:Anchor ui:field="revenueFeature" styleName="col-sm-4 {global.reflection.smooth} {style.feature}" href="{HomePageType.asHref.asString}">
                         <img src="../images/statistical_128.png" alt="Revenue feature" />
-                        <h3>Revenue &amp; Download Data</h3>
+                        <h4 class="{style.offBlack}">Revenue &amp; Download Data</h4>
                         <p class="text-muted">Analyse historical revenue, download and rank information for any app to base your business decisions on.</p>
                     </g:Anchor>
 
                     <g:Anchor ui:field="leaderboardFeature" styleName="col-sm-4 {global.reflection.smooth} {style.feature}" href="{HomePageType.asHref.asString}">
                         <img src="../images/global_128.png" alt="Leaderboard feature" />
-                        <h3>Global App Leaderboard</h3>
+                        <h4 class="{style.offBlack}">Global App Leaderboard</h4>
                         <p class="text-muted">View revenue and download data for the Top 400 apps in any country, in any category, at any time.</p>
                     </g:Anchor>
 
                     <g:Anchor ui:field="modelFeature" styleName="col-sm-4 {global.reflection.smooth} {style.feature}" href="{HomePageType.asHref.asString}">
                         <img src="../images/historical_128.png" alt="Model feature" />
-                        <h3>Powerful Statistical Model</h3>
+                        <h4 class="{style.offBlack}">Powerful Statistical Model</h4>
                         <p class="text-muted">We have created an algorithm that statistically paints a very accurate picture of the stores based on public rank and
                             private
                             download and
@@ -283,24 +300,24 @@
                     </g:Anchor>
 
                 </div>
-                <div class="row">
+                <div class="row {style.moveDown}">
                     <g:Anchor ui:field="storesFeature" styleName="col-sm-4 col-sm {global.reflection.smooth} {style.feature}" href="{HomePageType.asHref.asString}">
                         <img src="../images/stores_128.png" alt="Stores feature" />
-                        <h3>Supported Stores</h3>
+                        <h4 class="{style.offBlack}">Supported Stores</h4>
                         <p class="text-muted">We will launch with the iPhone and iPad stores and will then work hard to add all
                             major stores starting with Google Play.</p>
                     </g:Anchor>
 
                     <g:Anchor ui:field="searchFeature" styleName="col-sm-4 {global.reflection.smooth} {style.feature}" href="{HomePageType.asHref.asString}">
                         <img src="../images/search_128.png" alt="Search feature" />
-                        <h3>Comprehensive Search</h3>
+                        <h4 class="{style.offBlack}">Comprehensive Search</h4>
                         <p class="text-muted">Search for any app to see its revenue, download and rank history for any
                             country and date range.</p>
                     </g:Anchor>
 
                     <g:Anchor ui:field="functionalFeature" styleName="col-sm-4 {global.reflection.smooth} {style.feature}" href="{HomePageType.asHref.asString}">
                         <img src="../images/beautiful_128.png" alt="Functional feature" />
-                        <h3>Beautiful &amp; Functional</h3>
+                        <h4 class="{style.offBlack}">Beautiful &amp; Functional</h4>
                         <p class="text-muted">Access meaningful market intelligence wherever you are on any device through our
                             easy to use web app.</p>
                     </g:Anchor>
@@ -311,7 +328,7 @@
                 <div class="{style.centered} container {style.moveDown}">
                     <div class="row">
                         <div class="col-sm-6 col-sm-offset-3">
-                            <h2>Make Smarter Decisions</h2>
+                            <h2 class="{style.offBlack}">Make Smarter Decisions</h2>
 
                             <p class="text-muted {style.moveDownALittle}">Analyse daily revenue, downloads and rank for the Top 400 apps in any country &amp; category. Make smart business,
                                 marketing
@@ -355,7 +372,7 @@
             <div class="container {style.moveDown}">
                 <div class="row">
                     <div class="col-sm-6">
-                        <h2>About Us</h2>
+                        <h2 class="{style.offBlack}">About Us</h2>
 
                         <p class="text-muted {style.moveDownALittle}">We’re a core team of talented engineers and designers with over 35 years of combined experience in the web and mobile space.</p>
 
@@ -367,7 +384,7 @@
                             a
                             better service ourselves.</p>
 
-                        <h3>Work with Reflection</h3>
+                        <h3 class="{style.offBlack} {style.moveDownALittle}">Work with Reflection</h3>
 
 
                         <p class="text-muted">Our small and passionate start-up is growing. If you're a self-starter, would love to be part of a growing start-up and have
@@ -383,7 +400,7 @@
                     </div>
                     <ul class="col-sm-6 {style.people}">
                         <li>
-                            <h5>William Shakour</h5>
+                            <h5 class="{style.offBlack}">William Shakour</h5>
                             <p class="text-muted">Originally from Sudan, William has written code for a large variety of devices and platforms - ranging from phones to
                                 servers
                                 and
@@ -392,7 +409,7 @@
                                 making sense of app data he loves to write mobile games.</p>
                         </li>
                         <li>
-                            <h5>Gustaf Leksell</h5>
+                            <h5 class="{style.offBlack}">Gustaf Leksell</h5>
                             <p class="text-muted">Before founding Reflection, Gustaf led Business Development for Games at BBC Worldwide. He has lived and worked in Seoul,
                                 Shanghai and
                                 Austin
@@ -400,7 +417,7 @@
                                 produced successful mobile and online games.</p>
                         </li>
                         <li>
-                            <h5>Chi Dire</h5>
+                            <h5 class="{style.offBlack}">Chi Dire</h5>
                             <p class="text-muted">Chi has more than 20 years experience coding apps and services for small to global brands. With more than 600 apps across
                                 his
                                 devices,
@@ -414,7 +431,7 @@
             </div>
             <div class="{style.centered} container-fluid {style.moveDown} {style.data}">
                 <div class="row {style.insideData}">
-                    <h2>Need data for reports or articles? Reference us and get it for free.</h2>
+                    <h3>Need data for reports or articles? Reference us and get it for free.</h3>
 
                     <g:Anchor ui:field="getInTouch" styleName="btn {style.btnHollow} {style.btnPurpleInv} {style.moveDownALittle}" href="{HomePageType.asHref.asString}">Get In Touch</g:Anchor>
                 </div>
@@ -423,7 +440,7 @@
 
                 <div class="row">
                     <div class="col-sm-6 col-sm-offset-3">
-                        <h2>Contact us</h2>
+                        <h2 class="{style.offBlack}">Contact us</h2>
 
                         <p class="text-muted {style.moveDownALittle}">
                             If you have any inquiries please get in touch using the form below, or send an email to
@@ -465,41 +482,53 @@
                         </g:HTMLPanel>
                     </g:FormPanel>
                 </div>
-                <div class="row {style.moveDownALittle}">
+                <div class="row {style.moveDown}">
                     <div class="col-sm-6 col-sm-offset-3">
                         <div class="col-sm-4 {style.contact}">
                             <span class="glyphicon glyphicon-envelope" />
                             <h5>Mail</h5>
-                            <p class="text-muted">hello at reflection.io</p>
+                            <p class="text-muted {style.moveDownALittle}">hello at reflection.io</p>
                             <p class="text-muted">careers at reflection.io</p>
                         </div>
                         <div class="col-sm-4 {style.contact}">
                             <span class="glyphicon glyphicon-map-marker" />
                             <h5>Location</h5>
-                            <p class="text-muted">79 Wardour Street</p>
+                            <p class="text-muted {style.moveDownALittle}">79 Wardour Street</p>
                             <p class="text-muted">London, W1D 6QB</p>
                         </div>
                         <div class="col-sm-4 {style.contact}">
                             <span class="glyphicon glyphicon-earphone" />
                             <h5>Contact</h5>
-                            <p class="text-muted">+44 (0) 20 7851 8645</p>
+                            <p class="text-muted {style.moveDownALittle}">+44 (0) 20 7851 8645</p>
                         </div>
                     </div>
                 </div>
                 <div class="row {style.moveDown}">
                     <div class="col-sm-6 col-sm-offset-3 {style.social}">
-                        <div class="col-sm-2 col-sm-offset-4 {style.moveDownALittle}">
+                        <div class="col-sm-2 col-sm-offset-3 {style.moveDownALittle}">
                             <a href="https://www.facebook.com/reflection.io" target="_blank" class="{global.reflection.smooth}">
-                                <span class="icon-facebook" />
+                                <span class="icon-facebook-squared" />
                             </a>
                         </div>
                         <div class="col-sm-2 {style.moveDownALittle}">
                             <a href="http://www.linkedin.com/company/reflection-io-ltd" target="_blank" class="{global.reflection.smooth}">
-                                <span class="icon-linkedin" />
+                                <span class="icon-linkedin-squared" />
+                            </a>
+                        </div>
+                        <div class="col-sm-2 {style.moveDownALittle}">
+                            <a href="https://twitter.com/reflectionio" target="_blank" class="{global.reflection.smooth}">
+                                <span class="icon-twitter" />
                             </a>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="{style.centered} container {style.moveDown}">
+                <span class="row text-muted">
+                    copyright &copy;
+                    <g:Anchor ui:field="gotoTop" href="{HomePageType.asHref.asString}">Reflection.io</g:Anchor>
+                    <span ui:field="year"></span>
+                </span>
             </div>
         </div>
     </g:HTMLPanel>
