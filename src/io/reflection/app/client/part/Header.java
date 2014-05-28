@@ -365,9 +365,9 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 		removeUserSignOut();
 		addUserSignOut(user);
-		
+
 		removeSearch();
-		addSearch();		
+		addSearch();
 
 		removeLogin();
 	}
@@ -549,7 +549,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@Override
 	public void changeUserDetailsSuccess(ChangeUserDetailsRequest input, ChangeUserDetailsResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			addUserSignOut(SessionController.get().getLoggedInUser());
+			User user = SessionController.get().getLoggedInUser();
+			userName.setText(user.forename + "  " + user.surname);
 		}
 	}
 
