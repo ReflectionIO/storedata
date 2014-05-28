@@ -42,12 +42,14 @@ public interface Styles extends ClientBundle {
 		String unknownAppLarge();
 		
 		String linkedAccountClose();
-		
+
 		String linkedAccountMinus();
-		
+
 		String linkedAccountPlus();
 		
 		String smooth();
+		
+		String header();
 	}
 
 	public static final Styles INSTANCE = GWT.create(Styles.class);
