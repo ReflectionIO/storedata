@@ -142,7 +142,7 @@ public class ModellerIOS extends RenjinRModellerBase implements Modeller {
 
 			// set simulation inputs
 			mEngine.eval("Napps  <- 40");
-			mEngine.eval("Dt.in <- 500000");
+			mEngine.eval("Dt.in <- 50000");
 
 			Collector collector = CollectorFactory.getCollectorForStore(STORE);
 			List<String> listTypes = new ArrayList<String>();

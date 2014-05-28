@@ -142,6 +142,8 @@ public class LoadingPage extends Page implements NavigationEventHandler, LoginEv
 		currentTaskIndex = 0;
 		
 		NavigationController.get().getHeader().getElement().removeClassName(Styles.INSTANCE.reflection().smooth());
+		NavigationController.get().getFooter().getElement().removeClassName(Styles.INSTANCE.reflection().smooth());
+		
 		NavigationController.get().getHeader().getElement().getStyle().setTop(-60, Unit.PX);
 		NavigationController.get().getFooter().getElement().getStyle().setHeight(0, Unit.PX);
 
@@ -159,6 +161,7 @@ public class LoadingPage extends Page implements NavigationEventHandler, LoginEv
 	protected void onDetach() {
 
 		NavigationController.get().getHeader().getElement().addClassName(Styles.INSTANCE.reflection().smooth());
+		NavigationController.get().getFooter().getElement().addClassName(Styles.INSTANCE.reflection().smooth());
 		NavigationController.get().getHeader().getElement().getStyle().setTop(0, Unit.PX);
 		NavigationController.get().getFooter().getElement().getStyle().clearHeight();
 		
