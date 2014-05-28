@@ -724,24 +724,35 @@ final class UserService implements IUserService {
 	 */
 	@Override
 	public DataAccount addDataAccount(User user, DataSource dataSource, String username, String password, String properties) throws DataAccessException {
-		DataAccount addedDataAccount = DataAccountServiceProvider.provide().addDataAccount(dataSource, username, password, properties);
 
-		if (addedDataAccount != null) {
-			String addDataAccountQuery = String.format("INSERT INTO `userdataaccount` (`dataaccountid`,`userid`) VALUES (%d, %d)",
-					addedDataAccount.id.longValue(), user.id.longValue());
+		DataAccount addedDataAccount = null;
 
-			Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
+		DataAccount deletedDataAccount = UserServiceProvider.provide().getDeletedDataAccount(user, username);
+		if (deletedDataAccount != null) {
 
-			try {
-				userConnection.connect();
-				userConnection.executeQuery(addDataAccountQuery);
+			deletedDataAccount.password = password;
+			deletedDataAccount.properties = properties;
+			addedDataAccount = UserServiceProvider.provide().restoreDataAccount(deletedDataAccount);
 
-				if (userConnection.getAffectedRowCount() > 0) {
-					// added the user account successfully
-				}
-			} finally {
-				if (userConnection != null) {
-					userConnection.disconnect();
+		} else {
+			addedDataAccount = DataAccountServiceProvider.provide().addDataAccount(dataSource, username, password, properties);
+			if (addedDataAccount != null) {
+				String addDataAccountQuery = String.format("INSERT INTO `userdataaccount` (`dataaccountid`,`userid`) VALUES (%d, %d)",
+						addedDataAccount.id.longValue(), user.id.longValue());
+
+				Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
+
+				try {
+					userConnection.connect();
+					userConnection.executeQuery(addDataAccountQuery);
+
+					if (userConnection.getAffectedRowCount() > 0) {
+						// added the user account successfully
+					}
+				} finally {
+					if (userConnection != null) {
+						userConnection.disconnect();
+					}
 				}
 			}
 		}
