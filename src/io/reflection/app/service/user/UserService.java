@@ -1022,12 +1022,12 @@ final class UserService implements IUserService {
 	 * @see io.reflection.app.service.user.IUserService#hasDataAccount(io.reflection.app.datatypes.shared.User, io.reflection.app.datatypes.shared.DataAccount)
 	 */
 	@Override
-	public Boolean hasDataAccount(User user, DataAccount dataAccount) throws DataAccessException {
+	public Boolean hasDataAccount(User user, DataAccount dataAccount, boolean deleted) throws DataAccessException {
 		Boolean hasDataAccount = Boolean.FALSE;
 
 		String hasDataAccountQuery = String.format(
-				"SELECT 1 FROM `userdataaccount` WHERE `dataaccountid`=%d AND `userid`=%d AND `deleted`='n' ORDER BY `id` ASC LIMIT 1",
-				dataAccount.id.longValue(), user.id.longValue());
+				"SELECT 1 FROM `userdataaccount` WHERE `dataaccountid`=%d AND `userid`=%d AND `deleted`='%s' ORDER BY `id` ASC LIMIT 1",
+				dataAccount.id.longValue(), user.id.longValue(), (deleted) ? "y" : "n");
 
 		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
@@ -1046,39 +1046,6 @@ final class UserService implements IUserService {
 		}
 
 		return hasDataAccount;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.service.user.IUserService#hasDeletedDataAccount(io.reflection.app.datatypes.shared.User,
-	 * io.reflection.app.datatypes.shared.DataAccount)
-	 */
-	@Override
-	public Boolean hasDeletedDataAccount(User user, DataAccount dataAccount) throws DataAccessException {
-		Boolean hasDeletedDataAccount = Boolean.FALSE;
-
-		String hasDataAccountQuery = String.format(
-				"SELECT 1 FROM `userdataaccount` WHERE `dataaccountid`=%d AND `userid`=%d AND `deleted`='y' ORDER BY `id` ASC LIMIT 1",
-				dataAccount.id.longValue(), user.id.longValue());
-
-		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
-
-		try {
-			userConnection.connect();
-			userConnection.executeQuery(hasDataAccountQuery);
-
-			if (userConnection.fetchNextRow()) {
-				hasDeletedDataAccount = Boolean.TRUE;
-			}
-
-		} finally {
-			if (userConnection != null) {
-				userConnection.disconnect();
-			}
-		}
-
-		return hasDeletedDataAccount;
 	}
 
 	/*
@@ -1113,7 +1080,7 @@ final class UserService implements IUserService {
 		if (deletedDataAccountId != null) {
 			DataAccount da = new DataAccount();
 			da.id = deletedDataAccountId;
-			if (hasDeletedDataAccount(user, da)) { // Check if the user it the owner of the deleted linked account
+			if (hasDataAccount(user, da, true)) { // Check if the user is the owner of the deleted linked account
 				deletedDataAccount = DataAccountServiceProvider.provide().getDeletedDataAccount(da.id); // Get the deleted linked account
 			}
 		}

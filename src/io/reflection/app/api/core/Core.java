@@ -840,7 +840,7 @@ public final class Core extends ActionHandler {
 
 			input.linkedAccount = ValidationHelper.validateDataAccount(input.linkedAccount, "input.linkedAccount");
 
-			boolean hasDataAccount = UserServiceProvider.provide().hasDataAccount(input.session.user, input.linkedAccount).booleanValue();
+			boolean hasDataAccount = UserServiceProvider.provide().hasDataAccount(input.session.user, input.linkedAccount, false).booleanValue();
 
 			if (hasDataAccount) {
 				User user = UserServiceProvider.provide().getDataAccountOwner(input.linkedAccount);
@@ -1072,7 +1072,7 @@ public final class Core extends ActionHandler {
 
 				deletedDataAccount.properties = input.properties;
 
- 				output.account = UserServiceProvider.provide().restoreDataAccount(deletedDataAccount);
+				output.account = UserServiceProvider.provide().restoreDataAccount(deletedDataAccount);
 
 			} else {
 
@@ -1846,7 +1846,7 @@ public final class Core extends ActionHandler {
 			DataAccount linkedAccount = SaleServiceProvider.provide().getDataAccount(input.item.internalId);
 
 			if (linkedAccount != null) {
-				boolean hasLinkedAccount = UserServiceProvider.provide().hasDataAccount(input.session.user, linkedAccount);
+				boolean hasLinkedAccount = UserServiceProvider.provide().hasDataAccount(input.session.user, linkedAccount, false);
 
 				if (hasLinkedAccount) {
 					output.item = input.item;
