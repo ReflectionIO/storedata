@@ -1033,7 +1033,11 @@ final class UserService implements IUserService {
 	 * @see io.reflection.app.service.user.IUserService#hasDataAccount(io.reflection.app.datatypes.shared.User, io.reflection.app.datatypes.shared.DataAccount)
 	 */
 	@Override
-	public Boolean hasDataAccount(User user, DataAccount dataAccount, boolean deleted) throws DataAccessException {
+	public Boolean hasDataAccount(User user, DataAccount dataAccount) throws DataAccessException {
+		return hasDataAccount(user, dataAccount, false);
+	}
+
+	private Boolean hasDataAccount(User user, DataAccount dataAccount, Boolean deleted) throws DataAccessException {
 		Boolean hasDataAccount = Boolean.FALSE;
 
 		String hasDataAccountQuery = String.format(

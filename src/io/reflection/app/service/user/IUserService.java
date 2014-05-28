@@ -209,11 +209,10 @@ public interface IUserService extends IService {
 	 * 
 	 * @param user
 	 * @param dataAccount
-	 * @param deleted
 	 * @return
 	 * @throws DataAccessException
 	 */
-	public Boolean hasDataAccount(User user, DataAccount dataAccount, boolean deleted) throws DataAccessException;
+	public Boolean hasDataAccount(User user, DataAccount dataAccount) throws DataAccessException;
 
 	/**
 	 * 

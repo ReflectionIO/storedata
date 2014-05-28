@@ -50,16 +50,25 @@ final class DataAccountService implements IDataAccountService {
 		return ServiceType.ServiceTypeDataAccount.toString();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getDataAccount(java.lang.Long)
+	 */
 	@Override
 	public DataAccount getDataAccount(Long id) throws DataAccessException {
+		return getDataAccount(id, false);
+	}
+
+	private DataAccount getDataAccount(Long id, Boolean deleted) throws DataAccessException {
 		DataAccount dataAccount = null;
 
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection dataAccountConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
 		String getDataAccountQuery = String
-				.format("SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` FROM `dataaccount` WHERE `deleted`='n' AND `id`='%d' LIMIT 1",
-						key(), id.longValue());
+				.format("SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` FROM `dataaccount` WHERE `deleted`='%s' AND `id`='%d' LIMIT 1",
+						key(), (deleted) ? "y" : "n", id.longValue());
 
 		try {
 			dataAccountConnection.connect();
