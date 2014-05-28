@@ -16,39 +16,42 @@
     <ui:import field="io.reflection.app.client.page.PageType.HomePageType" />
     <ui:import field="io.reflection.app.client.page.PageType.ItemsPageType" />
 
-    <ui:with field='res' type='io.reflection.app.client.res.Images' />
+    <ui:with field="res" type='io.reflection.app.client.res.Images' />
+    <ui:with field="global" type="io.reflection.app.client.res.Styles" />
+
     <ui:style>
     .searchBox {
     	margin-top: 10px;
     	margin-right: 25px;
     }
     
-    /*
-                        @external btn, form-control;
-                        .searchBox .btn {
-                        	border-radius: 0 4px 4px 0;
-                        	background-color: #080808;
-                        	color: white;
-                        	border-color: #080808;
-                        }
-                        
-                        .searchBox .form-control {
-                        	border-radius: 4px 0 0 4px;
-                        	background-color: #080808;
-                        	color: white;
-                        	border-color: #080808;
-                        }
-                        
-                        .searchBox .form-control:focus {
-                        	border-color: #6D69C5;
-                        }
-                        
-                        .searchBox span {
-                        	float: left;
-                        }
-                        */
+    <!--
+    @external btn, form-control;
+    .searchBox .btn {
+    	border-radius: 0 4px 4px 0;
+    	background-color: #080808;
+    	color: white;
+    	border-color: #080808;
+    }
+    
+    .searchBox .form-control {
+    	border-radius: 4px 0 0 4px;
+    	background-color: #080808;
+    	color: white;
+    	border-color: #080808;
+    }
+    
+    .searchBox .form-control:focus {
+    	border-color: #6D69C5;
+    }
+    
+    .searchBox span {
+    	float: left;
+    }
+    -->
     </ui:style>
-    <g:HTMLPanel ui:field="pnlHeader" styleName="header navbar navbar-inverse navbar-fixed-top">
+
+    <g:HTMLPanel ui:field="pnlHeader" styleName="{global.reflection.header} navbar navbar-inverse navbar-fixed-top">
 
         <!-- Logo -->
         <div class="navbar-header">
@@ -158,8 +161,8 @@
 
             <!-- Log In -->
             <ul class="nav navbar-nav navbar-right" ui:field="login">
-                <!-- <li ui:field="mRegisterItem"> <g:InlineHyperlink ui:field="mRegisterLink" targetHistoryToken="{RegisterPageType.asTargetHistoryToken}">Sign Up</g:InlineHyperlink> 
-                    </li> -->
+                <!-- <li ui:field="mRegisterItem"> <g:InlineHyperlink ui:field="mRegisterLink" targetHistoryToken="{RegisterPageType.asTargetHistoryToken}">Sign 
+                    Up</g:InlineHyperlink> </li> -->
                 <li ui:field="loginItem">
                     <g:InlineHyperlink ui:field="loginLink" targetHistoryToken="{LoginPageType.asTargetHistoryToken}">
                         Log In
@@ -189,11 +192,11 @@
 
             <!-- Feature Request <ul class="nav navbar-nav navbar-right" style="display: none;" ui:field="mFeatureRequest"> <li class="dropdown"> <g:Anchor styleName="dropdown-toggle" 
                 ui:field="featureRequestButton"> <i class="glyphicon glyphicon-comment" style="margin-right: 10px"></i> Feature Requests </g:Anchor> <ul class="dropdown-menu"> <li 
-                style="text-align: justify; font-size: 14px;"> Help us develop a truly groundbreaking intelligence tool. Contact us if you have feedback or if you would like to see 
-                any additional feature that you feel can add value. We're here to help. </li> <hr style="height:1px; border:none; color:#363845; background-color:#363845;"></hr> <li> 
-                <a href="mailto:gustaf@reflection.io" target="_blank"> <i class="glyphicon glyphicon-envelope" style="margin-right: 15px"></i> gustaf@reflection.io </a> </li> <li> 
-                <a href="callto:+44 (0) 7929 635 487" target="_blank"> <i class="glyphicon glyphicon-earphone" style="margin-right: 15px"></i> +44 (0) 7929 635 487 </a> </li> </ul> 
-                </li> <li class="divider-vertical"></li> </ul> -->
+                style="text-align: justify; font-size: 14px;"> Help us develop a truly groundbreaking intelligence tool. Contact us if you have feedback or if you would like to 
+                see any additional feature that you feel can add value. We're here to help. </li> <hr style="height:1px; border:none; color:#363845; background-color:#363845;"></hr> 
+                <li> <a href="mailto:gustaf@reflection.io" target="_blank"> <i class="glyphicon glyphicon-envelope" style="margin-right: 15px"></i> gustaf@reflection.io </a> </li> 
+                <li> <a href="callto:+44 (0) 7929 635 487" target="_blank"> <i class="glyphicon glyphicon-earphone" style="margin-right: 15px"></i> +44 (0) 7929 635 487 </a> </li> 
+                </ul> </li> <li class="divider-vertical"></li> </ul> -->
 
 
             <!-- <g:FormPanel styleName="navbar-form navbar-right"> <g:HTMLPanel styleName="{style.searchBox}"> <span class="form-group"> <g:TextBox styleName="form-control" 
