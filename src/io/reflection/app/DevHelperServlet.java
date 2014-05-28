@@ -13,11 +13,6 @@ import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.ingestors.Ingestor;
 import io.reflection.app.ingestors.IngestorFactory;
 import io.reflection.app.logging.GaeLevel;
-import io.reflection.app.mapreduce.CsvBlobReducer;
-import io.reflection.app.mapreduce.RankCountMapper;
-import io.reflection.app.mapreduce.RankCountReducer;
-import io.reflection.app.mapreduce.TopAndGrossingMapper;
-import io.reflection.app.mapreduce.TotalRankedItemsCountMapper;
 import io.reflection.app.service.application.ApplicationServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
@@ -25,8 +20,6 @@ import io.reflection.app.setup.CountriesInstaller;
 import io.reflection.app.setup.StoresInstaller;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -55,14 +48,6 @@ import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Builder;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
-import com.google.appengine.tools.mapreduce.KeyValue;
-import com.google.appengine.tools.mapreduce.MapReduceJob;
-import com.google.appengine.tools.mapreduce.MapReduceSettings;
-import com.google.appengine.tools.mapreduce.MapReduceSpecification;
-import com.google.appengine.tools.mapreduce.Marshallers;
-import com.google.appengine.tools.mapreduce.inputs.DatastoreInput;
-import com.google.appengine.tools.mapreduce.outputs.GoogleCloudStorageFileOutput;
-import com.google.appengine.tools.mapreduce.outputs.InMemoryOutput;
 import com.googlecode.objectify.cmd.Query;
 
 /**
@@ -74,7 +59,8 @@ public class DevHelperServlet extends HttpServlet {
 	private static final Logger LOG = Logger.getLogger(DevHelperServlet.class.getName());
 
 	private static final String RANK_END_200_PLUS = "200+";
-	private static final boolean USE_BACKENDS = false;
+
+	// private static final boolean USE_BACKENDS = false;
 
 	/*
 	 * (non-Javadoc)
@@ -546,24 +532,24 @@ public class DevHelperServlet extends HttpServlet {
 				// will not support this
 			} else if ("countitemrankmr".equalsIgnoreCase(action)) {
 
-				int rankStartValue = Integer.parseInt(rankStart);
-				int rankEndValue = RANK_END_200_PLUS.equals(rankEnd) ? Integer.MAX_VALUE : Integer.parseInt(rankEnd);
-
-				redirectToPipelineStatus(req, resp, startStatsJob(5, 2, "ios", "us", feedType, rankStartValue, rankEndValue));
-
+				// int rankStartValue = Integer.parseInt(rankStart);
+				// int rankEndValue = RANK_END_200_PLUS.equals(rankEnd) ? Integer.MAX_VALUE : Integer.parseInt(rankEnd);
+				//
+				// redirectToPipelineStatus(req, resp, startStatsJob(5, 2, "ios", "us", feedType, rankStartValue, rankEndValue));
+				//
 				success = true;
 			} else if ("countranksmr".equalsIgnoreCase(action)) {
-				redirectToPipelineStatus(req, resp, startRankCountJob(5, 2, "ios", "us", feedType));
+				// redirectToPipelineStatus(req, resp, startRankCountJob(5, 2, "ios", "us", feedType));
 
 				success = true;
 			} else if ("createcsvofpaidranks".equalsIgnoreCase(action)) {
-				redirectToPipelineStatus(req, resp,
-						startCreateCsvBlobRank(5, 1, CollectorIOS.TOP_PAID_APPS, CollectorIOS.TOP_GROSSING_APPS, "ios", "us", feedType));
+				// redirectToPipelineStatus(req, resp,
+				// startCreateCsvBlobRank(5, 1, CollectorIOS.TOP_PAID_APPS, CollectorIOS.TOP_GROSSING_APPS, "ios", "us", feedType));
 
 				success = true;
 			} else if ("createcsvoffreeranks".equalsIgnoreCase(action)) {
-				redirectToPipelineStatus(req, resp,
-						startCreateCsvBlobRank(5, 1, CollectorIOS.TOP_FREE_APPS, CollectorIOS.TOP_GROSSING_APPS, "ios", "us", feedType));
+				// redirectToPipelineStatus(req, resp,
+				// startCreateCsvBlobRank(5, 1, CollectorIOS.TOP_FREE_APPS, CollectorIOS.TOP_GROSSING_APPS, "ios", "us", feedType));
 
 				success = true;
 			} else if ("addcountries".equalsIgnoreCase(action)) {
@@ -626,50 +612,50 @@ public class DevHelperServlet extends HttpServlet {
 
 	}
 
-	private String startCreateCsvBlobRank(int mapShardCount, int reduceSharedCount, String topType, String grossingType, String source, String country,
-			String type) {
-		DateFormat format = new SimpleDateFormat("yyyy-MM-dd-HHmmss");
-		return MapReduceJob.start(MapReduceSpecification.of("Create Rank csv blob", new DatastoreInput("Rank", mapShardCount), new TopAndGrossingMapper(
-				topType, grossingType, source, country), Marshallers.getStringMarshaller(), Marshallers.getStringMarshaller(), new CsvBlobReducer(topType,
-				grossingType), new GoogleCloudStorageFileOutput("rankmatchoutput", topType + "_" + grossingType + format.format(new Date()) + "_%d.csv",
-				"text/csv", reduceSharedCount)), getSettings());
-	}
+	// private String startCreateCsvBlobRank(int mapShardCount, int reduceSharedCount, String topType, String grossingType, String source, String country,
+	// String type) {
+	// DateFormat format = new SimpleDateFormat("yyyy-MM-dd-HHmmss");
+	// return MapReduceJob.start(MapReduceSpecification.of("Create Rank csv blob", new DatastoreInput("Rank", mapShardCount), new TopAndGrossingMapper(
+	// topType, grossingType, source, country), Marshallers.getStringMarshaller(), Marshallers.getStringMarshaller(), new CsvBlobReducer(topType,
+	// grossingType), new GoogleCloudStorageFileOutput("rankmatchoutput", topType + "_" + grossingType + format.format(new Date()) + "_%d.csv",
+	// "text/csv", reduceSharedCount)), getSettings());
+	// }
 
-	private String getUrlBase(HttpServletRequest req) throws MalformedURLException {
-		URL requestUrl = new URL(req.getRequestURL().toString());
-		String portString = requestUrl.getPort() == -1 ? "" : ":" + requestUrl.getPort();
-		return requestUrl.getProtocol() + "://" + requestUrl.getHost() + portString + "/";
-	}
+	// private String getUrlBase(HttpServletRequest req) throws MalformedURLException {
+	// URL requestUrl = new URL(req.getRequestURL().toString());
+	// String portString = requestUrl.getPort() == -1 ? "" : ":" + requestUrl.getPort();
+	// return requestUrl.getProtocol() + "://" + requestUrl.getHost() + portString + "/";
+	// }
 
-	private void redirectToPipelineStatus(HttpServletRequest req, HttpServletResponse resp, String pipelineId) throws IOException {
-		String destinationUrl = getPipelineStatusUrl(getUrlBase(req), pipelineId);
-		LOG.info("Redirecting to " + destinationUrl);
-		resp.sendRedirect(destinationUrl);
-	}
+	// private void redirectToPipelineStatus(HttpServletRequest req, HttpServletResponse resp, String pipelineId) throws IOException {
+	// String destinationUrl = getPipelineStatusUrl(getUrlBase(req), pipelineId);
+	// LOG.info("Redirecting to " + destinationUrl);
+	// resp.sendRedirect(destinationUrl);
+	// }
 
-	private String getPipelineStatusUrl(String urlBase, String pipelineId) {
-		return urlBase + "_ah/pipeline/status.html?root=" + pipelineId;
-	}
+	// private String getPipelineStatusUrl(String urlBase, String pipelineId) {
+	// return urlBase + "_ah/pipeline/status.html?root=" + pipelineId;
+	// }
 
-	@SuppressWarnings("deprecation")
-	private MapReduceSettings getSettings() {
-		MapReduceSettings settings = new MapReduceSettings().setWorkerQueueName("mapreduce-workers").setControllerQueueName("default");
-		if (USE_BACKENDS) {
-			settings.setBackend("worker");
-		}
-		return settings;
-	}
+	// @SuppressWarnings("deprecation")
+	// private MapReduceSettings getSettings() {
+	// MapReduceSettings settings = new MapReduceSettings().setWorkerQueueName("mapreduce-workers").setControllerQueueName("default");
+	// if (USE_BACKENDS) {
+	// settings.setBackend("worker");
+	// }
+	// return settings;
+	// }
 
-	private String startStatsJob(int mapShardCount, int reduceShardCount, String source, String country, String type, int start, int end) {
-		return MapReduceJob.start(MapReduceSpecification.of("Item stats", new DatastoreInput("Rank", mapShardCount), new RankCountMapper(source, country, type,
-				start, end), Marshallers.getStringMarshaller(), Marshallers.getLongMarshaller(), new RankCountReducer(),
-				new InMemoryOutput<KeyValue<String, Long>>(reduceShardCount)), getSettings());
-	}
-
-	private String startRankCountJob(int mapShardCount, int reduceShardCount, String source, String country, String type) {
-		return MapReduceJob.start(MapReduceSpecification.of("Rank count", new DatastoreInput("Rank", mapShardCount), new TotalRankedItemsCountMapper(source,
-				country, type), Marshallers.getStringMarshaller(), Marshallers.getLongMarshaller(), new RankCountReducer(),
-				new InMemoryOutput<KeyValue<String, Long>>(reduceShardCount)), getSettings());
-	}
+	// private String startStatsJob(int mapShardCount, int reduceShardCount, String source, String country, String type, int start, int end) {
+	// return MapReduceJob.start(MapReduceSpecification.of("Item stats", new DatastoreInput("Rank", mapShardCount), new RankCountMapper(source, country, type,
+	// start, end), Marshallers.getStringMarshaller(), Marshallers.getLongMarshaller(), new RankCountReducer(),
+	// new InMemoryOutput<KeyValue<String, Long>>(reduceShardCount)), getSettings());
+	// }
+	//
+	// private String startRankCountJob(int mapShardCount, int reduceShardCount, String source, String country, String type) {
+	// return MapReduceJob.start(MapReduceSpecification.of("Rank count", new DatastoreInput("Rank", mapShardCount), new TotalRankedItemsCountMapper(source,
+	// country, type), Marshallers.getStringMarshaller(), Marshallers.getLongMarshaller(), new RankCountReducer(),
+	// new InMemoryOutput<KeyValue<String, Long>>(reduceShardCount)), getSettings());
+	// }
 
 }

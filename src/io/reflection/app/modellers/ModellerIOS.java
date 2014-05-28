@@ -64,6 +64,7 @@ import com.spacehopperstudios.utility.StringUtils;
  * @author billy1380
  * 
  */
+@SuppressWarnings("deprecation")
 public class ModellerIOS extends RenjinRModellerBase implements Modeller {
 
 	private static final Logger LOG = Logger.getLogger(ModellerIOS.class.getName());
@@ -92,7 +93,7 @@ public class ModellerIOS extends RenjinRModellerBase implements Modeller {
 			options.param("country", country);
 			options.param("type", type);
 			options.param("code", code.toString());
-			
+
 			options.header("Host", backendServerName);
 
 			try {
@@ -137,11 +138,11 @@ public class ModellerIOS extends RenjinRModellerBase implements Modeller {
 		try {
 			init();
 
-			mEngine.eval("cut.point <- 300");
+			mEngine.eval("cut.point <- 400");
 
 			// set simulation inputs
-			mEngine.eval("Napps  <- 30");
-			mEngine.eval("Dt.in <- 10000");
+			mEngine.eval("Napps  <- 40");
+			mEngine.eval("Dt.in <- 500000");
 
 			Collector collector = CollectorFactory.getCollectorForStore(STORE);
 			List<String> listTypes = new ArrayList<String>();
@@ -260,12 +261,10 @@ public class ModellerIOS extends RenjinRModellerBase implements Modeller {
 
 		Category category = CategoryServiceProvider.provide().getAllCategory(s);
 
-		Connection connection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
-
 		String query = String.format(
 				"SELECT `r`.`itemid`, `r`.`position`,`r`.`grossingposition`, `r`.`price`, `s`.`usesiap` FROM `rank` AS `r` JOIN `item` AS `i`"
 						+ " ON `i`.`internalid`=`r`.`itemid` LEFT JOIN `sup_application_iap` AS `s` ON `s`.`internalid`=`i`.`internalid`"
-						+ " WHERE `r`.`country`='%s' AND `r`.`category`=%d AND `r`.`source`='%s' AND %s AND `r`.%s AND `date`<FROM_UNIXTIME(%d)"
+						+ " WHERE `r`.`country`='%s' AND `r`.`categoryid`=%d AND `r`.`source`='%s' AND %s AND `r`.%s AND `date`<FROM_UNIXTIME(%d)"
 						+ " ORDER BY `date` DESC", country, category.id.longValue(), store, priceQuery, typesQueryPart, date.getTime() / 1000);
 
 		StringVector.Builder itemIdBuilder = StringVector.newBuilder();
@@ -275,6 +274,8 @@ public class ModellerIOS extends RenjinRModellerBase implements Modeller {
 		LogicalArrayVector.Builder usesIapBuilder = new LogicalArrayVector.Builder();
 
 		int i = 0;
+
+		Connection connection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
 		try {
 

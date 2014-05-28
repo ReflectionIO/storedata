@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<backends>
-    <backend name="model">
-        <class>B2</class>
-        <instances>2</instances>
-        <options>
-            <dynamic>true</dynamic>
-        </options>
-    </backend>
-</backends>
+ <backends>
+     <backend name="model">
+         <class>B4_1G</class>
+         <instances>2</instances>
+         <options>
+             <dynamic>true</dynamic>
+         </options>
+     </backend>
+ </backends>

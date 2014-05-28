@@ -13,11 +13,15 @@ import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.part.AlertBox;
 import io.reflection.app.client.part.AlertBox.AlertBoxType;
 
+import java.util.Date;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.OListElement;
 import com.google.gwt.dom.client.ParagraphElement;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -31,6 +35,7 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ScrollEvent;
@@ -60,6 +65,8 @@ public class HomePage extends Page {
 	}
 
 	@UiField HomePageStyle style;
+
+	@UiField SpanElement year;
 
 	@UiField DivElement firstPage;
 	@UiField DivElement features;
@@ -104,9 +111,15 @@ public class HomePage extends Page {
 
 	@UiField Anchor workWithUs;
 	@UiField Anchor getInTouch;
+	@UiField Anchor gotoTop;
 
 	private int destinationTop;
 
+	private int selectedCarouselImage = 0;
+
+	private Timer carouselSpinTimer;
+
+	@SuppressWarnings("deprecation")
 	public HomePage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
@@ -117,6 +130,18 @@ public class HomePage extends Page {
 		requestInvite.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken("requestinvite"));
 
 		setupIntroSequence();
+
+		year.setInnerHTML(Integer.toString(1900 + (new Date()).getYear()));
+
+		// rotate the carousel every 5 of seconds
+		(carouselSpinTimer = new Timer() {
+
+			@Override
+			public void run() {
+				spinCarousel(carouselLeft);
+			}
+
+		}).scheduleRepeating(10000);
 	}
 
 	private void setupIntroSequence() {
@@ -166,10 +191,8 @@ public class HomePage extends Page {
 			public void onWindowScroll(ScrollEvent event) {
 				if (event.getScrollTop() > Window.getClientHeight()) {
 					NavigationController.get().getHeader().getElement().getStyle().clearBorderColor();
-					NavigationController.get().getFooter().getElement().getStyle().clearHeight();
 				} else {
 					NavigationController.get().getHeader().getElement().getStyle().setBorderColor("#272733");
-					NavigationController.get().getFooter().getElement().getStyle().setHeight(0, Unit.PX);
 				}
 
 				if (event.getScrollTop() < 0) {
@@ -213,8 +236,9 @@ public class HomePage extends Page {
 		NavigationController.get().getFooter().getElement().getStyle().clearHeight();
 	}
 
-	@UiHandler({ "gotoFeatures", "workWithUs", "getInTouch", "revenueFeature", "leaderboardFeature", "modelFeature", "storesFeature", "searchFeature",
-			"functionalFeature" })
+	@UiHandler({ "gotoFeatures", "workWithUs", "getInTouch", "gotoTop"
+	// , "revenueFeature", "leaderboardFeature", "modelFeature", "storesFeature", "searchFeature", "functionalFeature"
+	})
 	void onClickHandler(ClickEvent e) {
 		Object source = e.getSource();
 		if (source == gotoFeatures || source == revenueFeature || source == leaderboardFeature || source == modelFeature || source == storesFeature
@@ -236,6 +260,109 @@ public class HomePage extends Page {
 
 			destinationTop = contact.getAbsoluteTop();
 			scrollTimer.scheduleRepeating(DELTA);
+		} else if (source == gotoTop) {
+			if (scrollTimer == null) {
+				createNewScrollTimer();
+			} else {
+				scrollTimer.cancel();
+			}
+
+			destinationTop = getAbsoluteTop();
+			scrollTimer.scheduleRepeating(DELTA);
+		}
+	}
+
+	@UiHandler({ "carouselLeft", "carouselRight" })
+	void onCarouselArrowClickHandler(ClickEvent e) {
+		carouselSpinTimer.cancel();
+		spinCarousel(e.getSource());
+		carouselSpinTimer.scheduleRepeating(10000);
+	}
+
+	private void spinCarousel(final Object source) {
+		if (source == carouselLeft || source == carouselRight) {
+			final Element sourceHighlight = DOM.getChild(carouselIndicators, selectedCarouselImage);
+			final Element sourceImage = DOM.getChild(carouselContainer, selectedCarouselImage);
+
+			final Element destinationHighlight, destinationImage;
+
+			Element nextHighlight = null;
+			Element nextImage = null;
+
+			if (source == carouselLeft) {
+				nextHighlight = DOM.getChild(carouselIndicators, selectedCarouselImage + 1);
+				nextImage = DOM.getChild(carouselContainer, selectedCarouselImage + 1);
+
+				if (nextHighlight == null) {
+					selectedCarouselImage = 0;
+				} else {
+					selectedCarouselImage++;
+				}
+			} else if (source == carouselRight) {
+				nextHighlight = DOM.getChild(carouselIndicators, selectedCarouselImage - 1);
+				nextImage = DOM.getChild(carouselContainer, selectedCarouselImage - 1);
+
+				if (nextHighlight == null) {
+					selectedCarouselImage = DOM.getChildCount(carouselIndicators) - 1;
+				} else {
+					selectedCarouselImage--;
+				}
+			}
+
+			destinationHighlight = (nextHighlight == null ? DOM.getChild(carouselIndicators, selectedCarouselImage) : nextHighlight);
+			destinationImage = (nextImage == null ? DOM.getChild(carouselContainer, selectedCarouselImage) : nextImage);
+
+			if (source == carouselLeft) {
+				destinationImage.addClassName("next");
+
+				sourceImage.addClassName("left");
+			} else if (source == carouselRight) {
+				destinationImage.addClassName("prev");
+
+				sourceImage.addClassName("right");
+
+			}
+
+			// this is done in a timer because applying both styles in one go gives a resulting effect with the animation skipped
+			(new Timer() {
+				@Override
+				public void run() {
+					if (source == carouselLeft) {
+						destinationImage.addClassName("left");
+					} else if (source == carouselRight) {
+						destinationImage.addClassName("right");
+					}
+				}
+			}).schedule(1);
+
+			// wait for the duration of the animation then sort out the state
+			(new Timer() {
+				@Override
+				public void run() {
+
+					if (source == carouselLeft) {
+						destinationImage.removeClassName("left");
+						destinationImage.removeClassName("next");
+					} else if (source == carouselRight) {
+						destinationImage.removeClassName("right");
+						destinationImage.removeClassName("prev");
+					}
+
+					destinationImage.addClassName("active");
+
+					destinationHighlight.addClassName("active");
+
+					sourceImage.removeClassName("active");
+
+					if (source == carouselLeft) {
+						sourceImage.removeClassName("left");
+					} else if (source == carouselRight) {
+						sourceImage.removeClassName("right");
+					}
+
+					sourceHighlight.removeClassName("active");
+				}
+			}).schedule(601);
 		}
 	}
 
