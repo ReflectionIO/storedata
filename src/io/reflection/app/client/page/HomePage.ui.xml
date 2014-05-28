@@ -7,7 +7,7 @@
     <ui:with field="global" type="io.reflection.app.client.res.Styles" />
 
     <ui:style type="io.reflection.app.client.page.HomePage.HomePageStyle">
-    @external btn, text-muted, carousel, carousel-inner, item, carousel-control, right, left, carousel-indicators, active, glyphicon, icon-angle-right, icon-angle-left,noteDetail;
+    @external btn, text-muted, carousel, carousel-inner, item, carousel-control, right, left, carousel-indicators, active, icon-angle-right, icon-angle-left, glyphicon, noteDetail;
     .logo {
     	background: url("../images/logo.png") no-repeat center;
     	text-indent: -100000px;
@@ -99,12 +99,12 @@
     }
     
     /*.feature:hover img,.feature:focus img {
-                        	opacity: 1;
-                        }
-                        
-                        .feature:hover h3,.feature:focus h3 {
-                        	color: #7e72c9;
-                        }*/
+                                	opacity: 1;
+                                }
+                                
+                                .feature:hover h3,.feature:focus h3 {
+                                	color: #7e72c9;
+                                }*/
     .whiteSmoke {
     	background: whitesmoke;
     }
@@ -130,20 +130,33 @@
     	left: 25%;
     }
     
-    .carousel-control:hover .icon-angle-left,.carousel-control:focus .icon-angle-left {
+    .carousel-control:hover .icon-angle-left,.carousel-control:focus .icon-angle-left
+    	{
     	left: 15%;
     }
     
-    .carousel-control:hover .icon-angle-right,.carousel-control:focus .icon-angle-right {
+    .carousel-control:hover .icon-angle-right,.carousel-control:focus .icon-angle-right
+    	{
     	left: 35%;
     }
     
     .carousel-indicators li {
-    	border-color: #8587a1;
+    	background-color: #999;
+    	border: none;
+    	cursor: default;
+    	margin-left: 5px;
+    	margin-right: 5px;
     }
+    
+    .carousel-indicators {
+        bottom: -20px;
+	}
     
     .carousel-indicators li.active {
     	background-color: #272833;
+    	border: none;
+    	margin-left: 5px;
+        margin-right: 5px;
     }
     
     .carousel {
@@ -235,7 +248,8 @@
     	border-color: white;
     }
     
-    .btnPurple:hover,.btnPurpleLBg:hover,.btnPurple:focus,.btnPurpleLBg:focus {
+    .btnPurple:hover,.btnPurpleLBg:hover,.btnPurple:focus,.btnPurpleLBg:focus
+    	{
     	color: white;
     	background-color: #7e72c9;
     }

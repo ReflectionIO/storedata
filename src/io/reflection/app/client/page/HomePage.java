@@ -7,13 +7,13 @@
 //
 package io.reflection.app.client.page;
 
-import java.util.Date;
-
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.helper.AlertBoxHelper;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.part.AlertBox;
 import io.reflection.app.client.part.AlertBox.AlertBoxType;
+
+import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
@@ -117,6 +117,8 @@ public class HomePage extends Page {
 
 	private int selectedCarouselImage = 0;
 
+	private Timer carouselSpinTimer;
+
 	@SuppressWarnings("deprecation")
 	public HomePage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -130,6 +132,16 @@ public class HomePage extends Page {
 		setupIntroSequence();
 
 		year.setInnerHTML(Integer.toString(1900 + (new Date()).getYear()));
+
+		// rotate the carousel every 5 of seconds
+		(carouselSpinTimer = new Timer() {
+
+			@Override
+			public void run() {
+				spinCarousel(carouselLeft);
+			}
+
+		}).scheduleRepeating(10000);
 	}
 
 	private void setupIntroSequence() {
@@ -262,67 +274,95 @@ public class HomePage extends Page {
 
 	@UiHandler({ "carouselLeft", "carouselRight" })
 	void onCarouselArrowClickHandler(ClickEvent e) {
-		Object source = e.getSource();
-		// carouselIndicators
-		// carouselContainer
+		carouselSpinTimer.cancel();
+		spinCarousel(e.getSource());
+		carouselSpinTimer.scheduleRepeating(10000);
+	}
 
+	private void spinCarousel(final Object source) {
 		if (source == carouselLeft || source == carouselRight) {
 			final Element sourceHighlight = DOM.getChild(carouselIndicators, selectedCarouselImage);
 			final Element sourceImage = DOM.getChild(carouselContainer, selectedCarouselImage);
 
 			final Element destinationHighlight, destinationImage;
 
-			if (source == carouselLeft) {
-				sourceImage.addClassName("left");
-			} else if (source == carouselRight) {
-				sourceImage.addClassName("right");
-			}
-
-			Element nextHighlight;
-			Element nextImage;
+			Element nextHighlight = null;
+			Element nextImage = null;
 
 			if (source == carouselLeft) {
-				nextHighlight = DOM.getChild(carouselIndicators, selectedCarouselImage - 1);
-				nextImage = DOM.getChild(carouselContainer, selectedCarouselImage - 1);
-
-				if (sourceHighlight == null) {
-					selectedCarouselImage = DOM.getChildCount(carouselIndicators) - 1;
-				} else {
-					selectedCarouselImage--;
-				}
-
-			} else if (source == carouselRight) {
 				nextHighlight = DOM.getChild(carouselIndicators, selectedCarouselImage + 1);
 				nextImage = DOM.getChild(carouselContainer, selectedCarouselImage + 1);
 
-				if (sourceHighlight == null) {
+				if (nextHighlight == null) {
 					selectedCarouselImage = 0;
 				} else {
 					selectedCarouselImage++;
 				}
+			} else if (source == carouselRight) {
+				nextHighlight = DOM.getChild(carouselIndicators, selectedCarouselImage - 1);
+				nextImage = DOM.getChild(carouselContainer, selectedCarouselImage - 1);
+
+				if (nextHighlight == null) {
+					selectedCarouselImage = DOM.getChildCount(carouselIndicators) - 1;
+				} else {
+					selectedCarouselImage--;
+				}
 			}
 
-			destinationHighlight = DOM.getChild(carouselIndicators, selectedCarouselImage);
-			destinationImage = DOM.getChild(carouselContainer, selectedCarouselImage);
+			destinationHighlight = (nextHighlight == null ? DOM.getChild(carouselIndicators, selectedCarouselImage) : nextHighlight);
+			destinationImage = (nextImage == null ? DOM.getChild(carouselContainer, selectedCarouselImage) : nextImage);
 
-			sourceImage.addClassName("next");
 			if (source == carouselLeft) {
+				destinationImage.addClassName("next");
+
 				sourceImage.addClassName("left");
 			} else if (source == carouselRight) {
+				destinationImage.addClassName("prev");
+
 				sourceImage.addClassName("right");
+
 			}
 
+			// this is done in a timer because applying both styles in one go gives a resulting effect with the animation skipped
 			(new Timer() {
 				@Override
 				public void run() {
-					sourceImage.removeClassName("next");
-					sourceImage.removeClassName("left");
-					sourceImage.removeClassName("right");
+					if (source == carouselLeft) {
+						destinationImage.addClassName("left");
+					} else if (source == carouselRight) {
+						destinationImage.addClassName("right");
+					}
+				}
+			}).schedule(1);
+
+			// wait for the duration of the animation then sort out the state
+			(new Timer() {
+				@Override
+				public void run() {
+
+					if (source == carouselLeft) {
+						destinationImage.removeClassName("left");
+						destinationImage.removeClassName("next");
+					} else if (source == carouselRight) {
+						destinationImage.removeClassName("right");
+						destinationImage.removeClassName("prev");
+					}
+
+					destinationImage.addClassName("active");
 
 					destinationHighlight.addClassName("active");
-					destinationImage.addClassName("active");
+
+					sourceImage.removeClassName("active");
+
+					if (source == carouselLeft) {
+						sourceImage.removeClassName("left");
+					} else if (source == carouselRight) {
+						sourceImage.removeClassName("right");
+					}
+
+					sourceHighlight.removeClassName("active");
 				}
-			}).schedule(600);
+			}).schedule(601);
 		}
 	}
 
