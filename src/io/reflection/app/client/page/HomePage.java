@@ -62,6 +62,10 @@ public class HomePage extends Page {
 
 	interface HomePageStyle extends CssResource {
 		String hide();
+		
+		String moveDownALittle();
+		
+		String moveDown();
 	}
 
 	@UiField HomePageStyle style;
@@ -101,6 +105,8 @@ public class HomePage extends Page {
 	@UiField HeadingElement homeHeading;
 	@UiField ParagraphElement homeDescription;
 	@UiField InlineHyperlink requestInvite;
+	
+	@UiField DivElement gotoFeaturesContainer;
 	@UiField Anchor gotoFeatures;
 
 	@UiField OListElement carouselIndicators;
@@ -114,10 +120,9 @@ public class HomePage extends Page {
 	@UiField Anchor gotoTop;
 
 	private int destinationTop;
-
 	private int selectedCarouselImage = 0;
-
 	private Timer carouselSpinTimer;
+	private boolean carouselSpinning = false;
 
 	@SuppressWarnings("deprecation")
 	public HomePage() {
@@ -145,28 +150,42 @@ public class HomePage extends Page {
 	}
 
 	private void setupIntroSequence() {
-		homeHeading.removeClassName(style.hide());
-
+		homeHeading.getStyle().clearDisplay();
 		(new Timer() {
 			@Override
 			public void run() {
-				homeDescription.removeClassName(style.hide());
-
+				homeHeading.removeClassName(style.hide());
+				homeHeading.removeClassName(style.moveDownALittle());
+				
+				homeDescription.getStyle().clearDisplay();
 				(new Timer() {
 					@Override
 					public void run() {
-						requestInvite.getElement().removeClassName(style.hide());
+						homeDescription.removeClassName(style.hide());
+						homeDescription.removeClassName(style.moveDown());
+						homeDescription.addClassName(style.moveDownALittle());
+						requestInvite.setVisible(true);
 
 						(new Timer() {
 							@Override
 							public void run() {
-								gotoFeatures.getElement().removeClassName(style.hide());
+								requestInvite.removeStyleName(style.hide());
+								gotoFeaturesContainer.getStyle().clearDisplay();
+
+								(new Timer() {
+									@Override
+									public void run() {
+										gotoFeaturesContainer.removeClassName(style.hide());
+										gotoFeaturesContainer.removeClassName(style.moveDownALittle());
+										gotoFeaturesContainer.addClassName(style.moveDown());
+									}
+								}).schedule(500);
 							}
-						}).schedule(500);
+						}).schedule(600);
 					}
-				}).schedule(500);
+				}).schedule(600);
 			}
-		}).schedule(600);
+		}).schedule(200);
 
 	}
 
@@ -280,7 +299,9 @@ public class HomePage extends Page {
 	}
 
 	private void spinCarousel(final Object source) {
-		if (source == carouselLeft || source == carouselRight) {
+		if (!carouselSpinning && (source == carouselLeft || source == carouselRight)) {
+			carouselSpinning = true;
+
 			final Element sourceHighlight = DOM.getChild(carouselIndicators, selectedCarouselImage);
 			final Element sourceImage = DOM.getChild(carouselContainer, selectedCarouselImage);
 
@@ -289,7 +310,7 @@ public class HomePage extends Page {
 			Element nextHighlight = null;
 			Element nextImage = null;
 
-			if (source == carouselLeft) {
+			if (source == carouselRight) {
 				nextHighlight = DOM.getChild(carouselIndicators, selectedCarouselImage + 1);
 				nextImage = DOM.getChild(carouselContainer, selectedCarouselImage + 1);
 
@@ -298,7 +319,7 @@ public class HomePage extends Page {
 				} else {
 					selectedCarouselImage++;
 				}
-			} else if (source == carouselRight) {
+			} else if (source == carouselLeft) {
 				nextHighlight = DOM.getChild(carouselIndicators, selectedCarouselImage - 1);
 				nextImage = DOM.getChild(carouselContainer, selectedCarouselImage - 1);
 
@@ -333,7 +354,7 @@ public class HomePage extends Page {
 						destinationImage.addClassName("right");
 					}
 				}
-			}).schedule(10);
+			}).schedule(100);
 
 			// wait for the duration of the animation then sort out the state
 			(new Timer() {
@@ -361,8 +382,10 @@ public class HomePage extends Page {
 					}
 
 					sourceHighlight.removeClassName("active");
+
+					carouselSpinning = false;
 				}
-			}).schedule(610);
+			}).schedule(600);
 		}
 	}
 
