@@ -333,7 +333,7 @@ public class HomePage extends Page {
 						destinationImage.addClassName("right");
 					}
 				}
-			}).schedule(1);
+			}).schedule(10);
 
 			// wait for the duration of the animation then sort out the state
 			(new Timer() {
@@ -362,7 +362,7 @@ public class HomePage extends Page {
 
 					sourceHighlight.removeClassName("active");
 				}
-			}).schedule(601);
+			}).schedule(610);
 		}
 	}
 
