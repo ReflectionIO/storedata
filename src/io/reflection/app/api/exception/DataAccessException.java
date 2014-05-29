@@ -20,7 +20,11 @@ public class DataAccessException extends ServiceException {
 	 * 
 	 */
 	public DataAccessException() {
-		super(400000, "A database exception occured.");
+		this(400000, "A database exception occured.");
+	}
+
+	public DataAccessException(int code, String message) {
+		super(code, message);
 	}
 
 }

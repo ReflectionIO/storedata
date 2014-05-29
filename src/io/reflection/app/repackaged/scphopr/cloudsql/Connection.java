@@ -8,6 +8,7 @@
 package io.reflection.app.repackaged.scphopr.cloudsql;
 
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.api.exception.DuplicateKeyException;
 import io.reflection.app.logging.GaeLevel;
 
 import java.sql.DriverManager;
@@ -20,6 +21,7 @@ import java.util.logging.Logger;
 
 import com.google.appengine.api.rdbms.AppEngineDriver;
 import com.google.appengine.api.utils.SystemProperty;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 
 public final class Connection {
 
@@ -170,6 +172,10 @@ public final class Connection {
 			} else {
 				queryResult = statement.getGeneratedKeys();
 			}
+		} catch (MySQLIntegrityConstraintViolationException ex) {
+			LOG.log(GaeLevel.SEVERE, "Error executing query - duplicate entry key", ex);
+
+			throw new DuplicateKeyException();
 		} catch (SQLException ex) {
 			LOG.log(GaeLevel.SEVERE, "Error executing query", ex);
 

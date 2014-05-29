@@ -162,14 +162,6 @@ public interface IUserService extends IService {
 	public DataAccount addDataAccount(User user, DataSource datasource, String username, String password, String properties) throws DataAccessException;
 
 	/**
-	 * 
-	 * @param dataAccount
-	 * @return
-	 * @throws DataAccessException
-	 */
-	public DataAccount restoreDataAccount(DataAccount dataAccount) throws DataAccessException;
-
-	/**
 	 * @param pager
 	 * @return
 	 * @throws DataAccessException

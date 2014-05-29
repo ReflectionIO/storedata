@@ -12,6 +12,7 @@ import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
+import io.reflection.app.datatypes.shared.User;
 
 import java.util.Collection;
 import java.util.List;
@@ -29,17 +30,18 @@ public interface IDataAccountService extends IService {
 	/**
 	 * 
 	 * @param id
+	 * @param deleted
 	 * @return
 	 * @throws DataAccessException
 	 */
-	public DataAccount getDeletedDataAccount(Long id) throws DataAccessException;
+	public DataAccount getDataAccount(Long id, Boolean deleted) throws DataAccessException;
 
 	/**
 	 * @param dataAccount
 	 * @return
 	 * @throws DataAccessException
 	 */
-	public DataAccount addDataAccount(DataAccount dataAccount) throws DataAccessException;
+	public DataAccount addDataAccount(DataAccount dataAccount, User user) throws DataAccessException;
 
 	/**
 	 * 
@@ -49,7 +51,7 @@ public interface IDataAccountService extends IService {
 	 * @return
 	 * @throws DataAccessException
 	 */
-	public DataAccount addDataAccount(DataSource dataSource, String username, String password, String properties) throws DataAccessException;
+	public DataAccount addDataAccount(DataSource dataSource, String username, String password, String properties, User user) throws DataAccessException;
 
 	/**
 	 * @param dataAccount
