@@ -25,6 +25,7 @@ import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.SessionController;
+import io.reflection.app.client.handler.ConfirmDialogEventHandler;
 import io.reflection.app.client.handler.EnterPressedEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.FormHelper;
@@ -40,9 +41,12 @@ import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.shared.util.FormattingHelper;
 
 import com.google.gson.JsonObject;
+import com.google.gwt.cell.client.ButtonCell;
+import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -52,6 +56,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -67,7 +72,7 @@ import com.willshex.gson.json.shared.Convert;
  * 
  */
 public class LinkedAccountsPage extends Page implements NavigationEventHandler, LinkAccountEventHandler, GetLinkedAccountsEventHandler,
-		DeleteLinkedAccountEventHandler, UpdateLinkedAccountEventHandler {
+		DeleteLinkedAccountEventHandler, UpdateLinkedAccountEventHandler, ConfirmDialogEventHandler {
 
 	public static final int ACTION_PARAMETER = 1;
 	public static final int ACTION_PARAMETER_INDEX = 2;
@@ -89,7 +94,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	private TextColumn<DataAccount> columnAccountType;
 	private TextColumn<DataAccount> columnDateAdded;
 	private Column<DataAccount, SafeHtml> columnEdit;
-	private Column<DataAccount, SafeHtml> columnDelete;
+	private Column<DataAccount, String> columnDelete;
 	// private Column<DataAccount, SafeHtml> columnExpand;
 
 	// Add linked account elements
@@ -131,6 +136,29 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		LinkedAccountController.get().addDataDisplay(linkedAccountsTable);
 		simplePager.setDisplay(linkedAccountsTable);
 		confirmationDialog = new ConfirmationDialog("Delete linked account", "Are you sure you want to remove this linked account?");
+
+		confirmationDialog.getCancelButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if (user != null) {
+					PageType.UsersPageType.show(PageType.LinkedAccountsPageType.toString(user.id.toString()));
+				}
+
+			}
+		});
+
+		confirmationDialog.getDeleteButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if (LinkedAccountController.get().getLinkedAccount(Long.valueOf(confirmationDialog.getTypeParameter())) != null) {
+					loader.setVisible(true);
+					LinkedAccountController.get().deleteLinkedAccount(LinkedAccountController.get().getLinkedAccount(confirmationDialog.getTypeParameter()));
+				}
+			}
+		});
+
 	}
 
 	/*
@@ -147,6 +175,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		register(EventController.get().addHandlerToSource(GetLinkedAccountsEventHandler.TYPE, LinkedAccountController.get(), this));
 		register(EventController.get().addHandlerToSource(DeleteLinkedAccountEventHandler.TYPE, LinkedAccountController.get(), this));
 		register(EventController.get().addHandlerToSource(UpdateLinkedAccountEventHandler.TYPE, LinkedAccountController.get(), this));
+		register(EventController.get().addHandlerToSource(ConfirmDialogEventHandler.TYPE, confirmationDialog, this));
 	}
 
 	/**
@@ -192,17 +221,21 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		};
 		linkedAccountsTable.addColumn(columnEdit);
 
-		columnDelete = new Column<DataAccount, SafeHtml>(new SafeHtmlCell()) {
+		columnDelete = new Column<DataAccount, String>(new ButtonCell()) {
 			@Override
-			public SafeHtml getValue(DataAccount object) {
-				String id = object.id.toString();
-
-				return SafeHtmlUtils.fromTrustedString("<a href=\""
-						+ PageType.UsersPageType.asHref(PageType.LinkedAccountsPageType.toString(user.id.toString(), DELETE_ACTION_PARAMETER_VALUE, id))
-								.asString() + "\" class=\"btn btn-xs btn-danger\">Delete</a>");
+			public String getValue(DataAccount object) {
+				return "Delete";
 			}
 
 		};
+		columnDelete.setFieldUpdater(new FieldUpdater<DataAccount, String>() {
+
+			@Override
+			public void update(int index, DataAccount object, String value) {
+				confirmationDialog.setTypeParameter(object.id);
+				confirmationDialog.center();
+			}
+		});
 		linkedAccountsTable.addColumn(columnDelete);
 
 		// columnExpand = new Column<DataAccount, SafeHtml>(new SafeHtmlCell()) {
@@ -364,11 +397,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 			JsonObject propertiesJson = Convert.toJsonObject(linkedAccount.properties);
 			mIosMacForm.setVendorNumber(propertiesJson.get("vendors").getAsString());
 
-		} else if (isValidDeleteStack(actionParameter, typeParameter)) {
-			confirmationDialog.center(); // bug because called on navigation
-
-			// loader.setVisible(true);
-			// LinkedAccountController.get().deleteLinkedAccount(LinkedAccountController.get().getLinkedAccount(Long.valueOf(typeParameter)));
+			// } else if (isValidDeleteStack(actionParameter, typeParameter)) {
 
 		} else {
 			linkedAccountForm.setVisible(false);
@@ -382,11 +411,6 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 	private boolean isValidEditStack(String actionParameter, String typeParameter) {
 		return (EDIT_ACTION_PARAMETER_VALUE.equals(actionParameter) && typeParameter != null && typeParameter.matches("[0-9]+") && LinkedAccountController
-				.get().getLinkedAccount(Long.valueOf(typeParameter)) != null) ? true : false;
-	}
-
-	private boolean isValidDeleteStack(String actionParameter, String typeParameter) {
-		return (DELETE_ACTION_PARAMETER_VALUE.equals(actionParameter) && typeParameter != null && typeParameter.matches("[0-9]+") && LinkedAccountController
 				.get().getLinkedAccount(Long.valueOf(typeParameter)) != null) ? true : false;
 	}
 
@@ -542,5 +566,13 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	 */
 	@Override
 	public void getLinkedAccountsFailure(GetLinkedAccountsRequest input, Throwable caught) {}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.client.handler.ConfirmDialogEventHandler#onConfirmPressed()
+	 */
+	@Override
+	public void onConfirmPressed() {
+		Window.alert("confirm pressed");
+	}
 
 }

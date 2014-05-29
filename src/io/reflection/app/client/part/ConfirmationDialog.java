@@ -7,6 +7,10 @@
 //
 package io.reflection.app.client.part;
 
+import io.reflection.app.client.controller.EventController;
+import io.reflection.app.client.controller.LinkedAccountController;
+import io.reflection.app.client.handler.ConfirmDialogEventHandler;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
@@ -23,6 +27,8 @@ public class ConfirmationDialog extends PopupPanel {
 	HTMLPanel buttonsPanel = new HTMLPanel("");
 	Button cancel = new Button("Cancel");
 	Button delete = new Button("Delete <i class=\"glyphicon glyphicon-remove-circle\"></i>");
+
+	Long parameter = null;
 
 	public ConfirmationDialog(String title, String text) {
 		super();
@@ -44,6 +50,7 @@ public class ConfirmationDialog extends PopupPanel {
 			@Override
 			public void onClick(ClickEvent event) {
 				ConfirmationDialog.this.hide();
+				parameter = null;
 			}
 		});
 
@@ -52,24 +59,27 @@ public class ConfirmationDialog extends PopupPanel {
 			@Override
 			public void onClick(ClickEvent event) {
 				ConfirmationDialog.this.hide();
+				// typeParameter = null;				
 			}
 		});
 
 	}
+	
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.Widget#onAttach()
-	 */
-	@Override
-	protected void onAttach() {
-		super.onAttach();
-
+	public Button getCancelButton() {
+		return cancel;
 	}
 
 	public Button getDeleteButton() {
 		return delete;
+	}
+
+	public void setTypeParameter(Long typeParameter) {
+		parameter = typeParameter;
+	}
+
+	public Long getTypeParameter() {
+		return parameter;
 	}
 
 }
