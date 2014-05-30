@@ -33,6 +33,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
         <servlet-name>Predictor Tasks</servlet-name>
         <servlet-class>io.reflection.app.PerdictorServlet</servlet-class>
     </servlet>
+    
+    <servlet>
+        <servlet-name>Call Service Method Tasks</servlet-name>
+        <servlet-class>io.reflection.app.CallServiceMethodServlet</servlet-class>
+    </servlet>
 	
 	<servlet>
 		<servlet-name>Dev Helper</servlet-name>
@@ -121,6 +126,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
     <servlet-mapping>
         <servlet-name>Predictor Tasks</servlet-name>
         <url-pattern>/predict</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>Call Service Method Tasks</servlet-name>
+        <url-pattern>/callservicemethod</url-pattern>
     </servlet-mapping>
     
 	<servlet-mapping>

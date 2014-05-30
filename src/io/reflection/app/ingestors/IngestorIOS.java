@@ -8,6 +8,7 @@
 //
 package io.reflection.app.ingestors;
 
+import io.reflection.app.CallServiceMethodServlet;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.collectors.Collector;
@@ -300,11 +301,16 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			Store s = new Store();
 			s.a3Code = IOS_STORE_A3;
 			Category all = CategoryServiceProvider.provide().getAllCategory(s);
-		
+
 			// only run the model based on the "all" category, right now category data is not modelled
-			if (isGrossing && firstFeedFetch.category.id.longValue() == all.id.longValue()) {
-				ModellerFactory.getModellerForStore(IOS_STORE_A3).enqueue(firstFeedFetch.country, firstFeedFetch.type, firstFeedFetch.code);
+			if (isGrossing) {
+				if (firstFeedFetch.category.id.longValue() == all.id.longValue()) {
+					ModellerFactory.getModellerForStore(IOS_STORE_A3).enqueue(firstFeedFetch.country, firstFeedFetch.type, firstFeedFetch.code);
+				}
+				
+				CallServiceMethodServlet.enqueueGetAllRanks(firstFeedFetch.country, IOS_STORE_A3, firstFeedFetch.category.id, firstFeedFetch.type, key);
 			}
+
 		}
 	}
 

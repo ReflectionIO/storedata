@@ -55,7 +55,7 @@ public enum ServiceType {
 		if (valueLookup == null) {
 			valueLookup = new HashMap<String, ServiceType>();
 			for (ServiceType currentServiceType : ServiceType.values()) {
-				valueLookup.put(currentServiceType.value, currentServiceType);
+				valueLookup.put(currentServiceType.toString(), currentServiceType);
 			}
 		}
 		return valueLookup.get(value);
