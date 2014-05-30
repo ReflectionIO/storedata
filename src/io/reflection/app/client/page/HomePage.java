@@ -310,7 +310,7 @@ public class HomePage extends Page {
 			Element nextHighlight = null;
 			Element nextImage = null;
 
-			if (source == carouselRight) {
+			if (source == carouselLeft) {
 				nextHighlight = DOM.getChild(carouselIndicators, selectedCarouselImage + 1);
 				nextImage = DOM.getChild(carouselContainer, selectedCarouselImage + 1);
 
@@ -319,7 +319,7 @@ public class HomePage extends Page {
 				} else {
 					selectedCarouselImage++;
 				}
-			} else if (source == carouselLeft) {
+			} else if (source == carouselRight) {
 				nextHighlight = DOM.getChild(carouselIndicators, selectedCarouselImage - 1);
 				nextImage = DOM.getChild(carouselContainer, selectedCarouselImage - 1);
 
