@@ -8,6 +8,7 @@
 package io.reflection.app.api.core;
 
 import static io.reflection.app.api.PagerHelper.updatePager;
+import static io.reflection.app.helpers.ApiHelper.getGrossingListName;
 import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPAD_IOS;
 import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS;
 import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_UNIVERSAL_IOS;
@@ -74,7 +75,6 @@ import io.reflection.app.api.exception.AuthenticationException;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
-import io.reflection.app.collectors.CollectorIOS;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
@@ -1180,20 +1180,6 @@ public final class Core extends ActionHandler {
 	// return listName;
 	//
 	// }
-
-	private String getGrossingListName(Store store, String type) {
-		String listName = null;
-
-		if ("ios".equalsIgnoreCase(store.a3Code)) {
-			if (type != null && type.contains("ipad") || type.toLowerCase().contains("ipad")) {
-				listName = CollectorIOS.TOP_GROSSING_IPAD_APPS;
-			} else {
-				listName = CollectorIOS.TOP_GROSSING_APPS;
-			}
-		}
-
-		return listName;
-	}
 
 	public SearchForItemResponse searchForItem(SearchForItemRequest input) {
 		LOG.finer("Entering searchForItem");
