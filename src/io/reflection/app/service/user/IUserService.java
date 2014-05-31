@@ -209,19 +209,17 @@ public interface IUserService extends IService {
 	/**
 	 * 
 	 * @param user
-	 * @param username
-	 * @return
-	 * @throws DataAccessException
-	 */
-	public DataAccount getDeletedDataAccount(User user, String username) throws DataAccessException;
-
-	/**
-	 * 
-	 * @param user
 	 * @param dataAccount
 	 * @throws DataAccessException
 	 */
 	public void deleteDataAccount(User user, DataAccount dataAccount) throws DataAccessException;
+
+	/**
+	 * 
+	 * @param dataAccount
+	 * @throws DataAccessException
+	 */
+	public void restoreUserDataAccount(DataAccount dataAccount) throws DataAccessException;
 
 	/**
 	 * @param dataAccount

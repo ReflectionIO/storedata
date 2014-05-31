@@ -15,14 +15,12 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
-import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
-import io.reflection.app.service.user.UserServiceProvider;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,6 +35,7 @@ import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.google.appengine.api.taskqueue.TransientFailureException;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 
 final class DataAccountService implements IDataAccountService {
 
@@ -79,7 +78,48 @@ final class DataAccountService implements IDataAccountService {
 
 		String getDataAccountQuery = String.format(
 				"SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` FROM `dataaccount` WHERE `id`='%d' %s LIMIT 1", key(),
-				id.longValue(), (deleted) ? "" : "AND `deleted`='n'");
+				id.longValue(), deleted ? "" : "AND `deleted`='n'");
+
+		try {
+			dataAccountConnection.connect();
+			dataAccountConnection.executeQuery(getDataAccountQuery);
+
+			if (dataAccountConnection.fetchNextRow()) {
+				dataAccount = toDataAccount(dataAccountConnection);
+			}
+		} finally {
+			if (dataAccountConnection != null) {
+				dataAccountConnection.disconnect();
+			}
+		}
+		return dataAccount;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getDataAccount(java.lang.String, java.lang.Long)
+	 */
+	@Override
+	public DataAccount getDataAccount(String username, Long sourceid) throws DataAccessException {
+		return getDataAccount(username, sourceid, Boolean.FALSE);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getDataAccount(java.lang.String, java.lang.Long, java.lang.Boolean)
+	 */
+	@Override
+	public DataAccount getDataAccount(String username, Long sourceid, Boolean deleted) throws DataAccessException {
+		DataAccount dataAccount = null;
+
+		IDatabaseService databaseService = DatabaseServiceProvider.provide();
+		Connection dataAccountConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
+
+		String getDataAccountQuery = String
+				.format("SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` FROM `dataaccount` WHERE `username`='%s' AND `sourceid`=%d %s LIMIT 1",
+						key(), username, sourceid, deleted ? "" : "AND `deleted`='n'");
 
 		try {
 			dataAccountConnection.connect();
@@ -124,7 +164,7 @@ final class DataAccountService implements IDataAccountService {
 	}
 
 	@Override
-	public DataAccount addDataAccount(DataAccount dataAccount, User user) throws DataAccessException {
+	public DataAccount addDataAccount(DataAccount dataAccount) throws DataAccessException {
 
 		DataAccount addedDataAccount = null;
 
@@ -147,13 +187,10 @@ final class DataAccountService implements IDataAccountService {
 				}
 			}
 		} catch (DataAccessException ex) {
-			if (ex.getCode() == 400001) { // Data account already exists
-				DataAccount deletedDataAccount = UserServiceProvider.provide().getDeletedDataAccount(user, dataAccount.username);
-				if (deletedDataAccount != null) { // if == null is not the owner
-					deletedDataAccount.password = dataAccount.password;
-					deletedDataAccount.properties = dataAccount.properties;
-					addedDataAccount = restoreDataAccount(deletedDataAccount);
-				}
+			if (ex.getCause() instanceof MySQLIntegrityConstraintViolationException) { // Data account already exists
+				addedDataAccount = restoreDataAccount(dataAccount);
+			} else {
+				throw ex;
 			}
 		}
 
@@ -266,21 +303,17 @@ final class DataAccountService implements IDataAccountService {
 		DataAccount restoredDataAccount = null;
 
 		final String restoreDataAccountQuery = String
-				.format("UPDATE `dataaccount` SET `username`='%s', `created`=NOW(), `password`=AES_ENCRYPT('%s',UNHEX('%s')), `properties`='%s', `deleted`='n' WHERE `id`='%d' AND `deleted`='y'",
-						addslashes(dataAccount.username), addslashes(dataAccount.password), key(), addslashes(dataAccount.properties),
-						dataAccount.id.longValue());
-
-		final String restoreUserDataAccountQuery = String.format("UPDATE `userdataaccount` SET `deleted`='n' WHERE `dataaccountid`=%d AND `deleted`='y'",
-				dataAccount.id.longValue());
+				.format("UPDATE `dataaccount` SET `created`=NOW(), `password`=AES_ENCRYPT('%s',UNHEX('%s')), `properties`='%s', `deleted`='n' WHERE `username`='%s'",
+						addslashes(dataAccount.password), key(), addslashes(dataAccount.properties), addslashes(dataAccount.username));
 
 		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
 		try {
 			dataAccountConnection.connect();
 			dataAccountConnection.executeQuery(restoreDataAccountQuery);
-			dataAccountConnection.executeQuery(restoreUserDataAccountQuery);
 
 			if (dataAccountConnection.getAffectedRowCount() > 0) {
+				dataAccount = getDataAccount(dataAccount.username, dataAccount.source.id);
 				restoredDataAccount = getDataAccount(dataAccount.id);
 			}
 		} finally {
@@ -391,7 +424,7 @@ final class DataAccountService implements IDataAccountService {
 	 * java.lang.String, java.lang.String)
 	 */
 	@Override
-	public DataAccount addDataAccount(DataSource dataSource, String username, String password, String properties, User user) throws DataAccessException {
+	public DataAccount addDataAccount(DataSource dataSource, String username, String password, String properties) throws DataAccessException {
 		DataAccount dataAccount = new DataAccount();
 
 		dataAccount.source = dataSource;
@@ -399,7 +432,7 @@ final class DataAccountService implements IDataAccountService {
 		dataAccount.password = password;
 		dataAccount.properties = properties;
 
-		return addDataAccount(dataAccount, user);
+		return addDataAccount(dataAccount);
 	}
 
 	/*
