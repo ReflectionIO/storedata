@@ -7,12 +7,6 @@
 //
 package io.reflection.app.client.part;
 
-import io.reflection.app.client.controller.EventController;
-import io.reflection.app.client.controller.LinkedAccountController;
-import io.reflection.app.client.handler.ConfirmDialogEventHandler;
-
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -44,27 +38,7 @@ public class ConfirmationDialog extends PopupPanel {
 		dialogWidget.add(buttonsPanel);
 		cancel.getElement().addClassName("btn btn-cancel");
 		delete.getElement().addClassName("btn btn-delete");
-
-		cancel.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				ConfirmationDialog.this.hide();
-				parameter = null;
-			}
-		});
-
-		delete.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				ConfirmationDialog.this.hide();
-				// typeParameter = null;				
-			}
-		});
-
 	}
-	
 
 	public Button getCancelButton() {
 		return cancel;
@@ -74,12 +48,17 @@ public class ConfirmationDialog extends PopupPanel {
 		return delete;
 	}
 
-	public void setTypeParameter(Long typeParameter) {
+	public void setParameter(Long typeParameter) {
 		parameter = typeParameter;
 	}
 
-	public Long getTypeParameter() {
+	public Long getParameter() {
 		return parameter;
+	}
+
+	public void reset() {
+		parameter = null;
+		this.hide();
 	}
 
 }
