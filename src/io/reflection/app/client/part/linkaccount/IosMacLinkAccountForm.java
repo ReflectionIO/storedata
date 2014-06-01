@@ -122,11 +122,9 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 		} else if (username.length() > 255) {
 			mAccountUsernameError = "Too long";
 			validated = false;
-		} else if (stack.getParameter(1) != null && stack.getParameter(1).equals("add")) {
-			if (LinkedAccountController.get().hasLinkedAccount(username)) {
-				mAccountUsernameError = "Linked account already exists";
-				validated = false;
-			}
+		} else if (stack.getParameter(1) != null && stack.getParameter(1).equals("add") && LinkedAccountController.get().hasLinkedAccount(username)) {
+			mAccountUsernameError = "Linked account already exists";
+			validated = false;
 		} else {
 			mAccountUsernameError = null;
 			validated = validated && true;
