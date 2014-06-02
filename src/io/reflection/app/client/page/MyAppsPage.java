@@ -105,7 +105,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		appsTable.setEmptyTableWidget(new HTMLPanel("No Apps found!"));
 		MyAppsController.get().addDataDisplay(appsTable);
 		simplePager.setDisplay(appsTable);
-
+		FilterController.get().reset();
 	}
 
 	/*
