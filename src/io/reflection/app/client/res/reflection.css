@@ -305,7 +305,7 @@ a:hover,a:focus,a:active {
 	background-color: #8e93a2;
 }
 
-.btn, .smooth {
+.btn,.smooth {
 	/* Fade effect */
 	-o-transition: .4s;
 	-ms-transition: .4s;
@@ -324,7 +324,7 @@ a:hover,a:focus,a:active {
 .btn-primary:hover,.btn-primary:focus,.btn-primary:active,.btn-primary.active,.open .dropdown-toggle.btn-primary
 	{
 	border-color: #1bc79f;
-	background: #1bc79f;
+	background-color: #1bc79f;
 }
 
 .btn-primary.disabled,.btn-primary[disabled],fieldset[disabled] .btn-primary,.btn-primary.disabled:hover,.btn-primary[disabled]:hover,fieldset[disabled] .btn-primary:hover,.btn-primary.disabled:focus,.btn-primary[disabled]:focus,fieldset[disabled] .btn-primary:focus,.btn-primary.disabled:active,.btn-primary[disabled]:active,fieldset[disabled] .btn-primary:active,.btn-primary.disabled.active,.btn-primary.active[disabled],fieldset[disabled] .btn-primary.active
@@ -437,8 +437,6 @@ a:hover,a:focus,a:active {
 	border-bottom-color: #1bc79f;
 }
 
-
-
 /* Tabs Rank */
 .nav-tabs.nav-justified.ranks>li>a {
 	background-color: #f6f6f6;
@@ -517,6 +515,56 @@ a:hover,a:focus,a:active {
 	background-color: #fafafa;
 	font-weight: 600;
 }
+
+/* Popup Dialog */
+.gwt-PopupPanel {
+	text-align: center;
+	padding: 3px;
+	background-color: transparent;
+	z-index: 1050;
+	width: 345px;
+}
+
+.gwt-PopupPanel>.popupContent .btn-cancel {
+	color: #FFF;
+	background-color: transparent;
+	border-color: #FFF;
+	margin: 10px 20px;
+	width: 120px;
+}
+
+.gwt-PopupPanel>.popupContent .btn-cancel:hover,.gwt-PopupPanel>.popupContent .btn-cancel:focus,.gwt-PopupPanel>.popupContent .btn-cancel:active,.gwt-PopupPanel>.popupContent .btn-cancel.active
+	{
+	background-color: #FFF;
+	color: #000;
+}
+
+.gwt-PopupPanel>.popupContent .btn-delete {
+	color: #FFF;
+	border-color: red;
+	background-color: red;
+	margin: 10px 20px;
+	width: 120px;
+}
+
+.gwt-PopupPanel>.popupContent .btn-delete:hover,.gwt-PopupPanel>.popupContent .btn-delete:focus,.gwt-PopupPanel>.popupContent.btn-delete:active,.gwt-PopupPanel>.popupContent .btn-delete.active
+	{
+	background-color: #FFF;
+	color: red;
+}
+
+.gwt-PopupPanel>.popupContent h1,.gwt-PopupPanel>.popupContent p {
+	color: #FFF;
+	margin-bottom: 30px;
+}
+
+.gwt-PopupPanelGlass {
+	background-color: #000;
+	opacity: 0.7;
+	filter: alpha(opacity = 70);
+	z-index: 1050;
+}
+
 /* Sprites */
 @sprite       
 .footerFacebook {
