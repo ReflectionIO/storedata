@@ -1,6 +1,6 @@
 @CHARSET "UTF-8";
 
-@external popupContent, btn-cancel, btn-delete, gwt-PopupPanel, gwt-PopupPanelGlass, header, headerCaret, navbar-header, p-small, form, formEdit, noteDetail, label, gwt-CheckBox, gwt-DateBox, gwt-ListBox, topPanel, sidepanel, btn, btn-group, btn-default, row, divider, divider-vertical, nav-pills, nav-stacked, nav-tabs, nav-justified, ranks, loginregister, well, well-title, form-group, gwt-RadioButton, hr, navbar-fixed-top, navbar, container, pagination, btn-primary, disabled, active, open, dropdown-toggle, dropdown-menu, i, badge, dropdown, nav, navbar-inverse, navbar-nav, navbar-text, caret, form-control;
+@external headerCaret, navbar-header, p-small, form, formEdit, noteDetail, label, gwt-CheckBox, gwt-DateBox, gwt-ListBox, topPanel, sidepanel, btn, btn-group, btn-default, row, divider, divider-vertical, nav-pills, nav-stacked, nav-tabs, nav-justified, ranks, loginregister, well, well-title, form-group, gwt-RadioButton, hr, navbar-fixed-top, navbar, container, pagination, btn-primary, disabled, active, open, dropdown-toggle, dropdown-menu, i, badge, dropdown, nav, navbar-inverse, navbar-nav, navbar-text, caret, form-control;
 	/* Colors palette: Purple #6d69c5; DarkBlue 272933; Gold #eabc3e; LightGrey: #f8f9f9; Green: #1bc79f; Blue: #3357cc; Red: #e73c48; */
 body {
 	font-family: 'Lato', sans-serif;
@@ -305,7 +305,7 @@ a:hover,a:focus,a:active {
 	background-color: #8e93a2;
 }
 
-.btn, .smooth {
+.btn,.smooth {
 	/* Fade effect */
 	-o-transition: .4s;
 	-ms-transition: .4s;
@@ -324,7 +324,7 @@ a:hover,a:focus,a:active {
 .btn-primary:hover,.btn-primary:focus,.btn-primary:active,.btn-primary.active,.open .dropdown-toggle.btn-primary
 	{
 	border-color: #1bc79f;
-	background: #1bc79f;
+	background-color: #1bc79f;
 }
 
 .btn-primary.disabled,.btn-primary[disabled],fieldset[disabled] .btn-primary,.btn-primary.disabled:hover,.btn-primary[disabled]:hover,fieldset[disabled] .btn-primary:hover,.btn-primary.disabled:focus,.btn-primary[disabled]:focus,fieldset[disabled] .btn-primary:focus,.btn-primary.disabled:active,.btn-primary[disabled]:active,fieldset[disabled] .btn-primary:active,.btn-primary.disabled.active,.btn-primary.active[disabled],fieldset[disabled] .btn-primary.active
@@ -437,8 +437,6 @@ a:hover,a:focus,a:active {
 	border-bottom-color: #1bc79f;
 }
 
-
-
 /* Tabs Rank */
 .nav-tabs.nav-justified.ranks>li>a {
 	background-color: #f6f6f6;
@@ -517,6 +515,7 @@ a:hover,a:focus,a:active {
 	background-color: #fafafa;
 	font-weight: 600;
 }
+
 /* Sprites */
 @sprite       
 .footerFacebook {

@@ -7,6 +7,8 @@
 //
 package io.reflection.app.client.part;
 
+import io.reflection.app.client.res.Styles;
+
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -26,6 +28,7 @@ public class ConfirmationDialog extends PopupPanel {
 
 	public ConfirmationDialog(String title, String text) {
 		super();
+		Styles.INSTANCE.confirmationDialog().ensureInjected();
 		this.hide(true);
 		this.setGlassEnabled(true);
 		this.setModal(true);
