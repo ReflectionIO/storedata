@@ -105,4 +105,14 @@
         </retry-parameters>
     </queue>
 
+    <queue>
+        <name>callservicemethod</name>
+        <rate>1/s</rate>
+        <bucket-size>2</bucket-size>
+        <max-concurrent-requests>1</max-concurrent-requests>
+        <retry-parameters>
+            <task-retry-limit>5</task-retry-limit>
+        </retry-parameters>
+    </queue>
+
 </queue-entries>
