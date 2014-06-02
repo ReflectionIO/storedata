@@ -31,6 +31,7 @@ import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.page.part.MyAccountSidePanel;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.CircleProgressBar;
+import io.reflection.app.client.part.ConfirmationDialog;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.part.linkaccount.IosMacLinkAccountForm;
 import io.reflection.app.client.part.linkaccount.LinkableAccountFields;
@@ -42,6 +43,7 @@ import com.google.gson.JsonObject;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -117,6 +119,8 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 	private LinkableAccountFields mLinkableAccount;
 
+	private ConfirmationDialog confirmationDialog;
+
 	public LinkedAccountsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
@@ -180,7 +184,6 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 			@Override
 			public SafeHtml getValue(DataAccount object) {
 				String id = object.id.toString();
-
 				return SafeHtmlUtils.fromTrustedString("<a href=\""
 						+ PageType.UsersPageType.asHref(PageType.LinkedAccountsPageType.toString(user.id.toString(), EDIT_ACTION_PARAMETER_VALUE, id))
 								.asString() + "\" class=\"btn btn-xs btn-default\">Edit</a>");
@@ -193,13 +196,13 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 			@Override
 			public SafeHtml getValue(DataAccount object) {
 				String id = object.id.toString();
-
 				return SafeHtmlUtils.fromTrustedString("<a href=\""
 						+ PageType.UsersPageType.asHref(PageType.LinkedAccountsPageType.toString(user.id.toString(), DELETE_ACTION_PARAMETER_VALUE, id))
 								.asString() + "\" class=\"btn btn-xs btn-danger\">Delete</a>");
 			}
 
 		};
+
 		linkedAccountsTable.addColumn(columnDelete);
 
 		// columnExpand = new Column<DataAccount, SafeHtml>(new SafeHtmlCell()) {
@@ -362,13 +365,42 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 			mIosMacForm.setVendorNumber(propertiesJson.get("vendors").getAsString());
 
 		} else if (isValidDeleteStack(actionParameter, typeParameter)) {
-			loader.setVisible(true);
-			LinkedAccountController.get().deleteLinkedAccount(LinkedAccountController.get().getLinkedAccount(Long.valueOf(typeParameter)));
+			confirmationDialog = new ConfirmationDialog("Delete linked account", "Are you sure you want to remove this linked account?");
+			confirmationDialog.center();
+			confirmationDialog.setParameter(Long.valueOf(typeParameter));
+
+			confirmationDialog.getCancelButton().addClickHandler(new ClickHandler() {
+
+				@Override
+				public void onClick(ClickEvent event) {
+					// Window.alert(confirmationDialog.getParameter().toString());
+					// Window.alert(LinkedAccountController.get().getLinkedAccount(confirmationDialog.getParameter()).toString());
+					if (user != null) {
+						PageType.UsersPageType.show(PageType.LinkedAccountsPageType.toString(user.id.toString()));
+					}
+					confirmationDialog.reset();
+
+				}
+			});
+
+			confirmationDialog.getDeleteButton().addClickHandler(new ClickHandler() {
+
+				@Override
+				public void onClick(ClickEvent event) {
+					loader.setVisible(true);
+					LinkedAccountController.get().deleteLinkedAccount(LinkedAccountController.get().getLinkedAccount(confirmationDialog.getParameter()));
+					confirmationDialog.reset();
+				}
+			});
+
 		} else {
 			linkedAccountForm.setVisible(false);
 			linkedAccountsPanel.setVisible(true);
 			if (user != null) {
 				PageType.UsersPageType.show(PageType.LinkedAccountsPageType.toString(user.id.toString()));
+			}
+			if (confirmationDialog != null) {				
+				confirmationDialog.reset();
 			}
 		}
 
