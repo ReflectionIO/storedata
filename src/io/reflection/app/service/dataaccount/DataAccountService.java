@@ -35,6 +35,7 @@ import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.google.appengine.api.taskqueue.TransientFailureException;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 
 final class DataAccountService implements IDataAccountService {
 
@@ -50,16 +51,75 @@ final class DataAccountService implements IDataAccountService {
 		return ServiceType.ServiceTypeDataAccount.toString();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getDataAccount(java.lang.Long)
+	 */
 	@Override
 	public DataAccount getDataAccount(Long id) throws DataAccessException {
+		return getDataAccount(id, Boolean.FALSE);
+	}
+
+	/**
+	 * 
+	 * @param id
+	 * @param deleted
+	 *            If true, retrieve deleted linked accounts as well
+	 * @return
+	 * @throws DataAccessException
+	 */
+	@Override
+	public DataAccount getDataAccount(Long id, Boolean deleted) throws DataAccessException {
+		DataAccount dataAccount = null;
+
+		IDatabaseService databaseService = DatabaseServiceProvider.provide();
+		Connection dataAccountConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
+
+		String getDataAccountQuery = String.format(
+				"SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` FROM `dataaccount` WHERE `id`='%d' %s LIMIT 1", key(),
+				id.longValue(), deleted ? "" : "AND `deleted`='n'");
+
+		try {
+			dataAccountConnection.connect();
+			dataAccountConnection.executeQuery(getDataAccountQuery);
+
+			if (dataAccountConnection.fetchNextRow()) {
+				dataAccount = toDataAccount(dataAccountConnection);
+			}
+		} finally {
+			if (dataAccountConnection != null) {
+				dataAccountConnection.disconnect();
+			}
+		}
+		return dataAccount;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getDataAccount(java.lang.String, java.lang.Long)
+	 */
+	@Override
+	public DataAccount getDataAccount(String username, Long sourceid) throws DataAccessException {
+		return getDataAccount(username, sourceid, Boolean.FALSE);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getDataAccount(java.lang.String, java.lang.Long, java.lang.Boolean)
+	 */
+	@Override
+	public DataAccount getDataAccount(String username, Long sourceid, Boolean deleted) throws DataAccessException {
 		DataAccount dataAccount = null;
 
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection dataAccountConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
 		String getDataAccountQuery = String
-				.format("SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` FROM `dataaccount` WHERE `deleted`='n' AND `id`='%d' LIMIT 1",
-						key(), id.longValue());
+				.format("SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` FROM `dataaccount` WHERE `username`='%s' AND `sourceid`=%d %s LIMIT 1",
+						key(), username, sourceid, deleted ? "" : "AND `deleted`='n'");
 
 		try {
 			dataAccountConnection.connect();
@@ -105,6 +165,7 @@ final class DataAccountService implements IDataAccountService {
 
 	@Override
 	public DataAccount addDataAccount(DataAccount dataAccount) throws DataAccessException {
+
 		DataAccount addedDataAccount = null;
 
 		final String addDataAccountQuery = String.format(
@@ -125,7 +186,15 @@ final class DataAccountService implements IDataAccountService {
 					addedDataAccount.id = Long.valueOf(dataAccountConnection.getInsertedId());
 				}
 			}
-		} finally {
+		} catch (DataAccessException ex) {
+			if (ex.getCause() instanceof MySQLIntegrityConstraintViolationException) { // Data account already exists
+				addedDataAccount = restoreDataAccount(dataAccount);
+			} else {
+				throw ex;
+			}
+		}
+
+		finally {
 			if (dataAccountConnection != null) {
 				dataAccountConnection.disconnect();
 			}
@@ -226,6 +295,38 @@ final class DataAccountService implements IDataAccountService {
 		}
 
 		return updDataAccount;
+	}
+
+	@Override
+	public DataAccount restoreDataAccount(DataAccount dataAccount) throws DataAccessException {
+
+		DataAccount restoredDataAccount = null;
+
+		final String restoreDataAccountQuery = String
+				.format("UPDATE `dataaccount` SET `created`=NOW(), `password`=AES_ENCRYPT('%s',UNHEX('%s')), `properties`='%s', `deleted`='n' WHERE `username`='%s'",
+						addslashes(dataAccount.password), key(), addslashes(dataAccount.properties), addslashes(dataAccount.username));
+
+		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
+
+		try {
+			dataAccountConnection.connect();
+			dataAccountConnection.executeQuery(restoreDataAccountQuery);
+
+			if (dataAccountConnection.getAffectedRowCount() > 0) {
+				dataAccount = getDataAccount(dataAccount.username, dataAccount.source.id);
+				restoredDataAccount = getDataAccount(dataAccount.id);
+			}
+		} finally {
+			if (dataAccountConnection != null) {
+				dataAccountConnection.disconnect();
+			}
+		}
+
+		if (restoredDataAccount != null) {
+			enqueue(restoredDataAccount, 30, false);
+		}
+
+		return restoredDataAccount;
 	}
 
 	@Override

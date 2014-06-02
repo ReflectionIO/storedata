@@ -281,6 +281,12 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
 
+		if (LinkedAccountController.get().hasLinkedAccounts()) {
+			addLinkedAccount.setVisible(true);
+		} else {
+			addLinkedAccount.setVisible(false);
+		}
+
 		myAccountSidePanel.setLinkedAccountsLinkActive();
 
 		user = SessionController.get().getLoggedInUser();
@@ -557,6 +563,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 			} else {
 				simplePager.setVisible(false);
 			}
+			addLinkedAccount.setVisible(true);
 		}
 	}
 

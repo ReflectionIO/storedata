@@ -79,15 +79,15 @@ public final class Connection {
 			} catch (InstantiationException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error registering driver", ex);
 
-				throw new DataAccessException();
+				throw new DataAccessException(ex);
 			} catch (IllegalAccessException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error registering driver", ex);
 
-				throw new DataAccessException();
+				throw new DataAccessException(ex);
 			} catch (ClassNotFoundException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error registering driver", ex);
 
-				throw new DataAccessException();
+				throw new DataAccessException(ex);
 			}
 		} else {
 			try {
@@ -95,7 +95,7 @@ public final class Connection {
 			} catch (SQLException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error registering driver", ex);
 
-				throw new DataAccessException();
+				throw new DataAccessException(ex);
 			}
 		}
 	}
@@ -130,7 +130,7 @@ public final class Connection {
 		} catch (SQLException ex) {
 			LOG.log(GaeLevel.SEVERE, "Error conneting to databse", ex);
 
-			throw new DataAccessException();
+			throw new DataAccessException(ex);
 		}
 
 		return;
@@ -142,7 +142,7 @@ public final class Connection {
 		} catch (SQLException ex) {
 			LOG.log(GaeLevel.SEVERE, "Error checking if connection is closed", ex);
 
-			throw new DataAccessException();
+			throw new DataAccessException(ex);
 		}
 	}
 
@@ -170,10 +170,11 @@ public final class Connection {
 			} else {
 				queryResult = statement.getGeneratedKeys();
 			}
+
 		} catch (SQLException ex) {
 			LOG.log(GaeLevel.SEVERE, "Error executing query", ex);
 
-			throw new DataAccessException();
+			throw new DataAccessException(ex);
 		}
 
 		return;
@@ -193,7 +194,7 @@ public final class Connection {
 				} catch (SQLException ex) {
 					LOG.log(GaeLevel.SEVERE, "Error getting inserted id", ex);
 
-					throw new DataAccessException();
+					throw new DataAccessException(ex);
 				}
 			}
 		}
@@ -209,7 +210,7 @@ public final class Connection {
 			} catch (SQLException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error fetching next row", ex);
 
-				throw new DataAccessException();
+				throw new DataAccessException(ex);
 			}
 		}
 
@@ -225,7 +226,7 @@ public final class Connection {
 			} catch (SQLException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error getting value for column", ex);
 
-				throw new DataAccessException();
+				throw new DataAccessException(ex);
 			}
 		}
 
@@ -241,7 +242,7 @@ public final class Connection {
 			} catch (SQLException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error getting value for column", ex);
 
-				throw new DataAccessException();
+				throw new DataAccessException(ex);
 			}
 		}
 
@@ -260,7 +261,7 @@ public final class Connection {
 			} catch (SQLException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error getting value for column", ex);
 
-				throw new DataAccessException();
+				throw new DataAccessException(ex);
 			}
 		}
 
@@ -276,7 +277,7 @@ public final class Connection {
 			} catch (SQLException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error getting value for column", ex);
 
-				throw new DataAccessException();
+				throw new DataAccessException(ex);
 			}
 		}
 
@@ -292,7 +293,7 @@ public final class Connection {
 			} catch (SQLException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error getting value for column", ex);
 
-				throw new DataAccessException();
+				throw new DataAccessException(ex);
 			}
 		}
 
@@ -308,7 +309,7 @@ public final class Connection {
 			} catch (SQLException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error getting value for column", ex);
 
-				throw new DataAccessException();
+				throw new DataAccessException(ex);
 			}
 		}
 
@@ -327,7 +328,7 @@ public final class Connection {
 			} catch (SQLException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error getting row count", ex);
 
-				throw new DataAccessException();
+				throw new DataAccessException(ex);
 			}
 		}
 
@@ -344,7 +345,7 @@ public final class Connection {
 			} catch (SQLException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error while closing connection", ex);
 
-				throw new DataAccessException();
+				throw new DataAccessException(ex);
 			}
 		}
 
@@ -358,7 +359,7 @@ public final class Connection {
 			} catch (SQLException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error getting affected row count", ex);
 
-				throw new DataAccessException();
+				throw new DataAccessException(ex);
 			}
 		}
 
@@ -373,7 +374,7 @@ public final class Connection {
 				} catch (SQLException ex) {
 					LOG.log(GaeLevel.SEVERE, "Error committing transaction", ex);
 
-					throw new DataAccessException();
+					throw new DataAccessException(ex);
 				}
 			}
 		} else {

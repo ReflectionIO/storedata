@@ -302,6 +302,16 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 		return myDataAccountLookup.get(linkedAccountId.toString());
 	}
 
+	public boolean hasLinkedAccount(String username) {
+		boolean hasLinkedAccount = false;
+		for (DataAccount ds : getAllLinkedAccounts()) {
+			if (ds.username.equalsIgnoreCase(username)) {
+				hasLinkedAccount = true;
+			}
+		}
+		return hasLinkedAccount;
+	}
+
 	/**
 	 * Get data source
 	 * 

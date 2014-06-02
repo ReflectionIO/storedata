@@ -724,26 +724,35 @@ final class UserService implements IUserService {
 	 */
 	@Override
 	public DataAccount addDataAccount(User user, DataSource dataSource, String username, String password, String properties) throws DataAccessException {
-		DataAccount addedDataAccount = DataAccountServiceProvider.provide().addDataAccount(dataSource, username, password, properties);
+		DataAccount addedDataAccount = null;
+
+		addedDataAccount = DataAccountServiceProvider.provide().addDataAccount(dataSource, username, password, properties);
 
 		if (addedDataAccount != null) {
-			String addDataAccountQuery = String.format("INSERT INTO `userdataaccount` (`dataaccountid`,`userid`) VALUES (%d, %d)",
-					addedDataAccount.id.longValue(), user.id.longValue());
+			if (!hasDataAccount(user, addedDataAccount, Boolean.TRUE)) {
+				String addDataAccountQuery = String.format("INSERT INTO `userdataaccount` (`dataaccountid`,`userid`) VALUES (%d, %d)",
+						addedDataAccount.id.longValue(), user.id.longValue());
 
-			Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
+				Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
-			try {
-				userConnection.connect();
-				userConnection.executeQuery(addDataAccountQuery);
+				try {
+					userConnection.connect();
+					userConnection.executeQuery(addDataAccountQuery);
 
-				if (userConnection.getAffectedRowCount() > 0) {
-					// added the user account successfully
+					if (userConnection.getAffectedRowCount() > 0) {
+						// added the user account successfully
+					}
+				} finally {
+					if (userConnection != null) {
+						userConnection.disconnect();
+					}
 				}
-			} finally {
-				if (userConnection != null) {
-					userConnection.disconnect();
-				}
+			} else {
+				restoreUserDataAccount(addedDataAccount);
 			}
+		} else {
+			LOG.warning("");
+			throw new DataAccessException();
 		}
 
 		return addedDataAccount;
@@ -989,11 +998,23 @@ final class UserService implements IUserService {
 	 */
 	@Override
 	public Boolean hasDataAccount(User user, DataAccount dataAccount) throws DataAccessException {
+		return hasDataAccount(user, dataAccount, Boolean.FALSE);
+	}
+
+	/**
+	 * 
+	 * @param user
+	 * @param dataAccount
+	 * @param deleted
+	 *            If true, check deleted linked accounts as well
+	 * @return
+	 * @throws DataAccessException
+	 */
+	private Boolean hasDataAccount(User user, DataAccount dataAccount, Boolean deleted) throws DataAccessException {
 		Boolean hasDataAccount = Boolean.FALSE;
 
-		String hasDataAccountQuery = String.format(
-				"SELECT 1 FROM `userdataaccount` WHERE `dataaccountid`=%d AND `userid`=%d AND `deleted`='n' ORDER BY `id` ASC LIMIT 1",
-				dataAccount.id.longValue(), user.id.longValue());
+		String hasDataAccountQuery = String.format("SELECT 1 FROM `userdataaccount` WHERE `dataaccountid`=%d AND `userid`=%d %s ORDER BY `id` ASC LIMIT 1",
+				dataAccount.id.longValue(), user.id.longValue(), deleted ? "" : "AND `deleted`='n'");
 
 		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
@@ -1012,6 +1033,34 @@ final class UserService implements IUserService {
 		}
 
 		return hasDataAccount;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.user.IUserService#restoreUserDeletedDataAccount(io.reflection.app.datatypes.shared.User, java.lang.String)
+	 */
+	@Override
+	public void restoreUserDataAccount(DataAccount dataAccount) throws DataAccessException {
+
+		String restoreDataAccountQuery = String.format("UPDATE `userdataaccount` SET `deleted`='n' WHERE `dataaccountid`=%d AND `deleted`='y'",
+				dataAccount.id.longValue());
+
+		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
+
+		try {
+			userConnection.connect();
+			userConnection.executeQuery(restoreDataAccountQuery);
+
+			if (userConnection.getAffectedRowCount() > 0) {
+				// added the user account successfully
+			}
+		} finally {
+			if (userConnection != null) {
+				userConnection.disconnect();
+			}
+		}
+
 	}
 
 	/*

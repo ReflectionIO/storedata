@@ -27,6 +27,34 @@ public interface IDataAccountService extends IService {
 	public DataAccount getDataAccount(Long id) throws DataAccessException;
 
 	/**
+	 * 
+	 * @param id
+	 * @param deleted
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public DataAccount getDataAccount(Long id, Boolean deleted) throws DataAccessException;
+
+	/**
+	 * 
+	 * @param username
+	 * @param sourceid
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public DataAccount getDataAccount(String username, Long sourceid) throws DataAccessException;
+
+	/**
+	 * 
+	 * @param username
+	 * @param sourceid
+	 * @param deleted
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public DataAccount getDataAccount(String username, Long sourceid, Boolean deleted) throws DataAccessException;
+
+	/**
 	 * @param dataAccount
 	 * @return
 	 * @throws DataAccessException
@@ -49,6 +77,14 @@ public interface IDataAccountService extends IService {
 	 * @throws DataAccessException
 	 */
 	public DataAccount updateDataAccount(DataAccount dataAccount) throws DataAccessException;
+
+	/**
+	 * 
+	 * @param dataAccountId
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public DataAccount restoreDataAccount(DataAccount dataAccount) throws DataAccessException;
 
 	/**
 	 * @param dataAccount
