@@ -82,14 +82,6 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 		}
 		input.pager = pager;
 
-		if (myDataAccounts == null) {
-			myDataAccounts = new ArrayList<DataAccount>();
-		}
-
-		if (myDataSources == null) {
-			myDataSources = new ArrayList<DataSource>();
-		}
-
 		service.getLinkedAccounts(input, new AsyncCallback<GetLinkedAccountsResponse>() {
 
 			@Override
@@ -169,7 +161,13 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 					rows.add(output.account);
 					addLinkedAccountsToLookup(Arrays.asList(output.account));
 					addDataSourceToLookup(Arrays.asList(output.account.source));
-					pager.totalCount = pager.totalCount + 1;
+					if (pager == null) { // Link account after request invite registration
+						pager = new Pager();
+						pager.count = (long) Integer.MAX_VALUE;
+						pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
+						pager.totalCount = Long.valueOf(0);
+					}
+					pager.totalCount = pager.totalCount + Long.valueOf(1);
 					pager.start = Long.valueOf(0);
 					mCount = pager.totalCount;
 					updateRowCount((int) mCount, true);
@@ -328,6 +326,9 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 	 * @param linkedAccounts
 	 */
 	private void addLinkedAccountsToLookup(List<DataAccount> linkedAccounts) {
+		if (myDataAccounts == null) {
+			myDataAccounts = new ArrayList<DataAccount>();
+		}
 		for (DataAccount dataAccount : linkedAccounts) {
 			myDataAccountLookup.put(dataAccount.id.toString(), dataAccount);
 			myDataAccounts.add(dataAccount);
@@ -365,6 +366,9 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 	 * @param dataSources
 	 */
 	private void addDataSourceToLookup(List<DataSource> dataSources) {
+		if (myDataSources == null) {
+			myDataSources = new ArrayList<DataSource>();
+		}
 		for (DataSource dataSource : dataSources) {
 			myDataSourceLookup.put(dataSource.id.toString(), dataSource);
 			myDataSources.add(dataSource);
