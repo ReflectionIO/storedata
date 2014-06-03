@@ -261,7 +261,7 @@ final class CategoryService implements ICategoryService {
 		Category category = null;
 
 		String getInternalIdCategoryQuery = String.format("SELECT * FROM `category` WHERE `deleted`='n' AND `store`='%s' AND `internalid`=%d LIMIT 1",
-				store.a3Code, internalId);
+				store.a3Code, internalId.longValue());
 
 		Connection categoryConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeCategory.toString());
 
