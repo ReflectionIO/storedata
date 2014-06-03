@@ -51,12 +51,11 @@
     </queue>
     <queue>
         <name>model</name>
-        <rate>100/s</rate>
-        <bucket-size>100</bucket-size>
-        <max-concurrent-requests>2</max-concurrent-requests>
-        <retry-parameters>
-            <task-retry-limit>5</task-retry-limit>
-        </retry-parameters>
+        <mode>pull</mode>
+        <acl>
+            <user-email>hello@reflection.com</user-email>
+            <!-- <writer-email>hello@reflection.com</writer-email> -->
+        </acl>
     </queue>
     <queue>
         <name>predict</name>
@@ -66,6 +65,9 @@
         <retry-parameters>
             <task-retry-limit>5</task-retry-limit>
         </retry-parameters>
+        <acl>
+            <writer-email>hello@reflection.com</writer-email>
+        </acl>
     </queue>
     <queue>
         <name>persist</name>

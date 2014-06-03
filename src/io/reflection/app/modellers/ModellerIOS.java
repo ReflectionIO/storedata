@@ -51,8 +51,6 @@ import org.renjin.sexp.StringVector;
 import org.renjin.sexp.Symbols;
 import org.renjin.sexp.Vector;
 
-import com.google.appengine.api.backends.BackendService;
-import com.google.appengine.api.backends.BackendServiceFactory;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
@@ -64,7 +62,6 @@ import com.spacehopperstudios.utility.StringUtils;
  * @author billy1380
  * 
  */
-@SuppressWarnings("deprecation")
 public class ModellerIOS extends RenjinRModellerBase implements Modeller {
 
 	private static final Logger LOG = Logger.getLogger(ModellerIOS.class.getName());
@@ -85,16 +82,11 @@ public class ModellerIOS extends RenjinRModellerBase implements Modeller {
 		try {
 			Queue queue = QueueFactory.getQueue("model");
 
-			BackendService backendApi = BackendServiceFactory.getBackendService();
-			String backendServerName = backendApi.getBackendAddress("model");
-
 			TaskOptions options = TaskOptions.Builder.withUrl("/model").method(Method.POST);
 			options.param("store", STORE);
 			options.param("country", country);
 			options.param("type", type);
 			options.param("code", code.toString());
-
-			options.header("Host", backendServerName);
 
 			try {
 				queue.add(options);
