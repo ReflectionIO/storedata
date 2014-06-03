@@ -19,7 +19,6 @@ import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProv
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
-import io.reflection.app.service.permission.PermissionServiceProvider;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -310,13 +309,15 @@ final class RoleService implements IRoleService {
 			roleConnection.executeQuery(getRolePermissionsQuery);
 
 			while (roleConnection.fetchNextRow()) {
-				Long id = roleConnection.getCurrentRowLong("id");
+				Permission p = new Permission();
 
-				Permission p = PermissionServiceProvider.provide().getPermission(id);
+				p.id = roleConnection.getCurrentRowLong("id");
 
-				if (p != null) {
-					rolePermissions.add(p);
-				}
+				// Permission p = PermissionServiceProvider.provide().getPermission(id);
+				//
+				// if (p != null) {
+				// rolePermissions.add(p);
+				// }
 			}
 		} finally {
 			if (roleConnection != null) {

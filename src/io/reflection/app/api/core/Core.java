@@ -931,8 +931,18 @@ public final class Core extends ActionHandler {
 			if (input.permissionsOnly != Boolean.TRUE) {
 				output.roles = UserServiceProvider.provide().getRoles(input.session.user);
 
-				if (output.roles != null && input.idsOnly == Boolean.FALSE) {
-					RoleServiceProvider.provide().inflateRoles(output.roles);
+				if (output.roles != null) {
+					if (input.idsOnly == Boolean.FALSE) {
+						RoleServiceProvider.provide().inflateRoles(output.roles);
+					}
+					
+					for (Role role : output.roles) {
+						role.permissions = RoleServiceProvider.provide().getPermissions(role);
+						
+						if (role.permissions != null && input.idsOnly == Boolean.FALSE) {
+							PermissionServiceProvider.provide().inflatePermissions(role.permissions);
+						}
+					}
 				}
 			}
 
