@@ -348,16 +348,35 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	public boolean hasPermission(User user, long id) {
 		boolean hasPermission = hasRole(user, ADMIN_ROLE_ID);
 
-		if (!hasPermission && user != null && user.permissions != null) {
-			for (Permission permission : user.permissions) {
-				if (permission.id != null && permission.id.longValue() == id) {
-					hasPermission = true;
-					break;
+		if (!hasPermission && user != null) {
+			if (user.roles != null) {
+				for (Role role : user.roles) {
+					if (!hasPermission && role.permissions != null) {
+						hasPermission = hasIdPermission(role.permissions, id);
+						if (hasPermission) {
+							break;
+						}
+					}
 				}
 			}
+			if (!hasPermission && user.permissions != null) {
+				hasPermission = hasIdPermission(user.permissions, id);
+			}
+
 		}
 
 		return hasPermission;
+	}
+
+	private Boolean hasIdPermission(Collection<Permission> permissions, Long id) {
+		boolean hasIdPermission = false;
+		for (Permission p : permissions) {
+			if (p.id != null && p.id.longValue() == id) {
+				hasIdPermission = true;
+				break;
+			}
+		}
+		return hasIdPermission;
 	}
 
 	/**
