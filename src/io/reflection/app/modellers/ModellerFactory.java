@@ -22,7 +22,6 @@ public class ModellerFactory {
 
 		if ("ios".equals(store.toLowerCase())) {
 			// ios store
-			modeller = new ModellerIOS();
 		} else if ("azn".equals(store.toLowerCase())) {
 			// amazon store
 		} else if ("gpl".equals(store.toLowerCase())) {

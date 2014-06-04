@@ -60,15 +60,7 @@
             <version>0.3.10</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.renjin</groupId>
-            <artifactId>renjin-appengine</artifactId>
-        </dependency>
 
-        <dependency>
-            <groupId>org.renjin.cran</groupId>
-            <artifactId>truncreg</artifactId>
-        </dependency>
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -142,19 +134,4 @@
             <url>http://nexus.bedatadriven.com/content/groups/public/</url>
         </repository>
     </repositories>
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.renjin</groupId>
-                <artifactId>renjin-appengine</artifactId>
-                <version>0.7.0-RC7-SNAPSHOT</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.renjin.cran</groupId>
-                <artifactId>truncreg</artifactId>
-                <version>0.1-1-SNAPSHOT</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 </project>
