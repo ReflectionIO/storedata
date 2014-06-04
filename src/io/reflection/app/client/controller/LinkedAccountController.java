@@ -76,7 +76,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 
 		if (pager == null) {
 			pager = new Pager();
-			pager.count = (long) Integer.MAX_VALUE;
+			pager.count = Long.valueOf(Integer.MAX_VALUE);
 			pager.start = Long.valueOf(0);
 			pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
 		}
@@ -153,6 +153,14 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 
 		input.source = source;
 
+		if (pager == null) { // Link account after request invite registration
+			pager = new Pager();
+			pager.count = Long.valueOf(Integer.MAX_VALUE);
+			pager.start = Long.valueOf(0);
+			pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
+			pager.totalCount = Long.valueOf(0);
+		}
+
 		service.linkAccount(input, new AsyncCallback<LinkAccountResponse>() {
 
 			@Override
@@ -161,14 +169,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 					rows.add(output.account);
 					addLinkedAccountsToLookup(Arrays.asList(output.account));
 					addDataSourceToLookup(Arrays.asList(output.account.source));
-					if (pager == null) { // Link account after request invite registration
-						pager = new Pager();
-						pager.count = (long) Integer.MAX_VALUE;
-						pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
-						pager.totalCount = Long.valueOf(0);
-					}
-					pager.totalCount = pager.totalCount + Long.valueOf(1);
-					pager.start = Long.valueOf(0);
+					pager.totalCount = Long.valueOf(pager.totalCount.longValue() + 1);
 					mCount = pager.totalCount;
 					updateRowCount((int) mCount, true);
 					updateRowData(0, rows.subList(0, Math.min(pager.count.intValue(), pager.totalCount.intValue())));
@@ -252,7 +253,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 				if (output.status == StatusType.StatusTypeSuccess) {
 					rows.remove(myDataAccountLookup.get(input.linkedAccount.id.toString()));
 					deleteLinkedAccountLookup(input.linkedAccount.id);
-					pager.totalCount = pager.totalCount - 1;
+					pager.totalCount = Long.valueOf(pager.totalCount.longValue() - 1);
 					pager.start = Long.valueOf(0);
 					mCount = pager.totalCount;
 					updateRowCount((int) mCount, true);
