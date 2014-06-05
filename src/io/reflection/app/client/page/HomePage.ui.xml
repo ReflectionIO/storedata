@@ -12,7 +12,7 @@
     @external icon-location-1, icon-mail, icon-phone;
     @external icon-basket-alt, icon-chart-bar, icon-chart-pie, icon-heart, icon-globe, icon-search;
     .logo {
-    	background: url("../images/logo.png") no-repeat center;
+    	background: url("images/logo.png") no-repeat center;
     	text-indent: -100000px;
     	overflow: hidden;
     }
@@ -46,7 +46,7 @@
     }
     
     .custom {
-    	background: #272833 url("../images/header_bg.png") fixed repeat-x bottom;
+    	background: #272833 url("images/header_bg.png") fixed repeat-x bottom;
     }
     
     .home .custom h1,.custom h2 {
@@ -368,13 +368,13 @@
                             </ol>
                             <div class="carousel-inner" ui:field="carouselContainer">
                                 <div class="item active">
-                                    <img src="../images/leaderboard.png" alt="Leaderboard" />
+                                    <img src="images/leaderboard.png" alt="Leaderboard" />
                                 </div>
                                 <div class="item">
-                                    <img src="../images/revenue_history.png" alt="Revenue History" />
+                                    <img src="images/revenue_history.png" alt="Revenue History" />
                                 </div>
                                 <div class="item">
-                                    <img src="../images/download_history.png" alt="Download History" />
+                                    <img src="images/download_history.png" alt="Download History" />
                                 </div>
                             </div>
                             <g:Anchor styleName="left carousel-control {global.reflection.smooth}" ui:field="carouselLeft">
