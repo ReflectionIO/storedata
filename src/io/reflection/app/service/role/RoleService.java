@@ -300,7 +300,7 @@ final class RoleService implements IRoleService {
 	public List<Permission> getPermissions(Role role) throws DataAccessException {
 		List<Permission> rolePermissions = new ArrayList<Permission>();
 
-		String getRolePermissionsQuery = String.format("SELECT `id` FROM `rolepermission` WHERE `roleid`=%d", role.id.longValue());
+		String getRolePermissionsQuery = String.format("SELECT `permissionid` FROM `rolepermission` WHERE `roleid`=%d", role.id.longValue());
 
 		Connection roleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRole.toString());
 
@@ -310,14 +310,8 @@ final class RoleService implements IRoleService {
 
 			while (roleConnection.fetchNextRow()) {
 				Permission p = new Permission();
-
-				p.id = roleConnection.getCurrentRowLong("id");
-
-				// Permission p = PermissionServiceProvider.provide().getPermission(id);
-				//
-				// if (p != null) {
-				// rolePermissions.add(p);
-				// }
+				p.id = roleConnection.getCurrentRowLong("permissionid");
+				rolePermissions.add(p);
 			}
 		} finally {
 			if (roleConnection != null) {
