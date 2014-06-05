@@ -76,19 +76,11 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 
 		if (pager == null) {
 			pager = new Pager();
-			pager.count = (long) Integer.MAX_VALUE;
+			pager.count = Long.valueOf(Integer.MAX_VALUE);
 			pager.start = Long.valueOf(0);
 			pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
 		}
 		input.pager = pager;
-
-		if (myDataAccounts == null) {
-			myDataAccounts = new ArrayList<DataAccount>();
-		}
-
-		if (myDataSources == null) {
-			myDataSources = new ArrayList<DataSource>();
-		}
 
 		service.getLinkedAccounts(input, new AsyncCallback<GetLinkedAccountsResponse>() {
 
@@ -161,6 +153,14 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 
 		input.source = source;
 
+		if (pager == null) { // Link account after request invite registration
+			pager = new Pager();
+			pager.count = Long.valueOf(Integer.MAX_VALUE);
+			pager.start = Long.valueOf(0);
+			pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
+			pager.totalCount = Long.valueOf(0);
+		}
+
 		service.linkAccount(input, new AsyncCallback<LinkAccountResponse>() {
 
 			@Override
@@ -169,8 +169,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 					rows.add(output.account);
 					addLinkedAccountsToLookup(Arrays.asList(output.account));
 					addDataSourceToLookup(Arrays.asList(output.account.source));
-					pager.totalCount = pager.totalCount + 1;
-					pager.start = Long.valueOf(0);
+					pager.totalCount = Long.valueOf(pager.totalCount.longValue() + 1);
 					mCount = pager.totalCount;
 					updateRowCount((int) mCount, true);
 					updateRowData(0, rows.subList(0, Math.min(pager.count.intValue(), pager.totalCount.intValue())));
@@ -254,7 +253,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 				if (output.status == StatusType.StatusTypeSuccess) {
 					rows.remove(myDataAccountLookup.get(input.linkedAccount.id.toString()));
 					deleteLinkedAccountLookup(input.linkedAccount.id);
-					pager.totalCount = pager.totalCount - 1;
+					pager.totalCount = Long.valueOf(pager.totalCount.longValue() - 1);
 					pager.start = Long.valueOf(0);
 					mCount = pager.totalCount;
 					updateRowCount((int) mCount, true);
@@ -328,6 +327,9 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 	 * @param linkedAccounts
 	 */
 	private void addLinkedAccountsToLookup(List<DataAccount> linkedAccounts) {
+		if (myDataAccounts == null) {
+			myDataAccounts = new ArrayList<DataAccount>();
+		}
 		for (DataAccount dataAccount : linkedAccounts) {
 			myDataAccountLookup.put(dataAccount.id.toString(), dataAccount);
 			myDataAccounts.add(dataAccount);
@@ -365,6 +367,9 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 	 * @param dataSources
 	 */
 	private void addDataSourceToLookup(List<DataSource> dataSources) {
+		if (myDataSources == null) {
+			myDataSources = new ArrayList<DataSource>();
+		}
 		for (DataSource dataSource : dataSources) {
 			myDataSourceLookup.put(dataSource.id.toString(), dataSource);
 			myDataSources.add(dataSource);
