@@ -32,13 +32,10 @@
 		<g:Image resource="{images.alarmClock}" styleName="col-md-2 text-center {style.image1}" />
 		<h3 class="col-md-offset-2" style="padding-bottom:13px;">Benefits of getting in early</h3>
 		<p class="col-md-offset-2">
-			Ability to request any additional feature based on our
-			data, such as forecasting and trends.
+			Ability to feedback on current and future features based on our data, such as forecasting and trends.
 		</p>
 		<p class="col-md-offset-2">
-			Revenue and download intelligence as well as any premium
-			features
-			for free.
+			Revenue and download intelligence at no cost for the duration of the beta.
 		</p>
 
 		<g:Image resource="{images.clipboard}"
