@@ -2,25 +2,30 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:with field='images' type='io.reflection.app.client.res.Images' />
     <ui:style>
-    .form {
-    	padding-left: 55px;
-    	padding-right: 55px;
-    	margin-top: 30px;
-    	margin-bottom: 30px;
-    }
+        .panel {
+        padding-left: 73px;
+        padding-right: 73px;
+        margin-top: 40px;
+        margin-bottom: 80px;
+        }
+        .thanks{
+        margin-top: 30px; margin-bottom: 25px;
+        }
     </ui:style>
     <g:HTMLPanel>
-        <g:HTMLPanel styleName="{style.form} text-center">
+        <g:HTMLPanel styleName="{style.panel} text-center">
 
             <g:Image resource="{images.tick}" />
-            <h3 style="margin-top: 40px; margin-bottom: 40px;">
+            <h3 class="{style.thanks}">
                 Thank you for your request
             </h3>
-            <p style="margin-bottom: 30px;">We just need to verify your details, which will take a few minutes. We'll send you a notification email once your accont is up and
-                running.</p>
-            <p>
-                Only companies that have been previously invited will be approved. If you have any issues please email
+            <p style="margin-bottom: 30px;">
+                Only companies that have been previously invited will be approved. If you have any problems please email
                 <a href="mailto:beta@reflection.io">beta@reflection.io</a>
+            </p>
+            <p>
+                For those invited we just need to verify your details, which will take a few minutes. We'll send you a notification email once your account is up
+                and running
             </p>
 
         </g:HTMLPanel>
