@@ -53,8 +53,8 @@
         <name>model</name>
         <mode>pull</mode>
         <acl>
-            <user-email>535523482315@project.googleusercontent.com</user-email>
-            <!-- <writer-email>535523482315@project.googleusercontent.com</writer-email> -->
+            <user-email>535523482315@project.gserviceaccount.com</user-email>
+            <user-email>hello@reflection.io</user-email>
         </acl>
     </queue>
     <queue>
@@ -66,7 +66,8 @@
             <task-retry-limit>5</task-retry-limit>
         </retry-parameters>
         <acl>
-            <writer-email>535523482315@project.googleusercontent.com</writer-email>
+            <writer-email>535523482315@project.gserviceaccount.com</writer-email>
+            <writer-email>hello@reflection.io</writer-email>
         </acl>
     </queue>
     <queue>
