@@ -33,6 +33,7 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -173,17 +174,29 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 			setLoading(LoadingType.NoneLoadingType);
 
 			if (post.commentsEnabled == Boolean.TRUE) {
-				String identifier = "post" + post.id.toString();
-				String url = GWT.getHostPageBaseURL() + PageType.BlogPostPageType.asHref("view", post.id.toString()).asString();
-				String title = post.title;
-				String tag = post.tags == null || post.tags.size() == 0 ? "reflection.io" : post.tags.get(0);
+				final String identifier = "post" + post.id.toString();
+				final String url = GWT.getHostPageBaseURL() + PageType.BlogPostPageType.asHref("view", post.id.toString()).asString();
+				final String title = post.title;
+				final String tag = post.tags == null || post.tags.size() == 0 ? "reflection.io" : post.tags.get(0);
 
-				if (!installed) {
-					installDisqus(identifier, url, title, tag);
-					installed = true;
-				} else {
-					resetDisqus(identifier, url, title, tag);
-				}
+				(new Timer() {
+					@Override
+					public void run() {
+						comments = DivElement.as(Document.get().getElementById("disqus_thread"));
+
+						if (comments != null) {
+							if (!installed) {
+								installDisqus(identifier, url, title, tag);
+								installed = true;
+							} else {
+								resetDisqus(identifier, url, title, tag);
+							}
+							
+							this.cancel();
+						}
+					}
+				}).scheduleRepeating(100);
+
 			}
 		}
 
@@ -247,6 +260,7 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 		$wnd.disqus_url = url;
 		$wnd.disqus_title = title;
 		$wnd.disqus_category_id = category;
+//		$wnd.disqus_developer = 1;
 
 		($wnd.installDisqus = function() {
 			var dsq = $wnd.document.createElement('script');
@@ -265,6 +279,7 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 					this.page.url = resetUrl;
 					this.page.title = resetTitle;
 					this.page.category_id = resetCategory;
+//					this.page.developer = 1;
 				}
 			});
 		};
