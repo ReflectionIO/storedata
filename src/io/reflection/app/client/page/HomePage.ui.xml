@@ -7,269 +7,265 @@
     <ui:with field="global" type="io.reflection.app.client.res.Styles" />
 
     <ui:style type="io.reflection.app.client.page.HomePage.HomePageStyle">
-    @external btn, text-muted, carousel, carousel-inner, item, carousel-control, right, left, carousel-indicators, active, noteDetail;
-    @external icon-angle-right, icon-angle-left;
-    @external icon-location-1, icon-mail, icon-phone;
-    @external icon-basket-alt, icon-chart-bar, icon-chart-pie, icon-heart, icon-globe, icon-search;
-    .logo {
-    	background: url("images/logo.png") no-repeat center;
-    	text-indent: -100000px;
-    	overflow: hidden;
-    }
-    
-    .contact .icon-location-1,.contact .icon-mail,.contact .icon-phone {
-    	font-size: 35px;
-    	color: #7e72c9;
-    }
-    
-    .home .contact .text-muted {
-    	font-size: 14px;
-    	line-height: 14px;
-    }
-    
-    .home .noteDetail {
-    	text-align: left;
-    }
-    
-    .contact h5 {
-    	display: none;
-    }
-    
-    .home h1,.home h2 {
-    	font-size: 34px;
-    	line-height: 40px;
-    	font-weight: 600;
-    }
-    
-    .offBlack {
-    	color: #484a50;
-    }
-    
-    .custom {
-    	background: #272833 url("images/header_bg.png") fixed repeat-x bottom;
-    }
-    
-    .home .custom h1,.custom h2 {
-    	color: white;
-    	font-weight: 400;
-    }
-    
-    .custom .text-muted {
-    	color: #afb1cf;
-    }
-    
-    .home .text-muted {
-    	font-size: 16px;
-    	line-height: 26px;
-    }
-    
-    .arrow a {
-    	color: white;
-    	font-size: 50px;
-    	opacity: .5;
-    }
-    
-    .arrow a:hover,.arrow a:focus {
-    	opacity: 1;
-    }
-    
-    .centered {
-    	text-align: center;
-    }
-    
-    .moveDown {
-    	margin-top: 60px;
-    }
-    
-    .moveDownALittle {
-    	margin-top: 30px;
-    }
-    
-    .feature .icon-basket-alt,.feature .icon-chart-bar,.feature .icon-chart-pie,.feature .icon-heart,.feature .icon-globe,.feature .icon-search {
-    	font-size: 50px;
-    	color: #bbbae6;
-    	margin-bottom: 30px;
-    }
-    
-    .feature {
-    	padding-left: 30px;
-    	padding-right: 30px;
-    }
-    
-    .features {
-    	margin-top: 60px;
-    	margin-bottom: 120px;
-    }
-    
-    /*
-                        .feature:hover span,.feature:focus span {
-                        	opacity: 1;
-                        }
-                        
-                        .feature:hover h3,.feature:focus h3 {
-                        	color: #7e72c9;
-                        }
-                        
-                        */
-    .whiteSmoke {
-    	background: whitesmoke;
-    }
-    
-    .carousel-control.right {
-    	background-image: none;
-    	text-shadow: none;
-    	color: #d9dce0;
-    }
-    
-    .carousel-control.left {
-    	background-image: none;
-    	text-shadow: none;
-    	color: #d9dce0;
-    }
-    
-    .carousel-control .icon-angle-left,.carousel-control .icon-angle-right {
-    	font-size: 60px;
-    	position: absolute;
-    	top: 50%;
-    	z-index: 5;
-    	display: inline-block;
-    	left: 25%;
-    }
-    
-    .carousel-control:hover .icon-angle-left,.carousel-control:focus .icon-angle-left {
-    	left: 15%;
-    }
-    
-    .carousel-control:hover .icon-angle-right,.carousel-control:focus .icon-angle-right {
-    	left: 35%;
-    }
-    
-    .carousel-indicators li {
-    	background-color: #999;
-    	border: none;
-    	cursor: default;
-    	margin-left: 5px;
-    	margin-right: 5px;
-    }
-    
-    .carousel-indicators {
-    	bottom: -20px;
-    }
-    
-    .carousel-indicators li.active {
-    	background-color: #272833;
-    	border: none;
-    	margin-left: 5px;
-    	margin-right: 5px;
-    }
-    
-    .carousel {
-    	margin-bottom: 100px;
-    	margin-top: 30px;
-    	height: 540px;
-    }
-    
-    .carousel-inner {
-    	height: 540px;
-    }
-    
-    .carousel-inner>.item {
-    	height: 540px;
-    	/* position: absolute; */
-    	width: 100%;
-    }
-    
-    .carousel-inner>.item>img {
-    	margin: 0 auto;
-    	height: 540px;
-    }
-    
-    .people li {
-    	border: 2px solid #e5e5e5;
-    	border-radius: 3px;
-    	padding: 25px;
-    	margin: 20px 0;
-    	list-style: none;
-    }
-    
-    .people li>p {
-    	font-size: 14px;
-    }
-    
-    .data {
-    	background-color: #7e72c9;
-    }
-    
-    .insideData {
-    	margin-top: 60px;
-    	margin-bottom: 60px;
-    }
-    
-    .insideData h3 {
-    	color: white;
-    }
-    
-    .contactFormField label {
-    	display: none;
-    }
-    
-    .social {
-    	border-top: 1px solid #d9dce0;
-    }
-    
-    .social a {
-    	color: #8587a1;
-    	font-size: 32px;
-    }
-    
-    .social a:hover {
-    	color: #272833;
-    }
-    
-    .home .btn {
-    	font-size: 16px;
-    }
-    
-    .btnHollow {
-    	background: none;
-    	border: 2px solid;
-    	border-radius: 5px;
-    	padding: 20px 25px;
-    }
-    
-    .btnPurple {
-    	color: white;
-    	border-color: #7e72c9;
-    }
-    
-    .btnPurpleLBg {
-    	color: #7e72c9;
-    	border-color: #7e72c9;
-    }
-    
-    .btnPurpleInv {
-    	color: white;
-    	border-color: white;
-    }
-    
-    .btnPurple:hover,.btnPurpleLBg:hover,.btnPurple:focus,.btnPurpleLBg:focus {
-    	color: white;
-    	background-color: #7e72c9;
-    }
-    
-    .btnPurpleInv:hover,.btnPurpleInv:focus {
-    	color: #7e72c9;
-    	background-color: white;
-    }
-    
-    .hide {
-    	opacity: 0;
-    }
+        @external btn, text-muted, carousel, carousel-inner, item, carousel-control, right, left, carousel-indicators, active, noteDetail;
+        @external icon-angle-right, icon-angle-left;
+        @external icon-location-1, icon-mail, icon-phone;
+        @external icon-basket-alt, icon-chart-bar, icon-chart-pie, icon-heart, icon-globe, icon-search;
+        .logo {
+        background: url("images/logo.png") no-repeat center;
+        text-indent: -100000px;
+        overflow: hidden;
+        }
+
+        .contact .icon-location-1,.contact .icon-mail,.contact .icon-phone {
+        font-size: 35px;
+        color: #7e72c9;
+        }
+
+        .home .contact .text-muted {
+        font-size: 14px;
+        line-height: 14px;
+        }
+
+        .home .noteDetail {
+        text-align: left;
+        }
+
+        .contact h5 {
+        display: none;
+        }
+
+        .home h1,.home h2 {
+        font-size: 34px;
+        line-height: 40px;
+        font-weight: 600;
+        }
+
+        .offBlack {
+        color: #484a50;
+        }
+
+        .custom {
+		min-height: 680px;
+        background: #272833 url("images/header_bg.png") fixed repeat-x bottom;
+        }
+
+        .home .custom h1,.custom h2 {
+        color: white;
+        font-weight: 400;
+        }
+
+        .custom .text-muted {
+        color: #afb1cf;
+        }
+
+        .home .text-muted {
+        font-size: 16px;
+        line-height: 26px;
+        }
+
+        .arrow a {
+        color: white;
+        font-size: 50px;
+        opacity: .5;
+        }
+
+        .arrow a:hover,.arrow a:focus {
+        opacity: 1;
+        }
+
+        .moveDown {
+        margin-top: 60px;
+        }
+
+        .moveDownALittle {
+        margin-top: 30px;
+        }
+
+        .icon-basket-alt, .icon-chart-bar, .icon-chart-pie, .icon-heart, .icon-globe, .icon-search {
+        font-size: 50px;
+        color: #bbbae6;
+        margin-bottom: 30px;
+        }
+
+        .feature {
+
+        }
+
+        .features {
+        margin-top: 60px;
+        margin-bottom: 120px;
+        }
+
+        /*
+        .feature:hover span,.feature:focus span {
+        opacity: 1;
+        }
+
+        .feature:hover h3,.feature:focus h3 {
+        color: #7e72c9;
+        }
+
+        */
+        .whiteSmoke {
+        background: whitesmoke;
+        }
+
+        .carousel-control.right {
+        background-image: none;
+        text-shadow: none;
+        color: #d9dce0;
+        }
+
+        .carousel-control.left {
+        background-image: none;
+        text-shadow: none;
+        color: #d9dce0;
+        }
+
+        .carousel-control .icon-angle-left,.carousel-control .icon-angle-right {
+        font-size: 60px;
+        position: absolute;
+        top: 50%;
+        z-index: 5;
+        display: inline-block;
+        left: 25%;
+        }
+
+        .carousel-control:hover .icon-angle-left,.carousel-control:focus .icon-angle-left {
+        left: 15%;
+        }
+
+        .carousel-control:hover .icon-angle-right,.carousel-control:focus .icon-angle-right {
+        left: 35%;
+        }
+
+        .carousel-indicators li {
+        background-color: #999;
+        border: none;
+        cursor: default;
+        margin-left: 5px;
+        margin-right: 5px;
+        }
+
+        .carousel-indicators {
+        bottom: -20px;
+        }
+
+        .carousel-indicators li.active {
+        background-color: #272833;
+        border: none;
+        margin-left: 5px;
+        margin-right: 5px;
+        }
+
+        .carousel {
+        margin-bottom: 100px;
+        margin-top: 30px;
+        height: 540px;
+        }
+
+        .carousel-inner {
+        height: 540px;
+        }
+
+        .carousel-inner>.item {
+        height: 540px;
+        /* position: absolute; */
+        width: 100%;
+        }
+
+        .carousel-inner>.item>img {
+        margin: 0 auto;
+        height: 540px;
+        }
+
+        .people li {
+        border: 2px solid #e5e5e5;
+        border-radius: 3px;
+        padding: 25px;
+        margin: 20px 0;
+        list-style: none;
+        }
+
+        .people li>p {
+        font-size: 14px;
+        }
+
+        .data {
+        background-color: #7e72c9;
+        }
+
+        .insideData {
+        margin-top: 60px;
+        margin-bottom: 60px;
+        }
+
+        .insideData h3 {
+        color: white;
+        }
+
+        .contactFormField label {
+        display: none;
+        }
+
+        .social {
+        border-top: 1px solid #d9dce0;
+        }
+
+        .social a {
+        color: #8587a1;
+        font-size: 32px;
+        }
+
+        .social a:hover {
+        color: #272833;
+        }
+
+        .home .btn {
+        font-size: 16px;
+        }
+
+        .btnHollow {
+        background: none;
+        border: 2px solid;
+        border-radius: 5px;
+        padding: 20px 25px;
+        }
+
+        .btnPurple {
+        color: white;
+        border-color: #7e72c9;
+        }
+
+        .btnPurpleLBg {
+        color: #7e72c9;
+        border-color: #7e72c9;
+        }
+
+        .btnPurpleInv {
+        color: white;
+        border-color: white;
+        }
+
+        .btnPurple:hover,.btnPurpleLBg:hover,.btnPurple:focus,.btnPurpleLBg:focus {
+        color: white;
+        background-color: #7e72c9;
+        }
+
+        .btnPurpleInv:hover,.btnPurpleInv:focus {
+        color: #7e72c9;
+        background-color: white;
+        }
+
+        .hide {
+        opacity: 0;
+        }
     </ui:style>
     <g:HTMLPanel>
         <div class="{style.home}">
             <div ui:field="firstPage" class="jumbotron {style.custom}">
-                <div class="container {style.centered} {style.moveDown}">
+                <div class="container text-center {style.moveDown}">
                     <h1 class="{style.logo}">Reflection</h1>
                     <div class="row {style.moveDownALittle}">
                         <h2 class="{style.hide} {style.moveDownALittle} {global.reflection.smooth}" ui:field="homeHeading" style="display:none;">Powerful market intelligence
@@ -289,62 +285,78 @@
                 </div>
             </div>
 
-            <div class="{style.centered} container {style.features}" ui:field="features">
+            <div class="text-center container {style.features}" ui:field="features">
                 <div class="row">
                     <h2 class="{style.offBlack}">Features</h2>
                     <p class="text-muted {style.moveDownALittle}">We're launching soon with detailed revenue, rank and download data for apps on the iPhone and iPad stores.</p>
                 </div>
 
                 <div class="row {style.moveDown}">
-                    <g:Anchor ui:field="revenueFeature" styleName="col-sm-4 {global.reflection.smooth} {style.feature}" href="{HomePageType.asHref.asString}">
-                        <span class="icon-chart-pie" />
-                        <h4 class="{style.offBlack}">Revenue &amp; Download Data</h4>
-                        <p class="text-muted">Analyse historical revenue, download and rank information for any app to base your business decisions on.</p>
-                    </g:Anchor>
 
-                    <g:Anchor ui:field="leaderboardFeature" styleName="col-sm-4 {global.reflection.smooth} {style.feature}" href="{HomePageType.asHref.asString}">
-                        <span class="icon-globe" />
-                        <h4 class="{style.offBlack}">Global App Leaderboard</h4>
-                        <p class="text-muted">View revenue and download data for the Top 400 apps in any country, in any category, at any time.</p>
-                    </g:Anchor>
+                    <div class="col-sm-4">
+                        <i class="icon-chart-pie" />
+                        <g:Anchor ui:field="revenueFeature" styleName=" {global.reflection.smooth}" href="{HomePageType.asHref.asString}">
 
-                    <g:Anchor ui:field="modelFeature" styleName="col-sm-4 {global.reflection.smooth} {style.feature}" href="{HomePageType.asHref.asString}">
-                        <span class="icon-chart-bar" />
-                        <h4 class="{style.offBlack}">Powerful Statistical Model</h4>
-                        <p class="text-muted">We have created an algorithm that statistically paints a very accurate picture of the stores based on public rank and
-                            private
-                            download and
-                            revenue
-                            data.</p>
-                    </g:Anchor>
+                            <h4 class="{style.offBlack}">Revenue &amp; Download Data</h4>
+                            <p class="text-muted">Analyse historical revenue, download and rank information for any app to base your business decisions on.</p>
+                        </g:Anchor>
+                    </div>
+                    <div class="col-sm-4">
+                        <i class="icon-globe" />
+                        <g:Anchor ui:field="leaderboardFeature" styleName="{global.reflection.smooth} {style.feature}" href="{HomePageType.asHref.asString}">
+
+                            <h4 class="{style.offBlack}">Global App Leaderboard</h4>
+                            <p class="text-muted">View revenue and download data for the Top 400 apps in any country, in any category, at any time.</p>
+                        </g:Anchor>
+                    </div>
+                    <div class="col-sm-4">
+                        <i class="icon-chart-bar" />
+                        <g:Anchor ui:field="modelFeature" styleName="{global.reflection.smooth} {style.feature}" href="{HomePageType.asHref.asString}">
+
+                            <h4 class="{style.offBlack}">Powerful Statistical Model</h4>
+                            <p class="text-muted">We have created an algorithm that statistically paints a very accurate picture of the stores based on public rank and
+                                private
+                                download and
+                                revenue
+                                data.</p>
+                        </g:Anchor>
+                    </div>
 
                 </div>
-                <div class="row {style.moveDown}">
-                    <g:Anchor ui:field="storesFeature" styleName="col-sm-4 col-sm {global.reflection.smooth} {style.feature}" href="{HomePageType.asHref.asString}">
-                        <span class="icon-basket-alt" />
+                <div class="row">
+                    <div class="col-sm-4">
+                    <i class="icon-basket-alt" />
+                    <g:Anchor ui:field="storesFeature" styleName="{global.reflection.smooth} {style.feature}" href="{HomePageType.asHref.asString}">
+                        
                         <h4 class="{style.offBlack}">Supported Stores</h4>
                         <p class="text-muted">We will launch with the iPhone and iPad stores and will then work hard to add all
                             major stores starting with Google Play.</p>
                     </g:Anchor>
+                    </div>
 
-                    <g:Anchor ui:field="searchFeature" styleName="col-sm-4 {global.reflection.smooth} {style.feature}" href="{HomePageType.asHref.asString}">
-                        <span class="icon-search" />
+                    <div class="col-sm-4">
+                    <i class="icon-search" />
+                    <g:Anchor ui:field="searchFeature" styleName="{global.reflection.smooth} {style.feature}" href="{HomePageType.asHref.asString}">
+                        
                         <h4 class="{style.offBlack}">Comprehensive Search</h4>
                         <p class="text-muted">Search for any app to see its revenue, download and rank history for any
                             country and date range.</p>
-                    </g:Anchor>
+                    </g:Anchor></div>
 
-                    <g:Anchor ui:field="functionalFeature" styleName="col-sm-4 {global.reflection.smooth} {style.feature}" href="{HomePageType.asHref.asString}">
-                        <span class="icon-heart" />
+                    <div class="col-sm-4">
+                    <i class="icon-heart" />
+                    <g:Anchor ui:field="functionalFeature" styleName="{global.reflection.smooth} {style.feature}" href="{HomePageType.asHref.asString}">
+                        
                         <h4 class="{style.offBlack}">Beautiful &amp; Functional</h4>
                         <p class="text-muted">Access meaningful market intelligence wherever you are on any device through our
                             easy to use web app.</p>
                     </g:Anchor>
+                    </div>
                 </div>
             </div>
 
             <div class="container-fluid  {style.whiteSmoke} {style.moveDown}">
-                <div class="{style.centered} container {style.moveDown}">
+                <div class="text-center container {style.moveDown}">
                     <div class="row">
                         <div class="col-sm-6 col-sm-offset-3">
                             <h2 class="{style.offBlack}">Make Smarter Decisions</h2>
@@ -448,14 +460,14 @@
                     </ul>
                 </div>
             </div>
-            <div class="{style.centered} container-fluid {style.moveDown} {style.data}">
+            <div class="text-center container-fluid {style.moveDown} {style.data}">
                 <div class="row {style.insideData}">
                     <h3>Need data for reports or articles? Reference us and get it for free.</h3>
 
                     <g:Anchor ui:field="getInTouch" styleName="btn {style.btnHollow} {style.btnPurpleInv} {style.moveDownALittle}" href="{HomePageType.asHref.asString}">Get In Touch</g:Anchor>
                 </div>
             </div>
-            <div class="{style.centered} container {style.moveDown}" ui:field="contact">
+            <div class="text-center container {style.moveDown}" ui:field="contact">
 
                 <div class="row">
                     <div class="col-sm-6 col-sm-offset-3">
@@ -503,38 +515,33 @@
                 </div>
                 <div class="row {style.moveDown}">
                     <div class="col-sm-6 col-sm-offset-3">
-                        <div class="col-sm-4 {style.contact}">
+                        <div class="col-sm-4 {style.contact} ">
                             <span class="icon-mail" />
-                            <h5>Mail</h5>
-                            <p class="text-muted {style.moveDownALittle}">hello at reflection.io</p>
+                            <p class="text-muted">hello at reflection.io</p>
                             <p class="text-muted">careers at reflection.io</p>
                         </div>
-                        <div class="col-sm-4 {style.contact}">
+                        <div class="col-sm-4 {style.contact} ">
                             <span class="icon-location-1" />
                             <h5>Location</h5>
-                            <p class="text-muted {style.moveDownALittle}">79 Wardour Street</p>
+                            <p class="text-muted">79 Wardour Street</p>
                             <p class="text-muted">London, W1D 6QB</p>
                         </div>
-                        <div class="col-sm-4 {style.contact}">
+                        <div class="col-sm-4 {style.contact} ">
                             <span class="icon-phone" />
                             <h5>Contact</h5>
-                            <p class="text-muted {style.moveDownALittle}">+44 (0) 20 7851 8645</p>
+                            <p class="text-muted">+44 (0) 20 7851 8645</p>
                         </div>
                     </div>
                 </div>
                 <div class="row {style.moveDown}">
-                    <div class="col-sm-6 col-sm-offset-3 {style.social}">
-                        <div class="col-sm-2 col-sm-offset-3 {style.moveDownALittle}">
+                    <div class="col-xs-12 {style.social}">
+                        <div>
                             <a href="https://www.facebook.com/reflection.io" target="_blank" class="{global.reflection.smooth}">
                                 <span class="icon-facebook-squared" />
                             </a>
-                        </div>
-                        <div class="col-sm-2 {style.moveDownALittle}">
                             <a href="http://www.linkedin.com/company/reflection-io-ltd" target="_blank" class="{global.reflection.smooth}">
                                 <span class="icon-linkedin-squared" />
                             </a>
-                        </div>
-                        <div class="col-sm-2 {style.moveDownALittle}">
                             <a href="https://twitter.com/reflectionio" target="_blank" class="{global.reflection.smooth}">
                                 <span class="icon-twitter" />
                             </a>
@@ -542,7 +549,7 @@
                     </div>
                 </div>
             </div>
-            <div class="{style.centered} container {style.moveDown}">
+            <div class="text-center container {style.moveDown}">
                 <span class="row text-muted">
                     copyright &copy;
                     <g:Anchor ui:field="gotoTop" href="{HomePageType.asHref.asString}">Reflection.io</g:Anchor>
