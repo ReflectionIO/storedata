@@ -60,7 +60,7 @@ public enum PageType {
 	ForgotPasswordPageType("forgotpassword", false),
 	ResetPasswordPageType("resetpassword", false),
 	ItemsPageType("items", "MIT"),
-	TermsPageType("terms", true),
+	TermsPageType("terms", false),
 	BlogAdminPageType("blogadmin", "MBL"),
 	BlogTagPageType("blogtag", false),
 	BlogPostsPageType("blog", false),
