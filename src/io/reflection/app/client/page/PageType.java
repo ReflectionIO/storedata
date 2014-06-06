@@ -60,8 +60,7 @@ public enum PageType {
 	ForgotPasswordPageType("forgotpassword", false),
 	ResetPasswordPageType("resetpassword", false),
 	ItemsPageType("items", "MIT"),
-	PolicyPageType("policy", false),
-	TermsPageType("terms", false),
+	TermsPageType("terms", true),
 	BlogAdminPageType("blogadmin", "MBL"),
 	BlogTagPageType("blogtag", false),
 	BlogPostsPageType("blog", false),
@@ -250,9 +249,6 @@ public enum PageType {
 			break;
 		case TermsPageType:
 			page = new TermsPage();
-			break;
-		case PolicyPageType:
-			page = new PolicyPage();
 			break;
 		case BlogAdminPageType:
 			page = new PostAdminPage();
