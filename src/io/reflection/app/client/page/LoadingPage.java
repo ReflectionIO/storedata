@@ -26,6 +26,7 @@ import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.StoreController;
 import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.part.Footer;
 import io.reflection.app.client.res.Styles;
 
 import java.util.ArrayList;
@@ -145,7 +146,7 @@ public class LoadingPage extends Page implements NavigationEventHandler, LoginEv
 		NavigationController.get().getFooter().getElement().removeClassName(Styles.INSTANCE.reflection().smooth());
 		
 		NavigationController.get().getHeader().getElement().getStyle().setTop(-60, Unit.PX);
-		NavigationController.get().getFooter().getElement().getStyle().setHeight(0, Unit.PX);
+		((Footer)NavigationController.get().getFooter()).setNoHeight();
 
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(EventController.get().addHandlerToSource(LoginEventHandler.TYPE, SessionController.get(), this));
@@ -163,7 +164,7 @@ public class LoadingPage extends Page implements NavigationEventHandler, LoginEv
 		NavigationController.get().getHeader().getElement().addClassName(Styles.INSTANCE.reflection().smooth());
 		NavigationController.get().getFooter().getElement().addClassName(Styles.INSTANCE.reflection().smooth());
 		NavigationController.get().getHeader().getElement().getStyle().setTop(0, Unit.PX);
-		NavigationController.get().getFooter().getElement().getStyle().clearHeight();
+		((Footer)NavigationController.get().getFooter()).setFullHeight();
 		
 		super.onDetach();
 	}

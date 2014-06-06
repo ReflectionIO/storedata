@@ -7,27 +7,51 @@
 //
 package io.reflection.app.client.part;
 
+import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
+import io.reflection.app.api.shared.datatypes.Session;
+import io.reflection.app.client.controller.EventController;
+import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.controller.FilterController.Filter;
+import io.reflection.app.client.controller.SessionController;
+import io.reflection.app.client.handler.FilterEventHandler;
+import io.reflection.app.client.handler.user.SessionEventHandler;
+import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.res.Styles;
+import io.reflection.app.datatypes.shared.User;
 
 import java.util.Date;
+import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.gson.json.service.shared.Error;
 
 /**
  * @author billy1380
  * 
  */
-public class Footer extends Composite /* implements FilterEventHandler */{
+/**
+ * @author billy1380
+ *
+ */
+/**
+ * @author billy1380
+ * 
+ */
+public class Footer extends Composite implements FilterEventHandler, SessionEventHandler {
 
 	private static FooterUiBinder uiBinder = GWT.create(FooterUiBinder.class);
 
@@ -36,13 +60,24 @@ public class Footer extends Composite /* implements FilterEventHandler */{
 	@UiField FocusPanel footer;
 	@UiField SpanElement mYear;
 	@UiField Anchor mArrow;
-	// @UiField InlineHyperlink ranks;
+
+	@UiField InlineHyperlink ranks;
+	@UiField InlineHyperlink terms;
+	@UiField DivElement links;
 
 	private boolean open;
-//	private HandlerRegistration filterChangedRegistration;
+	private HandlerRegistration filterChangedRegistration;
+	private HandlerRegistration sessionRegistration;
 
-	private final int FOOTER_HIDDEN_BOTTOM = -40;
+	private final int FOOTER_HIDDEN_BOTTOM_LINKS = -125;
+	private final int FOOTER_HIDDEN_BOTTOM_LINKLESS = -40;
+	
+	private final int FOOTER_HEIGHT_LINKS = 165;
+	private final int FOOTER_HEIGHT_LINKLESS = 80;
 
+	private int footerBottom = FOOTER_HIDDEN_BOTTOM_LINKS;
+	private int footerHeight = FOOTER_HEIGHT_LINKS;
+	
 	@SuppressWarnings("deprecation")
 	public Footer() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -50,11 +85,50 @@ public class Footer extends Composite /* implements FilterEventHandler */{
 		Styles.INSTANCE.reflection().ensureInjected();
 
 		open = false;
-		footer.getElement().getStyle().setBottom(FOOTER_HIDDEN_BOTTOM, Unit.PX);
+
+		if (SessionController.get().isValidSession()) {
+			footerBottom = FOOTER_HIDDEN_BOTTOM_LINKS;
+			footerHeight = FOOTER_HEIGHT_LINKS;
+		} else {
+			footerBottom = FOOTER_HIDDEN_BOTTOM_LINKLESS;
+			footerHeight = FOOTER_HEIGHT_LINKLESS;
+		}
+
+		footer.getElement().getStyle().setBottom(footerBottom, Unit.PX);
+		footer.getElement().getStyle().setHeight(footerHeight, Unit.PX);
 
 		mYear.setInnerHTML(Integer.toString(1900 + (new Date()).getYear()));
 
-		// ranks.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
+		ranks.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
+
+		removeLeaderboard();
+		removeTerms();
+
+		links.getStyle().setDisplay(Display.NONE);
+	}
+
+	public void setNoHeight() {
+		footer.getElement().getStyle().setHeight(0, Unit.PX);
+	}
+	
+	public void setFullHeight() {
+		footer.getElement().getStyle().setHeight(footerHeight, Unit.PX);
+	}
+	
+	private void removeTerms() {
+		terms.removeFromParent();
+	}
+
+	private void addTerms() {
+		links.appendChild(terms.getElement());
+	}
+
+	private void removeLeaderboard() {
+		ranks.removeFromParent();
+	}
+
+	private void addLeaderboard() {
+		links.appendChild(ranks.getElement());
 	}
 
 	/*
@@ -66,7 +140,8 @@ public class Footer extends Composite /* implements FilterEventHandler */{
 	protected void onAttach() {
 		super.onAttach();
 
-		// filterChangedRegistration = EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this);
+		filterChangedRegistration = EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this);
+		sessionRegistration = EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this);
 	}
 
 	/*
@@ -77,9 +152,13 @@ public class Footer extends Composite /* implements FilterEventHandler */{
 	@Override
 	protected void onDetach() {
 
-//		if (filterChangedRegistration != null) {
-//			filterChangedRegistration.removeHandler();
-//		}
+		 if (filterChangedRegistration != null) {
+			 filterChangedRegistration.removeHandler();
+		 }
+		 
+		 if (sessionRegistration != null) {
+			 sessionRegistration.removeHandler();
+		 }
 
 		super.onDetach();
 	}
@@ -88,7 +167,7 @@ public class Footer extends Composite /* implements FilterEventHandler */{
 	void onClickFooter(ClickEvent event) {
 		if (open) {
 			mArrow.setStyleName(Styles.INSTANCE.reflection().footerUpArrow());
-			footer.getElement().getStyle().setBottom(FOOTER_HIDDEN_BOTTOM, Unit.PX);
+			footer.getElement().getStyle().setBottom(footerBottom, Unit.PX);
 		} else {
 			mArrow.setStyleName(Styles.INSTANCE.reflection().footerDownArrow());
 			footer.getElement().getStyle().setBottom(0, Unit.PX);
@@ -96,25 +175,85 @@ public class Footer extends Composite /* implements FilterEventHandler */{
 		open = !open;
 	}
 
-	// /*
-	// * (non-Javadoc)
-	// *
-	// * @see io.reflection.app.client.handler.FilterEventHandler#filterParamChanged(java.lang.String, java.lang.Object, java.lang.Object)
-	// */
-	// @Override
-	// public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
-	// ranks.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
-	// }
-	//
-	// /*
-	// * (non-Javadoc)
-	// *
-	// * @see io.reflection.app.client.handler.FilterEventHandler#filterParamsChanged(io.reflection.app.client.controller.FilterController.Filter,
-	// java.util.Map)
-	// */
-	// @Override
-	// public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
-	// ranks.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
-	// }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamChanged(java.lang.String, java.lang.Object, java.lang.Object)
+	 */
+	@Override
+	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
+		ranks.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamsChanged(io.reflection.app.client.controller.FilterController.Filter, java.util.Map)
+	 */
+	@Override
+	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
+		ranks.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoggedIn(io.reflection.app.datatypes.shared.User,
+	 * io.reflection.app.api.shared.datatypes.Session)
+	 */
+	@Override
+	public void userLoggedIn(User user, Session session) {
+		addLeaderboard();
+		addTerms();
+
+		links.getStyle().clearDisplay();
+
+		footerBottom = FOOTER_HIDDEN_BOTTOM_LINKS;
+		footerHeight = FOOTER_HEIGHT_LINKS;
+
+//		setFullHeight();
+		
+		if (open) {
+			mArrow.setStyleName(Styles.INSTANCE.reflection().footerDownArrow());
+			footer.getElement().getStyle().setBottom(0, Unit.PX);
+		} else {
+			mArrow.setStyleName(Styles.INSTANCE.reflection().footerUpArrow());
+			footer.getElement().getStyle().setBottom(footerBottom, Unit.PX);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoggedOut()
+	 */
+	@Override
+	public void userLoggedOut() {
+		removeLeaderboard();
+		removeTerms();
+
+		footerBottom = FOOTER_HIDDEN_BOTTOM_LINKLESS;
+		footerHeight = FOOTER_HEIGHT_LINKLESS;
+
+		links.getStyle().setDisplay(Display.NONE);
+
+		setFullHeight();
+		
+		if (open) {
+			mArrow.setStyleName(Styles.INSTANCE.reflection().footerDownArrow());
+			footer.getElement().getStyle().setBottom(0, Unit.PX);
+		} else {
+			mArrow.setStyleName(Styles.INSTANCE.reflection().footerUpArrow());
+			footer.getElement().getStyle().setBottom(footerBottom, Unit.PX);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoginFailed(com.willshex.gson.json.service.shared.Error)
+	 */
+	@Override
+	public void userLoginFailed(Error error) {}
 
 }
