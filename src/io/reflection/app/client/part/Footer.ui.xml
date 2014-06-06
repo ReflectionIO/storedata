@@ -2,7 +2,6 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
     <ui:import field="io.reflection.app.client.page.PageType.TermsPageType" />
-    <ui:import field="io.reflection.app.client.page.PageType.PolicyPageType" />
 
     <ui:with field='global' type='io.reflection.app.client.res.Styles' />
 
