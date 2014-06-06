@@ -253,14 +253,19 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 	@Override
 	public void getPostFailure(GetPostRequest input, Throwable caught) {}
 
+	/**
+	 * @param postId
+	 * @param url
+	 * @param title
+	 * @param category
+	 */
 	private static native void installDisqus(String postId, String url, String title, String category) /*-{
 		$wnd.disqus_shortname = 'reflectionio';
 
-		$wnd.disqus_identifier = postId;
+//		$wnd.disqus_identifier = postId;
 		$wnd.disqus_url = url;
 		$wnd.disqus_title = title;
-		$wnd.disqus_category_id = category;
-//		$wnd.disqus_developer = 1;
+		$wnd.disqus_category_id = '3096350';
 
 		($wnd.installDisqus = function() {
 			var dsq = $wnd.document.createElement('script');
@@ -275,11 +280,10 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 			$wnd.DISQUS.reset({
 				reload : true,
 				config : function() {
-					this.page.identifier = resetPostId;
+//					this.page.identifier = resetPostId;
 					this.page.url = resetUrl;
 					this.page.title = resetTitle;
-					this.page.category_id = resetCategory;
-//					this.page.developer = 1;
+					this.page.category_id = '3096350';
 				}
 			});
 		};
