@@ -9,7 +9,6 @@
     .footer {
     	position: fixed;
     	width: 100%;
-    	height: 80px;
     	margin-top: 40px;
     	padding-left: 25px;
     	padding-right: 25px;
@@ -70,15 +69,13 @@
 
             <g:HTMLPanel styleName="{style.downPanel}">
 
-                <!-- <div style="width: 100%; padding-top:20px; padding-bottom: 40px;">
+                <div ui:field="links" style="width: 100%; padding-top:20px; padding-bottom: 40px;">
                     <g:InlineHyperlink ui:field="ranks">Leaderboard</g:InlineHyperlink>
 
-                    <g:InlineHyperlink targetHistoryToken="{TermsPageType.asTargetHistoryToken}" styleName="{style.sideMargin}">Terms and
+                    <g:InlineHyperlink ui:field="terms" targetHistoryToken="{TermsPageType.asTargetHistoryToken}" styleName="{style.sideMargin}">Terms and
                         Conditions</g:InlineHyperlink>
 
-                    <g:InlineHyperlink targetHistoryToken="{PolicyPageType.asTargetHistoryToken}">Privacy
-                        Policy</g:InlineHyperlink>
-                </div> -->
+                </div>
 
                 <div style="width: 100%;">
                     <a href="https://www.facebook.com/reflection.io" target="_blank">

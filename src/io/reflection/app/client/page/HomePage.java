@@ -12,6 +12,7 @@ import io.reflection.app.client.helper.AlertBoxHelper;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.part.AlertBox;
 import io.reflection.app.client.part.AlertBox.AlertBoxType;
+import io.reflection.app.client.part.Footer;
 
 import java.util.Date;
 
@@ -199,7 +200,7 @@ public class HomePage extends Page {
 		super.onAttach();
 
 		NavigationController.get().getHeader().getElement().getStyle().setBorderColor("#272733");
-		NavigationController.get().getFooter().getElement().getStyle().setHeight(0, Unit.PX);
+		((Footer)NavigationController.get().getFooter()).setNoHeight();
 		NavigationController.get().getPageHolderPanel().getElement().getStyle().setPaddingTop(0, Unit.PX);
 
 		firstPage.getStyle().setHeight(Window.getClientHeight(), Unit.PX);
@@ -252,7 +253,7 @@ public class HomePage extends Page {
 
 		NavigationController.get().getHeader().getElement().getStyle().clearBorderColor();
 		NavigationController.get().getPageHolderPanel().getElement().getStyle().setPaddingTop(60, Unit.PX);
-		NavigationController.get().getFooter().getElement().getStyle().clearHeight();
+		((Footer)NavigationController.get().getFooter()).setFullHeight();
 	}
 
 	@UiHandler({ "gotoFeatures", "workWithUs", "getInTouch", "gotoTop"
