@@ -46,7 +46,7 @@ public class ModellerIOS
 		try {
 			Queue queue = QueueFactory.getQueue("model");
 
-			TaskOptions options = TaskOptions.Builder.withUrl("/model").method(Method.POST);
+			TaskOptions options = TaskOptions.Builder.withMethod(Method.PULL);
 			options.param("store", STORE);
 			options.param("country", country);
 			options.param("type", type);
