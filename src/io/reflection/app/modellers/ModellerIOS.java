@@ -43,8 +43,6 @@ public class ModellerIOS
 			LOG.log(GaeLevel.TRACE, "Entering...");
 		}
 
-		LOG.log(GaeLevel.DEBUG, "what?");
-
 		try {
 			Queue queue = QueueFactory.getQueue("model");
 
