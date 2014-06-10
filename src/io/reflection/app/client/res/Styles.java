@@ -50,6 +50,8 @@ public interface Styles extends ClientBundle {
 		String smooth();
 
 		String header();
+		
+		String footer();
 	}
 
 	public interface ConfirmationDialogStyles extends CssResource {}
