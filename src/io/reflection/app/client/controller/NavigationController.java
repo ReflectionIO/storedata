@@ -206,7 +206,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 		if (mPanel == null) {
 			mPanel = new HTMLPanel("");
 			mPanel.setStyleName("container-fluid");
-			mPanel.getElement().setAttribute("style", "padding: 60px 0px 60px 0px;");
+			mPanel.getElement().setAttribute("style", "padding: 60px 0px; min-width: 275px;");
 		}
 
 		return mPanel;

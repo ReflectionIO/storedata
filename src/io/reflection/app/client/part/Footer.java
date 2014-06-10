@@ -58,7 +58,8 @@ public class Footer extends Composite implements FilterEventHandler, SessionEven
 	interface FooterUiBinder extends UiBinder<Widget, Footer> {}
 
 	@UiField FocusPanel footer;
-	@UiField SpanElement mYear;
+	@UiField SpanElement year;
+	@UiField SpanElement yearXs;
 	@UiField Anchor mArrow;
 
 	@UiField InlineHyperlink ranks;
@@ -70,14 +71,14 @@ public class Footer extends Composite implements FilterEventHandler, SessionEven
 	private HandlerRegistration sessionRegistration;
 
 	private final int FOOTER_HIDDEN_BOTTOM_LINKS = -125;
-	private final int FOOTER_HIDDEN_BOTTOM_LINKLESS = -40;
-	
+	private final int FOOTER_HIDDEN_BOTTOM_LINKLESS = -80;
+
 	private final int FOOTER_HEIGHT_LINKS = 165;
-	private final int FOOTER_HEIGHT_LINKLESS = 80;
+	private final int FOOTER_HEIGHT_LINKLESS = 120;
 
 	private int footerBottom = FOOTER_HIDDEN_BOTTOM_LINKS;
 	private int footerHeight = FOOTER_HEIGHT_LINKS;
-	
+
 	@SuppressWarnings("deprecation")
 	public Footer() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -97,7 +98,8 @@ public class Footer extends Composite implements FilterEventHandler, SessionEven
 		footer.getElement().getStyle().setBottom(footerBottom, Unit.PX);
 		footer.getElement().getStyle().setHeight(footerHeight, Unit.PX);
 
-		mYear.setInnerHTML(Integer.toString(1900 + (new Date()).getYear()));
+		year.setInnerHTML(Integer.toString(1900 + (new Date()).getYear()));
+		yearXs.setInnerHTML(Integer.toString(1900 + (new Date()).getYear()));
 
 		ranks.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
 
@@ -110,11 +112,11 @@ public class Footer extends Composite implements FilterEventHandler, SessionEven
 	public void setNoHeight() {
 		footer.getElement().getStyle().setHeight(0, Unit.PX);
 	}
-	
+
 	public void setFullHeight() {
 		footer.getElement().getStyle().setHeight(footerHeight, Unit.PX);
 	}
-	
+
 	private void removeTerms() {
 		terms.removeFromParent();
 	}
@@ -152,13 +154,13 @@ public class Footer extends Composite implements FilterEventHandler, SessionEven
 	@Override
 	protected void onDetach() {
 
-		 if (filterChangedRegistration != null) {
-			 filterChangedRegistration.removeHandler();
-		 }
-		 
-		 if (sessionRegistration != null) {
-			 sessionRegistration.removeHandler();
-		 }
+		if (filterChangedRegistration != null) {
+			filterChangedRegistration.removeHandler();
+		}
+
+		if (sessionRegistration != null) {
+			sessionRegistration.removeHandler();
+		}
 
 		super.onDetach();
 	}
@@ -211,8 +213,8 @@ public class Footer extends Composite implements FilterEventHandler, SessionEven
 		footerBottom = FOOTER_HIDDEN_BOTTOM_LINKS;
 		footerHeight = FOOTER_HEIGHT_LINKS;
 
-//		setFullHeight();
-		
+		// setFullHeight();
+
 		if (open) {
 			mArrow.setStyleName(Styles.INSTANCE.reflection().footerDownArrow());
 			footer.getElement().getStyle().setBottom(0, Unit.PX);
@@ -238,7 +240,7 @@ public class Footer extends Composite implements FilterEventHandler, SessionEven
 		links.getStyle().setDisplay(Display.NONE);
 
 		setFullHeight();
-		
+
 		if (open) {
 			mArrow.setStyleName(Styles.INSTANCE.reflection().footerDownArrow());
 			footer.getElement().getStyle().setBottom(0, Unit.PX);
