@@ -46,7 +46,7 @@
         }
 
         .custom {
-		min-height: 680px;
+		min-height: 780px;
         background: #272833 url("images/header_bg.png") fixed repeat-x bottom;
         }
 
@@ -81,15 +81,13 @@
         .moveDownALittle {
         margin-top: 30px;
         }
+	
+		.feature{} 
 
-        .icon-basket-alt, .icon-chart-bar, .icon-chart-pie, .icon-heart, .icon-globe, .icon-search {
+        .feature .icon-basket-alt, .feature .icon-chart-bar, .feature .icon-chart-pie, .feature .icon-heart, .feature .icon-globe, .feature .icon-search {
         font-size: 50px;
         color: #bbbae6;
         margin-bottom: 30px;
-        }
-
-        .feature {
-
         }
 
         .features {
@@ -97,16 +95,6 @@
         margin-bottom: 120px;
         }
 
-        /*
-        .feature:hover span,.feature:focus span {
-        opacity: 1;
-        }
-
-        .feature:hover h3,.feature:focus h3 {
-        color: #7e72c9;
-        }
-
-        */
         .whiteSmoke {
         background: whitesmoke;
         }
@@ -128,16 +116,23 @@
         position: absolute;
         top: 50%;
         z-index: 5;
-        display: inline-block;
-        left: 25%;
+        display: inline-block;        
         }
 
+		.carousel-control .icon-angle-left{
+		left: 15px;
+		}
+
+		.carousel-control .icon-angle-right{
+		right: 15px;
+		}
+
         .carousel-control:hover .icon-angle-left,.carousel-control:focus .icon-angle-left {
-        left: 15%;
+        left: 25px;
         }
 
         .carousel-control:hover .icon-angle-right,.carousel-control:focus .icon-angle-right {
-        left: 35%;
+        right: 25px;
         }
 
         .carousel-indicators li {
@@ -162,22 +157,11 @@
         .carousel {
         margin-bottom: 100px;
         margin-top: 30px;
-        height: 540px;
-        }
-
-        .carousel-inner {
-        height: 540px;
-        }
-
-        .carousel-inner>.item {
-        height: 540px;
-        /* position: absolute; */
-        width: 100%;
         }
 
         .carousel-inner>.item>img {
         margin: 0 auto;
-        height: 540px;
+        max-height: 540px;
         }
 
         .people li {
@@ -261,6 +245,10 @@
         .hide {
         opacity: 0;
         }
+
+		.outlineHidden{
+		outline: 0 !important;
+		}
     </ui:style>
     <g:HTMLPanel>
         <div class="{style.home}">
@@ -277,7 +265,7 @@
                         <g:InlineHyperlink ui:field="requestInvite" targetHistoryToken="{RegisterPageType.asTargetHistoryToken}" text="Request Invite"
                             styleName="btn {style.btnPurple} {style.btnHollow} {style.moveDownALittle} {style.hide}" visible="false" />
                         <div class="{style.arrow} {style.hide} {style.moveDownALittle} {global.reflection.smooth}" style="display:none" ui:field="gotoFeaturesContainer">
-                            <g:Anchor ui:field="gotoFeatures" styleName="{global.reflection.smooth}" href="{HomePageType.asHref.asString}">
+                            <g:Anchor ui:field="gotoFeatures" styleName="{global.reflection.smooth} {style.outlineHidden}" href="{HomePageType.asHref.asString}">
                                 <spans class="icon-angle-down" />
                             </g:Anchor>
                         </div>
@@ -293,7 +281,7 @@
 
                 <div class="row {style.moveDown}">
 
-                    <div class="col-sm-4">
+                    <div class="col-sm-4 {style.feature}">
                         <i class="icon-chart-pie" />
                         <g:Anchor ui:field="revenueFeature" styleName=" {global.reflection.smooth}" href="{HomePageType.asHref.asString}">
 
@@ -301,17 +289,17 @@
                             <p class="text-muted">Analyse historical revenue, download and rank information for any app to base your business decisions on.</p>
                         </g:Anchor>
                     </div>
-                    <div class="col-sm-4">
-                        <i class="icon-globe" />
-                        <g:Anchor ui:field="leaderboardFeature" styleName="{global.reflection.smooth} {style.feature}" href="{HomePageType.asHref.asString}">
+                    <div class="col-sm-4 {style.feature}">
+                        <i class="feature icon-globe" />
+                        <g:Anchor ui:field="leaderboardFeature" styleName="{global.reflection.smooth}" href="{HomePageType.asHref.asString}">
 
                             <h4 class="{style.offBlack}">Global App Leaderboard</h4>
                             <p class="text-muted">View revenue and download data for the Top 400 apps in any country, in any category, at any time.</p>
                         </g:Anchor>
                     </div>
-                    <div class="col-sm-4">
-                        <i class="icon-chart-bar" />
-                        <g:Anchor ui:field="modelFeature" styleName="{global.reflection.smooth} {style.feature}" href="{HomePageType.asHref.asString}">
+                    <div class="col-sm-4 {style.feature}">
+                        <i class="feature icon-chart-bar" />
+                        <g:Anchor ui:field="modelFeature" styleName="{global.reflection.smooth} " href="{HomePageType.asHref.asString}">
 
                             <h4 class="{style.offBlack}">Powerful Statistical Model</h4>
                             <p class="text-muted">We have created an algorithm that statistically paints a very accurate picture of the stores based on public rank and
@@ -324,9 +312,9 @@
 
                 </div>
                 <div class="row">
-                    <div class="col-sm-4">
-                    <i class="icon-basket-alt" />
-                    <g:Anchor ui:field="storesFeature" styleName="{global.reflection.smooth} {style.feature}" href="{HomePageType.asHref.asString}">
+                    <div class="col-sm-4 {style.feature}">
+                    <i class="feature icon-basket-alt" />
+                    <g:Anchor ui:field="storesFeature" styleName="{global.reflection.smooth} " href="{HomePageType.asHref.asString}">
                         
                         <h4 class="{style.offBlack}">Supported Stores</h4>
                         <p class="text-muted">We will launch with the iPhone and iPad stores and will then work hard to add all
@@ -334,18 +322,18 @@
                     </g:Anchor>
                     </div>
 
-                    <div class="col-sm-4">
-                    <i class="icon-search" />
-                    <g:Anchor ui:field="searchFeature" styleName="{global.reflection.smooth} {style.feature}" href="{HomePageType.asHref.asString}">
+                    <div class="col-sm-4 {style.feature}">
+                    <i class="feature icon-search" />
+                    <g:Anchor ui:field="searchFeature" styleName="{global.reflection.smooth} " href="{HomePageType.asHref.asString}">
                         
                         <h4 class="{style.offBlack}">Comprehensive Search</h4>
                         <p class="text-muted">Search for any app to see its revenue, download and rank history for any
                             country and date range.</p>
                     </g:Anchor></div>
 
-                    <div class="col-sm-4">
-                    <i class="icon-heart" />
-                    <g:Anchor ui:field="functionalFeature" styleName="{global.reflection.smooth} {style.feature}" href="{HomePageType.asHref.asString}">
+                    <div class="col-sm-4 {style.feature}">
+                    <i class="feature icon-heart" />
+                    <g:Anchor ui:field="functionalFeature" styleName="{global.reflection.smooth} " href="{HomePageType.asHref.asString}">
                         
                         <h4 class="{style.offBlack}">Beautiful &amp; Functional</h4>
                         <p class="text-muted">Access meaningful market intelligence wherever you are on any device through our
@@ -356,7 +344,7 @@
             </div>
 
             <div class="container-fluid  {style.whiteSmoke} {style.moveDown}">
-                <div class="text-center container {style.moveDown}">
+                <div class="text-center {style.moveDown}">
                     <div class="row">
                         <div class="col-sm-6 col-sm-offset-3">
                             <h2 class="{style.offBlack}">Make Smarter Decisions</h2>
