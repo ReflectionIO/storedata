@@ -28,6 +28,8 @@ import io.reflection.app.client.part.register.ThankYouRegisterPanel;
 import io.reflection.app.datatypes.shared.User;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.StyleInjector;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -43,6 +45,10 @@ import com.willshex.gson.json.service.shared.StatusType;
 public class RegisterPage extends Page implements UserRegisteredEventHandler, RegisterUserEventHandler, NavigationEventHandler, GetUserDetailsEventHandler,
 		SessionEventHandler {
 
+	public interface Style extends CssResource {
+	    String mainPanel();
+	}
+	
 	private static RegisterPageUiBinder uiBinder = GWT.create(RegisterPageUiBinder.class);
 
 	interface RegisterPageUiBinder extends UiBinder<Widget, RegisterPage> {}
@@ -56,11 +62,16 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 
 	@UiField ThankYouRegisterPanel mThankYouRegisterPanel;
 
+	@UiField Style style;
+	
 	private String username;
 
 	public RegisterPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 		login.setTargetHistoryToken(PageType.LoginPageType.asTargetHistoryToken(FormHelper.REQUEST_INVITE_ACTION_NAME));
+		
+		String mediaQueries = " @media (max-width: 768px) {." + style.mainPanel() + " {margin-top:0;}}";
+		StyleInjector.injectAtEnd(mediaQueries);
 	}
 
 	/*

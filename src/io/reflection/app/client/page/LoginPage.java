@@ -63,7 +63,7 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 		initWidget(uiBinder.createAndBindUi(this));
 		login.setTargetHistoryToken(PageType.LoginPageType.asTargetHistoryToken(FormHelper.REQUEST_INVITE_ACTION_NAME));
 		
-		String mediaQueries = " @media (max-width: 768px) {." + style.mainPanel() + " {margin-top:60px;}}";
+		String mediaQueries = " @media (max-width: 768px) {." + style.mainPanel() + " {margin-top:0;}}";
 		StyleInjector.injectAtEnd(mediaQueries);
 	}
 
