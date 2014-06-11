@@ -12,6 +12,7 @@ import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.part.SuperAlertBox;
 import io.reflection.app.client.res.Styles;
 
+import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -24,6 +25,12 @@ import com.googlecode.gchart.client.GChart;
 public class AppEntryPoint extends ErrorHandlingEntryPoint {
 
 	private HTMLPanel mContainer;
+
+	static {
+		Styles.INSTANCE.reflection().ensureInjected();
+		String mediaQueries = " @media (max-width: 1024px) {." + Styles.INSTANCE.reflection().footer() + " {display:none;} .navbar-fixed-top {position:relative;} .navbar {margin-bottom:0px;}}";
+		StyleInjector.injectAtEnd(mediaQueries);
+	}
 
 	/*
 	 * (non-Javadoc)
