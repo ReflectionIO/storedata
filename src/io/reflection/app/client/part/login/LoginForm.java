@@ -83,7 +83,7 @@ public class LoginForm extends Composite {
 	public void setUsername(String value) {
 		if (value != null && value.length() > 0) {
 			mEmail.setText(value);
-			// mPassword.setFocus(true);
+			mPassword.setFocus(true);
 		}
 	}
 
@@ -174,7 +174,7 @@ public class LoginForm extends Composite {
 			mRememberMe.setValue(Boolean.TRUE);
 		}
 		clearErrors();
-		// mEmail.setFocus(true);
+		mEmail.setFocus(true);
 	}
 
 	private void clearErrors() {
@@ -184,14 +184,14 @@ public class LoginForm extends Composite {
 
 	public void setEnabled(boolean value) {
 		mEmail.setEnabled(value);
-		// mEmail.setFocus(value);
+		mEmail.setFocus(value);
 		mRememberMe.setEnabled(value);
 		mLogin.setEnabled(value);
 		mPassword.setEnabled(value);
 		if (!value) {
 			mRememberMe.setFocus(false);
 			mLogin.setFocus(false);
-			// mPassword.setFocus(value);
+			mPassword.setFocus(value);
 		}
 
 	}
