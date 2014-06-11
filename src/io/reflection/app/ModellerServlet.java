@@ -27,6 +27,7 @@ import com.willshex.service.ContextAwareServlet;
  * 
  */
 @SuppressWarnings("serial")
+@Deprecated
 public class ModellerServlet extends ContextAwareServlet {
 
 	private static final Logger LOG = Logger.getLogger(ModellerServlet.class.getName());
