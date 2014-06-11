@@ -350,11 +350,11 @@ public class RegisterForm extends Composite {
 	}
 
 	public void focusFirstActiveField() {
-		if (forename.isEnabled()) {
-			forename.setFocus(true);
-		} else {
-			password.setFocus(true);
-		}
+//		if (forename.isEnabled()) {
+//			forename.setFocus(true);
+//		} else {
+//			password.setFocus(true);
+//		}
 	}
 
 	/**

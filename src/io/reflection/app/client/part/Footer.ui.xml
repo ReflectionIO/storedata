@@ -2,82 +2,81 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
     <ui:import field="io.reflection.app.client.page.PageType.TermsPageType" />
-
+    <ui:with field="res" type='io.reflection.app.client.res.Images' />
     <ui:with field='global' type='io.reflection.app.client.res.Styles' />
 
     <ui:style>
-    .footer {
-    	position: fixed;
-    	width: 100%;
-    	margin-top: 40px;
-    	padding-left: 25px;
-    	padding-right: 25px;
-    	border-top: 1px solid #d9dce0;
-    	background-color: #ffffff;
-    	z-index: 16;
-    	outline: 0;
-    }
-    
-    .upPanel {
-    	height: 40px;
-    	padding-top: 8px;
-    }
-    
-    .downPanel {
-    	text-align: center;
-    }
-    
-    .logo {
-    	display: block;
-    	margin-left: 0px;
-    	margin-right: auto;
-    }
-    
-    .arrow {
-    	margin-left: auto;
-    	margin-right: auto;
-    }
-    
-    .arrow:hover {
-    	cursor: pointer;
-    }
-    
-    .sideMargin {
-    	margin-left: 25px;
-    	margin-right: 25px;
-    }
+
+        .upPanel {
+        height: 40px;
+        margin-top: 8px;
+        text-align: center;
+        }
+
+        .downPanel {
+        text-align: center;
+        }
+
+        .arrow:hover {
+        cursor: pointer;
+        }
+
+        .copyright{
+        overflow:
+        hidden;
+        white-space: nowrap;
+        }
+
+        .copyright>span{
+        font-size: 13px; color: #63656a;
+        }
+
+        .social{
+        margin-top: 5px;
+        margin-bottom: 10px;
+        }
+
+        .sideMargin {
+        margin-left: 25px;
+        margin-right: 25px;
+        }
+
+        .links{
+		padding: 0px 0px 20px 0px;	        
+        }
+
+		.links a{
+		padding: 0px 10px;	        
+        }
+
     </ui:style>
 
 
-    <g:FocusPanel styleName="{style.footer} {global.reflection.smooth}" ui:field="footer">
+    <g:FocusPanel styleName="{global.reflection.footer} {global.reflection.smooth}" ui:field="footer">
         <g:HTMLPanel>
-            <g:HTMLPanel styleName="{style.upPanel}">
-                <div style="float: left;width:20px;">
+            <g:HTMLPanel styleName="{style.upPanel} row">
+                <div class="col-sm-1 col-xs-6 text-left">
                     <span class="{global.reflection.footerLogo}"></span>
                 </div>
-                <div style="margin:0 auto;width:20px;">
-                    <g:Anchor ui:field="mArrow" styleName="{global.reflection.footerUpArrow} {style.arrow}" />
+                <div class="col-sm-2 col-sm-offset-4 col-xs-2 col-xs-offset-4 text-center">
+                    <g:Anchor ui:field="mArrow" styleName="{global.reflection.footerUpArrow}" />
                 </div>
-                <div style="margin-top:-18px; float:right; width:290px;">
-                    <span style="display: block; font-size: 13px; color: #63656a;">
+                <div class="col-sm-5 hidden-xs text-right {style.copyright}">
+                    <span>
                         &copy; Copyright
-                        <span ui:field="mYear"></span>
+                        <span ui:field="year"></span>
                         Reflection. All Rights Reserved
                     </span>
                 </div>
             </g:HTMLPanel>
 
-            <g:HTMLPanel styleName="{style.downPanel}">
-
-                <div ui:field="links" style="width: 100%; padding-top:20px; padding-bottom: 40px;">
-                    <g:InlineHyperlink ui:field="ranks">Leaderboard</g:InlineHyperlink>
-
-                    <g:InlineHyperlink ui:field="terms" targetHistoryToken="{TermsPageType.asTargetHistoryToken}" styleName="{style.sideMargin}">Terms and
-                        Conditions</g:InlineHyperlink>
-
+            <g:HTMLPanel styleName="row">
+                <div ui:field="links" class="{style.links} text-center">                    
+                        <g:InlineHyperlink ui:field="ranks">Leaderboard</g:InlineHyperlink>                        
+                        <g:InlineHyperlink ui:field="terms" targetHistoryToken="{TermsPageType.asTargetHistoryToken}">Terms and
+                            Conditions</g:InlineHyperlink>
                 </div>
-
-                <div style="width: 100%;">
+                <div class="{style.social} text-center">
                     <a href="https://www.facebook.com/reflection.io" target="_blank">
                         <span class="{global.reflection.footerFacebook}"></span>
                     </a>
@@ -87,7 +86,13 @@
                     <a href="https://twitter.com/reflectionio" target="_blank">
                         <span class="{global.reflection.footerTwitter}"></span>
                     </a>
-
+                </div>
+                <div class="col-xs-12 visible-xs text-center {style.copyright}">
+                    <span>
+                        &copy; Copyright
+                        <span ui:field="yearXs"></span>
+                        Reflection. All Rights Reserved
+                    </span>
                 </div>
 
             </g:HTMLPanel>

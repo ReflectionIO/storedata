@@ -13,10 +13,24 @@ body {
 	padding-top: 5px;
 	height: 60px;
 	color: #8d8ea1;
+	min-width: 290px;
 }
 
 .navbar-header {
 	
+}
+
+.footer {
+	position: fixed;
+	width: 100%;
+	margin-top: 40px;
+	padding: 0px;
+	margin: 0px;	
+	border-top: 1px solid #d9dce0;
+	background-color: #ffffff;
+	z-index: 16;
+	outline: 0;
+	min-width: 290px;
 }
 
 /* Forms */
@@ -473,7 +487,12 @@ a:hover,a:focus,a:active {
 }
 
 /* Tabs Login/Register */
-.nav-tabs.nav-justified.loginregister>li>a {
+.nav-tabs.nav-justified.loginregister li {
+	display: table-cell;
+	width: 1%;
+}
+
+.nav-tabs.nav-justified.loginregister li>a {
 	background-color: #efefef;
 	height: 65px;
 	font-size: 18px;
@@ -485,11 +504,11 @@ a:hover,a:focus,a:active {
 	color: #37383b;
 }
 
-.nav-tabs.nav-justified.loginregister>li>a:hover {
+.nav-tabs.nav-justified.loginregister li>a:hover {
 	color: #1bc79f;
 }
 
-.nav-tabs.nav-justified.loginregister>.active>a,.nav-tabs.nav-justified.loginregister>.active>a:hover,.nav-tabs.nav-justified.loginregister>.active>a:focus
+.nav-tabs.nav-justified.loginregister .active>a,.nav-tabs.nav-justified.loginregister .active>a:hover,.nav-tabs.nav-justified.loginregister .active>a:focus
 	{
 	background-color: #fafafa;
 	font-weight: bold;
