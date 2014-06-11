@@ -21,6 +21,8 @@ import io.reflection.app.client.part.login.WelcomePanel;
 import io.reflection.app.datatypes.shared.User;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.StyleInjector;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -34,6 +36,11 @@ import com.willshex.gson.json.service.shared.Error;
  */
 public class LoginPage extends Page implements NavigationEventHandler, SessionEventHandler {
 
+	
+	public interface Style extends CssResource {
+	    String mainPanel();
+	}
+	
 	private static LoginPageUiBinder uiBinder = GWT.create(LoginPageUiBinder.class);
 
 	interface LoginPageUiBinder extends UiBinder<Widget, LoginPage> {}
@@ -49,10 +56,15 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 	@UiField LoginForm mLoginForm; // Usual login panel
 
 	@UiField AlertBox mAlertBox;
+	
+	@UiField Style style;
 
 	public LoginPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 		login.setTargetHistoryToken(PageType.LoginPageType.asTargetHistoryToken(FormHelper.REQUEST_INVITE_ACTION_NAME));
+		
+		String mediaQueries = " @media (max-width: 768px) {." + style.mainPanel() + " {margin-top:60px;}}";
+		StyleInjector.injectAtEnd(mediaQueries);
 	}
 
 	/*

@@ -311,7 +311,7 @@ public class HomePage extends Page {
 			Element nextHighlight = null;
 			Element nextImage = null;
 
-			if (source == carouselLeft) {
+			if (source == carouselRight) {
 				nextHighlight = DOM.getChild(carouselIndicators, selectedCarouselImage + 1);
 				nextImage = DOM.getChild(carouselContainer, selectedCarouselImage + 1);
 
@@ -320,7 +320,7 @@ public class HomePage extends Page {
 				} else {
 					selectedCarouselImage++;
 				}
-			} else if (source == carouselRight) {
+			} else if (source == carouselLeft) {
 				nextHighlight = DOM.getChild(carouselIndicators, selectedCarouselImage - 1);
 				nextImage = DOM.getChild(carouselContainer, selectedCarouselImage - 1);
 
@@ -334,11 +334,11 @@ public class HomePage extends Page {
 			destinationHighlight = (nextHighlight == null ? DOM.getChild(carouselIndicators, selectedCarouselImage) : nextHighlight);
 			destinationImage = (nextImage == null ? DOM.getChild(carouselContainer, selectedCarouselImage) : nextImage);
 
-			if (source == carouselLeft) {
+			if (source == carouselRight) {
 				destinationImage.addClassName("next");
 
 				sourceImage.addClassName("left");
-			} else if (source == carouselRight) {
+			} else if (source == carouselLeft) {
 				destinationImage.addClassName("prev");
 
 				sourceImage.addClassName("right");
@@ -349,9 +349,9 @@ public class HomePage extends Page {
 			(new Timer() {
 				@Override
 				public void run() {
-					if (source == carouselLeft) {
+					if (source == carouselRight) {
 						destinationImage.addClassName("left");
-					} else if (source == carouselRight) {
+					} else if (source == carouselLeft) {
 						destinationImage.addClassName("right");
 					}
 				}
@@ -362,10 +362,10 @@ public class HomePage extends Page {
 				@Override
 				public void run() {
 
-					if (source == carouselLeft) {
+					if (source == carouselRight) {
 						destinationImage.removeClassName("left");
 						destinationImage.removeClassName("next");
-					} else if (source == carouselRight) {
+					} else if (source == carouselLeft) {
 						destinationImage.removeClassName("right");
 						destinationImage.removeClassName("prev");
 					}
@@ -376,9 +376,9 @@ public class HomePage extends Page {
 
 					sourceImage.removeClassName("active");
 
-					if (source == carouselLeft) {
+					if (source == carouselRight) {
 						sourceImage.removeClassName("left");
-					} else if (source == carouselRight) {
+					} else if (source == carouselLeft) {
 						sourceImage.removeClassName("right");
 					}
 
