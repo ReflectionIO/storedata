@@ -377,7 +377,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 	/**
 	 * Purges all pages that contain or rely on user data
 	 */
-	public void pugeUserPages() {
+	public void purgeUserPages() {
 		List<String> pagesToRemove = new ArrayList<String>();
 
 		for (String pageType : pages.keySet()) {
