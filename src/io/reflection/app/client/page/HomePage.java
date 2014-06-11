@@ -144,7 +144,7 @@ public class HomePage extends Page {
 
 			@Override
 			public void run() {
-				spinCarousel(carouselLeft);
+				spinCarousel(carouselRight);
 			}
 
 		}).scheduleRepeating(10000);
