@@ -19,12 +19,12 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<servlet-class>io.reflection.app.IngestorServlet</servlet-class>
 	</servlet>
     
-    <servlet>
+    <!-- <servlet>
         <servlet-name>Modeller Tasks</servlet-name>
         <servlet-class>io.reflection.app.ModellerServlet</servlet-class>
     </servlet>
 
-	<!-- <servlet>
+	<servlet>
 		<servlet-name>Persist Tasks</servlet-name>
 		<servlet-class>io.reflection.app.PersistServlet</servlet-class>
 	</servlet> -->
@@ -111,11 +111,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<servlet-name>Ingestor Tasks</servlet-name>
 		<url-pattern>/ingest</url-pattern>
 	</servlet-mapping>
-    <servlet-mapping>
+    <!-- <servlet-mapping>
         <servlet-name>Modeller Tasks</servlet-name>
         <url-pattern>/model</url-pattern>
     </servlet-mapping>
-	<!-- <servlet-mapping>
+	<servlet-mapping>
 		<servlet-name>Persist Tasks</servlet-name>
 		<url-pattern>/persist</url-pattern>
 	</servlet-mapping> -->

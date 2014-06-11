@@ -77,7 +77,7 @@ final class DataAccountService implements IDataAccountService {
 		Connection dataAccountConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
 		String getDataAccountQuery = String.format(
-				"SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` FROM `dataaccount` WHERE `id`='%d' %s LIMIT 1", key(),
+				"SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` FROM `dataaccount` WHERE `id`=%d %s LIMIT 1", key(),
 				id.longValue(), deleted ? "" : "AND `deleted`='n'");
 
 		try {
@@ -264,25 +264,20 @@ final class DataAccountService implements IDataAccountService {
 	@Override
 	public DataAccount updateDataAccount(DataAccount dataAccount) throws DataAccessException {
 
-		DataAccount updDataAccount = null;
+		DataAccount updatedDataAccount = null;
 
-		final String updDataAccountQuery = String.format(
-				"UPDATE `dataaccount` SET `username`='%s', `password`=AES_ENCRYPT('%s',UNHEX('%s')), `properties`='%s' WHERE `id`='%d' AND `deleted`='n'",
+		final String updateDataAccountQuery = String.format(
+				"UPDATE `dataaccount` SET `username`='%s', `password`=AES_ENCRYPT('%s',UNHEX('%s')), `properties`='%s' WHERE `id`=%d AND `deleted`='n'",
 				addslashes(dataAccount.username), addslashes(dataAccount.password), key(), addslashes(dataAccount.properties), dataAccount.id.longValue());
 
 		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
 		try {
 			dataAccountConnection.connect();
-			dataAccountConnection.executeQuery(updDataAccountQuery);
+			dataAccountConnection.executeQuery(updateDataAccountQuery);
 
 			if (dataAccountConnection.getAffectedRowCount() > 0) {
-				updDataAccount = getDataAccount(Long.valueOf(dataAccountConnection.getInsertedId()));
-
-				if (updDataAccount == null) {
-					updDataAccount = dataAccount;
-					updDataAccount.id = Long.valueOf(dataAccountConnection.getInsertedId());
-				}
+				updatedDataAccount = getDataAccount(dataAccount.id);
 			}
 		} finally {
 			if (dataAccountConnection != null) {
@@ -290,11 +285,11 @@ final class DataAccountService implements IDataAccountService {
 			}
 		}
 
-		if (updDataAccount != null) {
-			enqueue(updDataAccount, 30, false);
+		if (updatedDataAccount != null) {
+			enqueue(updatedDataAccount, 30, false);
 		}
 
-		return updDataAccount;
+		return updatedDataAccount;
 	}
 
 	@Override
