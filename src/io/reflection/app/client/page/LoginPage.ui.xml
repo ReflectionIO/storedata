@@ -5,7 +5,7 @@
     <!-- <ui:import field="io.reflection.app.client.page.PageType.RegisterPageType" /> -->
     <ui:import field="io.reflection.app.client.page.PageType.LoginPageType" />
 
-    <ui:style>
+    <ui:style type="io.reflection.app.client.page.LoginPage.Style">
     .noteDetail {
     	font-size: smaller;
     	margin-top: 5px;

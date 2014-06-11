@@ -2,19 +2,29 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:with field='images' type='io.reflection.app.client.res.Images' />
     <ui:style>
-        .image {
-        margin-bottom: 10px;
-		margin-right: 20px;
-        }
-        .title{
-
-        }
-        .heading3{
-        display:inline-block; margin-top: 40px;
-        }
-        .parag1{margin-top: 40px; margin-bottom:
-        20px;}
-        .parag2{margin-top: 20px; margin-bottom: 20px}
+    .image {
+    	margin-bottom: 10px;
+    	margin-right: 20px;
+    }
+    
+    .title {
+    	
+    }
+    
+    .heading3 {
+    	display: inline-block;
+    	margin-top: 40px;
+    }
+    
+    .parag1 {
+    	margin-top: 40px;
+    	margin-bottom: 20px;
+    }
+    
+    .parag2 {
+    	margin-top: 20px;
+    	margin-bottom: 20px
+    }
     </ui:style>
     <g:HTMLPanel>
 

@@ -6,7 +6,7 @@
     <ui:import field="io.reflection.app.client.page.PageType.LoginPageType" />
 
     <ui:with field='images' type='io.reflection.app.client.res.Images' />
-    <ui:style>
+    <ui:style type="io.reflection.app.client.page.RegisterPage.Style">
     .mainPanel {
     	margin-top: 120px;
     }
