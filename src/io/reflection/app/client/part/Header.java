@@ -38,10 +38,13 @@ import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.UListElement;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.InlineHyperlink;
@@ -136,6 +139,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	// @UiField UListElement mFeatureRequest;
 
 	@UiField DivElement collapsableNavBar;
+	@UiField Button collapseButton;
 
 	private List<LIElement> items;
 	private List<LIElement> highlightedItems = new ArrayList<LIElement>();
@@ -590,6 +594,30 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		if (user != null) {
 			myAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(),
 					FilterController.get().asMyAppsFilterString()));
+		}
+	}
+
+	@UiHandler("collapseButton")
+	void onCollapseButtonClicked(ClickEvent e) {
+		toggleNavBar();
+	}
+
+	private void toggleNavBar() {
+		String classNames = collapsableNavBar.getClassName();
+		String[] splitClassNames = classNames.split(" ");
+
+		boolean isCollapsed = false;
+		for (String className : splitClassNames) {
+			if ("collapse".equals(className)) {
+				isCollapsed = true;
+				break;
+			}
+		}
+
+		if (isCollapsed) {
+			collapsableNavBar.removeClassName("collapse");
+		} else {
+			collapsableNavBar.addClassName("collapse");
 		}
 	}
 
