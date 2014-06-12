@@ -317,6 +317,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		} else {
 			highlight();
 		}
+		
+		setNavBarVisible(false);
 	}
 
 	/*
@@ -599,10 +601,6 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 	@UiHandler("collapseButton")
 	void onCollapseButtonClicked(ClickEvent e) {
-		toggleNavBar();
-	}
-
-	private void toggleNavBar() {
 		String classNames = collapsableNavBar.getClassName();
 		String[] splitClassNames = classNames.split(" ");
 
@@ -613,8 +611,12 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 				break;
 			}
 		}
+		
+		setNavBarVisible(isCollapsed);
+	}
 
-		if (isCollapsed) {
+	private void setNavBarVisible(boolean visible) {
+		if (visible) {
 			collapsableNavBar.removeClassName("collapse");
 		} else {
 			collapsableNavBar.addClassName("collapse");
