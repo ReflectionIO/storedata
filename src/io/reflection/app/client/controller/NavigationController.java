@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.controller;
 
+import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
@@ -355,7 +356,11 @@ public class NavigationController implements ValueChangeHandler<String> {
 		if (mStack.hasNext()) {
 			PageType.fromString(mStack.getNext().getPage()).show(mStack.getNext().toString(1));
 		} else {
-			PageType.HomePageType.show();
+			if (SessionController.get().getLoggedInUser() != null) {
+				PageType.RanksPageType.show("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString());
+			} else {
+				PageType.HomePageType.show();
+			}
 		}
 	}
 
