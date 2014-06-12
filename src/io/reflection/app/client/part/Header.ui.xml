@@ -55,11 +55,11 @@
 
         <!-- Logo -->
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <g:Button ui:field="collapseButton" styleName="navbar-toggle">
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
-            </button>
+            </g:Button>
             <a class="navbar-brand" href="{HomePageType.asHref}">
                 <g:Image resource="{res.reflectionLogoBeta}" />
             </a>

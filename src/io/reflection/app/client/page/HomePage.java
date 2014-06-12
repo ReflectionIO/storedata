@@ -254,6 +254,8 @@ public class HomePage extends Page {
 		NavigationController.get().getHeader().getElement().getStyle().clearBorderColor();
 		NavigationController.get().getPageHolderPanel().getElement().getStyle().setPaddingTop(60, Unit.PX);
 		((Footer)NavigationController.get().getFooter()).setFullHeight();
+		
+		resetContactForm();
 	}
 
 	@UiHandler({ "gotoFeatures", "workWithUs", "getInTouch", "gotoTop"
@@ -423,10 +425,10 @@ public class HomePage extends Page {
 	void onSubmitClicked(ClickEvent e) {
 		contactAlert.setVisible(false);
 
-		if (validate()) {
-			clearErrors();
+		if (validateContactForm()) {
+			clearContactFormErrors();
 
-			setEnabled(false);
+			setContactFormFieldsEnabled(false);
 
 			RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, "/sendmail");
 			builder.setHeader("Content-type", "application/x-www-form-urlencoded");
@@ -453,7 +455,7 @@ public class HomePage extends Page {
 						AlertBoxHelper.configureAlert(contactAlert, AlertBoxType.DangerAlertBoxType, false, "Error: ",
 								"An error occured while sending the message!", true).setVisible(true);
 
-						setEnabled(true);
+						setContactFormFieldsEnabled(true);
 					}
 
 					public void onResponseReceived(Request request, Response response) {
@@ -468,22 +470,20 @@ public class HomePage extends Page {
 								}
 							}).schedule(2000);
 
-							name.setValue("");
-							email.setValue("");
-							message.setValue("");
+							clearContactFormFields();
 						} else {
 							AlertBoxHelper.configureAlert(contactAlert, AlertBoxType.DangerAlertBoxType, false, "Error: ",
 									"An error occured while sending the message!", true).setVisible(true);
 						}
 
-						setEnabled(true);
+						setContactFormFieldsEnabled(true);
 					}
 				});
 			} catch (RequestException re) {
 				AlertBoxHelper.configureAlert(contactAlert, AlertBoxType.DangerAlertBoxType, false, "Error: ", "An error occured while sending the message!",
 						true).setVisible(true);
 
-				setEnabled(true);
+				setContactFormFieldsEnabled(true);
 			}
 
 		} else {
@@ -508,7 +508,7 @@ public class HomePage extends Page {
 
 	}
 
-	private boolean validate() {
+	private boolean validateContactForm() {
 		boolean validated = true;
 		// Retrieve fields to validate
 		String nameValue = name.getText();
@@ -564,7 +564,7 @@ public class HomePage extends Page {
 		return validated;
 	}
 
-	public void setEnabled(boolean value) {
+	public void setContactFormFieldsEnabled(boolean value) {
 		name.setEnabled(value);
 		email.setEnabled(value);
 		message.setEnabled(value);
@@ -572,10 +572,22 @@ public class HomePage extends Page {
 		submit.setEnabled(value);
 	}
 
-	private void clearErrors() {
+	private void clearContactFormErrors() {
 		FormHelper.hideNote(nameGroup, nameNote);
 		FormHelper.hideNote(emailGroup, emailNote);
 		FormHelper.hideNote(messageGroup, messageNote);
+	}
+	
+	private void clearContactFormFields() {
+		name.setValue("");
+		email.setValue("");
+		message.setValue("");
+	}
+	
+	private void resetContactForm() {
+		clearContactFormFields();
+		setContactFormFieldsEnabled(true);
+		clearContactFormErrors();
 	}
 
 }
