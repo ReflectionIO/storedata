@@ -112,25 +112,25 @@
         .carousel-control .icon-angle-left,.carousel-control .icon-angle-right {
         font-size: 60px;
         position: absolute;
-        top: 50%;
+        top: 45%;
         z-index: 5;
-        display: inline-block;        
+        display: inline-block;    
         }
 
 		.carousel-control .icon-angle-left{
-		left: 15px;
+		left: 0px;		
 		}
 
 		.carousel-control .icon-angle-right{
-		right: 15px;
+		right: 0px;
 		}
 
         .carousel-control:hover .icon-angle-left,.carousel-control:focus .icon-angle-left {
-        left: 25px;
+        left: 15px;
         }
 
         .carousel-control:hover .icon-angle-right,.carousel-control:focus .icon-angle-right {
-        right: 25px;
+        right: 15px;
         }
 
         .carousel-indicators li {
@@ -247,6 +247,17 @@
 		.outlineHidden{
 		outline: 0 !important;
 		}
+		
+		.carousel-arrow-left:before {
+	       width: auto;
+           margin-left: 0px;
+	    }
+        
+		.carousel-arrow-right:before {
+            width: auto;
+            margin-right: 0px;
+	    }
+
     </ui:style>
     <g:HTMLPanel>
         <div class="{style.home}">
@@ -254,12 +265,8 @@
                 <div class="container text-center {style.moveDown}">
                     <h1 class="{style.logo}">Reflection</h1>
                     <div class="row {style.moveDownALittle}">
-                        <h2 class="{style.hide} {style.moveDownALittle} {global.reflection.smooth}" ui:field="homeHeading" style="display:none;">Powerful market intelligence
-                            for the global app market.</h2>
-                        <p class="text-muted {style.moveDown} {style.hide} {global.reflection.smooth}" style="display:none;" ui:field="homeDescription">Make smarter business
-                            decisions. Access revenue, download and rank
-                            data
-                            for any app in the store.</p>
+                        <h2 class="{style.hide} {style.moveDownALittle} {global.reflection.smooth}" ui:field="homeHeading" style="display:none;">Intelligence for the global app community</h2>
+                        <p class="text-muted {style.moveDown} {style.hide} {global.reflection.smooth}" style="display:none;" ui:field="homeDescription">Revenue, download and rank data for any app in the store</p>
                         <g:InlineHyperlink ui:field="requestInvite" targetHistoryToken="{RegisterPageType.asTargetHistoryToken}" text="Request Invite"
                             styleName="btn {style.btnPurple} {style.btnHollow} {style.moveDownALittle} {style.hide}" visible="false" />
                         <div class="{style.arrow} {style.hide} {style.moveDownALittle} {global.reflection.smooth}" style="display:none" ui:field="gotoFeaturesContainer">
@@ -357,7 +364,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="container">
+                        <div style="margin-left: auto; margin-right: auto; max-width: 1170px">
                             <div class="carousel">
                                 <!-- Indicators -->
                                 <ol class="carousel-indicators" ui:field="carouselIndicators">
@@ -377,10 +384,10 @@
                                     </div>
                                 </div>
                                 <g:Anchor styleName="left carousel-control {global.reflection.smooth}" ui:field="carouselLeft">
-                                    <span class="icon-angle-left {global.reflection.smooth}"></span>
+                                    <span class="icon-angle-left {global.reflection.smooth} {style.carousel-arrow-left}"></span>
                                 </g:Anchor>
                                 <g:Anchor styleName="right carousel-control {global.reflection.smooth}" ui:field="carouselRight">
-                                    <span class="icon-angle-right {global.reflection.smooth}"></span>
+                                    <span class="icon-angle-right {global.reflection.smooth} {style.carousel-arrow-right}"></span>
                                 </g:Anchor>
                             </div>
                         </div>

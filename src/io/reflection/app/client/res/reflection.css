@@ -14,10 +14,18 @@ body {
 	height: 60px;
 	color: #8d8ea1;
 	min-width: 290px;
+	border: none;
 }
 
-.navbar-toggle {
+.navbar-inverse .navbar-toggle {
 	margin-right:0px;
+	padding-right: 0px;	
+	border: none; 
+}
+
+.navbar-inverse .navbar-toggle:HOVER, .navbar-inverse .navbar-toggle:FOCUS {
+	border: none;
+	background: none;
 }
 
 .footer {
@@ -421,7 +429,7 @@ a:hover,a:focus,a:active {
 	background-color: #272833;
 }
 
-.navbar-inverse .navbar-nav>.active>a,.navbar-inverse .navbar-nav>.active>a:hover,.navbar-inverse .navbar-nav>.active>a:focus
+.navbar-inverse .navbar-nav li a, .navbar-inverse .navbar-nav li a:HOVER, .navbar-inverse .navbar-nav li a:FOCUS, .navbar-inverse .navbar-nav>.active>a,.navbar-inverse .navbar-nav>.active>a:hover,.navbar-inverse .navbar-nav>.active>a:focus
 	{
 	background-color: #272833;
 }
@@ -487,6 +495,10 @@ a:hover,a:focus,a:active {
 }
 
 /* Tabs Login/Register */
+.nav-tabs.nav-justified.loginregister{
+	padding-top: 0px;	
+}
+
 .nav-tabs.nav-justified.loginregister li {
 	display: table-cell;
 	width: 1%;
