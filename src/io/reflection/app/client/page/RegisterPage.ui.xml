@@ -15,11 +15,16 @@
     	padding: 0px;
     	margin-top: 20px;
     }
+    
+    .spaceFiller {
+        height: 100px;
+    }
+    
     </ui:style>
     <g:HTMLPanel styleName="container">
         <p:AlertBox ui:field="mAlertBox" visible="false" />
         <g:HTMLPanel ui:field="mPanel" styleName="row">
-
+            <div class="hidden-xs hidden-sm col-md-12 {style.spaceFiller}"></div>
             <pp:LoginRegisterPanel styleName="col-md-6 {style.mainPanel}" />
 
             <g:HTMLPanel styleName="col-md-5 col-md-offset-1 well {style.registerform}">

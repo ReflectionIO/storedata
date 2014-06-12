@@ -27,10 +27,10 @@
     .mainPanel {
     	margin-top: 20px;
     }
-
-	.spaceFiller{
-	height: 100px;
-	}
+    
+    .spaceFiller {
+    	height: 100px;
+    }
     
     .loginform {
     	padding: 0px;
@@ -41,7 +41,7 @@
         <p:AlertBox ui:field="mAlertBox" visible="false" />
         <div class="row">
             <g:HTMLPanel ui:field="mDefaultLogin">
-                <div class="hidden-xs hidden-sm col-md-12 {style.spaceFiller}"></div>                
+                <div class="hidden-xs hidden-sm col-md-12 {style.spaceFiller}"></div>
                 <pp:LoginRegisterPanel styleName="col-md-6 col-xs-12 {style.mainPanel}" />
                 <g:HTMLPanel styleName="col-md-5 col-md-offset-1 col-xs-12 well {style.loginform}">
                     <ul class="nav nav-tabs nav-justified loginregister">
