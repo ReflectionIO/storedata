@@ -12,7 +12,7 @@
             <div class="col-md-10">
                 <g:HTMLPanel styleName="well well-sm well-title col-md-12 topPanel">
                     <div class="pull-left;">
-                        <h5>Personal details</h5>
+                        <h5>Personal Details</h5>
                     </div>
                 </g:HTMLPanel>
 

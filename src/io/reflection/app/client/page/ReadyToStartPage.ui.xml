@@ -1,6 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:with field='images' type='io.reflection.app.client.res.Images' />
+    <ui:import field="io.reflection.app.client.page.PageType.ForumPageType" />
     <ui:style>
     .HtmlPanelStyle {
     	margin-top: -20px;
@@ -24,7 +25,7 @@
                     style="font-size: 34px; font-family: 'Source Sans Pro', sans-serif;	color: #0e0e1f;	font-weight: 600; padding-top: 40px; padding-bottom: 25px;">That's it! You're ready to start using Reflection</span>
 
                 <span class="col-xs-12" style="line-height: 26px; font-size: 18px; font-family: Lato; font-weight: normal; color: #63656a;">
-                    Start by exploring the top charting apps in the
+                    Start by exploring the top apps in the
                     <g:InlineHyperlink ui:field="ranks" styleName="{style.hyperlink}">Leaderboard</g:InlineHyperlink>
                     <br />
                     It will take a short while to add your apps to the My Apps section,
@@ -49,19 +50,14 @@
                     <g:Image resource="{images.bubble}"></g:Image>
                     <h3>We want your input</h3>
                     <p>
-                        Our goal is to provide the most insightful and accurate
-                        app
-                        intelligence. Help us make that happen
+                        Our goal is to provide the most insightful and accurate intelligence. Help us make that happen
                     </p>
                 </div>
                 <div class="col-md-4" style="padding-left: 60px; padding-right: 60px;">
                     <g:Image resource="{images.cog}"></g:Image>
                     <h3>Request features</h3>
                     <p>
-                        As a member of the private beta you can request features you
-                        feel would add value. Click the Request Feature button in the menu
-                        bar to get
-                        started
+                        As a private beta member you can suggest features<!--. To do so please visit our <g:InlineHyperlink targetHistoryToken="{ForumPageType.asTargetHistoryToken}">forum</g:InlineHyperlink> -->                        
                     </p>
                 </div>
             </div>
