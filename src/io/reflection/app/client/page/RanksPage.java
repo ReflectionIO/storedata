@@ -51,6 +51,7 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TextHeader;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
@@ -83,7 +84,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 	@UiField RankSidePanel mSidePanel;
 
-	@UiField InlineHyperlink mRedirect;
+	@UiField Button redirect;
 
 	@UiField InlineHyperlink mAll;
 	@UiField InlineHyperlink mFree;
@@ -317,8 +318,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	// public void userLoggedOut() {
 	// RankController.get().reset();
 	// mPager.setVisible(false);
-	// mRedirect.setVisible(true);
-	// mRedirect.setTargetHistoryToken(PageType.LoginPageType.toString());
+	// redirect.setVisible(true);
+	// redirect.setTargetHistoryToken(PageType.LoginPageType.toString());
 	// }
 	//
 	// /*
@@ -343,7 +344,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	// for (Permission p : input.permissions) {
 	// if (p.id != null && p.id != null) {
 	// mPager.setVisible(true);
-	// mRedirect.setVisible(false);
+	// redirect.setVisible(false);
 	// }
 	// }
 	// }
@@ -485,7 +486,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	//
 	// SessionController.get().fetchAuthorisation(null, permissions);
 	//
-	// mRedirect.setTargetHistoryToken(PageType.UpgradePageType.toString());
+	// redirect.setTargetHistoryToken(PageType.UpgradePageType.toString());
 	// }
 
 	/*
@@ -505,6 +506,6 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		boolean hasPermission = SessionController.get().loggedInUserHas(SessionController.FULL_RANK_VIEW_PERMISSION_ID);
 
 		mPager.setVisible(hasPermission);
-		mRedirect.setVisible(!hasPermission);
+		redirect.setVisible(!hasPermission);
 	}
 }
