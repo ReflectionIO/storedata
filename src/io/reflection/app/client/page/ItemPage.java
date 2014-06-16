@@ -21,9 +21,7 @@ import io.reflection.app.api.core.shared.call.event.GetItemRanksEventHandler;
 import io.reflection.app.api.core.shared.call.event.GetItemSalesRanksEventHandler;
 import io.reflection.app.api.core.shared.call.event.GetLinkedAccountItemEventHandler;
 import io.reflection.app.client.cell.ImageAndTextCell;
-import io.reflection.app.client.cell.ProgressBarCell;
 import io.reflection.app.client.cell.content.ConcreteImageAndText;
-import io.reflection.app.client.cell.content.PercentageProgress;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.FilterController.Filter;
@@ -34,11 +32,11 @@ import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.RankController;
 import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
-import io.reflection.app.client.page.part.ItemSidePanel;
-import io.reflection.app.client.page.part.ItemTopPanel;
 import io.reflection.app.client.page.part.ItemChart;
 import io.reflection.app.client.page.part.ItemChart.RankingType;
 import io.reflection.app.client.page.part.ItemChart.YAxisDataType;
+import io.reflection.app.client.page.part.ItemSidePanel;
+import io.reflection.app.client.page.part.ItemTopPanel;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.CircleProgressBar;
 import io.reflection.app.client.part.datatypes.ItemRevenue;
@@ -52,6 +50,7 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
@@ -125,20 +124,28 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			}
 		};
 
-		Column<ItemRevenue, PercentageProgress> percentageColumn = new Column<ItemRevenue, PercentageProgress>(new ProgressBarCell<PercentageProgress>()) {
-
-			@Override
-			public PercentageProgress getValue(ItemRevenue object) {
-				return new PercentageProgress(object.percentage.floatValue());
-			}
-
-		};
+		// Column<ItemRevenue, PercentageProgress> percentageColumn = new Column<ItemRevenue, PercentageProgress>(new ProgressBarCell<PercentageProgress>()) {
+		//
+		// @Override
+		// public PercentageProgress getValue(ItemRevenue object) {
+		// return new PercentageProgress(object.percentage.floatValue());
+		// }
+		//
+		// };
 
 		TextColumn<ItemRevenue> paidColumn = new TextColumn<ItemRevenue>() {
 
 			@Override
 			public String getValue(ItemRevenue object) {
 				return FormattingHelper.getCurrencySymbol(object.currency) + " " + Double.toString(object.paid.doubleValue());
+			}
+		};
+
+		TextColumn<ItemRevenue> subscriptionColumn = new TextColumn<ItemRevenue>() {
+
+			@Override
+			public String getValue(ItemRevenue object) {
+				return FormattingHelper.getCurrencySymbol(object.currency) + " 0.0";
 			}
 		};
 
@@ -161,17 +168,27 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		TextHeader countryHeader = new TextHeader("Country");
 		revenue.addColumn(countryColumn, countryHeader);
 
-		TextHeader percentageHeader = new TextHeader("% total revenue");
-		revenue.addColumn(percentageColumn, percentageHeader);
+		// TextHeader percentageHeader = new TextHeader("% total revenue");
+		// revenue.addColumn(percentageColumn, percentageHeader);
 
 		TextHeader paidHeader = new TextHeader("Paid");
 		revenue.addColumn(paidColumn, paidHeader);
+
+		TextHeader subscriptionHeader = new TextHeader("Subscription");
+		revenue.addColumn(subscriptionColumn, subscriptionHeader);
 
 		TextHeader iapHeader = new TextHeader("IAP");
 		revenue.addColumn(iapColumn, iapHeader);
 
 		TextHeader totalHeader = new TextHeader("Total");
 		revenue.addColumn(totalColumn, totalHeader);
+
+		revenue.setWidth("100%", true);
+		revenue.setColumnWidth(countryColumn, 136.0, Unit.PX);
+		revenue.setColumnWidth(paidColumn, 51.0, Unit.PX);
+		revenue.setColumnWidth(subscriptionColumn, 51.0, Unit.PX);
+		revenue.setColumnWidth(iapColumn, 51.0, Unit.PX);
+		revenue.setColumnWidth(totalColumn, 51.0, Unit.PX);
 	}
 
 	/*

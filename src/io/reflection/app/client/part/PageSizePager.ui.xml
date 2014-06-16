@@ -1,16 +1,28 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:style>
-        /* Add CSS here. See the GWT docs on UI Binder for more details */
+    .viewButtons{
+		padding-top: 35px;
+	}
+	.viewLess{
+		padding-bottom: 25px;
+	}
+	.viewMore{
+		padding-bottom: 35px;
+	}
     </ui:style>
-    <g:HTMLPanel>
-        <ul class="pager">
-            <li ui:field="mShowLessItem">
-                <g:Anchor ui:field="mShowLess">Show Less</g:Anchor>
-            </li>
-            <li ui:field="mShowMoreItem">
-                <g:Anchor ui:field="mShowMore">Show More</g:Anchor>
-            </li>
-        </ul>
+    <g:HTMLPanel styleName="{style.viewButtons}">
+        <g:HTMLPanel styleName="{style.viewLess}">
+            <g:Anchor ui:field="viewLessButton">
+                View Less
+                <span> &#45;</span>
+            </g:Anchor>
+        </g:HTMLPanel>
+        <g:HTMLPanel styleName="{style.viewMore}">
+            <g:Button ui:field="viewMoreButton" styleName="btn btn-lg btn-default">
+                View More                
+                <span> &#43;</span>
+            </g:Button>
+        </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder> 

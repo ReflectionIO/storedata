@@ -12,19 +12,25 @@
     .hideOverflow {
 		overflow: hidden;
 	}
+
+	.imgWrapper{
+		max-width: 75px;
+	}
 	
     </ui:style>
     <g:HTMLPanel styleName="sidebar-nav">
-        <g:Image ui:field="mImage" styleName="img-rounded" />
-
+        
+            <g:Image ui:field="mImage" styleName="img-rounded {style.imgWrapper}" />
+        
         <h2 ui:field="mTitle" class="{style.hideOverflow}">Item</h2>
 
-        <h3 ui:field="mCreatorName" class="{style.pageTitle} {style.hideOverflow} text-muted">By Creator</h3>
+        <h4 ui:field="mCreatorName" class="{style.pageTitle} {style.hideOverflow} text-muted">By Creator</h4>
 
         <p ui:field="price">price + in-App purchases</p>
 
+        <!-- 
         <hr />
-
+        
         <div class="btn-group btn-group-justified">
             <g:InlineHyperlink ui:field="mToday" styleName="btn btn-default active">
                 <span class="caret"></span>
@@ -48,19 +54,21 @@
         </h4>
 
         <p class="text-right lead">downloads</p>
+         -->
 
         <!-- <h4><i class="icon-star-empty"></i>Customer Rating</h4> <p>4/5<span class="pull-right"><i class="icon-star-empty"></i><i class="icon-star"></i><i class="icon-star"></i><i 
             class="icon-star"></i><i class="icon-star"></i></span></p> -->
         <hr />
 
         <!-- <a class="btn btn-primary col-xs-12"> More Info <i class="icon-plus"></i> </a> <br /> -->
-
-        <a class="col-xs-12 text-center" target="_blank" ui:field="viewInStore">
-            View in the
-            <span ui:field="storeName">Appstore</span>
-            <i class="icon-link-ext"></i>
-        </a>
-
+        
+        <div  class="text-center">
+            <a target="_blank" ui:field="viewInStore">
+                View in the
+                <span ui:field="storeName">Appstore</span>
+                <i class="icon-link-ext"></i>
+            </a>
+        </div>
 
     </g:HTMLPanel>
 

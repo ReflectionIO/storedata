@@ -14,6 +14,17 @@
         .silver {
         color: silver;
         }
+
+		.content{
+		padding-left: 0px;
+		padding-right: 0px;
+		}
+
+		.table{
+		margin-left: 20px;
+		margin-right: 25px;
+		margin-top: 20px;
+		}
     </ui:style>
     <g:HTMLPanel>
 
@@ -21,7 +32,7 @@
 
             <pp:RankSidePanel ui:field="mSidePanel" styleName="sidepanel col-md-2 well" />
 
-            <div class="col-md-10" style="padding-left: 0px; padding-right: 0px;">
+            <div class="col-md-10 {style.content}">
                 <ul class="nav nav-tabs nav-justified ranks">
                     <li ui:field="mAllItem">
                         <g:InlineHyperlink ui:field="mAll">Overview / All</g:InlineHyperlink>
@@ -37,14 +48,14 @@
                     </li>
                 </ul>
 
-                <div style="margin-left: 20px; margin-right: 25px; margin-top: 20px;">
+                <div class="{style.table}">
 
                     <c:CellTable ui:field="mRanks" styleName="table table-hover table-striped" />
 
-                    <p:PageSizePager ui:field="mPager" visible="false" />
+                    <p:PageSizePager ui:field="mPager" styleName="text-center" visible="false" />
 
                     <div class="text-center">
-                        <g:InlineHyperlink text="Show More" styleName="btn btn-default" ui:field="mRedirect" />
+                        <g:Button ui:field="redirect" styleName="btn btn-lg btn-default">Load More</g:Button>
                     </div>
 
                 </div>

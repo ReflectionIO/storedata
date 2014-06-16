@@ -42,6 +42,7 @@ import java.util.Map;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -51,6 +52,7 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TextHeader;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
@@ -83,7 +85,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 	@UiField RankSidePanel mSidePanel;
 
-	@UiField InlineHyperlink mRedirect;
+	@UiField Button redirect;
 
 	@UiField InlineHyperlink mAll;
 	@UiField InlineHyperlink mFree;
@@ -212,20 +214,23 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		TextHeader rankHeader = new TextHeader("Rank");
 		rankHeader.setHeaderStyleNames("col-xs-1");
 		mRanks.addColumn(position, rankHeader);
-
 		mPaidHeader = new TextHeader("Paid");
-
 		mFreeHeader = new TextHeader("Free");
-
 		mGrossingHeader = new TextHeader("Grossing");
-
 		mPriceHeader = new TextHeader("Price");
-
 		mDownloadsHeader = new TextHeader("Downloads");
-
 		mRevenueHeader = new TextHeader("Revenue");
-
 		mIapHeader = new TextHeader("IAP");
+
+		mRanks.setWidth("100%", true);
+		mRanks.setColumnWidth(position, 15.0, Unit.PCT);
+		mRanks.setColumnWidth(mPaidColumn, 100.0, Unit.PCT);
+		mRanks.setColumnWidth(mFreeColumn, 100.0, Unit.PCT);
+		mRanks.setColumnWidth(mGrossingColumn, 100.0, Unit.PCT);
+		mRanks.setColumnWidth(mPriceColumn, 30.0, Unit.PCT);
+		mRanks.setColumnWidth(mDownloadsColumn, 30.0, Unit.PCT);
+		mRanks.setColumnWidth(mRevenueColumn, 30.0, Unit.PCT);
+		mRanks.setColumnWidth(mIapColumn, 15.0, Unit.PCT);
 
 	}
 
@@ -317,8 +322,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	// public void userLoggedOut() {
 	// RankController.get().reset();
 	// mPager.setVisible(false);
-	// mRedirect.setVisible(true);
-	// mRedirect.setTargetHistoryToken(PageType.LoginPageType.toString());
+	// redirect.setVisible(true);
+	// redirect.setTargetHistoryToken(PageType.LoginPageType.toString());
 	// }
 	//
 	// /*
@@ -343,7 +348,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	// for (Permission p : input.permissions) {
 	// if (p.id != null && p.id != null) {
 	// mPager.setVisible(true);
-	// mRedirect.setVisible(false);
+	// redirect.setVisible(false);
 	// }
 	// }
 	// }
@@ -485,7 +490,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	//
 	// SessionController.get().fetchAuthorisation(null, permissions);
 	//
-	// mRedirect.setTargetHistoryToken(PageType.UpgradePageType.toString());
+	// redirect.setTargetHistoryToken(PageType.UpgradePageType.toString());
 	// }
 
 	/*
@@ -505,6 +510,6 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		boolean hasPermission = SessionController.get().loggedInUserHas(SessionController.FULL_RANK_VIEW_PERMISSION_ID);
 
 		mPager.setVisible(hasPermission);
-		mRedirect.setVisible(!hasPermission);
+		redirect.setVisible(!hasPermission);
 	}
 }
