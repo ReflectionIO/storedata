@@ -7,8 +7,8 @@
     }
     
     .pushDown {
-    	margin-top: 20px;
-    }
+		margin-top: 50px;
+	}
     
     .loading {
     	z-index: 1;
@@ -18,18 +18,30 @@
     	float: left;
 		width: 100%;
     }
+    
+    .content{
+		padding-left: 0px;
+		padding-right: 0px;
+	}
+    
+    .table{
+		margin-left: 40px;
+		margin-right: 25px;
+		margin-top: 20px;
+	}	
+
     </ui:style>
     <g:HTMLPanel>
 
         <div class="row">
             <pp:ItemSidePanel ui:field="mSidePanel" styleName="sidepanel col-md-2 well" />
 
-            <div class="col-md-10" style="padding-left: 0px; padding-right: 0px;">
+            <div class="col-md-10 {style.content}">
                 <ul class="nav nav-tabs nav-justified ranks">
                     <li ui:field="mRevenueItem">
                         <g:InlineHyperlink ui:field="mRevenue">
                             Revenue
-                            <i class="{style.floatRight} icon-money"></i>
+                            <i class="{style.floatRight} glyphicon glyphicon-align-center"></i>
                         </g:InlineHyperlink>
                     </li>
                     <li ui:field="mDownloadsItem">
@@ -40,20 +52,20 @@
                     </li>
                     <li ui:field="mRankingItem">
                         <g:InlineHyperlink ui:field="mRanking">
-                            Ranking
+                            Rank
                             <i class="{style.floatRight} icon-list-numbered"></i>
                         </g:InlineHyperlink>
                     </li>
                 </ul>
-                <div style="margin-left: 20px; margin-right: 25px; margin-top: 20px;">
+                <div class="{style.table}">
 
-                    <pp:ItemTopPanel ui:field="mTopPanel" />
+                    <pp:ItemTopPanel ui:field="mTopPanel"/>
 
                     <p:CircleProgressBar visible="false" ui:field="loader" styleName="{style.loading}" />
 
-                    <pp:ItemChart ui:field="historyChart" />
+                    <pp:ItemChart ui:field="historyChart" styleName="{style.pushDown}"/>
 
-                    <c:CellTable ui:field="revenue" styleName="table table-hover table-striped {style.pushDown}"></c:CellTable>
+                    <c:CellTable ui:field="revenue" styleName="table table-hover table-striped table-item {style.pushDown}"></c:CellTable>
 
                 </div>
             </div>

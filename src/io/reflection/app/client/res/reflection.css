@@ -1,6 +1,6 @@
 @CHARSET "UTF-8";
 
-@external headerCaret, navbar-toggle, p-small, form, formEdit, noteDetail, label, gwt-CheckBox, gwt-DateBox, gwt-ListBox, topPanel, sidepanel, btn, btn-group, btn-default, row, divider, divider-vertical, nav-pills, nav-stacked, nav-tabs, nav-justified, ranks, loginregister, well, well-title, form-group, gwt-RadioButton, hr, navbar-fixed-top, navbar, container, pagination, btn-primary, disabled, active, open, dropdown-toggle, dropdown-menu, i, badge, dropdown, nav, navbar-inverse, navbar-nav, navbar-text, caret, form-control;
+@external table-item, table-striped, tbody,nth-child, td, thead, th, tr:nth-child,  headerCaret, navbar-toggle, p-small, form, formEdit, noteDetail, label, gwt-CheckBox, gwt-DateBox, gwt-ListBox, topPanel, sidepanel, btn, btn-group, btn-default, row, divider, divider-vertical, nav-pills, nav-stacked, nav-tabs, nav-justified, ranks, loginregister, well, well-title, form-group, gwt-RadioButton, hr, navbar-fixed-top, navbar, container, pagination, btn-primary, disabled, active, open, dropdown-toggle, dropdown-menu, i, badge, dropdown, nav, navbar-inverse, navbar-nav, navbar-text, caret, form-control;
 	/* Colors palette: Purple #6d69c5; DarkBlue 272933; Gold #eabc3e; LightGrey: #f8f9f9; Green: #1bc79f; Blue: #3357cc; Red: #e73c48; */
 body {
 	font-family: 'Lato', sans-serif;
@@ -161,13 +161,35 @@ body {
 	box-shadow: none;
 }
 
+/* Cell Table */
+.table-striped > tbody > tr > td, .table-striped > thead > tr > th {
+	vertical-align: middle;
+	border: 0px;
+}
+
+.table-striped > thead > tr > th{
+	border: 0px;
+}
+
+.table-striped > tbody > tr:nth-child\(odd\) > td {
+	background-color: #eff2f5;
+}
+
+.table-striped > tbody > tr:nth-child\(even\) > td {
+	background-color: #ffffff;
+}
+
+/* Cell Table - ItemPage */
+.table-striped.table-item > tbody > tr > td, .table-striped.table-item > thead > tr > th {
+   height: 50px;
+}
+
 .row {
 	margin-left: 0px;
 	margin-right: 0px;
 }
 
 .sidepanel {
-	margin-top: -10px;
 	padding-left: 25px;
 	padding-right: 25px;
 	border-radius: 0px;
@@ -459,18 +481,20 @@ a:hover,a:focus,a:active {
 	border-bottom-color: #1bc79f;
 }
 
+
 /* Tabs Rank */
 .nav-tabs.nav-justified.ranks>li>a {
 	background-color: #f6f6f6;
 	height: 65px;
-	font-size: 18px;
-	padding-top: 17px;
+	font-size: 18px;	
 	border-radius: 0px;
 	border: 1px solid #d9dce0;
 	outline: 0;
 	color: #5c5e65;
 	text-align: left;
+	padding-top: 19px;
 	padding-left: 30px;
+	padding-right: 30px;
 }
 
 .nav-tabs.nav-justified.ranks>.active>a,.nav-tabs.nav-justified.ranks>.active>a:hover,.nav-tabs.nav-justified.ranks>.active>a:focus
