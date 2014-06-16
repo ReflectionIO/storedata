@@ -303,10 +303,6 @@ a:hover,a:focus,a:active {
 	color: #1bc79f;
 }
 
-.breakWords {
-	word-wrap: break-word;
-}
-
 .pagination>.active>a,.pagination>.active>span,.pagination>.active>a:hover,.pagination>.active>span:hover,.pagination>.active>a:focus,.pagination>.active>span:focus
 	{
 	background-color: #6D69C5;
