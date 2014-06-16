@@ -96,6 +96,7 @@ public class PageSizePager extends AbstractPager {
 				display.setVisibleRange(range.getStart(), pageSize);
 			}
 		}
+		viewMoreButton.setFocus(false);
 	}
 
 	@Override
