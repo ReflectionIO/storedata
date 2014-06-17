@@ -19,28 +19,46 @@ import java.util.Date;
  * 
  */
 public class ForumMessage {
+
 	private Topic topic;
 	private Reply reply;
 	Long currentuserId = SessionController.get().getLoggedInUser().id;
 
-	public ForumMessage(Reply reply) {
-		this.reply = reply;
+	public Long getId() {
+		return reply == null ? topic.id : reply.id;
 	}
 
-	public ForumMessage(Topic topic) {
+	public Long getTopicId() {
+		return topic.id;
+	}
+
+	public ForumMessage(Topic topic, Reply reply) {
+		this.topic = topic;
+		this.reply = reply;
+	}
+	
+	public ForumMessage(Topic topic){
 		this.topic = topic;
 	}
 
 	public String getContent() {
-		return topic == null ? reply.content : topic.content;
+		return reply == null ? topic.content : reply.content;
 	}
 
 	public User getAuthor() {
-		return topic == null ? reply.author : topic.author;
+		return reply == null ? topic.author : reply.author;
 	}
 
 	public Date getCreated() {
-		return topic == null ? reply.created : topic.created;
+		return reply == null ? topic.created : reply.created;
+	}
+
+	public boolean canFlag() {
+		return currentuserId != getId() ? true : false;
+	}
+
+	public boolean canEdit() {
+		return currentuserId == getId() ? true : false;
 	}
 
 }

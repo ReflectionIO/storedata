@@ -18,6 +18,7 @@ import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.ReplyController;
+import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.TopicController;
 import io.reflection.app.client.dataprovider.ForumMessageProvider;
 import io.reflection.app.client.handler.NavigationEventHandler;
@@ -33,6 +34,7 @@ import io.reflection.app.datatypes.shared.Topic;
 import io.reflection.app.shared.util.FormattingHelper;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.linker.SymbolMapsLinker.ScriptFragmentEditsArtifact.Edit;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.LIElement;
@@ -44,6 +46,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellList;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -113,6 +116,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 		if (dataProvider != null) {
 			dataProvider.registerListeners();
 		}
+
 	}
 
 	/*
@@ -154,7 +158,6 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
 	private boolean validate() {
 		boolean isValid = false;
-
 		// TODO should probably take into account quoted text
 		if (replyText.getHTML().trim().length() > 0) {
 			FormHelper.hideNote(replyGroup, replyNote);
@@ -162,7 +165,6 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 		} else {
 			FormHelper.showNote(true, replyGroup, replyNote, "No reply text");
 		}
-
 		return isValid;
 	}
 
@@ -177,14 +179,13 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
 		if (current != null && PageType.ForumThreadPageType.equals(current.getPage())) {
 			if (current.getAction() != null && VIEW_ACTION_PARAMETER_VALUE.equals(current.getAction())) {
-
 				String topicIdString;
 				if ((topicIdString = current.getParameter(TOPIC_ID_PARAMETER_INDEX)) != null) {
 					topicId = Long.valueOf(topicIdString);
-
 					Topic topic = TopicController.get().getTopic(topicId);
-
 					updateTopic(topic);
+					// Window.alert("In Nav Controller");
+					// replyText.setHTML("<div class=\"quoting\">" + topic.author.forename + " scribbled " + topic.content.toString() + "</div>");
 				}
 			}
 		}
@@ -192,7 +193,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
 	private void updateTopic(Topic topic) {
 		if (topic != null) {
-
+			Window.alert("In update topic");
 			String properties = "";
 
 			boolean isLocked = topic.locked != null && topic.locked.booleanValue();

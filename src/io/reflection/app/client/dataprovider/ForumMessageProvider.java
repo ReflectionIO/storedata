@@ -86,7 +86,7 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
 		if (output.status == StatusType.StatusTypeSuccess) {
 			if (output.replies != null) {
 				for (Reply reply : output.replies) {
-					rows.add(new ForumMessage(reply));
+					rows.add(new ForumMessage(input.topic, reply));
 					replyLookup.put(reply.id, reply);
 				}
 			}
@@ -174,7 +174,7 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
 	 */
 	@Override
 	public void addReplySuccess(AddReplyRequest input, AddReplyResponse output) {
-		rows.add(new ForumMessage(output.reply));
+		rows.add(new ForumMessage(input.reply.topic, output.reply));
 
 		totalCount++;
 		updateRowCount(rows.size(), true);
