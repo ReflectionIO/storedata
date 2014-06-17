@@ -1,0 +1,46 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+    <ui:with field='images' type='io.reflection.app.client.res.Images' />
+    <ui:style>
+    .title {
+    	padding-bottom: 20px;
+    }
+    .heading{
+		padding-bottom: 77px;
+		font-weight: normal;
+	}
+    </ui:style>
+    <g:HTMLPanel styleName="text-center">
+        <h1 class="{style.title}">
+            Welcome to Reflection
+        </h1>
+
+        <h5 class="{style.heading}">
+            Congratulations on becoming part of our private beta. Our goal is to provide the most insightful and accurate app intelligence and you can help us
+            achieve this.
+        </h5>
+
+        <g:Image resource="{images.linkAccountProgress1}" />
+
+        <div>
+            <div class="col-md-4">
+                <h3 style="margin-top: 30px; color: #6D69C5;">
+                    Step 1
+                </h3>
+                <p class="p-small" style="margin-top: 20px; padding-left: 5px; padding-right: 5px;">Create password and register to get started</p>
+            </div>
+            <div class="col-md-4">
+                <h3 style="margin-top: 30px;">
+                    Step 2
+                </h3>
+                <p class="p-small" style="margin-top: 20px; padding-left: 10px; padding-right: 10px;">Link your iTunes Connect account</p>
+            </div>
+            <div class="col-md-4">
+                <h3 style=" margin-top: 30px;">
+                    Step 3
+                </h3>
+                <p class="p-small" style="margin-top: 20px; padding-left: 10px; padding-right: 10px;">Done. Welcome to the private beta</p>
+            </div>
+        </div>
+    </g:HTMLPanel>
+</ui:UiBinder> 
