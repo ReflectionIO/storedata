@@ -39,11 +39,11 @@
                         <i class="glyphicon glyphicon-flag"></i>
                         Flag
                     </a>
-					<a href="flag" class="btn btn-warning btn-xs" ui:field="flag"
-						visible="false">
-						<i class="glyphicon glyphicon-flag"></i>
-						Flag
-					</a>                    
+					<a href="{ForumThreadPageType.asHref.asString}/view/{topicId.toString}/quote/{messageId.toString}"
+						class="btn btn-default btn-xs" ui:field="quote">
+						<i class="glyphicon glyphicon-pencil"></i>
+						Quote
+					</a>                   
                 </div>
             </div>
         </div>

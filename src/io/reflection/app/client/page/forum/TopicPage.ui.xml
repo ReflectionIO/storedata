@@ -2,8 +2,12 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:com.google.gwt.user.cellview.client"
     xmlns:p="urn:import:io.reflection.app.client.part.text" xmlns:a="urn:import:io.reflection.app.client.part">
     <ui:style>
+    @external quoting;
     .textArea {
     	height: 200px;
+    }
+    .quoting {
+		background : red;
     }
     
     .margins {
@@ -40,6 +44,7 @@
                     <g:Button ui:field="post" styleName="btn btn-lg btn-primary col-sm-4 col-sm-offset-4">
                         Post
                     </g:Button>
+
                 </g:HTMLPanel>
             </g:FormPanel>
         </div>
