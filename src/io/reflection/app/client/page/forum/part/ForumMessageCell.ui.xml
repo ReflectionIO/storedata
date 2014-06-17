@@ -37,6 +37,11 @@
                         <i class="glyphicon glyphicon-flag"></i>
                         Flag
                     </a>
+					<a href="flag" class="btn btn-warning btn-xs" ui:field="flag"
+						visible="false">
+						<i class="glyphicon glyphicon-flag"></i>
+						Flag
+					</a>                    
                 </div>
             </div>
         </div>
