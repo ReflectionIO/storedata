@@ -3,7 +3,9 @@
     <ui:with field="authorName" type="java.lang.String" />
     <ui:with field="content" type="com.google.gwt.safehtml.shared.SafeHtml" />
     <ui:with field="created" type="java.lang.String" />
-
+	<ui:with field="topicId" type="java.lang.Long" />
+	<ui:with field="messageId" type="java.lang.Long" />
+	<ui:import field="io.reflection.app.client.page.PageType.ForumThreadPageType" />
     <ui:style>
     .split {
     	border-top: solid 1px #999;
