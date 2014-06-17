@@ -59,7 +59,10 @@ public interface Images extends ClientBundle {
 
 	@Source("welcomeprogress.png")
 	ImageResource welcomeProgress();
-
+	
+	@Source("linkaccountprogress1.png")
+	ImageResource linkAccountProgress1();
+	
 	@Source("linkaccountprogress.png")
 	ImageResource linkAccountProgress();
 
