@@ -77,7 +77,6 @@ public class RegisterForm extends Composite {
 	public RegisterForm() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		mRegister.setHTML(mRegister.getText() + "&nbsp;&nbsp;" + imageButtonLink);
 		forename.getElement().setAttribute("placeholder", "First name");
 		surname.getElement().setAttribute("placeholder", "Last name");
 		company.getElement().setAttribute("placeholder", "Company");
@@ -369,9 +368,11 @@ public class RegisterForm extends Composite {
 			focusFirstActiveField();
 			passwordGroup.setVisible(false);
 			termAndCondGroup.setVisible(false);
+			mRegister.setHTML("Submit&nbsp;&nbsp;" + imageButtonLink);
 		} else {
 			passwordGroup.setVisible(true);
 			termAndCondGroup.setVisible(true);
+			mRegister.setText("Register");
 		}
 	}
 

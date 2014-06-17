@@ -17,26 +17,50 @@
     }
     
     .spaceFiller {
-        height: 100px;
+    	height: 100px;
     }
     
+    .inviteRegisterTab {
+    	background-color: #fafafa;
+    	font-weight: 600;
+    	height: 65px;
+    	font-size: 18px;
+    	padding-top: 35px;
+    	border-radius: 0px;
+    	border: 0px;
+    	outline: 0;
+    	text-align: center;
+    	color: #0e0e1f;
+    }
     </ui:style>
     <g:HTMLPanel styleName="container">
         <p:AlertBox ui:field="mAlertBox" visible="false" />
-        <g:HTMLPanel ui:field="mPanel" styleName="row">
+        <g:HTMLPanel styleName="row">
             <div class="hidden-xs hidden-sm col-md-12 {style.spaceFiller}"></div>
-            <pp:LoginRegisterPanel styleName="col-md-6 {style.mainPanel}" />
 
+            <div class="col-md-6 {style.mainPanel}">
+                <pp:LoginRegisterPanel ui:field="loginRegisterPanel" />
+                <pp:InviteRegisterPanel ui:field="inviteRegisterPanel" visible="false" />
+            </div>
             <g:HTMLPanel styleName="col-md-5 col-md-offset-1 well {style.registerform}">
 
-                <ul class="nav nav-tabs nav-justified loginregister">
-                    <li ui:field="registerItem" class="active">
-                        <g:InlineHyperlink ui:field="register" targetHistoryToken="{RegisterPageType.asTargetHistoryToken}" />
-                    </li>
-                    <li ui:field="loginItem">
-                        <g:InlineHyperlink ui:field="login">Log in</g:InlineHyperlink>
-                    </li>
-                </ul>
+                <g:HTMLPanel ui:field="loginRegisterTabs">
+                    <ul class="nav nav-tabs nav-justified loginregister">
+                        <li ui:field="registerItem" class="active">
+                            <g:InlineHyperlink ui:field="register" targetHistoryToken="{RegisterPageType.asTargetHistoryToken}" />
+                        </li>
+                        <li ui:field="loginItem">
+                            <g:InlineHyperlink ui:field="login">Log in</g:InlineHyperlink>
+                        </li>
+                    </ul>
+                </g:HTMLPanel>
+                <g:HTMLPanel ui:field="inviteRegisterTabs">
+                    <ul class="nav nav-tabs nav-justified loginregister">
+                        <li class="{style.inviteRegisterTab}">
+                            Create Password and Register
+                        </li>
+                    </ul>
+                </g:HTMLPanel>
 
                 <r:RegisterForm ui:field="mRegisterForm" />
 

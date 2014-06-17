@@ -1,11 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
-    <ui:style>
-    .noteDetail {
-    	font-size: smaller;
-    	margin-top: 5px;
-    }
-    
+    <ui:style>    
     .marginTop5 {
     	margin-top: 5px;
     }
@@ -20,20 +15,20 @@
         <g:HTMLPanel ui:field="mAccountUsernameGroup" styleName="form-group">
             <label>Account name</label>
             <g:TextBox styleName="form-control  {style.marginTop5}" ui:field="mAccountUsername" />
-            <g:HTMLPanel styleName="{style.noteDetail}" ui:field="mAccountUsernameNote" visible="false" />
+            <g:HTMLPanel ui:field="mAccountUsernameNote" visible="false" styleName="noteDetail" />
         </g:HTMLPanel>
 
         <g:HTMLPanel ui:field="mPasswordGroup" styleName="form-group">
             <label>Password</label>
             <g:PasswordTextBox styleName="form-control  {style.marginTop5}" ui:field="mPassword" />
-            <g:HTMLPanel styleName="{style.noteDetail}" ui:field="mPasswordNote" visible="false" />
+            <g:HTMLPanel ui:field="mPasswordNote" visible="false" styleName="noteDetail" />
         </g:HTMLPanel>
 
         <g:HTMLPanel ui:field="mVendorIdGroup" styleName="form-group">
             <label>Vendor ID</label>
             <g:InlineHyperlink ui:field="whatsThis" styleName="{style.inlineAnchor}">What's this?</g:InlineHyperlink>
             <g:TextBox styleName="form-control {style.marginTop5}" ui:field="mVendorId" />
-            <g:HTMLPanel styleName="{style.noteDetail}" ui:field="mVendorIdNote" visible="false" />
+            <g:HTMLPanel ui:field="mVendorIdNote" visible="false" styleName="noteDetail" />
         </g:HTMLPanel>
 
     </g:HTMLPanel>
