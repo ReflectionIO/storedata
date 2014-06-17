@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.part.datatypes;
 
+import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.datatypes.shared.Reply;
 import io.reflection.app.datatypes.shared.Topic;
 import io.reflection.app.datatypes.shared.User;
@@ -20,6 +21,7 @@ import java.util.Date;
 public class ForumMessage {
 	private Topic topic;
 	private Reply reply;
+	Long currentuserId = SessionController.get().getLoggedInUser().id;
 
 	public ForumMessage(Reply reply) {
 		this.reply = reply;
