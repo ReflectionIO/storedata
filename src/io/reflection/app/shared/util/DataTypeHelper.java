@@ -47,31 +47,38 @@ public class DataTypeHelper {
 
 	public static String itemIapState(Item item, String yes, String no, String unknown) {
 		String usesIap = null;
+		
 		if (item != null) {
-			String jsonProperties = item.properties;
+			usesIap = jsonPropertiesIapState(item.properties, yes, no, unknown);
+		}
 
-			if (jsonProperties != null) {
-				JsonElement propertiesJsonElement = (new JsonParser()).parse(jsonProperties);
+		return usesIap;
+	}
+	
+	public static String jsonPropertiesIapState(String jsonProperties, String yes, String no, String unknown) {
+		String usesIap = null;
+		
+		if (jsonProperties != null) {
+			JsonElement propertiesJsonElement = (new JsonParser()).parse(jsonProperties);
 
-				if (propertiesJsonElement.isJsonObject()) {
-					JsonObject propertiesJsonObject = propertiesJsonElement.getAsJsonObject();
-					JsonElement usesIapJsonElement = propertiesJsonObject.get("usesIap");
+			if (propertiesJsonElement.isJsonObject()) {
+				JsonObject propertiesJsonObject = propertiesJsonElement.getAsJsonObject();
+				JsonElement usesIapJsonElement = propertiesJsonObject.get("usesIap");
 
-					if (usesIapJsonElement.isJsonPrimitive()) {
-						if (usesIapJsonElement.getAsBoolean()) {
-							usesIap = yes;
-						} else {
-							usesIap = no;
-						}
+				if (usesIapJsonElement.isJsonPrimitive()) {
+					if (usesIapJsonElement.getAsBoolean()) {
+						usesIap = yes;
+					} else {
+						usesIap = no;
 					}
 				}
 			}
 		}
-
+		
 		if (usesIap == null) {
 			usesIap = unknown;
 		}
-
+		
 		return usesIap;
 	}
 }
