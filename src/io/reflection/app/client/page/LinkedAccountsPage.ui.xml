@@ -8,15 +8,6 @@
     	padding-bottom: 10px;
     }
     
-    .loading {
-    	z-index: 1;
-    	top: 100px;
-    	text-align: center;
-    	position: relative;
-    	float: left;
-    	width: 100%;
-    }
-    
     .backLink {
     	margin-top: 20px;
     	margin-bottom: 20px;
@@ -58,8 +49,7 @@
                         </g:HTMLPanel>
                     </g:FormPanel>
                 </g:HTMLPanel>
-                <p:CircleProgressBar visible="false" ui:field="loader" styleName="{style.loading}" />
-
+                
             </g:HTMLPanel>
         </g:HTMLPanel>
 

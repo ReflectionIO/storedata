@@ -30,7 +30,6 @@ import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.page.part.MyAccountSidePanel;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
-import io.reflection.app.client.part.CircleProgressBar;
 import io.reflection.app.client.part.ConfirmationDialog;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.part.linkaccount.IosMacLinkAccountForm;
@@ -112,8 +111,6 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 	@UiField MyAccountSidePanel myAccountSidePanel;
 	@UiField HTMLPanel linkedAccountsPanel;
-
-	@UiField CircleProgressBar loader;
 
 	private User user = SessionController.get().getLoggedInUser();
 
@@ -393,7 +390,6 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 				@Override
 				public void onClick(ClickEvent event) {
-					loader.setVisible(true);
 					LinkedAccountController.get().deleteLinkedAccount(LinkedAccountController.get().getLinkedAccount(confirmationDialog.getParameter()));
 					confirmationDialog.reset();
 				}
@@ -405,7 +401,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 			if (user != null) {
 				PageType.UsersPageType.show(PageType.LinkedAccountsPageType.toString(user.id.toString()));
 			}
-			if (confirmationDialog != null) {				
+			if (confirmationDialog != null) {
 				confirmationDialog.reset();
 			}
 		}
@@ -429,7 +425,6 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 			mLinkableAccount.setFormErrors();
 			mLinkableAccount.setEnabled(false);
 			mLinkAccount.setEnabled(false);
-			loader.setVisible(true);
 
 			if (EDIT_ACTION_PARAMETER_VALUE.equals(NavigationController.get().getStack().getParameter(ACTION_PARAMETER))) {
 				LinkedAccountController.get().updateLinkedAccont(Long.valueOf(NavigationController.get().getStack().getParameter(ACTION_PARAMETER_INDEX)),
@@ -451,8 +446,6 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	 */
 	@Override
 	public void linkAccountSuccess(LinkAccountRequest input, LinkAccountResponse output) {
-		loader.setVisible(false);
-
 		mLinkableAccount.resetForm();
 		mLinkableAccount.setEnabled(true);
 		mLinkAccount.setEnabled(true);
@@ -474,7 +467,6 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	 */
 	@Override
 	public void linkAccountFailure(LinkAccountRequest input, Throwable caught) {
-		loader.setVisible(false);
 		mForm.setVisible(true);
 		mLinkableAccount.resetForm();
 		mLinkableAccount.setEnabled(true);
@@ -496,7 +488,6 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	 */
 	@Override
 	public void deleteLinkedAccountSuccess(DeleteLinkedAccountRequest input, DeleteLinkedAccountResponse output) {
-		loader.setVisible(false);
 		if (output.status == StatusType.StatusTypeSuccess) {
 			PageType.UsersPageType.show(PageType.LinkedAccountsPageType.toString(user.id.toString()));
 		} else {
@@ -512,9 +503,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	 * DeleteLinkedAccountRequest, java.lang.Throwable)
 	 */
 	@Override
-	public void deleteLinkedAccountFailure(DeleteLinkedAccountRequest input, Throwable caught) {
-		loader.setVisible(false);
-	}
+	public void deleteLinkedAccountFailure(DeleteLinkedAccountRequest input, Throwable caught) {}
 
 	/*
 	 * (non-Javadoc)
@@ -524,7 +513,6 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	 */
 	@Override
 	public void updateLinkedAccountSuccess(UpdateLinkedAccountRequest input, UpdateLinkedAccountResponse output) {
-		loader.setVisible(false);
 		mLinkableAccount.setEnabled(true);
 		mLinkAccount.setEnabled(true);
 
@@ -544,7 +532,6 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	 */
 	@Override
 	public void updateLinkedAccountFailure(UpdateLinkedAccountRequest input, Throwable caught) {
-		loader.setVisible(false);
 		mLinkableAccount.setEnabled(true);
 		mLinkAccount.setEnabled(true);
 	}

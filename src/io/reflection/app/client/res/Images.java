@@ -89,5 +89,8 @@ public interface Images extends ClientBundle {
 
 	@Source("searchplaceholder.jpg")
 	ImageResource searchPlaceholder();
+	
+	@Source("preloader.gif")
+	ImageResource preloader();
 
 }
