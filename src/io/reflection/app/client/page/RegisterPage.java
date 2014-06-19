@@ -47,7 +47,7 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 		SessionEventHandler {
 
 	public interface Style extends CssResource {
-		String mainPanel();
+	    String mainPanel();
 	}
 
 	private static RegisterPageUiBinder uiBinder = GWT.create(RegisterPageUiBinder.class);
@@ -141,7 +141,7 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 		register.setTargetHistoryToken(current.toString());
 		// Request invite form
 		if (current.getAction() != null && FormHelper.REQUEST_INVITE_ACTION_NAME.equals(current.getAction())) {
-			username = null;;
+			username = null;
 			setRequestInvite(Boolean.TRUE);
 			// Register form
 		} else {

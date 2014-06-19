@@ -33,8 +33,6 @@ public interface Styles extends ClientBundle {
 
 		String footerDownArrow();
 
-		String breakWords();
-
 		String unknownAppSmall();
 
 		String unknownAppMedium();
@@ -48,6 +46,8 @@ public interface Styles extends ClientBundle {
 		String linkedAccountPlus();
 
 		String smooth();
+		
+		String noteDetail();
 
 		String header();
 		

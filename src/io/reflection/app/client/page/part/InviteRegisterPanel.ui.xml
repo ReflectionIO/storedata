@@ -5,18 +5,46 @@
     .title {
     	padding-bottom: 20px;
     }
-    .heading{
-		padding-bottom: 77px;
-		font-weight: normal;
-	}
+    
+    .heading5 {
+    	padding-bottom: 77px;
+    	font-weight: normal;
+    }
+    
+    .heading3 {
+    	margin-top: 30px;
+    }
+    
+    .active {
+    	color: #6D69C5;
+    }
+    
+    .col1 {
+    	margin-top: 20px;
+    	padding-left: 5px;
+    	padding-right: 5px;
+    }
+    
+    .col2 {
+    	margin-top: 20px;
+    	padding-left: 10px;
+    	padding-right: 10px;
+    }
+    
+    .col3 {
+    	margin-top: 20px;
+    	padding-left: 10px;
+    	padding-right: 10px;
+    }
     </ui:style>
     <g:HTMLPanel styleName="text-center">
         <h1 class="{style.title}">
             Welcome to Reflection
         </h1>
 
-        <h5 class="{style.heading}">
-            Congratulations on becoming part of our private beta. Our goal is to provide the most insightful and accurate app intelligence and you can help us
+        <h5 class="{style.heading5}">
+            Congratulations on becoming part of our private beta. Our goal is to provide the most insightful and accurate app intelligence and you can
+            help us
             achieve this.
         </h5>
 
@@ -24,22 +52,22 @@
 
         <div>
             <div class="col-md-4">
-                <h3 style="margin-top: 30px; color: #6D69C5;">
+                <h3 class="{style.heading3} {style.active}">
                     Step 1
                 </h3>
-                <p class="p-small" style="margin-top: 20px; padding-left: 5px; padding-right: 5px;">Create password and register to get started</p>
+                <p class="p-small {style.col1}">Create password and register to get started</p>
             </div>
             <div class="col-md-4">
-                <h3 style="margin-top: 30px;">
+                <h3 class="{style.heading3}">
                     Step 2
                 </h3>
-                <p class="p-small" style="margin-top: 20px; padding-left: 10px; padding-right: 10px;">Link your iTunes Connect account</p>
+                <p class="p-small {style.col2}">Link your iTunes Connect account</p>
             </div>
             <div class="col-md-4">
-                <h3 style=" margin-top: 30px;">
+                <h3 class="{style.heading3}">
                     Step 3
                 </h3>
-                <p class="p-small" style="margin-top: 20px; padding-left: 10px; padding-right: 10px;">Done. Welcome to the private beta</p>
+                <p class="p-small {style.col3}">Done. Welcome to the private beta</p>
             </div>
         </div>
     </g:HTMLPanel>
