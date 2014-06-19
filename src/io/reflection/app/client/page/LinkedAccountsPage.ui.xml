@@ -6,8 +6,7 @@
     .toolbar_spacing {
     	padding-top: 10px;
     	padding-bottom: 10px;
-    }
-    
+    }    
     .backLink {
     	margin-top: 20px;
     	margin-bottom: 20px;
@@ -28,28 +27,34 @@
                     </g:HTMLPanel>
                 </g:HTMLPanel>
 
-                <g:HTMLPanel ui:field="linkedAccountsPanel">
-                    <c:CellTable ui:field="linkedAccountsTable" styleName="table table-hover table-striped" />
-                    <p:SimplePager ui:field="simplePager" styleName="text-center" visible="false" />
-                    <div class="text-center">
-                        <g:Button ui:field="addLinkedAccount" styleName="btn btn-default btn-lg text-center" text="Link Another Account" visible="false" />
-                    </div>
-                </g:HTMLPanel>
+                <p:Preloader ui:field="preloaderTable">
+                    <g:HTMLPanel ui:field="linkedAccountsPanel">
 
-                <g:HTMLPanel ui:field="linkedAccountForm" visible="false">
+                        <c:CellTable ui:field="linkedAccountsTable" styleName="table table-hover table-striped" />
+                        <!--<p:SimplePager ui:field="simplePager" styleName="text-center" visible="false" /> -->
+                        <div class="text-center">
+                            <g:Button ui:field="addLinkedAccount" styleName="btn btn-default btn-lg text-center" text="Link Another Account" visible="false" />
+                        </div>
+                    </g:HTMLPanel>
+                </p:Preloader>
 
+
+                <g:HTMLPanel ui:field="linkedAccountForm" visible="false" styleName="col-md-12">
                     <!-- <g:HTMLPanel ui:field="mToolbar" styleName="btn-group {style.toolbar_spacing}"> <g:InlineHyperlink styleName="btn btn-default" text="iOS/Mac" 
                         ui:field="mIosMacLink" /> <g:InlineHyperlink styleName="btn btn-default disabled" text="Google Play" ui:field="mPlayLink" /> <g:InlineHyperlink styleName="btn btn-default 
                         disabled" text="Amazon" ui:field="mAmazonLink" /> <g:InlineHyperlink styleName="btn btn-default disabled" text="Windows" ui:field="mWindowsPhoneLink" /> </g:HTMLPanel> -->
-                    <g:FormPanel ui:field="mForm" styleName="formEdit col-md-12" visible="false">
-                        <g:HTMLPanel>
-                            <g:InlineHyperlink ui:field="backLink" styleName="{style.backLink}">&#8592; Back to linked accounts</g:InlineHyperlink>
-                            <l:IosMacLinkAccountForm ui:field="mIosMacForm" />
-                            <g:Button ui:field="mLinkAccount" styleName="btn btn-lg btn-primary btn-block" text="Link Account" />
-                        </g:HTMLPanel>
-                    </g:FormPanel>
+
+                    <p:Preloader ui:field="preloaderForm">
+                        <g:InlineHyperlink ui:field="backLink" styleName="{style.backLink}">&#8592; Back to linked accounts</g:InlineHyperlink>
+                            <g:FormPanel ui:field="mForm" styleName="formEdit" visible="false">
+                                <g:HTMLPanel>
+                                    <l:IosMacLinkAccountForm ui:field="mIosMacForm" />
+                                    <g:Button ui:field="mLinkAccount" styleName="btn btn-lg btn-primary btn-block" text="Link Account" />
+                                </g:HTMLPanel>
+                            </g:FormPanel>
+                    </p:Preloader>
                 </g:HTMLPanel>
-                
+
             </g:HTMLPanel>
         </g:HTMLPanel>
 

@@ -8,9 +8,7 @@
 package io.reflection.app.client.part;
 
 import io.reflection.app.client.controller.EventController;
-import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.helper.AlertBoxHelper;
-import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.AlertBox.AlertBoxType;
 
 import java.util.ArrayList;
@@ -107,6 +105,7 @@ public class SuperAlertBox implements JsonServiceCallEventHandler, CloseHandler<
 
 		if (alertBox != null) {
 			AlertBoxHelper.configureAlert(alertBox, AlertBoxType.SuccessAlertBoxType, false, callName, "Returned success!", true);
+
 			closeAfter(alertBox, 2);
 		}
 	}
@@ -117,6 +116,7 @@ public class SuperAlertBox implements JsonServiceCallEventHandler, CloseHandler<
 		if (alertBox != null) {
 			AlertBoxHelper.configureAlert(alertBox, AlertBoxType.DangerAlertBoxType, false, callName, "Failed with exception [" + caught.toString() + "]!",
 					true);
+
 			closeAfter(alertBox, 5);
 		}
 	}
@@ -145,7 +145,7 @@ public class SuperAlertBox implements JsonServiceCallEventHandler, CloseHandler<
 			AlertBoxHelper.configureAlert(alertBox, AlertBoxType.DangerAlertBoxType, false, callName,
 					response.error == null ? "Failed with unknown error, no code or message!" : "Failed with code [" + response.error.code.toString()
 							+ "] and message [" + response.error.message + "]!", true);
-			Preloader.get().hide();
+
 			closeAfter(alertBox, 5);
 		}
 	}
@@ -158,9 +158,6 @@ public class SuperAlertBox implements JsonServiceCallEventHandler, CloseHandler<
 	 */
 	@Override
 	public void jsonServiceCallStart(JsonService origin, String callName, Request input, com.google.gwt.http.client.Request handle) {
-		if (!NavigationController.get().getStack().getPage().equals(PageType.LoadingPageType)) {
-			Preloader.get().center();
-		}
 		startCall(input, callName, origin.getUrl());
 	}
 
@@ -172,9 +169,6 @@ public class SuperAlertBox implements JsonServiceCallEventHandler, CloseHandler<
 	 */
 	@Override
 	public void jsonServiceCallSuccess(JsonService origin, String callName, Request input, Response output) {
-		if (requests.size() <= 1) {
-			Preloader.get().hide();
-		}
 		if (output.status == StatusType.StatusTypeSuccess) {
 			callSuccess(callName, input, output);
 		} else {
@@ -190,9 +184,6 @@ public class SuperAlertBox implements JsonServiceCallEventHandler, CloseHandler<
 	 */
 	@Override
 	public void jsonServiceCallFailure(JsonService origin, String callName, Request input, Throwable caught) {
-		if (requests.size() == 1) {
-			Preloader.get().hide();
-		}
 		callFailure(callName, input, caught);
 	}
 

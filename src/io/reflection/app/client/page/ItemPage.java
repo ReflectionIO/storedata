@@ -38,7 +38,7 @@ import io.reflection.app.client.page.part.ItemChart.YAxisDataType;
 import io.reflection.app.client.page.part.ItemSidePanel;
 import io.reflection.app.client.page.part.ItemTopPanel;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
-import io.reflection.app.client.part.CircleProgressBar;
+import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.part.datatypes.ItemRevenue;
 import io.reflection.app.client.res.flags.Styles;
 import io.reflection.app.datatypes.shared.Item;
@@ -83,7 +83,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField LIElement mRankingItem;
 
 	@UiField ItemChart historyChart;
-	@UiField CircleProgressBar loader;
+	// @UiField CircleProgressBar loader;
+	@UiField Preloader preloader;
 
 	@UiField(provided = true) CellTable<ItemRevenue> revenue = new CellTable<ItemRevenue>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
 
@@ -395,8 +396,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		} else {
 			// do nothing
 		}
-
-		loader.setVisible(false);
+		preloader.hide();
+		// loader.setVisible(false);
 	}
 
 	/*
@@ -418,7 +419,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			// " - Please wait while we fetch the rank history for the selected item", false).setVisible(true);
 
 			historyChart.setLoading(true);
-			loader.setVisible(true);
+			// loader.setVisible(true);
+			preloader.show();
 
 			if (LinkedAccountController.get().getLinkedAccountItem(item) != null) {
 				RankController.get().fetchItemSalesRanks(item);
@@ -473,8 +475,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		} else {
 			// do nothing
 		}
-
-		loader.setVisible(false);
+		preloader.hide();
+		// loader.setVisible(false);
 	}
 
 	/*

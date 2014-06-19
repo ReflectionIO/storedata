@@ -32,6 +32,7 @@ import io.reflection.app.client.page.part.RankSidePanel;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.PageSizePager;
 import io.reflection.app.client.part.datatypes.RanksGroup;
+import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.app.shared.util.FormattingHelper;
@@ -54,6 +55,7 @@ import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -130,6 +132,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		mTabs.put(GROSSING_LIST_TYPE, mGrossingItem);
 
 		mRanks.setEmptyTableWidget(new HTMLPanel("No ranking data for filter!"));
+		mRanks.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 		RankController.get().addDataDisplay(mRanks);
 		mPager.setDisplay(mRanks);
 
