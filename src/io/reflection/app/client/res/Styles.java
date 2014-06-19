@@ -46,6 +46,8 @@ public interface Styles extends ClientBundle {
 		String linkedAccountPlus();
 
 		String smooth();
+		
+		String noteDetail();
 
 		String header();
 		

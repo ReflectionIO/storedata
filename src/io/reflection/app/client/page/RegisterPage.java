@@ -23,6 +23,8 @@ import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.handler.user.SessionEventHandler;
 import io.reflection.app.client.handler.user.UserRegisteredEventHandler;
 import io.reflection.app.client.helper.FormHelper;
+import io.reflection.app.client.page.part.InviteRegisterPanel;
+import io.reflection.app.client.page.part.LoginRegisterPanel;
 import io.reflection.app.client.part.register.RegisterForm;
 import io.reflection.app.client.part.register.ThankYouRegisterPanel;
 import io.reflection.app.datatypes.shared.User;
@@ -47,12 +49,16 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 	public interface Style extends CssResource {
 	    String mainPanel();
 	}
-	
+
 	private static RegisterPageUiBinder uiBinder = GWT.create(RegisterPageUiBinder.class);
 
 	interface RegisterPageUiBinder extends UiBinder<Widget, RegisterPage> {}
 
-	@UiField HTMLPanel mPanel;
+	@UiField LoginRegisterPanel loginRegisterPanel;
+	@UiField InviteRegisterPanel inviteRegisterPanel;
+
+	@UiField HTMLPanel loginRegisterTabs;
+	@UiField HTMLPanel inviteRegisterTabs;
 
 	@UiField InlineHyperlink login;
 
@@ -62,15 +68,15 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 	@UiField ThankYouRegisterPanel mThankYouRegisterPanel;
 
 	@UiField Style style;
-	
+
 	private String username;
 
 	public RegisterPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 		login.setTargetHistoryToken(PageType.LoginPageType.asTargetHistoryToken(FormHelper.REQUEST_INVITE_ACTION_NAME));
-		
-//		String mediaQueries = " @media (max-width: 768px) {." + style.mainPanel() + " {margin-top:20px;}}";
-//		StyleInjector.injectAtEnd(mediaQueries);
+
+		// String mediaQueries = " @media (max-width: 768px) {." + style.mainPanel() + " {margin-top:20px;}}";
+		// StyleInjector.injectAtEnd(mediaQueries);
 	}
 
 	/*
@@ -136,16 +142,15 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 		// Request invite form
 		if (current.getAction() != null && FormHelper.REQUEST_INVITE_ACTION_NAME.equals(current.getAction())) {
 			username = null;
-			register.setText("Request invite");
-			mRegisterForm.setRequestInvite(Boolean.TRUE);
+			setRequestInvite(Boolean.TRUE);
 			// Register form
 		} else {
 
 			// Register after request invite
 			if (current.getAction() != null && FormHelper.COMPLETE_ACTION_NAME.equals(current.getAction())
 					&& (actionCode = current.getParameter(FormHelper.CODE_PARAMETER_INDEX)) != null) {
-				register.setText("Register");
-				mRegisterForm.setRequestInvite(Boolean.FALSE);
+
+				setRequestInvite(Boolean.FALSE);
 				mRegisterForm.setEnabled(false);
 				UserController.get().fetchUser(actionCode);
 				// Default register
@@ -153,9 +158,21 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 				// mRegisterForm.resetForm();
 				// mRegisterForm.focusFirstActiveField();
 				username = null;
-				register.setText("Request invite");
-				mRegisterForm.setRequestInvite(Boolean.TRUE);
+				setRequestInvite(Boolean.TRUE);
 			}
+		}
+	}
+
+	private void setRequestInvite(boolean requestInvite) {
+		mRegisterForm.setRequestInvite(requestInvite);
+		inviteRegisterPanel.setVisible(!requestInvite);
+		inviteRegisterTabs.setVisible(!requestInvite);
+		loginRegisterPanel.setVisible(requestInvite);
+		loginRegisterTabs.setVisible(requestInvite);
+		if (requestInvite) {
+			register.setText("Request invite");
+		} else {
+			register.setText("Register");
 		}
 	}
 

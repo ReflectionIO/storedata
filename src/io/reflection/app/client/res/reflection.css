@@ -56,6 +56,7 @@ body {
 .form .btn-primary {
 	margin-bottom: 20px;
 	margin-top: 30px;
+	height: 55px;
 }
 
 .formEdit {
@@ -89,10 +90,12 @@ body {
 .form-control:focus {
 	border-color: #6d69c5;
 	outline: 0;
-	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px
-		rgba(151, 128, 228, 0.6);
-	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px
-		rgba(151, 128, 228, 0.6);
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+
+input[type="text"]:disabled{
+	color: #AAA;
 }
 
 /* Date Box */
@@ -216,7 +219,7 @@ body {
 
 .gwt-CheckBox input {
 	outline: 0;
-	cursor: pointer;
+	cursor: pointer;	
 }
 
 .gwt-CheckBox label {
@@ -496,7 +499,7 @@ a:hover,a:focus,a:active {
 .nav-tabs.nav-justified.ranks>.active>a,.nav-tabs.nav-justified.ranks>.active>a:hover,.nav-tabs.nav-justified.ranks>.active>a:focus
 	{
 	background-color: #ffffff;
-	font-weight: bold;
+	font-weight: 600;
 	border: 0px;
 	color: #0e0e1f;
 }
@@ -543,7 +546,7 @@ a:hover,a:focus,a:active {
 .nav-tabs.nav-justified.loginregister .active>a,.nav-tabs.nav-justified.loginregister .active>a:hover,.nav-tabs.nav-justified.loginregister .active>a:focus
 	{
 	background-color: #fafafa;
-	font-weight: bold;
+	font-weight: 600;
 	border: 0px;
 	color: #0e0e1f;
 }
