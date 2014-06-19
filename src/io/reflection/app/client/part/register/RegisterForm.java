@@ -110,7 +110,7 @@ public class RegisterForm extends Composite {
 	void onRegisterClicked(ClickEvent event) {
 		if (validate()) {
 			clearErrors();
-			setEnabled(false);
+			// setEnabled(false);
 			if (actionCode == null) {
 				UserController.get().registerUser(email.getText(), password.getText(), forename.getText(), surname.getText(), company.getText());
 			} else {
