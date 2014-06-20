@@ -2,35 +2,33 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
     xmlns:c="urn:import:com.google.gwt.user.cellview.client" xmlns:pp="urn:import:io.reflection.app.client.page.part">
     <ui:style>
-        .floatRight {
-        float: right;
-        }
-
-        .pushDown {
-        margin-top: 50px;
-        }
-
-        .loading {
-        z-index: 1;
-        top: 100px;
-        text-align: center;
-        position: relative;
-        float: left;
-        width:
-        100%;
-        }
-
-        .content{
-        padding-left: 0px;
-        padding-right: 0px;
-        }
-
-        .table{
-        margin-left: 40px;
-        margin-right: 25px;
-        margin-top: 20px;
-        }
-
+    .floatRight {
+    	float: right;
+    }
+    
+    .pushDown {
+    	margin-top: 50px;
+    }
+    
+    .loading {
+    	z-index: 1;
+    	top: 100px;
+    	text-align: center;
+    	position: relative;
+    	float: left;
+    	width: 100%;
+    }
+    
+    .content {
+    	padding-left: 0px;
+    	padding-right: 0px;
+    }
+    
+    .table {
+    	margin-left: 40px;
+    	margin-right: 25px;
+    	margin-top: 20px;
+    }
     </ui:style>
     <g:HTMLPanel>
 
@@ -58,18 +56,14 @@
                         </g:InlineHyperlink>
                     </li>
                 </ul>
-                <div class="{style.table} col-md-12">
-
-                    <pp:ItemTopPanel ui:field="mTopPanel" />
-
-                    <!-- <p:CircleProgressBar visible="false" ui:field="loader" styleName="{style.loading}" /> -->
-
-                    <p:Preloader ui:field="preloader">
+                <p:Preloader ui:field="preloader">
+                    <g:HTMLPanel styleName="{style.table}">
+                        <pp:ItemTopPanel ui:field="mTopPanel" />
+                        <!-- <p:CircleProgressBar visible="false" ui:field="loader" styleName="{style.loading}" /> -->
                         <pp:ItemChart ui:field="historyChart" styleName="{style.pushDown}" />
-                    </p:Preloader>
-                    <c:CellTable ui:field="revenue" styleName="table table-hover table-striped table-item {style.pushDown}"></c:CellTable>
-
-                </div>
+                        <c:CellTable ui:field="revenue" styleName="table table-hover table-striped table-item {style.pushDown}"></c:CellTable>
+                    </g:HTMLPanel>
+                </p:Preloader>
             </div>
         </div>
         <!-- <p:AlertBox ui:field="mAlertBox" visible="false" /> -->

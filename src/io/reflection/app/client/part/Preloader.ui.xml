@@ -9,7 +9,7 @@
     	padding: 5px;
     	background-color: #FFF;
     	opacity: 0.9;
-    	z-index: 1050;
+    	z-index: 15;
     }
     
     .loader {

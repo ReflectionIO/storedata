@@ -28,6 +28,7 @@ import io.reflection.app.client.page.part.LoginRegisterPanel;
 import io.reflection.app.client.part.register.RegisterForm;
 import io.reflection.app.client.part.register.ThankYouRegisterPanel;
 import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.client.part.Preloader;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.CssResource;
@@ -36,7 +37,11 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.gson.json.service.client.JsonService;
+import com.willshex.gson.json.service.client.JsonServiceCallEventHandler;
 import com.willshex.gson.json.service.shared.Error;
+import com.willshex.gson.json.service.shared.Request;
+import com.willshex.gson.json.service.shared.Response;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**
@@ -44,10 +49,10 @@ import com.willshex.gson.json.service.shared.StatusType;
  * 
  */
 public class RegisterPage extends Page implements UserRegisteredEventHandler, RegisterUserEventHandler, NavigationEventHandler, GetUserDetailsEventHandler,
-		SessionEventHandler {
+		SessionEventHandler, JsonServiceCallEventHandler {
 
 	public interface Style extends CssResource {
-	    String mainPanel();
+		String mainPanel();
 	}
 
 	private static RegisterPageUiBinder uiBinder = GWT.create(RegisterPageUiBinder.class);
@@ -68,6 +73,7 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 	@UiField ThankYouRegisterPanel mThankYouRegisterPanel;
 
 	@UiField Style style;
+	@UiField Preloader preloader;
 
 	private String username;
 
@@ -93,6 +99,7 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 		register(EventController.get().addHandlerToSource(GetUserDetailsEventHandler.TYPE, UserController.get(), this));
 		register(EventController.get().addHandlerToSource(RegisterUserEventHandler.TYPE, UserController.get(), this));
 		register(EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
+		EventController.get().addHandler(JsonServiceCallEventHandler.TYPE, this);
 
 		mRegisterForm.setVisible(true);
 		mThankYouRegisterPanel.setVisible(false);
@@ -109,7 +116,7 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 
 		mRegisterForm.setVisible(false);
 		mThankYouRegisterPanel.setVisible(true);
-
+		preloader.hide();
 	}
 
 	/*
@@ -121,9 +128,9 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 	public void userRegistrationFailed(Error error) {
 		mRegisterForm.clearPasswordValue();
 		mRegisterForm.setTermAndCond(Boolean.FALSE);
-		mRegisterForm.setEnabled(true);
+		// mRegisterForm.setEnabled(true);
 		mRegisterForm.focusFirstActiveField();
-
+		preloader.hide();
 		// TODO User already asked for request invite
 
 	}
@@ -136,6 +143,10 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 	 */
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
+		
+		mRegisterForm.setVisible(true);
+		mThankYouRegisterPanel.setVisible(false);
+		
 		String actionCode = null;
 
 		register.setTargetHistoryToken(current.toString());
@@ -149,9 +160,8 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 			// Register after request invite
 			if (current.getAction() != null && FormHelper.COMPLETE_ACTION_NAME.equals(current.getAction())
 					&& (actionCode = current.getParameter(FormHelper.CODE_PARAMETER_INDEX)) != null) {
-
-				setRequestInvite(Boolean.FALSE);
-				mRegisterForm.setEnabled(false);
+				mRegisterForm.setRequestInvite(Boolean.FALSE);
+				// mRegisterForm.setEnabled(false);
 				UserController.get().fetchUser(actionCode);
 				// Default register
 			} else {
@@ -240,6 +250,8 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 	public void registerUserSuccess(RegisterUserRequest input, RegisterUserResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			SessionController.get().login(username, input.user.password, true);
+		} else {
+			preloader.hide();
 		}
 	}
 
@@ -252,7 +264,7 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 	 */
 	@Override
 	public void registerUserFailure(RegisterUserRequest input, Throwable caught) {
-
+		preloader.hide();
 	}
 
 	/*
@@ -266,6 +278,7 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 		if (user != null && session != null) {
 			PageType.LinkItunesPageType.show();
 		}
+		preloader.hide();
 	}
 
 	/*
@@ -274,7 +287,9 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoggedOut()
 	 */
 	@Override
-	public void userLoggedOut() {}
+	public void userLoggedOut() {
+		preloader.hide();
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -284,6 +299,38 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 	@Override
 	public void userLoginFailed(Error error) {
 		// TODO: check the error code and if it is a permissions issue redirect to the closed beta page
+		preloader.hide();
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.willshex.gson.json.service.client.JsonServiceCallEventHandler#jsonServiceCallStart(com.willshex.gson.json.service.client.JsonService,
+	 * java.lang.String, com.willshex.gson.json.service.shared.Request, com.google.gwt.http.client.Request)
+	 */
+	@Override
+	public void jsonServiceCallStart(JsonService origin, String callName, Request input, com.google.gwt.http.client.Request handle) {
+		if ("RegisterUser".equals(callName)) {
+			preloader.show();
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.willshex.gson.json.service.client.JsonServiceCallEventHandler#jsonServiceCallSuccess(com.willshex.gson.json.service.client.JsonService,
+	 * java.lang.String, com.willshex.gson.json.service.shared.Request, com.willshex.gson.json.service.shared.Response)
+	 */
+	@Override
+	public void jsonServiceCallSuccess(JsonService origin, String callName, Request input, Response output) {}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.willshex.gson.json.service.client.JsonServiceCallEventHandler#jsonServiceCallFailure(com.willshex.gson.json.service.client.JsonService,
+	 * java.lang.String, com.willshex.gson.json.service.shared.Request, java.lang.Throwable)
+	 */
+	@Override
+	public void jsonServiceCallFailure(JsonService origin, String callName, Request input, Throwable caught) {}
 
 }

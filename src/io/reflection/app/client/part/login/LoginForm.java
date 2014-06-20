@@ -118,10 +118,6 @@ public class LoginForm extends Composite {
 			}
 		}
 	}
-	
-	public Button getLoginButton(){
-		return mLogin;
-	}
 
 	private boolean validate() {
 
