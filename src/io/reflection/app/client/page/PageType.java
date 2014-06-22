@@ -18,6 +18,7 @@ import io.reflection.app.client.page.blog.PostAdminPage;
 import io.reflection.app.client.page.blog.PostPage;
 import io.reflection.app.client.page.blog.PostsPage;
 import io.reflection.app.client.page.forum.AddTopicPage;
+import io.reflection.app.client.page.forum.EditTopicPage;
 import io.reflection.app.client.page.forum.ForumPage;
 import io.reflection.app.client.page.forum.TopicPage;
 import io.reflection.app.client.page.test.WidgetTestPage;
@@ -71,6 +72,7 @@ public enum PageType {
 	ForumPageType("forum", false),
 	ForumThreadPageType("forumthread", false),
 	ForumTopicPageType("forumtopic", false),
+	ForumEditTopicPageType("forumtopicedit", false),
 
 	// Non navigable
 	LoadingPageType("loading"), ;
@@ -279,6 +281,9 @@ public enum PageType {
 			break;
 		case ForumTopicPageType:
 			page = new AddTopicPage();
+			break;
+		case ForumEditTopicPageType:
+			page = new EditTopicPage();
 			break;
 		case HomePageType:
 		default:
