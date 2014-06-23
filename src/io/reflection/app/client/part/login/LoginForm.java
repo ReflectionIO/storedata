@@ -103,7 +103,7 @@ public class LoginForm extends Composite {
 	void onLoginClicked(ClickEvent event) {
 		if (validate()) {
 			clearErrors();
-			setEnabled(false);
+			//setEnabled(false);
 			SessionController.get().login(mEmail.getText(), mPassword.getText(), mRememberMe.getValue().booleanValue()); // Execute user login
 		} else {
 			if (mEmailError != null) {
@@ -165,7 +165,7 @@ public class LoginForm extends Composite {
 	}
 
 	private void resetForm() {
-		setEnabled(true);
+		//setEnabled(true);
 		mEmail.setText("");
 		mPassword.setText("");
 		if (mRememberMe.getValue().equals(Boolean.FALSE)) {
@@ -192,8 +192,7 @@ public class LoginForm extends Composite {
 			mRememberMe.setFocus(false);
 			mLogin.setFocus(false);
 			mPassword.setFocus(value);
-		}
-
+		}		
 	}
 
 }

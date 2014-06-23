@@ -21,6 +21,7 @@ import io.reflection.app.client.helper.AlertBoxHelper;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.page.part.MyAccountSidePanel;
 import io.reflection.app.client.part.AlertBox;
+import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.part.AlertBox.AlertBoxType;
 import io.reflection.app.datatypes.shared.User;
 
@@ -78,6 +79,8 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 
 	@UiField Button mChangeDetails;
 
+	@UiField Preloader preloader;
+
 	private User mUser;
 
 	public ChangeDetailsPage() {
@@ -108,7 +111,8 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	void onChangeDetailsClicked(ClickEvent event) {
 		if (validate()) {
 			clearErrors();
-			mForm.setVisible(false);
+			// mForm.setVisible(false);
+			preloader.show();
 
 			AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Please wait", " - changing user details...", false).setVisible(true);
 
@@ -223,7 +227,10 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 			}
 		}
 
-		mForm.setVisible(mUser != null);
+		// mForm.setVisible(mUser != null);
+		if (mUser != null) {
+			preloader.hide();
+		}
 		mAlertBox.setVisible(mUser == null);
 
 		if (mUser == null) {
@@ -382,7 +389,8 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 					"(" + output.error.code + ") " + output.error.message, true).setVisible(true);
 		}
 
-		mForm.setVisible(true);
+		// mForm.setVisible(true);
+		preloader.hide();
 
 	}
 
@@ -394,14 +402,15 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	 */
 	@Override
 	public void changeUserDetailsFailure(ChangeUserDetailsRequest input, Throwable caught) {
-		if (!mForm.isVisible()) {
+		if (preloader.isVisible()) {
 			Error error = FormHelper.convertToError(caught);
 
 			AlertBoxHelper
 					.configureAlert(mAlertBox, AlertBoxType.DangerAlertBoxType, false, "An error occured:", "(" + error.code + ") " + error.message, true)
 					.setVisible(true);
 
-			mForm.setVisible(true);
+			// mForm.setVisible(true);
+			preloader.hide();
 		}
 
 	}

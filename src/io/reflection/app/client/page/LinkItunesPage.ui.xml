@@ -1,25 +1,26 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:l="urn:import:io.reflection.app.client.part.linkaccount">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
+    xmlns:l="urn:import:io.reflection.app.client.part.linkaccount">
     <ui:with field='images' type='io.reflection.app.client.res.Images' />
     <ui:style>
-
-        .spaceFiller {
-        height: 100px;
-        }
-
-        .mainPanel {
-        margin-top: 20px;
-        }
-        .marginTopForm {
-        padding: 0px;
-        margin-top: 20px;
-        }
-
-        .marginTop20 {
-        margin-top: 20px;
-        }
-
-		.inviteRegisterTab {
+    .spaceFiller {
+    	height: 100px;
+    }
+    
+    .mainPanel {
+    	margin-top: 20px;
+    }
+    
+    .marginTopForm {
+    	padding: 0px;
+    	margin-top: 20px;
+    }
+    
+    .marginTop20 {
+    	margin-top: 20px;
+    }
+    
+    .inviteRegisterTab {
     	background-color: #fafafa;
     	font-weight: 600;
     	height: 65px;
@@ -67,25 +68,27 @@
 
             </div>
 
-            <g:HTMLPanel styleName="well col-md-5 col-md-offset-1 {style.marginTopForm}">
+            <g:HTMLPanel styleName="col-md-5 col-md-offset-1 {style.marginTopForm}">
 
-                <g:HTMLPanel>
-                    <ul class="nav nav-tabs nav-justified loginregister">
-                        <li class="{style.inviteRegisterTab}">
-                            Link Your iTunes Connect Account
-                        </li>
-                    </ul>
-                </g:HTMLPanel>
-                <g:FormPanel ui:field="form" styleName="form">
-                    <g:HTMLPanel>
-                        <l:IosMacLinkAccountForm ui:field="mIosMacForm" />
-
-                        <g:Button ui:field="mLinkAccount" styleName="btn btn-lg btn-primary btn-block">
-                            Link Account
-                        </g:Button>
+                <p:Preloader ui:field="preloader">
+                    <g:HTMLPanel styleName="well">
+                        <g:HTMLPanel>
+                            <ul class="nav nav-tabs nav-justified loginregister">
+                                <li class="{style.inviteRegisterTab}">
+                                    Link Your iTunes Connect Account
+                                </li>
+                            </ul>
+                        </g:HTMLPanel>
+                        <g:FormPanel ui:field="form" styleName="form">
+                            <g:HTMLPanel>
+                                <l:IosMacLinkAccountForm ui:field="mIosMacForm" />
+                                <g:Button ui:field="mLinkAccount" styleName="btn btn-lg btn-primary btn-block">
+                                    Link Account
+                                </g:Button>
+                            </g:HTMLPanel>
+                        </g:FormPanel>
                     </g:HTMLPanel>
-                </g:FormPanel>
-
+                </p:Preloader>
 
             </g:HTMLPanel>
         </g:HTMLPanel>

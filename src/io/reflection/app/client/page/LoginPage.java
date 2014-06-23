@@ -16,6 +16,7 @@ import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.handler.user.SessionEventHandler;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.part.AlertBox;
+import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.part.login.LoginForm;
 import io.reflection.app.client.part.login.WelcomePanel;
 import io.reflection.app.datatypes.shared.User;
@@ -27,13 +28,17 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.gson.json.service.client.JsonService;
+import com.willshex.gson.json.service.client.JsonServiceCallEventHandler;
 import com.willshex.gson.json.service.shared.Error;
+import com.willshex.gson.json.service.shared.Request;
+import com.willshex.gson.json.service.shared.Response;
 
 /**
  * @author billy1380
  * 
  */
-public class LoginPage extends Page implements NavigationEventHandler, SessionEventHandler {
+public class LoginPage extends Page implements NavigationEventHandler, SessionEventHandler, JsonServiceCallEventHandler {
 
 	
 	public interface Style extends CssResource {
@@ -55,15 +60,16 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 	@UiField LoginForm mLoginForm; // Usual login panel
 
 	@UiField AlertBox mAlertBox;
-	
+
 	@UiField Style style;
+
+	@UiField Preloader preloader;
 
 	public LoginPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 		login.setTargetHistoryToken(PageType.LoginPageType.asTargetHistoryToken(FormHelper.REQUEST_INVITE_ACTION_NAME));
-		
-//		String mediaQueries = " @media (max-width: 768px) {." + style.mainPanel() + " {margin-top:20px;}}";
-//		StyleInjector.injectAtEnd(mediaQueries);
+		// String mediaQueries = " @media (max-width: 768px) {." + style.mainPanel() + " {margin-top:20px;}}";
+		// StyleInjector.injectAtEnd(mediaQueries);
 	}
 
 	/*
@@ -80,6 +86,7 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
+		EventController.get().addHandler(JsonServiceCallEventHandler.TYPE, this);
 	}
 
 	/*
@@ -151,6 +158,7 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 	 */
 	@Override
 	public void userLoggedIn(User user, Session session) {
+		preloader.hide();
 		NavigationController.get().showNext();
 	}
 
@@ -161,7 +169,7 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 	 */
 	@Override
 	public void userLoggedOut() {
-
+		preloader.hide();
 	}
 
 	/*
@@ -171,6 +179,47 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 	 */
 	@Override
 	public void userLoginFailed(Error error) {
-		mLoginForm.setEnabled(true);
+		//mLoginForm.setEnabled(true);
+		preloader.hide();
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.willshex.gson.json.service.client.JsonServiceCallEventHandler#jsonServiceCallStart(com.willshex.gson.json.service.client.JsonService,
+	 * java.lang.String, com.willshex.gson.json.service.shared.Request, com.google.gwt.http.client.Request)
+	 */
+	@Override
+	public void jsonServiceCallStart(JsonService origin, String callName, Request input, com.google.gwt.http.client.Request handle) {
+		if ("Login".equals(callName)) {
+			preloader.show();
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.willshex.gson.json.service.client.JsonServiceCallEventHandler#jsonServiceCallSuccess(com.willshex.gson.json.service.client.JsonService,
+	 * java.lang.String, com.willshex.gson.json.service.shared.Request, com.willshex.gson.json.service.shared.Response)
+	 */
+	@Override
+	public void jsonServiceCallSuccess(JsonService origin, String callName, Request input, Response output) {
+		if ("Login".equals(callName)) {
+			preloader.hide();
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.willshex.gson.json.service.client.JsonServiceCallEventHandler#jsonServiceCallFailure(com.willshex.gson.json.service.client.JsonService,
+	 * java.lang.String, com.willshex.gson.json.service.shared.Request, java.lang.Throwable)
+	 */
+	@Override
+	public void jsonServiceCallFailure(JsonService origin, String callName, Request input, Throwable caught) {
+		if ("Login".equals(callName)) {
+			preloader.hide();
+		}
+	}
+
 }

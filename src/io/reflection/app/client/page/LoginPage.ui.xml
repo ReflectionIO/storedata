@@ -39,23 +39,27 @@
     </ui:style>
     <g:HTMLPanel styleName="container">
         <p:AlertBox ui:field="mAlertBox" visible="false" />
-        <div class="row">
+        <g:HTMLPanel styleName="row">
             <g:HTMLPanel ui:field="mDefaultLogin">
                 <div class="hidden-xs hidden-sm col-md-12 {style.spaceFiller}"></div>
                 <pp:LoginRegisterPanel styleName="col-md-6 col-xs-12 {style.mainPanel}" />
-                <g:HTMLPanel styleName="col-md-5 col-md-offset-1 col-xs-12 well {style.loginform}">
-                    <ul class="nav nav-tabs nav-justified loginregister">
-                        <li ui:field="registerItem">
-                            <g:InlineHyperlink ui:field="register" />
-                        </li>
-                        <li ui:field="loginItem" class="active">
-                            <g:InlineHyperlink ui:field="login">Log in</g:InlineHyperlink>
-                        </li>
-                    </ul>
-                    <l:LoginForm ui:field="mLoginForm" />
+                <g:HTMLPanel styleName="col-md-5 col-md-offset-1 col-xs-12">
+                    <p:Preloader ui:field="preloader">
+                        <g:HTMLPanel styleName="well {style.loginform}">
+                            <ul class="nav nav-tabs nav-justified loginregister">
+                                <li ui:field="registerItem">
+                                    <g:InlineHyperlink ui:field="register" />
+                                </li>
+                                <li ui:field="loginItem" class="active">
+                                    <g:InlineHyperlink ui:field="login">Log in</g:InlineHyperlink>
+                                </li>
+                            </ul>
+                            <l:LoginForm ui:field="mLoginForm" />
+                        </g:HTMLPanel>
+                    </p:Preloader>
                 </g:HTMLPanel>
             </g:HTMLPanel>
             <l:WelcomePanel ui:field="mWelcomePanel" styleName="col-md-12 {style.panel}" visible="false" />
-        </div>
+        </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder> 

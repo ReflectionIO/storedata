@@ -18,36 +18,40 @@
 
                 <p:AlertBox ui:field="mAlertBox" visible="false" />
 
-                <g:FormPanel ui:field="mForm" styleName="formEdit col-md-12">
-                    <g:HTMLPanel>
-                        <g:HTMLPanel ui:field="mForenameGroup" styleName="form-group">
-                            <label>First name</label>
-                            <g:TextBox styleName="form-control" ui:field="mForename" />
-                            <g:HTMLPanel ui:field="mForenameNote" visible="false" styleName="noteDetail" />
-                        </g:HTMLPanel>
+                <g:HTMLPanel styleName="col-md-12">
+                    <p:Preloader ui:field="preloader">
+                        <g:FormPanel ui:field="mForm" styleName="formEdit">
+                            <g:HTMLPanel>
+                                <g:HTMLPanel ui:field="mForenameGroup" styleName="form-group">
+                                    <label>First name</label>
+                                    <g:TextBox styleName="form-control" ui:field="mForename" />
+                                    <g:HTMLPanel ui:field="mForenameNote" visible="false" styleName="noteDetail" />
+                                </g:HTMLPanel>
 
-                        <g:HTMLPanel ui:field="mSurnameGroup" styleName="form-group">
-                            <label>Last name</label>
-                            <g:TextBox styleName="form-control" ui:field="mSurname" />
-                            <g:HTMLPanel ui:field="mSurnameNote" visible="false" styleName="noteDetail" />
-                        </g:HTMLPanel>
+                                <g:HTMLPanel ui:field="mSurnameGroup" styleName="form-group">
+                                    <label>Last name</label>
+                                    <g:TextBox styleName="form-control" ui:field="mSurname" />
+                                    <g:HTMLPanel ui:field="mSurnameNote" visible="false" styleName="noteDetail" />
+                                </g:HTMLPanel>
 
-                        <g:HTMLPanel ui:field="mCompanyGroup" styleName="form-group">
-                            <label>Company</label>
-                            <g:TextBox styleName="form-control" ui:field="mCompany" />
-                            <g:HTMLPanel ui:field="mCompanyNote" visible="false" styleName="noteDetail" />
-                        </g:HTMLPanel>
+                                <g:HTMLPanel ui:field="mCompanyGroup" styleName="form-group">
+                                    <label>Company</label>
+                                    <g:TextBox styleName="form-control" ui:field="mCompany" />
+                                    <g:HTMLPanel ui:field="mCompanyNote" visible="false" styleName="noteDetail" />
+                                </g:HTMLPanel>
 
-                        <g:HTMLPanel ui:field="mUsernameGroup" styleName="form-group">
-                            <label>Email</label>
-                            <g:TextBox styleName="form-control" ui:field="mUsername" />
-                            <g:HTMLPanel ui:field="mUsernameNote" visible="false" styleName="noteDetail" />
-                        </g:HTMLPanel>
+                                <g:HTMLPanel ui:field="mUsernameGroup" styleName="form-group">
+                                    <label>Email</label>
+                                    <g:TextBox styleName="form-control" ui:field="mUsername" />
+                                    <g:HTMLPanel ui:field="mUsernameNote" visible="false" styleName="noteDetail" />
+                                </g:HTMLPanel>
 
-                        <g:Button ui:field="mChangeDetails" styleName="btn btn-lg btn-primary btn-block" text="Update" />
+                                <g:Button ui:field="mChangeDetails" styleName="btn btn-lg btn-primary btn-block" text="Update" />
 
-                    </g:HTMLPanel>
-                </g:FormPanel>
+                            </g:HTMLPanel>
+                        </g:FormPanel>
+                    </p:Preloader>
+                </g:HTMLPanel>
 
             </div>
         </div>

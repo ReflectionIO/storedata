@@ -16,6 +16,7 @@ import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.handler.EnterPressedEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.part.linkaccount.IosMacLinkAccountForm;
 import io.reflection.app.client.part.linkaccount.LinkableAccountFields;
 
@@ -47,6 +48,8 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 
 	@UiField Button mLinkAccount;
 
+	@UiField Preloader preloader;
+
 	private LinkableAccountFields mLinkableAccount;
 
 	public LinkItunesPage() {
@@ -73,6 +76,7 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 			mLinkableAccount.setFormErrors();
 			mLinkableAccount.setEnabled(false);
 			mLinkAccount.setEnabled(false);
+			preloader.show();
 			LinkedAccountController.get().linkAccount(mLinkableAccount.getAccountSourceId(), mLinkableAccount.getUsername(), mLinkableAccount.getPassword(),
 					mLinkableAccount.getProperties()); // Link account
 		} else {
@@ -97,6 +101,7 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 			mLinkableAccount.setEnabled(true);
 			mLinkAccount.setEnabled(true);
 		}
+		preloader.hide();
 	}
 
 	/*
@@ -109,6 +114,7 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 	public void linkAccountFailure(LinkAccountRequest input, Throwable caught) {
 		mLinkableAccount.resetForm();
 		mLinkAccount.setEnabled(true);
+		preloader.hide();
 	}
 
 	/*

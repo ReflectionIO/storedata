@@ -32,6 +32,7 @@ import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.BootstrapGwtDatePicker;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.part.datatypes.MyApp;
+import io.reflection.app.client.res.Images;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.User;
@@ -50,6 +51,7 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
 
@@ -103,6 +105,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		createColumns();
 
 		appsTable.setEmptyTableWidget(new HTMLPanel("No Apps found!"));
+		appsTable.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 		MyAppsController.get().addDataDisplay(appsTable);
 		simplePager.setDisplay(appsTable);
 		FilterController.get().reset();

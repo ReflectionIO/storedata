@@ -30,11 +30,11 @@ import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.page.part.MyAccountSidePanel;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
-import io.reflection.app.client.part.CircleProgressBar;
 import io.reflection.app.client.part.ConfirmationDialog;
-import io.reflection.app.client.part.SimplePager;
+import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.part.linkaccount.IosMacLinkAccountForm;
 import io.reflection.app.client.part.linkaccount.LinkableAccountFields;
+import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.shared.util.FormattingHelper;
@@ -56,6 +56,7 @@ import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.CellPreviewEvent;
@@ -81,7 +82,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	interface LinkedAccountsPageUiBinder extends UiBinder<Widget, LinkedAccountsPage> {}
 
 	@UiField(provided = true) CellTable<DataAccount> linkedAccountsTable = new CellTable<DataAccount>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
-	@UiField SimplePager simplePager;
+	// @UiField SimplePager simplePager;
 
 	final String buttonAddHtml = "Link Account";
 	final String buttonEditHtml = "Save changes";
@@ -113,13 +114,14 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	@UiField MyAccountSidePanel myAccountSidePanel;
 	@UiField HTMLPanel linkedAccountsPanel;
 
-	@UiField CircleProgressBar loader;
-
 	private User user = SessionController.get().getLoggedInUser();
 
 	private LinkableAccountFields mLinkableAccount;
 
 	private ConfirmationDialog confirmationDialog;
+
+	@UiField Preloader preloaderTable;
+	@UiField Preloader preloaderForm;
 
 	public LinkedAccountsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -130,7 +132,11 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 		linkedAccountsTable.setEmptyTableWidget(new HTMLPanel("No linked accounts found!"));
 		LinkedAccountController.get().addDataDisplay(linkedAccountsTable);
-		simplePager.setDisplay(linkedAccountsTable);
+		linkedAccountsTable.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
+		// simplePager.setDisplay(linkedAccountsTable);
+
+		// preloaderForm.show();
+		// preloaderTable.show();
 
 	}
 
@@ -385,7 +391,6 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 						PageType.UsersPageType.show(PageType.LinkedAccountsPageType.toString(user.id.toString()));
 					}
 					confirmationDialog.reset();
-
 				}
 			});
 
@@ -393,7 +398,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 				@Override
 				public void onClick(ClickEvent event) {
-					loader.setVisible(true);
+					preloaderTable.show();
 					LinkedAccountController.get().deleteLinkedAccount(LinkedAccountController.get().getLinkedAccount(confirmationDialog.getParameter()));
 					confirmationDialog.reset();
 				}
@@ -405,7 +410,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 			if (user != null) {
 				PageType.UsersPageType.show(PageType.LinkedAccountsPageType.toString(user.id.toString()));
 			}
-			if (confirmationDialog != null) {				
+			if (confirmationDialog != null) {
 				confirmationDialog.reset();
 			}
 		}
@@ -427,11 +432,11 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		if (mLinkableAccount.validate()) {
 
 			mLinkableAccount.setFormErrors();
-			mLinkableAccount.setEnabled(false);
-			mLinkAccount.setEnabled(false);
-			loader.setVisible(true);
-
+			// mLinkableAccount.setEnabled(false);
+			// mLinkAccount.setEnabled(false);
+			preloaderForm.show();
 			if (EDIT_ACTION_PARAMETER_VALUE.equals(NavigationController.get().getStack().getParameter(ACTION_PARAMETER))) {
+				preloaderForm.show();
 				LinkedAccountController.get().updateLinkedAccont(Long.valueOf(NavigationController.get().getStack().getParameter(ACTION_PARAMETER_INDEX)),
 						mLinkableAccount.getPassword(), mLinkableAccount.getProperties());
 			} else { // Add linked account
@@ -451,11 +456,10 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	 */
 	@Override
 	public void linkAccountSuccess(LinkAccountRequest input, LinkAccountResponse output) {
-		loader.setVisible(false);
-
+		preloaderForm.hide();
 		mLinkableAccount.resetForm();
-		mLinkableAccount.setEnabled(true);
-		mLinkAccount.setEnabled(true);
+		// mLinkableAccount.setEnabled(true);
+		// mLinkAccount.setEnabled(true);
 
 		if (output.status == StatusType.StatusTypeSuccess) {
 
@@ -474,11 +478,11 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	 */
 	@Override
 	public void linkAccountFailure(LinkAccountRequest input, Throwable caught) {
-		loader.setVisible(false);
+		preloaderForm.hide();
 		mForm.setVisible(true);
 		mLinkableAccount.resetForm();
-		mLinkableAccount.setEnabled(true);
-		mLinkAccount.setEnabled(true);
+		// mLinkableAccount.setEnabled(true);
+		// mLinkAccount.setEnabled(true);
 		showError(FormHelper.convertToError(caught));
 	}
 
@@ -496,7 +500,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	 */
 	@Override
 	public void deleteLinkedAccountSuccess(DeleteLinkedAccountRequest input, DeleteLinkedAccountResponse output) {
-		loader.setVisible(false);
+		preloaderTable.hide();
 		if (output.status == StatusType.StatusTypeSuccess) {
 			PageType.UsersPageType.show(PageType.LinkedAccountsPageType.toString(user.id.toString()));
 		} else {
@@ -513,7 +517,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	 */
 	@Override
 	public void deleteLinkedAccountFailure(DeleteLinkedAccountRequest input, Throwable caught) {
-		loader.setVisible(false);
+		preloaderTable.hide();
 	}
 
 	/*
@@ -524,9 +528,9 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	 */
 	@Override
 	public void updateLinkedAccountSuccess(UpdateLinkedAccountRequest input, UpdateLinkedAccountResponse output) {
-		loader.setVisible(false);
-		mLinkableAccount.setEnabled(true);
-		mLinkAccount.setEnabled(true);
+		preloaderForm.hide();
+		// mLinkableAccount.setEnabled(true);
+		// mLinkAccount.setEnabled(true);
 
 		if (output.status == StatusType.StatusTypeSuccess) {
 			mLinkableAccount.resetForm();
@@ -544,9 +548,9 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	 */
 	@Override
 	public void updateLinkedAccountFailure(UpdateLinkedAccountRequest input, Throwable caught) {
-		loader.setVisible(false);
-		mLinkableAccount.setEnabled(true);
-		mLinkAccount.setEnabled(true);
+		preloaderForm.hide();
+		// mLinkableAccount.setEnabled(true);
+		// mLinkAccount.setEnabled(true);
 	}
 
 	/*
@@ -557,12 +561,13 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	 */
 	@Override
 	public void getLinkedAccountsSuccess(GetLinkedAccountsRequest input, GetLinkedAccountsResponse output) {
+		preloaderTable.hide();
 		if (output.status == StatusType.StatusTypeSuccess) {
-			if (LinkedAccountController.get().getLinkedAccountsCount() > output.pager.count) {
-				simplePager.setVisible(true);
-			} else {
-				simplePager.setVisible(false);
-			}
+			// if (LinkedAccountController.get().getLinkedAccountsCount() > output.pager.count) {
+			// simplePager.setVisible(true);
+			// } else {
+			// simplePager.setVisible(false);
+			// }
 			addLinkedAccount.setVisible(true);
 		}
 	}
@@ -574,6 +579,8 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	 * GetLinkedAccountsRequest, java.lang.Throwable)
 	 */
 	@Override
-	public void getLinkedAccountsFailure(GetLinkedAccountsRequest input, Throwable caught) {}
+	public void getLinkedAccountsFailure(GetLinkedAccountsRequest input, Throwable caught) {
+		preloaderTable.hide();
+	}
 
 }

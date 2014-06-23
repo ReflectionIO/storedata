@@ -19,6 +19,7 @@ import io.reflection.app.client.helper.AlertBoxHelper;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.page.part.MyAccountSidePanel;
 import io.reflection.app.client.part.AlertBox;
+import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.part.AlertBox.AlertBoxType;
 import io.reflection.app.datatypes.shared.User;
 
@@ -73,6 +74,8 @@ public class ChangePasswordPage extends Page implements NavigationEventHandler, 
 
 	private Long mUserId;
 
+	@UiField Preloader preloader;
+
 	public ChangePasswordPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
@@ -101,7 +104,8 @@ public class ChangePasswordPage extends Page implements NavigationEventHandler, 
 
 		if (validate()) {
 			clearErrors();
-			mForm.setVisible(false);
+			// mForm.setVisible(false);
+			preloader.show();
 
 			AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Please wait", " - changing user password...", false)
 					.setVisible(true);
@@ -231,7 +235,6 @@ public class ChangePasswordPage extends Page implements NavigationEventHandler, 
 
 		mChangePassword.setEnabled(false);
 		resetForm();
-		
 
 		if (SessionController.get().isLoggedInUserAdmin()) {
 			Timer t = new Timer() {
@@ -258,7 +261,7 @@ public class ChangePasswordPage extends Page implements NavigationEventHandler, 
 	public void userPasswordChangeFailed(Error error) {
 		AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.DangerAlertBoxType, false, "An error occured:", "(" + error.code + ") " + error.message, true)
 				.setVisible(true);
-
+		preloader.hide();
 		resetForm();
 
 	}
@@ -277,7 +280,8 @@ public class ChangePasswordPage extends Page implements NavigationEventHandler, 
 
 		mAlertBox.setVisible(false);
 
-		mForm.setVisible(true);
+		// mForm.setVisible(true);
+		preloader.hide();
 
 		if (SessionController.get().isLoggedInUserAdmin()) {
 			mNewPassword.setFocus(true);
