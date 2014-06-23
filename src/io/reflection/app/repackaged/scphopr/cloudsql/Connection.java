@@ -23,7 +23,7 @@ import com.google.appengine.api.utils.SystemProperty;
 
 public final class Connection {
 
-	private static final String CONNECTION_NATIVE_KEY = "connection.native";
+	public static final String CONNECTION_NATIVE_KEY = "connection.native";
 
 	private String server;
 	private String database;
