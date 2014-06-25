@@ -103,6 +103,7 @@ import io.reflection.app.service.session.SessionServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.service.user.IUserService;
 import io.reflection.app.service.user.UserServiceProvider;
+import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.app.shared.util.SparseArray;
 
 import java.text.SimpleDateFormat;
@@ -935,10 +936,10 @@ public final class Core extends ActionHandler {
 					if (input.idsOnly == Boolean.FALSE) {
 						RoleServiceProvider.provide().inflateRoles(output.roles);
 					}
-					
+
 					for (Role role : output.roles) {
 						role.permissions = RoleServiceProvider.provide().getPermissions(role);
-						
+
 						if (role.permissions != null && input.idsOnly == Boolean.FALSE) {
 							PermissionServiceProvider.provide().inflatePermissions(role.permissions);
 						}
@@ -1594,8 +1595,8 @@ public final class Core extends ActionHandler {
 								populatedCommon = true;
 							}
 
-							revenue += ((float) sale.customerPrice.intValue()) / 100.0f;
-							downloads++;
+							revenue += (sale.units.floatValue() * (float) sale.customerPrice.intValue()) / 100.0f;
+							downloads += sale.units.intValue();
 						}
 
 						rank.revenue = Float.valueOf(revenue);
@@ -1610,6 +1611,8 @@ public final class Core extends ActionHandler {
 				}
 			}
 
+			DataTypeHelper.sortRanksByDate(output.ranks);
+			
 			output.pager = input.pager;
 			updatePager(output.pager, output.ranks);
 			output.status = StatusType.StatusTypeSuccess;
@@ -1781,8 +1784,8 @@ public final class Core extends ActionHandler {
 								populatedCommon = true;
 							}
 
-							revenue += ((float) sale.customerPrice.intValue()) / 100.0f;
-							downloads++;
+							revenue += (sale.units.floatValue() * (float) sale.customerPrice.intValue()) / 100.0f;
+							downloads += sale.units.intValue();
 						}
 
 						rank.revenue = Float.valueOf(revenue);
@@ -1796,6 +1799,8 @@ public final class Core extends ActionHandler {
 					}
 				}
 			}
+
+			DataTypeHelper.sortRanksByDate(output.ranks);
 
 			output.item = input.item;
 

@@ -9,7 +9,12 @@ package io.reflection.app.shared.util;
 
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Permission;
+import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Role;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -47,17 +52,17 @@ public class DataTypeHelper {
 
 	public static String itemIapState(Item item, String yes, String no, String unknown) {
 		String usesIap = null;
-		
+
 		if (item != null) {
 			usesIap = jsonPropertiesIapState(item.properties, yes, no, unknown);
 		}
 
 		return usesIap;
 	}
-	
+
 	public static String jsonPropertiesIapState(String jsonProperties, String yes, String no, String unknown) {
 		String usesIap = null;
-		
+
 		if (jsonProperties != null) {
 			JsonElement propertiesJsonElement = (new JsonParser()).parse(jsonProperties);
 
@@ -74,11 +79,24 @@ public class DataTypeHelper {
 				}
 			}
 		}
-		
+
 		if (usesIap == null) {
 			usesIap = unknown;
 		}
-		
+
 		return usesIap;
+	}
+
+	public static void sortRanksByDate(List<Rank> ranks) {
+		if (ranks != null) {
+			Collections.sort(ranks, new Comparator<Rank>() {
+
+				@Override
+				public int compare(Rank r1, Rank r2) {
+					return r1.date.getTime() > r2.date.getTime() ? 1 : (r2.date.getTime() > r1.date.getTime() ? -1 : 0);
+				}
+
+			});
+		}
 	}
 }
