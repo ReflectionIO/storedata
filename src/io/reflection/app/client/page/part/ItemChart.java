@@ -248,7 +248,7 @@ public class ItemChart extends GChart {
 		}
 
 		((RankHover) curve.getSymbol().getHoverWidget()).setYAxisDataType(dataType);
-		
+
 		switch (dataType) {
 		case DownloadsYAxisDataType:
 			drawDownloads();
@@ -265,28 +265,70 @@ public class ItemChart extends GChart {
 		setLoading(false);
 	}
 
+	private void setYAxisRange(int minY, int maxY) {
+		int factor = (int) ((float) (maxY - minY) / 7.0f) + 1;
+
+		maxY = minY + (7 * factor);
+
+		if (dataType == YAxisDataType.RankingYAxisDataType) {
+			getYAxis().setAxisMin(maxY);
+			getYAxis().setAxisMax(minY);
+		} else {
+			getYAxis().setAxisMin(minY);
+			getYAxis().setAxisMax(maxY);
+		}
+
+		// int diffY = (maxY - minY) + 1;
+
+		getYAxis().setTickCount(8);
+	}
+
 	private void drawDownloads() {
+		int minY = Integer.MAX_VALUE, maxY = 0;
 		Date lastDate = null;
 
 		for (Rank rank : ranks) {
 			int gap = 0;
+
+			if (rank.downloads.intValue() < minY) {
+				minY = rank.downloads.intValue();
+			}
+
+			if (rank.downloads.intValue() > maxY) {
+				maxY = rank.downloads.intValue();
+			}
+
 			if (lastDate != null && (gap = CalendarUtil.getDaysBetween(lastDate, rank.date)) > 1) {
+
 				for (int i = 0; i < gap; i++) {
 					CalendarUtil.addDaysToDate(lastDate, 1);
 					curve.addPoint(lastDate.getTime(), 10000);
 				}
+
 			} else {
 				lastDate = CalendarUtil.copyDate(rank.date);
 				curve.addPoint(rank.date.getTime(), rank.downloads.intValue());
 			}
 		}
+
+		setYAxisRange(minY, maxY);
 	}
 
 	private void drawRevenue() {
+		int minY = Integer.MAX_VALUE, maxY = 0;
 		Date lastDate = null;
 
 		for (Rank rank : ranks) {
 			int gap = 0;
+			
+			if (rank.revenue.intValue() < minY) {
+				minY = rank.revenue.intValue();
+			}
+
+			if (rank.revenue.intValue() > maxY) {
+				maxY = rank.revenue.intValue();
+			}
+			
 			if (lastDate != null && (gap = CalendarUtil.getDaysBetween(lastDate, rank.date)) > 1) {
 				for (int i = 0; i < gap; i++) {
 					CalendarUtil.addDaysToDate(lastDate, 1);
@@ -297,6 +339,8 @@ public class ItemChart extends GChart {
 				curve.addPoint(rank.date.getTime(), rank.revenue.floatValue());
 			}
 		}
+		
+		setYAxisRange(minY, maxY);
 	}
 
 	private void drawRanking() {
@@ -327,16 +371,7 @@ public class ItemChart extends GChart {
 			}
 		}
 
-		int factor = (int) ((float) (maxY - minY) / 7.0f) + 1;
-
-		maxY = minY + (7 * factor);
-
-		getYAxis().setAxisMin(maxY);
-		getYAxis().setAxisMax(minY);
-
-		// int diffY = (maxY - minY) + 1;
-
-		getYAxis().setTickCount(8);
+		setYAxisRange(minY, maxY);
 	}
 
 	public void setData(Item item, List<Rank> ranks) {
