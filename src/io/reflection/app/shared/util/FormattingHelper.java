@@ -20,6 +20,7 @@ import java.util.Map;
 public class FormattingHelper {
 
 	public static final String DATE_FORMAT = "dd-MM-yyyy";
+	public static final float SMALL_MONEY = 0.0000001f;
 
 	private static Map<String, String> currencySymbolLookup = null;
 
@@ -53,7 +54,7 @@ public class FormattingHelper {
 	public static String getPrice(String currency, float price) {
 		String priceString;
 
-		if (price == 0) {
+		if (price < SMALL_MONEY) {
 			priceString = "free";
 		} else {
 			priceString = (currency == null ? "" : getCurrencySymbol(currency) + " ") + Float.toString(price);
@@ -65,7 +66,7 @@ public class FormattingHelper {
 	public static String getPriceRange(String currency, float from, float to) {
 		String priceRangeString;
 
-		if (from == to) {
+		if (Math.abs(from - to) < SMALL_MONEY) {
 			priceRangeString = getPrice(currency, from);
 		} else {
 			String fromString = getPrice(currency, from), toString = getPrice(currency, to);
