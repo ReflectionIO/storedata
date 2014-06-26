@@ -16,6 +16,7 @@ import static io.reflection.app.service.sale.ISaleService.UPDATE_IPAD_IOS;
 import static io.reflection.app.service.sale.ISaleService.UPDATE_IPHONE_AND_IPOD_TOUCH_IOS;
 import static io.reflection.app.service.sale.ISaleService.UPDATE_UNIVERSAL_IOS;
 import io.reflection.app.accountdatacollectors.DataAccountCollectorFactory;
+import io.reflection.app.api.PagerHelper;
 import io.reflection.app.api.ValidationHelper;
 import io.reflection.app.api.core.shared.call.ChangePasswordRequest;
 import io.reflection.app.api.core.shared.call.ChangePasswordResponse;
@@ -1506,7 +1507,7 @@ public final class Core extends ActionHandler {
 				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
 						ApiError.DateRangeOutOfBounds.getMessage("0-60 days: input.end - input.start"));
 
-			List<Sale> sales = SaleServiceProvider.provide().getSales(input.country, input.category, input.linkedAccount, input.start, input.end, input.pager);
+			List<Sale> sales = SaleServiceProvider.provide().getSales(input.country, input.category, input.linkedAccount, input.start, input.end, PagerHelper.infinitePager());
 
 			if (sales.size() > 0) {
 				// group sales by date
@@ -1696,7 +1697,7 @@ public final class Core extends ActionHandler {
 				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
 						ApiError.DateRangeOutOfBounds.getMessage("0-60 days: input.end - input.start"));
 
-			List<Sale> sales = SaleServiceProvider.provide().getSales(input.country, input.category, linkedAccount, input.start, input.end, input.pager);
+			List<Sale> sales = SaleServiceProvider.provide().getSales(input.country, input.category, linkedAccount, input.start, input.end, PagerHelper.infinitePager());
 
 			if (sales.size() > 0) {
 				// group sales by date

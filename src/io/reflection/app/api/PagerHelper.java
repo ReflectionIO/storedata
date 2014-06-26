@@ -17,6 +17,8 @@ import java.util.List;
  */
 public class PagerHelper {
 
+	private static final Pager infinitePager = new Pager();
+
 	public static void updatePager(Pager pager, List<?> list) {
 		updatePager(pager, list, null);
 
@@ -32,5 +34,12 @@ public class PagerHelper {
 		if (total != null) {
 			pager.totalCount = total;
 		}
+	}
+	
+	public static Pager infinitePager () {
+		infinitePager.start = Long.valueOf(0);
+		infinitePager.count = Long.valueOf(Long.MAX_VALUE);
+		
+		return infinitePager;
 	}
 }
