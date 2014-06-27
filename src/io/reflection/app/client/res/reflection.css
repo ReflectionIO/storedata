@@ -23,7 +23,8 @@ body {
 	border: none;
 }
 
-.navbar-inverse .navbar-toggle:HOVER, .navbar-inverse .navbar-toggle:FOCUS {
+.navbar-inverse .navbar-toggle:HOVER,.navbar-inverse .navbar-toggle:FOCUS
+	{
 	border: none;
 	background: none;
 }
@@ -33,7 +34,7 @@ body {
 	width: 100%;
 	margin-top: 40px;
 	padding: 0px;
-	margin: 0px;	
+	margin: 0px;
 	border-top: 1px solid #d9dce0;
 	background-color: #ffffff;
 	z-index: 16;
@@ -113,10 +114,10 @@ input[type="text"]:disabled {
 	color: #434346;
 	padding-left: 12px;
 	padding-top: 5px;
-	margin-right: 0px;	
+	margin-right: 0px;
 	border-radius: 4px;
 	-webkit-border-radius: 4px;
-	-moz-border-radius: 4px;	
+	-moz-border-radius: 4px;
 	-webkit-box-shadow: none;
 	box-shadow: none;
 	border: 1px solid #d5d6da;
@@ -362,15 +363,15 @@ a:hover,a:focus,a:active {
 	transition: .4s;
 }
 
-.btn-primary {
+.btn-primary,.btn-primary:active,.btn-primary:focus {
 	background-color: #6d69c5;
 	border-color: #6d69c5;
 	border-radius: 4px;
 	color: #FFFFFF;
+	outline: none;
 }
 
-.btn-primary:hover,.btn-primary:focus,.btn-primary:active,.btn-primary.active,.open .dropdown-toggle.btn-primary
-	{
+.btn-primary:hover,.open .dropdown-toggle.btn-primary {
 	border-color: #1bc79f;
 	background-color: #1bc79f;
 }
@@ -381,15 +382,15 @@ a:hover,a:focus,a:active {
 	border-color: #dedede;
 }
 
-.btn-default {
+.btn-default,.btn-default:active,.btn-default:focus {
 	background-color: #FFFFFF;
 	border-color: #6d69c5;
 	border-radius: 4px;
 	color: #6d69c5;
+	outline: none;
 }
 
-.btn-default:hover,.btn-default:focus,.btn-default:active,.btn-default.active,.open .dropdown-toggle.btn-default
-	{
+.btn-default:hover,.open .dropdown-toggle.btn-default {
 	border-color: #6d69c5;
 	background: #6d69c5;
 	color: #FFFFFF;
