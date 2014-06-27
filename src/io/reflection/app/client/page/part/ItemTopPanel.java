@@ -11,15 +11,12 @@ import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.part.BootstrapGwtDatePicker;
-import io.reflection.app.client.part.DateRangeBox;
-import io.reflection.app.client.part.DateRangeBox.DefaultFormat;
+import io.reflection.app.client.part.DateSelector;
 import io.reflection.app.client.part.datatypes.DateRange;
-import io.reflection.app.shared.util.FormattingHelper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -37,7 +34,7 @@ public class ItemTopPanel extends Composite {
 
 	interface ItemTopPanelUiBinder extends UiBinder<Widget, ItemTopPanel> {}
 
-	@UiField DateRangeBox mDateRange;
+	@UiField DateSelector dateSelector;
 	@UiField ListBox mAppStore;
 	// @UiField ListBox mListType;
 	@UiField ListBox mCountry;
@@ -50,8 +47,7 @@ public class ItemTopPanel extends Composite {
 		FilterHelper.addStores(mAppStore);
 		FilterHelper.addCountries(mCountry);
 
-		mDateRange.setFormat(new DefaultFormat(DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT)));
-		mDateRange.setValue(FilterHelper.createRangeFromToday(-30));
+		updateFromFilter();
 	}
 
 	@UiHandler("mAppStore")
@@ -64,7 +60,7 @@ public class ItemTopPanel extends Composite {
 		FilterController.get().setCountry(mCountry.getValue(mCountry.getSelectedIndex()));
 	}
 
-	@UiHandler("mDateRange")
+	@UiHandler("dateSelector")
 	void onDateRangeValueChanged(ValueChangeEvent<DateRange> event) {
 		FilterController fc = FilterController.get();
 
@@ -82,8 +78,8 @@ public class ItemTopPanel extends Composite {
 
 		range.setFrom(fc.getStartDate());
 		range.setTo(fc.getEndDate());
+		dateSelector.setValue(range);
 
-		mDateRange.setValue(range);
 		mCountry.setSelectedIndex(FormHelper.getItemIndex(mCountry, fc.getFilter().getCountryA2Code()));
 	}
 
