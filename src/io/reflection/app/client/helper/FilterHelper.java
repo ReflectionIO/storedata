@@ -35,6 +35,42 @@ public class FilterHelper {
 		return normalizeDate(new Date());
 	}
 
+	public static Date get1DayAgo() {
+		Date date = normalizeDate(new Date());
+		CalendarUtil.addDaysToDate(date, -1);
+		return date;
+	}
+
+	public static Date get1WeekAgo() {
+		Date date = normalizeDate(new Date());
+		CalendarUtil.addDaysToDate(date, -7);
+		return date;
+	}
+
+	public static Date get1MonthAgo() {
+		Date date = normalizeDate(new Date());
+		CalendarUtil.addMonthsToDate(date, -1);
+		return date;
+	}
+
+	public static Date get3MonthsAgo() {
+		Date date = normalizeDate(new Date());
+		CalendarUtil.addMonthsToDate(date, -3);
+		return date;
+	}
+
+	public static Date get6MonthsAgo() {
+		Date date = normalizeDate(new Date());
+		CalendarUtil.addMonthsToDate(date, -6);
+		return date;
+	}
+
+	public static Date get1YearAgo() {
+		Date date = normalizeDate(new Date());
+		CalendarUtil.addMonthsToDate(date, -12);
+		return date;
+	}
+
 	public static void addLinkedAccounts(ListBox list) {
 		List<DataAccount> linkedAccounts = LinkedAccountController.get().getAllLinkedAccounts();
 

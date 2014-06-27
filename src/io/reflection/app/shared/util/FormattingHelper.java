@@ -3,7 +3,7 @@
 //  storedata
 //
 //  Created by Stefano Capuzzi on 20 Mar 2014.
-//  Copyright © 2014 Reflection.io Ltd. All rights reserved.
+//  Copyright ?? 2014 Reflection.io Ltd. All rights reserved.
 //
 package io.reflection.app.shared.util;
 
@@ -18,8 +18,9 @@ import java.util.Map;
  * 
  */
 public class FormattingHelper {
-
-	public static final String DATE_FORMAT = "dd-MM-yyyy";
+	
+	public static final String DATE_FORMAT_2 = "dd MMM yyyy";
+	public static final String DATE_FORMAT = "dd-MM-yyyy";	
 	public static final float SMALL_MONEY = 0.0000001f;
 
 	private static Map<String, String> currencySymbolLookup = null;
@@ -45,9 +46,9 @@ public class FormattingHelper {
 			currencySymbolLookup = new HashMap<String, String>();
 
 			currencySymbolLookup.put("USD", "$");
-			currencySymbolLookup.put("EUR", "€");
-			currencySymbolLookup.put("CNY", "¥");
-			currencySymbolLookup.put("GBP", "£");
+			currencySymbolLookup.put("EUR", "???");
+			currencySymbolLookup.put("CNY", "??");
+			currencySymbolLookup.put("GBP", "??");
 		}
 	}
 
