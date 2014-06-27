@@ -16,6 +16,9 @@
 
             <xsd:element name="GetRepliesInput" type="sdf:GetRepliesRequest" />
             <xsd:element name="GetRepliesOutput" type="sdf:GetRepliesResponse" />
+            
+            <xsd:element name="GetReplyInput" type="sdf:GetReplyRequest" />
+            <xsd:element name="GetReplyOutput" type="sdf:GetReplyResponse" />
 
             <xsd:element name="CreateTopicInput" type="sdf:CreateTopicRequest" />
             <xsd:element name="CreateTopicOutput" type="sdf:CreateTopicResponse" />
@@ -118,7 +121,26 @@
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>
+            
+           <xsd:complexType name="GetReplyRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:attribute name="id" type="xsd:long" />
+                        <xsd:attribute name="title" type="xsd:string" />
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
 
+            <xsd:complexType name="GetReplyResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+                            <xsd:element name="reply" type="sd:Reply" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+            
             <xsd:complexType name="CreateTopicRequest">
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
@@ -265,6 +287,13 @@
     <wsdl:message name="GetRepliesResponse">
         <wsdl:part name="output" element="sdf:GetRepliesOutput" />
     </wsdl:message>
+    
+    <wsdl:message name="GetReplyRequest">
+        <wsdl:part name="input" element="sdf:GetReplyInput" />
+    </wsdl:message>
+    <wsdl:message name="GetReplyResponse">
+        <wsdl:part name="output" element="sdf:GetReplyOutput" />
+    </wsdl:message>
 
     <wsdl:message name="CreateTopicRequest">
         <wsdl:part name="input" element="sdf:CreateTopicInput" />
@@ -327,6 +356,11 @@
         <wsdl:operation name="GetReplies">
             <wsdl:input message="sdf:GetRepliesRequest" />
             <wsdl:output message="sdf:GetRepliesResponse" />
+        </wsdl:operation>
+        
+        <wsdl:operation name="GetReply">
+            <wsdl:input message="sdf:GetReplyRequest" />
+            <wsdl:output message="sdf:GetReplyResponse" />
         </wsdl:operation>
 
         <wsdl:operation name="CreateTopic">
@@ -401,6 +435,16 @@
                 <soap:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
+        
+        <wsdl:operation name="GetReply">
+            <soap:operation soapAction="http://app.reflection.io/forum/GetReply" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>        
 
         <wsdl:operation name="CreateTopic">
             <soap:operation soapAction="http://app.reflection.io/forum/CreateTopic" />
