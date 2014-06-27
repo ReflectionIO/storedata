@@ -12,6 +12,7 @@ import io.reflection.app.client.page.Page;
 import io.reflection.app.client.part.DateRangeBox;
 import io.reflection.app.client.part.DateRangePicker;
 import io.reflection.app.client.part.DateRangePicker.FixedDateRange;
+import io.reflection.app.client.part.DateSelector;
 import io.reflection.app.client.part.datatypes.DateRange;
 
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ public class WidgetTestPage extends Page {
 
 	interface WidgetTestPageUiBinder extends UiBinder<Widget, WidgetTestPage> {}
 
+	@UiField DateSelector dateSelector;
 	@UiField DateRangePicker picker1;
 	@UiField DateRangeBox dateRange;
 
