@@ -18,9 +18,9 @@ body {
 }
 
 .navbar-inverse .navbar-toggle {
-	margin-right:0px;
-	padding-right: 0px;	
-	border: none; 
+	margin-right: 0px;
+	padding-right: 0px;
+	border: none;
 }
 
 .navbar-inverse .navbar-toggle:HOVER, .navbar-inverse .navbar-toggle:FOCUS {
@@ -94,14 +94,15 @@ body {
 	box-shadow: none;
 }
 
-input[type="text"]:disabled{
+input[type="text"]:disabled {
 	color: #AAA;
 }
 
 /* Date Box */
 .gwt-DateBox {
 	height: 34px;
-	width: 180px;
+	width: 120px;
+	text-align: center;
 	background: -webkit-linear-gradient(#f6f7f9, #eeeff1);
 	/* For Safari 5.1 to 6.0 */
 	background: -o-linear-gradient(#f6f7f9, #eeeff1);
@@ -112,9 +113,11 @@ input[type="text"]:disabled{
 	color: #434346;
 	padding-left: 12px;
 	padding-top: 5px;
-	margin-right: 0px;
-	border-top-left-radius: 4px;
-	border-bottom-left-radius: 4px;
+	margin-right: 0px;	
+	border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;	
+	-webkit-box-shadow: none;
 	box-shadow: none;
 	border: 1px solid #d5d6da;
 	outline: 0;
@@ -145,6 +148,7 @@ input[type="text"]:disabled{
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	border-radius: 4px;
+	-webkit-box-shadow: none;
 	box-shadow: none;
 	border: 1px solid #d5d6da;
 	outline: 0;
@@ -165,26 +169,27 @@ input[type="text"]:disabled{
 }
 
 /* Cell Table */
-.table-striped > tbody > tr > td, .table-striped > thead > tr > th {
+.table-striped>tbody>tr>td,.table-striped>thead>tr>th {
 	vertical-align: middle;
 	border: 0px;
 }
 
-.table-striped > thead > tr > th{
+.table-striped>thead>tr>th {
 	border: 0px;
 }
 
-.table-striped > tbody > tr:nth-child\(odd\) > td {
+.table-striped>tbody>tr:nth-child\(odd\)>td {
 	background-color: #eff2f5;
 }
 
-.table-striped > tbody > tr:nth-child\(even\) > td {
+.table-striped>tbody>tr:nth-child\(even\)>td {
 	background-color: #ffffff;
 }
 
 /* Cell Table - ItemPage */
-.table-striped.table-item > tbody > tr > td, .table-striped.table-item > thead > tr > th {
-   height: 50px;
+.table-striped.table-item>tbody>tr>td,.table-striped.table-item>thead>tr>th
+	{
+	height: 50px;
 }
 
 .row {
@@ -219,7 +224,7 @@ input[type="text"]:disabled{
 
 .gwt-CheckBox input {
 	outline: 0;
-	cursor: pointer;	
+	cursor: pointer;
 }
 
 .gwt-CheckBox label {
@@ -450,7 +455,7 @@ a:hover,a:focus,a:active {
 	background-color: #272833;
 }
 
-.navbar-inverse .navbar-nav li a, .navbar-inverse .navbar-nav li a:HOVER, .navbar-inverse .navbar-nav li a:FOCUS, .navbar-inverse .navbar-nav>.active>a,.navbar-inverse .navbar-nav>.active>a:hover,.navbar-inverse .navbar-nav>.active>a:focus
+.navbar-inverse .navbar-nav li a,.navbar-inverse .navbar-nav li a:HOVER,.navbar-inverse .navbar-nav li a:FOCUS,.navbar-inverse .navbar-nav>.active>a,.navbar-inverse .navbar-nav>.active>a:hover,.navbar-inverse .navbar-nav>.active>a:focus
 	{
 	background-color: #272833;
 }
@@ -480,12 +485,11 @@ a:hover,a:focus,a:active {
 	border-bottom-color: #1bc79f;
 }
 
-
 /* Tabs Rank */
 .nav-tabs.nav-justified.ranks>li>a {
 	background-color: #f6f6f6;
 	height: 65px;
-	font-size: 18px;	
+	font-size: 18px;
 	border-radius: 0px;
 	border: 1px solid #d9dce0;
 	outline: 0;
@@ -518,8 +522,8 @@ a:hover,a:focus,a:active {
 }
 
 /* Tabs Login/Register */
-.nav-tabs.nav-justified.loginregister{
-	padding-top: 0px;	
+.nav-tabs.nav-justified.loginregister {
+	padding-top: 0px;
 }
 
 .nav-tabs.nav-justified.loginregister li {
