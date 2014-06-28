@@ -31,43 +31,46 @@ import com.google.gwt.user.datepicker.client.DatePicker;
  */
 public class FilterHelper {
 
-	public static Date getToday() {
-		return normalizeDate(new Date());
-	}
+	public static final int TODAY_PARAM = 1;
+	public static final int ONE_DAY_AGO_PARAM = 2;
+	public static final int ONE_WEEK_AGO_PARAM = 3;
+	public static final int ONE_MONTH_AGO_PARAM = 4;
+	public static final int THREE_MONTHS_AGO_PARAM = 5;
+	public static final int SIX_MONTHS_AGO_PARAM = 6;
+	public static final int ONE_YEAR_AGO_PARAM = 7;
 
-	public static Date get1DayAgo() {
-		Date date = normalizeDate(new Date());
-		CalendarUtil.addDaysToDate(date, -1);
-		return date;
-	}
-
-	public static Date get1WeekAgo() {
-		Date date = normalizeDate(new Date());
-		CalendarUtil.addDaysToDate(date, -7);
-		return date;
-	}
-
-	public static Date get1MonthAgo() {
-		Date date = normalizeDate(new Date());
-		CalendarUtil.addMonthsToDate(date, -1);
-		return date;
-	}
-
-	public static Date get3MonthsAgo() {
-		Date date = normalizeDate(new Date());
-		CalendarUtil.addMonthsToDate(date, -3);
-		return date;
-	}
-
-	public static Date get6MonthsAgo() {
-		Date date = normalizeDate(new Date());
-		CalendarUtil.addMonthsToDate(date, -6);
-		return date;
-	}
-
-	public static Date get1YearAgo() {
-		Date date = normalizeDate(new Date());
-		CalendarUtil.addMonthsToDate(date, -12);
+	/**
+	 * Get a common used date, setting today as default
+	 * 
+	 * @param defaultDateParam
+	 * @return
+	 */
+	public static Date getCommonDate(int defaultDateParam) {
+		Date date = normalizeDate(new Date()); // Today - default
+		switch (defaultDateParam) {
+		case TODAY_PARAM:
+			break;
+		case ONE_DAY_AGO_PARAM:
+			CalendarUtil.addDaysToDate(date, -1); // 1 Day ago
+			break;
+		case ONE_WEEK_AGO_PARAM:
+			CalendarUtil.addDaysToDate(date, -7); // 1 Week ago
+			break;
+		case ONE_MONTH_AGO_PARAM:
+			CalendarUtil.addMonthsToDate(date, -1); // 1 Month ago
+			break;
+		case THREE_MONTHS_AGO_PARAM:
+			CalendarUtil.addMonthsToDate(date, -3); // 3 Months ago
+			break;
+		case SIX_MONTHS_AGO_PARAM:
+			CalendarUtil.addMonthsToDate(date, -6); // 6 Months ago
+			break;
+		case ONE_YEAR_AGO_PARAM:
+			CalendarUtil.addMonthsToDate(date, -12); // 1 Year ago
+			break;
+		default:
+			break;
+		}
 		return date;
 	}
 
@@ -209,12 +212,12 @@ public class FilterHelper {
 		Date from, to;
 
 		if (daysApart > 0) {
-			dateRange.setFrom(from = getToday());
+			dateRange.setFrom(from = getCommonDate(TODAY_PARAM));
 			to = CalendarUtil.copyDate(from);
 			CalendarUtil.addDaysToDate(to, daysApart);
 			dateRange.setTo(to);
 		} else {
-			dateRange.setTo(to = getToday());
+			dateRange.setTo(to = getCommonDate(TODAY_PARAM));
 			from = CalendarUtil.copyDate(to);
 			CalendarUtil.addDaysToDate(from, daysApart);
 			dateRange.setFrom(from);
@@ -227,11 +230,11 @@ public class FilterHelper {
 		DateRange dateRange = new DateRange();
 
 		if (from == null) {
-			from = getToday();
+			from = getCommonDate(TODAY_PARAM);
 		}
 
 		if (to == null) {
-			to = getToday();
+			to = getCommonDate(TODAY_PARAM);
 		}
 
 		dateRange.setFrom(from);

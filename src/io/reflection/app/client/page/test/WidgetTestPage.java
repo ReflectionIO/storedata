@@ -69,7 +69,7 @@ public class WidgetTestPage extends Page {
 			@Override
 			public DateRange getDateRange() {
 				DateRange r = new DateRange();
-				r.setFrom(FilterHelper.getToday());
+				r.setFrom(FilterHelper.getCommonDate(FilterHelper.TODAY_PARAM));
 				r.setTo(r.getFrom());
 				return r;
 			}

@@ -69,7 +69,7 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 		dateBoxTo.setFormat(new DateBox.DefaultFormat(dtf));
 		dateBoxTo.getTextBox().setReadOnly(Boolean.TRUE);
 
-		setDateRange(FilterHelper.get1MonthAgo(), FilterHelper.getToday());
+		setDateRange(FilterHelper.getCommonDate(FilterHelper.ONE_MONTH_AGO_PARAM), FilterHelper.getCommonDate(FilterHelper.TODAY_PARAM));
 
 		// Disable out of range dates
 		dateBoxFrom.getDatePicker().addShowRangeHandler(new ShowRangeHandler<Date>() {
@@ -81,7 +81,7 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 		dateBoxTo.getDatePicker().addShowRangeHandler(new ShowRangeHandler<Date>() {
 			@Override
 			public void onShowRange(ShowRangeEvent<Date> event) {
-				FilterHelper.disableOutOfRangeDates(dateBoxTo.getDatePicker(), dateBoxFrom.getValue(), FilterHelper.getToday());
+				FilterHelper.disableOutOfRangeDates(dateBoxTo.getDatePicker(), dateBoxFrom.getValue(), FilterHelper.getCommonDate(FilterHelper.TODAY_PARAM));
 			}
 		});
 
@@ -128,7 +128,7 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 	 */
 	@UiHandler("dateBoxTo")
 	void onChangedSelectedTo(ValueChangeEvent<Date> event) {
-		if (event.getValue().before(dateBoxFrom.getValue()) || event.getValue().after(FilterHelper.getToday())) {
+		if (event.getValue().before(dateBoxFrom.getValue()) || event.getValue().after(FilterHelper.getCommonDate(FilterHelper.TODAY_PARAM))) {
 			dateBoxTo.setValue(dateRange.getTo());
 		}
 	}
@@ -145,27 +145,27 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 
 	@UiHandler("oneWeekLink")
 	void onSevenDaysLinkClicked(ClickEvent event) {
-		setValue(FilterHelper.get1WeekAgo(), FilterHelper.getToday(), Boolean.TRUE);
+		setValue(FilterHelper.getCommonDate(FilterHelper.ONE_WEEK_AGO_PARAM), FilterHelper.getCommonDate(FilterHelper.TODAY_PARAM), Boolean.TRUE);
 	}
 
 	@UiHandler("oneMonthLink")
 	void onOneMonthLinkClicked(ClickEvent event) {
-		setValue(FilterHelper.get1MonthAgo(), FilterHelper.getToday(), Boolean.TRUE);
+		setValue(FilterHelper.getCommonDate(FilterHelper.ONE_MONTH_AGO_PARAM), FilterHelper.getCommonDate(FilterHelper.TODAY_PARAM), Boolean.TRUE);
 	}
 
 	@UiHandler("threeMonthsLink")
 	void onThreeMonthsLinkClicked(ClickEvent event) {
-		setValue(FilterHelper.get3MonthsAgo(), FilterHelper.getToday(), Boolean.TRUE);
+		setValue(FilterHelper.getCommonDate(FilterHelper.SIX_MONTHS_AGO_PARAM), FilterHelper.getCommonDate(FilterHelper.TODAY_PARAM), Boolean.TRUE);
 	}
 
 	@UiHandler("sixMonthsLink")
 	void onSixMonthsLinkClicked(ClickEvent event) {
-		setValue(FilterHelper.get6MonthsAgo(), FilterHelper.getToday(), Boolean.TRUE);
+		setValue(FilterHelper.getCommonDate(FilterHelper.SIX_MONTHS_AGO_PARAM), FilterHelper.getCommonDate(FilterHelper.TODAY_PARAM), Boolean.TRUE);
 	}
 
 	@UiHandler("oneYearLink")
 	void onOneYearLinkClicked(ClickEvent event) {
-		setValue(FilterHelper.get1YearAgo(), FilterHelper.getToday(), Boolean.TRUE);
+		setValue(FilterHelper.getCommonDate(FilterHelper.ONE_YEAR_AGO_PARAM), FilterHelper.getCommonDate(FilterHelper.TODAY_PARAM), Boolean.TRUE);
 	}
 
 	/**
@@ -181,16 +181,16 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 
 	private Anchor lookForDefaultLink() {
 		Anchor link = null;
-		if (dateBoxTo.getValue().equals(FilterHelper.getToday())) {
-			if (dateBoxFrom.getValue().equals(FilterHelper.get1WeekAgo())) {
+		if (dateBoxTo.getValue().equals(FilterHelper.getCommonDate(FilterHelper.TODAY_PARAM))) {
+			if (dateBoxFrom.getValue().equals(FilterHelper.getCommonDate(FilterHelper.ONE_WEEK_AGO_PARAM))) {
 				link = oneWeekLink;
-			} else if (dateBoxFrom.getValue().equals(FilterHelper.get1MonthAgo())) {
+			} else if (dateBoxFrom.getValue().equals(FilterHelper.getCommonDate(FilterHelper.ONE_MONTH_AGO_PARAM))) {
 				link = oneMonthLink;
-			} else if (dateBoxFrom.getValue().equals(FilterHelper.get3MonthsAgo())) {
+			} else if (dateBoxFrom.getValue().equals(FilterHelper.getCommonDate(FilterHelper.THREE_MONTHS_AGO_PARAM))) {
 				link = threeMonthsLink;
-			} else if (dateBoxFrom.getValue().equals(FilterHelper.get6MonthsAgo())) {
+			} else if (dateBoxFrom.getValue().equals(FilterHelper.getCommonDate(FilterHelper.SIX_MONTHS_AGO_PARAM))) {
 				link = sixMonthsLink;
-			} else if (dateBoxFrom.getValue().equals(FilterHelper.get1YearAgo())) {
+			} else if (dateBoxFrom.getValue().equals(FilterHelper.getCommonDate(FilterHelper.ONE_YEAR_AGO_PARAM))) {
 				link = oneYearLink;
 			}
 		}
