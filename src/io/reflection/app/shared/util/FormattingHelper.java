@@ -3,7 +3,7 @@
 //  storedata
 //
 //  Created by Stefano Capuzzi on 20 Mar 2014.
-//  Copyright ?? 2014 Reflection.io Ltd. All rights reserved.
+//  Copyright © 2014 Reflection.io Ltd. All rights reserved.
 //
 package io.reflection.app.shared.util;
 
@@ -46,9 +46,9 @@ public class FormattingHelper {
 			currencySymbolLookup = new HashMap<String, String>();
 
 			currencySymbolLookup.put("USD", "$");
-			currencySymbolLookup.put("EUR", "???");
-			currencySymbolLookup.put("CNY", "??");
-			currencySymbolLookup.put("GBP", "??");
+			currencySymbolLookup.put("EUR", "€");
+			currencySymbolLookup.put("CNY", "¥");
+			currencySymbolLookup.put("GBP", "£");
 		}
 	}
 
