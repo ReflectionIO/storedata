@@ -3,7 +3,7 @@
 //  storedata
 //
 //  Created by Stefano Capuzzi (stefanocapuzzi) on 23 Jun 2014.
-//  Copyright �� 2014 Reflection.io Ltd. All rights reserved.
+//  Copyright © 2014 Reflection.io Ltd. All rights reserved.
 //
 package io.reflection.app.client.part;
 
