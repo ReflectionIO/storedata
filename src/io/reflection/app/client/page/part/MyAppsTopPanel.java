@@ -7,10 +7,14 @@
 //
 package io.reflection.app.client.page.part;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.part.DateSelector;
+import io.reflection.app.client.part.DateSelector.PresetDateRange;
 import io.reflection.app.client.part.datatypes.DateRange;
 
 import com.google.gwt.core.client.GWT;
@@ -48,6 +52,78 @@ public class MyAppsTopPanel extends Composite {
 
 		FilterHelper.addStores(appStore);
 		FilterHelper.addCountries(country);
+
+		List<PresetDateRange> dateSelectorPresetRanges = new ArrayList<PresetDateRange>();
+
+		dateSelectorPresetRanges.add(new PresetDateRange() {
+
+			@Override
+			public String getName() {
+				return "1 Week";
+			}
+
+			@Override
+			public DateRange getDateRange() {
+				return FilterHelper.createRange(FilterHelper.getFixedDate(FilterHelper.ONE_WEEK_AGO_PARAM), FilterHelper.getFixedDate(FilterHelper.TODAY_PARAM));
+			}
+		});
+
+		dateSelectorPresetRanges.add(new PresetDateRange() {
+
+			@Override
+			public String getName() {
+				return "1 Month";
+			}
+
+			@Override
+			public DateRange getDateRange() {
+				return FilterHelper.createRange(FilterHelper.getFixedDate(FilterHelper.ONE_MONTH_AGO_PARAM),
+						FilterHelper.getFixedDate(FilterHelper.TODAY_PARAM));
+			}
+		});
+
+		dateSelectorPresetRanges.add(new PresetDateRange() {
+
+			@Override
+			public String getName() {
+				return "3 Months";
+			}
+
+			@Override
+			public DateRange getDateRange() {
+				return FilterHelper.createRange(FilterHelper.getFixedDate(FilterHelper.THREE_MONTHS_AGO_PARAM),
+						FilterHelper.getFixedDate(FilterHelper.TODAY_PARAM));
+			}
+		});
+
+		dateSelectorPresetRanges.add(new PresetDateRange() {
+
+			@Override
+			public String getName() {
+				return "6 Months";
+			}
+
+			@Override
+			public DateRange getDateRange() {
+				return FilterHelper.createRange(FilterHelper.getFixedDate(FilterHelper.SIX_MONTHS_AGO_PARAM),
+						FilterHelper.getFixedDate(FilterHelper.TODAY_PARAM));
+			}
+		});
+
+		dateSelectorPresetRanges.add(new PresetDateRange() {
+
+			@Override
+			public String getName() {
+				return "1 Year";
+			}
+
+			@Override
+			public DateRange getDateRange() {
+				return FilterHelper.createRange(FilterHelper.getFixedDate(FilterHelper.ONE_YEAR_AGO_PARAM), FilterHelper.getFixedDate(FilterHelper.TODAY_PARAM));
+			}
+		});
+
+		dateSelector.addFixedRanges(dateSelectorPresetRanges);
 
 		updateFromFilter();
 
