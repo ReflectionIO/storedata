@@ -12,10 +12,14 @@ import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.client.part.datatypes.DateRangeChangeEvent;
 import io.reflection.app.shared.util.FormattingHelper;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ShowRangeEvent;
 import com.google.gwt.event.logical.shared.ShowRangeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -29,6 +33,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.DateBox;
@@ -43,19 +48,26 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 
 	interface DateSelectorUiBinder extends UiBinder<Widget, DateSelector> {}
 
+	public interface PresetDateRange {
+		String getName();
+
+		DateRange getDateRange();
+	}
+
+	private List<PresetDateRange> fixedRanges = null;
+	private HashMap<PresetDateRange, Anchor> lookupFixedDateRangeAnchor = new HashMap<PresetDateRange, Anchor>();
+
 	interface DateSelectorStyle extends CssResource {
 		String highlight();
+
+		String preset();
 	}
 
 	@UiField DateSelectorStyle style;
 
 	@UiField DateBox dateBoxFrom;
 	@UiField DateBox dateBoxTo;
-	@UiField Anchor oneWeekLink;
-	@UiField Anchor oneMonthLink;
-	@UiField Anchor threeMonthsLink;
-	@UiField Anchor sixMonthsLink;
-	@UiField Anchor oneYearLink;
+	@UiField HTMLPanel fixedRangesPanel;
 	@UiField Button applyDateRange;
 
 	private DateRange dateRange = new DateRange();
@@ -69,7 +81,7 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 		dateBoxTo.setFormat(new DateBox.DefaultFormat(dtf));
 		dateBoxTo.getTextBox().setReadOnly(Boolean.TRUE);
 
-		setDateRange(FilterHelper.getCommonDate(FilterHelper.ONE_MONTH_AGO_PARAM), FilterHelper.getCommonDate(FilterHelper.TODAY_PARAM));
+		setDateRange(FilterHelper.getFixedDate(FilterHelper.ONE_MONTH_AGO_PARAM), FilterHelper.getFixedDate(FilterHelper.TODAY_PARAM));
 
 		// Disable out of range dates
 		dateBoxFrom.getDatePicker().addShowRangeHandler(new ShowRangeHandler<Date>() {
@@ -81,10 +93,53 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 		dateBoxTo.getDatePicker().addShowRangeHandler(new ShowRangeHandler<Date>() {
 			@Override
 			public void onShowRange(ShowRangeEvent<Date> event) {
-				FilterHelper.disableOutOfRangeDates(dateBoxTo.getDatePicker(), dateBoxFrom.getValue(), FilterHelper.getCommonDate(FilterHelper.TODAY_PARAM));
+				FilterHelper.disableOutOfRangeDates(dateBoxTo.getDatePicker(), dateBoxFrom.getValue(), FilterHelper.getFixedDate(FilterHelper.TODAY_PARAM));
 			}
 		});
 
+	}
+
+	public void addFixedRange(PresetDateRange fixedRange) {
+		if (fixedRange != null) {
+			if (fixedRanges == null) {
+				fixedRanges = new ArrayList<PresetDateRange>();
+			}
+
+			fixedRanges.add(fixedRange);
+
+			showRanges();
+		}
+	}
+
+	public void addFixedRanges(List<PresetDateRange> fixedRanges) {
+		if (fixedRanges != null && fixedRanges.size() > 0) {
+			if (this.fixedRanges == null) {
+				this.fixedRanges = new ArrayList<PresetDateRange>();
+			}
+
+			this.fixedRanges.addAll(fixedRanges);
+
+			showRanges();
+		}
+	}
+
+	private void showRanges() {
+		fixedRangesPanel.clear();
+		lookupFixedDateRangeAnchor.clear();
+		for (final PresetDateRange fixedRange : fixedRanges) {
+			Anchor fixedRangeLink = new Anchor(fixedRange.getName());
+			fixedRangeLink.getElement().addClassName(style.preset());
+			lookupFixedDateRangeAnchor.put(fixedRange, fixedRangeLink);
+			fixedRangeLink.addClickHandler(new ClickHandler() {
+
+				@Override
+				public void onClick(ClickEvent event) {
+					setValue(fixedRange.getDateRange());
+
+				}
+			});
+			fixedRangesPanel.add(fixedRangeLink);
+		}
 	}
 
 	/**
@@ -128,7 +183,7 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 	 */
 	@UiHandler("dateBoxTo")
 	void onChangedSelectedTo(ValueChangeEvent<Date> event) {
-		if (event.getValue().before(dateBoxFrom.getValue()) || event.getValue().after(FilterHelper.getCommonDate(FilterHelper.TODAY_PARAM))) {
+		if (event.getValue().before(dateBoxFrom.getValue()) || event.getValue().after(FilterHelper.getFixedDate(FilterHelper.TODAY_PARAM))) {
 			dateBoxTo.setValue(dateRange.getTo());
 		}
 	}
@@ -141,31 +196,6 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 	@UiHandler("applyDateRange")
 	void onApplyDateRangeButtonClicked(ClickEvent event) {
 		setValue(dateBoxFrom.getValue(), dateBoxTo.getValue(), Boolean.TRUE);
-	}
-
-	@UiHandler("oneWeekLink")
-	void onSevenDaysLinkClicked(ClickEvent event) {
-		setValue(FilterHelper.getCommonDate(FilterHelper.ONE_WEEK_AGO_PARAM), FilterHelper.getCommonDate(FilterHelper.TODAY_PARAM), Boolean.TRUE);
-	}
-
-	@UiHandler("oneMonthLink")
-	void onOneMonthLinkClicked(ClickEvent event) {
-		setValue(FilterHelper.getCommonDate(FilterHelper.ONE_MONTH_AGO_PARAM), FilterHelper.getCommonDate(FilterHelper.TODAY_PARAM), Boolean.TRUE);
-	}
-
-	@UiHandler("threeMonthsLink")
-	void onThreeMonthsLinkClicked(ClickEvent event) {
-		setValue(FilterHelper.getCommonDate(FilterHelper.SIX_MONTHS_AGO_PARAM), FilterHelper.getCommonDate(FilterHelper.TODAY_PARAM), Boolean.TRUE);
-	}
-
-	@UiHandler("sixMonthsLink")
-	void onSixMonthsLinkClicked(ClickEvent event) {
-		setValue(FilterHelper.getCommonDate(FilterHelper.SIX_MONTHS_AGO_PARAM), FilterHelper.getCommonDate(FilterHelper.TODAY_PARAM), Boolean.TRUE);
-	}
-
-	@UiHandler("oneYearLink")
-	void onOneYearLinkClicked(ClickEvent event) {
-		setValue(FilterHelper.getCommonDate(FilterHelper.ONE_YEAR_AGO_PARAM), FilterHelper.getCommonDate(FilterHelper.TODAY_PARAM), Boolean.TRUE);
 	}
 
 	/**
@@ -181,17 +211,12 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 
 	private Anchor lookForDefaultLink() {
 		Anchor link = null;
-		if (dateBoxTo.getValue().equals(FilterHelper.getCommonDate(FilterHelper.TODAY_PARAM))) {
-			if (dateBoxFrom.getValue().equals(FilterHelper.getCommonDate(FilterHelper.ONE_WEEK_AGO_PARAM))) {
-				link = oneWeekLink;
-			} else if (dateBoxFrom.getValue().equals(FilterHelper.getCommonDate(FilterHelper.ONE_MONTH_AGO_PARAM))) {
-				link = oneMonthLink;
-			} else if (dateBoxFrom.getValue().equals(FilterHelper.getCommonDate(FilterHelper.THREE_MONTHS_AGO_PARAM))) {
-				link = threeMonthsLink;
-			} else if (dateBoxFrom.getValue().equals(FilterHelper.getCommonDate(FilterHelper.SIX_MONTHS_AGO_PARAM))) {
-				link = sixMonthsLink;
-			} else if (dateBoxFrom.getValue().equals(FilterHelper.getCommonDate(FilterHelper.ONE_YEAR_AGO_PARAM))) {
-				link = oneYearLink;
+		if (fixedRanges != null && dateBoxTo.getValue().equals(FilterHelper.getFixedDate(FilterHelper.TODAY_PARAM))) {
+			for (PresetDateRange fixedRange : fixedRanges) {
+				if (dateBoxFrom.getValue().equals(fixedRange.getDateRange().getFrom())) {
+					link = lookupFixedDateRangeAnchor.get(fixedRange);
+					break;
+				}
 			}
 		}
 		return link;
@@ -201,11 +226,11 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 	 * Clear highlight style for all links
 	 */
 	private void clearLinkHighlight() {
-		oneWeekLink.getElement().removeClassName(style.highlight());
-		oneMonthLink.getElement().removeClassName(style.highlight());
-		threeMonthsLink.getElement().removeClassName(style.highlight());
-		sixMonthsLink.getElement().removeClassName(style.highlight());
-		oneYearLink.getElement().removeClassName(style.highlight());
+		if (fixedRanges != null) {
+			for (PresetDateRange fixedRange : fixedRanges) {
+				lookupFixedDateRangeAnchor.get(fixedRange).getElement().removeClassName(style.highlight());
+			}
+		}
 	}
 
 	/*

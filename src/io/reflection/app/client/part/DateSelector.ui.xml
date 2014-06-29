@@ -49,12 +49,6 @@
 			<g:Button ui:field="applyDateRange" text="Apply"
 				styleName="btn btn-sm btn-default {style.apply}" />
 		</g:HTMLPanel>
-		<g:HTMLPanel styleName="{style.presets} text-left">
-			<g:Anchor ui:field="oneWeekLink" styleName="{style.preset}">1 week</g:Anchor>
-			<g:Anchor ui:field="oneMonthLink" styleName="{style.preset}">1 month</g:Anchor>
-			<g:Anchor ui:field="threeMonthsLink" styleName="{style.preset}">3 months</g:Anchor>
-			<g:Anchor ui:field="sixMonthsLink" styleName="{style.preset}">6 months</g:Anchor>
-			<g:Anchor ui:field="oneYearLink" styleName="{style.preset}">1 year</g:Anchor>
-		</g:HTMLPanel>
+		<g:HTMLPanel ui:field="fixedRangesPanel" styleName="{style.presets} text-left" />
 	</g:HTMLPanel>
 </ui:UiBinder> 
