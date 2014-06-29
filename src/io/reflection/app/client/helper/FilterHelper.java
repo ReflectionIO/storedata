@@ -45,7 +45,7 @@ public class FilterHelper {
 	 * @param defaultDateParam
 	 * @return
 	 */
-	public static Date getCommonDate(int defaultDateParam) {
+	public static Date getFixedDate(int defaultDateParam) {
 		Date date = normalizeDate(new Date()); // Today - default
 		switch (defaultDateParam) {
 		case TODAY_PARAM:
@@ -212,12 +212,12 @@ public class FilterHelper {
 		Date from, to;
 
 		if (daysApart > 0) {
-			dateRange.setFrom(from = getCommonDate(TODAY_PARAM));
+			dateRange.setFrom(from = getFixedDate(TODAY_PARAM));
 			to = CalendarUtil.copyDate(from);
 			CalendarUtil.addDaysToDate(to, daysApart);
 			dateRange.setTo(to);
 		} else {
-			dateRange.setTo(to = getCommonDate(TODAY_PARAM));
+			dateRange.setTo(to = getFixedDate(TODAY_PARAM));
 			from = CalendarUtil.copyDate(to);
 			CalendarUtil.addDaysToDate(from, daysApart);
 			dateRange.setFrom(from);
@@ -230,11 +230,11 @@ public class FilterHelper {
 		DateRange dateRange = new DateRange();
 
 		if (from == null) {
-			from = getCommonDate(TODAY_PARAM);
+			from = getFixedDate(TODAY_PARAM);
 		}
 
 		if (to == null) {
-			to = getCommonDate(TODAY_PARAM);
+			to = getFixedDate(TODAY_PARAM);
 		}
 
 		dateRange.setFrom(from);
