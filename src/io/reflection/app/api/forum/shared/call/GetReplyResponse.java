@@ -1,9 +1,10 @@
-//
+//  
 //  GetReplyResponse.java
-//  storedata
+//  reflection.io
 //
-//  Created by William Shakour (donsasikumar) on 21 Jun 2014.
-//  Copyright © 2014 Reflection.io Ltd. All rights reserved.
+//  Created by Don Sasikumar on June 27, 2014.
+//  Copyrights © 2014 SPACEHOPPER STUDIOS LTD. All rights reserved.
+//  Copyrights © 2014 reflection.io. All rights reserved.
 //
 package io.reflection.app.api.forum.shared.call;
 
@@ -14,11 +15,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
-/**
- * @author donsasikumar
- *
- */
-public class GetReplyResponse extends Response{
+public class GetReplyResponse extends Response {
 	public Reply reply;
 
 	@Override
