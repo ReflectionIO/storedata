@@ -31,67 +31,28 @@ import com.google.gwt.user.datepicker.client.DatePicker;
  */
 public class FilterHelper {
 
-	public static final int TODAY_PARAM = 1;
-	public static final int ONE_DAY_AGO_PARAM = 2;
-	public static final int ONE_WEEK_AGO_PARAM = 3;
-	public static final int ONE_MONTH_AGO_PARAM = 4;
-	public static final int THREE_MONTHS_AGO_PARAM = 5;
-	public static final int SIX_MONTHS_AGO_PARAM = 6;
-	public static final int ONE_YEAR_AGO_PARAM = 7;
-	public static final int TWO_WEEKS_AGO_PARAM = 8;
-	public static final int SIXTY_DAYS_AGO_PARAM = 9;
-	public static final int FOUR_WEEKS_AGO_PARAM = 10;
-	public static final int SIX_WEEKS_AGO_PARAM = 11;
-	public static final int EIGHT_WEEKS_AGO_PARAM = 12;
+	public static Date getToday() {
+		return normalizeDate(new Date());
+	}
 
-	/**
-	 * Get a common used date, setting today as default
-	 * 
-	 * @param defaultDateParam
-	 * @return
-	 */
-	public static Date getFixedDate(int defaultDateParam) {
-		Date date = normalizeDate(new Date()); // Today - default
-		switch (defaultDateParam) {
-		case TODAY_PARAM:
-			break;
-		case ONE_DAY_AGO_PARAM:
-			CalendarUtil.addDaysToDate(date, -1); // 1 Day ago
-			break;
-		case ONE_WEEK_AGO_PARAM:
-			CalendarUtil.addDaysToDate(date, -7); // 1 Week ago
-			break;
-		case ONE_MONTH_AGO_PARAM:
-			CalendarUtil.addMonthsToDate(date, -1); // 1 Month ago
-			break;
-		case THREE_MONTHS_AGO_PARAM:
-			CalendarUtil.addMonthsToDate(date, -3); // 3 Months ago
-			break;
-		case SIX_MONTHS_AGO_PARAM:
-			CalendarUtil.addMonthsToDate(date, -6); // 6 Months ago
-			break;
-		case ONE_YEAR_AGO_PARAM:
-			CalendarUtil.addMonthsToDate(date, -12); // 1 Year ago
-			break;
-		case TWO_WEEKS_AGO_PARAM:
-			CalendarUtil.addDaysToDate(date, -14); // 2 Weeks ago
-			break;
-		case SIXTY_DAYS_AGO_PARAM:
-			CalendarUtil.addDaysToDate(date, -60); // 60 Days ago
-			break;
-		case FOUR_WEEKS_AGO_PARAM:
-			CalendarUtil.addDaysToDate(date, -28); // 4 Weeks ago
-			break;
-		case SIX_WEEKS_AGO_PARAM:
-			CalendarUtil.addDaysToDate(date, -42); // 6 Weeks ago
-			break;
-		case EIGHT_WEEKS_AGO_PARAM:
-			CalendarUtil.addDaysToDate(date, -56); // 8 Weeks ago
-			break;
-		default:
-			break;
-		}
+	public static Date getDaysAgo(int value) {
+		Date date = getToday();
+		CalendarUtil.addDaysToDate(date, value * -1);
 		return date;
+	}
+
+	public static Date getWeeksAgo(int value) {
+		return getDaysAgo(value * 7);
+	}
+
+	public static Date getMonthsAgo(int value) {
+		Date date = getToday();
+		CalendarUtil.addMonthsToDate(date, value * -1);
+		return date;
+	}
+
+	public static Date getYearsAgo(int value) {
+		return getMonthsAgo(value * 12);
 	}
 
 	public static void addLinkedAccounts(ListBox list) {
@@ -232,12 +193,12 @@ public class FilterHelper {
 		Date from, to;
 
 		if (daysApart > 0) {
-			dateRange.setFrom(from = getFixedDate(TODAY_PARAM));
+			dateRange.setFrom(from = getToday());
 			to = CalendarUtil.copyDate(from);
 			CalendarUtil.addDaysToDate(to, daysApart);
 			dateRange.setTo(to);
 		} else {
-			dateRange.setTo(to = getFixedDate(TODAY_PARAM));
+			dateRange.setTo(to = getToday());
 			from = CalendarUtil.copyDate(to);
 			CalendarUtil.addDaysToDate(from, daysApart);
 			dateRange.setFrom(from);
@@ -250,11 +211,11 @@ public class FilterHelper {
 		DateRange dateRange = new DateRange();
 
 		if (from == null) {
-			from = getFixedDate(TODAY_PARAM);
+			from = getToday();
 		}
 
 		if (to == null) {
-			to = getFixedDate(TODAY_PARAM);
+			to = getToday();
 		}
 
 		dateRange.setFrom(from);

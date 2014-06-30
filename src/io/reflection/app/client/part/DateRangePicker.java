@@ -106,13 +106,13 @@ public class DateRangePicker extends Composite implements HasValue<DateRange>, I
 		// initialize today and set it at midnight, since when pick the today date from DatePicker is set to noon, and the after function doesn't work
 		// as expected in the morning
 
-		mValue.setTo(FilterHelper.getFixedDate(FilterHelper.TODAY_PARAM));
+		mValue.setTo(FilterHelper.getToday());
 		mToPicker.setValue(mValue.getTo(), false);
 
-		mValue.setFrom(FilterHelper.getFixedDate(FilterHelper.ONE_MONTH_AGO_PARAM));
+		mValue.setFrom(FilterHelper.getMonthsAgo(1));
 		mFromPicker.setValue(mValue.getFrom(), false);
 
-		mFromPicker.setCurrentMonth(FilterHelper.getFixedDate(FilterHelper.ONE_MONTH_AGO_PARAM)); // Show the current selected month
+		mFromPicker.setCurrentMonth(FilterHelper.getMonthsAgo(1)); // Show the current selected month
 
 		/**
 		 * Function called when the DatePicker is refreshed, e.g. first load or every time the month changes

@@ -53,7 +53,7 @@ public class WidgetTestPage extends Page {
 
 			@Override
 			public DateRange getDateRange() {
-				return FilterHelper.createRange(FilterHelper.getFixedDate(FilterHelper.ONE_WEEK_AGO_PARAM), FilterHelper.getFixedDate(FilterHelper.TODAY_PARAM));
+				return FilterHelper.createRange(FilterHelper.getWeeksAgo(1), FilterHelper.getToday());
 			}
 		});
 
@@ -61,13 +61,12 @@ public class WidgetTestPage extends Page {
 
 			@Override
 			public String getName() {
-				return "1 Month";
+				return "2 Weeks";
 			}
 
 			@Override
 			public DateRange getDateRange() {
-				return FilterHelper.createRange(FilterHelper.getFixedDate(FilterHelper.ONE_MONTH_AGO_PARAM),
-						FilterHelper.getFixedDate(FilterHelper.TODAY_PARAM));
+				return FilterHelper.createRange(FilterHelper.getWeeksAgo(2), FilterHelper.getToday());
 			}
 		});
 
@@ -75,13 +74,12 @@ public class WidgetTestPage extends Page {
 
 			@Override
 			public String getName() {
-				return "3 Months";
+				return "4 Weeks";
 			}
 
 			@Override
 			public DateRange getDateRange() {
-				return FilterHelper.createRange(FilterHelper.getFixedDate(FilterHelper.THREE_MONTHS_AGO_PARAM),
-						FilterHelper.getFixedDate(FilterHelper.TODAY_PARAM));
+				return FilterHelper.createRange(FilterHelper.getWeeksAgo(4), FilterHelper.getToday());
 			}
 		});
 
@@ -89,13 +87,12 @@ public class WidgetTestPage extends Page {
 
 			@Override
 			public String getName() {
-				return "6 Months";
+				return "6 Weeks";
 			}
 
 			@Override
 			public DateRange getDateRange() {
-				return FilterHelper.createRange(FilterHelper.getFixedDate(FilterHelper.SIX_MONTHS_AGO_PARAM),
-						FilterHelper.getFixedDate(FilterHelper.TODAY_PARAM));
+				return FilterHelper.createRange(FilterHelper.getWeeksAgo(6), FilterHelper.getToday());
 			}
 		});
 
@@ -103,15 +100,15 @@ public class WidgetTestPage extends Page {
 
 			@Override
 			public String getName() {
-				return "1 Year";
+				return "8 Weeks";
 			}
 
 			@Override
 			public DateRange getDateRange() {
-				return FilterHelper.createRange(FilterHelper.getFixedDate(FilterHelper.ONE_YEAR_AGO_PARAM), FilterHelper.getFixedDate(FilterHelper.TODAY_PARAM));
+				return FilterHelper.createRange(FilterHelper.getWeeksAgo(8), FilterHelper.getToday());
 			}
 		});
-		
+
 		dateSelector.addFixedRanges(dateSelectorPresetRanges);
 
 		picker1.addFixedRange(new FixedDateRange() {
@@ -143,7 +140,7 @@ public class WidgetTestPage extends Page {
 			@Override
 			public DateRange getDateRange() {
 				DateRange r = new DateRange();
-				r.setFrom(FilterHelper.getFixedDate(FilterHelper.TODAY_PARAM));
+				r.setFrom(FilterHelper.getToday());
 				r.setTo(r.getFrom());
 				return r;
 			}
