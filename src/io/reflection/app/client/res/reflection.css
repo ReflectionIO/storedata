@@ -1,6 +1,6 @@
 @CHARSET "UTF-8";
 
-@external table-item, table-striped, tbody,nth-child, td, thead, th, tr:nth-child,  headerCaret, navbar-toggle, p-small, form, formEdit, noteDetail, label, gwt-CheckBox, gwt-DateBox, gwt-ListBox, topPanel, sidepanel, btn, btn-group, btn-default, row, divider, divider-vertical, nav-pills, nav-stacked, nav-tabs, nav-justified, ranks, loginregister, well, well-title, form-group, gwt-RadioButton, hr, navbar-fixed-top, navbar, container, pagination, btn-primary, disabled, active, open, dropdown-toggle, dropdown-menu, i, badge, dropdown, nav, navbar-inverse, navbar-nav, navbar-text, caret, form-control;
+@external table-item, table-striped, tbody,nth-child, td, thead, th, tr:nth-child,  headerCaret, navbar-toggle, p-small, form, formEdit, noteDetail, label, gwt-CheckBox, gwt-DateBox, gwt-ListBox, topPanel, sidepanel, btn, btn-group, btn-default, row, divider, divider-vertical, nav-pills, nav-stacked, nav-tabs, nav-justified, ranks, loginregister, well, well-title, form-inline, form-group, gwt-RadioButton, hr, navbar-fixed-top, navbar, container, pagination, btn-primary, disabled, active, open, dropdown-toggle, dropdown-menu, i, badge, dropdown, nav, navbar-inverse, navbar-nav, navbar-text, caret, form-control;
 	/* Colors palette: Purple #6d69c5; DarkBlue 272933; Gold #eabc3e; LightGrey: #f8f9f9; Green: #1bc79f; Blue: #3357cc; Red: #e73c48; */
 body {
 	font-family: 'Lato', sans-serif;
@@ -72,6 +72,10 @@ body {
 
 .form-group {
 	margin-bottom: 10px;
+}
+
+.form-inline .form-group {
+	vertical-align: top;
 }
 
 .noteDetail {
@@ -314,7 +318,7 @@ a:hover {
 	outline: none;
 }
 
-a:active, a:focus {
+a:active,a:focus {
 	color: #434346;
 	text-decoration: none;
 	outline: none;
