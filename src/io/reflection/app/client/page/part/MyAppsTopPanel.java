@@ -72,12 +72,12 @@ public class MyAppsTopPanel extends Composite {
 
 			@Override
 			public String getName() {
-				return "1 Month";
+				return "2 Weeks";
 			}
 
 			@Override
 			public DateRange getDateRange() {
-				return FilterHelper.createRange(FilterHelper.getFixedDate(FilterHelper.ONE_MONTH_AGO_PARAM),
+				return FilterHelper.createRange(FilterHelper.getFixedDate(FilterHelper.TWO_WEEKS_AGO_PARAM),
 						FilterHelper.getFixedDate(FilterHelper.TODAY_PARAM));
 			}
 		});
@@ -86,12 +86,12 @@ public class MyAppsTopPanel extends Composite {
 
 			@Override
 			public String getName() {
-				return "3 Months";
+				return "4 Weeks";
 			}
 
 			@Override
 			public DateRange getDateRange() {
-				return FilterHelper.createRange(FilterHelper.getFixedDate(FilterHelper.THREE_MONTHS_AGO_PARAM),
+				return FilterHelper.createRange(FilterHelper.getFixedDate(FilterHelper.FOUR_WEEKS_AGO_PARAM),
 						FilterHelper.getFixedDate(FilterHelper.TODAY_PARAM));
 			}
 		});
@@ -100,12 +100,12 @@ public class MyAppsTopPanel extends Composite {
 
 			@Override
 			public String getName() {
-				return "6 Months";
+				return "6 Weeks";
 			}
 
 			@Override
 			public DateRange getDateRange() {
-				return FilterHelper.createRange(FilterHelper.getFixedDate(FilterHelper.SIX_MONTHS_AGO_PARAM),
+				return FilterHelper.createRange(FilterHelper.getFixedDate(FilterHelper.SIX_WEEKS_AGO_PARAM),
 						FilterHelper.getFixedDate(FilterHelper.TODAY_PARAM));
 			}
 		});
@@ -114,12 +114,13 @@ public class MyAppsTopPanel extends Composite {
 
 			@Override
 			public String getName() {
-				return "1 Year";
+				return "8 Weeks";
 			}
 
 			@Override
 			public DateRange getDateRange() {
-				return FilterHelper.createRange(FilterHelper.getFixedDate(FilterHelper.ONE_YEAR_AGO_PARAM), FilterHelper.getFixedDate(FilterHelper.TODAY_PARAM));
+				return FilterHelper.createRange(FilterHelper.getFixedDate(FilterHelper.EIGHT_WEEKS_AGO_PARAM),
+						FilterHelper.getFixedDate(FilterHelper.TODAY_PARAM));
 			}
 		});
 
