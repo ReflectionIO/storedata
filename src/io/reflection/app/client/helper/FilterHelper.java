@@ -38,6 +38,11 @@ public class FilterHelper {
 	public static final int THREE_MONTHS_AGO_PARAM = 5;
 	public static final int SIX_MONTHS_AGO_PARAM = 6;
 	public static final int ONE_YEAR_AGO_PARAM = 7;
+	public static final int TWO_WEEKS_AGO_PARAM = 8;
+	public static final int SIXTY_DAYS_AGO_PARAM = 9;
+	public static final int FOUR_WEEKS_AGO_PARAM = 10;
+	public static final int SIX_WEEKS_AGO_PARAM = 11;
+	public static final int EIGHT_WEEKS_AGO_PARAM = 12;
 
 	/**
 	 * Get a common used date, setting today as default
@@ -67,6 +72,21 @@ public class FilterHelper {
 			break;
 		case ONE_YEAR_AGO_PARAM:
 			CalendarUtil.addMonthsToDate(date, -12); // 1 Year ago
+			break;
+		case TWO_WEEKS_AGO_PARAM:
+			CalendarUtil.addDaysToDate(date, -14); // 2 Weeks ago
+			break;
+		case SIXTY_DAYS_AGO_PARAM:
+			CalendarUtil.addDaysToDate(date, -60); // 60 Days ago
+			break;
+		case FOUR_WEEKS_AGO_PARAM:
+			CalendarUtil.addDaysToDate(date, -28); // 4 Weeks ago
+			break;
+		case SIX_WEEKS_AGO_PARAM:
+			CalendarUtil.addDaysToDate(date, -42); // 6 Weeks ago
+			break;
+		case EIGHT_WEEKS_AGO_PARAM:
+			CalendarUtil.addDaysToDate(date, -56); // 8 Weeks ago
 			break;
 		default:
 			break;
