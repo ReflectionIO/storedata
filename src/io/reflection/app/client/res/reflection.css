@@ -304,12 +304,20 @@ a {
 	font-family: 'Lato', sans-serif;
 	cursor: pointer;
 	color: #6D69C5;
-	outline: 0;
+	outline: none;
+	text-decoration: none;
 }
 
-a:hover,a:focus,a:active {
-	text-decoration: none;
+a:hover {
 	color: #1bc79f;
+	text-decoration: none;
+	outline: none;
+}
+
+a:active, a:focus {
+	color: #434346;
+	text-decoration: none;
+	outline: none;
 }
 
 .pagination>.active>a,.pagination>.active>span,.pagination>.active>a:hover,.pagination>.active>span:hover,.pagination>.active>a:focus,.pagination>.active>span:focus
