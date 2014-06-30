@@ -23,6 +23,7 @@
 		.preset {
 			padding-left: 2px;
 			padding-right: 2px;
+			outline: none;
 		}
 		
 		.dateSeparator {
@@ -38,6 +39,8 @@
 		.highlight {
 			color: #434346;
 			font-weight: 600;
+			text-decoration: none;
+			outline: none;
 		}
 		</ui:style>
 	<g:HTMLPanel>

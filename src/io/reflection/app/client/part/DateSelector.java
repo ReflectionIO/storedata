@@ -30,6 +30,7 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
@@ -56,6 +57,7 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 
 	private List<PresetDateRange> fixedRanges = null;
 	private HashMap<PresetDateRange, Anchor> lookupFixedDateRangeAnchor = new HashMap<PresetDateRange, Anchor>();
+	List<HandlerRegistration> fixedRangeRegistrations = new ArrayList<HandlerRegistration>();
 
 	interface DateSelectorStyle extends CssResource {
 		String highlight();
@@ -81,13 +83,14 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 		dateBoxTo.setFormat(new DateBox.DefaultFormat(dtf));
 		dateBoxTo.getTextBox().setReadOnly(Boolean.TRUE);
 
-		setDateRange(FilterHelper.getFixedDate(FilterHelper.ONE_MONTH_AGO_PARAM), FilterHelper.getFixedDate(FilterHelper.TODAY_PARAM));
+		setDateRange(FilterHelper.getFixedDate(FilterHelper.FOUR_WEEKS_AGO_PARAM), FilterHelper.getFixedDate(FilterHelper.TODAY_PARAM));
 
 		// Disable out of range dates
 		dateBoxFrom.getDatePicker().addShowRangeHandler(new ShowRangeHandler<Date>() {
 			@Override
 			public void onShowRange(ShowRangeEvent<Date> event) {
-				FilterHelper.disableOutOfRangeDates(dateBoxFrom.getDatePicker(), null, dateBoxTo.getValue());
+				FilterHelper.disableOutOfRangeDates(dateBoxFrom.getDatePicker(), FilterHelper.getFixedDate(FilterHelper.SIXTY_DAYS_AGO_PARAM),
+						dateBoxTo.getValue());
 			}
 		});
 		dateBoxTo.getDatePicker().addShowRangeHandler(new ShowRangeHandler<Date>() {
@@ -124,20 +127,24 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 	}
 
 	private void showRanges() {
+		for (HandlerRegistration registration : fixedRangeRegistrations) {
+			registration.removeHandler();
+		}
+		fixedRangeRegistrations.clear();
 		fixedRangesPanel.clear();
 		lookupFixedDateRangeAnchor.clear();
 		for (final PresetDateRange fixedRange : fixedRanges) {
 			Anchor fixedRangeLink = new Anchor(fixedRange.getName());
 			fixedRangeLink.getElement().addClassName(style.preset());
 			lookupFixedDateRangeAnchor.put(fixedRange, fixedRangeLink);
-			fixedRangeLink.addClickHandler(new ClickHandler() {
+			fixedRangeRegistrations.add(fixedRangeLink.addClickHandler(new ClickHandler() {
 
 				@Override
 				public void onClick(ClickEvent event) {
-					setValue(fixedRange.getDateRange());
+					setValue(fixedRange.getDateRange(), Boolean.TRUE);
 
 				}
-			});
+			}));
 			fixedRangesPanel.add(fixedRangeLink);
 		}
 	}
@@ -171,7 +178,7 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 	 */
 	@UiHandler("dateBoxFrom")
 	void onChangedSelectedFrom(ValueChangeEvent<Date> event) {
-		if (event.getValue().after(dateBoxTo.getValue())) {
+		if (event.getValue().after(dateBoxTo.getValue()) || event.getValue().before(FilterHelper.getFixedDate(FilterHelper.SIXTY_DAYS_AGO_PARAM))) {
 			dateBoxFrom.setValue(dateRange.getFrom());
 		}
 	}
@@ -277,9 +284,10 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 		highlightLink();
 
 		if (fireEvents) {
+			Window.alert(dateRange.getFrom() + " - " + dateRange.getTo() + "\n" + value.getFrom() + " - " + value.getTo());
 			DateRangeChangeEvent.fireIfNotEqualDateRanges(this, dateRange, value);
 		}
-		setDateBoxes(value.getFrom(), value.getTo());
+		setDateRange(value.getFrom(), value.getTo()); // Update date range
 	}
 
 	private void setValue(Date from, Date to, boolean fireEvents) {
