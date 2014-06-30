@@ -302,7 +302,7 @@ public class ItemChart extends GChart {
 
 				for (int i = 0; i < gap; i++) {
 					CalendarUtil.addDaysToDate(lastDate, 1);
-					curve.addPoint(lastDate.getTime(), 10000);
+					curve.addPoint(lastDate.getTime(), Integer.MAX_VALUE);
 				}
 
 			} else {
@@ -332,7 +332,7 @@ public class ItemChart extends GChart {
 			if (lastDate != null && (gap = CalendarUtil.getDaysBetween(lastDate, rank.date)) > 1) {
 				for (int i = 0; i < gap; i++) {
 					CalendarUtil.addDaysToDate(lastDate, 1);
-					curve.addPoint(lastDate.getTime(), 10000);
+					curve.addPoint(lastDate.getTime(), Integer.MAX_VALUE);
 				}
 			} else {
 				lastDate = CalendarUtil.copyDate(rank.date);
@@ -344,7 +344,7 @@ public class ItemChart extends GChart {
 	}
 
 	private void drawRanking() {
-		int minY = 10000, maxY = 0;
+		int minY = Integer.MAX_VALUE, maxY = 0;
 		int position;
 		Date lastDate = null;
 
@@ -363,7 +363,7 @@ public class ItemChart extends GChart {
 			if (lastDate != null && (gap = CalendarUtil.getDaysBetween(lastDate, rank.date)) > 1) {
 				for (int i = 0; i < gap; i++) {
 					CalendarUtil.addDaysToDate(lastDate, 1);
-					curve.addPoint(lastDate.getTime(), 10000);
+					curve.addPoint(lastDate.getTime(), Integer.MAX_VALUE);
 				}
 			} else {
 				lastDate = CalendarUtil.copyDate(rank.date);
