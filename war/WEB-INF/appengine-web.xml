@@ -37,13 +37,13 @@
     <property name="db.connection.catalogue" value="rio" />
 	<!-- <property name="db.connection.server" value="storedatacollector:reflectiondb" /> -->
     
-	<!-- <property name="db.connection.server" value="localhost" /> -->
-    <!-- <property name="db.connection.username" value="root" /> -->
-    <!-- <property name="db.connection.password" value="" /> -->
+	<property name="db.connection.server" value="localhost" /> -->
+    <property name="db.connection.username" value="root" />
+    <property name="db.connection.password" value="" /> 
     
-    <property name="db.connection.server" value="173.194.104.108" />
+    <!-- <property name="db.connection.server" value="173.194.104.108" />
     <property name="db.connection.username" value="rio_app_user" />
-    <property name="db.connection.password" value="sooth28@duns" />
+    <property name="db.connection.password" value="sooth28@duns" />-->
 
 	<!-- <property name="gather.ios.newapplications" value="https://itunes.apple.com/%s/rss/newapplications/limit=200/json" />
 	<property name="gather.ios.newfreeapplications" value="https://itunes.apple.com/%s/rss/newfreeapplications/limit=200/json" />

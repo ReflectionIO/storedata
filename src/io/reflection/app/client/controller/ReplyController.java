@@ -131,18 +131,6 @@ public class ReplyController extends AsyncDataProvider<Reply> implements Service
 		fetchReplies();
 	}
 
-	public List<Reply> getRepliesList(Long topicId) {
-		if (this.topicId == null || this.topicId != topicId) {
-			this.topicId = topicId;
-			reset();
-		}
-
-		if (pager == null) {
-			fetchReplies();
-		}
-
-		return replies;
-	}
 
 	public Reply getReply(Long replyId) {
 		Reply result = null;

@@ -63,7 +63,7 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
 	 */
 	@Override
 	protected void onAttach() {
-		// TODO Auto-generated method stub
+
 		super.onAttach();
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(EventController.get().addHandlerToSource(UpdateReplyEventHandler.TYPE, ReplyController.get(), this));
@@ -78,7 +78,7 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
 	 */
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
-		// TODO Auto-generated method stub
+
 		if (current != null && PageType.ForumEditTopicPageType.equals(current.getPage())) {
 			String topicIdString = current.getParameter(0);
 			String selectedMessageId = current.getParameter(2);
@@ -92,7 +92,6 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
 				} catch (NumberFormatException e) {}
 
 				if (topicId != null) {
-					List<Reply> replyList = ReplyController.get().getRepliesList(topicId);
 					reply = ReplyController.get().getReply(replyId);
 					replyContent = reply.content.toString();
 
@@ -115,7 +114,7 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
 	}
 
 	@UiHandler("submit")
-	void onSubmit(ClickEvent e) {
+	void onSubmitClicked(ClickEvent e) {
 
 		if (validate()) {
 			if (replyId != null) {
@@ -153,7 +152,7 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
 	 */
 	@Override
 	public void updateReplyFailure(UpdateReplyRequest input, Throwable caught) {
-		// TODO Auto-generated method stub
+
 
 	}
 

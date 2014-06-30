@@ -79,7 +79,7 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
     public void onBrowserEvent(Context context, Element parent, ForumMessage value,
             NativeEvent event, ValueUpdater<ForumMessage> valueUpdater) {
     	    SafeUri link = PageType.ForumEditTopicPageType.asHref("edit", value.getTopicId().toString());
-    		//Window.alert("In Browser event :"+link.toString());
+
     		
     	RENDERER.onBrowserEvent(this, event, parent, value);
     }
@@ -96,7 +96,6 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 		// id insetad username
 		// value has author
 			// ForumMessage ad property to check the user
-		//Window.alert("in Render");
 		RENDERER.render(builder, FormattingHelper.getUserLongName(value.getAuthor()), SafeHtmlUtils.fromTrustedString(value.getContent()), "Posted "
 				+ FormattingHelper.getTimeSince(value.getCreated()), value.getTopicId(), value.getId());
 	}
