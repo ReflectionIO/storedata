@@ -33,8 +33,7 @@ final class ReplyService implements IReplyService {
 	public Reply getReply(Long id) throws DataAccessException {
 		Reply reply = null;
 
-		IDatabaseService databaseService = DatabaseServiceProvider.provide();
-		Connection replyConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeReply.toString());
+		Connection replyConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeReply.toString());
 
 		String getReplyQuery = String.format("select * from `reply` where `deleted`='n' and `id`='%d' limit 1", id.longValue());
 		try {

@@ -22,6 +22,8 @@ import io.reflection.app.api.forum.shared.call.GetForumsRequest;
 import io.reflection.app.api.forum.shared.call.GetForumsResponse;
 import io.reflection.app.api.forum.shared.call.GetRepliesRequest;
 import io.reflection.app.api.forum.shared.call.GetRepliesResponse;
+import io.reflection.app.api.forum.shared.call.GetReplyRequest;
+import io.reflection.app.api.forum.shared.call.GetReplyResponse;
 import io.reflection.app.api.forum.shared.call.GetTopicRequest;
 import io.reflection.app.api.forum.shared.call.GetTopicResponse;
 import io.reflection.app.api.forum.shared.call.GetTopicsRequest;
@@ -158,6 +160,19 @@ public final class Forum extends ActionHandler {
 			output.error = convertToErrorAndLog(LOG, e);
 		}
 		LOG.finer("Exiting getReplies");
+		return output;
+	}
+
+	public GetReplyResponse getReply(GetReplyRequest input) {
+		LOG.finer("Entering getReply");
+		GetReplyResponse output = new GetReplyResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getReply");
 		return output;
 	}
 

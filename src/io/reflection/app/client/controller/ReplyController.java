@@ -27,6 +27,7 @@ import io.reflection.app.datatypes.shared.Topic;
 import io.reflection.app.shared.util.SparseArray;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -41,6 +42,7 @@ import com.willshex.gson.json.service.shared.StatusType;
 public class ReplyController extends AsyncDataProvider<Reply> implements ServiceConstants {
 
 	private List<Reply> replies = new ArrayList<Reply>();
+	private HashMap<Long,Reply> replyStore= new HashMap<Long,Reply>();
 	private Long topicId;
 	private long count = 0;
 	private Pager pager;
@@ -89,6 +91,7 @@ public class ReplyController extends AsyncDataProvider<Reply> implements Service
 
 						for (Reply reply : output.replies) {
 							replyLookup.put(reply.id.intValue(), reply);
+							replyStore.put(reply.id, reply);
 						}
 					}
 
@@ -133,14 +136,7 @@ public class ReplyController extends AsyncDataProvider<Reply> implements Service
 
 
 	public Reply getReply(Long replyId) {
-		Reply result = null;
-		for (Reply reply : replies) {
-			if (reply.id == replyId) {
-				result = reply;
-				return result;
-			}
-		}
-		return result;
+		return replyStore.get(replyId);
 	}
 
 	public void reset() {
