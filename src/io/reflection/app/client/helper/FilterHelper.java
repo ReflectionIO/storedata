@@ -35,26 +35,6 @@ public class FilterHelper {
 		return normalizeDate(new Date());
 	}
 
-	public static Date getDaysAgo(int value) {
-		Date date = getToday();
-		CalendarUtil.addDaysToDate(date, value * -1);
-		return date;
-	}
-
-	public static Date getWeeksAgo(int value) {
-		return getDaysAgo(value * 7);
-	}
-
-	public static Date getMonthsAgo(int value) {
-		Date date = getToday();
-		CalendarUtil.addMonthsToDate(date, value * -1);
-		return date;
-	}
-
-	public static Date getYearsAgo(int value) {
-		return getMonthsAgo(value * 12);
-	}
-
 	public static void addLinkedAccounts(ListBox list) {
 		List<DataAccount> linkedAccounts = LinkedAccountController.get().getAllLinkedAccounts();
 
