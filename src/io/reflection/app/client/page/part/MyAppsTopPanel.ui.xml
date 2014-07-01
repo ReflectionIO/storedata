@@ -2,53 +2,52 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.user.datepicker.client"
     xmlns:p="urn:import:io.reflection.app.client.part">
     <ui:style>
-    
-    .pageHeading {
-    	margin-left: 30px;
-    	margin-right: 50px;
+    .title {
+    	width: 100px;
+    	position: relative;
+    	float: left;
+    	padding-left: 15px;
     }
     
-    .inlineTable {
-    	display: inline-table !important;
+    .filters {
+    	position: relative;
+    	padding-right: 15px;
     }
+    
+    .leftSpace {
+    	margin-left: 10px;
+    	margin-bottom: 5px;
+    }
+    
     </ui:style>
     <g:HTMLPanel styleName="well well-sm">
+        <g:HTMLPanel styleName="row">
 
-        <g:FormPanel styleName="form-inline">
-            <g:HTMLPanel styleName="row">
-
-                <div class="form-group col-md-1" style="{style.pageHeading}">
-                    <h5>My Apps</h5>
-                </div>
-
-                <div class="form-group col-md-11 text-right">
-
-                    <div class="form-group">
+            <div class="{style.title}">
+                <h5>My Apps</h5>
+            </div>
+            <g:FormPanel styleName="form-inline">
+                <g:HTMLPanel styleName="text-right pull-right {style.filters}">
+                
+                    <div class="form-group {style.leftSpace}">
                         <g:ListBox styleName="form-control" ui:field="accountName" />
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group {style.leftSpace}">
                         <g:ListBox styleName="form-control" ui:field="appStore" />
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group {style.leftSpace}">
                         <g:ListBox styleName="form-control" ui:field="country" />
                     </div>
 
-                    <div class="form-group {style.inlineTable}">
-                        <div class="input-group">
-                            <p:DateRangeBox styleName="form-control" ui:field="dateRangeBox" />
-
-                            <span class="input-group-addon">
-                                <i class="icon-calendar"></i>
-                            </span>
-                        </div>
+                    <div class="form-group {style.leftSpace}">
+                        <p:DateSelector ui:field="dateSelector" />
                     </div>
-                </div>
-            </g:HTMLPanel>
-        </g:FormPanel>
-
-
-
+                    
+                </g:HTMLPanel>
+            </g:FormPanel>
+        
+        </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder> 

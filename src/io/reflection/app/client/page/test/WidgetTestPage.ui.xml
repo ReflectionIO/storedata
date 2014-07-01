@@ -14,6 +14,8 @@
             <h2>Widget Testing</h2>
             <p>This is our widget testing page... Developers will drop widgets here to test their layout before using it on the site pages.</p>
             <p>Reflection.io dev team :)</p>
+            
+            <p:DateSelector ui:field="dateSelector"/>
 
             <p:CircleProgressBar></p:CircleProgressBar>
             <p:ReflectionProgressBar></p:ReflectionProgressBar>

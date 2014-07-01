@@ -1,6 +1,6 @@
 @CHARSET "UTF-8";
 
-@external table-item, table-striped, tbody,nth-child, td, thead, th, tr:nth-child,  headerCaret, navbar-toggle, p-small, form, formEdit, noteDetail, label, gwt-CheckBox, gwt-DateBox, gwt-ListBox, topPanel, sidepanel, btn, btn-group, btn-default, row, divider, divider-vertical, nav-pills, nav-stacked, nav-tabs, nav-justified, ranks, loginregister, well, well-title, form-group, gwt-RadioButton, hr, navbar-fixed-top, navbar, container, pagination, btn-primary, disabled, active, open, dropdown-toggle, dropdown-menu, i, badge, dropdown, nav, navbar-inverse, navbar-nav, navbar-text, caret, form-control;
+@external table-item, table-striped, tbody,nth-child, td, thead, th, tr:nth-child,  headerCaret, navbar-toggle, p-small, form, formEdit, noteDetail, label, gwt-CheckBox, gwt-DateBox, gwt-ListBox, topPanel, sidepanel, btn, btn-group, btn-default, row, divider, divider-vertical, nav-pills, nav-stacked, nav-tabs, nav-justified, ranks, loginregister, well, well-title, form-inline, form-group, gwt-RadioButton, hr, navbar-fixed-top, navbar, container, pagination, btn-primary, disabled, active, open, dropdown-toggle, dropdown-menu, i, badge, dropdown, nav, navbar-inverse, navbar-nav, navbar-text, caret, form-control;
 	/* Colors palette: Purple #6d69c5; DarkBlue 272933; Gold #eabc3e; LightGrey: #f8f9f9; Green: #1bc79f; Blue: #3357cc; Red: #e73c48; */
 body {
 	font-family: 'Lato', sans-serif;
@@ -18,12 +18,13 @@ body {
 }
 
 .navbar-inverse .navbar-toggle {
-	margin-right:0px;
-	padding-right: 0px;	
-	border: none; 
+	margin-right: 0px;
+	padding-right: 0px;
+	border: none;
 }
 
-.navbar-inverse .navbar-toggle:HOVER, .navbar-inverse .navbar-toggle:FOCUS {
+.navbar-inverse .navbar-toggle:HOVER,.navbar-inverse .navbar-toggle:FOCUS
+	{
 	border: none;
 	background: none;
 }
@@ -33,7 +34,7 @@ body {
 	width: 100%;
 	margin-top: 40px;
 	padding: 0px;
-	margin: 0px;	
+	margin: 0px;
 	border-top: 1px solid #d9dce0;
 	background-color: #ffffff;
 	z-index: 16;
@@ -73,6 +74,10 @@ body {
 	margin-bottom: 10px;
 }
 
+.form-inline .form-group {
+	vertical-align: top;
+}
+
 .noteDetail {
 	font-size: smaller;
 	margin-top: 5px;
@@ -94,14 +99,15 @@ body {
 	box-shadow: none;
 }
 
-input[type="text"]:disabled{
+input[type="text"]:disabled {
 	color: #AAA;
 }
 
 /* Date Box */
 .gwt-DateBox {
 	height: 34px;
-	width: 180px;
+	width: 120px;
+	text-align: center;
 	background: -webkit-linear-gradient(#f6f7f9, #eeeff1);
 	/* For Safari 5.1 to 6.0 */
 	background: -o-linear-gradient(#f6f7f9, #eeeff1);
@@ -113,8 +119,10 @@ input[type="text"]:disabled{
 	padding-left: 12px;
 	padding-top: 5px;
 	margin-right: 0px;
-	border-top-left-radius: 4px;
-	border-bottom-left-radius: 4px;
+	border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-box-shadow: none;
 	box-shadow: none;
 	border: 1px solid #d5d6da;
 	outline: 0;
@@ -145,6 +153,7 @@ input[type="text"]:disabled{
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	border-radius: 4px;
+	-webkit-box-shadow: none;
 	box-shadow: none;
 	border: 1px solid #d5d6da;
 	outline: 0;
@@ -165,26 +174,27 @@ input[type="text"]:disabled{
 }
 
 /* Cell Table */
-.table-striped > tbody > tr > td, .table-striped > thead > tr > th {
+.table-striped>tbody>tr>td,.table-striped>thead>tr>th {
 	vertical-align: middle;
 	border: 0px;
 }
 
-.table-striped > thead > tr > th{
+.table-striped>thead>tr>th {
 	border: 0px;
 }
 
-.table-striped > tbody > tr:nth-child\(odd\) > td {
+.table-striped>tbody>tr:nth-child\(odd\)>td {
 	background-color: #eff2f5;
 }
 
-.table-striped > tbody > tr:nth-child\(even\) > td {
+.table-striped>tbody>tr:nth-child\(even\)>td {
 	background-color: #ffffff;
 }
 
 /* Cell Table - ItemPage */
-.table-striped.table-item > tbody > tr > td, .table-striped.table-item > thead > tr > th {
-   height: 50px;
+.table-striped.table-item>tbody>tr>td,.table-striped.table-item>thead>tr>th
+	{
+	height: 50px;
 }
 
 .row {
@@ -219,7 +229,7 @@ input[type="text"]:disabled{
 
 .gwt-CheckBox input {
 	outline: 0;
-	cursor: pointer;	
+	cursor: pointer;
 }
 
 .gwt-CheckBox label {
@@ -298,12 +308,20 @@ a {
 	font-family: 'Lato', sans-serif;
 	cursor: pointer;
 	color: #6D69C5;
-	outline: 0;
+	outline: none;
+	text-decoration: none;
 }
 
-a:hover,a:focus,a:active {
-	text-decoration: none;
+a:hover {
 	color: #1bc79f;
+	text-decoration: none;
+	outline: none;
+}
+
+a:active,a:focus {
+	color: #434346;
+	text-decoration: none;
+	outline: none;
 }
 
 .pagination>.active>a,.pagination>.active>span,.pagination>.active>a:hover,.pagination>.active>span:hover,.pagination>.active>a:focus,.pagination>.active>span:focus
@@ -357,15 +375,15 @@ a:hover,a:focus,a:active {
 	transition: .4s;
 }
 
-.btn-primary {
+.btn-primary,.btn-primary:active,.btn-primary:focus {
 	background-color: #6d69c5;
 	border-color: #6d69c5;
 	border-radius: 4px;
 	color: #FFFFFF;
+	outline: none;
 }
 
-.btn-primary:hover,.btn-primary:focus,.btn-primary:active,.btn-primary.active,.open .dropdown-toggle.btn-primary
-	{
+.btn-primary:hover,.open .dropdown-toggle.btn-primary {
 	border-color: #1bc79f;
 	background-color: #1bc79f;
 }
@@ -376,15 +394,15 @@ a:hover,a:focus,a:active {
 	border-color: #dedede;
 }
 
-.btn-default {
+.btn-default,.btn-default:active,.btn-default:focus {
 	background-color: #FFFFFF;
 	border-color: #6d69c5;
 	border-radius: 4px;
 	color: #6d69c5;
+	outline: none;
 }
 
-.btn-default:hover,.btn-default:focus,.btn-default:active,.btn-default.active,.open .dropdown-toggle.btn-default
-	{
+.btn-default:hover,.open .dropdown-toggle.btn-default {
 	border-color: #6d69c5;
 	background: #6d69c5;
 	color: #FFFFFF;
@@ -450,7 +468,7 @@ a:hover,a:focus,a:active {
 	background-color: #272833;
 }
 
-.navbar-inverse .navbar-nav li a, .navbar-inverse .navbar-nav li a:HOVER, .navbar-inverse .navbar-nav li a:FOCUS, .navbar-inverse .navbar-nav>.active>a,.navbar-inverse .navbar-nav>.active>a:hover,.navbar-inverse .navbar-nav>.active>a:focus
+.navbar-inverse .navbar-nav li a,.navbar-inverse .navbar-nav li a:HOVER,.navbar-inverse .navbar-nav li a:FOCUS,.navbar-inverse .navbar-nav>.active>a,.navbar-inverse .navbar-nav>.active>a:hover,.navbar-inverse .navbar-nav>.active>a:focus
 	{
 	background-color: #272833;
 }
@@ -480,12 +498,11 @@ a:hover,a:focus,a:active {
 	border-bottom-color: #1bc79f;
 }
 
-
 /* Tabs Rank */
 .nav-tabs.nav-justified.ranks>li>a {
 	background-color: #f6f6f6;
 	height: 65px;
-	font-size: 18px;	
+	font-size: 18px;
 	border-radius: 0px;
 	border: 1px solid #d9dce0;
 	outline: 0;
@@ -518,8 +535,8 @@ a:hover,a:focus,a:active {
 }
 
 /* Tabs Login/Register */
-.nav-tabs.nav-justified.loginregister{
-	padding-top: 0px;	
+.nav-tabs.nav-justified.loginregister {
+	padding-top: 0px;
 }
 
 .nav-tabs.nav-justified.loginregister li {

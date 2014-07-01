@@ -12,6 +12,8 @@ import io.reflection.app.client.page.Page;
 import io.reflection.app.client.part.DateRangeBox;
 import io.reflection.app.client.part.DateRangePicker;
 import io.reflection.app.client.part.DateRangePicker.FixedDateRange;
+import io.reflection.app.client.part.DateSelector.PresetDateRange;
+import io.reflection.app.client.part.DateSelector;
 import io.reflection.app.client.part.datatypes.DateRange;
 
 import java.util.ArrayList;
@@ -33,11 +35,82 @@ public class WidgetTestPage extends Page {
 
 	interface WidgetTestPageUiBinder extends UiBinder<Widget, WidgetTestPage> {}
 
+	@UiField DateSelector dateSelector;
 	@UiField DateRangePicker picker1;
 	@UiField DateRangeBox dateRange;
 
 	public WidgetTestPage() {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		List<PresetDateRange> dateSelectorPresetRanges = new ArrayList<PresetDateRange>();
+
+		dateSelectorPresetRanges.add(new PresetDateRange() {
+
+			@Override
+			public String getName() {
+				return "1 Week";
+			}
+
+			@Override
+			public DateRange getDateRange() {
+				return FilterHelper.createRange(FilterHelper.getWeeksAgo(1), FilterHelper.getToday());
+			}
+		});
+
+		dateSelectorPresetRanges.add(new PresetDateRange() {
+
+			@Override
+			public String getName() {
+				return "2 Weeks";
+			}
+
+			@Override
+			public DateRange getDateRange() {
+				return FilterHelper.createRange(FilterHelper.getWeeksAgo(2), FilterHelper.getToday());
+			}
+		});
+
+		dateSelectorPresetRanges.add(new PresetDateRange() {
+
+			@Override
+			public String getName() {
+				return "4 Weeks";
+			}
+
+			@Override
+			public DateRange getDateRange() {
+				return FilterHelper.createRange(FilterHelper.getWeeksAgo(4), FilterHelper.getToday());
+			}
+		});
+
+		dateSelectorPresetRanges.add(new PresetDateRange() {
+
+			@Override
+			public String getName() {
+				return "6 Weeks";
+			}
+
+			@Override
+			public DateRange getDateRange() {
+				return FilterHelper.createRange(FilterHelper.getWeeksAgo(6), FilterHelper.getToday());
+			}
+		});
+
+		dateSelectorPresetRanges.add(new PresetDateRange() {
+
+			@Override
+			public String getName() {
+				return "8 Weeks";
+			}
+
+			@Override
+			public DateRange getDateRange() {
+				return FilterHelper.createRange(FilterHelper.getWeeksAgo(8), FilterHelper.getToday());
+			}
+		});
+
+		dateSelector.addFixedRanges(dateSelectorPresetRanges);
+
 		picker1.addFixedRange(new FixedDateRange() {
 
 			@Override

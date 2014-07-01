@@ -109,12 +109,10 @@ public class DateRangePicker extends Composite implements HasValue<DateRange>, I
 		mValue.setTo(FilterHelper.getToday());
 		mToPicker.setValue(mValue.getTo(), false);
 
-		Date oneMonthAgo = (Date) FilterHelper.getToday().clone();
-		CalendarUtil.addMonthsToDate(oneMonthAgo, -1);
-		mValue.setFrom(oneMonthAgo);
+		mValue.setFrom(FilterHelper.getMonthsAgo(1));
 		mFromPicker.setValue(mValue.getFrom(), false);
 
-		mFromPicker.setCurrentMonth(oneMonthAgo); // Show the current selected month
+		mFromPicker.setCurrentMonth(FilterHelper.getMonthsAgo(1)); // Show the current selected month
 
 		/**
 		 * Function called when the DatePicker is refreshed, e.g. first load or every time the month changes
