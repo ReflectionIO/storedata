@@ -7,19 +7,20 @@
 //
 package io.reflection.app.client.page.part;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.part.BootstrapGwtDatePicker;
-import io.reflection.app.client.part.DateRangeBox;
-import io.reflection.app.client.part.DateRangeBox.DefaultFormat;
+import io.reflection.app.client.part.DateSelector;
+import io.reflection.app.client.part.DateSelector.PresetDateRange;
 import io.reflection.app.client.part.datatypes.DateRange;
-import io.reflection.app.shared.util.FormattingHelper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -37,7 +38,7 @@ public class ItemTopPanel extends Composite {
 
 	interface ItemTopPanelUiBinder extends UiBinder<Widget, ItemTopPanel> {}
 
-	@UiField DateRangeBox mDateRange;
+	@UiField DateSelector dateSelector;
 	@UiField ListBox mAppStore;
 	// @UiField ListBox mListType;
 	@UiField ListBox mCountry;
@@ -50,8 +51,76 @@ public class ItemTopPanel extends Composite {
 		FilterHelper.addStores(mAppStore);
 		FilterHelper.addCountries(mCountry);
 
-		mDateRange.setFormat(new DefaultFormat(DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT)));
-		mDateRange.setValue(FilterHelper.createRangeFromToday(-30));
+		List<PresetDateRange> dateSelectorPresetRanges = new ArrayList<PresetDateRange>();
+
+		dateSelectorPresetRanges.add(new PresetDateRange() {
+
+			@Override
+			public String getName() {
+				return "1 Week";
+			}
+
+			@Override
+			public DateRange getDateRange() {
+				return FilterHelper.createRange(FilterHelper.getWeeksAgo(1), FilterHelper.getToday());
+			}
+		});
+
+		dateSelectorPresetRanges.add(new PresetDateRange() {
+
+			@Override
+			public String getName() {
+				return "2 Weeks";
+			}
+
+			@Override
+			public DateRange getDateRange() {
+				return FilterHelper.createRange(FilterHelper.getWeeksAgo(2), FilterHelper.getToday());
+			}
+		});
+
+		dateSelectorPresetRanges.add(new PresetDateRange() {
+
+			@Override
+			public String getName() {
+				return "4 Weeks";
+			}
+
+			@Override
+			public DateRange getDateRange() {
+				return FilterHelper.createRange(FilterHelper.getWeeksAgo(4), FilterHelper.getToday());
+			}
+		});
+
+		dateSelectorPresetRanges.add(new PresetDateRange() {
+
+			@Override
+			public String getName() {
+				return "6 Weeks";
+			}
+
+			@Override
+			public DateRange getDateRange() {
+				return FilterHelper.createRange(FilterHelper.getWeeksAgo(6), FilterHelper.getToday());
+			}
+		});
+
+		dateSelectorPresetRanges.add(new PresetDateRange() {
+
+			@Override
+			public String getName() {
+				return "8 Weeks";
+			}
+
+			@Override
+			public DateRange getDateRange() {
+				return FilterHelper.createRange(FilterHelper.getWeeksAgo(8), FilterHelper.getToday());
+			}
+		});
+
+		dateSelector.addFixedRanges(dateSelectorPresetRanges);
+
+		updateFromFilter();
 	}
 
 	@UiHandler("mAppStore")
@@ -64,7 +133,7 @@ public class ItemTopPanel extends Composite {
 		FilterController.get().setCountry(mCountry.getValue(mCountry.getSelectedIndex()));
 	}
 
-	@UiHandler("mDateRange")
+	@UiHandler("dateSelector")
 	void onDateRangeValueChanged(ValueChangeEvent<DateRange> event) {
 		FilterController fc = FilterController.get();
 
@@ -82,8 +151,8 @@ public class ItemTopPanel extends Composite {
 
 		range.setFrom(fc.getStartDate());
 		range.setTo(fc.getEndDate());
+		dateSelector.setValue(range);
 
-		mDateRange.setValue(range);
 		mCountry.setSelectedIndex(FormHelper.getItemIndex(mCountry, fc.getFilter().getCountryA2Code()));
 	}
 

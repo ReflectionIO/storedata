@@ -1,0 +1,57 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:db="urn:import:com.google.gwt.user.datepicker.client">
+	<ui:style
+		type="io.reflection.app.client.part.DateSelector.DateSelectorStyle">
+		.icon {
+			display: inline-block;
+			vertical-align: middle;
+			color: #6d69c5;
+			font-size: 20px;
+			margin-right: 7px;
+		}
+		
+		.pickers {
+			margin-bottom: 7px;
+		}
+		
+		.presets {
+			margin-left: 28px;
+			font-size: 12px;
+		}
+		
+		.preset {
+			padding-left: 2px;
+			padding-right: 2px;
+			outline: none;
+		}
+		
+		.dateSeparator {
+			margin-left: 5px;
+			margin-right: 5px;
+		}
+		
+		.apply {
+			margin-left: 10px;
+			vertical-align: baseline;
+		}
+		
+		.highlight {
+			color: #434346;
+			font-weight: 600;
+			text-decoration: none;
+			outline: none;
+		}
+		</ui:style>
+	<g:HTMLPanel>
+		<g:HTMLPanel styleName="{style.pickers} hidden-xs">
+			<span class="glyphicon glyphicon-calendar {style.icon}" />
+			<db:DateBox ui:field="dateBoxFrom"></db:DateBox>
+			<span class="{style.dateSeparator}">to</span>
+			<db:DateBox ui:field="dateBoxTo"></db:DateBox>
+			<g:Button ui:field="applyDateRange" text="Apply"
+				styleName="btn btn-sm btn-default {style.apply}" />
+		</g:HTMLPanel>
+		<g:HTMLPanel ui:field="fixedRangesPanel" styleName="{style.presets} text-left" />
+	</g:HTMLPanel>
+</ui:UiBinder> 

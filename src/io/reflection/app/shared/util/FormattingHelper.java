@@ -18,8 +18,9 @@ import java.util.Map;
  * 
  */
 public class FormattingHelper {
-
-	public static final String DATE_FORMAT = "dd-MM-yyyy";
+	
+	public static final String DATE_FORMAT_2 = "dd MMM yyyy";
+	public static final String DATE_FORMAT = "dd-MM-yyyy";	
 	public static final float SMALL_MONEY = 0.0000001f;
 
 	private static Map<String, String> currencySymbolLookup = null;

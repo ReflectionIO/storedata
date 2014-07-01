@@ -7,22 +7,19 @@
 //
 package io.reflection.app.client.page.part;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
-import io.reflection.app.client.part.DateRangeBox;
-import io.reflection.app.client.part.DateRangeBox.DefaultFormat;
-import io.reflection.app.client.part.DateRangePicker.FixedDateRange;
+import io.reflection.app.client.part.DateSelector;
+import io.reflection.app.client.part.DateSelector.PresetDateRange;
 import io.reflection.app.client.part.datatypes.DateRange;
-import io.reflection.app.shared.util.FormattingHelper;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -43,7 +40,7 @@ public class MyAppsTopPanel extends Composite {
 	@UiField ListBox accountName;
 	@UiField ListBox appStore;
 	@UiField ListBox country;
-	@UiField DateRangeBox dateRangeBox;
+	@UiField DateSelector dateSelector;
 
 	/**
 	 * Because this class has a default constructor, it can be used as a binder template. In other words, it can be used in other *.ui.xml files as follows:
@@ -56,53 +53,74 @@ public class MyAppsTopPanel extends Composite {
 		FilterHelper.addStores(appStore);
 		FilterHelper.addCountries(country);
 
-		dateRangeBox.setFormat(new DefaultFormat(DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT)));
+		List<PresetDateRange> dateSelectorPresetRanges = new ArrayList<PresetDateRange>();
 
-		List<FixedDateRange> ranges = new ArrayList<FixedDateRange>();
-		ranges.add(new FixedDateRange() {
+		dateSelectorPresetRanges.add(new PresetDateRange() {
 
 			@Override
 			public String getName() {
-				return "Today";
+				return "1 Week";
 			}
 
 			@Override
 			public DateRange getDateRange() {
-				DateRange r = new DateRange();
-				r.setFrom(FilterHelper.getToday());
-				r.setTo(r.getFrom());
-				return r;
+				return FilterHelper.createRange(FilterHelper.getWeeksAgo(1), FilterHelper.getToday());
 			}
 		});
 
-		ranges.add(new FixedDateRange() {
+		dateSelectorPresetRanges.add(new PresetDateRange() {
 
 			@Override
 			public String getName() {
-				return "Last Week";
+				return "2 Weeks";
 			}
 
 			@Override
 			public DateRange getDateRange() {
-				return FilterHelper.createRangeFromToday(-7);
+				return FilterHelper.createRange(FilterHelper.getWeeksAgo(2), FilterHelper.getToday());
 			}
 		});
 
-		ranges.add(new FixedDateRange() {
+		dateSelectorPresetRanges.add(new PresetDateRange() {
 
 			@Override
 			public String getName() {
-				return "Last 30 Days";
+				return "4 Weeks";
 			}
 
 			@Override
 			public DateRange getDateRange() {
-				return FilterHelper.createRangeFromToday(-30);
+				return FilterHelper.createRange(FilterHelper.getWeeksAgo(4), FilterHelper.getToday());
 			}
 		});
 
-		dateRangeBox.getDateRangePicker().addFixedRanges(ranges);
-		dateRangeBox.setValue(FilterHelper.createRangeFromToday(-30));
+		dateSelectorPresetRanges.add(new PresetDateRange() {
+
+			@Override
+			public String getName() {
+				return "6 Weeks";
+			}
+
+			@Override
+			public DateRange getDateRange() {
+				return FilterHelper.createRange(FilterHelper.getWeeksAgo(6), FilterHelper.getToday());
+			}
+		});
+
+		dateSelectorPresetRanges.add(new PresetDateRange() {
+
+			@Override
+			public String getName() {
+				return "8 Weeks";
+			}
+
+			@Override
+			public DateRange getDateRange() {
+				return FilterHelper.createRange(FilterHelper.getWeeksAgo(8), FilterHelper.getToday());
+			}
+		});
+
+		dateSelector.addFixedRanges(dateSelectorPresetRanges);
 
 		updateFromFilter();
 
@@ -131,8 +149,8 @@ public class MyAppsTopPanel extends Composite {
 
 		range.setFrom(fc.getStartDate());
 		range.setTo(fc.getEndDate());
+		dateSelector.setValue(range);
 
-		dateRangeBox.setValue(range);
 		country.setSelectedIndex(FormHelper.getItemIndex(country, fc.getFilter().getCountryA2Code()));
 
 		if (fc.getFilter().getLinkedAccountId() > 0) {
@@ -141,7 +159,7 @@ public class MyAppsTopPanel extends Composite {
 
 	}
 
-	@UiHandler("dateRangeBox")
+	@UiHandler("dateSelector")
 	void onDateRangeValueChanged(ValueChangeEvent<DateRange> event) {
 		FilterController fc = FilterController.get();
 

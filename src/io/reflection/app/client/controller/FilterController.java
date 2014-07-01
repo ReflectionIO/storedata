@@ -22,8 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gwt.user.datepicker.client.CalendarUtil;
-
 /**
  * @author billy1380
  * 
@@ -223,10 +221,8 @@ public class FilterController {
 		setStore(StoreController.IPHONE_A3_CODE);
 		setListType(OVERALL_LIST_TYPE);
 		setCountry("us");
-		setEndDate(new Date());
-		Date startDate = getEndDate();
-		CalendarUtil.addDaysToDate(startDate, -30);
-		setStartDate(startDate);
+		setEndDate(FilterHelper.getToday());
+		setStartDate(FilterHelper.getWeeksAgo(4));
 		setCategory(Long.valueOf(24));
 		setDailyData(REVENUE_DAILY_DATA_TYPE);
 		setChartType(RANKING_CHART_TYPE);
