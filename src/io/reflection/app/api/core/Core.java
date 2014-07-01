@@ -1507,7 +1507,8 @@ public final class Core extends ActionHandler {
 				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
 						ApiError.DateRangeOutOfBounds.getMessage("0-60 days: input.end - input.start"));
 
-			List<Sale> sales = SaleServiceProvider.provide().getSales(input.country, input.category, input.linkedAccount, input.start, input.end, PagerHelper.infinitePager());
+			List<Sale> sales = SaleServiceProvider.provide().getSales(input.country, input.category, input.linkedAccount, input.start, input.end,
+					PagerHelper.infinitePager());
 
 			if (sales.size() > 0) {
 				// group sales by date
@@ -1613,7 +1614,7 @@ public final class Core extends ActionHandler {
 			}
 
 			DataTypeHelper.sortRanksByDate(output.ranks);
-			
+
 			output.pager = input.pager;
 			updatePager(output.pager, output.ranks);
 			output.status = StatusType.StatusTypeSuccess;
@@ -1697,7 +1698,8 @@ public final class Core extends ActionHandler {
 				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
 						ApiError.DateRangeOutOfBounds.getMessage("0-60 days: input.end - input.start"));
 
-			List<Sale> sales = SaleServiceProvider.provide().getSales(input.country, input.category, linkedAccount, input.start, input.end, PagerHelper.infinitePager());
+			List<Sale> sales = SaleServiceProvider.provide().getSales(input.country, input.category, linkedAccount, input.start, input.end,
+					PagerHelper.infinitePager());
 
 			if (sales.size() > 0) {
 				// group sales by date
@@ -1713,11 +1715,12 @@ public final class Core extends ActionHandler {
 				for (Sale sale : sales) {
 					// only add items that are consistent with the product type
 					if (FREE_OR_PAID_APP_UNIVERSAL_IOS.equals(sale.typeIdentifier)
-							|| UPDATE_UNIVERSAL_IOS.equals(sale.typeIdentifier)
-							|| (form == FormType.FormTypeOther && (FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier) || UPDATE_IPHONE_AND_IPOD_TOUCH_IOS
-									.equals(sale.typeIdentifier)))
-							|| (form == FormType.FormTypeTablet && (FREE_OR_PAID_APP_IPAD_IOS.equals(sale.typeIdentifier) || UPDATE_IPAD_IOS
-									.equals(sale.typeIdentifier)))) {
+					// || UPDATE_UNIVERSAL_IOS.equals(sale.typeIdentifier)
+							|| (form == FormType.FormTypeOther && (FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier)
+							// || UPDATE_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier)
+							)) || (form == FormType.FormTypeTablet && (FREE_OR_PAID_APP_IPAD_IOS.equals(sale.typeIdentifier)
+							// || UPDATE_IPAD_IOS.equals(sale.typeIdentifier)
+							))) {
 						key = keyFormat.parse(keyFormat.format(sale.begin));
 						dateSalesList = salesGroupByDate.get(key);
 
