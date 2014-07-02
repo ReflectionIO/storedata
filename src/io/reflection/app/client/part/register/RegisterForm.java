@@ -111,9 +111,9 @@ public class RegisterForm extends Composite {
 		if (validate()) {
 			clearErrors();
 			// setEnabled(false);
-			if (actionCode == null) {
+			if (actionCode == null) { // Create new user
 				UserController.get().registerUser(email.getText(), password.getText(), forename.getText(), surname.getText(), company.getText());
-			} else {
+			} else { // Update user
 				UserController.get().registerUser(actionCode, password.getText());
 			}
 

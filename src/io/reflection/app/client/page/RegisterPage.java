@@ -113,9 +113,12 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 	@Override
 	public void userRegistered(String email) {
 		// final String username = email;
-
-		mRegisterForm.setVisible(false);
-		mThankYouRegisterPanel.setVisible(true);
+		if (SessionController.get().isLoggedInUserAdmin()) {
+			PageType.UsersPageType.show();
+		} else {
+			mRegisterForm.setVisible(false);
+			mThankYouRegisterPanel.setVisible(true);
+		}
 		preloader.hide();
 	}
 
@@ -150,23 +153,22 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 		String actionCode = null;
 
 		register.setTargetHistoryToken(current.toString());
-		// Request invite form
-		if (current.getAction() != null && FormHelper.REQUEST_INVITE_ACTION_NAME.equals(current.getAction())) {
+
+		if (current.getAction() != null && FormHelper.REQUEST_INVITE_ACTION_NAME.equals(current.getAction())) { // Request invite form
 			username = null;
 			setRequestInvite(Boolean.TRUE);
-			// Register form
-		} else {
-
-			// Register after request invite
+		} else { // Register form
 			if (current.getAction() != null && FormHelper.COMPLETE_ACTION_NAME.equals(current.getAction())
-					&& (actionCode = current.getParameter(FormHelper.CODE_PARAMETER_INDEX)) != null) {
-				mRegisterForm.setRequestInvite(Boolean.FALSE);
+					&& (actionCode = current.getParameter(FormHelper.CODE_PARAMETER_INDEX)) != null) { // Register after request invite
+				setRequestInvite(Boolean.FALSE);
 				// mRegisterForm.setEnabled(false);
+				preloader.show();
 				UserController.get().fetchUser(actionCode);
-				// Default register
-			} else {
-				// mRegisterForm.resetForm();
-				// mRegisterForm.focusFirstActiveField();
+			} else if (SessionController.get().isLoggedInUserAdmin() && current.getAction() == null) { // Admin - normal registration
+				setRequestInvite(Boolean.FALSE);
+				mRegisterForm.resetForm();
+				mRegisterForm.focusFirstActiveField();
+			} else { // Default action - Show request invite form
 				username = null;
 				setRequestInvite(Boolean.TRUE);
 			}
@@ -196,7 +198,6 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 	@Override
 	public void getUserDetailsSuccess(GetUserDetailsRequest input, GetUserDetailsResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			mRegisterForm.setVisible(Boolean.TRUE);
 			if (output.user != null) {
 				mRegisterForm.resetForm();
 				mRegisterForm.setUsername(username = output.user.username);
@@ -215,10 +216,11 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 
 			username = null;
 			register.setText("Request invite");
-			mRegisterForm.setRequestInvite(Boolean.TRUE);
+			setRequestInvite(Boolean.TRUE);
 			mRegisterForm.resetForm();
 			PageType.RegisterPageType.show(FormHelper.REQUEST_INVITE_ACTION_NAME);
 		}
+		preloader.hide();
 	}
 
 	/*
@@ -234,9 +236,10 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 		// mRegisterForm.focusFirstActiveField();
 		username = null;
 		register.setText("Request invite");
-		mRegisterForm.setRequestInvite(Boolean.TRUE);
+		setRequestInvite(Boolean.TRUE);
 		mRegisterForm.resetForm();
 		PageType.RegisterPageType.show(FormHelper.REQUEST_INVITE_ACTION_NAME);
+		preloader.hide();
 	}
 
 	/*
