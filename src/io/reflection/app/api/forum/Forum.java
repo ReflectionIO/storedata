@@ -167,6 +167,18 @@ public final class Forum extends ActionHandler {
 		LOG.finer("Entering getReply");
 		GetReplyResponse output = new GetReplyResponse();
 		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("GetReplyRequest: input"));
+
+			if (input.id == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("Long: input.id"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			output.reply = ReplyServiceProvider.provide().getReply(input.id);
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
