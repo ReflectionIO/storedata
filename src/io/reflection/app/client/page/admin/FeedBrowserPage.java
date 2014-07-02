@@ -19,6 +19,7 @@ import io.reflection.app.client.page.Page;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.Breadcrumbs;
 import io.reflection.app.client.part.SimplePager;
+import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.FeedFetch;
 
 import java.util.Map;
@@ -33,6 +34,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -86,6 +88,7 @@ public class FeedBrowserPage extends Page implements FilterEventHandler {
 		// });
 		// mFeeds.setSelectionModel(s);
 
+		mFeeds.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 		FeedFetchController.get().addDataDisplay(mFeeds);
 		mPager.setDisplay(mFeeds);
 
@@ -169,7 +172,7 @@ public class FeedBrowserPage extends Page implements FilterEventHandler {
 			}
 		};
 
-		StyledButtonCell prototype = new StyledButtonCell("btn", "btn-xs", "btn-default"); 
+		StyledButtonCell prototype = new StyledButtonCell("btn", "btn-xs", "btn-default");
 
 		Column<FeedFetch, String> ingest = new Column<FeedFetch, String>(prototype) {
 

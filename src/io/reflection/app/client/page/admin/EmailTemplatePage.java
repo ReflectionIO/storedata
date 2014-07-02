@@ -17,6 +17,7 @@ import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.SimplePager;
+import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.EmailTemplate;
 
 import com.google.gwt.cell.client.SafeHtmlCell;
@@ -29,6 +30,7 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TextHeader;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -50,6 +52,7 @@ public class EmailTemplatePage extends Page implements NavigationEventHandler {
 
 		addColumns();
 
+		emailTemplates.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 		EmailTemplateController.get().addDataDisplay(emailTemplates);
 		pager.setDisplay(emailTemplates);
 	}

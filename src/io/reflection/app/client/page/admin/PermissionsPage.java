@@ -12,6 +12,7 @@ import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.SimplePager;
+import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.Permission;
 
 import com.google.gwt.core.client.GWT;
@@ -20,6 +21,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TextHeader;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -40,6 +42,7 @@ public class PermissionsPage extends Page {
 
 		addPermissionColumns();
 
+		mPermissions.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 		PermissionController.get().addDataDisplay(mPermissions);
 		mPager.setDisplay(mPermissions);
 	}
