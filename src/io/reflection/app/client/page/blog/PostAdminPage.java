@@ -15,6 +15,7 @@ import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.SimplePager;
+import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.Post;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.shared.util.FormattingHelper;
@@ -31,6 +32,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -51,6 +53,7 @@ public class PostAdminPage extends Page {
 
 		createColumns();
 
+		posts.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 		PostController.get().addDataDisplay(posts);
 		pager.setDisplay(posts);
 	}

@@ -12,6 +12,7 @@ import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.SimplePager;
+import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.Item;
 
 import com.google.gwt.cell.client.ImageCell;
@@ -22,6 +23,7 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TextHeader;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -41,6 +43,7 @@ public class ItemsPage extends Page {
 		initWidget(uiBinder.createAndBindUi(this));
 		addColumns();
 
+		items.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 		ItemController.get().addDataDisplay(items);
 		pager.setDisplay(items);
 	}
