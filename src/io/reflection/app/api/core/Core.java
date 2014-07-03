@@ -12,9 +12,9 @@ import static io.reflection.app.helpers.ApiHelper.getGrossingListName;
 import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPAD_IOS;
 import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS;
 import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_UNIVERSAL_IOS;
-import static io.reflection.app.service.sale.ISaleService.UPDATE_IPAD_IOS;
-import static io.reflection.app.service.sale.ISaleService.UPDATE_IPHONE_AND_IPOD_TOUCH_IOS;
-import static io.reflection.app.service.sale.ISaleService.UPDATE_UNIVERSAL_IOS;
+//import static io.reflection.app.service.sale.ISaleService.UPDATE_IPAD_IOS;
+//import static io.reflection.app.service.sale.ISaleService.UPDATE_IPHONE_AND_IPOD_TOUCH_IOS;
+//import static io.reflection.app.service.sale.ISaleService.UPDATE_UNIVERSAL_IOS;
 import io.reflection.app.accountdatacollectors.DataAccountCollectorFactory;
 import io.reflection.app.api.PagerHelper;
 import io.reflection.app.api.ValidationHelper;
@@ -1523,11 +1523,12 @@ public final class Core extends ActionHandler {
 				for (Sale sale : sales) {
 					// only add items that are consistent with the product type
 					if (FREE_OR_PAID_APP_UNIVERSAL_IOS.equals(sale.typeIdentifier)
-							|| UPDATE_UNIVERSAL_IOS.equals(sale.typeIdentifier)
-							|| (form == FormType.FormTypeOther && (FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier) || UPDATE_IPHONE_AND_IPOD_TOUCH_IOS
-									.equals(sale.typeIdentifier)))
-							|| (form == FormType.FormTypeTablet && (FREE_OR_PAID_APP_IPAD_IOS.equals(sale.typeIdentifier) || UPDATE_IPAD_IOS
-									.equals(sale.typeIdentifier)))) {
+					// || UPDATE_UNIVERSAL_IOS.equals(sale.typeIdentifier)
+							|| (form == FormType.FormTypeOther && (FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier)
+							// || UPDATE_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier)
+							)) || (form == FormType.FormTypeTablet && (FREE_OR_PAID_APP_IPAD_IOS.equals(sale.typeIdentifier)
+							// || UPDATE_IPAD_IOS.equals(sale.typeIdentifier)
+							))) {
 
 						key = keyFormat.parse(keyFormat.format(sale.begin));
 						dateSalesList = salesGroupByDate.get(key);
