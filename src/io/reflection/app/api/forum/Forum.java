@@ -22,6 +22,8 @@ import io.reflection.app.api.forum.shared.call.GetForumsRequest;
 import io.reflection.app.api.forum.shared.call.GetForumsResponse;
 import io.reflection.app.api.forum.shared.call.GetRepliesRequest;
 import io.reflection.app.api.forum.shared.call.GetRepliesResponse;
+import io.reflection.app.api.forum.shared.call.GetReplyRequest;
+import io.reflection.app.api.forum.shared.call.GetReplyResponse;
 import io.reflection.app.api.forum.shared.call.GetTopicRequest;
 import io.reflection.app.api.forum.shared.call.GetTopicResponse;
 import io.reflection.app.api.forum.shared.call.GetTopicsRequest;
@@ -158,6 +160,31 @@ public final class Forum extends ActionHandler {
 			output.error = convertToErrorAndLog(LOG, e);
 		}
 		LOG.finer("Exiting getReplies");
+		return output;
+	}
+
+	public GetReplyResponse getReply(GetReplyRequest input) {
+		LOG.finer("Entering getReply");
+		GetReplyResponse output = new GetReplyResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("GetReplyRequest: input"));
+
+			if (input.id == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("Long: input.id"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			output.reply = ReplyServiceProvider.provide().getReply(input.id);
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getReply");
 		return output;
 	}
 

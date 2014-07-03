@@ -8,6 +8,7 @@
 //
 package io.reflection.app.api.forum.client;
 
+import io.reflection.app.api.blog.shared.call.UpdatePostResponse;
 import io.reflection.app.api.forum.shared.call.AddReplyRequest;
 import io.reflection.app.api.forum.shared.call.AddReplyResponse;
 import io.reflection.app.api.forum.shared.call.CreateTopicRequest;
@@ -20,6 +21,8 @@ import io.reflection.app.api.forum.shared.call.GetForumsRequest;
 import io.reflection.app.api.forum.shared.call.GetForumsResponse;
 import io.reflection.app.api.forum.shared.call.GetRepliesRequest;
 import io.reflection.app.api.forum.shared.call.GetRepliesResponse;
+import io.reflection.app.api.forum.shared.call.GetReplyRequest;
+import io.reflection.app.api.forum.shared.call.GetReplyResponse;
 import io.reflection.app.api.forum.shared.call.GetTopicRequest;
 import io.reflection.app.api.forum.shared.call.GetTopicResponse;
 import io.reflection.app.api.forum.shared.call.GetTopicsRequest;
@@ -171,6 +174,39 @@ public final class ForumService extends JsonService {
 		return handle;
 	}
 
+	public static final String ForumMethodGetReply = "GetReply";
+
+	public Request getReply(final GetReplyRequest input, final AsyncCallback<GetReplyResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(ForumMethodGetReply, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						GetReplyResponse outputParameter = new GetReplyResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(ForumService.this, ForumMethodGetReply, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(ForumService.this, ForumMethodGetReply, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(ForumService.this, ForumMethodGetReply, input, exception);
+				}
+			});
+			onCallStart(ForumService.this, ForumMethodGetReply, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(ForumService.this, ForumMethodGetReply, input, exception);
+		}
+		return handle;
+	}
+
 	public static final String ForumMethodCreateTopic = "CreateTopic";
 
 	public Request createTopic(final CreateTopicRequest input, final AsyncCallback<CreateTopicResponse> output) {
@@ -272,7 +308,7 @@ public final class ForumService extends JsonService {
 
 	public static final String ForumMethodUpdateReply = "UpdateReply";
 
-	public Request updateReply(final UpdateReplyRequest input, final AsyncCallback<UpdateReplyResponse> output) {
+	public Request updateReply(final UpdateReplyRequest input, final AsyncCallback<UpdateReplyResponse> asyncCallback) {
 		Request handle = null;
 		try {
 			handle = sendRequest(ForumMethodUpdateReply, input, new RequestCallback() {
@@ -281,23 +317,23 @@ public final class ForumService extends JsonService {
 					try {
 						UpdateReplyResponse outputParameter = new UpdateReplyResponse();
 						parseResponse(response, outputParameter);
-						output.onSuccess(outputParameter);
+						asyncCallback.onSuccess(outputParameter);
 						onCallSuccess(ForumService.this, ForumMethodUpdateReply, input, outputParameter);
 					} catch (JSONException | HttpException exception) {
-						output.onFailure(exception);
+						asyncCallback.onFailure(exception);
 						onCallFailure(ForumService.this, ForumMethodUpdateReply, input, exception);
 					}
 				}
 
 				@Override
 				public void onError(Request request, Throwable exception) {
-					output.onFailure(exception);
+					asyncCallback.onFailure(exception);
 					onCallFailure(ForumService.this, ForumMethodUpdateReply, input, exception);
 				}
 			});
 			onCallStart(ForumService.this, ForumMethodUpdateReply, input, handle);
 		} catch (RequestException exception) {
-			output.onFailure(exception);
+			asyncCallback.onFailure(exception);
 			onCallFailure(ForumService.this, ForumMethodUpdateReply, input, exception);
 		}
 		return handle;
