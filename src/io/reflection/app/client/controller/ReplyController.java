@@ -31,20 +31,18 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.view.client.AsyncDataProvider;
-import com.google.gwt.view.client.HasData;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author billy1380
  * 
  */
-public class ReplyController extends AsyncDataProvider<Reply> implements ServiceConstants {
+public class ReplyController implements ServiceConstants {
 
 	private List<Reply> replies = new ArrayList<Reply>();
-	private HashMap<Long,Reply> replyStore= new HashMap<Long,Reply>();
+	private HashMap<Long, Reply> replyStore = new HashMap<Long, Reply>();
 	private Long topicId;
-	private long count = 0;
+//	private long count = 0;
 	private Pager pager;
 	private SparseArray<Reply> replyLookup = null;
 
@@ -98,16 +96,16 @@ public class ReplyController extends AsyncDataProvider<Reply> implements Service
 					if (output.pager != null) {
 						pager = output.pager;
 
-						if (pager.totalCount != null) {
-							count = pager.totalCount.longValue();
-						}
+//						if (pager.totalCount != null) {
+//							count = pager.totalCount.longValue();
+//						}
 					}
 
-					updateRowCount((int) count, true);
-					updateRowData(
-							input.pager.start.intValue(),
-							replies.subList(input.pager.start.intValue(),
-									Math.min(input.pager.start.intValue() + input.pager.count.intValue(), pager.totalCount.intValue())));
+//					updateRowCount((int) count, true);
+//					updateRowData(
+//							input.pager.start.intValue(),
+//							replies.subList(input.pager.start.intValue(),
+//									Math.min(input.pager.start.intValue() + input.pager.count.intValue(), pager.totalCount.intValue())));
 				}
 
 				EventController.get().fireEventFromSource(new GetRepliesSuccess(input, output), ReplyController.this);
@@ -133,7 +131,6 @@ public class ReplyController extends AsyncDataProvider<Reply> implements Service
 
 		fetchReplies();
 	}
-
 
 	public Reply getReply(Long replyId) {
 		return replyStore.get(replyId);
@@ -217,17 +214,5 @@ public class ReplyController extends AsyncDataProvider<Reply> implements Service
 
 			}
 		});
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.view.client.AbstractDataProvider#onRangeChanged(com.google.gwt.view.client.HasData)
-	 */
-	@Override
-	protected void onRangeChanged(HasData<Reply> display) {
-		// TODO Auto-generated method stub
-
 	}
 }
