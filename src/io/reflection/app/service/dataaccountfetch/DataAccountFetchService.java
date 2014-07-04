@@ -11,14 +11,17 @@ package io.reflection.app.service.dataaccountfetch;
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
-import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import com.google.appengine.api.utils.SystemProperty;
 
@@ -35,8 +38,7 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 	public DataAccountFetch getDataAccountFetch(Long id) throws DataAccessException {
 		DataAccountFetch dataAccountFetch = null;
 
-		IDatabaseService databaseService = DatabaseServiceProvider.provide();
-		Connection dataAccountFetchConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeDataAccountFetch.toString());
+		Connection dataAccountFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccountFetch.toString());
 
 		String getDataAccountFetchQuery = String.format("SELECT * FROM `dataaccountfetch` WHERE `deleted`='n' AND `id`='%d' LIMIT 1", id.longValue());
 		try {
@@ -156,12 +158,103 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 	 * @see io.reflection.app.service.dataaccountfetch.IDataAccountFetchService#isFetchable(io.reflection.app.datatypes.shared.DataAccount)
 	 */
 	@Override
-	public Boolean isFetchable(DataAccount dataAccount) {
+	public Boolean isFetchable(DataAccount dataAccount) throws DataAccessException {
 
 		// for now we are assuming that all accounts are fetchable, if that changes we can add some selection criteria here that limit the number of accounts
 		// that we gather e.g. if the last n-gathers on the account have failed. We will probably need a mechanism to access the failure messages - if the
 		// messages are password related then the user might have updated their password: it can get really messy here
 		return Boolean.TRUE;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getFailedDataAccountFetches(io.reflection.app.datatypes.shared.DataAccount,
+	 * io.reflection.app.api.shared.datatypes.Pager)
+	 */
+	@Override
+	public List<DataAccountFetch> getFailedDataAccountFetches(DataAccount dataAccount, Pager pager) throws DataAccessException {
+		List<DataAccountFetch> failedDataAccountFetches = new ArrayList<DataAccountFetch>();
+
+		Connection dataAccountFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccountFetch.toString());
+
+		String getFailedDataAccountFetchesQuery = String.format(
+				"SELECT * FROM `dataaccountfetch` WHERE `linkedaccountid`=%d AND `date` BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE() AND `deleted`='n'",
+				dataAccount.id.longValue());
+
+		if (pager != null) {
+			String sortByQuery = "id";
+
+			String sortDirectionQuery = "DESC";
+
+			if (pager.sortDirection != null) {
+				switch (pager.sortDirection) {
+				case SortDirectionTypeAscending:
+					sortDirectionQuery = "ASC";
+					break;
+				default:
+					break;
+				}
+			}
+
+			getFailedDataAccountFetchesQuery += String.format(" ORDER BY `%s` %s", sortByQuery, sortDirectionQuery);
+		}
+
+		if (pager.start != null && pager.count != null) {
+			getFailedDataAccountFetchesQuery += String.format(" LIMIT %sd, %d", pager.start.longValue(), pager.count.longValue());
+		} else if (pager.count != null) {
+			getFailedDataAccountFetchesQuery += String.format(" LIMIT %d", pager.count);
+		}
+
+		try {
+			dataAccountFetchConnection.connect();
+			dataAccountFetchConnection.executeQuery(getFailedDataAccountFetchesQuery);
+
+			while (dataAccountFetchConnection.fetchNextRow()) {
+				DataAccountFetch dataAccountFetch = this.toDataAccountFetch(dataAccountFetchConnection);
+
+				if (dataAccountFetch != null) {
+					failedDataAccountFetches.add(dataAccountFetch);
+				}
+			}
+		} finally {
+			if (dataAccountFetchConnection != null) {
+				dataAccountFetchConnection.disconnect();
+			}
+		}
+
+		return failedDataAccountFetches;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getFailedDataAccountFetchesCount(io.reflection.app.datatypes.shared.DataAccount)
+	 */
+	@Override
+	public Long getFailedDataAccountFetchesCount(DataAccount dataAccount) throws DataAccessException {
+		Long failedDataAccountFetchesCount = Long.valueOf(0);
+
+		String getFailedDataAccountFetchesCountQuery = String
+				.format("SELECT COUNT(1) AS `count` FROM `dataaccountfetch` WHERE `linkedaccountid`=%d AND `status`='error' AND `date` BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE() AND `deleted`='n'",
+						dataAccount.id.longValue());
+
+		Connection dataAccountFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccountFetch.toString());
+
+		try {
+			dataAccountFetchConnection.connect();
+			dataAccountFetchConnection.executeQuery(getFailedDataAccountFetchesCountQuery);
+
+			if (dataAccountFetchConnection.fetchNextRow()) {
+				failedDataAccountFetchesCount = dataAccountFetchConnection.getCurrentRowLong("count");
+			}
+		} finally {
+			if (dataAccountFetchConnection != null) {
+				dataAccountFetchConnection.disconnect();
+			}
+		}
+
+		return failedDataAccountFetchesCount;
 	}
 
 }

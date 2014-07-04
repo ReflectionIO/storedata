@@ -8,16 +8,20 @@
 package io.reflection.app;
 
 import static io.reflection.app.objectify.PersistenceService.ofy;
+import io.reflection.app.api.PagerHelper;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.collectors.CollectorAmazon;
 import io.reflection.app.collectors.CollectorIOS;
 import io.reflection.app.datatypes.shared.DataAccount;
+import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
+import io.reflection.app.service.dataaccount.IDataAccountService;
 import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
+import io.reflection.app.service.dataaccountfetch.IDataAccountFetchService;
 
 import java.io.IOException;
 import java.util.List;
@@ -113,20 +117,30 @@ public class CronServlet extends HttpServlet {
 				pager.count = Long.valueOf(100);
 
 				try {
-
+					IDataAccountFetchService dataAccountFetchService = DataAccountFetchServiceProvider.provide();
+					IDataAccountService dataAccountService = DataAccountServiceProvider.provide();
+					
 					// get the total number of accounts there are
-					pager.totalCount = DataAccountServiceProvider.provide().getDataAccountsCount();
+					pager.totalCount = dataAccountService.getDataAccountsCount();
 
 					// get data accounts 100 at a time
 					for (pager.start = Long.valueOf(0); pager.start.longValue() < pager.totalCount.longValue(); pager.start = Long.valueOf(pager.start
 							.longValue() + pager.count.longValue())) {
-						List<DataAccount> dataAccounts = DataAccountServiceProvider.provide().getDataAccounts(pager);
+						List<DataAccount> dataAccounts = dataAccountService.getDataAccounts(pager);
 
 						for (DataAccount dataAccount : dataAccounts) {
-							// if the account has some erros then don't bother otherwise enqueue a message to do a gather for it
+							// if the account has some errors then don't bother otherwise enqueue a message to do a gather for it
 
 							if (DataAccountFetchServiceProvider.provide().isFetchable(dataAccount) == Boolean.TRUE) {
-								DataAccountServiceProvider.provide().triggerDataAccountFetch(dataAccount);
+								dataAccountService.triggerDataAccountFetch(dataAccount);
+
+								// go through all the failed attempts and get them too (failed attempts = less than 30 days old)
+								List<DataAccountFetch> failedDataAccountFetches = dataAccountFetchService.getFailedDataAccountFetches(dataAccount,
+										PagerHelper.infinitePager());
+
+								for (DataAccountFetch dataAccountFetch : failedDataAccountFetches) {
+									dataAccountService.triggerSingleDateDataAccountFetch(dataAccount, dataAccountFetch.date);
+								}
 							}
 						}
 

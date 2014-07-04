@@ -14,6 +14,7 @@ import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import com.spacehopperstudios.service.IService;
@@ -121,5 +122,12 @@ public interface IDataAccountService extends IService {
 	 * @throws DataAccessException
 	 */
 	public void triggerDataAccountFetch(DataAccount dataAccount) throws DataAccessException;
+
+	/**
+	 * @param dataAccount
+	 * @param date
+	 * @throws DataAccessException
+	 */
+	public void triggerSingleDateDataAccountFetch(DataAccount dataAccount, Date date) throws DataAccessException;
 
 }

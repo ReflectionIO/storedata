@@ -207,57 +207,62 @@ final class DataAccountService implements IDataAccountService {
 		return addedDataAccount;
 	}
 
-	/**
-	 * @param dataAccount
-	 * @param days
-	 */
-	private void enqueue(DataAccount dataAccount, int days, boolean add) {
+	private void enqueue(DataAccount dataAccount, Date date, boolean notify) {
 		if (LOG.isLoggable(GaeLevel.TRACE)) {
 			LOG.log(GaeLevel.TRACE, "Entering...");
 		}
 
 		try {
 			Queue queue = QueueFactory.getQueue("dataaccountgather");
-			Calendar c = Calendar.getInstance();
 
-			for (int i = 1; i <= days; i++) {
-				TaskOptions options = TaskOptions.Builder.withUrl("/dataaccountgather").method(Method.POST);
+			TaskOptions options = TaskOptions.Builder.withUrl("/dataaccountgather").method(Method.POST);
 
-				options.param("accountId", dataAccount.id.toString());
+			options.param("accountId", dataAccount.id.toString());
+			options.param("date", Long.toString(date.getTime()));
 
-				c.setTime(new Date());
-				c.add(Calendar.DAY_OF_MONTH, -i);
+			if (notify) {
+				options.param("notify", Boolean.toString(true));
+			}
 
-				options.param("date", Long.toString(c.getTime().getTime()));
+			try {
+				queue.add(options);
+			} catch (TransientFailureException ex) {
 
-				if (add && i == days) {
-					options.param("notify", Boolean.toString(true));
+				if (LOG.isLoggable(Level.WARNING)) {
+					LOG.warning(String.format("Could not queue a message because of [%s] - will retry it once", ex.toString()));
 				}
 
+				// retry once
 				try {
 					queue.add(options);
-				} catch (TransientFailureException ex) {
-
-					if (LOG.isLoggable(Level.WARNING)) {
-						LOG.warning(String.format("Could not queue a message because of [%s] - will retry it once", ex.toString()));
-					}
-
-					// retry once
-					try {
-						queue.add(options);
-					} catch (TransientFailureException reEx) {
-						if (LOG.isLoggable(Level.SEVERE)) {
-							LOG.log(Level.SEVERE,
-									String.format("Retry of with payload [%s] failed while adding to queue [%s] twice", options.toString(),
-											queue.getQueueName()), reEx);
-						}
+				} catch (TransientFailureException reEx) {
+					if (LOG.isLoggable(Level.SEVERE)) {
+						LOG.log(Level.SEVERE,
+								String.format("Retry of with payload [%s] failed while adding to queue [%s] twice", options.toString(), queue.getQueueName()),
+								reEx);
 					}
 				}
 			}
+
 		} finally {
 			if (LOG.isLoggable(GaeLevel.TRACE)) {
 				LOG.log(GaeLevel.TRACE, "Exiting...");
 			}
+		}
+	}
+
+	/**
+	 * @param dataAccount
+	 * @param days
+	 */
+	private void enqueue(DataAccount dataAccount, int days, boolean add) {
+		Calendar c = Calendar.getInstance();
+
+		for (int i = 1; i <= days; i++) {
+			c.setTime(new Date());
+			c.add(Calendar.DAY_OF_MONTH, -i);
+
+			enqueue(dataAccount, c.getTime(), add && i == days);
 		}
 	}
 
@@ -297,9 +302,9 @@ final class DataAccountService implements IDataAccountService {
 
 		DataAccount restoredDataAccount = null;
 
-		final String restoreDataAccountQuery = String
-				.format("UPDATE `dataaccount` SET `created`=NOW(), `password`=AES_ENCRYPT('%s',UNHEX('%s')), `properties`='%s', `deleted`='n' WHERE `username`='%s'",
-						addslashes(dataAccount.password), key(), addslashes(dataAccount.properties), addslashes(dataAccount.username));
+		final String restoreDataAccountQuery = String.format(
+				"UPDATE `dataaccount` SET `created`=NOW(), `password`=AES_ENCRYPT('%s',UNHEX('%s')), `properties`='%s', `deleted`='n' WHERE `username`='%s'",
+				addslashes(dataAccount.password), key(), addslashes(dataAccount.properties), addslashes(dataAccount.username));
 
 		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
@@ -483,9 +488,20 @@ final class DataAccountService implements IDataAccountService {
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#triggerDataAccountFetch(io.reflection.app.datatypes.shared.DataAccount)
 	 */
 	@Override
-	public void triggerDataAccountFetch(DataAccount dataAccount) {
+	public void triggerDataAccountFetch(DataAccount dataAccount) throws DataAccessException {
 		// TODO: enqueue messages for the number of days since the last success or 30 days - for now we just enqueue the last day
 		enqueue(dataAccount, 1, false);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.dataaccount.IDataAccountService#triggerSingleDateDataAccountFetch(io.reflection.app.datatypes.shared.DataAccount,
+	 * java.util.Date)
+	 */
+	@Override
+	public void triggerSingleDateDataAccountFetch(DataAccount dataAccount, Date date) throws DataAccessException {
+		enqueue(dataAccount, date, false);
 	}
 
 }
