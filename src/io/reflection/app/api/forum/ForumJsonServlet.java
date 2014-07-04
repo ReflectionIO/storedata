@@ -14,6 +14,7 @@ import io.reflection.app.api.forum.shared.call.DeleteReplyRequest;
 import io.reflection.app.api.forum.shared.call.DeleteTopicRequest;
 import io.reflection.app.api.forum.shared.call.GetForumsRequest;
 import io.reflection.app.api.forum.shared.call.GetRepliesRequest;
+import io.reflection.app.api.forum.shared.call.GetReplyRequest;
 import io.reflection.app.api.forum.shared.call.GetTopicRequest;
 import io.reflection.app.api.forum.shared.call.GetTopicsRequest;
 import io.reflection.app.api.forum.shared.call.UpdateReplyRequest;
@@ -44,6 +45,10 @@ public final class ForumJsonServlet extends JsonServlet {
 			GetRepliesRequest input = new GetRepliesRequest();
 			input.fromJson(request);
 			output = service.getReplies(input).toString();
+		} else if ("GetReply".equals(action)) {
+			GetReplyRequest input = new GetReplyRequest();
+			input.fromJson(request);
+			output = service.getReply(input).toString();
 		} else if ("CreateTopic".equals(action)) {
 			CreateTopicRequest input = new CreateTopicRequest();
 			input.fromJson(request);

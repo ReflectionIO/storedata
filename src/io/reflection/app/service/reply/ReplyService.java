@@ -33,8 +33,7 @@ final class ReplyService implements IReplyService {
 	public Reply getReply(Long id) throws DataAccessException {
 		Reply reply = null;
 
-		IDatabaseService databaseService = DatabaseServiceProvider.provide();
-		Connection replyConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeReply.toString());
+		Connection replyConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeReply.toString());
 
 		String getReplyQuery = String.format("select * from `reply` where `deleted`='n' and `id`='%d' limit 1", id.longValue());
 		try {
@@ -113,7 +112,34 @@ final class ReplyService implements IReplyService {
 
 	@Override
 	public Reply updateReply(Reply reply) throws DataAccessException {
-		throw new UnsupportedOperationException();
+		Reply updatedReply = null;
+		boolean changed = false;
+
+		IDatabaseService databaseService = DatabaseServiceProvider.provide();
+		Connection replyConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeReply.toString());
+
+		String updateReplyQuery = String.format("UPDATE `reply` SET `content`='%s' WHERE `id`=%d AND `deleted`='n'", addslashes(reply.content),
+				reply.id.longValue());
+		try {
+			replyConnection.connect();
+			replyConnection.executeQuery(updateReplyQuery);
+
+			if (replyConnection.getAffectedRowCount() > 0) {
+				changed = true;
+			}
+		} finally {
+			if (replyConnection != null) {
+				replyConnection.disconnect();
+			}
+		}
+
+		if (changed) {
+			updatedReply = getReply(reply.id);
+		} else {
+			updatedReply = reply;
+		}
+
+		return updatedReply;
 	}
 
 	@Override
@@ -193,8 +219,7 @@ final class ReplyService implements IReplyService {
 
 		Connection replyConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeReply.toString());
 
-		String getRepliesCountQuery = String.format("SELECT COUNT(1) AS `replycount` FROM `reply` WHERE `topicid`=%d AND `deleted`='n'",
-				topic.id.longValue());
+		String getRepliesCountQuery = String.format("SELECT COUNT(1) AS `replycount` FROM `reply` WHERE `topicid`=%d AND `deleted`='n'", topic.id.longValue());
 
 		try {
 			replyConnection.connect();

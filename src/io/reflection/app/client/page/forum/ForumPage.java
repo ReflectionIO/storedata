@@ -105,7 +105,6 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 				if (object.sticky != null && object.sticky.booleanValue()) {
 					properties += "<i class=\"glyphicon glyphicon-pushpin\"></i> ";
 				}
-				//Window.alert(object.title);
 				return TopicTemplate.INSTANCE.topicLayout(SafeHtmlUtils.fromSafeConstant(properties),
 						PageType.ForumThreadPageType.asHref(TopicPage.VIEW_ACTION_PARAMETER_VALUE, object.id.toString()).asString(),
 						SafeStylesUtils.fromTrustedString(""), SafeHtmlUtils.fromString(object.title), SafeHtmlUtils.fromString("n pages"));
