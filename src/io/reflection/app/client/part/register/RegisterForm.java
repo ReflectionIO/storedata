@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.part.register;
 
+import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.UserController;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.res.Images;
@@ -94,6 +95,11 @@ public class RegisterForm extends Composite {
 	@Override
 	protected void onAttach() {
 		super.onAttach();
+		if (SessionController.get().isLoggedInUserAdmin()) {
+			termAndCond.setVisible(Boolean.FALSE);
+		} else {
+			termAndCond.setVisible(Boolean.TRUE);
+		}
 
 		resetForm();
 		focusFirstActiveField();
@@ -111,9 +117,9 @@ public class RegisterForm extends Composite {
 		if (validate()) {
 			clearErrors();
 			// setEnabled(false);
-			if (actionCode == null) {
+			if (actionCode == null) { // Create new user
 				UserController.get().registerUser(email.getText(), password.getText(), forename.getText(), surname.getText(), company.getText());
-			} else {
+			} else { // Update user
 				UserController.get().registerUser(actionCode, password.getText());
 			}
 
@@ -256,12 +262,14 @@ public class RegisterForm extends Composite {
 				validated = validated && true;
 			}
 
-			if (termAndCond.getValue() == Boolean.FALSE) {
-				termAndCondError = "Must accept terms and conditions";
-				validated = false;
-			} else {
-				termAndCondError = null;
-				validated = validated && true;
+			if (!SessionController.get().isLoggedInUserAdmin()) {
+				if (termAndCond.getValue() == Boolean.FALSE) {
+					termAndCondError = "Must accept terms and conditions";
+					validated = false;
+				} else {
+					termAndCondError = null;
+					validated = validated && true;
+				}
 			}
 		}
 
