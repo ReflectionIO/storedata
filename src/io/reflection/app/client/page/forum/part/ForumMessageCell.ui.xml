@@ -3,10 +3,14 @@
     <ui:with field="authorName" type="java.lang.String" />
     <ui:with field="content" type="com.google.gwt.safehtml.shared.SafeHtml" />
     <ui:with field="created" type="java.lang.String" />
-	<ui:with field="topicId" type="java.lang.Long" />
-	<ui:with field="messageId" type="java.lang.Long" />
-	<ui:import field="io.reflection.app.client.page.PageType.ForumThreadPageType" />
+    <ui:with field="topicId" type="java.lang.Long" />
+    <ui:with field="messageId" type="java.lang.Long" />
+    <ui:import field="io.reflection.app.client.page.PageType.ForumThreadPageType" />
+    <ui:import field="io.reflection.app.client.page.PageType.ForumEditTopicPageType" />
     <ui:style>
+    
+    @external forumMessageQuote,forumMessageQuoteAuthor;
+    
     .split {
     	border-top: solid 1px #999;
     	padding-top: 10px;
@@ -17,6 +21,21 @@
     	margin-bottom: 10px;
     	margin-top: 10px;
     }
+    
+    .infoWrapper div span {
+    	display: inline-block;
+    	marin-right: 5px;
+    	text-decoration: underline;
+    	cursor: pointer;
+    }
+    
+    .forumMessageQuote {
+        background: red;
+	}
+	
+	.forumMessageQuoteAuthor {
+	   background: blue;
+	}
     </ui:style>
 
     <div class="row">
@@ -31,19 +50,20 @@
             <div class="{style.split}">
                 <ui:text from="{created}" />
                 <div class="pull-right">
-                    <a href="edit" class="btn btn-default btn-xs">
+
+                    <a href="{ForumEditTopicPageType.asHref.asString}/view/{topicId.toString}/edit/{messageId.toString}" class="btn btn-default btn-xs"
+                        ui:field="edit">
                         <i class="glyphicon glyphicon-pencil"></i>
                         Edit
                     </a>
-                    <a href="flag" class="btn btn-warning btn-xs">
+                    <a href="flag" class="btn btn-warning btn-xs" ui:field="flag">
                         <i class="glyphicon glyphicon-flag"></i>
                         Flag
                     </a>
-					<a href="{ForumThreadPageType.asHref.asString}/view/{topicId.toString}/quote/{messageId.toString}"
-						class="btn btn-default btn-xs" ui:field="quote">
-						<i class="glyphicon glyphicon-pencil"></i>
-						Quote
-					</a>                   
+                    <a class="btn btn-default btn-xs" ui:field="quote">
+                        <i class="glyphicon glyphicon-pencil"></i>
+                        Quote
+                    </a>
                 </div>
             </div>
         </div>

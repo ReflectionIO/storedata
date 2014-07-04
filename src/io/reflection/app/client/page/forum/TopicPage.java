@@ -29,6 +29,7 @@ import io.reflection.app.client.part.BootstrapGwtCellList;
 import io.reflection.app.client.part.ReflectionProgressBar;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.part.datatypes.ForumMessage;
+import io.reflection.app.client.part.text.RichTextToolbar;
 import io.reflection.app.datatypes.shared.Topic;
 import io.reflection.app.shared.util.FormattingHelper;
 
@@ -44,7 +45,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellList;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -70,7 +70,8 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 	@UiField HeadingElement title;
 	@UiField UListElement notes;
 
-	@UiField(provided = true) CellList<ForumMessage> messages = new CellList<ForumMessage>(new ForumMessageCell(), BootstrapGwtCellList.INSTANCE);
+	private ForumMessageCell cellPrototype = new ForumMessageCell();
+	@UiField(provided = true) CellList<ForumMessage> messages = new CellList<ForumMessage>(cellPrototype, BootstrapGwtCellList.INSTANCE);
 
 	@UiField Button reply;
 	@UiField Button post;
@@ -78,8 +79,11 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 	@UiField FormPanel replyForm;
 
 	@UiField HTMLPanel replyGroup;
-	@UiField RichTextArea replyText;
+
 	@UiField HTMLPanel replyNote;
+
+	@UiField RichTextArea replyText;
+	@UiField RichTextToolbar replyToolbar;
 
 	@UiField SimplePager pager;
 
@@ -96,6 +100,17 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 		messages.setEmptyListWidget(new HTMLPanel("No messages found!"));
 
 		pager.setPageSize(ServiceConstants.SHORT_STEP_VALUE);
+
+		replyToolbar.setRichText(replyText);
+		cellPrototype.setRichText(replyText);
+
+		
+//		  Topic topic = TopicController.get().getTopic(topicId);
+//		  dataProvider = new ForumMessageProvider(topic);
+//		  dataProvider.registerListeners();
+//		  
+//		  dataProvider.addDataDisplay(messages);
+		 
 	}
 
 	/*
@@ -182,7 +197,6 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 					topicId = Long.valueOf(topicIdString);
 					Topic topic = TopicController.get().getTopic(topicId);
 					updateTopic(topic);
-					// Window.alert("In Nav Controller");
 					// replyText.setHTML("<div class=\"quoting\">" + topic.author.forename + " scribbled " + topic.content.toString() + "</div>");
 				}
 			}
@@ -191,7 +205,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
 	private void updateTopic(Topic topic) {
 		if (topic != null) {
-			Window.alert("In update topic");
+
 			String properties = "";
 
 			boolean isLocked = topic.locked != null && topic.locked.booleanValue();
