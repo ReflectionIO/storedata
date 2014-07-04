@@ -2,7 +2,7 @@
 //  ForumJsonServlet.java
 //  reflection.io
 //
-//  Created by Don Sasikumar on June 27, 2014.
+//  Created by William Shakour on April 5, 2014.
 //  Copyrights © 2014 SPACEHOPPER STUDIOS LTD. All rights reserved.
 //  Copyrights © 2014 reflection.io. All rights reserved.
 //
