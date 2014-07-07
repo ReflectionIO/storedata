@@ -22,6 +22,7 @@ import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.dataaccount.IDataAccountService;
 import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
 import io.reflection.app.service.dataaccountfetch.IDataAccountFetchService;
+import io.reflection.app.service.item.ItemServiceProvider;
 
 import java.io.IOException;
 import java.util.List;
@@ -33,6 +34,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.appengine.api.taskqueue.Queue;
+import com.google.appengine.api.taskqueue.QueueFactory;
+import com.google.appengine.api.taskqueue.TaskOptions;
+import com.google.appengine.api.taskqueue.TaskOptions.Method;
+import com.google.appengine.api.taskqueue.TransientFailureException;
 import com.googlecode.objectify.cmd.QueryKeys;
 
 /**
@@ -80,6 +86,8 @@ public class CronServlet extends HttpServlet {
 		String store = req.getParameter("store");
 		String deleteSome = req.getParameter("deletesome");
 		String process = req.getParameter("process");
+		String tidy = req.getParameter("tidy");
+
 		int count = 0;
 
 		if (store != null) {
@@ -119,7 +127,7 @@ public class CronServlet extends HttpServlet {
 				try {
 					IDataAccountFetchService dataAccountFetchService = DataAccountFetchServiceProvider.provide();
 					IDataAccountService dataAccountService = DataAccountServiceProvider.provide();
-					
+
 					// get the total number of accounts there are
 					pager.totalCount = dataAccountService.getDataAccountsCount();
 
@@ -148,10 +156,62 @@ public class CronServlet extends HttpServlet {
 				} catch (DataAccessException daEx) {
 					throw new RuntimeException(daEx);
 				}
+			} else if ("item".equals(tidy)) {
+				try {
+					List<String> itemsWithDuplicates = ItemServiceProvider.provide().getDuplicateItemsInternalId(PagerHelper.infinitePager());
+
+					if (itemsWithDuplicates.size() > 0) {
+						for (String internalId : itemsWithDuplicates) {
+							enqueueItemForDuplicateRemoval(internalId);
+						}
+					}
+				} catch (DataAccessException daEx) {
+					throw new RuntimeException(daEx);
+				}
 			}
 		}
 
 		resp.setHeader("Cache-Control", "no-cache");
+	}
+
+	private void enqueueItemForDuplicateRemoval(String internalId) {
+		if (LOG.isLoggable(GaeLevel.TRACE)) {
+			LOG.log(GaeLevel.TRACE, "Entering...");
+		}
+
+		try {
+			Queue queue = QueueFactory.getQueue("itempropertylookup");
+
+			TaskOptions options = TaskOptions.Builder.withUrl("/itempropertylookup").method(Method.POST);
+
+			options.param("item", internalId);
+			options.param("action", "removeDuplicates");
+
+			try {
+				queue.add(options);
+			} catch (TransientFailureException ex) {
+
+				if (LOG.isLoggable(Level.WARNING)) {
+					LOG.warning(String.format("Could not queue a message because of [%s] - will retry it once", ex.toString()));
+				}
+
+				// retry once
+				try {
+					queue.add(options);
+				} catch (TransientFailureException reEx) {
+					if (LOG.isLoggable(Level.SEVERE)) {
+						LOG.log(Level.SEVERE,
+								String.format("Retry of with payload [%s] failed while adding to queue [%s] twice", options.toString(), queue.getQueueName()),
+								reEx);
+					}
+				}
+			}
+
+		} finally {
+			if (LOG.isLoggable(GaeLevel.TRACE)) {
+				LOG.log(GaeLevel.TRACE, "Exiting...");
+			}
+		}
 	}
 
 }
