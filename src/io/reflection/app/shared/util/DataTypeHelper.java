@@ -99,4 +99,17 @@ public class DataTypeHelper {
 			});
 		}
 	}
+
+	public static void sortItemsByDate(List<Item> items) {
+		if (items != null) {
+			Collections.sort(items, new Comparator<Item>() {
+
+				@Override
+				public int compare(Item i1, Item i2) {
+					return i1.added.getTime() > i2.added.getTime() ? 1 : (i2.added.getTime() > i1.added.getTime() ? -1 : 0);
+				}
+
+			});
+		}
+	}
 }

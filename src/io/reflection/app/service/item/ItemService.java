@@ -213,7 +213,8 @@ final class ItemService implements IItemService {
 		String jsonString = (String) syncCache.get(memcacheKey);
 
 		if (jsonString == null) {
-			final String getExternalIdItemQuery = String.format("SELECT * FROM `item` WHERE `externalid`='%s' AND `deleted`='n'", addslashes(externalId));
+			final String getExternalIdItemQuery = String.format("SELECT * FROM `item` WHERE `externalid`='%s' AND `deleted`='n' ORDER BY `id` DESC LIMIT 1",
+					addslashes(externalId));
 			Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
 
 			try {
@@ -254,7 +255,8 @@ final class ItemService implements IItemService {
 		String jsonString = (String) syncCache.get(memcacheKey);
 
 		if (jsonString == null) {
-			final String getInternalIdItemQuery = String.format("SELECT * FROM `item` WHERE `internalid`='%s' and `deleted`='n'", addslashes(internalId));
+			final String getInternalIdItemQuery = String.format("SELECT * FROM `item` WHERE `internalid`='%s' AND `deleted`='n' ORDER BY `id` DESC LIMIT 1",
+					addslashes(internalId));
 
 			Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
 
@@ -644,5 +646,62 @@ final class ItemService implements IItemService {
 		}
 
 		return itemsCount;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.item.IItemService#getDuplicateItemsInternalId(io.reflection.app.api.shared.datatypes.Pager)
+	 */
+	@Override
+	public List<String> getDuplicateItemsInternalId(Pager infinitePager) throws DataAccessException {
+		// SELECT internalid FROM item
+		// GROUP BY internalid
+		// HAVING COUNT(internalid) > 1 limit 10
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.item.IItemService#removeInternalIdDuplicates(java.lang.String)
+	 */
+	@Override
+	public void removeInternalIdDuplicates(String internalId) throws DataAccessException {
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.item.IItemService#getInternalIdItemAndDuplicates(java.lang.String)
+	 */
+	@Override
+	public List<Item> getInternalIdItemAndDuplicates(String internalId) throws DataAccessException {
+		List<Item> itemAndDuplicates = new ArrayList<Item>();
+
+		final String getInternalIdItemAndDuplicatesQuery = String.format("SELECT * FROM `item` WHERE `internalid`='%s' AND `deleted`='n' ORDER BY `id` DESC",
+				addslashes(internalId));
+
+		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
+
+		try {
+			itemConnection.connect();
+			itemConnection.executeQuery(getInternalIdItemAndDuplicatesQuery);
+
+			while (itemConnection.fetchNextRow()) {
+				Item item = toItem(itemConnection);
+
+				if (item != null) {
+					itemAndDuplicates.add(item);
+				}
+			}
+		} finally {
+			if (itemConnection != null) {
+				itemConnection.disconnect();
+			}
+		}
+
+		return itemAndDuplicates;
 	}
 }
