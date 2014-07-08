@@ -79,11 +79,11 @@
     </queue>
     <queue>
         <name>itempropertylookup</name>
-        <rate>1/m</rate>
+        <rate>10/s</rate>
         <max-concurrent-requests>1</max-concurrent-requests>
         <bucket-size>1</bucket-size>
         <retry-parameters>
-            <task-retry-limit>0</task-retry-limit>
+            <task-retry-limit>5</task-retry-limit>
         </retry-parameters>
     </queue>
     <queue>
