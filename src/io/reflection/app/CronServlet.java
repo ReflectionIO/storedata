@@ -159,13 +159,22 @@ public class CronServlet extends HttpServlet {
 			}
 		} else if ("item".equals(tidy)) {
 			try {
-				List<String> itemsWithDuplicates = ItemServiceProvider.provide().getDuplicateItemsInternalId(PagerHelper.infinitePager());
+				List<String> itemsWithDuplicates = null;
+				// Pager p = new Pager();
+				// p.start = Long.valueOf(0);
+				// p.count = Long.valueOf(1000);
 
-				if (itemsWithDuplicates.size() > 0) {
+				Pager p = PagerHelper.infinitePager();
+
+//				do {
+					itemsWithDuplicates = ItemServiceProvider.provide().getDuplicateItemsInternalId(p);
+
 					for (String internalId : itemsWithDuplicates) {
 						enqueueItemForDuplicateRemoval(internalId);
 					}
-				}
+
+//					p.start = Long.valueOf(p.start.longValue() + p.count.longValue());
+//				} while (itemsWithDuplicates.size() > 0);
 			} catch (DataAccessException daEx) {
 				throw new RuntimeException(daEx);
 			}

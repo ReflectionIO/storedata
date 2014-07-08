@@ -63,6 +63,16 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+	 */
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		doGet(req, resp);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest , javax.servlet.http.HttpServletResponse)
 	 */
 	@Override
@@ -194,7 +204,8 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 				// for remove duplicates the item is expected to be the internal item id
 				List<Item> itemAndDuplicates = itemService.getInternalIdItemAndDuplicates(itemId);
 
-				if (itemAndDuplicates != null && itemAndDuplicates.size() > 0) {
+				if (itemAndDuplicates != null && itemAndDuplicates.size() > 1) {
+
 					// sort items (newest first)
 					DataTypeHelper.sortItemsByDate(itemAndDuplicates);
 
@@ -211,7 +222,7 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 						newestItem.properties = iapItem.properties;
 					}
 
-					if (englishItem != null) {
+					if (englishItem != null && englishItem != newestItem) {
 						newestItem.creatorName = englishItem.creatorName;
 						newestItem.name = englishItem.name;
 					}
@@ -263,7 +274,7 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 	private Item findIapItem(Collection<Item> items) {
 		Item iapItem = null;
 		for (Item item : items) {
-			if (item.properties != null && !"".equals(item.properties)) {
+			if (item.properties != null && !"".equals(item.properties) && !"null".equals(item.properties)) {
 				iapItem = item;
 				break;
 			}
