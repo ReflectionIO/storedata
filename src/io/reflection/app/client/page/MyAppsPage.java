@@ -123,6 +123,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
 		register(EventController.get().addHandlerToSource(GetLinkedAccountsEventHandler.TYPE, LinkedAccountController.get(), this));
+		register(EventController.get().addHandlerToSource(GetLinkedAccountItemsEventHandler.TYPE, MyAppsController.get(), this));
 
 		// boolean hasPermission = SessionController.get().loggedInUserHas(SessionController.);
 
@@ -299,6 +300,8 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 					MyAppsController.get().reset();
 				}
 			}
+		} else {
+			MyAppsController.get().reset();
 		}
 	}
 
@@ -311,7 +314,6 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	@Override
 	public void getLinkedAccountsFailure(GetLinkedAccountsRequest input, Throwable caught) {
 		MyAppsController.get().reset();
-
 	}
 
 	/*
@@ -328,6 +330,8 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 			} else {
 				simplePager.setVisible(false);
 			}
+		} else {
+			MyAppsController.get().reset();
 		}
 
 	}
@@ -341,7 +345,6 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	@Override
 	public void getLinkedAccountItemsFailure(GetLinkedAccountItemsRequest input, Throwable caught) {
 		MyAppsController.get().reset();
-
 	}
 
 }
