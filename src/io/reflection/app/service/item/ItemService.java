@@ -654,21 +654,34 @@ final class ItemService implements IItemService {
 	 * @see io.reflection.app.service.item.IItemService#getDuplicateItemsInternalId(io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
-	public List<String> getDuplicateItemsInternalId(Pager infinitePager) throws DataAccessException {
-		// SELECT internalid FROM item
-		// GROUP BY internalid
-		// HAVING COUNT(internalid) > 1 limit 10
-		return null;
-	}
+	public List<String> getDuplicateItemsInternalId(Pager pager) throws DataAccessException {
+		List<String> duplicateIntenalIds = new ArrayList<String>();
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.service.item.IItemService#removeInternalIdDuplicates(java.lang.String)
-	 */
-	@Override
-	public void removeInternalIdDuplicates(String internalId) throws DataAccessException {
+		final String getDuplicateItemsInternalIdQuery = "SELECT `internalid` FROM `item` GROUP BY `internalid` HAVING COUNT(`internalid`) > 1";
 
+		// TODO: add pager integration
+		
+		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
+
+		try {
+			itemConnection.connect();
+			itemConnection.executeQuery(getDuplicateItemsInternalIdQuery);
+
+			String internalId;
+			while (itemConnection.fetchNextRow()) {
+				internalId = itemConnection.getCurrentRowString("internalid");
+
+				if (internalId != null) {
+					duplicateIntenalIds.add(internalId);
+				}
+			}
+		} finally {
+			if (itemConnection != null) {
+				itemConnection.disconnect();
+			}
+		}
+
+		return duplicateIntenalIds;
 	}
 
 	/*
@@ -703,5 +716,15 @@ final class ItemService implements IItemService {
 		}
 
 		return itemAndDuplicates;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.item.IItemService#tidyDuplicates(io.reflection.app.datatypes.shared.Item, java.util.Collection)
+	 */
+	@Override
+	public void tidyDuplicates(Item update, Collection<Item> delete) throws DataAccessException {
+
 	}
 }

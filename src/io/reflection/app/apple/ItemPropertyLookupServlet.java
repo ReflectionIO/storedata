@@ -19,9 +19,12 @@ import io.reflection.app.service.application.ApplicationServiceProvider;
 //import io.reflection.app.service.item.IItemService;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -190,8 +193,38 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 				List<Item> itemAndDuplicates = ItemServiceProvider.provide().getInternalIdItemAndDuplicates(itemId);
 
 				if (itemAndDuplicates != null && itemAndDuplicates.size() > 0) {
-					
+					// sort items (newest first)
+					DataTypeHelper.sortItemsByDate(itemAndDuplicates);
+
+					Item newestItem = itemAndDuplicates.get(0);
+
+					// find newest item with iap (if any)
+					Item iapItem = findIapItem(itemAndDuplicates);
+
+					// find newest item with us or gb
+					Item englishItem = findUsOrGbItem(itemAndDuplicates);
+
+					// consolidate into single item (probably the first item)
+					if (iapItem != null && iapItem != newestItem) {
+						newestItem.properties = iapItem.properties;
+					}
+
+					if (englishItem != null) {
+						newestItem.creatorName = englishItem.creatorName;
+						newestItem.name = englishItem.name;
+					}
+
+					// create list of the others
+					List<Item> removeItems = new ArrayList<Item>();
+					for (Item item : itemAndDuplicates) {
+						if (item != newestItem) {
+							removeItems.add(item);
+						}
+					}
+
+					ItemServiceProvider.provide().tidyDuplicates(newestItem, removeItems);
 				}
+
 			} catch (DataAccessException e) {
 				throw new RuntimeException(e);
 			}
@@ -219,5 +252,39 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 			ApplicationServiceProvider.provide().setApplicationIap(applications.get(0), usesIap);
 		}
 
+	}
+
+	/**
+	 * 
+	 * @param items
+	 * @return
+	 */
+	private Item findIapItem(Collection<Item> items) {
+		Item iapItem = null;
+		for (Item item : items) {
+			if (item.properties != null && !"".equals(item.properties)) {
+				iapItem = item;
+				break;
+			}
+		}
+
+		return iapItem;
+	}
+
+	/**
+	 * @param items
+	 * @return
+	 */
+	private Item findUsOrGbItem(Collection<Item> items) {
+		Item usOrGbItem = null;
+
+		for (Item item : items) {
+			if ("USD".equals(item.currency) || "GBP".equals(item.currency)) {
+				usOrGbItem = item;
+				break;
+			}
+		}
+
+		return usOrGbItem;
 	}
 }
