@@ -40,11 +40,10 @@ import com.willshex.gson.json.service.shared.Response;
  */
 public class LoginPage extends Page implements NavigationEventHandler, SessionEventHandler, JsonServiceCallEventHandler {
 
-	
 	public interface Style extends CssResource {
-	    String mainPanel();
+		String mainPanel();
 	}
-	
+
 	private static LoginPageUiBinder uiBinder = GWT.create(LoginPageUiBinder.class);
 
 	interface LoginPageUiBinder extends UiBinder<Widget, LoginPage> {}
@@ -121,22 +120,8 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 
 		}
 
-		// Set proper text for Register / Request invite panel
-		// Request invite label
-		if ((previous != null && previous.getAction() != null && FormHelper.REQUEST_INVITE_ACTION_NAME.equals(previous.getAction()))
-				|| (current != null && current.getAction() != null && FormHelper.REQUEST_INVITE_ACTION_NAME.equals(current.getAction()))) {
-			register.setText("Request invite");
-			register.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken(FormHelper.REQUEST_INVITE_ACTION_NAME));
-			// Register label
-		} else {
-			register.setText("Register");
-			if (previous != null && previous.getAction() != null && FormHelper.COMPLETE_ACTION_NAME.equals(previous.getAction())
-					&& (previous.getParameter(FormHelper.CODE_PARAMETER_INDEX)) != null) {
-				register.setTargetHistoryToken(previous.toString());
-			} else {
-				register.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken());
-			}
-		}
+		register.setText("Request invite");
+		register.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken(FormHelper.REQUEST_INVITE_ACTION_NAME));
 
 	}
 
@@ -179,7 +164,7 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 	 */
 	@Override
 	public void userLoginFailed(Error error) {
-		//mLoginForm.setEnabled(true);
+		// mLoginForm.setEnabled(true);
 		preloader.hide();
 	}
 
