@@ -109,12 +109,4 @@ public interface IItemService extends IService {
 	 */
 	public List<String> getDuplicateItemsInternalId(Pager infinitePager) throws DataAccessException;
 
-	/**
-	 * 
-	 * @param update
-	 * @param delete
-	 * @throws DataAccessException
-	 */
-	public void tidyDuplicates(Item update, Collection<Item> delete) throws DataAccessException;
-
 }
