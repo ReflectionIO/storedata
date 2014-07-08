@@ -163,6 +163,7 @@ public final class Connection {
 		try {
 			if (statement == null) {
 				statement = connection.createStatement();
+//				statement.setQueryTimeout(60);
 			}
 
 			if (statement.execute(query, Statement.RETURN_GENERATED_KEYS)) {
