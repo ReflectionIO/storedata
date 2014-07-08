@@ -156,18 +156,18 @@ public class CronServlet extends HttpServlet {
 				} catch (DataAccessException daEx) {
 					throw new RuntimeException(daEx);
 				}
-			} else if ("item".equals(tidy)) {
-				try {
-					List<String> itemsWithDuplicates = ItemServiceProvider.provide().getDuplicateItemsInternalId(PagerHelper.infinitePager());
+			}
+		} else if ("item".equals(tidy)) {
+			try {
+				List<String> itemsWithDuplicates = ItemServiceProvider.provide().getDuplicateItemsInternalId(PagerHelper.infinitePager());
 
-					if (itemsWithDuplicates.size() > 0) {
-						for (String internalId : itemsWithDuplicates) {
-							enqueueItemForDuplicateRemoval(internalId);
-						}
+				if (itemsWithDuplicates.size() > 0) {
+					for (String internalId : itemsWithDuplicates) {
+						enqueueItemForDuplicateRemoval(internalId);
 					}
-				} catch (DataAccessException daEx) {
-					throw new RuntimeException(daEx);
 				}
+			} catch (DataAccessException daEx) {
+				throw new RuntimeException(daEx);
 			}
 		}
 

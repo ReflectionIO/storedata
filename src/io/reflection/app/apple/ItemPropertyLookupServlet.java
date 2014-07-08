@@ -16,13 +16,13 @@ import io.reflection.app.datatypes.shared.Item;
 //import io.reflection.app.collectors.HttpExternalGetter;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.application.ApplicationServiceProvider;
+import io.reflection.app.service.item.IItemService;
 //import io.reflection.app.service.item.IItemService;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -189,8 +189,10 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 			}
 		} else if ("removeDuplicates".equals(action)) {
 			try {
+				IItemService itemService = ItemServiceProvider.provide();
+
 				// for remove duplicates the item is expected to be the internal item id
-				List<Item> itemAndDuplicates = ItemServiceProvider.provide().getInternalIdItemAndDuplicates(itemId);
+				List<Item> itemAndDuplicates = itemService.getInternalIdItemAndDuplicates(itemId);
 
 				if (itemAndDuplicates != null && itemAndDuplicates.size() > 0) {
 					// sort items (newest first)
@@ -215,14 +217,13 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 					}
 
 					// create list of the others
-					List<Item> removeItems = new ArrayList<Item>();
 					for (Item item : itemAndDuplicates) {
-						if (item != newestItem) {
-							removeItems.add(item);
+						if (item == newestItem) {
+							itemService.updateItem(item);
+						} else {
+							itemService.deleteItem(item);
 						}
 					}
-
-					ItemServiceProvider.provide().tidyDuplicates(newestItem, removeItems);
 				}
 
 			} catch (DataAccessException e) {

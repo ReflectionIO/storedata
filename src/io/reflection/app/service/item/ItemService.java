@@ -196,8 +196,25 @@ final class ItemService implements IItemService {
 	}
 
 	@Override
-	public void deleteItem(Item item) {
-		throw new UnsupportedOperationException();
+	public void deleteItem(Item item) throws DataAccessException {
+		String deleteItemQuery = String.format("UPDATE `item` SET `deleted`='y' WHERE `id`=%d", item.id.longValue());
+
+		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+
+		try {
+			itemConnection.connect();
+			itemConnection.executeQuery(deleteItemQuery);
+
+			if (itemConnection.getAffectedRowCount() > 0) {
+				String memcacheKey = getName() + ".id." + item.id;
+				asyncCache.delete(memcacheKey);
+			}
+
+		} finally {
+			if (itemConnection != null) {
+				itemConnection.disconnect();
+			}
+		}
 	}
 
 	/*
@@ -657,10 +674,11 @@ final class ItemService implements IItemService {
 	public List<String> getDuplicateItemsInternalId(Pager pager) throws DataAccessException {
 		List<String> duplicateIntenalIds = new ArrayList<String>();
 
-		final String getDuplicateItemsInternalIdQuery = "SELECT `internalid` FROM `item` GROUP BY `internalid` HAVING COUNT(`internalid`) > 1";
+		final String getDuplicateItemsInternalIdQuery = String.format(
+				"SELECT `internalid` FROM `item` GROUP BY `internalid` HAVING COUNT(`internalid`) > 1 ORDER BY `%s` %s LIMIT %d,%d",
+				pager.sortBy == null ? "id" : pager.sortBy, pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start,
+				pager.count);
 
-		// TODO: add pager integration
-		
 		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
 
 		try {
@@ -716,15 +734,5 @@ final class ItemService implements IItemService {
 		}
 
 		return itemAndDuplicates;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.service.item.IItemService#tidyDuplicates(io.reflection.app.datatypes.shared.Item, java.util.Collection)
-	 */
-	@Override
-	public void tidyDuplicates(Item update, Collection<Item> delete) throws DataAccessException {
-
 	}
 }
