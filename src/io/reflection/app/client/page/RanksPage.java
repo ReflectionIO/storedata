@@ -16,6 +16,9 @@ import static io.reflection.app.client.controller.FilterController.GROSSING_LIST
 import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
 import static io.reflection.app.client.controller.FilterController.PAID_LIST_TYPE;
 import static io.reflection.app.client.controller.FilterController.STORE_KEY;
+import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
+import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
+import io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler;
 import io.reflection.app.client.cell.AppRankCell;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FilterController;
@@ -58,13 +61,14 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author billy1380
  * 
  */
 public class RanksPage extends Page implements FilterEventHandler, // SessionEventHandler, IsAuthorisedEventHandler,
-		NavigationEventHandler {
+		NavigationEventHandler, GetAllTopItemsEventHandler {
 
 	private static RanksPageUiBinder uiBinder = GWT.create(RanksPageUiBinder.class);
 
@@ -98,6 +102,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	@UiField LIElement mFreeItem;
 	@UiField LIElement mGrossingItem;
 	@UiField LIElement mPaidItem;
+
+	@UiField HTMLPanel showMorePanel;
 
 	private Column<RanksGroup, Rank> mGrossingColumn;
 	private Column<RanksGroup, Rank> mFreeColumn;
@@ -467,8 +473,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 				selectedTab = current.getParameter(SELECTED_TAB_PARAMETER_INDEX);
 
+				showMorePanel.setVisible(Boolean.FALSE);
 				refreshTabs();
-
 				refreshRanks();
 
 				if (FREE_LIST_TYPE.equals(selectedTab) || PAID_LIST_TYPE.equals(selectedTab) || GROSSING_LIST_TYPE.equals(selectedTab)) {
@@ -509,10 +515,35 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		// register(EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
 		// register(EventController.get().addHandlerToSource(IsAuthorisedEventHandler.TYPE, SessionController.get(), this));
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+		register(EventController.get().addHandlerToSource(GetAllTopItemsEventHandler.TYPE, RankController.get(), this));
 
 		boolean hasPermission = SessionController.get().loggedInUserHas(SessionController.FULL_RANK_VIEW_PERMISSION_ID);
 
 		mPager.setVisible(hasPermission);
 		redirect.setVisible(!hasPermission);
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler#getAllTopItemsSuccess(io.reflection.app.api.core.shared.call.GetAllTopItemsRequest
+	 * , io.reflection.app.api.core.shared.call.GetAllTopItemsResponse)
+	 */
+	@Override
+	public void getAllTopItemsSuccess(GetAllTopItemsRequest input, GetAllTopItemsResponse output) {
+		if (output.status.equals(StatusType.StatusTypeSuccess)) {
+			showMorePanel.setVisible(Boolean.TRUE);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler#getAllTopItemsFailure(io.reflection.app.api.core.shared.call.GetAllTopItemsRequest
+	 * , java.lang.Throwable)
+	 */
+	@Override
+	public void getAllTopItemsFailure(GetAllTopItemsRequest input, Throwable caught) {}
 }
