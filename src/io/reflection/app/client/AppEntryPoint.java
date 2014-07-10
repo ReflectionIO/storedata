@@ -28,7 +28,8 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 
 	static {
 		Styles.INSTANCE.reflection().ensureInjected();
-		String mediaQueries = " @media (max-width: 1024px) {." + Styles.INSTANCE.reflection().footer() + " {display:none;} .navbar-fixed-top {position:relative;} .navbar {margin-bottom:0px;}}";
+		String mediaQueries = " @media (max-width: 1024px) {." + Styles.INSTANCE.reflection().footer()
+				+ " {display:none;} .navbar-fixed-top {position:relative;} .navbar {margin-bottom:0px;} .container-fluid{padding-top:0px !important;}}";
 		StyleInjector.injectAtEnd(mediaQueries);
 	}
 
