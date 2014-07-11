@@ -8,7 +8,11 @@
 //
 package io.reflection.app.service.dataaccountfetch;
 
+import java.util.Date;
+import java.util.List;
+
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
 
@@ -49,5 +53,30 @@ public interface IDataAccountFetchService extends IService {
 	 * @throws DataAccessException
 	 */
 	public Boolean isFetchable(DataAccount dataAccount) throws DataAccessException;
+
+	/**
+	 * 
+	 * @param dataAccount
+	 * @param pager
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<DataAccountFetch> getFailedDataAccountFetches(DataAccount dataAccount, Pager pager) throws DataAccessException;
+
+	/**
+	 * 
+	 * @param dataAccount
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public Long getFailedDataAccountFetchesCount(DataAccount dataAccount) throws DataAccessException;
+
+	/**
+	 * @param dataAccount
+	 * @param date
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public DataAccountFetch getDateDataAccountFetch(DataAccount dataAccount, Date date) throws DataAccessException;
 
 }
