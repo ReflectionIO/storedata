@@ -5,10 +5,11 @@
 		type="io.reflection.app.client.part.DateSelector.DateSelectorStyle">
 		.icon {
 			display: inline-block;
-			vertical-align: middle;
+			vertical-align: top;
 			color: #6d69c5;
 			font-size: 20px;
 			margin-right: 7px;
+			margin-top: 3px;
 		}
 		
 		.pickers {
@@ -16,13 +17,13 @@
 		}
 		
 		.presets {
-			margin-left: 28px;
+			margin-left: 32px;
 			font-size: 12px;
 		}
 		
 		.preset {
-			padding-left: 2px;
-			padding-right: 2px;
+			padding-left: 6px;
+			padding-right: 6px;
 			outline: none;
 		}
 		
@@ -34,6 +35,8 @@
 		.apply {
 			margin-left: 10px;
 			vertical-align: baseline;
+			height: 34px;
+			background-color: transparent;
 		}
 		
 		.highlight {
@@ -45,7 +48,7 @@
 		</ui:style>
 	<g:HTMLPanel>
 		<g:HTMLPanel styleName="{style.pickers} hidden-xs">
-			<span class="glyphicon glyphicon-calendar {style.icon}" />
+			<span class="icon-calendar {style.icon}" />
 			<db:DateBox ui:field="dateBoxFrom"></db:DateBox>
 			<span class="{style.dateSeparator}">to</span>
 			<db:DateBox ui:field="dateBoxTo"></db:DateBox>

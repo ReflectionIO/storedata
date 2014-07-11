@@ -22,7 +22,7 @@ public class ConfirmationDialog extends PopupPanel {
 	HTMLPanel textPanel = new HTMLPanel("<h1></h1><p></p>");
 	HTMLPanel buttonsPanel = new HTMLPanel("");
 	Button cancel = new Button("Cancel");
-	Button delete = new Button("Delete <i class=\"glyphicon glyphicon-remove-circle\"></i>");
+	Button delete = new Button("Delete <span class=\"icon-cancel-1\"/>");
 
 	Long parameter = null;
 
