@@ -26,11 +26,11 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.HeadingElement;
+import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Timer;
@@ -64,7 +64,7 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 	@UiField HTMLPanel tags;
 	DivElement comments;
 
-	@UiField DivElement content;
+	@UiField ParagraphElement content;
 	@UiField ReflectionProgressBar progress;
 
 	private Long postId;
@@ -149,7 +149,7 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 		author.setInnerText(FormattingHelper.getUserName(post.author));
 
 		if (post.published != null) {
-			date.setInnerText(DateTimeFormat.getFormat(PredefinedFormat.DATE_FULL).format(post.published));
+			date.setInnerText(DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT_3).format(post.published));
 		} else {
 			date.setInnerText("TBD");
 		}

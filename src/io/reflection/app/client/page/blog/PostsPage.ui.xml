@@ -1,23 +1,32 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
-    xmlns:c="urn:import:com.google.gwt.user.cellview.client">
-    <ui:style>
-    .centered {
-    	text-align: center;
-    }
-    </ui:style>
-    <g:HTMLPanel>
-        <g:HTMLPanel styleName="container">
-            <h2>Blog</h2>
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
+	xmlns:c="urn:import:com.google.gwt.user.cellview.client" xmlns:b="urn:import:io.reflection.app.client.page.blog.part">
+	<ui:style>
+	.blogcontainer {
+		margin-top: 100px;
+	}
+	
+	.title {
+		margin-top: 0px;
+		margin-bottom: 50px;
+	}
+	
+	.posts {
+		max-width: 800px;
+	}
+	</ui:style>
+	<g:HTMLPanel>
+		<g:HTMLPanel styleName="row {style.blogcontainer}">
 
-            <div class="row">
-                <c:CellList ui:field="posts" />
-            </div>
+			<b:BlogSidePanel ui:field="blogSidePanel" styleName="col-sm-3" />
 
-            <div class="row">
-                <p:PageSizePager ui:field="pager" />
-            </div>
+			<g:HTMLPanel styleName="col-sm-8 {style.posts}">
+				<h1 class="{style.title}">The Reflection Blog</h1>
+				<c:CellList ui:field="posts" />
+				<p:PageSizePager ui:field="pager" />
+			</g:HTMLPanel>
 
-        </g:HTMLPanel>
-    </g:HTMLPanel>
+		</g:HTMLPanel>
+	</g:HTMLPanel>
 </ui:UiBinder> 

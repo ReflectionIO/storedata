@@ -14,7 +14,6 @@ import io.reflection.app.shared.util.FormattingHelper;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -39,7 +38,7 @@ public class PostSummaryCell extends AbstractCell<Post> {
 		String published = "TBD";
 
 		if (value.published != null) {
-			published = DateTimeFormat.getFormat(PredefinedFormat.DATE_FULL).format(value.published);
+			published = DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT_3).format(value.published);
 		}
 
 		RENDERER.render(builder, link, value.title, SafeHtmlUtils.fromTrustedString(value.description), FormattingHelper.getUserName(value.author), published);
