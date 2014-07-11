@@ -8,6 +8,7 @@
 //
 package io.reflection.app.service.dataaccountfetch;
 
+import java.util.Date;
 import java.util.List;
 
 import io.reflection.app.api.exception.DataAccessException;
@@ -69,5 +70,13 @@ public interface IDataAccountFetchService extends IService {
 	 * @throws DataAccessException
 	 */
 	public Long getFailedDataAccountFetchesCount(DataAccount dataAccount) throws DataAccessException;
+
+	/**
+	 * @param dataAccount
+	 * @param date
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public DataAccountFetch getDateDataAccountFetch(DataAccount dataAccount, Date date) throws DataAccessException;
 
 }

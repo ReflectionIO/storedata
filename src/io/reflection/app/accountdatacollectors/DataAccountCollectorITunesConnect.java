@@ -15,6 +15,7 @@ import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
+import io.reflection.app.helpers.ApiHelper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
 
@@ -114,12 +115,14 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 	@Override
 	public boolean collect(DataAccount dataAccount, Date date) throws DataAccessException {
 
+		date = ApiHelper.removeTime(date);
+
 		String dateParameter = (new SimpleDateFormat("yyyyMMdd")).format(date);
 
 		if (LOG.isLoggable(GaeLevel.INFO)) {
 			LOG.info(String.format("Getting data from itunes connect for data account [%d] and date [%s]", dataAccount.id.longValue(), dateParameter));
 		}
-		
+
 		boolean success = true;
 
 		URL url;
@@ -150,54 +153,68 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 				localOutputStreamWriter.flush();
 				localOutputStreamWriter.close();
 
-				DataAccountFetch dataAccountFetch = new DataAccountFetch();
-				dataAccountFetch.date = date;
-				dataAccountFetch.linkedAccount = dataAccount;
+				DataAccountFetch dataAccountFetch = DataAccountFetchServiceProvider.provide().getDateDataAccountFetch(dataAccount, date);
 
-				String error = null;
-				if ((error = connection.getHeaderField("ERRORMSG")) != null) {
-					if (LOG.isLoggable(GaeLevel.WARNING)) {
-						if (data != null) {
-							// remove the password for the purposes of logging
-							data.replace(dataAccount.password, "**********");
-						}
+				if (dataAccountFetch == null) {
+					dataAccountFetch = new DataAccountFetch();
 
-						LOG.warning(String.format("itunes connect return error message [%s] while trying to obtain data with request [%s] ", error, data));
-					}
-
-					if (error.startsWith("There are no reports")) {
-						dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeEmpty;
-					} else {
-						dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeError;
-					}
-
-					dataAccountFetch.data = error;
-				} else if (connection.getHeaderField("filename") != null) {
-					String cloudFileName = getFile(dataAccount, connection);
-
-					if (cloudFileName != null) {
-						dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered;
-						dataAccountFetch.data = cloudFileName;
-					} else {
-						dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeEmpty;
-					}
-					
-					success = true;
-				} else {
-					// this should not occur (and is more likely to be an error than an empty result)
-
-					dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeEmpty;
-					
-					success = true;
+					dataAccountFetch.date = date;
+					dataAccountFetch.linkedAccount = dataAccount;
 				}
 
-				dataAccountFetch = DataAccountFetchServiceProvider.provide().addDataAccountFetch(dataAccountFetch);
+				if (dataAccountFetch.status != DataAccountFetchStatusType.DataAccountFetchStatusTypeIngested) {
+					String error = null;
+					if ((error = connection.getHeaderField("ERRORMSG")) != null) {
+						if (LOG.isLoggable(GaeLevel.WARNING)) {
+							if (data != null) {
+								// remove the password for the purposes of logging
+								data.replace(dataAccount.password, "**********");
+							}
 
-				if (dataAccountFetch != null && dataAccountFetch.status == DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered) {
-					// once the data is collected
-					DataAccountIngestor ingestor = DataAccountIngestorFactory.getIngestorForSource(dataAccount.source.a3Code);
-					
-					ingestor.enqueue(dataAccountFetch);
+							LOG.warning(String.format("itunes connect return error message [%s] while trying to obtain data with request [%s] ", error, data));
+						}
+
+						if (error.startsWith("There are no reports") || error.startsWith("There is no report")) {
+							dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeEmpty;
+						} else {
+							dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeError;
+						}
+
+						dataAccountFetch.data = error;
+					} else if (connection.getHeaderField("filename") != null) {
+						String cloudFileName = getFile(dataAccount, connection);
+
+						if (cloudFileName != null) {
+							dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered;
+							dataAccountFetch.data = cloudFileName;
+						} else {
+							dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeEmpty;
+						}
+
+						success = true;
+					} else {
+						// this should not occur (and is more likely to be an error than an empty result)
+
+						dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeEmpty;
+
+						success = true;
+					}
+
+					if (dataAccountFetch.id == null) {
+						dataAccountFetch = DataAccountFetchServiceProvider.provide().addDataAccountFetch(dataAccountFetch);
+					} else {
+						dataAccountFetch = DataAccountFetchServiceProvider.provide().updateDataAccountFetch(dataAccountFetch);
+					}
+
+					if (dataAccountFetch != null && dataAccountFetch.status == DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered) {
+						// once the data is collected
+						DataAccountIngestor ingestor = DataAccountIngestorFactory.getIngestorForSource(dataAccount.source.a3Code);
+
+						ingestor.enqueue(dataAccountFetch);
+					}
+				} else {
+					LOG.warning(String.format("Gather for data account [%d] and date [%s] skipped because of status [%s]", dataAccount.id.longValue(),
+							dateParameter, dataAccountFetch.status));
 				}
 			}
 
@@ -205,27 +222,27 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 			LOG.log(GaeLevel.SEVERE,
 					String.format("Exception throw while obtaining file for data account [%d] and date [%s]", dataAccount.id.longValue(), dateParameter), e);
 		}
-		
+
 		return success;
 
 	}
 
-//	/**
-//	 * THIS CODE HAS TO BE REMOVED AFTER THE CLOSED BETA
-//	 * 
-//	 * @throws DataAccessException 
-//	 * 
-//	 */
-//	private void BETA_GrantAccess(DataAccount dataAccount) throws DataAccessException {
-//		User owner = UserServiceProvider.provide().getDataAccountOwner(dataAccount);
-//		
-//		Role betaUser = new Role();
-//		betaUser.id = new Long(5);
-//		
-//		if (!UserServiceProvider.provide().hasRole(owner, betaUser)) {
-//			UserServiceProvider.provide().assignRole(owner, betaUser);
-//		}
-//	}
+	// /**
+	// * THIS CODE HAS TO BE REMOVED AFTER THE CLOSED BETA
+	// *
+	// * @throws DataAccessException
+	// *
+	// */
+	// private void BETA_GrantAccess(DataAccount dataAccount) throws DataAccessException {
+	// User owner = UserServiceProvider.provide().getDataAccountOwner(dataAccount);
+	//
+	// Role betaUser = new Role();
+	// betaUser.id = new Long(5);
+	//
+	// if (!UserServiceProvider.provide().hasRole(owner, betaUser)) {
+	// UserServiceProvider.provide().assignRole(owner, betaUser);
+	// }
+	// }
 
 	/**
 	 * Gets the first vendor id in a properties string containing a json object

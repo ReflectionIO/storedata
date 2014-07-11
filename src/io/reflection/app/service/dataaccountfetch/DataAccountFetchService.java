@@ -21,6 +21,7 @@ import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.service.ServiceType;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.google.appengine.api.utils.SystemProperty;
@@ -40,7 +41,7 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 
 		Connection dataAccountFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccountFetch.toString());
 
-		String getDataAccountFetchQuery = String.format("SELECT * FROM `dataaccountfetch` WHERE `deleted`='n' AND `id`='%d' LIMIT 1", id.longValue());
+		String getDataAccountFetchQuery = String.format("SELECT * FROM `dataaccountfetch` WHERE `deleted`='n' AND `id`=%d LIMIT 1", id.longValue());
 		try {
 			dataAccountFetchConnection.connect();
 			dataAccountFetchConnection.executeQuery(getDataAccountFetchQuery);
@@ -178,9 +179,9 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 
 		Connection dataAccountFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccountFetch.toString());
 
-		String getFailedDataAccountFetchesQuery = String.format(
-				"SELECT * FROM `dataaccountfetch` WHERE `linkedaccountid`=%d AND `date` BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE() AND `deleted`='n'",
-				dataAccount.id.longValue());
+		String getFailedDataAccountFetchesQuery = String
+				.format("SELECT * FROM `dataaccountfetch` WHERE `linkedaccountid`=%d AND `status`='error' AND `date` BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE() AND `deleted`='n'",
+						dataAccount.id.longValue());
 
 		if (pager != null) {
 			String sortByQuery = "id";
@@ -201,9 +202,9 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 		}
 
 		if (pager.start != null && pager.count != null) {
-			getFailedDataAccountFetchesQuery += String.format(" LIMIT %sd, %d", pager.start.longValue(), pager.count.longValue());
+			getFailedDataAccountFetchesQuery += String.format(" LIMIT %d, %d", pager.start.longValue(), pager.count.longValue());
 		} else if (pager.count != null) {
-			getFailedDataAccountFetchesQuery += String.format(" LIMIT %d", pager.count);
+			getFailedDataAccountFetchesQuery += String.format(" LIMIT %d", pager.count.longValue());
 		}
 
 		try {
@@ -255,6 +256,36 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 		}
 
 		return failedDataAccountFetchesCount;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.dataaccountfetch.IDataAccountFetchService#getDateDataAccountFetch(io.reflection.app.datatypes.shared.DataAccount,
+	 * java.util.Date)
+	 */
+	@Override
+	public DataAccountFetch getDateDataAccountFetch(DataAccount dataAccount, Date date) throws DataAccessException {
+		DataAccountFetch dataAccountFetch = null;
+
+		Connection dataAccountFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccountFetch.toString());
+
+		String getDateDataAccountFetchQuery = String.format(
+				"SELECT * FROM `dataaccountfetch` WHERE `linkedaccountid`=%d AND `date`=FROM_UNIXTIME(%d) AND `deleted`='n' LIMIT 1",
+				dataAccount.id.longValue(), date.getTime() / 1000);
+		try {
+			dataAccountFetchConnection.connect();
+			dataAccountFetchConnection.executeQuery(getDateDataAccountFetchQuery);
+
+			if (dataAccountFetchConnection.fetchNextRow()) {
+				dataAccountFetch = toDataAccountFetch(dataAccountFetchConnection);
+			}
+		} finally {
+			if (dataAccountFetchConnection != null) {
+				dataAccountFetchConnection.disconnect();
+			}
+		}
+		return dataAccountFetch;
 	}
 
 }
