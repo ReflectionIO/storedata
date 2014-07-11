@@ -23,26 +23,40 @@
 	
 	.table {
 		margin-left: 20px;
-		margin-right: 25px;
+		margin-right: 20px;
 		margin-top: 20px;
+	}
+	
+	.all {
+		border-right: 1px solid #d9dce0 !important;
+	}
+	
+	.paid {
+		border-right: 1px solid #d9dce0 !important;
+	}
+	
+	.free {
+		border-right: 1px solid #d9dce0 !important;
 	}
 	</ui:style>
 	<g:HTMLPanel>
 
 		<div class="row">
 
-			<pp:RankSidePanel ui:field="mSidePanel" styleName="sidepanel col-md-2 well" />
+			<pp:RankSidePanel ui:field="mSidePanel"
+				styleName="sidepanel sidebar-nav col-md-3 col-lg-2 well" />
 
-			<div class="col-md-10 {style.content}">
+			<div class="col-md-9 col-lg-10 {style.content}">
 				<ul class="nav nav-tabs nav-justified ranks">
 					<li ui:field="mAllItem">
-						<g:InlineHyperlink ui:field="mAll">Overview / All</g:InlineHyperlink>
+						<g:InlineHyperlink ui:field="mAll" styleName="{style.all}">Overview
+							/ All</g:InlineHyperlink>
 					</li>
 					<li ui:field="mPaidItem">
-						<g:InlineHyperlink ui:field="mPaid">Paid</g:InlineHyperlink>
+						<g:InlineHyperlink ui:field="mPaid" styleName="{style.paid}">Paid</g:InlineHyperlink>
 					</li>
 					<li ui:field="mFreeItem">
-						<g:InlineHyperlink ui:field="mFree">Free</g:InlineHyperlink>
+						<g:InlineHyperlink ui:field="mFree" styleName="{style.free}">Free</g:InlineHyperlink>
 					</li>
 					<li ui:field="mGrossingItem">
 						<g:InlineHyperlink ui:field="mGrossing">Grossing</g:InlineHyperlink>
@@ -51,13 +65,17 @@
 
 				<div class="{style.table}">
 
-					<c:CellTable ui:field="mRanks" styleName="table table-hover table-striped" />
+					<c:CellTable ui:field="mRanks"
+						styleName="table table-hover table-striped table-rank" />
 
-					<g:HTMLPanel ui:field="showMorePanel" visible="false">
-						<p:PageSizePager ui:field="mPager" styleName="text-center"
+					<g:HTMLPanel ui:field="showMorePanel">
+						<p:PageSizePager ui:field="mPager" styleName="text-left"
 							visible="false" />
-						<div class="text-center">
-							<g:Button ui:field="redirect" styleName="btn btn-lg btn-default">Load More</g:Button>
+						<div class="text-left">
+							<g:Button ui:field="redirect" styleName="btn btn-default">
+								View More Apps
+								<span class="icon-plus" />
+							</g:Button>
 						</div>
 					</g:HTMLPanel>
 

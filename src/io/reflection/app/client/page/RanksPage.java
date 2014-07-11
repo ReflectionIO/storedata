@@ -141,7 +141,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		mRanks.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 		RankController.get().addDataDisplay(mRanks);
 		mPager.setDisplay(mRanks);
-
+		showMorePanel.setVisible(Boolean.FALSE);
 	}
 
 	private void createColumns() {
@@ -473,7 +473,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 				selectedTab = current.getParameter(SELECTED_TAB_PARAMETER_INDEX);
 
-				showMorePanel.setVisible(Boolean.FALSE);
+				showMorePanel.setVisible(showMorePanel.isVisible());
 				refreshTabs();
 				refreshRanks();
 
@@ -534,6 +534,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	public void getAllTopItemsSuccess(GetAllTopItemsRequest input, GetAllTopItemsResponse output) {
 		if (output.status.equals(StatusType.StatusTypeSuccess)) {
 			showMorePanel.setVisible(Boolean.TRUE);
+		} else {
+			showMorePanel.setVisible(Boolean.FALSE);
 		}
 	}
 
@@ -545,5 +547,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	 * , java.lang.Throwable)
 	 */
 	@Override
-	public void getAllTopItemsFailure(GetAllTopItemsRequest input, Throwable caught) {}
+	public void getAllTopItemsFailure(GetAllTopItemsRequest input, Throwable caught) {
+		showMorePanel.setVisible(Boolean.FALSE);
+	}
 }
