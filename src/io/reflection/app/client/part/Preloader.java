@@ -10,6 +10,7 @@ package io.reflection.app.client.part;
 import java.util.Iterator;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
@@ -28,14 +29,30 @@ public class Preloader extends Composite implements HasWidgets {
 	interface PreloaderUiBinder extends UiBinder<Widget, Preloader> {}
 
 	@UiField HTMLPanel wrapperPanel;
-
 	@UiField HTMLPanel content;
+
+	interface PreloaderStyle extends CssResource {
+		String opaque();
+
+		String transparent();
+	}
+
+	@UiField PreloaderStyle style;
 
 	public Preloader() {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
 	public void show() {
+		show(Boolean.FALSE);
+	}
+
+	public void show(boolean transparent) {
+		if (transparent) {
+			content.addStyleName(style.transparent());
+		} else {
+			content.addStyleName(style.opaque());
+		}
 		content.setVisible(Boolean.TRUE);
 	}
 
