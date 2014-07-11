@@ -1,47 +1,62 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.user.datepicker.client"
-    xmlns:p="urn:import:io.reflection.app.client.part">
-    <ui:style>
-    .filters {
-    	position: relative;
-    	padding-left: 15px;
-    }
-    
-    .rightSpace {
-    	margin-left: 10px;
-    	margin-bottom: 5px;
-    }
-    </ui:style>
-    <g:HTMLPanel styleName="well well-sm">
-        <g:HTMLPanel styleName="row">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.user.datepicker.client"
+	xmlns:p="urn:import:io.reflection.app.client.part">
+	<ui:style>
+	.filters {
+		position: relative;
+	}
+	
+	.dateSel {
+		display: inline-block;
+		width: 15px;
+	}
+	
+	.store {
+		display: inline-block;
+		width: 15px;
+	}
+	</ui:style>
+	<g:HTMLPanel styleName="well well-sm">
+		<g:HTMLPanel styleName="row">
 
-            <g:FormPanel styleName="form-inline">
+			<g:FormPanel styleName="form-inline">
 
-                <g:HTMLPanel styleName="pull-left  {style.filters}">
+				<g:HTMLPanel styleName="pull-left  {style.filters}">
 
-                    <div class="form-group {style.rightSpace}">
-                        <p:DateSelector ui:field="dateSelector" />
-                    </div>
+					<div class="form-group">
+						<p:DateSelector ui:field="dateSelector" />
+					</div>
 
-                    <div class="form-group {style.rightSpace}">
-                        <g:ListBox styleName="form-control" ui:field="mAppStore" />
-                    </div>
+					<div class="{style.dateSel} hidden-xs" />
+					<div class="{style.dateSel} hidden-xs hidden-sm hidden-md" />
 
-                    <div class="form-group {style.rightSpace}">
-                        <g:ListBox styleName="form-control" ui:field="mCountry" />
-                    </div>
+					<div class="form-group">
+						<g:ListBox styleName="form-control" ui:field="mAppStore" />
+					</div>
 
-                    <!-- <div class="btn-group btn-group-xs"> <g:InlineHyperlink ui:field="m1Month" styleName="btn btn-default active">1m</g:InlineHyperlink> <g:InlineHyperlink 
-                        ui:field="m3Months" styleName="btn btn-default">3m</g:InlineHyperlink> <g:InlineHyperlink ui:field="m6Months" styleName="btn btn-default">6m</g:InlineHyperlink> <g:InlineHyperlink 
-                        ui:field="m1Year" styleName="btn btn-default">1y</g:InlineHyperlink> <g:InlineHyperlink ui:field="mAllTime" styleName="btn btn-default">All</g:InlineHyperlink> </div> 
-                        <div class="btn-group btn-group-xs"> <g:InlineHyperlink ui:field="mStandard" styleName="btn btn-default active"> <span class="caret"></span> Standard </g:InlineHyperlink> 
-                        <g:InlineHyperlink ui:field="mCumulative" styleName="btn btn-default">Cumulative</g:InlineHyperlink> </div> -->
+					<div class="{style.store} hidden-xs" />
 
-                </g:HTMLPanel>
+					<div class="form-group">
+						<g:ListBox styleName="form-control" ui:field="mCountry" />
+					</div>
 
-            </g:FormPanel>
+					<!-- <div class="btn-group btn-group-xs"> <g:InlineHyperlink ui:field="m1Month" 
+						styleName="btn btn-default active">1m</g:InlineHyperlink> <g:InlineHyperlink 
+						ui:field="m3Months" styleName="btn btn-default">3m</g:InlineHyperlink> <g:InlineHyperlink 
+						ui:field="m6Months" styleName="btn btn-default">6m</g:InlineHyperlink> <g:InlineHyperlink 
+						ui:field="m1Year" styleName="btn btn-default">1y</g:InlineHyperlink> <g:InlineHyperlink 
+						ui:field="mAllTime" styleName="btn btn-default">All</g:InlineHyperlink> </div> 
+						<div class="btn-group btn-group-xs"> <g:InlineHyperlink ui:field="mStandard" 
+						styleName="btn btn-default active"> <span class="caret"></span> Standard 
+						</g:InlineHyperlink> <g:InlineHyperlink ui:field="mCumulative" styleName="btn 
+						btn-default">Cumulative</g:InlineHyperlink> </div> -->
 
-        </g:HTMLPanel>
+				</g:HTMLPanel>
 
-    </g:HTMLPanel>
+			</g:FormPanel>
+
+		</g:HTMLPanel>
+
+	</g:HTMLPanel>
 </ui:UiBinder> 
