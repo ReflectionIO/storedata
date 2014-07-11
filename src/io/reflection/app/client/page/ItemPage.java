@@ -420,7 +420,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 			historyChart.setLoading(true);
 			// loader.setVisible(true);
-			preloader.show();
+			preloader.show(Boolean.TRUE);
 
 			if (LinkedAccountController.get().getLinkedAccountItem(item) != null) {
 				RankController.get().fetchItemSalesRanks(item);
@@ -486,7 +486,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	 * GetItemSalesRanksRequest, java.lang.Throwable)
 	 */
 	@Override
-	public void getItemSalesRanksFailure(GetItemSalesRanksRequest input, Throwable caught) {}
+	public void getItemSalesRanksFailure(GetItemSalesRanksRequest input, Throwable caught) {
+		preloader.hide();
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -502,6 +504,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			} else {
 				RankController.get().fetchItemSalesRanks(item);
 			}
+		} else {
+			preloader.hide();
 		}
 	}
 
@@ -512,6 +516,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	 * GetLinkedAccountItemRequest, java.lang.Throwable)
 	 */
 	@Override
-	public void getLinkedAccountItemFailure(GetLinkedAccountItemRequest input, Throwable caught) {}
+	public void getLinkedAccountItemFailure(GetLinkedAccountItemRequest input, Throwable caught) {
+		preloader.hide();
+	}
 
 }
