@@ -1,52 +1,59 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
-    
-    <ui:import field="io.reflection.app.client.page.PageType.ForgotPasswordPageType" />
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
-    <ui:style>
-    .passwordLink {
-    	font-weight: 400;
-    	font-size: 14px;
-    	font-family: 'Lato', sans-serif;
-    	line-height: 22px;
-    }
-    </ui:style>
-    <g:HTMLPanel>
-        <g:FormPanel ui:field="mForm" styleName="form">
+	<ui:import
+		field="io.reflection.app.client.page.PageType.ForgotPasswordPageType" />
 
-            <g:HTMLPanel>
+	<ui:style>
+	.passwordLink {
+		font-weight: 400;
+		font-size: 14px;
+		font-family: 'Lato', sans-serif;
+		line-height: 22px;
+	}
+	</ui:style>
+	<g:HTMLPanel>
+		<g:FormPanel ui:field="mForm" styleName="form">
 
-                <g:HTMLPanel ui:field="mEmailGroup" styleName="form-group">
-                    <label>Email Address</label>
-                    <g:TextBox styleName="form-control" ui:field="mEmail" />
-                    <g:HTMLPanel styleName="noteDetail" ui:field="mEmailNote" visible="false" />
-                </g:HTMLPanel>
+			<g:HTMLPanel>
 
-                <g:HTMLPanel ui:field="mPasswordGroup" styleName="form-group">
-                    <label>Password</label>
-                    <g:PasswordTextBox styleName="form-control" ui:field="mPassword" />
-                    <g:HTMLPanel styleName="noteDetail" ui:field="mPasswordNote" visible="false" />
-                </g:HTMLPanel>
+				<g:HTMLPanel ui:field="mEmailGroup" styleName="form-group">
+					<label>Email Address</label>
+					<g:TextBox styleName="form-control" ui:field="mEmail" />
+					<g:HTMLPanel styleName="noteDetail" ui:field="mEmailNote"
+						visible="false" />
+				</g:HTMLPanel>
 
-                <g:HTMLPanel>
-                    <g:CheckBox ui:field="mRememberMe">
-                        Remember me
-                    </g:CheckBox>
-                </g:HTMLPanel>
+				<g:HTMLPanel ui:field="mPasswordGroup" styleName="form-group">
+					<label>Password</label>
+					<g:PasswordTextBox styleName="form-control"
+						ui:field="mPassword" />
+					<g:HTMLPanel styleName="noteDetail" ui:field="mPasswordNote"
+						visible="false" />
+				</g:HTMLPanel>
 
-                <g:Button ui:field="mLogin" styleName="btn btn-lg btn-primary btn-block">
-                    Log In
-                </g:Button>
+				<g:HTMLPanel>
+					<g:CheckBox ui:field="mRememberMe">
+						Remember me
+					</g:CheckBox>
+				</g:HTMLPanel>
 
-                <p class="text-center p-small">
-                    I've forgotten my
-                    <g:InlineHyperlink ui:field="mForgotPassword" targetHistoryToken="{ForgotPasswordPageType.asTargetHistoryToken}">
-                        <span class="p-small">Password</span>
-                    </g:InlineHyperlink>
-                </p>
+				<g:Button ui:field="mLogin" styleName="btn btn-lg btn-primary btn-block">
+					Log In
+					<span class="icon-login" />
+				</g:Button>
 
-            </g:HTMLPanel>
-        </g:FormPanel>
+				<p class="text-center p-small">
+					I've forgotten my
+					<g:InlineHyperlink ui:field="mForgotPassword"
+						targetHistoryToken="{ForgotPasswordPageType.asTargetHistoryToken}">
+						<span class="p-small">Password</span>
+					</g:InlineHyperlink>
+				</p>
 
-    </g:HTMLPanel>
+			</g:HTMLPanel>
+		</g:FormPanel>
+
+	</g:HTMLPanel>
 </ui:UiBinder> 

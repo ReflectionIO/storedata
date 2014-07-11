@@ -9,7 +9,7 @@ package io.reflection.app.client.part.login;
 
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.FormHelper;
-import io.reflection.app.client.res.Images;
+import io.reflection.app.client.page.PageType;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -22,6 +22,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -36,21 +37,19 @@ public class ForgotPasswordForm extends Composite {
 	interface ForgotPasswordFormUiBinder extends UiBinder<Widget, ForgotPasswordForm> {}
 	
 	@UiField FormPanel mForm;
-	
+	@UiField InlineHyperlink tryAgainLink;
 	@UiField TextBox mEmail;
 	@UiField HTMLPanel mEmailGroup;
 	@UiField HTMLPanel mEmailNote;
 	private String mEmailError = null;
-	
+
 	@UiField Button mSubmit;
 
-	final String imageButtonLink = "<img style=\"vertical-align: 1px;\" src=\"" + Images.INSTANCE.buttonArrowWhite().getSafeUri().asString() + "\"/>";
-	
 	public ForgotPasswordForm() {
 		initWidget(uiBinder.createAndBindUi(this));
-		
+
+		tryAgainLink.setTargetHistoryToken(PageType.LoginPageType.asTargetHistoryToken("requestinvite"));
 		mEmail.getElement().setAttribute("placeholder", "Email");
-		mSubmit.setHTML(mSubmit.getText() + "&nbsp;&nbsp;" + imageButtonLink);
 	}
 
 	@UiHandler("mSubmit")
@@ -63,8 +62,10 @@ public class ForgotPasswordForm extends Composite {
 			FormHelper.showNote(true, mEmailGroup, mEmailNote, mEmailError);
 		}
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
 	 */
 	@Override

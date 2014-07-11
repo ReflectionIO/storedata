@@ -9,7 +9,6 @@ package io.reflection.app.client.part.login;
 
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.FormHelper;
-import io.reflection.app.client.res.Images;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -52,12 +51,8 @@ public class LoginForm extends Composite {
 
 	@UiField Button mLogin;
 
-	final String imageButtonLink = "<img style=\"vertical-align: -2px;\" src=\"" + Images.INSTANCE.buttonLogin().getSafeUri().asString() + "\"/>";
-
 	public LoginForm() {
 		initWidget(uiBinder.createAndBindUi(this));
-
-		mLogin.setHTML(mLogin.getText() + "&nbsp;&nbsp;" + imageButtonLink);
 
 		mEmail.getElement().setAttribute("placeholder", "Email");
 		mPassword.getElement().setAttribute("placeholder", "Password");
