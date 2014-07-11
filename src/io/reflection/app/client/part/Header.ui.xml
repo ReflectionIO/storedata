@@ -69,7 +69,7 @@
 	}
 	
 	.searchBox 
-												            .form-control {
+													            .form-control {
 		border-radius: 4px 0 0 4px;
 		background-color: #080808;
 		color: white;
@@ -233,7 +233,8 @@
 				</li>
 			</ul>
 
-			<ul class="nav navbar-nav navbar-right" ui:field="search">
+			<ul class="nav navbar-nav navbar-right hidden-xs hidden-sm"
+				ui:field="search">
 				<li>
 					<span class="navbar-text {style.searchBox}">
 						Search Coming Soon

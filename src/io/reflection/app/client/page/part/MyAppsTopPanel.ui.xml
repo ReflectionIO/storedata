@@ -12,7 +12,7 @@
 	
 	.filters {
 		position: relative;
-		padding-right: 15px;
+		padding-right: 4px;
 	}
 	
 	.store {
@@ -55,7 +55,7 @@
 						<g:ListBox styleName="form-control" ui:field="country" />
 					</div>
 
-					<div class="{style.dateSel} hidden-xs" />
+					<div class="{style.dateSel} hidden-xs hidden-sm" />
 					<div class="{style.dateSel} hidden-xs hidden-sm hidden-md" />
 
 					<div class="form-group">
