@@ -54,6 +54,13 @@ public interface IItemService extends IService {
 	public Item getInternalIdItem(String internalId) throws DataAccessException;
 
 	/**
+	 * @param internalId
+	 * @param includeDuplicates
+	 * @return
+	 */
+	public List<Item> getInternalIdItemAndDuplicates(String internalId) throws DataAccessException;
+
+	/**
 	 * @param itemIds
 	 * @return
 	 */
@@ -95,5 +102,11 @@ public interface IItemService extends IService {
 	 * @return
 	 */
 	public Long getItemsCount() throws DataAccessException;
+
+	/**
+	 * @param infinitePager
+	 * @return
+	 */
+	public List<String> getDuplicateItemsInternalId(Pager infinitePager) throws DataAccessException;
 
 }

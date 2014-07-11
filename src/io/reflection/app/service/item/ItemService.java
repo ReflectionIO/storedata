@@ -196,8 +196,25 @@ final class ItemService implements IItemService {
 	}
 
 	@Override
-	public void deleteItem(Item item) {
-		throw new UnsupportedOperationException();
+	public void deleteItem(Item item) throws DataAccessException {
+		String deleteItemQuery = String.format("UPDATE `item` SET `deleted`='y' WHERE `id`=%d", item.id.longValue());
+
+		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+
+		try {
+			itemConnection.connect();
+			itemConnection.executeQuery(deleteItemQuery);
+
+			if (itemConnection.getAffectedRowCount() > 0) {
+				String memcacheKey = getName() + ".id." + item.id;
+				asyncCache.delete(memcacheKey);
+			}
+
+		} finally {
+			if (itemConnection != null) {
+				itemConnection.disconnect();
+			}
+		}
 	}
 
 	/*
@@ -213,7 +230,8 @@ final class ItemService implements IItemService {
 		String jsonString = (String) syncCache.get(memcacheKey);
 
 		if (jsonString == null) {
-			final String getExternalIdItemQuery = String.format("SELECT * FROM `item` WHERE `externalid`='%s' AND `deleted`='n'", addslashes(externalId));
+			final String getExternalIdItemQuery = String.format("SELECT * FROM `item` WHERE `externalid`='%s' AND `deleted`='n' ORDER BY `id` DESC LIMIT 1",
+					addslashes(externalId));
 			Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
 
 			try {
@@ -254,7 +272,8 @@ final class ItemService implements IItemService {
 		String jsonString = (String) syncCache.get(memcacheKey);
 
 		if (jsonString == null) {
-			final String getInternalIdItemQuery = String.format("SELECT * FROM `item` WHERE `internalid`='%s' and `deleted`='n'", addslashes(internalId));
+			final String getInternalIdItemQuery = String.format("SELECT * FROM `item` WHERE `internalid`='%s' AND `deleted`='n' ORDER BY `id` DESC LIMIT 1",
+					addslashes(internalId));
 
 			Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
 
@@ -644,5 +663,78 @@ final class ItemService implements IItemService {
 		}
 
 		return itemsCount;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.item.IItemService#getDuplicateItemsInternalId(io.reflection.app.api.shared.datatypes.Pager)
+	 */
+	@Override
+	public List<String> getDuplicateItemsInternalId(Pager pager) throws DataAccessException {
+		List<String> duplicateIntenalIds = new ArrayList<String>();
+
+		final String getDuplicateItemsInternalIdQuery = String.format(
+//				"SELECT `internalid` FROM `item` GROUP BY `internalid` HAVING COUNT(`internalid`) > 1 ORDER BY `%s` %s LIMIT %d,%d",
+//				"SELECT `internalid`, count(1) as `count` FROM `item` WHERE `deleted`='n' GROUP BY `internalid` HAVING `count` > 1 ORDER BY `%s` %s LIMIT %d,%d",
+				"SELECT `internalid`, count(1) as `count` FROM `item` GROUP BY `internalid` HAVING `count` > 1 ORDER BY `%s` %s LIMIT %d,%d",
+				pager.sortBy == null ? "id" : pager.sortBy, pager.sortDirection == SortDirectionType.SortDirectionTypeDescending ? "DESC" : "ASC", pager.start,
+				pager.count);
+
+		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
+
+		try {
+			itemConnection.connect();
+			itemConnection.executeQuery(getDuplicateItemsInternalIdQuery);
+
+			String internalId;
+			while (itemConnection.fetchNextRow()) {
+				internalId = itemConnection.getCurrentRowString("internalid");
+
+				if (internalId != null) {
+					duplicateIntenalIds.add(internalId);
+				}
+			}
+		} finally {
+			if (itemConnection != null) {
+				itemConnection.disconnect();
+			}
+		}
+
+		return duplicateIntenalIds;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.item.IItemService#getInternalIdItemAndDuplicates(java.lang.String)
+	 */
+	@Override
+	public List<Item> getInternalIdItemAndDuplicates(String internalId) throws DataAccessException {
+		List<Item> itemAndDuplicates = new ArrayList<Item>();
+
+		final String getInternalIdItemAndDuplicatesQuery = String.format("SELECT * FROM `item` WHERE `internalid`='%s' AND `deleted`='n' ORDER BY `id` DESC",
+				addslashes(internalId));
+
+		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
+
+		try {
+			itemConnection.connect();
+			itemConnection.executeQuery(getInternalIdItemAndDuplicatesQuery);
+
+			while (itemConnection.fetchNextRow()) {
+				Item item = toItem(itemConnection);
+
+				if (item != null && "n".equals(item.deleted)) {
+					itemAndDuplicates.add(item);
+				}
+			}
+		} finally {
+			if (itemConnection != null) {
+				itemConnection.disconnect();
+			}
+		}
+
+		return itemAndDuplicates;
 	}
 }
