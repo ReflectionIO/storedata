@@ -1,270 +1,270 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+    xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
-	<ui:import field="io.reflection.app.client.page.PageType.ForumPageType" />
-	<ui:import field="io.reflection.app.client.page.PageType.BlogPostsPageType" />
-	<ui:import field="io.reflection.app.client.page.PageType.UpgradePageType" />
-	<ui:import field="io.reflection.app.client.page.PageType.FeedBrowserPageType" />
-	<ui:import field="io.reflection.app.client.page.PageType.UsersPageType" />
-	<ui:import field="io.reflection.app.client.page.PageType.RolesPageType" />
-	<ui:import field="io.reflection.app.client.page.PageType.PermissionsPageType" />
-	<ui:import
-		field="io.reflection.app.client.page.PageType.EmailTemplatesPageType" />
-	<ui:import field="io.reflection.app.client.page.PageType.BlogAdminPageType" />
-	<ui:import field="io.reflection.app.client.page.PageType.RegisterPageType" />
-	<ui:import field="io.reflection.app.client.page.PageType.LoginPageType" />
-	<ui:import field="io.reflection.app.client.page.PageType.SearchPageType" />
-	<ui:import field="io.reflection.app.client.page.PageType.HomePageType" />
-	<ui:import field="io.reflection.app.client.page.PageType.ItemsPageType" />
+    <ui:import field="io.reflection.app.client.page.PageType.ForumPageType" />
+    <ui:import field="io.reflection.app.client.page.PageType.BlogPostsPageType" />
+    <ui:import field="io.reflection.app.client.page.PageType.UpgradePageType" />
+    <ui:import field="io.reflection.app.client.page.PageType.FeedBrowserPageType" />
+    <ui:import field="io.reflection.app.client.page.PageType.UsersPageType" />
+    <ui:import field="io.reflection.app.client.page.PageType.RolesPageType" />
+    <ui:import field="io.reflection.app.client.page.PageType.PermissionsPageType" />
+    <ui:import
+        field="io.reflection.app.client.page.PageType.EmailTemplatesPageType" />
+    <ui:import field="io.reflection.app.client.page.PageType.BlogAdminPageType" />
+    <ui:import field="io.reflection.app.client.page.PageType.RegisterPageType" />
+    <ui:import field="io.reflection.app.client.page.PageType.LoginPageType" />
+    <ui:import field="io.reflection.app.client.page.PageType.SearchPageType" />
+    <ui:import field="io.reflection.app.client.page.PageType.HomePageType" />
+    <ui:import field="io.reflection.app.client.page.PageType.ItemsPageType" />
 
-	<ui:with field="res" type='io.reflection.app.client.res.Images' />
-	<ui:with field="global" type="io.reflection.app.client.res.Styles" />
+    <ui:with field="res" type='io.reflection.app.client.res.Images' />
+    <ui:with field="global" type="io.reflection.app.client.res.Styles" />
 
-	<ui:style>
-	.searchBox {
-		margin-top: 5px;
-		margin-right: 24px;
-		height: 40px;
-		background-color: #21222b;
-		padding-top: 10px;
-		padding-left: 16px;
-		padding-right: 10px;
-		color: #6b6c7c !important;
-	}
-	
-	.searchIcon {
-		margin-left: 16px;
-	}
-	
-	.collapseMobile {
-		padding-left: 0px;
-		padding-right: 0px;
-		border: none;
-		box-shadow: none;
-	}
-	
-	.loginMobile {
-		margin-top: -10px;
-	}
-	
-	.loginMobile li a {
-		padding-top: 25px;
-		padding-bottom: 15px;
-		padding-left: 30px !important;
-		padding-right: 28px !important;
-	}
-	
-	.loginMobile li a i {
-		padding-right: 4px;
-	}
-	
-	<!--
-	@external btn, form-control;
-	.searchBox .btn {
-		border-radius: 0 4px 4px 0;
-		background-color: #080808;
-		color: white;
-		border-color: #080808;
-	}
-	
-	.searchBox 
-													            .form-control {
-		border-radius: 4px 0 0 4px;
-		background-color: #080808;
-		color: white;
-		border-color: #080808;
-	}
-	
-	.searchBox .form-control:focus {
-		border-color: #6D69C5;
-	}
-	
-	.searchBox span {
-		float: left;
-	}
-	-->
-	</ui:style>
+    <ui:style>
+    .searchBox {
+        margin-top: 5px;
+        margin-right: 24px;
+        height: 40px;
+        background-color: #21222b;
+        padding-top: 10px;
+        padding-left: 16px;
+        padding-right: 10px;
+        color: #6b6c7c !important;
+    }
+    
+    .searchIcon {
+        margin-left: 16px;
+    }
+    
+    .collapseMobile {
+        padding-left: 0px;
+        padding-right: 0px;
+        border: none;
+        box-shadow: none;
+    }
+    
+    .loginMobile {
+        margin-top: -10px;
+    }
+    
+    .loginMobile li a {
+        padding-top: 25px;
+        padding-bottom: 15px;
+        padding-left: 30px !important;
+        padding-right: 28px !important;
+    }
+    
+    .loginMobile li a i {
+        padding-right: 4px;
+    }
+    
+    <!--
+    @external btn, form-control;
+    .searchBox .btn {
+        border-radius: 0 4px 4px 0;
+        background-color: #080808;
+        color: white;
+        border-color: #080808;
+    }
+    
+    .searchBox 
+                                                                .form-control {
+        border-radius: 4px 0 0 4px;
+        background-color: #080808;
+        color: white;
+        border-color: #080808;
+    }
+    
+    .searchBox .form-control:focus {
+        border-color: #6D69C5;
+    }
+    
+    .searchBox span {
+        float: left;
+    }
+    -->
+    </ui:style>
 
-	<g:HTMLPanel ui:field="pnlHeader"
-		styleName="{global.reflection.header} navbar navbar-inverse navbar-fixed-top">
+    <g:HTMLPanel ui:field="pnlHeader"
+        styleName="{global.reflection.header} navbar navbar-inverse navbar-fixed-top">
 
-		<!-- Logo -->
-		<div class="navbar-header">
-			<g:Button ui:field="collapseButton" styleName="navbar-toggle">
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</g:Button>
-			<a class="navbar-brand" href="{HomePageType.asHref}">
-				<g:Image resource="{res.reflectionLogoBeta}" />
-			</a>
-		</div>
+        <!-- Logo -->
+        <div class="navbar-header">
+            <g:Button ui:field="collapseButton" styleName="navbar-toggle">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </g:Button>
+            <a class="navbar-brand" href="{HomePageType.asHref}">
+                <g:Image resource="{res.reflectionLogoBeta}" />
+            </a>
+        </div>
 
-		<div class="{style.collapseMobile} collapse navbar-collapse "
-			ui:field="collapsableNavBar">
+        <div class="{style.collapseMobile} collapse navbar-collapse "
+            ui:field="collapsableNavBar">
 
-			<ul class="nav navbar-nav" ui:field="navList">
-				<li ui:field="ranksItem">
-					<g:InlineHyperlink ui:field="ranksLink">Leaderboard</g:InlineHyperlink>
-				</li>
+            <ul class="nav navbar-nav" ui:field="navList">
+                <li ui:field="ranksItem">
+                    <g:InlineHyperlink ui:field="ranksLink">Leaderboard</g:InlineHyperlink>
+                </li>
 
-				<!-- My Account Panel -->
-				<ul class="nav navbar-nav" ui:field="myAccountList">
+                <!-- My Account Panel -->
+                <ul class="nav navbar-nav" ui:field="myAccountList">
 
-					<li ui:field="myAccountDropdown" class="dropdown">
-						<g:Anchor styleName="dropdown-toggle" ui:field="accountButton">
-							My Account
-							<span class="caret headerCaret"></span>
-						</g:Anchor>
-						<ul class="dropdown-menu">
-							<li ui:field="myAppsItem">
-								<g:InlineHyperlink ui:field="myAppsLink">
-									<i class="glyphicon glyphicon-th"></i>
-									My Apps
-								</g:InlineHyperlink>
-							</li>
-							<li ui:field="linkedAccountsItem">
-								<g:InlineHyperlink ui:field="linkedAccountsLink">
-									<i class="glyphicon glyphicon-link"></i>
-									Linked Accounts
-								</g:InlineHyperlink>
-							</li>
-							<li ui:field="personalDetailsItem">
-								<g:InlineHyperlink ui:field="personalDetailsLink">
-									<i class="glyphicon glyphicon-user"></i>
-									Personal Details
-								</g:InlineHyperlink>
-							</li>
-							<li ui:field="changePasswordItem">
-								<g:InlineHyperlink ui:field="changePasswordLink">
-									<i class="glyphicon glyphicon-lock"></i>
-									Change Password
-								</g:InlineHyperlink>
-							</li>
-						</ul>
-					</li>
-				</ul>
+                    <li ui:field="myAccountDropdown" class="dropdown">
+                        <g:Anchor styleName="dropdown-toggle" ui:field="accountButton">
+                            My Account
+                            <span class="caret headerCaret"></span>
+                        </g:Anchor>
+                        <ul class="dropdown-menu">
+                            <li ui:field="myAppsItem">
+                                <g:InlineHyperlink ui:field="myAppsLink">
+                                    <i class="glyphicon glyphicon-th"></i>
+                                    My Apps
+                                </g:InlineHyperlink>
+                            </li>
+                            <li ui:field="linkedAccountsItem">
+                                <g:InlineHyperlink ui:field="linkedAccountsLink">
+                                    <i class="glyphicon glyphicon-link"></i>
+                                    Linked Accounts
+                                </g:InlineHyperlink>
+                            </li>
+                            <li ui:field="personalDetailsItem">
+                                <g:InlineHyperlink ui:field="personalDetailsLink">
+                                    <i class="glyphicon glyphicon-user"></i>
+                                    Personal Details
+                                </g:InlineHyperlink>
+                            </li>
+                            <li ui:field="changePasswordItem">
+                                <g:InlineHyperlink ui:field="changePasswordLink">
+                                    <i class="glyphicon glyphicon-lock"></i>
+                                    Change Password
+                                </g:InlineHyperlink>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
 
-				<li ui:field="blogItem">
-					<g:InlineHyperlink ui:field="blogLink"
-						targetHistoryToken="{BlogPostsPageType.asTargetHistoryToken}">Blog</g:InlineHyperlink>
-				</li>
+                <li ui:field="blogItem">
+                    <g:InlineHyperlink ui:field="blogLink"
+                        targetHistoryToken="{BlogPostsPageType.asTargetHistoryToken}">Blog</g:InlineHyperlink>
+                </li>
 
-				<li ui:field="forumItem">
-					<g:InlineHyperlink ui:field="forumLink"
-						targetHistoryToken="{ForumPageType.asTargetHistoryToken}">Forum</g:InlineHyperlink>
-				</li>
+                <li ui:field="forumItem">
+                    <g:InlineHyperlink ui:field="forumLink"
+                        targetHistoryToken="{ForumPageType.asTargetHistoryToken}">Forum</g:InlineHyperlink>
+                </li>
 
-				<!-- <li ui:field="upgradeAccountItem"> <g:InlineHyperlink targetHistoryToken="{UpgradePageType.asTargetHistoryToken}" 
-					ui:field="upgradeAccountLink" text="Pricing" /> </li> -->
-			</ul>
+                <!-- <li ui:field="upgradeAccountItem"> <g:InlineHyperlink targetHistoryToken="{UpgradePageType.asTargetHistoryToken}" 
+                    ui:field="upgradeAccountLink" text="Pricing" /> </li> -->
+            </ul>
 
-			<!-- Admin panel -->
-			<ul class="nav navbar-nav" ui:field="adminList">
-				<li ui:field="adminDropdown" class="dropdown">
-					<g:Anchor styleName="dropdown-toggle" ui:field="adminButton">
-						Admin
-						<span class="caret"></span>
-					</g:Anchor>
-					<ul class="dropdown-menu">
-						<li ui:field="feedBrowserItem">
-							<g:InlineHyperlink ui:field="feedBrowserLink"
-								targetHistoryToken="{FeedBrowserPageType.asTargetHistoryToken}">Feed Browser</g:InlineHyperlink>
-						</li>
-						<li ui:field="itemsItem">
-							<g:InlineHyperlink ui:field="itemsLink"
-								targetHistoryToken="{ItemsPageType.asTargetHistoryToken}">Items</g:InlineHyperlink>
-						</li>
-						<li class="divider-horizontal-header"></li>
-						<li ui:field="usersItem">
-							<g:InlineHyperlink ui:field="usersLink"
-								targetHistoryToken="{UsersPageType.asTargetHistoryToken}">
-								Users
-								<span ui:field="totalUsers" class="badge">1+</span>
-							</g:InlineHyperlink>
-						</li>
-						<li ui:field="rolesItem">
-							<g:InlineHyperlink ui:field="rolesLink"
-								targetHistoryToken="{RolesPageType.asTargetHistoryToken}">Roles</g:InlineHyperlink>
-						</li>
-						<li ui:field="permissionsItem">
-							<g:InlineHyperlink ui:field="permissionsLink"
-								targetHistoryToken="{PermissionsPageType.asTargetHistoryToken}">Permissions</g:InlineHyperlink>
-						</li>
-						<li class="divider-horizontal-header"></li>
-						<li ui:field="emailTemplatesItem">
-							<g:InlineHyperlink ui:field="emailTemplatesLink"
-								targetHistoryToken="{EmailTemplatesPageType.asTargetHistoryToken}">Email Templates</g:InlineHyperlink>
-						</li>
-						<li ui:field="blogAdminItem">
-							<g:InlineHyperlink ui:field="blogAdminLink"
-								targetHistoryToken="{BlogAdminPageType.asTargetHistoryToken}">Blog</g:InlineHyperlink>
-						</li>
-					</ul>
-				</li>
-			</ul>
+            <!-- Admin panel -->
+            <ul class="nav navbar-nav" ui:field="adminList">
+                <li ui:field="adminDropdown" class="dropdown">
+                    <g:Anchor styleName="dropdown-toggle" ui:field="adminButton">
+                        Admin
+                        <span class="caret"></span>
+                    </g:Anchor>
+                    <ul class="dropdown-menu">
+                        <li ui:field="feedBrowserItem">
+                            <g:InlineHyperlink ui:field="feedBrowserLink"
+                                targetHistoryToken="{FeedBrowserPageType.asTargetHistoryToken}">Feed Browser</g:InlineHyperlink>
+                        </li>
+                        <li ui:field="itemsItem">
+                            <g:InlineHyperlink ui:field="itemsLink"
+                                targetHistoryToken="{ItemsPageType.asTargetHistoryToken}">Items</g:InlineHyperlink>
+                        </li>
+                        <li class="divider-horizontal-header"></li>
+                        <li ui:field="usersItem">
+                            <g:InlineHyperlink ui:field="usersLink"
+                                targetHistoryToken="{UsersPageType.asTargetHistoryToken}">
+                                Users
+                                <span ui:field="totalUsers" class="badge">1+</span>
+                            </g:InlineHyperlink>
+                        </li>
+                        <li ui:field="rolesItem">
+                            <g:InlineHyperlink ui:field="rolesLink"
+                                targetHistoryToken="{RolesPageType.asTargetHistoryToken}">Roles</g:InlineHyperlink>
+                        </li>
+                        <li ui:field="permissionsItem">
+                            <g:InlineHyperlink ui:field="permissionsLink"
+                                targetHistoryToken="{PermissionsPageType.asTargetHistoryToken}">Permissions</g:InlineHyperlink>
+                        </li>
+                        <li class="divider-horizontal-header"></li>
+                        <li ui:field="emailTemplatesItem">
+                            <g:InlineHyperlink ui:field="emailTemplatesLink"
+                                targetHistoryToken="{EmailTemplatesPageType.asTargetHistoryToken}">Email Templates</g:InlineHyperlink>
+                        </li>
+                        <li ui:field="blogAdminItem">
+                            <g:InlineHyperlink ui:field="blogAdminLink"
+                                targetHistoryToken="{BlogAdminPageType.asTargetHistoryToken}">Blog</g:InlineHyperlink>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
 
-			<!-- Log In -->
-			<ul class="nav navbar-nav navbar-right {style.loginMobile}"
-				ui:field="login">
-				<!-- <li ui:field="mRegisterItem"> <g:InlineHyperlink ui:field="mRegisterLink" 
-					targetHistoryToken="{RegisterPageType.asTargetHistoryToken}">Sign Up</g:InlineHyperlink> 
-					</li> -->
-				<li ui:field="loginItem">
-					<g:InlineHyperlink ui:field="loginLink"
-						targetHistoryToken="{LoginPageType.asTargetHistoryToken}">
-						<i class="icon-login" />
-						Log In
-					</g:InlineHyperlink>
-				</li>
-			</ul>
+            <!-- Log In -->
+            <ul class="nav navbar-nav navbar-right {style.loginMobile}"
+                ui:field="login">
+                <!-- <li ui:field="mRegisterItem"> <g:InlineHyperlink ui:field="mRegisterLink" 
+                    targetHistoryToken="{RegisterPageType.asTargetHistoryToken}">Sign Up</g:InlineHyperlink> 
+                    </li> -->
+                <li ui:field="loginItem">
+                    <g:InlineHyperlink ui:field="loginLink"
+                        targetHistoryToken="{LoginPageType.asTargetHistoryToken}">
+                        <i class="icon-login" />
+                        Log In
+                    </g:InlineHyperlink>
+                </li>
+            </ul>
 
-			<!-- User name and Sign Out -->
-			<ul class="nav navbar-nav navbar-right" ui:field="userSignOut">
-				<li>
-					<g:InlineHTML ui:field="userName" styleName="navbar-text" />
-				</li>
-				<li class="divider-vertical"></li>
-				<li>
-					<g:InlineHyperlink targetHistoryToken="logout">
-						Sign Out
-					</g:InlineHyperlink>
-				</li>
-			</ul>
+            <!-- User name and Sign Out -->
+            <ul class="nav navbar-nav navbar-right" ui:field="userSignOut">
+                <li>
+                    <g:InlineHTML ui:field="userName" styleName="navbar-text" />
+                </li>
+                <li class="divider-vertical"></li>
+                <li>
+                    <g:InlineHyperlink targetHistoryToken="logout">
+                        Sign Out
+                    </g:InlineHyperlink>
+                </li>
+            </ul>
 
-			<ul class="nav navbar-nav navbar-right hidden-xs hidden-sm"
-				ui:field="search">
-				<li>
-					<span class="navbar-text {style.searchBox}">
-						Search Coming Soon
-						<span class="icon-search {style.searchIcon}" />
-					</span>
-				</li>
-			</ul>
+            <ul class="nav navbar-nav navbar-right hidden-xs hidden-sm"
+                ui:field="search">
+                <li>
+                    <span class="navbar-text {style.searchBox}">
+                        Search Coming Soon
+                        <span class="icon-search {style.searchIcon}" />
+                    </span>
+                </li>
+            </ul>
 
-			<!-- Feature Request <ul class="nav navbar-nav navbar-right" style="display: 
-				none;" ui:field="mFeatureRequest"> <li class="dropdown"> <g:Anchor styleName="dropdown-toggle" 
-				ui:field="featureRequestButton"> <i class="glyphicon glyphicon-comment" style="margin-right: 
-				10px"></i> Feature Requests </g:Anchor> <ul class="dropdown-menu"> <li style="text-align: 
-				justify; font-size: 14px;"> Help us develop a truly groundbreaking intelligence 
-				tool. Contact us if you have feedback or if you would like to see any additional 
-				feature that you feel can add value. We're here to help. </li> <hr style="height:1px; 
-				border:none; color:#363845; background-color:#363845;"></hr> <li> <a href="mailto:gustaf@reflection.io" 
-				target="_blank"> <i class="glyphicon glyphicon-envelope" style="margin-right: 
-				15px"></i> gustaf@reflection.io </a> </li> <li> <a href="callto:+44 (0) 7929 
-				635 487" target="_blank"> <i class="glyphicon glyphicon-earphone" style="margin-right: 
-				15px"></i> +44 (0) 7929 635 487 </a> </li> </ul> </li> <li class="divider-vertical"></li> 
-				</ul> -->
+            <!-- Feature Request <ul class="nav navbar-nav navbar-right" style="display: 
+                none;" ui:field="mFeatureRequest"> <li class="dropdown"> <g:Anchor styleName="dropdown-toggle" 
+                ui:field="featureRequestButton"> <i class="glyphicon glyphicon-comment" style="margin-right: 
+                10px"></i> Feature Requests </g:Anchor> <ul class="dropdown-menu"> <li style="text-align: 
+                justify; font-size: 14px;"> Help us develop a truly groundbreaking intelligence 
+                tool. Contact us if you have feedback or if you would like to see any additional 
+                feature that you feel can add value. We're here to help. </li> <hr style="height:1px; 
+                border:none; color:#363845; background-color:#363845;"></hr> <li> <a href="mailto:gustaf@reflection.io" 
+                target="_blank"> <i class="glyphicon glyphicon-envelope" style="margin-right: 
+                15px"></i> gustaf@reflection.io </a> </li> <li> <a href="callto:+44 (0) 7929 
+                635 487" target="_blank"> <i class="glyphicon glyphicon-earphone" style="margin-right: 
+                15px"></i> +44 (0) 7929 635 487 </a> </li> </ul> </li> <li class="divider-vertical"></li> 
+                </ul> -->
 
 
-			<!-- <g:FormPanel styleName="navbar-form navbar-right"> <g:HTMLPanel styleName="{style.searchBox}"> 
-				<span class="form-group"> <g:TextBox styleName="form-control" ui:field="mQuery" 
-				/> </span> <span> <g:InlineHyperlink styleName="btn btn-default" ui:field="mSearch" 
-				targetHistoryToken="{SearchPageType.asTargetHistoryToken}/query" /> </span> 
-				</g:HTMLPanel> </g:FormPanel> -->
+            <!-- <g:FormPanel styleName="navbar-form navbar-right"> <g:HTMLPanel styleName="{style.searchBox}"> 
+                <span class="form-group"> <g:TextBox styleName="form-control" ui:field="mQuery" 
+                /> </span> <span> <g:InlineHyperlink styleName="btn btn-default" ui:field="mSearch" 
+                targetHistoryToken="{SearchPageType.asTargetHistoryToken}/query" /> </span> 
+                </g:HTMLPanel> </g:FormPanel> -->
 
-		</div><!--/.nav-collapse -->
+        </div><!--/.nav-collapse -->
 
-	</g:HTMLPanel>
+    </g:HTMLPanel>
 </ui:UiBinder> 

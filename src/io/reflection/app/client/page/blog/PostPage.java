@@ -149,7 +149,7 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 		author.setInnerText(FormattingHelper.getUserName(post.author));
 
 		if (post.published != null) {
-			date.setInnerText(DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT_3).format(post.published));
+			date.setInnerText(DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT_EEE_DD_MMM_YYYY).format(post.published));
 		} else {
 			date.setInnerText("TBD");
 		}

@@ -38,7 +38,7 @@ public class PostSummaryCell extends AbstractCell<Post> {
 		String published = "TBD";
 
 		if (value.published != null) {
-			published = DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT_3).format(value.published);
+			published = DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT_EEE_DD_MMM_YYYY).format(value.published);
 		}
 
 		RENDERER.render(builder, link, value.title, SafeHtmlUtils.fromTrustedString(value.description), FormattingHelper.getUserName(value.author), published);

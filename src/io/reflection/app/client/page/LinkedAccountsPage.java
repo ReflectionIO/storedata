@@ -180,7 +180,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		columnDateAdded = new TextColumn<DataAccount>() {
 			@Override
 			public String getValue(DataAccount object) {
-				DateTimeFormat dtf = DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT);
+				DateTimeFormat dtf = DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT_DD_MM_YYYY);
 				return (object.source.created != null) ? dtf.format(object.created, null) : "-";
 			}
 		};
