@@ -166,7 +166,7 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 					String error = null;
 					if ((error = connection.getHeaderField("ERRORMSG")) != null) {
 						if (LOG.isLoggable(GaeLevel.WARNING)) {
-							if (data != null) {
+							if (data != null && dataAccount.password != null) {
 								// remove the password for the purposes of logging
 								data.replace(dataAccount.password, "**********");
 							}
