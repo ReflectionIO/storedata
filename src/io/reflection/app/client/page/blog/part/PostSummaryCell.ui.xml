@@ -1,50 +1,50 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder">
-	<ui:with field="link" type="com.google.gwt.safehtml.shared.SafeUri" />
-	<ui:with field="title" type="java.lang.String" />
-	<ui:with field="description" type="com.google.gwt.safehtml.shared.SafeHtml" />
-	<ui:with field="author" type="java.lang.String" />
-	<ui:with field="published" type="java.lang.String" />
+    <ui:with field="link" type="com.google.gwt.safehtml.shared.SafeUri" />
+    <ui:with field="title" type="java.lang.String" />
+    <ui:with field="description" type="com.google.gwt.safehtml.shared.SafeHtml" />
+    <ui:with field="author" type="java.lang.String" />
+    <ui:with field="published" type="java.lang.String" />
 
-	<ui:style>
-	.info {
-		font-size: 13px;
-		margin-bottom: 20px;
-	}
-	
-	.bold {
-		font-weight: 700;
-	}
-	
-	.readMore {
-		display: inline-block;
-		margin-top: 14px;
-		margin-bottom: 36px;
-	}
-	</ui:style>
+    <ui:style>
+    .info {
+        font-size: 13px;
+        margin-bottom: 20px;
+    }
+    
+    .bold {
+        font-weight: 700;
+    }
+    
+    .readMore {
+        display: inline-block;
+        margin-top: 14px;
+        margin-bottom: 36px;
+    }
+    </ui:style>
 
-	<div>
-		<h3>
-			<a href="{link}">
-				<ui:text from="{title}" />
-			</a>
-		</h3>
-		<p class="{style.info}">
-			<span class="{style.bold}">
-				By
-				<span>
-					<ui:text from="{author}" />
-				</span>
-			</span>
-			<span>
-				<ui:text from="{published}" />
-			</span>
-		</p>
-		<p>
-			<ui:safehtml from="{description}" />
-		</p>
+    <div>
+        <h3>
+            <a href="{link}">
+                <ui:text from="{title}" />
+            </a>
+        </h3>
+        <p class="{style.info}">
+            <span class="{style.bold}">
+                By
+                <span>
+                    <ui:text from="{author}" />
+                </span>
+            </span>
+            <span>
+                <ui:text from="{published}" />
+            </span>
+        </p>
+        <p>
+            <ui:safehtml from="{description}" />
+        </p>
 
-		<a href="{link}" class="{style.readMore}">Read More</a>
+        <a href="{link}" class="{style.readMore}">Read More</a>
 
-	</div>
+    </div>
 </ui:UiBinder>
