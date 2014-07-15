@@ -8,18 +8,18 @@
 
     <ui:style>
     .info {
-        font-size: 13px;
-        margin-bottom: 20px;
+    	font-size: 13px;
+    	margin-bottom: 20px;
     }
     
     .bold {
-        font-weight: 700;
+    	font-weight: 700;
     }
     
     .readMore {
-        display: inline-block;
-        margin-top: 14px;
-        margin-bottom: 36px;
+    	display: inline-block;
+    	margin-top: 14px;
+    	margin-bottom: 36px;
     }
     </ui:style>
 

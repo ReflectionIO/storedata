@@ -5,34 +5,34 @@
 
     <ui:style type="io.reflection.app.client.part.Preloader.PreloaderStyle">
     .content {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        padding: 5px;
-        z-index: 15;
+    	position: absolute;
+    	width: 100%;
+    	height: 100%;
+    	padding: 5px;
+    	z-index: 15;
     }
-
+    
     .loader {
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        margin: auto;
+    	position: absolute;
+    	left: 0;
+    	right: 0;
+    	top: 0;
+    	bottom: 0;
+    	margin: auto;
     }
-
+    
     .wrapper {
-        position: relative;
-        height: 100%;
-        height: 100%;
+    	position: relative;
+    	height: 100%;
+    	height: 100%;
     }
-
+    
     .opaque {
-        background-color: #FFF;
+    	background-color: #FFF;
     }
-
+    
     .transparent {
-        background-color: transparent;
+    	background-color: transparent;
     }
     </ui:style>
     <g:HTMLPanel ui:field="wrapperPanel" styleName="{style.wrapper}">
