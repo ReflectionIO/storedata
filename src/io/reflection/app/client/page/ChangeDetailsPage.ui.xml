@@ -1,59 +1,74 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+    xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
     xmlns:pp="urn:import:io.reflection.app.client.page.part">
     <ui:style>
-    
+    .filler {
+    	height: 40px;
+    }
     </ui:style>
-    <g:HTMLPanel>
-        <div class="row">
+    <g:HTMLPanel styleName="row">
 
-            <pp:MyAccountSidePanel ui:field="myAccountSidePanel" />
+        <pp:MyAccountSidePanel ui:field="myAccountSidePanel" />
 
-            <div class="col-md-10">
-                <g:HTMLPanel styleName="well well-sm well-title col-md-12 topPanel">
-                    <div class="pull-left;">
-                        <h5>Personal Details</h5>
-                    </div>
-                </g:HTMLPanel>
+        <div class="col-md-10">
+            <g:HTMLPanel styleName="well well-sm well-title col-md-12 topPanel">
+                <div class="pull-left;">
+                    <h5>Personal Details</h5>
+                </div>
+            </g:HTMLPanel>
 
-                <p:AlertBox ui:field="mAlertBox" visible="false" />
+            <p:AlertBox ui:field="mAlertBox" visible="false" />
 
-                <g:HTMLPanel styleName="col-md-12">
-                    <p:Preloader ui:field="preloader">
-                        <g:FormPanel ui:field="mForm" styleName="formEdit">
-                            <g:HTMLPanel>
-                                <g:HTMLPanel ui:field="mForenameGroup" styleName="form-group">
-                                    <label>First name</label>
-                                    <g:TextBox styleName="form-control" ui:field="mForename" />
-                                    <g:HTMLPanel ui:field="mForenameNote" visible="false" styleName="noteDetail" />
-                                </g:HTMLPanel>
-
-                                <g:HTMLPanel ui:field="mSurnameGroup" styleName="form-group">
-                                    <label>Last name</label>
-                                    <g:TextBox styleName="form-control" ui:field="mSurname" />
-                                    <g:HTMLPanel ui:field="mSurnameNote" visible="false" styleName="noteDetail" />
-                                </g:HTMLPanel>
-
-                                <g:HTMLPanel ui:field="mCompanyGroup" styleName="form-group">
-                                    <label>Company</label>
-                                    <g:TextBox styleName="form-control" ui:field="mCompany" />
-                                    <g:HTMLPanel ui:field="mCompanyNote" visible="false" styleName="noteDetail" />
-                                </g:HTMLPanel>
-
-                                <g:HTMLPanel ui:field="mUsernameGroup" styleName="form-group">
-                                    <label>Email</label>
-                                    <g:TextBox styleName="form-control" ui:field="mUsername" />
-                                    <g:HTMLPanel ui:field="mUsernameNote" visible="false" styleName="noteDetail" />
-                                </g:HTMLPanel>
-
-                                <g:Button ui:field="mChangeDetails" styleName="btn btn-lg btn-primary btn-block" text="Update" />
-
+            <g:HTMLPanel styleName="col-md-12">
+                <p:Preloader ui:field="preloader">
+                    <g:FormPanel ui:field="mForm" styleName="formEdit">
+                        <g:HTMLPanel>
+                            <g:HTMLPanel ui:field="mForenameGroup"
+                                styleName="form-group">
+                                <label>First name</label>
+                                <g:TextBox styleName="form-control"
+                                    ui:field="mForename" />
+                                <g:HTMLPanel ui:field="mForenameNote"
+                                    visible="false" styleName="noteDetail" />
                             </g:HTMLPanel>
-                        </g:FormPanel>
-                    </p:Preloader>
-                </g:HTMLPanel>
 
-            </div>
+                            <g:HTMLPanel ui:field="mSurnameGroup"
+                                styleName="form-group">
+                                <label>Last name</label>
+                                <g:TextBox styleName="form-control"
+                                    ui:field="mSurname" />
+                                <g:HTMLPanel ui:field="mSurnameNote"
+                                    visible="false" styleName="noteDetail" />
+                            </g:HTMLPanel>
+
+                            <g:HTMLPanel ui:field="mCompanyGroup"
+                                styleName="form-group">
+                                <label>Company</label>
+                                <g:TextBox styleName="form-control"
+                                    ui:field="mCompany" />
+                                <g:HTMLPanel ui:field="mCompanyNote"
+                                    visible="false" styleName="noteDetail" />
+                            </g:HTMLPanel>
+
+                            <g:HTMLPanel ui:field="mUsernameGroup"
+                                styleName="form-group">
+                                <label>Email</label>
+                                <g:TextBox styleName="form-control"
+                                    ui:field="mUsername" />
+                                <g:HTMLPanel ui:field="mUsernameNote"
+                                    visible="false" styleName="noteDetail" />
+                            </g:HTMLPanel>
+
+                            <g:Button ui:field="mChangeDetails"
+                                styleName="btn btn-lg btn-primary btn-block"
+                                text="Update" />
+
+                        </g:HTMLPanel>
+                    </g:FormPanel>
+                </p:Preloader>
+            </g:HTMLPanel>
+            <g:HTMLPanel styleName="{style.filler} col-md-12 hidden-xs hidden-sm" />
         </div>
     </g:HTMLPanel>
 </ui:UiBinder> 

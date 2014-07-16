@@ -7,9 +7,20 @@
     <ui:with field="published" type="java.lang.String" />
 
     <ui:style>
-        .smaller {
-        font-size: smaller;
-        }
+    .info {
+    	font-size: 13px;
+    	margin-bottom: 20px;
+    }
+    
+    .bold {
+    	font-weight: 700;
+    }
+    
+    .readMore {
+    	display: inline-block;
+    	margin-top: 14px;
+    	margin-bottom: 36px;
+    }
     </ui:style>
 
     <div>
@@ -18,21 +29,22 @@
                 <ui:text from="{title}" />
             </a>
         </h3>
-        <p class="text-muted {style.smaller}">
-            Posted on
+        <p class="{style.info}">
+            <span class="{style.bold}">
+                By
+                <span>
+                    <ui:text from="{author}" />
+                </span>
+            </span>
             <span>
                 <ui:text from="{published}" />
-            </span>
-            by
-            <span>
-                <ui:text from="{author}" />
             </span>
         </p>
         <p>
             <ui:safehtml from="{description}" />
         </p>
 
-        <a href="{link}">Read More</a>
+        <a href="{link}" class="{style.readMore}">Read More</a>
 
     </div>
 </ui:UiBinder>

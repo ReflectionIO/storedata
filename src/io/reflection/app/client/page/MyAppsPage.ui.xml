@@ -1,6 +1,8 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.user.datepicker.client"
-    xmlns:p="urn:import:io.reflection.app.client.part" xmlns:cell="urn:import:com.google.gwt.user.cellview.client" xmlns:pp="urn:import:io.reflection.app.client.page.part">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+    xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.user.datepicker.client"
+    xmlns:p="urn:import:io.reflection.app.client.part" xmlns:cell="urn:import:com.google.gwt.user.cellview.client"
+    xmlns:pp="urn:import:io.reflection.app.client.page.part">
     <ui:style type="io.reflection.app.client.page.MyAppsPage.MyAppsPageStyle">
     .red {
     	color: red;
@@ -13,18 +15,24 @@
     .silver {
     	color: silver;
     }
+    
+    .filler {
+    	height: 40px;
+    }
     </ui:style>
-    <g:HTMLPanel>
-        <div class="row">
+    <g:HTMLPanel styleName="row">
 
-            <pp:MyAccountSidePanel ui:field="myAccountSidePanel" />
+        <pp:MyAccountSidePanel ui:field="myAccountSidePanel" />
 
-            <g:HTMLPanel styleName="col-md-10 topPanel">
-                <pp:MyAppsTopPanel ui:field="myAppsTopPanel" />
-                <cell:CellTable ui:field="appsTable" styleName="table table-hover table-striped" />
-                <p:SimplePager ui:field="simplePager" styleName="text-center" visible="false" />
-            </g:HTMLPanel>
+        <g:HTMLPanel styleName="col-md-10">
+            <pp:MyAppsTopPanel ui:field="myAppsTopPanel"
+                styleName="well well-sm topPanel" />
+            <cell:CellTable ui:field="appsTable"
+                styleName="table table-hover table-striped" />
+            <p:SimplePager ui:field="simplePager"
+                styleName="text-center" visible="false" />
+            <g:HTMLPanel styleName="{style.filler} col-md-12 hidden-xs hidden-sm" />
+        </g:HTMLPanel>
 
-        </div>
     </g:HTMLPanel>
 </ui:UiBinder> 

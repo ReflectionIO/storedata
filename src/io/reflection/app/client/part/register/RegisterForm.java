@@ -10,7 +10,6 @@ package io.reflection.app.client.part.register;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.UserController;
 import io.reflection.app.client.helper.FormHelper;
-import io.reflection.app.client.res.Images;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -70,8 +69,6 @@ public class RegisterForm extends Composite {
 	@UiField Button mRegister;
 
 	private boolean isRequestInvite;
-
-	final String imageButtonLink = "<img style=\"vertical-align: 1px;\" src=\"" + Images.INSTANCE.buttonArrowWhite().getSafeUri().asString() + "\"/>";
 
 	private String actionCode;
 
@@ -376,7 +373,7 @@ public class RegisterForm extends Composite {
 			focusFirstActiveField();
 			passwordGroup.setVisible(false);
 			termAndCondGroup.setVisible(false);
-			mRegister.setHTML("Submit&nbsp;&nbsp;" + imageButtonLink);
+			mRegister.setHTML("Submit <span class=\"icon-right-small\"/>");
 		} else {
 			passwordGroup.setVisible(true);
 			termAndCondGroup.setVisible(true);

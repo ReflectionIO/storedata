@@ -34,8 +34,8 @@
 
 .gwt-PopupPanel>.popupContent .btn-delete:hover,.gwt-PopupPanel>.popupContent .btn-delete:focus,.gwt-PopupPanel>.popupContent.btn-delete:active,.gwt-PopupPanel>.popupContent .btn-delete.active
 	{
-	background-color: #FFF;
-	color: red;
+	background-color: #1bc79f;
+	border-color: #1bc79f;
 }
 
 .gwt-PopupPanel>.popupContent h1,.gwt-PopupPanel>.popupContent p {

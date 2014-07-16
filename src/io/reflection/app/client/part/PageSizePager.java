@@ -16,6 +16,7 @@ import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.AbstractPager;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Image;
@@ -38,7 +39,8 @@ public class PageSizePager extends AbstractPager {
 	 */
 	private final int increment;
 
-	@UiField Anchor viewLessButton;
+	// @UiField Anchor viewLessButton;
+	@UiField Anchor backToTopButton;
 	@UiField Button viewMoreButton;
 
 	private Image mSpinner;
@@ -66,23 +68,28 @@ public class PageSizePager extends AbstractPager {
 		// Hide the buttons if the display is null. If the display is non-null, the
 		// buttons will be displayed in onRangeOrRowCountChanged().
 		if (display == null) {
-			viewLessButton.setVisible(false);
+			// viewLessButton.setVisible(false);
 			viewMoreButton.setVisible(false);
 		}
 		super.setDisplay(display);
 	}
 
-	@UiHandler("viewLessButton")
-	void onviewLessButtonClicked(ClickEvent event) {
-		if (((Anchor) event.getSource()).isEnabled()) {
-			// Display should be non-null, but we check defensively.
-			HasRows display = getDisplay();
-			if (display != null) {
-				Range range = display.getVisibleRange();
-				int pageSize = Math.max(range.getLength() - increment, increment);
-				display.setVisibleRange(range.getStart(), pageSize);
-			}
-		}
+	// @UiHandler("viewLessButton")
+	// void onviewLessButtonClicked(ClickEvent event) {
+	// if (((Anchor) event.getSource()).isEnabled()) {
+	// // Display should be non-null, but we check defensively.
+	// HasRows display = getDisplay();
+	// if (display != null) {
+	// Range range = display.getVisibleRange();
+	// int pageSize = Math.max(range.getLength() - increment, increment);
+	// display.setVisibleRange(range.getStart(), pageSize);
+	// }
+	// }
+	// }
+
+	@UiHandler("backToTopButton")
+	void onBackToTopClicked(ClickEvent event) {
+		Window.scrollTo(0, 0);
 	}
 
 	@UiHandler("viewMoreButton")
@@ -109,9 +116,9 @@ public class PageSizePager extends AbstractPager {
 		// Assumes a page start index of 0.
 		HasRows display = getDisplay();
 		int pageSize = display.getVisibleRange().getLength();
-		boolean hasLess = pageSize > increment;
+		// boolean hasLess = pageSize > increment;
 		boolean hasMore = !display.isRowCountExact() || pageSize < display.getRowCount();
-		viewLessButton.setVisible(hasLess);
+		// viewLessButton.setVisible(hasLess);
 		viewMoreButton.setVisible(hasMore);
 
 		if (mLoading) {
@@ -123,10 +130,11 @@ public class PageSizePager extends AbstractPager {
 	 * 
 	 */
 	private void processLoading() {
-		viewLessButton.setEnabled(!mLoading);
+		// viewLessButton.setEnabled(!mLoading);
 		viewMoreButton.setEnabled(!mLoading);
 
-		Widget visible = viewMoreButton.isVisible() ? viewMoreButton : viewLessButton;
+		// Widget visible = viewMoreButton.isVisible() ? viewMoreButton : viewLessButton;
+		Widget visible = viewMoreButton;
 
 		if (mLoading) {
 			if (mSpinner == null) {
@@ -136,12 +144,12 @@ public class PageSizePager extends AbstractPager {
 			visible.getElement().setInnerHTML("Loading... ");
 			visible.getElement().appendChild(mSpinner.getElement());
 
-			viewLessButton.setEnabled(Boolean.FALSE);
+			// viewLessButton.setEnabled(Boolean.FALSE);
 			viewMoreButton.setEnabled(Boolean.FALSE);
 		} else {
 			visible.getElement().setInnerHTML("Show " + (visible == viewMoreButton ? "More" : "Less"));
 
-			viewLessButton.setEnabled(Boolean.TRUE);
+			// viewLessButton.setEnabled(Boolean.TRUE);
 			viewMoreButton.setEnabled(Boolean.TRUE);
 		}
 	}
@@ -149,9 +157,9 @@ public class PageSizePager extends AbstractPager {
 	/**
 	 * Visible for testing.
 	 */
-	boolean isShowLessButtonVisible() {
-		return viewLessButton.isVisible();
-	}
+	// boolean isShowLessButtonVisible() {
+	// return viewLessButton.isVisible();
+	// }
 
 	/**
 	 * Visible for testing.

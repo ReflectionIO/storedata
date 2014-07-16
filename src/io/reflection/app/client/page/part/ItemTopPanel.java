@@ -57,7 +57,7 @@ public class ItemTopPanel extends Composite {
 
 			@Override
 			public String getName() {
-				return "1 Week";
+				return "1 wk";
 			}
 
 			@Override
@@ -70,7 +70,7 @@ public class ItemTopPanel extends Composite {
 
 			@Override
 			public String getName() {
-				return "2 Weeks";
+				return "2 wks";
 			}
 
 			@Override
@@ -83,7 +83,7 @@ public class ItemTopPanel extends Composite {
 
 			@Override
 			public String getName() {
-				return "4 Weeks";
+				return "4 wks";
 			}
 
 			@Override
@@ -96,7 +96,7 @@ public class ItemTopPanel extends Composite {
 
 			@Override
 			public String getName() {
-				return "6 Weeks";
+				return "6 wks";
 			}
 
 			@Override
@@ -109,7 +109,7 @@ public class ItemTopPanel extends Composite {
 
 			@Override
 			public String getName() {
-				return "8 Weeks";
+				return "8 wks";
 			}
 
 			@Override

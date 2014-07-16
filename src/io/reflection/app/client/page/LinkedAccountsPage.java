@@ -180,7 +180,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		columnDateAdded = new TextColumn<DataAccount>() {
 			@Override
 			public String getValue(DataAccount object) {
-				DateTimeFormat dtf = DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT);
+				DateTimeFormat dtf = DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT_DD_MM_YYYY);
 				return (object.source.created != null) ? dtf.format(object.created, null) : "-";
 			}
 		};
@@ -192,7 +192,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 				String id = object.id.toString();
 				return SafeHtmlUtils.fromTrustedString("<a href=\""
 						+ PageType.UsersPageType.asHref(PageType.LinkedAccountsPageType.toString(user.id.toString(), EDIT_ACTION_PARAMETER_VALUE, id))
-								.asString() + "\" class=\"btn btn-xs btn-default\">Edit</a>");
+								.asString() + "\">Edit</a>");
 			}
 
 		};
@@ -204,7 +204,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 				String id = object.id.toString();
 				return SafeHtmlUtils.fromTrustedString("<a href=\""
 						+ PageType.UsersPageType.asHref(PageType.LinkedAccountsPageType.toString(user.id.toString(), DELETE_ACTION_PARAMETER_VALUE, id))
-								.asString() + "\" class=\"btn btn-xs btn-danger\">Delete</a>");
+								.asString() + "\"><span class=\"icon-cancel-1\"/></a>");
 			}
 
 		};

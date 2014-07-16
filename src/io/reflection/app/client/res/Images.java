@@ -87,9 +87,6 @@ public interface Images extends ClientBundle {
 	@Source("emailsent.png")
 	ImageResource emailSent();
 
-	@Source("searchplaceholder.jpg")
-	ImageResource searchPlaceholder();
-	
 	@Source("preloader.gif")
 	ImageResource preloader();
 

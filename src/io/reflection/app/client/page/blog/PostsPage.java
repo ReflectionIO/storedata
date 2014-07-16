@@ -7,9 +7,14 @@
 //
 package io.reflection.app.client.page.blog;
 
+import io.reflection.app.client.controller.EventController;
+import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.PostController;
 import io.reflection.app.client.controller.ServiceConstants;
+import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.page.Page;
+import io.reflection.app.client.page.blog.part.BlogSidePanel;
 import io.reflection.app.client.page.blog.part.PostSummaryCell;
 import io.reflection.app.client.part.BootstrapGwtCellList;
 import io.reflection.app.client.part.PageSizePager;
@@ -32,7 +37,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author billy1380
  * 
  */
-public class PostsPage extends Page {
+public class PostsPage extends Page implements NavigationEventHandler {
 
 	private static PostsPageUiBinder uiBinder = GWT.create(PostsPageUiBinder.class);
 
@@ -40,6 +45,8 @@ public class PostsPage extends Page {
 
 	@UiField(provided = true) CellList<Post> posts = new CellList<Post>(new PostSummaryCell(), BootstrapGwtCellList.INSTANCE);
 	@UiField(provided = true) PageSizePager pager = new PageSizePager(ServiceConstants.SHORT_STEP_VALUE);
+
+	@UiField BlogSidePanel blogSidePanel;
 
 	private Element atomLink;
 	private Element head;
@@ -81,6 +88,8 @@ public class PostsPage extends Page {
 	protected void onAttach() {
 		super.onAttach();
 
+		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+
 		if (head != null) {
 			head.appendChild(atomLink);
 		}
@@ -108,6 +117,18 @@ public class PostsPage extends Page {
 		}
 
 		super.onDetach();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
+	 * io.reflection.app.client.controller.NavigationController.Stack)
+	 */
+	@Override
+	public void navigationChanged(Stack previous, Stack current) {
+		blogSidePanel.setBlogHomeLinkActive();
+
 	}
 
 }

@@ -76,7 +76,7 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 	public DateSelector() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		DateTimeFormat dtf = DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT_2);
+		DateTimeFormat dtf = DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT_DD_MMM_YYYY);
 		dateBoxFrom.setFormat(new DateBox.DefaultFormat(dtf));
 		dateBoxFrom.getTextBox().setReadOnly(Boolean.TRUE);
 		dateBoxTo.setFormat(new DateBox.DefaultFormat(dtf));

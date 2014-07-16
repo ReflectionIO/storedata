@@ -1,20 +1,24 @@
 @CHARSET "UTF-8";
 
-@external table-item, table-striped, tbody,nth-child, td, thead, th, tr:nth-child,  headerCaret, navbar-toggle, p-small, form, formEdit, noteDetail, label, gwt-CheckBox, gwt-DateBox, gwt-ListBox, topPanel, sidepanel, btn, btn-group, btn-default, row, divider, divider-vertical, nav-pills, nav-stacked, nav-tabs, nav-justified, ranks, loginregister, well, well-title, form-inline, form-group, gwt-RadioButton, hr, navbar-fixed-top, navbar, container, pagination, btn-primary, disabled, active, open, dropdown-toggle, dropdown-menu, i, badge, dropdown, nav, navbar-inverse, navbar-nav, navbar-text, caret, form-control;
+@external table-linkedaccount, table-rank, table-item, table-striped, table, tbody,nth-child, td, thead, th, tr:nth-child,  headerCaret, navbar-brand, navbar-toggle, p-small, form, formEdit, noteDetail, label, gwt-CheckBox, gwt-DateBox, topPanel, sidepanel, btn, btn-group, btn-default, row, divider-vertical, divider-horizontal, divider-horizontal-header, nav-pills, nav-stacked, nav-tabs, nav-justified, ranks, loginregister, well, well-title, form-inline, form-group, gwt-RadioButton, hr, navbar-fixed-top, navbar, pagination, btn-primary, disabled, active, open, dropdown-toggle, dropdown-menu, i, badge, dropdown, nav, navbar-inverse, navbar-nav, navbar-text, caret, form-control;
 	/* Colors palette: Purple #6d69c5; DarkBlue 272933; Gold #eabc3e; LightGrey: #f8f9f9; Green: #1bc79f; Blue: #3357cc; Red: #e73c48; */
+/* Small devices (tablets, 768px and up) - Medium devices (desktop, 992px and up) - Large devices (large desktop, 1200px and up) */
 body {
 	font-family: 'Lato', sans-serif;
 }
 
 .header {
 	background: #272733;
-	padding-left: 8px;
-	padding-right: 25px;
+	padding-left: 0px;
+	padding-right: 14px;
+	margin-left: 0px;
+	margin-right: 0px;
 	padding-top: 5px;
 	height: 60px;
 	color: #8d8ea1;
 	min-width: 290px;
 	border: none;
+	font-size: 14px;
 }
 
 .navbar-inverse .navbar-toggle {
@@ -27,6 +31,12 @@ body {
 	{
 	border: none;
 	background: none;
+}
+
+.navbar-brand {
+	padding-left: 25px;
+	padding-top: 12px;
+	padding-right: 50px;
 }
 
 .footer {
@@ -70,6 +80,11 @@ body {
 	margin-top: 30px;
 }
 
+.noteDetail {
+	font-size: smaller;
+	margin-top: 5px;
+}
+
 .form-group {
 	margin-bottom: 10px;
 }
@@ -78,9 +93,15 @@ body {
 	vertical-align: top;
 }
 
-.noteDetail {
-	font-size: smaller;
-	margin-top: 5px;
+.form-inline .form-group>.form-control {
+	max-width: 140px;
+	background: -webkit-linear-gradient(#f6f7f9, #eeeff1);
+	/* For Safari 5.1 to 6.0 */
+	background: -o-linear-gradient(#f6f7f9, #eeeff1);
+	/* For Opera 11.1 to 12.0 */
+	background: -moz-linear-gradient(#f6f7f9, #eeeff1);
+	/* For Firefox 3.6 to 15 */
+	background: linear-gradient(#f6f7f9, #eeeff1); /* Standard syntax */
 }
 
 .form-control {
@@ -106,7 +127,7 @@ input[type="text"]:disabled {
 /* Date Box */
 .gwt-DateBox {
 	height: 34px;
-	width: 120px;
+	width: 100px;
 	text-align: center;
 	background: -webkit-linear-gradient(#f6f7f9, #eeeff1);
 	/* For Safari 5.1 to 6.0 */
@@ -132,48 +153,11 @@ input[type="text"]:disabled {
 	cursor: pointer;
 }
 
-/* List Box */
-.gwt-ListBox {
-	display: inline-block;
-	color: #434346;
-	height: 34px;
-	width: 160px;
-	background: -webkit-linear-gradient(#f6f7f9, #eeeff1);
-	/* For Safari 5.1 to 6.0 */
-	background: -o-linear-gradient(#f6f7f9, #eeeff1);
-	/* For Opera 11.1 to 12.0 */
-	background: -moz-linear-gradient(#f6f7f9, #eeeff1);
-	/* For Firefox 3.6 to 15 */
-	background: linear-gradient(#f6f7f9, #eeeff1); /* Standard syntax */
-	margin: 0px;
-	margin-left: 7px;
-	padding-left: 12px;
-	padding-top: 5px;
-	margin-right: 7px;
-	-webkit-border-radius: 4px;
-	-moz-border-radius: 4px;
-	border-radius: 4px;
-	-webkit-box-shadow: none;
-	box-shadow: none;
-	border: 1px solid #d5d6da;
-	outline: 0;
-	display: inline-block;
-	-webkit-appearance: none;
-	-moz-appearance: none;
-	appearance: none;
-	cursor: pointer;
-}
-
-.gwt-ListBox>option {
-	color: #434346;
-	outline: 0;
-	height: 34px;
-	padding-left: 12px;
-	padding-top: 7px;
-	box-shadow: none;
-}
-
 /* Cell Table */
+.table>tbody+tbody {
+	border: none;
+}
+
 .table-striped>tbody>tr>td,.table-striped>thead>tr>th {
 	vertical-align: middle;
 	border: 0px;
@@ -195,6 +179,26 @@ input[type="text"]:disabled {
 .table-striped.table-item>tbody>tr>td,.table-striped.table-item>thead>tr>th
 	{
 	height: 50px;
+}
+
+.table-striped.table-item>tbody>tr>td:FIRST-CHILD,.table-striped.table-item>thead>tr>th:FIRST-CHILD
+	{
+	padding-left: 24px;
+}
+
+/* Cell Table - RankPage */
+.table-striped.table-rank>tbody>tr>td {
+	height: 70px;
+}
+
+/* Cell Table - LinkedAccountsPage */
+.table-striped.table-linkedaccount>tbody>tr>td {
+	height: 50px;
+}
+
+.table-striped.table-rank>tbody>tr>td:FIRST-CHILD,.table-striped.table-rank>thead>tr>th:FIRST-CHILD
+	{
+	padding-left: 24px;
 }
 
 .row {
@@ -450,11 +454,15 @@ a:active,a:focus {
 .navbar-inverse .navbar-nav>li>a {
 	color: #8d8ea1;
 	outline: 0;
+	padding-left: 10px;
+	padding-right: 10px;
 }
 
 .navbar-inverse .navbar-text {
 	color: #FFFFFF;
 	cursor: default;
+	margin-left: 10px;
+	margin-right: 10px;
 }
 
 /* emulates .open click */
@@ -504,7 +512,7 @@ a:active,a:focus {
 	height: 65px;
 	font-size: 18px;
 	border-radius: 0px;
-	border: 1px solid #d9dce0;
+	border-bottom: 1px solid #d9dce0;
 	outline: 0;
 	color: #5c5e65;
 	text-align: left;
@@ -523,15 +531,35 @@ a:active,a:focus {
 
 /* Navbar vertical divider */
 .navbar .divider-vertical {
-	height: 30px;
 	margin: 10px 9px;
-	border-right: 1px solid #454757;
-	border-left: 1px solid #454757;
+	height: 30px;
+	width: 1px;
+	background-color: #454757;
+	border: none;
+	box-shadow: none;
 }
 
-.navbar-inverse .divider-vertical {
-	border-right-color: #454757;
-	border-left-color: #454757;
+/* Horizontal divider */
+.divider-horizontal {
+	display: inline-block;
+	height: 1px;
+	width: 100%;
+	background-color: #d6d6d6;
+	border: none;
+	box-shadow: none;
+	margin: 0px;
+	padding: 0px;
+}
+
+.divider-horizontal-header {
+	display: block;
+	height: 1px;
+	width: 100%;
+	background-color: #454757;
+	border: none;
+	box-shadow: none;
+	margin: 0px;
+	padding: 0px;
 }
 
 /* Tabs Login/Register */

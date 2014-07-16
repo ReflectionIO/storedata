@@ -28,198 +28,141 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
-import com.willshex.gson.json.service.client.JsonService;
-import com.willshex.gson.json.service.client.JsonServiceCallEventHandler;
 import com.willshex.gson.json.service.shared.Error;
-import com.willshex.gson.json.service.shared.Request;
-import com.willshex.gson.json.service.shared.Response;
 
 /**
  * @author billy1380
  * 
  */
-public class LoginPage extends Page implements NavigationEventHandler, SessionEventHandler, JsonServiceCallEventHandler {
+public class LoginPage extends Page implements NavigationEventHandler, SessionEventHandler {
 
-	
-	public interface Style extends CssResource {
-	    String mainPanel();
-	}
-	
-	private static LoginPageUiBinder uiBinder = GWT.create(LoginPageUiBinder.class);
+    public interface Style extends CssResource {
+        String mainPanel();
+    }
 
-	interface LoginPageUiBinder extends UiBinder<Widget, LoginPage> {}
+    private static LoginPageUiBinder uiBinder = GWT.create(LoginPageUiBinder.class);
 
-	private static final String WELCOME_ACTION_NAME = "welcome";
+    interface LoginPageUiBinder extends UiBinder<Widget, LoginPage> {}
 
-	@UiField WelcomePanel mWelcomePanel; // Welcome panel, showed when action 'welcome' is in the stack
+    private static final String WELCOME_ACTION_NAME = "welcome";
 
-	@UiField HTMLPanel mDefaultLogin;
+    @UiField WelcomePanel mWelcomePanel; // Welcome panel, showed when action 'welcome' is in the stack
 
-	@UiField InlineHyperlink register;
-	@UiField InlineHyperlink login;
-	@UiField LoginForm mLoginForm; // Usual login panel
+    @UiField HTMLPanel mDefaultLogin;
 
-	@UiField AlertBox mAlertBox;
+    @UiField InlineHyperlink register;
+    @UiField InlineHyperlink login;
+    @UiField LoginForm mLoginForm; // Usual login panel
 
-	@UiField Style style;
+    @UiField AlertBox mAlertBox;
 
-	@UiField Preloader preloader;
+    @UiField Style style;
 
-	public LoginPage() {
-		initWidget(uiBinder.createAndBindUi(this));
-		login.setTargetHistoryToken(PageType.LoginPageType.asTargetHistoryToken(FormHelper.REQUEST_INVITE_ACTION_NAME));
-		// String mediaQueries = " @media (max-width: 768px) {." + style.mainPanel() + " {margin-top:20px;}}";
-		// StyleInjector.injectAtEnd(mediaQueries);
-	}
+    @UiField Preloader preloader;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
-	 */
-	@Override
-	protected void onAttach() {
+    public LoginPage() {
+        initWidget(uiBinder.createAndBindUi(this));
+        login.setTargetHistoryToken(PageType.LoginPageType.asTargetHistoryToken(FormHelper.REQUEST_INVITE_ACTION_NAME));
 
-		super.onAttach();
+        mLoginForm.setPreloader(preloader); // Assign the preloader reference to the Login Form
+        // String mediaQueries = " @media (max-width: 768px) {." + style.mainPanel() + " {margin-top:20px;}}";
+        // StyleInjector.injectAtEnd(mediaQueries);
+    }
 
-		register.setText("Request invite");
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.gwt.user.client.ui.Composite#onAttach()
+     */
+    @Override
+    protected void onAttach() {
 
-		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
-		register(EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
-		EventController.get().addHandler(JsonServiceCallEventHandler.TYPE, this);
-	}
+        super.onAttach();
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
-	 * io.reflection.app.client.controller.NavigationController.Stack)
-	 */
-	@Override
-	public void navigationChanged(Stack previous, Stack current) {
-		Stack s = NavigationController.get().getStack();
-		if (s != null && s.hasAction()) {
-			if (WELCOME_ACTION_NAME.equals(s.getAction())) { // If action == 'welcome', show the Welcome panel
-				mWelcomePanel.setVisible(true);
-				mDefaultLogin.setVisible(false);
-			} else { // If action == email (user has been just registered to the system) attach him email to field
-				String email = getEmail(s.getAction());
+        register.setText("Request invite");
 
-				if (email == null) {
-					email = getEmail(s.getParameter(0));
-				}
+        register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+        register(EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
+    }
 
-				if (email != null) {
-					mWelcomePanel.setVisible(false);
-					mDefaultLogin.setVisible(true);
-					mLoginForm.setUsername(email);
-				}
-			}
-		} else {
-			mWelcomePanel.setVisible(false);
-			mDefaultLogin.setVisible(true);
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
+     * io.reflection.app.client.controller.NavigationController.Stack)
+     */
+    @Override
+    public void navigationChanged(Stack previous, Stack current) {
+        Stack s = NavigationController.get().getStack();
+        if (s != null && s.hasAction()) {
+            if (WELCOME_ACTION_NAME.equals(s.getAction())) { // If action == 'welcome', show the Welcome panel
+                mWelcomePanel.setVisible(true);
+                mDefaultLogin.setVisible(false);
+            } else { // If action == email (user has been just registered to the system) attach him email to field
+                String email = getEmail(s.getAction());
 
-		}
+                if (email == null) {
+                    email = getEmail(s.getParameter(0));
+                }
 
-		// Set proper text for Register / Request invite panel
-		// Request invite label
-		if ((previous != null && previous.getAction() != null && FormHelper.REQUEST_INVITE_ACTION_NAME.equals(previous.getAction()))
-				|| (current != null && current.getAction() != null && FormHelper.REQUEST_INVITE_ACTION_NAME.equals(current.getAction()))) {
-			register.setText("Request invite");
-			register.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken(FormHelper.REQUEST_INVITE_ACTION_NAME));
-			// Register label
-		} else {
-			register.setText("Register");
-			if (previous != null && previous.getAction() != null && FormHelper.COMPLETE_ACTION_NAME.equals(previous.getAction())
-					&& (previous.getParameter(FormHelper.CODE_PARAMETER_INDEX)) != null) {
-				register.setTargetHistoryToken(previous.toString());
-			} else {
-				register.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken());
-			}
-		}
+                if (email != null) {
+                    mWelcomePanel.setVisible(false);
+                    mDefaultLogin.setVisible(true);
+                    mLoginForm.setUsername(email);
+                }
+            }
+        } else {
+            mWelcomePanel.setVisible(false);
+            mDefaultLogin.setVisible(true);
 
-	}
+        }
 
-	public String getEmail(String value) {
-		String email = null;
+        register.setText("Request invite");
+        register.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken(FormHelper.REQUEST_INVITE_ACTION_NAME));
 
-		if (value != null && value.length() > 0 && FormHelper.isValidEmail(value)) {
-			email = value;
-		}
+    }
 
-		return email;
-	}
+    public String getEmail(String value) {
+        String email = null;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.SessionEventHandler#userLoggedIn(io.reflection.app.shared.datatypes.User,
-	 * io.reflection.app.api.shared.datatypes.Session)
-	 */
-	@Override
-	public void userLoggedIn(User user, Session session) {
-		preloader.hide();
-		NavigationController.get().showNext();
-	}
+        if (value != null && value.length() > 0 && FormHelper.isValidEmail(value)) {
+            email = value;
+        }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.SessionEventHandler#userLoggedOut()
-	 */
-	@Override
-	public void userLoggedOut() {
-		preloader.hide();
-	}
+        return email;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.SessionEventHandler#userLoginFailed(com.willshex.gson.json.service.shared.Error)
-	 */
-	@Override
-	public void userLoginFailed(Error error) {
-		//mLoginForm.setEnabled(true);
-		preloader.hide();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.client.handler.SessionEventHandler#userLoggedIn(io.reflection.app.shared.datatypes.User,
+     * io.reflection.app.api.shared.datatypes.Session)
+     */
+    @Override
+    public void userLoggedIn(User user, Session session) {
+        preloader.hide();
+        NavigationController.get().showNext();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.json.service.client.JsonServiceCallEventHandler#jsonServiceCallStart(com.willshex.gson.json.service.client.JsonService,
-	 * java.lang.String, com.willshex.gson.json.service.shared.Request, com.google.gwt.http.client.Request)
-	 */
-	@Override
-	public void jsonServiceCallStart(JsonService origin, String callName, Request input, com.google.gwt.http.client.Request handle) {
-		if ("Login".equals(callName)) {
-			preloader.show();
-		}
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.client.handler.SessionEventHandler#userLoggedOut()
+     */
+    @Override
+    public void userLoggedOut() {
+        preloader.hide();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.json.service.client.JsonServiceCallEventHandler#jsonServiceCallSuccess(com.willshex.gson.json.service.client.JsonService,
-	 * java.lang.String, com.willshex.gson.json.service.shared.Request, com.willshex.gson.json.service.shared.Response)
-	 */
-	@Override
-	public void jsonServiceCallSuccess(JsonService origin, String callName, Request input, Response output) {
-		if ("Login".equals(callName)) {
-			preloader.hide();
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.json.service.client.JsonServiceCallEventHandler#jsonServiceCallFailure(com.willshex.gson.json.service.client.JsonService,
-	 * java.lang.String, com.willshex.gson.json.service.shared.Request, java.lang.Throwable)
-	 */
-	@Override
-	public void jsonServiceCallFailure(JsonService origin, String callName, Request input, Throwable caught) {
-		if ("Login".equals(callName)) {
-			preloader.hide();
-		}
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.client.handler.SessionEventHandler#userLoginFailed(com.willshex.gson.json.service.shared.Error)
+     */
+    @Override
+    public void userLoginFailed(Error error) {
+        // mLoginForm.setEnabled(true);
+        preloader.hide();
+    }
 
 }

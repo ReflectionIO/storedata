@@ -1,66 +1,88 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+    xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
     xmlns:c="urn:import:com.google.gwt.user.cellview.client" xmlns:pp="urn:import:io.reflection.app.client.page.part">
 
     <ui:style type="io.reflection.app.client.page.RanksPage.RanksPageStyle">
-        .red {
-        color: red;
-        }
-
-        .green {
-        color: green;
-        }
-
-        .silver {
-        color: silver;
-        }
-
-		.content{
-		padding-left: 0px;
-		padding-right: 0px;
-		}
-
-		.table{
-		margin-left: 20px;
-		margin-right: 25px;
-		margin-top: 20px;
-		}
+    .red {
+    	color: red;
+    }
+    
+    .green {
+    	color: green;
+    }
+    
+    .silver {
+    	color: silver;
+    }
+    
+    .content {
+    	padding-left: 0px;
+    	padding-right: 0px;
+    }
+    
+    .table {
+    	margin-left: 20px;
+    	margin-right: 20px;
+    	margin-top: 20px;
+    }
+    
+    .all {
+    	border-right: 1px solid #d9dce0 !important;
+    }
+    
+    .paid {
+    	border-right: 1px solid #d9dce0 !important;
+    }
+    
+    .free {
+    	border-right: 1px solid #d9dce0 !important;
+    }
     </ui:style>
-    <g:HTMLPanel>
+    <g:HTMLPanel styleName="row">
 
-        <div class="row">
+        <pp:RankSidePanel ui:field="mSidePanel"
+            styleName="sidepanel sidebar-nav col-md-3 col-lg-2 well" />
 
-            <pp:RankSidePanel ui:field="mSidePanel" styleName="sidepanel col-md-2 well" />
+        <div class="col-md-9 col-lg-10 {style.content}">
+            <ul class="nav nav-tabs nav-justified ranks">
+                <li ui:field="mAllItem">
+                    <g:InlineHyperlink ui:field="mAll"
+                        styleName="{style.all}">Overview
+                        / All</g:InlineHyperlink>
+                </li>
+                <li ui:field="mPaidItem">
+                    <g:InlineHyperlink ui:field="mPaid"
+                        styleName="{style.paid}">Paid</g:InlineHyperlink>
+                </li>
+                <li ui:field="mFreeItem">
+                    <g:InlineHyperlink ui:field="mFree"
+                        styleName="{style.free}">Free</g:InlineHyperlink>
+                </li>
+                <li ui:field="mGrossingItem">
+                    <g:InlineHyperlink ui:field="mGrossing">Grossing</g:InlineHyperlink>
+                </li>
+            </ul>
 
-            <div class="col-md-10 {style.content}">
-                <ul class="nav nav-tabs nav-justified ranks">
-                    <li ui:field="mAllItem">
-                        <g:InlineHyperlink ui:field="mAll">Overview / All</g:InlineHyperlink>
-                    </li>
-                    <li ui:field="mPaidItem">
-                        <g:InlineHyperlink ui:field="mPaid">Paid</g:InlineHyperlink>
-                    </li>
-                    <li ui:field="mFreeItem">
-                        <g:InlineHyperlink ui:field="mFree">Free</g:InlineHyperlink>
-                    </li>
-                    <li ui:field="mGrossingItem">
-                        <g:InlineHyperlink ui:field="mGrossing">Grossing</g:InlineHyperlink>
-                    </li>
-                </ul>
+            <div class="{style.table}">
 
-                <div class="{style.table}">
+                <c:CellTable ui:field="mRanks"
+                    styleName="table table-hover table-striped table-rank" />
 
-                    <c:CellTable ui:field="mRanks" styleName="table table-hover table-striped" />
-
-                    <p:PageSizePager ui:field="mPager" styleName="text-center" visible="false" />
-
-                    <div class="text-center">
-                        <g:Button ui:field="redirect" styleName="btn btn-lg btn-default">Load More</g:Button>
+                <g:HTMLPanel ui:field="showMorePanel">
+                    <p:PageSizePager ui:field="mPager"
+                        styleName="text-left" visible="false" />
+                    <div class="text-left">
+                        <g:Button ui:field="redirect"
+                            styleName="btn btn-default">
+                            View More Apps
+                            <span class="icon-plus" />
+                        </g:Button>
                     </div>
-
-                </div>
+                </g:HTMLPanel>
 
             </div>
+
         </div>
 
     </g:HTMLPanel>

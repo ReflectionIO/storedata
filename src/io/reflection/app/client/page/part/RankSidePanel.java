@@ -65,7 +65,7 @@ public class RankSidePanel extends Composite {
 		FilterHelper.addCountries(mCountry);
 		FilterHelper.addCategories(category);
 
-		date.setFormat(new DefaultFormat(DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT)));
+		date.setFormat(new DefaultFormat(DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT_DD_MM_YYYY)));
 
 		date.getDatePicker().addShowRangeHandler(new ShowRangeHandler<Date>() {
 
