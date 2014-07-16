@@ -159,53 +159,145 @@ public class PredictorIOS implements Predictor {
 			boolean usesIap = properties.getBoolean(ItemPropertyLookupServlet.PROPERTY_IAP);
 
 			if (item != null) {
-				if (rank.price.floatValue() > 0) {
-					if (usesIap) {
-						if (rank.grossingPosition != null) {
-							rank.downloads = Integer.valueOf((int) (modelRun.grossingB.doubleValue() * Math.pow(rank.grossingPosition.doubleValue(),
-									-modelRun.grossingAIap)));
-							rank.revenue = Float.valueOf((float) (rank.downloads.doubleValue() * (rank.price.doubleValue() + modelRun.theta.doubleValue())));
-						} else {
-							rank.downloads = Integer.valueOf((int) (modelRun.paidB.doubleValue() * Math.pow(rank.position.doubleValue(), -modelRun.paidAIap)));
-							rank.revenue = Float.valueOf((float) ((modelRun.theta.doubleValue() + rank.price.doubleValue()) * rank.downloads.doubleValue()));
-						}
+				setDownloadsAndRevenue(rank, modelRun, usesIap, rank.price.floatValue());
 
-					} else {
-						if (rank.grossingPosition != null) {
-							rank.downloads = Integer.valueOf((int) (modelRun.grossingB.doubleValue() * Math.pow(rank.grossingPosition.doubleValue(),
-									-modelRun.grossingA.doubleValue())));
-							rank.revenue = Float.valueOf((float) (rank.downloads.floatValue() * rank.price.floatValue()));
-						} else {
-							rank.downloads = Integer.valueOf((int) (modelRun.paidB.doubleValue() * Math.pow(rank.position.doubleValue(), -modelRun.paidA)));
-							rank.revenue = Float.valueOf(rank.price.floatValue() * rank.downloads.floatValue());
-						}
-
-					}
-				} else if (rank.price.floatValue() == 0) {
-					if (usesIap || rank.grossingPosition != null) {
-						if (rank.grossingPosition != null) {
-							rank.downloads = Integer.valueOf((int) (modelRun.grossingB.doubleValue() * Math.pow(rank.grossingPosition.doubleValue(),
-									-modelRun.grossingAIap.doubleValue())));
-							rank.revenue = Float.valueOf((float) (rank.downloads.doubleValue() * modelRun.theta.doubleValue()));
-						} else {
-							rank.downloads = Integer.valueOf((int) (modelRun.freeB.doubleValue() * Math.pow(rank.position.doubleValue(), -modelRun.freeA)));
-							rank.revenue = Float.valueOf((float) (modelRun.theta.doubleValue() * rank.downloads.doubleValue()));
-						}
-					} else {
-						if (rank.grossingPosition != null) {
-							// ERROR!!!
-						} else {
-							rank.downloads = Integer.valueOf((int) (modelRun.freeB.doubleValue() * Math.pow(rank.position.doubleValue(), -modelRun.freeA)));
-							rank.revenue = Float.valueOf(0);
-
-						}
-
-					}
-				}
+				// if (rank.price.floatValue() > 0) {
+				// if (usesIap) {
+				// if (rank.grossingPosition != null) {
+				// rank.downloads = Integer.valueOf((int) (modelRun.grossingB.doubleValue() * Math.pow(rank.grossingPosition.doubleValue(),
+				// -modelRun.grossingAIap)));
+				// rank.revenue = Float.valueOf((float) (rank.downloads.doubleValue() * (rank.price.doubleValue() + modelRun.theta.doubleValue())));
+				// } else {
+				// rank.downloads = Integer.valueOf((int) (modelRun.paidB.doubleValue() * Math.pow(rank.position.doubleValue(), -modelRun.paidAIap)));
+				// rank.revenue = Float.valueOf((float) ((modelRun.theta.doubleValue() + rank.price.doubleValue()) * rank.downloads.doubleValue()));
+				// }
+				//
+				// } else {
+				// if (rank.grossingPosition != null) {
+				// rank.downloads = Integer.valueOf((int) (modelRun.grossingB.doubleValue() * Math.pow(rank.grossingPosition.doubleValue(),
+				// -modelRun.grossingA.doubleValue())));
+				// rank.revenue = Float.valueOf((float) (rank.downloads.floatValue() * rank.price.floatValue()));
+				// } else {
+				// rank.downloads = Integer.valueOf((int) (modelRun.paidB.doubleValue() * Math.pow(rank.position.doubleValue(), -modelRun.paidA)));
+				// rank.revenue = Float.valueOf(rank.price.floatValue() * rank.downloads.floatValue());
+				// }
+				//
+				// }
+				// } else if (rank.price.floatValue() == 0) {
+				// if (usesIap || rank.grossingPosition != null) {
+				// if (rank.grossingPosition != null) {
+				// rank.downloads = Integer.valueOf((int) (modelRun.grossingB.doubleValue() * Math.pow(rank.grossingPosition.doubleValue(),
+				// -modelRun.grossingAIap.doubleValue())));
+				// rank.revenue = Float.valueOf((float) (rank.downloads.doubleValue() * modelRun.theta.doubleValue()));
+				// } else {
+				// rank.downloads = Integer.valueOf((int) (modelRun.freeB.doubleValue() * Math.pow(rank.position.doubleValue(), -modelRun.freeA)));
+				// rank.revenue = Float.valueOf((float) (modelRun.theta.doubleValue() * rank.downloads.doubleValue()));
+				// }
+				// } else {
+				// if (rank.grossingPosition != null) {
+				// // ERROR!!!
+				// } else {
+				// rank.downloads = Integer.valueOf((int) (modelRun.freeB.doubleValue() * Math.pow(rank.position.doubleValue(), -modelRun.freeA)));
+				// rank.revenue = Float.valueOf(0);
+				//
+				// }
+				//
+				// }
+				// }
 
 				RankServiceProvider.provide().updateRank(rank);
 			}
 		}
+	}
+
+	private void setDownloadsAndRevenue(Rank rank, ModelRun output, boolean usesIap, float price) {
+		double revenue = 0.0;
+		double downloads = 0.0;
+
+		if (usesIap) {
+			if (isFree(price)) {
+				if (rank.grossingPosition == null) {
+					downloads = (double) (output.freeB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.freeA.doubleValue()));
+					revenue = output.theta.doubleValue() * downloads;
+				} else {
+					downloads = (double) (output.freeB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.freeA.doubleValue()));
+					// revenue = output.th * downloads;
+					revenue = output.grossingB.doubleValue() * Math.pow(rank.grossingPosition.doubleValue(), -output.grossingA.doubleValue());
+					// revenue = reconcile(revenue, grossing_revenue);
+				}
+			} else {
+				if (rank.grossingPosition == null) {
+					downloads = (double) (output.paidB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.paidAIap.doubleValue()));
+					revenue = downloads * (price + output.theta.doubleValue());
+				} else {
+					downloads = (double) (output.paidB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.paidAIap.doubleValue()));
+					revenue = output.grossingB.doubleValue() * Math.pow(rank.grossingPosition.doubleValue(), -output.grossingAIap.doubleValue());
+					// revenue = reconcile(revenue, grossing_revenue);
+				}
+			}
+		} else {
+			if (isFree(price)) {
+				// revenue is zero since it is a free app and no IAP. Thus only
+				// download calculated here
+				downloads = (double) (output.freeB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.freeA.doubleValue()));
+			} else {
+				if (rank.grossingPosition == null) {
+					downloads = (double) (output.paidB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.paidA.doubleValue()));
+					revenue = downloads * price;
+				} else {
+					downloads = (double) (output.paidB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.paidA.doubleValue()));
+					revenue = output.grossingB.doubleValue() * Math.pow(rank.grossingPosition.doubleValue(), -output.grossingA.doubleValue());
+					// revenue = reconcile(revenue, grossing_revenue);
+				}
+			}
+		}
+
+		// These numbers still overflow using the current model
+		rank.downloads = Integer.valueOf((int) downloads);
+		rank.revenue = Float.valueOf((float) revenue);
+
+		LOG.info("Downloads :" + downloads);
+		LOG.info("Revenue :" + revenue);
+	}
+
+	// private void rank(ModelRun output, int downloads, double revenue, String rankType, boolean usesIap, float price) {
+	// double predictedRank = 0;
+	//
+	// if (usesIap) {
+	// if ("revenue".equals(rankType)) {
+	// if (isFree(price)) {
+	// predictedRank = (double) Math.pow(((revenue / output.theta.doubleValue()) / output.freeB.doubleValue()),
+	// (1.0 / -output.freeA.doubleValue()));
+	// } else {
+	// predictedRank = (double) Math.pow((revenue / (price + output.theta.doubleValue()) / output.paidB.doubleValue()),
+	// (-1.0 / output.paidA.doubleValue()));
+	// }
+	// } else {
+	// if (isFree(price)) {
+	// predictedRank = (double) Math.pow((downloads / output.freeB.doubleValue()), (1.0 / -output.freeA.doubleValue()));
+	// } else {
+	// predictedRank = (double) Math.pow((downloads / output.paidB.doubleValue()), (1.0 / -output.paidA.doubleValue()));
+	// }
+	// }
+	// } else {
+	// if ("revenue".equals(rankType)) {
+	// if (!isFree(price)) {
+	// predictedRank = (double) Math.pow((revenue / output.grossingB.doubleValue()), (1.0 / -output.grossingA.doubleValue()));
+	// }
+	// } else {
+	// if (isFree(price)) {
+	// predictedRank = (double) Math.pow((downloads / output.freeB.doubleValue()), (1.0 / -output.freeA.doubleValue()));
+	// } else {
+	// predictedRank = (double) Math.pow((downloads / output.paidB.doubleValue()), (1.0 / -output.paidA.doubleValue()));
+	// }
+	// }
+	// }
+	//
+	// LOG.info("predictedRank :" + predictedRank);
+	// }
+
+	private boolean isFree(float price) {
+		return price <= Float.MIN_VALUE;
 	}
 
 }
