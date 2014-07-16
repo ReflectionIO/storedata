@@ -7,8 +7,12 @@
 //
 package io.reflection.app.client.part.login;
 
+import io.reflection.app.api.core.shared.call.LoginRequest;
+import io.reflection.app.api.core.shared.call.LoginResponse;
+import io.reflection.app.api.core.shared.call.event.LoginEventHandler;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.FormHelper;
+import io.reflection.app.client.part.Preloader;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -29,165 +33,198 @@ import com.google.gwt.user.client.ui.Widget;
  * @author stefanocapuzzi
  * 
  */
-public class LoginForm extends Composite {
+public class LoginForm extends Composite implements LoginEventHandler {
 
-	private static LoginFormUiBinder uiBinder = GWT.create(LoginFormUiBinder.class);
+    private static LoginFormUiBinder uiBinder = GWT.create(LoginFormUiBinder.class);
 
-	interface LoginFormUiBinder extends UiBinder<Widget, LoginForm> {}
+    interface LoginFormUiBinder extends UiBinder<Widget, LoginForm> {}
 
-	@UiField FormPanel mForm;
+    @UiField FormPanel mForm;
 
-	@UiField TextBox mEmail;
-	@UiField HTMLPanel mEmailGroup;
-	@UiField HTMLPanel mEmailNote;
-	private String mEmailError = null;
+    @UiField TextBox mEmail;
+    @UiField HTMLPanel mEmailGroup;
+    @UiField HTMLPanel mEmailNote;
+    private String mEmailError = null;
 
-	@UiField TextBox mPassword;
-	@UiField HTMLPanel mPasswordGroup;
-	@UiField HTMLPanel mPasswordNote;
-	private String mPasswordError = null;
+    @UiField TextBox mPassword;
+    @UiField HTMLPanel mPasswordGroup;
+    @UiField HTMLPanel mPasswordNote;
+    private String mPasswordError = null;
 
-	@UiField CheckBox mRememberMe;
+    private Preloader preloaderRef;
 
-	@UiField Button mLogin;
+    @UiField CheckBox mRememberMe;
 
-	public LoginForm() {
-		initWidget(uiBinder.createAndBindUi(this));
+    @UiField Button mLogin;
 
-		mEmail.getElement().setAttribute("placeholder", "Email");
-		mPassword.getElement().setAttribute("placeholder", "Password");
-	}
+    public LoginForm() {
+        initWidget(uiBinder.createAndBindUi(this));
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
-	 */
-	@Override
-	protected void onAttach() {
-		super.onAttach();
+        mEmail.getElement().setAttribute("placeholder", "Email");
+        mPassword.getElement().setAttribute("placeholder", "Password");
+    }
 
-		resetForm();
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.gwt.user.client.ui.Composite#onAttach()
+     */
+    @Override
+    protected void onAttach() {
+        super.onAttach();
 
-		if (!mLogin.isVisible()) {
-			mLogin.setVisible(true);
-		}
+        resetForm();
 
-	}
+        if (!mLogin.isVisible()) {
+            mLogin.setVisible(true);
+        }
 
-	public void setUsername(String value) {
-		if (value != null && value.length() > 0) {
-			mEmail.setText(value);
-			mPassword.setFocus(true);
-		}
-	}
+    }
 
-	/**
-	 * Fire the button when pressing the 'enter' key on one of the form fields
-	 * 
-	 * @param event
-	 */
-	@UiHandler({ "mEmail", "mPassword" })
-	void onEnterKeyPressFields(KeyPressEvent event) {
-		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
-			mLogin.click();
-		}
-	}
+    /**
+     * Set preloader object from Login Page
+     * 
+     * @param p
+     */
+    public void setPreloader(Preloader p) {
+        preloaderRef = p;
+    }
 
-	@UiHandler("mLogin")
-	void onLoginClicked(ClickEvent event) {
-		if (validate()) {
-			clearErrors();
-			//setEnabled(false);
-			SessionController.get().login(mEmail.getText(), mPassword.getText(), mRememberMe.getValue().booleanValue()); // Execute user login
-		} else {
-			if (mEmailError != null) {
-				FormHelper.showNote(true, mEmailGroup, mEmailNote, mEmailError);
-			} else {
-				FormHelper.hideNote(mEmailGroup, mEmailNote);
-			}
-			if (mPasswordError != null) {
-				FormHelper.showNote(true, mPasswordGroup, mPasswordNote, mPasswordError);
-			} else {
-				FormHelper.hideNote(mPasswordGroup, mPasswordNote);
-			}
-		}
-	}
+    public void setUsername(String value) {
+        if (value != null && value.length() > 0) {
+            mEmail.setText(value);
+            mPassword.setFocus(true);
+        }
+    }
 
-	private boolean validate() {
+    /**
+     * Fire the button when pressing the 'enter' key on one of the form fields
+     * 
+     * @param event
+     */
+    @UiHandler({ "mEmail", "mPassword" })
+    void onEnterKeyPressFields(KeyPressEvent event) {
+        if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
+            mLogin.click();
+        }
+    }
 
-		boolean validated = true;
-		// Retrieve fields to validate
-		String email = mEmail.getText();
-		String password = mPassword.getText();
+    @UiHandler("mLogin")
+    void onLoginClicked(ClickEvent event) {
+        if (validate()) {
+            clearErrors();
+            preloaderRef.show();
+            SessionController.get().login(mEmail.getText(), mPassword.getText(), mRememberMe.getValue().booleanValue()); // Execute user login
+        } else {
+            if (mEmailError != null) {
+                FormHelper.showNote(true, mEmailGroup, mEmailNote, mEmailError);
+            } else {
+                FormHelper.hideNote(mEmailGroup, mEmailNote);
+            }
+            if (mPasswordError != null) {
+                FormHelper.showNote(true, mPasswordGroup, mPasswordNote, mPasswordError);
+            } else {
+                FormHelper.hideNote(mPasswordGroup, mPasswordNote);
+            }
+        }
+    }
 
-		// Check fields constraints
-		if (email == null || email.length() == 0) {
-			mEmailError = "Cannot be empty";
-			validated = false;
-		} else if (email.length() < 6) {
-			mEmailError = "Too short (minimum 6 characters)";
-			validated = false;
-		} else if (email.length() > 255) {
-			mEmailError = "Too long (maximum 255 characters)";
-			validated = false;
-		} else if (!FormHelper.isValidEmail(email)) {
-			mEmailError = "Invalid email address";
-			validated = false;
-		} else {
-			mEmailError = null;
-			validated = validated && true;
-		}
+    private boolean validate() {
 
-		if (password == null || password.length() == 0) {
-			mPasswordError = "Cannot be empty";
-			validated = false;
-		} else if (password.length() < 6) {
-			mPasswordError = "Too short (minimum 6 characters)";
-			validated = false;
-		} else if (password.length() > 64) {
-			mPasswordError = "Too long (maximum 64 characters)";
-			validated = false;
-		} else if (!FormHelper.isTrimmed(password)) {
-			mPasswordError = "Whitespaces not allowed either before or after the string";
-			validated = false;
-		} else {
-			mPasswordError = null;
-			validated = validated && true;
-		}
+        boolean validated = true;
+        // Retrieve fields to validate
+        String email = mEmail.getText();
+        String password = mPassword.getText();
 
-		return validated;
-	}
+        // Check fields constraints
+        if (email == null || email.length() == 0) {
+            mEmailError = "Cannot be empty";
+            validated = false;
+        } else if (email.length() < 6) {
+            mEmailError = "Too short (minimum 6 characters)";
+            validated = false;
+        } else if (email.length() > 255) {
+            mEmailError = "Too long (maximum 255 characters)";
+            validated = false;
+        } else if (!FormHelper.isValidEmail(email)) {
+            mEmailError = "Invalid email address";
+            validated = false;
+        } else {
+            mEmailError = null;
+            validated = validated && true;
+        }
 
-	private void resetForm() {
-		//setEnabled(true);
-		mEmail.setText("");
-		mPassword.setText("");
-		if (mRememberMe.getValue().equals(Boolean.FALSE)) {
-			mRememberMe.setValue(Boolean.FALSE);
-		} else {
-			mRememberMe.setValue(Boolean.TRUE);
-		}
-		clearErrors();
-		mEmail.setFocus(true);
-	}
+        if (password == null || password.length() == 0) {
+            mPasswordError = "Cannot be empty";
+            validated = false;
+        } else if (password.length() < 6) {
+            mPasswordError = "Too short (minimum 6 characters)";
+            validated = false;
+        } else if (password.length() > 64) {
+            mPasswordError = "Too long (maximum 64 characters)";
+            validated = false;
+        } else if (!FormHelper.isTrimmed(password)) {
+            mPasswordError = "Whitespaces not allowed either before or after the string";
+            validated = false;
+        } else {
+            mPasswordError = null;
+            validated = validated && true;
+        }
 
-	private void clearErrors() {
-		FormHelper.hideNote(mEmailGroup, mEmailNote);
-		FormHelper.hideNote(mPasswordGroup, mPasswordNote);
-	}
+        return validated;
+    }
 
-	public void setEnabled(boolean value) {
-		mEmail.setEnabled(value);
-		mEmail.setFocus(value);
-		mRememberMe.setEnabled(value);
-		mLogin.setEnabled(value);
-		mPassword.setEnabled(value);
-		if (!value) {
-			mRememberMe.setFocus(false);
-			mLogin.setFocus(false);
-			mPassword.setFocus(value);
-		}		
-	}
+    private void resetForm() {
+        // setEnabled(true);
+        mEmail.setText("");
+        mPassword.setText("");
+        if (mRememberMe.getValue().equals(Boolean.FALSE)) {
+            mRememberMe.setValue(Boolean.FALSE);
+        } else {
+            mRememberMe.setValue(Boolean.TRUE);
+        }
+        clearErrors();
+        mEmail.setFocus(true);
+    }
+
+    private void clearErrors() {
+        FormHelper.hideNote(mEmailGroup, mEmailNote);
+        FormHelper.hideNote(mPasswordGroup, mPasswordNote);
+    }
+
+    public void setEnabled(boolean value) {
+        mEmail.setEnabled(value);
+        mEmail.setFocus(value);
+        mRememberMe.setEnabled(value);
+        mLogin.setEnabled(value);
+        mPassword.setEnabled(value);
+        if (!value) {
+            mRememberMe.setFocus(false);
+            mLogin.setFocus(false);
+            mPassword.setFocus(value);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.api.core.shared.call.event.LoginEventHandler#loginSuccess(io.reflection.app.api.core.shared.call.LoginRequest,
+     * io.reflection.app.api.core.shared.call.LoginResponse)
+     */
+    @Override
+    public void loginSuccess(LoginRequest input, LoginResponse output) {
+        preloaderRef.hide();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.api.core.shared.call.event.LoginEventHandler#loginFailure(io.reflection.app.api.core.shared.call.LoginRequest,
+     * java.lang.Throwable)
+     */
+    @Override
+    public void loginFailure(LoginRequest input, Throwable caught) {
+        preloaderRef.hide();
+    }
 
 }
