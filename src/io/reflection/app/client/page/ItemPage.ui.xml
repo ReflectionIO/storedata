@@ -59,8 +59,10 @@
                 <!-- <p:CircleProgressBar visible="false" ui:field="loader" 
                     styleName="{style.loading}" /> -->
                 <p:Preloader ui:field="preloader">
-                    <pp:ItemChart ui:field="historyChart"
-                        styleName="{style.pushDown}" />
+                    <g:HTMLPanel>
+                        <pp:ItemChart ui:field="historyChart"
+                            styleName="{style.pushDown}" />
+                    </g:HTMLPanel>
                 </p:Preloader>
                 <c:CellTable ui:field="revenue"
                     styleName="table table-hover table-striped table-item {style.pushDown}"></c:CellTable>
