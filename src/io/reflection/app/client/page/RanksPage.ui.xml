@@ -38,13 +38,22 @@
     .free {
     	border-right: 1px solid #d9dce0 !important;
     }
+    
+    .viewButtons {
+    	padding-top: 15px;
+    	padding-bottom: 35px;
+    }
+    
+    .filler {
+    	height: 40px;
+    }
     </ui:style>
     <g:HTMLPanel styleName="row">
 
         <pp:RankSidePanel ui:field="mSidePanel"
             styleName="sidepanel sidebar-nav col-md-3 col-lg-2 well" />
 
-        <div class="col-md-9 col-lg-10 {style.content}">
+        <g:HTMLPanel styleName="col-md-9 col-lg-10 {style.content}">
             <ul class="nav nav-tabs nav-justified ranks">
                 <li ui:field="mAllItem">
                     <g:InlineHyperlink ui:field="mAll"
@@ -64,26 +73,27 @@
                 </li>
             </ul>
 
-            <div class="{style.table}">
+            <g:HTMLPanel styleName="{style.table}">
 
                 <c:CellTable ui:field="mRanks"
                     styleName="table table-hover table-striped table-rank" />
 
-                <g:HTMLPanel ui:field="showMorePanel">
+                <g:HTMLPanel ui:field="showMorePanel"
+                    visible="false">
                     <p:PageSizePager ui:field="mPager"
-                        styleName="text-left" visible="false" />
-                    <div class="text-left">
+                        styleName="{style.viewButtons}" visible="false" />
+                    <g:HTMLPanel>
                         <g:Button ui:field="redirect"
                             styleName="btn btn-default">
                             View More Apps
                             <span class="icon-plus" />
                         </g:Button>
-                    </div>
+                    </g:HTMLPanel>
                 </g:HTMLPanel>
 
-            </div>
-
-        </div>
+            </g:HTMLPanel>
+            <g:HTMLPanel styleName="{style.filler} col-md-12 hidden-xs hidden-sm" />
+        </g:HTMLPanel>
 
     </g:HTMLPanel>
 </ui:UiBinder> 
