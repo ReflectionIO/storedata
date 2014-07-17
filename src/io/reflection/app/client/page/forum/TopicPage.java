@@ -203,6 +203,11 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 		}
 	}
 
+	/**
+	 * is called when there are new changes to be applied to the topic
+	 * this actually updates these changes in the ui
+	 * @param topic
+	 */
 	private void updateTopic(Topic topic) {
 		if (topic != null) {
 

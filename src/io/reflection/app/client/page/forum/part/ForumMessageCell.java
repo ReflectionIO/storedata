@@ -13,15 +13,18 @@ import io.reflection.app.shared.util.FormattingHelper;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiRenderer;
 import com.google.gwt.user.client.ui.RichTextArea;
@@ -32,6 +35,9 @@ import com.google.gwt.user.client.ui.RichTextArea;
  */
 public class ForumMessageCell extends AbstractCell<ForumMessage> {
 	private RichTextArea richText;
+	
+	@UiField
+	private AnchorElement flag ;
 
 	/**
 	 * @param consumedEvents
@@ -41,10 +47,17 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 	}
 
 	interface ForumMessageCellRenderer extends UiRenderer {
-		void render(SafeHtmlBuilder sb, String authorName, SafeHtml content, String created, Long topicId, Long messageId);
+		void render(SafeHtmlBuilder sb, String authorName, SafeHtml content, String created, Long topicId, Long messageId, String flagStyle, String editStyle);
 
 		void onBrowserEvent(ForumMessageCell o, NativeEvent e, Element p, ForumMessage n);
+
+		ForumMessageStyle getForumMessageStyle();
 	}
+	
+	public interface ForumMessageStyle extends CssResource {
+		  String hidden();
+		  String shown();
+		}
 
 	private static ForumMessageCellRenderer RENDERER = GWT.create(ForumMessageCellRenderer.class);
 
@@ -78,7 +91,10 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 		// value has author
 		// ForumMessage ad property to check the user
 		RENDERER.render(builder, FormattingHelper.getUserLongName(value.getAuthor()), SafeHtmlUtils.fromTrustedString(value.getContent()), "Posted "
-				+ FormattingHelper.getTimeSince(value.getCreated()), value.getTopicId(), value.getId());
+				+ FormattingHelper.getTimeSince(value.getCreated()), value.getTopicId(), value.getId(), 
+				value.belongsToCurrentUser() ? RENDERER.getForumMessageStyle().hidden() : RENDERER.getForumMessageStyle().shown(),
+				value.belongsToCurrentUser() ? RENDERER.getForumMessageStyle().shown() : RENDERER.getForumMessageStyle().hidden()) ;
+		
 	}
 
 	@UiHandler("quote")

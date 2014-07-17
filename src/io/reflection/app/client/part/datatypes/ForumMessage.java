@@ -20,7 +20,7 @@ import java.util.Date;
  */
 public class ForumMessage {
 
-	private Topic topic;
+	private Topic topic; //surely Topic refers to the thread?
 	private Reply reply;
 	Long currentuserId = SessionController.get().getLoggedInUser().id;
 
@@ -59,6 +59,13 @@ public class ForumMessage {
 
 	public boolean canEdit() {
 		return currentuserId == getId() ? true : false;
+	}
+
+	/**
+	 * @return true if the author is the same as the user, false otherwise
+	 */
+	public boolean belongsToCurrentUser() {
+		return getAuthor().id.equals(currentuserId) ;
 	}
 
 }
