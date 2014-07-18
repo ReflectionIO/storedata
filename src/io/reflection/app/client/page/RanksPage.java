@@ -231,14 +231,14 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
         mIapHeader = new TextHeader("IAP");
 
         mRanks.setWidth("100%", true);
-        mRanks.setColumnWidth(position, 50.0, Unit.PCT);
+        mRanks.setColumnWidth(position, 25.0, Unit.PCT);
         mRanks.setColumnWidth(mPaidColumn, 100.0, Unit.PCT);
         mRanks.setColumnWidth(mFreeColumn, 100.0, Unit.PCT);
         mRanks.setColumnWidth(mGrossingColumn, 100.0, Unit.PCT);
-        mRanks.setColumnWidth(mPriceColumn, 30.0, Unit.PCT);
-        mRanks.setColumnWidth(mDownloadsColumn, 30.0, Unit.PCT);
-        mRanks.setColumnWidth(mRevenueColumn, 30.0, Unit.PCT);
-        mRanks.setColumnWidth(mIapColumn, 15.0, Unit.PCT);
+        mRanks.setColumnWidth(mPriceColumn, 60.0, Unit.PCT);
+        mRanks.setColumnWidth(mDownloadsColumn, 60.0, Unit.PCT);
+        mRanks.setColumnWidth(mRevenueColumn, 60.0, Unit.PCT);
+        mRanks.setColumnWidth(mIapColumn, 20.0, Unit.PCT);
 
     }
 
