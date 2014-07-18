@@ -137,7 +137,7 @@ final class FeedFetchService implements IFeedFetchService {
 		final String updateFeedFetchQuery = String
 				.format("UPDATE `feedfetch` SET `country`='%s',`data`='%s',`date`=FROM_UNIXTIME(%d),`store`='%s',`type`='%s',`categoryid`=%d,`code2`=%d,`status`='%s' WHERE `id`=%d",
 						addslashes(feedFetch.country), addslashes(feedFetch.data), feedFetch.date.getTime() / 1000, addslashes(feedFetch.store),
-						addslashes(feedFetch.type), feedFetch.id.longValue(), feedFetch.code.longValue(), feedFetch.status.toString(), feedFetch.id.longValue());
+						addslashes(feedFetch.type), feedFetch.category.id.longValue(), feedFetch.code.longValue(), feedFetch.status.toString(), feedFetch.id.longValue());
 
 		Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
 
