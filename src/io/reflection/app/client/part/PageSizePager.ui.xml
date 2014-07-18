@@ -3,23 +3,23 @@
     xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:style>
     .viewLessLink {
-    	font-size: 14px;
+        font-size: 14px;
     }
     
     .viewMoreBtn {
-    	height: 35px;
-    	font-size: 14px;
-    	margin-right: 20px;
+        height: 35px;
+        font-size: 14px;
+        margin-right: 20px;
     }
     </ui:style>
 
     <g:HTMLPanel>
         <g:Button ui:field="viewMoreButton"
-            styleName="btn btn-default {style.viewMoreBtn}">
+            styleName="btn btn-default pull-left {style.viewMoreBtn}">
             View More Apps
             <span class="icon-plus" />
         </g:Button>
-        <g:Anchor ui:field="backToTopButton" styleName="{style.viewLessLink}">
+        <g:Anchor ui:field="backToTopButton" styleName="pull-right {style.viewLessLink}">
             <span class="icon-angle-up" />
             Back to Top
         </g:Anchor>
