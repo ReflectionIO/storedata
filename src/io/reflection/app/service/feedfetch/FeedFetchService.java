@@ -53,7 +53,7 @@ final class FeedFetchService implements IFeedFetchService {
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection feedFetchConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
 
-		String getFeedFetchQuery = String.format("SELECT * FROM `feedfetch` WHERE `deleted`='n' AND `id`='%d' LIMIT 1", id.longValue());
+		String getFeedFetchQuery = String.format("SELECT * FROM `feedfetch` WHERE `deleted`='n' AND `id`=%d LIMIT 1", id.longValue());
 		try {
 			feedFetchConnection.connect();
 			feedFetchConnection.executeQuery(getFeedFetchQuery);
