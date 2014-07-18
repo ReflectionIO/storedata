@@ -188,7 +188,7 @@ input[type="text"]:disabled {
 
 /* Cell Table - RankPage */
 .table-striped.table-rank>tbody>tr>td {
-    height: 70px;
+    height: 78px;
 }
 
 /* Cell Table - LinkedAccountsPage */
