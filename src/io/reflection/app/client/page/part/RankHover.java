@@ -9,16 +9,17 @@
 package io.reflection.app.client.page.part;
 
 import io.reflection.app.client.page.part.ItemChart.YAxisDataType;
+import io.reflection.app.shared.util.FormattingHelper;
 
 import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.gchart.client.GChart.Curve.Point;
 import com.googlecode.gchart.client.HoverUpdateable;
@@ -33,8 +34,8 @@ public class RankHover extends Composite implements HoverUpdateable {
 
 	interface RankHoverUiBinder extends UiBinder<Widget, RankHover> {}
 
-	@UiField DivElement date;
-	@UiField DivElement detail;
+	@UiField HTMLPanel date;
+	@UiField HTMLPanel detail;
 
 	private ItemChart.YAxisDataType dataType;
 	private String currency;
@@ -60,16 +61,16 @@ public class RankHover extends Composite implements HoverUpdateable {
 	 */
 	@Override
 	public void hoverUpdate(Point hoveredOver) {
-		date.setInnerHTML(DateTimeFormat.getFormat("MMM d, yyyy").format(new Date((long) hoveredOver.getX())));
+		date.getElement().setInnerHTML(DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT_EEE_DD_MMM_YYYY).format(new Date((long) hoveredOver.getX())));
 		switch (dataType) {
 		case RevenueYAxisDataType:
-			detail.setInnerHTML("Revenue: " + currency + " " + Double.toString(hoveredOver.getY()));
+			detail.getElement().setInnerHTML(currency + " " + Double.toString(hoveredOver.getY()));
 			break;
 		case DownloadsYAxisDataType:
-			detail.setInnerHTML("Downloads: " + Double.toString(hoveredOver.getY()));
+			detail.getElement().setInnerHTML(Double.toString(hoveredOver.getY()));
 			break;
 		case RankingYAxisDataType:
-			detail.setInnerHTML("Rank: " + Double.toString(hoveredOver.getY()));
+			detail.getElement().setInnerHTML(Double.toString(hoveredOver.getY()));
 			break;
 		}
 	}
