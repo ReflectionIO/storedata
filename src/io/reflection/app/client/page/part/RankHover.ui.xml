@@ -3,18 +3,18 @@
     xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:style>
     .box {
-    	height: 72px;
-    	width: 142px;
-    	background-color: #272833;
-    	margin: 0px;
-    	border-top: solid 5px #736fb3;
-    	overflow: hidden;
-    	border-radius: 2px;
-    	-webkit-border-radius: 2px;
-    	-moz-border-radius: 2px;
+        height: 60px;
+        width: 116px;
+        background-color: #272833;
+        margin: 0px;
+        border-top: solid 5px #736fb3;
+        overflow: hidden;
+        border-radius: 2px;
+        -webkit-border-radius: 2px;
+        -moz-border-radius: 2px;
     }
     
-    .box:after {
+   .box:after {
     	top: 100%;
     	left: 50%;
     	border: solid transparent;
@@ -27,21 +27,20 @@
     	border-width: 10px;
     	margin-left: -10px;
     }
-    
     .date {
-    	color: #a5a6b6;
-    	font-size: 12px;
-    	text-align: left;
-    	margin: 0px;
-    	padding: 12px 12px 0px 12px;
+        color: #a5a6b6;
+        font-size: 12px;
+        text-align: left;
+        margin: 0px;
+        padding: 12px 8px 0px 8px;
     }
     
     .detail {
-    	font-size: 16px;
-    	text-align: left;
-    	color: #FFFFFF;
-    	margin: 0px;
-    	padding: 0px 12px;
+        font-size: 14px;
+        text-align: left;
+        color: #FFFFFF;
+        margin: 0px;
+        padding: 0px 8px;
     }
     </ui:style>
     <g:HTMLPanel styleName="{style.box}">

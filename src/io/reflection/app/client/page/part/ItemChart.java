@@ -50,7 +50,7 @@ public class ItemChart extends GChart {
     };
 
     private void resize() {
-        setChartSize((int) (this.getParent().getElement().getClientWidth() - this.getParent().getElement().getClientWidth() * 0.045), 350);
+        setChartSize((int) (this.getParent().getElement().getClientWidth() - 50), 350);
 
         update();
     }
