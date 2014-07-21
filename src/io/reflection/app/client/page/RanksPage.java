@@ -140,6 +140,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
         mRanks.setEmptyTableWidget(new HTMLPanel("No ranking data for filter!"));
         mRanks.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
         RankController.get().addDataDisplay(mRanks);
+        mPager.setTitle("View More Apps");
         mPager.setDisplay(mRanks);
     }
 

@@ -30,149 +30,153 @@ import com.google.gwt.view.client.Range;
  */
 public class PageSizePager extends AbstractPager {
 
-	private static PageSizePagerUiBinder uiBinder = GWT.create(PageSizePagerUiBinder.class);
+    private static PageSizePagerUiBinder uiBinder = GWT.create(PageSizePagerUiBinder.class);
 
-	interface PageSizePagerUiBinder extends UiBinder<Widget, PageSizePager> {}
+    interface PageSizePagerUiBinder extends UiBinder<Widget, PageSizePager> {}
 
-	/**
-	 * The increment by which to grow or shrink the page size.
-	 */
-	private final int increment;
+    /**
+     * The increment by which to grow or shrink the page size.
+     */
+    private final int increment;
 
-	// @UiField Anchor viewLessButton;
-	@UiField Anchor backToTopButton;
-	@UiField Button viewMoreButton;
+    // @UiField Anchor viewLessButton;
+    @UiField Anchor backToTopButton;
+    @UiField Button viewMoreButton;
 
-	private Image mSpinner;
+    private Image mSpinner;
 
-	private boolean mLoading;
+    private boolean mLoading;
 
-	/**
-	 * Construct a PageSizePager with a given increment.
+    /**
+     * Construct a PageSizePager with a given increment.
+     * 
+     * @param increment
+     *            the amount by which to increase the page size
+     */
+    @UiConstructor
+    public PageSizePager(final int increment) {
+        initWidget(uiBinder.createAndBindUi(this));
+
+        this.increment = increment;
+
+        // Hide the buttons by default.
+        setDisplay(null);
+    }
+
+    public void setViewMoreText(String s) {
+        viewMoreButton.setText(s);
+    }
+
+    @Override
+    public void setDisplay(HasRows display) {
+        // Hide the buttons if the display is null. If the display is non-null, the
+        // buttons will be displayed in onRangeOrRowCountChanged().
+        if (display == null) {
+            // viewLessButton.setVisible(false);
+            viewMoreButton.setVisible(false);
+        }
+        super.setDisplay(display);
+    }
+
+    // @UiHandler("viewLessButton")
+    // void onviewLessButtonClicked(ClickEvent event) {
+    // if (((Anchor) event.getSource()).isEnabled()) {
+    // // Display should be non-null, but we check defensively.
+    // HasRows display = getDisplay();
+    // if (display != null) {
+    // Range range = display.getVisibleRange();
+    // int pageSize = Math.max(range.getLength() - increment, increment);
+    // display.setVisibleRange(range.getStart(), pageSize);
+    // }
+    // }
+    // }
+
+    @UiHandler("backToTopButton")
+    void onBackToTopClicked(ClickEvent event) {
+        Window.scrollTo(0, 0);
+    }
+
+    @UiHandler("viewMoreButton")
+    void onviewMoreButtonClicked(ClickEvent event) {
+        if (((Button) event.getSource()).isEnabled()) {
+            // Display should be non-null, but we check defensively.
+            HasRows display = getDisplay();
+            if (display != null) {
+                Range range = display.getVisibleRange();
+                int pageSize = Math.min(range.getLength() + increment, display.getRowCount() + (display.isRowCountExact() ? 0 : increment));
+                display.setVisibleRange(range.getStart(), pageSize);
+            }
+        }
+        viewMoreButton.setFocus(false);
+    }
+
+    @Override
+    public void setPageSize(int pageSize) {
+        super.setPageSize(pageSize);
+    }
+
+    @Override
+    protected void onRangeOrRowCountChanged() {
+        // Assumes a page start index of 0.
+        HasRows display = getDisplay();
+        int pageSize = display.getVisibleRange().getLength();
+        // boolean hasLess = pageSize > increment;
+        boolean hasMore = !display.isRowCountExact() || pageSize < display.getRowCount();
+        // viewLessButton.setVisible(hasLess);
+        viewMoreButton.setVisible(hasMore);
+
+        if (mLoading) {
+            processLoading();
+        }
+    }
+
+    /**
 	 * 
-	 * @param increment
-	 *            the amount by which to increase the page size
 	 */
-	@UiConstructor
-	public PageSizePager(final int increment) {
-		initWidget(uiBinder.createAndBindUi(this));
+    private void processLoading() {
+        // viewLessButton.setEnabled(!mLoading);
+        viewMoreButton.setEnabled(!mLoading);
 
-		this.increment = increment;
+        // Widget visible = viewMoreButton.isVisible() ? viewMoreButton : viewLessButton;
+        Widget visible = viewMoreButton;
 
-		// Hide the buttons by default.
-		setDisplay(null);
-	}
+        if (mLoading) {
+            if (mSpinner == null) {
+                mSpinner = new Image(Images.INSTANCE.spinner());
+            }
 
-	@Override
-	public void setDisplay(HasRows display) {
-		// Hide the buttons if the display is null. If the display is non-null, the
-		// buttons will be displayed in onRangeOrRowCountChanged().
-		if (display == null) {
-			// viewLessButton.setVisible(false);
-			viewMoreButton.setVisible(false);
-		}
-		super.setDisplay(display);
-	}
+            visible.getElement().setInnerHTML("Loading... ");
+            visible.getElement().appendChild(mSpinner.getElement());
 
-	// @UiHandler("viewLessButton")
-	// void onviewLessButtonClicked(ClickEvent event) {
-	// if (((Anchor) event.getSource()).isEnabled()) {
-	// // Display should be non-null, but we check defensively.
-	// HasRows display = getDisplay();
-	// if (display != null) {
-	// Range range = display.getVisibleRange();
-	// int pageSize = Math.max(range.getLength() - increment, increment);
-	// display.setVisibleRange(range.getStart(), pageSize);
-	// }
-	// }
-	// }
+            // viewLessButton.setEnabled(Boolean.FALSE);
+            viewMoreButton.setEnabled(Boolean.FALSE);
+        } else {
+            visible.getElement().setInnerHTML("Show " + (visible == viewMoreButton ? "More" : "Less"));
 
-	@UiHandler("backToTopButton")
-	void onBackToTopClicked(ClickEvent event) {
-		Window.scrollTo(0, 0);
-	}
+            // viewLessButton.setEnabled(Boolean.TRUE);
+            viewMoreButton.setEnabled(Boolean.TRUE);
+        }
+    }
 
-	@UiHandler("viewMoreButton")
-	void onviewMoreButtonClicked(ClickEvent event) {
-		if (((Button) event.getSource()).isEnabled()) {
-			// Display should be non-null, but we check defensively.
-			HasRows display = getDisplay();
-			if (display != null) {
-				Range range = display.getVisibleRange();
-				int pageSize = Math.min(range.getLength() + increment, display.getRowCount() + (display.isRowCountExact() ? 0 : increment));
-				display.setVisibleRange(range.getStart(), pageSize);
-			}
-		}
-		viewMoreButton.setFocus(false);
-	}
+    /**
+     * Visible for testing.
+     */
+    // boolean isShowLessButtonVisible() {
+    // return viewLessButton.isVisible();
+    // }
 
-	@Override
-	public void setPageSize(int pageSize) {
-		super.setPageSize(pageSize);
-	}
+    /**
+     * Visible for testing.
+     */
+    boolean isShowMoreButtonVisible() {
+        return viewMoreButton.isVisible();
+    }
 
-	@Override
-	protected void onRangeOrRowCountChanged() {
-		// Assumes a page start index of 0.
-		HasRows display = getDisplay();
-		int pageSize = display.getVisibleRange().getLength();
-		// boolean hasLess = pageSize > increment;
-		boolean hasMore = !display.isRowCountExact() || pageSize < display.getRowCount();
-		// viewLessButton.setVisible(hasLess);
-		viewMoreButton.setVisible(hasMore);
+    public void setLoading(boolean value) {
+        mLoading = value;
 
-		if (mLoading) {
-			processLoading();
-		}
-	}
-
-	/**
-	 * 
-	 */
-	private void processLoading() {
-		// viewLessButton.setEnabled(!mLoading);
-		viewMoreButton.setEnabled(!mLoading);
-
-		// Widget visible = viewMoreButton.isVisible() ? viewMoreButton : viewLessButton;
-		Widget visible = viewMoreButton;
-
-		if (mLoading) {
-			if (mSpinner == null) {
-				mSpinner = new Image(Images.INSTANCE.spinner());
-			}
-
-			visible.getElement().setInnerHTML("Loading... ");
-			visible.getElement().appendChild(mSpinner.getElement());
-
-			// viewLessButton.setEnabled(Boolean.FALSE);
-			viewMoreButton.setEnabled(Boolean.FALSE);
-		} else {
-			visible.getElement().setInnerHTML("Show " + (visible == viewMoreButton ? "More" : "Less"));
-
-			// viewLessButton.setEnabled(Boolean.TRUE);
-			viewMoreButton.setEnabled(Boolean.TRUE);
-		}
-	}
-
-	/**
-	 * Visible for testing.
-	 */
-	// boolean isShowLessButtonVisible() {
-	// return viewLessButton.isVisible();
-	// }
-
-	/**
-	 * Visible for testing.
-	 */
-	boolean isShowMoreButtonVisible() {
-		return viewMoreButton.isVisible();
-	}
-
-	public void setLoading(boolean value) {
-		mLoading = value;
-
-		if (!mLoading) {
-			processLoading();
-		}
-	}
+        if (!mLoading) {
+            processLoading();
+        }
+    }
 }

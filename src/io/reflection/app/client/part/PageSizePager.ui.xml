@@ -16,7 +16,7 @@
     <g:HTMLPanel>
         <g:Button ui:field="viewMoreButton"
             styleName="btn btn-default pull-left {style.viewMoreBtn}">
-            View More Apps
+            View More
             <span class="icon-plus" />
         </g:Button>
         <g:Anchor ui:field="backToTopButton" styleName="pull-right {style.viewLessLink}">
