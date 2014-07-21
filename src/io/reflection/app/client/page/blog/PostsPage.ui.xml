@@ -4,16 +4,20 @@
     xmlns:c="urn:import:com.google.gwt.user.cellview.client" xmlns:b="urn:import:io.reflection.app.client.page.blog.part">
     <ui:style>
     .blogcontainer {
-    	margin-top: 100px;
+        margin-top: 100px;
     }
     
     .title {
-    	margin-top: 0px;
-    	margin-bottom: 50px;
+        margin-top: 0px;
+        margin-bottom: 50px;
     }
     
-    .posts {
-    	max-width: 800px;
+    .postsPanel {
+        max-width: 800px;
+    }
+    
+    .postsList {
+        min-height: 100px;
     }
     </ui:style>
     <g:HTMLPanel>
@@ -22,10 +26,15 @@
             <b:BlogSidePanel ui:field="blogSidePanel"
                 styleName="col-sm-3" />
 
-            <g:HTMLPanel styleName="col-sm-8 {style.posts}">
+            <g:HTMLPanel styleName="col-sm-8 {style.postsPanel}">
                 <h1 class="{style.title}">The Reflection Blog</h1>
-                <c:CellList ui:field="posts" />
-                <p:PageSizePager ui:field="pager" />
+                <p:Preloader ui:field="preloader">
+                    <g:HTMLPanel>
+                        <c:CellList ui:field="posts"
+                            styleName="{style.postsList}" />
+                        <p:PageSizePager ui:field="pager" />
+                    </g:HTMLPanel>
+                </p:Preloader>
             </g:HTMLPanel>
 
         </g:HTMLPanel>

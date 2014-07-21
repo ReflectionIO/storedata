@@ -18,7 +18,7 @@ import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.page.blog.part.DisplayTag;
-import io.reflection.app.client.part.ReflectionProgressBar;
+import io.reflection.app.client.part.Preloader;
 import io.reflection.app.datatypes.shared.Post;
 import io.reflection.app.shared.util.FormattingHelper;
 
@@ -29,7 +29,6 @@ import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Display;
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -44,225 +43,222 @@ import com.willshex.gson.json.service.shared.StatusType;
  */
 public class PostPage extends Page implements NavigationEventHandler, GetPostEventHandler {
 
-	private static PostPageUiBinder uiBinder = GWT.create(PostPageUiBinder.class);
+    private static PostPageUiBinder uiBinder = GWT.create(PostPageUiBinder.class);
 
-	interface PostPageUiBinder extends UiBinder<Widget, PostPage> {}
+    interface PostPageUiBinder extends UiBinder<Widget, PostPage> {}
 
-	private enum LoadingType {
-		CompleteLoadingType,
-		PartialLoadingType,
-		NoneLoadingType
-	}
+    private enum LoadingType {
+        CompleteLoadingType,
+        PartialLoadingType,
+        NoneLoadingType
+    }
 
-	private static final int POST_ID_PARAMETER_INDEX = 0;
-	private static final String MORE_ACTION_NAME = "view";
+    private static final int POST_ID_PARAMETER_INDEX = 0;
+    private static final String MORE_ACTION_NAME = "view";
 
-	@UiField HeadingElement title;
-	@UiField SpanElement date;
-	@UiField SpanElement author;
+    @UiField HeadingElement title;
+    @UiField SpanElement date;
+    @UiField SpanElement author;
 
-	@UiField HTMLPanel tags;
-	DivElement comments;
+    @UiField HTMLPanel tags;
+    DivElement comments;
 
-	@UiField ParagraphElement content;
-	@UiField ReflectionProgressBar progress;
+    @UiField ParagraphElement content;
+    @UiField Preloader preloader;
 
-	private Long postId;
-	private boolean installed;
+    private Long postId;
+    private boolean installed;
 
-	public PostPage() {
-		initWidget(uiBinder.createAndBindUi(this));
-	}
+    public PostPage() {
+        initWidget(uiBinder.createAndBindUi(this));
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
-	 */
-	@Override
-	protected void onAttach() {
-		super.onAttach();
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.gwt.user.client.ui.Composite#onAttach()
+     */
+    @Override
+    protected void onAttach() {
+        super.onAttach();
 
-		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
-		register(EventController.get().addHandlerToSource(GetPostEventHandler.TYPE, PostController.get(), this));
+        register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+        register(EventController.get().addHandlerToSource(GetPostEventHandler.TYPE, PostController.get(), this));
 
-		// this is not a uifield because it requires html id
-		comments = DivElement.as(Document.get().getElementById("disqus_thread"));
+        // this is not a uifield because it requires html id
+        comments = DivElement.as(Document.get().getElementById("disqus_thread"));
 
-		setLoading(LoadingType.CompleteLoadingType);
-	}
+        setLoading(LoadingType.CompleteLoadingType);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.page.Page#getTitle()
-	 */
-	@Override
-	public String getTitle() {
-		return "Reflection.io: Blog";
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.client.page.Page#getTitle()
+     */
+    @Override
+    public String getTitle() {
+        return "Reflection.io: Blog";
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
-	 * io.reflection.app.client.controller.NavigationController.Stack)
-	 */
-	@Override
-	public void navigationChanged(Stack previous, Stack current) {
-		if (current.getAction() != null) {
-			if (MORE_ACTION_NAME.equals(current.getAction())) {
-				String postIdValue = current.getParameter(POST_ID_PARAMETER_INDEX);
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
+     * io.reflection.app.client.controller.NavigationController.Stack)
+     */
+    @Override
+    public void navigationChanged(Stack previous, Stack current) {
+        if (current.getAction() != null) {
+            if (MORE_ACTION_NAME.equals(current.getAction())) {
+                String postIdValue = current.getParameter(POST_ID_PARAMETER_INDEX);
 
-				if (postIdValue != null) {
-					postId = null;
+                if (postIdValue != null) {
+                    postId = null;
 
-					try {
-						postId = Long.parseLong(postIdValue);
-					} catch (NumberFormatException e) {}
+                    try {
+                        postId = Long.parseLong(postIdValue);
+                    } catch (NumberFormatException e) {}
 
-					if (postId != null) {
-						Post post = PostController.get().getPost(postId);
+                    if (postId != null) {
+                        Post post = PostController.get().getPost(postId);
 
-						if (post == null) {
-							post = PostController.get().getPostPart(postId);
+                        if (post == null) {
+                            post = PostController.get().getPostPart(postId);
 
-							if (post != null) {
-								setLoading(LoadingType.PartialLoadingType);
-							}
-						}
+                            if (post != null) {
+                                setLoading(LoadingType.PartialLoadingType);
+                            }
+                        }
 
-						if (post != null) {
-							show(post);
-						}
-					}
-				}
-			}
-		}
-	}
+                        if (post != null) {
+                            show(post);
+                        }
+                    }
+                }
+            }
+        }
+    }
 
-	/**
-	 * @param post
-	 */
-	private void show(Post post) {
-		title.setInnerText(post.title);
-		author.setInnerText(FormattingHelper.getUserName(post.author));
+    /**
+     * @param post
+     */
+    private void show(Post post) {
+        title.setInnerText(post.title);
+        author.setInnerText(FormattingHelper.getUserName(post.author));
 
-		if (post.published != null) {
-			date.setInnerText(DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT_EEE_DD_MMM_YYYY).format(post.published));
-		} else {
-			date.setInnerText("TBD");
-		}
+        if (post.published != null) {
+            date.setInnerText(DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT_EEE_DD_MMM_YYYY).format(post.published));
+        } else {
+            date.setInnerText("TBD");
+        }
 
-		if (tags.getWidgetCount() > 0) {
-			tags.clear();
-		}
+        if (tags.getWidgetCount() > 0) {
+            tags.clear();
+        }
 
-		if (post.tags != null) {
-			DisplayTag displayTag;
-			for (String tag : post.tags) {
-				displayTag = new DisplayTag();
-				displayTag.setName(tag);
-				displayTag.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-				tags.add(displayTag);
-			}
-		}
+        if (post.tags != null) {
+            DisplayTag displayTag;
+            for (String tag : post.tags) {
+                displayTag = new DisplayTag();
+                displayTag.setName(tag);
+                displayTag.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+                tags.add(displayTag);
+            }
+        }
 
-		if (post.content != null) {
-			content.setInnerHTML(post.content);
+        if (post.content != null) {
+            content.setInnerHTML(post.content);
 
-			setLoading(LoadingType.NoneLoadingType);
+            setLoading(LoadingType.NoneLoadingType);
 
-			if (post.commentsEnabled == Boolean.TRUE) {
-				final String identifier = "post" + post.id.toString();
-				final String url = GWT.getHostPageBaseURL() + PageType.BlogPostPageType.asHref("view", post.id.toString()).asString();
-				final String title = post.title;
-				final String tag = post.tags == null || post.tags.size() == 0 ? "reflection.io" : post.tags.get(0);
+            if (post.commentsEnabled == Boolean.TRUE) {
+                final String identifier = "post" + post.id.toString();
+                final String url = GWT.getHostPageBaseURL() + PageType.BlogPostPageType.asHref("view", post.id.toString()).asString();
+                final String title = post.title;
+                final String tag = post.tags == null || post.tags.size() == 0 ? "reflection.io" : post.tags.get(0);
 
-				(new Timer() {
-					@Override
-					public void run() {
-						comments = DivElement.as(Document.get().getElementById("disqus_thread"));
+                (new Timer() {
+                    @Override
+                    public void run() {
+                        comments = DivElement.as(Document.get().getElementById("disqus_thread"));
 
-						if (comments != null) {
-							if (!installed) {
-								installDisqus(identifier, url, title, tag);
-								installed = true;
-							} else {
-								resetDisqus(identifier, url, title, tag);
-							}
-							
-							this.cancel();
-						}
-					}
-				}).scheduleRepeating(100);
+                        if (comments != null) {
+                            if (!installed) {
+                                installDisqus(identifier, url, title, tag);
+                                installed = true;
+                            } else {
+                                resetDisqus(identifier, url, title, tag);
+                            }
 
-			}
-		}
+                            this.cancel();
+                        }
+                    }
+                }).scheduleRepeating(100);
 
-	}
+            }
+        }
 
-	private void setLoading(LoadingType value) {
-		switch (value) {
-		case CompleteLoadingType:
-			progress.setVisible(true);
-			progress.getElement().getStyle().setPaddingTop(30, Unit.PX);
-			title.getStyle().setDisplay(Display.NONE);
-			author.getParentElement().getStyle().setDisplay(Display.NONE);
-			content.getStyle().setDisplay(Display.NONE);
-			comments.getStyle().setDisplay(Display.NONE);
-			break;
-		case PartialLoadingType:
-			progress.setVisible(true);
-			progress.getElement().getStyle().clearPaddingTop();
-			title.getStyle().clearDisplay();
-			author.getParentElement().getStyle().clearDisplay();
-			content.getStyle().setDisplay(Display.NONE);
-			comments.getStyle().setDisplay(Display.NONE);
-			break;
-		case NoneLoadingType:
-			progress.setVisible(false);
-			progress.getElement().getStyle().clearPaddingTop();
-			title.getStyle().clearDisplay();
-			author.getParentElement().getStyle().clearDisplay();
-			content.getStyle().clearDisplay();
-			comments.getStyle().clearDisplay();
-			break;
-		}
-	}
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.api.blog.shared.call.event.GetPostEventHandler#getPostSuccess(io.reflection.app.api.blog.shared.call.GetPostRequest,
-	 * io.reflection.app.api.blog.shared.call.GetPostResponse)
-	 */
-	@Override
-	public void getPostSuccess(GetPostRequest input, GetPostResponse output) {
-		if (output.status == StatusType.StatusTypeSuccess && output.post != null) {
-			show(output.post);
-		}
-	}
+    private void setLoading(LoadingType value) {
+        switch (value) {
+        case CompleteLoadingType:
+            preloader.show();
+            title.getStyle().setDisplay(Display.NONE);
+            author.getParentElement().getStyle().setDisplay(Display.NONE);
+            content.getStyle().setDisplay(Display.NONE);
+            comments.getStyle().setDisplay(Display.NONE);
+            break;
+        case PartialLoadingType:
+            preloader.show();
+            title.getStyle().clearDisplay();
+            author.getParentElement().getStyle().clearDisplay();
+            content.getStyle().setDisplay(Display.NONE);
+            comments.getStyle().setDisplay(Display.NONE);
+            break;
+        case NoneLoadingType:
+            preloader.hide();
+            title.getStyle().clearDisplay();
+            author.getParentElement().getStyle().clearDisplay();
+            content.getStyle().clearDisplay();
+            comments.getStyle().clearDisplay();
+            break;
+        }
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.api.blog.shared.call.event.GetPostEventHandler#getPostFailure(io.reflection.app.api.blog.shared.call.GetPostRequest,
-	 * java.lang.Throwable)
-	 */
-	@Override
-	public void getPostFailure(GetPostRequest input, Throwable caught) {}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.api.blog.shared.call.event.GetPostEventHandler#getPostSuccess(io.reflection.app.api.blog.shared.call.GetPostRequest,
+     * io.reflection.app.api.blog.shared.call.GetPostResponse)
+     */
+    @Override
+    public void getPostSuccess(GetPostRequest input, GetPostResponse output) {
+        if (output.status == StatusType.StatusTypeSuccess && output.post != null) {
+            show(output.post);
+        }
+    }
 
-	/**
-	 * @param postId
-	 * @param url
-	 * @param title
-	 * @param category
-	 */
-	private static native void installDisqus(String postId, String url, String title, String category) /*-{
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.api.blog.shared.call.event.GetPostEventHandler#getPostFailure(io.reflection.app.api.blog.shared.call.GetPostRequest,
+     * java.lang.Throwable)
+     */
+    @Override
+    public void getPostFailure(GetPostRequest input, Throwable caught) {}
+
+    /**
+     * @param postId
+     * @param url
+     * @param title
+     * @param category
+     */
+    private static native void installDisqus(String postId, String url, String title, String category) /*-{
 		$wnd.disqus_shortname = 'reflectionio';
 
-//		$wnd.disqus_identifier = postId;
+		//		$wnd.disqus_identifier = postId;
 		$wnd.disqus_url = url;
 		$wnd.disqus_title = title;
 		$wnd.disqus_category_id = '3096350';
@@ -280,16 +276,16 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 			$wnd.DISQUS.reset({
 				reload : true,
 				config : function() {
-//					this.page.identifier = resetPostId;
+					//					this.page.identifier = resetPostId;
 					this.page.url = resetUrl;
 					this.page.title = resetTitle;
 					this.page.category_id = '3096350';
 				}
 			});
 		};
-	}-*/;
+    }-*/;
 
-	private static native void resetDisqus(String postId, String url, String title, String category) /*-{
+    private static native void resetDisqus(String postId, String url, String title, String category) /*-{
 		$wnd.reset(postId, url, title, category);
-	}-*/;
+    }-*/;
 }
