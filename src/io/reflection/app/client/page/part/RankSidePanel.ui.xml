@@ -3,15 +3,15 @@
     xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.user.datepicker.client">
     <ui:style>
     .moreMargin {
-    	margin-right: 0.2em;
+        margin-right: 0.2em;
     }
     
     .pageTitle {
-    	padding-bottom: 30px;
+        padding-bottom: 30px;
     }
     
     .filler {
-    	height: 40px;
+        height: 40px;
     }
     </ui:style>
     <g:HTMLPanel>
@@ -29,7 +29,7 @@
                     <!--<input type="text" id="datepicker"> -->
                     <div class="input-group">
                         <d:DateBox styleName="form-control"
-                            ui:field="date" />
+                            ui:field="dateBox" />
                         <span class="input-group-addon">
                             <i class="icon-calendar"></i>
                         </span>
