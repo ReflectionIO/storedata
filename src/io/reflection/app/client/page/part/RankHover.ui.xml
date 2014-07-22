@@ -1,50 +1,52 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
     xmlns:g="urn:import:com.google.gwt.user.client.ui">
+    <ui:with field='images' type='io.reflection.app.client.res.charts.Images' />
     <ui:style>
     .box {
-        height: 60px;
+        position: relative;
+        height: 88px;
         width: 116px;
-        background-color: #272833;
+        background-color: transparent;
         margin: 0px;
-        border-top: solid 5px #736fb3;
         overflow: hidden;
-        border-radius: 2px;
-        -webkit-border-radius: 2px;
-        -moz-border-radius: 2px;
     }
     
-   .box:after {
-    	top: 100%;
-    	left: 50%;
-    	border: solid transparent;
-    	content: " ";
-    	height: 0;
-    	width: 0;
-    	position: absolute;
-    	pointer-events: none;
-    	border-top-color: #272833;
-    	border-width: 10px;
-    	margin-left: -10px;
+    .imgBackground {
+        position: absolute;
+        top: 0px;
+        left: 0px;
     }
+    
     .date {
         color: #a5a6b6;
         font-size: 12px;
-        text-align: left;
-        margin: 0px;
-        padding: 12px 8px 0px 8px;
+        position: absolute;
+        top: 10px;
+        left: 10px;
     }
     
     .detail {
         font-size: 14px;
         text-align: left;
         color: #FFFFFF;
-        margin: 0px;
-        padding: 0px 8px;
+        position: absolute;
+        top: 30px;
+        left: 10px;
+    }
+    
+    .disk {
+        position: absolute;
+        top: 80px;
+        left: 54px;
+        height: 8px;
+        width: 8px;
     }
     </ui:style>
     <g:HTMLPanel styleName="{style.box}">
+        <g:Image resource="{images.popup}" styleName="{style.imgBackground}" />
         <g:HTMLPanel ui:field="date" styleName="{style.date}" />
         <g:HTMLPanel ui:field="detail" styleName="{style.detail}" />
+        <g:Image resource="{images.purpleDisk}" styleName="{style.disk}" />
     </g:HTMLPanel>
 </ui:UiBinder> 

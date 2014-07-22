@@ -16,8 +16,8 @@
     
     .date {
         height: 34px;
-        width: 100px;
-        text-align: center;
+        width: 100%;
+        text-align: left;
         background: -webkit-linear-gradient(#f6f7f9, #eeeff1);
         /* For Safari 5.1 to 6.0 */
         background: -o-linear-gradient(#f6f7f9, #eeeff1);
@@ -26,7 +26,7 @@
         /* For Firefox 3.6 to 15 */
         background: linear-gradient(#f6f7f9, #eeeff1); /* Standard syntax */
         color: #434346;
-        padding-left: 12px;
+        padding-left: 12px !important;
         padding-top: 5px;
         margin-right: 0px;
         border-radius: 4px;

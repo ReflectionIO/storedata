@@ -203,21 +203,24 @@ public class ItemChart extends GChart {
         curve.getSymbol().setFillThickness(2);
 
         curve.getSymbol().setBorderWidth(0);
-        curve.getSymbol().setWidth(12);
-        curve.getSymbol().setHeight(12);
+        curve.getSymbol().setWidth(8);
+        curve.getSymbol().setHeight(8);
 
         curve.getSymbol().setImageURL(Colour.PurpleColour.getImageUrl());
 
         curve.getSymbol().setHoverSelectionWidth(1);
-        curve.getSymbol().setHoverSelectionBorderColor("#929292");
+        curve.getSymbol().setHoverSelectionBackgroundColor("#929292");
+        curve.getSymbol().setHoverSelectionBorderWidth(0);
+        curve.getSymbol().setHoverSelectionFillThickness(1);
+
         // use a vertical line for the selection cursor
         curve.getSymbol().setHoverSelectionSymbolType(SymbolType.XGRIDLINE);
         // with annotation on top of this line (above chart)
         // curve.getSymbol().setHoverAnnotationSymbolType(SymbolType.BOX_EAST);
-        curve.getSymbol().setHoverLocation(AnnotationLocation.NORTH);
+        curve.getSymbol().setHoverLocation(AnnotationLocation.NORTHEAST);
 
-        curve.getSymbol().setHoverYShift(25);
-        curve.getSymbol().setHoverXShift(0);
+        curve.getSymbol().setHoverYShift(-8);
+        curve.getSymbol().setHoverXShift(-62);
 
         RankHover hoverWidget = new RankHover();
         hoverWidget.setCssColor(Colour.PurpleColour.getColour());
@@ -234,6 +237,9 @@ public class ItemChart extends GChart {
         // curve.setYShift(-10);
 
         getYAxis().setOutOfBoundsMultiplier(.1);
+
+        getCurve().getSymbol().setHoverAnnotationEnabled(true);
+        getCurve().getSymbol().setHoverAnnotationSymbolType(SymbolType.BOX_CENTER);            
 
     }
 
