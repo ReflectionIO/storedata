@@ -5,7 +5,7 @@
     <ui:style>
     .box {
         position: relative;
-        height: 88px;
+        height: 74px;
         width: 116px;
         background-color: transparent;
         margin: 0px;
@@ -14,8 +14,8 @@
     
     .imgBackground {
         position: absolute;
-        top: 0px;
-        left: 0px;
+        top: 0;
+        left: 0;
     }
     
     .date {
@@ -34,19 +34,10 @@
         top: 30px;
         left: 10px;
     }
-    
-    .disk {
-        position: absolute;
-        top: 80px;
-        left: 54px;
-        height: 8px;
-        width: 8px;
-    }
     </ui:style>
     <g:HTMLPanel styleName="{style.box}">
         <g:Image resource="{images.popup}" styleName="{style.imgBackground}" />
         <g:HTMLPanel ui:field="date" styleName="{style.date}" />
         <g:HTMLPanel ui:field="detail" styleName="{style.detail}" />
-        <g:Image resource="{images.purpleDisk}" styleName="{style.disk}" />
     </g:HTMLPanel>
 </ui:UiBinder> 

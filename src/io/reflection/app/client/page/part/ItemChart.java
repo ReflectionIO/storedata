@@ -219,7 +219,7 @@ public class ItemChart extends GChart {
         // curve.getSymbol().setHoverAnnotationSymbolType(SymbolType.BOX_EAST);
         curve.getSymbol().setHoverLocation(AnnotationLocation.NORTHEAST);
 
-        curve.getSymbol().setHoverYShift(-8);
+        curve.getSymbol().setHoverYShift(15);
         curve.getSymbol().setHoverXShift(-62);
 
         RankHover hoverWidget = new RankHover();
@@ -237,9 +237,6 @@ public class ItemChart extends GChart {
         // curve.setYShift(-10);
 
         getYAxis().setOutOfBoundsMultiplier(.1);
-
-        getCurve().getSymbol().setHoverAnnotationEnabled(true);
-        getCurve().getSymbol().setHoverAnnotationSymbolType(SymbolType.BOX_CENTER);            
 
     }
 
