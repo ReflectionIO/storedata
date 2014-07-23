@@ -174,4 +174,24 @@ public class MyAppsTopPanel extends Composite {
 		FilterHelper.addLinkedAccounts(accountName);
 	}
 
+	/**
+	 * Linked account filter
+	 * 
+	 * @param enabled
+	 */
+	public void setFilterAccountEnabled(boolean enabled) {
+		accountName.setEnabled(enabled);
+	}
+
+	/**
+	 * Excluded linked account filter
+	 * 
+	 * @param enabled
+	 */
+	public void setFiltersEnabled(boolean enabled) {
+		appStore.setEnabled(enabled);
+		country.setEnabled(enabled);
+		dateSelector.setEnabled(enabled);
+	}
+
 }
