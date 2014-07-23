@@ -1,32 +1,19 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui">
-	<ui:style>
-	.viewButtons {
-		padding-top: 15px;
-		margin-bottom: 35px;
-	}
-	
-	.viewLessLink {
-		font-size: 14px;
-	}
-	
-	.viewMoreBtn {
-		height: 35px;
-		font-size: 14px;
-		margin-right: 20px;
-	}
-	</ui:style>
+    xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part">
+    <ui:style>
+    .viewMoreBtn {
+        height: 35px;
+        font-size: 14px;
+        padding-right: 6px;
+        margin-right: 20px;
+    }
+    </ui:style>
 
-	<g:HTMLPanel styleName="{style.viewButtons}">
-		<g:Button ui:field="viewMoreButton" styleName="btn btn-default {style.viewMoreBtn}">
-			View More Apps
-			<span class="icon-plus" />
-		</g:Button>
-		<g:Anchor ui:field="backToTopButton" styleName="{style.viewLessLink}">
-			<span class="icon-angle-up" />
-			Back to Top
-		</g:Anchor>
-	</g:HTMLPanel>
+    <g:HTMLPanel>
+        <g:Button ui:field="viewMoreButton"
+            styleName="btn btn-default pull-left {style.viewMoreBtn}" />
+        <p:BackToTop styleName="pull-right" />
+    </g:HTMLPanel>
 
 </ui:UiBinder> 

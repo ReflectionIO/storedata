@@ -50,7 +50,7 @@ public class ItemChart extends GChart {
     };
 
     private void resize() {
-        setChartSize((int) (this.getParent().getElement().getClientWidth() - this.getParent().getElement().getClientWidth() * 0.045), 350);
+        setChartSize((int) (this.getParent().getElement().getClientWidth() - 50), 350);
 
         update();
     }
@@ -203,21 +203,24 @@ public class ItemChart extends GChart {
         curve.getSymbol().setFillThickness(2);
 
         curve.getSymbol().setBorderWidth(0);
-        curve.getSymbol().setWidth(12);
-        curve.getSymbol().setHeight(12);
+        curve.getSymbol().setWidth(8);
+        curve.getSymbol().setHeight(8);
 
         curve.getSymbol().setImageURL(Colour.PurpleColour.getImageUrl());
 
         curve.getSymbol().setHoverSelectionWidth(1);
-        curve.getSymbol().setHoverSelectionBorderColor("#eff2f5");
+        curve.getSymbol().setHoverSelectionBackgroundColor("#929292");
+        curve.getSymbol().setHoverSelectionBorderWidth(0);
+        curve.getSymbol().setHoverSelectionFillThickness(1);
+
         // use a vertical line for the selection cursor
         curve.getSymbol().setHoverSelectionSymbolType(SymbolType.XGRIDLINE);
         // with annotation on top of this line (above chart)
         // curve.getSymbol().setHoverAnnotationSymbolType(SymbolType.BOX_EAST);
-        curve.getSymbol().setHoverLocation(AnnotationLocation.EAST);
+        curve.getSymbol().setHoverLocation(AnnotationLocation.NORTHEAST);
 
-        curve.getSymbol().setHoverYShift(10);
-        curve.getSymbol().setHoverXShift(5);
+        curve.getSymbol().setHoverYShift(15);
+        curve.getSymbol().setHoverXShift(-62);
 
         RankHover hoverWidget = new RankHover();
         hoverWidget.setCssColor(Colour.PurpleColour.getColour());

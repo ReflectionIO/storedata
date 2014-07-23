@@ -204,7 +204,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 				String id = object.id.toString();
 				return SafeHtmlUtils.fromTrustedString("<a href=\""
 						+ PageType.UsersPageType.asHref(PageType.LinkedAccountsPageType.toString(user.id.toString(), DELETE_ACTION_PARAMETER_VALUE, id))
-								.asString() + "\"><span class=\"icon-cancel-1\"/></a>");
+								.asString() + "\"><span class=\"icon-cancel-1 delete\"/></a>");
 			}
 
 		};

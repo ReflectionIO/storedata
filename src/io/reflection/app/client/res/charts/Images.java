@@ -16,9 +16,9 @@ import com.google.gwt.resources.client.ImageResource;
  * 
  */
 public interface Images extends ClientBundle {
-	public static final Images INSTANCE = GWT.create(Images.class);
+    public static final Images INSTANCE = GWT.create(Images.class);
 
-	@Source("purplecircle.png")
-	ImageResource purpleCirle();
+    @Source("purplecircle.png")
+    ImageResource purpleCirle();
 
 }

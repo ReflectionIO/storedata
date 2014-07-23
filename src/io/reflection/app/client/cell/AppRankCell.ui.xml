@@ -5,22 +5,22 @@
     <ui:with field="smallImage" type="com.google.gwt.safehtml.shared.SafeUri" />
     <ui:with field="creatorName" type="java.lang.String" />
     <ui:with field="link" type="com.google.gwt.safehtml.shared.SafeUri" />
-    <ui:with field="dailyData" type="java.lang.String" />
+    <ui:with field="dailyData" type="com.google.gwt.safehtml.shared.SafeHtml" />
     <ui:with field="displayDailyData" type="java.lang.String" />
 
     <ui:style>
     .image {
-    	width: 45px;
-    	height: 45px;
-    	float: left;
+        width: 45px;
+        height: 45px;
+        float: left;
     }
     
     .description {
-    	overflow: hidden;
-		padding-left: 20px;
-		white-space:nowrap; 	
-		overflow:hidden;
-		text-overflow:ellipsis;
+        overflow: hidden;
+        padding-left: 20px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     </ui:style>
 
@@ -38,8 +38,7 @@
             </span>
             <br />
             <span style="{displayDailyData}">
-                <i class="glyphicon glyphicon-align-right"></i>
-                <ui:text from="{dailyData}" />
+                <ui:safehtml from="{dailyData}" />
             </span>
         </div>
     </div>

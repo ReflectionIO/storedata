@@ -34,7 +34,6 @@ import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.google.gwt.user.datepicker.client.DateBox;
-import com.google.gwt.user.datepicker.client.DateBox.DefaultFormat;
 
 /**
  * @author billy1380
@@ -42,141 +41,143 @@ import com.google.gwt.user.datepicker.client.DateBox.DefaultFormat;
  */
 public class RankSidePanel extends Composite {
 
-    private static RankSidePanelUiBinder uiBinder = GWT.create(RankSidePanelUiBinder.class);
+	private static RankSidePanelUiBinder uiBinder = GWT.create(RankSidePanelUiBinder.class);
 
-    interface RankSidePanelUiBinder extends UiBinder<Widget, RankSidePanel> {}
+	interface RankSidePanelUiBinder extends UiBinder<Widget, RankSidePanel> {}
 
-    @UiField DateBox dateBox;
-    Date currentDate = new Date();
-    @UiField ListBox mAppStore;
-    // @UiField ListBox mListType;
-    @UiField ListBox mCountry;
-    @UiField ListBox category;
-    @UiField RadioButton mDailyDataRevenue;
-    @UiField RadioButton mDailyDataDownloads;
+	@UiField DateBox date;
+	Date currentDate = new Date();
+	@UiField ListBox mAppStore;
+	// @UiField ListBox mListType;
+	@UiField ListBox mCountry;
+	@UiField ListBox category;
+	@UiField RadioButton mDailyDataRevenue;
+	@UiField RadioButton mDailyDataDownloads;
 
-    @UiField HTMLPanel dailyDataRadio;
+	@UiField HTMLPanel dailyDataRadio;
 
-    public RankSidePanel() {
-        initWidget(uiBinder.createAndBindUi(this));
+	public RankSidePanel() {
+		initWidget(uiBinder.createAndBindUi(this));
 
-        BootstrapGwtDatePicker.INSTANCE.styles().ensureInjected();
+		BootstrapGwtDatePicker.INSTANCE.styles().ensureInjected();
 
-        FilterHelper.addStores(mAppStore);
-        FilterHelper.addCountries(mCountry);
-        FilterHelper.addCategories(category);
+		FilterHelper.addStores(mAppStore);
+		FilterHelper.addCountries(mCountry);
+		FilterHelper.addCategories(category);
 
-        dateBox.setFormat(new DefaultFormat(DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT_DD_MM_YYYY)));
+		DateTimeFormat dtf = DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT_DD_MMM_YYYY);
+		date.setFormat(new DateBox.DefaultFormat(dtf));
+		date.getTextBox().setReadOnly(Boolean.TRUE);
 
-        dateBox.getDatePicker().addShowRangeHandler(new ShowRangeHandler<Date>() {
+		date.getDatePicker().addShowRangeHandler(new ShowRangeHandler<Date>() {
 
-            @Override
-            public void onShowRange(ShowRangeEvent<Date> event) {
-                FilterHelper.disableFutureDates(dateBox.getDatePicker());
-            }
-        });
+			@Override
+			public void onShowRange(ShowRangeEvent<Date> event) {
+				FilterHelper.disableFutureDates(date.getDatePicker());
+			}
+		});
 
-        updateFromFilter();
-    }
+		updateFromFilter();
+	}
 
-    @UiHandler("mAppStore")
-    void onAppStoreValueChanged(ChangeEvent event) {
-        FilterController.get().setStore(mAppStore.getValue(mAppStore.getSelectedIndex()));
-    }
+	@UiHandler("mAppStore")
+	void onAppStoreValueChanged(ChangeEvent event) {
+		FilterController.get().setStore(mAppStore.getValue(mAppStore.getSelectedIndex()));
+	}
 
-    // @UiHandler("mListType")
-    // void onListTypeValueChanged(ChangeEvent event) {
-    // FilterController.get().setListType(mListType.getValue(mListType.getSelectedIndex()));
-    // }
+	// @UiHandler("mListType")
+	// void onListTypeValueChanged(ChangeEvent event) {
+	// FilterController.get().setListType(mListType.getValue(mListType.getSelectedIndex()));
+	// }
 
-    @UiHandler("mCountry")
-    void onCountryValueChanged(ChangeEvent event) {
-        FilterController.get().setCountry(mCountry.getValue(mCountry.getSelectedIndex()));
-    }
+	@UiHandler("mCountry")
+	void onCountryValueChanged(ChangeEvent event) {
+		FilterController.get().setCountry(mCountry.getValue(mCountry.getSelectedIndex()));
+	}
 
-    @UiHandler("dateBox")
-    void onDateValueChanged(ValueChangeEvent<Date> event) {
-        if (event.getValue().after(FilterHelper.getToday())) { // Restore previously selected date
-            dateBox.setValue(currentDate);
-        } else {
-            currentDate.setTime(dateBox.getValue().getTime());
-            FilterController fc = FilterController.get();
-            fc.start();
-            fc.setEndDate(event.getValue());
-            Date startDate = fc.getEndDate();
-            CalendarUtil.addDaysToDate(startDate, -30);
-            fc.setStartDate(startDate);
-            fc.commit();
-        }
-    }
+	@UiHandler("date")
+	void onDateValueChanged(ValueChangeEvent<Date> event) {
+		if (event.getValue().after(FilterHelper.getToday())) { // Restore previously selected date
+			date.setValue(currentDate);
+		} else {
+			currentDate.setTime(date.getValue().getTime());
+			FilterController fc = FilterController.get();
+			fc.start();
+			fc.setEndDate(event.getValue());
+			Date startDate = fc.getEndDate();
+			CalendarUtil.addDaysToDate(startDate, -30);
+			fc.setStartDate(startDate);
+			fc.commit();
+		}
+	}
 
-    @UiHandler("category")
-    void onCategoryValueChanged(ChangeEvent event) {
-        FilterController.get().setCategory(getCatgegory());
-    }
+	@UiHandler("category")
+	void onCategoryValueChanged(ChangeEvent event) {
+		FilterController.get().setCategory(getCatgegory());
+	}
 
-    @UiHandler("mDailyDataRevenue")
-    void onDailyDataRevenueSelected(ClickEvent event) {
-        FilterController.get().setDailyData(REVENUE_DAILY_DATA_TYPE);
-    }
+	@UiHandler("mDailyDataRevenue")
+	void onDailyDataRevenueSelected(ClickEvent event) {
+		FilterController.get().setDailyData(REVENUE_DAILY_DATA_TYPE);
+	}
 
-    @UiHandler("mDailyDataDownloads")
-    void onDailyDataDownloadsSelected(ClickEvent event) {
-        FilterController.get().setDailyData(DOWNLOADS_DAILY_DATA_TYPE);
-    }
+	@UiHandler("mDailyDataDownloads")
+	void onDailyDataDownloadsSelected(ClickEvent event) {
+		FilterController.get().setDailyData(DOWNLOADS_DAILY_DATA_TYPE);
+	}
 
-    /**
-     * @return
-     */
-    public String getStore() {
-        return mAppStore.getItemText(mAppStore.getSelectedIndex());
-    }
+	/**
+	 * @return
+	 */
+	public String getStore() {
+		return mAppStore.getItemText(mAppStore.getSelectedIndex());
+	}
 
-    /**
-     * @return
-     */
-    public String getCountry() {
-        return mCountry.getItemText(mCountry.getSelectedIndex());
-    }
+	/**
+	 * @return
+	 */
+	public String getCountry() {
+		return mCountry.getItemText(mCountry.getSelectedIndex());
+	}
 
-    public String getDisplayDate() {
-        return getDisplayDate("d MMM");
-    }
+	public String getDisplayDate() {
+		return getDisplayDate("d MMM");
+	}
 
-    public String getDisplayDate(String format) {
-        Date date = getDate();
-        return date == null ? "" : DateTimeFormat.getFormat(format).format(getDate());
-    }
+	public String getDisplayDate(String format) {
+		Date date = getDate();
+		return date == null ? "" : DateTimeFormat.getFormat(format).format(getDate());
+	}
 
-    public Long getCatgegory() {
-        return Long.valueOf(category.getValue(category.getSelectedIndex()));
-    }
+	public Long getCatgegory() {
+		return Long.valueOf(category.getValue(category.getSelectedIndex()));
+	}
 
-    /**
-     * @return
-     */
-    public Date getDate() {
-        return dateBox.getValue();
-    }
+	/**
+	 * @return
+	 */
+	public Date getDate() {
+		return date.getValue();
+	}
 
-    public void updateFromFilter() {
-        FilterController fc = FilterController.get();
+	public void updateFromFilter() {
+		FilterController fc = FilterController.get();
 
-        mAppStore.setSelectedIndex(FormHelper.getItemIndex(mAppStore, fc.getFilter().getStoreA3Code()));
-        long endTime = fc.getFilter().getEndTime().longValue();
-        Date endDate = new Date(endTime);
-        dateBox.setValue(endDate);
-        currentDate.setTime(endDate.getTime());
-        mCountry.setSelectedIndex(FormHelper.getItemIndex(mCountry, fc.getFilter().getCountryA2Code()));
-        category.setSelectedIndex(FormHelper.getItemIndex(category, fc.getFilter().getCategoryId().toString()));
-    }
+		mAppStore.setSelectedIndex(FormHelper.getItemIndex(mAppStore, fc.getFilter().getStoreA3Code()));
+		long endTime = fc.getFilter().getEndTime().longValue();
+		Date endDate = new Date(endTime);
+		date.setValue(endDate);
+		currentDate.setTime(endDate.getTime());
+		mCountry.setSelectedIndex(FormHelper.getItemIndex(mCountry, fc.getFilter().getCountryA2Code()));
+		category.setSelectedIndex(FormHelper.getItemIndex(category, fc.getFilter().getCategoryId().toString()));
+	}
 
-    public void setDataFilterVisible(boolean visible) {
-        if (visible) {
-            dailyDataRadio.setVisible(true);
-        } else {
-            dailyDataRadio.setVisible(false);
-        }
-    }
+	public void setDataFilterVisible(boolean visible) {
+		if (visible) {
+			dailyDataRadio.setVisible(true);
+		} else {
+			dailyDataRadio.setVisible(false);
+		}
+	}
 
 }

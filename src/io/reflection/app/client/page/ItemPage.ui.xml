@@ -3,28 +3,34 @@
     xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
     xmlns:c="urn:import:com.google.gwt.user.cellview.client" xmlns:pp="urn:import:io.reflection.app.client.page.part">
     <ui:style>
-    .pushDown {
-    	margin-top: 50px;
+    .cellTable {
+        margin-top: 50px;
+    }
+    
+    .chart {
+        margin-top: 50px;
+        margin-left: 20px;
     }
     
     .content {
-    	padding-left: 0px;
-    	padding-right: 0px;
+        padding-left: 0px;
+        padding-right: 0px;
+        overflow-x: hidden;
     }
     
     .table {
-    	margin-left: 25px;
-    	margin-right: 25px;
-    	margin-top: 20px;
+        margin-left: 25px;
+        margin-right: 25px;
+        margin-top: 20px;
     }
     
     .downloads {
-    	border-left: 1px solid #d9dce0 !important;
-    	border-right: 1px solid #d9dce0 !important;
+        border-left: 1px solid #d9dce0 !important;
+        border-right: 1px solid #d9dce0 !important;
     }
     
     .filler {
-    	height: 40px;
+        height: 40px;
     }
     </ui:style>
     <g:HTMLPanel styleName="row">
@@ -36,7 +42,7 @@
                 <li ui:field="mRevenueItem">
                     <g:InlineHyperlink ui:field="mRevenue">
                         Revenue
-                        <i class="glyphicon glyphicon-align-center pull-right"></i>
+                        <i class="icon-dollar pull-right"></i>
                     </g:InlineHyperlink>
                 </li>
                 <li ui:field="mDownloadsItem">
@@ -61,11 +67,11 @@
                 <p:Preloader ui:field="preloader">
                     <g:HTMLPanel>
                         <pp:ItemChart ui:field="historyChart"
-                            styleName="{style.pushDown}" />
+                            styleName="{style.chart}" />
                     </g:HTMLPanel>
                 </p:Preloader>
                 <c:CellTable ui:field="revenue"
-                    styleName="table table-hover table-striped table-item {style.pushDown}"></c:CellTable>
+                    styleName="table table-hover table-striped table-item {style.cellTable}"></c:CellTable>
             </g:HTMLPanel>
             <g:HTMLPanel styleName="{style.filler} col-md-12 hidden-xs hidden-sm" />
         </div>
