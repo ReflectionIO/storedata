@@ -44,6 +44,19 @@
         border: 1px solid #ccc;
         border-top: 1px solid #999;
     }
+    
+    .appStore {
+        margin-left: -4px;
+    }
+    
+    .cat {
+        font-size: 14px;
+        padding-right: 4px;
+    }
+    
+    .dailyData {
+        padding-right: 4px;
+    }
     </ui:style>
     <g:HTMLPanel>
 
@@ -80,8 +93,8 @@
 
                 <g:HTMLPanel styleName="form-group">
                     <label>
-                        <i
-                            class="glyphicon glyphicon-shopping-cart {style.moreMargin}"></i>
+                        <span
+                            class="icon-basket-alt {style.moreMargin} {style.appStore}" />
                         App Store
                     </label>
                     <g:ListBox styleName="form-control"
@@ -91,8 +104,8 @@
 
                 <g:HTMLPanel styleName="form-group">
                     <label>
-                        <i
-                            class="glyphicon glyphicon-folder-open {style.moreMargin}"></i>
+                        <span
+                            class="glyphicon glyphicon-folder-open {style.moreMargin} {style.cat}" />
                         Category
                     </label>
                     <g:ListBox styleName="form-control"
@@ -127,7 +140,7 @@
                 <g:HTMLPanel styleName="form-group"
                     ui:field="dailyDataRadio">
                     <label>
-                        <i class="glyphicon glyphicon-stats"></i>
+                        <i class="glyphicon glyphicon-stats {style.dailyData}"></i>
                         Daily Data
                     </label>
                     <br />

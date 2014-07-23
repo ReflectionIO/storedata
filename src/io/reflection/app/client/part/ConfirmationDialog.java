@@ -39,8 +39,8 @@ public class ConfirmationDialog extends PopupPanel {
 		buttonsPanel.add(delete);
 		dialogWidget.add(textPanel);
 		dialogWidget.add(buttonsPanel);
-		cancel.getElement().addClassName("btn btn-cancel");
-		delete.getElement().addClassName("btn btn-delete");
+		cancel.getElement().addClassName("btn btn-cancel delete");
+		delete.getElement().addClassName("btn btn-delete delete");
 	}
 
 	public Button getCancelButton() {

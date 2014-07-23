@@ -1,0 +1,16 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+    xmlns:g="urn:import:com.google.gwt.user.client.ui">
+    <ui:style>
+    .link {
+        font-size: 14px;
+    }
+    </ui:style>
+    <g:HTMLPanel>
+        <g:Anchor ui:field="link" styleName="{style.link}"
+            visible="false">
+            <span class="icon-angle-up" />
+            Back to Top
+        </g:Anchor>
+    </g:HTMLPanel>
+</ui:UiBinder> 

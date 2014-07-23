@@ -208,9 +208,9 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
         mIapColumn = new Column<RanksGroup, SafeHtml>(new SafeHtmlCell()) {
 
-            private final String IAP_DONT_KNOW_HTML = "<span class=\"glyphicon glyphicon-question-sign " + style.silver() + "\"></span>";
-            private final String IAP_YES_HTML = "<span class=\"glyphicon glyphicon-ok-sign " + style.green() + "\"></span>";
-            private final String IAP_NO_HTML = "<span class=\"glyphicon glyphicon-remove-sign " + style.red() + "\"></span>";
+            private final String IAP_DONT_KNOW_HTML = "<span class=\"icon-help " + style.silver() + "\"></span>";
+            private final String IAP_YES_HTML = "<span class=\"icon-ok " + style.green() + "\"></span>";
+            private final String IAP_NO_HTML = "<span class=\"icon-cancel-1 " + style.red() + "\"></span>";
 
             @Override
             public SafeHtml getValue(RanksGroup object) {

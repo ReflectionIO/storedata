@@ -24,7 +24,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.safecss.shared.SafeStyles;
 import com.google.gwt.safecss.shared.SafeStylesUtils;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiRenderer;
@@ -36,7 +38,7 @@ import com.google.gwt.uibinder.client.UiRenderer;
 public class AppRankCell extends AbstractCell<Rank> {
 
 	interface AppRankCellRenderer extends UiRenderer {
-		void render(SafeHtmlBuilder sb, String name, String creatorName, SafeUri smallImage, SafeUri link, String dailyData, String displayDailyData);
+		void render(SafeHtmlBuilder sb, String name, String creatorName, SafeUri smallImage, SafeUri link, SafeHtml dailyData, String displayDailyData);
 	}
 
 	private static AppRankCellRenderer RENDERER = GWT.create(AppRankCellRenderer.class);
@@ -48,12 +50,15 @@ public class AppRankCell extends AbstractCell<Rank> {
 
 		Filter filter = FilterController.get().getFilter();
 
-		String dailyDataType = filter.getDailyData(), dailyData, listType = FilterController.OVERALL_LIST_TYPE;
+		String dailyDataType = filter.getDailyData(), listType = FilterController.OVERALL_LIST_TYPE;
+
+		SafeHtml dailyData;
 
 		if (REVENUE_DAILY_DATA_TYPE.equals(dailyDataType)) {
-			dailyData = FormattingHelper.getCurrencySymbol(value.currency) + " " + value.revenue;
+			dailyData = SafeHtmlUtils.fromSafeConstant("<span class=\"icon-dollar\" style=\"padding-right: 6px;\"></span>"
+		+ FormattingHelper.getCurrencySymbol(value.currency) + " " + value.revenue);
 		} else {
-			dailyData = value.downloads.toString();
+			dailyData = SafeHtmlUtils.fromSafeConstant("<span class=\"icon-download-alt\" style=\"padding-right: 6px;\"></span>" + value.downloads.toString());
 		}
 
 		Stack s = NavigationController.get().getStack();

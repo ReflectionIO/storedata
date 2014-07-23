@@ -42,7 +42,7 @@
                 <li ui:field="mRevenueItem">
                     <g:InlineHyperlink ui:field="mRevenue">
                         Revenue
-                        <i class="glyphicon glyphicon-align-center pull-right"></i>
+                        <i class="icon-dollar pull-right"></i>
                     </g:InlineHyperlink>
                 </li>
                 <li ui:field="mDownloadsItem">
