@@ -156,6 +156,8 @@ public class CronServlet extends HttpServlet {
 				} catch (DataAccessException daEx) {
 					throw new RuntimeException(daEx);
 				}
+			} else if ("itemiaps".equals(process)) {
+
 			}
 		} else if ("item".equals(tidy)) {
 			try {
@@ -166,15 +168,15 @@ public class CronServlet extends HttpServlet {
 
 				Pager p = PagerHelper.infinitePager();
 
-//				do {
-					itemsWithDuplicates = ItemServiceProvider.provide().getDuplicateItemsInternalId(p);
+				// do {
+				itemsWithDuplicates = ItemServiceProvider.provide().getDuplicateItemsInternalId(p);
 
-					for (String internalId : itemsWithDuplicates) {
-						enqueueItemForDuplicateRemoval(internalId);
-					}
+				for (String internalId : itemsWithDuplicates) {
+					enqueueItemForDuplicateRemoval(internalId);
+				}
 
-//					p.start = Long.valueOf(p.start.longValue() + p.count.longValue());
-//				} while (itemsWithDuplicates.size() > 0);
+				// p.start = Long.valueOf(p.start.longValue() + p.count.longValue());
+				// } while (itemsWithDuplicates.size() > 0);
 			} catch (DataAccessException daEx) {
 				throw new RuntimeException(daEx);
 			}

@@ -675,8 +675,8 @@ final class ItemService implements IItemService {
 		List<String> duplicateIntenalIds = new ArrayList<String>();
 
 		final String getDuplicateItemsInternalIdQuery = String.format(
-//				"SELECT `internalid` FROM `item` GROUP BY `internalid` HAVING COUNT(`internalid`) > 1 ORDER BY `%s` %s LIMIT %d,%d",
-//				"SELECT `internalid`, count(1) as `count` FROM `item` WHERE `deleted`='n' GROUP BY `internalid` HAVING `count` > 1 ORDER BY `%s` %s LIMIT %d,%d",
+				// "SELECT `internalid` FROM `item` GROUP BY `internalid` HAVING COUNT(`internalid`) > 1 ORDER BY `%s` %s LIMIT %d,%d",
+				// "SELECT `internalid`, count(1) as `count` FROM `item` WHERE `deleted`='n' GROUP BY `internalid` HAVING `count` > 1 ORDER BY `%s` %s LIMIT %d,%d",
 				"SELECT `internalid`, count(1) as `count` FROM `item` GROUP BY `internalid` HAVING `count` > 1 ORDER BY `%s` %s LIMIT %d,%d",
 				pager.sortBy == null ? "id" : pager.sortBy, pager.sortDirection == SortDirectionType.SortDirectionTypeDescending ? "DESC" : "ASC", pager.start,
 				pager.count);
@@ -736,5 +736,25 @@ final class ItemService implements IItemService {
 		}
 
 		return itemAndDuplicates;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.item.IItemService#getPropertylessItemCount()
+	 */
+	@Override
+	public Long getPropertylessItemCount() throws DataAccessException {
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.item.IItemService#getPropertylessItems()
+	 */
+	@Override
+	public List<Item> getPropertylessItems() throws DataAccessException {
+		return null;
 	}
 }
