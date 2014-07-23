@@ -19,6 +19,10 @@
     .postsList {
         min-height: 100px;
     }
+    
+    .filler {
+        height: 60px;
+    }
     </ui:style>
     <g:HTMLPanel>
         <g:HTMLPanel styleName="row {style.blogcontainer}">
@@ -32,9 +36,12 @@
                     <g:HTMLPanel>
                         <c:CellList ui:field="posts"
                             styleName="{style.postsList}" />
-                        <p:PageSizePager ui:field="pager" />
+                        <p:PageSizePager ui:field="pager"
+                            visible="false" />
                     </g:HTMLPanel>
                 </p:Preloader>
+                <g:HTMLPanel
+                    styleName="{style.filler} col-md-12 hidden-xs hidden-sm" />
             </g:HTMLPanel>
 
         </g:HTMLPanel>

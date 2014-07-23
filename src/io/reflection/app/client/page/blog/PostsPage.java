@@ -34,6 +34,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author billy1380
@@ -69,6 +70,7 @@ public class PostsPage extends Page implements NavigationEventHandler, GetPostsE
         posts.setEmptyListWidget(new HTMLPanel("No posts found!"));
 
         PostController.get().addDataDisplay(posts);
+        pager.setViewMoreText("View More Posts");
         pager.setDisplay(posts);
     }
 
@@ -141,6 +143,11 @@ public class PostsPage extends Page implements NavigationEventHandler, GetPostsE
      */
     @Override
     public void getPostsSuccess(GetPostsRequest input, GetPostsResponse output) {
+        if (output.status.equals(StatusType.StatusTypeSuccess)) {
+            pager.setVisible(true);
+        } else {
+            pager.setVisible(false);
+        }
         preloader.hide();
     }
 
@@ -152,6 +159,7 @@ public class PostsPage extends Page implements NavigationEventHandler, GetPostsE
      */
     @Override
     public void getPostsFailure(GetPostsRequest input, Throwable caught) {
+        pager.setVisible(false);
         preloader.hide();
     }
 

@@ -16,8 +16,6 @@ import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.AbstractPager;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
@@ -40,7 +38,6 @@ public class PageSizePager extends AbstractPager {
     private final int increment;
 
     // @UiField Anchor viewLessButton;
-    @UiField Anchor backToTopButton;
     @UiField Button viewMoreButton;
 
     private Image mSpinner;
@@ -61,10 +58,12 @@ public class PageSizePager extends AbstractPager {
 
         // Hide the buttons by default.
         setDisplay(null);
+
+        setViewMoreText("View More"); // Set default text
     }
 
     public void setViewMoreText(String s) {
-        viewMoreButton.setText(s);
+        viewMoreButton.setHTML(s + " <span class=\"icon-plus\" />");
     }
 
     @Override
@@ -90,11 +89,6 @@ public class PageSizePager extends AbstractPager {
     // }
     // }
     // }
-
-    @UiHandler("backToTopButton")
-    void onBackToTopClicked(ClickEvent event) {
-        Window.scrollTo(0, 0);
-    }
 
     @UiHandler("viewMoreButton")
     void onviewMoreButtonClicked(ClickEvent event) {
