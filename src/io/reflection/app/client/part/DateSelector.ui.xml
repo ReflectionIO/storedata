@@ -4,57 +4,62 @@
     <ui:style
         type="io.reflection.app.client.part.DateSelector.DateSelectorStyle">
         .icon {
-        	display: inline-block;
-        	vertical-align: top;
-        	color: #6d69c5;
-        	font-size: 20px;
-        	margin-right: 7px;
-        	margin-top: 3px;
+            display: inline-block;
+            vertical-align: top;
+            color: #6d69c5;
+            font-size: 20px;
+            margin-right: 7px;
+            margin-top: 3px;
         }
         
         .pickers {
-        	margin-bottom: 7px;
+            margin-bottom: 7px;
         }
         
         .presets {
-        	margin-left: 32px;
-        	font-size: 12px;
+            margin-left: 32px;
+            font-size: 12px;
         }
         
         .preset {
-        	padding-left: 6px;
-        	padding-right: 6px;
-        	outline: none;
+            padding-left: 6px;
+            padding-right: 6px;
+            outline: none;
         }
         
         .dateSeparator {
-        	margin-left: 5px;
-        	margin-right: 5px;
+            margin-left: 5px;
+            margin-right: 5px;
         }
         
         .apply {
-        	vertical-align: baseline;
-        	height: 34px;
-        	background-color: transparent;
+            vertical-align: baseline;
+            height: 34px;
+            background-color: transparent;
         }
         
         .filler {
-        	display: inline-block;
-        	width: 10px;
+            display: inline-block;
+            width: 10px;
         }
         
         .highlight {
-        	color: #434346;
-        	font-weight: 600;
-        	text-decoration: none;
-        	outline: none;
+            color: #434346;
+            font-weight: 600;
+            text-decoration: none;
+            outline: none;
+        }
+        
+        .disable,.disable:HOVER,.disable:FOCUS,.disable:ACTIVE {
+            color: #aaa;
+            cursor: default;
         }
         </ui:style>
     <g:HTMLPanel>
         <g:HTMLPanel styleName="{style.pickers} hidden-xs">
-            <span class="icon-calendar {style.icon} hidden-sm" />
+            <span ui:field="icon" class="icon-calendar {style.icon} hidden-sm" />
             <db:DateBox ui:field="dateBoxFrom"></db:DateBox>
-            <span class="{style.dateSeparator}">to</span>
+            <span ui:field="separator" class="{style.dateSeparator}">to</span>
             <db:DateBox ui:field="dateBoxTo"></db:DateBox>
             <span class="{style.filler} hidden-sm" />
             <g:Button ui:field="applyDateRange" text="Apply"
