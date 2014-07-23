@@ -13,6 +13,37 @@
     .filler {
         height: 40px;
     }
+    
+    .date {
+        height: 34px;
+        width: 100px;
+        text-align: center;
+        background: -webkit-linear-gradient(#f6f7f9, #eeeff1);
+        /* For Safari 5.1 to 6.0 */
+        background: -o-linear-gradient(#f6f7f9, #eeeff1);
+        /* For Opera 11.1 to 12.0 */
+        background: -moz-linear-gradient(#f6f7f9, #eeeff1);
+        /* For Firefox 3.6 to 15 */
+        background: linear-gradient(#f6f7f9, #eeeff1); /* Standard syntax */
+        color: #434346;
+        padding-left: 12px;
+        padding-top: 5px;
+        margin-right: 0px;
+        border-radius: 4px;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+        border: 1px solid #d5d6da;
+        outline: 0;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        cursor: pointer;
+        padding: 5px 4px;
+        border: 1px solid #ccc;
+        border-top: 1px solid #999;
+    }
     </ui:style>
     <g:HTMLPanel>
 
@@ -26,13 +57,8 @@
                         <i class="icon-calendar"></i>
                         Date
                     </label>
-                    <!--<input type="text" id="datepicker"> -->
-                    <div class="input-group">
-                        <d:DateBox styleName="form-control"
-                            ui:field="dateBox" />
-                        <span class="input-group-addon">
-                            <i class="icon-calendar"></i>
-                        </span>
+                    <div>
+                        <d:DateBox ui:field="date" styleName="{style.date}" />
                     </div>
                 </g:HTMLPanel>
 
