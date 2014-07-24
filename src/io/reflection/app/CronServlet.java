@@ -156,8 +156,22 @@ public class CronServlet extends HttpServlet {
 				} catch (DataAccessException daEx) {
 					throw new RuntimeException(daEx);
 				}
-			} else if ("itemiaps".equals(process)) {
+			} else if ("itemproperties".equals(process)) {
+				List<Long> propertylessItemIds;
+				Pager pager = PagerHelper.infinitePager();
 
+				try {
+					propertylessItemIds = ItemServiceProvider.provide().getPropertylessItemIds(pager);
+
+					if (propertylessItemIds != null) {
+						for (Long id : propertylessItemIds) {
+							enqueueItemForPropertiesRefresh(id);
+						}
+					}
+
+				} catch (DataAccessException daEx) {
+					throw new RuntimeException(daEx);
+				}
 			}
 		} else if ("item".equals(tidy)) {
 			try {
@@ -218,6 +232,43 @@ public class CronServlet extends HttpServlet {
 				}
 			}
 
+		} finally {
+			if (LOG.isLoggable(GaeLevel.TRACE)) {
+				LOG.log(GaeLevel.TRACE, "Exiting...");
+			}
+		}
+	}
+
+	private void enqueueItemForPropertiesRefresh(Long itemId) {
+		if (LOG.isLoggable(GaeLevel.TRACE)) {
+			LOG.log(GaeLevel.TRACE, "Entering...");
+		}
+
+		try {
+			Queue queue = QueueFactory.getQueue("refreshitemproperties");
+
+			TaskOptions options = TaskOptions.Builder.withMethod(Method.PULL);
+			options.param("itemid", itemId.toString());
+
+			try {
+				queue.add(options);
+			} catch (TransientFailureException ex) {
+
+				if (LOG.isLoggable(Level.WARNING)) {
+					LOG.warning(String.format("Could not queue a message because of [%s] - will retry it once", ex.toString()));
+				}
+
+				// retry once
+				try {
+					queue.add(options);
+				} catch (TransientFailureException reEx) {
+					if (LOG.isLoggable(Level.SEVERE)) {
+						LOG.log(Level.SEVERE,
+								String.format("Retry of with payload [%s] failed while adding to queue [%s] twice", options.toString(), queue.getQueueName()),
+								reEx);
+					}
+				}
+			}
 		} finally {
 			if (LOG.isLoggable(GaeLevel.TRACE)) {
 				LOG.log(GaeLevel.TRACE, "Exiting...");
