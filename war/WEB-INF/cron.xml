@@ -23,6 +23,11 @@
     <cron>
         <url>/cron?tidy=item</url>
         <description>Tidy duplicate item rows</description>
-        <schedule>every day 18:01</schedule>
+        <schedule>every day 19:01</schedule>
+    </cron>
+    <cron>
+        <url>/cron?process=itemiaps</url>
+        <description>Get missing item iaps</description>
+        <schedule>every day 22:00</schedule>
     </cron>
 </cronentries> 

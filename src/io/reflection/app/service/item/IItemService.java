@@ -109,4 +109,30 @@ public interface IItemService extends IService {
 	 */
 	public List<String> getDuplicateItemsInternalId(Pager infinitePager) throws DataAccessException;
 
+	/**
+	 * Get propertyless item count
+	 * 
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public Long getPropertylessItemsCount() throws DataAccessException;
+
+	/**
+	 * Get propertyless items
+	 * 
+	 * @param pager
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<Item> getPropertylessItems(Pager pager) throws DataAccessException;
+
+	/**
+	 * Get propertyless item ids
+	 * 
+	 * @param pager
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<Long> getPropertylessItemIds(Pager pager) throws DataAccessException;
+
 }
