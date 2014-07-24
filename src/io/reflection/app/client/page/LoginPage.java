@@ -62,7 +62,6 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 
     public LoginPage() {
         initWidget(uiBinder.createAndBindUi(this));
-        login.setTargetHistoryToken(PageType.LoginPageType.asTargetHistoryToken(FormHelper.REQUEST_INVITE_ACTION_NAME));
 
         mLoginForm.setPreloader(preloader); // Assign the preloader reference to the Login Form
         // String mediaQueries = " @media (max-width: 768px) {." + style.mainPanel() + " {margin-top:20px;}}";
@@ -79,10 +78,10 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 
         super.onAttach();
 
-        register.setText("Request invite");
-
         register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
         register(EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
+
+        updateForm();
     }
 
     /*
@@ -117,9 +116,13 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 
         }
 
+        updateForm();
+    }
+
+    private void updateForm() {
+        login.setTargetHistoryToken(PageType.LoginPageType.asTargetHistoryToken(FormHelper.REQUEST_INVITE_ACTION_NAME));
         register.setText("Request invite");
         register.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken(FormHelper.REQUEST_INVITE_ACTION_NAME));
-
     }
 
     public String getEmail(String value) {
