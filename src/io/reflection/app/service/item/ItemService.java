@@ -606,6 +606,7 @@ final class ItemService implements IItemService {
 		} else if (pager.count != null) {
 			getItemIdsQuery += String.format(" LIMIT %d", pager.count.longValue());
 		}
+
 		try {
 			itemConnection.connect();
 			itemConnection.executeQuery(getItemIdsQuery);
@@ -741,20 +742,151 @@ final class ItemService implements IItemService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.service.item.IItemService#getPropertylessItemCount()
+	 * @see io.reflection.app.service.item.IItemService#getPropertylessItemsCount()
 	 */
 	@Override
-	public Long getPropertylessItemCount() throws DataAccessException {
-		return null;
+	public Long getPropertylessItemsCount() throws DataAccessException {
+		Long propertylessItemsCount = Long.valueOf(0);
+
+		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
+
+		String getPropertylessItemsCountQuery = "SELECT count(1) AS `itemcount` FROM `item` WHERE (`properties`=null OR `properties`='null') AND `deleted`='n'";
+
+		try {
+			itemConnection.connect();
+			itemConnection.executeQuery(getPropertylessItemsCountQuery);
+
+			if (itemConnection.fetchNextRow()) {
+				propertylessItemsCount = itemConnection.getCurrentRowLong("itemcount");
+			}
+		} finally {
+			if (itemConnection != null) {
+				itemConnection.disconnect();
+			}
+		}
+
+		return propertylessItemsCount;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.service.item.IItemService#getPropertylessItems()
+	 * @see io.reflection.app.service.item.IItemService#getPropertylessItems(io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
-	public List<Item> getPropertylessItems() throws DataAccessException {
-		return null;
+	public List<Item> getPropertylessItems(Pager pager) throws DataAccessException {
+		List<Item> propertylessItems = new ArrayList<Item>();
+
+		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
+
+		String getPropertylessItemsQuery = "SELECT * FROM `item` WHERE (`properties` IS NULL OR `properties`='null') AND `deleted`='n'";
+
+		if (pager != null) {
+			String sortByQuery = "id";
+
+			if (pager.sortBy != null && ("internalid".equals(pager.sortBy) || "externalid".equals(pager.sortBy))) {
+				sortByQuery = pager.sortBy;
+			}
+
+			String sortDirectionQuery = "DESC";
+
+			if (pager.sortDirection != null) {
+				switch (pager.sortDirection) {
+				case SortDirectionTypeAscending:
+					sortDirectionQuery = "ASC";
+					break;
+				default:
+					break;
+				}
+			}
+
+			getPropertylessItemsQuery += String.format(" ORDER BY `%s` %s", sortByQuery, sortDirectionQuery);
+		}
+
+		if (pager.start != null && pager.count != null) {
+			getPropertylessItemsQuery += String.format(" LIMIT %d, %d", pager.start.longValue(), pager.count.longValue());
+		} else if (pager.count != null) {
+			getPropertylessItemsQuery += String.format(" LIMIT %d", pager.count.longValue());
+		}
+
+		try {
+			itemConnection.connect();
+			itemConnection.executeQuery(getPropertylessItemsQuery);
+
+			while (itemConnection.fetchNextRow()) {
+				Item item = toItem(itemConnection);
+
+				if (item != null) {
+					propertylessItems.add(item);
+				}
+			}
+		} finally {
+			if (itemConnection != null) {
+				itemConnection.disconnect();
+			}
+		}
+
+		return propertylessItems;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.item.IItemService#getPropertylessItemIds(io.reflection.app.api.shared.datatypes.Pager)
+	 */
+	@Override
+	public List<Long> getPropertylessItemIds(Pager pager) throws DataAccessException {
+		List<Long> propertylessItemIds = new ArrayList<Long>();
+
+		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
+
+		String getPropertylessItemsQuery = "SELECT `id` FROM `item` WHERE (`properties` IS NULL OR `properties`='null') AND `deleted`='n'";
+
+		if (pager != null) {
+			String sortByQuery = "id";
+
+			if (pager.sortBy != null && ("internalid".equals(pager.sortBy) || "externalid".equals(pager.sortBy))) {
+				sortByQuery = pager.sortBy;
+			}
+
+			String sortDirectionQuery = "DESC";
+
+			if (pager.sortDirection != null) {
+				switch (pager.sortDirection) {
+				case SortDirectionTypeAscending:
+					sortDirectionQuery = "ASC";
+					break;
+				default:
+					break;
+				}
+			}
+
+			getPropertylessItemsQuery += String.format(" ORDER BY `%s` %s", sortByQuery, sortDirectionQuery);
+		}
+
+		if (pager.start != null && pager.count != null) {
+			getPropertylessItemsQuery += String.format(" LIMIT %d, %d", pager.start.longValue(), pager.count.longValue());
+		} else if (pager.count != null) {
+			getPropertylessItemsQuery += String.format(" LIMIT %d", pager.count.longValue());
+		}
+
+		try {
+			itemConnection.connect();
+			itemConnection.executeQuery(getPropertylessItemsQuery);
+
+			while (itemConnection.fetchNextRow()) {
+				Long id = itemConnection.getCurrentRowLong("id");
+
+				if (id != null) {
+					propertylessItemIds.add(id);
+				}
+			}
+		} finally {
+			if (itemConnection != null) {
+				itemConnection.disconnect();
+			}
+		}
+
+		return propertylessItemIds;
 	}
 }
