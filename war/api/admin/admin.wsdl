@@ -50,6 +50,9 @@
             <xsd:element name="GetItemsInput" type="sda:GetItemsRequest" />
             <xsd:element name="GetItemsOutput" type="sda:GetItemsResponse" />
 
+            <xsd:element name="DeleteUserInput" type="sda:DeleteUserRequest" />
+            <xsd:element name="DeleteUserOutput" type="sda:DeleteUserResponse" />
+
             <xsd:complexType name="GetUsersRequest">
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
@@ -361,6 +364,22 @@
                 </xsd:complexContent>
             </xsd:complexType>
 
+            <xsd:complexType name="DeleteUserRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="user" type="sd:User" maxOccurs="1" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+            <xsd:complexType name="DeleteUserResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
         </xsd:schema>
     </wsdl:types>
 
@@ -469,6 +488,13 @@
         <wsdl:part name="output" element="sda:GetItemsOutput" />
     </wsdl:message>
 
+    <wsdl:message name="DeleteUserRequest">
+        <wsdl:part name="input" element="sdc:DeleteUserInput" />
+    </wsdl:message>
+    <wsdl:message name="DeleteUserResponse">
+        <wsdl:part name="output" element="sdc:DeleteUserOutput" />
+    </wsdl:message>
+
     <wsdl:portType name="admin">
         <wsdl:operation name="GetUsers">
             <wsdl:input message="sda:GetUsersRequest" />
@@ -533,10 +559,15 @@
             <wsdl:input message="sda:SendEmailRequest" />
             <wsdl:output message="sda:SendEmailResponse" />
         </wsdl:operation>
-        
+
         <wsdl:operation name="GetItems">
             <wsdl:input message="sda:GetItemsRequest" />
             <wsdl:output message="sda:GetItemsResponse" />
+        </wsdl:operation>
+        
+        <wsdl:operation name="DeleteUser">
+            <wsdl:input message="sda:DeleteUserRequest" />
+            <wsdl:output message="sda:DeleteUserResponse" />
         </wsdl:operation>
     </wsdl:portType>
     <wsdl:binding name="adminSOAP" type="sda:admin">
@@ -673,8 +704,8 @@
                 <soap:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
-       
-       <wsdl:operation name="GetItems">
+
+        <wsdl:operation name="GetItems">
             <soap:operation soapAction="http://app.reflection.io/admin/GetItems" />
             <wsdl:input>
                 <soap:body use="literal" />
@@ -683,7 +714,17 @@
                 <soap:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
-         
+
+        <wsdl:operation name="DeleteUser">
+            <soap:operation soapAction="http://app.reflection.io/core/DeleteUser" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+
     </wsdl:binding>
     <wsdl:service name="admin">
         <wsdl:port name="adminSOAP" binding="sda:adminSOAP">

@@ -40,6 +40,8 @@ import io.reflection.app.api.admin.shared.call.TriggerModelRequest;
 import io.reflection.app.api.admin.shared.call.TriggerModelResponse;
 import io.reflection.app.api.admin.shared.call.TriggerPredictRequest;
 import io.reflection.app.api.admin.shared.call.TriggerPredictResponse;
+import io.reflection.app.api.blog.shared.call.DeleteUserRequest;
+import io.reflection.app.api.blog.shared.call.DeleteUserResponse;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.collectors.Collector;
@@ -474,7 +476,7 @@ public final class Admin extends ActionHandler {
 			output.status = StatusType.StatusTypeFailure;
 			output.error = convertToErrorAndLog(LOG, e);
 		}
-		
+
 		LOG.finer("Exiting getEmailTemplates");
 		return output;
 	}
@@ -521,20 +523,33 @@ public final class Admin extends ActionHandler {
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(Long.valueOf(1)));
-			
+
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
 			output.items = ItemServiceProvider.provide().getItems(input.pager);
 			output.pager = input.pager;
 			updatePager(output.pager, output.items, input.pager.totalCount == null ? ItemServiceProvider.provide().getItemsCount() : null);
-			
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
 			output.error = convertToErrorAndLog(LOG, e);
 		}
-		
+
 		LOG.finer("Exiting getItems");
+		return output;
+	}
+
+	public DeleteUserResponse deleteUser(DeleteUserRequest input) {
+		LOG.finer("Entering deleteUser");
+		DeleteUserResponse output = new DeleteUserResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting deleteUser");
 		return output;
 	}
 
