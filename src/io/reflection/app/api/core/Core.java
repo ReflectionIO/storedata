@@ -1754,10 +1754,19 @@ public final class Core extends ActionHandler {
 				Set<Date> dates = salesGroupByDate.keySet();
 				List<Sale> salesGroup;
 
-				output.ranks = new ArrayList<Rank>();
+				output.ranks = RankServiceProvider.provide().getItemRanks(input.country, defaultStore, input.listType, input.item, input.start, input.end,
+						input.pager);
+				Map<Date, Rank> indexedRank = new HashMap<Date, Rank>();
+				for (Rank current : output.ranks) {
+					indexedRank.put(current.date, current);
+				}
 
 				for (Date salesGroupDate : dates) {
-					rank = new Rank();
+					rank = indexedRank.get(salesGroupDate);
+
+					if (rank == null) {
+						rank = new Rank();
+					}
 
 					output.ranks.add(rank);
 
