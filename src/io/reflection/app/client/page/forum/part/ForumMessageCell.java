@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.page.forum.part;
 
+import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.datatypes.ForumMessage;
 import io.reflection.app.shared.util.FormattingHelper;
 
@@ -37,7 +38,7 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 	private RichTextArea richText;
 	
 	@UiField
-	private AnchorElement flag ;
+	private AnchorElement flagButton ;
 
 	/**
 	 * @param consumedEvents
@@ -47,7 +48,8 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 	}
 
 	interface ForumMessageCellRenderer extends UiRenderer {
-		void render(SafeHtmlBuilder sb, String authorName, SafeHtml content, String created, Long topicId, Long messageId, SafeHtml flagButton, String editStyle);
+		void render(SafeHtmlBuilder sb, String authorName, SafeHtml content, String created, SafeHtml flagButtonHtml, 
+				SafeHtml editButtonHtml);
 
 		void onBrowserEvent(ForumMessageCell o, NativeEvent e, Element p, ForumMessage n);
 
@@ -65,11 +67,19 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 		@SafeHtmlTemplates.Template("<div class=\"forumMessageQuote\"><div class=\"forumMessageQuoteAuthor\">{0} said : {1}</div>")
 		SafeHtml quoteLayout(SafeHtml author, SafeHtml message);
 		
-		@SafeHtmlTemplates.Template("<a href=\"flag\" class=\"btn btn-warning btn-xs\" ui:field=\"flag\">\n" +
+		@SafeHtmlTemplates.Template("<a href=\"flag\" class=\"btn btn-warning btn-xs\" ui:field=\"flagButton\">\n" +
                 "                        <i class=\"glyphicon glyphicon-flag\"></i>\n" +
                 "                        Flag\n" +
                 "                    </a>")
 		SafeHtml flagButton();
+		
+		@SafeHtmlTemplates.Template("<a href=\"{0}/view/{1}/edit/{2}\" "+
+		"class=\"btn btn-default btn-xs\" ui:field=\"editButton\">\n" +
+                "                        <i class=\"glyphicon glyphicon-pencil\"></i>\n" +
+                "                        Edit\n" +
+                "                    </a>")
+		SafeHtml editButton(String pageHref, long topicId, long messageId);
+		
 		
 		@SafeHtmlTemplates.Template("")
 		SafeHtml empty();
@@ -95,10 +105,12 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 		// id insetad username
 		// value has author
 		// ForumMessage ad property to check the user
+		SafeHtml editButtonHtml = QuoteTemplate.INSTANCE.editButton(PageType.ForumEditTopicPageType.asHref().asString(), value.getTopicId(), value.getId());
+				
 		RENDERER.render(builder, FormattingHelper.getUserLongName(value.getAuthor()), SafeHtmlUtils.fromTrustedString(value.getContent()), "Posted "
-				+ FormattingHelper.getTimeSince(value.getCreated()), value.getTopicId(), value.getId(), 
+				+ FormattingHelper.getTimeSince(value.getCreated()), 
 				value.belongsToCurrentUser() ? QuoteTemplate.INSTANCE.empty(): QuoteTemplate.INSTANCE.flagButton(),
-				value.belongsToCurrentUser() ? "" : "disabled") ;
+				value.belongsToCurrentUser() ? editButtonHtml : QuoteTemplate.INSTANCE.empty()) ;
 		
 	}
 
