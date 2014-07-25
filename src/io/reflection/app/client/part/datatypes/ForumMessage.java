@@ -61,4 +61,11 @@ public class ForumMessage {
 		return currentuserId == getId() ? true : false;
 	}
 
+	/**
+	 * @return true if the author is the same as the user, false otherwise
+	 */
+	public boolean belongsToCurrentUser() {
+		return getAuthor().id.equals(currentuserId) ;
+	}
+
 }

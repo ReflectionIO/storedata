@@ -3,8 +3,10 @@
     <ui:with field="authorName" type="java.lang.String" />
     <ui:with field="content" type="com.google.gwt.safehtml.shared.SafeHtml" />
     <ui:with field="created" type="java.lang.String" />
-    <ui:with field="topicId" type="java.lang.Long" />
-    <ui:with field="messageId" type="java.lang.Long" />
+    <!-- <ui:with field="topicId" type="java.lang.Long" />
+    <ui:with field="messageId" type="java.lang.Long" /> -->
+    <ui:with field="flagButtonHtml" type="com.google.gwt.safehtml.shared.SafeHtml"/>
+    <ui:with field="editButtonHtml" type="com.google.gwt.safehtml.shared.SafeHtml"/>
     <ui:import field="io.reflection.app.client.page.PageType.ForumThreadPageType" />
     <ui:import field="io.reflection.app.client.page.PageType.ForumEditTopicPageType" />
     <ui:style>
@@ -51,15 +53,9 @@
                 <ui:text from="{created}" />
                 <div class="pull-right">
 
-                    <a href="{ForumEditTopicPageType.asHref.asString}/view/{topicId.toString}/edit/{messageId.toString}" class="btn btn-default btn-xs"
-                        ui:field="edit">
-                        <i class="glyphicon glyphicon-pencil"></i>
-                        Edit
-                    </a>
-                    <a href="flag" class="btn btn-warning btn-xs" ui:field="flag">
-                        <i class="glyphicon glyphicon-flag"></i>
-                        Flag
-                    </a>
+                    <ui:safehtml from = "{editButtonHtml}"/>                    
+                    <ui:safehtml from ="{flagButtonHtml}"/>
+                    
                     <a class="btn btn-default btn-xs" ui:field="quote">
                         <i class="glyphicon glyphicon-pencil"></i>
                         Quote
