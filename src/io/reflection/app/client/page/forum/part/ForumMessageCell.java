@@ -47,7 +47,7 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 	}
 
 	interface ForumMessageCellRenderer extends UiRenderer {
-		void render(SafeHtmlBuilder sb, String authorName, SafeHtml content, String created, Long topicId, Long messageId, String flagStyle, String editStyle);
+		void render(SafeHtmlBuilder sb, String authorName, SafeHtml content, String created, Long topicId, Long messageId, SafeHtml flagButton, String editStyle);
 
 		void onBrowserEvent(ForumMessageCell o, NativeEvent e, Element p, ForumMessage n);
 
@@ -64,6 +64,16 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 
 		@SafeHtmlTemplates.Template("<div class=\"forumMessageQuote\"><div class=\"forumMessageQuoteAuthor\">{0} said : {1}</div>")
 		SafeHtml quoteLayout(SafeHtml author, SafeHtml message);
+		
+		@SafeHtmlTemplates.Template("<a href=\"flag\" class=\"btn btn-warning btn-xs\" ui:field=\"flag\">\n" +
+                "                        <i class=\"glyphicon glyphicon-flag\"></i>\n" +
+                "                        Flag\n" +
+                "                    </a>")
+		SafeHtml flagButton();
+		
+		@SafeHtmlTemplates.Template("")
+		SafeHtml empty();
+		
 	}
 
 	@Override
@@ -87,7 +97,7 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 		// ForumMessage ad property to check the user
 		RENDERER.render(builder, FormattingHelper.getUserLongName(value.getAuthor()), SafeHtmlUtils.fromTrustedString(value.getContent()), "Posted "
 				+ FormattingHelper.getTimeSince(value.getCreated()), value.getTopicId(), value.getId(), 
-				value.belongsToCurrentUser() ? "disabled" : "",
+				value.belongsToCurrentUser() ? QuoteTemplate.INSTANCE.empty(): QuoteTemplate.INSTANCE.flagButton(),
 				value.belongsToCurrentUser() ? "" : "disabled") ;
 		
 	}

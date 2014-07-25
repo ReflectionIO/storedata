@@ -5,7 +5,7 @@
     <ui:with field="created" type="java.lang.String" />
     <ui:with field="topicId" type="java.lang.Long" />
     <ui:with field="messageId" type="java.lang.Long" />
-    <ui:with field="flagStyle" type="java.lang.String"/>
+    <ui:with field="flagButton" type="com.google.gwt.safehtml.shared.SafeHtml"/>
     <ui:with field="editStyle" type="java.lang.String"/>
     <ui:import field="io.reflection.app.client.page.PageType.ForumThreadPageType" />
     <ui:import field="io.reflection.app.client.page.PageType.ForumEditTopicPageType" />
@@ -58,10 +58,9 @@
                         <i class="glyphicon glyphicon-pencil"></i>
                         Edit
                     </a>
-                    <a href="flag" class="btn btn-warning btn-xs {flagStyle}" ui:field="flag">
-                        <i class="glyphicon glyphicon-flag"></i>
-                        Flag
-                    </a>
+                    
+                    <ui:safehtml from ="{flagButton}"/>
+                    
                     <a class="btn btn-default btn-xs" ui:field="quote">
                         <i class="glyphicon glyphicon-pencil"></i>
                         Quote
