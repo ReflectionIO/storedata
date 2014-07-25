@@ -20,7 +20,7 @@ import java.util.Date;
  */
 public class ForumMessage {
 
-	private Topic topic; //surely Topic refers to the thread?
+	private Topic topic;
 	private Reply reply;
 	Long currentuserId = SessionController.get().getLoggedInUser().id;
 
