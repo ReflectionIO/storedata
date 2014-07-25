@@ -51,13 +51,8 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 
 		void onBrowserEvent(ForumMessageCell o, NativeEvent e, Element p, ForumMessage n);
 
-		ForumMessageStyle getForumMessageStyle();
 	}
 	
-	public interface ForumMessageStyle extends CssResource {
-		  String hidden();
-		  String shown();
-		}
 
 	private static ForumMessageCellRenderer RENDERER = GWT.create(ForumMessageCellRenderer.class);
 
@@ -92,8 +87,8 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 		// ForumMessage ad property to check the user
 		RENDERER.render(builder, FormattingHelper.getUserLongName(value.getAuthor()), SafeHtmlUtils.fromTrustedString(value.getContent()), "Posted "
 				+ FormattingHelper.getTimeSince(value.getCreated()), value.getTopicId(), value.getId(), 
-				value.belongsToCurrentUser() ? RENDERER.getForumMessageStyle().hidden() : RENDERER.getForumMessageStyle().shown(),
-				value.belongsToCurrentUser() ? RENDERER.getForumMessageStyle().shown() : RENDERER.getForumMessageStyle().hidden()) ;
+				value.belongsToCurrentUser() ? "disabled" : "",
+				value.belongsToCurrentUser() ? "" : "disabled") ;
 		
 	}
 

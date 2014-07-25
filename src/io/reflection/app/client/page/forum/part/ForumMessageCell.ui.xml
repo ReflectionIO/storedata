@@ -9,14 +9,6 @@
     <ui:with field="editStyle" type="java.lang.String"/>
     <ui:import field="io.reflection.app.client.page.PageType.ForumThreadPageType" />
     <ui:import field="io.reflection.app.client.page.PageType.ForumEditTopicPageType" />
-    <ui:style field="forumMessageStyle" type="io.reflection.app.client.page.forum.part.ForumMessageCell.ForumMessageStyle">
-        .hidden {
-            display:none;
-        }
-
-        .shown {
-        }
-    </ui:style>
     <ui:style>
     
     @external forumMessageQuote,forumMessageQuoteAuthor;
