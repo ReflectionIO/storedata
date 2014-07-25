@@ -354,8 +354,6 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 	 * Delete linked account from lookup
 	 * 
 	 * @param linkedAccountId
-	 * @param password
-	 * @param properties
 	 */
 	private void deleteLinkedAccountLookup(Long linkedAccountId) {
 		myDataAccounts.remove(myDataAccountLookup.get(linkedAccountId.toString()));
