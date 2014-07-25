@@ -32,6 +32,9 @@
     	text-align: center;
     	color: #0e0e1f;
     }
+    .formLinkAcc {
+        padding: 0px;
+    }
     </ui:style>
     <g:HTMLPanel styleName="container"> <!-- Override container-fluid assigned in NavigationController -->
 
@@ -71,7 +74,7 @@
             <g:HTMLPanel styleName="col-md-5 col-md-offset-1 {style.marginTopForm}">
 
                 <p:Preloader ui:field="preloader">
-                    <g:HTMLPanel styleName="well">
+                    <g:HTMLPanel styleName="well {style.formLinkAcc}">
                         <g:HTMLPanel>
                             <ul class="nav nav-tabs nav-justified loginregister">
                                 <li class="{style.inviteRegisterTab}">
