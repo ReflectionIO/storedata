@@ -544,7 +544,19 @@ public final class Admin extends ActionHandler {
 		LOG.finer("Entering deleteUser");
 		DeleteUserResponse output = new DeleteUserResponse();
 		try {
-			output.status = StatusType.StatusTypeSuccess;
+		    if (input == null)
+                throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+                        ApiError.InvalidValueNull.getMessage("DeleteUserRequest: input"));
+
+            input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
+            output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+            
+            input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
+
+            UserServiceProvider.provide().deleteUser(input.user);
+                        
+            output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
 			output.error = convertToErrorAndLog(LOG, e);
