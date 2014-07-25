@@ -36,6 +36,9 @@
     	padding: 0px;
     	margin-top: 20px;
     }
+    .filler {
+    	height: 40px;
+    }
     </ui:style>
     <g:HTMLPanel styleName="container">
         <p:AlertBox ui:field="mAlertBox" visible="false" />
@@ -58,8 +61,10 @@
                         </g:HTMLPanel>
                     </p:Preloader>
                 </g:HTMLPanel>
+                <g:HTMLPanel styleName="{style.filler} col-md-12 hidden-xs hidden-sm" />
             </g:HTMLPanel>
             <l:WelcomePanel ui:field="mWelcomePanel" styleName="col-md-12 {style.panel}" visible="false" />
+            
         </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder> 
