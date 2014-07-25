@@ -7,13 +7,18 @@
 //
 package io.reflection.app.client.page.admin;
 
+import io.reflection.app.api.blog.shared.call.DeleteUserRequest;
+import io.reflection.app.api.blog.shared.call.DeleteUserResponse;
+import io.reflection.app.api.blog.shared.call.event.DeleteUserEventHandler;
 import io.reflection.app.client.cell.StyledButtonCell;
+import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.UserController;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.ConfirmationDialog;
+import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.User;
@@ -39,7 +44,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author billy1380
  * 
  */
-public class UsersPage extends Page {
+public class UsersPage extends Page implements DeleteUserEventHandler {
 
     private static UsersPageUiBinder uiBinder = GWT.create(UsersPageUiBinder.class);
 
@@ -49,6 +54,7 @@ public class UsersPage extends Page {
     @UiField(provided = true) SimplePager mPager = new SimplePager(false, false);
 
     private ConfirmationDialog confirmationDialog;
+    @UiField Preloader preloader;
 
     public UsersPage() {
         initWidget(uiBinder.createAndBindUi(this));
@@ -59,6 +65,18 @@ public class UsersPage extends Page {
         UserController.get().addDataDisplay(mUsers);
         mPager.setDisplay(mUsers);
 
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.client.page.Page#onAttach()
+     */
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+
+        register(EventController.get().addHandlerToSource(DeleteUserEventHandler.TYPE, UserController.get(), this));
     }
 
     private void createColumns() {
@@ -133,7 +151,8 @@ public class UsersPage extends Page {
                     UserController.get().makeBeta(object.id);
                     break;
                 case "Delete":
-                    confirmationDialog = new ConfirmationDialog("Delete user", "Are you sure you want to remove this user?");
+                    confirmationDialog = new ConfirmationDialog("Delete " + object.forename + " " + object.surname + "\n" + object.company,
+                            "Are you sure you want to remove " + object.username + " ?");
                     confirmationDialog.center();
                     confirmationDialog.setParameter(object.id);
 
@@ -149,6 +168,7 @@ public class UsersPage extends Page {
 
                         @Override
                         public void onClick(ClickEvent event) {
+                            preloader.show();
                             UserController.get().delete(object.id);
                             confirmationDialog.reset();
                         }
@@ -207,4 +227,26 @@ public class UsersPage extends Page {
     // }
     // }
     //
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.api.blog.shared.call.event.DeleteUserEventHandler#deleteUserSuccess(io.reflection.app.api.blog.shared.call.DeleteUserRequest,
+     * io.reflection.app.api.blog.shared.call.DeleteUserResponse)
+     */
+    @Override
+    public void deleteUserSuccess(DeleteUserRequest input, DeleteUserResponse output) {
+        preloader.hide();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.api.blog.shared.call.event.DeleteUserEventHandler#deleteUserFailure(io.reflection.app.api.blog.shared.call.DeleteUserRequest,
+     * java.lang.Throwable)
+     */
+    @Override
+    public void deleteUserFailure(DeleteUserRequest input, Throwable caught) {
+        preloader.hide();
+    }
 }
