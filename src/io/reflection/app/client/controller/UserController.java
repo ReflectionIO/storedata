@@ -17,6 +17,9 @@ import io.reflection.app.api.admin.shared.call.GetUsersResponse;
 import io.reflection.app.api.admin.shared.call.SetPasswordRequest;
 import io.reflection.app.api.admin.shared.call.SetPasswordResponse;
 import io.reflection.app.api.admin.shared.call.event.AssignRoleEventHandler;
+import io.reflection.app.api.blog.shared.call.DeleteUserRequest;
+import io.reflection.app.api.blog.shared.call.DeleteUserResponse;
+import io.reflection.app.api.blog.shared.call.event.DeleteUserEventHandler;
 import io.reflection.app.api.core.client.CoreService;
 import io.reflection.app.api.core.shared.call.GetUserDetailsRequest;
 import io.reflection.app.api.core.shared.call.GetUserDetailsResponse;
@@ -224,7 +227,39 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 	 * @param userId
 	 */
 	public void delete(Long userId) {
+	    AdminService service = ServiceCreator.createAdminService();
+	    
+	    final DeleteUserRequest input = new DeleteUserRequest();
+	    input.accessCode = ACCESS_CODE;
+	    
+	    input.session = SessionController.get().getSessionForApiCall();
+	    
+	    input.user = new User();
+        input.user.id = userId;
+        
+        service.deleteUser(input, new AsyncCallback<DeleteUserResponse>() {            
 
+            @Override
+            public void onSuccess(DeleteUserResponse output) {
+                if (output.status == StatusType.StatusTypeSuccess) {
+                    mUsers.remove(mUserLookup.get(input.user.id.toString()));
+                    mUserLookup.remove(input.user.id.toString());
+                    mPager.totalCount = Long.valueOf(mPager.totalCount.longValue() - 1);
+                    mPager.start = Long.valueOf(0);
+                    mCount = mPager.totalCount;
+                    updateRowCount((int) mCount, true);
+                    updateRowData(0, mUsers.subList(0, Math.min(mPager.count.intValue(), mPager.totalCount.intValue())));
+                }
+                EventController.get().fireEventFromSource(new DeleteUserEventHandler.DeleteUserSuccess(input, output), UserController.this);
+            }
+            
+            @Override
+            public void onFailure(Throwable caught) {
+                EventController.get().fireEventFromSource(new DeleteUserEventHandler.DeleteUserFailure(input, caught), UserController.this);
+            }
+            
+        });
+	    
 	}
 
 	/**
@@ -454,5 +489,6 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 			}
 		});
 	}
+	
 
 }
