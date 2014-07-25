@@ -23,6 +23,7 @@ import io.reflection.app.api.admin.shared.call.TriggerGatherRequest;
 import io.reflection.app.api.admin.shared.call.TriggerIngestRequest;
 import io.reflection.app.api.admin.shared.call.TriggerModelRequest;
 import io.reflection.app.api.admin.shared.call.TriggerPredictRequest;
+import io.reflection.app.api.blog.shared.call.DeleteUserRequest;
 
 import com.google.gson.JsonObject;
 import com.willshex.gson.json.service.server.JsonServlet;
@@ -93,6 +94,10 @@ public final class AdminJsonServlet extends JsonServlet {
 			GetItemsRequest input = new GetItemsRequest();
 			input.fromJson(request);
 			output = service.getItems(input).toString();
+		} else if ("DeleteUser".equals(action)) {
+			DeleteUserRequest input = new DeleteUserRequest();
+			input.fromJson(request);
+			output = service.deleteUser(input).toString();
 		}
 
 		return output;

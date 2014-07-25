@@ -38,6 +38,8 @@ import io.reflection.app.api.admin.shared.call.TriggerModelRequest;
 import io.reflection.app.api.admin.shared.call.TriggerModelResponse;
 import io.reflection.app.api.admin.shared.call.TriggerPredictRequest;
 import io.reflection.app.api.admin.shared.call.TriggerPredictResponse;
+import io.reflection.app.api.blog.shared.call.DeleteUserRequest;
+import io.reflection.app.api.blog.shared.call.DeleteUserResponse;
 
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
@@ -540,6 +542,39 @@ public final class AdminService extends JsonService {
 		} catch (RequestException exception) {
 			output.onFailure(exception);
 			onCallFailure(AdminService.this, AdminMethodGetItems, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String AdminMethodDeleteUser = "DeleteUser";
+
+	public Request deleteUser(final DeleteUserRequest input, final AsyncCallback<DeleteUserResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(AdminMethodDeleteUser, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						DeleteUserResponse outputParameter = new DeleteUserResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodDeleteUser, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodDeleteUser, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(AdminService.this, AdminMethodDeleteUser, input, exception);
+				}
+			});
+			onCallStart(AdminService.this, AdminMethodDeleteUser, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodDeleteUser, input, exception);
 		}
 		return handle;
 	}
