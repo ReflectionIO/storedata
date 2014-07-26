@@ -474,7 +474,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
                 displayItemDetails(output.ranks.get(0));
 
-                historyChart.setMode(rankingType);
+                historyChart.setMode(RankingType.PositionRankingType);
                 historyChart.setDataType(dataType);
 
                 // redraw the graph with the new data

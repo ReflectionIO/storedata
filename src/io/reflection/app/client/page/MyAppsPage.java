@@ -100,14 +100,13 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 		Styles.INSTANCE.reflection().ensureInjected();
 
-		FilterController.get().setListType(OVERALL_LIST_TYPE);
-
 		createColumns();
 
 		appsTable.setEmptyTableWidget(new HTMLPanel("No Apps found!"));
 		appsTable.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 		MyAppsController.get().addDataDisplay(appsTable);
 		simplePager.setDisplay(appsTable);
+		
 		FilterController.get().reset();
 	}
 
@@ -128,7 +127,8 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 		// pager.setVisible(hasPermission);
 		// redirect.setVisible(!hasPermission);
-
+		
+		FilterController.get().setListType(OVERALL_LIST_TYPE);
 	}
 
 	/**

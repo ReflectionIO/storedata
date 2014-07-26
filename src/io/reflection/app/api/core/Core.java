@@ -88,6 +88,7 @@ import io.reflection.app.datatypes.shared.Sale;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.modellers.Modeller;
 import io.reflection.app.modellers.ModellerFactory;
 import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.country.CountryServiceProvider;
@@ -1518,7 +1519,8 @@ public final class Core extends ActionHandler {
 				SimpleDateFormat keyFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 				Store defaultStore = stores.get(0);
-				FormType form = ModellerFactory.getModellerForStore(defaultStore.a3Code).getForm(input.listType);
+				Modeller modeller = ModellerFactory.getModellerForStore(defaultStore.a3Code);
+				FormType form = modeller.getForm(input.listType);
 
 				for (Sale sale : sales) {
 					// only add items that are consistent with the product type
@@ -1711,7 +1713,9 @@ public final class Core extends ActionHandler {
 
 				Store defaultStore = stores.get(0);
 				input.item.source = defaultStore.a3Code;
-				FormType form = ModellerFactory.getModellerForStore(defaultStore.a3Code).getForm(input.listType);
+				Modeller modeller = ModellerFactory.getModellerForStore(defaultStore.a3Code);
+				FormType form = modeller.getForm(input.listType);
+				Boolean isFree = null;
 
 				for (Sale sale : sales) {
 					// only add items that are consistent with the product type
@@ -1728,6 +1732,14 @@ public final class Core extends ActionHandler {
 						if (dateSalesList == null) {
 							dateSalesList = new ArrayList<Sale>();
 							salesGroupByDate.put(key, dateSalesList);
+						}
+
+						if (sale.proceeds != null) {
+							if (sale.proceeds.intValue() == 0) {
+								isFree = Boolean.TRUE;
+							} else {
+								isFree = Boolean.FALSE;
+							}
 						}
 
 						dateSalesList.add(sale);
@@ -1754,10 +1766,23 @@ public final class Core extends ActionHandler {
 				Set<Date> dates = salesGroupByDate.keySet();
 				List<Sale> salesGroup;
 
-				output.ranks = new ArrayList<Rank>();
+				output.ranks = RankServiceProvider.provide().getItemRanks(input.country, defaultStore, modeller.getType(form, isFree), input.item, input.start,
+						input.end, input.pager);
+				Map<Date, Rank> indexedRank = new HashMap<Date, Rank>();
+				for (Rank current : output.ranks) {
+					indexedRank.put(current.date, current);
+				}
 
 				for (Date salesGroupDate : dates) {
-					rank = new Rank();
+					boolean populatedCommon = false;
+
+					rank = indexedRank.get(salesGroupDate);
+
+					if (rank == null) {
+						rank = new Rank();
+					} else {
+						populatedCommon = true;
+					}
 
 					output.ranks.add(rank);
 
@@ -1768,7 +1793,6 @@ public final class Core extends ActionHandler {
 						int downloads = 0;
 						float revenue = 0;
 
-						boolean populatedCommon = false;
 						for (Sale sale : salesGroup) {
 							if (!populatedCommon) {
 								rank.category = input.category;

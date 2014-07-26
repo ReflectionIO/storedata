@@ -26,8 +26,8 @@
         <schedule>every day 19:01</schedule>
     </cron>
     <cron>
-        <url>/cron?process=itemiaps</url>
-        <description>Get missing item iaps</description>
+        <url>/cron?process=itemproperties</url>
+        <description>Get missing item properties</description>
         <schedule>every day 22:00</schedule>
     </cron>
 </cronentries> 
