@@ -227,7 +227,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
      * 
      * @param userId
      */
-    public void delete(Long userId) {
+    public void deleteUser(Long userId) {
         AdminService service = ServiceCreator.createAdminService();
 
         final DeleteUserRequest input = new DeleteUserRequest();

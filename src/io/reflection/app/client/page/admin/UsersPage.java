@@ -169,7 +169,7 @@ public class UsersPage extends Page implements DeleteUserEventHandler {
                         @Override
                         public void onClick(ClickEvent event) {
                             preloader.show();
-                            UserController.get().delete(object.id);
+                            UserController.get().deleteUser(object.id);
                             confirmationDialog.reset();
                         }
                     });
