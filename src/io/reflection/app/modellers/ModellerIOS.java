@@ -8,6 +8,7 @@
 package io.reflection.app.modellers;
 
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.collectors.CollectorIOS;
 import io.reflection.app.datatypes.shared.FormType;
 import io.reflection.app.logging.GaeLevel;
 
@@ -312,4 +313,24 @@ public class ModellerIOS
 		return type.contains("ipad") ? FormType.FormTypeTablet : FormType.FormTypeOther;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.modellers.Modeller#getGrossingType(io.reflection.app.datatypes.shared.FormType)
+	 */
+	@Override
+	public String getGrossingType(FormType formType) {
+		return formType == FormType.FormTypeTablet ? CollectorIOS.TOP_GROSSING_IPAD_APPS : CollectorIOS.TOP_GROSSING_APPS;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.modellers.Modeller#getType(io.reflection.app.datatypes.shared.FormType, java.lang.Boolean)
+	 */
+	@Override
+	public String getType(FormType formType, Boolean isFree) {
+		return formType == FormType.FormTypeTablet ? (isFree != null && isFree.booleanValue() ? CollectorIOS.TOP_FREE_IPAD_APPS
+				: CollectorIOS.TOP_PAID_IPAD_APPS) : (isFree != null && isFree.booleanValue() ? CollectorIOS.TOP_FREE_APPS : CollectorIOS.TOP_PAID_APPS);
+	}
 }

@@ -21,5 +21,9 @@ public interface Modeller {
 	void modelVariables(String country, String type, Long code) throws DataAccessException ;
 
 	FormType getForm(String type);
+	
+	String getGrossingType(FormType formType);
+	
+	String getType(FormType formType, Boolean isFree);
 
 }
