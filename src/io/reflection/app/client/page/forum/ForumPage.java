@@ -23,6 +23,7 @@ import io.reflection.app.client.page.forum.part.ForumSummaryCell;
 import io.reflection.app.client.part.BootstrapGwtCellList;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.SimplePager;
+import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.Forum;
 import io.reflection.app.datatypes.shared.Topic;
 import io.reflection.app.shared.util.FormattingHelper;
@@ -42,6 +43,7 @@ import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -77,6 +79,7 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 
 		createColumns();
 
+		topics.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 		topics.setEmptyTableWidget(new HTMLPanel("No topics found!"));
 
 		TopicController.get().addDataDisplay(topics);
