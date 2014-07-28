@@ -589,11 +589,12 @@ a:active,a:focus {
 /* Tabs Login/Register */
 .nav-tabs.nav-justified.loginregister {
     padding-top: 0px;
+    display: block;
 }
 
 .nav-tabs.nav-justified.loginregister li {
-    display: table-cell;
-    width: 1%;
+    display: block;
+    width: 50%;
 }
 
 .nav-tabs.nav-justified.loginregister li>a {
