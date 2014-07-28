@@ -459,7 +459,14 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
     public void navigationChanged(Stack previous, Stack current) {
 
         if (PageType.RanksPageType.equals(current.getPage())) {
-            // checkPermissions();
+            
+            if (mRanks.getVisibleItemCount() > 0){
+                showMorePanel.setVisible(true);
+            }
+            
+            boolean hasPermission = SessionController.get().loggedInUserHas(SessionController.FULL_RANK_VIEW_PERMISSION_ID);
+            mPager.setVisible(hasPermission);
+            redirect.setVisible(!hasPermission);
 
             if (current.getAction() == null || !"view".equals(current.getAction())) {
                 PageType.RanksPageType.show("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString());
@@ -518,10 +525,6 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
         register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
         register(EventController.get().addHandlerToSource(GetAllTopItemsEventHandler.TYPE, RankController.get(), this));
 
-        boolean hasPermission = SessionController.get().loggedInUserHas(SessionController.FULL_RANK_VIEW_PERMISSION_ID);
-
-        mPager.setVisible(hasPermission);
-        redirect.setVisible(!hasPermission);
     }
 
     /*
