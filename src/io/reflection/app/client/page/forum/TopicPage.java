@@ -227,26 +227,9 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 			}
 
 			title.setInnerHTML(properties + topic.title);
-			notes.removeAllChildren();
-
-			LIElement author = Document.get().createLIElement();
-			author.setInnerHTML("Started " + FormattingHelper.getTimeSince(topic.created) + " by " + FormattingHelper.getUserLongName(topic.author));
-
-			notes.appendChild(author);
-
-			if (topic.numberOfReplies != null) {
-				LIElement replies = Document.get().createLIElement();
-				replies.setInnerHTML(topic.numberOfReplies.toString() + " replies");
-
-				notes.appendChild(replies);
-			}
-
-			if (topic.lastReplier != null) {
-				LIElement lastReplier = Document.get().createLIElement();
-				lastReplier.setInnerHTML("Latest reply from " + FormattingHelper.getUserLongName(topic.lastReplier));
-
-				notes.appendChild(lastReplier);
-			}
+			
+			
+			updateNotes(topic);
 
 			if (dataProvider != null) {
 				dataProvider.unregisterListeners();
@@ -265,6 +248,29 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 			} else {
 				reply.getElement().getParentElement().getStyle().clearDisplay();
 			}
+		}
+	}
+
+	protected void updateNotes(Topic topic) {
+		notes.removeAllChildren();
+
+		LIElement author = Document.get().createLIElement();
+		author.setInnerHTML("Started " + FormattingHelper.getTimeSince(topic.created) + " by " + FormattingHelper.getUserLongName(topic.author));
+
+		notes.appendChild(author);
+
+		if (topic.numberOfReplies != null) {
+			LIElement replies = Document.get().createLIElement();
+			replies.setInnerHTML(topic.numberOfReplies.toString() + " replies");
+
+			notes.appendChild(replies);
+		}
+
+		if (topic.lastReplier != null) {
+			LIElement lastReplier = Document.get().createLIElement();
+			lastReplier.setInnerHTML("Latest reply from " + FormattingHelper.getUserLongName(topic.lastReplier));
+
+			notes.appendChild(lastReplier);
 		}
 	}
 
@@ -300,6 +306,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 	public void addReplySuccess(AddReplyRequest input, AddReplyResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			replyText.setText("");
+			updateNotes(TopicController.get().getTopic(topicId));
 		}
 	}
 
