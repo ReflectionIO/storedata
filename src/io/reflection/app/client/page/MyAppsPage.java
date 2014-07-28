@@ -102,6 +102,8 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 		Styles.INSTANCE.reflection().ensureInjected();
 
+		FilterController.get().setListType(OVERALL_LIST_TYPE);
+
 		createColumns();
 
         appsTable.setEmptyTableWidget(myAppsEmptyTable);
@@ -109,8 +111,10 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		appsTable.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 		MyAppsController.get().addDataDisplay(appsTable);
 		simplePager.setDisplay(appsTable);
-		
 		FilterController.get().reset();
+		
+		myAppsTopPanel.setFiltersEnabled(false);
+		myAppsTopPanel.setFilterAccountEnabled(false);
 	}
 
 	/*
@@ -125,13 +129,13 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
 		register(EventController.get().addHandlerToSource(GetLinkedAccountsEventHandler.TYPE, LinkedAccountController.get(), this));
+		register(EventController.get().addHandlerToSource(GetLinkedAccountItemsEventHandler.TYPE, MyAppsController.get(), this));
 
 		// boolean hasPermission = SessionController.get().loggedInUserHas(SessionController.);
 
 		// pager.setVisible(hasPermission);
 		// redirect.setVisible(!hasPermission);
 		
-		FilterController.get().setListType(OVERALL_LIST_TYPE);
 	}
 
 	/**
@@ -205,6 +209,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
         if (LinkedAccountController.get().hasLinkedAccounts() && LinkedAccountController.get().getLinkedAccountsCount() > 0) { // There are linked accounts
             myAppsEmptyTable.setLinkAccountVisible(false);
 			MyAppsController.get().reset();
+			myAppsTopPanel.setFiltersEnabled(false);
 			MyAppsController.get().fetchLinkedAccountItems();
 		}
 		myAccountSidePanel.getMyAppsLink().setTargetHistoryToken(
@@ -223,6 +228,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
         if (LinkedAccountController.get().hasLinkedAccounts() && LinkedAccountController.get().getLinkedAccountsCount() > 0) { // There are linked accounts
             myAppsEmptyTable.setLinkAccountVisible(false);
 			MyAppsController.get().reset();
+			myAppsTopPanel.setFiltersEnabled(false);
 			MyAppsController.get().fetchLinkedAccountItems();
 		}
 		myAccountSidePanel.getMyAppsLink().setTargetHistoryToken(
@@ -280,8 +286,10 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
         if (linkedAccountsCount > 0) {
             myAppsEmptyTable.setLinkAccountVisible(false);
+			myAppsTopPanel.setFilterAccountEnabled(true);
         } else {
             myAppsEmptyTable.setLinkAccountVisible(true);
+			myAppsTopPanel.setFilterAccountEnabled(false);
         }
 
 		myAppsTopPanel.updateFromFilter();
@@ -303,13 +311,17 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 					linkedAccountsCount = LinkedAccountController.get().getLinkedAccountsCount();
 					if (LinkedAccountController.get().getLinkedAccountsCount() > 0) {
 						FilterController.get().setLinkedAccount(LinkedAccountController.get().getAllLinkedAccounts().get(0).id);
+						myAppsTopPanel.setFilterAccountEnabled(true);
 					} else {
 						MyAppsController.get().reset();
+						myAppsTopPanel.setFilterAccountEnabled(false);
 					}
 				} else { // No linked accounts associated with this user
 					MyAppsController.get().reset();
 				}
 			}
+		}else{
+			myAppsTopPanel.setFilterAccountEnabled(false);
 		}
 	}
 
@@ -339,6 +351,13 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 			} else {
 				simplePager.setVisible(false);
 			}
+			if (MyAppsController.get().getUserItemsCount() > 0) {
+				myAppsTopPanel.setFiltersEnabled(true);
+			} else {
+				myAppsTopPanel.setFiltersEnabled(false);
+			}
+		} else {
+			myAppsTopPanel.setFiltersEnabled(false);
 		}
 
 	}
@@ -352,7 +371,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	@Override
 	public void getLinkedAccountItemsFailure(GetLinkedAccountItemsRequest input, Throwable caught) {
 		MyAppsController.get().reset();
-
+		myAppsTopPanel.setFiltersEnabled(false);
 	}
 
 }
