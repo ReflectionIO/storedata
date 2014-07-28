@@ -45,6 +45,7 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
     interface LoginPageUiBinder extends UiBinder<Widget, LoginPage> {}
 
     private static final String WELCOME_ACTION_NAME = "welcome";
+    private static final String TIMEOUT_ACTION_NAME = "timeout";
 
     @UiField WelcomePanel mWelcomePanel; // Welcome panel, showed when action 'welcome' is in the stack
 
@@ -82,6 +83,16 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
         register(EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
 
         updateForm();
+
+        Stack s = NavigationController.get().getStack();
+        if (s != null && s.hasAction()) {
+            if (TIMEOUT_ACTION_NAME.equals(s.getAction())) {
+                String email = getEmail(s.getParameter(0));
+                if (email != null) {
+                    mLoginForm.setUsername(email);
+                }
+            }
+        }
     }
 
     /*
@@ -92,16 +103,16 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
      */
     @Override
     public void navigationChanged(Stack previous, Stack current) {
-        Stack s = NavigationController.get().getStack();
-        if (s != null && s.hasAction()) {
-            if (WELCOME_ACTION_NAME.equals(s.getAction())) { // If action == 'welcome', show the Welcome panel
+
+        if (current != null && current.hasAction()) {
+            if (WELCOME_ACTION_NAME.equals(current.getAction())) { // If action == 'welcome', show the Welcome panel
                 mWelcomePanel.setVisible(true);
                 mDefaultLogin.setVisible(false);
             } else { // If action == email (user has been just registered to the system) attach him email to field
-                String email = getEmail(s.getAction());
+                String email = getEmail(current.getAction());
 
                 if (email == null) {
-                    email = getEmail(s.getParameter(0));
+                    email = getEmail(current.getParameter(0));
                 }
 
                 if (email != null) {
