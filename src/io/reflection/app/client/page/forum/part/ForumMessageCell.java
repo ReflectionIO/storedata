@@ -60,7 +60,8 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 	interface QuoteTemplate extends SafeHtmlTemplates {
 		QuoteTemplate INSTANCE = GWT.create(QuoteTemplate.class);
 
-		@SafeHtmlTemplates.Template("<div class=\"forumMessageQuote\"><div class=\"forumMessageQuoteAuthor\">{0} said : {1}</div>")
+		@SafeHtmlTemplates.Template("<blockquote style=\"margin: 0 0 0 40px; border: none; padding: 0px;\"><i>{0} wrote:</i><div style=\"font-style: italic;\">"+
+									"<span class=\"Apple-tab-span\" style=\"white-space:pre\">\t</span>\"{1}\"</div></blockquote><br/>")
 		SafeHtml quoteLayout(SafeHtml author, SafeHtml message);
 
 		@SafeHtmlTemplates.Template("<a href=\"flag\" class=\"btn btn-warning btn-xs\" ui:field=\"flagButton\"><i class=\"glyphicon glyphicon-flag\"></i>Flag</a>")
@@ -108,8 +109,9 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 
 		richText.setFocus(true);
 
-		richText.setHTML(QuoteTemplate.INSTANCE.quoteLayout(SafeHtmlUtils.fromString(FormattingHelper.getUserName(value.getAuthor())),
-				SafeHtmlUtils.fromTrustedString(value.getContent())));
+		richText.getFormatter().insertHTML(QuoteTemplate.INSTANCE.quoteLayout(SafeHtmlUtils.fromString(FormattingHelper.getUserName(value.getAuthor())),
+				SafeHtmlUtils.fromTrustedString(value.getContent())).asString());
+
 	}
 
 	/**
