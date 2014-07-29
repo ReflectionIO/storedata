@@ -168,6 +168,9 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 
 		register(EventController.get().addHandlerToSource(GetForumsEventHandler.TYPE, ForumController.get(), this));
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+		
+		topics.redraw(); //in order to redraw the new topic data after for example, a new reply success, which causes num topics to be out.
+
 	}
 
 	/*

@@ -170,7 +170,7 @@ public class ReplyController implements ServiceConstants {
 
 					if (topic != null) {
 						int numberOfReplies = topic.numberOfReplies.intValue();
-						topic.numberOfReplies = Integer.valueOf(numberOfReplies++);
+						topic.numberOfReplies = Integer.valueOf(++numberOfReplies);
 					}
 				}
 
