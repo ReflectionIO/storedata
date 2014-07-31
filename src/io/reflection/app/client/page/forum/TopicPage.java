@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.page.forum;
 
+import io.reflection.app.api.forum.client.ForumService;
 import io.reflection.app.api.forum.shared.call.AddReplyRequest;
 import io.reflection.app.api.forum.shared.call.AddReplyResponse;
 import io.reflection.app.api.forum.shared.call.GetTopicRequest;
@@ -14,10 +15,12 @@ import io.reflection.app.api.forum.shared.call.GetTopicResponse;
 import io.reflection.app.api.forum.shared.call.event.AddReplyEventHandler;
 import io.reflection.app.api.forum.shared.call.event.GetTopicEventHandler;
 import io.reflection.app.client.controller.EventController;
+import io.reflection.app.client.controller.ForumController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.ReplyController;
 import io.reflection.app.client.controller.ServiceConstants;
+import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.TopicController;
 import io.reflection.app.client.dataprovider.ForumMessageProvider;
 import io.reflection.app.client.handler.NavigationEventHandler;
@@ -41,12 +44,14 @@ import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.TextAlign;
 import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.Widget;
@@ -86,8 +91,12 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 	@UiField RichTextToolbar replyToolbar;
 
 	@UiField SimplePager pager;
+	
+	@UiField HTMLPanel adminButtons ;
 
 	private ForumMessageProvider dataProvider;
+
+	private Button makeStickyButton;
 
 	public TopicPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -103,14 +112,54 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
 		replyToolbar.setRichText(replyText);
 		cellPrototype.setRichText(replyText);
-
 		
+		if (SessionController.get().isLoggedInUserAdmin())
+			addAdminButtons();
+		else
+			adminButtons.removeFromParent();
+
 //		  Topic topic = TopicController.get().getTopic(topicId);
 //		  dataProvider = new ForumMessageProvider(topic);
 //		  dataProvider.registerListeners();
 //		  
 //		  dataProvider.addDataDisplay(messages);
 		 
+	}
+	
+	class StickyButton extends Button implements ClickHandler {
+		public StickyButton(String name) {
+			super(name);
+			this.addClickHandler(this);
+		}
+
+		
+		@Override
+		public void onClick(ClickEvent event) {
+			TopicController.get().setSticky(topicId, true);
+		}
+		
+	}
+	
+	class LockButton extends Button implements ClickHandler {
+		public LockButton(String name) {
+			super(name);
+			this.addClickHandler(this);
+		}
+
+		
+		@Override
+		public void onClick(ClickEvent event) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+
+	
+	private void addAdminButtons() {	
+		adminButtons.add(new StickyButton("Make Sticky"));
+		adminButtons.add(new LockButton("Lock"));
+
 	}
 
 	/*

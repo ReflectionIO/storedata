@@ -8,6 +8,7 @@
 package io.reflection.app.client.controller;
 
 import io.reflection.app.api.forum.client.ForumService;
+import io.reflection.app.api.forum.shared.call.AlterTopicRequest;
 import io.reflection.app.api.forum.shared.call.CreateTopicRequest;
 import io.reflection.app.api.forum.shared.call.CreateTopicResponse;
 import io.reflection.app.api.forum.shared.call.GetTopicRequest;
@@ -367,6 +368,42 @@ public class TopicController extends AsyncDataProvider<Topic> implements Service
 	 */
 	public Long getForumId() {
 		return forumId;
+	}
+
+	/**
+	 * @param topicId
+	 * @param b
+	 */
+	public void setSticky(Long topicId, boolean makeSticky) {
+		ForumService service = ServiceCreator.createForumService();
+
+		final AlterTopicRequest input = new AlterTopicRequest();
+		input.accessCode = ACCESS_CODE;
+
+		input.session = SessionController.get().getSessionForApiCall();
+
+		input.topic = new Topic();
+		
+		input.topic.id = topicId ;
+		input.topic.sticky = makeSticky;
+
+//		service.alterTopic(input, new AsyncCallback<CreateTopicResponse>() {
+//
+//			@Override
+//			public void onSuccess(CreateTopicResponse output) {
+//				if (output.status == StatusType.StatusTypeSuccess) {
+//
+//				}
+//
+//				EventController.get().fireEventFromSource(new CreateTopicSuccess(input, output), TopicController.this);
+//			}
+//
+//			@Override
+//			public void onFailure(Throwable caught) {
+//				EventController.get().fireEventFromSource(new CreateTopicFailure(input, caught), TopicController.this);
+//			}
+//		});
+		
 	}
 
 }
