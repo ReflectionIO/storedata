@@ -8,7 +8,6 @@
 package io.reflection.app.client.controller;
 
 import io.reflection.app.api.forum.client.ForumService;
-import io.reflection.app.api.forum.shared.call.AlterTopicRequest;
 import io.reflection.app.api.forum.shared.call.CreateTopicRequest;
 import io.reflection.app.api.forum.shared.call.CreateTopicResponse;
 import io.reflection.app.api.forum.shared.call.GetTopicRequest;
@@ -377,7 +376,7 @@ public class TopicController extends AsyncDataProvider<Topic> implements Service
 	public void setSticky(Long topicId, boolean makeSticky) {
 		ForumService service = ServiceCreator.createForumService();
 
-		final AlterTopicRequest input = new AlterTopicRequest();
+		final CreateTopicRequest input = new CreateTopicRequest();
 		input.accessCode = ACCESS_CODE;
 
 		input.session = SessionController.get().getSessionForApiCall();
