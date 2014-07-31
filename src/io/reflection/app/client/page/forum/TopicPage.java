@@ -130,6 +130,8 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 		public StickyButton(String name) {
 			super(name);
 			this.addClickHandler(this);
+			this.getStyleElement().addClassName("btn");
+			this.getStyleElement().addClassName("btn-default");
 		}
 
 		
@@ -144,6 +146,8 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 		public LockButton(String name) {
 			super(name);
 			this.addClickHandler(this);
+			this.getStyleElement().addClassName("btn");
+			this.getStyleElement().addClassName("btn-default");
 		}
 
 		

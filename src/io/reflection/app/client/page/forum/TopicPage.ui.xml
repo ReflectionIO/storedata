@@ -28,7 +28,7 @@
             <div class="row">
                 <div class="col-sm-10 col-sm-offset-2 btn-group">
                     <g:Button styleName="btn btn-default" text="Reply" ui:field="reply" />
-                    <g:HTML ui:field="adminButtons"/>
+                    <g:HTMLPanel ui:field="adminButtons"/>
                 </div>
             </div>
 
