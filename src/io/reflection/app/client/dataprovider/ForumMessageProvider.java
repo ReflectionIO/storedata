@@ -69,7 +69,7 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
 		int end = start + r.getLength();
 
 		if (rows == null || end > rows.size()) {
-			ReplyController.get().getReplies(topic.id);
+			ReplyController.get().getReplies(topic.id, start, end);
 		} else {
 			updateRowData(start, rows.subList(start, end));
 		}

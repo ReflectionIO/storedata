@@ -38,15 +38,10 @@ import com.willshex.gson.json.service.shared.StatusType;
  * 
  */
 public class ReplyController implements ServiceConstants {
-
-	private List<Reply> replies = new ArrayList<Reply>();
-	private HashMap<Long, Reply> replyStore = new HashMap<Long, Reply>();
-	private Long topicId;
-//	private long count = 0;
-	private Pager pager;
-	private SparseArray<Reply> replyLookup = null;
-
 	private static ReplyController one = null;
+	
+	private ReplyThread thread ;
+	
 
 	public static ReplyController get() {
 		if (one == null) {
@@ -55,8 +50,70 @@ public class ReplyController implements ServiceConstants {
 
 		return one;
 	}
+	
+	/**
+	 * @param topicId
+	 * @param end 
+	 * @param start 
+	 */
+	public void getReplies(Long topicId, int start, int end) {
 
-	private void fetchReplies() {
+		if (thread == null || thread.getTopicId() != topicId) {
+			thread = new ReplyThread(this, topicId);
+		}
+
+		thread.fetchReplies(topicId, start, end);
+	}
+
+	public Reply getReply(Long replyId) {
+		if (thread == null) 
+			return null;
+		
+		return thread.getReply(replyId) ;
+	}
+
+	/**
+	 * 
+	 */
+	public void reset() {
+		thread = null ;
+	}
+
+	
+}
+
+class ReplyThread implements ServiceConstants
+{
+
+	private List<Reply> replies = new ArrayList<Reply>();
+	private HashMap<Long, Reply> replyStore = new HashMap<Long, Reply>();
+	Long topicId;
+//	private long count = 0;
+	private Pager pager;
+	private SparseArray<Reply> replyLookup = null;
+	private ReplyController replyController;
+
+	/**
+	 * @param replyController
+	 * @param topicId 
+	 */
+	public ReplyThread(ReplyController replyController, Long topicId) {
+		this.replyController = replyController ;
+		this.topicId = topicId ;
+	}
+
+	public Reply getReply(Long replyId) {
+		return replyStore.get(replyId);
+	}
+
+	/**
+	 * @return
+	 */
+	public Long getTopicId() {
+		return topicId ;
+	}
+
+	void fetchReplies(Long topicId2, int start, int end) {
 		ForumService service = ServiceCreator.createForumService();
 
 		final GetRepliesRequest input = new GetRepliesRequest();
@@ -108,38 +165,17 @@ public class ReplyController implements ServiceConstants {
 //									Math.min(input.pager.start.intValue() + input.pager.count.intValue(), pager.totalCount.intValue())));
 				}
 
-				EventController.get().fireEventFromSource(new GetRepliesSuccess(input, output), ReplyController.this);
+				EventController.get().fireEventFromSource(new GetRepliesSuccess(input, output), replyController);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new GetRepliesFailure(input, caught), ReplyController.this);
+				EventController.get().fireEventFromSource(new GetRepliesFailure(input, caught), replyController);
 			}
 		});
 	}
 
-	/**
-	 * @param topicId
-	 */
-	public void getReplies(Long topicId) {
-
-		if (topicId != this.topicId) {
-			reset();
-
-			this.topicId = topicId;
-		}
-
-		fetchReplies();
-	}
-
-	public Reply getReply(Long replyId) {
-		return replyStore.get(replyId);
-	}
-
-	public void reset() {
-		topicId = null;
-		pager = null;
-	}
+	
 
 	public void addReply(Long topicId, String replyContent) {
 		ForumService service = ServiceCreator.createForumService();
@@ -162,11 +198,11 @@ public class ReplyController implements ServiceConstants {
 
 				if (output.status == StatusType.StatusTypeSuccess) {
 					if (pager != null && pager.totalCount != null) {
-						long totalCount = pager.totalCount.longValue();
-						pager.totalCount = Long.valueOf(totalCount++);
+						long totalCount = pager.totalCount.longValue() + 1;
+						pager.totalCount = Long.valueOf(totalCount);
 					}
 
-					Topic topic = TopicController.get().getTopic(ReplyController.this.topicId);
+					Topic topic = TopicController.get().getTopic(ReplyThread.this.topicId);
 
 					if (topic != null) {
 						int numberOfReplies = topic.numberOfReplies.intValue();
@@ -174,12 +210,12 @@ public class ReplyController implements ServiceConstants {
 					}
 				}
 
-				EventController.get().fireEventFromSource(new AddReplySuccess(input, output), ReplyController.this);
+				EventController.get().fireEventFromSource(new AddReplySuccess(input, output), replyController);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new AddReplyFailure(input, caught), ReplyController.this);
+				EventController.get().fireEventFromSource(new AddReplyFailure(input, caught), replyController);
 			}
 		});
 	}
@@ -200,17 +236,17 @@ public class ReplyController implements ServiceConstants {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new UpdateReplyFailure(input, caught), ReplyController.this);
+				EventController.get().fireEventFromSource(new UpdateReplyFailure(input, caught), replyController);
 
 			}
 
 			@Override
 			public void onSuccess(UpdateReplyResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
-					reset();
+					replyController.reset();
 				}
 
-				EventController.get().fireEventFromSource(new UpdateReplySuccess(input, output), ReplyController.this);
+				EventController.get().fireEventFromSource(new UpdateReplySuccess(input, output), replyController);
 
 			}
 		});

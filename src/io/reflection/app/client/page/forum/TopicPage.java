@@ -7,7 +7,10 @@
 //
 package io.reflection.app.client.page.forum;
 
+
 import io.reflection.app.api.forum.client.ForumService;
+import java.util.HashMap;
+
 import io.reflection.app.api.forum.shared.call.AddReplyRequest;
 import io.reflection.app.api.forum.shared.call.AddReplyResponse;
 import io.reflection.app.api.forum.shared.call.GetTopicRequest;
@@ -77,7 +80,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 	@UiField UListElement notes;
 
 	private ForumMessageCell cellPrototype = new ForumMessageCell();
-	@UiField(provided = true) CellList<ForumMessage> messages = new CellList<ForumMessage>(cellPrototype, BootstrapGwtCellList.INSTANCE);
+	@UiField(provided = true) CellList<ForumMessage> messagesCellList = new CellList<ForumMessage>(cellPrototype, BootstrapGwtCellList.INSTANCE);
 
 	@UiField Button reply;
 	@UiField Button post;
@@ -108,9 +111,9 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 		ReflectionProgressBar progress = new ReflectionProgressBar();
 		progress.getElement().getStyle().setTextAlign(TextAlign.CENTER);
 
-		messages.setPageSize(ServiceConstants.SHORT_STEP_VALUE);
-		messages.setLoadingIndicator(progress);
-		messages.setEmptyListWidget(new HTMLPanel("No messages found!"));
+		messagesCellList.setPageSize(ServiceConstants.SHORT_STEP_VALUE);
+		messagesCellList.setLoadingIndicator(progress);
+		messagesCellList.setEmptyListWidget(new HTMLPanel("No messages found!"));
 
 		pager.setPageSize(ServiceConstants.SHORT_STEP_VALUE);
 
@@ -253,8 +256,36 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 				if ((topicIdString = current.getParameter(TOPIC_ID_PARAMETER_INDEX)) != null) {
 					topicId = Long.valueOf(topicIdString);
 					Topic topic = TopicController.get().getTopic(topicId);
-					updateTopic(topic);
+					
 					// replyText.setHTML("<div class=\"quoting\">" + topic.author.forename + " scribbled " + topic.content.toString() + "</div>");
+					
+					HashMap<String, String> paramMap = new HashMap<String, String>();
+					for (int i = 1, ss = current.getParameterCount() ; i < ss && i+1 < ss ; i += 2)
+					{
+						paramMap.put(current.getParameter(i), current.getParameter(i+1));
+					}
+					
+					if (paramMap.containsKey("page"))
+					{
+						final int page = Integer.parseInt(paramMap.get("page"));
+						
+						//The pager is a separate argument that can trigger and respond to range change events in the display.
+						//That doesn't mean that the pager is the right place to do initial data loads.
+						
+						messagesCellList.setPageStart(page * ServiceConstants.SHORT_STEP_VALUE);
+						
+//						Scheduler.get().scheduleDeferred(new ScheduledCommand(){
+//
+//							@Override
+//							public void execute() {
+//								pager.setPage(page);
+//								
+//							}
+//							
+//						});
+					}
+
+					updateTopic(topic);
 				}
 			}
 		}
@@ -295,8 +326,13 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 			dataProvider = new ForumMessageProvider(topic);
 			dataProvider.registerListeners();
 
-			dataProvider.addDataDisplay(messages);
-			pager.setDisplay(messages);
+			dataProvider.addDataDisplay(messagesCellList);
+			pager.setDisplay(messagesCellList); //bind the pager and the display together.
+			//just note that the display is primary about what range it has set.
+			//The SimplePager is just a bound view on that data.
+			//Manual jumping of ranges should thus be set on the display, not on the pager.
+			//in any event that would be better in case a different pager was bound/detached or
+			//something else happened during the lifecycle.
 
 			replyForm.setVisible(!isLocked);
 

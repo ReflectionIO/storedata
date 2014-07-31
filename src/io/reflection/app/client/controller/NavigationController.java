@@ -189,6 +189,12 @@ public class NavigationController implements ValueChangeHandler<String> {
 
             return splitDecoded;
         }
+
+		public int getParameterCount() {
+			int count = mParts.length - 2;
+			return count > 0 ? count : 0 ;
+			
+		}
     }
 
     public static NavigationController get() {
