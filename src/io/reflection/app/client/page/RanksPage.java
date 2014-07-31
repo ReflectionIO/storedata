@@ -210,7 +210,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
             private final String IAP_DONT_KNOW_HTML = "<span class=\"icon-help " + style.silver() + "\"></span>";
             private final String IAP_YES_HTML = "<span class=\"icon-ok " + style.green() + "\"></span>";
-            private final String IAP_NO_HTML = "<span class=\"icon-cancel-1 " + style.red() + "\"></span>";
+            private final String IAP_NO_HTML = "<span></span>";
 
             @Override
             public SafeHtml getValue(RanksGroup object) {
