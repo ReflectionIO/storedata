@@ -36,7 +36,7 @@
                 </div>
             </div>
 
-            <c:CellList ui:field="messages" styleName="{style.margins}" />
+            <c:CellList ui:field="messagesCellList" styleName="{style.margins}" />
 
             <a:SimplePager ui:field="pager" styleName="col-sm-offset-2 text-center" />
 
