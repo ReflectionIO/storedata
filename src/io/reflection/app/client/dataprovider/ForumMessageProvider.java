@@ -21,10 +21,12 @@ import io.reflection.app.api.forum.shared.call.event.UpdateReplyEventHandler;
 import io.reflection.app.api.forum.shared.call.event.UpdateTopicEventHandler;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.ReplyController;
+import io.reflection.app.client.controller.ReplyController.ReplyThread;
 import io.reflection.app.client.controller.TopicController;
 import io.reflection.app.client.part.datatypes.ForumMessage;
 import io.reflection.app.datatypes.shared.Reply;
 import io.reflection.app.datatypes.shared.Topic;
+import io.reflection.app.shared.util.SparseArray;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,16 +46,26 @@ import com.willshex.gson.json.service.shared.StatusType;
 public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implements GetRepliesEventHandler, AddReplyEventHandler, UpdateTopicEventHandler,
 		UpdateReplyEventHandler {
 
-	private List<ForumMessage> rows = new ArrayList<ForumMessage>();
-	private Map<Long, Reply> replyLookup = new HashMap<Long, Reply>();
 	private Topic topic;
 	private List<HandlerRegistration> registrations = new ArrayList<HandlerRegistration>();
 	private int start;
 	private int count;
+	private ForumMessage topicMessage;
+	
+	//will delete these
+	private List<ForumMessage> rows = new ArrayList<ForumMessage>();
+	private Map<Long, Reply> replyLookup = new HashMap<Long, Reply>();
 	private int totalCount;
 
+
 	public ForumMessageProvider(Topic topic) {
-		rows.add(new ForumMessage(this.topic = topic));
+		topicMessage = new ForumMessage(this.topic = topic);
+		ReplyController.get(topic.id).setTopicMessage(topicMessage);
+	}
+	
+	long getTotalCount()
+	{
+		return ReplyController.get(topic.id).getCount();
 	}
 
 	/*
@@ -67,12 +79,29 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
 
 		int start = r.getStart();
 		int end = start + r.getLength();
-
-		if (rows == null || end > rows.size()) {
+		
+		ReplyThread thread = ReplyController.get(topic.id);
+		
+		if (thread.hasRows(start, end))
+			updateRowData(start, getSubsetRows(start, end));
+		else
 			ReplyController.get().getReplies(topic.id, start, end);
-		} else {
-			updateRowData(start, rows.subList(start, end));
+
+	}
+
+	/**
+	 * @param start2
+	 * @param end
+	 * @return
+	 */
+	private List<ForumMessage> getSubsetRows(int start, int end) {
+		ReplyThread thread = ReplyController.get(topic.id);
+		List rows = new ArrayList<ForumMessage>();
+		for (Reply reply : thread.getRows(start, end)) {
+			rows.add(new ForumMessage(topic, reply));
+			replyLookup.put(reply.id, reply);
 		}
+		return rows ;
 	}
 
 	/*
@@ -84,12 +113,7 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
 	@Override
 	public void getRepliesSuccess(GetRepliesRequest input, GetRepliesResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			if (output.replies != null) {
-				for (Reply reply : output.replies) {
-					rows.add(new ForumMessage(input.topic, reply));
-					replyLookup.put(reply.id, reply);
-				}
-			}
+
 
 			start = input.pager.start.intValue() == 0 ? 0 : input.pager.start.intValue() + 1;
 			count = input.pager.count.intValue();
