@@ -14,7 +14,7 @@
         margin-bottom: 20px !important;
     }
     </ui:style>
-    <g:HTMLPanel styleName="sidepanel col-md-2 well">
+    <g:HTMLPanel>
         <h3>Forums</h3>
 
         <!-- <h6 ui:field="creatorName" class="{style.creator} text-muted"></h6> -->

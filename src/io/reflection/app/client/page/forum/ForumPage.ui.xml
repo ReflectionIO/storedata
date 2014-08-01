@@ -16,23 +16,22 @@
         height: 40px;
     }
     </ui:style>
-    <g:HTMLPanel>
-        <div class="container">
-            <pp:ForumSummarySidePanel ui:field="forumSummarySidePanel" />
+	<g:HTMLPanel styleName="row">
+		<pp:ForumSummarySidePanel ui:field="forumSummarySidePanel"
+			styleName="sidepanel col-md-2 well" />
 
-            <div class="row">
-                <div class="col-sm-9">
-                    <g:HTMLPanel styleName="btn-group {style.toolbar_spacing}">
-                        <g:InlineHyperlink styleName="btn btn-default" text="Add Topic" targetHistoryToken="{ForumTopicPageType.asTargetHistoryToken}/new" />
-                    </g:HTMLPanel>
+		<div class="col-sm-9">
+			<g:HTMLPanel styleName="btn-group {style.toolbar_spacing}">
+				<g:InlineHyperlink styleName="btn btn-default"
+					text="Add Topic" targetHistoryToken="{ForumTopicPageType.asTargetHistoryToken}/new" />
+			</g:HTMLPanel>
 
-                    <c:CellTable styleName="table table-hover table-striped" ui:field="topics" />
+			<c:CellTable styleName="table table-hover table-striped"
+				ui:field="topics" />
 
-                    <p:SimplePager styleName="text-center" ui:field="pager"></p:SimplePager>
-                    <g:HTMLPanel styleName="{style.filler} col-md-12 hidden-xs hidden-sm" />
-                </div>
-            </div>
-        </div>
+			<p:SimplePager styleName="text-center" ui:field="pager"></p:SimplePager>
+			<g:HTMLPanel styleName="{style.filler} col-md-12 hidden-xs hidden-sm" />
+		</div>
 
-    </g:HTMLPanel>
+	</g:HTMLPanel>
 </ui:UiBinder> 
