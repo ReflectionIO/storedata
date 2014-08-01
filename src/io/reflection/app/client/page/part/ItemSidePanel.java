@@ -30,44 +30,56 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class ItemSidePanel extends Composite {
 
-	private static ItemSidePanelUiBinder uiBinder = GWT.create(ItemSidePanelUiBinder.class);
+    private static ItemSidePanelUiBinder uiBinder = GWT.create(ItemSidePanelUiBinder.class);
 
-	interface ItemSidePanelUiBinder extends UiBinder<Widget, ItemSidePanel> {}
+    interface ItemSidePanelUiBinder extends UiBinder<Widget, ItemSidePanel> {}
 
-	@UiField HeadingElement mTitle;
-	@UiField Image mImage;
-	@UiField HeadingElement mCreatorName;
+    @UiField HeadingElement mTitle;
+    @UiField Image mImage;
+    @UiField HeadingElement mCreatorName;
 
-	@UiField SpanElement storeName;
-	@UiField AnchorElement viewInStore;
-	@UiField ParagraphElement price;
+    @UiField SpanElement storeName;
+    @UiField AnchorElement viewInStore;
+    @UiField ParagraphElement price;
 
-	public ItemSidePanel() {
-		initWidget(uiBinder.createAndBindUi(this));
-	}
+    @UiField Image spinnerLoader;
 
-	public void setItem(Item item) {
-		mTitle.setInnerText(item.name);
-		mCreatorName.setInnerText("By " + item.creatorName);
+    public ItemSidePanel() {
+        initWidget(uiBinder.createAndBindUi(this));
+    }
 
-		if (item.largeImage != null) {
-			mImage.setUrl(item.largeImage);
-			mImage.removeStyleName(Styles.INSTANCE.reflection().unknownAppLarge());
-		} else {
-			mImage.setUrl("");
-			mImage.addStyleName(Styles.INSTANCE.reflection().unknownAppLarge());
-		}
+    public void setItem(Item item) {
+        mTitle.setInnerText(item.name);
+        mCreatorName.setInnerText("By " + item.creatorName);
 
-		Store s = StoreController.get().getStore(item.source);
-		storeName.setInnerHTML((s == null || s.name == null || s.name.length() == 0) ? item.source.toUpperCase() + " Store" : s.name);
+        if (item.largeImage != null) {
+            mImage.setUrl(item.largeImage);
+            mImage.removeStyleName(Styles.INSTANCE.reflection().unknownAppLarge());
+        } else {
+            mImage.setUrl("");
+            mImage.addStyleName(Styles.INSTANCE.reflection().unknownAppLarge());
+        }
 
-		viewInStore.setHref(StoreController.get().getExternalUri(item));
+        Store s = StoreController.get().getStore(item.source);
+        storeName.setInnerHTML((s == null || s.name == null || s.name.length() == 0) ? item.source.toUpperCase() + " Store" : s.name);
 
-		price.setInnerHTML("price + in-App purchases");
-	}
+        viewInStore.setHref(StoreController.get().getExternalUri(item));
+        
+        setPriceInnerHTML("");
+        setLoaderVisible(true);
+    }
 
-	public void setPrice(String currency, Float value) {
-		price.setInnerHTML(value.floatValue() == 0 ? "Free" : FormattingHelper.getCurrencySymbol(currency) + " " + value);
-	}
+    public void setPrice(String currency, Float value) {
+        setLoaderVisible(false);
+        setPriceInnerHTML(value.floatValue() == 0 ? "Free" : FormattingHelper.getCurrencySymbol(currency) + " " + value);
+    }
+    
+    private void setLoaderVisible(boolean visible){
+        spinnerLoader.setVisible(visible);
+    }
+    
+    public void setPriceInnerHTML(String s){
+        price.setInnerHTML(s);
+    }
 
 }
