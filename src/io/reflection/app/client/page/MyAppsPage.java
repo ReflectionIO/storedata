@@ -50,7 +50,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
-import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -88,11 +87,11 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	long linkedAccountsCount = -1;
 
 	// Columns
-	private TextColumn<MyApp> columnRank;
+	private Column<MyApp, SafeHtml> columnRank;
 	private Column<MyApp, Item> columnAppDetails;
-	private TextColumn<MyApp> columnPrice;
-	private TextColumn<MyApp> columnDownloads;
-	private TextColumn<MyApp> columnRevenue;
+	private Column<MyApp, SafeHtml> columnPrice;
+	private Column<MyApp, SafeHtml> columnDownloads;
+	private Column<MyApp, SafeHtml> columnRevenue;
 	private Column<MyApp, SafeHtml> columnIap;
 
 	public MyAppsPage() {
@@ -142,11 +141,13 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	 * 
 	 */
 	private void createColumns() {
+	    
+	    final SafeHtml spinnerLoaderHTML = SafeHtmlUtils.fromSafeConstant("<img src=\""+Images.INSTANCE.spinnerLoader().getSafeUri().asString()+"\"/>");
 
-		columnRank = new TextColumn<MyApp>() {
+		columnRank = new Column<MyApp, SafeHtml>(new SafeHtmlCell()) {
 			@Override
-			public String getValue(MyApp object) {
-				return (object.ranks != null) ? object.overallPosition : "-";
+			public SafeHtml getValue(MyApp object) {
+				return (object.ranks != null) ? SafeHtmlUtils.fromSafeConstant(object.overallPosition) : spinnerLoaderHTML;
 			}
 		};
 		appsTable.addColumn(columnRank, "Rank");
@@ -159,26 +160,26 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		};
 		appsTable.addColumn(columnAppDetails, "App Details");
 
-		columnPrice = new TextColumn<MyApp>() {
+		columnPrice = new Column<MyApp, SafeHtml>(new SafeHtmlCell()) {
 			@Override
-			public String getValue(MyApp object) {
-				return (object.overallPrice != null) ? object.overallPrice : "-";
+			public SafeHtml getValue(MyApp object) {			    
+				return (object.overallPrice != null) ? SafeHtmlUtils.fromSafeConstant(object.overallPrice) : spinnerLoaderHTML;
 			}
 		};
 		appsTable.addColumn(columnPrice, "Price");
 
-		columnDownloads = new TextColumn<MyApp>() {
+		columnDownloads = new Column<MyApp, SafeHtml>(new SafeHtmlCell()) {
 			@Override
-			public String getValue(MyApp object) {
-				return (object.ranks != null) ? object.overallDownloads : "-";
+			public SafeHtml getValue(MyApp object) {
+				return (object.ranks != null) ? SafeHtmlUtils.fromSafeConstant(object.overallDownloads) : spinnerLoaderHTML;
 			}
 		};
 		appsTable.addColumn(columnDownloads, "Downloads");
 
-		columnRevenue = new TextColumn<MyApp>() {
+		columnRevenue = new Column<MyApp, SafeHtml>(new SafeHtmlCell()) {
 			@Override
-			public String getValue(MyApp object) {
-				return (object.ranks != null) ? object.overallRevenue : "-";
+			public SafeHtml getValue(MyApp object) {
+				return (object.ranks != null) ? SafeHtmlUtils.fromSafeConstant(object.overallRevenue) : spinnerLoaderHTML;
 			}
 		};
 		appsTable.addColumn(columnRevenue, "Revenue");
@@ -191,7 +192,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 			@Override
 			public SafeHtml getValue(MyApp object) {
-				return SafeHtmlUtils.fromSafeConstant(DataTypeHelper.itemIapState(object.item, IAP_YES_HTML, IAP_NO_HTML, IAP_DONT_KNOW_HTML));
+				return (object.item != null) ? SafeHtmlUtils.fromSafeConstant(DataTypeHelper.itemIapState(object.item, IAP_YES_HTML, IAP_NO_HTML, IAP_DONT_KNOW_HTML)) : spinnerLoaderHTML;
 			}
 
 		};

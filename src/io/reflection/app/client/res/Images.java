@@ -16,78 +16,81 @@ import com.google.gwt.resources.client.ImageResource;
  * 
  */
 public interface Images extends ClientBundle {
-	public static final Images INSTANCE = GWT.create(Images.class);
+    public static final Images INSTANCE = GWT.create(Images.class);
 
-	@Source("logo.png")
-	ImageResource logo();
+    @Source("logo.png")
+    ImageResource logo();
 
-	@Source("reflectionlogobeta.png")
-	ImageResource reflectionLogoBeta();
+    @Source("reflectionlogobeta.png")
+    ImageResource reflectionLogoBeta();
 
-	@Source("spinner.gif")
-	ImageResource spinner();
+    @Source("spinner.gif")
+    ImageResource spinner();
 
-	@Source("spinnerinfo.gif")
-	ImageResource spinnerInfo();
+    @Source("spinnerloader.gif")
+    ImageResource spinnerLoader();
 
-	@Source("spinnertableodd.gif")
-	ImageResource spinnerTableOdd();
+    @Source("spinnerinfo.gif")
+    ImageResource spinnerInfo();
 
-	@Source("spinnertableeven.gif")
-	ImageResource spinnerTableEven();
+    @Source("spinnertableodd.gif")
+    ImageResource spinnerTableOdd();
 
-	@Source("alarmclock.png")
-	ImageResource alarmClock();
+    @Source("spinnertableeven.gif")
+    ImageResource spinnerTableEven();
 
-	@Source("clipboard.png")
-	ImageResource clipboard();
+    @Source("alarmclock.png")
+    ImageResource alarmClock();
 
-	@Source("tick.png")
-	ImageResource tick();
+    @Source("clipboard.png")
+    ImageResource clipboard();
 
-	@Source("welcomelogo.png")
-	ImageResource welcomeLogo();
+    @Source("tick.png")
+    ImageResource tick();
 
-	@Source("linkaccount.png")
-	ImageResource linkAccount();
+    @Source("welcomelogo.png")
+    ImageResource welcomeLogo();
 
-	@Source("buttonarrowwhite.png")
-	ImageResource buttonArrowWhite();
+    @Source("linkaccount.png")
+    ImageResource linkAccount();
 
-	@Source("buttonlogin.png")
-	ImageResource buttonLogin();
+    @Source("buttonarrowwhite.png")
+    ImageResource buttonArrowWhite();
 
-	@Source("welcomeprogress.png")
-	ImageResource welcomeProgress();
-	
-	@Source("linkaccountprogress1.png")
-	ImageResource linkAccountProgress1();
-	
-	@Source("linkaccountprogress.png")
-	ImageResource linkAccountProgress();
+    @Source("buttonlogin.png")
+    ImageResource buttonLogin();
 
-	@Source("trowel.png")
-	ImageResource trowel();
+    @Source("welcomeprogress.png")
+    ImageResource welcomeProgress();
 
-	@Source("bubble.png")
-	ImageResource bubble();
+    @Source("linkaccountprogress1.png")
+    ImageResource linkAccountProgress1();
 
-	@Source("cog.png")
-	ImageResource cog();
+    @Source("linkaccountprogress.png")
+    ImageResource linkAccountProgress();
 
-	@Source("clock.png")
-	ImageResource clock();
+    @Source("trowel.png")
+    ImageResource trowel();
 
-	@Source("questionmark.png")
-	ImageResource questionMark();
+    @Source("bubble.png")
+    ImageResource bubble();
 
-	@Source("greentick.png")
-	ImageResource greenTick();
+    @Source("cog.png")
+    ImageResource cog();
 
-	@Source("emailsent.png")
-	ImageResource emailSent();
+    @Source("clock.png")
+    ImageResource clock();
 
-	@Source("preloader.gif")
-	ImageResource preloader();
+    @Source("questionmark.png")
+    ImageResource questionMark();
+
+    @Source("greentick.png")
+    ImageResource greenTick();
+
+    @Source("emailsent.png")
+    ImageResource emailSent();
+
+    @Source("preloader.gif")
+    ImageResource preloader();
 
 }
