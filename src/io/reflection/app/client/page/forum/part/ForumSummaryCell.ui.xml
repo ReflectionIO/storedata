@@ -10,18 +10,53 @@
     .smaller {
     	font-size: smaller;
     }
-    </ui:style>
 
-    <a href="{link}" class="{styleName}">
-        <h4 class="list-group-item-heading">
-            <ui:text from="{title}" />
-        </h4>
+    .topicNumber {
+        font-size:small;
+        color:black;
+        margin-top:3px;
+    }
+
+    div.list-group-item
+    {
+        padding-left:0px;
+        border: 0px;
+        background: none;
+    }
+
+    .list-group-item-heading
+    {
+        font-weight: 600;
+    }
+
+    @external .list-group-item;
+    @external .list-group-item-heading;
+    @external .active;
+
+    div.active a
+    {
+        color:black;
+        pointer-events: none;
+        cursor: default;
+    }
+    </ui:style>
+    <div class="{styleName}">
+
+    <a href="{link}" >
+        <div class="list-group-item-heading">
+            <ui:text from="{title}"/>
+       </div>
+    </a>
         <p class="list-group-item-text {style.smaller}">
             <ui:text from="{description}" />
         </p>
-        <p class="list-group-item-text">
+        
+        <p class="list-group-item-text {style.topicNumber}">
             <ui:text from="{topics.toString}" />
             topics
         </p>
-    </a>
+        
+        <div class="divider-horizontal"/>
+    </div>
+    
 </ui:UiBinder>
