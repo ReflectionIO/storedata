@@ -20,6 +20,7 @@ import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.page.forum.part.ForumSummaryCell;
+import io.reflection.app.client.page.forum.part.ForumSummarySidePanel;
 import io.reflection.app.client.part.BootstrapGwtCellList;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.SimplePager;
@@ -52,7 +53,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class ForumPage extends Page implements NavigationEventHandler, GetForumsEventHandler {
+public class ForumPage extends Page implements NavigationEventHandler {
 
 	interface TopicTemplate extends SafeHtmlTemplates {
 		TopicTemplate INSTANCE = GWT.create(TopicTemplate.class);
@@ -68,9 +69,10 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 	private static final int SELECTED_FORUM_PARAMETER_INDEX = 0;
 
 	@UiField(provided = true) CellTable<Topic> topics = new CellTable<Topic>(ServiceConstants.SHORT_STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
-	@UiField(provided = true) CellList<Forum> forums = new CellList<Forum>(new ForumSummaryCell(), BootstrapGwtCellList.INSTANCE);
 
 	@UiField SimplePager pager;
+	
+	@UiField ForumSummarySidePanel forumSummarySidePanel ;
 
 	private Long selectedId;
 
@@ -84,9 +86,19 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 
 		TopicController.get().addDataDisplay(topics);
 		pager.setDisplay(topics);
+		
+		forumSummarySidePanel.setOnForumsSuccessHandler(new Runnable(){
 
-		forums.setEmptyListWidget(new HTMLPanel("No forums found!"));
-		ForumController.get().addDataDisplay(forums);
+			@Override
+			public void run() {
+				if (selectedId == null) {
+					selectedId = forumSummarySidePanel.selectFirstItemAndReturnId();
+					if (selectedId != null) //shouldn't be null unless an error has occured
+						TopicController.get().getTopics(selectedId);
+					
+				}
+			}});
+
 	}
 
 	private void createColumns() {
@@ -166,45 +178,16 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 	protected void onAttach() {
 		super.onAttach();
 
-		register(EventController.get().addHandlerToSource(GetForumsEventHandler.TYPE, ForumController.get(), this));
+		register(EventController.get().addHandlerToSource(GetForumsEventHandler.TYPE, ForumController.get(), forumSummarySidePanel));
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		
 		topics.redraw(); //in order to redraw the new topic data after for example, a new reply success, which causes num topics to be out.
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler#getForumsSuccess(io.reflection.app.api.forum.shared.call.GetForumsRequest,
-	 * io.reflection.app.api.forum.shared.call.GetForumsResponse)
-	 */
-	@Override
-	public void getForumsSuccess(GetForumsRequest input, GetForumsResponse output) {
-		if (output.status == StatusType.StatusTypeSuccess && output.forums != null && output.forums.size() > 0) {
-			SingleSelectionModel<Forum> selectionModel = new SingleSelectionModel<Forum>();
-			forums.setSelectionModel(selectionModel);
-			if (selectedId == null) {
-				if (forums.getVisibleItemCount() > 0) {
-					Forum selectedForum = forums.getVisibleItem(0);
-					selectionModel.setSelected(selectedForum, true);
-					selectedId = selectedForum.id;
+	
 
-					TopicController.get().getTopics(selectedId);
-					forums.redraw();
-				}
-			}
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler#getForumsFailure(io.reflection.app.api.forum.shared.call.GetForumsRequest,
-	 * java.lang.Throwable)
-	 */
-	@Override
-	public void getForumsFailure(GetForumsRequest input, Throwable caught) {}
+	
 
 	/*
 	 * (non-Javadoc)
@@ -224,7 +207,7 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 					selectedId = newSelectedId;
 
 					TopicController.get().getTopics(selectedId);
-					forums.redraw();
+					forumSummarySidePanel.redraw();
 				}
 			}
 		}
