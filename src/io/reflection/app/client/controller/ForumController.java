@@ -17,7 +17,9 @@ import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.datatypes.shared.Forum;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.AsyncDataProvider;
@@ -31,6 +33,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  */
 public class ForumController extends AsyncDataProvider<Forum> implements ServiceConstants {
 	private List<Forum> forums = null;
+	private Map<Long, Forum> forumMap = null ;
 	private long count = 0;
 	private Pager pager;
 
@@ -70,9 +73,12 @@ public class ForumController extends AsyncDataProvider<Forum> implements Service
 					if (output.forums != null) {
 						if (forums == null) {
 							forums = new ArrayList<Forum>();
+							forumMap = new HashMap<Long, Forum>();
 						}
 
 						forums.addAll(output.forums);
+						for(Forum forum : forums)
+							forumMap.put(forum.id, forum);
 					}
 
 					if (output.pager != null) {
@@ -265,6 +271,19 @@ public class ForumController extends AsyncDataProvider<Forum> implements Service
 		// EventController.get().fireEventFromSource(new DeleteForumFailure(input, caught), ForumController.this);
 		// }
 		// });
+	}
+
+	/**
+	 * @param newSelectedId
+	 * @return
+	 */
+	public Forum getForumById(Long newSelectedId) {
+		if (forumMap == null)
+		{
+			fetchForums();
+			return null ;
+		}
+		return forumMap.get(newSelectedId);
 	}
 
 }

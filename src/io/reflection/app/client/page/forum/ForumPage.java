@@ -31,6 +31,8 @@ import io.reflection.app.shared.util.FormattingHelper;
 
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.HeadingElement;
+import com.google.gwt.xml.client.Text;
 import com.google.gwt.safecss.shared.SafeStyles;
 import com.google.gwt.safecss.shared.SafeStylesUtils;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
@@ -43,6 +45,7 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TextHeader;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
@@ -53,7 +56,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class ForumPage extends Page implements NavigationEventHandler {
+public class ForumPage extends Page implements NavigationEventHandler, GetForumsEventHandler {
 
 	interface TopicTemplate extends SafeHtmlTemplates {
 		TopicTemplate INSTANCE = GWT.create(TopicTemplate.class);
@@ -73,8 +76,11 @@ public class ForumPage extends Page implements NavigationEventHandler {
 	@UiField SimplePager pager;
 	
 	@UiField ForumSummarySidePanel forumSummarySidePanel ;
+	@UiField HeadingElement titleText ;
 
-	private Long selectedId;
+	private Forum selectedForum;
+
+	private Long selectedForumId;
 
 	public ForumPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -87,17 +93,7 @@ public class ForumPage extends Page implements NavigationEventHandler {
 		TopicController.get().addDataDisplay(topics);
 		pager.setDisplay(topics);
 		
-		forumSummarySidePanel.setOnForumsSuccessHandler(new Runnable(){
-
-			@Override
-			public void run() {
-				if (selectedId == null) {
-					selectedId = forumSummarySidePanel.selectFirstItemAndReturnId();
-					if (selectedId != null) //shouldn't be null unless an error has occured
-						TopicController.get().getTopics(selectedId);
-					
-				}
-			}});
+		
 
 	}
 
@@ -178,7 +174,7 @@ public class ForumPage extends Page implements NavigationEventHandler {
 	protected void onAttach() {
 		super.onAttach();
 
-		register(EventController.get().addHandlerToSource(GetForumsEventHandler.TYPE, ForumController.get(), forumSummarySidePanel));
+		register(EventController.get().addHandlerToSource(GetForumsEventHandler.TYPE, ForumController.get(), this));
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		
 		topics.redraw(); //in order to redraw the new topic data after for example, a new reply success, which causes num topics to be out.
@@ -186,7 +182,42 @@ public class ForumPage extends Page implements NavigationEventHandler {
 	}
 
 	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler#getForumsSuccess(io.reflection.app.api.forum.shared.call.GetForumsRequest,
+	 * io.reflection.app.api.forum.shared.call.GetForumsResponse)
+	 */
+	@Override
+	public void getForumsSuccess(GetForumsRequest input, GetForumsResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess && output.forums != null && output.forums.size() > 0) {	
+			configureTitleAndSidePanel();
+		}
+	}
 
+	/**
+	 * This may either run from Navigation changed, or after Forum callback
+	 */
+	protected void configureTitleAndSidePanel() {
+		if (!ForumController.get().hasForums())
+			return ;
+		selectedForum = ForumController.get().getForumById(selectedForumId);
+		forumSummarySidePanel.selectItem(selectedForum);
+		if (selectedForum != null) // shouldn't be null unless an error has occured
+		{
+			titleText.setInnerText(selectedForum.title);
+		}
+		forumSummarySidePanel.redraw();
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler#getForumsFailure(io.reflection.app.api.forum.shared.call.GetForumsRequest,
+	 * java.lang.Throwable)
+	 */
+	@Override
+	public void getForumsFailure(GetForumsRequest input, Throwable caught) {}
 	
 
 	/*
@@ -201,14 +232,20 @@ public class ForumPage extends Page implements NavigationEventHandler {
 
 			String selectedIdString;
 			if ((selectedIdString = current.getParameter(SELECTED_FORUM_PARAMETER_INDEX)) != null) {
+				
 				Long newSelectedId = Long.valueOf(selectedIdString);
-
-				if (selectedId == null || newSelectedId.longValue() != selectedId.longValue()) {
-					selectedId = newSelectedId;
-
-					TopicController.get().getTopics(selectedId);
-					forumSummarySidePanel.redraw();
+				
+				
+				if (selectedForumId == null || newSelectedId.longValue() != selectedForumId.longValue()) 
+				{
+					selectedForumId = newSelectedId ;
+					selectedForum = null ;
+					TopicController.get().getTopics(selectedForumId);
+					
+					configureTitleAndSidePanel();
+					
 				}
+				
 			}
 		}
 	}
