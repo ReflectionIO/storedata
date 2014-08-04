@@ -100,6 +100,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
     private String selectedTab;
 
     private String filterContents;
+    
+    private static String VIEW_ACTION_NAME = "view";
 
     public ItemPage() {
         initWidget(uiBinder.createAndBindUi(this));
@@ -220,7 +222,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
     @Override
     public void navigationChanged(Stack previous, Stack current) {
         if (current != null && PageType.ItemPageType.equals(current.getPage())) {
-            if ("view".equals(current.getAction())) {
+            if (VIEW_ACTION_NAME.equals(current.getAction())) {
 
                 String newInternalId = current.getParameter(0);
                 boolean isNewDataRequired = false;
@@ -250,9 +252,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
                 if (filterContents == null || !filterContents.equals(newFilterContents)) {
                     filterContents = newFilterContents;
-                    mRevenue.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken("view", internalId, REVENUE_CHART_TYPE, filterContents));
-                    mDownloads.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken("view", internalId, DOWNLOADS_CHART_TYPE, filterContents));
-                    mRanking.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken("view", internalId, RANKING_CHART_TYPE, filterContents));
 
                     RankingType newRankingType = RankingType.fromString(newFilter.getListType());
                     if (rankingType == null || rankingType != newRankingType) {
@@ -261,6 +260,10 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
                     isNewDataRequired = true;
                 }
+                
+                mRevenue.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(VIEW_ACTION_NAME, internalId, REVENUE_CHART_TYPE, filterContents));
+                mDownloads.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(VIEW_ACTION_NAME, internalId, DOWNLOADS_CHART_TYPE, filterContents));
+                mRanking.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(VIEW_ACTION_NAME, internalId, RANKING_CHART_TYPE, filterContents));
 
                 mTopPanel.updateFromFilter();
 
@@ -297,7 +300,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
                 // AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.DangerAlertBoxType, false, "Item", " - We did not find the requrested item!", false)
                 // .setVisible(true);
 
-                PageType.RanksPageType.show("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString());
+                PageType.RanksPageType.show(VIEW_ACTION_NAME, OVERALL_LIST_TYPE, FilterController.get().asRankFilterString());
             }
         }
 
@@ -444,7 +447,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
     @Override
     public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
         if (NavigationController.get().getCurrentPage() == PageType.ItemPageType) {
-            PageType.ItemPageType.show("view", internalId, selectedTab, FilterController.get().asItemFilterString());
+            PageType.ItemPageType.show(VIEW_ACTION_NAME, internalId, selectedTab, FilterController.get().asItemFilterString());
         }
     }
 
@@ -456,7 +459,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
     @Override
     public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
         if (NavigationController.get().getCurrentPage() == PageType.ItemPageType) {
-            PageType.ItemPageType.show("view", internalId, selectedTab, FilterController.get().asItemFilterString());
+            PageType.ItemPageType.show(VIEW_ACTION_NAME, internalId, selectedTab, FilterController.get().asItemFilterString());
         }
     }
 
