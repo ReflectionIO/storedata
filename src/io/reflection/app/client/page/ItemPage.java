@@ -40,6 +40,7 @@ import io.reflection.app.client.page.part.ItemTopPanel;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.part.datatypes.ItemRevenue;
+import io.reflection.app.client.res.Images;
 import io.reflection.app.client.res.flags.Styles;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
@@ -48,10 +49,13 @@ import io.reflection.app.shared.util.FormattingHelper;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
@@ -119,6 +123,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
     }
 
     private void createColumns() {
+        
+        final SafeHtml spinnerLoaderHTML = SafeHtmlUtils.fromSafeConstant("<img src=\""+Images.INSTANCE.spinnerLoader().getSafeUri().asString()+"\"/>");
 
         Column<ItemRevenue, ConcreteImageAndText> countryColumn = new Column<ItemRevenue, ConcreteImageAndText>(new ImageAndTextCell<ConcreteImageAndText>()) {
 
@@ -137,11 +143,11 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
         //
         // };
 
-        TextColumn<ItemRevenue> paidColumn = new TextColumn<ItemRevenue>() {
+        Column<ItemRevenue, SafeHtml> paidColumn = new Column<ItemRevenue, SafeHtml>(new SafeHtmlCell()) {
 
             @Override
-            public String getValue(ItemRevenue object) {
-                return FormattingHelper.getCurrencySymbol(object.currency) + " " + Double.toString(object.paid.doubleValue());
+            public SafeHtml getValue(ItemRevenue object) {
+                return (object.iap != null) ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.getCurrencySymbol(object.currency) + " " + Double.toString(object.paid.doubleValue())) : spinnerLoaderHTML;
             }
         };
 
