@@ -180,7 +180,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 			private final String IAP_DONT_KNOW_HTML = "<span class=\"glyphicon glyphicon-question-sign " + style.silver() + "\"></span>";
 			private final String IAP_YES_HTML = "<span class=\"glyphicon glyphicon-ok-sign " + style.green() + "\"></span>";
-			private final String IAP_NO_HTML = "<span class=\"glyphicon glyphicon-remove-sign " + style.red() + "\"></span>";
+			private final String IAP_NO_HTML = "<span></span>";
 
 			@Override
 			public SafeHtml getValue(MyApp object) {

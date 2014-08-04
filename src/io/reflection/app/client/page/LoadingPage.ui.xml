@@ -1,38 +1,124 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+    
     <ui:style type="io.reflection.app.client.page.LoadingPage.LoadingPageStyle">
-    .thinner {
-    	height: 15px;
+    .wrap {
+        margin-top: 154px;
+        margin-bottom: 30px;
+    }
+    
+    .loader {
+        margin-left: auto;
+        margin-right: auto;
+        width: 66px;
+    }
+    
+    .progress {
+        height: 8px;
+        margin: 0px;
+        background-color: #e8e8e8;
+        border-radius: 4px;
+        box-shadow: none;
+        -webkit-box-shadow: none;
+    }
+    
+    .progressBar {
+        box-shadow: none;
+        -webkit-box-shadow: none;
+    }
+    
+    .barSeparator {
+        height: 5px;
+    }
+    
+    .mediumLegth {
+        width: 56px;
+    }
+    
+    .shortLegth {
+        width: 46px;
+    }
+    
+    .longLegth {
+        width: 66px;
     }
     
     .task {
-    	font-weight: bold;
-    	font-size: larger;
-    	text-align: center;
-    	margin-bottom: 10px;
-    }
-    
-    .container {
-    	margin-top: 100px;
+        font-weight: 700;
+        margin-top: 56px;
     }
     
     .purpleBar {
-    	background-color: #6D69C5;
+        background-color: #6D69C5;
     }
     
-    .instantBar {
-    	-webkit-transition: none;
-    	transition: none;
+    .orangeBar {
+        background-color: #f8c765;
+    }
+	
+    .one {
+    opacity: 0;
+    -webkit-animation: dot 1.3s infinite;
+    -webkit-animation-delay: 0.0s;
+    animation: dot 1.3s infinite;
+    animation-delay: 0.0s;
+    }
+
+    .two {
+    opacity: 0;
+    -webkit-animation: dot 1.3s infinite;
+    -webkit-animation-delay: 0.2s;
+      animation: dot 1.3s infinite;
+      animation-delay: 0.2s;
+    }
+
+    .three {
+    opacity: 0;
+    -webkit-animation: dot 1.3s infinite;
+    -webkit-animation-delay: 0.3s;
+     animation: dot 1.3s infinite;
+     animation-delay: 0.3s;
+    }
+	
+    @-webkit-keyframes dot {
+        0% { opacity: 0; }
+       50% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    @keyframes dot {
+        0% { opacity: 0; }
+        50% { opacity: 0; }
+        100% { opacity: 1; }
     }
     </ui:style>
-    <g:HTMLPanel styleName="container {style.container}">
-        <p ui:field="task" class="row {style.task}">Loading...</p>
-        <div class="col-sm-8 col-sm-offset-2">
-            <div class="{style.thinner} progress">
-                <div class="progress-bar {style.purpleBar}" ui:field="bar">
-                    <span class="sr-only" ui:field="description"></span>
-                </div>
+    <g:HTMLPanel styleName="text-center {style.wrap}">
+        <g:HTMLPanel styleName="{style.loader}">
+            <div class="progress {style.progress} {style.mediumLegth}">
+                <div ui:field="bar" class="progress-bar {style.purpleBar} {style.progressBar}"></div>
             </div>
-        </div>
+            <g:HTMLPanel styleName="{style.barSeparator}" />
+            <div class="progress {style.progress} {style.longLegth}">
+                <div ui:field="bar2" class="progress-bar {style.purpleBar} {style.progressBar}"></div>
+            </div>
+            <g:HTMLPanel styleName="{style.barSeparator}" />
+            <div class="progress {style.progress} {style.mediumLegth}">
+                <div ui:field="bar3" class="progress-bar {style.purpleBar} {style.progressBar}"></div>
+            </div>
+            <g:HTMLPanel styleName="{style.barSeparator}" />
+            <div class="progress {style.progress} {style.shortLegth}">
+                <div ui:field="bar4" class="progress-bar {style.purpleBar} {style.progressBar}"></div>
+            </div>
+            <g:HTMLPanel styleName="{style.barSeparator}" />
+            <div class="progress {style.progress} {style.mediumLegth}">
+                <div ui:field="bar5" class="progress-bar {style.purpleBar} {style.progressBar}"></div>
+            </div>
+            <g:HTMLPanel styleName="{style.barSeparator}" />
+            <div class="progress {style.progress} {style.longLegth}">
+                <div ui:field="bar6" class="progress-bar {style.purpleBar} {style.progressBar}"></div>
+            </div>
+        </g:HTMLPanel>
+        <p class="{style.task}"><span ui:field="task">Loading </span><span ui:field="dots"><span class="{style.one}">.</span><span class="{style.two}">.</span><span class="{style.three}">.</span></span></p>
+
     </g:HTMLPanel>
 </ui:UiBinder> 

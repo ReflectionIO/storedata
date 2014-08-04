@@ -27,14 +27,13 @@ import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.StoreController;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.part.Footer;
-import io.reflection.app.client.res.Styles;
+import io.reflection.app.client.part.Header;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
-import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.resources.client.CssResource;
@@ -49,316 +48,334 @@ import com.willshex.gson.json.service.shared.StatusType;
  * 
  */
 public class LoadingPage extends Page implements NavigationEventHandler, LoginEventHandler, GetCountriesEventHandler, GetStoresEventHandler,
-		GetRolesAndPermissionsEventHandler {
+        GetRolesAndPermissionsEventHandler {
 
-	private static LoadingPageUiBinder uiBinder = GWT.create(LoadingPageUiBinder.class);
+    private static LoadingPageUiBinder uiBinder = GWT.create(LoadingPageUiBinder.class);
 
-	interface LoadingPageUiBinder extends UiBinder<Widget, LoadingPage> {}
+    interface LoadingPageUiBinder extends UiBinder<Widget, LoadingPage> {}
 
-	interface LoadingPageStyle extends CssResource {
-		String purpleBar();
+    interface LoadingPageStyle extends CssResource {
+        String purpleBar();
 
-		String instantBar();
-		
-		String thinner();
-	}
+        String orangeBar();
 
-	@UiField LoadingPageStyle style;
+        String progressBar();
 
-	@UiField ParagraphElement task;
-	@UiField DivElement bar;
-	@UiField SpanElement description;
+    }
 
-	private List<Runnable> tasks = new ArrayList<Runnable>();
-	private List<String> taskNames = new ArrayList<String>();
+    @UiField LoadingPageStyle style;
 
-	private int currentTaskIndex;
+    @UiField SpanElement task;
+    @UiField SpanElement dots;
 
-	public LoadingPage() {
-		initWidget(uiBinder.createAndBindUi(this));
+    @UiField DivElement bar;
+    @UiField DivElement bar2;
+    @UiField DivElement bar3;
+    @UiField DivElement bar4;
+    @UiField DivElement bar5;
+    @UiField DivElement bar6;
+    private List<DivElement> bars = new ArrayList<DivElement>();
 
-		addTask(new Runnable() {
+    private List<Runnable> tasks = new ArrayList<Runnable>();
+    private List<String> taskNames = new ArrayList<String>();
 
-			@Override
-			public void run() {
-				boolean attemptRestoreSession = SessionController.get().restoreSession();
+    private int currentTaskIndex;
 
-				if (!attemptRestoreSession) {
-					runTask(++currentTaskIndex);
-				}
-			}
-		}, "Restoring user session...");
+    public LoadingPage() {
+        initWidget(uiBinder.createAndBindUi(this));
 
-		addTask(new Runnable() {
+        bars.add(bar);
+        bars.add(bar2);
+        bars.add(bar3);
+        bars.add(bar4);
+        bars.add(bar5);
+        bars.add(bar6);
 
-			@Override
-			public void run() {
+        addTask(new Runnable() {
 
-				boolean attemptPreload = SessionController.get().prefetchRolesAndPermissions();
+            @Override
+            public void run() {
+                boolean attemptRestoreSession = SessionController.get().restoreSession();
 
-				if (!attemptPreload) {
-					runTask(++currentTaskIndex);
-				}
-			}
-		}, "Loading user account...");
+                if (!attemptRestoreSession) {
+                    runTask(++currentTaskIndex);
+                }
+            }
+        }, "Restoring user session ");
 
-		addTask(new Runnable() {
+        addTask(new Runnable() {
 
-			@Override
-			public void run() {
-				boolean attemptPreload = CountryController.get().prefetchCountries();
+            @Override
+            public void run() {
 
-				if (!attemptPreload) {
-					runTask(++currentTaskIndex);
-				}
-			}
-		}, "Loading countries...");
+                boolean attemptPreload = SessionController.get().prefetchRolesAndPermissions();
 
-		addTask(new Runnable() {
+                if (!attemptPreload) {
+                    runTask(++currentTaskIndex);
+                }
+            }
+        }, "Loading user account ");
 
-			@Override
-			public void run() {
-				boolean attemptPreload = StoreController.get().prefetchStores();
+        addTask(new Runnable() {
 
-				if (!attemptPreload) {
-					runTask(++currentTaskIndex);
-				}
-			}
-		}, "Loading stores...");
+            @Override
+            public void run() {
+                boolean attemptPreload = CountryController.get().prefetchCountries();
 
-		// TODO: preload categories for all stores
-	}
+                if (!attemptPreload) {
+                    runTask(++currentTaskIndex);
+                }
+            }
+        }, "Loading countries ");
 
-	/*
-	 * (non-Javadoc)
+        addTask(new Runnable() {
+
+            @Override
+            public void run() {
+                boolean attemptPreload = StoreController.get().prefetchStores();
+
+                if (!attemptPreload) {
+                    runTask(++currentTaskIndex);
+                }
+            }
+        }, "Loading stores ");
+
+        // TODO: preload categories for all stores
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.gwt.user.client.ui.Composite#onAttach()
+     */
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+
+        resetProgressBar();
+
+        register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+        register(EventController.get().addHandlerToSource(LoginEventHandler.TYPE, SessionController.get(), this));
+        register(EventController.get().addHandlerToSource(GetRolesAndPermissionsEventHandler.TYPE, SessionController.get(), this));
+        register(EventController.get().addHandlerToSource(GetCountriesEventHandler.TYPE, CountryController.get(), this));
+        register(EventController.get().addHandlerToSource(GetStoresEventHandler.TYPE, StoreController.get(), this));
+
+        currentTaskIndex = 0;
+
+        ((Header) NavigationController.get().getHeader()).setReadOnly(true);
+        ((Footer) NavigationController.get().getFooter()).setVisible(false);
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.client.page.Page#onDetach()
+     */
+    @Override
+    protected void onDetach() {
+
+        ((Header) NavigationController.get().getHeader()).setReadOnly(false);
+        ((Footer) NavigationController.get().getFooter()).setVisible(true);
+
+        super.onDetach();
+    }
+
+    /**
 	 * 
-	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
 	 */
-	@Override
-	protected void onAttach() {
-		super.onAttach();
+    private void resetProgressBar() {
+        dots.getStyle().setProperty("visibility", "visible");
+        setProgress("Loading", 0, tasks.size());
+        for (DivElement b : bars) {
+            b.setClassName("progress-bar " + style.purpleBar() + " " + style.progressBar());
+        }
+    }
 
-		resetProgressBar();
-		
-		currentTaskIndex = 0;
-		
-		NavigationController.get().getHeader().getElement().removeClassName(Styles.INSTANCE.reflection().smooth());
-		NavigationController.get().getFooter().getElement().removeClassName(Styles.INSTANCE.reflection().smooth());
-		
-		NavigationController.get().getHeader().getElement().getStyle().setTop(-60, Unit.PX);
-		((Footer)NavigationController.get().getFooter()).setNoHeight();
+    private void setProgressBarError() {
+        dots.getStyle().setProperty("visibility", "hidden");
+        for (DivElement b : bars) {
+            b.setClassName("progress-bar progress-bar-danger");
+        }
+    }
 
-		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
-		register(EventController.get().addHandlerToSource(LoginEventHandler.TYPE, SessionController.get(), this));
-		register(EventController.get().addHandlerToSource(GetRolesAndPermissionsEventHandler.TYPE, SessionController.get(), this));
-		register(EventController.get().addHandlerToSource(GetCountriesEventHandler.TYPE, CountryController.get(), this));
-		register(EventController.get().addHandlerToSource(GetStoresEventHandler.TYPE, StoreController.get(), this));
-	}
+    private void setProgressBarComplete() {
+        dots.getStyle().setProperty("visibility", "hidden");
+        for (DivElement b : bars) {
+            b.setClassName("progress-bar " + style.orangeBar() + " " + style.progressBar());
+        }
+    }
 
-	/* (non-Javadoc)
-	 * @see io.reflection.app.client.page.Page#onDetach()
-	 */
-	@Override
-	protected void onDetach() {
+    /**
+     * @param task
+     * @param taskName
+     * @param handlerRegistration
+     */
+    private void addTask(Runnable task, String taskName) {
+        tasks.add(task);
+        taskNames.add(taskName);
+    }
 
-		NavigationController.get().getHeader().getElement().addClassName(Styles.INSTANCE.reflection().smooth());
-		NavigationController.get().getFooter().getElement().addClassName(Styles.INSTANCE.reflection().smooth());
-		NavigationController.get().getHeader().getElement().getStyle().setTop(0, Unit.PX);
-		((Footer)NavigationController.get().getFooter()).setFullHeight();
-		
-		super.onDetach();
-	}
-	
-	/**
-	 * 
-	 */
-	private void resetProgressBar() {
-		setProgress("Loading", 0, tasks.size());
-		bar.getParentElement().addClassName("progress-striped");
-		bar.getParentElement().addClassName("active");
-		bar.setClassName("progress-bar " + style.purpleBar());
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
+     * io.reflection.app.client.controller.NavigationController.Stack)
+     */
+    @Override
+    public void navigationChanged(Stack previous, Stack current) {
+        if (PageType.LoadingPageType.equals(current.getPage())) {
+            runTask(currentTaskIndex);
+        }
+    }
 
-	private void setProgressBarError() {
-		bar.getParentElement().removeClassName("progress-striped");
-		bar.getParentElement().removeClassName("active");
-		bar.setClassName("progress-bar progress-bar-danger " + style.instantBar());
-	}
+    /**
+     * @param i
+     */
+    private void runTask(int i) {
+        if (i < tasks.size()) {
+            setProgress(taskNames.get(i), i + 1, tasks.size());
+            tasks.get(i).run();
+        } else {
+            setProgressBarComplete();
+            setProgress("Done! :)", 1, 1);
 
-	private void setProgressBarComplete() {
-		bar.getParentElement().removeClassName("progress-striped");
-		bar.getParentElement().removeClassName("active");
-		bar.setClassName("progress-bar progress-bar-success " + style.instantBar());
-	}
+            (new Timer() {
+                @Override
+                public void run() {
+                    NavigationController.get().showIntendedPage();
+                }
+            }).schedule(600);
 
-	/**
-	 * @param task
-	 * @param taskName
-	 * @param handlerRegistration
-	 */
-	private void addTask(Runnable task, String taskName) {
-		tasks.add(task);
-		taskNames.add(taskName);
-	}
+        }
+    }
 
-	/* (non-Javadoc)
-	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack, io.reflection.app.client.controller.NavigationController.Stack)
-	 */
-	@Override
-	public void navigationChanged(Stack previous, Stack current) {
-		if (PageType.LoadingPageType.equals(current.getPage())) {
-			runTask(currentTaskIndex);
-		}
-	}
+    private void setProgress(String doing, int progress, int total) {
+        int percentageProgress = (int) (((float) progress / (float) total) * 66.0f);
+        for (DivElement b : bars) {
+            b.setAttribute("aria-valuenow", Integer.toString(progress));
+            b.setAttribute("aria-valuemin", "0");
+            b.setAttribute("aria-valuemax", Integer.toString(total));
+            b.getStyle().setWidth(percentageProgress, Unit.PX);
+        }
 
-	/**
-	 * @param i
-	 */
-	private void runTask(int i) {
-		if (i < tasks.size()) {
-			setProgress(taskNames.get(i), i + 1, tasks.size());
-			tasks.get(i).run();
-		} else {
-			setProgressBarComplete();
-			setProgress("Done! :)", 1, 1);
+        task.setInnerHTML(doing);
+    }
 
-			(new Timer() {
-				@Override
-				public void run() {
-					NavigationController.get().showIntendedPage();
-				}
-			}).schedule(600);
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * io.reflection.app.api.core.shared.call.event.GetCountriesEventHandler#getCountriesSuccess(io.reflection.app.api.core.shared.call.GetCountriesRequest,
+     * io.reflection.app.api.core.shared.call.GetCountriesResponse)
+     */
+    @Override
+    public void getCountriesSuccess(GetCountriesRequest input, GetCountriesResponse output) {
+        if (output.status == StatusType.StatusTypeSuccess) {
+            runTask(++currentTaskIndex);
+        } else {
+            showRefreshToRetryMessage();
+        }
+    }
 
-		}
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * io.reflection.app.api.core.shared.call.event.GetCountriesEventHandler#getCountriesFailure(io.reflection.app.api.core.shared.call.GetCountriesRequest,
+     * java.lang.Throwable)
+     */
+    @Override
+    public void getCountriesFailure(GetCountriesRequest input, Throwable caught) {
+        showRefreshToRetryMessage();
+    }
 
-	private void setProgress(String doing, int progress, int total) {
-		bar.setAttribute("aria-valuenow", Integer.toString(progress));
-		bar.setAttribute("aria-valuemin", "0");
-		bar.setAttribute("aria-valuemax", Integer.toString(total));
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.api.core.shared.call.event.GetStoresEventHandler#getStoresSuccess(io.reflection.app.api.core.shared.call.GetStoresRequest,
+     * io.reflection.app.api.core.shared.call.GetStoresResponse)
+     */
+    @Override
+    public void getStoresSuccess(GetStoresRequest input, GetStoresResponse output) {
+        if (output.status == StatusType.StatusTypeSuccess) {
+            runTask(++currentTaskIndex);
+        } else {
+            showRefreshToRetryMessage();
+        }
+    }
 
-		int percentageProgress = (int) (((float) progress / (float) total) * 100.0f);
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.api.core.shared.call.event.GetStoresEventHandler#getStoresFailure(io.reflection.app.api.core.shared.call.GetStoresRequest,
+     * java.lang.Throwable)
+     */
+    @Override
+    public void getStoresFailure(GetStoresRequest input, Throwable caught) {
+        showRefreshToRetryMessage();
+    }
 
-		bar.getStyle().setWidth(percentageProgress, Unit.PCT);
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * io.reflection.app.api.core.shared.call.event.GetRolesAndPermissionsEventHandler#getRolesAndPermissionsSuccess(io.reflection.app.api.core.shared.call.
+     * GetRolesAndPermissionsRequest, io.reflection.app.api.core.shared.call.GetRolesAndPermissionsResponse)
+     */
+    @Override
+    public void getRolesAndPermissionsSuccess(GetRolesAndPermissionsRequest input, GetRolesAndPermissionsResponse output) {
+        if (output.status == StatusType.StatusTypeSuccess) {
+            runTask(++currentTaskIndex);
+        } else {
+            showRefreshToRetryMessage();
+        }
+    }
 
-		description.setInnerText(Integer.toString(percentageProgress) + "%");
-		task.setInnerHTML(doing);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * io.reflection.app.api.core.shared.call.event.GetRolesAndPermissionsEventHandler#getRolesAndPermissionsFailure(io.reflection.app.api.core.shared.call.
+     * GetRolesAndPermissionsRequest, java.lang.Throwable)
+     */
+    @Override
+    public void getRolesAndPermissionsFailure(GetRolesAndPermissionsRequest input, Throwable caught) {
+        showRefreshToRetryMessage();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * io.reflection.app.api.core.shared.call.event.GetCountriesEventHandler#getCountriesSuccess(io.reflection.app.api.core.shared.call.GetCountriesRequest,
-	 * io.reflection.app.api.core.shared.call.GetCountriesResponse)
-	 */
-	@Override
-	public void getCountriesSuccess(GetCountriesRequest input, GetCountriesResponse output) {
-		if (output.status == StatusType.StatusTypeSuccess) {
-			runTask(++currentTaskIndex);
-		} else {
-			showRefreshToRetryMessage();
-		}
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.api.core.shared.call.event.LoginEventHandler#loginSuccess(io.reflection.app.api.core.shared.call.LoginRequest,
+     * io.reflection.app.api.core.shared.call.LoginResponse)
+     */
+    @Override
+    public void loginSuccess(LoginRequest input, LoginResponse output) {
+        if (output.status == StatusType.StatusTypeSuccess) {
+            if (SessionController.get().getLoggedInUser() != null) {
+                currentTaskIndex = 0;
+            }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * io.reflection.app.api.core.shared.call.event.GetCountriesEventHandler#getCountriesFailure(io.reflection.app.api.core.shared.call.GetCountriesRequest,
-	 * java.lang.Throwable)
-	 */
-	@Override
-	public void getCountriesFailure(GetCountriesRequest input, Throwable caught) {
-		showRefreshToRetryMessage();
-	}
+            runTask(++currentTaskIndex);
+        } else {
+            showRefreshToRetryMessage();
+        }
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.api.core.shared.call.event.GetStoresEventHandler#getStoresSuccess(io.reflection.app.api.core.shared.call.GetStoresRequest,
-	 * io.reflection.app.api.core.shared.call.GetStoresResponse)
-	 */
-	@Override
-	public void getStoresSuccess(GetStoresRequest input, GetStoresResponse output) {
-		if (output.status == StatusType.StatusTypeSuccess) {
-			runTask(++currentTaskIndex);
-		} else {
-			showRefreshToRetryMessage();
-		}
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.api.core.shared.call.event.LoginEventHandler#loginFailure(io.reflection.app.api.core.shared.call.LoginRequest,
+     * java.lang.Throwable)
+     */
+    @Override
+    public void loginFailure(LoginRequest input, Throwable caught) {
+        showRefreshToRetryMessage();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.api.core.shared.call.event.GetStoresEventHandler#getStoresFailure(io.reflection.app.api.core.shared.call.GetStoresRequest,
-	 * java.lang.Throwable)
-	 */
-	@Override
-	public void getStoresFailure(GetStoresRequest input, Throwable caught) {
-		showRefreshToRetryMessage();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * io.reflection.app.api.core.shared.call.event.GetRolesAndPermissionsEventHandler#getRolesAndPermissionsSuccess(io.reflection.app.api.core.shared.call.
-	 * GetRolesAndPermissionsRequest, io.reflection.app.api.core.shared.call.GetRolesAndPermissionsResponse)
-	 */
-	@Override
-	public void getRolesAndPermissionsSuccess(GetRolesAndPermissionsRequest input, GetRolesAndPermissionsResponse output) {
-		if (output.status == StatusType.StatusTypeSuccess) {
-			runTask(++currentTaskIndex);
-		} else {
-			showRefreshToRetryMessage();
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * io.reflection.app.api.core.shared.call.event.GetRolesAndPermissionsEventHandler#getRolesAndPermissionsFailure(io.reflection.app.api.core.shared.call.
-	 * GetRolesAndPermissionsRequest, java.lang.Throwable)
-	 */
-	@Override
-	public void getRolesAndPermissionsFailure(GetRolesAndPermissionsRequest input, Throwable caught) {
-		showRefreshToRetryMessage();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.api.core.shared.call.event.LoginEventHandler#loginSuccess(io.reflection.app.api.core.shared.call.LoginRequest,
-	 * io.reflection.app.api.core.shared.call.LoginResponse)
-	 */
-	@Override
-	public void loginSuccess(LoginRequest input, LoginResponse output) {
-		if (output.status == StatusType.StatusTypeSuccess) {
-			if (SessionController.get().getLoggedInUser() != null) {
-				currentTaskIndex = 0;
-			}
-
-			runTask(++currentTaskIndex);
-		} else {
-			showRefreshToRetryMessage();
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.api.core.shared.call.event.LoginEventHandler#loginFailure(io.reflection.app.api.core.shared.call.LoginRequest,
-	 * java.lang.Throwable)
-	 */
-	@Override
-	public void loginFailure(LoginRequest input, Throwable caught) {
-		showRefreshToRetryMessage();
-	}
-
-	private void showRefreshToRetryMessage() {
-		setProgressBarError();
-		setProgress("An error occured - Press refresh to retry! :'(", 1, 1);
-	}
+    private void showRefreshToRetryMessage() {
+        setProgressBarError();
+        setProgress("An error occured - Press refresh to retry! :'(", 1, 1);
+    }
 }
