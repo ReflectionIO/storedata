@@ -252,6 +252,12 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 					configureTitleAndSidePanel();	
 				}				
 			}
+			else
+			{
+				//needs to be reset in case we're coming back to this page.
+				selectedForumId = null ;
+				selectedForum = null ;
+			}
 		}
 	}
 
