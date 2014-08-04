@@ -32,6 +32,7 @@ import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.BootstrapGwtDatePicker;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.part.datatypes.MyApp;
+import io.reflection.app.client.part.myapps.MyAppsEmptyTable;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Item;
@@ -50,7 +51,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -81,6 +81,8 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	@UiField MyAppsTopPanel myAppsTopPanel;
 	@UiField MyAccountSidePanel myAccountSidePanel;
 
+    private MyAppsEmptyTable myAppsEmptyTable = new MyAppsEmptyTable();
+
 	private User user = SessionController.get().getLoggedInUser();
 
 	long linkedAccountsCount = -1;
@@ -102,7 +104,8 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 		createColumns();
 
-		appsTable.setEmptyTableWidget(new HTMLPanel("No Apps found!"));
+        appsTable.setEmptyTableWidget(myAppsEmptyTable);
+
 		appsTable.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 		MyAppsController.get().addDataDisplay(appsTable);
 		simplePager.setDisplay(appsTable);
@@ -199,7 +202,8 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	 */
 	@Override
 	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
-		if (LinkedAccountController.get().hasLinkedAccounts() && LinkedAccountController.get().getLinkedAccountsCount() > 0) {
+        if (LinkedAccountController.get().hasLinkedAccounts() && LinkedAccountController.get().getLinkedAccountsCount() > 0) { // There are linked accounts
+            myAppsEmptyTable.setLinkAccountVisible(false);
 			MyAppsController.get().reset();
 			MyAppsController.get().fetchLinkedAccountItems();
 		}
@@ -216,7 +220,8 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	 */
 	@Override
 	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
-		if (LinkedAccountController.get().hasLinkedAccounts() && LinkedAccountController.get().getLinkedAccountsCount() > 0) {
+        if (LinkedAccountController.get().hasLinkedAccounts() && LinkedAccountController.get().getLinkedAccountsCount() > 0) { // There are linked accounts
+            myAppsEmptyTable.setLinkAccountVisible(false);
 			MyAppsController.get().reset();
 			MyAppsController.get().fetchLinkedAccountItems();
 		}
@@ -272,6 +277,12 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 				MyAppsController.get().reset();
 			}
 		}
+
+        if (linkedAccountsCount > 0) {
+            myAppsEmptyTable.setLinkAccountVisible(false);
+        } else {
+            myAppsEmptyTable.setLinkAccountVisible(true);
+        }
 
 		myAppsTopPanel.updateFromFilter();
 

@@ -210,11 +210,6 @@ input[type="text"]:disabled {
     height: 78px;
 }
 
-/* Cell Table - LinkedAccountsPage */
-.table-striped.table-linkedaccount>tbody>tr>td {
-    height: 50px;
-}
-
 .table-striped.table-rank>tbody>tr>td:FIRST-CHILD,.table-striped.table-rank>thead>tr>th:FIRST-CHILD
     {
     padding-left: 24px;
@@ -222,6 +217,11 @@ input[type="text"]:disabled {
 
 .table-striped.table-rank>tbody>tr>td:FIRST-CHILD+td {
     vertical-align: top;
+}
+
+/* Cell Table - LinkedAccountsPage */
+.table-striped.table-linkedaccount>tbody>tr>td {
+    height: 50px;
 }
 
 .row {
