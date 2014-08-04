@@ -352,7 +352,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
         myDataAccountLookup.get(linkedAccountId.toString()).properties = properties;
     }
 
-<<<<<<< Upstream, based on upstream/master
+
 	/**
 	 * Delete linked account from lookup
 	 * 
@@ -362,19 +362,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 		myDataAccounts.remove(myDataAccountLookup.get(linkedAccountId.toString()));
 		myDataAccountLookup.remove(linkedAccountId.toString());
 	}
-=======
-    /**
-     * Delete linked account from lookup
-     * 
-     * @param linkedAccountId
-     * @param password
-     * @param properties
-     */
-    private void deleteLinkedAccountLookup(Long linkedAccountId) {
-        myDataAccounts.remove(myDataAccountLookup.get(linkedAccountId.toString()));
-        myDataAccountLookup.remove(linkedAccountId.toString());
-    }
->>>>>>> 2eea3ed Merge update
+
 
     /**
      * 
