@@ -286,4 +286,11 @@ public class ForumController extends AsyncDataProvider<Forum> implements Service
 		return forumMap.get(newSelectedId);
 	}
 
+	/**
+	 * @return
+	 */
+	public Forum getFirstForum() {
+		return forums.get(0);
+	}
+
 }

@@ -201,7 +201,14 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 	protected void configureTitleAndSidePanel() {
 		if (!ForumController.get().hasForums())
 			return ;
-		selectedForum = ForumController.get().getForumById(selectedForumId);
+		if (selectedForumId != null)
+			selectedForum = ForumController.get().getForumById(selectedForumId);
+		else
+		{
+			selectedForum = ForumController.get().getFirstForum();
+			selectedForumId = selectedForum.id;
+			TopicController.get().getTopics(selectedForumId);
+		}
 		forumSummarySidePanel.selectItem(selectedForum);
 		if (selectedForum != null) // shouldn't be null unless an error has occured
 		{
@@ -242,10 +249,8 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 					selectedForum = null ;
 					TopicController.get().getTopics(selectedForumId);
 					
-					configureTitleAndSidePanel();
-					
-				}
-				
+					configureTitleAndSidePanel();	
+				}				
 			}
 		}
 	}
