@@ -32,6 +32,9 @@
     	text-align: center;
     	color: #0e0e1f;
     }
+    .filler {
+    	height: 40px;
+    }
     </ui:style>
     <g:HTMLPanel styleName="container">
         <p:AlertBox ui:field="mAlertBox" visible="false" />
@@ -67,9 +70,9 @@
                         <r:ThankYouRegisterPanel ui:field="mThankYouRegisterPanel" visible="false" />
                     </g:HTMLPanel>
                 </p:Preloader>
-
-
+                
             </g:HTMLPanel>
+            <g:HTMLPanel styleName="{style.filler} col-md-12 hidden-xs hidden-sm" />
         </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder> 

@@ -32,6 +32,7 @@ import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.BootstrapGwtDatePicker;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.part.datatypes.MyApp;
+import io.reflection.app.client.part.myapps.MyAppsEmptyTable;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Item;
@@ -50,7 +51,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -81,6 +81,8 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	@UiField MyAppsTopPanel myAppsTopPanel;
 	@UiField MyAccountSidePanel myAccountSidePanel;
 
+    private MyAppsEmptyTable myAppsEmptyTable = new MyAppsEmptyTable();
+
 	private User user = SessionController.get().getLoggedInUser();
 
 	long linkedAccountsCount = -1;
@@ -100,14 +102,19 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 		Styles.INSTANCE.reflection().ensureInjected();
 
+		FilterController.get().setListType(OVERALL_LIST_TYPE);
+
 		createColumns();
 
-		appsTable.setEmptyTableWidget(new HTMLPanel("No Apps found!"));
+        appsTable.setEmptyTableWidget(myAppsEmptyTable);
+
 		appsTable.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 		MyAppsController.get().addDataDisplay(appsTable);
 		simplePager.setDisplay(appsTable);
-		
 		FilterController.get().reset();
+		
+		myAppsTopPanel.setFiltersEnabled(false);
+		myAppsTopPanel.setFilterAccountEnabled(false);
 	}
 
 	/*
@@ -122,13 +129,13 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
 		register(EventController.get().addHandlerToSource(GetLinkedAccountsEventHandler.TYPE, LinkedAccountController.get(), this));
+		register(EventController.get().addHandlerToSource(GetLinkedAccountItemsEventHandler.TYPE, MyAppsController.get(), this));
 
 		// boolean hasPermission = SessionController.get().loggedInUserHas(SessionController.);
 
 		// pager.setVisible(hasPermission);
 		// redirect.setVisible(!hasPermission);
 		
-		FilterController.get().setListType(OVERALL_LIST_TYPE);
 	}
 
 	/**
@@ -199,8 +206,10 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	 */
 	@Override
 	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
-		if (LinkedAccountController.get().hasLinkedAccounts() && LinkedAccountController.get().getLinkedAccountsCount() > 0) {
+        if (LinkedAccountController.get().hasLinkedAccounts() && LinkedAccountController.get().getLinkedAccountsCount() > 0) { // There are linked accounts
+            myAppsEmptyTable.setLinkAccountVisible(false);
 			MyAppsController.get().reset();
+			myAppsTopPanel.setFiltersEnabled(false);
 			MyAppsController.get().fetchLinkedAccountItems();
 		}
 		myAccountSidePanel.getMyAppsLink().setTargetHistoryToken(
@@ -216,8 +225,10 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	 */
 	@Override
 	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
-		if (LinkedAccountController.get().hasLinkedAccounts() && LinkedAccountController.get().getLinkedAccountsCount() > 0) {
+        if (LinkedAccountController.get().hasLinkedAccounts() && LinkedAccountController.get().getLinkedAccountsCount() > 0) { // There are linked accounts
+            myAppsEmptyTable.setLinkAccountVisible(false);
 			MyAppsController.get().reset();
+			myAppsTopPanel.setFiltersEnabled(false);
 			MyAppsController.get().fetchLinkedAccountItems();
 		}
 		myAccountSidePanel.getMyAppsLink().setTargetHistoryToken(
@@ -273,6 +284,14 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 			}
 		}
 
+        if (linkedAccountsCount > 0) {
+            myAppsEmptyTable.setLinkAccountVisible(false);
+			myAppsTopPanel.setFilterAccountEnabled(true);
+        } else {
+            myAppsEmptyTable.setLinkAccountVisible(true);
+			myAppsTopPanel.setFilterAccountEnabled(false);
+        }
+
 		myAppsTopPanel.updateFromFilter();
 
 	}
@@ -292,13 +311,17 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 					linkedAccountsCount = LinkedAccountController.get().getLinkedAccountsCount();
 					if (LinkedAccountController.get().getLinkedAccountsCount() > 0) {
 						FilterController.get().setLinkedAccount(LinkedAccountController.get().getAllLinkedAccounts().get(0).id);
+						myAppsTopPanel.setFilterAccountEnabled(true);
 					} else {
 						MyAppsController.get().reset();
+						myAppsTopPanel.setFilterAccountEnabled(false);
 					}
 				} else { // No linked accounts associated with this user
 					MyAppsController.get().reset();
 				}
 			}
+		}else{
+			myAppsTopPanel.setFilterAccountEnabled(false);
 		}
 	}
 
@@ -328,6 +351,13 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 			} else {
 				simplePager.setVisible(false);
 			}
+			if (MyAppsController.get().getUserItemsCount() > 0) {
+				myAppsTopPanel.setFiltersEnabled(true);
+			} else {
+				myAppsTopPanel.setFiltersEnabled(false);
+			}
+		} else {
+			myAppsTopPanel.setFiltersEnabled(false);
 		}
 
 	}
@@ -341,7 +371,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	@Override
 	public void getLinkedAccountItemsFailure(GetLinkedAccountItemsRequest input, Throwable caught) {
 		MyAppsController.get().reset();
-
+		myAppsTopPanel.setFiltersEnabled(false);
 	}
 
 }

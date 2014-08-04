@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ShowRangeEvent;
@@ -62,6 +63,8 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 		String highlight();
 
 		String preset();
+
+		String disable();
 	}
 
 	@UiField DateSelectorStyle style;
@@ -70,6 +73,8 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 	@UiField DateBox dateBoxTo;
 	@UiField HTMLPanel fixedRangesPanel;
 	@UiField Button applyDateRange;
+	@UiField SpanElement icon;
+	@UiField SpanElement separator;
 
 	private DateRange dateRange = new DateRange();
 
@@ -132,15 +137,16 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 		fixedRangesPanel.clear();
 		lookupFixedDateRangeAnchor.clear();
 		for (final PresetDateRange fixedRange : fixedRanges) {
-			Anchor fixedRangeLink = new Anchor(fixedRange.getName());
+			final Anchor fixedRangeLink = new Anchor(fixedRange.getName());
 			fixedRangeLink.getElement().addClassName(style.preset());
 			lookupFixedDateRangeAnchor.put(fixedRange, fixedRangeLink);
 			fixedRangeRegistrations.add(fixedRangeLink.addClickHandler(new ClickHandler() {
 
 				@Override
 				public void onClick(ClickEvent event) {
-					setValue(fixedRange.getDateRange(), Boolean.TRUE);
-
+					if (fixedRangeLink.isEnabled()) {
+						setValue(fixedRange.getDateRange(), Boolean.TRUE);
+					}
 				}
 			}));
 			fixedRangesPanel.add(fixedRangeLink);
@@ -292,6 +298,29 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 		dr.setFrom(from);
 		dr.setTo(to);
 		setValue(dr, fireEvents);
+	}
+
+	public void setEnabled(boolean enabled) {
+		dateBoxFrom.setEnabled(enabled);
+		dateBoxTo.setEnabled(enabled);
+		applyDateRange.setEnabled(enabled);
+		if (enabled) {
+			icon.removeClassName(style.disable());
+			separator.removeClassName(style.disable());
+		} else {
+			separator.addClassName(style.disable());
+			icon.addClassName(style.disable());
+		}
+		if (fixedRanges != null) {
+			for (PresetDateRange fixedRange : fixedRanges) {
+				if (enabled) {
+					lookupFixedDateRangeAnchor.get(fixedRange).getElement().removeClassName(style.disable());
+				} else {
+					lookupFixedDateRangeAnchor.get(fixedRange).getElement().addClassName(style.disable());
+				}
+				lookupFixedDateRangeAnchor.get(fixedRange).setEnabled(enabled);
+			}
+		}
 	}
 
 }

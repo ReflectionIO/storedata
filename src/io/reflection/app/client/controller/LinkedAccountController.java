@@ -48,307 +48,310 @@ import com.willshex.gson.json.service.shared.StatusType;
  */
 public class LinkedAccountController extends AsyncDataProvider<DataAccount> implements ServiceConstants {
 
-	private List<DataAccount> myDataAccounts = null;
-	private List<DataSource> myDataSources = null;
-	private Map<String, DataSource> myDataSourceLookup = new HashMap<String, DataSource>();
-	private Map<String, DataAccount> myDataAccountLookup = new HashMap<String, DataAccount>();
+    private List<DataAccount> myDataAccounts = null;
+    private List<DataSource> myDataSources = null;
+    private Map<String, DataSource> myDataSourceLookup = new HashMap<String, DataSource>();
+    private Map<String, DataAccount> myDataAccountLookup = new HashMap<String, DataAccount>();
 
-	private long mCount = -1;
+    private long mCount = -1;
 
-	private List<DataAccount> rows = new ArrayList<DataAccount>();
-	private Pager pager = null;
+    private List<DataAccount> rows = new ArrayList<DataAccount>();
+    private Pager pager = null;
 
-	private static LinkedAccountController mOne = null;
+    private static LinkedAccountController mOne = null;
 
-	public static LinkedAccountController get() {
-		if (mOne == null) {
-			mOne = new LinkedAccountController();
-		}
-		return mOne;
-	}
+    public static LinkedAccountController get() {
+        if (mOne == null) {
+            mOne = new LinkedAccountController();
+        }
+        return mOne;
+    }
 
-	public void fetchLinkedAccounts() {
-		CoreService service = ServiceCreator.createCoreService();
+    public void fetchLinkedAccounts() {
+        CoreService service = ServiceCreator.createCoreService();
 
-		final GetLinkedAccountsRequest input = new GetLinkedAccountsRequest();
-		input.accessCode = ACCESS_CODE;
-		input.session = SessionController.get().getSessionForApiCall();
+        final GetLinkedAccountsRequest input = new GetLinkedAccountsRequest();
+        input.accessCode = ACCESS_CODE;
+        input.session = SessionController.get().getSessionForApiCall();
 
-		if (pager == null) {
-			pager = new Pager();
-			pager.count = Long.valueOf(Integer.MAX_VALUE);
-			pager.start = Long.valueOf(0);
-			pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
-		}
-		input.pager = pager;
+        if (pager == null) {
+            pager = new Pager();
+            pager.count = Long.valueOf(Integer.MAX_VALUE);
+            pager.start = Long.valueOf(0);
+            pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
+        }
+        input.pager = pager;
 
-		service.getLinkedAccounts(input, new AsyncCallback<GetLinkedAccountsResponse>() {
+        service.getLinkedAccounts(input, new AsyncCallback<GetLinkedAccountsResponse>() {
 
-			@Override
-			public void onSuccess(GetLinkedAccountsResponse output) {
-				if (output.status == StatusType.StatusTypeSuccess) {
-					if (output.linkedAccounts != null) {
-						addLinkedAccountsToLookup(output.linkedAccounts);
-						addDataSourceToLookup(output.dataSources);
-						DataAccount myLinkedAccount;
-						for (DataAccount da : output.linkedAccounts) {
-							myLinkedAccount = new DataAccount();
-							myLinkedAccount = da;
-							myLinkedAccount.source = getDataSource(da.source.id);
-							rows.add(myLinkedAccount);
-						}
-					}
+            @Override
+            public void onSuccess(GetLinkedAccountsResponse output) {
+                if (output.status == StatusType.StatusTypeSuccess) {
+                    if (output.linkedAccounts != null) {
+                        addLinkedAccountsToLookup(output.linkedAccounts);
+                        addDataSourceToLookup(output.dataSources);
+                        DataAccount myLinkedAccount;
+                        for (DataAccount da : output.linkedAccounts) {
+                            myLinkedAccount = new DataAccount();
+                            myLinkedAccount = da;
+                            myLinkedAccount.source = getDataSource(da.source.id);
+                            rows.add(myLinkedAccount);
+                        }
+                    }
 
-					if (output.pager != null) {
-						pager = output.pager;
+                    if (output.pager != null) {
+                        pager = output.pager;
 
-						if (pager.totalCount != null) {
-							mCount = pager.totalCount.longValue();
-						}
+                        if (pager.totalCount != null) {
+                            mCount = pager.totalCount.longValue();
+                        }
 
-					}
+                    }
 
-					updateRowCount((int) mCount, true);
-					updateRowData(
-							input.pager.start.intValue(),
-							rows.subList(input.pager.start.intValue(),
-									Math.min(input.pager.start.intValue() + input.pager.count.intValue(), pager.totalCount.intValue())));
+                    updateRowCount((int) mCount, true);
+                    updateRowData(
+                            input.pager.start.intValue(),
+                            rows.subList(input.pager.start.intValue(),
+                                    Math.min(input.pager.start.intValue() + input.pager.count.intValue(), pager.totalCount.intValue())));
 
-				}
+                }
 
-				EventController.get().fireEventFromSource(new GetLinkedAccountsEventHandler.GetLinkedAccountsSuccess(input, output),
-						LinkedAccountController.this);
-			}
+                EventController.get().fireEventFromSource(new GetLinkedAccountsEventHandler.GetLinkedAccountsSuccess(input, output),
+                        LinkedAccountController.this);
+            }
 
-			@Override
-			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new GetLinkedAccountsEventHandler.GetLinkedAccountsFailure(input, caught),
-						LinkedAccountController.this);
-			}
-		});
-	}
+            @Override
+            public void onFailure(Throwable caught) {
+                EventController.get().fireEventFromSource(new GetLinkedAccountsEventHandler.GetLinkedAccountsFailure(input, caught),
+                        LinkedAccountController.this);
+            }
+        });
+    }
 
-	/**
-	 * Add new linked account
-	 * 
-	 * @param sourceId
-	 * @param username
-	 * @param password
-	 * @param properties
-	 */
-	public void linkAccount(Long sourceId, String username, String password, String properties) {
-		CoreService service = ServiceCreator.createCoreService();
+    /**
+     * Add new linked account
+     * 
+     * @param sourceId
+     * @param username
+     * @param password
+     * @param properties
+     */
+    public void linkAccount(Long sourceId, String username, String password, String properties) {
+        CoreService service = ServiceCreator.createCoreService();
 
-		final LinkAccountRequest input = new LinkAccountRequest();
-		input.accessCode = ACCESS_CODE;
+        final LinkAccountRequest input = new LinkAccountRequest();
+        input.accessCode = ACCESS_CODE;
 
-		input.session = SessionController.get().getSessionForApiCall();
+        input.session = SessionController.get().getSessionForApiCall();
 
-		input.username = username;
-		input.password = password;
-		input.properties = properties;
+        input.username = username;
+        input.password = password;
+        input.properties = properties;
 
-		DataSource source = new DataSource();
-		source.id = sourceId;
+        DataSource source = new DataSource();
+        source.id = sourceId;
 
-		input.source = source;
+        input.source = source;
 
-		if (pager == null) { // Link account after request invite registration
-			pager = new Pager();
-			pager.count = Long.valueOf(Integer.MAX_VALUE);
-			pager.start = Long.valueOf(0);
-			pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
-			pager.totalCount = Long.valueOf(0);
-		}
+        if (pager == null) { // Link account after request invite registration
+            pager = new Pager();
+            pager.count = Long.valueOf(Integer.MAX_VALUE);
+            pager.start = Long.valueOf(0);
+            pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
+            pager.totalCount = Long.valueOf(0);
+        }
 
-		service.linkAccount(input, new AsyncCallback<LinkAccountResponse>() {
+        service.linkAccount(input, new AsyncCallback<LinkAccountResponse>() {
 
-			@Override
-			public void onSuccess(LinkAccountResponse output) {
-				if (output.status == StatusType.StatusTypeSuccess) {
-					rows.add(output.account);
-					addLinkedAccountsToLookup(Arrays.asList(output.account));
-					addDataSourceToLookup(Arrays.asList(output.account.source));
-					pager.totalCount = Long.valueOf(pager.totalCount.longValue() + 1);
-					mCount = pager.totalCount;
-					updateRowCount((int) mCount, true);
-					updateRowData(0, rows.subList(0, Math.min(pager.count.intValue(), pager.totalCount.intValue())));
-				}
-				EventController.get().fireEventFromSource(new LinkAccountSuccess(input, output), LinkedAccountController.this);
-			}
+            @Override
+            public void onSuccess(LinkAccountResponse output) {
+                if (output.status == StatusType.StatusTypeSuccess) {
+                    rows.add(output.account);
+                    addLinkedAccountsToLookup(Arrays.asList(output.account));
+                    addDataSourceToLookup(Arrays.asList(output.account.source));
+                    pager.totalCount = Long.valueOf(pager.totalCount.longValue() + 1);
+                    mCount = pager.totalCount;
+                    updateRowCount((int) mCount, true);
+                    updateRowData(0, rows.subList(0, Math.min(pager.count.intValue(), pager.totalCount.intValue())));
+                }
+                EventController.get().fireEventFromSource(new LinkAccountSuccess(input, output), LinkedAccountController.this);
+            }
 
-			@Override
-			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new LinkAccountFailure(input, caught), LinkedAccountController.this);
-			}
-		});
+            @Override
+            public void onFailure(Throwable caught) {
+                EventController.get().fireEventFromSource(new LinkAccountFailure(input, caught), LinkedAccountController.this);
+            }
+        });
 
-	}
+    }
 
-	/**
-	 * Change the linked account password and properties - the account user name can't be changed
-	 * 
-	 * @param accountUsername
-	 * @param password
-	 * @param vendorNumber
-	 */
-	public void updateLinkedAccont(Long linkedAccountId, String password, String properties) {
-		CoreService service = ServiceCreator.createCoreService();
-		final UpdateLinkedAccountRequest input = new UpdateLinkedAccountRequest();
+    /**
+     * Change the linked account password and properties - the account user name can't be changed
+     * 
+     * @param accountUsername
+     * @param password
+     * @param vendorNumber
+     */
+    public void updateLinkedAccont(Long linkedAccountId, String password, String properties) {
+        CoreService service = ServiceCreator.createCoreService();
+        final UpdateLinkedAccountRequest input = new UpdateLinkedAccountRequest();
 
-		input.accessCode = ACCESS_CODE;
+        input.accessCode = ACCESS_CODE;
 
-		input.session = SessionController.get().getSessionForApiCall();
+        input.session = SessionController.get().getSessionForApiCall();
 
-		input.linkedAccount = new DataAccount();
+        input.linkedAccount = new DataAccount();
 
-		input.linkedAccount.id = linkedAccountId;
+        input.linkedAccount.id = linkedAccountId;
 
-		input.linkedAccount.password = password;
+        input.linkedAccount.password = password;
 
-		input.linkedAccount.properties = properties;
+        input.linkedAccount.properties = properties;
 
-		// input.linkedAccount.source = new DataSource();
-		// input.linkedAccount.source.a3Code = dataSourceLookup.get(dataAccountLookup.get(linkedAccountId.toString()).source.id.toString()).a3Code;
+        // input.linkedAccount.source = new DataSource();
+        // input.linkedAccount.source.a3Code = dataSourceLookup.get(dataAccountLookup.get(linkedAccountId.toString()).source.id.toString()).a3Code;
 
-		service.updateLinkedAccount(input, new AsyncCallback<UpdateLinkedAccountResponse>() {
+        service.updateLinkedAccount(input, new AsyncCallback<UpdateLinkedAccountResponse>() {
 
-			@Override
-			public void onSuccess(UpdateLinkedAccountResponse output) {
-				if (output.status == StatusType.StatusTypeSuccess) {
-					updateLinkedAccountLookup(input.linkedAccount.id, input.linkedAccount.password, input.linkedAccount.properties);
-				}
+            @Override
+            public void onSuccess(UpdateLinkedAccountResponse output) {
+                if (output.status == StatusType.StatusTypeSuccess) {
+                    updateLinkedAccountLookup(input.linkedAccount.id, input.linkedAccount.password, input.linkedAccount.properties);
+                }
 
-				EventController.get().fireEventFromSource(new UpdateLinkedAccountEventHandler.UpdateLinkedAccountSuccess(input, output),
-						LinkedAccountController.this);
-			}
+                EventController.get().fireEventFromSource(new UpdateLinkedAccountEventHandler.UpdateLinkedAccountSuccess(input, output),
+                        LinkedAccountController.this);
+            }
 
-			@Override
-			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new UpdateLinkedAccountEventHandler.UpdateLinkedAccountFailure(input, caught),
-						LinkedAccountController.this);
-			}
-		});
-	}
+            @Override
+            public void onFailure(Throwable caught) {
+                EventController.get().fireEventFromSource(new UpdateLinkedAccountEventHandler.UpdateLinkedAccountFailure(input, caught),
+                        LinkedAccountController.this);
+            }
+        });
+    }
 
-	/**
-	 * Delete the linked account identified by id
-	 * 
-	 * @param linkedAccountId
-	 */
-	public void deleteLinkedAccount(DataAccount linkedAccount) {
+    /**
+     * Delete the linked account identified by id
+     * 
+     * @param linkedAccountId
+     */
+    public void deleteLinkedAccount(DataAccount linkedAccount) {
 
-		CoreService service = ServiceCreator.createCoreService();
-		final DeleteLinkedAccountRequest input = new DeleteLinkedAccountRequest();
-		input.accessCode = ACCESS_CODE;
+        CoreService service = ServiceCreator.createCoreService();
+        final DeleteLinkedAccountRequest input = new DeleteLinkedAccountRequest();
+        input.accessCode = ACCESS_CODE;
 
-		input.session = SessionController.get().getSessionForApiCall();
+        input.session = SessionController.get().getSessionForApiCall();
 
-		input.linkedAccount = linkedAccount;
+        input.linkedAccount = linkedAccount;
 
-		service.deleteLinkedAccount(input, new AsyncCallback<DeleteLinkedAccountResponse>() {
+        service.deleteLinkedAccount(input, new AsyncCallback<DeleteLinkedAccountResponse>() {
 
-			@Override
-			public void onSuccess(DeleteLinkedAccountResponse output) {
-				if (output.status == StatusType.StatusTypeSuccess) {
-					rows.remove(myDataAccountLookup.get(input.linkedAccount.id.toString()));
-					deleteLinkedAccountLookup(input.linkedAccount.id);
-					pager.totalCount = Long.valueOf(pager.totalCount.longValue() - 1);
-					pager.start = Long.valueOf(0);
-					mCount = pager.totalCount;
-					updateRowCount((int) mCount, true);
-					updateRowData(0, rows.subList(0, Math.min(pager.count.intValue(), pager.totalCount.intValue())));
-				}
-				EventController.get().fireEventFromSource(new DeleteLinkedAccountSuccess(input, output), LinkedAccountController.this);
-			}
+            @Override
+            public void onSuccess(DeleteLinkedAccountResponse output) {
+                if (output.status == StatusType.StatusTypeSuccess) {
+                    rows.remove(myDataAccountLookup.get(input.linkedAccount.id.toString()));
+                    deleteLinkedAccountLookup(input.linkedAccount.id);
+                    pager.totalCount = Long.valueOf(pager.totalCount.longValue() - 1);
+                    pager.start = Long.valueOf(0);
+                    mCount = pager.totalCount;
+                    updateRowCount((int) mCount, true);
+                    updateRowData(0, rows.subList(0, Math.min(pager.count.intValue(), pager.totalCount.intValue())));
+                }
+                EventController.get().fireEventFromSource(new DeleteLinkedAccountSuccess(input, output), LinkedAccountController.this);
+            }
 
-			@Override
-			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new DeleteLinkedAccountFailure(input, caught), LinkedAccountController.this);
-			}
-		});
+            @Override
+            public void onFailure(Throwable caught) {
+                EventController.get().fireEventFromSource(new DeleteLinkedAccountFailure(input, caught), LinkedAccountController.this);
+            }
+        });
 
-	}
+    }
 
-	/**
-	 * 
-	 * @return
-	 */
-	public long getLinkedAccountsCount() {
-		return mCount;
-	}
+    /**
+     * 
+     * @return
+     */
+    public long getLinkedAccountsCount() {
+        return mCount;
+    }
 
-	/**
-	 * Get all linked accounts
-	 * 
-	 * @return
-	 */
-	public List<DataAccount> getAllLinkedAccounts() {
-		return myDataAccounts;
-	}
+    /**
+     * Get all linked accounts
+     * 
+     * @return
+     */
+    public List<DataAccount> getAllLinkedAccounts() {
+        return myDataAccounts;
+    }
 
-	public boolean hasLinkedAccounts() {
-		return mCount != -1;
-	}
+    public boolean hasLinkedAccounts() {
+        return mCount != -1;
+    }
 
-	/**
-	 * Get linked account
-	 * 
-	 * @param linkedAccountId
-	 * @return
-	 */
-	public DataAccount getLinkedAccount(Long linkedAccountId) {
-		return myDataAccountLookup.get(linkedAccountId.toString());
-	}
+    /**
+     * Get linked account
+     * 
+     * @param linkedAccountId
+     * @return
+     */
+    public DataAccount getLinkedAccount(Long linkedAccountId) {
+        return myDataAccountLookup.get(linkedAccountId.toString());
+    }
 
-	public boolean hasLinkedAccount(String username) {
-		boolean hasLinkedAccount = false;
-		for (DataAccount ds : getAllLinkedAccounts()) {
-			if (ds.username.equalsIgnoreCase(username)) {
-				hasLinkedAccount = true;
-			}
-		}
-		return hasLinkedAccount;
-	}
+    public boolean hasLinkedAccount(String username) {
+        boolean hasLinkedAccount = false;
+        if (getAllLinkedAccounts() != null) {
+            for (DataAccount ds : getAllLinkedAccounts()) {
+                if (ds.username.equalsIgnoreCase(username)) {
+                    hasLinkedAccount = true;
+                }
+            }
+        }
+        return hasLinkedAccount;
+    }
 
-	/**
-	 * Get data source
-	 * 
-	 * @param dataSourceId
-	 * @return
-	 */
-	public DataSource getDataSource(Long dataSourceId) {
-		return myDataSourceLookup.get(dataSourceId.toString());
-	}
+    /**
+     * Get data source
+     * 
+     * @param dataSourceId
+     * @return
+     */
+    public DataSource getDataSource(Long dataSourceId) {
+        return myDataSourceLookup.get(dataSourceId.toString());
+    }
 
-	/**
-	 * Add linked account into lookup
-	 * 
-	 * @param linkedAccounts
-	 */
-	private void addLinkedAccountsToLookup(List<DataAccount> linkedAccounts) {
-		if (myDataAccounts == null) {
-			myDataAccounts = new ArrayList<DataAccount>();
-		}
-		for (DataAccount dataAccount : linkedAccounts) {
-			myDataAccountLookup.put(dataAccount.id.toString(), dataAccount);
-			myDataAccounts.add(dataAccount);
-		}
-	}
+    /**
+     * Add linked account into lookup
+     * 
+     * @param linkedAccounts
+     */
+    private void addLinkedAccountsToLookup(List<DataAccount> linkedAccounts) {
+        if (myDataAccounts == null) {
+            myDataAccounts = new ArrayList<DataAccount>();
+        }
+        for (DataAccount dataAccount : linkedAccounts) {
+            myDataAccountLookup.put(dataAccount.id.toString(), dataAccount);
+            myDataAccounts.add(dataAccount);
+        }
+    }
 
-	/**
-	 * Update linked account from lookup
-	 * 
-	 * @param linkedAccountId
-	 * @param password
-	 * @param properties
-	 */
-	private void updateLinkedAccountLookup(Long linkedAccountId, String password, String properties) {
-		myDataAccounts.get(myDataAccounts.indexOf(myDataAccountLookup.get(linkedAccountId.toString()))).password = password;
-		myDataAccounts.get(myDataAccounts.indexOf(myDataAccountLookup.get(linkedAccountId.toString()))).properties = properties;
-		myDataAccountLookup.get(linkedAccountId.toString()).password = password;
-		myDataAccountLookup.get(linkedAccountId.toString()).properties = properties;
-	}
+    /**
+     * Update linked account from lookup
+     * 
+     * @param linkedAccountId
+     * @param password
+     * @param properties
+     */
+    private void updateLinkedAccountLookup(Long linkedAccountId, String password, String properties) {
+        myDataAccounts.get(myDataAccounts.indexOf(myDataAccountLookup.get(linkedAccountId.toString()))).password = password;
+        myDataAccounts.get(myDataAccounts.indexOf(myDataAccountLookup.get(linkedAccountId.toString()))).properties = properties;
+        myDataAccountLookup.get(linkedAccountId.toString()).password = password;
+        myDataAccountLookup.get(linkedAccountId.toString()).properties = properties;
+    }
+
 
 	/**
 	 * Delete linked account from lookup
@@ -360,96 +363,97 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 		myDataAccountLookup.remove(linkedAccountId.toString());
 	}
 
-	/**
-	 * 
-	 * @param dataSources
-	 */
-	private void addDataSourceToLookup(List<DataSource> dataSources) {
-		if (myDataSources == null) {
-			myDataSources = new ArrayList<DataSource>();
-		}
-		for (DataSource dataSource : dataSources) {
-			myDataSourceLookup.put(dataSource.id.toString(), dataSource);
-			myDataSources.add(dataSource);
-		}
-	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.view.client.AbstractDataProvider#onRangeChanged(com.google.gwt.view.client.HasData)
-	 */
-	@Override
-	protected void onRangeChanged(HasData<DataAccount> display) {
-		// Range r = display.getVisibleRange();
-		// int start = r.getStart();
-		// int end = start + r.getLength();
-		if (!hasLinkedAccounts()) {
-			fetchLinkedAccounts();
-		} else {
-			updateRowData(0, rows.subList(0, (int) getLinkedAccountsCount()));
-		}
+    /**
+     * 
+     * @param dataSources
+     */
+    private void addDataSourceToLookup(List<DataSource> dataSources) {
+        if (myDataSources == null) {
+            myDataSources = new ArrayList<DataSource>();
+        }
+        for (DataSource dataSource : dataSources) {
+            myDataSourceLookup.put(dataSource.id.toString(), dataSource);
+            myDataSources.add(dataSource);
+        }
+    }
 
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.gwt.view.client.AbstractDataProvider#onRangeChanged(com.google.gwt.view.client.HasData)
+     */
+    @Override
+    protected void onRangeChanged(HasData<DataAccount> display) {
+        // Range r = display.getVisibleRange();
+        // int start = r.getStart();
+        // int end = start + r.getLength();
+        if (!hasLinkedAccounts()) {
+            fetchLinkedAccounts();
+        } else {
+            updateRowData(0, rows.subList(0, (int) getLinkedAccountsCount()));
+        }
 
-	public void reset() {
-		myDataAccounts = null;
-		myDataSources = null;
+    }
 
-		myDataAccountLookup.clear();
-		myDataSourceLookup.clear();
+    public void reset() {
+        myDataAccounts = null;
+        myDataSources = null;
 
-		pager = null;
-		mCount = -1;
-		rows.clear();
+        myDataAccountLookup.clear();
+        myDataSourceLookup.clear();
 
-		updateRowData(0, rows);
-		updateRowCount(0, false);
+        pager = null;
+        mCount = -1;
+        rows.clear();
 
-	}
+        updateRowData(0, rows);
+        updateRowCount(0, false);
 
-	public Item getLinkedAccountItem(Item item) {
-		Item lookupItem = null;
+    }
 
-		if (item != null && item.internalId != null) {
-			lookupItem = MyAppsController.get().getUserItem(item.internalId);
+    public Item getLinkedAccountItem(Item item) {
+        Item lookupItem = null;
 
-			if (lookupItem == null) {
-				fetchLinkedAccountItem(item.internalId);
-			}
-		}
+        if (item != null && item.internalId != null) {
+            lookupItem = MyAppsController.get().getUserItem(item.internalId);
 
-		return lookupItem;
-	}
+            if (lookupItem == null) {
+                fetchLinkedAccountItem(item.internalId);
+            }
+        }
 
-	public void fetchLinkedAccountItem(String itemInternalId) {
-		CoreService service = ServiceCreator.createCoreService();
+        return lookupItem;
+    }
 
-		final GetLinkedAccountItemRequest input = new GetLinkedAccountItemRequest();
-		input.accessCode = ACCESS_CODE;
-		input.session = SessionController.get().getSessionForApiCall();
+    public void fetchLinkedAccountItem(String itemInternalId) {
+        CoreService service = ServiceCreator.createCoreService();
 
-		input.item = new Item();
-		input.item.internalId = itemInternalId;
-		input.item.source = FilterController.get().getStore().a3Code;
+        final GetLinkedAccountItemRequest input = new GetLinkedAccountItemRequest();
+        input.accessCode = ACCESS_CODE;
+        input.session = SessionController.get().getSessionForApiCall();
 
-		service.getLinkedAccountItem(input, new AsyncCallback<GetLinkedAccountItemResponse>() {
+        input.item = new Item();
+        input.item.internalId = itemInternalId;
+        input.item.source = FilterController.get().getStore().a3Code;
 
-			@Override
-			public void onSuccess(GetLinkedAccountItemResponse output) {
-				if (output.status == StatusType.StatusTypeSuccess) {
-					MyAppsController.get().setUserItem(output.item);
-				}
+        service.getLinkedAccountItem(input, new AsyncCallback<GetLinkedAccountItemResponse>() {
 
-				EventController.get().fireEventFromSource(new GetLinkedAccountItemEventHandler.GetLinkedAccountItemSuccess(input, output),
-						LinkedAccountController.this);
-			}
+            @Override
+            public void onSuccess(GetLinkedAccountItemResponse output) {
+                if (output.status == StatusType.StatusTypeSuccess) {
+                    MyAppsController.get().setUserItem(output.item);
+                }
 
-			@Override
-			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new GetLinkedAccountItemEventHandler.GetLinkedAccountItemFailure(input, caught),
-						LinkedAccountController.this);
-			}
-		});
-	}
+                EventController.get().fireEventFromSource(new GetLinkedAccountItemEventHandler.GetLinkedAccountItemSuccess(input, output),
+                        LinkedAccountController.this);
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                EventController.get().fireEventFromSource(new GetLinkedAccountItemEventHandler.GetLinkedAccountItemFailure(input, caught),
+                        LinkedAccountController.this);
+            }
+        });
+    }
 }

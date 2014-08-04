@@ -102,7 +102,7 @@ body {
 }
 
 .form-inline .form-group>.form-control {
-    max-width: 140px;
+    width: 140px;
     background: -webkit-linear-gradient(#f6f7f9, #eeeff1);
     /* For Safari 5.1 to 6.0 */
     background: -o-linear-gradient(#f6f7f9, #eeeff1);
@@ -110,6 +110,13 @@ body {
     background: -moz-linear-gradient(#f6f7f9, #eeeff1);
     /* For Firefox 3.6 to 15 */
     background: linear-gradient(#f6f7f9, #eeeff1); /* Standard syntax */
+}
+
+.form-inline .form-group>.form-control[disabled] {
+    background-color: #dedede;
+    border-color: #dedede;
+    color: #aaa;
+    cursor: default;
 }
 
 .sidepanel .form-group>.form-control {
@@ -210,11 +217,6 @@ input[type="text"]:disabled {
     height: 78px;
 }
 
-/* Cell Table - LinkedAccountsPage */
-.table-striped.table-linkedaccount>tbody>tr>td {
-    height: 50px;
-}
-
 .table-striped.table-rank>tbody>tr>td:FIRST-CHILD,.table-striped.table-rank>thead>tr>th:FIRST-CHILD
     {
     padding-left: 24px;
@@ -222,6 +224,11 @@ input[type="text"]:disabled {
 
 .table-striped.table-rank>tbody>tr>td:FIRST-CHILD+td {
     vertical-align: top;
+}
+
+/* Cell Table - LinkedAccountsPage */
+.table-striped.table-linkedaccount>tbody>tr>td {
+    height: 50px;
 }
 
 .row {
@@ -420,6 +427,8 @@ a:active,a:focus {
     {
     background-color: #dedede;
     border-color: #dedede;
+    color: #aaa;
+    cursor: default;
 }
 
 .btn-default,.btn-default:active,.btn-default:focus {
@@ -440,6 +449,8 @@ a:active,a:focus {
     {
     background-color: #dedede;
     border-color: #dedede;
+    color: #aaa;
+    cursor: default;
 }
 
 /* Dropdown */

@@ -34,6 +34,7 @@ import io.reflection.app.client.part.ConfirmationDialog;
 import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.part.linkaccount.IosMacLinkAccountForm;
 import io.reflection.app.client.part.linkaccount.LinkableAccountFields;
+import io.reflection.app.client.part.linkaccount.LinkedAccountsEmptyTable;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.User;
@@ -130,7 +131,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
         // addSoonTag(mPlayLink);
 
-        linkedAccountsTable.setEmptyTableWidget(new HTMLPanel("No linked accounts found!"));
+        linkedAccountsTable.setEmptyTableWidget(new LinkedAccountsEmptyTable());
         LinkedAccountController.get().addDataDisplay(linkedAccountsTable);
         linkedAccountsTable.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
         // simplePager.setDisplay(linkedAccountsTable);
@@ -198,14 +199,14 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
         };
         linkedAccountsTable.addColumn(columnEdit);
 
-        columnDelete = new Column<DataAccount, SafeHtml>(new SafeHtmlCell()) {
-            @Override
-            public SafeHtml getValue(DataAccount object) {
-                String id = object.id.toString();
-                return SafeHtmlUtils.fromTrustedString("<a href=\""
-                        + PageType.UsersPageType.asHref(PageType.LinkedAccountsPageType.toString(user.id.toString(), DELETE_ACTION_PARAMETER_VALUE, id))
-                                .asString() + "\"><span class=\"icon-cancel-1 delete\"/></a>");
-            }
+		columnDelete = new Column<DataAccount, SafeHtml>(new SafeHtmlCell()) {
+			@Override
+			public SafeHtml getValue(DataAccount object) {
+				String id = object.id.toString();
+				return SafeHtmlUtils.fromTrustedString("<a href=\""
+						+ PageType.UsersPageType.asHref(PageType.LinkedAccountsPageType.toString(user.id.toString(), DELETE_ACTION_PARAMETER_VALUE, id))
+								.asString() + "\"><span class=\"icon-cancel-1 delete\"/></a>");
+			}
 
         };
 
@@ -287,7 +288,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
     @Override
     public void navigationChanged(Stack previous, Stack current) {
 
-        if (LinkedAccountController.get().hasLinkedAccounts()) {
+        if (LinkedAccountController.get().hasLinkedAccounts() && LinkedAccountController.get().getLinkedAccountsCount() > 0) {
             addLinkedAccount.setVisible(true);
         } else {
             addLinkedAccount.setVisible(false);
@@ -566,7 +567,9 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
             // } else {
             // simplePager.setVisible(false);
             // }
-            addLinkedAccount.setVisible(true);
+            if (LinkedAccountController.get().getLinkedAccountsCount() > 0) {
+                addLinkedAccount.setVisible(true);
+            }
         }
     }
 

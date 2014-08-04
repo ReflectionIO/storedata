@@ -69,7 +69,11 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 		mAccountUsername.getElement().setAttribute("placeholder", "iTunes Connect Username");
 		mPassword.getElement().setAttribute("placeholder", "iTunes Connect Password");
 		mVendorId.getElement().setAttribute("placeholder", "Vendor number (8xxxxxxx)");
-
+		
+		mAccountUsername.setTabIndex(1);
+		mPassword.setTabIndex(2);
+		mVendorId.setTabIndex(3);
+		
 	}
 
 	/**
