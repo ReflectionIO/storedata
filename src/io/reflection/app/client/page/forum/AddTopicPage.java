@@ -19,6 +19,7 @@ import io.reflection.app.client.controller.TopicController;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
+import io.reflection.app.client.page.forum.part.ForumSummarySidePanel;
 import io.reflection.app.client.part.text.RichTextToolbar;
 
 import com.google.gwt.core.client.GWT;
@@ -47,6 +48,8 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
 
 	@UiField RichTextToolbar contentToolbar;
 	@UiField RichTextArea contentText;
+	
+	@UiField ForumSummarySidePanel forumSummarySidePanel ;
 
 	private static AddTopicPageUiBinder uiBinder = GWT.create(AddTopicPageUiBinder.class);
 

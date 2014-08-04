@@ -28,6 +28,7 @@ import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.page.forum.part.ForumMessageCell;
+import io.reflection.app.client.page.forum.part.ForumSummarySidePanel;
 import io.reflection.app.client.part.BootstrapGwtCellList;
 import io.reflection.app.client.part.ReflectionProgressBar;
 import io.reflection.app.client.part.SimplePager;
@@ -93,6 +94,9 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 	@UiField SimplePager pager;
 	
 	@UiField HTMLPanel adminButtons ;
+	
+	@UiField ForumSummarySidePanel forumSummarySidePanel ;
+	
 
 	private ForumMessageProvider dataProvider;
 
@@ -337,6 +341,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 	public void getTopicSuccess(GetTopicRequest input, GetTopicResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			updateTopic(output.topic);
+			forumSummarySidePanel.selectItem(output.topic.forum);
 		}
 	}
 
