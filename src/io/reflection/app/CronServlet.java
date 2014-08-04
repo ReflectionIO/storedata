@@ -239,7 +239,7 @@ public class CronServlet extends HttpServlet {
 		}
 	}
 
-	private void enqueueItemForPropertiesRefresh(Long itemId) {
+	public static void enqueueItemForPropertiesRefresh(Long itemId) {
 		if (LOG.isLoggable(GaeLevel.TRACE)) {
 			LOG.log(GaeLevel.TRACE, "Entering...");
 		}
