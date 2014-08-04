@@ -187,6 +187,11 @@ public class DevHelperServlet extends HttpServlet {
 				i.enqueue(Arrays.asList(Long.valueOf(itemId)));
 
 				success = true;
+
+			} else if ("refreshproperties".equalsIgnoreCase(action)) {
+				CronServlet.enqueueItemForPropertiesRefresh(Long.valueOf(itemId));
+
+				success = true;
 			} else if ("ingestmulti".equalsIgnoreCase(action)) {
 
 				Ingestor i = IngestorFactory.getIngestorForStore("ios");
@@ -590,7 +595,7 @@ public class DevHelperServlet extends HttpServlet {
 
 			} else if ("cacheranks".equalsIgnoreCase(action)) {
 				CallServiceMethodServlet.enqueueGetAllRanks("us", "ios", Long.valueOf(24), CollectorIOS.TOP_GROSSING_APPS, new Date());
-				
+
 				success = true;
 			} else {
 
