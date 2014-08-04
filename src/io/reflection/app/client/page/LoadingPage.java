@@ -188,21 +188,26 @@ public class LoadingPage extends Page implements NavigationEventHandler, LoginEv
         dots.getStyle().setProperty("visibility", "visible");
         setProgress("Loading", 0, tasks.size());
         for (DivElement b : bars) {
-            b.setClassName("progress-bar " + style.purpleBar() + " " + style.progressBar());
+            b.addClassName("progress-bar");
+            b.addClassName(style.purpleBar());
+            b.addClassName(style.progressBar());
         }
     }
 
     private void setProgressBarError() {
         dots.getStyle().setProperty("visibility", "hidden");
         for (DivElement b : bars) {
-            b.setClassName("progress-bar progress-bar-danger");
+            b.addClassName("progress-bar");
+            b.addClassName("progress-bar-danger");
         }
     }
 
     private void setProgressBarComplete() {
         dots.getStyle().setProperty("visibility", "hidden");
         for (DivElement b : bars) {
-            b.setClassName("progress-bar " + style.orangeBar() + " " + style.progressBar());
+            b.addClassName("progress-bar");
+            b.addClassName(style.orangeBar());
+            b.addClassName(style.progressBar());
         }
     }
 
