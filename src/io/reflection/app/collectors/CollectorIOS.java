@@ -82,7 +82,17 @@ public class CollectorIOS extends StoreCollector implements Collector {
 
 				try {
 					code = FeedFetchServiceProvider.provide().getCode();
+
+					if (code == null && LOG.isLoggable(GaeLevel.DEBUG)) {
+						LOG.log(GaeLevel.DEBUG, "Got null code");
+					} else {
+						LOG.log(GaeLevel.DEBUG, String.format("Got code [%d] from feed fetch service", code.longValue()));
+					}
+
 					for (String countryCode : splitCountries) {
+						if (LOG.isLoggable(GaeLevel.DEBUG)) {
+							LOG.log(GaeLevel.DEBUG, String.format("Enqueueing gather tasks for country [%s]", countryCode));
+						}
 
 						enqueue(queue, countryCode, TOP_FREE_APPS, code);
 						enqueue(queue, countryCode, TOP_PAID_APPS, code);
@@ -97,7 +107,7 @@ public class CollectorIOS extends StoreCollector implements Collector {
 						count++;
 					}
 				} catch (DataAccessException dae) {
-					LOG.log(GaeLevel.SEVERE, "A database error occured attempting to to get an id code for gather enqueing", dae);
+					LOG.log(GaeLevel.SEVERE, "A database error occured attempting to to get an id code for gather enqueueing", dae);
 				}
 
 				if (code != null) {
@@ -120,11 +130,24 @@ public class CollectorIOS extends StoreCollector implements Collector {
 								categories = CategoryServiceProvider.provide().getParentCategories(all, p);
 
 								if (categories != null && categories.size() > 0) {
+									if (LOG.isLoggable(GaeLevel.DEBUG)) {
+										LOG.log(GaeLevel.DEBUG, String.format("Found [%d] categories", categories.size()));
+									}
+
 									// if we have some categories iterate through all the countries again
 									for (String countryCode : splitCountries) {
 
+										if (LOG.isLoggable(GaeLevel.DEBUG)) {
+											LOG.log(GaeLevel.DEBUG, String.format("Enqueueing gather tasks for country [%s]", countryCode));
+										}
+
 										// for each category
 										for (Category category : categories) {
+
+											if (LOG.isLoggable(GaeLevel.DEBUG)) {
+												LOG.log(GaeLevel.DEBUG, String.format("Enqueueing gather tasks for category [%d]", category.id.longValue()));
+											}
+
 											enqueue(queue, countryCode, TOP_FREE_APPS, category.internalId, code);
 											enqueue(queue, countryCode, TOP_PAID_APPS, category.internalId, code);
 											enqueue(queue, countryCode, TOP_GROSSING_APPS, category.internalId, code);
@@ -244,29 +267,32 @@ public class CollectorIOS extends StoreCollector implements Collector {
 	}
 
 	private void enqueue(Queue queue, String country, String type, Long categoryInternalId, Long code) {
+		String url = null;
+
+		if (categoryInternalId == null) {
+			url = String.format(ENQUEUE_GATHER_FORMAT, IOS_STORE_A3, country, type, code);
+		} else {
+			url = String.format(ENQUEUE_GATHER_CATEGORY_FORMAT, IOS_STORE_A3, country, type, categoryInternalId.longValue(), code);
+		}
+
+		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			LOG.log(GaeLevel.DEBUG, String.format("Enqueueing gather tasks for url [%s]", url));
+		}
+
 		try {
-			String url = null;
-
-			if (categoryInternalId == null) {
-				url = String.format(ENQUEUE_GATHER_FORMAT, IOS_STORE_A3, country, type, code);
-			} else {
-				url = String.format(ENQUEUE_GATHER_CATEGORY_FORMAT, IOS_STORE_A3, country, type, categoryInternalId.longValue(), code);
-			}
-
 			queue.add(TaskOptions.Builder.withUrl(url).method(Method.GET));
 		} catch (TransientFailureException ex) {
 
 			if (LOG.isLoggable(Level.WARNING)) {
-				LOG.warning(String.format("Could not queue a message because of [%s] - will retry it once", ex.toString()));
+				LOG.log(Level.WARNING, String.format("Could not queue a message with url", url), ex);
 			}
 
 			// retry once
 			try {
-				queue.add(TaskOptions.Builder.withUrl(String.format(ENQUEUE_GATHER_FORMAT, IOS_STORE_A3, country, type, code)).method(Method.GET));
+				queue.add(TaskOptions.Builder.withUrl(url).method(Method.GET));
 			} catch (TransientFailureException reEx) {
 				if (LOG.isLoggable(Level.SEVERE)) {
-					LOG.log(Level.SEVERE, String.format("Retry of with parameters country [%s] type [%s] code [%s] failed while adding to queue [%s] twice",
-							country, type, code, queue.getQueueName()), reEx);
+					LOG.log(Level.SEVERE, String.format("Retry of with url [%s] failed while adding to queue [%s] twice", url, queue.getQueueName()), reEx);
 				}
 			}
 		}
