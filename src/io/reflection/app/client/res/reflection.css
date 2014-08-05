@@ -184,6 +184,11 @@ input[type="text"]:disabled {
     border: none;
 }
 
+.table-striped>tbody>tr>td:FIRST-CHILD,.table-striped>thead>tr>th:FIRST-CHILD
+    {
+    padding-left: 24px;
+}
+
 .table-striped>tbody>tr>td,.table-striped>thead>tr>th {
     vertical-align: middle;
     border: 0px;
@@ -207,19 +212,9 @@ input[type="text"]:disabled {
     height: 50px;
 }
 
-.table-striped.table-item>tbody>tr>td:FIRST-CHILD,.table-striped.table-item>thead>tr>th:FIRST-CHILD
-    {
-    padding-left: 24px;
-}
-
 /* Cell Table - RankPage */
 .table-striped.table-rank>tbody>tr>td {
     height: 78px;
-}
-
-.table-striped.table-rank>tbody>tr>td:FIRST-CHILD,.table-striped.table-rank>thead>tr>th:FIRST-CHILD
-    {
-    padding-left: 24px;
 }
 
 .table-striped.table-rank>tbody>tr>td:FIRST-CHILD+td {
