@@ -59,8 +59,8 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
 
 
 	public ForumMessageProvider(Topic topic) {
-		topicMessage = new ForumMessage(this.topic = topic);
-		ReplyController.get(topic.id).setTopicMessage(topicMessage);
+		ReplyController.get(topic.id).setTopic(topic);
+		this.topic = topic ;
 	}
 	
 	long getTotalCount()
@@ -83,25 +83,9 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
 		ReplyThread thread = ReplyController.get(topic.id);
 		
 		if (thread.hasRows(start, end))
-			updateRowData(start, getSubsetRows(start, end));
+			updateRowData(start, thread.getMessages(start, end));
 		else
 			ReplyController.get().getReplies(topic.id, start, end);
-
-	}
-
-	/**
-	 * @param start2
-	 * @param end
-	 * @return
-	 */
-	private List<ForumMessage> getSubsetRows(int start, int end) {
-		ReplyThread thread = ReplyController.get(topic.id);
-		List rows = new ArrayList<ForumMessage>();
-		for (Reply reply : thread.getRows(start, end)) {
-			rows.add(new ForumMessage(topic, reply));
-			replyLookup.put(reply.id, reply);
-		}
-		return rows ;
 	}
 
 	/*
@@ -114,14 +98,18 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
 	public void getRepliesSuccess(GetRepliesRequest input, GetRepliesResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 
-
 			start = input.pager.start.intValue() == 0 ? 0 : input.pager.start.intValue() + 1;
 			count = input.pager.count.intValue();
 			totalCount = output.pager.totalCount.intValue() + 1;
-
-			updateRowCount(rows.size(), true);
-			updateRowData(start, rows.subList(start, Math.min(start + count, totalCount)));
+			
+			updateRows(input.topic.id);
 		}
+	}
+
+	protected void updateRows(long topicId) {
+		ReplyThread thread = ReplyController.get(topicId);
+		updateRowCount(thread.getTotalCount(), true);
+		updateRowData(start, thread.getMessages(start, start + count + 1));
 	}
 
 	public void registerListeners() {
@@ -156,8 +144,7 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
 	 */
 	@Override
 	public void updateReplySuccess(UpdateReplyRequest input, UpdateReplyResponse output) {
-		updateRowCount(rows.size(), true);
-		updateRowData(start, rows.subList(start, Math.min(start + count, totalCount)));
+		updateRows(input.reply.topic.id);
 	}
 
 	/*
@@ -177,8 +164,7 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
 	 */
 	@Override
 	public void updateTopicSuccess(UpdateTopicRequest input, UpdateTopicResponse output) {
-		updateRowCount(rows.size(), true);
-		updateRowData(start, rows.subList(start, Math.min(start + count, totalCount)));
+		updateRows(input.topic.id);
 	}
 
 	/*
@@ -198,11 +184,8 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
 	 */
 	@Override
 	public void addReplySuccess(AddReplyRequest input, AddReplyResponse output) {
-		rows.add(new ForumMessage(input.reply.topic, output.reply));
-
-		totalCount++;
-		updateRowCount(rows.size(), true);
-		updateRowData(start, rows.subList(start, Math.min(start + count, totalCount)));
+		
+		updateRows(input.reply.topic.id);
 	}
 
 	/*
