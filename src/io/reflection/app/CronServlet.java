@@ -199,7 +199,7 @@ public class CronServlet extends HttpServlet {
 		resp.setHeader("Cache-Control", "no-cache");
 	}
 
-	private void enqueueItemForDuplicateRemoval(String internalId) {
+	public static void enqueueItemForDuplicateRemoval(String internalId) {
 		if (LOG.isLoggable(GaeLevel.TRACE)) {
 			LOG.log(GaeLevel.TRACE, "Entering...");
 		}
