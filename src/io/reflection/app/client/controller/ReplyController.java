@@ -280,7 +280,7 @@ public class ReplyController implements ServiceConstants {
 		 */
 		public void setTopicMessage(ForumMessage topicMessage) {
 			this.topicMessage = topicMessage ;
-			this.replyStore.
+			
 		}
 
 		/**
