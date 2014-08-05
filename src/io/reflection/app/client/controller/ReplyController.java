@@ -57,7 +57,7 @@ public class ReplyController implements ServiceConstants {
 	 * @param start
 	 */
 	public void getReplies(Long topicId, int start, int end) {
-
+		
 		thread.fetchReplies(topicId, start, end);
 	}
 
@@ -110,13 +110,17 @@ public class ReplyController implements ServiceConstants {
 	public static class ReplyThread implements ServiceConstants {
 
 		private List<Reply> replies = new ArrayList<Reply>();
+		/* This is to get a reply by it's id
+		 * At the moment it's used in the EditTopicPage, but actually this could be using ForumMessage too TODO*/
 		private HashMap<Long, Reply> replyStore = new HashMap<Long, Reply>();
 		Long topicId;
 		// private long count = 0;
 		private Pager pager;
-		private SparseArray<Reply> replyLookup = null;
+		
+		
+		private SparseArray<ForumMessage> messagesLookup = new SparseArray<ForumMessage>() ;
 		private ReplyController replyController;
-		private ForumMessage topicMessage;
+		private Topic topic;
 
 		/**
 		 * @param replyController
@@ -138,7 +142,7 @@ public class ReplyController implements ServiceConstants {
 			return topicId;
 		}
 
-		void fetchReplies(Long topicId2, long start, long count) {
+		void fetchReplies(Long topicId2, final long start, final long count) {
 			ForumService service = ServiceCreator.createForumService();
 
 			final GetRepliesRequest input = new GetRepliesRequest();
@@ -165,13 +169,12 @@ public class ReplyController implements ServiceConstants {
 						if (output.replies != null) {
 							replies.addAll(output.replies);
 
-							if (replyLookup == null) {
-								replyLookup = new SparseArray<Reply>();
-							}
-
+							
+							long i = start ;
 							for (Reply reply : output.replies) {
-								replyLookup.put(reply.id.intValue(), reply);
+								messagesLookup.put((int) i, new ForumMessage(input.topic, reply));
 								replyStore.put(reply.id, reply);
+								i++;
 							}
 						}
 
@@ -250,7 +253,7 @@ public class ReplyController implements ServiceConstants {
 			input.accessCode = ACCESS_CODE;
 
 			input.session = SessionController.get().getSessionForApiCall();
-			input.reply = replyLookup.get(id.intValue());
+			input.reply = replyStore.get(id.intValue());
 
 			input.reply.id = id;
 			input.reply.content = content;
@@ -276,10 +279,10 @@ public class ReplyController implements ServiceConstants {
 		}
 
 		/**
-		 * @param topicMessage
+		 * @param topic
 		 */
-		public void setTopicMessage(ForumMessage topicMessage) {
-			this.topicMessage = topicMessage ;
+		public void setTopic(Topic topic) {
+			this.topic = topic ;
 			
 		}
 
@@ -290,8 +293,8 @@ public class ReplyController implements ServiceConstants {
 		 */
 		public boolean hasRows(int start, int end) {
 			//inefficient, but not noticeable for 10-100 rows per page.
-			for (long i = start ; i <= end ; i++)
-				if (!this.replyStore.containsKey(Long.valueOf(i)))
+			for (int i = start ; i <= end ; i++)
+				if (this.messagesLookup.valueAt(i) == null)
 					return false ;
 			return true ;
 		}
@@ -303,14 +306,35 @@ public class ReplyController implements ServiceConstants {
 			return replyStore.size() ;
 		}
 
+		
+
 		/**
+		 * Since Replys and ForumMessages are so similar, it makes
+		 * sense to manage the caching of them here in ReplyController
+		 * and do the wrapping.
 		 * @param start
 		 * @param end
 		 * @return
 		 */
-		public List<Reply> getRows(int start, int end) {
-			// TODO Auto-generated method stub
-			return null;
+		public List<ForumMessage> getMessages(int start, int end) {
+			ArrayList<ForumMessage> rows = new ArrayList<ForumMessage>();
+			for (int i = start ; i < end ; i++)
+			{
+				ForumMessage message = messagesLookup.get(i);
+				if(message != null)
+				{
+					rows.add(message);
+				}
+			}
+			
+			return rows ;
+		}
+
+		/**
+		 * @return
+		 */
+		public int getTotalCount() {
+			return topic.numberOfReplies + 1 ;
 		}
 
 		
