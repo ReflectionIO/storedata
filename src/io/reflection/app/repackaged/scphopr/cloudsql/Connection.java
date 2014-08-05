@@ -126,6 +126,7 @@ public final class Connection {
 				connection = DriverManager.getConnection(url, username, password);
 				connection.setAutoCommit(!isTransactionMode);
 				executeQuery(String.format("SET NAMES \'%s\'", encoding));
+//			 	 executeQuery(String.format("SET CHARACTER SET \'%s\'", encoding));
 			}
 		} catch (SQLException ex) {
 			LOG.log(GaeLevel.SEVERE, "Error conneting to databse", ex);
