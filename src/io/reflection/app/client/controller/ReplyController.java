@@ -107,12 +107,21 @@ public class ReplyController implements ServiceConstants {
 		return one.getThread(topicId) ;
 	}
 
+	/**
+	 * The ReplyThread class is to act as a caching mechanism.
+	 * Rather than resetting all the various members of this class to 
+	 * change threads, simply removing the current ReplyThread and
+	 * reinstantiating will do. It also means we will be able to
+	 * eventually cache across different threads seamlessly.
+	 * @author daniel
+	 *
+	 */
 	public static class ReplyThread implements ServiceConstants {
 
 		private List<Reply> replies = new ArrayList<Reply>();
 		/* This is to get a reply by it's id
 		 * At the moment it's used in the EditTopicPage, but actually this could be using ForumMessage too TODO*/
-		private HashMap<Long, Reply> replyStore = new HashMap<Long, Reply>();
+		private HashMap<Integer, Reply> replyStore = new HashMap<Integer, Reply>();
 		Long topicId;
 		// private long count = 0;
 		private Pager pager;
@@ -152,13 +161,13 @@ public class ReplyController implements ServiceConstants {
 			input.topic = new Topic();
 			input.topic.id = topicId;
 
-			if (pager == null) {
-				pager = new Pager();
-				pager.count = count;
-				pager.start = start;
-				pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
-				pager.sortBy = "created";
-			}
+			
+			pager = new Pager();
+			pager.count = count;
+			pager.start = start;
+			pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
+			pager.sortBy = "created";
+			
 			input.pager = pager;
 
 			service.getReplies(input, new AsyncCallback<GetRepliesResponse>() {
@@ -169,11 +178,13 @@ public class ReplyController implements ServiceConstants {
 						if (output.replies != null) {
 							replies.addAll(output.replies);
 
+							//be careful with the different ordering of replies, forumMessages,
+							//and rows in the celltable/database.
 							
 							long i = start ;
 							for (Reply reply : output.replies) {
-								messagesLookup.put((int) i, new ForumMessage(input.topic, reply));
-								replyStore.put(reply.id, reply);
+								messagesLookup.put((int) i+1, new ForumMessage(input.topic, reply));
+								replyStore.put(reply.id.intValue(), reply);
 								i++;
 							}
 						}
@@ -283,17 +294,18 @@ public class ReplyController implements ServiceConstants {
 		 */
 		public void setTopic(Topic topic) {
 			this.topic = topic ;
+			this.messagesLookup.append(0, new ForumMessage(topic, null));
 			
 		}
 
 		/**
-		 * @param start
-		 * @param end
+		 * @param start from zero.
+		 * @param end (exclusive)
 		 * @return
 		 */
 		public boolean hasRows(int start, int end) {
 			//inefficient, but not noticeable for 10-100 rows per page.
-			for (int i = start ; i <= end ; i++)
+			for (int i = start ; i <= end && i <= topic.numberOfReplies ; i++)
 				if (this.messagesLookup.valueAt(i) == null)
 					return false ;
 			return true ;
