@@ -265,26 +265,13 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 						paramMap.put(current.getParameter(i), current.getParameter(i+1));
 					}
 					
-					if (paramMap.containsKey("page"))
+					if (paramMap.containsKey("post"))
 					{
-						final int page = Integer.parseInt(paramMap.get("page"));
+						final int post = Integer.parseInt(paramMap.get("post"));
+						int firstOnPage = post - (post % ServiceConstants.SHORT_STEP_VALUE);
 						
-						//The pager is a separate argument that can trigger and respond to range change events in the display.
-						//That doesn't mean that the pager is the right place to do initial data loads.
-						
-						messagesCellList.setPageStart(page * ServiceConstants.SHORT_STEP_VALUE);
-						
-//						Scheduler.get().scheduleDeferred(new ScheduledCommand(){
-//
-//							@Override
-//							public void execute() {
-//								pager.setPage(page);
-//								
-//							}
-//							
-//						});
+						messagesCellList.setPageStart(firstOnPage);
 					}
-
 					updateTopic(topic);
 				}
 			}

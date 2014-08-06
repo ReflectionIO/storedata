@@ -50,13 +50,6 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
 	private List<HandlerRegistration> registrations = new ArrayList<HandlerRegistration>();
 	private int start;
 	private int count;
-	private ForumMessage topicMessage;
-	
-	//will delete these
-	private List<ForumMessage> rows = new ArrayList<ForumMessage>();
-	private Map<Long, Reply> replyLookup = new HashMap<Long, Reply>();
-	private int totalCount;
-
 
 	public ForumMessageProvider(Topic topic) {
 		ReplyController.get(topic.id).setTopic(topic);
@@ -100,7 +93,6 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
 
 			start = input.pager.start.intValue() == 0 ? 0 : input.pager.start.intValue() + 1;
 			count = input.pager.count.intValue();
-			totalCount = output.pager.totalCount.intValue() + 1;
 			
 			updateRows(input.topic.id);
 		}
@@ -108,11 +100,13 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
 
 	protected void updateRows(long topicId) {
 		ReplyThread thread = ReplyController.get(topicId);
-		updateRowCount(thread.getTotalCount(), true);
+		
 		
 		//note this will not trigger a redraw of the table if the content of the cells
 		//has changed but the range data hasn't.
-		updateRowData(start, thread.getMessages(start, start + count + 1)); 
+		List<ForumMessage> messages = thread.getMessages(start, start + count + 1);
+		updateRowCount(ReplyController.get(topic.id).getTotalCount(), true);
+		updateRowData(start, messages); 
 	}
 
 	public void registerListeners() {
