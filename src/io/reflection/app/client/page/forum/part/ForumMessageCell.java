@@ -90,16 +90,21 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 	@Override
 	public void render(com.google.gwt.cell.client.Cell.Context context, ForumMessage value, SafeHtmlBuilder builder) {
 
-		// put template string empty or template with button
-		// id insetad username
-		// value has author
-		// ForumMessage ad property to check the user
-		SafeHtml editButtonHtml = QuoteTemplate.INSTANCE.editButton(PageType.ForumEditTopicPageType.asHref().asString(), value.getTopicId(), value.getId());
-
-		RENDERER.render(builder, FormattingHelper.getUserLongName(value.getAuthor()), SafeHtmlUtils.fromTrustedString(value.getContent()), "Posted "
-				+ FormattingHelper.getTimeSince(value.getCreated()),
-				value.belongsToCurrentUser() ? QuoteTemplate.INSTANCE.empty() : QuoteTemplate.INSTANCE.flagButton(),
-				value.belongsToCurrentUser() ? editButtonHtml : QuoteTemplate.INSTANCE.empty());
+		/* The CellList will render rows of nulls if the paging goes beyond the end of the list */
+		if (value != null)
+		{
+		
+			// put template string empty or template with button
+			// id insetad username
+			// value has author
+			// ForumMessage ad property to check the user
+			SafeHtml editButtonHtml = QuoteTemplate.INSTANCE.editButton(PageType.ForumEditTopicPageType.asHref().asString(), value.getTopicId(), value.getId());
+	
+			RENDERER.render(builder, FormattingHelper.getUserLongName(value.getAuthor()), SafeHtmlUtils.fromTrustedString(value.getContent()), "Posted "
+					+ FormattingHelper.getTimeSince(value.getCreated()),
+					value.belongsToCurrentUser() ? QuoteTemplate.INSTANCE.empty() : QuoteTemplate.INSTANCE.flagButton(),
+					value.belongsToCurrentUser() ? editButtonHtml : QuoteTemplate.INSTANCE.empty());
+		}
 
 	}
 

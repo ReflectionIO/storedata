@@ -15,6 +15,11 @@ import io.reflection.app.datatypes.shared.User;
 import java.util.Date;
 
 /**
+ * This is a wrapper object around Topic and Reply.
+ * It's needed in order to treat the content from a topic or reply as a single entity from the perspective of displaying them in a list.
+ * Ideally in the future ForumMessage will replace Reply so that editing the content of a topic vs editing the content of a reply etc,
+ * will have a single pathway (and all the other operations on both of them). ~Daniel
+ * 
  * @author billy1380
  * 
  */
