@@ -109,7 +109,10 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
 	protected void updateRows(long topicId) {
 		ReplyThread thread = ReplyController.get(topicId);
 		updateRowCount(thread.getTotalCount(), true);
-		updateRowData(start, thread.getMessages(start, start + count + 1));
+		
+		//note this will not trigger a redraw of the table if the content of the cells
+		//has changed but the range data hasn't.
+		updateRowData(start, thread.getMessages(start, start + count + 1)); 
 	}
 
 	public void registerListeners() {
