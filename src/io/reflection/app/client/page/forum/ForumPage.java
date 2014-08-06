@@ -116,10 +116,12 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 				if (object.sticky != null && object.sticky.booleanValue()) {
 					properties += "<i class=\"glyphicon glyphicon-pushpin\"></i> ";
 				}
+				
+				int numPages = (int) Math.ceil((double)(object.numberOfReplies + 1) / ServiceConstants.SHORT_STEP_VALUE) ;
 				return TopicTemplate.INSTANCE.topicLayout(SafeHtmlUtils.fromSafeConstant(properties),
 						PageType.ForumThreadPageType.asHref(TopicPage.VIEW_ACTION_PARAMETER_VALUE, object.id.toString()).asString(),
 						SafeStylesUtils.fromTrustedString(""), SafeHtmlUtils.fromString(object.title), 
-						SafeHtmlUtils.fromString("n pages"));
+						SafeHtmlUtils.fromString(numPages+" pages"));
 			}
 		};
 
