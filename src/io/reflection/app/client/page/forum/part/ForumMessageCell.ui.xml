@@ -3,6 +3,7 @@
     <ui:with field="authorName" type="java.lang.String" />
     <ui:with field="content" type="com.google.gwt.safehtml.shared.SafeHtml" />
     <ui:with field="created" type="java.lang.String" />
+    <ui:with field="link" type="com.google.gwt.safehtml.shared.SafeUri" />
     <!-- <ui:with field="topicId" type="java.lang.Long" />
     <ui:with field="messageId" type="java.lang.Long" /> -->
     <ui:with field="flagButtonHtml" type="com.google.gwt.safehtml.shared.SafeHtml"/>
@@ -43,6 +44,7 @@
     <div class="row">
         <div class="col-sm-2">
             <ui:text from="{authorName}" />
+            <a href="{link}" >#</a>
         </div>
 
         <div class="col-sm-10 {style.postContent}">

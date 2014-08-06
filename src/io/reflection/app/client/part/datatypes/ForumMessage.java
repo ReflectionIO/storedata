@@ -14,6 +14,8 @@ import io.reflection.app.datatypes.shared.User;
 
 import java.util.Date;
 
+import com.google.gwt.safehtml.shared.SafeUri;
+
 /**
  * This is a wrapper object around Topic and Reply.
  * It's needed in order to treat the content from a topic or reply as a single entity from the perspective of displaying them in a list.
@@ -27,6 +29,7 @@ public class ForumMessage {
 
 	private Topic topic;
 	private Reply reply;
+	private int index ;
 	Long currentuserId = SessionController.get().getLoggedInUser().id;
 
 	public Long getId() {
@@ -37,9 +40,10 @@ public class ForumMessage {
 		return topic.id;
 	}
 
-	public ForumMessage(Topic topic, Reply reply) {
+	public ForumMessage(Topic topic, Reply reply, int index) {
 		this.topic = topic;
 		this.reply = reply;
+		this.index = index ;
 	}
 	
 	public ForumMessage(Topic topic){
@@ -71,6 +75,13 @@ public class ForumMessage {
 	 */
 	public boolean belongsToCurrentUser() {
 		return getAuthor().id.equals(currentuserId) ;
+	}
+
+	/**
+	 * @return
+	 */
+	public int getIndex() {
+		return index ;
 	}
 
 }

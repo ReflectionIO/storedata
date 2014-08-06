@@ -183,7 +183,7 @@ public class ReplyController implements ServiceConstants {
 							
 							long i = start ;
 							for (Reply reply : output.replies) {
-								messagesLookup.put((int) i+1, new ForumMessage(input.topic, reply));
+								messagesLookup.put((int) i+1, new ForumMessage(input.topic, reply, (int) i+1));
 								replyStore.put(reply.id.intValue(), reply);
 								i++;
 							}
@@ -294,7 +294,7 @@ public class ReplyController implements ServiceConstants {
 		 */
 		public void setTopic(Topic topic) {
 			this.topic = topic ;
-			this.messagesLookup.append(0, new ForumMessage(topic, null));
+			this.messagesLookup.append(0, new ForumMessage(topic, null, 0));
 			
 		}
 

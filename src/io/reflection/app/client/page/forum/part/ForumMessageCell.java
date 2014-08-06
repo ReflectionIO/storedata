@@ -24,6 +24,8 @@ import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
+import com.google.gwt.safehtml.shared.SafeUri;
+import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiRenderer;
@@ -46,7 +48,7 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 	}
 
 	interface ForumMessageCellRenderer extends UiRenderer {
-		void render(SafeHtmlBuilder sb, String authorName, SafeHtml content, String created, SafeHtml flagButtonHtml, SafeHtml editButtonHtml);
+		void render(SafeHtmlBuilder sb, String authorName, SafeHtml content, String created, SafeHtml flagButtonHtml, SafeHtml editButtonHtml, SafeUri link);
 
 		void onBrowserEvent(ForumMessageCell o, NativeEvent e, Element p, ForumMessage n);
 
@@ -103,7 +105,8 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 			RENDERER.render(builder, FormattingHelper.getUserLongName(value.getAuthor()), SafeHtmlUtils.fromTrustedString(value.getContent()), "Posted "
 					+ FormattingHelper.getTimeSince(value.getCreated()),
 					value.belongsToCurrentUser() ? QuoteTemplate.INSTANCE.empty() : QuoteTemplate.INSTANCE.flagButton(),
-					value.belongsToCurrentUser() ? editButtonHtml : QuoteTemplate.INSTANCE.empty());
+					value.belongsToCurrentUser() ? editButtonHtml : QuoteTemplate.INSTANCE.empty(),
+							UriUtils.fromSafeConstant(PageType.ForumThreadPageType.asHref()+"/view/"+value.getTopicId()+"/post/"+value.getIndex()));
 		}
 
 	}
