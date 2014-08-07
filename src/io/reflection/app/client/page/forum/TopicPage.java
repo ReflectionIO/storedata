@@ -9,6 +9,7 @@ package io.reflection.app.client.page.forum;
 
 
 import io.reflection.app.api.forum.client.ForumService;
+
 import java.util.HashMap;
 
 import io.reflection.app.api.forum.shared.call.AddReplyRequest;
@@ -37,6 +38,7 @@ import io.reflection.app.client.part.ReflectionProgressBar;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.part.datatypes.ForumMessage;
 import io.reflection.app.client.part.text.RichTextToolbar;
+import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.Topic;
 import io.reflection.app.shared.util.FormattingHelper;
 
@@ -57,6 +59,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -108,11 +111,15 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 	public TopicPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		ReflectionProgressBar progress = new ReflectionProgressBar();
-		progress.getElement().getStyle().setTextAlign(TextAlign.CENTER);
-
 		messagesCellList.setPageSize(ServiceConstants.SHORT_STEP_VALUE);
-		messagesCellList.setLoadingIndicator(progress);
+		Image loadingIndicator = new Image(Images.INSTANCE.preloader());
+		
+		//not sure why this is needed here to centre, but can't see it used elsewhere in code.
+		loadingIndicator.getElement().getStyle().setDisplay(Display.BLOCK);
+		loadingIndicator.getElement().getStyle().setProperty("marginLeft", "auto");
+		loadingIndicator.getElement().getStyle().setProperty("marginRight", "auto");
+		
+		messagesCellList.setLoadingIndicator(loadingIndicator);
 		messagesCellList.setEmptyListWidget(new HTMLPanel("No messages found!"));
 
 		pager.setPageSize(ServiceConstants.SHORT_STEP_VALUE);
