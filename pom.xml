@@ -126,12 +126,27 @@
             <artifactId>gwt-crypto</artifactId>
             <version>2.3.0</version>
         </dependency>
+        <dependency>
+			<groupId>info.bliki.wiki</groupId>
+			<artifactId>bliki-core</artifactId>
+			<version>3.0.19</version>
+        </dependency>
     </dependencies>
     <repositories>
         <repository>
             <id>bedatadriven</id>
             <name>bedatadriven public repo</name>
             <url>http://nexus.bedatadriven.com/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>info-bliki-repository</id>
+            <url>http://gwtwiki.googlecode.com/svn/maven-repository/</url>
+            <releases>
+                    <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                    <enabled>false</enabled>
+            </snapshots>
         </repository>
     </repositories>
 </project>

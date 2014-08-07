@@ -20,6 +20,7 @@ import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.page.forum.part.ForumSummarySidePanel;
+import io.reflection.app.client.part.text.BlikiEditor;
 import io.reflection.app.client.part.text.RichTextToolbar;
 
 import com.google.gwt.core.client.GWT;
@@ -46,8 +47,8 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
 	@UiField CheckBox sticky;
 	@UiField ListBox forums;
 
-	@UiField RichTextToolbar contentToolbar;
-	@UiField RichTextArea contentText;
+//	@UiField RichTextToolbar contentToolbar;
+	@UiField BlikiEditor contentText;
 	
 	@UiField ForumSummarySidePanel forumSummarySidePanel ;
 
@@ -58,11 +59,11 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
 	public AddTopicPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		contentToolbar.setRichText(contentText);
+//		contentToolbar.setRichText(contentText);
 
 		title.getElement().setAttribute("placeholder", "Title");
 		tags.getElement().setAttribute("placeholder", "Comma separated tags");
-		contentText.getElement().setAttribute("placeholder", "Content");
+//		contentText.getElement().setAttribute("placeholder", "Content");
 
 		FilterHelper.addForums(forums);
 	}
@@ -103,7 +104,7 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
 			}
 
 			if (forumId != null) {
-				TopicController.get().createTopic(forumId, title.getText(), sticky.getValue(), contentText.getHTML(), tags.getText());
+				TopicController.get().createTopic(forumId, title.getText(), sticky.getValue(), contentText.getText(), tags.getText());
 			}
 		}
 	}
