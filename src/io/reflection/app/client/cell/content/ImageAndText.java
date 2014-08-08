@@ -7,13 +7,17 @@
 //
 package io.reflection.app.client.cell.content;
 
+import com.google.gwt.safehtml.shared.SafeHtml;
+
 
 /**
  * @author billy1380
  * 
  */
 public interface ImageAndText {
-	String getImageStyleName();
+	
+    String getImageStyleName();
 
-	String getText();
+    SafeHtml getText();
+    
 }

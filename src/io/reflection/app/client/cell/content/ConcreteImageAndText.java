@@ -7,6 +7,8 @@
 //
 package io.reflection.app.client.cell.content;
 
+import com.google.gwt.safehtml.shared.SafeHtml;
+
 
 /**
  * @author billy1380
@@ -14,13 +16,13 @@ package io.reflection.app.client.cell.content;
  */
 public class ConcreteImageAndText implements ImageAndText {
 
-	private String text;
+	private SafeHtml text;
 	private String imageStyleName;
 
 	/**
 	 * 
 	 */
-	public ConcreteImageAndText(String imageStyleName, String text) {
+	public ConcreteImageAndText(String imageStyleName, SafeHtml text) {
 		this.imageStyleName = imageStyleName;
 		this.text = text;
 	}
@@ -37,8 +39,9 @@ public class ConcreteImageAndText implements ImageAndText {
 	 * @see io.reflection.app.client.cell.content.ImageAndText#getText()
 	 */
 	@Override
-	public String getText() {
+	public SafeHtml getText() {
 		return text;
 	}
+
 
 }
