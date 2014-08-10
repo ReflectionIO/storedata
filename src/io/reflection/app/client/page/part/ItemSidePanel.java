@@ -74,12 +74,13 @@ public class ItemSidePanel extends Composite {
         setPriceInnerHTML(value.floatValue() == 0 ? "Free" : FormattingHelper.getCurrencySymbol(currency) + " " + value);
     }
     
-    private void setLoaderVisible(boolean visible){
+    public void setLoaderVisible(boolean visible){
         spinnerLoader.setVisible(visible);
     }
     
     public void setPriceInnerHTML(String s){
         price.setInnerHTML(s);
     }
+    
 
 }
