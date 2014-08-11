@@ -44,7 +44,7 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
 	@UiField TextBox title;
 	@UiField TextBox tags;
 
-	@UiField CheckBox sticky;
+
 	@UiField ListBox forums;
 
 //	@UiField RichTextToolbar contentToolbar;
@@ -104,7 +104,7 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
 			}
 
 			if (forumId != null) {
-				TopicController.get().createTopic(forumId, title.getText(), sticky.getValue(), contentText.getText(), tags.getText());
+				TopicController.get().createTopic(forumId, title.getText(), false, contentText.getText(), tags.getText());
 			}
 		}
 	}
@@ -118,7 +118,6 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
 		title.setText("");
 		contentText.setText("");
 		tags.setText("");
-		sticky.setValue(Boolean.FALSE);
 
 		// hide errors and remove clear validation strings
 	}

@@ -18,9 +18,11 @@
                         <g:TextBox styleName="form-control" ui:field="title" />
                         <g:HTMLPanel styleName="noteDetail" ui:field="titleNote" visible="false" />
                     </g:HTMLPanel>
-
-                    <g:HTMLPanel>
-                        <g:CheckBox ui:field="sticky" checked="false">Sticky (sticks to the top)</g:CheckBox>
+                    
+                    <g:HTMLPanel styleName="form-group">
+                        <label>Forum</label>
+                        <g:ListBox styleName="form-control" ui:field="forums">
+                        </g:ListBox>
                     </g:HTMLPanel>
 
                     <g:HTMLPanel ui:field="contentGroup" styleName="form-group">
@@ -29,12 +31,6 @@
                         <g:RichTextArea ui:field="contentText" styleName="form-control {style.textArea}" /> -->
                         <p:BlikiEditor ui:field="contentText"/>
                         <g:HTMLPanel styleName="noteDetail" ui:field="contentNote" visible="false" />
-                    </g:HTMLPanel>
-
-                    <g:HTMLPanel styleName="form-group">
-                        <label>Forum</label>
-                        <g:ListBox styleName="form-control" ui:field="forums">
-                        </g:ListBox>
                     </g:HTMLPanel>
 
                     <g:HTMLPanel ui:field="tagsGroup" styleName="form-group">
