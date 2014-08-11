@@ -64,9 +64,7 @@ public class ItemSidePanel extends Composite {
         storeName.setInnerHTML((s == null || s.name == null || s.name.length() == 0) ? item.source.toUpperCase() + " Store" : s.name);
 
         viewInStore.setHref(StoreController.get().getExternalUri(item));
-        
-        setPriceInnerHTML("");
-        setLoaderVisible(true);
+                            
     }
 
     public void setPrice(String currency, Float value) {
