@@ -6,6 +6,7 @@
     <ui:with field="link" type="com.google.gwt.safehtml.shared.SafeUri" />
     <!-- <ui:with field="topicId" type="java.lang.Long" />
     <ui:with field="messageId" type="java.lang.Long" /> -->
+    <ui:with field="backgroundColour" type="java.lang.String" />
     <ui:with field="flagButtonHtml" type="com.google.gwt.safehtml.shared.SafeHtml"/>
     <ui:with field="editButtonHtml" type="com.google.gwt.safehtml.shared.SafeHtml"/>
     <ui:import field="io.reflection.app.client.page.PageType.ForumThreadPageType" />
@@ -41,7 +42,7 @@
 	}
     </ui:style>
 
-    <div class="row">
+    <div class="row {backgroundColour}">
         <div class="col-sm-2">
             <ui:text from="{authorName}" />
             <a href="{link}" >#</a>

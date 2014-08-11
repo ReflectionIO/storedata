@@ -20,6 +20,9 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.ClientBundle.Source;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -48,10 +51,26 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 	}
 
 	interface ForumMessageCellRenderer extends UiRenderer {
-		void render(SafeHtmlBuilder sb, String authorName, SafeHtml content, String created, SafeHtml flagButtonHtml, SafeHtml editButtonHtml, SafeUri link);
+		void render(SafeHtmlBuilder sb, String authorName, SafeHtml content, String created, SafeHtml flagButtonHtml, SafeHtml editButtonHtml, SafeUri link, String backgroundColour);
 
 		void onBrowserEvent(ForumMessageCell o, NativeEvent e, Element p, ForumMessage n);
 
+	}
+	
+	public interface TopicResources extends ClientBundle {
+		  public static final TopicResources INSTANCE =  GWT.create(TopicResources.class);
+
+		  @Source("topic.css")
+		  public TopicCss css();
+
+		}
+
+	interface TopicCss extends CssResource {
+		@ClassName("oddRow")
+		String oddRowClass();
+		
+		@ClassName("evenRow")
+		String evenRowClass();
 	}
 
 	private static ForumMessageCellRenderer RENDERER = GWT.create(ForumMessageCellRenderer.class);
@@ -91,22 +110,31 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 	 */
 	@Override
 	public void render(com.google.gwt.cell.client.Cell.Context context, ForumMessage value, SafeHtmlBuilder builder) {
+		
+		TopicCss css = TopicResources.INSTANCE.css();
+		css.ensureInjected();
 
 		/* The CellList will render rows of nulls if the paging goes beyond the end of the list */
 		if (value != null)
 		{
-		
 			// put template string empty or template with button
 			// id insetad username
 			// value has author
 			// ForumMessage ad property to check the user
 			SafeHtml editButtonHtml = QuoteTemplate.INSTANCE.editButton(PageType.ForumEditTopicPageType.asHref().asString(), value.getTopicId(), value.getId());
+			
+			String color = css.oddRowClass();
+			if (context.getIndex() % 2 == 1)
+				color = css.evenRowClass();
 	
 			RENDERER.render(builder, FormattingHelper.getUserLongName(value.getAuthor()), SafeHtmlUtils.fromTrustedString(value.getContent()), "Posted "
 					+ FormattingHelper.getTimeSince(value.getCreated()),
 					value.belongsToCurrentUser() ? QuoteTemplate.INSTANCE.empty() : QuoteTemplate.INSTANCE.flagButton(),
 					value.belongsToCurrentUser() ? editButtonHtml : QuoteTemplate.INSTANCE.empty(),
-							UriUtils.fromSafeConstant(PageType.ForumThreadPageType.asHref()+"/view/"+value.getTopicId()+"/post/"+value.getIndex()));
+							UriUtils.fromSafeConstant(PageType.ForumThreadPageType.asHref()+"/view/"+value.getTopicId()+"/post/"+value.getIndex()), 
+							color);
+			
+			
 		}
 
 	}
