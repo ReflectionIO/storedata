@@ -7,7 +7,7 @@
 //
 package io.reflection.app.client.part.text;
 
-import info.bliki.wiki.model.WikiModel;
+
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
@@ -23,6 +23,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.TextArea;
@@ -38,8 +39,11 @@ public class BlikiEditor extends Composite implements HasText{
 	private static BlikiEditorUiBinder uiBinder = GWT.create(BlikiEditorUiBinder.class);
 	@UiField TextArea textArea;
 	@UiField Frame iframe;
-	@UiField TabLayoutPanel tabLayout;
-
+	@UiField TabPanel tabLayout;
+	
+	@UiField Button bold;
+	@UiField Button italic;
+	
 	interface BlikiEditorUiBinder extends UiBinder<Widget, BlikiEditor> {}
 
 	/**
@@ -58,36 +62,47 @@ public class BlikiEditor extends Composite implements HasText{
 		
 		textArea.getElement().addClassName("form-control");
 		iframe.getElement().addClassName("form-control");
+		
+//		Processor.process("Change me int **markup** now please.");
+//		String test = processor.markdown("whatever **so** cool");
+		
+		bold.getElement().setInnerHTML("<span class=\"icon-bold\"></span>");
+		italic.getElement().setInnerHTML("<span class=\"icon-italic\"></span>");
+		
+//		tabLayout.getTabBar()
+		
+		tabLayout.selectTab(0);
+		
 		tabLayout.addBeforeSelectionHandler(new BeforeSelectionHandler<Integer>(){
 
 			@Override
 			public void onBeforeSelection(BeforeSelectionEvent<Integer> event) {
 				//we're about to change tabs
 				Integer indx = event.getItem();
+				
 				if (indx == 1)
 				{
-					String htmlText = WikiModel.toHtml("This is a simple [[Hello World]] wiki tag");
 					FrameElement frameElement = (FrameElement) (Object) iframe.getElement();
 					
 					Document contentDocument = frameElement.getContentDocument(); 
-	                Element targetElement = contentDocument.getElementsByTagName("head") 
-	                                .getItem(0); 
+	                Element bodyElement = contentDocument.getElementsByTagName("body") 
+	                			.getItem(0);
 
-	                if(targetElement == null){ 
-	                        targetElement = contentDocument.getDocumentElement() 
-	                                        .getFirstChildElement(); 
-
-	                if(targetElement == null){ 
-	                        contentDocument.insertFirst(targetElement = contentDocument 
-	                                        .createElement("head")); 
-	                        } 
-	                }
-	                targetElement.appendChild(contentDocument.createTextNode("Blalalalalalalalalalla"));
-
+					if (bodyElement == null) {
+						contentDocument.insertFirst(bodyElement = contentDocument.createElement("body"));
+					}
+					bodyElement.removeAllChildren();
 					
+					//styles to be included in the header.
+//					<link rel="stylesheet" href="bootstrap-v3.1.1/css/bootstrap.min.css">
+//					<link rel="stylesheet" href="reflectionglphs-v5/css/reflectionglyphs.css">
+//					<link href="favicon.ico" rel="icon" type="image/x-icon">
+//					<link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:400,600" rel="stylesheet" type="text/css">
+//					<link href="//fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet" type="text/css">
+//					<link href="//fonts.googleapis.com/css?family=Oswald" rel="stylesheet" type="text/css">
+
+					bodyElement.appendChild(contentDocument.createTextNode("Blalalalalalalalalalla"));
 				}
-				
-				
 			}	
 		});
 	}

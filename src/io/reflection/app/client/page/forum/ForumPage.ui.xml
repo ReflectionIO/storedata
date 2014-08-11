@@ -16,6 +16,11 @@
     .filler {
         height: 40px;
     }
+
+    .header2 {
+        margin-top:0px;
+        margin-bottom:0px;
+    }   
     </ui:style>
 	<g:HTMLPanel styleName="row">
 		<pp:ForumSummarySidePanel ui:field="forumSummarySidePanel"
@@ -24,12 +29,11 @@
 		<div class="col-sm-9">
 			<g:HTMLPanel styleName="well {style.toolbar_spacing}">
 			    <div class="row">
-			        <h2 ui:field="titleText"></h2>
-				<g:InlineHyperlink styleName="btn btn-primary col-sm-2 pull-right"
-					targetHistoryToken="{ForumTopicPageType.asTargetHistoryToken}/new">
-				    New Topic <span class="icon-plus"></span>
-				</g:InlineHyperlink>
-					
+			        <h2 class="col-sm-2 {style.header2}" ui:field="titleText"></h2>
+					<g:InlineHyperlink styleName="btn btn-primary col-sm-2 pull-right"
+						targetHistoryToken="{ForumTopicPageType.asTargetHistoryToken}/new">
+					    New Topic <span class="icon-plus"></span>
+					</g:InlineHyperlink>
 				</div>
 			</g:HTMLPanel>
 
