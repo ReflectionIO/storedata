@@ -3,12 +3,12 @@
 	<cron>
 		<url>/cron?store=ios</url>
 		<description>Gather iOS store data</description>
-		<schedule>every 12 hours from 01:00 to 13:00</schedule>
+		<schedule>every 12 hours from 10:00 to 22:00</schedule>
 	</cron>
     <cron>
         <url>/cron?deletesome=Rank</url>
         <description>Removes some ranks</description>
-        <schedule>every 12 hours from 05:00 to 17:00</schedule>
+        <schedule>every 12 hours from 03:00 to 15:00</schedule>
     </cron>
     <!-- <cron>
         <url>/cron?deletesome=Item</url>
@@ -18,7 +18,7 @@
     <cron>
         <url>/cron?process=accounts</url>
         <description>Gather data account (linked account data)</description>
-        <schedule>every day 15:01</schedule>
+        <schedule>every day 17:01</schedule>
     </cron>
     <cron>
         <url>/cron?tidy=item</url>
@@ -28,6 +28,6 @@
     <cron>
         <url>/cron?process=itemproperties</url>
         <description>Get missing item properties</description>
-        <schedule>every day 22:00</schedule>
+        <schedule>every day 20:00</schedule>
     </cron>
 </cronentries> 
