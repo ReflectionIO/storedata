@@ -40,31 +40,38 @@
 	.forumMessageQuoteAuthor {
 	   background: blue;
 	}
+
+    .smaller {
+        font-size: smaller;
+    }
+
+    a {
+        margin-left:3px;
+        margin-right:3px;
+    }
     </ui:style>
 
     <div class="row {backgroundColour}">
         <div class="col-sm-2">
             <ui:text from="{authorName}" />
-            <a href="{link}" >#</a>
+            <div class="{style.smaller}">
+             <ui:text from="{created}"  />
+             </div>
         </div>
 
         <div class="col-sm-10 {style.postContent}">
             <div>
                 <ui:safehtml from="{content}" />
             </div>
-            <div class="{style.split}">
-                <ui:text from="{created}" />
+           
+               
                 <div class="pull-right">
-
-                    <ui:safehtml from = "{editButtonHtml}"/>                    
+                    <a href="{link}" >Link</a> | 
+                    <ui:safehtml from = "{editButtonHtml}"/>                 
                     <ui:safehtml from ="{flagButtonHtml}"/>
-                    
-                    <a class="btn btn-default btn-xs" ui:field="quote">
-                        <i class="glyphicon glyphicon-pencil"></i>
-                        Quote
-                    </a>
+                    <a ui:field="quote">Quote</a>
                 </div>
-            </div>
+            
         </div>
     </div>
 

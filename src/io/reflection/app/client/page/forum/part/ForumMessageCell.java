@@ -71,6 +71,9 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 		
 		@ClassName("evenRow")
 		String evenRowClass();
+
+		@ClassName("companyRow")
+		String companyRowClass();
 	}
 
 	private static ForumMessageCellRenderer RENDERER = GWT.create(ForumMessageCellRenderer.class);
@@ -85,10 +88,10 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 									"<span class=\"Apple-tab-span\" style=\"white-space:pre\">\t</span>\"{1}\"</div></blockquote><br/>")
 		SafeHtml quoteLayout(SafeHtml author, SafeHtml message);
 
-		@SafeHtmlTemplates.Template("<a href=\"flag\" class=\"btn btn-warning btn-xs\" ui:field=\"flagButton\"><i class=\"glyphicon glyphicon-flag\"></i>Flag</a>")
+		@SafeHtmlTemplates.Template("<a href=\"flag\" class=\"\" ui:field=\"flagButton\"><i class=\"glyphicon glyphicon-flag\"></i>Flag</a> | ")
 		SafeHtml flagButton();
 
-		@SafeHtmlTemplates.Template("<a href=\"{0}/view/{1}/edit/{2}\" class=\"btn btn-default btn-xs\" ui:field=\"editButton\"><i class=\"glyphicon glyphicon-pencil\"></i>Edit</a>")
+		@SafeHtmlTemplates.Template("<a href=\"{0}/view/{1}/edit/{2}\" class=\"\" ui:field=\"editButton\">Edit</a> | ")
 		SafeHtml editButton(String pageHref, long topicId, long messageId);
 
 		@SafeHtmlTemplates.Template("")
@@ -117,24 +120,23 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 		/* The CellList will render rows of nulls if the paging goes beyond the end of the list */
 		if (value != null)
 		{
-			// put template string empty or template with button
-			// id insetad username
-			// value has author
-			// ForumMessage ad property to check the user
 			SafeHtml editButtonHtml = QuoteTemplate.INSTANCE.editButton(PageType.ForumEditTopicPageType.asHref().asString(), value.getTopicId(), value.getId());
 			
 			String color = css.oddRowClass();
 			if (context.getIndex() % 2 == 1)
 				color = css.evenRowClass();
-	
-			RENDERER.render(builder, FormattingHelper.getUserLongName(value.getAuthor()), SafeHtmlUtils.fromTrustedString(value.getContent()), "Posted "
-					+ FormattingHelper.getTimeSince(value.getCreated()),
+			
+			//Enable this when we when we have the data to demonstrate both cases.
+			
+//			if (value.getAuthor().company.equals("Reflection"))
+//					color = css.companyRowClass();
+
+			RENDERER.render(builder, FormattingHelper.getUserName(value.getAuthor()), SafeHtmlUtils.fromTrustedString(value.getContent()), 
+					FormattingHelper.getTimeSince(value.getCreated()),
 					value.belongsToCurrentUser() ? QuoteTemplate.INSTANCE.empty() : QuoteTemplate.INSTANCE.flagButton(),
 					value.belongsToCurrentUser() ? editButtonHtml : QuoteTemplate.INSTANCE.empty(),
 							UriUtils.fromSafeConstant(PageType.ForumThreadPageType.asHref()+"/view/"+value.getTopicId()+"/post/"+value.getIndex()), 
 							color);
-			
-			
 		}
 
 	}
