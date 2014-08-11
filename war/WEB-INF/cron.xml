@@ -4,7 +4,6 @@
 		<url>/cron?store=ios</url>
 		<description>Gather iOS store data</description>
 		<schedule>every 12 hours from 01:00 to 13:00</schedule>
-        <target>crons</target>
 	</cron>
     <cron>
         <url>/cron?deletesome=Rank</url>
@@ -20,7 +19,6 @@
         <url>/cron?process=accounts</url>
         <description>Gather data account (linked account data)</description>
         <schedule>every day 15:01</schedule>
-        <target>crons</target>
     </cron>
     <cron>
         <url>/cron?tidy=item</url>
