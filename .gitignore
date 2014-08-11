@@ -1,3 +1,11 @@
 /sdk
 /gwt-unitCache
 /.gwt
+
+/war/app
+
+/war/WEB-INF/deploy
+/war/WEB-INF/classes
+/war/WEB-INF/appengine-generated
+/war/WEB-INF/lib
+/war/WEB-INF/m2e-wtp
