@@ -141,7 +141,7 @@ public class ReplyController implements ServiceConstants {
 		}
 
 		public Reply getReply(Long replyId) {
-			return replyStore.get(replyId);
+			return replyStore.get(replyId.intValue());
 		}
 
 		/**

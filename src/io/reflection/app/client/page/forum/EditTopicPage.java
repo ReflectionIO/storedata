@@ -17,6 +17,7 @@ import io.reflection.app.client.controller.ReplyController;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
+import io.reflection.app.client.part.text.BlikiEditor;
 import io.reflection.app.client.part.text.RichTextToolbar;
 import io.reflection.app.datatypes.shared.Reply;
 
@@ -44,12 +45,11 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
 	private Long replyId;
 	private Reply reply;
 	private String replyContent;
-	@UiField RichTextToolbar editToolbar;
-	@UiField RichTextArea editText;
+
+	@UiField BlikiEditor editText ;
 
 	public EditTopicPage() {
 		initWidget(uiBinder.createAndBindUi(this));
-		editToolbar.setRichText(editText);
 
 	}
 
@@ -90,9 +90,9 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
 
 				if (topicId != null) {
 					reply = ReplyController.get().getReply(replyId);
-					replyContent = reply.content.toString();
 
 					if (reply != null) {
+						replyContent = reply.content.toString();
 						show();
 					}
 				}
@@ -106,7 +106,7 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
 	private void show() {
 		editText.setFocus(true);
 		Document.get().setScrollTop(editText.getAbsoluteTop());
-		editText.setHTML(replyContent);
+		editText.setText(replyContent);
 
 	}
 
@@ -115,9 +115,9 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
 
 		if (validate()) {
 			if (replyId != null) {
-				ReplyController.get().updateReply(replyId, editText.getHTML());
+				ReplyController.get().updateReply(replyId, editText.getText());
 			} else {
-				ReplyController.get().addReply(replyId, editText.getHTML());
+				ReplyController.get().addReply(replyId, editText.getText());
 			}
 		}
 	}
