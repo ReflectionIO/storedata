@@ -139,7 +139,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
         } else {
             revenue.setRowCount(0, true);
         }
-    }    
+    }
 
     private void createColumns() {
 
@@ -260,8 +260,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
                 if (internalId == null || !internalId.equals(newInternalId)) {
                     isNewDataRequired = true;
 
-                    setLoadingSpinnerEnabled(true);
-
                     internalId = newInternalId;
 
                     if ((item = ItemController.get().lookupItem(internalId)) != null) {
@@ -294,8 +292,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
                 }
 
                 mRevenue.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(VIEW_ACTION_NAME, internalId, REVENUE_CHART_TYPE, filterContents));
-                mDownloads
-                        .setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(VIEW_ACTION_NAME, internalId, DOWNLOADS_CHART_TYPE, filterContents));
+                mDownloads.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(VIEW_ACTION_NAME, internalId, DOWNLOADS_CHART_TYPE, filterContents));
                 mRanking.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(VIEW_ACTION_NAME, internalId, RANKING_CHART_TYPE, filterContents));
 
                 mTopPanel.updateFromFilter();
@@ -316,6 +313,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
                 }
 
                 if (isNewDataRequired) {
+                    setLoadingSpinnerEnabled(true);
+                    mSidePanel.setPriceInnerHTML("");
+                    mSidePanel.setLoaderVisible(true);
                     getHistoryChartData();
                 }
 
@@ -345,6 +345,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
         if (rank != null) {
             mSidePanel.setPrice(rank.currency, rank.price);
+        }else{
+            mSidePanel.setPriceInnerHTML("-");
         }
     }
 
@@ -431,18 +433,17 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
                 historyChart.setData(output.item, output.ranks);
 
                 // mAlertBox.dismiss();
+            } else {
+                mSidePanel.setLoaderVisible(false);
+                mSidePanel.setPriceInnerHTML("-");                
             }
-            // else {
-            // AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.WarningAlertBoxType, false, "Warning", " - Item rank history could not be obtained!",
-            // false).setVisible(true);
-            // }
         } else {
             mSidePanel.setLoaderVisible(false);
             mSidePanel.setPriceInnerHTML("-");
-            setLoadingSpinnerEnabled(false);
-        }
+        }        
+        setLoadingSpinnerEnabled(false);
         preloader.hide();
-        
+
     }
 
     /*
@@ -463,8 +464,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
     private void getHistoryChartData() {
         if (item != null) {
             historyChart.setLoading(true);
-            //mSidePanel.setPriceInnerHTML("");
-            //mSidePanel.setLoaderVisible(true);
             preloader.show(true);
             if (LinkedAccountController.get().getLinkedAccountItem(item) != null) {
                 RankController.get().fetchItemSalesRanks(item);
@@ -480,7 +479,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
     @Override
     public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
         if (NavigationController.get().getCurrentPage() == PageType.ItemPageType) {
-            setLoadingSpinnerEnabled(true);
             PageType.ItemPageType.show(VIEW_ACTION_NAME, internalId, selectedTab, FilterController.get().asItemFilterString());
         }
     }
@@ -493,7 +491,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
     @Override
     public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
         if (NavigationController.get().getCurrentPage() == PageType.ItemPageType) {
-            setLoadingSpinnerEnabled(true);
             PageType.ItemPageType.show(VIEW_ACTION_NAME, internalId, selectedTab, FilterController.get().asItemFilterString());
         }
     }
@@ -518,6 +515,10 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
                 // redraw the graph with the new data
                 historyChart.setData(output.item, output.ranks);
 
+            }else{
+                mSidePanel.setLoaderVisible(false);
+                mSidePanel.setPriceInnerHTML("-");
+                setLoadingSpinnerEnabled(false);
             }
         } else {
             mSidePanel.setLoaderVisible(false);
