@@ -7,10 +7,15 @@
 //
 package io.reflection.app.client.part.text;
 
+import java.io.IOException;
+
+import org.markdown4j.Markdown4jProcessor;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.FrameElement;
+import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.BeforeSelectionEvent;
@@ -76,23 +81,28 @@ public class BlikiEditor extends Composite implements HasText {
 				if (indx == 1) {
 					FrameElement frameElement = (FrameElement) (Object) iframe.getElement();
 
-					Document contentDocument = frameElement.getContentDocument();
-					Element bodyElement = contentDocument.getElementsByTagName("body").getItem(0);
-
-					if (bodyElement == null) {
-						contentDocument.insertFirst(bodyElement = contentDocument.createElement("body"));
-					}
-					bodyElement.removeAllChildren();
-
 					// styles to be included in the header.
-					// <link rel="stylesheet" href="bootstrap-v3.1.1/css/bootstrap.min.css">
-					// <link rel="stylesheet" href="reflectionglphs-v5/css/reflectionglyphs.css">
-					// <link href="favicon.ico" rel="icon" type="image/x-icon">
-					// <link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:400,600" rel="stylesheet" type="text/css">
-					// <link href="//fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet" type="text/css">
-					// <link href="//fonts.googleapis.com/css?family=Oswald" rel="stylesheet" type="text/css">
-
-					bodyElement.appendChild(contentDocument.createTextNode("Blalalalalalalalalalla"));
+					
+					String header = "<meta http-equiv='content-type' content='text/html; charset=UTF-8'>"+
+					"<link rel='stylesheet' href='/bootstrap-v3.1.1/css/bootstrap.min.css'>\n" +
+	                "<link rel='stylesheet' href='/reflectionglphs-v5/css/reflectionglyphs.css'>\n" +
+	                "<link href='favicon.ico' rel='icon' type='image/x-icon'>\n" +
+	                "<link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:400,600' rel='stylesheet' type='text/css'>\n" +
+	                "<link href='//fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>\n" +
+	                "<link href='//fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>";
+					
+					try {
+						String previewHtml = new Markdown4jProcessor().process(textArea.getText()) ;
+						
+						//This doesn't work... because it is tempting to think it would
+						//frameElement.setInnerHTML(previewHtml);
+						
+						BlikiEditor.this.fillIframe(frameElement, previewHtml, header);
+						
+//						bodyElement.appendChild(contentDocument.createTextNode(previewHtml));
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		});
@@ -158,4 +168,27 @@ public class BlikiEditor extends Composite implements HasText {
 	public void setFocus(boolean b) {
 		textArea.setFocus(b);
 	}
+	
+	/**
+	 * http://bealetech.com/blog/2010/01/25/embedding-html-document-in-an-iframe-with-gwt/
+	 * and an alternative
+	 * https://groups.google.com/forum/#!topic/google-web-toolkit/mjzFLq8s1v4
+	 * 
+	 * */
+	private final native void fillIframe(FrameElement iframe, String content, String header) /*-{
+		  var doc = iframe.document;
+
+		  if(iframe.contentDocument)
+		    doc = iframe.contentDocument; // For NS6
+		  else if(iframe.contentWindow)
+		    doc = iframe.contentWindow.document; // For IE5.5 and IE6
+
+		   // Put the content in the iframe
+		  doc.open();
+		  doc.writeln('<head>'+header+'</head>');
+		  doc.writeln('<body>'+content+'</body>');
+		  doc.close();
+		}-*/;
+	
+	
 }
