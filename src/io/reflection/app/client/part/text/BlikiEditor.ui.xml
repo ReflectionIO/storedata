@@ -27,7 +27,7 @@
 			                <g:Button styleName="btn btn-default" ui:field="bold" />
 			                <g:Button styleName="btn btn-default" ui:field="italic" />
 	                    </g:HTMLPanel>
-	                    <g:TextArea addStyleNames="{style.marginTop}" ui:field="textArea" width="100%" height="200px" text="daniel is cool [[so there]] lalala"/>
+	                    <g:TextArea addStyleNames="{style.marginTop}" ui:field="textArea" width="100%" height="200px" text=""/>
                     </g:HTMLPanel>
 					
 				<!-- </g:VerticalPanel> -->

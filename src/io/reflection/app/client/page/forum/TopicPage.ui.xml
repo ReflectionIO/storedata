@@ -65,9 +65,10 @@
             <g:FormPanel styleName="col-sm-10 col-sm-offset-1" ui:field="replyForm">
                 <g:HTMLPanel>
                     <g:HTMLPanel ui:field="replyGroup" styleName="form-group">
-                        <label>Reply</label>
-                        <p:RichTextToolbar ui:field="replyToolbar" />
-                        <g:RichTextArea ui:field="replyText" styleName="form-control {style.textArea}" />
+                        <label>Content</label>
+                        <!-- <p:RichTextToolbar ui:field="contentToolbar" />
+                        <g:RichTextArea ui:field="contentText" styleName="form-control {style.textArea}" /> -->
+                        <p:BlikiEditor ui:field="replyText"/>
                         <g:HTMLPanel styleName="noteDetail" ui:field="replyNote" visible="false" />
                     </g:HTMLPanel>
 
