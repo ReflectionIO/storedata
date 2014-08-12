@@ -151,4 +151,11 @@ public class BlikiEditor extends Composite implements HasText {
 			textArea.setText(newString);
 		}
 	}
+
+	/**
+	 * @param b
+	 */
+	public void setFocus(boolean b) {
+		textArea.setFocus(b);
+	}
 }

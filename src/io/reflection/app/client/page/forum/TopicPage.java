@@ -31,6 +31,7 @@ import io.reflection.app.client.page.forum.part.ForumSummarySidePanel;
 import io.reflection.app.client.part.BootstrapGwtCellList;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.part.datatypes.ForumMessage;
+import io.reflection.app.client.part.text.BlikiEditor;
 import io.reflection.app.client.part.text.RichTextToolbar;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.Topic;
@@ -83,16 +84,13 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 	
 	@UiField Button replyLink; 
 	@UiField Button post;
+	
+	@UiField HTMLPanel replyGroup ;
+	@UiField HTMLPanel replyNote ;
 
 	@UiField FormPanel replyForm;
-
-	@UiField HTMLPanel replyGroup;
-
-	@UiField HTMLPanel replyNote;
-
-	@UiField RichTextArea replyText;
-	@UiField RichTextToolbar replyToolbar;
-
+	
+	@UiField BlikiEditor replyText;
 	@UiField SimplePager pager;
 	
 	@UiField HTMLPanel adminButtons ;
@@ -120,8 +118,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
 		pager.setPageSize(ServiceConstants.SHORT_STEP_VALUE);
 
-		replyToolbar.setRichText(replyText);
-		cellPrototype.setRichText(replyText);
+		
 		
 		if (SessionController.get().isLoggedInUserAdmin())
 			addAdminButtons();
@@ -235,14 +232,14 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 	@UiHandler("post")
 	void postReplyClicked(ClickEvent event) {
 		if (validate()) {
-			ReplyController.get().addReply(topicId, replyText.getHTML());
+			ReplyController.get().addReply(topicId, replyText.getText());
 		}
 	}
 
 	private boolean validate() {
 		boolean isValid = false;
 		// TODO should probably take into account quoted text
-		if (replyText.getHTML().trim().length() > 0) {
+		if (replyText.getText().trim().length() > 0) {
 			FormHelper.hideNote(replyGroup, replyNote);
 			isValid = true;
 		} else {
