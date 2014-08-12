@@ -14,11 +14,12 @@
     <g:HTMLPanel>
         <g:FormPanel styleName="col-sm-10 col-sm-offset-2" ui:field="editForm">
             <g:HTMLPanel>
-
+                
                 <g:HTMLPanel ui:field="editGroup" styleName="form-group">
-                    <label>Edit</label>
-                    <p:RichTextToolbar ui:field="editToolbar" />
-                    <g:RichTextArea ui:field="editText" styleName="form-control {style.textArea}" />
+                    <label>Content</label>
+                    <!-- <p:RichTextToolbar ui:field="contentToolbar" />
+                    <g:RichTextArea ui:field="contentText" styleName="form-control {style.textArea}" /> -->
+                    <p:BlikiEditor ui:field="editText"/>
                     <g:HTMLPanel styleName="noteDetail" ui:field="editNote" visible="false" />
                 </g:HTMLPanel>
 
