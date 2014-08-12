@@ -55,7 +55,8 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
     private Pager pager;
     private SparseArray<Post> postLookup = null;
     private SparseArray<Post> postsLookup = null;
-    private Preloader preloaderPosts;
+    
+    private Preloader preloaderPosts = null;
 
     private static PostController one = null;
 
@@ -68,7 +69,11 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
     }
 
     private void fetchPosts() {
-        preloaderPosts.show();
+    	
+    	if (preloaderPosts != null) {
+    		preloaderPosts.show();
+    	}
+    	
         BlogService service = ServiceCreator.createBlogService();
 
         final GetPostsRequest input = new GetPostsRequest();
