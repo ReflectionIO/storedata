@@ -8,10 +8,6 @@
 package io.reflection.app.client.page.forum;
 
 
-import io.reflection.app.api.forum.client.ForumService;
-
-import java.util.HashMap;
-
 import io.reflection.app.api.forum.shared.call.AddReplyRequest;
 import io.reflection.app.api.forum.shared.call.AddReplyResponse;
 import io.reflection.app.api.forum.shared.call.GetTopicRequest;
@@ -19,7 +15,6 @@ import io.reflection.app.api.forum.shared.call.GetTopicResponse;
 import io.reflection.app.api.forum.shared.call.event.AddReplyEventHandler;
 import io.reflection.app.api.forum.shared.call.event.GetTopicEventHandler;
 import io.reflection.app.client.controller.EventController;
-import io.reflection.app.client.controller.ForumController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.ReplyController;
@@ -34,7 +29,6 @@ import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.page.forum.part.ForumMessageCell;
 import io.reflection.app.client.page.forum.part.ForumSummarySidePanel;
 import io.reflection.app.client.part.BootstrapGwtCellList;
-import io.reflection.app.client.part.ReflectionProgressBar;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.part.datatypes.ForumMessage;
 import io.reflection.app.client.part.text.RichTextToolbar;
@@ -42,12 +36,13 @@ import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.Topic;
 import io.reflection.app.shared.util.FormattingHelper;
 
+import java.util.HashMap;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.Style.Display;
-import com.google.gwt.dom.client.Style.TextAlign;
 import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -57,7 +52,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RichTextArea;
@@ -79,13 +73,15 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
 	interface TopicPageUiBinder extends UiBinder<Widget, TopicPage> {}
 
-	@UiField HeadingElement title;
+	@UiField HeadingElement topicTitle;
+	@UiField HeadingElement forumTitle;
 	@UiField UListElement notes;
 
 	private ForumMessageCell cellPrototype = new ForumMessageCell();
 	@UiField(provided = true) CellList<ForumMessage> messagesCellList = new CellList<ForumMessage>(cellPrototype, BootstrapGwtCellList.INSTANCE);
 
-	@UiField Button reply;
+	
+	@UiField Button replyLink; 
 	@UiField Button post;
 
 	@UiField FormPanel replyForm;
@@ -137,6 +133,15 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 //		  dataProvider.registerListeners();
 //		  
 //		  dataProvider.addDataDisplay(messages);
+		
+		replyLink.addClickHandler(new ClickHandler()
+		{
+			@Override
+			public void onClick(ClickEvent event) {
+				post.getElement().scrollIntoView();
+			}
+		});
+	
 		 
 	}
 	
@@ -148,12 +153,10 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 			this.getStyleElement().addClassName("btn-default");
 		}
 
-		
 		@Override
 		public void onClick(ClickEvent event) {
 			TopicController.get().setSticky(topicId, true);
 		}
-		
 	}
 	
 	class LockButton extends Button implements ClickHandler {
@@ -308,8 +311,8 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 				properties += "<i class=\"glyphicon glyphicon-pushpin\"></i> ";
 			}
 
-			title.setInnerHTML(properties + topic.title);
-			
+			topicTitle.setInnerHTML(properties + topic.title);
+			forumTitle.setInnerText(topic.forum.title);
 			
 			updateNotes(topic);
 
@@ -331,9 +334,9 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 			replyForm.setVisible(!isLocked);
 
 			if (isLocked) {
-				reply.getElement().getParentElement().getStyle().setDisplay(Display.NONE);
+				post.getElement().getParentElement().getStyle().setDisplay(Display.NONE);
 			} else {
-				reply.getElement().getParentElement().getStyle().clearDisplay();
+				post.getElement().getParentElement().getStyle().clearDisplay();
 			}
 		}
 	}

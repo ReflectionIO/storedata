@@ -122,6 +122,7 @@ public final class Forum extends ActionHandler {
 			// ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
 
 			output.topic = TopicServiceProvider.provide().getTopic(input.id);
+			output.topic.forum = ForumServiceProvider.provide().getForum(output.topic.forum.id);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
