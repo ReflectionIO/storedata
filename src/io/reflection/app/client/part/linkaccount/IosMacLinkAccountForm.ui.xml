@@ -2,6 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
     <ui:with field="global" type="io.reflection.app.client.res.Styles" />
+    <ui:import field="io.reflection.app.client.page.PageType.BlogPostPageType" />
 
     <ui:style>
     .marginTop5 {
@@ -29,7 +30,7 @@
 
         <g:HTMLPanel ui:field="mVendorIdGroup" styleName="form-group">
             <label>Vendor ID</label>
-            <g:InlineHyperlink ui:field="whatsThis" styleName="{style.inlineAnchor}">What's this?</g:InlineHyperlink>
+            <a class="{style.inlineAnchor}" target="_blank" href="{BlogPostPageType.asHref.asString}/view/7">What's this?</a>
             <g:TextBox styleName="form-control {style.marginTop5}" ui:field="mVendorId" />
             <g:HTMLPanel ui:field="mVendorIdNote" visible="false" styleName="{global.reflection.noteDetail}" />
         </g:HTMLPanel>
