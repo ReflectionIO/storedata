@@ -171,7 +171,7 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 		};
 
 		TextHeader titleHeader = new TextHeader("Topic");
-		titleHeader.setHeaderStyleNames("col-sm-10");
+		titleHeader.setHeaderStyleNames("col-sm-9");
 		topics.addColumn(titleColumn, titleHeader);
 
 		TextHeader postHeader = new TextHeader("Posts");
@@ -179,7 +179,7 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 		topics.addColumn(postsColumn, postHeader);
 
 		TextHeader lastPosterHeader = new TextHeader("Last Poster");
-		lastPosterHeader.setHeaderStyleNames("col-sm-1");
+		lastPosterHeader.setHeaderStyleNames("col-sm-2");
 		topics.addColumn(lastPosterColumn, lastPosterHeader);
 
 		TextHeader lastPostedHeader = new TextHeader("");
