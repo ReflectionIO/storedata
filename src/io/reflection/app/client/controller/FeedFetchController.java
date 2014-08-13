@@ -41,6 +41,7 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 
 	private List<FeedFetch> mRows = new ArrayList<FeedFetch>();
 	private Pager mPager;
+	private long count = 0;
 
 	public static FeedFetchController get() {
 		if (mOne == null) {
@@ -77,15 +78,26 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 				public void onSuccess(GetFeedFetchesResponse output) {
 					if (output.status == StatusType.StatusTypeSuccess) {
 						if (output.feedFetches != null) {
-							if (output.pager != null) {
-								mPager = output.pager;
+							if (mRows == null) {
+								mRows = new ArrayList<FeedFetch>();
 							}
 
 							mRows.addAll(output.feedFetches);
-
-							updateRowData(0, mRows);
-							updateRowCount(mPager.totalCount.intValue(), true);
 						}
+
+						if (output.pager != null) {
+							mPager = output.pager;
+
+							if (mPager.totalCount != null) {
+								count = mPager.totalCount.longValue();
+							}
+						}
+
+						updateRowCount((int) count, true);
+						updateRowData(
+								input.pager.start.intValue(),
+								mRows == null ? new ArrayList<FeedFetch>() : mRows.subList(input.pager.start.intValue(), Math.min(input.pager.start.intValue()
+										+ input.pager.count.intValue(), count == 0 ? (mRows == null ? 0 : mRows.size()) : (int) count)));
 					}
 
 					EventController.get().fireEventFromSource(new GetFeedFetchesSuccess(input, output), FeedFetchController.this);
@@ -120,10 +132,13 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 
 	public void reset() {
 		mPager = null;
-		mRows.clear();
 
-		updateRowData(0, mRows);
+		mRows = null;
+
+		updateRowData(0, new ArrayList<FeedFetch>());
 		updateRowCount(0, false);
+
+		fetchFeedFetches();
 	}
 
 	public void model(Long code) {

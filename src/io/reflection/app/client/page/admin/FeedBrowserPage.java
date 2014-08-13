@@ -7,15 +7,24 @@
 //
 package io.reflection.app.client.page.admin;
 
+import static io.reflection.app.client.controller.FilterController.CATEGORY_KEY;
+import static io.reflection.app.client.controller.FilterController.COUNTRY_KEY;
+import static io.reflection.app.client.controller.FilterController.LIST_TYPE_KEY;
+import static io.reflection.app.client.controller.FilterController.STORE_KEY;
 import io.reflection.app.client.cell.StyledButtonCell;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FeedFetchController;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.FilterController.Filter;
+import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.handler.FilterEventHandler;
+import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.FilterHelper;
+import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.page.Page;
+import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.Breadcrumbs;
 import io.reflection.app.client.part.SimplePager;
@@ -34,6 +43,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -42,7 +52,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author billy1380
  * 
  */
-public class FeedBrowserPage extends Page implements FilterEventHandler {
+public class FeedBrowserPage extends Page implements FilterEventHandler, NavigationEventHandler {
 
 	private static FeedBrowserPageUiBinder uiBinder = GWT.create(FeedBrowserPageUiBinder.class);
 
@@ -89,11 +99,11 @@ public class FeedBrowserPage extends Page implements FilterEventHandler {
 		// mFeeds.setSelectionModel(s);
 
 		mFeeds.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
+		mFeeds.setEmptyTableWidget(new HTMLPanel("No Feed fetches found!"));
 		FeedFetchController.get().addDataDisplay(mFeeds);
 		mPager.setDisplay(mFeeds);
 
 		refreshBreadcrumbs();
-
 	}
 
 	/*
@@ -106,6 +116,7 @@ public class FeedBrowserPage extends Page implements FilterEventHandler {
 		super.onAttach();
 
 		register(EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
+		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 	}
 
 	/**
@@ -121,7 +132,6 @@ public class FeedBrowserPage extends Page implements FilterEventHandler {
 	 * 
 	 */
 	private void createColumns() {
-
 		mFeeds.addColumn(new TextColumn<FeedFetch>() {
 
 			@Override
@@ -240,6 +250,16 @@ public class FeedBrowserPage extends Page implements FilterEventHandler {
 	@Override
 	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
 		refreshBreadcrumbs();
+
+		if (NavigationController.get().getCurrentPage() == PageType.FeedBrowserPageType) {
+			if (name != null && (COUNTRY_KEY.equals(name) || STORE_KEY.equals(name) || CATEGORY_KEY.equals(name) || LIST_TYPE_KEY.equals(name))) {
+				FeedFetchController.get().reset();
+				
+				mPager.setPage(0);
+
+				PageType.FeedBrowserPageType.show("view", FilterController.get().asFeedFilterString());
+			}
+		}
 	}
 
 	/*
@@ -250,5 +270,45 @@ public class FeedBrowserPage extends Page implements FilterEventHandler {
 	@Override
 	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
 		refreshBreadcrumbs();
+
+		if (NavigationController.get().getCurrentPage() == PageType.FeedBrowserPageType) {
+			if (previousValues.get(COUNTRY_KEY) != null || previousValues.get(STORE_KEY) != null || previousValues.get(CATEGORY_KEY) != null
+					|| previousValues.get(LIST_TYPE_KEY) != null) {
+
+				FeedFetchController.get().reset();
+				
+				mPager.setPage(0);
+
+				PageType.FeedBrowserPageType.show("view", FilterController.get().asFeedFilterString());
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
+	 * io.reflection.app.client.controller.NavigationController.Stack)
+	 */
+	@Override
+	public void navigationChanged(Stack previous, Stack current) {
+		if (PageType.FeedBrowserPageType.equals(current.getPage())) {
+			if (mFeeds.getVisibleItemCount() > 0) {
+				mPager.setVisible(true);
+			}
+
+			if (current.getAction() == null || !"view".equals(current.getAction())) {
+				PageType.FeedBrowserPageType.show("view", FilterController.get().asFeedFilterString());
+			} else {
+				refreshBreadcrumbs();
+
+				FilterController fc = FilterController.get();
+
+				mListType.setSelectedIndex(FormHelper.getItemIndex(mListType, fc.getFilter().getListType()));
+				mAppStore.setSelectedIndex(FormHelper.getItemIndex(mAppStore, fc.getFilter().getStoreA3Code()));
+				mCountry.setSelectedIndex(FormHelper.getItemIndex(mCountry, fc.getFilter().getCountryA2Code()));
+				category.setSelectedIndex(FormHelper.getItemIndex(category, fc.getFilter().getCategoryId().toString()));
+			}
+		}
 	}
 }
