@@ -38,267 +38,283 @@ import com.willshex.gson.json.service.shared.StatusType;
  */
 public class MyAppsController extends AsyncDataProvider<MyApp> implements ServiceConstants {
 
-	private static MyAppsController mOne = null;
+    private static MyAppsController mOne = null;
 
-	private List<MyApp> rows = new ArrayList<MyApp>();
-	private Pager pager = null;
-	private List<MyApp> userItems = null;
-	private Map<String, MyApp> userItemsLookup = new HashMap<String, MyApp>();
-	private long mCount = -1;
+    private List<MyApp> rows = new ArrayList<MyApp>();
+    private Pager pager = null;
+    private List<MyApp> userItems = null;
+    private Map<String, MyApp> userItemsLookup = new HashMap<String, MyApp>();
+    private long mCount = -1;
 
-	public static MyAppsController get() {
-		if (mOne == null) {
-			mOne = new MyAppsController();
-		}
+    public static MyAppsController get() {
+        if (mOne == null) {
+            mOne = new MyAppsController();
+        }
 
-		return mOne;
-	}
+        return mOne;
+    }
 
-	public void fetchLinkedAccountItems() {
-		updateRowCount(0, false);
-		CoreService service = ServiceCreator.createCoreService();
+    public void fetchLinkedAccountItems() {
+        updateRowCount(0, false);
+        CoreService service = ServiceCreator.createCoreService();
 
-		final GetLinkedAccountItemsRequest input = new GetLinkedAccountItemsRequest();
-		input.accessCode = ACCESS_CODE;
-		input.session = SessionController.get().getSessionForApiCall();
-		if (pager == null) {
-			pager = new Pager();
-			pager.count = STEP;
-			pager.start = Long.valueOf(0);
-			pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
-		}
-		input.pager = pager;
+        final GetLinkedAccountItemsRequest input = new GetLinkedAccountItemsRequest();
+        input.accessCode = ACCESS_CODE;
+        input.session = SessionController.get().getSessionForApiCall();
+        if (pager == null) {
+            pager = new Pager();
+            pager.count = STEP;
+            pager.start = Long.valueOf(0);
+            pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
+        }
+        input.pager = pager;
 
-		if (userItems == null) {
-			userItems = new ArrayList<MyApp>();
-		}
+        if (userItems == null) {
+            userItems = new ArrayList<MyApp>();
+        }
 
-		input.linkedAccount = FilterController.get().getLinkedAccount();
+        input.linkedAccount = FilterController.get().getLinkedAccount();
 
-		service.getLinkedAccountItems(input, new AsyncCallback<GetLinkedAccountItemsResponse>() {
+        service.getLinkedAccountItems(input, new AsyncCallback<GetLinkedAccountItemsResponse>() {
 
-			@Override
-			public void onSuccess(GetLinkedAccountItemsResponse output) {
-				if (output.status == StatusType.StatusTypeSuccess) {
+            @Override
+            public void onSuccess(GetLinkedAccountItemsResponse output) {
+                if (output.status == StatusType.StatusTypeSuccess) {
 
-					if (output.pager != null) {
-						pager = output.pager;
+                    if (output.pager != null) {
+                        pager = output.pager;
 
-						if (pager.totalCount != null) {
-							mCount = pager.totalCount.longValue();
-						}
-					}
+                        if (pager.totalCount != null) {
+                            mCount = pager.totalCount.longValue();
+                        }
+                    }
 
-					if (output.items != null) { // There are items associated with this linked account
+                    if (output.items != null) { // There are items associated with this linked account
 
-						MyApp myApp;
+                        MyApp myApp;
 
-						for (Item item : output.items) {
-							rows.add(myApp = new MyApp());
-							myApp.item = item;
+                        for (Item item : output.items) {
+                            rows.add(myApp = new MyApp());
+                            myApp.item = item;
 
-							userItemsLookup.put(item.internalId, myApp);
-							userItems.add(myApp);
-						}
+                            userItemsLookup.put(item.internalId, myApp);
+                            userItems.add(myApp);
+                        }
 
-						if (userItemsLookup.size() > 0) {
-							fetchSalesRanks();
-						}
-					}
+                        if (userItemsLookup.size() > 0) {
+                            fetchSalesRanks();
+                        }
+                    }
 
-					updateRowCount((int) mCount, true);
-					updateRowData(
-							input.pager.start.intValue(),
-							rows.subList(input.pager.start.intValue(),
-									Math.min(input.pager.start.intValue() + input.pager.count.intValue(), pager.totalCount.intValue())));
-				}
+                    updateRowCount((int) mCount, true);
+                    updateRowData(
+                            input.pager.start.intValue(),
+                            rows.subList(input.pager.start.intValue(),
+                                    Math.min(input.pager.start.intValue() + input.pager.count.intValue(), pager.totalCount.intValue())));
+                }
 
-				EventController.get().fireEventFromSource(new GetLinkedAccountItemsSuccess(input, output), MyAppsController.this);
-			}
+                EventController.get().fireEventFromSource(new GetLinkedAccountItemsSuccess(input, output), MyAppsController.this);
+            }
 
-			@Override
-			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new GetLinkedAccountItemsFailure(input, caught), MyAppsController.this);
-			}
-		});
-	}
+            @Override
+            public void onFailure(Throwable caught) {
+                EventController.get().fireEventFromSource(new GetLinkedAccountItemsFailure(input, caught), MyAppsController.this);
+            }
+        });
+    }
 
-	private void fetchSalesRanks() {
-		CoreService service = ServiceCreator.createCoreService();
+    private void fetchSalesRanks() {
+        CoreService service = ServiceCreator.createCoreService();
 
-		final GetSalesRanksRequest input = new GetSalesRanksRequest();
-		input.accessCode = ACCESS_CODE;
-		input.session = SessionController.get().getSessionForApiCall();
+        final GetSalesRanksRequest input = new GetSalesRanksRequest();
+        input.accessCode = ACCESS_CODE;
+        input.session = SessionController.get().getSessionForApiCall();
 
-		input.linkedAccount = FilterController.get().getLinkedAccount();
+        input.linkedAccount = FilterController.get().getLinkedAccount();
 
-		input.category = FilterController.get().getCategory();
-		input.country = FilterController.get().getCountry();
-		input.start = FilterController.get().getStartDate();
-		input.end = FilterController.get().getEndDate();
-		input.listType = StoreController.IPAD_A3_CODE.equals(FilterController.get().getFilter().getStoreA3Code()) ? "ipad" : "";
+        input.category = FilterController.get().getCategory();
+        input.country = FilterController.get().getCountry();
+        input.start = FilterController.get().getStartDate();
+        input.end = FilterController.get().getEndDate();
+        input.listType = StoreController.IPAD_A3_CODE.equals(FilterController.get().getFilter().getStoreA3Code()) ? "ipad" : "";
 
-		service.getSalesRanks(input, new AsyncCallback<GetSalesRanksResponse>() {
+        service.getSalesRanks(input, new AsyncCallback<GetSalesRanksResponse>() {
 
-			@Override
-			public void onSuccess(GetSalesRanksResponse output) {
-				if (output != null && output.status == StatusType.StatusTypeSuccess && output.ranks != null) {
-					ItemController.get().addItemsToCache(output.items);
+            @Override
+            public void onSuccess(GetSalesRanksResponse output) {
+                if (output != null && output.status == StatusType.StatusTypeSuccess && output.ranks != null) { // Ranks available
+                    ItemController.get().addItemsToCache(output.items);
 
-					List<MyApp> appList = new ArrayList<MyApp>();
+                    List<MyApp> appList = new ArrayList<MyApp>();
 
-					MyApp app;
-					// ranks belong to various apps and each app can have multiple ranks depending on the time span (a rank per day)
-					for (Rank rank : output.ranks) {
-						app = userItemsLookup.get(rank.itemId);
+                    MyApp app;
+                    // ranks belong to various apps and each app can have multiple ranks depending on the time span (a rank per day)
+                    for (Rank rank : output.ranks) {
+                        app = userItemsLookup.get(rank.itemId);
 
-						if (app != null) {
-							if (app.ranks == null) {
-								app.ranks = new ArrayList<Rank>();
-							}
+                        if (app != null) {
+                            if (app.ranks == null) {
+                                app.ranks = new ArrayList<Rank>();
+                            }
 
-							app.ranks.add(rank);
-							appList.add(app);
-						}
-					}
+                            app.ranks.add(rank);
+                            appList.add(app);
+                        }
+                    }
 
-					for (MyApp myApp : appList) {
-						myApp.updateOverallValues();
-					}
+                    for (MyApp myApp : appList) {
+                        myApp.updateOverallValues();
+                    }
 
-					updateRowData(0, rows);
-				} else {
-					// leave the rows as they are
-				}
+                    updateRowData(0, rows);
+                } else { // No Ranks available
+                    MyApp myApp;
+                    for (int i = 0; i < rows.size(); i++) {
+                        myApp = rows.get(i);
+                        if (myApp.overallDownloads == null) {
+                            myApp.overallDownloads = "-";
+                        }
+                        if (myApp.overallPosition == null) {
+                            myApp.overallPosition = "-";
+                        }
+                        if (myApp.overallPrice == null) {
+                            myApp.overallPrice = "-";
+                        }
+                        if (myApp.overallRevenue == null) {
+                            myApp.overallRevenue = "-";
+                        }
+                    }
+                    updateRowData(0, rows);
+                }
 
-				EventController.get().fireEventFromSource(new GetSalesRanksEventHandler.GetSalesRanksSuccess(input, output), MyAppsController.this);
-			}
+                EventController.get().fireEventFromSource(new GetSalesRanksEventHandler.GetSalesRanksSuccess(input, output), MyAppsController.this);
+            }
 
-			@Override
-			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new GetSalesRanksEventHandler.GetSalesRanksFailure(input, caught), MyAppsController.this);
-			}
-		});
-	}
+            @Override
+            public void onFailure(Throwable caught) {
+                EventController.get().fireEventFromSource(new GetSalesRanksEventHandler.GetSalesRanksFailure(input, caught), MyAppsController.this);
+            }
+        });
+    }
 
-	// private void fetchItemRanks(final MyApp myApp) {
-	// CoreService service = ServiceCreator.createCoreService();
-	// final GetItemRanksRequest input = new GetItemRanksRequest();
-	// input.accessCode = ACCESS_CODE;
-	// input.session = SessionController.get().getSessionForApiCall();
-	// // input.pager = pager;
-	// // input.category = FilterController.get().getCategory();
-	//
-	// input.country = ApiCallHelper.createCountryForApiCall(FilterController.get().getCountry());
-	//
-	// input.listType = FilterController.get().getListTypes().get(0);
-	//
-	// input.item = myApp.item;
-	// input.start = FilterController.get().getStartDate();
-	//
-	// input.end = FilterController.get().getEndDate();
-	//
-	// service.getItemRanks(input, new AsyncCallback<GetItemRanksResponse>() {
-	//
-	// @Override
-	// public void onFailure(Throwable caught) {
-	// EventController.get().fireEventFromSource(new GetItemRanksEventHandler.GetItemRanksFailure(input, caught), MyAppsController.this);
-	// }
-	//
-	// @Override
-	// public void onSuccess(GetItemRanksResponse output) {
-	//
-	// if (output != null && output.status == StatusType.StatusTypeSuccess && output.item != null) {
-	// ItemController.get().addItemToCache(output.item);
-	// if (output.ranks != null) {
-	// myApp.rank = output.ranks.get(0); // TODO loop on ranks
-	// }
-	// updateRowData(0, rows);
-	// } else {
-	// // updateRowCount(0, true);
-	// }
-	//
-	// EventController.get().fireEventFromSource(new GetItemRanksEventHandler.GetItemRanksSuccess(input, output), MyAppsController.this);
-	// }
-	//
-	// });
-	//
-	// }
+    // private void fetchItemRanks(final MyApp myApp) {
+    // CoreService service = ServiceCreator.createCoreService();
+    // final GetItemRanksRequest input = new GetItemRanksRequest();
+    // input.accessCode = ACCESS_CODE;
+    // input.session = SessionController.get().getSessionForApiCall();
+    // // input.pager = pager;
+    // // input.category = FilterController.get().getCategory();
+    //
+    // input.country = ApiCallHelper.createCountryForApiCall(FilterController.get().getCountry());
+    //
+    // input.listType = FilterController.get().getListTypes().get(0);
+    //
+    // input.item = myApp.item;
+    // input.start = FilterController.get().getStartDate();
+    //
+    // input.end = FilterController.get().getEndDate();
+    //
+    // service.getItemRanks(input, new AsyncCallback<GetItemRanksResponse>() {
+    //
+    // @Override
+    // public void onFailure(Throwable caught) {
+    // EventController.get().fireEventFromSource(new GetItemRanksEventHandler.GetItemRanksFailure(input, caught), MyAppsController.this);
+    // }
+    //
+    // @Override
+    // public void onSuccess(GetItemRanksResponse output) {
+    //
+    // if (output != null && output.status == StatusType.StatusTypeSuccess && output.item != null) {
+    // ItemController.get().addItemToCache(output.item);
+    // if (output.ranks != null) {
+    // myApp.rank = output.ranks.get(0); // TODO loop on ranks
+    // }
+    // updateRowData(0, rows);
+    // } else {
+    // // updateRowCount(0, true);
+    // }
+    //
+    // EventController.get().fireEventFromSource(new GetItemRanksEventHandler.GetItemRanksSuccess(input, output), MyAppsController.this);
+    // }
+    //
+    // });
+    //
+    // }
 
-	/**
-	 * 
-	 * @return
-	 */
-	public long getUserItemsCount() {
-		return mCount;
-	}
+    /**
+     * 
+     * @return
+     */
+    public long getUserItemsCount() {
+        return mCount;
+    }
 
-	/**
-	 * 
-	 * @return
-	 */
-	public List<MyApp> getUserItems() {
-		return userItems;
-	}
+    /**
+     * 
+     * @return
+     */
+    public List<MyApp> getUserItems() {
+        return userItems;
+    }
 
-	public boolean hasUserItems() {
-		return mCount != -1;
-	}
+    public boolean hasUserItems() {
+        return mCount != -1;
+    }
 
-	public void reset() {
-		userItems = null;
-		userItemsLookup.clear();
+    public void reset() {
+        userItems = null;
+        userItemsLookup.clear();
 
-		pager = null;
-		mCount = -1;
-		rows.clear();
+        pager = null;
+        mCount = -1;
+        rows.clear();
 
-		updateRowData(0, rows);
-		updateRowCount(0, true);
-	}
+        updateRowData(0, rows);
+        updateRowCount(0, true);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.view.client.AbstractDataProvider#onRangeChanged(com.google.gwt.view.client.HasData)
-	 */
-	@Override
-	protected void onRangeChanged(HasData<MyApp> display) {
-		if (LinkedAccountController.get().hasLinkedAccounts()) {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.gwt.view.client.AbstractDataProvider#onRangeChanged(com.google.gwt.view.client.HasData)
+     */
+    @Override
+    protected void onRangeChanged(HasData<MyApp> display) {
+        if (LinkedAccountController.get().hasLinkedAccounts()) {
 
-			Range r = display.getVisibleRange();
-			int start = r.getStart();
-			int end = start + r.getLength();
-			if (end > rows.size()) {
-				if (LinkedAccountController.get().getLinkedAccountsCount() > 0 && pager != null) {
-					fetchLinkedAccountItems();
-				} else {
-					updateRowCount(0, true);
-				}
-			} else {
-				updateRowData(start, rows.subList(start, end));
-			}
-		} else {
-			LinkedAccountController.get().fetchLinkedAccounts();
-			updateRowCount(0, false);
-		}
-	}
+            Range r = display.getVisibleRange();
+            int start = r.getStart();
+            int end = start + r.getLength();
+            if (end > rows.size()) {
+                if (LinkedAccountController.get().getLinkedAccountsCount() > 0 && pager != null) {
+                    fetchLinkedAccountItems();
+                } else {
+                    updateRowCount(0, true);
+                }
+            } else {
+                updateRowData(start, rows.subList(start, end));
+            }
+        } else {
+            LinkedAccountController.get().fetchLinkedAccounts();
+            updateRowCount(0, false);
+        }
+    }
 
-	public Item getUserItem(String itemId) {
-		MyApp app = userItemsLookup.get(itemId);
-		return app == null ? null : app.item;
-	}
+    public Item getUserItem(String itemId) {
+        MyApp app = userItemsLookup.get(itemId);
+        return app == null ? null : app.item;
+    }
 
-	/**
-	 * @param item
-	 */
-	public void setUserItem(Item item) {
-		if (item != null && item.internalId != null) {
-			MyApp app = new MyApp();
-			app.item = item;
+    /**
+     * @param item
+     */
+    public void setUserItem(Item item) {
+        if (item != null && item.internalId != null) {
+            MyApp app = new MyApp();
+            app.item = item;
 
-			userItemsLookup.put(item.internalId, app);
-		}
-	}
+            userItemsLookup.put(item.internalId, app);
+        }
+    }
 
 }

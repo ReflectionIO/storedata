@@ -31,16 +31,11 @@ import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.googlecode.gchart.client.GChart;
 
 public class ItemChart extends GChart {
-
+	
+	private Timer resizeTimer;
+	private static int CHART_HEIGHT = 350;
     private HandlerRegistration resizeRegistration;
-    private ResizeHandler resizeHandler = new ResizeHandler() {
-
-        Timer resizeTimer = new Timer() {
-            @Override
-            public void run() {
-                resize();
-            }
-        };
+    private ResizeHandler resizeHandler = new ResizeHandler() {        
 
         @Override
         public void onResize(ResizeEvent event) {
@@ -50,7 +45,7 @@ public class ItemChart extends GChart {
     };
 
     private void resize() {
-        setChartSize((int) (this.getParent().getElement().getClientWidth() - 50), 350);
+        setChartSize((int) (this.getParent().getElement().getClientWidth() - 70), CHART_HEIGHT);
 
         update();
     }
@@ -65,7 +60,8 @@ public class ItemChart extends GChart {
     protected void onAttach() {
         super.onAttach();
 
-        resize();
+        resizeTimer.cancel();
+        resizeTimer.schedule(250);
 
         resizeRegistration = Window.addResizeHandler(resizeHandler);
     }
@@ -167,6 +163,13 @@ public class ItemChart extends GChart {
     private List<Rank> ranks;
 
     public ItemChart() {
+    	
+    	resizeTimer = new Timer() {
+            @Override
+            public void run() {
+                resize();
+            }
+        };
 
         setBorderStyle("none");
 
@@ -229,7 +232,7 @@ public class ItemChart extends GChart {
         curve.getSymbol().setHoverWidget(hoverWidget);
 
         // tall brush so it touches independent of mouse y position
-        curve.getSymbol().setBrushSize(25, 200);
+        curve.getSymbol().setBrushSize(25, 700);
         // so only point-to-mouse x-distance matters for hit testing
         curve.getSymbol().setDistanceMetric(1, 0);
 

@@ -1,6 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
-    <ui:with field="text" type="java.lang.String" />
+    <ui:with field="text" type="com.google.gwt.safehtml.shared.SafeHtml" />
     <ui:with field="image" type="java.lang.String" />
     <ui:style>
     .image {
@@ -11,6 +11,6 @@
 
     <div>
         <span class="{image} img-circle {style.image}" />
-        <ui:text from="{text}" />
+        <ui:safehtml from="{text}" />
     </div>
 </ui:UiBinder>

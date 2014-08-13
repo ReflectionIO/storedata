@@ -40,23 +40,28 @@ import io.reflection.app.client.page.part.ItemTopPanel;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.part.datatypes.ItemRevenue;
+import io.reflection.app.client.res.Images;
 import io.reflection.app.client.res.flags.Styles;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.shared.util.FormattingHelper;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
-import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
@@ -71,7 +76,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
     public static final int SELECTED_TAB_PARAMETER_INDEX = 1;
 
-    // @UiField AlertBox mAlertBox;
     @UiField ItemSidePanel mSidePanel;
     @UiField ItemTopPanel mTopPanel;
 
@@ -84,7 +88,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
     @UiField LIElement mRankingItem;
 
     @UiField ItemChart historyChart;
-    // @UiField CircleProgressBar loader;
+
     @UiField Preloader preloader;
 
     @UiField(provided = true) CellTable<ItemRevenue> revenue = new CellTable<ItemRevenue>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
@@ -100,8 +104,11 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
     private String selectedTab;
 
     private String filterContents;
-    
+
     private static String VIEW_ACTION_NAME = "view";
+
+    private ItemRevenue itemRevenuePlaceholder = new ItemRevenue();
+    private List<ItemRevenue> tablePlaceholder = new ArrayList<ItemRevenue>();
 
     public ItemPage() {
         initWidget(uiBinder.createAndBindUi(this));
@@ -116,15 +123,34 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
         RankController.get().getItemRevenueDataProvider().addDataDisplay(revenue);
 
+        tablePlaceholder.add(itemRevenuePlaceholder);
+
+    }
+
+    /**
+     * If enables, set the row with null values to force loading state
+     * 
+     * @param enabled
+     */
+    private void setLoadingSpinnerEnabled(boolean enabled) {
+        if (enabled) {
+            revenue.setRowCount(1, true);
+            revenue.setRowData(0, tablePlaceholder);
+        } else {
+            revenue.setRowCount(0, true);
+        }
     }
 
     private void createColumns() {
+
+        final SafeHtml spinnerLoaderHTML = SafeHtmlUtils.fromSafeConstant("<img src=\"" + Images.INSTANCE.spinner().getSafeUri().asString() + "\"/>");
 
         Column<ItemRevenue, ConcreteImageAndText> countryColumn = new Column<ItemRevenue, ConcreteImageAndText>(new ImageAndTextCell<ConcreteImageAndText>()) {
 
             @Override
             public ConcreteImageAndText getValue(ItemRevenue object) {
-                return new ConcreteImageAndText(object.countryFlagStyleName, object.countryName);
+                return (object.countryFlagStyleName != null && object.countryName != null) ? new ConcreteImageAndText(object.countryFlagStyleName,
+                        SafeHtmlUtils.fromSafeConstant(object.countryName)) : new ConcreteImageAndText("", SafeHtmlUtils.fromSafeConstant(""));
             }
         };
 
@@ -137,35 +163,39 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
         //
         // };
 
-        TextColumn<ItemRevenue> paidColumn = new TextColumn<ItemRevenue>() {
+        Column<ItemRevenue, SafeHtml> paidColumn = new Column<ItemRevenue, SafeHtml>(new SafeHtmlCell()) {
 
             @Override
-            public String getValue(ItemRevenue object) {
-                return FormattingHelper.getCurrencySymbol(object.currency) + " " + Double.toString(object.paid.doubleValue());
+            public SafeHtml getValue(ItemRevenue object) {
+                return (object.currency != null) ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.getCurrencySymbol(object.currency) + " "
+                        + Double.toString(object.paid.doubleValue())) : spinnerLoaderHTML;
             }
         };
 
-        TextColumn<ItemRevenue> subscriptionColumn = new TextColumn<ItemRevenue>() {
+        Column<ItemRevenue, SafeHtml> subscriptionColumn = new Column<ItemRevenue, SafeHtml>(new SafeHtmlCell()) {
 
             @Override
-            public String getValue(ItemRevenue object) {
-                return FormattingHelper.getCurrencySymbol(object.currency) + " 0.0";
+            public SafeHtml getValue(ItemRevenue object) {
+                return (object.currency != null) ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.getCurrencySymbol(object.currency) + " 0.0")
+                        : spinnerLoaderHTML;
             }
         };
 
-        TextColumn<ItemRevenue> iapColumn = new TextColumn<ItemRevenue>() {
+        Column<ItemRevenue, SafeHtml> iapColumn = new Column<ItemRevenue, SafeHtml>(new SafeHtmlCell()) {
 
             @Override
-            public String getValue(ItemRevenue object) {
-                return FormattingHelper.getCurrencySymbol(object.currency) + " " + Double.toString(object.iap.doubleValue());
+            public SafeHtml getValue(ItemRevenue object) {
+                return (object.currency != null && object.iap != null) ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.getCurrencySymbol(object.currency)
+                        + " " + Double.toString(object.iap.doubleValue())) : spinnerLoaderHTML;
             }
         };
 
-        TextColumn<ItemRevenue> totalColumn = new TextColumn<ItemRevenue>() {
+        Column<ItemRevenue, SafeHtml> totalColumn = new Column<ItemRevenue, SafeHtml>(new SafeHtmlCell()) {
 
             @Override
-            public String getValue(ItemRevenue object) {
-                return FormattingHelper.getCurrencySymbol(object.currency) + " " + Double.toString(object.total.doubleValue());
+            public SafeHtml getValue(ItemRevenue object) {
+                return (object.currency != null && object.total != null) ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.getCurrencySymbol(object.currency)
+                        + " " + Double.toString(object.total.doubleValue())) : spinnerLoaderHTML;
             }
         };
 
@@ -260,7 +290,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
                     isNewDataRequired = true;
                 }
-                
+
                 mRevenue.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(VIEW_ACTION_NAME, internalId, REVENUE_CHART_TYPE, filterContents));
                 mDownloads.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(VIEW_ACTION_NAME, internalId, DOWNLOADS_CHART_TYPE, filterContents));
                 mRanking.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(VIEW_ACTION_NAME, internalId, RANKING_CHART_TYPE, filterContents));
@@ -283,6 +313,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
                 }
 
                 if (isNewDataRequired) {
+                    setLoadingSpinnerEnabled(true);
+                    mSidePanel.setPriceInnerHTML("");
+                    mSidePanel.setLoaderVisible(true);
                     getHistoryChartData();
                 }
 
@@ -307,12 +340,13 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
     }
 
     private void displayItemDetails(Rank rank) {
-        // mAlertBox.dismiss();
 
         mSidePanel.setItem(item);
 
         if (rank != null) {
             mSidePanel.setPrice(rank.currency, rank.price);
+        }else{
+            mSidePanel.setPriceInnerHTML("-");
         }
     }
 
@@ -399,16 +433,18 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
                 historyChart.setData(output.item, output.ranks);
 
                 // mAlertBox.dismiss();
+            } else {
+                mSidePanel.setLoaderVisible(false);
+                mSidePanel.setPriceInnerHTML("-");
+                setLoadingSpinnerEnabled(false);
             }
-            // else {
-            // AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.WarningAlertBoxType, false, "Warning", " - Item rank history could not be obtained!",
-            // false).setVisible(true);
-            // }
         } else {
-            // do nothing
-        }
+            mSidePanel.setLoaderVisible(false);
+            mSidePanel.setPriceInnerHTML("-");
+            setLoadingSpinnerEnabled(false);
+        }                
         preloader.hide();
-        // loader.setVisible(false);
+
     }
 
     /*
@@ -420,19 +456,16 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
      */
     @Override
     public void getItemRanksFailure(GetItemRanksRequest input, Throwable caught) {
-        // AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.DangerAlertBoxType, false, "Error", " - An error occured fetching item history!", false)
-        // .setVisible(true);
+        mSidePanel.setLoaderVisible(false);
+        mSidePanel.setPriceInnerHTML("-");
+        setLoadingSpinnerEnabled(false);
+
     }
 
     private void getHistoryChartData() {
         if (item != null) {
-            // AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Getting History",
-            // " - Please wait while we fetch the rank history for the selected item", false).setVisible(true);
-
             historyChart.setLoading(true);
-            // loader.setVisible(true);
-            preloader.show(Boolean.TRUE);
-
+            preloader.show(true);
             if (LinkedAccountController.get().getLinkedAccountItem(item) != null) {
                 RankController.get().fetchItemSalesRanks(item);
             }
@@ -483,12 +516,17 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
                 // redraw the graph with the new data
                 historyChart.setData(output.item, output.ranks);
 
+            }else{
+                mSidePanel.setLoaderVisible(false);
+                mSidePanel.setPriceInnerHTML("-");
+                setLoadingSpinnerEnabled(false);
             }
         } else {
-            // do nothing
+            mSidePanel.setLoaderVisible(false);
+            mSidePanel.setPriceInnerHTML("-");
+            setLoadingSpinnerEnabled(false);
         }
         preloader.hide();
-        // loader.setVisible(false);
     }
 
     /*
@@ -500,6 +538,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
     @Override
     public void getItemSalesRanksFailure(GetItemSalesRanksRequest input, Throwable caught) {
         preloader.hide();
+        mSidePanel.setLoaderVisible(false);
+        mSidePanel.setPriceInnerHTML("-");
+        setLoadingSpinnerEnabled(false);
     }
 
     /*
@@ -517,7 +558,10 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
                 RankController.get().fetchItemSalesRanks(item);
             }
         } else {
+            mSidePanel.setLoaderVisible(false);
+            mSidePanel.setPriceInnerHTML("-");
             preloader.hide();
+            setLoadingSpinnerEnabled(false);
         }
     }
 
@@ -530,6 +574,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
     @Override
     public void getLinkedAccountItemFailure(GetLinkedAccountItemRequest input, Throwable caught) {
         preloader.hide();
+        mSidePanel.setLoaderVisible(false);
+        mSidePanel.setPriceInnerHTML("-");
+        setLoadingSpinnerEnabled(false);
     }
 
 }

@@ -8,10 +8,13 @@
 package io.reflection.app.client.cell;
 
 import io.reflection.app.client.cell.content.ImageAndText;
+import io.reflection.app.client.res.Images;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiRenderer;
 
 /**
@@ -21,7 +24,7 @@ import com.google.gwt.uibinder.client.UiRenderer;
 public class ImageAndTextCell<T extends ImageAndText> extends AbstractCell<T> {
 
 	interface ImageAndTextCellRenderer extends UiRenderer {
-		void render(SafeHtmlBuilder sb, String text, String image);
+		void render(SafeHtmlBuilder sb, SafeHtml text, String image);
 	}
 
 	private static ImageAndTextCellRenderer RENDERER = GWT.create(ImageAndTextCellRenderer.class);
@@ -34,7 +37,13 @@ public class ImageAndTextCell<T extends ImageAndText> extends AbstractCell<T> {
 	 */
 	@Override
 	public void render(com.google.gwt.cell.client.Cell.Context context, T value, SafeHtmlBuilder sb) {
-		RENDERER.render(sb, value.getText(), value.getImageStyleName());
+	    SafeHtml text = value.getText();
+	    String image = value.getImageStyleName();
+	    if (image == "" || text == SafeHtmlUtils.fromSafeConstant("")){
+	        text = SafeHtmlUtils.fromSafeConstant("<img src=\""+Images.INSTANCE.spinner().getSafeUri().asString()+"\"/>");
+	        image = "";
+	    }
+		RENDERER.render(sb, text, image);
 	}
 
 }
