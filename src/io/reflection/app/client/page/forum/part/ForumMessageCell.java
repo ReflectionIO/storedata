@@ -7,6 +7,10 @@
 //
 package io.reflection.app.client.page.forum.part;
 
+import java.io.IOException;
+
+import org.markdown4j.Markdown4jProcessor;
+
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.datatypes.ForumMessage;
 import io.reflection.app.client.part.text.BlikiEditor;
@@ -131,8 +135,16 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 			
 //			if (value.getAuthor().company.equals("Reflection"))
 //					color = css.companyRowClass();
+			
+			String processedString = value.getContent() ;
+			
+			try {
+				processedString = new Markdown4jProcessor().process(value.getContent());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 
-			RENDERER.render(builder, FormattingHelper.getUserName(value.getAuthor()), SafeHtmlUtils.fromTrustedString(value.getContent()), 
+			RENDERER.render(builder, FormattingHelper.getUserName(value.getAuthor()), SafeHtmlUtils.fromTrustedString(processedString), 
 					FormattingHelper.getTimeSince(value.getCreated()),
 					value.belongsToCurrentUser() ? QuoteTemplate.INSTANCE.empty() : QuoteTemplate.INSTANCE.flagButton(),
 					value.belongsToCurrentUser() ? editButtonHtml : QuoteTemplate.INSTANCE.empty(),
