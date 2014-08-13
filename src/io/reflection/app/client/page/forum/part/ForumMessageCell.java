@@ -148,7 +148,7 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 
 		richText.setFocus(true);
 
-		richText.insertQuote(value.getContent());
+		richText.insertQuote(value.getAuthor().forename + " wrote: \n"+value.getContent());
 
 	}
 

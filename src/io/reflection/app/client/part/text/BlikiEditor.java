@@ -198,8 +198,12 @@ public class BlikiEditor extends Composite implements HasText {
 			int position = textArea.getCursorPos() ;
 			String unedited = textArea.getText() ;
 			
+			content = content.replaceAll("\n", "\n>");
+			String initial = "\n>";
+			if (position == 0) initial = ">";
+			
 			String newString = unedited.substring(0, position) + 
-					"\n"+content+"\n"+
+					initial + content+"\n"+
 					unedited.substring(position , unedited.length()) ;
 			
 			textArea.setText(newString);
