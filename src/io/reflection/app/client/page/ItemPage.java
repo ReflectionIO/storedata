@@ -435,13 +435,14 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
                 // mAlertBox.dismiss();
             } else {
                 mSidePanel.setLoaderVisible(false);
-                mSidePanel.setPriceInnerHTML("-");                
+                mSidePanel.setPriceInnerHTML("-");
+                setLoadingSpinnerEnabled(false);
             }
         } else {
             mSidePanel.setLoaderVisible(false);
             mSidePanel.setPriceInnerHTML("-");
-        }        
-        setLoadingSpinnerEnabled(false);
+            setLoadingSpinnerEnabled(false);
+        }                
         preloader.hide();
 
     }
