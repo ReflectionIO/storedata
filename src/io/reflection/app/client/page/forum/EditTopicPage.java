@@ -135,7 +135,7 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
 	@Override
 	public void updateReplySuccess(UpdateReplyRequest input, UpdateReplyResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess && replyId != null) {
-			PageType.ForumThreadPageType.show("view", replyId.toString());
+			PageType.ForumThreadPageType.show("view", topicId.toString());
 		}
 
 	}
