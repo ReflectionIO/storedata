@@ -9,6 +9,7 @@ package io.reflection.app.client.page.forum.part;
 
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.datatypes.ForumMessage;
+import io.reflection.app.client.part.text.BlikiEditor;
 import io.reflection.app.shared.util.FormattingHelper;
 
 import com.google.gwt.cell.client.AbstractCell;
@@ -39,7 +40,7 @@ import com.google.gwt.user.client.ui.RichTextArea;
  * 
  */
 public class ForumMessageCell extends AbstractCell<ForumMessage> {
-	private RichTextArea richText;
+	private BlikiEditor richText;
 
 	@UiField private AnchorElement flagButton;
 
@@ -147,19 +148,18 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 
 		richText.setFocus(true);
 
-		richText.getFormatter().insertHTML(QuoteTemplate.INSTANCE.quoteLayout(SafeHtmlUtils.fromString(FormattingHelper.getUserName(value.getAuthor())),
-				SafeHtmlUtils.fromTrustedString(value.getContent())).asString());
+		richText.insertQuote(value.getContent());
 
 	}
 
 	/**
 	 * @param richText
 	 */
-	public void setRichText(RichTextArea richText) {
+	public void setRichText(BlikiEditor richText) {
 		this.richText = richText;
 	}
 
-	public RichTextArea getRichText() {
+	public BlikiEditor getRichText() {
 		return richText;
 	}
 

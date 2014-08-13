@@ -189,6 +189,22 @@ public class BlikiEditor extends Composite implements HasText {
 		  doc.writeln('<body>'+content+'</body>');
 		  doc.close();
 		}-*/;
+
+	/**
+	 * @param content
+	 */
+	public void insertQuote(String content) {
+		
+			int position = textArea.getCursorPos() ;
+			String unedited = textArea.getText() ;
+			
+			String newString = unedited.substring(0, position) + 
+					"\n"+content+"\n"+
+					unedited.substring(position , unedited.length()) ;
+			
+			textArea.setText(newString);
+		
+	}
 	
 	
 }
