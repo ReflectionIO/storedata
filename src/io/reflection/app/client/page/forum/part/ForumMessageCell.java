@@ -148,7 +148,7 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 					FormattingHelper.getTimeSince(value.getCreated()),
 					value.belongsToCurrentUser() ? QuoteTemplate.INSTANCE.empty() : QuoteTemplate.INSTANCE.flagButton(),
 					value.belongsToCurrentUser() ? editButtonHtml : QuoteTemplate.INSTANCE.empty(),
-							UriUtils.fromSafeConstant(PageType.ForumThreadPageType.asHref()+"/view/"+value.getTopicId()+"/post/"+value.getIndex()), 
+							UriUtils.fromSafeConstant(PageType.ForumThreadPageType.asHref().asString()+"/view/"+value.getTopicId()+"/post/"+value.getIndex()), 
 							color);
 		}
 
