@@ -142,7 +142,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	 */
     private void createColumns() {
 
-        final SafeHtml spinnerLoaderHTML = SafeHtmlUtils.fromSafeConstant("<img src=\"" + Images.INSTANCE.spinnerLoader().getSafeUri().asString() + "\"/>");
+        final SafeHtml spinnerLoaderHTML = SafeHtmlUtils.fromSafeConstant("<img src=\"" + Images.INSTANCE.spinner().getSafeUri().asString() + "\"/>");
 
         columnRank = new Column<MyApp, SafeHtml>(new SafeHtmlCell()) {
             @Override

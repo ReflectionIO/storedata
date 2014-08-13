@@ -44,7 +44,7 @@
 
         <g:HTMLPanel styleName="{style.pricePanel}">
             <p ui:field="price" class="{style.price}"></p>
-            <g:Image resource="{images.spinnerLoader}" ui:field="spinnerLoader" visible="false"/>
+            <g:Image resource="{images.spinner}" ui:field="spinnerLoader" visible="false"/>
         </g:HTMLPanel>
 
         <!-- <hr /> <div class="btn-group btn-group-justified"> <g:InlineHyperlink ui:field="mToday" styleName="btn btn-default active"> <span class="caret"></span> 

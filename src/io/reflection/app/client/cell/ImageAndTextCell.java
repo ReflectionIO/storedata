@@ -40,7 +40,7 @@ public class ImageAndTextCell<T extends ImageAndText> extends AbstractCell<T> {
 	    SafeHtml text = value.getText();
 	    String image = value.getImageStyleName();
 	    if (image == "" || text == SafeHtmlUtils.fromSafeConstant("")){
-	        text = SafeHtmlUtils.fromSafeConstant("<img src=\""+Images.INSTANCE.spinnerLoader().getSafeUri().asString()+"\"/>");
+	        text = SafeHtmlUtils.fromSafeConstant("<img src=\""+Images.INSTANCE.spinner().getSafeUri().asString()+"\"/>");
 	        image = "";
 	    }
 		RENDERER.render(sb, text, image);
