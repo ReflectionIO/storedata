@@ -31,6 +31,7 @@ public class FilterController {
 	public static final String ITEM_FILTER_KEY = "itemfilter:";
 	public static final String RANK_FILTER_KEY = "rankfilter:";
 	public static final String MYAPP_FILTER_KEY = "myappfilter:";
+	public static final String FEED_FILTER_KEY = "feedfilter:";
 
 	public static final String LINKED_ACCOUNT_KEY = "linkedaccount";
 	public static final String STORE_KEY = "store";
@@ -200,6 +201,10 @@ public class FilterController {
 			return Stack.encode(MYAPP_FILTER_KEY, getStoreA3Code(), getCountryA2Code(), getStartTime().toString(), getEndTime().toString(),
 					getLinkedAccountId().toString());
 		}
+		
+		public String asFeedFilterString() {
+			return Stack.encode(FEED_FILTER_KEY, getListType(), getStoreA3Code(), getCountryA2Code(), getCategoryId().toString());
+		}
 
 		/**
 		 * @param part
@@ -208,6 +213,7 @@ public class FilterController {
 		public static boolean isFilter(String part) {
 			return false;
 		}
+
 	}
 
 	private Map<String, Object> mPreviousValues;
@@ -587,6 +593,10 @@ public class FilterController {
 
 	public String asMyAppsFilterString() {
 		return mCurrentFilter == null ? "" : mCurrentFilter.asMyAppsFilterString();
+	}
+	
+	public String asFeedFilterString() {
+		return mCurrentFilter == null ? "" : mCurrentFilter.asFeedFilterString();
 	}
 
 	public boolean isFilterParam(String parameter) {
