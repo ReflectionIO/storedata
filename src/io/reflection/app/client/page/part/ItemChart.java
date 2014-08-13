@@ -232,7 +232,7 @@ public class ItemChart extends GChart {
         curve.getSymbol().setHoverWidget(hoverWidget);
 
         // tall brush so it touches independent of mouse y position
-        curve.getSymbol().setBrushSize(25, 200);
+        curve.getSymbol().setBrushSize(25, 700);
         // so only point-to-mouse x-distance matters for hit testing
         curve.getSymbol().setDistanceMetric(1, 0);
 
