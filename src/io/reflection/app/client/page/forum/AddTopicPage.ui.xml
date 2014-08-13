@@ -2,48 +2,46 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part.text"
 	xmlns:pp="urn:import:io.reflection.app.client.page.forum.part">
 	<ui:style>
-		.textArea {
+	.textArea {
 		height: 200px;
-		}
-    </ui:style>
-    <g:HTMLPanel styleName="row">
-        <pp:ForumSummarySidePanel ui:field="forumSummarySidePanel"
-            styleName="sidepanel col-md-2 well" />
-        <div class="col-md-10">
-            <h2>Add Topic</h2>
-            <g:FormPanel styleName="form">
-                <g:HTMLPanel>
-                    <g:HTMLPanel ui:field="titleGroup" styleName="form-group">
-                        <label>Title</label>
-                        <g:TextBox styleName="form-control" ui:field="title" />
-                        <g:HTMLPanel styleName="noteDetail" ui:field="titleNote" visible="false" />
-                    </g:HTMLPanel>
-                    
-                    <g:HTMLPanel styleName="form-group">
-                        <label>Forum</label>
-                        <g:ListBox styleName="form-control" ui:field="forums">
-                        </g:ListBox>
-                    </g:HTMLPanel>
+	}
+	</ui:style>
+	<g:HTMLPanel styleName="row">
+		<pp:ForumSummarySidePanel ui:field="forumSummarySidePanel" styleName="sidepanel col-md-2 well" />
+		<div class="col-md-10">
+			<h2>Add Topic</h2>
+			<g:FormPanel styleName="form">
+				<g:HTMLPanel>
+					<g:HTMLPanel ui:field="titleGroup" styleName="form-group">
+						<label>Title</label>
+						<g:TextBox styleName="form-control" ui:field="title" />
+						<g:HTMLPanel styleName="noteDetail" ui:field="titleNote" visible="false" />
+					</g:HTMLPanel>
 
-                    <g:HTMLPanel ui:field="contentGroup" styleName="form-group">
-                        <label>Content</label>
-                        <!-- <p:RichTextToolbar ui:field="contentToolbar" />
-                        <g:RichTextArea ui:field="contentText" styleName="form-control {style.textArea}" /> -->
-                        <p:BlikiEditor ui:field="contentText"/>
-                        <g:HTMLPanel styleName="noteDetail" ui:field="contentNote" visible="false" />
-                    </g:HTMLPanel>
+					<g:HTMLPanel styleName="form-group">
+						<label>Forum</label>
+						<g:ListBox styleName="form-control" ui:field="forums">
+						</g:ListBox>
+					</g:HTMLPanel>
 
-                    <g:HTMLPanel ui:field="tagsGroup" styleName="form-group">
-                        <label>Tags</label>
-                        <g:TextBox styleName="form-control" ui:field="tags" />
-                        <g:HTMLPanel styleName="noteDetail" ui:field="tagsNote" visible="false" />
-                    </g:HTMLPanel>
+					<g:HTMLPanel ui:field="contentGroup" styleName="form-group">
+						<label>Content</label>
+						<!-- <p:RichTextToolbar ui:field="contentToolbar" /> <g:RichTextArea ui:field="contentText" styleName="form-control {style.textArea}" /> -->
+						<p:BlikiEditor ui:field="contentText" />
+						<g:HTMLPanel styleName="noteDetail" ui:field="contentNote" visible="false" />
+					</g:HTMLPanel>
 
-                    <g:Button ui:field="submit" styleName="btn btn-lg btn-primary col-sm-4 col-sm-offset-4">
-                        Submit
-                    </g:Button>
-                </g:HTMLPanel>
-            </g:FormPanel>
-        </div>
-    </g:HTMLPanel>
+					<g:HTMLPanel ui:field="tagsGroup" styleName="form-group">
+						<label>Tags</label>
+						<g:TextBox styleName="form-control" ui:field="tags" />
+						<g:HTMLPanel styleName="noteDetail" ui:field="tagsNote" visible="false" />
+					</g:HTMLPanel>
+
+					<g:Button ui:field="submit" styleName="btn btn-lg btn-primary col-sm-4 col-sm-offset-4">
+						Submit
+					</g:Button>
+				</g:HTMLPanel>
+			</g:FormPanel>
+		</div>
+	</g:HTMLPanel>
 </ui:UiBinder> 

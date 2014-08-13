@@ -19,9 +19,7 @@ import io.reflection.app.client.controller.TopicController;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
-import io.reflection.app.client.page.forum.part.ForumSummaryCell;
 import io.reflection.app.client.page.forum.part.ForumSummarySidePanel;
-import io.reflection.app.client.part.BootstrapGwtCellList;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.res.Images;
@@ -32,7 +30,6 @@ import io.reflection.app.shared.util.FormattingHelper;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.HeadingElement;
-import com.google.gwt.xml.client.Text;
 import com.google.gwt.safecss.shared.SafeStyles;
 import com.google.gwt.safecss.shared.SafeStylesUtils;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
@@ -42,16 +39,13 @@ import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TextHeader;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.view.client.SingleSelectionModel;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**
@@ -76,9 +70,9 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 	@UiField(provided = true) CellTable<Topic> topics = new CellTable<Topic>(ServiceConstants.SHORT_STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 
 	@UiField SimplePager pager;
-	
-	@UiField ForumSummarySidePanel forumSummarySidePanel ;
-	@UiField HeadingElement titleText ;
+
+	@UiField ForumSummarySidePanel forumSummarySidePanel;
+	@UiField HeadingElement titleText;
 
 	private Forum selectedForum;
 
@@ -94,8 +88,6 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 
 		TopicController.get().addDataDisplay(topics);
 		pager.setDisplay(topics);
-		
-		
 
 	}
 
@@ -118,30 +110,29 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 				if (object.sticky != null && object.sticky.booleanValue()) {
 					properties += "<i class=\"glyphicon glyphicon-pushpin\"></i> ";
 				}
-				
-				int numPages = (int) Math.ceil((double)(object.numberOfReplies + 1) / ServiceConstants.SHORT_STEP_VALUE) ;
 
-				//generate page links
-				String pageLinksString = ""; 
-				
-				for(int i = 1 ; i <= numPages && numPages > 1 ; i++)
-				{
-					int position = i * ServiceConstants.SHORT_STEP_VALUE ;
-					if (i == numPages)
-						position = object.numberOfReplies ;
-					
-					SafeUri lastPageLink = UriUtils.fromSafeConstant(PageType.ForumThreadPageType.asHref().asString()+"/view/"+object.id+"/post/"+position);
-					pageLinksString += "<a style='margin-left:3px' href='"+lastPageLink.asString()+"' style>"+i+"</a>";
-					
+				int numPages = (int) Math.ceil((double) (object.numberOfReplies + 1) / ServiceConstants.SHORT_STEP_VALUE);
+
+				// generate page links
+				String pageLinksString = "";
+
+				for (int i = 1; i <= numPages && numPages > 1; i++) {
+					int position = i * ServiceConstants.SHORT_STEP_VALUE;
+					if (i == numPages) position = object.numberOfReplies;
+
+					SafeUri lastPageLink = UriUtils.fromSafeConstant(PageType.ForumThreadPageType.asHref().asString() + "/view/" + object.id + "/post/"
+							+ position);
+					pageLinksString += "<a style='margin-left:3px' href='" + lastPageLink.asString() + "' style>" + i + "</a>";
+
 				}
 				SafeHtml pageLinks = SafeHtmlUtils.fromTrustedString(pageLinksString);
-				
-				//put it all together
-				return TopicTemplate.INSTANCE.topicLayout(SafeHtmlUtils.fromSafeConstant(properties),
-						PageType.ForumThreadPageType.asHref(TopicPage.VIEW_ACTION_PARAMETER_VALUE, object.id.toString()).asString(),
-						SafeStylesUtils.fromTrustedString(""), SafeHtmlUtils.fromString(object.title), 
-						SafeHtmlUtils.fromString(numPages+" pages"),
-						pageLinks);
+
+				// put it all together
+				return TopicTemplate.INSTANCE
+						.topicLayout(SafeHtmlUtils.fromSafeConstant(properties),
+								PageType.ForumThreadPageType.asHref(TopicPage.VIEW_ACTION_PARAMETER_VALUE, object.id.toString()).asString(),
+								SafeStylesUtils.fromTrustedString(""), SafeHtmlUtils.fromString(object.title), SafeHtmlUtils.fromString(numPages + " pages"),
+								pageLinks);
 			}
 		};
 
@@ -199,12 +190,8 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 
 		register(EventController.get().addHandlerToSource(GetForumsEventHandler.TYPE, ForumController.get(), this));
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
-		
-		topics.redraw(); //in order to redraw the new topic data after for example, a new reply success, which causes num topics to be out.
-
 	}
 
-	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -213,7 +200,7 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 	 */
 	@Override
 	public void getForumsSuccess(GetForumsRequest input, GetForumsResponse output) {
-		if (output.status == StatusType.StatusTypeSuccess && output.forums != null && output.forums.size() > 0) {	
+		if (output.status == StatusType.StatusTypeSuccess && output.forums != null && output.forums.size() > 0) {
 			configureTitleAndSidePanel();
 		}
 	}
@@ -222,24 +209,22 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 	 * This may either run from Navigation changed, or after Forum callback
 	 */
 	protected void configureTitleAndSidePanel() {
-		if (!ForumController.get().hasForums())
-			return ;
-		if (selectedForumId != null)
-			selectedForum = ForumController.get().getForumById(selectedForumId);
-		else
-		{
-			selectedForum = ForumController.get().getFirstForum();
-			selectedForumId = selectedForum.id;
-			TopicController.get().getTopics(selectedForumId);
+		if (ForumController.get().hasForums()) {
+			if (selectedForumId != null) selectedForum = ForumController.get().getForumById(selectedForumId);
+			else {
+				selectedForum = ForumController.get().getFirstForum();
+				selectedForumId = selectedForum.id;
+				TopicController.get().getTopics(selectedForumId);
+			}
+			forumSummarySidePanel.selectItem(selectedForum);
+			if (selectedForum != null) // shouldn't be null unless an error has occured
+			{
+				titleText.setInnerText(selectedForum.title);
+			}
+			forumSummarySidePanel.redraw();
 		}
-		forumSummarySidePanel.selectItem(selectedForum);
-		if (selectedForum != null) // shouldn't be null unless an error has occured
-		{
-			titleText.setInnerText(selectedForum.title);
-		}
-		forumSummarySidePanel.redraw();
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -248,7 +233,6 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 	 */
 	@Override
 	public void getForumsFailure(GetForumsRequest input, Throwable caught) {}
-	
 
 	/*
 	 * (non-Javadoc)
@@ -262,24 +246,20 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 
 			String selectedIdString;
 			if ((selectedIdString = current.getParameter(SELECTED_FORUM_PARAMETER_INDEX)) != null) {
-				
+
 				Long newSelectedId = Long.valueOf(selectedIdString);
-				
-				
-				if (selectedForumId == null || newSelectedId.longValue() != selectedForumId.longValue()) 
-				{
-					selectedForumId = newSelectedId ;
-					selectedForum = null ;
+
+				if (selectedForumId == null || newSelectedId.longValue() != selectedForumId.longValue()) {
+					selectedForumId = newSelectedId;
+					selectedForum = null;
 					TopicController.get().getTopics(selectedForumId);
-					
-					configureTitleAndSidePanel();	
-				}				
-			}
-			else
-			{
-				//needs to be reset in case we're coming back to this page.
-				selectedForumId = null ;
-				selectedForum = null ;
+
+					configureTitleAndSidePanel();
+				}
+			} else {
+				// needs to be reset in case we're coming back to this page.
+				selectedForumId = null;
+				selectedForum = null;
 			}
 		}
 	}

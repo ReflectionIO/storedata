@@ -21,16 +21,13 @@ import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.page.forum.part.ForumSummarySidePanel;
 import io.reflection.app.client.part.text.BlikiEditor;
-import io.reflection.app.client.part.text.RichTextToolbar;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -44,13 +41,12 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
 	@UiField TextBox title;
 	@UiField TextBox tags;
 
-
 	@UiField ListBox forums;
 
-//	@UiField RichTextToolbar contentToolbar;
+	// @UiField RichTextToolbar contentToolbar;
 	@UiField BlikiEditor contentText;
-	
-	@UiField ForumSummarySidePanel forumSummarySidePanel ;
+
+	@UiField ForumSummarySidePanel forumSummarySidePanel;
 
 	private static AddTopicPageUiBinder uiBinder = GWT.create(AddTopicPageUiBinder.class);
 
@@ -59,11 +55,11 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
 	public AddTopicPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-//		contentToolbar.setRichText(contentText);
+		// contentToolbar.setRichText(contentText);
 
 		title.getElement().setAttribute("placeholder", "Title");
 		tags.getElement().setAttribute("placeholder", "Comma separated tags");
-//		contentText.getElement().setAttribute("placeholder", "Content");
+		// contentText.getElement().setAttribute("placeholder", "Content");
 
 		FilterHelper.addForums(forums);
 	}

@@ -18,7 +18,6 @@ import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.text.BlikiEditor;
-import io.reflection.app.client.part.text.RichTextToolbar;
 import io.reflection.app.datatypes.shared.Reply;
 
 import com.google.gwt.core.client.GWT;
@@ -27,7 +26,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
 
@@ -46,7 +44,7 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
 	private Reply reply;
 	private String replyContent;
 
-	@UiField BlikiEditor editText ;
+	@UiField BlikiEditor editText;
 
 	public EditTopicPage() {
 		initWidget(uiBinder.createAndBindUi(this));

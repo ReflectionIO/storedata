@@ -1,47 +1,29 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-    xmlns:g="urn:import:com.google.gwt.user.client.ui"
-    xmlns:c="urn:import:com.google.gwt.user.cellview.client">
-    <ui:style>
-    .creator {
-        padding-bottom: 30px;
-        font-size: 18px;
-        font-weight: 400;
-    }
-    
-    .horDivider {
-        margin-top: 20px !important;
-        margin-bottom: 20px !important;
-    }
-    </ui:style>
-    <g:HTMLPanel>
-        <h3>Forums</h3>
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:com.google.gwt.user.cellview.client">
+	<ui:style>
+		.creator {
+		padding-bottom: 30px;
+		font-size: 18px;
+		font-weight: 400;
+		}
 
-        <!-- <h6 ui:field="creatorName" class="{style.creator} text-muted"></h6> -->
-        
-        <c:CellList styleName="list-group" ui:field="forums" />
-        
-        
-        <!-- <ul class="nav nav-pills nav-stacked">
-            <li ui:field="myAppsListItem">
-                <g:InlineHyperlink ui:field="myAppsLink" text="My Apps" />
-            </li>
-            <li class="divider-horizontal {style.horDivider}" />
-            <li ui:field="linkedAccountsListItem">
-                <g:InlineHyperlink ui:field="linkedAccountsLink"
-                    text="Linked Accounts" />
-            </li>
-            <li class="divider-horizontal {style.horDivider}" />
-            <li ui:field="personalDetailsListItem">
-                <g:InlineHyperlink ui:field="personalDetailsLink"
-                    text="Personal Details" />
-            </li>
-            <li class="divider-horizontal {style.horDivider}" />
-            <li ui:field="changePasswordListItem">
-                <g:InlineHyperlink ui:field="changePasswordLink"
-                    text="Change Password" />
-            </li>
-            <li class="divider-horizontal {style.horDivider}" />
-        </ul> -->
-    </g:HTMLPanel>
+		.horDivider {
+		margin-top: 20px !important;
+		margin-bottom: 20px !important;
+		}
+	</ui:style>
+	<g:HTMLPanel>
+		<h3>Forums</h3>
+
+		<!-- <h6 ui:field="creatorName" class="{style.creator} text-muted"></h6> -->
+
+		<c:CellList styleName="list-group" ui:field="forums" />
+
+
+		<!-- <ul class="nav nav-pills nav-stacked"> <li ui:field="myAppsListItem"> <g:InlineHyperlink ui:field="myAppsLink" text="My Apps" /> </li> <li class="divider-horizontal 
+			{style.horDivider}" /> <li ui:field="linkedAccountsListItem"> <g:InlineHyperlink ui:field="linkedAccountsLink" text="Linked Accounts" /> </li> <li class="divider-horizontal 
+			{style.horDivider}" /> <li ui:field="personalDetailsListItem"> <g:InlineHyperlink ui:field="personalDetailsLink" text="Personal Details" /> </li> <li class="divider-horizontal 
+			{style.horDivider}" /> <li ui:field="changePasswordListItem"> <g:InlineHyperlink ui:field="changePasswordLink" text="Change Password" /> </li> <li class="divider-horizontal 
+			{style.horDivider}" /> </ul> -->
+	</g:HTMLPanel>
 </ui:UiBinder> 

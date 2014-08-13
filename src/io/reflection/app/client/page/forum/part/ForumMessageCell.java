@@ -7,14 +7,14 @@
 //
 package io.reflection.app.client.page.forum.part;
 
-import java.io.IOException;
-
-import org.markdown4j.Markdown4jProcessor;
-
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.datatypes.ForumMessage;
 import io.reflection.app.client.part.text.BlikiEditor;
 import io.reflection.app.shared.util.FormattingHelper;
+
+import java.io.IOException;
+
+import org.markdown4j.Markdown4jProcessor;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.ValueUpdater;
@@ -27,7 +27,6 @@ import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
-import com.google.gwt.resources.client.ClientBundle.Source;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -37,7 +36,6 @@ import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiRenderer;
-import com.google.gwt.user.client.ui.RichTextArea;
 
 /**
  * @author billy1380
@@ -56,24 +54,25 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 	}
 
 	interface ForumMessageCellRenderer extends UiRenderer {
-		void render(SafeHtmlBuilder sb, String authorName, SafeHtml content, String created, SafeHtml flagButtonHtml, SafeHtml editButtonHtml, SafeUri link, String backgroundColour);
+		void render(SafeHtmlBuilder sb, String authorName, SafeHtml content, String created, SafeHtml flagButtonHtml, SafeHtml editButtonHtml, SafeUri link,
+				String backgroundColour);
 
 		void onBrowserEvent(ForumMessageCell o, NativeEvent e, Element p, ForumMessage n);
 
 	}
-	
+
 	public interface TopicResources extends ClientBundle {
-		  public static final TopicResources INSTANCE =  GWT.create(TopicResources.class);
+		public static final TopicResources INSTANCE = GWT.create(TopicResources.class);
 
-		  @Source("topic.css")
-		  public TopicCss css();
+		@Source("topic.css")
+		public TopicCss css();
 
-		}
+	}
 
 	interface TopicCss extends CssResource {
 		@ClassName("oddRow")
 		String oddRowClass();
-		
+
 		@ClassName("evenRow")
 		String evenRowClass();
 
@@ -88,10 +87,6 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 	 */
 	interface QuoteTemplate extends SafeHtmlTemplates {
 		QuoteTemplate INSTANCE = GWT.create(QuoteTemplate.class);
-
-		@SafeHtmlTemplates.Template("<blockquote style=\"margin: 0 0 0 40px; border: none; padding: 0px;\"><i>{0} wrote:</i><div style=\"font-style: italic;\">"+
-									"<span class=\"Apple-tab-span\" style=\"white-space:pre\">\t</span>\"{1}\"</div></blockquote><br/>")
-		SafeHtml quoteLayout(SafeHtml author, SafeHtml message);
 
 		@SafeHtmlTemplates.Template("<a href=\"flag\" class=\"\" ui:field=\"flagButton\"><i class=\"glyphicon glyphicon-flag\"></i>Flag</a> | ")
 		SafeHtml flagButton();
@@ -118,38 +113,34 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 	 */
 	@Override
 	public void render(com.google.gwt.cell.client.Cell.Context context, ForumMessage value, SafeHtmlBuilder builder) {
-		
+
 		TopicCss css = TopicResources.INSTANCE.css();
 		css.ensureInjected();
 
 		/* The CellList will render rows of nulls if the paging goes beyond the end of the list */
-		if (value != null)
-		{
+		if (value != null) {
 			SafeHtml editButtonHtml = QuoteTemplate.INSTANCE.editButton(PageType.ForumEditTopicPageType.asHref().asString(), value.getTopicId(), value.getId());
-			
+
 			String color = css.oddRowClass();
-			if (context.getIndex() % 2 == 1)
-				color = css.evenRowClass();
-			
-			//Enable this when we when we have the data to demonstrate both cases.
-			
-//			if (value.getAuthor().company.equals("Reflection"))
-//					color = css.companyRowClass();
-			
-			String processedString = value.getContent() ;
-			
+			if (context.getIndex() % 2 == 1) color = css.evenRowClass();
+
+			// Enable this when we when we have the data to demonstrate both cases.
+
+			// if (value.getAuthor().company.equals("Reflection"))
+			// color = css.companyRowClass();
+
+			String processedString = value.getContent();
+
 			try {
 				processedString = new Markdown4jProcessor().process(value.getContent());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 
-			RENDERER.render(builder, FormattingHelper.getUserName(value.getAuthor()), SafeHtmlUtils.fromTrustedString(processedString), 
-					FormattingHelper.getTimeSince(value.getCreated()),
-					value.belongsToCurrentUser() ? QuoteTemplate.INSTANCE.empty() : QuoteTemplate.INSTANCE.flagButton(),
-					value.belongsToCurrentUser() ? editButtonHtml : QuoteTemplate.INSTANCE.empty(),
-							UriUtils.fromSafeConstant(PageType.ForumThreadPageType.asHref().asString()+"/view/"+value.getTopicId()+"/post/"+value.getIndex()), 
-							color);
+			RENDERER.render(builder, FormattingHelper.getUserName(value.getAuthor()), SafeHtmlUtils.fromTrustedString(processedString), FormattingHelper
+					.getTimeSince(value.getCreated()), value.belongsToCurrentUser() ? QuoteTemplate.INSTANCE.empty() : QuoteTemplate.INSTANCE.flagButton(),
+					value.belongsToCurrentUser() ? editButtonHtml : QuoteTemplate.INSTANCE.empty(), UriUtils.fromSafeConstant(PageType.ForumThreadPageType
+							.asHref().asString() + "/view/" + value.getTopicId() + "/post/" + value.getIndex()), color);
 		}
 
 	}
@@ -160,7 +151,7 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 
 		richText.setFocus(true);
 
-		richText.insertQuote(value.getAuthor().forename + " wrote: \n"+value.getContent());
+		richText.insertQuote(value.getAuthor().forename + " wrote: \n" + value.getContent());
 
 	}
 

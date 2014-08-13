@@ -1,62 +1,62 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder">
-    <ui:with field="link" type="com.google.gwt.safehtml.shared.SafeUri" />
-    <ui:with field="title" type="java.lang.String" />
-    <ui:with field="styleName" type="java.lang.String" />
-    <ui:with field="description" type="java.lang.String" />
-    <ui:with field="topics" type="java.lang.Integer" />
+	<ui:with field="link" type="com.google.gwt.safehtml.shared.SafeUri" />
+	<ui:with field="title" type="java.lang.String" />
+	<ui:with field="styleName" type="java.lang.String" />
+	<ui:with field="description" type="java.lang.String" />
+	<ui:with field="topics" type="java.lang.Integer" />
 
-    <ui:style>
-    .smaller {
-    	font-size: smaller;
-    }
+	<ui:style>
+		.smaller {
+		font-size: smaller;
+		}
 
-    .topicNumber {
-        font-size:small;
-        color:black;
-        margin-top:3px;
-    }
+		.topicNumber {
+		font-size:small;
+		color:black;
+		margin-top:3px;
+		}
 
-    div.list-group-item
-    {
-        padding-left:0px;
-        border: 0px;
-        background: none;
-    }
+		div.list-group-item
+		{
+		padding-left:0px;
+		border: 0px;
+		background: none;
+		}
 
-    .list-group-item-heading
-    {
-        font-weight: 600;
-    }
+		.list-group-item-heading
+		{
+		font-weight: 600;
+		}
 
-    @external .list-group-item;
-    @external .list-group-item-heading;
-    @external .active;
+		@external .list-group-item;
+		@external .list-group-item-heading;
+		@external .active;
 
-    div.active a
-    {
-        color:black;
-        pointer-events: none;
-        cursor: default;
-    }
-    </ui:style>
-    <div class="{styleName}">
+		div.active a
+		{
+		color:black;
+		pointer-events: none;
+		cursor: default;
+		}
+	</ui:style>
+	<div class="{styleName}">
 
-    <a href="{link}" >
-        <div class="list-group-item-heading">
-            <ui:text from="{title}"/>
-       </div>
-    </a>
-        <p class="list-group-item-text {style.smaller}">
-            <ui:text from="{description}" />
-        </p>
-        
-        <p class="list-group-item-text {style.topicNumber}">
-            <ui:text from="{topics.toString}" />
-            topics
-        </p>
-        
-        <div class="divider-horizontal"/>
-    </div>
-    
+		<a href="{link}">
+			<div class="list-group-item-heading">
+				<ui:text from="{title}" />
+			</div>
+		</a>
+		<p class="list-group-item-text {style.smaller}">
+			<ui:text from="{description}" />
+		</p>
+
+		<p class="list-group-item-text {style.topicNumber}">
+			<ui:text from="{topics.toString}" />
+			topics
+		</p>
+
+		<div class="divider-horizontal" />
+	</div>
+
 </ui:UiBinder>
