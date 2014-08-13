@@ -118,7 +118,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
 		pager.setPageSize(ServiceConstants.SHORT_STEP_VALUE);
 
-		
+		cellPrototype.setRichText(replyText);
 		
 		if (SessionController.get().isLoggedInUserAdmin())
 			addAdminButtons();
@@ -131,15 +131,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 //		  
 //		  dataProvider.addDataDisplay(messages);
 		
-		replyLink.addClickHandler(new ClickHandler()
-		{
-			@Override
-			public void onClick(ClickEvent event) {
-				post.getElement().scrollIntoView();
-			}
-		});
-	
-		 
+		
 	}
 	
 	class StickyButton extends Button implements ClickHandler {
@@ -223,10 +215,9 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 		return "Reflection.io: Forum";
 	}
 
-	@UiHandler("reply")
+	@UiHandler("replyLink")
 	void focusReplyClicked(ClickEvent event) {
-		replyText.setFocus(true);
-		Document.get().setScrollTop(replyText.getAbsoluteTop());
+		post.getElement().scrollIntoView();
 	}
 
 	@UiHandler("post")
