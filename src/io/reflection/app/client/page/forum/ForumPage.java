@@ -38,6 +38,8 @@ import com.google.gwt.safecss.shared.SafeStylesUtils;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
+import com.google.gwt.safehtml.shared.SafeUri;
+import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellList;
@@ -61,8 +63,8 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 	interface TopicTemplate extends SafeHtmlTemplates {
 		TopicTemplate INSTANCE = GWT.create(TopicTemplate.class);
 
-		@SafeHtmlTemplates.Template("<div>{0} <a href=\"{1}\"" + " style=\"{2}\">{3}</a></div><div>{4}</div>")
-		SafeHtml topicLayout(SafeHtml properties, String link, SafeStyles styles, SafeHtml title, SafeHtml pages);
+		@SafeHtmlTemplates.Template("<div>{0} <a href=\"{1}\"" + " style=\"{2}\">{3}</a></div><div>{4} {5}</div>")
+		SafeHtml topicLayout(SafeHtml properties, String link, SafeStyles styles, SafeHtml title, SafeHtml pages, SafeHtml pageLinks);
 	}
 
 	private static ForumPageUiBinder uiBinder = GWT.create(ForumPageUiBinder.class);
@@ -118,10 +120,28 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 				}
 				
 				int numPages = (int) Math.ceil((double)(object.numberOfReplies + 1) / ServiceConstants.SHORT_STEP_VALUE) ;
+
+				//generate page links
+				String pageLinksString = ""; 
+				
+				for(int i = 1 ; i <= numPages && numPages > 1 ; i++)
+				{
+					int position = i * ServiceConstants.SHORT_STEP_VALUE ;
+					if (i == numPages)
+						position = object.numberOfReplies ;
+					
+					SafeUri lastPageLink = UriUtils.fromSafeConstant(PageType.ForumThreadPageType.asHref().asString()+"/view/"+object.id+"/post/"+position);
+					pageLinksString += "<a style='margin-left:3px' href='"+lastPageLink.asString()+"' style>"+i+"</a>";
+					
+				}
+				SafeHtml pageLinks = SafeHtmlUtils.fromTrustedString(pageLinksString);
+				
+				//put it all together
 				return TopicTemplate.INSTANCE.topicLayout(SafeHtmlUtils.fromSafeConstant(properties),
 						PageType.ForumThreadPageType.asHref(TopicPage.VIEW_ACTION_PARAMETER_VALUE, object.id.toString()).asString(),
 						SafeStylesUtils.fromTrustedString(""), SafeHtmlUtils.fromString(object.title), 
-						SafeHtmlUtils.fromString(numPages+" pages"));
+						SafeHtmlUtils.fromString(numPages+" pages"),
+						pageLinks);
 			}
 		};
 
