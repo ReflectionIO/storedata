@@ -78,7 +78,12 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
 		if (thread.hasRows(start, end))
 			updateRowData(start, thread.getMessages(start, end));
 		else
+		{
 			ReplyController.get().getReplies(topic.id, start, end);
+			
+			//this causes the spinner until we get the rows and update the display properly.
+			display.setVisibleRangeAndClearData(display.getVisibleRange(), false);
+		}
 	}
 
 	/*
