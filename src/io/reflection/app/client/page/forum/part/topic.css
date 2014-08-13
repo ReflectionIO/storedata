@@ -1,18 +1,11 @@
-
-
-.oddRow
-{
+.oddRow {
 	background-color: #eff2f5;
 }
 
-.evenRow
-{
+.evenRow {
 	background-color: #ffffff;
 }
 
-.companyRow
-{
-    background-color: #ecebfb;
+.companyRow {
+	background-color: #ecebfb;
 }
-
-

@@ -7,7 +7,6 @@
 //
 package io.reflection.app.client.page.forum;
 
-
 import io.reflection.app.api.forum.shared.call.AddReplyRequest;
 import io.reflection.app.api.forum.shared.call.AddReplyResponse;
 import io.reflection.app.api.forum.shared.call.GetTopicRequest;
@@ -32,7 +31,6 @@ import io.reflection.app.client.part.BootstrapGwtCellList;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.part.datatypes.ForumMessage;
 import io.reflection.app.client.part.text.BlikiEditor;
-import io.reflection.app.client.part.text.RichTextToolbar;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.Topic;
 import io.reflection.app.shared.util.FormattingHelper;
@@ -55,7 +53,6 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
 
@@ -81,22 +78,20 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 	private ForumMessageCell cellPrototype = new ForumMessageCell();
 	@UiField(provided = true) CellList<ForumMessage> messagesCellList = new CellList<ForumMessage>(cellPrototype, BootstrapGwtCellList.INSTANCE);
 
-	
-	@UiField Button replyLink; 
+	@UiField Button replyLink;
 	@UiField Button post;
-	
-	@UiField HTMLPanel replyGroup ;
-	@UiField HTMLPanel replyNote ;
+
+	@UiField HTMLPanel replyGroup;
+	@UiField HTMLPanel replyNote;
 
 	@UiField FormPanel replyForm;
-	
+
 	@UiField BlikiEditor replyText;
 	@UiField SimplePager pager;
-	
-	@UiField HTMLPanel adminButtons ;
-	
-	@UiField ForumSummarySidePanel forumSummarySidePanel ;
-	
+
+	@UiField HTMLPanel adminButtons;
+
+	@UiField ForumSummarySidePanel forumSummarySidePanel;
 
 	private ForumMessageProvider dataProvider;
 
@@ -107,33 +102,30 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
 		messagesCellList.setPageSize(ServiceConstants.SHORT_STEP_VALUE);
 		Image loadingIndicator = new Image(Images.INSTANCE.preloader());
-		
-		//not sure why this is needed here to centre, but can't see it used elsewhere in code.
+
+		// not sure why this is needed here to centre, but can't see it used elsewhere in code.
 		loadingIndicator.getElement().getStyle().setDisplay(Display.BLOCK);
 		loadingIndicator.getElement().getStyle().setProperty("marginLeft", "auto");
 		loadingIndicator.getElement().getStyle().setProperty("marginRight", "auto");
-		
+
 		messagesCellList.setLoadingIndicator(loadingIndicator);
 		messagesCellList.setEmptyListWidget(new HTMLPanel("No messages found!"));
 
 		pager.setPageSize(ServiceConstants.SHORT_STEP_VALUE);
 
 		cellPrototype.setRichText(replyText);
-		
-		if (SessionController.get().isLoggedInUserAdmin())
-			addAdminButtons();
-		else
-			adminButtons.removeFromParent();
 
-//		  Topic topic = TopicController.get().getTopic(topicId);
-//		  dataProvider = new ForumMessageProvider(topic);
-//		  dataProvider.registerListeners();
-//		  
-//		  dataProvider.addDataDisplay(messages);
-		
-		
+		if (SessionController.get().isLoggedInUserAdmin()) addAdminButtons();
+		else adminButtons.removeFromParent();
+
+		// Topic topic = TopicController.get().getTopic(topicId);
+		// dataProvider = new ForumMessageProvider(topic);
+		// dataProvider.registerListeners();
+		//
+		// dataProvider.addDataDisplay(messages);
+
 	}
-	
+
 	class StickyButton extends Button implements ClickHandler {
 		public StickyButton(String name) {
 			super(name);
@@ -147,7 +139,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 			TopicController.get().setSticky(topicId, true);
 		}
 	}
-	
+
 	class LockButton extends Button implements ClickHandler {
 		public LockButton(String name) {
 			super(name);
@@ -156,17 +148,15 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 			this.getStyleElement().addClassName("btn-default");
 		}
 
-		
 		@Override
 		public void onClick(ClickEvent event) {
 			// TODO Auto-generated method stub
-			
+
 		}
-		
+
 	}
 
-	
-	private void addAdminButtons() {	
+	private void addAdminButtons() {
 		adminButtons.add(new StickyButton("Make Sticky"));
 		adminButtons.add(new LockButton("Lock"));
 
@@ -254,31 +244,30 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 				if ((topicIdString = current.getParameter(TOPIC_ID_PARAMETER_INDEX)) != null) {
 					topicId = Long.valueOf(topicIdString);
 					Topic topic = TopicController.get().getTopic(topicId);
-					
+
 					// replyText.setHTML("<div class=\"quoting\">" + topic.author.forename + " scribbled " + topic.content.toString() + "</div>");
-					
+
 					HashMap<String, String> paramMap = new HashMap<String, String>();
-					for (int i = 1, ss = current.getParameterCount() ; i < ss && i+1 < ss ; i += 2)
-					{
-						paramMap.put(current.getParameter(i), current.getParameter(i+1));
+					for (int i = 1, ss = current.getParameterCount(); i < ss && i + 1 < ss; i += 2) {
+						paramMap.put(current.getParameter(i), current.getParameter(i + 1));
 					}
-					
-					if (paramMap.containsKey("post"))
-					{
+
+					if (paramMap.containsKey("post")) {
 						final int post = Integer.parseInt(paramMap.get("post"));
 						int firstOnPage = post - (post % ServiceConstants.SHORT_STEP_VALUE);
-						
+
 						messagesCellList.setPageStart(firstOnPage);
 					}
 					updateTopic(topic);
 				}
 			}
 		}
+		messagesCellList.redraw();
 	}
 
 	/**
-	 * is called when there are new changes to be applied to the topic
-	 * this actually updates these changes in the ui
+	 * is called when there are new changes to be applied to the topic this actually updates these changes in the ui
+	 * 
 	 * @param topic
 	 */
 	private void updateTopic(Topic topic) {
@@ -301,7 +290,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
 			topicTitle.setInnerHTML(properties + topic.title);
 			forumTitle.setInnerText(topic.forum.title);
-			
+
 			updateNotes(topic);
 
 			if (dataProvider != null) {
@@ -312,12 +301,12 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 			dataProvider.registerListeners();
 
 			dataProvider.addDataDisplay(messagesCellList);
-			pager.setDisplay(messagesCellList); //bind the pager and the display together.
-			//just note that the display is primary about what range it has set.
-			//The SimplePager is just a bound view on that data.
-			//Manual jumping of ranges should thus be set on the display, not on the pager.
-			//in any event that would be better in case a different pager was bound/detached or
-			//something else happened during the lifecycle.
+			pager.setDisplay(messagesCellList); // bind the pager and the display together.
+			// just note that the display is primary about what range it has set.
+			// The SimplePager is just a bound view on that data.
+			// Manual jumping of ranges should thus be set on the display, not on the pager.
+			// in any event that would be better in case a different pager was bound/detached or
+			// something else happened during the lifecycle.
 
 			replyForm.setVisible(!isLocked);
 
