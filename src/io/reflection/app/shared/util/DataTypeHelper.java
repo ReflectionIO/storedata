@@ -55,6 +55,8 @@ public class DataTypeHelper {
 
 		if (item != null) {
 			usesIap = jsonPropertiesIapState(item.properties, yes, no, unknown);
+		} else {
+			usesIap = unknown;
 		}
 
 		return usesIap;
