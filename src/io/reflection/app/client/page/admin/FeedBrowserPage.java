@@ -163,6 +163,14 @@ public class FeedBrowserPage extends Page implements FilterEventHandler, Navigat
 				return object.type;
 			}
 		}, "Type");
+		
+		mFeeds.addColumn(new TextColumn<FeedFetch>() {
+
+			@Override
+			public String getValue(FeedFetch object) {
+				return object.status.toString();
+			}
+		}, "Status");
 
 		FieldUpdater<FeedFetch, String> onClick = new FieldUpdater<FeedFetch, String>() {
 
