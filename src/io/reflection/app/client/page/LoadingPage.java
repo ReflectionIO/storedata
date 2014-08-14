@@ -188,6 +188,8 @@ public class LoadingPage extends Page implements NavigationEventHandler, LoginEv
         dots.getStyle().setProperty("visibility", "visible");
         setProgress("Loading", 0, tasks.size());
         for (DivElement b : bars) {
+            b.removeClassName("progress-bar-danger");
+            b.removeClassName(style.orangeBar());
             b.addClassName("progress-bar");
             b.addClassName(style.purpleBar());
             b.addClassName(style.progressBar());
