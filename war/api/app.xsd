@@ -54,6 +54,7 @@
                 <xsd:attribute name="source" type="xsd:string" />
                 <xsd:attribute name="type" type="xsd:string" />
                 <xsd:attribute name="added" type="xsd:dateTime" />
+                <xsd:attribute name="country" type="xsd:string" />
                 <xsd:attribute name="currency" type="xsd:string" />
                 <xsd:attribute name="smallImage" type="xsd:string" />
                 <xsd:attribute name="mediumImage" type="xsd:string" />
@@ -120,6 +121,7 @@
             <xsd:extension base="DataType">
                 <xsd:sequence>
                     <xsd:element name="account" type="DataAccount" />
+                    <xsd:element name="fetch" type="DataAccountFetch" />
                     <xsd:element name="item" type="Item" />
                 </xsd:sequence>
                 <xsd:attribute name="country" type="xsd:string" />
