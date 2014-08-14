@@ -186,14 +186,15 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
         columnIap = new Column<MyApp, SafeHtml>(new SafeHtmlCell()) {
 
-            private final String IAP_DONT_KNOW_HTML = "<span class=\"glyphicon glyphicon-question-sign " + style.silver() + "\"></span>";
-            private final String IAP_YES_HTML = "<span class=\"glyphicon glyphicon-ok-sign " + style.green() + "\"></span>";
-            private final String IAP_NO_HTML = "<span></span>";
+			private final String IAP_DONT_KNOW_HTML = "<span class=\"icon-help " + style.silver() + "\"></span>";
+			private final String IAP_YES_HTML = "<span class=\"icon-ok " + style.green() + "\"></span>";
+			private final String IAP_NO_HTML = "<span></span>";
 
-            @Override
-            public SafeHtml getValue(MyApp object) {
-				return (object.item != null) ? SafeHtmlUtils.fromSafeConstant(DataTypeHelper.itemIapState(object.item, IAP_YES_HTML, IAP_NO_HTML, IAP_DONT_KNOW_HTML)) : spinnerLoaderHTML;
-            }
+			@Override
+			public SafeHtml getValue(MyApp object) {
+				return (object.item != null) ? SafeHtmlUtils.fromSafeConstant(DataTypeHelper.itemIapState(object.item, IAP_YES_HTML, IAP_NO_HTML,
+						IAP_DONT_KNOW_HTML)) : spinnerLoaderHTML;
+			}
 
         };
         appsTable.addColumn(columnIap, "IAP");
