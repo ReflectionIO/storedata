@@ -110,7 +110,6 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
         appsTable.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
         MyAppsController.get().addDataDisplay(appsTable);
         simplePager.setDisplay(appsTable);
-        FilterController.get().reset();
 
         myAppsTopPanel.setFiltersEnabled(false);
         myAppsTopPanel.setFilterAccountEnabled(false);
