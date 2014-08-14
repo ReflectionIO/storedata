@@ -38,128 +38,146 @@ import com.willshex.gson.json.service.shared.StatusType;
  */
 public class AddTopicPage extends Page implements CreateTopicEventHandler, GetForumsEventHandler {
 
-	@UiField TextBox title;
-	@UiField TextBox tags;
+    @UiField
+    TextBox title;
+    @UiField
+    TextBox tags;
 
-	@UiField ListBox forums;
+    @UiField
+    ListBox forums;
 
-	// @UiField RichTextToolbar contentToolbar;
-	@UiField BlikiEditor contentText;
+    // @UiField RichTextToolbar contentToolbar;
+    @UiField
+    BlikiEditor contentText;
 
-	@UiField ForumSummarySidePanel forumSummarySidePanel;
+    @UiField
+    ForumSummarySidePanel forumSummarySidePanel;
 
-	private static AddTopicPageUiBinder uiBinder = GWT.create(AddTopicPageUiBinder.class);
+    private static AddTopicPageUiBinder uiBinder = GWT.create(AddTopicPageUiBinder.class);
 
-	interface AddTopicPageUiBinder extends UiBinder<Widget, AddTopicPage> {}
+    interface AddTopicPageUiBinder extends UiBinder<Widget, AddTopicPage> {
+    }
 
-	public AddTopicPage() {
-		initWidget(uiBinder.createAndBindUi(this));
+    public AddTopicPage() {
+        initWidget(uiBinder.createAndBindUi(this));
 
-		// contentToolbar.setRichText(contentText);
+        // contentToolbar.setRichText(contentText);
 
-		title.getElement().setAttribute("placeholder", "Title");
-		tags.getElement().setAttribute("placeholder", "Comma separated tags");
-		// contentText.getElement().setAttribute("placeholder", "Content");
+        title.getElement().setAttribute("placeholder", "Title");
+        tags.getElement().setAttribute("placeholder", "Comma separated tags");
+        // contentText.getElement().setAttribute("placeholder", "Content");
 
-		FilterHelper.addForums(forums);
-	}
+        FilterHelper.addForums(forums);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.page.Page#onAttach()
-	 */
-	@Override
-	protected void onAttach() {
-		super.onAttach();
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.client.page.Page#onAttach()
+     */
+    @Override
+    protected void onAttach() {
+        super.onAttach();
 
-		register(EventController.get().addHandlerToSource(CreateTopicEventHandler.TYPE, TopicController.get(), this));
-		register(EventController.get().addHandlerToSource(GetForumsEventHandler.TYPE, ForumController.get(), this));
+        register(EventController.get().addHandlerToSource(CreateTopicEventHandler.TYPE, TopicController.get(), this));
+        register(EventController.get().addHandlerToSource(GetForumsEventHandler.TYPE, ForumController.get(), this));
 
-		resetForm();
-	}
+        resetForm();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.page.Page#getTitle()
-	 */
-	@Override
-	public String getTitle() {
-		return "Reflection.io: Forum";
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.client.page.Page#getTitle()
+     */
+    @Override
+    public String getTitle() {
+        return "Reflection.io: Forum";
+    }
 
-	@UiHandler("submit")
-	void onSubmit(ClickEvent e) {
-		if (validate()) {
-			Long forumId = null;
+    @UiHandler("submit")
+    void onSubmit(ClickEvent e) {
+        if (validate()) {
+            Long forumId = null;
 
-			if (forums.getItemCount() > 0) {
-				String forumIdString = forums.getValue(forums.getSelectedIndex());
-				forumId = Long.valueOf(forumIdString);
-			}
+            if (forums.getItemCount() > 0) {
+                String forumIdString = forums.getValue(forums.getSelectedIndex());
+                forumId = Long.valueOf(forumIdString);
+            }
 
-			if (forumId != null) {
-				TopicController.get().createTopic(forumId, title.getText(), false, contentText.getText(), tags.getText());
-			}
-		}
-	}
+            if (forumId != null) {
+                TopicController.get().createTopic(forumId, title.getText(), false, contentText.getText(), tags.getText());
+            }
+        }
+    }
 
-	private boolean validate() {
-		return true;
-	}
+    private boolean validate() {
+        return true;
+    }
 
-	private void resetForm() {
+    private void resetForm() {
 
-		title.setText("");
-		contentText.setText("");
-		tags.setText("");
+        title.setText("");
+        contentText.setText("");
+        tags.setText("");
 
-		// hide errors and remove clear validation strings
-	}
+        // hide errors and remove clear validation strings
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.api.forum.shared.call.event.CreateTopicEventHandler#createTopicSuccess(io.reflection.app.api.forum.shared.call.CreateTopicRequest,
-	 * io.reflection.app.api.forum.shared.call.CreateTopicResponse)
-	 */
-	@Override
-	public void createTopicSuccess(CreateTopicRequest input, CreateTopicResponse output) {
-		if (output.status == StatusType.StatusTypeSuccess) {
-			TopicController.get().reset();
-			PageType.ForumThreadPageType.show("view", output.topic.id.toString());
-		}
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * io.reflection.app.api.forum.shared.call.event.CreateTopicEventHandler
+     * #createTopicSuccess
+     * (io.reflection.app.api.forum.shared.call.CreateTopicRequest,
+     * io.reflection.app.api.forum.shared.call.CreateTopicResponse)
+     */
+    @Override
+    public void createTopicSuccess(CreateTopicRequest input, CreateTopicResponse output) {
+        if (output.status == StatusType.StatusTypeSuccess) {
+            TopicController.get().reset();
+            PageType.ForumThreadPageType.show("view", output.topic.id.toString());
+        }
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.api.forum.shared.call.event.CreateTopicEventHandler#createTopicFailure(io.reflection.app.api.forum.shared.call.CreateTopicRequest,
-	 * java.lang.Throwable)
-	 */
-	@Override
-	public void createTopicFailure(CreateTopicRequest input, Throwable caught) {}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * io.reflection.app.api.forum.shared.call.event.CreateTopicEventHandler
+     * #createTopicFailure
+     * (io.reflection.app.api.forum.shared.call.CreateTopicRequest,
+     * java.lang.Throwable)
+     */
+    @Override
+    public void createTopicFailure(CreateTopicRequest input, Throwable caught) {
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler#getForumsSuccess(io.reflection.app.api.forum.shared.call.GetForumsRequest,
-	 * io.reflection.app.api.forum.shared.call.GetForumsResponse)
-	 */
-	@Override
-	public void getForumsSuccess(GetForumsRequest input, GetForumsResponse output) {
-		forums.clear();
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler#
+     * getForumsSuccess
+     * (io.reflection.app.api.forum.shared.call.GetForumsRequest,
+     * io.reflection.app.api.forum.shared.call.GetForumsResponse)
+     */
+    @Override
+    public void getForumsSuccess(GetForumsRequest input, GetForumsResponse output) {
+        forums.clear();
 
-		FilterHelper.addForums(forums);
-	}
+        FilterHelper.addForums(forums);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler#getForumsFailure(io.reflection.app.api.forum.shared.call.GetForumsRequest,
-	 * java.lang.Throwable)
-	 */
-	@Override
-	public void getForumsFailure(GetForumsRequest input, Throwable caught) {}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler#
+     * getForumsFailure
+     * (io.reflection.app.api.forum.shared.call.GetForumsRequest,
+     * java.lang.Throwable)
+     */
+    @Override
+    public void getForumsFailure(GetForumsRequest input, Throwable caught) {
+    }
 }
