@@ -20,6 +20,6 @@ public interface BootstrapGwtDatePicker extends ClientBundle {
 
 	public static final BootstrapGwtDatePicker INSTANCE = GWT.create(BootstrapGwtDatePicker.class);
 
-	@Source("../res/bootstrapgwtdatepicker.css")
+	@Source("res/bootstrapgwtdatepicker.css")
 	BootstrapGwtDatePickerStyles styles();
 }
