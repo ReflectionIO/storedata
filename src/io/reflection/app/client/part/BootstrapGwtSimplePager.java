@@ -19,6 +19,6 @@ public interface BootstrapGwtSimplePager extends SimplePager.Resources {
 
 	public interface BootstrapGwtSimplePagerStyle extends SimplePager.Style {};
 
-	@Source("../res/bootstrapgwtsimplepager.css")
+	@Source("res/bootstrapgwtsimplepager.css")
 	BootstrapGwtSimplePagerStyle simplePagerStyle();
 };
