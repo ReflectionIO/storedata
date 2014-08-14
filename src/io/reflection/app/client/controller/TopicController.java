@@ -14,12 +14,15 @@ import io.reflection.app.api.forum.shared.call.GetTopicRequest;
 import io.reflection.app.api.forum.shared.call.GetTopicResponse;
 import io.reflection.app.api.forum.shared.call.GetTopicsRequest;
 import io.reflection.app.api.forum.shared.call.GetTopicsResponse;
+import io.reflection.app.api.forum.shared.call.UpdateTopicRequest;
+import io.reflection.app.api.forum.shared.call.UpdateTopicResponse;
 import io.reflection.app.api.forum.shared.call.event.CreateTopicEventHandler.CreateTopicFailure;
 import io.reflection.app.api.forum.shared.call.event.CreateTopicEventHandler.CreateTopicSuccess;
 import io.reflection.app.api.forum.shared.call.event.GetTopicEventHandler.GetTopicFailure;
 import io.reflection.app.api.forum.shared.call.event.GetTopicEventHandler.GetTopicSuccess;
 import io.reflection.app.api.forum.shared.call.event.GetTopicsEventHandler.GetTopicsFailure;
 import io.reflection.app.api.forum.shared.call.event.GetTopicsEventHandler.GetTopicsSuccess;
+import io.reflection.app.api.forum.shared.call.event.UpdateTopicEventHandler;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.datatypes.shared.Forum;
@@ -369,39 +372,31 @@ public class TopicController extends AsyncDataProvider<Topic> implements Service
 		return forumId;
 	}
 
-	/**
-	 * @param topicId
-	 * @param b
-	 */
-	public void setSticky(Long topicId, boolean makeSticky) {
+	
+	public void updateTopic(Topic topic){
 		ForumService service = ServiceCreator.createForumService();
 
-		final CreateTopicRequest input = new CreateTopicRequest();
+		final UpdateTopicRequest input = new UpdateTopicRequest();
 		input.accessCode = ACCESS_CODE;
 
 		input.session = SessionController.get().getSessionForApiCall();
 
-		input.topic = new Topic();
-		
-		input.topic.id = topicId ;
-		input.topic.sticky = makeSticky;
+		input.topic = topic;
 
-//		service.alterTopic(input, new AsyncCallback<CreateTopicResponse>() {
-//
-//			@Override
-//			public void onSuccess(CreateTopicResponse output) {
-//				if (output.status == StatusType.StatusTypeSuccess) {
-//
-//				}
-//
-//				EventController.get().fireEventFromSource(new CreateTopicSuccess(input, output), TopicController.this);
-//			}
-//
-//			@Override
-//			public void onFailure(Throwable caught) {
-//				EventController.get().fireEventFromSource(new CreateTopicFailure(input, caught), TopicController.this);
-//			}
-//		});
+		service.updateTopic(input, new AsyncCallback<UpdateTopicResponse>() {
+
+			@Override
+			public void onSuccess(UpdateTopicResponse output) {
+				if (output.status == StatusType.StatusTypeSuccess) {
+				    EventController.get().fireEventFromSource(new UpdateTopicEventHandler.UpdateTopicSuccess(input, output), TopicController.this);
+				}
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				EventController.get().fireEventFromSource(new UpdateTopicEventHandler.UpdateTopicFailure(input, caught), TopicController.this);
+			}
+		});
 		
 	}
 

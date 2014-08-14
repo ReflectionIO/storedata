@@ -31,6 +31,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.spacehopperstudios.utility.StringUtils;
+
 final class TopicService implements ITopicService {
 
 	private static final Logger LOG = Logger.getLogger(TopicService.class.getName());
@@ -143,7 +145,36 @@ final class TopicService implements ITopicService {
 
 	@Override
 	public Topic updateTopic(Topic topic) throws DataAccessException {
-		throw new UnsupportedOperationException();
+	    String updateTopicQuery = 
+	            String.format("UPDATE `rio`.`topic` SET `sticky`='%s', `locked`='%s' WHERE `id`='%s';",
+	                    topic.sticky == null || !topic.sticky.booleanValue() ? "n" : "y",
+                        topic.locked == null || !topic.locked.booleanValue() ? "n" : "y",
+                                topic.id.longValue());
+
+        Connection topicConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeTopic.toString());
+
+        try {
+            topicConnection.connect();
+            topicConnection.executeQuery(updateTopicQuery);
+
+            if (topicConnection.getAffectedRowCount() > 0) {
+                if (LOG.isLoggable(GaeLevel.INFO)) {
+                    LOG.info(String.format("Updated either sticky or locked on topic with id [%d]", topic.id.longValue()));
+                }
+
+                
+            } else {
+                if (LOG.isLoggable(GaeLevel.INFO)) {
+                    LOG.warning(String.format("Could not update sticky/locked on topic with id [%d]", topic.id.longValue()));
+                }
+            }
+        } finally {
+            if (topicConnection != null) {
+                topicConnection.disconnect();
+            }
+        }
+
+        return topic;
 	}
 
 	@Override

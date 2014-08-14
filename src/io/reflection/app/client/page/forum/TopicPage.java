@@ -111,6 +111,8 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
     private Button makeStickyButton;
 
+    private Topic topic;
+
     public TopicPage() {
         initWidget(uiBinder.createAndBindUi(this));
 
@@ -130,10 +132,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
         cellPrototype.setRichText(replyText);
 
-        if (SessionController.get().isLoggedInUserAdmin())
-            addAdminButtons();
-        else
-            adminButtons.removeFromParent();
+        
 
         // Topic topic = TopicController.get().getTopic(topicId);
         // dataProvider = new ForumMessageProvider(topic);
@@ -144,16 +143,29 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
     }
 
     class StickyButton extends Button implements ClickHandler {
-        public StickyButton(String name) {
-            super(name);
+        public StickyButton() {
+            super("");
             this.addClickHandler(this);
             this.getStyleElement().addClassName("btn");
             this.getStyleElement().addClassName("btn-default");
+            setName();
+            
+        }
+        public void setName()
+        {
+            Topic topic = TopicController.get().getTopic(topicId);
+            if (!topic.sticky)
+                this.setText("Make sticky");
+            else
+                this.setText("Make unsticky");
         }
 
         @Override
         public void onClick(ClickEvent event) {
-            TopicController.get().setSticky(topicId, true);
+            Topic topic = TopicController.get().getTopic(topicId);
+            topic.sticky = !topic.sticky ;
+            TopicController.get().updateTopic(topic);
+            setName();
         }
     }
 
@@ -164,17 +176,28 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
             this.getStyleElement().addClassName("btn");
             this.getStyleElement().addClassName("btn-default");
         }
+        
+        public void setName()
+        {
+            Topic topic = TopicController.get().getTopic(topicId);
+            if (!topic.locked)
+                this.setText("Lock");
+            else
+                this.setText("Unlock");
+        }
 
         @Override
         public void onClick(ClickEvent event) {
-            // TODO Auto-generated method stub
-
+            Topic topic = TopicController.get().getTopic(topicId);
+            topic.locked = !topic.locked ;
+            TopicController.get().updateTopic(topic);
+            setName();
         }
 
     }
 
     private void addAdminButtons() {
-        adminButtons.add(new StickyButton("Make Sticky"));
+        adminButtons.add(new StickyButton());
         adminButtons.add(new LockButton("Lock"));
 
     }
@@ -377,6 +400,17 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
     @Override
     public void getTopicSuccess(GetTopicRequest input, GetTopicResponse output) {
         if (output.status == StatusType.StatusTypeSuccess) {
+
+            if (TopicPage.this.topic == null)
+            {
+                if (SessionController.get().isLoggedInUserAdmin())
+                    addAdminButtons();
+                else
+                    adminButtons.removeFromParent();
+            }
+            
+            TopicPage.this.topic = output.topic ;
+            
             updateTopic(output.topic);
             forumSummarySidePanel.selectItem(output.topic.forum);
         }
