@@ -48,6 +48,14 @@ public class AppRankCell extends AbstractCell<Rank> {
 
 		Item item = ItemController.get().lookupItem(value.itemId);
 
+		if (item == null) {
+			item = new Item();
+			item.internalId = value.itemId;
+			item.name = value.itemId + "???";
+			item.creatorName = "???";
+			item.smallImage = "";
+		}
+
 		Filter filter = FilterController.get().getFilter();
 
 		String dailyDataType = filter.getDailyData(), listType = FilterController.OVERALL_LIST_TYPE;
@@ -56,7 +64,7 @@ public class AppRankCell extends AbstractCell<Rank> {
 
 		if (REVENUE_DAILY_DATA_TYPE.equals(dailyDataType)) {
 			dailyData = SafeHtmlUtils.fromSafeConstant("<span class=\"icon-dollar\" style=\"padding-right: 6px;\"></span>"
-		+ FormattingHelper.getCurrencySymbol(value.currency) + " " + value.revenue);
+					+ FormattingHelper.getCurrencySymbol(value.currency) + " " + value.revenue);
 		} else {
 			dailyData = SafeHtmlUtils.fromSafeConstant("<span class=\"icon-download-alt\" style=\"padding-right: 6px;\"></span>" + value.downloads.toString());
 		}
