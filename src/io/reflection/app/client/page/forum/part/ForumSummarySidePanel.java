@@ -26,36 +26,38 @@ import com.google.gwt.view.client.SingleSelectionModel;
  */
 public class ForumSummarySidePanel extends Composite {
 
-	private static ForumSummarySidePanelUiBinder uiBinder = GWT.create(ForumSummarySidePanelUiBinder.class);
+    private static ForumSummarySidePanelUiBinder uiBinder = GWT.create(ForumSummarySidePanelUiBinder.class);
 
-	interface ForumSummarySidePanelUiBinder extends UiBinder<Widget, ForumSummarySidePanel> {}
+    interface ForumSummarySidePanelUiBinder extends UiBinder<Widget, ForumSummarySidePanel> {
+    }
 
-	@UiField(provided = true) CellList<Forum> forums = new CellList<Forum>(new ForumSummaryCell(), BootstrapGwtCellList.INSTANCE);
-	private SingleSelectionModel<Forum> selectionModel;
+    @UiField(provided = true)
+    CellList<Forum> forums = new CellList<Forum>(new ForumSummaryCell(), BootstrapGwtCellList.INSTANCE);
+    private SingleSelectionModel<Forum> selectionModel;
 
-	public ForumSummarySidePanel() {
-		initWidget(uiBinder.createAndBindUi(this));
+    public ForumSummarySidePanel() {
+        initWidget(uiBinder.createAndBindUi(this));
 
-		forums.setEmptyListWidget(new HTMLPanel("No forums found!"));
-		ForumController.get().addDataDisplay(forums);
-	}
+        forums.setEmptyListWidget(new HTMLPanel("No forums found!"));
+        ForumController.get().addDataDisplay(forums);
+    }
 
-	/**
+    /**
 	 * 
 	 */
-	public void redraw() {
-		forums.redraw();
-	}
+    public void redraw() {
+        forums.redraw();
+    }
 
-	/**
-	 * @param selectedForumId
-	 */
-	public void selectItem(Forum selectedForum) {
-		selectionModel = new SingleSelectionModel<Forum>();
-		forums.setSelectionModel(selectionModel);
+    /**
+     * @param selectedForumId
+     */
+    public void selectItem(Forum selectedForum) {
+        selectionModel = new SingleSelectionModel<Forum>();
+        forums.setSelectionModel(selectionModel);
 
-		selectionModel.setSelected(selectedForum, true);
-		redraw();
-	}
+        selectionModel.setSelected(selectedForum, true);
+        redraw();
+    }
 
 }

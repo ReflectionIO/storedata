@@ -42,128 +42,137 @@ import com.google.gwt.uibinder.client.UiRenderer;
  * 
  */
 public class ForumMessageCell extends AbstractCell<ForumMessage> {
-	private BlikiEditor richText;
+    private BlikiEditor richText;
 
-	@UiField private AnchorElement flagButton;
+    @UiField
+    private AnchorElement flagButton;
 
-	/**
-	 * @param consumedEvents
-	 */
-	public ForumMessageCell(String... consumedEvents) {
-		super(BrowserEvents.CLICK);
-	}
+    /**
+     * @param consumedEvents
+     */
+    public ForumMessageCell(String... consumedEvents) {
+        super(BrowserEvents.CLICK);
+    }
 
-	interface ForumMessageCellRenderer extends UiRenderer {
-		void render(SafeHtmlBuilder sb, String authorName, SafeHtml content, String created, SafeHtml flagButtonHtml, SafeHtml editButtonHtml, SafeUri link,
-				String backgroundColour);
+    interface ForumMessageCellRenderer extends UiRenderer {
+        void render(SafeHtmlBuilder sb, String authorName, SafeHtml content, String created, SafeHtml flagButtonHtml, SafeHtml editButtonHtml, SafeUri link,
+                String backgroundColour);
 
-		void onBrowserEvent(ForumMessageCell o, NativeEvent e, Element p, ForumMessage n);
+        void onBrowserEvent(ForumMessageCell o, NativeEvent e, Element p, ForumMessage n);
 
-	}
+    }
 
-	public interface TopicResources extends ClientBundle {
-		public static final TopicResources INSTANCE = GWT.create(TopicResources.class);
+    public interface TopicResources extends ClientBundle {
+        public static final TopicResources INSTANCE = GWT.create(TopicResources.class);
 
-		@Source("topic.css")
-		public TopicCss css();
+        @Source("topic.css")
+        public TopicCss css();
 
-	}
+    }
 
-	interface TopicCss extends CssResource {
-		@ClassName("oddRow")
-		String oddRowClass();
+    interface TopicCss extends CssResource {
+        @ClassName("oddRow")
+        String oddRowClass();
 
-		@ClassName("evenRow")
-		String evenRowClass();
+        @ClassName("evenRow")
+        String evenRowClass();
 
-		@ClassName("companyRow")
-		String companyRowClass();
-	}
+        @ClassName("companyRow")
+        String companyRowClass();
+    }
 
-	private static ForumMessageCellRenderer RENDERER = GWT.create(ForumMessageCellRenderer.class);
+    private static ForumMessageCellRenderer RENDERER = GWT.create(ForumMessageCellRenderer.class);
 
-	/**
-	 * The HTML templates used to render the cell.
-	 */
-	interface QuoteTemplate extends SafeHtmlTemplates {
-		QuoteTemplate INSTANCE = GWT.create(QuoteTemplate.class);
+    /**
+     * The HTML templates used to render the cell.
+     */
+    interface QuoteTemplate extends SafeHtmlTemplates {
+        QuoteTemplate INSTANCE = GWT.create(QuoteTemplate.class);
 
-		@SafeHtmlTemplates.Template("<a href=\"flag\" class=\"\" ui:field=\"flagButton\"><i class=\"glyphicon glyphicon-flag\"></i>Flag</a> | ")
-		SafeHtml flagButton();
+        @SafeHtmlTemplates.Template("<a href=\"flag\" class=\"\" ui:field=\"flagButton\"><i class=\"glyphicon glyphicon-flag\"></i>Flag</a> | ")
+        SafeHtml flagButton();
 
-		@SafeHtmlTemplates.Template("<a href=\"{0}/view/{1}/edit/{2}\" class=\"\" ui:field=\"editButton\">Edit</a> | ")
-		SafeHtml editButton(String pageHref, long topicId, long messageId);
+        @SafeHtmlTemplates.Template("<a href=\"{0}/view/{1}/edit/{2}\" class=\"\" ui:field=\"editButton\">Edit</a> | ")
+        SafeHtml editButton(String pageHref, long topicId, long messageId);
 
-		@SafeHtmlTemplates.Template("")
-		SafeHtml empty();
+        @SafeHtmlTemplates.Template("")
+        SafeHtml empty();
 
-	}
+    }
 
-	@Override
-	public void onBrowserEvent(Context context, Element parent, ForumMessage value, NativeEvent event, ValueUpdater<ForumMessage> valueUpdater) {
-		// SafeUri link = PageType.ForumEditTopicPageType.asHref("edit", value.getTopicId().toString());
-		RENDERER.onBrowserEvent(this, event, parent, value);
-	}
+    @Override
+    public void onBrowserEvent(Context context, Element parent, ForumMessage value, NativeEvent event, ValueUpdater<ForumMessage> valueUpdater) {
+        // SafeUri link = PageType.ForumEditTopicPageType.asHref("edit",
+        // value.getTopicId().toString());
+        RENDERER.onBrowserEvent(this, event, parent, value);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.cell.client.AbstractCell#render(com.google.gwt.cell.client.Cell.Context, java.lang.Object,
-	 * com.google.gwt.safehtml.shared.SafeHtmlBuilder)
-	 */
-	@Override
-	public void render(com.google.gwt.cell.client.Cell.Context context, ForumMessage value, SafeHtmlBuilder builder) {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.google.gwt.cell.client.AbstractCell#render(com.google.gwt.cell.client
+     * .Cell.Context, java.lang.Object,
+     * com.google.gwt.safehtml.shared.SafeHtmlBuilder)
+     */
+    @Override
+    public void render(com.google.gwt.cell.client.Cell.Context context, ForumMessage value, SafeHtmlBuilder builder) {
 
-		TopicCss css = TopicResources.INSTANCE.css();
-		css.ensureInjected();
+        TopicCss css = TopicResources.INSTANCE.css();
+        css.ensureInjected();
 
-		/* The CellList will render rows of nulls if the paging goes beyond the end of the list */
-		if (value != null) {
-			SafeHtml editButtonHtml = QuoteTemplate.INSTANCE.editButton(PageType.ForumEditTopicPageType.asHref().asString(), value.getTopicId(), value.getId());
+        /*
+         * The CellList will render rows of nulls if the paging goes beyond the
+         * end of the list
+         */
+        if (value != null) {
+            SafeHtml editButtonHtml = QuoteTemplate.INSTANCE.editButton(PageType.ForumEditTopicPageType.asHref().asString(), value.getTopicId(), value.getId());
 
-			String color = css.oddRowClass();
-			if (context.getIndex() % 2 == 1) color = css.evenRowClass();
+            String color = css.oddRowClass();
+            if (context.getIndex() % 2 == 1)
+                color = css.evenRowClass();
 
-			// Enable this when we when we have the data to demonstrate both cases.
+            // Enable this when we when we have the data to demonstrate both
+            // cases.
 
-			// if (value.getAuthor().company.equals("Reflection"))
-			// color = css.companyRowClass();
+            // if (value.getAuthor().company.equals("Reflection"))
+            // color = css.companyRowClass();
 
-			String processedString = value.getContent();
+            String processedString = value.getContent();
 
-			try {
-				processedString = new Markdown4jProcessor().process(value.getContent());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+            try {
+                processedString = new Markdown4jProcessor().process(value.getContent());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-			RENDERER.render(builder, FormattingHelper.getUserName(value.getAuthor()), SafeHtmlUtils.fromTrustedString(processedString), FormattingHelper
-					.getTimeSince(value.getCreated()), value.belongsToCurrentUser() ? QuoteTemplate.INSTANCE.empty() : QuoteTemplate.INSTANCE.flagButton(),
-					value.belongsToCurrentUser() ? editButtonHtml : QuoteTemplate.INSTANCE.empty(), UriUtils.fromSafeConstant(PageType.ForumThreadPageType
-							.asHref().asString() + "/view/" + value.getTopicId() + "/post/" + value.getIndex()), color);
-		}
+            RENDERER.render(builder, FormattingHelper.getUserName(value.getAuthor()), SafeHtmlUtils.fromTrustedString(processedString), FormattingHelper
+                    .getTimeSince(value.getCreated()), value.belongsToCurrentUser() ? QuoteTemplate.INSTANCE.empty() : QuoteTemplate.INSTANCE.flagButton(),
+                    value.belongsToCurrentUser() ? editButtonHtml : QuoteTemplate.INSTANCE.empty(), UriUtils.fromSafeConstant(PageType.ForumThreadPageType
+                            .asHref().asString() + "/view/" + value.getTopicId() + "/post/" + value.getIndex()), color);
+        }
 
-	}
+    }
 
-	@UiHandler("quote")
-	void focusReplyClicked(ClickEvent event, Element parent, ForumMessage value) {
-		Document.get().setScrollTop(richText.getAbsoluteTop());
+    @UiHandler("quote")
+    void focusReplyClicked(ClickEvent event, Element parent, ForumMessage value) {
+        Document.get().setScrollTop(richText.getAbsoluteTop());
 
-		richText.setFocus(true);
+        richText.setFocus(true);
 
-		richText.insertQuote(value.getAuthor().forename + " wrote: \n" + value.getContent());
+        richText.insertQuote(value.getAuthor().forename + " wrote: \n" + value.getContent());
 
-	}
+    }
 
-	/**
-	 * @param richText
-	 */
-	public void setRichText(BlikiEditor richText) {
-		this.richText = richText;
-	}
+    /**
+     * @param richText
+     */
+    public void setRichText(BlikiEditor richText) {
+        this.richText = richText;
+    }
 
-	public BlikiEditor getRichText() {
-		return richText;
-	}
+    public BlikiEditor getRichText() {
+        return richText;
+    }
 
 }

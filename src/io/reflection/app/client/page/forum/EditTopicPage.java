@@ -35,116 +35,128 @@ import com.willshex.gson.json.service.shared.StatusType;
  */
 public class EditTopicPage extends Page implements NavigationEventHandler, UpdateReplyEventHandler {
 
-	private static EditTopicPageUiBinder uiBinder = GWT.create(EditTopicPageUiBinder.class);
+    private static EditTopicPageUiBinder uiBinder = GWT.create(EditTopicPageUiBinder.class);
 
-	interface EditTopicPageUiBinder extends UiBinder<Widget, EditTopicPage> {}
+    interface EditTopicPageUiBinder extends UiBinder<Widget, EditTopicPage> {
+    }
 
-	private Long topicId;
-	private Long replyId;
-	private Reply reply;
-	private String replyContent;
+    private Long topicId;
+    private Long replyId;
+    private Reply reply;
+    private String replyContent;
 
-	@UiField BlikiEditor editText;
+    @UiField
+    BlikiEditor editText;
 
-	public EditTopicPage() {
-		initWidget(uiBinder.createAndBindUi(this));
+    public EditTopicPage() {
+        initWidget(uiBinder.createAndBindUi(this));
 
-	}
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.page.Page#onAttach()
-	 */
-	@Override
-	protected void onAttach() {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.client.page.Page#onAttach()
+     */
+    @Override
+    protected void onAttach() {
 
-		super.onAttach();
-		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
-		register(EventController.get().addHandlerToSource(UpdateReplyEventHandler.TYPE, ReplyController.get(), this));
+        super.onAttach();
+        register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+        register(EventController.get().addHandlerToSource(UpdateReplyEventHandler.TYPE, ReplyController.get(), this));
 
-	}
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
-	 * io.reflection.app.client.controller.NavigationController.Stack)
-	 */
-	@Override
-	public void navigationChanged(Stack previous, Stack current) {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * io.reflection.app.client.handler.NavigationEventHandler#navigationChanged
+     * (io.reflection.app.client.controller.NavigationController.Stack,
+     * io.reflection.app.client.controller.NavigationController.Stack)
+     */
+    @Override
+    public void navigationChanged(Stack previous, Stack current) {
 
-		if (current != null && PageType.ForumEditTopicPageType.equals(current.getPage())) {
-			String topicIdString = current.getParameter(0);
-			String selectedMessageId = current.getParameter(2);
+        if (current != null && PageType.ForumEditTopicPageType.equals(current.getPage())) {
+            String topicIdString = current.getParameter(0);
+            String selectedMessageId = current.getParameter(2);
 
-			if (topicIdString != null) {
-				topicId = null;
+            if (topicIdString != null) {
+                topicId = null;
 
-				try {
-					topicId = Long.parseLong(topicIdString);
-					replyId = Long.parseLong(selectedMessageId);
-				} catch (NumberFormatException e) {}
+                try {
+                    topicId = Long.parseLong(topicIdString);
+                    replyId = Long.parseLong(selectedMessageId);
+                } catch (NumberFormatException e) {
+                }
 
-				if (topicId != null) {
-					reply = ReplyController.get().getReply(replyId);
+                if (topicId != null) {
+                    reply = ReplyController.get().getReply(replyId);
 
-					if (reply != null) {
-						replyContent = reply.content.toString();
-						show();
-					}
-				}
-			}
-		}
-	}
+                    if (reply != null) {
+                        replyContent = reply.content.toString();
+                        show();
+                    }
+                }
+            }
+        }
+    }
 
-	/**
-	 * @param reply
-	 */
-	private void show() {
-		editText.setFocus(true);
-		Document.get().setScrollTop(editText.getAbsoluteTop());
-		editText.setText(replyContent);
+    /**
+     * @param reply
+     */
+    private void show() {
+        editText.setFocus(true);
+        Document.get().setScrollTop(editText.getAbsoluteTop());
+        editText.setText(replyContent);
 
-	}
+    }
 
-	@UiHandler("submit")
-	void onSubmitClicked(ClickEvent e) {
+    @UiHandler("submit")
+    void onSubmitClicked(ClickEvent e) {
 
-		if (validate()) {
-			if (replyId != null) {
-				ReplyController.get().updateReply(replyId, editText.getText());
-			} else {
-				ReplyController.get().addReply(replyId, editText.getText());
-			}
-		}
-	}
+        if (validate()) {
+            if (replyId != null) {
+                ReplyController.get().updateReply(replyId, editText.getText());
+            } else {
+                ReplyController.get().addReply(replyId, editText.getText());
+            }
+        }
+    }
 
-	private boolean validate() {
-		return true;
-	}
+    private boolean validate() {
+        return true;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.api.forum.shared.call.event.UpdateReplyEventHandler#updateReplySuccess(io.reflection.app.api.forum.shared.call.UpdateReplyRequest,
-	 * io.reflection.app.api.forum.shared.call.UpdateReplyResponse)
-	 */
-	@Override
-	public void updateReplySuccess(UpdateReplyRequest input, UpdateReplyResponse output) {
-		if (output.status == StatusType.StatusTypeSuccess && replyId != null) {
-			PageType.ForumThreadPageType.show("view", topicId.toString());
-		}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * io.reflection.app.api.forum.shared.call.event.UpdateReplyEventHandler
+     * #updateReplySuccess
+     * (io.reflection.app.api.forum.shared.call.UpdateReplyRequest,
+     * io.reflection.app.api.forum.shared.call.UpdateReplyResponse)
+     */
+    @Override
+    public void updateReplySuccess(UpdateReplyRequest input, UpdateReplyResponse output) {
+        if (output.status == StatusType.StatusTypeSuccess && replyId != null) {
+            PageType.ForumThreadPageType.show("view", topicId.toString());
+        }
 
-	}
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.api.forum.shared.call.event.UpdateReplyEventHandler#updateReplyFailure(io.reflection.app.api.forum.shared.call.UpdateReplyRequest,
-	 * java.lang.Throwable)
-	 */
-	@Override
-	public void updateReplyFailure(UpdateReplyRequest input, Throwable caught) {}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * io.reflection.app.api.forum.shared.call.event.UpdateReplyEventHandler
+     * #updateReplyFailure
+     * (io.reflection.app.api.forum.shared.call.UpdateReplyRequest,
+     * java.lang.Throwable)
+     */
+    @Override
+    public void updateReplyFailure(UpdateReplyRequest input, Throwable caught) {
+    }
 
 }

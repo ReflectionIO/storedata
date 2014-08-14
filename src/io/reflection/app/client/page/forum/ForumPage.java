@@ -54,224 +54,239 @@ import com.willshex.gson.json.service.shared.StatusType;
  */
 public class ForumPage extends Page implements NavigationEventHandler, GetForumsEventHandler {
 
-	interface TopicTemplate extends SafeHtmlTemplates {
-		TopicTemplate INSTANCE = GWT.create(TopicTemplate.class);
+    interface TopicTemplate extends SafeHtmlTemplates {
+        TopicTemplate INSTANCE = GWT.create(TopicTemplate.class);
 
-		@SafeHtmlTemplates.Template("<div>{0} <a href=\"{1}\"" + " style=\"{2}\">{3}</a></div><div>{4} {5}</div>")
-		SafeHtml topicLayout(SafeHtml properties, String link, SafeStyles styles, SafeHtml title, SafeHtml pages, SafeHtml pageLinks);
-	}
+        @SafeHtmlTemplates.Template("<div>{0} <a href=\"{1}\"" + " style=\"{2}\">{3}</a></div><div>{4} {5}</div>")
+        SafeHtml topicLayout(SafeHtml properties, String link, SafeStyles styles, SafeHtml title, SafeHtml pages, SafeHtml pageLinks);
+    }
 
-	private static ForumPageUiBinder uiBinder = GWT.create(ForumPageUiBinder.class);
+    private static ForumPageUiBinder uiBinder = GWT.create(ForumPageUiBinder.class);
 
-	interface ForumPageUiBinder extends UiBinder<Widget, ForumPage> {}
+    interface ForumPageUiBinder extends UiBinder<Widget, ForumPage> {
+    }
 
-	private static final int SELECTED_FORUM_PARAMETER_INDEX = 0;
+    private static final int SELECTED_FORUM_PARAMETER_INDEX = 0;
 
-	@UiField(provided = true) CellTable<Topic> topics = new CellTable<Topic>(ServiceConstants.SHORT_STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
+    @UiField(provided = true)
+    CellTable<Topic> topics = new CellTable<Topic>(ServiceConstants.SHORT_STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 
-	@UiField SimplePager pager;
+    @UiField
+    SimplePager pager;
 
-	@UiField ForumSummarySidePanel forumSummarySidePanel;
-	@UiField HeadingElement titleText;
+    @UiField
+    ForumSummarySidePanel forumSummarySidePanel;
+    @UiField
+    HeadingElement titleText;
 
-	private Forum selectedForum;
+    private Forum selectedForum;
 
-	private Long selectedForumId;
+    private Long selectedForumId;
 
-	public ForumPage() {
-		initWidget(uiBinder.createAndBindUi(this));
+    public ForumPage() {
+        initWidget(uiBinder.createAndBindUi(this));
 
-		createColumns();
+        createColumns();
 
-		topics.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
-		topics.setEmptyTableWidget(new HTMLPanel("No topics found!"));
+        topics.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
+        topics.setEmptyTableWidget(new HTMLPanel("No topics found!"));
 
-		TopicController.get().addDataDisplay(topics);
-		pager.setDisplay(topics);
+        TopicController.get().addDataDisplay(topics);
+        pager.setDisplay(topics);
 
-	}
+    }
 
-	private void createColumns() {
-		Column<Topic, SafeHtml> titleColumn = new Column<Topic, SafeHtml>(new SafeHtmlCell()) {
+    private void createColumns() {
+        Column<Topic, SafeHtml> titleColumn = new Column<Topic, SafeHtml>(new SafeHtmlCell()) {
 
-			@Override
-			public SafeHtml getValue(Topic object) {
+            @Override
+            public SafeHtml getValue(Topic object) {
 
-				String properties = "";
+                String properties = "";
 
-				if (object.locked != null && object.locked.booleanValue()) {
-					properties += "<i class=\"glyphicon glyphicon-lock\"></i> ";
-				}
+                if (object.locked != null && object.locked.booleanValue()) {
+                    properties += "<i class=\"glyphicon glyphicon-lock\"></i> ";
+                }
 
-				if (object.heat != null && object.heat > 10) {
-					properties += "<i class=\"glyphicon glyphicon-fire\"></i> ";
-				}
+                if (object.heat != null && object.heat > 10) {
+                    properties += "<i class=\"glyphicon glyphicon-fire\"></i> ";
+                }
 
-				if (object.sticky != null && object.sticky.booleanValue()) {
-					properties += "<i class=\"glyphicon glyphicon-pushpin\"></i> ";
-				}
+                if (object.sticky != null && object.sticky.booleanValue()) {
+                    properties += "<i class=\"glyphicon glyphicon-pushpin\"></i> ";
+                }
 
-				int numPages = (int) Math.ceil((double) (object.numberOfReplies + 1) / ServiceConstants.SHORT_STEP_VALUE);
+                int numPages = (int) Math.ceil((double) (object.numberOfReplies + 1) / ServiceConstants.SHORT_STEP_VALUE);
 
-				// generate page links
-				String pageLinksString = "";
+                // generate page links
+                String pageLinksString = "";
 
-				for (int i = 1; i <= numPages && numPages > 1; i++) {
-					int position = i * ServiceConstants.SHORT_STEP_VALUE;
-					if (i == numPages) position = object.numberOfReplies;
+                for (int i = 1; i <= numPages && numPages > 1; i++) {
+                    int position = i * ServiceConstants.SHORT_STEP_VALUE;
+                    if (i == numPages)
+                        position = object.numberOfReplies;
 
-					SafeUri lastPageLink = UriUtils.fromSafeConstant(PageType.ForumThreadPageType.asHref().asString() + "/view/" + object.id + "/post/"
-							+ position);
-					pageLinksString += "<a style='margin-left:3px' href='" + lastPageLink.asString() + "' style>" + i + "</a>";
+                    SafeUri lastPageLink = UriUtils.fromSafeConstant(PageType.ForumThreadPageType.asHref().asString() + "/view/" + object.id + "/post/"
+                            + position);
+                    pageLinksString += "<a style='margin-left:3px' href='" + lastPageLink.asString() + "' style>" + i + "</a>";
 
-				}
-				SafeHtml pageLinks = SafeHtmlUtils.fromTrustedString(pageLinksString);
+                }
+                SafeHtml pageLinks = SafeHtmlUtils.fromTrustedString(pageLinksString);
 
-				// put it all together
-				return TopicTemplate.INSTANCE
-						.topicLayout(SafeHtmlUtils.fromSafeConstant(properties),
-								PageType.ForumThreadPageType.asHref(TopicPage.VIEW_ACTION_PARAMETER_VALUE, object.id.toString()).asString(),
-								SafeStylesUtils.fromTrustedString(""), SafeHtmlUtils.fromString(object.title), SafeHtmlUtils.fromString(numPages + " pages"),
-								pageLinks);
-			}
-		};
+                // put it all together
+                return TopicTemplate.INSTANCE
+                        .topicLayout(SafeHtmlUtils.fromSafeConstant(properties),
+                                PageType.ForumThreadPageType.asHref(TopicPage.VIEW_ACTION_PARAMETER_VALUE, object.id.toString()).asString(),
+                                SafeStylesUtils.fromTrustedString(""), SafeHtmlUtils.fromString(object.title), SafeHtmlUtils.fromString(numPages + " pages"),
+                                pageLinks);
+            }
+        };
 
-		TextColumn<Topic> postsColumn = new TextColumn<Topic>() {
+        TextColumn<Topic> postsColumn = new TextColumn<Topic>() {
 
-			@Override
-			public String getValue(Topic object) {
-				return object.numberOfReplies.toString();
-			}
+            @Override
+            public String getValue(Topic object) {
+                return object.numberOfReplies.toString();
+            }
 
-		};
+        };
 
-		TextColumn<Topic> lastPosterColumn = new TextColumn<Topic>() {
+        TextColumn<Topic> lastPosterColumn = new TextColumn<Topic>() {
 
-			@Override
-			public String getValue(Topic object) {
-				return FormattingHelper.getUserName(object.lastReplier);
-			}
-		};
+            @Override
+            public String getValue(Topic object) {
+                return FormattingHelper.getUserName(object.lastReplier);
+            }
+        };
 
-		TextColumn<Topic> lastPostedColumn = new TextColumn<Topic>() {
+        TextColumn<Topic> lastPostedColumn = new TextColumn<Topic>() {
 
-			@Override
-			public String getValue(Topic object) {
-				return FormattingHelper.getTimeSince(object.lastReplied);
-			}
-		};
+            @Override
+            public String getValue(Topic object) {
+                return FormattingHelper.getTimeSince(object.lastReplied);
+            }
+        };
 
-		TextHeader titleHeader = new TextHeader("Topic");
-		titleHeader.setHeaderStyleNames("col-sm-9");
-		topics.addColumn(titleColumn, titleHeader);
+        TextHeader titleHeader = new TextHeader("Topic");
+        titleHeader.setHeaderStyleNames("col-sm-9");
+        topics.addColumn(titleColumn, titleHeader);
 
-		TextHeader postHeader = new TextHeader("Posts");
+        TextHeader postHeader = new TextHeader("Posts");
 
-		topics.addColumn(postsColumn, postHeader);
+        topics.addColumn(postsColumn, postHeader);
 
-		TextHeader lastPosterHeader = new TextHeader("Last Poster");
-		lastPosterHeader.setHeaderStyleNames("col-sm-2");
-		topics.addColumn(lastPosterColumn, lastPosterHeader);
+        TextHeader lastPosterHeader = new TextHeader("Last Poster");
+        lastPosterHeader.setHeaderStyleNames("col-sm-2");
+        topics.addColumn(lastPosterColumn, lastPosterHeader);
 
-		TextHeader lastPostedHeader = new TextHeader("");
-		lastPostedHeader.setHeaderStyleNames("col-sm-1");
-		topics.addColumn(lastPostedColumn, lastPostedHeader);
+        TextHeader lastPostedHeader = new TextHeader("");
+        lastPostedHeader.setHeaderStyleNames("col-sm-1");
+        topics.addColumn(lastPostedColumn, lastPostedHeader);
 
-	}
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.page.Page#onAttach()
-	 */
-	@Override
-	protected void onAttach() {
-		super.onAttach();
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.client.page.Page#onAttach()
+     */
+    @Override
+    protected void onAttach() {
+        super.onAttach();
 
-		register(EventController.get().addHandlerToSource(GetForumsEventHandler.TYPE, ForumController.get(), this));
-		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
-	}
+        register(EventController.get().addHandlerToSource(GetForumsEventHandler.TYPE, ForumController.get(), this));
+        register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler#getForumsSuccess(io.reflection.app.api.forum.shared.call.GetForumsRequest,
-	 * io.reflection.app.api.forum.shared.call.GetForumsResponse)
-	 */
-	@Override
-	public void getForumsSuccess(GetForumsRequest input, GetForumsResponse output) {
-		if (output.status == StatusType.StatusTypeSuccess && output.forums != null && output.forums.size() > 0) {
-			configureTitleAndSidePanel();
-		}
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler#
+     * getForumsSuccess
+     * (io.reflection.app.api.forum.shared.call.GetForumsRequest,
+     * io.reflection.app.api.forum.shared.call.GetForumsResponse)
+     */
+    @Override
+    public void getForumsSuccess(GetForumsRequest input, GetForumsResponse output) {
+        if (output.status == StatusType.StatusTypeSuccess && output.forums != null && output.forums.size() > 0) {
+            configureTitleAndSidePanel();
+        }
+    }
 
-	/**
-	 * This may either run from Navigation changed, or after Forum callback
-	 */
-	protected void configureTitleAndSidePanel() {
-		if (ForumController.get().hasForums()) {
-			if (selectedForumId != null) selectedForum = ForumController.get().getForumById(selectedForumId);
-			else {
-				selectedForum = ForumController.get().getFirstForum();
-				selectedForumId = selectedForum.id;
-				TopicController.get().getTopics(selectedForumId);
-			}
-			forumSummarySidePanel.selectItem(selectedForum);
-			if (selectedForum != null) // shouldn't be null unless an error has occured
-			{
-				titleText.setInnerText(selectedForum.title);
-			}
-			forumSummarySidePanel.redraw();
-		}
-	}
+    /**
+     * This may either run from Navigation changed, or after Forum callback
+     */
+    protected void configureTitleAndSidePanel() {
+        if (ForumController.get().hasForums()) {
+            if (selectedForumId != null)
+                selectedForum = ForumController.get().getForumById(selectedForumId);
+            else {
+                selectedForum = ForumController.get().getFirstForum();
+                selectedForumId = selectedForum.id;
+                TopicController.get().getTopics(selectedForumId);
+            }
+            forumSummarySidePanel.selectItem(selectedForum);
+            if (selectedForum != null) // shouldn't be null unless an error has
+                                       // occured
+            {
+                titleText.setInnerText(selectedForum.title);
+            }
+            forumSummarySidePanel.redraw();
+        }
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler#getForumsFailure(io.reflection.app.api.forum.shared.call.GetForumsRequest,
-	 * java.lang.Throwable)
-	 */
-	@Override
-	public void getForumsFailure(GetForumsRequest input, Throwable caught) {}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler#
+     * getForumsFailure
+     * (io.reflection.app.api.forum.shared.call.GetForumsRequest,
+     * java.lang.Throwable)
+     */
+    @Override
+    public void getForumsFailure(GetForumsRequest input, Throwable caught) {
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
-	 * io.reflection.app.client.controller.NavigationController.Stack)
-	 */
-	@Override
-	public void navigationChanged(Stack previous, Stack current) {
-		if (current != null && PageType.ForumPageType.equals(current.getPage())) {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * io.reflection.app.client.handler.NavigationEventHandler#navigationChanged
+     * (io.reflection.app.client.controller.NavigationController.Stack,
+     * io.reflection.app.client.controller.NavigationController.Stack)
+     */
+    @Override
+    public void navigationChanged(Stack previous, Stack current) {
+        if (current != null && PageType.ForumPageType.equals(current.getPage())) {
 
-			String selectedIdString;
-			if ((selectedIdString = current.getParameter(SELECTED_FORUM_PARAMETER_INDEX)) != null) {
+            String selectedIdString;
+            if ((selectedIdString = current.getParameter(SELECTED_FORUM_PARAMETER_INDEX)) != null) {
 
-				Long newSelectedId = Long.valueOf(selectedIdString);
+                Long newSelectedId = Long.valueOf(selectedIdString);
 
-				if (selectedForumId == null || newSelectedId.longValue() != selectedForumId.longValue()) {
-					selectedForumId = newSelectedId;
-					selectedForum = null;
-					TopicController.get().getTopics(selectedForumId);
+                if (selectedForumId == null || newSelectedId.longValue() != selectedForumId.longValue()) {
+                    selectedForumId = newSelectedId;
+                    selectedForum = null;
+                    TopicController.get().getTopics(selectedForumId);
 
-					configureTitleAndSidePanel();
-				}
-			} else {
-				// needs to be reset in case we're coming back to this page.
-				selectedForumId = null;
-				selectedForum = null;
-			}
-		}
-	}
+                    configureTitleAndSidePanel();
+                }
+            } else {
+                // needs to be reset in case we're coming back to this page.
+                selectedForumId = null;
+                selectedForum = null;
+            }
+        }
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.page.Page#getTitle()
-	 */
-	@Override
-	public String getTitle() {
-		return "Reflection.io: Forum";
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.client.page.Page#getTitle()
+     */
+    @Override
+    public String getTitle() {
+        return "Reflection.io: Forum";
+    }
 
 }
