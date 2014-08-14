@@ -489,10 +489,10 @@
     </wsdl:message>
 
     <wsdl:message name="DeleteUserRequest">
-        <wsdl:part name="input" element="sdc:DeleteUserInput" />
+        <wsdl:part name="input" element="sda:DeleteUserInput" />
     </wsdl:message>
     <wsdl:message name="DeleteUserResponse">
-        <wsdl:part name="output" element="sdc:DeleteUserOutput" />
+        <wsdl:part name="output" element="sda:DeleteUserOutput" />
     </wsdl:message>
 
     <wsdl:portType name="admin">
