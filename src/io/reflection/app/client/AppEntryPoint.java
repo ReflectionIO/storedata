@@ -31,7 +31,7 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 		String mediaQueries = " @media (max-width: 1024px) {."
 				+ Styles.INSTANCE.reflection().footer()
 				+ " {display:none;} .navbar-fixed-top {position:relative;} .navbar {margin-bottom:0px;} .container-fluid{padding-top:0px !important;}}"
-				+ "@media (min-width: 992px) {html,body,#content,.container-fluid,#content>.container-fluid>.row{height: 100%} .sidepanel{height: 100%;margin-bottom:0px;border-bottom:0px;}}";
+				+ "@media (min-width: 992px) {html,body,#content,.container-fluid,#content>.container-fluid>.row{height: 100%} .sidepanel{height: 100%;margin-bottom:0px;}}";
 		StyleInjector.injectAtEnd(mediaQueries);
 	}
 
