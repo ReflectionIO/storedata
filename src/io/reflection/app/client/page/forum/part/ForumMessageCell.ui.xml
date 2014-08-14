@@ -48,6 +48,10 @@
 		margin-left:3px;
 		margin-right:3px;
 		}
+
+        .markdown p {
+            font-size:14px;
+        }
 	</ui:style>
 
 	<div class="row {backgroundColour}">
@@ -59,7 +63,7 @@
 		</div>
 
 		<div class="col-sm-10 {style.postContent}">
-			<div>
+			<div class="{style.markdown}">
 				<ui:safehtml from="{content}" />
 			</div>
 
