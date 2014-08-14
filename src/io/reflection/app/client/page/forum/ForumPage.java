@@ -277,6 +277,7 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
                 selectedForum = null;
             }
         }
+        topics.redraw();
     }
 
     /*
