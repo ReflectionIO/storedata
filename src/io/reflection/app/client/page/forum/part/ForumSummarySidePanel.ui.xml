@@ -7,23 +7,14 @@
 		font-weight: 400;
 		}
 
-		.horDivider {
+		.horizontalDivider {
 		margin-top: 20px !important;
 		margin-bottom: 20px !important;
 		}
 	</ui:style>
 	<g:HTMLPanel>
 		<h3>Forums</h3>
-
-		<!-- <h6 ui:field="creatorName" class="{style.creator} text-muted"></h6> -->
-
 		<c:CellList styleName="list-group" ui:field="forums" />
 
-
-		<!-- <ul class="nav nav-pills nav-stacked"> <li ui:field="myAppsListItem"> <g:InlineHyperlink ui:field="myAppsLink" text="My Apps" /> </li> <li class="divider-horizontal 
-			{style.horDivider}" /> <li ui:field="linkedAccountsListItem"> <g:InlineHyperlink ui:field="linkedAccountsLink" text="Linked Accounts" /> </li> <li class="divider-horizontal 
-			{style.horDivider}" /> <li ui:field="personalDetailsListItem"> <g:InlineHyperlink ui:field="personalDetailsLink" text="Personal Details" /> </li> <li class="divider-horizontal 
-			{style.horDivider}" /> <li ui:field="changePasswordListItem"> <g:InlineHyperlink ui:field="changePasswordLink" text="Change Password" /> </li> <li class="divider-horizontal 
-			{style.horDivider}" /> </ul> -->
 	</g:HTMLPanel>
 </ui:UiBinder> 

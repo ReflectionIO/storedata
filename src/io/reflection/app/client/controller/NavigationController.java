@@ -231,7 +231,6 @@ public class NavigationController implements ValueChangeHandler<String> {
         if (!page.isAttached()) {
             mPanel.clear();
             mPanel.add(page);
-        } else {
         }
     }
 
@@ -362,9 +361,7 @@ public class NavigationController implements ValueChangeHandler<String> {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.google.gwt.event.logical.shared.ValueChangeHandler#onValueChange(
-     * com.google.gwt.event.logical.shared.ValueChangeEvent)
+     * @see com.google.gwt.event.logical.shared.ValueChangeHandler#onValueChange( com.google.gwt.event.logical.shared.ValueChangeEvent)
      */
     @Override
     public void onValueChange(ValueChangeEvent<String> event) {

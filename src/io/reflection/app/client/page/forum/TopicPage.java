@@ -154,10 +154,12 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
         public void setName()
         {
             Topic topic = TopicController.get().getTopic(topicId);
-            if (!topic.sticky)
+            if (!topic.sticky) {
                 this.setText("Make sticky");
-            else
+            }
+            else {
                 this.setText("Make unsticky");
+            }
         }
 
         @Override
@@ -180,10 +182,12 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
         public void setName()
         {
             Topic topic = TopicController.get().getTopic(topicId);
-            if (!topic.locked)
+            if (!topic.locked) {
                 this.setText("Lock");
-            else
+            }
+            else {
                 this.setText("Unlock");
+            }
         }
 
         @Override
@@ -403,10 +407,12 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
             if (TopicPage.this.topic == null)
             {
-                if (SessionController.get().isLoggedInUserAdmin())
+                if (SessionController.get().isLoggedInUserAdmin()) {
                     addAdminButtons();
-                else
+                }
+                else {
                     adminButtons.removeFromParent();
+                }
             }
             
             TopicPage.this.topic = output.topic ;

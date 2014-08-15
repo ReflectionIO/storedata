@@ -63,21 +63,16 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 
     private static ForumPageUiBinder uiBinder = GWT.create(ForumPageUiBinder.class);
 
-    interface ForumPageUiBinder extends UiBinder<Widget, ForumPage> {
-    }
+    interface ForumPageUiBinder extends UiBinder<Widget, ForumPage> {}
 
     private static final int SELECTED_FORUM_PARAMETER_INDEX = 0;
 
-    @UiField(provided = true)
-    CellTable<Topic> topics = new CellTable<Topic>(ServiceConstants.SHORT_STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
+    @UiField(provided = true) CellTable<Topic> topics = new CellTable<Topic>(ServiceConstants.SHORT_STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 
-    @UiField
-    SimplePager pager;
+    @UiField SimplePager pager;
 
-    @UiField
-    ForumSummarySidePanel forumSummarySidePanel;
-    @UiField
-    HeadingElement titleText;
+    @UiField ForumSummarySidePanel forumSummarySidePanel;
+    @UiField HeadingElement titleText;
 
     private Forum selectedForum;
 
@@ -123,8 +118,9 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 
                 for (int i = 1; i <= numPages && numPages > 1; i++) {
                     int position = i * ServiceConstants.SHORT_STEP_VALUE;
-                    if (i == numPages)
+                    if (i == numPages) {
                         position = object.numberOfReplies;
+                    }
 
                     SafeUri lastPageLink = UriUtils.fromSafeConstant(PageType.ForumThreadPageType.asHref().asString() + "/view/" + object.id + "/post/"
                             + position);
@@ -201,9 +197,7 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
     /*
      * (non-Javadoc)
      * 
-     * @see io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler#
-     * getForumsSuccess
-     * (io.reflection.app.api.forum.shared.call.GetForumsRequest,
+     * @see io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler# getForumsSuccess (io.reflection.app.api.forum.shared.call.GetForumsRequest,
      * io.reflection.app.api.forum.shared.call.GetForumsResponse)
      */
     @Override
@@ -218,9 +212,9 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
      */
     protected void configureTitleAndSidePanel() {
         if (ForumController.get().hasForums()) {
-            if (selectedForumId != null)
+            if (selectedForumId != null) {
                 selectedForum = ForumController.get().getForumById(selectedForumId);
-            else {
+            } else {
                 selectedForum = ForumController.get().getFirstForum();
                 selectedForumId = selectedForum.id;
                 TopicController.get().getTopics(selectedForumId);
@@ -238,21 +232,16 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
     /*
      * (non-Javadoc)
      * 
-     * @see io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler#
-     * getForumsFailure
-     * (io.reflection.app.api.forum.shared.call.GetForumsRequest,
+     * @see io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler# getForumsFailure (io.reflection.app.api.forum.shared.call.GetForumsRequest,
      * java.lang.Throwable)
      */
     @Override
-    public void getForumsFailure(GetForumsRequest input, Throwable caught) {
-    }
+    public void getForumsFailure(GetForumsRequest input, Throwable caught) {}
 
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * io.reflection.app.client.handler.NavigationEventHandler#navigationChanged
-     * (io.reflection.app.client.controller.NavigationController.Stack,
+     * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged (io.reflection.app.client.controller.NavigationController.Stack,
      * io.reflection.app.client.controller.NavigationController.Stack)
      */
     @Override

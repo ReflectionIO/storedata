@@ -27,7 +27,7 @@
 		margin-bottom: 0px;
 	}
 	
-	.toolbar_spacing {
+	.toolbarSpacing {
 		padding-top: 10px;
 		margin-top: 30px;
 		padding-bottom: 10px;
@@ -37,7 +37,7 @@
 		<pp:ForumSummarySidePanel ui:field="forumSummarySidePanel" styleName="sidepanel col-md-2 well" />
 
 		<div class="col-md-10">
-			<g:HTMLPanel styleName="well {style.toolbar_spacing}">
+			<g:HTMLPanel styleName="well {style.toolbarSpacing}">
 				<div class="row">
 					<h3 class="col-sm-2 {style.header2}" ui:field="forumTitle"></h3>
 					<g:Button ui:field="replyLink" styleName="btn btn-primary col-sm-2 pull-right">
@@ -64,7 +64,6 @@
 				<g:HTMLPanel>
 					<g:HTMLPanel ui:field="replyGroup" styleName="form-group">
 						<label>Content</label>
-						<!-- <p:RichTextToolbar ui:field="contentToolbar" /> <g:RichTextArea ui:field="contentText" styleName="form-control {style.textArea}" /> -->
 						<p:BlikiEditor ui:field="replyText" />
 						<g:HTMLPanel styleName="noteDetail" ui:field="replyNote" visible="false" />
 					</g:HTMLPanel>

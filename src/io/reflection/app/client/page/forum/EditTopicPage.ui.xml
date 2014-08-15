@@ -12,7 +12,7 @@
 		height: 200px;
 		}
 
-		.toolbar_spacing {
+		.toolbarSpacing {
 		padding-top: 10px;
 		margin-top:30px;
 		padding-bottom: 10px;
@@ -26,7 +26,7 @@
 	<g:HTMLPanel styleName="row">
 		<pp:ForumSummarySidePanel ui:field="forumSummarySidePanel" styleName="sidepanel col-md-2 well" />
 		<div class="col-md-10">
-			<g:HTMLPanel styleName="well {style.toolbar_spacing}">
+			<g:HTMLPanel styleName="well {style.toolbarSpacing}">
 				<div class="row">
 					<h2 class="col-sm-2 {style.header2}">Edit Post</h2>
 				</div>
@@ -35,7 +35,6 @@
 				<g:HTMLPanel>
 					<g:HTMLPanel ui:field="editGroup" styleName="form-group">
 						<label>Content</label>
-						<!-- <p:RichTextToolbar ui:field="contentToolbar" /> <g:RichTextArea ui:field="contentText" styleName="form-control {style.textArea}" /> -->
 						<p:BlikiEditor ui:field="editText" />
 						<g:HTMLPanel styleName="noteDetail" ui:field="editNote" visible="false" />
 					</g:HTMLPanel>

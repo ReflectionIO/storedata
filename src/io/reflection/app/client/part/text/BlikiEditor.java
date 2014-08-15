@@ -202,8 +202,9 @@ public class BlikiEditor extends Composite implements HasText {
 
         content = content.replaceAll("\n", "\n>");
         String initial = "\n>";
-        if (position == 0)
+        if (position == 0) {
             initial = ">";
+        }
 
         String newString = unedited.substring(0, position) + initial + content + "\n" + unedited.substring(position, unedited.length());
 

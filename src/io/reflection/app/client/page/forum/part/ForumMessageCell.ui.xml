@@ -4,7 +4,6 @@
 	<ui:with field="content" type="com.google.gwt.safehtml.shared.SafeHtml" />
 	<ui:with field="created" type="java.lang.String" />
 	<ui:with field="link" type="com.google.gwt.safehtml.shared.SafeUri" />
-	<!-- <ui:with field="topicId" type="java.lang.Long" /> <ui:with field="messageId" type="java.lang.Long" /> -->
 	<ui:with field="backgroundColour" type="java.lang.String" />
 	<ui:with field="flagButtonHtml" type="com.google.gwt.safehtml.shared.SafeHtml" />
 	<ui:with field="editButtonHtml" type="com.google.gwt.safehtml.shared.SafeHtml" />

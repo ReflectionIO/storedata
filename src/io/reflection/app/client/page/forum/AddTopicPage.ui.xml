@@ -26,7 +26,6 @@
 
 					<g:HTMLPanel ui:field="contentGroup" styleName="form-group">
 						<label>Content</label>
-						<!-- <p:RichTextToolbar ui:field="contentToolbar" /> <g:RichTextArea ui:field="contentText" styleName="form-control {style.textArea}" /> -->
 						<p:BlikiEditor ui:field="contentText" />
 						<g:HTMLPanel styleName="noteDetail" ui:field="contentNote" visible="false" />
 					</g:HTMLPanel>

@@ -44,8 +44,7 @@ import com.google.gwt.uibinder.client.UiRenderer;
 public class ForumMessageCell extends AbstractCell<ForumMessage> {
     private BlikiEditor richText;
 
-    @UiField
-    private AnchorElement flagButton;
+    @UiField private AnchorElement flagButton;
 
     /**
      * @param consumedEvents
@@ -110,9 +109,7 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.google.gwt.cell.client.AbstractCell#render(com.google.gwt.cell.client
-     * .Cell.Context, java.lang.Object,
+     * @see com.google.gwt.cell.client.AbstractCell#render(com.google.gwt.cell.client .Cell.Context, java.lang.Object,
      * com.google.gwt.safehtml.shared.SafeHtmlBuilder)
      */
     @Override
@@ -122,15 +119,15 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
         css.ensureInjected();
 
         /*
-         * The CellList will render rows of nulls if the paging goes beyond the
-         * end of the list
+         * The CellList will render rows of nulls if the paging goes beyond the end of the list
          */
         if (value != null) {
             SafeHtml editButtonHtml = QuoteTemplate.INSTANCE.editButton(PageType.ForumEditTopicPageType.asHref().asString(), value.getTopicId(), value.getId());
 
             String color = css.oddRowClass();
-            if (context.getIndex() % 2 == 1)
+            if (context.getIndex() % 2 == 1) {
                 color = css.evenRowClass();
+            }
 
             // Enable this when we when we have the data to demonstrate both
             // cases.

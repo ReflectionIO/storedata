@@ -32,265 +32,270 @@ import com.willshex.gson.json.service.shared.StatusType;
  * 
  */
 public class ForumController extends AsyncDataProvider<Forum> implements ServiceConstants {
-	private List<Forum> forums = null;
-	private Map<Long, Forum> forumMap = null ;
-	private long count = 0;
-	private Pager pager;
+    private List<Forum> forums = null;
+    private Map<Long, Forum> forumMap = null;
+    private long count = 0;
+    private Pager pager;
 
-	private static ForumController one = null;
+    private static ForumController one = null;
 
-	public static ForumController get() {
-		if (one == null) {
-			one = new ForumController();
-		}
+    public static ForumController get() {
+        if (one == null) {
+            one = new ForumController();
+        }
 
-		return one;
-	}
+        return one;
+    }
 
-	private void fetchForums() {
+    private void fetchForums() {
 
-		ForumService service = ServiceCreator.createForumService();
+        ForumService service = ServiceCreator.createForumService();
 
-		final GetForumsRequest input = new GetForumsRequest();
-		input.accessCode = ACCESS_CODE;
+        final GetForumsRequest input = new GetForumsRequest();
+        input.accessCode = ACCESS_CODE;
 
-		input.session = SessionController.get().getSessionForApiCall();
+        input.session = SessionController.get().getSessionForApiCall();
 
-		if (pager == null) {
-			pager = new Pager();
-			pager.count = SHORT_STEP;
-			pager.start = Long.valueOf(0);
-			pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
-		}
+        if (pager == null) {
+            pager = new Pager();
+            pager.count = SHORT_STEP;
+            pager.start = Long.valueOf(0);
+            pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
+        }
 
-		input.pager = pager;
+        input.pager = pager;
 
-		service.getForums(input, new AsyncCallback<GetForumsResponse>() {
+        service.getForums(input, new AsyncCallback<GetForumsResponse>() {
 
-			@Override
-			public void onSuccess(GetForumsResponse output) {
-				if (output.status == StatusType.StatusTypeSuccess) {
-					if (output.forums != null) {
-						if (forums == null) {
-							forums = new ArrayList<Forum>();
-							forumMap = new HashMap<Long, Forum>();
-						}
+            @Override
+            public void onSuccess(GetForumsResponse output) {
+                if (output.status == StatusType.StatusTypeSuccess) {
+                    if (output.forums != null) {
+                        if (forums == null) {
+                            forums = new ArrayList<Forum>();
+                            forumMap = new HashMap<Long, Forum>();
+                        }
 
-						forums.addAll(output.forums);
-						for(Forum forum : forums)
-							forumMap.put(forum.id, forum);
-					}
+                        forums.addAll(output.forums);
+                        for (Forum forum : forums)
+                            forumMap.put(forum.id, forum);
+                    }
 
-					if (output.pager != null) {
-						pager = output.pager;
+                    if (output.pager != null) {
+                        pager = output.pager;
 
-						if (pager.totalCount != null) {
-							count = pager.totalCount.longValue();
-						}
-					}
+                        if (pager.totalCount != null) {
+                            count = pager.totalCount.longValue();
+                        }
+                    }
 
-					updateRowCount((int) count, true);
-					updateRowData(
-							input.pager.start.intValue(),
-							forums == null ? new ArrayList<Forum>() : forums.subList(input.pager.start.intValue(), Math.min(input.pager.start.intValue()
-									+ input.pager.count.intValue(), count == 0 ? (forums == null ? 0 : forums.size()) : (int) count)));
-				}
+                    updateRowCount((int) count, true);
+                    updateRowData(
+                            input.pager.start.intValue(),
+                            forums == null ? new ArrayList<Forum>() : forums.subList(input.pager.start.intValue(), Math.min(input.pager.start.intValue()
+                                    + input.pager.count.intValue(), count == 0 ? (forums == null ? 0 : forums.size()) : (int) count)));
+                }
 
-				EventController.get().fireEventFromSource(new GetForumsSuccess(input, output), ForumController.this);
-			}
+                EventController.get().fireEventFromSource(new GetForumsSuccess(input, output), ForumController.this);
+            }
 
-			@Override
-			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new GetForumsFailure(input, caught), ForumController.this);
-			}
-		});
-	}
+            @Override
+            public void onFailure(Throwable caught) {
+                EventController.get().fireEventFromSource(new GetForumsFailure(input, caught), ForumController.this);
+            }
+        });
+    }
 
-	public List<Forum> getForums() {
-		if (pager == null) {
-			fetchForums();
-		}
+    public List<Forum> getForums() {
+        if (pager == null) {
+            fetchForums();
+        }
 
-		return forums;
-	}
+        return forums;
+    }
 
-	public long getForumsCount() {
-		return count;
-	}
+    public long getForumsCount() {
+        return count;
+    }
 
-	public boolean hasForums() {
-		return pager != null && forums != null && forums.size() > 0;
-	}
+    public boolean hasForums() {
+        return pager != null && forums != null && forums.size() > 0;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.view.client.AbstractDataProvider#onRangeChanged(com.google.gwt.view.client.HasData)
-	 */
-	@Override
-	protected void onRangeChanged(HasData<Forum> display) {
-		Range r = display.getVisibleRange();
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.gwt.view.client.AbstractDataProvider#onRangeChanged(com.google.gwt.view.client.HasData)
+     */
+    @Override
+    protected void onRangeChanged(HasData<Forum> display) {
+        Range r = display.getVisibleRange();
 
-		int start = r.getStart();
-		int end = start + r.getLength();
+        int start = r.getStart();
+        int end = start + r.getLength();
 
-		if (!hasForums() || end > forums.size()) {
-			fetchForums();
-		}
+        if (!hasForums() || end > forums.size()) {
+            fetchForums();
+        }
 
-		updateRowData(start, forums == null || forums.size() == 0 ? new ArrayList<Forum>() : forums.subList(start, Math.min(forums.size(), end)));
-	}
+        updateRowData(start, forums == null || forums.size() == 0 ? new ArrayList<Forum>() : forums.subList(start, Math.min(forums.size(), end)));
+    }
 
-	/**
-	 * 
-	 * @param id
-	 * @param title
-	 * @param visible
-	 * @param commentsEnabled
-	 * @param description
-	 * @param content
-	 * @param publish
-	 * @param tags
-	 */
-	public void updateForum(Long id, String title, Boolean visible, Boolean commentsEnabled, String description, String content, Boolean publish, String tags) {
-		// ForumService service = ServiceCreator.createForumService();
-		//
-		// final UpdateForumRequest input = new UpdateForumRequest();
-		// input.accessCode = ACCESS_CODE;
-		//
-		// input.session = SessionController.get().getSessionForApiCall();
-		// input.forum = forumLookup.get(id.intValue());
-		//
-		// input.forum.title = title;
-		// input.forum.description = description;
-		// input.forum.content = content;
-		//
-		// input.publish = publish;
-		//
-		// input.forum.visible = visible;
-		// input.forum.commentsEnabled = commentsEnabled;
-		//
-		// input.forum.tags = TagHelper.convertToTagList(tags);
-		//
-		// service.updateForum(input, new AsyncCallback<UpdateForumResponse>() {
-		//
-		// @Override
-		// public void onSuccess(UpdateForumResponse output) {
-		// if (output.status == StatusType.StatusTypeSuccess) {
-		// reset();
-		// }
-		//
-		// EventController.get().fireEventFromSource(new UpdateForumSuccess(input, output), ForumController.this);
-		// }
-		//
-		// @Override
-		// public void onFailure(Throwable caught) {
-		// EventController.get().fireEventFromSource(new UpdateForumFailure(input, caught), ForumController.this);
-		// }
-		// });
-	}
+    /**
+     * 
+     * @param id
+     * @param title
+     * @param visible
+     * @param commentsEnabled
+     * @param description
+     * @param content
+     * @param publish
+     * @param tags
+     */
+    public void updateForum(Long id, String title, Boolean visible, Boolean commentsEnabled, String description, String content, Boolean publish, String tags) {
+        // ForumService service = ServiceCreator.createForumService();
+        //
+        // final UpdateForumRequest input = new UpdateForumRequest();
+        // input.accessCode = ACCESS_CODE;
+        //
+        // input.session = SessionController.get().getSessionForApiCall();
+        // input.forum = forumLookup.get(id.intValue());
+        //
+        // input.forum.title = title;
+        // input.forum.description = description;
+        // input.forum.content = content;
+        //
+        // input.publish = publish;
+        //
+        // input.forum.visible = visible;
+        // input.forum.commentsEnabled = commentsEnabled;
+        //
+        // input.forum.tags = TagHelper.convertToTagList(tags);
+        //
+        // service.updateForum(input, new AsyncCallback<UpdateForumResponse>() {
+        //
+        // @Override
+        // public void onSuccess(UpdateForumResponse output) {
+        // if (output.status == StatusType.StatusTypeSuccess) {
+        // reset();
+        // }
+        //
+        // EventController.get().fireEventFromSource(new UpdateForumSuccess(input, output), ForumController.this);
+        // }
+        //
+        // @Override
+        // public void onFailure(Throwable caught) {
+        // EventController.get().fireEventFromSource(new UpdateForumFailure(input, caught), ForumController.this);
+        // }
+        // });
+    }
 
-	/**
-	 * 
-	 * @param title
-	 * @param visible
-	 * @param commentsEnabled
-	 * @param description
-	 * @param content
-	 * @param publish
-	 * @param tags
-	 */
-	public void createForum(String title, Boolean visible, Boolean commentsEnabled, String description, String content, Boolean publish, String tags) {
-		// ForumService service = ServiceCreator.createForumService();
-		//
-		// final CreateForumRequest input = new CreateForumRequest();
-		// input.accessCode = ACCESS_CODE;
-		//
-		// input.session = SessionController.get().getSessionForApiCall();
-		//
-		// input.forum = new Forum();
-		//
-		// input.forum.title = title;
-		// input.forum.description = description;
-		// input.forum.content = content;
-		// input.publish = publish;
-		// input.forum.visible = visible;
-		// input.forum.commentsEnabled = commentsEnabled;
-		//
-		// input.forum.tags = TagHelper.convertToTagList(tags);
-		//
-		// service.createForum(input, new AsyncCallback<CreateForumResponse>() {
-		//
-		// @Override
-		// public void onSuccess(CreateForumResponse output) {
-		// if (output.status == StatusType.StatusTypeSuccess) {}
-		//
-		// EventController.get().fireEventFromSource(new CreateForumSuccess(input, output), ForumController.this);
-		// }
-		//
-		// @Override
-		// public void onFailure(Throwable caught) {
-		// EventController.get().fireEventFromSource(new CreateForumFailure(input, caught), ForumController.this);
-		// }
-		// });
-	}
+    /**
+     * 
+     * @param title
+     * @param visible
+     * @param commentsEnabled
+     * @param description
+     * @param content
+     * @param publish
+     * @param tags
+     */
+    public void createForum(String title, Boolean visible, Boolean commentsEnabled, String description, String content, Boolean publish, String tags) {
+        // ForumService service = ServiceCreator.createForumService();
+        //
+        // final CreateForumRequest input = new CreateForumRequest();
+        // input.accessCode = ACCESS_CODE;
+        //
+        // input.session = SessionController.get().getSessionForApiCall();
+        //
+        // input.forum = new Forum();
+        //
+        // input.forum.title = title;
+        // input.forum.description = description;
+        // input.forum.content = content;
+        // input.publish = publish;
+        // input.forum.visible = visible;
+        // input.forum.commentsEnabled = commentsEnabled;
+        //
+        // input.forum.tags = TagHelper.convertToTagList(tags);
+        //
+        // service.createForum(input, new AsyncCallback<CreateForumResponse>() {
+        //
+        // @Override
+        // public void onSuccess(CreateForumResponse output) {
+        // if (output.status == StatusType.StatusTypeSuccess) {}
+        //
+        // EventController.get().fireEventFromSource(new CreateForumSuccess(input, output), ForumController.this);
+        // }
+        //
+        // @Override
+        // public void onFailure(Throwable caught) {
+        // EventController.get().fireEventFromSource(new CreateForumFailure(input, caught), ForumController.this);
+        // }
+        // });
+    }
 
-	public void reset() {
-		pager = null;
+    public void reset() {
+        pager = null;
 
-		forums = null;
+        forums = null;
 
-		updateRowData(0, new ArrayList<Forum>());
-		updateRowCount(0, false);
+        updateRowData(0, new ArrayList<Forum>());
+        updateRowCount(0, false);
 
-		fetchForums();
-	}
+        fetchForums();
+    }
 
-	public void deleteForum(Long forumId) {
-		// ForumService service = ServiceCreator.createForumService();
-		//
-		// final DeleteForumRequest input = new DeleteForumRequest();
-		// input.accessCode = ACCESS_CODE;
-		//
-		// input.session = SessionController.get().getSessionForApiCall();
-		//
-		// input.forum = new Forum();
-		// input.forum.id = forumId;
-		//
-		// service.deleteForum(input, new AsyncCallback<DeleteForumResponse>() {
-		//
-		// @Override
-		// public void onSuccess(DeleteForumResponse output) {
-		// if (output.status == StatusType.StatusTypeSuccess) {}
-		//
-		// EventController.get().fireEventFromSource(new DeleteForumSuccess(input, output), ForumController.this);
-		// }
-		//
-		// @Override
-		// public void onFailure(Throwable caught) {
-		// EventController.get().fireEventFromSource(new DeleteForumFailure(input, caught), ForumController.this);
-		// }
-		// });
-	}
+    public void deleteForum(Long forumId) {
+        // ForumService service = ServiceCreator.createForumService();
+        //
+        // final DeleteForumRequest input = new DeleteForumRequest();
+        // input.accessCode = ACCESS_CODE;
+        //
+        // input.session = SessionController.get().getSessionForApiCall();
+        //
+        // input.forum = new Forum();
+        // input.forum.id = forumId;
+        //
+        // service.deleteForum(input, new AsyncCallback<DeleteForumResponse>() {
+        //
+        // @Override
+        // public void onSuccess(DeleteForumResponse output) {
+        // if (output.status == StatusType.StatusTypeSuccess) {}
+        //
+        // EventController.get().fireEventFromSource(new DeleteForumSuccess(input, output), ForumController.this);
+        // }
+        //
+        // @Override
+        // public void onFailure(Throwable caught) {
+        // EventController.get().fireEventFromSource(new DeleteForumFailure(input, caught), ForumController.this);
+        // }
+        // });
+    }
 
-	/**
-	 * @param newSelectedId
-	 * @return
-	 */
-	public Forum getForumById(Long newSelectedId) {
-		if (forumMap == null)
-		{
-			fetchForums();
-			return null ;
-		}
-		return forumMap.get(newSelectedId);
-	}
+    /**
+     * @param newSelectedId
+     * @return
+     */
+    public Forum getForumById(Long newSelectedId) {
+        Forum result = null;
+        if (forumMap == null) {
+            fetchForums();
+        } else {
+            result = forumMap.get(newSelectedId);
+        }
+        return result;
+    }
 
-	/**
-	 * @return
-	 */
-	public Forum getFirstForum() {
-		return forums.get(0);
-	}
+    /**
+     * @return
+     */
+    public Forum getFirstForum() {
+        Forum result = null;
+        if (forums != null) {
+            result = forums.get(0);
+        }
+        return result;
+    }
 
 }
