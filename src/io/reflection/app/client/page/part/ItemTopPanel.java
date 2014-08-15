@@ -34,126 +34,126 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class ItemTopPanel extends Composite {
 
-    private static ItemTopPanelUiBinder uiBinder = GWT.create(ItemTopPanelUiBinder.class);
+	private static ItemTopPanelUiBinder uiBinder = GWT.create(ItemTopPanelUiBinder.class);
 
-    interface ItemTopPanelUiBinder extends UiBinder<Widget, ItemTopPanel> {}
+	interface ItemTopPanelUiBinder extends UiBinder<Widget, ItemTopPanel> {}
 
-    @UiField DateSelector dateSelector;
-    // @UiField ListBox mAppStore;
-    // @UiField ListBox mListType;
-    @UiField ListBox mCountry;
+	@UiField DateSelector dateSelector;
+	// @UiField ListBox mAppStore;
+	// @UiField ListBox mListType;
+	@UiField ListBox mCountry;
 
-    public ItemTopPanel() {
-        initWidget(uiBinder.createAndBindUi(this));
+	public ItemTopPanel() {
+		initWidget(uiBinder.createAndBindUi(this));
 
-        BootstrapGwtDatePicker.INSTANCE.styles().ensureInjected();
+		BootstrapGwtDatePicker.INSTANCE.styles().ensureInjected();
 
-        // FilterHelper.addStores(mAppStore);
-        FilterHelper.addCountries(mCountry);
+		// FilterHelper.addStores(mAppStore);
+		FilterHelper.addCountries(mCountry);
 
-        List<PresetDateRange> dateSelectorPresetRanges = new ArrayList<PresetDateRange>();
+		List<PresetDateRange> dateSelectorPresetRanges = new ArrayList<PresetDateRange>();
 
-        dateSelectorPresetRanges.add(new PresetDateRange() {
+		dateSelectorPresetRanges.add(new PresetDateRange() {
 
-            @Override
-            public String getName() {
-                return "1 wk";
-            }
+			@Override
+			public String getName() {
+				return "1 wk";
+			}
 
-            @Override
-            public DateRange getDateRange() {
-                return FilterHelper.createRange(FilterHelper.getWeeksAgo(1), FilterHelper.getToday());
-            }
-        });
+			@Override
+			public DateRange getDateRange() {
+				return FilterHelper.createRange(FilterHelper.getWeeksAgo(1), FilterHelper.getToday());
+			}
+		});
 
-        dateSelectorPresetRanges.add(new PresetDateRange() {
+		dateSelectorPresetRanges.add(new PresetDateRange() {
 
-            @Override
-            public String getName() {
-                return "2 wks";
-            }
+			@Override
+			public String getName() {
+				return "2 wks";
+			}
 
-            @Override
-            public DateRange getDateRange() {
-                return FilterHelper.createRange(FilterHelper.getWeeksAgo(2), FilterHelper.getToday());
-            }
-        });
+			@Override
+			public DateRange getDateRange() {
+				return FilterHelper.createRange(FilterHelper.getWeeksAgo(2), FilterHelper.getToday());
+			}
+		});
 
-        dateSelectorPresetRanges.add(new PresetDateRange() {
+		dateSelectorPresetRanges.add(new PresetDateRange() {
 
-            @Override
-            public String getName() {
-                return "4 wks";
-            }
+			@Override
+			public String getName() {
+				return "4 wks";
+			}
 
-            @Override
-            public DateRange getDateRange() {
-                return FilterHelper.createRange(FilterHelper.getWeeksAgo(4), FilterHelper.getToday());
-            }
-        });
+			@Override
+			public DateRange getDateRange() {
+				return FilterHelper.createRange(FilterHelper.getWeeksAgo(4), FilterHelper.getToday());
+			}
+		});
 
-        dateSelectorPresetRanges.add(new PresetDateRange() {
+		dateSelectorPresetRanges.add(new PresetDateRange() {
 
-            @Override
-            public String getName() {
-                return "6 wks";
-            }
+			@Override
+			public String getName() {
+				return "6 wks";
+			}
 
-            @Override
-            public DateRange getDateRange() {
-                return FilterHelper.createRange(FilterHelper.getWeeksAgo(6), FilterHelper.getToday());
-            }
-        });
+			@Override
+			public DateRange getDateRange() {
+				return FilterHelper.createRange(FilterHelper.getWeeksAgo(6), FilterHelper.getToday());
+			}
+		});
 
-        dateSelectorPresetRanges.add(new PresetDateRange() {
+		dateSelectorPresetRanges.add(new PresetDateRange() {
 
-            @Override
-            public String getName() {
-                return "8 wks";
-            }
+			@Override
+			public String getName() {
+				return "8 wks";
+			}
 
-            @Override
-            public DateRange getDateRange() {
-                return FilterHelper.createRange(FilterHelper.getWeeksAgo(8), FilterHelper.getToday());
-            }
-        });
+			@Override
+			public DateRange getDateRange() {
+				return FilterHelper.createRange(FilterHelper.getWeeksAgo(8), FilterHelper.getToday());
+			}
+		});
 
-        dateSelector.addFixedRanges(dateSelectorPresetRanges);
+		dateSelector.addFixedRanges(dateSelectorPresetRanges);
 
-        updateFromFilter();
-    }
+		updateFromFilter();
+	}
 
-    // @UiHandler("mAppStore")
-    // void onAppStoreValueChanged(ChangeEvent event) {
-    // FilterController.get().setStore(mAppStore.getValue(mAppStore.getSelectedIndex()));
-    // }
+	// @UiHandler("mAppStore")
+	// void onAppStoreValueChanged(ChangeEvent event) {
+	// FilterController.get().setStore(mAppStore.getValue(mAppStore.getSelectedIndex()));
+	// }
 
-    @UiHandler("mCountry")
-    void onCountryValueChanged(ChangeEvent event) {
-        FilterController.get().setCountry(mCountry.getValue(mCountry.getSelectedIndex()));
-    }
+	@UiHandler("mCountry")
+	void onCountryValueChanged(ChangeEvent event) {
+		FilterController.get().setCountry(mCountry.getValue(mCountry.getSelectedIndex()));
+	}
 
-    @UiHandler("dateSelector")
-    void onDateRangeValueChanged(ValueChangeEvent<DateRange> event) {
-        FilterController fc = FilterController.get();
+	@UiHandler("dateSelector")
+	void onDateRangeValueChanged(ValueChangeEvent<DateRange> event) {
+		FilterController fc = FilterController.get();
 
-        fc.start();
-        fc.setEndDate(event.getValue().getTo());
-        fc.setStartDate(event.getValue().getFrom());
-        fc.commit();
-    }
+		fc.start();
+		fc.setEndDate(event.getValue().getTo());
+		fc.setStartDate(event.getValue().getFrom());
+		fc.commit();
+	}
 
-    public void updateFromFilter() {
-        FilterController fc = FilterController.get();
+	public void updateFromFilter() {
+		FilterController fc = FilterController.get();
 
-        // mAppStore.setSelectedIndex(FormHelper.getItemIndex(mAppStore, fc.getFilter().getStoreA3Code()));
-        DateRange range = new DateRange();
+		// mAppStore.setSelectedIndex(FormHelper.getItemIndex(mAppStore, fc.getFilter().getStoreA3Code()));
+		DateRange range = new DateRange();
 
-        range.setFrom(fc.getStartDate());
-        range.setTo(fc.getEndDate());
-        dateSelector.setValue(range);
+		range.setFrom(fc.getStartDate());
+		range.setTo(fc.getEndDate());
+		dateSelector.setValue(range);
 
-        mCountry.setSelectedIndex(FormHelper.getItemIndex(mCountry, fc.getFilter().getCountryA2Code()));
-    }
+		mCountry.setSelectedIndex(FormHelper.getItemIndex(mCountry, fc.getFilter().getCountryA2Code()));
+	}
 
 }
