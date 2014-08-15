@@ -39,7 +39,7 @@ public class ItemTopPanel extends Composite {
 	interface ItemTopPanelUiBinder extends UiBinder<Widget, ItemTopPanel> {}
 
 	@UiField DateSelector dateSelector;
-	@UiField ListBox mAppStore;
+	// @UiField ListBox mAppStore;
 	// @UiField ListBox mListType;
 	@UiField ListBox mCountry;
 
@@ -48,7 +48,7 @@ public class ItemTopPanel extends Composite {
 
 		BootstrapGwtDatePicker.INSTANCE.styles().ensureInjected();
 
-		FilterHelper.addStores(mAppStore);
+		// FilterHelper.addStores(mAppStore);
 		FilterHelper.addCountries(mCountry);
 
 		List<PresetDateRange> dateSelectorPresetRanges = new ArrayList<PresetDateRange>();
@@ -123,10 +123,10 @@ public class ItemTopPanel extends Composite {
 		updateFromFilter();
 	}
 
-	@UiHandler("mAppStore")
-	void onAppStoreValueChanged(ChangeEvent event) {
-		FilterController.get().setStore(mAppStore.getValue(mAppStore.getSelectedIndex()));
-	}
+	// @UiHandler("mAppStore")
+	// void onAppStoreValueChanged(ChangeEvent event) {
+	// FilterController.get().setStore(mAppStore.getValue(mAppStore.getSelectedIndex()));
+	// }
 
 	@UiHandler("mCountry")
 	void onCountryValueChanged(ChangeEvent event) {
@@ -146,7 +146,7 @@ public class ItemTopPanel extends Composite {
 	public void updateFromFilter() {
 		FilterController fc = FilterController.get();
 
-		mAppStore.setSelectedIndex(FormHelper.getItemIndex(mAppStore, fc.getFilter().getStoreA3Code()));
+		// mAppStore.setSelectedIndex(FormHelper.getItemIndex(mAppStore, fc.getFilter().getStoreA3Code()));
 		DateRange range = new DateRange();
 
 		range.setFrom(fc.getStartDate());
