@@ -35,7 +35,7 @@ public class ForumSummaryCell extends AbstractCell<Forum> {
 
         String styleName = "list-group-item";
         if (value.id.equals(TopicController.get().getForumId())) {
-            styleName += " active";
+            styleName += " activeForum";
         }
 
         RENDERER.render(builder, link, value.title, styleName, value.description, value.numberOfTopics);

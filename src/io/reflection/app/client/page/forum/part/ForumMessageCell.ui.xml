@@ -11,7 +11,7 @@
 	<ui:import field="io.reflection.app.client.page.PageType.ForumEditTopicPageType" />
 	<ui:style>
 
-		@external forumMessageQuote,forumMessageQuoteAuthor;
+		@external forumMessageQuote,forumMessageQuoteAuthor, forumMessageLink;
 
 		.split {
 		border-top: solid 1px #999;
@@ -43,7 +43,7 @@
 		font-size: smaller;
 		}
 
-		a {
+		.forumMessageLink {
 		margin-left:3px;
 		margin-right:3px;
 		}
@@ -68,11 +68,11 @@
 
 
 			<div class="pull-right">
-				<a href="{link}">Link</a>
+				<a href="{link}" class="forumMessageLink">Link</a>
 				|
 				<ui:safehtml from="{editButtonHtml}" />
 				<ui:safehtml from="{flagButtonHtml}" />
-				<a ui:field="quote">Quote</a>
+				<a class="forumMessageLink" ui:field="quote">Quote</a>
 			</div>
 
 		</div>

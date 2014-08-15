@@ -142,6 +142,6 @@ public class FormattingHelper {
 			}
 		}
 
-		return timeSince.replace(".0 ", " ");
+		return timeSince;
 	}
 }

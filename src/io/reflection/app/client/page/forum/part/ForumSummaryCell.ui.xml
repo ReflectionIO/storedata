@@ -7,6 +7,10 @@
 	<ui:with field="topics" type="java.lang.Integer" />
 
 	<ui:style>
+        @external .list-group-item;
+        @external .list-group-item-heading;
+        @external .activeForum;
+
 		.smaller {
 		font-size: smaller;
 		}
@@ -29,11 +33,8 @@
 		font-weight: 600;
 		}
 
-		@external .list-group-item;
-		@external .list-group-item-heading;
-		@external .active;
 
-		div.active a
+		.activeForum a
 		{
 		color:black;
 		pointer-events: none;

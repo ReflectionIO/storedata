@@ -88,10 +88,10 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
     interface QuoteTemplate extends SafeHtmlTemplates {
         QuoteTemplate INSTANCE = GWT.create(QuoteTemplate.class);
 
-        @SafeHtmlTemplates.Template("<a href=\"flag\" class=\"\" ui:field=\"flagButton\"><i class=\"glyphicon glyphicon-flag\"></i>Flag</a> | ")
+        @SafeHtmlTemplates.Template("<a href=\"flag\" class=\"forumMessageLink\" ui:field=\"flagButton\"><i class=\"glyphicon glyphicon-flag\"></i>Flag</a> | ")
         SafeHtml flagButton();
 
-        @SafeHtmlTemplates.Template("<a href=\"{0}/view/{1}/edit/{2}\" class=\"\" ui:field=\"editButton\">Edit</a> | ")
+        @SafeHtmlTemplates.Template("<a href=\"{0}/view/{1}/edit/{2}\" class=\"forumMessageLink\" ui:field=\"editButton\">Edit</a> | ")
         SafeHtml editButton(String pageHref, long topicId, long messageId);
 
         @SafeHtmlTemplates.Template("")
