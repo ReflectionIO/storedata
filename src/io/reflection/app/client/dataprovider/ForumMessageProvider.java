@@ -53,6 +53,8 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
     }
 
     long getTotalCount() {
+        //using the replycontroller to work out count because the number is more immediately
+        //connected to the number of items in the replyStore container, which drives the provider.
         return ReplyController.get(topic.id).getCount();
     }
 
