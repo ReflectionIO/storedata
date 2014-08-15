@@ -9,7 +9,7 @@ package io.reflection.app.client.page.forum.part;
 
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.datatypes.ForumMessage;
-import io.reflection.app.client.part.text.BlikiEditor;
+import io.reflection.app.client.part.text.MarkdownEditor;
 import io.reflection.app.shared.util.FormattingHelper;
 
 import java.io.IOException;
@@ -42,7 +42,7 @@ import com.google.gwt.uibinder.client.UiRenderer;
  * 
  */
 public class ForumMessageCell extends AbstractCell<ForumMessage> {
-    private BlikiEditor richText;
+    private MarkdownEditor richText;
 
     @UiField private AnchorElement flagButton;
 
@@ -164,11 +164,11 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
     /**
      * @param richText
      */
-    public void setRichText(BlikiEditor richText) {
+    public void setRichText(MarkdownEditor richText) {
         this.richText = richText;
     }
 
-    public BlikiEditor getRichText() {
+    public MarkdownEditor getRichText() {
         return richText;
     }
 

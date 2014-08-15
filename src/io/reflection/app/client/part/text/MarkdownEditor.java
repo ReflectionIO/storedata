@@ -1,5 +1,5 @@
 //
-//  BlikiEditor.java
+//  MarkdownEditor.java
 //  storedata
 //
 //  Created by daniel on 7 Aug 2014.
@@ -31,46 +31,31 @@ import com.google.gwt.user.client.ui.Widget;
  * @author daniel
  * 
  */
-public class BlikiEditor extends Composite implements HasText {
+public class MarkdownEditor extends Composite implements HasText {
 
-    private static BlikiEditorUiBinder uiBinder = GWT.create(BlikiEditorUiBinder.class);
-    @UiField
-    TextArea textArea;
-    @UiField
-    Frame iframe;
-    @UiField
-    TabPanel tabLayout;
+    private static MarkdownEditorUiBinder uiBinder = GWT.create(MarkdownEditorUiBinder.class);
+    @UiField TextArea textArea;
+    @UiField Frame iframe;
+    @UiField TabPanel tabLayout;
 
-    @UiField
-    Button bold;
-    @UiField
-    Button italic;
+    @UiField Button bold;
+    @UiField Button italic;
 
-    interface BlikiEditorUiBinder extends UiBinder<Widget, BlikiEditor> {
-    }
+    interface MarkdownEditorUiBinder extends UiBinder<Widget, MarkdownEditor> {}
 
     /**
-     * Because this class has a default constructor, it can be used as a binder
-     * template. In other words, it can be used in other *.ui.xml files as
-     * follows: <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-     * xmlns:g="urn:import:**user's package**">
-     * <g:**UserClassName**>Hello!</g:**UserClassName> </ui:UiBinder> Note that
-     * depending on the widget that is used, it may be necessary to implement
-     * HasHTML instead of HasText.
+     * Because this class has a default constructor, it can be used as a binder template. In other words, it can be used in other *.ui.xml files as follows:
+     * <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:**user's package**"> <g:**UserClassName**>Hello!</g:**UserClassName>
+     * </ui:UiBinder> Note that depending on the widget that is used, it may be necessary to implement HasHTML instead of HasText.
      */
-    public BlikiEditor() {
+    public MarkdownEditor() {
         initWidget(uiBinder.createAndBindUi(this));
 
         textArea.getElement().addClassName("form-control");
         iframe.getElement().addClassName("form-control");
 
-        // Processor.process("Change me int **markup** now please.");
-        // String test = processor.markdown("whatever **so** cool");
-
         bold.getElement().setInnerHTML("<span class=\"icon-bold\"></span>");
         italic.getElement().setInnerHTML("<span class=\"icon-italic\"></span>");
-
-        // tabLayout.getTabBar()
 
         tabLayout.selectTab(0);
 
@@ -101,7 +86,7 @@ public class BlikiEditor extends Composite implements HasText {
                         // it would
                         // frameElement.setInnerHTML(previewHtml);
 
-                        BlikiEditor.this.fillIframe(frameElement, previewHtml, header);
+                        MarkdownEditor.this.fillIframe(frameElement, previewHtml, header);
 
                         // bodyElement.appendChild(contentDocument.createTextNode(previewHtml));
                     } catch (IOException e) {
@@ -126,7 +111,7 @@ public class BlikiEditor extends Composite implements HasText {
         });
     }
 
-    public BlikiEditor(String firstName) {
+    public MarkdownEditor(String firstName) {
         initWidget(uiBinder.createAndBindUi(this));
 
     }
@@ -172,25 +157,24 @@ public class BlikiEditor extends Composite implements HasText {
     }
 
     /**
-     * http://bealetech.com/blog/2010/01/25/embedding-html-document-in-an-iframe
-     * -with-gwt/ and an alternative
+     * http://bealetech.com/blog/2010/01/25/embedding-html-document-in-an-iframe -with-gwt/ and an alternative
      * https://groups.google.com/forum/#!topic/google-web-toolkit/mjzFLq8s1v4
      * 
      * */
     private final native void fillIframe(FrameElement iframe, String content, String header) /*-{
-                                                                                             var doc = iframe.document;
+		var doc = iframe.document;
 
-                                                                                             if (iframe.contentDocument)
-                                                                                             doc = iframe.contentDocument; // For NS6
-                                                                                             else if (iframe.contentWindow)
-                                                                                             doc = iframe.contentWindow.document; // For IE5.5 and IE6
+		if (iframe.contentDocument)
+			doc = iframe.contentDocument; // For NS6
+		else if (iframe.contentWindow)
+			doc = iframe.contentWindow.document; // For IE5.5 and IE6
 
-                                                                                             // Put the content in the iframe
-                                                                                             doc.open();
-                                                                                             doc.writeln('<head>' + header + '</head>');
-                                                                                             doc.writeln('<body>' + content + '</body>');
-                                                                                             doc.close();
-                                                                                             }-*/;
+		// Put the content in the iframe
+		doc.open();
+		doc.writeln('<head>' + header + '</head>');
+		doc.writeln('<body>' + content + '</body>');
+		doc.close();
+    }-*/;
 
     /**
      * @param content
