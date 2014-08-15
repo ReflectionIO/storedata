@@ -130,7 +130,7 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
             }
 
             // Enable this when we when we have the data to demonstrate both
-            // cases.
+            // cases. [purple highlighting for Reflection company posts]
 
             // if (value.getAuthor().company.equals("Reflection"))
             // color = css.companyRowClass();
@@ -140,13 +140,13 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
             try {
                 processedString = new Markdown4jProcessor().process(value.getContent());
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
 
             RENDERER.render(builder, FormattingHelper.getUserName(value.getAuthor()), SafeHtmlUtils.fromTrustedString(processedString), FormattingHelper
                     .getTimeSince(value.getCreated()), value.belongsToCurrentUser() ? QuoteTemplate.INSTANCE.empty() : QuoteTemplate.INSTANCE.flagButton(),
                     value.belongsToCurrentUser() ? editButtonHtml : QuoteTemplate.INSTANCE.empty(), UriUtils.fromSafeConstant(PageType.ForumThreadPageType
-                            .asHref().asString() + "/view/" + value.getTopicId() + "/post/" + value.getIndex()), color);
+                            .asHref("view", value.getTopicId().toString(), "post", Integer.toString(value.getIndex())).asString()), color);
         }
 
     }

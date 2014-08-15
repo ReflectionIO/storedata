@@ -180,17 +180,20 @@ public class MarkdownEditor extends Composite implements HasText {
      * @param content
      */
     public void insertQuote(String content) {
+        
+        //http://stackoverflow.com/questions/14217101/what-character-represents-a-new-line-in-a-text-area
+        String CRLF = "\r\n"; //not necessarily a complete solution across all browsers. Needs more testing.
 
         int position = textArea.getCursorPos();
         String unedited = textArea.getText();
 
-        content = content.replaceAll("\n", "\n>");
-        String initial = "\n>";
+        content = content.replaceAll(CRLF, CRLF+">");
+        String initial = CRLF+">";
         if (position == 0) {
             initial = ">";
         }
 
-        String newString = unedited.substring(0, position) + initial + content + "\n" + unedited.substring(position, unedited.length());
+        String newString = unedited.substring(0, position) + initial + content + CRLF + unedited.substring(position, unedited.length());
 
         textArea.setText(newString);
 
