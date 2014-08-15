@@ -1,6 +1,6 @@
 @CHARSET "UTF-8";
 
-@external gwt-TabLayoutPanelTab, gwt-TabBarItem, delete, table-linkedaccount, table-rank, table-item, table-striped, table, tbody,nth-child, td, thead, th, tr:nth-child,  headerCaret, navbar-brand, navbar-toggle, p-small, form, formEdit, noteDetail, label, gwt-CheckBox, gwt-DateBox, topPanel, sidepanel, btn, btn-group, btn-default, row, divider-vertical, divider-horizontal, divider-horizontal-header, nav-pills, nav-stacked, nav-tabs, nav-justified, ranks, loginregister, well, well-title, form-inline, form-group, gwt-RadioButton, hr, navbar-fixed-top, navbar, pagination, btn-primary, disabled, active, open, dropdown-toggle, dropdown-menu, i, badge, dropdown, nav, navbar-inverse, navbar-nav, navbar-text, caret, form-control;
+@external delete, table-linkedaccount, table-rank, table-item, table-striped, table, tbody,nth-child, td, thead, th, tr:nth-child,  headerCaret, navbar-brand, navbar-toggle, p-small, form, formEdit, noteDetail, label, gwt-CheckBox, gwt-DateBox, topPanel, sidepanel, btn, btn-group, btn-default, row, divider-vertical, divider-horizontal, divider-horizontal-header, nav-pills, nav-stacked, nav-tabs, nav-justified, ranks, loginregister, well, well-title, form-inline, form-group, gwt-RadioButton, hr, navbar-fixed-top, navbar, pagination, btn-primary, disabled, active, open, dropdown-toggle, dropdown-menu, i, badge, dropdown, nav, navbar-inverse, navbar-nav, navbar-text, caret, form-control;
     /* Colors palette: Purple #6d69c5; DarkBlue 272933; Gold #eabc3e; LightGrey: #f8f9f9; Green: #1bc79f; Blue: #3357cc; Red: #e73c48; */
 /* Small devices (tablets, 768px and up) - Medium devices (desktop, 992px and up) - Large devices (large desktop, 1200px and up) */
 body {
@@ -180,43 +180,7 @@ input[type="text"]:disabled {
     cursor: pointer;
 }
 
-/*  */
-.gwt-TabLayoutPanelTab,
-.gwt-TabBarItem
-{
-	height: 3em;
-    width: 100px;
-    text-align: center;
-    background: -webkit-linear-gradient(#f6f7f9, #eeeff1);
-    /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(#f6f7f9, #eeeff1);
-    /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(#f6f7f9, #eeeff1);
-    /* For Firefox 3.6 to 15 */
-    background: linear-gradient(#f6f7f9, #eeeff1); /* Standard syntax */
-    color: #434346;
-    padding-left: 12px;
-    padding-top: 5px;
-    margin-right: 0px;
-/*     border-radius: 4px; */
-/*     -webkit-border-radius: 4px;
-    -moz-border-radius: 4px; */
-    -webkit-box-shadow: none;
-    box-shadow: none;
-    border: 1px solid #d5d6da;
-    outline: 0;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    cursor: pointer;
-    margin:0px;
-    padding:0px;
-}
 
-.gwt-TabBarItem div
-{
-	margin-top:10px;
-}
 
 /* Cell Table */
 .table>tbody+tbody {

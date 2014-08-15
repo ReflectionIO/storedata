@@ -7,6 +7,8 @@
 //
 package io.reflection.app.client.part.text;
 
+import io.reflection.app.client.part.BootstrapGwtTabPanel;
+
 import java.io.IOException;
 
 import org.markdown4j.Markdown4jProcessor;
@@ -50,6 +52,8 @@ public class MarkdownEditor extends Composite implements HasText {
      */
     public MarkdownEditor() {
         initWidget(uiBinder.createAndBindUi(this));
+        
+        BootstrapGwtTabPanel.INSTANCE.styles().ensureInjected();
 
         textArea.getElement().addClassName("form-control");
         iframe.getElement().addClassName("form-control");
