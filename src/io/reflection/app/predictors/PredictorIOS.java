@@ -148,7 +148,7 @@ public class PredictorIOS implements Predictor {
 
 		Category category = CategoryServiceProvider.provide().getAllCategory(s);
 
-		List<Rank> foundRanks = RankServiceProvider.provide().getGatherCodeRanks(c, s, category, type, code, p, false);
+		List<Rank> foundRanks = RankServiceProvider.provide().getGatherCodeRanks(c, s, category, type, code, p, true);
 		Map<String, Item> lookup = lookupItemsForRanks(foundRanks);
 
 		Item item = null;
@@ -159,7 +159,12 @@ public class PredictorIOS implements Predictor {
 			boolean usesIap = properties.getBoolean(ItemPropertyLookupServlet.PROPERTY_IAP);
 
 			if (item != null) {
-				setDownloadsAndRevenue(rank, modelRun, usesIap, rank.price.floatValue());
+				setDownloadsAndRevenue(rank, modelRun, usesIap, rank.price.floatValue() / 100.0f);
+				
+				// FIXME: we need to fix this
+				if (rank.revenue.longValue() == Long.MAX_VALUE) {
+					continue;
+				}
 
 				// if (rank.price.floatValue() > 0) {
 				// if (usesIap) {
@@ -208,6 +213,8 @@ public class PredictorIOS implements Predictor {
 				RankServiceProvider.provide().updateRank(rank);
 			}
 		}
+		
+		LOG.info("Done");
 	}
 
 	private void setDownloadsAndRevenue(Rank rank, ModelRun output, boolean usesIap, float price) {
@@ -216,7 +223,7 @@ public class PredictorIOS implements Predictor {
 
 		if (usesIap) {
 			if (isFree(price)) {
-				if (rank.grossingPosition == null) {
+				if (rank.grossingPosition == null || rank.grossingPosition.intValue() == 0) {
 					downloads = (double) (output.freeB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.freeA.doubleValue()));
 					revenue = output.theta.doubleValue() * downloads;
 				} else {
@@ -226,7 +233,7 @@ public class PredictorIOS implements Predictor {
 					// revenue = reconcile(revenue, grossing_revenue);
 				}
 			} else {
-				if (rank.grossingPosition == null) {
+				if (rank.grossingPosition == null || rank.grossingPosition.intValue() == 0) {
 					downloads = (double) (output.paidB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.paidAIap.doubleValue()));
 					revenue = downloads * (price + output.theta.doubleValue());
 				} else {
@@ -241,7 +248,7 @@ public class PredictorIOS implements Predictor {
 				// download calculated here
 				downloads = (double) (output.freeB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.freeA.doubleValue()));
 			} else {
-				if (rank.grossingPosition == null) {
+				if (rank.grossingPosition == null || rank.grossingPosition.intValue() == 0) {
 					downloads = (double) (output.paidB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.paidA.doubleValue()));
 					revenue = downloads * price;
 				} else {
