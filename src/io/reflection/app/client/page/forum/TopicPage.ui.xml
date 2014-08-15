@@ -64,7 +64,7 @@
 				<g:HTMLPanel>
 					<g:HTMLPanel ui:field="replyGroup" styleName="form-group">
 						<label>Content</label>
-						<p:BlikiEditor ui:field="replyText" />
+						<p:MarkdownEditor ui:field="replyText" />
 						<g:HTMLPanel styleName="noteDetail" ui:field="replyNote" visible="false" />
 					</g:HTMLPanel>
 

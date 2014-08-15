@@ -26,7 +26,7 @@
 
 					<g:HTMLPanel ui:field="contentGroup" styleName="form-group">
 						<label>Content</label>
-						<p:BlikiEditor ui:field="contentText" />
+						<p:MarkdownEditor ui:field="contentText" />
 						<g:HTMLPanel styleName="noteDetail" ui:field="contentNote" visible="false" />
 					</g:HTMLPanel>
 

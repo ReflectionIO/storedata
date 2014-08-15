@@ -17,7 +17,7 @@ import io.reflection.app.client.controller.ReplyController;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
-import io.reflection.app.client.part.text.BlikiEditor;
+import io.reflection.app.client.part.text.MarkdownEditor;
 import io.reflection.app.datatypes.shared.Reply;
 
 import com.google.gwt.core.client.GWT;
@@ -44,7 +44,7 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
     private Reply reply;
     private String replyContent;
 
-    @UiField BlikiEditor editText;
+    @UiField MarkdownEditor editText;
 
     public EditTopicPage() {
         initWidget(uiBinder.createAndBindUi(this));

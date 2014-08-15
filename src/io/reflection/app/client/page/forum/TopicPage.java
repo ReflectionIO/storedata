@@ -32,7 +32,7 @@ import io.reflection.app.client.page.forum.part.StickyButton;
 import io.reflection.app.client.part.BootstrapGwtCellList;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.part.datatypes.ForumMessage;
-import io.reflection.app.client.part.text.BlikiEditor;
+import io.reflection.app.client.part.text.MarkdownEditor;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.Topic;
 import io.reflection.app.shared.util.FormattingHelper;
@@ -87,7 +87,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
     @UiField FormPanel replyForm;
 
-    @UiField BlikiEditor replyText;
+    @UiField MarkdownEditor replyText;
     @UiField SimplePager pager;
 
     @UiField HTMLPanel adminButtons;
@@ -201,7 +201,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
      */
     @Override
     public void navigationChanged(Stack previous, Stack current) {
-
+        
         if (current != null && PageType.ForumThreadPageType.equals(current.getPage())) {
             if (current.getAction() != null && VIEW_ACTION_PARAMETER_VALUE.equals(current.getAction())) {
                 String topicIdString;
@@ -209,20 +209,16 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
                     topicId = Long.valueOf(topicIdString);
                     Topic topic = TopicController.get().getTopic(topicId);
 
-                    // replyText.setHTML("<div class=\"quoting\">" +
-                    // topic.author.forename + " scribbled " +
-                    // topic.content.toString() + "</div>");
-
-                    HashMap<String, String> paramMap = new HashMap<String, String>();
-                    for (int i = 1, ss = current.getParameterCount(); i < ss && i + 1 < ss; i += 2) {
-                        paramMap.put(current.getParameter(i), current.getParameter(i + 1));
-                    }
-
-                    if (paramMap.containsKey("post")) {
-                        final int post = Integer.parseInt(paramMap.get("post"));
-                        int firstOnPage = post - (post % ServiceConstants.SHORT_STEP_VALUE);
-
-                        messagesCellList.setPageStart(firstOnPage);
+                    String param1 = current.getParameter(1);
+                    if (param1 != null && param1.contains("post"))
+                    {
+                        String param2 = current.getParameter(2);
+                        if (param2 != null)
+                        {
+                            final int post = Integer.parseInt(param2);
+                            int firstOnPage = post - (post % ServiceConstants.SHORT_STEP_VALUE);
+                            messagesCellList.setPageStart(firstOnPage);
+                        }
                     }
                     updateTopic(topic);
                 }

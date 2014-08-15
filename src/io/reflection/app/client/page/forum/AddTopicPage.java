@@ -20,7 +20,7 @@ import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.page.forum.part.ForumSummarySidePanel;
-import io.reflection.app.client.part.text.BlikiEditor;
+import io.reflection.app.client.part.text.MarkdownEditor;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -43,7 +43,7 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
 
     @UiField ListBox forums;
     
-    @UiField BlikiEditor contentText;
+    @UiField MarkdownEditor contentText;
 
     @UiField ForumSummarySidePanel forumSummarySidePanel;
 
