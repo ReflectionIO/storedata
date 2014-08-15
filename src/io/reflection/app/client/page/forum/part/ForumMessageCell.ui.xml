@@ -1,68 +1,81 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder">
-    <ui:with field="authorName" type="java.lang.String" />
-    <ui:with field="content" type="com.google.gwt.safehtml.shared.SafeHtml" />
-    <ui:with field="created" type="java.lang.String" />
-    <!-- <ui:with field="topicId" type="java.lang.Long" />
-    <ui:with field="messageId" type="java.lang.Long" /> -->
-    <ui:with field="flagButtonHtml" type="com.google.gwt.safehtml.shared.SafeHtml"/>
-    <ui:with field="editButtonHtml" type="com.google.gwt.safehtml.shared.SafeHtml"/>
-    <ui:import field="io.reflection.app.client.page.PageType.ForumThreadPageType" />
-    <ui:import field="io.reflection.app.client.page.PageType.ForumEditTopicPageType" />
-    <ui:style>
-    
-    @external forumMessageQuote,forumMessageQuoteAuthor;
-    
-    .split {
-    	border-top: solid 1px #999;
-    	padding-top: 10px;
-    	margin-top: 10px;
-    }
-    
-    .postContent {
-    	margin-bottom: 10px;
-    	margin-top: 10px;
-    }
-    
-    .infoWrapper div span {
-    	display: inline-block;
-    	marin-right: 5px;
-    	text-decoration: underline;
-    	cursor: pointer;
-    }
-    
-    .forumMessageQuote {
-        background: red;
-	}
-	
-	.forumMessageQuoteAuthor {
-	   background: blue;
-	}
-    </ui:style>
+	<ui:with field="authorName" type="java.lang.String" />
+	<ui:with field="content" type="com.google.gwt.safehtml.shared.SafeHtml" />
+	<ui:with field="created" type="java.lang.String" />
+	<ui:with field="link" type="com.google.gwt.safehtml.shared.SafeUri" />
+	<ui:with field="backgroundColour" type="java.lang.String" />
+	<ui:with field="flagButtonHtml" type="com.google.gwt.safehtml.shared.SafeHtml" />
+	<ui:with field="editButtonHtml" type="com.google.gwt.safehtml.shared.SafeHtml" />
+	<ui:import field="io.reflection.app.client.page.PageType.ForumThreadPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.ForumEditTopicPageType" />
+	<ui:style>
 
-    <div class="row">
-        <div class="col-sm-2">
-            <ui:text from="{authorName}" />
-        </div>
+		@external forumMessageQuote,forumMessageQuoteAuthor, forumMessageLink;
 
-        <div class="col-sm-10 {style.postContent}">
-            <div>
-                <ui:safehtml from="{content}" />
-            </div>
-            <div class="{style.split}">
-                <ui:text from="{created}" />
-                <div class="pull-right">
+		.split {
+		border-top: solid 1px #999;
+		padding-top: 10px;
+		margin-top: 10px;
+		}
 
-                    <ui:safehtml from = "{editButtonHtml}"/>                    
-                    <ui:safehtml from ="{flagButtonHtml}"/>
-                    
-                    <a class="btn btn-default btn-xs" ui:field="quote">
-                        <i class="glyphicon glyphicon-pencil"></i>
-                        Quote
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
+		.postContent {
+		margin-bottom: 10px;
+		margin-top: 10px;
+		}
+
+		.infoWrapper div span {
+		display: inline-block;
+		marin-right: 5px;
+		text-decoration: underline;
+		cursor: pointer;
+		}
+
+		.forumMessageQuote {
+		background: red;
+		}
+
+		.forumMessageQuoteAuthor {
+		background: blue;
+		}
+
+		.smaller {
+		font-size: smaller;
+		}
+
+		.forumMessageLink {
+		margin-left:3px;
+		margin-right:3px;
+		}
+
+        .markdown p {
+            font-size:14px;
+        }
+	</ui:style>
+
+	<div class="row {backgroundColour}">
+		<div class="col-sm-2">
+			<ui:text from="{authorName}" />
+			<div class="{style.smaller}">
+				<ui:text from="{created}" />
+			</div>
+		</div>
+
+		<div class="col-sm-10 {style.postContent}">
+			<div class="{style.markdown}">
+				<ui:safehtml from="{content}" />
+			</div>
+
+
+			<div class="pull-right">
+				<a href="{link}" class="forumMessageLink">Link</a>
+				|
+				<ui:safehtml from="{editButtonHtml}" />
+				<ui:safehtml from="{flagButtonHtml}" />
+				<a class="forumMessageLink" ui:field="quote">Quote</a>
+			</div>
+
+		</div>
+	</div>
 
 </ui:UiBinder>

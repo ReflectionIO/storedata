@@ -21,15 +21,13 @@ import io.reflection.app.api.forum.shared.call.event.UpdateReplyEventHandler;
 import io.reflection.app.api.forum.shared.call.event.UpdateTopicEventHandler;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.ReplyController;
+import io.reflection.app.client.controller.ReplyController.ReplyThread;
 import io.reflection.app.client.controller.TopicController;
 import io.reflection.app.client.part.datatypes.ForumMessage;
-import io.reflection.app.datatypes.shared.Reply;
 import io.reflection.app.datatypes.shared.Topic;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.view.client.AsyncDataProvider;
@@ -42,152 +40,158 @@ import com.willshex.gson.json.service.shared.StatusType;
  * 
  */
 public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implements GetRepliesEventHandler, AddReplyEventHandler, UpdateTopicEventHandler,
-		UpdateReplyEventHandler {
+        UpdateReplyEventHandler {
 
-	private List<ForumMessage> rows = new ArrayList<ForumMessage>();
-	private Map<Long, Reply> replyLookup = new HashMap<Long, Reply>();
-	private Topic topic;
-	private List<HandlerRegistration> registrations = new ArrayList<HandlerRegistration>();
-	private int start;
-	private int count;
-	private int totalCount;
+    private Topic topic;
+    private List<HandlerRegistration> registrations = new ArrayList<HandlerRegistration>();
+    private int start;
+    private int count;
 
-	public ForumMessageProvider(Topic topic) {
-		rows.add(new ForumMessage(this.topic = topic));
-	}
+    public ForumMessageProvider(Topic topic) {
+        ReplyController.get(topic.id).setTopic(topic);
+        this.topic = topic;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.view.client.AbstractDataProvider#onRangeChanged(com.google.gwt.view.client.HasData)
-	 */
-	@Override
-	protected void onRangeChanged(HasData<ForumMessage> display) {
-		Range r = display.getVisibleRange();
+    long getTotalCount() {
+        //using the replycontroller to work out count because the number is more immediately
+        //connected to the number of items in the replyStore container, which drives the provider.
+        return ReplyController.get(topic.id).getCount();
+    }
 
-		int start = r.getStart();
-		int end = start + r.getLength();
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.gwt.view.client.AbstractDataProvider#onRangeChanged(com.google.gwt.view.client.HasData)
+     */
+    @Override
+    protected void onRangeChanged(HasData<ForumMessage> display) {
+        Range r = display.getVisibleRange();
 
-		if (rows == null || end > rows.size()) {
-			ReplyController.get().getReplies(topic.id);
-		} else {
-			updateRowData(start, rows.subList(start, end));
-		}
-	}
+        int start = r.getStart();
+        int end = start + r.getLength();
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.api.forum.shared.call.event.GetRepliesEventHandler#getRepliesSuccess(io.reflection.app.api.forum.shared.call.GetRepliesRequest,
-	 * io.reflection.app.api.forum.shared.call.GetRepliesResponse)
-	 */
-	@Override
-	public void getRepliesSuccess(GetRepliesRequest input, GetRepliesResponse output) {
-		if (output.status == StatusType.StatusTypeSuccess) {
-			if (output.replies != null) {
-				for (Reply reply : output.replies) {
-					rows.add(new ForumMessage(input.topic, reply));
-					replyLookup.put(reply.id, reply);
-				}
-			}
+        ReplyThread thread = ReplyController.get(topic.id);
 
-			start = input.pager.start.intValue() == 0 ? 0 : input.pager.start.intValue() + 1;
-			count = input.pager.count.intValue();
-			totalCount = output.pager.totalCount.intValue() + 1;
+        if (thread.hasRows(start, end)) {
+            updateRowData(start, thread.getMessages(start, end));
+        } else {
+            ReplyController.get().getReplies(topic.id, start, end);
 
-			updateRowCount(rows.size(), true);
-			updateRowData(start, rows.subList(start, Math.min(start + count, totalCount)));
-		}
-	}
+            // this causes the spinner until we get the rows and update the display properly.
+            display.setVisibleRangeAndClearData(display.getVisibleRange(), false);
+        }
+    }
 
-	public void registerListeners() {
-		registrations.add(EventController.get().addHandlerToSource(GetRepliesEventHandler.TYPE, ReplyController.get(), this));
-		registrations.add(EventController.get().addHandlerToSource(AddReplyEventHandler.TYPE, ReplyController.get(), this));
-		registrations.add(EventController.get().addHandlerToSource(UpdateTopicEventHandler.TYPE, TopicController.get(), this));
-		registrations.add(EventController.get().addHandlerToSource(UpdateReplyEventHandler.TYPE, ReplyController.get(), this));
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.api.forum.shared.call.event.GetRepliesEventHandler#getRepliesSuccess(io.reflection.app.api.forum.shared.call.GetRepliesRequest,
+     * io.reflection.app.api.forum.shared.call.GetRepliesResponse)
+     */
+    @Override
+    public void getRepliesSuccess(GetRepliesRequest input, GetRepliesResponse output) {
+        if (output.status == StatusType.StatusTypeSuccess) {
 
-	public void unregisterListeners() {
-		for (HandlerRegistration registration : this.registrations) {
-			registration.removeHandler();
-		}
+            start = input.pager.start.intValue() == 0 ? 0 : input.pager.start.intValue() + 1;
+            count = input.pager.count.intValue();
 
-		registrations.clear();
-	}
+            updateRows(input.topic.id);
+        }
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.api.forum.shared.call.event.GetRepliesEventHandler#getRepliesFailure(io.reflection.app.api.forum.shared.call.GetRepliesRequest,
-	 * java.lang.Throwable)
-	 */
-	@Override
-	public void getRepliesFailure(GetRepliesRequest input, Throwable caught) {}
+    protected void updateRows(long topicId) {
+        ReplyThread thread = ReplyController.get(topicId);
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.api.forum.shared.call.event.UpdateReplyEventHandler#updateReplySuccess(io.reflection.app.api.forum.shared.call.UpdateReplyRequest,
-	 * io.reflection.app.api.forum.shared.call.UpdateReplyResponse)
-	 */
-	@Override
-	public void updateReplySuccess(UpdateReplyRequest input, UpdateReplyResponse output) {
-		updateRowCount(rows.size(), true);
-		updateRowData(start, rows.subList(start, Math.min(start + count, totalCount)));
-	}
+        // note this will not trigger a redraw of the table if the content of the cells
+        // has changed but the range data hasn't.
+        List<ForumMessage> messages = thread.getMessages(start, start + count + 1);
+        updateRowCount(ReplyController.get(topic.id).getTotalCount(), true);
+        updateRowData(start, messages);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.api.forum.shared.call.event.UpdateReplyEventHandler#updateReplyFailure(io.reflection.app.api.forum.shared.call.UpdateReplyRequest,
-	 * java.lang.Throwable)
-	 */
-	@Override
-	public void updateReplyFailure(UpdateReplyRequest input, Throwable caught) {}
+    public void registerListeners() {
+        registrations.add(EventController.get().addHandlerToSource(GetRepliesEventHandler.TYPE, ReplyController.get(), this));
+        registrations.add(EventController.get().addHandlerToSource(AddReplyEventHandler.TYPE, ReplyController.get(), this));
+        registrations.add(EventController.get().addHandlerToSource(UpdateTopicEventHandler.TYPE, TopicController.get(), this));
+        registrations.add(EventController.get().addHandlerToSource(UpdateReplyEventHandler.TYPE, ReplyController.get(), this));
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.api.forum.shared.call.event.UpdateTopicEventHandler#updateTopicSuccess(io.reflection.app.api.forum.shared.call.UpdateTopicRequest,
-	 * io.reflection.app.api.forum.shared.call.UpdateTopicResponse)
-	 */
-	@Override
-	public void updateTopicSuccess(UpdateTopicRequest input, UpdateTopicResponse output) {
-		updateRowCount(rows.size(), true);
-		updateRowData(start, rows.subList(start, Math.min(start + count, totalCount)));
-	}
+    public void unregisterListeners() {
+        for (HandlerRegistration registration : this.registrations) {
+            registration.removeHandler();
+        }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.api.forum.shared.call.event.UpdateTopicEventHandler#updateTopicFailure(io.reflection.app.api.forum.shared.call.UpdateTopicRequest,
-	 * java.lang.Throwable)
-	 */
-	@Override
-	public void updateTopicFailure(UpdateTopicRequest input, Throwable caught) {}
+        registrations.clear();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.api.forum.shared.call.event.AddReplyEventHandler#addReplySuccess(io.reflection.app.api.forum.shared.call.AddReplyRequest,
-	 * io.reflection.app.api.forum.shared.call.AddReplyResponse)
-	 */
-	@Override
-	public void addReplySuccess(AddReplyRequest input, AddReplyResponse output) {
-		rows.add(new ForumMessage(input.reply.topic, output.reply));
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.api.forum.shared.call.event.GetRepliesEventHandler#getRepliesFailure(io.reflection.app.api.forum.shared.call.GetRepliesRequest,
+     * java.lang.Throwable)
+     */
+    @Override
+    public void getRepliesFailure(GetRepliesRequest input, Throwable caught) {}
 
-		totalCount++;
-		updateRowCount(rows.size(), true);
-		updateRowData(start, rows.subList(start, Math.min(start + count, totalCount)));
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.api.forum.shared.call.event.UpdateReplyEventHandler#updateReplySuccess(io.reflection.app.api.forum.shared.call.UpdateReplyRequest,
+     * io.reflection.app.api.forum.shared.call.UpdateReplyResponse)
+     */
+    @Override
+    public void updateReplySuccess(UpdateReplyRequest input, UpdateReplyResponse output) {
+        updateRows(input.reply.topic.id);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.api.forum.shared.call.event.AddReplyEventHandler#addReplyFailure(io.reflection.app.api.forum.shared.call.AddReplyRequest,
-	 * java.lang.Throwable)
-	 */
-	@Override
-	public void addReplyFailure(AddReplyRequest input, Throwable caught) {}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.api.forum.shared.call.event.UpdateReplyEventHandler#updateReplyFailure(io.reflection.app.api.forum.shared.call.UpdateReplyRequest,
+     * java.lang.Throwable)
+     */
+    @Override
+    public void updateReplyFailure(UpdateReplyRequest input, Throwable caught) {}
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.api.forum.shared.call.event.UpdateTopicEventHandler#updateTopicSuccess(io.reflection.app.api.forum.shared.call.UpdateTopicRequest,
+     * io.reflection.app.api.forum.shared.call.UpdateTopicResponse)
+     */
+    @Override
+    public void updateTopicSuccess(UpdateTopicRequest input, UpdateTopicResponse output) {
+        updateRows(input.topic.id);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.api.forum.shared.call.event.UpdateTopicEventHandler#updateTopicFailure(io.reflection.app.api.forum.shared.call.UpdateTopicRequest,
+     * java.lang.Throwable)
+     */
+    @Override
+    public void updateTopicFailure(UpdateTopicRequest input, Throwable caught) {}
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.api.forum.shared.call.event.AddReplyEventHandler#addReplySuccess(io.reflection.app.api.forum.shared.call.AddReplyRequest,
+     * io.reflection.app.api.forum.shared.call.AddReplyResponse)
+     */
+    @Override
+    public void addReplySuccess(AddReplyRequest input, AddReplyResponse output) {
+
+        updateRows(input.reply.topic.id);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.api.forum.shared.call.event.AddReplyEventHandler#addReplyFailure(io.reflection.app.api.forum.shared.call.AddReplyRequest,
+     * java.lang.Throwable)
+     */
+    @Override
+    public void addReplyFailure(AddReplyRequest input, Throwable caught) {}
 
 }

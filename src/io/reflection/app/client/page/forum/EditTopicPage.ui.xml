@@ -1,32 +1,50 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:com.google.gwt.user.cellview.client"
-    xmlns:p="urn:import:io.reflection.app.client.part.text" xmlns:a="urn:import:io.reflection.app.client.part">
-    <ui:style>
-    
-    .important {
-    	font-weight: bold;
-    }
-    
-    .textArea {
-    	height: 200px;
-    }
-    </ui:style>
-    <g:HTMLPanel>
-        <g:FormPanel styleName="col-sm-10 col-sm-offset-2" ui:field="editForm">
-            <g:HTMLPanel>
+	xmlns:p="urn:import:io.reflection.app.client.part.text" xmlns:a="urn:import:io.reflection.app.client.part" xmlns:pp="urn:import:io.reflection.app.client.page.forum.part">
 
-                <g:HTMLPanel ui:field="editGroup" styleName="form-group">
-                    <label>Edit</label>
-                    <p:RichTextToolbar ui:field="editToolbar" />
-                    <g:RichTextArea ui:field="editText" styleName="form-control {style.textArea}" />
-                    <g:HTMLPanel styleName="noteDetail" ui:field="editNote" visible="false" />
-                </g:HTMLPanel>
+	<ui:style>
 
-                <g:Button ui:field="submit" styleName="btn btn-lg btn-primary col-sm-4 col-sm-offset-4">
-                    Submit
-                </g:Button>
+		.important {
+		font-weight: bold;
+		}
 
-            </g:HTMLPanel>
-        </g:FormPanel>
-    </g:HTMLPanel>
+		.textArea {
+		height: 200px;
+		}
+
+		.toolbarSpacing {
+		padding-top: 10px;
+		margin-top:30px;
+		padding-bottom: 10px;
+		}
+
+		.header2 {
+		margin-top:0px;
+		margin-bottom:0px;
+		}
+	</ui:style>
+	<g:HTMLPanel styleName="row">
+		<pp:ForumSummarySidePanel ui:field="forumSummarySidePanel" styleName="sidepanel col-md-2 well" />
+		<div class="col-md-10">
+			<g:HTMLPanel styleName="well {style.toolbarSpacing}">
+				<div class="row">
+					<h2 class="col-sm-2 {style.header2}">Edit Post</h2>
+				</div>
+			</g:HTMLPanel>
+			<g:FormPanel styleName="col-sm-10 col-sm-offset-1" ui:field="editForm">
+				<g:HTMLPanel>
+					<g:HTMLPanel ui:field="editGroup" styleName="form-group">
+						<label>Content</label>
+						<p:MarkdownEditor ui:field="editText" />
+						<g:HTMLPanel styleName="noteDetail" ui:field="editNote" visible="false" />
+					</g:HTMLPanel>
+
+					<g:Button ui:field="submit" styleName="btn btn-lg btn-primary col-sm-4 col-sm-offset-4">
+						Submit
+					</g:Button>
+
+				</g:HTMLPanel>
+			</g:FormPanel>
+		</div>
+	</g:HTMLPanel>
 </ui:UiBinder> 

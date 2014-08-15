@@ -180,6 +180,8 @@ input[type="text"]:disabled {
     cursor: pointer;
 }
 
+
+
 /* Cell Table */
 .table>tbody+tbody {
     border: none;

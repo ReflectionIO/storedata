@@ -33,295 +33,321 @@ import java.util.logging.Logger;
 
 final class TopicService implements ITopicService {
 
-	private static final Logger LOG = Logger.getLogger(TopicService.class.getName());
+    private static final Logger LOG = Logger.getLogger(TopicService.class.getName());
 
-	public String getName() {
-		return ServiceType.ServiceTypeTopic.toString();
-	}
+    public String getName() {
+        return ServiceType.ServiceTypeTopic.toString();
+    }
 
-	@Override
-	public Topic getTopic(Long id) throws DataAccessException {
-		Topic topic = null;
+    @Override
+    public Topic getTopic(Long id) throws DataAccessException {
+        Topic topic = null;
 
-		IDatabaseService databaseService = DatabaseServiceProvider.provide();
-		Connection topicConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeTopic.toString());
+        IDatabaseService databaseService = DatabaseServiceProvider.provide();
+        Connection topicConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeTopic.toString());
 
-		String getTopicQuery = String.format("SELECT * FROM `topic` WHERE `deleted`='n' AND `id`='%d' LIMIT 1", id.longValue());
-		try {
-			topicConnection.connect();
-			topicConnection.executeQuery(getTopicQuery);
+        String getTopicQuery = String.format("SELECT * FROM `topic` WHERE `deleted`='n' AND `id`='%d' LIMIT 1", id.longValue());
+        try {
+            topicConnection.connect();
+            topicConnection.executeQuery(getTopicQuery);
 
-			if (topicConnection.fetchNextRow()) {
-				topic = toTopic(topicConnection);
-			}
-		} finally {
-			if (topicConnection != null) {
-				topicConnection.disconnect();
-			}
-		}
-		return topic;
-	}
+            if (topicConnection.fetchNextRow()) {
+                topic = toTopic(topicConnection);
+            }
+        } finally {
+            if (topicConnection != null) {
+                topicConnection.disconnect();
+            }
+        }
+        return topic;
+    }
 
-	/**
-	 * To topic
-	 * 
-	 * @param connection
-	 * @return
-	 */
-	private Topic toTopic(Connection connection) throws DataAccessException {
-		Topic topic = new Topic();
-		topic.id = connection.getCurrentRowLong("id");
-		topic.created = connection.getCurrentRowDateTime("created");
-		topic.deleted = connection.getCurrentRowString("deleted");
+    /**
+     * To topic
+     * 
+     * @param connection
+     * @return
+     */
+    private Topic toTopic(Connection connection) throws DataAccessException {
+        Topic topic = new Topic();
+        topic.id = connection.getCurrentRowLong("id");
+        topic.created = connection.getCurrentRowDateTime("created");
+        topic.deleted = connection.getCurrentRowString("deleted");
 
-		Long authorId = connection.getCurrentRowLong("authorid");
-		topic.author = UserServiceProvider.provide().getUser(authorId);
+        Long authorId = connection.getCurrentRowLong("authorid");
+        topic.author = UserServiceProvider.provide().getUser(authorId);
 
-		topic.title = connection.getCurrentRowString("title");
-		topic.content = connection.getCurrentRowString("content");
-		topic.flagged = connection.getCurrentRowInteger("flagged");
+        topic.title = connection.getCurrentRowString("title");
+        topic.content = connection.getCurrentRowString("content");
+        topic.flagged = connection.getCurrentRowInteger("flagged");
 
-		topic.forum = new Forum();
-		topic.forum.id = connection.getCurrentRowLong("forumid");
+        topic.forum = new Forum();
+        topic.forum.id = connection.getCurrentRowLong("forumid");
 
-		topic.heat = connection.getCurrentRowInteger("heat");
+        topic.heat = connection.getCurrentRowInteger("heat");
 
-		Long lastReplierId = connection.getCurrentRowLong("lastreplierid");
+        Long lastReplierId = connection.getCurrentRowLong("lastreplierid");
 
-		if (lastReplierId != null) {
-			topic.lastReplier = UserServiceProvider.provide().getUser(lastReplierId);
-		}
+        if (lastReplierId != null) {
+            topic.lastReplier = UserServiceProvider.provide().getUser(lastReplierId);
+        }
 
-		topic.lastReplied = connection.getCurrentRowDateTime("lastreplied");
+        topic.lastReplied = connection.getCurrentRowDateTime("lastreplied");
 
-		String lockedString = connection.getCurrentRowString("locked");
-		topic.locked = lockedString == null ? Boolean.FALSE : (lockedString.equalsIgnoreCase("y") ? Boolean.TRUE : Boolean.FALSE);
+        String lockedString = connection.getCurrentRowString("locked");
+        topic.locked = lockedString == null ? Boolean.FALSE : (lockedString.equalsIgnoreCase("y") ? Boolean.TRUE : Boolean.FALSE);
 
-		topic.numberOfReplies = connection.getCurrentRowInteger("numberofreplies");
+        topic.numberOfReplies = connection.getCurrentRowInteger("numberofreplies");
 
-		String stickyString = connection.getCurrentRowString("sticky");
-		topic.sticky = stickyString == null ? Boolean.FALSE : (stickyString.equalsIgnoreCase("y") ? Boolean.TRUE : Boolean.FALSE);
+        String stickyString = connection.getCurrentRowString("sticky");
+        topic.sticky = stickyString == null ? Boolean.FALSE : (stickyString.equalsIgnoreCase("y") ? Boolean.TRUE : Boolean.FALSE);
 
-		topic.tags = TagHelper.convertToTagList(stripslashes(connection.getCurrentRowString("tags")));
+        topic.tags = TagHelper.convertToTagList(stripslashes(connection.getCurrentRowString("tags")));
 
-		return topic;
-	}
+        return topic;
+    }
 
-	@Override
-	public Topic addTopic(Topic topic) throws DataAccessException {
-		Topic addedTopic = null;
+    @Override
+    public Topic addTopic(Topic topic) throws DataAccessException {
+        Topic addedTopic = null;
 
-		final String addTopicQuery = String.format(
-				"INSERT INTO `topic` (`authorid`,`title`,`content`,`sticky`,`forumid`,`tags`) VALUES (%d,'%s','%s','%s',%d,%s)", topic.author.id.longValue(),
-				addslashes(topic.title), addslashes(topic.content), topic.sticky == null || !topic.sticky.booleanValue() ? "n" : "y",
-				topic.forum.id.longValue(), topic.tags == null ? "NULL" : "'" + addslashes(join(topic.tags)) + "'");
+        final String addTopicQuery = String.format(
+                "INSERT INTO `topic` (`authorid`,`title`,`content`,`sticky`,`forumid`,`tags`) VALUES (%d,'%s','%s','%s',%d,%s)", topic.author.id.longValue(),
+                addslashes(topic.title), addslashes(topic.content), topic.sticky == null || !topic.sticky.booleanValue() ? "n" : "y",
+                topic.forum.id.longValue(), topic.tags == null ? "NULL" : "'" + addslashes(join(topic.tags)) + "'");
 
-		Connection topicConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeTopic.toString());
+        Connection topicConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeTopic.toString());
 
-		try {
-			topicConnection.connect();
-			topicConnection.executeQuery(addTopicQuery);
+        try {
+            topicConnection.connect();
+            topicConnection.executeQuery(addTopicQuery);
 
-			if (topicConnection.getAffectedRowCount() > 0) {
-				addedTopic = getTopic(Long.valueOf(topicConnection.getInsertedId()));
+            if (topicConnection.getAffectedRowCount() > 0) {
+                addedTopic = getTopic(Long.valueOf(topicConnection.getInsertedId()));
 
-				if (addedTopic == null) {
-					addedTopic = topic;
-					addedTopic.id = Long.valueOf(topicConnection.getInsertedId());
-				}
+                if (addedTopic == null) {
+                    addedTopic = topic;
+                    addedTopic.id = Long.valueOf(topicConnection.getInsertedId());
+                }
 
-				addedTopic.forum = ForumServiceProvider.provide().addTopic(topic.forum);
-			}
-		} finally {
-			if (topicConnection != null) {
-				topicConnection.disconnect();
-			}
-		}
+                addedTopic.forum = ForumServiceProvider.provide().addTopic(topic.forum);
+            }
+        } finally {
+            if (topicConnection != null) {
+                topicConnection.disconnect();
+            }
+        }
 
-		return addedTopic;
-	}
+        return addedTopic;
+    }
 
-	@Override
-	public Topic updateTopic(Topic topic) throws DataAccessException {
-		throw new UnsupportedOperationException();
-	}
+    @Override
+    public Topic updateTopic(Topic topic) throws DataAccessException {
+        String updateTopicQuery = String.format("UPDATE `rio`.`topic` SET `sticky`='%s', `locked`='%s' WHERE `id`='%s';",
+                topic.sticky == null || !topic.sticky.booleanValue() ? "n" : "y", topic.locked == null || !topic.locked.booleanValue() ? "n" : "y",
+                topic.id.longValue());
 
-	@Override
-	public void deleteTopic(Topic topic) throws DataAccessException {
-		throw new UnsupportedOperationException();
-	}
+        Connection topicConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeTopic.toString());
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.service.topic.ITopicService#getTopics(io.reflection.app.datatypes.shared.Forum, io.reflection.app.api.shared.datatypes.Pager)
-	 */
-	@Override
-	public List<Topic> getTopics(Forum forum, Pager pager) throws DataAccessException {
-		List<Topic> topics = new ArrayList<Topic>();
+        try {
+            topicConnection.connect();
+            topicConnection.executeQuery(updateTopicQuery);
 
-		IDatabaseService databaseService = DatabaseServiceProvider.provide();
-		Connection topicConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeTopic.toString());
+            if (topicConnection.getAffectedRowCount() > 0) {
+                if (LOG.isLoggable(GaeLevel.INFO)) {
+                    LOG.info(String.format("Updated either sticky or locked on topic with id [%d]", topic.id.longValue()));
+                }
 
-		String getTopicsQuery = String.format("SELECT * FROM `topic` WHERE `forumid`=%d AND `deleted`='n' ORDER BY `sticky` ASC", forum.id.longValue());
+            } else {
+                if (LOG.isLoggable(GaeLevel.INFO)) {
+                    LOG.warning(String.format("Could not update sticky/locked on topic with id [%d]", topic.id.longValue()));
+                }
+            }
+        } finally {
+            if (topicConnection != null) {
+                topicConnection.disconnect();
+            }
+        }
 
-		if (pager != null) {
-			String sortByQuery = "id";
+        return topic;
+    }
 
-			if (pager.sortBy != null && ("code".equals(pager.sortBy) || "name".equals(pager.sortBy))) {
-				sortByQuery = pager.sortBy;
-			}
+    @Override
+    public void deleteTopic(Topic topic) throws DataAccessException {
+        throw new UnsupportedOperationException();
+    }
 
-			String sortDirectionQuery = "DESC";
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.service.topic.ITopicService#getTopics(io.reflection.app.datatypes.shared.Forum, io.reflection.app.api.shared.datatypes.Pager)
+     */
+    @Override
+    public List<Topic> getTopics(Forum forum, Pager pager) throws DataAccessException {
+        List<Topic> topics = new ArrayList<Topic>();
 
-			if (pager.sortDirection != null) {
-				switch (pager.sortDirection) {
-				case SortDirectionTypeAscending:
-					sortDirectionQuery = "ASC";
-					break;
-				default:
-					break;
-				}
-			}
+        IDatabaseService databaseService = DatabaseServiceProvider.provide();
+        Connection topicConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeTopic.toString());
 
-			getTopicsQuery += String.format(",`%s` %s", sortByQuery, sortDirectionQuery);
-		}
+        String getTopicsQuery = String.format("SELECT * FROM `topic` WHERE `forumid`=%d AND `deleted`='n' ORDER BY `sticky` ASC", forum.id.longValue());
 
-		if (pager.start != null && pager.count != null) {
-			getTopicsQuery += String.format(" LIMIT %d, %d", pager.start.longValue(), pager.count.longValue());
-		} else if (pager.count != null) {
-			getTopicsQuery += String.format(" LIMIT %d", pager.count.longValue());
-		}
-		try {
-			topicConnection.connect();
-			topicConnection.executeQuery(getTopicsQuery);
+        if (pager != null) {
+            String sortByQuery = "id";
 
-			while (topicConnection.fetchNextRow()) {
-				Topic topic = this.toTopic(topicConnection);
+            if (pager.sortBy != null && ("code".equals(pager.sortBy) || "name".equals(pager.sortBy))) {
+                sortByQuery = pager.sortBy;
+            }
 
-				if (topic != null) {
-					topics.add(topic);
-				}
-			}
-		} finally {
-			if (topicConnection != null) {
-				topicConnection.disconnect();
-			}
-		}
+            String sortDirectionQuery = "DESC";
 
-		return topics;
-	}
+            if (pager.sortDirection != null) {
+                switch (pager.sortDirection) {
+                case SortDirectionTypeAscending:
+                    sortDirectionQuery = "ASC";
+                    break;
+                default:
+                    break;
+                }
+            }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.service.topic.ITopicService#getTopicsCount(io.reflection.app.datatypes.shared.Forum)
-	 */
-	@Override
-	public Long getTopicsCount(Forum forum) throws DataAccessException {
-		Long topicsCount = Long.valueOf(0);
+            getTopicsQuery += String.format(",`%s` %s", sortByQuery, sortDirectionQuery);
+        }
 
-		Connection topicConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeTopic.toString());
+        if (pager.start != null && pager.count != null) {
+            getTopicsQuery += String.format(" LIMIT %d, %d", pager.start.longValue(), pager.count.longValue());
+        } else if (pager.count != null) {
+            getTopicsQuery += String.format(" LIMIT %d", pager.count.longValue());
+        }
+        try {
+            topicConnection.connect();
+            topicConnection.executeQuery(getTopicsQuery);
 
-		String getTopicsCountQuery = String
-				.format("SELECT COUNT(`id`) AS `topiccount` FROM `topic` WHERE `forumid`=%d AND `deleted`='n'", forum.id.longValue());
+            while (topicConnection.fetchNextRow()) {
+                Topic topic = this.toTopic(topicConnection);
 
-		try {
-			topicConnection.connect();
-			topicConnection.executeQuery(getTopicsCountQuery);
+                if (topic != null) {
+                    topics.add(topic);
+                }
+            }
+        } finally {
+            if (topicConnection != null) {
+                topicConnection.disconnect();
+            }
+        }
 
-			if (topicConnection.fetchNextRow()) {
-				topicsCount = topicConnection.getCurrentRowLong("topiccount");
-			}
-		} finally {
-			if (topicConnection != null) {
-				topicConnection.disconnect();
-			}
-		}
+        return topics;
+    }
 
-		return topicsCount;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.service.topic.ITopicService#getTopicsCount(io.reflection.app.datatypes.shared.Forum)
+     */
+    @Override
+    public Long getTopicsCount(Forum forum) throws DataAccessException {
+        Long topicsCount = Long.valueOf(0);
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.service.topic.ITopicService#addUserReply(io.reflection.app.datatypes.shared.Topic, io.reflection.app.datatypes.shared.User)
-	 */
-	@Override
-	public Topic addUserReply(Topic topic, User user) throws DataAccessException {
-		String addReplyQuery = String.format(
-				"UPDATE `topic` SET `numberofreplies`=`numberofreplies`+1, `lastreplierid`=%d, `lastreplied`=NOW() WHERE `id`=%d AND `deleted`='n'",
-				user.id.longValue(), topic.id.longValue());
+        Connection topicConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeTopic.toString());
 
-		Connection topicConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeTopic.toString());
+        String getTopicsCountQuery = String
+                .format("SELECT COUNT(`id`) AS `topiccount` FROM `topic` WHERE `forumid`=%d AND `deleted`='n'", forum.id.longValue());
 
-		try {
-			topicConnection.connect();
-			topicConnection.executeQuery(addReplyQuery);
+        try {
+            topicConnection.connect();
+            topicConnection.executeQuery(getTopicsCountQuery);
 
-			if (topicConnection.getAffectedRowCount() > 0) {
-				if (LOG.isLoggable(GaeLevel.INFO)) {
-					LOG.info(String.format("Incremented reply count on topic with id [%d] and reply by user [%d]", topic.id.longValue(), user.id.longValue()));
-				}
+            if (topicConnection.fetchNextRow()) {
+                topicsCount = topicConnection.getCurrentRowLong("topiccount");
+            }
+        } finally {
+            if (topicConnection != null) {
+                topicConnection.disconnect();
+            }
+        }
 
-				if (topic.numberOfReplies != null) {
-					int numberOfReplies = topic.numberOfReplies.intValue();
-					topic.numberOfReplies = Integer.valueOf(numberOfReplies + 1);
+        return topicsCount;
+    }
 
-					topic.lastReplier = user;
-					topic.lastReplied = new Date();
-				}
-			} else {
-				if (LOG.isLoggable(GaeLevel.INFO)) {
-					LOG.warning(String.format("Could not increment reply count on topic with id [%d]", topic.id.longValue()));
-				}
-			}
-		} finally {
-			if (topicConnection != null) {
-				topicConnection.disconnect();
-			}
-		}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.service.topic.ITopicService#addUserReply(io.reflection.app.datatypes.shared.Topic, io.reflection.app.datatypes.shared.User)
+     */
+    @Override
+    public Topic addUserReply(Topic topic, User user) throws DataAccessException {
+        String addReplyQuery = String.format(
+                "UPDATE `topic` SET `numberofreplies`=`numberofreplies`+1, `lastreplierid`=%d, `lastreplied`=NOW() WHERE `id`=%d AND `deleted`='n'",
+                user.id.longValue(), topic.id.longValue());
 
-		return topic;
-	}
+        Connection topicConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeTopic.toString());
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.service.topic.ITopicService#removeReply(io.reflection.app.datatypes.shared.Topic)
-	 */
-	@Override
-	public Topic removeReply(Topic topic) throws DataAccessException {
-		String removeReplyQuery = String.format("UPDATE `topic` SET `numberorreplies`=`numberofreplies`-1 WHERE `id`=%d AND `deleted`='n'",
-				topic.id.longValue());
+        try {
+            topicConnection.connect();
+            topicConnection.executeQuery(addReplyQuery);
 
-		Connection topicConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeTopic.toString());
+            if (topicConnection.getAffectedRowCount() > 0) {
+                if (LOG.isLoggable(GaeLevel.INFO)) {
+                    LOG.info(String.format("Incremented reply count on topic with id [%d] and reply by user [%d]", topic.id.longValue(), user.id.longValue()));
+                }
 
-		try {
-			topicConnection.connect();
-			topicConnection.executeQuery(removeReplyQuery);
+                if (topic.numberOfReplies != null) {
+                    int numberOfReplies = topic.numberOfReplies.intValue();
+                    topic.numberOfReplies = Integer.valueOf(numberOfReplies + 1);
 
-			if (topicConnection.getAffectedRowCount() > 0) {
-				if (LOG.isLoggable(GaeLevel.INFO)) {
-					LOG.info(String.format("Decremented reply count on topic with id [%d]", topic.id.longValue()));
-				}
+                    topic.lastReplier = user;
+                    topic.lastReplied = new Date();
+                }
+            } else {
+                if (LOG.isLoggable(GaeLevel.INFO)) {
+                    LOG.warning(String.format("Could not increment reply count on topic with id [%d]", topic.id.longValue()));
+                }
+            }
+        } finally {
+            if (topicConnection != null) {
+                topicConnection.disconnect();
+            }
+        }
 
-				if (topic.numberOfReplies != null) {
-					int numberOfReplies = topic.numberOfReplies.intValue();
-					topic.numberOfReplies = Integer.valueOf(numberOfReplies - 1);
-				}
-			} else {
-				if (LOG.isLoggable(GaeLevel.INFO)) {
-					LOG.warning(String.format("Could not decrement reply count on topic with id [%d]", topic.id.longValue()));
-				}
-			}
-		} finally {
-			if (topicConnection != null) {
-				topicConnection.disconnect();
-			}
-		}
+        return topic;
+    }
 
-		return topic;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.service.topic.ITopicService#removeReply(io.reflection.app.datatypes.shared.Topic)
+     */
+    @Override
+    public Topic removeReply(Topic topic) throws DataAccessException {
+        String removeReplyQuery = String.format("UPDATE `topic` SET `numberorreplies`=`numberofreplies`-1 WHERE `id`=%d AND `deleted`='n'",
+                topic.id.longValue());
+
+        Connection topicConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeTopic.toString());
+
+        try {
+            topicConnection.connect();
+            topicConnection.executeQuery(removeReplyQuery);
+
+            if (topicConnection.getAffectedRowCount() > 0) {
+                if (LOG.isLoggable(GaeLevel.INFO)) {
+                    LOG.info(String.format("Decremented reply count on topic with id [%d]", topic.id.longValue()));
+                }
+
+                if (topic.numberOfReplies != null) {
+                    int numberOfReplies = topic.numberOfReplies.intValue();
+                    topic.numberOfReplies = Integer.valueOf(numberOfReplies - 1);
+                }
+            } else {
+                if (LOG.isLoggable(GaeLevel.INFO)) {
+                    LOG.warning(String.format("Could not decrement reply count on topic with id [%d]", topic.id.longValue()));
+                }
+            }
+        } finally {
+            if (topicConnection != null) {
+                topicConnection.disconnect();
+            }
+        }
+
+        return topic;
+    }
 
 }
