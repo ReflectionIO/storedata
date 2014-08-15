@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -189,6 +191,12 @@ public class NavigationController implements ValueChangeHandler<String> {
 
             return splitDecoded;
         }
+
+        public int getParameterCount() {
+            int count = mParts.length - 2;
+            return count > 0 ? count : 0;
+
+        }
     }
 
     public static NavigationController get() {
@@ -223,13 +231,15 @@ public class NavigationController implements ValueChangeHandler<String> {
         if (!page.isAttached()) {
             mPanel.clear();
             mPanel.add(page);
-        } else {}
+        }
     }
 
     /**
      * @param value
      */
     public void addPage(String value) {
+        FilterController.get().setFilter(value);
+
         Stack s = Stack.parse(value);
 
         if (intended != null && intended.equals(s.toString())) {
@@ -292,11 +302,31 @@ public class NavigationController implements ValueChangeHandler<String> {
             }
 
             if (doAttach) {
-                Stack previous = mStack;
+                final Stack previous = mStack;
                 mStack = value;
 
                 attachPage(stackPage);
-                EventController.get().fireEventFromSource(new NavigationEventHandler.ChangedEvent(previous, mStack), NavigationController.this);
+
+                // So in the web.bindery SimpleEventBus, it records the state of
+                // firingDepth i.e. if eventA calls eventB call eventC, we'd be
+                // 3 levels deep at
+                // the time that eventC is called. When new handlers are added
+                // it checks to see if we are at level 0. If not, it queues the
+                // addition of the
+                // new handler, wrapping it in a deferred run statement. So none
+                // of the new handlers in the onAttached are run in this case.
+                // This means in NavigationController.addStack, when the
+                // ChangedEvent is fired... it misses all the enqueued handlers
+                // of the new page.
+                // This is why we wrap the firing of ChangedEvent.
+
+                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        EventController.get().fireEventFromSource(new NavigationEventHandler.ChangedEvent(previous, mStack), NavigationController.this);
+                    }
+                });
+
             }
         }
 
@@ -323,7 +353,11 @@ public class NavigationController implements ValueChangeHandler<String> {
     }
 
     public PageType getCurrentPage() {
-        return PageType.fromString(mStack.getPage());
+        PageType p = null;
+        if (mStack != null) {
+            p = PageType.fromString(mStack.getPage());
+        }
+        return p;
     }
 
     public Stack getStack() {
@@ -333,7 +367,7 @@ public class NavigationController implements ValueChangeHandler<String> {
     /*
      * (non-Javadoc)
      * 
-     * @see com.google.gwt.event.logical.shared.ValueChangeHandler#onValueChange(com.google.gwt.event.logical.shared.ValueChangeEvent)
+     * @see com.google.gwt.event.logical.shared.ValueChangeHandler#onValueChange( com.google.gwt.event.logical.shared.ValueChangeEvent)
      */
     @Override
     public void onValueChange(ValueChangeEvent<String> event) {

@@ -10,6 +10,7 @@ package io.reflection.app.client.controller;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.helper.FilterHelper;
+import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
@@ -58,6 +59,8 @@ public class FilterController {
 
 	public static final String TODAY_SUMMARY_TYPE = "today";
 	public static final String MONTH_SUMMARY_TYPE = "month";
+
+	private PageType pageTypeFilter;
 
 	private static FilterController mOne = null;
 
@@ -201,7 +204,7 @@ public class FilterController {
 			return Stack.encode(MYAPP_FILTER_KEY, getStoreA3Code(), getCountryA2Code(), getStartTime().toString(), getEndTime().toString(),
 					getLinkedAccountId().toString());
 		}
-		
+
 		public String asFeedFilterString() {
 			return Stack.encode(FEED_FILTER_KEY, getListType(), getStoreA3Code(), getCountryA2Code(), getCategoryId().toString());
 		}
@@ -214,14 +217,31 @@ public class FilterController {
 			return false;
 		}
 
+		public Filter copyFilter() {
+			Filter filterCopy = new Filter();
+			filterCopy.setCategoryId(this.getCategoryId());
+			filterCopy.setChartType(this.getChartType());
+			filterCopy.setCountryA2Code(this.getCountryA2Code());
+			filterCopy.setDailyData(this.getDailyData());
+			filterCopy.setEndTime(this.getEndTime());
+			filterCopy.setLinkedAccountId(this.getLinkedAccountId());
+			filterCopy.setListType(this.getListType());
+			filterCopy.setStartTime(this.getStartTime());
+			filterCopy.setStoreA3Code(this.getStoreA3Code());
+			filterCopy.setSummaryType(this.getSummaryType());
+			return filterCopy;
+		}
 	}
 
+	private Map<PageType, Filter> filters = new HashMap<PageType, Filter>();
 	private Map<String, Object> mPreviousValues;
 	private Filter mCurrentFilter = new Filter();
+	private Filter defaultFilter = new Filter();
 
 	private int mInTransaction = 0;
 
 	private FilterController() {
+		defaultFilter = mCurrentFilter;
 		start();
 		setLinkedAccount(Long.valueOf(0));
 		setStore(StoreController.IPHONE_A3_CODE);
@@ -234,10 +254,51 @@ public class FilterController {
 		setChartType(RANKING_CHART_TYPE);
 		setSummaryType(TODAY_SUMMARY_TYPE);
 		commit();
+
+		defaultFilter = getDefaultFilter();
+
+		filters.put(PageType.RanksPageType, getDefaultFilter());
+		filters.put(PageType.MyAppsPageType, getDefaultFilter());
+		filters.put(PageType.FeedBrowserPageType, getDefaultFilter());
+		filters.put(PageType.ItemPageType, getDefaultFilter());
+
 	}
 
 	public Filter getFilter() {
 		return mCurrentFilter;
+	}
+
+	private Filter getDefaultFilter() {
+		return defaultFilter.copyFilter();
+	}
+
+	/**
+	 * Set the proper filter page - Item Page filter will reflect the changes made in other pages, but not the opposite
+	 * 
+	 * @param p
+	 */
+	public void setFilter(String stackValue) {
+		if (stackValue != null) {
+			String[] allParts = stackValue.split("/");
+			if (allParts[0].equals("!ranks") && pageTypeFilter != PageType.RanksPageType) {
+				pageTypeFilter = PageType.RanksPageType;
+				mCurrentFilter = filters.get(pageTypeFilter);
+			}
+			if (allParts[0].equals("!users") && allParts[1].equals("myapps") && pageTypeFilter != PageType.MyAppsPageType) {
+				pageTypeFilter = PageType.MyAppsPageType;
+				mCurrentFilter = filters.get(pageTypeFilter);
+			}
+			if (allParts[0].equals("!feedbrowser") && pageTypeFilter != PageType.FeedBrowserPageType) {
+				pageTypeFilter = PageType.FeedBrowserPageType;
+				mCurrentFilter = filters.get(pageTypeFilter);
+			}
+			if (allParts[0].equals("!item") && pageTypeFilter != PageType.ItemPageType) { // Dump object reference and make item filter independent again
+				pageTypeFilter = PageType.ItemPageType;
+				mCurrentFilter = Filter.parse(allParts[4]);				
+			}
+			filters.put(PageType.ItemPageType, mCurrentFilter);
+		}
+
 	}
 
 	public void setLinkedAccount(Long linkedAccountId) {
@@ -584,19 +645,19 @@ public class FilterController {
 	}
 
 	public String asRankFilterString() {
-		return mCurrentFilter == null ? "" : mCurrentFilter.asRankFilterString();
+		return filters.get(PageType.RanksPageType) == null ? "" : filters.get(PageType.RanksPageType).asRankFilterString();
 	}
 
 	public String asItemFilterString() {
-		return mCurrentFilter == null ? "" : mCurrentFilter.asItemFilterString();
+		return filters.get(PageType.ItemPageType) == null ? "" : filters.get(PageType.ItemPageType).asItemFilterString();
 	}
 
 	public String asMyAppsFilterString() {
-		return mCurrentFilter == null ? "" : mCurrentFilter.asMyAppsFilterString();
+		return filters.get(PageType.MyAppsPageType) == null ? "" : filters.get(PageType.MyAppsPageType).asMyAppsFilterString();
 	}
-	
+
 	public String asFeedFilterString() {
-		return mCurrentFilter == null ? "" : mCurrentFilter.asFeedFilterString();
+		return filters.get(PageType.FeedBrowserPageType) == null ? "" : filters.get(PageType.FeedBrowserPageType).asFeedFilterString();
 	}
 
 	public boolean isFilterParam(String parameter) {
@@ -633,21 +694,8 @@ public class FilterController {
 		return FilterHelper.createRange(getStartDate(), getEndDate());
 	}
 
-	public void reset() {
-		start();
-		setLinkedAccount(Long.valueOf(0));
-		// setStore(StoreController.IPHONE_A3_CODE);
-		// setListType(OVERALL_LIST_TYPE);
-		// setCountry("us");
-		// setEndDate(new Date());
-		// Date startDate = getEndDate();
-		// CalendarUtil.addDaysToDate(startDate, -30);
-		// setStartDate(startDate);
-		// setCategory(Long.valueOf(24));
-		// setDailyData(REVENUE_DAILY_DATA_TYPE);
-		// setChartType(RANKING_CHART_TYPE);
-		// setSummaryType(TODAY_SUMMARY_TYPE);
-		commit(false);
+	public void resetFilter(PageType p) {
+		filters.put(p, getDefaultFilter());
 	}
 
 }

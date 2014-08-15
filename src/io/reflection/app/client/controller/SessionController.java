@@ -278,10 +278,13 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 		});
 
 		makeSessionInvalid();
+		
+		// Clear user data, filters and pages
 		LinkedAccountController.get().reset();
 		MyAppsController.get().reset();
-		FilterController.get().reset();
+		FilterController.get().resetFilter(PageType.MyAppsPageType);
 		NavigationController.get().purgeUserPages();
+		
 		PageType.LoginPageType.show("requestinvite");
 	}
 
