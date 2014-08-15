@@ -27,6 +27,8 @@ import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.page.forum.part.ForumMessageCell;
 import io.reflection.app.client.page.forum.part.ForumSummarySidePanel;
+import io.reflection.app.client.page.forum.part.LockButton;
+import io.reflection.app.client.page.forum.part.StickyButton;
 import io.reflection.app.client.part.BootstrapGwtCellList;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.part.datatypes.ForumMessage;
@@ -44,7 +46,6 @@ import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -69,43 +70,29 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
     private Long topicId;
 
-    interface TopicPageUiBinder extends UiBinder<Widget, TopicPage> {
-    }
+    interface TopicPageUiBinder extends UiBinder<Widget, TopicPage> {}
 
-    @UiField
-    HeadingElement topicTitle;
-    @UiField
-    HeadingElement forumTitle;
-    @UiField
-    UListElement notes;
+    @UiField HeadingElement topicTitle;
+    @UiField HeadingElement forumTitle;
+    @UiField UListElement notes;
 
     private ForumMessageCell cellPrototype = new ForumMessageCell();
-    @UiField(provided = true)
-    CellList<ForumMessage> messagesCellList = new CellList<ForumMessage>(cellPrototype, BootstrapGwtCellList.INSTANCE);
+    @UiField(provided = true) CellList<ForumMessage> messagesCellList = new CellList<ForumMessage>(cellPrototype, BootstrapGwtCellList.INSTANCE);
 
-    @UiField
-    Button replyLink;
-    @UiField
-    Button post;
+    @UiField Button replyLink;
+    @UiField Button post;
 
-    @UiField
-    HTMLPanel replyGroup;
-    @UiField
-    HTMLPanel replyNote;
+    @UiField HTMLPanel replyGroup;
+    @UiField HTMLPanel replyNote;
 
-    @UiField
-    FormPanel replyForm;
+    @UiField FormPanel replyForm;
 
-    @UiField
-    BlikiEditor replyText;
-    @UiField
-    SimplePager pager;
+    @UiField BlikiEditor replyText;
+    @UiField SimplePager pager;
 
-    @UiField
-    HTMLPanel adminButtons;
+    @UiField HTMLPanel adminButtons;
 
-    @UiField
-    ForumSummarySidePanel forumSummarySidePanel;
+    @UiField ForumSummarySidePanel forumSummarySidePanel;
 
     private ForumMessageProvider dataProvider;
 
@@ -132,78 +119,11 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
         cellPrototype.setRichText(replyText);
 
-        
-
-        // Topic topic = TopicController.get().getTopic(topicId);
-        // dataProvider = new ForumMessageProvider(topic);
-        // dataProvider.registerListeners();
-        //
-        // dataProvider.addDataDisplay(messages);
-
-    }
-
-    class StickyButton extends Button implements ClickHandler {
-        public StickyButton() {
-            super("");
-            this.addClickHandler(this);
-            this.getStyleElement().addClassName("btn");
-            this.getStyleElement().addClassName("btn-default");
-            setName();
-            
-        }
-        public void setName()
-        {
-            Topic topic = TopicController.get().getTopic(topicId);
-            if (!topic.sticky) {
-                this.setText("Make sticky");
-            }
-            else {
-                this.setText("Make unsticky");
-            }
-        }
-
-        @Override
-        public void onClick(ClickEvent event) {
-            Topic topic = TopicController.get().getTopic(topicId);
-            topic.sticky = !topic.sticky ;
-            TopicController.get().updateTopic(topic);
-            setName();
-        }
-    }
-
-    class LockButton extends Button implements ClickHandler {
-        public LockButton(String name) {
-            super(name);
-            this.addClickHandler(this);
-            this.getStyleElement().addClassName("btn");
-            this.getStyleElement().addClassName("btn-default");
-        }
-        
-        public void setName()
-        {
-            Topic topic = TopicController.get().getTopic(topicId);
-            if (!topic.locked) {
-                this.setText("Lock");
-            }
-            else {
-                this.setText("Unlock");
-            }
-        }
-
-        @Override
-        public void onClick(ClickEvent event) {
-            Topic topic = TopicController.get().getTopic(topicId);
-            topic.locked = !topic.locked ;
-            TopicController.get().updateTopic(topic);
-            setName();
-        }
-
     }
 
     private void addAdminButtons() {
-        adminButtons.add(new StickyButton());
-        adminButtons.add(new LockButton("Lock"));
-
+        adminButtons.add(new StickyButton(topicId));
+        adminButtons.add(new LockButton("Lock", topicId));
     }
 
     /*
@@ -276,9 +196,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * io.reflection.app.client.handler.NavigationEventHandler#navigationChanged
-     * (io.reflection.app.client.controller.NavigationController.Stack,
+     * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged (io.reflection.app.client.controller.NavigationController.Stack,
      * io.reflection.app.client.controller.NavigationController.Stack)
      */
     @Override
@@ -314,8 +232,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
     }
 
     /**
-     * is called when there are new changes to be applied to the topic this
-     * actually updates these changes in the ui
+     * is called when there are new changes to be applied to the topic this actually updates these changes in the ui
      * 
      * @param topic
      */
@@ -397,26 +314,23 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
     /*
      * (non-Javadoc)
      * 
-     * @see io.reflection.app.api.forum.shared.call.event.GetTopicEventHandler#
-     * getTopicSuccess(io.reflection.app.api.forum.shared.call.GetTopicRequest,
+     * @see io.reflection.app.api.forum.shared.call.event.GetTopicEventHandler# getTopicSuccess(io.reflection.app.api.forum.shared.call.GetTopicRequest,
      * io.reflection.app.api.forum.shared.call.GetTopicResponse)
      */
     @Override
     public void getTopicSuccess(GetTopicRequest input, GetTopicResponse output) {
         if (output.status == StatusType.StatusTypeSuccess) {
 
-            if (TopicPage.this.topic == null)
-            {
+            if (TopicPage.this.topic == null) {
                 if (SessionController.get().isLoggedInUserAdmin()) {
                     addAdminButtons();
-                }
-                else {
+                } else {
                     adminButtons.removeFromParent();
                 }
             }
-            
-            TopicPage.this.topic = output.topic ;
-            
+
+            TopicPage.this.topic = output.topic;
+
             updateTopic(output.topic);
             forumSummarySidePanel.selectItem(output.topic.forum);
         }
@@ -425,19 +339,16 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
     /*
      * (non-Javadoc)
      * 
-     * @see io.reflection.app.api.forum.shared.call.event.GetTopicEventHandler#
-     * getTopicFailure(io.reflection.app.api.forum.shared.call.GetTopicRequest,
+     * @see io.reflection.app.api.forum.shared.call.event.GetTopicEventHandler# getTopicFailure(io.reflection.app.api.forum.shared.call.GetTopicRequest,
      * java.lang.Throwable)
      */
     @Override
-    public void getTopicFailure(GetTopicRequest input, Throwable caught) {
-    }
+    public void getTopicFailure(GetTopicRequest input, Throwable caught) {}
 
     /*
      * (non-Javadoc)
      * 
-     * @see io.reflection.app.api.forum.shared.call.event.AddReplyEventHandler#
-     * addReplySuccess(io.reflection.app.api.forum.shared.call.AddReplyRequest,
+     * @see io.reflection.app.api.forum.shared.call.event.AddReplyEventHandler# addReplySuccess(io.reflection.app.api.forum.shared.call.AddReplyRequest,
      * io.reflection.app.api.forum.shared.call.AddReplyResponse)
      */
     @Override
@@ -451,12 +362,10 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
     /*
      * (non-Javadoc)
      * 
-     * @see io.reflection.app.api.forum.shared.call.event.AddReplyEventHandler#
-     * addReplyFailure(io.reflection.app.api.forum.shared.call.AddReplyRequest,
+     * @see io.reflection.app.api.forum.shared.call.event.AddReplyEventHandler# addReplyFailure(io.reflection.app.api.forum.shared.call.AddReplyRequest,
      * java.lang.Throwable)
      */
     @Override
-    public void addReplyFailure(AddReplyRequest input, Throwable caught) {
-    }
+    public void addReplyFailure(AddReplyRequest input, Throwable caught) {}
 
 }
