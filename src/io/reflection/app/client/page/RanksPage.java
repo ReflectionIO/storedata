@@ -201,7 +201,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
             @Override
             public String getValue(RanksGroup object) {
-                return rankForListType(object).revenue.toString();
+            	Rank value = rankForListType(object); 
+                return FormattingHelper.getCurrencySymbol(value.currency) + " " + value.revenue;
             }
 
         };
