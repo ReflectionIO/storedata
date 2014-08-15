@@ -14,8 +14,6 @@ import io.reflection.app.datatypes.shared.User;
 
 import java.util.Date;
 
-import com.google.gwt.safehtml.shared.SafeUri;
-
 /**
  * This is a wrapper object around Topic and Reply.
  * It's needed in order to treat the content from a topic or reply as a single entity from the perspective of displaying them in a list.

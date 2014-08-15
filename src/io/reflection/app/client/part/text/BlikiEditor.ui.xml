@@ -20,8 +20,6 @@
 	<g:HTMLPanel height="700">
 		<g:TabPanel ui:field="tabLayout" width="100%">
 			<g:Tab text="Edit">
-				<!-- <g:header><div class="btn">Edit</div></g:header> -->
-				<!-- <g:VerticalPanel width="100%" height="100%" horizontalAlignment="ALIGN_LEFT"> -->
 				<g:HTMLPanel>
 					<g:HTMLPanel addStyleNames="btn-group {style.marginTop}">
 						<g:Button styleName="btn btn-default" ui:field="bold" />
@@ -29,14 +27,9 @@
 					</g:HTMLPanel>
 					<g:TextArea addStyleNames="{style.marginTop}" ui:field="textArea" width="100%" height="200px" text="" />
 				</g:HTMLPanel>
-
-				<!-- </g:VerticalPanel> -->
 			</g:Tab>
 			<g:Tab text="Preview">
-				<!-- <g:header><div class="btn">Preview</div></g:header> -->
-				<!-- <g:VerticalPanel width="100%" height="100%"> -->
 				<g:Frame width="100%" height="100%" ui:field="iframe" styleName="{style.gwt-Frame} {style.marginTop}" />
-				<!-- </g:VerticalPanel> -->
 			</g:Tab>
 		</g:TabPanel>
 	</g:HTMLPanel>

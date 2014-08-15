@@ -39,316 +39,294 @@ import com.willshex.gson.json.service.shared.StatusType;
  * 
  */
 public class ReplyController implements ServiceConstants {
-	private static ReplyController one = null;
+    private static ReplyController one = null;
 
-	private ReplyThread thread;
+    private ReplyThread thread;
 
-	public static ReplyController get() {
-		if (one == null) {
-			one = new ReplyController();
-		}
+    public static ReplyController get() {
+        if (one == null) {
+            one = new ReplyController();
+        }
 
-		return one;
-	}
+        return one;
+    }
 
-	/**
-	 * @param topicId
-	 * @param end
-	 * @param start
-	 */
-	public void getReplies(Long topicId, int start, int end) {
-		
-		thread.fetchReplies(topicId, start, end);
-	}
+    /**
+     * @param topicId
+     * @param end
+     * @param start
+     */
+    public void getReplies(Long topicId, int start, int end) {
 
-	public Reply getReply(Long replyId) {
-		if (thread == null) return null;
+        thread.fetchReplies(topicId, start, end);
+    }
 
-		return thread.getReply(replyId);
-	}
+    public Reply getReply(Long replyId) {
+        Reply reply = null;
+        if (thread == null) {
+            reply = thread.getReply(replyId);
+        }
+        return reply;
+    }
 
-	/**
+    /**
 	 * 
 	 */
-	public void reset() {
-		thread = null;
-	}
+    public void reset() {
+        thread = null;
+    }
 
-	/**
-	 * @param replyId
-	 * @param html
-	 */
-	public void updateReply(Long replyId, String html) {
-		thread.updateReply(replyId, html);
-	}
+    /**
+     * @param replyId
+     * @param html
+     */
+    public void updateReply(Long replyId, String html) {
+        thread.updateReply(replyId, html);
+    }
 
-	/**
-	 * @param replyId
-	 * @param html
-	 */
-	public void addReply(Long replyId, String html) {
-		thread.addReply(replyId, html);
-	}
-	
-	private ReplyThread getThread(long topicId)
-	{
-		if (thread == null || thread.getTopicId() != topicId) {
-			thread = new ReplyThread(this, topicId);
-		}
-		return thread ;
-	}
+    /**
+     * @param replyId
+     * @param html
+     */
+    public void addReply(Long replyId, String html) {
+        thread.addReply(replyId, html);
+    }
 
-	/**
-	 * @param id
-	 * @return
-	 */
-	public static ReplyThread get(Long topicId) {
-		
-		return one.getThread(topicId) ;
-	}
+    private ReplyThread getThread(long topicId) {
+        if (thread == null || thread.getTopicId() != topicId) {
+            thread = new ReplyThread(this, topicId);
+        }
+        return thread;
+    }
 
-	/**
-	 * The ReplyThread class is to act as a caching mechanism.
-	 * Rather than resetting all the various members of this class to 
-	 * change threads, simply removing the current ReplyThread and
-	 * reinstantiating will do. It also means we will be able to
-	 * eventually cache across different threads seamlessly.
-	 * @author daniel
-	 *
-	 */
-	public static class ReplyThread implements ServiceConstants {
+    /**
+     * @param id
+     * @return
+     */
+    public static ReplyThread get(Long topicId) {
 
-		private List<Reply> replies = new ArrayList<Reply>();
-		/* This is to get a reply by it's id
-		 * At the moment it's used in the EditTopicPage, but actually this could be using ForumMessage too TODO*/
-		private HashMap<Integer, Reply> replyStore = new HashMap<Integer, Reply>();
-		Long topicId;
-		// private long count = 0;
-		private Pager pager;
-		
-		
-		private SparseArray<ForumMessage> messagesLookup = new SparseArray<ForumMessage>() ;
-		private ReplyController replyController;
-		private Topic topic;
+        return one.getThread(topicId);
+    }
 
-		/**
-		 * @param replyController
-		 * @param topicId
-		 */
-		public ReplyThread(ReplyController replyController, Long topicId) {
-			this.replyController = replyController;
-			this.topicId = topicId;
-		}
+    /**
+     * The ReplyThread class is to act as a caching mechanism. Rather than resetting all the various members of this class to change threads, simply removing
+     * the current ReplyThread and reinstantiating will do. It also means we will be able to eventually cache across different threads seamlessly.
+     * 
+     * @author daniel
+     * 
+     */
+    public static class ReplyThread implements ServiceConstants {
 
-		public Reply getReply(Long replyId) {
-			return replyStore.get(replyId.intValue());
-		}
+        private List<Reply> replies = new ArrayList<Reply>();
+        /*
+         * This is to get a reply by it's id At the moment it's used in the EditTopicPage, but actually this could be using ForumMessage too TODO
+         */
+        private HashMap<Integer, Reply> replyStore = new HashMap<Integer, Reply>();
+        Long topicId;
 
-		/**
-		 * @return
-		 */
-		public Long getTopicId() {
-			return topicId;
-		}
+        private SparseArray<ForumMessage> messagesLookup = new SparseArray<ForumMessage>();
+        private ReplyController replyController;
+        private Topic topic;
 
-		void fetchReplies(Long topicId2, final long start, final long count) {
-			ForumService service = ServiceCreator.createForumService();
+        /**
+         * @param replyController
+         * @param topicId
+         */
+        public ReplyThread(ReplyController replyController, Long topicId) {
+            this.replyController = replyController;
+            this.topicId = topicId;
+        }
 
-			final GetRepliesRequest input = new GetRepliesRequest();
-			input.accessCode = ACCESS_CODE;
-			input.session = SessionController.get().getSessionForApiCall();
+        public Reply getReply(Long replyId) {
+            return replyStore.get(replyId.intValue());
+        }
 
-			input.topic = new Topic();
-			input.topic.id = topicId;
+        /**
+         * @return
+         */
+        public Long getTopicId() {
+            return topicId;
+        }
 
-			
-			pager = new Pager();
-			pager.count = count;
-			pager.start = start;
-			pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
-			pager.sortBy = "created";
-			
-			input.pager = pager;
+        void fetchReplies(Long topicId2, final long start, final long count) {
+            ForumService service = ServiceCreator.createForumService();
 
-			service.getReplies(input, new AsyncCallback<GetRepliesResponse>() {
+            final GetRepliesRequest input = new GetRepliesRequest();
+            input.accessCode = ACCESS_CODE;
+            input.session = SessionController.get().getSessionForApiCall();
 
-				@Override
-				public void onSuccess(GetRepliesResponse output) {
-					if (output.status == StatusType.StatusTypeSuccess) {
-						if (output.replies != null) {
-							replies.addAll(output.replies);
+            input.topic = new Topic();
+            input.topic.id = topicId;
 
-							//be careful with the different ordering of replies, forumMessages,
-							//and rows in the celltable/database.
-							
-							long i = start ;
-							for (Reply reply : output.replies) {
-								messagesLookup.put((int) i+1, new ForumMessage(input.topic, reply, (int) i+1));
-								replyStore.put(reply.id.intValue(), reply);
-								i++;
-							}
-						}
+            final Pager pager = new Pager();
+            pager.count = count;
+            pager.start = start;
+            pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
+            pager.sortBy = "created";
 
-						if (output.pager != null) {
-							pager = output.pager;
+            input.pager = pager;
 
-							// if (pager.totalCount != null) {
-							// count = pager.totalCount.longValue();
-							// }
-						}
+            service.getReplies(input, new AsyncCallback<GetRepliesResponse>() {
 
-						// updateRowCount((int) count, true);
-						// updateRowData(
-						// input.pager.start.intValue(),
-						// replies.subList(input.pager.start.intValue(),
-						// Math.min(input.pager.start.intValue() + input.pager.count.intValue(), pager.totalCount.intValue())));
-					}
+                @Override
+                public void onSuccess(GetRepliesResponse output) {
+                    if (output.status == StatusType.StatusTypeSuccess) {
+                        if (output.replies != null) {
+                            replies.addAll(output.replies);
 
-					EventController.get().fireEventFromSource(new GetRepliesSuccess(input, output), replyController);
-				}
+                            // be careful with the different ordering of
+                            // replies, forumMessages,
+                            // and rows in the celltable/database.
 
-				@Override
-				public void onFailure(Throwable caught) {
-					EventController.get().fireEventFromSource(new GetRepliesFailure(input, caught), replyController);
-				}
-			});
-		}
+                            long i = start;
+                            for (Reply reply : output.replies) {
+                                messagesLookup.put((int) i + 1, new ForumMessage(input.topic, reply, (int) i + 1));
+                                replyStore.put(reply.id.intValue(), reply);
+                                i++;
+                            }
+                        }
 
-		public void addReply(Long topicId, String replyContent) {
-			ForumService service = ServiceCreator.createForumService();
+                    }
 
-			final AddReplyRequest input = new AddReplyRequest();
-			input.accessCode = ACCESS_CODE;
-			input.session = SessionController.get().getSessionForApiCall();
+                    EventController.get().fireEventFromSource(new GetRepliesSuccess(input, output), replyController);
+                }
 
-			input.reply = new Reply();
-			input.reply.author = SessionController.get().getLoggedInUser();
-			input.reply.content = replyContent;
+                @Override
+                public void onFailure(Throwable caught) {
+                    EventController.get().fireEventFromSource(new GetRepliesFailure(input, caught), replyController);
+                }
+            });
+        }
 
-			input.reply.topic = new Topic();
-			input.reply.topic.id = topicId;
+        public void addReply(Long topicId, String replyContent) {
+            ForumService service = ServiceCreator.createForumService();
 
-			service.addReply(input, new AsyncCallback<AddReplyResponse>() {
+            final AddReplyRequest input = new AddReplyRequest();
+            input.accessCode = ACCESS_CODE;
+            input.session = SessionController.get().getSessionForApiCall();
 
-				@Override
-				public void onSuccess(AddReplyResponse output) {
+            input.reply = new Reply();
+            input.reply.author = SessionController.get().getLoggedInUser();
+            input.reply.content = replyContent;
 
-					if (output.status == StatusType.StatusTypeSuccess) {
-						if (pager != null && pager.totalCount != null) {
-							long totalCount = pager.totalCount.longValue() + 1;
-							pager.totalCount = Long.valueOf(totalCount);
-						}
+            input.reply.topic = new Topic();
+            input.reply.topic.id = topicId;
 
-						Topic topic = TopicController.get().getTopic(ReplyThread.this.topicId);
+            service.addReply(input, new AsyncCallback<AddReplyResponse>() {
 
-						if (topic != null) {
-							int numberOfReplies = topic.numberOfReplies.intValue();
-							topic.numberOfReplies = Integer.valueOf(++numberOfReplies);
-						}
-					}
+                @Override
+                public void onSuccess(AddReplyResponse output) {
 
-					EventController.get().fireEventFromSource(new AddReplySuccess(input, output), replyController);
-				}
+                    if (output.status == StatusType.StatusTypeSuccess) {
+                        Topic topic = TopicController.get().getTopic(ReplyThread.this.topicId);
 
-				@Override
-				public void onFailure(Throwable caught) {
-					EventController.get().fireEventFromSource(new AddReplyFailure(input, caught), replyController);
-				}
-			});
-		}
+                        if (topic != null) {
+                            int numberOfReplies = topic.numberOfReplies.intValue();
+                            topic.numberOfReplies = Integer.valueOf(++numberOfReplies);
+                        }
+                    }
 
-		public void updateReply(Long id, String content) {
-			ForumService service = ServiceCreator.createForumService();
+                    EventController.get().fireEventFromSource(new AddReplySuccess(input, output), replyController);
+                }
 
-			final UpdateReplyRequest input = new UpdateReplyRequest();
-			input.accessCode = ACCESS_CODE;
+                @Override
+                public void onFailure(Throwable caught) {
+                    EventController.get().fireEventFromSource(new AddReplyFailure(input, caught), replyController);
+                }
+            });
+        }
 
-			input.session = SessionController.get().getSessionForApiCall();
-			input.reply = replyStore.get(id.intValue());
+        public void updateReply(Long id, String content) {
+            ForumService service = ServiceCreator.createForumService();
 
-			input.reply.id = id;
-			input.reply.content = content;
+            final UpdateReplyRequest input = new UpdateReplyRequest();
+            input.accessCode = ACCESS_CODE;
 
-			service.updateReply(input, new AsyncCallback<UpdateReplyResponse>() {
+            input.session = SessionController.get().getSessionForApiCall();
+            input.reply = replyStore.get(id.intValue());
 
-				@Override
-				public void onFailure(Throwable caught) {
-					EventController.get().fireEventFromSource(new UpdateReplyFailure(input, caught), replyController);
+            input.reply.id = id;
+            input.reply.content = content;
 
-				}
+            service.updateReply(input, new AsyncCallback<UpdateReplyResponse>() {
 
-				@Override
-				public void onSuccess(UpdateReplyResponse output) {
-					if (output.status == StatusType.StatusTypeSuccess) {
-						replyController.reset();
-					}
+                @Override
+                public void onFailure(Throwable caught) {
+                    EventController.get().fireEventFromSource(new UpdateReplyFailure(input, caught), replyController);
 
-					EventController.get().fireEventFromSource(new UpdateReplySuccess(input, output), replyController);
+                }
 
-				}
-			});
-		}
+                @Override
+                public void onSuccess(UpdateReplyResponse output) {
+                    if (output.status == StatusType.StatusTypeSuccess) {
+                        replyController.reset();
+                    }
 
-		/**
-		 * @param topic
-		 */
-		public void setTopic(Topic topic) {
-			this.topic = topic ;
-			this.messagesLookup.append(0, new ForumMessage(topic, null, 0));
-			
-		}
+                    EventController.get().fireEventFromSource(new UpdateReplySuccess(input, output), replyController);
 
-		/**
-		 * @param start from zero.
-		 * @param end (exclusive)
-		 * @return
-		 */
-		public boolean hasRows(int start, int end) {
-			//inefficient, but not noticeable for 10-100 rows per page.
-			for (int i = start ; i <= end && i <= topic.numberOfReplies ; i++)
-				if (this.messagesLookup.valueAt(i) == null)
-					return false ;
-			return true ;
-		}
+                }
+            });
+        }
 
-		/**
-		 * @return
-		 */
-		public long getCount() {
-			return replyStore.size() ;
-		}
+        /**
+         * @param topic
+         */
+        public void setTopic(Topic topic) {
+            this.topic = topic;
+            messagesLookup.append(0, new ForumMessage(topic, null, 0));
 
-		
+        }
 
-		/**
-		 * Since Replys and ForumMessages are so similar, it makes
-		 * sense to manage the caching of them here in ReplyController
-		 * and do the wrapping.
-		 * @param start
-		 * @param end
-		 * @return
-		 */
-		public List<ForumMessage> getMessages(int start, int end) {
-			ArrayList<ForumMessage> rows = new ArrayList<ForumMessage>();
-			for (int i = start ; i < end ; i++)
-			{
-				ForumMessage message = messagesLookup.get(i);
-				if(message != null)
-				{
-					rows.add(message);
-				}
-			}
-			
-			return rows ;
-		}
+        /**
+         * @param start
+         *            from zero.
+         * @param end
+         *            (exclusive)
+         * @return
+         */
+        public boolean hasRows(int start, int end) {
+            boolean hasRows = true;
+            // inefficient, but not noticeable for 10-100 rows per page.
+            for (int i = start; i <= end && i <= topic.numberOfReplies; i++)
+                if (messagesLookup.valueAt(i) == null) {
+                    hasRows = false;
+                    break;
+                }
+            return hasRows;
+        }
 
-		/**
-		 * @return
-		 */
-		public int getTotalCount() {
-			return topic.numberOfReplies + 1 ;
-		}
+        /**
+         * @return
+         */
+        public long getCount() {
+            return replyStore.size();
+        }
 
-		
-	}
+        /**
+         * Since Replys and ForumMessages are so similar, it makes sense to manage the caching of them here in ReplyController and do the wrapping.
+         * 
+         * @param start
+         * @param end
+         * @return
+         */
+        public List<ForumMessage> getMessages(int start, int end) {
+            ArrayList<ForumMessage> rows = new ArrayList<ForumMessage>();
+            for (int i = start; i < end; i++) {
+                ForumMessage message = messagesLookup.get(i);
+                if (message != null) {
+                    rows.add(message);
+                }
+            }
+
+            return rows;
+        }
+
+        /**
+         * @return
+         */
+        public int getTotalCount() {
+            return topic.numberOfReplies + 1;
+        }
+
+    }
 }

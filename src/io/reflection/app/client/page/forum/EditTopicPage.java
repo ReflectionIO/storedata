@@ -37,16 +37,14 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
 
     private static EditTopicPageUiBinder uiBinder = GWT.create(EditTopicPageUiBinder.class);
 
-    interface EditTopicPageUiBinder extends UiBinder<Widget, EditTopicPage> {
-    }
+    interface EditTopicPageUiBinder extends UiBinder<Widget, EditTopicPage> {}
 
     private Long topicId;
     private Long replyId;
     private Reply reply;
     private String replyContent;
 
-    @UiField
-    BlikiEditor editText;
+    @UiField BlikiEditor editText;
 
     public EditTopicPage() {
         initWidget(uiBinder.createAndBindUi(this));
@@ -70,9 +68,7 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * io.reflection.app.client.handler.NavigationEventHandler#navigationChanged
-     * (io.reflection.app.client.controller.NavigationController.Stack,
+     * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged (io.reflection.app.client.controller.NavigationController.Stack,
      * io.reflection.app.client.controller.NavigationController.Stack)
      */
     @Override
@@ -88,8 +84,7 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
                 try {
                     topicId = Long.parseLong(topicIdString);
                     replyId = Long.parseLong(selectedMessageId);
-                } catch (NumberFormatException e) {
-                }
+                } catch (NumberFormatException e) {}
 
                 if (topicId != null) {
                     reply = ReplyController.get().getReply(replyId);
@@ -132,11 +127,8 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * io.reflection.app.api.forum.shared.call.event.UpdateReplyEventHandler
-     * #updateReplySuccess
-     * (io.reflection.app.api.forum.shared.call.UpdateReplyRequest,
-     * io.reflection.app.api.forum.shared.call.UpdateReplyResponse)
+     * @see io.reflection.app.api.forum.shared.call.event.UpdateReplyEventHandler #updateReplySuccess
+     * (io.reflection.app.api.forum.shared.call.UpdateReplyRequest, io.reflection.app.api.forum.shared.call.UpdateReplyResponse)
      */
     @Override
     public void updateReplySuccess(UpdateReplyRequest input, UpdateReplyResponse output) {
@@ -149,14 +141,10 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * io.reflection.app.api.forum.shared.call.event.UpdateReplyEventHandler
-     * #updateReplyFailure
-     * (io.reflection.app.api.forum.shared.call.UpdateReplyRequest,
-     * java.lang.Throwable)
+     * @see io.reflection.app.api.forum.shared.call.event.UpdateReplyEventHandler #updateReplyFailure
+     * (io.reflection.app.api.forum.shared.call.UpdateReplyRequest, java.lang.Throwable)
      */
     @Override
-    public void updateReplyFailure(UpdateReplyRequest input, Throwable caught) {
-    }
+    public void updateReplyFailure(UpdateReplyRequest input, Throwable caught) {}
 
 }

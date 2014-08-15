@@ -38,34 +38,24 @@ import com.willshex.gson.json.service.shared.StatusType;
  */
 public class AddTopicPage extends Page implements CreateTopicEventHandler, GetForumsEventHandler {
 
-    @UiField
-    TextBox title;
-    @UiField
-    TextBox tags;
+    @UiField TextBox title;
+    @UiField TextBox tags;
 
-    @UiField
-    ListBox forums;
+    @UiField ListBox forums;
+    
+    @UiField BlikiEditor contentText;
 
-    // @UiField RichTextToolbar contentToolbar;
-    @UiField
-    BlikiEditor contentText;
-
-    @UiField
-    ForumSummarySidePanel forumSummarySidePanel;
+    @UiField ForumSummarySidePanel forumSummarySidePanel;
 
     private static AddTopicPageUiBinder uiBinder = GWT.create(AddTopicPageUiBinder.class);
 
-    interface AddTopicPageUiBinder extends UiBinder<Widget, AddTopicPage> {
-    }
+    interface AddTopicPageUiBinder extends UiBinder<Widget, AddTopicPage> {}
 
     public AddTopicPage() {
         initWidget(uiBinder.createAndBindUi(this));
 
-        // contentToolbar.setRichText(contentText);
-
         title.getElement().setAttribute("placeholder", "Title");
         tags.getElement().setAttribute("placeholder", "Comma separated tags");
-        // contentText.getElement().setAttribute("placeholder", "Content");
 
         FilterHelper.addForums(forums);
     }
@@ -127,11 +117,8 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * io.reflection.app.api.forum.shared.call.event.CreateTopicEventHandler
-     * #createTopicSuccess
-     * (io.reflection.app.api.forum.shared.call.CreateTopicRequest,
-     * io.reflection.app.api.forum.shared.call.CreateTopicResponse)
+     * @see io.reflection.app.api.forum.shared.call.event.CreateTopicEventHandler#createTopicSuccess
+     * (io.reflection.app.api.forum.shared.call.CreateTopicRequest,io.reflection.app.api.forum.shared.call.CreateTopicResponse)
      */
     @Override
     public void createTopicSuccess(CreateTopicRequest input, CreateTopicResponse output) {
@@ -144,23 +131,17 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * io.reflection.app.api.forum.shared.call.event.CreateTopicEventHandler
-     * #createTopicFailure
-     * (io.reflection.app.api.forum.shared.call.CreateTopicRequest,
-     * java.lang.Throwable)
+     * @see io.reflection.app.api.forum.shared.call.event.CreateTopicEventHandler#createTopicFailure
+     * (io.reflection.app.api.forum.shared.call.CreateTopicRequest,java.lang.Throwable)
      */
     @Override
-    public void createTopicFailure(CreateTopicRequest input, Throwable caught) {
-    }
+    public void createTopicFailure(CreateTopicRequest input, Throwable caught) {}
 
     /*
      * (non-Javadoc)
      * 
-     * @see io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler#
-     * getForumsSuccess
-     * (io.reflection.app.api.forum.shared.call.GetForumsRequest,
-     * io.reflection.app.api.forum.shared.call.GetForumsResponse)
+     * @see io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler#getForumsSuccess
+     * (io.reflection.app.api.forum.shared.call.GetForumsRequest,io.reflection.app.api.forum.shared.call.GetForumsResponse)
      */
     @Override
     public void getForumsSuccess(GetForumsRequest input, GetForumsResponse output) {
@@ -172,12 +153,9 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
     /*
      * (non-Javadoc)
      * 
-     * @see io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler#
-     * getForumsFailure
-     * (io.reflection.app.api.forum.shared.call.GetForumsRequest,
-     * java.lang.Throwable)
+     * @see io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler#getForumsFailure
+     * (io.reflection.app.api.forum.shared.call.GetForumsRequest,java.lang.Throwable)
      */
     @Override
-    public void getForumsFailure(GetForumsRequest input, Throwable caught) {
-    }
+    public void getForumsFailure(GetForumsRequest input, Throwable caught) {}
 }
