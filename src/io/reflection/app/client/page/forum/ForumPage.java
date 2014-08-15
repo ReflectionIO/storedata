@@ -59,6 +59,9 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 
         @SafeHtmlTemplates.Template("<div>{0} <a href=\"{1}\"" + " style=\"{2}\">{3}</a></div><div>{4} {5}</div>")
         SafeHtml topicLayout(SafeHtml properties, String link, SafeStyles styles, SafeHtml title, SafeHtml pages, SafeHtml pageLinks);
+
+        @SafeHtmlTemplates.Template("<a style='margin-left:3px' href='{0}'>{1}</a>")
+        SafeHtml pageLink(SafeUri lastPageLink, int i);
     }
 
     private static ForumPageUiBinder uiBinder = GWT.create(ForumPageUiBinder.class);
@@ -124,7 +127,9 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 
                     SafeUri lastPageLink = UriUtils.fromSafeConstant(PageType.ForumThreadPageType.asHref().asString() + "/view/" + object.id + "/post/"
                             + position);
-                    pageLinksString += "<a style='margin-left:3px' href='" + lastPageLink.asString() + "' style>" + i + "</a>";
+                    
+                    
+                    pageLinksString += TopicTemplate.INSTANCE.pageLink(lastPageLink, i).asString(); //asString because can't see how to combine SafeHtmls together.
 
                 }
                 SafeHtml pageLinks = SafeHtmlUtils.fromTrustedString(pageLinksString);
