@@ -230,6 +230,8 @@ public class NavigationController implements ValueChangeHandler<String> {
      * @param value
      */
     public void addPage(String value) {
+        FilterController.get().setFilter(value);
+
         Stack s = Stack.parse(value);
 
         if (intended != null && intended.equals(s.toString())) {
@@ -323,7 +325,11 @@ public class NavigationController implements ValueChangeHandler<String> {
     }
 
     public PageType getCurrentPage() {
-        return PageType.fromString(mStack.getPage());
+        PageType p = null;
+        if (mStack != null) {
+            p = PageType.fromString(mStack.getPage());
+        }
+        return p;
     }
 
     public Stack getStack() {

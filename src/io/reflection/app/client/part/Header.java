@@ -14,12 +14,10 @@ import io.reflection.app.api.core.shared.call.event.ChangeUserDetailsEventHandle
 import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FilterController;
-import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.UserController;
-import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.handler.user.SessionEventHandler;
 import io.reflection.app.client.handler.user.UserPowersEventHandler;
@@ -31,7 +29,6 @@ import io.reflection.app.datatypes.shared.User;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
@@ -57,7 +54,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * 
  */
 public class Header extends Composite implements UsersEventHandler, NavigationEventHandler, SessionEventHandler, UserPowersEventHandler,
-        ChangeUserDetailsEventHandler, FilterEventHandler {
+        ChangeUserDetailsEventHandler {
 
     private static HeaderUiBinder uiBinder = GWT.create(HeaderUiBinder.class);
 
@@ -156,12 +153,6 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
         // mQuery.getElement().setAttribute("placeholder", "Search for any app");
         // mSearch.setHTML("<b class=\"glyphicon glyphicon-search\"></b>");
 
-        EventController.get().addHandlerToSource(UsersEventHandler.TYPE, UserController.get(), this);
-        EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this);
-        EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this);
-        EventController.get().addHandlerToSource(UserPowersEventHandler.TYPE, SessionController.get(), this);
-        EventController.get().addHandlerToSource(ChangeUserDetailsEventHandler.TYPE, SessionController.get(), this);
-
         createItemList();
 
         removeLeaderboard();
@@ -176,7 +167,6 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
         removeUserSignOut();
         addLogin();
 
-        ranksLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
     }
 
     /*
@@ -188,7 +178,11 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
     protected void onAttach() {
         super.onAttach();
 
-        filterChangedRegistration = EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this);
+        EventController.get().addHandlerToSource(UsersEventHandler.TYPE, UserController.get(), this);
+        EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this);
+        EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this);
+        EventController.get().addHandlerToSource(UserPowersEventHandler.TYPE, SessionController.get(), this);
+        EventController.get().addHandlerToSource(ChangeUserDetailsEventHandler.TYPE, SessionController.get(), this);
     }
 
     /*
@@ -321,6 +315,13 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
         }
 
         setNavBarVisible(false);
+
+        ranksLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
+        User user = SessionController.get().getLoggedInUser();
+        if (user != null) {
+            myAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(),
+                    FilterController.get().asMyAppsFilterString()));
+        }
     }
 
     /*
@@ -570,36 +571,6 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
      */
     @Override
     public void changeUserDetailsFailure(ChangeUserDetailsRequest input, Throwable caught) {}
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see io.reflection.app.client.handler.FilterEventHandler#filterParamChanged(java.lang.String, java.lang.Object, java.lang.Object)
-     */
-    @Override
-    public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
-        ranksLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
-        User user = SessionController.get().getLoggedInUser();
-        if (user != null) {
-            myAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(),
-                    FilterController.get().asMyAppsFilterString()));
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see io.reflection.app.client.handler.FilterEventHandler#filterParamsChanged(io.reflection.app.client.controller.FilterController.Filter, java.util.Map)
-     */
-    @Override
-    public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
-        ranksLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
-        User user = SessionController.get().getLoggedInUser();
-        if (user != null) {
-            myAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(),
-                    FilterController.get().asMyAppsFilterString()));
-        }
-    }
 
     @UiHandler("collapseButton")
     void onCollapseButtonClicked(ClickEvent e) {
