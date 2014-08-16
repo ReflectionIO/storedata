@@ -65,7 +65,6 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
 
 	public EditTopicPage() {
 		initWidget(uiBinder.createAndBindUi(this));
-
 	}
 
 	/*
@@ -112,7 +111,9 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
 					if (!isTopic) {
 						replyId = Long.parseLong(selectedReplyId);
 					}
-				} catch (NumberFormatException e) {}
+				} catch (NumberFormatException e) {
+					new RuntimeException(e);
+				}
 
 				if (isTopic) {
 					topic = TopicController.get().getTopic(topicId);
@@ -144,7 +145,6 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
 		editText.setFocus(true);
 		Document.get().setScrollTop(editText.getAbsoluteTop());
 		editText.setText(content);
-
 	}
 
 	@UiHandler("submit")

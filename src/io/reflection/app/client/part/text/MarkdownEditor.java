@@ -113,6 +113,9 @@ public class MarkdownEditor extends Composite implements HasText {
 	@Override
 	public void setText(String text) {
 		textArea.setText(text);
+		
+		// when the markdown is set always go to the edit tab
+		tabLayout.selectTab(0);
 	}
 
 	protected void wrapText(String leftWrap, String rightWrap) {
