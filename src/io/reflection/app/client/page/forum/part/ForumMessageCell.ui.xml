@@ -11,7 +11,7 @@
 	<ui:import field="io.reflection.app.client.page.PageType.ForumEditTopicPageType" />
 	<ui:style>
 
-		@external forumMessageQuote,forumMessageQuoteAuthor, forumMessageLink;
+		@external forumMessageLink;
 
 		.split {
 		border-top: solid 1px #999;
@@ -29,14 +29,6 @@
 		marin-right: 5px;
 		text-decoration: underline;
 		cursor: pointer;
-		}
-
-		.forumMessageQuote {
-		background: red;
-		}
-
-		.forumMessageQuoteAuthor {
-		background: blue;
 		}
 
 		.smaller {
