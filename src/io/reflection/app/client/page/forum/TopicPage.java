@@ -94,8 +94,6 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
     private ForumMessageProvider dataProvider;
 
-    private Button makeStickyButton;
-
     private Topic topic;
 
     public TopicPage() {
@@ -115,7 +113,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
         pager.setPageSize(ServiceConstants.SHORT_STEP_VALUE);
 
-        cellPrototype.setRichText(replyText);
+        cellPrototype.setMarkdownTextEditor(replyText);
 
     }
 
