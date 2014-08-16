@@ -63,7 +63,7 @@ public class ReplyController implements ServiceConstants {
 
     public Reply getReply(Long replyId) {
         Reply reply = null;
-        if (thread == null) {
+        if (thread != null) {
             reply = thread.getReply(replyId);
         }
         return reply;

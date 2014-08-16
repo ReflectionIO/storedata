@@ -86,7 +86,7 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
                     replyId = Long.parseLong(selectedMessageId);
                 } catch (NumberFormatException e) {}
 
-                if (topicId != null) {
+                if (replyId != null) {
                     reply = ReplyController.get().getReply(replyId);
 
                     if (reply != null) {
