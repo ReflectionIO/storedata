@@ -78,10 +78,10 @@ public class ReplyController implements ServiceConstants {
 
     /**
      * @param replyId
-     * @param html
+     * @param content
      */
-    public void updateReply(Long replyId, String html) {
-        thread.updateReply(replyId, html);
+    public void updateReply(Long replyId, String content) {
+        thread.updateReply(replyId, content);
     }
 
     /**

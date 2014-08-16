@@ -18,20 +18,17 @@ import java.io.IOException;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.safehtml.shared.UriUtils;
-import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiRenderer;
 
@@ -41,8 +38,6 @@ import com.google.gwt.uibinder.client.UiRenderer;
  */
 public class ForumMessageCell extends AbstractCell<ForumMessage> {
 	private MarkdownEditor markdownTextEditor;
-
-	@UiField private AnchorElement flagButton;
 
 	/**
 	 * @param consumedEvents
@@ -58,10 +53,6 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 
 	}
 
-	interface TopicCss extends CssResource {
-		String companyRow();
-	}
-
 	private static ForumMessageCellRenderer RENDERER = GWT.create(ForumMessageCellRenderer.class);
 
 	/**
@@ -70,11 +61,14 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 	interface QuoteTemplate extends SafeHtmlTemplates {
 		QuoteTemplate INSTANCE = GWT.create(QuoteTemplate.class);
 
-		@SafeHtmlTemplates.Template("<a href=\"flag\" class=\"forumMessageLink\" ui:field=\"flagButton\"><i class=\"glyphicon glyphicon-flag\"></i>Flag</a> | ")
+		@SafeHtmlTemplates.Template("<a href=\"flag\" class=\"forumMessageLink\"><i class=\"glyphicon glyphicon-flag\"></i>Flag</a> | ")
 		SafeHtml flagButton();
 
-		@SafeHtmlTemplates.Template("<a href=\"{0}/view/{1}/edit/{2}\" class=\"forumMessageLink\" ui:field=\"editButton\">Edit</a> | ")
-		SafeHtml editButton(String pageHref, long topicId, long messageId);
+		@SafeHtmlTemplates.Template("<a href=\"{0}/view/{1}/edit/{2}\" class=\"forumMessageLink\">Edit</a> | ")
+		SafeHtml replyEditButton(String pageHref, long topicId, long messageId);
+
+		@SafeHtmlTemplates.Template("<a href=\"{0}/edit/{1}\" class=\"forumMessageLink\">Edit</a> | ")
+		SafeHtml topicEditButton(String pageHref, long topicId);
 
 	}
 
@@ -96,7 +90,13 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 
 		// The CellList will render rows of nulls if the paging goes beyond the end of the list
 		if (value != null) {
-			SafeHtml editButtonHtml = QuoteTemplate.INSTANCE.editButton(PageType.ForumEditTopicPageType.asHref().asString(), value.getTopicId(), value.getId());
+			SafeHtml editButtonHtml = null;
+
+			if (value.isTopic()) {
+				editButtonHtml = QuoteTemplate.INSTANCE.topicEditButton(PageType.ForumEditTopicPageType.asHref().asString(), value.getTopicId());
+			} else {
+				editButtonHtml = QuoteTemplate.INSTANCE.replyEditButton(PageType.ForumEditTopicPageType.asHref().asString(), value.getTopicId(), value.getId());
+			}
 
 			// Enable this when we when we have the data to demonstrate both
 			// cases. [purple highlighting for Reflection company posts]

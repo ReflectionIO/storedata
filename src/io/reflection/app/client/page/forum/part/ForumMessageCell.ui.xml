@@ -9,7 +9,10 @@
 	<ui:import field="io.reflection.app.client.page.PageType.ForumThreadPageType" />
 	<ui:import field="io.reflection.app.client.page.PageType.ForumEditTopicPageType" />
 
-	<ui:style type="io.reflection.app.client.page.forum.part.ForumMessageCell.TopicCss">
+	<ui:style>
+	
+	@external forumMessageLink;
+	
 	.split {
 		border-top: solid 1px #999;
 		padding-top: 10px;
@@ -39,10 +42,6 @@
 	
 	.markdown p {
 		font-size: 14px;
-	}
-	
-	.companyRow {
-		background-color: #ecebfb;
 	}
 	</ui:style>
 
