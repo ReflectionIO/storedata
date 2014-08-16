@@ -7,39 +7,35 @@
 	<ui:with field="topics" type="java.lang.Integer" />
 
 	<ui:style>
-        @external .list-group-item;
-        @external .list-group-item-heading;
-        @external .activeForum;
-
-		.smaller {
+	@external .list-group-item;
+	@external .list-group-item-heading;
+	@external .activeForum;
+	
+	.smaller {
 		font-size: smaller;
-		}
-
-		.topicNumber {
-		font-size:small;
-		color:black;
-		margin-top:3px;
-		}
-
-		div.list-group-item
-		{
-		padding-left:0px;
+	}
+	
+	.topicNumber {
+		font-size: small;
+		color: black;
+		margin-top: 3px;
+	}
+	
+	div.list-group-item {
+		padding-left: 0px;
 		border: 0px;
 		background: none;
-		}
-
-		.list-group-item-heading
-		{
+	}
+	
+	.list-group-item-heading {
 		font-weight: 600;
-		}
-
-
-		.activeForum a
-		{
-		color:black;
+	}
+	
+	.activeForum a {
+		color: black;
 		pointer-events: none;
 		cursor: default;
-		}
+	}
 	</ui:style>
 	<div class="{styleName}">
 

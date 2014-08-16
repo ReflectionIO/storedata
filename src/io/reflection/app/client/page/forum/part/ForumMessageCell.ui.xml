@@ -4,48 +4,49 @@
 	<ui:with field="content" type="com.google.gwt.safehtml.shared.SafeHtml" />
 	<ui:with field="created" type="java.lang.String" />
 	<ui:with field="link" type="com.google.gwt.safehtml.shared.SafeUri" />
-	<ui:with field="backgroundColour" type="java.lang.String" />
 	<ui:with field="flagButtonHtml" type="com.google.gwt.safehtml.shared.SafeHtml" />
 	<ui:with field="editButtonHtml" type="com.google.gwt.safehtml.shared.SafeHtml" />
 	<ui:import field="io.reflection.app.client.page.PageType.ForumThreadPageType" />
 	<ui:import field="io.reflection.app.client.page.PageType.ForumEditTopicPageType" />
-	<ui:style>
 
-		@external forumMessageLink;
-
-		.split {
+	<ui:style type="io.reflection.app.client.page.forum.part.ForumMessageCell.TopicCss">
+	.split {
 		border-top: solid 1px #999;
 		padding-top: 10px;
 		margin-top: 10px;
-		}
-
-		.postContent {
+	}
+	
+	.postContent {
 		margin-bottom: 10px;
 		margin-top: 10px;
-		}
-
-		.infoWrapper div span {
+	}
+	
+	.infoWrapper div span {
 		display: inline-block;
 		marin-right: 5px;
 		text-decoration: underline;
 		cursor: pointer;
-		}
-
-		.smaller {
+	}
+	
+	.smaller {
 		font-size: smaller;
-		}
-
-		.forumMessageLink {
-		margin-left:3px;
-		margin-right:3px;
-		}
-
-        .markdown p {
-            font-size:14px;
-        }
+	}
+	
+	.forumMessageLink {
+		margin-left: 3px;
+		margin-right: 3px;
+	}
+	
+	.markdown p {
+		font-size: 14px;
+	}
+	
+	.companyRow {
+		background-color: #ecebfb;
+	}
 	</ui:style>
 
-	<div class="row {backgroundColour}">
+	<div class="row">
 		<div class="col-sm-2">
 			<ui:text from="{authorName}" />
 			<div class="{style.smaller}">
@@ -57,7 +58,6 @@
 			<div class="{style.markdown}">
 				<ui:safehtml from="{content}" />
 			</div>
-
 
 			<div class="pull-right">
 				<a href="{link}" class="forumMessageLink">Link</a>
