@@ -27,7 +27,7 @@ public class ForumMessage {
 	private Topic topic;
 	private Reply reply;
 	private int index;
-	Long currentuserId = SessionController.get().getLoggedInUser().id;
+	Long currentUserId = SessionController.get().getLoggedInUser().id;
 
 	public Long getId() {
 		return reply == null ? topic.id : reply.id;
@@ -60,18 +60,18 @@ public class ForumMessage {
 	}
 
 	public boolean canFlag() {
-		return currentuserId != getId() ? true : false;
+		return currentUserId != getAuthor().id.longValue() && !isLocked();
 	}
 
 	public boolean canEdit() {
-		return currentuserId == getId() ? true : false;
+		return currentUserId == getAuthor().id.longValue() && !isLocked();
 	}
 
 	/**
-	 * @return true if the author is the same as the user, false otherwise
+	 * @return
 	 */
-	public boolean belongsToCurrentUser() {
-		return getAuthor().id.equals(currentuserId);
+	public boolean canQuote() {
+		return !isLocked();
 	}
 
 	/**
@@ -83,6 +83,10 @@ public class ForumMessage {
 
 	public boolean isTopic() {
 		return reply == null;
+	}
+
+	public boolean isLocked() {
+		return topic.locked != null && topic.locked.booleanValue();
 	}
 
 }
