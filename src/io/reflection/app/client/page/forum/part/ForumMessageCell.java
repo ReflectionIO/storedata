@@ -24,7 +24,6 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -53,30 +52,14 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 	}
 
 	interface ForumMessageCellRenderer extends UiRenderer {
-		void render(SafeHtmlBuilder sb, String authorName, SafeHtml content, String created, SafeHtml flagButtonHtml, SafeHtml editButtonHtml, SafeUri link,
-				String backgroundColour);
+		void render(SafeHtmlBuilder sb, String authorName, SafeHtml content, String created, SafeHtml flagButtonHtml, SafeHtml editButtonHtml, SafeUri link);
 
 		void onBrowserEvent(ForumMessageCell o, NativeEvent e, Element p, ForumMessage n);
 
 	}
 
-	public interface TopicResources extends ClientBundle {
-		public static final TopicResources INSTANCE = GWT.create(TopicResources.class);
-
-		@Source("topic.css")
-		public TopicCss css();
-
-	}
-
 	interface TopicCss extends CssResource {
-		@ClassName("oddRow")
-		String oddRowClass();
-
-		@ClassName("evenRow")
-		String evenRowClass();
-
-		@ClassName("companyRow")
-		String companyRowClass();
+		String companyRow();
 	}
 
 	private static ForumMessageCellRenderer RENDERER = GWT.create(ForumMessageCellRenderer.class);
@@ -110,19 +93,10 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 	 */
 	@Override
 	public void render(com.google.gwt.cell.client.Cell.Context context, ForumMessage value, SafeHtmlBuilder builder) {
-		TopicCss css = TopicResources.INSTANCE.css();
-		css.ensureInjected();
 
 		// The CellList will render rows of nulls if the paging goes beyond the end of the list
 		if (value != null) {
 			SafeHtml editButtonHtml = QuoteTemplate.INSTANCE.editButton(PageType.ForumEditTopicPageType.asHref().asString(), value.getTopicId(), value.getId());
-
-			// FIXME there are already odd and even styles defined for celllist, they should be used
-			String color = css.oddRowClass();
-
-			if (context.getIndex() % 2 == 1) {
-				color = css.evenRowClass();
-			}
 
 			// Enable this when we when we have the data to demonstrate both
 			// cases. [purple highlighting for Reflection company posts]
@@ -141,7 +115,7 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 			RENDERER.render(builder, FormattingHelper.getUserName(value.getAuthor()), SafeHtmlUtils.fromTrustedString(processedString), FormattingHelper
 					.getTimeSince(value.getCreated()), value.belongsToCurrentUser() ? SafeHtmlUtils.EMPTY_SAFE_HTML : QuoteTemplate.INSTANCE.flagButton(),
 					value.belongsToCurrentUser() ? editButtonHtml : SafeHtmlUtils.EMPTY_SAFE_HTML, UriUtils.fromSafeConstant(PageType.ForumThreadPageType
-							.asHref("view", value.getTopicId().toString(), "post", Integer.toString(value.getIndex())).asString()), color);
+							.asHref("view", value.getTopicId().toString(), "post", Integer.toString(value.getIndex())).asString()));
 		}
 
 	}
