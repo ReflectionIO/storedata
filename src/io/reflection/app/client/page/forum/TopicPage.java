@@ -263,6 +263,10 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
             dataProvider.addDataDisplay(messagesCellList);
             pager.setDisplay(messagesCellList); // bind the pager and the
                                                 // display together.
+            
+            //necessary to pull data from the data provider?
+            messagesCellList.redraw();
+            
             // just note that the display is primary about what range it has
             // set.
             // The SimplePager is just a bound view on that data.

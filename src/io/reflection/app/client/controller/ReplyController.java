@@ -58,15 +58,7 @@ public class ReplyController implements ServiceConstants {
      */
     public void getReplies(Long topicId, int start, int end) {
 
-        thread.fetchReplies(topicId, start, end);
-    }
-
-    public Reply getReply(Long replyId) {
-        Reply reply = null;
-        if (thread != null) {
-            reply = thread.getReply(replyId);
-        }
-        return reply;
+        getThread(topicId).fetchReplies(topicId, start, end);
     }
 
     /**
