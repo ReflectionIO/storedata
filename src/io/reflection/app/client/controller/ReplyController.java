@@ -180,8 +180,9 @@ public class ReplyController implements ServiceConstants {
 
                             long i = start;
                             for (Reply reply : output.replies) {
-                                messagesLookup.put((int) i + 1, new ForumMessage(input.topic, reply, (int) i + 1));
-                                replyStore.put(reply.id.intValue(), reply);
+                            	Topic topic = input.topic;
+                            	int replyId = reply.id.intValue();
+                                addForumMessage((int) i, reply, topic, replyId);
                                 i++;
                             }
                         }
@@ -191,12 +192,26 @@ public class ReplyController implements ServiceConstants {
                     EventController.get().fireEventFromSource(new GetRepliesSuccess(input, output), replyController);
                 }
 
+				
+
                 @Override
                 public void onFailure(Throwable caught) {
                     EventController.get().fireEventFromSource(new GetRepliesFailure(input, caught), replyController);
                 }
             });
         }
+        
+        /**
+         * 
+         * @param messageIndex starts from zero, replies start from 1
+         * @param reply
+         * @param topic
+         * @param replyId
+         */
+        protected void addForumMessage(int messageIndex, Reply reply, Topic topic, int replyId) {
+			messagesLookup.put(messageIndex + 1, new ForumMessage(topic, reply, messageIndex + 1));
+			replyStore.put(replyId, reply);
+		}
 
         public void addReply(Long topicId, String replyContent) {
             ForumService service = ServiceCreator.createForumService();
@@ -211,6 +226,8 @@ public class ReplyController implements ServiceConstants {
 
             input.reply.topic = new Topic();
             input.reply.topic.id = topicId;
+            
+            
 
             service.addReply(input, new AsyncCallback<AddReplyResponse>() {
 
@@ -219,6 +236,8 @@ public class ReplyController implements ServiceConstants {
 
                     if (output.status == StatusType.StatusTypeSuccess) {
                         Topic topic = TopicController.get().getTopic(ReplyThread.this.topicId);
+                        
+                        addForumMessage((int) topic.numberOfReplies, output.reply, topic, output.reply.id.intValue());
 
                         if (topic != null) {
                             int numberOfReplies = topic.numberOfReplies.intValue();
@@ -274,7 +293,6 @@ public class ReplyController implements ServiceConstants {
         public void setTopic(Topic topic) {
             this.topic = topic;
             messagesLookup.append(0, new ForumMessage(topic, null, 0));
-
         }
 
         /**
