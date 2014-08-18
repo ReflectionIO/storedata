@@ -18,23 +18,20 @@ import java.io.IOException;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.safehtml.shared.UriUtils;
-import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiRenderer;
+import com.google.gwt.user.client.Window;
 
 /**
  * @author billy1380
@@ -42,8 +39,6 @@ import com.google.gwt.uibinder.client.UiRenderer;
  */
 public class ForumMessageCell extends AbstractCell<ForumMessage> {
 	private MarkdownEditor markdownTextEditor;
-
-	@UiField private AnchorElement flagButton;
 
 	/**
 	 * @param consumedEvents
@@ -53,30 +48,11 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 	}
 
 	interface ForumMessageCellRenderer extends UiRenderer {
-		void render(SafeHtmlBuilder sb, String authorName, SafeHtml content, String created, SafeHtml flagButtonHtml, SafeHtml editButtonHtml, SafeUri link,
-				String backgroundColour);
+		void render(SafeHtmlBuilder sb, String authorName, SafeHtml content, String created, SafeUri link, String flagBar, String flagText, String editBar,
+				SafeHtml editButtonHtml, String quoteBar, String quoteText);
 
 		void onBrowserEvent(ForumMessageCell o, NativeEvent e, Element p, ForumMessage n);
 
-	}
-
-	public interface TopicResources extends ClientBundle {
-		public static final TopicResources INSTANCE = GWT.create(TopicResources.class);
-
-		@Source("topic.css")
-		public TopicCss css();
-
-	}
-
-	interface TopicCss extends CssResource {
-		@ClassName("oddRow")
-		String oddRowClass();
-
-		@ClassName("evenRow")
-		String evenRowClass();
-
-		@ClassName("companyRow")
-		String companyRowClass();
 	}
 
 	private static ForumMessageCellRenderer RENDERER = GWT.create(ForumMessageCellRenderer.class);
@@ -87,11 +63,11 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 	interface QuoteTemplate extends SafeHtmlTemplates {
 		QuoteTemplate INSTANCE = GWT.create(QuoteTemplate.class);
 
-		@SafeHtmlTemplates.Template("<a href=\"flag\" class=\"forumMessageLink\" ui:field=\"flagButton\"><i class=\"glyphicon glyphicon-flag\"></i>Flag</a> | ")
-		SafeHtml flagButton();
+		@SafeHtmlTemplates.Template("<a href=\"{0}/view/{1}/edit/{2}\" class=\"forumMessageLink\">Edit</a>")
+		SafeHtml replyEditButton(String pageHref, long topicId, long messageId);
 
-		@SafeHtmlTemplates.Template("<a href=\"{0}/view/{1}/edit/{2}\" class=\"forumMessageLink\" ui:field=\"editButton\">Edit</a> | ")
-		SafeHtml editButton(String pageHref, long topicId, long messageId);
+		@SafeHtmlTemplates.Template("<a href=\"{0}/edit/{1}\" class=\"forumMessageLink\">Edit</a>")
+		SafeHtml topicEditButton(String pageHref, long topicId);
 
 	}
 
@@ -110,48 +86,56 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 	 */
 	@Override
 	public void render(com.google.gwt.cell.client.Cell.Context context, ForumMessage value, SafeHtmlBuilder builder) {
-		TopicCss css = TopicResources.INSTANCE.css();
-		css.ensureInjected();
 
 		// The CellList will render rows of nulls if the paging goes beyond the end of the list
 		if (value != null) {
-			SafeHtml editButtonHtml = QuoteTemplate.INSTANCE.editButton(PageType.ForumEditTopicPageType.asHref().asString(), value.getTopicId(), value.getId());
+			SafeHtml editButtonHtml = null;
 
-			// FIXME there are already odd and even styles defined for celllist, they should be used
-			String color = css.oddRowClass();
-
-			if (context.getIndex() % 2 == 1) {
-				color = css.evenRowClass();
+			if (value.isTopic()) {
+				editButtonHtml = QuoteTemplate.INSTANCE.topicEditButton(PageType.ForumEditTopicPageType.asHref().asString(), value.getTopicId());
+			} else {
+				editButtonHtml = QuoteTemplate.INSTANCE.replyEditButton(PageType.ForumEditTopicPageType.asHref().asString(), value.getTopicId(), value.getId());
 			}
-
-			// Enable this when we when we have the data to demonstrate both
-			// cases. [purple highlighting for Reflection company posts]
-
-			// if (value.getAuthor().company.equals("Reflection"))
-			// color = css.companyRowClass();
 
 			String processedString = value.getContent();
 
 			try {
 				processedString = MarkdownHelper.PROCESSOR.process(value.getContent());
 			} catch (IOException e) {
-				throw new RuntimeException(e);
+				new RuntimeException(e);
 			}
 
+			SafeUri link = UriUtils.fromSafeConstant(PageType.ForumThreadPageType.asHref("view", value.getTopicId().toString(), "view",
+					Integer.toString(value.getIndex())).asString());
+
 			RENDERER.render(builder, FormattingHelper.getUserName(value.getAuthor()), SafeHtmlUtils.fromTrustedString(processedString), FormattingHelper
-					.getTimeSince(value.getCreated()), value.belongsToCurrentUser() ? SafeHtmlUtils.EMPTY_SAFE_HTML : QuoteTemplate.INSTANCE.flagButton(),
-					value.belongsToCurrentUser() ? editButtonHtml : SafeHtmlUtils.EMPTY_SAFE_HTML, UriUtils.fromSafeConstant(PageType.ForumThreadPageType
-							.asHref("view", value.getTopicId().toString(), "post", Integer.toString(value.getIndex())).asString()), color);
+					.getTimeSince(value.getCreated()), link, value.canFlag() ? " | " : "", value.canFlag() ? "Flag" : "", value.canEdit() ? " | " : "", value
+					.canEdit() ? editButtonHtml : SafeHtmlUtils.EMPTY_SAFE_HTML, value.canQuote() ? " | " : "", value.canQuote() ? "Quote" : "");
 		}
 
 	}
 
-	@UiHandler("quote")
-	void focusReplyClicked(ClickEvent event, Element parent, ForumMessage value) {
-		Document.get().setScrollTop(markdownTextEditor.getAbsoluteTop());
+	@UiHandler("flag")
+	void flagClicked(ClickEvent event, Element parent, ForumMessage value) {
+		if (value.canFlag()) {
+			if (value.isTopic()) {
+				// use topic controller to flag
+				Window.alert("Cannot flag topics yet!");
+			} else {
+				// use reply controller to flag
+				Window.alert("Cannot flag responses yet!");
+			}
+		}
+	}
 
-		markdownTextEditor.setFocus(true);
-		markdownTextEditor.insertQuote(FormattingHelper.getUserName(value.getAuthor()), value.getContent());
+	@UiHandler("quote")
+	void quoteClicked(ClickEvent event, Element parent, ForumMessage value) {
+		if (value.canQuote()) {
+			Document.get().setScrollTop(markdownTextEditor.getAbsoluteTop());
+
+			markdownTextEditor.setFocus(true);
+			markdownTextEditor.insertQuote(FormattingHelper.getUserName(value.getAuthor()), value.getContent());
+		}
 	}
 
 	/**

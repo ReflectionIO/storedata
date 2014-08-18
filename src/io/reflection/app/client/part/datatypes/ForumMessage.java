@@ -15,10 +15,9 @@ import io.reflection.app.datatypes.shared.User;
 import java.util.Date;
 
 /**
- * This is a wrapper object around Topic and Reply.
- * It's needed in order to treat the content from a topic or reply as a single entity from the perspective of displaying them in a list.
- * Ideally in the future ForumMessage will replace Reply so that editing the content of a topic vs editing the content of a reply etc,
- * will have a single pathway (and all the other operations on both of them). ~Daniel
+ * This is a wrapper object around Topic and Reply. It's needed in order to treat the content from a topic or reply as a single entity from the perspective of
+ * displaying them in a list. Ideally in the future ForumMessage will replace Reply so that editing the content of a topic vs editing the content of a reply
+ * etc, will have a single pathway (and all the other operations on both of them). ~Daniel
  * 
  * @author billy1380
  * 
@@ -27,8 +26,8 @@ public class ForumMessage {
 
 	private Topic topic;
 	private Reply reply;
-	private int index ;
-	Long currentuserId = SessionController.get().getLoggedInUser().id;
+	private int index;
+	Long currentUserId = SessionController.get().getLoggedInUser().id;
 
 	public Long getId() {
 		return reply == null ? topic.id : reply.id;
@@ -41,10 +40,10 @@ public class ForumMessage {
 	public ForumMessage(Topic topic, Reply reply, int index) {
 		this.topic = topic;
 		this.reply = reply;
-		this.index = index ;
+		this.index = index;
 	}
-	
-	public ForumMessage(Topic topic){
+
+	public ForumMessage(Topic topic) {
 		this.topic = topic;
 	}
 
@@ -61,25 +60,33 @@ public class ForumMessage {
 	}
 
 	public boolean canFlag() {
-		return currentuserId != getId() ? true : false;
+		return currentUserId != getAuthor().id.longValue() && !isLocked();
 	}
 
 	public boolean canEdit() {
-		return currentuserId == getId() ? true : false;
+		return currentUserId == getAuthor().id.longValue() && !isLocked();
 	}
 
 	/**
-	 * @return true if the author is the same as the user, false otherwise
+	 * @return
 	 */
-	public boolean belongsToCurrentUser() {
-		return getAuthor().id.equals(currentuserId) ;
+	public boolean canQuote() {
+		return !isLocked();
 	}
 
 	/**
 	 * @return
 	 */
 	public int getIndex() {
-		return index ;
+		return index;
+	}
+
+	public boolean isTopic() {
+		return reply == null;
+	}
+
+	public boolean isLocked() {
+		return topic.locked != null && topic.locked.booleanValue();
 	}
 
 }

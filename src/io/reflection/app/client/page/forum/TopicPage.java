@@ -25,11 +25,11 @@ import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
+import io.reflection.app.client.page.forum.part.BootstrapGwtTopicCellList;
 import io.reflection.app.client.page.forum.part.ForumMessageCell;
 import io.reflection.app.client.page.forum.part.ForumSummarySidePanel;
 import io.reflection.app.client.page.forum.part.LockButton;
 import io.reflection.app.client.page.forum.part.StickyButton;
-import io.reflection.app.client.part.BootstrapGwtCellList;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.part.datatypes.ForumMessage;
 import io.reflection.app.client.part.text.MarkdownEditor;
@@ -75,7 +75,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
     @UiField UListElement notes;
 
     private ForumMessageCell cellPrototype = new ForumMessageCell();
-    @UiField(provided = true) CellList<ForumMessage> messagesCellList = new CellList<ForumMessage>(cellPrototype, BootstrapGwtCellList.INSTANCE);
+    @UiField(provided = true) CellList<ForumMessage> messagesCellList = new CellList<ForumMessage>(cellPrototype, BootstrapGwtTopicCellList.INSTANCE);
 
     @UiField Button replyLink;
     @UiField Button post;

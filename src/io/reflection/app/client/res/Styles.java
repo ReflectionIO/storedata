@@ -35,8 +35,6 @@ public interface Styles extends ClientBundle {
 
 		String unknownAppSmall();
 
-		String unknownAppMedium();
-
 		String unknownAppLarge();
 
 		String linkedAccountClose();

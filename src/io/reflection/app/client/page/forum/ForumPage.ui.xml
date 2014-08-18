@@ -4,20 +4,22 @@
 	<ui:import field="io.reflection.app.client.page.PageType.ForumTopicPageType" />
 
 	<ui:style>
-		.toolbar_spacing {
+	
+	.toolbar_spacing {
 		padding-top: 10px;
-		margin-top:30px;
+		margin-top: 30px;
 		padding-bottom: 10px;
-		}
-
-		.filler {
+	}
+	
+	.filler {
 		height: 40px;
-		}
-
-		.header2 {
-		margin-top:0px;
-		margin-bottom:0px;
-		}
+	}
+	
+	.header2 {
+		margin-top: 0px;
+		margin-bottom: 0px;
+	}
+	
 	</ui:style>
 	<g:HTMLPanel styleName="row">
 		<pp:ForumSummarySidePanel ui:field="forumSummarySidePanel" styleName="sidepanel col-md-2 well" />

@@ -4,48 +4,54 @@
 	<ui:with field="content" type="com.google.gwt.safehtml.shared.SafeHtml" />
 	<ui:with field="created" type="java.lang.String" />
 	<ui:with field="link" type="com.google.gwt.safehtml.shared.SafeUri" />
-	<ui:with field="backgroundColour" type="java.lang.String" />
-	<ui:with field="flagButtonHtml" type="com.google.gwt.safehtml.shared.SafeHtml" />
+
+	<ui:with field="flagBar" type="java.lang.String" />
+	<ui:with field="flagText" type="java.lang.String" />
+
+	<ui:with field="editBar" type="java.lang.String" />
 	<ui:with field="editButtonHtml" type="com.google.gwt.safehtml.shared.SafeHtml" />
+
+	<ui:with field="quoteBar" type="java.lang.String" />
+	<ui:with field="quoteText" type="java.lang.String" />
+
 	<ui:import field="io.reflection.app.client.page.PageType.ForumThreadPageType" />
 	<ui:import field="io.reflection.app.client.page.PageType.ForumEditTopicPageType" />
+
 	<ui:style>
-
-		@external forumMessageLink;
-
-		.split {
+	@external forumMessageLink;
+	.split {
 		border-top: solid 1px #999;
 		padding-top: 10px;
 		margin-top: 10px;
-		}
-
-		.postContent {
+	}
+	
+	.postContent {
 		margin-bottom: 10px;
 		margin-top: 10px;
-		}
-
-		.infoWrapper div span {
+	}
+	
+	.infoWrapper div span {
 		display: inline-block;
 		marin-right: 5px;
 		text-decoration: underline;
 		cursor: pointer;
-		}
-
-		.smaller {
+	}
+	
+	.smaller {
 		font-size: smaller;
-		}
-
-		.forumMessageLink {
-		margin-left:3px;
-		margin-right:3px;
-		}
-
-        .markdown p {
-            font-size:14px;
-        }
+	}
+	
+	.forumMessageLink {
+		margin-left: 3px;
+		margin-right: 3px;
+	}
+	
+	.markdown p {
+		font-size: 14px;
+	}
 	</ui:style>
 
-	<div class="row {backgroundColour}">
+	<div class="row">
 		<div class="col-sm-2">
 			<ui:text from="{authorName}" />
 			<div class="{style.smaller}">
@@ -58,13 +64,11 @@
 				<ui:safehtml from="{content}" />
 			</div>
 
-
 			<div class="pull-right">
-				<a href="{link}" class="forumMessageLink">Link</a>
-				|
-				<ui:safehtml from="{editButtonHtml}" />
-				<ui:safehtml from="{flagButtonHtml}" />
-				<a class="forumMessageLink" ui:field="quote">Quote</a>
+				<a href="{link}" class="forumMessageLink">#</a>
+				<ui:text from="{editBar}" /><ui:safehtml from="{editButtonHtml}" />
+				<ui:text from="{flagBar}" /><a class="forumMessageLink" ui:field="flag"><ui:text from="{flagText}" /></a>
+				<ui:text from="{quoteBar}" /><a class="forumMessageLink" ui:field="quote"><ui:text from="{quoteText}" /></a>
 			</div>
 
 		</div>

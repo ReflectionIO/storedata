@@ -63,7 +63,7 @@ public class ReplyController implements ServiceConstants {
 
     public Reply getReply(Long replyId) {
         Reply reply = null;
-        if (thread == null) {
+        if (thread != null) {
             reply = thread.getReply(replyId);
         }
         return reply;
@@ -78,10 +78,10 @@ public class ReplyController implements ServiceConstants {
 
     /**
      * @param replyId
-     * @param html
+     * @param content
      */
-    public void updateReply(Long replyId, String html) {
-        thread.updateReply(replyId, html);
+    public void updateReply(Long replyId, String content) {
+        thread.updateReply(replyId, content);
     }
 
     /**
