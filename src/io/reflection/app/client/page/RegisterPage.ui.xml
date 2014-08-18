@@ -60,7 +60,7 @@
                             </ul>
                         </g:HTMLPanel>
                         <g:HTMLPanel ui:field="inviteRegisterTabs">
-                            <ul class="nav nav-tabs nav-justified loginregister">
+                            <ul class="nav nav-tabs nav-justified register">
                                 <li class="{style.inviteRegisterTab}">
                                     Create Password and Register
                                 </li>
