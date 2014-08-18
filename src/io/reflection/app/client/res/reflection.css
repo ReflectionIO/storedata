@@ -1,6 +1,6 @@
 @CHARSET "UTF-8";
 
-@external delete, table-linkedaccount, table-rank, table-item, table-striped, table, tbody,nth-child, td, thead, th, tr:nth-child,  headerCaret, navbar-brand, navbar-toggle, p-small, form, formEdit, noteDetail, label, gwt-CheckBox, gwt-DateBox, topPanel, sidepanel, btn, btn-group, btn-default, row, divider-vertical, divider-horizontal, divider-horizontal-header, nav-pills, nav-stacked, nav-tabs, nav-justified, ranks, loginregister, well, well-title, form-inline, form-group, gwt-RadioButton, hr, navbar-fixed-top, navbar, pagination, btn-primary, disabled, active, open, dropdown-toggle, dropdown-menu, i, badge, dropdown, nav, navbar-inverse, navbar-nav, navbar-text, caret, form-control;
+@external delete, table-linkedaccount, table-rank, table-item, table-striped, table, tbody,nth-child, td, thead, th, tr:nth-child,  headerCaret, navbar-brand, navbar-toggle, p-small, form, formEdit, noteDetail, label, gwt-CheckBox, gwt-DateBox, topPanel, sidepanel, btn, btn-group, btn-default, row, divider-vertical, divider-horizontal, divider-horizontal-header, nav-pills, nav-stacked, nav-tabs, nav-justified, ranks, loginregister, register, well, well-title, form-inline, form-group, gwt-RadioButton, hr, navbar-fixed-top, navbar, pagination, btn-primary, disabled, active, open, dropdown-toggle, dropdown-menu, i, badge, dropdown, nav, navbar-inverse, navbar-nav, navbar-text, caret, form-control;
     /* Colors palette: Purple #6d69c5; DarkBlue 272933; Gold #eabc3e; LightGrey: #f8f9f9; Green: #1bc79f; Blue: #3357cc; Red: #e73c48; */
 /* Small devices (tablets, 768px and up) - Medium devices (desktop, 992px and up) - Large devices (large desktop, 1200px and up) */
 body {
@@ -595,10 +595,15 @@ a:active,a:focus {
     padding: 0px;
 }
 
-/* Tabs Login/Register */
-.nav-tabs.nav-justified.loginregister {
+/* Tabs Login/Register and Register */
+.nav-tabs.nav-justified.loginregister, .nav-tabs.nav-justified.register {
     padding-top: 0px;
     display: block;
+}
+
+.nav-tabs.nav-justified.register li {
+    display: block;
+    width: 100%;
 }
 
 .nav-tabs.nav-justified.loginregister li {
@@ -606,7 +611,7 @@ a:active,a:focus {
     width: 50%;
 }
 
-.nav-tabs.nav-justified.loginregister li>a {
+.nav-tabs.nav-justified.loginregister li>a, .nav-tabs.nav-justified.register li>a {
     background-color: #efefef;
     height: 65px;
     font-size: 18px;
@@ -618,11 +623,11 @@ a:active,a:focus {
     color: #37383b;
 }
 
-.nav-tabs.nav-justified.loginregister li>a:hover {
+.nav-tabs.nav-justified.loginregister li>a:hover, .nav-tabs.nav-justified.register li>a:hover {
     color: #1bc79f;
 }
 
-.nav-tabs.nav-justified.loginregister .active>a,.nav-tabs.nav-justified.loginregister .active>a:hover,.nav-tabs.nav-justified.loginregister .active>a:focus
+.nav-tabs.nav-justified.loginregister .active>a,.nav-tabs.nav-justified.loginregister .active>a:hover,.nav-tabs.nav-justified.loginregister .active>a:focus, .nav-tabs.nav-justified.register .active>a,.nav-tabs.nav-justified.register .active>a:hover,.nav-tabs.nav-justified.register .active>a:focus
     {
     background-color: #fafafa;
     font-weight: 600;
