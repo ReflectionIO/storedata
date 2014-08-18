@@ -180,8 +180,6 @@ input[type="text"]:disabled {
     cursor: pointer;
 }
 
-
-
 /* Cell Table */
 .table>tbody+tbody {
     border: none;
@@ -596,7 +594,7 @@ a:active,a:focus {
 }
 
 /* Tabs Login/Register and Register */
-.nav-tabs.nav-justified.loginregister, .nav-tabs.nav-justified.register {
+.nav-tabs.nav-justified.loginregister,.nav-tabs.nav-justified.register {
     padding-top: 0px;
     display: block;
 }
@@ -611,7 +609,8 @@ a:active,a:focus {
     width: 50%;
 }
 
-.nav-tabs.nav-justified.loginregister li>a, .nav-tabs.nav-justified.register li>a {
+.nav-tabs.nav-justified.loginregister li>a,.nav-tabs.nav-justified.register li>a
+    {
     background-color: #efefef;
     height: 65px;
     font-size: 18px;
@@ -623,11 +622,12 @@ a:active,a:focus {
     color: #37383b;
 }
 
-.nav-tabs.nav-justified.loginregister li>a:hover, .nav-tabs.nav-justified.register li>a:hover {
+.nav-tabs.nav-justified.loginregister li>a:hover,.nav-tabs.nav-justified.register li>a:hover
+    {
     color: #1bc79f;
 }
 
-.nav-tabs.nav-justified.loginregister .active>a,.nav-tabs.nav-justified.loginregister .active>a:hover,.nav-tabs.nav-justified.loginregister .active>a:focus, .nav-tabs.nav-justified.register .active>a,.nav-tabs.nav-justified.register .active>a:hover,.nav-tabs.nav-justified.register .active>a:focus
+.nav-tabs.nav-justified.loginregister .active>a,.nav-tabs.nav-justified.loginregister .active>a:hover,.nav-tabs.nav-justified.loginregister .active>a:focus,.nav-tabs.nav-justified.register .active>a,.nav-tabs.nav-justified.register .active>a:hover,.nav-tabs.nav-justified.register .active>a:focus
     {
     background-color: #fafafa;
     font-weight: 600;
@@ -746,9 +746,9 @@ a:active,a:focus {
     display: inline-block;
     overflow: hidden;
     background-repeat: no-repeat;
-    width: 53px;
-    height: 53px;
-    background-position: -2px -181px;
+    width: 45px;
+    height: 45px;
+    background-position: -2px -79px;
 }
 
 @sprite .unknownAppLarge {
@@ -756,19 +756,9 @@ a:active,a:focus {
     display: inline-block;
     overflow: hidden;
     background-repeat: no-repeat;
-    width: 100px;
-    height: 100px;
-    background-position: -2px -2px;
-}
-
-@sprite .unknownAppMedium {
-    gwt-image: "unknownSprite";
-    display: inline-block;
-    overflow: hidden;
-    background-repeat: no-repeat;
     width: 75px;
     height: 75px;
-    background-position: -2px -104px;
+    background-position: -2px -2px
 }
 
 @sprite .linkedAccountClose {
