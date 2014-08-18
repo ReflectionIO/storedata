@@ -1,40 +1,51 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
-    <ui:style>
-        .compensateTop {
-        	top: 1px;
-        }
-    </ui:style>
-    <g:HTMLPanel>
-        <ul ui:field="mList" class="pagination">
-            <li ui:field="mFirstPageItem" class="disabled">
-                <g:Anchor ui:field="mFirstPage" styleName="glyphicon glyphicon-fast-backward">
-                    <span />
-                </g:Anchor>
-            </li>
-            <li ui:field="mPrevPageItem" class="disabled">
-                <g:Anchor ui:field="mPrevPage" styleName="glyphicon glyphicon-arrow-left">
-                    <span />
-                </g:Anchor>
-            </li>
-            <li>
-                <span ui:field="mLabel" class="{style.compensateTop}" />
-            </li>
-            <li ui:field="mNextPageItem" class="disabled">
-                <g:Anchor ui:field="mNextPage" styleName="glyphicon glyphicon-arrow-right">
-                    <span />
-                </g:Anchor>
-            </li>
-            <li ui:field="mFastForwardItem" class="disabled">
-                <g:Anchor ui:field="mFastForward" styleName="glyphicon glyphicon-forward">
-                    <span />
-                </g:Anchor>
-            </li>
-            <li ui:field="mLastPageItem" class="disabled">
-                <g:Anchor ui:field="mLastPage" styleName="glyphicon glyphicon-fast-forward">
-                    <span />
-                </g:Anchor>
-            </li>
-        </ul>
-    </g:HTMLPanel>
+	<ui:style>
+	.divider {
+	    padding-left: 0px !important;
+	    padding-right: 0px !important;
+	    height: 18px !important;
+	    width: 1px !important;
+	    background-color: #d2d2d2 !important;
+	    border: none !important;
+	    border-radius: 0px !important;
+	    box-shadow: none !important;
+	    margin-top: 8px !important;
+	}
+	</ui:style>
+	<g:HTMLPanel>
+		<ul ui:field="mList" class="pagination">
+			<li ui:field="mFirstPageItem" class="disabled">
+				<g:Anchor ui:field="mFirstPage">
+					First
+				</g:Anchor>
+				<span class="{style.divider}"></span>
+			</li>
+			<li ui:field="mPrevPageItem" class="disabled">
+				<g:Anchor ui:field="mPrevPage">
+					Prev
+				</g:Anchor>
+			</li>
+			<li>
+				<span ui:field="mLabel" />
+			</li>
+			<li ui:field="mNextPageItem" class="disabled">
+				<g:Anchor ui:field="mNextPage">
+					Next
+				</g:Anchor>
+			</li>
+			<li ui:field="mFastForwardItem" class="disabled">
+				<span class="{style.divider}"></span>
+				<g:Anchor ui:field="mFastForward">
+					FF
+				</g:Anchor>
+			</li>
+			<li ui:field="mLastPageItem" class="disabled">
+				<span class="{style.divider}"></span>
+				<g:Anchor ui:field="mLastPage">
+					Last
+				</g:Anchor>
+			</li>
+		</ul>
+	</g:HTMLPanel>
 </ui:UiBinder> 

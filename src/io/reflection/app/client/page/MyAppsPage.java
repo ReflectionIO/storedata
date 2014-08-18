@@ -75,7 +75,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
     @UiField MyAppsPageStyle style;
 
     @UiField(provided = true) CellTable<MyApp> appsTable = new CellTable<MyApp>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
-    @UiField SimplePager simplePager;
+    @UiField(provided = true) SimplePager simplePager = new SimplePager(false, false);
 
     @UiField MyAppsTopPanel myAppsTopPanel;
     @UiField MyAccountSidePanel myAccountSidePanel;

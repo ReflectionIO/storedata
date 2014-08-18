@@ -180,8 +180,6 @@ input[type="text"]:disabled {
     cursor: pointer;
 }
 
-
-
 /* Cell Table */
 .table>tbody+tbody {
     border: none;
@@ -357,27 +355,49 @@ a:active,a:focus {
     outline: none;
 }
 
-.pagination>.active>a,.pagination>.active>span,.pagination>.active>a:hover,.pagination>.active>span:hover,.pagination>.active>a:focus,.pagination>.active>span:focus
+/* Pagination */
+.pagination {
+    border: none;
+    box-shadow: none;
+}
+
+.pagination>.active>a,.pagination>.active>a:hover,.pagination>.active>a:focus
     {
     background-color: #6D69C5;
     border-color: #6D69C5;
 }
 
-.pagination>li>span {
-    color: black;
-}
-
 .pagination>li>a {
     color: #6D69C5;
+    border: none;
+    box-shadow: none;
+    border-radius: 0px;
+    margin: 0px;
+}
+
+.pagination>li>span {
+    color: #000000;
+    border: none;
+    box-shadow: none;
+    cursor: default;
+    border-radius: 0px;
+    margin: 0px;
 }
 
 .pagination>li>a:hover,.pagination>li>a:focus {
     color: #1bc79f;
+    background-color: #FFFFFF;
 }
 
 .pagination>li>span:hover,.pagination>li>span:focus {
-    background: inherit;
-    color: black;
+    color: #000000;
+    background-color: #FFFFFF;
+}
+
+.pagination>.disabled>span,.pagination>.disabled>span:hover,.pagination>.disabled>span:focus,.pagination>.disabled>a,.pagination>.disabled>a:hover,.pagination>.disabled>a:focus
+    {
+    color: 5b5d61;
+    cursor: default;
 }
 
 /* Buttons */
@@ -596,7 +616,7 @@ a:active,a:focus {
 }
 
 /* Tabs Login/Register and Register */
-.nav-tabs.nav-justified.loginregister, .nav-tabs.nav-justified.register {
+.nav-tabs.nav-justified.loginregister,.nav-tabs.nav-justified.register {
     padding-top: 0px;
     display: block;
 }
@@ -611,7 +631,8 @@ a:active,a:focus {
     width: 50%;
 }
 
-.nav-tabs.nav-justified.loginregister li>a, .nav-tabs.nav-justified.register li>a {
+.nav-tabs.nav-justified.loginregister li>a,.nav-tabs.nav-justified.register li>a
+    {
     background-color: #efefef;
     height: 65px;
     font-size: 18px;
@@ -623,11 +644,12 @@ a:active,a:focus {
     color: #37383b;
 }
 
-.nav-tabs.nav-justified.loginregister li>a:hover, .nav-tabs.nav-justified.register li>a:hover {
+.nav-tabs.nav-justified.loginregister li>a:hover,.nav-tabs.nav-justified.register li>a:hover
+    {
     color: #1bc79f;
 }
 
-.nav-tabs.nav-justified.loginregister .active>a,.nav-tabs.nav-justified.loginregister .active>a:hover,.nav-tabs.nav-justified.loginregister .active>a:focus, .nav-tabs.nav-justified.register .active>a,.nav-tabs.nav-justified.register .active>a:hover,.nav-tabs.nav-justified.register .active>a:focus
+.nav-tabs.nav-justified.loginregister .active>a,.nav-tabs.nav-justified.loginregister .active>a:hover,.nav-tabs.nav-justified.loginregister .active>a:focus,.nav-tabs.nav-justified.register .active>a,.nav-tabs.nav-justified.register .active>a:hover,.nav-tabs.nav-justified.register .active>a:focus
     {
     background-color: #fafafa;
     font-weight: 600;
