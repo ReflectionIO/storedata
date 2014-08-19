@@ -237,7 +237,9 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 				for (Item foundItem : foundItems) {
 					if (foundItem.internalId.equals(addItem.internalId)) {
 						if (foundItem.added.before(cal.getTime())) {
+							// if we find the item, give it the id and properties of the existing item to avoid data loss
 							addItem.id = foundItem.id;
+							addItem.properties = foundItem.properties;
 							update = true;
 							break;
 						} else {
@@ -307,7 +309,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 				if (firstFeedFetch.category.id.longValue() == all.id.longValue()) {
 					ModellerFactory.getModellerForStore(IOS_STORE_A3).enqueue(firstFeedFetch.country, firstFeedFetch.type, firstFeedFetch.code);
 				}
-				
+
 				CallServiceMethodServlet.enqueueGetAllRanks(firstFeedFetch.country, IOS_STORE_A3, firstFeedFetch.category.id, firstFeedFetch.type, key);
 			}
 
