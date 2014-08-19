@@ -199,9 +199,9 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
     public void navigationChanged(Stack previous, Stack current) {
 
         if (current != null && PageType.ForumThreadPageType.equals(current.getPage())) {
-        	
-        	forumSummarySidePanel.redraw();
-        	
+
+            forumSummarySidePanel.redraw();
+
             if (current.getAction() != null && VIEW_ACTION_PARAMETER_VALUE.equals(current.getAction())) {
                 String topicIdString;
                 if ((topicIdString = current.getParameter(TOPIC_ID_PARAMETER_INDEX)) != null) {
@@ -266,10 +266,10 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
             dataProvider.addDataDisplay(messagesCellList);
             pager.setDisplay(messagesCellList); // bind the pager and the
                                                 // display together.
-            
-            //necessary to pull data from the data provider?
+
+            // necessary to pull data from the data provider?
             messagesCellList.redraw();
-            
+
             // just note that the display is primary about what range it has
             // set.
             // The SimplePager is just a bound view on that data.
