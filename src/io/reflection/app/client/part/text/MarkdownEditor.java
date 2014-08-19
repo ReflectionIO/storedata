@@ -15,11 +15,11 @@ import java.io.IOException;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.BeforeSelectionEvent;
 import com.google.gwt.event.logical.shared.BeforeSelectionHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasText;
@@ -41,6 +41,8 @@ public class MarkdownEditor extends Composite implements HasText {
 
 	@UiField Button bold;
 	@UiField Button italic;
+	@UiField Button link;
+    @UiField Button image;
 
 	interface MarkdownEditorUiBinder extends UiBinder<Widget, MarkdownEditor> {}
 
@@ -51,8 +53,14 @@ public class MarkdownEditor extends Composite implements HasText {
 
 		bold.getElement().setInnerHTML("<span class=\"icon-bold\"></span>");
 		italic.getElement().setInnerHTML("<span class=\"icon-italic\"></span>");
+		link.getElement().setInnerHTML("<span class=\"icon-link\"></span>");
+		image.getElement().setInnerHTML("<span class=\"icon-picture\"></span>");
+		
 
 		tabLayout.selectTab(0);
+		
+		tabLayout.getTabBar().setTabHTML(0, "Edit &nbsp;&nbsp;&nbsp;&nbsp;<span class=\"glyphicon glyphicon-pencil\"></span>");
+		tabLayout.getTabBar().setTabHTML(1, "Preview &nbsp;&nbsp;&nbsp;&nbsp;<span class=\"glyphicon glyphicon-eye-open\"></span>");
 
 		tabLayout.addBeforeSelectionHandler(new BeforeSelectionHandler<Integer>() {
 
@@ -76,20 +84,42 @@ public class MarkdownEditor extends Composite implements HasText {
 			}
 		});
 
-		bold.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				wrapText("**", "**");
-			}
-		});
-
-		italic.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				wrapText("*", "*");
-			}
-		});
+		
 	}
+	
+	@UiHandler("bold")
+    void onBoldClicked(ClickEvent event) {
+	    wrapText("**", "**");
+    }
+	
+	@UiHandler("italic")
+    void onItalicClicked(ClickEvent event) {
+	    wrapText("*", "*");
+    }
+	
+	@UiHandler("link")
+    void onLinkClicked(ClickEvent event) {
+	    final UrlAndTitlePopup confirmationDialog = new UrlAndTitlePopup("Insert Link", "Are you sure you want to remove this linked account?")
+        {
+            @Override
+            public void insert() {
+               link();
+            }
+        };
+        
+        confirmationDialog.prepAndShow();
+    }
+	
+	public void link()
+	{
+	    int i = 5 ;
+	}
+	
+	@UiHandler("image")
+    void onImageClicked(ClickEvent event) {
+        
+    }
+
 
 	public MarkdownEditor(String firstName) {
 		initWidget(uiBinder.createAndBindUi(this));

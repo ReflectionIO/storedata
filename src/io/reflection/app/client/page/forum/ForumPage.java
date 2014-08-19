@@ -4,7 +4,7 @@
 //
 //  Created by William Shakour (billy1380) on 5 Apr 2014.
 //  Copyright © 2014 Reflection.io Ltd. All rights reserved.
-//
+// 
 package io.reflection.app.client.page.forum;
 
 import io.reflection.app.api.forum.shared.call.GetForumsRequest;
@@ -120,16 +120,16 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
                 String pageLinksString = "";
 
                 for (int i = 1; i <= numPages && numPages > 1; i++) {
-                    int position = i * ServiceConstants.SHORT_STEP_VALUE;
+                    int position = (i - 1) * ServiceConstants.SHORT_STEP_VALUE;
                     if (i == numPages) {
                         position = object.numberOfReplies;
                     }
 
                     SafeUri lastPageLink = UriUtils.fromSafeConstant(PageType.ForumThreadPageType.asHref().asString() + "/view/" + object.id + "/post/"
                             + position);
-                    
-                    
-                    pageLinksString += TopicTemplate.INSTANCE.pageLink(lastPageLink, i).asString(); //asString because can't see how to combine SafeHtmls together.
+
+                    pageLinksString += TopicTemplate.INSTANCE.pageLink(lastPageLink, i).asString(); // asString because can't see how to combine SafeHtmls
+                                                                                                    // together.
 
                 }
                 SafeHtml pageLinks = SafeHtmlUtils.fromTrustedString(pageLinksString);
