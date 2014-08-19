@@ -162,8 +162,9 @@ final class RankService implements IRankService {
 				.format("UPDATE `rank` SET `position`=%d,`grossingposition`=%d,`itemid`='%s',`type`='%s',`country`='%s',`date`=FROM_UNIXTIME(%d),`source`='%s',`price`=%d,`currency`='%s',`categoryid`=%d,`code2`=%d,`revenue`=%s,`downloads`=%s WHERE `id`=%d;",
 						rank.position.longValue(), rank.grossingPosition.longValue(), addslashes(rank.itemId), addslashes(rank.type), addslashes(rank.country),
 						rank.date.getTime() / 1000, addslashes(rank.source), (int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency),
-						rank.category.id.longValue(), rank.code.longValue(), rank.revenue == null ? "NULL" : rank.revenue.floatValue() * 100,
-						rank.downloads == null ? "NULL" : rank.downloads.intValue(), rank.id.longValue());
+						rank.category.id.longValue(), rank.code.longValue(),
+						rank.revenue == null || rank.revenue.isInfinite() ? "NULL" : rank.revenue.floatValue() * 100,
+						rank.downloads == null || rank.downloads.intValue() == Integer.MAX_VALUE ? "NULL" : rank.downloads.intValue(), rank.id.longValue());
 
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
@@ -640,7 +641,7 @@ final class RankService implements IRankService {
 			String getCountryStoreTypeRanksQuery = String
 					.format("SELECT * FROM `rank` WHERE %s AND CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`source` AS BINARY)=CAST('%s' AS BINARY) AND `categoryid`=%d AND `code2`=%d AND %s `deleted`='n' ORDER BY `%s` %s,`date` DESC LIMIT %d,%d",
 							typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), code.longValue(), isGrossing
-									&& !ignoreGrossingRank ? "`grossingposition`<>0 AND" : "", pager.sortBy,
+									&& ignoreGrossingRank ? "" : "`grossingposition`<>0 AND", pager.sortBy,
 							pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
 
 			try {
