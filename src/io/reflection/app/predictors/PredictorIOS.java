@@ -160,7 +160,7 @@ public class PredictorIOS implements Predictor {
 
 			if (item != null) {
 				setDownloadsAndRevenue(rank, modelRun, usesIap, rank.price.floatValue() / 100.0f);
-				
+
 				// FIXME: we need to fix this
 				if (rank.revenue.longValue() == Long.MAX_VALUE) {
 					continue;
@@ -213,7 +213,7 @@ public class PredictorIOS implements Predictor {
 				RankServiceProvider.provide().updateRank(rank);
 			}
 		}
-		
+
 		LOG.info("Done");
 	}
 
@@ -223,23 +223,21 @@ public class PredictorIOS implements Predictor {
 
 		if (usesIap) {
 			if (isFree(price)) {
-				if (rank.grossingPosition == null || rank.grossingPosition.intValue() == 0) {
+				if (rank.grossingPosition == null && rank.grossingPosition.intValue() == 0) {
 					downloads = (double) (output.freeB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.freeA.doubleValue()));
 					revenue = output.theta.doubleValue() * downloads;
 				} else {
-					downloads = (double) (output.freeB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.freeA.doubleValue()));
-					// revenue = output.th * downloads;
 					revenue = output.grossingB.doubleValue() * Math.pow(rank.grossingPosition.doubleValue(), -output.grossingA.doubleValue());
-					// revenue = reconcile(revenue, grossing_revenue);
+					downloads = revenue / output.theta.doubleValue();
 				}
 			} else {
-				if (rank.grossingPosition == null || rank.grossingPosition.intValue() == 0) {
+				if (rank.grossingPosition == null && rank.grossingPosition.intValue() == 0) {
 					downloads = (double) (output.paidB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.paidAIap.doubleValue()));
 					revenue = downloads * (price + output.theta.doubleValue());
 				} else {
-					downloads = (double) (output.paidB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.paidAIap.doubleValue()));
+					// downloads = (double) (output.paidB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.paidAIap.doubleValue()));
 					revenue = output.grossingB.doubleValue() * Math.pow(rank.grossingPosition.doubleValue(), -output.grossingAIap.doubleValue());
-					// revenue = reconcile(revenue, grossing_revenue);
+					downloads = revenue / (output.theta.doubleValue() + price);
 				}
 			}
 		} else {
@@ -248,13 +246,14 @@ public class PredictorIOS implements Predictor {
 				// download calculated here
 				downloads = (double) (output.freeB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.freeA.doubleValue()));
 			} else {
-				if (rank.grossingPosition == null || rank.grossingPosition.intValue() == 0) {
+				if (rank.grossingPosition == null && rank.grossingPosition.intValue() == 0) {
 					downloads = (double) (output.paidB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.paidA.doubleValue()));
 					revenue = downloads * price;
 				} else {
-					downloads = (double) (output.paidB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.paidA.doubleValue()));
+					// downloads = (double) (output.paidB * Math.pow(rank, -output.paidA));
 					revenue = output.grossingB.doubleValue() * Math.pow(rank.grossingPosition.doubleValue(), -output.grossingA.doubleValue());
 					// revenue = reconcile(revenue, grossing_revenue);
+					downloads = revenue / price;
 				}
 			}
 		}
