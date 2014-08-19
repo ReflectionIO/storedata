@@ -110,6 +110,8 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
         title.setText("");
         contentText.setText("");
         tags.setText("");
+        
+        forumSummarySidePanel.redraw();
 
         // hide errors and remove clear validation strings
     }

@@ -21,6 +21,7 @@ import io.reflection.app.client.controller.TopicController;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
+import io.reflection.app.client.page.forum.part.ForumSummarySidePanel;
 import io.reflection.app.client.part.text.MarkdownEditor;
 import io.reflection.app.datatypes.shared.Reply;
 import io.reflection.app.datatypes.shared.Topic;
@@ -62,6 +63,7 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
 	private boolean isTopic;
 
 	@UiField MarkdownEditor editText;
+	@UiField ForumSummarySidePanel forumSummarySidePanel ;
 
 	public EditTopicPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -97,6 +99,8 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
 
 			String topicIdString = current.getParameter(TOPIC_ID_PARAMETER_INDEX);
 			String selectedReplyId = current.getParameter(REPLY_ID_PARAMETER_INDEX);
+			
+			forumSummarySidePanel.redraw();
 
 			if (topicIdString != null) {
 				topicId = null;

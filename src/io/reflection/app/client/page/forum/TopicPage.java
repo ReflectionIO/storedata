@@ -199,6 +199,9 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
     public void navigationChanged(Stack previous, Stack current) {
 
         if (current != null && PageType.ForumThreadPageType.equals(current.getPage())) {
+        	
+        	forumSummarySidePanel.redraw();
+        	
             if (current.getAction() != null && VIEW_ACTION_PARAMETER_VALUE.equals(current.getAction())) {
                 String topicIdString;
                 if ((topicIdString = current.getParameter(TOPIC_ID_PARAMETER_INDEX)) != null) {
