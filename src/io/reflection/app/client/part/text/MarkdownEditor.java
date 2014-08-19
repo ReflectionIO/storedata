@@ -99,26 +99,39 @@ public class MarkdownEditor extends Composite implements HasText {
 	
 	@UiHandler("link")
     void onLinkClicked(ClickEvent event) {
-	    final UrlAndTitlePopup confirmationDialog = new UrlAndTitlePopup("Insert Link", "Are you sure you want to remove this linked account?")
+	    final UrlAndTitlePopup confirmationDialog = new UrlAndTitlePopup("Insert Link")
         {
             @Override
-            public void insert() {
-               link();
+            public void insert(String title, String url) {
+               linkOrImage(title, url, false);
             }
         };
-        
         confirmationDialog.prepAndShow();
     }
 	
-	public void link()
-	{
-	    int i = 5 ;
-	}
-	
 	@UiHandler("image")
     void onImageClicked(ClickEvent event) {
-        
+	    final UrlAndTitlePopup confirmationDialog = new UrlAndTitlePopup("Insert Image")
+        {
+            @Override
+            public void insert(String title, String url) {
+               linkOrImage(title, url, true);
+            }
+        };
+        confirmationDialog.prepAndShow();
     }
+	
+	public void linkOrImage(String title, String url, boolean image)
+	{
+	    int position = textArea.getCursorPos();
+        String unedited = textArea.getText();
+
+        String newString = unedited.substring(0, position) + (image ? "!" : "")+"["+title+"]("+url+")"
+                + unedited.substring(position, unedited.length());
+        textArea.setText(newString);
+	}
+	
+	
 
 
 	public MarkdownEditor(String firstName) {

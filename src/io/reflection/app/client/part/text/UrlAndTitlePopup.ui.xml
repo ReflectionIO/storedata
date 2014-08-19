@@ -4,10 +4,21 @@
 		.panel {
 		background-color: ivory;
 		}
+
+        .boxLabel
+        {
+        color: #fff;
+        }
 	</ui:style>
-	<g:HTMLPanel  ui:field="dialogWidget">
-	    <g:HTMLPanel  ui:field="textPanel"><h1></h1><p></p></g:HTMLPanel>
-	    <g:HTMLPanel  ui:field="buttonsPanel"></g:HTMLPanel>
-	       
+	<g:HTMLPanel ui:field="dialogWidget">
+		<g:HTMLPanel ui:field="textPanel">
+			<h1></h1>
+		</g:HTMLPanel>
+		<g:HTMLPanel ui:field="buttonsPanel" styleName="form-group">
+			<label class="{style.boxLabel}">Title, must not be blank.</label>
+			<g:TextBox styleName="form-control" ui:field="title" />
+			<label class="{style.boxLabel}">URL</label>
+            <g:TextBox styleName="form-control" ui:field="url" />
+		</g:HTMLPanel>
 	</g:HTMLPanel>
 </ui:UiBinder>
