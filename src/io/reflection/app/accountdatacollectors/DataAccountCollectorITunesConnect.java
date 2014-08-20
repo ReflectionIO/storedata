@@ -39,6 +39,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.spacehopperstudios.utility.StringUtils;
 import com.willshex.gson.json.service.server.InputValidationException;
 import com.willshex.gson.json.service.server.ServiceException;
 import com.willshex.gson.json.shared.Convert;
@@ -138,8 +139,8 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 			String vendorId = getVendorId(dataAccount.properties);
 
 			if (vendorId != null) {
-				String data = USERNAME_KEY + "=" + dataAccount.username;
-				data += "&" + PASSWORD_KEY + "=" + dataAccount.password;
+				String data = USERNAME_KEY + "=" + StringUtils.urlencode(dataAccount.username);
+				data += "&" + PASSWORD_KEY + "=" + StringUtils.urlencode(dataAccount.password);
 				data += "&" + VENDOR_NUMBER_KEY + "=" + vendorId;
 
 				data = data + "&" + TYPE_KEY + "=Sales";
