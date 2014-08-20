@@ -58,7 +58,7 @@
 
 			<c:CellList ui:field="messagesCellList" styleName="{style.margins}" />
 
-			<pp:DiscreteSizePager ui:field="pager" styleName="text-center" />
+			<a:NumberedPager ui:field="pager" styleName="text-center" />
 
 			<g:FormPanel styleName="col-sm-10 col-sm-offset-1" ui:field="replyForm">
 				<g:HTMLPanel>

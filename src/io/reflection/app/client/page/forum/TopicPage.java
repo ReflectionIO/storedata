@@ -30,6 +30,7 @@ import io.reflection.app.client.page.forum.part.ForumMessageCell;
 import io.reflection.app.client.page.forum.part.ForumSummarySidePanel;
 import io.reflection.app.client.page.forum.part.LockButton;
 import io.reflection.app.client.page.forum.part.StickyButton;
+import io.reflection.app.client.part.NumberedPager;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.part.datatypes.ForumMessage;
 import io.reflection.app.client.part.text.MarkdownEditor;
@@ -86,7 +87,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
     @UiField FormPanel replyForm;
 
     @UiField MarkdownEditor replyText;
-    @UiField SimplePager pager;
+    @UiField NumberedPager pager;
 
     @UiField HTMLPanel adminButtons;
 
