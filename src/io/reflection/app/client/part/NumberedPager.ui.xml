@@ -12,30 +12,30 @@
 		border-radius: 4px;
 		}
 
-        .pagination li
-        {
-           display:inline;
-        }
+		.pagination li
+		{
+		display:inline;
+		}
 	</ui:style>
 	<g:HTMLPanel>
 		<ul ui:field="mList" class="{style.pagination}">
 			<li ui:field="mFirstPageItem" class="disabled">
-				<g:Anchor ui:field="mFirstPage" >
+				<g:Anchor ui:field="mFirstPage">
 					first
 				</g:Anchor>
 			</li>
 			<li ui:field="mPrevPageItem" class="disabled">
-				<g:Anchor ui:field="mPrevPage" >
+				<g:Anchor ui:field="mPrevPage">
 					previous
 				</g:Anchor>
 			</li>
 			<li ui:field="mNextPageItem" class="disabled">
-				<g:Anchor ui:field="mNextPage" >
+				<g:Anchor ui:field="mNextPage">
 					next
 				</g:Anchor>
 			</li>
 			<li ui:field="mLastPageItem" class="disabled">
-				<g:Anchor ui:field="mLastPage" >
+				<g:Anchor ui:field="mLastPage">
 					last
 				</g:Anchor>
 			</li>
