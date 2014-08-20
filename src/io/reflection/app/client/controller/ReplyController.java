@@ -319,13 +319,20 @@ public class ReplyController implements ServiceConstants {
          * @param end
          * @return
          */
-        public List<ForumMessage> getMessages(int start, int end) {
+        public List<ForumMessage> getMessages(int start) {
             ArrayList<ForumMessage> rows = new ArrayList<ForumMessage>();
-            for (int i = start; i < end; i++) {
-                ForumMessage message = messagesLookup.get(i);
+            int i = start ;
+            ForumMessage message = messagesLookup.get(i);
+            
+            //this may be inefficient returning more than needed replies
+            //but at least it should always work.
+            while(message != null || i == start){
+                
                 if (message != null) {
                     rows.add(message);
                 }
+                i++;
+                message = messagesLookup.get(i);
             }
 
             return rows;

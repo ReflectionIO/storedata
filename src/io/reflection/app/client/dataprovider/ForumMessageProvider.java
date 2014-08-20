@@ -111,7 +111,7 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
 
         // note this will not trigger a redraw of the table if the content of the cells
         // has changed but the range data hasn't.
-        List<ForumMessage> messages = thread.getMessages(start, start + count + 1);
+        List<ForumMessage> messages = thread.getMessages(start);
         int totalCount = ReplyController.get(topic.id).getTotalCount();
         updateRowCount(totalCount, true);
         updateRowData(start, messages);

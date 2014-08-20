@@ -2,13 +2,14 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder' xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 	<ui:style>
 		.panel {
-		background-color: ivory;
+		  background-color: ivory;
 		}
 
         .boxLabel
         {
-        color: #fff;
+            color: #fff;
         }
+
 	</ui:style>
 	<g:HTMLPanel ui:field="dialogWidget">
 		<g:HTMLPanel ui:field="textPanel">
