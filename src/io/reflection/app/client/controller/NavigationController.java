@@ -386,17 +386,22 @@ public class NavigationController implements ValueChangeHandler<String> {
         intended = value.toString();
     }
 
-    public void showNext() {
-        if (mStack.hasNext()) {
-            PageType.fromString(mStack.getNext().getPage()).show(mStack.getNext().toString(1));
-        } else {
-            if (SessionController.get().getLoggedInUser() != null) {
-                PageType.RanksPageType.show("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString());
-            } else {
-                PageType.HomePageType.show();
-            }
-        }
-    }
+	public void showNext() {
+		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+			@Override
+			public void execute() {
+				if (mStack.hasNext()) {
+					PageType.fromString(mStack.getNext().getPage()).show(mStack.getNext().toString(1));
+				} else {
+					if (SessionController.get().getLoggedInUser() != null) {
+						PageType.RanksPageType.show("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString());
+					} else {
+						PageType.HomePageType.show();
+					}
+				}
+			}
+		});
+	}
 
     public void showPrevious() {
         if (mStack.hasPrevious()) {

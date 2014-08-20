@@ -414,7 +414,9 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
     }
 
     private void removeLogin() {
-        collapsableNavBar.removeChild(login);
+    	if (collapsableNavBar.isOrHasChild(login)) {
+    		collapsableNavBar.removeChild(login);
+    	}
     }
 
     // private void addRegister() {
