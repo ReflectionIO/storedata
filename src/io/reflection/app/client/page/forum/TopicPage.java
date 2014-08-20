@@ -225,7 +225,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
     protected void focusPagerOnPost(final int post) {
         int firstOnPage = post - (post % ServiceConstants.SHORT_STEP_VALUE);
-        messagesCellList.setPageStart(firstOnPage);
+        pager.setPageStart(firstOnPage);
     }
 
     /**
