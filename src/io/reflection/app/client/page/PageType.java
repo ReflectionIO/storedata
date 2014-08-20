@@ -29,6 +29,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.user.client.History;
@@ -300,13 +302,23 @@ public enum PageType {
 	public void show() {
 		if (!navigable) throw navigableError();
 
-		History.newItem(asTargetHistoryToken());
+		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+			@Override
+			public void execute() {
+				History.newItem(asTargetHistoryToken());
+			}
+		});
 	}
 
-	public void show(String... params) {
+	public void show(final String... params) {
 		if (!navigable) throw navigableError();
 
-		History.newItem(asTargetHistoryToken(params));
+		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+			@Override
+			public void execute() {
+				History.newItem(asTargetHistoryToken(params));
+			}
+		});
 	}
 
 	private RuntimeException navigableError() {
