@@ -197,7 +197,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
      */
     @Override
     public void navigationChanged(Stack previous, Stack current) {
-        
+
         if (current != null && PageType.ForumThreadPageType.equals(current.getPage())) {
             if (current.getAction() != null && VIEW_ACTION_PARAMETER_VALUE.equals(current.getAction())) {
                 String topicIdString;
@@ -206,14 +206,11 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
                     Topic topic = TopicController.get().getTopic(topicId);
 
                     String param1 = current.getParameter(1);
-                    if (param1 != null && param1.contains("post"))
-                    {
+                    if (param1 != null && param1.contains("post")) {
                         String param2 = current.getParameter(2);
-                        if (param2 != null)
-                        {
+                        if (param2 != null) {
                             final int post = Integer.parseInt(param2);
-                            int firstOnPage = post - (post % ServiceConstants.SHORT_STEP_VALUE);
-                            messagesCellList.setPageStart(firstOnPage);
+                            focusPagerOnPost(post);
                         }
                     }
                     updateTopic(topic);
@@ -221,6 +218,11 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
             }
         }
         messagesCellList.redraw();
+    }
+
+    protected void focusPagerOnPost(final int post) {
+        int firstOnPage = post - (post % ServiceConstants.SHORT_STEP_VALUE);
+        messagesCellList.setPageStart(firstOnPage);
     }
 
     /**
@@ -347,7 +349,15 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
     public void addReplySuccess(AddReplyRequest input, AddReplyResponse output) {
         if (output.status == StatusType.StatusTypeSuccess) {
             replyText.setText("");
-            updateNotes(TopicController.get().getTopic(topicId));
+            Topic topic2 = TopicController.get().getTopic(topicId);
+            updateNotes(topic2);
+
+            // note: It is api non-deterministic, (or specifically the order of handler registrations and treatment by the eventbus)
+            // whether this addReply handler will get called first or the one in ForumMessageProvider.
+            // that may be important depending on what you want to update in the handlers.
+
+            messagesCellList.redraw();
+            focusPagerOnPost(topic2.numberOfReplies + 1);
         }
     }
 
