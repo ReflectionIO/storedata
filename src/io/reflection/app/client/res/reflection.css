@@ -355,27 +355,49 @@ a:active,a:focus {
     outline: none;
 }
 
-.pagination>.active>a,.pagination>.active>span,.pagination>.active>a:hover,.pagination>.active>span:hover,.pagination>.active>a:focus,.pagination>.active>span:focus
+/* Pagination */
+.pagination {
+    border: none;
+    box-shadow: none;
+}
+
+.pagination>.active>a,.pagination>.active>a:hover,.pagination>.active>a:focus
     {
     background-color: #6D69C5;
     border-color: #6D69C5;
 }
 
-.pagination>li>span {
-    color: black;
-}
-
 .pagination>li>a {
     color: #6D69C5;
+    border: none;
+    box-shadow: none;
+    border-radius: 0px;
+    margin: 0px;
+}
+
+.pagination>li>span {
+    color: #000000;
+    border: none;
+    box-shadow: none;
+    cursor: default;
+    border-radius: 0px;
+    margin: 0px;
 }
 
 .pagination>li>a:hover,.pagination>li>a:focus {
     color: #1bc79f;
+    background-color: #FFFFFF;
 }
 
 .pagination>li>span:hover,.pagination>li>span:focus {
-    background: inherit;
-    color: black;
+    color: #000000;
+    background-color: #FFFFFF;
+}
+
+.pagination>.disabled>span,.pagination>.disabled>span:hover,.pagination>.disabled>span:focus,.pagination>.disabled>a,.pagination>.disabled>a:hover,.pagination>.disabled>a:focus
+    {
+    color: 5b5d61;
+    cursor: default;
 }
 
 /* Buttons */

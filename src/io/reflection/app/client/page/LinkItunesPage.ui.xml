@@ -76,7 +76,7 @@
                 <p:Preloader ui:field="preloader">
                     <g:HTMLPanel styleName="well {style.formLinkAcc}">
                         <g:HTMLPanel>
-                            <ul class="nav nav-tabs nav-justified loginregister">
+                            <ul class="nav nav-tabs nav-justified register">
                                 <li class="{style.inviteRegisterTab}">
                                     Link Your iTunes Connect Account
                                 </li>
