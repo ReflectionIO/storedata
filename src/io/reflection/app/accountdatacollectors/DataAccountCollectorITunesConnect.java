@@ -139,8 +139,8 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 			String vendorId = getVendorId(dataAccount.properties);
 
 			if (vendorId != null) {
-				String data = USERNAME_KEY + "=" + StringUtils.urldecode(dataAccount.username);
-				data += "&" + PASSWORD_KEY + "=" + StringUtils.urldecode(dataAccount.password);
+				String data = USERNAME_KEY + "=" + StringUtils.urlencode(dataAccount.username);
+				data += "&" + PASSWORD_KEY + "=" + StringUtils.urlencode(dataAccount.password);
 				data += "&" + VENDOR_NUMBER_KEY + "=" + vendorId;
 
 				data = data + "&" + TYPE_KEY + "=Sales";
