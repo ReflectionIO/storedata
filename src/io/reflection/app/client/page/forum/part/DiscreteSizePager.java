@@ -35,9 +35,9 @@ public class DiscreteSizePager extends SimplePager {
         if (getDisplay() != null) {
           Range range = getDisplay().getVisibleRange();
           int pageSize = range.getLength();
-          if (!isRangeLimited() && getDisplay().isRowCountExact()) {
-            index = Math.min(index, getDisplay().getRowCount() - pageSize);
-          }
+//          if (!isRangeLimited() && getDisplay().isRowCountExact()) {
+//            index = Math.min(index, getDisplay().getRowCount() - pageSize);
+//          }
           index = Math.max(0, index);
           if (index != range.getStart()) {
             getDisplay().setVisibleRange(index, pageSize);
