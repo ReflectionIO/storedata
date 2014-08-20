@@ -45,7 +45,6 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
     private Topic topic;
     private List<HandlerRegistration> registrations = new ArrayList<HandlerRegistration>();
     private int start;
-    private int count;
 
     public ForumMessageProvider(Topic topic) {
         ReplyController.get(topic.id).setTopic(topic);
@@ -93,7 +92,7 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
         if (output.status == StatusType.StatusTypeSuccess) {
 
             start = input.pager.start.intValue() == 0 ? 0 : input.pager.start.intValue() + 1;
-            count = input.pager.count.intValue();
+            
 
             updateRows(input.topic.id);
         }
