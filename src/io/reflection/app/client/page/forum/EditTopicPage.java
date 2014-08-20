@@ -124,7 +124,7 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
 					}
 				} else {
 					if (replyId != null) {
-						reply = ReplyController.get().getReply(replyId);
+						reply = ReplyController.get(topicId).getReply(replyId);
 
 						if (reply != null) {
 							content = reply.content.toString();
@@ -157,9 +157,9 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
 				TopicController.get().updateTopic(topic);
 			} else {
 				if (replyId != null) {
-					ReplyController.get().updateReply(replyId, editText.getText());
+					ReplyController.get(topic.id).updateReply(replyId, editText.getText());
 				} else {
-					ReplyController.get().addReply(replyId, editText.getText());
+					ReplyController.get(topic.id).addReply(replyId, editText.getText());
 				}
 			}
 		}

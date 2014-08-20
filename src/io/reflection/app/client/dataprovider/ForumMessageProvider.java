@@ -73,7 +73,7 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
         ReplyThread thread = ReplyController.get(topic.id);
 
         if (thread.hasRows(start, end)) {
-            updateRowData(start, thread.getMessages(start, end));
+               updateRows(topic.id);
         } else {
             ReplyController.get().getReplies(topic.id, start, end);
 
@@ -99,13 +99,21 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
         }
     }
 
+    /**
+     * It's really important to call updateRowCount & updateRowData together on any occasion.
+     * http://turbomanage.wordpress.com/2011/03/02/gwt-2-2-asyncdataprovider-celltable-gotcha/
+     * We had problems with messages from one thread appearing in another, despite a completely
+     * new ForumMessageProvider created and attached. Hopefully this solves it.
+     * @param topicId
+     */
     protected void updateRows(long topicId) {
         ReplyThread thread = ReplyController.get(topicId);
 
         // note this will not trigger a redraw of the table if the content of the cells
         // has changed but the range data hasn't.
         List<ForumMessage> messages = thread.getMessages(start, start + count + 1);
-        updateRowCount(ReplyController.get(topic.id).getTotalCount(), true);
+        int totalCount = ReplyController.get(topic.id).getTotalCount();
+        updateRowCount(totalCount, true);
         updateRowData(start, messages);
     }
 
