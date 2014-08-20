@@ -11,35 +11,32 @@
 		margin: 20px 0;
 		border-radius: 4px;
 		}
+
+        .pagination li
+        {
+           display:inline;
+        }
 	</ui:style>
 	<g:HTMLPanel>
 		<ul ui:field="mList" class="{style.pagination}">
 			<li ui:field="mFirstPageItem" class="disabled">
-				<g:Anchor ui:field="mFirstPage" styleName="glyphicon glyphicon-fast-backward">
-					<span />
+				<g:Anchor ui:field="mFirstPage" >
+					first
 				</g:Anchor>
 			</li>
 			<li ui:field="mPrevPageItem" class="disabled">
-				<g:Anchor ui:field="mPrevPage" styleName="glyphicon glyphicon-arrow-left">
-					<span />
+				<g:Anchor ui:field="mPrevPage" >
+					previous
 				</g:Anchor>
-			</li>
-			<li>
-				<span ui:field="mLabel" class="{style.compensateTop}" />
 			</li>
 			<li ui:field="mNextPageItem" class="disabled">
-				<g:Anchor ui:field="mNextPage" styleName="glyphicon glyphicon-arrow-right">
-					<span />
-				</g:Anchor>
-			</li>
-			<li ui:field="mFastForwardItem" class="disabled">
-				<g:Anchor ui:field="mFastForward" styleName="glyphicon glyphicon-forward">
-					<span />
+				<g:Anchor ui:field="mNextPage" >
+					next
 				</g:Anchor>
 			</li>
 			<li ui:field="mLastPageItem" class="disabled">
-				<g:Anchor ui:field="mLastPage" styleName="glyphicon glyphicon-fast-forward">
-					<span />
+				<g:Anchor ui:field="mLastPage" >
+					last
 				</g:Anchor>
 			</li>
 		</ul>

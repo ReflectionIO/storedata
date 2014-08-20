@@ -8,8 +8,11 @@
 package io.reflection.app.client.part;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.AnchorElement;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -25,28 +28,25 @@ import com.google.gwt.view.client.HasRows;
 import com.google.gwt.view.client.Range;
 
 /**
- * @author billy1380
+ * @author Daniel Gerson
  * 
  */
 public class NumberedPager extends AbstractPager {
 
-	private static SimplePagerUiBinder uiBinder = GWT.create(SimplePagerUiBinder.class);
+	private static NumberedPagerUiBinder uiBinder = GWT.create(NumberedPagerUiBinder.class);
 
-	interface SimplePagerUiBinder extends UiBinder<Widget, NumberedPager> {}
+	interface NumberedPagerUiBinder extends UiBinder<Widget, NumberedPager> {}
 
 	@UiField UListElement mList;
 
 	private static final int DEFAULT_FAST_FORWARD_ROWS = 1000;
-
-	@UiField Anchor mFastForward;
-	@UiField LIElement mFastForwardItem;
 
 	private final int mFastForwardRows;
 
 	@UiField Anchor mFirstPage;
 	@UiField LIElement mFirstPageItem;
 
-	@UiField SpanElement mLabel;
+//	@UiField SpanElement mLabel;
 
 	@UiField Anchor mLastPage;
 	@UiField LIElement mLastPageItem;
@@ -63,19 +63,19 @@ public class NumberedPager extends AbstractPager {
 	 */
 	@UiConstructor
 	public NumberedPager() {
-		this(true, DEFAULT_FAST_FORWARD_ROWS, false);
+		this(false, DEFAULT_FAST_FORWARD_ROWS, false);
 	}
 
 	/**
 	 * Construct a {@link NumberedPager} with the default resources, fast forward rows and default image button names.
 	 * 
-	 * @param showFastForwardButton
+	 * @param showFirstPageButton
 	 *            if true, show a fast-forward button that advances by a larger increment than a single page
 	 * @param showLastPageButton
 	 *            if true, show a button to go the the last page
 	 */
-	public NumberedPager(boolean showFastForwardButton, boolean showLastPageButton) {
-		this(showFastForwardButton, DEFAULT_FAST_FORWARD_ROWS, showLastPageButton);
+	public NumberedPager(boolean showFirstPageButton, boolean showLastPageButton) {
+		this(showFirstPageButton, DEFAULT_FAST_FORWARD_ROWS, showLastPageButton);
 	}
 
 	/**
@@ -90,19 +90,22 @@ public class NumberedPager extends AbstractPager {
 	 * @param imageButtonConstants
 	 *            Constants that contain the image button names
 	 */
-	public NumberedPager(boolean showFastForwardButton, final int fastForwardRows, boolean showLastPageButton) {
+	public NumberedPager(boolean showFirstPageButton, final int fastForwardRows, boolean showLastPageButton) {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		this.mFastForwardRows = fastForwardRows;
 
-		if (!showFastForwardButton) {
-			mFastForwardItem.removeFromParent();
-			mFastForwardItem = null;
-		}
+		
 		
 		if (!showLastPageButton) {
 			mLastPageItem.removeFromParent();
 			mLastPageItem = null;
+		}
+		
+		if (!showFirstPageButton)
+		{
+		    mFirstPageItem.removeFromParent();
+		    mFirstPageItem = null ;
 		}
 
 		// Disable the buttons by default.
@@ -124,15 +127,19 @@ public class NumberedPager extends AbstractPager {
 		previousPage();
 	}
 	
+//	protected void previousPage() {
+//	    if (getDisplay() != null) {
+//	      Range range = getDisplay().getVisibleRange();
+//	      setPageStart(range.getStart() - range.getLength() - (range.getStart() % range.getLength()));
+//	    }
+//	  }
+	
 	@UiHandler("mLastPage")
 	void onLastPageClicked(ClickEvent e) {
 		lastPage();
 	}
 	
-	@UiHandler("mFastForward")
-	void onFastForwardClicked(ClickEvent e) {
-		setPage(getPage() + getFastForwardPages());
-	}
+	
 
 	@Override
 	public void firstPage() {
@@ -144,7 +151,7 @@ public class NumberedPager extends AbstractPager {
 		// Enable or disable all buttons.
 		boolean disableButtons = (display == null);
 		
-		setFastForwardDisabled(disableButtons);
+		
 		setNextPageButtonsDisabled(disableButtons);
 		setPrevPageButtonsDisabled(disableButtons);
 		
@@ -172,10 +179,21 @@ public class NumberedPager extends AbstractPager {
 	 */
 	public void startLoading() {
 		getDisplay().setRowCount(0, true);
-		mLabel.setInnerHTML("");
+		clearNumbers();
 	}
 
 	/**
+     * 
+     */
+    private void clearNumbers() {
+        Element parent = mPrevPageItem.getParentElement() ;
+        parent.removeAllChildren();
+        parent.appendChild(mPrevPageItem);
+        parent.appendChild(mNextPageItem);
+        
+    }
+
+    /**
 	 * Get the text to display in the pager that reflects the state of the pager.
 	 * 
 	 * @return the text
@@ -197,7 +215,7 @@ public class NumberedPager extends AbstractPager {
 	@Override
 	protected void onRangeOrRowCountChanged() {
 		HasRows display = getDisplay();
-		mLabel.setInnerHTML(createText());
+		generateNumberLinks();
 
 		// Update the prev and first buttons.
 		setPrevPageButtonsDisabled(!hasPreviousPage());
@@ -205,11 +223,32 @@ public class NumberedPager extends AbstractPager {
 		// Update the next and last buttons.
 		if (isRangeLimited() || !display.isRowCountExact()) {
 			setNextPageButtonsDisabled(!hasNextPage());
-			setFastForwardDisabled(!hasNextPages(getFastForwardPages()));
+			
 		}
 	}
 
 	/**
+     * 
+     */
+    private void generateNumberLinks() {
+        
+        Element parent = mPrevPageItem.getParentElement();
+        parent.removeAllChildren();
+        parent.appendChild(mPrevPageItem);
+        
+        for (int i = 1 ; i <3 ; i++)
+        {
+            LIElement li = Document.get().createLIElement();
+            AnchorElement anchor = Document.get().createAnchorElement();
+            anchor.appendChild(Document.get().createTextNode(Integer.toString(i)));
+            li.appendChild(anchor);
+            parent.appendChild(li);
+        }
+        
+        parent.appendChild(mNextPageItem);
+    }
+
+    /**
 	 * Check if the next button is disabled. Visible for testing.
 	 */
 	boolean isNextButtonDisabled() {
@@ -233,16 +272,7 @@ public class NumberedPager extends AbstractPager {
 		return pageSize > 0 ? mFastForwardRows / pageSize : 0;
 	}
 
-	/**
-	 * Enable or disable the fast forward button.
-	 * 
-	 * @param disabled
-	 *            true to disable, false to enable
-	 */
-	private void setFastForwardDisabled(boolean disabled) {
-		if (mFastForwardItem == null) { return; }
-		setDisabled(mFastForwardItem, disabled);
-	}
+	
 
 	void setDisabled(Element e, boolean disabled) {
 		if (disabled) {
@@ -276,7 +306,8 @@ public class NumberedPager extends AbstractPager {
 	 *            true to disable, false to enable
 	 */
 	private void setPrevPageButtonsDisabled(boolean disabled) {
-		setDisabled(mFirstPageItem, disabled);
+	    if (mFirstPageItem != null)
+	        setDisabled(mFirstPageItem, disabled);
 		setDisabled(mPrevPageItem, disabled);
 	}
 
