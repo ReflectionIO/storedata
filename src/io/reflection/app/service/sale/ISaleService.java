@@ -75,12 +75,12 @@ public interface ISaleService extends IService {
 	 * @param pager
 	 * @return
 	 */
-	public List<Item> getDataAccountItems(DataAccount dataAccount, Pager pager) throws DataAccessException;
+	public List<Item> getDataAccountItems(DataAccount dataAccount, List<String> typeIdentifiers, Pager pager) throws DataAccessException;
 
 	/**
 	 * @return
 	 */
-	public Long getDataAccountItemsCount(DataAccount dataAccount) throws DataAccessException;
+	public Long getDataAccountItemsCount(DataAccount dataAccount, List<String> typeIdentifiers) throws DataAccessException;
 
 	/**
 	 * @param sales

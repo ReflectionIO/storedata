@@ -156,15 +156,22 @@ final class SaleService implements ISaleService {
 	 * io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
-	public List<Item> getDataAccountItems(DataAccount dataAccount, Pager pager) throws DataAccessException {
+	public List<Item> getDataAccountItems(DataAccount dataAccount, List<String> typeIdentifiers, Pager pager) throws DataAccessException {
 		List<String> itemIds = new ArrayList<String>();
 		List<String> itemIdsTop400 = new ArrayList<String>();
 		List<Item> items = new ArrayList<Item>();
+		
+		String typeId = "";
+		if (typeIdentifiers != null && typeIdentifiers.size() > 0) {
+			typeId = "AND `typeidentifier` IN ('" + StringUtils.join(typeIdentifiers, "','") + "')";
+		}
 
-		String getSaleQuery = String.format("SELECT DISTINCT `itemid` FROM `sale` WHERE `dataaccountid`=%d AND `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d",
-				dataAccount.id.longValue(), pager.sortBy == null ? "id" : pager.sortBy,
-				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start == null ? Pager.DEFAULT_START.longValue()
-						: pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue() : pager.count.longValue());
+		String getSaleQuery = String
+				.format("SELECT DISTINCT `itemid` FROM `sale` WHERE `dataaccountid`=%d %s AND `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d",
+						dataAccount.id.longValue(), typeId, pager.sortBy == null ? "id" : pager.sortBy,
+						pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
+						pager.start == null ? Pager.DEFAULT_START.longValue() : pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue()
+								: pager.count.longValue());
 
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection saleConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
@@ -177,7 +184,8 @@ final class SaleService implements ISaleService {
 				itemIds.add(saleConnection.getCurrentRowString("itemid"));
 			}
 
-			items.addAll(ItemServiceProvider.provide().getInternalIdItemBatch(itemIds)); // add Items from items table (the ones in the top 400)
+			items.addAll(ItemServiceProvider.provide().getInternalIdItemBatch(itemIds)); // return Items date from ITEM table (but only the ones in the top 400
+																							// !)
 
 			for (Item i : items) {
 				itemIdsTop400.add(i.internalId);
@@ -188,13 +196,20 @@ final class SaleService implements ISaleService {
 			}
 		}
 
-		itemIds.removeAll(itemIdsTop400); // items out of the top 400
+		itemIds.removeAll(itemIdsTop400); // get IDs of items out of the top 400
 
-		items.addAll(generateDummyItems(itemIds)); // get dummy items from sale table
+		items.addAll(generateDummyItems(itemIds)); // generate dummy items from sale table for items out of the top 400
 
 		return items;
 	}
 
+	/**
+	 * Generate dummy items from sale table for items out of the top 400
+	 * 
+	 * @param itemId
+	 * @return
+	 * @throws DataAccessException
+	 */
 	private List<Item> generateDummyItems(Collection<String> itemId) throws DataAccessException {
 		List<Item> items = new ArrayList<Item>();
 
@@ -235,11 +250,15 @@ final class SaleService implements ISaleService {
 	 * @see io.reflection.app.service.sale.ISaleService#getDataAccountItemsCount()
 	 */
 	@Override
-	public Long getDataAccountItemsCount(DataAccount dataAccount) throws DataAccessException {
+	public Long getDataAccountItemsCount(DataAccount dataAccount, List<String> typeIdentifiers) throws DataAccessException {
 
 		Long dataCount = Long.valueOf(0);
+		String typeId = "";
+		if (typeIdentifiers != null && typeIdentifiers.size() > 0) {
+			typeId = "AND `typeidentifier` IN ('" + StringUtils.join(typeIdentifiers, "','") + "')";
+		}
 		String getDataAccountsCountQuery = String.format(
-				"SELECT COUNT(DISTINCT `itemid`) AS `datacount` FROM `sale` WHERE `deleted`='n' AND `dataaccountid`=%d ", dataAccount.id.longValue());
+				"SELECT COUNT(DISTINCT `itemid`) AS `datacount` FROM `sale` WHERE `deleted`='n' AND `dataaccountid`=%d %s", dataAccount.id.longValue(), typeId);
 
 		Connection dataConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
 		try {

@@ -530,8 +530,8 @@ final class ItemService implements IItemService {
 				commaDelimitedItemIds = StringUtils.join(notFoundItems, "','");
 
 				if (commaDelimitedItemIds != null && commaDelimitedItemIds.length() != 0) {
-					String getInternalIdItemBatchQuery = String.format("SELECT * FROM `item` WHERE `internalid` IN ('%s') and `deleted`='n'",
-							commaDelimitedItemIds);
+					String getInternalIdItemBatchQuery = String.format(
+							"SELECT * FROM `item` WHERE `internalid` IN ('%s') and `deleted`='n' GROUP BY `internalid`", commaDelimitedItemIds);
 
 					Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
 
