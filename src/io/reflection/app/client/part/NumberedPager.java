@@ -255,6 +255,7 @@ public class NumberedPager extends AbstractPager {
                     thePager.setPageStart((page - 1) * thePager.getPageSize());
                 }});
             anchor.getElement().appendChild(Document.get().createTextNode(Integer.toString(i)));
+        
             
             if (this.getPage() == i -1) //current page
             {
@@ -262,6 +263,7 @@ public class NumberedPager extends AbstractPager {
                 anchor.setEnabled(false);
                 
             }
+            anchor.addStyleName(BootstrapGwtNumberedPager.INSTANCE.styles().spaceApart());
             li.appendChild(anchor.getElement());
             htmlPanel.add(anchor);//.appendChild(anchor.getElement());
         }

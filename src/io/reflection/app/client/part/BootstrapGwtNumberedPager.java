@@ -20,6 +20,9 @@ public interface BootstrapGwtNumberedPager extends ClientBundle {
 
         @ClassName("selected")
         String selected();
+
+        @ClassName("spaceApart")
+        String spaceApart();
     }
 
     public static final BootstrapGwtNumberedPager INSTANCE = GWT.create(BootstrapGwtNumberedPager.class);
