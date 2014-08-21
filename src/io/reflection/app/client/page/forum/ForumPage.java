@@ -122,7 +122,6 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 
                 for (int i = 1; i <= numPages && numPages > 1; i++) {
                     int position = (i - 1) * ServiceConstants.SHORT_STEP_VALUE;
-                    
 
                     SafeUri lastPageLink = UriUtils.fromSafeConstant(PageType.ForumThreadPageType.asHref().asString() + "/view/" + object.id + "/post/"
                             + position);
@@ -155,10 +154,9 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 
             @Override
             public String getValue(Topic object) {
-                User lastPoster = object.lastReplier ;
-                if (lastPoster == null)
-                {
-                    lastPoster = object.author ;
+                User lastPoster = object.lastReplier;
+                if (lastPoster == null) {
+                    lastPoster = object.author;
                 }
                 return FormattingHelper.getUserName(lastPoster);
             }
