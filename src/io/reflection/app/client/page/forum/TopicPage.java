@@ -48,6 +48,8 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellList;
+import com.google.gwt.user.cellview.client.LoadingStateChangeEvent;
+import com.google.gwt.user.cellview.client.LoadingStateChangeEvent.LoadingState;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -112,10 +114,21 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
         messagesCellList.setLoadingIndicator(loadingIndicator);
         messagesCellList.setEmptyListWidget(new HTMLPanel("No messages found!"));
-
+        
         pager.setPageSize(ServiceConstants.SHORT_STEP_VALUE);
 
         cellPrototype.setMarkdownTextEditor(replyText);
+        
+        messagesCellList.addHandler(new LoadingStateChangeEvent.Handler() {
+            
+            @Override
+            public void onLoadingStateChanged(LoadingStateChangeEvent event) {
+                if (event.getLoadingState() == LoadingState.LOADED && !replyText.isVisible())
+                {
+                    replyText.setVisible(true);
+                }
+            }
+        }, LoadingStateChangeEvent.TYPE);
 
     }
 
@@ -203,6 +216,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
         if (current != null && PageType.ForumThreadPageType.equals(current.getPage())) {
 
             forumSummarySidePanel.redraw();
+            replyText.setVisible(false);
 
             if (current.getAction() != null && VIEW_ACTION_PARAMETER_VALUE.equals(current.getAction())) {
                 String topicIdString;
