@@ -47,14 +47,14 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
     private int start;
 
     public ForumMessageProvider(Topic topic) {
-        ReplyController.get(topic.id).setTopic(topic);
+        ReplyController.get().getThread(topic.id).setTopic(topic);
         this.topic = topic;
     }
 
     long getTotalCount() {
         //using the replycontroller to work out count because the number is more immediately
         //connected to the number of items in the replyStore container, which drives the provider.
-        return ReplyController.get(topic.id).getCount();
+        return ReplyController.get().getThread(topic.id).getCount();
     }
 
     /*
@@ -69,7 +69,7 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
         start = r.getStart();
         int end = start + r.getLength();
 
-        ReplyThread thread = ReplyController.get(topic.id);
+        ReplyThread thread = ReplyController.get().getThread(topic.id);
 
         if (thread.hasRows(start, end)) {
                updateRows(topic.id);
@@ -106,12 +106,12 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
      * @param topicId
      */
     protected void updateRows(long topicId) {
-        ReplyThread thread = ReplyController.get(topicId);
+        ReplyThread thread = ReplyController.get().getThread(topicId);
 
         // note this will not trigger a redraw of the table if the content of the cells
         // has changed but the range data hasn't.
         List<ForumMessage> messages = thread.getMessages(start);
-        int totalCount = ReplyController.get(topic.id).getTotalCount();
+        int totalCount = ReplyController.get().getThread(topic.id).getTotalCount();
         updateRowCount(totalCount, true);
         updateRowData(start, messages);
     }

@@ -84,20 +84,11 @@ public class ReplyController implements ServiceConstants {
         thread.addReply(replyId, html);
     }
 
-    private ReplyThread getThread(long topicId) {
+    public ReplyThread getThread(long topicId) {
         if (thread == null || thread.getTopicId() != topicId) {
             thread = new ReplyThread(this, topicId);
         }
         return thread;
-    }
-
-    /**
-     * @param id
-     * @return
-     */
-    public static ReplyThread get(Long topicId) {
-
-        return one.getThread(topicId);
     }
 
     /**
@@ -172,8 +163,8 @@ public class ReplyController implements ServiceConstants {
 
                             long i = start;
                             for (Reply reply : output.replies) {
-                            	Topic topic = input.topic;
-                            	int replyId = reply.id.intValue();
+                                Topic topic = input.topic;
+                                int replyId = reply.id.intValue();
                                 addForumMessage((int) i, reply, topic, replyId);
                                 i++;
                             }
@@ -184,26 +175,25 @@ public class ReplyController implements ServiceConstants {
                     EventController.get().fireEventFromSource(new GetRepliesSuccess(input, output), replyController);
                 }
 
-				
-
                 @Override
                 public void onFailure(Throwable caught) {
                     EventController.get().fireEventFromSource(new GetRepliesFailure(input, caught), replyController);
                 }
             });
         }
-        
+
         /**
          * 
-         * @param messageIndex starts from zero, replies start from 1
+         * @param messageIndex
+         *            starts from zero, replies start from 1
          * @param reply
          * @param topic
          * @param replyId
          */
         protected void addForumMessage(int messageIndex, Reply reply, Topic topic, int replyId) {
-			messagesLookup.put(messageIndex + 1, new ForumMessage(topic, reply, messageIndex + 1));
-			replyStore.put(replyId, reply);
-		}
+            messagesLookup.put(messageIndex + 1, new ForumMessage(topic, reply, messageIndex + 1));
+            replyStore.put(replyId, reply);
+        }
 
         public void addReply(Long topicId, String replyContent) {
             ForumService service = ServiceCreator.createForumService();
@@ -218,8 +208,6 @@ public class ReplyController implements ServiceConstants {
 
             input.reply.topic = new Topic();
             input.reply.topic.id = topicId;
-            
-            
 
             service.addReply(input, new AsyncCallback<AddReplyResponse>() {
 
@@ -228,7 +216,7 @@ public class ReplyController implements ServiceConstants {
 
                     if (output.status == StatusType.StatusTypeSuccess) {
                         Topic topic = TopicController.get().getTopic(ReplyThread.this.topicId);
-                        
+
                         addForumMessage((int) topic.numberOfReplies, output.reply, topic, output.reply.id.intValue());
 
                         if (topic != null) {
@@ -321,13 +309,13 @@ public class ReplyController implements ServiceConstants {
          */
         public List<ForumMessage> getMessages(int start) {
             ArrayList<ForumMessage> rows = new ArrayList<ForumMessage>();
-            int i = start ;
+            int i = start;
             ForumMessage message = messagesLookup.get(i);
-            
-            //this may be inefficient returning more than needed replies
-            //but at least it should always work.
-            while(message != null || i == start){
-                
+
+            // this may be inefficient returning more than needed replies
+            // but at least it should always work.
+            while (message != null || i == start) {
+
                 if (message != null) {
                     rows.add(message);
                 }
