@@ -10,8 +10,12 @@ package io.reflection.app.predictors;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.apple.ItemPropertyLookupServlet;
+import io.reflection.app.collectors.Collector;
+import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.FeedFetch;
+import io.reflection.app.datatypes.shared.FeedFetchStatusType;
 import io.reflection.app.datatypes.shared.FormType;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.ModelRun;
@@ -22,6 +26,7 @@ import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.modellers.Modeller;
 import io.reflection.app.modellers.ModellerFactory;
 import io.reflection.app.service.category.CategoryServiceProvider;
+import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.modelrun.ModelRunServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
@@ -142,6 +147,11 @@ public class PredictorIOS implements Predictor {
 		p.count = new Long(Long.MAX_VALUE);
 
 		Modeller modeller = ModellerFactory.getModellerForStore(IOS_STORE_A3);
+		
+		Collector collector = CollectorFactory.getCollectorForStore(IOS_STORE_A3);
+		List<String> listTypes = new ArrayList<String>();
+		listTypes.addAll(collector.getCounterpartTypes(type));
+		listTypes.add(type);
 
 		FormType form = modeller.getForm(type);
 		ModelRun modelRun = ModelRunServiceProvider.provide().getGatherCodeModelRun(c, s, form, code);
@@ -213,10 +223,32 @@ public class PredictorIOS implements Predictor {
 				RankServiceProvider.provide().updateRank(rank);
 			}
 		}
+		
+		alterFeedFetchStatus(s, c, category, listTypes, code);
 
 		LOG.info("Done");
 	}
 
+	/**
+	 * 
+	 * @param country
+	 * @param store
+	 * @param category
+	 * @param listTypes
+	 * @param code
+	 * @throws DataAccessException
+	 */
+	private static void alterFeedFetchStatus(Store store, Country country, Category category, List<String> listTypes, Long code) throws DataAccessException {
+		List<FeedFetch> feeds = FeedFetchServiceProvider.provide().getGatherCodeFeedFetches(country, store, listTypes, code);
+
+		for (FeedFetch feedFetch : feeds) {
+			if (feedFetch.category.id.longValue() == category.id.longValue()) {
+				feedFetch.status = FeedFetchStatusType.FeedFetchStatusTypePredicted;
+				FeedFetchServiceProvider.provide().updateFeedFetch(feedFetch);
+			}
+		}
+	}
+	
 	private void setDownloadsAndRevenue(Rank rank, ModelRun output, boolean usesIap, float price) {
 		double revenue = 0.0;
 		double downloads = 0.0;
