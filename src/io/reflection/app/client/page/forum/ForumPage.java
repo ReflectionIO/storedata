@@ -25,6 +25,7 @@ import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.Forum;
 import io.reflection.app.datatypes.shared.Topic;
+import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.shared.util.FormattingHelper;
 
 import com.google.gwt.cell.client.SafeHtmlCell;
@@ -154,7 +155,12 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 
             @Override
             public String getValue(Topic object) {
-                return FormattingHelper.getUserName(object.lastReplier);
+                User lastPoster = object.lastReplier ;
+                if (lastPoster == null)
+                {
+                    lastPoster = object.author ;
+                }
+                return FormattingHelper.getUserName(lastPoster);
             }
         };
 
