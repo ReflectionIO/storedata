@@ -71,7 +71,6 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
     interface TopicPageUiBinder extends UiBinder<Widget, TopicPage> {}
 
     @UiField HeadingElement topicTitle;
-    @UiField HeadingElement forumTitle;
     @UiField UListElement notes;
 
     private ForumMessageCell cellPrototype = new ForumMessageCell();
@@ -259,7 +258,6 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
             }
 
             topicTitle.setInnerHTML(properties + topic.title);
-            forumTitle.setInnerText(topic.forum.title);
 
             updateNotes(topic);
 
