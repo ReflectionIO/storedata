@@ -54,6 +54,9 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
         return mOne;
     }
 
+    /**
+     * Fetch the list of Item related to the linked account currently selected in the filter
+     */
     public void fetchLinkedAccountItems() {
         updateRowCount(0, false);
         CoreService service = ServiceCreator.createCoreService();
@@ -91,6 +94,8 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 
                     if (output.items != null) { // There are items associated with this linked account
 
+                    	ItemController.get().addItemsToCache(output.items);
+                    	
                         MyApp myApp;
 
                         for (Item item : output.items) {
@@ -123,6 +128,9 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
         });
     }
 
+    /**
+     * 
+     */
     private void fetchSalesRanks() {
         CoreService service = ServiceCreator.createCoreService();
 
@@ -142,35 +150,33 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 
             @Override
             public void onSuccess(GetSalesRanksResponse output) {
-                if (output != null && output.status == StatusType.StatusTypeSuccess && output.ranks != null) { // Ranks available
-                    ItemController.get().addItemsToCache(output.items);
+                if (output != null && output.status == StatusType.StatusTypeSuccess && output.ranks != null) { // Ranks available                    
 
-                    List<MyApp> appList = new ArrayList<MyApp>();
+                   //List<MyApp> myAppList = new ArrayList<MyApp>();
 
-                    MyApp app;
-                    // ranks belong to various apps and each app can have multiple ranks depending on the time span (a rank per day)
+                    MyApp myApp;
+                    // Add Rank to related Item
                     for (Rank rank : output.ranks) {
-                        app = userItemsLookup.get(rank.itemId);
+                    	myApp = userItemsLookup.get(rank.itemId);
 
-                        if (app != null) {
-                            if (app.ranks == null) {
-                                app.ranks = new ArrayList<Rank>();
+                        if (myApp != null) {                        	
+                        	
+                            if (myApp.ranks == null) {
+                            	myApp.ranks = new ArrayList<Rank>();
                             }
+                                                       
+                            myApp.ranks.add(rank);
 
-                            app.ranks.add(rank);
-                            appList.add(app);
                         }
                     }
 
-                    for (MyApp myApp : appList) {
-                        myApp.updateOverallValues();
+                    for (MyApp myItem : userItems) {
+                        myItem.updateOverallValues(); // Calculate values given the new added Ranks 
                     }
 
                     updateRowData(0, rows);
-                } else { // No Ranks available
-                    MyApp myApp;
-                    for (int i = 0; i < rows.size(); i++) {
-                        myApp = rows.get(i);
+                } else { // No Ranks available                    
+                    for (MyApp myApp : rows) {
                         if (myApp.overallDownloads == null) {
                             myApp.overallDownloads = "-";
                         }
@@ -289,14 +295,13 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
                 if (LinkedAccountController.get().getLinkedAccountsCount() > 0 && pager != null) {
                     fetchLinkedAccountItems();
                 } else {
-                    updateRowCount(0, true);
+                    updateRowCount(0, true); // No Apps available
                 }
             } else {
-                updateRowData(start, rows.subList(start, end));
+                updateRowData(start, rows.subList(start, end)); // Paging with all data already retrieved
             }
         } else {
-            LinkedAccountController.get().fetchLinkedAccounts();
-            updateRowCount(0, false);
+            LinkedAccountController.get().fetchLinkedAccounts(); // After refresh or the user didn't visit the linked accounts page
         }
     }
 
