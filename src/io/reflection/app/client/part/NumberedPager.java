@@ -233,6 +233,7 @@ public class NumberedPager extends AbstractPager {
      */
     private void generateNumberLinks() {
 
+        BootstrapGwtNumberedPager.INSTANCE.styles().ensureInjected();
        htmlPanel.clear();
        htmlPanel.add(mPrevPage);
         pageAnchors.clear();
@@ -254,6 +255,13 @@ public class NumberedPager extends AbstractPager {
                     thePager.setPageStart((page - 1) * thePager.getPageSize());
                 }});
             anchor.getElement().appendChild(Document.get().createTextNode(Integer.toString(i)));
+            
+            if (this.getPage() == i -1) //current page
+            {
+                anchor.setStyleName(BootstrapGwtNumberedPager.INSTANCE.styles().selected());
+                anchor.setEnabled(false);
+                
+            }
             li.appendChild(anchor.getElement());
             htmlPanel.add(anchor);//.appendChild(anchor.getElement());
         }

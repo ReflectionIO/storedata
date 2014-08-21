@@ -27,7 +27,6 @@
 				<a:MyAnchor ui:field="mFirstPage" styleName="{style.spaceApart}">
 					first
 				</a:MyAnchor>
-			
 				<a:MyAnchor ui:field="mPrevPage" styleName="{style.spaceApart}">
 					previous
 				</a:MyAnchor>
