@@ -45,6 +45,7 @@ public class MyAnchor extends Anchor {
         
         @Override
         public void setEnabled(boolean enabled) {
+            BootstrapGwtDisableAnchor.INSTANCE.styles().ensureInjected();
                 if(this.enabled != enabled)
                 {
                         this.enabled = enabled;
@@ -52,9 +53,11 @@ public class MyAnchor extends Anchor {
                         {
                                 this.getElement().setAttribute(LABEL_HREF, href);
                                 this.getElement().setAttribute(LABEL_TABINDEX, tabindex);
+                                this.removeStyleName(BootstrapGwtDisableAnchor.INSTANCE.styles().disabled());
                         }
                         else
                         {
+                                this.addStyleName(BootstrapGwtDisableAnchor.INSTANCE.styles().disabled());
                                 href = this.getElement().getAttribute(LABEL_HREF);
                                 this.getElement().removeAttribute(LABEL_HREF);
                                 tabindex = this.getElement().getAttribute(LABEL_TABINDEX);
