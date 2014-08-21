@@ -121,9 +121,7 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 
                 for (int i = 1; i <= numPages && numPages > 1; i++) {
                     int position = (i - 1) * ServiceConstants.SHORT_STEP_VALUE;
-                    if (i == numPages) {
-                        position = object.numberOfReplies;
-                    }
+                    
 
                     SafeUri lastPageLink = UriUtils.fromSafeConstant(PageType.ForumThreadPageType.asHref().asString() + "/view/" + object.id + "/post/"
                             + position);

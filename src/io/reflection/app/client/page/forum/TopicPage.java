@@ -96,6 +96,8 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
     private Topic topic;
 
+    private Integer startPage;
+
     public TopicPage() {
         initWidget(uiBinder.createAndBindUi(this));
 
@@ -213,10 +215,15 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
                         String param2 = current.getParameter(2);
                         if (param2 != null) {
                             final int post = Integer.parseInt(param2);
-                            focusPagerOnPost(post);
+                            startPage = post ;
+                            
                         }
                     }
                     updateTopic(topic);
+                    if (startPage != null)
+                    {
+                        focusPagerOnPost(startPage);
+                    }
                 }
             }
         }
@@ -262,10 +269,15 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
             dataProvider = new ForumMessageProvider(topic);
             dataProvider.registerListeners();
+            
+            pager.setDisplay(messagesCellList); // bind the pager and the
+            // display together.
 
             dataProvider.addDataDisplay(messagesCellList);
-            pager.setDisplay(messagesCellList); // bind the pager and the
-                                                // display together.
+            if (startPage != null)
+            {
+                focusPagerOnPost(startPage.intValue());
+            }
 
             // necessary to pull data from the data provider?
             messagesCellList.redraw();
