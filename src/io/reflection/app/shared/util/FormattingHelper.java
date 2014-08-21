@@ -13,6 +13,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gwt.i18n.client.NumberFormat;
+
 /**
  * @author stefanocapuzzi
  * 
@@ -59,7 +61,7 @@ public class FormattingHelper {
 		if (price < SMALL_MONEY) {
 			priceString = "free";
 		} else {
-			priceString = (currency == null ? "" : getCurrencySymbol(currency) + " ") + Float.toString(price);
+			priceString = (currency == null ? "" : getCurrencySymbol(currency) + " ") + getFormattedNumber(price);
 		}
 
 		return priceString;
@@ -69,10 +71,9 @@ public class FormattingHelper {
 		String priceRangeString;
 
 		if (Math.abs(from - to) < SMALL_MONEY) {
-			priceRangeString = getPrice(currency, from);
+ 			priceRangeString = getPrice(currency, from); // No need to use a price range
 		} else {
 			String fromString = getPrice(currency, from), toString = getPrice(currency, to);
-
 			priceRangeString = fromString + " - " + toString;
 		}
 
@@ -144,4 +145,9 @@ public class FormattingHelper {
 
 		return timeSince;
 	}
+	
+	public static String getFormattedNumber(Number number){
+		return NumberFormat.getDecimalFormat().format(number);
+	}
+	
 }
