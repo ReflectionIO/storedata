@@ -18,28 +18,24 @@
 		{
 		display:inline;
 		}
+
+        .spaceApart{
+            margin-right:3px;
+        }
 	</ui:style>
 	<g:HTMLPanel ui:field="htmlPanel">
-		<g:HTMLPanel ui:field="mFirstPageItem">
-				<a:MyAnchor ui:field="mFirstPage">
+				<a:MyAnchor ui:field="mFirstPage" styleName="{style.spaceApart}">
 					first
 				</a:MyAnchor>
-			</g:HTMLPanel>
-			<g:HTMLPanel ui:field="mPrevPageItem">
-				<a:MyAnchor ui:field="mPrevPage">
+			
+				<a:MyAnchor ui:field="mPrevPage" styleName="{style.spaceApart}">
 					previous
 				</a:MyAnchor>
-			</g:HTMLPanel>
-			<g:HTMLPanel ui:field="mNextPageItem">
-				<g:Anchor ui:field="mNextPage">
+				<a:MyAnchor ui:field="mNextPage" styleName="{style.spaceApart}">
 					next
-				</g:Anchor>
-			</g:HTMLPanel>
-			<g:HTMLPanel ui:field="mLastPageItem">
-				<g:Anchor ui:field="mLastPage">
+				</a:MyAnchor>
+				<a:MyAnchor ui:field="mLastPage" styleName="{style.spaceApart}">
 					last
-				</g:Anchor>
-			</g:HTMLPanel>
-		
+				</a:MyAnchor>
 	</g:HTMLPanel>
 </ui:UiBinder> 

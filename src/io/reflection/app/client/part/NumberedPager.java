@@ -27,6 +27,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.AbstractPager;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.HasRows;
@@ -49,18 +50,12 @@ public class NumberedPager extends AbstractPager {
     @UiField HTMLPanel htmlPanel ;
 
     @UiField MyAnchor mFirstPage;
-    @UiField HTMLPanel mFirstPageItem;
+    
+    @UiField MyAnchor mLastPage;
 
-    // @UiField SpanElement mLabel;
-
-    @UiField Anchor mLastPage;
-    @UiField HTMLPanel mLastPageItem;
-
-    @UiField Anchor mNextPage;
-    @UiField HTMLPanel mNextPageItem;
+    @UiField MyAnchor mNextPage;
 
     @UiField MyAnchor mPrevPage;
-    @UiField HTMLPanel mPrevPageItem;
 
     /**
      * Construct a {@link NumberedPager} with the specified text location.
@@ -101,13 +96,13 @@ public class NumberedPager extends AbstractPager {
         this.mFastForwardRows = fastForwardRows;
 
         if (!showLastPageButton) {
-            mLastPageItem.removeFromParent();
-            mLastPageItem = null;
+            mLastPage.removeFromParent();
+            mLastPage = null;
         }
 
         if (!showFirstPageButton) {
-            mFirstPageItem.removeFromParent();
-            mFirstPageItem = null;
+            mFirstPage.removeFromParent();
+            mFirstPage = null;
         }
 
         // Disable the buttons by default.
@@ -157,7 +152,7 @@ public class NumberedPager extends AbstractPager {
         boolean disableButtons = (display == null);
 
         setNextPageButtonsDisabled(disableButtons);
-        setPrevPageButtonsDisabled(disableButtons);
+        setPrevPageButtonsDisabled(true);
 
         super.setDisplay(display);
     }
@@ -192,8 +187,8 @@ public class NumberedPager extends AbstractPager {
     private void clearNumbers() {
         
         htmlPanel.clear();
-        htmlPanel.add(mPrevPageItem);
-        htmlPanel.add(mNextPageItem);
+        htmlPanel.add(mPrevPage);
+        htmlPanel.add(mNextPage);
     }
 
     /**
@@ -221,7 +216,8 @@ public class NumberedPager extends AbstractPager {
         generateNumberLinks();
 
         // Update the prev and first buttons.
-        setPrevPageButtonsDisabled(!hasPreviousPage());
+//        setPrevPageButtonsDisabled(!hasPreviousPage()); TODO
+        setPrevPageButtonsDisabled(true);
 
         // Update the next and last buttons.
         if (isRangeLimited() || !display.isRowCountExact()) {
@@ -239,7 +235,7 @@ public class NumberedPager extends AbstractPager {
     private void generateNumberLinks() {
 
        htmlPanel.clear();
-       htmlPanel.add(mPrevPageItem);
+       htmlPanel.add(mPrevPage);
         pageAnchors.clear();
         for (int i = 1; i < 3; i++) {
             LIElement li = Document.get().createLIElement();
@@ -263,21 +259,21 @@ public class NumberedPager extends AbstractPager {
             htmlPanel.add(anchor);//.appendChild(anchor.getElement());
         }
 
-        htmlPanel.add(mNextPageItem);
+        htmlPanel.add(mNextPage);
     }
 
     /**
      * Check if the next button is disabled. Visible for testing.
      */
     boolean isNextButtonDisabled() {
-        return mNextPageItem.getElement().getClassName().contains("disabled"); //no longer an element, this may not work
+        return mNextPage.getElement().getClassName().contains("disabled"); //no longer an element, this may not work
     }
 
     /**
      * Check if the previous button is disabled. Visible for testing.
      */
     boolean isPreviousButtonDisabled() {
-        return mPrevPageItem.getElement().getClassName().contains("disabled"); //no longer an element, this may not work
+        return mPrevPage.getElement().getClassName().contains("disabled"); //no longer an element, this may not work
     }
 
     /**
@@ -290,16 +286,8 @@ public class NumberedPager extends AbstractPager {
         return pageSize > 0 ? mFastForwardRows / pageSize : 0;
     }
 
-    void setDisabled(Widget e, boolean disabled) {
-        if (disabled) {
-            if (!e.getElement().getClassName().contains("disabled")) {
-                e.getElement().addClassName("disabled");
-            }
-        } else {
-            if (e.getElement().getClassName().contains("disabled")) {
-                e.getElement().removeClassName("disabled");
-            }
-        }
+    void setDisabled(FocusWidget e, boolean disabled) {
+        e.setEnabled(!disabled);
     }
 
     /**
@@ -309,9 +297,9 @@ public class NumberedPager extends AbstractPager {
      *            true to disable, false to enable
      */
     private void setNextPageButtonsDisabled(boolean disabled) {
-        setDisabled(mNextPageItem, disabled);
-        if (mLastPageItem != null) {
-            setDisabled(mLastPageItem, disabled);
+        setDisabled(mNextPage, disabled);
+        if (mLastPage != null) {
+            setDisabled(mLastPage, disabled);
         }
     }
 
@@ -322,9 +310,9 @@ public class NumberedPager extends AbstractPager {
      *            true to disable, false to enable
      */
     private void setPrevPageButtonsDisabled(boolean disabled) {
-        if (mFirstPageItem != null)
-            setDisabled(mFirstPageItem, disabled);
-        setDisabled(mPrevPageItem, disabled);
+        if (mFirstPage != null)
+            setDisabled(mFirstPage, disabled);
+        setDisabled(mPrevPage, disabled);
     }
 
 }
