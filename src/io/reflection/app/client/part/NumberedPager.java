@@ -237,7 +237,7 @@ public class NumberedPager extends AbstractPager {
        htmlPanel.clear();
        htmlPanel.add(mPrevPage);
         pageAnchors.clear();
-        for (int i = 1; i < 3; i++) {
+        for (int i = 1; i <= getPageCount(); i++) {
             LIElement li = Document.get().createLIElement();
             
             //This anchor clickhandler doesn't work.
