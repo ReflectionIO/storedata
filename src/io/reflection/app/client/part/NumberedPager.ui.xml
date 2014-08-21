@@ -17,28 +17,27 @@
 		display:inline;
 		}
 	</ui:style>
-	<g:HTMLPanel>
-		<ul ui:field="mList" class="{style.pagination}">
-			<li ui:field="mFirstPageItem" class="disabled">
+	<g:HTMLPanel ui:field="htmlPanel">
+		<g:HTMLPanel ui:field="mFirstPageItem">
 				<g:Anchor ui:field="mFirstPage">
 					first
 				</g:Anchor>
-			</li>
-			<li ui:field="mPrevPageItem" class="disabled">
+			</g:HTMLPanel>
+			<g:HTMLPanel ui:field="mPrevPageItem">
 				<g:Anchor ui:field="mPrevPage">
 					previous
 				</g:Anchor>
-			</li>
-			<li ui:field="mNextPageItem" class="disabled">
+			</g:HTMLPanel>
+			<g:HTMLPanel ui:field="mNextPageItem">
 				<g:Anchor ui:field="mNextPage">
 					next
 				</g:Anchor>
-			</li>
-			<li ui:field="mLastPageItem" class="disabled">
+			</g:HTMLPanel>
+			<g:HTMLPanel ui:field="mLastPageItem">
 				<g:Anchor ui:field="mLastPage">
 					last
 				</g:Anchor>
-			</li>
-		</ul>
+			</g:HTMLPanel>
+		
 	</g:HTMLPanel>
 </ui:UiBinder> 

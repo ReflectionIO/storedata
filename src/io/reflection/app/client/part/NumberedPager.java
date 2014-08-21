@@ -27,6 +27,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.AbstractPager;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.HasRows;
 import com.google.gwt.view.client.Range;
@@ -41,25 +42,25 @@ public class NumberedPager extends AbstractPager {
 
     interface NumberedPagerUiBinder extends UiBinder<Widget, NumberedPager> {}
 
-    @UiField UListElement mList;
-
     private static final int DEFAULT_FAST_FORWARD_ROWS = 1000;
 
     private final int mFastForwardRows;
+    
+    @UiField HTMLPanel htmlPanel ;
 
     @UiField Anchor mFirstPage;
-    @UiField LIElement mFirstPageItem;
+    @UiField HTMLPanel mFirstPageItem;
 
     // @UiField SpanElement mLabel;
 
     @UiField Anchor mLastPage;
-    @UiField LIElement mLastPageItem;
+    @UiField HTMLPanel mLastPageItem;
 
     @UiField Anchor mNextPage;
-    @UiField LIElement mNextPageItem;
+    @UiField HTMLPanel mNextPageItem;
 
     @UiField Anchor mPrevPage;
-    @UiField LIElement mPrevPageItem;
+    @UiField HTMLPanel mPrevPageItem;
 
     /**
      * Construct a {@link NumberedPager} with the specified text location.
@@ -111,6 +112,8 @@ public class NumberedPager extends AbstractPager {
 
         // Disable the buttons by default.
         setDisplay(null);
+        
+        mPrevPage.setEnabled(false);
     }
 
     @UiHandler("mFirstPage")
@@ -187,11 +190,10 @@ public class NumberedPager extends AbstractPager {
      * 
      */
     private void clearNumbers() {
-        Element parent = mPrevPageItem.getParentElement();
-        parent.removeAllChildren();
-        parent.appendChild(mPrevPageItem);
-        parent.appendChild(mNextPageItem);
-
+        
+        htmlPanel.clear();
+        htmlPanel.add(mPrevPageItem);
+        htmlPanel.add(mNextPageItem);
     }
 
     /**
@@ -236,9 +238,8 @@ public class NumberedPager extends AbstractPager {
      */
     private void generateNumberLinks() {
 
-        Element parent = mPrevPageItem.getParentElement();
-        parent.removeAllChildren();
-        parent.appendChild(mPrevPageItem);
+       htmlPanel.clear();
+       htmlPanel.add(mPrevPageItem);
         pageAnchors.clear();
         for (int i = 1; i < 3; i++) {
             LIElement li = Document.get().createLIElement();
@@ -259,24 +260,24 @@ public class NumberedPager extends AbstractPager {
                 }});
             anchor.getElement().appendChild(Document.get().createTextNode(Integer.toString(i)));
             li.appendChild(anchor.getElement());
-            parent.appendChild(li);
+            htmlPanel.add(anchor);//.appendChild(anchor.getElement());
         }
 
-        parent.appendChild(mNextPageItem);
+        htmlPanel.add(mNextPageItem);
     }
 
     /**
      * Check if the next button is disabled. Visible for testing.
      */
     boolean isNextButtonDisabled() {
-        return mNextPageItem.getClassName().contains("disabled");
+        return mNextPageItem.getElement().getClassName().contains("disabled"); //no longer an element, this may not work
     }
 
     /**
      * Check if the previous button is disabled. Visible for testing.
      */
     boolean isPreviousButtonDisabled() {
-        return mPrevPageItem.getClassName().contains("disabled");
+        return mPrevPageItem.getElement().getClassName().contains("disabled"); //no longer an element, this may not work
     }
 
     /**
@@ -289,14 +290,14 @@ public class NumberedPager extends AbstractPager {
         return pageSize > 0 ? mFastForwardRows / pageSize : 0;
     }
 
-    void setDisabled(Element e, boolean disabled) {
+    void setDisabled(Widget e, boolean disabled) {
         if (disabled) {
-            if (!e.getClassName().contains("disabled")) {
-                e.addClassName("disabled");
+            if (!e.getElement().getClassName().contains("disabled")) {
+                e.getElement().addClassName("disabled");
             }
         } else {
-            if (e.getClassName().contains("disabled")) {
-                e.removeClassName("disabled");
+            if (e.getElement().getClassName().contains("disabled")) {
+                e.getElement().removeClassName("disabled");
             }
         }
     }
