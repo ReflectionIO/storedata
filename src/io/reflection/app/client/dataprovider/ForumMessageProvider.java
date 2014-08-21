@@ -45,17 +45,16 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
     private Topic topic;
     private List<HandlerRegistration> registrations = new ArrayList<HandlerRegistration>();
     private int start;
-    private int count;
 
     public ForumMessageProvider(Topic topic) {
-        ReplyController.get(topic.id).setTopic(topic);
+        ReplyController.get().getThread(topic.id).setTopic(topic);
         this.topic = topic;
     }
 
     long getTotalCount() {
         //using the replycontroller to work out count because the number is more immediately
         //connected to the number of items in the replyStore container, which drives the provider.
-        return ReplyController.get(topic.id).getCount();
+        return ReplyController.get().getThread(topic.id).getCount();
     }
 
     /*
@@ -67,10 +66,10 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
     protected void onRangeChanged(HasData<ForumMessage> display) {
         Range r = display.getVisibleRange();
 
-        int start = r.getStart();
+        start = r.getStart();
         int end = start + r.getLength();
 
-        ReplyThread thread = ReplyController.get(topic.id);
+        ReplyThread thread = ReplyController.get().getThread(topic.id);
 
         if (thread.hasRows(start, end)) {
                updateRows(topic.id);
@@ -93,7 +92,7 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
         if (output.status == StatusType.StatusTypeSuccess) {
 
             start = input.pager.start.intValue() == 0 ? 0 : input.pager.start.intValue() + 1;
-            count = input.pager.count.intValue();
+            
 
             updateRows(input.topic.id);
         }
@@ -107,12 +106,12 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
      * @param topicId
      */
     protected void updateRows(long topicId) {
-        ReplyThread thread = ReplyController.get(topicId);
+        ReplyThread thread = ReplyController.get().getThread(topicId);
 
         // note this will not trigger a redraw of the table if the content of the cells
         // has changed but the range data hasn't.
-        List<ForumMessage> messages = thread.getMessages(start, start + count + 1);
-        int totalCount = ReplyController.get(topic.id).getTotalCount();
+        List<ForumMessage> messages = thread.getMessages(start);
+        int totalCount = ReplyController.get().getThread(topic.id).getTotalCount();
         updateRowCount(totalCount, true);
         updateRowData(start, messages);
     }

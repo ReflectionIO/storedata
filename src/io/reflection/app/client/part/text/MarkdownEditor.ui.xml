@@ -36,6 +36,8 @@
 					<g:HTMLPanel addStyleNames="btn-group {style.marginTop}">
 						<g:Button styleName="btn btn-default" ui:field="bold" />
 						<g:Button styleName="btn btn-default" ui:field="italic" />
+						<g:Button styleName="btn btn-default" ui:field="link" />
+						<g:Button styleName="btn btn-default" ui:field="image" />
 					</g:HTMLPanel>
 					<g:TextArea addStyleNames="{style.textArea} {style.marginTop} form-control" ui:field="textArea" text="" />
 				</g:HTMLPanel>

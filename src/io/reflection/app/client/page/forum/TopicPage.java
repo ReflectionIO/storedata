@@ -30,7 +30,7 @@ import io.reflection.app.client.page.forum.part.ForumMessageCell;
 import io.reflection.app.client.page.forum.part.ForumSummarySidePanel;
 import io.reflection.app.client.page.forum.part.LockButton;
 import io.reflection.app.client.page.forum.part.StickyButton;
-import io.reflection.app.client.part.SimplePager;
+import io.reflection.app.client.part.NumberedPager;
 import io.reflection.app.client.part.datatypes.ForumMessage;
 import io.reflection.app.client.part.text.MarkdownEditor;
 import io.reflection.app.client.res.Images;
@@ -86,7 +86,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
     @UiField FormPanel replyForm;
 
     @UiField MarkdownEditor replyText;
-    @UiField SimplePager pager;
+    @UiField NumberedPager pager;
 
     @UiField HTMLPanel adminButtons;
 
@@ -95,6 +95,8 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
     private ForumMessageProvider dataProvider;
 
     private Topic topic;
+
+    private Integer startPage;
 
     public TopicPage() {
         initWidget(uiBinder.createAndBindUi(this));
@@ -199,21 +201,29 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
     public void navigationChanged(Stack previous, Stack current) {
 
         if (current != null && PageType.ForumThreadPageType.equals(current.getPage())) {
+
+            forumSummarySidePanel.redraw();
+
             if (current.getAction() != null && VIEW_ACTION_PARAMETER_VALUE.equals(current.getAction())) {
                 String topicIdString;
                 if ((topicIdString = current.getParameter(TOPIC_ID_PARAMETER_INDEX)) != null) {
                     topicId = Long.valueOf(topicIdString);
-                    Topic topic = TopicController.get().getTopic(topicId);
+                    topic = TopicController.get().getTopic(topicId);
 
                     String param1 = current.getParameter(1);
                     if (param1 != null && param1.contains("post")) {
                         String param2 = current.getParameter(2);
                         if (param2 != null) {
                             final int post = Integer.parseInt(param2);
-                            focusPagerOnPost(post);
+                            startPage = post ;
+                            
                         }
                     }
                     updateTopic(topic);
+                    if (startPage != null)
+                    {
+                        focusPagerOnPost(startPage);
+                    }
                 }
             }
         }
@@ -222,7 +232,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
     protected void focusPagerOnPost(final int post) {
         int firstOnPage = post - (post % ServiceConstants.SHORT_STEP_VALUE);
-        messagesCellList.setPageStart(firstOnPage);
+        pager.setPageStart(firstOnPage);
     }
 
     /**
@@ -259,14 +269,19 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
             dataProvider = new ForumMessageProvider(topic);
             dataProvider.registerListeners();
+            
+            pager.setDisplay(messagesCellList); // bind the pager and the
+            // display together.
 
             dataProvider.addDataDisplay(messagesCellList);
-            pager.setDisplay(messagesCellList); // bind the pager and the
-                                                // display together.
-            
-            //necessary to pull data from the data provider?
+            if (startPage != null)
+            {
+                focusPagerOnPost(startPage.intValue());
+            }
+
+            // necessary to pull data from the data provider?
             messagesCellList.redraw();
-            
+
             // just note that the display is primary about what range it has
             // set.
             // The SimplePager is just a bound view on that data.
