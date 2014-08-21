@@ -114,17 +114,16 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
         messagesCellList.setLoadingIndicator(loadingIndicator);
         messagesCellList.setEmptyListWidget(new HTMLPanel("No messages found!"));
-        
+
         pager.setPageSize(ServiceConstants.SHORT_STEP_VALUE);
 
         cellPrototype.setMarkdownTextEditor(replyText);
-        
+
         messagesCellList.addHandler(new LoadingStateChangeEvent.Handler() {
-            
+
             @Override
             public void onLoadingStateChanged(LoadingStateChangeEvent event) {
-                if (event.getLoadingState() == LoadingState.LOADED && !replyText.isVisible())
-                {
+                if (event.getLoadingState() == LoadingState.LOADED && !replyText.isVisible()) {
                     replyText.setVisible(true);
                 }
             }
@@ -229,13 +228,12 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
                         String param2 = current.getParameter(2);
                         if (param2 != null) {
                             final int post = Integer.parseInt(param2);
-                            startPage = post ;
-                            
+                            startPage = post;
+
                         }
                     }
                     updateTopic(topic);
-                    if (startPage != null)
-                    {
+                    if (startPage != null) {
                         focusPagerOnPost(startPage);
                     }
                 }
@@ -283,13 +281,12 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
             dataProvider = new ForumMessageProvider(topic);
             dataProvider.registerListeners();
-            
+
             pager.setDisplay(messagesCellList); // bind the pager and the
             // display together.
 
             dataProvider.addDataDisplay(messagesCellList);
-            if (startPage != null)
-            {
+            if (startPage != null) {
                 focusPagerOnPost(startPage.intValue());
             }
 
