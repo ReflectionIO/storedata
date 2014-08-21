@@ -31,7 +31,6 @@ import io.reflection.app.client.page.forum.part.ForumSummarySidePanel;
 import io.reflection.app.client.page.forum.part.LockButton;
 import io.reflection.app.client.page.forum.part.StickyButton;
 import io.reflection.app.client.part.NumberedPager;
-import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.part.datatypes.ForumMessage;
 import io.reflection.app.client.part.text.MarkdownEditor;
 import io.reflection.app.client.res.Images;

@@ -66,7 +66,7 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
     protected void onRangeChanged(HasData<ForumMessage> display) {
         Range r = display.getVisibleRange();
 
-        int start = r.getStart();
+        start = r.getStart();
         int end = start + r.getLength();
 
         ReplyThread thread = ReplyController.get(topic.id);

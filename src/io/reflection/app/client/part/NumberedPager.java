@@ -11,13 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LIElement;
-import com.google.gwt.dom.client.Node;
-import com.google.gwt.dom.client.SpanElement;
-import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.NumberFormat;
@@ -107,8 +102,6 @@ public class NumberedPager extends AbstractPager {
 
         // Disable the buttons by default.
         setDisplay(null);
-        
-        mPrevPage.setEnabled(false);
     }
 
     @UiHandler("mFirstPage")
@@ -226,8 +219,7 @@ public class NumberedPager extends AbstractPager {
     }
 
     
-    List<Anchor> pageAnchors = new ArrayList<Anchor>();
-    
+   
     /**
      * 
      */
@@ -236,17 +228,12 @@ public class NumberedPager extends AbstractPager {
         BootstrapGwtNumberedPager.INSTANCE.styles().ensureInjected();
        htmlPanel.clear();
        htmlPanel.add(mPrevPage);
-        pageAnchors.clear();
         for (int i = 1; i <= getPageCount(); i++) {
             LIElement li = Document.get().createLIElement();
-            
-            //This anchor clickhandler doesn't work.
-            //neither does wrapping it with Anchor.wrap.
+           
             
             Anchor anchor = new Anchor();
-//            AnchorElement anchor = Document.get().createAnchorElement();
             final int page = i ;
-            pageAnchors.add(anchor); //so the main widget doesn't get garbage collected, but the element not.
             anchor.addClickHandler(new ClickHandler(){
 
                 @Override
@@ -265,7 +252,7 @@ public class NumberedPager extends AbstractPager {
             }
             anchor.addStyleName(BootstrapGwtNumberedPager.INSTANCE.styles().spaceApart());
             li.appendChild(anchor.getElement());
-            htmlPanel.add(anchor);//.appendChild(anchor.getElement());
+            htmlPanel.add(anchor);
         }
 
         htmlPanel.add(mNextPage);
