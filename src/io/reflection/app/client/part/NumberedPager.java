@@ -48,7 +48,7 @@ public class NumberedPager extends AbstractPager {
     
     @UiField HTMLPanel htmlPanel ;
 
-    @UiField Anchor mFirstPage;
+    @UiField MyAnchor mFirstPage;
     @UiField HTMLPanel mFirstPageItem;
 
     // @UiField SpanElement mLabel;
@@ -59,7 +59,7 @@ public class NumberedPager extends AbstractPager {
     @UiField Anchor mNextPage;
     @UiField HTMLPanel mNextPageItem;
 
-    @UiField Anchor mPrevPage;
+    @UiField MyAnchor mPrevPage;
     @UiField HTMLPanel mPrevPageItem;
 
     /**

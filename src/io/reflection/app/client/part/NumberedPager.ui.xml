@@ -1,5 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" 
+    xmlns:g="urn:import:com.google.gwt.user.client.ui"
+    xmlns:a="urn:import:io.reflection.app.client.part">
 	<ui:style>
 		.compensateTop {
 		top: 1px;
@@ -19,14 +21,14 @@
 	</ui:style>
 	<g:HTMLPanel ui:field="htmlPanel">
 		<g:HTMLPanel ui:field="mFirstPageItem">
-				<g:Anchor ui:field="mFirstPage">
+				<a:MyAnchor ui:field="mFirstPage">
 					first
-				</g:Anchor>
+				</a:MyAnchor>
 			</g:HTMLPanel>
 			<g:HTMLPanel ui:field="mPrevPageItem">
-				<g:Anchor ui:field="mPrevPage">
+				<a:MyAnchor ui:field="mPrevPage">
 					previous
-				</g:Anchor>
+				</a:MyAnchor>
 			</g:HTMLPanel>
 			<g:HTMLPanel ui:field="mNextPageItem">
 				<g:Anchor ui:field="mNextPage">
