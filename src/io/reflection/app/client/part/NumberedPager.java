@@ -152,7 +152,7 @@ public class NumberedPager extends AbstractPager {
         boolean disableButtons = (display == null);
 
         setNextPageButtonsDisabled(disableButtons);
-        setPrevPageButtonsDisabled(true);
+        setPrevPageButtonsDisabled(disableButtons);
 
         super.setDisplay(display);
     }
@@ -216,8 +216,7 @@ public class NumberedPager extends AbstractPager {
         generateNumberLinks();
 
         // Update the prev and first buttons.
-//        setPrevPageButtonsDisabled(!hasPreviousPage()); TODO
-        setPrevPageButtonsDisabled(true);
+        setPrevPageButtonsDisabled(!hasPreviousPage());
 
         // Update the next and last buttons.
         if (isRangeLimited() || !display.isRowCountExact()) {
@@ -252,7 +251,7 @@ public class NumberedPager extends AbstractPager {
                 @Override
                 public void onClick(ClickEvent event) {
                     NumberedPager thePager = NumberedPager.this ;
-                    thePager.setPageStart(page * thePager.getPageSize());
+                    thePager.setPageStart((page - 1) * thePager.getPageSize());
                 }});
             anchor.getElement().appendChild(Document.get().createTextNode(Integer.toString(i)));
             li.appendChild(anchor.getElement());
