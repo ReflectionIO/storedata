@@ -94,7 +94,9 @@ public class MarkdownEditor extends Composite implements HasText {
 
     @UiHandler("italic")
     void onItalicClicked(ClickEvent event) {
-        wrapText("*", "*");
+        if (!removeSurround("_")) {
+            wrapText("_", "_");
+        }
     }
 
     @UiHandler("link")
@@ -179,11 +181,9 @@ public class MarkdownEditor extends Composite implements HasText {
         boolean result = false;
 
         String text = textArea.getText();
-        if (start - surroundLength < 0 || length == 0)
-        {
+        if (start - surroundLength < 0 || length == 0) {
             textArea.setSelectionRange(start, length); // put back selection
-        }
-        else if (text.substring(start - surroundLength, start).equals(surrounding)
+        } else if (text.substring(start - surroundLength, start).equals(surrounding)
                 && text.substring(start + length, start + length + surroundLength).equals(surrounding)) {
             // remove surrounds
             String newText = text.substring(0, start - surroundLength) + text.substring(start, start + length)
