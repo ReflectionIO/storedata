@@ -12,9 +12,11 @@ import static io.reflection.app.helpers.ApiHelper.getGrossingListName;
 import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPAD_IOS;
 import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS;
 import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_UNIVERSAL_IOS;
-//import static io.reflection.app.service.sale.ISaleService.UPDATE_IPAD_IOS;
-//import static io.reflection.app.service.sale.ISaleService.UPDATE_IPHONE_AND_IPOD_TOUCH_IOS;
-//import static io.reflection.app.service.sale.ISaleService.UPDATE_UNIVERSAL_IOS;
+import static io.reflection.app.service.sale.ISaleService.UPDATE_IPAD_IOS;
+import static io.reflection.app.service.sale.ISaleService.UPDATE_IPHONE_AND_IPOD_TOUCH_IOS;
+import static io.reflection.app.service.sale.ISaleService.UPDATE_UNIVERSAL_IOS;
+import static io.reflection.app.service.sale.ISaleService.INAPP_PURCHASE_PURCHASE_IOS;
+import static io.reflection.app.service.sale.ISaleService.INAPP_PURCHASE_SUBSCRIPTION_IOS;
 import io.reflection.app.accountdatacollectors.DataAccountCollectorFactory;
 import io.reflection.app.api.PagerHelper;
 import io.reflection.app.api.ValidationHelper;
@@ -1037,11 +1039,15 @@ public final class Core extends ActionHandler {
 				input.pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
 			}
 
-			output.items = SaleServiceProvider.provide().getDataAccountItems(input.linkedAccount, input.pager);
+			List<String> freeOfPaidApps = new ArrayList<String>();
+			freeOfPaidApps.add(FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS);
+			freeOfPaidApps.add(FREE_OR_PAID_APP_UNIVERSAL_IOS);
+			freeOfPaidApps.add(FREE_OR_PAID_APP_IPAD_IOS);
+			output.items = SaleServiceProvider.provide().getDataAccountItems(input.linkedAccount, freeOfPaidApps, input.pager);
 
 			output.pager = input.pager;
-			updatePager(output.pager, output.items, input.pager.totalCount == null ? SaleServiceProvider.provide()
-					.getDataAccountItemsCount(input.linkedAccount) : null);
+			updatePager(output.pager, output.items,
+					input.pager.totalCount == null ? SaleServiceProvider.provide().getDataAccountItemsCount(input.linkedAccount, freeOfPaidApps) : null);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -1508,6 +1514,7 @@ public final class Core extends ActionHandler {
 				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
 						ApiError.DateRangeOutOfBounds.getMessage("0-60 days: input.end - input.start"));
 
+			// Get Items sales based on the filters
 			List<Sale> sales = SaleServiceProvider.provide().getSales(input.country, input.category, input.linkedAccount, input.start, input.end,
 					PagerHelper.infinitePager());
 
@@ -1522,16 +1529,26 @@ public final class Core extends ActionHandler {
 				Modeller modeller = ModellerFactory.getModellerForStore(defaultStore.a3Code);
 				FormType form = modeller.getForm(input.listType);
 
+				
+				Map<String,String> ParentIditemIdLookup = new HashMap<String,String>();
 				for (Sale sale : sales) {
-					// only add items that are consistent with the product type
-					if (FREE_OR_PAID_APP_UNIVERSAL_IOS.equals(sale.typeIdentifier)
-					// || UPDATE_UNIVERSAL_IOS.equals(sale.typeIdentifier)
-							|| (form == FormType.FormTypeOther && (FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier)
-							// || UPDATE_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier)
-							)) || (form == FormType.FormTypeTablet && (FREE_OR_PAID_APP_IPAD_IOS.equals(sale.typeIdentifier)
-							// || UPDATE_IPAD_IOS.equals(sale.typeIdentifier)
-							))) {
-
+					// only add Sales that are consistent with the device type
+					if (FREE_OR_PAID_APP_UNIVERSAL_IOS.equals(sale.typeIdentifier) // 1F
+							|| UPDATE_UNIVERSAL_IOS.equals(sale.typeIdentifier) // 7F
+							|| (form == FormType.FormTypeOther && (FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier))) // 1
+							|| (form == FormType.FormTypeOther && (UPDATE_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier))) // 7
+							|| (form == FormType.FormTypeTablet && (FREE_OR_PAID_APP_IPAD_IOS.equals(sale.typeIdentifier))) // 1T
+							|| (form == FormType.FormTypeTablet && (UPDATE_IPAD_IOS.equals(sale.typeIdentifier))) // 7T
+							|| (form == FormType.FormTypeTablet && (FREE_OR_PAID_APP_IPAD_IOS.equals(sale.typeIdentifier))) // 1T
+							|| INAPP_PURCHASE_PURCHASE_IOS.equals(sale.typeIdentifier) // IA1
+							|| INAPP_PURCHASE_SUBSCRIPTION_IOS.equals(sale.typeIdentifier) // IA9
+					) {
+						
+						// If typeidentifier != IA1 or IA9
+						if (!sale.typeIdentifier.equals("IA1") && !sale.typeIdentifier.equals("IA9")) {
+							ParentIditemIdLookup.put(sale.sku,sale.item.internalId);
+						}
+						
 						key = keyFormat.parse(keyFormat.format(sale.begin));
 						dateSalesList = salesGroupByDate.get(key);
 
@@ -1566,6 +1583,7 @@ public final class Core extends ActionHandler {
 
 				output.ranks = new ArrayList<Rank>();
 
+				// Create a dummy rank for every day in the date range
 				for (Date salesGroupDate : dates) {
 
 					rank = new Rank();
@@ -1580,28 +1598,35 @@ public final class Core extends ActionHandler {
 						float revenue = 0;
 
 						boolean populatedCommon = false;
+												
 						for (Sale sale : salesGroup) {
-							if (!populatedCommon) {
-								rank.category = input.category;
+							
+								if (!populatedCommon) {
+									rank.category = input.category;
 
-								if (modelRun != null) {
-									rank.code = modelRun.code;
+									if (modelRun != null) {
+										rank.code = modelRun.code;
+									}
+
+									rank.country = input.country.a2Code;
+									rank.currency = sale.customerCurrency;
+									rank.price = Float.valueOf(((float) sale.customerPrice.intValue()) / 100.0f);
+									rank.date = salesGroupDate;
+									rank.created = salesGroupDate;
+									if (sale.typeIdentifier.equals("IA1") || sale.typeIdentifier.equals("IA9")) {
+										rank.itemId = ParentIditemIdLookup.get(sale.parentIdentifier);
+									}else{
+										rank.itemId = sale.item.internalId;
+									}									
+									rank.source = defaultStore.a3Code;
+									rank.type = input.listType;
+
+									populatedCommon = true;
 								}
 
-								rank.country = input.country.a2Code;
-								rank.currency = sale.customerCurrency;
-								rank.price = Float.valueOf(((float) sale.customerPrice.intValue()) / 100.0f);
-								rank.date = salesGroupDate;
-								rank.created = salesGroupDate;
-								rank.itemId = sale.item.internalId;
-								rank.source = defaultStore.a3Code;
-								rank.type = input.listType;
-
-								populatedCommon = true;
-							}
-
-							revenue += (sale.units.floatValue() * (float) sale.customerPrice.intValue()) / 100.0f;
-							downloads += sale.units.intValue();
+								revenue += (sale.units.floatValue() * (float) sale.customerPrice.intValue()) / 100.0f;
+								downloads += sale.units.intValue();
+								
 						}
 
 						rank.revenue = Float.valueOf(revenue);
