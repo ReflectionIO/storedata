@@ -15,17 +15,12 @@ import org.markdown4j.Markdown4jProcessor;
  * 
  */
 public class MarkdownHelper {
-    public static final Markdown4jProcessor PROCESSOR = buildProcessor();
+    public static final Markdown4jProcessor PROCESSOR = new Markdown4jProcessor().setDecorator(new ExtDecorator() {
+        @Override
+        public void openLink(StringBuilder out) {
+            super.openLink(out);
 
-    static Markdown4jProcessor buildProcessor() {
-        Markdown4jProcessor processor = new Markdown4jProcessor();
-        processor.setDecorator(new ExtDecorator() {
-
-            @Override
-            public void openLink(StringBuilder out) {
-                out.append("<a target=\"_blank\" ");
-            }
-        });
-        return processor;
-    }
+            out.append(" target=\"_blank\"");
+        }
+    });
 }
