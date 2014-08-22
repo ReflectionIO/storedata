@@ -133,16 +133,16 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 				LOG.log(GaeLevel.DEBUG, String.format("Parsing [%s]", key.toString()));
 			}
 
-			List<Item> items = (new ParserIOS()).parse(combined.get(key));
+			Map<Integer, FeedFetch> group = grouped.get(key);
+			Iterator<FeedFetch> iterator = group.values().iterator();
+			FeedFetch firstFeedFetch = iterator.next();
+			
+			List<Item> items = (new ParserIOS()).parse(firstFeedFetch.country, firstFeedFetch.category.id, combined.get(key));
 
 			List<Rank> addRanks = new ArrayList<Rank>();
 			List<Rank> updateRanks = new ArrayList<Rank>();
 
 			List<Item> addItems = new ArrayList<Item>();
-
-			Map<Integer, FeedFetch> group = grouped.get(key);
-			Iterator<FeedFetch> iterator = group.values().iterator();
-			FeedFetch firstFeedFetch = iterator.next();
 
 			isGrossing = c.isGrossing(firstFeedFetch.type);
 

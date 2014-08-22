@@ -39,13 +39,12 @@ public class ParserIOS implements Parser {
 	private static final String KEY_IMAGE = "im:image";
 	private static final String KEY_HEIGHT = "height";
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.appcollector.ingestors.Parser#parse(java.lang.String)
+	
+	/* (non-Javadoc)
+	 * @see io.reflection.app.ingestors.Parser#parse(java.lang.String, java.lang.Long, java.lang.String)
 	 */
 	@Override
-	public List<Item> parse(String data) {
+	public List<Item> parse(String country, Long category, String data) {
 
 		if (LOG.isLoggable(GaeLevel.DEBUG)) {
 			LOG.log(GaeLevel.DEBUG, "Started parsing data");
@@ -61,10 +60,10 @@ public class ParserIOS implements Parser {
 				JsonArray entries = entriesElement.getAsJsonArray();
 
 				for (JsonElement entry : entries) {
-					addItem(entry.getAsJsonObject(), items);
+					addItem(country, entry.getAsJsonObject(), items);
 				}
 			} else {
-				addItem(entriesElement.getAsJsonObject(), items);
+				addItem(country, entriesElement.getAsJsonObject(), items);
 			}
 		} else {
 			if (LOG.isLoggable(Level.WARNING)) {
@@ -83,13 +82,14 @@ public class ParserIOS implements Parser {
 	 * @param entry
 	 * @param items
 	 */
-	private void addItem(JsonObject jsonItem, List<Item> items) {
+	private void addItem(String country, JsonObject jsonItem, List<Item> items) {
 		Item item = new Item();
 		item.name = jsonItem.get(KEY_NAME).getAsJsonObject().get(KEY_LABEL).getAsString();
 
 		JsonObject attributes = jsonItem.get(KEY_PRICE).getAsJsonObject().get(KEY_ATTRIBUTES).getAsJsonObject();
 		item.price = Float.valueOf(attributes.get(KEY_AMOUNT).getAsFloat());
 		item.currency = attributes.get(KEY_CURRENCY).getAsString();
+		item.country = country;
 
 		attributes = jsonItem.get(KEY_ID).getAsJsonObject().get(KEY_ATTRIBUTES).getAsJsonObject();
 		item.internalId = attributes.get(KEY_INTERNAL_ID).getAsString();
