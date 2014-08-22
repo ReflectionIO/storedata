@@ -33,8 +33,6 @@
 	
 	.activeForum a {
 		color: black;
-		pointer-events: none;
-		cursor: default;
 	}
 	</ui:style>
 	<div class="{styleName}">
