@@ -33,174 +33,198 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class MarkdownEditor extends Composite implements HasText {
 
-	private static MarkdownEditorUiBinder uiBinder = GWT.create(MarkdownEditorUiBinder.class);
+    private static MarkdownEditorUiBinder uiBinder = GWT.create(MarkdownEditorUiBinder.class);
 
-	@UiField TextArea textArea;
-	@UiField DivElement preview;
-	@UiField TabPanel tabLayout;
+    @UiField TextArea textArea;
+    @UiField DivElement preview;
+    @UiField TabPanel tabLayout;
 
-	@UiField Button bold;
-	@UiField Button italic;
-	@UiField Button link;
+    @UiField Button bold;
+    @UiField Button italic;
+    @UiField Button link;
     @UiField Button image;
 
-	interface MarkdownEditorUiBinder extends UiBinder<Widget, MarkdownEditor> {}
+    interface MarkdownEditorUiBinder extends UiBinder<Widget, MarkdownEditor> {}
 
-	public MarkdownEditor() {
-		initWidget(uiBinder.createAndBindUi(this));
+    public MarkdownEditor() {
+        initWidget(uiBinder.createAndBindUi(this));
 
-		BootstrapGwtTabPanel.INSTANCE.styles().ensureInjected();
+        BootstrapGwtTabPanel.INSTANCE.styles().ensureInjected();
 
-		bold.getElement().setInnerHTML("<span class=\"icon-bold\"></span>");
-		italic.getElement().setInnerHTML("<span class=\"icon-italic\"></span>");
-		link.getElement().setInnerHTML("<span class=\"icon-link\"></span>");
-		image.getElement().setInnerHTML("<span class=\"icon-picture\"></span>");
-		
+        bold.getElement().setInnerHTML("<span class=\"icon-bold\"></span>");
+        italic.getElement().setInnerHTML("<span class=\"icon-italic\"></span>");
+        link.getElement().setInnerHTML("<span class=\"icon-link\"></span>");
+        image.getElement().setInnerHTML("<span class=\"icon-picture\"></span>");
 
-		tabLayout.selectTab(0);
-		
-		tabLayout.getTabBar().setTabHTML(0, "Edit &nbsp;&nbsp;&nbsp;&nbsp;<span class=\"glyphicon glyphicon-pencil\"></span>");
-		tabLayout.getTabBar().setTabHTML(1, "Preview &nbsp;&nbsp;&nbsp;&nbsp;<span class=\"glyphicon glyphicon-eye-open\"></span>");
+        tabLayout.selectTab(0);
 
-		tabLayout.addBeforeSelectionHandler(new BeforeSelectionHandler<Integer>() {
+        tabLayout.getTabBar().setTabHTML(0, "Edit &nbsp;&nbsp;&nbsp;&nbsp;<span class=\"glyphicon glyphicon-pencil\"></span>");
+        tabLayout.getTabBar().setTabHTML(1, "Preview &nbsp;&nbsp;&nbsp;&nbsp;<span class=\"glyphicon glyphicon-eye-open\"></span>");
 
-			@Override
-			public void onBeforeSelection(BeforeSelectionEvent<Integer> event) {
-				// we're about to change tabs
-				Integer index = event.getItem();
+        tabLayout.addBeforeSelectionHandler(new BeforeSelectionHandler<Integer>() {
 
-				if (index == 1) {
-					// styles to be included in the header.
+            @Override
+            public void onBeforeSelection(BeforeSelectionEvent<Integer> event) {
+                // we're about to change tabs
+                Integer index = event.getItem();
 
-					try {
-						// FIXME SafeHtmlUtils.htmlEscape is too rough need a markdown aware plugin - using nothing is exploitable
-						String previewHtml = MarkdownHelper.PROCESSOR.process(textArea.getText());
-						preview.removeAllChildren();
-						preview.setInnerHTML(previewHtml);
-					} catch (IOException e) {
-						throw new RuntimeException(e);
-					}
-				}
-			}
-		});
+                if (index == 1) {
+                    // styles to be included in the header.
 
-		
-	}
-	
-	@UiHandler("bold")
+                    try {
+                        // FIXME SafeHtmlUtils.htmlEscape is too rough need a markdown aware plugin - using nothing is exploitable
+                        String previewHtml = MarkdownHelper.PROCESSOR.process(textArea.getText());
+                        preview.removeAllChildren();
+                        preview.setInnerHTML(previewHtml);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        });
+
+    }
+
+    @UiHandler("bold")
     void onBoldClicked(ClickEvent event) {
-	    wrapText("**", "**");
+        if (!removeSurround("**")) {
+            wrapText("**", "**");
+        }
     }
-	
-	@UiHandler("italic")
+
+    @UiHandler("italic")
     void onItalicClicked(ClickEvent event) {
-	    wrapText("*", "*");
+        wrapText("*", "*");
     }
-	
-	@UiHandler("link")
+
+    @UiHandler("link")
     void onLinkClicked(ClickEvent event) {
-	    final UrlAndTitlePopup confirmationDialog = new UrlAndTitlePopup("Insert Link")
-        {
+        final UrlAndTitlePopup confirmationDialog = new UrlAndTitlePopup("Insert Link") {
             @Override
             public void insert(String title, String url) {
-               linkOrImage(title, url, false);
+                linkOrImage(title, url, false);
             }
         };
         confirmationDialog.prepAndShow();
     }
-	
-	@UiHandler("image")
+
+    @UiHandler("image")
     void onImageClicked(ClickEvent event) {
-	    final UrlAndTitlePopup confirmationDialog = new UrlAndTitlePopup("Insert Image")
-        {
+        final UrlAndTitlePopup confirmationDialog = new UrlAndTitlePopup("Insert Image") {
             @Override
             public void insert(String title, String url) {
-               linkOrImage(title, url, true);
+                linkOrImage(title, url, true);
             }
         };
         confirmationDialog.prepAndShow();
     }
-	
-	public void linkOrImage(String title, String url, boolean image)
-	{
-	    int position = textArea.getCursorPos();
+
+    public void linkOrImage(String title, String url, boolean image) {
+        int position = textArea.getCursorPos();
         String unedited = textArea.getText();
 
-        String newString = unedited.substring(0, position) + (image ? "!" : "")+"["+title+"]("+url+")"
+        String newString = unedited.substring(0, position) + (image ? "!" : "") + "[" + title + "](" + url + ")"
                 + unedited.substring(position, unedited.length());
         textArea.setText(newString);
-	}
-	
-	
+    }
 
+    public MarkdownEditor(String firstName) {
+        initWidget(uiBinder.createAndBindUi(this));
+    }
 
-	public MarkdownEditor(String firstName) {
-		initWidget(uiBinder.createAndBindUi(this));
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.gwt.user.client.ui.HasText#getText()
+     */
+    @Override
+    public String getText() {
+        return textArea.getText();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.HasText#getText()
-	 */
-	@Override
-	public String getText() {
-		return textArea.getText();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.gwt.user.client.ui.HasText#setText(java.lang.String)
+     */
+    @Override
+    public void setText(String text) {
+        textArea.setText(text);
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.HasText#setText(java.lang.String)
-	 */
-	@Override
-	public void setText(String text) {
-		textArea.setText(text);
-		
-		// when the markdown is set always go to the edit tab
-		tabLayout.selectTab(0);
-	}
+        // when the markdown is set always go to the edit tab
+        tabLayout.selectTab(0);
+    }
 
-	protected void wrapText(String leftWrap, String rightWrap) {
-		String selection = textArea.getSelectedText();
-		if (selection.length() > 0) {
-			int position = textArea.getCursorPos();
-			String unedited = textArea.getText();
+    protected void wrapText(String leftWrap, String rightWrap) {
+        String selection = textArea.getSelectedText();
+        if (selection.length() > 0) {
+            int position = textArea.getCursorPos();
+            String unedited = textArea.getText();
 
-			String newString = unedited.substring(0, position) + leftWrap + selection + rightWrap
-					+ unedited.substring(position + selection.length(), unedited.length());
+            String begin = unedited.substring(0, position);
+            String end = unedited.substring(position + selection.length(), unedited.length());
+            String newString = begin + leftWrap + selection + rightWrap + end;
 
-			textArea.setText(newString);
-		}
-	}
+            textArea.setText(newString);
+            int leftSidePos = begin.length() + leftWrap.length();
+            textArea.setSelectionRange(leftSidePos, selection.length());
+        }
+    }
 
-	/**
-	 * @param b
-	 */
-	public void setFocus(boolean b) {
-		textArea.setFocus(b);
-	}
+    protected boolean removeSurround(String surrounding) {
+        int start = textArea.getCursorPos();
+        int length = textArea.getSelectionLength();
+        int surroundLength = surrounding.length();
 
-	/**
-	 * @param content
-	 */
-	public void insertQuote(String author, String content) {
-		// http://stackoverflow.com/questions/14217101/what-character-represents-a-new-line-in-a-text-area
-		String CRLF = "\r\n"; // not necessarily a complete solution across all browsers. Needs more testing.
+        boolean result = false;
 
-		int position = textArea.getCursorPos();
-		String unedited = textArea.getText();
+        String text = textArea.getText();
+        if (start - surroundLength < 0 || length == 0)
+        {
+            textArea.setSelectionRange(start, length); // put back selection
+        }
+        else if (text.substring(start - surroundLength, start).equals(surrounding)
+                && text.substring(start + length, start + length + surroundLength).equals(surrounding)) {
+            // remove surrounds
+            String newText = text.substring(0, start - surroundLength) + text.substring(start, start + length)
+                    + text.substring(start + length + surroundLength, text.length());
+            textArea.setText(newText);
+            textArea.setSelectionRange(start - surroundLength, length);
+            result = true;
+        } else {
+            textArea.setSelectionRange(start, length); // put back selection
+        }
 
-		content = content.replaceAll(CRLF, CRLF + ">");
-		String initial = CRLF + ">";
-		if (position == 0) {
-			initial = ">";
-		}
+        return result;
+    }
 
-		String newString = unedited.substring(0, position) + initial + author + " wrote:" + CRLF + content + CRLF
-				+ unedited.substring(position, unedited.length());
+    /**
+     * @param b
+     */
+    public void setFocus(boolean b) {
+        textArea.setFocus(b);
+    }
 
-		textArea.setText(newString);
-	}
+    /**
+     * @param content
+     */
+    public void insertQuote(String author, String content) {
+        // http://stackoverflow.com/questions/14217101/what-character-represents-a-new-line-in-a-text-area
+        String CRLF = "\r\n"; // not necessarily a complete solution across all browsers. Needs more testing.
+
+        int position = textArea.getCursorPos();
+        String unedited = textArea.getText();
+
+        content = content.replaceAll(CRLF, CRLF + ">");
+        String initial = CRLF + ">";
+        if (position == 0) {
+            initial = ">";
+        }
+
+        String newString = unedited.substring(0, position) + initial + author + " wrote:" + CRLF + content + CRLF
+                + unedited.substring(position, unedited.length());
+
+        textArea.setText(newString);
+    }
 
 }
