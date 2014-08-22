@@ -88,12 +88,16 @@ public class MarkdownEditor extends Composite implements HasText {
 
     @UiHandler("bold")
     void onBoldClicked(ClickEvent event) {
-        wrapText("**", "**");
+        if (!removeSurround("**")) {
+            wrapText("**", "**");
+        }
     }
 
     @UiHandler("italic")
     void onItalicClicked(ClickEvent event) {
-        wrapText("*", "*");
+        if (!removeSurround("_")) {
+            wrapText("_", "_");
+        }
     }
 
     @UiHandler("link")
@@ -157,11 +161,39 @@ public class MarkdownEditor extends Composite implements HasText {
             int position = textArea.getCursorPos();
             String unedited = textArea.getText();
 
-            String newString = unedited.substring(0, position) + leftWrap + selection + rightWrap
-                    + unedited.substring(position + selection.length(), unedited.length());
+            String begin = unedited.substring(0, position);
+            String end = unedited.substring(position + selection.length(), unedited.length());
+            String newString = begin + leftWrap + selection + rightWrap + end;
 
             textArea.setText(newString);
+            int leftSidePos = begin.length() + leftWrap.length();
+            textArea.setSelectionRange(leftSidePos, selection.length());
         }
+    }
+
+    protected boolean removeSurround(String surrounding) {
+        int start = textArea.getCursorPos();
+        int length = textArea.getSelectionLength();
+        int surroundLength = surrounding.length();
+
+        boolean result = false;
+
+        String text = textArea.getText();
+        if (start - surroundLength < 0 || length == 0) {
+            textArea.setSelectionRange(start, length); // put back selection
+        } else if (text.substring(start - surroundLength, start).equals(surrounding)
+                && text.substring(start + length, start + length + surroundLength).equals(surrounding)) {
+            // remove surrounds
+            String newText = text.substring(0, start - surroundLength) + text.substring(start, start + length)
+                    + text.substring(start + length + surroundLength, text.length());
+            textArea.setText(newText);
+            textArea.setSelectionRange(start - surroundLength, length);
+            result = true;
+        } else {
+            textArea.setSelectionRange(start, length); // put back selection
+        }
+
+        return result;
     }
 
     /**
