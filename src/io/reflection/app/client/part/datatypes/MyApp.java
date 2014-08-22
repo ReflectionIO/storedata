@@ -20,7 +20,7 @@ import java.util.List;
 public class MyApp {
 
 	private static final String UNKNOWN_VALUE = "-";
-	//private static final String NIL_VALUE = "0";
+	// private static final String NIL_VALUE = "0";
 
 	public Item item;
 
@@ -43,12 +43,21 @@ public class MyApp {
 			float minPrice = Float.MAX_VALUE, maxPrice = -Float.MAX_VALUE; // ! Be aware: Float.MIN_VALUE is the smaller POSITIVE value
 
 			int position, grossingPosition;
-			float price;
+			Float price = null;
 
 			for (Rank rank : ranks) {
 				position = rank.position == null || rank.position.intValue() < 1 ? Integer.MAX_VALUE : rank.position.intValue();
 				grossingPosition = rank.grossingPosition == null || rank.grossingPosition.intValue() < 1 ? Integer.MAX_VALUE : rank.grossingPosition.intValue();
-				price = rank.price.floatValue();
+				if (rank.price != null) {
+					price = rank.price;
+					// Calculate MIN and MAX prices in the range of ranks
+					if (minPrice > price.floatValue()) {
+						minPrice = price.floatValue();
+					}
+					if (maxPrice < price.floatValue()) {
+						maxPrice = price.floatValue();
+					}
+				}
 
 				// Calculate MIN and MAX positions (free or paid, and grossing together) in the range of ranks - ! It doesn't differentiate the type of position
 				if (minPosition > position) {
@@ -64,14 +73,6 @@ public class MyApp {
 					maxPosition = grossingPosition;
 				}
 
-				// Calculate MIN and MAX prices in the range of ranks
-				if (minPrice > price) {
-					minPrice = price;
-				}
-				if (maxPrice < price) {
-					maxPrice = price;
-				}
-
 				downloads += rank.downloads == null ? 0 : rank.downloads.intValue();
 
 				revenue += rank.revenue == null ? 0 : rank.revenue.floatValue();
@@ -80,10 +81,15 @@ public class MyApp {
 			Rank sample = ranks.get(0);
 			String symbol = FormattingHelper.getCurrencySymbol(sample.currency);
 
-			overallDownloads = FormattingHelper.getFormattedNumber(downloads);		
+			overallDownloads = FormattingHelper.getFormattedNumber(downloads);
 
 			overallRevenue = symbol + " " + FormattingHelper.getFormattedNumber(revenue);
-			overallPrice = FormattingHelper.getPriceRange(sample.currency, minPrice, maxPrice);
+
+			if (minPrice == Float.MAX_VALUE || maxPrice == -Float.MAX_VALUE) {
+				overallPrice = UNKNOWN_VALUE;
+			} else {
+				overallPrice = FormattingHelper.getPriceRange(sample.currency, minPrice, maxPrice);
+			}
 
 			if (minPosition == Integer.MAX_VALUE || maxPosition == Integer.MIN_VALUE) {
 				overallPosition = UNKNOWN_VALUE;

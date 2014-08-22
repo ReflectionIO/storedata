@@ -1529,8 +1529,7 @@ public final class Core extends ActionHandler {
 				Modeller modeller = ModellerFactory.getModellerForStore(defaultStore.a3Code);
 				FormType form = modeller.getForm(input.listType);
 
-				
-				Map<String,String> ParentIditemIdLookup = new HashMap<String,String>();
+				Map<String, String> ParentIditemIdLookup = new HashMap<String, String>();
 				for (Sale sale : sales) {
 					// only add Sales that are consistent with the device type
 					if (FREE_OR_PAID_APP_UNIVERSAL_IOS.equals(sale.typeIdentifier) // 1F
@@ -1543,12 +1542,12 @@ public final class Core extends ActionHandler {
 							|| INAPP_PURCHASE_PURCHASE_IOS.equals(sale.typeIdentifier) // IA1
 							|| INAPP_PURCHASE_SUBSCRIPTION_IOS.equals(sale.typeIdentifier) // IA9
 					) {
-						
-						// If typeidentifier != IA1 or IA9
+
+						// If typeidentifier != IA1 or IA9, add parent identifiers into the Map
 						if (!sale.typeIdentifier.equals("IA1") && !sale.typeIdentifier.equals("IA9")) {
-							ParentIditemIdLookup.put(sale.sku,sale.item.internalId);
+							ParentIditemIdLookup.put(sale.sku, sale.item.internalId);
 						}
-						
+
 						key = keyFormat.parse(keyFormat.format(sale.begin));
 						dateSalesList = salesGroupByDate.get(key);
 
@@ -1589,6 +1588,7 @@ public final class Core extends ActionHandler {
 					rank = new Rank();
 
 					output.ranks.add(rank);
+					rank.price = null; // The default was zero (free)
 
 					modelRun = modelRunLookup.get(salesGroupDate);
 					salesGroup = salesGroupByDate.get(salesGroupDate);
@@ -1598,35 +1598,41 @@ public final class Core extends ActionHandler {
 						float revenue = 0;
 
 						boolean populatedCommon = false;
-												
+
 						for (Sale sale : salesGroup) {
-							
-								if (!populatedCommon) {
-									rank.category = input.category;
 
-									if (modelRun != null) {
-										rank.code = modelRun.code;
-									}
+							if (!populatedCommon) {
+								rank.category = input.category;
 
-									rank.country = input.country.a2Code;
-									rank.currency = sale.customerCurrency;
-									rank.price = Float.valueOf(((float) sale.customerPrice.intValue()) / 100.0f);
-									rank.date = salesGroupDate;
-									rank.created = salesGroupDate;
-									if (sale.typeIdentifier.equals("IA1") || sale.typeIdentifier.equals("IA9")) {
-										rank.itemId = ParentIditemIdLookup.get(sale.parentIdentifier);
-									}else{
-										rank.itemId = sale.item.internalId;
-									}									
-									rank.source = defaultStore.a3Code;
-									rank.type = input.listType;
-
-									populatedCommon = true;
+								if (modelRun != null) {
+									rank.code = modelRun.code;
 								}
 
-								revenue += (sale.units.floatValue() * (float) sale.customerPrice.intValue()) / 100.0f;
+								rank.country = input.country.a2Code;
+								rank.currency = sale.customerCurrency;																
+								rank.date = salesGroupDate;
+								rank.created = salesGroupDate;								
+								rank.source = defaultStore.a3Code;
+								rank.type = input.listType;
+
+								populatedCommon = true;
+							}
+														
+							if (sale.typeIdentifier.equals("IA1") || sale.typeIdentifier.equals("IA9")) {
+								rank.itemId = ParentIditemIdLookup.get(sale.parentIdentifier);
+							} else {
+								rank.itemId = sale.item.internalId;
+							}
+							
+							// If units and customer prices are negatives (refunds), subtract the value setting units positive
+							revenue += (Math.abs(sale.units.floatValue()) * (float) sale.customerPrice.intValue()) / 100.0f;
+							
+							// Take into account price and downloads only from main Apps
+							if (sale.typeIdentifier.equals("1") || sale.typeIdentifier.equals("1F") || sale.typeIdentifier.equals("1T")) {
+								rank.price = Float.valueOf(((float) sale.customerPrice.intValue()) / 100.0f);
 								downloads += sale.units.intValue();
-								
+							}
+
 						}
 
 						rank.revenue = Float.valueOf(revenue);
