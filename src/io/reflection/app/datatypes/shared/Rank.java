@@ -36,7 +36,7 @@ public class Rank extends DataType {
 
 	@Index public String source;
 
-	public Float price = Float.valueOf(0);
+	public Float price;
 
 	public String currency;
 
