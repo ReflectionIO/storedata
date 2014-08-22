@@ -131,7 +131,7 @@ final class ItemService implements IItemService {
 		Item addedItem = null;
 
 		final String addItemQuery = String
-				.format("INSERT INTO `item` (`externalid`,`internalid`,`name`,`creatorname`,`price`,`source`,`type`,`added`,`country`,`currency`,`smallimage`,`mediumimage`,`largeimage`,`properties`) VALUES ('%s','%s','%s','%s',%d,'%s','%s',FROM_UNIXTIME(%d),'%s','%s','%s','%s','%s')",
+				.format("INSERT INTO `item` (`externalid`,`internalid`,`name`,`creatorname`,`price`,`source`,`type`,`added`,`country`,`currency`,`smallimage`,`mediumimage`,`largeimage`,`properties`) VALUES ('%s','%s','%s','%s',%d,'%s','%s',FROM_UNIXTIME(%d),'%s','%s','%s','%s','%s','%s')",
 						addslashes(item.externalId), addslashes(item.internalId), addslashes(item.name), addslashes(item.creatorName),
 						(int) (item.price.floatValue() * 100.0f), addslashes(item.source), addslashes(item.type), item.added.getTime() / 1000,
 						addslashes(item.country), addslashes(item.currency), addslashes(item.smallImage), addslashes(item.mediumImage),
@@ -398,7 +398,7 @@ final class ItemService implements IItemService {
 				addItemsBatchQuery.append(",");
 			}
 
-			addItemsBatchQuery.append(String.format("('%s','%s','%s','%s',%d,'%s','%s',FROM_UNIXTIME(%d),'%s','%s','%s','%s','%s')",
+			addItemsBatchQuery.append(String.format("('%s','%s','%s','%s',%d,'%s','%s',FROM_UNIXTIME(%d),'%s','%s','%s','%s','%s','%s')",
 					addslashes(item.externalId), addslashes(item.internalId), addslashes(item.name), addslashes(item.creatorName),
 					(int) (item.price.floatValue() * 100.0f), addslashes(item.source), addslashes(item.type), item.added.getTime() / 1000,
 					addslashes(item.country), addslashes(item.currency), addslashes(item.smallImage), addslashes(item.mediumImage),
