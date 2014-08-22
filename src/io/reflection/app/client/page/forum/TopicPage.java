@@ -48,6 +48,8 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellList;
+import com.google.gwt.user.cellview.client.LoadingStateChangeEvent;
+import com.google.gwt.user.cellview.client.LoadingStateChangeEvent.LoadingState;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -115,6 +117,16 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
         pager.setPageSize(ServiceConstants.SHORT_STEP_VALUE);
 
         cellPrototype.setMarkdownTextEditor(replyText);
+
+        messagesCellList.addHandler(new LoadingStateChangeEvent.Handler() {
+
+            @Override
+            public void onLoadingStateChanged(LoadingStateChangeEvent event) {
+                if (event.getLoadingState() == LoadingState.LOADED && !replyText.isVisible()) {
+                    replyText.setVisible(true);
+                }
+            }
+        }, LoadingStateChangeEvent.TYPE);
 
     }
 
@@ -202,6 +214,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
         if (current != null && PageType.ForumThreadPageType.equals(current.getPage())) {
 
             forumSummarySidePanel.redraw();
+            replyText.setVisible(false);
 
             if (current.getAction() != null && VIEW_ACTION_PARAMETER_VALUE.equals(current.getAction())) {
                 String topicIdString;
@@ -214,13 +227,12 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
                         String param2 = current.getParameter(2);
                         if (param2 != null) {
                             final int post = Integer.parseInt(param2);
-                            startPage = post ;
-                            
+                            startPage = post;
+
                         }
                     }
                     updateTopic(topic);
-                    if (startPage != null)
-                    {
+                    if (startPage != null) {
                         focusPagerOnPost(startPage);
                     }
                 }
@@ -267,13 +279,12 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
             dataProvider = new ForumMessageProvider(topic);
             dataProvider.registerListeners();
-            
+
             pager.setDisplay(messagesCellList); // bind the pager and the
             // display together.
 
             dataProvider.addDataDisplay(messagesCellList);
-            if (startPage != null)
-            {
+            if (startPage != null) {
                 focusPagerOnPost(startPage.intValue());
             }
 
