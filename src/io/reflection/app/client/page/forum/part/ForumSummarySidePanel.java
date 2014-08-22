@@ -60,4 +60,11 @@ public class ForumSummarySidePanel extends Composite {
         redraw();
     }
 
+    /**
+     * 
+     */
+    public void reset() {
+        selectionModel.clear();
+    }
+
 }

@@ -200,6 +200,25 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
         register(EventController.get().addHandlerToSource(GetForumsEventHandler.TYPE, ForumController.get(), this));
         register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
     }
+    
+    @Override
+    protected void onDetach() {
+        super.onDetach();
+        reset();
+    }
+
+    /**
+     * 
+     */
+    private void reset() {
+        
+        //got from https://groups.google.com/forum/#!topic/google-web-toolkit/cAvgdn2fmfU
+        //this *should* clear the attached pager.
+        topics.setVisibleRangeAndClearData(topics.getVisibleRange(), true);
+        
+        forumSummarySidePanel.reset() ;
+        titleText.setInnerHTML("");
+    }
 
     /*
      * (non-Javadoc)
