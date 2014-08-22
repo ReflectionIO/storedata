@@ -7,12 +7,20 @@
 //
 package io.reflection.app.client.helper;
 
+import org.markdown4j.ExtDecorator;
 import org.markdown4j.Markdown4jProcessor;
 
 /**
  * @author William Shakour (billy1380)
- *
+ * 
  */
 public class MarkdownHelper {
-	public static final Markdown4jProcessor PROCESSOR = new Markdown4jProcessor();
+    public static final Markdown4jProcessor PROCESSOR = new Markdown4jProcessor().setDecorator(new ExtDecorator() {
+        @Override
+        public void openLink(StringBuilder out) {
+            super.openLink(out);
+
+            out.append(" target=\"_blank\"");
+        }
+    });
 }
