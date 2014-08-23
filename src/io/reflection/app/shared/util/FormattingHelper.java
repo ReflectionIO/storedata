@@ -147,7 +147,7 @@ public class FormattingHelper {
 	}
 	
 	public static String getFormattedNumber(Number number){
-		return NumberFormat.getDecimalFormat().format(number);
+		return NumberFormat.getFormat(",###.##").format(number);
 	}
 	
 }
