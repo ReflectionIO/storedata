@@ -95,7 +95,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
     @UiField HTMLPanel adminButtons;
 
     @UiField ForumSummarySidePanel forumSummarySidePanel;
-    
+
     private Map<Long, String> editorTextMap = new HashMap<Long, String>();
 
     private ForumMessageProvider dataProvider;
@@ -129,6 +129,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
             public void onLoadingStateChanged(LoadingStateChangeEvent event) {
                 if (event.getLoadingState() == LoadingState.LOADED && !replyText.isVisible()) {
                     replyText.setVisible(true);
+                    pager.setVisible(true);
                 }
             }
         }, LoadingStateChangeEvent.TYPE);
@@ -157,6 +158,8 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
             dataProvider.registerListeners();
         }
 
+        reset();
+
     }
 
     /*
@@ -171,7 +174,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
         if (dataProvider != null) {
             dataProvider.unregisterListeners();
         }
-        
+
         reset();
     }
 
@@ -181,22 +184,25 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
     private void reset() {
         topicTitle.setInnerHTML("");
         notes.setInnerHTML("");
-        
-        if (dataProvider != null) {
+
+        if (dataProvider != null && dataProvider.getDataDisplays().size() > 0) {
             dataProvider.removeDataDisplay(messagesCellList);
         }
         messagesCellList.setVisibleRangeAndClearData(messagesCellList.getVisibleRange(), true);
-        
-        
+
+        pager.setVisible(false);
+
         notes.setInnerHTML("");
 
         editorTextMap.put(topicId, replyText.getText());
         replyText.reset();
+        replyText.setVisible(false);
+        replyForm.setVisible(false);
 
-        //we shouldn't have to reset admin buttons because admin privledges should be the same.
-        
+        // we shouldn't have to reset admin buttons because admin privledges should be the same.
+
         forumSummarySidePanel.reset();
-        
+
     }
 
     /*
@@ -252,7 +258,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
                 if ((topicIdString = current.getParameter(TOPIC_ID_PARAMETER_INDEX)) != null) {
                     topicId = Long.valueOf(topicIdString);
                     topic = TopicController.get().getTopic(topicId);
-                    
+
                     replyText.setText(editorTextMap.get(topicId));
 
                     String param1 = current.getParameter(1);

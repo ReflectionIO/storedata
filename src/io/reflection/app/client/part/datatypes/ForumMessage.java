@@ -60,11 +60,19 @@ public class ForumMessage {
 	}
 
 	public boolean canFlag() {
-		return currentUserId != getAuthor().id.longValue() && !isLocked();
+	    boolean result = false ;
+	    if (getAuthor() != null){
+	        result = currentUserId != getAuthor().id.longValue() && !isLocked();
+	    }
+		return result ;
 	}
 
 	public boolean canEdit() {
-		return currentUserId == getAuthor().id.longValue() && !isLocked();
+	    boolean result = false ;
+        if (getAuthor() != null){
+            result =  currentUserId == getAuthor().id.longValue() && !isLocked();
+        }
+        return result ;
 	}
 
 	/**
