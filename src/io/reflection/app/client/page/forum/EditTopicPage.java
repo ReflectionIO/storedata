@@ -83,6 +83,18 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
         register(EventController.get().addHandlerToSource(UpdateTopicEventHandler.TYPE, TopicController.get(), this));
     }
 
+    @Override
+    protected void onDetach() {
+        super.onDetach();
+        reset();
+    }
+
+   
+    private void reset() {
+        forumSummarySidePanel.reset();
+        editText.reset();
+    }
+
     /*
      * (non-Javadoc)
      * 
