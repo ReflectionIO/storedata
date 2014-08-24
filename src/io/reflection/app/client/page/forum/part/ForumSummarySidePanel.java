@@ -28,11 +28,9 @@ public class ForumSummarySidePanel extends Composite {
 
     private static ForumSummarySidePanelUiBinder uiBinder = GWT.create(ForumSummarySidePanelUiBinder.class);
 
-    interface ForumSummarySidePanelUiBinder extends UiBinder<Widget, ForumSummarySidePanel> {
-    }
+    interface ForumSummarySidePanelUiBinder extends UiBinder<Widget, ForumSummarySidePanel> {}
 
-    @UiField(provided = true)
-    CellList<Forum> forums = new CellList<Forum>(new ForumSummaryCell(), BootstrapGwtCellList.INSTANCE);
+    @UiField(provided = true) CellList<Forum> forums = new CellList<Forum>(new ForumSummaryCell(), BootstrapGwtCellList.INSTANCE);
     private SingleSelectionModel<Forum> selectionModel;
 
     public ForumSummarySidePanel() {
@@ -64,7 +62,9 @@ public class ForumSummarySidePanel extends Composite {
      * 
      */
     public void reset() {
-        selectionModel.clear();
+        if (selectionModel != null) {
+            selectionModel.clear();
+        }
     }
 
 }
