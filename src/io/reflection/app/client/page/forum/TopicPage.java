@@ -252,6 +252,8 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
                 if ((topicIdString = current.getParameter(TOPIC_ID_PARAMETER_INDEX)) != null) {
                     topicId = Long.valueOf(topicIdString);
                     topic = TopicController.get().getTopic(topicId);
+                    
+                    replyText.setText(editorTextMap.get(topicId));
 
                     String param1 = current.getParameter(1);
                     if (param1 != null && param1.contains("post")) {
