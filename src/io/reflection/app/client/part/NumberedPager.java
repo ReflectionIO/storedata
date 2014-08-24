@@ -238,8 +238,8 @@ public class NumberedPager extends AbstractPager {
             });
             anchor.getElement().appendChild(Document.get().createTextNode(Integer.toString(i)));
 
-            if (this.getPage() == i - 1) // current page
-            {
+            // current page
+            if (this.getPage() == i - 1) {
                 anchor.setStyleName(BootstrapGwtNumberedPager.INSTANCE.styles().selected());
                 anchor.setEnabled(false);
 
