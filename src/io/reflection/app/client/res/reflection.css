@@ -112,7 +112,8 @@ body {
     background: linear-gradient(#f6f7f9, #eeeff1); /* Standard syntax */
 }
 
-.form-inline .form-group>.form-control[disabled] {
+.form-inline .form-group>.form-control[disabled],.sidepanel .form-group>.form-control[disabled]
+    {
     background-color: #dedede;
     border-color: #dedede;
     color: #aaa;
