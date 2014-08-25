@@ -78,6 +78,7 @@ import io.reflection.app.api.exception.AuthenticationException;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
@@ -1583,12 +1584,18 @@ public final class Core extends ActionHandler {
 				// Get range of dates
 				Set<Date> dates = salesGroupByDate.keySet();
 
+				// setup id only category to avoid bloating data with category
+				Category category = null;
+				if (input.category != null && input.category.id != null) {
+					category = new Category();
+					category.id = input.category.id;
+				}
+
 				for (Date salesGroupDate : dates) {
 
 					modelRun = modelRunLookup.get(salesGroupDate);
 
 					if (sales.size() > 0) {
-
 						itemIDsRankLookup = new HashMap<String, Rank>();
 
 						List<Sale> salesGroup = salesGroupByDate.get(salesGroupDate);
@@ -1612,7 +1619,9 @@ public final class Core extends ActionHandler {
 								if (modelRun != null) {
 									rank.code = modelRun.code;
 								}
-								rank.category = input.category;
+
+								rank.category = category;
+
 								rank.country = input.country.a2Code;
 								rank.currency = sale.customerCurrency;
 								rank.date = salesGroupDate;
@@ -1624,16 +1633,18 @@ public final class Core extends ActionHandler {
 							} else {
 								rank = itemIDsRankLookup.get(itemId);
 							}
+
 							rank.itemId = itemId;
 
 							// If units and customer prices are negatives (refunds), subtract the value setting units positive
 							rank.revenue += (Math.abs(sale.units.floatValue()) * (float) sale.customerPrice.intValue()) / 100.0f;
 
 							// Take into account price and downloads only from main Apps
-							if (sale.typeIdentifier.equals(FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS) || sale.typeIdentifier.equals(FREE_OR_PAID_APP_UNIVERSAL_IOS) || sale.typeIdentifier.equals(FREE_OR_PAID_APP_IPAD_IOS)) {
+							if (sale.typeIdentifier.equals(FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS)
+									|| sale.typeIdentifier.equals(FREE_OR_PAID_APP_UNIVERSAL_IOS) || sale.typeIdentifier.equals(FREE_OR_PAID_APP_IPAD_IOS)) {
 								rank.downloads += sale.units.intValue();
 								// Ignore price if the Sale is a refund or a promotion
-								if (rank.price == null && sale.customerPrice.intValue() >= 0 && sale.promoCode.equals(" ")){									
+								if (rank.price == null && sale.customerPrice.intValue() >= 0 && sale.promoCode.equals(" ")) {
 									rank.price = Float.valueOf(((float) sale.customerPrice.intValue()) / 100.0f);
 								}
 							}
