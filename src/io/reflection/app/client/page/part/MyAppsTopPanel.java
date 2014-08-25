@@ -190,8 +190,11 @@ public class MyAppsTopPanel extends Composite {
 	 * @param enabled
 	 */
 	public void setFiltersEnabled(boolean enabled) {
-		// appStore.setEnabled(enabled); TODO comment off when the user can select the filters
-		// country.setEnabled(enabled);
+		// TODO delete condition when the user can select the filters
+		if (SessionController.get().isLoggedInUserAdmin()) {
+			appStore.setEnabled(enabled);
+			country.setEnabled(enabled);
+		}
 		dateSelector.setEnabled(enabled);
 	}
 
