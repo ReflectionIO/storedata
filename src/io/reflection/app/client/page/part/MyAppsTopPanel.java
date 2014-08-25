@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.part.DateSelector;
@@ -50,8 +51,8 @@ public class MyAppsTopPanel extends Composite {
 	public MyAppsTopPanel() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		FilterHelper.addStores(appStore);
-		FilterHelper.addCountries(country);
+		FilterHelper.addStores(appStore, SessionController.get().isLoggedInUserAdmin());
+		FilterHelper.addCountries(country, SessionController.get().isLoggedInUserAdmin());
 
 		List<PresetDateRange> dateSelectorPresetRanges = new ArrayList<PresetDateRange>();
 
@@ -189,8 +190,8 @@ public class MyAppsTopPanel extends Composite {
 	 * @param enabled
 	 */
 	public void setFiltersEnabled(boolean enabled) {
-		appStore.setEnabled(enabled);
-		country.setEnabled(enabled);
+		// appStore.setEnabled(enabled); TODO comment off when the user can select the filters
+		// country.setEnabled(enabled);
 		dateSelector.setEnabled(enabled);
 	}
 
