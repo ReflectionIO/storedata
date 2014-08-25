@@ -20,7 +20,7 @@ import java.util.List;
 public class MyApp {
 
 	private static final String UNKNOWN_VALUE = "-";
-	private static final String NIL_VALUE = "0";
+	// private static final String NIL_VALUE = "0";
 
 	public Item item;
 
@@ -35,43 +35,42 @@ public class MyApp {
 	 * Updates the overall values based on the ranks
 	 */
 	public void updateOverallValues() {
-		if (ranks != null || ranks.size() == 0) {
+		if (ranks != null && ranks.size() > 0) {
 			int downloads = 0;
 			float revenue = 0;
 
 			int minPosition = Integer.MAX_VALUE, maxPosition = Integer.MIN_VALUE;
-			float minPrice = Float.MAX_VALUE, maxPrice = Float.MIN_VALUE;
+			float minPrice = Float.MAX_VALUE, maxPrice = -Float.MAX_VALUE; // ! Be aware: Float.MIN_VALUE is the smaller POSITIVE value
 
-			int possition, grossingPossion;
-			float price;
+			int position, grossingPosition;
+			Float price = null;
 
 			for (Rank rank : ranks) {
-				possition = rank.position == null || rank.position.intValue() < 1 ? Integer.MAX_VALUE : rank.position.intValue();
-				grossingPossion = rank.grossingPosition == null || rank.grossingPosition.intValue() < 1 ? Integer.MAX_VALUE : rank.grossingPosition.intValue();
-				price = rank.price.floatValue();
-
-				if (minPosition > possition) {
-					minPosition = possition;
+				position = rank.position == null || rank.position.intValue() < 1 ? Integer.MAX_VALUE : rank.position.intValue();
+				grossingPosition = rank.grossingPosition == null || rank.grossingPosition.intValue() < 1 ? Integer.MAX_VALUE : rank.grossingPosition.intValue();
+				if (rank.price != null) {
+					price = rank.price;
+					// Calculate MIN and MAX prices in the range of ranks
+					if (minPrice > price.floatValue()) {
+						minPrice = price.floatValue();
+					}
+					if (maxPrice < price.floatValue()) {
+						maxPrice = price.floatValue();
+					}
 				}
 
-				if (minPosition > grossingPossion) {
-					minPosition = grossingPossion;
+				// Calculate MIN and MAX positions (free or paid, and grossing together) in the range of ranks - ! It doesn't differentiate the type of position
+				if (minPosition > position) {
+					minPosition = position;
 				}
-
-				if (maxPosition < possition) {
-					maxPosition = possition;
+				if (minPosition > grossingPosition) {
+					minPosition = grossingPosition;
 				}
-
-				if (maxPosition < grossingPossion) {
-					maxPosition = grossingPossion;
+				if (maxPosition < position) {
+					maxPosition = position;
 				}
-
-				if (minPrice > price) {
-					minPrice = price;
-				}
-
-				if (maxPrice < price) {
-					maxPrice = price;
+				if (maxPosition < grossingPosition) {
+					maxPosition = grossingPosition;
 				}
 
 				downloads += rank.downloads == null ? 0 : rank.downloads.intValue();
@@ -82,21 +81,27 @@ public class MyApp {
 			Rank sample = ranks.get(0);
 			String symbol = FormattingHelper.getCurrencySymbol(sample.currency);
 
-			overallDownloads = Integer.toString(downloads);
-			overallRevenue = symbol + " " + Float.toString(revenue);
-			overallPrice = FormattingHelper.getPriceRange(sample.currency, minPrice, maxPrice);
+			overallDownloads = FormattingHelper.getFormattedNumber(downloads);
+
+			overallRevenue = symbol + " " + FormattingHelper.getFormattedNumber(revenue);
+
+			if (minPrice == Float.MAX_VALUE || maxPrice == -Float.MAX_VALUE) {
+				overallPrice = UNKNOWN_VALUE;
+			} else {
+				overallPrice = FormattingHelper.getPriceRange(sample.currency, minPrice, maxPrice);
+			}
 
 			if (minPosition == Integer.MAX_VALUE || maxPosition == Integer.MIN_VALUE) {
 				overallPosition = UNKNOWN_VALUE;
 			} else {
-				overallPosition = (minPosition == maxPosition) ? Integer.toString(minPosition) : (Integer.toString(minPosition) + " " + Integer
+				overallPosition = (minPosition == maxPosition) ? Integer.toString(minPosition) : (Integer.toString(minPosition) + " - " + Integer
 						.toString(maxPosition));
 			}
 
 		} else {
 			overallDownloads = UNKNOWN_VALUE;
-			overallRevenue = NIL_VALUE;
-			overallPrice = NIL_VALUE;
+			overallRevenue = UNKNOWN_VALUE;
+			overallPrice = UNKNOWN_VALUE;
 			overallPosition = UNKNOWN_VALUE;
 		}
 	}

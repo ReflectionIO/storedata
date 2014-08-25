@@ -12,9 +12,11 @@ import static io.reflection.app.helpers.ApiHelper.getGrossingListName;
 import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPAD_IOS;
 import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS;
 import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_UNIVERSAL_IOS;
-//import static io.reflection.app.service.sale.ISaleService.UPDATE_IPAD_IOS;
-//import static io.reflection.app.service.sale.ISaleService.UPDATE_IPHONE_AND_IPOD_TOUCH_IOS;
-//import static io.reflection.app.service.sale.ISaleService.UPDATE_UNIVERSAL_IOS;
+import static io.reflection.app.service.sale.ISaleService.UPDATE_IPAD_IOS;
+import static io.reflection.app.service.sale.ISaleService.UPDATE_IPHONE_AND_IPOD_TOUCH_IOS;
+import static io.reflection.app.service.sale.ISaleService.UPDATE_UNIVERSAL_IOS;
+import static io.reflection.app.service.sale.ISaleService.INAPP_PURCHASE_PURCHASE_IOS;
+import static io.reflection.app.service.sale.ISaleService.INAPP_PURCHASE_SUBSCRIPTION_IOS;
 import io.reflection.app.accountdatacollectors.DataAccountCollectorFactory;
 import io.reflection.app.api.PagerHelper;
 import io.reflection.app.api.ValidationHelper;
@@ -1037,11 +1039,15 @@ public final class Core extends ActionHandler {
 				input.pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
 			}
 
-			output.items = SaleServiceProvider.provide().getDataAccountItems(input.linkedAccount, input.pager);
+			List<String> freeOrPaidApps = new ArrayList<String>();
+			freeOrPaidApps.add(FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS);
+			freeOrPaidApps.add(FREE_OR_PAID_APP_UNIVERSAL_IOS);
+			freeOrPaidApps.add(FREE_OR_PAID_APP_IPAD_IOS);
+			output.items = SaleServiceProvider.provide().getDataAccountItems(input.linkedAccount, freeOrPaidApps, input.pager);
 
 			output.pager = input.pager;
-			updatePager(output.pager, output.items, input.pager.totalCount == null ? SaleServiceProvider.provide()
-					.getDataAccountItemsCount(input.linkedAccount) : null);
+			updatePager(output.pager, output.items,
+					input.pager.totalCount == null ? SaleServiceProvider.provide().getDataAccountItemsCount(input.linkedAccount, freeOrPaidApps) : null);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -1508,13 +1514,13 @@ public final class Core extends ActionHandler {
 				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
 						ApiError.DateRangeOutOfBounds.getMessage("0-60 days: input.end - input.start"));
 
+			// Get Items sales based on the filters
 			List<Sale> sales = SaleServiceProvider.provide().getSales(input.country, input.category, input.linkedAccount, input.start, input.end,
 					PagerHelper.infinitePager());
 
 			if (sales.size() > 0) {
 				// group sales by date
 				Map<Date, List<Sale>> salesGroupByDate = new HashMap<Date, List<Sale>>();
-				List<Sale> dateSalesList = null;
 				Date key;
 				SimpleDateFormat keyFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -1522,25 +1528,32 @@ public final class Core extends ActionHandler {
 				Modeller modeller = ModellerFactory.getModellerForStore(defaultStore.a3Code);
 				FormType form = modeller.getForm(input.listType);
 
+				Map<String, String> ParentIditemIdLookup = new HashMap<String, String>();
 				for (Sale sale : sales) {
-					// only add items that are consistent with the product type
-					if (FREE_OR_PAID_APP_UNIVERSAL_IOS.equals(sale.typeIdentifier)
-					// || UPDATE_UNIVERSAL_IOS.equals(sale.typeIdentifier)
-							|| (form == FormType.FormTypeOther && (FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier)
-							// || UPDATE_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier)
-							)) || (form == FormType.FormTypeTablet && (FREE_OR_PAID_APP_IPAD_IOS.equals(sale.typeIdentifier)
-							// || UPDATE_IPAD_IOS.equals(sale.typeIdentifier)
-							))) {
+					// only add Sales that are consistent with the device type
+					if (FREE_OR_PAID_APP_UNIVERSAL_IOS.equals(sale.typeIdentifier) // 1F
+							|| UPDATE_UNIVERSAL_IOS.equals(sale.typeIdentifier) // 7F
+							|| (form == FormType.FormTypeOther && (FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier))) // 1
+							|| (form == FormType.FormTypeOther && (UPDATE_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier))) // 7
+							|| (form == FormType.FormTypeTablet && (FREE_OR_PAID_APP_IPAD_IOS.equals(sale.typeIdentifier))) // 1T
+							|| (form == FormType.FormTypeTablet && (UPDATE_IPAD_IOS.equals(sale.typeIdentifier))) // 7T
+							|| INAPP_PURCHASE_PURCHASE_IOS.equals(sale.typeIdentifier) // IA1
+							|| INAPP_PURCHASE_SUBSCRIPTION_IOS.equals(sale.typeIdentifier) // IA9
+					) {
 
-						key = keyFormat.parse(keyFormat.format(sale.begin));
-						dateSalesList = salesGroupByDate.get(key);
-
-						if (dateSalesList == null) {
-							dateSalesList = new ArrayList<Sale>();
-							salesGroupByDate.put(key, dateSalesList);
+						// If type identifier != IA1 or IA9, add parent identifiers into the Map
+						if (!sale.typeIdentifier.equals(INAPP_PURCHASE_PURCHASE_IOS) && !sale.typeIdentifier.equals(INAPP_PURCHASE_SUBSCRIPTION_IOS)) {
+							ParentIditemIdLookup.put(sale.sku, sale.item.internalId);
 						}
 
-						dateSalesList.add(sale);
+						key = keyFormat.parse(keyFormat.format(sale.begin));
+
+						// Link list of item IDs with every day of the range
+						if (salesGroupByDate.get(key) == null) {
+							salesGroupByDate.put(key, new ArrayList<Sale>());
+						}
+						salesGroupByDate.get(key).add(sale);
+
 					}
 				}
 
@@ -1558,62 +1571,84 @@ public final class Core extends ActionHandler {
 				}
 
 				// add the numbers up to create ranks and then predict the position and the grossing position
-
 				Rank rank;
 				ModelRun modelRun;
-				Set<Date> dates = salesGroupByDate.keySet();
-				List<Sale> salesGroup;
 
+				// Create a dummy rank for every Item, every day of the date range
 				output.ranks = new ArrayList<Rank>();
+
+				// Keep track of the rank for a specific Item this day
+				Map<String, Rank> itemIDsRankLookup;
+
+				// Get range of dates
+				Set<Date> dates = salesGroupByDate.keySet();
 
 				for (Date salesGroupDate : dates) {
 
-					rank = new Rank();
-
-					output.ranks.add(rank);
-
 					modelRun = modelRunLookup.get(salesGroupDate);
-					salesGroup = salesGroupByDate.get(salesGroupDate);
 
 					if (sales.size() > 0) {
-						int downloads = 0;
-						float revenue = 0;
 
-						boolean populatedCommon = false;
+						itemIDsRankLookup = new HashMap<String, Rank>();
+
+						List<Sale> salesGroup = salesGroupByDate.get(salesGroupDate);
+
+						String itemId;
 						for (Sale sale : salesGroup) {
-							if (!populatedCommon) {
-								rank.category = input.category;
 
+							// Assign item id of the parent to IAP and Subscriptions
+							if (sale.typeIdentifier.equals(INAPP_PURCHASE_PURCHASE_IOS) || sale.typeIdentifier.equals(INAPP_PURCHASE_SUBSCRIPTION_IOS)) {
+								itemId = ParentIditemIdLookup.get(sale.parentIdentifier);
+							} else {
+								itemId = sale.item.internalId;
+							}
+
+							if (itemIDsRankLookup.get(itemId) == null) {
+								rank = new Rank();
+								rank.downloads = 0;
+								rank.revenue = (float) 0;
+
+								// Add common values
 								if (modelRun != null) {
 									rank.code = modelRun.code;
 								}
-
+								rank.category = input.category;
 								rank.country = input.country.a2Code;
 								rank.currency = sale.customerCurrency;
-								rank.price = Float.valueOf(((float) sale.customerPrice.intValue()) / 100.0f);
 								rank.date = salesGroupDate;
 								rank.created = salesGroupDate;
-								rank.itemId = sale.item.internalId;
 								rank.source = defaultStore.a3Code;
 								rank.type = input.listType;
 
-								populatedCommon = true;
+								output.ranks.add(rank);
+							} else {
+								rank = itemIDsRankLookup.get(itemId);
+							}
+							rank.itemId = itemId;
+
+							// If units and customer prices are negatives (refunds), subtract the value setting units positive
+							rank.revenue += (Math.abs(sale.units.floatValue()) * (float) sale.customerPrice.intValue()) / 100.0f;
+
+							// Take into account price and downloads only from main Apps
+							if (sale.typeIdentifier.equals(FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS) || sale.typeIdentifier.equals(FREE_OR_PAID_APP_UNIVERSAL_IOS) || sale.typeIdentifier.equals(FREE_OR_PAID_APP_IPAD_IOS)) {
+								rank.downloads += sale.units.intValue();
+								// Ignore price if the Sale is a refund or a promotion
+								if (rank.price == null && sale.customerPrice.intValue() >= 0 && sale.promoCode.equals(" ")){									
+									rank.price = Float.valueOf(((float) sale.customerPrice.intValue()) / 100.0f);
+								}
 							}
 
-							revenue += (sale.units.floatValue() * (float) sale.customerPrice.intValue()) / 100.0f;
-							downloads += sale.units.intValue();
-						}
+							if (modelRun != null) {
+								// TODO: use the mode to predict what rank that would be
+								// rank.grossingPosition;
+								// rank.position;
+							}
 
-						rank.revenue = Float.valueOf(revenue);
-						rank.downloads = Integer.valueOf(downloads);
+						} // end 1 day sales loop
 
-						if (modelRun != null) {
-							// TODO: use the mode to predict what rank that would be
-							// rank.grossingPosition;
-							// rank.position;
-						}
 					}
-				}
+
+				} // end date range loop
 			}
 
 			DataTypeHelper.sortRanksByDate(output.ranks);

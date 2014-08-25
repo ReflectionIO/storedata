@@ -284,7 +284,7 @@ public class FilterController {
 				pageTypeFilter = PageType.RanksPageType;
 				mCurrentFilter = filters.get(pageTypeFilter);
 			}
-			if (allParts[0].equals("!users") && allParts[1].equals("myapps") && pageTypeFilter != PageType.MyAppsPageType) {
+			if (allParts[0].equals("!users") && allParts.length > 1 && allParts[1].equals("myapps") && pageTypeFilter != PageType.MyAppsPageType) {
 				pageTypeFilter = PageType.MyAppsPageType;
 				mCurrentFilter = filters.get(pageTypeFilter);
 			}
