@@ -35,7 +35,7 @@ public class MyApp {
 	 * Updates the overall values based on the ranks
 	 */
 	public void updateOverallValues() {
-		if (ranks != null || (ranks != null && ranks.size() == 0)) {
+		if (ranks != null && ranks.size() > 0) {
 			int downloads = 0;
 			float revenue = 0;
 
