@@ -90,7 +90,6 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
         topics.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
         topics.setEmptyTableWidget(new HTMLPanel("No topics found!"));
 
-        TopicController.get().addDataDisplay(topics);
         pager.setDisplay(topics);
 
     }
@@ -201,6 +200,28 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
         register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
     }
 
+    @Override
+    protected void onDetach() {
+        super.onDetach();
+        reset();
+    }
+
+    /**
+     * 
+     */
+    private void reset() {
+
+        // got from https://groups.google.com/forum/#!topic/google-web-toolkit/cAvgdn2fmfU
+        // this *should* clear the attached pager.
+        if (TopicController.get().getDataDisplays().size() > 0) {
+            TopicController.get().removeDataDisplay(topics);
+        }
+        topics.setVisibleRangeAndClearData(topics.getVisibleRange(), true);
+
+        forumSummarySidePanel.reset();
+        titleText.setInnerHTML("");
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -254,6 +275,8 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
     @Override
     public void navigationChanged(Stack previous, Stack current) {
         if (current != null && PageType.ForumPageType.equals(current.getPage())) {
+
+            TopicController.get().addDataDisplay(topics);
 
             String selectedIdString;
             if ((selectedIdString = current.getParameter(SELECTED_FORUM_PARAMETER_INDEX)) != null) {

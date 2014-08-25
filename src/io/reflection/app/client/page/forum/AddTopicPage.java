@@ -74,6 +74,12 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
 
         resetForm();
     }
+    
+    @Override
+    protected void onDetach() {
+        super.onDetach();
+        resetForm();
+    }
 
     /*
      * (non-Javadoc)

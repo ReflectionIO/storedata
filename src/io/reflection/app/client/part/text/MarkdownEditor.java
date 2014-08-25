@@ -225,4 +225,15 @@ public class MarkdownEditor extends Composite implements HasText {
         textArea.setText(newString);
     }
 
+    /**
+     * 
+     */
+    public void reset() {
+        textArea.setText("");
+        preview.setInnerHTML("");
+        tabLayout.selectTab(0);
+    }
+
+    
+
 }

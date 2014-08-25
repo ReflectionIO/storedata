@@ -7,6 +7,9 @@
 //
 package io.reflection.app.client.page.forum;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import io.reflection.app.api.forum.shared.call.AddReplyRequest;
 import io.reflection.app.api.forum.shared.call.AddReplyResponse;
 import io.reflection.app.api.forum.shared.call.GetTopicRequest;
@@ -93,6 +96,8 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
     @UiField ForumSummarySidePanel forumSummarySidePanel;
 
+    private Map<Long, String> editorTextMap = new HashMap<Long, String>();
+
     private ForumMessageProvider dataProvider;
 
     private Topic topic;
@@ -124,6 +129,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
             public void onLoadingStateChanged(LoadingStateChangeEvent event) {
                 if (event.getLoadingState() == LoadingState.LOADED && !replyText.isVisible()) {
                     replyText.setVisible(true);
+                    pager.setVisible(true);
                 }
             }
         }, LoadingStateChangeEvent.TYPE);
@@ -152,6 +158,8 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
             dataProvider.registerListeners();
         }
 
+        reset();
+
     }
 
     /*
@@ -166,6 +174,35 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
         if (dataProvider != null) {
             dataProvider.unregisterListeners();
         }
+
+        reset();
+    }
+
+    /**
+     * 
+     */
+    private void reset() {
+        topicTitle.setInnerHTML("");
+        notes.setInnerHTML("");
+
+        if (dataProvider != null && dataProvider.getDataDisplays().size() > 0) {
+            dataProvider.removeDataDisplay(messagesCellList);
+        }
+        messagesCellList.setVisibleRangeAndClearData(messagesCellList.getVisibleRange(), true);
+
+        pager.setVisible(false);
+
+        notes.setInnerHTML("");
+
+        editorTextMap.put(topicId, replyText.getText());
+        replyText.reset();
+        replyText.setVisible(false);
+        replyForm.setVisible(false);
+
+        // we shouldn't have to reset admin buttons because admin privledges should be the same.
+
+        forumSummarySidePanel.reset();
+
     }
 
     /*
@@ -221,6 +258,8 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
                 if ((topicIdString = current.getParameter(TOPIC_ID_PARAMETER_INDEX)) != null) {
                     topicId = Long.valueOf(topicIdString);
                     topic = TopicController.get().getTopic(topicId);
+
+                    replyText.setText(editorTextMap.get(topicId));
 
                     String param1 = current.getParameter(1);
                     if (param1 != null && param1.contains("post")) {

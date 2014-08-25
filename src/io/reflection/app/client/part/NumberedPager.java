@@ -38,11 +38,11 @@ public class NumberedPager extends AbstractPager {
     private static final int DEFAULT_FAST_FORWARD_ROWS = 1000;
 
     private final int mFastForwardRows;
-    
-    @UiField HTMLPanel htmlPanel ;
+
+    @UiField HTMLPanel htmlPanel;
 
     @UiField MyAnchor mFirstPage;
-    
+
     @UiField MyAnchor mLastPage;
 
     @UiField MyAnchor mNextPage;
@@ -175,7 +175,7 @@ public class NumberedPager extends AbstractPager {
      * 
      */
     private void clearNumbers() {
-        
+
         htmlPanel.clear();
         htmlPanel.add(mPrevPage);
         htmlPanel.add(mNextPage);
@@ -215,37 +215,34 @@ public class NumberedPager extends AbstractPager {
         }
     }
 
-    
-   
     /**
      * 
      */
     private void generateNumberLinks() {
 
         BootstrapGwtNumberedPager.INSTANCE.styles().ensureInjected();
-       htmlPanel.clear();
-       htmlPanel.add(mPrevPage);
+        htmlPanel.clear();
+        htmlPanel.add(mPrevPage);
         for (int i = 1; i <= getPageCount(); i++) {
             LIElement li = Document.get().createLIElement();
-           
-            
+
             Anchor anchor = new Anchor();
-            final int page = i ;
-            anchor.addClickHandler(new ClickHandler(){
+            final int page = i;
+            anchor.addClickHandler(new ClickHandler() {
 
                 @Override
                 public void onClick(ClickEvent event) {
-                    NumberedPager thePager = NumberedPager.this ;
+                    NumberedPager thePager = NumberedPager.this;
                     thePager.setPageStart((page - 1) * thePager.getPageSize());
-                }});
+                }
+            });
             anchor.getElement().appendChild(Document.get().createTextNode(Integer.toString(i)));
-        
-            
-            if (this.getPage() == i -1) //current page
-            {
+
+            // current page
+            if (this.getPage() == i - 1) {
                 anchor.setStyleName(BootstrapGwtNumberedPager.INSTANCE.styles().selected());
                 anchor.setEnabled(false);
-                
+
             }
             anchor.addStyleName(BootstrapGwtNumberedPager.INSTANCE.styles().spaceApart());
             li.appendChild(anchor.getElement());
@@ -259,24 +256,14 @@ public class NumberedPager extends AbstractPager {
      * Check if the next button is disabled. Visible for testing.
      */
     boolean isNextButtonDisabled() {
-        return mNextPage.getElement().getClassName().contains("disabled"); //no longer an element, this may not work
+        return mNextPage.getElement().getClassName().contains("disabled"); // no longer an element, this may not work
     }
 
     /**
      * Check if the previous button is disabled. Visible for testing.
      */
     boolean isPreviousButtonDisabled() {
-        return mPrevPage.getElement().getClassName().contains("disabled"); //no longer an element, this may not work
-    }
-
-    /**
-     * Get the number of pages to fast forward based on the current page size.
-     * 
-     * @return the number of pages to fast forward
-     */
-    private int getFastForwardPages() {
-        int pageSize = getPageSize();
-        return pageSize > 0 ? mFastForwardRows / pageSize : 0;
+        return mPrevPage.getElement().getClassName().contains("disabled"); // no longer an element, this may not work
     }
 
     void setDisabled(FocusWidget e, boolean disabled) {
@@ -303,8 +290,9 @@ public class NumberedPager extends AbstractPager {
      *            true to disable, false to enable
      */
     private void setPrevPageButtonsDisabled(boolean disabled) {
-        if (mFirstPage != null)
+        if (mFirstPage != null) {
             setDisabled(mFirstPage, disabled);
+        }
         setDisabled(mPrevPage, disabled);
     }
 
