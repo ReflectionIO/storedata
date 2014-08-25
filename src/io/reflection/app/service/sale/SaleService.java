@@ -160,18 +160,16 @@ final class SaleService implements ISaleService {
 		List<String> itemIds = new ArrayList<String>();
 		List<String> itemIdsTop400 = new ArrayList<String>();
 		List<Item> items = new ArrayList<Item>();
-		
+
 		String typeId = "";
 		if (typeIdentifiers != null && typeIdentifiers.size() > 0) {
 			typeId = "AND `typeidentifier` IN ('" + StringUtils.join(typeIdentifiers, "','") + "')";
 		}
 
-		String getSaleQuery = String
-				.format("SELECT DISTINCT `itemid` FROM `sale` WHERE `dataaccountid`=%d %s AND `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d",
-						dataAccount.id.longValue(), typeId, pager.sortBy == null ? "id" : pager.sortBy,
-						pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
-						pager.start == null ? Pager.DEFAULT_START.longValue() : pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue()
-								: pager.count.longValue());
+		String getSaleQuery = String.format("SELECT DISTINCT `itemid` FROM `sale` WHERE `dataaccountid`=%d %s AND `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d",
+				dataAccount.id.longValue(), typeId, pager.sortBy == null ? "id" : pager.sortBy,
+				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start == null ? Pager.DEFAULT_START.longValue()
+						: pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue() : pager.count.longValue());
 
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection saleConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
@@ -184,8 +182,7 @@ final class SaleService implements ISaleService {
 				itemIds.add(saleConnection.getCurrentRowString("itemid"));
 			}
 
-			items.addAll(ItemServiceProvider.provide().getInternalIdItemBatch(itemIds)); // return Items date from ITEM table (but only the ones in the top 400
-																							// !)
+			items.addAll(ItemServiceProvider.provide().getInternalIdItemBatch(itemIds)); // return only Items in the top 400
 
 			for (Item i : items) {
 				itemIdsTop400.add(i.internalId);
@@ -198,7 +195,7 @@ final class SaleService implements ISaleService {
 
 		itemIds.removeAll(itemIdsTop400); // get IDs of items out of the top 400
 
-		items.addAll(generateDummyItems(itemIds)); // generate dummy items from sale table for items out of the top 400
+		items.addAll(generateDummyItems(itemIds,typeIdentifiers)); // generate dummy items from sale table for items out of the top 400
 
 		return items;
 	}
@@ -210,8 +207,13 @@ final class SaleService implements ISaleService {
 	 * @return
 	 * @throws DataAccessException
 	 */
-	private List<Item> generateDummyItems(Collection<String> itemId) throws DataAccessException {
+	private List<Item> generateDummyItems(Collection<String> itemId, List<String> typeIdentifiers) throws DataAccessException {
 		List<Item> items = new ArrayList<Item>();
+		
+		String typeId = "";
+		if (typeIdentifiers != null && typeIdentifiers.size() > 0) {
+			typeId = "AND `typeidentifier` IN ('" + StringUtils.join(typeIdentifiers, "','") + "')";
+		}
 
 		String typesQueryPart = null;
 		if (itemId.size() == 1) {
@@ -220,7 +222,7 @@ final class SaleService implements ISaleService {
 			typesQueryPart = "CAST(`itemid` AS BINARY) IN (CAST('" + StringUtils.join(itemId, "' AS BINARY),CAST('") + "' AS BINARY))";
 		}
 
-		String getSaleItemQuery = String.format("SELECT DISTINCT `title`,`developer`,`itemid` FROM `sale` WHERE %s AND `deleted`='n'", typesQueryPart);
+		String getSaleItemQuery = String.format("SELECT DISTINCT `title`,`developer`,`itemid` FROM `sale` WHERE %s AND `deleted`='n' %s GROUP BY `itemid`", typesQueryPart, typeId);
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection saleConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
 
