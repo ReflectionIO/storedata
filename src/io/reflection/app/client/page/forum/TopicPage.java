@@ -202,6 +202,8 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
         // we shouldn't have to reset admin buttons because admin privledges should be the same.
 
         forumSummarySidePanel.reset();
+        
+        startPage = null ;
 
     }
 
@@ -275,6 +277,9 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
                         focusPagerOnPost(startPage);
                     }
                 }
+                if(startPage == null){
+                    startPage = 0 ;
+                }
             }
         }
         messagesCellList.redraw();
@@ -282,8 +287,14 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
     protected void focusPagerOnPost(final int post) {
         int firstOnPage = post - (post % ServiceConstants.SHORT_STEP_VALUE);
-        //this will call code that will set the range on the display itself
-        pager.setPageStart(firstOnPage);
+        
+        //This used to be the previous way we set the range on the display, via the pager like so
+        //pager.setPageStart(firstOnPage);
+        //However, this seems to be influenced by the previous replies the display/pager/dataprovider was bound too.
+        //Exactly why, I'm not sure, so to be safe set the visible range on the display itself. (Each change like this seems to have knock on effects that
+        //are difficult to predict without a complete understanding of AsyncDataProvider/CellList/Table).
+        
+        messagesCellList.setVisibleRange(post, ServiceConstants.SHORT_STEP_VALUE);
     }
 
     /**
