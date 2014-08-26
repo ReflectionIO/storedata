@@ -315,8 +315,12 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
             if (dataProvider != null) {
                 dataProvider.unregisterListeners();
+                
+                if (dataProvider.getDataDisplays().size() > 0) {
+                    dataProvider.removeDataDisplay(messagesCellList);
+                }
             }
-
+            
             dataProvider = new ForumMessageProvider(topic);
             dataProvider.registerListeners();
 
