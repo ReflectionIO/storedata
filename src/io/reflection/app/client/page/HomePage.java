@@ -200,7 +200,7 @@ public class HomePage extends Page {
 		super.onAttach();
 
 		NavigationController.get().getHeader().getElement().getStyle().setBorderColor("#272733");
-		((Footer)NavigationController.get().getFooter()).setNoHeight();
+		((Footer)NavigationController.get().getFooter()).setVisible(false);;
 		NavigationController.get().getPageHolderPanel().getElement().getStyle().setPaddingTop(0, Unit.PX);
 
 		firstPage.getStyle().setHeight(Window.getClientHeight(), Unit.PX);
@@ -253,7 +253,7 @@ public class HomePage extends Page {
 
 		NavigationController.get().getHeader().getElement().getStyle().clearBorderColor();
 		NavigationController.get().getPageHolderPanel().getElement().getStyle().setPaddingTop(60, Unit.PX);
-		((Footer)NavigationController.get().getFooter()).setFullHeight();
+		((Footer)NavigationController.get().getFooter()).setVisible(true);;
 		
 		resetContactForm();
 	}

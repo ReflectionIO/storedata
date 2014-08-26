@@ -71,11 +71,11 @@
             </g:HTMLPanel>
 
             <g:HTMLPanel styleName="row">
-                <div ui:field="links" class="{style.links} text-center">                    
+                <g:HTMLPanel ui:field="links" styleName="{style.links} text-center">                    
                         <g:InlineHyperlink ui:field="ranks">Leaderboard</g:InlineHyperlink>                        
                         <g:InlineHyperlink ui:field="terms" targetHistoryToken="{TermsPageType.asTargetHistoryToken}">Terms and
                             Conditions</g:InlineHyperlink>
-                </div>
+                </g:HTMLPanel>
                 <div class="{style.social} text-center">
                     <a href="https://www.facebook.com/reflection.io" target="_blank">
                         <span class="{global.reflection.footerFacebook}"></span>
