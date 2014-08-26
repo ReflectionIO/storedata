@@ -323,14 +323,15 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
             pager.setDisplay(messagesCellList); // bind the pager and the
             // display together.
             
-            //at this point we will call an onRangeChanged, but we don't have a start post as per yet.
-            dataProvider.addDataDisplay(messagesCellList);
-            
-            //this is where the pager should get set to the right page.
+            //this needs to be called BEFORE the dataprovider is connected.
+            //Connecting the data provider will trigger a rangeChange and we need the right page to be set for that.
             if (startPage != null) {
                 focusPagerOnPost(startPage.intValue());
             }
-
+            
+            //at this point we will call an onRangeChanged, but we don't have a start post as per yet.
+            dataProvider.addDataDisplay(messagesCellList);
+            
             // necessary to pull data from the data provider?
             messagesCellList.redraw();
 
