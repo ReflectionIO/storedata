@@ -202,6 +202,8 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
         // we shouldn't have to reset admin buttons because admin privledges should be the same.
 
         forumSummarySidePanel.reset();
+        
+        startPage = null ;
 
     }
 
@@ -275,6 +277,9 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
                         focusPagerOnPost(startPage);
                     }
                 }
+                if(startPage == null){
+                    startPage = 0 ;
+                }
             }
         }
         messagesCellList.redraw();
@@ -282,7 +287,14 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
     protected void focusPagerOnPost(final int post) {
         int firstOnPage = post - (post % ServiceConstants.SHORT_STEP_VALUE);
-        pager.setPageStart(firstOnPage);
+        
+        //This used to be the previous way we set the range on the display, via the pager like so
+        //pager.setPageStart(firstOnPage);
+        //However, this seems to be influenced by the previous replies the display/pager/dataprovider was bound too.
+        //Exactly why, I'm not sure, so to be safe set the visible range on the display itself. (Each change like this seems to have knock on effects that
+        //are difficult to predict without a complete understanding of AsyncDataProvider/CellList/Table).
+        
+        messagesCellList.setVisibleRange(post, ServiceConstants.SHORT_STEP_VALUE);
     }
 
     /**
@@ -314,19 +326,27 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
             if (dataProvider != null) {
                 dataProvider.unregisterListeners();
+                
+                if (dataProvider.getDataDisplays().size() > 0) {
+                    dataProvider.removeDataDisplay(messagesCellList);
+                }
             }
-
+            
             dataProvider = new ForumMessageProvider(topic);
             dataProvider.registerListeners();
 
             pager.setDisplay(messagesCellList); // bind the pager and the
             // display together.
-
-            dataProvider.addDataDisplay(messagesCellList);
+            
+            //this needs to be called BEFORE the dataprovider is connected.
+            //Connecting the data provider will trigger a rangeChange and we need the right page to be set for that.
             if (startPage != null) {
                 focusPagerOnPost(startPage.intValue());
             }
-
+            
+            //at this point we will call an onRangeChanged, but we don't have a start post as per yet.
+            dataProvider.addDataDisplay(messagesCellList);
+            
             // necessary to pull data from the data provider?
             messagesCellList.redraw();
 

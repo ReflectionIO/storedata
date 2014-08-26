@@ -112,8 +112,11 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
         // has changed but the range data hasn't.
         List<ForumMessage> messages = thread.getMessages(start);
         int totalCount = ReplyController.get().getThread(topic.id).getTotalCount();
-        updateRowCount(totalCount, true);
+        
+        //both of these calls potentially update the display of the pager.
         updateRowData(start, messages);
+        updateRowCount(totalCount, true);
+        
     }
 
     public void registerListeners() {
