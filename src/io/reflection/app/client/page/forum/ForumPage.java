@@ -22,7 +22,6 @@ import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.page.forum.part.ForumSummarySidePanel;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.NumberedPager;
-import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.Forum;
 import io.reflection.app.datatypes.shared.Topic;
