@@ -184,6 +184,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
     private void reset() {
         topicTitle.setInnerHTML("");
         notes.setInnerHTML("");
+        post.setText("Post");
 
         if (dataProvider != null && dataProvider.getDataDisplays().size() > 0) {
             dataProvider.removeDataDisplay(messagesCellList);
@@ -224,6 +225,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
     void postReplyClicked(ClickEvent event) {
         if (validate()) {
             ReplyController.get().addReply(topicId, replyText.getText());
+            post.setText("Posting...");
         }
     }
 
@@ -415,6 +417,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
     @Override
     public void addReplySuccess(AddReplyRequest input, AddReplyResponse output) {
         if (output.status == StatusType.StatusTypeSuccess) {
+            post.setText("Post");
             replyText.setText("");
             Topic topic2 = TopicController.get().getTopic(topicId);
             updateNotes(topic2);

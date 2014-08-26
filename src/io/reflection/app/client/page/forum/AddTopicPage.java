@@ -27,6 +27,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -46,6 +47,8 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
     @UiField MarkdownEditor contentText;
 
     @UiField ForumSummarySidePanel forumSummarySidePanel;
+    
+    @UiField Button submit ;
 
     private static AddTopicPageUiBinder uiBinder = GWT.create(AddTopicPageUiBinder.class);
 
@@ -57,7 +60,6 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
         title.getElement().setAttribute("placeholder", "Title");
         tags.getElement().setAttribute("placeholder", "Comma separated tags");
 
-        FilterHelper.addForums(forums);
     }
 
     /*
@@ -95,6 +97,8 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
     void onSubmit(ClickEvent e) {
         if (validate()) {
             Long forumId = null;
+            
+            submit.setText("Submitting new Topic...");
 
             if (forums.getItemCount() > 0) {
                 String forumIdString = forums.getValue(forums.getSelectedIndex());
@@ -116,8 +120,12 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
         title.setText("");
         contentText.setText("");
         tags.setText("");
+        submit.setText("Submit");
 
         forumSummarySidePanel.redraw();
+        
+        forums.clear();
+        FilterHelper.addForums(forums);
 
         // hide errors and remove clear validation strings
     }
@@ -131,6 +139,7 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
     @Override
     public void createTopicSuccess(CreateTopicRequest input, CreateTopicResponse output) {
         if (output.status == StatusType.StatusTypeSuccess) {
+            submit.setText("Submit");
             TopicController.get().reset();
             PageType.ForumThreadPageType.show("view", output.topic.id.toString());
         }
