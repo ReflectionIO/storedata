@@ -122,6 +122,9 @@ public class MyAppsTopPanel extends Composite {
 
 		dateSelector.addFixedRanges(dateSelectorPresetRanges);
 
+		// Reset linked account id in filter, to avoid problems after refreshing the page
+		FilterController.get().getFilter().setLinkedAccountId(0L);
+
 		updateFromFilter();
 
 	}
