@@ -282,6 +282,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
     protected void focusPagerOnPost(final int post) {
         int firstOnPage = post - (post % ServiceConstants.SHORT_STEP_VALUE);
+        //this will call code that will set the range on the display itself
         pager.setPageStart(firstOnPage);
     }
 
@@ -321,8 +322,11 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
             pager.setDisplay(messagesCellList); // bind the pager and the
             // display together.
-
+            
+            //at this point we will call an onRangeChanged, but we don't have a start post as per yet.
             dataProvider.addDataDisplay(messagesCellList);
+            
+            //this is where the pager should get set to the right page.
             if (startPage != null) {
                 focusPagerOnPost(startPage.intValue());
             }
