@@ -102,7 +102,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
     private Topic topic;
 
-    private Integer startPage;
+    private Integer startPagePost;
 
     public TopicPage() {
         initWidget(uiBinder.createAndBindUi(this));
@@ -204,7 +204,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
         forumSummarySidePanel.reset();
         
-        startPage = null ;
+        startPagePost = null ;
 
     }
 
@@ -270,22 +270,22 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
                         String param2 = current.getParameter(2);
                         if (param2 != null) {
                             final int post = Integer.parseInt(param2);
-                            startPage = post;
+                            startPagePost = post;
 
                         }
                     }
+                    
                     updateTopic(topic);
-                    if (startPage != null) {
-                        focusPagerOnPost(startPage);
+                    if (startPagePost != null) {
+                        focusPagerOnPost(startPagePost);
                     }
                 }
-                if(startPage == null){
-                    startPage = 0 ;
-                }
+                
             }
         }
-        messagesCellList.redraw();
     }
+
+ 
 
     protected void focusPagerOnPost(final int post) {
         int firstOnPage = post - (post % ServiceConstants.SHORT_STEP_VALUE);
@@ -340,11 +340,12 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
             pager.setDisplay(messagesCellList); // bind the pager and the
             // display together.
             
+            if(startPagePost == null){
+                startPagePost = 0 ;
+            }
             //this needs to be called BEFORE the dataprovider is connected.
             //Connecting the data provider will trigger a rangeChange and we need the right page to be set for that.
-            if (startPage != null) {
-                focusPagerOnPost(startPage.intValue());
-            }
+            focusPagerOnPost(startPagePost.intValue());
             
             //at this point we will call an onRangeChanged, but we don't have a start post as per yet.
             dataProvider.addDataDisplay(messagesCellList);
