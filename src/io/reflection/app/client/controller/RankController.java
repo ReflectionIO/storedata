@@ -70,7 +70,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 		input.country = ApiCallHelper.createCountryForApiCall(FilterController.get().getCountry()); // Get country from filter
 
-		input.listType = FilterController.get().getListTypes().get(0); // Get item type (paid, free, grossing)
+		input.listType = FilterController.get().getListTypes().get(0);
 
 		input.on = FilterController.get().getEndDate(); // Get start date from filter
 
@@ -85,7 +85,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 		input.pager = mPager; // Set pager used to retrieve and format the wished items (start, number of elements, sorting order)
 
-		input.store = ApiCallHelper.createStoreForApiCall(FilterController.get().getStore()); // Get store (iPhone, iPad ...)
+		input.store = ApiCallHelper.createStoreForApiCall(FilterController.get().getStore());
 
 		// Call to retrieve top items from DB. The response contains List<Rank> for the 3 rank types (free, paid, grossing) , a List<Item> and a Pager
 		service.getAllTopItems(input, new AsyncCallback<GetAllTopItemsResponse>() {
