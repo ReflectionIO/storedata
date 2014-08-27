@@ -70,7 +70,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 		input.country = ApiCallHelper.createCountryForApiCall(FilterController.get().getCountry()); // Get country from filter
 
-		input.listType = FilterController.get().getListTypes().get(0); // Get item type (paid, free, grossing)
+		input.listType = FilterController.get().getListTypes().get(0);
 
 		input.on = FilterController.get().getEndDate(); // Get start date from filter
 
@@ -153,7 +153,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 		input.category = FilterController.get().getCategory();
 
 		input.listType = FilterController.get().getListTypes().get(0);
-		
+
 		input.item = new Item();
 		input.item.internalId = item.internalId;
 		input.item.source = ApiCallHelper.storeCodeForApiCall(item.source);
@@ -334,7 +334,6 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 		updateRowData(0, mRows);
 		updateRowCount(0, false);
 
-		fetchTopItems();
 	}
 
 	/**

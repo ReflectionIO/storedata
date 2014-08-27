@@ -86,7 +86,7 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 		store.a3Code = FilterController.get().getFilter().getStoreA3Code();
 		input.store = ApiCallHelper.createStoreForApiCall(FilterController.get().getStore()); // Get store (iPhone, iPad ...)
 
-		input.listType = FilterController.get().getListTypes().get(0); // Get item type (paid, free, grossing)
+		input.listType = FilterController.get().getListTypes().get(0);
 
 		service.getLinkedAccountItems(input, new AsyncCallback<GetLinkedAccountItemsResponse>() {
 
