@@ -84,7 +84,7 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 
 		Store store = new Store();
 		store.a3Code = FilterController.get().getFilter().getStoreA3Code();
-		input.store = ApiCallHelper.createStoreForApiCall(FilterController.get().getStore()); // Get store (iPhone, iPad ...)
+		input.store = ApiCallHelper.createStoreForApiCall(FilterController.get().getStore());
 
 		input.listType = FilterController.get().getListTypes().get(0);
 
