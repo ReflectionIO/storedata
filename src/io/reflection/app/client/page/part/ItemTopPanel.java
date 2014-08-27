@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.part.BootstrapGwtDatePicker;
@@ -49,7 +50,7 @@ public class ItemTopPanel extends Composite {
 		BootstrapGwtDatePicker.INSTANCE.styles().ensureInjected();
 
 		// FilterHelper.addStores(mAppStore);
-		FilterHelper.addCountries(mCountry);
+		FilterHelper.addCountries(mCountry, SessionController.get().isLoggedInUserAdmin());
 
 		List<PresetDateRange> dateSelectorPresetRanges = new ArrayList<PresetDateRange>();
 

@@ -10,6 +10,7 @@ package io.reflection.app.client.page.part;
 import static io.reflection.app.client.controller.FilterController.DOWNLOADS_DAILY_DATA_TYPE;
 import static io.reflection.app.client.controller.FilterController.REVENUE_DAILY_DATA_TYPE;
 import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.part.BootstrapGwtDatePicker;
@@ -60,10 +61,10 @@ public class RankSidePanel extends Composite {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		BootstrapGwtDatePicker.INSTANCE.styles().ensureInjected();
-
-		FilterHelper.addStores(mAppStore);
-		FilterHelper.addCountries(mCountry);
-		FilterHelper.addCategories(category);
+		
+		FilterHelper.addStores(mAppStore, SessionController.get().isLoggedInUserAdmin());
+		FilterHelper.addCountries(mCountry, SessionController.get().isLoggedInUserAdmin());
+		FilterHelper.addCategories(category, SessionController.get().isLoggedInUserAdmin());
 
 		DateTimeFormat dtf = DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT_DD_MMM_YYYY);
 		date.setFormat(new DateBox.DefaultFormat(dtf));

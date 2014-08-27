@@ -63,29 +63,106 @@ public class FilterHelper {
 				list.addItem(linkedAccount.username, linkedAccount.id.toString());
 			}
 		}
-	}
+	}	
 
+	/**
+	 * Add list of stores to ListBox
+	 * 
+	 * @param list
+	 *            , ListBox
+	 * @param isAdmin
+	 *            , if false add only iPhone store
+	 */
+	public static void addStores(ListBox list, boolean isAdmin) {
+		if (isAdmin) {
+			List<Store> stores = StoreController.get().getStores();
+
+			if (stores != null) {
+				for (Store store : stores) {
+					list.addItem(store.name, store.a3Code);
+				}
+			}
+		} else {
+			list.addItem("iPhone Store", "iph");
+			list.setEnabled(false);
+		}
+	}
+	
 	public static void addStores(ListBox list) {
-		List<Store> stores = StoreController.get().getStores();
+		addStores(list, false);
+	}	
 
-		if (stores != null) {
-			for (Store store : stores) {
-				list.addItem(store.name, store.a3Code);
+	/**
+	 * Add list of countries to ListBox
+	 * 
+	 * @param list
+	 *            , ListBox
+	 * @param isAdmin
+	 *            , if false add only USA
+	 */
+	public static void addCountries(ListBox list, boolean isAdmin) {
+		if (isAdmin) {
+			List<Country> countries = CountryController.get().getCountries();
+
+			if (countries != null) {
+				for (Country country : countries) {
+					list.addItem(country.name, country.a2Code);
+				}
 			}
+		} else {
+			Country usCountry = CountryController.get().getCountry("us");
+			list.addItem(usCountry.name, usCountry.a2Code);
+			list.setEnabled(false);
 		}
-	}
-
+	}	
+	
 	public static void addCountries(ListBox list) {
-		List<Country> countries = CountryController.get().getCountries();
-
-		if (countries != null) {
-			for (Country country : countries) {
-				list.addItem(country.name, country.a2Code);
-			}
-		}
+		addCountries(list, false);
 	}
 
-	public static void addCategories(ListBox list) {}
+	/**
+	 * Add list of categories to ListBox
+	 * 
+	 * @param list
+	 *            , ListBox
+	 * @param isAdmin
+	 *            , if false add only All categories
+	 */
+	public static void addCategories(ListBox list, boolean isAdmin) {
+		if (isAdmin) {
+			list.addItem("All", "24");
+			list.addItem("Book", "19");
+			list.addItem("Business", "1");
+			list.addItem("Catalogs", "22");
+			list.addItem("Education", "18");
+			list.addItem("Entertainment", "17");
+			list.addItem("Finance", "16");
+			list.addItem("Food & Drink", "23");
+			list.addItem("Games", "15");
+			list.addItem("Health & Fitness", "14");
+			list.addItem("Lifestyle", "13");
+			list.addItem("Medical", "20");
+			list.addItem("Music", "12");
+			list.addItem("Navigation", "11");
+			list.addItem("News", "10");
+			list.addItem("Newsstand", "21");
+			list.addItem("Photo & Video", "9");
+			list.addItem("Productivity", "8");
+			list.addItem("Reference", "7");
+			list.addItem("Social Networking", "6");
+			list.addItem("Sports", "5");
+			list.addItem("Travel", "4");
+			list.addItem("Utilities", "3");
+			list.addItem("Weather", "2");
+		} else {
+			list.addItem("All", "24");
+			list.setEnabled(false);
+		}
+	}
+	
+	public static void addCategories(ListBox list) {
+		addCategories(list, false);
+	}
 
 	public static void addForums(ListBox list) {
 		List<Forum> forums = ForumController.get().getForums();
