@@ -11,6 +11,7 @@ import io.reflection.app.client.helper.MarkdownHelper;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.datatypes.ForumMessage;
 import io.reflection.app.client.part.text.MarkdownEditor;
+import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.shared.util.FormattingHelper;
 
 import java.io.IOException;
@@ -48,7 +49,7 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 	}
 
 	interface ForumMessageCellRenderer extends UiRenderer {
-		void render(SafeHtmlBuilder sb, String authorName, SafeHtml content, String created, SafeUri link, String flagBar, String flagText, String editBar,
+		void render(SafeHtmlBuilder sb, String authorName, String companyName, SafeHtml content, String created, SafeUri link, String flagBar, String flagText, String editBar,
 				SafeHtml editButtonHtml, String quoteBar, String quoteText);
 
 		void onBrowserEvent(ForumMessageCell o, NativeEvent e, Element p, ForumMessage n);
@@ -107,8 +108,11 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 
 			SafeUri link = UriUtils.fromSafeConstant(PageType.ForumThreadPageType.asHref("view", value.getTopicId().toString(), "view",
 					Integer.toString(value.getIndex())).asString());
+			
+			User author = value.getAuthor();
+			String companyName = SafeHtmlUtils.htmlEscape(FormattingHelper.getCompanyName(author));
 
-			RENDERER.render(builder, FormattingHelper.getUserName(value.getAuthor()), SafeHtmlUtils.fromTrustedString(processedString), FormattingHelper
+			RENDERER.render(builder, FormattingHelper.getUserName(author), companyName, SafeHtmlUtils.fromTrustedString(processedString), FormattingHelper
 					.getTimeSince(value.getCreated()), link, value.canFlag() ? " | " : "", value.canFlag() ? "Flag" : "", value.canEdit() ? " | " : "", value
 					.canEdit() ? editButtonHtml : SafeHtmlUtils.EMPTY_SAFE_HTML, value.canQuote() ? " | " : "", value.canQuote() ? "Quote" : "");
 		}
