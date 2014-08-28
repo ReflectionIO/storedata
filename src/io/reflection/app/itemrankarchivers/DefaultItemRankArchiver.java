@@ -3,7 +3,7 @@
 //  storedata
 //
 //  Created by William Shakour (billy1380) on 27 Aug 2014.
-//  Copyright © 2014 SPACEHOPPER STUDIOS LTD. All rights reserved.
+//  Copyright © 2014 Reflection.io Ltd. All rights reserved.
 //
 package io.reflection.app.itemrankarchivers;
 
@@ -16,7 +16,6 @@ import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.helpers.SliceHelper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.category.CategoryServiceProvider;
-import io.reflection.app.service.rank.IRankService;
 import io.reflection.app.service.rank.RankServiceProvider;
 
 import java.util.logging.Level;
@@ -90,10 +89,17 @@ public class DefaultItemRankArchiver implements ItemRankArchiver {
 	 * @see io.reflection.app.itemrankarchivers.ItemRankArchiver#archive(java.lang.Long)
 	 */
 	@Override
-	public void archive(Long id) throws DataAccessException {
-		IRankService rankService = RankServiceProvider.provide();
-		Rank rank = rankService.getRank(id);
+	public void archiveRank(Long id) throws DataAccessException {
+		archive(RankServiceProvider.provide().getRank(id));
+	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.itemrankarchivers.ItemRankArchiver#archive(io.reflection.app.datatypes.shared.Rank)
+	 */
+	@Override
+	public void archive(Rank rank) throws DataAccessException {
 		KeyValueArchiveManager.get().setAppender(Rank.class, new ValueAppender<Rank>() {
 
 			@Override
@@ -101,10 +107,10 @@ public class DefaultItemRankArchiver implements ItemRankArchiver {
 				String newValue = currentValue;
 
 				if (object != null) {
-					JsonElement jsonElement = (new JsonParser()).parse(currentValue);
+					JsonElement jsonElement = currentValue == null ? null : (new JsonParser()).parse(currentValue);
 					JsonArray newJsonArray = new JsonArray();
 
-					if (jsonElement.isJsonArray()) {
+					if (jsonElement != null && jsonElement.isJsonArray()) {
 						JsonArray jsonArray = jsonElement.getAsJsonArray();
 
 						Rank existingRank;
@@ -127,17 +133,17 @@ public class DefaultItemRankArchiver implements ItemRankArchiver {
 		});
 
 		Category allCategory = null;
-		
+
 		if (rank.category == null) {
 			if (allCategory == null) {
 				Store store = new Store();
 				store.a3Code = rank.source;
 				allCategory = CategoryServiceProvider.provide().getAllCategory(store);
 			}
-			
+
 			rank.category = allCategory;
 		}
-		
+
 		KeyValueArchiveManager.get().appendToValue(createArchiveKey(rank), rank);
 	}
 
@@ -151,10 +157,11 @@ public class DefaultItemRankArchiver implements ItemRankArchiver {
 		sb.append(".");
 		sb.append(rank.category.id.toString());
 		sb.append(".");
+		sb.append(rank.itemId);
+		sb.append(".");
 		sb.append(Long.toString(SliceHelper.offset(rank.date)));
 
 		return sb.toString();
 	}
 
-	
 }

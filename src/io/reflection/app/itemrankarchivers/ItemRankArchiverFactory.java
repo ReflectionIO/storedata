@@ -3,7 +3,7 @@
 //  storedata
 //
 //  Created by William Shakour (billy1380) on 27 Aug 2014.
-//  Copyright © 2014 SPACEHOPPER STUDIOS LTD. All rights reserved.
+//  Copyright © 2014 Reflection.io Ltd. All rights reserved.
 //
 package io.reflection.app.itemrankarchivers;
 
