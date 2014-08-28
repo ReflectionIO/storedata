@@ -90,10 +90,6 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
     @Override
     public void getRepliesSuccess(GetRepliesRequest input, GetRepliesResponse output) {
         if (output.status == StatusType.StatusTypeSuccess) {
-
-            start = input.pager.start.intValue() == 0 ? 0 : input.pager.start.intValue() + 1;
-            
-
             updateRows(input.topic.id);
         }
     }

@@ -84,6 +84,10 @@ public class NumberedPager extends AbstractPager {
      */
     public NumberedPager(boolean showFirstPageButton, final int fastForwardRows, boolean showLastPageButton) {
         initWidget(uiBinder.createAndBindUi(this));
+        
+        //This badly named setting seems to mean that the paging is not purely governed by the available data.
+        //i.e. if false can represent the last page even if rows don't add up to page size.
+//        setRangeLimited(false);
 
         this.mFastForwardRows = fastForwardRows;
 
@@ -156,11 +160,25 @@ public class NumberedPager extends AbstractPager {
     public void setPageSize(int pageSize) {
         super.setPageSize(pageSize);
     }
-
+    
+    /**
+     * Adapted from the solution proposed here.
+     * https://groups.google.com/forum/#!topic/google-web-toolkit/RedwgreWKB0
+     */
     @Override
     public void setPageStart(int index) {
-        super.setPageStart(index);
-    }
+        if (getDisplay() != null) {
+          Range range = getDisplay().getVisibleRange();
+          int pageSize = range.getLength();
+//          if (!isRangeLimited() && getDisplay().isRowCountExact()) {
+//            index = Math.min(index, getDisplay().getRowCount() - pageSize);
+//          }
+          index = Math.max(0, index);
+          if (index != range.getStart()) {
+            getDisplay().setVisibleRange(index, pageSize);
+          }
+        }
+      }
 
     /**
      * Let the page know that the table is loading. Call this method to clear all data from the table and hide the current range when new data is being loaded
@@ -209,10 +227,8 @@ public class NumberedPager extends AbstractPager {
         setPrevPageButtonsDisabled(!hasPreviousPage());
 
         // Update the next and last buttons.
-        if (isRangeLimited() || !display.isRowCountExact()) {
-            setNextPageButtonsDisabled(!hasNextPage());
-
-        }
+        setNextPageButtonsDisabled(!hasNextPage());
+        
     }
 
     /**
@@ -295,5 +311,7 @@ public class NumberedPager extends AbstractPager {
         }
         setDisabled(mPrevPage, disabled);
     }
+    
+   
 
 }
