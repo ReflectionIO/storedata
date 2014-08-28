@@ -135,15 +135,19 @@ public class ReplyController implements ServiceConstants {
          * Writing down example of a two pages, 10 items per page to demonstrate numbering to avoid confusion.
          * That means 20 ForumMessages, of which the first is the topic message with 19 replies.
          * 
-         * First page:  Visually            01 -> 10
-         *              Message Lookup      00 -> 09
-         *              fetch from server   01 -> 09  because 00 is the topic
-         *              with server ids     00 -> 08 (but we can fetch 10, no harm).
+         * First page:  Visually                01 -> 10
+         *              Message Lookup ids      00 -> 09
+         *              fetch from server       01 -> 09  because 00 is the topic, 
+         *              with server LIMIT ids   00 -> 08 (but we can fetch 10, no harm).
+         *              
+         *              so replies START = 00, but fill messageLookup first entry is 01 (not equal)
          *    
-         * Second page: Visually            11 -> 20
-         *              Message Lookup      10 -> 19
-         *              fetch from server   10 -> 19  because 00 is the topic
-         *              with server ids     09 -> 18 
+         * Second page: Visually                11 -> 20
+         *              Message Lookup ids      10 -> 19
+         *              fetch from server       10 -> 19  because 00 is the topic
+         *              with server LIMIT ids   09 -> 18 
+         *              
+         *              replies START = 10, AND fill messageLookup first entry is 10 (equal)
          */
         void fetchReplies(Long topicId2, final long start, final long count) {
             ForumService service = ServiceCreator.createForumService();
@@ -171,11 +175,7 @@ public class ReplyController implements ServiceConstants {
                         if (output.replies != null) {
                             replies.addAll(output.replies);
 
-                            // be careful with the different ordering of
-                            // replies, forumMessages,
-                            // and rows in the celltable/database.
-
-                            long i = start;
+                            long i = start == 0 ? 1 : start; //not equal on first page, see above
                             for (Reply reply : output.replies) {
                                 Topic topic = input.topic;
                                 int replyId = reply.id.intValue();
@@ -205,7 +205,7 @@ public class ReplyController implements ServiceConstants {
          * @param replyId
          */
         protected void addForumMessage(int messageIndex, Reply reply, Topic topic, int replyId) {
-            messagesLookup.put(messageIndex + 1, new ForumMessage(topic, reply, messageIndex + 1));
+            messagesLookup.put(messageIndex, new ForumMessage(topic, reply, messageIndex));
             replyStore.put(replyId, reply);
         }
 

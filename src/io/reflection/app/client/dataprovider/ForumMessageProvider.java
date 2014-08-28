@@ -111,7 +111,7 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
         int totalCount = ReplyController.get().getThread(topic.id).getTotalCount();
         
         //check that the number of messages intended to draw is adequate.
-        assert messages.size() == Math.min(ServiceConstants.SHORT_STEP_VALUE, totalCount - start) : "ForumMessageProvider: messages for cell list is not adequate" ;
+        assert messages.size() >= Math.min(ServiceConstants.SHORT_STEP_VALUE, totalCount - start) : "ForumMessageProvider: messages for cell list is not adequate" ;
         
         //both of these calls potentially update the display of the pager.
         updateRowData(start, messages);
