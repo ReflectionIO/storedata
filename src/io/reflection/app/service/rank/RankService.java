@@ -73,11 +73,11 @@ final class RankService implements IRankService {
 				if (rankConnection.fetchNextRow()) {
 					rank = toRank(rankConnection);
 
-//					if (rank != null) {
-//						cal.setTime(new Date());
-//						cal.add(Calendar.DAY_OF_MONTH, 20);
-//						cache.put(memcacheKey, rank.toString(), cal.getTime());
-//					}
+					// if (rank != null) {
+					// cal.setTime(new Date());
+					// cal.add(Calendar.DAY_OF_MONTH, 20);
+					// cache.put(memcacheKey, rank.toString(), cal.getTime());
+					// }
 				}
 			} finally {
 				if (rankConnection != null) {
@@ -234,12 +234,12 @@ final class RankService implements IRankService {
 
 				if (rankConnection.fetchNextRow()) {
 					rank = toRank(rankConnection);
-					
-//					if (rank != null) {
-//						cal.setTime(new Date());
-//						cal.add(Calendar.DAY_OF_MONTH, 20);
-//						cache.put(memcacheKey, rank.toString(), cal.getTime());
-//					}
+
+					// if (rank != null) {
+					// cal.setTime(new Date());
+					// cal.add(Calendar.DAY_OF_MONTH, 20);
+					// cache.put(memcacheKey, rank.toString(), cal.getTime());
+					// }
 				}
 			} finally {
 				if (rankConnection != null) {
@@ -775,5 +775,40 @@ final class RankService implements IRankService {
 		}
 
 		return ranks;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.rank.IRankService#getRankIds(io.reflection.app.datatypes.shared.Country, io.reflection.app.datatypes.shared.Store,
+	 * io.reflection.app.datatypes.shared.Category, java.util.Date, java.util.Date)
+	 */
+	@Override
+	public List<Long> getRankIds(Country country, Store store, Category category, Date start, Date end) throws DataAccessException {
+		List<Long> rankIds = new ArrayList<Long>();
+
+		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+		String getCountryStoreTypeRanksQuery = String
+				.format("SELECT `id` FROM `rank` WHERE CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`source` AS BINARY)=CAST('%s' AS BINARY) AND `categoryid`=%d AND %s `deleted`='n'",
+						addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), beforeAfterQuery(end, start));
+
+		try {
+			rankConnection.connect();
+			rankConnection.executeQuery(getCountryStoreTypeRanksQuery);
+
+			while (rankConnection.fetchNextRow()) {
+				Long id = rankConnection.getCurrentRowLong("id");
+
+				if (id != null) {
+					rankIds.add(id);
+				}
+			}
+		} finally {
+			if (rankConnection != null) {
+				rankConnection.disconnect();
+			}
+		}
+
+		return rankIds;
 	}
 }

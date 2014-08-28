@@ -153,4 +153,16 @@ public interface IRankService extends IService {
 	 */
 	public List<Rank> getAllRanks(Country country, Store store, Category category, String listType, Date start, Date end) throws DataAccessException;
 
+	/**
+	 * Get Rank Ids
+	 * @param country
+	 * @param store
+	 * @param category
+	 * @param start
+	 * @param end
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<Long> getRankIds(Country country, Store store, Category category, Date start, Date end) throws DataAccessException;
+
 }
