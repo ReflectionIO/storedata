@@ -131,6 +131,20 @@ public class ReplyController implements ServiceConstants {
             return topicId;
         }
 
+        /*
+         * Writing down example of a two pages, 10 items per page to demonstrate numbering to avoid confusion.
+         * That means 20 ForumMessages, of which the first is the topic message with 19 replies.
+         * 
+         * First page:  Visually            01 -> 10
+         *              Message Lookup      00 -> 09
+         *              fetch from server   01 -> 09  because 00 is the topic
+         *              with server ids     00 -> 08 (but we can fetch 10, no harm).
+         *    
+         * Second page: Visually            11 -> 20
+         *              Message Lookup      10 -> 19
+         *              fetch from server   10 -> 19  because 00 is the topic
+         *              with server ids     09 -> 18 
+         */
         void fetchReplies(Long topicId2, final long start, final long count) {
             ForumService service = ServiceCreator.createForumService();
 
@@ -143,7 +157,7 @@ public class ReplyController implements ServiceConstants {
 
             final Pager pager = new Pager();
             pager.count = count;
-            pager.start = start;
+            pager.start = start == 0 ? 0 : start - 1;
             pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
             pager.sortBy = "created";
 

@@ -21,6 +21,7 @@ import io.reflection.app.api.forum.shared.call.event.UpdateReplyEventHandler;
 import io.reflection.app.api.forum.shared.call.event.UpdateTopicEventHandler;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.ReplyController;
+import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.ReplyController.ReplyThread;
 import io.reflection.app.client.controller.TopicController;
 import io.reflection.app.client.part.datatypes.ForumMessage;
@@ -108,6 +109,9 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
         // has changed but the range data hasn't.
         List<ForumMessage> messages = thread.getMessages(start);
         int totalCount = ReplyController.get().getThread(topic.id).getTotalCount();
+        
+        //check that the number of messages intended to draw is adequate.
+        assert messages.size() == Math.min(ServiceConstants.SHORT_STEP_VALUE, totalCount - start) : "ForumMessageProvider: messages for cell list is not adequate" ;
         
         //both of these calls potentially update the display of the pager.
         updateRowData(start, messages);
