@@ -92,6 +92,14 @@ public class FormattingHelper {
 		}
 		return longName;
 	}
+	
+	public static String getCompanyName(User user) {
+	    String result = "";
+	    if (user != null && user.company != null && user.company.trim().length() > 0) {
+	        result = user.company.trim();
+	    }
+	    return result ;
+	}
 
 	public static String getTimeSince(Date date) {
 		return date == null ? "" : getTimeSince(date, true);

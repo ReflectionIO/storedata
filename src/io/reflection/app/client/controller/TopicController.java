@@ -51,6 +51,7 @@ public class TopicController extends AsyncDataProvider<Topic> implements Service
 	private SparseArray<Topic> topicLookup = null;
 
 	private Long forumId;
+    private GetTopicsRequest fetchTopicsRequest;
 
 	private static TopicController one = null;
 
@@ -64,24 +65,12 @@ public class TopicController extends AsyncDataProvider<Topic> implements Service
 
 	private void fetchTopics() {
 
-		if (forumId != null) {
+	    //make sure only one active fetch is running at a time
+		if (forumId != null && (fetchTopicsRequest == null || !fetchTopicsRequest.forum.id.equals(forumId))) {
 			ForumService service = ServiceCreator.createForumService();
-
-			final GetTopicsRequest input = new GetTopicsRequest();
-			input.accessCode = ACCESS_CODE;
-
-			input.session = SessionController.get().getSessionForApiCall();
-
-			input.forum = new Forum();
-			input.forum.id = forumId;
-
-			if (pager == null) {
-				pager = new Pager();
-				pager.count = SHORT_STEP;
-				pager.start = Long.valueOf(0);
-				pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
-			}
-			input.pager = pager;
+			
+			final GetTopicsRequest input = createGetTopicsRequest(forumId);
+			fetchTopicsRequest = input ;
 
 			service.getTopics(input, new AsyncCallback<GetTopicsResponse>() {
 
@@ -116,16 +105,38 @@ public class TopicController extends AsyncDataProvider<Topic> implements Service
 					}
 
 					EventController.get().fireEventFromSource(new GetTopicsSuccess(input, output), TopicController.this);
+					fetchTopicsRequest = null ;
 				}
 
 				@Override
 				public void onFailure(Throwable caught) {
 					EventController.get().fireEventFromSource(new GetTopicsFailure(input, caught), TopicController.this);
+					fetchTopicsRequest = null ;
 				}
 			});
 		}
 
 	}
+
+    protected GetTopicsRequest createGetTopicsRequest(Long forumId) {
+        final GetTopicsRequest input = new GetTopicsRequest();
+        
+        input.accessCode = ACCESS_CODE;
+
+        input.session = SessionController.get().getSessionForApiCall();
+
+        input.forum = new Forum();
+        input.forum.id = forumId;
+
+        if (pager == null) {
+        	pager = new Pager();
+        	pager.count = SHORT_STEP;
+        	pager.start = Long.valueOf(0);
+        	pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
+        }
+        input.pager = pager;
+        return input;
+    }
 
 	private void fetchTopic(Long topicId) {
 		ForumService service = ServiceCreator.createForumService();
@@ -181,6 +192,8 @@ public class TopicController extends AsyncDataProvider<Topic> implements Service
 	public boolean hasTopics() {
 		return pager != null || topics.size() > 0;
 	}
+	
+	
 
 	/*
 	 * (non-Javadoc)
