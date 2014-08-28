@@ -47,6 +47,7 @@ import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -104,6 +105,8 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
     private Integer startPagePost;
 
+    private HandlerRegistration onLoadedHandler;
+
     public TopicPage() {
         initWidget(uiBinder.createAndBindUi(this));
 
@@ -123,16 +126,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
         cellPrototype.setMarkdownTextEditor(replyText);
 
-        messagesCellList.addHandler(new LoadingStateChangeEvent.Handler() {
-
-            @Override
-            public void onLoadingStateChanged(LoadingStateChangeEvent event) {
-                if (event.getLoadingState() == LoadingState.LOADED && !replyText.isVisible()) {
-                    replyText.setVisible(true);
-                    pager.setVisible(true);
-                }
-            }
-        }, LoadingStateChangeEvent.TYPE);
+        
 
     }
 
@@ -153,6 +147,8 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
         register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
         register(EventController.get().addHandlerToSource(GetTopicEventHandler.TYPE, TopicController.get(), this));
         register(EventController.get().addHandlerToSource(AddReplyEventHandler.TYPE, ReplyController.get(), this));
+        
+        registerOnMessagesLoadedHandler();
 
         if (dataProvider != null) {
             dataProvider.registerListeners();
@@ -160,6 +156,21 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
         reset();
 
+    }
+
+    protected void registerOnMessagesLoadedHandler() {
+        if (onLoadedHandler == null) {
+            onLoadedHandler = messagesCellList.addHandler(new LoadingStateChangeEvent.Handler() {
+    
+                @Override
+                public void onLoadingStateChanged(LoadingStateChangeEvent event) {
+                    if (event.getLoadingState() == LoadingState.LOADED) {
+                        replyText.setVisible(true);
+                        pager.setVisible(true);
+                    }
+                }
+            }, LoadingStateChangeEvent.TYPE);
+        }
     }
 
     /*
@@ -174,6 +185,9 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
         if (dataProvider != null) {
             dataProvider.unregisterListeners();
         }
+        
+        onLoadedHandler.removeHandler();
+        onLoadedHandler = null ;
 
         reset();
     }
@@ -189,6 +203,11 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
         if (dataProvider != null && dataProvider.getDataDisplays().size() > 0) {
             dataProvider.removeDataDisplay(messagesCellList);
         }
+        
+        //https://groups.google.com/d/msg/google-web-toolkit/cAvgdn2fmfU/X-xqKn8uFQsJ
+        //This seems to allow the onLoadedHandler for the cell list to run
+        messagesCellList.setRowCount(1); 
+        messagesCellList.setPageSize(1);
         messagesCellList.setVisibleRangeAndClearData(messagesCellList.getVisibleRange(), true);
 
         pager.setVisible(false);
