@@ -113,7 +113,7 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 			
 			String companyName = "";
 			if (author != null) {
-			    SafeHtmlUtils.htmlEscape(FormattingHelper.getCompanyName(author));
+			    companyName = SafeHtmlUtils.htmlEscape(FormattingHelper.getCompanyName(author));
 			}
 
 			RENDERER.render(builder, FormattingHelper.getUserName(author), companyName, SafeHtmlUtils.fromTrustedString(processedString), FormattingHelper

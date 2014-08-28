@@ -95,7 +95,7 @@ public class FormattingHelper {
 	
 	public static String getCompanyName(User user)
 	{
-	    String result = null;
+	    String result = "";
 	    if (user != null && user.company != null && user.company.trim().length() > 0) {
 	        result = user.company.trim();
 	    }
