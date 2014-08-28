@@ -93,8 +93,7 @@ public class FormattingHelper {
 		return longName;
 	}
 	
-	public static String getCompanyName(User user)
-	{
+	public static String getCompanyName(User user) {
 	    String result = "";
 	    if (user != null && user.company != null && user.company.trim().length() > 0) {
 	        result = user.company.trim();
