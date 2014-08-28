@@ -72,6 +72,12 @@ final class RankService implements IRankService {
 
 				if (rankConnection.fetchNextRow()) {
 					rank = toRank(rankConnection);
+
+//					if (rank != null) {
+//						cal.setTime(new Date());
+//						cal.add(Calendar.DAY_OF_MONTH, 20);
+//						cache.put(memcacheKey, rank.toString(), cal.getTime());
+//					}
 				}
 			} finally {
 				if (rankConnection != null) {
@@ -228,6 +234,12 @@ final class RankService implements IRankService {
 
 				if (rankConnection.fetchNextRow()) {
 					rank = toRank(rankConnection);
+					
+//					if (rank != null) {
+//						cal.setTime(new Date());
+//						cal.add(Calendar.DAY_OF_MONTH, 20);
+//						cache.put(memcacheKey, rank.toString(), cal.getTime());
+//					}
 				}
 			} finally {
 				if (rankConnection != null) {
