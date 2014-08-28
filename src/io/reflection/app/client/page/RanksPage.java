@@ -87,7 +87,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	@UiField RanksPageStyle style;
 
 	@UiField(provided = true) CellTable<RanksGroup> mRanks = new CellTable<RanksGroup>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
-	@UiField(provided = true) PageSizePager mPager = new PageSizePager(ServiceConstants.STEP_VALUE);
+	@UiField(provided = true) PageSizePager mPager = new PageSizePager(175);
 
 	@UiField RankSidePanel mSidePanel;
 
@@ -140,7 +140,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		mRanks.setEmptyTableWidget(new HTMLPanel("No ranking data for filter!"));
 		mRanks.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 		RankController.get().addDataDisplay(mRanks);
-		mPager.setViewMoreText("View More Apps");
+		mPager.setViewMoreText("View All Apps");
 		mPager.setDisplay(mRanks);
 	}
 
