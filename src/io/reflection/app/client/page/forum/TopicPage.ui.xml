@@ -39,7 +39,6 @@
 		<div class="col-md-10">
 			<g:HTMLPanel styleName="well {style.toolbarSpacing}">
 				<div class="row">
-					<h3 class="col-sm-8 {style.header2}" ui:field="topicTitle"></h3>
 					<g:Button ui:field="replyLink" styleName="btn btn-primary col-sm-2 pull-right">
 						Post Reply
 						<span class="icon-plus"></span>
@@ -47,7 +46,7 @@
 				</div>
 			</g:HTMLPanel>
 
-		 
+			<h3 class="col-sm-8 {style.header2}" ui:field="topicTitle"></h3>
 			<div ui:field="descriptionStartedBy" />
 			<div ui:field="descriptionReplies" />
 			<div ui:field="descriptionLastPoster" />
