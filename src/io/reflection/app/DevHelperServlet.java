@@ -6,15 +6,21 @@ package io.reflection.app;
 import static io.reflection.app.objectify.PersistenceService.ofy;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.collectors.CollectorIOS;
+import io.reflection.app.datatypes.shared.Category;
+import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.ItemRankSummary;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.ingestors.Ingestor;
 import io.reflection.app.ingestors.IngestorFactory;
+import io.reflection.app.itemrankarchivers.ItemRankArchiver;
+import io.reflection.app.itemrankarchivers.ItemRankArchiverFactory;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.application.ApplicationServiceProvider;
+import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
+import io.reflection.app.service.rank.RankServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.setup.CountriesInstaller;
 import io.reflection.app.setup.StoresInstaller;
@@ -121,6 +127,7 @@ public class DevHelperServlet extends HttpServlet {
 				deferredQueue.add(TaskOptions.Builder.withUrl("/cron?" + req.getQueryString()).method(Method.GET));
 				// }
 			}
+
 			return;
 		}
 
@@ -597,8 +604,31 @@ public class DevHelperServlet extends HttpServlet {
 				CallServiceMethodServlet.enqueueGetAllRanks("us", "ios", Long.valueOf(24), CollectorIOS.TOP_GROSSING_APPS, new Date());
 
 				success = true;
-			} else {
+			} else if ("archive".equalsIgnoreCase(action)) {
+				if ("rank".equalsIgnoreCase(object)) {
+					try {
+						Store store = new Store();
+						store.a3Code = "ios";
 
+						Country country = new Country();
+						country.a2Code = "us";
+
+						Category allCategory = CategoryServiceProvider.provide().getAllCategory(store);
+
+						ItemRankArchiver ar = ItemRankArchiverFactory.getItemRankArchiverForStore(store.a3Code);
+
+						List<Long> rankIds = RankServiceProvider.provide().getRankIds(country, store, allCategory, new Date(0L), new Date());
+
+						for (Long rankId : rankIds) {
+							ar.enqueue(rankId);
+						}
+					} catch (DataAccessException e) {
+						throw new RuntimeException(e);
+					}
+				}
+
+				success = true;
+			} else {
 				if (LOG.isLoggable(Level.INFO)) {
 					LOG.info(String.format("Action [%s] not supported", action));
 				}
