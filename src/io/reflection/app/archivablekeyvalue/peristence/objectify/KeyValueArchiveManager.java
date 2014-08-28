@@ -32,9 +32,8 @@ public class KeyValueArchiveManager {
 	}
 
 	private Map<String, ValueAppender<?>> appenders = new HashMap<String, ValueAppender<?>>();
-	
-	@SuppressWarnings("rawtypes")
-	private ValueAppender defaultAppender = new ValueAppender() {
+
+	@SuppressWarnings("rawtypes") private ValueAppender defaultAppender = new ValueAppender() {
 
 		@Override
 		public String getNewValue(String currentValue, Object value) {
@@ -56,7 +55,14 @@ public class KeyValueArchiveManager {
 		ofy().transact(new VoidWork() {
 			public void vrun() {
 				ArchivableKeyValue akv = ofy().cache(false).load().type(ArchivableKeyValue.class).id(key).now();
+
+				if (akv == null) {
+					akv = new ArchivableKeyValue();
+					akv.key = key;
+				}
+
 				akv.value = "";
+
 				ofy().save().entity(akv);
 			}
 		});
@@ -70,6 +76,12 @@ public class KeyValueArchiveManager {
 			@SuppressWarnings("unchecked")
 			public void vrun() {
 				ArchivableKeyValue akv = ofy().cache(false).load().type(ArchivableKeyValue.class).id(key).now();
+
+				if (akv == null) {
+					akv = new ArchivableKeyValue();
+					akv.key = key;
+				}
+
 				akv.value = (appender == null ? defaultAppender : appender).getNewValue(akv.value, value);
 				ofy().save().entity(akv);
 			}
