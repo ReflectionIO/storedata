@@ -147,7 +147,7 @@ public class PredictorIOS implements Predictor {
 		p.count = new Long(Long.MAX_VALUE);
 
 		Modeller modeller = ModellerFactory.getModellerForStore(IOS_STORE_A3);
-		
+
 		Collector collector = CollectorFactory.getCollectorForStore(IOS_STORE_A3);
 		List<String> listTypes = new ArrayList<String>();
 		listTypes.addAll(collector.getCounterpartTypes(type));
@@ -223,10 +223,12 @@ public class PredictorIOS implements Predictor {
 				RankServiceProvider.provide().updateRank(rank);
 			}
 		}
-		
+
 		alterFeedFetchStatus(s, c, category, listTypes, code);
 
-		LOG.info("Done");
+		if (LOG.isLoggable(Level.INFO)) {
+			LOG.info("predictRevenueAndDownloads completed and status updated");
+		}
 	}
 
 	/**
@@ -248,7 +250,7 @@ public class PredictorIOS implements Predictor {
 			}
 		}
 	}
-	
+
 	private void setDownloadsAndRevenue(Rank rank, ModelRun output, boolean usesIap, float price) {
 		double revenue = 0.0;
 		double downloads = 0.0;
