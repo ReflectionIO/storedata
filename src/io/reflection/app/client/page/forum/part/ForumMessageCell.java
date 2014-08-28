@@ -110,7 +110,11 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 					Integer.toString(value.getIndex())).asString());
 			
 			User author = value.getAuthor();
-			String companyName = SafeHtmlUtils.htmlEscape(FormattingHelper.getCompanyName(author));
+			
+			String companyName = "";
+			if (author != null) {
+			    SafeHtmlUtils.htmlEscape(FormattingHelper.getCompanyName(author));
+			}
 
 			RENDERER.render(builder, FormattingHelper.getUserName(author), companyName, SafeHtmlUtils.fromTrustedString(processedString), FormattingHelper
 					.getTimeSince(value.getCreated()), link, value.canFlag() ? " | " : "", value.canFlag() ? "Flag" : "", value.canEdit() ? " | " : "", value
