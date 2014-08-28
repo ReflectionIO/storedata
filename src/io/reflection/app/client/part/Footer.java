@@ -23,9 +23,7 @@ import java.util.Date;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.SpanElement;
-import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -35,6 +33,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.Error;
@@ -64,7 +63,7 @@ public class Footer extends Composite implements FilterEventHandler, SessionEven
 
 	@UiField InlineHyperlink ranks;
 	@UiField InlineHyperlink terms;
-	@UiField DivElement links;
+	@UiField HTMLPanel links;
 
 	private boolean open;
 	private HandlerRegistration filterChangedRegistration;
@@ -106,15 +105,7 @@ public class Footer extends Composite implements FilterEventHandler, SessionEven
 		removeLeaderboard();
 		removeTerms();
 
-		links.getStyle().setDisplay(Display.NONE);
-	}
-
-	public void setNoHeight() {
-		footer.getElement().getStyle().setHeight(0, Unit.PX);
-	}
-
-	public void setFullHeight() {
-		footer.getElement().getStyle().setHeight(footerHeight, Unit.PX);
+		links.setVisible(false);
 	}
 
 	private void removeTerms() {
@@ -122,7 +113,7 @@ public class Footer extends Composite implements FilterEventHandler, SessionEven
 	}
 
 	private void addTerms() {
-		links.appendChild(terms.getElement());
+		links.getElement().appendChild(terms.getElement());
 	}
 
 	private void removeLeaderboard() {
@@ -130,7 +121,7 @@ public class Footer extends Composite implements FilterEventHandler, SessionEven
 	}
 
 	private void addLeaderboard() {
-		links.appendChild(ranks.getElement());
+		links.getElement().appendChild(ranks.getElement());
 	}
 
 	/*
@@ -205,23 +196,20 @@ public class Footer extends Composite implements FilterEventHandler, SessionEven
 	 */
 	@Override
 	public void userLoggedIn(User user, Session session) {
-		addLeaderboard();
-		addTerms();
 
-		links.getStyle().clearDisplay();
-
+		// Set new height and close
 		footerBottom = FOOTER_HIDDEN_BOTTOM_LINKS;
 		footerHeight = FOOTER_HEIGHT_LINKS;
+		footer.getElement().getStyle().setHeight(footerHeight, Unit.PX);
+		footer.getElement().getStyle().setBottom(footerBottom, Unit.PX);
+		mArrow.setStyleName(Styles.INSTANCE.reflection().footerUpArrow());
+		open = false;
 
-		// setFullHeight();
+		// Add links
+		addLeaderboard();
+		addTerms();
+		links.setVisible(true);
 
-		if (open) {
-			mArrow.setStyleName(Styles.INSTANCE.reflection().footerDownArrow());
-			footer.getElement().getStyle().setBottom(0, Unit.PX);
-		} else {
-			mArrow.setStyleName(Styles.INSTANCE.reflection().footerUpArrow());
-			footer.getElement().getStyle().setBottom(footerBottom, Unit.PX);
-		}
 	}
 
 	/*
@@ -231,23 +219,20 @@ public class Footer extends Composite implements FilterEventHandler, SessionEven
 	 */
 	@Override
 	public void userLoggedOut() {
-		removeLeaderboard();
-		removeTerms();
 
+		// Set new height and close
 		footerBottom = FOOTER_HIDDEN_BOTTOM_LINKLESS;
 		footerHeight = FOOTER_HEIGHT_LINKLESS;
+		footer.getElement().getStyle().setHeight(footerHeight, Unit.PX);
+		footer.getElement().getStyle().setBottom(footerBottom, Unit.PX);
+		mArrow.setStyleName(Styles.INSTANCE.reflection().footerUpArrow());
+		open = false;
 
-		links.getStyle().setDisplay(Display.NONE);
+		// Remove links
+		removeLeaderboard();
+		removeTerms();
+		links.setVisible(false);
 
-		setFullHeight();
-
-		if (open) {
-			mArrow.setStyleName(Styles.INSTANCE.reflection().footerDownArrow());
-			footer.getElement().getStyle().setBottom(0, Unit.PX);
-		} else {
-			mArrow.setStyleName(Styles.INSTANCE.reflection().footerUpArrow());
-			footer.getElement().getStyle().setBottom(footerBottom, Unit.PX);
-		}
 	}
 
 	/*

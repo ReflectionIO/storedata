@@ -17,9 +17,11 @@ import io.reflection.app.api.core.shared.call.event.GetLinkedAccountItemsEventHa
 import io.reflection.app.api.core.shared.call.event.GetSalesRanksEventHandler;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.client.helper.ApiCallHelper;
 import io.reflection.app.client.part.datatypes.MyApp;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
+import io.reflection.app.datatypes.shared.Store;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -79,6 +81,12 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 		}
 
 		input.linkedAccount = FilterController.get().getLinkedAccount();
+
+		Store store = new Store();
+		store.a3Code = FilterController.get().getFilter().getStoreA3Code();
+		input.store = ApiCallHelper.createStoreForApiCall(FilterController.get().getStore());
+
+		input.listType = FilterController.get().getListTypes().get(0);
 
 		service.getLinkedAccountItems(input, new AsyncCallback<GetLinkedAccountItemsResponse>() {
 

@@ -11,13 +11,17 @@ package io.reflection.app.api.core.shared.call;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.Request;
 import io.reflection.app.datatypes.shared.DataAccount;
+import io.reflection.app.datatypes.shared.Store;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 public class GetLinkedAccountItemsRequest extends Request {
 	public DataAccount linkedAccount;
+	public Store store;
+	public String listType;
 	public Pager pager;
 
 	@Override
@@ -25,6 +29,10 @@ public class GetLinkedAccountItemsRequest extends Request {
 		JsonObject object = super.toJson();
 		JsonElement jsonLinkedAccount = linkedAccount == null ? JsonNull.INSTANCE : linkedAccount.toJson();
 		object.add("linkedAccount", jsonLinkedAccount);
+		JsonElement jsonStore = store == null ? JsonNull.INSTANCE : store.toJson();
+		object.add("store", jsonStore);
+		JsonElement jsonListType = listType == null ? JsonNull.INSTANCE : new JsonPrimitive(listType);
+		object.add("listType", jsonListType);
 		JsonElement jsonPager = pager == null ? JsonNull.INSTANCE : pager.toJson();
 		object.add("pager", jsonPager);
 		return object;
@@ -38,6 +46,19 @@ public class GetLinkedAccountItemsRequest extends Request {
 			if (jsonLinkedAccount != null) {
 				linkedAccount = new DataAccount();
 				linkedAccount.fromJson(jsonLinkedAccount.getAsJsonObject());
+			}
+		}
+		if (jsonObject.has("store")) {
+			JsonElement jsonStore = jsonObject.get("store");
+			if (jsonStore != null) {
+				store = new Store();
+				store.fromJson(jsonStore.getAsJsonObject());
+			}
+		}
+		if (jsonObject.has("listType")) {
+			JsonElement jsonListType = jsonObject.get("listType");
+			if (jsonListType != null) {
+				listType = jsonListType.getAsString();
 			}
 		}
 		if (jsonObject.has("pager")) {

@@ -5,6 +5,9 @@
 	.textArea {
 		height: 200px;
 	}
+	.filler {
+        height: 40px;
+    }
 	</ui:style>
 	<g:HTMLPanel styleName="row">
 		<pp:ForumSummarySidePanel ui:field="forumSummarySidePanel" styleName="sidepanel col-md-2 well" />
@@ -41,6 +44,7 @@
 					</g:Button>
 				</g:HTMLPanel>
 			</g:FormPanel>
+			<g:HTMLPanel styleName="{style.filler} col-md-12 hidden-xs hidden-sm" />
 		</div>
 	</g:HTMLPanel>
 </ui:UiBinder> 

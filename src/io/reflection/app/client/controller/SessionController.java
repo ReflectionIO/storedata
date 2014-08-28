@@ -277,12 +277,22 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 			}
 		});
 
+		boolean wasAdmin = isLoggedInUserAdmin();
+
 		makeSessionInvalid();
-		
+
 		// Clear user data, filters and pages
 		LinkedAccountController.get().reset();
 		MyAppsController.get().reset();
 		FilterController.get().resetFilter(PageType.MyAppsPageType);
+
+		// TODO Remove when user can select all the filters
+		if (wasAdmin) {
+			FilterController.get().resetFilter(PageType.RanksPageType);
+			RankController.get().reset();
+			FilterController.get().resetFilter(PageType.ItemPageType);
+		}
+
 		NavigationController.get().purgeUserPages();
 		
 		PageType.LoginPageType.show("requestinvite");

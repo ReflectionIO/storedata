@@ -102,7 +102,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
     private Topic topic;
 
-    private Integer startPage;
+    private Integer startPagePost;
 
     public TopicPage() {
         initWidget(uiBinder.createAndBindUi(this));
@@ -184,6 +184,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
     private void reset() {
         topicTitle.setInnerHTML("");
         notes.setInnerHTML("");
+        post.setText("Post");
 
         if (dataProvider != null && dataProvider.getDataDisplays().size() > 0) {
             dataProvider.removeDataDisplay(messagesCellList);
@@ -202,6 +203,8 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
         // we shouldn't have to reset admin buttons because admin privledges should be the same.
 
         forumSummarySidePanel.reset();
+        
+        startPagePost = null ;
 
     }
 
@@ -224,6 +227,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
     void postReplyClicked(ClickEvent event) {
         if (validate()) {
             ReplyController.get().addReply(topicId, replyText.getText());
+            post.setText("Posting...");
         }
     }
 
@@ -266,23 +270,33 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
                         String param2 = current.getParameter(2);
                         if (param2 != null) {
                             final int post = Integer.parseInt(param2);
-                            startPage = post;
+                            startPagePost = post;
 
                         }
                     }
+                    
                     updateTopic(topic);
-                    if (startPage != null) {
-                        focusPagerOnPost(startPage);
+                    if (startPagePost != null) {
+                        focusPagerOnPost(startPagePost);
                     }
                 }
+                
             }
         }
-        messagesCellList.redraw();
     }
+
+ 
 
     protected void focusPagerOnPost(final int post) {
         int firstOnPage = post - (post % ServiceConstants.SHORT_STEP_VALUE);
-        pager.setPageStart(firstOnPage);
+        
+        //This used to be the previous way we set the range on the display, via the pager like so
+        //pager.setPageStart(firstOnPage);
+        //However, this seems to be influenced by the previous replies the display/pager/dataprovider was bound too.
+        //Exactly why, I'm not sure, so to be safe set the visible range on the display itself. (Each change like this seems to have knock on effects that
+        //are difficult to predict without a complete understanding of AsyncDataProvider/CellList/Table).
+        
+        messagesCellList.setVisibleRange(post, ServiceConstants.SHORT_STEP_VALUE);
     }
 
     /**
@@ -314,19 +328,28 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
             if (dataProvider != null) {
                 dataProvider.unregisterListeners();
+                
+                if (dataProvider.getDataDisplays().size() > 0) {
+                    dataProvider.removeDataDisplay(messagesCellList);
+                }
             }
-
+            
             dataProvider = new ForumMessageProvider(topic);
             dataProvider.registerListeners();
 
             pager.setDisplay(messagesCellList); // bind the pager and the
             // display together.
-
-            dataProvider.addDataDisplay(messagesCellList);
-            if (startPage != null) {
-                focusPagerOnPost(startPage.intValue());
+            
+            if(startPagePost == null){
+                startPagePost = 0 ;
             }
-
+            //this needs to be called BEFORE the dataprovider is connected.
+            //Connecting the data provider will trigger a rangeChange and we need the right page to be set for that.
+            focusPagerOnPost(startPagePost.intValue());
+            
+            //at this point we will call an onRangeChanged, but we don't have a start post as per yet.
+            dataProvider.addDataDisplay(messagesCellList);
+            
             // necessary to pull data from the data provider?
             messagesCellList.redraw();
 
@@ -415,6 +438,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
     @Override
     public void addReplySuccess(AddReplyRequest input, AddReplyResponse output) {
         if (output.status == StatusType.StatusTypeSuccess) {
+            post.setText("Post");
             replyText.setText("");
             Topic topic2 = TopicController.get().getTopic(topicId);
             updateNotes(topic2);
