@@ -84,15 +84,13 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	}
 
 	public static final int SELECTED_TAB_PARAMETER_INDEX = 0;
-	public static final int VIEW_ALL_LENGTH_VALUE = 200;
+	public static final int VIEW_ALL_LENGTH_VALUE = Integer.MAX_VALUE;
 
 	@UiField RanksPageStyle style;
 
 	@UiField(provided = true) CellTable<RanksGroup> mRanks = new CellTable<RanksGroup>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 
 	@UiField RankSidePanel mSidePanel;
-
-	@UiField Button redirect;
 
 	@UiField InlineHyperlink mAll;
 	@UiField InlineHyperlink mFree;
@@ -106,7 +104,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 	@UiField HTMLPanel showMorePanel;
 	@UiField Button viewAllBtn;
-	@UiField Button viewLessBtn;
+	@UiField InlineHyperlink redirect;
 
 	private Column<RanksGroup, Rank> mGrossingColumn;
 	private Column<RanksGroup, Rank> mFreeColumn;
@@ -456,18 +454,13 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	@UiHandler("viewAllBtn")
 	void onViewAllButtonClicked(ClickEvent event) {
 		if (((Button) event.getSource()).isEnabled()) {
-			mRanks.setVisibleRange(0, VIEW_ALL_LENGTH_VALUE);
-			viewAllBtn.setVisible(false);
-			viewLessBtn.setVisible(true);
-		}
-	}
-
-	@UiHandler("viewLessBtn")
-	void onViewLessButtonClicked(ClickEvent event) {
-		if (((Button) event.getSource()).isEnabled()) {
-			mRanks.setVisibleRange(0, ServiceConstants.STEP_VALUE);
-			viewLessBtn.setVisible(false);
-			viewAllBtn.setVisible(true);
+			if (mRanks.getVisibleItemCount() == ServiceConstants.STEP_VALUE) {
+				mRanks.setVisibleRange(0, VIEW_ALL_LENGTH_VALUE);
+				viewAllBtn.setText("View Less Apps");
+			} else {
+				mRanks.setVisibleRange(0, ServiceConstants.STEP_VALUE);
+				viewAllBtn.setText("View All Apps");
+			}
 		}
 	}
 
@@ -491,17 +484,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			if (hasPermission) {
 				redirect.removeFromParent();
 				viewAllBtn.getParent().getElement().appendChild(viewAllBtn.getElement());
-				viewLessBtn.getParent().getElement().appendChild(viewLessBtn.getElement());
-				if (mRanks.getVisibleItemCount() == VIEW_ALL_LENGTH_VALUE) {
-					viewAllBtn.setVisible(false);
-					viewLessBtn.setVisible(true);
-				} else {
-					viewLessBtn.setVisible(false);
-					viewAllBtn.setVisible(true);
-				}
 			} else {
 				viewAllBtn.removeFromParent();
-				viewLessBtn.removeFromParent();
 				redirect.getParent().getElement().appendChild(redirect.getElement());
 			}
 
