@@ -149,6 +149,7 @@ public class ReplyController implements ServiceConstants {
                     if (output.status == StatusType.StatusTypeSuccess) {
                         if (output.reply != null) {
                             replies.add(output.reply);
+                            replyStore.put(output.reply.id.intValue(), output.reply);
                         }
                     }
 
