@@ -7,12 +7,15 @@
 //
 package io.reflection.app.client.page.forum;
 
+import io.reflection.app.api.forum.shared.call.GetReplyRequest;
+import io.reflection.app.api.forum.shared.call.GetReplyResponse;
 import io.reflection.app.api.forum.shared.call.GetTopicRequest;
 import io.reflection.app.api.forum.shared.call.GetTopicResponse;
 import io.reflection.app.api.forum.shared.call.UpdateReplyRequest;
 import io.reflection.app.api.forum.shared.call.UpdateReplyResponse;
 import io.reflection.app.api.forum.shared.call.UpdateTopicRequest;
 import io.reflection.app.api.forum.shared.call.UpdateTopicResponse;
+import io.reflection.app.api.forum.shared.call.event.GetReplyEventHandler;
 import io.reflection.app.api.forum.shared.call.event.GetTopicEventHandler;
 import io.reflection.app.api.forum.shared.call.event.UpdateReplyEventHandler;
 import io.reflection.app.api.forum.shared.call.event.UpdateTopicEventHandler;
@@ -45,7 +48,8 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class EditTopicPage extends Page implements NavigationEventHandler, UpdateReplyEventHandler, UpdateTopicEventHandler, GetTopicEventHandler {
+public class EditTopicPage extends Page implements NavigationEventHandler, UpdateReplyEventHandler, UpdateTopicEventHandler, GetTopicEventHandler,
+        GetReplyEventHandler {
 
     private static EditTopicPageUiBinder uiBinder = GWT.create(EditTopicPageUiBinder.class);
 
@@ -90,6 +94,7 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
         register(EventController.get().addHandlerToSource(UpdateReplyEventHandler.TYPE, ReplyController.get(), this));
         register(EventController.get().addHandlerToSource(UpdateTopicEventHandler.TYPE, TopicController.get(), this));
         register(EventController.get().addHandlerToSource(GetTopicEventHandler.TYPE, TopicController.get(), this));
+        register(EventController.get().addHandlerToSource(GetReplyEventHandler.TYPE, ReplyController.get(), this));
     }
 
     @Override
@@ -98,7 +103,6 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
         reset();
     }
 
-   
     private void reset() {
         forumSummarySidePanel.reset();
         editText.reset();
@@ -122,7 +126,7 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
             String selectedReplyId = current.getParameter(REPLY_ID_PARAMETER_INDEX);
 
             forumSummarySidePanel.redraw();
-            
+
             replyPromise = new PromiseRPC<Reply>();
             topicPromise = new PromiseRPC<Topic>();
 
@@ -142,19 +146,19 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
                 } catch (NumberFormatException e) {
                     new RuntimeException(e);
                 }
-                
-                //get the topic or a promise
+
+                // get the topic or a promise
                 topic = TopicController.get().getTopic(topicId);
-                
+
                 if (topic != null) {
                     topicPromise.onSuccess(topic);
                 }
 
                 if (isTopic) {
-                    //run this function when we definitely have the topic
-                    GQuery.when(topicPromise).then(new Function(){
+                    // run this function when we definitely have the topic
+                    GQuery.when(topicPromise).then(new Function() {
                         @Override
-                        public void f(){
+                        public void f() {
                             content = topic.content.toString();
                             show();
                         }
@@ -165,21 +169,20 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
 
                         if (reply != null) {
                             replyPromise.onSuccess(reply);
-                        } 
-                        
-                        //if we're dealing with a reply, run this function when we have both the topic and reply
-                        GQuery.when(replyPromise, topicPromise).then(new Function(){
+                        }
+
+                        // if we're dealing with a reply, run this function when we have both the topic and reply
+                        GQuery.when(replyPromise, topicPromise).then(new Function() {
                             @Override
-                            public void f(){
+                            public void f() {
                                 content = reply.content.toString();
                                 show();
                             }
                         });
                     }
                 }
-            } 
-            
-            
+            }
+
         }
     }
 
@@ -258,8 +261,11 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
     @Override
     public void updateTopicFailure(UpdateTopicRequest input, Throwable caught) {}
 
-    /* (non-Javadoc)
-     * @see io.reflection.app.api.forum.shared.call.event.GetTopicEventHandler#getTopicSuccess(io.reflection.app.api.forum.shared.call.GetTopicRequest, io.reflection.app.api.forum.shared.call.GetTopicResponse)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.api.forum.shared.call.event.GetTopicEventHandler#getTopicSuccess(io.reflection.app.api.forum.shared.call.GetTopicRequest,
+     * io.reflection.app.api.forum.shared.call.GetTopicResponse)
      */
     @Override
     public void getTopicSuccess(GetTopicRequest input, GetTopicResponse output) {
@@ -269,12 +275,34 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
         }
     }
 
-    /* (non-Javadoc)
-     * @see io.reflection.app.api.forum.shared.call.event.GetTopicEventHandler#getTopicFailure(io.reflection.app.api.forum.shared.call.GetTopicRequest, java.lang.Throwable)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.api.forum.shared.call.event.GetTopicEventHandler#getTopicFailure(io.reflection.app.api.forum.shared.call.GetTopicRequest,
+     * java.lang.Throwable)
      */
     @Override
     public void getTopicFailure(GetTopicRequest input, Throwable caught) {
         topicPromise.onFailure(caught);
+    }
+
+    /* (non-Javadoc)
+     * @see io.reflection.app.api.forum.shared.call.event.GetReplyEventHandler#getReplySuccess(io.reflection.app.api.forum.shared.call.GetReplyRequest, io.reflection.app.api.forum.shared.call.GetReplyResponse)
+     */
+    @Override
+    public void getReplySuccess(GetReplyRequest input, GetReplyResponse output) {
+        if (output.status == StatusType.StatusTypeSuccess) {
+            reply = output.reply ;
+            replyPromise.onSuccess(reply);
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see io.reflection.app.api.forum.shared.call.event.GetReplyEventHandler#getReplyFailure(io.reflection.app.api.forum.shared.call.GetReplyRequest, java.lang.Throwable)
+     */
+    @Override
+    public void getReplyFailure(GetReplyRequest input, Throwable caught) {
+        replyPromise.onFailure(caught);
     }
 
 }
