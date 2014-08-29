@@ -9,8 +9,11 @@ package io.reflection.app.itemrankarchivers;
 
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.archivablekeyvalue.peristence.ValueAppender;
+import io.reflection.app.archivablekeyvalue.peristence.objectify.ArchivableKeyValue;
 import io.reflection.app.archivablekeyvalue.peristence.objectify.KeyValueArchiveManager;
 import io.reflection.app.datatypes.shared.Category;
+import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.helpers.SliceHelper;
@@ -18,6 +21,9 @@ import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,6 +36,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.spacehopperstudios.utility.JsonUtils;
+import com.spacehopperstudios.utility.StringUtils;
 
 /**
  * @author billy1380
@@ -148,20 +155,62 @@ public class DefaultItemRankArchiver implements ItemRankArchiver {
 	}
 
 	private String createArchiveKey(Rank rank) {
-		StringBuffer sb = new StringBuffer();
+		Item item = new Item();
+		item.internalId = rank.itemId;
 
-		sb.append("archiver.rank.");
-		sb.append(rank.source);
-		sb.append(".");
-		sb.append(rank.country);
-		sb.append(".");
-		sb.append(rank.category.id.toString());
-		sb.append(".");
-		sb.append(rank.itemId);
-		sb.append(".");
-		sb.append(Long.toString(SliceHelper.offset(rank.date)));
+		Store store = new Store();
+		store.a3Code = rank.source;
 
-		return sb.toString();
+		Country country = new Country();
+		country.a2Code = rank.country;
+
+		return createKey(Long.valueOf(SliceHelper.offset(rank.date)), item, store, country, rank.category);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.itemrankarchivers.ItemRankArchiver#createKey(java.lang.Long, io.reflection.app.datatypes.shared.Item,
+	 * io.reflection.app.datatypes.shared.Store, io.reflection.app.datatypes.shared.Country, io.reflection.app.datatypes.shared.Category)
+	 */
+	@Override
+	public String createKey(Long slice, Item item, Store store, Country country, Category category) {
+		return StringUtils.join(Arrays.asList("archiver", "item", "rank", slice.toString(), item.internalId == null ? item.id.toString() : item.internalId,
+				store.a3Code, country.a2Code, category.id.toString()), ".");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.itemrankarchivers.ItemRankArchiver#getItemRanks(java.lang.String)
+	 */
+	@Override
+	public List<Rank> getItemRanks(String key) {
+		List<Rank> ranks = null;
+		ArchivableKeyValue value = KeyValueArchiveManager.get().getArchiveKeyValue(key);
+
+		if (value != null && value.value != null && value.value.length() > 0) {
+			JsonElement jsonElement = (new JsonParser()).parse(value.value);
+
+			if (jsonElement.isJsonArray()) {
+				JsonArray jsonArray = jsonElement.getAsJsonArray();
+
+				Rank rank;
+				for (JsonElement jsonArrayElement : jsonArray) {
+					if (jsonArrayElement.isJsonObject()) {
+						rank = new Rank();
+						rank.fromJson(jsonArrayElement.getAsJsonObject());
+
+						if (ranks == null) {
+							ranks = new ArrayList<Rank>();
+						}
+						
+						ranks.add(rank);
+					}
+				}
+			}
+		}
+
+		return ranks;
+	}
 }

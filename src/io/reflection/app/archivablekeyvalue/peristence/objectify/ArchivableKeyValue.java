@@ -18,6 +18,6 @@ import com.googlecode.objectify.annotation.Id;
 @Entity
 @Cache
 public class ArchivableKeyValue {
-	@Id String key;
-	String value;
+	public @Id String key;
+	public String value;
 }

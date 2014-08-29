@@ -53,11 +53,11 @@ public class SliceHelper {
 		return new Date(c.getTimeInMillis());
 	}
 
-	public long[] slices(Date startDate, Date endDate) {
-		return slices(startDate, endDate, DEFAULT_DAYS_PER_SLICE);
+	public static long[] offsets(Date startDate, Date endDate) {
+		return offsets(startDate, endDate, DEFAULT_DAYS_PER_SLICE);
 	}
 
-	public long[] slices(Date startDate, Date endDate, int daysPerSlice) {
+	public static long[] offsets(Date startDate, Date endDate, int daysPerSlice) {
 		long[] dateRangeSlices = null;
 
 		long startDateSlice = offset(startDate, daysPerSlice);
