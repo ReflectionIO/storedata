@@ -7,9 +7,6 @@
 //
 package io.reflection.app.client.page.forum;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import io.reflection.app.api.forum.shared.call.AddReplyRequest;
 import io.reflection.app.api.forum.shared.call.AddReplyResponse;
 import io.reflection.app.api.forum.shared.call.GetTopicRequest;
@@ -40,14 +37,17 @@ import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.Topic;
 import io.reflection.app.shared.util.FormattingHelper;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadingElement;
-import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.Style.Display;
-import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.safehtml.client.SafeHtmlTemplates;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -77,7 +77,10 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
     interface TopicPageUiBinder extends UiBinder<Widget, TopicPage> {}
 
     @UiField HeadingElement topicTitle;
-    @UiField UListElement notes;
+
+    @UiField Element descriptionStartedBy;
+    @UiField Element descriptionReplies;
+    @UiField Element descriptionLastPoster;
 
     private ForumMessageCell cellPrototype = new ForumMessageCell();
     @UiField(provided = true) CellList<ForumMessage> messagesCellList = new CellList<ForumMessage>(cellPrototype, BootstrapGwtTopicCellList.INSTANCE);
@@ -126,8 +129,6 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
         cellPrototype.setMarkdownTextEditor(replyText);
 
-        
-
     }
 
     private void addAdminButtons() {
@@ -147,7 +148,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
         register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
         register(EventController.get().addHandlerToSource(GetTopicEventHandler.TYPE, TopicController.get(), this));
         register(EventController.get().addHandlerToSource(AddReplyEventHandler.TYPE, ReplyController.get(), this));
-        
+
         registerOnMessagesLoadedHandler();
 
         if (dataProvider != null) {
@@ -161,7 +162,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
     protected void registerOnMessagesLoadedHandler() {
         if (onLoadedHandler == null) {
             onLoadedHandler = messagesCellList.addHandler(new LoadingStateChangeEvent.Handler() {
-    
+
                 @Override
                 public void onLoadingStateChanged(LoadingStateChangeEvent event) {
                     if (event.getLoadingState() == LoadingState.LOADED) {
@@ -185,9 +186,9 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
         if (dataProvider != null) {
             dataProvider.unregisterListeners();
         }
-        
+
         onLoadedHandler.removeHandler();
-        onLoadedHandler = null ;
+        onLoadedHandler = null;
 
         reset();
     }
@@ -197,18 +198,19 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
      */
     private void reset() {
         topicTitle.setInnerHTML("");
-        notes.setInnerHTML("");
         post.setText("Post");
 
         if (dataProvider != null && dataProvider.getDataDisplays().size() > 0) {
             dataProvider.removeDataDisplay(messagesCellList);
         }
-        
+
         messagesCellList.setVisibleRangeAndClearData(messagesCellList.getVisibleRange(), true);
 
         pager.setVisible(false);
 
-        notes.setInnerHTML("");
+        descriptionStartedBy.setInnerHTML("");
+        descriptionReplies.setInnerHTML("");
+        descriptionLastPoster.setInnerHTML("");
 
         editorTextMap.put(topicId, replyText.getText());
         replyText.reset();
@@ -218,8 +220,8 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
         // we shouldn't have to reset admin buttons because admin privledges should be the same.
 
         forumSummarySidePanel.reset();
-        
-        startPagePost = null ;
+
+        startPagePost = null;
 
     }
 
@@ -289,28 +291,25 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
                         }
                     }
-                    
+
                     updateTopic(topic);
                     if (startPagePost != null) {
                         focusPagerOnPost(startPagePost);
                     }
                 }
-                
+
             }
         }
     }
 
- 
-
     protected void focusPagerOnPost(final int post) {
-        int firstOnPage = post - (post % ServiceConstants.SHORT_STEP_VALUE);
-        
-        //This used to be the previous way we set the range on the display, via the pager like so
-        //pager.setPageStart(firstOnPage);
-        //However, this seems to be influenced by the previous replies the display/pager/dataprovider was bound too.
-        //Exactly why, I'm not sure, so to be safe set the visible range on the display itself. (Each change like this seems to have knock on effects that
-        //are difficult to predict without a complete understanding of AsyncDataProvider/CellList/Table).
-        
+
+        // This used to be the previous way we set the range on the display, via the pager like so
+        // pager.setPageStart(firstOnPage);
+        // However, this seems to be influenced by the previous replies the display/pager/dataprovider was bound too.
+        // Exactly why, I'm not sure, so to be safe set the visible range on the display itself. (Each change like this seems to have knock on effects that
+        // are difficult to predict without a complete understanding of AsyncDataProvider/CellList/Table).
+
         messagesCellList.setVisibleRange(post, ServiceConstants.SHORT_STEP_VALUE);
     }
 
@@ -343,28 +342,28 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
             if (dataProvider != null) {
                 dataProvider.unregisterListeners();
-                
+
                 if (dataProvider.getDataDisplays().size() > 0) {
                     dataProvider.removeDataDisplay(messagesCellList);
                 }
             }
-            
+
             dataProvider = new ForumMessageProvider(topic);
             dataProvider.registerListeners();
 
             pager.setDisplay(messagesCellList); // bind the pager and the
             // display together.
-            
-            if(startPagePost == null){
-                startPagePost = 0 ;
+
+            if (startPagePost == null) {
+                startPagePost = 0;
             }
-            //this needs to be called BEFORE the dataprovider is connected.
-            //Connecting the data provider will trigger a rangeChange and we need the right page to be set for that.
+            // this needs to be called BEFORE the dataprovider is connected.
+            // Connecting the data provider will trigger a rangeChange and we need the right page to be set for that.
             focusPagerOnPost(startPagePost.intValue());
-            
-            //at this point we will call an onRangeChanged, but we don't have a start post as per yet.
+
+            // at this point we will call an onRangeChanged, but we don't have a start post as per yet.
             dataProvider.addDataDisplay(messagesCellList);
-            
+
             // necessary to pull data from the data provider?
             messagesCellList.redraw();
 
@@ -387,26 +386,33 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
         }
     }
 
+    interface TopicNotesTemplate extends SafeHtmlTemplates {
+        TopicNotesTemplate INSTANCE = GWT.create(TopicNotesTemplate.class);
+
+        @SafeHtmlTemplates.Template("<strong>Started by {0}</strong> <span>{1}</span>\n")
+        SafeHtml descriptionStartedBy(String startedBy, String topicStartedTimeAgo);
+
+        @SafeHtmlTemplates.Template("<strong>Replies</strong> <span>{0}</span>\n")
+        SafeHtml descriptionReplies(String numberOfReplies);
+
+        @SafeHtmlTemplates.Template("<strong>Last post by {0}</strong> <span>{1}</span>")
+        SafeHtml descriptionLastPoster(String lastPoster, String lastPostTimeAgo);
+    }
+
     protected void updateNotes(Topic topic) {
-        notes.removeAllChildren();
 
-        LIElement author = Document.get().createLIElement();
-        author.setInnerHTML("Started " + FormattingHelper.getTimeSince(topic.created) + " by " + FormattingHelper.getUserLongName(topic.author));
-
-        notes.appendChild(author);
+        descriptionStartedBy.setInnerSafeHtml(TopicNotesTemplate.INSTANCE.descriptionStartedBy(FormattingHelper.getUserName(topic.author),
+                FormattingHelper.getTimeSince(topic.created)));
 
         if (topic.numberOfReplies != null) {
-            LIElement replies = Document.get().createLIElement();
-            replies.setInnerHTML(topic.numberOfReplies.toString() + " replies");
+            descriptionReplies.setInnerSafeHtml(TopicNotesTemplate.INSTANCE.descriptionReplies(topic.numberOfReplies.toString()));
 
-            notes.appendChild(replies);
         }
 
         if (topic.lastReplier != null) {
-            LIElement lastReplier = Document.get().createLIElement();
-            lastReplier.setInnerHTML("Latest reply from " + FormattingHelper.getUserLongName(topic.lastReplier));
+            descriptionLastPoster.setInnerSafeHtml(TopicNotesTemplate.INSTANCE.descriptionLastPoster(FormattingHelper.getUserName(topic.lastReplier),
+                    FormattingHelper.getTimeSince(topic.lastReplied)));
 
-            notes.appendChild(lastReplier);
         }
     }
 

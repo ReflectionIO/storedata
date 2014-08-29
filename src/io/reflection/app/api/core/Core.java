@@ -12,11 +12,11 @@ import static io.reflection.app.helpers.ApiHelper.getGrossingListName;
 import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPAD_IOS;
 import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS;
 import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_UNIVERSAL_IOS;
+import static io.reflection.app.service.sale.ISaleService.INAPP_PURCHASE_PURCHASE_IOS;
+import static io.reflection.app.service.sale.ISaleService.INAPP_PURCHASE_SUBSCRIPTION_IOS;
 import static io.reflection.app.service.sale.ISaleService.UPDATE_IPAD_IOS;
 import static io.reflection.app.service.sale.ISaleService.UPDATE_IPHONE_AND_IPOD_TOUCH_IOS;
 import static io.reflection.app.service.sale.ISaleService.UPDATE_UNIVERSAL_IOS;
-import static io.reflection.app.service.sale.ISaleService.INAPP_PURCHASE_PURCHASE_IOS;
-import static io.reflection.app.service.sale.ISaleService.INAPP_PURCHASE_SUBSCRIPTION_IOS;
 import io.reflection.app.accountdatacollectors.DataAccountCollectorFactory;
 import io.reflection.app.api.PagerHelper;
 import io.reflection.app.api.ValidationHelper;
@@ -1040,10 +1040,25 @@ public final class Core extends ActionHandler {
 				input.pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
 			}
 
+			input.store = ValidationHelper.validateStore(input.store, "input");
+
+			if (input.store == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("Store: input.store"));
+
+			if (input.listType == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("String: input.listType"));
+
+			Modeller modeller = ModellerFactory.getModellerForStore(input.store.a3Code);
+			FormType form = modeller.getForm(input.listType);
+
 			List<String> freeOrPaidApps = new ArrayList<String>();
-			freeOrPaidApps.add(FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS);
 			freeOrPaidApps.add(FREE_OR_PAID_APP_UNIVERSAL_IOS);
-			freeOrPaidApps.add(FREE_OR_PAID_APP_IPAD_IOS);
+			if (form == FormType.FormTypeOther) {
+				freeOrPaidApps.add(FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS);
+			} else if (form == FormType.FormTypeTablet) {
+				freeOrPaidApps.add(FREE_OR_PAID_APP_IPAD_IOS);
+			}
+
 			output.items = SaleServiceProvider.provide().getDataAccountItems(input.linkedAccount, freeOrPaidApps, input.pager);
 
 			output.pager = input.pager;

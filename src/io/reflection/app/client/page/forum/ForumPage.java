@@ -248,9 +248,9 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
                 TopicController.get().getTopics(selectedForumId);
             }
             forumSummarySidePanel.selectItem(selectedForum);
-            if (selectedForum != null) // shouldn't be null unless an error has
-                                       // occured
-            {
+            
+            // shouldn't be null unless an error has occurred.
+            if (selectedForum != null) {
                 titleText.setInnerText(selectedForum.title);
             }
             forumSummarySidePanel.redraw();

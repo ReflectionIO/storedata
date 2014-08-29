@@ -387,8 +387,10 @@
                     <xsd:extension base="sd:Request">
                         <xsd:sequence>
                             <xsd:element name="linkedAccount" type="sd:DataAccount" />
+                            <xsd:element name="store" type="sd:Store" />
                             <xsd:element name="pager" type="sd:Pager" />
                         </xsd:sequence>
+                        <xsd:attribute name="listType" type="xsd:string" />
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>
