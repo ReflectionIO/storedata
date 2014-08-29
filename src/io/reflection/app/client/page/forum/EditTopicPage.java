@@ -7,14 +7,18 @@
 //
 package io.reflection.app.client.page.forum;
 
+import io.reflection.app.api.forum.shared.call.GetTopicRequest;
+import io.reflection.app.api.forum.shared.call.GetTopicResponse;
 import io.reflection.app.api.forum.shared.call.UpdateReplyRequest;
 import io.reflection.app.api.forum.shared.call.UpdateReplyResponse;
 import io.reflection.app.api.forum.shared.call.UpdateTopicRequest;
 import io.reflection.app.api.forum.shared.call.UpdateTopicResponse;
+import io.reflection.app.api.forum.shared.call.event.GetTopicEventHandler;
 import io.reflection.app.api.forum.shared.call.event.UpdateReplyEventHandler;
 import io.reflection.app.api.forum.shared.call.event.UpdateTopicEventHandler;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.ReplyController;
 import io.reflection.app.client.controller.TopicController;
@@ -39,7 +43,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class EditTopicPage extends Page implements NavigationEventHandler, UpdateReplyEventHandler, UpdateTopicEventHandler {
+public class EditTopicPage extends Page implements NavigationEventHandler, UpdateReplyEventHandler, UpdateTopicEventHandler, GetTopicEventHandler {
 
     private static EditTopicPageUiBinder uiBinder = GWT.create(EditTopicPageUiBinder.class);
 
@@ -81,6 +85,7 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
         register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
         register(EventController.get().addHandlerToSource(UpdateReplyEventHandler.TYPE, ReplyController.get(), this));
         register(EventController.get().addHandlerToSource(UpdateTopicEventHandler.TYPE, TopicController.get(), this));
+        register(EventController.get().addHandlerToSource(GetTopicEventHandler.TYPE, TopicController.get(), this));
     }
 
     @Override
@@ -141,6 +146,7 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
                 } else {
                     if (replyId != null) {
                         reply = ReplyController.get().getThread(topicId).getReply(replyId);
+                        topic = TopicController.get().getTopic(topicId);
 
                         if (reply != null) {
                             content = reply.content.toString();
@@ -228,5 +234,24 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
      */
     @Override
     public void updateTopicFailure(UpdateTopicRequest input, Throwable caught) {}
+
+    /* (non-Javadoc)
+     * @see io.reflection.app.api.forum.shared.call.event.GetTopicEventHandler#getTopicSuccess(io.reflection.app.api.forum.shared.call.GetTopicRequest, io.reflection.app.api.forum.shared.call.GetTopicResponse)
+     */
+    @Override
+    public void getTopicSuccess(GetTopicRequest input, GetTopicResponse output) {
+        if (output.status == StatusType.StatusTypeSuccess) {
+            topic = output.topic;
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see io.reflection.app.api.forum.shared.call.event.GetTopicEventHandler#getTopicFailure(io.reflection.app.api.forum.shared.call.GetTopicRequest, java.lang.Throwable)
+     */
+    @Override
+    public void getTopicFailure(GetTopicRequest input, Throwable caught) {
+        // TODO Auto-generated method stub
+        
+    }
 
 }
