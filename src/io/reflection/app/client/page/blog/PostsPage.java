@@ -70,7 +70,7 @@ public class PostsPage extends Page implements NavigationEventHandler, GetPostsE
         posts.setEmptyListWidget(new HTMLPanel("No posts found!"));
 
         PostController.get().addDataDisplay(posts);
-        pager.setViewMoreText("View All Posts");
+        pager.setViewMoreText("View More Posts");
         pager.setDisplay(posts);
     }
 
