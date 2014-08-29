@@ -32,6 +32,10 @@
 		margin-top: 30px;
 		padding-bottom: 10px;
 	}
+	
+	.notes {
+	   list-style: none;
+	}
 	</ui:style>
 	<g:HTMLPanel styleName="row">
 		<pp:ForumSummarySidePanel ui:field="forumSummarySidePanel" styleName="sidepanel col-md-2 well" />
@@ -39,6 +43,7 @@
 		<div class="col-md-10">
 			<g:HTMLPanel styleName="well {style.toolbarSpacing}">
 				<div class="row">
+				    <h3 class="col-sm-2 {style.header2}" ui:field="forumTitle"></h3>
 					<g:Button ui:field="replyLink" styleName="btn btn-primary col-sm-2 pull-right">
 						Post Reply
 						<span class="icon-plus"></span>
@@ -46,10 +51,8 @@
 				</div>
 			</g:HTMLPanel>
 
-			<h3 class="col-sm-8 {style.header2}" ui:field="topicTitle"></h3>
-			<div ui:field="descriptionStartedBy" />
-			<div ui:field="descriptionReplies" />
-			<div ui:field="descriptionLastPoster" />
+			<h2 ui:field="topicTitle"></h2>
+			<ul ui:field="notes" class="{style.notes}" />
 
 			<div class="row">
 				<div class="col-sm-10 col-sm-offset-2 btn-group">
