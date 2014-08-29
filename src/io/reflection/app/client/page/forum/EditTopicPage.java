@@ -18,7 +18,6 @@ import io.reflection.app.api.forum.shared.call.event.UpdateReplyEventHandler;
 import io.reflection.app.api.forum.shared.call.event.UpdateTopicEventHandler;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.NavigationController;
-import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.ReplyController;
 import io.reflection.app.client.controller.TopicController;
@@ -33,6 +32,9 @@ import io.reflection.app.datatypes.shared.Topic;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.query.client.Function;
+import com.google.gwt.query.client.GQuery;
+import com.google.gwt.query.client.plugins.deferred.PromiseRPC;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -68,6 +70,8 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
 
     @UiField MarkdownEditor editText;
     @UiField ForumSummarySidePanel forumSummarySidePanel;
+    private PromiseRPC<Reply> replyPromise;
+    private PromiseRPC<Topic> topicPromise;
 
     public EditTopicPage() {
         initWidget(uiBinder.createAndBindUi(this));
@@ -118,6 +122,9 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
             String selectedReplyId = current.getParameter(REPLY_ID_PARAMETER_INDEX);
 
             forumSummarySidePanel.redraw();
+            
+            replyPromise = new PromiseRPC<Reply>();
+            topicPromise = new PromiseRPC<Topic>();
 
             if (topicIdString != null) {
                 topicId = null;
@@ -135,28 +142,44 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
                 } catch (NumberFormatException e) {
                     new RuntimeException(e);
                 }
+                
+                //get the topic or a promise
+                topic = TopicController.get().getTopic(topicId);
+                
+                if (topic != null) {
+                    topicPromise.onSuccess(topic);
+                }
 
                 if (isTopic) {
-                    topic = TopicController.get().getTopic(topicId);
-
-                    if (topic != null) {
-                        content = topic.content.toString();
-                        show();
-                    }
+                    //run this function when we definitely have the topic
+                    GQuery.when(topicPromise).then(new Function(){
+                        @Override
+                        public void f(){
+                            content = topic.content.toString();
+                            show();
+                        }
+                    });
                 } else {
                     if (replyId != null) {
                         reply = ReplyController.get().getThread(topicId).getReply(replyId);
-                        topic = TopicController.get().getTopic(topicId);
 
                         if (reply != null) {
-                            content = reply.content.toString();
-                            show();
-                        }
+                            replyPromise.onSuccess(reply);
+                        } 
+                        
+                        //if we're dealing with a reply, run this function when we have both the topic and reply
+                        GQuery.when(replyPromise, topicPromise).then(new Function(){
+                            @Override
+                            public void f(){
+                                content = reply.content.toString();
+                                show();
+                            }
+                        });
                     }
                 }
-            } else {
-                // there really is no point... this looks like trying to add a topic which will never happen on this page
-            }
+            } 
+            
+            
         }
     }
 
@@ -242,6 +265,7 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
     public void getTopicSuccess(GetTopicRequest input, GetTopicResponse output) {
         if (output.status == StatusType.StatusTypeSuccess) {
             topic = output.topic;
+            topicPromise.onSuccess(topic);
         }
     }
 
@@ -250,8 +274,7 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
      */
     @Override
     public void getTopicFailure(GetTopicRequest input, Throwable caught) {
-        // TODO Auto-generated method stub
-        
+        topicPromise.onFailure(caught);
     }
 
 }

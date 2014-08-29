@@ -121,7 +121,20 @@ public class ReplyController implements ServiceConstants {
         }
 
         public Reply getReply(Long replyId) {
-            return replyStore.get(replyId.intValue());
+            Reply result = replyStore.get(replyId.intValue());
+            if (result == null) {
+                fetchReply(replyId) ;
+            }
+            return result ;
+        }
+
+        /**
+         * This method doesn't need the topicId as an argument, but putting it here as the
+         * replystore is still thread based for now.
+         * @param replyId
+         */
+        private void fetchReply(Long replyId) {
+            
         }
 
         /**
