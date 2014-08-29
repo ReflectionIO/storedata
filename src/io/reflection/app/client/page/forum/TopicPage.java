@@ -45,6 +45,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -76,7 +77,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
     interface TopicPageUiBinder extends UiBinder<Widget, TopicPage> {}
 
     @UiField HeadingElement topicTitle;
-    
+
     @UiField Element descriptionStartedBy;
     @UiField Element descriptionReplies;
     @UiField Element descriptionLastPoster;
@@ -107,6 +108,8 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
     private Integer startPagePost;
 
+    private HandlerRegistration onLoadedHandler;
+
     public TopicPage() {
         initWidget(uiBinder.createAndBindUi(this));
 
@@ -125,17 +128,6 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
         pager.setPageSize(ServiceConstants.SHORT_STEP_VALUE);
 
         cellPrototype.setMarkdownTextEditor(replyText);
-
-        messagesCellList.addHandler(new LoadingStateChangeEvent.Handler() {
-
-            @Override
-            public void onLoadingStateChanged(LoadingStateChangeEvent event) {
-                if (event.getLoadingState() == LoadingState.LOADED && !replyText.isVisible()) {
-                    replyText.setVisible(true);
-                    pager.setVisible(true);
-                }
-            }
-        }, LoadingStateChangeEvent.TYPE);
 
     }
 
@@ -157,12 +149,29 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
         register(EventController.get().addHandlerToSource(GetTopicEventHandler.TYPE, TopicController.get(), this));
         register(EventController.get().addHandlerToSource(AddReplyEventHandler.TYPE, ReplyController.get(), this));
 
+        registerOnMessagesLoadedHandler();
+
         if (dataProvider != null) {
             dataProvider.registerListeners();
         }
 
         reset();
 
+    }
+
+    protected void registerOnMessagesLoadedHandler() {
+        if (onLoadedHandler == null) {
+            onLoadedHandler = messagesCellList.addHandler(new LoadingStateChangeEvent.Handler() {
+
+                @Override
+                public void onLoadingStateChanged(LoadingStateChangeEvent event) {
+                    if (event.getLoadingState() == LoadingState.LOADED) {
+                        replyText.setVisible(true);
+                        pager.setVisible(true);
+                    }
+                }
+            }, LoadingStateChangeEvent.TYPE);
+        }
     }
 
     /*
@@ -178,6 +187,9 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
             dataProvider.unregisterListeners();
         }
 
+        onLoadedHandler.removeHandler();
+        onLoadedHandler = null;
+
         reset();
     }
 
@@ -191,14 +203,14 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
         if (dataProvider != null && dataProvider.getDataDisplays().size() > 0) {
             dataProvider.removeDataDisplay(messagesCellList);
         }
+
         messagesCellList.setVisibleRangeAndClearData(messagesCellList.getVisibleRange(), true);
 
         pager.setVisible(false);
-        
+
         descriptionStartedBy.setInnerHTML("");
         descriptionReplies.setInnerHTML("");
         descriptionLastPoster.setInnerHTML("");
-
 
         editorTextMap.put(topicId, replyText.getText());
         replyText.reset();
@@ -291,7 +303,6 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
     }
 
     protected void focusPagerOnPost(final int post) {
-        int firstOnPage = post - (post % ServiceConstants.SHORT_STEP_VALUE);
 
         // This used to be the previous way we set the range on the display, via the pager like so
         // pager.setPageStart(firstOnPage);
@@ -389,11 +400,6 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
     }
 
     protected void updateNotes(Topic topic) {
-
-        String numberOfReplies = "";
-        if (topic.numberOfReplies != null) {
-            numberOfReplies = Integer.toString(topic.numberOfReplies);
-        }
 
         descriptionStartedBy.setInnerSafeHtml(TopicNotesTemplate.INSTANCE.descriptionStartedBy(FormattingHelper.getUserName(topic.author),
                 FormattingHelper.getTimeSince(topic.created)));

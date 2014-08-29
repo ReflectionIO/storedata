@@ -157,9 +157,19 @@ public class NumberedPager extends AbstractPager {
         super.setPageSize(pageSize);
     }
 
+    /**
+     * Adapted from the solution proposed here. https://groups.google.com/forum/#!topic/google-web-toolkit/RedwgreWKB0
+     */
     @Override
     public void setPageStart(int index) {
-        super.setPageStart(index);
+        if (getDisplay() != null) {
+            Range range = getDisplay().getVisibleRange();
+            int pageSize = range.getLength();
+            index = Math.max(0, index);
+            if (index != range.getStart()) {
+                getDisplay().setVisibleRange(index, pageSize);
+            }
+        }
     }
 
     /**
@@ -209,10 +219,8 @@ public class NumberedPager extends AbstractPager {
         setPrevPageButtonsDisabled(!hasPreviousPage());
 
         // Update the next and last buttons.
-        if (isRangeLimited() || !display.isRowCountExact()) {
-            setNextPageButtonsDisabled(!hasNextPage());
+        setNextPageButtonsDisabled(!hasNextPage());
 
-        }
     }
 
     /**
