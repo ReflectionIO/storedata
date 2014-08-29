@@ -400,6 +400,8 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
 	protected void updateNotes(Topic topic) {
 
+		notes.removeAllChildren();
+		
 		LIElement author = Document.get().createLIElement();
 		author.setInnerSafeHtml(TopicNotesTemplate.INSTANCE.descriptionStartedBy(FormattingHelper.getUserName(topic.author),
 				FormattingHelper.getTimeSince(topic.created)));
