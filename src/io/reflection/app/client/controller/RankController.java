@@ -96,6 +96,9 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 				if (output.status == StatusType.StatusTypeSuccess) {
 					if (output.pager != null) {
 						mPager = output.pager;// Set pager as the one received from the server
+						if (mPager != null && mPager.totalCount == null && output.freeRanks != null && output.freeRanks.size() > 0) {
+							mPager.totalCount = Long.valueOf(output.freeRanks.size());
+						}
 					}
 
 					// Caching retrieved items
@@ -319,10 +322,10 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 		int start = r.getStart();
 		int end = start + r.getLength();
 
-		if (mRows == null || end > mRows.size()) {
+		if (mRows == null || mPager == null || mPager.totalCount == null || (end > mRows.size() && mRows.size() != mPager.totalCount.intValue())) {
 			fetchTopItems();
 		} else {
-			updateRowData(start, mRows.subList(start, end));
+			updateRowData(start, mRows.subList(start, Math.min(end, mRows.size())));
 		}
 	}
 
