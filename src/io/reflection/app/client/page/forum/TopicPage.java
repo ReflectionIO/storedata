@@ -204,10 +204,6 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
             dataProvider.removeDataDisplay(messagesCellList);
         }
         
-        //https://groups.google.com/d/msg/google-web-toolkit/cAvgdn2fmfU/X-xqKn8uFQsJ
-        //This seems to allow the onLoadedHandler for the cell list to run
-//        messagesCellList.setRowCount(1); 
-//        messagesCellList.setPageSize(1);
         messagesCellList.setVisibleRangeAndClearData(messagesCellList.getVisibleRange(), true);
 
         pager.setVisible(false);
