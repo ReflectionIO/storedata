@@ -1,99 +1,100 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-    xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
-    xmlns:c="urn:import:com.google.gwt.user.cellview.client" xmlns:pp="urn:import:io.reflection.app.client.page.part">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
+	xmlns:c="urn:import:com.google.gwt.user.cellview.client" xmlns:pp="urn:import:io.reflection.app.client.page.part">
 
-    <ui:style type="io.reflection.app.client.page.RanksPage.RanksPageStyle">
-    .red {
-        color: red;
-    }
-    
-    .green {
-        color: green;
-    }
-    
-    .silver {
-        color: silver;
-    }
-    
-    .content {
-        padding-left: 0px;
-        padding-right: 0px;
-    }
-    
-    .table {
-        margin-left: 20px;
-        margin-right: 20px;
-        margin-top: 20px;
-    }
-    
-    .all {
-        border-right: 1px solid #d9dce0 !important;
-    }
-    
-    .paid {
-        border-right: 1px solid #d9dce0 !important;
-    }
-    
-    .free {
-        border-right: 1px solid #d9dce0 !important;
-    }
-    
-    .viewButtons {
-        padding-top: 15px;
-        padding-bottom: 35px;
-    }
-    
-    .filler {
-        height: 60px;
-    }
-    </ui:style>
-    <g:HTMLPanel styleName="row">
+	<ui:style type="io.reflection.app.client.page.RanksPage.RanksPageStyle">
+	.red {
+	    color: red;
+	}
+	
+	.green {
+	    color: green;
+	}
+	
+	.silver {
+	    color: silver;
+	}
+	
+	.content {
+	    padding-left: 0px;
+	    padding-right: 0px;
+	}
+	
+	.table {
+	    margin-left: 20px;
+	    margin-right: 20px;
+	    margin-top: 20px;
+	}
+	
+	.all {
+	    border-right: 1px solid #d9dce0 !important;
+	}
+	
+	.paid {
+	    border-right: 1px solid #d9dce0 !important;
+	}
+	
+	.free {
+	    border-right: 1px solid #d9dce0 !important;
+	}
+	
+	.viewButton {
+	    height: 35px;
+	    font-size: 14px;
+	    padding-right: 6px;
+	    margin-right: 20px;
+	}
+	
+	.filler {
+	    height: 60px;
+	}
+	</ui:style>
+	<g:HTMLPanel styleName="row">
 
-        <pp:RankSidePanel ui:field="mSidePanel"
-            styleName="sidepanel sidebar-nav col-md-3 col-lg-2 well" />
+		<pp:RankSidePanel ui:field="mSidePanel" styleName="sidepanel sidebar-nav col-md-3 col-lg-2 well" />
 
-        <g:HTMLPanel styleName="col-md-9 col-lg-10 {style.content}">
-            <ul class="nav nav-tabs nav-justified ranks">
-                <li ui:field="mAllItem">
-                    <g:InlineHyperlink ui:field="mAll"
-                        styleName="{style.all}">Overview
-                        / All</g:InlineHyperlink>
-                </li>
-                <li ui:field="mPaidItem">
-                    <g:InlineHyperlink ui:field="mPaid"
-                        styleName="{style.paid}">Paid</g:InlineHyperlink>
-                </li>
-                <li ui:field="mFreeItem">
-                    <g:InlineHyperlink ui:field="mFree"
-                        styleName="{style.free}">Free</g:InlineHyperlink>
-                </li>
-                <li ui:field="mGrossingItem">
-                    <g:InlineHyperlink ui:field="mGrossing">Grossing</g:InlineHyperlink>
-                </li>
-            </ul>
+		<g:HTMLPanel styleName="col-md-9 col-lg-10 {style.content}">
+			<ul class="nav nav-tabs nav-justified ranks">
+				<li ui:field="mAllItem">
+					<g:InlineHyperlink ui:field="mAll" styleName="{style.all}">Overview
+						/ All</g:InlineHyperlink>
+				</li>
+				<li ui:field="mPaidItem">
+					<g:InlineHyperlink ui:field="mPaid" styleName="{style.paid}">Paid</g:InlineHyperlink>
+				</li>
+				<li ui:field="mFreeItem">
+					<g:InlineHyperlink ui:field="mFree" styleName="{style.free}">Free</g:InlineHyperlink>
+				</li>
+				<li ui:field="mGrossingItem">
+					<g:InlineHyperlink ui:field="mGrossing">Grossing</g:InlineHyperlink>
+				</li>
+			</ul>
 
-            <g:HTMLPanel styleName="{style.table}">
+			<g:HTMLPanel styleName="{style.table}">
 
-                <c:CellTable ui:field="mRanks"
-                    styleName="table table-hover table-striped table-rank" />
+				<c:CellTable ui:field="mRanks" styleName="table table-hover table-striped table-rank" />
 
-                <g:HTMLPanel ui:field="showMorePanel"
-                    visible="false">
-                    <p:PageSizePager ui:field="mPager"
-                        styleName="{style.viewButtons}" visible="false" />
-                    <g:HTMLPanel>
-                        <g:Button ui:field="redirect"
-                            styleName="btn btn-default">
-                            View More Apps
-                            <span class="icon-plus" />
-                        </g:Button>
-                    </g:HTMLPanel>
-                </g:HTMLPanel>
+				<g:HTMLPanel ui:field="showMorePanel" visible="false">
+					<g:HTMLPanel>
+						<g:Button ui:field="viewAllBtn" styleName="btn btn-default pull-left {style.viewButton}">
+							View All Apps
+						</g:Button>
+						<g:Button ui:field="viewLessBtn" styleName="btn btn-default pull-left {style.viewButton}">
+							View Less Apps
+						</g:Button>
+					</g:HTMLPanel>
+					<g:HTMLPanel>
+						<g:Button ui:field="redirect" styleName="btn btn-default pull-left {style.viewButton}">
+							View All Apps
+							<span class="icon-plus" />
+						</g:Button>
+					</g:HTMLPanel>
+					<p:BackToTop styleName="pull-right" />
+				</g:HTMLPanel>
 
-            </g:HTMLPanel>
-            <g:HTMLPanel styleName="{style.filler} col-md-12 hidden-xs hidden-sm" />
-        </g:HTMLPanel>
+			</g:HTMLPanel>
+			<g:HTMLPanel styleName="{style.filler} col-md-12 hidden-xs hidden-sm" />
+		</g:HTMLPanel>
 
-    </g:HTMLPanel>
+	</g:HTMLPanel>
 </ui:UiBinder> 

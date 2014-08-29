@@ -33,7 +33,6 @@ import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.page.part.RankSidePanel;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
-import io.reflection.app.client.part.PageSizePager;
 import io.reflection.app.client.part.datatypes.RanksGroup;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.Rank;
@@ -47,11 +46,13 @@ import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
@@ -83,11 +84,11 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	}
 
 	public static final int SELECTED_TAB_PARAMETER_INDEX = 0;
+	public static final int VIEW_ALL_LENGTH_VALUE = 200;
 
 	@UiField RanksPageStyle style;
 
 	@UiField(provided = true) CellTable<RanksGroup> mRanks = new CellTable<RanksGroup>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
-	@UiField(provided = true) PageSizePager mPager = new PageSizePager(ServiceConstants.STEP_VALUE);
 
 	@UiField RankSidePanel mSidePanel;
 
@@ -104,6 +105,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	@UiField LIElement mPaidItem;
 
 	@UiField HTMLPanel showMorePanel;
+	@UiField Button viewAllBtn;
+	@UiField Button viewLessBtn;
 
 	private Column<RanksGroup, Rank> mGrossingColumn;
 	private Column<RanksGroup, Rank> mFreeColumn;
@@ -140,8 +143,6 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		mRanks.setEmptyTableWidget(new HTMLPanel("No ranking data for filter!"));
 		mRanks.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 		RankController.get().addDataDisplay(mRanks);
-		mPager.setViewMoreText("View More Apps");
-		mPager.setDisplay(mRanks);
 	}
 
 	private void createColumns() {
@@ -452,6 +453,24 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		}
 	}
 
+	@UiHandler("viewAllBtn")
+	void onViewAllButtonClicked(ClickEvent event) {
+		if (((Button) event.getSource()).isEnabled()) {
+			mRanks.setVisibleRange(0, VIEW_ALL_LENGTH_VALUE);
+			viewAllBtn.setVisible(false);
+			viewLessBtn.setVisible(true);
+		}
+	}
+
+	@UiHandler("viewLessBtn")
+	void onViewLessButtonClicked(ClickEvent event) {
+		if (((Button) event.getSource()).isEnabled()) {
+			mRanks.setVisibleRange(0, ServiceConstants.STEP_VALUE);
+			viewLessBtn.setVisible(false);
+			viewAllBtn.setVisible(true);
+		}
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -468,8 +487,23 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			}
 
 			boolean hasPermission = SessionController.get().loggedInUserHas(SessionController.FULL_RANK_VIEW_PERMISSION_ID);
-			mPager.setVisible(hasPermission);
-			redirect.setVisible(!hasPermission);
+
+			if (hasPermission) {
+				redirect.removeFromParent();
+				viewAllBtn.getParent().getElement().appendChild(viewAllBtn.getElement());
+				viewLessBtn.getParent().getElement().appendChild(viewLessBtn.getElement());
+				if (mRanks.getVisibleItemCount() == VIEW_ALL_LENGTH_VALUE) {
+					viewAllBtn.setVisible(false);
+					viewLessBtn.setVisible(true);
+				} else {
+					viewLessBtn.setVisible(false);
+					viewAllBtn.setVisible(true);
+				}
+			} else {
+				viewAllBtn.removeFromParent();
+				viewLessBtn.removeFromParent();
+				redirect.getParent().getElement().appendChild(redirect.getElement());
+			}
 
 			if (current.getAction() == null || !"view".equals(current.getAction())) {
 				PageType.RanksPageType.show("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString());
