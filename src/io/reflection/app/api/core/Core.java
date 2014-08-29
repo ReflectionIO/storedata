@@ -90,6 +90,9 @@ import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.Sale;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.helpers.SliceHelper;
+import io.reflection.app.itemrankarchivers.ItemRankArchiver;
+import io.reflection.app.itemrankarchivers.ItemRankArchiverFactory;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.modellers.Modeller;
 import io.reflection.app.modellers.ModellerFactory;
@@ -555,7 +558,28 @@ public final class Core extends ActionHandler {
 				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
 						ApiError.DateRangeOutOfBounds.getMessage("0-60 days: input.end - input.start"));
 
-			output.ranks = RankServiceProvider.provide().getItemRanks(input.country, store, input.listType, input.item, input.start, input.end, input.pager);
+			ItemRankArchiver archiver = ItemRankArchiverFactory.getItemRankArchiverForStore(store.a3Code);
+			long [] slices = SliceHelper.offsets(input.start, input.end);
+			
+			String key;
+			List<Rank> ranks;
+			for (long slice : slices) {
+				key = archiver.createKey(slice, input.item, store, input.country, input.category);
+				
+				ranks = archiver.getItemRanks(key);
+				
+				if (ranks != null) {
+					if (output.ranks == null) {
+						output.ranks = new ArrayList<Rank>();
+					}
+					
+					output.ranks.addAll(ranks);
+				}
+			}
+			
+			if (output.ranks == null) {
+				output.ranks = RankServiceProvider.provide().getItemRanks(input.country, store, input.listType, input.item, input.start, input.end, input.pager);
+			}
 
 			if (input.pager.start.intValue() == 0) {
 				output.item = input.item;
