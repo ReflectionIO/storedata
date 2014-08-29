@@ -53,8 +53,8 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
     }
 
     long getTotalCount() {
-        //using the replycontroller to work out count because the number is more immediately
-        //connected to the number of items in the replyStore container, which drives the provider.
+        // using the replycontroller to work out count because the number is more immediately
+        // connected to the number of items in the replyStore container, which drives the provider.
         return ReplyController.get().getThread(topic.id).getCount();
     }
 
@@ -73,7 +73,7 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
         ReplyThread thread = ReplyController.get().getThread(topic.id);
 
         if (thread.hasRows(start, end)) {
-               updateRows(topic.id);
+            updateRows(topic.id);
         } else {
             ReplyController.get().getReplies(topic.id, start, end);
 
@@ -97,9 +97,9 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
 
     /**
      * It's really important to call updateRowCount & updateRowData together on any occasion.
-     * http://turbomanage.wordpress.com/2011/03/02/gwt-2-2-asyncdataprovider-celltable-gotcha/
-     * We had problems with messages from one thread appearing in another, despite a completely
-     * new ForumMessageProvider created and attached. Hopefully this solves it.
+     * http://turbomanage.wordpress.com/2011/03/02/gwt-2-2-asyncdataprovider-celltable-gotcha/ We had problems with messages from one thread appearing in
+     * another, despite a completely new ForumMessageProvider created and attached. Hopefully this solves it.
+     * 
      * @param topicId
      */
     protected void updateRows(long topicId) {
@@ -111,7 +111,9 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
         int totalCount = ReplyController.get().getThread(topic.id).getTotalCount();
         
         //check that the number of messages intended to draw is adequate.
-        assert messages.size() >= Math.min(ServiceConstants.SHORT_STEP_VALUE, totalCount - start) : "ForumMessageProvider: messages for cell list is not adequate" ;
+        if (messages.size() < Math.min(ServiceConstants.SHORT_STEP_VALUE, totalCount - start)) {
+           throw new RuntimeException("ForumMessageProvider: messages for cell list is not adequate") ;
+        }
         
         //both of these calls potentially update the display of the pager.
         updateRowData(start, messages);

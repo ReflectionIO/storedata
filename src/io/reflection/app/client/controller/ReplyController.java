@@ -161,7 +161,7 @@ public class ReplyController implements ServiceConstants {
 
             final Pager pager = new Pager();
             pager.count = count;
-            pager.start = start == 0 ? 0 : start - 1;
+            pager.start = start == 0 ? Long.valueOf(0) : Long.valueOf(start - 1);
             pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
             pager.sortBy = "created";
 
@@ -175,7 +175,7 @@ public class ReplyController implements ServiceConstants {
                         if (output.replies != null) {
                             replies.addAll(output.replies);
 
-                            long i = start == 0 ? 1 : start; //not equal on first page, see above
+                            long i = start == 0 ? Long.valueOf(1) : Long.valueOf(start); //not equal on first page, see above
                             for (Reply reply : output.replies) {
                                 Topic topic = input.topic;
                                 int replyId = reply.id.intValue();
@@ -183,7 +183,6 @@ public class ReplyController implements ServiceConstants {
                                 i++;
                             }
                         }
-
                     }
 
                     EventController.get().fireEventFromSource(new GetRepliesSuccess(input, output), replyController);
