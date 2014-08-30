@@ -85,27 +85,27 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-//		String appEngineQueue = req.getHeader("X-AppEngine-QueueName");
-//
-//		if (LOG.isLoggable(GaeLevel.DEBUG)) {
-//			LOG.log(GaeLevel.DEBUG, String.format("appEngineQueue is [%s]", appEngineQueue));
-//		}
-//
-//		boolean isNotQueue = false;
-//
-//		// bail out if we have not been called by app engine cron
-//		if (isNotQueue = (appEngineQueue == null || !"itempropertylookup".toLowerCase().equals(appEngineQueue.toLowerCase()))) {
-//			resp.setStatus(401);
-//			resp.getOutputStream().print("failure");
-//			LOG.log(Level.WARNING, "Attempt to run script directly, this is not permitted");
-//			return;
-//		}
-//
-//		if (LOG.isLoggable(GaeLevel.DEBUG)) {
-//			if (!isNotQueue) {
-//				LOG.log(GaeLevel.DEBUG, String.format("Servelet is being called from [%s] queue", appEngineQueue));
-//			}
-//		}
+		String appEngineQueue = req.getHeader("X-AppEngine-QueueName");
+
+		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			LOG.log(GaeLevel.DEBUG, String.format("appEngineQueue is [%s]", appEngineQueue));
+		}
+
+		boolean isNotQueue = false;
+
+		// bail out if we have not been called by app engine cron
+		if (isNotQueue = (appEngineQueue == null || !"itempropertylookup".toLowerCase().equals(appEngineQueue.toLowerCase()))) {
+			resp.setStatus(401);
+			resp.getOutputStream().print("failure");
+			LOG.log(Level.WARNING, "Attempt to run script directly, this is not permitted");
+			return;
+		}
+
+		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			if (!isNotQueue) {
+				LOG.log(GaeLevel.DEBUG, String.format("Servelet is being called from [%s] queue", appEngineQueue));
+			}
+		}
 
 		String itemId = req.getParameter("item");
 		String action = req.getParameter("action");
@@ -219,7 +219,8 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 
 						JsonElement firstResult;
 						JsonObject jsonItem;
-						if (results != null && results.size() > 0 && (firstResult = results.get(0)) != null && (jsonItem = firstResult.getAsJsonObject()) != null) {
+						if (results != null && results.size() > 0 && (firstResult = results.get(0)) != null
+								&& (jsonItem = firstResult.getAsJsonObject()) != null) {
 							item = new Item();
 
 							item.added = new Date();
@@ -237,7 +238,7 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 							if (imageUrl != null) {
 								int lastIndexOfPng = imageUrl.lastIndexOf(".png");
 								imageUrl = imageUrl.substring(0, lastIndexOfPng);
-								
+
 								// 8 = length of http:// or https://
 								int countryStart = imageUrl.indexOf('/', 8) + 1;
 								item.country = imageUrl.substring(countryStart, countryStart + 2);
