@@ -85,27 +85,27 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-		String appEngineQueue = req.getHeader("X-AppEngine-QueueName");
-
-		if (LOG.isLoggable(GaeLevel.DEBUG)) {
-			LOG.log(GaeLevel.DEBUG, String.format("appEngineQueue is [%s]", appEngineQueue));
-		}
-
-		boolean isNotQueue = false;
-
-		// bail out if we have not been called by app engine cron
-		if (isNotQueue = (appEngineQueue == null || !"itempropertylookup".toLowerCase().equals(appEngineQueue.toLowerCase()))) {
-			resp.setStatus(401);
-			resp.getOutputStream().print("failure");
-			LOG.log(Level.WARNING, "Attempt to run script directly, this is not permitted");
-			return;
-		}
-
-		if (LOG.isLoggable(GaeLevel.DEBUG)) {
-			if (!isNotQueue) {
-				LOG.log(GaeLevel.DEBUG, String.format("Servelet is being called from [%s] queue", appEngineQueue));
-			}
-		}
+//		String appEngineQueue = req.getHeader("X-AppEngine-QueueName");
+//
+//		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+//			LOG.log(GaeLevel.DEBUG, String.format("appEngineQueue is [%s]", appEngineQueue));
+//		}
+//
+//		boolean isNotQueue = false;
+//
+//		// bail out if we have not been called by app engine cron
+//		if (isNotQueue = (appEngineQueue == null || !"itempropertylookup".toLowerCase().equals(appEngineQueue.toLowerCase()))) {
+//			resp.setStatus(401);
+//			resp.getOutputStream().print("failure");
+//			LOG.log(Level.WARNING, "Attempt to run script directly, this is not permitted");
+//			return;
+//		}
+//
+//		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+//			if (!isNotQueue) {
+//				LOG.log(GaeLevel.DEBUG, String.format("Servelet is being called from [%s] queue", appEngineQueue));
+//			}
+//		}
 
 		String itemId = req.getParameter("item");
 		String action = req.getParameter("action");
@@ -221,8 +221,8 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 						JsonObject jsonItem;
 						if (results != null && (firstResult = results.get(0)) != null && (jsonItem = firstResult.getAsJsonObject()) != null) {
 							item = new Item();
+
 							item.added = new Date();
-							item.country = null;
 							item.creatorName = jsonItem.get("artistName").getAsString();
 							item.price = Float.valueOf(jsonItem.get("price").getAsFloat());
 							item.currency = jsonItem.get("currency").getAsString();
@@ -237,17 +237,23 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 							if (imageUrl != null) {
 								int lastIndexOfPng = imageUrl.lastIndexOf(".png");
 								imageUrl = imageUrl.substring(0, lastIndexOfPng);
+								
+								// 8 = length of http:// or https://
+								int countryStart = imageUrl.indexOf('/', 8) + 1;
+								item.country = imageUrl.substring(countryStart, countryStart + 2);
 
 								item.smallImage = imageUrl.concat(".53x53-50.png");
 								item.mediumImage = imageUrl.concat(".75x75-65.png.png");
 								item.largeImage = imageUrl.concat(".100x100-75.png");
+							} else {
+								item.country = item.smallImage = item.mediumImage = item.largeImage = "";
 							}
 
 							item = ItemServiceProvider.provide().addItem(item);
 
 							if (item.id != null) {
 								if (LOG.isLoggable(Level.INFO)) {
-									LOG.log(Level.INFO, String.format("Added item internal id [%s] with id [%d]", item.id.longValue()));
+									LOG.log(Level.INFO, String.format("Added item internal id [%s] with id [%d]", itemId, item.id.longValue()));
 								}
 							}
 						} else {
