@@ -9,6 +9,7 @@ package io.reflection.app.accountdataingestors;
 
 import io.reflection.app.accountdatacollectors.DataAccountCollector;
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.apple.ItemPropertyLookupServlet;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
 import io.reflection.app.datatypes.shared.Item;
@@ -24,8 +25,10 @@ import java.nio.channels.Channels;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
@@ -147,15 +150,21 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 
 				sales = new ArrayList<Sale>();
 
+				Set<String> items = new HashSet<String>();
+
 				while ((line = reader.readLine()) != null) {
 
 					if (!line.startsWith("Provider")) {
-						Sale sale = convertToSale(line, fetch);
+						Sale sale = convertToSale(line, fetch, items);
 
 						if (sale != null) {
 							sales.add(sale);
 						}
 					}
+				}
+
+				for (String internalItemId : items) {
+					ItemPropertyLookupServlet.enqueueItem(internalItemId, ItemPropertyLookupServlet.ADD_IF_NEW_ACTION);
 				}
 
 			} finally {
@@ -185,7 +194,7 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 		return sales;
 	}
 
-	private Sale convertToSale(String line, DataAccountFetch fetch) {
+	private Sale convertToSale(String line, DataAccountFetch fetch, Set<String> items) {
 		Sale sale = null;
 		if (line != null && line.length() > 0) {
 			String[] split = line.split("\\t");
@@ -196,6 +205,10 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 
 			sale.item = new Item();
 			sale.item.internalId = split[APPLE_IDENTIFIER_INDEX];
+
+			if (sale.item.internalId != null && sale.item.internalId.trim().length() > 0) {
+				items.add(sale.item.internalId.trim());
+			}
 
 			sale.account = fetch.linkedAccount;
 
