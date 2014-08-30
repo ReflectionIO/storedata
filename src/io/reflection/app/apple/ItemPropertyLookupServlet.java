@@ -219,7 +219,7 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 
 						JsonElement firstResult;
 						JsonObject jsonItem;
-						if (results != null && (firstResult = results.get(0)) != null && (jsonItem = firstResult.getAsJsonObject()) != null) {
+						if (results != null && results.size() > 0 && (firstResult = results.get(0)) != null && (jsonItem = firstResult.getAsJsonObject()) != null) {
 							item = new Item();
 
 							item.added = new Date();
