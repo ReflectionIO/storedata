@@ -22,6 +22,8 @@ import io.reflection.app.datatypes.shared.ModelRun;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.helpers.ItemPropertyWrapper;
+import io.reflection.app.itemrankarchivers.ItemRankArchiver;
+import io.reflection.app.itemrankarchivers.ItemRankArchiverFactory;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.modellers.Modeller;
 import io.reflection.app.modellers.ModellerFactory;
@@ -161,10 +163,16 @@ public class PredictorIOS implements Predictor {
 		List<Rank> foundRanks = RankServiceProvider.provide().getGatherCodeRanks(c, s, category, type, code, p, true);
 		Map<String, Item> lookup = lookupItemsForRanks(foundRanks);
 
+		ItemRankArchiver archiver = null;
+
 		Item item = null;
 		for (Rank rank : foundRanks) {
 			item = lookup.get(rank.itemId);
 			ItemPropertyWrapper properties = new ItemPropertyWrapper(item.properties);
+
+			if (archiver == null) {
+				archiver = ItemRankArchiverFactory.getItemRankArchiverForStore(rank.source);
+			}
 
 			boolean usesIap = properties.getBoolean(ItemPropertyLookupServlet.PROPERTY_IAP);
 
@@ -221,6 +229,7 @@ public class PredictorIOS implements Predictor {
 				// }
 
 				RankServiceProvider.provide().updateRank(rank);
+				archiver.enqueue(rank.id);
 			}
 		}
 
