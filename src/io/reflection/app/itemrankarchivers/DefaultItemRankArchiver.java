@@ -23,7 +23,13 @@ import io.reflection.app.service.rank.RankServiceProvider;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -187,7 +193,11 @@ public class DefaultItemRankArchiver implements ItemRankArchiver {
 	@Override
 	public List<Rank> getItemRanks(String key) {
 		List<Rank> ranks = null;
+		Map<Date, Rank> ranksLookup = new HashMap<Date, Rank>();
 		ArchivableKeyValue value = KeyValueArchiveManager.get().getArchiveKeyValue(key);
+
+		Calendar cal = Calendar.getInstance();
+		Date date;
 
 		if (value != null && value.value != null && value.value.length() > 0) {
 			JsonElement jsonElement = (new JsonParser()).parse(value.value);
@@ -204,11 +214,39 @@ public class DefaultItemRankArchiver implements ItemRankArchiver {
 						if (ranks == null) {
 							ranks = new ArrayList<Rank>();
 						}
-						
-						ranks.add(rank);
+
+						cal.setTime(rank.date);
+						cal.set(Calendar.HOUR_OF_DAY, 0);
+						cal.set(Calendar.MINUTE, 0);
+						cal.set(Calendar.SECOND, 0);
+						cal.set(Calendar.MILLISECOND, 0);
+						date = cal.getTime();
+
+						if (ranksLookup.get(date) == null) {
+							ranks.add(rank);
+							ranksLookup.put(date, rank);
+						}
 					}
 				}
 			}
+		}
+
+		if (ranks != null) {
+			Collections.sort(ranks, new Comparator<Rank>() {
+
+				@Override
+				public int compare(Rank o1, Rank o2) {
+					int compare = 0;
+
+					if (o1.date.getTime() > o2.date.getTime()) {
+						compare = 1;
+					} else if (o1.date.getTime() < o2.date.getTime()) {
+						compare = -1;
+					}
+
+					return compare;
+				}
+			});
 		}
 
 		return ranks;
