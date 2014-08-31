@@ -1,6 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder">
 	<ui:with field="authorName" type="java.lang.String" />
+	<ui:with field="companyName" type="java.lang.String" />
 	<ui:with field="content" type="com.google.gwt.safehtml.shared.SafeHtml" />
 	<ui:with field="created" type="java.lang.String" />
 	<ui:with field="link" type="com.google.gwt.safehtml.shared.SafeUri" />
@@ -25,7 +26,7 @@
 		margin-top: 10px;
 	}
 	
-	.postContent {
+	.postContent, .postProperties {
 		margin-bottom: 10px;
 		margin-top: 10px;
 	}
@@ -52,8 +53,11 @@
 	</ui:style>
 
 	<div class="row">
-		<div class="col-sm-2">
+		<div class="col-sm-2 {style.postProperties}">
 			<ui:text from="{authorName}" />
+			<div class="text-muted">
+				<ui:text from="{companyName}" />
+			</div>
 			<div class="{style.smaller}">
 				<ui:text from="{created}" />
 			</div>
@@ -66,9 +70,16 @@
 
 			<div class="pull-right">
 				<a href="{link}" class="forumMessageLink">#</a>
-				<ui:text from="{editBar}" /><ui:safehtml from="{editButtonHtml}" />
-				<ui:text from="{flagBar}" /><a class="forumMessageLink" ui:field="flag"><ui:text from="{flagText}" /></a>
-				<ui:text from="{quoteBar}" /><a class="forumMessageLink" ui:field="quote"><ui:text from="{quoteText}" /></a>
+				<ui:text from="{editBar}" />
+				<ui:safehtml from="{editButtonHtml}" />
+				<ui:text from="{flagBar}" />
+				<a class="forumMessageLink" ui:field="flag">
+					<ui:text from="{flagText}" />
+				</a>
+				<ui:text from="{quoteBar}" />
+				<a class="forumMessageLink" ui:field="quote">
+					<ui:text from="{quoteText}" />
+				</a>
 			</div>
 
 		</div>

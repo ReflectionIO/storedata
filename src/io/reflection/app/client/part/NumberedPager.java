@@ -37,7 +37,7 @@ public class NumberedPager extends AbstractPager {
 
     private static final int DEFAULT_FAST_FORWARD_ROWS = 1000;
 
-    private final int mFastForwardRows;
+//    private final int mFastForwardRows;
 
     @UiField HTMLPanel htmlPanel;
 
@@ -85,7 +85,7 @@ public class NumberedPager extends AbstractPager {
     public NumberedPager(boolean showFirstPageButton, final int fastForwardRows, boolean showLastPageButton) {
         initWidget(uiBinder.createAndBindUi(this));
 
-        this.mFastForwardRows = fastForwardRows;
+//        this.mFastForwardRows = fastForwardRows;
 
         if (!showLastPageButton) {
             mLastPage.removeFromParent();
@@ -157,9 +157,19 @@ public class NumberedPager extends AbstractPager {
         super.setPageSize(pageSize);
     }
 
+    /**
+     * Adapted from the solution proposed here. https://groups.google.com/forum/#!topic/google-web-toolkit/RedwgreWKB0
+     */
     @Override
     public void setPageStart(int index) {
-        super.setPageStart(index);
+        if (getDisplay() != null) {
+            Range range = getDisplay().getVisibleRange();
+            int pageSize = range.getLength();
+            index = Math.max(0, index);
+            if (index != range.getStart()) {
+                getDisplay().setVisibleRange(index, pageSize);
+            }
+        }
     }
 
     /**
@@ -202,17 +212,15 @@ public class NumberedPager extends AbstractPager {
 
     @Override
     protected void onRangeOrRowCountChanged() {
-        HasRows display = getDisplay();
+//        HasRows display = getDisplay();
         generateNumberLinks();
 
         // Update the prev and first buttons.
         setPrevPageButtonsDisabled(!hasPreviousPage());
 
         // Update the next and last buttons.
-        if (isRangeLimited() || !display.isRowCountExact()) {
-            setNextPageButtonsDisabled(!hasNextPage());
+        setNextPageButtonsDisabled(!hasNextPage());
 
-        }
     }
 
     /**

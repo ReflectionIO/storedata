@@ -11,6 +11,7 @@ import static io.reflection.app.objectify.PersistenceService.ofy;
 import io.reflection.app.api.PagerHelper;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.apple.ItemPropertyLookupServlet;
 import io.reflection.app.collectors.CollectorAmazon;
 import io.reflection.app.collectors.CollectorIOS;
 import io.reflection.app.datatypes.shared.DataAccount;
@@ -106,9 +107,10 @@ public class CronServlet extends HttpServlet {
 			}
 		} else if (deleteSome != null) {
 			if ("Rank".equals(deleteSome)) {
-				QueryKeys<Rank> query = ofy().load().type(Rank.class).limit(DELETE_COUNT).keys();
+				int deleteCount = DELETE_COUNT * 10;
+				QueryKeys<Rank> query = ofy().load().type(Rank.class).limit(deleteCount).keys();
 				ofy().delete().keys(query.iterable());
-				count = DELETE_COUNT;
+				count = deleteCount;
 			} else if ("Item".equals(deleteSome)) {
 				QueryKeys<Item> query = ofy().load().type(Item.class).limit(DELETE_COUNT).keys();
 				ofy().delete().keys(query.iterable());
@@ -186,7 +188,7 @@ public class CronServlet extends HttpServlet {
 				itemsWithDuplicates = ItemServiceProvider.provide().getDuplicateItemsInternalId(p);
 
 				for (String internalId : itemsWithDuplicates) {
-					enqueueItemForDuplicateRemoval(internalId);
+					ItemPropertyLookupServlet.enqueueItem(internalId, ItemPropertyLookupServlet.REMOVE_DUPLICATES_ACTION);
 				}
 
 				// p.start = Long.valueOf(p.start.longValue() + p.count.longValue());
@@ -197,46 +199,6 @@ public class CronServlet extends HttpServlet {
 		}
 
 		resp.setHeader("Cache-Control", "no-cache");
-	}
-
-	public static void enqueueItemForDuplicateRemoval(String internalId) {
-		if (LOG.isLoggable(GaeLevel.TRACE)) {
-			LOG.log(GaeLevel.TRACE, "Entering...");
-		}
-
-		try {
-			Queue queue = QueueFactory.getQueue("itempropertylookup");
-
-			TaskOptions options = TaskOptions.Builder.withUrl("/itempropertylookup").method(Method.POST);
-
-			options.param("item", internalId);
-			options.param("action", "removeDuplicates");
-
-			try {
-				queue.add(options);
-			} catch (TransientFailureException ex) {
-
-				if (LOG.isLoggable(Level.WARNING)) {
-					LOG.warning(String.format("Could not queue a message because of [%s] - will retry it once", ex.toString()));
-				}
-
-				// retry once
-				try {
-					queue.add(options);
-				} catch (TransientFailureException reEx) {
-					if (LOG.isLoggable(Level.SEVERE)) {
-						LOG.log(Level.SEVERE,
-								String.format("Retry of with payload [%s] failed while adding to queue [%s] twice", options.toString(), queue.getQueueName()),
-								reEx);
-					}
-				}
-			}
-
-		} finally {
-			if (LOG.isLoggable(GaeLevel.TRACE)) {
-				LOG.log(GaeLevel.TRACE, "Exiting...");
-			}
-		}
 	}
 
 	public static void enqueueItemForPropertiesRefresh(Long itemId) {

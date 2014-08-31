@@ -248,9 +248,9 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
                 TopicController.get().getTopics(selectedForumId);
             }
             forumSummarySidePanel.selectItem(selectedForum);
-            if (selectedForum != null) // shouldn't be null unless an error has
-                                       // occured
-            {
+            
+            // shouldn't be null unless an error has occurred.
+            if (selectedForum != null) {
                 titleText.setInnerText(selectedForum.title);
             }
             forumSummarySidePanel.redraw();
@@ -276,7 +276,9 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
     public void navigationChanged(Stack previous, Stack current) {
         if (current != null && PageType.ForumPageType.equals(current.getPage())) {
 
-            TopicController.get().addDataDisplay(topics);
+            if (!TopicController.get().getDataDisplays().contains(topics)) {
+                TopicController.get().addDataDisplay(topics);
+            }
 
             String selectedIdString;
             if ((selectedIdString = current.getParameter(SELECTED_FORUM_PARAMETER_INDEX)) != null) {

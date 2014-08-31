@@ -22,6 +22,7 @@ import io.reflection.app.service.ServiceType;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -532,7 +533,7 @@ final class ItemService implements IItemService {
 
 				if (commaDelimitedItemIds != null && commaDelimitedItemIds.length() != 0) {
 					String getInternalIdItemBatchQuery = String.format(
-							"SELECT * FROM `item` WHERE `internalid` IN ('%s') and `deleted`='n' GROUP BY `internalid`", commaDelimitedItemIds);
+							"SELECT * FROM `item` WHERE `internalid` IN ('%s') and `deleted`='n' GROUP BY `internalid`,`properties`", commaDelimitedItemIds);
 
 					Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
 
@@ -540,11 +541,18 @@ final class ItemService implements IItemService {
 						itemConnection.connect();
 						itemConnection.executeQuery(getInternalIdItemBatchQuery);
 
+						Map<String, Item> itemIdPropertiesLookup = new HashMap<String, Item>();
+
 						while (itemConnection.fetchNextRow()) {
 							item = toItem(itemConnection);
 
 							if (item != null) {
-								items.add(item);
+
+								// If present, keep Item with properties not null
+								if (itemIdPropertiesLookup.get(item.internalId) == null || itemIdPropertiesLookup.get(item.internalId).properties == null
+										|| itemIdPropertiesLookup.get(item.internalId).properties.equals("null")) {
+									itemIdPropertiesLookup.put(item.internalId, item);
+								}
 
 								memcacheKey = getName() + ".internal." + item.internalId;
 
@@ -554,6 +562,9 @@ final class ItemService implements IItemService {
 								asyncCache.put(memcacheKey, item.toString());
 							}
 						}
+
+						items.addAll(itemIdPropertiesLookup.values());
+
 					} finally {
 						if (itemConnection != null) {
 							itemConnection.disconnect();
