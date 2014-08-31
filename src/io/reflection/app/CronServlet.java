@@ -107,9 +107,10 @@ public class CronServlet extends HttpServlet {
 			}
 		} else if (deleteSome != null) {
 			if ("Rank".equals(deleteSome)) {
-				QueryKeys<Rank> query = ofy().load().type(Rank.class).limit(DELETE_COUNT).keys();
+				int deleteCount = DELETE_COUNT * 10;
+				QueryKeys<Rank> query = ofy().load().type(Rank.class).limit(deleteCount).keys();
 				ofy().delete().keys(query.iterable());
-				count = DELETE_COUNT;
+				count = deleteCount;
 			} else if ("Item".equals(deleteSome)) {
 				QueryKeys<Item> query = ofy().load().type(Item.class).limit(DELETE_COUNT).keys();
 				ofy().delete().keys(query.iterable());
