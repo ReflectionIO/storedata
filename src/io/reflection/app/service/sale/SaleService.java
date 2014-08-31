@@ -29,7 +29,9 @@ import io.reflection.app.service.item.ItemServiceProvider;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.spacehopperstudios.utility.StringUtils;
 
@@ -195,7 +197,9 @@ final class SaleService implements ISaleService {
 
 		itemIds.removeAll(itemIdsTop400); // get IDs of items out of the top 400
 
-		items.addAll(generateDummyItems(itemIds,typeIdentifiers)); // generate dummy items from sale table for items out of the top 400
+		if (itemIds.size() > 0) {
+			items.addAll(generateDummyItems(itemIds, typeIdentifiers)); // generate dummy items from sale table for items out of the top 400
+		}
 
 		return items;
 	}
@@ -222,7 +226,8 @@ final class SaleService implements ISaleService {
 			typesQueryPart = "CAST(`itemid` AS BINARY) IN (CAST('" + StringUtils.join(itemId, "' AS BINARY),CAST('") + "' AS BINARY))";
 		}
 
-		String getSaleItemQuery = String.format("SELECT DISTINCT `title`,`developer`,`itemid` FROM `sale` WHERE %s AND `deleted`='n' %s GROUP BY `itemid`", typesQueryPart, typeId);
+		String getSaleItemQuery = String.format(
+				"SELECT DISTINCT `title`,`developer`,`itemid`,`sku` FROM `sale` WHERE %s AND `deleted`='n' %s GROUP BY `itemid`", typesQueryPart, typeId);
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection saleConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
 
@@ -230,11 +235,25 @@ final class SaleService implements ISaleService {
 			saleConnection.connect();
 			saleConnection.executeQuery(getSaleItemQuery);
 
+			Map<String, Item> skuItemLookup = new HashMap<String, Item>();
 			while (saleConnection.fetchNextRow()) {
 				Item mockItem = toMockItem(saleConnection);
-
-				items.add(mockItem);
+				skuItemLookup.put(saleConnection.getCurrentRowString("sku"), mockItem);
 			}
+
+			// Add IAP property if has IA1 or IA9 sales
+			String parentIdentifiers = "";
+			if (skuItemLookup.size() > 0) {
+				parentIdentifiers = "AND `parentidentifier` IN ('" + StringUtils.join(skuItemLookup.keySet(), "','") + "')";
+			}
+			String getIAPQuery = String.format("SELECT DISTINCT parentidentifier FROM `sale` WHERE `typeidentifier` IN ('IA1','IA9') %s", parentIdentifiers);
+
+			saleConnection.executeQuery(getIAPQuery);
+			while (saleConnection.fetchNextRow()) {
+				skuItemLookup.get(saleConnection.getCurrentRowString("parentidentifier")).properties = "{\"usesIap\":true}";
+			}
+
+			items.addAll(skuItemLookup.values());
 
 		} finally {
 			if (saleConnection != null) {
