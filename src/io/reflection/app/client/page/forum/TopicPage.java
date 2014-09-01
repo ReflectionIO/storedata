@@ -401,7 +401,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 	protected void updateNotes(Topic topic) {
 
 		notes.removeAllChildren();
-		
+
 		LIElement author = Document.get().createLIElement();
 		author.setInnerSafeHtml(TopicNotesTemplate.INSTANCE.descriptionStartedBy(FormattingHelper.getUserName(topic.author),
 				FormattingHelper.getTimeSince(topic.created)));
@@ -410,14 +410,14 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 		if (topic.numberOfReplies != null) {
 			LIElement replies = Document.get().createLIElement();
 			replies.setInnerSafeHtml(TopicNotesTemplate.INSTANCE.descriptionReplies(topic.numberOfReplies.toString()));
-
+			notes.appendChild(replies);
 		}
 
 		if (topic.lastReplier != null) {
 			LIElement lastReplier = Document.get().createLIElement();
 			lastReplier.setInnerSafeHtml(TopicNotesTemplate.INSTANCE.descriptionLastPoster(FormattingHelper.getUserName(topic.lastReplier),
 					FormattingHelper.getTimeSince(topic.lastReplied)));
-
+			notes.appendChild(lastReplier);
 		}
 	}
 
