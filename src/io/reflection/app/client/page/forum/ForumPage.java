@@ -217,6 +217,12 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
             TopicController.get().removeDataDisplay(topics);
         }
         topics.setVisibleRangeAndClearData(topics.getVisibleRange(), true);
+        
+        //this hard resets the topic controller every time we leave the ForumPage.
+        //it does mean that it will have to reload, but this logic is simpler than
+        //currently working out when we have to use the topic controller pager and when 
+        //we have to discard it.
+        TopicController.get().reset();
 
         forumSummarySidePanel.reset();
         titleText.setInnerHTML("");
@@ -276,10 +282,6 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
     public void navigationChanged(Stack previous, Stack current) {
         if (current != null && PageType.ForumPageType.equals(current.getPage())) {
 
-            if (!TopicController.get().getDataDisplays().contains(topics)) {
-                TopicController.get().addDataDisplay(topics);
-            }
-
             String selectedIdString;
             if ((selectedIdString = current.getParameter(SELECTED_FORUM_PARAMETER_INDEX)) != null) {
 
@@ -296,6 +298,12 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
                 // needs to be reset in case we're coming back to this page.
                 selectedForumId = null;
                 selectedForum = null;
+            }
+            
+            if (!TopicController.get().getDataDisplays().contains(topics)) {
+                //this triggers a range change update, so moved it lower in navigationChanged, after getTopics has
+                //likely been called.
+                TopicController.get().addDataDisplay(topics);
             }
         }
         topics.redraw();
