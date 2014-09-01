@@ -51,6 +51,7 @@ public class TopicController extends AsyncDataProvider<Topic> implements Service
 	private SparseArray<Topic> topicLookup = null;
 
 	private Long forumId;
+	private Long oldForumId ;
     private GetTopicsRequest fetchTopicsRequest;
 
 	private static TopicController one = null;
@@ -63,13 +64,18 @@ public class TopicController extends AsyncDataProvider<Topic> implements Service
 		return one;
 	}
 
+	/**
+	 * Has functionality to continue through a current forumId or to start again
+	 * on a new forumId.
+	 */
 	private void fetchTopics() {
 
 	    //make sure only one active fetch is running at a time
 		if (forumId != null && (fetchTopicsRequest == null || hasForumChanged())) {
-		    if (fetchTopicsRequest != null && hasForumChanged()) {
+		    if (hasForumChanged()) {
 		        pager = null ;
 		    }
+		    oldForumId = forumId ;
 		    
 			ForumService service = ServiceCreator.createForumService();
 			
@@ -122,7 +128,13 @@ public class TopicController extends AsyncDataProvider<Topic> implements Service
 	}
 
     protected boolean hasForumChanged() {
-        return fetchTopicsRequest.forum.id.intValue() != forumId.intValue();
+        boolean result = false ;
+        if (fetchTopicsRequest != null && fetchTopicsRequest.forum.id.intValue() != forumId.intValue()) {
+            result = true ;
+        } else if (forumId != null && oldForumId != null && forumId.intValue() != oldForumId.intValue()) {
+            result = true ;
+        }
+        return result ;
     }
 
     protected GetTopicsRequest createGetTopicsRequest(Long forumId) {
@@ -180,9 +192,8 @@ public class TopicController extends AsyncDataProvider<Topic> implements Service
 
 	public List<Topic> getTopics(Long forumId) {
 		if (this.forumId == null || this.forumId != forumId) {
-			this.forumId = forumId;
-
 			reset();
+			this.forumId = forumId;
 		}
 
 		if (pager == null) {
@@ -275,6 +286,7 @@ public class TopicController extends AsyncDataProvider<Topic> implements Service
 		pager = null;
 		topics.clear();
 		fetchTopicsRequest = null ;
+		forumId = null;
 
 		updateRowData(0, topics);
 		updateRowCount(0, false);
