@@ -67,7 +67,7 @@ public class TopicController extends AsyncDataProvider<Topic> implements Service
 
 	    //make sure only one active fetch is running at a time
 		if (forumId != null && (fetchTopicsRequest == null || hasForumChanged())) {
-		    if (hasForumChanged()) {
+		    if (fetchTopicsRequest != null && hasForumChanged()) {
 		        pager = null ;
 		    }
 		    
