@@ -225,6 +225,8 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
         //currently working out when we have to use the topic controller pager and when 
         //we have to discard it.
         TopicController.get().reset();
+        
+        pager.setDisplay(topics);
 
         forumSummarySidePanel.reset();
         titleText.setInnerHTML("");
@@ -291,6 +293,9 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
                 TopicController.get().addDataDisplay(topics);
             }
             
+            //always reset to 0 
+            pager.setPageStart(0);
+            
             String selectedIdString;
             if ((selectedIdString = current.getParameter(SELECTED_FORUM_PARAMETER_INDEX)) != null) {
 
@@ -311,8 +316,6 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
                 //This call also resets the default selected forum provided selectedForum/Id is null.
                 configureTitleAndSidePanel();
             }
-            
-            
         }
     }
 
