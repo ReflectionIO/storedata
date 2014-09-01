@@ -35,9 +35,6 @@ import io.reflection.app.datatypes.shared.Topic;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.query.client.Function;
-import com.google.gwt.query.client.GQuery;
-import com.google.gwt.query.client.plugins.deferred.PromiseRPC;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -74,8 +71,6 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
 
     @UiField MarkdownEditor editText;
     @UiField ForumSummarySidePanel forumSummarySidePanel;
-    private PromiseRPC<Reply> replyPromise;
-    private PromiseRPC<Topic> topicPromise;
 
     public EditTopicPage() {
         initWidget(uiBinder.createAndBindUi(this));
@@ -127,9 +122,6 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
 
             forumSummarySidePanel.redraw();
 
-            replyPromise = new PromiseRPC<Reply>();
-            topicPromise = new PromiseRPC<Topic>();
-
             if (topicIdString != null) {
                 topicId = null;
 
@@ -151,34 +143,17 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
                 topic = TopicController.get().getTopic(topicId);
 
                 if (topic != null) {
-                    topicPromise.onSuccess(topic);
+                    whenGotTopic();
                 }
 
-                if (isTopic) {
-                    // run this function when we definitely have the topic
-                    GQuery.when(topicPromise).then(new Function() {
-                        @Override
-                        public void f() {
-                            content = topic.content.toString();
-                            show();
-                        }
-                    });
-                } else {
+                if (!isTopic) {
                     if (replyId != null) {
                         reply = ReplyController.get().getThread(topicId).getReply(replyId);
 
                         if (reply != null) {
-                            replyPromise.onSuccess(reply);
+                            whenGotReplyAndTopic();
                         }
 
-                        // if we're dealing with a reply, run this function when we have both the topic and reply
-                        GQuery.when(replyPromise, topicPromise).then(new Function() {
-                            @Override
-                            public void f() {
-                                content = reply.content.toString();
-                                show();
-                            }
-                        });
                     }
                 }
             }
@@ -271,7 +246,8 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
     public void getTopicSuccess(GetTopicRequest input, GetTopicResponse output) {
         if (output.status == StatusType.StatusTypeSuccess) {
             topic = output.topic;
-            topicPromise.onSuccess(topic);
+            whenGotTopic();
+            whenGotReplyAndTopic();
         }
     }
 
@@ -283,26 +259,44 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
      */
     @Override
     public void getTopicFailure(GetTopicRequest input, Throwable caught) {
-        topicPromise.onFailure(caught);
     }
 
-    /* (non-Javadoc)
-     * @see io.reflection.app.api.forum.shared.call.event.GetReplyEventHandler#getReplySuccess(io.reflection.app.api.forum.shared.call.GetReplyRequest, io.reflection.app.api.forum.shared.call.GetReplyResponse)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.api.forum.shared.call.event.GetReplyEventHandler#getReplySuccess(io.reflection.app.api.forum.shared.call.GetReplyRequest,
+     * io.reflection.app.api.forum.shared.call.GetReplyResponse)
      */
     @Override
     public void getReplySuccess(GetReplyRequest input, GetReplyResponse output) {
         if (output.status == StatusType.StatusTypeSuccess) {
-            reply = output.reply ;
-            replyPromise.onSuccess(reply);
+            reply = output.reply;
+            whenGotReplyAndTopic();
         }
     }
 
-    /* (non-Javadoc)
-     * @see io.reflection.app.api.forum.shared.call.event.GetReplyEventHandler#getReplyFailure(io.reflection.app.api.forum.shared.call.GetReplyRequest, java.lang.Throwable)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.api.forum.shared.call.event.GetReplyEventHandler#getReplyFailure(io.reflection.app.api.forum.shared.call.GetReplyRequest,
+     * java.lang.Throwable)
      */
     @Override
     public void getReplyFailure(GetReplyRequest input, Throwable caught) {
-        replyPromise.onFailure(caught);
+    }
+
+    protected void whenGotTopic() {
+        if (topic != null) {
+            content = topic.content.toString();
+            show();
+        }
+    }
+
+    protected void whenGotReplyAndTopic() {
+        if (reply != null && topic != null) {
+            content = reply.content.toString();
+            show();
+        }
     }
 
 }
