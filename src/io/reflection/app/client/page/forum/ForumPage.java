@@ -70,6 +70,7 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
     interface ForumPageUiBinder extends UiBinder<Widget, ForumPage> {}
 
     private static final int SELECTED_FORUM_PARAMETER_INDEX = 0;
+    private static final Long DEFAULT_FORUM = 5L ;
 
     @UiField(provided = true) CellTable<Topic> topics = new CellTable<Topic>(ServiceConstants.SHORT_STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 
@@ -296,8 +297,11 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
                 }
             } else {
                 // needs to be reset in case we're coming back to this page.
-                selectedForumId = null;
+                selectedForumId = DEFAULT_FORUM;
                 selectedForum = null;
+                TopicController.get().getTopics(selectedForumId);
+
+                configureTitleAndSidePanel();
             }
             
             if (!TopicController.get().getDataDisplays().contains(topics)) {
@@ -306,7 +310,6 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
                 TopicController.get().addDataDisplay(topics);
             }
         }
-        topics.redraw();
     }
 
     /*
