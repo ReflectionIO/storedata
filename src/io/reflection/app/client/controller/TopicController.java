@@ -119,7 +119,6 @@ public class TopicController extends AsyncDataProvider<Topic> implements Service
 				}
 			});
 		}
-
 	}
 
     protected boolean hasForumChanged() {
@@ -130,7 +129,7 @@ public class TopicController extends AsyncDataProvider<Topic> implements Service
         final GetTopicsRequest input = new GetTopicsRequest();
         
         input.accessCode = ACCESS_CODE;
-
+        
         input.session = SessionController.get().getSessionForApiCall();
 
         input.forum = new Forum();
@@ -279,8 +278,6 @@ public class TopicController extends AsyncDataProvider<Topic> implements Service
 
 		updateRowData(0, topics);
 		updateRowCount(0, false);
-
-		fetchTopics();
 	}
 
 	/**

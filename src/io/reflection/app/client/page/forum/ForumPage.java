@@ -212,11 +212,12 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
      */
     private void reset() {
 
-        // got from https://groups.google.com/forum/#!topic/google-web-toolkit/cAvgdn2fmfU
-        // this *should* clear the attached pager.
+        
+        // this *should* clear the attached pager, combined with the next statement
         if (TopicController.get().getDataDisplays().size() > 0) {
             TopicController.get().removeDataDisplay(topics);
         }
+        // got from https://groups.google.com/forum/#!topic/google-web-toolkit/cAvgdn2fmfU
         topics.setVisibleRangeAndClearData(topics.getVisibleRange(), true);
         
         //this hard resets the topic controller every time we leave the ForumPage.
@@ -283,6 +284,13 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
     public void navigationChanged(Stack previous, Stack current) {
         if (current != null && PageType.ForumPageType.equals(current.getPage())) {
 
+            //no caching, just get it working.
+            TopicController.get().reset();
+            if (!TopicController.get().getDataDisplays().contains(topics)) {
+                //this triggers a range change update!
+                TopicController.get().addDataDisplay(topics);
+            }
+            
             String selectedIdString;
             if ((selectedIdString = current.getParameter(SELECTED_FORUM_PARAMETER_INDEX)) != null) {
 
@@ -296,19 +304,15 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
                     configureTitleAndSidePanel();
                 }
             } else {
-                // needs to be reset in case we're coming back to this page.
-                selectedForumId = DEFAULT_FORUM;
+                // needs to be reset in case we're coming back to this page. The next call will set them.
+                selectedForumId = null;
                 selectedForum = null;
-                TopicController.get().getTopics(selectedForumId);
 
+                //This call also resets the default selected forum provided selectedForum/Id is null.
                 configureTitleAndSidePanel();
             }
             
-            if (!TopicController.get().getDataDisplays().contains(topics)) {
-                //this triggers a range change update, so moved it lower in navigationChanged, after getTopics has
-                //likely been called.
-                TopicController.get().addDataDisplay(topics);
-            }
+            
         }
     }
 
