@@ -70,7 +70,7 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
     interface ForumPageUiBinder extends UiBinder<Widget, ForumPage> {}
 
     private static final int SELECTED_FORUM_PARAMETER_INDEX = 0;
-    private static final Long DEFAULT_FORUM = 5L ;
+    private static final Long DEFAULT_FORUM = 5L;
 
     @UiField(provided = true) CellTable<Topic> topics = new CellTable<Topic>(ServiceConstants.SHORT_STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 
@@ -212,20 +212,19 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
      */
     private void reset() {
 
-        
         // this *should* clear the attached pager, combined with the next statement
         if (TopicController.get().getDataDisplays().size() > 0) {
             TopicController.get().removeDataDisplay(topics);
         }
         // got from https://groups.google.com/forum/#!topic/google-web-toolkit/cAvgdn2fmfU
         topics.setVisibleRangeAndClearData(topics.getVisibleRange(), true);
-        
-        //this hard resets the topic controller every time we leave the ForumPage.
-        //it does mean that it will have to reload, but this logic is simpler than
-        //currently working out when we have to use the topic controller pager and when 
-        //we have to discard it.
+
+        // this hard resets the topic controller every time we leave the ForumPage.
+        // it does mean that it will have to reload, but this logic is simpler than
+        // currently working out when we have to use the topic controller pager and when
+        // we have to discard it.
         TopicController.get().reset();
-        
+
         pager.setDisplay(topics);
 
         forumSummarySidePanel.reset();
@@ -258,7 +257,7 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
                 TopicController.get().getTopics(selectedForumId);
             }
             forumSummarySidePanel.selectItem(selectedForum);
-            
+
             // shouldn't be null unless an error has occurred.
             if (selectedForum != null) {
                 titleText.setInnerText(selectedForum.title);
@@ -286,16 +285,16 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
     public void navigationChanged(Stack previous, Stack current) {
         if (current != null && PageType.ForumPageType.equals(current.getPage())) {
 
-            //no caching, just get it working.
+            // no caching, just get it working.
             TopicController.get().reset();
             if (!TopicController.get().getDataDisplays().contains(topics)) {
-                //this triggers a range change update!
+                // this triggers a range change update!
                 TopicController.get().addDataDisplay(topics);
             }
-            
-            //always reset to 0 
+
+            // always reset to 0
             pager.setPageStart(0);
-            
+
             String selectedIdString;
             if ((selectedIdString = current.getParameter(SELECTED_FORUM_PARAMETER_INDEX)) != null) {
 
@@ -313,7 +312,7 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
                 selectedForumId = null;
                 selectedForum = null;
 
-                //This call also resets the default selected forum provided selectedForum/Id is null.
+                // This call also resets the default selected forum provided selectedForum/Id is null.
                 configureTitleAndSidePanel();
             }
         }
