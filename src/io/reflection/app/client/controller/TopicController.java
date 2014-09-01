@@ -66,7 +66,11 @@ public class TopicController extends AsyncDataProvider<Topic> implements Service
 	private void fetchTopics() {
 
 	    //make sure only one active fetch is running at a time
-		if (forumId != null && (fetchTopicsRequest == null || !fetchTopicsRequest.forum.id.equals(forumId))) {
+		if (forumId != null && (fetchTopicsRequest == null || hasForumChanged())) {
+		    if (hasForumChanged()) {
+		        pager = null ;
+		    }
+		    
 			ForumService service = ServiceCreator.createForumService();
 			
 			final GetTopicsRequest input = createGetTopicsRequest(forumId);
@@ -117,6 +121,10 @@ public class TopicController extends AsyncDataProvider<Topic> implements Service
 		}
 
 	}
+
+    protected boolean hasForumChanged() {
+        return fetchTopicsRequest.forum.id.intValue() != forumId.intValue();
+    }
 
     protected GetTopicsRequest createGetTopicsRequest(Long forumId) {
         final GetTopicsRequest input = new GetTopicsRequest();
@@ -267,6 +275,7 @@ public class TopicController extends AsyncDataProvider<Topic> implements Service
 	public void reset() {
 		pager = null;
 		topics.clear();
+		fetchTopicsRequest = null ;
 
 		updateRowData(0, topics);
 		updateRowCount(0, false);
