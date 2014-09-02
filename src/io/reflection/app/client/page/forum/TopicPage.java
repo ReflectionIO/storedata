@@ -111,6 +111,8 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
 	private HandlerRegistration onLoadedHandler;
 
+    private boolean isLocked;
+
 	public TopicPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
@@ -169,6 +171,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 					if (event.getLoadingState() == LoadingState.LOADED) {
 						replyText.setVisible(true);
 						pager.setVisible(true);
+						replyForm.setVisible(!isLocked);
 					}
 				}
 			}, LoadingStateChangeEvent.TYPE);
@@ -272,6 +275,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
 			forumSummarySidePanel.redraw();
 			replyText.setVisible(false);
+			replyForm.setVisible(false);
 
 			if (current.getAction() != null && VIEW_ACTION_PARAMETER_VALUE.equals(current.getAction())) {
 				String topicIdString;
@@ -322,7 +326,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
 			String properties = "";
 
-			boolean isLocked = topic.locked != null && topic.locked.booleanValue();
+			isLocked = topic.locked != null && topic.locked.booleanValue();
 			if (isLocked) {
 				properties += "<i class=\"glyphicon glyphicon-lock\"></i> ";
 			}
@@ -375,7 +379,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 			// bound/detached or
 			// something else happened during the lifecycle.
 
-			replyForm.setVisible(!isLocked);
+			
 
 			if (isLocked) {
 				post.getElement().getParentElement().getStyle().setDisplay(Display.NONE);
