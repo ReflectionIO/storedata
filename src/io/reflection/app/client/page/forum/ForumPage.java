@@ -7,8 +7,6 @@
 // 
 package io.reflection.app.client.page.forum;
 
-import java.util.Date;
-
 import io.reflection.app.api.forum.shared.call.GetForumsRequest;
 import io.reflection.app.api.forum.shared.call.GetForumsResponse;
 import io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler;
@@ -30,10 +28,11 @@ import io.reflection.app.datatypes.shared.Topic;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.shared.util.FormattingHelper;
 
+import java.util.Date;
+
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.HeadingElement;
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.safecss.shared.SafeStyles;
 import com.google.gwt.safecss.shared.SafeStylesUtils;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
@@ -168,33 +167,29 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 
             @Override
             public String getValue(Topic object) {
-                Date lastTime = object.lastReplied ;
+                Date lastTime = object.lastReplied;
                 if (lastTime == null) {
-                    lastTime = object.created ;
+                    lastTime = object.created;
                 }
                 return FormattingHelper.getTimeSince(lastTime);
             }
         };
 
         TextHeader titleHeader = new TextHeader("Topic");
+        titleHeader.setHeaderStyleNames("col-sm-12");
         topics.addColumn(titleColumn, titleHeader);
 
         TextHeader postHeader = new TextHeader("Posts");
-
+        postHeader.setHeaderStyleNames("col-sm-12");
         topics.addColumn(postsColumn, postHeader);
 
         TextHeader lastPosterHeader = new TextHeader("Last Poster");
+        lastPosterHeader.setHeaderStyleNames("col-sm-12");
         topics.addColumn(lastPosterColumn, lastPosterHeader);
 
         TextHeader lastPostedHeader = new TextHeader("");
+        lastPostedHeader.setHeaderStyleNames("col-sm-12");
         topics.addColumn(lastPostedColumn, lastPostedHeader);
-        
-        topics.setWidth("100%", true);
-        topics.setColumnWidth(titleColumn, 100.0, Unit.PCT);
-        topics.setColumnWidth(postsColumn, 100.0, Unit.PCT);
-        topics.setColumnWidth(lastPosterColumn, 100.0, Unit.PCT);
-        topics.setColumnWidth(lastPostedColumn, 100.0, Unit.PCT);
-
     }
 
     /*
@@ -258,7 +253,7 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
                 TopicController.get().getTopics(selectedForumId);
             }
             forumSummarySidePanel.selectItem(selectedForum);
-            
+
             // shouldn't be null unless an error has occurred.
             if (selectedForum != null) {
                 titleText.setInnerText(selectedForum.title);
