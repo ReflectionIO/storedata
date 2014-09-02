@@ -236,8 +236,8 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 							String imageUrl = jsonItem.get("artworkUrl100").getAsString();
 
 							if (imageUrl != null) {
-								int lastIndexOfPng = imageUrl.lastIndexOf(".png");
-								imageUrl = imageUrl.substring(0, lastIndexOfPng);
+								int indexOfExtension = imageUrl.lastIndexOf('.');
+								imageUrl = imageUrl.substring(0, indexOfExtension);
 
 								// 8 = length of http:// or https://
 								int countryStart = imageUrl.indexOf('/', 8) + 1;
