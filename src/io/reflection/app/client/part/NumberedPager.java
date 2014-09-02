@@ -10,7 +10,6 @@ package io.reflection.app.client.part;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.LIElement;
-import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.NumberFormat;
@@ -23,7 +22,6 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.HasRows;
 import com.google.gwt.view.client.Range;
@@ -45,12 +43,12 @@ public class NumberedPager extends AbstractPager {
     @UiField HTMLPanel htmlPanel;
 
     @UiField MyAnchor mFirstPage;
-    
-    @UiField InlineLabel firstBar ;
+
+    @UiField InlineLabel firstBar;
 
     @UiField MyAnchor mLastPage;
-    
-    @UiField InlineLabel lastBar ;
+
+    @UiField InlineLabel lastBar;
 
     @UiField MyAnchor mNextPage;
 
@@ -236,43 +234,45 @@ public class NumberedPager extends AbstractPager {
     private void generateNumberLinks() {
 
         BootstrapGwtNumberedPager.INSTANCE.styles().ensureInjected();
-        //this doesn't seem to clear all elements, only fields!
+        // this doesn't seem to clear all elements, only fields!
         htmlPanel.clear();
-        if (mFirstPage != null) {
-            htmlPanel.add(mFirstPage);
-            htmlPanel.add(firstBar);
-        }
-        htmlPanel.add(mPrevPage);
-        for (int i = 1; i <= getPageCount(); i++) {
-            LIElement li = Document.get().createLIElement();
-
-            Anchor anchor = new Anchor();
-            final int page = i;
-            anchor.addClickHandler(new ClickHandler() {
-
-                @Override
-                public void onClick(ClickEvent event) {
-                    NumberedPager thePager = NumberedPager.this;
-                    thePager.setPageStart((page - 1) * thePager.getPageSize());
-                }
-            });
-            anchor.getElement().appendChild(Document.get().createTextNode(Integer.toString(i)));
-
-            // current page
-            if (this.getPage() == i - 1) {
-                anchor.setStyleName(BootstrapGwtNumberedPager.INSTANCE.styles().selected());
-                anchor.setEnabled(false);
-
+        if (getPageCount() > 1) {
+            if (mFirstPage != null) {
+                htmlPanel.add(mFirstPage);
+                htmlPanel.add(firstBar);
             }
-            anchor.addStyleName(BootstrapGwtNumberedPager.INSTANCE.styles().spaceApart());
-            li.appendChild(anchor.getElement());
-            htmlPanel.add(anchor);
-        }
-        
-        htmlPanel.add(mNextPage);
-        if (mLastPage != null) {
-            htmlPanel.add(lastBar);
-            htmlPanel.add(mLastPage);
+            htmlPanel.add(mPrevPage);
+            for (int i = 1; i <= getPageCount(); i++) {
+                LIElement li = Document.get().createLIElement();
+
+                Anchor anchor = new Anchor();
+                final int page = i;
+                anchor.addClickHandler(new ClickHandler() {
+
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        NumberedPager thePager = NumberedPager.this;
+                        thePager.setPageStart((page - 1) * thePager.getPageSize());
+                    }
+                });
+                anchor.getElement().appendChild(Document.get().createTextNode(Integer.toString(i)));
+
+                // current page
+                if (this.getPage() == i - 1) {
+                    anchor.setStyleName(BootstrapGwtNumberedPager.INSTANCE.styles().selected());
+                    anchor.setEnabled(false);
+
+                }
+                anchor.addStyleName(BootstrapGwtNumberedPager.INSTANCE.styles().spaceApart());
+                li.appendChild(anchor.getElement());
+                htmlPanel.add(anchor);
+            }
+
+            htmlPanel.add(mNextPage);
+            if (mLastPage != null) {
+                htmlPanel.add(lastBar);
+                htmlPanel.add(mLastPage);
+            }
         }
     }
 
