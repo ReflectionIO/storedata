@@ -127,13 +127,8 @@ public class TopicController extends AsyncDataProvider<Topic> implements Service
     }
 
     protected boolean hasForumChanged() {
-        boolean result = false;
-        if (fetchTopicsRequest != null && fetchTopicsRequest.forum.id.intValue() != forumId.intValue()) {
-            result = true;
-        } else if (forumId != null && oldForumId != null && forumId.intValue() != oldForumId.intValue()) {
-            result = true;
-        }
-        return result;
+        return (fetchTopicsRequest != null && fetchTopicsRequest.forum.id.intValue() != forumId.intValue()) ||
+                (forumId != null && oldForumId != null && forumId.intValue() != oldForumId.intValue()) ;
     }
 
     protected GetTopicsRequest createGetTopicsRequest(Long forumId) {
