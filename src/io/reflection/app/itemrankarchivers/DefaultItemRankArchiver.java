@@ -13,11 +13,13 @@ import io.reflection.app.archivablekeyvalue.peristence.objectify.ArchivableKeyVa
 import io.reflection.app.archivablekeyvalue.peristence.objectify.KeyValueArchiveManager;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.FormType;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.helpers.SliceHelper;
 import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.modellers.ModellerFactory;
 import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
 
@@ -170,19 +172,15 @@ public class DefaultItemRankArchiver implements ItemRankArchiver {
 		Country country = new Country();
 		country.a2Code = rank.country;
 
-		return createKey(Long.valueOf(SliceHelper.offset(rank.date)), item, store, country, rank.category);
+		FormType form = ModellerFactory.getModellerForStore(store.a3Code).getForm(rank.type);
+
+		return createKey(Long.valueOf(SliceHelper.offset(rank.date)), item, form, store, country, rank.category);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.itemrankarchivers.ItemRankArchiver#createKey(java.lang.Long, io.reflection.app.datatypes.shared.Item,
-	 * io.reflection.app.datatypes.shared.Store, io.reflection.app.datatypes.shared.Country, io.reflection.app.datatypes.shared.Category)
-	 */
 	@Override
-	public String createKey(Long slice, Item item, Store store, Country country, Category category) {
+	public String createKey(Long slice, Item item, FormType form, Store store, Country country, Category category) {
 		return StringUtils.join(Arrays.asList("archiver", "item", "rank", slice.toString(), item.internalId == null ? item.id.toString() : item.internalId,
-				store.a3Code, country.a2Code, category.id.toString()), ".");
+				form.toString(), store.a3Code, country.a2Code, category.id.toString()), ".");
 	}
 
 	/*

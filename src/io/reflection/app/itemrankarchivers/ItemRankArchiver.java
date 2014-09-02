@@ -7,14 +7,15 @@
 //
 package io.reflection.app.itemrankarchivers;
 
-import java.util.List;
-
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.FormType;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
+
+import java.util.List;
 
 /**
  * @author billy1380
@@ -42,14 +43,16 @@ public interface ItemRankArchiver {
 	void archive(Rank rank) throws DataAccessException;
 
 	/**
+	 * 
 	 * @param slice
 	 * @param item
+	 * @param form
 	 * @param store
 	 * @param country
 	 * @param category
 	 * @return
 	 */
-	String createKey(Long slice, Item item, Store store, Country country, Category category);
+	String createKey(Long slice, Item item, FormType form, Store store, Country country, Category category);
 
 	/**
 	 * @param key

@@ -550,6 +550,8 @@ public final class Core extends ActionHandler {
 			}
 
 			input.listType = ValidationHelper.validateListType(input.listType, store);
+			
+			FormType form = ModellerFactory.getModellerForStore(store.a3Code).getForm(input.listType);
 
 			long diff = input.end.getTime() - input.start.getTime();
 			long diffDays = diff / (24 * 60 * 60 * 1000);
@@ -564,7 +566,7 @@ public final class Core extends ActionHandler {
 			String key;
 			List<Rank> ranks;
 			for (long slice : slices) {
-				key = archiver.createKey(slice, input.item, store, input.country, input.category);
+				key = archiver.createKey(slice, input.item, form, store, input.country, input.category);
 
 				ranks = archiver.getItemRanks(key);
 
