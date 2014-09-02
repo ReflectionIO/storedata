@@ -7,6 +7,8 @@
 // 
 package io.reflection.app.client.page.forum;
 
+import java.util.Date;
+
 import io.reflection.app.api.forum.shared.call.GetForumsRequest;
 import io.reflection.app.api.forum.shared.call.GetForumsResponse;
 import io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler;
@@ -31,6 +33,7 @@ import io.reflection.app.shared.util.FormattingHelper;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.HeadingElement;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.safecss.shared.SafeStyles;
 import com.google.gwt.safecss.shared.SafeStylesUtils;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
@@ -165,12 +168,15 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 
             @Override
             public String getValue(Topic object) {
-                return FormattingHelper.getTimeSince(object.lastReplied);
+                Date lastTime = object.lastReplied ;
+                if (lastTime == null) {
+                    lastTime = object.created ;
+                }
+                return FormattingHelper.getTimeSince(lastTime);
             }
         };
 
         TextHeader titleHeader = new TextHeader("Topic");
-        titleHeader.setHeaderStyleNames("col-sm-9");
         topics.addColumn(titleColumn, titleHeader);
 
         TextHeader postHeader = new TextHeader("Posts");
@@ -178,12 +184,16 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
         topics.addColumn(postsColumn, postHeader);
 
         TextHeader lastPosterHeader = new TextHeader("Last Poster");
-        lastPosterHeader.setHeaderStyleNames("col-sm-2");
         topics.addColumn(lastPosterColumn, lastPosterHeader);
 
         TextHeader lastPostedHeader = new TextHeader("");
-        lastPostedHeader.setHeaderStyleNames("col-sm-1");
         topics.addColumn(lastPostedColumn, lastPostedHeader);
+        
+        topics.setWidth("100%", true);
+        topics.setColumnWidth(titleColumn, 100.0, Unit.PCT);
+        topics.setColumnWidth(postsColumn, 100.0, Unit.PCT);
+        topics.setColumnWidth(lastPosterColumn, 100.0, Unit.PCT);
+        topics.setColumnWidth(lastPostedColumn, 100.0, Unit.PCT);
 
     }
 
