@@ -25,16 +25,18 @@
 	</ui:style>
 	<g:HTMLPanel ui:field="htmlPanel">
 				<a:MyAnchor ui:field="mFirstPage" styleName="{style.spaceApart}">
-					first
+					First
 				</a:MyAnchor>
+				<g:InlineLabel ui:field="firstBar" styleName="{style.spaceApart}">|</g:InlineLabel>
 				<a:MyAnchor ui:field="mPrevPage" styleName="{style.spaceApart}">
-					previous
+					Prev
 				</a:MyAnchor>
 				<a:MyAnchor ui:field="mNextPage" styleName="{style.spaceApart}">
-					next
+					Next
 				</a:MyAnchor>
+				<g:InlineLabel ui:field="lastBar" styleName="{style.spaceApart}">|</g:InlineLabel>
 				<a:MyAnchor ui:field="mLastPage" styleName="{style.spaceApart}">
-					last
+					Last
 				</a:MyAnchor>
 	</g:HTMLPanel>
 </ui:UiBinder> 

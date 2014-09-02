@@ -10,6 +10,7 @@ package io.reflection.app.client.part;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.NumberFormat;
@@ -21,6 +22,8 @@ import com.google.gwt.user.cellview.client.AbstractPager;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.HasRows;
 import com.google.gwt.view.client.Range;
@@ -37,13 +40,17 @@ public class NumberedPager extends AbstractPager {
 
     private static final int DEFAULT_FAST_FORWARD_ROWS = 1000;
 
-//    private final int mFastForwardRows;
+    // private final int mFastForwardRows;
 
     @UiField HTMLPanel htmlPanel;
 
     @UiField MyAnchor mFirstPage;
+    
+    @UiField InlineLabel firstBar ;
 
     @UiField MyAnchor mLastPage;
+    
+    @UiField InlineLabel lastBar ;
 
     @UiField MyAnchor mNextPage;
 
@@ -55,7 +62,7 @@ public class NumberedPager extends AbstractPager {
      */
     @UiConstructor
     public NumberedPager() {
-        this(false, DEFAULT_FAST_FORWARD_ROWS, false);
+        this(true, DEFAULT_FAST_FORWARD_ROWS, true);
     }
 
     /**
@@ -85,7 +92,7 @@ public class NumberedPager extends AbstractPager {
     public NumberedPager(boolean showFirstPageButton, final int fastForwardRows, boolean showLastPageButton) {
         initWidget(uiBinder.createAndBindUi(this));
 
-//        this.mFastForwardRows = fastForwardRows;
+        // this.mFastForwardRows = fastForwardRows;
 
         if (!showLastPageButton) {
             mLastPage.removeFromParent();
@@ -212,7 +219,7 @@ public class NumberedPager extends AbstractPager {
 
     @Override
     protected void onRangeOrRowCountChanged() {
-//        HasRows display = getDisplay();
+        // HasRows display = getDisplay();
         generateNumberLinks();
 
         // Update the prev and first buttons.
@@ -229,7 +236,12 @@ public class NumberedPager extends AbstractPager {
     private void generateNumberLinks() {
 
         BootstrapGwtNumberedPager.INSTANCE.styles().ensureInjected();
+        //this doesn't seem to clear all elements, only fields!
         htmlPanel.clear();
+        if (mFirstPage != null) {
+            htmlPanel.add(mFirstPage);
+            htmlPanel.add(firstBar);
+        }
         htmlPanel.add(mPrevPage);
         for (int i = 1; i <= getPageCount(); i++) {
             LIElement li = Document.get().createLIElement();
@@ -256,8 +268,12 @@ public class NumberedPager extends AbstractPager {
             li.appendChild(anchor.getElement());
             htmlPanel.add(anchor);
         }
-
+        
         htmlPanel.add(mNextPage);
+        if (mLastPage != null) {
+            htmlPanel.add(lastBar);
+            htmlPanel.add(mLastPage);
+        }
     }
 
     /**
