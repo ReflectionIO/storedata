@@ -3,7 +3,7 @@
 	<ui:style>
 
     .headerMargin {
-        height:50px;
+        height:10px;
     }
 	
 	</ui:style>
