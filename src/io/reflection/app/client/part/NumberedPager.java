@@ -90,6 +90,8 @@ public class NumberedPager extends AbstractPager {
     public NumberedPager(boolean showFirstPageButton, final int fastForwardRows, boolean showLastPageButton) {
         initWidget(uiBinder.createAndBindUi(this));
 
+        BootstrapGwtNumberedPager.INSTANCE.styles().ensureInjected();
+
         // this.mFastForwardRows = fastForwardRows;
 
         if (!showLastPageButton) {
@@ -233,7 +235,6 @@ public class NumberedPager extends AbstractPager {
      */
     private void generateNumberLinks() {
 
-        BootstrapGwtNumberedPager.INSTANCE.styles().ensureInjected();
         // this doesn't seem to clear all elements, only fields!
         htmlPanel.clear();
         if (getPageCount() > 1) {
@@ -255,7 +256,7 @@ public class NumberedPager extends AbstractPager {
                         thePager.setPageStart((page - 1) * thePager.getPageSize());
                     }
                 });
-                anchor.getElement().appendChild(Document.get().createTextNode(Integer.toString(i)));
+                anchor.getElement().setInnerHTML(Integer.toString(i));
 
                 // current page
                 if (this.getPage() == i - 1) {
