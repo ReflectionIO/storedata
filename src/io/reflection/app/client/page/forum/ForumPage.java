@@ -28,6 +28,8 @@ import io.reflection.app.datatypes.shared.Topic;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.shared.util.FormattingHelper;
 
+import java.util.Date;
+
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.HeadingElement;
@@ -61,8 +63,8 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
         @SafeHtmlTemplates.Template("<div>{0} <a href=\"{1}\"" + " style=\"{2}\">{3}</a></div><div>{4} {5}</div>")
         SafeHtml topicLayout(SafeHtml properties, String link, SafeStyles styles, SafeHtml title, SafeHtml pages, SafeHtml pageLinks);
 
-        @SafeHtmlTemplates.Template("<a style='margin-left:3px' href='{0}'>{1}</a>")
-        SafeHtml pageLink(SafeUri lastPageLink, int i);
+        @SafeHtmlTemplates.Template("<a class='{2}' href='{0}'>{1}</a>")
+        SafeHtml pageLink(SafeUri lastPageLink, int i, String style);
     }
 
     private static ForumPageUiBinder uiBinder = GWT.create(ForumPageUiBinder.class);
@@ -70,6 +72,7 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
     interface ForumPageUiBinder extends UiBinder<Widget, ForumPage> {}
 
     private static final int SELECTED_FORUM_PARAMETER_INDEX = 0;
+    private static final Long DEFAULT_FORUM = 5L;
 
     @UiField(provided = true) CellTable<Topic> topics = new CellTable<Topic>(ServiceConstants.SHORT_STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 
@@ -125,7 +128,7 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
                     SafeUri lastPageLink = UriUtils.fromSafeConstant(PageType.ForumThreadPageType.asHref().asString() + "/view/" + object.id + "/post/"
                             + position);
 
-                    pageLinksString += TopicTemplate.INSTANCE.pageLink(lastPageLink, i).asString(); // asString because can't see how to combine SafeHtmls
+                    pageLinksString += TopicTemplate.INSTANCE.pageLink(lastPageLink, i, "forumPageAnchorMarginStyle").asString(); // asString because can't see how to combine SafeHtmls
                                                                                                     // together.
 
                 }
@@ -165,26 +168,29 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 
             @Override
             public String getValue(Topic object) {
-                return FormattingHelper.getTimeSince(object.lastReplied);
+                Date lastTime = object.lastReplied;
+                if (lastTime == null) {
+                    lastTime = object.created;
+                }
+                return FormattingHelper.getTimeSince(lastTime);
             }
         };
 
         TextHeader titleHeader = new TextHeader("Topic");
-        titleHeader.setHeaderStyleNames("col-sm-9");
+        titleHeader.setHeaderStyleNames("col-sm-3");
         topics.addColumn(titleColumn, titleHeader);
 
         TextHeader postHeader = new TextHeader("Posts");
-
+        postHeader.setHeaderStyleNames("col-sm-3");
         topics.addColumn(postsColumn, postHeader);
 
         TextHeader lastPosterHeader = new TextHeader("Last Poster");
-        lastPosterHeader.setHeaderStyleNames("col-sm-2");
+        lastPosterHeader.setHeaderStyleNames("col-sm-3");
         topics.addColumn(lastPosterColumn, lastPosterHeader);
 
         TextHeader lastPostedHeader = new TextHeader("");
-        lastPostedHeader.setHeaderStyleNames("col-sm-1");
+        lastPostedHeader.setHeaderStyleNames("col-sm-3");
         topics.addColumn(lastPostedColumn, lastPostedHeader);
-
     }
 
     /*
@@ -211,12 +217,20 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
      */
     private void reset() {
 
-        // got from https://groups.google.com/forum/#!topic/google-web-toolkit/cAvgdn2fmfU
-        // this *should* clear the attached pager.
+        // this *should* clear the attached pager, combined with the next statement
         if (TopicController.get().getDataDisplays().size() > 0) {
             TopicController.get().removeDataDisplay(topics);
         }
+        // got from https://groups.google.com/forum/#!topic/google-web-toolkit/cAvgdn2fmfU
         topics.setVisibleRangeAndClearData(topics.getVisibleRange(), true);
+
+        // this hard resets the topic controller every time we leave the ForumPage.
+        // it does mean that it will have to reload, but this logic is simpler than
+        // currently working out when we have to use the topic controller pager and when
+        // we have to discard it.
+        TopicController.get().reset();
+
+        pager.setDisplay(topics);
 
         forumSummarySidePanel.reset();
         titleText.setInnerHTML("");
@@ -248,7 +262,7 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
                 TopicController.get().getTopics(selectedForumId);
             }
             forumSummarySidePanel.selectItem(selectedForum);
-            
+
             // shouldn't be null unless an error has occurred.
             if (selectedForum != null) {
                 titleText.setInnerText(selectedForum.title);
@@ -276,9 +290,15 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
     public void navigationChanged(Stack previous, Stack current) {
         if (current != null && PageType.ForumPageType.equals(current.getPage())) {
 
+            // no caching, just get it working.
+            TopicController.get().reset();
             if (!TopicController.get().getDataDisplays().contains(topics)) {
+                // this triggers a range change update!
                 TopicController.get().addDataDisplay(topics);
             }
+
+            // always reset to 0
+            pager.setPageStart(0);
 
             String selectedIdString;
             if ((selectedIdString = current.getParameter(SELECTED_FORUM_PARAMETER_INDEX)) != null) {
@@ -293,12 +313,14 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
                     configureTitleAndSidePanel();
                 }
             } else {
-                // needs to be reset in case we're coming back to this page.
+                // needs to be reset in case we're coming back to this page. The next call will set them.
                 selectedForumId = null;
                 selectedForum = null;
+
+                // This call also resets the default selected forum provided selectedForum/Id is null.
+                configureTitleAndSidePanel();
             }
         }
-        topics.redraw();
     }
 
     /*

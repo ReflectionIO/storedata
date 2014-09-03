@@ -28,7 +28,7 @@
 		<div class="col-md-10">
 			<g:HTMLPanel styleName="well {style.toolbarSpacing}">
 				<div class="row">
-					<h2 class="col-sm-2 {style.header2}">Edit Post</h2>
+					<h3 class="col-sm-2 {style.header2}">Edit Post</h3>
 				</div>
 			</g:HTMLPanel>
 			<g:FormPanel styleName="col-sm-10 col-sm-offset-1" ui:field="editForm">
