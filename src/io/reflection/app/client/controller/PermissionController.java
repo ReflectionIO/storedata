@@ -31,6 +31,9 @@ import com.willshex.gson.json.service.shared.StatusType;
  */
 public class PermissionController extends AsyncDataProvider<Permission> implements ServiceConstants {
 
+	public static final long FULL_RANK_VIEW_PERMISSION_ID = 1;
+	public static final long HAS_LINKED_ACCOUNT_PERMISSION_ID = 20;
+
 	private List<Permission> mPermissions = new ArrayList<Permission>();
 	private long mCount = -1;
 	private Pager mPager;
