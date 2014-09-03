@@ -55,7 +55,7 @@
                 </div>
             </g:HTMLPanel>
 
-            <h2 ui:field="topicTitle"></h2>
+            <h3 ui:field="topicTitle"></h3>
             <ul ui:field="notes" class="{style.notes}" />
 
             <div class="row">

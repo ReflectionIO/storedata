@@ -28,6 +28,8 @@ import io.reflection.app.datatypes.shared.Topic;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.shared.util.FormattingHelper;
 
+import java.util.Date;
+
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.HeadingElement;
@@ -61,8 +63,8 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
         @SafeHtmlTemplates.Template("<div>{0} <a href=\"{1}\"" + " style=\"{2}\">{3}</a></div><div>{4} {5}</div>")
         SafeHtml topicLayout(SafeHtml properties, String link, SafeStyles styles, SafeHtml title, SafeHtml pages, SafeHtml pageLinks);
 
-        @SafeHtmlTemplates.Template("<a style='margin-left:3px' href='{0}'>{1}</a>")
-        SafeHtml pageLink(SafeUri lastPageLink, int i);
+        @SafeHtmlTemplates.Template("<a class='{2}' href='{0}'>{1}</a>")
+        SafeHtml pageLink(SafeUri lastPageLink, int i, String style);
     }
 
     private static ForumPageUiBinder uiBinder = GWT.create(ForumPageUiBinder.class);
@@ -126,7 +128,7 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
                     SafeUri lastPageLink = UriUtils.fromSafeConstant(PageType.ForumThreadPageType.asHref().asString() + "/view/" + object.id + "/post/"
                             + position);
 
-                    pageLinksString += TopicTemplate.INSTANCE.pageLink(lastPageLink, i).asString(); // asString because can't see how to combine SafeHtmls
+                    pageLinksString += TopicTemplate.INSTANCE.pageLink(lastPageLink, i, "forumPageAnchorMarginStyle").asString(); // asString because can't see how to combine SafeHtmls
                                                                                                     // together.
 
                 }
@@ -166,26 +168,29 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 
             @Override
             public String getValue(Topic object) {
-                return FormattingHelper.getTimeSince(object.lastReplied);
+                Date lastTime = object.lastReplied;
+                if (lastTime == null) {
+                    lastTime = object.created;
+                }
+                return FormattingHelper.getTimeSince(lastTime);
             }
         };
 
         TextHeader titleHeader = new TextHeader("Topic");
-        titleHeader.setHeaderStyleNames("col-sm-9");
+        titleHeader.setHeaderStyleNames("col-sm-3");
         topics.addColumn(titleColumn, titleHeader);
 
         TextHeader postHeader = new TextHeader("Posts");
-
+        postHeader.setHeaderStyleNames("col-sm-3");
         topics.addColumn(postsColumn, postHeader);
 
         TextHeader lastPosterHeader = new TextHeader("Last Poster");
-        lastPosterHeader.setHeaderStyleNames("col-sm-2");
+        lastPosterHeader.setHeaderStyleNames("col-sm-3");
         topics.addColumn(lastPosterColumn, lastPosterHeader);
 
         TextHeader lastPostedHeader = new TextHeader("");
-        lastPostedHeader.setHeaderStyleNames("col-sm-1");
+        lastPostedHeader.setHeaderStyleNames("col-sm-3");
         topics.addColumn(lastPostedColumn, lastPostedHeader);
-
     }
 
     /*
