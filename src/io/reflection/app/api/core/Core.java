@@ -1645,6 +1645,7 @@ public final class Core extends ActionHandler {
 								rank.type = input.listType;
 
 								output.ranks.add(rank);
+								itemIDsRankLookup.put(itemId, rank);
 							} else {
 								rank = itemIDsRankLookup.get(itemId);
 							}
