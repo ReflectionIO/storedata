@@ -72,7 +72,6 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
     interface ForumPageUiBinder extends UiBinder<Widget, ForumPage> {}
 
     private static final int SELECTED_FORUM_PARAMETER_INDEX = 0;
-    private static final Long DEFAULT_FORUM = 5L;
 
     @UiField(provided = true) CellTable<Topic> topics = new CellTable<Topic>(ServiceConstants.SHORT_STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 
