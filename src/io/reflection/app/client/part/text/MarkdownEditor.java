@@ -14,6 +14,8 @@ import java.io.IOException;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.BeforeSelectionEvent;
 import com.google.gwt.event.logical.shared.BeforeSelectionHandler;
@@ -61,6 +63,11 @@ public class MarkdownEditor extends Composite implements HasText {
 
         tabLayout.getTabBar().setTabHTML(0, "Edit &nbsp;&nbsp;&nbsp;&nbsp;<span class=\"glyphicon glyphicon-pencil\"></span>");
         tabLayout.getTabBar().setTabHTML(1, "Preview &nbsp;&nbsp;&nbsp;&nbsp;<span class=\"glyphicon glyphicon-eye-open\"></span>");
+        
+        //hack to get rid of first &nbsp in the TD before the Edit and Preview.
+        NodeList<Element> nodeList = tabLayout.getTabBar().getElement().getElementsByTagName("div");
+        nodeList.getItem(0).setInnerHTML("");
+        
 
         tabLayout.addBeforeSelectionHandler(new BeforeSelectionHandler<Integer>() {
 

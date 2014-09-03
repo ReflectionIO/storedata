@@ -38,7 +38,7 @@
     }
     
     .buttonWidth {
-        width: 250px;
+        width: 170px;
     }
     </ui:style>
     <g:HTMLPanel styleName="row">
@@ -77,7 +77,7 @@
                         <g:HTMLPanel styleName="noteDetail" ui:field="replyNote" visible="false" />
                     </g:HTMLPanel>
 
-                    <g:Button ui:field="post" styleName="btn btn-lg btn-primary {style.buttonWidth} pull-right">
+                    <g:Button ui:field="post" styleName="btn btn-primary {style.buttonWidth} pull-right">
                         Post Response
                     </g:Button>
 

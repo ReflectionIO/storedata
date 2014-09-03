@@ -202,7 +202,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
      */
     private void reset() {
         topicTitle.setInnerHTML("");
-        post.setText("Post");
+        post.setText("Post Response");
 
         if (dataProvider != null && dataProvider.getDataDisplays().size() > 0) {
             dataProvider.removeDataDisplay(messagesCellList);
