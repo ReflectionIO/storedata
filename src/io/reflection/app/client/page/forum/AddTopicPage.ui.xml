@@ -8,22 +8,43 @@
 	.filler {
         height: 40px;
     }
+    
+    .toolbarSpacing {
+        padding-top: 10px;
+        margin-top: 30px;
+        padding-bottom: 10px;
+    }
+    
+    .indentHeader {
+	   margin-left: 55px;
+    }
+    
+    .forumControl {
+	   background: linear-gradient(#f6f7f9, #eeeff1);
+	}
 	</ui:style>
 	<g:HTMLPanel styleName="row">
 		<pp:ForumSummarySidePanel ui:field="forumSummarySidePanel" styleName="sidepanel col-md-2 well" />
 		<div class="col-md-10">
-			<h3>Add Topic</h3>
+        
+            <g:HTMLPanel styleName="well {style.toolbarSpacing}">
+                <div class="row">
+                    <h3 >Add New Topic</h3>
+                </div>
+            </g:HTMLPanel>
+        <h2 class="{style.indentHeader}">Add a new Topic</h2>
 			<g:FormPanel styleName="form">
+            
 				<g:HTMLPanel>
 					<g:HTMLPanel ui:field="titleGroup" styleName="form-group">
 						<label>Title</label>
 						<g:TextBox styleName="form-control" ui:field="title" />
 						<g:HTMLPanel styleName="noteDetail" ui:field="titleNote" visible="false" />
 					</g:HTMLPanel>
-
+                    
 					<g:HTMLPanel styleName="form-group">
 						<label>Forum</label>
-						<g:ListBox styleName="form-control" ui:field="forums">
+						<g:ListBox addStyleNames="form-control {style.forumControl}" ui:field="forums">
 						</g:ListBox>
 					</g:HTMLPanel>
 
@@ -39,8 +60,8 @@
 						<g:HTMLPanel styleName="noteDetail" ui:field="tagsNote" visible="false" />
 					</g:HTMLPanel>
 
-					<g:Button ui:field="submit" styleName="btn btn-lg btn-primary col-sm-4 col-sm-offset-4">
-						Submit
+					<g:Button ui:field="submit" styleName="btn  btn-primary">
+						Post New Topic
 					</g:Button>
 				</g:HTMLPanel>
 			</g:FormPanel>
