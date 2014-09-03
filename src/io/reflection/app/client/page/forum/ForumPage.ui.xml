@@ -19,6 +19,10 @@
 		margin-top: 0px;
 		margin-bottom: 0px;
 	}
+
+    .buttonWidth {
+        width: 150px;
+    }
 	
 	</ui:style>
 	<g:HTMLPanel styleName="row">
@@ -28,7 +32,7 @@
 			<g:HTMLPanel styleName="well {style.toolbar_spacing}">
 				<div class="row">
 					<h2 class="col-sm-8 {style.header2}" ui:field="titleText"></h2>
-					<g:InlineHyperlink styleName="btn btn-primary col-sm-2 pull-right" targetHistoryToken="{ForumTopicPageType.asTargetHistoryToken}/new">
+					<g:InlineHyperlink styleName="btn btn-primary pull-right {style.buttonWidth}" targetHistoryToken="{ForumTopicPageType.asTargetHistoryToken}/new">
 						New Topic
 						<span class="icon-plus"></span>
 					</g:InlineHyperlink>
