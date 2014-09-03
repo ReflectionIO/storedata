@@ -45,82 +45,95 @@ import com.willshex.gson.json.service.shared.StatusType;
  */
 public class TopicController extends AsyncDataProvider<Topic> implements ServiceConstants {
 
-	private List<Topic> topics = new ArrayList<Topic>();
-	private long count = 0;
-	private Pager pager;
-	private SparseArray<Topic> topicLookup = null;
+    private List<Topic> topics = new ArrayList<Topic>();
+    private long count = 0;
+    private Pager pager;
+    private SparseArray<Topic> topicLookup = null;
 
-	private Long forumId;
+    private Long forumId;
+    private Long oldForumId;
     private GetTopicsRequest fetchTopicsRequest;
 
-	private static TopicController one = null;
+    private static TopicController one = null;
 
-	public static TopicController get() {
-		if (one == null) {
-			one = new TopicController();
-		}
+    public static TopicController get() {
+        if (one == null) {
+            one = new TopicController();
+        }
 
-		return one;
-	}
+        return one;
+    }
 
-	private void fetchTopics() {
+    /**
+     * Has functionality to continue through a current forumId or to start again on a new forumId.
+     */
+    private void fetchTopics() {
 
-	    //make sure only one active fetch is running at a time
-		if (forumId != null && (fetchTopicsRequest == null || !fetchTopicsRequest.forum.id.equals(forumId))) {
-			ForumService service = ServiceCreator.createForumService();
-			
-			final GetTopicsRequest input = createGetTopicsRequest(forumId);
-			fetchTopicsRequest = input ;
+        // make sure only one active fetch is running at a time
+        if (forumId != null && (fetchTopicsRequest == null || hasForumChanged())) {
+            if (hasForumChanged()) {
+                pager = null;
+            }
+            oldForumId = forumId;
 
-			service.getTopics(input, new AsyncCallback<GetTopicsResponse>() {
+            ForumService service = ServiceCreator.createForumService();
 
-				@Override
-				public void onSuccess(GetTopicsResponse output) {
-					if (output.status == StatusType.StatusTypeSuccess) {
-						if (output.topics != null) {
-							topics.addAll(output.topics);
+            final GetTopicsRequest input = createGetTopicsRequest(forumId);
+            fetchTopicsRequest = input;
 
-							if (topicLookup == null) {
-								topicLookup = new SparseArray<Topic>();
-							}
+            service.getTopics(input, new AsyncCallback<GetTopicsResponse>() {
 
-							for (Topic topic : output.topics) {
-								topicLookup.put(topic.id.intValue(), topic);
-							}
-						}
+                @Override
+                public void onSuccess(GetTopicsResponse output) {
+                    if (output.status == StatusType.StatusTypeSuccess) {
+                        if (output.topics != null) {
+                            topics.addAll(output.topics);
 
-						if (output.pager != null) {
-							pager = output.pager;
+                            if (topicLookup == null) {
+                                topicLookup = new SparseArray<Topic>();
+                            }
 
-							if (pager.totalCount != null) {
-								count = pager.totalCount.longValue();
-							}
-						}
+                            for (Topic topic : output.topics) {
+                                topicLookup.put(topic.id.intValue(), topic);
+                            }
+                        }
 
-						updateRowCount((int) count, true);
-						updateRowData(
-								input.pager.start.intValue(),
-								topics.subList(input.pager.start.intValue(),
-										Math.min(input.pager.start.intValue() + input.pager.count.intValue(), pager.totalCount.intValue())));
-					}
+                        if (output.pager != null) {
+                            pager = output.pager;
 
-					EventController.get().fireEventFromSource(new GetTopicsSuccess(input, output), TopicController.this);
-					fetchTopicsRequest = null ;
-				}
+                            if (pager.totalCount != null) {
+                                count = pager.totalCount.longValue();
+                            }
+                        }
 
-				@Override
-				public void onFailure(Throwable caught) {
-					EventController.get().fireEventFromSource(new GetTopicsFailure(input, caught), TopicController.this);
-					fetchTopicsRequest = null ;
-				}
-			});
-		}
+                        updateRowCount((int) count, true);
+                        updateRowData(
+                                input.pager.start.intValue(),
+                                topics.subList(input.pager.start.intValue(),
+                                        Math.min(input.pager.start.intValue() + input.pager.count.intValue(), pager.totalCount.intValue())));
+                    }
 
-	}
+                    EventController.get().fireEventFromSource(new GetTopicsSuccess(input, output), TopicController.this);
+                    fetchTopicsRequest = null;
+                }
+
+                @Override
+                public void onFailure(Throwable caught) {
+                    EventController.get().fireEventFromSource(new GetTopicsFailure(input, caught), TopicController.this);
+                    fetchTopicsRequest = null;
+                }
+            });
+        }
+    }
+
+    protected boolean hasForumChanged() {
+        return (fetchTopicsRequest != null && fetchTopicsRequest.forum.id.intValue() != forumId.intValue()) ||
+                (forumId != null && oldForumId != null && forumId.intValue() != oldForumId.intValue()) ;
+    }
 
     protected GetTopicsRequest createGetTopicsRequest(Long forumId) {
         final GetTopicsRequest input = new GetTopicsRequest();
-        
+
         input.accessCode = ACCESS_CODE;
 
         input.session = SessionController.get().getSessionForApiCall();
@@ -129,238 +142,235 @@ public class TopicController extends AsyncDataProvider<Topic> implements Service
         input.forum.id = forumId;
 
         if (pager == null) {
-        	pager = new Pager();
-        	pager.count = SHORT_STEP;
-        	pager.start = Long.valueOf(0);
-        	pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
+            pager = new Pager();
+            pager.count = SHORT_STEP;
+            pager.start = Long.valueOf(0);
+            pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
         }
         input.pager = pager;
         return input;
     }
 
-	private void fetchTopic(Long topicId) {
-		ForumService service = ServiceCreator.createForumService();
+    private void fetchTopic(Long topicId) {
+        ForumService service = ServiceCreator.createForumService();
 
-		final GetTopicRequest input = new GetTopicRequest();
-		input.accessCode = ACCESS_CODE;
+        final GetTopicRequest input = new GetTopicRequest();
+        input.accessCode = ACCESS_CODE;
 
-		input.session = SessionController.get().getSessionForApiCall();
-		input.id = topicId;
+        input.session = SessionController.get().getSessionForApiCall();
+        input.id = topicId;
 
-		service.getTopic(input, new AsyncCallback<GetTopicResponse>() {
+        service.getTopic(input, new AsyncCallback<GetTopicResponse>() {
 
-			@Override
-			public void onSuccess(GetTopicResponse output) {
-				if (output.status == StatusType.StatusTypeSuccess) {
-					if (output.topic != null) {
-						if (topicLookup == null) {
-							topicLookup = new SparseArray<Topic>();
-						}
+            @Override
+            public void onSuccess(GetTopicResponse output) {
+                if (output.status == StatusType.StatusTypeSuccess) {
+                    if (output.topic != null) {
+                        if (topicLookup == null) {
+                            topicLookup = new SparseArray<Topic>();
+                        }
 
-						topicLookup.put(output.topic.id.intValue(), output.topic);
-					}
-				}
+                        topicLookup.put(output.topic.id.intValue(), output.topic);
+                    }
+                }
 
-				EventController.get().fireEventFromSource(new GetTopicSuccess(input, output), TopicController.this);
-			}
+                EventController.get().fireEventFromSource(new GetTopicSuccess(input, output), TopicController.this);
+            }
 
-			@Override
-			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new GetTopicFailure(input, caught), TopicController.this);
-			}
-		});
-	}
+            @Override
+            public void onFailure(Throwable caught) {
+                EventController.get().fireEventFromSource(new GetTopicFailure(input, caught), TopicController.this);
+            }
+        });
+    }
 
-	public List<Topic> getTopics(Long forumId) {
-		if (this.forumId == null || this.forumId != forumId) {
-			this.forumId = forumId;
+    public List<Topic> getTopics(Long forumId) {
+        if (this.forumId == null || this.forumId != forumId) {
+            reset();
+            this.forumId = forumId;
+        }
 
-			reset();
-		}
+        if (pager == null) {
+            fetchTopics();
+        }
 
-		if (pager == null) {
-			fetchTopics();
-		}
+        return topics;
+    }
 
-		return topics;
-	}
+    public long getTopicsCount() {
+        return count;
+    }
 
-	public long getTopicsCount() {
-		return count;
-	}
+    public boolean hasTopics() {
+        return pager != null || topics.size() > 0;
+    }
 
-	public boolean hasTopics() {
-		return pager != null || topics.size() > 0;
-	}
-	
-	
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.gwt.view.client.AbstractDataProvider#onRangeChanged(com.google.gwt.view.client.HasData)
+     */
+    @Override
+    protected void onRangeChanged(HasData<Topic> display) {
+        Range r = display.getVisibleRange();
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.view.client.AbstractDataProvider#onRangeChanged(com.google.gwt.view.client.HasData)
-	 */
-	@Override
-	protected void onRangeChanged(HasData<Topic> display) {
-		Range r = display.getVisibleRange();
+        int start = r.getStart();
+        int end = start + r.getLength();
 
-		int start = r.getStart();
-		int end = start + r.getLength();
+        if (end > topics.size()) {
+            fetchTopics();
+        }
 
-		if (end > topics.size()) {
-			fetchTopics();
-		}
+        updateRowData(start, topics.size() == 0 ? topics : topics.subList(start, Math.min(topics.size(), end)));
+    }
 
-		updateRowData(start, topics.size() == 0 ? topics : topics.subList(start, Math.min(topics.size(), end)));
-	}
+    /**
+     * 
+     * @param forumId
+     * @param title
+     * @param sticky
+     * @param visible
+     * @param commentsEnabled
+     * @param description
+     * @param content
+     * @param publish
+     * @param tags
+     */
+    public void createTopic(Long forumId, String title, Boolean sticky, String content, String tags) {
+        ForumService service = ServiceCreator.createForumService();
 
-	/**
-	 * 
-	 * @param forumId
-	 * @param title
-	 * @param sticky
-	 * @param visible
-	 * @param commentsEnabled
-	 * @param description
-	 * @param content
-	 * @param publish
-	 * @param tags
-	 */
-	public void createTopic(Long forumId, String title, Boolean sticky, String content, String tags) {
-		ForumService service = ServiceCreator.createForumService();
+        final CreateTopicRequest input = new CreateTopicRequest();
+        input.accessCode = ACCESS_CODE;
 
-		final CreateTopicRequest input = new CreateTopicRequest();
-		input.accessCode = ACCESS_CODE;
+        input.session = SessionController.get().getSessionForApiCall();
 
-		input.session = SessionController.get().getSessionForApiCall();
+        input.topic = new Topic();
 
-		input.topic = new Topic();
+        input.topic.title = title;
+        input.topic.content = content;
 
-		input.topic.title = title;
-		input.topic.content = content;
+        input.topic.forum = new Forum();
+        input.topic.forum.id = this.forumId = forumId;
 
-		input.topic.forum = new Forum();
-		input.topic.forum.id = this.forumId = forumId;
+        input.topic.tags = TagHelper.convertToTagList(tags);
 
-		input.topic.tags = TagHelper.convertToTagList(tags);
+        input.topic.sticky = sticky;
 
-		input.topic.sticky = sticky;
+        service.createTopic(input, new AsyncCallback<CreateTopicResponse>() {
 
-		service.createTopic(input, new AsyncCallback<CreateTopicResponse>() {
+            @Override
+            public void onSuccess(CreateTopicResponse output) {
+                if (output.status == StatusType.StatusTypeSuccess) {
 
-			@Override
-			public void onSuccess(CreateTopicResponse output) {
-				if (output.status == StatusType.StatusTypeSuccess) {
+                }
 
-				}
+                EventController.get().fireEventFromSource(new CreateTopicSuccess(input, output), TopicController.this);
+            }
 
-				EventController.get().fireEventFromSource(new CreateTopicSuccess(input, output), TopicController.this);
-			}
+            @Override
+            public void onFailure(Throwable caught) {
+                EventController.get().fireEventFromSource(new CreateTopicFailure(input, caught), TopicController.this);
+            }
+        });
+    }
 
-			@Override
-			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new CreateTopicFailure(input, caught), TopicController.this);
-			}
-		});
-	}
+    public void reset() {
+        pager = null;
+        topics.clear();
+        fetchTopicsRequest = null;
+        forumId = null;
 
-	public void reset() {
-		pager = null;
-		topics.clear();
+        updateRowData(0, topics);
+        updateRowCount(0, false);
+    }
 
-		updateRowData(0, topics);
-		updateRowCount(0, false);
+    /**
+     * @param id
+     * @return
+     */
+    public Topic getTopic(Long id) {
+        Topic topic = null;
 
-		fetchTopics();
-	}
+        if (topicLookup != null) {
+            topic = topicLookup.get(id.intValue());
+        }
 
-	/**
-	 * @param id
-	 * @return
-	 */
-	public Topic getTopic(Long id) {
-		Topic topic = null;
+        if (topic == null) {
+            fetchTopic(id);
+        }
 
-		if (topicLookup != null) {
-			topic = topicLookup.get(id.intValue());
-		}
+        return topic;
+    }
 
-		if (topic == null) {
-			fetchTopic(id);
-		}
+    public Topic getTopicPart(Long id) {
+        Topic topic = null;
 
-		return topic;
-	}
+        if (topicLookup != null) {
+            topic = topicLookup.get(id.intValue());
+        }
 
-	public Topic getTopicPart(Long id) {
-		Topic topic = null;
+        return topic;
+    }
 
-		if (topicLookup != null) {
-			topic = topicLookup.get(id.intValue());
-		}
+    public void deleteTopic(Long topicId) {
+        // ForumService service = ServiceCreator.createForumService();
+        //
+        // final DeleteTopicRequest input = new DeleteTopicRequest();
+        // input.accessCode = ACCESS_CODE;
+        //
+        // input.session = SessionController.get().getSessionForApiCall();
+        //
+        // input.topic = new Topic();
+        // input.topic.id = topicId;
+        //
+        // service.deleteTopic(input, new AsyncCallback<DeleteTopicResponse>() {
+        //
+        // @Override
+        // public void onSuccess(DeleteTopicResponse output) {
+        // if (output.status == StatusType.StatusTypeSuccess) {}
+        //
+        // EventController.get().fireEventFromSource(new DeleteTopicSuccess(input, output), TopicController.this);
+        // }
+        //
+        // @Override
+        // public void onFailure(Throwable caught) {
+        // EventController.get().fireEventFromSource(new DeleteTopicFailure(input, caught), TopicController.this);
+        // }
+        // });
+    }
 
-		return topic;
-	}
+    /**
+     * @return
+     */
+    public Long getForumId() {
+        return forumId;
+    }
 
-	public void deleteTopic(Long topicId) {
-		// ForumService service = ServiceCreator.createForumService();
-		//
-		// final DeleteTopicRequest input = new DeleteTopicRequest();
-		// input.accessCode = ACCESS_CODE;
-		//
-		// input.session = SessionController.get().getSessionForApiCall();
-		//
-		// input.topic = new Topic();
-		// input.topic.id = topicId;
-		//
-		// service.deleteTopic(input, new AsyncCallback<DeleteTopicResponse>() {
-		//
-		// @Override
-		// public void onSuccess(DeleteTopicResponse output) {
-		// if (output.status == StatusType.StatusTypeSuccess) {}
-		//
-		// EventController.get().fireEventFromSource(new DeleteTopicSuccess(input, output), TopicController.this);
-		// }
-		//
-		// @Override
-		// public void onFailure(Throwable caught) {
-		// EventController.get().fireEventFromSource(new DeleteTopicFailure(input, caught), TopicController.this);
-		// }
-		// });
-	}
+    public void updateTopic(Topic topic) {
+        ForumService service = ServiceCreator.createForumService();
 
-	/**
-	 * @return
-	 */
-	public Long getForumId() {
-		return forumId;
-	}
+        final UpdateTopicRequest input = new UpdateTopicRequest();
+        input.accessCode = ACCESS_CODE;
 
-	public void updateTopic(Topic topic) {
-		ForumService service = ServiceCreator.createForumService();
+        input.session = SessionController.get().getSessionForApiCall();
 
-		final UpdateTopicRequest input = new UpdateTopicRequest();
-		input.accessCode = ACCESS_CODE;
+        input.topic = topic;
 
-		input.session = SessionController.get().getSessionForApiCall();
+        service.updateTopic(input, new AsyncCallback<UpdateTopicResponse>() {
 
-		input.topic = topic;
+            @Override
+            public void onSuccess(UpdateTopicResponse output) {
+                if (output.status == StatusType.StatusTypeSuccess) {}
 
-		service.updateTopic(input, new AsyncCallback<UpdateTopicResponse>() {
+                EventController.get().fireEventFromSource(new UpdateTopicEventHandler.UpdateTopicSuccess(input, output), TopicController.this);
+            }
 
-			@Override
-			public void onSuccess(UpdateTopicResponse output) {
-				if (output.status == StatusType.StatusTypeSuccess) {}
+            @Override
+            public void onFailure(Throwable caught) {
+                EventController.get().fireEventFromSource(new UpdateTopicEventHandler.UpdateTopicFailure(input, caught), TopicController.this);
+            }
+        });
 
-				EventController.get().fireEventFromSource(new UpdateTopicEventHandler.UpdateTopicSuccess(input, output), TopicController.this);
-			}
-
-			@Override
-			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new UpdateTopicEventHandler.UpdateTopicFailure(input, caught), TopicController.this);
-			}
-		});
-
-	}
+    }
 
 }
