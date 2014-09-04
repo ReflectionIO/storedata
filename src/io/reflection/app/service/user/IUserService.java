@@ -141,6 +141,13 @@ public interface IUserService extends IService {
 
 	/**
 	 * @param user
+	 * @param permission
+	 * @return
+	 */
+	public Boolean hasPermission(User user, Permission permission, Boolean deleted) throws DataAccessException;
+
+	/**
+	 * @param user
 	 * @return
 	 */
 	public List<Role> getRoles(User user) throws DataAccessException;
@@ -150,6 +157,13 @@ public interface IUserService extends IService {
 	 * @return
 	 */
 	public List<Permission> getPermissions(User user) throws DataAccessException;
+
+	/**
+	 * 
+	 * @param user
+	 * @throws DataAccessException
+	 */
+	public void revokePermission(User user, Permission permission) throws DataAccessException;
 
 	/**
 	 * @param user
@@ -205,6 +219,14 @@ public interface IUserService extends IService {
 	 * @throws DataAccessException
 	 */
 	public Boolean hasDataAccount(User user, DataAccount dataAccount) throws DataAccessException;
+
+	/**
+	 * 
+	 * @param user
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public Boolean hasDataAccounts(User user) throws DataAccessException;
 
 	/**
 	 * 

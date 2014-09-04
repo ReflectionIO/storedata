@@ -268,21 +268,33 @@ public class NavigationController implements ValueChangeHandler<String> {
 			boolean doAttach = false;
 
 			if (SessionController.get().isValidSession()) {
-				if (loaded) {
-					if (!stackPage.requiresLogin() || SessionController.get().isLoggedInUserAdmin()
-							|| SessionController.get().isAuthorised(stackPage.getRequiredPermissions())) {
-						doAttach = true;
-					} else {
-						if (!PageType.NotPermittedPageType.equals(mStack.getPage())) {
-							PageType.NotPermittedPageType.show(value.asParameter(), mStack.asPreviousParameter());
-						}
-					}
-				} else {
-					setLastIntendedPage(value);
-					stackPage = PageType.LoadingPageType;
+				// If beta user with no linked accounts, always redirect to linkitunes page (show only post because of the 'waths this' link in the form)
+				if (!SessionController.get().loggedInUserHas(PermissionController.HAS_LINKED_ACCOUNT_PERMISSION_ID)
+						&& SessionController.get().loggedInUserIs(RoleController.BETA_ROLE_ID) && stackPage != PageType.BlogPostPageType
+						&& stackPage != PageType.BlogPostsPageType && stackPage != PageType.BlogEditPostPageType && stackPage != PageType.BlogTagPageType) {
+					stackPage = PageType.LinkItunesPageType;
 					value = new Stack(stackPage.toString());
 					doAttach = true;
 					loaded = true;
+					PageType.LinkItunesPageType.show();
+				} else {
+					if (loaded) {
+						if (!stackPage.requiresLogin() || SessionController.get().isLoggedInUserAdmin()
+								|| SessionController.get().isAuthorised(stackPage.getRequiredPermissions())) {
+							doAttach = true;
+
+						} else {
+							if (!PageType.NotPermittedPageType.equals(mStack.getPage())) {
+								PageType.NotPermittedPageType.show(value.asParameter(), mStack.asPreviousParameter());
+							}
+						}
+					} else {
+						setLastIntendedPage(value);
+						stackPage = PageType.LoadingPageType;
+						value = new Stack(stackPage.toString());
+						doAttach = true;
+						loaded = true;
+					}
 				}
 			} else {
 				if (stackPage.requiresLogin()) {

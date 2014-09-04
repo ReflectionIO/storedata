@@ -42,7 +42,7 @@ import com.spacehopperstudios.utility.StringUtils;
  */
 public enum PageType {
 	// navigable
-	RanksPageType("ranks", true),
+	RanksPageType("ranks", "HLA"),
 	FeedBrowserPageType("feedbrowser", "MFF"),
 	UsersPageType("users", "MUS"),
 	LoginPageType("login", false),

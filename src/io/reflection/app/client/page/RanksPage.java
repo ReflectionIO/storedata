@@ -26,6 +26,7 @@ import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.ItemController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
+import io.reflection.app.client.controller.PermissionController;
 import io.reflection.app.client.controller.RankController;
 import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.SessionController;
@@ -479,7 +480,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 				showMorePanel.setVisible(true);
 			}
 
-			boolean hasPermission = SessionController.get().loggedInUserHas(SessionController.FULL_RANK_VIEW_PERMISSION_ID);
+			boolean hasPermission = SessionController.get().loggedInUserHas(PermissionController.FULL_RANK_VIEW_PERMISSION_ID);
 
 			if (hasPermission) {
 				redirect.removeFromParent();

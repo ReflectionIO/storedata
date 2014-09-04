@@ -1,35 +1,35 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part">
 	<ui:style>
-	
-	.important {
+
+		.important {
 		font-weight: bold;
-	}
-	
-	.toolbar {
+		}
+
+		.toolbar {
 		margin-bottom: 5px;
-	}
-	
-	.marginTop {
+		}
+
+		.marginTop {
 		margin-top: 10px;
-	}
-	
-	textarea.textArea {
+		}
+
+		textarea.textArea {
 		width: 100%;
 		height: 200px;
-	}
-	
-	.preview {
+		}
+
+		.preview {
 		width: 100%;
 		height: 200px;
 		overflow: auto;
-	}
-	
-	.tabs {
+		}
+
+		.tabs {
 		width: 100%;
-	}
+		}
 	</ui:style>
-	<g:HTMLPanel >
+	<g:HTMLPanel>
 		<g:TabPanel ui:field="tabLayout" styleName="{style.tabs}">
 			<g:Tab text="Edit">
 				<g:HTMLPanel>
@@ -39,12 +39,14 @@
 						<g:Button styleName="btn btn-default" ui:field="link" />
 						<g:Button styleName="btn btn-default" ui:field="image" />
 					</g:HTMLPanel>
-					<g:TextArea addStyleNames="{style.textArea} {style.marginTop} form-control" ui:field="textArea" text="" />
+					<p:Preloader ui:field="preloader">
+						<g:TextArea addStyleNames="{style.textArea} {style.marginTop} form-control" ui:field="textArea" text="" />
+					</p:Preloader>
 				</g:HTMLPanel>
 			</g:Tab>
 			<g:Tab text="Preview">
 				<g:HTMLPanel>
-				    <div ui:field="preview" class="{style.marginTop} {style.preview}" />
+					<div ui:field="preview" class="{style.marginTop} {style.preview}" />
 				</g:HTMLPanel>
 			</g:Tab>
 		</g:TabPanel>

@@ -7,10 +7,16 @@
 //
 package io.reflection.app.client.page.forum;
 
+import io.reflection.app.api.forum.shared.call.GetReplyRequest;
+import io.reflection.app.api.forum.shared.call.GetReplyResponse;
+import io.reflection.app.api.forum.shared.call.GetTopicRequest;
+import io.reflection.app.api.forum.shared.call.GetTopicResponse;
 import io.reflection.app.api.forum.shared.call.UpdateReplyRequest;
 import io.reflection.app.api.forum.shared.call.UpdateReplyResponse;
 import io.reflection.app.api.forum.shared.call.UpdateTopicRequest;
 import io.reflection.app.api.forum.shared.call.UpdateTopicResponse;
+import io.reflection.app.api.forum.shared.call.event.GetReplyEventHandler;
+import io.reflection.app.api.forum.shared.call.event.GetTopicEventHandler;
 import io.reflection.app.api.forum.shared.call.event.UpdateReplyEventHandler;
 import io.reflection.app.api.forum.shared.call.event.UpdateTopicEventHandler;
 import io.reflection.app.client.controller.EventController;
@@ -39,7 +45,8 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class EditTopicPage extends Page implements NavigationEventHandler, UpdateReplyEventHandler, UpdateTopicEventHandler {
+public class EditTopicPage extends Page implements NavigationEventHandler, UpdateReplyEventHandler, UpdateTopicEventHandler, GetTopicEventHandler,
+        GetReplyEventHandler {
 
     private static EditTopicPageUiBinder uiBinder = GWT.create(EditTopicPageUiBinder.class);
 
@@ -81,6 +88,8 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
         register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
         register(EventController.get().addHandlerToSource(UpdateReplyEventHandler.TYPE, ReplyController.get(), this));
         register(EventController.get().addHandlerToSource(UpdateTopicEventHandler.TYPE, TopicController.get(), this));
+        register(EventController.get().addHandlerToSource(GetTopicEventHandler.TYPE, TopicController.get(), this));
+        register(EventController.get().addHandlerToSource(GetReplyEventHandler.TYPE, ReplyController.get(), this));
     }
 
     @Override
@@ -89,7 +98,6 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
         reset();
     }
 
-   
     private void reset() {
         forumSummarySidePanel.reset();
         editText.reset();
@@ -131,26 +139,25 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
                     new RuntimeException(e);
                 }
 
-                if (isTopic) {
-                    topic = TopicController.get().getTopic(topicId);
+                // get the topic or a promise
+                topic = TopicController.get().getTopic(topicId);
 
-                    if (topic != null) {
-                        content = topic.content.toString();
-                        show();
-                    }
-                } else {
+                if (topic != null) {
+                    whenGotTopic();
+                }
+
+                if (!isTopic) {
                     if (replyId != null) {
                         reply = ReplyController.get().getThread(topicId).getReply(replyId);
 
                         if (reply != null) {
-                            content = reply.content.toString();
-                            show();
+                            whenGotReplyAndTopic();
                         }
+
                     }
                 }
-            } else {
-                // there really is no point... this looks like trying to add a topic which will never happen on this page
             }
+
         }
     }
 
@@ -228,5 +235,68 @@ public class EditTopicPage extends Page implements NavigationEventHandler, Updat
      */
     @Override
     public void updateTopicFailure(UpdateTopicRequest input, Throwable caught) {}
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.api.forum.shared.call.event.GetTopicEventHandler#getTopicSuccess(io.reflection.app.api.forum.shared.call.GetTopicRequest,
+     * io.reflection.app.api.forum.shared.call.GetTopicResponse)
+     */
+    @Override
+    public void getTopicSuccess(GetTopicRequest input, GetTopicResponse output) {
+        if (output.status == StatusType.StatusTypeSuccess) {
+            topic = output.topic;
+            whenGotTopic();
+            whenGotReplyAndTopic();
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.api.forum.shared.call.event.GetTopicEventHandler#getTopicFailure(io.reflection.app.api.forum.shared.call.GetTopicRequest,
+     * java.lang.Throwable)
+     */
+    @Override
+    public void getTopicFailure(GetTopicRequest input, Throwable caught) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.api.forum.shared.call.event.GetReplyEventHandler#getReplySuccess(io.reflection.app.api.forum.shared.call.GetReplyRequest,
+     * io.reflection.app.api.forum.shared.call.GetReplyResponse)
+     */
+    @Override
+    public void getReplySuccess(GetReplyRequest input, GetReplyResponse output) {
+        if (output.status == StatusType.StatusTypeSuccess) {
+            reply = output.reply;
+            whenGotReplyAndTopic();
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see io.reflection.app.api.forum.shared.call.event.GetReplyEventHandler#getReplyFailure(io.reflection.app.api.forum.shared.call.GetReplyRequest,
+     * java.lang.Throwable)
+     */
+    @Override
+    public void getReplyFailure(GetReplyRequest input, Throwable caught) {
+    }
+
+    protected void whenGotTopic() {
+        if (topic != null) {
+            content = topic.content.toString();
+            show();
+        }
+    }
+
+    protected void whenGotReplyAndTopic() {
+        if (reply != null && topic != null) {
+            content = reply.content.toString();
+            show();
+        }
+    }
 
 }
