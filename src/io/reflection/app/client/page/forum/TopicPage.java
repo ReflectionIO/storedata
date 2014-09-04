@@ -111,7 +111,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
 	private HandlerRegistration onLoadedHandler;
 
-    private boolean isLocked;
+	private boolean isLocked;
 
 	public TopicPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -202,7 +202,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
      */
 	private void reset() {
 		topicTitle.setInnerHTML("");
-		post.setText("Post");
+		post.setText("Post Response");
 
 		if (dataProvider != null && dataProvider.getDataDisplays().size() > 0) {
 			dataProvider.removeDataDisplay(messagesCellList);
@@ -246,6 +246,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 	void postReplyClicked(ClickEvent event) {
 		if (validate()) {
 			ReplyController.get().addReply(topicId, replyText.getText());
+			post.setText("Posting...");
 			post.setEnabled(false);
 			replyText.setLoading(true);
 		}
@@ -313,8 +314,8 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 		// However, this seems to be influenced by the previous replies the display/pager/dataprovider was bound too.
 		// Exactly why, I'm not sure, so to be safe set the visible range on the display itself. (Each change like this seems to have knock on effects that
 		// are difficult to predict without a complete understanding of AsyncDataProvider/CellList/Table).
-	    
-	    startPagePost = post - (post % ServiceConstants.SHORT_STEP_VALUE) ;
+
+		startPagePost = post - (post % ServiceConstants.SHORT_STEP_VALUE);
 
 		messagesCellList.setVisibleRange(startPagePost, ServiceConstants.SHORT_STEP_VALUE);
 	}
@@ -382,8 +383,6 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 			// bound/detached or
 			// something else happened during the lifecycle.
 
-			
-
 			if (isLocked) {
 				post.getElement().getParentElement().getStyle().setDisplay(Display.NONE);
 			} else {
@@ -408,7 +407,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 	protected void updateNotes(Topic topic) {
 
 		notes.removeAllChildren();
-		
+
 		LIElement author = Document.get().createLIElement();
 		author.setInnerSafeHtml(TopicNotesTemplate.INSTANCE.descriptionStartedBy(FormattingHelper.getUserName(topic.author),
 				FormattingHelper.getTimeSince(topic.created)));
@@ -472,6 +471,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 	public void addReplySuccess(AddReplyRequest input, AddReplyResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			post.setEnabled(true);
+			post.setText("Post Response");
 			replyText.setLoading(false);
 			replyText.setText("");
 			Topic topic2 = TopicController.get().getTopic(topicId);
@@ -482,8 +482,8 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 			// that may be important depending on what you want to update in the handlers.
 
 			messagesCellList.redraw();
-			
-			//numberOfReplies was already incremented by ReplyController, and since ForumMessages start at 0 it is the right number.
+
+			// numberOfReplies was already incremented by ReplyController, and since ForumMessages start at 0 it is the right number.
 			focusPagerOnPost(topic2.numberOfReplies);
 		}
 	}
