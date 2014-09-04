@@ -99,6 +99,7 @@ import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.datasource.DataSourceServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.modelrun.ModelRunServiceProvider;
+import io.reflection.app.service.permission.IPermissionService;
 import io.reflection.app.service.permission.PermissionServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
 import io.reflection.app.service.role.RoleServiceProvider;
@@ -854,6 +855,12 @@ public final class Core extends ActionHandler {
 				if (user != null && user.id.longValue() == input.session.user.id.longValue()) {
 					UserServiceProvider.provide().deleteAllUsersDataAccount(input.linkedAccount);
 
+					if (!UserServiceProvider.provide().hasDataAccounts(user)) {
+						Permission hlaPermission = new Permission();
+						hlaPermission.id = IPermissionService.HAS_LINKED_ACCOUNT_PERMISSION_ID;
+						UserServiceProvider.provide().revokePermission(user, hlaPermission);
+					}
+
 					DataAccountServiceProvider.provide().deleteDataAccount(input.linkedAccount);
 
 					if (LOG.isLoggable(GaeLevel.DEBUG)) {
@@ -1102,6 +1109,13 @@ public final class Core extends ActionHandler {
 			output.account = UserServiceProvider.provide().addDataAccount(input.session.user, input.source, input.username, input.password, input.properties);
 
 			output.account.source = input.source;
+
+			Permission hlaPermission = new Permission();
+			hlaPermission.id = IPermissionService.HAS_LINKED_ACCOUNT_PERMISSION_ID;
+			boolean hasPermission = UserServiceProvider.provide().hasPermission(input.session.user, hlaPermission);
+			if (!hasPermission) {
+				UserServiceProvider.provide().assignPermission(input.session.user, hlaPermission);
+			}
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {

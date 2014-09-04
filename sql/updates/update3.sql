@@ -1,0 +1,1 @@
+INSERT INTO `permission` (`name`,`description`,`code`) VALUES ('Has Linked Account','Users with this permission will be able to perform action reserved to who has a linked account','HLA');
