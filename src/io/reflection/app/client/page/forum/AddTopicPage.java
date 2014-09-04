@@ -7,8 +7,6 @@
 //
 package io.reflection.app.client.page.forum;
 
-import java.util.List;
-
 import io.reflection.app.api.forum.shared.call.CreateTopicRequest;
 import io.reflection.app.api.forum.shared.call.CreateTopicResponse;
 import io.reflection.app.api.forum.shared.call.GetForumsRequest;
@@ -29,6 +27,8 @@ import io.reflection.app.client.part.MyAnchor;
 import io.reflection.app.client.part.text.MarkdownEditor;
 import io.reflection.app.datatypes.shared.Forum;
 
+import java.util.List;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Style.Display;
@@ -38,7 +38,6 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
@@ -51,202 +50,206 @@ import com.willshex.gson.json.service.shared.StatusType;
  */
 public class AddTopicPage extends Page implements CreateTopicEventHandler, GetForumsEventHandler, NavigationEventHandler {
 
-    private static final int FORUM_ID_PARAMETER_INDEX = 0;
-    @UiField TextBox title;
-    @UiField TextBox tags;
+	private static final int FORUM_ID_PARAMETER_INDEX = 0;
+	@UiField TextBox title;
+	@UiField TextBox tags;
 
-    @UiField ListBox forums;
+	@UiField ListBox forums;
 
-    @UiField MarkdownEditor contentText;
+	@UiField MarkdownEditor contentText;
 
-    @UiField ForumSummarySidePanel forumSummarySidePanel;
-    
-    @UiField Button submit ;
-    
-    @UiField DivElement prepareRow ;
-    @UiField DivElement doneRow ;
-    
-    @UiField MyAnchor redirectAnchor ;
+	@UiField ForumSummarySidePanel forumSummarySidePanel;
 
-    private static AddTopicPageUiBinder uiBinder = GWT.create(AddTopicPageUiBinder.class);
-    private HandlerRegistration redirectToTopicHandler;
-    private Long forumId;
+	@UiField Button submit;
 
-    interface AddTopicPageUiBinder extends UiBinder<Widget, AddTopicPage> {}
+	@UiField DivElement prepareRow;
+	@UiField DivElement doneRow;
 
-    public AddTopicPage() {
-        initWidget(uiBinder.createAndBindUi(this));
+	@UiField MyAnchor redirectAnchor;
 
-        title.getElement().setAttribute("placeholder", "Title");
-        tags.getElement().setAttribute("placeholder", "Comma separated tags");
+	private static AddTopicPageUiBinder uiBinder = GWT.create(AddTopicPageUiBinder.class);
+	private HandlerRegistration redirectToTopicHandler;
+	private Long forumId;
 
-    }
+	interface AddTopicPageUiBinder extends UiBinder<Widget, AddTopicPage> {}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see io.reflection.app.client.page.Page#onAttach()
-     */
-    @Override
-    protected void onAttach() {
-        super.onAttach();
+	public AddTopicPage() {
+		initWidget(uiBinder.createAndBindUi(this));
 
-        register(EventController.get().addHandlerToSource(CreateTopicEventHandler.TYPE, TopicController.get(), this));
-        register(EventController.get().addHandlerToSource(GetForumsEventHandler.TYPE, ForumController.get(), this));
-        register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+		title.getElement().setAttribute("placeholder", "Title");
+		tags.getElement().setAttribute("placeholder", "Comma separated tags");
 
-        resetForm();
-    }
-    
-    @Override
-    protected void onDetach() {
-        super.onDetach();
-        resetForm();
-    }
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see io.reflection.app.client.page.Page#getTitle()
-     */
-    @Override
-    public String getTitle() {
-        return "Reflection.io: Forum";
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.page.Page#onAttach()
+	 */
+	@Override
+	protected void onAttach() {
+		super.onAttach();
 
-    @UiHandler("submit")
-    void onSubmit(ClickEvent e) {
-        if (validate()) {
-            Long forumId = null;
-            
-            submit.setText("Posting new Topic...");
-            submit.setEnabled(false);
-            contentText.setLoading(true);
+		register(EventController.get().addHandlerToSource(CreateTopicEventHandler.TYPE, TopicController.get(), this));
+		register(EventController.get().addHandlerToSource(GetForumsEventHandler.TYPE, ForumController.get(), this));
+		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 
-            if (forums.getItemCount() > 0) {
-                String forumIdString = forums.getValue(forums.getSelectedIndex());
-                forumId = Long.valueOf(forumIdString);
-            }
+		resetForm();
+	}
 
-            if (forumId != null) {
-                TopicController.get().createTopic(forumId, title.getText(), false, contentText.getText(), tags.getText());
-            }
-        }
-    }
+	@Override
+	protected void onDetach() {
+		super.onDetach();
+		resetForm();
+	}
 
-    private boolean validate() {
-        return true;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.page.Page#getTitle()
+	 */
+	@Override
+	public String getTitle() {
+		return "Reflection.io: Forum";
+	}
 
-    private void resetForm() {
+	@UiHandler("submit")
+	void onSubmit(ClickEvent e) {
+		if (validate()) {
+			Long forumId = null;
 
-        title.setText("");
-        contentText.setText("");
-        tags.setText("");
-        submit.setText("Post New Topic");
-        submit.setEnabled(true);
+			submit.setText("Posting new Topic...");
+			submit.setEnabled(false);
+			contentText.setLoading(true);
 
-        forumSummarySidePanel.redraw();
-        
-        forums.clear();
-        FilterHelper.addForums(forums);
-        
-        prepareRow.getStyle().setDisplay(Display.BLOCK);
-        doneRow.getStyle().setDisplay(Display.NONE);
-        
-        if (redirectToTopicHandler != null) {
-            redirectToTopicHandler.removeHandler();
-            redirectToTopicHandler = null ;
-        }
-        
-        contentText.setLoading(false);
-        forumId = null ;
+			if (forums.getItemCount() > 0) {
+				String forumIdString = forums.getValue(forums.getSelectedIndex());
+				forumId = Long.valueOf(forumIdString);
+			}
 
-        // hide errors and remove clear validation strings
-    }
+			if (forumId != null) {
+				TopicController.get().createTopic(forumId, title.getText(), false, contentText.getText(), tags.getText());
+			}
+		}
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see io.reflection.app.api.forum.shared.call.event.CreateTopicEventHandler#createTopicSuccess
-     * (io.reflection.app.api.forum.shared.call.CreateTopicRequest,io.reflection.app.api.forum.shared.call.CreateTopicResponse)
-     */
-    @Override
-    public void createTopicSuccess(CreateTopicRequest input, final CreateTopicResponse output) {
-        if (output.status == StatusType.StatusTypeSuccess) {
-            submit.setText("Submit");
-            TopicController.get().reset();
-            
-            prepareRow.getStyle().setDisplay(Display.NONE);
-            doneRow.getStyle().setDisplay(Display.BLOCK);
-            
-            redirectToTopicHandler = redirectAnchor.addClickHandler(new ClickHandler(){
+	private boolean validate() {
+		return true;
+	}
 
-                @Override
-                public void onClick(ClickEvent event) {
-                    PageType.ForumThreadPageType.show("view", output.topic.id.toString());
-                }});
-            
-        }
-    }
+	private void resetForm() {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see io.reflection.app.api.forum.shared.call.event.CreateTopicEventHandler#createTopicFailure
-     * (io.reflection.app.api.forum.shared.call.CreateTopicRequest,java.lang.Throwable)
-     */
-    @Override
-    public void createTopicFailure(CreateTopicRequest input, Throwable caught) {}
+		title.setText("");
+		contentText.setText("");
+		tags.setText("");
+		submit.setText("Post New Topic");
+		submit.setEnabled(true);
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler#getForumsSuccess
-     * (io.reflection.app.api.forum.shared.call.GetForumsRequest,io.reflection.app.api.forum.shared.call.GetForumsResponse)
-     */
-    @Override
-    public void getForumsSuccess(GetForumsRequest input, GetForumsResponse output) {
-        forums.clear();
+		forumSummarySidePanel.redraw();
 
-        FilterHelper.addForums(forums);
-        
-        setForumComboIndex();
-    }
+		forums.clear();
+		FilterHelper.addForums(forums);
 
-    protected void setForumComboIndex() {
-        List<Forum> forumList = ForumController.get().getForums();
-        
-        int index = 0;
-        for (int i = 0; i < forumList.size() ; i++) {
-            if (forumList.get(i).id.equals(forumId)) {
-                index = i ;
-            }
-        }
-        
-        forums.setSelectedIndex(index);
-    }
+		prepareRow.getStyle().setDisplay(Display.BLOCK);
+		doneRow.getStyle().setDisplay(Display.NONE);
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler#getForumsFailure
-     * (io.reflection.app.api.forum.shared.call.GetForumsRequest,java.lang.Throwable)
-     */
-    @Override
-    public void getForumsFailure(GetForumsRequest input, Throwable caught) {}
+		if (redirectToTopicHandler != null) {
+			redirectToTopicHandler.removeHandler();
+			redirectToTopicHandler = null;
+		}
 
-    /* (non-Javadoc)
-     * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack, io.reflection.app.client.controller.NavigationController.Stack)
-     */
-    @Override
-    public void navigationChanged(Stack previous, Stack current) {
-        if (current != null && PageType.ForumTopicPageType.equals(current.getPage())) {
-           String forumIdString = null ;
-            if ((forumIdString = current.getParameter(FORUM_ID_PARAMETER_INDEX)) != null) {
-                forumId = Long.valueOf(forumIdString);
-                setForumComboIndex();
-            }
-        }
-    }
+		contentText.setLoading(false);
+		forumId = null;
+
+		// hide errors and remove clear validation strings
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.forum.shared.call.event.CreateTopicEventHandler#createTopicSuccess
+	 * (io.reflection.app.api.forum.shared.call.CreateTopicRequest,io.reflection.app.api.forum.shared.call.CreateTopicResponse)
+	 */
+	@Override
+	public void createTopicSuccess(CreateTopicRequest input, final CreateTopicResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess) {
+			submit.setText("Submit");
+			TopicController.get().reset();
+
+			prepareRow.getStyle().setDisplay(Display.NONE);
+			doneRow.getStyle().setDisplay(Display.BLOCK);
+
+			redirectToTopicHandler = redirectAnchor.addClickHandler(new ClickHandler() {
+
+				@Override
+				public void onClick(ClickEvent event) {
+					PageType.ForumThreadPageType.show("view", output.topic.id.toString());
+				}
+			});
+
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.forum.shared.call.event.CreateTopicEventHandler#createTopicFailure
+	 * (io.reflection.app.api.forum.shared.call.CreateTopicRequest,java.lang.Throwable)
+	 */
+	@Override
+	public void createTopicFailure(CreateTopicRequest input, Throwable caught) {}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler#getForumsSuccess
+	 * (io.reflection.app.api.forum.shared.call.GetForumsRequest,io.reflection.app.api.forum.shared.call.GetForumsResponse)
+	 */
+	@Override
+	public void getForumsSuccess(GetForumsRequest input, GetForumsResponse output) {
+		forums.clear();
+
+		FilterHelper.addForums(forums);
+
+		setForumComboIndex();
+	}
+
+	protected void setForumComboIndex() {
+		List<Forum> forumList = ForumController.get().getForums();
+
+		int index = 0;
+		for (int i = 0; i < forumList.size(); i++) {
+			if (forumList.get(i).id.equals(forumId)) {
+				index = i;
+			}
+		}
+
+		forums.setSelectedIndex(index);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler#getForumsFailure
+	 * (io.reflection.app.api.forum.shared.call.GetForumsRequest,java.lang.Throwable)
+	 */
+	@Override
+	public void getForumsFailure(GetForumsRequest input, Throwable caught) {}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
+	 * io.reflection.app.client.controller.NavigationController.Stack)
+	 */
+	@Override
+	public void navigationChanged(Stack previous, Stack current) {
+		if (current != null && PageType.ForumTopicPageType.equals(current.getPage())) {
+			String forumIdString = null;
+			if ((forumIdString = current.getParameter(FORUM_ID_PARAMETER_INDEX)) != null) {
+				forumId = Long.valueOf(forumIdString);
+				setForumComboIndex();
+			}
+		}
+	}
 }

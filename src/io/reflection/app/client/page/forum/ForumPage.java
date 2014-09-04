@@ -58,283 +58,284 @@ import com.willshex.gson.json.service.shared.StatusType;
  */
 public class ForumPage extends Page implements NavigationEventHandler, GetForumsEventHandler {
 
-    interface TopicTemplate extends SafeHtmlTemplates {
-        TopicTemplate INSTANCE = GWT.create(TopicTemplate.class);
+	interface TopicTemplate extends SafeHtmlTemplates {
+		TopicTemplate INSTANCE = GWT.create(TopicTemplate.class);
 
-        @SafeHtmlTemplates.Template("<div>{0} <a href=\"{1}\" style=\"{2}\">{3}</a></div><div>{4} {5}</div>")
-        SafeHtml topicLayout(SafeHtml properties, String link, SafeStyles styles, SafeHtml title, SafeHtml pages, SafeHtml pageLinks);
+		@SafeHtmlTemplates.Template("<div>{0} <a href=\"{1}\" style=\"{2}\">{3}</a></div><div>{4} {5}</div>")
+		SafeHtml topicLayout(SafeHtml properties, String link, SafeStyles styles, SafeHtml title, SafeHtml pages, SafeHtml pageLinks);
 
-        @SafeHtmlTemplates.Template("<a class='{2}' href='{0}'>{1}</a>")
-        SafeHtml pageLink(SafeUri lastPageLink, int i, String style);
-    }
+		@SafeHtmlTemplates.Template("<a class='{2}' href='{0}'>{1}</a>")
+		SafeHtml pageLink(SafeUri lastPageLink, int i, String style);
+	}
 
-    private static ForumPageUiBinder uiBinder = GWT.create(ForumPageUiBinder.class);
+	private static ForumPageUiBinder uiBinder = GWT.create(ForumPageUiBinder.class);
 
-    interface ForumPageUiBinder extends UiBinder<Widget, ForumPage> {}
+	interface ForumPageUiBinder extends UiBinder<Widget, ForumPage> {}
 
-    private static final int SELECTED_FORUM_PARAMETER_INDEX = 0;
+	private static final int SELECTED_FORUM_PARAMETER_INDEX = 0;
 
-    @UiField(provided = true) CellTable<Topic> topics = new CellTable<Topic>(ServiceConstants.SHORT_STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true) CellTable<Topic> topics = new CellTable<Topic>(ServiceConstants.SHORT_STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 
-    @UiField NumberedPager pager;
+	@UiField NumberedPager pager;
 
-    @UiField ForumSummarySidePanel forumSummarySidePanel;
-    @UiField HeadingElement titleText;
-    
-    @UiField InlineHyperlink newTopicButton ;
+	@UiField ForumSummarySidePanel forumSummarySidePanel;
+	@UiField HeadingElement titleText;
 
-    private Forum selectedForum;
+	@UiField InlineHyperlink newTopicButton;
 
-    private Long selectedForumId;
+	private Forum selectedForum;
 
-    public ForumPage() {
-        initWidget(uiBinder.createAndBindUi(this));
+	private Long selectedForumId;
 
-        createColumns();
+	public ForumPage() {
+		initWidget(uiBinder.createAndBindUi(this));
 
-        topics.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
-        topics.setEmptyTableWidget(new HTMLPanel("No topics found!"));
+		createColumns();
 
-        pager.setDisplay(topics);
+		topics.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
+		topics.setEmptyTableWidget(new HTMLPanel("No topics found!"));
 
-    }
+		pager.setDisplay(topics);
 
-    private void createColumns() {
-        Column<Topic, SafeHtml> titleColumn = new Column<Topic, SafeHtml>(new SafeHtmlCell()) {
+	}
 
-            @Override
-            public SafeHtml getValue(Topic object) {
+	private void createColumns() {
+		Column<Topic, SafeHtml> titleColumn = new Column<Topic, SafeHtml>(new SafeHtmlCell()) {
 
-                String properties = "";
+			@Override
+			public SafeHtml getValue(Topic object) {
 
-                if (object.locked != null && object.locked.booleanValue()) {
-                    properties += "<i class=\"glyphicon glyphicon-lock\"></i> ";
-                }
+				String properties = "";
 
-                if (object.heat != null && object.heat > 10) {
-                    properties += "<i class=\"glyphicon glyphicon-fire\"></i> ";
-                }
+				if (object.locked != null && object.locked.booleanValue()) {
+					properties += "<i class=\"glyphicon glyphicon-lock\"></i> ";
+				}
 
-                if (object.sticky != null && object.sticky.booleanValue()) {
-                    properties += "<i class=\"glyphicon glyphicon-pushpin\"></i> ";
-                }
+				if (object.heat != null && object.heat > 10) {
+					properties += "<i class=\"glyphicon glyphicon-fire\"></i> ";
+				}
 
-                int numPages = (int) Math.ceil((double) (object.numberOfReplies + 1) / ServiceConstants.SHORT_STEP_VALUE);
+				if (object.sticky != null && object.sticky.booleanValue()) {
+					properties += "<i class=\"glyphicon glyphicon-pushpin\"></i> ";
+				}
 
-                // generate page links
-                String pageLinksString = "";
+				int numPages = (int) Math.ceil((double) (object.numberOfReplies + 1) / ServiceConstants.SHORT_STEP_VALUE);
 
-                for (int i = 1; i <= numPages && numPages > 1; i++) {
-                    int position = (i - 1) * ServiceConstants.SHORT_STEP_VALUE;
+				// generate page links
+				String pageLinksString = "";
 
-                    SafeUri lastPageLink = UriUtils.fromSafeConstant(PageType.ForumThreadPageType.asHref().asString() + "/view/" + object.id + "/post/"
-                            + position);
+				for (int i = 1; i <= numPages && numPages > 1; i++) {
+					int position = (i - 1) * ServiceConstants.SHORT_STEP_VALUE;
 
-                    pageLinksString += TopicTemplate.INSTANCE.pageLink(lastPageLink, i, "forumPageAnchorMarginStyle").asString(); // asString because can't see how to combine SafeHtmls
-                                                                                                    // together.
+					SafeUri lastPageLink = UriUtils.fromSafeConstant(PageType.ForumThreadPageType.asHref().asString() + "/view/" + object.id + "/post/"
+							+ position);
 
-                }
-                SafeHtml pageLinks = SafeHtmlUtils.fromTrustedString(pageLinksString);
+					pageLinksString += TopicTemplate.INSTANCE.pageLink(lastPageLink, i, "forumPageAnchorMarginStyle").asString(); // asString because can't see
+																																	// how to combine SafeHtmls
+					// together.
 
-                // put it all together
-                return TopicTemplate.INSTANCE
-                        .topicLayout(SafeHtmlUtils.fromSafeConstant(properties),
-                                PageType.ForumThreadPageType.asHref(TopicPage.VIEW_ACTION_PARAMETER_VALUE, object.id.toString()).asString(),
-                                SafeStylesUtils.fromTrustedString(""), SafeHtmlUtils.fromString(object.title), SafeHtmlUtils.fromString(numPages + " pages"),
-                                pageLinks);
-            }
-        };
+				}
+				SafeHtml pageLinks = SafeHtmlUtils.fromTrustedString(pageLinksString);
 
-        TextColumn<Topic> postsColumn = new TextColumn<Topic>() {
+				// put it all together
+				return TopicTemplate.INSTANCE
+						.topicLayout(SafeHtmlUtils.fromSafeConstant(properties),
+								PageType.ForumThreadPageType.asHref(TopicPage.VIEW_ACTION_PARAMETER_VALUE, object.id.toString()).asString(),
+								SafeStylesUtils.fromTrustedString(""), SafeHtmlUtils.fromString(object.title), SafeHtmlUtils.fromString(numPages + " pages"),
+								pageLinks);
+			}
+		};
 
-            @Override
-            public String getValue(Topic object) {
-                return object.numberOfReplies.toString();
-            }
+		TextColumn<Topic> postsColumn = new TextColumn<Topic>() {
 
-        };
+			@Override
+			public String getValue(Topic object) {
+				return object.numberOfReplies.toString();
+			}
 
-        TextColumn<Topic> lastPosterColumn = new TextColumn<Topic>() {
+		};
 
-            @Override
-            public String getValue(Topic object) {
-                User lastPoster = object.lastReplier;
-                if (lastPoster == null) {
-                    lastPoster = object.author;
-                }
-                return FormattingHelper.getUserName(lastPoster);
-            }
-        };
+		TextColumn<Topic> lastPosterColumn = new TextColumn<Topic>() {
 
-        TextColumn<Topic> lastPostedColumn = new TextColumn<Topic>() {
+			@Override
+			public String getValue(Topic object) {
+				User lastPoster = object.lastReplier;
+				if (lastPoster == null) {
+					lastPoster = object.author;
+				}
+				return FormattingHelper.getUserName(lastPoster);
+			}
+		};
 
-            @Override
-            public String getValue(Topic object) {
-                Date lastTime = object.lastReplied;
-                if (lastTime == null) {
-                    lastTime = object.created;
-                }
-                return FormattingHelper.getTimeSince(lastTime);
-            }
-        };
+		TextColumn<Topic> lastPostedColumn = new TextColumn<Topic>() {
 
-        TextHeader titleHeader = new TextHeader("Topic");
-        titleHeader.setHeaderStyleNames("col-sm-3");
-        topics.addColumn(titleColumn, titleHeader);
+			@Override
+			public String getValue(Topic object) {
+				Date lastTime = object.lastReplied;
+				if (lastTime == null) {
+					lastTime = object.created;
+				}
+				return FormattingHelper.getTimeSince(lastTime);
+			}
+		};
 
-        TextHeader postHeader = new TextHeader("Posts");
-        postHeader.setHeaderStyleNames("col-sm-3");
-        topics.addColumn(postsColumn, postHeader);
+		TextHeader titleHeader = new TextHeader("Topic");
+		titleHeader.setHeaderStyleNames("col-sm-3");
+		topics.addColumn(titleColumn, titleHeader);
 
-        TextHeader lastPosterHeader = new TextHeader("Last Poster");
-        lastPosterHeader.setHeaderStyleNames("col-sm-3");
-        topics.addColumn(lastPosterColumn, lastPosterHeader);
+		TextHeader postHeader = new TextHeader("Posts");
+		postHeader.setHeaderStyleNames("col-sm-3");
+		topics.addColumn(postsColumn, postHeader);
 
-        TextHeader lastPostedHeader = new TextHeader("");
-        lastPostedHeader.setHeaderStyleNames("col-sm-3");
-        topics.addColumn(lastPostedColumn, lastPostedHeader);
-    }
+		TextHeader lastPosterHeader = new TextHeader("Last Poster");
+		lastPosterHeader.setHeaderStyleNames("col-sm-3");
+		topics.addColumn(lastPosterColumn, lastPosterHeader);
 
-    /*
-     * (non-Javadoc)
+		TextHeader lastPostedHeader = new TextHeader("");
+		lastPostedHeader.setHeaderStyleNames("col-sm-3");
+		topics.addColumn(lastPostedColumn, lastPostedHeader);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.page.Page#onAttach()
+	 */
+	@Override
+	protected void onAttach() {
+		super.onAttach();
+
+		register(EventController.get().addHandlerToSource(GetForumsEventHandler.TYPE, ForumController.get(), this));
+		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+	}
+
+	@Override
+	protected void onDetach() {
+		super.onDetach();
+		reset();
+	}
+
+	/**
      * 
-     * @see io.reflection.app.client.page.Page#onAttach()
      */
-    @Override
-    protected void onAttach() {
-        super.onAttach();
+	private void reset() {
 
-        register(EventController.get().addHandlerToSource(GetForumsEventHandler.TYPE, ForumController.get(), this));
-        register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
-    }
+		// this *should* clear the attached pager, combined with the next statement
+		if (TopicController.get().getDataDisplays().size() > 0) {
+			TopicController.get().removeDataDisplay(topics);
+		}
+		// got from https://groups.google.com/forum/#!topic/google-web-toolkit/cAvgdn2fmfU
+		topics.setVisibleRangeAndClearData(topics.getVisibleRange(), true);
 
-    @Override
-    protected void onDetach() {
-        super.onDetach();
-        reset();
-    }
+		// this hard resets the topic controller every time we leave the ForumPage.
+		// it does mean that it will have to reload, but this logic is simpler than
+		// currently working out when we have to use the topic controller pager and when
+		// we have to discard it.
+		TopicController.get().reset();
 
-    /**
-     * 
-     */
-    private void reset() {
+		pager.setDisplay(topics);
 
-        // this *should* clear the attached pager, combined with the next statement
-        if (TopicController.get().getDataDisplays().size() > 0) {
-            TopicController.get().removeDataDisplay(topics);
-        }
-        // got from https://groups.google.com/forum/#!topic/google-web-toolkit/cAvgdn2fmfU
-        topics.setVisibleRangeAndClearData(topics.getVisibleRange(), true);
+		forumSummarySidePanel.reset();
+		titleText.setInnerHTML("");
+	}
 
-        // this hard resets the topic controller every time we leave the ForumPage.
-        // it does mean that it will have to reload, but this logic is simpler than
-        // currently working out when we have to use the topic controller pager and when
-        // we have to discard it.
-        TopicController.get().reset();
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler# getForumsSuccess (io.reflection.app.api.forum.shared.call.GetForumsRequest,
+	 * io.reflection.app.api.forum.shared.call.GetForumsResponse)
+	 */
+	@Override
+	public void getForumsSuccess(GetForumsRequest input, GetForumsResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess && output.forums != null && output.forums.size() > 0) {
+			configureTitleAndSidePanel();
+		}
+	}
 
-        pager.setDisplay(topics);
+	/**
+	 * This may either run from Navigation changed, or after Forum callback
+	 */
+	protected void configureTitleAndSidePanel() {
+		if (ForumController.get().hasForums()) {
+			if (selectedForumId != null) {
+				selectedForum = ForumController.get().getForumById(selectedForumId);
+			} else {
+				selectedForum = ForumController.get().getFirstForum();
+				selectedForumId = selectedForum.id;
+				TopicController.get().getTopics(selectedForumId);
+			}
+			forumSummarySidePanel.selectItem(selectedForum);
 
-        forumSummarySidePanel.reset();
-        titleText.setInnerHTML("");
-    }
+			// shouldn't be null unless an error has occurred.
+			if (selectedForum != null) {
+				titleText.setInnerText(selectedForum.title);
+			}
+			forumSummarySidePanel.redraw();
+		}
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler# getForumsSuccess (io.reflection.app.api.forum.shared.call.GetForumsRequest,
-     * io.reflection.app.api.forum.shared.call.GetForumsResponse)
-     */
-    @Override
-    public void getForumsSuccess(GetForumsRequest input, GetForumsResponse output) {
-        if (output.status == StatusType.StatusTypeSuccess && output.forums != null && output.forums.size() > 0) {
-            configureTitleAndSidePanel();
-        }
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler# getForumsFailure (io.reflection.app.api.forum.shared.call.GetForumsRequest,
+	 * java.lang.Throwable)
+	 */
+	@Override
+	public void getForumsFailure(GetForumsRequest input, Throwable caught) {}
 
-    /**
-     * This may either run from Navigation changed, or after Forum callback
-     */
-    protected void configureTitleAndSidePanel() {
-        if (ForumController.get().hasForums()) {
-            if (selectedForumId != null) {
-                selectedForum = ForumController.get().getForumById(selectedForumId);
-            } else {
-                selectedForum = ForumController.get().getFirstForum();
-                selectedForumId = selectedForum.id;
-                TopicController.get().getTopics(selectedForumId);
-            }
-            forumSummarySidePanel.selectItem(selectedForum);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged (io.reflection.app.client.controller.NavigationController.Stack,
+	 * io.reflection.app.client.controller.NavigationController.Stack)
+	 */
+	@Override
+	public void navigationChanged(Stack previous, Stack current) {
+		if (current != null && PageType.ForumPageType.equals(current.getPage())) {
 
-            // shouldn't be null unless an error has occurred.
-            if (selectedForum != null) {
-                titleText.setInnerText(selectedForum.title);
-            }
-            forumSummarySidePanel.redraw();
-        }
-    }
+			// no caching, just get it working.
+			TopicController.get().reset();
+			if (!TopicController.get().getDataDisplays().contains(topics)) {
+				// this triggers a range change update!
+				TopicController.get().addDataDisplay(topics);
+			}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler# getForumsFailure (io.reflection.app.api.forum.shared.call.GetForumsRequest,
-     * java.lang.Throwable)
-     */
-    @Override
-    public void getForumsFailure(GetForumsRequest input, Throwable caught) {}
+			// always reset to 0
+			pager.setPageStart(0);
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged (io.reflection.app.client.controller.NavigationController.Stack,
-     * io.reflection.app.client.controller.NavigationController.Stack)
-     */
-    @Override
-    public void navigationChanged(Stack previous, Stack current) {
-        if (current != null && PageType.ForumPageType.equals(current.getPage())) {
+			String selectedIdString;
+			if ((selectedIdString = current.getParameter(SELECTED_FORUM_PARAMETER_INDEX)) != null) {
 
-            // no caching, just get it working.
-            TopicController.get().reset();
-            if (!TopicController.get().getDataDisplays().contains(topics)) {
-                // this triggers a range change update!
-                TopicController.get().addDataDisplay(topics);
-            }
+				Long newSelectedId = Long.valueOf(selectedIdString);
 
-            // always reset to 0
-            pager.setPageStart(0);
+				if (selectedForumId == null || newSelectedId.longValue() != selectedForumId.longValue()) {
+					selectedForumId = newSelectedId;
+					selectedForum = null;
+					TopicController.get().getTopics(selectedForumId);
 
-            String selectedIdString;
-            if ((selectedIdString = current.getParameter(SELECTED_FORUM_PARAMETER_INDEX)) != null) {
+					configureTitleAndSidePanel();
+				}
+			} else {
+				// needs to be reset in case we're coming back to this page. The next call will set them.
+				selectedForumId = null;
+				selectedForum = null;
 
-                Long newSelectedId = Long.valueOf(selectedIdString);
+				// This call also resets the default selected forum provided selectedForum/Id is null.
+				configureTitleAndSidePanel();
+			}
 
-                if (selectedForumId == null || newSelectedId.longValue() != selectedForumId.longValue()) {
-                    selectedForumId = newSelectedId;
-                    selectedForum = null;
-                    TopicController.get().getTopics(selectedForumId);
+			newTopicButton.setTargetHistoryToken(PageType.ForumTopicPageType.asTargetHistoryToken("new", selectedForumId.toString()));
+		}
+	}
 
-                    configureTitleAndSidePanel();
-                }
-            } else {
-                // needs to be reset in case we're coming back to this page. The next call will set them.
-                selectedForumId = null;
-                selectedForum = null;
-
-                // This call also resets the default selected forum provided selectedForum/Id is null.
-                configureTitleAndSidePanel();
-            }
-            
-            newTopicButton.setTargetHistoryToken(PageType.ForumTopicPageType.asTargetHistoryToken("new",selectedForumId.toString()));
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see io.reflection.app.client.page.Page#getTitle()
-     */
-    @Override
-    public String getTitle() {
-        return "Reflection.io: Forum";
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.page.Page#getTitle()
+	 */
+	@Override
+	public String getTitle() {
+		return "Reflection.io: Forum";
+	}
 
 }

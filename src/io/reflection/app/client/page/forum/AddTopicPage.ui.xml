@@ -5,90 +5,91 @@
 	.textArea {
 		height: 200px;
 	}
+	
 	.filler {
-        height: 40px;
-    }
-    
-    .toolbarSpacing {
-        padding-top: 10px;
-        margin-top: 30px;
-        padding-bottom: 10px;
-    }
-    
-    .indentHeader {
-	   margin-left: 55px;
-    }
-    
-    .indentHeader2 {
-       margin-left: 35px;
-    }
-    
-    .successDiv {
-	   margin-left: 50px;
+		height: 40px;
 	}
-    
-    .forumControl {
-	   background: linear-gradient(#f6f7f9, #eeeff1);
+	
+	.toolbarSpacing {
+		padding-top: 10px;
+		margin-top: 30px;
+		padding-bottom: 10px;
+	}
+	
+	.indentHeader {
+		margin-left: 55px;
+	}
+	
+	.indentHeader2 {
+		margin-left: 35px;
+	}
+	
+	.successDiv {
+		margin-left: 50px;
+	}
+	
+	.forumControl {
+		background: linear-gradient(#f6f7f9, #eeeff1);
 	}
 	
 	.successHeading {
-	   font-size: 34px;
-font-family: "Source Sans Pro", sans-serif;
-font-weight: 600;
-margin-top: 20px;
-margin-bottom: 30px;
-line-height: 1.1;
+		font-size: 34px;
+		font-family: "Source Sans Pro", sans-serif;
+		font-weight: 600;
+		margin-top: 20px;
+		margin-bottom: 30px;
+		line-height: 1.1;
 	}
 	</ui:style>
 	<g:HTMLPanel styleName="row">
 		<pp:ForumSummarySidePanel ui:field="forumSummarySidePanel" styleName="sidepanel col-md-2 well" />
 		<div class="col-md-10">
-        
-        <g:HTMLPanel styleName="well {style.toolbarSpacing}">
-            <div class="row">
-                <h3 class='{style.indentHeader2}'>Add New Topic</h3>
-            </div>
-        </g:HTMLPanel>
-        <div class="row" ui:field="prepareRow">
-        <h2 class="{style.indentHeader}">Add a new Topic</h2>
-			<g:FormPanel styleName="form">
-            
-				<g:HTMLPanel>
-					<g:HTMLPanel ui:field="titleGroup" styleName="form-group">
-						<label>Title</label>
-						<g:TextBox styleName="form-control" ui:field="title" />
-						<g:HTMLPanel styleName="noteDetail" ui:field="titleNote" visible="false" />
-					</g:HTMLPanel>
-                    
-					<g:HTMLPanel styleName="form-group">
-						<label>Forum</label>
-						<g:ListBox addStyleNames="form-control {style.forumControl}" ui:field="forums">
-						</g:ListBox>
-					</g:HTMLPanel>
 
-					<g:HTMLPanel ui:field="contentGroup" styleName="form-group">
-						<label>Content</label>
-						<p:MarkdownEditor ui:field="contentText" />
-						<g:HTMLPanel styleName="noteDetail" ui:field="contentNote" visible="false" />
-					</g:HTMLPanel>
+			<g:HTMLPanel styleName="well {style.toolbarSpacing}">
+				<div class="row">
+					<h3 class='{style.indentHeader2}'>Add New Topic</h3>
+				</div>
+			</g:HTMLPanel>
+			<div class="row" ui:field="prepareRow">
+				<h2 class="{style.indentHeader}">Add a new Topic</h2>
+				<g:FormPanel styleName="form">
 
-					<g:HTMLPanel ui:field="tagsGroup" styleName="form-group">
-						<label>Tags</label>
-						<g:TextBox styleName="form-control" ui:field="tags" />
-						<g:HTMLPanel styleName="noteDetail" ui:field="tagsNote" visible="false" />
-					</g:HTMLPanel>
+					<g:HTMLPanel>
+						<g:HTMLPanel ui:field="titleGroup" styleName="form-group">
+							<label>Title</label>
+							<g:TextBox styleName="form-control" ui:field="title" />
+							<g:HTMLPanel styleName="noteDetail" ui:field="titleNote" visible="false" />
+						</g:HTMLPanel>
 
-					<g:Button ui:field="submit" styleName="btn  btn-primary">
-						Post New Topic
-					</g:Button>
-				</g:HTMLPanel>
-			</g:FormPanel>
-			<g:HTMLPanel styleName="{style.filler} col-md-12 hidden-xs hidden-sm" />
-            </div>
-            <div class="row {style.successDiv}" ui:field="doneRow">
-                <div class="{style.successHeading}">Your topic has been successfully added!</div>
-                <a:MyAnchor  ui:field="redirectAnchor">Go to your topic now</a:MyAnchor>
-            </div>
+						<g:HTMLPanel styleName="form-group">
+							<label>Forum</label>
+							<g:ListBox addStyleNames="form-control {style.forumControl}" ui:field="forums">
+							</g:ListBox>
+						</g:HTMLPanel>
+
+						<g:HTMLPanel ui:field="contentGroup" styleName="form-group">
+							<label>Content</label>
+							<p:MarkdownEditor ui:field="contentText" />
+							<g:HTMLPanel styleName="noteDetail" ui:field="contentNote" visible="false" />
+						</g:HTMLPanel>
+
+						<g:HTMLPanel ui:field="tagsGroup" styleName="form-group">
+							<label>Tags</label>
+							<g:TextBox styleName="form-control" ui:field="tags" />
+							<g:HTMLPanel styleName="noteDetail" ui:field="tagsNote" visible="false" />
+						</g:HTMLPanel>
+
+						<g:Button ui:field="submit" styleName="btn  btn-primary">
+							Post New Topic
+						</g:Button>
+					</g:HTMLPanel>
+				</g:FormPanel>
+				<g:HTMLPanel styleName="{style.filler} col-md-12 hidden-xs hidden-sm" />
+			</div>
+			<div class="row {style.successDiv}" ui:field="doneRow">
+				<div class="{style.successHeading}">Your topic has been successfully added!</div>
+				<a:MyAnchor ui:field="redirectAnchor">Go to your topic now</a:MyAnchor>
+			</div>
 		</div>
 	</g:HTMLPanel>
 </ui:UiBinder> 
