@@ -7,6 +7,8 @@
 //
 package io.reflection.app.client.page.forum;
 
+import java.util.List;
+
 import io.reflection.app.api.forum.shared.call.CreateTopicRequest;
 import io.reflection.app.api.forum.shared.call.CreateTopicResponse;
 import io.reflection.app.api.forum.shared.call.GetForumsRequest;
@@ -15,13 +17,17 @@ import io.reflection.app.api.forum.shared.call.event.CreateTopicEventHandler;
 import io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.ForumController;
+import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.TopicController;
+import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.page.forum.part.ForumSummarySidePanel;
 import io.reflection.app.client.part.MyAnchor;
 import io.reflection.app.client.part.text.MarkdownEditor;
+import io.reflection.app.datatypes.shared.Forum;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
@@ -43,8 +49,9 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class AddTopicPage extends Page implements CreateTopicEventHandler, GetForumsEventHandler {
+public class AddTopicPage extends Page implements CreateTopicEventHandler, GetForumsEventHandler, NavigationEventHandler {
 
+    private static final int FORUM_ID_PARAMETER_INDEX = 0;
     @UiField TextBox title;
     @UiField TextBox tags;
 
@@ -63,6 +70,7 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
 
     private static AddTopicPageUiBinder uiBinder = GWT.create(AddTopicPageUiBinder.class);
     private HandlerRegistration redirectToTopicHandler;
+    private Long forumId;
 
     interface AddTopicPageUiBinder extends UiBinder<Widget, AddTopicPage> {}
 
@@ -85,6 +93,7 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
 
         register(EventController.get().addHandlerToSource(CreateTopicEventHandler.TYPE, TopicController.get(), this));
         register(EventController.get().addHandlerToSource(GetForumsEventHandler.TYPE, ForumController.get(), this));
+        register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 
         resetForm();
     }
@@ -151,6 +160,7 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
         }
         
         contentText.setLoading(false);
+        forumId = null ;
 
         // hide errors and remove clear validation strings
     }
@@ -200,6 +210,21 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
         forums.clear();
 
         FilterHelper.addForums(forums);
+        
+        setForumComboIndex();
+    }
+
+    protected void setForumComboIndex() {
+        List<Forum> forumList = ForumController.get().getForums();
+        
+        int index = 0;
+        for (int i = 0; i < forumList.size() ; i++) {
+            if (forumList.get(i).id.equals(forumId)) {
+                index = i ;
+            }
+        }
+        
+        forums.setSelectedIndex(index);
     }
 
     /*
@@ -210,4 +235,18 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
      */
     @Override
     public void getForumsFailure(GetForumsRequest input, Throwable caught) {}
+
+    /* (non-Javadoc)
+     * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack, io.reflection.app.client.controller.NavigationController.Stack)
+     */
+    @Override
+    public void navigationChanged(Stack previous, Stack current) {
+        if (current != null && PageType.ForumTopicPageType.equals(current.getPage())) {
+           String forumIdString = null ;
+            if ((forumIdString = current.getParameter(FORUM_ID_PARAMETER_INDEX)) != null) {
+                forumId = Long.valueOf(forumIdString);
+                setForumComboIndex();
+            }
+        }
+    }
 }
