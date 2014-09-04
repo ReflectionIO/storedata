@@ -20,13 +20,19 @@ import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.page.forum.part.ForumSummarySidePanel;
+import io.reflection.app.client.part.MyAnchor;
 import io.reflection.app.client.part.text.MarkdownEditor;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
@@ -49,8 +55,14 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
     @UiField ForumSummarySidePanel forumSummarySidePanel;
     
     @UiField Button submit ;
+    
+    @UiField DivElement prepareRow ;
+    @UiField DivElement doneRow ;
+    
+    @UiField MyAnchor redirectAnchor ;
 
     private static AddTopicPageUiBinder uiBinder = GWT.create(AddTopicPageUiBinder.class);
+    private HandlerRegistration redirectToTopicHandler;
 
     interface AddTopicPageUiBinder extends UiBinder<Widget, AddTopicPage> {}
 
@@ -98,7 +110,7 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
         if (validate()) {
             Long forumId = null;
             
-            submit.setText("Submitting new Topic...");
+            submit.setText("Posting new Topic...");
 
             if (forums.getItemCount() > 0) {
                 String forumIdString = forums.getValue(forums.getSelectedIndex());
@@ -120,12 +132,20 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
         title.setText("");
         contentText.setText("");
         tags.setText("");
-        submit.setText("Submit");
+        submit.setText("Post New Topic");
 
         forumSummarySidePanel.redraw();
         
         forums.clear();
         FilterHelper.addForums(forums);
+        
+        prepareRow.getStyle().setDisplay(Display.BLOCK);
+        doneRow.getStyle().setDisplay(Display.NONE);
+        
+        if (redirectToTopicHandler != null) {
+            redirectToTopicHandler.removeHandler();
+            redirectToTopicHandler = null ;
+        }
 
         // hide errors and remove clear validation strings
     }
@@ -137,11 +157,21 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
      * (io.reflection.app.api.forum.shared.call.CreateTopicRequest,io.reflection.app.api.forum.shared.call.CreateTopicResponse)
      */
     @Override
-    public void createTopicSuccess(CreateTopicRequest input, CreateTopicResponse output) {
+    public void createTopicSuccess(CreateTopicRequest input, final CreateTopicResponse output) {
         if (output.status == StatusType.StatusTypeSuccess) {
             submit.setText("Submit");
             TopicController.get().reset();
-            PageType.ForumThreadPageType.show("view", output.topic.id.toString());
+            
+            prepareRow.getStyle().setDisplay(Display.NONE);
+            doneRow.getStyle().setDisplay(Display.BLOCK);
+            
+            redirectToTopicHandler = redirectAnchor.addClickHandler(new ClickHandler(){
+
+                @Override
+                public void onClick(ClickEvent event) {
+                    PageType.ForumThreadPageType.show("view", output.topic.id.toString());
+                }});
+            
         }
     }
 
