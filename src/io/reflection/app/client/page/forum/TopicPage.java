@@ -111,6 +111,8 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
 	private HandlerRegistration onLoadedHandler;
 
+    private boolean isLocked;
+
 	public TopicPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
@@ -169,6 +171,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 					if (event.getLoadingState() == LoadingState.LOADED) {
 						replyText.setVisible(true);
 						pager.setVisible(true);
+						replyForm.setVisible(!isLocked);
 					}
 				}
 			}, LoadingStateChangeEvent.TYPE);
@@ -243,7 +246,8 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 	void postReplyClicked(ClickEvent event) {
 		if (validate()) {
 			ReplyController.get().addReply(topicId, replyText.getText());
-			post.setText("Posting...");
+			post.setEnabled(false);
+			replyText.setLoading(true);
 		}
 	}
 
@@ -272,6 +276,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
 			forumSummarySidePanel.redraw();
 			replyText.setVisible(false);
+			replyForm.setVisible(false);
 
 			if (current.getAction() != null && VIEW_ACTION_PARAMETER_VALUE.equals(current.getAction())) {
 				String topicIdString;
@@ -308,8 +313,10 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 		// However, this seems to be influenced by the previous replies the display/pager/dataprovider was bound too.
 		// Exactly why, I'm not sure, so to be safe set the visible range on the display itself. (Each change like this seems to have knock on effects that
 		// are difficult to predict without a complete understanding of AsyncDataProvider/CellList/Table).
+	    
+	    startPagePost = post - (post % ServiceConstants.SHORT_STEP_VALUE) ;
 
-		messagesCellList.setVisibleRange(post, ServiceConstants.SHORT_STEP_VALUE);
+		messagesCellList.setVisibleRange(startPagePost, ServiceConstants.SHORT_STEP_VALUE);
 	}
 
 	/**
@@ -322,7 +329,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
 			String properties = "";
 
-			boolean isLocked = topic.locked != null && topic.locked.booleanValue();
+			isLocked = topic.locked != null && topic.locked.booleanValue();
 			if (isLocked) {
 				properties += "<i class=\"glyphicon glyphicon-lock\"></i> ";
 			}
@@ -375,7 +382,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 			// bound/detached or
 			// something else happened during the lifecycle.
 
-			replyForm.setVisible(!isLocked);
+			
 
 			if (isLocked) {
 				post.getElement().getParentElement().getStyle().setDisplay(Display.NONE);
@@ -464,7 +471,8 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 	@Override
 	public void addReplySuccess(AddReplyRequest input, AddReplyResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			post.setText("Post");
+			post.setEnabled(true);
+			replyText.setLoading(false);
 			replyText.setText("");
 			Topic topic2 = TopicController.get().getTopic(topicId);
 			updateNotes(topic2);
@@ -474,7 +482,9 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 			// that may be important depending on what you want to update in the handlers.
 
 			messagesCellList.redraw();
-			focusPagerOnPost(topic2.numberOfReplies + 1);
+			
+			//numberOfReplies was already incremented by ReplyController, and since ForumMessages start at 0 it is the right number.
+			focusPagerOnPost(topic2.numberOfReplies);
 		}
 	}
 

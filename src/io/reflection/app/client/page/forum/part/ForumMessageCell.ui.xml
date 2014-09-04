@@ -72,10 +72,10 @@
 				<a href="{link}" class="forumMessageLink">#</a>
 				<ui:text from="{editBar}" />
 				<ui:safehtml from="{editButtonHtml}" />
-				<ui:text from="{flagBar}" />
+				<!-- <ui:text from="{flagBar}" />
 				<a class="forumMessageLink" ui:field="flag">
 					<ui:text from="{flagText}" />
-				</a>
+				</a> -->
 				<ui:text from="{quoteBar}" />
 				<a class="forumMessageLink" ui:field="quote">
 					<ui:text from="{quoteText}" />

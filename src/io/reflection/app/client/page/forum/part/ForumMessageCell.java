@@ -123,7 +123,7 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 
 	}
 
-	@UiHandler("flag")
+//	@UiHandler("flag")
 	void flagClicked(ClickEvent event, Element parent, ForumMessage value) {
 		if (value.canFlag()) {
 			if (value.isTopic()) {

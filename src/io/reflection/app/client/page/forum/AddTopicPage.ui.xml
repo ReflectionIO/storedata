@@ -12,7 +12,7 @@
 	<g:HTMLPanel styleName="row">
 		<pp:ForumSummarySidePanel ui:field="forumSummarySidePanel" styleName="sidepanel col-md-2 well" />
 		<div class="col-md-10">
-			<h2>Add Topic</h2>
+			<h3>Add Topic</h3>
 			<g:FormPanel styleName="form">
 				<g:HTMLPanel>
 					<g:HTMLPanel ui:field="titleGroup" styleName="form-group">
