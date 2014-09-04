@@ -22,13 +22,13 @@
 		margin-bottom: 0px;
 		}
 
-    .buttonWidth {
-        width: 150px;
-        }
+		.buttonWidth {
+		width: 150px;
+		}
 		.forumPageAnchorMarginStyle {
 		margin-left:8px
 		}
-	
+
 	</ui:style>
 	<g:HTMLPanel styleName="row">
 		<pp:ForumSummarySidePanel ui:field="forumSummarySidePanel" styleName="sidepanel col-md-2 well" />
