@@ -471,7 +471,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 	public void addReplySuccess(AddReplyRequest input, AddReplyResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			post.setEnabled(true);
-			post.setText("Post");
+			post.setText("Post Response");
 			replyText.setLoading(false);
 			replyText.setText("");
 			Topic topic2 = TopicController.get().getTopic(topicId);
