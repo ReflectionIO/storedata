@@ -625,10 +625,21 @@ final class UserService implements IUserService {
 	 */
 	@Override
 	public Boolean hasPermission(User user, Permission permission) throws DataAccessException {
+		return hasPermission(user, permission, Boolean.FALSE);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.user.IUserService#hasPermission(io.reflection.app.datatypes.shared.User, io.reflection.app.datatypes.shared.Permission,
+	 * java.lang.Boolean)
+	 */
+	@Override
+	public Boolean hasPermission(User user, Permission permission, Boolean deleted) throws DataAccessException {
 		Boolean hasUserPermission = Boolean.FALSE;
 
-		String hasUserPermissionQuery = String.format("SELECT `id` FROM `userpermission` WHERE `userid`=%d AND `permissionid`=%d AND `deleted`='n' LIMIT 1",
-				user.id.longValue(), permission.id.longValue());
+		String hasUserPermissionQuery = String.format("SELECT `id` FROM `userpermission` WHERE `userid`=%d AND `permissionid`=%d %s LIMIT 1",
+				user.id.longValue(), permission.id.longValue(), deleted ? "" : "AND `deleted`='n'");
 
 		Connection permissionConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypePermission.toString());
 
@@ -1035,6 +1046,38 @@ final class UserService implements IUserService {
 		return hasDataAccount;
 	}
 
+	/**
+	 * Return true if the user has at least one active linked account
+	 * 
+	 * @param user
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public Boolean hasDataAccounts(User user) throws DataAccessException {
+		Boolean hasDataAccounts = Boolean.FALSE;
+
+		String hasDataAccountQuery = String.format("SELECT 1 FROM `userdataaccount` WHERE `userid`=%d AND `deleted`='n' LIMIT 1",
+				user.id.longValue());
+
+		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
+
+		try {
+			userConnection.connect();
+			userConnection.executeQuery(hasDataAccountQuery);
+
+			if (userConnection.fetchNextRow()) {
+				hasDataAccounts = Boolean.TRUE;
+			}
+
+		} finally {
+			if (userConnection != null) {
+				userConnection.disconnect();
+			}
+		}
+
+		return hasDataAccounts;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -1107,6 +1150,32 @@ final class UserService implements IUserService {
 		try {
 			userConnection.connect();
 			userConnection.executeQuery(deleteAllUsersDataAccountQuery);
+
+			if (userConnection.getAffectedRowCount() > 0) {
+				// log something
+			}
+		} finally {
+			if (userConnection != null) {
+				userConnection.disconnect();
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.user.IUserService#deletePermission(io.reflection.app.datatypes.shared.User, io.reflection.app.datatypes.shared.Permission)
+	 */
+	@Override
+	public void revokePermission(User user, Permission permission) throws DataAccessException {
+		String deletePermissionQuery = String.format("UPDATE `userpermission` SET `deleted`='y' WHERE `permissionid`=%d AND `userid`=%d AND `deleted`='n'",
+				permission.id.longValue(), user.id.longValue());
+
+		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
+
+		try {
+			userConnection.connect();
+			userConnection.executeQuery(deletePermissionQuery);
 
 			if (userConnection.getAffectedRowCount() > 0) {
 				// log something

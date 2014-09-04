@@ -269,12 +269,12 @@ public class ReplyController implements ServiceConstants {
 					if (output.status == StatusType.StatusTypeSuccess) {
 						Topic topic = TopicController.get().getTopic(ReplyThread.this.topicId);
 
-						addForumMessage((int) topic.numberOfReplies, output.reply, topic, output.reply.id.intValue());
-
 						if (topic != null) {
 							int numberOfReplies = topic.numberOfReplies.intValue();
 							topic.numberOfReplies = Integer.valueOf(++numberOfReplies);
 						}
+
+						addForumMessage((int) topic.numberOfReplies, output.reply, topic, output.reply.id.intValue());
 					}
 
 					EventController.get().fireEventFromSource(new AddReplySuccess(input, output), replyController);

@@ -21,6 +21,7 @@ import com.google.gwt.user.cellview.client.AbstractPager;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.HasRows;
 import com.google.gwt.view.client.Range;
@@ -37,13 +38,17 @@ public class NumberedPager extends AbstractPager {
 
     private static final int DEFAULT_FAST_FORWARD_ROWS = 1000;
 
-    private final int mFastForwardRows;
+    // private final int mFastForwardRows;
 
     @UiField HTMLPanel htmlPanel;
 
     @UiField MyAnchor mFirstPage;
 
+    @UiField InlineLabel firstBar;
+
     @UiField MyAnchor mLastPage;
+
+    @UiField InlineLabel lastBar;
 
     @UiField MyAnchor mNextPage;
 
@@ -55,7 +60,7 @@ public class NumberedPager extends AbstractPager {
      */
     @UiConstructor
     public NumberedPager() {
-        this(false, DEFAULT_FAST_FORWARD_ROWS, false);
+        this(true, DEFAULT_FAST_FORWARD_ROWS, true);
     }
 
     /**
@@ -85,7 +90,9 @@ public class NumberedPager extends AbstractPager {
     public NumberedPager(boolean showFirstPageButton, final int fastForwardRows, boolean showLastPageButton) {
         initWidget(uiBinder.createAndBindUi(this));
 
-        this.mFastForwardRows = fastForwardRows;
+        BootstrapGwtNumberedPager.INSTANCE.styles().ensureInjected();
+
+        // this.mFastForwardRows = fastForwardRows;
 
         if (!showLastPageButton) {
             mLastPage.removeFromParent();
@@ -212,7 +219,7 @@ public class NumberedPager extends AbstractPager {
 
     @Override
     protected void onRangeOrRowCountChanged() {
-        HasRows display = getDisplay();
+        // HasRows display = getDisplay();
         generateNumberLinks();
 
         // Update the prev and first buttons.
@@ -228,36 +235,46 @@ public class NumberedPager extends AbstractPager {
      */
     private void generateNumberLinks() {
 
-        BootstrapGwtNumberedPager.INSTANCE.styles().ensureInjected();
+        // this doesn't seem to clear all elements, only fields!
         htmlPanel.clear();
-        htmlPanel.add(mPrevPage);
-        for (int i = 1; i <= getPageCount(); i++) {
-            LIElement li = Document.get().createLIElement();
-
-            Anchor anchor = new Anchor();
-            final int page = i;
-            anchor.addClickHandler(new ClickHandler() {
-
-                @Override
-                public void onClick(ClickEvent event) {
-                    NumberedPager thePager = NumberedPager.this;
-                    thePager.setPageStart((page - 1) * thePager.getPageSize());
-                }
-            });
-            anchor.getElement().appendChild(Document.get().createTextNode(Integer.toString(i)));
-
-            // current page
-            if (this.getPage() == i - 1) {
-                anchor.setStyleName(BootstrapGwtNumberedPager.INSTANCE.styles().selected());
-                anchor.setEnabled(false);
-
+        if (getPageCount() > 1) {
+            if (mFirstPage != null) {
+                htmlPanel.add(mFirstPage);
+                htmlPanel.add(firstBar);
             }
-            anchor.addStyleName(BootstrapGwtNumberedPager.INSTANCE.styles().spaceApart());
-            li.appendChild(anchor.getElement());
-            htmlPanel.add(anchor);
-        }
+            htmlPanel.add(mPrevPage);
+            for (int i = 1; i <= getPageCount(); i++) {
+                LIElement li = Document.get().createLIElement();
 
-        htmlPanel.add(mNextPage);
+                Anchor anchor = new Anchor();
+                final int page = i;
+                anchor.addClickHandler(new ClickHandler() {
+
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        NumberedPager thePager = NumberedPager.this;
+                        thePager.setPageStart((page - 1) * thePager.getPageSize());
+                    }
+                });
+                anchor.getElement().setInnerHTML(Integer.toString(i));
+
+                // current page
+                if (this.getPage() == i - 1) {
+                    anchor.setStyleName(BootstrapGwtNumberedPager.INSTANCE.styles().selected());
+                    anchor.setEnabled(false);
+
+                }
+                anchor.addStyleName(BootstrapGwtNumberedPager.INSTANCE.styles().spaceApart());
+                li.appendChild(anchor.getElement());
+                htmlPanel.add(anchor);
+            }
+
+            htmlPanel.add(mNextPage);
+            if (mLastPage != null) {
+                htmlPanel.add(lastBar);
+                htmlPanel.add(mLastPage);
+            }
+        }
     }
 
     /**

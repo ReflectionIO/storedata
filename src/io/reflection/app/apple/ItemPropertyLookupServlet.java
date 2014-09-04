@@ -11,6 +11,7 @@ import static com.willshex.gson.json.shared.Convert.fromJsonObject;
 import static com.willshex.gson.json.shared.Convert.toJsonObject;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.lookup.shared.datatypes.LookupDetailType;
+import io.reflection.app.collectors.HttpExternalGetter;
 import io.reflection.app.datatypes.shared.Application;
 import io.reflection.app.datatypes.shared.Item;
 //import io.reflection.app.collectors.HttpExternalGetter;
@@ -41,8 +42,11 @@ import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
+import com.google.appengine.api.taskqueue.TransientFailureException;
+import com.google.appengine.api.urlfetch.HTTPMethod;
 //import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.google.appengine.api.utils.SystemProperty;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -59,6 +63,9 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 	private static final String PROPERTY_IAP_ON = "usesIap.on";
 
 	private static final long DURATION_30_DAYS = 30 * 24 * 60 * 60 * 1000;
+
+	public static final String ADD_IF_NEW_ACTION = "addIfNew";
+	public static final String REMOVE_DUPLICATES_ACTION = "removeDuplicates";
 
 	/*
 	 * (non-Javadoc)
@@ -197,7 +204,78 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 					LOG.log(Level.WARNING, String.format("Could not get find item for [%s]", itemId));
 				}
 			}
-		} else if ("removeDuplicates".equals(action)) {
+		} else if (ADD_IF_NEW_ACTION.equals(action)) {
+			try {
+				Item item = ItemServiceProvider.provide().getInternalIdItem(itemId);
+
+				if (item == null) {
+					String itemUrl = "http://itunes.apple.com/lookup?id=" + itemId;
+					String data = HttpExternalGetter.getData(itemUrl, HTTPMethod.GET);
+
+					if (data != null && data.length() > 0) {
+						JsonObject jsonObject = toJsonObject(data);
+
+						JsonArray results = jsonObject.get("results").getAsJsonArray();
+
+						JsonElement firstResult;
+						JsonObject jsonItem;
+						if (results != null && results.size() > 0 && (firstResult = results.get(0)) != null
+								&& (jsonItem = firstResult.getAsJsonObject()) != null) {
+							item = new Item();
+
+							item.added = new Date();
+							item.creatorName = jsonItem.get("artistName").getAsString();
+							item.price = Float.valueOf(jsonItem.get("price").getAsFloat());
+							item.currency = jsonItem.get("currency").getAsString();
+							item.internalId = itemId;
+							item.externalId = jsonItem.get("bundleId").getAsString();
+							item.name = jsonItem.get("trackName").getAsString();
+							item.source = "ios";
+							item.type = "Application";
+
+							String imageUrl = jsonItem.get("artworkUrl100").getAsString();
+
+							if (imageUrl != null) {
+								int indexOfExtension = imageUrl.lastIndexOf('.');
+								imageUrl = imageUrl.substring(0, indexOfExtension);
+
+								// 8 = length of http:// or https://
+								int countryStart = imageUrl.indexOf('/', 8) + 1;
+								item.country = imageUrl.substring(countryStart, countryStart + 2);
+
+								item.smallImage = imageUrl.concat(".53x53-50.png");
+								item.mediumImage = imageUrl.concat(".75x75-65.png.png");
+								item.largeImage = imageUrl.concat(".100x100-75.png");
+							} else {
+								item.country = item.smallImage = item.mediumImage = item.largeImage = "";
+							}
+
+							item = ItemServiceProvider.provide().addItem(item);
+
+							if (item.id != null) {
+								if (LOG.isLoggable(Level.INFO)) {
+									LOG.log(Level.INFO, String.format("Added item internal id [%s] with id [%d]", itemId, item.id.longValue()));
+								}
+							}
+						} else {
+							if (LOG.isLoggable(Level.WARNING)) {
+								LOG.log(Level.WARNING, String.format("Could not find element results in item [%s] json", itemId));
+							}
+						}
+					} else {
+						if (LOG.isLoggable(Level.WARNING)) {
+							LOG.log(Level.WARNING, String.format("Could not get GET json data for item [%s] with url", itemId, itemUrl));
+						}
+					}
+				} else {
+					if (LOG.isLoggable(Level.INFO)) {
+						LOG.log(Level.INFO, String.format("Item [%s] already exists with id [%d]", itemId, item.id.longValue()));
+					}
+				}
+			} catch (DataAccessException e) {
+				throw new RuntimeException(e);
+			}
+		} else if (REMOVE_DUPLICATES_ACTION.equals(action)) {
 			try {
 				IItemService itemService = ItemServiceProvider.provide();
 
@@ -298,5 +376,45 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 		}
 
 		return usOrGbItem;
+	}
+
+	public static void enqueueItem(String internalId, String action) {
+		if (LOG.isLoggable(GaeLevel.TRACE)) {
+			LOG.log(GaeLevel.TRACE, "Entering...");
+		}
+
+		try {
+			Queue queue = QueueFactory.getQueue("itempropertylookup");
+
+			TaskOptions options = TaskOptions.Builder.withUrl("/itempropertylookup").method(Method.POST);
+
+			options.param("item", internalId);
+			options.param("action", action);
+
+			try {
+				queue.add(options);
+			} catch (TransientFailureException ex) {
+
+				if (LOG.isLoggable(Level.WARNING)) {
+					LOG.warning(String.format("Could not queue a message because of [%s] - will retry it once", ex.toString()));
+				}
+
+				// retry once
+				try {
+					queue.add(options);
+				} catch (TransientFailureException reEx) {
+					if (LOG.isLoggable(Level.SEVERE)) {
+						LOG.log(Level.SEVERE,
+								String.format("Retry of with payload [%s] failed while adding to queue [%s] twice", options.toString(), queue.getQueueName()),
+								reEx);
+					}
+				}
+			}
+
+		} finally {
+			if (LOG.isLoggable(GaeLevel.TRACE)) {
+				LOG.log(GaeLevel.TRACE, "Exiting...");
+			}
+		}
 	}
 }

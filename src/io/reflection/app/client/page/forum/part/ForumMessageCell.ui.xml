@@ -19,43 +19,43 @@
 	<ui:import field="io.reflection.app.client.page.PageType.ForumEditTopicPageType" />
 
 	<ui:style>
-		@external forumMessageLink;
-		.split {
+	@external forumMessageLink;
+	.split {
 		border-top: solid 1px #999;
 		padding-top: 10px;
 		margin-top: 10px;
-		}
-
-		.postContent {
+	}
+	
+	.postContent, .postProperties {
 		margin-bottom: 10px;
 		margin-top: 10px;
-		}
-
-		.infoWrapper div span {
+	}
+	
+	.infoWrapper div span {
 		display: inline-block;
 		marin-right: 5px;
 		text-decoration: underline;
 		cursor: pointer;
-		}
-
-		.smaller {
+	}
+	
+	.smaller {
 		font-size: smaller;
-		}
-
-		.forumMessageLink {
+	}
+	
+	.forumMessageLink {
 		margin-left: 3px;
 		margin-right: 3px;
-		}
-
-		.markdown p {
+	}
+	
+	.markdown p {
 		font-size: 14px;
-		}
+	}
 	</ui:style>
 
 	<div class="row">
-		<div class="col-sm-2">
+		<div class="col-sm-2 {style.postProperties}">
 			<ui:text from="{authorName}" />
-			<div>
+			<div class="text-muted">
 				<ui:text from="{companyName}" />
 			</div>
 			<div class="{style.smaller}">
@@ -72,10 +72,10 @@
 				<a href="{link}" class="forumMessageLink">#</a>
 				<ui:text from="{editBar}" />
 				<ui:safehtml from="{editButtonHtml}" />
-				<ui:text from="{flagBar}" />
+				<!-- <ui:text from="{flagBar}" />
 				<a class="forumMessageLink" ui:field="flag">
 					<ui:text from="{flagText}" />
-				</a>
+				</a> -->
 				<ui:text from="{quoteBar}" />
 				<a class="forumMessageLink" ui:field="quote">
 					<ui:text from="{quoteText}" />
