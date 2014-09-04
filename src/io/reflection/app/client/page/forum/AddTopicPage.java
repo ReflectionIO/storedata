@@ -111,6 +111,8 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
             Long forumId = null;
             
             submit.setText("Posting new Topic...");
+            submit.setEnabled(false);
+            contentText.setLoading(true);
 
             if (forums.getItemCount() > 0) {
                 String forumIdString = forums.getValue(forums.getSelectedIndex());
@@ -133,6 +135,7 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
         contentText.setText("");
         tags.setText("");
         submit.setText("Post New Topic");
+        submit.setEnabled(true);
 
         forumSummarySidePanel.redraw();
         
@@ -146,6 +149,8 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
             redirectToTopicHandler.removeHandler();
             redirectToTopicHandler = null ;
         }
+        
+        contentText.setLoading(false);
 
         // hide errors and remove clear validation strings
     }
