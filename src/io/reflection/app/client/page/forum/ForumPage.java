@@ -60,7 +60,7 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
     interface TopicTemplate extends SafeHtmlTemplates {
         TopicTemplate INSTANCE = GWT.create(TopicTemplate.class);
 
-        @SafeHtmlTemplates.Template("<div>{0} <a href=\"{1}\"" + " style=\"{2}\">{3}</a></div><div>{4} {5}</div>")
+        @SafeHtmlTemplates.Template("<div>{0} <a href=\"{1}\" style=\"{2}\">{3}</a></div><div>{4} {5}</div>")
         SafeHtml topicLayout(SafeHtml properties, String link, SafeStyles styles, SafeHtml title, SafeHtml pages, SafeHtml pageLinks);
 
         @SafeHtmlTemplates.Template("<a class='{2}' href='{0}'>{1}</a>")
@@ -72,7 +72,6 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
     interface ForumPageUiBinder extends UiBinder<Widget, ForumPage> {}
 
     private static final int SELECTED_FORUM_PARAMETER_INDEX = 0;
-    private static final Long DEFAULT_FORUM = 5L;
 
     @UiField(provided = true) CellTable<Topic> topics = new CellTable<Topic>(ServiceConstants.SHORT_STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 
