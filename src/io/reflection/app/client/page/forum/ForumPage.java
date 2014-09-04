@@ -293,7 +293,12 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 	public void navigationChanged(Stack previous, Stack current) {
 		if (current != null && PageType.ForumPageType.equals(current.getPage())) {
 
-			// no caching, just get it working.
+			//No caching, just to get it working.
+			//There is still caching for using the pager on a ForumPage, just not navigating away from and to the same ForumPage.
+			//We don't cache for now because we may be returning to this page from the beginning, but the pager thinks it is on page 2.
+			//Adding the datadisplay back again (which is needed because of the need to disconnect it in other situations)
+			//will cause an async data provider to fire getting perhaps unecessary data or worse an edge case. On return it will force the display of
+			//that data even though we're starting from the beginning.
 			TopicController.get().reset();
 			if (!TopicController.get().getDataDisplays().contains(topics)) {
 				// this triggers a range change update!
@@ -307,14 +312,12 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 			if ((selectedIdString = current.getParameter(SELECTED_FORUM_PARAMETER_INDEX)) != null) {
 
 				Long newSelectedId = Long.valueOf(selectedIdString);
+				selectedForumId = newSelectedId;
+				selectedForum = null;
+				TopicController.get().getTopics(selectedForumId);
 
-				if (selectedForumId == null || newSelectedId.longValue() != selectedForumId.longValue()) {
-					selectedForumId = newSelectedId;
-					selectedForum = null;
-					TopicController.get().getTopics(selectedForumId);
+				configureTitleAndSidePanel();
 
-					configureTitleAndSidePanel();
-				}
 			} else {
 				// needs to be reset in case we're coming back to this page. The next call will set them.
 				selectedForumId = null;
