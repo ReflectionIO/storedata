@@ -46,6 +46,7 @@ import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -70,12 +71,9 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 
 	// Cache roles and permissions meanwhile user is logged in
 	private Map<Long, Role> mRoleCache; // Role.id : Role
-	private Map<Long, Permission> mPermissionCache; // Permission.id : Permission
+	private Map<String, Permission> mPermissionCache; // Permission.code : Permission
 
 	private static final String COOKIE_KEY_TOKEN = SessionController.class.getName() + ".token";
-
-	public static final long ADMIN_ROLE_ID = 1;
-	public static final long FULL_RANK_VIEW_PERMISSION_ID = 1;
 
 	private User mLoggedInUser = null;
 	private Session mSession = null;
@@ -196,7 +194,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 
 			input.session = session;
 
-			// input.idsOnly = Boolean.FALSE;
+			input.idsOnly = Boolean.FALSE; // Retrieve the whole permission
 
 			// Ask roles and permissions for the user
 			service.getRolesAndPermissions(input, new AsyncCallback<GetRolesAndPermissionsResponse>() {
@@ -215,7 +213,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 							}
 
 							if (mPermissionCache == null) {
-								mPermissionCache = new HashMap<Long, Permission>();
+								mPermissionCache = new HashMap<String, Permission>();
 							}
 
 							// Add retrieved roles into cache
@@ -225,10 +223,10 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 								}
 							}
 
-							// Add retrieved permissions into cache
+							// Add retrieved permissions into caches
 							if (output.permissions != null) {
 								for (Permission permission : output.permissions) {
-									mPermissionCache.put(permission.id, permission);
+									addPermissionToLookup(permission);
 								}
 							}
 
@@ -311,7 +309,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	 * @return
 	 */
 	public boolean isLoggedInUserAdmin() {
-		return hasRole(mLoggedInUser, ADMIN_ROLE_ID);
+		return hasRole(mLoggedInUser, RoleController.ADMIN_ROLE_ID);
 	}
 
 	/**
@@ -359,7 +357,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	}
 
 	public boolean hasPermission(User user, long id) {
-		boolean hasPermission = hasRole(user, ADMIN_ROLE_ID);
+		boolean hasPermission = hasRole(user, RoleController.ADMIN_ROLE_ID);
 
 		if (!hasPermission && user != null) {
 			if (user.roles != null) {
@@ -410,20 +408,42 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	}
 
 	/**
+	 * Add a permission to the cache
+	 * 
+	 * @param p
+	 */
+	public void addPermissionToLookup(Permission p) {
+		if (mLoggedInUser.permissions == null) {
+			mLoggedInUser.permissions = new ArrayList<Permission>();
+		}
+		mLoggedInUser.permissions.add(p);		
+		mPermissionCache.put(p.code, p);
+	}
+
+	/**
 	 * Retrieve a permission from the cache
 	 * 
 	 * @param Id
 	 *            id of the permission to retrieve
 	 * @return the permission
 	 */
-	public Permission lookupPermission(String id) {
+	public Permission lookupPermission(String code) {
 		Permission permission = null;
 
 		if (mPermissionCache != null) {
-			permission = mPermissionCache.get(id);
+			permission = mPermissionCache.get(code);
 		}
 
 		return permission;
+	}
+
+	/**
+	 * Remove Permission from the cache
+	 * 
+	 * @param p
+	 */
+	public void deletePermissionLookup(Permission p) {
+		mPermissionCache.remove(p.code);
 	}
 
 	/**
