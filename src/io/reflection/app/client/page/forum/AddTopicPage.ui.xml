@@ -19,6 +19,10 @@
 	   margin-left: 55px;
     }
     
+    .indentHeader2 {
+       margin-left: 35px;
+    }
+    
     .forumControl {
 	   background: linear-gradient(#f6f7f9, #eeeff1);
 	}
@@ -26,10 +30,10 @@
 	<g:HTMLPanel styleName="row">
 		<pp:ForumSummarySidePanel ui:field="forumSummarySidePanel" styleName="sidepanel col-md-2 well" />
 		<div class="col-md-10">
-        
+        <div class="row">
             <g:HTMLPanel styleName="well {style.toolbarSpacing}">
                 <div class="row">
-                    <h3 >Add New Topic</h3>
+                    <h3 class='{style.indentHeader2}'>Add New Topic</h3>
                 </div>
             </g:HTMLPanel>
         <h2 class="{style.indentHeader}">Add a new Topic</h2>
@@ -66,6 +70,9 @@
 				</g:HTMLPanel>
 			</g:FormPanel>
 			<g:HTMLPanel styleName="{style.filler} col-md-12 hidden-xs hidden-sm" />
+            </div>
+            <div class="col-md-12">
+            </div>
 		</div>
 	</g:HTMLPanel>
 </ui:UiBinder> 
