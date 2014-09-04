@@ -324,7 +324,9 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 				configureTitleAndSidePanel();
 			}
 
-			newTopicButton.setTargetHistoryToken(PageType.ForumTopicPageType.asTargetHistoryToken("new", selectedForumId.toString()));
+			if (selectedForumId != null) {
+				newTopicButton.setTargetHistoryToken(PageType.ForumTopicPageType.asTargetHistoryToken("new", selectedForumId.toString()));
+			}
 		}
 	}
 
