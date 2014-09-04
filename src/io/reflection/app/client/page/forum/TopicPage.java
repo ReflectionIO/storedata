@@ -246,7 +246,8 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 	void postReplyClicked(ClickEvent event) {
 		if (validate()) {
 			ReplyController.get().addReply(topicId, replyText.getText());
-			post.setText("Posting...");
+			post.setEnabled(false);
+			replyText.setLoading(true);
 		}
 	}
 
@@ -468,7 +469,8 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 	@Override
 	public void addReplySuccess(AddReplyRequest input, AddReplyResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			post.setText("Post");
+			post.setEnabled(true);
+			replyText.setLoading(false);
 			replyText.setText("");
 			Topic topic2 = TopicController.get().getTopic(topicId);
 			updateNotes(topic2);
