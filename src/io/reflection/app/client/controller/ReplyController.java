@@ -12,12 +12,15 @@ import io.reflection.app.api.forum.shared.call.AddReplyRequest;
 import io.reflection.app.api.forum.shared.call.AddReplyResponse;
 import io.reflection.app.api.forum.shared.call.GetRepliesRequest;
 import io.reflection.app.api.forum.shared.call.GetRepliesResponse;
+import io.reflection.app.api.forum.shared.call.GetReplyRequest;
+import io.reflection.app.api.forum.shared.call.GetReplyResponse;
 import io.reflection.app.api.forum.shared.call.UpdateReplyRequest;
 import io.reflection.app.api.forum.shared.call.UpdateReplyResponse;
 import io.reflection.app.api.forum.shared.call.event.AddReplyEventHandler.AddReplyFailure;
 import io.reflection.app.api.forum.shared.call.event.AddReplyEventHandler.AddReplySuccess;
 import io.reflection.app.api.forum.shared.call.event.GetRepliesEventHandler.GetRepliesFailure;
 import io.reflection.app.api.forum.shared.call.event.GetRepliesEventHandler.GetRepliesSuccess;
+import io.reflection.app.api.forum.shared.call.event.GetReplyEventHandler;
 import io.reflection.app.api.forum.shared.call.event.UpdateReplyEventHandler.UpdateReplyFailure;
 import io.reflection.app.api.forum.shared.call.event.UpdateReplyEventHandler.UpdateReplySuccess;
 import io.reflection.app.api.shared.datatypes.Pager;
@@ -121,7 +124,43 @@ public class ReplyController implements ServiceConstants {
 		}
 
 		public Reply getReply(Long replyId) {
-			return replyStore.get(replyId.intValue());
+			Reply result = replyStore.get(replyId.intValue());
+			if (result == null) {
+				fetchReply(replyId);
+			}
+			return result;
+		}
+
+		/**
+		 * This method doesn't need the topicId as an argument, but putting it here as the replystore is still thread based for now.
+		 * 
+		 * @param replyId
+		 */
+		private void fetchReply(Long replyId) {
+			ForumService service = ServiceCreator.createForumService();
+			final GetReplyRequest input = new GetReplyRequest();
+			input.accessCode = ACCESS_CODE;
+			input.session = SessionController.get().getSessionForApiCall();
+			input.id = replyId;
+			service.getReply(input, new AsyncCallback<GetReplyResponse>() {
+
+				@Override
+				public void onSuccess(GetReplyResponse output) {
+					if (output.status == StatusType.StatusTypeSuccess) {
+						if (output.reply != null) {
+							replies.add(output.reply);
+							replyStore.put(output.reply.id.intValue(), output.reply);
+						}
+					}
+
+					EventController.get().fireEventFromSource(new GetReplyEventHandler.GetReplySuccess(input, output), replyController);
+				}
+
+				@Override
+				public void onFailure(Throwable caught) {
+					EventController.get().fireEventFromSource(new GetReplyEventHandler.GetReplyFailure(input, caught), replyController);
+				}
+			});
 		}
 
 		/**
