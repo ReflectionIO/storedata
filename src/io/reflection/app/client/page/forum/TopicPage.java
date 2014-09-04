@@ -247,6 +247,8 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
         if (validate()) {
             ReplyController.get().addReply(topicId, replyText.getText());
             post.setText("Posting...");
+			post.setEnabled(false);
+			replyText.setLoading(true);
         }
     }
 
@@ -312,8 +314,10 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
         // However, this seems to be influenced by the previous replies the display/pager/dataprovider was bound too.
         // Exactly why, I'm not sure, so to be safe set the visible range on the display itself. (Each change like this seems to have knock on effects that
         // are difficult to predict without a complete understanding of AsyncDataProvider/CellList/Table).
+	    
+	    startPagePost = post - (post % ServiceConstants.SHORT_STEP_VALUE) ;
 
-        messagesCellList.setVisibleRange(post, ServiceConstants.SHORT_STEP_VALUE);
+		messagesCellList.setVisibleRange(startPagePost, ServiceConstants.SHORT_STEP_VALUE);
     }
 
     /**
@@ -466,7 +470,9 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
     @Override
     public void addReplySuccess(AddReplyRequest input, AddReplyResponse output) {
         if (output.status == StatusType.StatusTypeSuccess) {
+			post.setEnabled(true);
             post.setText("Post");
+			replyText.setLoading(false);
             replyText.setText("");
             Topic topic2 = TopicController.get().getTopic(topicId);
             updateNotes(topic2);
@@ -476,7 +482,9 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
             // that may be important depending on what you want to update in the handlers.
 
             messagesCellList.redraw();
-            focusPagerOnPost(topic2.numberOfReplies + 1);
+			
+			//numberOfReplies was already incremented by ReplyController, and since ForumMessages start at 0 it is the right number.
+			focusPagerOnPost(topic2.numberOfReplies);
         }
     }
 

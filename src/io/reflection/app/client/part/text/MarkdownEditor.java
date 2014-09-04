@@ -9,6 +9,7 @@ package io.reflection.app.client.part.text;
 
 import io.reflection.app.client.helper.MarkdownHelper;
 import io.reflection.app.client.part.BootstrapGwtTabPanel;
+import io.reflection.app.client.part.Preloader;
 
 import java.io.IOException;
 
@@ -46,6 +47,8 @@ public class MarkdownEditor extends Composite implements HasText {
     @UiField Button italic;
     @UiField Button link;
     @UiField Button image;
+
+    @UiField Preloader preloader;
 
     interface MarkdownEditorUiBinder extends UiBinder<Widget, MarkdownEditor> {}
 
@@ -241,6 +244,15 @@ public class MarkdownEditor extends Composite implements HasText {
         tabLayout.selectTab(0);
     }
 
-    
+    /**
+     * @param b
+     */
+    public void setLoading(boolean show) {
+        if (show) {
+            preloader.show(true);
+        } else {
+            preloader.hide();
+        }
+    }
 
 }
