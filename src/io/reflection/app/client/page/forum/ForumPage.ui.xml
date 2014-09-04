@@ -34,7 +34,7 @@
 			<g:HTMLPanel styleName="well {style.toolbar_spacing}">
 				<div class="row">
 					<h3 class="col-sm-8 {style.header2}" ui:field="titleText"></h3>
-					<g:InlineHyperlink styleName="btn btn-primary col-sm-2 pull-right" targetHistoryToken="{ForumTopicPageType.asTargetHistoryToken}/new">
+					<g:InlineHyperlink styleName="btn btn-primary col-sm-2 pull-right" ui:field="newTopicButton">
 						New Topic
 						<span class="icon-plus"></span>
 					</g:InlineHyperlink>

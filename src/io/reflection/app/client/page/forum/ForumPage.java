@@ -48,6 +48,7 @@ import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
 
@@ -79,6 +80,8 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 
     @UiField ForumSummarySidePanel forumSummarySidePanel;
     @UiField HeadingElement titleText;
+    
+    @UiField InlineHyperlink newTopicButton ;
 
     private Forum selectedForum;
 
@@ -319,6 +322,8 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
                 // This call also resets the default selected forum provided selectedForum/Id is null.
                 configureTitleAndSidePanel();
             }
+            
+            newTopicButton.setTargetHistoryToken(PageType.ForumTopicPageType.asTargetHistoryToken("new",selectedForumId.toString()));
         }
     }
 
