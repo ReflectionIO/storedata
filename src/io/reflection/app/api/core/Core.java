@@ -1544,7 +1544,7 @@ public final class Core extends ActionHandler {
 				Modeller modeller = ModellerFactory.getModellerForStore(defaultStore.a3Code);
 				FormType form = modeller.getForm(input.listType);
 
-				Map<String, String> ParentIditemIdLookup = new HashMap<String, String>();
+				Map<String, String> parentIdItemIdLookup = new HashMap<String, String>();
 				for (Sale sale : sales) {
 					// only add Sales that are consistent with the device type
 					if (FREE_OR_PAID_APP_UNIVERSAL_IOS.equals(sale.typeIdentifier) // 1F
@@ -1559,7 +1559,7 @@ public final class Core extends ActionHandler {
 
 						// If type identifier != IA1 or IA9, add parent identifiers into the Map
 						if (!sale.typeIdentifier.equals(INAPP_PURCHASE_PURCHASE_IOS) && !sale.typeIdentifier.equals(INAPP_PURCHASE_SUBSCRIPTION_IOS)) {
-							ParentIditemIdLookup.put(sale.sku, sale.item.internalId);
+							parentIdItemIdLookup.put(sale.sku, sale.item.internalId);
 						}
 
 						key = keyFormat.parse(keyFormat.format(sale.begin));
@@ -1568,6 +1568,7 @@ public final class Core extends ActionHandler {
 						if (salesGroupByDate.get(key) == null) {
 							salesGroupByDate.put(key, new ArrayList<Sale>());
 						}
+
 						salesGroupByDate.get(key).add(sale);
 
 					}
@@ -1617,10 +1618,9 @@ public final class Core extends ActionHandler {
 
 						String itemId;
 						for (Sale sale : salesGroup) {
-
 							// Assign item id of the parent to IAP and Subscriptions
 							if (sale.typeIdentifier.equals(INAPP_PURCHASE_PURCHASE_IOS) || sale.typeIdentifier.equals(INAPP_PURCHASE_SUBSCRIPTION_IOS)) {
-								itemId = ParentIditemIdLookup.get(sale.parentIdentifier);
+								itemId = parentIdItemIdLookup.get(sale.parentIdentifier);
 							} else {
 								itemId = sale.item.internalId;
 							}
@@ -1645,6 +1645,7 @@ public final class Core extends ActionHandler {
 								rank.type = input.listType;
 
 								output.ranks.add(rank);
+								itemIDsRankLookup.put(itemId, rank);
 							} else {
 								rank = itemIDsRankLookup.get(itemId);
 							}
