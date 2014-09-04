@@ -292,7 +292,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 		}
 
 		NavigationController.get().purgeUserPages();
-		
+
 		PageType.LoginPageType.show("requestinvite");
 	}
 
@@ -416,7 +416,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 		if (mLoggedInUser.permissions == null) {
 			mLoggedInUser.permissions = new ArrayList<Permission>();
 		}
-		mLoggedInUser.permissions.add(p);		
+		mLoggedInUser.permissions.add(p);
 		mPermissionCache.put(p.code, p);
 	}
 
@@ -444,6 +444,12 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	 */
 	public void deletePermissionLookup(Permission p) {
 		mPermissionCache.remove(p.code);
+		for (Permission userPermission : mLoggedInUser.permissions) {
+			if (userPermission.code.equals(p.code)) {
+				mLoggedInUser.permissions.remove(userPermission);
+				break;
+			}
+		}
 	}
 
 	/**
