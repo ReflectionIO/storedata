@@ -50,12 +50,18 @@
 	.markdown p {
 		font-size: 14px;
 	}
+
+    .topMargin {
+	   margin-top: 20px ;
+    }
 	</ui:style>
 
 	<div class="row">
 		<div class="col-sm-2 {style.postProperties}">
+		    <strong>
 			<ui:text from="{authorName}" />
-			<div class="text-muted">
+			</strong>
+			<div class="{style.smaller}">
 				<ui:text from="{companyName}" />
 			</div>
 			<div class="{style.smaller}">
@@ -68,7 +74,7 @@
 				<ui:safehtml from="{content}" />
 			</div>
 
-			<div class="pull-right">
+			<div class="pull-right {style.topMargin}">
 				<a href="{link}" class="forumMessageLink">#</a>
 				<ui:text from="{editBar}" />
 				<ui:safehtml from="{editButtonHtml}" />
