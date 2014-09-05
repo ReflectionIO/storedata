@@ -14,6 +14,7 @@ import static io.reflection.app.client.controller.FilterController.PAID_LIST_TYP
 import static io.reflection.app.client.controller.FilterController.RANKING_CHART_TYPE;
 import static io.reflection.app.client.controller.FilterController.REVENUE_CHART_TYPE;
 import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.res.charts.Images;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
@@ -31,390 +32,395 @@ import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.googlecode.gchart.client.GChart;
 
 public class ItemChart extends GChart {
-	
+
 	private Timer resizeTimer;
 	private static int CHART_HEIGHT = 350;
-    private HandlerRegistration resizeRegistration;
-    private ResizeHandler resizeHandler = new ResizeHandler() {        
-
-        @Override
-        public void onResize(ResizeEvent event) {
-            resizeTimer.cancel();
-            resizeTimer.schedule(250);
-        }
-    };
-
-    private void resize() {
-        setChartSize((int) (this.getParent().getElement().getClientWidth() - 70), CHART_HEIGHT);
-
-        update();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.google.gwt.user.client.ui.Composite#onAttach()
-     */
-
-    @Override
-    protected void onAttach() {
-        super.onAttach();
-
-        resizeTimer.cancel();
-        resizeTimer.schedule(250);
-
-        resizeRegistration = Window.addResizeHandler(resizeHandler);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.google.gwt.user.client.ui.Composite#onDetach()
-     */
-    @Override
-    protected void onDetach() {
-        if (resizeRegistration != null) {
-            resizeRegistration.removeHandler();
-        }
-
-        super.onDetach();
-    }
-
-    public enum YAxisDataType {
-        RevenueYAxisDataType,
-        DownloadsYAxisDataType,
-        RankingYAxisDataType;
-
-        /**
-         * @param value
-         * @return
-         */
-        public static YAxisDataType fromString(String value) {
-            YAxisDataType dataType = null;
-
-            switch (value) {
-            case RANKING_CHART_TYPE:
-                dataType = RankingYAxisDataType;
-                break;
-            case DOWNLOADS_CHART_TYPE:
-                dataType = DownloadsYAxisDataType;
-                break;
-            case REVENUE_CHART_TYPE:
-                dataType = RevenueYAxisDataType;
-                break;
-            }
-
-            return dataType;
-        }
-    }
-
-    public enum RankingType {
-        PositionRankingType,
-        GrossingPositionRankingType;
-
-        /**
-         * @param value
-         * @return
-         */
-        public static RankingType fromString(String value) {
-            RankingType mode = null;
-
-            switch (value) {
-            case FREE_LIST_TYPE:
-            case PAID_LIST_TYPE:
-                mode = PositionRankingType;
-                break;
-            case GROSSING_LIST_TYPE:
-            default:
-                mode = GrossingPositionRankingType;
-                break;
-            }
-
-            return mode;
-        }
-    }
-
-    public enum Colour {
-        PurpleColour("#6D69C5", Images.INSTANCE.purpleCirle().getSafeUri().asString()), ;
+	private HandlerRegistration resizeRegistration;
+
+	private boolean showModelPredictions;
+
+	private ResizeHandler resizeHandler = new ResizeHandler() {
+
+		@Override
+		public void onResize(ResizeEvent event) {
+			resizeTimer.cancel();
+			resizeTimer.schedule(250);
+		}
+	};
+
+	private void resize() {
+		setChartSize((int) (this.getParent().getElement().getClientWidth() - 70), CHART_HEIGHT);
+
+		update();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
+	 */
+
+	@Override
+	protected void onAttach() {
+		super.onAttach();
+
+		resizeTimer.cancel();
+		resizeTimer.schedule(250);
+
+		resizeRegistration = Window.addResizeHandler(resizeHandler);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.Composite#onDetach()
+	 */
+	@Override
+	protected void onDetach() {
+		if (resizeRegistration != null) {
+			resizeRegistration.removeHandler();
+		}
+
+		super.onDetach();
+	}
+
+	public enum YAxisDataType {
+		RevenueYAxisDataType,
+		DownloadsYAxisDataType,
+		RankingYAxisDataType;
+
+		/**
+		 * @param value
+		 * @return
+		 */
+		public static YAxisDataType fromString(String value) {
+			YAxisDataType dataType = null;
+
+			switch (value) {
+			case RANKING_CHART_TYPE:
+				dataType = RankingYAxisDataType;
+				break;
+			case DOWNLOADS_CHART_TYPE:
+				dataType = DownloadsYAxisDataType;
+				break;
+			case REVENUE_CHART_TYPE:
+				dataType = RevenueYAxisDataType;
+				break;
+			}
 
-        private String Colour;
-        private String imageUrl;
+			return dataType;
+		}
+	}
 
-        private Colour(String Colour, String imageUrl) {
-            this.Colour = Colour;
-            this.imageUrl = imageUrl;
-        }
+	public enum RankingType {
+		PositionRankingType,
+		GrossingPositionRankingType;
 
-        public String getImageUrl() {
-            return imageUrl;
-        }
+		/**
+		 * @param value
+		 * @return
+		 */
+		public static RankingType fromString(String value) {
+			RankingType mode = null;
 
-        public String getColour() {
-            return Colour;
-        }
-    }
+			switch (value) {
+			case FREE_LIST_TYPE:
+			case PAID_LIST_TYPE:
+				mode = PositionRankingType;
+				break;
+			case GROSSING_LIST_TYPE:
+			default:
+				mode = GrossingPositionRankingType;
+				break;
+			}
+
+			return mode;
+		}
+	}
 
-    private Curve curve;
-    private RankingType mode;
-    private YAxisDataType dataType;
+	public enum Colour {
+		PurpleColour("#6D69C5", Images.INSTANCE.purpleCirle().getSafeUri().asString()), ;
 
-    // private Item item;
+		private String Colour;
+		private String imageUrl;
 
-    private List<Rank> ranks;
+		private Colour(String Colour, String imageUrl) {
+			this.Colour = Colour;
+			this.imageUrl = imageUrl;
+		}
 
-    public ItemChart() {
-    	
-    	resizeTimer = new Timer() {
-            @Override
-            public void run() {
-                resize();
-            }
-        };
+		public String getImageUrl() {
+			return imageUrl;
+		}
 
-        setBorderStyle("none");
+		public String getColour() {
+			return Colour;
+		}
+	}
 
-        // setBackgroundColor("repeating-linear-gradient( 180deg, #FAFAFA, #FAFAFA 50px, #FFFFFF 50px, #FFFFFF 100px)");
+	private Curve curve;
+	private RankingType mode;
+	private YAxisDataType dataType;
 
-        // configure x-axis
-        getXAxis().setTickLength(0);
+	// private Item item;
 
-        getYAxis().setHasGridlines(true);
-        getYAxis().setTickLength(0);
+	private List<Rank> ranks;
 
-        getYAxis().setTicksPerGridline(1);
-        setGridColor("#eff2f5");
+	public ItemChart() {
 
-        getYAxis().setAxisVisible(false);
-        getXAxis().setAxisVisible(false);
+		resizeTimer = new Timer() {
+			@Override
+			public void run() {
+				resize();
+			}
+		};
 
-        getXAxis().setTickLabelFontColor("gray");
-        getYAxis().setTickLabelFontColor("gray");
+		showModelPredictions = SessionController.get().isLoggedInUserAdmin();
 
-        getXAxis().setTickLabelPadding(20);
-        getYAxis().setTickLabelPadding(10);
+		setBorderStyle("none");
 
-        getXAxis().setTickLabelFormat("=(Date)d MMM");
+		// setBackgroundColor("repeating-linear-gradient( 180deg, #FAFAFA, #FAFAFA 50px, #FFFFFF 50px, #FFFFFF 100px)");
 
-        addCurve();
+		// configure x-axis
+		getXAxis().setTickLength(0);
 
-        curve = getCurve();
+		getYAxis().setHasGridlines(true);
+		getYAxis().setTickLength(0);
 
-        curve.getSymbol().setSymbolType(SymbolType.LINE);
+		getYAxis().setTicksPerGridline(1);
+		setGridColor("#eff2f5");
 
-        curve.getSymbol().setBorderColor(Colour.PurpleColour.getColour());
-        curve.getSymbol().setBorderStyle("solid");
-        curve.getSymbol().setFillThickness(2);
+		getYAxis().setAxisVisible(false);
+		getXAxis().setAxisVisible(false);
 
-        curve.getSymbol().setBorderWidth(0);
-        curve.getSymbol().setWidth(8);
-        curve.getSymbol().setHeight(8);
+		getXAxis().setTickLabelFontColor("gray");
+		getYAxis().setTickLabelFontColor("gray");
 
-        curve.getSymbol().setImageURL(Colour.PurpleColour.getImageUrl());
+		getXAxis().setTickLabelPadding(20);
+		getYAxis().setTickLabelPadding(10);
 
-        curve.getSymbol().setHoverSelectionWidth(1);
-        curve.getSymbol().setHoverSelectionBackgroundColor("#929292");
-        curve.getSymbol().setHoverSelectionBorderWidth(0);
-        curve.getSymbol().setHoverSelectionFillThickness(1);
+		getXAxis().setTickLabelFormat("=(Date)d MMM");
 
-        // use a vertical line for the selection cursor
-        curve.getSymbol().setHoverSelectionSymbolType(SymbolType.XGRIDLINE);
-        // with annotation on top of this line (above chart)
-        // curve.getSymbol().setHoverAnnotationSymbolType(SymbolType.BOX_EAST);
-        curve.getSymbol().setHoverLocation(AnnotationLocation.NORTHEAST);
+		addCurve();
 
-        curve.getSymbol().setHoverYShift(15);
-        curve.getSymbol().setHoverXShift(-62);
+		curve = getCurve();
 
-        RankHover hoverWidget = new RankHover();
-        hoverWidget.setCssColor(Colour.PurpleColour.getColour());
-        hoverWidget.setYAxisDataType(YAxisDataType.RankingYAxisDataType);
+		curve.getSymbol().setSymbolType(SymbolType.LINE);
 
-        curve.getSymbol().setHoverWidget(hoverWidget);
+		curve.getSymbol().setBorderColor(Colour.PurpleColour.getColour());
+		curve.getSymbol().setBorderStyle("solid");
+		curve.getSymbol().setFillThickness(2);
 
-        // tall brush so it touches independent of mouse y position
-        curve.getSymbol().setBrushSize(25, 700);
-        // so only point-to-mouse x-distance matters for hit testing
-        curve.getSymbol().setDistanceMetric(1, 0);
+		curve.getSymbol().setBorderWidth(0);
+		curve.getSymbol().setWidth(8);
+		curve.getSymbol().setHeight(8);
 
-        // curve.setXShift(10);
-        // curve.setYShift(-10);
+		curve.getSymbol().setImageURL(Colour.PurpleColour.getImageUrl());
 
-        getYAxis().setOutOfBoundsMultiplier(.1);
+		curve.getSymbol().setHoverSelectionWidth(1);
+		curve.getSymbol().setHoverSelectionBackgroundColor("#929292");
+		curve.getSymbol().setHoverSelectionBorderWidth(0);
+		curve.getSymbol().setHoverSelectionFillThickness(1);
 
-    }
+		// use a vertical line for the selection cursor
+		curve.getSymbol().setHoverSelectionSymbolType(SymbolType.XGRIDLINE);
+		// with annotation on top of this line (above chart)
+		// curve.getSymbol().setHoverAnnotationSymbolType(SymbolType.BOX_EAST);
+		curve.getSymbol().setHoverLocation(AnnotationLocation.NORTHEAST);
 
-    public void setMode(RankingType value) {
-        this.mode = value;
-    }
+		curve.getSymbol().setHoverYShift(15);
+		curve.getSymbol().setHoverXShift(-62);
 
-    public void setDataType(YAxisDataType value) {
-        this.dataType = value;
-    }
+		RankHover hoverWidget = new RankHover();
+		hoverWidget.setCssColor(Colour.PurpleColour.getColour());
+		hoverWidget.setYAxisDataType(YAxisDataType.RankingYAxisDataType);
 
-    public void drawData() {
-        if (curve != null) {
-            curve.clearPoints();
-        }
+		curve.getSymbol().setHoverWidget(hoverWidget);
 
-        ((RankHover) curve.getSymbol().getHoverWidget()).setYAxisDataType(dataType);
+		// tall brush so it touches independent of mouse y position
+		curve.getSymbol().setBrushSize(25, 700);
+		// so only point-to-mouse x-distance matters for hit testing
+		curve.getSymbol().setDistanceMetric(1, 0);
 
-        switch (dataType) {
-        case DownloadsYAxisDataType:
-            drawDownloads();
-            break;
-        case RevenueYAxisDataType:
-            drawRevenue();
-            break;
-        case RankingYAxisDataType:
-        default:
-            drawRanking();
-            break;
-        }
+		// curve.setXShift(10);
+		// curve.setYShift(-10);
 
-        setLoading(false);
+		getYAxis().setOutOfBoundsMultiplier(.1);
 
-    }
+	}
 
-    private void setYAxisRange(int minY, int maxY) {
-        int factor = (int) ((float) (maxY - minY) / 7.0f) + 1;
+	public void setMode(RankingType value) {
+		this.mode = value;
+	}
 
-        maxY = minY + (7 * factor);
+	public void setDataType(YAxisDataType value) {
+		this.dataType = value;
+	}
 
-        if (dataType == YAxisDataType.RankingYAxisDataType) {
-            getYAxis().setAxisMin(maxY);
-            getYAxis().setAxisMax(minY);
-        } else {
-            getYAxis().setAxisMin(minY);
-            getYAxis().setAxisMax(maxY);
-        }
+	public void drawData() {
+		if (curve != null) {
+			curve.clearPoints();
+		}
 
-        // int diffY = (maxY - minY) + 1;
+		((RankHover) curve.getSymbol().getHoverWidget()).setYAxisDataType(dataType);
 
-        getYAxis().setTickCount(8);
-    }
+		switch (dataType) {
+		case DownloadsYAxisDataType:
+			drawDownloads();
+			break;
+		case RevenueYAxisDataType:
+			drawRevenue();
+			break;
+		case RankingYAxisDataType:
+		default:
+			drawRanking();
+			break;
+		}
 
-    private void drawDownloads() {
-        int minY = Integer.MAX_VALUE, maxY = 0;
-        Date lastDate = null;
+		setLoading(false);
 
-        for (Rank rank : ranks) {
-            int gap = 0;
+	}
 
-            if (rank.downloads.intValue() < minY) {
-                minY = rank.downloads.intValue();
-            }
+	private void setYAxisRange(int minY, int maxY) {
+		int factor = (int) ((float) (maxY - minY) / 7.0f) + 1;
 
-            if (rank.downloads.intValue() > maxY) {
-                maxY = rank.downloads.intValue();
-            }
+		maxY = minY + (7 * factor);
 
-            if (lastDate != null && (gap = CalendarUtil.getDaysBetween(lastDate, rank.date)) > 1) {
+		if (dataType == YAxisDataType.RankingYAxisDataType) {
+			getYAxis().setAxisMin(maxY);
+			getYAxis().setAxisMax(minY);
+		} else {
+			getYAxis().setAxisMin(minY);
+			getYAxis().setAxisMax(maxY);
+		}
 
-                for (int i = 0; i < gap; i++) {
-                    CalendarUtil.addDaysToDate(lastDate, 1);
-                    curve.addPoint(lastDate.getTime(), Integer.MAX_VALUE);
-                }
+		// int diffY = (maxY - minY) + 1;
 
-            } else {
-                lastDate = CalendarUtil.copyDate(rank.date);
-                curve.addPoint(rank.date.getTime(), rank.downloads.intValue());
-            }
-        }
+		getYAxis().setTickCount(8);
+	}
 
-        setYAxisRange(minY, maxY);
-    }
+	private void drawDownloads() {
+		int minY = Integer.MAX_VALUE, maxY = 0;
+		Date lastDate = null;
 
-    private void drawRevenue() {
-        int minY = Integer.MAX_VALUE, maxY = 0;
-        Date lastDate = null;
+		for (Rank rank : ranks) {
+			int gap = 0;
 
-        for (Rank rank : ranks) {
-            int gap = 0;
+			if (rank.downloads.intValue() < minY) {
+				minY = rank.downloads.intValue();
+			}
 
-            if (rank.revenue.intValue() < minY) {
-                minY = rank.revenue.intValue();
-            }
+			if (rank.downloads.intValue() > maxY) {
+				maxY = rank.downloads.intValue();
+			}
 
-            if (rank.revenue.intValue() > maxY) {
-                maxY = rank.revenue.intValue();
-            }
+			if (lastDate != null && (gap = CalendarUtil.getDaysBetween(lastDate, rank.date)) > 1) {
 
-            if (lastDate != null && (gap = CalendarUtil.getDaysBetween(lastDate, rank.date)) > 1) {
-                for (int i = 0; i < gap; i++) {
-                    CalendarUtil.addDaysToDate(lastDate, 1);
-                    curve.addPoint(lastDate.getTime(), Integer.MAX_VALUE);
-                }
-            } else {
-                lastDate = CalendarUtil.copyDate(rank.date);
-                curve.addPoint(rank.date.getTime(), rank.revenue.floatValue());
-            }
-        }
+				for (int i = 0; i < gap; i++) {
+					CalendarUtil.addDaysToDate(lastDate, 1);
+					curve.addPoint(lastDate.getTime(), Integer.MAX_VALUE);
+				}
 
-        setYAxisRange(minY, maxY);
-    }
+			} else {
+				lastDate = CalendarUtil.copyDate(rank.date);
+				curve.addPoint(rank.date.getTime(), (showModelPredictions) ? rank.downloads.intValue() : 0);
+			}
+		}
 
-    private void drawRanking() {
-        int minY = Integer.MAX_VALUE, maxY = 0;
-        int position;
-        Date lastDate = null;
+		setYAxisRange(minY, maxY);
+	}
 
-        for (Rank rank : ranks) {
-            position = (mode == RankingType.PositionRankingType ? rank.position.intValue() : rank.grossingPosition.intValue());
+	private void drawRevenue() {
+		int minY = Integer.MAX_VALUE, maxY = 0;
+		Date lastDate = null;
 
-            if (position < minY) {
-                minY = position;
-            }
+		for (Rank rank : ranks) {
+			int gap = 0;
 
-            if (position > maxY) {
-                maxY = position;
-            }
+			if (rank.revenue.intValue() < minY) {
+				minY = rank.revenue.intValue();
+			}
 
-            int gap = 0;
-            if (lastDate != null && (gap = CalendarUtil.getDaysBetween(lastDate, rank.date)) > 1) {
-                for (int i = 0; i < gap; i++) {
-                    CalendarUtil.addDaysToDate(lastDate, 1);
-                    curve.addPoint(lastDate.getTime(), Integer.MAX_VALUE);
-                }
-            } else {
-                lastDate = CalendarUtil.copyDate(rank.date);
-                curve.addPoint(rank.date.getTime(), position);
-            }
-        }
+			if (rank.revenue.intValue() > maxY) {
+				maxY = rank.revenue.intValue();
+			}
 
-        setYAxisRange(minY, maxY);
-    }
+			if (lastDate != null && (gap = CalendarUtil.getDaysBetween(lastDate, rank.date)) > 1) {
+				for (int i = 0; i < gap; i++) {
+					CalendarUtil.addDaysToDate(lastDate, 1);
+					curve.addPoint(lastDate.getTime(), Integer.MAX_VALUE);
+				}
+			} else {
+				lastDate = CalendarUtil.copyDate(rank.date);
+				curve.addPoint(rank.date.getTime(), (showModelPredictions) ? rank.revenue.floatValue() : 0);
+			}
+		}
 
-    public void setData(Item item, List<Rank> ranks) {
+		setYAxisRange(minY, maxY);
+	}
 
-        // this.item = item;
-        this.ranks = ranks;
+	private void drawRanking() {
+		int minY = Integer.MAX_VALUE, maxY = 0;
+		int position;
+		Date lastDate = null;
 
-        if (this.ranks != null && this.ranks.size() > 0) {
-            ((RankHover) curve.getSymbol().getHoverWidget()).setCurrency(FormattingHelper.getCurrencySymbol(this.ranks.get(0).currency));
-        }
+		for (Rank rank : ranks) {
+			position = (mode == RankingType.PositionRankingType ? rank.position.intValue() : rank.grossingPosition.intValue());
 
-        drawData();
+			if (position < minY) {
+				minY = position;
+			}
 
-    }
+			if (position > maxY) {
+				maxY = position;
+			}
 
-    public void setLoading(boolean loading) {
+			int gap = 0;
+			if (lastDate != null && (gap = CalendarUtil.getDaysBetween(lastDate, rank.date)) > 1) {
+				for (int i = 0; i < gap; i++) {
+					CalendarUtil.addDaysToDate(lastDate, 1);
+					curve.addPoint(lastDate.getTime(), Integer.MAX_VALUE);
+				}
+			} else {
+				lastDate = CalendarUtil.copyDate(rank.date);
+				curve.addPoint(rank.date.getTime(), position);
+			}
+		}
 
-        if (curve != null) {
-            curve.setVisible(!loading);
+		setYAxisRange(minY, maxY);
+	}
 
-            if (loading) {
-                curve.clearPoints();
+	public void setData(Item item, List<Rank> ranks) {
 
-                getXAxis().setAxisMax(FilterController.get().getEndDate().getTime());
-                getXAxis().setAxisMin(FilterController.get().getStartDate().getTime());
+		// this.item = item;
+		this.ranks = ranks;
 
-                getYAxis().setAxisMax(1);
-                getYAxis().setAxisMin(8);
-                getYAxis().setTickCount(8);
-            }
+		if (this.ranks != null && this.ranks.size() > 0) {
+			((RankHover) curve.getSymbol().getHoverWidget()).setCurrency(FormattingHelper.getCurrencySymbol(this.ranks.get(0).currency));
+		}
 
-            update();
-        }
-    }
+		drawData();
+
+	}
+
+	public void setLoading(boolean loading) {
+
+		if (curve != null) {
+			curve.setVisible(!loading);
+
+			if (loading) {
+				curve.clearPoints();
+
+				getXAxis().setAxisMax(FilterController.get().getEndDate().getTime());
+				getXAxis().setAxisMin(FilterController.get().getStartDate().getTime());
+
+				getYAxis().setAxisMax(1);
+				getYAxis().setAxisMin(8);
+				getYAxis().setTickCount(8);
+			}
+
+			update();
+		}
+	}
 
 }
