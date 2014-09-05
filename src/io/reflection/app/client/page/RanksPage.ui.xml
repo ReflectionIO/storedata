@@ -48,6 +48,15 @@
 	.filler {
 	    height: 60px;
 	}
+	
+	.emptyTableContainer {
+	    height: 100px;
+	    padding-top: 30px;
+	}
+	
+	.emptyTableHeading {
+	    display: inline-block;
+	}
 	</ui:style>
 	<g:HTMLPanel styleName="row">
 

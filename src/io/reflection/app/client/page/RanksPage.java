@@ -82,6 +82,10 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		String green();
 
 		String silver();
+
+		String emptyTableContainer();
+
+		String emptyTableHeading();
 	}
 
 	public static final int SELECTED_TAB_PARAMETER_INDEX = 0;
@@ -129,8 +133,12 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 	private String selectedTab = OVERALL_LIST_TYPE;
 
+	private boolean showModelPredictions;
+
 	public RanksPage() {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		showModelPredictions = SessionController.get().isLoggedInUserAdmin();
 
 		createColumns();
 
@@ -139,8 +147,11 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		mTabs.put(PAID_LIST_TYPE, mPaidItem);
 		mTabs.put(GROSSING_LIST_TYPE, mGrossingItem);
 
-		mRanks.setEmptyTableWidget(new HTMLPanel("No ranking data for filter!"));
+		HTMLPanel emptyTableWidget = new HTMLPanel("<h6 class=" + style.emptyTableHeading() + ">No ranking data for filter!</h6>");
+		emptyTableWidget.setStyleName(style.emptyTableContainer());
+		mRanks.setEmptyTableWidget(emptyTableWidget);
 		mRanks.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
+
 		RankController.get().addDataDisplay(mRanks);
 	}
 
@@ -154,7 +165,9 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 		};
 
-		mPaidColumn = new Column<RanksGroup, Rank>(new AppRankCell()) {
+		AppRankCell appRankCell = new AppRankCell(showModelPredictions);
+
+		mPaidColumn = new Column<RanksGroup, Rank>(appRankCell) {
 
 			@Override
 			public Rank getValue(RanksGroup object) {
@@ -162,7 +175,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			}
 		};
 
-		mFreeColumn = new Column<RanksGroup, Rank>(new AppRankCell()) {
+		mFreeColumn = new Column<RanksGroup, Rank>(appRankCell) {
 
 			@Override
 			public Rank getValue(RanksGroup object) {
@@ -171,7 +184,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 		};
 
-		mGrossingColumn = new Column<RanksGroup, Rank>(new AppRankCell()) {
+		mGrossingColumn = new Column<RanksGroup, Rank>(appRankCell) {
 
 			@Override
 			public Rank getValue(RanksGroup object) {
@@ -510,7 +523,11 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 				if (FREE_LIST_TYPE.equals(selectedTab) || PAID_LIST_TYPE.equals(selectedTab) || GROSSING_LIST_TYPE.equals(selectedTab)) {
 					mSidePanel.setDataFilterVisible(false);
 				} else {
-					mSidePanel.setDataFilterVisible(true);
+					if (showModelPredictions) {
+						mSidePanel.setDataFilterVisible(true);
+					} else {
+						mSidePanel.setDataFilterVisible(false);
+					}
 					selectedTab = OVERALL_LIST_TYPE;
 				}
 
@@ -561,6 +578,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		if (output.status.equals(StatusType.StatusTypeSuccess)) {
 			showMorePanel.setVisible(true);
 		} else {
+			RankController.get().updateRowCount(0, true);
 			showMorePanel.setVisible(false);
 		}
 	}
@@ -574,6 +592,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	 */
 	@Override
 	public void getAllTopItemsFailure(GetAllTopItemsRequest input, Throwable caught) {
+		RankController.get().updateRowCount(0, true);
 		showMorePanel.setVisible(false);
 	}
 }

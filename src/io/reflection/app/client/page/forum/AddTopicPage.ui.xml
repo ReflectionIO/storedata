@@ -47,7 +47,7 @@
 
 			<g:HTMLPanel styleName="well {style.toolbarSpacing}">
 				<div class="row">
-					<h3 class='{style.indentHeader2}'>Add New Topic</h3>
+					<h5 class='{style.indentHeader2}'>Add New Topic</h5>
 				</div>
 			</g:HTMLPanel>
 			<div class="row" ui:field="prepareRow">

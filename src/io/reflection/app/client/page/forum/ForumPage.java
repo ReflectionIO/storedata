@@ -33,6 +33,7 @@ import java.util.Date;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.HeadingElement;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.safecss.shared.SafeStyles;
 import com.google.gwt.safecss.shared.SafeStylesUtils;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
@@ -42,10 +43,12 @@ import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TextHeader;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
@@ -81,7 +84,7 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 	@UiField ForumSummarySidePanel forumSummarySidePanel;
 	@UiField HeadingElement titleText;
 
-	@UiField InlineHyperlink newTopicButton;
+	@UiField Button newTopicButton;
 
 	private Forum selectedForum;
 
@@ -237,6 +240,8 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 
 		forumSummarySidePanel.reset();
 		titleText.setInnerHTML("");
+		
+		newTopicButton.setEnabled(false);
 	}
 
 	/*
@@ -327,11 +332,17 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 				configureTitleAndSidePanel();
 			}
 
-			if (selectedForumId != null) {
-				newTopicButton.setTargetHistoryToken(PageType.ForumTopicPageType.asTargetHistoryToken("new", selectedForumId.toString()));
-			}
+			newTopicButton.setEnabled(true);
 		}
 	}
+	
+	@UiHandler("newTopicButton")
+    void newTopicClick(ClickEvent event) {
+	    if (selectedForumId != null) {
+	        PageType.ForumTopicPageType.show("new", selectedForumId.toString()) ;
+	    }
+	}
+	
 
 	/*
 	 * (non-Javadoc)

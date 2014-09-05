@@ -35,6 +35,12 @@
 		font-weight: 600;
 	}
 	
+	.list-group-item {
+	   margin-bottom:0px;
+	   padding-bottom:0px;
+	   padding-top:7px;
+	}
+	
 	.activeForum a {
 		color: black;
 	}
