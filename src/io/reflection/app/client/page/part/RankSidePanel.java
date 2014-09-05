@@ -47,7 +47,7 @@ public class RankSidePanel extends Composite {
 	interface RankSidePanelUiBinder extends UiBinder<Widget, RankSidePanel> {}
 
 	@UiField DateBox date;
-	Date currentDate = new Date();
+	Date currentDate = FilterHelper.getToday();
 	@UiField ListBox mAppStore;
 	// @UiField ListBox mListType;
 	@UiField ListBox mCountry;
