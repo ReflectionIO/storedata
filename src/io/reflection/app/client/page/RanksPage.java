@@ -32,7 +32,6 @@ import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
-import io.reflection.app.client.page.part.LeaderboardEmptyTable;
 import io.reflection.app.client.page.part.RankSidePanel;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.datatypes.RanksGroup;
@@ -92,8 +91,6 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 	@UiField(provided = true) CellTable<RanksGroup> mRanks = new CellTable<RanksGroup>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 
-	private LeaderboardEmptyTable leaderboardEmptyTable = new LeaderboardEmptyTable();
-
 	@UiField RankSidePanel mSidePanel;
 
 	@UiField InlineHyperlink mAll;
@@ -146,7 +143,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		mTabs.put(PAID_LIST_TYPE, mPaidItem);
 		mTabs.put(GROSSING_LIST_TYPE, mGrossingItem);
 
-		mRanks.setEmptyTableWidget(leaderboardEmptyTable);
+		mRanks.setEmptyTableWidget(new HTMLPanel("No ranking data for filter!"));
 		mRanks.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 		RankController.get().addDataDisplay(mRanks);
 	}
@@ -574,7 +571,6 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		if (output.status.equals(StatusType.StatusTypeSuccess)) {
 			showMorePanel.setVisible(true);
 		} else {
-			RankController.get().updateRowCount(0, true);
 			showMorePanel.setVisible(false);
 		}
 	}
@@ -588,7 +584,6 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	 */
 	@Override
 	public void getAllTopItemsFailure(GetAllTopItemsRequest input, Throwable caught) {
-		RankController.get().updateRowCount(0, true);
 		showMorePanel.setVisible(false);
 	}
 }
