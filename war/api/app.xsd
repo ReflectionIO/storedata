@@ -536,5 +536,12 @@
             <xsd:enumeration value="private" />
         </xsd:restriction>
     </xsd:simpleType>
+    
+    <xsd:simpleType name="ModelTypeType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="correlation" />
+            <xsd:enumeration value="simple" />
+        </xsd:restriction>
+    </xsd:simpleType>
 
 </xsd:schema>
