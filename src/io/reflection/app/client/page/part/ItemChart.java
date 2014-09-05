@@ -323,7 +323,7 @@ public class ItemChart extends GChart {
 
 			} else {
 				lastDate = CalendarUtil.copyDate(rank.date);
-				curve.addPoint(rank.date.getTime(), (showModelPredictions) ? rank.downloads.intValue() : 0);
+				curve.addPoint(rank.date.getTime(), (showModelPredictions ? rank.downloads.intValue() : 0));
 			}
 		}
 
@@ -352,7 +352,7 @@ public class ItemChart extends GChart {
 				}
 			} else {
 				lastDate = CalendarUtil.copyDate(rank.date);
-				curve.addPoint(rank.date.getTime(), (showModelPredictions) ? rank.revenue.floatValue() : 0);
+				curve.addPoint(rank.date.getTime(), (showModelPredictions ? rank.revenue.floatValue() : 0));
 			}
 		}
 

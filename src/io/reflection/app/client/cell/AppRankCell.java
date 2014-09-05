@@ -24,6 +24,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.safecss.shared.SafeStyles;
 import com.google.gwt.safecss.shared.SafeStylesUtils;
+import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -42,6 +43,13 @@ public class AppRankCell extends AbstractCell<Rank> {
 	}
 
 	private boolean showModelPredictions;
+
+	interface DailyDataTemplate extends SafeHtmlTemplates {
+		DailyDataTemplate INSTANCE = GWT.create(DailyDataTemplate.class);
+
+		@Template("<span class=\"{0}\" style=\"{1}\"></span>{2} {3}")
+		SafeHtml dailyData(String icon, String style, String currency, String value);
+	}
 
 	public AppRankCell(boolean showModelPredictions) {
 		this.showModelPredictions = showModelPredictions;
@@ -70,14 +78,13 @@ public class AppRankCell extends AbstractCell<Rank> {
 
 		if (showModelPredictions) {
 			if (REVENUE_DAILY_DATA_TYPE.equals(dailyDataType)) {
-				dailyData = SafeHtmlUtils.fromSafeConstant("<span class=\"icon-dollar\" style=\"padding-right: 6px;\"></span>"
-						+ FormattingHelper.getCurrencySymbol(value.currency) + " " + value.revenue);
+				dailyData = DailyDataTemplate.INSTANCE.dailyData("icon-dollar", "padding-right: 6px", FormattingHelper.getCurrencySymbol(value.currency),
+						value.revenue.toString());
 			} else {
-				dailyData = SafeHtmlUtils.fromSafeConstant("<span class=\"icon-download-alt\" style=\"padding-right: 6px;\"></span>"
-						+ value.downloads.toString());
+				dailyData = DailyDataTemplate.INSTANCE.dailyData("icon-download-alt", "padding-right: 6px", "", value.downloads.toString());
 			}
 		} else {
-			dailyData = SafeHtmlUtils.fromSafeConstant("");
+			dailyData = SafeHtmlUtils.EMPTY_SAFE_HTML;
 		}
 
 		Stack s = NavigationController.get().getStack();
