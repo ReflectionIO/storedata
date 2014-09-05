@@ -82,6 +82,10 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		String green();
 
 		String silver();
+
+		String emptyTableContainer();
+
+		String emptyTableHeading();
 	}
 
 	public static final int SELECTED_TAB_PARAMETER_INDEX = 0;
@@ -143,8 +147,11 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		mTabs.put(PAID_LIST_TYPE, mPaidItem);
 		mTabs.put(GROSSING_LIST_TYPE, mGrossingItem);
 
-		mRanks.setEmptyTableWidget(new HTMLPanel("No ranking data for filter!"));
+		HTMLPanel emptyTableWidget = new HTMLPanel("<h6 class=" + style.emptyTableHeading() + ">No ranking data for filter!</h6>");
+		emptyTableWidget.setStyleName(style.emptyTableContainer());
+		mRanks.setEmptyTableWidget(emptyTableWidget);
 		mRanks.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
+
 		RankController.get().addDataDisplay(mRanks);
 	}
 
@@ -571,6 +578,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		if (output.status.equals(StatusType.StatusTypeSuccess)) {
 			showMorePanel.setVisible(true);
 		} else {
+			RankController.get().updateRowCount(0, true);
 			showMorePanel.setVisible(false);
 		}
 	}
@@ -584,6 +592,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	 */
 	@Override
 	public void getAllTopItemsFailure(GetAllTopItemsRequest input, Throwable caught) {
+		RankController.get().updateRowCount(0, true);
 		showMorePanel.setVisible(false);
 	}
 }
