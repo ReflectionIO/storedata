@@ -206,14 +206,9 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 								&& mSession.token.equals(input.session.token)) {
 
 							mLoggedInUser.roles = output.roles;
-							mLoggedInUser.permissions = output.permissions;
 
 							if (mRoleCache == null) {
 								mRoleCache = new HashMap<Long, Role>();
-							}
-
-							if (mPermissionCache == null) {
-								mPermissionCache = new HashMap<String, Permission>();
 							}
 
 							// Add retrieved roles into cache
@@ -413,11 +408,14 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	 * @param p
 	 */
 	public void addPermissionToLookup(Permission p) {
+		if (mPermissionCache == null) {
+			mPermissionCache = new HashMap<String, Permission>();
+		}
+		mPermissionCache.put(p.code, p);
 		if (mLoggedInUser.permissions == null) {
 			mLoggedInUser.permissions = new ArrayList<Permission>();
 		}
 		mLoggedInUser.permissions.add(p);
-		mPermissionCache.put(p.code, p);
 	}
 
 	/**

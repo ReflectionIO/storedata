@@ -129,8 +129,12 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 	private String selectedTab = OVERALL_LIST_TYPE;
 
+	private boolean showModelPredictions;
+
 	public RanksPage() {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		showModelPredictions = SessionController.get().isLoggedInUserAdmin();
 
 		createColumns();
 
@@ -154,7 +158,9 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 		};
 
-		mPaidColumn = new Column<RanksGroup, Rank>(new AppRankCell()) {
+		AppRankCell appRankCell = new AppRankCell(showModelPredictions);
+
+		mPaidColumn = new Column<RanksGroup, Rank>(appRankCell) {
 
 			@Override
 			public Rank getValue(RanksGroup object) {
@@ -162,7 +168,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			}
 		};
 
-		mFreeColumn = new Column<RanksGroup, Rank>(new AppRankCell()) {
+		mFreeColumn = new Column<RanksGroup, Rank>(appRankCell) {
 
 			@Override
 			public Rank getValue(RanksGroup object) {
@@ -171,7 +177,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 		};
 
-		mGrossingColumn = new Column<RanksGroup, Rank>(new AppRankCell()) {
+		mGrossingColumn = new Column<RanksGroup, Rank>(appRankCell) {
 
 			@Override
 			public Rank getValue(RanksGroup object) {
@@ -510,7 +516,11 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 				if (FREE_LIST_TYPE.equals(selectedTab) || PAID_LIST_TYPE.equals(selectedTab) || GROSSING_LIST_TYPE.equals(selectedTab)) {
 					mSidePanel.setDataFilterVisible(false);
 				} else {
-					mSidePanel.setDataFilterVisible(true);
+					if (showModelPredictions) {
+						mSidePanel.setDataFilterVisible(true);
+					} else {
+						mSidePanel.setDataFilterVisible(false);
+					}
 					selectedTab = OVERALL_LIST_TYPE;
 				}
 
