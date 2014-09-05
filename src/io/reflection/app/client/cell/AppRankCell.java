@@ -41,6 +41,12 @@ public class AppRankCell extends AbstractCell<Rank> {
 		void render(SafeHtmlBuilder sb, String name, String creatorName, SafeUri smallImage, SafeUri link, SafeHtml dailyData, String displayDailyData);
 	}
 
+	private boolean showModelPredictions;
+
+	public AppRankCell(boolean showModelPredictions) {
+		this.showModelPredictions = showModelPredictions;
+	}
+
 	private static AppRankCellRenderer RENDERER = GWT.create(AppRankCellRenderer.class);
 
 	@Override
@@ -62,11 +68,16 @@ public class AppRankCell extends AbstractCell<Rank> {
 
 		SafeHtml dailyData;
 
-		if (REVENUE_DAILY_DATA_TYPE.equals(dailyDataType)) {
-			dailyData = SafeHtmlUtils.fromSafeConstant("<span class=\"icon-dollar\" style=\"padding-right: 6px;\"></span>"
-					+ FormattingHelper.getCurrencySymbol(value.currency) + " " + value.revenue);
+		if (showModelPredictions) {
+			if (REVENUE_DAILY_DATA_TYPE.equals(dailyDataType)) {
+				dailyData = SafeHtmlUtils.fromSafeConstant("<span class=\"icon-dollar\" style=\"padding-right: 6px;\"></span>"
+						+ FormattingHelper.getCurrencySymbol(value.currency) + " " + value.revenue);
+			} else {
+				dailyData = SafeHtmlUtils.fromSafeConstant("<span class=\"icon-download-alt\" style=\"padding-right: 6px;\"></span>"
+						+ value.downloads.toString());
+			}
 		} else {
-			dailyData = SafeHtmlUtils.fromSafeConstant("<span class=\"icon-download-alt\" style=\"padding-right: 6px;\"></span>" + value.downloads.toString());
+			dailyData = SafeHtmlUtils.fromSafeConstant("");
 		}
 
 		Stack s = NavigationController.get().getStack();
