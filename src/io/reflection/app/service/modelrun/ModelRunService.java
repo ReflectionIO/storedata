@@ -207,8 +207,8 @@ final class ModelRunService implements IModelRunService {
 		Long code = FeedFetchServiceProvider.provide().getGatherCode(country, store, start, end);
 
 		String getModelRunQuery = String
-				.format("SELECT * FROM `modelrun` WHERE CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`store` AS BINARY)=CAST('%s' AS BINARY) AND `code2`=%d `deleted`='n' ORDER BY `id` DESC LIMIT 1",
-						addslashes(country.a2Code), addslashes(store.a3Code), code.longValue());
+				.format("SELECT * FROM `modelrun` WHERE CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`store` AS BINARY)=CAST('%s' AS BINARY) AND `form`='%s' AND `code2`=%d `deleted`='n' ORDER BY `id` DESC LIMIT 1",
+						addslashes(country.a2Code), addslashes(store.a3Code), form.toString(), code.longValue());
 
 		Connection modelRunConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeModelRun.toString());
 
@@ -236,11 +236,7 @@ final class ModelRunService implements IModelRunService {
 	 */
 	@Override
 	public List<ModelRun> getDateModelRunBatch(Country country, Store store, FormType form, Collection<Date> dates) throws DataAccessException {
-		List<ModelRun> modelRuns = new ArrayList<ModelRun>();
-		
-		
-		
-		return modelRuns;
+		return new ArrayList<ModelRun>();
 	}
 
 }
