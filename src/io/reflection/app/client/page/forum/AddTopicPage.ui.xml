@@ -42,8 +42,8 @@
 	}
 	
 	.maxWidth {
-           max-width:75em;
-    }
+		max-width: 75em;
+	}
 	</ui:style>
 	<g:HTMLPanel styleName="row">
 		<pp:ForumSummarySidePanel ui:field="forumSummarySidePanel" styleName="sidepanel col-md-2 well" />
