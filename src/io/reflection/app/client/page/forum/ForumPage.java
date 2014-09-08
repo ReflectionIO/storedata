@@ -119,9 +119,7 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
                 } else if (object.heat != null && object.heat > 10) {
 					properties += "<i class=\"glyphicon glyphicon-fire\"></i> ";
 				}
-
 				
-
 				int numPages = (int) Math.ceil((double) (object.numberOfReplies + 1) / ServiceConstants.SHORT_STEP_VALUE);
 
 				// generate page links
@@ -183,19 +181,19 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 		};
 
 		SafeHtmlHeader titleHeader = new SafeHtmlHeader(SafeHtmlUtils.fromSafeConstant("<span style='margin-left:37px'>Topic</span>"));
-		titleHeader.setHeaderStyleNames("col-sm-3");
+		titleHeader.setHeaderStyleNames("col-sm-4");
 		topics.addColumn(titleColumn, titleHeader);
 
 		TextHeader postHeader = new TextHeader("Posts");
-		postHeader.setHeaderStyleNames("col-sm-3");
+		postHeader.setHeaderStyleNames("col-sm-2");
 		topics.addColumn(postsColumn, postHeader);
 
 		TextHeader lastPosterHeader = new TextHeader("Last Poster");
-		lastPosterHeader.setHeaderStyleNames("col-sm-3");
+		lastPosterHeader.setHeaderStyleNames("col-sm-2");
 		topics.addColumn(lastPosterColumn, lastPosterHeader);
 
 		TextHeader lastPostedHeader = new TextHeader("");
-		lastPostedHeader.setHeaderStyleNames("col-sm-3");
+		lastPostedHeader.setHeaderStyleNames("col-sm-2");
 		topics.addColumn(lastPostedColumn, lastPostedHeader);
 	}
 
