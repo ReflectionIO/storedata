@@ -64,7 +64,7 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 	interface TopicTemplate extends SafeHtmlTemplates {
 		TopicTemplate INSTANCE = GWT.create(TopicTemplate.class);
 
-		@SafeHtmlTemplates.Template("<div>{0} <a href=\"{1}\" style=\"{2}\">{3}</a></div><div>{4} {5}</div>")
+		@SafeHtmlTemplates.Template("<div style='float:left;width:30px;margin-right:10px;'>{0}</div><div style='float:left;'><a href=\"{1}\" style=\"{2}\">{3}</a><div>{4} {5}</div></div>")
 		SafeHtml topicLayout(SafeHtml properties, String link, SafeStyles styles, SafeHtml title, SafeHtml pages, SafeHtml pageLinks);
 
 		@SafeHtmlTemplates.Template("<a class='{2}' href='{0}'>{1}</a>")
@@ -103,6 +103,7 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 	}
 
 	private void createColumns() {
+	
 		Column<Topic, SafeHtml> titleColumn = new Column<Topic, SafeHtml>(new SafeHtmlCell()) {
 
 			@Override
@@ -112,15 +113,13 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 
 				if (object.locked != null && object.locked.booleanValue()) {
 					properties += "<i class=\"glyphicon glyphicon-lock\"></i> ";
-				}
-
-				if (object.heat != null && object.heat > 10) {
+				} else if (object.sticky != null && object.sticky.booleanValue()) {
+                    properties += "<i class=\"glyphicon glyphicon-pushpin\"></i> ";
+                } else if (object.heat != null && object.heat > 10) {
 					properties += "<i class=\"glyphicon glyphicon-fire\"></i> ";
 				}
 
-				if (object.sticky != null && object.sticky.booleanValue()) {
-					properties += "<i class=\"glyphicon glyphicon-pushpin\"></i> ";
-				}
+				
 
 				int numPages = (int) Math.ceil((double) (object.numberOfReplies + 1) / ServiceConstants.SHORT_STEP_VALUE);
 
