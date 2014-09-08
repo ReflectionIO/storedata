@@ -46,6 +46,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.cellview.client.SafeHtmlHeader;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.ui.Button;
@@ -64,7 +65,7 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 	interface TopicTemplate extends SafeHtmlTemplates {
 		TopicTemplate INSTANCE = GWT.create(TopicTemplate.class);
 
-		@SafeHtmlTemplates.Template("<div style='float:left;width:30px;margin-right:10px;'>{0}</div><div style='float:left;'><a href=\"{1}\" style=\"{2}\">{3}</a><div>{4} {5}</div></div>")
+		@SafeHtmlTemplates.Template("<div style='float:left;width:30px;height:5px;margin-right:10px;'>{0}</div><div style='float:left;'><a href=\"{1}\" style=\"{2}\">{3}</a><div>{4} {5}</div></div>")
 		SafeHtml topicLayout(SafeHtml properties, String link, SafeStyles styles, SafeHtml title, SafeHtml pages, SafeHtml pageLinks);
 
 		@SafeHtmlTemplates.Template("<a class='{2}' href='{0}'>{1}</a>")
@@ -181,7 +182,7 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 			}
 		};
 
-		TextHeader titleHeader = new TextHeader("Topic");
+		SafeHtmlHeader titleHeader = new SafeHtmlHeader(SafeHtmlUtils.fromSafeConstant("<span style='margin-left:37px'>Topic</span>"));
 		titleHeader.setHeaderStyleNames("col-sm-3");
 		topics.addColumn(titleColumn, titleHeader);
 
