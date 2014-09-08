@@ -10,16 +10,12 @@ package io.reflection.app.modellers;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.collectors.CollectorIOS;
 import io.reflection.app.datatypes.shared.FormType;
-import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.helpers.QueueHelper;
 
-import java.util.logging.Level;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.logging.Logger;
 
-import com.google.appengine.api.taskqueue.Queue;
-import com.google.appengine.api.taskqueue.QueueFactory;
-import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
-import com.google.appengine.api.taskqueue.TransientFailureException;
 
 /**
  * @author billy1380
@@ -31,7 +27,7 @@ public class ModellerIOS
 
 	private static final Logger LOG = Logger.getLogger(ModellerIOS.class.getName());
 
-	private static final String STORE = "ios";
+	protected static final String STORE = "ios";
 
 	/*
 	 * (non-Javadoc)
@@ -40,43 +36,8 @@ public class ModellerIOS
 	 */
 	@Override
 	public void enqueue(String country, String type, Long code) {
-		if (LOG.isLoggable(GaeLevel.TRACE)) {
-			LOG.log(GaeLevel.TRACE, "Entering...");
-		}
-
-		try {
-			Queue queue = QueueFactory.getQueue("model");
-
-			TaskOptions options = TaskOptions.Builder.withMethod(Method.PULL);
-			options.param("store", STORE);
-			options.param("country", country);
-			options.param("type", type);
-			options.param("code", code.toString());
-
-			try {
-				queue.add(options);
-			} catch (TransientFailureException ex) {
-
-				if (LOG.isLoggable(Level.WARNING)) {
-					LOG.warning(String.format("Could not queue a message because of [%s] - will retry it once", ex.toString()));
-				}
-
-				// retry once
-				try {
-					queue.add(options);
-				} catch (TransientFailureException reEx) {
-					if (LOG.isLoggable(Level.SEVERE)) {
-						LOG.log(Level.SEVERE,
-								String.format("Retry of with payload [%s] failed while adding to queue [%s] twice", options.toString(), queue.getQueueName()),
-								reEx);
-					}
-				}
-			}
-		} finally {
-			if (LOG.isLoggable(GaeLevel.TRACE)) {
-				LOG.log(GaeLevel.TRACE, "Exiting...");
-			}
-		}
+		QueueHelper.enqueue("model", Method.PULL, new SimpleEntry<String, String>("store", STORE), new SimpleEntry<String, String>("country", country),
+				new SimpleEntry<String, String>("type", type), new SimpleEntry<String, String>("code", code.toString()));
 	}
 
 	/*

@@ -7,6 +7,7 @@
 //
 package io.reflection.app.modellers;
 
+
 /**
  * @author billy1380
  * 
@@ -21,8 +22,7 @@ public class ModellerFactory {
 		Modeller modeller = null;
 
 		if ("ios".equals(store.toLowerCase())) {
-			// ios store
-			modeller = new ModellerIOS();
+			modeller = new SimpleModellerIOS();
 		} else if ("azn".equals(store.toLowerCase())) {
 			// amazon store
 		} else if ("gpl".equals(store.toLowerCase())) {
