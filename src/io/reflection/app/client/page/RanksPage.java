@@ -523,11 +523,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 				if (FREE_LIST_TYPE.equals(selectedTab) || PAID_LIST_TYPE.equals(selectedTab) || GROSSING_LIST_TYPE.equals(selectedTab)) {
 					mSidePanel.setDataFilterVisible(false);
 				} else {
-					if (showModelPredictions) {
-						mSidePanel.setDataFilterVisible(true);
-					} else {
-						mSidePanel.setDataFilterVisible(false);
-					}
+					mSidePanel.setDataFilterVisible(true);
 					selectedTab = OVERALL_LIST_TYPE;
 				}
 
