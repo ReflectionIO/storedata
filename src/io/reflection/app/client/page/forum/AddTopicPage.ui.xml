@@ -40,6 +40,10 @@
 		margin-bottom: 30px;
 		line-height: 1.1;
 	}
+	
+	.maxWidth {
+		max-width: 75em;
+	}
 	</ui:style>
 	<g:HTMLPanel styleName="row">
 		<pp:ForumSummarySidePanel ui:field="forumSummarySidePanel" styleName="sidepanel col-md-2 well" />
@@ -50,7 +54,7 @@
 					<h5 class='{style.indentHeader2}'>Add New Topic</h5>
 				</div>
 			</g:HTMLPanel>
-			<div class="row" ui:field="prepareRow">
+			<div class="row {style.maxWidth}" ui:field="prepareRow">
 				<h2 class="{style.indentHeader}">Add a new Topic</h2>
 				<g:FormPanel styleName="form">
 
