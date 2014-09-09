@@ -102,6 +102,7 @@ import io.reflection.app.service.modelrun.ModelRunServiceProvider;
 import io.reflection.app.service.permission.IPermissionService;
 import io.reflection.app.service.permission.PermissionServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
+import io.reflection.app.service.role.IRoleService;
 import io.reflection.app.service.role.RoleServiceProvider;
 import io.reflection.app.service.sale.SaleServiceProvider;
 import io.reflection.app.service.session.ISessionService;
@@ -849,13 +850,17 @@ public final class Core extends ActionHandler {
 
 			boolean hasDataAccount = UserServiceProvider.provide().hasDataAccount(input.session.user, input.linkedAccount).booleanValue();
 
-			if (hasDataAccount) {
+			Role adminRole = new Role();
+			adminRole.id = IRoleService.ADMIN_ROLE_ID;
+			boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, adminRole);
+
+			if (hasDataAccount || isAdmin) {
 				User user = UserServiceProvider.provide().getDataAccountOwner(input.linkedAccount);
 
 				if (user != null && user.id.longValue() == input.session.user.id.longValue()) {
 					UserServiceProvider.provide().deleteAllUsersDataAccount(input.linkedAccount);
 
-					if (!UserServiceProvider.provide().hasDataAccounts(user)) {
+					if (!UserServiceProvider.provide().hasDataAccounts(user) && !isAdmin) {
 						Permission hlaPermission = new Permission();
 						hlaPermission.id = IPermissionService.HAS_LINKED_ACCOUNT_PERMISSION_ID;
 						UserServiceProvider.provide().revokePermission(user, hlaPermission);
@@ -1110,10 +1115,15 @@ public final class Core extends ActionHandler {
 
 			output.account.source = input.source;
 
+			Role adminRole = new Role();
+			adminRole.id = IRoleService.ADMIN_ROLE_ID;
+			boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, adminRole);
+
 			Permission hlaPermission = new Permission();
 			hlaPermission.id = IPermissionService.HAS_LINKED_ACCOUNT_PERMISSION_ID;
 			boolean hasPermission = UserServiceProvider.provide().hasPermission(input.session.user, hlaPermission);
-			if (!hasPermission) {
+
+			if (!hasPermission && !isAdmin) {
 				UserServiceProvider.provide().assignPermission(input.session.user, hlaPermission);
 			}
 
