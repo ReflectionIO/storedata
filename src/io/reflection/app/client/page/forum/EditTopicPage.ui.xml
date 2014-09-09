@@ -3,25 +3,32 @@
 	xmlns:p="urn:import:io.reflection.app.client.part.text" xmlns:a="urn:import:io.reflection.app.client.part" xmlns:pp="urn:import:io.reflection.app.client.page.forum.part">
 
 	<ui:style>
-
-		.important {
+	.important {
 		font-weight: bold;
-		}
-
-		.textArea {
+	}
+	
+	.textArea {
 		height: 200px;
-		}
-
-		.toolbarSpacing {
+	}
+	
+	.toolbarSpacing {
 		padding-top: 10px;
-		margin-top:30px;
+		margin-top: 30px;
 		padding-bottom: 10px;
-		}
-
-		.header2 {
-		margin-top:0px;
-		margin-bottom:0px;
-		}
+	}
+	
+	.maxWidth {
+		max-width: 75em;
+	}
+	
+	.header2 {
+		margin-top: 0px;
+		margin-bottom: 0px;
+	}
+	
+	.indentHeader {
+		margin-left: 0px;
+	}
 	</ui:style>
 	<g:HTMLPanel styleName="row">
 		<pp:ForumSummarySidePanel ui:field="forumSummarySidePanel" styleName="sidepanel col-md-2 well" />
@@ -31,15 +38,16 @@
 					<h5 class="col-sm-2 {style.header2}">Edit Post</h5>
 				</div>
 			</g:HTMLPanel>
-			<g:FormPanel styleName="col-sm-10 col-sm-offset-1" ui:field="editForm">
+			<g:FormPanel styleName="col-sm-10 col-sm-offset-1 {style.maxWidth}" ui:field="editForm">
 				<g:HTMLPanel>
+					<h2 class="{style.indentHeader}">Edit Topic</h2>
 					<g:HTMLPanel ui:field="editGroup" styleName="form-group">
 						<label>Content</label>
 						<p:MarkdownEditor ui:field="editText" />
 						<g:HTMLPanel styleName="noteDetail" ui:field="editNote" visible="false" />
 					</g:HTMLPanel>
 
-					<g:Button ui:field="submit" styleName="btn btn-lg btn-primary col-sm-4 col-sm-offset-4">
+					<g:Button ui:field="submit" styleName="btn btn-primary">
 						Submit
 					</g:Button>
 
