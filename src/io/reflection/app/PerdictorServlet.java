@@ -59,13 +59,21 @@ public class PerdictorServlet extends ContextAwareServlet {
 		String store = REQUEST.get().getParameter("store");
 		String type = REQUEST.get().getParameter("type");
 		String codeParam = REQUEST.get().getParameter("code");
+		String categoryIdParam = REQUEST.get().getParameter("categoryid");
+		String modelType = REQUEST.get().getParameter("modeltype");
+
+		if (LOG.isLoggable(GaeLevel.TRACE)) {
+			LOG.log(GaeLevel.TRACE, "Running predict for model type [" + modelType + "]");
+		}
+
 		Long code = codeParam == null ? null : Long.valueOf(codeParam);
+		Long categoryId = categoryIdParam == null ? null : Long.valueOf(categoryIdParam);
 
 		Predictor perdictor = PredictorFactory.getPredictorForStore(store);
 
 		if (perdictor != null) {
 			try {
-				perdictor.predictRevenueAndDownloads(country, type, code);
+				perdictor.predictRevenueAndDownloads(country, type, code, categoryId);
 			} catch (DataAccessException e) {
 				throw new RuntimeException(e);
 			}

@@ -14,6 +14,7 @@ import io.reflection.app.api.core.shared.call.event.GetStoresEventHandler.GetSto
 import io.reflection.app.api.core.shared.call.event.GetStoresEventHandler.GetStoresSuccess;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Store;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.HashMap;
 import java.util.List;
@@ -32,8 +33,6 @@ public class StoreController implements ServiceConstants {
 
 	public static final String IPHONE_A3_CODE = "iph";
 	public static final String IPAD_A3_CODE = "ipa";
-
-	public static final String IOS_A3_CODE = "ios";
 
 	private static StoreController mOne = null;
 
@@ -71,7 +70,7 @@ public class StoreController implements ServiceConstants {
 
 						Store iosStore = null;
 						for (Store store : output.stores) {
-							if (IOS_A3_CODE.equals(store.a3Code)) {
+							if (DataTypeHelper.IOS_STORE_A3.equals(store.a3Code)) {
 								iosStore = store;
 							}
 
@@ -101,8 +100,8 @@ public class StoreController implements ServiceConstants {
 
 							output.stores.add(iphone);
 
-							mStoreLookup.put(ipad.a3Code, mStoreLookup.get(IOS_A3_CODE));
-							mStoreLookup.put(iphone.a3Code, mStoreLookup.get(IOS_A3_CODE));
+							mStoreLookup.put(ipad.a3Code, mStoreLookup.get(DataTypeHelper.IOS_STORE_A3));
+							mStoreLookup.put(iphone.a3Code, mStoreLookup.get(DataTypeHelper.IOS_STORE_A3));
 
 							output.stores.remove(iosStore);
 						}
@@ -130,7 +129,7 @@ public class StoreController implements ServiceConstants {
 			store = new Store();
 
 			if (IPAD_A3_CODE.equalsIgnoreCase(code) || IPHONE_A3_CODE.equalsIgnoreCase(code)) {
-				store.a3Code = IOS_A3_CODE;
+				store.a3Code = DataTypeHelper.IOS_STORE_A3;
 			} else {
 				store.a3Code = code;
 			}
@@ -146,7 +145,7 @@ public class StoreController implements ServiceConstants {
 	public SafeUri getExternalUri(Item item) {
 		SafeUri externalUri = null;
 
-		if (IOS_A3_CODE.equals(item.source)) {
+		if (DataTypeHelper.IOS_STORE_A3.equals(item.source)) {
 			externalUri = UriUtils.fromString("http://itunes.apple.com/app/id" + item.internalId);
 		}
 

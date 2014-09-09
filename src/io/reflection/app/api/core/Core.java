@@ -1204,7 +1204,7 @@ public final class Core extends ActionHandler {
 	// private String getFreeListName(Store store, String type) {
 	// String listName = null;
 	//
-	// if ("ios".equalsIgnoreCase(store.a3Code)) {
+	// if (DataTypeHelper.IOS_STORE_A3.equalsIgnoreCase(store.a3Code)) {
 	// if ("ipad".equalsIgnoreCase(type)) {
 	// listName = CollectorIOS.TOP_FREE_IPAD_APPS;
 	// } else {
@@ -1218,7 +1218,7 @@ public final class Core extends ActionHandler {
 	// private String getPaidListName(Store store, String type) {
 	// String listName = null;
 	//
-	// if ("ios".equalsIgnoreCase(store.a3Code)) {
+	// if (DataTypeHelper.IOS_STORE_A3.equalsIgnoreCase(store.a3Code)) {
 	// if ("ipad".equalsIgnoreCase(type)) {
 	// listName = CollectorIOS.TOP_PAID_IPAD_APPS;
 	// } else {

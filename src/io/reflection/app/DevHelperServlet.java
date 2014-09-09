@@ -18,6 +18,7 @@ import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.setup.CountriesInstaller;
 import io.reflection.app.setup.StoresInstaller;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -183,7 +184,7 @@ public class DevHelperServlet extends HttpServlet {
 				success = true;
 			} else if ("ingest".equalsIgnoreCase(action)) {
 
-				Ingestor i = IngestorFactory.getIngestorForStore("ios");
+				Ingestor i = IngestorFactory.getIngestorForStore(DataTypeHelper.IOS_STORE_A3);
 				i.enqueue(Arrays.asList(Long.valueOf(itemId)));
 
 				success = true;
@@ -194,7 +195,7 @@ public class DevHelperServlet extends HttpServlet {
 				success = true;
 			} else if ("ingestmulti".equalsIgnoreCase(action)) {
 
-				Ingestor i = IngestorFactory.getIngestorForStore("ios");
+				Ingestor i = IngestorFactory.getIngestorForStore(DataTypeHelper.IOS_STORE_A3);
 
 				String[] feedIdsArray = feedIds.split(",");
 
@@ -384,7 +385,7 @@ public class DevHelperServlet extends HttpServlet {
 				buffer.append("<table>");
 				buffer.append("<tr><th>Appliation</th><th>top 10</th><th>top 25</th><th>top 50</th><th>top 100</th><th>top 200</th><th>total</th></tr>");
 
-				Query<ItemRankSummary> query = ofy().load().type(ItemRankSummary.class).filter("type =", feedType).filter("source =", "ios");
+				Query<ItemRankSummary> query = ofy().load().type(ItemRankSummary.class).filter("type =", feedType).filter("source =", DataTypeHelper.IOS_STORE_A3);
 
 				if (rankEndValue < 10) {
 					query = query.filter("numberOfTimesRankedTop10 >", Integer.valueOf(0)).order("numberOfTimesRankedTop10");
@@ -477,7 +478,7 @@ public class DevHelperServlet extends HttpServlet {
 
 				List<Long> codes = new ArrayList<Long>();
 
-				Query<Rank> query = ofy().load().type(Rank.class).filter("source =", "ios").filter("type =", CollectorIOS.TOP_PAID_APPS)
+				Query<Rank> query = ofy().load().type(Rank.class).filter("source =", DataTypeHelper.IOS_STORE_A3).filter("type =", CollectorIOS.TOP_PAID_APPS)
 						.filter("date >", cal.getTime()).filter("itemId = ", itemId).offset(Integer.parseInt(start)).limit(Integer.parseInt(count));
 
 				for (Rank rank : query.iterable()) {
@@ -488,7 +489,7 @@ public class DevHelperServlet extends HttpServlet {
 					}
 				}
 
-				query = ofy().load().type(Rank.class).filter("source =", "ios").filter("type =", CollectorIOS.TOP_GROSSING_APPS)
+				query = ofy().load().type(Rank.class).filter("source =", DataTypeHelper.IOS_STORE_A3).filter("type =", CollectorIOS.TOP_GROSSING_APPS)
 						.filter("date >", cal.getTime()).filter("itemId = ", itemId).offset(Integer.parseInt(start)).limit(Integer.parseInt(count));
 
 				for (Rank rank : query.iterable()) {
@@ -540,21 +541,21 @@ public class DevHelperServlet extends HttpServlet {
 				// int rankStartValue = Integer.parseInt(rankStart);
 				// int rankEndValue = RANK_END_200_PLUS.equals(rankEnd) ? Integer.MAX_VALUE : Integer.parseInt(rankEnd);
 				//
-				// redirectToPipelineStatus(req, resp, startStatsJob(5, 2, "ios", "us", feedType, rankStartValue, rankEndValue));
+				// redirectToPipelineStatus(req, resp, startStatsJob(5, 2, DataTypeHelper.IOS_STORE_A3, "us", feedType, rankStartValue, rankEndValue));
 				//
 				success = true;
 			} else if ("countranksmr".equalsIgnoreCase(action)) {
-				// redirectToPipelineStatus(req, resp, startRankCountJob(5, 2, "ios", "us", feedType));
+				// redirectToPipelineStatus(req, resp, startRankCountJob(5, 2, DataTypeHelper.IOS_STORE_A3, "us", feedType));
 
 				success = true;
 			} else if ("createcsvofpaidranks".equalsIgnoreCase(action)) {
 				// redirectToPipelineStatus(req, resp,
-				// startCreateCsvBlobRank(5, 1, CollectorIOS.TOP_PAID_APPS, CollectorIOS.TOP_GROSSING_APPS, "ios", "us", feedType));
+				// startCreateCsvBlobRank(5, 1, CollectorIOS.TOP_PAID_APPS, CollectorIOS.TOP_GROSSING_APPS, DataTypeHelper.IOS_STORE_A3, "us", feedType));
 
 				success = true;
 			} else if ("createcsvoffreeranks".equalsIgnoreCase(action)) {
 				// redirectToPipelineStatus(req, resp,
-				// startCreateCsvBlobRank(5, 1, CollectorIOS.TOP_FREE_APPS, CollectorIOS.TOP_GROSSING_APPS, "ios", "us", feedType));
+				// startCreateCsvBlobRank(5, 1, CollectorIOS.TOP_FREE_APPS, CollectorIOS.TOP_GROSSING_APPS, DataTypeHelper.IOS_STORE_A3, "us", feedType));
 
 				success = true;
 			} else if ("addcountries".equalsIgnoreCase(action)) {
@@ -575,7 +576,7 @@ public class DevHelperServlet extends HttpServlet {
 
 				Store store;
 				try {
-					store = StoreServiceProvider.provide().getA3CodeStore("ios");
+					store = StoreServiceProvider.provide().getA3CodeStore(DataTypeHelper.IOS_STORE_A3);
 				} catch (DataAccessException e) {
 					throw new RuntimeException(e);
 				}
@@ -594,7 +595,7 @@ public class DevHelperServlet extends HttpServlet {
 				success = true;
 
 			} else if ("cacheranks".equalsIgnoreCase(action)) {
-				CallServiceMethodServlet.enqueueGetAllRanks("us", "ios", Long.valueOf(24), CollectorIOS.TOP_GROSSING_APPS, new Date());
+				CallServiceMethodServlet.enqueueGetAllRanks("us", DataTypeHelper.IOS_STORE_A3, Long.valueOf(24), CollectorIOS.TOP_GROSSING_APPS, new Date());
 
 				success = true;
 			} else {

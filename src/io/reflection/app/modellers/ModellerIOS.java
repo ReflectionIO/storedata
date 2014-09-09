@@ -10,7 +10,9 @@ package io.reflection.app.modellers;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.collectors.CollectorIOS;
 import io.reflection.app.datatypes.shared.FormType;
+import io.reflection.app.datatypes.shared.ModelTypeType;
 import io.reflection.app.helpers.QueueHelper;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.logging.Logger;
@@ -27,8 +29,6 @@ public class ModellerIOS
 
 	private static final Logger LOG = Logger.getLogger(ModellerIOS.class.getName());
 
-	protected static final String STORE = "ios";
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -36,8 +36,8 @@ public class ModellerIOS
 	 */
 	@Override
 	public void enqueue(String country, String type, Long code) {
-		QueueHelper.enqueue("model", Method.PULL, new SimpleEntry<String, String>("store", STORE), new SimpleEntry<String, String>("country", country),
-				new SimpleEntry<String, String>("type", type), new SimpleEntry<String, String>("code", code.toString()));
+		QueueHelper.enqueue("model", Method.PULL, new SimpleEntry<String, String>("store", DataTypeHelper.IOS_STORE_A3), new SimpleEntry<String, String>(
+				"country", country), new SimpleEntry<String, String>("type", type), new SimpleEntry<String, String>("code", code.toString()));
 	}
 
 	/*
@@ -64,14 +64,14 @@ public class ModellerIOS
 		// mEngine.eval("Napps  <- 40");
 		// mEngine.eval("Dt.in <- 50000");
 		//
-		// Collector collector = CollectorFactory.getCollectorForStore(STORE);
+		// Collector collector = CollectorFactory.getCollectorForStore(IOS_STORE_A3);
 		// List<String> listTypes = new ArrayList<String>();
 		// listTypes.addAll(collector.getCounterpartTypes(listType));
 		// listTypes.add(addslashes(listType));
 		//
-		// put(STORE, country, listTypes, date, "`r`.`price`=0", "free.raw");
+		// put(IOS_STORE_A3, country, listTypes, date, "`r`.`price`=0", "free.raw");
 		//
-		// put(STORE, country, listTypes, date, "`r`.`price`<>0", "paid.raw");
+		// put(IOS_STORE_A3, country, listTypes, date, "`r`.`price`<>0", "paid.raw");
 		//
 		// runModelParts();
 		//
@@ -79,14 +79,15 @@ public class ModellerIOS
 		// c.a2Code = country;
 		//
 		// Store s = new Store();
-		// s.a3Code = STORE;
+		// s.a3Code = IOS_STORE_A3;
 		//
 		// persistValues(c, s, getForm(listType), code);
 		//
 		// alterFeedFetchStatus(c, s, listTypes, code);
 		//
 		// } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | ScriptException | SQLException e) {
-		// LOG.log(Level.SEVERE, String.format("Error occured calculating values with parameters store [%s], country [%s], type [%s], [%s]", STORE, country,
+		// LOG.log(Level.SEVERE, String.format("Error occured calculating values with parameters store [%s], country [%s], type [%s], [%s]", IOS_STORE_A3,
+		// country,
 		// listType, date == null ? "null" : Long.toString(date.getTime())), e);
 		//
 		// throw new RuntimeException(e);
@@ -177,7 +178,7 @@ public class ModellerIOS
 	// }
 	//
 	// Store s = new Store();
-	// s.a3Code = STORE;
+	// s.a3Code = IOS_STORE_A3;
 	//
 	// Category category = CategoryServiceProvider.provide().getAllCategory(s);
 	//
@@ -293,5 +294,15 @@ public class ModellerIOS
 	public String getType(FormType formType, Boolean isFree) {
 		return formType == FormType.FormTypeTablet ? (isFree != null && isFree.booleanValue() ? CollectorIOS.TOP_FREE_IPAD_APPS
 				: CollectorIOS.TOP_PAID_IPAD_APPS) : (isFree != null && isFree.booleanValue() ? CollectorIOS.TOP_FREE_APPS : CollectorIOS.TOP_PAID_APPS);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.modellers.Modeller#getModelType()
+	 */
+	@Override
+	public ModelTypeType getModelType() {
+		return ModelTypeType.ModelTypeTypeCorrelation;
 	}
 }

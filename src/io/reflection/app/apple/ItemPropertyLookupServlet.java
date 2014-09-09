@@ -230,7 +230,7 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 							item.internalId = itemId;
 							item.externalId = jsonItem.get("bundleId").getAsString();
 							item.name = jsonItem.get("trackName").getAsString();
-							item.source = "ios";
+							item.source = DataTypeHelper.IOS_STORE_A3;
 							item.type = "Application";
 
 							String imageUrl = jsonItem.get("artworkUrl100").getAsString();

@@ -28,7 +28,7 @@ public class QueueHelper {
 	private static final Logger LOG = Logger.getLogger(QueueHelper.class.getName());
 
 	@SafeVarargs
-	public static void enqueue(String queueName, Method method, SimpleEntry<String, String>... params) {
+	public static void enqueue(String queueName, String relativeUrl, Method method, SimpleEntry<String, String>... params) {
 		if (LOG.isLoggable(GaeLevel.TRACE)) {
 			LOG.log(GaeLevel.TRACE, "Entering...");
 		}
@@ -37,6 +37,10 @@ public class QueueHelper {
 			Queue queue = QueueFactory.getQueue(queueName);
 
 			TaskOptions options = TaskOptions.Builder.withMethod(method);
+
+			if (relativeUrl != null) {
+				options.url(relativeUrl);
+			}
 
 			for (SimpleEntry<String, String> param : params) {
 				options.param(param.getKey(), param.getValue());
@@ -66,6 +70,11 @@ public class QueueHelper {
 				LOG.log(GaeLevel.TRACE, "Exiting...");
 			}
 		}
+	}
+
+	@SafeVarargs
+	public static void enqueue(String queueName, Method method, SimpleEntry<String, String>... params) {
+		enqueue(queueName, null, method, params);
 	}
 
 }
