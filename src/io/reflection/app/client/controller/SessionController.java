@@ -571,7 +571,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 
 		String token = Cookies.getCookie(COOKIE_KEY_TOKEN);
 
-		if (attemptRestore = (token != null)) {
+		if (attemptRestore = (token != null && getSession() == null)) {
 			CoreService core = ServiceCreator.createCoreService();
 
 			final LoginRequest input = new LoginRequest();
