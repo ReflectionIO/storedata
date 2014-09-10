@@ -38,7 +38,7 @@
 	    -webkit-appearance: none;
 	    -moz-appearance: none;
 	    appearance: none;
-	    cursor: pointer;
+	    cursor: pointer !important;
 	    padding: 5px 4px;
 	    border: 1px solid #ccc;
 	    border-top: 1px solid #999;

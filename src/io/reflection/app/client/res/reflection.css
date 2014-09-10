@@ -148,6 +148,18 @@ body {
     box-shadow: none;
 }
 
+input[type="text"] {
+    cursor: text;
+}
+
+input[type="password"] {
+    cursor: text;
+}
+
+input[type="radio"] {
+    cursor: pointer;
+}
+
 input[type="text"]:disabled {
     color: #AAA;
 }
@@ -178,7 +190,7 @@ input[type="text"]:disabled {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    cursor: pointer;
+    cursor: pointer !important;
 }
 
 /* Cell Table */
