@@ -43,15 +43,18 @@ import io.reflection.app.api.admin.shared.call.TriggerPredictResponse;
 import io.reflection.app.api.blog.shared.call.DeleteUserRequest;
 import io.reflection.app.api.blog.shared.call.DeleteUserResponse;
 import io.reflection.app.api.shared.ApiError;
+import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
+import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.ingestors.Ingestor;
 import io.reflection.app.ingestors.IngestorFactory;
 import io.reflection.app.modellers.Modeller;
 import io.reflection.app.modellers.ModellerFactory;
 import io.reflection.app.predictors.Predictor;
 import io.reflection.app.predictors.PredictorFactory;
+import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.emailtemplate.EmailTemplateServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
@@ -60,6 +63,7 @@ import io.reflection.app.service.role.RoleServiceProvider;
 import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -544,19 +548,36 @@ public final class Admin extends ActionHandler {
 		LOG.finer("Entering deleteUser");
 		DeleteUserResponse output = new DeleteUserResponse();
 		try {
-		    if (input == null)
-                throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
-                        ApiError.InvalidValueNull.getMessage("DeleteUserRequest: input"));
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("DeleteUserRequest: input"));
 
-            input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
-            output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
-            
-            input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-            UserServiceProvider.provide().deleteUser(input.user);
-                        
-            output.status = StatusType.StatusTypeSuccess;
+			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
+
+			Pager pager = new Pager();
+			pager.start = 0L;
+			pager.count = Long.MAX_VALUE;
+			List<DataAccount> linkedAccounts = new ArrayList<DataAccount>();
+			linkedAccounts = UserServiceProvider.provide().getDataAccounts(input.user, pager);
+			for (DataAccount la : linkedAccounts) {
+				if (input.user.id.longValue() == UserServiceProvider.provide().getDataAccountOwner(la).id) { // User is the owner of the linked account
+					la.active = "n";
+					DataAccountServiceProvider.provide().updateDataAccount(la);
+				}
+			}
+
+			UserServiceProvider.provide().deleteAllDataAccounts(input.user);
+
+			UserServiceProvider.provide().revokeAllPermissions(input.user);
+
+			UserServiceProvider.provide().revokeAllRoles(input.user);
+
+			UserServiceProvider.provide().deleteUser(input.user);
+
+			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
 			output.error = convertToErrorAndLog(LOG, e);
@@ -564,5 +585,4 @@ public final class Admin extends ActionHandler {
 		LOG.finer("Exiting deleteUser");
 		return output;
 	}
-
 }

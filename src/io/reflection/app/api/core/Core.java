@@ -866,7 +866,9 @@ public final class Core extends ActionHandler {
 						UserServiceProvider.provide().revokePermission(user, hlaPermission);
 					}
 
-					DataAccountServiceProvider.provide().deleteDataAccount(input.linkedAccount);
+					// Set linked account as inactive
+					input.linkedAccount.active = "n";
+					DataAccountServiceProvider.provide().updateDataAccount(input.linkedAccount);
 
 					if (LOG.isLoggable(GaeLevel.DEBUG)) {
 						LOG.finer(String.format("Linked account with id [%d] deleted by owner [%d]", input.linkedAccount.id.longValue(),
@@ -1005,6 +1007,13 @@ public final class Core extends ActionHandler {
 
 			output.linkedAccounts = UserServiceProvider.provide().getDataAccounts(input.session.user, input.pager);
 
+			// Keep only active linked accounts
+			for (int i = 0; i < output.linkedAccounts.size(); i++) {
+				if (output.linkedAccounts.get(i).active.equals("n")) {
+					output.linkedAccounts.remove(i);
+				}
+			}
+
 			Map<Long, DataSource> dataSources = new HashMap<Long, DataSource>();
 			for (DataAccount d : output.linkedAccounts) {
 				if (d.source.id != null) {
@@ -1018,8 +1027,7 @@ public final class Core extends ActionHandler {
 			}
 
 			output.pager = input.pager;
-			updatePager(output.pager, output.linkedAccounts,
-					input.pager.totalCount == null ? UserServiceProvider.provide().getDataAccountsCount(input.session.user) : null);
+			updatePager(output.pager, output.linkedAccounts, input.pager.totalCount == null ? (long) output.linkedAccounts.size() : null);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
