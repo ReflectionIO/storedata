@@ -7,6 +7,7 @@
 //
 package io.reflection.app.objectify;
 
+import io.reflection.app.archivablekeyvalue.peristence.objectify.ArchivableKeyValue;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 
@@ -27,6 +28,8 @@ public class PersistenceService {
 		// factory().register(ItemRankSummary.class);
 		factory().register(Rank.class);
 		// factory().register(Store.class);
+		
+		factory().register(ArchivableKeyValue.class);
 	}
 
 	public static Objectify ofy() {

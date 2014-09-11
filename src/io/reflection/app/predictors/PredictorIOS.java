@@ -24,6 +24,8 @@ import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.helpers.ItemPropertyWrapper;
 import io.reflection.app.helpers.QueueHelper;
+import io.reflection.app.itemrankarchivers.ItemRankArchiver;
+import io.reflection.app.itemrankarchivers.ItemRankArchiverFactory;
 import io.reflection.app.modellers.Modeller;
 import io.reflection.app.modellers.ModellerFactory;
 import io.reflection.app.service.category.CategoryServiceProvider;
@@ -38,6 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
@@ -121,10 +124,16 @@ public class PredictorIOS implements Predictor {
 		List<Rank> foundRanks = RankServiceProvider.provide().getGatherCodeRanks(c, s, category, type, code, p, true);
 		Map<String, Item> lookup = lookupItemsForRanks(foundRanks);
 
+		ItemRankArchiver archiver = null;
+
 		Item item = null;
 		for (Rank rank : foundRanks) {
 			item = lookup.get(rank.itemId);
 			ItemPropertyWrapper properties = new ItemPropertyWrapper(item.properties);
+
+			if (archiver == null) {
+				archiver = ItemRankArchiverFactory.getItemRankArchiverForStore(rank.source);
+			}
 
 			boolean usesIap = properties.getBoolean(ItemPropertyLookupServlet.PROPERTY_IAP);
 
@@ -181,12 +190,15 @@ public class PredictorIOS implements Predictor {
 				// }
 
 				RankServiceProvider.provide().updateRank(rank);
+				archiver.enqueue(rank.id);
 			}
 		}
 
 		alterFeedFetchStatus(s, c, category, listTypes, code);
 
-		LOG.info("Done");
+		if (LOG.isLoggable(Level.INFO)) {
+			LOG.info("predictRevenueAndDownloads completed and status updated");
+		}
 	}
 
 	/**

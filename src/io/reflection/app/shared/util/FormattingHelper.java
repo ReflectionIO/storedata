@@ -23,7 +23,8 @@ public class FormattingHelper {
 
 	public static final String DATE_FORMAT_EEE_DD_MMM_YYYY = "EEE dd MMM yyyy";
 	public static final String DATE_FORMAT_DD_MMM_YYYY = "dd MMM yyyy";
-	public static final String DATE_FORMAT_DD_MM_YYYY = "dd-MM-yyyy";	
+	public static final String DATE_FORMAT_DD_MM_YYYY = "dd-MM-yyyy";
+	public static final String DATE_FORMAT_YYYY_MM_DD = "yyyy-MM-dd";
 	public static final float SMALL_MONEY = 0.0000001f;
 
 	private static Map<String, String> currencySymbolLookup = null;
