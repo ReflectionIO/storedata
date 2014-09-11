@@ -26,6 +26,18 @@ import com.google.gson.JsonParser;
  */
 public class DataTypeHelper {
 
+	public static final String ACTIVE_VALUE = "y";
+	public static final String INACTIVE_VALUE = "n";
+
+	public static final long PERMISSION_FULL_RANK_VIEW_ID = 1;
+	public static final long PERMISSION_HAS_LINKED_ACCOUNT_ID = 20;
+
+	public static final long ROLE_ADMIN_ID = 1;
+	public static final long ROLE_DEVELOPER_ID = 2;
+	public static final long ROLE_PREMIUM_ID = 3;
+	public static final long ROLE_ALPHA_ID = 4;
+	public static final long ROLE_BETA_ID = 5;
+
 	/**
 	 * Creates a role with a given id
 	 * 

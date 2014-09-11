@@ -9,6 +9,7 @@
 package io.reflection.app.api.admin;
 
 import static io.reflection.app.api.PagerHelper.updatePager;
+import io.reflection.app.api.PagerHelper;
 import io.reflection.app.api.ValidationHelper;
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
 import io.reflection.app.api.admin.shared.call.AssignRoleResponse;
@@ -43,7 +44,6 @@ import io.reflection.app.api.admin.shared.call.TriggerPredictResponse;
 import io.reflection.app.api.blog.shared.call.DeleteUserRequest;
 import io.reflection.app.api.blog.shared.call.DeleteUserResponse;
 import io.reflection.app.api.shared.ApiError;
-import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
@@ -557,14 +557,11 @@ public final class Admin extends ActionHandler {
 
 			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
 
-			Pager pager = new Pager();
-			pager.start = 0L;
-			pager.count = Long.MAX_VALUE;
 			List<DataAccount> linkedAccounts = new ArrayList<DataAccount>();
-			linkedAccounts = UserServiceProvider.provide().getDataAccounts(input.user, pager);
+			linkedAccounts = UserServiceProvider.provide().getDataAccounts(input.user, PagerHelper.infinitePager());
 			for (DataAccount la : linkedAccounts) {
 				if (input.user.id.longValue() == UserServiceProvider.provide().getDataAccountOwner(la).id) { // User is the owner of the linked account
-					la.active = "n";
+					la.active = DataTypeHelper.INACTIVE_VALUE;
 					DataAccountServiceProvider.provide().updateDataAccount(la);
 				}
 			}

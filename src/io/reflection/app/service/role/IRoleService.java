@@ -20,8 +20,6 @@ import com.spacehopperstudios.service.IService;
 
 public interface IRoleService extends IService {
 
-	public static final long ADMIN_ROLE_ID = 1;
-
 	/**
 	 * @param id
 	 * @return

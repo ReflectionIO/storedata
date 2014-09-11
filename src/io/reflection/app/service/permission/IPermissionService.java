@@ -19,8 +19,6 @@ import com.spacehopperstudios.service.IService;
 
 public interface IPermissionService extends IService {
 
-	public static final long HAS_LINKED_ACCOUNT_PERMISSION_ID = 20;
-
 	/**
 	 * @param id
 	 * @return

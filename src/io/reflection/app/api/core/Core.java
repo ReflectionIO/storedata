@@ -99,10 +99,8 @@ import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.datasource.DataSourceServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.modelrun.ModelRunServiceProvider;
-import io.reflection.app.service.permission.IPermissionService;
 import io.reflection.app.service.permission.PermissionServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
-import io.reflection.app.service.role.IRoleService;
 import io.reflection.app.service.role.RoleServiceProvider;
 import io.reflection.app.service.sale.SaleServiceProvider;
 import io.reflection.app.service.session.ISessionService;
@@ -850,8 +848,7 @@ public final class Core extends ActionHandler {
 
 			boolean hasDataAccount = UserServiceProvider.provide().hasDataAccount(input.session.user, input.linkedAccount).booleanValue();
 
-			Role adminRole = new Role();
-			adminRole.id = IRoleService.ADMIN_ROLE_ID;
+			Role adminRole = DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID);
 			boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, adminRole);
 
 			if (hasDataAccount || isAdmin) {
@@ -861,13 +858,12 @@ public final class Core extends ActionHandler {
 					UserServiceProvider.provide().deleteAllUsersDataAccount(input.linkedAccount);
 
 					if (!UserServiceProvider.provide().hasDataAccounts(user) && !isAdmin) {
-						Permission hlaPermission = new Permission();
-						hlaPermission.id = IPermissionService.HAS_LINKED_ACCOUNT_PERMISSION_ID;
+						Permission hlaPermission = DataTypeHelper.createPermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_ID);
 						UserServiceProvider.provide().revokePermission(user, hlaPermission);
 					}
 
 					// Set linked account as inactive
-					input.linkedAccount.active = "n";
+					input.linkedAccount.active = DataTypeHelper.INACTIVE_VALUE;
 					DataAccountServiceProvider.provide().updateDataAccount(input.linkedAccount);
 
 					if (LOG.isLoggable(GaeLevel.DEBUG)) {
@@ -1008,11 +1004,13 @@ public final class Core extends ActionHandler {
 			output.linkedAccounts = UserServiceProvider.provide().getDataAccounts(input.session.user, input.pager);
 
 			// Keep only active linked accounts
-			for (int i = 0; i < output.linkedAccounts.size(); i++) {
-				if (output.linkedAccounts.get(i).active.equals("n")) {
-					output.linkedAccounts.remove(i);
+			List<DataAccount> inactiveLinkedAccounts = new ArrayList<DataAccount>();
+			for (DataAccount da : output.linkedAccounts) {
+				if (DataTypeHelper.INACTIVE_VALUE.equals(da.active)) {
+					inactiveLinkedAccounts.add(da);
 				}
 			}
+			output.linkedAccounts.removeAll(inactiveLinkedAccounts);
 
 			Map<Long, DataSource> dataSources = new HashMap<Long, DataSource>();
 			for (DataAccount d : output.linkedAccounts) {
@@ -1123,12 +1121,10 @@ public final class Core extends ActionHandler {
 
 			output.account.source = input.source;
 
-			Role adminRole = new Role();
-			adminRole.id = IRoleService.ADMIN_ROLE_ID;
+			Role adminRole = DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID);
 			boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, adminRole);
 
-			Permission hlaPermission = new Permission();
-			hlaPermission.id = IPermissionService.HAS_LINKED_ACCOUNT_PERMISSION_ID;
+			Permission hlaPermission = DataTypeHelper.createPermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_ID);
 			boolean hasPermission = UserServiceProvider.provide().hasPermission(input.session.user, hlaPermission);
 
 			if (!hasPermission && !isAdmin) {

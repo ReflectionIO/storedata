@@ -21,6 +21,7 @@ import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProv
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -191,7 +192,7 @@ final class DataAccountService implements IDataAccountService {
 				// Restore deactivated Data Account
 				Long restoredId = getDataAccount(dataAccount.username, dataAccount.source.id).id;
 				dataAccount.id = restoredId;
-				dataAccount.active = "y";
+				dataAccount.active = DataTypeHelper.ACTIVE_VALUE;
 				addedDataAccount = updateDataAccount(dataAccount);
 			} else {
 				throw ex;
