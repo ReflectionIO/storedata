@@ -188,7 +188,11 @@ final class DataAccountService implements IDataAccountService {
 			}
 		} catch (DataAccessException ex) {
 			if (ex.getCause() instanceof MySQLIntegrityConstraintViolationException) { // Data account already exists
-				addedDataAccount = restoreDataAccount(dataAccount);
+				// Restore deactivated Data Account
+				Long restoredId = getDataAccount(dataAccount.username, dataAccount.source.id).id;
+				dataAccount.id = restoredId;
+				dataAccount.active = "y";
+				addedDataAccount = updateDataAccount(dataAccount);
 			} else {
 				throw ex;
 			}
