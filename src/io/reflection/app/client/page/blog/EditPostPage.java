@@ -24,6 +24,7 @@ import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.text.RichTextToolbar;
+import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Post;
 
 import com.google.gwt.core.client.GWT;
@@ -69,6 +70,8 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 
 	public EditPostPage() {
 		initWidget(uiBinder.createAndBindUi(this));
+		
+		Styles.INSTANCE.blog().ensureInjected();
 
 		descriptionToolbar.setRichText(descriptionText);
 		contentToolbar.setRichText(contentText);
