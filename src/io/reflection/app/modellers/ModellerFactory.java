@@ -7,6 +7,8 @@
 //
 package io.reflection.app.modellers;
 
+import io.reflection.app.shared.util.DataTypeHelper;
+
 /**
  * @author billy1380
  * 
@@ -20,9 +22,8 @@ public class ModellerFactory {
 	public static Modeller getModellerForStore(String store) {
 		Modeller modeller = null;
 
-		if ("ios".equals(store.toLowerCase())) {
-			// ios store
-			modeller = new ModellerIOS();
+		if (DataTypeHelper.IOS_STORE_A3.equals(store.toLowerCase())) {
+			modeller = new SimpleModellerIOS();
 		} else if ("azn".equals(store.toLowerCase())) {
 			// amazon store
 		} else if ("gpl".equals(store.toLowerCase())) {

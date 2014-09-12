@@ -94,9 +94,11 @@
                         <xsd:sequence>
                             <xsd:element name="country" type="sd:Country" />
                             <xsd:element name="store" type="sd:Store" />
+                            <xsd:element name="category" type="sd:Category" />
                         </xsd:sequence>
                         <xsd:attribute name="code" type="xsd:long" />
                         <xsd:attribute name="listType" type="xsd:string" />
+                        <xsd:attribute name="modelType" type="sd:ModelTypeType" />
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>
@@ -105,7 +107,8 @@
                 <xsd:complexContent>
                     <xsd:extension base="sd:Response">
                         <xsd:sequence>
-                            <xsd:element name="run" type="sd:ModelRun" />
+                            <xsd:element name="correlation" type="sd:ModelRun" />
+                            <xsd:element name="simple" type="sd:SimpleModelRun" />
                         </xsd:sequence>
                     </xsd:extension>
                 </xsd:complexContent>

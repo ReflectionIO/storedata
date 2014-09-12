@@ -24,6 +24,7 @@ import io.reflection.app.service.dataaccount.IDataAccountService;
 import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
 import io.reflection.app.service.dataaccountfetch.IDataAccountFetchService;
 import io.reflection.app.service.item.ItemServiceProvider;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.io.IOException;
 import java.util.List;
@@ -92,7 +93,7 @@ public class CronServlet extends HttpServlet {
 		int count = 0;
 
 		if (store != null) {
-			if ("ios".equals(store.toLowerCase())) {
+			if (DataTypeHelper.IOS_STORE_A3.equals(store.toLowerCase())) {
 				// ios app store
 				count = (new CollectorIOS()).enqueue();
 			} else if ("amazon".equals(store.toLowerCase())) {

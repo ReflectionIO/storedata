@@ -7,6 +7,8 @@
 //
 package io.reflection.app.ingestors;
 
+import io.reflection.app.shared.util.DataTypeHelper;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +25,7 @@ public class IngestorFactory {
 	public static Ingestor getIngestorForStore(String store) {
 		Ingestor ingestor = null;
 
-		if ("ios".equals(store.toLowerCase())) {
+		if (DataTypeHelper.IOS_STORE_A3.equals(store.toLowerCase())) {
 			ingestor = new IngestorIOS();
 		} else if ("azn".equals(store.toLowerCase())) {
 			// do amazon ingest here

@@ -309,6 +309,24 @@
         </xsd:complexContent>
     </xsd:complexType>
 
+    <xsd:complexType name="SimpleModelRun">
+        <xsd:complexContent>
+            <xsd:extension base="DataType">
+                <xsd:sequence>
+                    <xsd:element name="category" type="Category" />
+                </xsd:sequence>
+
+                <xsd:attribute name="country" type="xsd:string" />
+                <xsd:attribute name="store" type="xsd:string" />
+
+                <xsd:attribute name="code" type="xsd:long" />
+                <xsd:attribute name="form" type="FormType" />
+                <xsd:attribute name="a" type="xsd:double" />
+                <xsd:attribute name="b" type="xsd:double" />
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
     <xsd:complexType name="Resource">
         <xsd:complexContent>
             <xsd:extension base="DataType">
@@ -516,6 +534,13 @@
             <xsd:enumeration value="anonymous" />
             <xsd:enumeration value="public" />
             <xsd:enumeration value="private" />
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:simpleType name="ModelTypeType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="correlation" />
+            <xsd:enumeration value="simple" />
         </xsd:restriction>
     </xsd:simpleType>
 

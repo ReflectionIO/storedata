@@ -46,6 +46,7 @@ import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
+import io.reflection.app.datatypes.shared.ModelTypeType;
 import io.reflection.app.ingestors.Ingestor;
 import io.reflection.app.ingestors.IngestorFactory;
 import io.reflection.app.modellers.Modeller;
@@ -266,20 +267,29 @@ public final class Admin extends ActionHandler {
 
 			Collector collector = CollectorFactory.getCollectorForStore(input.store.a3Code);
 
-			String type = null;
-			for (String listType : input.listTypes) {
-				if (collector.isGrossing(listType)) {
-					type = listType;
-					break;
+			Modeller modeller = ModellerFactory.getModellerForStore(input.store.a3Code);
+			ModelTypeType modelType = modeller.getModelType();
+
+			if (modelType == ModelTypeType.ModelTypeTypeCorrelation) {
+				String type = null;
+
+				for (String listType : input.listTypes) {
+					if (collector.isGrossing(listType)) {
+						type = listType;
+						break;
+					}
+				}
+
+				if (type == null)
+					throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+							ApiError.InvalidValueNull.getMessage("should contain a grossing list name List: input.listType"));
+
+				modeller.enqueue(input.country.a2Code, type, input.code);
+			} else if (modelType == ModelTypeType.ModelTypeTypeSimple) {
+				for (String type : input.listTypes) {
+					modeller.enqueue(input.country.a2Code, type, input.code);
 				}
 			}
-
-			if (type == null)
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
-						ApiError.InvalidValueNull.getMessage("should contain a grossing list name List: input.listType"));
-
-			Modeller model = ModellerFactory.getModellerForStore(input.store.a3Code);
-			model.enqueue(input.country.a2Code, type, input.code);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -544,19 +554,18 @@ public final class Admin extends ActionHandler {
 		LOG.finer("Entering deleteUser");
 		DeleteUserResponse output = new DeleteUserResponse();
 		try {
-		    if (input == null)
-                throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
-                        ApiError.InvalidValueNull.getMessage("DeleteUserRequest: input"));
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("DeleteUserRequest: input"));
 
-            input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
-            output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
-            
-            input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-            UserServiceProvider.provide().deleteUser(input.user);
-                        
-            output.status = StatusType.StatusTypeSuccess;
+			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
+
+			UserServiceProvider.provide().deleteUser(input.user);
+
+			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
 			output.error = convertToErrorAndLog(LOG, e);
