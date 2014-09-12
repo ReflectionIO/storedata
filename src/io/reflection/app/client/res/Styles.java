@@ -44,15 +44,17 @@ public interface Styles extends ClientBundle {
 		String linkedAccountPlus();
 
 		String smooth();
-		
+
 		String noteDetail();
 
 		String header();
-		
+
 		String footer();
 	}
 
 	public interface ConfirmationDialogStyles extends CssResource {}
+
+	public interface BlogStyles extends CssResource {}
 
 	public static final Styles INSTANCE = GWT.create(Styles.class);
 
@@ -73,5 +75,8 @@ public interface Styles extends ClientBundle {
 
 	@Source("confirmationdialog.css")
 	ConfirmationDialogStyles confirmationDialog();
+
+	@Source("blog.css")
+	ConfirmationDialogStyles blog();
 
 }

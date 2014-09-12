@@ -7,8 +7,12 @@
 //
 package io.reflection.app.client.part.login;
 
+import io.reflection.app.api.core.shared.call.ChangePasswordRequest;
+import io.reflection.app.api.core.shared.call.ChangePasswordResponse;
+import io.reflection.app.api.core.shared.call.event.ChangePasswordEventHandler;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.FormHelper;
+import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.res.Images;
 
 import com.google.gwt.core.client.GWT;
@@ -30,7 +34,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author billy1380
  * 
  */
-public class ResetPasswordForm extends Composite {
+public class ResetPasswordForm extends Composite implements ChangePasswordEventHandler {
 
 	private static ResetPasswordFormUiBinder uiBinder = GWT.create(ResetPasswordFormUiBinder.class);
 
@@ -45,6 +49,7 @@ public class ResetPasswordForm extends Composite {
 	@UiField PasswordTextBox confirmPassword;
 	@UiField HTMLPanel newPasswordGroup;
 	@UiField HTMLPanel newPasswordNote;
+	private Preloader preloaderRef;
 
 	private String newPasswordError = null;
 
@@ -66,8 +71,8 @@ public class ResetPasswordForm extends Composite {
 	@UiHandler("submit")
 	void onSubmitClick(ClickEvent event) {
 		if (validate()) {
-			disableForm();
 			FormHelper.hideNote(newPasswordGroup, newPasswordNote);
+			preloaderRef.show();
 			SessionController.get().resetPassword(resetCode.getText(), newPassword.getText());
 		} else {
 			if (newPasswordError != null) {
@@ -90,6 +95,15 @@ public class ResetPasswordForm extends Composite {
 		resetForm();
 
 		newPassword.setFocus(true);
+	}
+
+	/**
+	 * Set preloader object from Reset Password Page
+	 * 
+	 * @param p
+	 */
+	public void setPreloader(Preloader p) {
+		preloaderRef = p;
 	}
 
 	@UiHandler({ "newPassword", "confirmPassword" })
@@ -131,18 +145,10 @@ public class ResetPasswordForm extends Composite {
 		resetCode.setText("");
 		newPassword.setText("");
 		confirmPassword.setText("");
-		enableForm();
+		setEnabled(true);
 		FormHelper.hideNote(newPasswordGroup, newPasswordNote);
 	}
 
-	public void enableForm() {
-		setEnabled(true);
-	}
-	
-	private void disableForm() {
-		setEnabled(false);
-	}
-	
 	private void setEnabled(boolean value) {
 		newPassword.setEnabled(value);
 		confirmPassword.setEnabled(value);
@@ -151,6 +157,30 @@ public class ResetPasswordForm extends Composite {
 
 	public void setResetCode(String code) {
 		resetCode.setText(code);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.api.core.shared.call.event.ChangePasswordEventHandler#changePasswordSuccess(io.reflection.app.api.core.shared.call.ChangePasswordRequest
+	 * , io.reflection.app.api.core.shared.call.ChangePasswordResponse)
+	 */
+	@Override
+	public void changePasswordSuccess(ChangePasswordRequest input, ChangePasswordResponse output) {
+		preloaderRef.hide();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.api.core.shared.call.event.ChangePasswordEventHandler#changePasswordFailure(io.reflection.app.api.core.shared.call.ChangePasswordRequest
+	 * , java.lang.Throwable)
+	 */
+	@Override
+	public void changePasswordFailure(ChangePasswordRequest input, Throwable caught) {
+		preloaderRef.hide();
 	}
 
 }

@@ -3,46 +3,42 @@
 	xmlns:pp="urn:import:io.reflection.app.client.page.forum.part" xmlns:a="urn:import:io.reflection.app.client.part">
 	<ui:style>
 	.textArea {
-		height: 200px;
-	}
-	
-	.filler {
-		height: 40px;
+	    height: 200px;
 	}
 	
 	.toolbarSpacing {
-		padding-top: 10px;
-		margin-top: 30px;
-		padding-bottom: 10px;
+	    padding-top: 10px;
+	    margin-top: 30px;
+	    padding-bottom: 10px;
 	}
 	
 	.indentHeader {
-		margin-left: 55px;
+	    margin-left: 55px;
 	}
 	
 	.indentHeader2 {
-		margin-left: 35px;
+	    margin-left: 35px;
 	}
 	
 	.successDiv {
-		margin-left: 50px;
+	    margin-left: 50px;
 	}
 	
 	.forumControl {
-		background: linear-gradient(#f6f7f9, #eeeff1);
+	    background: linear-gradient(#f6f7f9, #eeeff1);
 	}
 	
 	.successHeading {
-		font-size: 34px;
-		font-family: "Source Sans Pro", sans-serif;
-		font-weight: 600;
-		margin-top: 20px;
-		margin-bottom: 30px;
-		line-height: 1.1;
+	    font-size: 34px;
+	    font-family: "Source Sans Pro", sans-serif;
+	    font-weight: 600;
+	    margin-top: 20px;
+	    margin-bottom: 30px;
+	    line-height: 1.1;
 	}
 	
 	.maxWidth {
-		max-width: 75em;
+	    max-width: 75em;
 	}
 	</ui:style>
 	<g:HTMLPanel styleName="row">
@@ -88,7 +84,7 @@
 						</g:Button>
 					</g:HTMLPanel>
 				</g:FormPanel>
-				<g:HTMLPanel styleName="{style.filler} col-md-12 hidden-xs hidden-sm" />
+				<g:HTMLPanel styleName="filler-bottom col-md-12 hidden-xs hidden-sm" />
 			</div>
 			<div class="row {style.successDiv}" ui:field="doneRow">
 				<div class="{style.successHeading}">Your topic has been successfully added!</div>
