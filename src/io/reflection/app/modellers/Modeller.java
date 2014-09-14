@@ -7,7 +7,7 @@
 //
 package io.reflection.app.modellers;
 
-import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.FormType;
 import io.reflection.app.datatypes.shared.ModelTypeType;
 
@@ -17,9 +17,7 @@ import io.reflection.app.datatypes.shared.ModelTypeType;
  */
 public interface Modeller {
 
-	void enqueue(String country, String type, Long code);
-
-	void modelVariables(String country, String type, Long code) throws DataAccessException;
+	void enqueue(ModelTypeType modelType, String country, Category category, String listType, Long code);
 
 	ModelTypeType getModelType();
 

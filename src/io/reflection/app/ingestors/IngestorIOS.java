@@ -8,22 +8,21 @@
 //
 package io.reflection.app.ingestors;
 
-import io.reflection.app.CallServiceMethodServlet;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.collectors.StoreCollector;
-import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.FeedFetchStatusType;
 import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.datatypes.shared.ModelTypeType;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.modellers.Modeller;
 import io.reflection.app.modellers.ModellerFactory;
-import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
@@ -293,24 +292,30 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			//
 			// });
 
+			Modeller modeller = ModellerFactory.getModellerForStore(DataTypeHelper.IOS_STORE_A3);
+
 			for (int i = 0; i < group.size(); i++) {
 				FeedFetch current = group.get(Integer.valueOf(i));
 				current.status = FeedFetchStatusType.FeedFetchStatusTypeIngested;
 				FeedFetchServiceProvider.provide().updateFeedFetch(current);
+
+				// once the feed fetch status is updated model the list 
+				modeller.enqueue(ModelTypeType.ModelTypeTypeSimple, current.country, current.category, current.type, current.code);
 			}
 
-			Store s = DataTypeHelper.getIosStore();
-			Category all = CategoryServiceProvider.provide().getAllCategory(s);
-
-			// only run the model based on the "all" category, right now category data is not modelled
-			if (isGrossing) {
-				if (firstFeedFetch.category.id.longValue() == all.id.longValue()) {
-					ModellerFactory.getModellerForStore(DataTypeHelper.IOS_STORE_A3).enqueue(firstFeedFetch.country, firstFeedFetch.type, firstFeedFetch.code);
-				}
-
-				CallServiceMethodServlet.enqueueGetAllRanks(firstFeedFetch.country, DataTypeHelper.IOS_STORE_A3, firstFeedFetch.category.id,
-						firstFeedFetch.type, key);
-			}
+			// Store s = DataTypeHelper.getIosStore();
+			// Category all = CategoryServiceProvider.provide().getAllCategory(s);
+			//
+			// // only run the model based on the "all" category, right now category data is not modelled
+			// if (isGrossing) {
+			// if (firstFeedFetch.category.id.longValue() == all.id.longValue()) {
+			// ModellerFactory.getModellerForStore(DataTypeHelper.IOS_STORE_A3).enqueue(firstFeedFetch.country, firstFeedFetch.category,
+			// firstFeedFetch.type, firstFeedFetch.code);
+			// }
+			//
+			// CallServiceMethodServlet.enqueueGetAllRanks(firstFeedFetch.country, DataTypeHelper.IOS_STORE_A3, firstFeedFetch.category.id,
+			// firstFeedFetch.type, key);
+			// }
 
 		}
 	}
