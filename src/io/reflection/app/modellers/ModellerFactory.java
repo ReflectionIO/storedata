@@ -23,7 +23,7 @@ public class ModellerFactory {
 		Modeller modeller = null;
 
 		if (DataTypeHelper.IOS_STORE_A3.equals(store.toLowerCase())) {
-			modeller = new SimpleModellerIOS();
+			modeller = new ModellerIOS();
 		} else if ("azn".equals(store.toLowerCase())) {
 			// amazon store
 		} else if ("gpl".equals(store.toLowerCase())) {

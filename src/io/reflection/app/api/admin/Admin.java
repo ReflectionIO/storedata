@@ -53,6 +53,7 @@ import io.reflection.app.modellers.Modeller;
 import io.reflection.app.modellers.ModellerFactory;
 import io.reflection.app.predictors.Predictor;
 import io.reflection.app.predictors.PredictorFactory;
+import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.emailtemplate.EmailTemplateServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
@@ -173,7 +174,7 @@ public final class Admin extends ActionHandler {
 			input.store = ValidationHelper.validateStore(input.store, "input");
 
 			input.listTypes = ValidationHelper.validateListTypes(input.listTypes, input.store, "input.listTypes");
-
+			
 			output.feedFetches = FeedFetchServiceProvider.provide().getFeedFetches(input.country, input.store, input.listTypes, input.pager);
 
 			output.pager = input.pager;
@@ -196,11 +197,23 @@ public final class Admin extends ActionHandler {
 			if (input == null)
 				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("TriggerGatherRequest: input"));
 
-			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
-
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");			
+			
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(Long.valueOf(1)));
+			
+			input.country = ValidationHelper.validateCountry(input.country, "input");
+
+			input.store = ValidationHelper.validateStore(input.store, "input");
+
+			if (input.category != null) {
+				input.category = ValidationHelper.validateCategory(input.category, "input.category");
+			} else {
+				input.category = CategoryServiceProvider.provide().getAllCategory(input.store);
+			}
+			
+			input.listTypes = ValidationHelper.validateListTypes(input.listTypes, input.store, "input");
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -228,6 +241,12 @@ public final class Admin extends ActionHandler {
 
 			input.store = ValidationHelper.validateStore(input.store, "input");
 
+			if (input.category != null) {
+				input.category = ValidationHelper.validateCategory(input.category, "input.category");
+			} else {
+				input.category = CategoryServiceProvider.provide().getAllCategory(input.store);
+			}
+			
 			input.listTypes = ValidationHelper.validateListTypes(input.listTypes, input.store, "input");
 
 			Ingestor i = IngestorFactory.getIngestorForStore(input.store.a3Code);
@@ -262,6 +281,12 @@ public final class Admin extends ActionHandler {
 			input.country = ValidationHelper.validateCountry(input.country, "input");
 
 			input.store = ValidationHelper.validateStore(input.store, "input");
+						
+			if (input.category != null) {
+				input.category = ValidationHelper.validateCategory(input.category, "input.category");
+			} else {
+				input.category = CategoryServiceProvider.provide().getAllCategory(input.store);
+			}
 
 			input.listTypes = ValidationHelper.validateListTypes(input.listTypes, input.store, "input");
 
@@ -284,10 +309,10 @@ public final class Admin extends ActionHandler {
 					throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
 							ApiError.InvalidValueNull.getMessage("should contain a grossing list name List: input.listType"));
 
-				modeller.enqueue(input.country.a2Code, type, input.code);
+				modeller.enqueue(modelType, input.country.a2Code, input.category, type, input.code);
 			} else if (modelType == ModelTypeType.ModelTypeTypeSimple) {
 				for (String type : input.listTypes) {
-					modeller.enqueue(input.country.a2Code, type, input.code);
+					modeller.enqueue(modelType, input.country.a2Code, input.category, type, input.code);
 				}
 			}
 
