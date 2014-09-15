@@ -54,37 +54,31 @@ public final class Blog extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
-			Boolean showAll = Boolean.FALSE;
+			Boolean showAll = Boolean.FALSE; // Determine if the user can view the unpublished posts
 
-			if (input.session != null) {
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			final Permission permissionListAny = new Permission();
+			permissionListAny.id = Long.valueOf(DataTypeHelper.PERMISSION_BLOG_LIST_ANY_ID);
+
+			final Role roleAdmin = new Role();
+			roleAdmin.id = Long.valueOf(DataTypeHelper.ROLE_ADMIN_ID);
+
+			try {
+				ValidationHelper.validateAuthorised(input.session.user, permissionListAny);
+				// Show All posts if has BLA permission
+				showAll = Boolean.TRUE;
+			} catch (AuthorisationException aEx) {
+
+			}
+
+			if (!showAll.booleanValue()) {
 				try {
-					output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+					ValidationHelper.validateAuthorised(input.session.user, roleAdmin);
+					// Show All posts if Admin
+					showAll = Boolean.TRUE;
+				} catch (AuthorisationException aEx) {
 
-					final Permission permissionListAny = new Permission();
-					permissionListAny.id = Long.valueOf(17);
-
-					final Role roleAdmin = new Role();
-					roleAdmin.id = Long.valueOf(1);
-
-					try {
-						ValidationHelper.validateAuthorised(input.session.user, permissionListAny);
-
-						showAll = Boolean.TRUE;
-					} catch (AuthorisationException aEx) {
-
-					}
-
-					if (!showAll.booleanValue()) {
-						try {
-							ValidationHelper.validateAuthorised(input.session.user, roleAdmin);
-
-							showAll = Boolean.TRUE;
-						} catch (AuthorisationException aEx) {
-
-						}
-					}
-				} catch (InputValidationException ex) {
-					output.session = input.session = null;
 				}
 			}
 
@@ -92,7 +86,7 @@ public final class Blog extends ActionHandler {
 				input.includeContents = Boolean.FALSE;
 			}
 
-			output.posts = PostServiceProvider.provide().getPosts(showAll, input.includeContents, input.pager);
+			output.posts = PostServiceProvider.provide().getUserPosts(input.session.user.id, showAll, input.includeContents, input.pager);
 
 			SparseArray<User> users = new SparseArray<User>();
 
@@ -105,8 +99,8 @@ public final class Blog extends ActionHandler {
 			}
 
 			output.pager = input.pager;
-			updatePager(output.pager, output.posts, input.pager.totalCount == null ? PostServiceProvider.provide().getPostsCount(showAll)
-					: input.pager.totalCount);
+			updatePager(output.pager, output.posts,
+					input.pager.totalCount == null ? PostServiceProvider.provide().getUserPostsCount(input.session.user.id, showAll) : input.pager.totalCount);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -126,13 +120,7 @@ public final class Blog extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
-			if (input.session != null) {
-				try {
-					output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
-				} catch (InputValidationException ex) {
-					output.session = input.session = null;
-				}
-			}
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			boolean isIdLookup = false, isTitleLookup = false;
 			if (input.id != null) {
@@ -169,7 +157,7 @@ public final class Blog extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
-			input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			// TODO: check permissions
 
