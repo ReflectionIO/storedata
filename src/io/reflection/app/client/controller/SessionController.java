@@ -45,6 +45,7 @@ import io.reflection.app.client.page.PageType;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -298,7 +299,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	 * @return
 	 */
 	public boolean isLoggedInUserAdmin() {
-		return hasRole(mLoggedInUser, RoleController.ADMIN_ROLE_ID);
+		return hasRole(mLoggedInUser, DataTypeHelper.ROLE_ADMIN_ID);
 	}
 
 	/**
@@ -346,7 +347,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	}
 
 	public boolean hasPermission(User user, long id) {
-		boolean hasPermission = hasRole(user, RoleController.ADMIN_ROLE_ID);
+		boolean hasPermission = hasRole(user, DataTypeHelper.ROLE_ADMIN_ID);
 
 		if (!hasPermission && user != null) {
 			if (user.roles != null) {
