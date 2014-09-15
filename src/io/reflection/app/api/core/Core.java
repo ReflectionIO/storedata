@@ -102,7 +102,6 @@ import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.datasource.DataSourceServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.modelrun.ModelRunServiceProvider;
-import io.reflection.app.service.permission.IPermissionService;
 import io.reflection.app.service.permission.PermissionServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
 import io.reflection.app.service.role.RoleServiceProvider;
@@ -876,19 +875,23 @@ public final class Core extends ActionHandler {
 
 			boolean hasDataAccount = UserServiceProvider.provide().hasDataAccount(input.session.user, input.linkedAccount).booleanValue();
 
-			if (hasDataAccount) {
+			Role adminRole = DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID);
+			boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, adminRole);
+
+			if (hasDataAccount || isAdmin) {
 				User user = UserServiceProvider.provide().getDataAccountOwner(input.linkedAccount);
 
 				if (user != null && user.id.longValue() == input.session.user.id.longValue()) {
 					UserServiceProvider.provide().deleteAllUsersDataAccount(input.linkedAccount);
 
-					if (!UserServiceProvider.provide().hasDataAccounts(user)) {
-						Permission hlaPermission = new Permission();
-						hlaPermission.id = IPermissionService.HAS_LINKED_ACCOUNT_PERMISSION_ID;
+					if (!UserServiceProvider.provide().hasDataAccounts(user) && !isAdmin) {
+						Permission hlaPermission = DataTypeHelper.createPermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_ID);
 						UserServiceProvider.provide().revokePermission(user, hlaPermission);
 					}
 
-					DataAccountServiceProvider.provide().deleteDataAccount(input.linkedAccount);
+					// Set linked account as inactive
+					input.linkedAccount.active = DataTypeHelper.INACTIVE_VALUE;
+					DataAccountServiceProvider.provide().updateDataAccount(input.linkedAccount);
 
 					if (LOG.isLoggable(GaeLevel.DEBUG)) {
 						LOG.finer(String.format("Linked account with id [%d] deleted by owner [%d]", input.linkedAccount.id.longValue(),
@@ -1027,6 +1030,15 @@ public final class Core extends ActionHandler {
 
 			output.linkedAccounts = UserServiceProvider.provide().getDataAccounts(input.session.user, input.pager);
 
+			// Keep only active linked accounts
+			List<DataAccount> inactiveLinkedAccounts = new ArrayList<DataAccount>();
+			for (DataAccount da : output.linkedAccounts) {
+				if (DataTypeHelper.INACTIVE_VALUE.equals(da.active)) {
+					inactiveLinkedAccounts.add(da);
+				}
+			}
+			output.linkedAccounts.removeAll(inactiveLinkedAccounts);
+
 			Map<Long, DataSource> dataSources = new HashMap<Long, DataSource>();
 			for (DataAccount d : output.linkedAccounts) {
 				if (d.source.id != null) {
@@ -1040,8 +1052,7 @@ public final class Core extends ActionHandler {
 			}
 
 			output.pager = input.pager;
-			updatePager(output.pager, output.linkedAccounts,
-					input.pager.totalCount == null ? UserServiceProvider.provide().getDataAccountsCount(input.session.user) : null);
+			updatePager(output.pager, output.linkedAccounts, input.pager.totalCount == null ? (long) output.linkedAccounts.size() : null);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -1137,10 +1148,13 @@ public final class Core extends ActionHandler {
 
 			output.account.source = input.source;
 
-			Permission hlaPermission = new Permission();
-			hlaPermission.id = IPermissionService.HAS_LINKED_ACCOUNT_PERMISSION_ID;
+			Role adminRole = DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID);
+			boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, adminRole);
+
+			Permission hlaPermission = DataTypeHelper.createPermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_ID);
 			boolean hasPermission = UserServiceProvider.provide().hasPermission(input.session.user, hlaPermission);
-			if (!hasPermission) {
+
+			if (!hasPermission && !isAdmin) {
 				UserServiceProvider.provide().assignPermission(input.session.user, hlaPermission);
 			}
 

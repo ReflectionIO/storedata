@@ -19,6 +19,7 @@ import java.util.List;
 import com.spacehopperstudios.service.IService;
 
 public interface IRoleService extends IService {
+
 	/**
 	 * @param id
 	 * @return
@@ -47,13 +48,15 @@ public interface IRoleService extends IService {
 	 * @return
 	 */
 	public Role getNamedRole(String name) throws DataAccessException;
-	
+
 	/**
 	 * Gets the role using a lookup code
-	 * @param code the code name for the role
+	 * 
+	 * @param code
+	 *            the code name for the role
 	 * @return
 	 */
-	public Role getCodeRole(String code) throws DataAccessException; 
+	public Role getCodeRole(String code) throws DataAccessException;
 
 	/**
 	 * @param pager

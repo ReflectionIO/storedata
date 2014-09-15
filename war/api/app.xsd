@@ -226,6 +226,7 @@
                 <xsd:attribute type="xsd:string" name="username" />
                 <xsd:attribute type="xsd:string" name="password" />
                 <xsd:attribute type="xsd:string" name="properties" />
+				<xsd:attribute type="xsd:string" name="active" />
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
