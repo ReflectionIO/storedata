@@ -280,8 +280,10 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 		FilterController.get().resetFilter(PageType.MyAppsPageType);
 		RankController.get().reset();
 		FilterController.get().resetFilter(PageType.RanksPageType);
+		PostController.get().reset();
 
-		NavigationController.get().purgeUserPages();
+		// Remove all the pages from the Navigation Controller
+		NavigationController.get().purgeAllPages();
 
 		PageType.LoginPageType.show("requestinvite");
 	}
