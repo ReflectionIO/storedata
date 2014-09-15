@@ -198,6 +198,7 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 	public void createPostSuccess(CreatePostRequest input, CreatePostResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			PostController.get().reset();
+			PostController.get().fetchPosts();
 			PageType.BlogPostPageType.show("view", postId.toString());
 		}
 	}
