@@ -9,6 +9,7 @@
 package io.reflection.app.api.admin;
 
 import static io.reflection.app.api.PagerHelper.updatePager;
+import io.reflection.app.api.PagerHelper;
 import io.reflection.app.api.ValidationHelper;
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
 import io.reflection.app.api.admin.shared.call.AssignRoleResponse;
@@ -46,6 +47,7 @@ import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
+import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.ModelTypeType;
 import io.reflection.app.ingestors.Ingestor;
 import io.reflection.app.ingestors.IngestorFactory;
@@ -54,6 +56,7 @@ import io.reflection.app.modellers.ModellerFactory;
 import io.reflection.app.predictors.Predictor;
 import io.reflection.app.predictors.PredictorFactory;
 import io.reflection.app.service.category.CategoryServiceProvider;
+import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.emailtemplate.EmailTemplateServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
@@ -62,6 +65,7 @@ import io.reflection.app.service.role.RoleServiceProvider;
 import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -588,6 +592,21 @@ public final class Admin extends ActionHandler {
 
 			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
 
+			List<DataAccount> linkedAccounts = new ArrayList<DataAccount>();
+			linkedAccounts = UserServiceProvider.provide().getDataAccounts(input.user, PagerHelper.infinitePager());
+			for (DataAccount la : linkedAccounts) {
+				if (input.user.id.longValue() == UserServiceProvider.provide().getDataAccountOwner(la).id) { // User is the owner of the linked account
+					la.active = DataTypeHelper.INACTIVE_VALUE;
+					DataAccountServiceProvider.provide().updateDataAccount(la);
+				}
+			}
+
+			UserServiceProvider.provide().deleteAllDataAccounts(input.user);
+
+			UserServiceProvider.provide().revokeAllPermissions(input.user);
+
+			UserServiceProvider.provide().revokeAllRoles(input.user);
+
 			UserServiceProvider.provide().deleteUser(input.user);
 
 			output.status = StatusType.StatusTypeSuccess;
@@ -598,5 +617,4 @@ public final class Admin extends ActionHandler {
 		LOG.finer("Exiting deleteUser");
 		return output;
 	}
-
 }

@@ -45,10 +45,6 @@
 	    margin-right: 20px;
 	}
 	
-	.filler {
-	    height: 60px;
-	}
-	
 	.emptyTableContainer {
 	    height: 100px;
 	    padding-top: 30px;
@@ -98,7 +94,7 @@
 				</g:HTMLPanel>
 
 			</g:HTMLPanel>
-			<g:HTMLPanel styleName="{style.filler} col-md-12 hidden-xs hidden-sm" />
+			<g:HTMLPanel styleName="filler-bottom col-md-12 hidden-xs hidden-sm" />
 		</g:HTMLPanel>
 
 	</g:HTMLPanel>

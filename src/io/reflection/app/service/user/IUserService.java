@@ -161,9 +161,31 @@ public interface IUserService extends IService {
 	/**
 	 * 
 	 * @param user
+	 * @param permission
 	 * @throws DataAccessException
 	 */
 	public void revokePermission(User user, Permission permission) throws DataAccessException;
+
+	/**
+	 * 
+	 * @param user
+	 * @throws DataAccessException
+	 */
+	public void revokeAllPermissions(User user) throws DataAccessException;
+
+	/**
+	 * 
+	 * @param user
+	 * @throws DataAccessException
+	 */
+	public void revokeRole(User user, Role role) throws DataAccessException;
+
+	/**
+	 * 
+	 * @param user
+	 * @throws DataAccessException
+	 */
+	public void revokeAllRoles(User user) throws DataAccessException;
 
 	/**
 	 * @param user
@@ -247,4 +269,10 @@ public interface IUserService extends IService {
 	 * @param dataAccount
 	 */
 	public void deleteAllUsersDataAccount(DataAccount dataAccount) throws DataAccessException;
+
+	/**
+	 * @param dataAccount
+	 */
+	public void deleteAllDataAccounts(User user) throws DataAccessException;
+
 }

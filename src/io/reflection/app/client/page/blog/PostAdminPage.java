@@ -16,6 +16,7 @@ import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.res.Images;
+import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Post;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.shared.util.FormattingHelper;
@@ -50,6 +51,8 @@ public class PostAdminPage extends Page {
 
 	public PostAdminPage() {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		Styles.INSTANCE.blog().ensureInjected();
 
 		createColumns();
 

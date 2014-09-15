@@ -1,100 +1,102 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
-    xmlns:l="urn:import:io.reflection.app.client.part.linkaccount">
-    <ui:with field='images' type='io.reflection.app.client.res.Images' />
-    <ui:style>
-    .spaceFiller {
-    	height: 100px;
-    }
-    
-    .mainPanel {
-    	margin-top: 20px;
-    }
-    
-    .marginTopForm {
-    	padding: 0px;
-    	margin-top: 20px;
-    }
-    
-    .marginTop20 {
-    	margin-top: 20px;
-    }
-    
-    .inviteRegisterTab {
-    	background-color: #fafafa;
-    	font-weight: 600;
-    	height: 65px;
-    	font-size: 18px;
-    	padding-top: 35px;
-    	border-radius: 0px;
-    	border: 0px;
-    	outline: 0;
-    	text-align: center;
-    	color: #0e0e1f;
-    }
-    .formLinkAcc {
-        padding: 0px;
-    }
-    </ui:style>
-    <g:HTMLPanel styleName="container"> <!-- Override container-fluid assigned in NavigationController -->
+	xmlns:l="urn:import:io.reflection.app.client.part.linkaccount">
+	<ui:with field='images' type='io.reflection.app.client.res.Images' />
+	<ui:style>
+	.spaceFiller {
+	    height: 100px;
+	}
+	
+	.mainPanel {
+	    margin-top: 20px;
+	}
+	
+	.marginTopForm {
+	    padding: 0px;
+	    margin-top: 20px;
+	}
+	
+	.marginTop20 {
+	    margin-top: 20px;
+	}
+	
+	.inviteRegisterTab {
+	    background-color: #fafafa;
+	    font-weight: 600;
+	    height: 65px;
+	    font-size: 18px;
+	    padding-top: 35px;
+	    border-radius: 0px;
+	    border: 0px;
+	    outline: 0;
+	    text-align: center;
+	    color: #0e0e1f;
+	}
+	
+	.formLinkAcc {
+	    padding: 0px;
+	}
+	</ui:style>
+	<g:HTMLPanel styleName="container"> <!-- Override container-fluid assigned in NavigationController -->
 
-        <g:HTMLPanel ui:field="mPanel" styleName="row">
-            <div class="hidden-xs hidden-sm col-md-12 {style.spaceFiller}"></div>
+		<g:HTMLPanel ui:field="mPanel" styleName="row">
+			<div class="hidden-xs hidden-sm col-md-12 {style.spaceFiller}"></div>
 
-            <div class="col-md-6 text-center {style.mainPanel}">
+			<div class="col-md-6 text-center {style.mainPanel}">
 
-                <g:Image resource="{images.linkAccount}" />
-                <h1 style="margin-top: 40px;  margin-bottom: 70px; margin-left:50px; margin-right: 50px;">Please link your iTunes Connect account</h1>
+				<g:Image resource="{images.linkAccount}" />
+				<h1 style="margin-top: 40px;  margin-bottom: 70px; margin-left:50px; margin-right: 50px;">Please link your iTunes Connect account</h1>
 
-                <g:Image resource="{images.linkAccountProgress}" />
+				<g:Image resource="{images.linkAccountProgress}" />
 
-                <div>
-                    <div class="col-md-4">
-                        <h3 style="margin-top: 30px;">
-                            Step 1
-                        </h3>
-                        <p class="p-small" style="margin-top: 20px; padding-left: 5px; padding-right: 5px;">Create password and register to get started</p>
-                    </div>
-                    <div class="col-md-4">
-                        <h3 style="color: #6D69C5;  margin-top: 30px;">
-                            Step 2
-                        </h3>
-                        <p class="p-small" style="margin-top: 20px; padding-left: 10px; padding-right: 10px;">Link your iTunes Connect account</p>
-                    </div>
-                    <div class="col-md-4">
-                        <h3 style=" margin-top: 30px;">
-                            Step 3
-                        </h3>
-                        <p class="p-small" style="margin-top: 20px; padding-left: 10px; padding-right: 10px;">Done. Welcome to the private beta</p>
-                    </div>
-                </div>
+				<div>
+					<div class="col-md-4">
+						<h3 style="margin-top: 30px;">
+							Step 1
+						</h3>
+						<p class="p-small" style="margin-top: 20px; padding-left: 5px; padding-right: 5px;">Create password and register to get started</p>
+					</div>
+					<div class="col-md-4">
+						<h3 style="color: #6D69C5;  margin-top: 30px;">
+							Step 2
+						</h3>
+						<p class="p-small" style="margin-top: 20px; padding-left: 10px; padding-right: 10px;">Link your iTunes Connect account</p>
+					</div>
+					<div class="col-md-4">
+						<h3 style=" margin-top: 30px;">
+							Step 3
+						</h3>
+						<p class="p-small" style="margin-top: 20px; padding-left: 10px; padding-right: 10px;">Done. Welcome to the private beta</p>
+					</div>
+				</div>
 
-            </div>
+			</div>
 
-            <g:HTMLPanel styleName="col-md-5 col-md-offset-1 {style.marginTopForm}">
+			<g:HTMLPanel styleName="col-md-5 col-md-offset-1 {style.marginTopForm}">
 
-                <p:Preloader ui:field="preloader">
-                    <g:HTMLPanel styleName="well {style.formLinkAcc}">
-                        <g:HTMLPanel>
-                            <ul class="nav nav-tabs nav-justified register">
-                                <li class="{style.inviteRegisterTab}">
-                                    Link Your iTunes Connect Account
-                                </li>
-                            </ul>
-                        </g:HTMLPanel>
-                        <g:FormPanel ui:field="form" styleName="form">
-                            <g:HTMLPanel>
-                                <l:IosMacLinkAccountForm ui:field="mIosMacForm" />
-                                <g:Button ui:field="mLinkAccount" styleName="btn btn-lg btn-primary btn-block">
-                                    Link Account
-                                </g:Button>
-                            </g:HTMLPanel>
-                        </g:FormPanel>
-                    </g:HTMLPanel>
-                </p:Preloader>
+				<p:Preloader ui:field="preloader">
+					<g:HTMLPanel styleName="well {style.formLinkAcc}">
+						<g:HTMLPanel>
+							<ul class="nav nav-tabs nav-justified register">
+								<li class="{style.inviteRegisterTab}">
+									Link Your iTunes Connect Account
+								</li>
+							</ul>
+						</g:HTMLPanel>
+						<g:FormPanel ui:field="form" styleName="form">
+							<g:HTMLPanel>
+								<l:IosMacLinkAccountForm ui:field="mIosMacForm" />
+								<g:Button ui:field="mLinkAccount" styleName="btn btn-lg btn-primary btn-block">
+									Link Account
+								</g:Button>
+							</g:HTMLPanel>
+						</g:FormPanel>
+					</g:HTMLPanel>
+				</p:Preloader>
 
-            </g:HTMLPanel>
-        </g:HTMLPanel>
+			</g:HTMLPanel>
+			<g:HTMLPanel styleName="filler-bottom col-md-12 hidden-xs hidden-sm" />
+		</g:HTMLPanel>
 
-    </g:HTMLPanel>
+	</g:HTMLPanel>
 </ui:UiBinder> 

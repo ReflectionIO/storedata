@@ -21,6 +21,7 @@ import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProv
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -147,7 +148,7 @@ final class DataAccountService implements IDataAccountService {
 		dataAccount.id = connection.getCurrentRowLong("id");
 		dataAccount.created = connection.getCurrentRowDateTime("created");
 		dataAccount.deleted = connection.getCurrentRowString("deleted");
-
+		dataAccount.active = connection.getCurrentRowString("active");
 		dataAccount.source = new DataSource();
 		dataAccount.source.id = connection.getCurrentRowLong("sourceid");
 
@@ -188,7 +189,11 @@ final class DataAccountService implements IDataAccountService {
 			}
 		} catch (DataAccessException ex) {
 			if (ex.getCause() instanceof MySQLIntegrityConstraintViolationException) { // Data account already exists
-				addedDataAccount = restoreDataAccount(dataAccount);
+				// Restore deactivated Data Account
+				Long restoredId = getDataAccount(dataAccount.username, dataAccount.source.id).id;
+				dataAccount.id = restoredId;
+				dataAccount.active = DataTypeHelper.ACTIVE_VALUE;
+				addedDataAccount = updateDataAccount(dataAccount);
 			} else {
 				throw ex;
 			}
@@ -271,9 +276,10 @@ final class DataAccountService implements IDataAccountService {
 
 		DataAccount updatedDataAccount = null;
 
-		final String updateDataAccountQuery = String.format(
-				"UPDATE `dataaccount` SET `username`='%s', `password`=AES_ENCRYPT('%s',UNHEX('%s')), `properties`='%s' WHERE `id`=%d AND `deleted`='n'",
-				addslashes(dataAccount.username), addslashes(dataAccount.password), key(), addslashes(dataAccount.properties), dataAccount.id.longValue());
+		final String updateDataAccountQuery = String
+				.format("UPDATE `dataaccount` SET `username`='%s', `password`=AES_ENCRYPT('%s',UNHEX('%s')), `properties`='%s', `active`='%s' WHERE `id`=%d AND `deleted`='n'",
+						addslashes(dataAccount.username), addslashes(dataAccount.password), key(), addslashes(dataAccount.properties),
+						addslashes(dataAccount.active), dataAccount.id.longValue());
 
 		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 

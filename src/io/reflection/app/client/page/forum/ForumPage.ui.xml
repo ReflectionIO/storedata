@@ -4,36 +4,30 @@
 	<ui:import field="io.reflection.app.client.page.PageType.ForumTopicPageType" />
 
 	<ui:style>
-
-		@external forumPageAnchorMarginStyle ;
-
-		.toolbar_spacing {
-		padding-top: 10px;
-		margin-top: 30px;
-		padding-bottom: 10px;
-		}
-
-		.filler {
-		height: 40px;
-		}
-		
-		.margins {
-	        margin-top: 60px;
-	        margin-bottom: 10px;
-        }
-
-		.header2 {
-		margin-top: 7px;
-		margin-bottom: 0px;
-		}
-
-		.buttonWidth {
-		width: 150px;
-		}
-		.forumPageAnchorMarginStyle {
-		margin-left:8px
-		}
-
+	@external forumPageAnchorMarginStyle ;
+	.toolbar_spacing {
+	    padding-top: 10px;
+	    margin-top: 30px;
+	    padding-bottom: 10px;
+	}
+	
+	.margins {
+	    margin-top: 60px;
+	    margin-bottom: 10px;
+	}
+	
+	.header2 {
+	    margin-top: 7px;
+	    margin-bottom: 0px;
+	}
+	
+	.buttonWidth {
+	    width: 150px;
+	}
+	
+	.forumPageAnchorMarginStyle {
+	    margin-left: 8px
+	}
 	</ui:style>
 	<g:HTMLPanel styleName="row">
 		<pp:ForumSummarySidePanel ui:field="forumSummarySidePanel" styleName="sidepanel col-md-2 well" />
@@ -52,7 +46,7 @@
 			<c:CellTable styleName="table table-hover table-striped" ui:field="topics" />
 
 			<p:NumberedPager styleName="{style.margins}" ui:field="pager"></p:NumberedPager>
-			<g:HTMLPanel styleName="{style.filler} col-md-12 hidden-xs hidden-sm" />
+			<g:HTMLPanel styleName="filler-bottom col-md-12 hidden-xs hidden-sm" />
 		</div>
 
 	</g:HTMLPanel>

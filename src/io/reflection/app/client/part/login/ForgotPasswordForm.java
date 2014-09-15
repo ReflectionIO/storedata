@@ -36,119 +36,119 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class ForgotPasswordForm extends Composite implements ForgotPasswordEventHandler {
 
-    private static ForgotPasswordFormUiBinder uiBinder = GWT.create(ForgotPasswordFormUiBinder.class);
+	private static ForgotPasswordFormUiBinder uiBinder = GWT.create(ForgotPasswordFormUiBinder.class);
 
-    interface ForgotPasswordFormUiBinder extends UiBinder<Widget, ForgotPasswordForm> {}
+	interface ForgotPasswordFormUiBinder extends UiBinder<Widget, ForgotPasswordForm> {}
 
-    @UiField FormPanel mForm;
-    @UiField InlineHyperlink tryAgainLink;
-    @UiField TextBox mEmail;
-    @UiField HTMLPanel mEmailGroup;
-    @UiField HTMLPanel mEmailNote;
-    private String mEmailError = null;
-    private Preloader preloaderRef;
+	@UiField FormPanel mForm;
+	@UiField InlineHyperlink tryAgainLink;
+	@UiField TextBox mEmail;
+	@UiField HTMLPanel mEmailGroup;
+	@UiField HTMLPanel mEmailNote;
+	private String mEmailError = null;
+	private Preloader preloaderRef;
 
-    @UiField Button mSubmit;
+	@UiField Button mSubmit;
 
-    public ForgotPasswordForm() {
-        initWidget(uiBinder.createAndBindUi(this));
+	public ForgotPasswordForm() {
+		initWidget(uiBinder.createAndBindUi(this));
 
-        tryAgainLink.setTargetHistoryToken(PageType.LoginPageType.asTargetHistoryToken("requestinvite"));
-        mEmail.getElement().setAttribute("placeholder", "Email");
-    }
+		tryAgainLink.setTargetHistoryToken(PageType.LoginPageType.asTargetHistoryToken("requestinvite"));
+		mEmail.getElement().setAttribute("placeholder", "Email");
+	}
 
-    @UiHandler("mSubmit")
-    void onSubmitClick(ClickEvent event) {
-        if (validate()) {
-            FormHelper.hideNote(mEmailGroup, mEmailNote);
-            preloaderRef.show();
-            SessionController.get().forgotPassword(mEmail.getText());
-        } else {
-            FormHelper.showNote(true, mEmailGroup, mEmailNote, mEmailError);
-        }
-    }
+	@UiHandler("mSubmit")
+	void onSubmitClick(ClickEvent event) {
+		if (validate()) {
+			FormHelper.hideNote(mEmailGroup, mEmailNote);
+			preloaderRef.show();
+			SessionController.get().forgotPassword(mEmail.getText());
+		} else {
+			FormHelper.showNote(true, mEmailGroup, mEmailNote, mEmailError);
+		}
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.google.gwt.user.client.ui.Composite#onAttach()
-     */
-    @Override
-    protected void onAttach() {
-        super.onAttach();
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
+	 */
+	@Override
+	protected void onAttach() {
+		super.onAttach();
 
-        resetForm();
+		resetForm();
 
-        mEmail.setFocus(true);
-    }
+		mEmail.setFocus(true);
+	}
 
-    /**
-     * Set preloader object from Login Page
-     * 
-     * @param p
-     */
-    public void setPreloader(Preloader p) {
-        preloaderRef = p;
-    }
+	/**
+	 * Set preloader object from Login Page
+	 * 
+	 * @param p
+	 */
+	public void setPreloader(Preloader p) {
+		preloaderRef = p;
+	}
 
-    @UiHandler("mEmail")
-    void onEnterKeyPressForgotPassword(KeyPressEvent event) {
-        if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
-            mSubmit.click();
-        }
-    }
+	@UiHandler("mEmail")
+	void onEnterKeyPressForgotPassword(KeyPressEvent event) {
+		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
+			mSubmit.click();
+		}
+	}
 
-    private boolean validate() {
-        boolean validated = true;
-        String email = mEmail.getText();
-        if (email == null || email.length() == 0) {
-            mEmailError = "Cannot be empty";
-            validated = false;
-        } else if (email.length() < 6) {
-            mEmailError = "Too short (minimum 6 characters)";
-            validated = false;
-        } else if (email.length() > 255) {
-            mEmailError = "Too long (maximum 255 characters)";
-            validated = false;
-        } else if (!FormHelper.isValidEmail(email)) {
-            mEmailError = "Invalid email address";
-            validated = false;
-        } else {
-            mEmailError = null;
-            validated = validated && true;
-        }
-        return validated;
-    }
+	private boolean validate() {
+		boolean validated = true;
+		String email = mEmail.getText();
+		if (email == null || email.length() == 0) {
+			mEmailError = "Cannot be empty";
+			validated = false;
+		} else if (email.length() < 6) {
+			mEmailError = "Too short (minimum 6 characters)";
+			validated = false;
+		} else if (email.length() > 255) {
+			mEmailError = "Too long (maximum 255 characters)";
+			validated = false;
+		} else if (!FormHelper.isValidEmail(email)) {
+			mEmailError = "Invalid email address";
+			validated = false;
+		} else {
+			mEmailError = null;
+			validated = validated && true;
+		}
+		return validated;
+	}
 
-    private void resetForm() {
-        mEmail.setEnabled(true);
-        mEmail.setText("");
-        mSubmit.setEnabled(true);
-        FormHelper.hideNote(mEmailGroup, mEmailNote);
-    }
+	private void resetForm() {
+		mEmail.setEnabled(true);
+		mEmail.setText("");
+		mSubmit.setEnabled(true);
+		FormHelper.hideNote(mEmailGroup, mEmailNote);
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * io.reflection.app.api.core.shared.call.event.ForgotPasswordEventHandler#forgotPasswordSuccess(io.reflection.app.api.core.shared.call.ForgotPasswordRequest
-     * , io.reflection.app.api.core.shared.call.ForgotPasswordResponse)
-     */
-    @Override
-    public void forgotPasswordSuccess(ForgotPasswordRequest input, ForgotPasswordResponse output) {
-        preloaderRef.hide();
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.api.core.shared.call.event.ForgotPasswordEventHandler#forgotPasswordSuccess(io.reflection.app.api.core.shared.call.ForgotPasswordRequest
+	 * , io.reflection.app.api.core.shared.call.ForgotPasswordResponse)
+	 */
+	@Override
+	public void forgotPasswordSuccess(ForgotPasswordRequest input, ForgotPasswordResponse output) {
+		preloaderRef.hide();
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * io.reflection.app.api.core.shared.call.event.ForgotPasswordEventHandler#forgotPasswordFailure(io.reflection.app.api.core.shared.call.ForgotPasswordRequest
-     * , java.lang.Throwable)
-     */
-    @Override
-    public void forgotPasswordFailure(ForgotPasswordRequest input, Throwable caught) {
-        preloaderRef.hide();
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.api.core.shared.call.event.ForgotPasswordEventHandler#forgotPasswordFailure(io.reflection.app.api.core.shared.call.ForgotPasswordRequest
+	 * , java.lang.Throwable)
+	 */
+	@Override
+	public void forgotPasswordFailure(ForgotPasswordRequest input, Throwable caught) {
+		preloaderRef.hide();
+	}
 
 }

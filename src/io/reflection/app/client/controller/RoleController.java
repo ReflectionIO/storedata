@@ -31,12 +31,6 @@ import com.willshex.gson.json.service.shared.StatusType;
  */
 public class RoleController extends AsyncDataProvider<Role> implements ServiceConstants {
 
-	public static final long ADMIN_ROLE_ID = 1;
-	public static final long DEVELOPER_ROLE_ID = 2;
-	public static final long PREMIUM_ROLE_ID = 3;
-	public static final long ALPHA_ROLE_ID = 4;
-	public static final long BETA_ROLE_ID = 5;
-
 	private List<Role> mRoles = new ArrayList<Role>();
 	private long mCount = -1;
 	private Pager mPager;

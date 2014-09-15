@@ -15,6 +15,7 @@ import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.part.login.ResetPasswordForm;
 
 import com.google.gwt.core.client.GWT;
@@ -27,7 +28,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class ResetPasswordPage extends Page implements ChangePasswordEventHandler, NavigationEventHandler {
+public class ResetPasswordPage extends Page implements NavigationEventHandler, ChangePasswordEventHandler {
 
 	private static ResetPasswordPageUiBinder uiBinder = GWT.create(ResetPasswordPageUiBinder.class);
 
@@ -35,9 +36,12 @@ public class ResetPasswordPage extends Page implements ChangePasswordEventHandle
 
 	// @UiField HTMLPanel reminder;
 	@UiField ResetPasswordForm form;
+	@UiField Preloader preloader;
 
 	public ResetPasswordPage() {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		form.setPreloader(preloader); // Assign the preloader reference to the Forgot Password Form
 	}
 
 	/*
@@ -49,11 +53,11 @@ public class ResetPasswordPage extends Page implements ChangePasswordEventHandle
 	protected void onAttach() {
 		super.onAttach();
 
-		// reminder.setVisible(false);
 		form.setVisible(true);
 
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(EventController.get().addHandlerToSource(ChangePasswordEventHandler.TYPE, SessionController.get(), this));
+		register(EventController.get().addHandlerToSource(ChangePasswordEventHandler.TYPE, SessionController.get(), form));
 	}
 
 	/*
@@ -83,11 +87,7 @@ public class ResetPasswordPage extends Page implements ChangePasswordEventHandle
 	public void changePasswordSuccess(ChangePasswordRequest input, ChangePasswordResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			PageType.LoginPageType.show();
-		} else {
-			// TODO: the error panel
-			form.enableForm();
 		}
-
 	}
 
 	/*
@@ -98,9 +98,6 @@ public class ResetPasswordPage extends Page implements ChangePasswordEventHandle
 	 * , java.lang.Throwable)
 	 */
 	@Override
-	public void changePasswordFailure(ChangePasswordRequest input, Throwable caught) {
-		// TODO: the error panel
-		form.enableForm();
-	}
+	public void changePasswordFailure(ChangePasswordRequest input, Throwable caught) {}
 
 }
