@@ -30,6 +30,7 @@ import io.reflection.app.api.blog.shared.call.event.UpdatePostEventHandler.Updat
 import io.reflection.app.api.blog.shared.call.event.UpdatePostEventHandler.UpdatePostSuccess;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.Preloader;
 import io.reflection.app.datatypes.shared.Post;
 import io.reflection.app.shared.util.SparseArray;
@@ -51,7 +52,7 @@ import com.willshex.gson.json.service.shared.StatusType;
 public class PostController extends AsyncDataProvider<Post> implements ServiceConstants {
 
 	private List<Post> posts = new ArrayList<Post>();
-	private long count = 0;
+	private long count = -1;
 	private Pager pager;
 	private SparseArray<Post> postLookup = null;
 	private SparseArray<Post> postsLookup = null;
@@ -70,7 +71,7 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 
 	public void fetchPosts() {
 
-		if (preloaderPosts != null) {
+		if (preloaderPosts != null && NavigationController.get().getCurrentPage().equals(PageType.BlogPostsPageType)) {
 			preloaderPosts.show();
 		}
 
@@ -177,8 +178,22 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 		return count;
 	}
 
+	/**
+	 * Return true if Posts already fetched
+	 * 
+	 * @return
+	 */
+	public boolean postsFetched() {
+		return count != -1;
+	}
+
+	/**
+	 * Return true if there is at least 1 Post
+	 * 
+	 * @return
+	 */
 	public boolean hasPosts() {
-		return pager != null || posts.size() > 0;
+		return getPostsCount() > 0;
 	}
 
 	/*
@@ -193,11 +208,12 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 		int start = r.getStart();
 		int end = start + r.getLength();
 
-		if (end > posts.size()) {
+		if (!postsFetched() || (postsFetched() && getPostsCount() != posts.size() && end > posts.size())) {
 			fetchPosts();
+		} else {
+			updateRowData(start, posts.size() == 0 ? posts : posts.subList(start, Math.min(posts.size(), end)));
 		}
 
-		updateRowData(start, posts.size() == 0 ? posts : posts.subList(start, Math.min(posts.size(), end)));
 	}
 
 	/**
@@ -297,8 +313,10 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 
 	public void reset() {
 		pager = null;
+		count = -1;
 		posts.clear();
-
+		postLookup = null;
+		postsLookup = null;
 		updateRowData(0, posts);
 		updateRowCount(0, false);
 
@@ -373,6 +391,11 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 		});
 	}
 
+	/**
+	 * Pass PostsPage Preloader reference, in order to show it when fetchPosts is called
+	 * 
+	 * @param p
+	 */
 	public void setPreloaderPosts(Preloader p) {
 		preloaderPosts = p;
 	}
