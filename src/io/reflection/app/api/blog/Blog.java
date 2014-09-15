@@ -59,10 +59,10 @@ public final class Blog extends ActionHandler {
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			final Permission permissionListAny = new Permission();
-			permissionListAny.id = Long.valueOf(17);
+			permissionListAny.id = Long.valueOf(DataTypeHelper.PERMISSION_BLOG_LIST_ANY_ID);
 
 			final Role roleAdmin = new Role();
-			roleAdmin.id = Long.valueOf(1);
+			roleAdmin.id = Long.valueOf(DataTypeHelper.ROLE_ADMIN_ID);
 
 			try {
 				ValidationHelper.validateAuthorised(input.session.user, permissionListAny);
