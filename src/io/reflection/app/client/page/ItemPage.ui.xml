@@ -1,80 +1,69 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-    xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
-    xmlns:c="urn:import:com.google.gwt.user.cellview.client" xmlns:pp="urn:import:io.reflection.app.client.page.part">
-    <ui:style>
-    .cellTable {
-        margin-top: 50px;
-    }
-    
-    .chart {
-        margin-top: 50px;
-        margin-left: 20px;
-    }
-    
-    .content {
-        padding-left: 0px;
-        padding-right: 0px;
-        overflow-x: hidden;
-    }
-    
-    .table {
-        margin-left: 25px;
-        margin-right: 25px;
-        margin-top: 20px;
-    }
-    
-    .downloads {
-        border-left: 1px solid #d9dce0 !important;
-        border-right: 1px solid #d9dce0 !important;
-    }
-    
-    .filler {
-        height: 40px;
-    }
-    </ui:style>
-    <g:HTMLPanel styleName="row">
-        <pp:ItemSidePanel ui:field="mSidePanel"
-            styleName="sidepanel col-md-2 well" />
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
+	xmlns:c="urn:import:com.google.gwt.user.cellview.client" xmlns:pp="urn:import:io.reflection.app.client.page.part">
+	<ui:style>
+	.cellTable {
+	    margin-top: 50px;
+	}
+	
+	.chart {
+	    margin-top: 50px;
+	    margin-left: 20px;
+	}
+	
+	.content {
+	    padding-left: 0px;
+	    padding-right: 0px;
+	    overflow-x: hidden;
+	}
+	
+	.table {
+	    margin-left: 25px;
+	    margin-right: 25px;
+	    margin-top: 20px;
+	}
+	
+	.downloads {
+	    border-left: 1px solid #d9dce0 !important;
+	    border-right: 1px solid #d9dce0 !important;
+	}
+	</ui:style>
+	<g:HTMLPanel styleName="row">
+		<pp:ItemSidePanel ui:field="mSidePanel" styleName="sidepanel col-md-2 well" />
 
-        <div class="col-md-10 {style.content}">
-            <ul class="nav nav-tabs nav-justified ranks">
-                <li ui:field="mRevenueItem">
-                    <g:InlineHyperlink ui:field="mRevenue">
-                        Revenue
-                        <i class="icon-dollar pull-right"></i>
-                    </g:InlineHyperlink>
-                </li>
-                <li ui:field="mDownloadsItem">
-                    <g:InlineHyperlink ui:field="mDownloads"
-                        styleName="{style.downloads}">
-                        Downloads
-                        <i class="icon-download-alt pull-right"></i>
-                    </g:InlineHyperlink>
-                </li>
-                <li ui:field="mRankingItem">
-                    <g:InlineHyperlink ui:field="mRanking">
-                        Rank
-                        <i class="icon-list-numbered pull-right"></i>
-                    </g:InlineHyperlink>
-                </li>
-            </ul>
-            <g:HTMLPanel styleName="{style.table}">
-                <pp:ItemTopPanel ui:field="mTopPanel"
-                    styleName="well well-sm" />
-                <!-- <p:CircleProgressBar visible="false" ui:field="loader" 
-                    styleName="{style.loading}" /> -->
-                <p:Preloader ui:field="preloader">
-                    <g:HTMLPanel>
-                        <pp:ItemChart ui:field="historyChart"
-                            styleName="{style.chart}" />
-                    </g:HTMLPanel>
-                </p:Preloader>
-                <c:CellTable ui:field="revenue"
-                    styleName="table table-hover table-striped table-item {style.cellTable}"></c:CellTable>
-            </g:HTMLPanel>
-            <g:HTMLPanel styleName="{style.filler} col-md-12 hidden-xs hidden-sm" />
-        </div>
-        <!-- <p:AlertBox ui:field="mAlertBox" visible="false" /> -->
-    </g:HTMLPanel>
+		<div class="col-md-10 {style.content}">
+			<ul class="nav nav-tabs nav-justified ranks">
+				<li ui:field="mRevenueItem">
+					<g:InlineHyperlink ui:field="mRevenue">
+						Revenue
+						<i class="icon-dollar pull-right"></i>
+					</g:InlineHyperlink>
+				</li>
+				<li ui:field="mDownloadsItem">
+					<g:InlineHyperlink ui:field="mDownloads" styleName="{style.downloads}">
+						Downloads
+						<i class="icon-download-alt pull-right"></i>
+					</g:InlineHyperlink>
+				</li>
+				<li ui:field="mRankingItem">
+					<g:InlineHyperlink ui:field="mRanking">
+						Rank
+						<i class="icon-list-numbered pull-right"></i>
+					</g:InlineHyperlink>
+				</li>
+			</ul>
+			<g:HTMLPanel styleName="{style.table}">
+				<pp:ItemTopPanel ui:field="mTopPanel" styleName="well well-sm" />
+				<!-- <p:CircleProgressBar visible="false" ui:field="loader" styleName="{style.loading}" /> -->
+				<p:Preloader ui:field="preloader">
+					<g:HTMLPanel>
+						<pp:ItemChart ui:field="historyChart" styleName="{style.chart}" />
+					</g:HTMLPanel>
+				</p:Preloader>
+				<c:CellTable ui:field="revenue" styleName="table table-hover table-striped table-item {style.cellTable}"></c:CellTable>
+			</g:HTMLPanel>
+			<g:HTMLPanel styleName="filler-bottom col-md-12 hidden-xs hidden-sm" />
+		</div>
+		<!-- <p:AlertBox ui:field="mAlertBox" visible="false" /> -->
+	</g:HTMLPanel>
 </ui:UiBinder> 
