@@ -45,13 +45,18 @@ public interface IPostService extends IService {
 	public void deletePost(Post post) throws DataAccessException;
 
 	/**
+	 * 
+	 * 
+	 * @param userId
+	 *            , get all posts published by user
 	 * @param showAll
+	 *            , if true show even unpublished posts
 	 * @param includeContents
 	 * @param pager
 	 * @return
 	 * @throws DataAccessException
 	 */
-	public List<Post> getPosts(Boolean showAll, Boolean includeContents, Pager pager) throws DataAccessException;
+	public List<Post> getUserPosts(Long userId, Boolean showAll, Boolean includeContents, Pager pager) throws DataAccessException;
 
 	/**
 	 * 
@@ -62,10 +67,12 @@ public interface IPostService extends IService {
 	public Post getTitlePost(String title) throws DataAccessException;
 
 	/**
+	 * 
+	 * @param userId
 	 * @param showAll
 	 * @return
 	 * @throws DataAccessException
 	 */
-	public Long getPostsCount(Boolean showAll) throws DataAccessException;
+	public Long getUserPostsCount(Long userId, Boolean showAll) throws DataAccessException;
 
 }

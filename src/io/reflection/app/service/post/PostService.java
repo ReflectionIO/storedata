@@ -193,7 +193,7 @@ final class PostService implements IPostService {
 	 * @see io.reflection.app.service.post.IPostService#getPosts(java.lang.Boolean, java.lang.Boolean, io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
-	public List<Post> getPosts(Boolean showAll, Boolean includeContents, Pager pager) throws DataAccessException {
+	public List<Post> getUserPosts(Long userId, Boolean showAll, Boolean includeContents, Pager pager) throws DataAccessException {
 		List<Post> posts = new ArrayList<Post>();
 
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
@@ -208,8 +208,9 @@ final class PostService implements IPostService {
 			getPostsQuery = "SELECT `id`,`created`,`authorid`, `published`,`title`,`description`,`visible`,`tags`,`commentsenabled`,`deleted`";
 		}
 
-		getPostsQuery += " FROM `post` WHERE `deleted`='n'";
+		getPostsQuery += " FROM `post` WHERE (`authorid`=" + userId.longValue() + " AND `deleted`='n') OR `deleted`='n'";
 
+		// If showAll == true, get unpublished posts
 		if (showAll == null || !showAll.booleanValue()) {
 			getPostsQuery += " AND `visible`>0";
 		}
@@ -298,12 +299,13 @@ final class PostService implements IPostService {
 	 * @see io.reflection.app.service.post.IPostService#getPostsCount(java.lang.Boolean)
 	 */
 	@Override
-	public Long getPostsCount(Boolean showAll) throws DataAccessException {
+	public Long getUserPostsCount(Long userId, Boolean showAll) throws DataAccessException {
 		Long postsCount = Long.valueOf(0);
 
 		Connection postConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypePost.toString());
 
-		String getPostsCountQuery = "SELECT count(1) AS `postcount` FROM `post` WHERE `deleted`='n'";
+		String getPostsCountQuery = "SELECT count(1) AS `postcount` FROM `post` WHERE (`authorid`=" + userId.longValue()
+				+ " AND `deleted`='n') OR `deleted`='n'";
 
 		if (showAll == null || !showAll.booleanValue()) {
 			getPostsCountQuery += " AND `visible`>0";
@@ -324,5 +326,4 @@ final class PostService implements IPostService {
 
 		return postsCount;
 	}
-
 }
