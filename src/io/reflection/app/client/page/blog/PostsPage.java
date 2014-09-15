@@ -20,8 +20,8 @@ import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.blog.part.BlogSidePanel;
 import io.reflection.app.client.page.blog.part.PostSummaryCell;
 import io.reflection.app.client.part.BootstrapGwtCellList;
-import io.reflection.app.client.part.PageSizePager;
 import io.reflection.app.client.part.Preloader;
+import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Post;
 
@@ -48,7 +48,7 @@ public class PostsPage extends Page implements NavigationEventHandler, GetPostsE
 	interface PostsPageUiBinder extends UiBinder<Widget, PostsPage> {}
 
 	@UiField(provided = true) CellList<Post> posts = new CellList<Post>(new PostSummaryCell(), BootstrapGwtCellList.INSTANCE);
-	@UiField(provided = true) PageSizePager pager = new PageSizePager(ServiceConstants.SHORT_STEP_VALUE);
+	@UiField(provided = true) SimplePager simplePager = new SimplePager(false, false);
 
 	@UiField BlogSidePanel blogSidePanel;
 	@UiField Preloader preloader;
@@ -73,8 +73,8 @@ public class PostsPage extends Page implements NavigationEventHandler, GetPostsE
 		posts.setEmptyListWidget(new HTMLPanel("No posts found!"));
 
 		PostController.get().addDataDisplay(posts);
-		pager.setViewMoreText("View More Posts");
-		pager.setDisplay(posts);
+
+		simplePager.setDisplay(posts);
 	}
 
 	public void createAtomLink() {
@@ -135,7 +135,10 @@ public class PostsPage extends Page implements NavigationEventHandler, GetPostsE
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
 		blogSidePanel.setBlogHomeLinkActive();
-
+		// Show pager if data loaded in Admin Blog page
+		if (PostController.get().hasPosts() && PostController.get().getPostsCount() > posts.getVisibleItemCount()) {
+			simplePager.setVisible(true);
+		}
 	}
 
 	/*
@@ -147,9 +150,11 @@ public class PostsPage extends Page implements NavigationEventHandler, GetPostsE
 	@Override
 	public void getPostsSuccess(GetPostsRequest input, GetPostsResponse output) {
 		if (output.status.equals(StatusType.StatusTypeSuccess)) {
-			pager.setVisible(true);
-		} else {
-			pager.setVisible(false);
+			if (PostController.get().getPostsCount() > output.pager.count) {
+				simplePager.setVisible(true);
+			} else {
+				simplePager.setVisible(false);
+			}
 		}
 		preloader.hide();
 	}
@@ -162,7 +167,6 @@ public class PostsPage extends Page implements NavigationEventHandler, GetPostsE
 	 */
 	@Override
 	public void getPostsFailure(GetPostsRequest input, Throwable caught) {
-		pager.setVisible(false);
 		preloader.hide();
 	}
 
