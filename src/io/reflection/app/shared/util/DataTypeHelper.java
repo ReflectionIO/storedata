@@ -30,10 +30,7 @@ public class DataTypeHelper {
 	public static final String INACTIVE_VALUE = "n";
 
 	public static final long PERMISSION_FULL_RANK_VIEW_ID = 1;
-<<<<<<< Upstream, based on upstream/master
-=======
 	public static final long PERMISSION_BLOG_LIST_ANY_ID = 17;
->>>>>>> ccc7142 DataTypeHelper - Add permission constant
 	public static final long PERMISSION_HAS_LINKED_ACCOUNT_ID = 20;
 
 	public static final long ROLE_ADMIN_ID = 1;
