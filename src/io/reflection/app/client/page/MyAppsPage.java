@@ -207,7 +207,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	 */
 	@Override
 	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
-		if (LinkedAccountController.get().hasLinkedAccounts() && LinkedAccountController.get().getLinkedAccountsCount() > 0) { // There are linked accounts
+		if (LinkedAccountController.get().hasLinkedAccounts()) { // There are linked accounts
 			myAppsEmptyTable.setLinkAccountVisible(false);
 			MyAppsController.get().reset();
 			myAppsTopPanel.setFiltersEnabled(false);
@@ -226,7 +226,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	 */
 	@Override
 	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
-		if (LinkedAccountController.get().hasLinkedAccounts() && LinkedAccountController.get().getLinkedAccountsCount() > 0) { // There are linked accounts
+		if (LinkedAccountController.get().hasLinkedAccounts()) { // There are linked accounts
 			myAppsEmptyTable.setLinkAccountVisible(false);
 			MyAppsController.get().reset();
 			myAppsTopPanel.setFiltersEnabled(false);
@@ -274,7 +274,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		}
 
 		// Linked accounts retrieved in LinkedAccountPage but not here, or Check if Added or deleted a linked account
-		if ((linkedAccountsCount == -1 && LinkedAccountController.get().hasLinkedAccounts())
+		if ((linkedAccountsCount == -1 && LinkedAccountController.get().linkedAccountsFetched())
 				|| linkedAccountsCount != LinkedAccountController.get().getLinkedAccountsCount()) {
 			myAppsTopPanel.fillAccountNameList();
 			linkedAccountsCount = LinkedAccountController.get().getLinkedAccountsCount();
@@ -307,7 +307,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	public void getLinkedAccountsSuccess(GetLinkedAccountsRequest input, GetLinkedAccountsResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			if (output.pager.totalCount != null) {
-				if (LinkedAccountController.get().hasLinkedAccounts()) {
+				if (LinkedAccountController.get().linkedAccountsFetched()) {
 					myAppsTopPanel.fillAccountNameList();
 					linkedAccountsCount = LinkedAccountController.get().getLinkedAccountsCount();
 					if (LinkedAccountController.get().getLinkedAccountsCount() > 0) {

@@ -444,6 +444,9 @@ public class NavigationController implements ValueChangeHandler<String> {
 		}
 	}
 
+	/**
+	 * Purges all pages
+	 */
 	public void purgeAllPages() {
 		pages.clear();
 	}
