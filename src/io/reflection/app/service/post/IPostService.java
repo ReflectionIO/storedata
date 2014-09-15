@@ -11,6 +11,7 @@ package io.reflection.app.service.post;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.Post;
+import io.reflection.app.datatypes.shared.User;
 
 import java.util.List;
 
@@ -45,13 +46,18 @@ public interface IPostService extends IService {
 	public void deletePost(Post post) throws DataAccessException;
 
 	/**
+	 * 
+	 * 
+	 * @param user
+	 *            , get all posts published by user
 	 * @param showAll
+	 *            , if true show even unpublished posts
 	 * @param includeContents
 	 * @param pager
 	 * @return
 	 * @throws DataAccessException
 	 */
-	public List<Post> getPosts(Boolean showAll, Boolean includeContents, Pager pager) throws DataAccessException;
+	public List<Post> getUserViewablePosts(User user, Boolean showAll, Boolean includeContents, Pager pager) throws DataAccessException;
 
 	/**
 	 * 
@@ -62,10 +68,12 @@ public interface IPostService extends IService {
 	public Post getTitlePost(String title) throws DataAccessException;
 
 	/**
+	 * 
+	 * @param user
 	 * @param showAll
 	 * @return
 	 * @throws DataAccessException
 	 */
-	public Long getPostsCount(Boolean showAll) throws DataAccessException;
+	public Long getUserViewablePostsCount(User user, Boolean showAll) throws DataAccessException;
 
 }
