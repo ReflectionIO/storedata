@@ -118,6 +118,7 @@ final class PostService implements IPostService {
 
 			if (postConnection.getAffectedRowCount() > 0) {
 				post.id = postConnection.getInsertedId();
+				addedPost = post;
 			}
 		} finally {
 			if (postConnection != null) {
