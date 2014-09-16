@@ -209,7 +209,7 @@ final class PostService implements IPostService {
 		}
 
 		if (user != null && user.id != null) {
-			getPostsQuery += " FROM `post` WHERE (`authorid`=" + user.id.longValue() + " AND `deleted`='n') OR `deleted`='n'";
+			getPostsQuery += String.format(" FROM `post` WHERE (`authorid`=%d AND `deleted`='n') OR `deleted`='n'", user.id.longValue());
 		} else {
 			getPostsQuery += " FROM `post` WHERE `deleted`='n'";
 		}
@@ -320,7 +320,8 @@ final class PostService implements IPostService {
 
 		String getPostsCountQuery;
 		if (user != null && user.id != null) {
-			getPostsCountQuery = "SELECT count(1) AS `postcount` FROM `post` WHERE (`authorid`=" + user.id.longValue() + " AND `deleted`='n') OR `deleted`='n'";
+			getPostsCountQuery = String.format("SELECT count(1) AS `postcount` FROM `post` WHERE (`authorid`=%d AND `deleted`='n') OR `deleted`='n'",
+					user.id.longValue());
 		} else {
 			getPostsCountQuery = "SELECT count(1) AS `postcount` FROM `post` WHERE `deleted`='n'";
 		}
