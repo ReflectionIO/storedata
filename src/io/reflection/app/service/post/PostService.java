@@ -208,7 +208,11 @@ final class PostService implements IPostService {
 			getPostsQuery = "SELECT `id`,`created`,`authorid`, `published`,`title`,`description`,`visible`,`tags`,`commentsenabled`,`deleted`";
 		}
 
-		getPostsQuery += " FROM `post` WHERE (`authorid`=" + user.id.longValue() + " AND `deleted`='n') OR `deleted`='n'";
+		if (user != null && user.id != null) {
+			getPostsQuery += " FROM `post` WHERE (`authorid`=" + user.id.longValue() + " AND `deleted`='n') OR `deleted`='n'";
+		} else {
+			getPostsQuery += " FROM `post` WHERE `deleted`='n'";
+		}
 
 		// If showAll == true, get unpublished posts
 		if (showAll == null || !showAll.booleanValue()) {
@@ -266,6 +270,16 @@ final class PostService implements IPostService {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see io.reflection.app.service.post.IPostService#getViewablePosts(java.lang.Boolean, java.lang.Boolean, io.reflection.app.api.shared.datatypes.Pager)
+	 */
+	@Override
+	public List<Post> getPosts(Boolean showAll, Boolean includeContents, Pager pager) throws DataAccessException {
+		return getUserViewablePosts(null, showAll, includeContents, pager);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.service.post.IPostService#getTitlePost(java.lang.String)
 	 */
 	@Override
@@ -304,8 +318,12 @@ final class PostService implements IPostService {
 
 		Connection postConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypePost.toString());
 
-		String getPostsCountQuery = "SELECT count(1) AS `postcount` FROM `post` WHERE (`authorid`=" + user.id.longValue()
-				+ " AND `deleted`='n') OR `deleted`='n'";
+		String getPostsCountQuery;
+		if (user != null && user.id != null) {
+			getPostsCountQuery = "SELECT count(1) AS `postcount` FROM `post` WHERE (`authorid`=" + user.id.longValue() + " AND `deleted`='n') OR `deleted`='n'";
+		} else {
+			getPostsCountQuery = "SELECT count(1) AS `postcount` FROM `post` WHERE `deleted`='n'";
+		}
 
 		if (showAll == null || !showAll.booleanValue()) {
 			getPostsCountQuery += " AND `visible`>0";
@@ -326,4 +344,15 @@ final class PostService implements IPostService {
 
 		return postsCount;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.post.IPostService#getViewablePostsCount(java.lang.Boolean)
+	 */
+	@Override
+	public Long getPostsCount(Boolean showAll) throws DataAccessException {
+		return getUserViewablePostsCount(null, showAll);
+	}
+
 }

@@ -47,7 +47,6 @@ public interface IPostService extends IService {
 
 	/**
 	 * 
-	 * 
 	 * @param user
 	 *            , get all posts published by user
 	 * @param showAll
@@ -61,11 +60,13 @@ public interface IPostService extends IService {
 
 	/**
 	 * 
-	 * @param title
+	 * @param showAll
+	 * @param includeContents
+	 * @param pager
 	 * @return
 	 * @throws DataAccessException
 	 */
-	public Post getTitlePost(String title) throws DataAccessException;
+	public List<Post> getPosts(Boolean showAll, Boolean includeContents, Pager pager) throws DataAccessException;
 
 	/**
 	 * 
@@ -75,5 +76,21 @@ public interface IPostService extends IService {
 	 * @throws DataAccessException
 	 */
 	public Long getUserViewablePostsCount(User user, Boolean showAll) throws DataAccessException;
+
+	/**
+	 * 
+	 * @param showAll
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public Long getPostsCount(Boolean showAll) throws DataAccessException;
+
+	/**
+	 * 
+	 * @param title
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public Post getTitlePost(String title) throws DataAccessException;
 
 }

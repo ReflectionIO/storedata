@@ -98,12 +98,6 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 				if (output.status == StatusType.StatusTypeSuccess) {
 					if (output.posts != null) {
 
-						for (Post post : output.posts) {
-							if (!post.visible) {
-								post.title += " (not published)";
-							}
-						}
-
 						posts.addAll(output.posts);
 
 						if (postsLookup == null) {

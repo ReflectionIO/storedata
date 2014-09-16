@@ -92,7 +92,11 @@ public final class Blog extends ActionHandler {
 				input.includeContents = Boolean.FALSE;
 			}
 
-			output.posts = PostServiceProvider.provide().getUserViewablePosts(input.session.user, showAll, input.includeContents, input.pager);
+			if (input.session != null && input.session.user != null) {
+				output.posts = PostServiceProvider.provide().getUserViewablePosts(input.session.user, showAll, input.includeContents, input.pager);
+			} else {
+				output.posts = PostServiceProvider.provide().getPosts(showAll, input.includeContents, input.pager);
+			}
 
 			SparseArray<User> users = new SparseArray<User>();
 
@@ -105,9 +109,15 @@ public final class Blog extends ActionHandler {
 			}
 
 			output.pager = input.pager;
-			updatePager(output.pager, output.posts,
-					input.pager.totalCount == null ? PostServiceProvider.provide().getUserViewablePostsCount(input.session.user, showAll)
-							: input.pager.totalCount);
+
+			if (input.session != null && input.session.user != null) {
+				updatePager(output.pager, output.posts,
+						input.pager.totalCount == null ? PostServiceProvider.provide().getUserViewablePostsCount(input.session.user, showAll)
+								: input.pager.totalCount);
+			} else {
+				updatePager(output.pager, output.posts, input.pager.totalCount == null ? PostServiceProvider.provide().getPostsCount(showAll)
+						: input.pager.totalCount);
+			}
 
 			output.status = StatusType.StatusTypeSuccess;
 
