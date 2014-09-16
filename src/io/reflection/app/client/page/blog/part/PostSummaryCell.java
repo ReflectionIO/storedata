@@ -41,6 +41,10 @@ public class PostSummaryCell extends AbstractCell<Post> {
 			published = DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT_EEE_DD_MMM_YYYY).format(value.published);
 		}
 
+		if (!value.visible) {
+			value.description += "<p>NOT PUBLISHED</p>";
+		}
+
 		RENDERER.render(builder, link, value.title, SafeHtmlUtils.fromTrustedString(value.description), FormattingHelper.getUserName(value.author), published);
 	}
 
