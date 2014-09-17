@@ -46,6 +46,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.cellview.client.SafeHtmlHeader;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.ui.Button;
@@ -63,7 +64,7 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 	interface TopicTemplate extends SafeHtmlTemplates {
 		TopicTemplate INSTANCE = GWT.create(TopicTemplate.class);
 
-		@SafeHtmlTemplates.Template("<div>{0} <a href=\"{1}\" style=\"{2}\">{3}</a></div><div>{4} {5}</div>")
+		@SafeHtmlTemplates.Template("<div style='float:left;width:30px;height:5px;margin-right:10px;'>{0}</div><div style='float:left;'><a href=\"{1}\" style=\"{2}\">{3}</a><div>{4} {5}</div></div>")
 		SafeHtml topicLayout(SafeHtml properties, String link, SafeStyles styles, SafeHtml title, SafeHtml pages, SafeHtml pageLinks);
 
 		@SafeHtmlTemplates.Template("<a class='{2}' href='{0}'>{1}</a>")
@@ -102,6 +103,7 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 	}
 
 	private void createColumns() {
+	
 		Column<Topic, SafeHtml> titleColumn = new Column<Topic, SafeHtml>(new SafeHtmlCell()) {
 
 			@Override
@@ -111,16 +113,12 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 
 				if (object.locked != null && object.locked.booleanValue()) {
 					properties += "<i class=\"glyphicon glyphicon-lock\"></i> ";
-				}
-
-				if (object.heat != null && object.heat > 10) {
+				} else if (object.sticky != null && object.sticky.booleanValue()) {
+                    properties += "<i class=\"glyphicon glyphicon-pushpin\"></i> ";
+                } else if (object.heat != null && object.heat > 10) {
 					properties += "<i class=\"glyphicon glyphicon-fire\"></i> ";
 				}
-
-				if (object.sticky != null && object.sticky.booleanValue()) {
-					properties += "<i class=\"glyphicon glyphicon-pushpin\"></i> ";
-				}
-
+				
 				int numPages = (int) Math.ceil((double) (object.numberOfReplies + 1) / ServiceConstants.SHORT_STEP_VALUE);
 
 				// generate page links
@@ -181,20 +179,20 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 			}
 		};
 
-		TextHeader titleHeader = new TextHeader("Topic");
-		titleHeader.setHeaderStyleNames("col-sm-3");
+		SafeHtmlHeader titleHeader = new SafeHtmlHeader(SafeHtmlUtils.fromSafeConstant("<span style='margin-left:37px'>Topic</span>"));
+		titleHeader.setHeaderStyleNames("col-sm-4");
 		topics.addColumn(titleColumn, titleHeader);
 
 		TextHeader postHeader = new TextHeader("Posts");
-		postHeader.setHeaderStyleNames("col-sm-3");
+		postHeader.setHeaderStyleNames("col-sm-2");
 		topics.addColumn(postsColumn, postHeader);
 
 		TextHeader lastPosterHeader = new TextHeader("Last Poster");
-		lastPosterHeader.setHeaderStyleNames("col-sm-3");
+		lastPosterHeader.setHeaderStyleNames("col-sm-2");
 		topics.addColumn(lastPosterColumn, lastPosterHeader);
 
 		TextHeader lastPostedHeader = new TextHeader("");
-		lastPostedHeader.setHeaderStyleNames("col-sm-3");
+		lastPostedHeader.setHeaderStyleNames("col-sm-2");
 		topics.addColumn(lastPostedColumn, lastPostedHeader);
 	}
 
