@@ -32,7 +32,7 @@ public class DataTypeHelper {
 	public static final long PERMISSION_FULL_RANK_VIEW_ID = 1;
 	public static final long PERMISSION_HAS_LINKED_ACCOUNT_ID = 20;
 
-	public static final long ROLE_ADMIN_ID = 1;
+	public static final Long ROLE_ADMIN_ID = Long.valueOf(1);
 	public static final long ROLE_DEVELOPER_ID = 2;
 	public static final long ROLE_PREMIUM_ID = 3;
 	public static final long ROLE_ALPHA_ID = 4;

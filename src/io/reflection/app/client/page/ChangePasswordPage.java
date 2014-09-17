@@ -299,6 +299,8 @@ public class ChangePasswordPage extends Page implements NavigationEventHandler, 
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
 
+		mChangePassword.setEnabled(false);
+
 		myAccountSidePanel.setChangePasswordLinkActive();
 
 		user = SessionController.get().getLoggedInUser();
@@ -312,8 +314,6 @@ public class ChangePasswordPage extends Page implements NavigationEventHandler, 
 			myAccountSidePanel.getPersonalDetailsLink().setTargetHistoryToken(
 					PageType.UsersPageType.asTargetHistoryToken(PageType.ChangeDetailsPageType.toString(), user.id.toString()));
 
-			myAccountSidePanel.getChangePasswordLink().setTargetHistoryToken(
-					PageType.UsersPageType.asTargetHistoryToken(PageType.ChangePasswordPageType.toString(), user.id.toString()));
 		}
 
 		String currentFilter = FilterController.get().asMyAppsFilterString();
@@ -326,20 +326,6 @@ public class ChangePasswordPage extends Page implements NavigationEventHandler, 
 		}
 
 		resetForm();
-		mChangePassword.setEnabled(false);
-
-		if (user != null) {
-			myAccountSidePanel.getLinkedAccountsLink().setTargetHistoryToken(
-					PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(), user.id.toString()));
-
-			myAccountSidePanel.getCreatorNameLink().setInnerText(user.company);
-
-			myAccountSidePanel.getPersonalDetailsLink().setTargetHistoryToken(
-					PageType.UsersPageType.asTargetHistoryToken(PageType.ChangeDetailsPageType.toString(), user.id.toString()));
-
-			myAccountSidePanel.getChangePasswordLink().setTargetHistoryToken(
-					PageType.UsersPageType.asTargetHistoryToken(PageType.ChangePasswordPageType.toString(), user.id.toString()));
-		}
 
 	}
 

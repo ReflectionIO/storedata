@@ -260,8 +260,6 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 			myAccountSidePanel.getPersonalDetailsLink().setTargetHistoryToken(
 					PageType.UsersPageType.asTargetHistoryToken(PageType.ChangeDetailsPageType.toString(), user.id.toString()));
 
-			myAccountSidePanel.getChangePasswordLink().setTargetHistoryToken(
-					PageType.UsersPageType.asTargetHistoryToken(PageType.ChangePasswordPageType.toString(), user.id.toString()));
 		}
 
 		String currentFilter = FilterController.get().asMyAppsFilterString();

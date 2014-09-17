@@ -7,19 +7,11 @@
 //
 package io.reflection.app.client.page.admin;
 
-import io.reflection.app.api.admin.shared.call.GetPermissionsRequest;
-import io.reflection.app.api.admin.shared.call.GetPermissionsResponse;
-import io.reflection.app.api.admin.shared.call.GetRolesRequest;
-import io.reflection.app.api.admin.shared.call.GetRolesResponse;
-import io.reflection.app.api.admin.shared.call.event.GetPermissionsEventHandler;
-import io.reflection.app.api.admin.shared.call.event.GetRolesEventHandler;
 import io.reflection.app.api.blog.shared.call.DeleteUserRequest;
 import io.reflection.app.api.blog.shared.call.DeleteUserResponse;
 import io.reflection.app.api.blog.shared.call.event.DeleteUserEventHandler;
 import io.reflection.app.client.cell.StyledButtonCell;
 import io.reflection.app.client.controller.EventController;
-import io.reflection.app.client.controller.PermissionController;
-import io.reflection.app.client.controller.RoleController;
 import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.UserController;
 import io.reflection.app.client.page.Page;
@@ -29,8 +21,6 @@ import io.reflection.app.client.part.ConfirmationDialog;
 import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.res.Images;
-import io.reflection.app.datatypes.shared.Permission;
-import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.shared.util.FormattingHelper;
 
@@ -48,15 +38,13 @@ import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
-import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author billy1380
  * 
  */
-public class UsersPage extends Page implements DeleteUserEventHandler, GetRolesEventHandler, GetPermissionsEventHandler {
+public class UsersPage extends Page implements DeleteUserEventHandler {
 
 	private static UsersPageUiBinder uiBinder = GWT.create(UsersPageUiBinder.class);
 
@@ -68,15 +56,14 @@ public class UsersPage extends Page implements DeleteUserEventHandler, GetRolesE
 	private ConfirmationDialog confirmationDialog;
 	@UiField Preloader preloader;
 
-	private ListBox roles = new ListBox();
-	private ListBox permissions = new ListBox();
-
 	public UsersPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		mUsers.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
+		createColumns();
 
-		RoleController.get().fetchRoles();
+		mUsers.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
+		UserController.get().addDataDisplay(mUsers);
+		mPager.setDisplay(mUsers);
 
 	}
 
@@ -90,8 +77,6 @@ public class UsersPage extends Page implements DeleteUserEventHandler, GetRolesE
 		super.onAttach();
 
 		register(EventController.get().addHandlerToSource(DeleteUserEventHandler.TYPE, UserController.get(), this));
-		register(EventController.get().addHandlerToSource(GetRolesEventHandler.TYPE, RoleController.get(), this));
-		register(EventController.get().addHandlerToSource(GetPermissionsEventHandler.TYPE, PermissionController.get(), this));
 	}
 
 	private void createColumns() {
@@ -136,39 +121,13 @@ public class UsersPage extends Page implements DeleteUserEventHandler, GetRolesE
 		mUsers.addColumn(email, emailHeader);
 
 		SafeHtmlCell prototype = new SafeHtmlCell();
-		Column<User, SafeHtml> assignPassword = new Column<User, SafeHtml>(prototype) {
-
-			@Override
-			public SafeHtml getValue(User object) {
-				return SafeHtmlUtils.fromTrustedString("<a href=\"" + PageType.UsersPageType.asHref("changepassword", object.id.toString()).asString()
-						+ "\" class=\"btn btn-xs btn-default\">Assign password</a>");
-			}
-		};
 
 		Column<User, SafeHtml> changeDetails = new Column<User, SafeHtml>(prototype) {
 
 			@Override
 			public SafeHtml getValue(User object) {
 				return SafeHtmlUtils.fromTrustedString("<a href=\"" + PageType.UsersPageType.asHref("changedetails", object.id.toString()).asString()
-						+ "\" class=\"btn btn-xs btn-default\">Change details</a>");
-			}
-		};
-
-		Column<User, SafeHtml> changeRole = new Column<User, SafeHtml>(prototype) {
-
-			@Override
-			public SafeHtml getValue(User object) {
-				return SafeHtmlUtils.fromTrustedString("<a href=\"" + PageType.UsersPageType.asHref("changepassword", object.id.toString()).asString()
-						+ "\" class=\"btn btn-xs btn-default\">Change role</a> " + roles);
-			}
-		};
-
-		Column<User, SafeHtml> changePermission = new Column<User, SafeHtml>(prototype) {
-
-			@Override
-			public SafeHtml getValue(User object) {
-				return SafeHtmlUtils.fromTrustedString("<a href=\"" + PageType.UsersPageType.asHref("changepassword", object.id.toString()).asString()
-						+ "\" class=\"btn btn-xs btn-default\">Change permission</a> " + permissions);
+						+ "\">Edit</a>");
 			}
 		};
 
@@ -178,10 +137,10 @@ public class UsersPage extends Page implements DeleteUserEventHandler, GetRolesE
 			public void update(int index, final User object, String value) {
 				switch (value) {
 				case "Make admin":
-					UserController.get().makeAdmin(object.id);
+					UserController.get().assignUserRoleId(object.id, "ADM");
 					break;
 				case "Add to beta":
-					UserController.get().makeBeta(object.id);
+					UserController.get().assignUserRoleId(object.id, "BT1");
 					break;
 				case "Delete":
 					confirmationDialog = new ConfirmationDialog("Delete " + object.forename + " " + object.surname + "\n" + object.company,
@@ -241,10 +200,7 @@ public class UsersPage extends Page implements DeleteUserEventHandler, GetRolesE
 		};
 		delete.setFieldUpdater(action);
 
-		mUsers.addColumn(assignPassword);
 		mUsers.addColumn(changeDetails);
-		mUsers.addColumn(changeRole);
-		mUsers.addColumn(changePermission);
 		mUsers.addColumn(makeAdmin);
 		mUsers.addColumn(addToBeta);
 		mUsers.addColumn(delete);
@@ -284,66 +240,6 @@ public class UsersPage extends Page implements DeleteUserEventHandler, GetRolesE
 	@Override
 	public void deleteUserFailure(DeleteUserRequest input, Throwable caught) {
 		preloader.hide();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.api.admin.shared.call.event.GetRolesEventHandler#getRolesSuccess(io.reflection.app.api.admin.shared.call.GetRolesRequest,
-	 * io.reflection.app.api.admin.shared.call.GetRolesResponse)
-	 */
-	@Override
-	public void getRolesSuccess(GetRolesRequest input, GetRolesResponse output) {
-		if (output.status == StatusType.StatusTypeSuccess) {
-			for (Role r : output.roles) {
-				roles.addItem(r.name);
-			}
-			PermissionController.get().fetchPermissions();
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.api.admin.shared.call.event.GetRolesEventHandler#getRolesFailure(io.reflection.app.api.admin.shared.call.GetRolesRequest,
-	 * java.lang.Throwable)
-	 */
-	@Override
-	public void getRolesFailure(GetRolesRequest input, Throwable caught) {
-		// TODO Auto-generated method stub
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * io.reflection.app.api.admin.shared.call.event.GetPermissionsEventHandler#getPermissionsSuccess(io.reflection.app.api.admin.shared.call.GetPermissionsRequest
-	 * , io.reflection.app.api.admin.shared.call.GetPermissionsResponse)
-	 */
-	@Override
-	public void getPermissionsSuccess(GetPermissionsRequest input, GetPermissionsResponse output) {
-		if (output.status == StatusType.StatusTypeSuccess) {
-			for (Permission p : output.permissions) {
-				permissions.addItem(p.name);
-			}
-			createColumns();
-			UserController.get().addDataDisplay(mUsers);
-			mPager.setDisplay(mUsers);
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * io.reflection.app.api.admin.shared.call.event.GetPermissionsEventHandler#getPermissionsFailure(io.reflection.app.api.admin.shared.call.GetPermissionsRequest
-	 * , java.lang.Throwable)
-	 */
-	@Override
-	public void getPermissionsFailure(GetPermissionsRequest input, Throwable caught) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

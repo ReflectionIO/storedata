@@ -8,6 +8,8 @@
 package io.reflection.app.client.controller;
 
 import io.reflection.app.api.admin.client.AdminService;
+import io.reflection.app.api.admin.shared.call.AssignPermissionRequest;
+import io.reflection.app.api.admin.shared.call.AssignPermissionResponse;
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
 import io.reflection.app.api.admin.shared.call.AssignRoleResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
@@ -16,7 +18,6 @@ import io.reflection.app.api.admin.shared.call.GetUsersRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersResponse;
 import io.reflection.app.api.admin.shared.call.SetPasswordRequest;
 import io.reflection.app.api.admin.shared.call.SetPasswordResponse;
-import io.reflection.app.api.admin.shared.call.event.AssignRoleEventHandler;
 import io.reflection.app.api.blog.shared.call.DeleteUserRequest;
 import io.reflection.app.api.blog.shared.call.DeleteUserResponse;
 import io.reflection.app.api.blog.shared.call.event.DeleteUserEventHandler;
@@ -35,6 +36,7 @@ import io.reflection.app.client.handler.user.UserRegisteredEventHandler.UserRegi
 import io.reflection.app.client.handler.user.UserRegisteredEventHandler.UserRegistrationFailed;
 import io.reflection.app.client.handler.user.UsersEventHandler.ReceivedCount;
 import io.reflection.app.client.handler.user.UsersEventHandler.ReceivedUsers;
+import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
 
@@ -189,39 +191,6 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		});
 	}
 
-	/**
-	 * @param userId
-	 */
-	public void makeAdmin(Long userId) {
-		AdminService service = ServiceCreator.createAdminService();
-
-		final AssignRoleRequest input = new AssignRoleRequest();
-		input.accessCode = ACCESS_CODE;
-
-		input.session = SessionController.get().getSessionForApiCall();
-
-		input.role = new Role();
-		input.role.code = "ADM";
-
-		input.user = new User();
-		input.user.id = userId;
-
-		service.assignRole(input, new AsyncCallback<AssignRoleResponse>() {
-
-			@Override
-			public void onSuccess(AssignRoleResponse output) {
-				if (output.status == StatusType.StatusTypeSuccess) {
-					// not sure what to do
-				}
-			}
-
-			@Override
-			public void onFailure(Throwable caught) {
-
-			}
-		});
-	}
-
 	public void assignUserRole(Long userId, Role role) {
 		AdminService service = ServiceCreator.createAdminService();
 
@@ -249,6 +218,47 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 			}
 		});
+	}
+
+	public void assignUserRoleId(Long userId, String roleCode) {
+		Role role = new Role();
+		role.code = roleCode;
+		assignUserRole(userId, role);
+	}
+
+	public void assignUserPermission(Long userId, Permission permission) {
+		AdminService service = ServiceCreator.createAdminService();
+
+		final AssignPermissionRequest input = new AssignPermissionRequest();
+		input.accessCode = ACCESS_CODE;
+
+		input.session = SessionController.get().getSessionForApiCall();
+
+		input.permission = permission;
+
+		input.user = new User();
+		input.user.id = userId;
+
+		service.assignPermission(input, new AsyncCallback<AssignPermissionResponse>() {
+
+			@Override
+			public void onSuccess(AssignPermissionResponse output) {
+				if (output.status == StatusType.StatusTypeSuccess) {
+					// not sure what to do
+				}
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+
+			}
+		});
+	}
+
+	public void assignUserPermissionId(Long userId, String permissionCode) {
+		Permission permission = new Permission();
+		permission.code = permissionCode;
+		assignUserPermission(userId, permission);
 	}
 
 	/**
@@ -289,40 +299,6 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 		});
 
-	}
-
-	/**
-	 * Adds BT1 role to the user (this is the role code designated to the first closed beta)
-	 * 
-	 * @param userId
-	 *            The id of the user to add to the closed beta
-	 */
-	public void makeBeta(Long userId) {
-		AdminService service = ServiceCreator.createAdminService();
-
-		final AssignRoleRequest input = new AssignRoleRequest();
-		input.accessCode = ACCESS_CODE;
-
-		input.session = SessionController.get().getSessionForApiCall();
-
-		input.role = new Role();
-		input.role.code = "BT1";
-
-		input.user = new User();
-		input.user.id = userId;
-
-		service.assignRole(input, new AsyncCallback<AssignRoleResponse>() {
-
-			@Override
-			public void onSuccess(AssignRoleResponse output) {
-				EventController.get().fireEventFromSource(new AssignRoleEventHandler.AssignRoleSuccess(input, output), UserController.this);
-			}
-
-			@Override
-			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new AssignRoleEventHandler.AssignRoleFailure(input, caught), UserController.this);
-			}
-		});
 	}
 
 	/**
@@ -517,6 +493,63 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 				EventController.get().fireEventFromSource(new GetUserDetailsEventHandler.GetUserDetailsFailure(input, caught), UserController.this);
 			}
 		});
+	}
+
+	public void fetchUserRoles(User user) {
+
+		// TODO IF ADMIN GETROLESANDPERMISSION MODIFIED, ELSE NEW METHOD
+
+//		CoreService service = ServiceCreator.createCoreService();
+//
+//		final GetRolesRequest input = new GetRolesRequest();
+//		input.accessCode = ACCESS_CODE;
+//
+//		input.session = SessionController.get().getSessionForApiCall();
+//
+//		if (mPager == null) {
+//			mPager = new Pager();
+//			mPager.count = SHORT_STEP;
+//			mPager.start = Long.valueOf(0);
+//			mPager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
+//		}
+//		input.pager = mPager;
+//
+//		service.getRolesAndPermissions(input, new AsyncCallback<G>() {
+//
+//			@Override
+//			public void onSuccess(GetUsersResponse result) {
+//				if (result.status == StatusType.StatusTypeSuccess) {
+//					if (result.users != null) {
+//						mUsers.addAll(result.users);
+//
+//						addToLookup(result.users);
+//					}
+//
+//					if (result.pager != null) {
+//						mPager = result.pager;
+//
+//						if (mPager.totalCount != null) {
+//							mCount = mPager.totalCount.longValue();
+//
+//							EventController.get().fireEventFromSource(new ReceivedCount(result.pager.totalCount), UserController.this);
+//						}
+//					}
+//
+//					updateRowCount((int) mCount, true);
+//					updateRowData(
+//							input.pager.start.intValue(),
+//							mUsers.subList(input.pager.start.intValue(),
+//									Math.min(input.pager.start.intValue() + input.pager.count.intValue(), mPager.totalCount.intValue())));
+//
+//					EventController.get().fireEventFromSource(new ReceivedUsers(result.users), UserController.this);
+//				}
+//			}
+//
+//			@Override
+//			public void onFailure(Throwable caught) {
+//				Window.alert("Error");
+//			}
+//		});
 	}
 
 }

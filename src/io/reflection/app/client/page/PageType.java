@@ -47,7 +47,6 @@ public enum PageType {
 	UsersPageType("users", "MUS"),
 	LoginPageType("login", false),
 	RegisterPageType("register", false),
-	ChangePasswordPageType("changepassword", true),
 	RolesPageType("roles", "MRL"),
 	PermissionsPageType("permissions", "MPR"),
 	ChangeDetailsPageType("changedetails", true),
@@ -205,9 +204,6 @@ public enum PageType {
 			break;
 		case RegisterPageType:
 			page = new RegisterPage();
-			break;
-		case ChangePasswordPageType:
-			page = new ChangePasswordPage();
 			break;
 		case RolesPageType:
 			page = new RolesPage();

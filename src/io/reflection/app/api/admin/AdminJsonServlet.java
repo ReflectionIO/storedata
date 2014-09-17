@@ -8,12 +8,14 @@
 //
 package io.reflection.app.api.admin;
 
+import io.reflection.app.api.admin.shared.call.AssignPermissionRequest;
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
 import io.reflection.app.api.admin.shared.call.GetEmailTemplatesRequest;
 import io.reflection.app.api.admin.shared.call.GetFeedFetchesRequest;
 import io.reflection.app.api.admin.shared.call.GetItemsRequest;
 import io.reflection.app.api.admin.shared.call.GetModelOutcomeRequest;
 import io.reflection.app.api.admin.shared.call.GetPermissionsRequest;
+import io.reflection.app.api.admin.shared.call.GetRolesAndPermissionsRequest;
 import io.reflection.app.api.admin.shared.call.GetRolesRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersRequest;
@@ -74,6 +76,10 @@ public final class AdminJsonServlet extends JsonServlet {
 			AssignRoleRequest input = new AssignRoleRequest();
 			input.fromJson(request);
 			output = service.assignRole(input).toString();
+		} else if ("AssignPermission".equals(action)) {
+			AssignPermissionRequest input = new AssignPermissionRequest();
+			input.fromJson(request);
+			output = service.assignPermission(input).toString();
 		} else if ("GetRoles".equals(action)) {
 			GetRolesRequest input = new GetRolesRequest();
 			input.fromJson(request);
@@ -98,6 +104,10 @@ public final class AdminJsonServlet extends JsonServlet {
 			DeleteUserRequest input = new DeleteUserRequest();
 			input.fromJson(request);
 			output = service.deleteUser(input).toString();
+		} else if ("GetRolesAndPermissions".equals(action)) {
+			GetRolesAndPermissionsRequest input = new GetRolesAndPermissionsRequest();
+			input.fromJson(request);
+			output = service.getRolesAndPermissions(input).toString();
 		}
 
 		return output;

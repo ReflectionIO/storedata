@@ -84,10 +84,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@UiField LIElement myAppsItem;
 	@UiField InlineHyperlink linkedAccountsLink;
 	@UiField LIElement linkedAccountsItem;
-	@UiField InlineHyperlink personalDetailsLink;
-	@UiField LIElement personalDetailsItem;
-	@UiField InlineHyperlink changePasswordLink;
-	@UiField LIElement changePasswordItem;
+	@UiField InlineHyperlink accountSettingsLink;
+	@UiField LIElement accountSettingsItem;
 
 	@UiField InlineHyperlink blogLink;
 	@UiField LIElement blogItem;
@@ -233,8 +231,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			items.add(ranksItem);
 			items.add(myAppsItem);
 			items.add(linkedAccountsItem);
-			items.add(personalDetailsItem);
-			items.add(changePasswordItem);
+			items.add(accountSettingsItem);
 			items.add(blogItem);
 			items.add(forumItem);
 			items.add(usersItem);
@@ -293,9 +290,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			} else if (PageType.LinkedAccountsPageType.equals(current.getAction())) {
 				highlight(myAccountDropdown, linkedAccountsItem);
 			} else if (PageType.ChangeDetailsPageType.equals(current.getAction())) {
-				highlight(myAccountDropdown, personalDetailsItem);
-			} else if (PageType.ChangePasswordPageType.equals(current.getAction())) {
-				highlight(myAccountDropdown, changePasswordItem);
+				highlight(myAccountDropdown, accountSettingsItem);
 			}
 		} else if (PageType.LoginPageType.equals(current.getPage())) {
 			highlight(loginItem);
@@ -492,8 +487,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		myAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController
 				.get().asMyAppsFilterString()));
 		linkedAccountsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(), user.id.toString()));
-		personalDetailsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.ChangeDetailsPageType.toString(), user.id.toString()));
-		changePasswordLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.ChangePasswordPageType.toString(), user.id.toString()));
+		accountSettingsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.ChangeDetailsPageType.toString(), user.id.toString()));
 
 		navList.appendChild(myAccountList);
 	}

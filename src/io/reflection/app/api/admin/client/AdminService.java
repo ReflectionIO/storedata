@@ -8,6 +8,8 @@
 //
 package io.reflection.app.api.admin.client;
 
+import io.reflection.app.api.admin.shared.call.AssignPermissionRequest;
+import io.reflection.app.api.admin.shared.call.AssignPermissionResponse;
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
 import io.reflection.app.api.admin.shared.call.AssignRoleResponse;
 import io.reflection.app.api.admin.shared.call.GetEmailTemplatesRequest;
@@ -20,6 +22,8 @@ import io.reflection.app.api.admin.shared.call.GetModelOutcomeRequest;
 import io.reflection.app.api.admin.shared.call.GetModelOutcomeResponse;
 import io.reflection.app.api.admin.shared.call.GetPermissionsRequest;
 import io.reflection.app.api.admin.shared.call.GetPermissionsResponse;
+import io.reflection.app.api.admin.shared.call.GetRolesAndPermissionsRequest;
+import io.reflection.app.api.admin.shared.call.GetRolesAndPermissionsResponse;
 import io.reflection.app.api.admin.shared.call.GetRolesRequest;
 import io.reflection.app.api.admin.shared.call.GetRolesResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
@@ -381,6 +385,39 @@ public final class AdminService extends JsonService {
 		return handle;
 	}
 
+	public static final String AdminMethodAssignPermission = "AssignPermission";
+
+	public Request assignPermission(final AssignPermissionRequest input, final AsyncCallback<AssignPermissionResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(AdminMethodAssignPermission, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						AssignPermissionResponse outputParameter = new AssignPermissionResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodAssignPermission, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodAssignPermission, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(AdminService.this, AdminMethodAssignPermission, input, exception);
+				}
+			});
+			onCallStart(AdminService.this, AdminMethodAssignPermission, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodAssignPermission, input, exception);
+		}
+		return handle;
+	}
+
 	public static final String AdminMethodGetRoles = "GetRoles";
 
 	public Request getRoles(final GetRolesRequest input, final AsyncCallback<GetRolesResponse> output) {
@@ -575,6 +612,39 @@ public final class AdminService extends JsonService {
 		} catch (RequestException exception) {
 			output.onFailure(exception);
 			onCallFailure(AdminService.this, AdminMethodDeleteUser, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String AdminMethodGetRolesAndPermissions = "GetRolesAndPermissions";
+
+	public Request getRolesAndPermissions(final GetRolesAndPermissionsRequest input, final AsyncCallback<GetRolesAndPermissionsResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(AdminMethodGetRolesAndPermissions, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						GetRolesAndPermissionsResponse outputParameter = new GetRolesAndPermissionsResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodGetRolesAndPermissions, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodGetRolesAndPermissions, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(AdminService.this, AdminMethodGetRolesAndPermissions, input, exception);
+				}
+			});
+			onCallStart(AdminService.this, AdminMethodGetRolesAndPermissions, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodGetRolesAndPermissions, input, exception);
 		}
 		return handle;
 	}
