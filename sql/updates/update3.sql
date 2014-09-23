@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS `simplemodelrun` (
 	`store` char(3) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
 	`code` bigint(20) unsigned DEFAULT NULL,
 	`form` enum('tablet','other') COLLATE utf8mb4_unicode_ci DEFAULT 'other',
+	`listtype` enum('free','paid','grossing') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
 	`a` double DEFAULT NULL,
 	`b` double DEFAULT NULL,
 	`deleted` enum('y','n') COLLATE utf8mb4_unicode_ci DEFAULT 'n',

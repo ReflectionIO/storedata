@@ -322,6 +322,7 @@
 
 				<xsd:attribute name="code" type="xsd:long" />
 				<xsd:attribute name="form" type="FormType" />
+				<xsd:attribute name="listType" type="ListTypeType" />
 				<xsd:attribute name="a" type="xsd:double" />
 				<xsd:attribute name="b" type="xsd:double" />
 			</xsd:extension>
@@ -542,6 +543,14 @@
 		<xsd:restriction base="xsd:string">
 			<xsd:enumeration value="correlation" />
 			<xsd:enumeration value="simple" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="ListTypeType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="free" />
+			<xsd:enumeration value="paid" />
+			<xsd:enumeration value="grossing" />
 		</xsd:restriction>
 	</xsd:simpleType>
 	
