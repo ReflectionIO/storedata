@@ -8,8 +8,8 @@
 //
 package io.reflection.app.api.admin.shared.call.event;
 
-import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsRequest;
-import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsResponse;
+import io.reflection.app.api.admin.shared.call.GetRolesAndPermissionsRequest;
+import io.reflection.app.api.admin.shared.call.GetRolesAndPermissionsResponse;
 
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;

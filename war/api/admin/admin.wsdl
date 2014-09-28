@@ -37,6 +37,12 @@
 
 			<xsd:element name="AssignPermissionInput" type="sda:AssignPermissionRequest" />
 			<xsd:element name="AssignPermissionOutput" type="sda:AssignPermissionResponse" />
+			
+			<xsd:element name="RevokeRoleInput" type="sda:RevokeRoleRequest" />
+			<xsd:element name="RevokeRoleOutput" type="sda:RevokeRoleResponse" />
+
+			<xsd:element name="RevokePermissionInput" type="sda:RevokePermissionRequest" />
+			<xsd:element name="RevokePermissionOutput" type="sda:RevokePermissionResponse" />
 
 			<xsd:element name="GetRolesInput" type="sda:GetRolesRequest" />
 			<xsd:element name="GetRolesOutput" type="sda:GetRolesResponse" />
@@ -285,6 +291,42 @@
 					</xsd:extension>
 				</xsd:complexContent>
 			</xsd:complexType>
+			
+			<xsd:complexType name="RevokeRoleRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="user" type="sd:User" />
+							<xsd:element name="role" type="sd:Role" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="RevokeRoleResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="RevokePermissionRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="user" type="sd:User" />
+							<xsd:element name="permission" type="sd:Permission" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="RevokePermissionResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
 			<xsd:complexType name="GetRolesRequest">
 				<xsd:complexContent>
@@ -507,6 +549,20 @@
 	<wsdl:message name="AssignPermissionResponse">
 		<wsdl:part name="output" element="sda:AssignPermissionOutput" />
 	</wsdl:message>
+	
+	<wsdl:message name="RevokeRoleRequest">
+		<wsdl:part name="input" element="sda:RevokeRoleInput" />
+	</wsdl:message>
+	<wsdl:message name="RevokeRoleResponse">
+		<wsdl:part name="output" element="sda:RevokeRoleOutput" />
+	</wsdl:message>
+
+	<wsdl:message name="RevokePermissionRequest">
+		<wsdl:part name="input" element="sda:RevokePermissionInput" />
+	</wsdl:message>
+	<wsdl:message name="RevokePermissionResponse">
+		<wsdl:part name="output" element="sda:RevokePermissionOutput" />
+	</wsdl:message>
 
 	<wsdl:message name="GetRolesRequest">
 		<wsdl:part name="input" element="sda:GetRolesInput" />
@@ -605,6 +661,16 @@
 		<wsdl:operation name="AssignPermission">
 			<wsdl:input message="sda:AssignPermissionRequest" />
 			<wsdl:output message="sda:AssignPermissionResponse" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="RevokeRole">
+			<wsdl:input message="sda:RevokeRoleRequest" />
+			<wsdl:output message="sda:RevokeRoleResponse" />
+		</wsdl:operation>
+
+		<wsdl:operation name="RevokePermission">
+			<wsdl:input message="sda:RevokePermissionRequest" />
+			<wsdl:output message="sda:RevokePermissionResponse" />
 		</wsdl:operation>
 
 		<wsdl:operation name="GetRoles">
@@ -739,6 +805,26 @@
 
 		<wsdl:operation name="AssignPermission">
 			<soap:operation soapAction="http://app.reflection.io/admin/AssignPermission" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		
+		<wsdl:operation name="RevokeRole">
+			<soap:operation soapAction="http://app.reflection.io/admin/RevokeRole" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="RevokePermission">
+			<soap:operation soapAction="http://app.reflection.io/admin/RevokePermission" />
 			<wsdl:input>
 				<soap:body use="literal" />
 			</wsdl:input>

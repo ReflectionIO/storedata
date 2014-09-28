@@ -19,6 +19,8 @@ import io.reflection.app.api.admin.shared.call.GetRolesAndPermissionsRequest;
 import io.reflection.app.api.admin.shared.call.GetRolesRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersRequest;
+import io.reflection.app.api.admin.shared.call.RevokePermissionRequest;
+import io.reflection.app.api.admin.shared.call.RevokeRoleRequest;
 import io.reflection.app.api.admin.shared.call.SendEmailRequest;
 import io.reflection.app.api.admin.shared.call.SetPasswordRequest;
 import io.reflection.app.api.admin.shared.call.TriggerGatherRequest;
@@ -80,6 +82,14 @@ public final class AdminJsonServlet extends JsonServlet {
 			AssignPermissionRequest input = new AssignPermissionRequest();
 			input.fromJson(request);
 			output = service.assignPermission(input).toString();
+		} else if ("RevokeRole".equals(action)) {
+			RevokeRoleRequest input = new RevokeRoleRequest();
+			input.fromJson(request);
+			output = service.revokeRole(input).toString();
+		} else if ("RevokePermission".equals(action)) {
+			RevokePermissionRequest input = new RevokePermissionRequest();
+			input.fromJson(request);
+			output = service.revokePermission(input).toString();
 		} else if ("GetRoles".equals(action)) {
 			GetRolesRequest input = new GetRolesRequest();
 			input.fromJson(request);

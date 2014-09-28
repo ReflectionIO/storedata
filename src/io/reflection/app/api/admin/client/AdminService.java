@@ -30,6 +30,10 @@ import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersCountResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersResponse;
+import io.reflection.app.api.admin.shared.call.RevokePermissionRequest;
+import io.reflection.app.api.admin.shared.call.RevokePermissionResponse;
+import io.reflection.app.api.admin.shared.call.RevokeRoleRequest;
+import io.reflection.app.api.admin.shared.call.RevokeRoleResponse;
 import io.reflection.app.api.admin.shared.call.SendEmailRequest;
 import io.reflection.app.api.admin.shared.call.SendEmailResponse;
 import io.reflection.app.api.admin.shared.call.SetPasswordRequest;
@@ -414,6 +418,72 @@ public final class AdminService extends JsonService {
 		} catch (RequestException exception) {
 			output.onFailure(exception);
 			onCallFailure(AdminService.this, AdminMethodAssignPermission, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String AdminMethodRevokeRole = "RevokeRole";
+
+	public Request revokeRole(final RevokeRoleRequest input, final AsyncCallback<RevokeRoleResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(AdminMethodRevokeRole, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						RevokeRoleResponse outputParameter = new RevokeRoleResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodRevokeRole, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodRevokeRole, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(AdminService.this, AdminMethodRevokeRole, input, exception);
+				}
+			});
+			onCallStart(AdminService.this, AdminMethodRevokeRole, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodRevokeRole, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String AdminMethodRevokePermission = "RevokePermission";
+
+	public Request revokePermission(final RevokePermissionRequest input, final AsyncCallback<RevokePermissionResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(AdminMethodRevokePermission, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						RevokePermissionResponse outputParameter = new RevokePermissionResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodRevokePermission, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodRevokePermission, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(AdminService.this, AdminMethodRevokePermission, input, exception);
+				}
+			});
+			onCallStart(AdminService.this, AdminMethodRevokePermission, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodRevokePermission, input, exception);
 		}
 		return handle;
 	}

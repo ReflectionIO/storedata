@@ -33,6 +33,10 @@ import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersCountResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersResponse;
+import io.reflection.app.api.admin.shared.call.RevokePermissionRequest;
+import io.reflection.app.api.admin.shared.call.RevokePermissionResponse;
+import io.reflection.app.api.admin.shared.call.RevokeRoleRequest;
+import io.reflection.app.api.admin.shared.call.RevokeRoleResponse;
 import io.reflection.app.api.admin.shared.call.SendEmailRequest;
 import io.reflection.app.api.admin.shared.call.SendEmailResponse;
 import io.reflection.app.api.admin.shared.call.SetPasswordRequest;
@@ -432,6 +436,66 @@ public final class Admin extends ActionHandler {
 			output.error = convertToErrorAndLog(LOG, e);
 		}
 		LOG.finer("Exiting assignPermission");
+		return output;
+	}
+
+	public RevokeRoleResponse revokeRole(RevokeRoleRequest input) {
+		LOG.finer("Entering revokeRole");
+		RevokeRoleResponse output = new RevokeRoleResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("RevokeRoleRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+
+			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
+
+			input.role = ValidationHelper.validateRole(input.role, "input.role");
+
+			if (UserServiceProvider.provide().hasRole(input.user, input.role).booleanValue()) {
+				UserServiceProvider.provide().revokeRole(input.user, input.role);
+			}
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting revokeRole");
+		return output;
+	}
+
+	public RevokePermissionResponse revokePermission(RevokePermissionRequest input) {
+		LOG.finer("Entering revokePermission");
+		RevokePermissionResponse output = new RevokePermissionResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("AssignRoleRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+
+			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
+
+			input.permission = ValidationHelper.validatePermission(input.permission, "input.permission");
+
+			if (UserServiceProvider.provide().hasPermission(input.user, input.permission).booleanValue()) {
+				UserServiceProvider.provide().revokePermission(input.user, input.permission);
+			}
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting revokePermission");
 		return output;
 	}
 
