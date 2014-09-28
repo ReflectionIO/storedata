@@ -12,12 +12,23 @@ import io.reflection.app.api.admin.shared.call.AssignPermissionRequest;
 import io.reflection.app.api.admin.shared.call.AssignPermissionResponse;
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
 import io.reflection.app.api.admin.shared.call.AssignRoleResponse;
+import io.reflection.app.api.admin.shared.call.GetRolesAndPermissionsRequest;
+import io.reflection.app.api.admin.shared.call.GetRolesAndPermissionsResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersCountResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersResponse;
+import io.reflection.app.api.admin.shared.call.RevokePermissionRequest;
+import io.reflection.app.api.admin.shared.call.RevokePermissionResponse;
+import io.reflection.app.api.admin.shared.call.RevokeRoleRequest;
+import io.reflection.app.api.admin.shared.call.RevokeRoleResponse;
 import io.reflection.app.api.admin.shared.call.SetPasswordRequest;
 import io.reflection.app.api.admin.shared.call.SetPasswordResponse;
+import io.reflection.app.api.admin.shared.call.event.AssignPermissionEventHandler;
+import io.reflection.app.api.admin.shared.call.event.AssignRoleEventHandler;
+import io.reflection.app.api.admin.shared.call.event.GetRolesAndPermissionsEventHandler;
+import io.reflection.app.api.admin.shared.call.event.RevokePermissionEventHandler;
+import io.reflection.app.api.admin.shared.call.event.RevokeRoleEventHandler;
 import io.reflection.app.api.blog.shared.call.DeleteUserRequest;
 import io.reflection.app.api.blog.shared.call.DeleteUserResponse;
 import io.reflection.app.api.blog.shared.call.event.DeleteUserEventHandler;
@@ -211,11 +222,12 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 				if (output.status == StatusType.StatusTypeSuccess) {
 					// not sure what to do
 				}
+				EventController.get().fireEventFromSource(new AssignRoleEventHandler.AssignRoleSuccess(input, output), UserController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-
+				EventController.get().fireEventFromSource(new AssignRoleEventHandler.AssignRoleFailure(input, caught), UserController.this);
 			}
 		});
 	}
@@ -246,11 +258,12 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 				if (output.status == StatusType.StatusTypeSuccess) {
 					// not sure what to do
 				}
+				EventController.get().fireEventFromSource(new AssignPermissionEventHandler.AssignPermissionSuccess(input, output), UserController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-
+				EventController.get().fireEventFromSource(new AssignPermissionEventHandler.AssignPermissionFailure(input, caught), UserController.this);
 			}
 		});
 	}
@@ -259,6 +272,80 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		Permission permission = new Permission();
 		permission.code = permissionCode;
 		assignUserPermission(userId, permission);
+	}
+
+	public void revokeUserRole(Long userId, Role role) {
+		AdminService service = ServiceCreator.createAdminService();
+
+		final RevokeRoleRequest input = new RevokeRoleRequest();
+		input.accessCode = ACCESS_CODE;
+
+		input.session = SessionController.get().getSessionForApiCall();
+
+		input.role = role;
+
+		input.user = new User();
+		input.user.id = userId;
+
+		service.revokeRole(input, new AsyncCallback<RevokeRoleResponse>() {
+
+			@Override
+			public void onSuccess(RevokeRoleResponse output) {
+				if (output.status == StatusType.StatusTypeSuccess) {
+					// not sure what to do
+				}
+				EventController.get().fireEventFromSource(new RevokeRoleEventHandler.RevokeRoleSuccess(input, output), UserController.this);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				EventController.get().fireEventFromSource(new RevokeRoleEventHandler.RevokeRoleFailure(input, caught), UserController.this);
+			}
+
+		});
+
+	}
+
+	public void revokeUserRoleId(Long userId, String roleCode) {
+		Role role = new Role();
+		role.code = roleCode;
+		revokeUserRole(userId, role);
+	}
+
+	public void revokeUserPermission(Long userId, Permission permission) {
+		AdminService service = ServiceCreator.createAdminService();
+
+		final RevokePermissionRequest input = new RevokePermissionRequest();
+		input.accessCode = ACCESS_CODE;
+
+		input.session = SessionController.get().getSessionForApiCall();
+
+		input.permission = permission;
+
+		input.user = new User();
+		input.user.id = userId;
+
+		service.revokePermission(input, new AsyncCallback<RevokePermissionResponse>() {
+
+			@Override
+			public void onSuccess(RevokePermissionResponse output) {
+				if (output.status == StatusType.StatusTypeSuccess) {
+					// not sure what to do
+				}
+				EventController.get().fireEventFromSource(new RevokePermissionEventHandler.RevokePermissionSuccess(input, output), UserController.this);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				EventController.get().fireEventFromSource(new RevokePermissionEventHandler.RevokePermissionFailure(input, caught), UserController.this);
+			}
+		});
+	}
+
+	public void revokeUserPermissionId(Long userId, String permissionCode) {
+		Permission permission = new Permission();
+		permission.code = permissionCode;
+		revokeUserPermission(userId, permission);
 	}
 
 	/**
@@ -495,61 +582,39 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		});
 	}
 
-	public void fetchUserRoles(User user) {
+	/**
+	 * If the current user is Admin, fetch roles and permissions of the user defined as parameter
+	 * 
+	 * @param user
+	 */
+	public void fetchUserRolesAndPermissions(User user) {
 
-		// TODO IF ADMIN GETROLESANDPERMISSION MODIFIED, ELSE NEW METHOD
+		AdminService service = ServiceCreator.createAdminService();
 
-//		CoreService service = ServiceCreator.createCoreService();
-//
-//		final GetRolesRequest input = new GetRolesRequest();
-//		input.accessCode = ACCESS_CODE;
-//
-//		input.session = SessionController.get().getSessionForApiCall();
-//
-//		if (mPager == null) {
-//			mPager = new Pager();
-//			mPager.count = SHORT_STEP;
-//			mPager.start = Long.valueOf(0);
-//			mPager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
-//		}
-//		input.pager = mPager;
-//
-//		service.getRolesAndPermissions(input, new AsyncCallback<G>() {
-//
-//			@Override
-//			public void onSuccess(GetUsersResponse result) {
-//				if (result.status == StatusType.StatusTypeSuccess) {
-//					if (result.users != null) {
-//						mUsers.addAll(result.users);
-//
-//						addToLookup(result.users);
-//					}
-//
-//					if (result.pager != null) {
-//						mPager = result.pager;
-//
-//						if (mPager.totalCount != null) {
-//							mCount = mPager.totalCount.longValue();
-//
-//							EventController.get().fireEventFromSource(new ReceivedCount(result.pager.totalCount), UserController.this);
-//						}
-//					}
-//
-//					updateRowCount((int) mCount, true);
-//					updateRowData(
-//							input.pager.start.intValue(),
-//							mUsers.subList(input.pager.start.intValue(),
-//									Math.min(input.pager.start.intValue() + input.pager.count.intValue(), mPager.totalCount.intValue())));
-//
-//					EventController.get().fireEventFromSource(new ReceivedUsers(result.users), UserController.this);
-//				}
-//			}
-//
-//			@Override
-//			public void onFailure(Throwable caught) {
-//				Window.alert("Error");
-//			}
-//		});
+		final GetRolesAndPermissionsRequest input = new GetRolesAndPermissionsRequest();
+		input.accessCode = ACCESS_CODE;
+
+		input.session = SessionController.get().getSessionForApiCall();
+
+		input.idsOnly = Boolean.FALSE; // Retrieve the whole permission
+
+		input.user = user;
+
+		service.getRolesAndPermissions(input, new AsyncCallback<GetRolesAndPermissionsResponse>() {
+
+			@Override
+			public void onSuccess(GetRolesAndPermissionsResponse output) {
+				EventController.get().fireEventFromSource(new GetRolesAndPermissionsEventHandler.GetRolesAndPermissionsSuccess(input, output),
+						UserController.this);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				EventController.get().fireEventFromSource(new GetRolesAndPermissionsEventHandler.GetRolesAndPermissionsFailure(input, caught),
+						UserController.this);
+			}
+
+		});
 	}
 
 }
