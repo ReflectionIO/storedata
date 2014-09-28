@@ -278,7 +278,7 @@ final class PermissionService implements IPermissionService {
 				permissionConnection.connect();
 				permissionConnection.executeQuery(getPermissionsQuery.toString());
 
-				if (permissionConnection.fetchNextRow()) {
+				while (permissionConnection.fetchNextRow()) {
 					Permission permission = lookup.get(permissionConnection.getCurrentRowLong("id"));
 
 					toPermission(permissionConnection, permission);
