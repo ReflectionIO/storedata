@@ -91,6 +91,12 @@ public enum ApiError {
 
 	InvalidActionCode(100055, "Invalid action code String: {0}"),
 
+	FeedFetchNull(100060, "Invalid value null for FeedFetch: {0}.feedFetch"),
+	FeedFetchNotFound(100061, "FeedFetch not found FeedFetch: {0}.value"),
+
+	SimpleModelRunNull(100060, "Invalid value null for SimpleModelRun: {0}.simpleModelRun"),
+	SimpleModelRunNotFound(100061, "SimpleModelRun not found SimpleModelRun: {0}.value"),
+
 	GetCountriesNeedsStoreOrQuery(100101, "GetCountries call should either have a store or a query. To get all countries use * for the query: {0}"),
 
 	GetStoresNeedsCountryOrQuery(100201, "GetStores call should either have a country or a query. To get all stores use * for the query: {0}"),

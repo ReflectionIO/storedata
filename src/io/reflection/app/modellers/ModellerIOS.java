@@ -10,6 +10,7 @@ package io.reflection.app.modellers;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.collectors.CollectorIOS;
 import io.reflection.app.datatypes.shared.Category;
+import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.FormType;
 import io.reflection.app.datatypes.shared.ModelTypeType;
 import io.reflection.app.datatypes.shared.Store;
@@ -62,16 +63,6 @@ public class ModellerIOS
 				: CollectorIOS.TOP_PAID_IPAD_APPS) : (isFree != null && isFree.booleanValue() ? CollectorIOS.TOP_FREE_APPS : CollectorIOS.TOP_PAID_APPS);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.modellers.Modeller#getModelType()
-	 */
-	@Override
-	public ModelTypeType getModelType() {
-		return ModelTypeType.ModelTypeTypeCorrelation;
-	}
-
 	@Override
 	public void enqueue(ModelTypeType modelType, String country, Category category, String listType, Long code) {
 		Store s = DataTypeHelper.getIosStore();
@@ -88,5 +79,30 @@ public class ModellerIOS
 				"country", country), new SimpleEntry<String, String>("type", listType), new SimpleEntry<String, String>("code", code.toString()),
 				new SimpleEntry<String, String>("categoryid", category == null ? Long.toString(24) : category.id.toString()), new SimpleEntry<String, String>(
 						"modeltype", modelType.toString()));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.modellers.Modeller#enqueue(io.reflection.app.datatypes.shared.FeedFetch)
+	 */
+	@Override
+	public void enqueue(FeedFetch feedFetch) {
+		QueueHelper.enqueue("model", Method.PULL, new SimpleEntry<String, String>("fetchid", feedFetch.id.toString()), new SimpleEntry<String, String>(
+				"modeltype", ModelTypeType.ModelTypeTypeSimple.toString()));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.modellers.Modeller#enqueue(io.reflection.app.datatypes.shared.FeedFetch, io.reflection.app.datatypes.shared.FeedFetch,
+	 * io.reflection.app.datatypes.shared.FeedFetch)
+	 */
+	@Override
+	public void enqueue(FeedFetch free, FeedFetch paid, FeedFetch grossing) {
+		QueueHelper.enqueue("model", Method.PULL, new SimpleEntry<String, String>("freefetchid", free.id.toString()), new SimpleEntry<String, String>(
+				"paidfetchid", paid.id.toString()), new SimpleEntry<String, String>("grossingfetchid", grossing.id.toString()),
+				new SimpleEntry<String, String>("modeltype", ModelTypeType.ModelTypeTypeCorrelation.toString()));
+
 	}
 }

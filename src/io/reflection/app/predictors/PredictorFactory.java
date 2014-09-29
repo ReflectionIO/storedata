@@ -25,7 +25,7 @@ public class PredictorFactory {
 
 			if (DataTypeHelper.IOS_STORE_A3.equals(store.toLowerCase())) {
 				// ios store
-				predictor = new SimplePredictorIOS();
+				predictor = new PredictorIOS();
 			} else if ("azn".equals(store.toLowerCase())) {
 				// amazon store
 			} else if ("gpl".equals(store.toLowerCase())) {

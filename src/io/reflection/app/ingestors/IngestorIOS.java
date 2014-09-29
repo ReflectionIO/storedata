@@ -17,7 +17,6 @@ import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.FeedFetchStatusType;
 import io.reflection.app.datatypes.shared.Item;
-import io.reflection.app.datatypes.shared.ModelTypeType;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.logging.GaeLevel;
@@ -300,7 +299,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 				FeedFetchServiceProvider.provide().updateFeedFetch(current);
 
 				// once the feed fetch status is updated model the list 
-				modeller.enqueue(ModelTypeType.ModelTypeTypeSimple, current.country, current.category, current.type, current.code);
+				modeller.enqueue(current);
 			}
 
 			// Store s = DataTypeHelper.getIosStore();

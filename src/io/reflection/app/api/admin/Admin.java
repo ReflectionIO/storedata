@@ -48,7 +48,6 @@ import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.shared.DataAccount;
-import io.reflection.app.datatypes.shared.ModelTypeType;
 import io.reflection.app.ingestors.Ingestor;
 import io.reflection.app.ingestors.IngestorFactory;
 import io.reflection.app.modellers.Modeller;
@@ -178,7 +177,7 @@ public final class Admin extends ActionHandler {
 			input.store = ValidationHelper.validateStore(input.store, "input");
 
 			input.listTypes = ValidationHelper.validateListTypes(input.listTypes, input.store, "input.listTypes");
-			
+
 			output.feedFetches = FeedFetchServiceProvider.provide().getFeedFetches(input.country, input.store, input.listTypes, input.pager);
 
 			output.pager = input.pager;
@@ -201,12 +200,12 @@ public final class Admin extends ActionHandler {
 			if (input == null)
 				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("TriggerGatherRequest: input"));
 
-			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");			
-			
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(Long.valueOf(1)));
-			
+
 			input.country = ValidationHelper.validateCountry(input.country, "input");
 
 			input.store = ValidationHelper.validateStore(input.store, "input");
@@ -216,7 +215,7 @@ public final class Admin extends ActionHandler {
 			} else {
 				input.category = CategoryServiceProvider.provide().getAllCategory(input.store);
 			}
-			
+
 			input.listTypes = ValidationHelper.validateListTypes(input.listTypes, input.store, "input");
 
 			output.status = StatusType.StatusTypeSuccess;
@@ -250,7 +249,7 @@ public final class Admin extends ActionHandler {
 			} else {
 				input.category = CategoryServiceProvider.provide().getAllCategory(input.store);
 			}
-			
+
 			input.listTypes = ValidationHelper.validateListTypes(input.listTypes, input.store, "input");
 
 			Ingestor i = IngestorFactory.getIngestorForStore(input.store.a3Code);
@@ -282,26 +281,25 @@ public final class Admin extends ActionHandler {
 
 			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(Long.valueOf(1)));
 
-			input.country = ValidationHelper.validateCountry(input.country, "input");
+			Modeller modeller = null;
 
-			input.store = ValidationHelper.validateStore(input.store, "input");
-						
-			if (input.category != null) {
-				input.category = ValidationHelper.validateCategory(input.category, "input.category");
-			} else {
-				input.category = CategoryServiceProvider.provide().getAllCategory(input.store);
-			}
+			switch (input.modelType) {
+			case ModelTypeTypeCorrelation:
+				input.country = ValidationHelper.validateCountry(input.country, "input");
 
-			input.listTypes = ValidationHelper.validateListTypes(input.listTypes, input.store, "input");
+				input.store = ValidationHelper.validateStore(input.store, "input");
 
-			Collector collector = CollectorFactory.getCollectorForStore(input.store.a3Code);
+				if (input.category != null) {
+					input.category = ValidationHelper.validateCategory(input.category, "input.category");
+				} else {
+					input.category = CategoryServiceProvider.provide().getAllCategory(input.store);
+				}
 
-			Modeller modeller = ModellerFactory.getModellerForStore(input.store.a3Code);
-			ModelTypeType modelType = modeller.getModelType();
+				input.listTypes = ValidationHelper.validateListTypes(input.listTypes, input.store, "input");
 
-			if (modelType == ModelTypeType.ModelTypeTypeCorrelation) {
+				Collector collector = CollectorFactory.getCollectorForStore(input.store.a3Code);
+
 				String type = null;
-
 				for (String listType : input.listTypes) {
 					if (collector.isGrossing(listType)) {
 						type = listType;
@@ -313,11 +311,19 @@ public final class Admin extends ActionHandler {
 					throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
 							ApiError.InvalidValueNull.getMessage("should contain a grossing list name List: input.listType"));
 
-				modeller.enqueue(modelType, input.country.a2Code, input.category, type, input.code);
-			} else if (modelType == ModelTypeType.ModelTypeTypeSimple) {
-				for (String type : input.listTypes) {
-					modeller.enqueue(modelType, input.country.a2Code, input.category, type, input.code);
-				}
+				modeller = ModellerFactory.getModellerForStore(input.store.a3Code);
+				modeller.enqueue(input.modelType, input.country.a2Code, input.category, type, input.code);
+
+				break;
+			case ModelTypeTypeSimple:
+				input.feedFetch = ValidationHelper.validateFeedFetch(input.feedFetch, "input.feedFetch");
+
+				modeller = ModellerFactory.getModellerForStore(input.store.a3Code);
+				modeller.enqueue(input.feedFetch);
+				
+				break;
+			default:
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("ModelTypeType: input.modelType"));
 			}
 
 			output.status = StatusType.StatusTypeSuccess;
@@ -342,29 +348,49 @@ public final class Admin extends ActionHandler {
 
 			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(Long.valueOf(1)));
 
-			input.country = ValidationHelper.validateCountry(input.country, "input");
+			switch (input.modelType) {
+			case ModelTypeTypeCorrelation:
+				input.country = ValidationHelper.validateCountry(input.country, "input");
 
-			input.store = ValidationHelper.validateStore(input.store, "input");
+				input.store = ValidationHelper.validateStore(input.store, "input");
 
-			input.listTypes = ValidationHelper.validateListTypes(input.listTypes, input.store, "input");
-
-			Collector collector = CollectorFactory.getCollectorForStore(input.store.a3Code);
-
-			String type = null;
-			for (String listType : input.listTypes) {
-				if (collector.isGrossing(listType)) {
-					type = listType;
-					break;
+				if (input.category != null) {
+					input.category = ValidationHelper.validateCategory(input.category, "input.category");
+				} else {
+					input.category = CategoryServiceProvider.provide().getAllCategory(input.store);
 				}
+
+				input.listTypes = ValidationHelper.validateListTypes(input.listTypes, input.store, "input");
+
+				Collector collector = CollectorFactory.getCollectorForStore(input.store.a3Code);
+				Predictor predictor = null;
+
+				String type = null;
+				for (String listType : input.listTypes) {
+					if (collector.isGrossing(listType)) {
+						type = listType;
+						break;
+					}
+				}
+
+				if (type == null)
+					throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+							ApiError.InvalidValueNull.getMessage("should contain a grossing list name List: input.listType"));
+
+				predictor = PredictorFactory.getPredictorForStore(input.store.a3Code);
+				predictor.enqueue(input.country.a2Code, type, input.code);
+				
+				break;
+			case ModelTypeTypeSimple:
+				input.simpleModelRun = ValidationHelper.validateSimpleModelRun(input.simpleModelRun, "input.simpleModelRun");
+				
+				predictor = PredictorFactory.getPredictorForStore(input.store.a3Code);
+				predictor.enqueue(input.simpleModelRun);
+				
+				break;
+			default:
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("ModelTypeType: input.modelType"));
 			}
-
-			if (type == null)
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
-						ApiError.InvalidValueNull.getMessage("should contain a grossing list name List: input.listType"));
-
-			Predictor predictor = PredictorFactory.getPredictorForStore(input.store.a3Code);
-
-			predictor.enqueue(input.country.a2Code, type, input.code);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {

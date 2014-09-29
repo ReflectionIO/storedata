@@ -8,7 +8,8 @@
 package io.reflection.app.predictors;
 
 import io.reflection.app.api.exception.DataAccessException;
-import io.reflection.app.datatypes.shared.ModelTypeType;
+import io.reflection.app.datatypes.shared.ModelRun;
+import io.reflection.app.datatypes.shared.SimpleModelRun;
 
 /**
  * @author billy1380
@@ -16,6 +17,10 @@ import io.reflection.app.datatypes.shared.ModelTypeType;
  */
 public interface Predictor {
 	void enqueue(String country, String type, Long code);
+	
+	void enqueue(SimpleModelRun simpleModelRun);
+	
+	void enqueue(ModelRun modelRun);
 
 	/**
 	 * Predict revenue and downloads
@@ -27,7 +32,5 @@ public interface Predictor {
 	 * @throws DataAccessException
 	 */
 	void predictRevenueAndDownloads(String country, String type, Long code, Long categorId) throws DataAccessException;
-
-	ModelTypeType getModelType();
 
 }
