@@ -13,4 +13,4 @@ CREATE TABLE IF NOT EXISTS `simplemodelrun` (
 	`deleted` enum('y','n') COLLATE utf8mb4_unicode_ci DEFAULT 'n',
 	PRIMARY KEY (`id`),
 	KEY `indexfeedfetchid` (`feedfetchid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci$$
