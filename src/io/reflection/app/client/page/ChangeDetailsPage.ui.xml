@@ -10,8 +10,16 @@
 	    padding-left: 25px;
 	}
 	
-	.addPowersPanels {
-	    width: 400px;
+	.section {
+	    padding-bottom: 40px;
+	}
+	
+	.titleSection {
+	    padding-top: 20px;
+	}
+	
+	.subtitleSection {
+	    padding-top: 25px;
 	}
 	</ui:style>
 	<g:HTMLPanel styleName="row">
@@ -27,8 +35,8 @@
 
 			<p:AlertBox ui:field="mAlertBox" visible="false" />
 
-			<g:HTMLPanel styleName="">
-				<h3 class="{style.spaceLeft}">Personal Details</h3>
+			<g:HTMLPanel styleName="{style.section}">
+				<h3 class="{style.spaceLeft} {style.titleSection}">Personal Details</h3>
 				<g:FormPanel styleName="formEdit">
 					<p:Preloader ui:field="preloaderDetails">
 						<g:HTMLPanel>
@@ -65,8 +73,8 @@
 
 			<span class="divider-horizontal"></span>
 
-			<g:HTMLPanel styleName="">
-				<h3 class="{style.spaceLeft}">Change Password</h3>
+			<g:HTMLPanel styleName="{style.section}">
+				<h3 class="{style.spaceLeft} {style.titleSection}">Change Password</h3>
 				<g:FormPanel styleName="formEdit">
 					<p:Preloader ui:field="preloaderPassword">
 						<g:HTMLPanel>
@@ -94,32 +102,44 @@
 
 			<span class="divider-horizontal"></span>
 
-			<g:HTMLPanel styleName="{style.spaceLeft}">
-				<h3>User Access</h3>
+			<g:HTMLPanel styleName="{style.spaceLeft} {style.section}">
+				<h3 class="{style.titleSection}">User Access</h3>
 				<g:HTMLPanel>
-					<h5>Roles</h5>
+					<h5 class="{style.subtitleSection}">Roles</h5>
 					<c:CellTable ui:field="rolesTable" styleName="table table-hover table-striped table-access" />
-					<g:HTMLPanel styleName="{style.addPowersPanels}">
-						<g:HTMLPanel ui:field="addRoleGroup" styleName="form-group">
-							<label>Add Role</label>
-							<g:TextBox styleName=" form-control " ui:field="addRoleTextbox" />
-							<g:HTMLPanel ui:field="addRoleNote" visible="false" styleName="noteDetail" />
-						</g:HTMLPanel>
-						<g:Button styleName="btn btn-lg btn-primary btn-block" ui:field="addRoleButton">Add Role</g:Button>
-					</g:HTMLPanel>
+					<g:FormPanel styleName="formEdit">
+						<p:Preloader ui:field="preloaderAddRole">
+							<g:HTMLPanel>
+								<g:HTMLPanel ui:field="addRolePanel">
+									<g:HTMLPanel ui:field="addRoleGroup" styleName="form-group">
+										<label>Add Role</label>
+										<g:TextBox styleName=" form-control " ui:field="addRoleTextbox" />
+										<g:HTMLPanel ui:field="addRoleNote" visible="false" styleName="noteDetail" />
+									</g:HTMLPanel>
+									<g:Button styleName="btn btn-lg btn-primary btn-block" ui:field="addRoleButton">Add Role</g:Button>
+								</g:HTMLPanel>
+							</g:HTMLPanel>
+						</p:Preloader>
+					</g:FormPanel>
 				</g:HTMLPanel>
 
 				<g:HTMLPanel>
-					<h5>Permissions</h5>
+					<h5 class="{style.subtitleSection}">Permissions</h5>
 					<c:CellTable ui:field="permissionsTable" styleName="table table-hover table-striped table-access" />
-					<g:HTMLPanel styleName="{style.addPowersPanels}">
-						<g:HTMLPanel ui:field="addPermissionGroup" styleName="form-group">
-							<label>Add Permission</label>
-							<g:TextBox styleName=" form-control " ui:field="addPermissionTextbox" />
-							<g:HTMLPanel ui:field="addPermissionNote" visible="false" styleName="noteDetail" />
-						</g:HTMLPanel>
-						<g:Button styleName="btn btn-lg btn-primary btn-block" ui:field="addPermissionButton">Add Permission</g:Button>
-					</g:HTMLPanel>
+					<g:FormPanel styleName="formEdit">
+						<p:Preloader ui:field="preloaderAddPermission">
+							<g:HTMLPanel>
+								<g:HTMLPanel ui:field="addPermissionPanel">
+									<g:HTMLPanel ui:field="addPermissionGroup" styleName="form-group">
+										<label>Add Permission</label>
+										<g:TextBox styleName=" form-control " ui:field="addPermissionTextbox" />
+										<g:HTMLPanel ui:field="addPermissionNote" visible="false" styleName="noteDetail" />
+									</g:HTMLPanel>
+									<g:Button styleName="btn btn-lg btn-primary btn-block" ui:field="addPermissionButton">Add Permission</g:Button>
+								</g:HTMLPanel>
+							</g:HTMLPanel>
+						</p:Preloader>
+					</g:FormPanel>
 				</g:HTMLPanel>
 			</g:HTMLPanel>
 
