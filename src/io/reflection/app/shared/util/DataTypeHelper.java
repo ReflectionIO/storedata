@@ -11,6 +11,7 @@ import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Role;
+import io.reflection.app.datatypes.shared.User;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -60,6 +61,18 @@ public class DataTypeHelper {
 		Permission permission = new Permission();
 		permission.id = id;
 		return permission;
+	}
+
+	/**
+	 * Creates a User with a given id
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public static User createUser(Long id) {
+		User user = new User();
+		user.id = id;
+		return user;
 	}
 
 	public static String itemIapState(Item item, String yes, String no, String unknown) {
