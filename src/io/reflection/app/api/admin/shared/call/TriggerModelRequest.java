@@ -11,6 +11,7 @@ package io.reflection.app.api.admin.shared.call;
 import io.reflection.app.api.shared.datatypes.Request;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.ModelTypeType;
 import io.reflection.app.datatypes.shared.Store;
 
@@ -28,6 +29,7 @@ public class TriggerModelRequest extends Request {
 	public Store store;
 	public Category category;
 	public List<String> listTypes;
+	public FeedFetch feedFetch;
 	public Long code;
 	public ModelTypeType modelType;
 
@@ -49,6 +51,8 @@ public class TriggerModelRequest extends Request {
 			}
 		}
 		object.add("listTypes", jsonListTypes);
+		JsonElement jsonFeedFetch = feedFetch == null ? JsonNull.INSTANCE : feedFetch.toJson();
+		object.add("feedFetch", jsonFeedFetch);
 		JsonElement jsonCode = code == null ? JsonNull.INSTANCE : new JsonPrimitive(code);
 		object.add("code", jsonCode);
 		JsonElement jsonModelType = modelType == null ? JsonNull.INSTANCE : new JsonPrimitive(modelType.toString());
@@ -94,6 +98,13 @@ public class TriggerModelRequest extends Request {
 			}
 		}
 
+		if (jsonObject.has("feedFetch")) {
+			JsonElement jsonFeedFetch = jsonObject.get("feedFetch");
+			if (jsonFeedFetch != null) {
+				feedFetch = new FeedFetch();
+				feedFetch.fromJson(jsonFeedFetch.getAsJsonObject());
+			}
+		}
 		if (jsonObject.has("code")) {
 			JsonElement jsonCode = jsonObject.get("code");
 			if (jsonCode != null) {

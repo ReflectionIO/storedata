@@ -21,6 +21,7 @@ import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.ModelRun;
 import io.reflection.app.datatypes.shared.ModelTypeType;
 import io.reflection.app.datatypes.shared.Rank;
+import io.reflection.app.datatypes.shared.SimpleModelRun;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.helpers.ItemPropertyWrapper;
 import io.reflection.app.helpers.QueueHelper;
@@ -313,11 +314,22 @@ public class PredictorIOS implements Predictor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.predictors.Predictor#getModelType()
+	 * @see io.reflection.app.predictors.Predictor#enqueue(io.reflection.app.datatypes.shared.SimpleModelRun)
 	 */
 	@Override
-	public ModelTypeType getModelType() {
-		return ModelTypeType.ModelTypeTypeCorrelation;
+	public void enqueue(SimpleModelRun simpleModelRun) {
+		QueueHelper.enqueue("predict", "/predict", Method.POST, new SimpleEntry<String, String>("runid", simpleModelRun.id.toString()),
+				new SimpleEntry<String, String>("modeltype", ModelTypeType.ModelTypeTypeSimple.toString()));
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.predictors.Predictor#enqueue(io.reflection.app.datatypes.shared.ModelRun)
+	 */
+	@Override
+	public void enqueue(ModelRun modelRun) {
+		QueueHelper.enqueue("predict", "/predict", Method.POST, new SimpleEntry<String, String>("runid", modelRun.id.toString()),
+				new SimpleEntry<String, String>("modeltype", ModelTypeType.ModelTypeTypeCorrelation.toString()));
+	}
 }
