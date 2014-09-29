@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.dataprovider;
 
+import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.UserController;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
@@ -47,9 +48,19 @@ public class UserRolesProvider extends AsyncDataProvider<Role> {
 		int end = start + r.getLength();
 
 		if (end > userRoles.size()) {
-			UserController.get().fetchUserRoles(user);
+			if (SessionController.get().isLoggedInUserAdmin()) {
+				UserController.get().fetchUserRolesAndPermissions(user);
+			} else {
+				List<Role> currentUserRoles = SessionController.get().getLoggedInUser().roles;
+				if (currentUserRoles != null) {
+					updateRowData(0, currentUserRoles);
+				} else {
+					updateRowCount(0, true);
+				}
+			}
 		} else {
 			updateRowData(start, userRoles.subList(start, end));
 		}
 	}
+
 }
