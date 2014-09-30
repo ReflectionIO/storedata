@@ -7,21 +7,37 @@
 //
 package io.reflection.app.client.page;
 
+import java.util.List;
+
 import io.reflection.app.api.admin.shared.call.AssignPermissionRequest;
 import io.reflection.app.api.admin.shared.call.AssignPermissionResponse;
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
 import io.reflection.app.api.admin.shared.call.AssignRoleResponse;
+import io.reflection.app.api.admin.shared.call.GetRolesAndPermissionsRequest;
+import io.reflection.app.api.admin.shared.call.GetRolesAndPermissionsResponse;
+import io.reflection.app.api.admin.shared.call.RevokePermissionRequest;
+import io.reflection.app.api.admin.shared.call.RevokePermissionResponse;
+import io.reflection.app.api.admin.shared.call.RevokeRoleRequest;
+import io.reflection.app.api.admin.shared.call.RevokeRoleResponse;
 import io.reflection.app.api.admin.shared.call.event.AssignPermissionEventHandler;
 import io.reflection.app.api.admin.shared.call.event.AssignRoleEventHandler;
+import io.reflection.app.api.admin.shared.call.event.GetRolesAndPermissionsEventHandler;
+import io.reflection.app.api.admin.shared.call.event.RevokePermissionEventHandler;
+import io.reflection.app.api.admin.shared.call.event.RevokeRoleEventHandler;
 import io.reflection.app.api.core.shared.call.ChangeUserDetailsRequest;
 import io.reflection.app.api.core.shared.call.ChangeUserDetailsResponse;
+import io.reflection.app.api.core.shared.call.GetUserDetailsRequest;
+import io.reflection.app.api.core.shared.call.GetUserDetailsResponse;
 import io.reflection.app.api.core.shared.call.event.ChangeUserDetailsEventHandler;
+import io.reflection.app.api.core.shared.call.event.GetUserDetailsEventHandler;
+import io.reflection.app.client.cell.StyledButtonCell;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.UserController;
+import io.reflection.app.client.dataprovider.UserPermissionsProvider;
 import io.reflection.app.client.dataprovider.UserRolesProvider;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.handler.user.UserPasswordChangedEventHandler;
@@ -36,15 +52,14 @@ import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.shared.util.DataTypeHelper;
 
-import com.google.gwt.cell.client.SafeHtmlCell;
+import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -66,12 +81,15 @@ import com.willshex.gson.json.service.shared.StatusType;
  * 
  */
 public class ChangeDetailsPage extends Page implements NavigationEventHandler, ChangeUserDetailsEventHandler, UserPasswordChangedEventHandler,
-		AssignRoleEventHandler, AssignPermissionEventHandler {
+		AssignRoleEventHandler, AssignPermissionEventHandler, RevokeRoleEventHandler, RevokePermissionEventHandler, GetRolesAndPermissionsEventHandler,
+		GetUserDetailsEventHandler {
 
 	private static ChangeDetailsPageUiBinder uiBinder = GWT.create(ChangeDetailsPageUiBinder.class);
 
 	interface ChangeDetailsPageUiBinder extends UiBinder<Widget, ChangeDetailsPage> {}
 
+	UserRolesProvider userRolesProvider;
+	UserPermissionsProvider userPermissionsProvider;
 	@UiField(provided = true) CellTable<Role> rolesTable = new CellTable<Role>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) CellTable<Permission> permissionsTable = new CellTable<Permission>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
 
@@ -126,53 +144,49 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	@UiField TextBox addRoleTextbox;
 	@UiField HTMLPanel addRoleGroup;
 	@UiField HTMLPanel addRoleNote;
-	// private String addRoleError;
+	private String addRoleError;
 
+	@UiField HTMLPanel addRolePanel;
 	@UiField Button addRoleButton;
+	@UiField Preloader preloaderAddRole;
 
 	// User Permissions
 	@UiField TextBox addPermissionTextbox;
 	@UiField HTMLPanel addPermissionGroup;
 	@UiField HTMLPanel addPermissionNote;
-	// private String addPermissionError;
+	private String addPermissionError;
 
+	@UiField HTMLPanel addPermissionPanel;
 	@UiField Button addPermissionButton;
+	@UiField Preloader preloaderAddPermission;
 
-	private User currentUser = SessionController.get().getLoggedInUser();
-	private Long userId = Long.valueOf(NavigationController.get().getStack().getParameter(0)); // User Id from the URL
+	private User currentUser; // User using the system
+	private Long editingUserId; // User Id to Edit
 
 	public ChangeDetailsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		addRoleColumns();
-		addPermissionColumns();
+		if (SessionController.get().isLoggedInUserAdmin()) {
+			addRolePanel.getParent().getElement().appendChild(addRolePanel.getElement());
+			addPermissionPanel.getParent().getElement().appendChild(addPermissionPanel.getElement());
+		} else {
+			addRolePanel.removeFromParent();
+			addPermissionPanel.removeFromParent();
+		}
+
+		addRoleColumns(SessionController.get().isLoggedInUserAdmin());
+		addPermissionColumns(SessionController.get().isLoggedInUserAdmin());
 
 		rolesTable.setEmptyTableWidget(new HTMLPanel("NO ROLES"));
 		permissionsTable.setEmptyTableWidget(new HTMLPanel("NO PERMISSIONS"));
 		rolesTable.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 		permissionsTable.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 
-		User u = new User();
-		u.id = userId;
-		UserRolesProvider userRolesProvider = new UserRolesProvider(u); // TODO update when user changes
-		userRolesProvider.addDataDisplay(rolesTable);
-		// PermissionController.get().addDataDisplay(permissionsTable);
-
-		mUsername.getElement().setAttribute("placeholder", "Email Address");
-		mForename.getElement().setAttribute("placeholder", "First name");
-		mSurname.getElement().setAttribute("placeholder", "Last name");
-		mCompany.getElement().setAttribute("placeholder", "Company");
-
-		mPassword.getElement().setAttribute("placeholder", "Current password");
-		mNewPassword.getElement().setAttribute("placeholder", "New password");
-		mConfirmPassword.getElement().setAttribute("placeholder", "Confirm new password");
-
-		addRoleTextbox.getElement().setAttribute("placeholder", "ROL");
-		addPermissionTextbox.getElement().setAttribute("placeholder", "PER");
+		addPlaceholders();
 
 	}
 
-	private void addRoleColumns() {
+	private void addRoleColumns(boolean isAdmin) {
 
 		TextColumn<Role> roleInfo = new TextColumn<Role>() {
 
@@ -184,21 +198,33 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		};
 		rolesTable.addColumn(roleInfo);
 
-		if (SessionController.get().isLoggedInUserAdmin()) {
-			Column<Role, SafeHtml> removeRole = new Column<Role, SafeHtml>(new SafeHtmlCell()) {
+		if (isAdmin) {
+
+			FieldUpdater<Role, String> actionRole = new FieldUpdater<Role, String>() {
 
 				@Override
-				public SafeHtml getValue(Role object) {
-					return SafeHtmlUtils.fromSafeConstant("ciao");
+				public void update(int index, Role object, String value) {
+					userRolesProvider.updateRowCount(0, false);
+					UserController.get().revokeUserRole(editingUserId, object);
 				}
-
 			};
+
+			StyledButtonCell prototype = new StyledButtonCell("btn", "btn-xs", "btn-default", "pull-right");
+			Column<Role, String> removeRole = new Column<Role, String>(prototype) {
+
+				@Override
+				public String getValue(Role object) {
+					return "Revoke role";
+				}
+			};
+			removeRole.setFieldUpdater(actionRole);
 			rolesTable.addColumn(removeRole);
+
 		}
 
 	}
 
-	private void addPermissionColumns() {
+	private void addPermissionColumns(boolean isAdmin) {
 
 		TextColumn<Permission> permissionInfo = new TextColumn<Permission>() {
 
@@ -210,16 +236,28 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		};
 		permissionsTable.addColumn(permissionInfo);
 
-		if (SessionController.get().isLoggedInUserAdmin()) {
-			Column<Permission, SafeHtml> removePermission = new Column<Permission, SafeHtml>(new SafeHtmlCell()) {
+		if (isAdmin) {
+
+			FieldUpdater<Permission, String> actionPermission = new FieldUpdater<Permission, String>() {
 
 				@Override
-				public SafeHtml getValue(Permission object) {
-					return SafeHtmlUtils.fromSafeConstant("ciao");
+				public void update(int index, Permission object, String value) {
+					userPermissionsProvider.updateRowCount(0, false);
+					UserController.get().revokeUserPermission(editingUserId, object);
 				}
-
 			};
+
+			StyledButtonCell prototype = new StyledButtonCell("btn", "btn-xs", "btn-default", "pull-right");
+			Column<Permission, String> removePermission = new Column<Permission, String>(prototype) {
+
+				@Override
+				public String getValue(Permission object) {
+					return "Revoke permission";
+				}
+			};
+			removePermission.setFieldUpdater(actionPermission);
 			permissionsTable.addColumn(removePermission);
+
 		}
 
 	}
@@ -237,12 +275,18 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		register(EventController.get().addHandlerToSource(ChangeUserDetailsEventHandler.TYPE, SessionController.get(), this));
 		register(EventController.get().addHandlerToSource(UserPasswordChangedEventHandler.TYPE, UserController.get(), this));
 		register(EventController.get().addHandlerToSource(UserPasswordChangedEventHandler.TYPE, SessionController.get(), this));
+		register(EventController.get().addHandlerToSource(GetRolesAndPermissionsEventHandler.TYPE, UserController.get(), this));
+		register(EventController.get().addHandlerToSource(AssignRoleEventHandler.TYPE, UserController.get(), this));
+		register(EventController.get().addHandlerToSource(AssignPermissionEventHandler.TYPE, UserController.get(), this));
+		register(EventController.get().addHandlerToSource(RevokeRoleEventHandler.TYPE, UserController.get(), this));
+		register(EventController.get().addHandlerToSource(RevokePermissionEventHandler.TYPE, UserController.get(), this));
+		register(EventController.get().addHandlerToSource(GetUserDetailsEventHandler.TYPE, UserController.get(), this));
 
 	}
 
 	@UiHandler("mChangeDetails")
 	void onChangeDetailsClicked(ClickEvent event) {
-		if (validate()) {
+		if (validateDetails()) {
 			clearDetailsErrors();
 			preloaderDetails.show();
 
@@ -281,16 +325,13 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 
 		if (validatePassword()) {
 			clearPasswordErrors();
-			// mForm.setVisible(false);
 			preloaderPassword.show();
 
 			AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Please wait", " - changing user password...", false)
 					.setVisible(true);
 
 			if (SessionController.get().isLoggedInUserAdmin()) {
-				userId = Long.valueOf(NavigationController.get().getStack().getParameter(0));
-
-				UserController.get().setPassword(userId, mNewPassword.getText());
+				UserController.get().setPassword(editingUserId, mNewPassword.getText());
 			} else {
 				SessionController.get().changePassword(mPassword.getText(), mNewPassword.getText());
 			}
@@ -308,6 +349,46 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		}
 	}
 
+	@UiHandler("addRoleButton")
+	void onAddRoleButtonClicked(ClickEvent event) {
+
+		if (validateRole()) {
+			clearAddRoleErrors();
+			preloaderAddRole.show();
+			userRolesProvider.updateRowCount(0, false);
+			UserController.get().assignUserRoleId(editingUserId, addRoleTextbox.getText().toUpperCase());
+
+		} else {
+			if (addRoleError != null) {
+				FormHelper.showNote(true, addRoleGroup, addRoleNote, addRoleError);
+			} else {
+				FormHelper.hideNote(addRoleGroup, addRoleNote);
+			}
+
+		}
+
+	}
+
+	@UiHandler("addPermissionButton")
+	void onAddPermissionButtonClicked(ClickEvent event) {
+
+		if (validatePermission()) {
+			clearAddPermissionErrors();;
+			preloaderAddPermission.show();
+			userPermissionsProvider.updateRowCount(0, false);
+			UserController.get().assignUserPermissionId(editingUserId, addPermissionTextbox.getText().toUpperCase());
+
+		} else {
+			if (addPermissionError != null) {
+				FormHelper.showNote(true, addPermissionGroup, addPermissionNote, addPermissionError);
+			} else {
+				FormHelper.hideNote(addPermissionGroup, addPermissionNote);
+			}
+
+		}
+
+	}
+
 	private void clearDetailsErrors() {
 		FormHelper.hideNote(mUsernameGroup, mUsernameNote);
 		FormHelper.hideNote(mForenameGroup, mForenameNote);
@@ -318,6 +399,14 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	private void clearPasswordErrors() {
 		FormHelper.hideNote(mPasswordGroup, mPasswordNote);
 		FormHelper.hideNote(mNewPasswordGroup, mNewPasswordNote);
+	}
+
+	private void clearAddRoleErrors() {
+		FormHelper.hideNote(addRoleGroup, addRoleNote);
+	}
+
+	private void clearAddPermissionErrors() {
+		FormHelper.hideNote(addPermissionGroup, addPermissionNote);
 	}
 
 	/**
@@ -371,6 +460,20 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		}
 	}
 
+	@UiHandler("addRoleTextbox")
+	void onEnterKeyPressAddRoleFields(KeyPressEvent event) {
+		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
+			addRoleButton.click();
+		}
+	}
+
+	@UiHandler("addPermissionTextbox")
+	void onEnterKeyPressAddPermissionFields(KeyPressEvent event) {
+		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
+			addPermissionButton.click();
+		}
+	}
+
 	private void resetForm() {
 		mUsername.setText("");
 		mForename.setText("");
@@ -381,58 +484,44 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		FormHelper.hideNote(mForenameGroup, mForenameNote);
 		FormHelper.hideNote(mSurnameGroup, mSurnameNote);
 		FormHelper.hideNote(mCompanyGroup, mCompanyNote);
-
-		mAlertBox.setVisible(false);
 	}
 
-	private void fillForm() {
-		mUsername.setText(currentUser.username);
-		mForename.setText(currentUser.forename);
-		mSurname.setText(currentUser.surname);
-		mCompany.setText(currentUser.company);
+	private void resetPasswordForm() {
+
+		mPassword.setText("");
+
+		mNewPassword.setText("");
+		mConfirmPassword.setText("");
+
+		mPasswordGroup.setVisible(!SessionController.get().isLoggedInUserAdmin());
+
+		FormHelper.hideNote(mNewPasswordGroup, mNewPasswordNote);
+		FormHelper.hideNote(mPasswordGroup, mPasswordNote);
+
+		preloaderPassword.hide();
+
+		// if (SessionController.get().isLoggedInUserAdmin()) {
+		// mNewPassword.setFocus(true);
+		// } else {
+		// mPassword.setFocus(true);
+		// }
 	}
 
-	private void changedUser() {
-		currentUser = null;
+	private void resetRoleForm() {
+		addRoleTextbox.setText("");
+		FormHelper.hideNote(addRoleGroup, addRoleNote);
+	}
 
-		User newUser = SessionController.get().getLoggedInUser();
-		String paramUserId = NavigationController.get().getStack().getParameter(0);
+	private void resetPermissionForm() {
+		addPermissionTextbox.setText("");
+		FormHelper.hideNote(addPermissionGroup, addPermissionNote);
+	}
 
-		if (paramUserId == null || newUser == null) {
-			currentUser = newUser;
-
-			if (currentUser == null) {
-				AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.DangerAlertBoxType, false, "No user found",
-						" - it does not look like a user has been specified and no user is logged in!", false);
-			}
-
-		} else {
-			Long userId = Long.valueOf(paramUserId);
-
-			if (newUser != null && newUser.id.longValue() == userId.longValue()) {
-				currentUser = newUser;
-			} else {
-				if (SessionController.get().isLoggedInUserAdmin()) {
-					currentUser = UserController.get().getUser(userId);
-
-					if (currentUser == null) {
-						AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.DangerAlertBoxType, true, "Please wait", " - loading user details...", false);
-					}
-				} else {
-					AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.DangerAlertBoxType, false, "Access denied",
-							" - You tried to view user details that are not your own. This functionality is only accessible by administrators.", false);
-				}
-			}
-		}
-
-		if (currentUser != null) {
-			preloaderDetails.hide();
-			fillForm();
-		} else {
-			resetForm();
-		}
-		mAlertBox.setVisible(currentUser == null);
-
+	private void fillDetailsForm(User u) {
+		mUsername.setText(u.username);
+		mForename.setText(u.forename);
+		mSurname.setText(u.surname);
+		mCompany.setText(u.company);
 	}
 
 	/**
@@ -440,7 +529,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	 * 
 	 * @return Boolean validated
 	 */
-	private boolean validate() {
+	private boolean validateDetails() {
 		boolean validated = true;
 		// Retrieve fields to validate
 		String forename = mForename.getText();
@@ -573,6 +662,54 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		return validated;
 	}
 
+	/**
+	 * Check if every field of the form is valid and return true
+	 * 
+	 * @return Boolean validated
+	 */
+	private boolean validateRole() {
+		boolean validated = true;
+		// Retrieve fields to validate
+		String role = addRoleTextbox.getText();
+		// Check fields constraints
+		if (role == null || role.length() == 0) {
+			addRoleError = "Cannot be empty";
+			validated = false;
+		} else if (role.length() != 3) {
+			addRoleError = "Must have 3 characters";
+			validated = false;
+		} else {
+			addRoleError = null;
+			validated = validated && true;
+		}
+
+		return validated;
+	}
+
+	/**
+	 * Check if every field of the form is valid and return true
+	 * 
+	 * @return Boolean validated
+	 */
+	private boolean validatePermission() {
+		boolean validated = true;
+		// Retrieve fields to validate
+		String permission = addPermissionTextbox.getText();
+		// Check fields constraints
+		if (permission == null || permission.length() == 0) {
+			addPermissionError = "Cannot be empty";
+			validated = false;
+		} else if (permission.length() != 3) {
+			addPermissionError = "Must have 3 characters";
+			validated = false;
+		} else {
+			addPermissionError = null;
+			validated = validated && true;
+		}
+
+		return validated;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -581,42 +718,102 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	 */
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
-		if (current != null && PageType.UsersPageType.equals(current.getPage()) && PageType.ChangeDetailsPageType.equals(current.getAction())) {
 
-			mChangeDetails.setEnabled(false);
-			mChangePassword.setEnabled(false);
+		currentUser = SessionController.get().getLoggedInUser(); // Update user using the system
+		mChangeDetails.setEnabled(false);
+		mChangePassword.setEnabled(false);
+		myAccountSidePanel.setPersonalDetailsLinkActive();
 
-			changedUser();
+		if (currentUser != null) {
+			myAccountSidePanel.getLinkedAccountsLink().setTargetHistoryToken(
+					PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(), currentUser.id.toString()));
 
-			myAccountSidePanel.setPersonalDetailsLinkActive();
+			myAccountSidePanel.getCreatorNameLink().setInnerText(currentUser.company);
 
-			currentUser = SessionController.get().getLoggedInUser();
+			myAccountSidePanel.getPersonalDetailsLink().setTargetHistoryToken(
+					PageType.UsersPageType.asTargetHistoryToken(PageType.ChangeDetailsPageType.toString(), currentUser.id.toString()));
 
-			if (currentUser != null) {
-				myAccountSidePanel.getLinkedAccountsLink().setTargetHistoryToken(
-						PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(), currentUser.id.toString()));
-
-				myAccountSidePanel.getCreatorNameLink().setInnerText(currentUser.company);
-
-				myAccountSidePanel.getPersonalDetailsLink().setTargetHistoryToken(
-						PageType.UsersPageType.asTargetHistoryToken(PageType.ChangeDetailsPageType.toString(), currentUser.id.toString()));
-
-			}
-
-			String currentFilter = FilterController.get().asMyAppsFilterString();
-			if (currentFilter != null && currentFilter.length() > 0) {
-				if (currentUser != null) {
-					myAccountSidePanel.getMyAppsLink().setTargetHistoryToken(
-							PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), currentUser.id.toString(), FilterController.get()
-									.asMyAppsFilterString()));
-				}
-			}
-
-			resetPasswordForm();
-
-			mForename.setFocus(true);
-			mForename.setCursorPos(mForename.getText().length());
 		}
+
+		String currentFilter = FilterController.get().asMyAppsFilterString();
+		if (currentFilter != null && currentFilter.length() > 0) {
+			if (currentUser != null) {
+				myAccountSidePanel.getMyAppsLink().setTargetHistoryToken(
+						PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), currentUser.id.toString(), FilterController.get()
+								.asMyAppsFilterString()));
+			}
+		}
+
+		resetForm();
+		resetPasswordForm();
+		resetRoleForm();
+		resetPermissionForm();
+
+		if (isValidStack(current)) {
+
+			boolean editingUserChanged = editingUserId != Long.valueOf(current.getParameter(0));
+			if (editingUserChanged) {
+
+				// Create and fetch Roles and Permissions providers
+				editingUserId = Long.valueOf(current.getParameter(0)); // Update user to edit
+				User dummyEditingUser = DataTypeHelper.createUser(editingUserId);
+				userRolesProvider = new UserRolesProvider();
+				userRolesProvider.addDataDisplay(rolesTable);
+				userPermissionsProvider = new UserPermissionsProvider();
+				userPermissionsProvider.addDataDisplay(permissionsTable);
+				userRolesProvider.updateRowCount(0, false);
+				userPermissionsProvider.updateRowCount(0, false);
+
+				if (SessionController.get().isLoggedInUserAdmin()) {
+					UserController.get().fetchUserRolesAndPermissions(dummyEditingUser);
+				} else {
+					// If non admin, can retrieve only his own powers, so get from SessionController
+					List<Role> currentUserRoles = SessionController.get().getLoggedInUser().roles;
+					if (currentUserRoles != null) {
+						userRolesProvider.updateRowData(0, currentUserRoles);
+					} else {
+						userRolesProvider.updateRowCount(0, true);
+					}
+					List<Permission> currentUserPermissions = SessionController.get().getLoggedInUser().permissions;
+					if (currentUserPermissions != null) {
+						userPermissionsProvider.updateRowData(0, currentUserPermissions);
+					} else {
+						userPermissionsProvider.updateRowCount(0, true);
+					}
+				}
+
+				// Fill user details form
+				if (currentUser.id.toString().equals(editingUserId.toString())) { // Current user is the same as in the stack parameter
+					fillDetailsForm(currentUser);
+				} else if (SessionController.get().isLoggedInUserAdmin()) {
+					User editingUser = UserController.get().getUser(editingUserId);
+					if (editingUser != null) { // User already retrieved
+						fillDetailsForm(editingUser);
+					} else { // Coming from a page refreshing
+						preloaderDetails.show();
+						UserController.get().fetchUser(editingUserId);
+					}
+				} else { // No access to this user
+					userRolesProvider.updateRowCount(0, true);
+					userPermissionsProvider.updateRowCount(0, true);
+				}
+				mForename.setFocus(true);
+				mForename.setCursorPos(mForename.getText().length());
+
+			}
+
+		} else {
+
+			userRolesProvider.updateRowCount(0, true);
+			userPermissionsProvider.updateRowCount(0, true);
+
+		}
+	}
+
+	private boolean isValidStack(Stack current) {
+		return (current != null && PageType.UsersPageType.equals(current.getPage()) && current.getAction() != null
+				&& PageType.ChangeDetailsPageType.equals(current.getAction()) && current.getParameter(0) != null && (current.getParameter(0).equals(
+				currentUser.id.toString()) || SessionController.get().isLoggedInUserAdmin()));
 	}
 
 	/*
@@ -713,48 +910,18 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 
 	}
 
-	private void resetPasswordForm() {
+	private void addPlaceholders() {
+		mUsername.getElement().setAttribute("placeholder", "Email Address");
+		mForename.getElement().setAttribute("placeholder", "First name");
+		mSurname.getElement().setAttribute("placeholder", "Last name");
+		mCompany.getElement().setAttribute("placeholder", "Company");
 
-		mPassword.setText("");
+		mPassword.getElement().setAttribute("placeholder", "Current password");
+		mNewPassword.getElement().setAttribute("placeholder", "New password");
+		mConfirmPassword.getElement().setAttribute("placeholder", "Confirm new password");
 
-		mNewPassword.setText("");
-		mConfirmPassword.setText("");
-
-		mPasswordGroup.setVisible(!SessionController.get().isLoggedInUserAdmin());
-
-		FormHelper.hideNote(mNewPasswordGroup, mNewPasswordNote);
-		FormHelper.hideNote(mPasswordGroup, mPasswordNote);
-
-		mAlertBox.setVisible(false);
-
-		// mForm.setVisible(true);
-		preloaderPassword.hide();
-
-		if (SessionController.get().isLoggedInUserAdmin()) {
-			mNewPassword.setFocus(true);
-		} else {
-			mPassword.setFocus(true);
-		}
-	}
-
-	@UiHandler("addRoleButton")
-	void onAddRoleButtonClicked(ClickEvent event) {
-		String roleCode = addRoleTextbox.getValue();
-		if (!roleCode.equals("") && roleCode.length() == 3) {
-			roleCode = roleCode.toUpperCase();
-			userId = Long.valueOf(NavigationController.get().getStack().getParameter(0));
-			UserController.get().assignUserRoleId(userId, roleCode);
-		}
-	}
-
-	@UiHandler("addPermissionButton")
-	void onAddPermissionButtonClicked(ClickEvent event) {
-		String permissionCode = addPermissionTextbox.getValue();
-		if (!permissionCode.equals("") && permissionCode.length() == 3) {
-			permissionCode = permissionCode.toUpperCase();
-			userId = Long.valueOf(NavigationController.get().getStack().getParameter(0));
-			UserController.get().assignUserPermissionId(userId, permissionCode);
-		}
+		addRoleTextbox.getElement().setAttribute("placeholder", "ROL");
+		addPermissionTextbox.getElement().setAttribute("placeholder", "PRM");
 	}
 
 	/*
@@ -765,9 +932,8 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	 */
 	@Override
 	public void assignRoleSuccess(AssignRoleRequest input, AssignRoleResponse output) {
-		if (output.status == StatusType.StatusTypeSuccess) {
-			// UserController.get().fetchUserRoles();
-		}
+		UserController.get().fetchUserRolesAndPermissions(input.user);
+		preloaderAddRole.hide();
 	}
 
 	/*
@@ -778,7 +944,8 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	 */
 	@Override
 	public void assignRoleFailure(AssignRoleRequest input, Throwable caught) {
-
+		UserController.get().fetchUserRolesAndPermissions(input.user);
+		preloaderAddRole.hide();
 	}
 
 	/*
@@ -789,9 +956,8 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	 */
 	@Override
 	public void assignPermissionSuccess(AssignPermissionRequest input, AssignPermissionResponse output) {
-		if (output.status == StatusType.StatusTypeSuccess) {
-			// UserController.get().fetchUserRoles();
-		}
+		UserController.get().fetchUserRolesAndPermissions(input.user);
+		preloaderAddPermission.hide();
 	}
 
 	/*
@@ -802,8 +968,147 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	 */
 	@Override
 	public void assignPermissionFailure(AssignPermissionRequest input, Throwable caught) {
-		// TODO Auto-generated method stub
+		UserController.get().fetchUserRolesAndPermissions(input.user);
+		preloaderAddPermission.hide();
+	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.api.admin.shared.call.event.GetRolesAndPermissionsEventHandler#getRolesAndPermissionsSuccess(io.reflection.app.api.admin.shared.call
+	 * .GetRolesAndPermissionsRequest, io.reflection.app.api.admin.shared.call.GetRolesAndPermissionsResponse)
+	 */
+	@Override
+	public void getRolesAndPermissionsSuccess(GetRolesAndPermissionsRequest input, GetRolesAndPermissionsResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess) {
+			// Roles and Permissions must be retrieved with one call
+			if (output.roles != null) {
+				userRolesProvider.updateRowData(0, output.roles);
+			} else {
+				userRolesProvider.updateRowCount(0, true);
+			}
+			if (output.permissions != null) {
+				userPermissionsProvider.updateRowData(0, output.permissions);
+			} else {
+				userPermissionsProvider.updateRowCount(0, true);
+			}
+		} else {
+			userRolesProvider.updateRowCount(0, true);
+			userPermissionsProvider.updateRowCount(0, true);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.api.admin.shared.call.event.GetRolesAndPermissionsEventHandler#getRolesAndPermissionsFailure(io.reflection.app.api.admin.shared.call
+	 * .GetRolesAndPermissionsRequest, java.lang.Throwable)
+	 */
+	@Override
+	public void getRolesAndPermissionsFailure(GetRolesAndPermissionsRequest input, Throwable caught) {
+		userRolesProvider.updateRowCount(0, true);
+		userPermissionsProvider.updateRowCount(0, true);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.admin.shared.call.event.RevokePermissionEventHandler#revokePermissionSuccess(io.reflection.app.api.admin.shared.call.
+	 * RevokePermissionRequest, io.reflection.app.api.admin.shared.call.RevokePermissionResponse)
+	 */
+	@Override
+	public void revokePermissionSuccess(RevokePermissionRequest input, RevokePermissionResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess) {
+			UserController.get().fetchUserRolesAndPermissions(input.user);
+		} else {
+			List<Permission> currentUserPermissions = SessionController.get().getLoggedInUser().permissions;
+			if (currentUserPermissions != null) {
+				userPermissionsProvider.updateRowData(0, currentUserPermissions);
+			} else {
+				userPermissionsProvider.updateRowCount(0, true);
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.admin.shared.call.event.RevokePermissionEventHandler#revokePermissionFailure(io.reflection.app.api.admin.shared.call.
+	 * RevokePermissionRequest, java.lang.Throwable)
+	 */
+	@Override
+	public void revokePermissionFailure(RevokePermissionRequest input, Throwable caught) {
+		List<Permission> currentUserPermissions = SessionController.get().getLoggedInUser().permissions;
+		if (currentUserPermissions != null) {
+			userPermissionsProvider.updateRowData(0, currentUserPermissions);
+		} else {
+			userPermissionsProvider.updateRowCount(0, true);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.admin.shared.call.event.RevokeRoleEventHandler#revokeRoleSuccess(io.reflection.app.api.admin.shared.call.RevokeRoleRequest,
+	 * io.reflection.app.api.admin.shared.call.RevokeRoleResponse)
+	 */
+	@Override
+	public void revokeRoleSuccess(RevokeRoleRequest input, RevokeRoleResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess) {
+			UserController.get().fetchUserRolesAndPermissions(input.user);
+		} else {
+			List<Role> currentUserRoles = SessionController.get().getLoggedInUser().roles;
+			if (currentUserRoles != null) {
+				userRolesProvider.updateRowData(0, currentUserRoles);
+			} else {
+				userRolesProvider.updateRowCount(0, true);
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.admin.shared.call.event.RevokeRoleEventHandler#revokeRoleFailure(io.reflection.app.api.admin.shared.call.RevokeRoleRequest,
+	 * java.lang.Throwable)
+	 */
+	@Override
+	public void revokeRoleFailure(RevokeRoleRequest input, Throwable caught) {
+		List<Role> currentUserRoles = SessionController.get().getLoggedInUser().roles;
+		if (currentUserRoles != null) {
+			userRolesProvider.updateRowData(0, currentUserRoles);
+		} else {
+			userRolesProvider.updateRowCount(0, true);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.api.core.shared.call.event.GetUserDetailsEventHandler#getUserDetailsSuccess(io.reflection.app.api.core.shared.call.GetUserDetailsRequest
+	 * , io.reflection.app.api.core.shared.call.GetUserDetailsResponse)
+	 */
+	@Override
+	public void getUserDetailsSuccess(GetUserDetailsRequest input, GetUserDetailsResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess && output.user != null) {
+			fillDetailsForm(output.user);
+		}
+		preloaderDetails.hide();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.api.core.shared.call.event.GetUserDetailsEventHandler#getUserDetailsFailure(io.reflection.app.api.core.shared.call.GetUserDetailsRequest
+	 * , java.lang.Throwable)
+	 */
+	@Override
+	public void getUserDetailsFailure(GetUserDetailsRequest input, Throwable caught) {
+		preloaderDetails.hide();
 	}
 
 }

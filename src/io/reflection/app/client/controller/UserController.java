@@ -539,6 +539,11 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 			@Override
 			public void onSuccess(GetUserDetailsResponse output) {
+
+				if (output.status == StatusType.StatusTypeSuccess && output.user != null) {
+					mUserLookup.put(output.user.id, output.user);
+				}
+
 				EventController.get().fireEventFromSource(new GetUserDetailsEventHandler.GetUserDetailsSuccess(input, output), UserController.this);
 			}
 
