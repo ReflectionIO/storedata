@@ -1,1 +1,0 @@
-ALTER TABLE `dataaccount` ADD COLUMN `active` ENUM('y','n') NULL DEFAULT 'y' AFTER `properties`;

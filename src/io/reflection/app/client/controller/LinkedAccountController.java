@@ -268,7 +268,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 					pager.start = Long.valueOf(0);
 					mCount = pager.totalCount;
 					// Delete HLA Permission if there are no more Linked Accounts
-					if (hasLinkedAccounts() && getLinkedAccountsCount() == 0) {
+					if (linkedAccountsFetched() && getLinkedAccountsCount() == 0) {
 						Permission p = new Permission();
 						p.id = PermissionController.HAS_LINKED_ACCOUNT_PERMISSION_ID;
 						p.code = PermissionController.HAS_LINKED_ACCOUNT_PERMISSION_CODE;
@@ -305,8 +305,22 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 		return myDataAccounts;
 	}
 
-	public boolean hasLinkedAccounts() {
+	/**
+	 * Return true if Linked Accounts already fetched
+	 * 
+	 * @return
+	 */
+	public boolean linkedAccountsFetched() {
 		return mCount != -1;
+	}
+
+	/**
+	 * Return true if there is at least 1 linked account
+	 * 
+	 * @return
+	 */
+	public boolean hasLinkedAccounts() {
+		return getLinkedAccountsCount() > 0;
 	}
 
 	/**
@@ -404,7 +418,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 		// Range r = display.getVisibleRange();
 		// int start = r.getStart();
 		// int end = start + r.getLength();
-		if (!hasLinkedAccounts()) {
+		if (!linkedAccountsFetched()) {
 			fetchLinkedAccounts();
 		} else {
 			updateRowData(0, rows.subList(0, (int) getLinkedAccountsCount()));

@@ -288,7 +288,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
 
-		if (LinkedAccountController.get().hasLinkedAccounts() && LinkedAccountController.get().getLinkedAccountsCount() > 0) {
+		if (LinkedAccountController.get().hasLinkedAccounts()) {
 			addLinkedAccount.setVisible(true);
 		} else {
 			addLinkedAccount.setVisible(false);
