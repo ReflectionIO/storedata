@@ -31,6 +31,7 @@ public class DataTypeHelper {
 	public static final String INACTIVE_VALUE = "n";
 
 	public static final long PERMISSION_FULL_RANK_VIEW_ID = 1;
+	public static final long PERMISSION_BLOG_LIST_ANY_ID = 17;
 	public static final long PERMISSION_HAS_LINKED_ACCOUNT_ID = 20;
 
 	public static final Long ROLE_ADMIN_ID = Long.valueOf(1);
