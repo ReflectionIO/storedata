@@ -12,6 +12,7 @@ import java.util.Date;
 
 import io.reflection.app.collectors.CollectorIOS;
 import io.reflection.app.datatypes.shared.Store;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 /**
  * @author billy1380
@@ -21,7 +22,7 @@ public class ApiHelper {
 	public static String getGrossingListName(Store store, String type) {
 		String listName = null;
 
-		if ("ios".equalsIgnoreCase(store.a3Code)) {
+		if (DataTypeHelper.IOS_STORE_A3.equalsIgnoreCase(store.a3Code)) {
 			if (type != null && type.contains("ipad") || type.toLowerCase().contains("ipad")) {
 				listName = CollectorIOS.TOP_GROSSING_IPAD_APPS;
 			} else {

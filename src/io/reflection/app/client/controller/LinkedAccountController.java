@@ -177,9 +177,6 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 						Permission hlaPermission = new Permission();
 						hlaPermission.id = PermissionController.HAS_LINKED_ACCOUNT_PERMISSION_ID;
 						hlaPermission.code = PermissionController.HAS_LINKED_ACCOUNT_PERMISSION_CODE;
-						// Add full details so they appears on change details page when adding the permission
-						hlaPermission.name = "Has Linked Account";
-						hlaPermission.description = "Users with this permission will be able to perform action reserved to who has a linked account";
 						SessionController.get().addPermissionToLookup(hlaPermission);
 					}
 					updateRowCount((int) mCount, true);

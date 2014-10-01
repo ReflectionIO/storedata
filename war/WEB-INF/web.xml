@@ -99,6 +99,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
         <servlet-class>io.reflection.app.RssServlet</servlet-class>
     </servlet>
 
+    <servlet>
+        <servlet-name>Archive</servlet-name>
+        <servlet-class>io.reflection.app.ArchiveServlet</servlet-class>
+    </servlet>
+
 	<servlet-mapping>
 		<servlet-name>Cron Tasks</servlet-name>
 		<url-pattern>/cron</url-pattern>
@@ -186,6 +191,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
     <servlet-mapping>
         <servlet-name>Rss</servlet-name>
         <url-pattern>/rss</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>Archive</servlet-name>
+        <url-pattern>/archive</url-pattern>
     </servlet-mapping>
 
 	<servlet>

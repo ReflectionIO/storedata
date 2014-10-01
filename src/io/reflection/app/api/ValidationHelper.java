@@ -19,12 +19,14 @@ import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.EmailTemplate;
+import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.Forum;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Post;
 import io.reflection.app.datatypes.shared.Reply;
 import io.reflection.app.datatypes.shared.Role;
+import io.reflection.app.datatypes.shared.SimpleModelRun;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.datatypes.shared.Topic;
 import io.reflection.app.datatypes.shared.User;
@@ -33,12 +35,14 @@ import io.reflection.app.service.country.CountryServiceProvider;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.datasource.DataSourceServiceProvider;
 import io.reflection.app.service.emailtemplate.EmailTemplateServiceProvider;
+import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
 import io.reflection.app.service.role.RoleServiceProvider;
 import io.reflection.app.service.sale.SaleServiceProvider;
 import io.reflection.app.service.session.ISessionService;
 import io.reflection.app.service.session.SessionServiceProvider;
+import io.reflection.app.service.simplemodelrun.SimpleModelRunServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.service.user.UserServiceProvider;
 
@@ -631,6 +635,26 @@ public class ValidationHelper {
 	}
 
 	/**
+	 * 
+	 * @param feedFetch
+	 * @param parent
+	 * @return
+	 * @throws InputValidationException
+	 */
+	public static FeedFetch validateFeedFetch(FeedFetch feedFetch, String parent) throws ServiceException {
+		if (feedFetch == null) throw new InputValidationException(ApiError.FeedFetchNull.getCode(), ApiError.FeedFetchNull.getMessage(parent));
+
+		FeedFetch lookupFeedFetch = null;
+		if (feedFetch.id != null) {
+			lookupFeedFetch = FeedFetchServiceProvider.provide().getFeedFetch(feedFetch.id);
+		}
+
+		if (lookupFeedFetch == null) throw new InputValidationException(ApiError.FeedFetchNotFound.getCode(), ApiError.FeedFetchNotFound.getMessage(parent));
+
+		return lookupFeedFetch;
+	}
+
+	/**
 	 * @param email
 	 * @param isNullable
 	 * @param parent
@@ -701,5 +725,25 @@ public class ValidationHelper {
 	public static Reply validateNewReply(Reply reply, String parent) throws ServiceException {
 		// TODO Auto-generated method stub
 		return reply;
+	}
+
+	/**
+	 * @param simpleModelRun
+	 * @param string
+	 * @return
+	 * @throws ServiceException
+	 */
+	public static SimpleModelRun validateSimpleModelRun(SimpleModelRun simpleModelRun, String parent) throws ServiceException {
+		if (simpleModelRun == null) throw new InputValidationException(ApiError.SimpleModelRunNull.getCode(), ApiError.SimpleModelRunNull.getMessage(parent));
+
+		SimpleModelRun lookupSimpleModelRun = null;
+		if (simpleModelRun.id != null) {
+			lookupSimpleModelRun = SimpleModelRunServiceProvider.provide().getSimpleModelRun(simpleModelRun.id);
+		}
+
+		if (lookupSimpleModelRun == null)
+			throw new InputValidationException(ApiError.SimpleModelRunNotFound.getCode(), ApiError.SimpleModelRunNotFound.getMessage(parent));
+
+		return lookupSimpleModelRun;
 	}
 }

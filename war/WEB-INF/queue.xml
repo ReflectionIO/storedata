@@ -53,9 +53,9 @@
         <name>model</name>
         <mode>pull</mode>
         <acl>
-            <user-email>535523482315@project.gserviceaccount.com</user-email>
+            <user-email>486144765626-compute@developer.gserviceaccount.com</user-email>
             <user-email>hello@reflection.io</user-email>
-            <writer-email>535523482315@project.gserviceaccount.com</writer-email>
+            <writer-email>486144765626-compute@developer.gserviceaccount.com</writer-email>
             <writer-email>hello@reflection.io</writer-email>
         </acl>
     </queue>
@@ -120,11 +120,21 @@
         <name>refreshitemproperties</name>
         <mode>pull</mode>
         <acl>
-            <user-email>535523482315@project.gserviceaccount.com</user-email>
+            <user-email>486144765626-compute@developer.gserviceaccount.com</user-email>
             <user-email>hello@reflection.io</user-email>
-            <writer-email>535523482315@project.gserviceaccount.com</writer-email>
+            <writer-email>486144765626-compute@developer.gserviceaccount.com</writer-email>
             <writer-email>hello@reflection.io</writer-email>
         </acl>
+    </queue>
+    
+    <queue>
+        <name>archive</name>
+        <rate>20/s</rate>
+        <bucket-size>10</bucket-size>
+        <max-concurrent-requests>20</max-concurrent-requests>
+        <retry-parameters>
+            <task-retry-limit>5</task-retry-limit>
+        </retry-parameters>
     </queue>
 
 </queue-entries>

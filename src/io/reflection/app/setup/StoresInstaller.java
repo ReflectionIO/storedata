@@ -11,6 +11,7 @@ import static io.reflection.app.objectify.PersistenceService.ofy;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.service.store.StoreServiceProvider;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,7 +31,7 @@ public class StoresInstaller {
 			ofy().save().entities(
 					createStore(
 							"Apple iOS Store",
-							"ios",
+							DataTypeHelper.IOS_STORE_A3,
 							"http://www.apple.com",
 							Arrays.asList(new String[] { "al", "dz", "ao", "ai", "ag", "ar", "am", "au", "at", "az", "bs", "bh", "bb", "by", "be", "bz", "bj",
 									"bm", "bt", "bo", "bw", "br", "bn", "bg", "bf", "kh", "ca", "cv", "ky", "td", "cl", "cn", "co", "cg", "cr", "hr", "cy",

@@ -48,6 +48,7 @@ public enum PageType {
 	BlogPostPageType("blogpost", false),
 	BlogTagPageType("blogtag", false),
 	ChangeDetailsPageType("changedetails", true),
+	ChangePasswordPageType("changepassword", true),
 	EmailTemplatesPageType("emailtemplates", "MET"),
 	FeedBrowserPageType("feedbrowser", "MFF"),
 	ForgotPasswordPageType("forgotpassword", false),
@@ -204,6 +205,9 @@ public enum PageType {
 			break;
 		case RegisterPageType:
 			page = new RegisterPage();
+			break;
+		case ChangePasswordPageType:
+			page = new ChangePasswordPage();
 			break;
 		case RolesPageType:
 			page = new RolesPage();

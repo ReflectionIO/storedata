@@ -306,7 +306,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 			myAccountSidePanel.getPersonalDetailsLink().setTargetHistoryToken(
 					PageType.UsersPageType.asTargetHistoryToken(PageType.ChangeDetailsPageType.toString(), user.id.toString()));
-
+			
 			backLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(), user.id.toString()));
 		}
 

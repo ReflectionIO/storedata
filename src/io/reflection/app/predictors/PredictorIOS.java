@@ -19,10 +19,14 @@ import io.reflection.app.datatypes.shared.FeedFetchStatusType;
 import io.reflection.app.datatypes.shared.FormType;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.ModelRun;
+import io.reflection.app.datatypes.shared.ModelTypeType;
 import io.reflection.app.datatypes.shared.Rank;
+import io.reflection.app.datatypes.shared.SimpleModelRun;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.helpers.ItemPropertyWrapper;
-import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.helpers.QueueHelper;
+import io.reflection.app.itemrankarchivers.ItemRankArchiver;
+import io.reflection.app.itemrankarchivers.ItemRankArchiverFactory;
 import io.reflection.app.modellers.Modeller;
 import io.reflection.app.modellers.ModellerFactory;
 import io.reflection.app.service.category.CategoryServiceProvider;
@@ -30,7 +34,9 @@ import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.modelrun.ModelRunServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
+import io.reflection.app.shared.util.DataTypeHelper;
 
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,11 +44,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.google.appengine.api.taskqueue.Queue;
-import com.google.appengine.api.taskqueue.QueueFactory;
-import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
-import com.google.appengine.api.taskqueue.TransientFailureException;
 
 /**
  * @author billy1380
@@ -52,8 +54,6 @@ public class PredictorIOS implements Predictor {
 
 	private static final Logger LOG = Logger.getLogger(PredictorIOS.class.getName());
 
-	private static final String IOS_STORE_A3 = "ios";
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -61,43 +61,8 @@ public class PredictorIOS implements Predictor {
 	 */
 	@Override
 	public void enqueue(String country, String type, Long code) {
-		if (LOG.isLoggable(GaeLevel.TRACE)) {
-			LOG.log(GaeLevel.TRACE, "Entering...");
-		}
-
-		try {
-			Queue queue = QueueFactory.getQueue("predict");
-
-			TaskOptions options = TaskOptions.Builder.withUrl("/predict").method(Method.POST);
-			options.param("country", country);
-			options.param("store", IOS_STORE_A3);
-			options.param("type", type);
-			options.param("code", code.toString());
-
-			try {
-				queue.add(options);
-			} catch (TransientFailureException ex) {
-
-				if (LOG.isLoggable(Level.WARNING)) {
-					LOG.warning(String.format("Could not queue a message because of [%s] - will retry it once", ex.toString()));
-				}
-
-				// retry once
-				try {
-					queue.add(options);
-				} catch (TransientFailureException reEx) {
-					if (LOG.isLoggable(Level.SEVERE)) {
-						LOG.log(Level.SEVERE,
-								String.format("Retry of with payload [%s] failed while adding to queue [%s] twice", options.toString(), queue.getQueueName()),
-								reEx);
-					}
-				}
-			}
-		} finally {
-			if (LOG.isLoggable(GaeLevel.TRACE)) {
-				LOG.log(GaeLevel.TRACE, "Exiting...");
-			}
-		}
+		QueueHelper.enqueue("predict", "/predict", Method.POST, new SimpleEntry<String, String>("country", country), new SimpleEntry<String, String>("store",
+				DataTypeHelper.IOS_STORE_A3), new SimpleEntry<String, String>("type", type), new SimpleEntry<String, String>("code", code.toString()));
 	}
 
 	/**
@@ -131,24 +96,23 @@ public class PredictorIOS implements Predictor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.predictors.Predictor#predictRevenueAndDownloads(java.lang.String, java.lang.String, java.lang.Long)
+	 * @see io.reflection.app.predictors.Predictor#predictRevenueAndDownloads(java.lang.String, java.lang.String, java.lang.Long, java.lang.Long)
 	 */
 	@Override
-	public void predictRevenueAndDownloads(String country, String type, Long code) throws DataAccessException {
+	public void predictRevenueAndDownloads(String country, String type, Long code, Long categoryId) throws DataAccessException {
 
 		Country c = new Country();
 		c.a2Code = country;
 
-		Store s = new Store();
-		s.a3Code = IOS_STORE_A3;
+		Store s = DataTypeHelper.getIosStore();
 
 		Pager p = new Pager();
 		p.start = Long.valueOf(0);
 		p.count = new Long(Long.MAX_VALUE);
 
-		Modeller modeller = ModellerFactory.getModellerForStore(IOS_STORE_A3);
-		
-		Collector collector = CollectorFactory.getCollectorForStore(IOS_STORE_A3);
+		Modeller modeller = ModellerFactory.getModellerForStore(DataTypeHelper.IOS_STORE_A3);
+
+		Collector collector = CollectorFactory.getCollectorForStore(DataTypeHelper.IOS_STORE_A3);
 		List<String> listTypes = new ArrayList<String>();
 		listTypes.addAll(collector.getCounterpartTypes(type));
 		listTypes.add(type);
@@ -161,10 +125,16 @@ public class PredictorIOS implements Predictor {
 		List<Rank> foundRanks = RankServiceProvider.provide().getGatherCodeRanks(c, s, category, type, code, p, true);
 		Map<String, Item> lookup = lookupItemsForRanks(foundRanks);
 
+		ItemRankArchiver archiver = null;
+
 		Item item = null;
 		for (Rank rank : foundRanks) {
 			item = lookup.get(rank.itemId);
 			ItemPropertyWrapper properties = new ItemPropertyWrapper(item.properties);
+
+			if (archiver == null) {
+				archiver = ItemRankArchiverFactory.getItemRankArchiverForStore(rank.source);
+			}
 
 			boolean usesIap = properties.getBoolean(ItemPropertyLookupServlet.PROPERTY_IAP);
 
@@ -221,12 +191,15 @@ public class PredictorIOS implements Predictor {
 				// }
 
 				RankServiceProvider.provide().updateRank(rank);
+				archiver.enqueue(rank.id);
 			}
 		}
-		
+
 		alterFeedFetchStatus(s, c, category, listTypes, code);
 
-		LOG.info("Done");
+		if (LOG.isLoggable(Level.INFO)) {
+			LOG.info("predictRevenueAndDownloads completed and status updated");
+		}
 	}
 
 	/**
@@ -248,7 +221,7 @@ public class PredictorIOS implements Predictor {
 			}
 		}
 	}
-	
+
 	private void setDownloadsAndRevenue(Rank rank, ModelRun output, boolean usesIap, float price) {
 		double revenue = 0.0;
 		double downloads = 0.0;
@@ -338,4 +311,25 @@ public class PredictorIOS implements Predictor {
 		return price <= Float.MIN_VALUE;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.predictors.Predictor#enqueue(io.reflection.app.datatypes.shared.SimpleModelRun)
+	 */
+	@Override
+	public void enqueue(SimpleModelRun simpleModelRun) {
+		QueueHelper.enqueue("predict", "/predict", Method.POST, new SimpleEntry<String, String>("runid", simpleModelRun.id.toString()),
+				new SimpleEntry<String, String>("modeltype", ModelTypeType.ModelTypeTypeSimple.toString()));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.predictors.Predictor#enqueue(io.reflection.app.datatypes.shared.ModelRun)
+	 */
+	@Override
+	public void enqueue(ModelRun modelRun) {
+		QueueHelper.enqueue("predict", "/predict", Method.POST, new SimpleEntry<String, String>("runid", modelRun.id.toString()),
+				new SimpleEntry<String, String>("modeltype", ModelTypeType.ModelTypeTypeCorrelation.toString()));
+	}
 }
