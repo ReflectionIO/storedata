@@ -8,12 +8,12 @@
 //
 package io.reflection.app.service.permission;
 
-import java.util.Collection;
-import java.util.List;
-
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.Permission;
+
+import java.util.Collection;
+import java.util.List;
 
 import com.spacehopperstudios.service.IService;
 
@@ -47,6 +47,15 @@ public interface IPermissionService extends IService {
 	 * @return
 	 */
 	public Permission getNamedPermission(String name) throws DataAccessException;
+
+	/**
+	 * Gets the permission using a lookup code
+	 * 
+	 * @param code
+	 *            the code name for the permission
+	 * @return
+	 */
+	public Permission getCodePermission(String code) throws DataAccessException;
 
 	/**
 	 * @param pager

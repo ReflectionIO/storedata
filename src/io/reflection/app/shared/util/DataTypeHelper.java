@@ -11,6 +11,7 @@ import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Role;
+import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.datatypes.shared.Store;
 
 import java.util.Collections;
@@ -38,7 +39,7 @@ public class DataTypeHelper {
 	public static final long PERMISSION_BLOG_LIST_ANY_ID = 17;
 	public static final long PERMISSION_HAS_LINKED_ACCOUNT_ID = 20;
 
-	public static final long ROLE_ADMIN_ID = 1;
+	public static final Long ROLE_ADMIN_ID = Long.valueOf(1);
 	public static final long ROLE_DEVELOPER_ID = 2;
 	public static final long ROLE_PREMIUM_ID = 3;
 	public static final long ROLE_ALPHA_ID = 4;
@@ -66,6 +67,18 @@ public class DataTypeHelper {
 		Permission permission = new Permission();
 		permission.id = id;
 		return permission;
+	}
+
+	/**
+	 * Creates a User with a given id
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public static User createUser(Long id) {
+		User user = new User();
+		user.id = id;
+		return user;
 	}
 
 	public static String itemIapState(Item item, String yes, String no, String unknown) {

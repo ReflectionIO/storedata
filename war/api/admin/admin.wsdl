@@ -1,746 +1,924 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <wsdl:definitions name="admin" targetNamespace="http://app.reflection.io/admin" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:sda="http://app.reflection.io/admin"
-    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <wsdl:types>
-        <xsd:schema targetNamespace="http://app.reflection.io/admin" xmlns:sd="http://app.reflection.io">
-            <xsd:import schemaLocation="../app.xsd" namespace="http://app.reflection.io" />
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<wsdl:types>
+		<xsd:schema targetNamespace="http://app.reflection.io/admin" xmlns:sd="http://app.reflection.io">
+			<xsd:import schemaLocation="../app.xsd" namespace="http://app.reflection.io" />
 
-            <xsd:element name="GetUsersInput" type="sda:GetUsersRequest" />
-            <xsd:element name="GetUsersOutput" type="sda:GetUsersResponse" />
+			<xsd:element name="GetUsersInput" type="sda:GetUsersRequest" />
+			<xsd:element name="GetUsersOutput" type="sda:GetUsersResponse" />
 
-            <xsd:element name="GetUsersCountInput" type="sda:GetUsersCountRequest" />
-            <xsd:element name="GetUsersCountOutput" type="sda:GetUsersCountResponse" />
+			<xsd:element name="GetUsersCountInput" type="sda:GetUsersCountRequest" />
+			<xsd:element name="GetUsersCountOutput" type="sda:GetUsersCountResponse" />
 
-            <xsd:element name="GetModelOutcomeInput" type="sda:GetModelOutcomeRequest" />
-            <xsd:element name="GetModelOutcomeOutput" type="sda:GetModelOutcomeResponse" />
+			<xsd:element name="GetModelOutcomeInput" type="sda:GetModelOutcomeRequest" />
+			<xsd:element name="GetModelOutcomeOutput" type="sda:GetModelOutcomeResponse" />
 
-            <xsd:element name="GetFeedFetchesInput" type="sda:GetFeedFetchesRequest" />
-            <xsd:element name="GetFeedFetchesOutput" type="sda:GetFeedFetchesResponse" />
+			<xsd:element name="GetFeedFetchesInput" type="sda:GetFeedFetchesRequest" />
+			<xsd:element name="GetFeedFetchesOutput" type="sda:GetFeedFetchesResponse" />
 
-            <xsd:element name="TriggerGatherInput" type="sda:TriggerGatherRequest" />
-            <xsd:element name="TriggerGatherOutput" type="sda:TriggerGatherResponse" />
+			<xsd:element name="TriggerGatherInput" type="sda:TriggerGatherRequest" />
+			<xsd:element name="TriggerGatherOutput" type="sda:TriggerGatherResponse" />
 
-            <xsd:element name="TriggerIngestInput" type="sda:TriggerIngestRequest" />
-            <xsd:element name="TriggerIngestOutput" type="sda:TriggerIngestResponse" />
+			<xsd:element name="TriggerIngestInput" type="sda:TriggerIngestRequest" />
+			<xsd:element name="TriggerIngestOutput" type="sda:TriggerIngestResponse" />
 
-            <xsd:element name="TriggerModelInput" type="sda:TriggerModelRequest" />
-            <xsd:element name="TriggerModelOutput" type="sda:TriggerModelResponse" />
+			<xsd:element name="TriggerModelInput" type="sda:TriggerModelRequest" />
+			<xsd:element name="TriggerModelOutput" type="sda:TriggerModelResponse" />
 
-            <xsd:element name="TriggerPredictInput" type="sda:TriggerPredictRequest" />
-            <xsd:element name="TriggerPredictOutput" type="sda:TriggerPredictResponse" />
+			<xsd:element name="TriggerPredictInput" type="sda:TriggerPredictRequest" />
+			<xsd:element name="TriggerPredictOutput" type="sda:TriggerPredictResponse" />
 
-            <xsd:element name="SetPasswordInput" type="sda:SetPasswordRequest" />
-            <xsd:element name="SetPasswordOutput" type="sda:SetPasswordResponse" />
+			<xsd:element name="SetPasswordInput" type="sda:SetPasswordRequest" />
+			<xsd:element name="SetPasswordOutput" type="sda:SetPasswordResponse" />
 
-            <xsd:element name="AssignRoleInput" type="sda:AssignRoleRequest" />
-            <xsd:element name="AssignRoleOutput" type="sda:AssignRoleResponse" />
+			<xsd:element name="AssignRoleInput" type="sda:AssignRoleRequest" />
+			<xsd:element name="AssignRoleOutput" type="sda:AssignRoleResponse" />
 
-            <xsd:element name="GetRolesInput" type="sda:GetRolesRequest" />
-            <xsd:element name="GetRolesOutput" type="sda:GetRolesResponse" />
+			<xsd:element name="AssignPermissionInput" type="sda:AssignPermissionRequest" />
+			<xsd:element name="AssignPermissionOutput" type="sda:AssignPermissionResponse" />
+			
+			<xsd:element name="RevokeRoleInput" type="sda:RevokeRoleRequest" />
+			<xsd:element name="RevokeRoleOutput" type="sda:RevokeRoleResponse" />
 
-            <xsd:element name="GetPermissionsInput" type="sda:GetPermissionsRequest" />
-            <xsd:element name="GetPermissionsOutput" type="sda:GetPermissionsResponse" />
+			<xsd:element name="RevokePermissionInput" type="sda:RevokePermissionRequest" />
+			<xsd:element name="RevokePermissionOutput" type="sda:RevokePermissionResponse" />
 
-            <xsd:element name="GetEmailTemplatesInput" type="sda:GetEmailTemplatesRequest" />
-            <xsd:element name="GetEmailTemplatesOutput" type="sda:GetEmailTemplatesResponse" />
+			<xsd:element name="GetRolesInput" type="sda:GetRolesRequest" />
+			<xsd:element name="GetRolesOutput" type="sda:GetRolesResponse" />
 
-            <xsd:element name="SendEmailInput" type="sda:SendEmailRequest" />
-            <xsd:element name="SendEmailOutput" type="sda:SendEmailResponse" />
+			<xsd:element name="GetPermissionsInput" type="sda:GetPermissionsRequest" />
+			<xsd:element name="GetPermissionsOutput" type="sda:GetPermissionsResponse" />
 
-            <xsd:element name="GetItemsInput" type="sda:GetItemsRequest" />
-            <xsd:element name="GetItemsOutput" type="sda:GetItemsResponse" />
+			<xsd:element name="GetEmailTemplatesInput" type="sda:GetEmailTemplatesRequest" />
+			<xsd:element name="GetEmailTemplatesOutput" type="sda:GetEmailTemplatesResponse" />
 
-            <xsd:element name="DeleteUserInput" type="sda:DeleteUserRequest" />
-            <xsd:element name="DeleteUserOutput" type="sda:DeleteUserResponse" />
+			<xsd:element name="SendEmailInput" type="sda:SendEmailRequest" />
+			<xsd:element name="SendEmailOutput" type="sda:SendEmailResponse" />
 
-            <xsd:complexType name="GetUsersRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="pager" type="sd:Pager" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
+			<xsd:element name="GetItemsInput" type="sda:GetItemsRequest" />
+			<xsd:element name="GetItemsOutput" type="sda:GetItemsResponse" />
 
-            <xsd:complexType name="GetUsersResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                        <xsd:sequence>
-                            <xsd:element name="users" type="sd:User" maxOccurs="unbounded" />
-                            <xsd:element name="pager" type="sd:Pager" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
+			<xsd:element name="DeleteUserInput" type="sda:DeleteUserRequest" />
+			<xsd:element name="DeleteUserOutput" type="sda:DeleteUserResponse" />
 
-            <xsd:complexType name="GetUsersCountRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request" />
-                </xsd:complexContent>
-            </xsd:complexType>
+			<xsd:element name="GetRolesAndPermissionsInput" type="sda:GetRolesAndPermissionsRequest" />
+			<xsd:element name="GetRolesAndPermissionsOutput" type="sda:GetRolesAndPermissionsResponse" />
 
-            <xsd:complexType name="GetUsersCountResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                        <xsd:attribute name="count" type="xsd:long" />
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
+			<xsd:complexType name="GetUsersRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
-            <xsd:complexType name="GetModelOutcomeRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="country" type="sd:Country" />
-                            <xsd:element name="store" type="sd:Store" />
+			<xsd:complexType name="GetUsersResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+							<xsd:element name="users" type="sd:User" maxOccurs="unbounded" />
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetUsersCountRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request" />
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetUsersCountResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:attribute name="count" type="xsd:long" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetModelOutcomeRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="country" type="sd:Country" />
+							<xsd:element name="store" type="sd:Store" />
                             <xsd:element name="category" type="sd:Category" />
-                        </xsd:sequence>
-                        <xsd:attribute name="code" type="xsd:long" />
-                        <xsd:attribute name="listType" type="xsd:string" />
+						</xsd:sequence>
+						<xsd:attribute name="code" type="xsd:long" />
+						<xsd:attribute name="listType" type="xsd:string" />
                         <xsd:attribute name="modelType" type="sd:ModelTypeType" />
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
-            <xsd:complexType name="GetModelOutcomeResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                        <xsd:sequence>
+			<xsd:complexType name="GetModelOutcomeResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
                             <xsd:element name="correlation" type="sd:ModelRun" />
                             <xsd:element name="simple" type="sd:SimpleModelRun" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
-            <xsd:complexType name="GetFeedFetchesRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="country" type="sd:Country" />
-                            <xsd:element name="store" type="sd:Store" />
-                            <xsd:element name="pager" type="sd:Pager" />
-                            <xsd:element name="listTypes" type="xsd:string" maxOccurs="unbounded" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
+			<xsd:complexType name="GetFeedFetchesRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="country" type="sd:Country" />
+							<xsd:element name="store" type="sd:Store" />
+							<xsd:element name="pager" type="sd:Pager" />
+							<xsd:element name="listTypes" type="xsd:string" maxOccurs="unbounded" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
-            <xsd:complexType name="GetFeedFetchesResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                        <xsd:sequence>
-                            <xsd:element name="feedFetches" type="sd:FeedFetch" maxOccurs="unbounded" />
-                            <xsd:element name="pager" type="sd:Pager" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
+			<xsd:complexType name="GetFeedFetchesResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+							<xsd:element name="feedFetches" type="sd:FeedFetch" maxOccurs="unbounded" />
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
-            <xsd:complexType name="TriggerGatherRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="country" type="sd:Country" />
-                            <xsd:element name="store" type="sd:Store" />
+			<xsd:complexType name="TriggerGatherRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="country" type="sd:Country" />
+							<xsd:element name="store" type="sd:Store" />
                             <xsd:element name="category" type="sd:Category" />
-                            <xsd:element name="listTypes" type="xsd:string" maxOccurs="unbounded" />
-                        </xsd:sequence>
-                        <xsd:attribute name="code" type="xsd:long" />
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
+							<xsd:element name="listTypes" type="xsd:string" maxOccurs="unbounded" />
+						</xsd:sequence>
+						<xsd:attribute name="code" type="xsd:long" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
-            <xsd:complexType name="TriggerGatherResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                        <xsd:sequence>
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
+			<xsd:complexType name="TriggerGatherResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
-            <xsd:complexType name="TriggerIngestRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="country" type="sd:Country" />
-                            <xsd:element name="store" type="sd:Store" />
+			<xsd:complexType name="TriggerIngestRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="country" type="sd:Country" />
+							<xsd:element name="store" type="sd:Store" />
                             <xsd:element name="category" type="sd:Category" />
-                            <xsd:element name="listTypes" type="xsd:string" maxOccurs="unbounded" />
-                        </xsd:sequence>
-                        <xsd:attribute name="code" type="xsd:long" />
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
+							<xsd:element name="listTypes" type="xsd:string" maxOccurs="unbounded" />
+						</xsd:sequence>
+						<xsd:attribute name="code" type="xsd:long" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
-            <xsd:complexType name="TriggerIngestResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                        <xsd:sequence>
+			<xsd:complexType name="TriggerIngestResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
 
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
-            <xsd:complexType name="TriggerModelRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="country" type="sd:Country" />
-                            <xsd:element name="store" type="sd:Store" />
+			<xsd:complexType name="TriggerModelRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="country" type="sd:Country" />
+							<xsd:element name="store" type="sd:Store" />
                             <xsd:element name="category" type="sd:Category" />
-                            <xsd:element name="listTypes" type="xsd:string" maxOccurs="unbounded" />
+							<xsd:element name="listTypes" type="xsd:string" maxOccurs="unbounded" />
 							<xsd:element name="feedFetch" type="sd:FeedFetch" />
-                        </xsd:sequence>
-                        <xsd:attribute name="code" type="xsd:long" />
+						</xsd:sequence>
+						<xsd:attribute name="code" type="xsd:long" />
                         <xsd:attribute name="modelType" type="sd:ModelTypeType" />
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
-            <xsd:complexType name="TriggerModelResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                        <xsd:sequence>
+			<xsd:complexType name="TriggerModelResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
 
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
-            <xsd:complexType name="TriggerPredictRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="country" type="sd:Country" />
-                            <xsd:element name="store" type="sd:Store" />
+			<xsd:complexType name="TriggerPredictRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="country" type="sd:Country" />
+							<xsd:element name="store" type="sd:Store" />
                             <xsd:element name="category" type="sd:Category" />
-                            <xsd:element name="listTypes" type="xsd:string" maxOccurs="unbounded" />
+							<xsd:element name="listTypes" type="xsd:string" maxOccurs="unbounded" />
 							<xsd:element name="simpleModelRun" type="sd:SimpleModelRun" />
 							<xsd:element name="modelRun" type="sd:ModelRun" />
-                        </xsd:sequence>
-                        <xsd:attribute name="code" type="xsd:long" />
+						</xsd:sequence>
+						<xsd:attribute name="code" type="xsd:long" />
                         <xsd:attribute name="modelType" type="sd:ModelTypeType" />
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
-            <xsd:complexType name="TriggerPredictResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                        <xsd:sequence>
+			<xsd:complexType name="TriggerPredictResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
 
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
-            <xsd:complexType name="SetPasswordRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="user" type="sd:User" />
-                        </xsd:sequence>
-                        <xsd:attribute name="password" type="xsd:string" />
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
+			<xsd:complexType name="SetPasswordRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="user" type="sd:User" />
+						</xsd:sequence>
+						<xsd:attribute name="password" type="xsd:string" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
-            <xsd:complexType name="SetPasswordResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
+			<xsd:complexType name="SetPasswordResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
-            <xsd:complexType name="AssignRoleRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="user" type="sd:User" />
-                            <xsd:element name="role" type="sd:Role" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
+			<xsd:complexType name="AssignRoleRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="user" type="sd:User" />
+							<xsd:element name="role" type="sd:Role" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
-            <xsd:complexType name="AssignRoleResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
+			<xsd:complexType name="AssignRoleResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
-            <xsd:complexType name="GetRolesRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="pager" type="sd:Pager" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
+			<xsd:complexType name="AssignPermissionRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="user" type="sd:User" />
+							<xsd:element name="permission" type="sd:Permission" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
-            <xsd:complexType name="GetRolesResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                        <xsd:sequence>
-                            <xsd:element name="roles" type="sd:Role" maxOccurs="unbounded" />
-                            <xsd:element name="pager" type="sd:Pager" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
+			<xsd:complexType name="AssignPermissionResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			
+			<xsd:complexType name="RevokeRoleRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="user" type="sd:User" />
+							<xsd:element name="role" type="sd:Role" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
-            <xsd:complexType name="GetPermissionsRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="pager" type="sd:Pager" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
+			<xsd:complexType name="RevokeRoleResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
-            <xsd:complexType name="GetPermissionsResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                        <xsd:sequence>
-                            <xsd:element name="permissions" type="sd:Permission" maxOccurs="unbounded" />
-                            <xsd:element name="pager" type="sd:Pager" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
+			<xsd:complexType name="RevokePermissionRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="user" type="sd:User" />
+							<xsd:element name="permission" type="sd:Permission" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
-            <xsd:complexType name="GetEmailTemplatesRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="pager" type="sd:Pager" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
+			<xsd:complexType name="RevokePermissionResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
-            <xsd:complexType name="GetEmailTemplatesResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                        <xsd:sequence>
-                            <xsd:element name="templates" type="sd:EmailTemplate" maxOccurs="unbounded" />
-                            <xsd:element name="pager" type="sd:Pager" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
+			<xsd:complexType name="GetRolesRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
-            <xsd:complexType name="SendEmailRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="template" type="sd:EmailTemplate" />
-                            <xsd:element name="toUser" type="sd:User" />
-                        </xsd:sequence>
-                        <xsd:attribute name="toAddress" type="xsd:string" />
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
+			<xsd:complexType name="GetRolesResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+							<xsd:element name="roles" type="sd:Role" maxOccurs="unbounded" />
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
-            <xsd:complexType name="SendEmailResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response" />
-                </xsd:complexContent>
-            </xsd:complexType>
+			<xsd:complexType name="GetPermissionsRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
-            <xsd:complexType name="GetItemsRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="pager" type="sd:Pager" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
+			<xsd:complexType name="GetPermissionsResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+							<xsd:element name="permissions" type="sd:Permission" maxOccurs="unbounded" />
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
-            <xsd:complexType name="GetItemsResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                        <xsd:sequence>
-                            <xsd:element name="items" type="sd:Item" maxOccurs="unbounded" />
-                            <xsd:element name="pager" type="sd:Pager" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
+			<xsd:complexType name="GetEmailTemplatesRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
-            <xsd:complexType name="DeleteUserRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="user" type="sd:User" maxOccurs="1" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-            <xsd:complexType name="DeleteUserResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
+			<xsd:complexType name="GetEmailTemplatesResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+							<xsd:element name="templates" type="sd:EmailTemplate" maxOccurs="unbounded" />
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
-        </xsd:schema>
-    </wsdl:types>
+			<xsd:complexType name="SendEmailRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="template" type="sd:EmailTemplate" />
+							<xsd:element name="toUser" type="sd:User" />
+						</xsd:sequence>
+						<xsd:attribute name="toAddress" type="xsd:string" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
-    <wsdl:message name="GetUsersRequest">
-        <wsdl:part name="input" element="sda:GetUsersInput" />
-    </wsdl:message>
-    <wsdl:message name="GetUsersResponse">
-        <wsdl:part name="output" element="sda:GetUsersOutput" />
-    </wsdl:message>
+			<xsd:complexType name="SendEmailResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response" />
+				</xsd:complexContent>
+			</xsd:complexType>
 
-    <wsdl:message name="GetUsersCountRequest">
-        <wsdl:part name="input" element="sda:GetUsersCountInput" />
-    </wsdl:message>
-    <wsdl:message name="GetUsersCountResponse">
-        <wsdl:part name="output" element="sda:GetUsersCountOutput" />
-    </wsdl:message>
+			<xsd:complexType name="GetItemsRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
-    <wsdl:message name="GetModelOutcomeRequest">
-        <wsdl:part name="input" element="sda:GetModelOutcomeInput" />
-    </wsdl:message>
-    <wsdl:message name="GetModelOutcomeResponse">
-        <wsdl:part name="output" element="sda:GetModelOutcomeOutput" />
-    </wsdl:message>
+			<xsd:complexType name="GetItemsResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+							<xsd:element name="items" type="sd:Item" maxOccurs="unbounded" />
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
-    <wsdl:message name="GetFeedFetchesRequest">
-        <wsdl:part name="input" element="sda:GetFeedFetchesInput" />
-    </wsdl:message>
-    <wsdl:message name="GetFeedFetchesResponse">
-        <wsdl:part name="output" element="sda:GetFeedFetchesOutput" />
-    </wsdl:message>
+			<xsd:complexType name="DeleteUserRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="user" type="sd:User" maxOccurs="1" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:complexType name="DeleteUserResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
-    <wsdl:message name="TriggerGatherRequest">
-        <wsdl:part name="input" element="sda:TriggerGatherInput" />
-    </wsdl:message>
-    <wsdl:message name="TriggerGatherResponse">
-        <wsdl:part name="output" element="sda:TriggerGatherOutput" />
-    </wsdl:message>
+			<xsd:complexType name="GetRolesAndPermissionsRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="user" type="sd:User" />
+						</xsd:sequence>
+						<xsd:attribute name="idsOnly" type="xsd:boolean" default="true" />
+						<xsd:attribute name="expandRoles" type="xsd:boolean" default="false" />
+						<xsd:attribute name="rolesOnly" type="xsd:boolean" default="false" />
+						<xsd:attribute name="permissionsOnly" type="xsd:boolean" default="false" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:complexType name="GetRolesAndPermissionsResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+							<xsd:element name="roles" type="sd:Role" minOccurs="0" maxOccurs="unbounded" />
+							<xsd:element name="permissions" type="sd:Permission" minOccurs="0" maxOccurs="unbounded" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
-    <wsdl:message name="TriggerIngestRequest">
-        <wsdl:part name="input" element="sda:TriggerIngestInput" />
-    </wsdl:message>
-    <wsdl:message name="TriggerIngestResponse">
-        <wsdl:part name="output" element="sda:TriggerIngestOutput" />
-    </wsdl:message>
+		</xsd:schema>
+	</wsdl:types>
 
-    <wsdl:message name="TriggerModelRequest">
-        <wsdl:part name="input" element="sda:TriggerModelInput" />
-    </wsdl:message>
-    <wsdl:message name="TriggerModelResponse">
-        <wsdl:part name="output" element="sda:TriggerModelOutput" />
-    </wsdl:message>
+	<wsdl:message name="GetUsersRequest">
+		<wsdl:part name="input" element="sda:GetUsersInput" />
+	</wsdl:message>
+	<wsdl:message name="GetUsersResponse">
+		<wsdl:part name="output" element="sda:GetUsersOutput" />
+	</wsdl:message>
 
-    <wsdl:message name="TriggerPredictRequest">
-        <wsdl:part name="input" element="sda:TriggerPredictInput" />
-    </wsdl:message>
-    <wsdl:message name="TriggerPredictResponse">
-        <wsdl:part name="output" element="sda:TriggerPredictOutput" />
-    </wsdl:message>
+	<wsdl:message name="GetUsersCountRequest">
+		<wsdl:part name="input" element="sda:GetUsersCountInput" />
+	</wsdl:message>
+	<wsdl:message name="GetUsersCountResponse">
+		<wsdl:part name="output" element="sda:GetUsersCountOutput" />
+	</wsdl:message>
 
-    <wsdl:message name="SetPasswordRequest">
-        <wsdl:part name="input" element="sda:SetPasswordInput" />
-    </wsdl:message>
-    <wsdl:message name="SetPasswordResponse">
-        <wsdl:part name="output" element="sda:SetPasswordOutput" />
-    </wsdl:message>
+	<wsdl:message name="GetModelOutcomeRequest">
+		<wsdl:part name="input" element="sda:GetModelOutcomeInput" />
+	</wsdl:message>
+	<wsdl:message name="GetModelOutcomeResponse">
+		<wsdl:part name="output" element="sda:GetModelOutcomeOutput" />
+	</wsdl:message>
 
-    <wsdl:message name="AssignRoleRequest">
-        <wsdl:part name="input" element="sda:AssignRoleInput" />
-    </wsdl:message>
-    <wsdl:message name="AssignRoleResponse">
-        <wsdl:part name="output" element="sda:AssignRoleOutput" />
-    </wsdl:message>
+	<wsdl:message name="GetFeedFetchesRequest">
+		<wsdl:part name="input" element="sda:GetFeedFetchesInput" />
+	</wsdl:message>
+	<wsdl:message name="GetFeedFetchesResponse">
+		<wsdl:part name="output" element="sda:GetFeedFetchesOutput" />
+	</wsdl:message>
 
-    <wsdl:message name="GetRolesRequest">
-        <wsdl:part name="input" element="sda:GetRolesInput" />
-    </wsdl:message>
-    <wsdl:message name="GetRolesResponse">
-        <wsdl:part name="output" element="sda:GetRolesOutput" />
-    </wsdl:message>
+	<wsdl:message name="TriggerGatherRequest">
+		<wsdl:part name="input" element="sda:TriggerGatherInput" />
+	</wsdl:message>
+	<wsdl:message name="TriggerGatherResponse">
+		<wsdl:part name="output" element="sda:TriggerGatherOutput" />
+	</wsdl:message>
 
-    <wsdl:message name="GetPermissionsRequest">
-        <wsdl:part name="input" element="sda:GetPermissionsInput" />
-    </wsdl:message>
-    <wsdl:message name="GetPermissionsResponse">
-        <wsdl:part name="output" element="sda:GetPermissionsOutput" />
-    </wsdl:message>
+	<wsdl:message name="TriggerIngestRequest">
+		<wsdl:part name="input" element="sda:TriggerIngestInput" />
+	</wsdl:message>
+	<wsdl:message name="TriggerIngestResponse">
+		<wsdl:part name="output" element="sda:TriggerIngestOutput" />
+	</wsdl:message>
 
-    <wsdl:message name="GetEmailTemplatesRequest">
-        <wsdl:part name="input" element="sda:GetEmailTemplatesInput" />
-    </wsdl:message>
-    <wsdl:message name="GetEmailTemplatesResponse">
-        <wsdl:part name="output" element="sda:GetEmailTemplatesOutput" />
-    </wsdl:message>
+	<wsdl:message name="TriggerModelRequest">
+		<wsdl:part name="input" element="sda:TriggerModelInput" />
+	</wsdl:message>
+	<wsdl:message name="TriggerModelResponse">
+		<wsdl:part name="output" element="sda:TriggerModelOutput" />
+	</wsdl:message>
 
-    <wsdl:message name="SendEmailRequest">
-        <wsdl:part name="input" element="sda:SendEmailInput" />
-    </wsdl:message>
-    <wsdl:message name="SendEmailResponse">
-        <wsdl:part name="output" element="sda:SendEmailOutput" />
-    </wsdl:message>
+	<wsdl:message name="TriggerPredictRequest">
+		<wsdl:part name="input" element="sda:TriggerPredictInput" />
+	</wsdl:message>
+	<wsdl:message name="TriggerPredictResponse">
+		<wsdl:part name="output" element="sda:TriggerPredictOutput" />
+	</wsdl:message>
 
-    <wsdl:message name="GetItemsRequest">
-        <wsdl:part name="input" element="sda:GetItemsInput" />
-    </wsdl:message>
-    <wsdl:message name="GetItemsResponse">
-        <wsdl:part name="output" element="sda:GetItemsOutput" />
-    </wsdl:message>
+	<wsdl:message name="SetPasswordRequest">
+		<wsdl:part name="input" element="sda:SetPasswordInput" />
+	</wsdl:message>
+	<wsdl:message name="SetPasswordResponse">
+		<wsdl:part name="output" element="sda:SetPasswordOutput" />
+	</wsdl:message>
 
-    <wsdl:message name="DeleteUserRequest">
-        <wsdl:part name="input" element="sda:DeleteUserInput" />
-    </wsdl:message>
-    <wsdl:message name="DeleteUserResponse">
-        <wsdl:part name="output" element="sda:DeleteUserOutput" />
-    </wsdl:message>
+	<wsdl:message name="AssignRoleRequest">
+		<wsdl:part name="input" element="sda:AssignRoleInput" />
+	</wsdl:message>
+	<wsdl:message name="AssignRoleResponse">
+		<wsdl:part name="output" element="sda:AssignRoleOutput" />
+	</wsdl:message>
 
-    <wsdl:portType name="admin">
-        <wsdl:operation name="GetUsers">
-            <wsdl:input message="sda:GetUsersRequest" />
-            <wsdl:output message="sda:GetUsersResponse" />
-        </wsdl:operation>
-        <wsdl:operation name="GetUsersCount">
-            <wsdl:input message="sda:GetUsersCountRequest" />
-            <wsdl:output message="sda:GetUsersCountResponse" />
-        </wsdl:operation>
-        <wsdl:operation name="GetModelOutcome">
-            <wsdl:input message="sda:GetModelOutcomeRequest" />
-            <wsdl:output message="sda:GetModelOutcomeResponse" />
-        </wsdl:operation>
-        <wsdl:operation name="GetFeedFetches">
-            <wsdl:input message="sda:GetFeedFetchesRequest" />
-            <wsdl:output message="sda:GetFeedFetchesResponse" />
-        </wsdl:operation>
-        <wsdl:operation name="TriggerGather">
-            <wsdl:input message="sda:TriggerGatherRequest" />
-            <wsdl:output message="sda:TriggerGatherResponse" />
-        </wsdl:operation>
-        <wsdl:operation name="TriggerIngest">
-            <wsdl:input message="sda:TriggerIngestRequest" />
-            <wsdl:output message="sda:TriggerIngestResponse" />
-        </wsdl:operation>
-        <wsdl:operation name="TriggerModel">
-            <wsdl:input message="sda:TriggerModelRequest" />
-            <wsdl:output message="sda:TriggerModelResponse" />
-        </wsdl:operation>
+	<wsdl:message name="AssignPermissionRequest">
+		<wsdl:part name="input" element="sda:AssignPermissionInput" />
+	</wsdl:message>
+	<wsdl:message name="AssignPermissionResponse">
+		<wsdl:part name="output" element="sda:AssignPermissionOutput" />
+	</wsdl:message>
+	
+	<wsdl:message name="RevokeRoleRequest">
+		<wsdl:part name="input" element="sda:RevokeRoleInput" />
+	</wsdl:message>
+	<wsdl:message name="RevokeRoleResponse">
+		<wsdl:part name="output" element="sda:RevokeRoleOutput" />
+	</wsdl:message>
 
-        <wsdl:operation name="TriggerPredict">
-            <wsdl:input message="sda:TriggerPredictRequest" />
-            <wsdl:output message="sda:TriggerPredictResponse" />
-        </wsdl:operation>
+	<wsdl:message name="RevokePermissionRequest">
+		<wsdl:part name="input" element="sda:RevokePermissionInput" />
+	</wsdl:message>
+	<wsdl:message name="RevokePermissionResponse">
+		<wsdl:part name="output" element="sda:RevokePermissionOutput" />
+	</wsdl:message>
 
-        <wsdl:operation name="SetPassword">
-            <wsdl:input message="sda:SetPasswordRequest" />
-            <wsdl:output message="sda:SetPasswordResponse" />
-        </wsdl:operation>
+	<wsdl:message name="GetRolesRequest">
+		<wsdl:part name="input" element="sda:GetRolesInput" />
+	</wsdl:message>
+	<wsdl:message name="GetRolesResponse">
+		<wsdl:part name="output" element="sda:GetRolesOutput" />
+	</wsdl:message>
 
-        <wsdl:operation name="AssignRole">
-            <wsdl:input message="sda:AssignRoleRequest" />
-            <wsdl:output message="sda:AssignRoleResponse" />
-        </wsdl:operation>
+	<wsdl:message name="GetPermissionsRequest">
+		<wsdl:part name="input" element="sda:GetPermissionsInput" />
+	</wsdl:message>
+	<wsdl:message name="GetPermissionsResponse">
+		<wsdl:part name="output" element="sda:GetPermissionsOutput" />
+	</wsdl:message>
 
-        <wsdl:operation name="GetRoles">
-            <wsdl:input message="sda:GetRolesRequest" />
-            <wsdl:output message="sda:GetRolesResponse" />
-        </wsdl:operation>
+	<wsdl:message name="GetEmailTemplatesRequest">
+		<wsdl:part name="input" element="sda:GetEmailTemplatesInput" />
+	</wsdl:message>
+	<wsdl:message name="GetEmailTemplatesResponse">
+		<wsdl:part name="output" element="sda:GetEmailTemplatesOutput" />
+	</wsdl:message>
 
-        <wsdl:operation name="GetPermissions">
-            <wsdl:input message="sda:GetPermissionsRequest" />
-            <wsdl:output message="sda:GetPermissionsResponse" />
-        </wsdl:operation>
+	<wsdl:message name="SendEmailRequest">
+		<wsdl:part name="input" element="sda:SendEmailInput" />
+	</wsdl:message>
+	<wsdl:message name="SendEmailResponse">
+		<wsdl:part name="output" element="sda:SendEmailOutput" />
+	</wsdl:message>
 
-        <wsdl:operation name="GetEmailTemplates">
-            <wsdl:input message="sda:GetEmailTemplatesRequest" />
-            <wsdl:output message="sda:GetEmailTemplatesResponse" />
-        </wsdl:operation>
+	<wsdl:message name="GetItemsRequest">
+		<wsdl:part name="input" element="sda:GetItemsInput" />
+	</wsdl:message>
+	<wsdl:message name="GetItemsResponse">
+		<wsdl:part name="output" element="sda:GetItemsOutput" />
+	</wsdl:message>
 
-        <wsdl:operation name="SendEmail">
-            <wsdl:input message="sda:SendEmailRequest" />
-            <wsdl:output message="sda:SendEmailResponse" />
-        </wsdl:operation>
+	<wsdl:message name="DeleteUserRequest">
+		<wsdl:part name="input" element="sda:DeleteUserInput" />
+	</wsdl:message>
+	<wsdl:message name="DeleteUserResponse">
+		<wsdl:part name="output" element="sda:DeleteUserOutput" />
+	</wsdl:message>
 
-        <wsdl:operation name="GetItems">
-            <wsdl:input message="sda:GetItemsRequest" />
-            <wsdl:output message="sda:GetItemsResponse" />
-        </wsdl:operation>
-        
-        <wsdl:operation name="DeleteUser">
-            <wsdl:input message="sda:DeleteUserRequest" />
-            <wsdl:output message="sda:DeleteUserResponse" />
-        </wsdl:operation>
-    </wsdl:portType>
-    <wsdl:binding name="adminSOAP" type="sda:admin">
-        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
-        <wsdl:operation name="GetUsers">
-            <soap:operation soapAction="http://app.reflection.io/admin/GetUsers" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="GetUsersCount">
-            <soap:operation soapAction="http://app.reflection.io/admin/GetUsersCount" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="GetModelOutcome">
-            <soap:operation soapAction="http://app.reflection.io/admin/GetModelOutcome" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="GetFeedFetches">
-            <soap:operation soapAction="http://app.reflection.io/admin/GetFeedFetches" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="TriggerGather">
-            <soap:operation soapAction="http://app.reflection.io/admin/TriggerGather" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="TriggerIngest">
-            <soap:operation soapAction="http://app.reflection.io/admin/TriggerIngest" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="TriggerModel">
-            <soap:operation soapAction="http://app.reflection.io/admin/TriggerModel" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="TriggerPredict">
-            <soap:operation soapAction="http://app.reflection.io/admin/TriggerPredict" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
+	<wsdl:message name="GetRolesAndPermissionsRequest">
+		<wsdl:part name="input" element="sda:GetRolesAndPermissionsInput" />
+	</wsdl:message>
+	<wsdl:message name="GetRolesAndPermissionsResponse">
+		<wsdl:part name="output" element="sda:GetRolesAndPermissionsOutput" />
+	</wsdl:message>
 
-        <wsdl:operation name="SetPassword">
-            <soap:operation soapAction="http://app.reflection.io/admin/SetPassword" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
+	<wsdl:portType name="admin">
+		<wsdl:operation name="GetUsers">
+			<wsdl:input message="sda:GetUsersRequest" />
+			<wsdl:output message="sda:GetUsersResponse" />
+		</wsdl:operation>
+		<wsdl:operation name="GetUsersCount">
+			<wsdl:input message="sda:GetUsersCountRequest" />
+			<wsdl:output message="sda:GetUsersCountResponse" />
+		</wsdl:operation>
+		<wsdl:operation name="GetModelOutcome">
+			<wsdl:input message="sda:GetModelOutcomeRequest" />
+			<wsdl:output message="sda:GetModelOutcomeResponse" />
+		</wsdl:operation>
+		<wsdl:operation name="GetFeedFetches">
+			<wsdl:input message="sda:GetFeedFetchesRequest" />
+			<wsdl:output message="sda:GetFeedFetchesResponse" />
+		</wsdl:operation>
+		<wsdl:operation name="TriggerGather">
+			<wsdl:input message="sda:TriggerGatherRequest" />
+			<wsdl:output message="sda:TriggerGatherResponse" />
+		</wsdl:operation>
+		<wsdl:operation name="TriggerIngest">
+			<wsdl:input message="sda:TriggerIngestRequest" />
+			<wsdl:output message="sda:TriggerIngestResponse" />
+		</wsdl:operation>
+		<wsdl:operation name="TriggerModel">
+			<wsdl:input message="sda:TriggerModelRequest" />
+			<wsdl:output message="sda:TriggerModelResponse" />
+		</wsdl:operation>
 
-        <wsdl:operation name="AssignRole">
-            <soap:operation soapAction="http://app.reflection.io/admin/AssignRole" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
+		<wsdl:operation name="TriggerPredict">
+			<wsdl:input message="sda:TriggerPredictRequest" />
+			<wsdl:output message="sda:TriggerPredictResponse" />
+		</wsdl:operation>
 
-        <wsdl:operation name="GetRoles">
-            <soap:operation soapAction="http://app.reflection.io/admin/GetRoles" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
+		<wsdl:operation name="SetPassword">
+			<wsdl:input message="sda:SetPasswordRequest" />
+			<wsdl:output message="sda:SetPasswordResponse" />
+		</wsdl:operation>
 
-        <wsdl:operation name="GetPermissions">
-            <soap:operation soapAction="http://app.reflection.io/admin/GetPermissions" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
+		<wsdl:operation name="AssignRole">
+			<wsdl:input message="sda:AssignRoleRequest" />
+			<wsdl:output message="sda:AssignRoleResponse" />
+		</wsdl:operation>
 
-        <wsdl:operation name="GetEmailTemplates">
-            <soap:operation soapAction="http://app.reflection.io/admin/GetEmailTemplates" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
+		<wsdl:operation name="AssignPermission">
+			<wsdl:input message="sda:AssignPermissionRequest" />
+			<wsdl:output message="sda:AssignPermissionResponse" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="RevokeRole">
+			<wsdl:input message="sda:RevokeRoleRequest" />
+			<wsdl:output message="sda:RevokeRoleResponse" />
+		</wsdl:operation>
 
-        <wsdl:operation name="SendEmail">
-            <soap:operation soapAction="http://app.reflection.io/admin/SendEmail" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
+		<wsdl:operation name="RevokePermission">
+			<wsdl:input message="sda:RevokePermissionRequest" />
+			<wsdl:output message="sda:RevokePermissionResponse" />
+		</wsdl:operation>
 
-        <wsdl:operation name="GetItems">
-            <soap:operation soapAction="http://app.reflection.io/admin/GetItems" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
+		<wsdl:operation name="GetRoles">
+			<wsdl:input message="sda:GetRolesRequest" />
+			<wsdl:output message="sda:GetRolesResponse" />
+		</wsdl:operation>
 
-        <wsdl:operation name="DeleteUser">
-            <soap:operation soapAction="http://app.reflection.io/core/DeleteUser" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
+		<wsdl:operation name="GetPermissions">
+			<wsdl:input message="sda:GetPermissionsRequest" />
+			<wsdl:output message="sda:GetPermissionsResponse" />
+		</wsdl:operation>
 
-    </wsdl:binding>
-    <wsdl:service name="admin">
-        <wsdl:port name="adminSOAP" binding="sda:adminSOAP">
-            <soap:address location="http://app.reflection.io/admin/" />
-        </wsdl:port>
-    </wsdl:service>
+		<wsdl:operation name="GetEmailTemplates">
+			<wsdl:input message="sda:GetEmailTemplatesRequest" />
+			<wsdl:output message="sda:GetEmailTemplatesResponse" />
+		</wsdl:operation>
+
+		<wsdl:operation name="SendEmail">
+			<wsdl:input message="sda:SendEmailRequest" />
+			<wsdl:output message="sda:SendEmailResponse" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetItems">
+			<wsdl:input message="sda:GetItemsRequest" />
+			<wsdl:output message="sda:GetItemsResponse" />
+		</wsdl:operation>
+
+		<wsdl:operation name="DeleteUser">
+			<wsdl:input message="sda:DeleteUserRequest" />
+			<wsdl:output message="sda:DeleteUserResponse" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetRolesAndPermissions">
+			<wsdl:input message="sda:GetRolesAndPermissionsRequest" />
+			<wsdl:output message="sda:GetRolesAndPermissionsResponse" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="adminSOAP" type="sda:admin">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="GetUsers">
+			<soap:operation soapAction="http://app.reflection.io/admin/GetUsers" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetUsersCount">
+			<soap:operation soapAction="http://app.reflection.io/admin/GetUsersCount" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetModelOutcome">
+			<soap:operation soapAction="http://app.reflection.io/admin/GetModelOutcome" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetFeedFetches">
+			<soap:operation soapAction="http://app.reflection.io/admin/GetFeedFetches" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="TriggerGather">
+			<soap:operation soapAction="http://app.reflection.io/admin/TriggerGather" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="TriggerIngest">
+			<soap:operation soapAction="http://app.reflection.io/admin/TriggerIngest" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="TriggerModel">
+			<soap:operation soapAction="http://app.reflection.io/admin/TriggerModel" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="TriggerPredict">
+			<soap:operation soapAction="http://app.reflection.io/admin/TriggerPredict" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="SetPassword">
+			<soap:operation soapAction="http://app.reflection.io/admin/SetPassword" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="AssignRole">
+			<soap:operation soapAction="http://app.reflection.io/admin/AssignRole" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="AssignPermission">
+			<soap:operation soapAction="http://app.reflection.io/admin/AssignPermission" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		
+		<wsdl:operation name="RevokeRole">
+			<soap:operation soapAction="http://app.reflection.io/admin/RevokeRole" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="RevokePermission">
+			<soap:operation soapAction="http://app.reflection.io/admin/RevokePermission" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="GetRoles">
+			<soap:operation soapAction="http://app.reflection.io/admin/GetRoles" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="GetPermissions">
+			<soap:operation soapAction="http://app.reflection.io/admin/GetPermissions" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="GetEmailTemplates">
+			<soap:operation soapAction="http://app.reflection.io/admin/GetEmailTemplates" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="SendEmail">
+			<soap:operation soapAction="http://app.reflection.io/admin/SendEmail" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="GetItems">
+			<soap:operation soapAction="http://app.reflection.io/admin/GetItems" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="DeleteUser">
+			<soap:operation soapAction="http://app.reflection.io/admin/DeleteUser" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetRolesAndPermissions">
+			<soap:operation soapAction="http://app.reflection.io/admin/GetRolesAndPermissions" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+	</wsdl:binding>
+	<wsdl:service name="admin">
+		<wsdl:port name="adminSOAP" binding="sda:adminSOAP">
+			<soap:address location="http://app.reflection.io/admin/" />
+		</wsdl:port>
+	</wsdl:service>
 </wsdl:definitions>

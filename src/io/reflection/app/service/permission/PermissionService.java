@@ -170,7 +170,7 @@ final class PermissionService implements IPermissionService {
 		} else if (pager.count != null) {
 			getPermissionIdsQuery += String.format(" LIMIT %d", pager.count.longValue());
 		}
-		
+
 		try {
 			permissionConnection.connect();
 			permissionConnection.executeQuery(getPermissionIdsQuery);
@@ -244,9 +244,9 @@ final class PermissionService implements IPermissionService {
 
 			if (permissions.size() == 1) {
 				getPermissionsQuery.append("=");
-				
+
 				Permission permission = permissions.iterator().next();
-				
+
 				getPermissionsQuery.append(permission.id);
 
 				lookup.put(permission.id, permission);
@@ -278,7 +278,7 @@ final class PermissionService implements IPermissionService {
 				permissionConnection.connect();
 				permissionConnection.executeQuery(getPermissionsQuery.toString());
 
-				if (permissionConnection.fetchNextRow()) {
+				while (permissionConnection.fetchNextRow()) {
 					Permission permission = lookup.get(permissionConnection.getCurrentRowLong("id"));
 
 					toPermission(permissionConnection, permission);
@@ -290,6 +290,35 @@ final class PermissionService implements IPermissionService {
 			}
 		}
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.permission.IPermissionService#getCodePermission(java.lang.String)
+	 */
+	@Override
+	public Permission getCodePermission(String code) throws DataAccessException {
+		Permission permission = null;
+
+		IDatabaseService databaseService = DatabaseServiceProvider.provide();
+		Connection permissionConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeRole.toString());
+
+		String getCodePermissionQuery = String.format("SELECT * FROM `permission` WHERE `deleted`='n' AND `code`='%s' LIMIT 1", addslashes(code));
+
+		try {
+			permissionConnection.connect();
+			permissionConnection.executeQuery(getCodePermissionQuery);
+
+			if (permissionConnection.fetchNextRow()) {
+				permission = toPermission(permissionConnection);
+			}
+		} finally {
+			if (permissionConnection != null) {
+				permissionConnection.disconnect();
+			}
+		}
+		return permission;
 	}
 
 }

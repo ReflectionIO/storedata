@@ -278,7 +278,7 @@ final class RoleService implements IRoleService {
 				roleConnection.connect();
 				roleConnection.executeQuery(getRolesQuery.toString());
 
-				if (roleConnection.fetchNextRow()) {
+				while (roleConnection.fetchNextRow()) {
 					Role role = lookup.get(roleConnection.getCurrentRowLong("id"));
 
 					toRole(roleConnection, role);

@@ -448,15 +448,17 @@ public class ValidationHelper {
 	public static Permission validatePermission(Permission permission, String parent) throws ServiceException {
 		if (permission == null) throw new InputValidationException(ApiError.PermissionNull.getCode(), ApiError.PermissionNull.getMessage(parent));
 
-		boolean isIdLookup = false, isNameLookup = false;
+		boolean isIdLookup = false, isCodeLookup = false, isNameLookup = false;
 
 		if (permission.id != null) {
 			isIdLookup = true;
 		} else if (permission.name != null) {
 			isNameLookup = true;
+		} else if (permission.code != null) {
+			isCodeLookup = true;
 		}
 
-		if (!(isIdLookup || isNameLookup))
+		if (!(isIdLookup || isNameLookup || isCodeLookup))
 			throw new InputValidationException(ApiError.PermissionNoLookup.getCode(), ApiError.PermissionNoLookup.getMessage(parent));
 
 		Permission lookupPermission = null;
@@ -464,6 +466,8 @@ public class ValidationHelper {
 			lookupPermission = PermissionServiceProvider.provide().getPermission(permission.id);
 		} else if (isNameLookup) {
 			lookupPermission = PermissionServiceProvider.provide().getNamedPermission(permission.name);
+		} else if (isCodeLookup) {
+			lookupPermission = PermissionServiceProvider.provide().getCodePermission(permission.code);
 		}
 
 		if (lookupPermission == null)

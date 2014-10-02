@@ -110,16 +110,10 @@
 									Linked Accounts
 								</g:InlineHyperlink>
 							</li>
-							<li ui:field="personalDetailsItem">
-								<g:InlineHyperlink ui:field="personalDetailsLink">
+							<li ui:field="accountSettingsItem">
+								<g:InlineHyperlink ui:field="accountSettingsLink">
 									<i class="glyphicon glyphicon-user"></i>
-									Personal Details
-								</g:InlineHyperlink>
-							</li>
-							<li ui:field="changePasswordItem">
-								<g:InlineHyperlink ui:field="changePasswordLink">
-									<i class="glyphicon glyphicon-lock"></i>
-									Change Password
+									Account Settings
 								</g:InlineHyperlink>
 							</li>
 						</ul>

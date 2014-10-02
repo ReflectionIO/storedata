@@ -34,10 +34,8 @@ public class MyAccountSidePanel extends Composite {
 	@UiField LIElement myAppsListItem;
 	@UiField InlineHyperlink linkedAccountsLink;
 	@UiField LIElement linkedAccountsListItem;
-	@UiField InlineHyperlink personalDetailsLink;
-	@UiField LIElement personalDetailsListItem;
-	@UiField InlineHyperlink changePasswordLink;
-	@UiField LIElement changePasswordListItem;
+	@UiField InlineHyperlink accountSettingsLink;
+	@UiField LIElement accountSettingsListItem;
 
 	public MyAccountSidePanel() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -53,8 +51,7 @@ public class MyAccountSidePanel extends Composite {
 
 	public void setMyAppsLinkActive() {
 		deactivate(linkedAccountsListItem);
-		deactivate(personalDetailsListItem);
-		deactivate(changePasswordListItem);
+		deactivate(accountSettingsListItem);
 		activate(myAppsListItem);
 	}
 
@@ -64,31 +61,24 @@ public class MyAccountSidePanel extends Composite {
 
 	public void setLinkedAccountsLinkActive() {
 		deactivate(myAppsListItem);
-		deactivate(personalDetailsListItem);
-		deactivate(changePasswordListItem);
+		deactivate(accountSettingsListItem);
 		activate(linkedAccountsListItem);
 	}
 
 	public InlineHyperlink getPersonalDetailsLink() {
-		return personalDetailsLink;
+		return accountSettingsLink;
 	}
 
 	public void setPersonalDetailsLinkActive() {
 		deactivate(myAppsListItem);
 		deactivate(linkedAccountsListItem);
-		deactivate(changePasswordListItem);
-		activate(personalDetailsListItem);
-	}
-
-	public InlineHyperlink getChangePasswordLink() {
-		return changePasswordLink;
+		activate(accountSettingsListItem);
 	}
 
 	public void setChangePasswordLinkActive() {
 		deactivate(myAppsListItem);
 		deactivate(linkedAccountsListItem);
-		deactivate(personalDetailsListItem);
-		activate(changePasswordListItem);
+		deactivate(accountSettingsListItem);
 	}
 
 	private void activate(LIElement item) {

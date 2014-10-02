@@ -45,7 +45,7 @@ public class RoleController extends AsyncDataProvider<Role> implements ServiceCo
 		return mOne;
 	}
 
-	private void fetchRoles() {
+	public void fetchRoles() {
 
 		AdminService service = ServiceCreator.createAdminService();
 

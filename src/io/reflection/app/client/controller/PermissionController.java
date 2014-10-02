@@ -49,7 +49,7 @@ public class PermissionController extends AsyncDataProvider<Permission> implemen
 		return mOne;
 	}
 
-	private void fetchPermissions() {
+	public void fetchPermissions() {
 
 		AdminService service = ServiceCreator.createAdminService();
 
