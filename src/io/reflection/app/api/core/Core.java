@@ -75,6 +75,7 @@ import io.reflection.app.api.core.shared.call.SearchForItemResponse;
 import io.reflection.app.api.core.shared.call.UpdateLinkedAccountRequest;
 import io.reflection.app.api.core.shared.call.UpdateLinkedAccountResponse;
 import io.reflection.app.api.exception.AuthenticationException;
+import io.reflection.app.api.exception.AuthorisationException;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
@@ -1350,7 +1351,7 @@ public final class Core extends ActionHandler {
 				User sessionUser = UserServiceProvider.provide().getUser(input.session.user.id);
 
 				if (input.userId != sessionUser.id) {
-					ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
+					ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(DataTypeHelper.ROLE_ADMIN_ID));
 				}
 
 				output.user = UserServiceProvider.provide().getUser(input.userId);
@@ -1375,6 +1376,13 @@ public final class Core extends ActionHandler {
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			final Permission permissionMCA = DataTypeHelper.createPermission(DataTypeHelper.PERMISSION_MANAGE_CATEGORIES_ID);
+			try {
+				ValidationHelper.validateAuthorised(input.session.user, permissionMCA);
+			} catch (AuthorisationException aEx) {
+
+			}
 
 			input.store = ValidationHelper.validateStore(input.store, "input");
 
