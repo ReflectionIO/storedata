@@ -31,9 +31,6 @@ import com.willshex.gson.json.service.shared.StatusType;
  */
 public class StoreController implements ServiceConstants {
 
-	public static final String IPHONE_A3_CODE = "iph";
-	public static final String IPAD_A3_CODE = "ipa";
-
 	private static StoreController mOne = null;
 
 	private Map<String, Store> mStoreLookup = null;
@@ -63,7 +60,7 @@ public class StoreController implements ServiceConstants {
 					if (output.stores != null && output.stores.size() > 0) {
 
 						stores = output.stores;
-						
+
 						if (mStoreLookup == null) {
 							mStoreLookup = new HashMap<String, Store>();
 						}
@@ -79,7 +76,7 @@ public class StoreController implements ServiceConstants {
 
 						if (iosStore != null) {
 							Store ipad = new Store();
-							ipad.a3Code = IPAD_A3_CODE;
+							ipad.a3Code = DataTypeHelper.STORE_IPAD_A3_CODE;
 							ipad.countries = iosStore.countries;
 							ipad.created = iosStore.created;
 							ipad.deleted = iosStore.deleted;
@@ -90,7 +87,7 @@ public class StoreController implements ServiceConstants {
 							output.stores.add(ipad);
 
 							Store iphone = new Store();
-							iphone.a3Code = IPHONE_A3_CODE;
+							iphone.a3Code = DataTypeHelper.STORE_IPHONE_A3_CODE;
 							iphone.countries = iosStore.countries;
 							iphone.created = iosStore.created;
 							iphone.deleted = iosStore.deleted;
@@ -128,7 +125,7 @@ public class StoreController implements ServiceConstants {
 		if (code != null && (mStoreLookup == null || (store = mStoreLookup.get(code)) == null)) {
 			store = new Store();
 
-			if (IPAD_A3_CODE.equalsIgnoreCase(code) || IPHONE_A3_CODE.equalsIgnoreCase(code)) {
+			if (DataTypeHelper.STORE_IPAD_A3_CODE.equalsIgnoreCase(code) || DataTypeHelper.STORE_IPHONE_A3_CODE.equalsIgnoreCase(code)) {
 				store.a3Code = DataTypeHelper.IOS_STORE_A3;
 			} else {
 				store.a3Code = code;

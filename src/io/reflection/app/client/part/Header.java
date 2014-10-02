@@ -23,7 +23,6 @@ import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
-import io.reflection.app.client.controller.PermissionController;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.UserController;
 import io.reflection.app.client.handler.NavigationEventHandler;
@@ -34,6 +33,7 @@ import io.reflection.app.client.page.PageType;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -581,7 +581,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		removeAdmin();
 		removeSearch();
 		if (user != null) {
-			if (SessionController.get().isLoggedInUserAdmin() || SessionController.get().loggedInUserHas(PermissionController.HAS_LINKED_ACCOUNT_PERMISSION_ID)) {
+			if (SessionController.get().isLoggedInUserAdmin() || SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_ID)) {
 				addLeaderboard();
 				addMyAccount(user);
 				addBlog();

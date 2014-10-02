@@ -16,6 +16,7 @@ import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.Store;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -244,7 +245,7 @@ public class FilterController {
 		defaultFilter = mCurrentFilter;
 		start();
 		setLinkedAccount(Long.valueOf(0));
-		setStore(StoreController.IPHONE_A3_CODE);
+		setStore(DataTypeHelper.STORE_IPHONE_A3_CODE);
 		setListType(OVERALL_LIST_TYPE);
 		setCountry("us");
 		setEndDate(FilterHelper.getToday());
@@ -294,7 +295,7 @@ public class FilterController {
 			}
 			if (allParts[0].equals("!item") && pageTypeFilter != PageType.ItemPageType) { // Dump object reference and make item filter independent again
 				pageTypeFilter = PageType.ItemPageType;
-				mCurrentFilter = Filter.parse(allParts[4]);				
+				mCurrentFilter = Filter.parse(allParts[4]);
 			}
 			filters.put(PageType.ItemPageType, mCurrentFilter);
 		}
@@ -414,7 +415,7 @@ public class FilterController {
 	public List<String> getListTypes() {
 		List<String> types = new ArrayList<String>();
 
-		if (StoreController.IPHONE_A3_CODE.equals(mCurrentFilter.getStoreA3Code())) {
+		if (DataTypeHelper.STORE_IPHONE_A3_CODE.equals(mCurrentFilter.getStoreA3Code())) {
 			if (PAID_LIST_TYPE.equals(mCurrentFilter.getListType()) || OVERALL_LIST_TYPE.equals(mCurrentFilter.getListType())) {
 				types.add("toppaidapplications");
 			}
@@ -424,7 +425,7 @@ public class FilterController {
 			}
 
 			types.add("topgrossingapplications");
-		} else if (StoreController.IPAD_A3_CODE.equals(mCurrentFilter.getStoreA3Code())) {
+		} else if (DataTypeHelper.STORE_IPAD_A3_CODE.equals(mCurrentFilter.getStoreA3Code())) {
 			if (PAID_LIST_TYPE.equals(mCurrentFilter.getListType()) || OVERALL_LIST_TYPE.equals(mCurrentFilter.getListType())) {
 				types.add("toppaidipadapplications");
 			}
@@ -523,11 +524,11 @@ public class FilterController {
 	public List<String> getAllListTypes() {
 		List<String> types = new ArrayList<String>();
 
-		if (StoreController.IPHONE_A3_CODE.equals(mCurrentFilter.getStoreA3Code())) {
+		if (DataTypeHelper.STORE_IPHONE_A3_CODE.equals(mCurrentFilter.getStoreA3Code())) {
 			types.add("toppaidapplications");
 			types.add("topfreeapplications");
 			types.add("topgrossingapplications");
-		} else if (StoreController.IPAD_A3_CODE.equals(mCurrentFilter.getStoreA3Code())) {
+		} else if (DataTypeHelper.STORE_IPAD_A3_CODE.equals(mCurrentFilter.getStoreA3Code())) {
 			types.add("toppaidipadapplications");
 			types.add("topfreeipadapplications");
 			types.add("topgrossingipadapplications");

@@ -31,6 +31,7 @@ import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Permission;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -169,14 +170,14 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 				if (output.status == StatusType.StatusTypeSuccess) {
 					rows.add(output.account);
 					addLinkedAccountsToLookup(Arrays.asList(output.account));
-					addDataSourceToLookup(Arrays.asList(output.account.source));					
+					addDataSourceToLookup(Arrays.asList(output.account.source));
 					pager.totalCount = Long.valueOf(pager.totalCount.longValue() + 1);
 					mCount = pager.totalCount;
 					// Load HLA Permission
-					if (!SessionController.get().loggedInUserHas(PermissionController.HAS_LINKED_ACCOUNT_PERMISSION_ID)) {
+					if (!SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_ID)) {
 						Permission hlaPermission = new Permission();
-						hlaPermission.id = PermissionController.HAS_LINKED_ACCOUNT_PERMISSION_ID;
-						hlaPermission.code = PermissionController.HAS_LINKED_ACCOUNT_PERMISSION_CODE;
+						hlaPermission.id = DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_ID;
+						hlaPermission.code = DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE;
 						SessionController.get().addPermissionToLookup(hlaPermission);
 					}
 					updateRowCount((int) mCount, true);
@@ -267,8 +268,8 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 					// Delete HLA Permission if there are no more Linked Accounts
 					if (linkedAccountsFetched() && getLinkedAccountsCount() == 0) {
 						Permission p = new Permission();
-						p.id = PermissionController.HAS_LINKED_ACCOUNT_PERMISSION_ID;
-						p.code = PermissionController.HAS_LINKED_ACCOUNT_PERMISSION_CODE;
+						p.id = DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_ID;
+						p.code = DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE;
 						SessionController.get().deletePermissionLookup(p);
 					}
 					updateRowCount((int) mCount, true);
