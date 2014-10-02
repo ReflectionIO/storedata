@@ -550,7 +550,7 @@ public final class Core extends ActionHandler {
 			}
 
 			input.listType = ValidationHelper.validateListType(input.listType, store);
-			
+
 			FormType form = ModellerFactory.getModellerForStore(store.a3Code).getForm(input.listType);
 
 			long diff = input.end.getTime() - input.start.getTime();
@@ -1374,9 +1374,20 @@ public final class Core extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			input.store = ValidationHelper.validateStore(input.store, "input");
+
+			if (input.store == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("Store: input.store"));
+
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
-			// get categories for store
+			output.categories = CategoryServiceProvider.provide().getStoreCategories(input.store, input.pager);
+
+			output.pager = input.pager;
+			updatePager(output.pager, output.categories, input.pager.totalCount == null ? CategoryServiceProvider.provide()
+					.getStoreCategoriesCount(input.store) : null);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
