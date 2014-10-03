@@ -7,7 +7,7 @@
 	<g:HTMLPanel>
 		<div class="row">
 			<g:HTMLPanel styleName="col-sm-10 col-sm-offset-1">
-				<h2>Categories (ios store)</h2>
+				<h2>Categories</h2>
 
 				<c:CellTable ui:field="tableCategories" styleName="table table-hover table-striped" />
 

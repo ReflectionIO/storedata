@@ -31,17 +31,17 @@ import com.willshex.gson.json.service.shared.StatusType;
  */
 public class CategoryController extends AsyncDataProvider<Category> implements ServiceConstants {
 
-	private static CategoryController mOne = null;
+	private static CategoryController one = null;
 	private List<Category> categoryList = new ArrayList<Category>();
 	private long count = -1;
 	private Pager pager;
 
 	public static CategoryController get() {
-		if (mOne == null) {
-			mOne = new CategoryController();
+		if (one == null) {
+			one = new CategoryController();
 		}
 
-		return mOne;
+		return one;
 	}
 
 	/*
