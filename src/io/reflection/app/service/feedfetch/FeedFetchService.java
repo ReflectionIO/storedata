@@ -548,25 +548,25 @@ final class FeedFetchService implements IFeedFetchService {
 		code = (Long) cache.get(memcacheKey);
 
 		if (code == null) {
-			Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+			Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
 
 			try {
-				rankConnection.connect();
+				feedFetchConnection.connect();
 				String getGatherCode = String
-						.format("SELECT `code2` FROM `rank` WHERE CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`source` AS BINARY)=CAST('%s' AS BINARY) AND %s `deleted`='n' ORDER BY `date` DESC LIMIT 1",
+						.format("SELECT `code2` FROM `feedfetch` WHERE CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`store` AS BINARY)=CAST('%s' AS BINARY) AND %s `deleted`='n' ORDER BY `date` DESC LIMIT 1",
 								addslashes(country.a2Code), addslashes(store.a3Code), beforeAfterQuery(before, after));
 
-				rankConnection.executeQuery(getGatherCode);
+				feedFetchConnection.executeQuery(getGatherCode);
 
-				if (rankConnection.fetchNextRow()) {
-					code = rankConnection.getCurrentRowLong("code2");
+				if (feedFetchConnection.fetchNextRow()) {
+					code = feedFetchConnection.getCurrentRowLong("code2");
 					cal.setTime(new Date());
 					cal.add(Calendar.DAY_OF_MONTH, 20);
 					cache.put(memcacheKey, code, cal.getTime());
 				}
 			} finally {
-				if (rankConnection != null) {
-					rankConnection.disconnect();
+				if (feedFetchConnection != null) {
+					feedFetchConnection.disconnect();
 				}
 			}
 		}
@@ -588,7 +588,7 @@ final class FeedFetchService implements IFeedFetchService {
 		Connection feedFetchConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
 
 		String getListTypeCodeFeedFetchQuery = String
-				.format("SELECT * FROM `feedfetch` WHERE CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`source` AS BINARY)=CAST('%s' AS BINARY) AND `categoryid`=%d AND CAST(`type` AS BINARY)=CAST('%s' AS BINARY) AND `code2`=%d AND `deleted`='n' LIMIT 1",
+				.format("SELECT * FROM `feedfetch` WHERE CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`store` AS BINARY)=CAST('%s' AS BINARY) AND `categoryid`=%d AND CAST(`type` AS BINARY)=CAST('%s' AS BINARY) AND `code2`=%d AND `deleted`='n' LIMIT 1",
 						addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), listType, code.longValue());
 		try {
 			feedFetchConnection.connect();
