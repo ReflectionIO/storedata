@@ -7,6 +7,9 @@
 //
 package io.reflection.app.client.page.blog.part;
 
+import java.io.IOException;
+
+import io.reflection.app.client.helper.MarkdownHelper;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.datatypes.shared.Post;
 import io.reflection.app.shared.util.FormattingHelper;
@@ -41,12 +44,19 @@ public class PostSummaryCell extends AbstractCell<Post> {
 			published = DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT_EEE_DD_MMM_YYYY).format(value.published);
 		}
 
-		String description = value.description;
-		if (value.visible == Boolean.TRUE) {
-			description += "<p>NOT PUBLISHED</p>";
+		String processedString = value.description;
+
+		try {
+			processedString = MarkdownHelper.PROCESSOR.process(value.description);
+		} catch (IOException e) {
+			new RuntimeException(e);
 		}
 
-		RENDERER.render(builder, link, value.title, SafeHtmlUtils.fromTrustedString(description), FormattingHelper.getUserName(value.author), published);
+		if (value.visible == Boolean.TRUE) {
+			processedString += "<p>NOT PUBLISHED</p>";
+		}
+
+		RENDERER.render(builder, link, value.title, SafeHtmlUtils.fromTrustedString(processedString), FormattingHelper.getUserName(value.author), published);
 	}
 
 }
