@@ -60,11 +60,9 @@ public final class Blog extends ActionHandler {
 				try {
 					output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-					final Permission permissionListAny = new Permission();
-					permissionListAny.id = Long.valueOf(DataTypeHelper.PERMISSION_BLOG_LIST_ANY_ID);
+					final Permission permissionListAny = DataTypeHelper.createPermission(DataTypeHelper.PERMISSION_BLOG_LIST_ANY_ID);
 
-					final Role roleAdmin = new Role();
-					roleAdmin.id = Long.valueOf(DataTypeHelper.ROLE_ADMIN_ID);
+					final Role roleAdmin = DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID);
 
 					try {
 						ValidationHelper.validateAuthorised(input.session.user, permissionListAny);
@@ -215,10 +213,10 @@ public final class Blog extends ActionHandler {
 			boolean isAuthorised = false;
 
 			List<Role> roles = new ArrayList<Role>();
-			roles.add(DataTypeHelper.createRole(Long.valueOf(1)));
+			roles.add(DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
 
 			List<Permission> permissions = new ArrayList<Permission>();
-			permissions.add(DataTypeHelper.createPermission(Long.valueOf(9)));
+			permissions.add(DataTypeHelper.createPermission(DataTypeHelper.PERMISSION_BLOG_POST_ID));
 
 			try {
 				ValidationHelper.validateAuthorised(input.session.user, roles.get(0));
@@ -274,7 +272,7 @@ public final class Blog extends ActionHandler {
 
 			input.post = ValidationHelper.validateExistingPost(input.post, "input.post");
 
-			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
+			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(DataTypeHelper.ROLE_ADMIN_ID));
 
 			PostServiceProvider.provide().deletePost(input.post);
 

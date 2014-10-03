@@ -22,6 +22,7 @@ import io.reflection.app.client.part.datatypes.MyApp;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -154,7 +155,7 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 		input.country = FilterController.get().getCountry();
 		input.start = FilterController.get().getStartDate();
 		input.end = FilterController.get().getEndDate();
-		input.listType = StoreController.IPAD_A3_CODE.equals(FilterController.get().getFilter().getStoreA3Code()) ? "ipad" : "";
+		input.listType = DataTypeHelper.STORE_IPAD_A3_CODE.equals(FilterController.get().getFilter().getStoreA3Code()) ? "ipad" : "";
 
 		service.getSalesRanks(input, new AsyncCallback<GetSalesRanksResponse>() {
 

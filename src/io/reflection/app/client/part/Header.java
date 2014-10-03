@@ -23,7 +23,6 @@ import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
-import io.reflection.app.client.controller.PermissionController;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.UserController;
 import io.reflection.app.client.handler.NavigationEventHandler;
@@ -34,6 +33,7 @@ import io.reflection.app.client.page.PageType;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,20 +87,17 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@UiField InlineHyperlink accountSettingsLink;
 	@UiField LIElement accountSettingsItem;
 
-	@UiField InlineHyperlink blogLink;
 	@UiField LIElement blogItem;
 
-	@UiField InlineHyperlink forumLink;
 	@UiField LIElement forumItem;
 
 	@UiField UListElement adminList;
-	@UiField InlineHyperlink usersLink;
+
 	@UiField LIElement usersItem;
 
 	// @UiField LIElement upgradeAccountItem;
 	// @UiField InlineHyperlink upgradeAccountLink;
 
-	@UiField InlineHyperlink feedBrowserLink;
 	@UiField LIElement feedBrowserItem;
 
 	@UiField UListElement login;
@@ -111,19 +108,16 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	// @UiField InlineHyperlink mRegisterLink;
 	// @UiField LIElement mRegisterItem;
 
-	@UiField InlineHyperlink rolesLink;
 	@UiField LIElement rolesItem;
 
-	@UiField InlineHyperlink permissionsLink;
 	@UiField LIElement permissionsItem;
 
-	@UiField InlineHyperlink emailTemplatesLink;
 	@UiField LIElement emailTemplatesItem;
 
-	@UiField InlineHyperlink itemsLink;
 	@UiField LIElement itemsItem;
 
-	@UiField InlineHyperlink blogAdminLink;
+	@UiField LIElement categoriesItem;
+
 	@UiField LIElement blogAdminItem;
 
 	@UiField SpanElement totalUsers;
@@ -240,6 +234,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			items.add(permissionsItem);
 			items.add(emailTemplatesItem);
 			items.add(itemsItem);
+			items.add(categoriesItem);
 			// items.add(upgradeAccountItem);
 			items.add(loginItem);
 			// items.add(mRegisterItem);
@@ -308,6 +303,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			highlight(adminDropdown, emailTemplatesItem);
 		} else if (PageType.ItemsPageType.equals(current.getPage())) {
 			highlight(adminDropdown, itemsItem);
+		} else if (PageType.CategoriesPageType.equals(current.getPage())) {
+			highlight(adminDropdown, categoriesItem);
 		} else if (PageType.BlogAdminPageType.equals(current.getPage())) {
 			highlight(adminDropdown, blogAdminItem);
 		} else if (PageType.BlogPostsPageType.equals(current.getPage()) || PageType.BlogPostPageType.equals(current.getPage())) {
@@ -584,7 +581,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		removeAdmin();
 		removeSearch();
 		if (user != null) {
-			if (SessionController.get().isLoggedInUserAdmin() || SessionController.get().loggedInUserHas(PermissionController.HAS_LINKED_ACCOUNT_PERMISSION_ID)) {
+			if (SessionController.get().isLoggedInUserAdmin() || SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_ID)) {
 				addLeaderboard();
 				addMyAccount(user);
 				addBlog();

@@ -75,6 +75,7 @@ import io.reflection.app.api.core.shared.call.SearchForItemResponse;
 import io.reflection.app.api.core.shared.call.UpdateLinkedAccountRequest;
 import io.reflection.app.api.core.shared.call.UpdateLinkedAccountResponse;
 import io.reflection.app.api.exception.AuthenticationException;
+import io.reflection.app.api.exception.AuthorisationException;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
@@ -550,7 +551,7 @@ public final class Core extends ActionHandler {
 			}
 
 			input.listType = ValidationHelper.validateListType(input.listType, store);
-			
+
 			FormType form = ModellerFactory.getModellerForStore(store.a3Code).getForm(input.listType);
 
 			long diff = input.end.getTime() - input.start.getTime();
@@ -1350,7 +1351,7 @@ public final class Core extends ActionHandler {
 				User sessionUser = UserServiceProvider.provide().getUser(input.session.user.id);
 
 				if (input.userId != sessionUser.id) {
-					ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
+					ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(DataTypeHelper.ROLE_ADMIN_ID));
 				}
 
 				output.user = UserServiceProvider.provide().getUser(input.userId);
@@ -1374,9 +1375,27 @@ public final class Core extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			final Permission permissionMCA = DataTypeHelper.createPermission(DataTypeHelper.PERMISSION_MANAGE_CATEGORIES_ID);
+			try {
+				ValidationHelper.validateAuthorised(input.session.user, permissionMCA);
+			} catch (AuthorisationException aEx) {
+
+			}
+
+			input.store = ValidationHelper.validateStore(input.store, "input");
+
+			if (input.store == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("Store: input.store"));
+
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
-			// get categories for store
+			output.categories = CategoryServiceProvider.provide().getStoreCategories(input.store, input.pager);
+
+			output.pager = input.pager;
+			updatePager(output.pager, output.categories, input.pager.totalCount == null ? CategoryServiceProvider.provide()
+					.getStoreCategoriesCount(input.store) : null);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {

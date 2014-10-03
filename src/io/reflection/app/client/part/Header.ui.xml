@@ -1,6 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
+	<ui:import field="io.reflection.app.client.page.PageType.CategoriesPageType" />
 	<ui:import field="io.reflection.app.client.page.PageType.ForumPageType" />
 	<ui:import field="io.reflection.app.client.page.PageType.BlogPostsPageType" />
 	<ui:import field="io.reflection.app.client.page.PageType.UpgradePageType" />
@@ -121,11 +122,11 @@
 				</ul>
 
 				<li ui:field="blogItem">
-					<g:InlineHyperlink ui:field="blogLink" targetHistoryToken="{BlogPostsPageType.asTargetHistoryToken}">Blog</g:InlineHyperlink>
+					<g:InlineHyperlink targetHistoryToken="{BlogPostsPageType.asTargetHistoryToken}">Blog</g:InlineHyperlink>
 				</li>
 
 				<li ui:field="forumItem">
-					<g:InlineHyperlink ui:field="forumLink" targetHistoryToken="{ForumPageType.asTargetHistoryToken}">Forum</g:InlineHyperlink>
+					<g:InlineHyperlink targetHistoryToken="{ForumPageType.asTargetHistoryToken}">Forum</g:InlineHyperlink>
 				</li>
 
 				<!-- <li ui:field="upgradeAccountItem"> <g:InlineHyperlink targetHistoryToken="{UpgradePageType.asTargetHistoryToken}" ui:field="upgradeAccountLink" text="Pricing" 
@@ -141,30 +142,33 @@
 					</g:Anchor>
 					<ul class="dropdown-menu">
 						<li ui:field="feedBrowserItem">
-							<g:InlineHyperlink ui:field="feedBrowserLink" targetHistoryToken="{FeedBrowserPageType.asTargetHistoryToken}">Feed Browser</g:InlineHyperlink>
+							<g:InlineHyperlink targetHistoryToken="{FeedBrowserPageType.asTargetHistoryToken}">Feed Browser</g:InlineHyperlink>
 						</li>
 						<li ui:field="itemsItem">
-							<g:InlineHyperlink ui:field="itemsLink" targetHistoryToken="{ItemsPageType.asTargetHistoryToken}">Items</g:InlineHyperlink>
+							<g:InlineHyperlink targetHistoryToken="{ItemsPageType.asTargetHistoryToken}">Items</g:InlineHyperlink>
+						</li>
+						<li ui:field="categoriesItem">
+							<g:InlineHyperlink targetHistoryToken="{CategoriesPageType.asTargetHistoryToken}">Categories</g:InlineHyperlink>
 						</li>
 						<li class="divider-horizontal-header"></li>
 						<li ui:field="usersItem">
-							<g:InlineHyperlink ui:field="usersLink" targetHistoryToken="{UsersPageType.asTargetHistoryToken}">
+							<g:InlineHyperlink targetHistoryToken="{UsersPageType.asTargetHistoryToken}">
 								Users
 								<span ui:field="totalUsers" class="badge">1+</span>
 							</g:InlineHyperlink>
 						</li>
 						<li ui:field="rolesItem">
-							<g:InlineHyperlink ui:field="rolesLink" targetHistoryToken="{RolesPageType.asTargetHistoryToken}">Roles</g:InlineHyperlink>
+							<g:InlineHyperlink targetHistoryToken="{RolesPageType.asTargetHistoryToken}">Roles</g:InlineHyperlink>
 						</li>
 						<li ui:field="permissionsItem">
-							<g:InlineHyperlink ui:field="permissionsLink" targetHistoryToken="{PermissionsPageType.asTargetHistoryToken}">Permissions</g:InlineHyperlink>
+							<g:InlineHyperlink targetHistoryToken="{PermissionsPageType.asTargetHistoryToken}">Permissions</g:InlineHyperlink>
 						</li>
 						<li class="divider-horizontal-header"></li>
 						<li ui:field="emailTemplatesItem">
-							<g:InlineHyperlink ui:field="emailTemplatesLink" targetHistoryToken="{EmailTemplatesPageType.asTargetHistoryToken}">Email Templates</g:InlineHyperlink>
+							<g:InlineHyperlink targetHistoryToken="{EmailTemplatesPageType.asTargetHistoryToken}">Email Templates</g:InlineHyperlink>
 						</li>
 						<li ui:field="blogAdminItem">
-							<g:InlineHyperlink ui:field="blogAdminLink" targetHistoryToken="{BlogAdminPageType.asTargetHistoryToken}">Blog</g:InlineHyperlink>
+							<g:InlineHyperlink targetHistoryToken="{BlogAdminPageType.asTargetHistoryToken}">Blog</g:InlineHyperlink>
 						</li>
 					</ul>
 				</li>

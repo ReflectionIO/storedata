@@ -35,15 +35,21 @@ public class DataTypeHelper {
 	public static final String ACTIVE_VALUE = "y";
 	public static final String INACTIVE_VALUE = "n";
 
-	public static final long PERMISSION_FULL_RANK_VIEW_ID = 1;
-	public static final long PERMISSION_BLOG_LIST_ANY_ID = 17;
-	public static final long PERMISSION_HAS_LINKED_ACCOUNT_ID = 20;
+	public static final Long PERMISSION_FULL_RANK_VIEW_ID = Long.valueOf(1);
+	public static final Long PERMISSION_BLOG_POST_ID = Long.valueOf(9);
+	public static final Long PERMISSION_BLOG_LIST_ANY_ID = Long.valueOf(17);
+	public static final Long PERMISSION_HAS_LINKED_ACCOUNT_ID = Long.valueOf(20);
+	public static final Long PERMISSION_MANAGE_CATEGORIES_ID = Long.valueOf(21);
+	public static final String PERMISSION_HAS_LINKED_ACCOUNT_CODE = "HLA";
 
 	public static final Long ROLE_ADMIN_ID = Long.valueOf(1);
-	public static final long ROLE_DEVELOPER_ID = 2;
-	public static final long ROLE_PREMIUM_ID = 3;
-	public static final long ROLE_ALPHA_ID = 4;
-	public static final long ROLE_BETA_ID = 5;
+	public static final Long ROLE_DEVELOPER_ID = Long.valueOf(2);
+	public static final Long ROLE_PREMIUM_ID = Long.valueOf(3);
+	public static final Long ROLE_ALPHA_ID = Long.valueOf(4);
+	public static final Long ROLE_BETA_ID = Long.valueOf(5);
+
+	public static final String STORE_IPHONE_A3_CODE = "iph";
+	public static final String STORE_IPAD_A3_CODE = "ipa";
 
 	/**
 	 * Creates a role with a given id
