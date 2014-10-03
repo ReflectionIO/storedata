@@ -38,10 +38,10 @@ import com.google.appengine.api.utils.SystemProperty;
 import com.spacehopperstudios.utility.StringUtils;
 
 final class FeedFetchService implements IFeedFetchService {
-
+	
 	private PersistentMap cache = PersistentMapFactory.createObjectify();
 	private Calendar cal = Calendar.getInstance();
-
+	
 	public String getName() {
 		return ServiceType.ServiceTypeFeedFetch.toString();
 	}
@@ -573,7 +573,7 @@ final class FeedFetchService implements IFeedFetchService {
 
 		return code;
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 

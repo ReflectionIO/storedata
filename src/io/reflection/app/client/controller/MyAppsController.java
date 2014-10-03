@@ -296,7 +296,7 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 	 */
 	@Override
 	protected void onRangeChanged(HasData<MyApp> display) {
-		if (LinkedAccountController.get().hasLinkedAccounts()) {
+		if (LinkedAccountController.get().linkedAccountsFetched()) {
 
 			Range r = display.getVisibleRange();
 			int start = r.getStart();

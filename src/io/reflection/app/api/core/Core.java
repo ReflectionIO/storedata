@@ -1353,7 +1353,7 @@ public final class Core extends ActionHandler {
 					ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
 				}
 
-				output.user = sessionUser;
+				output.user = UserServiceProvider.provide().getUser(input.userId);
 			}
 
 			output.status = StatusType.StatusTypeSuccess;

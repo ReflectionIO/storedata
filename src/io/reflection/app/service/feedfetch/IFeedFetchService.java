@@ -150,7 +150,7 @@ public interface IFeedFetchService extends IService {
 	 * @throws DataAccessException
 	 */
 	public Long getGatherCode(Country country, Store store, Date after, Date before) throws DataAccessException;
-	
+
 	/**
 	 * 
 	 * @param country

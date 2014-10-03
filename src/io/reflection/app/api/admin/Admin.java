@@ -11,6 +11,8 @@ package io.reflection.app.api.admin;
 import static io.reflection.app.api.PagerHelper.updatePager;
 import io.reflection.app.api.PagerHelper;
 import io.reflection.app.api.ValidationHelper;
+import io.reflection.app.api.admin.shared.call.AssignPermissionRequest;
+import io.reflection.app.api.admin.shared.call.AssignPermissionResponse;
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
 import io.reflection.app.api.admin.shared.call.AssignRoleResponse;
 import io.reflection.app.api.admin.shared.call.GetEmailTemplatesRequest;
@@ -23,12 +25,18 @@ import io.reflection.app.api.admin.shared.call.GetModelOutcomeRequest;
 import io.reflection.app.api.admin.shared.call.GetModelOutcomeResponse;
 import io.reflection.app.api.admin.shared.call.GetPermissionsRequest;
 import io.reflection.app.api.admin.shared.call.GetPermissionsResponse;
+import io.reflection.app.api.admin.shared.call.GetRolesAndPermissionsRequest;
+import io.reflection.app.api.admin.shared.call.GetRolesAndPermissionsResponse;
 import io.reflection.app.api.admin.shared.call.GetRolesRequest;
 import io.reflection.app.api.admin.shared.call.GetRolesResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersCountResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersResponse;
+import io.reflection.app.api.admin.shared.call.RevokePermissionRequest;
+import io.reflection.app.api.admin.shared.call.RevokePermissionResponse;
+import io.reflection.app.api.admin.shared.call.RevokeRoleRequest;
+import io.reflection.app.api.admin.shared.call.RevokeRoleResponse;
 import io.reflection.app.api.admin.shared.call.SendEmailRequest;
 import io.reflection.app.api.admin.shared.call.SendEmailResponse;
 import io.reflection.app.api.admin.shared.call.SetPasswordRequest;
@@ -48,6 +56,7 @@ import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.shared.DataAccount;
+import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.ingestors.Ingestor;
 import io.reflection.app.ingestors.IngestorFactory;
 import io.reflection.app.modellers.Modeller;
@@ -86,7 +95,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(Long.valueOf(1)));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
@@ -114,7 +123,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(Long.valueOf(1)));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
 
 			output.count = UserServiceProvider.provide().getUsersCount();
 
@@ -138,7 +147,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(Long.valueOf(1)));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -160,7 +169,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(Long.valueOf(1)));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
@@ -204,7 +213,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(Long.valueOf(1)));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
 
 			input.country = ValidationHelper.validateCountry(input.country, "input");
 
@@ -238,7 +247,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(Long.valueOf(1)));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
 
 			input.country = ValidationHelper.validateCountry(input.country, "input");
 
@@ -279,7 +288,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(Long.valueOf(1)));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
 
 			Modeller modeller = null;
 
@@ -346,7 +355,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(Long.valueOf(1)));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
 
 			switch (input.modelType) {
 			case ModelTypeTypeCorrelation:
@@ -413,7 +422,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(Long.valueOf(1)));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
 
 			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
 
@@ -442,7 +451,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(Long.valueOf(1)));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
 
 			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
 
@@ -461,6 +470,96 @@ public final class Admin extends ActionHandler {
 		return output;
 	}
 
+	public AssignPermissionResponse assignPermission(AssignPermissionRequest input) {
+		LOG.finer("Entering assignPermission");
+		AssignPermissionResponse output = new AssignPermissionResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("AssignRoleRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+
+			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
+
+			input.permission = ValidationHelper.validatePermission(input.permission, "input.permission");
+
+			if (!UserServiceProvider.provide().hasPermission(input.user, input.permission).booleanValue()) {
+				UserServiceProvider.provide().assignPermission(input.user, input.permission);
+			}
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting assignPermission");
+		return output;
+	}
+
+	public RevokeRoleResponse revokeRole(RevokeRoleRequest input) {
+		LOG.finer("Entering revokeRole");
+		RevokeRoleResponse output = new RevokeRoleResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("RevokeRoleRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+
+			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
+
+			input.role = ValidationHelper.validateRole(input.role, "input.role");
+
+			if (UserServiceProvider.provide().hasRole(input.user, input.role).booleanValue()) {
+				UserServiceProvider.provide().revokeRole(input.user, input.role);
+			}
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting revokeRole");
+		return output;
+	}
+
+	public RevokePermissionResponse revokePermission(RevokePermissionRequest input) {
+		LOG.finer("Entering revokePermission");
+		RevokePermissionResponse output = new RevokePermissionResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("AssignRoleRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+
+			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
+
+			input.permission = ValidationHelper.validatePermission(input.permission, "input.permission");
+
+			if (UserServiceProvider.provide().hasPermission(input.user, input.permission).booleanValue()) {
+				UserServiceProvider.provide().revokePermission(input.user, input.permission);
+			}
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting revokePermission");
+		return output;
+	}
+
 	public GetRolesResponse getRoles(GetRolesRequest input) {
 		LOG.finer("Entering getRoles");
 		GetRolesResponse output = new GetRolesResponse();
@@ -472,7 +571,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(Long.valueOf(1)));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
@@ -500,7 +599,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(Long.valueOf(1)));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
@@ -528,7 +627,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(Long.valueOf(1)));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
@@ -557,7 +656,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(Long.valueOf(1)));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
 
 			input.toAddress = ValidationHelper.validateEmail(input.toAddress, true, "input.toAddress");
 
@@ -587,7 +686,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(Long.valueOf(1)));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
@@ -616,6 +715,8 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+
 			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
 
 			List<DataAccount> linkedAccounts = new ArrayList<DataAccount>();
@@ -641,6 +742,57 @@ public final class Admin extends ActionHandler {
 			output.error = convertToErrorAndLog(LOG, e);
 		}
 		LOG.finer("Exiting deleteUser");
+		return output;
+	}
+
+	public GetRolesAndPermissionsResponse getRolesAndPermissions(GetRolesAndPermissionsRequest input) {
+		LOG.finer("Entering getRolesAndPermissions");
+		GetRolesAndPermissionsResponse output = new GetRolesAndPermissionsResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+						ApiError.InvalidValueNull.getMessage("GetRolesAndPermissionsResponse: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+
+			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
+
+			if (input.permissionsOnly != Boolean.TRUE) {
+				output.roles = UserServiceProvider.provide().getRoles(input.user);
+
+				if (output.roles != null) {
+					if (input.idsOnly == Boolean.FALSE) {
+						RoleServiceProvider.provide().inflateRoles(output.roles);
+					}
+
+					for (Role role : output.roles) {
+						role.permissions = RoleServiceProvider.provide().getPermissions(role);
+
+						if (role.permissions != null && input.idsOnly == Boolean.FALSE) {
+							PermissionServiceProvider.provide().inflatePermissions(role.permissions);
+						}
+					}
+				}
+			}
+
+			if (input.rolesOnly != Boolean.TRUE) {
+				output.permissions = UserServiceProvider.provide().getPermissions(input.user);
+
+				if (output.permissions != null && input.idsOnly == Boolean.FALSE) {
+					PermissionServiceProvider.provide().inflatePermissions(output.permissions);
+				}
+			}
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getRolesAndPermissions");
 		return output;
 	}
 }

@@ -7,10 +7,17 @@
 //
 package io.reflection.app.client.page.blog;
 
+import io.reflection.app.api.blog.shared.call.GetPostsRequest;
+import io.reflection.app.api.blog.shared.call.GetPostsResponse;
+import io.reflection.app.api.blog.shared.call.event.GetPostsEventHandler;
 import io.reflection.app.client.cell.StyledButtonCell;
+import io.reflection.app.client.controller.EventController;
+import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.PostController;
 import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.SessionController;
+import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
@@ -35,19 +42,20 @@ import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author billy1380
  * 
  */
-public class PostAdminPage extends Page {
+public class PostAdminPage extends Page implements GetPostsEventHandler, NavigationEventHandler {
 
 	private static PostAdminPageUiBinder uiBinder = GWT.create(PostAdminPageUiBinder.class);
 
 	interface PostAdminPageUiBinder extends UiBinder<Widget, PostAdminPage> {}
 
 	@UiField(provided = true) CellTable<Post> posts = new CellTable<Post>(ServiceConstants.SHORT_STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
-	@UiField(provided = true) SimplePager pager = new SimplePager(false, false);
+	@UiField(provided = true) SimplePager simplePager = new SimplePager(false, false);
 
 	public PostAdminPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -58,7 +66,20 @@ public class PostAdminPage extends Page {
 
 		posts.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 		PostController.get().addDataDisplay(posts);
-		pager.setDisplay(posts);
+		simplePager.setDisplay(posts);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.page.Page#onAttach()
+	 */
+	@Override
+	protected void onAttach() {
+		super.onAttach();
+
+		register(EventController.get().addHandlerToSource(GetPostsEventHandler.TYPE, PostController.get(), this));
+		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 	}
 
 	private void createColumns() {
@@ -163,5 +184,45 @@ public class PostAdminPage extends Page {
 		posts.addColumn(editColumn);
 		posts.addColumn(viewColumn);
 		posts.addColumn(deleteColumn);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.blog.shared.call.event.GetPostsEventHandler#getPostsSuccess(io.reflection.app.api.blog.shared.call.GetPostsRequest,
+	 * io.reflection.app.api.blog.shared.call.GetPostsResponse)
+	 */
+	@Override
+	public void getPostsSuccess(GetPostsRequest input, GetPostsResponse output) {
+		if (output.status.equals(StatusType.StatusTypeSuccess)) {
+			if (PostController.get().getPostsCount() > output.pager.count) {
+				simplePager.setVisible(true);
+			} else {
+				simplePager.setVisible(false);
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.blog.shared.call.event.GetPostsEventHandler#getPostsFailure(io.reflection.app.api.blog.shared.call.GetPostsRequest,
+	 * java.lang.Throwable)
+	 */
+	@Override
+	public void getPostsFailure(GetPostsRequest input, Throwable caught) {}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
+	 * io.reflection.app.client.controller.NavigationController.Stack)
+	 */
+	@Override
+	public void navigationChanged(Stack previous, Stack current) {
+		// Show pager if data loaded in User Blog page
+		if (PostController.get().hasPosts() && PostController.get().getPostsCount() > posts.getVisibleItemCount()) {
+			simplePager.setVisible(true);
+		}
 	}
 }

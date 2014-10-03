@@ -35,6 +35,15 @@
 			<xsd:element name="AssignRoleInput" type="sda:AssignRoleRequest" />
 			<xsd:element name="AssignRoleOutput" type="sda:AssignRoleResponse" />
 
+			<xsd:element name="AssignPermissionInput" type="sda:AssignPermissionRequest" />
+			<xsd:element name="AssignPermissionOutput" type="sda:AssignPermissionResponse" />
+			
+			<xsd:element name="RevokeRoleInput" type="sda:RevokeRoleRequest" />
+			<xsd:element name="RevokeRoleOutput" type="sda:RevokeRoleResponse" />
+
+			<xsd:element name="RevokePermissionInput" type="sda:RevokePermissionRequest" />
+			<xsd:element name="RevokePermissionOutput" type="sda:RevokePermissionResponse" />
+
 			<xsd:element name="GetRolesInput" type="sda:GetRolesRequest" />
 			<xsd:element name="GetRolesOutput" type="sda:GetRolesResponse" />
 
@@ -52,6 +61,9 @@
 
 			<xsd:element name="DeleteUserInput" type="sda:DeleteUserRequest" />
 			<xsd:element name="DeleteUserOutput" type="sda:DeleteUserResponse" />
+
+			<xsd:element name="GetRolesAndPermissionsInput" type="sda:GetRolesAndPermissionsRequest" />
+			<xsd:element name="GetRolesAndPermissionsOutput" type="sda:GetRolesAndPermissionsResponse" />
 
 			<xsd:complexType name="GetUsersRequest">
 				<xsd:complexContent>
@@ -94,11 +106,11 @@
 						<xsd:sequence>
 							<xsd:element name="country" type="sd:Country" />
 							<xsd:element name="store" type="sd:Store" />
-							<xsd:element name="category" type="sd:Category" />
+                            <xsd:element name="category" type="sd:Category" />
 						</xsd:sequence>
 						<xsd:attribute name="code" type="xsd:long" />
 						<xsd:attribute name="listType" type="xsd:string" />
-						<xsd:attribute name="modelType" type="sd:ModelTypeType" />
+                        <xsd:attribute name="modelType" type="sd:ModelTypeType" />
 					</xsd:extension>
 				</xsd:complexContent>
 			</xsd:complexType>
@@ -107,8 +119,8 @@
 				<xsd:complexContent>
 					<xsd:extension base="sd:Response">
 						<xsd:sequence>
-							<xsd:element name="correlation" type="sd:ModelRun" />
-							<xsd:element name="simple" type="sd:SimpleModelRun" />
+                            <xsd:element name="correlation" type="sd:ModelRun" />
+                            <xsd:element name="simple" type="sd:SimpleModelRun" />
 						</xsd:sequence>
 					</xsd:extension>
 				</xsd:complexContent>
@@ -144,7 +156,7 @@
 						<xsd:sequence>
 							<xsd:element name="country" type="sd:Country" />
 							<xsd:element name="store" type="sd:Store" />
-							<xsd:element name="category" type="sd:Category" />
+                            <xsd:element name="category" type="sd:Category" />
 							<xsd:element name="listTypes" type="xsd:string" maxOccurs="unbounded" />
 						</xsd:sequence>
 						<xsd:attribute name="code" type="xsd:long" />
@@ -167,7 +179,7 @@
 						<xsd:sequence>
 							<xsd:element name="country" type="sd:Country" />
 							<xsd:element name="store" type="sd:Store" />
-							<xsd:element name="category" type="sd:Category" />
+                            <xsd:element name="category" type="sd:Category" />
 							<xsd:element name="listTypes" type="xsd:string" maxOccurs="unbounded" />
 						</xsd:sequence>
 						<xsd:attribute name="code" type="xsd:long" />
@@ -191,12 +203,12 @@
 						<xsd:sequence>
 							<xsd:element name="country" type="sd:Country" />
 							<xsd:element name="store" type="sd:Store" />
-							<xsd:element name="category" type="sd:Category" />
+                            <xsd:element name="category" type="sd:Category" />
 							<xsd:element name="listTypes" type="xsd:string" maxOccurs="unbounded" />
 							<xsd:element name="feedFetch" type="sd:FeedFetch" />
 						</xsd:sequence>
 						<xsd:attribute name="code" type="xsd:long" />
-						<xsd:attribute name="modelType" type="sd:ModelTypeType" />
+                        <xsd:attribute name="modelType" type="sd:ModelTypeType" />
 					</xsd:extension>
 				</xsd:complexContent>
 			</xsd:complexType>
@@ -217,13 +229,13 @@
 						<xsd:sequence>
 							<xsd:element name="country" type="sd:Country" />
 							<xsd:element name="store" type="sd:Store" />
-							<xsd:element name="category" type="sd:Category" />
+                            <xsd:element name="category" type="sd:Category" />
 							<xsd:element name="listTypes" type="xsd:string" maxOccurs="unbounded" />
 							<xsd:element name="simpleModelRun" type="sd:SimpleModelRun" />
 							<xsd:element name="modelRun" type="sd:ModelRun" />
 						</xsd:sequence>
 						<xsd:attribute name="code" type="xsd:long" />
-						<xsd:attribute name="modelType" type="sd:ModelTypeType" />
+                        <xsd:attribute name="modelType" type="sd:ModelTypeType" />
 					</xsd:extension>
 				</xsd:complexContent>
 			</xsd:complexType>
@@ -268,6 +280,60 @@
 			</xsd:complexType>
 
 			<xsd:complexType name="AssignRoleResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="AssignPermissionRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="user" type="sd:User" />
+							<xsd:element name="permission" type="sd:Permission" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="AssignPermissionResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			
+			<xsd:complexType name="RevokeRoleRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="user" type="sd:User" />
+							<xsd:element name="role" type="sd:Role" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="RevokeRoleResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="RevokePermissionRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="user" type="sd:User" />
+							<xsd:element name="permission" type="sd:Permission" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="RevokePermissionResponse">
 				<xsd:complexContent>
 					<xsd:extension base="sd:Response">
 					</xsd:extension>
@@ -392,6 +458,30 @@
 				</xsd:complexContent>
 			</xsd:complexType>
 
+			<xsd:complexType name="GetRolesAndPermissionsRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="user" type="sd:User" />
+						</xsd:sequence>
+						<xsd:attribute name="idsOnly" type="xsd:boolean" default="true" />
+						<xsd:attribute name="expandRoles" type="xsd:boolean" default="false" />
+						<xsd:attribute name="rolesOnly" type="xsd:boolean" default="false" />
+						<xsd:attribute name="permissionsOnly" type="xsd:boolean" default="false" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:complexType name="GetRolesAndPermissionsResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+							<xsd:element name="roles" type="sd:Role" minOccurs="0" maxOccurs="unbounded" />
+							<xsd:element name="permissions" type="sd:Permission" minOccurs="0" maxOccurs="unbounded" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
 		</xsd:schema>
 	</wsdl:types>
 
@@ -465,6 +555,27 @@
 		<wsdl:part name="output" element="sda:AssignRoleOutput" />
 	</wsdl:message>
 
+	<wsdl:message name="AssignPermissionRequest">
+		<wsdl:part name="input" element="sda:AssignPermissionInput" />
+	</wsdl:message>
+	<wsdl:message name="AssignPermissionResponse">
+		<wsdl:part name="output" element="sda:AssignPermissionOutput" />
+	</wsdl:message>
+	
+	<wsdl:message name="RevokeRoleRequest">
+		<wsdl:part name="input" element="sda:RevokeRoleInput" />
+	</wsdl:message>
+	<wsdl:message name="RevokeRoleResponse">
+		<wsdl:part name="output" element="sda:RevokeRoleOutput" />
+	</wsdl:message>
+
+	<wsdl:message name="RevokePermissionRequest">
+		<wsdl:part name="input" element="sda:RevokePermissionInput" />
+	</wsdl:message>
+	<wsdl:message name="RevokePermissionResponse">
+		<wsdl:part name="output" element="sda:RevokePermissionOutput" />
+	</wsdl:message>
+
 	<wsdl:message name="GetRolesRequest">
 		<wsdl:part name="input" element="sda:GetRolesInput" />
 	</wsdl:message>
@@ -505,6 +616,13 @@
 	</wsdl:message>
 	<wsdl:message name="DeleteUserResponse">
 		<wsdl:part name="output" element="sda:DeleteUserOutput" />
+	</wsdl:message>
+
+	<wsdl:message name="GetRolesAndPermissionsRequest">
+		<wsdl:part name="input" element="sda:GetRolesAndPermissionsInput" />
+	</wsdl:message>
+	<wsdl:message name="GetRolesAndPermissionsResponse">
+		<wsdl:part name="output" element="sda:GetRolesAndPermissionsOutput" />
 	</wsdl:message>
 
 	<wsdl:portType name="admin">
@@ -552,6 +670,21 @@
 			<wsdl:output message="sda:AssignRoleResponse" />
 		</wsdl:operation>
 
+		<wsdl:operation name="AssignPermission">
+			<wsdl:input message="sda:AssignPermissionRequest" />
+			<wsdl:output message="sda:AssignPermissionResponse" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="RevokeRole">
+			<wsdl:input message="sda:RevokeRoleRequest" />
+			<wsdl:output message="sda:RevokeRoleResponse" />
+		</wsdl:operation>
+
+		<wsdl:operation name="RevokePermission">
+			<wsdl:input message="sda:RevokePermissionRequest" />
+			<wsdl:output message="sda:RevokePermissionResponse" />
+		</wsdl:operation>
+
 		<wsdl:operation name="GetRoles">
 			<wsdl:input message="sda:GetRolesRequest" />
 			<wsdl:output message="sda:GetRolesResponse" />
@@ -580,6 +713,11 @@
 		<wsdl:operation name="DeleteUser">
 			<wsdl:input message="sda:DeleteUserRequest" />
 			<wsdl:output message="sda:DeleteUserResponse" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetRolesAndPermissions">
+			<wsdl:input message="sda:GetRolesAndPermissionsRequest" />
+			<wsdl:output message="sda:GetRolesAndPermissionsResponse" />
 		</wsdl:operation>
 	</wsdl:portType>
 	<wsdl:binding name="adminSOAP" type="sda:admin">
@@ -677,6 +815,36 @@
 			</wsdl:output>
 		</wsdl:operation>
 
+		<wsdl:operation name="AssignPermission">
+			<soap:operation soapAction="http://app.reflection.io/admin/AssignPermission" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		
+		<wsdl:operation name="RevokeRole">
+			<soap:operation soapAction="http://app.reflection.io/admin/RevokeRole" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="RevokePermission">
+			<soap:operation soapAction="http://app.reflection.io/admin/RevokePermission" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
 		<wsdl:operation name="GetRoles">
 			<soap:operation soapAction="http://app.reflection.io/admin/GetRoles" />
 			<wsdl:input>
@@ -728,7 +896,17 @@
 		</wsdl:operation>
 
 		<wsdl:operation name="DeleteUser">
-			<soap:operation soapAction="http://app.reflection.io/core/DeleteUser" />
+			<soap:operation soapAction="http://app.reflection.io/admin/DeleteUser" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetRolesAndPermissions">
+			<soap:operation soapAction="http://app.reflection.io/admin/GetRolesAndPermissions" />
 			<wsdl:input>
 				<soap:body use="literal" />
 			</wsdl:input>

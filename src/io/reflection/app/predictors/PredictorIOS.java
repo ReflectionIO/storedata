@@ -332,5 +332,4 @@ public class PredictorIOS implements Predictor {
 		QueueHelper.enqueue("predict", "/predict", Method.POST, new SimpleEntry<String, String>("runid", modelRun.id.toString()),
 				new SimpleEntry<String, String>("modeltype", ModelTypeType.ModelTypeTypeCorrelation.toString()));
 	}
-
 }
