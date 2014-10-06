@@ -27,6 +27,7 @@ import io.reflection.app.api.admin.shared.call.TriggerGatherRequest;
 import io.reflection.app.api.admin.shared.call.TriggerIngestRequest;
 import io.reflection.app.api.admin.shared.call.TriggerModelRequest;
 import io.reflection.app.api.admin.shared.call.TriggerPredictRequest;
+import io.reflection.app.api.admin.shared.call.UpdateEmailTemplateRequest;
 import io.reflection.app.api.blog.shared.call.DeleteUserRequest;
 
 import com.google.gson.JsonObject;
@@ -118,6 +119,10 @@ public final class AdminJsonServlet extends JsonServlet {
 			GetRolesAndPermissionsRequest input = new GetRolesAndPermissionsRequest();
 			input.fromJson(request);
 			output = service.getRolesAndPermissions(input).toString();
+		} else if ("UpdateEmailTemplate".equals(action)) {
+			UpdateEmailTemplateRequest input = new UpdateEmailTemplateRequest();
+			input.fromJson(request);
+			output = service.updateEmailTemplate(input).toString();
 		}
 
 		return output;
