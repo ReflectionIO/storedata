@@ -49,6 +49,8 @@ import io.reflection.app.api.admin.shared.call.TriggerModelRequest;
 import io.reflection.app.api.admin.shared.call.TriggerModelResponse;
 import io.reflection.app.api.admin.shared.call.TriggerPredictRequest;
 import io.reflection.app.api.admin.shared.call.TriggerPredictResponse;
+import io.reflection.app.api.admin.shared.call.UpdateEmailTemplateRequest;
+import io.reflection.app.api.admin.shared.call.UpdateEmailTemplateResponse;
 import io.reflection.app.api.blog.shared.call.DeleteUserRequest;
 import io.reflection.app.api.blog.shared.call.DeleteUserResponse;
 import io.reflection.app.api.shared.ApiError;
@@ -329,7 +331,7 @@ public final class Admin extends ActionHandler {
 
 				modeller = ModellerFactory.getModellerForStore(input.store.a3Code);
 				modeller.enqueue(input.feedFetch);
-				
+
 				break;
 			default:
 				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("ModelTypeType: input.modelType"));
@@ -388,14 +390,14 @@ public final class Admin extends ActionHandler {
 
 				predictor = PredictorFactory.getPredictorForStore(input.store.a3Code);
 				predictor.enqueue(input.country.a2Code, type, input.code);
-				
+
 				break;
 			case ModelTypeTypeSimple:
 				input.simpleModelRun = ValidationHelper.validateSimpleModelRun(input.simpleModelRun, "input.simpleModelRun");
-				
+
 				predictor = PredictorFactory.getPredictorForStore(input.store.a3Code);
 				predictor.enqueue(input.simpleModelRun);
-				
+
 				break;
 			default:
 				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("ModelTypeType: input.modelType"));
@@ -795,4 +797,33 @@ public final class Admin extends ActionHandler {
 		LOG.finer("Exiting getRolesAndPermissions");
 		return output;
 	}
+
+	public UpdateEmailTemplateResponse updateEmailTemplate(UpdateEmailTemplateRequest input) {
+		LOG.finer("Entering updateEmailTemplate");
+		UpdateEmailTemplateResponse output = new UpdateEmailTemplateResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+						ApiError.InvalidValueNull.getMessage("UpdateEmailTemplateRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			if (input.emailTemplate == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("input.emailTemplate"));
+
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+
+			EmailTemplateServiceProvider.provide().updateEmailTemplate(input.emailTemplate);
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting updateEmailTemplate");
+		return output;
+	}
+
 }
