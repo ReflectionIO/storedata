@@ -19,6 +19,7 @@ import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
@@ -42,7 +43,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
-import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -72,14 +72,23 @@ public class EmailTemplatePage extends Page implements NavigationEventHandler, G
 			BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) SimplePager simplePager = new SimplePager(false, false);
 
-	private EmailTemplate emailTemplate = new EmailTemplate();
+	private EmailTemplate emailTemplate;
 
 	@UiField HTMLPanel templateTablePanel;
 	@UiField HTMLPanel editTemplatePanel;
 	@UiField TextBox fromTextBox;
+	@UiField HTMLPanel fromGroup;
+	@UiField HTMLPanel fromNote;
+	private String fromError = null;
 	@UiField TextBox subjectTextBox;
+	@UiField HTMLPanel subjectGroup;
+	@UiField HTMLPanel subjectNote;
+	private String subjectError = null;
 	@UiField MarkdownEditor templateHtmlEditor;
 	@UiField TextArea templatePlainTextEditor;
+	@UiField HTMLPanel bodyGroup;
+	@UiField HTMLPanel bodyNote;
+	private String bodyError = null;
 	private TextArea textArea; // Assign the current used TextArea to this
 	@UiField Button addForenameBtn;
 	@UiField Button addSurnameBtn;
@@ -110,8 +119,17 @@ public class EmailTemplatePage extends Page implements NavigationEventHandler, G
 
 		};
 
-		TextHeader idHeader = new TextHeader("Id");
-		emailTemplates.addColumn(idColumn, idHeader);
+		emailTemplates.addColumn(idColumn, "Id");
+
+		TextColumn<EmailTemplate> fromColumn = new TextColumn<EmailTemplate>() {
+
+			@Override
+			public String getValue(EmailTemplate object) {
+				return object.from;
+			}
+
+		};
+		emailTemplates.addColumn(fromColumn, "From");
 
 		TextColumn<EmailTemplate> subjectColumn = new TextColumn<EmailTemplate>() {
 
@@ -122,8 +140,7 @@ public class EmailTemplatePage extends Page implements NavigationEventHandler, G
 
 		};
 
-		TextHeader subjectHeader = new TextHeader("Subject");
-		emailTemplates.addColumn(subjectColumn, subjectHeader);
+		emailTemplates.addColumn(subjectColumn, "Subject");
 
 		TextColumn<EmailTemplate> formatColumn = new TextColumn<EmailTemplate>() {
 
@@ -134,8 +151,7 @@ public class EmailTemplatePage extends Page implements NavigationEventHandler, G
 
 		};
 
-		TextHeader formatHeader = new TextHeader("Format");
-		emailTemplates.addColumn(formatColumn, formatHeader);
+		emailTemplates.addColumn(formatColumn, "Format");
 
 		TextColumn<EmailTemplate> typeColumn = new TextColumn<EmailTemplate>() {
 
@@ -146,8 +162,7 @@ public class EmailTemplatePage extends Page implements NavigationEventHandler, G
 
 		};
 
-		TextHeader typeHeader = new TextHeader("Type");
-		emailTemplates.addColumn(typeColumn, typeHeader);
+		emailTemplates.addColumn(typeColumn, "Type");
 
 		Column<EmailTemplate, SafeHtml> editColumn = new Column<EmailTemplate, SafeHtml>(new SafeHtmlCell()) {
 
@@ -173,12 +188,13 @@ public class EmailTemplatePage extends Page implements NavigationEventHandler, G
 		String actionParameter = current.getAction();
 		String typeParameter = current.getParameter(TEMPLATE_EMAIL_ID_PARAMETER);
 		if (isValidEditStack(actionParameter, typeParameter)) {
+			clearErrors();
 			emailTemplate = EmailTemplateController.get().getEmailTemplate(Long.valueOf(typeParameter));
 			templateTablePanel.setVisible(false);
 			editTemplatePanel.setVisible(true);
 			fromTextBox.setText(emailTemplate.from);
 			subjectTextBox.setText(emailTemplate.subject);
-			if (emailTemplate.format.equals(EmailFormatType.EmailFormatTypePlainText)) {
+			if (emailTemplate.format == EmailFormatType.EmailFormatTypePlainText) {
 				templateHtmlEditor.setVisible(false);
 				templatePlainTextEditor.setVisible(true);
 				textArea = templatePlainTextEditor;
@@ -255,15 +271,78 @@ public class EmailTemplatePage extends Page implements NavigationEventHandler, G
 
 	@UiHandler("buttonUpdate")
 	void onUpdateClicked(ClickEvent event) {
-		emailTemplate.from = fromTextBox.getText();
-		emailTemplate.subject = subjectTextBox.getText();
-		emailTemplate.id = Long.valueOf(NavigationController.get().getStack().getParameter(TEMPLATE_EMAIL_ID_PARAMETER));
-		emailTemplate.body = textArea.getText();
-		emailTemplate.format = (formatListBox.getValue(formatListBox.getSelectedIndex()).equals(FORMAT_PLAIN_TEXT_VALUE) ? EmailFormatType.EmailFormatTypePlainText
-				: EmailFormatType.EmailFormatTypeHtml);
+		if (validate()) {
+			clearErrors();
+			preloader.show();
+			emailTemplate.from = fromTextBox.getText();
+			emailTemplate.subject = subjectTextBox.getText();
+			emailTemplate.id = Long.valueOf(NavigationController.get().getStack().getParameter(TEMPLATE_EMAIL_ID_PARAMETER));
+			emailTemplate.body = textArea.getText();
+			emailTemplate.format = (formatListBox.getValue(formatListBox.getSelectedIndex()).equals(FORMAT_PLAIN_TEXT_VALUE) ? EmailFormatType.EmailFormatTypePlainText
+					: EmailFormatType.EmailFormatTypeHtml);
+			EmailTemplateController.get().updateEmailTemplate(emailTemplate);
+		} else {
+			if (fromError != null) {
+				FormHelper.showNote(true, fromGroup, fromNote, fromError);
+			} else {
+				FormHelper.hideNote(fromGroup, fromNote);
+			}
+			if (subjectError != null) {
+				FormHelper.showNote(true, subjectGroup, subjectNote, subjectError);
+			} else {
+				FormHelper.hideNote(subjectGroup, subjectNote);
+			}
+			if (bodyError != null) {
+				FormHelper.showNote(true, bodyGroup, bodyNote, bodyError);
+			} else {
+				FormHelper.hideNote(bodyGroup, bodyNote);
+			}
+		}
+	}
 
-		preloader.show();
-		EmailTemplateController.get().updateEmailTemplate(emailTemplate);
+	private boolean validate() {
+
+		boolean validated = true;
+		// Retrieve fields to validate
+		String from = fromTextBox.getText();
+		String subject = subjectTextBox.getText();
+		String body = textArea.getText();
+
+		// Check fields constraints
+		if (from == null || from.length() == 0) {
+			fromError = "Cannot be empty";
+			validated = false;
+		} else if (!FormHelper.isValidEmail(from)) {
+			fromError = "Invalid email address";
+			validated = false;
+		} else {
+			fromError = null;
+			validated = validated && true;
+		}
+
+		if (subject == null || subject.length() == 0) {
+			subjectError = "Cannot be empty";
+			validated = false;
+		} else {
+			subjectError = null;
+			validated = validated && true;
+		}
+
+		if (body == null || body.length() == 0) {
+			bodyError = "Cannot be empty";
+			validated = false;
+		} else {
+			bodyError = null;
+			validated = validated && true;
+		}
+
+		return validated;
+	}
+
+	private void clearErrors() {
+		FormHelper.hideNote(fromGroup, fromNote);
+		FormHelper.hideNote(subjectGroup, subjectNote);
+		FormHelper.hideNote(bodyGroup, bodyNote);
 	}
 
 	/*
@@ -319,7 +398,7 @@ public class EmailTemplatePage extends Page implements NavigationEventHandler, G
 	@Override
 	public void updateEmailTemplateSuccess(UpdateEmailTemplateRequest input, UpdateEmailTemplateResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-
+			PageType.EmailTemplatesPageType.show();
 		}
 		preloader.hide();
 	}

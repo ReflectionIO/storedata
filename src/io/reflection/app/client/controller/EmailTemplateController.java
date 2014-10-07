@@ -128,7 +128,6 @@ public class EmailTemplateController extends AsyncDataProvider<EmailTemplate> im
 			@Override
 			public void onSuccess(UpdateEmailTemplateResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
-					updateEmailTemplates(input.emailTemplate);
 					updateRowData(0, mEmailTemplates.subList(0, (mEmailTemplates.size() < STEP_VALUE ? mEmailTemplates.size() : STEP_VALUE)));
 				}
 
@@ -165,16 +164,6 @@ public class EmailTemplateController extends AsyncDataProvider<EmailTemplate> im
 	 */
 	public EmailTemplate getEmailTemplate(Long emailTemplateId) {
 		return emailTemplateLookup.get(emailTemplateId);
-	}
-
-	/**
-	 * Update email template from lookup
-	 * 
-	 * @param emailTemplate
-	 */
-	private void updateEmailTemplates(EmailTemplate emailTemplate) {
-		mEmailTemplates.set(mEmailTemplates.indexOf(emailTemplateLookup.get(emailTemplate.id)), emailTemplate);
-		emailTemplateLookup.put(emailTemplate.id, emailTemplate);
 	}
 
 	/*

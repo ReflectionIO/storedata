@@ -689,7 +689,19 @@ public class ValidationHelper {
 		if (lookupEmailTemplate == null)
 			throw new InputValidationException(ApiError.EmailTemplateNotFound.getCode(), ApiError.EmailTemplateNotFound.getMessage(parent));
 
+		validateEmailTemplate(emailTemplate, parent);
+
 		return lookupEmailTemplate;
+	}
+
+	public static EmailTemplate validateEmailTemplate(EmailTemplate emailTemplate, String parent) throws ServiceException {
+		emailTemplate.from = ValidationHelper.validateEmail(emailTemplate.from, false, parent + ".from");
+
+		emailTemplate.subject = ValidationHelper.validateStringLength(emailTemplate.subject, parent + ".subject", 1, 2000);
+
+		emailTemplate.body = ValidationHelper.validateStringLength(emailTemplate.body, parent + ".body", 1, 50000);
+
+		return emailTemplate;
 	}
 
 	public static Post validateExistingPost(Post post, String parent) throws ServiceException {

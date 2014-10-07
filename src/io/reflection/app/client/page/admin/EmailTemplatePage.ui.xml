@@ -29,16 +29,22 @@
 					<g:HTMLPanel ui:field="editTemplatePanel" visible="false">
 						<g:InlineHyperlink styleName="{style.backLink}" targetHistoryToken="{EmailTemplatesPageType.asTargetHistoryToken}">&#8592;
 							Back to email templates</g:InlineHyperlink>
-						<g:HTMLPanel styleName="form-group">
+						<g:HTMLPanel ui:field="fromGroup" styleName="form-group">
 							<label>From</label>
 							<g:TextBox styleName="form-control" ui:field="fromTextBox" width="320px" />
+							<g:HTMLPanel styleName="noteDetail" ui:field="fromNote" visible="false" />
 						</g:HTMLPanel>
-						<g:HTMLPanel styleName="form-group">
+						<g:HTMLPanel ui:field="subjectGroup" styleName="form-group">
 							<label>Subject</label>
 							<g:TextBox styleName="form-control" ui:field="subjectTextBox" />
+							<g:HTMLPanel styleName="noteDetail" ui:field="subjectNote" visible="false" />
 						</g:HTMLPanel>
-						<pt:MarkdownEditor ui:field="templateHtmlEditor" visible="false" />
-						<g:TextArea ui:field="templatePlainTextEditor" styleName="form-control" width="100%" height="200px" visible="false" />
+						<g:HTMLPanel ui:field="bodyGroup" styleName="form-group">
+							<label>Body</label>
+							<pt:MarkdownEditor ui:field="templateHtmlEditor" visible="false" />
+							<g:TextArea ui:field="templatePlainTextEditor" styleName="form-control" width="100%" height="200px" visible="false" />
+							<g:HTMLPanel styleName="noteDetail" ui:field="bodyNote" visible="false" />
+						</g:HTMLPanel>
 						<g:HTMLPanel styleName="{style.addCodeButtons}">
 							<g:Button ui:field="addForenameBtn" styleName="btn btn-sm btn-default">Add forename</g:Button>
 							<g:Button ui:field="addSurnameBtn" styleName="btn btn-sm btn-default">Add surname</g:Button>
