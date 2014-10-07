@@ -23,7 +23,7 @@ import io.reflection.app.client.controller.PostController;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
-import io.reflection.app.client.part.text.RichTextToolbar;
+import io.reflection.app.client.part.text.MarkdownEditor;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Post;
 
@@ -33,7 +33,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.spacehopperstudios.utility.StringUtils;
@@ -60,21 +59,16 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 	@UiField CheckBox visible;
 	@UiField CheckBox commentsEnabled;
 
-	@UiField RichTextToolbar descriptionToolbar;
-	@UiField RichTextArea descriptionText;
+	@UiField MarkdownEditor descriptionText;
 
-	@UiField RichTextToolbar contentToolbar;
-	@UiField RichTextArea contentText;
+	@UiField MarkdownEditor contentText;
 
 	private Long postId;
 
 	public EditPostPage() {
 		initWidget(uiBinder.createAndBindUi(this));
-		
-		Styles.INSTANCE.blog().ensureInjected();
 
-		descriptionToolbar.setRichText(descriptionText);
-		contentToolbar.setRichText(contentText);
+		Styles.INSTANCE.blog().ensureInjected();
 
 		title.getElement().setAttribute("placeholder", "Title");
 		tags.getElement().setAttribute("placeholder", "Comma separated tags");
@@ -148,8 +142,8 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 		visible.setValue(post.visible);
 		commentsEnabled.setValue(post.commentsEnabled);
 
-		descriptionText.setHTML(post.description);
-		contentText.setHTML(post.content);
+		descriptionText.setText(post.description);
+		contentText.setText(post.content);
 
 		publish.setValue(Boolean.valueOf(post.published != null));
 
@@ -162,11 +156,11 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 	void onSubmit(ClickEvent e) {
 		if (validate()) {
 			if (postId != null) {
-				PostController.get().updatePost(postId, title.getText(), visible.getValue(), commentsEnabled.getValue(), descriptionText.getHTML(),
-						contentText.getHTML(), publish.getValue(), tags.getText());
+				PostController.get().updatePost(postId, title.getText(), visible.getValue(), commentsEnabled.getValue(), descriptionText.getText(),
+						contentText.getText(), publish.getValue(), tags.getText());
 			} else {
-				PostController.get().createPost(title.getText(), visible.getValue(), commentsEnabled.getValue(), descriptionText.getHTML(),
-						contentText.getHTML(), publish.getValue(), tags.getText());
+				PostController.get().createPost(title.getText(), visible.getValue(), commentsEnabled.getValue(), descriptionText.getText(),
+						contentText.getText(), publish.getValue(), tags.getText());
 			}
 		}
 	}

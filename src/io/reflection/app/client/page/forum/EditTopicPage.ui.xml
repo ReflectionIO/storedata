@@ -44,7 +44,6 @@
 					<g:HTMLPanel ui:field="editGroup" styleName="form-group">
 						<label>Content</label>
 						<p:MarkdownEditor ui:field="editText" />
-						<g:HTMLPanel styleName="noteDetail" ui:field="editNote" visible="false" />
 					</g:HTMLPanel>
 
 					<g:Button ui:field="submit" styleName="btn btn-primary">

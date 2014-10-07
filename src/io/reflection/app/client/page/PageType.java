@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.page;
 
+import io.reflection.app.client.page.admin.CategoriesPage;
 import io.reflection.app.client.page.admin.EmailTemplatePage;
 import io.reflection.app.client.page.admin.FeedBrowserPage;
 import io.reflection.app.client.page.admin.ItemsPage;
@@ -47,6 +48,7 @@ public enum PageType {
 	BlogPostsPageType("blog", false),
 	BlogPostPageType("blogpost", false),
 	BlogTagPageType("blogtag", false),
+	CategoriesPageType("categories", "MCA"),
 	ChangeDetailsPageType("changedetails", true),
 	ChangePasswordPageType("changepassword", true),
 	EmailTemplatesPageType("emailtemplates", "MET"),
@@ -191,6 +193,9 @@ public enum PageType {
 		Page page = null;
 
 		switch (this) {
+		case CategoriesPageType:
+			page = new CategoriesPage();
+			break;
 		case RanksPageType:
 			page = new RanksPage();
 			break;
