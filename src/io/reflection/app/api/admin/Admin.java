@@ -329,7 +329,7 @@ public final class Admin extends ActionHandler {
 			case ModelTypeTypeSimple:
 				input.feedFetch = ValidationHelper.validateFeedFetch(input.feedFetch, "input.feedFetch");
 
-				modeller = ModellerFactory.getModellerForStore(input.store.a3Code);
+				modeller = ModellerFactory.getModellerForStore(input.feedFetch.store);
 				modeller.enqueue(input.feedFetch);
 
 				break;
@@ -395,7 +395,9 @@ public final class Admin extends ActionHandler {
 			case ModelTypeTypeSimple:
 				input.simpleModelRun = ValidationHelper.validateSimpleModelRun(input.simpleModelRun, "input.simpleModelRun");
 
-				predictor = PredictorFactory.getPredictorForStore(input.store.a3Code);
+				input.simpleModelRun.feedFetch = FeedFetchServiceProvider.provide().getFeedFetch(input.simpleModelRun.feedFetch.id);
+
+				predictor = PredictorFactory.getPredictorForStore(input.simpleModelRun.feedFetch.store);
 				predictor.enqueue(input.simpleModelRun);
 
 				break;
