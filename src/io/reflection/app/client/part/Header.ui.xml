@@ -16,6 +16,7 @@
 	<ui:import field="io.reflection.app.client.page.PageType.SearchPageType" />
 	<ui:import field="io.reflection.app.client.page.PageType.HomePageType" />
 	<ui:import field="io.reflection.app.client.page.PageType.ItemsPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.DataAccountsPageType" />
 
 	<ui:with field="res" type='io.reflection.app.client.res.Images' />
 	<ui:with field="global" type="io.reflection.app.client.res.Styles" />
@@ -162,6 +163,9 @@
 						</li>
 						<li ui:field="permissionsItem">
 							<g:InlineHyperlink targetHistoryToken="{PermissionsPageType.asTargetHistoryToken}">Permissions</g:InlineHyperlink>
+						</li>
+						<li ui:field="dataAccountsItem">
+							<g:InlineHyperlink targetHistoryToken="{DataAccountsPageType.asTargetHistoryToken}">Data accounts</g:InlineHyperlink>
 						</li>
 						<li class="divider-horizontal-header"></li>
 						<li ui:field="emailTemplatesItem">
