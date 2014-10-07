@@ -46,6 +46,8 @@ import io.reflection.app.api.admin.shared.call.TriggerModelRequest;
 import io.reflection.app.api.admin.shared.call.TriggerModelResponse;
 import io.reflection.app.api.admin.shared.call.TriggerPredictRequest;
 import io.reflection.app.api.admin.shared.call.TriggerPredictResponse;
+import io.reflection.app.api.admin.shared.call.UpdateEmailTemplateRequest;
+import io.reflection.app.api.admin.shared.call.UpdateEmailTemplateResponse;
 import io.reflection.app.api.blog.shared.call.DeleteUserRequest;
 import io.reflection.app.api.blog.shared.call.DeleteUserResponse;
 
@@ -718,4 +720,38 @@ public final class AdminService extends JsonService {
 		}
 		return handle;
 	}
+
+	public static final String AdminMethodUpdateEmailTemplate = "UpdateEmailTemplate";
+
+	public Request updateEmailTemplate(final UpdateEmailTemplateRequest input, final AsyncCallback<UpdateEmailTemplateResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(AdminMethodUpdateEmailTemplate, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						UpdateEmailTemplateResponse outputParameter = new UpdateEmailTemplateResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodUpdateEmailTemplate, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodUpdateEmailTemplate, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(AdminService.this, AdminMethodUpdateEmailTemplate, input, exception);
+				}
+			});
+			onCallStart(AdminService.this, AdminMethodUpdateEmailTemplate, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodUpdateEmailTemplate, input, exception);
+		}
+		return handle;
+	}
+
 }

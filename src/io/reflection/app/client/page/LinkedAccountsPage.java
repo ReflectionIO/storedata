@@ -74,9 +74,6 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 	public static final int ACTION_PARAMETER = 1;
 	public static final int ACTION_PARAMETER_INDEX = 2;
-	public static final String ADD_ACTION_PARAMETER_VALUE = "add";
-	public static final String EDIT_ACTION_PARAMETER_VALUE = "edit";
-	public static final String DELETE_ACTION_PARAMETER_VALUE = "delete";
 
 	private static LinkedAccountsPageUiBinder uiBinder = GWT.create(LinkedAccountsPageUiBinder.class);
 
@@ -192,8 +189,9 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 			public SafeHtml getValue(DataAccount object) {
 				String id = object.id.toString();
 				return SafeHtmlUtils.fromTrustedString("<a href=\""
-						+ PageType.UsersPageType.asHref(PageType.LinkedAccountsPageType.toString(user.id.toString(), EDIT_ACTION_PARAMETER_VALUE, id))
-								.asString() + "\">Edit</a>");
+						+ PageType.UsersPageType.asHref(
+								PageType.LinkedAccountsPageType.toString(user.id.toString(), NavigationController.EDIT_ACTION_PARAMETER_VALUE, id)).asString()
+						+ "\">Edit</a>");
 			}
 
 		};
@@ -204,7 +202,8 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 			public SafeHtml getValue(DataAccount object) {
 				String id = object.id.toString();
 				return SafeHtmlUtils.fromTrustedString("<a href=\""
-						+ PageType.UsersPageType.asHref(PageType.LinkedAccountsPageType.toString(user.id.toString(), DELETE_ACTION_PARAMETER_VALUE, id))
+						+ PageType.UsersPageType.asHref(
+								PageType.LinkedAccountsPageType.toString(user.id.toString(), NavigationController.DELETE_ACTION_PARAMETER_VALUE, id))
 								.asString() + "\"><span class=\"icon-cancel-1 delete\"/></a>");
 			}
 
@@ -260,7 +259,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 	@UiHandler("addLinkedAccount")
 	void onAddLinkedAccountClicked(ClickEvent event) {
-		PageType.UsersPageType.show(PageType.LinkedAccountsPageType.toString(user.id.toString(), ADD_ACTION_PARAMETER_VALUE));
+		PageType.UsersPageType.show(PageType.LinkedAccountsPageType.toString(user.id.toString(), NavigationController.ADD_ACTION_PARAMETER_VALUE));
 	}
 
 	/**
@@ -306,7 +305,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 			myAccountSidePanel.getPersonalDetailsLink().setTargetHistoryToken(
 					PageType.UsersPageType.asTargetHistoryToken(PageType.ChangeDetailsPageType.toString(), user.id.toString()));
-			
+
 			backLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(), user.id.toString()));
 		}
 
@@ -324,7 +323,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		String actionParameter = current.getParameter(ACTION_PARAMETER);
 		String typeParameter = current.getParameter(ACTION_PARAMETER_INDEX);
 
-		if (ADD_ACTION_PARAMETER_VALUE.equals(actionParameter)) {
+		if (NavigationController.ADD_ACTION_PARAMETER_VALUE.equals(actionParameter)) {
 			linkedAccountsPanel.setVisible(false);
 			linkedAccountForm.setVisible(true);
 			// mToolbar.setVisible(true);
@@ -414,12 +413,12 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	}
 
 	private boolean isValidEditStack(String actionParameter, String typeParameter) {
-		return (EDIT_ACTION_PARAMETER_VALUE.equals(actionParameter) && typeParameter != null && typeParameter.matches("[0-9]+") && LinkedAccountController
+		return (NavigationController.EDIT_ACTION_PARAMETER_VALUE.equals(actionParameter) && typeParameter != null && typeParameter.matches("[0-9]+") && LinkedAccountController
 				.get().getLinkedAccount(Long.valueOf(typeParameter)) != null) ? true : false;
 	}
 
 	private boolean isValidDeleteStack(String actionParameter, String typeParameter) {
-		return (DELETE_ACTION_PARAMETER_VALUE.equals(actionParameter) && typeParameter != null && typeParameter.matches("[0-9]+") && LinkedAccountController
+		return (NavigationController.DELETE_ACTION_PARAMETER_VALUE.equals(actionParameter) && typeParameter != null && typeParameter.matches("[0-9]+") && LinkedAccountController
 				.get().getLinkedAccount(Long.valueOf(typeParameter)) != null) ? true : false;
 	}
 
@@ -431,7 +430,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 			// mLinkableAccount.setEnabled(false);
 			// mLinkAccount.setEnabled(false);
 			preloaderForm.show();
-			if (EDIT_ACTION_PARAMETER_VALUE.equals(NavigationController.get().getStack().getParameter(ACTION_PARAMETER))) {
+			if (NavigationController.EDIT_ACTION_PARAMETER_VALUE.equals(NavigationController.get().getStack().getParameter(ACTION_PARAMETER))) {
 				preloaderForm.show();
 				LinkedAccountController.get().updateLinkedAccont(Long.valueOf(NavigationController.get().getStack().getParameter(ACTION_PARAMETER_INDEX)),
 						mLinkableAccount.getPassword(), mLinkableAccount.getProperties());

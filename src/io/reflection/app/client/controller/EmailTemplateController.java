@@ -10,14 +10,19 @@ package io.reflection.app.client.controller;
 import io.reflection.app.api.admin.client.AdminService;
 import io.reflection.app.api.admin.shared.call.GetEmailTemplatesRequest;
 import io.reflection.app.api.admin.shared.call.GetEmailTemplatesResponse;
+import io.reflection.app.api.admin.shared.call.UpdateEmailTemplateRequest;
+import io.reflection.app.api.admin.shared.call.UpdateEmailTemplateResponse;
 import io.reflection.app.api.admin.shared.call.event.GetEmailTemplatesEventHandler.GetEmailTemplatesFailure;
 import io.reflection.app.api.admin.shared.call.event.GetEmailTemplatesEventHandler.GetEmailTemplatesSuccess;
+import io.reflection.app.api.admin.shared.call.event.UpdateEmailTemplateEventHandler;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.datatypes.shared.EmailTemplate;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.AsyncDataProvider;
@@ -32,6 +37,7 @@ import com.willshex.gson.json.service.shared.StatusType;
 public class EmailTemplateController extends AsyncDataProvider<EmailTemplate> implements ServiceConstants {
 
 	private List<EmailTemplate> mEmailTemplates = new ArrayList<EmailTemplate>();
+	private Map<Long, EmailTemplate> emailTemplateLookup = new HashMap<Long, EmailTemplate>();
 	private long mCount = -1;
 	private Pager mPager;
 
@@ -69,6 +75,9 @@ public class EmailTemplateController extends AsyncDataProvider<EmailTemplate> im
 				if (output.status == StatusType.StatusTypeSuccess) {
 					if (output.templates != null) {
 						mEmailTemplates.addAll(output.templates);
+						for (EmailTemplate template : output.templates) {
+							emailTemplateLookup.put(template.id, template);
+						}
 					}
 
 					if (output.pager != null) {
@@ -96,6 +105,45 @@ public class EmailTemplateController extends AsyncDataProvider<EmailTemplate> im
 		});
 	}
 
+	/**
+	 * Change the email template format and text
+	 * 
+	 * @param emailTemplateId
+	 * @param format
+	 * @param body
+	 */
+	public void updateEmailTemplate(EmailTemplate emailTemplate) {
+
+		AdminService service = ServiceCreator.createAdminService();
+		final UpdateEmailTemplateRequest input = new UpdateEmailTemplateRequest();
+
+		input.accessCode = ACCESS_CODE;
+
+		input.session = SessionController.get().getSessionForApiCall();
+
+		input.emailTemplate = emailTemplate;
+
+		service.updateEmailTemplate(input, new AsyncCallback<UpdateEmailTemplateResponse>() {
+
+			@Override
+			public void onSuccess(UpdateEmailTemplateResponse output) {
+				if (output.status == StatusType.StatusTypeSuccess) {
+					updateRowData(0, mEmailTemplates.subList(0, (mEmailTemplates.size() < STEP_VALUE ? mEmailTemplates.size() : STEP_VALUE)));
+				}
+
+				EventController.get().fireEventFromSource(new UpdateEmailTemplateEventHandler.UpdateEmailTemplateSuccess(input, output),
+						EmailTemplateController.this);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				EventController.get().fireEventFromSource(new UpdateEmailTemplateEventHandler.UpdateEmailTemplateFailure(input, caught),
+						EmailTemplateController.this);
+			}
+
+		});
+	}
+
 	public List<EmailTemplate> getEmailTemplates() {
 		return mEmailTemplates;
 	}
@@ -106,6 +154,16 @@ public class EmailTemplateController extends AsyncDataProvider<EmailTemplate> im
 
 	public boolean hasEmailTemplates() {
 		return mPager != null || mEmailTemplates.size() > 0;
+	}
+
+	/**
+	 * Get email template
+	 * 
+	 * @param emailTeplateId
+	 * @return
+	 */
+	public EmailTemplate getEmailTemplate(Long emailTemplateId) {
+		return emailTemplateLookup.get(emailTemplateId);
 	}
 
 	/*

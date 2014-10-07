@@ -64,6 +64,9 @@
 
 			<xsd:element name="GetRolesAndPermissionsInput" type="sda:GetRolesAndPermissionsRequest" />
 			<xsd:element name="GetRolesAndPermissionsOutput" type="sda:GetRolesAndPermissionsResponse" />
+			
+			<xsd:element name="UpdateEmailTemplateInput" type="sda:UpdateEmailTemplateRequest" />
+			<xsd:element name="UpdateEmailTemplateOutput" type="sda:UpdateEmailTemplateResponse" />
 
 			<xsd:complexType name="GetUsersRequest">
 				<xsd:complexContent>
@@ -481,6 +484,22 @@
 					</xsd:extension>
 				</xsd:complexContent>
 			</xsd:complexType>
+			
+			<xsd:complexType name="UpdateEmailTemplateRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="emailTemplate" type="sd:EmailTemplate" maxOccurs="1" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+            <xsd:complexType name="UpdateEmailTemplateResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
 
 		</xsd:schema>
 	</wsdl:types>
@@ -624,6 +643,13 @@
 	<wsdl:message name="GetRolesAndPermissionsResponse">
 		<wsdl:part name="output" element="sda:GetRolesAndPermissionsOutput" />
 	</wsdl:message>
+	
+	<wsdl:message name="UpdateEmailTemplateRequest">
+		<wsdl:part name="input" element="sda:UpdateEmailTemplateInput" />
+	</wsdl:message>
+	<wsdl:message name="UpdateEmailTemplateResponse">
+		<wsdl:part name="output" element="sda:UpdateEmailTemplateOutput" />
+	</wsdl:message>
 
 	<wsdl:portType name="admin">
 		<wsdl:operation name="GetUsers">
@@ -718,6 +744,11 @@
 		<wsdl:operation name="GetRolesAndPermissions">
 			<wsdl:input message="sda:GetRolesAndPermissionsRequest" />
 			<wsdl:output message="sda:GetRolesAndPermissionsResponse" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="UpdateEmailTemplate">
+			<wsdl:input message="sda:UpdateEmailTemplateRequest" />
+			<wsdl:output message="sda:UpdateEmailTemplateResponse" />
 		</wsdl:operation>
 	</wsdl:portType>
 	<wsdl:binding name="adminSOAP" type="sda:admin">
@@ -907,6 +938,16 @@
 		
 		<wsdl:operation name="GetRolesAndPermissions">
 			<soap:operation soapAction="http://app.reflection.io/admin/GetRolesAndPermissions" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		
+		<wsdl:operation name="UpdateEmailTemplate">
+			<soap:operation soapAction="http://app.reflection.io/admin/UpdateEmailTemplate" />
 			<wsdl:input>
 				<soap:body use="literal" />
 			</wsdl:input>
