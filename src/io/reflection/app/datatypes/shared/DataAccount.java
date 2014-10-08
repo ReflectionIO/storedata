@@ -20,6 +20,8 @@ import com.google.gson.JsonPrimitive;
 public class DataAccount extends DataType {
 	public DataSource source;
 	public List<Item> items;
+	public User user;
+	public List<DataAccountFetch> dataAccountFetches;
 	public String username;
 	public String password;
 	public String properties;
@@ -39,6 +41,17 @@ public class DataAccount extends DataType {
 			}
 		}
 		object.add("items", jsonItems);
+		JsonElement jsonUser = user == null ? JsonNull.INSTANCE : user.toJson();
+		object.add("user", jsonUser);
+		JsonElement jsonDataAccountFetches = JsonNull.INSTANCE;
+		if (dataAccountFetches != null) {
+			jsonDataAccountFetches = new JsonArray();
+			for (int i = 0; i < dataAccountFetches.size(); i++) {
+				JsonElement jsonDataAccountFetchesItem = dataAccountFetches.get(i) == null ? JsonNull.INSTANCE : dataAccountFetches.get(i).toJson();
+				((JsonArray) jsonDataAccountFetches).add(jsonDataAccountFetchesItem);
+			}
+		}
+		object.add("dataAccountFetches", jsonDataAccountFetches);
 		JsonElement jsonUsername = username == null ? JsonNull.INSTANCE : new JsonPrimitive(username);
 		object.add("username", jsonUsername);
 		JsonElement jsonPassword = password == null ? JsonNull.INSTANCE : new JsonPrimitive(password);
@@ -73,7 +86,26 @@ public class DataAccount extends DataType {
 				}
 			}
 		}
-
+		if (jsonObject.has("user")) {
+			JsonElement jsonUser = jsonObject.get("user");
+			if (jsonUser != null) {
+				user = new User();
+				user.fromJson(jsonUser.getAsJsonObject());
+			}
+		}
+		if (jsonObject.has("dataAccountFetches")) {
+			JsonElement jsonDataAccountFetches = jsonObject.get("dataAccountFetches");
+			if (jsonDataAccountFetches != null) {
+				dataAccountFetches = new ArrayList<DataAccountFetch>();
+				DataAccountFetch dataAccountFetch = null;
+				for (int i = 0; i < jsonDataAccountFetches.getAsJsonArray().size(); i++) {
+					if (jsonDataAccountFetches.getAsJsonArray().get(i) != null) {
+						(dataAccountFetch = new DataAccountFetch()).fromJson(jsonDataAccountFetches.getAsJsonArray().get(i).getAsJsonObject());
+						dataAccountFetches.add(dataAccountFetch);
+					}
+				}
+			}
+		}
 		if (jsonObject.has("username")) {
 			JsonElement jsonUsername = jsonObject.get("username");
 			if (jsonUsername != null) {
