@@ -10,14 +10,19 @@ package io.reflection.app.client.controller;
 import io.reflection.app.api.admin.client.AdminService;
 import io.reflection.app.api.admin.shared.call.GetEmailTemplatesRequest;
 import io.reflection.app.api.admin.shared.call.GetEmailTemplatesResponse;
+import io.reflection.app.api.admin.shared.call.UpdateEmailTemplateRequest;
+import io.reflection.app.api.admin.shared.call.UpdateEmailTemplateResponse;
 import io.reflection.app.api.admin.shared.call.event.GetEmailTemplatesEventHandler.GetEmailTemplatesFailure;
 import io.reflection.app.api.admin.shared.call.event.GetEmailTemplatesEventHandler.GetEmailTemplatesSuccess;
+import io.reflection.app.api.admin.shared.call.event.UpdateEmailTemplateEventHandler;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.datatypes.shared.EmailTemplate;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.AsyncDataProvider;
@@ -32,8 +37,9 @@ import com.willshex.gson.json.service.shared.StatusType;
 public class EmailTemplateController extends AsyncDataProvider<EmailTemplate> implements ServiceConstants {
 
 	private List<EmailTemplate> mEmailTemplates = new ArrayList<EmailTemplate>();
-	private long mCount = -1;
-	private Pager mPager;
+	private Map<Long, EmailTemplate> emailTemplateLookup = new HashMap<Long, EmailTemplate>();
+	private long count = -1;
+	private Pager pager;
 
 	private static EmailTemplateController mOne = null;
 
@@ -54,13 +60,13 @@ public class EmailTemplateController extends AsyncDataProvider<EmailTemplate> im
 
 		input.session = SessionController.get().getSessionForApiCall();
 
-		if (mPager == null) {
-			mPager = new Pager();
-			mPager.count = STEP;
-			mPager.start = Long.valueOf(0);
-			mPager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
+		if (pager == null) {
+			pager = new Pager();
+			pager.count = STEP;
+			pager.start = Long.valueOf(0);
+			pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
 		}
-		input.pager = mPager;
+		input.pager = pager;
 
 		service.getEmailTemplates(input, new AsyncCallback<GetEmailTemplatesResponse>() {
 
@@ -69,21 +75,24 @@ public class EmailTemplateController extends AsyncDataProvider<EmailTemplate> im
 				if (output.status == StatusType.StatusTypeSuccess) {
 					if (output.templates != null) {
 						mEmailTemplates.addAll(output.templates);
-					}
-
-					if (output.pager != null) {
-						mPager = output.pager;
-
-						if (mPager.totalCount != null) {
-							mCount = mPager.totalCount.longValue();
+						for (EmailTemplate template : output.templates) {
+							emailTemplateLookup.put(template.id, template);
 						}
 					}
 
-					updateRowCount((int) mCount, true);
+					if (output.pager != null) {
+						pager = output.pager;
+
+						if (pager.totalCount != null) {
+							count = pager.totalCount.longValue();
+						}
+					}
+
+					updateRowCount((int) count, true);
 					updateRowData(
 							input.pager.start.intValue(),
 							mEmailTemplates.subList(input.pager.start.intValue(),
-									Math.min(input.pager.start.intValue() + input.pager.count.intValue(), mPager.totalCount.intValue())));
+									Math.min(input.pager.start.intValue() + input.pager.count.intValue(), pager.totalCount.intValue())));
 				}
 
 				EventController.get().fireEventFromSource(new GetEmailTemplatesSuccess(input, output), EmailTemplateController.this);
@@ -96,16 +105,74 @@ public class EmailTemplateController extends AsyncDataProvider<EmailTemplate> im
 		});
 	}
 
+	/**
+	 * Change the email template format and text
+	 * 
+	 * @param emailTemplateId
+	 * @param format
+	 * @param body
+	 */
+	public void updateEmailTemplate(EmailTemplate emailTemplate) {
+
+		AdminService service = ServiceCreator.createAdminService();
+		final UpdateEmailTemplateRequest input = new UpdateEmailTemplateRequest();
+
+		input.accessCode = ACCESS_CODE;
+
+		input.session = SessionController.get().getSessionForApiCall();
+
+		input.emailTemplate = emailTemplate;
+
+		service.updateEmailTemplate(input, new AsyncCallback<UpdateEmailTemplateResponse>() {
+
+			@Override
+			public void onSuccess(UpdateEmailTemplateResponse output) {
+				if (output.status == StatusType.StatusTypeSuccess) {
+					updateRowData(0, mEmailTemplates.subList(0, (mEmailTemplates.size() < STEP_VALUE ? mEmailTemplates.size() : STEP_VALUE)));
+				}
+
+				EventController.get().fireEventFromSource(new UpdateEmailTemplateEventHandler.UpdateEmailTemplateSuccess(input, output),
+						EmailTemplateController.this);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				EventController.get().fireEventFromSource(new UpdateEmailTemplateEventHandler.UpdateEmailTemplateFailure(input, caught),
+						EmailTemplateController.this);
+			}
+
+		});
+	}
+
 	public List<EmailTemplate> getEmailTemplates() {
 		return mEmailTemplates;
 	}
 
 	public long getEmailTemplatesCount() {
-		return mCount;
+		return count;
 	}
 
 	public boolean hasEmailTemplates() {
-		return mPager != null || mEmailTemplates.size() > 0;
+		return getEmailTemplatesCount() > 0;
+	}
+
+	/**
+	 * Return true if EmailTemplates already fetched
+	 * 
+	 * @return
+	 */
+	public boolean emailTemplatesFetched() {
+		return count != -1;
+	}
+
+	/**
+	 * Get email template
+	 * 
+	 * @param emailTeplateId
+	 * @return
+	 */
+	public EmailTemplate getEmailTemplate(Long emailTemplateId) {
+		return emailTemplateLookup.get(emailTemplateId);
 	}
 
 	/*
@@ -120,10 +187,10 @@ public class EmailTemplateController extends AsyncDataProvider<EmailTemplate> im
 		int start = r.getStart();
 		int end = start + r.getLength();
 
-		if (end > mEmailTemplates.size()) {
+		if (!emailTemplatesFetched() || (emailTemplatesFetched() && getEmailTemplatesCount() != mEmailTemplates.size() && end > mEmailTemplates.size())) {
 			fetchEmailTemplates();
 		} else {
-			updateRowData(start, mEmailTemplates.subList(start, end));
+			updateRowData(start, mEmailTemplates.size() == 0 ? mEmailTemplates : mEmailTemplates.subList(start, Math.min(mEmailTemplates.size(), end)));
 		}
 	}
 

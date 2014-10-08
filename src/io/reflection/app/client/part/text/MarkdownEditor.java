@@ -254,4 +254,8 @@ public class MarkdownEditor extends Composite implements HasText {
 		}
 	}
 
+	public TextArea getTextArea() {
+		return textArea;
+	}
+
 }

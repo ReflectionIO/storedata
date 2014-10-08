@@ -105,7 +105,16 @@ public class RoleController extends AsyncDataProvider<Role> implements ServiceCo
 	}
 
 	public boolean hasRoles() {
-		return mPager != null || mRoles.size() > 0;
+		return getRolesCount() > 0;
+	}
+
+	/**
+	 * Return true if Roles already fetched
+	 * 
+	 * @return
+	 */
+	public boolean rolesFetched() {
+		return mCount != -1;
 	}
 
 	/*
@@ -120,10 +129,10 @@ public class RoleController extends AsyncDataProvider<Role> implements ServiceCo
 		int start = r.getStart();
 		int end = start + r.getLength();
 
-		if (end > mRoles.size()) {
+		if (!rolesFetched() || (rolesFetched() && getRolesCount() != mRoles.size() && end > mRoles.size())) {
 			fetchRoles();
 		} else {
-			updateRowData(start, mRoles.subList(start, end));
+			updateRowData(start, mRoles.size() == 0 ? mRoles : mRoles.subList(start, Math.min(mRoles.size(), end)));
 		}
 	}
 

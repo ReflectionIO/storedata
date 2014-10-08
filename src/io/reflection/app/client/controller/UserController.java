@@ -150,7 +150,16 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 	}
 
 	public boolean hasUsers() {
-		return mPager != null || mUsers.size() > 0;
+		return getUsersCount() > 0;
+	}
+
+	/**
+	 * Return true if Users -already fetched
+	 * 
+	 * @return
+	 */
+	public boolean usersFetched() {
+		return mCount != -1;
 	}
 
 	/*
@@ -166,10 +175,10 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		int start = r.getStart();
 		int end = start + r.getLength();
 
-		if (end > mUsers.size()) {
+		if (!usersFetched() || (usersFetched() && getUsersCount() != mUsers.size() && end > mUsers.size())) {
 			fetchUsers();
 		} else {
-			updateRowData(start, mUsers.subList(start, end));
+			updateRowData(start, mUsers.size() == 0 ? mUsers : mUsers.subList(start, Math.min(mUsers.size(), end)));
 		}
 	}
 

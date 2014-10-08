@@ -105,7 +105,16 @@ public class PermissionController extends AsyncDataProvider<Permission> implemen
 	}
 
 	public boolean hasPermissions() {
-		return mPager != null || mPermissions.size() > 0;
+		return getPermissionsCount() > 0;
+	}
+
+	/**
+	 * Return true if Permissions already fetched
+	 * 
+	 * @return
+	 */
+	public boolean permissionsFetched() {
+		return mCount != -1;
 	}
 
 	/*
@@ -120,10 +129,10 @@ public class PermissionController extends AsyncDataProvider<Permission> implemen
 		int start = r.getStart();
 		int end = start + r.getLength();
 
-		if (end > mPermissions.size()) {
+		if (!permissionsFetched() || (permissionsFetched() && getPermissionsCount() != mPermissions.size() && end > mPermissions.size())) {
 			fetchPermissions();
 		} else {
-			updateRowData(start, mPermissions.subList(start, end));
+			updateRowData(start, mPermissions.size() == 0 ? mPermissions : mPermissions.subList(start, Math.min(mPermissions.size(), end)));
 		}
 	}
 

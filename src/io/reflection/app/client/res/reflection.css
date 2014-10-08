@@ -142,7 +142,6 @@ body {
     font-weight: 400;
     font-family: 'Lato', sans-serif;
     line-height: 24px;
-    cursor: pointer;
 }
 
 .form-control:focus {
@@ -152,20 +151,16 @@ body {
     box-shadow: none;
 }
 
-input[type="text"] {
-    cursor: text;
-}
-
-input[type="password"] {
-    cursor: text;
-}
-
 input[type="radio"] {
     cursor: pointer;
 }
 
 input[type="text"]:disabled {
     color: #AAA;
+}
+
+select{
+	cursor: pointer;
 }
 
 /* Date Box */

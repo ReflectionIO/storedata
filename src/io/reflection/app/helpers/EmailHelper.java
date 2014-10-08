@@ -33,6 +33,12 @@ public class EmailHelper {
 
 	private static final Logger LOG = Logger.getLogger(EmailHelper.class.getName());
 
+	public static final String USER_FORENAME_CODE = "${user.forename}";
+	public static final String USER_SURNAME_CODE = "${user.surname}";
+	public static final String USER_USERNAME_CODE = "${user.username}";
+	public static final String USER_COMPANY_CODE = "${user.company}";
+	public static final String LINK_CODE = "${link}";
+
 	public static String inflate(Map<String, ?> values, String string) {
 		StringBuffer email = new StringBuffer();
 
@@ -87,12 +93,18 @@ public class EmailHelper {
 
 	/**
 	 * Sends an email
-	 * @param from our email address (the alias is always Reflection for now
-	 * @param to the recipient email address
-	 * @param name the recipient name
-	 * @param subject the message subject
-	 * @param body the message body
-	 * @param format 
+	 * 
+	 * @param from
+	 *            our email address (the alias is always Reflection for now
+	 * @param to
+	 *            the recipient email address
+	 * @param name
+	 *            the recipient name
+	 * @param subject
+	 *            the message subject
+	 * @param body
+	 *            the message body
+	 * @param format
 	 * @return
 	 */
 	public static boolean sendEmail(String from, String to, String name, String subject, String body, EmailFormatType format) {
@@ -110,7 +122,7 @@ public class EmailHelper {
 			msg.addRecipient(Message.RecipientType.TO, new InternetAddress(to, name));
 
 			msg.setSubject(subject);
-			
+
 			switch (format) {
 			case EmailFormatTypeHtml:
 				msg.setContent(body, "text/html");
@@ -119,7 +131,7 @@ public class EmailHelper {
 				msg.setText(body);
 				break;
 			}
-			
+
 			Transport.send(msg);
 
 			if (LOG.isLoggable(Level.INFO)) {

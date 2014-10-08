@@ -815,6 +815,8 @@ public final class Admin extends ActionHandler {
 			if (input.emailTemplate == null)
 				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("input.emailTemplate"));
 
+			ValidationHelper.validateExistingEmailTemplate(input.emailTemplate, "input.emailTemplate");
+
 			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
 
 			EmailTemplateServiceProvider.provide().updateEmailTemplate(input.emailTemplate);

@@ -36,6 +36,11 @@ import com.spacehopperstudios.utility.StringUtils;
  * 
  */
 public class NavigationController implements ValueChangeHandler<String> {
+	
+	public static final String ADD_ACTION_PARAMETER_VALUE = "add";
+	public static final String EDIT_ACTION_PARAMETER_VALUE = "edit";
+	public static final String DELETE_ACTION_PARAMETER_VALUE = "delete";
+	
 	private static NavigationController mOne = null;
 
 	private HTMLPanel mPanel = null;
