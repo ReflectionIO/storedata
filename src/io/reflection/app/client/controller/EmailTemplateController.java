@@ -38,8 +38,8 @@ public class EmailTemplateController extends AsyncDataProvider<EmailTemplate> im
 
 	private List<EmailTemplate> mEmailTemplates = new ArrayList<EmailTemplate>();
 	private Map<Long, EmailTemplate> emailTemplateLookup = new HashMap<Long, EmailTemplate>();
-	private long mCount = -1;
-	private Pager mPager;
+	private long count = -1;
+	private Pager pager;
 
 	private static EmailTemplateController mOne = null;
 
@@ -60,13 +60,13 @@ public class EmailTemplateController extends AsyncDataProvider<EmailTemplate> im
 
 		input.session = SessionController.get().getSessionForApiCall();
 
-		if (mPager == null) {
-			mPager = new Pager();
-			mPager.count = STEP;
-			mPager.start = Long.valueOf(0);
-			mPager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
+		if (pager == null) {
+			pager = new Pager();
+			pager.count = STEP;
+			pager.start = Long.valueOf(0);
+			pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
 		}
-		input.pager = mPager;
+		input.pager = pager;
 
 		service.getEmailTemplates(input, new AsyncCallback<GetEmailTemplatesResponse>() {
 
@@ -81,18 +81,18 @@ public class EmailTemplateController extends AsyncDataProvider<EmailTemplate> im
 					}
 
 					if (output.pager != null) {
-						mPager = output.pager;
+						pager = output.pager;
 
-						if (mPager.totalCount != null) {
-							mCount = mPager.totalCount.longValue();
+						if (pager.totalCount != null) {
+							count = pager.totalCount.longValue();
 						}
 					}
 
-					updateRowCount((int) mCount, true);
+					updateRowCount((int) count, true);
 					updateRowData(
 							input.pager.start.intValue(),
 							mEmailTemplates.subList(input.pager.start.intValue(),
-									Math.min(input.pager.start.intValue() + input.pager.count.intValue(), mPager.totalCount.intValue())));
+									Math.min(input.pager.start.intValue() + input.pager.count.intValue(), pager.totalCount.intValue())));
 				}
 
 				EventController.get().fireEventFromSource(new GetEmailTemplatesSuccess(input, output), EmailTemplateController.this);
@@ -149,11 +149,20 @@ public class EmailTemplateController extends AsyncDataProvider<EmailTemplate> im
 	}
 
 	public long getEmailTemplatesCount() {
-		return mCount;
+		return count;
 	}
 
 	public boolean hasEmailTemplates() {
-		return mPager != null || mEmailTemplates.size() > 0;
+		return getEmailTemplatesCount() > 0;
+	}
+
+	/**
+	 * Return true if EmailTemplates already fetched
+	 * 
+	 * @return
+	 */
+	public boolean emailTemplatesFetched() {
+		return count != -1;
 	}
 
 	/**
@@ -178,10 +187,10 @@ public class EmailTemplateController extends AsyncDataProvider<EmailTemplate> im
 		int start = r.getStart();
 		int end = start + r.getLength();
 
-		if (end > mEmailTemplates.size()) {
+		if (!emailTemplatesFetched() || (emailTemplatesFetched() && getEmailTemplatesCount() != mEmailTemplates.size() && end > mEmailTemplates.size())) {
 			fetchEmailTemplates();
 		} else {
-			updateRowData(start, mEmailTemplates.subList(start, end));
+			updateRowData(start, mEmailTemplates.size() == 0 ? mEmailTemplates : mEmailTemplates.subList(start, Math.min(mEmailTemplates.size(), end)));
 		}
 	}
 
