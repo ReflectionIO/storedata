@@ -60,6 +60,7 @@ import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.shared.DataAccount;
+import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.ingestors.Ingestor;
 import io.reflection.app.ingestors.IngestorFactory;
@@ -69,6 +70,8 @@ import io.reflection.app.predictors.Predictor;
 import io.reflection.app.predictors.PredictorFactory;
 import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
+import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
+import io.reflection.app.service.datasource.DataSourceServiceProvider;
 import io.reflection.app.service.emailtemplate.EmailTemplateServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
@@ -78,7 +81,9 @@ import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import com.willshex.gson.json.service.server.ActionHandler;
@@ -841,7 +846,34 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			// output.dataAccounts = DataAccountServiceProvider.provide().getDataAccounts(input.pager);
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+
+			output.dataAccounts = DataAccountServiceProvider.provide().getDataAccounts(input.pager);
+			// Delete password fields
+			for (DataAccount dataAccount : output.dataAccounts) {
+				dataAccount.password = null;
+			}
+
+			// Retrieve Sources
+			Map<Long, DataSource> dataSourcesLookup = new HashMap<Long, DataSource>();
+			for (DataAccount dataAccount : output.dataAccounts) {
+				if (dataAccount.source.id != null) {
+					dataSourcesLookup.put(dataAccount.source.id, null);
+				}
+			}
+			if (dataSourcesLookup != null && dataSourcesLookup.size() > 0) {
+				List<DataSource> dataSourcesList = DataSourceServiceProvider.provide().getDataSourceBatch(dataSourcesLookup.keySet());
+				for (DataSource dataSource : dataSourcesList) {
+					dataSourcesLookup.put(dataSource.id, dataSource);
+				}
+			}
+			// Add needed informations
+			for (DataAccount dataAccount : output.dataAccounts) {
+				dataAccount.source = dataSourcesLookup.get(dataAccount.source.id);
+				dataAccount.user = UserServiceProvider.provide().getDataAccountOwner(dataAccount); // Get Data Account owner
+				dataAccount.dataAccountFetches = DataAccountFetchServiceProvider.provide()
+						.getFailedDataAccountFetches(dataAccount, PagerHelper.infinitePager()); // Get failed Fetched
+			}
 
 			output.pager = input.pager;
 			updatePager(output.pager, output.dataAccounts, input.pager.totalCount == null ? DataAccountServiceProvider.provide().getDataAccountsCount() : null);
@@ -854,5 +886,4 @@ public final class Admin extends ActionHandler {
 		LOG.finer("Exiting getDataAccounts");
 		return output;
 	}
-
 }
