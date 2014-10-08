@@ -31,17 +31,17 @@ import com.willshex.gson.json.service.shared.StatusType;
  */
 public class CategoryController extends AsyncDataProvider<Category> implements ServiceConstants {
 
-	private static CategoryController mOne = null;
+	private static CategoryController one = null;
 	private List<Category> categoryList = new ArrayList<Category>();
 	private long count = -1;
 	private Pager pager;
 
 	public static CategoryController get() {
-		if (mOne == null) {
-			mOne = new CategoryController();
+		if (one == null) {
+			one = new CategoryController();
 		}
 
-		return mOne;
+		return one;
 	}
 
 	/*
@@ -56,10 +56,10 @@ public class CategoryController extends AsyncDataProvider<Category> implements S
 		int start = r.getStart();
 		int end = start + r.getLength();
 
-		if (end > categoryList.size()) {
+		if (!categoriesFetched() || (categoriesFetched() && getCategoriesCount() != categoryList.size() && end > categoryList.size())) {
 			fetchCategories();
 		} else {
-			updateRowData(start, categoryList.subList(start, end));
+			updateRowData(start, categoryList.size() == 0 ? categoryList : categoryList.subList(start, Math.min(categoryList.size(), end)));
 		}
 	}
 
@@ -126,6 +126,15 @@ public class CategoryController extends AsyncDataProvider<Category> implements S
 
 	public long getCategoriesCount() {
 		return count;
+	}
+
+	/**
+	 * Return true if Categories already fetched
+	 * 
+	 * @return
+	 */
+	public boolean categoriesFetched() {
+		return count != -1;
 	}
 
 }
