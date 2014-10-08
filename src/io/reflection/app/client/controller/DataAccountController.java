@@ -103,6 +103,15 @@ public class DataAccountController extends AsyncDataProvider<DataAccount> implem
 		return count;
 	}
 
+	/**
+	 * Return true if Data Accounts already fetched
+	 * 
+	 * @return
+	 */
+	public boolean dataAccountsFetched() {
+		return count != -1;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -115,10 +124,10 @@ public class DataAccountController extends AsyncDataProvider<DataAccount> implem
 		int start = r.getStart();
 		int end = start + r.getLength();
 
-		if (end > dataAccountList.size()) {
+		if (!dataAccountsFetched() || (dataAccountsFetched() && getDataAccountsCount() != dataAccountList.size() && end > dataAccountList.size())) {
 			fetchDataAccounts();
 		} else {
-			updateRowData(start, dataAccountList.subList(start, end));
+			updateRowData(start, dataAccountList.size() == 0 ? dataAccountList : dataAccountList.subList(start, Math.min(dataAccountList.size(), end)));
 		}
 	}
 
