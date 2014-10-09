@@ -62,6 +62,7 @@ import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.Role;
+import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.ingestors.Ingestor;
 import io.reflection.app.ingestors.IngestorFactory;
 import io.reflection.app.modellers.Modeller;
@@ -854,25 +855,41 @@ public final class Admin extends ActionHandler {
 				dataAccount.password = null;
 			}
 
-			// Retrieve Sources
-			Map<Long, DataSource> dataSourcesLookup = new HashMap<Long, DataSource>();
+			// Retrieve and link Sources
+			List<Long> dataSourceIdList = new ArrayList<Long>();
+			Map<Long, DataSource> dataSourceLookup = new HashMap<Long, DataSource>();
 			for (DataAccount dataAccount : output.dataAccounts) {
 				if (dataAccount.source.id != null) {
-					dataSourcesLookup.put(dataAccount.source.id, null);
+					dataSourceIdList.add(dataAccount.source.id);
 				}
 			}
-			if (dataSourcesLookup != null && dataSourcesLookup.size() > 0) {
-				List<DataSource> dataSourcesList = DataSourceServiceProvider.provide().getDataSourceBatch(dataSourcesLookup.keySet());
-				for (DataSource dataSource : dataSourcesList) {
-					dataSourcesLookup.put(dataSource.id, dataSource);
+			if (dataSourceIdList != null && dataSourceIdList.size() > 0) {
+				List<DataSource> dataSourceList = DataSourceServiceProvider.provide().getDataSourceBatch(dataSourceIdList);
+				for (DataSource dataSource : dataSourceList) {
+					dataSourceLookup.put(dataSource.id, dataSource);
 				}
 			}
-			// Add needed informations
+
+			// Retrieve and link Owners
+			List<Long> dataAccountIdList = new ArrayList<Long>();
+			Map<Long, User> userLookup = new HashMap<Long, User>();
 			for (DataAccount dataAccount : output.dataAccounts) {
-				dataAccount.source = dataSourcesLookup.get(dataAccount.source.id);
-				dataAccount.user = UserServiceProvider.provide().getDataAccountOwner(dataAccount); // Get Data Account owner
-				dataAccount.dataAccountFetches = DataAccountFetchServiceProvider.provide()
-						.getFailedDataAccountFetches(dataAccount, PagerHelper.infinitePager()); // Get failed Fetched
+				if (dataAccount.id != null) {
+					dataAccountIdList.add(dataAccount.id);
+				}
+			}
+			if (dataAccountIdList != null && dataAccountIdList.size() > 0) {
+				List<User> userList = UserServiceProvider.provide().getDataAccountOwnerBatch(dataAccountIdList);
+				for (User owner : userList) {
+					if (owner.linkedAccounts.get(0).id != null) userLookup.put(owner.linkedAccounts.get(0).id, owner);
+				}
+			}
+
+			// Add DataAccount informations
+			for (DataAccount dataAccount : output.dataAccounts) {
+				dataAccount.source = dataSourceLookup.get(dataAccount.source.id);
+				dataAccount.user = userLookup.get(dataAccount.id);
+				dataAccount.fetches = DataAccountFetchServiceProvider.provide().getFailedDataAccountFetches(dataAccount, PagerHelper.infinitePager());
 			}
 
 			output.pager = input.pager;
