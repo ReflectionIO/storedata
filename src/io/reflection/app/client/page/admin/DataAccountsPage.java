@@ -128,7 +128,7 @@ public class DataAccountsPage extends Page {
 
 			@Override
 			public String getValue(DataAccount object) {
-				return object.dataAccountFetches != null ? String.valueOf(object.dataAccountFetches.size()) : "";
+				return object.fetches != null ? String.valueOf(object.fetches.size()) : "";
 			}
 
 		};

@@ -21,7 +21,7 @@ public class DataAccount extends DataType {
 	public DataSource source;
 	public List<Item> items;
 	public User user;
-	public List<DataAccountFetch> dataAccountFetches;
+	public List<DataAccountFetch> fetches;
 	public String username;
 	public String password;
 	public String properties;
@@ -44,10 +44,10 @@ public class DataAccount extends DataType {
 		JsonElement jsonUser = user == null ? JsonNull.INSTANCE : user.toJson();
 		object.add("user", jsonUser);
 		JsonElement jsonDataAccountFetches = JsonNull.INSTANCE;
-		if (dataAccountFetches != null) {
+		if (fetches != null) {
 			jsonDataAccountFetches = new JsonArray();
-			for (int i = 0; i < dataAccountFetches.size(); i++) {
-				JsonElement jsonDataAccountFetchesItem = dataAccountFetches.get(i) == null ? JsonNull.INSTANCE : dataAccountFetches.get(i).toJson();
+			for (int i = 0; i < fetches.size(); i++) {
+				JsonElement jsonDataAccountFetchesItem = fetches.get(i) == null ? JsonNull.INSTANCE : fetches.get(i).toJson();
 				((JsonArray) jsonDataAccountFetches).add(jsonDataAccountFetchesItem);
 			}
 		}
@@ -96,12 +96,12 @@ public class DataAccount extends DataType {
 		if (jsonObject.has("dataAccountFetches")) {
 			JsonElement jsonDataAccountFetches = jsonObject.get("dataAccountFetches");
 			if (jsonDataAccountFetches != null) {
-				dataAccountFetches = new ArrayList<DataAccountFetch>();
+				fetches = new ArrayList<DataAccountFetch>();
 				DataAccountFetch dataAccountFetch = null;
 				for (int i = 0; i < jsonDataAccountFetches.getAsJsonArray().size(); i++) {
 					if (jsonDataAccountFetches.getAsJsonArray().get(i) != null) {
 						(dataAccountFetch = new DataAccountFetch()).fromJson(jsonDataAccountFetches.getAsJsonArray().get(i).getAsJsonObject());
-						dataAccountFetches.add(dataAccountFetch);
+						fetches.add(dataAccountFetch);
 					}
 				}
 			}
