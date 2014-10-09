@@ -67,6 +67,9 @@
 			
 			<xsd:element name="UpdateEmailTemplateInput" type="sda:UpdateEmailTemplateRequest" />
 			<xsd:element name="UpdateEmailTemplateOutput" type="sda:UpdateEmailTemplateResponse" />
+			
+			<xsd:element name="GetDataAccountsInput" type="sda:GetDataAccountsRequest" />
+			<xsd:element name="GetDataAccountsOutput" type="sda:GetDataAccountsResponse" />
 
 			<xsd:complexType name="GetUsersRequest">
 				<xsd:complexContent>
@@ -500,6 +503,29 @@
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>
+            
+            <xsd:complexType name="GetDataAccountsRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="pager" type="sd:Pager" />
+                        </xsd:sequence>
+                        <xsd:attribute name="query" type="xsd:string" />
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="GetDataAccountsResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+                            <xsd:element name="dataAccounts" type="sd:DataAccount" maxOccurs="unbounded" />
+                            <xsd:element name="dataSources" type="sd:DataSource" maxOccurs="unbounded" />
+                            <xsd:element name="pager" type="sd:Pager" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
 
 		</xsd:schema>
 	</wsdl:types>
@@ -650,6 +676,13 @@
 	<wsdl:message name="UpdateEmailTemplateResponse">
 		<wsdl:part name="output" element="sda:UpdateEmailTemplateOutput" />
 	</wsdl:message>
+	
+	<wsdl:message name="GetDataAccountsRequest">
+		<wsdl:part name="input" element="sda:GetDataAccountsInput" />
+	</wsdl:message>
+	<wsdl:message name="GetDataAccountsResponse">
+		<wsdl:part name="output" element="sda:GetDataAccountsOutput" />
+	</wsdl:message>
 
 	<wsdl:portType name="admin">
 		<wsdl:operation name="GetUsers">
@@ -750,7 +783,13 @@
 			<wsdl:input message="sda:UpdateEmailTemplateRequest" />
 			<wsdl:output message="sda:UpdateEmailTemplateResponse" />
 		</wsdl:operation>
+		
+		<wsdl:operation name="GetDataAccounts">
+			<wsdl:input message="sda:GetDataAccountsRequest" />
+			<wsdl:output message="sda:GetDataAccountsResponse" />
+		</wsdl:operation>
 	</wsdl:portType>
+	
 	<wsdl:binding name="adminSOAP" type="sda:admin">
 		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
 		<wsdl:operation name="GetUsers">
@@ -948,6 +987,16 @@
 		
 		<wsdl:operation name="UpdateEmailTemplate">
 			<soap:operation soapAction="http://app.reflection.io/admin/UpdateEmailTemplate" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetDataAccounts">
+			<soap:operation soapAction="http://app.reflection.io/admin/GetDataAccounts" />
 			<wsdl:input>
 				<soap:body use="literal" />
 			</wsdl:input>

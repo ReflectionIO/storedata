@@ -15,6 +15,8 @@ import io.reflection.app.api.admin.shared.call.AssignPermissionRequest;
 import io.reflection.app.api.admin.shared.call.AssignPermissionResponse;
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
 import io.reflection.app.api.admin.shared.call.AssignRoleResponse;
+import io.reflection.app.api.admin.shared.call.GetDataAccountsRequest;
+import io.reflection.app.api.admin.shared.call.GetDataAccountsResponse;
 import io.reflection.app.api.admin.shared.call.GetEmailTemplatesRequest;
 import io.reflection.app.api.admin.shared.call.GetEmailTemplatesResponse;
 import io.reflection.app.api.admin.shared.call.GetFeedFetchesRequest;
@@ -58,7 +60,9 @@ import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.shared.DataAccount;
+import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.Role;
+import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.ingestors.Ingestor;
 import io.reflection.app.ingestors.IngestorFactory;
 import io.reflection.app.modellers.Modeller;
@@ -67,6 +71,8 @@ import io.reflection.app.predictors.Predictor;
 import io.reflection.app.predictors.PredictorFactory;
 import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
+import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
+import io.reflection.app.service.datasource.DataSourceServiceProvider;
 import io.reflection.app.service.emailtemplate.EmailTemplateServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
@@ -76,7 +82,9 @@ import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import com.willshex.gson.json.service.server.ActionHandler;
@@ -830,4 +838,71 @@ public final class Admin extends ActionHandler {
 		return output;
 	}
 
+	public GetDataAccountsResponse getDataAccounts(GetDataAccountsRequest input) {
+		LOG.finer("Entering getDataAccounts");
+		GetDataAccountsResponse output = new GetDataAccountsResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("GetDataAccountsRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+
+			output.dataAccounts = DataAccountServiceProvider.provide().getDataAccounts(input.pager);
+			// Delete password fields
+			for (DataAccount dataAccount : output.dataAccounts) {
+				dataAccount.password = null;
+			}
+
+			// Retrieve and link Sources
+			List<Long> dataSourceIdList = new ArrayList<Long>();
+			Map<Long, DataSource> dataSourceLookup = new HashMap<Long, DataSource>();
+			for (DataAccount dataAccount : output.dataAccounts) {
+				if (dataAccount.source.id != null) {
+					dataSourceIdList.add(dataAccount.source.id);
+				}
+			}
+			if (dataSourceIdList != null && dataSourceIdList.size() > 0) {
+				List<DataSource> dataSourceList = DataSourceServiceProvider.provide().getDataSourceBatch(dataSourceIdList);
+				for (DataSource dataSource : dataSourceList) {
+					dataSourceLookup.put(dataSource.id, dataSource);
+				}
+			}
+
+			// Retrieve and link Owners
+			List<Long> dataAccountIdList = new ArrayList<Long>();
+			Map<Long, User> userLookup = new HashMap<Long, User>();
+			for (DataAccount dataAccount : output.dataAccounts) {
+				if (dataAccount.id != null) {
+					dataAccountIdList.add(dataAccount.id);
+				}
+			}
+			if (dataAccountIdList != null && dataAccountIdList.size() > 0) {
+				List<User> userList = UserServiceProvider.provide().getDataAccountOwnerBatch(dataAccountIdList);
+				for (User owner : userList) {
+					if (owner.linkedAccounts.get(0).id != null) userLookup.put(owner.linkedAccounts.get(0).id, owner);
+				}
+			}
+
+			// Add DataAccount informations
+			for (DataAccount dataAccount : output.dataAccounts) {
+				dataAccount.source = dataSourceLookup.get(dataAccount.source.id);
+				dataAccount.user = userLookup.get(dataAccount.id);
+				dataAccount.fetches = DataAccountFetchServiceProvider.provide().getFailedDataAccountFetches(dataAccount, PagerHelper.infinitePager());
+			}
+
+			output.pager = input.pager;
+			updatePager(output.pager, output.dataAccounts, input.pager.totalCount == null ? DataAccountServiceProvider.provide().getDataAccountsCount() : null);
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getDataAccounts");
+		return output;
+	}
 }
