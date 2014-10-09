@@ -877,22 +877,22 @@ final class UserService implements IUserService {
 	public List<User> getDataAccountOwnerBatch(Collection<Long> dataAccountIds) throws DataAccessException {
 		List<User> owners = new ArrayList<User>();
 
-		StringBuffer commaDelimitedOwnerIds = new StringBuffer();
+		StringBuffer commaDelimitedDataAccountIds = new StringBuffer();
 
 		if (dataAccountIds != null && dataAccountIds.size() > 0) {
 			for (Long dataAccountId : dataAccountIds) {
-				if (commaDelimitedOwnerIds.length() != 0) {
-					commaDelimitedOwnerIds.append("','");
+				if (commaDelimitedDataAccountIds.length() != 0) {
+					commaDelimitedDataAccountIds.append("','");
 				}
 
-				commaDelimitedOwnerIds.append(dataAccountId);
+				commaDelimitedDataAccountIds.append(dataAccountId);
 			}
 		}
 
-		if (commaDelimitedOwnerIds != null && commaDelimitedOwnerIds.length() != 0) {
+		if (commaDelimitedDataAccountIds != null && commaDelimitedDataAccountIds.length() != 0) {
 			String getDataAccountOwnerQuery = String
 					.format("SELECT `userid`, `dataaccountid` FROM `userdataaccount` WHERE `dataaccountid` IN ('%s') AND `deleted`='n' GROUP BY `dataaccountid` ORDER BY `id` ASC",
-							commaDelimitedOwnerIds);
+							commaDelimitedDataAccountIds);
 
 			Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
@@ -900,16 +900,20 @@ final class UserService implements IUserService {
 				userConnection.connect();
 				userConnection.executeQuery(getDataAccountOwnerQuery);
 
+				Long userId, dataAccountId;
 				while (userConnection.fetchNextRow()) {
-					Long userId = userConnection.getCurrentRowLong("userid");
-					Long dataAccountId = userConnection.getCurrentRowLong("dataaccountid");
-					User owner = getUser(userId);
-					if (owner != null) {
-						owner.linkedAccounts = new ArrayList<DataAccount>();
+					userId = userConnection.getCurrentRowLong("userid");
+					dataAccountId = userConnection.getCurrentRowLong("dataaccountid");
+					User user = getUser(userId);
+
+					if (user != null) {
+						owners.add(user);
+
 						DataAccount dataAccount = new DataAccount();
 						dataAccount.id = dataAccountId;
-						owner.linkedAccounts.add(dataAccount);
-						owners.add(owner);
+
+						user.linkedAccounts = new ArrayList<DataAccount>();
+						user.linkedAccounts.add(dataAccount);
 					}
 				}
 
@@ -919,6 +923,7 @@ final class UserService implements IUserService {
 				}
 			}
 		}
+
 		return owners;
 	}
 
