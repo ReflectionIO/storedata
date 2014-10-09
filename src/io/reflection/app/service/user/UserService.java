@@ -32,6 +32,7 @@ import io.reflection.app.service.emailtemplate.EmailTemplateServiceProvider;
 import io.reflection.app.shared.util.FormattingHelper;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -865,6 +866,60 @@ final class UserService implements IUserService {
 		}
 
 		return owner;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.user.IUserService#getDataAccountOwnerBatch(java.util.Collection)
+	 */
+	@Override
+	public List<User> getDataAccountOwnerBatch(Collection<Long> dataAccountIds) throws DataAccessException {
+		List<User> owners = new ArrayList<User>();
+
+		StringBuffer commaDelimitedOwnerIds = new StringBuffer();
+
+		if (dataAccountIds != null && dataAccountIds.size() > 0) {
+			for (Long dataAccountId : dataAccountIds) {
+				if (commaDelimitedOwnerIds.length() != 0) {
+					commaDelimitedOwnerIds.append("','");
+				}
+
+				commaDelimitedOwnerIds.append(dataAccountId);
+			}
+		}
+
+		if (commaDelimitedOwnerIds != null && commaDelimitedOwnerIds.length() != 0) {
+			String getDataAccountOwnerQuery = String
+					.format("SELECT `userid`, `dataaccountid` FROM `userdataaccount` WHERE `dataaccountid` IN ('%s') AND `deleted`='n' GROUP BY `dataaccountid` ORDER BY `id` ASC",
+							commaDelimitedOwnerIds);
+
+			Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
+
+			try {
+				userConnection.connect();
+				userConnection.executeQuery(getDataAccountOwnerQuery);
+
+				while (userConnection.fetchNextRow()) {
+					Long userId = userConnection.getCurrentRowLong("userid");
+					Long dataAccountId = userConnection.getCurrentRowLong("dataaccountid");
+					User owner = getUser(userId);
+					if (owner != null) {
+						owner.linkedAccounts = new ArrayList<DataAccount>();
+						DataAccount dataAccount = new DataAccount();
+						dataAccount.id = dataAccountId;
+						owner.linkedAccounts.add(dataAccount);
+						owners.add(owner);
+					}
+				}
+
+			} finally {
+				if (userConnection != null) {
+					userConnection.disconnect();
+				}
+			}
+		}
+		return owners;
 	}
 
 	/**
