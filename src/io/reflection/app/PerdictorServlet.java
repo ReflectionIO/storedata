@@ -8,9 +8,14 @@
 package io.reflection.app;
 
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.datatypes.shared.FeedFetch;
+import io.reflection.app.datatypes.shared.ModelTypeType;
+import io.reflection.app.datatypes.shared.SimpleModelRun;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.predictors.Predictor;
 import io.reflection.app.predictors.PredictorFactory;
+import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
+import io.reflection.app.service.simplemodelrun.SimpleModelRunServiceProvider;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -55,31 +60,79 @@ public class PerdictorServlet extends ContextAwareServlet {
 			}
 		}
 
-		String country = REQUEST.get().getParameter("country");
-		String store = REQUEST.get().getParameter("store");
-		String type = REQUEST.get().getParameter("type");
-		String codeParam = REQUEST.get().getParameter("code");
-		String categoryIdParam = REQUEST.get().getParameter("categoryid");
-		String modelType = REQUEST.get().getParameter("modeltype");
+		String modelTypeParam = REQUEST.get().getParameter("modeltype");
+
+		ModelTypeType modelType = modelTypeParam == null ? ModelTypeType.ModelTypeTypeCorrelation : ModelTypeType.fromString(modelTypeParam);
 
 		if (LOG.isLoggable(GaeLevel.TRACE)) {
-			LOG.log(GaeLevel.TRACE, "Running predict for model type [" + modelType + "]");
+			LOG.log(GaeLevel.TRACE, "Running predict for model type [" + modelType.toString() + "]");
 		}
 
-		Long code = codeParam == null ? null : Long.valueOf(codeParam);
-		Long categoryId = categoryIdParam == null ? null : Long.valueOf(categoryIdParam);
+		if (modelType == ModelTypeType.ModelTypeTypeCorrelation) {
+			String country = REQUEST.get().getParameter("country");
+			String store = REQUEST.get().getParameter("store");
+			String type = REQUEST.get().getParameter("type");
+			String codeParam = REQUEST.get().getParameter("code");
+			String categoryIdParam = REQUEST.get().getParameter("categoryid");
 
-		Predictor perdictor = PredictorFactory.getPredictorForStore(store);
+			Long code = codeParam == null ? null : Long.valueOf(codeParam);
+			Long categoryId = categoryIdParam == null ? null : Long.valueOf(categoryIdParam);
 
-		if (perdictor != null) {
-			try {
-				perdictor.predictRevenueAndDownloads(country, type, code, categoryId);
-			} catch (DataAccessException e) {
-				throw new RuntimeException(e);
+			Predictor predictor = PredictorFactory.getPredictorForStore(store);
+
+			if (predictor != null) {
+				try {
+					predictor.predictRevenueAndDownloads(country, type, code, categoryId);
+				} catch (DataAccessException e) {
+					throw new RuntimeException(e);
+				}
+			} else {
+				if (LOG.isLoggable(Level.WARNING)) {
+					LOG.warning("Could not find Predictor for store [" + store + "]");
+				}
 			}
-		} else {
-			if (LOG.isLoggable(Level.WARNING)) {
-				LOG.warning("Could not find Predictor for store [" + store + "]");
+		} else if (modelType == ModelTypeType.ModelTypeTypeSimple) {
+			String runIdParam = REQUEST.get().getParameter("runid");
+
+			if (runIdParam == null) {
+				if (LOG.isLoggable(Level.WARNING)) {
+					LOG.warning("Could not find runid parameter");
+				}
+			} else {
+				try {
+					Long runId = Long.valueOf(runIdParam);
+
+					SimpleModelRun simpleModelRun = SimpleModelRunServiceProvider.provide().getSimpleModelRun(runId);
+
+					if (simpleModelRun != null) {
+						FeedFetch feedFetch = FeedFetchServiceProvider.provide().getFeedFetch(simpleModelRun.id);
+
+						if (feedFetch == null) {
+							if (LOG.isLoggable(Level.WARNING)) {
+								LOG.warning("Could not find feed fetch for id [" + simpleModelRun.id.toString() + "]");
+							}
+						} else {
+							Predictor predictor = PredictorFactory.getPredictorForStore(feedFetch.store);
+
+							simpleModelRun.feedFetch = feedFetch;
+
+							if (predictor != null) {
+								predictor.predictWithSimpleModel(simpleModelRun);
+							} else {
+								if (LOG.isLoggable(Level.WARNING)) {
+									LOG.warning("Could not find Predictor for store [" + feedFetch.store + "]");
+								}
+							}
+
+						}
+					} else {
+						if (LOG.isLoggable(Level.WARNING)) {
+							LOG.warning("Could not find simple model run for id [" + runIdParam + "]");
+						}
+					}
+				} catch (DataAccessException e) {
+					throw new RuntimeException(e);
+				}
 			}
 		}
 

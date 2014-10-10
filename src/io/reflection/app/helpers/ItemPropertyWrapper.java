@@ -35,7 +35,7 @@ public class ItemPropertyWrapper {
 	 * @return
 	 */
 	public boolean getBoolean(String name) {
-		return getBoolean(name, false);
+		return getBoolean(name, Boolean.FALSE).booleanValue();
 	}
 
 	/**
@@ -43,7 +43,7 @@ public class ItemPropertyWrapper {
 	 * @param defaultValue
 	 * @return
 	 */
-	public boolean getBoolean(String name, boolean defaultValue) {
+	public Boolean getBoolean(String name, Boolean defaultValue) {
 		boolean value = defaultValue;
 
 		if (mObject != null) {
