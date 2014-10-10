@@ -8,6 +8,7 @@
 package io.reflection.app.client.page;
 
 import io.reflection.app.client.page.admin.CategoriesPage;
+import io.reflection.app.client.page.admin.DataAccountFetchesPage;
 import io.reflection.app.client.page.admin.DataAccountsPage;
 import io.reflection.app.client.page.admin.EmailTemplatePage;
 import io.reflection.app.client.page.admin.FeedBrowserPage;
@@ -52,6 +53,7 @@ public enum PageType {
 	CategoriesPageType("categories", "MCA"),
 	ChangeDetailsPageType("changedetails", true),
 	ChangePasswordPageType("changepassword", true),
+	DataAccountFetchesPageType("dataaccountfetches", "MDF"),
 	DataAccountsPageType("dataaccounts", "MDA"),
 	EmailTemplatesPageType("emailtemplates", "MET"),
 	FeedBrowserPageType("feedbrowser", "MFF"),
@@ -197,6 +199,9 @@ public enum PageType {
 		switch (this) {
 		case DataAccountsPageType:
 			page = new DataAccountsPage();
+			break;
+		case DataAccountFetchesPageType:
+			page = new DataAccountFetchesPage();
 			break;
 		case CategoriesPageType:
 			page = new CategoriesPage();

@@ -114,6 +114,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 	@UiField LIElement dataAccountsItem;
 
+	@UiField LIElement dataAccountFetchesItem;
+
 	@UiField LIElement emailTemplatesItem;
 
 	@UiField LIElement itemsItem;
@@ -235,6 +237,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			items.add(rolesItem);
 			items.add(permissionsItem);
 			items.add(dataAccountsItem);
+			items.add(dataAccountFetchesItem);
 			items.add(emailTemplatesItem);
 			items.add(itemsItem);
 			items.add(categoriesItem);
@@ -302,6 +305,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			highlight(adminDropdown, permissionsItem);
 		} else if (PageType.DataAccountsPageType.equals(current.getPage())) {
 			highlight(adminDropdown, dataAccountsItem);
+		} else if (PageType.DataAccountFetchesPageType.equals(current.getPage())) {
+			highlight(adminDropdown, dataAccountFetchesItem);
 			// } else if (PageType.UpgradePageType.equals(current.getPage())) {
 			// highlight(upgradeAccountItem);
 		} else if (PageType.EmailTemplatesPageType.equals(current.getPage())) {
