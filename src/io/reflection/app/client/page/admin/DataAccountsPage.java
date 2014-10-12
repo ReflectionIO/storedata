@@ -10,6 +10,7 @@ package io.reflection.app.client.page.admin;
 import io.reflection.app.client.controller.DataAccountController;
 import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.page.Page;
+import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.res.Images;
@@ -138,9 +139,8 @@ public class DataAccountsPage extends Page {
 
 			@Override
 			public SafeHtml getValue(DataAccount object) {
-				// String id = object.id.toString();
-				// return SafeHtmlUtils.fromTrustedString("<a href=\"" + PageType.EmailTemplatesPageType.asHref(id).asString() + "\">Fetches</a>"); TODO
-				return SafeHtmlUtils.fromTrustedString("<a href=\"\">Fetches</a>");
+				String id = object.id.toString();
+				return SafeHtmlUtils.fromTrustedString("<a href=\"" + PageType.DataAccountFetchesPageType.asHref(id).asString() + "\">Fetches</a>");
 			}
 
 		};
