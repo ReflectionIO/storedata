@@ -8,9 +8,12 @@
 //
 package io.reflection.app.api.admin.shared.call;
 
+import java.util.Date;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.Request;
@@ -19,6 +22,8 @@ import io.reflection.app.datatypes.shared.DataAccount;
 public class GetDataAccountFetchesRequest extends Request {
 	public DataAccount dataAccount;
 	public Pager pager;
+	public Date start;
+	public Date end;
 
 	@Override
 	public JsonObject toJson() {
@@ -27,6 +32,10 @@ public class GetDataAccountFetchesRequest extends Request {
 		object.add("dataAccount", jsonDataAccount);
 		JsonElement jsonPager = pager == null ? JsonNull.INSTANCE : pager.toJson();
 		object.add("pager", jsonPager);
+		JsonElement jsonStart = start == null ? JsonNull.INSTANCE : new JsonPrimitive(start.getTime());
+		object.add("start", jsonStart);
+		JsonElement jsonEnd = end == null ? JsonNull.INSTANCE : new JsonPrimitive(end.getTime());
+		object.add("end", jsonEnd);
 		return object;
 	}
 
@@ -45,6 +54,18 @@ public class GetDataAccountFetchesRequest extends Request {
 			if (jsonPager != null) {
 				pager = new Pager();
 				pager.fromJson(jsonPager.getAsJsonObject());
+			}
+		}
+		if (jsonObject.has("start")) {
+			JsonElement jsonStart = jsonObject.get("start");
+			if (jsonStart != null) {
+				start = new Date(jsonStart.getAsLong());
+			}
+		}
+		if (jsonObject.has("end")) {
+			JsonElement jsonEnd = jsonObject.get("end");
+			if (jsonEnd != null) {
+				end = new Date(jsonEnd.getAsLong());
 			}
 		}
 	}
