@@ -295,7 +295,7 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 	 * io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
-	public List<DataAccountFetch> getDataAccountFetches(DataAccount dataAccount, Pager pager) throws DataAccessException {
+	public List<DataAccountFetch> getDataAccountFetches(DataAccount dataAccount, Date start, Date end, Pager pager) throws DataAccessException {
 		List<DataAccountFetch> dataAccountFetches = new ArrayList<DataAccountFetch>();
 
 		Connection dataAccountFetchesConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccountFetch.toString());
@@ -305,10 +305,16 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 			linkedAccountPart = "AND `linkedaccountid`=" + dataAccount.id.longValue();
 		}
 		String getDataAccountFetchesQuery = String.format(
-				"SELECT * FROM `dataaccountfetch` WHERE `date` BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE() %s AND `deleted`='n'", linkedAccountPart);
+				"SELECT * FROM `dataaccountfetch` WHERE (`date` BETWEEN FROM_UNIXTIME(%d) AND FROM_UNIXTIME(%d)) %s AND `deleted`='n'", start.getTime() / 1000,
+				end.getTime() / 1000, linkedAccountPart);
 
 		if (pager != null) {
-			String sortByQuery = "id";
+			String sortByQuery = null;
+			if (dataAccount != null && dataAccount.id != null) {
+				sortByQuery = "id";
+			} else {
+				sortByQuery = "linkedaccountid";
+			}
 
 			String sortDirectionQuery = "DESC";
 
@@ -357,8 +363,8 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 	 * @see io.reflection.app.service.dataaccountfetch.IDataAccountFetchService#getDataAccountFetches(io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
-	public List<DataAccountFetch> getDataAccountFetches(Pager pager) throws DataAccessException {
-		return getDataAccountFetches(null, pager);
+	public List<DataAccountFetch> getDataAccountFetches(Date start, Date end, Pager pager) throws DataAccessException {
+		return getDataAccountFetches(null, start, end, pager);
 	}
 
 	/*
@@ -367,7 +373,7 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 	 * @see io.reflection.app.service.dataaccountfetch.IDataAccountFetchService#getDataAccountFetchesCount(io.reflection.app.datatypes.shared.DataAccount)
 	 */
 	@Override
-	public Long getDataAccountFetchesCount(DataAccount dataAccount) throws DataAccessException {
+	public Long getDataAccountFetchesCount(DataAccount dataAccount, Date start, Date end) throws DataAccessException {
 		Long dataAccountFetchesCount = Long.valueOf(0);
 
 		Connection dataAccountFetchesCountConnection = DatabaseServiceProvider.provide().getNamedConnection(
@@ -378,8 +384,8 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 			linkedAccountPart = "AND `linkedaccountid`=" + dataAccount.id.longValue();
 		}
 		String getDataAccountFetchesQuery = String.format(
-				"SELECT COUNT(1) AS `count` FROM `dataaccountfetch` WHERE `date` BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE() %s AND `deleted`='n'",
-				linkedAccountPart);
+				"SELECT COUNT(1) AS `count` FROM `dataaccountfetch` WHERE (`date` BETWEEN FROM_UNIXTIME(%d) AND FROM_UNIXTIME(%d)) %s AND `deleted`='n'",
+				start.getTime() / 1000, end.getTime() / 1000, linkedAccountPart);
 
 		try {
 			dataAccountFetchesCountConnection.connect();
@@ -403,8 +409,8 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 	 * @see io.reflection.app.service.dataaccountfetch.IDataAccountFetchService#getDataAccountFetchesCount()
 	 */
 	@Override
-	public Long getDataAccountFetchesCount() throws DataAccessException {
-		return getDataAccountFetchesCount(null);
+	public Long getDataAccountFetchesCount(Date start, Date end) throws DataAccessException {
+		return getDataAccountFetchesCount(null, start, end);
 	}
 
 }

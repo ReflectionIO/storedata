@@ -86,7 +86,7 @@ public interface IDataAccountFetchService extends IService {
 	 * @return
 	 * @throws DataAccessException
 	 */
-	public List<DataAccountFetch> getDataAccountFetches(DataAccount dataAccount, Pager pager) throws DataAccessException;
+	public List<DataAccountFetch> getDataAccountFetches(DataAccount dataAccount, Date start, Date end, Pager pager) throws DataAccessException;
 
 	/**
 	 * 
@@ -94,7 +94,7 @@ public interface IDataAccountFetchService extends IService {
 	 * @return
 	 * @throws DataAccessException
 	 */
-	public List<DataAccountFetch> getDataAccountFetches(Pager pager) throws DataAccessException;
+	public List<DataAccountFetch> getDataAccountFetches(Date start, Date end, Pager pager) throws DataAccessException;
 
 	/**
 	 * 
@@ -103,7 +103,7 @@ public interface IDataAccountFetchService extends IService {
 	 * @return
 	 * @throws DataAccessException
 	 */
-	public Long getDataAccountFetchesCount(DataAccount dataAccount) throws DataAccessException;
+	public Long getDataAccountFetchesCount(DataAccount dataAccount, Date start, Date end) throws DataAccessException;
 
 	/**
 	 * 
@@ -111,6 +111,6 @@ public interface IDataAccountFetchService extends IService {
 	 * @return
 	 * @throws DataAccessException
 	 */
-	public Long getDataAccountFetchesCount() throws DataAccessException;
+	public Long getDataAccountFetchesCount(Date start, Date end) throws DataAccessException;
 
 }
