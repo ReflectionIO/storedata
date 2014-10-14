@@ -144,7 +144,7 @@
 					</g:Anchor>
 					<ul class="dropdown-menu">
 						<li ui:field="feedBrowserItem">
-							<g:InlineHyperlink targetHistoryToken="{FeedBrowserPageType.asTargetHistoryToken}">Feed Browser</g:InlineHyperlink>
+							<g:InlineHyperlink ui:field="feedBrowserLink">Feed Browser</g:InlineHyperlink>
 						</li>
 						<li ui:field="itemsItem">
 							<g:InlineHyperlink targetHistoryToken="{ItemsPageType.asTargetHistoryToken}">Items</g:InlineHyperlink>
@@ -170,7 +170,7 @@
 							<g:InlineHyperlink targetHistoryToken="{DataAccountsPageType.asTargetHistoryToken}">Data accounts</g:InlineHyperlink>
 						</li>
 						<li ui:field="dataAccountFetchesItem">
-							<g:InlineHyperlink targetHistoryToken="{DataAccountFetchesPageType.asTargetHistoryToken}">Data account fetches</g:InlineHyperlink>
+							<g:InlineHyperlink ui:field="dataAccountFetchesLink">Data account fetches</g:InlineHyperlink>
 						</li>
 						<li class="divider-horizontal-header"></li>
 						<li ui:field="emailTemplatesItem">
