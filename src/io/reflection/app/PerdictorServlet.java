@@ -105,7 +105,7 @@ public class PerdictorServlet extends ContextAwareServlet {
 					SimpleModelRun simpleModelRun = SimpleModelRunServiceProvider.provide().getSimpleModelRun(runId);
 
 					if (simpleModelRun != null) {
-						FeedFetch feedFetch = FeedFetchServiceProvider.provide().getFeedFetch(simpleModelRun.id);
+						FeedFetch feedFetch = FeedFetchServiceProvider.provide().getFeedFetch(simpleModelRun.feedFetch.id);
 
 						if (feedFetch == null) {
 							if (LOG.isLoggable(Level.WARNING)) {

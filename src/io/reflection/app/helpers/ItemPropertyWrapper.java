@@ -44,7 +44,7 @@ public class ItemPropertyWrapper {
 	 * @return
 	 */
 	public Boolean getBoolean(String name, Boolean defaultValue) {
-		boolean value = defaultValue;
+		Boolean value = defaultValue;
 
 		if (mObject != null) {
 			JsonElement e = mObject.get(name);

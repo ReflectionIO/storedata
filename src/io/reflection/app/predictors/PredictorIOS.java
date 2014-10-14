@@ -124,7 +124,7 @@ public class PredictorIOS implements Predictor {
 
 		Category category = CategoryServiceProvider.provide().getAllCategory(s);
 
-		List<Rank> foundRanks = RankServiceProvider.provide().getGatherCodeRanks(c, s, category, type, code, p, true);
+		List<Rank> foundRanks = RankServiceProvider.provide().getGatherCodeRanks(c, s, category, type, code, p, Boolean.TRUE);
 		Map<String, Item> lookup = lookupItemsForRanks(foundRanks);
 
 		ItemRankArchiver archiver = null;
@@ -362,28 +362,31 @@ public class PredictorIOS implements Predictor {
 		c.a2Code = simpleModelRun.feedFetch.country;
 
 		List<Rank> foundRanks = rankService.getGatherCodeRanks(c, s, simpleModelRun.feedFetch.category, simpleModelRun.feedFetch.type,
-				simpleModelRun.feedFetch.code, PagerHelper.infinitePager(), true);
+				simpleModelRun.feedFetch.code, PagerHelper.infinitePager(), Boolean.TRUE);
 
 		Map<String, Item> lookup = lookupItemsForRanks(foundRanks);
 
 		ItemRankArchiver archiver = ItemRankArchiverFactory.getItemRankArchiverForStore(simpleModelRun.feedFetch.store);
 
 		Item item = null;
+		Boolean usesIap = null;
+		
 		for (Rank rank : foundRanks) {
 			item = lookup.get(rank.itemId);
+			
+			if (item == null) {
+				usesIap = null;
+			} else {
+				ItemPropertyWrapper properties = new ItemPropertyWrapper(item.properties);
+				usesIap = properties.getBoolean(ItemPropertyLookupServlet.PROPERTY_IAP, null);
+			}
 
-			ItemPropertyWrapper properties = new ItemPropertyWrapper(item.properties);
+			setSimpleDownloadsAndRevenue(rank, simpleModelRun, usesIap);
 
-			Boolean usesIap = properties.getBoolean(ItemPropertyLookupServlet.PROPERTY_IAP, null);
+			RankServiceProvider.provide().updateRank(rank);
 
-			if (item != null) {
-				setSimpleDownloadsAndRevenue(rank, simpleModelRun, usesIap);
-
-				RankServiceProvider.provide().updateRank(rank);
-
-				if (archiver != null) {
-					archiver.enqueue(rank.id);
-				}
+			if (archiver != null) {
+				archiver.enqueue(rank.id);
 			}
 		}
 

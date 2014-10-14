@@ -154,7 +154,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			pager.count = new Long(Long.MAX_VALUE);
 
 			List<Rank> foundRanks = RankServiceProvider.provide().getGatherCodeRanks(country, store, firstFeedFetch.category, firstFeedFetch.type,
-					firstFeedFetch.code, pager, true);
+					firstFeedFetch.code, pager, Boolean.TRUE);
 
 			Map<String, Rank> lookup = indexRanks(foundRanks);
 			List<String> itemIds = new ArrayList<String>();

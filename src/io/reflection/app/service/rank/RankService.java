@@ -268,7 +268,7 @@ final class RankService implements IRankService {
 		Long code = FeedFetchServiceProvider.provide().getGatherCode(country, store, after, before);
 
 		if (code != null) {
-			ranks.addAll(getGatherCodeRanks(country, store, category, listType, code, pager, false));
+			ranks.addAll(getGatherCodeRanks(country, store, category, listType, code, pager, Boolean.FALSE));
 		}
 
 		return ranks;
@@ -653,7 +653,7 @@ final class RankService implements IRankService {
 			String getCountryStoreTypeRanksQuery = String
 					.format("SELECT * FROM `rank` WHERE %s AND CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`source` AS BINARY)=CAST('%s' AS BINARY) AND `categoryid`=%d AND `code2`=%d AND %s `deleted`='n' ORDER BY `%s` %s,`date` DESC LIMIT %d,%d",
 							typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), code.longValue(), isGrossing
-									&& ignoreGrossingRank.booleanValue() ? "" : "`grossingposition`<>0 AND", pager.sortBy,
+									|| !ignoreGrossingRank.booleanValue() ? "`grossingposition`<>0 AND" : "", pager.sortBy,
 							pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
 
 			try {
@@ -731,37 +731,39 @@ final class RankService implements IRankService {
 
 			Long code = FeedFetchServiceProvider.provide().getGatherCode(country, store, start, end);
 
-			Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
-			String getCountryStoreTypeRanksQuery = String
-					.format("SELECT * FROM `rank` WHERE %s AND CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`source` AS BINARY)=CAST('%s' AS BINARY) AND `categoryid`=%d AND `code2`=%d AND `deleted`='n'",
-							typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), code.longValue());
+			if (code != null) {
+				Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+				String getCountryStoreTypeRanksQuery = String
+						.format("SELECT * FROM `rank` WHERE %s AND CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`source` AS BINARY)=CAST('%s' AS BINARY) AND `categoryid`=%d AND `code2`=%d AND `deleted`='n'",
+								typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), code.longValue());
 
-			try {
-				rankConnection.connect();
-				rankConnection.executeQuery(getCountryStoreTypeRanksQuery);
+				try {
+					rankConnection.connect();
+					rankConnection.executeQuery(getCountryStoreTypeRanksQuery);
 
-				while (rankConnection.fetchNextRow()) {
-					Rank rank = toRank(rankConnection);
+					while (rankConnection.fetchNextRow()) {
+						Rank rank = toRank(rankConnection);
 
-					if (rank != null) {
-						ranks.add(rank);
-					}
-				}
-
-				if (ranks.size() > 0) {
-					JsonArray jsonArray = new JsonArray();
-					for (Rank rank : ranks) {
-						jsonArray.add(rank.toJson());
+						if (rank != null) {
+							ranks.add(rank);
+						}
 					}
 
-					cal.setTime(new Date());
-					cal.add(Calendar.DAY_OF_MONTH, 20);
-					cache.put(memcacheKey, JsonUtils.cleanJson(jsonArray.toString()), cal.getTime());
-				}
+					if (ranks.size() > 0) {
+						JsonArray jsonArray = new JsonArray();
+						for (Rank rank : ranks) {
+							jsonArray.add(rank.toJson());
+						}
 
-			} finally {
-				if (rankConnection != null) {
-					rankConnection.disconnect();
+						cal.setTime(new Date());
+						cal.add(Calendar.DAY_OF_MONTH, 20);
+						cache.put(memcacheKey, JsonUtils.cleanJson(jsonArray.toString()), cal.getTime());
+					}
+
+				} finally {
+					if (rankConnection != null) {
+						rankConnection.disconnect();
+					}
 				}
 			}
 		} else {
