@@ -279,7 +279,10 @@ public class FilterController {
 		filters.put(PageType.MyAppsPageType, getDefaultFilter());
 		filters.put(PageType.FeedBrowserPageType, getDefaultFilter());
 		filters.put(PageType.ItemPageType, getDefaultFilter());
-		filters.put(PageType.DataAccountFetchesPageType, getDefaultFilter());
+
+		Filter f = getDefaultFilter();
+		f.setStartTime(FilterHelper.getDaysAgo(30).getTime());
+		filters.put(PageType.DataAccountFetchesPageType, f);
 
 	}
 
