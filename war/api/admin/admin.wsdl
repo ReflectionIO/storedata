@@ -144,6 +144,8 @@
 							<xsd:element name="pager" type="sd:Pager" />
 							<xsd:element name="listTypes" type="xsd:string" maxOccurs="unbounded" />
 						</xsd:sequence>
+						<xsd:attribute name="start" type="xsd:dateTime" />
+                        <xsd:attribute name="end" type="xsd:dateTime" />
 					</xsd:extension>
 				</xsd:complexContent>
 			</xsd:complexType>
