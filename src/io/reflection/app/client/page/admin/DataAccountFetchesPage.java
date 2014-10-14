@@ -10,29 +10,44 @@ package io.reflection.app.client.page.admin;
 import io.reflection.app.client.cell.StyledButtonCell;
 import io.reflection.app.client.controller.DataAccountFetchController;
 import io.reflection.app.client.controller.EventController;
+import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.ServiceConstants;
+import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
+import io.reflection.app.client.part.BootstrapGwtDatePicker;
+import io.reflection.app.client.part.DateSelector;
+import io.reflection.app.client.part.DateSelector.PresetDateRange;
 import io.reflection.app.client.part.SimplePager;
+import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
 import io.reflection.app.shared.util.FormattingHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import com.google.gwt.cell.client.Cell.Context;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
@@ -41,7 +56,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Stefano Capuzzi (stefanocapuzzi)
  * 
  */
-public class DataAccountFetchesPage extends Page implements NavigationEventHandler {
+public class DataAccountFetchesPage extends Page implements NavigationEventHandler, FilterEventHandler {
 
 	private static DataAccountFetchesPageUiBinder uiBinder = GWT.create(DataAccountFetchesPageUiBinder.class);
 
@@ -51,16 +66,79 @@ public class DataAccountFetchesPage extends Page implements NavigationEventHandl
 			BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) SimplePager simplePager = new SimplePager(false, false);
 
+	@UiField DateSelector dateSelector = new DateSelector();
 	@UiField InlineHyperlink backLink;
 
 	public DataAccountFetchesPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
+		BootstrapGwtDatePicker.INSTANCE.styles().ensureInjected();
+
 		addColumns();
 
 		dataAccountFetchTable.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
+		dataAccountFetchTable.setEmptyTableWidget(new HTMLPanel("<h6>No Data Account Fetches</h6>"));
 		DataAccountFetchController.get().addDataDisplay(dataAccountFetchTable);
 		simplePager.setDisplay(dataAccountFetchTable);
+
+		List<PresetDateRange> dateSelectorPresetRanges = new ArrayList<PresetDateRange>();
+
+		dateSelectorPresetRanges.add(new PresetDateRange() {
+
+			@Override
+			public String getName() {
+				return "1 day";
+			}
+
+			@Override
+			public DateRange getDateRange() {
+				return FilterHelper.createRange(FilterHelper.getDaysAgo(1), FilterHelper.getToday());
+			}
+		});
+
+		dateSelectorPresetRanges.add(new PresetDateRange() {
+
+			@Override
+			public String getName() {
+				return "1 wk";
+			}
+
+			@Override
+			public DateRange getDateRange() {
+				return FilterHelper.createRange(FilterHelper.getWeeksAgo(1), FilterHelper.getToday());
+			}
+		});
+
+		dateSelectorPresetRanges.add(new PresetDateRange() {
+
+			@Override
+			public String getName() {
+				return "2 wks";
+			}
+
+			@Override
+			public DateRange getDateRange() {
+				return FilterHelper.createRange(FilterHelper.getWeeksAgo(2), FilterHelper.getToday());
+			}
+		});
+
+		dateSelectorPresetRanges.add(new PresetDateRange() {
+
+			@Override
+			public String getName() {
+				return "30 days";
+			}
+
+			@Override
+			public DateRange getDateRange() {
+				return FilterHelper.createRange(FilterHelper.getDaysAgo(30), FilterHelper.getToday());
+			}
+		});
+
+		dateSelector.addFixedRanges(dateSelectorPresetRanges);
+
+		updateFromFilter();
+
 	}
 
 	private void addColumns() {
@@ -167,6 +245,24 @@ public class DataAccountFetchesPage extends Page implements NavigationEventHandl
 
 	}
 
+	public void updateFromFilter() {
+		FilterController fc = FilterController.get();
+
+		DateRange range = new DateRange();
+		range.setFrom(fc.getStartDate());
+		range.setTo(fc.getEndDate());
+		dateSelector.setValue(range);
+	}
+
+	@UiHandler("dateSelector")
+	void onDateRangeValueChanged(ValueChangeEvent<DateRange> event) {
+		FilterController fc = FilterController.get();
+		fc.start();
+		fc.setEndDate(event.getValue().getTo());
+		fc.setStartDate(event.getValue().getFrom());
+		fc.commit();
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -176,6 +272,7 @@ public class DataAccountFetchesPage extends Page implements NavigationEventHandl
 	protected void onAttach() {
 		super.onAttach();
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+		register(EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
 	}
 
 	/*
@@ -187,6 +284,8 @@ public class DataAccountFetchesPage extends Page implements NavigationEventHandl
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
 		if (PageType.DataAccountFetchesPageType.equals(current.getPage())) {
+			updateFromFilter();
+
 			Long feedFetchDataAccountId = DataAccountFetchController.get().getDataAccountId();
 			if (current.getAction() != null && current.getAction().matches("[0-9]+")) { // Get for a specific Data Account
 				backLink.setVisible(true);
@@ -205,6 +304,44 @@ public class DataAccountFetchesPage extends Page implements NavigationEventHandl
 					simplePager.setPageStart(0);
 					DataAccountFetchController.get().fetchDataAccountFetches();
 				}
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamChanged(java.lang.String, java.lang.Object, java.lang.Object)
+	 */
+	@Override
+	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
+		if (PageType.DataAccountFetchesPageType.equals(NavigationController.get().getCurrentPage())) {
+			String dataAccountId = NavigationController.get().getStack().getAction();
+			DataAccountFetchController.get().reset();
+			simplePager.setPageStart(0);
+			if (dataAccountId != null && dataAccountId.matches("[0-9]+")) {
+				PageType.DataAccountFetchesPageType.show(dataAccountId, FilterController.get().asDataAccountFetchFilterString());
+			} else {
+				PageType.DataAccountFetchesPageType.show(FilterController.get().asDataAccountFetchFilterString());
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamsChanged(io.reflection.app.client.controller.FilterController.Filter, java.util.Map)
+	 */
+	@Override
+	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
+		if (PageType.DataAccountFetchesPageType.equals(NavigationController.get().getCurrentPage())) {
+			String dataAccountId = NavigationController.get().getStack().getAction();
+			DataAccountFetchController.get().reset();
+			simplePager.setPageStart(0);
+			if (dataAccountId != null && dataAccountId.matches("[0-9]+")) {
+				PageType.DataAccountFetchesPageType.show(dataAccountId, FilterController.get().asDataAccountFetchFilterString());
+			} else {
+				PageType.DataAccountFetchesPageType.show(FilterController.get().asDataAccountFetchFilterString());
 			}
 		}
 	}

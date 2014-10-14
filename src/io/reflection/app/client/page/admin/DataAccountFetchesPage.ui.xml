@@ -9,20 +9,37 @@
 	    margin-left: 25px;
 	    display: inline-block;
 	}
+	
+	.pageTitle {
+	    padding-bottom: 30px;
+	}
+	
+	.content {
+	    margin-top: 30px;
+	}
 	</ui:style>
-	<g:HTMLPanel>
-		<div class="row">
-			<g:HTMLPanel styleName="col-sm-10 col-sm-offset-1">
-				<h2>Data Account fetches</h2>
-				<g:InlineHyperlink ui:field="backLink" styleName="{style.backLink}" targetHistoryToken="{DataAccountsPageType.asTargetHistoryToken}"
-					visible="false">&#8592;
-					Back to data accounts</g:InlineHyperlink>
-				<c:CellTable ui:field="dataAccountFetchTable" styleName="table table-hover table-striped" />
+	<g:HTMLPanel styleName="row">
 
-				<p:SimplePager styleName="text-center" ui:field="simplePager" rangeLimited="true" />
+		<g:HTMLPanel styleName="col-md-2 well sidepanel">
+			<h3 class="{style.pageTitle}">Data Account fetches</h3>
 
-			</g:HTMLPanel>
-			<g:HTMLPanel styleName="filler-bottom col-md-12 hidden-xs hidden-sm" />
-		</div>
+			<div class="form-group">
+				<label>Date</label>
+				<p:DateSelector ui:field="dateSelector" />
+			</div>
+
+		</g:HTMLPanel>
+
+		<g:HTMLPanel styleName="col-md-10 {style.content}">
+			<g:InlineHyperlink ui:field="backLink" styleName="{style.backLink}" targetHistoryToken="{DataAccountsPageType.asTargetHistoryToken}"
+				visible="false">&#8592;
+				Back to data accounts</g:InlineHyperlink>
+			<c:CellTable ui:field="dataAccountFetchTable" styleName="table table-hover table-striped" />
+
+			<p:SimplePager styleName="text-center" ui:field="simplePager" rangeLimited="true" />
+
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="filler-bottom col-md-12 hidden-xs hidden-sm" />
+
 	</g:HTMLPanel>
 </ui:UiBinder> 
