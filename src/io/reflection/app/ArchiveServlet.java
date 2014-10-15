@@ -67,7 +67,13 @@ public class ArchiveServlet extends ContextAwareServlet {
 			if (id != null) {
 				try {
 					Rank rank = RankServiceProvider.provide().getRank(id);
-					ItemRankArchiverFactory.getItemRankArchiverForStore(rank.source).archive(rank);
+					if (rank != null) {
+						ItemRankArchiverFactory.getItemRankArchiverForStore(rank.source).archive(rank);
+					} else {
+						if (LOGGER.isLoggable(Level.INFO)) {
+							LOGGER.info("Could not find rank for archiving with id [" + idParameter + "]");
+						}
+					}
 				} catch (DataAccessException daEx) {
 					throw new RuntimeException(daEx);
 				}

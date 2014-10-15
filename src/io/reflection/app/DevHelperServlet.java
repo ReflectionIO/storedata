@@ -392,7 +392,8 @@ public class DevHelperServlet extends HttpServlet {
 				buffer.append("<table>");
 				buffer.append("<tr><th>Appliation</th><th>top 10</th><th>top 25</th><th>top 50</th><th>top 100</th><th>top 200</th><th>total</th></tr>");
 
-				Query<ItemRankSummary> query = ofy().load().type(ItemRankSummary.class).filter("type =", feedType).filter("source =", DataTypeHelper.IOS_STORE_A3);
+				Query<ItemRankSummary> query = ofy().load().type(ItemRankSummary.class).filter("type =", feedType)
+						.filter("source =", DataTypeHelper.IOS_STORE_A3);
 
 				if (rankEndValue < 10) {
 					query = query.filter("numberOfTimesRankedTop10 >", Integer.valueOf(0)).order("numberOfTimesRankedTop10");
@@ -629,7 +630,13 @@ public class DevHelperServlet extends HttpServlet {
 				}
 
 				success = true;
+			} else if ("predict".equalsIgnoreCase(action)) {
+				Queue predictQueue = QueueFactory.getQueue("predict");
+				predictQueue.add(TaskOptions.Builder.withUrl("/predict?" + req.getQueryString()).method(Method.GET));
+
+				success = true;
 			} else {
+
 				if (LOG.isLoggable(Level.INFO)) {
 					LOG.info(String.format("Action [%s] not supported", action));
 				}

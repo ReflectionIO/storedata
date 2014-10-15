@@ -7,6 +7,7 @@
 //
 package io.reflection.app.predictors;
 
+import io.reflection.app.api.PagerHelper;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.apple.ItemPropertyLookupServlet;
@@ -33,6 +34,7 @@ import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.modelrun.ModelRunServiceProvider;
+import io.reflection.app.service.rank.IRankService;
 import io.reflection.app.service.rank.RankServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
 
@@ -122,7 +124,7 @@ public class PredictorIOS implements Predictor {
 
 		Category category = CategoryServiceProvider.provide().getAllCategory(s);
 
-		List<Rank> foundRanks = RankServiceProvider.provide().getGatherCodeRanks(c, s, category, type, code, p, true);
+		List<Rank> foundRanks = RankServiceProvider.provide().getGatherCodeRanks(c, s, category, type, code, p, Boolean.TRUE);
 		Map<String, Item> lookup = lookupItemsForRanks(foundRanks);
 
 		ItemRankArchiver archiver = null;
@@ -211,7 +213,7 @@ public class PredictorIOS implements Predictor {
 	 * @param code
 	 * @throws DataAccessException
 	 */
-	private static void alterFeedFetchStatus(Store store, Country country, Category category, List<String> listTypes, Long code) throws DataAccessException {
+	private void alterFeedFetchStatus(Store store, Country country, Category category, List<String> listTypes, Long code) throws DataAccessException {
 		List<FeedFetch> feeds = FeedFetchServiceProvider.provide().getGatherCodeFeedFetches(country, store, listTypes, code);
 
 		for (FeedFetch feedFetch : feeds) {
@@ -220,6 +222,11 @@ public class PredictorIOS implements Predictor {
 				FeedFetchServiceProvider.provide().updateFeedFetch(feedFetch);
 			}
 		}
+	}
+
+	private void alterFeedFetchStatus(FeedFetch feedFetch) throws DataAccessException {
+		feedFetch.status = FeedFetchStatusType.FeedFetchStatusTypeModelled;
+		FeedFetchServiceProvider.provide().updateFeedFetch(feedFetch);
 	}
 
 	private void setDownloadsAndRevenue(Rank rank, ModelRun output, boolean usesIap, float price) {
@@ -267,8 +274,10 @@ public class PredictorIOS implements Predictor {
 		rank.downloads = Integer.valueOf((int) downloads);
 		rank.revenue = Float.valueOf((float) revenue);
 
-		LOG.info("Downloads :" + downloads);
-		LOG.info("Revenue :" + revenue);
+		if (LOG.isLoggable(Level.INFO)) {
+			LOG.info("Downloads :" + downloads);
+			LOG.info("Revenue :" + revenue);
+		}
 	}
 
 	// private void rank(ModelRun output, int downloads, double revenue, String rankType, boolean usesIap, float price) {
@@ -311,6 +320,10 @@ public class PredictorIOS implements Predictor {
 		return price <= Float.MIN_VALUE;
 	}
 
+	private boolean isDownloadListType(String listType) {
+		return !listType.contains("grossing");
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -331,5 +344,107 @@ public class PredictorIOS implements Predictor {
 	public void enqueue(ModelRun modelRun) {
 		QueueHelper.enqueue("predict", "/predict", Method.POST, new SimpleEntry<String, String>("runid", modelRun.id.toString()),
 				new SimpleEntry<String, String>("modeltype", ModelTypeType.ModelTypeTypeCorrelation.toString()));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.predictors.Predictor#predictWithSimpleModel(io.reflection.app.datatypes.shared.SimpleModelRun)
+	 */
+	@Override
+	public void predictWithSimpleModel(SimpleModelRun simpleModelRun) throws DataAccessException {
+		IRankService rankService = RankServiceProvider.provide();
+
+		Store s = new Store();
+		s.a3Code = simpleModelRun.feedFetch.store;
+
+		Country c = new Country();
+		c.a2Code = simpleModelRun.feedFetch.country;
+
+		List<Rank> foundRanks = rankService.getGatherCodeRanks(c, s, simpleModelRun.feedFetch.category, simpleModelRun.feedFetch.type,
+				simpleModelRun.feedFetch.code, PagerHelper.infinitePager(), Boolean.TRUE);
+
+		Map<String, Item> lookup = lookupItemsForRanks(foundRanks);
+
+		ItemRankArchiver archiver = ItemRankArchiverFactory.getItemRankArchiverForStore(simpleModelRun.feedFetch.store);
+
+		Item item = null;
+		Boolean usesIap = null;
+		
+		for (Rank rank : foundRanks) {
+			item = lookup.get(rank.itemId);
+			
+			if (item == null) {
+				usesIap = null;
+			} else {
+				ItemPropertyWrapper properties = new ItemPropertyWrapper(item.properties);
+				usesIap = properties.getBoolean(ItemPropertyLookupServlet.PROPERTY_IAP, null);
+			}
+
+			setSimpleDownloadsAndRevenue(rank, simpleModelRun, usesIap);
+
+			RankServiceProvider.provide().updateRank(rank);
+
+			if (archiver != null) {
+				archiver.enqueue(rank.id);
+			}
+		}
+
+		alterFeedFetchStatus(simpleModelRun.feedFetch);
+
+		if (LOG.isLoggable(Level.INFO)) {
+			LOG.info("predictRevenueAndDownloads completed and status updated");
+		}
+	}
+
+	private void setSimpleDownloadsAndRevenue(Rank rank, SimpleModelRun simpleModelRun, Boolean usesIap) {
+		float price = rank.price.floatValue() / 100.0f;
+		boolean isDownload = isDownloadListType(simpleModelRun.feedFetch.type), isFree = isFree(price);
+		double revenue = 0.0, downloads = 0.0;
+
+		if (usesIap == null || usesIap.booleanValue()) {
+			if (isFree) {
+				if (isDownload) {
+					downloads = (double) (simpleModelRun.b.doubleValue() * Math.pow(rank.position.doubleValue(), -simpleModelRun.a.doubleValue()));
+				} else {
+					revenue = simpleModelRun.b.doubleValue() * Math.pow(rank.grossingPosition.doubleValue(), -simpleModelRun.a.doubleValue());
+				}
+			} else {
+				if (isDownload) {
+					downloads = (double) (simpleModelRun.b.doubleValue() * Math.pow(rank.position.doubleValue(), -simpleModelRun.a.doubleValue()));
+				} else {
+					revenue = simpleModelRun.b.doubleValue() * Math.pow(rank.grossingPosition.doubleValue(), -simpleModelRun.a.doubleValue());
+				}
+			}
+		} else {
+			if (isFree) {
+				// revenue is zero since it is a free app and no IAP. Thus only
+				// download calculated here
+				downloads = (double) (simpleModelRun.b.doubleValue() * Math.pow(rank.position.doubleValue(), -simpleModelRun.a.doubleValue()));
+			} else {
+				if (isDownload) {
+					downloads = (double) (simpleModelRun.b.doubleValue() * Math.pow(rank.position.doubleValue(), -simpleModelRun.a.doubleValue()));
+
+					if (rank.grossingPosition == null || rank.grossingPosition.intValue() == 0) {
+						revenue = (double) downloads * (double) price;
+					}
+				} else {
+					revenue = simpleModelRun.b.doubleValue() * Math.pow(rank.grossingPosition.doubleValue(), -simpleModelRun.a.doubleValue());
+
+					if (rank.position == null || rank.position.intValue() == 0) {
+						downloads = (int) (revenue / (double) price);
+					}
+				}
+			}
+		}
+
+		// These numbers still overflow using the current model
+		rank.downloads = Integer.valueOf((int) downloads);
+		rank.revenue = Float.valueOf((float) revenue);
+
+		if (LOG.isLoggable(Level.INFO)) {
+			LOG.info("Downloads :" + downloads);
+			LOG.info("Revenue :" + revenue);
+		}
 	}
 }

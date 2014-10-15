@@ -114,7 +114,7 @@ public interface IRankService extends IService {
 	 * @param ignoreGrossingRank
 	 * @return
 	 */
-	public List<Rank> getGatherCodeRanks(Country country, Store store, Category category, String listType, Long code, Pager pager, boolean ignoreGrossingRank)
+	public List<Rank> getGatherCodeRanks(Country country, Store store, Category category, String listType, Long code, Pager pager, Boolean ignoreGrossingRank)
 			throws DataAccessException;
 
 	/**

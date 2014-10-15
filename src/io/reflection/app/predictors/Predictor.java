@@ -17,9 +17,9 @@ import io.reflection.app.datatypes.shared.SimpleModelRun;
  */
 public interface Predictor {
 	void enqueue(String country, String type, Long code);
-	
+
 	void enqueue(SimpleModelRun simpleModelRun);
-	
+
 	void enqueue(ModelRun modelRun);
 
 	/**
@@ -32,5 +32,13 @@ public interface Predictor {
 	 * @throws DataAccessException
 	 */
 	void predictRevenueAndDownloads(String country, String type, Long code, Long categorId) throws DataAccessException;
+
+	/**
+	 * Predict with simple model
+	 * 
+	 * @param simpleModelRun
+	 * @throws DataAccessException
+	 */
+	void predictWithSimpleModel(SimpleModelRun simpleModelRun) throws DataAccessException;
 
 }
