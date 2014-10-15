@@ -11,7 +11,7 @@ import io.reflection.app.client.controller.CountryController;
 import io.reflection.app.client.controller.ForumController;
 import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.StoreController;
-import io.reflection.app.client.part.DefaultPresetDateRange;
+import io.reflection.app.client.part.DateSelector.PresetDateRange;
 import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
@@ -31,6 +31,9 @@ import com.google.gwt.user.datepicker.client.DatePicker;
  * 
  */
 public class FilterHelper {
+
+	private static List<PresetDateRange> defaultPreset = null;
+	private static List<PresetDateRange> adminPreset = null;
 
 	public static Date getToday() {
 		return normalizeDate(new Date());
@@ -302,28 +305,140 @@ public class FilterHelper {
 		return dateRange;
 	}
 
-	public static List<DefaultPresetDateRange> getDefaultFetchDateRanges() {
+	public static List<PresetDateRange> getDefaultDateRanges() {
 
-		List<DefaultPresetDateRange> dateSelectorPresetRanges = new ArrayList<DefaultPresetDateRange>();
-		dateSelectorPresetRanges.add(new DefaultPresetDateRange("1 day", createRange(getDaysAgo(1), getToday())));
-		dateSelectorPresetRanges.add(new DefaultPresetDateRange("1 wk", createRange(getWeeksAgo(1), getToday())));
-		dateSelectorPresetRanges.add(new DefaultPresetDateRange("2 wks", createRange(getWeeksAgo(2), getToday())));
-		dateSelectorPresetRanges.add(new DefaultPresetDateRange("30 days", createRange(getDaysAgo(30), getToday())));
+		if (defaultPreset == null) {
+			defaultPreset = new ArrayList<PresetDateRange>();
 
-		return dateSelectorPresetRanges;
+			defaultPreset.add(new PresetDateRange() {
+
+				@Override
+				public String getName() {
+					return "1 wk";
+				}
+
+				@Override
+				public DateRange getDateRange() {
+					return FilterHelper.createRange(FilterHelper.getWeeksAgo(1), FilterHelper.getToday());
+				}
+			});
+
+			defaultPreset.add(new PresetDateRange() {
+
+				@Override
+				public String getName() {
+					return "2 wks";
+				}
+
+				@Override
+				public DateRange getDateRange() {
+					return FilterHelper.createRange(FilterHelper.getWeeksAgo(2), FilterHelper.getToday());
+				}
+			});
+
+			defaultPreset.add(new PresetDateRange() {
+
+				@Override
+				public String getName() {
+					return "4 wks";
+				}
+
+				@Override
+				public DateRange getDateRange() {
+					return FilterHelper.createRange(FilterHelper.getWeeksAgo(4), FilterHelper.getToday());
+				}
+			});
+
+			defaultPreset.add(new PresetDateRange() {
+
+				@Override
+				public String getName() {
+					return "6 wks";
+				}
+
+				@Override
+				public DateRange getDateRange() {
+					return FilterHelper.createRange(FilterHelper.getWeeksAgo(6), FilterHelper.getToday());
+				}
+			});
+
+			defaultPreset.add(new PresetDateRange() {
+
+				@Override
+				public String getName() {
+					return "8 wks";
+				}
+
+				@Override
+				public DateRange getDateRange() {
+					return FilterHelper.createRange(FilterHelper.getWeeksAgo(8), FilterHelper.getToday());
+				}
+			});
+		}
+
+		return defaultPreset;
 
 	}
 
-	public static List<DefaultPresetDateRange> getDefaultUserDataDateRanges() {
+	public static List<PresetDateRange> getAdminDateRanges() {
+		if (adminPreset == null) {
+			adminPreset = new ArrayList<PresetDateRange>();
 
-		List<DefaultPresetDateRange> dateSelectorPresetRanges = new ArrayList<DefaultPresetDateRange>();
-		dateSelectorPresetRanges.add(new DefaultPresetDateRange("1 wk", createRange(getWeeksAgo(1), getToday())));
-		dateSelectorPresetRanges.add(new DefaultPresetDateRange("2 wks", createRange(getWeeksAgo(2), getToday())));
-		dateSelectorPresetRanges.add(new DefaultPresetDateRange("4 wks", createRange(getWeeksAgo(4), getToday())));
-		dateSelectorPresetRanges.add(new DefaultPresetDateRange("6 wks", createRange(getWeeksAgo(6), getToday())));
-		dateSelectorPresetRanges.add(new DefaultPresetDateRange("8 wks", createRange(getWeeksAgo(8), getToday())));
+			adminPreset.add(new PresetDateRange() {
 
-		return dateSelectorPresetRanges;
+				@Override
+				public String getName() {
+					return "1 day";
+				}
+
+				@Override
+				public DateRange getDateRange() {
+					return FilterHelper.createRange(FilterHelper.getDaysAgo(1), FilterHelper.getToday());
+				}
+			});
+
+			adminPreset.add(new PresetDateRange() {
+
+				@Override
+				public String getName() {
+
+					return "1 wk";
+				}
+
+				@Override
+				public DateRange getDateRange() {
+					return FilterHelper.createRange(FilterHelper.getWeeksAgo(1), FilterHelper.getToday());
+				}
+			});
+
+			adminPreset.add(new PresetDateRange() {
+
+				@Override
+				public String getName() {
+					return "2 wks";
+				}
+
+				@Override
+				public DateRange getDateRange() {
+					return FilterHelper.createRange(FilterHelper.getWeeksAgo(2), FilterHelper.getToday());
+				}
+			});
+
+			adminPreset.add(new PresetDateRange() {
+
+				@Override
+				public String getName() {
+					return "30 days";
+				}
+
+				@Override
+				public DateRange getDateRange() {
+					return FilterHelper.createRange(FilterHelper.getDaysAgo(30), FilterHelper.getToday());
+				}
+			});
+		}
+
+		return adminPreset;
 
 	}
 

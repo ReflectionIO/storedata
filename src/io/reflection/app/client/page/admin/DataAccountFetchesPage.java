@@ -82,7 +82,7 @@ public class DataAccountFetchesPage extends Page implements NavigationEventHandl
 		DataAccountFetchController.get().addDataDisplay(dataAccountFetchTable);
 		simplePager.setDisplay(dataAccountFetchTable);
 
-		dateSelector.addFixedRanges(FilterHelper.getDefaultFetchDateRanges());
+		dateSelector.addFixedRanges(FilterHelper.getAdminDateRanges());
 
 		updateFromFilter();
 

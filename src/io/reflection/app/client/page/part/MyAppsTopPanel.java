@@ -50,7 +50,7 @@ public class MyAppsTopPanel extends Composite {
 		FilterHelper.addStores(appStore, SessionController.get().isLoggedInUserAdmin());
 		FilterHelper.addCountries(country, SessionController.get().isLoggedInUserAdmin());
 
-		dateSelector.addFixedRanges(FilterHelper.getDefaultUserDataDateRanges());
+		dateSelector.addFixedRanges(FilterHelper.getDefaultDateRanges());
 
 		// Reset linked account id in filter, to avoid problems after refreshing the page
 		FilterController.get().getFilter().setLinkedAccountId(0L);

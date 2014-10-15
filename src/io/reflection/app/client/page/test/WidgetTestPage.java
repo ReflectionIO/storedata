@@ -41,7 +41,7 @@ public class WidgetTestPage extends Page {
 	public WidgetTestPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		dateSelector.addFixedRanges(FilterHelper.getDefaultUserDataDateRanges());
+		dateSelector.addFixedRanges(FilterHelper.getDefaultDateRanges());
 
 		picker1.addFixedRange(new FixedDateRange() {
 

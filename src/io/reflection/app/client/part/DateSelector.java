@@ -49,8 +49,14 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 
 	interface DateSelectorUiBinder extends UiBinder<Widget, DateSelector> {}
 
-	private List<DefaultPresetDateRange> fixedRanges = null;
-	private HashMap<DefaultPresetDateRange, Anchor> lookupFixedDateRangeAnchor = new HashMap<DefaultPresetDateRange, Anchor>();
+	public interface PresetDateRange {
+		String getName();
+
+		DateRange getDateRange();
+	}
+
+	private List<PresetDateRange> fixedRanges = null;
+	private HashMap<PresetDateRange, Anchor> lookupFixedDateRangeAnchor = new HashMap<PresetDateRange, Anchor>();
 	List<HandlerRegistration> fixedRangeRegistrations = new ArrayList<HandlerRegistration>();
 
 	interface DateSelectorStyle extends CssResource {
@@ -99,10 +105,10 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 
 	}
 
-	public void addFixedRange(DefaultPresetDateRange fixedRange) {
+	public void addFixedRange(PresetDateRange fixedRange) {
 		if (fixedRange != null) {
 			if (fixedRanges == null) {
-				fixedRanges = new ArrayList<DefaultPresetDateRange>();
+				fixedRanges = new ArrayList<PresetDateRange>();
 			}
 
 			fixedRanges.add(fixedRange);
@@ -111,10 +117,10 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 		}
 	}
 
-	public void addFixedRanges(List<DefaultPresetDateRange> fixedRanges) {
+	public void addFixedRanges(List<PresetDateRange> fixedRanges) {
 		if (fixedRanges != null && fixedRanges.size() > 0) {
 			if (this.fixedRanges == null) {
-				this.fixedRanges = new ArrayList<DefaultPresetDateRange>();
+				this.fixedRanges = new ArrayList<PresetDateRange>();
 			}
 
 			this.fixedRanges.addAll(fixedRanges);
@@ -130,7 +136,7 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 		fixedRangeRegistrations.clear();
 		fixedRangesPanel.clear();
 		lookupFixedDateRangeAnchor.clear();
-		for (final DefaultPresetDateRange fixedRange : fixedRanges) {
+		for (final PresetDateRange fixedRange : fixedRanges) {
 			final Anchor fixedRangeLink = new Anchor(fixedRange.getName());
 			fixedRangeLink.getElement().addClassName(style.preset());
 			lookupFixedDateRangeAnchor.put(fixedRange, fixedRangeLink);
@@ -217,7 +223,7 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 	private Anchor lookForDefaultLink() {
 		Anchor link = null;
 		if (fixedRanges != null && dateBoxTo.getValue().equals(FilterHelper.getToday())) {
-			for (DefaultPresetDateRange fixedRange : fixedRanges) {
+			for (PresetDateRange fixedRange : fixedRanges) {
 				if (dateBoxFrom.getValue().equals(fixedRange.getDateRange().getFrom())) {
 					link = lookupFixedDateRangeAnchor.get(fixedRange);
 					break;
@@ -232,7 +238,7 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 	 */
 	private void clearLinkHighlight() {
 		if (fixedRanges != null) {
-			for (DefaultPresetDateRange fixedRange : fixedRanges) {
+			for (PresetDateRange fixedRange : fixedRanges) {
 				lookupFixedDateRangeAnchor.get(fixedRange).getElement().removeClassName(style.highlight());
 			}
 		}
@@ -306,7 +312,7 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 			icon.addClassName(style.disable());
 		}
 		if (fixedRanges != null) {
-			for (DefaultPresetDateRange fixedRange : fixedRanges) {
+			for (PresetDateRange fixedRange : fixedRanges) {
 				if (enabled) {
 					lookupFixedDateRangeAnchor.get(fixedRange).getElement().removeClassName(style.disable());
 				} else {

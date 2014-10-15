@@ -48,7 +48,7 @@ public class ItemTopPanel extends Composite {
 		// FilterHelper.addStores(mAppStore);
 		FilterHelper.addCountries(mCountry, SessionController.get().isLoggedInUserAdmin());
 
-		dateSelector.addFixedRanges(FilterHelper.getDefaultUserDataDateRanges());
+		dateSelector.addFixedRanges(FilterHelper.getDefaultDateRanges());
 
 		updateFromFilter();
 	}
