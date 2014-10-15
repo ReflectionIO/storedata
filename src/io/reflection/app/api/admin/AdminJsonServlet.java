@@ -10,6 +10,7 @@ package io.reflection.app.api.admin;
 
 import io.reflection.app.api.admin.shared.call.AssignPermissionRequest;
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
+import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesRequest;
 import io.reflection.app.api.admin.shared.call.GetDataAccountsRequest;
 import io.reflection.app.api.admin.shared.call.GetEmailTemplatesRequest;
 import io.reflection.app.api.admin.shared.call.GetFeedFetchesRequest;
@@ -128,6 +129,10 @@ public final class AdminJsonServlet extends JsonServlet {
 			GetDataAccountsRequest input = new GetDataAccountsRequest();
 			input.fromJson(request);
 			output = service.getDataAccounts(input).toString();
+		} else if ("GetDataAccountFetches".equals(action)) {
+			GetDataAccountFetchesRequest input = new GetDataAccountFetchesRequest();
+			input.fromJson(request);
+			output = service.getDataAccountFetches(input).toString();
 		}
 
 		return output;

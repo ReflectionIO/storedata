@@ -99,6 +99,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	// @UiField InlineHyperlink upgradeAccountLink;
 
 	@UiField LIElement feedBrowserItem;
+	@UiField InlineHyperlink feedBrowserLink;
 
 	@UiField UListElement login;
 
@@ -113,6 +114,9 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@UiField LIElement permissionsItem;
 
 	@UiField LIElement dataAccountsItem;
+
+	@UiField LIElement dataAccountFetchesItem;
+	@UiField InlineHyperlink dataAccountFetchesLink;
 
 	@UiField LIElement emailTemplatesItem;
 
@@ -235,6 +239,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			items.add(rolesItem);
 			items.add(permissionsItem);
 			items.add(dataAccountsItem);
+			items.add(dataAccountFetchesItem);
 			items.add(emailTemplatesItem);
 			items.add(itemsItem);
 			items.add(categoriesItem);
@@ -302,6 +307,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			highlight(adminDropdown, permissionsItem);
 		} else if (PageType.DataAccountsPageType.equals(current.getPage())) {
 			highlight(adminDropdown, dataAccountsItem);
+		} else if (PageType.DataAccountFetchesPageType.equals(current.getPage())) {
+			highlight(adminDropdown, dataAccountFetchesItem);
 			// } else if (PageType.UpgradePageType.equals(current.getPage())) {
 			// highlight(upgradeAccountItem);
 		} else if (PageType.EmailTemplatesPageType.equals(current.getPage())) {
@@ -329,6 +336,10 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			myAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(),
 					FilterController.get().asMyAppsFilterString()));
 		}
+		feedBrowserLink.setTargetHistoryToken(PageType.FeedBrowserPageType.asTargetHistoryToken("view", FilterController.get().asFeedFilterString()));
+		dataAccountFetchesLink.setTargetHistoryToken(PageType.DataAccountFetchesPageType.asTargetHistoryToken(FilterController.get()
+				.asDataAccountFetchFilterString()));
+
 	}
 
 	/*

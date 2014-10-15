@@ -70,6 +70,9 @@
 			
 			<xsd:element name="GetDataAccountsInput" type="sda:GetDataAccountsRequest" />
 			<xsd:element name="GetDataAccountsOutput" type="sda:GetDataAccountsResponse" />
+			
+			<xsd:element name="GetDataAccountFetchesInput" type="sda:GetDataAccountFetchesRequest" />
+			<xsd:element name="GetDataAccountFetchesOutput" type="sda:GetDataAccountFetchesResponse" />
 
 			<xsd:complexType name="GetUsersRequest">
 				<xsd:complexContent>
@@ -141,6 +144,8 @@
 							<xsd:element name="pager" type="sd:Pager" />
 							<xsd:element name="listTypes" type="xsd:string" maxOccurs="unbounded" />
 						</xsd:sequence>
+						<xsd:attribute name="start" type="xsd:dateTime" />
+                        <xsd:attribute name="end" type="xsd:dateTime" />
 					</xsd:extension>
 				</xsd:complexContent>
 			</xsd:complexType>
@@ -526,6 +531,28 @@
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>
+            
+            <xsd:complexType name="GetDataAccountFetchesRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                        	<xsd:element name="dataAccount" type="sd:DataAccount" maxOccurs="1" />
+                            <xsd:element name="pager" type="sd:Pager" />
+                        </xsd:sequence>                        
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="GetDataAccountFetchesResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                        <xsd:sequence>
+                            <xsd:element name="dataAccountFetches" type="sd:DataAccountFetch" maxOccurs="unbounded" />                            
+                            <xsd:element name="pager" type="sd:Pager" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
 
 		</xsd:schema>
 	</wsdl:types>
@@ -683,6 +710,13 @@
 	<wsdl:message name="GetDataAccountsResponse">
 		<wsdl:part name="output" element="sda:GetDataAccountsOutput" />
 	</wsdl:message>
+	
+	<wsdl:message name="GetDataAccountFetchesRequest">
+		<wsdl:part name="input" element="sda:GetDataAccountFetchesInput" />
+	</wsdl:message>
+	<wsdl:message name="GetDataAccountFetchesResponse">
+		<wsdl:part name="output" element="sda:GetDataAccountFetchesOutput" />
+	</wsdl:message>
 
 	<wsdl:portType name="admin">
 		<wsdl:operation name="GetUsers">
@@ -787,6 +821,11 @@
 		<wsdl:operation name="GetDataAccounts">
 			<wsdl:input message="sda:GetDataAccountsRequest" />
 			<wsdl:output message="sda:GetDataAccountsResponse" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetDataAccountFetches">
+			<wsdl:input message="sda:GetDataAccountFetchesRequest" />
+			<wsdl:output message="sda:GetDataAccountFetchesResponse" />
 		</wsdl:operation>
 	</wsdl:portType>
 	
@@ -997,6 +1036,16 @@
 		
 		<wsdl:operation name="GetDataAccounts">
 			<soap:operation soapAction="http://app.reflection.io/admin/GetDataAccounts" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetDataAccountFetches">
+			<soap:operation soapAction="http://app.reflection.io/admin/GetDataAccountFetches" />
 			<wsdl:input>
 				<soap:body use="literal" />
 			</wsdl:input>

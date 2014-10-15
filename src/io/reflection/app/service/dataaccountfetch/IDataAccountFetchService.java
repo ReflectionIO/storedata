@@ -79,4 +79,38 @@ public interface IDataAccountFetchService extends IService {
 	 */
 	public DataAccountFetch getDateDataAccountFetch(DataAccount dataAccount, Date date) throws DataAccessException;
 
+	/**
+	 * 
+	 * @param dataAccount
+	 * @param pager
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<DataAccountFetch> getDataAccountFetches(DataAccount dataAccount, Date start, Date end, Pager pager) throws DataAccessException;
+
+	/**
+	 * 
+	 * @param pager
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<DataAccountFetch> getDataAccountFetches(Date start, Date end, Pager pager) throws DataAccessException;
+
+	/**
+	 * 
+	 * @param dataAccount
+	 * @param pager
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public Long getDataAccountFetchesCount(DataAccount dataAccount, Date start, Date end) throws DataAccessException;
+
+	/**
+	 * 
+	 * @param pager
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public Long getDataAccountFetchesCount(Date start, Date end) throws DataAccessException;
+
 }

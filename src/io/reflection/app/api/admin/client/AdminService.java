@@ -12,6 +12,8 @@ import io.reflection.app.api.admin.shared.call.AssignPermissionRequest;
 import io.reflection.app.api.admin.shared.call.AssignPermissionResponse;
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
 import io.reflection.app.api.admin.shared.call.AssignRoleResponse;
+import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesRequest;
+import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesResponse;
 import io.reflection.app.api.admin.shared.call.GetDataAccountsRequest;
 import io.reflection.app.api.admin.shared.call.GetDataAccountsResponse;
 import io.reflection.app.api.admin.shared.call.GetEmailTemplatesRequest;
@@ -785,6 +787,39 @@ public final class AdminService extends JsonService {
 		} catch (RequestException exception) {
 			output.onFailure(exception);
 			onCallFailure(AdminService.this, AdminMethodGetDataAccounts, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String AdminMethodGetDataAccountFetches = "GetDataAccountFetches";
+
+	public Request getDataAccountFetches(final GetDataAccountFetchesRequest input, final AsyncCallback<GetDataAccountFetchesResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(AdminMethodGetDataAccountFetches, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						GetDataAccountFetchesResponse outputParameter = new GetDataAccountFetchesResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodGetDataAccountFetches, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodGetDataAccountFetches, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(AdminService.this, AdminMethodGetDataAccountFetches, input, exception);
+				}
+			});
+			onCallStart(AdminService.this, AdminMethodGetDataAccountFetches, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodGetDataAccountFetches, input, exception);
 		}
 		return handle;
 	}
