@@ -15,6 +15,8 @@ import io.reflection.app.api.admin.shared.call.AssignPermissionRequest;
 import io.reflection.app.api.admin.shared.call.AssignPermissionResponse;
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
 import io.reflection.app.api.admin.shared.call.AssignRoleResponse;
+import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesRequest;
+import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesResponse;
 import io.reflection.app.api.admin.shared.call.GetDataAccountsRequest;
 import io.reflection.app.api.admin.shared.call.GetDataAccountsResponse;
 import io.reflection.app.api.admin.shared.call.GetEmailTemplatesRequest;
@@ -82,6 +84,7 @@ import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -903,6 +906,62 @@ public final class Admin extends ActionHandler {
 			output.error = convertToErrorAndLog(LOG, e);
 		}
 		LOG.finer("Exiting getDataAccounts");
+		return output;
+	}
+
+	public GetDataAccountFetchesResponse getDataAccountFetches(GetDataAccountFetchesRequest input) {
+		LOG.finer("Entering getDataAccountFetches");
+		GetDataAccountFetchesResponse output = new GetDataAccountFetchesResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+						ApiError.InvalidValueNull.getMessage("GetDataAccountFetchesRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+
+			Calendar cal = Calendar.getInstance();
+
+			if (input.end == null) input.end = cal.getTime();
+
+			if (input.start == null) {
+				cal.setTime(input.end);
+				cal.add(Calendar.DAY_OF_YEAR, -30);
+				input.start = cal.getTime();
+			}
+
+			long diff = input.end.getTime() - input.start.getTime();
+			long diffDays = diff / (24 * 60 * 60 * 1000);
+
+			if (diffDays > 30 || diffDays < 0)
+				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
+						ApiError.DateRangeOutOfBounds.getMessage("0-30 days: input.end - input.start"));
+
+			if (input.dataAccount != null && input.dataAccount.id != null) {
+				output.dataAccountFetches = DataAccountFetchServiceProvider.provide().getDataAccountFetches(input.dataAccount, input.start, input.end,
+						input.pager);
+			} else {
+				output.dataAccountFetches = DataAccountFetchServiceProvider.provide().getDataAccountFetches(input.start, input.end, input.pager);
+			}
+
+			output.pager = input.pager;
+			if (input.dataAccount != null && input.dataAccount.id != null) {
+				updatePager(output.pager, output.dataAccountFetches, input.pager.totalCount == null ? DataAccountFetchServiceProvider.provide()
+						.getDataAccountFetchesCount(input.dataAccount, input.start, input.end) : null);
+			} else {
+				updatePager(output.pager, output.dataAccountFetches, input.pager.totalCount == null ? DataAccountFetchServiceProvider.provide()
+						.getDataAccountFetchesCount(input.start, input.end) : null);
+			}
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getDataAccountFetches");
 		return output;
 	}
 }
