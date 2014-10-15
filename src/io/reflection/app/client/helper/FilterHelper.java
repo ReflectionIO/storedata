@@ -11,6 +11,7 @@ import io.reflection.app.client.controller.CountryController;
 import io.reflection.app.client.controller.ForumController;
 import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.StoreController;
+import io.reflection.app.client.part.DefaultPresetDateRange;
 import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
@@ -63,7 +64,7 @@ public class FilterHelper {
 				list.addItem(linkedAccount.username, linkedAccount.id.toString());
 			}
 		}
-	}	
+	}
 
 	/**
 	 * Add list of stores to ListBox
@@ -87,10 +88,10 @@ public class FilterHelper {
 			list.setEnabled(false);
 		}
 	}
-	
+
 	public static void addStores(ListBox list) {
 		addStores(list, false);
-	}	
+	}
 
 	/**
 	 * Add list of countries to ListBox
@@ -114,8 +115,8 @@ public class FilterHelper {
 			list.addItem(usCountry.name, usCountry.a2Code);
 			list.setEnabled(false);
 		}
-	}	
-	
+	}
+
 	public static void addCountries(ListBox list) {
 		addCountries(list, false);
 	}
@@ -159,7 +160,7 @@ public class FilterHelper {
 			list.setEnabled(false);
 		}
 	}
-	
+
 	public static void addCategories(ListBox list) {
 		addCategories(list, false);
 	}
@@ -299,6 +300,31 @@ public class FilterHelper {
 		dateRange.setTo(to);
 
 		return dateRange;
+	}
+
+	public static List<DefaultPresetDateRange> getDefaultFetchDateRanges() {
+
+		List<DefaultPresetDateRange> dateSelectorPresetRanges = new ArrayList<DefaultPresetDateRange>();
+		dateSelectorPresetRanges.add(new DefaultPresetDateRange("1 day", createRange(getDaysAgo(1), getToday())));
+		dateSelectorPresetRanges.add(new DefaultPresetDateRange("1 wk", createRange(getWeeksAgo(1), getToday())));
+		dateSelectorPresetRanges.add(new DefaultPresetDateRange("2 wks", createRange(getWeeksAgo(2), getToday())));
+		dateSelectorPresetRanges.add(new DefaultPresetDateRange("30 days", createRange(getDaysAgo(30), getToday())));
+
+		return dateSelectorPresetRanges;
+
+	}
+
+	public static List<DefaultPresetDateRange> getDefaultUserDataDateRanges() {
+
+		List<DefaultPresetDateRange> dateSelectorPresetRanges = new ArrayList<DefaultPresetDateRange>();
+		dateSelectorPresetRanges.add(new DefaultPresetDateRange("1 wk", createRange(getWeeksAgo(1), getToday())));
+		dateSelectorPresetRanges.add(new DefaultPresetDateRange("2 wks", createRange(getWeeksAgo(2), getToday())));
+		dateSelectorPresetRanges.add(new DefaultPresetDateRange("4 wks", createRange(getWeeksAgo(4), getToday())));
+		dateSelectorPresetRanges.add(new DefaultPresetDateRange("6 wks", createRange(getWeeksAgo(6), getToday())));
+		dateSelectorPresetRanges.add(new DefaultPresetDateRange("8 wks", createRange(getWeeksAgo(8), getToday())));
+
+		return dateSelectorPresetRanges;
+
 	}
 
 }

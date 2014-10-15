@@ -7,15 +7,11 @@
 //
 package io.reflection.app.client.page.part;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.part.DateSelector;
-import io.reflection.app.client.part.DateSelector.PresetDateRange;
 import io.reflection.app.client.part.datatypes.DateRange;
 
 import com.google.gwt.core.client.GWT;
@@ -54,74 +50,7 @@ public class MyAppsTopPanel extends Composite {
 		FilterHelper.addStores(appStore, SessionController.get().isLoggedInUserAdmin());
 		FilterHelper.addCountries(country, SessionController.get().isLoggedInUserAdmin());
 
-		List<PresetDateRange> dateSelectorPresetRanges = new ArrayList<PresetDateRange>();
-
-		dateSelectorPresetRanges.add(new PresetDateRange() {
-
-			@Override
-			public String getName() {
-				return "1 wk";
-			}
-
-			@Override
-			public DateRange getDateRange() {
-				return FilterHelper.createRange(FilterHelper.getWeeksAgo(1), FilterHelper.getToday());
-			}
-		});
-
-		dateSelectorPresetRanges.add(new PresetDateRange() {
-
-			@Override
-			public String getName() {
-				return "2 wks";
-			}
-
-			@Override
-			public DateRange getDateRange() {
-				return FilterHelper.createRange(FilterHelper.getWeeksAgo(2), FilterHelper.getToday());
-			}
-		});
-
-		dateSelectorPresetRanges.add(new PresetDateRange() {
-
-			@Override
-			public String getName() {
-				return "4 wks";
-			}
-
-			@Override
-			public DateRange getDateRange() {
-				return FilterHelper.createRange(FilterHelper.getWeeksAgo(4), FilterHelper.getToday());
-			}
-		});
-
-		dateSelectorPresetRanges.add(new PresetDateRange() {
-
-			@Override
-			public String getName() {
-				return "6 wks";
-			}
-
-			@Override
-			public DateRange getDateRange() {
-				return FilterHelper.createRange(FilterHelper.getWeeksAgo(6), FilterHelper.getToday());
-			}
-		});
-
-		dateSelectorPresetRanges.add(new PresetDateRange() {
-
-			@Override
-			public String getName() {
-				return "8 wks";
-			}
-
-			@Override
-			public DateRange getDateRange() {
-				return FilterHelper.createRange(FilterHelper.getWeeksAgo(8), FilterHelper.getToday());
-			}
-		});
-
-		dateSelector.addFixedRanges(dateSelectorPresetRanges);
+		dateSelector.addFixedRanges(FilterHelper.getDefaultUserDataDateRanges());
 
 		// Reset linked account id in filter, to avoid problems after refreshing the page
 		FilterController.get().getFilter().setLinkedAccountId(0L);

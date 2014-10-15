@@ -7,6 +7,9 @@
 //
 package io.reflection.app.client.page.admin;
 
+import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesRequest;
+import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesResponse;
+import io.reflection.app.api.admin.shared.call.event.GetDataAccountFetchesEventHandler;
 import io.reflection.app.client.cell.StyledButtonCell;
 import io.reflection.app.client.controller.DataAccountFetchController;
 import io.reflection.app.client.controller.EventController;
@@ -23,7 +26,6 @@ import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.BootstrapGwtDatePicker;
 import io.reflection.app.client.part.DateSelector;
-import io.reflection.app.client.part.DateSelector.PresetDateRange;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.client.res.Images;
@@ -31,8 +33,6 @@ import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
 import io.reflection.app.shared.util.FormattingHelper;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.cell.client.Cell.Context;
@@ -51,12 +51,13 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author Stefano Capuzzi (stefanocapuzzi)
  * 
  */
-public class DataAccountFetchesPage extends Page implements NavigationEventHandler, FilterEventHandler {
+public class DataAccountFetchesPage extends Page implements NavigationEventHandler, FilterEventHandler, GetDataAccountFetchesEventHandler {
 
 	private static DataAccountFetchesPageUiBinder uiBinder = GWT.create(DataAccountFetchesPageUiBinder.class);
 
@@ -81,61 +82,7 @@ public class DataAccountFetchesPage extends Page implements NavigationEventHandl
 		DataAccountFetchController.get().addDataDisplay(dataAccountFetchTable);
 		simplePager.setDisplay(dataAccountFetchTable);
 
-		List<PresetDateRange> dateSelectorPresetRanges = new ArrayList<PresetDateRange>();
-
-		dateSelectorPresetRanges.add(new PresetDateRange() {
-
-			@Override
-			public String getName() {
-				return "1 day";
-			}
-
-			@Override
-			public DateRange getDateRange() {
-				return FilterHelper.createRange(FilterHelper.getDaysAgo(1), FilterHelper.getToday());
-			}
-		});
-
-		dateSelectorPresetRanges.add(new PresetDateRange() {
-
-			@Override
-			public String getName() {
-				return "1 wk";
-			}
-
-			@Override
-			public DateRange getDateRange() {
-				return FilterHelper.createRange(FilterHelper.getWeeksAgo(1), FilterHelper.getToday());
-			}
-		});
-
-		dateSelectorPresetRanges.add(new PresetDateRange() {
-
-			@Override
-			public String getName() {
-				return "2 wks";
-			}
-
-			@Override
-			public DateRange getDateRange() {
-				return FilterHelper.createRange(FilterHelper.getWeeksAgo(2), FilterHelper.getToday());
-			}
-		});
-
-		dateSelectorPresetRanges.add(new PresetDateRange() {
-
-			@Override
-			public String getName() {
-				return "30 days";
-			}
-
-			@Override
-			public DateRange getDateRange() {
-				return FilterHelper.createRange(FilterHelper.getDaysAgo(30), FilterHelper.getToday());
-			}
-		});
-
-		dateSelector.addFixedRanges(dateSelectorPresetRanges);
+		dateSelector.addFixedRanges(FilterHelper.getDefaultFetchDateRanges());
 
 		updateFromFilter();
 
@@ -273,6 +220,7 @@ public class DataAccountFetchesPage extends Page implements NavigationEventHandl
 		super.onAttach();
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
+		register(EventController.get().addHandlerToSource(GetDataAccountFetchesEventHandler.TYPE, DataAccountFetchController.get(), this));
 	}
 
 	/*
@@ -344,5 +292,33 @@ public class DataAccountFetchesPage extends Page implements NavigationEventHandl
 				PageType.DataAccountFetchesPageType.show(FilterController.get().asDataAccountFetchFilterString());
 			}
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.api.admin.shared.call.event.GetDataAccountFetchesEventHandler#getDataAccountFetchesSuccess(io.reflection.app.api.admin.shared.call.
+	 * GetDataAccountFetchesRequest, io.reflection.app.api.admin.shared.call.GetDataAccountFetchesResponse)
+	 */
+	@Override
+	public void getDataAccountFetchesSuccess(GetDataAccountFetchesRequest input, GetDataAccountFetchesResponse output) {
+		if (output.status.equals(StatusType.StatusTypeSuccess)) {
+
+		} else {
+			DataAccountFetchController.get().updateRowCount(0, true);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.api.admin.shared.call.event.GetDataAccountFetchesEventHandler#getDataAccountFetchesFailure(io.reflection.app.api.admin.shared.call.
+	 * GetDataAccountFetchesRequest, java.lang.Throwable)
+	 */
+	@Override
+	public void getDataAccountFetchesFailure(GetDataAccountFetchesRequest input, Throwable caught) {
+		DataAccountFetchController.get().updateRowCount(0, true);
 	}
 }

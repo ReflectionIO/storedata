@@ -12,7 +12,6 @@ import io.reflection.app.client.page.Page;
 import io.reflection.app.client.part.DateRangeBox;
 import io.reflection.app.client.part.DateRangePicker;
 import io.reflection.app.client.part.DateRangePicker.FixedDateRange;
-import io.reflection.app.client.part.DateSelector.PresetDateRange;
 import io.reflection.app.client.part.DateSelector;
 import io.reflection.app.client.part.datatypes.DateRange;
 
@@ -42,74 +41,7 @@ public class WidgetTestPage extends Page {
 	public WidgetTestPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		List<PresetDateRange> dateSelectorPresetRanges = new ArrayList<PresetDateRange>();
-
-		dateSelectorPresetRanges.add(new PresetDateRange() {
-
-			@Override
-			public String getName() {
-				return "1 wk";
-			}
-
-			@Override
-			public DateRange getDateRange() {
-				return FilterHelper.createRange(FilterHelper.getWeeksAgo(1), FilterHelper.getToday());
-			}
-		});
-
-		dateSelectorPresetRanges.add(new PresetDateRange() {
-
-			@Override
-			public String getName() {
-				return "2 wks";
-			}
-
-			@Override
-			public DateRange getDateRange() {
-				return FilterHelper.createRange(FilterHelper.getWeeksAgo(2), FilterHelper.getToday());
-			}
-		});
-
-		dateSelectorPresetRanges.add(new PresetDateRange() {
-
-			@Override
-			public String getName() {
-				return "4 wks";
-			}
-
-			@Override
-			public DateRange getDateRange() {
-				return FilterHelper.createRange(FilterHelper.getWeeksAgo(4), FilterHelper.getToday());
-			}
-		});
-
-		dateSelectorPresetRanges.add(new PresetDateRange() {
-
-			@Override
-			public String getName() {
-				return "6 wks";
-			}
-
-			@Override
-			public DateRange getDateRange() {
-				return FilterHelper.createRange(FilterHelper.getWeeksAgo(6), FilterHelper.getToday());
-			}
-		});
-
-		dateSelectorPresetRanges.add(new PresetDateRange() {
-
-			@Override
-			public String getName() {
-				return "8 wks";
-			}
-
-			@Override
-			public DateRange getDateRange() {
-				return FilterHelper.createRange(FilterHelper.getWeeksAgo(8), FilterHelper.getToday());
-			}
-		});
-
-		dateSelector.addFixedRanges(dateSelectorPresetRanges);
+		dateSelector.addFixedRanges(FilterHelper.getDefaultUserDataDateRanges());
 
 		picker1.addFixedRange(new FixedDateRange() {
 
