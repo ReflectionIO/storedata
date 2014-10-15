@@ -15,6 +15,7 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
+import io.reflection.app.helpers.SqlQueryHelper;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
@@ -302,11 +303,10 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 
 		String linkedAccountPart = "";
 		if (dataAccount != null && dataAccount.id != null) {
-			linkedAccountPart = "AND `linkedaccountid`=" + dataAccount.id.longValue();
+			linkedAccountPart = "`linkedaccountid`=" + dataAccount.id.longValue() + " AND";
 		}
-		String getDataAccountFetchesQuery = String.format(
-				"SELECT * FROM `dataaccountfetch` WHERE (`date` BETWEEN FROM_UNIXTIME(%d) AND FROM_UNIXTIME(%d)) %s AND `deleted`='n'", start.getTime() / 1000,
-				end.getTime() / 1000, linkedAccountPart);
+		String getDataAccountFetchesQuery = String.format("SELECT * FROM `dataaccountfetch` WHERE %s %s `deleted`='n'",
+				SqlQueryHelper.beforeAfterQuery(end, start), linkedAccountPart);
 
 		if (pager != null) {
 			String sortByQuery = null;
@@ -381,11 +381,10 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 
 		String linkedAccountPart = "";
 		if (dataAccount != null && dataAccount.id != null) {
-			linkedAccountPart = "AND `linkedaccountid`=" + dataAccount.id.longValue();
+			linkedAccountPart = "`linkedaccountid`=" + dataAccount.id.longValue() + " AND";
 		}
-		String getDataAccountFetchesQuery = String.format(
-				"SELECT COUNT(1) AS `count` FROM `dataaccountfetch` WHERE (`date` BETWEEN FROM_UNIXTIME(%d) AND FROM_UNIXTIME(%d)) %s AND `deleted`='n'",
-				start.getTime() / 1000, end.getTime() / 1000, linkedAccountPart);
+		String getDataAccountFetchesQuery = String.format("SELECT COUNT(1) AS `count` FROM `dataaccountfetch` WHERE %s %s `deleted`='n'",
+				SqlQueryHelper.beforeAfterQuery(end, start), linkedAccountPart);
 
 		try {
 			dataAccountFetchesCountConnection.connect();
