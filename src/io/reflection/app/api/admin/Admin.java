@@ -37,6 +37,8 @@ import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersCountResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersResponse;
+import io.reflection.app.api.admin.shared.call.JoinDataAccountRequest;
+import io.reflection.app.api.admin.shared.call.JoinDataAccountResponse;
 import io.reflection.app.api.admin.shared.call.RevokePermissionRequest;
 import io.reflection.app.api.admin.shared.call.RevokePermissionResponse;
 import io.reflection.app.api.admin.shared.call.RevokeRoleRequest;
@@ -45,6 +47,10 @@ import io.reflection.app.api.admin.shared.call.SendEmailRequest;
 import io.reflection.app.api.admin.shared.call.SendEmailResponse;
 import io.reflection.app.api.admin.shared.call.SetPasswordRequest;
 import io.reflection.app.api.admin.shared.call.SetPasswordResponse;
+import io.reflection.app.api.admin.shared.call.TriggerDataAccountFetchIngestRequest;
+import io.reflection.app.api.admin.shared.call.TriggerDataAccountFetchIngestResponse;
+import io.reflection.app.api.admin.shared.call.TriggerDataAccountGatherRequest;
+import io.reflection.app.api.admin.shared.call.TriggerDataAccountGatherResponse;
 import io.reflection.app.api.admin.shared.call.TriggerGatherRequest;
 import io.reflection.app.api.admin.shared.call.TriggerGatherResponse;
 import io.reflection.app.api.admin.shared.call.TriggerIngestRequest;
@@ -962,6 +968,45 @@ public final class Admin extends ActionHandler {
 			output.error = convertToErrorAndLog(LOG, e);
 		}
 		LOG.finer("Exiting getDataAccountFetches");
+		return output;
+	}
+
+	public TriggerDataAccountGatherResponse triggerDataAccountGather(TriggerDataAccountGatherRequest input) {
+		LOG.finer("Entering triggerDataAccountGather");
+		TriggerDataAccountGatherResponse output = new TriggerDataAccountGatherResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting triggerDataAccountGather");
+		return output;
+	}
+
+	public TriggerDataAccountFetchIngestResponse triggerDataAccountFetchIngest(TriggerDataAccountFetchIngestRequest input) {
+		LOG.finer("Entering triggerDataAccountFetchIngest");
+		TriggerDataAccountFetchIngestResponse output = new TriggerDataAccountFetchIngestResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting triggerDataAccountFetchIngest");
+		return output;
+	}
+
+	public JoinDataAccountResponse joinDataAccount(JoinDataAccountRequest input) {
+		LOG.finer("Entering joinDataAccount");
+		JoinDataAccountResponse output = new JoinDataAccountResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting joinDataAccount");
 		return output;
 	}
 }
