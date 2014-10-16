@@ -2,7 +2,7 @@
 //  DataAccountController.java
 //  storedata
 //
-//  Created by Stefano Capuzzi (stefanocapuzzi) on 7 Oct 2014.
+//  Created by Stefano Capuzzi on 7 Oct 2014.
 //  Copyright © 2014 Reflection.io Ltd. All rights reserved.
 //
 package io.reflection.app.client.controller;
@@ -10,8 +10,12 @@ package io.reflection.app.client.controller;
 import io.reflection.app.api.admin.client.AdminService;
 import io.reflection.app.api.admin.shared.call.GetDataAccountsRequest;
 import io.reflection.app.api.admin.shared.call.GetDataAccountsResponse;
+import io.reflection.app.api.admin.shared.call.JoinDataAccountRequest;
+import io.reflection.app.api.admin.shared.call.JoinDataAccountResponse;
 import io.reflection.app.api.admin.shared.call.event.GetDataAccountsEventHandler.GetDataAccountsFailure;
 import io.reflection.app.api.admin.shared.call.event.GetDataAccountsEventHandler.GetDataAccountsSuccess;
+import io.reflection.app.api.admin.shared.call.event.JoinDataAccountEventHandler.JoinDataAccountFailure;
+import io.reflection.app.api.admin.shared.call.event.JoinDataAccountEventHandler.JoinDataAccountSuccess;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.datatypes.shared.DataAccount;
@@ -26,7 +30,7 @@ import com.google.gwt.view.client.Range;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**
- * @author Stefano Capuzzi (stefanocapuzzi)
+ * @author Stefano Capuzzi
  * 
  */
 public class DataAccountController extends AsyncDataProvider<DataAccount> implements ServiceConstants {
@@ -92,6 +96,34 @@ public class DataAccountController extends AsyncDataProvider<DataAccount> implem
 			public void onFailure(Throwable caught) {
 				EventController.get().fireEventFromSource(new GetDataAccountsFailure(input, caught), DataAccountController.this);
 			}
+		});
+	}
+
+	public void joinDataAccount(DataAccount dataAccount) {
+		AdminService service = ServiceCreator.createAdminService();
+
+		final JoinDataAccountRequest input = new JoinDataAccountRequest();
+		input.accessCode = ACCESS_CODE;
+
+		input.session = SessionController.get().getSessionForApiCall();
+
+		input.dataAccount = dataAccount;
+
+		service.joinDataAccount(input, new AsyncCallback<JoinDataAccountResponse>() {
+
+			@Override
+			public void onSuccess(JoinDataAccountResponse output) {
+				if (output.status == StatusType.StatusTypeSuccess) {
+
+				}
+				EventController.get().fireEventFromSource(new JoinDataAccountSuccess(input, output), DataAccountController.this);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				EventController.get().fireEventFromSource(new JoinDataAccountFailure(input, caught), DataAccountController.this);
+			}
+
 		});
 	}
 
