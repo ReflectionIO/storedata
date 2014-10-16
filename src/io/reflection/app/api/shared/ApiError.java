@@ -28,9 +28,10 @@ public enum ApiError {
 	SearchQueryNull(100006, "Invalid value null search query for String: {0}.query"),
 
 	PagerStartLargerThanTotal(100007, "Invalid value for start, should be less than totalCount for Pager: {0}.pager"),
-	PagerStartNegative(100008, "Invalid negative value for Long: {0}.pager.start"),
-	PagerCountTooSmall(100009, "Invalid 0 or negative value for Long: {0}.pager.count"),
-	PagerCountTooLarge(100010, "Invalid value, maximum count should be <= 30 Long: {0}.pager.count"),
+
+	NegativeValueNotAllowed(100008, "Invalid negative value for {0}: {1}"),
+	NumericValueTooSmall(100009,  "Invalid value too small ({0}-{1}): {2}"),
+	NumericValueTooLarge(100010, "Invalid value too large ({0}-{1}): {2}"),
 
 	CountryNull(100011, "Invalid value null for Country: {0}.country"),
 	CountryNotFound(100012, "Country not found Country: {0}.country"),

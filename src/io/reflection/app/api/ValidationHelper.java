@@ -46,9 +46,11 @@ import io.reflection.app.service.simplemodelrun.SimpleModelRunServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.service.user.UserServiceProvider;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import com.spacehopperstudios.utility.StringUtils;
 import com.willshex.gson.json.service.server.InputValidationException;
 import com.willshex.gson.json.service.server.ServiceException;
 
@@ -160,12 +162,15 @@ public class ValidationHelper {
 
 		if (pager.start == null) pager.start = Long.valueOf(0);
 
-		if (pager.start < 0) throw new InputValidationException(ApiError.PagerStartNegative.getCode(), ApiError.PagerStartNegative.getMessage(parent));
+		if (pager.start < 0)
+			throw new InputValidationException(ApiError.NegativeValueNotAllowed.getCode(), ApiError.NegativeValueNotAllowed.getMessage(StringUtils.join(
+					Arrays.asList(parent, "pager", "start"), ".")));
 
 		if (pager.count == null) pager.count = Long.valueOf(10);
 
 		if (pager.count.intValue() <= 0)
-			throw new InputValidationException(ApiError.PagerCountTooSmall.getCode(), ApiError.PagerCountTooSmall.getMessage(parent));
+			throw new InputValidationException(ApiError.NumericValueTooSmall.getCode(), ApiError.NumericValueTooSmall.getMessage(StringUtils.join(
+					Arrays.asList(parent, "pager", "count"), "."), 0, 30));
 
 		// TODO: for now this is disabled until we sort something out for it
 		// if (pager.count.intValue() > 30)
