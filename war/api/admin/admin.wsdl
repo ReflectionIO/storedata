@@ -37,7 +37,7 @@
 
 			<xsd:element name="AssignPermissionInput" type="sda:AssignPermissionRequest" />
 			<xsd:element name="AssignPermissionOutput" type="sda:AssignPermissionResponse" />
-			
+
 			<xsd:element name="RevokeRoleInput" type="sda:RevokeRoleRequest" />
 			<xsd:element name="RevokeRoleOutput" type="sda:RevokeRoleResponse" />
 
@@ -64,15 +64,25 @@
 
 			<xsd:element name="GetRolesAndPermissionsInput" type="sda:GetRolesAndPermissionsRequest" />
 			<xsd:element name="GetRolesAndPermissionsOutput" type="sda:GetRolesAndPermissionsResponse" />
-			
+
 			<xsd:element name="UpdateEmailTemplateInput" type="sda:UpdateEmailTemplateRequest" />
 			<xsd:element name="UpdateEmailTemplateOutput" type="sda:UpdateEmailTemplateResponse" />
-			
+
 			<xsd:element name="GetDataAccountsInput" type="sda:GetDataAccountsRequest" />
 			<xsd:element name="GetDataAccountsOutput" type="sda:GetDataAccountsResponse" />
-			
+
 			<xsd:element name="GetDataAccountFetchesInput" type="sda:GetDataAccountFetchesRequest" />
 			<xsd:element name="GetDataAccountFetchesOutput" type="sda:GetDataAccountFetchesResponse" />
+
+			<xsd:element name="TriggerDataAccountGatherInput" type="sda:TriggerDataAccountGatherRequest" />
+			<xsd:element name="TriggerDataAccountGatherOutput" type="sda:TriggerDataAccountGatherResponse" />
+
+			<xsd:element name="TriggerDataAccountFetchIngestInput" type="sda:TriggerDataAccountFetchIngestRequest" />
+			<xsd:element name="TriggerDataAccountFetchIngestOutput" type="sda:TriggerDataAccountFetchIngestResponse" />
+
+			<xsd:element name="JoinDataAccountInput" type="sda:JoinDataAccountRequest" />
+			<xsd:element name="JoinDataAccountOutput" type="sda:JoinDataAccountResponse" />
+
 
 			<xsd:complexType name="GetUsersRequest">
 				<xsd:complexContent>
@@ -115,11 +125,11 @@
 						<xsd:sequence>
 							<xsd:element name="country" type="sd:Country" />
 							<xsd:element name="store" type="sd:Store" />
-                            <xsd:element name="category" type="sd:Category" />
+							<xsd:element name="category" type="sd:Category" />
 						</xsd:sequence>
 						<xsd:attribute name="code" type="xsd:long" />
 						<xsd:attribute name="listType" type="xsd:string" />
-                        <xsd:attribute name="modelType" type="sd:ModelTypeType" />
+						<xsd:attribute name="modelType" type="sd:ModelTypeType" />
 					</xsd:extension>
 				</xsd:complexContent>
 			</xsd:complexType>
@@ -128,8 +138,8 @@
 				<xsd:complexContent>
 					<xsd:extension base="sd:Response">
 						<xsd:sequence>
-                            <xsd:element name="correlation" type="sd:ModelRun" />
-                            <xsd:element name="simple" type="sd:SimpleModelRun" />
+							<xsd:element name="correlation" type="sd:ModelRun" />
+							<xsd:element name="simple" type="sd:SimpleModelRun" />
 						</xsd:sequence>
 					</xsd:extension>
 				</xsd:complexContent>
@@ -145,7 +155,7 @@
 							<xsd:element name="listTypes" type="xsd:string" maxOccurs="unbounded" />
 						</xsd:sequence>
 						<xsd:attribute name="start" type="xsd:dateTime" />
-                        <xsd:attribute name="end" type="xsd:dateTime" />
+						<xsd:attribute name="end" type="xsd:dateTime" />
 					</xsd:extension>
 				</xsd:complexContent>
 			</xsd:complexType>
@@ -167,7 +177,7 @@
 						<xsd:sequence>
 							<xsd:element name="country" type="sd:Country" />
 							<xsd:element name="store" type="sd:Store" />
-                            <xsd:element name="category" type="sd:Category" />
+							<xsd:element name="category" type="sd:Category" />
 							<xsd:element name="listTypes" type="xsd:string" maxOccurs="unbounded" />
 						</xsd:sequence>
 						<xsd:attribute name="code" type="xsd:long" />
@@ -190,7 +200,7 @@
 						<xsd:sequence>
 							<xsd:element name="country" type="sd:Country" />
 							<xsd:element name="store" type="sd:Store" />
-                            <xsd:element name="category" type="sd:Category" />
+							<xsd:element name="category" type="sd:Category" />
 							<xsd:element name="listTypes" type="xsd:string" maxOccurs="unbounded" />
 						</xsd:sequence>
 						<xsd:attribute name="code" type="xsd:long" />
@@ -214,12 +224,12 @@
 						<xsd:sequence>
 							<xsd:element name="country" type="sd:Country" />
 							<xsd:element name="store" type="sd:Store" />
-                            <xsd:element name="category" type="sd:Category" />
+							<xsd:element name="category" type="sd:Category" />
 							<xsd:element name="listTypes" type="xsd:string" maxOccurs="unbounded" />
 							<xsd:element name="feedFetch" type="sd:FeedFetch" />
 						</xsd:sequence>
 						<xsd:attribute name="code" type="xsd:long" />
-                        <xsd:attribute name="modelType" type="sd:ModelTypeType" />
+						<xsd:attribute name="modelType" type="sd:ModelTypeType" />
 					</xsd:extension>
 				</xsd:complexContent>
 			</xsd:complexType>
@@ -240,13 +250,13 @@
 						<xsd:sequence>
 							<xsd:element name="country" type="sd:Country" />
 							<xsd:element name="store" type="sd:Store" />
-                            <xsd:element name="category" type="sd:Category" />
+							<xsd:element name="category" type="sd:Category" />
 							<xsd:element name="listTypes" type="xsd:string" maxOccurs="unbounded" />
 							<xsd:element name="simpleModelRun" type="sd:SimpleModelRun" />
 							<xsd:element name="modelRun" type="sd:ModelRun" />
 						</xsd:sequence>
 						<xsd:attribute name="code" type="xsd:long" />
-                        <xsd:attribute name="modelType" type="sd:ModelTypeType" />
+						<xsd:attribute name="modelType" type="sd:ModelTypeType" />
 					</xsd:extension>
 				</xsd:complexContent>
 			</xsd:complexType>
@@ -314,7 +324,7 @@
 					</xsd:extension>
 				</xsd:complexContent>
 			</xsd:complexType>
-			
+
 			<xsd:complexType name="RevokeRoleRequest">
 				<xsd:complexContent>
 					<xsd:extension base="sd:Request">
@@ -492,67 +502,123 @@
 					</xsd:extension>
 				</xsd:complexContent>
 			</xsd:complexType>
-			
+
 			<xsd:complexType name="UpdateEmailTemplateRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="emailTemplate" type="sd:EmailTemplate" maxOccurs="1" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-            <xsd:complexType name="UpdateEmailTemplateResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-            
-            <xsd:complexType name="GetDataAccountsRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="pager" type="sd:Pager" />
-                        </xsd:sequence>
-                        <xsd:attribute name="query" type="xsd:string" />
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="emailTemplate" type="sd:EmailTemplate" maxOccurs="1" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:complexType name="UpdateEmailTemplateResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
-            <xsd:complexType name="GetDataAccountsResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                        <xsd:sequence>
-                            <xsd:element name="dataAccounts" type="sd:DataAccount" maxOccurs="unbounded" />
-                            <xsd:element name="dataSources" type="sd:DataSource" maxOccurs="unbounded" />
-                            <xsd:element name="pager" type="sd:Pager" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-            
-            <xsd:complexType name="GetDataAccountFetchesRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                        	<xsd:element name="dataAccount" type="sd:DataAccount" maxOccurs="1" />
-                            <xsd:element name="pager" type="sd:Pager" />
-                        </xsd:sequence>                        
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
+			<xsd:complexType name="GetDataAccountsRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+						<xsd:attribute name="query" type="xsd:string" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
-            <xsd:complexType name="GetDataAccountFetchesResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                        <xsd:sequence>
-                            <xsd:element name="dataAccountFetches" type="sd:DataAccountFetch" maxOccurs="unbounded" />                            
-                            <xsd:element name="pager" type="sd:Pager" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
+			<xsd:complexType name="GetDataAccountsResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+							<xsd:element name="dataAccounts" type="sd:DataAccount" maxOccurs="unbounded" />
+							<xsd:element name="dataSources" type="sd:DataSource" maxOccurs="unbounded" />
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetDataAccountFetchesRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="dataAccount" type="sd:DataAccount" maxOccurs="1" />
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetDataAccountFetchesResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+							<xsd:element name="dataAccountFetches" type="sd:DataAccountFetch" maxOccurs="unbounded" />
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="TriggerDataAccountGatherRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="dataAccount" type="sd:DataAccount" maxOccurs="1" />
+						</xsd:sequence>
+						<xsd:attribute name="days" type="xsd:int" use="optional" default="1" />
+						<xsd:attribute name="from" type="xsd:dateTime" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="TriggerDataAccountGatherResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="TriggerDataAccountFetchIngestRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="fetch" type="sd:DataAccountFetch" maxOccurs="1" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="TriggerDataAccountFetchIngestResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="JoinDataAccountRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="dataAccount" type="sd:DataAccount" maxOccurs="1" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="JoinDataAccountResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
 		</xsd:schema>
 	</wsdl:types>
@@ -633,7 +699,7 @@
 	<wsdl:message name="AssignPermissionResponse">
 		<wsdl:part name="output" element="sda:AssignPermissionOutput" />
 	</wsdl:message>
-	
+
 	<wsdl:message name="RevokeRoleRequest">
 		<wsdl:part name="input" element="sda:RevokeRoleInput" />
 	</wsdl:message>
@@ -696,26 +762,47 @@
 	<wsdl:message name="GetRolesAndPermissionsResponse">
 		<wsdl:part name="output" element="sda:GetRolesAndPermissionsOutput" />
 	</wsdl:message>
-	
+
 	<wsdl:message name="UpdateEmailTemplateRequest">
 		<wsdl:part name="input" element="sda:UpdateEmailTemplateInput" />
 	</wsdl:message>
 	<wsdl:message name="UpdateEmailTemplateResponse">
 		<wsdl:part name="output" element="sda:UpdateEmailTemplateOutput" />
 	</wsdl:message>
-	
+
 	<wsdl:message name="GetDataAccountsRequest">
 		<wsdl:part name="input" element="sda:GetDataAccountsInput" />
 	</wsdl:message>
 	<wsdl:message name="GetDataAccountsResponse">
 		<wsdl:part name="output" element="sda:GetDataAccountsOutput" />
 	</wsdl:message>
-	
+
 	<wsdl:message name="GetDataAccountFetchesRequest">
 		<wsdl:part name="input" element="sda:GetDataAccountFetchesInput" />
 	</wsdl:message>
 	<wsdl:message name="GetDataAccountFetchesResponse">
 		<wsdl:part name="output" element="sda:GetDataAccountFetchesOutput" />
+	</wsdl:message>
+	
+	<wsdl:message name="TriggerDataAccountGatherRequest">
+		<wsdl:part name="input" element="sda:TriggerDataAccountGatherInput" />
+	</wsdl:message>
+	<wsdl:message name="TriggerDataAccountGatherResponse">
+		<wsdl:part name="output" element="sda:TriggerDataAccountGatherOutput" />
+	</wsdl:message>
+	
+	<wsdl:message name="TriggerDataAccountFetchIngestRequest">
+		<wsdl:part name="input" element="sda:TriggerDataAccountFetchIngestInput" />
+	</wsdl:message>
+	<wsdl:message name="TriggerDataAccountFetchIngestResponse">
+		<wsdl:part name="output" element="sda:TriggerDataAccountFetchIngestOutput" />
+	</wsdl:message>
+	
+	<wsdl:message name="JoinDataAccountRequest">
+		<wsdl:part name="input" element="sda:JoinDataAccountInput" />
+	</wsdl:message>
+	<wsdl:message name="JoinDataAccountResponse">
+		<wsdl:part name="output" element="sda:JoinDataAccountOutput" />
 	</wsdl:message>
 
 	<wsdl:portType name="admin">
@@ -767,7 +854,7 @@
 			<wsdl:input message="sda:AssignPermissionRequest" />
 			<wsdl:output message="sda:AssignPermissionResponse" />
 		</wsdl:operation>
-		
+
 		<wsdl:operation name="RevokeRole">
 			<wsdl:input message="sda:RevokeRoleRequest" />
 			<wsdl:output message="sda:RevokeRoleResponse" />
@@ -812,23 +899,38 @@
 			<wsdl:input message="sda:GetRolesAndPermissionsRequest" />
 			<wsdl:output message="sda:GetRolesAndPermissionsResponse" />
 		</wsdl:operation>
-		
+
 		<wsdl:operation name="UpdateEmailTemplate">
 			<wsdl:input message="sda:UpdateEmailTemplateRequest" />
 			<wsdl:output message="sda:UpdateEmailTemplateResponse" />
 		</wsdl:operation>
-		
+
 		<wsdl:operation name="GetDataAccounts">
 			<wsdl:input message="sda:GetDataAccountsRequest" />
 			<wsdl:output message="sda:GetDataAccountsResponse" />
 		</wsdl:operation>
-		
+
 		<wsdl:operation name="GetDataAccountFetches">
 			<wsdl:input message="sda:GetDataAccountFetchesRequest" />
 			<wsdl:output message="sda:GetDataAccountFetchesResponse" />
 		</wsdl:operation>
+		
+		<wsdl:operation name="TriggerDataAccountGather">
+			<wsdl:input message="sda:TriggerDataAccountGatherRequest" />
+			<wsdl:output message="sda:TriggerDataAccountGatherResponse" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="TriggerDataAccountFetchIngest">
+			<wsdl:input message="sda:TriggerDataAccountFetchIngestRequest" />
+			<wsdl:output message="sda:TriggerDataAccountFetchIngestResponse" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="JoinDataAccount">
+			<wsdl:input message="sda:JoinDataAccountRequest" />
+			<wsdl:output message="sda:JoinDataAccountResponse" />
+		</wsdl:operation>
 	</wsdl:portType>
-	
+
 	<wsdl:binding name="adminSOAP" type="sda:admin">
 		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
 		<wsdl:operation name="GetUsers">
@@ -933,7 +1035,7 @@
 				<soap:body use="literal" />
 			</wsdl:output>
 		</wsdl:operation>
-		
+
 		<wsdl:operation name="RevokeRole">
 			<soap:operation soapAction="http://app.reflection.io/admin/RevokeRole" />
 			<wsdl:input>
@@ -1013,7 +1115,7 @@
 				<soap:body use="literal" />
 			</wsdl:output>
 		</wsdl:operation>
-		
+
 		<wsdl:operation name="GetRolesAndPermissions">
 			<soap:operation soapAction="http://app.reflection.io/admin/GetRolesAndPermissions" />
 			<wsdl:input>
@@ -1023,7 +1125,7 @@
 				<soap:body use="literal" />
 			</wsdl:output>
 		</wsdl:operation>
-		
+
 		<wsdl:operation name="UpdateEmailTemplate">
 			<soap:operation soapAction="http://app.reflection.io/admin/UpdateEmailTemplate" />
 			<wsdl:input>
@@ -1033,7 +1135,7 @@
 				<soap:body use="literal" />
 			</wsdl:output>
 		</wsdl:operation>
-		
+
 		<wsdl:operation name="GetDataAccounts">
 			<soap:operation soapAction="http://app.reflection.io/admin/GetDataAccounts" />
 			<wsdl:input>
@@ -1043,9 +1145,39 @@
 				<soap:body use="literal" />
 			</wsdl:output>
 		</wsdl:operation>
-		
+
 		<wsdl:operation name="GetDataAccountFetches">
 			<soap:operation soapAction="http://app.reflection.io/admin/GetDataAccountFetches" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		
+		<wsdl:operation name="TriggerDataAccountGather">
+			<soap:operation soapAction="http://app.reflection.io/admin/TriggerDataAccountGather" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		
+		<wsdl:operation name="TriggerDataAccountFetchIngest">
+			<soap:operation soapAction="http://app.reflection.io/admin/TriggerDataAccountFetchIngest" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		
+		<wsdl:operation name="JoinDataAccount">
+			<soap:operation soapAction="http://app.reflection.io/admin/JoinDataAccount" />
 			<wsdl:input>
 				<soap:body use="literal" />
 			</wsdl:input>

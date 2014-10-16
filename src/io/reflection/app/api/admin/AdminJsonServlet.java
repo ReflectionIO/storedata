@@ -21,10 +21,13 @@ import io.reflection.app.api.admin.shared.call.GetRolesAndPermissionsRequest;
 import io.reflection.app.api.admin.shared.call.GetRolesRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersRequest;
+import io.reflection.app.api.admin.shared.call.JoinDataAccountRequest;
 import io.reflection.app.api.admin.shared.call.RevokePermissionRequest;
 import io.reflection.app.api.admin.shared.call.RevokeRoleRequest;
 import io.reflection.app.api.admin.shared.call.SendEmailRequest;
 import io.reflection.app.api.admin.shared.call.SetPasswordRequest;
+import io.reflection.app.api.admin.shared.call.TriggerDataAccountFetchIngestRequest;
+import io.reflection.app.api.admin.shared.call.TriggerDataAccountGatherRequest;
 import io.reflection.app.api.admin.shared.call.TriggerGatherRequest;
 import io.reflection.app.api.admin.shared.call.TriggerIngestRequest;
 import io.reflection.app.api.admin.shared.call.TriggerModelRequest;
@@ -133,6 +136,18 @@ public final class AdminJsonServlet extends JsonServlet {
 			GetDataAccountFetchesRequest input = new GetDataAccountFetchesRequest();
 			input.fromJson(request);
 			output = service.getDataAccountFetches(input).toString();
+		} else if ("TriggerDataAccountGather".equals(action)) {
+			TriggerDataAccountGatherRequest input = new TriggerDataAccountGatherRequest();
+			input.fromJson(request);
+			output = service.triggerDataAccountGather(input).toString();
+		} else if ("TriggerDataAccountFetchIngest".equals(action)) {
+			TriggerDataAccountFetchIngestRequest input = new TriggerDataAccountFetchIngestRequest();
+			input.fromJson(request);
+			output = service.triggerDataAccountFetchIngest(input).toString();
+		} else if ("JoinDataAccount".equals(action)) {
+			JoinDataAccountRequest input = new JoinDataAccountRequest();
+			input.fromJson(request);
+			output = service.joinDataAccount(input).toString();
 		}
 
 		return output;
