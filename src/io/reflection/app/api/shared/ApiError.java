@@ -95,8 +95,13 @@ public enum ApiError {
 	FeedFetchNull(100060, "Invalid value null for FeedFetch: {0}.feedFetch"),
 	FeedFetchNotFound(100061, "FeedFetch not found FeedFetch: {0}.value"),
 
-	SimpleModelRunNull(100060, "Invalid value null for SimpleModelRun: {0}.simpleModelRun"),
-	SimpleModelRunNotFound(100061, "SimpleModelRun not found SimpleModelRun: {0}.value"),
+	SimpleModelRunNull(100062, "Invalid value null for SimpleModelRun: {0}.simpleModelRun"),
+	SimpleModelRunNotFound(100063, "SimpleModelRun not found SimpleModelRun: {0}.value"),
+	
+	DataAccountFetchNull(100064, "Invalid value null for DataAccount: {0}"),
+	DataAccountFetchNotFound(100065, "Data account not found DataAccount: {0}"),
+	DataAccountFetchNoLookup(100066, "Invalid data account lookup, no id provided for DataAccount: {0}"),
+
 
 	GetCountriesNeedsStoreOrQuery(100101, "GetCountries call should either have a store or a query. To get all countries use * for the query: {0}"),
 
@@ -112,7 +117,7 @@ public enum ApiError {
 	MissingRoles(100501, "User does not have required role"),
 	MissingRolesAndOrPermissions(100502, "User does not have required roles and/or permissions"),
 
-	DataAccountUserMissmatch(100601, "User does not own data account")
+	DataAccountUserMissmatch(100601, "User does not own data account"),	
 
 	;
 

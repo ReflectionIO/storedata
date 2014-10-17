@@ -17,6 +17,7 @@ import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
+import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.EmailTemplate;
 import io.reflection.app.datatypes.shared.FeedFetch;
@@ -33,6 +34,7 @@ import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.country.CountryServiceProvider;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
+import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
 import io.reflection.app.service.datasource.DataSourceServiceProvider;
 import io.reflection.app.service.emailtemplate.EmailTemplateServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
@@ -169,8 +171,8 @@ public class ValidationHelper {
 		if (pager.count == null) pager.count = Long.valueOf(10);
 
 		if (pager.count.intValue() <= 0)
-			throw new InputValidationException(ApiError.NumericValueTooSmall.getCode(), ApiError.NumericValueTooSmall.getMessage(StringUtils.join(
-					Arrays.asList(parent, "pager", "count"), "."), 0, 30));
+			throw new InputValidationException(ApiError.NumericValueTooSmall.getCode(), ApiError.NumericValueTooSmall.getMessage(
+					StringUtils.join(Arrays.asList(parent, "pager", "count"), "."), 0, 30));
 
 		// TODO: for now this is disabled until we sort something out for it
 		// if (pager.count.intValue() > 30)
@@ -601,7 +603,7 @@ public class ValidationHelper {
 		DataAccount lookupDataAccount = DataAccountServiceProvider.provide().getDataAccount(dataAccount.id);
 
 		if (lookupDataAccount == null)
-			throw new InputValidationException(ApiError.DataAccountNotFound.getCode(), ApiError.DataSourceNotFound.getMessage(parent));
+			throw new InputValidationException(ApiError.DataAccountNotFound.getCode(), ApiError.DataAccountNotFound.getMessage(parent));
 
 		return lookupDataAccount;
 	}
@@ -762,5 +764,27 @@ public class ValidationHelper {
 			throw new InputValidationException(ApiError.SimpleModelRunNotFound.getCode(), ApiError.SimpleModelRunNotFound.getMessage(parent));
 
 		return lookupSimpleModelRun;
+	}
+	
+	/**
+	 * Validate DataAccountFetch
+	 * 
+	 * @param dataAccountFetch
+	 * @param parent
+	 * @return
+	 * @throws ServiceException
+	 */
+	public static DataAccountFetch validateDataAccountFetch(DataAccountFetch dataAccountFetch, String parent) throws ServiceException {
+		if (dataAccountFetch == null) throw new InputValidationException(ApiError.DataAccountFetchNull.getCode(), ApiError.DataAccountFetchNull.getMessage(parent));
+
+		if (dataAccountFetch.id == null)
+			throw new InputValidationException(ApiError.DataAccountFetchNoLookup.getCode(), ApiError.DataAccountFetchNoLookup.getMessage(parent));
+
+		DataAccountFetch lookupDataAccountFetch = DataAccountFetchServiceProvider.provide().getDataAccountFetch(dataAccountFetch.id);
+
+		if (lookupDataAccountFetch == null)
+			throw new InputValidationException(ApiError.DataAccountFetchNotFound.getCode(), ApiError.DataAccountFetchNotFound.getMessage(parent));
+
+		return lookupDataAccountFetch;
 	}
 }

@@ -1013,6 +1013,20 @@ public final class Admin extends ActionHandler {
 		LOG.finer("Entering triggerDataAccountFetchIngest");
 		TriggerDataAccountFetchIngestResponse output = new TriggerDataAccountFetchIngestResponse();
 		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+						ApiError.InvalidValueNull.getMessage("TriggerDataAccountFetchIngestRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			
+			input.fetch = ValidationHelper.validateDataAccountFetch(input.fetch, "input.fetch");
+			
+			DataAccountFetchServiceProvider.provide().triggerDataAccountFetchIngest(input.fetch);
+			
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;

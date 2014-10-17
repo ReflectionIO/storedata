@@ -8,8 +8,6 @@
 //
 package io.reflection.app.accountdatacollectors;
 
-import io.reflection.app.accountdataingestors.DataAccountIngestor;
-import io.reflection.app.accountdataingestors.DataAccountIngestorFactory;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.datatypes.shared.DataAccount;
@@ -209,9 +207,7 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 
 					if (dataAccountFetch != null && dataAccountFetch.status == DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered) {
 						// once the data is collected
-						DataAccountIngestor ingestor = DataAccountIngestorFactory.getIngestorForSource(dataAccount.source.a3Code);
-
-						ingestor.enqueue(dataAccountFetch);
+						DataAccountFetchServiceProvider.provide().triggerDataAccountFetchIngest(dataAccountFetch);
 					}
 				} else {
 					LOG.warning(String.format("Gather for data account [%d] and date [%s] skipped because of status [%s]", dataAccount.id.longValue(),
