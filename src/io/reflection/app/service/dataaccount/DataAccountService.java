@@ -256,18 +256,25 @@ final class DataAccountService implements IDataAccountService {
 		}
 	}
 
+	private void enqueue(DataAccount dataAccount, int days, boolean requiresNotification) {
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.DAY_OF_MONTH, -1);
+
+		enqueue(dataAccount, c.getTime(), days, requiresNotification);
+	}
+
 	/**
 	 * @param dataAccount
 	 * @param days
 	 */
-	private void enqueue(DataAccount dataAccount, int days, boolean add) {
+	private void enqueue(DataAccount dataAccount, Date date, int days, boolean requiresNotification) {
 		Calendar c = Calendar.getInstance();
 
-		for (int i = 1; i <= days; i++) {
-			c.setTime(new Date());
+		for (int i = 0; i < days; i++) {
+			c.setTime(date);
 			c.add(Calendar.DAY_OF_MONTH, -i);
 
-			enqueue(dataAccount, c.getTime(), add && i == days);
+			enqueue(dataAccount, c.getTime(), requiresNotification && (days - i == 1));
 		}
 	}
 
@@ -508,6 +515,17 @@ final class DataAccountService implements IDataAccountService {
 	@Override
 	public void triggerSingleDateDataAccountFetch(DataAccount dataAccount, Date date) throws DataAccessException {
 		enqueue(dataAccount, date, false);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.dataaccount.IDataAccountService#triggerMultipleDateDataAccountFetch(io.reflection.app.datatypes.shared.DataAccount,
+	 * java.util.Date, java.lang.Integer)
+	 */
+	@Override
+	public void triggerMultipleDateDataAccountFetch(DataAccount dataAccount, Date date, Integer days) throws DataAccessException {
+		enqueue(dataAccount, date, days.intValue(), false);
 	}
 
 }

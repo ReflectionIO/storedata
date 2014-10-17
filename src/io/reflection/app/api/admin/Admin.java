@@ -975,6 +975,31 @@ public final class Admin extends ActionHandler {
 		LOG.finer("Entering triggerDataAccountGather");
 		TriggerDataAccountGatherResponse output = new TriggerDataAccountGatherResponse();
 		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+						ApiError.InvalidValueNull.getMessage("TriggerDataAccountGatherRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+
+			if (input.from == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("Date: input.from"));
+
+			if (input.days == null || input.days.intValue() < 1) {
+				input.days = Integer.valueOf(1);
+			}
+
+			input.dataAccount = ValidationHelper.validateDataAccount(input.dataAccount, "input.dataAccount");
+
+			if (input.days.intValue() == 1) {
+				DataAccountServiceProvider.provide().triggerSingleDateDataAccountFetch(input.dataAccount, input.from);
+			} else {
+				DataAccountServiceProvider.provide().triggerMultipleDateDataAccountFetch(input.dataAccount, input.from, input.days);
+			}
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -988,6 +1013,20 @@ public final class Admin extends ActionHandler {
 		LOG.finer("Entering triggerDataAccountFetchIngest");
 		TriggerDataAccountFetchIngestResponse output = new TriggerDataAccountFetchIngestResponse();
 		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+						ApiError.InvalidValueNull.getMessage("TriggerDataAccountFetchIngestRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			
+			input.fetch = ValidationHelper.validateDataAccountFetch(input.fetch, "input.fetch");
+			
+			DataAccountFetchServiceProvider.provide().triggerDataAccountFetchIngest(input.fetch);
+			
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;

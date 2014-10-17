@@ -17,9 +17,4 @@ public interface DataAccountIngestor {
 
 	void ingest(DataAccountFetch fetch);
 
-	/**
-	 * @param id
-	 */
-	void enqueue(DataAccountFetch fetch);
-
 }

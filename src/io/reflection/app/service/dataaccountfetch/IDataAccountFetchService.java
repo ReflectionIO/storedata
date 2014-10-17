@@ -113,4 +113,11 @@ public interface IDataAccountFetchService extends IService {
 	 */
 	public Long getDataAccountFetchesCount(Date start, Date end) throws DataAccessException;
 
+	/**
+	 * 
+	 * @param fetch
+	 * @throws DataAccessException
+	 */
+	public void triggerDataAccountFetchIngest(DataAccountFetch fetch) throws DataAccessException;
+
 }
