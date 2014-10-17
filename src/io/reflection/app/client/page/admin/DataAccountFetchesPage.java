@@ -157,7 +157,7 @@ public class DataAccountFetchesPage extends Page implements NavigationEventHandl
 				switch (value) {
 				case "gather":
 					preloader.show();
-					DataAccountFetchController.get().gather(object.linkedAccount);
+					DataAccountFetchController.get().gather(object.linkedAccount, object.date);
 					break;
 				case "ingest":
 					preloader.show();

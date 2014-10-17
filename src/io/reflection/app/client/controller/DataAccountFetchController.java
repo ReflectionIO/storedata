@@ -23,6 +23,7 @@ import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -120,7 +121,7 @@ public class DataAccountFetchController extends AsyncDataProvider<DataAccountFet
 	 * 
 	 * @param dataAccount
 	 */
-	public void gather(DataAccount dataAccount) {
+	public void gather(DataAccount dataAccount, Date from) {
 		AdminService service = ServiceCreator.createAdminService();
 
 		final TriggerDataAccountGatherRequest input = new TriggerDataAccountGatherRequest();
@@ -130,7 +131,7 @@ public class DataAccountFetchController extends AsyncDataProvider<DataAccountFet
 
 		input.dataAccount = dataAccount;
 
-		input.from = FilterController.get().getStartDate();
+		input.from = from;
 
 		service.triggerDataAccountGather(input, new AsyncCallback<TriggerDataAccountGatherResponse>() {
 
