@@ -16,6 +16,7 @@ import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
 import io.reflection.app.helpers.SqlQueryHelper;
+import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
@@ -24,11 +25,20 @@ import io.reflection.app.service.ServiceType;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import com.google.appengine.api.taskqueue.Queue;
+import com.google.appengine.api.taskqueue.QueueFactory;
+import com.google.appengine.api.taskqueue.TaskOptions;
+import com.google.appengine.api.taskqueue.TaskOptions.Method;
+import com.google.appengine.api.taskqueue.TransientFailureException;
 import com.google.appengine.api.utils.SystemProperty;
 
 final class DataAccountFetchService implements IDataAccountFetchService {
 
+	private static final Logger LOG = Logger.getLogger(DataAccountFetchService.class.getName());
+	
 	// a marker to help deleted rows that are added by developers
 	private static final String DEV_PREFIX = "__dev__";
 
@@ -410,6 +420,57 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 	@Override
 	public Long getDataAccountFetchesCount(Date start, Date end) throws DataAccessException {
 		return getDataAccountFetchesCount(null, start, end);
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.dataaccountfetch.IDataAccountFetchService#triggerDataAccountFetchIngest(io.reflection.app.datatypes.shared.DataAccountFetch)
+	 */
+	@Override
+	public void triggerDataAccountFetchIngest(DataAccountFetch fetch) throws DataAccessException {
+		enqueue(fetch);
+	}
+	
+	/**
+	 * 
+	 * @param fetch
+	 */
+	private void enqueue(DataAccountFetch fetch) {
+		if (LOG.isLoggable(GaeLevel.TRACE)) {
+			LOG.log(GaeLevel.TRACE, "Entering...");
+		}
+
+		try {
+			Queue queue = QueueFactory.getQueue("dataaccountingest");
+
+			TaskOptions options = TaskOptions.Builder.withUrl("/dataaccountingest").method(Method.POST);
+
+			options.param("fetchId", fetch.id.toString());
+
+			try {
+				queue.add(options);
+			} catch (TransientFailureException ex) {
+
+				if (LOG.isLoggable(Level.WARNING)) {
+					LOG.warning(String.format("Could not queue a message because of [%s] - will retry it once", ex.toString()));
+				}
+
+				// retry once
+				try {
+					queue.add(options);
+				} catch (TransientFailureException reEx) {
+					if (LOG.isLoggable(Level.SEVERE)) {
+						LOG.log(Level.SEVERE,
+								String.format("Retry of with payload [%s] failed while adding to queue [%s] twice", options.toString(), queue.getQueueName()),
+								reEx);
+					}
+				}
+
+			}
+		} finally {
+			if (LOG.isLoggable(GaeLevel.TRACE)) {
+				LOG.log(GaeLevel.TRACE, "Exiting...");
+			}
+		}
 	}
 
 }

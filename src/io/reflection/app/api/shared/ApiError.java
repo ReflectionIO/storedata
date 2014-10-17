@@ -28,9 +28,10 @@ public enum ApiError {
 	SearchQueryNull(100006, "Invalid value null search query for String: {0}.query"),
 
 	PagerStartLargerThanTotal(100007, "Invalid value for start, should be less than totalCount for Pager: {0}.pager"),
-	PagerStartNegative(100008, "Invalid negative value for Long: {0}.pager.start"),
-	PagerCountTooSmall(100009, "Invalid 0 or negative value for Long: {0}.pager.count"),
-	PagerCountTooLarge(100010, "Invalid value, maximum count should be <= 30 Long: {0}.pager.count"),
+
+	NegativeValueNotAllowed(100008, "Invalid negative value for {0}: {1}"),
+	NumericValueTooSmall(100009,  "Invalid value too small ({0}-{1}): {2}"),
+	NumericValueTooLarge(100010, "Invalid value too large ({0}-{1}): {2}"),
 
 	CountryNull(100011, "Invalid value null for Country: {0}.country"),
 	CountryNotFound(100012, "Country not found Country: {0}.country"),
@@ -94,8 +95,13 @@ public enum ApiError {
 	FeedFetchNull(100060, "Invalid value null for FeedFetch: {0}.feedFetch"),
 	FeedFetchNotFound(100061, "FeedFetch not found FeedFetch: {0}.value"),
 
-	SimpleModelRunNull(100060, "Invalid value null for SimpleModelRun: {0}.simpleModelRun"),
-	SimpleModelRunNotFound(100061, "SimpleModelRun not found SimpleModelRun: {0}.value"),
+	SimpleModelRunNull(100062, "Invalid value null for SimpleModelRun: {0}.simpleModelRun"),
+	SimpleModelRunNotFound(100063, "SimpleModelRun not found SimpleModelRun: {0}.value"),
+	
+	DataAccountFetchNull(100064, "Invalid value null for DataAccount: {0}"),
+	DataAccountFetchNotFound(100065, "Data account not found DataAccount: {0}"),
+	DataAccountFetchNoLookup(100066, "Invalid data account lookup, no id provided for DataAccount: {0}"),
+
 
 	GetCountriesNeedsStoreOrQuery(100101, "GetCountries call should either have a store or a query. To get all countries use * for the query: {0}"),
 
@@ -111,7 +117,7 @@ public enum ApiError {
 	MissingRoles(100501, "User does not have required role"),
 	MissingRolesAndOrPermissions(100502, "User does not have required roles and/or permissions"),
 
-	DataAccountUserMissmatch(100601, "User does not own data account")
+	DataAccountUserMissmatch(100601, "User does not own data account"),	
 
 	;
 
