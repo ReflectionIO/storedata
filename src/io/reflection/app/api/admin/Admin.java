@@ -69,8 +69,10 @@ import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
+import io.reflection.app.datatypes.shared.EmailFormatType;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.helpers.EmailHelper;
 import io.reflection.app.ingestors.Ingestor;
 import io.reflection.app.ingestors.IngestorFactory;
 import io.reflection.app.modellers.Modeller;
@@ -86,8 +88,10 @@ import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
 import io.reflection.app.service.role.RoleServiceProvider;
+import io.reflection.app.service.user.IUserService;
 import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
+import io.reflection.app.shared.util.FormattingHelper;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -1022,11 +1026,11 @@ public final class Admin extends ActionHandler {
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
-			
+
 			input.fetch = ValidationHelper.validateDataAccountFetch(input.fetch, "input.fetch");
-			
+
 			DataAccountFetchServiceProvider.provide().triggerDataAccountFetchIngest(input.fetch);
-			
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -1040,6 +1044,37 @@ public final class Admin extends ActionHandler {
 		LOG.finer("Entering joinDataAccount");
 		JoinDataAccountResponse output = new JoinDataAccountResponse();
 		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("JoinDataAccountRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+
+			input.dataAccount = ValidationHelper.validateDataAccount(input.dataAccount, "input.dataAccount");
+
+			IUserService userService = UserServiceProvider.provide();
+			userService.addOrRestoreUserDataAccount(input.session.user, input.dataAccount);
+
+			User adminUser = userService.getUser(input.session.user.id);
+			User ownerUser = userService.getDataAccountOwner(input.dataAccount);
+
+			DataSource dataSource = DataSourceServiceProvider.provide().getDataSource(input.dataAccount.source.id);
+
+			EmailHelper
+					.sendEmail(
+							"hello@reflection.io",
+							"chi@reflection.io",
+							"Chi Dire",
+							"An admin has linked to a user's account",
+							String.format(
+									"Hi Chi,\n\nThis is to let you know that the admin user [%d - %s] has added the data account [%d] for the data source [%d] and the username [%s]. This data account belongs to the user [%d - %s].\n\nReflection",
+									adminUser.id.longValue(), FormattingHelper.getUserLongName(adminUser), input.dataAccount.id.longValue(), dataSource.name,
+									input.dataAccount.username, ownerUser.id.longValue(), FormattingHelper.getUserLongName(ownerUser)),
+							EmailFormatType.EmailFormatTypePlainText);
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;

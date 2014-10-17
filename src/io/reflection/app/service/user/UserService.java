@@ -741,29 +741,12 @@ final class UserService implements IUserService {
 		addedDataAccount = DataAccountServiceProvider.provide().addDataAccount(dataSource, username, password, properties);
 
 		if (addedDataAccount != null) {
-			if (!hasDataAccount(user, addedDataAccount, Boolean.TRUE)) {
-				String addDataAccountQuery = String.format("INSERT INTO `userdataaccount` (`dataaccountid`,`userid`) VALUES (%d, %d)",
-						addedDataAccount.id.longValue(), user.id.longValue());
-
-				Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
-
-				try {
-					userConnection.connect();
-					userConnection.executeQuery(addDataAccountQuery);
-
-					if (userConnection.getAffectedRowCount() > 0) {
-						// added the user account successfully
-					}
-				} finally {
-					if (userConnection != null) {
-						userConnection.disconnect();
-					}
-				}
-			} else {
-				restoreUserDataAccount(addedDataAccount);
-			}
+			addOrRestoreUserDataAccount(user, addedDataAccount);
 		} else {
-			LOG.warning("");
+			if (LOG.isLoggable(Level.WARNING)) {
+				LOG.warning(String.format("Data account could not be added with user [%d], data source [%d], username [%s] and properties [%s]",
+						user.id.longValue(), dataSource.id.longValue(), username, properties));
+			}
 			throw new DataAccessException();
 		}
 
@@ -1345,6 +1328,37 @@ final class UserService implements IUserService {
 			if (userConnection != null) {
 				userConnection.disconnect();
 			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.user.IUserService#addOrRestoreUserDataAccount(io.reflection.app.datatypes.shared.User,
+	 * io.reflection.app.datatypes.shared.DataAccount)
+	 */
+	@Override
+	public void addOrRestoreUserDataAccount(User user, DataAccount dataAccount) throws DataAccessException {
+		if (!hasDataAccount(user, dataAccount, Boolean.TRUE)) {
+			String addUserDataAccountQuery = String.format("INSERT INTO `userdataaccount` (`dataaccountid`,`userid`) VALUES (%d, %d)",
+					dataAccount.id.longValue(), user.id.longValue());
+
+			Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
+
+			try {
+				userConnection.connect();
+				userConnection.executeQuery(addUserDataAccountQuery);
+
+				if (userConnection.getAffectedRowCount() > 0) {
+					// added the user account successfully
+				}
+			} finally {
+				if (userConnection != null) {
+					userConnection.disconnect();
+				}
+			}
+		} else {
+			restoreUserDataAccount(dataAccount);
 		}
 	}
 

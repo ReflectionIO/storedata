@@ -281,4 +281,12 @@ public interface IUserService extends IService {
 	 */
 	public void deleteAllDataAccounts(User user) throws DataAccessException;
 
+	/**
+	 * Adds a user to a data account or restores a deleted row if one exist 
+	 * @param user
+	 * @param dataAccount
+	 * @throws DataAccessException
+	 */
+	public void addOrRestoreUserDataAccount(User user, DataAccount dataAccount) throws DataAccessException;
+
 }
