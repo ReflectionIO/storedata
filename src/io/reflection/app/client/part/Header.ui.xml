@@ -18,53 +18,54 @@
 	<ui:import field="io.reflection.app.client.page.PageType.ItemsPageType" />
 	<ui:import field="io.reflection.app.client.page.PageType.DataAccountsPageType" />
 	<ui:import field="io.reflection.app.client.page.PageType.DataAccountFetchesPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.SimpleModelRunPageType" />
 
 	<ui:with field="res" type='io.reflection.app.client.res.Images' />
 	<ui:with field="global" type="io.reflection.app.client.res.Styles" />
 
 	<ui:style>
 	.searchBox {
-	    margin-top: 5px;
-	    margin-right: 24px;
-	    height: 40px;
-	    background-color: #21222b;
-	    padding-top: 10px;
-	    padding-left: 16px;
-	    padding-right: 10px;
-	    color: #6b6c7c !important;
+		margin-top: 5px;
+		margin-right: 24px;
+		height: 40px;
+		background-color: #21222b;
+		padding-top: 10px;
+		padding-left: 16px;
+		padding-right: 10px;
+		color: #6b6c7c !important;
 	}
 	
 	.searchIcon {
-	    margin-left: 16px;
+		margin-left: 16px;
 	}
 	
 	.collapseMobile {
-	    padding-left: 0px;
-	    padding-right: 0px;
-	    border: none;
-	    box-shadow: none;
+		padding-left: 0px;
+		padding-right: 0px;
+		border: none;
+		box-shadow: none;
 	}
 	
 	.loginMobile {
-	    margin-top: -10px;
+		margin-top: -10px;
 	}
 	
 	.loginMobile li a {
-	    padding-top: 25px;
-	    padding-bottom: 15px;
-	    padding-left: 30px !important;
-	    padding-right: 28px !important;
+		padding-top: 25px;
+		padding-bottom: 15px;
+		padding-left: 30px !important;
+		padding-right: 28px !important;
 	}
 	
 	.loginMobile li a i {
-	    padding-right: 4px;
+		padding-right: 4px;
 	}
 	
 	.brandCover {
-	    position: absolute;
-	    width: 225px;
-	    height: 50px;
-	    z-index: 15;
+		position: absolute;
+		width: 225px;
+		height: 50px;
+		z-index: 15;
 	}
 	</ui:style>
 
@@ -145,6 +146,9 @@
 					<ul class="dropdown-menu">
 						<li ui:field="feedBrowserItem">
 							<g:InlineHyperlink ui:field="feedBrowserLink">Feed Browser</g:InlineHyperlink>
+						</li>
+						<li ui:field="simpleModelRunItem">
+							<g:InlineHyperlink ui:field="simpleModelRunLink">Simple Model Run</g:InlineHyperlink>
 						</li>
 						<li ui:field="itemsItem">
 							<g:InlineHyperlink targetHistoryToken="{ItemsPageType.asTargetHistoryToken}">Items</g:InlineHyperlink>

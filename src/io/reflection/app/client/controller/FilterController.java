@@ -34,6 +34,7 @@ public class FilterController {
 	public static final String RANK_FILTER_KEY = "rankfilter:";
 	public static final String MYAPP_FILTER_KEY = "myappfilter:";
 	public static final String FEED_FILTER_KEY = "feedfilter:";
+	public static final String SIMPLE_MODEL_RUN_FILTER_KEY = "simplemodelrunfilter:";
 	public static final String DATA_ACCOUNT_FETCH_FILTER_KEY = "dataaccountfetchfilter:";
 
 	public static final String LINKED_ACCOUNT_KEY = "linkedaccount";
@@ -115,6 +116,15 @@ public class FilterController {
 				parsed.setCountryA2Code(splitDecoded[1]);
 				parsed.setStoreA3Code(splitDecoded[2]);
 				parsed.setCategoryId(Long.valueOf(splitDecoded[3]));
+			} else if ((splitDecoded = Stack.decode(SIMPLE_MODEL_RUN_FILTER_KEY, filter)) != null && splitDecoded.length == 6) {
+				parsed = new Filter();
+
+				parsed.setStartTime(Long.valueOf(splitDecoded[0]));
+				parsed.setEndTime(Long.valueOf(splitDecoded[1]));
+				parsed.setListType(splitDecoded[2]);
+				parsed.setCountryA2Code(splitDecoded[3]);
+				parsed.setStoreA3Code(splitDecoded[4]);
+				parsed.setCategoryId(Long.valueOf(splitDecoded[5]));
 			} else if ((splitDecoded = Stack.decode(DATA_ACCOUNT_FETCH_FILTER_KEY, filter)) != null && splitDecoded.length == 2) {
 				parsed = new Filter();
 
@@ -223,6 +233,11 @@ public class FilterController {
 			return Stack.encode(FEED_FILTER_KEY, getListType(), getStoreA3Code(), getCountryA2Code(), getCategoryId().toString());
 		}
 
+		public String asSimpleModelRunFilterString() {
+			return Stack.encode(SIMPLE_MODEL_RUN_FILTER_KEY, getStartTime().toString(), getEndTime().toString(), getListType(), getCountryA2Code(),
+					getStoreA3Code(), getCategoryId().toString());
+		}
+
 		public String asDataAccountFetchFilterString() {
 			return Stack.encode(DATA_ACCOUNT_FETCH_FILTER_KEY, getStartTime().toString(), getEndTime().toString());
 		}
@@ -278,6 +293,7 @@ public class FilterController {
 		filters.put(PageType.RanksPageType, getDefaultFilter());
 		filters.put(PageType.MyAppsPageType, getDefaultFilter());
 		filters.put(PageType.FeedBrowserPageType, getDefaultFilter());
+		filters.put(PageType.SimpleModelRunPageType, getDefaultFilter());
 		filters.put(PageType.ItemPageType, getDefaultFilter());
 
 		Filter f = getDefaultFilter();
@@ -312,6 +328,10 @@ public class FilterController {
 			}
 			if (allParts[0].equals("!feedbrowser") && pageTypeFilter != PageType.FeedBrowserPageType) {
 				pageTypeFilter = PageType.FeedBrowserPageType;
+				mCurrentFilter = filters.get(pageTypeFilter);
+			}
+			if (allParts[0].equals("!simplemodelrun") && pageTypeFilter != PageType.SimpleModelRunPageType) {
+				pageTypeFilter = PageType.SimpleModelRunPageType;
 				mCurrentFilter = filters.get(pageTypeFilter);
 			}
 			if (allParts[0].equals("!dataaccountfetches") && pageTypeFilter != PageType.DataAccountFetchesPageType) {
@@ -684,6 +704,10 @@ public class FilterController {
 
 	public String asFeedFilterString() {
 		return filters.get(PageType.FeedBrowserPageType) == null ? "" : filters.get(PageType.FeedBrowserPageType).asFeedFilterString();
+	}
+
+	public String asSimpleModelRunFilterString() {
+		return filters.get(PageType.SimpleModelRunPageType) == null ? "" : filters.get(PageType.SimpleModelRunPageType).asSimpleModelRunFilterString();
 	}
 
 	public String asDataAccountFetchFilterString() {
