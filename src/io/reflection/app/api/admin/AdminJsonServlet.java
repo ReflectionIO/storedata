@@ -19,6 +19,7 @@ import io.reflection.app.api.admin.shared.call.GetModelOutcomeRequest;
 import io.reflection.app.api.admin.shared.call.GetPermissionsRequest;
 import io.reflection.app.api.admin.shared.call.GetRolesAndPermissionsRequest;
 import io.reflection.app.api.admin.shared.call.GetRolesRequest;
+import io.reflection.app.api.admin.shared.call.GetSimpleModelRunsRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersRequest;
 import io.reflection.app.api.admin.shared.call.JoinDataAccountRequest;
@@ -148,6 +149,10 @@ public final class AdminJsonServlet extends JsonServlet {
 			JoinDataAccountRequest input = new JoinDataAccountRequest();
 			input.fromJson(request);
 			output = service.joinDataAccount(input).toString();
+		} else if ("GetSimpleModelRuns".equals(action)) {
+			GetSimpleModelRunsRequest input = new GetSimpleModelRunsRequest();
+			input.fromJson(request);
+			output = service.getSimpleModelRuns(input).toString();
 		}
 
 		return output;

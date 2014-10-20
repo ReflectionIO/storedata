@@ -30,6 +30,8 @@ import io.reflection.app.api.admin.shared.call.GetRolesAndPermissionsRequest;
 import io.reflection.app.api.admin.shared.call.GetRolesAndPermissionsResponse;
 import io.reflection.app.api.admin.shared.call.GetRolesRequest;
 import io.reflection.app.api.admin.shared.call.GetRolesResponse;
+import io.reflection.app.api.admin.shared.call.GetSimpleModelRunsRequest;
+import io.reflection.app.api.admin.shared.call.GetSimpleModelRunsResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersCountResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersRequest;
@@ -926,6 +928,39 @@ public final class AdminService extends JsonService {
 		} catch (RequestException exception) {
 			output.onFailure(exception);
 			onCallFailure(AdminService.this, AdminMethodJoinDataAccount, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String AdminMethodGetSimpleModelRuns = "GetSimpleModelRuns";
+
+	public Request getSimpleModelRuns(final GetSimpleModelRunsRequest input, final AsyncCallback<GetSimpleModelRunsResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(AdminMethodGetSimpleModelRuns, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						GetSimpleModelRunsResponse outputParameter = new GetSimpleModelRunsResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodGetSimpleModelRuns, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodGetSimpleModelRuns, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(AdminService.this, AdminMethodGetSimpleModelRuns, input, exception);
+				}
+			});
+			onCallStart(AdminService.this, AdminMethodGetSimpleModelRuns, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodGetSimpleModelRuns, input, exception);
 		}
 		return handle;
 	}
