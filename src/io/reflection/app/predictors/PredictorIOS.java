@@ -234,7 +234,7 @@ public class PredictorIOS implements Predictor {
 		double downloads = 0.0;
 
 		if (usesIap) {
-			if (isFree(price)) {
+			if (isZero(price)) {
 				if (rank.grossingPosition == null && rank.grossingPosition.intValue() == 0) {
 					downloads = (double) (output.freeB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.freeA.doubleValue()));
 					revenue = output.theta.doubleValue() * downloads;
@@ -253,7 +253,7 @@ public class PredictorIOS implements Predictor {
 				}
 			}
 		} else {
-			if (isFree(price)) {
+			if (isZero(price)) {
 				// revenue is zero since it is a free app and no IAP. Thus only
 				// download calculated here
 				downloads = (double) (output.freeB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.freeA.doubleValue()));
@@ -270,9 +270,13 @@ public class PredictorIOS implements Predictor {
 			}
 		}
 
-		// These numbers still overflow using the current model
-		rank.downloads = Integer.valueOf((int) downloads);
-		rank.revenue = Float.valueOf((float) revenue);
+		if (rank.downloads == null || (rank.downloads.intValue() == 0 && (int) downloads != 0)) {
+			rank.downloads = Integer.valueOf((int) downloads);
+		}
+
+		if (rank.revenue == null || (isZero(rank.revenue.floatValue()) && !isZero((float) revenue))) {
+			rank.revenue = Float.valueOf((float) revenue);
+		}
 
 		if (LOG.isLoggable(Level.INFO)) {
 			LOG.info("Downloads :" + downloads);
@@ -316,7 +320,7 @@ public class PredictorIOS implements Predictor {
 	// LOG.info("predictedRank :" + predictedRank);
 	// }
 
-	private boolean isFree(float price) {
+	private boolean isZero(float price) {
 		return price <= Float.MIN_VALUE;
 	}
 
@@ -370,10 +374,10 @@ public class PredictorIOS implements Predictor {
 
 		Item item = null;
 		Boolean usesIap = null;
-		
+
 		for (Rank rank : foundRanks) {
 			item = lookup.get(rank.itemId);
-			
+
 			if (item == null) {
 				usesIap = null;
 			} else {
@@ -399,7 +403,7 @@ public class PredictorIOS implements Predictor {
 
 	private void setSimpleDownloadsAndRevenue(Rank rank, SimpleModelRun simpleModelRun, Boolean usesIap) {
 		float price = rank.price.floatValue() / 100.0f;
-		boolean isDownload = isDownloadListType(simpleModelRun.feedFetch.type), isFree = isFree(price);
+		boolean isDownload = isDownloadListType(simpleModelRun.feedFetch.type), isFree = isZero(price);
 		double revenue = 0.0, downloads = 0.0;
 
 		if (usesIap == null || usesIap.booleanValue()) {
