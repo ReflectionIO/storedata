@@ -2,22 +2,29 @@
 //  DataAccountsPage.java
 //  storedata
 //
-//  Created by Stefano Capuzzi (stefanocapuzzi) on 7 Oct 2014.
+//  Created by Stefano Capuzzi on 7 Oct 2014.
 //  Copyright © 2014 Reflection.io Ltd. All rights reserved.
 //
 package io.reflection.app.client.page.admin;
 
+import io.reflection.app.api.admin.shared.call.JoinDataAccountRequest;
+import io.reflection.app.api.admin.shared.call.JoinDataAccountResponse;
+import io.reflection.app.api.admin.shared.call.event.JoinDataAccountEventHandler;
+import io.reflection.app.client.cell.StyledButtonCell;
 import io.reflection.app.client.controller.DataAccountController;
+import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
+import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.shared.util.FormattingHelper;
 
+import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -33,10 +40,10 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * @author Stefano Capuzzi (stefanocapuzzi)
+ * @author Stefano Capuzzi
  * 
  */
-public class DataAccountsPage extends Page {
+public class DataAccountsPage extends Page implements JoinDataAccountEventHandler {
 
 	private static DataAccountsPageUiBinder uiBinder = GWT.create(DataAccountsPageUiBinder.class);
 
@@ -51,6 +58,8 @@ public class DataAccountsPage extends Page {
 
 	@UiField(provided = true) CellTable<DataAccount> dataAccountTable = new CellTable<DataAccount>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) SimplePager simplePager = new SimplePager(false, false);
+
+	@UiField Preloader preloader;
 
 	public DataAccountsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -141,14 +150,67 @@ public class DataAccountsPage extends Page {
 			@Override
 			public SafeHtml getValue(DataAccount object) {
 				String id = object.id.toString();
-				return SafeHtmlUtils
-						.fromTrustedString("<a href=\""
-								+ PageType.DataAccountFetchesPageType.asHref(id, FilterController.get().asDataAccountFetchFilterString()).asString()
-								+ "\">Fetches</a>");
+				return SafeHtmlUtils.fromTrustedString("<a href=\""
+						+ PageType.DataAccountFetchesPageType.asHref(id, FilterController.get().asDataAccountFetchFilterString()).asString()
+						+ "\" class=\"btn btn-xs btn-default\">Fetches</a>");
 			}
 
 		};
 		dataAccountTable.addColumn(fetchColumn);
 
+		Column<DataAccount, String> linkToMeColumn = new Column<DataAccount, String>(new StyledButtonCell("btn", "btn-xs", "btn-warning")) {
+
+			@Override
+			public String getValue(DataAccount object) {
+				return "share with me";
+			}
+
+		};
+		dataAccountTable.addColumn(linkToMeColumn);
+
+		FieldUpdater<DataAccount, String> onLinkToMe = new FieldUpdater<DataAccount, String>() {
+
+			@Override
+			public void update(int index, DataAccount object, String value) {
+				preloader.show();
+				DataAccountController.get().joinDataAccount(object);
+			}
+		};
+
+		linkToMeColumn.setFieldUpdater(onLinkToMe);
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.page.Page#onAttach()
+	 */
+	@Override
+	protected void onAttach() {
+		super.onAttach();
+		register(EventController.get().addHandlerToSource(JoinDataAccountEventHandler.TYPE, DataAccountController.get(), this));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.admin.shared.call.event.JoinDataAccountEventHandler#joinDataAccountSuccess(io.reflection.app.api.admin.shared.call.
+	 * JoinDataAccountRequest, io.reflection.app.api.admin.shared.call.JoinDataAccountResponse)
+	 */
+	@Override
+	public void joinDataAccountSuccess(JoinDataAccountRequest input, JoinDataAccountResponse output) {
+		preloader.hide();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.admin.shared.call.event.JoinDataAccountEventHandler#joinDataAccountFailure(io.reflection.app.api.admin.shared.call.
+	 * JoinDataAccountRequest, java.lang.Throwable)
+	 */
+	@Override
+	public void joinDataAccountFailure(JoinDataAccountRequest input, Throwable caught) {
+		preloader.hide();
 	}
 }

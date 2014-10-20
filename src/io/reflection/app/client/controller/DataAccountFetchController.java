@@ -2,7 +2,7 @@
 //  DataAccountFetchController.java
 //  storedata
 //
-//  Created by Stefano Capuzzi (stefanocapuzzi) on 9 Oct 2014.
+//  Created by Stefano Capuzzi on 9 Oct 2014.
 //  Copyright © 2014 Reflection.io Ltd. All rights reserved.
 //
 package io.reflection.app.client.controller;
@@ -10,13 +10,20 @@ package io.reflection.app.client.controller;
 import io.reflection.app.api.admin.client.AdminService;
 import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesRequest;
 import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesResponse;
+import io.reflection.app.api.admin.shared.call.TriggerDataAccountFetchIngestRequest;
+import io.reflection.app.api.admin.shared.call.TriggerDataAccountFetchIngestResponse;
+import io.reflection.app.api.admin.shared.call.TriggerDataAccountGatherRequest;
+import io.reflection.app.api.admin.shared.call.TriggerDataAccountGatherResponse;
 import io.reflection.app.api.admin.shared.call.event.GetDataAccountFetchesEventHandler;
+import io.reflection.app.api.admin.shared.call.event.TriggerDataAccountFetchIngestEventHandler;
+import io.reflection.app.api.admin.shared.call.event.TriggerDataAccountGatherEventHandler;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -26,7 +33,7 @@ import com.google.gwt.view.client.Range;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**
- * @author Stefano Capuzzi (stefanocapuzzi)
+ * @author Stefano Capuzzi
  * 
  */
 public class DataAccountFetchController extends AsyncDataProvider<DataAccountFetch> implements ServiceConstants {
@@ -109,12 +116,74 @@ public class DataAccountFetchController extends AsyncDataProvider<DataAccountFet
 
 	}
 
-	public void gather(Long dataAccountFetchId) {
-		// TODO
+	/**
+	 * Trigger the process of gathering data account
+	 * 
+	 * @param dataAccount
+	 */
+	public void gather(DataAccount dataAccount, Date from) {
+		AdminService service = ServiceCreator.createAdminService();
+
+		final TriggerDataAccountGatherRequest input = new TriggerDataAccountGatherRequest();
+		input.accessCode = ACCESS_CODE;
+
+		input.session = SessionController.get().getSessionForApiCall();
+
+		input.dataAccount = dataAccount;
+
+		input.from = from;
+
+		service.triggerDataAccountGather(input, new AsyncCallback<TriggerDataAccountGatherResponse>() {
+
+			@Override
+			public void onSuccess(TriggerDataAccountGatherResponse output) {
+				EventController.get().fireEventFromSource(new TriggerDataAccountGatherEventHandler.TriggerDataAccountGatherSuccess(input, output),
+						DataAccountFetchController.this);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				EventController.get().fireEventFromSource(new TriggerDataAccountGatherEventHandler.TriggerDataAccountGatherFailure(input, caught),
+						DataAccountFetchController.this);
+			}
+
+		});
+
 	}
 
-	public void ingest(Long dataAccountFetchId) {
-		// TODO
+	/**
+	 * Trigger the process of ingesting the data account to obtain fetches
+	 * 
+	 * @param dataAccountFetch
+	 */
+	public void ingest(DataAccountFetch dataAccountFetch) {
+		AdminService service = ServiceCreator.createAdminService();
+
+		final TriggerDataAccountFetchIngestRequest input = new TriggerDataAccountFetchIngestRequest();
+		input.accessCode = ACCESS_CODE;
+
+		input.session = SessionController.get().getSessionForApiCall();
+
+		input.fetch = dataAccountFetch;
+
+		service.triggerDataAccountFetchIngest(input, new AsyncCallback<TriggerDataAccountFetchIngestResponse>() {
+
+			@Override
+			public void onSuccess(TriggerDataAccountFetchIngestResponse output) {
+				if (output.status == StatusType.StatusTypeSuccess) {
+
+				}
+				EventController.get().fireEventFromSource(new TriggerDataAccountFetchIngestEventHandler.TriggerDataAccountFetchIngestSuccess(input, output),
+						DataAccountFetchController.this);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				EventController.get().fireEventFromSource(new TriggerDataAccountFetchIngestEventHandler.TriggerDataAccountFetchIngestFailure(input, caught),
+						DataAccountFetchController.this);
+			}
+
+		});
 	}
 
 	public List<DataAccountFetch> getDataAccountFetches() {

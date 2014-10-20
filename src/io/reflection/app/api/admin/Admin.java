@@ -1070,7 +1070,7 @@ public final class Admin extends ActionHandler {
 							"Chi Dire",
 							"An admin has linked to a user's account",
 							String.format(
-									"Hi Chi,\n\nThis is to let you know that the admin user [%d - %s] has added the data account [%d] for the data source [%d] and the username [%s]. This data account belongs to the user [%d - %s].\n\nReflection",
+									"Hi Chi,\n\nThis is to let you know that the admin user [%d - %s] has added the data account [%d] for the data source [%s] and the username [%s]. This data account belongs to the user [%d - %s].\n\nReflection",
 									adminUser.id.longValue(), FormattingHelper.getUserLongName(adminUser), input.dataAccount.id.longValue(), dataSource.name,
 									input.dataAccount.username, ownerUser.id.longValue(), FormattingHelper.getUserLongName(ownerUser)),
 							EmailFormatType.EmailFormatTypePlainText);

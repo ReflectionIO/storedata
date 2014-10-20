@@ -9,7 +9,13 @@ package io.reflection.app.client.page.admin;
 
 import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesRequest;
 import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesResponse;
+import io.reflection.app.api.admin.shared.call.TriggerDataAccountFetchIngestRequest;
+import io.reflection.app.api.admin.shared.call.TriggerDataAccountFetchIngestResponse;
+import io.reflection.app.api.admin.shared.call.TriggerDataAccountGatherRequest;
+import io.reflection.app.api.admin.shared.call.TriggerDataAccountGatherResponse;
 import io.reflection.app.api.admin.shared.call.event.GetDataAccountFetchesEventHandler;
+import io.reflection.app.api.admin.shared.call.event.TriggerDataAccountFetchIngestEventHandler;
+import io.reflection.app.api.admin.shared.call.event.TriggerDataAccountGatherEventHandler;
 import io.reflection.app.client.cell.StyledButtonCell;
 import io.reflection.app.client.controller.DataAccountFetchController;
 import io.reflection.app.client.controller.EventController;
@@ -26,6 +32,7 @@ import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.BootstrapGwtDatePicker;
 import io.reflection.app.client.part.DateSelector;
+import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.client.res.Images;
@@ -57,7 +64,8 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author Stefano Capuzzi (stefanocapuzzi)
  * 
  */
-public class DataAccountFetchesPage extends Page implements NavigationEventHandler, FilterEventHandler, GetDataAccountFetchesEventHandler {
+public class DataAccountFetchesPage extends Page implements NavigationEventHandler, FilterEventHandler, GetDataAccountFetchesEventHandler,
+		TriggerDataAccountGatherEventHandler, TriggerDataAccountFetchIngestEventHandler {
 
 	private static DataAccountFetchesPageUiBinder uiBinder = GWT.create(DataAccountFetchesPageUiBinder.class);
 
@@ -69,6 +77,7 @@ public class DataAccountFetchesPage extends Page implements NavigationEventHandl
 
 	@UiField DateSelector dateSelector = new DateSelector();
 	@UiField InlineHyperlink backLink;
+	@UiField Preloader preloader;
 
 	public DataAccountFetchesPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -147,10 +156,12 @@ public class DataAccountFetchesPage extends Page implements NavigationEventHandl
 			public void update(int index, DataAccountFetch object, String value) {
 				switch (value) {
 				case "gather":
-					DataAccountFetchController.get().gather(object.id);
+					preloader.show();
+					DataAccountFetchController.get().gather(object.linkedAccount, object.date);
 					break;
 				case "ingest":
-					DataAccountFetchController.get().ingest(object.id);
+					preloader.show();
+					DataAccountFetchController.get().ingest(object);
 					break;
 				}
 			}
@@ -221,6 +232,8 @@ public class DataAccountFetchesPage extends Page implements NavigationEventHandl
 		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
 		register(EventController.get().addHandlerToSource(GetDataAccountFetchesEventHandler.TYPE, DataAccountFetchController.get(), this));
+		register(EventController.get().addHandlerToSource(TriggerDataAccountGatherEventHandler.TYPE, DataAccountFetchController.get(), this));
+		register(EventController.get().addHandlerToSource(TriggerDataAccountFetchIngestEventHandler.TYPE, DataAccountFetchController.get(), this));
 	}
 
 	/*
@@ -320,5 +333,53 @@ public class DataAccountFetchesPage extends Page implements NavigationEventHandl
 	@Override
 	public void getDataAccountFetchesFailure(GetDataAccountFetchesRequest input, Throwable caught) {
 		DataAccountFetchController.get().updateRowCount(0, true);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.api.admin.shared.call.event.TriggerDataAccountFetchIngestEventHandler#triggerDataAccountFetchIngestSuccess(io.reflection.app.api.admin
+	 * .shared.call.TriggerDataAccountFetchIngestRequest, io.reflection.app.api.admin.shared.call.TriggerDataAccountFetchIngestResponse)
+	 */
+	@Override
+	public void triggerDataAccountFetchIngestSuccess(TriggerDataAccountFetchIngestRequest input, TriggerDataAccountFetchIngestResponse output) {
+		preloader.hide();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.api.admin.shared.call.event.TriggerDataAccountFetchIngestEventHandler#triggerDataAccountFetchIngestFailure(io.reflection.app.api.admin
+	 * .shared.call.TriggerDataAccountFetchIngestRequest, java.lang.Throwable)
+	 */
+	@Override
+	public void triggerDataAccountFetchIngestFailure(TriggerDataAccountFetchIngestRequest input, Throwable caught) {
+		preloader.hide();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.api.admin.shared.call.event.TriggerDataAccountGatherEventHandler#triggerDataAccountGatherSuccess(io.reflection.app.api.admin.shared
+	 * .call.TriggerDataAccountGatherRequest, io.reflection.app.api.admin.shared.call.TriggerDataAccountGatherResponse)
+	 */
+	@Override
+	public void triggerDataAccountGatherSuccess(TriggerDataAccountGatherRequest input, TriggerDataAccountGatherResponse output) {
+		preloader.hide();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.api.admin.shared.call.event.TriggerDataAccountGatherEventHandler#triggerDataAccountGatherFailure(io.reflection.app.api.admin.shared
+	 * .call.TriggerDataAccountGatherRequest, java.lang.Throwable)
+	 */
+	@Override
+	public void triggerDataAccountGatherFailure(TriggerDataAccountGatherRequest input, Throwable caught) {
+		preloader.hide();
 	}
 }
