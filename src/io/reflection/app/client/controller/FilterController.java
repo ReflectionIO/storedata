@@ -270,6 +270,7 @@ public class FilterController {
 	private Map<String, Object> mPreviousValues;
 	private Filter mCurrentFilter = new Filter();
 	private Filter defaultFilter = new Filter();
+	private Filter adminFilter = new Filter();
 
 	private int mInTransaction = 0;
 
@@ -289,16 +290,16 @@ public class FilterController {
 		commit();
 
 		defaultFilter = getDefaultFilter();
+		adminFilter = getDefaultFilter();
+		adminFilter.setStartTime(FilterHelper.getDaysAgo(30).getTime());
 
 		filters.put(PageType.RanksPageType, getDefaultFilter());
 		filters.put(PageType.MyAppsPageType, getDefaultFilter());
-		filters.put(PageType.FeedBrowserPageType, getDefaultFilter());
-		filters.put(PageType.SimpleModelRunPageType, getDefaultFilter());
 		filters.put(PageType.ItemPageType, getDefaultFilter());
 
-		Filter f = getDefaultFilter();
-		f.setStartTime(FilterHelper.getDaysAgo(30).getTime());
-		filters.put(PageType.DataAccountFetchesPageType, f);
+		filters.put(PageType.FeedBrowserPageType, getAdminFilter());
+		filters.put(PageType.DataAccountFetchesPageType, getAdminFilter());
+		filters.put(PageType.SimpleModelRunPageType, getAdminFilter());
 
 	}
 
@@ -308,6 +309,10 @@ public class FilterController {
 
 	private Filter getDefaultFilter() {
 		return defaultFilter.copyFilter();
+	}
+
+	private Filter getAdminFilter() {
+		return adminFilter.copyFilter();
 	}
 
 	/**
