@@ -8,7 +8,6 @@
 package io.reflection.app.api.core;
 
 import static io.reflection.app.api.PagerHelper.updatePager;
-import static io.reflection.app.helpers.ApiHelper.getGrossingListName;
 import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPAD_IOS;
 import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS;
 import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_UNIVERSAL_IOS;
@@ -79,6 +78,8 @@ import io.reflection.app.api.exception.AuthorisationException;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.collectors.Collector;
+import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
@@ -91,6 +92,7 @@ import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.Sale;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.helpers.ApiHelper;
 import io.reflection.app.helpers.SliceHelper;
 import io.reflection.app.itemrankarchivers.ItemRankArchiver;
 import io.reflection.app.itemrankarchivers.ItemRankArchiverFactory;
@@ -101,6 +103,7 @@ import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.country.CountryServiceProvider;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.datasource.DataSourceServiceProvider;
+import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.modelrun.ModelRunServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
@@ -113,13 +116,13 @@ import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.service.user.IUserService;
 import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
-import io.reflection.app.shared.util.SparseArray;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -430,40 +433,65 @@ public final class Core extends ActionHandler {
 				cal.add(Calendar.DAY_OF_YEAR, -1);
 				Date start = cal.getTime();
 
-				List<String> itemIds = new ArrayList<String>();
-				final Map<String, Rank> lookup = new HashMap<String, Rank>();
+				Set<String> itemIds = new HashSet<String>();
+				// final Map<String, Rank> lookup = new HashMap<String, Rank>();
 
-				List<Rank> ranks = RankServiceProvider.provide().getAllRanks(input.country, input.store, input.category,
-						getGrossingListName(input.store, input.listType), start, end);
+				Long code = FeedFetchServiceProvider.provide().getGatherCode(input.country, input.store, start, end);
 
-				if (ranks != null && ranks.size() != 0) {
-					SparseArray<Rank> free = new SparseArray<Rank>();
-					SparseArray<Rank> paid = new SparseArray<Rank>();
-					SparseArray<Rank> grossing = new SparseArray<Rank>();
+				List<String> listTypes = ApiHelper.getAllListTypes(input.store, input.listType);
+				Collector collector = CollectorFactory.getCollectorForStore(input.store.a3Code);
+
+				List<Rank> ranks;
+				for (String listType : listTypes) {
+					// get all the ranks for the list type (we are using an infinite pager with no sorting to allow us to generate a deletion key during
+					// prediction)
+					ranks = RankServiceProvider.provide().getGatherCodeRanks(input.country, input.store, input.category, listType, code,
+							PagerHelper.infinitePager(), Boolean.TRUE);
 
 					for (Rank rank : ranks) {
-						if (!lookup.containsKey(rank.itemId)) {
-							itemIds.add(rank.itemId);
-							lookup.put(rank.itemId, rank);
-						}
-
-						if (rank.price.floatValue() == 0 && rank.position.intValue() > 0) {
-							free.append(rank.position.intValue(), rank);
-						}
-
-						if (rank.price.floatValue() != 0 && rank.position.intValue() > 0) {
-							paid.append(rank.position.intValue(), rank);
-						}
-
-						if (rank.grossingPosition.intValue() != 0) {
-							grossing.append(rank.grossingPosition.intValue(), rank);
-						}
+						itemIds.add(rank.itemId);
 					}
 
-					output.freeRanks = free.toList();
-					output.paidRanks = paid.toList();
-					output.grossingRanks = grossing.toList();
+					if (collector.isFree(listType)) {
+						output.freeRanks = ranks;
+					} else if (collector.isPaid(listType)) {
+						output.paidRanks = ranks;
+					} else if (collector.isGrossing(listType)) {
+						output.grossingRanks = ranks;
+					}
 				}
+
+				// List<Rank> ranks = RankServiceProvider.provide().getAllRanks(input.country, input.store, input.category,
+				// getGrossingListName(input.store, input.listType), start, end);
+				//
+				// if (ranks != null && ranks.size() != 0) {
+				// SparseArray<Rank> free = new SparseArray<Rank>();
+				// SparseArray<Rank> paid = new SparseArray<Rank>();
+				// SparseArray<Rank> grossing = new SparseArray<Rank>();
+				//
+				// for (Rank rank : ranks) {
+				// if (!lookup.containsKey(rank.itemId)) {
+				// itemIds.add(rank.itemId);
+				// lookup.put(rank.itemId, rank);
+				// }
+				//
+				// if (rank.price.floatValue() == 0 && rank.position.intValue() > 0) {
+				// free.append(rank.position.intValue(), rank);
+				// }
+				//
+				// if (rank.price.floatValue() != 0 && rank.position.intValue() > 0) {
+				// paid.append(rank.position.intValue(), rank);
+				// }
+				//
+				// if (rank.grossingPosition.intValue() != 0) {
+				// grossing.append(rank.grossingPosition.intValue(), rank);
+				// }
+				// }
+				//
+				// output.freeRanks = free.toList();
+				// output.paidRanks = paid.toList();
+				// output.grossingRanks = grossing.toList();
+				// }
 
 				output.items = ItemServiceProvider.provide().getInternalIdItemBatch(itemIds);
 

@@ -311,6 +311,26 @@ public class CollectorIOS extends StoreCollector implements Collector {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see io.reflection.app.collectors.Collector#isPaid(java.lang.String)
+	 */
+	@Override
+	public boolean isPaid(String type) {
+		return type.equalsIgnoreCase(TOP_PAID_IPAD_APPS) || type.equalsIgnoreCase(TOP_PAID_APPS);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.collectors.Collector#isFree(java.lang.String)
+	 */
+	@Override
+	public boolean isFree(String type) {
+		return type.equalsIgnoreCase(TOP_FREE_IPAD_APPS) || type.equalsIgnoreCase(TOP_FREE_APPS);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.collectors.Collector#getCounterpartTypes(java.lang.String)
 	 */
 	@Override

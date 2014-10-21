@@ -46,7 +46,10 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import co.spchopr.persistentmap.PersistentMapFactory;
+
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
+import com.spacehopperstudios.utility.StringUtils;
 
 /**
  * @author billy1380
@@ -395,6 +398,27 @@ public class PredictorIOS implements Predictor {
 		}
 
 		alterFeedFetchStatus(simpleModelRun.feedFetch);
+
+		Collector collector = CollectorFactory.getCollectorForStore(s.a3Code);
+		boolean isGrossing = collector.isGrossing(simpleModelRun.feedFetch.type);
+		Pager pager = PagerHelper.infinitePager();
+		if (isGrossing) {
+			pager.sortBy = "grossingposition";
+		} else {
+			pager.sortBy = "position";
+		}
+
+		List<String> listTypes = new ArrayList<String>();
+
+		if (isGrossing) {
+			listTypes.addAll(collector.getCounterpartTypes(simpleModelRun.feedFetch.type));
+		}
+
+		listTypes.add(simpleModelRun.feedFetch.type);
+		String memcacheKey = RankServiceProvider.provide().getName() + ".gathercoderanks." + simpleModelRun.feedFetch.code.toString() + "." + c.a2Code + "." + s.a3Code + "." + simpleModelRun.feedFetch.category.id.toString() + "."
+				+ StringUtils.join(listTypes, ".") + "." + pager.start + "." + pager.count + "." + pager.sortDirection + "." + pager.sortBy;
+
+		PersistentMapFactory.createObjectify().delete(memcacheKey);
 
 		if (LOG.isLoggable(Level.INFO)) {
 			LOG.info("predictRevenueAndDownloads completed and status updated");
