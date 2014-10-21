@@ -19,6 +19,7 @@ import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.FeedFetchStatusType;
 import io.reflection.app.datatypes.shared.Store;
+import io.reflection.app.helpers.SqlQueryHelper;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
@@ -605,4 +606,50 @@ final class FeedFetchService implements IFeedFetchService {
 
 		return feedFetch;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.feedfetch.IFeedFetchService#getDatesFeedFetches(io.reflection.app.datatypes.shared.Country,
+	 * io.reflection.app.datatypes.shared.Store, io.reflection.app.datatypes.shared.Category, java.util.Collection, java.util.Date, java.util.Date)
+	 */
+	@Override
+	public List<FeedFetch> getDatesFeedFetches(Country country, Store store, Category category, Collection<String> types, Date after, Date before)
+			throws DataAccessException {
+		List<FeedFetch> feedFetches = new ArrayList<FeedFetch>();
+
+		String typesQueryPart = null;
+		if (types.size() == 1) {
+			typesQueryPart = String.format("`type`='%s'", types.iterator().next());
+		} else {
+			typesQueryPart = "`type` IN ('" + StringUtils.join(types, "','") + "')";
+		}
+
+		String getDatesFeedFetchesQuery = String.format(
+				"SELECT * FROM `feedfetch` WHERE `store`='%s' AND `country`='%s' AND %s AND `categoryid`='%d' AND %s `deleted`='n'", addslashes(store.a3Code),
+				addslashes(country.a2Code), typesQueryPart == null ? "" : typesQueryPart, category.id.longValue(),
+				SqlQueryHelper.beforeAfterQuery(before, after));
+
+		Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
+
+		try {
+			feedFetchConnection.connect();
+			feedFetchConnection.executeQuery(getDatesFeedFetchesQuery);
+
+			while (feedFetchConnection.fetchNextRow()) {
+				FeedFetch feedFetch = toFeedFetch(feedFetchConnection);
+
+				if (feedFetch != null) {
+					feedFetches.add(feedFetch);
+				}
+			}
+		} finally {
+			if (feedFetchConnection != null) {
+				feedFetchConnection.disconnect();
+			}
+		}
+
+		return feedFetches;
+	}
+
 }

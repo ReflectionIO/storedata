@@ -163,4 +163,19 @@ public interface IFeedFetchService extends IService {
 	 */
 	public FeedFetch getListTypeCodeFeedFetch(Country country, Store store, Category category, String listType, Long code) throws DataAccessException;
 
+	/**
+	 * Get feed fetches within a date range
+	 * 
+	 * @param country
+	 * @param store
+	 * @param category
+	 * @param types
+	 * @param after
+	 * @param before
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<FeedFetch> getDatesFeedFetches(Country country, Store store, Category category, Collection<String> types, Date after, Date before)
+			throws DataAccessException;
+
 }
