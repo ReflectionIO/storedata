@@ -172,11 +172,11 @@ final class SimpleModelRunService implements ISimpleModelRunService {
 	 * io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
-	public List<SimpleModelRun> getFeedFetchesSimpleModelRuns(Collection<Long> feedFetcheIds, Pager pager) throws DataAccessException {
+	public List<SimpleModelRun> getFeedFetchesSimpleModelRuns(Collection<Long> feedFetchIds, Pager pager) throws DataAccessException {
 		List<SimpleModelRun> simpleModelRunList = new ArrayList<SimpleModelRun>();
 
 		StringBuffer joinedIds = new StringBuffer();
-		for (Long id : feedFetcheIds) {
+		for (Long id : feedFetchIds) {
 			if (joinedIds.length() != 0) {
 				joinedIds.append(",");
 			}
@@ -212,11 +212,11 @@ final class SimpleModelRunService implements ISimpleModelRunService {
 	 * @see io.reflection.app.service.simplemodelrun.ISimpleModelRunService#getFeedFetchesSimpleModelRunsCount(java.util.Collection)
 	 */
 	@Override
-	public Long getFeedFetchesSimpleModelRunsCount(Collection<Long> feedFetcheIds) throws DataAccessException {
+	public Long getFeedFetchesSimpleModelRunsCount(Collection<Long> feedFetchIds) throws DataAccessException {
 		Long SimpleModelRunCount = new Long(0);
 
 		StringBuffer joinedIds = new StringBuffer();
-		for (Long id : feedFetcheIds) {
+		for (Long id : feedFetchIds) {
 			if (joinedIds.length() != 0) {
 				joinedIds.append(",");
 			}

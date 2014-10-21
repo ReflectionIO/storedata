@@ -79,6 +79,6 @@ public interface ISimpleModelRunService extends IService {
 	 * @return
 	 * @throws DataAccessException
 	 */
-	public Long getFeedFetchesSimpleModelRunsCount(Collection<Long> feedFetcheIds) throws DataAccessException;
+	public Long getFeedFetchesSimpleModelRunsCount(Collection<Long> feedFetchIds) throws DataAccessException;
 
 }
