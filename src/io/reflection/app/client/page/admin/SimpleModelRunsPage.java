@@ -220,7 +220,7 @@ public class SimpleModelRunsPage extends Page implements FilterEventHandler {
 			SimpleModelRunController.get().reset();
 			simplePager.setPageStart(0);
 			SimpleModelRunController.get().fetchSimpleModelRuns();
-			PageType.SimpleModelRunPageType.show(FilterController.get().asSimpleModelRunFilterString());
+			PageType.SimpleModelRunPageType.show(FilterController.get().asFeedFilterString());
 		}
 	}
 
@@ -235,7 +235,7 @@ public class SimpleModelRunsPage extends Page implements FilterEventHandler {
 			SimpleModelRunController.get().reset();
 			simplePager.setPageStart(0);
 			SimpleModelRunController.get().fetchSimpleModelRuns();
-			PageType.SimpleModelRunPageType.show(FilterController.get().asSimpleModelRunFilterString());
+			PageType.SimpleModelRunPageType.show(FilterController.get().asFeedFilterString());
 		}
 	}
 

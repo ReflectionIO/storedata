@@ -343,7 +343,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 					FilterController.get().asMyAppsFilterString()));
 		}
 		feedBrowserLink.setTargetHistoryToken(PageType.FeedBrowserPageType.asTargetHistoryToken("view", FilterController.get().asFeedFilterString()));
-		simpleModelRunLink.setTargetHistoryToken(PageType.SimpleModelRunPageType.asTargetHistoryToken(FilterController.get().asSimpleModelRunFilterString()));
+		simpleModelRunLink.setTargetHistoryToken(PageType.SimpleModelRunPageType.asTargetHistoryToken(FilterController.get().asFeedFilterString()));
 		dataAccountFetchesLink.setTargetHistoryToken(PageType.DataAccountFetchesPageType.asTargetHistoryToken(FilterController.get()
 				.asDataAccountFetchFilterString()));
 
