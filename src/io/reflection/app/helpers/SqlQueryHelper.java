@@ -23,6 +23,10 @@ public class SqlQueryHelper {
 	public static String beforeAfterQuery(Date before, Date after) {
 		StringBuffer buffer = new StringBuffer();
 
+		if (before != null) {
+			before.setTime(before.getTime() + 86399999); // Add 1 day - 1 ms to before
+		}
+
 		if (before != null && after != null) {
 			buffer.append("(`date` BETWEEN FROM_UNIXTIME(");
 			buffer.append(after.getTime() / 1000);
