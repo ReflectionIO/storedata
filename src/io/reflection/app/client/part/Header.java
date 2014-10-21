@@ -101,6 +101,9 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@UiField LIElement feedBrowserItem;
 	@UiField InlineHyperlink feedBrowserLink;
 
+	@UiField LIElement simpleModelRunItem;
+	@UiField InlineHyperlink simpleModelRunLink;
+
 	@UiField UListElement login;
 
 	@UiField InlineHyperlink loginLink;
@@ -236,6 +239,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			items.add(forumItem);
 			items.add(usersItem);
 			items.add(feedBrowserItem);
+			items.add(simpleModelRunItem);
 			items.add(rolesItem);
 			items.add(permissionsItem);
 			items.add(dataAccountsItem);
@@ -301,6 +305,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			// highlight(mRegisterItem);
 		} else if (PageType.FeedBrowserPageType.equals(current.getPage())) {
 			highlight(adminDropdown, feedBrowserItem);
+		} else if (PageType.SimpleModelRunPageType.equals(current.getPage())) {
+			highlight(adminDropdown, simpleModelRunItem);
 		} else if (PageType.RolesPageType.equals(current.getPage())) {
 			highlight(adminDropdown, rolesItem);
 		} else if (PageType.PermissionsPageType.equals(current.getPage())) {
@@ -337,6 +343,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 					FilterController.get().asMyAppsFilterString()));
 		}
 		feedBrowserLink.setTargetHistoryToken(PageType.FeedBrowserPageType.asTargetHistoryToken("view", FilterController.get().asFeedFilterString()));
+		simpleModelRunLink.setTargetHistoryToken(PageType.SimpleModelRunPageType.asTargetHistoryToken(FilterController.get().asFeedFilterString()));
 		dataAccountFetchesLink.setTargetHistoryToken(PageType.DataAccountFetchesPageType.asTargetHistoryToken(FilterController.get()
 				.asDataAccountFetchFilterString()));
 

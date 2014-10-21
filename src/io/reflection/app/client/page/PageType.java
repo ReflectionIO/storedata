@@ -15,6 +15,7 @@ import io.reflection.app.client.page.admin.FeedBrowserPage;
 import io.reflection.app.client.page.admin.ItemsPage;
 import io.reflection.app.client.page.admin.PermissionsPage;
 import io.reflection.app.client.page.admin.RolesPage;
+import io.reflection.app.client.page.admin.SimpleModelRunsPage;
 import io.reflection.app.client.page.admin.UsersPage;
 import io.reflection.app.client.page.blog.EditPostPage;
 import io.reflection.app.client.page.blog.PostAdminPage;
@@ -77,6 +78,7 @@ public enum PageType {
 	ResetPasswordPageType("resetpassword", false),
 	RolesPageType("roles", "MRL"),
 	SearchPageType("search", true),
+	SimpleModelRunPageType("simplemodelrun", "MSM"),
 	TermsPageType("terms", false),
 	UpgradePageType("upgrade", true),
 	UsersPageType("users", "MUS"),
@@ -197,6 +199,9 @@ public enum PageType {
 		Page page = null;
 
 		switch (this) {
+		case SimpleModelRunPageType:
+			page = new SimpleModelRunsPage();
+			break;
 		case DataAccountsPageType:
 			page = new DataAccountsPage();
 			break;

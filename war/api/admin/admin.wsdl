@@ -82,6 +82,9 @@
 
 			<xsd:element name="JoinDataAccountInput" type="sda:JoinDataAccountRequest" />
 			<xsd:element name="JoinDataAccountOutput" type="sda:JoinDataAccountResponse" />
+			
+			<xsd:element name="GetSimpleModelRunsInput" type="sda:GetSimpleModelRunsRequest" />
+			<xsd:element name="GetSimpleModelRunsOutput" type="sda:GetSimpleModelRunsResponse" />
 
 
 			<xsd:complexType name="GetUsersRequest">
@@ -549,6 +552,8 @@
 							<xsd:element name="dataAccount" type="sd:DataAccount" maxOccurs="1" />
 							<xsd:element name="pager" type="sd:Pager" />
 						</xsd:sequence>
+						<xsd:attribute name="start" type="xsd:dateTime" />
+						<xsd:attribute name="end" type="xsd:dateTime" />
 					</xsd:extension>
 				</xsd:complexContent>
 			</xsd:complexType>
@@ -616,6 +621,34 @@
 				<xsd:complexContent>
 					<xsd:extension base="sd:Response">
 
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			
+			<xsd:complexType name="GetSimpleModelRunsRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>							
+							<xsd:element name="country" type="sd:Country" />
+                            <xsd:element name="store" type="sd:Store" />
+                            <xsd:element name="category" type="sd:Category" />
+                            <xsd:element name="feedFetch" type="sd:FeedFetch" />
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>						
+						<xsd:attribute name="listType" type="xsd:string" />
+						<xsd:attribute name="start" type="xsd:dateTime" />
+						<xsd:attribute name="end" type="xsd:dateTime" />						
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetSimpleModelRunsResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+							<xsd:element name="simpleModelRuns" type="sd:SimpleModelRun" maxOccurs="unbounded" />
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
 					</xsd:extension>
 				</xsd:complexContent>
 			</xsd:complexType>
@@ -804,6 +837,13 @@
 	<wsdl:message name="JoinDataAccountResponse">
 		<wsdl:part name="output" element="sda:JoinDataAccountOutput" />
 	</wsdl:message>
+	
+	<wsdl:message name="GetSimpleModelRunsRequest">
+		<wsdl:part name="input" element="sda:GetSimpleModelRunsInput" />
+	</wsdl:message>
+	<wsdl:message name="GetSimpleModelRunsResponse">
+		<wsdl:part name="output" element="sda:GetSimpleModelRunsOutput" />
+	</wsdl:message>
 
 	<wsdl:portType name="admin">
 		<wsdl:operation name="GetUsers">
@@ -928,6 +968,11 @@
 		<wsdl:operation name="JoinDataAccount">
 			<wsdl:input message="sda:JoinDataAccountRequest" />
 			<wsdl:output message="sda:JoinDataAccountResponse" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetSimpleModelRuns">
+			<wsdl:input message="sda:GetSimpleModelRunsRequest" />
+			<wsdl:output message="sda:GetSimpleModelRunsResponse" />
 		</wsdl:operation>
 	</wsdl:portType>
 
@@ -1178,6 +1223,16 @@
 		
 		<wsdl:operation name="JoinDataAccount">
 			<soap:operation soapAction="http://app.reflection.io/admin/JoinDataAccount" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetSimpleModelRuns">
+			<soap:operation soapAction="http://app.reflection.io/admin/GetSimpleModelRuns" />
 			<wsdl:input>
 				<soap:body use="literal" />
 			</wsdl:input>

@@ -9,3 +9,5 @@ INSERT INTO `permission` (`name`,`description`,`code`) VALUES ('Manage categorie
 INSERT INTO `permission` (`name`,`description`,`code`) VALUES ('Manage data accounts','Can perform actions on data accounts','MDA')$$
 
 INSERT INTO `permission` (`name`,`description`,`code`) VALUES ('Manage data account fetches','Can perform actions on data account fetches','MDF')$$
+
+INSERT INTO `permission` (`name`,`description`,`code`) VALUES ('Manage simple model run','Can perform actions on simple model runs','MSM')$$

@@ -33,6 +33,8 @@ import io.reflection.app.api.admin.shared.call.GetRolesAndPermissionsRequest;
 import io.reflection.app.api.admin.shared.call.GetRolesAndPermissionsResponse;
 import io.reflection.app.api.admin.shared.call.GetRolesRequest;
 import io.reflection.app.api.admin.shared.call.GetRolesResponse;
+import io.reflection.app.api.admin.shared.call.GetSimpleModelRunsRequest;
+import io.reflection.app.api.admin.shared.call.GetSimpleModelRunsResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersCountResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersRequest;
@@ -70,7 +72,9 @@ import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.EmailFormatType;
+import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.Role;
+import io.reflection.app.datatypes.shared.SimpleModelRun;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.helpers.EmailHelper;
 import io.reflection.app.ingestors.Ingestor;
@@ -88,6 +92,7 @@ import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
 import io.reflection.app.service.role.RoleServiceProvider;
+import io.reflection.app.service.simplemodelrun.SimpleModelRunServiceProvider;
 import io.reflection.app.service.user.IUserService;
 import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
@@ -1081,6 +1086,92 @@ public final class Admin extends ActionHandler {
 			output.error = convertToErrorAndLog(LOG, e);
 		}
 		LOG.finer("Exiting joinDataAccount");
+		return output;
+	}
+
+	public GetSimpleModelRunsResponse getSimpleModelRuns(GetSimpleModelRunsRequest input) {
+		LOG.finer("Entering getSimpleModelRuns");
+		GetSimpleModelRunsResponse output = new GetSimpleModelRunsResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("JoinDataAccountRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+
+			Calendar cal = Calendar.getInstance();
+
+			if (input.end == null) input.end = cal.getTime();
+
+			if (input.start == null) {
+				cal.setTime(input.end);
+				cal.add(Calendar.DAY_OF_YEAR, -30);
+				input.start = cal.getTime();
+			}
+
+			long diff = input.end.getTime() - input.start.getTime();
+			long diffDays = diff / (24 * 60 * 60 * 1000);
+
+			if (diffDays > 60 || diffDays < 0)
+				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
+						ApiError.DateRangeOutOfBounds.getMessage("0-60 days: input.end - input.start"));
+
+			input.country = ValidationHelper.validateCountry(input.country, "input");
+
+			input.store = ValidationHelper.validateStore(input.store, "input");
+
+			input.listType = ValidationHelper.validateListType(input.listType, input.store);
+			List<String> listTypes = new ArrayList<String>();
+			listTypes.add(input.listType);
+
+			if (input.category != null) {
+				input.category = ValidationHelper.validateCategory(input.category, "input.category");
+			} else {
+				input.category = CategoryServiceProvider.provide().getAllCategory(input.store);
+			}
+
+			input.pager = ValidationHelper.validatePager(input.pager, "input");
+			output.pager = input.pager;
+
+			List<FeedFetch> feedFetchList = FeedFetchServiceProvider.provide().getDatesFeedFetches(input.country, input.store, input.category, listTypes,
+					input.start, input.end);
+
+			if (feedFetchList != null && feedFetchList.size() > 0) {
+				// Create feedfetchId : feedFetch HashMap
+				Map<Long, FeedFetch> feedFetchIdLookup = new HashMap<Long, FeedFetch>();
+				for (FeedFetch feedFetch : feedFetchList) {
+					if (feedFetchIdLookup.get(feedFetch.id) == null) {
+						feedFetchIdLookup.put(feedFetch.id, feedFetch);
+					}
+				}
+
+				List<SimpleModelRun> simpleModelRunList = SimpleModelRunServiceProvider.provide().getFeedFetchesSimpleModelRuns(feedFetchIdLookup.keySet(),
+						input.pager);
+
+				// Add feedFetch object to SimpleModelRuns
+				for (SimpleModelRun simpleModelRun : simpleModelRunList) {
+					if (feedFetchIdLookup.get(simpleModelRun.feedFetch.id) != null) {
+						simpleModelRun.feedFetch = feedFetchIdLookup.get(simpleModelRun.feedFetch.id);
+					}
+				}
+
+				updatePager(output.pager, output.simpleModelRuns, input.pager.totalCount == null ? SimpleModelRunServiceProvider.provide()
+						.getFeedFetchesSimpleModelRunsCount(feedFetchIdLookup.keySet()) : null);
+
+				output.simpleModelRuns = simpleModelRunList;
+			} else {
+				updatePager(output.pager, null, Long.valueOf(0));
+			}
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getSimpleModelRuns");
 		return output;
 	}
 }

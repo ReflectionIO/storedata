@@ -83,7 +83,6 @@ public class FilterController {
 
 			if ((splitDecoded = Stack.decode(ITEM_FILTER_KEY, filter)) != null && splitDecoded.length == 8) {
 				parsed = new Filter();
-
 				parsed.setStoreA3Code(splitDecoded[0]);
 				parsed.setCountryA2Code(splitDecoded[1]);
 				parsed.setCategoryId(Long.valueOf(splitDecoded[2]));
@@ -92,32 +91,34 @@ public class FilterController {
 				parsed.setEndTime(Long.valueOf(splitDecoded[5]));
 				parsed.setChartType(splitDecoded[6]);
 				parsed.setSummaryType(splitDecoded[7]);
+
 			} else if ((splitDecoded = Stack.decode(RANK_FILTER_KEY, filter)) != null && splitDecoded.length == 5) {
 				parsed = new Filter();
-
 				parsed.setStoreA3Code(splitDecoded[0]);
 				parsed.setCountryA2Code(splitDecoded[1]);
 				parsed.setCategoryId(Long.valueOf(splitDecoded[2]));
 				parsed.setEndTime(Long.valueOf(splitDecoded[3]));
 				parsed.setDailyData(splitDecoded[4]);
+
 			} else if ((splitDecoded = Stack.decode(MYAPP_FILTER_KEY, filter)) != null && splitDecoded.length == 5) {
 				parsed = new Filter();
-
 				parsed.setStoreA3Code(splitDecoded[0]);
 				parsed.setCountryA2Code(splitDecoded[1]);
 				parsed.setStartTime(Long.valueOf(splitDecoded[2]));
 				parsed.setEndTime(Long.valueOf(splitDecoded[3]));
 				parsed.setLinkedAccountId(Long.valueOf(splitDecoded[4]));
-			} else if ((splitDecoded = Stack.decode(FEED_FILTER_KEY, filter)) != null && splitDecoded.length == 5) {
-				parsed = new Filter();
 
+			} else if ((splitDecoded = Stack.decode(FEED_FILTER_KEY, filter)) != null && splitDecoded.length == 6) {
+				parsed = new Filter();
 				parsed.setListType(splitDecoded[0]);
-				parsed.setCountryA2Code(splitDecoded[1]);
-				parsed.setStoreA3Code(splitDecoded[2]);
+				parsed.setStoreA3Code(splitDecoded[1]);
+				parsed.setCountryA2Code(splitDecoded[2]);
 				parsed.setCategoryId(Long.valueOf(splitDecoded[3]));
+				parsed.setStartTime(Long.valueOf(splitDecoded[4]));
+				parsed.setEndTime(Long.valueOf(splitDecoded[5]));
+
 			} else if ((splitDecoded = Stack.decode(DATA_ACCOUNT_FETCH_FILTER_KEY, filter)) != null && splitDecoded.length == 2) {
 				parsed = new Filter();
-
 				parsed.setStartTime(Long.valueOf(splitDecoded[0]));
 				parsed.setEndTime(Long.valueOf(splitDecoded[1]));
 			}
@@ -220,7 +221,8 @@ public class FilterController {
 		}
 
 		public String asFeedFilterString() {
-			return Stack.encode(FEED_FILTER_KEY, getListType(), getStoreA3Code(), getCountryA2Code(), getCategoryId().toString());
+			return Stack.encode(FEED_FILTER_KEY, getListType(), getStoreA3Code(), getCountryA2Code(), getCategoryId().toString(), getStartTime().toString(),
+					getEndTime().toString());
 		}
 
 		public String asDataAccountFetchFilterString() {
@@ -255,6 +257,7 @@ public class FilterController {
 	private Map<String, Object> mPreviousValues;
 	private Filter mCurrentFilter = new Filter();
 	private Filter defaultFilter = new Filter();
+	private Filter adminFilter = new Filter();
 
 	private int mInTransaction = 0;
 
@@ -274,15 +277,15 @@ public class FilterController {
 		commit();
 
 		defaultFilter = getDefaultFilter();
+		adminFilter = getDefaultFilter();
+		adminFilter.setStartTime(FilterHelper.getDaysAgo(30).getTime());
 
 		filters.put(PageType.RanksPageType, getDefaultFilter());
 		filters.put(PageType.MyAppsPageType, getDefaultFilter());
-		filters.put(PageType.FeedBrowserPageType, getDefaultFilter());
 		filters.put(PageType.ItemPageType, getDefaultFilter());
 
-		Filter f = getDefaultFilter();
-		f.setStartTime(FilterHelper.getDaysAgo(30).getTime());
-		filters.put(PageType.DataAccountFetchesPageType, f);
+		filters.put(PageType.FeedBrowserPageType, getAdminFilter());
+		filters.put(PageType.DataAccountFetchesPageType, getAdminFilter());
 
 	}
 
@@ -292,6 +295,10 @@ public class FilterController {
 
 	private Filter getDefaultFilter() {
 		return defaultFilter.copyFilter();
+	}
+
+	private Filter getAdminFilter() {
+		return adminFilter.copyFilter();
 	}
 
 	/**
@@ -310,7 +317,7 @@ public class FilterController {
 				pageTypeFilter = PageType.MyAppsPageType;
 				mCurrentFilter = filters.get(pageTypeFilter);
 			}
-			if (allParts[0].equals("!feedbrowser") && pageTypeFilter != PageType.FeedBrowserPageType) {
+			if ((allParts[0].equals("!feedbrowser") || allParts[0].equals("!simplemodelrun")) && pageTypeFilter != PageType.FeedBrowserPageType) {
 				pageTypeFilter = PageType.FeedBrowserPageType;
 				mCurrentFilter = filters.get(pageTypeFilter);
 			}
