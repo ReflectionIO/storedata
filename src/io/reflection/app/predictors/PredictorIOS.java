@@ -7,6 +7,7 @@
 //
 package io.reflection.app.predictors;
 
+import io.reflection.app.CallServiceMethodServlet;
 import io.reflection.app.api.PagerHelper;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
@@ -425,6 +426,9 @@ public class PredictorIOS implements Predictor {
 				+ pager.count + "." + pager.sortDirection + "." + pager.sortBy;
 
 		PersistentMapFactory.createObjectify().delete(memcacheKey);
+
+		CallServiceMethodServlet.enqueueGetAllRanks(c.a2Code, s.a3Code, simpleModelRun.feedFetch.category.id, simpleModelRun.feedFetch.type,
+				simpleModelRun.feedFetch.code);
 
 		if (LOG.isLoggable(Level.INFO)) {
 			LOG.info("predictRevenueAndDownloads completed and status updated");

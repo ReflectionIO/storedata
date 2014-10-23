@@ -603,7 +603,7 @@ public class DevHelperServlet extends HttpServlet {
 				success = true;
 
 			} else if ("cacheranks".equalsIgnoreCase(action)) {
-				CallServiceMethodServlet.enqueueGetAllRanks("us", DataTypeHelper.IOS_STORE_A3, Long.valueOf(24), CollectorIOS.TOP_GROSSING_APPS, new Date());
+				cacheRanks();
 
 				success = true;
 			} else if ("archive".equalsIgnoreCase(action)) {
@@ -667,6 +667,40 @@ public class DevHelperServlet extends HttpServlet {
 	// grossingType), new GoogleCloudStorageFileOutput("rankmatchoutput", topType + "_" + grossingType + format.format(new Date()) + "_%d.csv",
 	// "text/csv", reduceSharedCount)), getSettings());
 	// }
+
+	/**
+	 * 
+	 */
+	private void cacheRanks() {
+
+		Date date = new Date();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 1);
+		Date end = cal.getTime();
+		cal.add(Calendar.DAY_OF_YEAR, -1);
+		Date start = cal.getTime();
+
+		Store s = new Store();
+		s.a3Code = DataTypeHelper.IOS_STORE_A3;
+
+		Country c = new Country();
+		c.a2Code = "us";
+
+		Long code = null;
+		try {
+			code = FeedFetchServiceProvider.provide().getGatherCode(c, s, start, end);
+		} catch (DataAccessException e) {
+			throw new RuntimeException(e);
+		}
+
+		if (code != null) {
+			CallServiceMethodServlet.enqueueGetAllRanks("us", DataTypeHelper.IOS_STORE_A3, Long.valueOf(24), CollectorIOS.TOP_GROSSING_APPS, code);
+		}
+	}
 
 	// private String getUrlBase(HttpServletRequest req) throws MalformedURLException {
 	// URL requestUrl = new URL(req.getRequestURL().toString());
