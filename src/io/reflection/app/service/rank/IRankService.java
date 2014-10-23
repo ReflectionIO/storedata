@@ -140,21 +140,22 @@ public interface IRankService extends IService {
 	 */
 	public Long updateRanksBatch(Collection<Rank> updateRanks) throws DataAccessException;
 
-	/**
-	 * 
-	 * @param country
-	 * @param store
-	 * @param category
-	 * @param listType
-	 * @param start
-	 * @param end
-	 * @return
-	 * @throws DataAccessException
-	 */
-	public List<Rank> getAllRanks(Country country, Store store, Category category, String listType, Date start, Date end) throws DataAccessException;
+	// /**
+	// *
+	// * @param country
+	// * @param store
+	// * @param category
+	// * @param listType
+	// * @param start
+	// * @param end
+	// * @return
+	// * @throws DataAccessException
+	// */
+	// public List<Rank> getAllRanks(Country country, Store store, Category category, String listType, Date start, Date end) throws DataAccessException;
 
 	/**
 	 * Get Rank Ids
+	 * 
 	 * @param country
 	 * @param store
 	 * @param category
