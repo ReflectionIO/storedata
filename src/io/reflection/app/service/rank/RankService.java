@@ -629,6 +629,10 @@ final class RankService implements IRankService {
 			pager.sortBy = "position";
 		}
 
+		if (pager.sortDirection == null) {
+			pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
+		}
+
 		List<String> types = new ArrayList<String>();
 
 		if (isGrossing) {

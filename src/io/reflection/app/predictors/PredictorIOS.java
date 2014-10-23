@@ -10,6 +10,7 @@ package io.reflection.app.predictors;
 import io.reflection.app.api.PagerHelper;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.apple.ItemPropertyLookupServlet;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
@@ -408,6 +409,10 @@ public class PredictorIOS implements Predictor {
 			pager.sortBy = "position";
 		}
 
+		if (pager.sortDirection == null) {
+			pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
+		}
+
 		List<String> listTypes = new ArrayList<String>();
 
 		if (isGrossing) {
@@ -415,8 +420,9 @@ public class PredictorIOS implements Predictor {
 		}
 
 		listTypes.add(simpleModelRun.feedFetch.type);
-		String memcacheKey = RankServiceProvider.provide().getName() + ".gathercoderanks." + simpleModelRun.feedFetch.code.toString() + "." + c.a2Code + "." + s.a3Code + "." + simpleModelRun.feedFetch.category.id.toString() + "."
-				+ StringUtils.join(listTypes, ".") + "." + pager.start + "." + pager.count + "." + pager.sortDirection + "." + pager.sortBy;
+		String memcacheKey = RankServiceProvider.provide().getName() + ".gathercoderanks." + simpleModelRun.feedFetch.code.toString() + "." + c.a2Code + "."
+				+ s.a3Code + "." + simpleModelRun.feedFetch.category.id.toString() + "." + StringUtils.join(listTypes, ".") + "." + pager.start + "."
+				+ pager.count + "." + pager.sortDirection + "." + pager.sortBy;
 
 		PersistentMapFactory.createObjectify().delete(memcacheKey);
 
