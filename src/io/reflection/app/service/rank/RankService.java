@@ -641,59 +641,61 @@ final class RankService implements IRankService {
 
 		types.add(addslashes(listType));
 
-		String memcacheKey = getName() + ".gathercoderanks." + code.toString() + "." + country.a2Code + "." + store.a3Code + "." + category.id.toString() + "."
-				+ StringUtils.join(types, ".") + "." + pager.start + "." + pager.count + "." + pager.sortDirection + "." + pager.sortBy;
+		if (code != null) {
+			String memcacheKey = getName() + ".gathercoderanks." + code.toString() + "." + country.a2Code + "." + store.a3Code + "." + category.id.toString()
+					+ "." + StringUtils.join(types, ".") + "." + pager.start + "." + pager.count + "." + pager.sortDirection + "." + pager.sortBy;
 
-		String ranksString = (String) cache.get(memcacheKey);
+			String ranksString = (String) cache.get(memcacheKey);
 
-		if (ranksString == null) {
-			String typesQueryPart = null;
-			if (types.size() == 1) {
-				typesQueryPart = String.format("CAST(`type` AS BINARY)=CAST('%s' AS BINARY)", types.get(0));
+			if (ranksString == null) {
+				String typesQueryPart = null;
+				if (types.size() == 1) {
+					typesQueryPart = String.format("CAST(`type` AS BINARY)=CAST('%s' AS BINARY)", types.get(0));
+				} else {
+					typesQueryPart = "CAST(`type` AS BINARY) IN (CAST('" + StringUtils.join(types, "' AS BINARY),CAST('") + "' AS BINARY))";
+				}
+
+				String getCountryStoreTypeRanksQuery = String
+						.format("SELECT * FROM `rank` WHERE %s AND CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`source` AS BINARY)=CAST('%s' AS BINARY) AND `categoryid`=%d AND `code2`=%d AND %s `deleted`='n' ORDER BY `%s` %s,`date` DESC LIMIT %d,%d",
+								typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), code.longValue(), isGrossing
+										|| !ignoreGrossingRank.booleanValue() ? "`grossingposition`<>0 AND" : "", pager.sortBy,
+								pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
+
+				try {
+					rankConnection.connect();
+					rankConnection.executeQuery(getCountryStoreTypeRanksQuery);
+
+					while (rankConnection.fetchNextRow()) {
+						Rank rank = toRank(rankConnection);
+
+						if (rank != null) {
+							ranks.add(rank);
+						}
+					}
+
+					if (ranks.size() > 0) {
+						JsonArray jsonArray = new JsonArray();
+						for (Rank rank : ranks) {
+							jsonArray.add(rank.toJson());
+						}
+
+						cal.setTime(new Date());
+						cal.add(Calendar.DAY_OF_MONTH, 20);
+						cache.put(memcacheKey, JsonUtils.cleanJson(jsonArray.toString()), cal.getTime());
+					}
+				} finally {
+					if (rankConnection != null) {
+						rankConnection.disconnect();
+					}
+				}
 			} else {
-				typesQueryPart = "CAST(`type` AS BINARY) IN (CAST('" + StringUtils.join(types, "' AS BINARY),CAST('") + "' AS BINARY))";
-			}
-
-			String getCountryStoreTypeRanksQuery = String
-					.format("SELECT * FROM `rank` WHERE %s AND CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`source` AS BINARY)=CAST('%s' AS BINARY) AND `categoryid`=%d AND `code2`=%d AND %s `deleted`='n' ORDER BY `%s` %s,`date` DESC LIMIT %d,%d",
-							typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), code.longValue(), isGrossing
-									|| !ignoreGrossingRank.booleanValue() ? "`grossingposition`<>0 AND" : "", pager.sortBy,
-							pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
-
-			try {
-				rankConnection.connect();
-				rankConnection.executeQuery(getCountryStoreTypeRanksQuery);
-
-				while (rankConnection.fetchNextRow()) {
-					Rank rank = toRank(rankConnection);
-
-					if (rank != null) {
-						ranks.add(rank);
-					}
+				JsonArray parsed = (JsonArray) new JsonParser().parse(ranksString);
+				Rank rank;
+				for (JsonElement jsonElement : parsed) {
+					rank = new Rank();
+					rank.fromJson(jsonElement.getAsJsonObject());
+					ranks.add(rank);
 				}
-
-				if (ranks.size() > 0) {
-					JsonArray jsonArray = new JsonArray();
-					for (Rank rank : ranks) {
-						jsonArray.add(rank.toJson());
-					}
-
-					cal.setTime(new Date());
-					cal.add(Calendar.DAY_OF_MONTH, 20);
-					cache.put(memcacheKey, JsonUtils.cleanJson(jsonArray.toString()), cal.getTime());
-				}
-			} finally {
-				if (rankConnection != null) {
-					rankConnection.disconnect();
-				}
-			}
-		} else {
-			JsonArray parsed = (JsonArray) new JsonParser().parse(ranksString);
-			Rank rank;
-			for (JsonElement jsonElement : parsed) {
-				rank = new Rank();
-				rank.fromJson(jsonElement.getAsJsonObject());
-				ranks.add(rank);
 			}
 		}
 
