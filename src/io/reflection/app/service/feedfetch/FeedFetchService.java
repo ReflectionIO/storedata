@@ -39,10 +39,10 @@ import com.google.appengine.api.utils.SystemProperty;
 import com.spacehopperstudios.utility.StringUtils;
 
 final class FeedFetchService implements IFeedFetchService {
-	
+
 	private PersistentMap cache = PersistentMapFactory.createObjectify();
 	private Calendar cal = Calendar.getInstance();
-	
+
 	public String getName() {
 		return ServiceType.ServiceTypeFeedFetch.toString();
 	}
@@ -554,7 +554,7 @@ final class FeedFetchService implements IFeedFetchService {
 			try {
 				feedFetchConnection.connect();
 				String getGatherCode = String
-						.format("SELECT `code2` FROM `feedfetch` WHERE CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`store` AS BINARY)=CAST('%s' AS BINARY) AND %s `deleted`='n' ORDER BY `date` DESC LIMIT 1",
+						.format("SELECT `code2` FROM `feedfetch` WHERE CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`store` AS BINARY)=CAST('%s' AS BINARY) AND %s AND `deleted`='n' ORDER BY `date` DESC LIMIT 1",
 								addslashes(country.a2Code), addslashes(store.a3Code), beforeAfterQuery(before, after));
 
 				feedFetchConnection.executeQuery(getGatherCode);
@@ -574,7 +574,7 @@ final class FeedFetchService implements IFeedFetchService {
 
 		return code;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -626,8 +626,8 @@ final class FeedFetchService implements IFeedFetchService {
 		}
 
 		String getDatesFeedFetchesQuery = String.format(
-				"SELECT * FROM `feedfetch` WHERE `store`='%s' AND `country`='%s' AND %s AND `categoryid`='%d' AND %s `deleted`='n'", addslashes(store.a3Code),
-				addslashes(country.a2Code), typesQueryPart == null ? "" : typesQueryPart, category.id.longValue(),
+				"SELECT * FROM `feedfetch` WHERE `store`='%s' AND `country`='%s' AND %s AND `categoryid`='%d' AND %s AND `deleted`='n'",
+				addslashes(store.a3Code), addslashes(country.a2Code), typesQueryPart == null ? "" : typesQueryPart, category.id.longValue(),
 				SqlQueryHelper.beforeAfterQuery(before, after));
 
 		Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());

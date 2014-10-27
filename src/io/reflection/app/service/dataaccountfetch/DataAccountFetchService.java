@@ -38,7 +38,7 @@ import com.google.appengine.api.utils.SystemProperty;
 final class DataAccountFetchService implements IDataAccountFetchService {
 
 	private static final Logger LOG = Logger.getLogger(DataAccountFetchService.class.getName());
-	
+
 	// a marker to help deleted rows that are added by developers
 	private static final String DEV_PREFIX = "__dev__";
 
@@ -315,7 +315,7 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 		if (dataAccount != null && dataAccount.id != null) {
 			linkedAccountPart = "`linkedaccountid`=" + dataAccount.id.longValue() + " AND";
 		}
-		String getDataAccountFetchesQuery = String.format("SELECT * FROM `dataaccountfetch` WHERE %s %s `deleted`='n'",
+		String getDataAccountFetchesQuery = String.format("SELECT * FROM `dataaccountfetch` WHERE %s AND %s `deleted`='n'",
 				SqlQueryHelper.beforeAfterQuery(end, start), linkedAccountPart);
 
 		if (pager != null) {
@@ -393,7 +393,7 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 		if (dataAccount != null && dataAccount.id != null) {
 			linkedAccountPart = "`linkedaccountid`=" + dataAccount.id.longValue() + " AND";
 		}
-		String getDataAccountFetchesQuery = String.format("SELECT COUNT(1) AS `count` FROM `dataaccountfetch` WHERE %s %s `deleted`='n'",
+		String getDataAccountFetchesQuery = String.format("SELECT COUNT(1) AS `count` FROM `dataaccountfetch` WHERE %s AND %s `deleted`='n'",
 				SqlQueryHelper.beforeAfterQuery(end, start), linkedAccountPart);
 
 		try {
@@ -422,14 +422,17 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 		return getDataAccountFetchesCount(null, start, end);
 	}
 
-	/* (non-Javadoc)
-	 * @see io.reflection.app.service.dataaccountfetch.IDataAccountFetchService#triggerDataAccountFetchIngest(io.reflection.app.datatypes.shared.DataAccountFetch)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.service.dataaccountfetch.IDataAccountFetchService#triggerDataAccountFetchIngest(io.reflection.app.datatypes.shared.DataAccountFetch)
 	 */
 	@Override
 	public void triggerDataAccountFetchIngest(DataAccountFetch fetch) throws DataAccessException {
 		enqueue(fetch);
 	}
-	
+
 	/**
 	 * 
 	 * @param fetch
