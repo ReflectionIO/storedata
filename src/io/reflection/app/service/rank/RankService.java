@@ -316,9 +316,9 @@ final class RankService implements IRankService {
 			}
 
 			String getCountryStoreTypeRanksQuery = String
-					.format("SELECT * FROM `rank` WHERE %s AND CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`source` AS BINARY)=CAST('%s' AS BINARY) AND `itemid`='%s' AND `categoryid`=24 AND %s %s `deleted`='n' ORDER BY `date` ASC, `%s` %s LIMIT %d,%d",
-							typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), addslashes(item.internalId),
-							beforeAfterQuery(before, after), isGrossing ? "`grossingposition`<>0 AND" : "", pager.sortBy,
+					.format("SELECT * FROM `rank` WHERE %s AND CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`source` AS BINARY)=CAST('%s' AS BINARY) AND `itemid`='%s' AND `categoryid`=24 AND %s AND %s `deleted`='n' ORDER BY `date` ASC, `%s` %s LIMIT %d,%d",
+							typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), addslashes(item.internalId), beforeAfterQuery(before, after),
+							isGrossing ? "`grossingposition`<>0 AND" : "", pager.sortBy,
 							pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
 
 			Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
@@ -794,7 +794,7 @@ final class RankService implements IRankService {
 
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 		String getCountryStoreTypeRanksQuery = String
-				.format("SELECT `id` FROM `rank` WHERE CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`source` AS BINARY)=CAST('%s' AS BINARY) AND `categoryid`=%d AND %s `deleted`='n'",
+				.format("SELECT `id` FROM `rank` WHERE CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`source` AS BINARY)=CAST('%s' AS BINARY) AND `categoryid`=%d AND %s AND `deleted`='n'",
 						addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), beforeAfterQuery(end, start));
 
 		try {

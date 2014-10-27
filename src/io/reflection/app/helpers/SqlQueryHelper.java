@@ -34,15 +34,15 @@ public class SqlQueryHelper {
 			buffer.append(after.getTime() / 1000);
 			buffer.append(") AND FROM_UNIXTIME(");
 			buffer.append(before.getTime() / 1000);
-			buffer.append(")) AND ");
+			buffer.append("))");
 		} else if (after != null && before == null) {
 			buffer.append("`" + dateName + "`>=FROM_UNIXTIME(");
 			buffer.append(after.getTime() / 1000);
-			buffer.append(") AND ");
+			buffer.append(")");
 		} else if (before != null && after == null) {
 			buffer.append("`" + dateName + "`<FROM_UNIXTIME(");
 			buffer.append(before.getTime() / 1000);
-			buffer.append(") AND ");
+			buffer.append(")");
 		}
 
 		return buffer.toString();

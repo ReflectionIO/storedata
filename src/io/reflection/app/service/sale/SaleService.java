@@ -359,7 +359,7 @@ final class SaleService implements ISaleService {
 		// (category relates to store by a3code)
 		// we are using end for date but we could equally use begin
 		String getSalesQuery = String.format(
-				"SELECT * FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d AND %s `deleted`='n'", country.a2Code, 24,
+				"SELECT * FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d AND %s AND `deleted`='n'", country.a2Code, 24,
 				category.id.longValue(), category.name, linkedAccount.id.longValue(), SqlQueryHelper.beforeAfterQuery(end, start, "end"));
 
 		if (pager != null) {
@@ -422,9 +422,10 @@ final class SaleService implements ISaleService {
 	public Long getSalesCount(Country country, Category category, DataAccount linkedAccount, Date start, Date end) throws DataAccessException {
 		Long salesCount = Long.valueOf(0);
 
-		String getSalesQuery = String.format(
-				"SELECT count(1) AS `salescount` FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d %s `deleted`='n'",
-				country.a2Code, 24, category.id.longValue(), category.name, linkedAccount.id.longValue(), SqlQueryHelper.beforeAfterQuery(end, start, "end"));
+		String getSalesQuery = String
+				.format("SELECT count(1) AS `salescount` FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d AND %s AND `deleted`='n'",
+						country.a2Code, 24, category.id.longValue(), category.name, linkedAccount.id.longValue(),
+						SqlQueryHelper.beforeAfterQuery(end, start, "end"));
 
 		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
 
@@ -461,7 +462,7 @@ final class SaleService implements ISaleService {
 		// (category relates to store by a3code)
 		// we are using end for date but we could equally use begin
 		String getSalesQuery = String.format(
-				"SELECT * FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d AND %s `itemid`='%s' AND `deleted`='n'",
+				"SELECT * FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d AND %s AND `itemid`='%s' AND `deleted`='n'",
 				country.a2Code, 24, category.id.longValue(), category.name, linkedAccount.id.longValue(), SqlQueryHelper.beforeAfterQuery(end, start, "end"),
 				item.internalId);
 
@@ -526,7 +527,7 @@ final class SaleService implements ISaleService {
 		Long salesCount = Long.valueOf(0);
 
 		String getSalesQuery = String
-				.format("SELECT count(1) AS `salescount` FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d %s `itemid`='%s' AND `deleted`='n'",
+				.format("SELECT count(1) AS `salescount` FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d AND %s AND `itemid`='%s' AND `deleted`='n'",
 						country.a2Code, 24, category.id.longValue(), category.name, linkedAccount.id.longValue(),
 						SqlQueryHelper.beforeAfterQuery(end, start, "end"), item.internalId);
 

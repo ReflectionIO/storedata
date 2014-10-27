@@ -406,7 +406,7 @@ public class FilterHelper {
 
 				@Override
 				public DateRange getDateRange() {
-					return FilterHelper.createRange(FilterHelper.getDaysAgo(1), FilterHelper.getToday());
+					return FilterHelper.createRange(FilterHelper.getToday(), FilterHelper.getToday());
 				}
 			});
 
