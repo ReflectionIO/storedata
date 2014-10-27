@@ -316,7 +316,7 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 			linkedAccountPart = "`linkedaccountid`=" + dataAccount.id.longValue() + " AND";
 		}
 		String getDataAccountFetchesQuery = String.format("SELECT * FROM `dataaccountfetch` WHERE %s %s `deleted`='n'",
-				SqlQueryHelper.getBeforeAfterQuery(end, start), linkedAccountPart);
+				SqlQueryHelper.beforeAfterQuery(end, start), linkedAccountPart);
 
 		if (pager != null) {
 			String sortByQuery = null;
@@ -394,7 +394,7 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 			linkedAccountPart = "`linkedaccountid`=" + dataAccount.id.longValue() + " AND";
 		}
 		String getDataAccountFetchesQuery = String.format("SELECT COUNT(1) AS `count` FROM `dataaccountfetch` WHERE %s %s `deleted`='n'",
-				SqlQueryHelper.getBeforeAfterQuery(end, start), linkedAccountPart);
+				SqlQueryHelper.beforeAfterQuery(end, start), linkedAccountPart);
 
 		try {
 			dataAccountFetchesCountConnection.connect();

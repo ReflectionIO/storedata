@@ -22,7 +22,7 @@ public class SqlQueryHelper {
 	 * @param dateName
 	 * @return
 	 */
-	public static String getBeforeAfterQuery(Date before, Date after, String dateName) {
+	public static String beforeAfterQuery(Date before, Date after, String dateName) {
 		StringBuffer buffer = new StringBuffer();
 
 		if (before != null) {
@@ -54,8 +54,8 @@ public class SqlQueryHelper {
 	 * @param after
 	 * @return
 	 */
-	public static String getBeforeAfterQuery(Date before, Date after) {
-		return getBeforeAfterQuery(before, after, "date");
+	public static String beforeAfterQuery(Date before, Date after) {
+		return beforeAfterQuery(before, after, "date");
 	}
 
 }

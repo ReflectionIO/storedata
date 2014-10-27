@@ -360,7 +360,7 @@ final class SaleService implements ISaleService {
 		// we are using end for date but we could equally use begin
 		String getSalesQuery = String.format(
 				"SELECT * FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d AND %s `deleted`='n'", country.a2Code, 24,
-				category.id.longValue(), category.name, linkedAccount.id.longValue(), SqlQueryHelper.getBeforeAfterQuery(end, start, "end"));
+				category.id.longValue(), category.name, linkedAccount.id.longValue(), SqlQueryHelper.beforeAfterQuery(end, start, "end"));
 
 		if (pager != null) {
 			String sortByQuery = "id";
@@ -424,7 +424,7 @@ final class SaleService implements ISaleService {
 
 		String getSalesQuery = String.format(
 				"SELECT count(1) AS `salescount` FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d %s `deleted`='n'",
-				country.a2Code, 24, category.id.longValue(), category.name, linkedAccount.id.longValue(), SqlQueryHelper.getBeforeAfterQuery(end, start, "end"));
+				country.a2Code, 24, category.id.longValue(), category.name, linkedAccount.id.longValue(), SqlQueryHelper.beforeAfterQuery(end, start, "end"));
 
 		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
 
@@ -462,7 +462,7 @@ final class SaleService implements ISaleService {
 		// we are using end for date but we could equally use begin
 		String getSalesQuery = String.format(
 				"SELECT * FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d AND %s `itemid`='%s' AND `deleted`='n'",
-				country.a2Code, 24, category.id.longValue(), category.name, linkedAccount.id.longValue(), SqlQueryHelper.getBeforeAfterQuery(end, start, "end"),
+				country.a2Code, 24, category.id.longValue(), category.name, linkedAccount.id.longValue(), SqlQueryHelper.beforeAfterQuery(end, start, "end"),
 				item.internalId);
 
 		if (pager != null) {
@@ -528,7 +528,7 @@ final class SaleService implements ISaleService {
 		String getSalesQuery = String
 				.format("SELECT count(1) AS `salescount` FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d %s `itemid`='%s' AND `deleted`='n'",
 						country.a2Code, 24, category.id.longValue(), category.name, linkedAccount.id.longValue(),
-						SqlQueryHelper.getBeforeAfterQuery(end, start, "end"), item.internalId);
+						SqlQueryHelper.beforeAfterQuery(end, start, "end"), item.internalId);
 
 		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
 
