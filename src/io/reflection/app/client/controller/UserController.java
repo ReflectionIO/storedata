@@ -56,6 +56,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.AsyncDataProvider;
@@ -74,7 +75,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 	private long mCount = -1;
 	private Pager mPager;
 
-	private Map<Long, User> mUserLookup = new HashMap<Long, User>();
+	private Map<Long, User> userLookup = new HashMap<Long, User>();
 
 	private static UserController mOne = null;
 
@@ -378,8 +379,8 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 			@Override
 			public void onSuccess(DeleteUserResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
-					mUsers.remove(mUserLookup.get(input.user.id.toString()));
-					mUserLookup.remove(input.user.id.toString());
+					mUsers.remove(userLookup.get(input.user.id.toString()));
+					userLookup.remove(input.user.id.toString());
 					mCount--;
 					mPager.totalCount = Long.valueOf(mPager.totalCount.longValue() - 1);
 					updateRowCount((int) mCount, true);
@@ -520,12 +521,12 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 	private void addToLookup(List<User> users) {
 		for (User user : users) {
-			mUserLookup.put(user.id, user);
+			userLookup.put(user.id, user);
 		}
 	}
 
 	public User getUser(Long id) {
-		return mUserLookup.get(id);
+		return userLookup.get(id);
 	}
 
 	/**
@@ -550,7 +551,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 			public void onSuccess(GetUserDetailsResponse output) {
 
 				if (output.status == StatusType.StatusTypeSuccess && output.user != null) {
-					mUserLookup.put(output.user.id, output.user);
+					userLookup.put(output.user.id, output.user);
 				}
 
 				EventController.get().fireEventFromSource(new GetUserDetailsEventHandler.GetUserDetailsSuccess(input, output), UserController.this);
@@ -583,7 +584,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 			public void onSuccess(GetUserDetailsResponse output) {
 
 				if (output.status == StatusType.StatusTypeSuccess && output.user != null) {
-					mUserLookup.put(output.user.id, output.user);
+					userLookup.put(output.user.id, output.user);
 				}
 
 				EventController.get().fireEventFromSource(new GetUserDetailsEventHandler.GetUserDetailsSuccess(input, output), UserController.this);
@@ -629,6 +630,17 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 			}
 
 		});
+	}
+
+	public void searchUser(String query) {
+		List<Long> foundUserIdList = new ArrayList<Long>();
+		RegExp RegExpr = RegExp.compile("/" + query + "/i");
+		for (Map.Entry<Long, User> entry : userLookup.entrySet()) {
+			if (RegExpr.test(entry.getValue().forename)) {
+				foundUserIdList.add(entry.getKey());
+			}
+		}
+		//Window.alert(foundUserIdList.toString());
 	}
 
 }

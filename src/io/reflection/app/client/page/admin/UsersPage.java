@@ -29,15 +29,19 @@ import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TextHeader;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -50,21 +54,25 @@ public class UsersPage extends Page implements DeleteUserEventHandler {
 
 	interface UsersPageUiBinder extends UiBinder<Widget, UsersPage> {}
 
-	@UiField(provided = true) CellTable<User> mUsers = new CellTable<User>(ServiceConstants.SHORT_STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
-	@UiField(provided = true) SimplePager mPager = new SimplePager(false, false);
+	@UiField(provided = true) CellTable<User> usersTable = new CellTable<User>(ServiceConstants.SHORT_STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true) SimplePager simplePager = new SimplePager(false, false);
 
 	private ConfirmationDialog confirmationDialog;
 	@UiField Preloader preloader;
+
+	@UiField TextBox queryTextBox;
 
 	public UsersPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		createColumns();
 
-		mUsers.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
-		UserController.get().addDataDisplay(mUsers);
-		mPager.setDisplay(mUsers);
+		usersTable.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
+		usersTable.setEmptyTableWidget(new HTMLPanel("No Users found!"));
+		UserController.get().addDataDisplay(usersTable);
+		simplePager.setDisplay(usersTable);
 
+		queryTextBox.getElement().setAttribute("placeholder", "User");
 	}
 
 	/*
@@ -91,7 +99,7 @@ public class UsersPage extends Page implements DeleteUserEventHandler {
 
 		TextHeader nameHeader = new TextHeader("Name");
 		nameHeader.setHeaderStyleNames("col-md-1");
-		mUsers.addColumn(name, nameHeader);
+		usersTable.addColumn(name, nameHeader);
 
 		TextColumn<User> company = new TextColumn<User>() {
 
@@ -104,7 +112,7 @@ public class UsersPage extends Page implements DeleteUserEventHandler {
 
 		TextHeader companyHeader = new TextHeader("Company");
 		companyHeader.setHeaderStyleNames("col-md-1");
-		mUsers.addColumn(company, companyHeader);
+		usersTable.addColumn(company, companyHeader);
 
 		Column<User, SafeHtml> email = new Column<User, SafeHtml>(new SafeHtmlCell()) {
 
@@ -118,7 +126,7 @@ public class UsersPage extends Page implements DeleteUserEventHandler {
 
 		TextHeader emailHeader = new TextHeader("E-mail");
 		emailHeader.setHeaderStyleNames("col-md-3");
-		mUsers.addColumn(email, emailHeader);
+		usersTable.addColumn(email, emailHeader);
 
 		SafeHtmlCell prototype = new SafeHtmlCell();
 
@@ -200,10 +208,19 @@ public class UsersPage extends Page implements DeleteUserEventHandler {
 		};
 		delete.setFieldUpdater(action);
 
-		mUsers.addColumn(changeDetails);
-		mUsers.addColumn(makeAdmin);
-		mUsers.addColumn(addToBeta);
-		mUsers.addColumn(delete);
+		usersTable.addColumn(changeDetails);
+		usersTable.addColumn(makeAdmin);
+		usersTable.addColumn(addToBeta);
+		usersTable.addColumn(delete);
+	}
+
+	@UiHandler("queryTextBox")
+	void onKeyPressed(KeyUpEvent event) {
+		if (queryTextBox.getText().length() >= 3) {
+			UserController.get().searchUser(queryTextBox.getText());
+		} else {
+
+		}
 	}
 
 	//
