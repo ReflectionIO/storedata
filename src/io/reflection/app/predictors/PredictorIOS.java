@@ -478,7 +478,7 @@ public class PredictorIOS implements Predictor {
 
 		// These numbers still overflow using the current model
 		rank.downloads = Integer.valueOf((int) downloads);
-		rank.revenue = Float.valueOf((float) revenue);
+		rank.revenue = Float.valueOf((float) revenue * 100.0f);
 
 		if (LOG.isLoggable(Level.INFO)) {
 			LOG.info("Downloads :" + downloads);
