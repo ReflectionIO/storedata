@@ -17,6 +17,7 @@ import io.reflection.app.datatypes.shared.FormType;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
+import io.reflection.app.helpers.ApiHelper;
 import io.reflection.app.helpers.SliceHelper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.modellers.ModellerFactory;
@@ -214,11 +215,7 @@ public class DefaultItemRankArchiver implements ItemRankArchiver {
 						}
 
 						cal.setTime(rank.date);
-						cal.set(Calendar.HOUR_OF_DAY, 0);
-						cal.set(Calendar.MINUTE, 0);
-						cal.set(Calendar.SECOND, 0);
-						cal.set(Calendar.MILLISECOND, 0);
-						date = cal.getTime();
+						date = ApiHelper.removeTime(cal.getTime());
 
 						if (ranksLookup.get(date) == null) {
 							ranks.add(rank);

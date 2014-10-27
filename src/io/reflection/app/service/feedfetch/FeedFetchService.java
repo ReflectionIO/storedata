@@ -10,7 +10,7 @@ package io.reflection.app.service.feedfetch;
 
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
-import static io.reflection.app.helpers.SqlQueryHelper.beforeAfterQuery;
+import static io.reflection.app.helpers.SqlQueryHelper.getBeforeAfterQuery;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
@@ -555,7 +555,7 @@ final class FeedFetchService implements IFeedFetchService {
 				feedFetchConnection.connect();
 				String getGatherCode = String
 						.format("SELECT `code2` FROM `feedfetch` WHERE CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`store` AS BINARY)=CAST('%s' AS BINARY) AND %s `deleted`='n' ORDER BY `date` DESC LIMIT 1",
-								addslashes(country.a2Code), addslashes(store.a3Code), beforeAfterQuery(before, after));
+								addslashes(country.a2Code), addslashes(store.a3Code), getBeforeAfterQuery(before, after));
 
 				feedFetchConnection.executeQuery(getGatherCode);
 
@@ -628,7 +628,7 @@ final class FeedFetchService implements IFeedFetchService {
 		String getDatesFeedFetchesQuery = String.format(
 				"SELECT * FROM `feedfetch` WHERE `store`='%s' AND `country`='%s' AND %s AND `categoryid`='%d' AND %s `deleted`='n'", addslashes(store.a3Code),
 				addslashes(country.a2Code), typesQueryPart == null ? "" : typesQueryPart, category.id.longValue(),
-				SqlQueryHelper.beforeAfterQuery(before, after));
+				SqlQueryHelper.getBeforeAfterQuery(before, after));
 
 		Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
 

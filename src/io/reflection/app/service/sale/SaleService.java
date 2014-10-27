@@ -18,6 +18,7 @@ import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Sale;
+import io.reflection.app.helpers.SqlQueryHelper;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
@@ -213,7 +214,7 @@ final class SaleService implements ISaleService {
 	 */
 	private List<Item> generateDummyItems(Collection<String> itemId, List<String> typeIdentifiers) throws DataAccessException {
 		List<Item> items = new ArrayList<Item>();
-		
+
 		String typeId = "";
 		if (typeIdentifiers != null && typeIdentifiers.size() > 0) {
 			typeId = "AND `typeidentifier` IN ('" + StringUtils.join(typeIdentifiers, "','") + "')";
@@ -357,9 +358,9 @@ final class SaleService implements ISaleService {
 		// FIXME: for now we use the all category for the iOS store... we should get the category passed in, or attempt to detect it based on the linked account
 		// (category relates to store by a3code)
 		// we are using end for date but we could equally use begin
-		String getSalesQuery = String
-				.format("SELECT * FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d AND (`end` BETWEEN FROM_UNIXTIME(%d) AND FROM_UNIXTIME(%d)) AND `deleted`='n'",
-						country.a2Code, 24, category.id.longValue(), category.name, linkedAccount.id.longValue(), start.getTime() / 1000, end.getTime() / 1000);
+		String getSalesQuery = String.format(
+				"SELECT * FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d AND %s `deleted`='n'", country.a2Code, 24,
+				category.id.longValue(), category.name, linkedAccount.id.longValue(), SqlQueryHelper.getBeforeAfterQuery(end, start, "end"));
 
 		if (pager != null) {
 			String sortByQuery = "id";
@@ -421,9 +422,9 @@ final class SaleService implements ISaleService {
 	public Long getSalesCount(Country country, Category category, DataAccount linkedAccount, Date start, Date end) throws DataAccessException {
 		Long salesCount = Long.valueOf(0);
 
-		String getSalesQuery = String
-				.format("SELECT count(1) AS `salescount` FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d (`end` BETWEEN FROM_UNIXTIME(%d) AND FROM_UNIXTIME(%d)) AND `deleted`='n'",
-						country.a2Code, 24, category.id.longValue(), category.name, linkedAccount.id.longValue(), start.getTime() / 1000, end.getTime() / 1000);
+		String getSalesQuery = String.format(
+				"SELECT count(1) AS `salescount` FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d %s `deleted`='n'",
+				country.a2Code, 24, category.id.longValue(), category.name, linkedAccount.id.longValue(), SqlQueryHelper.getBeforeAfterQuery(end, start, "end"));
 
 		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
 
@@ -459,10 +460,10 @@ final class SaleService implements ISaleService {
 		// to detect it based on the linked account
 		// (category relates to store by a3code)
 		// we are using end for date but we could equally use begin
-		String getSalesQuery = String
-				.format("SELECT * FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d AND (`end` BETWEEN FROM_UNIXTIME(%d) AND FROM_UNIXTIME(%d)) AND `itemid`='%s' AND `deleted`='n'",
-						country.a2Code, 24, category.id.longValue(), category.name, linkedAccount.id.longValue(), start.getTime() / 1000, end.getTime() / 1000,
-						item.internalId);
+		String getSalesQuery = String.format(
+				"SELECT * FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d AND %s `itemid`='%s' AND `deleted`='n'",
+				country.a2Code, 24, category.id.longValue(), category.name, linkedAccount.id.longValue(), SqlQueryHelper.getBeforeAfterQuery(end, start, "end"),
+				item.internalId);
 
 		if (pager != null) {
 			String sortByQuery = "id";
@@ -525,9 +526,9 @@ final class SaleService implements ISaleService {
 		Long salesCount = Long.valueOf(0);
 
 		String getSalesQuery = String
-				.format("SELECT count(1) AS `salescount` FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d (`end` BETWEEN FROM_UNIXTIME(%d) AND FROM_UNIXTIME(%d)) AND `itemid`='%s' AND `deleted`='n'",
-						country.a2Code, 24, category.id.longValue(), category.name, linkedAccount.id.longValue(), start.getTime() / 1000, end.getTime() / 1000,
-						item.internalId);
+				.format("SELECT count(1) AS `salescount` FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d %s `itemid`='%s' AND `deleted`='n'",
+						country.a2Code, 24, category.id.longValue(), category.name, linkedAccount.id.longValue(),
+						SqlQueryHelper.getBeforeAfterQuery(end, start, "end"), item.internalId);
 
 		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
 

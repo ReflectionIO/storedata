@@ -9,7 +9,7 @@ package io.reflection.app.service.rank;
 
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
-import static io.reflection.app.helpers.SqlQueryHelper.beforeAfterQuery;
+import static io.reflection.app.helpers.SqlQueryHelper.getBeforeAfterQuery;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
@@ -20,6 +20,7 @@ import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
+import io.reflection.app.helpers.ApiHelper;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
@@ -316,8 +317,8 @@ final class RankService implements IRankService {
 
 			String getCountryStoreTypeRanksQuery = String
 					.format("SELECT * FROM `rank` WHERE %s AND CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`source` AS BINARY)=CAST('%s' AS BINARY) AND `itemid`='%s' AND `categoryid`=24 AND %s %s `deleted`='n' ORDER BY `date` ASC, `%s` %s LIMIT %d,%d",
-							typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), addslashes(item.internalId), beforeAfterQuery(before, after),
-							isGrossing ? "`grossingposition`<>0 AND" : "", pager.sortBy,
+							typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), addslashes(item.internalId),
+							getBeforeAfterQuery(before, after), isGrossing ? "`grossingposition`<>0 AND" : "", pager.sortBy,
 							pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
 
 			Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
@@ -336,11 +337,7 @@ final class RankService implements IRankService {
 					date = rankConnection.getCurrentRowDateTime("date");
 
 					cal.setTime(date);
-					cal.set(Calendar.HOUR_OF_DAY, 0);
-					cal.set(Calendar.MINUTE, 0);
-					cal.set(Calendar.SECOND, 0);
-					cal.set(Calendar.MILLISECOND, 0);
-					date = cal.getTime();
+					date = ApiHelper.removeTime(cal.getTime());
 
 					if (ranksLookup.get(date) == null) {
 						Rank rank = toRank(rankConnection);
@@ -798,7 +795,7 @@ final class RankService implements IRankService {
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 		String getCountryStoreTypeRanksQuery = String
 				.format("SELECT `id` FROM `rank` WHERE CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`source` AS BINARY)=CAST('%s' AS BINARY) AND `categoryid`=%d AND %s `deleted`='n'",
-						addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), beforeAfterQuery(end, start));
+						addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), getBeforeAfterQuery(end, start));
 
 		try {
 			rankConnection.connect();

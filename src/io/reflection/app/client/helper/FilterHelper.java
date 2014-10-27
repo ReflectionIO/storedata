@@ -314,6 +314,19 @@ public class FilterHelper {
 
 				@Override
 				public String getName() {
+					return "1 d";
+				}
+
+				@Override
+				public DateRange getDateRange() {
+					return FilterHelper.createRange(FilterHelper.getToday(), FilterHelper.getToday());
+				}
+			});
+
+			defaultPreset.add(new PresetDateRange() {
+
+				@Override
+				public String getName() {
 					return "1 wk";
 				}
 
