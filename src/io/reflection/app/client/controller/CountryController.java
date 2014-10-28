@@ -47,7 +47,7 @@ public class CountryController implements ServiceConstants {
 	// country.name = name;
 	//
 	// country.stores = new ArrayList<String>();
-	// country.stores.add("ios");
+	// country.stores.add(DataTypeHelper.IOS_STORE_A3);
 	//
 	// mCountryLookup.put(country.a2Code, country);
 	// }

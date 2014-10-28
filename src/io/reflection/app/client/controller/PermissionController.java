@@ -31,10 +31,6 @@ import com.willshex.gson.json.service.shared.StatusType;
  */
 public class PermissionController extends AsyncDataProvider<Permission> implements ServiceConstants {
 
-	public static final long FULL_RANK_VIEW_PERMISSION_ID = 1;
-	public static final long HAS_LINKED_ACCOUNT_PERMISSION_ID = 20;
-	public static final String HAS_LINKED_ACCOUNT_PERMISSION_CODE = "HLA";
-
 	private List<Permission> mPermissions = new ArrayList<Permission>();
 	private long mCount = -1;
 	private Pager mPager;
@@ -49,7 +45,7 @@ public class PermissionController extends AsyncDataProvider<Permission> implemen
 		return mOne;
 	}
 
-	private void fetchPermissions() {
+	public void fetchPermissions() {
 
 		AdminService service = ServiceCreator.createAdminService();
 
@@ -109,7 +105,16 @@ public class PermissionController extends AsyncDataProvider<Permission> implemen
 	}
 
 	public boolean hasPermissions() {
-		return mPager != null || mPermissions.size() > 0;
+		return getPermissionsCount() > 0;
+	}
+
+	/**
+	 * Return true if Permissions already fetched
+	 * 
+	 * @return
+	 */
+	public boolean permissionsFetched() {
+		return mCount != -1;
 	}
 
 	/*
@@ -124,10 +129,10 @@ public class PermissionController extends AsyncDataProvider<Permission> implemen
 		int start = r.getStart();
 		int end = start + r.getLength();
 
-		if (end > mPermissions.size()) {
+		if (!permissionsFetched() || (permissionsFetched() && getPermissionsCount() != mPermissions.size() && end > mPermissions.size())) {
 			fetchPermissions();
 		} else {
-			updateRowData(start, mPermissions.subList(start, end));
+			updateRowData(start, mPermissions.size() == 0 ? mPermissions : mPermissions.subList(start, Math.min(mPermissions.size(), end)));
 		}
 	}
 

@@ -7,11 +7,15 @@
 //
 package io.reflection.app.client.page;
 
+import io.reflection.app.client.page.admin.CategoriesPage;
+import io.reflection.app.client.page.admin.DataAccountFetchesPage;
+import io.reflection.app.client.page.admin.DataAccountsPage;
 import io.reflection.app.client.page.admin.EmailTemplatePage;
 import io.reflection.app.client.page.admin.FeedBrowserPage;
 import io.reflection.app.client.page.admin.ItemsPage;
 import io.reflection.app.client.page.admin.PermissionsPage;
 import io.reflection.app.client.page.admin.RolesPage;
+import io.reflection.app.client.page.admin.SimpleModelRunsPage;
 import io.reflection.app.client.page.admin.UsersPage;
 import io.reflection.app.client.page.blog.EditPostPage;
 import io.reflection.app.client.page.blog.PostAdminPage;
@@ -42,39 +46,43 @@ import com.spacehopperstudios.utility.StringUtils;
  */
 public enum PageType {
 	// navigable
-	RanksPageType("ranks", "HLA"),
-	FeedBrowserPageType("feedbrowser", "MFF"),
-	UsersPageType("users", "MUS"),
-	LoginPageType("login", false),
-	RegisterPageType("register", false),
-	ChangePasswordPageType("changepassword", true),
-	RolesPageType("roles", "MRL"),
-	PermissionsPageType("permissions", "MPR"),
-	ChangeDetailsPageType("changedetails", true),
-	UpgradePageType("upgrade", true),
-	LinkedAccountsPageType("linkedaccounts", true),
-	SearchPageType("search", true),
-	ItemPageType("item", true),
-	HomePageType("home", false),
-	LinkItunesPageType("linkitunes", true),
-	ReadyToStartPageType("readytostart", true),
-	MyAppsPageType("myapps", true),
-	EmailTemplatesPageType("emailtemplates", "MET"),
-	ForgotPasswordPageType("forgotpassword", false),
-	ResetPasswordPageType("resetpassword", false),
-	ItemsPageType("items", "MIT"),
-	TermsPageType("terms", false),
 	BlogAdminPageType("blogadmin", "MBL"),
-	BlogTagPageType("blogtag", false),
+	BlogEditPostPageType("blogedit", "BLE", "BLU"),
 	BlogPostsPageType("blog", false),
 	BlogPostPageType("blogpost", false),
-	BlogEditPostPageType("blogedit", "BLE", "BLU"),
-	NotPermittedPageType("notpermitted", false),
-	WidgetTestPage("test", false),
+	BlogTagPageType("blogtag", false),
+	CategoriesPageType("categories", "MCA"),
+	ChangeDetailsPageType("changedetails", true),
+	ChangePasswordPageType("changepassword", true),
+	DataAccountFetchesPageType("dataaccountfetches", "MDF"),
+	DataAccountsPageType("dataaccounts", "MDA"),
+	EmailTemplatesPageType("emailtemplates", "MET"),
+	FeedBrowserPageType("feedbrowser", "MFF"),
+	ForgotPasswordPageType("forgotpassword", false),
+	ForumEditTopicPageType("forumtopicedit", false),
 	ForumPageType("forum", false),
 	ForumThreadPageType("forumthread", false),
 	ForumTopicPageType("forumtopic", false),
-	ForumEditTopicPageType("forumtopicedit", false),
+	HomePageType("home", false),
+	ItemPageType("item", true),
+	ItemsPageType("items", "MIT"),
+	LoginPageType("login", false),
+	LinkedAccountsPageType("linkedaccounts", true),
+	LinkItunesPageType("linkitunes", true),
+	MyAppsPageType("myapps", true),
+	NotPermittedPageType("notpermitted", false),
+	PermissionsPageType("permissions", "MPR"),
+	RanksPageType("ranks", "HLA"),
+	ReadyToStartPageType("readytostart", true),
+	RegisterPageType("register", false),
+	ResetPasswordPageType("resetpassword", false),
+	RolesPageType("roles", "MRL"),
+	SearchPageType("search", true),
+	SimpleModelRunPageType("simplemodelrun", "MSM"),
+	TermsPageType("terms", false),
+	UpgradePageType("upgrade", true),
+	UsersPageType("users", "MUS"),
+	WidgetTestPage("test", false),
 
 	// Non navigable
 	LoadingPageType("loading"), ;
@@ -191,6 +199,18 @@ public enum PageType {
 		Page page = null;
 
 		switch (this) {
+		case SimpleModelRunPageType:
+			page = new SimpleModelRunsPage();
+			break;
+		case DataAccountsPageType:
+			page = new DataAccountsPage();
+			break;
+		case DataAccountFetchesPageType:
+			page = new DataAccountFetchesPage();
+			break;
+		case CategoriesPageType:
+			page = new CategoriesPage();
+			break;
 		case RanksPageType:
 			page = new RanksPage();
 			break;

@@ -32,6 +32,7 @@ import io.reflection.app.service.emailtemplate.EmailTemplateServiceProvider;
 import io.reflection.app.shared.util.FormattingHelper;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -740,29 +741,12 @@ final class UserService implements IUserService {
 		addedDataAccount = DataAccountServiceProvider.provide().addDataAccount(dataSource, username, password, properties);
 
 		if (addedDataAccount != null) {
-			if (!hasDataAccount(user, addedDataAccount, Boolean.TRUE)) {
-				String addDataAccountQuery = String.format("INSERT INTO `userdataaccount` (`dataaccountid`,`userid`) VALUES (%d, %d)",
-						addedDataAccount.id.longValue(), user.id.longValue());
-
-				Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
-
-				try {
-					userConnection.connect();
-					userConnection.executeQuery(addDataAccountQuery);
-
-					if (userConnection.getAffectedRowCount() > 0) {
-						// added the user account successfully
-					}
-				} finally {
-					if (userConnection != null) {
-						userConnection.disconnect();
-					}
-				}
-			} else {
-				restoreUserDataAccount(addedDataAccount);
-			}
+			addOrRestoreUserDataAccount(user, addedDataAccount);
 		} else {
-			LOG.warning("");
+			if (LOG.isLoggable(Level.WARNING)) {
+				LOG.warning(String.format("Data account could not be added with user [%d], data source [%d], username [%s] and properties [%s]",
+						user.id.longValue(), dataSource.id.longValue(), username, properties));
+			}
 			throw new DataAccessException();
 		}
 
@@ -867,6 +851,65 @@ final class UserService implements IUserService {
 		return owner;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.user.IUserService#getDataAccountOwnerBatch(java.util.Collection)
+	 */
+	@Override
+	public List<User> getDataAccountOwnerBatch(Collection<Long> dataAccountIds) throws DataAccessException {
+		List<User> owners = new ArrayList<User>();
+
+		StringBuffer commaDelimitedDataAccountIds = new StringBuffer();
+
+		if (dataAccountIds != null && dataAccountIds.size() > 0) {
+			for (Long dataAccountId : dataAccountIds) {
+				if (commaDelimitedDataAccountIds.length() != 0) {
+					commaDelimitedDataAccountIds.append("','");
+				}
+
+				commaDelimitedDataAccountIds.append(dataAccountId);
+			}
+		}
+
+		if (commaDelimitedDataAccountIds != null && commaDelimitedDataAccountIds.length() != 0) {
+			String getDataAccountOwnerQuery = String
+					.format("SELECT `userid`, `dataaccountid` FROM `userdataaccount` WHERE `dataaccountid` IN ('%s') AND `deleted`='n' GROUP BY `dataaccountid` ORDER BY `id` ASC",
+							commaDelimitedDataAccountIds);
+
+			Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
+
+			try {
+				userConnection.connect();
+				userConnection.executeQuery(getDataAccountOwnerQuery);
+
+				Long userId, dataAccountId;
+				while (userConnection.fetchNextRow()) {
+					userId = userConnection.getCurrentRowLong("userid");
+					dataAccountId = userConnection.getCurrentRowLong("dataaccountid");
+					User user = getUser(userId);
+
+					if (user != null) {
+						owners.add(user);
+
+						DataAccount dataAccount = new DataAccount();
+						dataAccount.id = dataAccountId;
+
+						user.linkedAccounts = new ArrayList<DataAccount>();
+						user.linkedAccounts.add(dataAccount);
+					}
+				}
+
+			} finally {
+				if (userConnection != null) {
+					userConnection.disconnect();
+				}
+			}
+		}
+
+		return owners;
+	}
+
 	/**
 	 * @param connection
 	 * @param user
@@ -946,7 +989,7 @@ final class UserService implements IUserService {
 				}
 
 				values.put("user", user);
-				values.put("link", String.format("http://www.reflection.io/#!%s/%d/%s", pageAction, user.id.longValue(), code));
+				values.put("link", String.format("http://testenv1.reflection.io/#!%s/%d/%s", pageAction, user.id.longValue(), code));
 
 				if (LOG.isLoggable(GaeLevel.DEBUG)) {
 					LOG.fine(String.format("Sending action code url [%s] to [%s]", values.get("link"), user.username));
@@ -1285,6 +1328,37 @@ final class UserService implements IUserService {
 			if (userConnection != null) {
 				userConnection.disconnect();
 			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.user.IUserService#addOrRestoreUserDataAccount(io.reflection.app.datatypes.shared.User,
+	 * io.reflection.app.datatypes.shared.DataAccount)
+	 */
+	@Override
+	public void addOrRestoreUserDataAccount(User user, DataAccount dataAccount) throws DataAccessException {
+		if (!hasDataAccount(user, dataAccount, Boolean.TRUE)) {
+			String addUserDataAccountQuery = String.format("INSERT INTO `userdataaccount` (`dataaccountid`,`userid`) VALUES (%d, %d)",
+					dataAccount.id.longValue(), user.id.longValue());
+
+			Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
+
+			try {
+				userConnection.connect();
+				userConnection.executeQuery(addUserDataAccountQuery);
+
+				if (userConnection.getAffectedRowCount() > 0) {
+					// added the user account successfully
+				}
+			} finally {
+				if (userConnection != null) {
+					userConnection.disconnect();
+				}
+			}
+		} else {
+			restoreUserDataAccount(dataAccount);
 		}
 	}
 

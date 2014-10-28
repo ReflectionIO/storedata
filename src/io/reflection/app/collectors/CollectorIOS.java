@@ -11,6 +11,7 @@ import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,11 +37,10 @@ public class CollectorIOS extends StoreCollector implements Collector {
 
 	private static final Logger LOG = Logger.getLogger(CollectorIOS.class.getName());
 
-	private static final String IOS_STORE_A3 = "ios";
-	private static final String COUNTRIES_KEY = "gather.ios.countries";
+	private static final String COUNTRIES_KEY = "gather." + DataTypeHelper.IOS_STORE_A3 + ".countries";
 
-	private static final String KEY_FORMAT = "gather.ios.%s";
-	private static final String KEY_CATEGORY_FEED = "gather.ios.category.feed.url";
+	private static final String KEY_FORMAT = "gather." + DataTypeHelper.IOS_STORE_A3 + ".%s";
+	private static final String KEY_CATEGORY_FEED = "gather." + DataTypeHelper.IOS_STORE_A3 + ".category.feed.url";
 
 	public static final String TOP_FREE_APPS = "topfreeapplications";
 	public static final String TOP_PAID_APPS = "toppaidapplications";
@@ -113,7 +113,7 @@ public class CollectorIOS extends StoreCollector implements Collector {
 				if (code != null) {
 					// when we have gathered all the counties feeds we do the same but for each category
 					try {
-						Store store = StoreServiceProvider.provide().getA3CodeStore(IOS_STORE_A3);
+						Store store = StoreServiceProvider.provide().getA3CodeStore(DataTypeHelper.IOS_STORE_A3);
 
 						// get the parent category all which references all lower categories
 						Category all = CategoryServiceProvider.provide().getAllCategory(store);
@@ -211,7 +211,7 @@ public class CollectorIOS extends StoreCollector implements Collector {
 
 				if (parsed == null) { throw new RuntimeException("The data could not be parsed or parsing it returned a null json object"); }
 
-				ids = store(data, country, IOS_STORE_A3, type, categoryInternalId, new Date(), code);
+				ids = store(data, country, DataTypeHelper.IOS_STORE_A3, type, categoryInternalId, new Date(), code);
 			} else {
 				if (LOG.isLoggable(GaeLevel.TRACE)) {
 					LOG.log(GaeLevel.TRACE, "Obtained data was empty for country [" + country + "], type [" + type + "] and code [" + code + "]");
@@ -270,9 +270,9 @@ public class CollectorIOS extends StoreCollector implements Collector {
 		String url = null;
 
 		if (categoryInternalId == null) {
-			url = String.format(ENQUEUE_GATHER_FORMAT, IOS_STORE_A3, country, type, code);
+			url = String.format(ENQUEUE_GATHER_FORMAT, DataTypeHelper.IOS_STORE_A3, country, type, code);
 		} else {
-			url = String.format(ENQUEUE_GATHER_CATEGORY_FORMAT, IOS_STORE_A3, country, type, categoryInternalId.longValue(), code);
+			url = String.format(ENQUEUE_GATHER_CATEGORY_FORMAT, DataTypeHelper.IOS_STORE_A3, country, type, categoryInternalId.longValue(), code);
 		}
 
 		if (LOG.isLoggable(GaeLevel.DEBUG)) {
@@ -306,6 +306,26 @@ public class CollectorIOS extends StoreCollector implements Collector {
 	@Override
 	public boolean isGrossing(String type) {
 		return type.equalsIgnoreCase(TOP_GROSSING_IPAD_APPS) || type.equalsIgnoreCase(TOP_GROSSING_APPS);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.collectors.Collector#isPaid(java.lang.String)
+	 */
+	@Override
+	public boolean isPaid(String type) {
+		return type.equalsIgnoreCase(TOP_PAID_IPAD_APPS) || type.equalsIgnoreCase(TOP_PAID_APPS);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.collectors.Collector#isFree(java.lang.String)
+	 */
+	@Override
+	public boolean isFree(String type) {
+		return type.equalsIgnoreCase(TOP_FREE_IPAD_APPS) || type.equalsIgnoreCase(TOP_FREE_APPS);
 	}
 
 	/*

@@ -280,8 +280,10 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 		FilterController.get().resetFilter(PageType.MyAppsPageType);
 		RankController.get().reset();
 		FilterController.get().resetFilter(PageType.RanksPageType);
+		PostController.get().reset();
 
-		NavigationController.get().purgeUserPages();
+		// Remove all the pages from the Navigation Controller
+		NavigationController.get().purgeAllPages();
 
 		PageType.LoginPageType.show("requestinvite");
 	}
@@ -331,12 +333,12 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	 * @param id
 	 * @return Boolean hasRole
 	 */
-	public boolean hasRole(User user, long id) {
+	public boolean hasRole(User user, Long id) {
 		boolean hasRole = false;
 
 		if (user != null && user.roles != null) {
 			for (Role role : user.roles) {
-				if (role.id != null && role.id.longValue() == id) {
+				if (role.id != null && role.id.longValue() == id.longValue()) {
 					hasRole = true;
 					break;
 				}
@@ -346,14 +348,14 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 		return hasRole;
 	}
 
-	public boolean hasPermission(User user, long id) {
+	public boolean hasPermission(User user, Long id) {
 		boolean hasPermission = hasRole(user, DataTypeHelper.ROLE_ADMIN_ID);
 
 		if (!hasPermission && user != null) {
 			if (user.roles != null) {
 				for (Role role : user.roles) {
 					if (!hasPermission && role.permissions != null) {
-						hasPermission = hasIdPermission(role.permissions, id);
+						hasPermission = hasIdPermission(role.permissions, id.longValue());
 						if (hasPermission) {
 							break;
 						}
@@ -361,7 +363,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 				}
 			}
 			if (!hasPermission && user.permissions != null) {
-				hasPermission = hasIdPermission(user.permissions, id);
+				hasPermission = hasIdPermission(user.permissions, id.longValue());
 			}
 
 		}

@@ -12,6 +12,7 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.service.store.StoreServiceProvider;
+import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.test.DatabaseTest;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public class CategoryServiceTest extends DatabaseTest {
 	public void testGetAllStoreCategories() throws DataAccessException {
 		setupLocalDatabaseConnectionSystemProperties();
 
-		Store store = StoreServiceProvider.provide().getA3CodeStore("ios");
+		Store store = StoreServiceProvider.provide().getA3CodeStore(DataTypeHelper.IOS_STORE_A3);
 
 		Long categoryCount = CategoryServiceProvider.provide().getStoreCategoriesCount(store);
 
@@ -49,7 +50,7 @@ public class CategoryServiceTest extends DatabaseTest {
 	public void testGetExcludingAllStoreCategories() throws DataAccessException {
 		setupLocalDatabaseConnectionSystemProperties();
 		
-		Store store = StoreServiceProvider.provide().getA3CodeStore("ios");
+		Store store = StoreServiceProvider.provide().getA3CodeStore(DataTypeHelper.IOS_STORE_A3);
 		
 		Category all = CategoryServiceProvider.provide().getAllCategory(store);
 		

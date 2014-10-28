@@ -114,7 +114,7 @@ public interface IRankService extends IService {
 	 * @param ignoreGrossingRank
 	 * @return
 	 */
-	public List<Rank> getGatherCodeRanks(Country country, Store store, Category category, String listType, Long code, Pager pager, boolean ignoreGrossingRank)
+	public List<Rank> getGatherCodeRanks(Country country, Store store, Category category, String listType, Long code, Pager pager, Boolean ignoreGrossingRank)
 			throws DataAccessException;
 
 	/**
@@ -140,17 +140,30 @@ public interface IRankService extends IService {
 	 */
 	public Long updateRanksBatch(Collection<Rank> updateRanks) throws DataAccessException;
 
+	// /**
+	// *
+	// * @param country
+	// * @param store
+	// * @param category
+	// * @param listType
+	// * @param start
+	// * @param end
+	// * @return
+	// * @throws DataAccessException
+	// */
+	// public List<Rank> getAllRanks(Country country, Store store, Category category, String listType, Date start, Date end) throws DataAccessException;
+
 	/**
+	 * Get Rank Ids
 	 * 
 	 * @param country
 	 * @param store
 	 * @param category
-	 * @param listType
 	 * @param start
 	 * @param end
 	 * @return
 	 * @throws DataAccessException
 	 */
-	public List<Rank> getAllRanks(Country country, Store store, Category category, String listType, Date start, Date end) throws DataAccessException;
+	public List<Long> getRankIds(Country country, Store store, Category category, Date start, Date end) throws DataAccessException;
 
 }

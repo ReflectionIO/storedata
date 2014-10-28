@@ -230,7 +230,7 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 							item.internalId = itemId;
 							item.externalId = jsonItem.get("bundleId").getAsString();
 							item.name = jsonItem.get("trackName").getAsString();
-							item.source = "ios";
+							item.source = DataTypeHelper.IOS_STORE_A3;
 							item.type = "Application";
 
 							String imageUrl = jsonItem.get("artworkUrl100").getAsString();
@@ -244,7 +244,7 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 								item.country = imageUrl.substring(countryStart, countryStart + 2);
 
 								item.smallImage = imageUrl.concat(".53x53-50.png");
-								item.mediumImage = imageUrl.concat(".75x75-65.png.png");
+								item.mediumImage = imageUrl.concat(".75x75-65.png");
 								item.largeImage = imageUrl.concat(".100x100-75.png");
 							} else {
 								item.country = item.smallImage = item.mediumImage = item.largeImage = "";

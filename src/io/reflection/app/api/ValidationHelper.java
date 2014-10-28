@@ -17,34 +17,42 @@ import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
+import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.EmailTemplate;
+import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.Forum;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Post;
 import io.reflection.app.datatypes.shared.Reply;
 import io.reflection.app.datatypes.shared.Role;
+import io.reflection.app.datatypes.shared.SimpleModelRun;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.datatypes.shared.Topic;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.country.CountryServiceProvider;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
+import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
 import io.reflection.app.service.datasource.DataSourceServiceProvider;
 import io.reflection.app.service.emailtemplate.EmailTemplateServiceProvider;
+import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
 import io.reflection.app.service.role.RoleServiceProvider;
 import io.reflection.app.service.sale.SaleServiceProvider;
 import io.reflection.app.service.session.ISessionService;
 import io.reflection.app.service.session.SessionServiceProvider;
+import io.reflection.app.service.simplemodelrun.SimpleModelRunServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.service.user.UserServiceProvider;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import com.spacehopperstudios.utility.StringUtils;
 import com.willshex.gson.json.service.server.InputValidationException;
 import com.willshex.gson.json.service.server.ServiceException;
 
@@ -156,12 +164,15 @@ public class ValidationHelper {
 
 		if (pager.start == null) pager.start = Long.valueOf(0);
 
-		if (pager.start < 0) throw new InputValidationException(ApiError.PagerStartNegative.getCode(), ApiError.PagerStartNegative.getMessage(parent));
+		if (pager.start < 0)
+			throw new InputValidationException(ApiError.NegativeValueNotAllowed.getCode(), ApiError.NegativeValueNotAllowed.getMessage(StringUtils.join(
+					Arrays.asList(parent, "pager", "start"), ".")));
 
 		if (pager.count == null) pager.count = Long.valueOf(10);
 
 		if (pager.count.intValue() <= 0)
-			throw new InputValidationException(ApiError.PagerCountTooSmall.getCode(), ApiError.PagerCountTooSmall.getMessage(parent));
+			throw new InputValidationException(ApiError.NumericValueTooSmall.getCode(), ApiError.NumericValueTooSmall.getMessage(
+					StringUtils.join(Arrays.asList(parent, "pager", "count"), "."), 0, 30));
 
 		// TODO: for now this is disabled until we sort something out for it
 		// if (pager.count.intValue() > 30)
@@ -444,15 +455,17 @@ public class ValidationHelper {
 	public static Permission validatePermission(Permission permission, String parent) throws ServiceException {
 		if (permission == null) throw new InputValidationException(ApiError.PermissionNull.getCode(), ApiError.PermissionNull.getMessage(parent));
 
-		boolean isIdLookup = false, isNameLookup = false;
+		boolean isIdLookup = false, isCodeLookup = false, isNameLookup = false;
 
 		if (permission.id != null) {
 			isIdLookup = true;
 		} else if (permission.name != null) {
 			isNameLookup = true;
+		} else if (permission.code != null) {
+			isCodeLookup = true;
 		}
 
-		if (!(isIdLookup || isNameLookup))
+		if (!(isIdLookup || isNameLookup || isCodeLookup))
 			throw new InputValidationException(ApiError.PermissionNoLookup.getCode(), ApiError.PermissionNoLookup.getMessage(parent));
 
 		Permission lookupPermission = null;
@@ -460,6 +473,8 @@ public class ValidationHelper {
 			lookupPermission = PermissionServiceProvider.provide().getPermission(permission.id);
 		} else if (isNameLookup) {
 			lookupPermission = PermissionServiceProvider.provide().getNamedPermission(permission.name);
+		} else if (isCodeLookup) {
+			lookupPermission = PermissionServiceProvider.provide().getCodePermission(permission.code);
 		}
 
 		if (lookupPermission == null)
@@ -588,7 +603,7 @@ public class ValidationHelper {
 		DataAccount lookupDataAccount = DataAccountServiceProvider.provide().getDataAccount(dataAccount.id);
 
 		if (lookupDataAccount == null)
-			throw new InputValidationException(ApiError.DataAccountNotFound.getCode(), ApiError.DataSourceNotFound.getMessage(parent));
+			throw new InputValidationException(ApiError.DataAccountNotFound.getCode(), ApiError.DataAccountNotFound.getMessage(parent));
 
 		return lookupDataAccount;
 	}
@@ -627,6 +642,26 @@ public class ValidationHelper {
 	}
 
 	/**
+	 * 
+	 * @param feedFetch
+	 * @param parent
+	 * @return
+	 * @throws InputValidationException
+	 */
+	public static FeedFetch validateFeedFetch(FeedFetch feedFetch, String parent) throws ServiceException {
+		if (feedFetch == null) throw new InputValidationException(ApiError.FeedFetchNull.getCode(), ApiError.FeedFetchNull.getMessage(parent));
+
+		FeedFetch lookupFeedFetch = null;
+		if (feedFetch.id != null) {
+			lookupFeedFetch = FeedFetchServiceProvider.provide().getFeedFetch(feedFetch.id);
+		}
+
+		if (lookupFeedFetch == null) throw new InputValidationException(ApiError.FeedFetchNotFound.getCode(), ApiError.FeedFetchNotFound.getMessage(parent));
+
+		return lookupFeedFetch;
+	}
+
+	/**
 	 * @param email
 	 * @param isNullable
 	 * @param parent
@@ -661,7 +696,19 @@ public class ValidationHelper {
 		if (lookupEmailTemplate == null)
 			throw new InputValidationException(ApiError.EmailTemplateNotFound.getCode(), ApiError.EmailTemplateNotFound.getMessage(parent));
 
+		validateEmailTemplate(emailTemplate, parent);
+
 		return lookupEmailTemplate;
+	}
+
+	public static EmailTemplate validateEmailTemplate(EmailTemplate emailTemplate, String parent) throws ServiceException {
+		emailTemplate.from = ValidationHelper.validateEmail(emailTemplate.from, false, parent + ".from");
+
+		emailTemplate.subject = ValidationHelper.validateStringLength(emailTemplate.subject, parent + ".subject", 1, 2000);
+
+		emailTemplate.body = ValidationHelper.validateStringLength(emailTemplate.body, parent + ".body", 1, 50000);
+
+		return emailTemplate;
 	}
 
 	public static Post validateExistingPost(Post post, String parent) throws ServiceException {
@@ -697,5 +744,47 @@ public class ValidationHelper {
 	public static Reply validateNewReply(Reply reply, String parent) throws ServiceException {
 		// TODO Auto-generated method stub
 		return reply;
+	}
+
+	/**
+	 * @param simpleModelRun
+	 * @param string
+	 * @return
+	 * @throws ServiceException
+	 */
+	public static SimpleModelRun validateSimpleModelRun(SimpleModelRun simpleModelRun, String parent) throws ServiceException {
+		if (simpleModelRun == null) throw new InputValidationException(ApiError.SimpleModelRunNull.getCode(), ApiError.SimpleModelRunNull.getMessage(parent));
+
+		SimpleModelRun lookupSimpleModelRun = null;
+		if (simpleModelRun.id != null) {
+			lookupSimpleModelRun = SimpleModelRunServiceProvider.provide().getSimpleModelRun(simpleModelRun.id);
+		}
+
+		if (lookupSimpleModelRun == null)
+			throw new InputValidationException(ApiError.SimpleModelRunNotFound.getCode(), ApiError.SimpleModelRunNotFound.getMessage(parent));
+
+		return lookupSimpleModelRun;
+	}
+	
+	/**
+	 * Validate DataAccountFetch
+	 * 
+	 * @param dataAccountFetch
+	 * @param parent
+	 * @return
+	 * @throws ServiceException
+	 */
+	public static DataAccountFetch validateDataAccountFetch(DataAccountFetch dataAccountFetch, String parent) throws ServiceException {
+		if (dataAccountFetch == null) throw new InputValidationException(ApiError.DataAccountFetchNull.getCode(), ApiError.DataAccountFetchNull.getMessage(parent));
+
+		if (dataAccountFetch.id == null)
+			throw new InputValidationException(ApiError.DataAccountFetchNoLookup.getCode(), ApiError.DataAccountFetchNoLookup.getMessage(parent));
+
+		DataAccountFetch lookupDataAccountFetch = DataAccountFetchServiceProvider.provide().getDataAccountFetch(dataAccountFetch.id);
+
+		if (lookupDataAccountFetch == null)
+			throw new InputValidationException(ApiError.DataAccountFetchNotFound.getCode(), ApiError.DataAccountFetchNotFound.getMessage(parent));
+
+		return lookupDataAccountFetch;
 	}
 }

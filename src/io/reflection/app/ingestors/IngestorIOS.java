@@ -8,13 +8,11 @@
 //
 package io.reflection.app.ingestors;
 
-import io.reflection.app.CallServiceMethodServlet;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.collectors.StoreCollector;
-import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.FeedFetchStatusType;
@@ -22,11 +20,12 @@ import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.modellers.Modeller;
 import io.reflection.app.modellers.ModellerFactory;
-import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -59,8 +58,6 @@ import com.google.appengine.api.taskqueue.TransientFailureException;
 public class IngestorIOS extends StoreCollector implements Ingestor {
 
 	private static final Logger LOG = Logger.getLogger(IngestorIOS.class.getName());
-
-	private static final String IOS_STORE_A3 = "ios";
 
 	@Override
 	public void ingest(List<Long> itemIds) throws DataAccessException {
@@ -124,7 +121,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			LOG.log(GaeLevel.DEBUG, "Extracting item ranks");
 		}
 
-		Collector c = CollectorFactory.getCollectorForStore("ios");
+		Collector c = CollectorFactory.getCollectorForStore(DataTypeHelper.IOS_STORE_A3);
 
 		boolean isGrossing;
 		for (final Date key : combined.keySet()) {
@@ -136,7 +133,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			Map<Integer, FeedFetch> group = grouped.get(key);
 			Iterator<FeedFetch> iterator = group.values().iterator();
 			FeedFetch firstFeedFetch = iterator.next();
-			
+
 			List<Item> items = (new ParserIOS()).parse(firstFeedFetch.country, firstFeedFetch.category.id, combined.get(key));
 
 			List<Rank> addRanks = new ArrayList<Rank>();
@@ -157,7 +154,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			pager.count = new Long(Long.MAX_VALUE);
 
 			List<Rank> foundRanks = RankServiceProvider.provide().getGatherCodeRanks(country, store, firstFeedFetch.category, firstFeedFetch.type,
-					firstFeedFetch.code, pager, true);
+					firstFeedFetch.code, pager, Boolean.TRUE);
 
 			Map<String, Rank> lookup = indexRanks(foundRanks);
 			List<String> itemIds = new ArrayList<String>();
@@ -294,24 +291,30 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			//
 			// });
 
+			Modeller modeller = ModellerFactory.getModellerForStore(DataTypeHelper.IOS_STORE_A3);
+
 			for (int i = 0; i < group.size(); i++) {
 				FeedFetch current = group.get(Integer.valueOf(i));
 				current.status = FeedFetchStatusType.FeedFetchStatusTypeIngested;
 				FeedFetchServiceProvider.provide().updateFeedFetch(current);
+
+				// once the feed fetch status is updated model the list 
+				modeller.enqueue(current);
 			}
 
-			Store s = new Store();
-			s.a3Code = IOS_STORE_A3;
-			Category all = CategoryServiceProvider.provide().getAllCategory(s);
-
-			// only run the model based on the "all" category, right now category data is not modelled
-			if (isGrossing) {
-				if (firstFeedFetch.category.id.longValue() == all.id.longValue()) {
-					ModellerFactory.getModellerForStore(IOS_STORE_A3).enqueue(firstFeedFetch.country, firstFeedFetch.type, firstFeedFetch.code);
-				}
-
-				CallServiceMethodServlet.enqueueGetAllRanks(firstFeedFetch.country, IOS_STORE_A3, firstFeedFetch.category.id, firstFeedFetch.type, key);
-			}
+			// Store s = DataTypeHelper.getIosStore();
+			// Category all = CategoryServiceProvider.provide().getAllCategory(s);
+			//
+			// // only run the model based on the "all" category, right now category data is not modelled
+			// if (isGrossing) {
+			// if (firstFeedFetch.category.id.longValue() == all.id.longValue()) {
+			// ModellerFactory.getModellerForStore(DataTypeHelper.IOS_STORE_A3).enqueue(firstFeedFetch.country, firstFeedFetch.category,
+			// firstFeedFetch.type, firstFeedFetch.code);
+			// }
+			//
+			// CallServiceMethodServlet.enqueueGetAllRanks(firstFeedFetch.country, DataTypeHelper.IOS_STORE_A3, firstFeedFetch.category.id,
+			// firstFeedFetch.type, key);
+			// }
 
 		}
 	}
@@ -508,7 +511,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			buffer.append(id.toString());
 		}
 
-		String store = IOS_STORE_A3, ids = buffer.toString();
+		String store = DataTypeHelper.IOS_STORE_A3, ids = buffer.toString();
 
 		try {
 			queue.add(TaskOptions.Builder.withUrl(String.format(ENQUEUE_INGEST_FORMAT, store, ids)).method(Method.GET));

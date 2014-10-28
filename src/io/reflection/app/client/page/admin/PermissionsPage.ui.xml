@@ -6,12 +6,13 @@
 	</ui:style>
 	<g:HTMLPanel>
 		<div class="row">
-			<h2>Permissions</h2>
+			<g:HTMLPanel styleName="col-sm-10 col-sm-offset-1">
+				<h2>Permissions</h2>
 
-			<c:CellTable ui:field="mPermissions" styleName="table table-hover table-striped" />
+				<c:CellTable ui:field="mPermissions" styleName="table table-hover table-striped" />
 
-			<p:SimplePager styleName="text-center" ui:field="mPager" />
-
+				<p:SimplePager styleName="text-center" ui:field="mPager" />
+			</g:HTMLPanel>
 			<g:HTMLPanel styleName="filler-bottom col-md-12 hidden-xs hidden-sm" />
 		</div>
 	</g:HTMLPanel>

@@ -11,8 +11,14 @@ package io.reflection.app.api.admin;
 import static io.reflection.app.api.PagerHelper.updatePager;
 import io.reflection.app.api.PagerHelper;
 import io.reflection.app.api.ValidationHelper;
+import io.reflection.app.api.admin.shared.call.AssignPermissionRequest;
+import io.reflection.app.api.admin.shared.call.AssignPermissionResponse;
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
 import io.reflection.app.api.admin.shared.call.AssignRoleResponse;
+import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesRequest;
+import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesResponse;
+import io.reflection.app.api.admin.shared.call.GetDataAccountsRequest;
+import io.reflection.app.api.admin.shared.call.GetDataAccountsResponse;
 import io.reflection.app.api.admin.shared.call.GetEmailTemplatesRequest;
 import io.reflection.app.api.admin.shared.call.GetEmailTemplatesResponse;
 import io.reflection.app.api.admin.shared.call.GetFeedFetchesRequest;
@@ -23,16 +29,30 @@ import io.reflection.app.api.admin.shared.call.GetModelOutcomeRequest;
 import io.reflection.app.api.admin.shared.call.GetModelOutcomeResponse;
 import io.reflection.app.api.admin.shared.call.GetPermissionsRequest;
 import io.reflection.app.api.admin.shared.call.GetPermissionsResponse;
+import io.reflection.app.api.admin.shared.call.GetRolesAndPermissionsRequest;
+import io.reflection.app.api.admin.shared.call.GetRolesAndPermissionsResponse;
 import io.reflection.app.api.admin.shared.call.GetRolesRequest;
 import io.reflection.app.api.admin.shared.call.GetRolesResponse;
+import io.reflection.app.api.admin.shared.call.GetSimpleModelRunsRequest;
+import io.reflection.app.api.admin.shared.call.GetSimpleModelRunsResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersCountResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersResponse;
+import io.reflection.app.api.admin.shared.call.JoinDataAccountRequest;
+import io.reflection.app.api.admin.shared.call.JoinDataAccountResponse;
+import io.reflection.app.api.admin.shared.call.RevokePermissionRequest;
+import io.reflection.app.api.admin.shared.call.RevokePermissionResponse;
+import io.reflection.app.api.admin.shared.call.RevokeRoleRequest;
+import io.reflection.app.api.admin.shared.call.RevokeRoleResponse;
 import io.reflection.app.api.admin.shared.call.SendEmailRequest;
 import io.reflection.app.api.admin.shared.call.SendEmailResponse;
 import io.reflection.app.api.admin.shared.call.SetPasswordRequest;
 import io.reflection.app.api.admin.shared.call.SetPasswordResponse;
+import io.reflection.app.api.admin.shared.call.TriggerDataAccountFetchIngestRequest;
+import io.reflection.app.api.admin.shared.call.TriggerDataAccountFetchIngestResponse;
+import io.reflection.app.api.admin.shared.call.TriggerDataAccountGatherRequest;
+import io.reflection.app.api.admin.shared.call.TriggerDataAccountGatherResponse;
 import io.reflection.app.api.admin.shared.call.TriggerGatherRequest;
 import io.reflection.app.api.admin.shared.call.TriggerGatherResponse;
 import io.reflection.app.api.admin.shared.call.TriggerIngestRequest;
@@ -41,6 +61,8 @@ import io.reflection.app.api.admin.shared.call.TriggerModelRequest;
 import io.reflection.app.api.admin.shared.call.TriggerModelResponse;
 import io.reflection.app.api.admin.shared.call.TriggerPredictRequest;
 import io.reflection.app.api.admin.shared.call.TriggerPredictResponse;
+import io.reflection.app.api.admin.shared.call.UpdateEmailTemplateRequest;
+import io.reflection.app.api.admin.shared.call.UpdateEmailTemplateResponse;
 import io.reflection.app.api.blog.shared.call.DeleteUserRequest;
 import io.reflection.app.api.blog.shared.call.DeleteUserResponse;
 import io.reflection.app.api.shared.ApiError;
@@ -48,23 +70,39 @@ import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.shared.DataAccount;
+import io.reflection.app.datatypes.shared.DataSource;
+import io.reflection.app.datatypes.shared.EmailFormatType;
+import io.reflection.app.datatypes.shared.FeedFetch;
+import io.reflection.app.datatypes.shared.Role;
+import io.reflection.app.datatypes.shared.SimpleModelRun;
+import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.helpers.EmailHelper;
 import io.reflection.app.ingestors.Ingestor;
 import io.reflection.app.ingestors.IngestorFactory;
 import io.reflection.app.modellers.Modeller;
 import io.reflection.app.modellers.ModellerFactory;
 import io.reflection.app.predictors.Predictor;
 import io.reflection.app.predictors.PredictorFactory;
+import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
+import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
+import io.reflection.app.service.datasource.DataSourceServiceProvider;
 import io.reflection.app.service.emailtemplate.EmailTemplateServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
 import io.reflection.app.service.role.RoleServiceProvider;
+import io.reflection.app.service.simplemodelrun.SimpleModelRunServiceProvider;
+import io.reflection.app.service.user.IUserService;
 import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
+import io.reflection.app.shared.util.FormattingHelper;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import com.willshex.gson.json.service.server.ActionHandler;
@@ -85,7 +123,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(Long.valueOf(1)));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
@@ -113,7 +151,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(Long.valueOf(1)));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
 
 			output.count = UserServiceProvider.provide().getUsersCount();
 
@@ -137,7 +175,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(Long.valueOf(1)));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -159,7 +197,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(Long.valueOf(1)));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
@@ -203,7 +241,19 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(Long.valueOf(1)));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+
+			input.country = ValidationHelper.validateCountry(input.country, "input");
+
+			input.store = ValidationHelper.validateStore(input.store, "input");
+
+			if (input.category != null) {
+				input.category = ValidationHelper.validateCategory(input.category, "input.category");
+			} else {
+				input.category = CategoryServiceProvider.provide().getAllCategory(input.store);
+			}
+
+			input.listTypes = ValidationHelper.validateListTypes(input.listTypes, input.store, "input");
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -225,11 +275,17 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(Long.valueOf(1)));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
 
 			input.country = ValidationHelper.validateCountry(input.country, "input");
 
 			input.store = ValidationHelper.validateStore(input.store, "input");
+
+			if (input.category != null) {
+				input.category = ValidationHelper.validateCategory(input.category, "input.category");
+			} else {
+				input.category = CategoryServiceProvider.provide().getAllCategory(input.store);
+			}
 
 			input.listTypes = ValidationHelper.validateListTypes(input.listTypes, input.store, "input");
 
@@ -260,30 +316,52 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(Long.valueOf(1)));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
 
-			input.country = ValidationHelper.validateCountry(input.country, "input");
+			Modeller modeller = null;
 
-			input.store = ValidationHelper.validateStore(input.store, "input");
+			switch (input.modelType) {
+			case ModelTypeTypeCorrelation:
+				input.country = ValidationHelper.validateCountry(input.country, "input");
 
-			input.listTypes = ValidationHelper.validateListTypes(input.listTypes, input.store, "input");
+				input.store = ValidationHelper.validateStore(input.store, "input");
 
-			Collector collector = CollectorFactory.getCollectorForStore(input.store.a3Code);
-
-			String type = null;
-			for (String listType : input.listTypes) {
-				if (collector.isGrossing(listType)) {
-					type = listType;
-					break;
+				if (input.category != null) {
+					input.category = ValidationHelper.validateCategory(input.category, "input.category");
+				} else {
+					input.category = CategoryServiceProvider.provide().getAllCategory(input.store);
 				}
+
+				input.listTypes = ValidationHelper.validateListTypes(input.listTypes, input.store, "input");
+
+				Collector collector = CollectorFactory.getCollectorForStore(input.store.a3Code);
+
+				String type = null;
+				for (String listType : input.listTypes) {
+					if (collector.isGrossing(listType)) {
+						type = listType;
+						break;
+					}
+				}
+
+				if (type == null)
+					throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+							ApiError.InvalidValueNull.getMessage("should contain a grossing list name List: input.listType"));
+
+				modeller = ModellerFactory.getModellerForStore(input.store.a3Code);
+				modeller.enqueue(input.modelType, input.country.a2Code, input.category, type, input.code);
+
+				break;
+			case ModelTypeTypeSimple:
+				input.feedFetch = ValidationHelper.validateFeedFetch(input.feedFetch, "input.feedFetch");
+
+				modeller = ModellerFactory.getModellerForStore(input.feedFetch.store);
+				modeller.enqueue(input.feedFetch);
+
+				break;
+			default:
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("ModelTypeType: input.modelType"));
 			}
-
-			if (type == null)
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
-						ApiError.InvalidValueNull.getMessage("should contain a grossing list name List: input.listType"));
-
-			Modeller model = ModellerFactory.getModellerForStore(input.store.a3Code);
-			model.enqueue(input.country.a2Code, type, input.code);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -305,31 +383,53 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(Long.valueOf(1)));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
 
-			input.country = ValidationHelper.validateCountry(input.country, "input");
+			switch (input.modelType) {
+			case ModelTypeTypeCorrelation:
+				input.country = ValidationHelper.validateCountry(input.country, "input");
 
-			input.store = ValidationHelper.validateStore(input.store, "input");
+				input.store = ValidationHelper.validateStore(input.store, "input");
 
-			input.listTypes = ValidationHelper.validateListTypes(input.listTypes, input.store, "input");
-
-			Collector collector = CollectorFactory.getCollectorForStore(input.store.a3Code);
-
-			String type = null;
-			for (String listType : input.listTypes) {
-				if (collector.isGrossing(listType)) {
-					type = listType;
-					break;
+				if (input.category != null) {
+					input.category = ValidationHelper.validateCategory(input.category, "input.category");
+				} else {
+					input.category = CategoryServiceProvider.provide().getAllCategory(input.store);
 				}
+
+				input.listTypes = ValidationHelper.validateListTypes(input.listTypes, input.store, "input");
+
+				Collector collector = CollectorFactory.getCollectorForStore(input.store.a3Code);
+				Predictor predictor = null;
+
+				String type = null;
+				for (String listType : input.listTypes) {
+					if (collector.isGrossing(listType)) {
+						type = listType;
+						break;
+					}
+				}
+
+				if (type == null)
+					throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+							ApiError.InvalidValueNull.getMessage("should contain a grossing list name List: input.listType"));
+
+				predictor = PredictorFactory.getPredictorForStore(input.store.a3Code);
+				predictor.enqueue(input.country.a2Code, type, input.code);
+
+				break;
+			case ModelTypeTypeSimple:
+				input.simpleModelRun = ValidationHelper.validateSimpleModelRun(input.simpleModelRun, "input.simpleModelRun");
+
+				input.simpleModelRun.feedFetch = FeedFetchServiceProvider.provide().getFeedFetch(input.simpleModelRun.feedFetch.id);
+
+				predictor = PredictorFactory.getPredictorForStore(input.simpleModelRun.feedFetch.store);
+				predictor.enqueue(input.simpleModelRun);
+
+				break;
+			default:
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("ModelTypeType: input.modelType"));
 			}
-
-			if (type == null)
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
-						ApiError.InvalidValueNull.getMessage("should contain a grossing list name List: input.listType"));
-
-			Predictor predictor = PredictorFactory.getPredictorForStore(input.store.a3Code);
-
-			predictor.enqueue(input.country.a2Code, type, input.code);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -352,7 +452,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(Long.valueOf(1)));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
 
 			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
 
@@ -381,7 +481,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(Long.valueOf(1)));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
 
 			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
 
@@ -400,6 +500,96 @@ public final class Admin extends ActionHandler {
 		return output;
 	}
 
+	public AssignPermissionResponse assignPermission(AssignPermissionRequest input) {
+		LOG.finer("Entering assignPermission");
+		AssignPermissionResponse output = new AssignPermissionResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("AssignRoleRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+
+			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
+
+			input.permission = ValidationHelper.validatePermission(input.permission, "input.permission");
+
+			if (!UserServiceProvider.provide().hasPermission(input.user, input.permission).booleanValue()) {
+				UserServiceProvider.provide().assignPermission(input.user, input.permission);
+			}
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting assignPermission");
+		return output;
+	}
+
+	public RevokeRoleResponse revokeRole(RevokeRoleRequest input) {
+		LOG.finer("Entering revokeRole");
+		RevokeRoleResponse output = new RevokeRoleResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("RevokeRoleRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+
+			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
+
+			input.role = ValidationHelper.validateRole(input.role, "input.role");
+
+			if (UserServiceProvider.provide().hasRole(input.user, input.role).booleanValue()) {
+				UserServiceProvider.provide().revokeRole(input.user, input.role);
+			}
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting revokeRole");
+		return output;
+	}
+
+	public RevokePermissionResponse revokePermission(RevokePermissionRequest input) {
+		LOG.finer("Entering revokePermission");
+		RevokePermissionResponse output = new RevokePermissionResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("AssignRoleRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+
+			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
+
+			input.permission = ValidationHelper.validatePermission(input.permission, "input.permission");
+
+			if (UserServiceProvider.provide().hasPermission(input.user, input.permission).booleanValue()) {
+				UserServiceProvider.provide().revokePermission(input.user, input.permission);
+			}
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting revokePermission");
+		return output;
+	}
+
 	public GetRolesResponse getRoles(GetRolesRequest input) {
 		LOG.finer("Entering getRoles");
 		GetRolesResponse output = new GetRolesResponse();
@@ -411,7 +601,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(Long.valueOf(1)));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
@@ -439,7 +629,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(Long.valueOf(1)));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
@@ -467,7 +657,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(Long.valueOf(1)));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
@@ -496,7 +686,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(Long.valueOf(1)));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
 
 			input.toAddress = ValidationHelper.validateEmail(input.toAddress, true, "input.toAddress");
 
@@ -526,7 +716,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(Long.valueOf(1)));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
@@ -555,6 +745,8 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+
 			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
 
 			List<DataAccount> linkedAccounts = new ArrayList<DataAccount>();
@@ -580,6 +772,406 @@ public final class Admin extends ActionHandler {
 			output.error = convertToErrorAndLog(LOG, e);
 		}
 		LOG.finer("Exiting deleteUser");
+		return output;
+	}
+
+	public GetRolesAndPermissionsResponse getRolesAndPermissions(GetRolesAndPermissionsRequest input) {
+		LOG.finer("Entering getRolesAndPermissions");
+		GetRolesAndPermissionsResponse output = new GetRolesAndPermissionsResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+						ApiError.InvalidValueNull.getMessage("GetRolesAndPermissionsResponse: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+
+			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
+
+			if (input.permissionsOnly != Boolean.TRUE) {
+				output.roles = UserServiceProvider.provide().getRoles(input.user);
+
+				if (output.roles != null) {
+					if (input.idsOnly == Boolean.FALSE) {
+						RoleServiceProvider.provide().inflateRoles(output.roles);
+					}
+
+					for (Role role : output.roles) {
+						role.permissions = RoleServiceProvider.provide().getPermissions(role);
+
+						if (role.permissions != null && input.idsOnly == Boolean.FALSE) {
+							PermissionServiceProvider.provide().inflatePermissions(role.permissions);
+						}
+					}
+				}
+			}
+
+			if (input.rolesOnly != Boolean.TRUE) {
+				output.permissions = UserServiceProvider.provide().getPermissions(input.user);
+
+				if (output.permissions != null && input.idsOnly == Boolean.FALSE) {
+					PermissionServiceProvider.provide().inflatePermissions(output.permissions);
+				}
+			}
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getRolesAndPermissions");
+		return output;
+	}
+
+	public UpdateEmailTemplateResponse updateEmailTemplate(UpdateEmailTemplateRequest input) {
+		LOG.finer("Entering updateEmailTemplate");
+		UpdateEmailTemplateResponse output = new UpdateEmailTemplateResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+						ApiError.InvalidValueNull.getMessage("UpdateEmailTemplateRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			if (input.emailTemplate == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("input.emailTemplate"));
+
+			ValidationHelper.validateExistingEmailTemplate(input.emailTemplate, "input.emailTemplate");
+
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+
+			EmailTemplateServiceProvider.provide().updateEmailTemplate(input.emailTemplate);
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting updateEmailTemplate");
+		return output;
+	}
+
+	public GetDataAccountsResponse getDataAccounts(GetDataAccountsRequest input) {
+		LOG.finer("Entering getDataAccounts");
+		GetDataAccountsResponse output = new GetDataAccountsResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("GetDataAccountsRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+
+			output.dataAccounts = DataAccountServiceProvider.provide().getDataAccounts(input.pager);
+			// Delete password fields
+			for (DataAccount dataAccount : output.dataAccounts) {
+				dataAccount.password = null;
+			}
+
+			// Retrieve and link Sources
+			List<Long> dataSourceIdList = new ArrayList<Long>();
+			Map<Long, DataSource> dataSourceLookup = new HashMap<Long, DataSource>();
+			for (DataAccount dataAccount : output.dataAccounts) {
+				if (dataAccount.source.id != null) {
+					dataSourceIdList.add(dataAccount.source.id);
+				}
+			}
+			if (dataSourceIdList != null && dataSourceIdList.size() > 0) {
+				List<DataSource> dataSourceList = DataSourceServiceProvider.provide().getDataSourceBatch(dataSourceIdList);
+				for (DataSource dataSource : dataSourceList) {
+					dataSourceLookup.put(dataSource.id, dataSource);
+				}
+			}
+
+			// Retrieve and link Owners
+			List<Long> dataAccountIdList = new ArrayList<Long>();
+			Map<Long, User> userLookup = new HashMap<Long, User>();
+			for (DataAccount dataAccount : output.dataAccounts) {
+				if (dataAccount.id != null) {
+					dataAccountIdList.add(dataAccount.id);
+				}
+			}
+			if (dataAccountIdList != null && dataAccountIdList.size() > 0) {
+				List<User> userList = UserServiceProvider.provide().getDataAccountOwnerBatch(dataAccountIdList);
+				for (User owner : userList) {
+					if (owner.linkedAccounts.get(0).id != null) userLookup.put(owner.linkedAccounts.get(0).id, owner);
+				}
+			}
+
+			// Add DataAccount informations
+			for (DataAccount dataAccount : output.dataAccounts) {
+				dataAccount.source = dataSourceLookup.get(dataAccount.source.id);
+				dataAccount.user = userLookup.get(dataAccount.id);
+				dataAccount.fetches = DataAccountFetchServiceProvider.provide().getFailedDataAccountFetches(dataAccount, PagerHelper.infinitePager());
+			}
+
+			output.pager = input.pager;
+			updatePager(output.pager, output.dataAccounts, input.pager.totalCount == null ? DataAccountServiceProvider.provide().getDataAccountsCount() : null);
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getDataAccounts");
+		return output;
+	}
+
+	public GetDataAccountFetchesResponse getDataAccountFetches(GetDataAccountFetchesRequest input) {
+		LOG.finer("Entering getDataAccountFetches");
+		GetDataAccountFetchesResponse output = new GetDataAccountFetchesResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+						ApiError.InvalidValueNull.getMessage("GetDataAccountFetchesRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+
+			Calendar cal = Calendar.getInstance();
+
+			if (input.end == null) input.end = cal.getTime();
+
+			if (input.start == null) {
+				cal.setTime(input.end);
+				cal.add(Calendar.DAY_OF_YEAR, -30);
+				input.start = cal.getTime();
+			}
+
+			long diff = input.end.getTime() - input.start.getTime();
+			long diffDays = diff / (24 * 60 * 60 * 1000);
+
+			if (diffDays > 30 || diffDays < 0)
+				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
+						ApiError.DateRangeOutOfBounds.getMessage("0-30 days: input.end - input.start"));
+
+			if (input.dataAccount != null && input.dataAccount.id != null) {
+				output.dataAccountFetches = DataAccountFetchServiceProvider.provide().getDataAccountFetches(input.dataAccount, input.start, input.end,
+						input.pager);
+			} else {
+				output.dataAccountFetches = DataAccountFetchServiceProvider.provide().getDataAccountFetches(input.start, input.end, input.pager);
+			}
+
+			output.pager = input.pager;
+			if (input.dataAccount != null && input.dataAccount.id != null) {
+				updatePager(output.pager, output.dataAccountFetches, input.pager.totalCount == null ? DataAccountFetchServiceProvider.provide()
+						.getDataAccountFetchesCount(input.dataAccount, input.start, input.end) : null);
+			} else {
+				updatePager(output.pager, output.dataAccountFetches, input.pager.totalCount == null ? DataAccountFetchServiceProvider.provide()
+						.getDataAccountFetchesCount(input.start, input.end) : null);
+			}
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getDataAccountFetches");
+		return output;
+	}
+
+	public TriggerDataAccountGatherResponse triggerDataAccountGather(TriggerDataAccountGatherRequest input) {
+		LOG.finer("Entering triggerDataAccountGather");
+		TriggerDataAccountGatherResponse output = new TriggerDataAccountGatherResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+						ApiError.InvalidValueNull.getMessage("TriggerDataAccountGatherRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+
+			if (input.from == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("Date: input.from"));
+
+			if (input.days == null || input.days.intValue() < 1) {
+				input.days = Integer.valueOf(1);
+			}
+
+			input.dataAccount = ValidationHelper.validateDataAccount(input.dataAccount, "input.dataAccount");
+
+			if (input.days.intValue() == 1) {
+				DataAccountServiceProvider.provide().triggerSingleDateDataAccountFetch(input.dataAccount, input.from);
+			} else {
+				DataAccountServiceProvider.provide().triggerMultipleDateDataAccountFetch(input.dataAccount, input.from, input.days);
+			}
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting triggerDataAccountGather");
+		return output;
+	}
+
+	public TriggerDataAccountFetchIngestResponse triggerDataAccountFetchIngest(TriggerDataAccountFetchIngestRequest input) {
+		LOG.finer("Entering triggerDataAccountFetchIngest");
+		TriggerDataAccountFetchIngestResponse output = new TriggerDataAccountFetchIngestResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+						ApiError.InvalidValueNull.getMessage("TriggerDataAccountFetchIngestRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+
+			input.fetch = ValidationHelper.validateDataAccountFetch(input.fetch, "input.fetch");
+
+			DataAccountFetchServiceProvider.provide().triggerDataAccountFetchIngest(input.fetch);
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting triggerDataAccountFetchIngest");
+		return output;
+	}
+
+	public JoinDataAccountResponse joinDataAccount(JoinDataAccountRequest input) {
+		LOG.finer("Entering joinDataAccount");
+		JoinDataAccountResponse output = new JoinDataAccountResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("JoinDataAccountRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+
+			input.dataAccount = ValidationHelper.validateDataAccount(input.dataAccount, "input.dataAccount");
+
+			IUserService userService = UserServiceProvider.provide();
+			userService.addOrRestoreUserDataAccount(input.session.user, input.dataAccount);
+
+			User adminUser = userService.getUser(input.session.user.id);
+			User ownerUser = userService.getDataAccountOwner(input.dataAccount);
+
+			DataSource dataSource = DataSourceServiceProvider.provide().getDataSource(input.dataAccount.source.id);
+
+			EmailHelper
+					.sendEmail(
+							"hello@reflection.io",
+							"chi@reflection.io",
+							"Chi Dire",
+							"An admin has linked to a user's account",
+							String.format(
+									"Hi Chi,\n\nThis is to let you know that the admin user [%d - %s] has added the data account [%d] for the data source [%s] and the username [%s]. This data account belongs to the user [%d - %s].\n\nReflection",
+									adminUser.id.longValue(), FormattingHelper.getUserLongName(adminUser), input.dataAccount.id.longValue(), dataSource.name,
+									input.dataAccount.username, ownerUser.id.longValue(), FormattingHelper.getUserLongName(ownerUser)),
+							EmailFormatType.EmailFormatTypePlainText);
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting joinDataAccount");
+		return output;
+	}
+
+	public GetSimpleModelRunsResponse getSimpleModelRuns(GetSimpleModelRunsRequest input) {
+		LOG.finer("Entering getSimpleModelRuns");
+		GetSimpleModelRunsResponse output = new GetSimpleModelRunsResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("JoinDataAccountRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+
+			Calendar cal = Calendar.getInstance();
+
+			if (input.end == null) input.end = cal.getTime();
+
+			if (input.start == null) {
+				cal.setTime(input.end);
+				cal.add(Calendar.DAY_OF_YEAR, -30);
+				input.start = cal.getTime();
+			}
+
+			long diff = input.end.getTime() - input.start.getTime();
+			long diffDays = diff / (24 * 60 * 60 * 1000);
+
+			if (diffDays > 60 || diffDays < 0)
+				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
+						ApiError.DateRangeOutOfBounds.getMessage("0-60 days: input.end - input.start"));
+
+			input.country = ValidationHelper.validateCountry(input.country, "input");
+
+			input.store = ValidationHelper.validateStore(input.store, "input");
+
+			input.listType = ValidationHelper.validateListType(input.listType, input.store);
+			List<String> listTypes = new ArrayList<String>();
+			listTypes.add(input.listType);
+
+			if (input.category != null) {
+				input.category = ValidationHelper.validateCategory(input.category, "input.category");
+			} else {
+				input.category = CategoryServiceProvider.provide().getAllCategory(input.store);
+			}
+
+			input.pager = ValidationHelper.validatePager(input.pager, "input");
+			output.pager = input.pager;
+
+			List<FeedFetch> feedFetchList = FeedFetchServiceProvider.provide().getDatesFeedFetches(input.country, input.store, input.category, listTypes,
+					input.start, input.end);
+
+			if (feedFetchList != null && feedFetchList.size() > 0) {
+				// Create feedfetchId : feedFetch HashMap
+				Map<Long, FeedFetch> feedFetchIdLookup = new HashMap<Long, FeedFetch>();
+				for (FeedFetch feedFetch : feedFetchList) {
+					if (feedFetchIdLookup.get(feedFetch.id) == null) {
+						feedFetchIdLookup.put(feedFetch.id, feedFetch);
+					}
+				}
+
+				List<SimpleModelRun> simpleModelRunList = SimpleModelRunServiceProvider.provide().getFeedFetchesSimpleModelRuns(feedFetchIdLookup.keySet(),
+						input.pager);
+
+				// Add feedFetch object to SimpleModelRuns
+				for (SimpleModelRun simpleModelRun : simpleModelRunList) {
+					if (feedFetchIdLookup.get(simpleModelRun.feedFetch.id) != null) {
+						simpleModelRun.feedFetch = feedFetchIdLookup.get(simpleModelRun.feedFetch.id);
+					}
+				}
+
+				updatePager(output.pager, output.simpleModelRuns, input.pager.totalCount == null ? SimpleModelRunServiceProvider.provide()
+						.getFeedFetchesSimpleModelRunsCount(feedFetchIdLookup.keySet()) : null);
+
+				output.simpleModelRuns = simpleModelRunList;
+			} else {
+				updatePager(output.pager, null, Long.valueOf(0));
+			}
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getSimpleModelRuns");
 		return output;
 	}
 }

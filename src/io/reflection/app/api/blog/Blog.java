@@ -54,21 +54,19 @@ public final class Blog extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
-			Boolean showAll = Boolean.FALSE;
+			Boolean showAll = Boolean.FALSE; // Determine if the user can view the unpublished posts
 
 			if (input.session != null) {
 				try {
 					output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-					final Permission permissionListAny = new Permission();
-					permissionListAny.id = Long.valueOf(17);
+					final Permission permissionListAny = DataTypeHelper.createPermission(DataTypeHelper.PERMISSION_BLOG_LIST_ANY_ID);
 
-					final Role roleAdmin = new Role();
-					roleAdmin.id = Long.valueOf(1);
+					final Role roleAdmin = DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID);
 
 					try {
 						ValidationHelper.validateAuthorised(input.session.user, permissionListAny);
-
+						// Show All posts if has BLA permission
 						showAll = Boolean.TRUE;
 					} catch (AuthorisationException aEx) {
 
@@ -77,7 +75,7 @@ public final class Blog extends ActionHandler {
 					if (!showAll.booleanValue()) {
 						try {
 							ValidationHelper.validateAuthorised(input.session.user, roleAdmin);
-
+							// Show All posts if Admin
 							showAll = Boolean.TRUE;
 						} catch (AuthorisationException aEx) {
 
@@ -92,7 +90,11 @@ public final class Blog extends ActionHandler {
 				input.includeContents = Boolean.FALSE;
 			}
 
-			output.posts = PostServiceProvider.provide().getPosts(showAll, input.includeContents, input.pager);
+			if (input.session != null && input.session.user != null) {
+				output.posts = PostServiceProvider.provide().getUserViewablePosts(input.session.user, showAll, input.includeContents, input.pager);
+			} else {
+				output.posts = PostServiceProvider.provide().getPosts(showAll, input.includeContents, input.pager);
+			}
 
 			SparseArray<User> users = new SparseArray<User>();
 
@@ -105,10 +107,18 @@ public final class Blog extends ActionHandler {
 			}
 
 			output.pager = input.pager;
-			updatePager(output.pager, output.posts, input.pager.totalCount == null ? PostServiceProvider.provide().getPostsCount(showAll)
-					: input.pager.totalCount);
+
+			if (input.session != null && input.session.user != null) {
+				updatePager(output.pager, output.posts,
+						input.pager.totalCount == null ? PostServiceProvider.provide().getUserViewablePostsCount(input.session.user, showAll)
+								: input.pager.totalCount);
+			} else {
+				updatePager(output.pager, output.posts, input.pager.totalCount == null ? PostServiceProvider.provide().getPostsCount(showAll)
+						: input.pager.totalCount);
+			}
 
 			output.status = StatusType.StatusTypeSuccess;
+
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
 			output.error = convertToErrorAndLog(LOG, e);
@@ -203,10 +213,10 @@ public final class Blog extends ActionHandler {
 			boolean isAuthorised = false;
 
 			List<Role> roles = new ArrayList<Role>();
-			roles.add(DataTypeHelper.createRole(Long.valueOf(1)));
+			roles.add(DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
 
 			List<Permission> permissions = new ArrayList<Permission>();
-			permissions.add(DataTypeHelper.createPermission(Long.valueOf(9)));
+			permissions.add(DataTypeHelper.createPermission(DataTypeHelper.PERMISSION_BLOG_POST_ID));
 
 			try {
 				ValidationHelper.validateAuthorised(input.session.user, roles.get(0));
@@ -262,7 +272,7 @@ public final class Blog extends ActionHandler {
 
 			input.post = ValidationHelper.validateExistingPost(input.post, "input.post");
 
-			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
+			ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(DataTypeHelper.ROLE_ADMIN_ID));
 
 			PostServiceProvider.provide().deletePost(input.post);
 

@@ -7,11 +7,14 @@
 //
 package io.reflection.app.helpers;
 
+import static io.reflection.app.collectors.CollectorIOS.*;
+import io.reflection.app.datatypes.shared.Store;
+import io.reflection.app.shared.util.DataTypeHelper;
+
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-
-import io.reflection.app.collectors.CollectorIOS;
-import io.reflection.app.datatypes.shared.Store;
+import java.util.List;
 
 /**
  * @author billy1380
@@ -21,11 +24,11 @@ public class ApiHelper {
 	public static String getGrossingListName(Store store, String type) {
 		String listName = null;
 
-		if ("ios".equalsIgnoreCase(store.a3Code)) {
+		if (DataTypeHelper.IOS_STORE_A3.equalsIgnoreCase(store.a3Code)) {
 			if (type != null && type.contains("ipad") || type.toLowerCase().contains("ipad")) {
-				listName = CollectorIOS.TOP_GROSSING_IPAD_APPS;
+				listName = TOP_GROSSING_IPAD_APPS;
 			} else {
-				listName = CollectorIOS.TOP_GROSSING_APPS;
+				listName = TOP_GROSSING_APPS;
 			}
 		}
 
@@ -43,5 +46,26 @@ public class ApiHelper {
 
 		return cal.getTime();
 
+	}
+
+	/**
+	 * Get all list types uses the form type in the list name and returns the names of all the lists (3) for a specified store
+	 * 
+	 * @param store
+	 * @param listType
+	 * @return
+	 */
+	public static List<String> getAllListTypes(Store store, String type) {
+		List<String> listTypes = null;
+
+		if (DataTypeHelper.IOS_STORE_A3.equalsIgnoreCase(store.a3Code)) {
+			if (type != null && type.contains("ipad") || type.toLowerCase().contains("ipad")) {
+				listTypes = Arrays.asList(TOP_GROSSING_IPAD_APPS, TOP_FREE_IPAD_APPS, TOP_PAID_IPAD_APPS);
+			} else {
+				listTypes = Arrays.asList(TOP_GROSSING_APPS, TOP_FREE_APPS, TOP_PAID_APPS);
+			}
+		}
+
+		return listTypes;
 	}
 }

@@ -7,21 +7,28 @@
 //
 package io.reflection.app;
 
-import static io.reflection.app.helpers.ApiHelper.getGrossingListName;
+import io.reflection.app.api.PagerHelper;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
+import io.reflection.app.helpers.ApiHelper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.ServiceType;
 import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.country.CountryServiceProvider;
+import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
+import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
 
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,8 +40,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
-import com.google.appengine.api.taskqueue.TransientFailureException;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
+import com.google.appengine.api.taskqueue.TransientFailureException;
 
 /**
  * @author billy1380
@@ -79,23 +86,50 @@ public class CallServiceMethodServlet extends HttpServlet {
 					String a3StoreCodeParameter = req.getParameter("store");
 					String categoryParameter = req.getParameter("category");
 					String listTypeParameter = req.getParameter("listtype");
+					String codeParameter = req.getParameter("code");
 
-					Date date = new Date(Long.valueOf(dateParameter).longValue());
+					Long code = null;
+
+					if (codeParameter != null) {
+						code = Long.valueOf(codeParameter);
+					}
+
 					Country country = CountryServiceProvider.provide().getA2CodeCountry(a2CountryCodeParameter);
 					Store store = StoreServiceProvider.provide().getA3CodeStore(a3StoreCodeParameter);
 					Category category = CategoryServiceProvider.provide().getCategory(Long.valueOf(categoryParameter));
 
-					Calendar cal = Calendar.getInstance();
-					cal.setTime(date);
-					cal.set(Calendar.HOUR_OF_DAY, 0);
-					cal.set(Calendar.MINUTE, 0);
-					cal.set(Calendar.SECOND, 0);
-					cal.set(Calendar.MILLISECOND, 1);
-					Date end = cal.getTime();
-					cal.add(Calendar.DAY_OF_YEAR, -1);
-					Date start = cal.getTime();
+					if (code == null) {
+						Date date = new Date(Long.valueOf(dateParameter).longValue());
+						Calendar cal = Calendar.getInstance();
+						cal.setTime(date);
+						cal.set(Calendar.HOUR_OF_DAY, 0);
+						cal.set(Calendar.MINUTE, 0);
+						cal.set(Calendar.SECOND, 0);
+						cal.set(Calendar.MILLISECOND, 1);
+						Date end = cal.getTime();
+						cal.add(Calendar.DAY_OF_YEAR, -1);
+						Date start = cal.getTime();
 
-					RankServiceProvider.provide().getAllRanks(country, store, category, getGrossingListName(store, listTypeParameter), start, end);
+						// RankServiceProvider.provide().getAllRanks(country, store, category, getGrossingListName(store, listTypeParameter), start, end);
+
+						code = FeedFetchServiceProvider.provide().getGatherCode(country, store, start, end);
+					}
+
+					List<String> listTypes = ApiHelper.getAllListTypes(store, listTypeParameter);
+					Set<String> itemIds = new HashSet<String>();
+					List<Rank> ranks;
+					for (String listType : listTypes) {
+						// get all the ranks for the list type (we are using an infinite pager with no sorting to allow us to generate a deletion key during
+						// prediction)
+						ranks = RankServiceProvider.provide().getGatherCodeRanks(country, store, category, listType, code, PagerHelper.infinitePager(),
+								Boolean.TRUE);
+
+						for (Rank rank : ranks) {
+							itemIds.add(rank.itemId);
+						}
+					}
+
+					ItemServiceProvider.provide().getInternalIdItemBatch(itemIds);
 				} catch (DataAccessException | NullPointerException ex) {
 					LOG.log(GaeLevel.SEVERE, "Error while trying to call service method " + GETALLRANKS_SUPPORTED_METHOD, ex);
 				}
@@ -106,20 +140,22 @@ public class CallServiceMethodServlet extends HttpServlet {
 	}
 
 	/**
+	 * 
 	 * @param country
-	 * @param iosStoreA3
-	 * @param id
-	 * @param type
-	 * @param key
+	 * @param store
+	 * @param categoryId
+	 * @param listType
+	 * @param code
 	 */
-	public static void enqueueGetAllRanks(String country, String store, Long categoryId, String listType, Date date) {
+	public static void enqueueGetAllRanks(String country, String store, Long categoryId, String listType, Long code) {
 
 		Queue queue = QueueFactory.getQueue("callservicemethod");
 
 		TaskOptions options = TaskOptions.Builder.withUrl("/callservicemethod");
 		options.param("service", ServiceType.ServiceTypeRank.toString());
 		options.param("method", GETALLRANKS_SUPPORTED_METHOD);
-		options.param("date", Long.toString(date.getTime()));
+		// options.param("date", Long.toString(date.getTime()));
+		options.param("code", code.toString());
 		options.param("country", country);
 		options.param("store", store);
 		options.param("category", categoryId.toString());

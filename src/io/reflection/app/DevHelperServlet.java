@@ -6,18 +6,25 @@ package io.reflection.app;
 import static io.reflection.app.objectify.PersistenceService.ofy;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.collectors.CollectorIOS;
+import io.reflection.app.datatypes.shared.Category;
+import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.ItemRankSummary;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.ingestors.Ingestor;
 import io.reflection.app.ingestors.IngestorFactory;
+import io.reflection.app.itemrankarchivers.ItemRankArchiver;
+import io.reflection.app.itemrankarchivers.ItemRankArchiverFactory;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.application.ApplicationServiceProvider;
+import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
+import io.reflection.app.service.rank.RankServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.setup.CountriesInstaller;
 import io.reflection.app.setup.StoresInstaller;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -121,6 +128,7 @@ public class DevHelperServlet extends HttpServlet {
 				deferredQueue.add(TaskOptions.Builder.withUrl("/cron?" + req.getQueryString()).method(Method.GET));
 				// }
 			}
+
 			return;
 		}
 
@@ -183,7 +191,7 @@ public class DevHelperServlet extends HttpServlet {
 				success = true;
 			} else if ("ingest".equalsIgnoreCase(action)) {
 
-				Ingestor i = IngestorFactory.getIngestorForStore("ios");
+				Ingestor i = IngestorFactory.getIngestorForStore(DataTypeHelper.IOS_STORE_A3);
 				i.enqueue(Arrays.asList(Long.valueOf(itemId)));
 
 				success = true;
@@ -194,7 +202,7 @@ public class DevHelperServlet extends HttpServlet {
 				success = true;
 			} else if ("ingestmulti".equalsIgnoreCase(action)) {
 
-				Ingestor i = IngestorFactory.getIngestorForStore("ios");
+				Ingestor i = IngestorFactory.getIngestorForStore(DataTypeHelper.IOS_STORE_A3);
 
 				String[] feedIdsArray = feedIds.split(",");
 
@@ -384,7 +392,8 @@ public class DevHelperServlet extends HttpServlet {
 				buffer.append("<table>");
 				buffer.append("<tr><th>Appliation</th><th>top 10</th><th>top 25</th><th>top 50</th><th>top 100</th><th>top 200</th><th>total</th></tr>");
 
-				Query<ItemRankSummary> query = ofy().load().type(ItemRankSummary.class).filter("type =", feedType).filter("source =", "ios");
+				Query<ItemRankSummary> query = ofy().load().type(ItemRankSummary.class).filter("type =", feedType)
+						.filter("source =", DataTypeHelper.IOS_STORE_A3);
 
 				if (rankEndValue < 10) {
 					query = query.filter("numberOfTimesRankedTop10 >", Integer.valueOf(0)).order("numberOfTimesRankedTop10");
@@ -477,7 +486,7 @@ public class DevHelperServlet extends HttpServlet {
 
 				List<Long> codes = new ArrayList<Long>();
 
-				Query<Rank> query = ofy().load().type(Rank.class).filter("source =", "ios").filter("type =", CollectorIOS.TOP_PAID_APPS)
+				Query<Rank> query = ofy().load().type(Rank.class).filter("source =", DataTypeHelper.IOS_STORE_A3).filter("type =", CollectorIOS.TOP_PAID_APPS)
 						.filter("date >", cal.getTime()).filter("itemId = ", itemId).offset(Integer.parseInt(start)).limit(Integer.parseInt(count));
 
 				for (Rank rank : query.iterable()) {
@@ -488,7 +497,7 @@ public class DevHelperServlet extends HttpServlet {
 					}
 				}
 
-				query = ofy().load().type(Rank.class).filter("source =", "ios").filter("type =", CollectorIOS.TOP_GROSSING_APPS)
+				query = ofy().load().type(Rank.class).filter("source =", DataTypeHelper.IOS_STORE_A3).filter("type =", CollectorIOS.TOP_GROSSING_APPS)
 						.filter("date >", cal.getTime()).filter("itemId = ", itemId).offset(Integer.parseInt(start)).limit(Integer.parseInt(count));
 
 				for (Rank rank : query.iterable()) {
@@ -540,21 +549,21 @@ public class DevHelperServlet extends HttpServlet {
 				// int rankStartValue = Integer.parseInt(rankStart);
 				// int rankEndValue = RANK_END_200_PLUS.equals(rankEnd) ? Integer.MAX_VALUE : Integer.parseInt(rankEnd);
 				//
-				// redirectToPipelineStatus(req, resp, startStatsJob(5, 2, "ios", "us", feedType, rankStartValue, rankEndValue));
+				// redirectToPipelineStatus(req, resp, startStatsJob(5, 2, DataTypeHelper.IOS_STORE_A3, "us", feedType, rankStartValue, rankEndValue));
 				//
 				success = true;
 			} else if ("countranksmr".equalsIgnoreCase(action)) {
-				// redirectToPipelineStatus(req, resp, startRankCountJob(5, 2, "ios", "us", feedType));
+				// redirectToPipelineStatus(req, resp, startRankCountJob(5, 2, DataTypeHelper.IOS_STORE_A3, "us", feedType));
 
 				success = true;
 			} else if ("createcsvofpaidranks".equalsIgnoreCase(action)) {
 				// redirectToPipelineStatus(req, resp,
-				// startCreateCsvBlobRank(5, 1, CollectorIOS.TOP_PAID_APPS, CollectorIOS.TOP_GROSSING_APPS, "ios", "us", feedType));
+				// startCreateCsvBlobRank(5, 1, CollectorIOS.TOP_PAID_APPS, CollectorIOS.TOP_GROSSING_APPS, DataTypeHelper.IOS_STORE_A3, "us", feedType));
 
 				success = true;
 			} else if ("createcsvoffreeranks".equalsIgnoreCase(action)) {
 				// redirectToPipelineStatus(req, resp,
-				// startCreateCsvBlobRank(5, 1, CollectorIOS.TOP_FREE_APPS, CollectorIOS.TOP_GROSSING_APPS, "ios", "us", feedType));
+				// startCreateCsvBlobRank(5, 1, CollectorIOS.TOP_FREE_APPS, CollectorIOS.TOP_GROSSING_APPS, DataTypeHelper.IOS_STORE_A3, "us", feedType));
 
 				success = true;
 			} else if ("addcountries".equalsIgnoreCase(action)) {
@@ -575,7 +584,7 @@ public class DevHelperServlet extends HttpServlet {
 
 				Store store;
 				try {
-					store = StoreServiceProvider.provide().getA3CodeStore("ios");
+					store = StoreServiceProvider.provide().getA3CodeStore(DataTypeHelper.IOS_STORE_A3);
 				} catch (DataAccessException e) {
 					throw new RuntimeException(e);
 				}
@@ -594,7 +603,36 @@ public class DevHelperServlet extends HttpServlet {
 				success = true;
 
 			} else if ("cacheranks".equalsIgnoreCase(action)) {
-				CallServiceMethodServlet.enqueueGetAllRanks("us", "ios", Long.valueOf(24), CollectorIOS.TOP_GROSSING_APPS, new Date());
+				cacheRanks();
+
+				success = true;
+			} else if ("archive".equalsIgnoreCase(action)) {
+				if ("rank".equalsIgnoreCase(object)) {
+					try {
+						Store store = new Store();
+						store.a3Code = "ios";
+
+						Country country = new Country();
+						country.a2Code = "us";
+
+						Category allCategory = CategoryServiceProvider.provide().getAllCategory(store);
+
+						ItemRankArchiver ar = ItemRankArchiverFactory.getItemRankArchiverForStore(store.a3Code);
+
+						List<Long> rankIds = RankServiceProvider.provide().getRankIds(country, store, allCategory, new Date(0L), new Date());
+
+						for (Long rankId : rankIds) {
+							ar.enqueue(rankId);
+						}
+					} catch (DataAccessException e) {
+						throw new RuntimeException(e);
+					}
+				}
+
+				success = true;
+			} else if ("predict".equalsIgnoreCase(action)) {
+				Queue predictQueue = QueueFactory.getQueue("predict");
+				predictQueue.add(TaskOptions.Builder.withUrl("/predict?" + req.getQueryString()).method(Method.GET));
 
 				success = true;
 			} else {
@@ -629,6 +667,40 @@ public class DevHelperServlet extends HttpServlet {
 	// grossingType), new GoogleCloudStorageFileOutput("rankmatchoutput", topType + "_" + grossingType + format.format(new Date()) + "_%d.csv",
 	// "text/csv", reduceSharedCount)), getSettings());
 	// }
+
+	/**
+	 * 
+	 */
+	private void cacheRanks() {
+
+		Date date = new Date();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 1);
+		Date end = cal.getTime();
+		cal.add(Calendar.DAY_OF_YEAR, -1);
+		Date start = cal.getTime();
+
+		Store s = new Store();
+		s.a3Code = DataTypeHelper.IOS_STORE_A3;
+
+		Country c = new Country();
+		c.a2Code = "us";
+
+		Long code = null;
+		try {
+			code = FeedFetchServiceProvider.provide().getGatherCode(c, s, start, end);
+		} catch (DataAccessException e) {
+			throw new RuntimeException(e);
+		}
+
+		if (code != null) {
+			CallServiceMethodServlet.enqueueGetAllRanks("us", DataTypeHelper.IOS_STORE_A3, Long.valueOf(24), CollectorIOS.TOP_GROSSING_APPS, code);
+		}
+	}
 
 	// private String getUrlBase(HttpServletRequest req) throws MalformedURLException {
 	// URL requestUrl = new URL(req.getRequestURL().toString());

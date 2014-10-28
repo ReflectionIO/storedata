@@ -30,16 +30,12 @@
 
 						<g:HTMLPanel ui:field="descriptionGroup" styleName="form-group">
 							<label>Description</label>
-							<p:RichTextToolbar ui:field="descriptionToolbar" />
-							<g:RichTextArea ui:field="descriptionText" styleName="form-control text-area" />
-							<g:HTMLPanel styleName="noteDetail" ui:field="descriptionNote" visible="false" />
+							<p:MarkdownEditor ui:field="descriptionText" />
 						</g:HTMLPanel>
 
 						<g:HTMLPanel ui:field="contentGroup" styleName="form-group">
 							<label>Content</label>
-							<p:RichTextToolbar ui:field="contentToolbar" />
-							<g:RichTextArea ui:field="contentText" styleName="form-control text-area" />
-							<g:HTMLPanel styleName="noteDetail" ui:field="contentNote" visible="false" />
+							<p:MarkdownEditor ui:field="contentText" />
 						</g:HTMLPanel>
 
 						<g:HTMLPanel ui:field="tagsGroup" styleName="form-group">

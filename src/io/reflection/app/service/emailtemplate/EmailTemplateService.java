@@ -8,6 +8,7 @@
 //
 package io.reflection.app.service.emailtemplate;
 
+import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
@@ -80,7 +81,29 @@ final class EmailTemplateService implements IEmailTemplateService {
 
 	@Override
 	public EmailTemplate updateEmailTemplate(EmailTemplate emailTemplate) throws DataAccessException {
-		throw new UnsupportedOperationException();
+		EmailTemplate updatedEmailTemplate = null;
+
+		final String updateEmailTemplateQuery = String.format(
+				"UPDATE `emailtemplate` SET `from`='%s', `body`='%s', `subject`='%s', `format`='%s'  WHERE `id`=%d AND `deleted`='n'",
+				addslashes(emailTemplate.from), addslashes(emailTemplate.body), addslashes(emailTemplate.subject), addslashes(emailTemplate.format.toString()),
+				emailTemplate.id.longValue());
+
+		Connection emailTemplateConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
+
+		try {
+			emailTemplateConnection.connect();
+			emailTemplateConnection.executeQuery(updateEmailTemplateQuery);
+
+			if (emailTemplateConnection.getAffectedRowCount() > 0) {
+				updatedEmailTemplate = getEmailTemplate(emailTemplate.id);
+			}
+		} finally {
+			if (emailTemplateConnection != null) {
+				emailTemplateConnection.disconnect();
+			}
+		}
+
+		return updatedEmailTemplate;
 	}
 
 	@Override

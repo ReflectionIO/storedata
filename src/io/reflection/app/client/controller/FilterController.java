@@ -16,6 +16,7 @@ import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.Store;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,6 +34,7 @@ public class FilterController {
 	public static final String RANK_FILTER_KEY = "rankfilter:";
 	public static final String MYAPP_FILTER_KEY = "myappfilter:";
 	public static final String FEED_FILTER_KEY = "feedfilter:";
+	public static final String DATA_ACCOUNT_FETCH_FILTER_KEY = "dataaccountfetchfilter:";
 
 	public static final String LINKED_ACCOUNT_KEY = "linkedaccount";
 	public static final String STORE_KEY = "store";
@@ -81,31 +83,44 @@ public class FilterController {
 
 			if ((splitDecoded = Stack.decode(ITEM_FILTER_KEY, filter)) != null && splitDecoded.length == 8) {
 				parsed = new Filter();
-
 				parsed.setStoreA3Code(splitDecoded[0]);
 				parsed.setCountryA2Code(splitDecoded[1]);
 				parsed.setCategoryId(Long.valueOf(splitDecoded[2]));
 				parsed.setListType(splitDecoded[3]);
 				parsed.setStartTime(Long.valueOf(splitDecoded[4]));
-				parsed.setEndTime(Long.valueOf(splitDecoded[5]).longValue());
+				parsed.setEndTime(Long.valueOf(splitDecoded[5]));
 				parsed.setChartType(splitDecoded[6]);
 				parsed.setSummaryType(splitDecoded[7]);
+
 			} else if ((splitDecoded = Stack.decode(RANK_FILTER_KEY, filter)) != null && splitDecoded.length == 5) {
 				parsed = new Filter();
-
 				parsed.setStoreA3Code(splitDecoded[0]);
 				parsed.setCountryA2Code(splitDecoded[1]);
 				parsed.setCategoryId(Long.valueOf(splitDecoded[2]));
 				parsed.setEndTime(Long.valueOf(splitDecoded[3]));
 				parsed.setDailyData(splitDecoded[4]);
+
 			} else if ((splitDecoded = Stack.decode(MYAPP_FILTER_KEY, filter)) != null && splitDecoded.length == 5) {
 				parsed = new Filter();
-
 				parsed.setStoreA3Code(splitDecoded[0]);
 				parsed.setCountryA2Code(splitDecoded[1]);
 				parsed.setStartTime(Long.valueOf(splitDecoded[2]));
-				parsed.setEndTime(Long.valueOf(splitDecoded[3]).longValue());
+				parsed.setEndTime(Long.valueOf(splitDecoded[3]));
 				parsed.setLinkedAccountId(Long.valueOf(splitDecoded[4]));
+
+			} else if ((splitDecoded = Stack.decode(FEED_FILTER_KEY, filter)) != null && splitDecoded.length == 6) {
+				parsed = new Filter();
+				parsed.setListType(splitDecoded[0]);
+				parsed.setStoreA3Code(splitDecoded[1]);
+				parsed.setCountryA2Code(splitDecoded[2]);
+				parsed.setCategoryId(Long.valueOf(splitDecoded[3]));
+				parsed.setStartTime(Long.valueOf(splitDecoded[4]));
+				parsed.setEndTime(Long.valueOf(splitDecoded[5]));
+
+			} else if ((splitDecoded = Stack.decode(DATA_ACCOUNT_FETCH_FILTER_KEY, filter)) != null && splitDecoded.length == 2) {
+				parsed = new Filter();
+				parsed.setStartTime(Long.valueOf(splitDecoded[0]));
+				parsed.setEndTime(Long.valueOf(splitDecoded[1]));
 			}
 
 			return parsed;
@@ -206,7 +221,12 @@ public class FilterController {
 		}
 
 		public String asFeedFilterString() {
-			return Stack.encode(FEED_FILTER_KEY, getListType(), getStoreA3Code(), getCountryA2Code(), getCategoryId().toString());
+			return Stack.encode(FEED_FILTER_KEY, getListType(), getStoreA3Code(), getCountryA2Code(), getCategoryId().toString(), getStartTime().toString(),
+					getEndTime().toString());
+		}
+
+		public String asDataAccountFetchFilterString() {
+			return Stack.encode(DATA_ACCOUNT_FETCH_FILTER_KEY, getStartTime().toString(), getEndTime().toString());
 		}
 
 		/**
@@ -237,6 +257,7 @@ public class FilterController {
 	private Map<String, Object> mPreviousValues;
 	private Filter mCurrentFilter = new Filter();
 	private Filter defaultFilter = new Filter();
+	private Filter adminFilter = new Filter();
 
 	private int mInTransaction = 0;
 
@@ -244,7 +265,7 @@ public class FilterController {
 		defaultFilter = mCurrentFilter;
 		start();
 		setLinkedAccount(Long.valueOf(0));
-		setStore(StoreController.IPHONE_A3_CODE);
+		setStore(DataTypeHelper.STORE_IPHONE_A3_CODE);
 		setListType(OVERALL_LIST_TYPE);
 		setCountry("us");
 		setEndDate(FilterHelper.getToday());
@@ -256,11 +277,15 @@ public class FilterController {
 		commit();
 
 		defaultFilter = getDefaultFilter();
+		adminFilter = getDefaultFilter();
+		adminFilter.setStartTime(FilterHelper.getDaysAgo(30).getTime());
 
 		filters.put(PageType.RanksPageType, getDefaultFilter());
 		filters.put(PageType.MyAppsPageType, getDefaultFilter());
-		filters.put(PageType.FeedBrowserPageType, getDefaultFilter());
 		filters.put(PageType.ItemPageType, getDefaultFilter());
+
+		filters.put(PageType.FeedBrowserPageType, getAdminFilter());
+		filters.put(PageType.DataAccountFetchesPageType, getAdminFilter());
 
 	}
 
@@ -270,6 +295,10 @@ public class FilterController {
 
 	private Filter getDefaultFilter() {
 		return defaultFilter.copyFilter();
+	}
+
+	private Filter getAdminFilter() {
+		return adminFilter.copyFilter();
 	}
 
 	/**
@@ -288,13 +317,17 @@ public class FilterController {
 				pageTypeFilter = PageType.MyAppsPageType;
 				mCurrentFilter = filters.get(pageTypeFilter);
 			}
-			if (allParts[0].equals("!feedbrowser") && pageTypeFilter != PageType.FeedBrowserPageType) {
+			if ((allParts[0].equals("!feedbrowser") || allParts[0].equals("!simplemodelrun")) && pageTypeFilter != PageType.FeedBrowserPageType) {
 				pageTypeFilter = PageType.FeedBrowserPageType;
+				mCurrentFilter = filters.get(pageTypeFilter);
+			}
+			if (allParts[0].equals("!dataaccountfetches") && pageTypeFilter != PageType.DataAccountFetchesPageType) {
+				pageTypeFilter = PageType.DataAccountFetchesPageType;
 				mCurrentFilter = filters.get(pageTypeFilter);
 			}
 			if (allParts[0].equals("!item") && pageTypeFilter != PageType.ItemPageType) { // Dump object reference and make item filter independent again
 				pageTypeFilter = PageType.ItemPageType;
-				mCurrentFilter = Filter.parse(allParts[4]);				
+				mCurrentFilter = Filter.parse(allParts[4]);
 			}
 			filters.put(PageType.ItemPageType, mCurrentFilter);
 		}
@@ -414,7 +447,7 @@ public class FilterController {
 	public List<String> getListTypes() {
 		List<String> types = new ArrayList<String>();
 
-		if (StoreController.IPHONE_A3_CODE.equals(mCurrentFilter.getStoreA3Code())) {
+		if (DataTypeHelper.STORE_IPHONE_A3_CODE.equals(mCurrentFilter.getStoreA3Code())) {
 			if (PAID_LIST_TYPE.equals(mCurrentFilter.getListType()) || OVERALL_LIST_TYPE.equals(mCurrentFilter.getListType())) {
 				types.add("toppaidapplications");
 			}
@@ -424,7 +457,7 @@ public class FilterController {
 			}
 
 			types.add("topgrossingapplications");
-		} else if (StoreController.IPAD_A3_CODE.equals(mCurrentFilter.getStoreA3Code())) {
+		} else if (DataTypeHelper.STORE_IPAD_A3_CODE.equals(mCurrentFilter.getStoreA3Code())) {
 			if (PAID_LIST_TYPE.equals(mCurrentFilter.getListType()) || OVERALL_LIST_TYPE.equals(mCurrentFilter.getListType())) {
 				types.add("toppaidipadapplications");
 			}
@@ -523,11 +556,11 @@ public class FilterController {
 	public List<String> getAllListTypes() {
 		List<String> types = new ArrayList<String>();
 
-		if (StoreController.IPHONE_A3_CODE.equals(mCurrentFilter.getStoreA3Code())) {
+		if (DataTypeHelper.STORE_IPHONE_A3_CODE.equals(mCurrentFilter.getStoreA3Code())) {
 			types.add("toppaidapplications");
 			types.add("topfreeapplications");
 			types.add("topgrossingapplications");
-		} else if (StoreController.IPAD_A3_CODE.equals(mCurrentFilter.getStoreA3Code())) {
+		} else if (DataTypeHelper.STORE_IPAD_A3_CODE.equals(mCurrentFilter.getStoreA3Code())) {
 			types.add("toppaidipadapplications");
 			types.add("topfreeipadapplications");
 			types.add("topgrossingipadapplications");
@@ -658,6 +691,11 @@ public class FilterController {
 
 	public String asFeedFilterString() {
 		return filters.get(PageType.FeedBrowserPageType) == null ? "" : filters.get(PageType.FeedBrowserPageType).asFeedFilterString();
+	}
+
+	public String asDataAccountFetchFilterString() {
+		return filters.get(PageType.DataAccountFetchesPageType) == null ? "" : filters.get(PageType.DataAccountFetchesPageType)
+				.asDataAccountFetchFilterString();
 	}
 
 	public boolean isFilterParam(String parameter) {

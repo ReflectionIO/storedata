@@ -20,6 +20,7 @@ import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
+import io.reflection.app.helpers.ApiHelper;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
@@ -72,6 +73,12 @@ final class RankService implements IRankService {
 
 				if (rankConnection.fetchNextRow()) {
 					rank = toRank(rankConnection);
+
+					// if (rank != null) {
+					// cal.setTime(new Date());
+					// cal.add(Calendar.DAY_OF_MONTH, 20);
+					// cache.put(memcacheKey, rank.toString(), cal.getTime());
+					// }
 				}
 			} finally {
 				if (rankConnection != null) {
@@ -228,6 +235,12 @@ final class RankService implements IRankService {
 
 				if (rankConnection.fetchNextRow()) {
 					rank = toRank(rankConnection);
+
+					// if (rank != null) {
+					// cal.setTime(new Date());
+					// cal.add(Calendar.DAY_OF_MONTH, 20);
+					// cache.put(memcacheKey, rank.toString(), cal.getTime());
+					// }
 				}
 			} finally {
 				if (rankConnection != null) {
@@ -256,7 +269,7 @@ final class RankService implements IRankService {
 		Long code = FeedFetchServiceProvider.provide().getGatherCode(country, store, after, before);
 
 		if (code != null) {
-			ranks.addAll(getGatherCodeRanks(country, store, category, listType, code, pager, false));
+			ranks.addAll(getGatherCodeRanks(country, store, category, listType, code, pager, Boolean.FALSE));
 		}
 
 		return ranks;
@@ -303,7 +316,7 @@ final class RankService implements IRankService {
 			}
 
 			String getCountryStoreTypeRanksQuery = String
-					.format("SELECT * FROM `rank` WHERE %s AND CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`source` AS BINARY)=CAST('%s' AS BINARY) AND `itemid`='%s' AND `categoryid`=24 AND %s %s `deleted`='n' ORDER BY `date` ASC, `%s` %s LIMIT %d,%d",
+					.format("SELECT * FROM `rank` WHERE %s AND CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`source` AS BINARY)=CAST('%s' AS BINARY) AND `itemid`='%s' AND `categoryid`=24 AND %s AND %s `deleted`='n' ORDER BY `date` ASC, `%s` %s LIMIT %d,%d",
 							typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), addslashes(item.internalId), beforeAfterQuery(before, after),
 							isGrossing ? "`grossingposition`<>0 AND" : "", pager.sortBy,
 							pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
@@ -324,11 +337,7 @@ final class RankService implements IRankService {
 					date = rankConnection.getCurrentRowDateTime("date");
 
 					cal.setTime(date);
-					cal.set(Calendar.HOUR_OF_DAY, 0);
-					cal.set(Calendar.MINUTE, 0);
-					cal.set(Calendar.SECOND, 0);
-					cal.set(Calendar.MILLISECOND, 0);
-					date = cal.getTime();
+					date = ApiHelper.removeTime(cal.getTime());
 
 					if (ranksLookup.get(date) == null) {
 						Rank rank = toRank(rankConnection);
@@ -599,10 +608,10 @@ final class RankService implements IRankService {
 	 * (non-Javadoc)
 	 * 
 	 * @see io.reflection.app.service.rank.IRankService#getGatherCodeRanks(io.reflection.app.shared.datatypes.Country, io.reflection.app.shared.datatypes.Store,
-	 * io.reflection.app.shared.datatypes.Category java.lang.String, java.lang.Long, io.reflection.app.api.shared.datatypes.Pager, boolean)
+	 * io.reflection.app.shared.datatypes.Category java.lang.String, java.lang.Long, io.reflection.app.api.shared.datatypes.Pager, java.lang.Boolean)
 	 */
 	@Override
-	public List<Rank> getGatherCodeRanks(Country country, Store store, Category category, String listType, Long code, Pager pager, boolean ignoreGrossingRank)
+	public List<Rank> getGatherCodeRanks(Country country, Store store, Category category, String listType, Long code, Pager pager, Boolean ignoreGrossingRank)
 			throws DataAccessException {
 		List<Rank> ranks = new ArrayList<Rank>();
 
@@ -617,6 +626,10 @@ final class RankService implements IRankService {
 			pager.sortBy = "position";
 		}
 
+		if (pager.sortDirection == null) {
+			pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
+		}
+
 		List<String> types = new ArrayList<String>();
 
 		if (isGrossing) {
@@ -625,143 +638,182 @@ final class RankService implements IRankService {
 
 		types.add(addslashes(listType));
 
-		String memcacheKey = getName() + ".gathercoderanks." + code.toString() + "." + country.a2Code + "." + store.a3Code + "." + category.id.toString() + "."
-				+ StringUtils.join(types, ".") + "." + pager.start + "." + pager.count + "." + pager.sortDirection + "." + pager.sortBy;
+		if (code != null) {
+			String memcacheKey = getName() + ".gathercoderanks." + code.toString() + "." + country.a2Code + "." + store.a3Code + "." + category.id.toString()
+					+ "." + StringUtils.join(types, ".") + "." + pager.start + "." + pager.count + "." + pager.sortDirection + "." + pager.sortBy;
 
-		String ranksString = (String) cache.get(memcacheKey);
+			String ranksString = (String) cache.get(memcacheKey);
 
-		if (ranksString == null) {
-			String typesQueryPart = null;
-			if (types.size() == 1) {
-				typesQueryPart = String.format("CAST(`type` AS BINARY)=CAST('%s' AS BINARY)", types.get(0));
+			if (ranksString == null) {
+				String typesQueryPart = null;
+				if (types.size() == 1) {
+					typesQueryPart = String.format("CAST(`type` AS BINARY)=CAST('%s' AS BINARY)", types.get(0));
+				} else {
+					typesQueryPart = "CAST(`type` AS BINARY) IN (CAST('" + StringUtils.join(types, "' AS BINARY),CAST('") + "' AS BINARY))";
+				}
+
+				String getCountryStoreTypeRanksQuery = String
+						.format("SELECT * FROM `rank` WHERE %s AND CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`source` AS BINARY)=CAST('%s' AS BINARY) AND `categoryid`=%d AND `code2`=%d AND %s `deleted`='n' ORDER BY `%s` %s,`date` DESC LIMIT %d,%d",
+								typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), code.longValue(), isGrossing
+										|| !ignoreGrossingRank.booleanValue() ? "`grossingposition`<>0 AND" : "", pager.sortBy,
+								pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
+
+				try {
+					rankConnection.connect();
+					rankConnection.executeQuery(getCountryStoreTypeRanksQuery);
+
+					while (rankConnection.fetchNextRow()) {
+						Rank rank = toRank(rankConnection);
+
+						if (rank != null) {
+							ranks.add(rank);
+						}
+					}
+
+					if (ranks.size() > 0) {
+						JsonArray jsonArray = new JsonArray();
+						for (Rank rank : ranks) {
+							jsonArray.add(rank.toJson());
+						}
+
+						cal.setTime(new Date());
+						cal.add(Calendar.DAY_OF_MONTH, 20);
+						cache.put(memcacheKey, JsonUtils.cleanJson(jsonArray.toString()), cal.getTime());
+					}
+				} finally {
+					if (rankConnection != null) {
+						rankConnection.disconnect();
+					}
+				}
 			} else {
-				typesQueryPart = "CAST(`type` AS BINARY) IN (CAST('" + StringUtils.join(types, "' AS BINARY),CAST('") + "' AS BINARY))";
-			}
-
-			String getCountryStoreTypeRanksQuery = String
-					.format("SELECT * FROM `rank` WHERE %s AND CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`source` AS BINARY)=CAST('%s' AS BINARY) AND `categoryid`=%d AND `code2`=%d AND %s `deleted`='n' ORDER BY `%s` %s,`date` DESC LIMIT %d,%d",
-							typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), code.longValue(), isGrossing
-									&& ignoreGrossingRank ? "" : "`grossingposition`<>0 AND", pager.sortBy,
-							pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
-
-			try {
-				rankConnection.connect();
-				rankConnection.executeQuery(getCountryStoreTypeRanksQuery);
-
-				while (rankConnection.fetchNextRow()) {
-					Rank rank = toRank(rankConnection);
-
-					if (rank != null) {
-						ranks.add(rank);
-					}
+				JsonArray parsed = (JsonArray) new JsonParser().parse(ranksString);
+				Rank rank;
+				for (JsonElement jsonElement : parsed) {
+					rank = new Rank();
+					rank.fromJson(jsonElement.getAsJsonObject());
+					ranks.add(rank);
 				}
-
-				if (ranks.size() > 0) {
-					JsonArray jsonArray = new JsonArray();
-					for (Rank rank : ranks) {
-						jsonArray.add(rank.toJson());
-					}
-
-					cal.setTime(new Date());
-					cal.add(Calendar.DAY_OF_MONTH, 20);
-					cache.put(memcacheKey, JsonUtils.cleanJson(jsonArray.toString()), cal.getTime());
-				}
-			} finally {
-				if (rankConnection != null) {
-					rankConnection.disconnect();
-				}
-			}
-		} else {
-			JsonArray parsed = (JsonArray) new JsonParser().parse(ranksString);
-			Rank rank;
-			for (JsonElement jsonElement : parsed) {
-				rank = new Rank();
-				rank.fromJson(jsonElement.getAsJsonObject());
-				ranks.add(rank);
 			}
 		}
 
 		return ranks;
 	}
 
+	// /*
+	// * (non-Javadoc)
+	// *
+	// * @see io.reflection.app.service.rank.IRankService#getAllRanks(io.reflection.app.datatypes.shared.Country, io.reflection.app.datatypes.shared.Store,
+	// * io.reflection.app.datatypes.shared.Category, java.lang.String, java.util.Date, java.util.Date)
+	// */
+	// @Override
+	// public List<Rank> getAllRanks(Country country, Store store, Category category, String listType, Date start, Date end) throws DataAccessException {
+	// List<Rank> ranks = new ArrayList<Rank>();
+	//
+	// Collector collector = CollectorFactory.getCollectorForStore(store.a3Code);
+	// boolean isGrossing = collector.isGrossing(listType);
+	//
+	// List<String> types = new ArrayList<String>();
+	//
+	// if (isGrossing) {
+	// types.addAll(collector.getCounterpartTypes(listType));
+	// }
+	//
+	// types.add(addslashes(listType));
+	//
+	// String memcacheKey = getName() + ".allranks." + country.a2Code + "." + store.a3Code + "." + category.id.toString() + "." + StringUtils.join(types, ".")
+	// + "." + (start == null ? "none" : start.getTime()) + "." + (end == null ? "none" : end.getTime());
+	// String allRanksString = (String) cache.get(memcacheKey);
+	//
+	// if (allRanksString == null) {
+	// String typesQueryPart = null;
+	// if (types.size() == 1) {
+	// typesQueryPart = String.format("CAST(`type` AS BINARY)=CAST('%s' AS BINARY)", types.get(0));
+	// } else {
+	// typesQueryPart = "CAST(`type` AS BINARY) IN (CAST('" + StringUtils.join(types, "' AS BINARY),CAST('") + "' AS BINARY))";
+	// }
+	//
+	// Long code = FeedFetchServiceProvider.provide().getGatherCode(country, store, start, end);
+	//
+	// if (code != null) {
+	// Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+	// String getCountryStoreTypeRanksQuery = String
+	// .format("SELECT * FROM `rank` WHERE %s AND CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`source` AS BINARY)=CAST('%s' AS BINARY) AND `categoryid`=%d AND `code2`=%d AND `deleted`='n'",
+	// typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), code.longValue());
+	//
+	// try {
+	// rankConnection.connect();
+	// rankConnection.executeQuery(getCountryStoreTypeRanksQuery);
+	//
+	// while (rankConnection.fetchNextRow()) {
+	// Rank rank = toRank(rankConnection);
+	//
+	// if (rank != null) {
+	// ranks.add(rank);
+	// }
+	// }
+	//
+	// if (ranks.size() > 0) {
+	// JsonArray jsonArray = new JsonArray();
+	// for (Rank rank : ranks) {
+	// jsonArray.add(rank.toJson());
+	// }
+	//
+	// cal.setTime(new Date());
+	// cal.add(Calendar.DAY_OF_MONTH, 20);
+	// cache.put(memcacheKey, JsonUtils.cleanJson(jsonArray.toString()), cal.getTime());
+	// }
+	//
+	// } finally {
+	// if (rankConnection != null) {
+	// rankConnection.disconnect();
+	// }
+	// }
+	// }
+	// } else {
+	// JsonArray parsed = (JsonArray) new JsonParser().parse(allRanksString);
+	// Rank rank;
+	// for (JsonElement jsonElement : parsed) {
+	// rank = new Rank();
+	// rank.fromJson(jsonElement.getAsJsonObject());
+	// ranks.add(rank);
+	// }
+	// }
+	//
+	// return ranks;
+	// }
+
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.service.rank.IRankService#getAllRanks(io.reflection.app.datatypes.shared.Country, io.reflection.app.datatypes.shared.Store,
-	 * io.reflection.app.datatypes.shared.Category, java.lang.String, java.util.Date, java.util.Date)
+	 * @see io.reflection.app.service.rank.IRankService#getRankIds(io.reflection.app.datatypes.shared.Country, io.reflection.app.datatypes.shared.Store,
+	 * io.reflection.app.datatypes.shared.Category, java.util.Date, java.util.Date)
 	 */
 	@Override
-	public List<Rank> getAllRanks(Country country, Store store, Category category, String listType, Date start, Date end) throws DataAccessException {
-		List<Rank> ranks = new ArrayList<Rank>();
+	public List<Long> getRankIds(Country country, Store store, Category category, Date start, Date end) throws DataAccessException {
+		List<Long> rankIds = new ArrayList<Long>();
 
-		Collector collector = CollectorFactory.getCollectorForStore(store.a3Code);
-		boolean isGrossing = collector.isGrossing(listType);
+		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+		String getCountryStoreTypeRanksQuery = String
+				.format("SELECT `id` FROM `rank` WHERE CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`source` AS BINARY)=CAST('%s' AS BINARY) AND `categoryid`=%d AND %s AND `deleted`='n'",
+						addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), beforeAfterQuery(end, start));
 
-		List<String> types = new ArrayList<String>();
+		try {
+			rankConnection.connect();
+			rankConnection.executeQuery(getCountryStoreTypeRanksQuery);
 
-		if (isGrossing) {
-			types.addAll(collector.getCounterpartTypes(listType));
-		}
+			while (rankConnection.fetchNextRow()) {
+				Long id = rankConnection.getCurrentRowLong("id");
 
-		types.add(addslashes(listType));
-
-		String memcacheKey = getName() + ".allranks." + country.a2Code + "." + store.a3Code + "." + category.id.toString() + "." + StringUtils.join(types, ".")
-				+ "." + (start == null ? "none" : start.getTime()) + "." + (end == null ? "none" : end.getTime());
-		String allRanksString = (String) cache.get(memcacheKey);
-
-		if (allRanksString == null) {
-			String typesQueryPart = null;
-			if (types.size() == 1) {
-				typesQueryPart = String.format("CAST(`type` AS BINARY)=CAST('%s' AS BINARY)", types.get(0));
-			} else {
-				typesQueryPart = "CAST(`type` AS BINARY) IN (CAST('" + StringUtils.join(types, "' AS BINARY),CAST('") + "' AS BINARY))";
-			}
-
-			Long code = FeedFetchServiceProvider.provide().getGatherCode(country, store, start, end);
-
-			Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
-			String getCountryStoreTypeRanksQuery = String
-					.format("SELECT * FROM `rank` WHERE %s AND CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`source` AS BINARY)=CAST('%s' AS BINARY) AND `categoryid`=%d AND `code2`=%d AND `deleted`='n'",
-							typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), code.longValue());
-
-			try {
-				rankConnection.connect();
-				rankConnection.executeQuery(getCountryStoreTypeRanksQuery);
-
-				while (rankConnection.fetchNextRow()) {
-					Rank rank = toRank(rankConnection);
-
-					if (rank != null) {
-						ranks.add(rank);
-					}
-				}
-
-				if (ranks.size() > 0) {
-					JsonArray jsonArray = new JsonArray();
-					for (Rank rank : ranks) {
-						jsonArray.add(rank.toJson());
-					}
-
-					cal.setTime(new Date());
-					cal.add(Calendar.DAY_OF_MONTH, 20);
-					cache.put(memcacheKey, JsonUtils.cleanJson(jsonArray.toString()), cal.getTime());
-				}
-
-			} finally {
-				if (rankConnection != null) {
-					rankConnection.disconnect();
+				if (id != null) {
+					rankIds.add(id);
 				}
 			}
-		} else {
-			JsonArray parsed = (JsonArray) new JsonParser().parse(allRanksString);
-			Rank rank;
-			for (JsonElement jsonElement : parsed) {
-				rank = new Rank();
-				rank.fromJson(jsonElement.getAsJsonObject());
-				ranks.add(rank);
+		} finally {
+			if (rankConnection != null) {
+				rankConnection.disconnect();
 			}
 		}
 
-		return ranks;
+		return rankIds;
 	}
 }

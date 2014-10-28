@@ -14,6 +14,7 @@ import io.reflection.app.api.core.shared.call.event.GetStoresEventHandler.GetSto
 import io.reflection.app.api.core.shared.call.event.GetStoresEventHandler.GetStoresSuccess;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Store;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,11 +30,6 @@ import com.willshex.gson.json.service.shared.StatusType;
  * 
  */
 public class StoreController implements ServiceConstants {
-
-	public static final String IPHONE_A3_CODE = "iph";
-	public static final String IPAD_A3_CODE = "ipa";
-
-	public static final String IOS_A3_CODE = "ios";
 
 	private static StoreController mOne = null;
 
@@ -64,14 +60,14 @@ public class StoreController implements ServiceConstants {
 					if (output.stores != null && output.stores.size() > 0) {
 
 						stores = output.stores;
-						
+
 						if (mStoreLookup == null) {
 							mStoreLookup = new HashMap<String, Store>();
 						}
 
 						Store iosStore = null;
 						for (Store store : output.stores) {
-							if (IOS_A3_CODE.equals(store.a3Code)) {
+							if (DataTypeHelper.IOS_STORE_A3.equals(store.a3Code)) {
 								iosStore = store;
 							}
 
@@ -80,7 +76,7 @@ public class StoreController implements ServiceConstants {
 
 						if (iosStore != null) {
 							Store ipad = new Store();
-							ipad.a3Code = IPAD_A3_CODE;
+							ipad.a3Code = DataTypeHelper.STORE_IPAD_A3_CODE;
 							ipad.countries = iosStore.countries;
 							ipad.created = iosStore.created;
 							ipad.deleted = iosStore.deleted;
@@ -91,7 +87,7 @@ public class StoreController implements ServiceConstants {
 							output.stores.add(ipad);
 
 							Store iphone = new Store();
-							iphone.a3Code = IPHONE_A3_CODE;
+							iphone.a3Code = DataTypeHelper.STORE_IPHONE_A3_CODE;
 							iphone.countries = iosStore.countries;
 							iphone.created = iosStore.created;
 							iphone.deleted = iosStore.deleted;
@@ -101,8 +97,8 @@ public class StoreController implements ServiceConstants {
 
 							output.stores.add(iphone);
 
-							mStoreLookup.put(ipad.a3Code, mStoreLookup.get(IOS_A3_CODE));
-							mStoreLookup.put(iphone.a3Code, mStoreLookup.get(IOS_A3_CODE));
+							mStoreLookup.put(ipad.a3Code, mStoreLookup.get(DataTypeHelper.IOS_STORE_A3));
+							mStoreLookup.put(iphone.a3Code, mStoreLookup.get(DataTypeHelper.IOS_STORE_A3));
 
 							output.stores.remove(iosStore);
 						}
@@ -129,8 +125,8 @@ public class StoreController implements ServiceConstants {
 		if (code != null && (mStoreLookup == null || (store = mStoreLookup.get(code)) == null)) {
 			store = new Store();
 
-			if (IPAD_A3_CODE.equalsIgnoreCase(code) || IPHONE_A3_CODE.equalsIgnoreCase(code)) {
-				store.a3Code = IOS_A3_CODE;
+			if (DataTypeHelper.STORE_IPAD_A3_CODE.equalsIgnoreCase(code) || DataTypeHelper.STORE_IPHONE_A3_CODE.equalsIgnoreCase(code)) {
+				store.a3Code = DataTypeHelper.IOS_STORE_A3;
 			} else {
 				store.a3Code = code;
 			}
@@ -146,7 +142,7 @@ public class StoreController implements ServiceConstants {
 	public SafeUri getExternalUri(Item item) {
 		SafeUri externalUri = null;
 
-		if (IOS_A3_CODE.equals(item.source)) {
+		if (DataTypeHelper.IOS_STORE_A3.equals(item.source)) {
 			externalUri = UriUtils.fromString("http://itunes.apple.com/app/id" + item.internalId);
 		}
 

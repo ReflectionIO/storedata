@@ -16,6 +16,7 @@ import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.spacehopperstudios.service.IService;
@@ -217,6 +218,11 @@ public interface IUserService extends IService {
 	public User getDataAccountOwner(DataAccount dataAccount) throws DataAccessException;
 
 	/**
+	 * @return
+	 */
+	public List<User> getDataAccountOwnerBatch(Collection<Long> dataAccountIds) throws DataAccessException;
+
+	/**
 	 * Marks the user with a reset code and sends an email notification to the user with the assigned action code
 	 * 
 	 * @param user
@@ -274,5 +280,13 @@ public interface IUserService extends IService {
 	 * @param dataAccount
 	 */
 	public void deleteAllDataAccounts(User user) throws DataAccessException;
+
+	/**
+	 * Adds a user to a data account or restores a deleted row if one exist 
+	 * @param user
+	 * @param dataAccount
+	 * @throws DataAccessException
+	 */
+	public void addOrRestoreUserDataAccount(User user, DataAccount dataAccount) throws DataAccessException;
 
 }

@@ -7,6 +7,8 @@
 //
 package io.reflection.app.collectors;
 
+import io.reflection.app.shared.util.DataTypeHelper;
+
 
 /**
  * @author billy1380
@@ -21,7 +23,7 @@ public class CollectorFactory {
 	public static Collector getCollectorForStore(String store) {
 		Collector collector = null;
 		
-		if ("ios".equals(store.toLowerCase())) {
+		if (DataTypeHelper.IOS_STORE_A3.equals(store.toLowerCase())) {
 			// ios store
 			collector = new CollectorIOS();
 		} else if ("azn".equals(store.toLowerCase())) {

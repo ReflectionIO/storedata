@@ -15,6 +15,8 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
+import io.reflection.app.helpers.SqlQueryHelper;
+import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
@@ -23,10 +25,19 @@ import io.reflection.app.service.ServiceType;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import com.google.appengine.api.taskqueue.Queue;
+import com.google.appengine.api.taskqueue.QueueFactory;
+import com.google.appengine.api.taskqueue.TaskOptions;
+import com.google.appengine.api.taskqueue.TaskOptions.Method;
+import com.google.appengine.api.taskqueue.TransientFailureException;
 import com.google.appengine.api.utils.SystemProperty;
 
 final class DataAccountFetchService implements IDataAccountFetchService {
+
+	private static final Logger LOG = Logger.getLogger(DataAccountFetchService.class.getName());
 
 	// a marker to help deleted rows that are added by developers
 	private static final String DEV_PREFIX = "__dev__";
@@ -286,6 +297,183 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 			}
 		}
 		return dataAccountFetch;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.dataaccountfetch.IDataAccountFetchService#getDataAccountFetches(io.reflection.app.datatypes.shared.DataAccount,
+	 * io.reflection.app.api.shared.datatypes.Pager)
+	 */
+	@Override
+	public List<DataAccountFetch> getDataAccountFetches(DataAccount dataAccount, Date start, Date end, Pager pager) throws DataAccessException {
+		List<DataAccountFetch> dataAccountFetches = new ArrayList<DataAccountFetch>();
+
+		Connection dataAccountFetchesConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccountFetch.toString());
+
+		String linkedAccountPart = "";
+		if (dataAccount != null && dataAccount.id != null) {
+			linkedAccountPart = "`linkedaccountid`=" + dataAccount.id.longValue() + " AND";
+		}
+		String getDataAccountFetchesQuery = String.format("SELECT * FROM `dataaccountfetch` WHERE %s AND %s `deleted`='n'",
+				SqlQueryHelper.beforeAfterQuery(end, start), linkedAccountPart);
+
+		if (pager != null) {
+			String sortByQuery = null;
+			if (dataAccount != null && dataAccount.id != null) {
+				sortByQuery = "id";
+			} else {
+				sortByQuery = "linkedaccountid";
+			}
+
+			String sortDirectionQuery = "DESC";
+
+			if (pager.sortDirection != null) {
+				switch (pager.sortDirection) {
+				case SortDirectionTypeAscending:
+					sortDirectionQuery = "ASC";
+					break;
+				default:
+					break;
+				}
+			}
+
+			getDataAccountFetchesQuery += String.format(" ORDER BY `%s` %s", sortByQuery, sortDirectionQuery);
+		}
+
+		if (pager.start != null && pager.count != null) {
+			getDataAccountFetchesQuery += String.format(" LIMIT %d, %d", pager.start.longValue(), pager.count.longValue());
+		} else if (pager.count != null) {
+			getDataAccountFetchesQuery += String.format(" LIMIT %d", pager.count.longValue());
+		}
+
+		try {
+			dataAccountFetchesConnection.connect();
+			dataAccountFetchesConnection.executeQuery(getDataAccountFetchesQuery);
+
+			while (dataAccountFetchesConnection.fetchNextRow()) {
+				DataAccountFetch dataAccountFetch = this.toDataAccountFetch(dataAccountFetchesConnection);
+
+				if (dataAccountFetch != null) {
+					dataAccountFetches.add(dataAccountFetch);
+				}
+			}
+		} finally {
+			if (dataAccountFetchesConnection != null) {
+				dataAccountFetchesConnection.disconnect();
+			}
+		}
+
+		return dataAccountFetches;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.dataaccountfetch.IDataAccountFetchService#getDataAccountFetches(io.reflection.app.api.shared.datatypes.Pager)
+	 */
+	@Override
+	public List<DataAccountFetch> getDataAccountFetches(Date start, Date end, Pager pager) throws DataAccessException {
+		return getDataAccountFetches(null, start, end, pager);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.dataaccountfetch.IDataAccountFetchService#getDataAccountFetchesCount(io.reflection.app.datatypes.shared.DataAccount)
+	 */
+	@Override
+	public Long getDataAccountFetchesCount(DataAccount dataAccount, Date start, Date end) throws DataAccessException {
+		Long dataAccountFetchesCount = Long.valueOf(0);
+
+		Connection dataAccountFetchesCountConnection = DatabaseServiceProvider.provide().getNamedConnection(
+				DatabaseType.DatabaseTypeDataAccountFetch.toString());
+
+		String linkedAccountPart = "";
+		if (dataAccount != null && dataAccount.id != null) {
+			linkedAccountPart = "`linkedaccountid`=" + dataAccount.id.longValue() + " AND";
+		}
+		String getDataAccountFetchesQuery = String.format("SELECT COUNT(1) AS `count` FROM `dataaccountfetch` WHERE %s AND %s `deleted`='n'",
+				SqlQueryHelper.beforeAfterQuery(end, start), linkedAccountPart);
+
+		try {
+			dataAccountFetchesCountConnection.connect();
+			dataAccountFetchesCountConnection.executeQuery(getDataAccountFetchesQuery);
+
+			if (dataAccountFetchesCountConnection.fetchNextRow()) {
+				dataAccountFetchesCount = dataAccountFetchesCountConnection.getCurrentRowLong("count");
+			}
+		} finally {
+			if (dataAccountFetchesCountConnection != null) {
+				dataAccountFetchesCountConnection.disconnect();
+			}
+		}
+
+		return dataAccountFetchesCount;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.dataaccountfetch.IDataAccountFetchService#getDataAccountFetchesCount()
+	 */
+	@Override
+	public Long getDataAccountFetchesCount(Date start, Date end) throws DataAccessException {
+		return getDataAccountFetchesCount(null, start, end);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.service.dataaccountfetch.IDataAccountFetchService#triggerDataAccountFetchIngest(io.reflection.app.datatypes.shared.DataAccountFetch)
+	 */
+	@Override
+	public void triggerDataAccountFetchIngest(DataAccountFetch fetch) throws DataAccessException {
+		enqueue(fetch);
+	}
+
+	/**
+	 * 
+	 * @param fetch
+	 */
+	private void enqueue(DataAccountFetch fetch) {
+		if (LOG.isLoggable(GaeLevel.TRACE)) {
+			LOG.log(GaeLevel.TRACE, "Entering...");
+		}
+
+		try {
+			Queue queue = QueueFactory.getQueue("dataaccountingest");
+
+			TaskOptions options = TaskOptions.Builder.withUrl("/dataaccountingest").method(Method.POST);
+
+			options.param("fetchId", fetch.id.toString());
+
+			try {
+				queue.add(options);
+			} catch (TransientFailureException ex) {
+
+				if (LOG.isLoggable(Level.WARNING)) {
+					LOG.warning(String.format("Could not queue a message because of [%s] - will retry it once", ex.toString()));
+				}
+
+				// retry once
+				try {
+					queue.add(options);
+				} catch (TransientFailureException reEx) {
+					if (LOG.isLoggable(Level.SEVERE)) {
+						LOG.log(Level.SEVERE,
+								String.format("Retry of with payload [%s] failed while adding to queue [%s] twice", options.toString(), queue.getQueueName()),
+								reEx);
+					}
+				}
+
+			}
+		} finally {
+			if (LOG.isLoggable(GaeLevel.TRACE)) {
+				LOG.log(GaeLevel.TRACE, "Exiting...");
+			}
+		}
 	}
 
 }

@@ -36,6 +36,11 @@ import com.spacehopperstudios.utility.StringUtils;
  * 
  */
 public class NavigationController implements ValueChangeHandler<String> {
+	
+	public static final String ADD_ACTION_PARAMETER_VALUE = "add";
+	public static final String EDIT_ACTION_PARAMETER_VALUE = "edit";
+	public static final String DELETE_ACTION_PARAMETER_VALUE = "delete";
+	
 	private static NavigationController mOne = null;
 
 	private HTMLPanel mPanel = null;
@@ -270,7 +275,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 
 			if (SessionController.get().isValidSession()) {
 				// If beta user with no linked accounts, always redirect to linkitunes page (show only post because of the 'waths this' link in the form)
-				if (!SessionController.get().loggedInUserHas(PermissionController.HAS_LINKED_ACCOUNT_PERMISSION_ID)
+				if (!SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_ID)
 						&& SessionController.get().loggedInUserIs(DataTypeHelper.ROLE_BETA_ID) && stackPage != PageType.BlogPostPageType
 						&& stackPage != PageType.BlogPostsPageType && stackPage != PageType.BlogEditPostPageType && stackPage != PageType.BlogTagPageType) {
 					stackPage = PageType.LinkItunesPageType;
@@ -444,6 +449,9 @@ public class NavigationController implements ValueChangeHandler<String> {
 		}
 	}
 
+	/**
+	 * Purges all pages
+	 */
 	public void purgeAllPages() {
 		pages.clear();
 	}

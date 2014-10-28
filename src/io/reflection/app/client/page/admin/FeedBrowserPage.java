@@ -74,9 +74,9 @@ public class FeedBrowserPage extends Page implements FilterEventHandler, Navigat
 
 		createColumns();
 
-		FilterHelper.addStores(mAppStore);
-		FilterHelper.addCountries(mCountry);
-		FilterHelper.addCategories(category);
+		FilterHelper.addStores(mAppStore, true);
+		FilterHelper.addCountries(mCountry, true);
+		FilterHelper.addCategories(category, true);
 
 		// final SingleSelectionModel<FeedFetch> s = new SingleSelectionModel<FeedFetch>();
 		// s.addSelectionChangeHandler(new Handler() {
@@ -163,7 +163,7 @@ public class FeedBrowserPage extends Page implements FilterEventHandler, Navigat
 				return object.type;
 			}
 		}, "Type");
-		
+
 		mFeeds.addColumn(new TextColumn<FeedFetch>() {
 
 			@Override
@@ -262,7 +262,7 @@ public class FeedBrowserPage extends Page implements FilterEventHandler, Navigat
 		if (NavigationController.get().getCurrentPage() == PageType.FeedBrowserPageType) {
 			if (name != null && (COUNTRY_KEY.equals(name) || STORE_KEY.equals(name) || CATEGORY_KEY.equals(name) || LIST_TYPE_KEY.equals(name))) {
 				FeedFetchController.get().reset();
-				
+
 				mPager.setPage(0);
 
 				PageType.FeedBrowserPageType.show("view", FilterController.get().asFeedFilterString());
@@ -284,7 +284,7 @@ public class FeedBrowserPage extends Page implements FilterEventHandler, Navigat
 					|| previousValues.get(LIST_TYPE_KEY) != null) {
 
 				FeedFetchController.get().reset();
-				
+
 				mPager.setPage(0);
 
 				PageType.FeedBrowserPageType.show("view", FilterController.get().asFeedFilterString());

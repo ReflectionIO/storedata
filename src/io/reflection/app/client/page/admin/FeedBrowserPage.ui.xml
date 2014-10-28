@@ -3,8 +3,8 @@
 	xmlns:c="urn:import:com.google.gwt.user.cellview.client">
 	<ui:style>
 	.toolbar_spacing {
-	    padding-top: 10px;
-	    padding-bottom: 10px;
+		padding-top: 10px;
+		padding-bottom: 10px;
 	}
 	</ui:style>
 	<g:HTMLPanel styleName="row"> <!-- CONTAINER-FLUID style -->
@@ -18,7 +18,7 @@
 				<h5 class="text-muted">12-hourly feeds</h5>
 
 				<g:HTMLPanel styleName="form-group">
-					<label>Overview</label>
+					<label>Lyst Type</label>
 					<g:ListBox styleName="form-control" ui:field="mListType">
 						<g:item value="all">All</g:item>
 						<g:item value="paid">Paid</g:item>
@@ -42,30 +42,6 @@
 				<g:HTMLPanel styleName="form-group">
 					<label>Category</label>
 					<g:ListBox styleName="form-control" ui:field="category">
-						<g:item value="24">All</g:item>
-						<g:item value="19">Book</g:item>
-						<g:item value="1"> Business</g:item>
-						<g:item value="22">Catalogs</g:item>
-						<g:item value="18">Education</g:item>
-						<g:item value="17">Entertainment</g:item>
-						<g:item value="16">Finance</g:item>
-						<g:item value="23">Food &amp; Drink</g:item>
-						<g:item value="15">Games</g:item>
-						<g:item value="14">Health &amp; Fitness</g:item>
-						<g:item value="13">Lifestyle</g:item>
-						<g:item value="20">Medical</g:item>
-						<g:item value="12">Music</g:item>
-						<g:item value="11">Navigation</g:item>
-						<g:item value="10">News</g:item>
-						<g:item value="21">Newsstand</g:item>
-						<g:item value="9"> Photo &amp; Video</g:item>
-						<g:item value="8"> Productivity</g:item>
-						<g:item value="7"> Reference</g:item>
-						<g:item value="6"> Social Networking</g:item>
-						<g:item value="5"> Sports</g:item>
-						<g:item value="4"> Travel</g:item>
-						<g:item value="3"> Utilities</g:item>
-						<g:item value="2"> Weather</g:item>
 					</g:ListBox>
 				</g:HTMLPanel>
 

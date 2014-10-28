@@ -7,6 +7,8 @@
 //
 package io.reflection.app.client.page.blog;
 
+import java.io.IOException;
+
 import io.reflection.app.api.blog.shared.call.GetPostRequest;
 import io.reflection.app.api.blog.shared.call.GetPostResponse;
 import io.reflection.app.api.blog.shared.call.event.GetPostEventHandler;
@@ -15,6 +17,7 @@ import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.PostController;
 import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.helper.MarkdownHelper;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.page.blog.part.DisplayTag;
@@ -171,7 +174,15 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 		}
 
 		if (post.content != null) {
-			content.setInnerHTML(post.content);
+
+			String processedString = post.content;
+
+			try {
+				processedString = MarkdownHelper.PROCESSOR.process(post.content);
+			} catch (IOException e) {
+				new RuntimeException(e);
+			}
+			content.setInnerHTML(processedString);
 
 			setLoading(LoadingType.NoneLoadingType);
 

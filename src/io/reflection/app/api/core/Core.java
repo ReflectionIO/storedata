@@ -8,7 +8,6 @@
 package io.reflection.app.api.core;
 
 import static io.reflection.app.api.PagerHelper.updatePager;
-import static io.reflection.app.helpers.ApiHelper.getGrossingListName;
 import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPAD_IOS;
 import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS;
 import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_UNIVERSAL_IOS;
@@ -75,9 +74,12 @@ import io.reflection.app.api.core.shared.call.SearchForItemResponse;
 import io.reflection.app.api.core.shared.call.UpdateLinkedAccountRequest;
 import io.reflection.app.api.core.shared.call.UpdateLinkedAccountResponse;
 import io.reflection.app.api.exception.AuthenticationException;
+import io.reflection.app.api.exception.AuthorisationException;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.collectors.Collector;
+import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
@@ -90,6 +92,10 @@ import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.Sale;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.helpers.ApiHelper;
+import io.reflection.app.helpers.SliceHelper;
+import io.reflection.app.itemrankarchivers.ItemRankArchiver;
+import io.reflection.app.itemrankarchivers.ItemRankArchiverFactory;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.modellers.Modeller;
 import io.reflection.app.modellers.ModellerFactory;
@@ -97,6 +103,7 @@ import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.country.CountryServiceProvider;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.datasource.DataSourceServiceProvider;
+import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.modelrun.ModelRunServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
@@ -109,13 +116,13 @@ import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.service.user.IUserService;
 import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
-import io.reflection.app.shared.util.SparseArray;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -426,40 +433,65 @@ public final class Core extends ActionHandler {
 				cal.add(Calendar.DAY_OF_YEAR, -1);
 				Date start = cal.getTime();
 
-				List<String> itemIds = new ArrayList<String>();
-				final Map<String, Rank> lookup = new HashMap<String, Rank>();
+				Set<String> itemIds = new HashSet<String>();
+				// final Map<String, Rank> lookup = new HashMap<String, Rank>();
 
-				List<Rank> ranks = RankServiceProvider.provide().getAllRanks(input.country, input.store, input.category,
-						getGrossingListName(input.store, input.listType), start, end);
+				Long code = FeedFetchServiceProvider.provide().getGatherCode(input.country, input.store, start, end);
 
-				if (ranks != null && ranks.size() != 0) {
-					SparseArray<Rank> free = new SparseArray<Rank>();
-					SparseArray<Rank> paid = new SparseArray<Rank>();
-					SparseArray<Rank> grossing = new SparseArray<Rank>();
+				List<String> listTypes = ApiHelper.getAllListTypes(input.store, input.listType);
+				Collector collector = CollectorFactory.getCollectorForStore(input.store.a3Code);
+
+				List<Rank> ranks;
+				for (String listType : listTypes) {
+					// get all the ranks for the list type (we are using an infinite pager with no sorting to allow us to generate a deletion key during
+					// prediction)
+					ranks = RankServiceProvider.provide().getGatherCodeRanks(input.country, input.store, input.category, listType, code,
+							PagerHelper.infinitePager(), Boolean.TRUE);
 
 					for (Rank rank : ranks) {
-						if (!lookup.containsKey(rank.itemId)) {
-							itemIds.add(rank.itemId);
-							lookup.put(rank.itemId, rank);
-						}
-
-						if (rank.price.floatValue() == 0 && rank.position.intValue() > 0) {
-							free.append(rank.position.intValue(), rank);
-						}
-
-						if (rank.price.floatValue() != 0 && rank.position.intValue() > 0) {
-							paid.append(rank.position.intValue(), rank);
-						}
-
-						if (rank.grossingPosition.intValue() != 0) {
-							grossing.append(rank.grossingPosition.intValue(), rank);
-						}
+						itemIds.add(rank.itemId);
 					}
 
-					output.freeRanks = free.toList();
-					output.paidRanks = paid.toList();
-					output.grossingRanks = grossing.toList();
+					if (collector.isFree(listType)) {
+						output.freeRanks = ranks;
+					} else if (collector.isPaid(listType)) {
+						output.paidRanks = ranks;
+					} else if (collector.isGrossing(listType)) {
+						output.grossingRanks = ranks;
+					}
 				}
+
+				// List<Rank> ranks = RankServiceProvider.provide().getAllRanks(input.country, input.store, input.category,
+				// getGrossingListName(input.store, input.listType), start, end);
+				//
+				// if (ranks != null && ranks.size() != 0) {
+				// SparseArray<Rank> free = new SparseArray<Rank>();
+				// SparseArray<Rank> paid = new SparseArray<Rank>();
+				// SparseArray<Rank> grossing = new SparseArray<Rank>();
+				//
+				// for (Rank rank : ranks) {
+				// if (!lookup.containsKey(rank.itemId)) {
+				// itemIds.add(rank.itemId);
+				// lookup.put(rank.itemId, rank);
+				// }
+				//
+				// if (rank.price.floatValue() == 0 && rank.position.intValue() > 0) {
+				// free.append(rank.position.intValue(), rank);
+				// }
+				//
+				// if (rank.price.floatValue() != 0 && rank.position.intValue() > 0) {
+				// paid.append(rank.position.intValue(), rank);
+				// }
+				//
+				// if (rank.grossingPosition.intValue() != 0) {
+				// grossing.append(rank.grossingPosition.intValue(), rank);
+				// }
+				// }
+				//
+				// output.freeRanks = free.toList();
+				// output.paidRanks = paid.toList();
+				// output.grossingRanks = grossing.toList();
+				// }
 
 				output.items = ItemServiceProvider.provide().getInternalIdItemBatch(itemIds);
 
@@ -548,6 +580,8 @@ public final class Core extends ActionHandler {
 
 			input.listType = ValidationHelper.validateListType(input.listType, store);
 
+			FormType form = ModellerFactory.getModellerForStore(store.a3Code).getForm(input.listType);
+
 			long diff = input.end.getTime() - input.start.getTime();
 			long diffDays = diff / (24 * 60 * 60 * 1000);
 
@@ -555,7 +589,29 @@ public final class Core extends ActionHandler {
 				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
 						ApiError.DateRangeOutOfBounds.getMessage("0-60 days: input.end - input.start"));
 
-			output.ranks = RankServiceProvider.provide().getItemRanks(input.country, store, input.listType, input.item, input.start, input.end, input.pager);
+			ItemRankArchiver archiver = ItemRankArchiverFactory.getItemRankArchiverForStore(store.a3Code);
+			long[] slices = SliceHelper.offsets(input.start, input.end);
+
+			String key;
+			List<Rank> ranks;
+			for (long slice : slices) {
+				key = archiver.createKey(slice, input.item, form, store, input.country, input.category);
+
+				ranks = archiver.getItemRanks(key);
+
+				if (ranks != null) {
+					if (output.ranks == null) {
+						output.ranks = new ArrayList<Rank>();
+					}
+
+					output.ranks.addAll(ranks);
+				}
+			}
+
+			if (output.ranks == null) {
+				output.ranks = RankServiceProvider.provide()
+						.getItemRanks(input.country, store, input.listType, input.item, input.start, input.end, input.pager);
+			}
 
 			if (input.pager.start.intValue() == 0) {
 				output.item = input.item;
@@ -1218,7 +1274,7 @@ public final class Core extends ActionHandler {
 	// private String getFreeListName(Store store, String type) {
 	// String listName = null;
 	//
-	// if ("ios".equalsIgnoreCase(store.a3Code)) {
+	// if (DataTypeHelper.IOS_STORE_A3.equalsIgnoreCase(store.a3Code)) {
 	// if ("ipad".equalsIgnoreCase(type)) {
 	// listName = CollectorIOS.TOP_FREE_IPAD_APPS;
 	// } else {
@@ -1232,7 +1288,7 @@ public final class Core extends ActionHandler {
 	// private String getPaidListName(Store store, String type) {
 	// String listName = null;
 	//
-	// if ("ios".equalsIgnoreCase(store.a3Code)) {
+	// if (DataTypeHelper.IOS_STORE_A3.equalsIgnoreCase(store.a3Code)) {
 	// if ("ipad".equalsIgnoreCase(type)) {
 	// listName = CollectorIOS.TOP_PAID_IPAD_APPS;
 	// } else {
@@ -1323,10 +1379,10 @@ public final class Core extends ActionHandler {
 				User sessionUser = UserServiceProvider.provide().getUser(input.session.user.id);
 
 				if (input.userId != sessionUser.id) {
-					ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(Long.valueOf(1)));
+					ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(DataTypeHelper.ROLE_ADMIN_ID));
 				}
 
-				output.user = sessionUser;
+				output.user = UserServiceProvider.provide().getUser(input.userId);
 			}
 
 			output.status = StatusType.StatusTypeSuccess;
@@ -1347,9 +1403,27 @@ public final class Core extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			final Permission permissionMCA = DataTypeHelper.createPermission(DataTypeHelper.PERMISSION_MANAGE_CATEGORIES_ID);
+			try {
+				ValidationHelper.validateAuthorised(input.session.user, permissionMCA);
+			} catch (AuthorisationException aEx) {
+
+			}
+
+			input.store = ValidationHelper.validateStore(input.store, "input");
+
+			if (input.store == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("Store: input.store"));
+
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
-			// get categories for store
+			output.categories = CategoryServiceProvider.provide().getStoreCategories(input.store, input.pager);
+
+			output.pager = input.pager;
+			updatePager(output.pager, output.categories, input.pager.totalCount == null ? CategoryServiceProvider.provide()
+					.getStoreCategoriesCount(input.store) : null);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {

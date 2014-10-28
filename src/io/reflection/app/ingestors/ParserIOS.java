@@ -5,6 +5,7 @@ package io.reflection.app.ingestors;
 
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,7 +96,7 @@ public class ParserIOS implements Parser {
 		item.internalId = attributes.get(KEY_INTERNAL_ID).getAsString();
 		item.externalId = attributes.get(KEY_BUNDLE_ID).getAsString();
 		item.type = "Application"; // LATER this can be obtained from the data
-		item.source = "ios";
+		item.source = DataTypeHelper.IOS_STORE_A3;
 		item.creatorName = jsonItem.get(KEY_ARTIST).getAsJsonObject().get(KEY_LABEL).getAsString();
 
 		JsonArray images = jsonItem.get(KEY_IMAGE).getAsJsonArray();

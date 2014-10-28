@@ -124,10 +124,22 @@ public interface IDataAccountService extends IService {
 	public void triggerDataAccountFetch(DataAccount dataAccount) throws DataAccessException;
 
 	/**
+	 * Trigger single date data account fetch
+	 * 
 	 * @param dataAccount
 	 * @param date
 	 * @throws DataAccessException
 	 */
 	public void triggerSingleDateDataAccountFetch(DataAccount dataAccount, Date date) throws DataAccessException;
+
+	/**
+	 * Trigger Multiple Date Data Account Fetch - dates are sequential and separated by a number of days
+	 * 
+	 * @param dataAccount
+	 * @param date
+	 * @param days
+	 * @throws DataAccessException
+	 */
+	public void triggerMultipleDateDataAccountFetch(DataAccount dataAccount, Date date, Integer days) throws DataAccessException;
 
 }

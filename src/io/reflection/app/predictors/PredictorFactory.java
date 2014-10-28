@@ -7,6 +7,8 @@
 //
 package io.reflection.app.predictors;
 
+import io.reflection.app.shared.util.DataTypeHelper;
+
 
 /**
  * @author billy1380
@@ -21,7 +23,7 @@ public class PredictorFactory {
 		public static Predictor getPredictorForStore(String store) {
 			Predictor predictor = null;
 
-			if ("ios".equals(store.toLowerCase())) {
+			if (DataTypeHelper.IOS_STORE_A3.equals(store.toLowerCase())) {
 				// ios store
 				predictor = new PredictorIOS();
 			} else if ("azn".equals(store.toLowerCase())) {

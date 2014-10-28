@@ -1,7 +1,6 @@
 @CHARSET "UTF-8";
 
 @external gwt-DatePicker, datePickerMonthSelector, datePickerWeekdayLabel, datePickerNextButton, datePickerDayIsHighlighted, datePickerWeekendLabel, datePickerDayIsFiller, datePickerMonth, datePickerDayIsValue, datePickerDay, html-face, datePickerDayIsValueAndHighlighted, datePickerDayIsToday, datePickerPreviousButton, datePickerDayIsDisabled, datePickerDays, gwt-DateBox;
-
 .gwt-DatePicker {
 	border-collapse: separate;
 	cursor: default;
@@ -23,7 +22,7 @@
 	background-clip: padding-box
 }
 
-.gwt-DatePicker td, .datePickerMonthSelector td:focus {
+.gwt-DatePicker td,.datePickerMonthSelector td:focus {
 	outline: none
 }
 
@@ -36,14 +35,14 @@
 	background: white
 }
 
-.datePickerDay, .datePickerWeekdayLabel, .datePickerWeekendLabel {
+.datePickerDay,.datePickerWeekdayLabel,.datePickerWeekendLabel {
 	text-align: center;
 	padding: 4px;
 	outline: none;
 	color: #333
 }
 
-.datePickerWeekdayLabel, .datePickerWeekendLabel {
+.datePickerWeekdayLabel,.datePickerWeekendLabel {
 	background: #fff;
 	padding: 0px 4px 2px;
 	cursor: default;
@@ -74,7 +73,6 @@
 	color: #AAAAAA;
 	font-style: italic;
 	cursor: not-allowed;
-	
 }
 
 .datePickerDayIsHighlighted {
@@ -108,7 +106,7 @@
 	background: #fff
 }
 
-.datePickerPreviousButton, .datePickerNextButton {
+.datePickerPreviousButton,.datePickerNextButton {
 	cursor: hand;
 	cursor: pointer;
 	font-weight: bold;
@@ -127,14 +125,36 @@ td.datePickerMonth {
 .gwt-DateBox {
 	padding: 5px 4px;
 	border: 1px solid #ccc;
-	border-top: 1px solid #999
+	border-top: 1px solid #999;
+	height: 34px;
+	width: 100px;
+	text-align: center;
+	background: -webkit-linear-gradient(#f6f7f9, #eeeff1);
+	/* For Safari 5.1 to 6.0 */
+	background: -o-linear-gradient(#f6f7f9, #eeeff1);
+	/* For Opera 11.1 to 12.0 */
+	background: -moz-linear-gradient(#f6f7f9, #eeeff1);
+	/* For Firefox 3.6 to 15 */
+	background: linear-gradient(#f6f7f9, #eeeff1); /* Standard syntax */
+	color: #434346;
+	margin-right: 0px;
+	border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	outline: 0;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	cursor: pointer !important;
 }
 
-.datePickerNextButton, .datePickerPreviousButton {
+.datePickerNextButton,.datePickerPreviousButton {
 	padding: 5px 9px 2px 9px
 }
 
-.datePickerNextButton:before, .datePickerPreviousButton:before {
+.datePickerNextButton:before,.datePickerPreviousButton:before {
 	font-family: 'Glyphicons Halflings';
 	font-style: normal;
 	font-weight: 400;
@@ -142,7 +162,7 @@ td.datePickerMonth {
 	-webkit-font-smoothing: antialiased
 }
 
-.datePickerPreviousButton .html-face, .datePickerNextButton .html-face {
+.datePickerPreviousButton .html-face,.datePickerNextButton .html-face {
 	display: none
 }
 
@@ -154,7 +174,7 @@ td.datePickerMonth {
 	content: "\e091"
 }
 
-.datePickerPreviousButton:HOVER, .datePickerNextButton:HOVER {
+.datePickerPreviousButton:HOVER,.datePickerNextButton:HOVER {
 	background: #EEE;
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;

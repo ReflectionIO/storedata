@@ -8,8 +8,14 @@
 //
 package io.reflection.app.api.admin.client;
 
+import io.reflection.app.api.admin.shared.call.AssignPermissionRequest;
+import io.reflection.app.api.admin.shared.call.AssignPermissionResponse;
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
 import io.reflection.app.api.admin.shared.call.AssignRoleResponse;
+import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesRequest;
+import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesResponse;
+import io.reflection.app.api.admin.shared.call.GetDataAccountsRequest;
+import io.reflection.app.api.admin.shared.call.GetDataAccountsResponse;
 import io.reflection.app.api.admin.shared.call.GetEmailTemplatesRequest;
 import io.reflection.app.api.admin.shared.call.GetEmailTemplatesResponse;
 import io.reflection.app.api.admin.shared.call.GetFeedFetchesRequest;
@@ -20,16 +26,30 @@ import io.reflection.app.api.admin.shared.call.GetModelOutcomeRequest;
 import io.reflection.app.api.admin.shared.call.GetModelOutcomeResponse;
 import io.reflection.app.api.admin.shared.call.GetPermissionsRequest;
 import io.reflection.app.api.admin.shared.call.GetPermissionsResponse;
+import io.reflection.app.api.admin.shared.call.GetRolesAndPermissionsRequest;
+import io.reflection.app.api.admin.shared.call.GetRolesAndPermissionsResponse;
 import io.reflection.app.api.admin.shared.call.GetRolesRequest;
 import io.reflection.app.api.admin.shared.call.GetRolesResponse;
+import io.reflection.app.api.admin.shared.call.GetSimpleModelRunsRequest;
+import io.reflection.app.api.admin.shared.call.GetSimpleModelRunsResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersCountResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersResponse;
+import io.reflection.app.api.admin.shared.call.JoinDataAccountRequest;
+import io.reflection.app.api.admin.shared.call.JoinDataAccountResponse;
+import io.reflection.app.api.admin.shared.call.RevokePermissionRequest;
+import io.reflection.app.api.admin.shared.call.RevokePermissionResponse;
+import io.reflection.app.api.admin.shared.call.RevokeRoleRequest;
+import io.reflection.app.api.admin.shared.call.RevokeRoleResponse;
 import io.reflection.app.api.admin.shared.call.SendEmailRequest;
 import io.reflection.app.api.admin.shared.call.SendEmailResponse;
 import io.reflection.app.api.admin.shared.call.SetPasswordRequest;
 import io.reflection.app.api.admin.shared.call.SetPasswordResponse;
+import io.reflection.app.api.admin.shared.call.TriggerDataAccountFetchIngestRequest;
+import io.reflection.app.api.admin.shared.call.TriggerDataAccountFetchIngestResponse;
+import io.reflection.app.api.admin.shared.call.TriggerDataAccountGatherRequest;
+import io.reflection.app.api.admin.shared.call.TriggerDataAccountGatherResponse;
 import io.reflection.app.api.admin.shared.call.TriggerGatherRequest;
 import io.reflection.app.api.admin.shared.call.TriggerGatherResponse;
 import io.reflection.app.api.admin.shared.call.TriggerIngestRequest;
@@ -38,6 +58,8 @@ import io.reflection.app.api.admin.shared.call.TriggerModelRequest;
 import io.reflection.app.api.admin.shared.call.TriggerModelResponse;
 import io.reflection.app.api.admin.shared.call.TriggerPredictRequest;
 import io.reflection.app.api.admin.shared.call.TriggerPredictResponse;
+import io.reflection.app.api.admin.shared.call.UpdateEmailTemplateRequest;
+import io.reflection.app.api.admin.shared.call.UpdateEmailTemplateResponse;
 import io.reflection.app.api.blog.shared.call.DeleteUserRequest;
 import io.reflection.app.api.blog.shared.call.DeleteUserResponse;
 
@@ -381,6 +403,105 @@ public final class AdminService extends JsonService {
 		return handle;
 	}
 
+	public static final String AdminMethodAssignPermission = "AssignPermission";
+
+	public Request assignPermission(final AssignPermissionRequest input, final AsyncCallback<AssignPermissionResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(AdminMethodAssignPermission, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						AssignPermissionResponse outputParameter = new AssignPermissionResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodAssignPermission, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodAssignPermission, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(AdminService.this, AdminMethodAssignPermission, input, exception);
+				}
+			});
+			onCallStart(AdminService.this, AdminMethodAssignPermission, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodAssignPermission, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String AdminMethodRevokeRole = "RevokeRole";
+
+	public Request revokeRole(final RevokeRoleRequest input, final AsyncCallback<RevokeRoleResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(AdminMethodRevokeRole, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						RevokeRoleResponse outputParameter = new RevokeRoleResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodRevokeRole, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodRevokeRole, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(AdminService.this, AdminMethodRevokeRole, input, exception);
+				}
+			});
+			onCallStart(AdminService.this, AdminMethodRevokeRole, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodRevokeRole, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String AdminMethodRevokePermission = "RevokePermission";
+
+	public Request revokePermission(final RevokePermissionRequest input, final AsyncCallback<RevokePermissionResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(AdminMethodRevokePermission, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						RevokePermissionResponse outputParameter = new RevokePermissionResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodRevokePermission, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodRevokePermission, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(AdminService.this, AdminMethodRevokePermission, input, exception);
+				}
+			});
+			onCallStart(AdminService.this, AdminMethodRevokePermission, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodRevokePermission, input, exception);
+		}
+		return handle;
+	}
+
 	public static final String AdminMethodGetRoles = "GetRoles";
 
 	public Request getRoles(final GetRolesRequest input, final AsyncCallback<GetRolesResponse> output) {
@@ -575,6 +696,271 @@ public final class AdminService extends JsonService {
 		} catch (RequestException exception) {
 			output.onFailure(exception);
 			onCallFailure(AdminService.this, AdminMethodDeleteUser, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String AdminMethodGetRolesAndPermissions = "GetRolesAndPermissions";
+
+	public Request getRolesAndPermissions(final GetRolesAndPermissionsRequest input, final AsyncCallback<GetRolesAndPermissionsResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(AdminMethodGetRolesAndPermissions, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						GetRolesAndPermissionsResponse outputParameter = new GetRolesAndPermissionsResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodGetRolesAndPermissions, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodGetRolesAndPermissions, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(AdminService.this, AdminMethodGetRolesAndPermissions, input, exception);
+				}
+			});
+			onCallStart(AdminService.this, AdminMethodGetRolesAndPermissions, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodGetRolesAndPermissions, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String AdminMethodUpdateEmailTemplate = "UpdateEmailTemplate";
+
+	public Request updateEmailTemplate(final UpdateEmailTemplateRequest input, final AsyncCallback<UpdateEmailTemplateResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(AdminMethodUpdateEmailTemplate, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						UpdateEmailTemplateResponse outputParameter = new UpdateEmailTemplateResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodUpdateEmailTemplate, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodUpdateEmailTemplate, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(AdminService.this, AdminMethodUpdateEmailTemplate, input, exception);
+				}
+			});
+			onCallStart(AdminService.this, AdminMethodUpdateEmailTemplate, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodUpdateEmailTemplate, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String AdminMethodGetDataAccounts = "GetDataAccounts";
+
+	public Request getDataAccounts(final GetDataAccountsRequest input, final AsyncCallback<GetDataAccountsResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(AdminMethodGetDataAccounts, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						GetDataAccountsResponse outputParameter = new GetDataAccountsResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodGetDataAccounts, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodGetDataAccounts, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(AdminService.this, AdminMethodGetDataAccounts, input, exception);
+				}
+			});
+			onCallStart(AdminService.this, AdminMethodGetDataAccounts, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodGetDataAccounts, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String AdminMethodGetDataAccountFetches = "GetDataAccountFetches";
+
+	public Request getDataAccountFetches(final GetDataAccountFetchesRequest input, final AsyncCallback<GetDataAccountFetchesResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(AdminMethodGetDataAccountFetches, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						GetDataAccountFetchesResponse outputParameter = new GetDataAccountFetchesResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodGetDataAccountFetches, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodGetDataAccountFetches, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(AdminService.this, AdminMethodGetDataAccountFetches, input, exception);
+				}
+			});
+			onCallStart(AdminService.this, AdminMethodGetDataAccountFetches, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodGetDataAccountFetches, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String AdminMethodTriggerDataAccountGather = "TriggerDataAccountGather";
+
+	public Request triggerDataAccountGather(final TriggerDataAccountGatherRequest input, final AsyncCallback<TriggerDataAccountGatherResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(AdminMethodTriggerDataAccountGather, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						TriggerDataAccountGatherResponse outputParameter = new TriggerDataAccountGatherResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodTriggerDataAccountGather, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodTriggerDataAccountGather, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(AdminService.this, AdminMethodTriggerDataAccountGather, input, exception);
+				}
+			});
+			onCallStart(AdminService.this, AdminMethodTriggerDataAccountGather, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodTriggerDataAccountGather, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String AdminMethodTriggerDataAccountFetchIngest = "TriggerDataAccountFetchIngest";
+
+	public Request triggerDataAccountFetchIngest(final TriggerDataAccountFetchIngestRequest input,
+			final AsyncCallback<TriggerDataAccountFetchIngestResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(AdminMethodTriggerDataAccountFetchIngest, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						TriggerDataAccountFetchIngestResponse outputParameter = new TriggerDataAccountFetchIngestResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodTriggerDataAccountFetchIngest, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodTriggerDataAccountFetchIngest, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(AdminService.this, AdminMethodTriggerDataAccountFetchIngest, input, exception);
+				}
+			});
+			onCallStart(AdminService.this, AdminMethodTriggerDataAccountFetchIngest, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodTriggerDataAccountFetchIngest, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String AdminMethodJoinDataAccount = "JoinDataAccount";
+
+	public Request joinDataAccount(final JoinDataAccountRequest input, final AsyncCallback<JoinDataAccountResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(AdminMethodJoinDataAccount, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						JoinDataAccountResponse outputParameter = new JoinDataAccountResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodJoinDataAccount, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodJoinDataAccount, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(AdminService.this, AdminMethodJoinDataAccount, input, exception);
+				}
+			});
+			onCallStart(AdminService.this, AdminMethodJoinDataAccount, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodJoinDataAccount, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String AdminMethodGetSimpleModelRuns = "GetSimpleModelRuns";
+
+	public Request getSimpleModelRuns(final GetSimpleModelRunsRequest input, final AsyncCallback<GetSimpleModelRunsResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(AdminMethodGetSimpleModelRuns, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						GetSimpleModelRunsResponse outputParameter = new GetSimpleModelRunsResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodGetSimpleModelRuns, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodGetSimpleModelRuns, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(AdminService.this, AdminMethodGetSimpleModelRuns, input, exception);
+				}
+			});
+			onCallStart(AdminService.this, AdminMethodGetSimpleModelRuns, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodGetSimpleModelRuns, input, exception);
 		}
 		return handle;
 	}

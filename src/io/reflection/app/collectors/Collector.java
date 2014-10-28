@@ -38,6 +38,10 @@ public interface Collector {
 	int enqueue();
 
 	boolean isGrossing(String type);
+	
+	boolean isPaid(String type);
+	
+	boolean isFree(String type);
 
 	/**
 	 * @param type
