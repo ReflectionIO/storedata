@@ -127,9 +127,19 @@ public final class Admin extends ActionHandler {
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
-			output.users = UserServiceProvider.provide().getUsers(input.pager);
+			boolean isQuery = false;
+			try {
+				input.query = ValidationHelper.validateQuery(input.query, "input");
+				isQuery = true;
+			} catch (InputValidationException ex) {}
+
+			output.users = isQuery ? UserServiceProvider.provide().searchUsers(input.query, input.pager) : UserServiceProvider.provide().getUsers(input.pager);
 			output.pager = input.pager;
-			updatePager(output.pager, output.users, input.pager.totalCount == null ? UserServiceProvider.provide().getUsersCount() : null);
+			if (isQuery) {
+				updatePager(output.pager, output.users, input.pager.totalCount == null ? UserServiceProvider.provide().searchUsersCount(input.query) : null);
+			} else {
+				updatePager(output.pager, output.users, input.pager.totalCount == null ? UserServiceProvider.provide().getUsersCount() : null);
+			}
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
