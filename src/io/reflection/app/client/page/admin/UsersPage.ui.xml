@@ -5,9 +5,18 @@
 	<ui:import field="io.reflection.app.client.page.PageType.RegisterPageType" />
 
 	<ui:style>
-	.toolbar_spacing {
-	    padding-top: 10px;
-	    padding-bottom: 10px;
+	.toolbar-spacing {
+		padding-top: 10px;
+		padding-bottom: 10px;
+	}
+	
+	.add-user {
+		display: inline-block;
+	}
+	
+	.search-box {
+		display: inline-block;
+		padding-left: 30px;
 	}
 	</ui:style>
 	<g:HTMLPanel>
@@ -18,13 +27,22 @@
 				<p:Preloader ui:field="preloader">
 					<g:HTMLPanel>
 
-						<g:HTMLPanel styleName="{style.toolbar_spacing}">
-							<g:InlineHyperlink styleName="btn btn-default" text="Add user" ui:field="addUser" targetHistoryToken="{RegisterPageType.asTargetHistoryToken}" />
+
+						<g:HTMLPanel styleName="form-inline {style.toolbar-spacing}">
+
+							<g:HTMLPanel styleName="{style.add-user}">
+								<g:InlineHyperlink styleName="btn btn-default" text="Add user" ui:field="addUser" targetHistoryToken="{RegisterPageType.asTargetHistoryToken}" />
+							</g:HTMLPanel>
+
+							<g:HTMLPanel styleName="{style.search-box}">
+								<g:TextBox ui:field="queryTextBox" styleName="form-control" />
+							</g:HTMLPanel>
+
 						</g:HTMLPanel>
 
-						<c:CellTable ui:field="mUsers" styleName="table table-hover table-striped" />
+						<c:CellTable ui:field="usersTable" styleName="table table-hover table-striped" />
 
-						<p:SimplePager styleName="text-center" ui:field="mPager" />
+						<p:SimplePager styleName="text-center" ui:field="simplePager" />
 					</g:HTMLPanel>
 				</p:Preloader>
 				<g:HTMLPanel styleName="filler-bottom col-md-12 hidden-xs hidden-sm" />

@@ -93,6 +93,7 @@
 						<xsd:sequence>
 							<xsd:element name="pager" type="sd:Pager" />
 						</xsd:sequence>
+						<xsd:attribute name="query" type="xsd:string" />
 					</xsd:extension>
 				</xsd:complexContent>
 			</xsd:complexType>
