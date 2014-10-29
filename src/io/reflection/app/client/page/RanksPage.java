@@ -89,6 +89,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 	public static final int SELECTED_TAB_PARAMETER_INDEX = 0;
 	public static final int VIEW_ALL_LENGTH_VALUE = Integer.MAX_VALUE;
+	public static final String ALL_TEXT = "Overview / All";
 
 	@UiField RanksPageStyle style;
 
@@ -137,6 +138,9 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	public RanksPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
+		// set the overall tab title (this is because it is modified for admins to contain the gather code)
+		mAll.setText(ALL_TEXT);
+		
 		showModelPredictions = SessionController.get().isLoggedInUserAdmin();
 
 		createColumns();
@@ -508,6 +512,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 				String currentFilter = FilterController.get().asRankFilterString();
 
 				if (currentFilter != null && currentFilter.length() > 0) {
+					mAll.setText(ALL_TEXT);
 					mAll.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, currentFilter));
 					mPaid.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", PAID_LIST_TYPE, currentFilter));
 					mFree.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", FREE_LIST_TYPE, currentFilter));
@@ -572,6 +577,12 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	public void getAllTopItemsSuccess(GetAllTopItemsRequest input, GetAllTopItemsResponse output) {
 		if (output.status.equals(StatusType.StatusTypeSuccess)) {
 			showMorePanel.setVisible(true);
+
+			if (SessionController.get().isLoggedInUserAdmin() && output.freeRanks != null && output.freeRanks.size() > 0
+					&& output.freeRanks.get(0).code != null) {
+				mAll.setText(ALL_TEXT + " (" + output.freeRanks.get(0).code.toString() + ")");
+			}
+
 		} else {
 			RankController.get().updateRowCount(0, true);
 			showMorePanel.setVisible(false);
