@@ -7,6 +7,9 @@
 //
 package io.reflection.app.client.page.admin;
 
+import io.reflection.app.api.admin.shared.call.GetUsersRequest;
+import io.reflection.app.api.admin.shared.call.GetUsersResponse;
+import io.reflection.app.api.admin.shared.call.event.GetUsersEventHandler;
 import io.reflection.app.api.blog.shared.call.DeleteUserRequest;
 import io.reflection.app.api.blog.shared.call.DeleteUserResponse;
 import io.reflection.app.api.blog.shared.call.event.DeleteUserEventHandler;
@@ -29,6 +32,7 @@ import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -38,7 +42,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
-import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.TextBox;
@@ -48,7 +51,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author billy1380
  * 
  */
-public class UsersPage extends Page implements DeleteUserEventHandler {
+public class UsersPage extends Page implements DeleteUserEventHandler, GetUsersEventHandler {
 
 	private static UsersPageUiBinder uiBinder = GWT.create(UsersPageUiBinder.class);
 
@@ -62,6 +65,8 @@ public class UsersPage extends Page implements DeleteUserEventHandler {
 
 	@UiField TextBox queryTextBox;
 
+	Image i = new Image(Images.INSTANCE.spinner());
+
 	public UsersPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
@@ -72,7 +77,8 @@ public class UsersPage extends Page implements DeleteUserEventHandler {
 		UserController.get().addDataDisplay(usersTable);
 		simplePager.setDisplay(usersTable);
 
-		queryTextBox.getElement().setAttribute("placeholder", "User");
+		queryTextBox.getElement().setAttribute("placeholder", "Find a user");
+
 	}
 
 	/*
@@ -85,6 +91,7 @@ public class UsersPage extends Page implements DeleteUserEventHandler {
 		super.onAttach();
 
 		register(EventController.get().addHandlerToSource(DeleteUserEventHandler.TYPE, UserController.get(), this));
+		register(EventController.get().addHandlerToSource(GetUsersEventHandler.TYPE, UserController.get(), this));
 	}
 
 	private void createColumns() {
@@ -96,10 +103,7 @@ public class UsersPage extends Page implements DeleteUserEventHandler {
 			}
 
 		};
-
-		TextHeader nameHeader = new TextHeader("Name");
-		nameHeader.setHeaderStyleNames("col-md-1");
-		usersTable.addColumn(name, nameHeader);
+		usersTable.addColumn(name, "Name");
 
 		TextColumn<User> company = new TextColumn<User>() {
 
@@ -109,10 +113,7 @@ public class UsersPage extends Page implements DeleteUserEventHandler {
 			}
 
 		};
-
-		TextHeader companyHeader = new TextHeader("Company");
-		companyHeader.setHeaderStyleNames("col-md-1");
-		usersTable.addColumn(company, companyHeader);
+		usersTable.addColumn(company, "Company");
 
 		Column<User, SafeHtml> email = new Column<User, SafeHtml>(new SafeHtmlCell()) {
 
@@ -123,10 +124,7 @@ public class UsersPage extends Page implements DeleteUserEventHandler {
 				return SafeHtmlUtils.fromTrustedString("<a href=\"mailto:" + s + "\">" + s + "</a>");
 			}
 		};
-
-		TextHeader emailHeader = new TextHeader("E-mail");
-		emailHeader.setHeaderStyleNames("col-md-3");
-		usersTable.addColumn(email, emailHeader);
+		usersTable.addColumn(email, "E-mail");
 
 		SafeHtmlCell prototype = new SafeHtmlCell();
 
@@ -216,26 +214,18 @@ public class UsersPage extends Page implements DeleteUserEventHandler {
 
 	@UiHandler("queryTextBox")
 	void onKeyPressed(KeyUpEvent event) {
-		if (queryTextBox.getText().length() >= 3) {
-			UserController.get().searchUser(queryTextBox.getText());
-		} else {
-
+		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
+			queryTextBox.setEnabled(false);
+			simplePager.setPageStart(0);
+			UserController.get().updateRowCount(0, false);
+			UserController.get().reset();
+			if (queryTextBox.getText().length() >= 1) { // Execute search
+				UserController.get().fetchUsersQuery(queryTextBox.getText());
+			} else { // Get all users
+				UserController.get().fetchUsers();
+			}
 		}
 	}
-
-	//
-	// String userId = mStack.getParameter(0);
-	// String roleName = mStack.getParameter(1);
-	//
-	// // TODO: this should not really be here (and the navigation controller should probably not be responsible for actions)
-	// if (userId != null) {
-	// if (roleName.equalsIgnoreCase("admin")) {
-	// UserController.get().makeAdmin(Long.valueOf(userId));
-	// } else if (roleName.equals("beta")) {
-	// UserController.get().makeBeta(Long.valueOf(userId));
-	// }
-	// }
-	//
 
 	/*
 	 * (non-Javadoc)
@@ -257,6 +247,28 @@ public class UsersPage extends Page implements DeleteUserEventHandler {
 	@Override
 	public void deleteUserFailure(DeleteUserRequest input, Throwable caught) {
 		preloader.hide();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.admin.shared.call.event.GetUsersEventHandler#getUsersSuccess(io.reflection.app.api.admin.shared.call.GetUsersRequest,
+	 * io.reflection.app.api.admin.shared.call.GetUsersResponse)
+	 */
+	@Override
+	public void getUsersSuccess(GetUsersRequest input, GetUsersResponse output) {
+		queryTextBox.setEnabled(true);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.admin.shared.call.event.GetUsersEventHandler#getUsersFailure(io.reflection.app.api.admin.shared.call.GetUsersRequest,
+	 * java.lang.Throwable)
+	 */
+	@Override
+	public void getUsersFailure(GetUsersRequest input, Throwable caught) {
+		queryTextBox.setEnabled(true);
 	}
 
 }
