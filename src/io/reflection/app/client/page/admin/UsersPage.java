@@ -7,9 +7,6 @@
 //
 package io.reflection.app.client.page.admin;
 
-import io.reflection.app.api.admin.shared.call.GetUsersRequest;
-import io.reflection.app.api.admin.shared.call.GetUsersResponse;
-import io.reflection.app.api.admin.shared.call.event.GetUsersEventHandler;
 import io.reflection.app.api.blog.shared.call.DeleteUserRequest;
 import io.reflection.app.api.blog.shared.call.DeleteUserResponse;
 import io.reflection.app.api.blog.shared.call.event.DeleteUserEventHandler;
@@ -32,7 +29,6 @@ import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -51,7 +47,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author billy1380
  * 
  */
-public class UsersPage extends Page implements DeleteUserEventHandler, GetUsersEventHandler {
+public class UsersPage extends Page implements DeleteUserEventHandler {
 
 	private static UsersPageUiBinder uiBinder = GWT.create(UsersPageUiBinder.class);
 
@@ -64,6 +60,7 @@ public class UsersPage extends Page implements DeleteUserEventHandler, GetUsersE
 	@UiField Preloader preloader;
 
 	@UiField TextBox queryTextBox;
+	private String query = "";
 
 	Image i = new Image(Images.INSTANCE.spinner());
 
@@ -91,7 +88,6 @@ public class UsersPage extends Page implements DeleteUserEventHandler, GetUsersE
 		super.onAttach();
 
 		register(EventController.get().addHandlerToSource(DeleteUserEventHandler.TYPE, UserController.get(), this));
-		register(EventController.get().addHandlerToSource(GetUsersEventHandler.TYPE, UserController.get(), this));
 	}
 
 	private void createColumns() {
@@ -214,13 +210,13 @@ public class UsersPage extends Page implements DeleteUserEventHandler, GetUsersE
 
 	@UiHandler("queryTextBox")
 	void onKeyPressed(KeyUpEvent event) {
-		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
-			queryTextBox.setEnabled(false);
+		if (!queryTextBox.getText().equals(query)) {
+			query = queryTextBox.getText();
 			simplePager.setPageStart(0);
 			UserController.get().updateRowCount(0, false);
 			UserController.get().reset();
-			if (queryTextBox.getText().length() >= 1) { // Execute search
-				UserController.get().fetchUsersQuery(queryTextBox.getText());
+			if (query.length() >= 1) { // Execute search
+				UserController.get().fetchUsersQuery(query);
 			} else { // Get all users
 				UserController.get().fetchUsers();
 			}
@@ -247,28 +243,6 @@ public class UsersPage extends Page implements DeleteUserEventHandler, GetUsersE
 	@Override
 	public void deleteUserFailure(DeleteUserRequest input, Throwable caught) {
 		preloader.hide();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.api.admin.shared.call.event.GetUsersEventHandler#getUsersSuccess(io.reflection.app.api.admin.shared.call.GetUsersRequest,
-	 * io.reflection.app.api.admin.shared.call.GetUsersResponse)
-	 */
-	@Override
-	public void getUsersSuccess(GetUsersRequest input, GetUsersResponse output) {
-		queryTextBox.setEnabled(true);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.api.admin.shared.call.event.GetUsersEventHandler#getUsersFailure(io.reflection.app.api.admin.shared.call.GetUsersRequest,
-	 * java.lang.Throwable)
-	 */
-	@Override
-	public void getUsersFailure(GetUsersRequest input, Throwable caught) {
-		queryTextBox.setEnabled(true);
 	}
 
 }
