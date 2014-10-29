@@ -145,7 +145,7 @@ final class UserService implements IUserService {
 		Connection userConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
 		String searchUsersQuery = String
-				.format("SELECT * FROM `user` WHERE `username` LIKE '%%%1$s%%' OR `forename` LIKE '%%%1$s%%' OR `surname` LIKE '%%%1$s%%' OR `company` LIKE '%%%1$s%%'",
+				.format("SELECT * FROM `user` WHERE `deleted`='n' AND (`username` LIKE '%%%1$s%%' OR `forename` LIKE '%%%1$s%%' OR `surname` LIKE '%%%1$s%%' OR `company` LIKE '%%%1$s%%')",
 						mask);
 
 		if (pager != null) {
@@ -211,7 +211,7 @@ final class UserService implements IUserService {
 		Connection userConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
 		String searchUsersCountQuery = String
-				.format("SELECT COUNT(1) AS `usercount` FROM `user`WHERE `username` LIKE '%%%1$s%%' OR `forename` LIKE '%%%1$s%%' OR `surname` LIKE '%%%1$s%%' OR `company` LIKE '%%%1$s%%'",
+				.format("SELECT COUNT(1) AS `usercount` FROM `user`WHERE `deleted`='n' AND (`username` LIKE '%%%1$s%%' OR `forename` LIKE '%%%1$s%%' OR `surname` LIKE '%%%1$s%%' OR `company` LIKE '%%%1$s%%')",
 						addslashes(mask));
 
 		try {
