@@ -5,6 +5,7 @@ package io.reflection.app;
 
 import static io.reflection.app.objectify.PersistenceService.ofy;
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.collectors.CollectorIOS;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
@@ -136,6 +137,7 @@ public class DevHelperServlet extends HttpServlet {
 		String object = req.getParameter("object");
 		String start = req.getParameter("start");
 		String count = req.getParameter("count");
+		String all = req.getParameter("all");
 		String rankStart = req.getParameter("rankstart");
 		String rankEnd = req.getParameter("rankend");
 		String feedType = req.getParameter("feedtype");
@@ -608,24 +610,33 @@ public class DevHelperServlet extends HttpServlet {
 				success = true;
 			} else if ("archive".equalsIgnoreCase(action)) {
 				if ("rank".equalsIgnoreCase(object)) {
-					try {
-						Store store = new Store();
-						store.a3Code = "ios";
 
-						Country country = new Country();
-						country.a2Code = "us";
+					if (start == null && count == null) {
+						try {
+							Store store = new Store();
+							store.a3Code = "ios";
 
-						Category allCategory = CategoryServiceProvider.provide().getAllCategory(store);
+							Country country = new Country();
+							country.a2Code = "us";
 
-						ItemRankArchiver ar = ItemRankArchiverFactory.getItemRankArchiverForStore(store.a3Code);
+							Category allCategory = CategoryServiceProvider.provide().getAllCategory(store);
 
-						List<Long> rankIds = RankServiceProvider.provide().getRankIds(country, store, allCategory, new Date(0L), new Date());
+							ItemRankArchiver ar = ItemRankArchiverFactory.get();
 
-						for (Long rankId : rankIds) {
-							ar.enqueue(rankId);
+							List<Long> rankIds = RankServiceProvider.provide().getRankIds(country, store, allCategory, new Date(0L), new Date());
+
+							for (Long rankId : rankIds) {
+								ar.enqueue(rankId);
+							}
+						} catch (DataAccessException e) {
+							throw new RuntimeException(e);
 						}
-					} catch (DataAccessException e) {
-						throw new RuntimeException(e);
+					} else {
+						ItemRankArchiver ar = ItemRankArchiverFactory.get();
+						Pager p = new Pager();
+						p.start = start == null ? Long.valueOf(0) : Long.valueOf(start);
+						p.count = count == null ? Long.valueOf(25) : Long.valueOf(count);
+						ar.enqueue(p, all == null ? Boolean.FALSE : Boolean.valueOf(all));
 					}
 				}
 

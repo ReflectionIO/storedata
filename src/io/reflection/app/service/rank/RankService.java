@@ -816,4 +816,93 @@ final class RankService implements IRankService {
 
 		return rankIds;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.rank.IRankService#getRanksCount()
+	 */
+	@Override
+	public List<Rank> getRanksCount() throws DataAccessException {
+		throw new UnsupportedOperationException("Ranks is an exteremely large table and it rows should not be counted like this");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.rank.IRankService#getRanks(io.reflection.app.api.shared.datatypes.Pager)
+	 */
+	@Override
+	public List<Rank> getRanks(Pager pager) throws DataAccessException {
+		List<Rank> ranks = new ArrayList<Rank>();
+
+		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+
+		if (pager.sortDirection == null) {
+			pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
+		}
+
+		switch (pager.sortBy) {
+		case "id":
+		default:
+			pager.sortBy = "id";
+			break;
+		}
+
+		String getRanksQuery = String.format("SELECT * FROM `rank` WHERE `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d", pager.sortBy,
+				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
+
+		try {
+			rankConnection.connect();
+			rankConnection.executeQuery(getRanksQuery);
+
+			while (rankConnection.fetchNextRow()) {
+				Rank rank = toRank(rankConnection);
+
+				if (rank != null) {
+					ranks.add(rank);
+				}
+			}
+		} finally {
+			if (rankConnection != null) {
+				rankConnection.disconnect();
+			}
+		}
+
+		return ranks;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.rank.IRankService#getRankIds(io.reflection.app.api.shared.datatypes.Pager)
+	 */
+	@Override
+	public List<Long> getRankIds(Pager pager) throws DataAccessException {
+		List<Long> rankIds = new ArrayList<Long>();
+
+		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+
+		String getRankIdsQuery = String.format("SELECT `id` FROM `rank` WHERE `deleted`='n' LIMIT %d, %d", pager.start, pager.count);
+
+		try {
+			rankConnection.connect();
+			rankConnection.executeQuery(getRankIdsQuery);
+
+			while (rankConnection.fetchNextRow()) {
+				Long rankId = rankConnection.getCurrentRowLong("id");
+
+				if (rankId != null) {
+					rankIds.add(rankId);
+				}
+			}
+
+		} finally {
+			if (rankConnection != null) {
+				rankConnection.disconnect();
+			}
+		}
+
+		return rankIds;
+	}
 }
