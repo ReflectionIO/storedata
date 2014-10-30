@@ -589,7 +589,7 @@ public final class Core extends ActionHandler {
 				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
 						ApiError.DateRangeOutOfBounds.getMessage("0-60 days: input.end - input.start"));
 
-			ItemRankArchiver archiver = ItemRankArchiverFactory.getItemRankArchiverForStore(store.a3Code);
+			ItemRankArchiver archiver = ItemRankArchiverFactory.get();
 			long[] slices = SliceHelper.offsets(input.start, input.end);
 
 			String key;

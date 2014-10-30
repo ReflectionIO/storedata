@@ -140,7 +140,7 @@ public class PredictorIOS implements Predictor {
 			ItemPropertyWrapper properties = new ItemPropertyWrapper(item.properties);
 
 			if (archiver == null) {
-				archiver = ItemRankArchiverFactory.getItemRankArchiverForStore(rank.source);
+				archiver = ItemRankArchiverFactory.get();
 			}
 
 			boolean usesIap = properties.getBoolean(ItemPropertyLookupServlet.PROPERTY_IAP);
@@ -375,7 +375,7 @@ public class PredictorIOS implements Predictor {
 
 		Map<String, Item> lookup = lookupItemsForRanks(foundRanks);
 
-		ItemRankArchiver archiver = ItemRankArchiverFactory.getItemRankArchiverForStore(simpleModelRun.feedFetch.store);
+		ItemRankArchiver archiver = ItemRankArchiverFactory.get();
 
 		Item item = null;
 		Boolean usesIap = null;
