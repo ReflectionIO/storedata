@@ -15,6 +15,8 @@ import io.reflection.app.api.admin.shared.call.AssignPermissionRequest;
 import io.reflection.app.api.admin.shared.call.AssignPermissionResponse;
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
 import io.reflection.app.api.admin.shared.call.AssignRoleResponse;
+import io.reflection.app.api.admin.shared.call.DeleteUsersRequest;
+import io.reflection.app.api.admin.shared.call.DeleteUsersResponse;
 import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesRequest;
 import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesResponse;
 import io.reflection.app.api.admin.shared.call.GetDataAccountsRequest;
@@ -782,6 +784,59 @@ public final class Admin extends ActionHandler {
 			output.error = convertToErrorAndLog(LOG, e);
 		}
 		LOG.finer("Exiting deleteUser");
+		return output;
+	}
+
+	public DeleteUsersResponse deleteUsers(DeleteUsersRequest input) {
+		LOG.finer("Entering deleteUsers");
+		DeleteUsersResponse output = new DeleteUsersResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("DeleteUsersRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+
+			if (input.allTestUsers) {
+				Role testRole = DataTypeHelper.createRole(DataTypeHelper.ROLE_TEST_ID);
+				input.users = UserServiceProvider.provide().getRoleUsers(testRole);
+			}
+
+			if (input.users != null && input.users.size() > 0) {
+
+				List<DataAccount> linkedAccounts = UserServiceProvider.provide().getUsersDataAccounts(input.users, PagerHelper.infinitePager());
+				List<Long> userIds = new ArrayList<Long>();
+				for (User user : input.users) {
+					userIds.add(user.id);
+				}
+				for (DataAccount la : linkedAccounts) {
+					if (userIds.contains(UserServiceProvider.provide().getDataAccountOwner(la).id)) { // One of the users to delete is the owner
+						la.active = DataTypeHelper.INACTIVE_VALUE;
+						DataAccountServiceProvider.provide().updateDataAccount(la);
+					}
+				}
+
+				UserServiceProvider.provide().deleteUsersAllDataAccounts(input.users);
+
+				UserServiceProvider.provide().revokeUsersAllPermissions(input.users);
+
+				UserServiceProvider.provide().revokeUsersAllRoles(input.users);
+
+				UserServiceProvider.provide().deleteUsers(input.users);
+
+			}
+
+			output.status = StatusType.StatusTypeSuccess;
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting deleteUsers");
 		return output;
 	}
 
