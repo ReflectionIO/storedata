@@ -7,6 +7,9 @@
 //
 package io.reflection.app.client.page.admin;
 
+import io.reflection.app.api.admin.shared.call.DeleteUsersRequest;
+import io.reflection.app.api.admin.shared.call.DeleteUsersResponse;
+import io.reflection.app.api.admin.shared.call.event.DeleteUsersEventHandler;
 import io.reflection.app.api.blog.shared.call.DeleteUserRequest;
 import io.reflection.app.api.blog.shared.call.DeleteUserResponse;
 import io.reflection.app.api.blog.shared.call.event.DeleteUserEventHandler;
@@ -30,6 +33,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -38,16 +42,18 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author billy1380
  * 
  */
-public class UsersPage extends Page implements DeleteUserEventHandler {
+public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUsersEventHandler {
 
 	private static UsersPageUiBinder uiBinder = GWT.create(UsersPageUiBinder.class);
 
@@ -58,11 +64,9 @@ public class UsersPage extends Page implements DeleteUserEventHandler {
 
 	private ConfirmationDialog confirmationDialog;
 	@UiField Preloader preloader;
-
+	@UiField Button deleteTestUsers;
 	@UiField TextBox queryTextBox;
 	private String query = "";
-
-	Image i = new Image(Images.INSTANCE.spinner());
 
 	public UsersPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -88,9 +92,21 @@ public class UsersPage extends Page implements DeleteUserEventHandler {
 		super.onAttach();
 
 		register(EventController.get().addHandlerToSource(DeleteUserEventHandler.TYPE, UserController.get(), this));
+		register(EventController.get().addHandlerToSource(DeleteUsersEventHandler.TYPE, UserController.get(), this));
 	}
 
 	private void createColumns() {
+
+		TextColumn<User> id = new TextColumn<User>() {
+
+			@Override
+			public String getValue(User object) {
+				return object.id.toString();
+			}
+
+		};
+		usersTable.addColumn(id, "Id");
+
 		TextColumn<User> name = new TextColumn<User>() {
 
 			@Override
@@ -122,6 +138,17 @@ public class UsersPage extends Page implements DeleteUserEventHandler {
 		};
 		usersTable.addColumn(email, "E-mail");
 
+		final DateTimeFormat dtf = DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT_DD_MMM_YYYY_HH_MM);
+		TextColumn<User> lastLoginColumn = new TextColumn<User>() {
+
+			@Override
+			public String getValue(User object) {
+				return (object.lastLoggedIn == null) ? "-" : dtf.format(object.lastLoggedIn);
+			}
+
+		};
+		usersTable.addColumn(lastLoginColumn, "Last login");
+
 		SafeHtmlCell prototype = new SafeHtmlCell();
 
 		Column<User, SafeHtml> changeDetails = new Column<User, SafeHtml>(prototype) {
@@ -138,8 +165,8 @@ public class UsersPage extends Page implements DeleteUserEventHandler {
 			@Override
 			public void update(int index, final User object, String value) {
 				switch (value) {
-				case "Make admin":
-					UserController.get().assignUserRoleId(object.id, "ADM");
+				case "Make test":
+					UserController.get().assignUserRoleId(object.id, "TST");
 					break;
 				case "Add to beta":
 					UserController.get().assignUserRoleId(object.id, "BT1");
@@ -174,14 +201,15 @@ public class UsersPage extends Page implements DeleteUserEventHandler {
 		};
 
 		StyledButtonCell prototype1 = new StyledButtonCell("btn", "btn-xs", "btn-default");
-		Column<User, String> makeAdmin = new Column<User, String>(prototype1) {
+
+		Column<User, String> makeTest = new Column<User, String>(prototype1) {
 
 			@Override
 			public String getValue(User object) {
-				return "Make admin";
+				return "Make test";
 			}
 		};
-		makeAdmin.setFieldUpdater(action);
+		makeTest.setFieldUpdater(action);
 
 		Column<User, String> addToBeta = new Column<User, String>(prototype1) {
 
@@ -203,9 +231,33 @@ public class UsersPage extends Page implements DeleteUserEventHandler {
 		delete.setFieldUpdater(action);
 
 		usersTable.addColumn(changeDetails);
-		usersTable.addColumn(makeAdmin);
+		usersTable.addColumn(makeTest);
 		usersTable.addColumn(addToBeta);
 		usersTable.addColumn(delete);
+	}
+
+	@UiHandler("deleteTestUsers")
+	void onDeleteTestUsersClick(ClickEvent event) {
+		confirmationDialog = new ConfirmationDialog("Delete test user", "Are you sure you want to remove all test users ?");
+		confirmationDialog.center();
+
+		confirmationDialog.getCancelButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				confirmationDialog.reset();
+			}
+		});
+
+		confirmationDialog.getDeleteButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				preloader.show();
+				UserController.get().deleteTestUsers();
+				confirmationDialog.reset();
+			}
+		});
 	}
 
 	@UiHandler("queryTextBox")
@@ -231,6 +283,12 @@ public class UsersPage extends Page implements DeleteUserEventHandler {
 	 */
 	@Override
 	public void deleteUserSuccess(DeleteUserRequest input, DeleteUserResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess) {
+			simplePager.setPageStart(0);
+			UserController.get().reset();
+			UserController.get().updateRowCount(0, false);
+			UserController.get().fetchUsers();
+		}
 		preloader.hide();
 	}
 
@@ -242,6 +300,34 @@ public class UsersPage extends Page implements DeleteUserEventHandler {
 	 */
 	@Override
 	public void deleteUserFailure(DeleteUserRequest input, Throwable caught) {
+		preloader.hide();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.admin.shared.call.event.DeleteUsersEventHandler#deleteUsersSuccess(io.reflection.app.api.admin.shared.call.DeleteUsersRequest,
+	 * io.reflection.app.api.admin.shared.call.DeleteUsersResponse)
+	 */
+	@Override
+	public void deleteUsersSuccess(DeleteUsersRequest input, DeleteUsersResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess) {
+			simplePager.setPageStart(0);
+			UserController.get().reset();
+			UserController.get().updateRowCount(0, false);
+			UserController.get().fetchUsers();
+		}
+		preloader.hide();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.admin.shared.call.event.DeleteUsersEventHandler#deleteUsersFailure(io.reflection.app.api.admin.shared.call.DeleteUsersRequest,
+	 * java.lang.Throwable)
+	 */
+	@Override
+	public void deleteUsersFailure(DeleteUsersRequest input, Throwable caught) {
 		preloader.hide();
 	}
 

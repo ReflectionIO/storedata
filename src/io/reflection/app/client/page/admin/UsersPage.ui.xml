@@ -5,18 +5,14 @@
 	<ui:import field="io.reflection.app.client.page.PageType.RegisterPageType" />
 
 	<ui:style>
-	.toolbar-spacing {
+	.toolbar {
 		padding-top: 10px;
 		padding-bottom: 10px;
 	}
 	
-	.add-user {
+	.toolbarItem {
 		display: inline-block;
-	}
-	
-	.search-box {
-		display: inline-block;
-		padding-left: 30px;
+		padding-right: 30px;
 	}
 	</ui:style>
 	<g:HTMLPanel>
@@ -28,13 +24,17 @@
 					<g:HTMLPanel>
 
 
-						<g:HTMLPanel styleName="form-inline {style.toolbar-spacing}">
+						<g:HTMLPanel styleName="form-inline {style.toolbar}">
 
-							<g:HTMLPanel styleName="{style.add-user}">
-								<g:InlineHyperlink styleName="btn btn-default" text="Add user" ui:field="addUser" targetHistoryToken="{RegisterPageType.asTargetHistoryToken}" />
+							<g:HTMLPanel styleName="{style.toolbarItem}">
+								<g:InlineHyperlink styleName="btn btn-default" text="Add user" targetHistoryToken="{RegisterPageType.asTargetHistoryToken}" />
 							</g:HTMLPanel>
 
-							<g:HTMLPanel styleName="{style.search-box}">
+							<g:HTMLPanel styleName="{style.toolbarItem}">
+								<g:Button styleName="btn btn-default" text="Delete test users" ui:field="deleteTestUsers" />
+							</g:HTMLPanel>
+
+							<g:HTMLPanel styleName="{style.toolbarItem}">
 								<g:TextBox ui:field="queryTextBox" styleName="form-control" />
 							</g:HTMLPanel>
 
