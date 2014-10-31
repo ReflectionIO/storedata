@@ -10,6 +10,7 @@ package io.reflection.app.api.admin;
 
 import io.reflection.app.api.admin.shared.call.AssignPermissionRequest;
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
+import io.reflection.app.api.admin.shared.call.DeleteUsersRequest;
 import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesRequest;
 import io.reflection.app.api.admin.shared.call.GetDataAccountsRequest;
 import io.reflection.app.api.admin.shared.call.GetEmailTemplatesRequest;
@@ -121,6 +122,10 @@ public final class AdminJsonServlet extends JsonServlet {
 			DeleteUserRequest input = new DeleteUserRequest();
 			input.fromJson(request);
 			output = service.deleteUser(input).toString();
+		} else if ("DeleteUsers".equals(action)) {
+			DeleteUsersRequest input = new DeleteUsersRequest();
+			input.fromJson(request);
+			output = service.deleteUsers(input).toString();
 		} else if ("GetRolesAndPermissions".equals(action)) {
 			GetRolesAndPermissionsRequest input = new GetRolesAndPermissionsRequest();
 			input.fromJson(request);
