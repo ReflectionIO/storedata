@@ -47,6 +47,7 @@ public class DataTypeHelper {
 	public static final Long ROLE_PREMIUM_ID = Long.valueOf(3);
 	public static final Long ROLE_ALPHA_ID = Long.valueOf(4);
 	public static final Long ROLE_BETA_ID = Long.valueOf(5);
+	public static final Long ROLE_TEST_ID = Long.valueOf(6);
 
 	public static final String STORE_IPHONE_A3_CODE = "iph";
 	public static final String STORE_IPAD_A3_CODE = "ipa";
