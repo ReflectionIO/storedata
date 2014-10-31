@@ -284,6 +284,7 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 	@Override
 	public void deleteUserSuccess(DeleteUserRequest input, DeleteUserResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
+			queryTextBox.setText("");
 			simplePager.setPageStart(0);
 			UserController.get().reset();
 			UserController.get().updateRowCount(0, false);
@@ -312,6 +313,7 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 	@Override
 	public void deleteUsersSuccess(DeleteUsersRequest input, DeleteUsersResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
+			queryTextBox.setText("");
 			simplePager.setPageStart(0);
 			UserController.get().reset();
 			UserController.get().updateRowCount(0, false);
