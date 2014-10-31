@@ -54,6 +54,11 @@ final class UserService implements IUserService {
 		return ServiceType.ServiceTypeUser.toString();
 	}
 
+	private boolean isValidTestUser(User user) {
+		String TEST_EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*\\+test__[0-9]*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+		return (user.username != null) ? user.username.matches(TEST_EMAIL_PATTERN) : false;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -145,6 +150,11 @@ final class UserService implements IUserService {
 
 				addedUser = this.getUser(user.id);
 				addedUser.password = null;
+
+				if (isValidTestUser(user)) {
+					Role testRole = DataTypeHelper.createRole(DataTypeHelper.ROLE_TEST_ID);
+					assignRole(user, testRole);
+				}
 
 				Map<String, Object> values = new HashMap<String, Object>();
 				values.put("user", addedUser);

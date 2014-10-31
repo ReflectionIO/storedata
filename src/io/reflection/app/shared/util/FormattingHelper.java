@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.i18n.client.NumberFormat;
-import com.google.gwt.regexp.shared.RegExp;
 
 /**
  * @author stefanocapuzzi
@@ -28,14 +27,7 @@ public class FormattingHelper {
 	public static final String DATE_FORMAT_YYYY_MM_DD = "yyyy-MM-dd";
 	public static final String DATE_FORMAT_DD_MMM_YYYY_HH_MM = "dd MMM yyyy - HH:mm";
 	public static final float SMALL_MONEY = 0.0000001f;
-	private static final String TEST_EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*\\+test__[0-9]*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-	private static final RegExp REG_EXP_TEST_EMAIL_CHECKER = RegExp.compile(TEST_EMAIL_PATTERN);
-
 	private static Map<String, String> currencySymbolLookup = null;
-
-	public static boolean isValidTestEmail(String toValidate) {
-		return REG_EXP_TEST_EMAIL_CHECKER.test(toValidate);
-	}
 
 	/**
 	 * Returns a currency sumbol or code if none are found
