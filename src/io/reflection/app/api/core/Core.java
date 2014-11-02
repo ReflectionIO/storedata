@@ -7,7 +7,6 @@
 //
 package io.reflection.app.api.core;
 
-import static io.reflection.app.api.PagerHelper.updatePager;
 import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPAD_IOS;
 import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS;
 import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_UNIVERSAL_IOS;
@@ -16,8 +15,8 @@ import static io.reflection.app.service.sale.ISaleService.INAPP_PURCHASE_SUBSCRI
 import static io.reflection.app.service.sale.ISaleService.UPDATE_IPAD_IOS;
 import static io.reflection.app.service.sale.ISaleService.UPDATE_IPHONE_AND_IPOD_TOUCH_IOS;
 import static io.reflection.app.service.sale.ISaleService.UPDATE_UNIVERSAL_IOS;
+import static io.reflection.app.shared.util.PagerHelper.updatePager;
 import io.reflection.app.accountdatacollectors.DataAccountCollectorFactory;
-import io.reflection.app.api.PagerHelper;
 import io.reflection.app.api.ValidationHelper;
 import io.reflection.app.api.core.shared.call.ChangePasswordRequest;
 import io.reflection.app.api.core.shared.call.ChangePasswordResponse;
@@ -116,6 +115,7 @@ import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.service.user.IUserService;
 import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
+import io.reflection.app.shared.util.PagerHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

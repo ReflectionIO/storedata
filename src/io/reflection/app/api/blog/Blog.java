@@ -8,7 +8,7 @@
 //
 package io.reflection.app.api.blog;
 
-import static io.reflection.app.api.PagerHelper.updatePager;
+import static io.reflection.app.shared.util.PagerHelper.updatePager;
 import io.reflection.app.api.ValidationHelper;
 import io.reflection.app.api.blog.shared.call.CreatePostRequest;
 import io.reflection.app.api.blog.shared.call.CreatePostResponse;

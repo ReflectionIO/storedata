@@ -48,16 +48,14 @@ import io.reflection.app.client.handler.user.UserPasswordChangedEventHandler.Use
 import io.reflection.app.client.handler.user.UserRegisteredEventHandler.UserRegistered;
 import io.reflection.app.client.handler.user.UserRegisteredEventHandler.UserRegistrationFailed;
 import io.reflection.app.client.handler.user.UsersEventHandler.ReceivedCount;
-import io.reflection.app.client.handler.user.UsersEventHandler.ReceivedUsers;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.shared.util.PagerHelper;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Collections;
 
+import com.google.gwt.http.client.Request;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.AsyncDataProvider;
@@ -72,13 +70,14 @@ import com.willshex.gson.json.service.shared.StatusType;
  */
 public class UserController extends AsyncDataProvider<User> implements ServiceConstants {
 
-	private List<User> userList = new ArrayList<User>();
-	private long count = -1;
-	private long totalCount = -1;
+	// private List<User> userList = new ArrayList<User>();
+	// private long count = -1;
+	// private long totalCount = -1;
 	private Pager pager;
-	private String searchQuery;
+	private String searchQuery = null;
+	private Request current;
 
-	private Map<Long, User> userLookup = new HashMap<Long, User>();
+	// private Map<Long, User> userLookup = new HashMap<Long, User>();
 
 	private static UserController mOne = null;
 
@@ -90,63 +89,69 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		return mOne;
 	}
 
+	// public void fetchUsers() {
+	//
+	// AdminService service = ServiceCreator.createAdminService();
+	//
+	// final GetUsersRequest input = new GetUsersRequest();
+	// input.accessCode = ACCESS_CODE;
+	//
+	// input.session = SessionController.get().getSessionForApiCall();
+	//
+	// if (pager == null) {
+	// pager = new Pager();
+	// pager.count = SHORT_STEP;
+	// pager.start = Pager.DEFAULT_START;
+	// pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
+	// }
+	// input.pager = pager;
+	//
+	// current = service.getUsers(input, new AsyncCallback<GetUsersResponse>() {
+	//
+	// @Override
+	// public void onSuccess(GetUsersResponse output) {
+	// if (output.status == StatusType.StatusTypeSuccess) {
+	// // if (output.users != null) {
+	// // userList.addAll(output.users);
+	// //
+	// // addToLookup(output.users);
+	// // }
+	//
+	// if (output.pager != null) {
+	// pager = output.pager;
+	//
+	// if (pager.totalCount != null) {
+	// // count = totalCount = pager.totalCount.longValue();
+	//
+	// EventController.get().fireEventFromSource(new ReceivedCount(output.pager.totalCount), UserController.this);
+	// }
+	// }
+	//
+	// updateRowCount(Integer.MAX_VALUE, false);
+	// updateRowData(input.pager.start.intValue(), output.users == null ? Collections.<User> emptyList() : output.users);
+	//
+	// EventController.get().fireEventFromSource(new ReceivedUsers(output.users), UserController.this);
+	// EventController.get().fireEventFromSource(new GetUsersSuccess(input, output), UserController.this);
+	// }
+	// }
+	//
+	// @Override
+	// public void onFailure(Throwable caught) {
+	// EventController.get().fireEventFromSource(new GetUsersFailure(input, caught), UserController.this);
+	// }
+	// });
+	// }
+
 	public void fetchUsers() {
-
-		AdminService service = ServiceCreator.createAdminService();
-
-		final GetUsersRequest input = new GetUsersRequest();
-		input.accessCode = ACCESS_CODE;
-
-		input.session = SessionController.get().getSessionForApiCall();
-
-		if (pager == null) {
-			pager = new Pager();
-			pager.count = SHORT_STEP;
-			pager.start = Long.valueOf(0);
-			pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
-		}
-		input.pager = pager;
-
-		service.getUsers(input, new AsyncCallback<GetUsersResponse>() {
-
-			@Override
-			public void onSuccess(GetUsersResponse output) {
-				if (output.status == StatusType.StatusTypeSuccess) {
-					if (output.users != null) {
-						userList.addAll(output.users);
-
-						addToLookup(output.users);
-					}
-
-					if (output.pager != null) {
-						pager = output.pager;
-
-						if (pager.totalCount != null) {
-							count = totalCount = pager.totalCount.longValue();
-
-							EventController.get().fireEventFromSource(new ReceivedCount(output.pager.totalCount), UserController.this);
-						}
-					}
-
-					updateRowCount((int) count, true);
-					updateRowData(
-							input.pager.start.intValue(),
-							userList.subList(input.pager.start.intValue(),
-									Math.min(input.pager.start.intValue() + input.pager.count.intValue(), pager.totalCount.intValue())));
-
-					EventController.get().fireEventFromSource(new ReceivedUsers(output.users), UserController.this);
-					EventController.get().fireEventFromSource(new GetUsersSuccess(input, output), UserController.this);
-				}
-			}
-
-			@Override
-			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new GetUsersFailure(input, caught), UserController.this);
-			}
-		});
+		fetchUsers(searchQuery);
 	}
 
-	public void fetchUsersQuery(String query) {
+	public void fetchUsers(String query) {
+		if (current != null) {
+			current.cancel();
+			current = null;
+		}
+
 		AdminService service = ServiceCreator.createAdminService();
 
 		final GetUsersRequest input = new GetUsersRequest();
@@ -157,44 +162,44 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		if (pager == null) {
 			pager = new Pager();
 			pager.count = SHORT_STEP;
-			pager.start = Long.valueOf(0);
+			pager.start = Pager.DEFAULT_START;
 			pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
 		}
 		input.pager = pager;
 
 		input.query = searchQuery = query;
 
-		service.getUsers(input, new AsyncCallback<GetUsersResponse>() {
+		if ("" == input.query) {
+			input.query = searchQuery = null;
+		}
+
+		current = service.getUsers(input, new AsyncCallback<GetUsersResponse>() {
 
 			@Override
 			public void onSuccess(GetUsersResponse output) {
+				current = null;
 				if (output.status == StatusType.StatusTypeSuccess) {
 
-					if (output.users != null) {
-						userList.addAll(output.users);
-						addToLookup(output.users);
-					}
+					// if (output.users != null) {}
 
 					if (output.pager != null) {
 						pager = output.pager;
 
-						if (pager.totalCount != null) {
-							count = pager.totalCount.longValue();
-						}
+						// if (pager.totalCount != null) {
+						// count = pager.totalCount.longValue();
+						// }
 					}
 
-					updateRowCount((int) count, true);
-					updateRowData(
-							input.pager.start.intValue(),
-							userList.subList(input.pager.start.intValue(),
-									Math.min(input.pager.start.intValue() + input.pager.count.intValue(), pager.totalCount.intValue())));
-
-					EventController.get().fireEventFromSource(new GetUsersSuccess(input, output), UserController.this);
+					updateRowCount(Integer.MAX_VALUE, false);
+					updateRowData(input.pager.start.intValue(), output.users == null ? Collections.<User> emptyList() : output.users);
 				}
+
+				EventController.get().fireEventFromSource(new GetUsersSuccess(input, output), UserController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
+				current = null;
 				EventController.get().fireEventFromSource(new GetUsersFailure(input, caught), UserController.this);
 			}
 		});
@@ -203,35 +208,36 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 	public void reset() {
 		pager = null;
-		count = -1;
-		userList.clear();
+		// count = -1;
 		searchQuery = null;
+
+		updateRowCount(0, false);
 	}
 
-	public List<User> getUsers() {
-		return userList;
-	}
+	// public List<User> getUsers() {
+	// return userList;
+	// }
 
-	private long getUsersCount() {
-		return count;
-	}
+	// private long getUsersCount() {
+	// return count;
+	// }
 
-	public long getUsersTotalCount() {
-		return totalCount;
-	}
+	// public long getUsersTotalCount() {
+	// return totalCount;
+	// }
 
-	public boolean hasUsers() {
-		return getUsersCount() > 0;
-	}
+	// public boolean hasUsers() {
+	// return getUsersCount() > 0;
+	// }
 
-	/**
-	 * Return true if Users -already fetched
-	 * 
-	 * @return
-	 */
-	public boolean usersFetched() {
-		return count != -1;
-	}
+	// /**
+	// * Return true if Users -already fetched
+	// *
+	// * @return
+	// */
+	// public boolean usersFetched() {
+	// return count != -1;
+	// }
 
 	/*
 	 * (non-Javadoc)
@@ -243,18 +249,22 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 		Range r = display.getVisibleRange();
 
-		int start = r.getStart();
-		int end = start + r.getLength();
+		// int start = r.getStart();
+		// int end = start + r.getLength();
 
-		if (!usersFetched() || (usersFetched() && getUsersCount() != userList.size() && end > userList.size())) {
-			if (searchQuery == null) {
-				fetchUsers();
-			} else {
-				fetchUsersQuery(searchQuery);
-			}
-		} else {
-			updateRowData(start, userList.size() == 0 ? userList : userList.subList(start, Math.min(userList.size(), end)));
-		}
+		pager = PagerHelper.newDefaultPager();
+		pager.start = Long.valueOf(r.getStart());
+		pager.count = Long.valueOf(r.getLength());
+
+		// if (!usersFetched() || (usersFetched() && getUsersCount() != userList.size() && end > userList.size())) {
+		// if (searchQuery == null) {
+		fetchUsers();
+		// } else {
+		// fetchUsersQuery(searchQuery);
+		// }
+		// } else {
+		// updateRowData(start, userList.size() == 0 ? userList : userList.subList(start, Math.min(userList.size(), end)));
+		// }
 
 	}
 
@@ -274,7 +284,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 			@Override
 			public void onSuccess(GetUsersCountResponse result) {
 				if (result.status == StatusType.StatusTypeSuccess) {
-					count = result.count;
+					// count = result.count;
 
 					EventController.get().fireEventFromSource(new ReceivedCount(result.count), UserController.this);
 				}
@@ -454,12 +464,13 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 			@Override
 			public void onSuccess(DeleteUserResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
-					userList.remove(userLookup.get(input.user.id.toString()));
-					userLookup.remove(input.user.id.toString());
-					count--;
-					pager.totalCount = Long.valueOf(pager.totalCount.longValue() - 1);
-					updateRowCount((int) count, true);
-					updateRowData(0, userList);
+					// userList.remove(userLookup.get(input.user.id.toString()));
+					// userLookup.remove(input.user.id.toString());
+					// count--;
+					// pager.totalCount = Long.valueOf(pager.totalCount.longValue() - 1);
+					// updateRowCount(Integer.MAX_VALUE, false);
+					PagerHelper.moveBackward(pager);
+					fetchUsers();
 				}
 				EventController.get().fireEventFromSource(new DeleteUserEventHandler.DeleteUserSuccess(input, output), UserController.this);
 			}
@@ -542,6 +553,11 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 			@Override
 			public void onSuccess(RegisterUserResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
+					// userList.clear();
+					PagerHelper.moveBackward(pager);
+
+					fetchUsers();
+
 					EventController.get().fireEventFromSource(new UserRegistered(email), UserController.this);
 				} else {
 					EventController.get().fireEventFromSource(new UserRegistrationFailed(output.error), UserController.this);
@@ -584,6 +600,13 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 			@Override
 			public void onSuccess(RegisterUserResponse output) {
+				if (output != null && output.status == StatusType.StatusTypeSuccess) {
+					// userList.clear();
+					PagerHelper.moveBackward(pager);
+
+					fetchUsers();
+				}
+
 				EventController.get().fireEventFromSource(new RegisterUserEventHandler.RegisterUserSuccess(input, output), UserController.this);
 			}
 
@@ -594,15 +617,15 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		});
 	}
 
-	private void addToLookup(List<User> users) {
-		for (User user : users) {
-			userLookup.put(user.id, user);
-		}
-	}
+	// private void addToLookup(List<User> users) {
+	// for (User user : users) {
+	// userLookup.put(user.id, user);
+	// }
+	// }
 
-	public User getUser(Long id) {
-		return userLookup.get(id);
-	}
+	// public User getUser(Long id) {
+	// return userLookup.get(id);
+	// }
 
 	/**
 	 * Fetches user details from the server. Details of fetched user (if the call is successful) will be broadcast on the event bus.
@@ -626,7 +649,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 			public void onSuccess(GetUserDetailsResponse output) {
 
 				if (output.status == StatusType.StatusTypeSuccess && output.user != null) {
-					userLookup.put(output.user.id, output.user);
+					// userLookup.put(output.user.id, output.user);
 				}
 
 				EventController.get().fireEventFromSource(new GetUserDetailsEventHandler.GetUserDetailsSuccess(input, output), UserController.this);
@@ -659,7 +682,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 			public void onSuccess(GetUserDetailsResponse output) {
 
 				if (output.status == StatusType.StatusTypeSuccess && output.user != null) {
-					userLookup.put(output.user.id, output.user);
+					// userLook|up.put(output.user.id, output.user);
 				}
 
 				EventController.get().fireEventFromSource(new GetUserDetailsEventHandler.GetUserDetailsSuccess(input, output), UserController.this);
