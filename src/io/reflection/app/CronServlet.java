@@ -8,7 +8,6 @@
 package io.reflection.app;
 
 import static io.reflection.app.objectify.PersistenceService.ofy;
-import io.reflection.app.api.PagerHelper;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.apple.ItemPropertyLookupServlet;
@@ -25,6 +24,7 @@ import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvide
 import io.reflection.app.service.dataaccountfetch.IDataAccountFetchService;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
+import io.reflection.app.shared.util.PagerHelper;
 
 import java.io.IOException;
 import java.util.List;

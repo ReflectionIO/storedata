@@ -265,13 +265,8 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 		if (!queryTextBox.getText().equals(query)) {
 			query = queryTextBox.getText();
 			simplePager.setPageStart(0);
-			UserController.get().updateRowCount(0, false);
 			UserController.get().reset();
-			if (query.length() >= 1) { // Execute search
-				UserController.get().fetchUsersQuery(query);
-			} else { // Get all users
-				UserController.get().fetchUsers();
-			}
+			UserController.get().fetchUsers(query);
 		}
 	}
 

@@ -140,7 +140,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 		// set the overall tab title (this is because it is modified for admins to contain the gather code)
 		mAll.setText(ALL_TEXT);
-		
+
 		showModelPredictions = SessionController.get().isLoggedInUserAdmin();
 
 		createColumns();
@@ -512,7 +512,6 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 				String currentFilter = FilterController.get().asRankFilterString();
 
 				if (currentFilter != null && currentFilter.length() > 0) {
-					mAll.setText(ALL_TEXT);
 					mAll.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, currentFilter));
 					mPaid.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", PAID_LIST_TYPE, currentFilter));
 					mFree.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", FREE_LIST_TYPE, currentFilter));
@@ -578,11 +577,17 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		if (output.status.equals(StatusType.StatusTypeSuccess)) {
 			showMorePanel.setVisible(true);
 
-			if (SessionController.get().isLoggedInUserAdmin() && output.freeRanks != null && output.freeRanks.size() > 0
-					&& output.freeRanks.get(0).code != null) {
-				mAll.setText(ALL_TEXT + " (" + output.freeRanks.get(0).code.toString() + ")");
+			if (SessionController.get().isLoggedInUserAdmin()) {
+				if (output.freeRanks != null && output.freeRanks.size() > 0 && output.freeRanks.get(0).code != null) {
+					mAll.setText(ALL_TEXT + " (" + output.freeRanks.get(0).code.toString() + ")");
+				} else if (output.paidRanks != null && output.paidRanks.size() > 0 && output.paidRanks.get(0).code != null) {
+					mAll.setText(ALL_TEXT + " (" + output.paidRanks.get(0).code.toString() + ")");
+				} else if (output.grossingRanks != null && output.grossingRanks.size() > 0 && output.grossingRanks.get(0).code != null) {
+					mAll.setText(ALL_TEXT + " (" + output.grossingRanks.get(0).code.toString() + ")");
+				} else {
+					mAll.setText(ALL_TEXT);
+				}
 			}
-
 		} else {
 			RankController.get().updateRowCount(0, true);
 			showMorePanel.setVisible(false);

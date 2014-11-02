@@ -13,23 +13,18 @@ package io.reflection.app.itemrankarchivers;
  */
 public class ItemRankArchiverFactory {
 
+	private static ItemRankArchiver one = null;
+
 	/**
 	 * @param store
 	 * @return
 	 */
-	public static ItemRankArchiver getItemRankArchiverForStore(String store) {
-		ItemRankArchiver predictor = null;
-
-		if ("ios".equals(store.toLowerCase())) {
-			// ios store
-			predictor = new DefaultItemRankArchiver();
-		} else if ("azn".equals(store.toLowerCase())) {
-			// amazon store
-		} else if ("gpl".equals(store.toLowerCase())) {
-			// google play store
+	public static ItemRankArchiver get() {
+		if (one == null) {
+			one = new DefaultItemRankArchiver();
 		}
 
-		return predictor;
+		return one;
 	}
 
 }

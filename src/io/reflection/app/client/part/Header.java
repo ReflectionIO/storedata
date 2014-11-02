@@ -444,11 +444,11 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 	private void addAdmin() {
 		if (SessionController.get().isLoggedInUserAdmin()) {
-			if (UserController.get().getUsersTotalCount() >= 0) {
-				totalUsers.setInnerText(Long.toString(UserController.get().getUsersTotalCount()));
-			} else {
+//			if (UserController.get().getUsersTotalCount() >= 0) {
+//				totalUsers.setInnerText(Long.toString(UserController.get().getUsersTotalCount()));
+//			} else {
 				UserController.get().fetchUsersCount();
-			}
+//			}
 
 			navList.getParentElement().appendChild(adminList);
 		} else {

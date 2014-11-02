@@ -8,8 +8,7 @@
 //
 package io.reflection.app.api.admin;
 
-import static io.reflection.app.api.PagerHelper.updatePager;
-import io.reflection.app.api.PagerHelper;
+import static io.reflection.app.shared.util.PagerHelper.updatePager;
 import io.reflection.app.api.ValidationHelper;
 import io.reflection.app.api.admin.shared.call.AssignPermissionRequest;
 import io.reflection.app.api.admin.shared.call.AssignPermissionResponse;
@@ -99,6 +98,7 @@ import io.reflection.app.service.user.IUserService;
 import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.app.shared.util.FormattingHelper;
+import io.reflection.app.shared.util.PagerHelper;
 
 import java.util.ArrayList;
 import java.util.Calendar;

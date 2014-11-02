@@ -8,7 +8,6 @@
 package io.reflection.app.predictors;
 
 import io.reflection.app.CallServiceMethodServlet;
-import io.reflection.app.api.PagerHelper;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
@@ -39,6 +38,7 @@ import io.reflection.app.service.modelrun.ModelRunServiceProvider;
 import io.reflection.app.service.rank.IRankService;
 import io.reflection.app.service.rank.RankServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
+import io.reflection.app.shared.util.PagerHelper;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
@@ -140,7 +140,7 @@ public class PredictorIOS implements Predictor {
 			ItemPropertyWrapper properties = new ItemPropertyWrapper(item.properties);
 
 			if (archiver == null) {
-				archiver = ItemRankArchiverFactory.getItemRankArchiverForStore(rank.source);
+				archiver = ItemRankArchiverFactory.get();
 			}
 
 			boolean usesIap = properties.getBoolean(ItemPropertyLookupServlet.PROPERTY_IAP);
@@ -375,7 +375,7 @@ public class PredictorIOS implements Predictor {
 
 		Map<String, Item> lookup = lookupItemsForRanks(foundRanks);
 
-		ItemRankArchiver archiver = ItemRankArchiverFactory.getItemRankArchiverForStore(simpleModelRun.feedFetch.store);
+		ItemRankArchiver archiver = ItemRankArchiverFactory.get();
 
 		Item item = null;
 		Boolean usesIap = null;

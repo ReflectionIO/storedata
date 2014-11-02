@@ -8,6 +8,7 @@
 package io.reflection.app.itemrankarchivers;
 
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.archivablekeyvalue.peristence.ValueAppender;
 import io.reflection.app.archivablekeyvalue.peristence.objectify.ArchivableKeyValue;
 import io.reflection.app.archivablekeyvalue.peristence.objectify.KeyValueArchiveManager;
@@ -245,5 +246,72 @@ public class DefaultItemRankArchiver implements ItemRankArchiver {
 		}
 
 		return ranks;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.itemrankarchivers.ItemRankArchiver#enqueue(io.reflection.app.api.shared.datatypes.Pager, java.lang.Boolean)
+	 */
+	@Override
+	public void enqueue(Pager pager, Boolean next) {
+		try {
+			List<Long> rankIds = RankServiceProvider.provide().getRankIds(pager);
+
+			if (rankIds != null) {
+				for (Long rankId : rankIds) {
+					enqueue(rankId);
+				}
+
+				if (next != null && next.booleanValue() && pager.count.intValue() == rankIds.size()) {
+					enqueueNext(pager);
+				}
+			}
+		} catch (DataAccessException daEx) {
+			throw new RuntimeException(daEx);
+		}
+
+	}
+
+	private void enqueueNext(Pager pager) {
+		if (LOG.isLoggable(GaeLevel.TRACE)) {
+			LOG.log(GaeLevel.TRACE, "Entering...");
+		}
+
+		try {
+			Queue queue = QueueFactory.getQueue("archive");
+
+			TaskOptions options = TaskOptions.Builder.withUrl("/archive").method(Method.POST);
+			options.param("type", "itemrank");
+			options.param("pager", Boolean.TRUE.toString());
+			options.param("next", Boolean.TRUE.toString());
+			options.param("start", Long.toString(pager.start.longValue() + pager.count.longValue()));
+			options.param("count", pager.count.toString());
+
+			try {
+				queue.add(options);
+			} catch (TransientFailureException ex) {
+
+				if (LOG.isLoggable(Level.WARNING)) {
+					LOG.warning(String.format("Could not queue a message because of [%s] - will retry it once", ex.toString()));
+				}
+
+				// retry once
+				try {
+					queue.add(options);
+				} catch (TransientFailureException reEx) {
+					if (LOG.isLoggable(Level.SEVERE)) {
+						LOG.log(Level.SEVERE,
+								String.format("Retry of with payload [%s] failed while adding to queue [%s] twice", options.toString(), queue.getQueueName()),
+								reEx);
+					}
+				}
+			}
+		} finally {
+			if (LOG.isLoggable(GaeLevel.TRACE)) {
+				LOG.log(GaeLevel.TRACE, "Exiting...");
+			}
+		}
+
 	}
 }
