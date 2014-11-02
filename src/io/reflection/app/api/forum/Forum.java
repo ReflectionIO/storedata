@@ -8,7 +8,7 @@
 //
 package io.reflection.app.api.forum;
 
-import static io.reflection.app.api.PagerHelper.updatePager;
+import static io.reflection.app.shared.util.PagerHelper.updatePager;
 import io.reflection.app.api.ValidationHelper;
 import io.reflection.app.api.forum.shared.call.AddReplyRequest;
 import io.reflection.app.api.forum.shared.call.AddReplyResponse;

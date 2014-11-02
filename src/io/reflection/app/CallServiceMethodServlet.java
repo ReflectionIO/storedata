@@ -7,7 +7,6 @@
 //
 package io.reflection.app;
 
-import io.reflection.app.api.PagerHelper;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
@@ -22,6 +21,7 @@ import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
+import io.reflection.app.shared.util.PagerHelper;
 
 import java.io.IOException;
 import java.util.Calendar;
