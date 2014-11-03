@@ -280,10 +280,12 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 	public void deleteUserSuccess(DeleteUserRequest input, DeleteUserResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			queryTextBox.setText("");
-			simplePager.setPageStart(0);
 			UserController.get().reset();
-			UserController.get().updateRowCount(0, false);
-			UserController.get().fetchUsers();
+			if (simplePager.getPageStart() >= simplePager.getPageSize()) {
+				simplePager.setPageStart(0);
+			} else {
+				UserController.get().fetchUsers();
+			}
 		}
 		preloader.hide();
 	}
@@ -309,10 +311,12 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 	public void deleteUsersSuccess(DeleteUsersRequest input, DeleteUsersResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			queryTextBox.setText("");
-			simplePager.setPageStart(0);
 			UserController.get().reset();
-			UserController.get().updateRowCount(0, false);
-			UserController.get().fetchUsers();
+			if (simplePager.getPageStart() >= simplePager.getPageSize()) {
+				simplePager.setPageStart(0);
+			} else {
+				UserController.get().fetchUsers();
+			}
 		}
 		preloader.hide();
 	}

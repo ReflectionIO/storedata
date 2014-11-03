@@ -467,6 +467,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 			@Override
 			public void onSuccess(DeleteUserResponse output) {
+				PagerHelper.moveBackward(pager);
 				EventController.get().fireEventFromSource(new DeleteUserEventHandler.DeleteUserSuccess(input, output), UserController.this);
 			}
 
@@ -740,6 +741,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 			@Override
 			public void onSuccess(DeleteUsersResponse output) {
+				PagerHelper.moveBackward(pager);				
 				EventController.get().fireEventFromSource(new DeleteUsersEventHandler.DeleteUsersSuccess(input, output), UserController.this);
 			}
 
