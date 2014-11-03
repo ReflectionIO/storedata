@@ -12,6 +12,8 @@ import io.reflection.app.api.admin.shared.call.AssignPermissionRequest;
 import io.reflection.app.api.admin.shared.call.AssignPermissionResponse;
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
 import io.reflection.app.api.admin.shared.call.AssignRoleResponse;
+import io.reflection.app.api.admin.shared.call.DeleteUsersRequest;
+import io.reflection.app.api.admin.shared.call.DeleteUsersResponse;
 import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesRequest;
 import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesResponse;
 import io.reflection.app.api.admin.shared.call.GetDataAccountsRequest;
@@ -696,6 +698,39 @@ public final class AdminService extends JsonService {
 		} catch (RequestException exception) {
 			output.onFailure(exception);
 			onCallFailure(AdminService.this, AdminMethodDeleteUser, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String AdminMethodDeleteUsers = "DeleteUsers";
+
+	public Request deleteUsers(final DeleteUsersRequest input, final AsyncCallback<DeleteUsersResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(AdminMethodDeleteUsers, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						DeleteUsersResponse outputParameter = new DeleteUsersResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodDeleteUsers, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodDeleteUsers, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(AdminService.this, AdminMethodDeleteUsers, input, exception);
+				}
+			});
+			onCallStart(AdminService.this, AdminMethodDeleteUsers, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodDeleteUsers, input, exception);
 		}
 		return handle;
 	}

@@ -12,6 +12,8 @@ import io.reflection.app.api.admin.shared.call.AssignPermissionRequest;
 import io.reflection.app.api.admin.shared.call.AssignPermissionResponse;
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
 import io.reflection.app.api.admin.shared.call.AssignRoleResponse;
+import io.reflection.app.api.admin.shared.call.DeleteUsersRequest;
+import io.reflection.app.api.admin.shared.call.DeleteUsersResponse;
 import io.reflection.app.api.admin.shared.call.GetRolesAndPermissionsRequest;
 import io.reflection.app.api.admin.shared.call.GetRolesAndPermissionsResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersCountRequest;
@@ -26,6 +28,7 @@ import io.reflection.app.api.admin.shared.call.SetPasswordRequest;
 import io.reflection.app.api.admin.shared.call.SetPasswordResponse;
 import io.reflection.app.api.admin.shared.call.event.AssignPermissionEventHandler;
 import io.reflection.app.api.admin.shared.call.event.AssignRoleEventHandler;
+import io.reflection.app.api.admin.shared.call.event.DeleteUsersEventHandler;
 import io.reflection.app.api.admin.shared.call.event.GetRolesAndPermissionsEventHandler;
 import io.reflection.app.api.admin.shared.call.event.GetUsersEventHandler.GetUsersFailure;
 import io.reflection.app.api.admin.shared.call.event.GetUsersEventHandler.GetUsersSuccess;
@@ -54,6 +57,7 @@ import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.shared.util.PagerHelper;
 
 import java.util.Collections;
+import java.util.List;
 
 import com.google.gwt.http.client.Request;
 import com.google.gwt.user.client.Window;
@@ -463,15 +467,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 			@Override
 			public void onSuccess(DeleteUserResponse output) {
-				if (output.status == StatusType.StatusTypeSuccess) {
-					// userList.remove(userLookup.get(input.user.id.toString()));
-					// userLookup.remove(input.user.id.toString());
-					// count--;
-					// pager.totalCount = Long.valueOf(pager.totalCount.longValue() - 1);
-					// updateRowCount(Integer.MAX_VALUE, false);
-					PagerHelper.moveBackward(pager);
-					fetchUsers();
-				}
+				PagerHelper.moveBackward(pager);
 				EventController.get().fireEventFromSource(new DeleteUserEventHandler.DeleteUserSuccess(input, output), UserController.this);
 			}
 
@@ -728,6 +724,41 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 			}
 
 		});
+	}
+
+	private void deleteUsers(List<User> users, boolean allTestUsers) {
+		AdminService service = ServiceCreator.createAdminService();
+
+		final DeleteUsersRequest input = new DeleteUsersRequest();
+		input.accessCode = ACCESS_CODE;
+
+		input.session = SessionController.get().getSessionForApiCall();
+
+		input.users = users;
+		input.allTestUsers = allTestUsers;
+
+		service.deleteUsers(input, new AsyncCallback<DeleteUsersResponse>() {
+
+			@Override
+			public void onSuccess(DeleteUsersResponse output) {
+				PagerHelper.moveBackward(pager);				
+				EventController.get().fireEventFromSource(new DeleteUsersEventHandler.DeleteUsersSuccess(input, output), UserController.this);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				EventController.get().fireEventFromSource(new DeleteUsersEventHandler.DeleteUsersFailure(input, caught), UserController.this);
+			}
+
+		});
+	}
+
+	public void deleteTestUsers() {
+		deleteUsers(null, true);
+	}
+
+	public void deleteUsers(List<User> users) {
+		deleteUsers(users, false);
 	}
 
 }

@@ -32,6 +32,14 @@ public interface IUserService extends IService {
 
 	/**
 	 * 
+	 * @param role
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<User> getRoleUsers(Role role) throws DataAccessException;
+
+	/**
+	 * 
 	 * @param user
 	 * @return
 	 */
@@ -80,6 +88,12 @@ public interface IUserService extends IService {
 	 * @param user
 	 */
 	public void deleteUser(User user) throws DataAccessException;
+
+	/**
+	 * 
+	 * @param userIds
+	 */
+	public void deleteUsers(Collection<User> users) throws DataAccessException;
 
 	/**
 	 * 
@@ -176,6 +190,13 @@ public interface IUserService extends IService {
 
 	/**
 	 * 
+	 * @param userIds
+	 * @throws DataAccessException
+	 */
+	public void revokeUsersAllPermissions(Collection<User> users) throws DataAccessException;
+
+	/**
+	 * 
 	 * @param user
 	 * @throws DataAccessException
 	 */
@@ -187,6 +208,13 @@ public interface IUserService extends IService {
 	 * @throws DataAccessException
 	 */
 	public void revokeAllRoles(User user) throws DataAccessException;
+
+	/**
+	 * 
+	 * @param users
+	 * @throws DataAccessException
+	 */
+	public void revokeUsersAllRoles(Collection<User> users) throws DataAccessException;
 
 	/**
 	 * @param user
@@ -204,6 +232,14 @@ public interface IUserService extends IService {
 	 * @throws DataAccessException
 	 */
 	public List<DataAccount> getDataAccounts(User user, Pager pager) throws DataAccessException;
+
+	/**
+	 * 
+	 * @param users
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<DataAccount> getUsersDataAccounts(Collection<User> users, Pager pager) throws DataAccessException;
 
 	/**
 	 * 
@@ -277,12 +313,22 @@ public interface IUserService extends IService {
 	public void deleteAllUsersDataAccount(DataAccount dataAccount) throws DataAccessException;
 
 	/**
-	 * @param dataAccount
+	 * 
+	 * @param user
+	 * @throws DataAccessException
 	 */
 	public void deleteAllDataAccounts(User user) throws DataAccessException;
 
 	/**
-	 * Adds a user to a data account or restores a deleted row if one exist 
+	 * 
+	 * @param user
+	 * @throws DataAccessException
+	 */
+	public void deleteUsersAllDataAccounts(Collection<User> users) throws DataAccessException;
+
+	/**
+	 * Adds a user to a data account or restores a deleted row if one exist
+	 * 
 	 * @param user
 	 * @param dataAccount
 	 * @throws DataAccessException

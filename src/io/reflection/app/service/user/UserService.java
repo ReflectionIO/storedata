@@ -29,6 +29,7 @@ import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.emailtemplate.EmailTemplateServiceProvider;
+import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.app.shared.util.FormattingHelper;
 
 import java.util.ArrayList;
@@ -51,6 +52,11 @@ final class UserService implements IUserService {
 
 	public String getName() {
 		return ServiceType.ServiceTypeUser.toString();
+	}
+
+	private boolean isValidTestUser(User user) {
+		String TEST_EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*\\+test__[0-9]*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+		return (user.username != null) ? user.username.matches(TEST_EMAIL_PATTERN) : false;
 	}
 
 	/*
@@ -86,6 +92,39 @@ final class UserService implements IUserService {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see io.reflection.app.service.user.IUserService#getRoleUserIds(io.reflection.app.datatypes.shared.Role)
+	 */
+	@Override
+	public List<User> getRoleUsers(Role role) throws DataAccessException {
+		List<User> users = new ArrayList<User>();
+
+		IDatabaseService databaseService = DatabaseServiceProvider.provide();
+		Connection userConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
+
+		String getUserIdsQuery = String.format("SELECT DISTINCT `userid` FROM `userrole` WHERE `roleid` = %d AND `deleted`='n'", role.id.longValue());
+
+		try {
+			userConnection.connect();
+			userConnection.executeQuery(getUserIdsQuery);
+
+			while (userConnection.fetchNextRow()) {
+				Long userId = userConnection.getCurrentRowLong("userid");
+				if (userId != null) {
+					users.add(DataTypeHelper.createUser(userId));
+				}
+			}
+		} finally {
+			if (userConnection != null) {
+				userConnection.disconnect();
+			}
+		}
+
+		return users;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#addUser(io.reflection.app.shared.datatypes.User)
 	 */
 	@Override
@@ -111,6 +150,11 @@ final class UserService implements IUserService {
 
 				addedUser = this.getUser(user.id);
 				addedUser.password = null;
+
+				if (isValidTestUser(user)) {
+					Role testRole = DataTypeHelper.createRole(DataTypeHelper.ROLE_TEST_ID);
+					assignRole(user, testRole);
+				}
 
 				Map<String, Object> values = new HashMap<String, Object>();
 				values.put("user", addedUser);
@@ -287,6 +331,42 @@ final class UserService implements IUserService {
 		} finally {
 			if (userConnection != null) {
 				userConnection.disconnect();
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.user.IUserService#deleteUsers(java.util.Collection)
+	 */
+	@Override
+	public void deleteUsers(Collection<User> users) throws DataAccessException {
+
+		StringBuffer commaDelimitedUserIds = new StringBuffer();
+
+		if (users != null && users.size() > 0) {
+			for (User user : users) {
+				if (commaDelimitedUserIds.length() != 0) {
+					commaDelimitedUserIds.append("','");
+				}
+
+				commaDelimitedUserIds.append(user.id);
+			}
+		}
+
+		if (commaDelimitedUserIds != null && commaDelimitedUserIds.length() != 0) {
+
+			Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
+
+			String deleteUsersQuery = String.format("UPDATE `user` SET `deleted`='y' WHERE `id` IN ('%s') AND `deleted`='n'", commaDelimitedUserIds);
+			try {
+				userConnection.connect();
+				userConnection.executeQuery(deleteUsersQuery);
+			} finally {
+				if (userConnection != null) {
+					userConnection.disconnect();
+				}
 			}
 		}
 	}
@@ -673,7 +753,7 @@ final class UserService implements IUserService {
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection userConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
-		String getRoleIdsQuery = String.format("SELECT `roleid` FROM `userrole` WHERE `userid`=%d AND `deleted`='n'", user.id.longValue());
+		String getRoleIdsQuery = String.format("SELECT DISTINCT `roleid` FROM `userrole` WHERE `userid`=%d AND `deleted`='n'", user.id.longValue());
 
 		try {
 			userConnection.connect();
@@ -707,7 +787,8 @@ final class UserService implements IUserService {
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection userConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
-		String getPermissionIdsQuery = String.format("SELECT `permissionid` FROM `userpermission` WHERE `userid`=%d AND `deleted`='n'", user.id.longValue());
+		String getPermissionIdsQuery = String.format("SELECT DISTINCT `permissionid` FROM `userpermission` WHERE `userid`=%d AND `deleted`='n'",
+				user.id.longValue());
 
 		try {
 			userConnection.connect();
@@ -784,6 +865,58 @@ final class UserService implements IUserService {
 		} finally {
 			if (userConnection != null) {
 				userConnection.disconnect();
+			}
+		}
+
+		return accountIds.size() == 0 ? new ArrayList<DataAccount>() : DataAccountServiceProvider.provide().getIdsDataAccounts(accountIds, pager);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.user.IUserService#getUsersDataAccounts(java.util.Collection)
+	 */
+	@Override
+	public List<DataAccount> getUsersDataAccounts(Collection<User> users, Pager pager) throws DataAccessException {
+		List<Long> accountIds = new ArrayList<Long>();
+
+		StringBuffer commaDelimitedUserIds = new StringBuffer();
+
+		if (users != null && users.size() > 0) {
+			for (User user : users) {
+				if (commaDelimitedUserIds.length() != 0) {
+					commaDelimitedUserIds.append("','");
+				}
+
+				commaDelimitedUserIds.append(user.id);
+			}
+		}
+
+		if (commaDelimitedUserIds != null && commaDelimitedUserIds.length() != 0) {
+
+			String getDataAccountIdsQuery = String.format(
+					"SELECT `dataaccountid` FROM `userdataaccount` WHERE `deleted`='n' AND `userid` IN ('%s') ORDER BY `%s` %s LIMIT %d, %d",
+					commaDelimitedUserIds, pager.sortBy == null ? "id" : pager.sortBy,
+					pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start == null ? 0 : pager.start.longValue(),
+					pager.count == null ? 25 : pager.count.longValue());
+
+			Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
+
+			try {
+				userConnection.connect();
+				userConnection.executeQuery(getDataAccountIdsQuery);
+
+				while (userConnection.fetchNextRow()) {
+					Long accountId = userConnection.getCurrentRowLong("dataaccountid");
+
+					if (accountId != null) {
+						accountIds.add(accountId);
+					}
+				}
+			} finally {
+				if (userConnection != null) {
+					userConnection.disconnect();
+				}
 			}
 		}
 
@@ -1194,9 +1327,6 @@ final class UserService implements IUserService {
 			userConnection.connect();
 			userConnection.executeQuery(deleteAllUsersDataAccountQuery);
 
-			if (userConnection.getAffectedRowCount() > 0) {
-				// log something
-			}
 		} finally {
 			if (userConnection != null) {
 				userConnection.disconnect();
@@ -1226,6 +1356,45 @@ final class UserService implements IUserService {
 		} finally {
 			if (userConnection != null) {
 				userConnection.disconnect();
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.user.IUserService#deleteUsersAllDataAccounts(java.util.Collection)
+	 */
+	@Override
+	public void deleteUsersAllDataAccounts(Collection<User> users) throws DataAccessException {
+
+		StringBuffer commaDelimitedUserIds = new StringBuffer();
+
+		if (users != null && users.size() > 0) {
+			for (User user : users) {
+				if (commaDelimitedUserIds.length() != 0) {
+					commaDelimitedUserIds.append("','");
+				}
+
+				commaDelimitedUserIds.append(user.id);
+			}
+		}
+
+		if (commaDelimitedUserIds != null && commaDelimitedUserIds.length() != 0) {
+
+			String deleteAllUsersDataAccountQuery = String.format("UPDATE `userdataaccount` SET `deleted`='y' WHERE `userid` IN ('%s') AND `deleted`='n'",
+					commaDelimitedUserIds);
+
+			Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
+
+			try {
+				userConnection.connect();
+				userConnection.executeQuery(deleteAllUsersDataAccountQuery);
+
+			} finally {
+				if (userConnection != null) {
+					userConnection.disconnect();
+				}
 			}
 		}
 	}
@@ -1284,6 +1453,44 @@ final class UserService implements IUserService {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see io.reflection.app.service.user.IUserService#revokeUsersAllPermissions(java.util.Collection)
+	 */
+	@Override
+	public void revokeUsersAllPermissions(Collection<User> users) throws DataAccessException {
+
+		StringBuffer commaDelimitedUserIds = new StringBuffer();
+
+		if (users != null && users.size() > 0) {
+			for (User user : users) {
+				if (commaDelimitedUserIds.length() != 0) {
+					commaDelimitedUserIds.append("','");
+				}
+
+				commaDelimitedUserIds.append(user.id);
+			}
+		}
+
+		if (commaDelimitedUserIds != null && commaDelimitedUserIds.length() != 0) {
+
+			Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
+
+			String deletePermissionQuery = String.format("UPDATE `userpermission` SET `deleted`='y' WHERE `userid` IN ('%s') AND `deleted`='n'",
+					commaDelimitedUserIds);
+			try {
+				userConnection.connect();
+				userConnection.executeQuery(deletePermissionQuery);
+
+			} finally {
+				if (userConnection != null) {
+					userConnection.disconnect();
+				}
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#revokeRoles(io.reflection.app.datatypes.shared.User, io.reflection.app.datatypes.shared.Role)
 	 */
 	@Override
@@ -1328,6 +1535,43 @@ final class UserService implements IUserService {
 		} finally {
 			if (userConnection != null) {
 				userConnection.disconnect();
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.user.IUserService#revokeUsersAllRoles(java.util.Collection)
+	 */
+	@Override
+	public void revokeUsersAllRoles(Collection<User> users) throws DataAccessException {
+
+		StringBuffer commaDelimitedUserIds = new StringBuffer();
+
+		if (users != null && users.size() > 0) {
+			for (User user : users) {
+				if (commaDelimitedUserIds.length() != 0) {
+					commaDelimitedUserIds.append("','");
+				}
+
+				commaDelimitedUserIds.append(user.id);
+			}
+		}
+
+		if (commaDelimitedUserIds != null && commaDelimitedUserIds.length() != 0) {
+
+			Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
+
+			String deleteRoleQuery = String.format("UPDATE `userrole` SET `deleted`='y' WHERE `userid` IN ('%s') AND `deleted`='n'", commaDelimitedUserIds);
+			try {
+				userConnection.connect();
+				userConnection.executeQuery(deleteRoleQuery);
+
+			} finally {
+				if (userConnection != null) {
+					userConnection.disconnect();
+				}
 			}
 		}
 	}

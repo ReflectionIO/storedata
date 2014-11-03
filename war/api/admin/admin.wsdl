@@ -61,6 +61,9 @@
 
 			<xsd:element name="DeleteUserInput" type="sda:DeleteUserRequest" />
 			<xsd:element name="DeleteUserOutput" type="sda:DeleteUserResponse" />
+			
+			<xsd:element name="DeleteUsersInput" type="sda:DeleteUserRequest" />
+			<xsd:element name="DeleteUsersOutput" type="sda:DeleteUserResponse" />
 
 			<xsd:element name="GetRolesAndPermissionsInput" type="sda:GetRolesAndPermissionsRequest" />
 			<xsd:element name="GetRolesAndPermissionsOutput" type="sda:GetRolesAndPermissionsResponse" />
@@ -482,6 +485,23 @@
 					</xsd:extension>
 				</xsd:complexContent>
 			</xsd:complexType>
+			
+			<xsd:complexType name="DeleteUsersRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="users" type="sd:User" maxOccurs="unbounded" />
+						</xsd:sequence>
+						<xsd:attribute name="allTestUsers" type="xsd:boolean" default="false" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:complexType name="DeleteUsersResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">						
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
 			<xsd:complexType name="GetRolesAndPermissionsRequest">
 				<xsd:complexContent>
@@ -789,6 +809,13 @@
 	<wsdl:message name="DeleteUserResponse">
 		<wsdl:part name="output" element="sda:DeleteUserOutput" />
 	</wsdl:message>
+	
+	<wsdl:message name="DeleteUsersRequest">
+		<wsdl:part name="input" element="sda:DeleteUsersInput" />
+	</wsdl:message>
+	<wsdl:message name="DeleteUsersResponse">
+		<wsdl:part name="output" element="sda:DeleteUsersOutput" />
+	</wsdl:message>
 
 	<wsdl:message name="GetRolesAndPermissionsRequest">
 		<wsdl:part name="input" element="sda:GetRolesAndPermissionsInput" />
@@ -934,6 +961,11 @@
 		<wsdl:operation name="DeleteUser">
 			<wsdl:input message="sda:DeleteUserRequest" />
 			<wsdl:output message="sda:DeleteUserResponse" />
+		</wsdl:operation>
+
+		<wsdl:operation name="DeleteUsers">
+			<wsdl:input message="sda:DeleteUsersRequest" />
+			<wsdl:output message="sda:DeleteUsersResponse" />
 		</wsdl:operation>
 
 		<wsdl:operation name="GetRolesAndPermissions">
@@ -1154,6 +1186,16 @@
 
 		<wsdl:operation name="DeleteUser">
 			<soap:operation soapAction="http://app.reflection.io/admin/DeleteUser" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		
+		<wsdl:operation name="DeleteUsers">
+			<soap:operation soapAction="http://app.reflection.io/admin/DeleteUsers" />
 			<wsdl:input>
 				<soap:body use="literal" />
 			</wsdl:input>

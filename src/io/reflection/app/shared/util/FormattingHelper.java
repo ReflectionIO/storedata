@@ -25,8 +25,8 @@ public class FormattingHelper {
 	public static final String DATE_FORMAT_DD_MMM_YYYY = "dd MMM yyyy";
 	public static final String DATE_FORMAT_DD_MM_YYYY = "dd-MM-yyyy";
 	public static final String DATE_FORMAT_YYYY_MM_DD = "yyyy-MM-dd";
+	public static final String DATE_FORMAT_DD_MMM_YYYY_HH_MM = "dd MMM yyyy - HH:mm";
 	public static final float SMALL_MONEY = 0.0000001f;
-
 	private static Map<String, String> currencySymbolLookup = null;
 
 	/**
@@ -72,7 +72,7 @@ public class FormattingHelper {
 		String priceRangeString;
 
 		if (Math.abs(from - to) < SMALL_MONEY) {
- 			priceRangeString = getPrice(currency, from); // No need to use a price range
+			priceRangeString = getPrice(currency, from); // No need to use a price range
 		} else {
 			String fromString = getPrice(currency, from), toString = getPrice(currency, to);
 			priceRangeString = fromString + " - " + toString;
@@ -93,13 +93,13 @@ public class FormattingHelper {
 		}
 		return longName;
 	}
-	
+
 	public static String getCompanyName(User user) {
-	    String result = "";
-	    if (user != null && user.company != null && user.company.trim().length() > 0) {
-	        result = user.company.trim();
-	    }
-	    return result ;
+		String result = "";
+		if (user != null && user.company != null && user.company.trim().length() > 0) {
+			result = user.company.trim();
+		}
+		return result;
 	}
 
 	public static String getTimeSince(Date date) {
@@ -154,9 +154,9 @@ public class FormattingHelper {
 
 		return timeSince;
 	}
-	
-	public static String getFormattedNumber(Number number){
+
+	public static String getFormattedNumber(Number number) {
 		return NumberFormat.getFormat(",###.##").format(number);
 	}
-	
+
 }
