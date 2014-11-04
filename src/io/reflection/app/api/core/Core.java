@@ -570,8 +570,10 @@ public final class Core extends ActionHandler {
 
 			Calendar cal = Calendar.getInstance();
 
-			if (input.end == null) input.end = cal.getTime();
-
+			if (input.end == null) {
+				input.end = cal.getTime();
+			}
+			
 			if (input.start == null) {
 				cal.setTime(input.end);
 				cal.add(Calendar.DAY_OF_YEAR, -30);
