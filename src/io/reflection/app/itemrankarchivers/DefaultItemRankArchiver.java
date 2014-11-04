@@ -27,7 +27,6 @@ import io.reflection.app.service.rank.RankServiceProvider;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -196,7 +195,6 @@ public class DefaultItemRankArchiver implements ItemRankArchiver {
 		Map<Date, Rank> ranksLookup = new HashMap<Date, Rank>();
 		ArchivableKeyValue value = KeyValueArchiveManager.get().getArchiveKeyValue(key);
 
-		Calendar cal = Calendar.getInstance();
 		Date date;
 
 		if (value != null && value.value != null && value.value.length() > 0) {
@@ -215,8 +213,7 @@ public class DefaultItemRankArchiver implements ItemRankArchiver {
 							ranks = new ArrayList<Rank>();
 						}
 
-						cal.setTime(rank.date);
-						date = ApiHelper.removeTime(cal.getTime());
+						date = ApiHelper.removeTime(rank.date);
 
 						if (ranksLookup.get(date) == null) {
 							ranks.add(rank);
