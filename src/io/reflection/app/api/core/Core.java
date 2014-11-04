@@ -115,6 +115,7 @@ import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.service.user.IUserService;
 import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
+import io.reflection.app.shared.util.FormattingHelper;
 import io.reflection.app.shared.util.PagerHelper;
 
 import java.text.SimpleDateFormat;
@@ -573,7 +574,7 @@ public final class Core extends ActionHandler {
 			if (input.end == null) {
 				input.end = cal.getTime();
 			}
-			
+
 			if (input.start == null) {
 				cal.setTime(input.end);
 				cal.add(Calendar.DAY_OF_YEAR, -30);
@@ -1757,15 +1758,15 @@ public final class Core extends ActionHandler {
 							rank.itemId = itemId;
 
 							// If units and customer prices are negatives (refunds), subtract the value setting units positive
-							rank.revenue += (Math.abs(sale.units.floatValue()) * (float) sale.customerPrice.intValue()) / 100.0f;
+							rank.revenue += Math.abs(sale.units.floatValue()) * sale.customerPrice.floatValue();
 
 							// Take into account price and downloads only from main Apps
 							if (sale.typeIdentifier.equals(FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS)
 									|| sale.typeIdentifier.equals(FREE_OR_PAID_APP_UNIVERSAL_IOS) || sale.typeIdentifier.equals(FREE_OR_PAID_APP_IPAD_IOS)) {
 								rank.downloads += sale.units.intValue();
 								// Ignore price if the Sale is a refund or a promotion
-								if (rank.price == null && sale.customerPrice.intValue() >= 0 && sale.promoCode.equals(" ")) {
-									rank.price = Float.valueOf(((float) sale.customerPrice.intValue()) / 100.0f);
+								if (rank.price == null && !FormattingHelper.isZero(sale.customerPrice.floatValue()) && sale.promoCode.equals(" ")) {
+									rank.price = sale.customerPrice;
 								}
 							}
 
@@ -1901,11 +1902,7 @@ public final class Core extends ActionHandler {
 						}
 
 						if (sale.proceeds != null) {
-							if (sale.proceeds.intValue() == 0) {
-								isFree = Boolean.TRUE;
-							} else {
-								isFree = Boolean.FALSE;
-							}
+							isFree = Boolean.valueOf(FormattingHelper.isZero(sale.proceeds));
 						}
 
 						dateSalesList.add(sale);
@@ -1969,7 +1966,6 @@ public final class Core extends ActionHandler {
 
 								rank.country = input.country.a2Code;
 								rank.currency = sale.customerCurrency;
-								rank.price = Float.valueOf(((float) sale.customerPrice.intValue()) / 100.0f);
 								rank.date = salesGroupDate;
 								rank.created = salesGroupDate;
 								rank.itemId = sale.item.internalId;
@@ -1979,8 +1975,19 @@ public final class Core extends ActionHandler {
 								populatedCommon = true;
 							}
 
-							revenue += (sale.units.floatValue() * (float) sale.customerPrice.intValue()) / 100.0f;
-							downloads += sale.units.intValue();
+							// If units and customer prices are negatives (refunds), subtract the value setting units positive
+							revenue += Math.abs(sale.units.floatValue()) * sale.customerPrice.floatValue();
+
+							// Take into account price and downloads only from main Apps
+							if (sale.typeIdentifier.equals(FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS)
+									|| sale.typeIdentifier.equals(FREE_OR_PAID_APP_UNIVERSAL_IOS) || sale.typeIdentifier.equals(FREE_OR_PAID_APP_IPAD_IOS)) {
+								downloads += sale.units.intValue();
+
+								// Ignore price if the Sale is a refund or a promotion
+								if (rank.price == null && sale.customerPrice.floatValue() >= 0.001f && sale.promoCode.equals(" ")) {
+									rank.price = sale.customerPrice;
+								}
+							}
 						}
 
 						rank.revenue = Float.valueOf(revenue);

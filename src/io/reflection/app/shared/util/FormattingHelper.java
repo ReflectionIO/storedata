@@ -159,4 +159,8 @@ public class FormattingHelper {
 		return NumberFormat.getFormat(",###.##").format(number);
 	}
 
+	public static boolean isZero(float value) {
+		return value <= 0.001f;
+	}
+
 }

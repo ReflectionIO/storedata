@@ -647,6 +647,7 @@ public class DevHelperServlet extends HttpServlet {
 					String[] rankIdsArray = ids.split(",");
 
 					for (String rankId : rankIdsArray) {
+						LOG.finer("Enqueueing rank [" + rankId + "]");
 						ar.enqueue(Long.valueOf(rankId));
 					}
 				}

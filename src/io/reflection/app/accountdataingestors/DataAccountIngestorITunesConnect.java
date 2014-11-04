@@ -215,14 +215,14 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 			sale.typeIdentifier = split[PRODUCT_TYPE_IDENTIFIER_INDEX];
 			sale.units = Integer.parseInt(split[UNITS_INDEX]);
 
-			float proceeds = 0;
+			Float proceeds = null;
 			try {
-				proceeds = Float.parseFloat(split[DEVELOPER_PROCEEDS_INDEX]);
+				proceeds = Float.valueOf(split[DEVELOPER_PROCEEDS_INDEX]);
 			} catch (NumberFormatException e) {
 				LOG.log(GaeLevel.WARNING, String.format("Exception occured while obtaining file for data account [%d]", fetch.id.longValue()), e);
 			}
 
-			sale.proceeds = Integer.valueOf((int) (100.0f * proceeds));
+			sale.proceeds = proceeds;
 
 			try {
 				sale.begin = sdf.parse(split[BEGIN_DATE_INDEX]);
@@ -238,20 +238,19 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 			sale.item = new Item();
 			sale.item.internalId = split[APPLE_IDENTIFIER_INDEX];
 
-			float customerPrice = 0;
+			Float customerPrice = null;
 			try {
-				customerPrice = Float.parseFloat(split[CUSTOMER_PRICE_INDEX]);
+				customerPrice = Float.valueOf(split[CUSTOMER_PRICE_INDEX]);
 			} catch (NumberFormatException e) {
 				LOG.log(GaeLevel.WARNING, String.format("Exception occured while obtaining file for data account [%d]", fetch.id.longValue()), e);
 			}
 
-			sale.customerPrice = Integer.valueOf((int) (100.0f * customerPrice));
+			sale.customerPrice = customerPrice;
 			sale.promoCode = split[PROMO_CODE_INDEX];
 			sale.parentIdentifier = split[PARENT_IDENTIFIER_INDEX];
 			sale.subscription = split[SUBSCRIPTION_INDEX];
 			sale.period = split[PERIOD_INDEX];
 			sale.category = split[CATEGORY_INDEX];
-
 		}
 
 		return sale;
