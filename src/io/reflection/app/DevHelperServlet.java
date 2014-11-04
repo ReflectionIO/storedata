@@ -143,7 +143,7 @@ public class DevHelperServlet extends HttpServlet {
 		String feedType = req.getParameter("feedtype");
 		String itemId = req.getParameter("itemid");
 		String date = req.getParameter("date");
-		String feedIds = req.getParameter("feedIds");
+		String ids = req.getParameter("ids");
 
 		boolean success = false;
 
@@ -206,7 +206,7 @@ public class DevHelperServlet extends HttpServlet {
 
 				Ingestor i = IngestorFactory.getIngestorForStore(DataTypeHelper.IOS_STORE_A3);
 
-				String[] feedIdsArray = feedIds.split(",");
+				String[] feedIdsArray = ids.split(",");
 
 				for (String feedId : feedIdsArray) {
 					i.enqueue(Arrays.asList(Long.valueOf(feedId)));
@@ -610,7 +610,6 @@ public class DevHelperServlet extends HttpServlet {
 				success = true;
 			} else if ("archive".equalsIgnoreCase(action)) {
 				if ("rank".equalsIgnoreCase(object)) {
-
 					if (start == null && count == null) {
 						try {
 							Store store = new Store();
@@ -623,9 +622,9 @@ public class DevHelperServlet extends HttpServlet {
 
 							ItemRankArchiver ar = ItemRankArchiverFactory.get();
 
-							List<Long> rankIds = RankServiceProvider.provide().getRankIds(country, store, allCategory, new Date(0L), new Date());
+							List<Long> foundRankIds = RankServiceProvider.provide().getRankIds(country, store, allCategory, new Date(0L), new Date());
 
-							for (Long rankId : rankIds) {
+							for (Long rankId : foundRankIds) {
 								ar.enqueue(rankId);
 							}
 						} catch (DataAccessException e) {
@@ -634,9 +633,22 @@ public class DevHelperServlet extends HttpServlet {
 					} else {
 						ItemRankArchiver ar = ItemRankArchiverFactory.get();
 						Pager p = new Pager();
-						p.start = start == null ? Long.valueOf(0) : Long.valueOf(start);
-						p.count = count == null ? Long.valueOf(25) : Long.valueOf(count);
+						p.start = start == null ? Pager.DEFAULT_START : Long.valueOf(start);
+						p.count = count == null ? Pager.DEFAULT_COUNT : Long.valueOf(count);
 						ar.enqueue(p, all == null ? Boolean.FALSE : Boolean.valueOf(all));
+					}
+				}
+
+				success = true;
+			} else if ("archivemulti".equalsIgnoreCase(action)) {
+				if ("rank".equalsIgnoreCase(object)) {
+					ItemRankArchiver ar = ItemRankArchiverFactory.get();
+
+					String[] rankIdsArray = ids.split(",");
+
+					for (String rankId : rankIdsArray) {
+						LOG.finer("Enqueueing rank [" + rankId + "]");
+						ar.enqueue(Long.valueOf(rankId));
 					}
 				}
 

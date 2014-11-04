@@ -1,0 +1,52 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- The HTML 4.01 Transitional DOCTYPE declaration-->
+<!-- above set at the top of the file will set     -->
+<!-- the browser's rendering engine into           -->
+<!-- "Quirks Mode". Replacing this declaration     -->
+<!-- with a "Standards Mode" doctype is supported, -->
+<!-- but may lead to some differences in layout.   -->
+
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+<title>Archive Dev Helper form</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Dev console">
+<meta name="author" content="">
+
+<link href="../assets/css/bootstrap.css" rel="stylesheet">
+
+<style type="text/css">
+#content {
+	margin: 0px auto;
+	width: 500px;
+}
+
+#rankstart, #rankend {
+	width: 65px;
+}
+</style>
+
+</head>
+
+<body>
+
+	<div id="content">
+		<h2>Archiver</h2>
+		<form action="/dev/devhelper" method="POST">
+			<label>queue</label> <select id="defer" name="defer">
+				<option value="yes">yes</option>
+				<option value="no">no</option>
+			</select><br> <label>action</label> <input id="action" name="action" type="text" value="archive" /><br /> <label>object</label> <input id="object"
+				name="object" type="text" /><br />
+			<textarea rows="10" cols="50" name="ids"></textarea>
+			<br /> <input type="submit" id="devhelpersubmit" name="devhelpersubmit" class="btn btn-primary">
+		</form>
+		<footer>
+		<p>Copyrights &copy; reflection.io 2013</p>
+		</footer>
+	</div>
+</body>
+</html>
+

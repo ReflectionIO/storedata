@@ -38,6 +38,7 @@ import io.reflection.app.service.modelrun.ModelRunServiceProvider;
 import io.reflection.app.service.rank.IRankService;
 import io.reflection.app.service.rank.RankServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
+import io.reflection.app.shared.util.FormattingHelper;
 import io.reflection.app.shared.util.PagerHelper;
 
 import java.util.AbstractMap.SimpleEntry;
@@ -146,7 +147,7 @@ public class PredictorIOS implements Predictor {
 			boolean usesIap = properties.getBoolean(ItemPropertyLookupServlet.PROPERTY_IAP);
 
 			if (item != null) {
-				setDownloadsAndRevenue(rank, modelRun, usesIap, rank.price.floatValue() / 100.0f);
+				setDownloadsAndRevenue(rank, modelRun, usesIap, rank.price.floatValue());
 
 				// FIXME: we need to fix this
 				if (rank.revenue.longValue() == Long.MAX_VALUE) {
@@ -239,7 +240,7 @@ public class PredictorIOS implements Predictor {
 		double downloads = 0.0;
 
 		if (usesIap) {
-			if (isZero(price)) {
+			if (FormattingHelper.isZero(price)) {
 				if (rank.grossingPosition == null && rank.grossingPosition.intValue() == 0) {
 					downloads = (double) (output.freeB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.freeA.doubleValue()));
 					revenue = output.theta.doubleValue() * downloads;
@@ -258,7 +259,7 @@ public class PredictorIOS implements Predictor {
 				}
 			}
 		} else {
-			if (isZero(price)) {
+			if (FormattingHelper.isZero(price)) {
 				// revenue is zero since it is a free app and no IAP. Thus only
 				// download calculated here
 				downloads = (double) (output.freeB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.freeA.doubleValue()));
@@ -279,7 +280,7 @@ public class PredictorIOS implements Predictor {
 			rank.downloads = Integer.valueOf((int) downloads);
 		}
 
-		if (rank.revenue == null || (isZero(rank.revenue.floatValue()) && !isZero((float) revenue))) {
+		if (rank.revenue == null || (FormattingHelper.isZero(rank.revenue.floatValue()) && !FormattingHelper.isZero((float) revenue))) {
 			rank.revenue = Float.valueOf((float) revenue);
 		}
 
@@ -324,10 +325,6 @@ public class PredictorIOS implements Predictor {
 	//
 	// LOG.info("predictedRank :" + predictedRank);
 	// }
-
-	private boolean isZero(float price) {
-		return price <= Float.MIN_VALUE;
-	}
 
 	private boolean isDownloadListType(String listType) {
 		return !listType.contains("grossing");
@@ -436,8 +433,8 @@ public class PredictorIOS implements Predictor {
 	}
 
 	private void setSimpleDownloadsAndRevenue(Rank rank, SimpleModelRun simpleModelRun, Boolean usesIap) {
-		float price = rank.price.floatValue() / 100.0f;
-		boolean isDownload = isDownloadListType(simpleModelRun.feedFetch.type), isFree = isZero(price);
+		float price = rank.price.floatValue();
+		boolean isDownload = isDownloadListType(simpleModelRun.feedFetch.type), isFree = FormattingHelper.isZero(price);
 		double revenue = 0.0, downloads = 0.0;
 
 		if (usesIap == null || usesIap.booleanValue()) {
@@ -478,7 +475,7 @@ public class PredictorIOS implements Predictor {
 
 		// These numbers still overflow using the current model
 		rank.downloads = Integer.valueOf((int) downloads);
-		rank.revenue = Float.valueOf((float) revenue * 100.0f);
+		rank.revenue = Float.valueOf((float) revenue);
 
 		if (LOG.isLoggable(Level.INFO)) {
 			LOG.info("Downloads :" + downloads);
