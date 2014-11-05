@@ -275,13 +275,10 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 
 		// Clear user data, filters and pages
 		LinkedAccountController.get().reset();
-		FilterController.get().resetFilter(PageType.LinkedAccountsPageType);
 		MyAppsController.get().reset();
-		FilterController.get().resetFilter(PageType.MyAppsPageType);
 		RankController.get().reset();
-		FilterController.get().resetFilter(PageType.RanksPageType);
 		PostController.get().reset();
-
+		FilterController.get().reset();
 		// Remove all the pages from the Navigation Controller
 		NavigationController.get().purgeAllPages();
 
