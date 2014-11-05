@@ -59,8 +59,8 @@ public class FormattingHelper {
 	public static String getPrice(String currency, float price) {
 		String priceString;
 
-		if (price < SMALL_MONEY) {
-			priceString = "free";
+		if (isZero(price)) {
+			priceString = "Free";
 		} else {
 			priceString = (currency == null ? "" : getCurrencySymbol(currency) + " ") + getFormattedNumber(price);
 		}
@@ -71,7 +71,7 @@ public class FormattingHelper {
 	public static String getPriceRange(String currency, float from, float to) {
 		String priceRangeString;
 
-		if (Math.abs(from - to) < SMALL_MONEY) {
+		if (isZero(Math.abs(from - to))) {
 			priceRangeString = getPrice(currency, from); // No need to use a price range
 		} else {
 			String fromString = getPrice(currency, from), toString = getPrice(currency, to);
@@ -160,7 +160,7 @@ public class FormattingHelper {
 	}
 
 	public static boolean isZero(float value) {
-		return value <= 0.001f;
+		return value < SMALL_MONEY;
 	}
 
 }

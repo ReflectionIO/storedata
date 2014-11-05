@@ -48,6 +48,7 @@ import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -92,6 +93,13 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	public static final String ALL_TEXT = "Overview / All";
 
 	@UiField RanksPageStyle style;
+
+	interface AllAdminCodeTemplate extends SafeHtmlTemplates {
+		AllAdminCodeTemplate INSTANCE = GWT.create(AllAdminCodeTemplate.class);
+
+		@Template(ALL_TEXT + " <span class=\"badge pull-right\">{0}</span>")
+		SafeHtml code(Long code);
+	}
 
 	@UiField(provided = true) CellTable<RanksGroup> mRanks = new CellTable<RanksGroup>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 
@@ -200,7 +208,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			@Override
 			public String getValue(RanksGroup object) {
 				Rank rank = rankForListType(object);
-				return rank.price.floatValue() == 0.0f ? "Free" : FormattingHelper.getCurrencySymbol(rank.currency) + " " + rank.price.toString();
+				return FormattingHelper.getPrice(rank.currency, rank.price.floatValue());
 			}
 
 		};
@@ -579,11 +587,11 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 			if (SessionController.get().isLoggedInUserAdmin()) {
 				if (output.freeRanks != null && output.freeRanks.size() > 0 && output.freeRanks.get(0).code != null) {
-					mAll.setText(ALL_TEXT + " (" + output.freeRanks.get(0).code.toString() + ")");
+					mAll.setHTML(AllAdminCodeTemplate.INSTANCE.code(output.freeRanks.get(0).code));
 				} else if (output.paidRanks != null && output.paidRanks.size() > 0 && output.paidRanks.get(0).code != null) {
-					mAll.setText(ALL_TEXT + " (" + output.paidRanks.get(0).code.toString() + ")");
+					mAll.setHTML(AllAdminCodeTemplate.INSTANCE.code(output.paidRanks.get(0).code));
 				} else if (output.grossingRanks != null && output.grossingRanks.size() > 0 && output.grossingRanks.get(0).code != null) {
-					mAll.setText(ALL_TEXT + " (" + output.grossingRanks.get(0).code.toString() + ")");
+					mAll.setHTML(AllAdminCodeTemplate.INSTANCE.code(output.grossingRanks.get(0).code));
 				} else {
 					mAll.setText(ALL_TEXT);
 				}

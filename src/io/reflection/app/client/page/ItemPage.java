@@ -315,7 +315,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 				if (isNewDataRequired) {
 					setLoadingSpinnerEnabled(true);
-					mSidePanel.setPriceInnerHTML("");
+					mSidePanel.setPriceInnerHTML("-");
 					mSidePanel.setLoaderVisible(true);
 					getHistoryChartData();
 				}
