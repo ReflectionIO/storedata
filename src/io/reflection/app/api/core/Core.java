@@ -904,7 +904,7 @@ public final class Core extends ActionHandler {
 
 			boolean hasDataAccount = UserServiceProvider.provide().hasDataAccount(input.session.user, input.linkedAccount).booleanValue();
 
-			Role adminRole = DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID);
+			Role adminRole = DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_CODE);
 			boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, adminRole);
 
 			if (hasDataAccount || isAdmin) {
@@ -914,7 +914,7 @@ public final class Core extends ActionHandler {
 					UserServiceProvider.provide().deleteAllUsersDataAccount(input.linkedAccount);
 
 					if (!UserServiceProvider.provide().hasDataAccounts(user) && !isAdmin) {
-						Permission hlaPermission = DataTypeHelper.createPermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_ID);
+						Permission hlaPermission = DataTypeHelper.createPermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE);
 						UserServiceProvider.provide().revokePermission(user, hlaPermission);
 					}
 
@@ -1177,10 +1177,10 @@ public final class Core extends ActionHandler {
 
 			output.account.source = input.source;
 
-			Role adminRole = DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID);
+			Role adminRole = DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_CODE);
 			boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, adminRole);
 
-			Permission hlaPermission = DataTypeHelper.createPermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_ID);
+			Permission hlaPermission = DataTypeHelper.createPermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE);
 			boolean hasPermission = UserServiceProvider.provide().hasPermission(input.session.user, hlaPermission);
 
 			if (!hasPermission && !isAdmin) {
@@ -1219,7 +1219,7 @@ public final class Core extends ActionHandler {
 					boolean foundRole = false;
 
 					for (Role userRole : roles) {
-						if (userRole.id.longValue() == inputRole.id.longValue()) {
+						if (userRole.code.equals(inputRole.code)) {
 							foundRole = true;
 							break;
 						}
@@ -1245,7 +1245,7 @@ public final class Core extends ActionHandler {
 					boolean foundPermission = false;
 
 					for (Permission userPermission : permissions) {
-						if (userPermission.id.longValue() == inputPermission.id.longValue()) {
+						if (userPermission.code.equals(inputPermission.code)) {
 							foundPermission = true;
 							break;
 						}
@@ -1379,7 +1379,7 @@ public final class Core extends ActionHandler {
 				User sessionUser = UserServiceProvider.provide().getUser(input.session.user.id);
 
 				if (input.userId != sessionUser.id) {
-					ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getRole(DataTypeHelper.ROLE_ADMIN_ID));
+					ValidationHelper.validateAuthorised(input.session.user, RoleServiceProvider.provide().getCodeRole(DataTypeHelper.ROLE_ADMIN_CODE));
 				}
 
 				output.user = UserServiceProvider.provide().getUser(input.userId);
@@ -1405,7 +1405,7 @@ public final class Core extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			final Permission permissionMCA = DataTypeHelper.createPermission(DataTypeHelper.PERMISSION_MANAGE_CATEGORIES_ID);
+			final Permission permissionMCA = DataTypeHelper.createPermission(DataTypeHelper.PERMISSION_MANAGE_CATEGORIES_CODE);
 			try {
 				ValidationHelper.validateAuthorised(input.session.user, permissionMCA);
 			} catch (AuthorisationException aEx) {
