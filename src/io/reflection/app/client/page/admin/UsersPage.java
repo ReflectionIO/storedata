@@ -166,10 +166,10 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 			public void update(int index, final User object, String value) {
 				switch (value) {
 				case "Make test":
-					UserController.get().assignUserRoleId(object.id, "TST");
+					UserController.get().assignUserRoleCode(object.id, "TST");
 					break;
 				case "Add to beta":
-					UserController.get().assignUserRoleId(object.id, "BT1");
+					UserController.get().assignUserRoleCode(object.id, "BT1");
 					break;
 				case "Delete":
 					confirmationDialog = new ConfirmationDialog("Delete " + object.forename + " " + object.surname + "\n" + object.company,

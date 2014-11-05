@@ -275,8 +275,8 @@ public class NavigationController implements ValueChangeHandler<String> {
 
 			if (SessionController.get().isValidSession()) {
 				// If beta user with no linked accounts, always redirect to linkitunes page (show only post because of the 'waths this' link in the form)
-				if (!SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_ID)
-						&& SessionController.get().loggedInUserIs(DataTypeHelper.ROLE_BETA_ID) && stackPage != PageType.BlogPostPageType
+				if (!SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE)
+						&& SessionController.get().loggedInUserIs(DataTypeHelper.ROLE_FIRST_CLOSED_BETA_CODE) && stackPage != PageType.BlogPostPageType
 						&& stackPage != PageType.BlogPostsPageType && stackPage != PageType.BlogEditPostPageType && stackPage != PageType.BlogTagPageType) {
 					stackPage = PageType.LinkItunesPageType;
 					value = new Stack(stackPage.toString());

@@ -356,7 +356,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 			clearAddRoleErrors();
 			preloaderAddRole.show();
 			userRolesProvider.updateRowCount(0, false);
-			UserController.get().assignUserRoleId(editingUserId, addRoleTextbox.getText().toUpperCase());
+			UserController.get().assignUserRoleCode(editingUserId, addRoleTextbox.getText().toUpperCase());
 
 		} else {
 			if (addRoleError != null) {
@@ -376,7 +376,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 			clearAddPermissionErrors();;
 			preloaderAddPermission.show();
 			userPermissionsProvider.updateRowCount(0, false);
-			UserController.get().assignUserPermissionId(editingUserId, addPermissionTextbox.getText().toUpperCase());
+			UserController.get().assignUserPermissionCode(editingUserId, addPermissionTextbox.getText().toUpperCase());
 
 		} else {
 			if (addPermissionError != null) {
@@ -786,13 +786,13 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 				if (currentUser.id.toString().equals(editingUserId.toString())) { // Current user is the same as in the stack parameter
 					fillDetailsForm(currentUser);
 				} else if (SessionController.get().isLoggedInUserAdmin()) {
-//					User editingUser = UserController.get().getUser(editingUserId);
-//					if (editingUser != null) { // User already retrieved
-//						fillDetailsForm(editingUser);
-//					} else { // Coming from a page refreshing
-						preloaderDetails.show();
-						UserController.get().fetchUser(editingUserId);
-//					}
+					// User editingUser = UserController.get().getUser(editingUserId);
+					// if (editingUser != null) { // User already retrieved
+					// fillDetailsForm(editingUser);
+					// } else { // Coming from a page refreshing
+					preloaderDetails.show();
+					UserController.get().fetchUser(editingUserId);
+					// }
 				} else { // No access to this user
 					userRolesProvider.updateRowCount(0, true);
 					userPermissionsProvider.updateRowCount(0, true);

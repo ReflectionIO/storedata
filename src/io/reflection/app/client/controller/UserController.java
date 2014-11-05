@@ -331,7 +331,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		});
 	}
 
-	public void assignUserRoleId(Long userId, String roleCode) {
+	public void assignUserRoleCode(Long userId, String roleCode) {
 		Role role = new Role();
 		role.code = roleCode;
 		assignUserRole(userId, role);
@@ -367,7 +367,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		});
 	}
 
-	public void assignUserPermissionId(Long userId, String permissionCode) {
+	public void assignUserPermissionCode(Long userId, String permissionCode) {
 		Permission permission = new Permission();
 		permission.code = permissionCode;
 		assignUserPermission(userId, permission);
@@ -405,7 +405,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 	}
 
-	public void revokeUserRoleId(Long userId, String roleCode) {
+	public void revokeUserRoleCode(Long userId, String roleCode) {
 		Role role = new Role();
 		role.code = roleCode;
 		revokeUserRole(userId, role);
@@ -441,7 +441,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		});
 	}
 
-	public void revokeUserPermissionId(Long userId, String permissionCode) {
+	public void revokeUserPermissionCode(Long userId, String permissionCode) {
 		Permission permission = new Permission();
 		permission.code = permissionCode;
 		revokeUserPermission(userId, permission);
