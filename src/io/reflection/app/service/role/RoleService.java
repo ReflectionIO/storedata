@@ -238,35 +238,35 @@ final class RoleService implements IRoleService {
 	@Override
 	public void inflateRoles(Collection<Role> roles) throws DataAccessException {
 		if (roles != null && roles.size() > 0) {
-			Map<Long, Role> lookup = new HashMap<Long, Role>();
+			Map<String, Role> lookup = new HashMap<String, Role>();
 
-			StringBuffer getRolesQuery = new StringBuffer("SELECT * FROM `role` WHERE `id`");
+			StringBuffer getRolesQuery = new StringBuffer("SELECT * FROM `role` WHERE `code`");
 
 			if (roles.size() == 1) {
-				getRolesQuery.append("=");
+				getRolesQuery.append("='");
 
 				Role role = roles.iterator().next();
 
-				getRolesQuery.append(role.id);
+				getRolesQuery.append(role.code + "'");
 
-				lookup.put(role.id, role);
+				lookup.put(role.code, role);
 			} else {
 				boolean first = true;
 
 				for (Role role : roles) {
 					if (!first) {
-						getRolesQuery.append(",");
+						getRolesQuery.append("','");
 					} else {
-						getRolesQuery.append(" IN (");
+						getRolesQuery.append(" IN ('");
 						first = false;
 					}
 
-					getRolesQuery.append(role.id.toString());
+					getRolesQuery.append(role.code);
 
-					lookup.put(role.id, role);
+					lookup.put(role.code, role);
 				}
 
-				getRolesQuery.append(")");
+				getRolesQuery.append("')");
 			}
 
 			getRolesQuery.append(" AND `deleted`='n'");
@@ -279,7 +279,7 @@ final class RoleService implements IRoleService {
 				roleConnection.executeQuery(getRolesQuery.toString());
 
 				while (roleConnection.fetchNextRow()) {
-					Role role = lookup.get(roleConnection.getCurrentRowLong("id"));
+					Role role = lookup.get(roleConnection.getCurrentRowString("code"));
 
 					toRole(roleConnection, role);
 				}
@@ -300,7 +300,7 @@ final class RoleService implements IRoleService {
 	public List<Permission> getPermissions(Role role) throws DataAccessException {
 		List<Permission> rolePermissions = new ArrayList<Permission>();
 
-		String getRolePermissionsQuery = String.format("SELECT `permissionid` FROM `rolepermission` WHERE `roleid`=%d", role.id.longValue());
+		String getRolePermissionsQuery = String.format("SELECT `permissioncode` FROM `rolepermission` WHERE `rolecode`='%s'", role.code);
 
 		Connection roleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRole.toString());
 
@@ -310,7 +310,7 @@ final class RoleService implements IRoleService {
 
 			while (roleConnection.fetchNextRow()) {
 				Permission p = new Permission();
-				p.id = roleConnection.getCurrentRowLong("permissionid");
+				p.code = roleConnection.getCurrentRowString("permissioncode");
 				rolePermissions.add(p);
 			}
 		} finally {

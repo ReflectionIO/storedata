@@ -141,7 +141,7 @@ final class PermissionService implements IPermissionService {
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection permissionConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypePermission.toString());
 
-		String getPermissionIdsQuery = "SELECT * FROM `permission` WHERE `deleted`='n'";
+		String getPermissionsQuery = "SELECT * FROM `permission` WHERE `deleted`='n'";
 
 		if (pager != null) {
 			String sortByQuery = "id";
@@ -162,18 +162,18 @@ final class PermissionService implements IPermissionService {
 				}
 			}
 
-			getPermissionIdsQuery += String.format(" ORDER BY `%s` %s", sortByQuery, sortDirectionQuery);
+			getPermissionsQuery += String.format(" ORDER BY `%s` %s", sortByQuery, sortDirectionQuery);
 		}
 
 		if (pager.start != null && pager.count != null) {
-			getPermissionIdsQuery += String.format(" LIMIT %d, %d", pager.start.longValue(), pager.count.longValue());
+			getPermissionsQuery += String.format(" LIMIT %d, %d", pager.start.longValue(), pager.count.longValue());
 		} else if (pager.count != null) {
-			getPermissionIdsQuery += String.format(" LIMIT %d", pager.count.longValue());
+			getPermissionsQuery += String.format(" LIMIT %d", pager.count.longValue());
 		}
 
 		try {
 			permissionConnection.connect();
-			permissionConnection.executeQuery(getPermissionIdsQuery);
+			permissionConnection.executeQuery(getPermissionsQuery);
 
 			while (permissionConnection.fetchNextRow()) {
 				Permission permission = this.toPermission(permissionConnection);
@@ -238,35 +238,35 @@ final class PermissionService implements IPermissionService {
 	@Override
 	public void inflatePermissions(Collection<Permission> permissions) throws DataAccessException {
 		if (permissions != null && permissions.size() > 0) {
-			Map<Long, Permission> lookup = new HashMap<Long, Permission>();
+			Map<String, Permission> lookup = new HashMap<String, Permission>();
 
-			StringBuffer getPermissionsQuery = new StringBuffer("SELECT * FROM `permission` WHERE `id`");
+			StringBuffer getPermissionsQuery = new StringBuffer("SELECT * FROM `permission` WHERE `code`");
 
 			if (permissions.size() == 1) {
-				getPermissionsQuery.append("=");
+				getPermissionsQuery.append("='");
 
 				Permission permission = permissions.iterator().next();
 
-				getPermissionsQuery.append(permission.id);
+				getPermissionsQuery.append(permission.code + "'");
 
-				lookup.put(permission.id, permission);
+				lookup.put(permission.code, permission);
 			} else {
 				boolean first = true;
 
 				for (Permission permission : permissions) {
 					if (!first) {
-						getPermissionsQuery.append(",");
+						getPermissionsQuery.append("','");
 					} else {
-						getPermissionsQuery.append(" IN (");
+						getPermissionsQuery.append(" IN ('");
 						first = false;
 					}
 
-					getPermissionsQuery.append(permission.id.toString());
+					getPermissionsQuery.append(permission.code);
 
-					lookup.put(permission.id, permission);
+					lookup.put(permission.code, permission);
 				}
 
-				getPermissionsQuery.append(")");
+				getPermissionsQuery.append("')");
 			}
 
 			getPermissionsQuery.append(" AND `deleted`='n'");
@@ -279,7 +279,7 @@ final class PermissionService implements IPermissionService {
 				permissionConnection.executeQuery(getPermissionsQuery.toString());
 
 				while (permissionConnection.fetchNextRow()) {
-					Permission permission = lookup.get(permissionConnection.getCurrentRowLong("id"));
+					Permission permission = lookup.get(permissionConnection.getCurrentRowString("code"));
 
 					toPermission(permissionConnection, permission);
 				}

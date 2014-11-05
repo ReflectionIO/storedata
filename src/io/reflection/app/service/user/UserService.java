@@ -101,7 +101,7 @@ final class UserService implements IUserService {
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection userConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
-		String getUserIdsQuery = String.format("SELECT DISTINCT `userid` FROM `userrole` WHERE `roleid` = %d AND `deleted`='n'", role.id.longValue());
+		String getUserIdsQuery = String.format("SELECT DISTINCT `userid` FROM `userrole` WHERE `rolecode` = '%s' AND `deleted`='n'", role.code);
 
 		try {
 			userConnection.connect();
@@ -152,7 +152,7 @@ final class UserService implements IUserService {
 				addedUser.password = null;
 
 				if (isValidTestUser(user)) {
-					Role testRole = DataTypeHelper.createRole(DataTypeHelper.ROLE_TEST_ID);
+					Role testRole = DataTypeHelper.createRole(DataTypeHelper.ROLE_TEST_CODE);
 					assignRole(user, testRole);
 				}
 
@@ -606,7 +606,7 @@ final class UserService implements IUserService {
 	 */
 	@Override
 	public void assignRole(User user, Role role) throws DataAccessException {
-		String assignUserRoleQuery = String.format("INSERT INTO `userrole` (`userid`, `roleid`) VALUES (%d, %d)", user.id.longValue(), role.id.longValue());
+		String assignUserRoleQuery = String.format("INSERT INTO `userrole` (`userid`, `rolecode`) VALUES (%d, '%s')", user.id.longValue(), role.code);
 
 		Connection roleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRole.toString());
 
@@ -616,15 +616,15 @@ final class UserService implements IUserService {
 
 			if (roleConnection.getAffectedRowCount() > 0) {
 				if (LOG.isLoggable(Level.INFO)) {
-					LOG.info(String.format("Role with roleid [%d] was added to user with userid [%d]", role.id.longValue(), user.id.longValue()));
+					LOG.info(String.format("Role with rolecode [%s] was added to user with userid [%d]", role.code, user.id.longValue()));
 				}
 
-				if (role.id == Long.valueOf(5) || "BT1".equals(role.code)) {
+				if (DataTypeHelper.ROLE_FIRST_CLOSED_BETA_CODE.equals(role.code)) {
 					markForEmailAction(user, "register/complete", 2);
 				}
 			} else {
 				if (LOG.isLoggable(Level.WARNING)) {
-					LOG.warning(String.format("Role with roleid [%d] was NOT added to user with userid [%d]", role.id.longValue(), user.id.longValue()));
+					LOG.warning(String.format("Role with rolecode [%s] was NOT added to user with userid [%d]", role.code, user.id.longValue()));
 				}
 			}
 		} finally {
@@ -644,8 +644,8 @@ final class UserService implements IUserService {
 	public Boolean hasRole(User user, Role role) throws DataAccessException {
 		Boolean hasUserRole = Boolean.FALSE;
 
-		String hasUserRoleQuery = String.format("SELECT `id` FROM `userrole` WHERE `userid`=%d AND `roleid`=%d AND `deleted`='n' LIMIT 1", user.id.longValue(),
-				role.id.longValue());
+		String hasUserRoleQuery = String.format("SELECT `id` FROM `userrole` WHERE `userid`=%d AND `rolecode`='%s' AND `deleted`='n' LIMIT 1",
+				user.id.longValue(), role.code);
 
 		Connection roleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRole.toString());
 
@@ -672,8 +672,8 @@ final class UserService implements IUserService {
 	 */
 	@Override
 	public void assignPermission(User user, Permission permission) throws DataAccessException {
-		String assignUserPermissionQuery = String.format("INSERT INTO `userpermission` (`userid`, `permissionid`) VALUES (%d, %d)", user.id.longValue(),
-				permission.id.longValue());
+		String assignUserPermissionQuery = String.format("INSERT INTO `userpermission` (`userid`, `permissioncode`) VALUES (%d, '%s')", user.id.longValue(),
+				permission.code);
 
 		Connection permissionConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypePermission.toString());
 
@@ -683,12 +683,11 @@ final class UserService implements IUserService {
 
 			if (permissionConnection.getAffectedRowCount() > 0) {
 				if (LOG.isLoggable(Level.INFO)) {
-					LOG.info(String.format("Permission with permissionid [%d] was added to user with userid [%d]", permission.id.longValue(),
-							user.id.longValue()));
+					LOG.info(String.format("Permission with permissioncode [%s] was added to user with userid [%d]", permission.code, user.id.longValue()));
 				}
 			} else {
 				if (LOG.isLoggable(Level.WARNING)) {
-					LOG.warning(String.format("Permission with permissionid [%d] was NOT added to user with userid [%d]", permission.id.longValue(),
+					LOG.warning(String.format("Permission with permissioncode [%s] was NOT added to user with userid [%d]", permission.code,
 							user.id.longValue()));
 				}
 			}
@@ -720,8 +719,8 @@ final class UserService implements IUserService {
 	public Boolean hasPermission(User user, Permission permission, Boolean deleted) throws DataAccessException {
 		Boolean hasUserPermission = Boolean.FALSE;
 
-		String hasUserPermissionQuery = String.format("SELECT `id` FROM `userpermission` WHERE `userid`=%d AND `permissionid`=%d %s LIMIT 1",
-				user.id.longValue(), permission.id.longValue(), deleted ? "" : "AND `deleted`='n'");
+		String hasUserPermissionQuery = String.format("SELECT `id` FROM `userpermission` WHERE `userid`=%d AND `permissioncode`='%s' %s LIMIT 1",
+				user.id.longValue(), permission.code, deleted ? "" : "AND `deleted`='n'");
 
 		Connection permissionConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypePermission.toString());
 
@@ -753,16 +752,16 @@ final class UserService implements IUserService {
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection userConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
-		String getRoleIdsQuery = String.format("SELECT DISTINCT `roleid` FROM `userrole` WHERE `userid`=%d AND `deleted`='n'", user.id.longValue());
+		String getRoleCodesQuery = String.format("SELECT DISTINCT `rolecode` FROM `userrole` WHERE `userid`=%d AND `deleted`='n'", user.id.longValue());
 
 		try {
 			userConnection.connect();
-			userConnection.executeQuery(getRoleIdsQuery);
+			userConnection.executeQuery(getRoleCodesQuery);
 
 			while (userConnection.fetchNextRow()) {
 				Role role = new Role();
 
-				role.id = userConnection.getCurrentRowLong("roleid");
+				role.code = userConnection.getCurrentRowString("rolecode");
 
 				roles.add(role);
 			}
@@ -787,17 +786,17 @@ final class UserService implements IUserService {
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection userConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
-		String getPermissionIdsQuery = String.format("SELECT DISTINCT `permissionid` FROM `userpermission` WHERE `userid`=%d AND `deleted`='n'",
+		String getPermissionCodesQuery = String.format("SELECT DISTINCT `permissioncode` FROM `userpermission` WHERE `userid`=%d AND `deleted`='n'",
 				user.id.longValue());
 
 		try {
 			userConnection.connect();
-			userConnection.executeQuery(getPermissionIdsQuery);
+			userConnection.executeQuery(getPermissionCodesQuery);
 
 			while (userConnection.fetchNextRow()) {
 				Permission permission = new Permission();
 
-				permission.id = userConnection.getCurrentRowLong("permissionid");
+				permission.code = userConnection.getCurrentRowString("permissioncode");
 
 				permissions.add(permission);
 			}
@@ -1406,8 +1405,8 @@ final class UserService implements IUserService {
 	 */
 	@Override
 	public void revokePermission(User user, Permission permission) throws DataAccessException {
-		String deletePermissionQuery = String.format("UPDATE `userpermission` SET `deleted`='y' WHERE `permissionid`=%d AND `userid`=%d AND `deleted`='n'",
-				permission.id.longValue(), user.id.longValue());
+		String deletePermissionQuery = String.format("UPDATE `userpermission` SET `deleted`='y' WHERE `permissioncode`='%s' AND `userid`=%d AND `deleted`='n'",
+				permission.code, user.id.longValue());
 
 		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
@@ -1495,7 +1494,7 @@ final class UserService implements IUserService {
 	 */
 	@Override
 	public void revokeRole(User user, Role role) throws DataAccessException {
-		String deleteRoleQuery = String.format("UPDATE `userrole` SET `deleted`='y' WHERE `roleid`=%d AND `userid`=%d AND `deleted`='n'", role.id.longValue(),
+		String deleteRoleQuery = String.format("UPDATE `userrole` SET `deleted`='y' WHERE `rolecode`='%s' AND `userid`=%d AND `deleted`='n'", role.code,
 				user.id.longValue());
 
 		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
