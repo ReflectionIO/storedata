@@ -171,6 +171,13 @@ public class RankSidePanel extends Composite {
 		currentDate.setTime(endDate.getTime());
 		mCountry.setSelectedIndex(FormHelper.getItemIndex(mCountry, fc.getFilter().getCountryA2Code()));
 		category.setSelectedIndex(FormHelper.getItemIndex(category, fc.getFilter().getCategoryId().toString()));
+
+		String dailyDataType = fc.getFilter().getDailyData();
+		if (REVENUE_DAILY_DATA_TYPE.equals(dailyDataType)) {
+			mDailyDataRevenue.setValue(true);
+		} else {
+			mDailyDataDownloads.setValue(true);
+		}
 	}
 
 	public void setDataFilterVisible(boolean visible) {

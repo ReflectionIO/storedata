@@ -732,8 +732,13 @@ public class FilterController {
 		return FilterHelper.createRange(getStartDate(), getEndDate());
 	}
 
-	public void resetFilter(PageType p) {
-		filters.put(p, getDefaultFilter());
+	public void reset() {
+		pageTypeFilter = null;
+		filters.put(PageType.RanksPageType, getDefaultFilter());
+		filters.put(PageType.MyAppsPageType, getDefaultFilter());
+		filters.put(PageType.ItemPageType, getDefaultFilter());
+		filters.put(PageType.FeedBrowserPageType, getAdminFilter());
+		filters.put(PageType.DataAccountFetchesPageType, getAdminFilter());
 	}
 
 }
