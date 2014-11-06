@@ -91,7 +91,7 @@ public class ArchiveServlet extends ContextAwareServlet {
 				p.sortBy = "id";
 				p.sortDirection = SortDirectionType.SortDirectionTypeAscending;
 
-				ItemRankArchiverFactory.get().enqueue(p, next);
+				ItemRankArchiverFactory.get().enqueuePagerRanks(p, next);
 
 			} else {
 				Long id = Long.valueOf(idParameter);
@@ -100,7 +100,7 @@ public class ArchiveServlet extends ContextAwareServlet {
 					try {
 						Rank rank = RankServiceProvider.provide().getRank(id);
 						if (rank != null) {
-							ItemRankArchiverFactory.get().archive(rank);
+							ItemRankArchiverFactory.get().archiveRank(rank);
 						} else {
 							if (LOGGER.isLoggable(Level.INFO)) {
 								LOGGER.info("Could not find rank for archiving with id [" + idParameter + "]");
@@ -110,6 +110,12 @@ public class ArchiveServlet extends ContextAwareServlet {
 						throw new RuntimeException(daEx);
 					}
 				}
+			}
+		} else if ("feedfetchranks".equals(type)) {
+			Long id = Long.valueOf(idParameter);
+
+			if (id != null) {
+				ItemRankArchiverFactory.get().archiveIdFeedFetchRanks(id);
 			}
 		}
 	}

@@ -625,7 +625,7 @@ public class DevHelperServlet extends HttpServlet {
 							List<Long> foundRankIds = RankServiceProvider.provide().getRankIds(country, store, allCategory, new Date(0L), new Date());
 
 							for (Long rankId : foundRankIds) {
-								ar.enqueue(rankId);
+								ar.enqueueIdRank(rankId);
 							}
 						} catch (DataAccessException e) {
 							throw new RuntimeException(e);
@@ -635,7 +635,7 @@ public class DevHelperServlet extends HttpServlet {
 						Pager p = new Pager();
 						p.start = start == null ? Pager.DEFAULT_START : Long.valueOf(start);
 						p.count = count == null ? Pager.DEFAULT_COUNT : Long.valueOf(count);
-						ar.enqueue(p, all == null ? Boolean.FALSE : Boolean.valueOf(all));
+						ar.enqueuePagerRanks(p, all == null ? Boolean.FALSE : Boolean.valueOf(all));
 					}
 				}
 
@@ -648,8 +648,10 @@ public class DevHelperServlet extends HttpServlet {
 
 					for (String rankId : rankIdsArray) {
 						LOG.finer("Enqueueing rank [" + rankId + "]");
-						ar.enqueue(Long.valueOf(rankId));
+						ar.enqueueIdRank(Long.valueOf(rankId));
 					}
+				} else if ("feedfetchrank".equalsIgnoreCase(object)) {
+					ItemRankArchiverFactory.get().enqueueIdFeedFetch(Long.valueOf(ids));
 				}
 
 				success = true;

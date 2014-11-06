@@ -7,6 +7,7 @@
 //
 package io.reflection.app.shared.util;
 
+import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Rank;
@@ -70,20 +71,20 @@ public class DataTypeHelper {
 	public static final String STORE_IPHONE_A3_CODE = "iph";
 	public static final String STORE_IPAD_A3_CODE = "ipa";
 
-	private static Role adminRole;
+	private static final Role ADMIN_ROLE = new Role();
 
 	/**
-	 * Creates an admin role
+	 * Gets instance of admin role
 	 * 
 	 * @param id
 	 * @return
 	 */
 	public static Role adminRole() {
-		if (adminRole == null) {
-			adminRole = new Role();
-			adminRole.id = ROLE_ADMIN_ID;
+		if (ADMIN_ROLE.id == null || ROLE_ADMIN_ID.longValue() != ADMIN_ROLE.id.longValue()) {
+			ADMIN_ROLE.id = ROLE_ADMIN_ID;
 		}
-		return adminRole;
+
+		return ADMIN_ROLE;
 	}
 
 	/**
@@ -190,8 +191,34 @@ public class DataTypeHelper {
 	public static Store getIosStore() {
 		if (!IOS_STORE_A3.equals(IOS_STORE.a3Code)) {
 			IOS_STORE.a3Code = IOS_STORE_A3;
+			IOS_STORE.id = null;
 		}
 
 		return IOS_STORE;
+	}
+
+	/**
+	 * Creates an instance of Store with an a3Code
+	 * 
+	 * @param a3Code
+	 * @return
+	 */
+	public static Store createStore(String a3Code) {
+		Store s = new Store();
+		s.a3Code = a3Code;
+		return s;
+	}
+
+	/**
+	 * Creates an instance of a Country with an a2Code
+	 * 
+	 * @param a2Code
+	 * @return
+	 */
+	public static Country createCountry(String a2Code) {
+		Country c = new Country();
+		c.a2Code = a2Code;
+
+		return c;
 	}
 }
