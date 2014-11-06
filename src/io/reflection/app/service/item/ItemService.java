@@ -428,33 +428,34 @@ final class ItemService implements IItemService {
 	@Override
 	public Long searchItemsCount(String query) throws DataAccessException {
 
-		String memcacheKey = getName() + query + ".count";
-		Long itemCount = (Long) syncCache.get(memcacheKey);
+		// String memcacheKey = getName() + query + ".count";
+		// Long itemCount = (Long) syncCache.get(memcacheKey);
+		//
+		// if (itemCount == null) {
+		Long itemCount = Long.valueOf(0);
+		String searchItemsCountQuery = String
+				.format("SELECT count(1) AS `itemscount` FROM `item` WHERE (`externalid` LIKE '%%%1$s%%' OR `name` LIKE '%%%1$s%%' OR `creatorname` LIKE  '%%%1$s%%') AND `deleted`='n'",
+						query);
+		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
 
-		if (itemCount == null) {
-			String getDataAccountsCountQuery = String
-					.format("SELECT count(1) AS `itemscount` FROM `item` WHERE (`externalid` LIKE '%%%1$s%%' OR `name` LIKE '%%%1$s%%' OR `creatorname` LIKE  '%%%1$s%%') AND `deleted`='n'",
-							query);
-			Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
+		try {
+			itemConnection.connect();
+			itemConnection.executeQuery(searchItemsCountQuery);
 
-			try {
-				itemConnection.connect();
-				itemConnection.executeQuery(getDataAccountsCountQuery);
+			if (itemConnection.fetchNextRow()) {
+				itemCount = itemConnection.getCurrentRowLong("itemscount");
 
-				if (itemConnection.fetchNextRow()) {
-					itemCount = itemConnection.getCurrentRowLong("itemscount");
-
-					// cal.setTime(new Date());
-					// cal.add(Calendar.DAY_OF_MONTH, 20);
-					// cache.put(memcacheKey, itemCount, cal.getTime());
-					asyncCache.put(memcacheKey, itemCount);
-				}
-			} finally {
-				if (itemConnection != null) {
-					itemConnection.disconnect();
-				}
+				// cal.setTime(new Date());
+				// cal.add(Calendar.DAY_OF_MONTH, 20);
+				// cache.put(memcacheKey, itemCount, cal.getTime());
+				// asyncCache.put(memcacheKey, itemCount);
+			}
+		} finally {
+			if (itemConnection != null) {
+				itemConnection.disconnect();
 			}
 		}
+		// }
 
 		return itemCount;
 	}
