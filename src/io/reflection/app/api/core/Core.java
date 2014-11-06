@@ -907,7 +907,7 @@ public final class Core extends ActionHandler {
 
 			boolean hasDataAccount = UserServiceProvider.provide().hasDataAccount(input.session.user, input.linkedAccount).booleanValue();
 
-			boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, DataTypeHelper.createAdminRole());
+			boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, DataTypeHelper.adminRole());
 
 			if (hasDataAccount || isAdmin) {
 				User user = UserServiceProvider.provide().getDataAccountOwner(input.linkedAccount);
@@ -1179,7 +1179,7 @@ public final class Core extends ActionHandler {
 
 			output.account.source = input.source;
 
-			boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, DataTypeHelper.createAdminRole());
+			boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, DataTypeHelper.adminRole());
 
 			Permission hlaPermission = PermissionServiceProvider.provide().getCodePermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE);
 			boolean hasPermission = UserServiceProvider.provide().hasPermission(input.session.user, hlaPermission);

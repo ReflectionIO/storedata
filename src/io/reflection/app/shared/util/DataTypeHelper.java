@@ -70,16 +70,20 @@ public class DataTypeHelper {
 	public static final String STORE_IPHONE_A3_CODE = "iph";
 	public static final String STORE_IPAD_A3_CODE = "ipa";
 
+	private static Role adminRole;
+
 	/**
 	 * Creates an admin role
 	 * 
 	 * @param id
 	 * @return
 	 */
-	public static Role createAdminRole() {
-		Role role = new Role();
-		role.id = ROLE_ADMIN_ID;
-		return role;
+	public static Role adminRole() {
+		if (adminRole == null) {
+			adminRole = new Role();
+			adminRole.id = ROLE_ADMIN_ID;
+		}
+		return adminRole;
 	}
 
 	/**

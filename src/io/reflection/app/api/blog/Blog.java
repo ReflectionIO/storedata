@@ -71,7 +71,7 @@ public final class Blog extends ActionHandler {
 
 					if (!showAll.booleanValue()) {
 						try {
-							ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createAdminRole());
+							ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 							// Show All posts if Admin
 							showAll = Boolean.TRUE;
 						} catch (AuthorisationException aEx) {
@@ -210,7 +210,7 @@ public final class Blog extends ActionHandler {
 			boolean isAuthorised = false;
 
 			List<Role> roles = new ArrayList<Role>();
-			roles.add(DataTypeHelper.createAdminRole());
+			roles.add(DataTypeHelper.adminRole());
 
 			List<Permission> permissions = new ArrayList<Permission>();
 			Permission postPermission = PermissionServiceProvider.provide().getCodePermission(DataTypeHelper.PERMISSION_BLOG_POST_CODE);
@@ -270,7 +270,7 @@ public final class Blog extends ActionHandler {
 
 			input.post = ValidationHelper.validateExistingPost(input.post, "input.post");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createAdminRole());
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			PostServiceProvider.provide().deletePost(input.post);
 
