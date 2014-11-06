@@ -195,7 +195,7 @@ public class DefaultItemRankArchiver implements ItemRankArchiver {
 		Map<Date, Rank> ranksLookup = new HashMap<Date, Rank>();
 		ArchivableKeyValue value = KeyValueArchiveManager.get().getArchiveKeyValue(key);
 
-		Date date;
+		// Date date;
 
 		if (value != null && value.value != null && value.value.length() > 0) {
 			JsonElement jsonElement = (new JsonParser()).parse(value.value);
@@ -203,7 +203,7 @@ public class DefaultItemRankArchiver implements ItemRankArchiver {
 			if (jsonElement.isJsonArray()) {
 				JsonArray jsonArray = jsonElement.getAsJsonArray();
 
-				Rank rank;
+				Rank rank, existingRank;
 				for (JsonElement jsonArrayElement : jsonArray) {
 					if (jsonArrayElement.isJsonObject()) {
 						rank = new Rank();
@@ -213,11 +213,23 @@ public class DefaultItemRankArchiver implements ItemRankArchiver {
 							ranks = new ArrayList<Rank>();
 						}
 
-						date = ApiHelper.removeTime(rank.date);
+						rank.date = ApiHelper.removeTime(rank.date);
 
-						if (ranksLookup.get(date) == null) {
+						if ((existingRank = ranksLookup.get(rank.date)) == null) {
 							ranks.add(rank);
-							ranksLookup.put(date, rank);
+							ranksLookup.put(rank.date, rank);
+						} else {
+							if (rank.code.longValue() == existingRank.code.longValue()) {
+								if ((existingRank.position == null || existingRank.position.intValue() == 0) && rank.position != null
+										&& rank.position.intValue() != 0) {
+									existingRank.position = rank.position;
+								}
+
+								if ((existingRank.grossingPosition == null || existingRank.grossingPosition.intValue() == 0) && rank.grossingPosition != null
+										&& rank.grossingPosition.intValue() != 0) {
+									existingRank.grossingPosition = rank.grossingPosition;
+								}
+							}
 						}
 					}
 				}
