@@ -732,9 +732,19 @@ public final class Admin extends ActionHandler {
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
-			output.items = ItemServiceProvider.provide().getItems(input.pager);
+			boolean isQuery = false;
+			try {
+				input.query = ValidationHelper.validateQuery(input.query, "input");
+				isQuery = true;
+			} catch (InputValidationException ex) {}
+
+			output.items = isQuery ? ItemServiceProvider.provide().searchItems(input.query, input.pager) : ItemServiceProvider.provide().getItems(input.pager);
 			output.pager = input.pager;
-			updatePager(output.pager, output.items, input.pager.totalCount == null ? ItemServiceProvider.provide().getItemsCount() : null);
+			if (isQuery) {
+				updatePager(output.pager, output.items, input.pager.totalCount == null ? ItemServiceProvider.provide().searchItemsCount(input.query) : null);
+			} else {
+				updatePager(output.pager, output.items, input.pager.totalCount == null ? ItemServiceProvider.provide().getItemsCount() : null);
+			}
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
