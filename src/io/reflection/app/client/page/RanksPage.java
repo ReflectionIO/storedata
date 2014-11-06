@@ -504,7 +504,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 				showMorePanel.setVisible(true);
 			}
 
-			boolean hasPermission = SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_FULL_RANK_VIEW_ID);
+			boolean hasPermission = SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_FULL_RANK_VIEW_CODE);
 
 			if (hasPermission) {
 				redirect.removeFromParent();

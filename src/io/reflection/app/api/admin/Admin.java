@@ -125,7 +125,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
@@ -163,7 +163,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			output.count = UserServiceProvider.provide().getUsersCount();
 
@@ -187,7 +187,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -209,7 +209,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
@@ -253,7 +253,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			input.country = ValidationHelper.validateCountry(input.country, "input");
 
@@ -287,7 +287,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			input.country = ValidationHelper.validateCountry(input.country, "input");
 
@@ -328,7 +328,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			Modeller modeller = null;
 
@@ -395,7 +395,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			switch (input.modelType) {
 			case ModelTypeTypeCorrelation:
@@ -464,7 +464,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
 
@@ -493,7 +493,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
 
@@ -523,7 +523,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
 
@@ -553,7 +553,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
 
@@ -583,7 +583,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
 
@@ -613,7 +613,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
@@ -641,7 +641,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
@@ -669,7 +669,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
@@ -698,7 +698,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			input.toAddress = ValidationHelper.validateEmail(input.toAddress, true, "input.toAddress");
 
@@ -728,7 +728,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
@@ -757,7 +757,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
 
@@ -798,10 +798,10 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			if (input.allTestUsers) {
-				Role testRole = DataTypeHelper.createRole(DataTypeHelper.ROLE_TEST_ID);
+				Role testRole = RoleServiceProvider.provide().getCodeRole(DataTypeHelper.ROLE_TEST_CODE);
 				input.users = UserServiceProvider.provide().getRoleUsers(testRole);
 			}
 
@@ -852,7 +852,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
 
@@ -908,7 +908,7 @@ public final class Admin extends ActionHandler {
 
 			ValidationHelper.validateExistingEmailTemplate(input.emailTemplate, "input.emailTemplate");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			EmailTemplateServiceProvider.provide().updateEmailTemplate(input.emailTemplate);
 
@@ -932,7 +932,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			output.dataAccounts = DataAccountServiceProvider.provide().getDataAccounts(input.pager);
 			// Delete password fields
@@ -1001,7 +1001,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			Calendar cal = Calendar.getInstance();
 
@@ -1057,7 +1057,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			if (input.from == null)
 				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("Date: input.from"));
@@ -1095,7 +1095,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			input.fetch = ValidationHelper.validateDataAccountFetch(input.fetch, "input.fetch");
 
@@ -1121,7 +1121,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			input.dataAccount = ValidationHelper.validateDataAccount(input.dataAccount, "input.dataAccount");
 
@@ -1165,7 +1165,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			Calendar cal = Calendar.getInstance();
 
