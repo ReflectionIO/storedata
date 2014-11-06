@@ -199,7 +199,7 @@ public class PredictorIOS implements Predictor {
 				// }
 
 				RankServiceProvider.provide().updateRank(rank);
-				archiver.enqueue(rank.id);
+				archiver.enqueueIdRank(rank.id);
 			}
 		}
 
@@ -392,7 +392,7 @@ public class PredictorIOS implements Predictor {
 			RankServiceProvider.provide().updateRank(rank);
 
 			if (archiver != null) {
-				archiver.enqueue(rank.id);
+				archiver.enqueueIdRank(rank.id);
 			}
 		}
 
