@@ -29,6 +29,7 @@ import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.emailtemplate.EmailTemplateServiceProvider;
+import io.reflection.app.service.role.RoleServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.app.shared.util.FormattingHelper;
 
@@ -152,7 +153,7 @@ final class UserService implements IUserService {
 				addedUser.password = null;
 
 				if (isValidTestUser(user)) {
-					Role testRole = DataTypeHelper.createRole(DataTypeHelper.ROLE_TEST_ID);
+					Role testRole = RoleServiceProvider.provide().getCodeRole(DataTypeHelper.ROLE_TEST_CODE);
 					assignRole(user, testRole);
 				}
 

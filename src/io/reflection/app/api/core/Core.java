@@ -907,8 +907,7 @@ public final class Core extends ActionHandler {
 
 			boolean hasDataAccount = UserServiceProvider.provide().hasDataAccount(input.session.user, input.linkedAccount).booleanValue();
 
-			Role adminRole = DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID);
-			boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, adminRole);
+			boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, DataTypeHelper.createAdminRole());
 
 			if (hasDataAccount || isAdmin) {
 				User user = UserServiceProvider.provide().getDataAccountOwner(input.linkedAccount);
@@ -917,7 +916,7 @@ public final class Core extends ActionHandler {
 					UserServiceProvider.provide().deleteAllUsersDataAccount(input.linkedAccount);
 
 					if (!UserServiceProvider.provide().hasDataAccounts(user) && !isAdmin) {
-						Permission hlaPermission = DataTypeHelper.createPermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_ID);
+						Permission hlaPermission = PermissionServiceProvider.provide().getCodePermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE);
 						UserServiceProvider.provide().revokePermission(user, hlaPermission);
 					}
 
@@ -1180,10 +1179,9 @@ public final class Core extends ActionHandler {
 
 			output.account.source = input.source;
 
-			Role adminRole = DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID);
-			boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, adminRole);
+			boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, DataTypeHelper.createAdminRole());
 
-			Permission hlaPermission = DataTypeHelper.createPermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_ID);
+			Permission hlaPermission = PermissionServiceProvider.provide().getCodePermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE);
 			boolean hasPermission = UserServiceProvider.provide().hasPermission(input.session.user, hlaPermission);
 
 			if (!hasPermission && !isAdmin) {
@@ -1408,7 +1406,7 @@ public final class Core extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			final Permission permissionMCA = DataTypeHelper.createPermission(DataTypeHelper.PERMISSION_MANAGE_CATEGORIES_ID);
+			final Permission permissionMCA = PermissionServiceProvider.provide().getCodePermission(DataTypeHelper.PERMISSION_MANAGE_CATEGORIES_CODE);
 			try {
 				ValidationHelper.validateAuthorised(input.session.user, permissionMCA);
 			} catch (AuthorisationException aEx) {
