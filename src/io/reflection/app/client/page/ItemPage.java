@@ -168,7 +168,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			@Override
 			public SafeHtml getValue(ItemRevenue object) {
 				return (object.currency != null) ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.getCurrencySymbol(object.currency) + " "
-						+ Double.toString(object.paid.doubleValue())) : spinnerLoaderHTML;
+						+ FormattingHelper.getIntegerFormattedNumber(object.paid)) : spinnerLoaderHTML;
 			}
 		};
 
@@ -186,7 +186,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			@Override
 			public SafeHtml getValue(ItemRevenue object) {
 				return (object.currency != null && object.iap != null) ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.getCurrencySymbol(object.currency)
-						+ " " + Double.toString(object.iap.doubleValue())) : spinnerLoaderHTML;
+						+ " " + FormattingHelper.getIntegerFormattedNumber(object.iap)) : spinnerLoaderHTML;
 			}
 		};
 
@@ -195,7 +195,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			@Override
 			public SafeHtml getValue(ItemRevenue object) {
 				return (object.currency != null && object.total != null) ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.getCurrencySymbol(object.currency)
-						+ " " + Double.toString(object.total.doubleValue())) : spinnerLoaderHTML;
+						+ " " + FormattingHelper.getIntegerFormattedNumber(object.total)) : spinnerLoaderHTML;
 			}
 		};
 

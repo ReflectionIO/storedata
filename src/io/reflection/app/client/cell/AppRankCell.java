@@ -77,10 +77,10 @@ public class AppRankCell extends AbstractCell<Rank> {
 
 		if (REVENUE_DAILY_DATA_TYPE.equals(dailyDataType)) {
 			dailyData = DailyDataTemplate.INSTANCE.dailyData("icon-dollar", "padding-right: 6px", FormattingHelper.getCurrencySymbol(value.currency),
-					(showModelPredictions ? value.revenue.toString() : "0"));
+					(showModelPredictions ? FormattingHelper.getIntegerFormattedNumber(value.revenue) : "0"));
 		} else {
-			dailyData = DailyDataTemplate.INSTANCE.dailyData("icon-download-alt", "padding-right: 6px", "", (showModelPredictions ? value.downloads.toString()
-					: "0"));
+			dailyData = DailyDataTemplate.INSTANCE.dailyData("icon-download-alt", "padding-right: 6px", "",
+					(showModelPredictions ? FormattingHelper.getIntegerFormattedNumber(value.downloads) : "0"));
 		}
 
 		Stack s = NavigationController.get().getStack();

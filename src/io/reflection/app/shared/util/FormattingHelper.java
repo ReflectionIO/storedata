@@ -159,6 +159,10 @@ public class FormattingHelper {
 		return NumberFormat.getFormat(",###.##").format(number);
 	}
 
+	public static String getIntegerFormattedNumber(Number number) {
+		return NumberFormat.getFormat(",###").format(number);
+	}
+
 	public static boolean isZero(float value) {
 		return value < SMALL_MONEY;
 	}
