@@ -3,44 +3,43 @@
 	xmlns:b="urn:import:io.reflection.app.client.page.blog.part">
 	<ui:style>
 	.gap {
-	    margin-top: 20px;
-	    margin-bottom: 50px;
+		margin-top: 20px;
+		margin-bottom: 50px;
 	}
 	
 	.bold {
-	    font-weight: 700;
+		font-weight: 700;
 	}
 	</ui:style>
-	<g:HTMLPanel>
-		<g:HTMLPanel styleName="row blog-container">
+	<g:HTMLPanel styleName="row blog-container">
 
-			<b:BlogSidePanel styleName="col-sm-3" />
+		<b:BlogSidePanel styleName="col-sm-3" />
 
-			<g:HTMLPanel styleName="col-sm-8 post">
-				<p:Preloader ui:field="preloader">
-					<g:HTMLPanel>
-						<h1 ui:field="title" class="post-title"></h1>
+		<g:HTMLPanel styleName="col-sm-8 post">
+			<p:Preloader ui:field="preloader">
+				<g:HTMLPanel>
+					<h1 ui:field="title" class="post-title"></h1>
 
-						<p class="post-info">
-							<span class="{style.bold}">
-								By
-								<span ui:field="author" />
-							</span>
-							<span ui:field="date" />
-						</p>
+					<p class="post-info">
+						<span class="{style.bold}">
+							By
+							<span ui:field="author" />
+						</span>
+						<span ui:field="date" />
+					</p>
 
-						<p ui:field="content" />
+					<p ui:field="content" />
 
-						<g:HTMLPanel ui:field="tags" styleName="{style.gap}" />
+					<g:HTMLPanel ui:field="tags" styleName="{style.gap}" />
 
-						<div id="disqus_thread" />
-						<p:BackToTop styleName="pull-right" />
-					</g:HTMLPanel>
-				</p:Preloader>
-				<g:HTMLPanel styleName="filler-bottom col-md-12 hidden-xs hidden-sm" />
-			</g:HTMLPanel>
+					<div id="disqus_thread" />
+
+				</g:HTMLPanel>
+			</p:Preloader>
+			<g:HTMLPanel styleName="filler-bottom col-md-12 hidden-xs hidden-sm" />
 		</g:HTMLPanel>
 
+		<p:BackToTop />
 
 	</g:HTMLPanel>
 
