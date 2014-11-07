@@ -216,7 +216,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 			@Override
 			public String getValue(RanksGroup object) {
-				return rankForListType(object).downloads.toString();
+				Rank rank = rankForListType(object);
+				return FormattingHelper.getIntegerFormattedNumber(rank.downloads);
 			}
 
 		};
@@ -225,8 +226,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 			@Override
 			public String getValue(RanksGroup object) {
-				Rank value = rankForListType(object);
-				return FormattingHelper.getCurrencySymbol(value.currency) + " " + value.revenue;
+				Rank rank = rankForListType(object);
+				return FormattingHelper.getCurrencySymbol(rank.currency) + " " + FormattingHelper.getIntegerFormattedNumber(rank.revenue);
 			}
 
 		};
