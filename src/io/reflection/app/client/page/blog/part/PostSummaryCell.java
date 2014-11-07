@@ -53,7 +53,7 @@ public class PostSummaryCell extends AbstractCell<Post> {
 		}
 
 		if (value.visible == Boolean.TRUE) {
-			processedString += "<p>NOT PUBLISHED</p>";
+			processedString += "<p class=\"label label-info\">NOT PUBLISHED</p>";
 		}
 
 		RENDERER.render(builder, link, value.title, SafeHtmlUtils.fromTrustedString(processedString), FormattingHelper.getUserName(value.author), published);
