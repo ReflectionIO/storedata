@@ -185,19 +185,20 @@ public class FilterHelper {
 	 *            Date to be set at noon
 	 * @return newDate The new date set at noon
 	 */
-	@SuppressWarnings("deprecation")
+	// @SuppressWarnings("deprecation")
 	public static Date normalizeDate(Date date) {
-		Date newDate = null;
-
-		if (date != null) {
-			newDate = new Date(0L);
-			newDate.setDate(date.getDate());
-			newDate.setMonth(date.getMonth());
-			newDate.setYear(date.getYear());
-			newDate.setHours(0);
-		}
-
-		return newDate;
+		// Date newDate = null;
+		//
+		// if (date != null) {
+		// newDate = new Date(0L);
+		// newDate.setDate(date.getDate());
+		// newDate.setMonth(date.getMonth());
+		// newDate.setYear(date.getYear());
+		// newDate.setHours(0);
+		// }
+		//
+		// return newDate;
+		return date;
 	}
 
 	/**

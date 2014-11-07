@@ -26,8 +26,12 @@ public class SliceHelper {
 		return offset(date, DEFAULT_DAYS_PER_SLICE);
 	}
 
-	public static long offset(Date date, int sliceDays) {
-		return date.getTime() / (MILLIS_PER_DAY * (long) sliceDays);
+	public static long offset(Date date, int daysPerSlice) {
+		return date.getTime() / (MILLIS_PER_DAY * (long) daysPerSlice);
+	}
+
+	public static long subDayOffset(Date date, int slicesPerDay) {
+		return date.getTime() / (MILLIS_PER_DAY / (long) slicesPerDay);
 	}
 
 	public static Date startDate(long slice) {
@@ -35,7 +39,6 @@ public class SliceHelper {
 	}
 
 	public static Date startDate(long slice, int daysPerSlice) {
-
 		c.setTime(new Date(0));
 		c.add(Calendar.DAY_OF_YEAR, (int) (slice * daysPerSlice));
 
