@@ -45,7 +45,6 @@ public class ApiHelper {
 		cal.set(Calendar.MILLISECOND, 0);
 
 		return cal.getTime();
-
 	}
 
 	/**

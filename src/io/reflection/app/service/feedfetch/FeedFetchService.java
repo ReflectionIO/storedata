@@ -27,21 +27,17 @@ import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-
-import co.spchopr.persistentmap.PersistentMap;
-import co.spchopr.persistentmap.PersistentMapFactory;
 
 import com.google.appengine.api.utils.SystemProperty;
 import com.spacehopperstudios.utility.StringUtils;
 
 final class FeedFetchService implements IFeedFetchService {
 
-	private PersistentMap cache = PersistentMapFactory.createObjectify();
-	private Calendar cal = Calendar.getInstance();
+//	private PersistentMap cache = PersistentMapFactory.createObjectify();
+//	private Calendar cal = Calendar.getInstance();
 
 	public String getName() {
 		return ServiceType.ServiceTypeFeedFetch.toString();
@@ -544,33 +540,33 @@ final class FeedFetchService implements IFeedFetchService {
 	public Long getGatherCode(Country country, Store store, Date after, Date before) throws DataAccessException {
 		Long code = null;
 
-		String memcacheKey = getName() + ".gathercode." + country.a2Code + "." + store.a3Code + "." + (after == null ? "none" : after.getTime()) + "."
-				+ (before == null ? "none" : before.getTime());
-		code = (Long) cache.get(memcacheKey);
+		// String memcacheKey = getName() + ".gathercode." + country.a2Code + "." + store.a3Code + "." + (after == null ? "none" : after.getTime()) + "."
+		// + (before == null ? "none" : before.getTime());
+		// code = (Long) cache.get(memcacheKey);
+		//
+		// if (code == null) {
+		Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
 
-		if (code == null) {
-			Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
+		try {
+			feedFetchConnection.connect();
+			String getGatherCode = String
+					.format("SELECT `code2` FROM `feedfetch` WHERE CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`store` AS BINARY)=CAST('%s' AS BINARY) AND %s AND `deleted`='n' ORDER BY `date` DESC LIMIT 1",
+							addslashes(country.a2Code), addslashes(store.a3Code), beforeAfterQuery(before, after));
 
-			try {
-				feedFetchConnection.connect();
-				String getGatherCode = String
-						.format("SELECT `code2` FROM `feedfetch` WHERE CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`store` AS BINARY)=CAST('%s' AS BINARY) AND %s AND `deleted`='n' ORDER BY `date` DESC LIMIT 1",
-								addslashes(country.a2Code), addslashes(store.a3Code), beforeAfterQuery(before, after));
+			feedFetchConnection.executeQuery(getGatherCode);
 
-				feedFetchConnection.executeQuery(getGatherCode);
-
-				if (feedFetchConnection.fetchNextRow()) {
-					code = feedFetchConnection.getCurrentRowLong("code2");
-					cal.setTime(new Date());
-					cal.add(Calendar.DAY_OF_MONTH, 20);
-					cache.put(memcacheKey, code, cal.getTime());
-				}
-			} finally {
-				if (feedFetchConnection != null) {
-					feedFetchConnection.disconnect();
-				}
+			if (feedFetchConnection.fetchNextRow()) {
+				code = feedFetchConnection.getCurrentRowLong("code2");
+				// cal.setTime(new Date());
+				// cal.add(Calendar.HOUR_OF_DAY, 1);
+				// cache.put(memcacheKey, code, cal.getTime());
+			}
+		} finally {
+			if (feedFetchConnection != null) {
+				feedFetchConnection.disconnect();
 			}
 		}
+		// }
 
 		return code;
 	}
@@ -650,6 +646,14 @@ final class FeedFetchService implements IFeedFetchService {
 		}
 
 		return feedFetches;
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.feedfetch.IFeedFetchService#getDateCode(java.util.Date, java.lang.Integer)
+	 */
+	@Override
+	public Long getDateCode(Date date, Integer gatherTimes) throws DataAccessException {
+		return null;
 	}
 
 }
