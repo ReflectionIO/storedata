@@ -211,7 +211,7 @@ public final class Admin extends ActionHandler {
 
 			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
-			input.pager = ValidationHelper.validatePager(input.pager, "input");
+			input.pager = ValidationHelper.validatePager(input.pager, "input.pager");
 
 			if (input.pager.sortBy == null) {
 				input.pager.sortBy = "date";
@@ -221,17 +221,22 @@ public final class Admin extends ActionHandler {
 				input.pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
 			}
 
-			input.country = ValidationHelper.validateCountry(input.country, "input");
+			input.country = ValidationHelper.validateCountry(input.country, "input.country");
 
-			input.store = ValidationHelper.validateStore(input.store, "input");
+			input.store = ValidationHelper.validateStore(input.store, "input.store");
+
+			input.category = ValidationHelper.validateCategory(input.category, "input.category");
 
 			input.listTypes = ValidationHelper.validateListTypes(input.listTypes, input.store, "input.listTypes");
 
-			output.feedFetches = FeedFetchServiceProvider.provide().getFeedFetches(input.country, input.store, input.listTypes, input.pager);
+			output.feedFetches = FeedFetchServiceProvider.provide().getFeedFetches(input.country, input.store, input.category, input.listTypes, input.pager);
 
 			output.pager = input.pager;
-			updatePager(output.pager, output.feedFetches,
-					input.pager.totalCount == null ? FeedFetchServiceProvider.provide().getFeedFetchesCount(input.country, input.store, input.listTypes) : null);
+			updatePager(
+					output.pager,
+					output.feedFetches,
+					input.pager.totalCount == null ? FeedFetchServiceProvider.provide().getFeedFetchesCount(input.country, input.store, input.category,
+							input.listTypes) : null);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {

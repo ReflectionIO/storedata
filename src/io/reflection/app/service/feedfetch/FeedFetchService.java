@@ -36,8 +36,8 @@ import com.spacehopperstudios.utility.StringUtils;
 
 final class FeedFetchService implements IFeedFetchService {
 
-//	private PersistentMap cache = PersistentMapFactory.createObjectify();
-//	private Calendar cal = Calendar.getInstance();
+	// private PersistentMap cache = PersistentMapFactory.createObjectify();
+	// private Calendar cal = Calendar.getInstance();
 
 	public String getName() {
 		return ServiceType.ServiceTypeFeedFetch.toString();
@@ -162,26 +162,20 @@ final class FeedFetchService implements IFeedFetchService {
 		throw new UnsupportedOperationException();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.service.fetchfeed.IFeedFetchService#getFeedFetches( io.reflection.app.shared.datatypes.Country,
-	 * io.reflection.app.shared.datatypes.Store,java.util.Collection, io.reflection.app.api.shared.datatypes.Pager)
-	 */
 	@Override
-	public List<FeedFetch> getFeedFetches(Country country, Store store, Collection<String> types, Pager pager) throws DataAccessException {
+	public List<FeedFetch> getFeedFetches(Country country, Store store, Category category, Collection<String> types, Pager pager) throws DataAccessException {
 		List<FeedFetch> feedFetches = new ArrayList<FeedFetch>();
 
 		String typesQueryPart = null;
 		if (types.size() == 1) {
-			typesQueryPart = String.format("`type`='%s'", types.iterator().next());
+			typesQueryPart = String.format("`type`='%s' AND", types.iterator().next());
 		} else {
-			typesQueryPart = "`type` IN ('" + StringUtils.join(types, "','") + "')";
+			typesQueryPart = "`type` IN ('" + StringUtils.join(types, "','") + "') AND";
 		}
 
 		String getFeedFetchesQuery = String.format(
-				"SELECT * FROM `feedfetch` WHERE `store`='%s' AND `country`='%s' AND %s AND `deleted`='n' ORDER BY `%s` %s LIMIT %d,%d",
-				addslashes(store.a3Code), addslashes(country.a2Code), typesQueryPart == null ? "" : typesQueryPart, pager.sortBy,
+				"SELECT * FROM `feedfetch` WHERE `store`='%s' AND `country`='%s' AND `categoryid`=%d AND %s `deleted`='n' ORDER BY `%s` %s LIMIT %d,%d",
+				addslashes(store.a3Code), addslashes(country.a2Code), category.id.longValue(), typesQueryPart == null ? "" : typesQueryPart, pager.sortBy,
 				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
 
 		Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
@@ -206,26 +200,20 @@ final class FeedFetchService implements IFeedFetchService {
 		return feedFetches;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.service.fetchfeed.IFeedFetchService#getFeedFetchesCount( io.reflection.app.shared.datatypes.Country,
-	 * io.reflection.app.shared.datatypes.Store,java.util.Collection)
-	 */
 	@Override
-	public Long getFeedFetchesCount(Country country, Store store, Collection<String> types) throws DataAccessException {
+	public Long getFeedFetchesCount(Country country, Store store, Category category, Collection<String> types) throws DataAccessException {
 		Long feedFetchesCount = Long.valueOf(0);
 
 		String typesQueryPart = null;
 		if (types.size() == 1) {
-			typesQueryPart = String.format("`type`='%s'", types.iterator().next());
+			typesQueryPart = String.format("`type`='%s' AND", types.iterator().next());
 		} else {
-			typesQueryPart = "`type` IN ('" + StringUtils.join(types, "','") + "')";
+			typesQueryPart = "`type` IN ('" + StringUtils.join(types, "','") + "') AND ";
 		}
 
 		String getFeedFetchesCountQuery = String.format(
-				"SELECT count(1) as `count` FROM `feedfetch` WHERE `store`='%s' AND `country`='%s' AND %s AND `deleted`='n'", addslashes(store.a3Code),
-				addslashes(country.a2Code), typesQueryPart == null ? "" : typesQueryPart);
+				"SELECT count(1) as `count` FROM `feedfetch` WHERE `store`='%s' AND `country`='%s' AND `categoryid`=%d AND %s `deleted`='n'",
+				addslashes(store.a3Code), addslashes(country.a2Code), category.id.longValue(), typesQueryPart == null ? "" : typesQueryPart);
 
 		Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
 
@@ -648,7 +636,9 @@ final class FeedFetchService implements IFeedFetchService {
 		return feedFetches;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.service.feedfetch.IFeedFetchService#getDateCode(java.util.Date, java.lang.Integer)
 	 */
 	@Override
