@@ -7,7 +7,12 @@
 //
 package io.reflection.app.helpers;
 
-import static io.reflection.app.collectors.CollectorIOS.*;
+import static io.reflection.app.collectors.CollectorIOS.TOP_FREE_APPS;
+import static io.reflection.app.collectors.CollectorIOS.TOP_FREE_IPAD_APPS;
+import static io.reflection.app.collectors.CollectorIOS.TOP_GROSSING_APPS;
+import static io.reflection.app.collectors.CollectorIOS.TOP_GROSSING_IPAD_APPS;
+import static io.reflection.app.collectors.CollectorIOS.TOP_PAID_APPS;
+import static io.reflection.app.collectors.CollectorIOS.TOP_PAID_IPAD_APPS;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.shared.util.DataTypeHelper;
 
@@ -21,6 +26,9 @@ import java.util.List;
  * 
  */
 public class ApiHelper {
+
+	public static final long MILLIS_PER_DAY = 24L * 60L * 60L * 1000L;
+
 	public static String getGrossingListName(Store store, String type) {
 		String listName = null;
 

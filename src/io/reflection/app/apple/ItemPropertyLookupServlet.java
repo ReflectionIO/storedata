@@ -14,6 +14,7 @@ import io.reflection.app.api.lookup.shared.datatypes.LookupDetailType;
 import io.reflection.app.collectors.HttpExternalGetter;
 import io.reflection.app.datatypes.shared.Application;
 import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.helpers.ApiHelper;
 //import io.reflection.app.collectors.HttpExternalGetter;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.application.ApplicationServiceProvider;
@@ -62,7 +63,7 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 	public static final String PROPERTY_IAP = "usesIap";
 	private static final String PROPERTY_IAP_ON = "usesIap.on";
 
-	private static final long DURATION_30_DAYS = 30 * 24 * 60 * 60 * 1000;
+	private static final long DURATION_30_DAYS = 30L * ApiHelper.MILLIS_PER_DAY;
 
 	public static final String ADD_IF_NEW_ACTION = "addIfNew";
 	public static final String REMOVE_DUPLICATES_ACTION = "removeDuplicates";
