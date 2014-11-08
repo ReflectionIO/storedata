@@ -123,17 +123,16 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 						r.grossing = output.grossingRanks.get(i);
 					}
 
-					// updateRowCount(mPager.totalCount.intValue(), true); // Inform the displays of the total number of items that are available. @params the
-					// new
-					// total row count, true if the count is exact, false if it is an estimate
 					updateRowData(0, mRows); // Inform the displays of the new data. @params Start index, data values
 				}
+				updateRowCount(mRows.size(), true);
 
 				EventController.get().fireEventFromSource(new GetAllTopItemsSuccess(input, output), RankController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
+				updateRowCount(0, true);
 				EventController.get().fireEventFromSource(new GetAllTopItemsFailure(input, caught), RankController.this);
 			}
 		});

@@ -583,7 +583,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	 */
 	@Override
 	public void getAllTopItemsSuccess(GetAllTopItemsRequest input, GetAllTopItemsResponse output) {
-		if (output.status.equals(StatusType.StatusTypeSuccess)) {
+		if (output.status.equals(StatusType.StatusTypeSuccess) && output.freeRanks != null) {
 			showMorePanel.setVisible(true);
 
 			if (SessionController.get().isLoggedInUserAdmin()) {
@@ -598,7 +598,6 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 				}
 			}
 		} else {
-			RankController.get().updateRowCount(0, true);
 			showMorePanel.setVisible(false);
 		}
 	}
@@ -612,7 +611,6 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	 */
 	@Override
 	public void getAllTopItemsFailure(GetAllTopItemsRequest input, Throwable caught) {
-		RankController.get().updateRowCount(0, true);
 		showMorePanel.setVisible(false);
 	}
 }
