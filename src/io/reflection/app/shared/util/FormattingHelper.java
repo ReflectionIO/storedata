@@ -28,6 +28,8 @@ public class FormattingHelper {
 	public static final String DATE_FORMAT_DD_MMM_YYYY_HH_MM = "dd MMM yyyy - HH:mm";
 	public static final float SMALL_MONEY = 0.0000001f;
 	private static Map<String, String> currencySymbolLookup = null;
+	private static NumberFormat MONEY_FORMAT = NumberFormat.getFormat(",###.##");
+	private static NumberFormat WHOLE_NUMBER_FORMAT = NumberFormat.getFormat(",###");
 
 	/**
 	 * Returns a currency sumbol or code if none are found
@@ -56,25 +58,25 @@ public class FormattingHelper {
 		}
 	}
 
-	public static String getPrice(String currency, float price) {
+	public static String asPriceString(String currency, float price) {
 		String priceString;
 
 		if (isZero(price)) {
 			priceString = "Free";
 		} else {
-			priceString = (currency == null ? "" : getCurrencySymbol(currency) + " ") + getFormattedNumber(price);
+			priceString = asMoneyString(currency, price);
 		}
 
 		return priceString;
 	}
 
-	public static String getPriceRange(String currency, float from, float to) {
+	public static String asPriceRangeString(String currency, float from, float to) {
 		String priceRangeString;
 
 		if (isZero(Math.abs(from - to))) {
-			priceRangeString = getPrice(currency, from); // No need to use a price range
+			priceRangeString = asPriceString(currency, from); // No need to use a price range
 		} else {
-			String fromString = getPrice(currency, from), toString = getPrice(currency, to);
+			String fromString = asPriceString(currency, from), toString = asPriceString(currency, to);
 			priceRangeString = fromString + " - " + toString;
 		}
 
@@ -155,12 +157,16 @@ public class FormattingHelper {
 		return timeSince;
 	}
 
-	public static String getFormattedNumber(Number number) {
-		return NumberFormat.getFormat(",###.##").format(number);
+	public static String asMoneyString(String currency, float money) {
+		return (currency == null ? "" : getCurrencySymbol(currency) + " ") + MONEY_FORMAT.format((double) money);
 	}
 
-	public static String getIntegerFormattedNumber(Number number) {
-		return NumberFormat.getFormat(",###").format(number);
+	public static String asWholeMoneyString(String currency, float money) {
+		return (currency == null ? "" : getCurrencySymbol(currency) + " ") + WHOLE_NUMBER_FORMAT.format((double) money);
+	}
+
+	public static String asDownloadsString(int downloads) {
+		return WHOLE_NUMBER_FORMAT.format((double) downloads);
 	}
 
 	public static boolean isZero(float value) {

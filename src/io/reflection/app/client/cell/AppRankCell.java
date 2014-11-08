@@ -46,8 +46,8 @@ public class AppRankCell extends AbstractCell<Rank> {
 	interface DailyDataTemplate extends SafeHtmlTemplates {
 		DailyDataTemplate INSTANCE = GWT.create(DailyDataTemplate.class);
 
-		@Template("<span class=\"{0}\" style=\"{1}\"></span>{2} {3}")
-		SafeHtml dailyData(String icon, String style, String currency, String value);
+		@Template("<span class=\"{0}\" style=\"{1}\"></span>{2}")
+		SafeHtml dailyData(String icon, String style, String value);
 	}
 
 	public AppRankCell(boolean showModelPredictions) {
@@ -76,11 +76,11 @@ public class AppRankCell extends AbstractCell<Rank> {
 		SafeHtml dailyData;
 
 		if (REVENUE_DAILY_DATA_TYPE.equals(dailyDataType)) {
-			dailyData = DailyDataTemplate.INSTANCE.dailyData("icon-dollar", "padding-right: 6px", FormattingHelper.getCurrencySymbol(value.currency),
-					(showModelPredictions ? FormattingHelper.getIntegerFormattedNumber(value.revenue) : "0"));
+			dailyData = DailyDataTemplate.INSTANCE.dailyData("icon-dollar", "padding-right: 6px",
+					FormattingHelper.asWholeMoneyString(value.currency, showModelPredictions ? value.revenue.floatValue() : 0.0f));
 		} else {
-			dailyData = DailyDataTemplate.INSTANCE.dailyData("icon-download-alt", "padding-right: 6px", "",
-					(showModelPredictions ? FormattingHelper.getIntegerFormattedNumber(value.downloads) : "0"));
+			dailyData = DailyDataTemplate.INSTANCE.dailyData("icon-download-alt", "padding-right: 6px",
+					FormattingHelper.asDownloadsString(showModelPredictions ? value.downloads.intValue() : 0));
 		}
 
 		Stack s = NavigationController.get().getStack();

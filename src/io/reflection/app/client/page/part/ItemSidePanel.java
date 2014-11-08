@@ -67,12 +67,12 @@ public class ItemSidePanel extends Composite {
 
 		viewInStore.setHref(StoreController.get().getExternalUri(item));
 
-		iapDescription = DataTypeHelper.itemIapState(item, " + IAPs", "", "");
+		iapDescription = DataTypeHelper.itemIapState(item, " + In App Purchases", "", "");
 	}
 
 	public void setPrice(String currency, Float value) {
 		setLoaderVisible(false);
-		setPriceInnerHTML(FormattingHelper.getPrice(currency, value.floatValue()) + iapDescription);
+		setPriceInnerHTML(FormattingHelper.asPriceString(currency, value.floatValue()) + iapDescription);
 	}
 
 	public void setLoaderVisible(boolean visible) {
