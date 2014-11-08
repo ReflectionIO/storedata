@@ -77,6 +77,7 @@ import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.SimpleModelRun;
 import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.helpers.ApiHelper;
 import io.reflection.app.helpers.EmailHelper;
 import io.reflection.app.ingestors.Ingestor;
 import io.reflection.app.ingestors.IngestorFactory;
@@ -1020,7 +1021,9 @@ public final class Admin extends ActionHandler {
 
 			Calendar cal = Calendar.getInstance();
 
-			if (input.end == null) input.end = cal.getTime();
+			if (input.end == null) {
+				input.end = cal.getTime();
+			}
 
 			if (input.start == null) {
 				cal.setTime(input.end);
@@ -1029,7 +1032,7 @@ public final class Admin extends ActionHandler {
 			}
 
 			long diff = input.end.getTime() - input.start.getTime();
-			long diffDays = diff / (24 * 60 * 60 * 1000);
+			long diffDays = diff / ApiHelper.MILLIS_PER_DAY;
 
 			if (diffDays > 30 || diffDays < 0)
 				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
@@ -1184,7 +1187,9 @@ public final class Admin extends ActionHandler {
 
 			Calendar cal = Calendar.getInstance();
 
-			if (input.end == null) input.end = cal.getTime();
+			if (input.end == null) {
+				input.end = cal.getTime();
+			}
 
 			if (input.start == null) {
 				cal.setTime(input.end);
@@ -1193,7 +1198,7 @@ public final class Admin extends ActionHandler {
 			}
 
 			long diff = input.end.getTime() - input.start.getTime();
-			long diffDays = diff / (24 * 60 * 60 * 1000);
+			long diffDays = diff / ApiHelper.MILLIS_PER_DAY;
 
 			if (diffDays > 60 || diffDays < 0)
 				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),

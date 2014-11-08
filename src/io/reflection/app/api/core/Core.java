@@ -298,10 +298,10 @@ public final class Core extends ActionHandler {
 
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(input.on);
-			cal.set(Calendar.HOUR_OF_DAY, 0);
-			cal.set(Calendar.MINUTE, 0);
-			cal.set(Calendar.SECOND, 0);
-			cal.set(Calendar.MILLISECOND, 1);
+//			cal.set(Calendar.HOUR_OF_DAY, 0);
+//			cal.set(Calendar.MINUTE, 0);
+//			cal.set(Calendar.SECOND, 0);
+//			cal.set(Calendar.MILLISECOND, 1);
 			Date end = cal.getTime();
 			cal.add(Calendar.DAY_OF_YEAR, -1);
 			Date start = cal.getTime();
@@ -426,10 +426,10 @@ public final class Core extends ActionHandler {
 
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(input.on);
-				cal.set(Calendar.HOUR_OF_DAY, 0);
-				cal.set(Calendar.MINUTE, 0);
-				cal.set(Calendar.SECOND, 0);
-				cal.set(Calendar.MILLISECOND, 1);
+//				cal.set(Calendar.HOUR_OF_DAY, 0);
+//				cal.set(Calendar.MINUTE, 0);
+//				cal.set(Calendar.SECOND, 0);
+//				cal.set(Calendar.MILLISECOND, 1);
 				Date end = cal.getTime();
 				cal.add(Calendar.DAY_OF_YEAR, -1);
 				Date start = cal.getTime();
@@ -586,7 +586,7 @@ public final class Core extends ActionHandler {
 			FormType form = ModellerFactory.getModellerForStore(store.a3Code).getForm(input.listType);
 
 			long diff = input.end.getTime() - input.start.getTime();
-			long diffDays = diff / (24 * 60 * 60 * 1000);
+			long diffDays = diff / ApiHelper.MILLIS_PER_DAY;
 
 			if (diffDays > 60 || diffDays < 0)
 				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
@@ -1487,7 +1487,9 @@ public final class Core extends ActionHandler {
 
 			Calendar cal = Calendar.getInstance();
 
-			if (input.end == null) input.end = cal.getTime();
+			if (input.end == null) {
+				input.end = cal.getTime();
+			}
 
 			if (input.start == null) {
 				cal.setTime(input.end);
@@ -1496,7 +1498,7 @@ public final class Core extends ActionHandler {
 			}
 
 			long diff = input.end.getTime() - input.start.getTime();
-			long diffDays = diff / (24 * 60 * 60 * 1000);
+			long diffDays = diff / ApiHelper.MILLIS_PER_DAY;
 
 			if (diffDays > 60 || diffDays < 0)
 				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
@@ -1618,7 +1620,9 @@ public final class Core extends ActionHandler {
 
 			Calendar cal = Calendar.getInstance();
 
-			if (input.end == null) input.end = cal.getTime();
+			if (input.end == null) {
+				input.end = cal.getTime();
+			}
 
 			if (input.start == null) {
 				cal.setTime(input.end);
@@ -1627,7 +1631,7 @@ public final class Core extends ActionHandler {
 			}
 
 			long diff = input.end.getTime() - input.start.getTime();
-			long diffDays = diff / (24 * 60 * 60 * 1000);
+			long diffDays = diff / ApiHelper.MILLIS_PER_DAY;
 
 			if (diffDays > 60 || diffDays < 0)
 				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
@@ -1851,7 +1855,9 @@ public final class Core extends ActionHandler {
 
 			Calendar cal = Calendar.getInstance();
 
-			if (input.end == null) input.end = cal.getTime();
+			if (input.end == null) {
+				input.end = cal.getTime();
+			}
 
 			if (input.start == null) {
 				cal.setTime(input.end);
@@ -1860,7 +1866,7 @@ public final class Core extends ActionHandler {
 			}
 
 			long diff = input.end.getTime() - input.start.getTime();
-			long diffDays = diff / (24 * 60 * 60 * 1000);
+			long diffDays = diff / ApiHelper.MILLIS_PER_DAY;
 
 			if (diffDays > 60 || diffDays < 0)
 				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
