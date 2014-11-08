@@ -47,23 +47,26 @@ public interface IFeedFetchService extends IService {
 	public void deleteFeedFetch(FeedFetch feedFetch) throws DataAccessException;
 
 	/**
+	 * Get feed fetches
 	 * 
 	 * @param country
 	 * @param store
+	 * @param category
 	 * @param types
 	 * @param pager
 	 * @return
 	 */
-	public List<FeedFetch> getFeedFetches(Country country, Store store, Collection<String> types, Pager pager) throws DataAccessException;
+	public List<FeedFetch> getFeedFetches(Country country, Store store, Category category, Collection<String> types, Pager pager) throws DataAccessException;
 
 	/**
 	 * 
 	 * @param country
 	 * @param store
+	 * @param category
 	 * @param types
 	 * @return
 	 */
-	public Long getFeedFetchesCount(Country country, Store store, Collection<String> types) throws DataAccessException;
+	public Long getFeedFetchesCount(Country country, Store store, Category category, Collection<String> types) throws DataAccessException;
 
 	/**
 	 * 

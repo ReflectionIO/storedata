@@ -19,10 +19,7 @@ import io.reflection.app.shared.util.DataTypeHelper;
  */
 public class ApiCallHelper {
 	public static Store createStoreForApiCall(Store store) {
-		Store apiStore = new Store();
-		apiStore.a3Code = storeCodeForApiCall(store.a3Code);
-
-		return apiStore;
+		return DataTypeHelper.createStore(store.a3Code);
 	}
 
 	public static String storeCodeForApiCall(String a3Code) {
@@ -40,10 +37,7 @@ public class ApiCallHelper {
 	}
 
 	public static Country createCountryForApiCall(Country country) {
-		Country apiCountry = new Country();
-		apiCountry.a2Code = country.a2Code;
-
-		return apiCountry;
+		return DataTypeHelper.createCountry(country.a2Code);
 	}
 
 	public static Session getSessionForApiCall() {

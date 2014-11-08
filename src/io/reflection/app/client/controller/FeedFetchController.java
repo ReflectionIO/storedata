@@ -69,6 +69,7 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 
 		input.country = ApiCallHelper.createCountryForApiCall(FilterController.get().getCountry());
 		input.store = ApiCallHelper.createStoreForApiCall(FilterController.get().getStore());
+		input.category = FilterController.get().getCategory();
 		input.listTypes = FilterController.get().getListTypes();
 
 		if (input.country != null && input.store != null && input.listTypes != null) {
