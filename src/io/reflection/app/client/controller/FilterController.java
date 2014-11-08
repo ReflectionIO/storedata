@@ -76,6 +76,7 @@ public class FilterController {
 
 	@SuppressWarnings("serial")
 	public static class Filter extends HashMap<String, Object> {
+
 		public static Filter parse(String filter) {
 			Filter parsed = null;
 
@@ -498,22 +499,13 @@ public class FilterController {
 
 	public void setStartDate(Date value) {
 		Long previousStartTime = mCurrentFilter.getStartTime();
+		Date previousStartDate = null;
 
-		value = FilterHelper.normalizeDate(value);
-
-		if (value != null && (previousStartTime == null || value.getTime() != previousStartTime.longValue())) {
-			Date previousStartDate = null;
-
-			if (previousStartTime != null) {
-				previousStartDate = new Date(previousStartTime.longValue());
-			}
-
+		if (value != null && (previousStartTime == null || FilterHelper.equalDate(value, previousStartDate = new Date(previousStartTime.longValue())))) {
 			mCurrentFilter.setStartTime(Long.valueOf(value.getTime()));
 
 			if (mInTransaction == 0) {
-				EventController.get().fireEventFromSource(
-						new FilterEventHandler.ChangedFilterParameter<Date>(START_DATE_KEY, new Date(mCurrentFilter.getStartTime().longValue()),
-								previousStartDate), this);
+				EventController.get().fireEventFromSource(new FilterEventHandler.ChangedFilterParameter<Date>(START_DATE_KEY, value, previousStartDate), this);
 			} else {
 				if (mPreviousValues == null) {
 					mPreviousValues = new HashMap<String, Object>();
@@ -527,22 +519,13 @@ public class FilterController {
 
 	public void setEndDate(Date value) {
 		Long previousEndTime = mCurrentFilter.getEndTime();
+		Date previousEndDate = null;
 
-		value = FilterHelper.normalizeDate(value);
-
-		if (value != null && (previousEndTime == null || value.getTime() != previousEndTime.longValue())) {
-			Date previousEndDate = null;
-
-			if (previousEndTime != null) {
-				previousEndDate = new Date(previousEndTime.longValue());
-			}
-
+		if (value != null && (previousEndTime == null || !FilterHelper.equalDate(value, previousEndDate = new Date(previousEndTime.longValue())))) {
 			mCurrentFilter.setEndTime(Long.valueOf(value.getTime()));
 
 			if (mInTransaction == 0) {
-				EventController.get().fireEventFromSource(
-						new FilterEventHandler.ChangedFilterParameter<Date>(END_DATE_KEY, new Date(mCurrentFilter.getEndTime().longValue()), previousEndDate),
-						this);
+				EventController.get().fireEventFromSource(new FilterEventHandler.ChangedFilterParameter<Date>(END_DATE_KEY, value, previousEndDate), this);
 			} else {
 				if (mPreviousValues == null) {
 					mPreviousValues = new HashMap<String, Object>();

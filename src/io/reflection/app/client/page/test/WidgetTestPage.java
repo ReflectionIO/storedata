@@ -54,7 +54,7 @@ public class WidgetTestPage extends Page {
 			public DateRange getDateRange() {
 				DateRange r = new DateRange();
 
-				r.setFrom(FilterHelper.normalizeDate(new Date()));
+				r.setFrom(new Date());
 				Date to = r.getFrom();
 				r.setTo(to);
 				return r;
