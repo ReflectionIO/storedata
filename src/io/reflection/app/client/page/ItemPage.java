@@ -167,8 +167,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 			@Override
 			public SafeHtml getValue(ItemRevenue object) {
-				return (object.currency != null) ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.getCurrencySymbol(object.currency) + " "
-						+ FormattingHelper.getIntegerFormattedNumber(object.paid)) : spinnerLoaderHTML;
+				return (object.currency != null) ? SafeHtmlUtils
+						.fromSafeConstant(FormattingHelper.asWholeMoneyString(object.currency, object.paid.floatValue())) : spinnerLoaderHTML;
 			}
 		};
 
@@ -176,8 +176,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 			@Override
 			public SafeHtml getValue(ItemRevenue object) {
-				return (object.currency != null) ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.getCurrencySymbol(object.currency) + " 0.0")
-						: spinnerLoaderHTML;
+				return (object.currency != null) ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.asMoneyString(object.currency, 0.0f)) : spinnerLoaderHTML;
 			}
 		};
 
@@ -185,8 +184,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 			@Override
 			public SafeHtml getValue(ItemRevenue object) {
-				return (object.currency != null && object.iap != null) ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.getCurrencySymbol(object.currency)
-						+ " " + FormattingHelper.getIntegerFormattedNumber(object.iap)) : spinnerLoaderHTML;
+				return (object.currency != null && object.iap != null) ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.asWholeMoneyString(object.currency,
+						object.iap.floatValue())) : spinnerLoaderHTML;
 			}
 		};
 
@@ -194,8 +193,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 			@Override
 			public SafeHtml getValue(ItemRevenue object) {
-				return (object.currency != null && object.total != null) ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.getCurrencySymbol(object.currency)
-						+ " " + FormattingHelper.getIntegerFormattedNumber(object.total)) : spinnerLoaderHTML;
+				return (object.currency != null && object.total != null) ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.asWholeMoneyString(object.currency,
+						object.total.floatValue())) : spinnerLoaderHTML;
 			}
 		};
 

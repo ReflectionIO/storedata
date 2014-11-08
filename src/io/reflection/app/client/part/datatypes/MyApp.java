@@ -79,16 +79,15 @@ public class MyApp {
 			}
 
 			Rank sample = ranks.get(0);
-			String symbol = FormattingHelper.getCurrencySymbol(sample.currency);
 
-			overallDownloads = FormattingHelper.getFormattedNumber(downloads);
+			overallDownloads = FormattingHelper.asDownloadsString(downloads);
 
-			overallRevenue = symbol + " " + FormattingHelper.getFormattedNumber(revenue);
+			overallRevenue = FormattingHelper.asMoneyString(sample.currency, revenue);
 
 			if (minPrice == Float.MAX_VALUE || maxPrice == -Float.MAX_VALUE) {
 				overallPrice = UNKNOWN_VALUE;
 			} else {
-				overallPrice = FormattingHelper.getPriceRange(sample.currency, minPrice, maxPrice);
+				overallPrice = FormattingHelper.asPriceRangeString(sample.currency, minPrice, maxPrice);
 			}
 
 			if (minPosition == Integer.MAX_VALUE || maxPosition == Integer.MIN_VALUE) {
