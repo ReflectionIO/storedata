@@ -187,6 +187,35 @@ final class SimpleModelRunService implements ISimpleModelRunService {
 		Connection simpleModelRunConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeSimpleModelRun.toString());
 
 		String getFeedFetchSimpleModelRunQuery = String.format("SELECT * FROM `simplemodelrun` WHERE `feedfetchid` IN (%s) AND `deleted`='n'", joinedIds);
+
+		if (pager != null) {
+			String sortByQuery = "id";
+
+			if (pager.sortBy != null && ("created".equals(pager.sortBy) || "feedfetchid".equals(pager.sortBy))) {
+				sortByQuery = pager.sortBy;
+			}
+
+			String sortDirectionQuery = "DESC";
+
+			if (pager.sortDirection != null) {
+				switch (pager.sortDirection) {
+				case SortDirectionTypeAscending:
+					sortDirectionQuery = "ASC";
+					break;
+				default:
+					break;
+				}
+			}
+
+			getFeedFetchSimpleModelRunQuery += String.format(" ORDER BY `%s` %s", sortByQuery, sortDirectionQuery);
+		}
+
+		if (pager.start != null && pager.count != null) {
+			getFeedFetchSimpleModelRunQuery += String.format(" LIMIT %d, %d", pager.start.longValue(), pager.count.longValue());
+		} else if (pager.count != null) {
+			getFeedFetchSimpleModelRunQuery += String.format(" LIMIT %d", pager.count);
+		}
+
 		try {
 			simpleModelRunConnection.connect();
 			simpleModelRunConnection.executeQuery(getFeedFetchSimpleModelRunQuery);

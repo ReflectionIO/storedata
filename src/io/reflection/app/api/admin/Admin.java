@@ -1223,6 +1223,15 @@ public final class Admin extends ActionHandler {
 			}
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
+			
+			if (input.pager.sortBy == null) {
+				input.pager.sortBy = "feedfetchid";
+			}
+
+			if (input.pager.sortDirection == null) {
+				input.pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
+			}
+			
 			output.pager = input.pager;
 
 			List<FeedFetch> feedFetchList = FeedFetchServiceProvider.provide().getDatesFeedFetches(input.country, input.store, input.category, listTypes,
