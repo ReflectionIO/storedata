@@ -9,7 +9,9 @@ package io.reflection.app.client.helper;
 
 import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.client.controller.SessionController;
+import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.shared.util.DataTypeHelper;
 
@@ -42,5 +44,17 @@ public class ApiCallHelper {
 
 	public static Session getSessionForApiCall() {
 		return SessionController.get().getSessionForApiCall();
+	}
+
+	public static Category createCategoryForApiCall(Category category) {
+		return DataTypeHelper.createCategory(category.id);
+	}
+
+	/**
+	 * @param feedFetch
+	 * @return
+	 */
+	public static FeedFetch createFeedFetchForApiCall(FeedFetch feedFetch) {
+		return DataTypeHelper.createFeedFetch(feedFetch.id);
 	}
 }

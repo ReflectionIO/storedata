@@ -443,7 +443,9 @@ public final class Admin extends ActionHandler {
 			case ModelTypeTypeSimple:
 				input.simpleModelRun = ValidationHelper.validateSimpleModelRun(input.simpleModelRun, "input.simpleModelRun");
 
-				input.simpleModelRun.feedFetch = FeedFetchServiceProvider.provide().getFeedFetch(input.simpleModelRun.feedFetch.id);
+				if (input.simpleModelRun.feedFetch.store == null) {
+					input.simpleModelRun.feedFetch = FeedFetchServiceProvider.provide().getFeedFetch(input.simpleModelRun.feedFetch.id);
+				}
 
 				predictor = PredictorFactory.getPredictorForStore(input.simpleModelRun.feedFetch.store);
 				predictor.enqueue(input.simpleModelRun);

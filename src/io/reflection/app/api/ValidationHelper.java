@@ -115,8 +115,8 @@ public class ValidationHelper {
 			isNameLookup = true;
 		}
 
-		if (!(isIdLookup || isA3CodeLookup || isNameLookup)) { throw new InputValidationException(ApiError.StoreNoLookup.getCode(),
-				ApiError.StoreNoLookup.getMessage(parent)); }
+		if (!(isIdLookup || isA3CodeLookup || isNameLookup))
+			throw new InputValidationException(ApiError.StoreNoLookup.getCode(), ApiError.StoreNoLookup.getMessage(parent));
 
 		Store lookupStore = null;
 		if (isIdLookup) {
@@ -755,9 +755,21 @@ public class ValidationHelper {
 	public static SimpleModelRun validateSimpleModelRun(SimpleModelRun simpleModelRun, String parent) throws ServiceException {
 		if (simpleModelRun == null) throw new InputValidationException(ApiError.SimpleModelRunNull.getCode(), ApiError.SimpleModelRunNull.getMessage(parent));
 
-		SimpleModelRun lookupSimpleModelRun = null;
+		boolean isIdLookup = false, isFeedFetchIdLookup = false;
+
 		if (simpleModelRun.id != null) {
+			isIdLookup = true;
+		} else if (simpleModelRun.feedFetch != null && simpleModelRun.feedFetch.id != null) {
+			isFeedFetchIdLookup = true;
+		}
+
+		// TODO: if no lookup method is found put a better error to point api user in the correct direction 
+
+		SimpleModelRun lookupSimpleModelRun = null;
+		if (isIdLookup) {
 			lookupSimpleModelRun = SimpleModelRunServiceProvider.provide().getSimpleModelRun(simpleModelRun.id);
+		} else if (isFeedFetchIdLookup) {
+			lookupSimpleModelRun = SimpleModelRunServiceProvider.provide().getFeedFetchSimpleModelRun(simpleModelRun.feedFetch);
 		}
 
 		if (lookupSimpleModelRun == null)
@@ -765,7 +777,7 @@ public class ValidationHelper {
 
 		return lookupSimpleModelRun;
 	}
-	
+
 	/**
 	 * Validate DataAccountFetch
 	 * 
@@ -775,7 +787,8 @@ public class ValidationHelper {
 	 * @throws ServiceException
 	 */
 	public static DataAccountFetch validateDataAccountFetch(DataAccountFetch dataAccountFetch, String parent) throws ServiceException {
-		if (dataAccountFetch == null) throw new InputValidationException(ApiError.DataAccountFetchNull.getCode(), ApiError.DataAccountFetchNull.getMessage(parent));
+		if (dataAccountFetch == null)
+			throw new InputValidationException(ApiError.DataAccountFetchNull.getCode(), ApiError.DataAccountFetchNull.getMessage(parent));
 
 		if (dataAccountFetch.id == null)
 			throw new InputValidationException(ApiError.DataAccountFetchNoLookup.getCode(), ApiError.DataAccountFetchNoLookup.getMessage(parent));
