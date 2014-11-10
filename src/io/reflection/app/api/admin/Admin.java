@@ -336,6 +336,9 @@ public final class Admin extends ActionHandler {
 
 			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
+			if (input.modelType == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("ModelTypeType: input.modelType"));
+
 			Modeller modeller = null;
 
 			switch (input.modelType) {
@@ -377,8 +380,6 @@ public final class Admin extends ActionHandler {
 				modeller.enqueue(input.feedFetch);
 
 				break;
-			default:
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("ModelTypeType: input.modelType"));
 			}
 
 			output.status = StatusType.StatusTypeSuccess;
@@ -402,6 +403,9 @@ public final class Admin extends ActionHandler {
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
+
+			if (input.modelType == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("ModelTypeType: input.modelType"));
 
 			switch (input.modelType) {
 			case ModelTypeTypeCorrelation:
@@ -445,8 +449,6 @@ public final class Admin extends ActionHandler {
 				predictor.enqueue(input.simpleModelRun);
 
 				break;
-			default:
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("ModelTypeType: input.modelType"));
 			}
 
 			output.status = StatusType.StatusTypeSuccess;
