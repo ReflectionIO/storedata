@@ -25,8 +25,6 @@ import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Post;
 import io.reflection.app.shared.util.FormattingHelper;
 
-import java.io.IOException;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
@@ -174,15 +172,7 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 		}
 
 		if (post.content != null) {
-
-			String processedString = post.content;
-
-			try {
-				processedString = MarkdownHelper.PROCESSOR.process(post.content);
-			} catch (IOException e) {
-				new RuntimeException(e);
-			}
-			content.setInnerHTML(processedString);
+			content.setInnerHTML(MarkdownHelper.process(post.content));
 
 			setLoading(LoadingType.NoneLoadingType);
 

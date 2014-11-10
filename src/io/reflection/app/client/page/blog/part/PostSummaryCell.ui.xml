@@ -4,7 +4,7 @@
     <ui:with field="title" type="java.lang.String" />
     <ui:with field="description" type="com.google.gwt.safehtml.shared.SafeHtml" />
     <ui:with field="author" type="java.lang.String" />
-    <ui:with field="published" type="java.lang.String" />
+    <ui:with field="published" type="com.google.gwt.safehtml.shared.SafeHtml" />
 
     <ui:style>
     .info {
@@ -36,9 +36,7 @@
                     <ui:text from="{author}" />
                 </span>
             </span>
-            <span>
-                <ui:text from="{published}" />
-            </span>
+            <ui:safehtml from="{published}" />
         </p>
         <p>
             <ui:safehtml from="{description}" />

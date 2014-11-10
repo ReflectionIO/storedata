@@ -11,8 +11,6 @@ import io.reflection.app.client.helper.MarkdownHelper;
 import io.reflection.app.client.part.BootstrapGwtTabPanel;
 import io.reflection.app.client.part.Preloader;
 
-import java.io.IOException;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Element;
@@ -80,15 +78,9 @@ public class MarkdownEditor extends Composite implements HasText {
 
 				if (index == 1) {
 					// styles to be included in the header.
-
-					try {
-						// FIXME SafeHtmlUtils.htmlEscape is too rough need a markdown aware plugin - using nothing is exploitable
-						String previewHtml = MarkdownHelper.PROCESSOR.process(textArea.getText());
-						preview.removeAllChildren();
-						preview.setInnerHTML(previewHtml);
-					} catch (IOException e) {
-						throw new RuntimeException(e);
-					}
+					String previewHtml = MarkdownHelper.process(textArea.getText());
+					preview.removeAllChildren();
+					preview.setInnerHTML(previewHtml);
 				}
 			}
 		});

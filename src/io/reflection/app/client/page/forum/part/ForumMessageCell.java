@@ -14,8 +14,6 @@ import io.reflection.app.client.part.text.MarkdownEditor;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.shared.util.FormattingHelper;
 
-import java.io.IOException;
-
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
@@ -98,13 +96,7 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 				editButtonHtml = QuoteTemplate.INSTANCE.replyEditButton(PageType.ForumEditTopicPageType.asHref().asString(), value.getTopicId(), value.getId());
 			}
 
-			String processedString = value.getContent();
-
-			try {
-				processedString = MarkdownHelper.PROCESSOR.process(value.getContent());
-			} catch (IOException e) {
-				new RuntimeException(e);
-			}
+			String processedString = MarkdownHelper.process(value.getContent());
 
 			SafeUri link = UriUtils.fromSafeConstant(PageType.ForumThreadPageType.asHref("view", value.getTopicId().toString(), "view",
 					Integer.toString(value.getIndex())).asString());
