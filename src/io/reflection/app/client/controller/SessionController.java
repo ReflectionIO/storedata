@@ -278,7 +278,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 		PageType.LoginPageType.show("requestinvite");
 	}
 
-	private void makeSessionInvalid() {
+	public void makeSessionInvalid() {
 		setLoggedInUser(null, null);
 		// ItemController.get().clearItemCache();
 		clearRolePermissionCache();
