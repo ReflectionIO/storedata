@@ -36,7 +36,7 @@ public class FilterHelper {
 	private static List<PresetDateRange> adminPreset = null;
 
 	public static Date getToday() {
-		return normalizeDate(new Date());
+		return new Date();
 	}
 
 	public static Date getDaysAgo(int value) {
@@ -179,29 +179,6 @@ public class FilterHelper {
 	}
 
 	/**
-	 * Normalize the date to midnight being sure the milliseconds are set at zero.
-	 * 
-	 * @param date
-	 *            Date to be set at noon
-	 * @return newDate The new date set at noon
-	 */
-	// @SuppressWarnings("deprecation")
-	public static Date normalizeDate(Date date) {
-		// Date newDate = null;
-		//
-		// if (date != null) {
-		// newDate = new Date(0L);
-		// newDate.setDate(date.getDate());
-		// newDate.setMonth(date.getMonth());
-		// newDate.setYear(date.getYear());
-		// newDate.setHours(0);
-		// }
-		//
-		// return newDate;
-		return date;
-	}
-
-	/**
 	 * Disable dates between startDate and endDate
 	 * 
 	 * @param datePicker
@@ -258,7 +235,7 @@ public class FilterHelper {
 		List<Date> dates = new ArrayList<Date>();
 		Date firstShownOnCalendar = CalendarUtil.copyDate(datePicker.getFirstDate());
 		Date lastShownOnCalendar = CalendarUtil.copyDate(datePicker.getLastDate());
-		Date today = normalizeDate(new Date());
+		Date today = new Date();
 		while ((lastShownOnCalendar.after(firstShownOnCalendar) || CalendarUtil.isSameDate(firstShownOnCalendar, lastShownOnCalendar))
 				&& lastShownOnCalendar.after(today)) {
 			if (datePicker.isDateVisible(CalendarUtil.copyDate(lastShownOnCalendar))) {
@@ -441,6 +418,16 @@ public class FilterHelper {
 
 		return adminPreset;
 
+	}
+
+	/**
+	 * @param value
+	 * @param date
+	 * @return
+	 */
+	@SuppressWarnings("deprecation")
+	public static boolean equalDate(Date rhs, Date lhs) {
+		return (rhs.getDate() == lhs.getDate()) && (rhs.getMonth() == lhs.getMonth()) && (rhs.getYear() == lhs.getYear());
 	}
 
 }

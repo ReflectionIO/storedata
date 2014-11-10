@@ -38,7 +38,6 @@ import io.reflection.app.service.modelrun.ModelRunServiceProvider;
 import io.reflection.app.service.rank.IRankService;
 import io.reflection.app.service.rank.RankServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
-import io.reflection.app.shared.util.FormattingHelper;
 import io.reflection.app.shared.util.PagerHelper;
 
 import java.util.AbstractMap.SimpleEntry;
@@ -240,7 +239,7 @@ public class PredictorIOS implements Predictor {
 		double downloads = 0.0;
 
 		if (usesIap) {
-			if (FormattingHelper.isZero(price)) {
+			if (DataTypeHelper.isZero(price)) {
 				if (rank.grossingPosition == null && rank.grossingPosition.intValue() == 0) {
 					downloads = (double) (output.freeB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.freeA.doubleValue()));
 					revenue = output.theta.doubleValue() * downloads;
@@ -259,7 +258,7 @@ public class PredictorIOS implements Predictor {
 				}
 			}
 		} else {
-			if (FormattingHelper.isZero(price)) {
+			if (DataTypeHelper.isZero(price)) {
 				// revenue is zero since it is a free app and no IAP. Thus only
 				// download calculated here
 				downloads = (double) (output.freeB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.freeA.doubleValue()));
@@ -280,7 +279,7 @@ public class PredictorIOS implements Predictor {
 			rank.downloads = Integer.valueOf((int) downloads);
 		}
 
-		if (rank.revenue == null || (FormattingHelper.isZero(rank.revenue.floatValue()) && !FormattingHelper.isZero((float) revenue))) {
+		if (rank.revenue == null || (DataTypeHelper.isZero(rank.revenue.floatValue()) && !DataTypeHelper.isZero((float) revenue))) {
 			rank.revenue = Float.valueOf((float) revenue);
 		}
 
@@ -434,7 +433,7 @@ public class PredictorIOS implements Predictor {
 
 	private void setSimpleDownloadsAndRevenue(Rank rank, SimpleModelRun simpleModelRun, Boolean usesIap) {
 		float price = rank.price.floatValue();
-		boolean isDownload = isDownloadListType(simpleModelRun.feedFetch.type), isFree = FormattingHelper.isZero(price);
+		boolean isDownload = isDownloadListType(simpleModelRun.feedFetch.type), isFree = DataTypeHelper.isZero(price);
 		double revenue = 0.0, downloads = 0.0;
 
 		if (usesIap == null || usesIap.booleanValue()) {

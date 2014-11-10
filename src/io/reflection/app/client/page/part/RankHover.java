@@ -8,14 +8,15 @@
 //
 package io.reflection.app.client.page.part;
 
+import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMAT_EEE_DD_MMM_YYYY;
+import static io.reflection.app.client.helper.FormattingHelper.WHOLE_NUMBER_FORMAT;
+import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.client.page.part.ItemChart.YAxisDataType;
-import io.reflection.app.shared.util.FormattingHelper;
 
 import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
@@ -61,13 +62,13 @@ public class RankHover extends Composite implements HoverUpdateable {
 	 */
 	@Override
 	public void hoverUpdate(Point hoveredOver) {
-		date.getElement().setInnerHTML(DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT_EEE_DD_MMM_YYYY).format(new Date((long) hoveredOver.getX())));
+		date.getElement().setInnerHTML(DATE_FORMAT_EEE_DD_MMM_YYYY.format(new Date((long) hoveredOver.getX())));
 		switch (dataType) {
 		case RevenueYAxisDataType:
 			detail.getElement().setInnerHTML(FormattingHelper.asWholeMoneyString(currency, (float) hoveredOver.getY()));
 			break;
 		case DownloadsYAxisDataType:
-			detail.getElement().setInnerHTML(FormattingHelper.asDownloadsString((int) hoveredOver.getY()));
+			detail.getElement().setInnerHTML(WHOLE_NUMBER_FORMAT.format((double) hoveredOver.getY()));
 			break;
 		case RankingYAxisDataType:
 			detail.getElement().setInnerHTML(Integer.toString((int) hoveredOver.getY()));

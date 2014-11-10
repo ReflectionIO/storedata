@@ -7,17 +7,18 @@
 //
 package io.reflection.app.client.cell;
 
+import static io.reflection.app.client.helper.FormattingHelper.WHOLE_NUMBER_FORMAT;
 import static io.reflection.app.client.controller.FilterController.REVENUE_DAILY_DATA_TYPE;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.ItemController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
+import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.page.RanksPage;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
-import io.reflection.app.shared.util.FormattingHelper;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
@@ -80,7 +81,7 @@ public class AppRankCell extends AbstractCell<Rank> {
 					FormattingHelper.asWholeMoneyString(value.currency, showModelPredictions ? value.revenue.floatValue() : 0.0f));
 		} else {
 			dailyData = DailyDataTemplate.INSTANCE.dailyData("icon-download-alt", "padding-right: 6px",
-					FormattingHelper.asDownloadsString(showModelPredictions ? value.downloads.intValue() : 0));
+					WHOLE_NUMBER_FORMAT.format(showModelPredictions ? value.downloads.doubleValue() : 0.0));
 		}
 
 		Stack s = NavigationController.get().getStack();

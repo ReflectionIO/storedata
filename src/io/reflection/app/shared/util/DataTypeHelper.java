@@ -29,6 +29,8 @@ import com.google.gson.JsonParser;
  */
 public class DataTypeHelper {
 
+	public static final float SMALL_MONEY = 0.0000001f;
+	
 	public static final String IOS_STORE_A3 = "ios";
 
 	private static final Store IOS_STORE = new Store();
@@ -221,4 +223,9 @@ public class DataTypeHelper {
 
 		return c;
 	}
+	
+	public static boolean isZero(float value) {
+		return value < SMALL_MONEY;
+	}
+
 }

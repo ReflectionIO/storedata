@@ -7,16 +7,16 @@
 //
 package io.reflection.app.client.page.blog.part;
 
-import java.io.IOException;
-
+import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMAT_EEE_DD_MMM_YYYY;
 import io.reflection.app.client.helper.MarkdownHelper;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.datatypes.shared.Post;
 import io.reflection.app.shared.util.FormattingHelper;
 
+import java.io.IOException;
+
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -38,10 +38,10 @@ public class PostSummaryCell extends AbstractCell<Post> {
 	@Override
 	public void render(Context context, Post value, SafeHtmlBuilder builder) {
 		SafeUri link = PageType.BlogPostPageType.asHref("view", value.id.toString());
-		String published = "TBD";
+		String published = "<span class=\"label label-info\">NOT PUBLISHED</span>";
 
 		if (value.published != null) {
-			published = DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT_EEE_DD_MMM_YYYY).format(value.published);
+			published = DATE_FORMAT_EEE_DD_MMM_YYYY.format(value.published);
 		}
 
 		String processedString = value.description;
@@ -52,8 +52,8 @@ public class PostSummaryCell extends AbstractCell<Post> {
 			new RuntimeException(e);
 		}
 
-		if (value.visible == Boolean.TRUE) {
-			processedString += "<p class=\"label label-info\">NOT PUBLISHED</p>";
+		if (value.visible == Boolean.FALSE) {
+			processedString += "<p class=\"label label-warning\">NOT VISIBLE</p>";
 		}
 
 		RENDERER.render(builder, link, value.title, SafeHtmlUtils.fromTrustedString(processedString), FormattingHelper.getUserName(value.author), published);

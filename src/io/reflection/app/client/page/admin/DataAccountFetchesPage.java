@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.page.admin;
 
+import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMAT_DD_MMM_YYYY;
 import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesRequest;
 import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesResponse;
 import io.reflection.app.api.admin.shared.call.TriggerDataAccountFetchIngestRequest;
@@ -38,7 +39,6 @@ import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
-import io.reflection.app.shared.util.FormattingHelper;
 
 import java.util.Map;
 
@@ -46,7 +46,6 @@ import com.google.gwt.cell.client.Cell.Context;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -118,13 +117,12 @@ public class DataAccountFetchesPage extends Page implements NavigationEventHandl
 
 		};
 		dataAccountFetchTable.addColumn(dataAccountIdColumn, "D.A. id");
-
-		final DateTimeFormat dtf = DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT_DD_MMM_YYYY);
+		
 		TextColumn<DataAccountFetch> dateColumn = new TextColumn<DataAccountFetch>() {
 
 			@Override
 			public String getValue(DataAccountFetch object) {
-				return dtf.format(object.date);
+				return DATE_FORMAT_DD_MMM_YYYY.format(object.date);
 			}
 
 		};

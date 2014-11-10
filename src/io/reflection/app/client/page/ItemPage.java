@@ -32,6 +32,7 @@ import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.RankController;
 import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.client.page.part.ItemChart;
 import io.reflection.app.client.page.part.ItemChart.RankingType;
 import io.reflection.app.client.page.part.ItemChart.YAxisDataType;
@@ -44,7 +45,6 @@ import io.reflection.app.client.res.Images;
 import io.reflection.app.client.res.flags.Styles;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
-import io.reflection.app.shared.util.FormattingHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -6,7 +6,7 @@
 //  Copyright © 2013 SPACEHOPPER STUDIOS LTD. All rights reserved.
 //
 package io.reflection.app.client.page;
-
+import static io.reflection.app.client.helper.FormattingHelper.*;
 import static io.reflection.app.client.controller.FilterController.CATEGORY_KEY;
 import static io.reflection.app.client.controller.FilterController.COUNTRY_KEY;
 import static io.reflection.app.client.controller.FilterController.DAILY_DATA_KEY;
@@ -31,13 +31,13 @@ import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.client.page.part.RankSidePanel;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.datatypes.RanksGroup;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.shared.util.DataTypeHelper;
-import io.reflection.app.shared.util.FormattingHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -217,7 +217,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			@Override
 			public String getValue(RanksGroup object) {
 				Rank rank = rankForListType(object);
-				return FormattingHelper.asDownloadsString(rank.downloads);
+				return WHOLE_NUMBER_FORMAT.format(rank.downloads);
 			}
 
 		};

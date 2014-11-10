@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.page.admin;
 
+import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMAT_DD_MMM_YYYY_HH_MM;
 import io.reflection.app.api.admin.shared.call.DeleteUsersRequest;
 import io.reflection.app.api.admin.shared.call.DeleteUsersResponse;
 import io.reflection.app.api.admin.shared.call.event.DeleteUsersEventHandler;
@@ -33,7 +34,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -138,12 +138,11 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 		};
 		usersTable.addColumn(email, "E-mail");
 
-		final DateTimeFormat dtf = DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT_DD_MMM_YYYY_HH_MM);
 		TextColumn<User> lastLoginColumn = new TextColumn<User>() {
 
 			@Override
 			public String getValue(User object) {
-				return (object.lastLoggedIn == null) ? "-" : dtf.format(object.lastLoggedIn);
+				return (object.lastLoggedIn == null) ? "-" : DATE_FORMAT_DD_MMM_YYYY_HH_MM.format(object.lastLoggedIn);
 			}
 
 		};
