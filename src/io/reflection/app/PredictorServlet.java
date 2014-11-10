@@ -1,5 +1,5 @@
 //
-//  PerdictorServlet.java
+//  PredictorServlet.java
 //  storedata
 //
 //  Created by William Shakour (billy1380) on 30 Oct 2013.
@@ -30,9 +30,9 @@ import com.willshex.service.ContextAwareServlet;
  * 
  */
 @SuppressWarnings("serial")
-public class PerdictorServlet extends ContextAwareServlet {
+public class PredictorServlet extends ContextAwareServlet {
 
-	private static final Logger LOG = Logger.getLogger(PerdictorServlet.class.getName());
+	private static final Logger LOG = Logger.getLogger(PredictorServlet.class.getName());
 
 	@Override
 	protected void doPost() {

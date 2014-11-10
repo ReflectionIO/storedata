@@ -31,7 +31,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
     
     <servlet>
         <servlet-name>Predictor Tasks</servlet-name>
-        <servlet-class>io.reflection.app.PerdictorServlet</servlet-class>
+        <servlet-class>io.reflection.app.PredictorServlet</servlet-class>
     </servlet>
     
     <servlet>
