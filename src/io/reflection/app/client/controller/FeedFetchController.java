@@ -22,8 +22,11 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.client.helper.ApiCallHelper;
 import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.ModelTypeType;
+import io.reflection.app.datatypes.shared.SimpleModelRun;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.google.gwt.user.client.Window;
@@ -143,7 +146,11 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 		fetchFeedFetches();
 	}
 
-	public void model(Long code) {
+	/**
+	 * 
+	 * @param feedFetch
+	 */
+	public void model(FeedFetch feedFetch) {
 		AdminService service = ServiceCreator.createAdminService();
 
 		final TriggerModelRequest input = new TriggerModelRequest();
@@ -151,11 +158,12 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 
 		input.session = SessionController.get().getSessionForApiCall();
 
-		input.country = ApiCallHelper.createCountryForApiCall(FilterController.get().getCountry());;
-		input.store = ApiCallHelper.createStoreForApiCall(FilterController.get().getStore());
-		input.listTypes = FilterController.get().getAllListTypes();
-		input.code = code;
+		input.country = DataTypeHelper.createCountry(feedFetch.country);
+		input.store = DataTypeHelper.createStore(feedFetch.store);
+		input.category = ApiCallHelper.createCategoryForApiCall(feedFetch.category);
+		input.code = feedFetch.code;
 		input.modelType = ModelTypeType.ModelTypeTypeSimple;
+		input.listTypes = Arrays.asList(feedFetch.type);
 
 		service.triggerModel(input, new AsyncCallback<TriggerModelResponse>() {
 
@@ -174,9 +182,10 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 	}
 
 	/**
-	 * @param code
+	 * 
+	 * @param feedFetch
 	 */
-	public void ingest(Long code) {
+	public void ingest(FeedFetch feedFetch) {
 		AdminService service = ServiceCreator.createAdminService();
 
 		final TriggerIngestRequest input = new TriggerIngestRequest();
@@ -184,10 +193,11 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 
 		input.session = SessionController.get().getSessionForApiCall();
 
-		input.country = ApiCallHelper.createCountryForApiCall(FilterController.get().getCountry());;
-		input.store = ApiCallHelper.createStoreForApiCall(FilterController.get().getStore());
-		input.listTypes = FilterController.get().getAllListTypes();
-		input.code = code;
+		input.country = DataTypeHelper.createCountry(feedFetch.country);
+		input.store = DataTypeHelper.createStore(feedFetch.store);
+		input.category = ApiCallHelper.createCategoryForApiCall(feedFetch.category);
+		input.code = feedFetch.code;
+		input.listTypes = Arrays.asList(feedFetch.type);
 
 		service.triggerIngest(input, new AsyncCallback<TriggerIngestResponse>() {
 
@@ -203,24 +213,26 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 				Window.alert(caught.getMessage());
 			}
 		});
-
 	}
 
 	/**
-	 * @param code
+	 * @param feedFetch
 	 */
-	public void predict(Long code) {
+	public void predict(FeedFetch feedFetch) {
 		AdminService service = ServiceCreator.createAdminService();
 		final TriggerPredictRequest input = new TriggerPredictRequest();
 		input.accessCode = ACCESS_CODE;
 
 		input.session = SessionController.get().getSessionForApiCall();
 
-		input.country = ApiCallHelper.createCountryForApiCall(FilterController.get().getCountry());
-		input.store = ApiCallHelper.createStoreForApiCall(FilterController.get().getStore());
-		input.listTypes = FilterController.get().getAllListTypes();
-		input.code = code;
+//		input.country = DataTypeHelper.createCountry(feedFetch.country);
+//		input.store = DataTypeHelper.createStore(feedFetch.store);
+//		input.category = ApiCallHelper.createCategoryForApiCall(feedFetch.category);
+//		input.code = feedFetch.code;
 		input.modelType = ModelTypeType.ModelTypeTypeSimple;
+//		input.listTypes = Arrays.asList(feedFetch.type);
+		input.simpleModelRun = new SimpleModelRun();
+		input.simpleModelRun.feedFetch = ApiCallHelper.createFeedFetchForApiCall(feedFetch);
 
 		service.triggerPredict(input, new AsyncCallback<TriggerPredictResponse>() {
 

@@ -7,13 +7,15 @@
 //
 package io.reflection.app.shared.util;
 
+import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Role;
-import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.datatypes.shared.Store;
+import io.reflection.app.datatypes.shared.User;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -30,7 +32,7 @@ import com.google.gson.JsonParser;
 public class DataTypeHelper {
 
 	public static final float SMALL_MONEY = 0.0000001f;
-	
+
 	public static final String IOS_STORE_A3 = "ios";
 
 	private static final Store IOS_STORE = new Store();
@@ -223,9 +225,25 @@ public class DataTypeHelper {
 
 		return c;
 	}
-	
+
 	public static boolean isZero(float value) {
 		return value < SMALL_MONEY;
+	}
+
+	public static Category createCategory(Long id) {
+		Category c = new Category();
+		c.id = id;
+		return c;
+	}
+
+	/**
+	 * @param id
+	 * @return
+	 */
+	public static FeedFetch createFeedFetch(Long id) {
+		FeedFetch f = new FeedFetch();
+		f.id = id;
+		return f;
 	}
 
 }
