@@ -21,6 +21,7 @@ import io.reflection.app.api.admin.shared.call.event.GetFeedFetchesEventHandler.
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.client.helper.ApiCallHelper;
 import io.reflection.app.datatypes.shared.FeedFetch;
+import io.reflection.app.datatypes.shared.ModelTypeType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -154,6 +155,7 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 		input.store = ApiCallHelper.createStoreForApiCall(FilterController.get().getStore());
 		input.listTypes = FilterController.get().getAllListTypes();
 		input.code = code;
+		input.modelType = ModelTypeType.ModelTypeTypeSimple;
 
 		service.triggerModel(input, new AsyncCallback<TriggerModelResponse>() {
 
@@ -214,10 +216,11 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 
 		input.session = SessionController.get().getSessionForApiCall();
 
-		input.country = ApiCallHelper.createCountryForApiCall(FilterController.get().getCountry());;
+		input.country = ApiCallHelper.createCountryForApiCall(FilterController.get().getCountry());
 		input.store = ApiCallHelper.createStoreForApiCall(FilterController.get().getStore());
 		input.listTypes = FilterController.get().getAllListTypes();
 		input.code = code;
+		input.modelType = ModelTypeType.ModelTypeTypeSimple;
 
 		service.triggerPredict(input, new AsyncCallback<TriggerPredictResponse>() {
 
