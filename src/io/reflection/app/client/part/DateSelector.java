@@ -7,10 +7,10 @@
 //
 package io.reflection.app.client.part;
 
+import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMAT_DD_MMM_YYYY;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.client.part.datatypes.DateRangeChangeEvent;
-import io.reflection.app.shared.util.FormattingHelper;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,7 +26,6 @@ import com.google.gwt.event.logical.shared.ShowRangeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -81,10 +80,9 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 	public DateSelector() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		DateTimeFormat dtf = DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT_DD_MMM_YYYY);
-		dateBoxFrom.setFormat(new DateBox.DefaultFormat(dtf));
+		dateBoxFrom.setFormat(new DateBox.DefaultFormat(DATE_FORMAT_DD_MMM_YYYY));
 		dateBoxFrom.getTextBox().setReadOnly(Boolean.TRUE);
-		dateBoxTo.setFormat(new DateBox.DefaultFormat(dtf));
+		dateBoxTo.setFormat(new DateBox.DefaultFormat(DATE_FORMAT_DD_MMM_YYYY));
 		dateBoxTo.getTextBox().setReadOnly(Boolean.TRUE);
 
 		setDateRange(FilterHelper.getWeeksAgo(4), FilterHelper.getToday());

@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.page.admin;
 
+import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMAT_DD_MMM_YYYY;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.FilterController.Filter;
@@ -26,14 +27,12 @@ import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.SimpleModelRun;
-import io.reflection.app.shared.util.FormattingHelper;
 
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -100,13 +99,11 @@ public class SimpleModelRunsPage extends Page implements FilterEventHandler {
 		};
 		simpleModelRunTable.addColumn(idColumn, "Id");
 
-		final DateTimeFormat dtf = DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT_DD_MMM_YYYY);
-
 		TextColumn<SimpleModelRun> createdColumn = new TextColumn<SimpleModelRun>() {
 
 			@Override
 			public String getValue(SimpleModelRun object) {
-				return dtf.format(object.created);
+				return DATE_FORMAT_DD_MMM_YYYY.format(object.created);
 			}
 
 		};
@@ -146,7 +143,7 @@ public class SimpleModelRunsPage extends Page implements FilterEventHandler {
 
 			@Override
 			public String getValue(SimpleModelRun object) {
-				return object.feedFetch != null && object.feedFetch.date != null ? dtf.format(object.feedFetch.date) : "-";
+				return object.feedFetch != null && object.feedFetch.date != null ? DATE_FORMAT_DD_MMM_YYYY.format(object.feedFetch.date) : "-";
 			}
 
 		};

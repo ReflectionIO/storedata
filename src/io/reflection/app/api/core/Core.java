@@ -115,7 +115,6 @@ import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.service.user.IUserService;
 import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
-import io.reflection.app.shared.util.FormattingHelper;
 import io.reflection.app.shared.util.PagerHelper;
 
 import java.text.SimpleDateFormat;
@@ -1767,7 +1766,7 @@ public final class Core extends ActionHandler {
 									|| sale.typeIdentifier.equals(FREE_OR_PAID_APP_UNIVERSAL_IOS) || sale.typeIdentifier.equals(FREE_OR_PAID_APP_IPAD_IOS)) {
 								rank.downloads += sale.units.intValue();
 								// Ignore price if the Sale is a refund or a promotion
-								if (rank.price == null && !FormattingHelper.isZero(sale.customerPrice.floatValue()) && sale.promoCode.equals(" ")) {
+								if (rank.price == null && !DataTypeHelper.isZero(sale.customerPrice.floatValue()) && sale.promoCode.equals(" ")) {
 									rank.price = sale.customerPrice;
 								}
 							}
@@ -1906,7 +1905,7 @@ public final class Core extends ActionHandler {
 						}
 
 						if (sale.proceeds != null) {
-							isFree = Boolean.valueOf(FormattingHelper.isZero(sale.proceeds));
+							isFree = Boolean.valueOf(DataTypeHelper.isZero(sale.proceeds));
 						}
 
 						dateSalesList.add(sale);

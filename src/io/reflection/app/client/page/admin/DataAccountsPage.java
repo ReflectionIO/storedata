@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.page.admin;
 
+import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMAT_DD_MMM_YYYY;
 import io.reflection.app.api.admin.shared.call.JoinDataAccountRequest;
 import io.reflection.app.api.admin.shared.call.JoinDataAccountResponse;
 import io.reflection.app.api.admin.shared.call.event.JoinDataAccountEventHandler;
@@ -22,12 +23,10 @@ import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.DataAccount;
-import io.reflection.app.shared.util.FormattingHelper;
 
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -83,12 +82,11 @@ public class DataAccountsPage extends Page implements JoinDataAccountEventHandle
 		};
 		dataAccountTable.addColumn(idColumn, "id");
 
-		final DateTimeFormat dtf = DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT_DD_MMM_YYYY);
 		TextColumn<DataAccount> createdColumn = new TextColumn<DataAccount>() {
 
 			@Override
 			public String getValue(DataAccount object) {
-				return dtf.format(object.created);
+				return DATE_FORMAT_DD_MMM_YYYY.format(object.created);
 			}
 
 		};

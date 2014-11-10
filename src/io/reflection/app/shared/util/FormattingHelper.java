@@ -13,8 +13,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.gwt.i18n.client.NumberFormat;
-
 /**
  * @author stefanocapuzzi
  * 
@@ -24,12 +22,24 @@ public class FormattingHelper {
 	public static final String DATE_FORMAT_EEE_DD_MMM_YYYY = "EEE dd MMM yyyy";
 	public static final String DATE_FORMAT_DD_MMM_YYYY = "dd MMM yyyy";
 	public static final String DATE_FORMAT_DD_MM_YYYY = "dd-MM-yyyy";
-	public static final String DATE_FORMAT_YYYY_MM_DD = "yyyy-MM-dd";
+	// public static final String DATE_FORMAT_YYYY_MM_DD = "yyyy-MM-dd";
 	public static final String DATE_FORMAT_DD_MMM_YYYY_HH_MM = "dd MMM yyyy - HH:mm";
-	public static final float SMALL_MONEY = 0.0000001f;
+	
+	public static final String MONEY_FORMAT = ",###.##";
+	public static final String WHOLE_NUMBER_FORMAT = ",###";
+
 	private static Map<String, String> currencySymbolLookup = null;
-	private static NumberFormat MONEY_FORMAT = NumberFormat.getFormat(",###.##");
-	private static NumberFormat WHOLE_NUMBER_FORMAT = NumberFormat.getFormat(",###");
+
+	private static void setup() {
+		if (currencySymbolLookup == null) {
+			currencySymbolLookup = new HashMap<String, String>();
+
+			currencySymbolLookup.put("USD", "$");
+			currencySymbolLookup.put("EUR", "€");
+			currencySymbolLookup.put("CNY", "¥");
+			currencySymbolLookup.put("GBP", "£");
+		}
+	}
 
 	/**
 	 * Returns a currency sumbol or code if none are found
@@ -45,42 +55,6 @@ public class FormattingHelper {
 		String symbol = currencySymbolLookup.get(currency);
 
 		return symbol == null ? currency : symbol;
-	}
-
-	public static void setup() {
-		if (currencySymbolLookup == null) {
-			currencySymbolLookup = new HashMap<String, String>();
-
-			currencySymbolLookup.put("USD", "$");
-			currencySymbolLookup.put("EUR", "€");
-			currencySymbolLookup.put("CNY", "¥");
-			currencySymbolLookup.put("GBP", "£");
-		}
-	}
-
-	public static String asPriceString(String currency, float price) {
-		String priceString;
-
-		if (isZero(price)) {
-			priceString = "Free";
-		} else {
-			priceString = asMoneyString(currency, price);
-		}
-
-		return priceString;
-	}
-
-	public static String asPriceRangeString(String currency, float from, float to) {
-		String priceRangeString;
-
-		if (isZero(Math.abs(from - to))) {
-			priceRangeString = asPriceString(currency, from); // No need to use a price range
-		} else {
-			String fromString = asPriceString(currency, from), toString = asPriceString(currency, to);
-			priceRangeString = fromString + " - " + toString;
-		}
-
-		return priceRangeString;
 	}
 
 	public static String getUserName(User user) {
@@ -156,21 +130,4 @@ public class FormattingHelper {
 
 		return timeSince;
 	}
-
-	public static String asMoneyString(String currency, float money) {
-		return (currency == null ? "" : getCurrencySymbol(currency) + " ") + MONEY_FORMAT.format((double) money);
-	}
-
-	public static String asWholeMoneyString(String currency, float money) {
-		return (currency == null ? "" : getCurrencySymbol(currency) + " ") + WHOLE_NUMBER_FORMAT.format((double) money);
-	}
-
-	public static String asDownloadsString(int downloads) {
-		return WHOLE_NUMBER_FORMAT.format((double) downloads);
-	}
-
-	public static boolean isZero(float value) {
-		return value < SMALL_MONEY;
-	}
-
 }

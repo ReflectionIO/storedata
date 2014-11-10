@@ -8,11 +8,11 @@
 package io.reflection.app.client.page.part;
 
 import io.reflection.app.client.controller.StoreController;
+import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.shared.util.DataTypeHelper;
-import io.reflection.app.shared.util.FormattingHelper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.AnchorElement;
