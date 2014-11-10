@@ -223,14 +223,13 @@ public class PredictorIOS implements Predictor {
 
 		for (FeedFetch feedFetch : feeds) {
 			if (feedFetch.category.id.longValue() == category.id.longValue()) {
-				feedFetch.status = FeedFetchStatusType.FeedFetchStatusTypePredicted;
-				FeedFetchServiceProvider.provide().updateFeedFetch(feedFetch);
+				alterFeedFetchStatus(feedFetch);
 			}
 		}
 	}
 
 	private void alterFeedFetchStatus(FeedFetch feedFetch) throws DataAccessException {
-		feedFetch.status = FeedFetchStatusType.FeedFetchStatusTypeModelled;
+		feedFetch.status = FeedFetchStatusType.FeedFetchStatusTypePredicted;
 		FeedFetchServiceProvider.provide().updateFeedFetch(feedFetch);
 	}
 
