@@ -158,12 +158,14 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 
 		input.session = SessionController.get().getSessionForApiCall();
 
-		input.country = DataTypeHelper.createCountry(feedFetch.country);
-		input.store = DataTypeHelper.createStore(feedFetch.store);
-		input.category = ApiCallHelper.createCategoryForApiCall(feedFetch.category);
-		input.code = feedFetch.code;
+//		input.country = DataTypeHelper.createCountry(feedFetch.country);
+//		input.store = DataTypeHelper.createStore(feedFetch.store);
+//		input.category = ApiCallHelper.createCategoryForApiCall(feedFetch.category);
+//		input.code = feedFetch.code;
 		input.modelType = ModelTypeType.ModelTypeTypeSimple;
-		input.listTypes = Arrays.asList(feedFetch.type);
+//		input.listTypes = Arrays.asList(feedFetch.type);
+		input.feedFetch = ApiCallHelper.createFeedFetchForApiCall(feedFetch);
+		
 
 		service.triggerModel(input, new AsyncCallback<TriggerModelResponse>() {
 
