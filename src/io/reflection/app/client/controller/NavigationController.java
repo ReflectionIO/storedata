@@ -313,6 +313,8 @@ public class NavigationController implements ValueChangeHandler<String> {
 
 					loginParams += value.asNextParameter();
 
+					SessionController.get().makeSessionInvalid();
+
 					PageType.LoginPageType.show(loginParams);
 				} else {
 					doAttach = true;
