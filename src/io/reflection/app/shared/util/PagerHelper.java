@@ -40,7 +40,10 @@ public class PagerHelper {
 	public static Pager infinitePager() {
 		infinitePager.start = Pager.DEFAULT_START;
 		infinitePager.count = Long.valueOf(Long.MAX_VALUE);
-
+		infinitePager.boundless = null;
+		infinitePager.sortBy = null;
+		infinitePager.sortDirection = null;
+		infinitePager.totalCount = null;
 		return infinitePager;
 	}
 
