@@ -501,7 +501,7 @@ public class FilterController {
 		Long previousStartTime = mCurrentFilter.getStartTime();
 		Date previousStartDate = null;
 
-		if (value != null && (previousStartTime == null || FilterHelper.equalDate(value, previousStartDate = new Date(previousStartTime.longValue())))) {
+		if (value != null && (previousStartTime == null || !FilterHelper.equalDate(value, previousStartDate = new Date(previousStartTime.longValue())))) {
 			mCurrentFilter.setStartTime(Long.valueOf(value.getTime()));
 
 			if (mInTransaction == 0) {

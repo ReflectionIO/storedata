@@ -220,9 +220,10 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 
 	private Anchor lookForDefaultLink() {
 		Anchor link = null;
-		if (fixedRanges != null && dateBoxTo.getValue().equals(FilterHelper.getToday())) {
+
+		if (fixedRanges != null && FilterHelper.equalDate(dateBoxTo.getValue(), FilterHelper.getToday())) {
 			for (PresetDateRange fixedRange : fixedRanges) {
-				if (dateBoxFrom.getValue().equals(fixedRange.getDateRange().getFrom())) {
+				if (FilterHelper.equalDate(dateBoxFrom.getValue(), fixedRange.getDateRange().getFrom())) {
 					link = lookupFixedDateRangeAnchor.get(fixedRange);
 					break;
 				}
@@ -280,7 +281,7 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 	@Override
 	public void setValue(DateRange value, boolean fireEvents) {
 
-		if (!value.getFrom().equals(dateBoxFrom.getValue()) || !value.getTo().equals(dateBoxTo.getValue())) {
+		if (!FilterHelper.equalDate(value.getFrom(), dateBoxFrom.getValue()) || !FilterHelper.equalDate(value.getTo(), dateBoxTo.getValue())) {
 			setDateBoxes(value.getFrom(), value.getTo());
 		}
 		highlightLink();

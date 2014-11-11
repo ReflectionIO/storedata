@@ -427,7 +427,7 @@ public class FilterHelper {
 	 */
 	@SuppressWarnings("deprecation")
 	public static boolean equalDate(Date rhs, Date lhs) {
-		return (rhs.getDate() == lhs.getDate()) && (rhs.getMonth() == lhs.getMonth()) && (rhs.getYear() == lhs.getYear());
+		return rhs != null && lhs != null && (rhs.getDate() == lhs.getDate()) && (rhs.getMonth() == lhs.getMonth()) && (rhs.getYear() == lhs.getYear());
 	}
 
 }
