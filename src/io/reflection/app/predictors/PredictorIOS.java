@@ -366,7 +366,7 @@ public class PredictorIOS implements Predictor {
 		c.a2Code = simpleModelRun.feedFetch.country;
 
 		List<Rank> foundRanks = rankService.getGatherCodeRanks(c, s, simpleModelRun.feedFetch.category, simpleModelRun.feedFetch.type,
-				simpleModelRun.feedFetch.code, PagerHelper.infinitePager(), Boolean.TRUE);
+				simpleModelRun.feedFetch.code, PagerHelper.createInfinitePager(), Boolean.TRUE);
 
 		Map<String, Item> lookup = lookupItemsForRanks(foundRanks);
 
@@ -398,7 +398,7 @@ public class PredictorIOS implements Predictor {
 
 		Collector collector = CollectorFactory.getCollectorForStore(s.a3Code);
 		boolean isGrossing = collector.isGrossing(simpleModelRun.feedFetch.type);
-		Pager pager = PagerHelper.infinitePager();
+		Pager pager = PagerHelper.createInfinitePager();
 		if (isGrossing) {
 			pager.sortBy = "grossingposition";
 		} else {

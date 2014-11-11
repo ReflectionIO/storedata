@@ -256,7 +256,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		// int start = r.getStart();
 		// int end = start + r.getLength();
 
-		pager = PagerHelper.newDefaultPager();
+		pager = PagerHelper.createDefaultPager();
 		pager.start = Long.valueOf(r.getStart());
 		pager.count = Long.valueOf(r.getLength());
 
