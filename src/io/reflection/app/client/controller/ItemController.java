@@ -308,7 +308,7 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 		// int start = r.getStart();
 		// int end = start + r.getLength();
 
-		pager = PagerHelper.newDefaultPager();
+		pager = PagerHelper.createDefaultPager();
 		pager.start = Long.valueOf(r.getStart());
 		pager.count = Long.valueOf(r.getLength());
 		// Range r = display.getVisibleRange();

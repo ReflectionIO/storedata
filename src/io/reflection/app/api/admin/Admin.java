@@ -782,7 +782,7 @@ public final class Admin extends ActionHandler {
 			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
 
 			List<DataAccount> linkedAccounts = new ArrayList<DataAccount>();
-			linkedAccounts = UserServiceProvider.provide().getDataAccounts(input.user, PagerHelper.infinitePager());
+			linkedAccounts = UserServiceProvider.provide().getDataAccounts(input.user, PagerHelper.createInfinitePager());
 			for (DataAccount la : linkedAccounts) {
 				if (input.user.id.longValue() == UserServiceProvider.provide().getDataAccountOwner(la).id) { // User is the owner of the linked account
 					la.active = DataTypeHelper.INACTIVE_VALUE;
@@ -827,7 +827,7 @@ public final class Admin extends ActionHandler {
 
 			if (input.users != null && input.users.size() > 0) {
 
-				List<DataAccount> linkedAccounts = UserServiceProvider.provide().getUsersDataAccounts(input.users, PagerHelper.infinitePager());
+				List<DataAccount> linkedAccounts = UserServiceProvider.provide().getUsersDataAccounts(input.users, PagerHelper.createInfinitePager());
 				List<Long> userIds = new ArrayList<Long>();
 				for (User user : input.users) {
 					userIds.add(user.id);
@@ -994,7 +994,7 @@ public final class Admin extends ActionHandler {
 			for (DataAccount dataAccount : output.dataAccounts) {
 				dataAccount.source = dataSourceLookup.get(dataAccount.source.id);
 				dataAccount.user = userLookup.get(dataAccount.id);
-				dataAccount.fetches = DataAccountFetchServiceProvider.provide().getFailedDataAccountFetches(dataAccount, PagerHelper.infinitePager());
+				dataAccount.fetches = DataAccountFetchServiceProvider.provide().getFailedDataAccountFetches(dataAccount, PagerHelper.createInfinitePager());
 			}
 
 			output.pager = input.pager;

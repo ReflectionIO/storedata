@@ -446,7 +446,7 @@ public final class Core extends ActionHandler {
 					// get all the ranks for the list type (we are using an infinite pager with no sorting to allow us to generate a deletion key during
 					// prediction)
 					ranks = RankServiceProvider.provide().getGatherCodeRanks(input.country, input.store, input.category, listType, code,
-							PagerHelper.infinitePager(), Boolean.TRUE);
+							PagerHelper.createInfinitePager(), Boolean.TRUE);
 
 					for (Rank rank : ranks) {
 						itemIds.add(rank.itemId);
@@ -1638,7 +1638,7 @@ public final class Core extends ActionHandler {
 
 			// Get Items sales based on the filters
 			List<Sale> sales = SaleServiceProvider.provide().getSales(input.country, input.category, input.linkedAccount, input.start, input.end,
-					PagerHelper.infinitePager());
+					PagerHelper.createInfinitePager());
 
 			if (sales.size() > 0) {
 				// group sales by date
@@ -1872,7 +1872,7 @@ public final class Core extends ActionHandler {
 						ApiError.DateRangeOutOfBounds.getMessage("0-60 days: input.end - input.start"));
 
 			List<Sale> sales = SaleServiceProvider.provide().getSales(input.country, input.category, linkedAccount, input.start, input.end,
-					PagerHelper.infinitePager());
+					PagerHelper.createInfinitePager());
 
 			if (sales.size() > 0) {
 				// group sales by date

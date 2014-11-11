@@ -147,7 +147,7 @@ public class CronServlet extends HttpServlet {
 
 								// go through all the failed attempts and get them too (failed attempts = less than 30 days old)
 								List<DataAccountFetch> failedDataAccountFetches = dataAccountFetchService.getFailedDataAccountFetches(dataAccount,
-										PagerHelper.infinitePager());
+										PagerHelper.createInfinitePager());
 
 								for (DataAccountFetch dataAccountFetch : failedDataAccountFetches) {
 									dataAccountService.triggerSingleDateDataAccountFetch(dataAccount, dataAccountFetch.date);
@@ -161,7 +161,7 @@ public class CronServlet extends HttpServlet {
 				}
 			} else if ("itemproperties".equals(process)) {
 				List<Long> propertylessItemIds;
-				Pager pager = PagerHelper.infinitePager();
+				Pager pager = PagerHelper.createInfinitePager();
 
 				try {
 					propertylessItemIds = ItemServiceProvider.provide().getPropertylessItemIds(pager);
@@ -183,7 +183,7 @@ public class CronServlet extends HttpServlet {
 				// p.start = Long.valueOf(0);
 				// p.count = Long.valueOf(1000);
 
-				Pager p = PagerHelper.infinitePager();
+				Pager p = PagerHelper.createInfinitePager();
 
 				// do {
 				itemsWithDuplicates = ItemServiceProvider.provide().getDuplicateItemsInternalId(p);

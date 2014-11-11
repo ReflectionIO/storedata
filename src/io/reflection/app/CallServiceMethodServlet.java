@@ -121,7 +121,7 @@ public class CallServiceMethodServlet extends HttpServlet {
 					for (String listType : listTypes) {
 						// get all the ranks for the list type (we are using an infinite pager with no sorting to allow us to generate a deletion key during
 						// prediction)
-						ranks = RankServiceProvider.provide().getGatherCodeRanks(country, store, category, listType, code, PagerHelper.infinitePager(),
+						ranks = RankServiceProvider.provide().getGatherCodeRanks(country, store, category, listType, code, PagerHelper.createInfinitePager(),
 								Boolean.TRUE);
 
 						for (Rank rank : ranks) {

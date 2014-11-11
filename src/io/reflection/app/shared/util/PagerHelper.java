@@ -18,8 +18,6 @@ import java.util.List;
  */
 public class PagerHelper {
 
-	private static final Pager infinitePager = new Pager();
-
 	public static void updatePager(Pager pager, List<?> list) {
 		updatePager(pager, list, null);
 
@@ -37,17 +35,16 @@ public class PagerHelper {
 		}
 	}
 
-	public static Pager infinitePager() {
-		infinitePager.start = Pager.DEFAULT_START;
-		infinitePager.count = Long.valueOf(Long.MAX_VALUE);
-		infinitePager.boundless = null;
-		infinitePager.sortBy = null;
-		infinitePager.sortDirection = null;
-		infinitePager.totalCount = null;
-		return infinitePager;
+	public static Pager createInfinitePager() {
+		Pager pager = new Pager();
+
+		pager.start = Pager.DEFAULT_START;
+		pager.count = Long.valueOf(Long.MAX_VALUE);
+
+		return pager;
 	}
 
-	public static Pager newDefaultPager() {
+	public static Pager createDefaultPager() {
 		Pager pager = new Pager();
 
 		pager.start = Pager.DEFAULT_START;

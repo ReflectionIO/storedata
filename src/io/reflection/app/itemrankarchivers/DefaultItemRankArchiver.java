@@ -332,7 +332,7 @@ public class DefaultItemRankArchiver implements ItemRankArchiver {
 			FeedFetch feedFetch = FeedFetchServiceProvider.provide().getFeedFetch(id);
 
 			List<Rank> ranks = RankServiceProvider.provide().getGatherCodeRanks(DataTypeHelper.createCountry(feedFetch.country),
-					DataTypeHelper.createStore(feedFetch.store), feedFetch.category, feedFetch.type, feedFetch.code, PagerHelper.infinitePager(), Boolean.TRUE);
+					DataTypeHelper.createStore(feedFetch.store), feedFetch.category, feedFetch.type, feedFetch.code, PagerHelper.createInfinitePager(), Boolean.TRUE);
 
 			for (Rank rank : ranks) {
 				archiveRank(rank);
