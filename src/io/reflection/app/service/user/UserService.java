@@ -898,8 +898,8 @@ final class UserService implements IUserService {
 			String getDataAccountIdsQuery = String.format(
 					"SELECT `dataaccountid` FROM `userdataaccount` WHERE `deleted`='n' AND `userid` IN ('%s') ORDER BY `%s` %s LIMIT %d, %d",
 					commaDelimitedUserIds, pager.sortBy == null ? "id" : pager.sortBy,
-					pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start == null ? 0 : pager.start.longValue(),
-					pager.count == null ? 25 : pager.count.longValue());
+					pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start == null ? Pager.DEFAULT_START.longValue()
+							: pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT : pager.count.longValue());
 
 			Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
