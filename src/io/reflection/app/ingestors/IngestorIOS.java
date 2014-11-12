@@ -19,6 +19,7 @@ import io.reflection.app.datatypes.shared.FeedFetchStatusType;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
+import io.reflection.app.itemrankarchivers.ItemRankArchiverFactory;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.modellers.Modeller;
 import io.reflection.app.modellers.ModellerFactory;
@@ -298,7 +299,9 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 				current.status = FeedFetchStatusType.FeedFetchStatusTypeIngested;
 				FeedFetchServiceProvider.provide().updateFeedFetch(current);
 
-				// once the feed fetch status is updated model the list 
+				ItemRankArchiverFactory.get().enqueueIdFeedFetch(current.id);
+
+				// once the feed fetch status is updated model the list
 				modeller.enqueue(current);
 			}
 

@@ -178,13 +178,13 @@ public class FeedBrowserPage extends Page implements FilterEventHandler, Navigat
 			public void update(int index, FeedFetch object, String value) {
 				switch (value) {
 				case "ingest":
-					FeedFetchController.get().ingest(object.code);
+					FeedFetchController.get().ingest(object);
 					break;
 				case "model":
-					FeedFetchController.get().model(object.code);
+					FeedFetchController.get().model(object);
 					break;
 				case "predict":
-					FeedFetchController.get().predict(object.code);
+					FeedFetchController.get().predict(object);
 					break;
 				}
 			}

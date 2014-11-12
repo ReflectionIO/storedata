@@ -166,4 +166,10 @@ public interface IRankService extends IService {
 	 */
 	public List<Long> getRankIds(Country country, Store store, Category category, Date start, Date end) throws DataAccessException;
 
+	public List<Rank> getRanks(Pager pager) throws DataAccessException;
+
+	public List<Rank> getRanksCount() throws DataAccessException;
+
+	public List<Long> getRankIds(Pager pager) throws DataAccessException;
+
 }

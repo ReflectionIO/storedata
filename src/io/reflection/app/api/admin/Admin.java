@@ -8,13 +8,14 @@
 //
 package io.reflection.app.api.admin;
 
-import static io.reflection.app.api.PagerHelper.updatePager;
-import io.reflection.app.api.PagerHelper;
+import static io.reflection.app.shared.util.PagerHelper.updatePager;
 import io.reflection.app.api.ValidationHelper;
 import io.reflection.app.api.admin.shared.call.AssignPermissionRequest;
 import io.reflection.app.api.admin.shared.call.AssignPermissionResponse;
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
 import io.reflection.app.api.admin.shared.call.AssignRoleResponse;
+import io.reflection.app.api.admin.shared.call.DeleteUsersRequest;
+import io.reflection.app.api.admin.shared.call.DeleteUsersResponse;
 import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesRequest;
 import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesResponse;
 import io.reflection.app.api.admin.shared.call.GetDataAccountsRequest;
@@ -76,6 +77,7 @@ import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.SimpleModelRun;
 import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.helpers.ApiHelper;
 import io.reflection.app.helpers.EmailHelper;
 import io.reflection.app.ingestors.Ingestor;
 import io.reflection.app.ingestors.IngestorFactory;
@@ -97,6 +99,7 @@ import io.reflection.app.service.user.IUserService;
 import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.app.shared.util.FormattingHelper;
+import io.reflection.app.shared.util.PagerHelper;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -123,13 +126,23 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
-			output.users = UserServiceProvider.provide().getUsers(input.pager);
+			boolean isQuery = false;
+			try {
+				input.query = ValidationHelper.validateQuery(input.query, "input");
+				isQuery = true;
+			} catch (InputValidationException ex) {}
+
+			output.users = isQuery ? UserServiceProvider.provide().searchUsers(input.query, input.pager) : UserServiceProvider.provide().getUsers(input.pager);
 			output.pager = input.pager;
-			updatePager(output.pager, output.users, input.pager.totalCount == null ? UserServiceProvider.provide().getUsersCount() : null);
+			if (isQuery) {
+				updatePager(output.pager, output.users, input.pager.totalCount == null ? UserServiceProvider.provide().searchUsersCount(input.query) : null);
+			} else {
+				updatePager(output.pager, output.users, input.pager.totalCount == null ? UserServiceProvider.provide().getUsersCount() : null);
+			}
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -151,7 +164,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			output.count = UserServiceProvider.provide().getUsersCount();
 
@@ -175,7 +188,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -197,9 +210,9 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
-			input.pager = ValidationHelper.validatePager(input.pager, "input");
+			input.pager = ValidationHelper.validatePager(input.pager, "input.pager");
 
 			if (input.pager.sortBy == null) {
 				input.pager.sortBy = "date";
@@ -209,17 +222,22 @@ public final class Admin extends ActionHandler {
 				input.pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
 			}
 
-			input.country = ValidationHelper.validateCountry(input.country, "input");
+			input.country = ValidationHelper.validateCountry(input.country, "input.country");
 
-			input.store = ValidationHelper.validateStore(input.store, "input");
+			input.store = ValidationHelper.validateStore(input.store, "input.store");
+
+			input.category = ValidationHelper.validateCategory(input.category, "input.category");
 
 			input.listTypes = ValidationHelper.validateListTypes(input.listTypes, input.store, "input.listTypes");
 
-			output.feedFetches = FeedFetchServiceProvider.provide().getFeedFetches(input.country, input.store, input.listTypes, input.pager);
+			output.feedFetches = FeedFetchServiceProvider.provide().getFeedFetches(input.country, input.store, input.category, input.listTypes, input.pager);
 
 			output.pager = input.pager;
-			updatePager(output.pager, output.feedFetches,
-					input.pager.totalCount == null ? FeedFetchServiceProvider.provide().getFeedFetchesCount(input.country, input.store, input.listTypes) : null);
+			updatePager(
+					output.pager,
+					output.feedFetches,
+					input.pager.totalCount == null ? FeedFetchServiceProvider.provide().getFeedFetchesCount(input.country, input.store, input.category,
+							input.listTypes) : null);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -241,7 +259,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			input.country = ValidationHelper.validateCountry(input.country, "input");
 
@@ -275,7 +293,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			input.country = ValidationHelper.validateCountry(input.country, "input");
 
@@ -316,7 +334,10 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
+
+			if (input.modelType == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("ModelTypeType: input.modelType"));
 
 			Modeller modeller = null;
 
@@ -359,8 +380,6 @@ public final class Admin extends ActionHandler {
 				modeller.enqueue(input.feedFetch);
 
 				break;
-			default:
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("ModelTypeType: input.modelType"));
 			}
 
 			output.status = StatusType.StatusTypeSuccess;
@@ -383,7 +402,10 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
+
+			if (input.modelType == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("ModelTypeType: input.modelType"));
 
 			switch (input.modelType) {
 			case ModelTypeTypeCorrelation:
@@ -421,14 +443,14 @@ public final class Admin extends ActionHandler {
 			case ModelTypeTypeSimple:
 				input.simpleModelRun = ValidationHelper.validateSimpleModelRun(input.simpleModelRun, "input.simpleModelRun");
 
-				input.simpleModelRun.feedFetch = FeedFetchServiceProvider.provide().getFeedFetch(input.simpleModelRun.feedFetch.id);
+				if (input.simpleModelRun.feedFetch.store == null) {
+					input.simpleModelRun.feedFetch = FeedFetchServiceProvider.provide().getFeedFetch(input.simpleModelRun.feedFetch.id);
+				}
 
 				predictor = PredictorFactory.getPredictorForStore(input.simpleModelRun.feedFetch.store);
 				predictor.enqueue(input.simpleModelRun);
 
 				break;
-			default:
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("ModelTypeType: input.modelType"));
 			}
 
 			output.status = StatusType.StatusTypeSuccess;
@@ -452,7 +474,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
 
@@ -481,7 +503,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
 
@@ -511,7 +533,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
 
@@ -541,7 +563,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
 
@@ -571,7 +593,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
 
@@ -601,7 +623,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
@@ -629,7 +651,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
@@ -657,7 +679,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
@@ -686,7 +708,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			input.toAddress = ValidationHelper.validateEmail(input.toAddress, true, "input.toAddress");
 
@@ -716,13 +738,23 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
-			output.items = ItemServiceProvider.provide().getItems(input.pager);
+			boolean isQuery = false;
+			try {
+				input.query = ValidationHelper.validateQuery(input.query, "input");
+				isQuery = true;
+			} catch (InputValidationException ex) {}
+
+			output.items = isQuery ? ItemServiceProvider.provide().searchItems(input.query, input.pager) : ItemServiceProvider.provide().getItems(input.pager);
 			output.pager = input.pager;
-			updatePager(output.pager, output.items, input.pager.totalCount == null ? ItemServiceProvider.provide().getItemsCount() : null);
+			if (isQuery) {
+				updatePager(output.pager, output.items, input.pager.totalCount == null ? ItemServiceProvider.provide().searchItemsCount(input.query) : null);
+			} else {
+				updatePager(output.pager, output.items, input.pager.totalCount == null ? ItemServiceProvider.provide().getItemsCount() : null);
+			}
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -745,12 +777,12 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
 
 			List<DataAccount> linkedAccounts = new ArrayList<DataAccount>();
-			linkedAccounts = UserServiceProvider.provide().getDataAccounts(input.user, PagerHelper.infinitePager());
+			linkedAccounts = UserServiceProvider.provide().getDataAccounts(input.user, PagerHelper.createInfinitePager());
 			for (DataAccount la : linkedAccounts) {
 				if (input.user.id.longValue() == UserServiceProvider.provide().getDataAccountOwner(la).id) { // User is the owner of the linked account
 					la.active = DataTypeHelper.INACTIVE_VALUE;
@@ -775,6 +807,59 @@ public final class Admin extends ActionHandler {
 		return output;
 	}
 
+	public DeleteUsersResponse deleteUsers(DeleteUsersRequest input) {
+		LOG.finer("Entering deleteUsers");
+		DeleteUsersResponse output = new DeleteUsersResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("DeleteUsersRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
+
+			if (input.allTestUsers) {
+				Role testRole = RoleServiceProvider.provide().getCodeRole(DataTypeHelper.ROLE_TEST_CODE);
+				input.users = UserServiceProvider.provide().getRoleUsers(testRole);
+			}
+
+			if (input.users != null && input.users.size() > 0) {
+
+				List<DataAccount> linkedAccounts = UserServiceProvider.provide().getUsersDataAccounts(input.users, PagerHelper.createInfinitePager());
+				List<Long> userIds = new ArrayList<Long>();
+				for (User user : input.users) {
+					userIds.add(user.id);
+				}
+				for (DataAccount la : linkedAccounts) {
+					if (userIds.contains(UserServiceProvider.provide().getDataAccountOwner(la).id)) { // One of the users to delete is the owner
+						la.active = DataTypeHelper.INACTIVE_VALUE;
+						DataAccountServiceProvider.provide().updateDataAccount(la);
+					}
+				}
+
+				UserServiceProvider.provide().deleteUsersAllDataAccounts(input.users);
+
+				UserServiceProvider.provide().revokeUsersAllPermissions(input.users);
+
+				UserServiceProvider.provide().revokeUsersAllRoles(input.users);
+
+				UserServiceProvider.provide().deleteUsers(input.users);
+
+			}
+
+			output.status = StatusType.StatusTypeSuccess;
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting deleteUsers");
+		return output;
+	}
+
 	public GetRolesAndPermissionsResponse getRolesAndPermissions(GetRolesAndPermissionsRequest input) {
 		LOG.finer("Entering getRolesAndPermissions");
 		GetRolesAndPermissionsResponse output = new GetRolesAndPermissionsResponse();
@@ -787,7 +872,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
 
@@ -843,7 +928,7 @@ public final class Admin extends ActionHandler {
 
 			ValidationHelper.validateExistingEmailTemplate(input.emailTemplate, "input.emailTemplate");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			EmailTemplateServiceProvider.provide().updateEmailTemplate(input.emailTemplate);
 
@@ -867,7 +952,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			output.dataAccounts = DataAccountServiceProvider.provide().getDataAccounts(input.pager);
 			// Delete password fields
@@ -909,7 +994,7 @@ public final class Admin extends ActionHandler {
 			for (DataAccount dataAccount : output.dataAccounts) {
 				dataAccount.source = dataSourceLookup.get(dataAccount.source.id);
 				dataAccount.user = userLookup.get(dataAccount.id);
-				dataAccount.fetches = DataAccountFetchServiceProvider.provide().getFailedDataAccountFetches(dataAccount, PagerHelper.infinitePager());
+				dataAccount.fetches = DataAccountFetchServiceProvider.provide().getFailedDataAccountFetches(dataAccount, PagerHelper.createInfinitePager());
 			}
 
 			output.pager = input.pager;
@@ -936,11 +1021,13 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			Calendar cal = Calendar.getInstance();
 
-			if (input.end == null) input.end = cal.getTime();
+			if (input.end == null) {
+				input.end = cal.getTime();
+			}
 
 			if (input.start == null) {
 				cal.setTime(input.end);
@@ -949,7 +1036,7 @@ public final class Admin extends ActionHandler {
 			}
 
 			long diff = input.end.getTime() - input.start.getTime();
-			long diffDays = diff / (24 * 60 * 60 * 1000);
+			long diffDays = diff / ApiHelper.MILLIS_PER_DAY;
 
 			if (diffDays > 30 || diffDays < 0)
 				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
@@ -992,7 +1079,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			if (input.from == null)
 				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("Date: input.from"));
@@ -1030,7 +1117,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			input.fetch = ValidationHelper.validateDataAccountFetch(input.fetch, "input.fetch");
 
@@ -1056,7 +1143,7 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			input.dataAccount = ValidationHelper.validateDataAccount(input.dataAccount, "input.dataAccount");
 
@@ -1100,11 +1187,13 @@ public final class Admin extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID));
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
 			Calendar cal = Calendar.getInstance();
 
-			if (input.end == null) input.end = cal.getTime();
+			if (input.end == null) {
+				input.end = cal.getTime();
+			}
 
 			if (input.start == null) {
 				cal.setTime(input.end);
@@ -1113,7 +1202,7 @@ public final class Admin extends ActionHandler {
 			}
 
 			long diff = input.end.getTime() - input.start.getTime();
-			long diffDays = diff / (24 * 60 * 60 * 1000);
+			long diffDays = diff / ApiHelper.MILLIS_PER_DAY;
 
 			if (diffDays > 60 || diffDays < 0)
 				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
@@ -1134,6 +1223,15 @@ public final class Admin extends ActionHandler {
 			}
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
+			
+			if (input.pager.sortBy == null) {
+				input.pager.sortBy = "feedfetchid";
+			}
+
+			if (input.pager.sortDirection == null) {
+				input.pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
+			}
+			
 			output.pager = input.pager;
 
 			List<FeedFetch> feedFetchList = FeedFetchServiceProvider.provide().getDatesFeedFetches(input.country, input.store, input.category, listTypes,

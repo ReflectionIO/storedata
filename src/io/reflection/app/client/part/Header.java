@@ -444,11 +444,11 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 	private void addAdmin() {
 		if (SessionController.get().isLoggedInUserAdmin()) {
-			if (UserController.get().getUsersCount() >= 0) {
-				totalUsers.setInnerText(Long.toString(UserController.get().getUsersCount()));
-			} else {
-				UserController.get().fetchUsersCount();
-			}
+			// if (UserController.get().getUsersTotalCount() >= 0) {
+			// totalUsers.setInnerText(Long.toString(UserController.get().getUsersTotalCount()));
+			// } else {
+			UserController.get().fetchUsersCount();
+			// }
 
 			navList.getParentElement().appendChild(adminList);
 		} else {
@@ -604,7 +604,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		removeAdmin();
 		removeSearch();
 		if (user != null) {
-			if (SessionController.get().isLoggedInUserAdmin() || SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_ID)) {
+			if (SessionController.get().isLoggedInUserAdmin() || SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE)) {
 				addLeaderboard();
 				addMyAccount(user);
 				addBlog();

@@ -114,11 +114,11 @@ final class RankService implements IRankService {
 		rank.grossingPosition = connection.getCurrentRowInteger("grossingposition");
 		rank.itemId = stripslashes(connection.getCurrentRowString("itemid"));
 		rank.position = connection.getCurrentRowInteger("position");
-		rank.price = Float.valueOf((float) connection.getCurrentRowInteger("price").intValue() / 100.0f);
+		rank.price = Float.valueOf(connection.getCurrentRowInteger("price").floatValue() / 100.0f);
 		rank.source = stripslashes(connection.getCurrentRowString("source"));
 		rank.type = stripslashes(connection.getCurrentRowString("type"));
 
-		rank.revenue = Float.valueOf((float) connection.getCurrentRowLong("revenue").longValue() / 100.0f);
+		rank.revenue = Float.valueOf(connection.getCurrentRowLong("revenue").floatValue() / 100.0f);
 		rank.downloads = connection.getCurrentRowInteger("downloads");
 
 		rank.category = new Category();
@@ -135,8 +135,9 @@ final class RankService implements IRankService {
 				.format("INSERT INTO `rank` (`position`,`grossingposition`,`itemid`,`type`,`country`,`date`,`source`,`price`,`currency`,`categoryid`,`code2`,`revenue`,`downloads`) VALUES (%d,%d,'%s','%s','%s',FROM_UNIXTIME(%d),'%s',%d,'%s',%d,%d,%s,%s)",
 						rank.position.longValue(), rank.grossingPosition.longValue(), addslashes(rank.itemId), addslashes(rank.type), addslashes(rank.country),
 						rank.date.getTime() / 1000, addslashes(rank.source), (int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency),
-						rank.category.id.longValue(), rank.code.longValue(), rank.revenue == null ? "NULL" : rank.revenue.floatValue() * 100,
-						rank.downloads == null ? "NULL" : rank.downloads.intValue());
+						rank.category.id.longValue(), rank.code.longValue(),
+						rank.revenue == null ? "NULL" : Integer.toString((int) (rank.revenue.floatValue() * 100.0f)), rank.downloads == null ? "NULL"
+								: rank.downloads.toString());
 
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
@@ -170,7 +171,7 @@ final class RankService implements IRankService {
 						rank.position.longValue(), rank.grossingPosition.longValue(), addslashes(rank.itemId), addslashes(rank.type), addslashes(rank.country),
 						rank.date.getTime() / 1000, addslashes(rank.source), (int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency),
 						rank.category.id.longValue(), rank.code.longValue(),
-						rank.revenue == null || rank.revenue.isInfinite() ? "NULL" : rank.revenue.floatValue() * 100,
+						rank.revenue == null || rank.revenue.isInfinite() ? "NULL" : Integer.toString((int) (rank.revenue.floatValue() * 100.0f)),
 						rank.downloads == null || rank.downloads.intValue() == Integer.MAX_VALUE ? "NULL" : rank.downloads.intValue(), rank.id.longValue());
 
 		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
@@ -448,9 +449,9 @@ final class RankService implements IRankService {
 
 			addRanksBatchQuery.append(String.format("(%d,%d,'%s','%s','%s',FROM_UNIXTIME(%d),'%s',%d,'%s',%d,%d,%s,%s)", rank.position.longValue(),
 					rank.grossingPosition.longValue(), addslashes(rank.itemId), addslashes(rank.type), addslashes(rank.country), rank.date.getTime() / 1000,
-					addslashes(rank.source), (int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency), rank.category.id.longValue(),
-					rank.code.longValue(), rank.revenue == null ? "NULL" : rank.revenue.floatValue() * 100,
-					rank.downloads == null ? "NULL" : rank.downloads.intValue()));
+					addslashes(rank.source), (int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency), rank.category.id.longValue(), rank.code
+							.longValue(), rank.revenue == null ? "NULL" : Integer.toString((int) (rank.revenue.floatValue() * 100.0f)),
+					rank.downloads == null ? "NULL" : rank.downloads.toString()));
 			addComma = true;
 		}
 
@@ -583,8 +584,8 @@ final class RankService implements IRankService {
 				updateRanksBatchQuery = String.format(updateRanksBatchQueryFormat, rank.position.longValue(), rank.grossingPosition.longValue(),
 						addslashes(rank.itemId), addslashes(rank.type), addslashes(rank.country), rank.date.getTime() / 1000, addslashes(rank.source),
 						(int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency), rank.category.id.longValue(), rank.code.longValue(),
-						rank.revenue == null ? "NULL" : rank.revenue.floatValue() * 100, rank.downloads == null ? "NULL" : rank.downloads.intValue(),
-						rank.id.longValue());
+						rank.revenue == null ? "NULL" : Integer.toString((int) (rank.revenue.floatValue() * 100.0f)), rank.downloads == null ? "NULL"
+								: rank.downloads.toString(), rank.id.longValue());
 
 				rankConnection.executeQuery(updateRanksBatchQuery);
 
@@ -808,6 +809,95 @@ final class RankService implements IRankService {
 					rankIds.add(id);
 				}
 			}
+		} finally {
+			if (rankConnection != null) {
+				rankConnection.disconnect();
+			}
+		}
+
+		return rankIds;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.rank.IRankService#getRanksCount()
+	 */
+	@Override
+	public List<Rank> getRanksCount() throws DataAccessException {
+		throw new UnsupportedOperationException("Ranks is an exteremely large table and it rows should not be counted like this");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.rank.IRankService#getRanks(io.reflection.app.api.shared.datatypes.Pager)
+	 */
+	@Override
+	public List<Rank> getRanks(Pager pager) throws DataAccessException {
+		List<Rank> ranks = new ArrayList<Rank>();
+
+		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+
+		if (pager.sortDirection == null) {
+			pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
+		}
+
+		switch (pager.sortBy) {
+		case "id":
+		default:
+			pager.sortBy = "id";
+			break;
+		}
+
+		String getRanksQuery = String.format("SELECT * FROM `rank` WHERE `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d", pager.sortBy,
+				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
+
+		try {
+			rankConnection.connect();
+			rankConnection.executeQuery(getRanksQuery);
+
+			while (rankConnection.fetchNextRow()) {
+				Rank rank = toRank(rankConnection);
+
+				if (rank != null) {
+					ranks.add(rank);
+				}
+			}
+		} finally {
+			if (rankConnection != null) {
+				rankConnection.disconnect();
+			}
+		}
+
+		return ranks;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.rank.IRankService#getRankIds(io.reflection.app.api.shared.datatypes.Pager)
+	 */
+	@Override
+	public List<Long> getRankIds(Pager pager) throws DataAccessException {
+		List<Long> rankIds = new ArrayList<Long>();
+
+		Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+
+		String getRankIdsQuery = String.format("SELECT `id` FROM `rank` WHERE `deleted`='n' LIMIT %d, %d", pager.start, pager.count);
+
+		try {
+			rankConnection.connect();
+			rankConnection.executeQuery(getRankIdsQuery);
+
+			while (rankConnection.fetchNextRow()) {
+				Long rankId = rankConnection.getCurrentRowLong("id");
+
+				if (rankId != null) {
+					rankIds.add(rankId);
+				}
+			}
+
 		} finally {
 			if (rankConnection != null) {
 				rankConnection.disconnect();

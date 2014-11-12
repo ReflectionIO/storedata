@@ -7,6 +7,8 @@
 //
 package io.reflection.app.client.helper;
 
+import java.io.IOException;
+
 import org.markdown4j.ExtDecorator;
 import org.markdown4j.Markdown4jProcessor;
 
@@ -15,12 +17,22 @@ import org.markdown4j.Markdown4jProcessor;
  * 
  */
 public class MarkdownHelper {
-    public static final Markdown4jProcessor PROCESSOR = new Markdown4jProcessor().setDecorator(new ExtDecorator() {
-        @Override
-        public void openLink(StringBuilder out) {
-            super.openLink(out);
+	public static final Markdown4jProcessor PROCESSOR = new Markdown4jProcessor().setDecorator(new ExtDecorator() {
+		@Override
+		public void openLink(StringBuilder out) {
+			super.openLink(out);
 
-            out.append(" target=\"_blank\"");
-        }
-    });
+			out.append(" target=\"_blank\"");
+		}
+	});
+
+	public static String process(String input) {
+		String processed = null;
+
+		try {
+			processed = PROCESSOR.process(input);
+		} catch (IOException ex) {}
+
+		return processed == null ? "" : processed;
+	}
 }

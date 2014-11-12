@@ -10,10 +10,12 @@ package io.reflection.app.api.admin.shared.call;
 
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.Request;
+import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.Store;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.google.gson.JsonArray;
@@ -22,12 +24,14 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-
 public class GetFeedFetchesRequest extends Request {
 	public Country country;
 	public Store store;
 	public Pager pager;
 	public List<String> listTypes;
+	public Category category;
+	public Date start;
+	public Date end;
 
 	@Override
 	public JsonObject toJson() {
@@ -47,6 +51,12 @@ public class GetFeedFetchesRequest extends Request {
 			}
 		}
 		object.add("listTypes", jsonListTypes);
+		JsonElement jsonCategory = category == null ? JsonNull.INSTANCE : category.toJson();
+		object.add("category", jsonCategory);
+		JsonElement jsonStart = start == null ? JsonNull.INSTANCE : new JsonPrimitive(start.getTime());
+		object.add("start", jsonStart);
+		JsonElement jsonEnd = end == null ? JsonNull.INSTANCE : new JsonPrimitive(end.getTime());
+		object.add("end", jsonEnd);
 		return object;
 	}
 
@@ -88,5 +98,24 @@ public class GetFeedFetchesRequest extends Request {
 			}
 		}
 
+		if (jsonObject.has("category")) {
+			JsonElement jsonCategory = jsonObject.get("category");
+			if (jsonCategory != null) {
+				category = new Category();
+				category.fromJson(jsonCategory.getAsJsonObject());
+			}
+		}
+		if (jsonObject.has("start")) {
+			JsonElement jsonStart = jsonObject.get("start");
+			if (jsonStart != null) {
+				start = new Date(jsonStart.getAsLong());
+			}
+		}
+		if (jsonObject.has("end")) {
+			JsonElement jsonEnd = jsonObject.get("end");
+			if (jsonEnd != null) {
+				end = new Date(jsonEnd.getAsLong());
+			}
+		}
 	}
 }

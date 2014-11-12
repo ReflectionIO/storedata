@@ -6,7 +6,7 @@
 //  Copyright © 2013 SPACEHOPPER STUDIOS LTD. All rights reserved.
 //
 package io.reflection.app.client.page;
-
+import static io.reflection.app.client.helper.FormattingHelper.*;
 import static io.reflection.app.client.controller.FilterController.CATEGORY_KEY;
 import static io.reflection.app.client.controller.FilterController.COUNTRY_KEY;
 import static io.reflection.app.client.controller.FilterController.DAILY_DATA_KEY;
@@ -31,13 +31,13 @@ import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.client.page.part.RankSidePanel;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.datatypes.RanksGroup;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.shared.util.DataTypeHelper;
-import io.reflection.app.shared.util.FormattingHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -48,6 +48,7 @@ import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -89,8 +90,16 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 	public static final int SELECTED_TAB_PARAMETER_INDEX = 0;
 	public static final int VIEW_ALL_LENGTH_VALUE = Integer.MAX_VALUE;
+	public static final String ALL_TEXT = "Overview / All";
 
 	@UiField RanksPageStyle style;
+
+	interface AllAdminCodeTemplate extends SafeHtmlTemplates {
+		AllAdminCodeTemplate INSTANCE = GWT.create(AllAdminCodeTemplate.class);
+
+		@Template(ALL_TEXT + " <span class=\"badge pull-right\">{0}</span>")
+		SafeHtml code(Long code);
+	}
 
 	@UiField(provided = true) CellTable<RanksGroup> mRanks = new CellTable<RanksGroup>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 
@@ -136,6 +145,9 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 	public RanksPage() {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		// set the overall tab title (this is because it is modified for admins to contain the gather code)
+		mAll.setText(ALL_TEXT);
 
 		showModelPredictions = SessionController.get().isLoggedInUserAdmin();
 
@@ -196,7 +208,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			@Override
 			public String getValue(RanksGroup object) {
 				Rank rank = rankForListType(object);
-				return rank.price.floatValue() == 0.0f ? "Free" : FormattingHelper.getCurrencySymbol(rank.currency) + " " + rank.price.toString();
+				return FormattingHelper.asPriceString(rank.currency, rank.price.floatValue());
 			}
 
 		};
@@ -204,7 +216,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 			@Override
 			public String getValue(RanksGroup object) {
-				return rankForListType(object).downloads.toString();
+				Rank rank = rankForListType(object);
+				return WHOLE_NUMBER_FORMAT.format(rank.downloads);
 			}
 
 		};
@@ -213,8 +226,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 			@Override
 			public String getValue(RanksGroup object) {
-				Rank value = rankForListType(object);
-				return FormattingHelper.getCurrencySymbol(value.currency) + " " + value.revenue;
+				Rank rank = rankForListType(object);
+				return FormattingHelper.asWholeMoneyString(rank.currency, rank.revenue.floatValue());
 			}
 
 		};
@@ -492,7 +505,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 				showMorePanel.setVisible(true);
 			}
 
-			boolean hasPermission = SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_FULL_RANK_VIEW_ID);
+			boolean hasPermission = SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_FULL_RANK_VIEW_CODE);
 
 			if (hasPermission) {
 				redirect.removeFromParent();
@@ -570,10 +583,21 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	 */
 	@Override
 	public void getAllTopItemsSuccess(GetAllTopItemsRequest input, GetAllTopItemsResponse output) {
-		if (output.status.equals(StatusType.StatusTypeSuccess)) {
+		if (output.status.equals(StatusType.StatusTypeSuccess) && output.freeRanks != null) {
 			showMorePanel.setVisible(true);
+
+			if (SessionController.get().isLoggedInUserAdmin()) {
+				if (output.freeRanks != null && output.freeRanks.size() > 0 && output.freeRanks.get(0).code != null) {
+					mAll.setHTML(AllAdminCodeTemplate.INSTANCE.code(output.freeRanks.get(0).code));
+				} else if (output.paidRanks != null && output.paidRanks.size() > 0 && output.paidRanks.get(0).code != null) {
+					mAll.setHTML(AllAdminCodeTemplate.INSTANCE.code(output.paidRanks.get(0).code));
+				} else if (output.grossingRanks != null && output.grossingRanks.size() > 0 && output.grossingRanks.get(0).code != null) {
+					mAll.setHTML(AllAdminCodeTemplate.INSTANCE.code(output.grossingRanks.get(0).code));
+				} else {
+					mAll.setText(ALL_TEXT);
+				}
+			}
 		} else {
-			RankController.get().updateRowCount(0, true);
 			showMorePanel.setVisible(false);
 		}
 	}
@@ -587,7 +611,6 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	 */
 	@Override
 	public void getAllTopItemsFailure(GetAllTopItemsRequest input, Throwable caught) {
-		RankController.get().updateRowCount(0, true);
 		showMorePanel.setVisible(false);
 	}
 }

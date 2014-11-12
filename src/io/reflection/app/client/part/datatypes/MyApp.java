@@ -7,9 +7,10 @@
 //
 package io.reflection.app.client.part.datatypes;
 
+import static io.reflection.app.client.helper.FormattingHelper.WHOLE_NUMBER_FORMAT;
+import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
-import io.reflection.app.shared.util.FormattingHelper;
 
 import java.util.List;
 
@@ -79,16 +80,15 @@ public class MyApp {
 			}
 
 			Rank sample = ranks.get(0);
-			String symbol = FormattingHelper.getCurrencySymbol(sample.currency);
 
-			overallDownloads = FormattingHelper.getFormattedNumber(downloads);
+			overallDownloads = WHOLE_NUMBER_FORMAT.format((double) downloads);
 
-			overallRevenue = symbol + " " + FormattingHelper.getFormattedNumber(revenue);
+			overallRevenue = FormattingHelper.asMoneyString(sample.currency, revenue);
 
 			if (minPrice == Float.MAX_VALUE || maxPrice == -Float.MAX_VALUE) {
 				overallPrice = UNKNOWN_VALUE;
 			} else {
-				overallPrice = FormattingHelper.getPriceRange(sample.currency, minPrice, maxPrice);
+				overallPrice = FormattingHelper.asPriceRangeString(sample.currency, minPrice, maxPrice);
 			}
 
 			if (minPosition == Integer.MAX_VALUE || maxPosition == Integer.MIN_VALUE) {

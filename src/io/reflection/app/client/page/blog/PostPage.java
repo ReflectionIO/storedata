@@ -7,8 +7,7 @@
 //
 package io.reflection.app.client.page.blog;
 
-import java.io.IOException;
-
+import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMAT_EEE_DD_MMM_YYYY;
 import io.reflection.app.api.blog.shared.call.GetPostRequest;
 import io.reflection.app.api.blog.shared.call.GetPostResponse;
 import io.reflection.app.api.blog.shared.call.event.GetPostEventHandler;
@@ -33,7 +32,6 @@ import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Display;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Timer;
@@ -154,9 +152,9 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 		author.setInnerText(FormattingHelper.getUserName(post.author));
 
 		if (post.published != null) {
-			date.setInnerText(DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT_EEE_DD_MMM_YYYY).format(post.published));
+			date.setInnerText(DATE_FORMAT_EEE_DD_MMM_YYYY.format(post.published));
 		} else {
-			date.setInnerText("TBD");
+			date.setInnerHTML("<span class=\"label label-info\">NOT PUBLISHED</span>");
 		}
 
 		if (tags.getWidgetCount() > 0) {
@@ -174,15 +172,7 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 		}
 
 		if (post.content != null) {
-
-			String processedString = post.content;
-
-			try {
-				processedString = MarkdownHelper.PROCESSOR.process(post.content);
-			} catch (IOException e) {
-				new RuntimeException(e);
-			}
-			content.setInnerHTML(processedString);
+			content.setInnerHTML(MarkdownHelper.process(post.content));
 
 			setLoading(LoadingType.NoneLoadingType);
 

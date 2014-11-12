@@ -5,6 +5,7 @@ package io.reflection.app;
 
 import static io.reflection.app.objectify.PersistenceService.ofy;
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.collectors.CollectorIOS;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
@@ -136,12 +137,13 @@ public class DevHelperServlet extends HttpServlet {
 		String object = req.getParameter("object");
 		String start = req.getParameter("start");
 		String count = req.getParameter("count");
+		String all = req.getParameter("all");
 		String rankStart = req.getParameter("rankstart");
 		String rankEnd = req.getParameter("rankend");
 		String feedType = req.getParameter("feedtype");
 		String itemId = req.getParameter("itemid");
 		String date = req.getParameter("date");
-		String feedIds = req.getParameter("feedIds");
+		String ids = req.getParameter("ids");
 
 		boolean success = false;
 
@@ -204,7 +206,7 @@ public class DevHelperServlet extends HttpServlet {
 
 				Ingestor i = IngestorFactory.getIngestorForStore(DataTypeHelper.IOS_STORE_A3);
 
-				String[] feedIdsArray = feedIds.split(",");
+				String[] feedIdsArray = ids.split(",");
 
 				for (String feedId : feedIdsArray) {
 					i.enqueue(Arrays.asList(Long.valueOf(feedId)));
@@ -608,25 +610,48 @@ public class DevHelperServlet extends HttpServlet {
 				success = true;
 			} else if ("archive".equalsIgnoreCase(action)) {
 				if ("rank".equalsIgnoreCase(object)) {
-					try {
-						Store store = new Store();
-						store.a3Code = "ios";
+					if (start == null && count == null) {
+						try {
+							Store store = new Store();
+							store.a3Code = "ios";
 
-						Country country = new Country();
-						country.a2Code = "us";
+							Country country = new Country();
+							country.a2Code = "us";
 
-						Category allCategory = CategoryServiceProvider.provide().getAllCategory(store);
+							Category allCategory = CategoryServiceProvider.provide().getAllCategory(store);
 
-						ItemRankArchiver ar = ItemRankArchiverFactory.getItemRankArchiverForStore(store.a3Code);
+							ItemRankArchiver ar = ItemRankArchiverFactory.get();
 
-						List<Long> rankIds = RankServiceProvider.provide().getRankIds(country, store, allCategory, new Date(0L), new Date());
+							List<Long> foundRankIds = RankServiceProvider.provide().getRankIds(country, store, allCategory, new Date(0L), new Date());
 
-						for (Long rankId : rankIds) {
-							ar.enqueue(rankId);
+							for (Long rankId : foundRankIds) {
+								ar.enqueueIdRank(rankId);
+							}
+						} catch (DataAccessException e) {
+							throw new RuntimeException(e);
 						}
-					} catch (DataAccessException e) {
-						throw new RuntimeException(e);
+					} else {
+						ItemRankArchiver ar = ItemRankArchiverFactory.get();
+						Pager p = new Pager();
+						p.start = start == null ? Pager.DEFAULT_START : Long.valueOf(start);
+						p.count = count == null ? Pager.DEFAULT_COUNT : Long.valueOf(count);
+						ar.enqueuePagerRanks(p, all == null ? Boolean.FALSE : Boolean.valueOf(all));
 					}
+				}
+
+				success = true;
+			} else if ("archivemulti".equalsIgnoreCase(action)) {
+				if ("rank".equalsIgnoreCase(object)) {
+					ItemRankArchiver ar = ItemRankArchiverFactory.get();
+
+					String[] rankIdsArray = ids.split(",");
+
+					for (String rankId : rankIdsArray) {
+						LOG.finer("Enqueueing rank [" + rankId + "]");
+						ar.enqueueIdRank(Long.valueOf(rankId));
+					}
+				} else if ("feedfetchrank".equalsIgnoreCase(object)) {
+					ItemRankArchiverFactory.get().enqueueIdFeedFetch(Long.valueOf(ids));
 				}
 
 				success = true;
@@ -676,10 +701,10 @@ public class DevHelperServlet extends HttpServlet {
 		Date date = new Date();
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 1);
+//		cal.set(Calendar.HOUR_OF_DAY, 0);
+//		cal.set(Calendar.MINUTE, 0);
+//		cal.set(Calendar.SECOND, 0);
+//		cal.set(Calendar.MILLISECOND, 1);
 		Date end = cal.getTime();
 		cal.add(Calendar.DAY_OF_YEAR, -1);
 		Date start = cal.getTime();

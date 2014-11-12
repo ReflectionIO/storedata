@@ -7,12 +7,15 @@
 //
 package io.reflection.app.shared.util;
 
+import io.reflection.app.datatypes.shared.Category;
+import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Role;
-import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.datatypes.shared.Store;
+import io.reflection.app.datatypes.shared.User;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -28,6 +31,8 @@ import com.google.gson.JsonParser;
  */
 public class DataTypeHelper {
 
+	public static final float SMALL_MONEY = 0.0000001f;
+
 	public static final String IOS_STORE_A3 = "ios";
 
 	private static final Store IOS_STORE = new Store();
@@ -35,43 +40,78 @@ public class DataTypeHelper {
 	public static final String ACTIVE_VALUE = "y";
 	public static final String INACTIVE_VALUE = "n";
 
-	public static final Long PERMISSION_FULL_RANK_VIEW_ID = Long.valueOf(1);
-	public static final Long PERMISSION_BLOG_POST_ID = Long.valueOf(9);
-	public static final Long PERMISSION_BLOG_LIST_ANY_ID = Long.valueOf(17);
-	public static final Long PERMISSION_HAS_LINKED_ACCOUNT_ID = Long.valueOf(20);
-	public static final Long PERMISSION_MANAGE_CATEGORIES_ID = Long.valueOf(21);
+	public static final String PERMISSION_FULL_RANK_VIEW_CODE = "FRV";
+	public static final String PERMISSION_MANAGE_FEED_FETCHES_CODE = "MFF";
+	public static final String PERMISSION_MANAGE_USERS_CODE = "MUS";
+	public static final String PERMISSION_MANAGE_ROLES_CODE = "MRL";
+	public static final String PERMISSION_MANAGE_PERMISSIONS_CODE = "MPR";
+	public static final String PERMISSION_MANAGE_EMAIL_TEMPLATES_CODE = "MET";
+	public static final String PERMISSION_MANAGE_ITEMS_CODE = "MIT";
+	public static final String PERMISSION_MANAGE_BLOG_POSTS_CODE = "MBL";
+	public static final String PERMISSION_BLOG_POST_CODE = "BPT";
+	public static final String PERMISSION_BLOG_PUBLISH_OWN_CODE = "BPO";
+	public static final String PERMISSION_BLOG_EDIT_OWN_CODE = "BEO";
+	public static final String PERMISSION_BLOG_DELETE_OWN_CODE = "BDO";
+	public static final String PERMISSION_BLOG_LIST_OWN_CODE = "BLO";
+	public static final String PERMISSION_BLOG_PUBLISH_ANY_CODE = "BPA";
+	public static final String PERMISSION_BLOG_EDIT_ANY_CODE = "BEA";
+	public static final String PERMISSION_BLOG_DELETE_ANY_CODE = "BDA";
+	public static final String PERMISSION_BLOG_LIST_ANY_CODE = "BLA";
+	public static final String PERMISSION_BLOG_EDIT_PUBLISHED_CODE = "BEP";
+	public static final String PERMISSION_BLOG_DELETE_PUBLISHED_CODE = "BDP";
 	public static final String PERMISSION_HAS_LINKED_ACCOUNT_CODE = "HLA";
+	public static final String PERMISSION_MANAGE_CATEGORIES_CODE = "MCA";
+	public static final String PERMISSION_MANAGE_DATA_ACCOUNTS_CODE = "MDA";
+	public static final String PERMISSION_MANAGE_SIMPLE_MODEL_RUN_CODE = "MSM";
 
+	public static final String ROLE_ADMIN_CODE = "ADM";
 	public static final Long ROLE_ADMIN_ID = Long.valueOf(1);
-	public static final Long ROLE_DEVELOPER_ID = Long.valueOf(2);
-	public static final Long ROLE_PREMIUM_ID = Long.valueOf(3);
-	public static final Long ROLE_ALPHA_ID = Long.valueOf(4);
-	public static final Long ROLE_BETA_ID = Long.valueOf(5);
+	public static final String ROLE_DEVELOPER_CODE = "DEV";
+	public static final String ROLE_PREMIUM_CODE = "PRE";
+	public static final String ROLE_ALPHA_CODE = "ALF";
+	public static final String ROLE_FIRST_CLOSED_BETA_CODE = "BT1";
+	public static final String ROLE_TEST_CODE = "TST";
 
 	public static final String STORE_IPHONE_A3_CODE = "iph";
 	public static final String STORE_IPAD_A3_CODE = "ipa";
 
+	private static final Role ADMIN_ROLE = new Role();
+
 	/**
-	 * Creates a role with a given id
+	 * Gets instance of admin role
 	 * 
 	 * @param id
 	 * @return
 	 */
-	public static Role createRole(Long id) {
+	public static Role adminRole() {
+		if (ADMIN_ROLE.id == null || ROLE_ADMIN_ID.longValue() != ADMIN_ROLE.id.longValue()) {
+			ADMIN_ROLE.id = ROLE_ADMIN_ID;
+		}
+
+		return ADMIN_ROLE;
+	}
+
+	/**
+	 * Creates a role with a given code
+	 * 
+	 * @param code
+	 * @return
+	 */
+	public static Role createRole(String code) {
 		Role role = new Role();
-		role.id = id;
+		role.code = code;
 		return role;
 	}
 
 	/**
-	 * Creates a permission with a given id
+	 * Creates a permission with a given code
 	 * 
 	 * @param id
 	 * @return
 	 */
-	public static Permission createPermission(Long id) {
+	public static Permission createPermission(String code) {
 		Permission permission = new Permission();
-		permission.id = id;
+		permission.code = code;
 		return permission;
 	}
 
@@ -155,8 +195,55 @@ public class DataTypeHelper {
 	public static Store getIosStore() {
 		if (!IOS_STORE_A3.equals(IOS_STORE.a3Code)) {
 			IOS_STORE.a3Code = IOS_STORE_A3;
+			IOS_STORE.id = null;
 		}
 
 		return IOS_STORE;
 	}
+
+	/**
+	 * Creates an instance of Store with an a3Code
+	 * 
+	 * @param a3Code
+	 * @return
+	 */
+	public static Store createStore(String a3Code) {
+		Store s = new Store();
+		s.a3Code = a3Code;
+		return s;
+	}
+
+	/**
+	 * Creates an instance of a Country with an a2Code
+	 * 
+	 * @param a2Code
+	 * @return
+	 */
+	public static Country createCountry(String a2Code) {
+		Country c = new Country();
+		c.a2Code = a2Code;
+
+		return c;
+	}
+
+	public static boolean isZero(float value) {
+		return value < SMALL_MONEY;
+	}
+
+	public static Category createCategory(Long id) {
+		Category c = new Category();
+		c.id = id;
+		return c;
+	}
+
+	/**
+	 * @param id
+	 * @return
+	 */
+	public static FeedFetch createFeedFetch(Long id) {
+		FeedFetch f = new FeedFetch();
+		f.id = id;
+		return f;
+	}
+
 }

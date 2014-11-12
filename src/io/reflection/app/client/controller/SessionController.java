@@ -71,7 +71,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	private static SessionController mOne;
 
 	// Cache roles and permissions meanwhile user is logged in
-	private Map<Long, Role> mRoleCache; // Role.id : Role
+	private Map<String, Role> mRoleCache; // Role.id : Role
 	private Map<String, Permission> mPermissionCache; // Permission.code : Permission
 
 	private static final String COOKIE_KEY_TOKEN = SessionController.class.getName() + ".token";
@@ -206,20 +206,13 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 						if (mSession != null && mSession.token != null && input.session != null && input.session.token != null
 								&& mSession.token.equals(input.session.token)) {
 
-							mLoggedInUser.roles = output.roles;
-
-							if (mRoleCache == null) {
-								mRoleCache = new HashMap<Long, Role>();
-							}
-
-							// Add retrieved roles into cache
+							// Add retrieved roles and permissions into caches
 							if (output.roles != null) {
 								for (Role role : output.roles) {
-									mRoleCache.put(role.id, role);
+									addRoleToLookup(role);
 								}
 							}
 
-							// Add retrieved permissions into caches
 							if (output.permissions != null) {
 								for (Permission permission : output.permissions) {
 									addPermissionToLookup(permission);
@@ -275,20 +268,17 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 
 		// Clear user data, filters and pages
 		LinkedAccountController.get().reset();
-		FilterController.get().resetFilter(PageType.LinkedAccountsPageType);
 		MyAppsController.get().reset();
-		FilterController.get().resetFilter(PageType.MyAppsPageType);
 		RankController.get().reset();
-		FilterController.get().resetFilter(PageType.RanksPageType);
 		PostController.get().reset();
-
+		FilterController.get().reset();
 		// Remove all the pages from the Navigation Controller
 		NavigationController.get().purgeAllPages();
 
 		PageType.LoginPageType.show("requestinvite");
 	}
 
-	private void makeSessionInvalid() {
+	public void makeSessionInvalid() {
 		setLoggedInUser(null, null);
 		// ItemController.get().clearItemCache();
 		clearRolePermissionCache();
@@ -301,7 +291,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	 * @return
 	 */
 	public boolean isLoggedInUserAdmin() {
-		return hasRole(mLoggedInUser, DataTypeHelper.ROLE_ADMIN_ID);
+		return hasRole(mLoggedInUser, DataTypeHelper.ROLE_ADMIN_CODE);
 	}
 
 	/**
@@ -311,34 +301,34 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	 *            rank id
 	 * @return
 	 */
-	public boolean loggedInUserIs(Long id) {
-		return hasRole(mLoggedInUser, id);
+	public boolean loggedInUserIs(String code) {
+		return hasRole(mLoggedInUser, code);
 	}
 
 	/**
-	 * Returns true if the user has a permission with a given id
+	 * Returns true if the user has a permission with a given code
 	 * 
-	 * @param id
-	 *            permission id
+	 * @param code
+	 *            permission code
 	 * @return
 	 */
-	public boolean loggedInUserHas(Long id) {
-		return hasPermission(mLoggedInUser, id);
+	public boolean loggedInUserHas(String code) {
+		return hasPermission(mLoggedInUser, code);
 	}
 
 	/**
 	 * If the user has a specific role
 	 * 
 	 * @param user
-	 * @param id
+	 * @param code
 	 * @return Boolean hasRole
 	 */
-	public boolean hasRole(User user, Long id) {
+	public boolean hasRole(User user, String code) {
 		boolean hasRole = false;
 
 		if (user != null && user.roles != null) {
 			for (Role role : user.roles) {
-				if (role.id != null && role.id.longValue() == id.longValue()) {
+				if (role.code != null && role.code.equals(code)) {
 					hasRole = true;
 					break;
 				}
@@ -348,14 +338,14 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 		return hasRole;
 	}
 
-	public boolean hasPermission(User user, Long id) {
-		boolean hasPermission = hasRole(user, DataTypeHelper.ROLE_ADMIN_ID);
+	public boolean hasPermission(User user, String code) {
+		boolean hasPermission = hasRole(user, DataTypeHelper.ROLE_ADMIN_CODE);
 
 		if (!hasPermission && user != null) {
 			if (user.roles != null) {
 				for (Role role : user.roles) {
 					if (!hasPermission && role.permissions != null) {
-						hasPermission = hasIdPermission(role.permissions, id.longValue());
+						hasPermission = hasCodePermission(role.permissions, code);
 						if (hasPermission) {
 							break;
 						}
@@ -363,7 +353,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 				}
 			}
 			if (!hasPermission && user.permissions != null) {
-				hasPermission = hasIdPermission(user.permissions, id.longValue());
+				hasPermission = hasCodePermission(user.permissions, code);
 			}
 
 		}
@@ -371,29 +361,29 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 		return hasPermission;
 	}
 
-	private Boolean hasIdPermission(Collection<Permission> permissions, Long id) {
-		boolean hasIdPermission = false;
+	private Boolean hasCodePermission(Collection<Permission> permissions, String code) {
+		boolean hasCodePermission = false;
 		for (Permission p : permissions) {
-			if (p.id != null && p.id.longValue() == id) {
-				hasIdPermission = true;
+			if (p.code != null && p.code.equals(code)) {
+				hasCodePermission = true;
 				break;
 			}
 		}
-		return hasIdPermission;
+		return hasCodePermission;
 	}
 
 	/**
 	 * Retrieve a role from the cache
 	 * 
-	 * @param Id
-	 *            id of the role to retrieve
+	 * @param Code
+	 *            code of the role to retrieve
 	 * @return the role
 	 */
-	public Role lookupRole(String id) {
+	public Role lookupRole(String code) {
 		Role role = null;
 
 		if (mRoleCache != null) {
-			role = mRoleCache.get(id);
+			role = mRoleCache.get(code);
 		}
 
 		return role;
@@ -416,10 +406,26 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	}
 
 	/**
+	 * Add a role to the cache
+	 * 
+	 * @param p
+	 */
+	public void addRoleToLookup(Role r) {
+		if (mRoleCache == null) {
+			mRoleCache = new HashMap<String, Role>();
+		}
+		mRoleCache.put(r.code, r);
+		if (mLoggedInUser.roles == null) {
+			mLoggedInUser.roles = new ArrayList<Role>();
+		}
+		mLoggedInUser.roles.add(r);
+	}
+
+	/**
 	 * Retrieve a permission from the cache
 	 * 
-	 * @param Id
-	 *            id of the permission to retrieve
+	 * @param Code
+	 *            code of the permission to retrieve
 	 * @return the permission
 	 */
 	public Permission lookupPermission(String code) {

@@ -9,7 +9,9 @@ package io.reflection.app.client.helper;
 
 import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.client.controller.SessionController;
+import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.shared.util.DataTypeHelper;
 
@@ -19,10 +21,7 @@ import io.reflection.app.shared.util.DataTypeHelper;
  */
 public class ApiCallHelper {
 	public static Store createStoreForApiCall(Store store) {
-		Store apiStore = new Store();
-		apiStore.a3Code = storeCodeForApiCall(store.a3Code);
-
-		return apiStore;
+		return DataTypeHelper.createStore(store.a3Code);
 	}
 
 	public static String storeCodeForApiCall(String a3Code) {
@@ -40,13 +39,22 @@ public class ApiCallHelper {
 	}
 
 	public static Country createCountryForApiCall(Country country) {
-		Country apiCountry = new Country();
-		apiCountry.a2Code = country.a2Code;
-
-		return apiCountry;
+		return DataTypeHelper.createCountry(country.a2Code);
 	}
 
 	public static Session getSessionForApiCall() {
 		return SessionController.get().getSessionForApiCall();
+	}
+
+	public static Category createCategoryForApiCall(Category category) {
+		return DataTypeHelper.createCategory(category.id);
+	}
+
+	/**
+	 * @param feedFetch
+	 * @return
+	 */
+	public static FeedFetch createFeedFetchForApiCall(FeedFetch feedFetch) {
+		return DataTypeHelper.createFeedFetch(feedFetch.id);
 	}
 }

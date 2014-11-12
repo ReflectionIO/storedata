@@ -11,3 +11,5 @@ INSERT INTO `permission` (`name`,`description`,`code`) VALUES ('Manage data acco
 INSERT INTO `permission` (`name`,`description`,`code`) VALUES ('Manage data account fetches','Can perform actions on data account fetches','MDF')$$
 
 INSERT INTO `permission` (`name`,`description`,`code`) VALUES ('Manage simple model run','Can perform actions on simple model runs','MSM')$$
+
+INSERT INTO `role` (`name`,`description`,`code`) VALUES ('test','Can perform test tasks','TST')$$

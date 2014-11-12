@@ -8,6 +8,8 @@
 package io.reflection.app;
 
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.itemrankarchivers.ItemRankArchiverFactory;
 import io.reflection.app.logging.GaeLevel;
@@ -62,21 +64,58 @@ public class ArchiveServlet extends ContextAwareServlet {
 		String type = REQUEST.get().getParameter("type");
 
 		if ("itemrank".equals(type)) {
+			String pagerParam = REQUEST.get().getParameter("pager");
+			String startParam = REQUEST.get().getParameter("start");
+			String countParam = REQUEST.get().getParameter("count");
+			String moreParam = REQUEST.get().getParameter("next");
+
+			Boolean pager = pagerParam == null ? null : Boolean.valueOf(pagerParam);
+
+			if (pager != null && pager.booleanValue()) {
+				Long start = startParam == null ? null : Long.valueOf(startParam);
+				Long count = countParam == null ? null : Long.valueOf(countParam);
+
+				Boolean next = moreParam == null ? Boolean.FALSE : Boolean.valueOf(moreParam);
+
+				if (start == null) {
+					start = Pager.DEFAULT_START;
+				}
+
+				if (count == null) {
+					count = Pager.DEFAULT_COUNT;
+				}
+
+				Pager p = new Pager();
+				p.start = start;
+				p.count = count;
+				p.sortBy = "id";
+				p.sortDirection = SortDirectionType.SortDirectionTypeAscending;
+
+				ItemRankArchiverFactory.get().enqueuePagerRanks(p, next);
+
+			} else {
+				Long id = Long.valueOf(idParameter);
+
+				if (id != null) {
+					try {
+						Rank rank = RankServiceProvider.provide().getRank(id);
+						if (rank != null) {
+							ItemRankArchiverFactory.get().archiveRank(rank);
+						} else {
+							if (LOGGER.isLoggable(Level.INFO)) {
+								LOGGER.info("Could not find rank for archiving with id [" + idParameter + "]");
+							}
+						}
+					} catch (DataAccessException daEx) {
+						throw new RuntimeException(daEx);
+					}
+				}
+			}
+		} else if ("feedfetchranks".equals(type)) {
 			Long id = Long.valueOf(idParameter);
 
 			if (id != null) {
-				try {
-					Rank rank = RankServiceProvider.provide().getRank(id);
-					if (rank != null) {
-						ItemRankArchiverFactory.getItemRankArchiverForStore(rank.source).archive(rank);
-					} else {
-						if (LOGGER.isLoggable(Level.INFO)) {
-							LOGGER.info("Could not find rank for archiving with id [" + idParameter + "]");
-						}
-					}
-				} catch (DataAccessException daEx) {
-					throw new RuntimeException(daEx);
-				}
+				ItemRankArchiverFactory.get().archiveIdFeedFetchRanks(id);
 			}
 		}
 	}

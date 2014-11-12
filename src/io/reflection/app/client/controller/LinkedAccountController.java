@@ -174,8 +174,8 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 					pager.totalCount = Long.valueOf(pager.totalCount.longValue() + 1);
 					mCount = pager.totalCount;
 					// Load HLA Permission
-					if (!SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_ID)) {
-						Permission hlaPermission = DataTypeHelper.createPermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_ID);
+					if (!SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE)) {
+						Permission hlaPermission = DataTypeHelper.createPermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE);
 						hlaPermission.code = DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE;
 						SessionController.get().addPermissionToLookup(hlaPermission);
 					}
@@ -266,7 +266,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 					mCount = pager.totalCount;
 					// Delete HLA Permission if there are no more Linked Accounts
 					if (linkedAccountsFetched() && getLinkedAccountsCount() == 0) {
-						Permission hlaPermission = DataTypeHelper.createPermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_ID);
+						Permission hlaPermission = DataTypeHelper.createPermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE);
 						hlaPermission.code = DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE;
 						SessionController.get().deletePermissionLookup(hlaPermission);
 					}

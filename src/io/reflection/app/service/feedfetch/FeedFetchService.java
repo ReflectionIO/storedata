@@ -27,21 +27,17 @@ import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-
-import co.spchopr.persistentmap.PersistentMap;
-import co.spchopr.persistentmap.PersistentMapFactory;
 
 import com.google.appengine.api.utils.SystemProperty;
 import com.spacehopperstudios.utility.StringUtils;
 
 final class FeedFetchService implements IFeedFetchService {
 
-	private PersistentMap cache = PersistentMapFactory.createObjectify();
-	private Calendar cal = Calendar.getInstance();
+	// private PersistentMap cache = PersistentMapFactory.createObjectify();
+	// private Calendar cal = Calendar.getInstance();
 
 	public String getName() {
 		return ServiceType.ServiceTypeFeedFetch.toString();
@@ -166,26 +162,20 @@ final class FeedFetchService implements IFeedFetchService {
 		throw new UnsupportedOperationException();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.service.fetchfeed.IFeedFetchService#getFeedFetches( io.reflection.app.shared.datatypes.Country,
-	 * io.reflection.app.shared.datatypes.Store,java.util.Collection, io.reflection.app.api.shared.datatypes.Pager)
-	 */
 	@Override
-	public List<FeedFetch> getFeedFetches(Country country, Store store, Collection<String> types, Pager pager) throws DataAccessException {
+	public List<FeedFetch> getFeedFetches(Country country, Store store, Category category, Collection<String> types, Pager pager) throws DataAccessException {
 		List<FeedFetch> feedFetches = new ArrayList<FeedFetch>();
 
 		String typesQueryPart = null;
 		if (types.size() == 1) {
-			typesQueryPart = String.format("`type`='%s'", types.iterator().next());
+			typesQueryPart = String.format("`type`='%s' AND", types.iterator().next());
 		} else {
-			typesQueryPart = "`type` IN ('" + StringUtils.join(types, "','") + "')";
+			typesQueryPart = "`type` IN ('" + StringUtils.join(types, "','") + "') AND";
 		}
 
 		String getFeedFetchesQuery = String.format(
-				"SELECT * FROM `feedfetch` WHERE `store`='%s' AND `country`='%s' AND %s AND `deleted`='n' ORDER BY `%s` %s LIMIT %d,%d",
-				addslashes(store.a3Code), addslashes(country.a2Code), typesQueryPart == null ? "" : typesQueryPart, pager.sortBy,
+				"SELECT * FROM `feedfetch` WHERE `store`='%s' AND `country`='%s' AND `categoryid`=%d AND %s `deleted`='n' ORDER BY `%s` %s LIMIT %d,%d",
+				addslashes(store.a3Code), addslashes(country.a2Code), category.id.longValue(), typesQueryPart == null ? "" : typesQueryPart, pager.sortBy,
 				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
 
 		Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
@@ -210,26 +200,20 @@ final class FeedFetchService implements IFeedFetchService {
 		return feedFetches;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.service.fetchfeed.IFeedFetchService#getFeedFetchesCount( io.reflection.app.shared.datatypes.Country,
-	 * io.reflection.app.shared.datatypes.Store,java.util.Collection)
-	 */
 	@Override
-	public Long getFeedFetchesCount(Country country, Store store, Collection<String> types) throws DataAccessException {
+	public Long getFeedFetchesCount(Country country, Store store, Category category, Collection<String> types) throws DataAccessException {
 		Long feedFetchesCount = Long.valueOf(0);
 
 		String typesQueryPart = null;
 		if (types.size() == 1) {
-			typesQueryPart = String.format("`type`='%s'", types.iterator().next());
+			typesQueryPart = String.format("`type`='%s' AND", types.iterator().next());
 		} else {
-			typesQueryPart = "`type` IN ('" + StringUtils.join(types, "','") + "')";
+			typesQueryPart = "`type` IN ('" + StringUtils.join(types, "','") + "') AND ";
 		}
 
 		String getFeedFetchesCountQuery = String.format(
-				"SELECT count(1) as `count` FROM `feedfetch` WHERE `store`='%s' AND `country`='%s' AND %s AND `deleted`='n'", addslashes(store.a3Code),
-				addslashes(country.a2Code), typesQueryPart == null ? "" : typesQueryPart);
+				"SELECT count(1) as `count` FROM `feedfetch` WHERE `store`='%s' AND `country`='%s' AND `categoryid`=%d AND %s `deleted`='n'",
+				addslashes(store.a3Code), addslashes(country.a2Code), category.id.longValue(), typesQueryPart == null ? "" : typesQueryPart);
 
 		Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
 
@@ -544,33 +528,33 @@ final class FeedFetchService implements IFeedFetchService {
 	public Long getGatherCode(Country country, Store store, Date after, Date before) throws DataAccessException {
 		Long code = null;
 
-		String memcacheKey = getName() + ".gathercode." + country.a2Code + "." + store.a3Code + "." + (after == null ? "none" : after.getTime()) + "."
-				+ (before == null ? "none" : before.getTime());
-		code = (Long) cache.get(memcacheKey);
+		// String memcacheKey = getName() + ".gathercode." + country.a2Code + "." + store.a3Code + "." + (after == null ? "none" : after.getTime()) + "."
+		// + (before == null ? "none" : before.getTime());
+		// code = (Long) cache.get(memcacheKey);
+		//
+		// if (code == null) {
+		Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
 
-		if (code == null) {
-			Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
+		try {
+			feedFetchConnection.connect();
+			String getGatherCode = String
+					.format("SELECT `code2` FROM `feedfetch` WHERE CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`store` AS BINARY)=CAST('%s' AS BINARY) AND %s AND `deleted`='n' ORDER BY `date` DESC LIMIT 1",
+							addslashes(country.a2Code), addslashes(store.a3Code), beforeAfterQuery(before, after));
 
-			try {
-				feedFetchConnection.connect();
-				String getGatherCode = String
-						.format("SELECT `code2` FROM `feedfetch` WHERE CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`store` AS BINARY)=CAST('%s' AS BINARY) AND %s AND `deleted`='n' ORDER BY `date` DESC LIMIT 1",
-								addslashes(country.a2Code), addslashes(store.a3Code), beforeAfterQuery(before, after));
+			feedFetchConnection.executeQuery(getGatherCode);
 
-				feedFetchConnection.executeQuery(getGatherCode);
-
-				if (feedFetchConnection.fetchNextRow()) {
-					code = feedFetchConnection.getCurrentRowLong("code2");
-					cal.setTime(new Date());
-					cal.add(Calendar.DAY_OF_MONTH, 20);
-					cache.put(memcacheKey, code, cal.getTime());
-				}
-			} finally {
-				if (feedFetchConnection != null) {
-					feedFetchConnection.disconnect();
-				}
+			if (feedFetchConnection.fetchNextRow()) {
+				code = feedFetchConnection.getCurrentRowLong("code2");
+				// cal.setTime(new Date());
+				// cal.add(Calendar.HOUR_OF_DAY, 1);
+				// cache.put(memcacheKey, code, cal.getTime());
+			}
+		} finally {
+			if (feedFetchConnection != null) {
+				feedFetchConnection.disconnect();
 			}
 		}
+		// }
 
 		return code;
 	}
@@ -650,6 +634,16 @@ final class FeedFetchService implements IFeedFetchService {
 		}
 
 		return feedFetches;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.feedfetch.IFeedFetchService#getDateCode(java.util.Date, java.lang.Integer)
+	 */
+	@Override
+	public Long getDateCode(Date date, Integer gatherTimes) throws DataAccessException {
+		return null;
 	}
 
 }

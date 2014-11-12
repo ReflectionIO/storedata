@@ -7,8 +7,7 @@
 //
 package io.reflection.app.client.page.blog.part;
 
-import java.io.IOException;
-
+import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMAT_EEE_DD_MMM_YYYY;
 import io.reflection.app.client.helper.MarkdownHelper;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.datatypes.shared.Post;
@@ -16,7 +15,7 @@ import io.reflection.app.shared.util.FormattingHelper;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -29,8 +28,19 @@ import com.google.gwt.uibinder.client.UiRenderer;
  */
 public class PostSummaryCell extends AbstractCell<Post> {
 
+	interface DateTemplate extends SafeHtmlTemplates {
+		DateTemplate INSTANCE = GWT.create(DateTemplate.class);
+
+		@SafeHtmlTemplates.Template("<span class=\"label label-info\">NOT PUBLISHED</span>")
+		SafeHtml notPublished();
+
+		@SafeHtmlTemplates.Template("<span>{0}</span>")
+		SafeHtml publishedDate(String formattedDate);
+
+	}
+
 	interface PostSummaryCellRenderer extends UiRenderer {
-		void render(SafeHtmlBuilder sb, SafeUri link, String title, SafeHtml description, String author, String published);
+		void render(SafeHtmlBuilder sb, SafeUri link, String title, SafeHtml description, String author, SafeHtml published);
 	}
 
 	private static PostSummaryCellRenderer RENDERER = GWT.create(PostSummaryCellRenderer.class);
@@ -38,25 +48,18 @@ public class PostSummaryCell extends AbstractCell<Post> {
 	@Override
 	public void render(Context context, Post value, SafeHtmlBuilder builder) {
 		SafeUri link = PageType.BlogPostPageType.asHref("view", value.id.toString());
-		String published = "TBD";
+		SafeHtml published = DateTemplate.INSTANCE.notPublished();
 
 		if (value.published != null) {
-			published = DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT_EEE_DD_MMM_YYYY).format(value.published);
+			published = DateTemplate.INSTANCE.publishedDate(DATE_FORMAT_EEE_DD_MMM_YYYY.format(value.published));
 		}
 
-		String processedString = value.description;
+		String processedString = MarkdownHelper.process(value.description);
 
-		try {
-			processedString = MarkdownHelper.PROCESSOR.process(value.description);
-		} catch (IOException e) {
-			new RuntimeException(e);
-		}
-
-		if (value.visible == Boolean.TRUE) {
-			processedString += "<p>NOT PUBLISHED</p>";
+		if (value.visible == Boolean.FALSE) {
+			processedString += "<p class=\"label label-warning\">NOT VISIBLE</p>";
 		}
 
 		RENDERER.render(builder, link, value.title, SafeHtmlUtils.fromTrustedString(processedString), FormattingHelper.getUserName(value.author), published);
 	}
-
 }

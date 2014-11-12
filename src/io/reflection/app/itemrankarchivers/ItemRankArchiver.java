@@ -8,6 +8,7 @@
 package io.reflection.app.itemrankarchivers;
 
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.FormType;
@@ -26,21 +27,43 @@ public interface ItemRankArchiver {
 	 * 
 	 * @param id
 	 */
-	void enqueue(Long id);
+	void enqueueIdRank(Long id);
+
+	/**
+	 * Add a set of rank ids to be queued
+	 * 
+	 * @param pager
+	 *            the page of rank ids to be queued
+	 * @param more
+	 *            indicates to the archiver to queue the next set
+	 */
+	void enqueuePagerRanks(Pager pager, Boolean next);
+
+	/**
+	 * 
+	 * @param id
+	 */
+	void enqueueIdFeedFetch(Long id);
+	
+	/**
+	 * 
+	 * @param id
+	 */
+	void archiveIdFeedFetchRanks(Long id);
 
 	/**
 	 * 
 	 * @param id
 	 * @throws DataAccessException
 	 */
-	void archiveRank(Long id) throws DataAccessException;
+	void archiveIdRank(Long id) throws DataAccessException;
 
 	/**
 	 * 
 	 * @param rank
 	 * @throws DataAccessException
 	 */
-	void archive(Rank rank) throws DataAccessException;
+	void archiveRank(Rank rank) throws DataAccessException;
 
 	/**
 	 * 

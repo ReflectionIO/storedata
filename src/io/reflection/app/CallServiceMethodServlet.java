@@ -7,7 +7,6 @@
 //
 package io.reflection.app;
 
-import io.reflection.app.api.PagerHelper;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
@@ -22,6 +21,7 @@ import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
+import io.reflection.app.shared.util.PagerHelper;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -102,10 +102,10 @@ public class CallServiceMethodServlet extends HttpServlet {
 						Date date = new Date(Long.valueOf(dateParameter).longValue());
 						Calendar cal = Calendar.getInstance();
 						cal.setTime(date);
-						cal.set(Calendar.HOUR_OF_DAY, 0);
-						cal.set(Calendar.MINUTE, 0);
-						cal.set(Calendar.SECOND, 0);
-						cal.set(Calendar.MILLISECOND, 1);
+//						cal.set(Calendar.HOUR_OF_DAY, 0);
+//						cal.set(Calendar.MINUTE, 0);
+//						cal.set(Calendar.SECOND, 0);
+//						cal.set(Calendar.MILLISECOND, 1);
 						Date end = cal.getTime();
 						cal.add(Calendar.DAY_OF_YEAR, -1);
 						Date start = cal.getTime();
@@ -121,7 +121,7 @@ public class CallServiceMethodServlet extends HttpServlet {
 					for (String listType : listTypes) {
 						// get all the ranks for the list type (we are using an infinite pager with no sorting to allow us to generate a deletion key during
 						// prediction)
-						ranks = RankServiceProvider.provide().getGatherCodeRanks(country, store, category, listType, code, PagerHelper.infinitePager(),
+						ranks = RankServiceProvider.provide().getGatherCodeRanks(country, store, category, listType, code, PagerHelper.createInfinitePager(),
 								Boolean.TRUE);
 
 						for (Rank rank : ranks) {

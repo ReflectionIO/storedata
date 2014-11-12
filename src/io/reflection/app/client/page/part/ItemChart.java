@@ -304,6 +304,10 @@ public class ItemChart extends GChart {
 		Date lastDate = null;
 
 		for (Rank rank : ranks) {
+			if (withinChartRange(rank) || getPosition(rank) == 0) {
+				continue;
+			}
+
 			int gap = 0;
 
 			if (rank.downloads.intValue() < minY) {
@@ -315,19 +319,25 @@ public class ItemChart extends GChart {
 			}
 
 			if (lastDate != null && (gap = CalendarUtil.getDaysBetween(lastDate, rank.date)) > 1) {
-
 				for (int i = 0; i < gap; i++) {
 					CalendarUtil.addDaysToDate(lastDate, 1);
 					curve.addPoint(lastDate.getTime(), Integer.MAX_VALUE);
 				}
-
 			} else {
 				lastDate = CalendarUtil.copyDate(rank.date);
-				curve.addPoint(rank.date.getTime(), (showModelPredictions ? rank.downloads.intValue() : 0));
+				curve.addPoint(rank.date.getTime(), showModelPredictions ? rank.downloads.intValue() : 0);
 			}
 		}
 
 		setYAxisRange(minY, maxY);
+	}
+
+	/**
+	 * @param rank
+	 * @return
+	 */
+	private boolean withinChartRange(Rank rank) {
+		return rank.date.getTime() > getXAxis().getAxisMax() || rank.date.getTime() < getXAxis().getAxisMin();
 	}
 
 	private void drawRevenue() {
@@ -335,6 +345,10 @@ public class ItemChart extends GChart {
 		Date lastDate = null;
 
 		for (Rank rank : ranks) {
+			if (withinChartRange(rank) || getPosition(rank) == 0) {
+				continue;
+			}
+
 			int gap = 0;
 
 			if (rank.revenue.intValue() < minY) {
@@ -352,7 +366,7 @@ public class ItemChart extends GChart {
 				}
 			} else {
 				lastDate = CalendarUtil.copyDate(rank.date);
-				curve.addPoint(rank.date.getTime(), (showModelPredictions ? rank.revenue.floatValue() : 0));
+				curve.addPoint(rank.date.getTime(), showModelPredictions ? rank.revenue.floatValue() : 0);
 			}
 		}
 
@@ -365,7 +379,9 @@ public class ItemChart extends GChart {
 		Date lastDate = null;
 
 		for (Rank rank : ranks) {
-			position = (mode == RankingType.PositionRankingType ? rank.position.intValue() : rank.grossingPosition.intValue());
+			if (withinChartRange(rank) || (position = getPosition(rank)) == 0) {
+				continue;
+			}
 
 			if (position < minY) {
 				minY = position;
@@ -388,6 +404,14 @@ public class ItemChart extends GChart {
 		}
 
 		setYAxisRange(minY, maxY);
+	}
+
+	/**
+	 * @param rank
+	 * @return
+	 */
+	private int getPosition(Rank rank) {
+		return (mode == RankingType.PositionRankingType ? rank.position.intValue() : rank.grossingPosition.intValue());
 	}
 
 	public void setData(Item item, List<Rank> ranks) {

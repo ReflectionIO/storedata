@@ -7,7 +7,6 @@
 //
 package io.reflection.app.api.core;
 
-import static io.reflection.app.api.PagerHelper.updatePager;
 import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPAD_IOS;
 import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS;
 import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_UNIVERSAL_IOS;
@@ -16,8 +15,8 @@ import static io.reflection.app.service.sale.ISaleService.INAPP_PURCHASE_SUBSCRI
 import static io.reflection.app.service.sale.ISaleService.UPDATE_IPAD_IOS;
 import static io.reflection.app.service.sale.ISaleService.UPDATE_IPHONE_AND_IPOD_TOUCH_IOS;
 import static io.reflection.app.service.sale.ISaleService.UPDATE_UNIVERSAL_IOS;
+import static io.reflection.app.shared.util.PagerHelper.updatePager;
 import io.reflection.app.accountdatacollectors.DataAccountCollectorFactory;
-import io.reflection.app.api.PagerHelper;
 import io.reflection.app.api.ValidationHelper;
 import io.reflection.app.api.core.shared.call.ChangePasswordRequest;
 import io.reflection.app.api.core.shared.call.ChangePasswordResponse;
@@ -84,6 +83,7 @@ import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
+import io.reflection.app.datatypes.shared.EmailFormatType;
 import io.reflection.app.datatypes.shared.FormType;
 import io.reflection.app.datatypes.shared.ModelRun;
 import io.reflection.app.datatypes.shared.Permission;
@@ -93,6 +93,7 @@ import io.reflection.app.datatypes.shared.Sale;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.helpers.ApiHelper;
+import io.reflection.app.helpers.EmailHelper;
 import io.reflection.app.helpers.SliceHelper;
 import io.reflection.app.itemrankarchivers.ItemRankArchiver;
 import io.reflection.app.itemrankarchivers.ItemRankArchiverFactory;
@@ -116,6 +117,8 @@ import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.service.user.IUserService;
 import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
+import io.reflection.app.shared.util.FormattingHelper;
+import io.reflection.app.shared.util.PagerHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -297,10 +300,10 @@ public final class Core extends ActionHandler {
 
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(input.on);
-			cal.set(Calendar.HOUR_OF_DAY, 0);
-			cal.set(Calendar.MINUTE, 0);
-			cal.set(Calendar.SECOND, 0);
-			cal.set(Calendar.MILLISECOND, 1);
+			// cal.set(Calendar.HOUR_OF_DAY, 0);
+			// cal.set(Calendar.MINUTE, 0);
+			// cal.set(Calendar.SECOND, 0);
+			// cal.set(Calendar.MILLISECOND, 1);
 			Date end = cal.getTime();
 			cal.add(Calendar.DAY_OF_YEAR, -1);
 			Date start = cal.getTime();
@@ -425,10 +428,10 @@ public final class Core extends ActionHandler {
 
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(input.on);
-				cal.set(Calendar.HOUR_OF_DAY, 0);
-				cal.set(Calendar.MINUTE, 0);
-				cal.set(Calendar.SECOND, 0);
-				cal.set(Calendar.MILLISECOND, 1);
+				// cal.set(Calendar.HOUR_OF_DAY, 0);
+				// cal.set(Calendar.MINUTE, 0);
+				// cal.set(Calendar.SECOND, 0);
+				// cal.set(Calendar.MILLISECOND, 1);
 				Date end = cal.getTime();
 				cal.add(Calendar.DAY_OF_YEAR, -1);
 				Date start = cal.getTime();
@@ -446,7 +449,7 @@ public final class Core extends ActionHandler {
 					// get all the ranks for the list type (we are using an infinite pager with no sorting to allow us to generate a deletion key during
 					// prediction)
 					ranks = RankServiceProvider.provide().getGatherCodeRanks(input.country, input.store, input.category, listType, code,
-							PagerHelper.infinitePager(), Boolean.TRUE);
+							PagerHelper.createInfinitePager(), Boolean.TRUE);
 
 					for (Rank rank : ranks) {
 						itemIds.add(rank.itemId);
@@ -570,7 +573,9 @@ public final class Core extends ActionHandler {
 
 			Calendar cal = Calendar.getInstance();
 
-			if (input.end == null) input.end = cal.getTime();
+			if (input.end == null) {
+				input.end = cal.getTime();
+			}
 
 			if (input.start == null) {
 				cal.setTime(input.end);
@@ -583,13 +588,13 @@ public final class Core extends ActionHandler {
 			FormType form = ModellerFactory.getModellerForStore(store.a3Code).getForm(input.listType);
 
 			long diff = input.end.getTime() - input.start.getTime();
-			long diffDays = diff / (24 * 60 * 60 * 1000);
+			long diffDays = diff / ApiHelper.MILLIS_PER_DAY;
 
 			if (diffDays > 60 || diffDays < 0)
 				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
 						ApiError.DateRangeOutOfBounds.getMessage("0-60 days: input.end - input.start"));
 
-			ItemRankArchiver archiver = ItemRankArchiverFactory.getItemRankArchiverForStore(store.a3Code);
+			ItemRankArchiver archiver = ItemRankArchiverFactory.get();
 			long[] slices = SliceHelper.offsets(input.start, input.end);
 
 			String key;
@@ -904,8 +909,7 @@ public final class Core extends ActionHandler {
 
 			boolean hasDataAccount = UserServiceProvider.provide().hasDataAccount(input.session.user, input.linkedAccount).booleanValue();
 
-			Role adminRole = DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID);
-			boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, adminRole);
+			boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, DataTypeHelper.adminRole());
 
 			if (hasDataAccount || isAdmin) {
 				User user = UserServiceProvider.provide().getDataAccountOwner(input.linkedAccount);
@@ -914,7 +918,7 @@ public final class Core extends ActionHandler {
 					UserServiceProvider.provide().deleteAllUsersDataAccount(input.linkedAccount);
 
 					if (!UserServiceProvider.provide().hasDataAccounts(user) && !isAdmin) {
-						Permission hlaPermission = DataTypeHelper.createPermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_ID);
+						Permission hlaPermission = PermissionServiceProvider.provide().getCodePermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE);
 						UserServiceProvider.provide().revokePermission(user, hlaPermission);
 					}
 
@@ -1177,14 +1181,30 @@ public final class Core extends ActionHandler {
 
 			output.account.source = input.source;
 
-			Role adminRole = DataTypeHelper.createRole(DataTypeHelper.ROLE_ADMIN_ID);
-			boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, adminRole);
+			boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, DataTypeHelper.adminRole());
 
-			Permission hlaPermission = DataTypeHelper.createPermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_ID);
+			Permission hlaPermission = PermissionServiceProvider.provide().getCodePermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE);
 			boolean hasPermission = UserServiceProvider.provide().hasPermission(input.session.user, hlaPermission);
 
 			if (!hasPermission && !isAdmin) {
 				UserServiceProvider.provide().assignPermission(input.session.user, hlaPermission);
+			}
+
+			if (output.account != null) {
+				if (input.session.user == null || input.session.user.forename == null) {
+					input.session.user = UserServiceProvider.provide().getUser(input.session.user.id);
+				}
+
+				EmailHelper
+						.sendEmail(
+								"hello@reflection.io",
+								"chi@reflection.io",
+								"Chi Dire",
+								"A user's has linked thier account account",
+								String.format(
+										"Hi Chi,\n\nThis is to let you know that the user [%d - %s] has added the data account [%d] for the data source [%s] and the username.\n\nReflection",
+										input.session.user.id.longValue(), FormattingHelper.getUserLongName(input.session.user), output.account.id.longValue(),
+										input.source.name, output.account.username), EmailFormatType.EmailFormatTypePlainText);
 			}
 
 			output.status = StatusType.StatusTypeSuccess;
@@ -1405,7 +1425,7 @@ public final class Core extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			final Permission permissionMCA = DataTypeHelper.createPermission(DataTypeHelper.PERMISSION_MANAGE_CATEGORIES_ID);
+			final Permission permissionMCA = PermissionServiceProvider.provide().getCodePermission(DataTypeHelper.PERMISSION_MANAGE_CATEGORIES_CODE);
 			try {
 				ValidationHelper.validateAuthorised(input.session.user, permissionMCA);
 			} catch (AuthorisationException aEx) {
@@ -1486,7 +1506,9 @@ public final class Core extends ActionHandler {
 
 			Calendar cal = Calendar.getInstance();
 
-			if (input.end == null) input.end = cal.getTime();
+			if (input.end == null) {
+				input.end = cal.getTime();
+			}
 
 			if (input.start == null) {
 				cal.setTime(input.end);
@@ -1495,7 +1517,7 @@ public final class Core extends ActionHandler {
 			}
 
 			long diff = input.end.getTime() - input.start.getTime();
-			long diffDays = diff / (24 * 60 * 60 * 1000);
+			long diffDays = diff / ApiHelper.MILLIS_PER_DAY;
 
 			if (diffDays > 60 || diffDays < 0)
 				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
@@ -1617,7 +1639,9 @@ public final class Core extends ActionHandler {
 
 			Calendar cal = Calendar.getInstance();
 
-			if (input.end == null) input.end = cal.getTime();
+			if (input.end == null) {
+				input.end = cal.getTime();
+			}
 
 			if (input.start == null) {
 				cal.setTime(input.end);
@@ -1626,7 +1650,7 @@ public final class Core extends ActionHandler {
 			}
 
 			long diff = input.end.getTime() - input.start.getTime();
-			long diffDays = diff / (24 * 60 * 60 * 1000);
+			long diffDays = diff / ApiHelper.MILLIS_PER_DAY;
 
 			if (diffDays > 60 || diffDays < 0)
 				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
@@ -1634,7 +1658,7 @@ public final class Core extends ActionHandler {
 
 			// Get Items sales based on the filters
 			List<Sale> sales = SaleServiceProvider.provide().getSales(input.country, input.category, input.linkedAccount, input.start, input.end,
-					PagerHelper.infinitePager());
+					PagerHelper.createInfinitePager());
 
 			if (sales.size() > 0) {
 				// group sales by date
@@ -1755,15 +1779,15 @@ public final class Core extends ActionHandler {
 							rank.itemId = itemId;
 
 							// If units and customer prices are negatives (refunds), subtract the value setting units positive
-							rank.revenue += (Math.abs(sale.units.floatValue()) * (float) sale.customerPrice.intValue()) / 100.0f;
+							rank.revenue += Math.abs(sale.units.floatValue()) * sale.customerPrice.floatValue();
 
 							// Take into account price and downloads only from main Apps
 							if (sale.typeIdentifier.equals(FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS)
 									|| sale.typeIdentifier.equals(FREE_OR_PAID_APP_UNIVERSAL_IOS) || sale.typeIdentifier.equals(FREE_OR_PAID_APP_IPAD_IOS)) {
 								rank.downloads += sale.units.intValue();
 								// Ignore price if the Sale is a refund or a promotion
-								if (rank.price == null && sale.customerPrice.intValue() >= 0 && sale.promoCode.equals(" ")) {
-									rank.price = Float.valueOf(((float) sale.customerPrice.intValue()) / 100.0f);
+								if (rank.price == null && !DataTypeHelper.isZero(sale.customerPrice.floatValue()) && sale.promoCode.equals(" ")) {
+									rank.price = sale.customerPrice;
 								}
 							}
 
@@ -1850,7 +1874,9 @@ public final class Core extends ActionHandler {
 
 			Calendar cal = Calendar.getInstance();
 
-			if (input.end == null) input.end = cal.getTime();
+			if (input.end == null) {
+				input.end = cal.getTime();
+			}
 
 			if (input.start == null) {
 				cal.setTime(input.end);
@@ -1859,14 +1885,14 @@ public final class Core extends ActionHandler {
 			}
 
 			long diff = input.end.getTime() - input.start.getTime();
-			long diffDays = diff / (24 * 60 * 60 * 1000);
+			long diffDays = diff / ApiHelper.MILLIS_PER_DAY;
 
 			if (diffDays > 60 || diffDays < 0)
 				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
 						ApiError.DateRangeOutOfBounds.getMessage("0-60 days: input.end - input.start"));
 
 			List<Sale> sales = SaleServiceProvider.provide().getSales(input.country, input.category, linkedAccount, input.start, input.end,
-					PagerHelper.infinitePager());
+					PagerHelper.createInfinitePager());
 
 			if (sales.size() > 0) {
 				// group sales by date
@@ -1899,11 +1925,7 @@ public final class Core extends ActionHandler {
 						}
 
 						if (sale.proceeds != null) {
-							if (sale.proceeds.intValue() == 0) {
-								isFree = Boolean.TRUE;
-							} else {
-								isFree = Boolean.FALSE;
-							}
+							isFree = Boolean.valueOf(DataTypeHelper.isZero(sale.proceeds));
 						}
 
 						dateSalesList.add(sale);
@@ -1967,7 +1989,6 @@ public final class Core extends ActionHandler {
 
 								rank.country = input.country.a2Code;
 								rank.currency = sale.customerCurrency;
-								rank.price = Float.valueOf(((float) sale.customerPrice.intValue()) / 100.0f);
 								rank.date = salesGroupDate;
 								rank.created = salesGroupDate;
 								rank.itemId = sale.item.internalId;
@@ -1977,8 +1998,19 @@ public final class Core extends ActionHandler {
 								populatedCommon = true;
 							}
 
-							revenue += (sale.units.floatValue() * (float) sale.customerPrice.intValue()) / 100.0f;
-							downloads += sale.units.intValue();
+							// If units and customer prices are negatives (refunds), subtract the value setting units positive
+							revenue += Math.abs(sale.units.floatValue()) * sale.customerPrice.floatValue();
+
+							// Take into account price and downloads only from main Apps
+							if (sale.typeIdentifier.equals(FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS)
+									|| sale.typeIdentifier.equals(FREE_OR_PAID_APP_UNIVERSAL_IOS) || sale.typeIdentifier.equals(FREE_OR_PAID_APP_IPAD_IOS)) {
+								downloads += sale.units.intValue();
+
+								// Ignore price if the Sale is a refund or a promotion
+								if (rank.price == null && sale.customerPrice.floatValue() >= 0.001f && sale.promoCode.equals(" ")) {
+									rank.price = sale.customerPrice;
+								}
+							}
 						}
 
 						rank.revenue = Float.valueOf(revenue);

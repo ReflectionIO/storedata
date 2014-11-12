@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.page;
 
+import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMAT_DD_MMM_YYYY;
 import io.reflection.app.api.core.shared.call.DeleteLinkedAccountRequest;
 import io.reflection.app.api.core.shared.call.DeleteLinkedAccountResponse;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountsRequest;
@@ -38,14 +39,12 @@ import io.reflection.app.client.part.linkaccount.LinkedAccountsEmptyTable;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.User;
-import io.reflection.app.shared.util.FormattingHelper;
 
 import com.google.gson.JsonObject;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -178,8 +177,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		columnDateAdded = new TextColumn<DataAccount>() {
 			@Override
 			public String getValue(DataAccount object) {
-				DateTimeFormat dtf = DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT_DD_MM_YYYY);
-				return (object.source.created != null) ? dtf.format(object.created, null) : "-";
+				return (object.source.created != null) ? DATE_FORMAT_DD_MMM_YYYY.format(object.created, null) : "-";
 			}
 		};
 		linkedAccountsTable.addColumn(columnDateAdded, "Date Added");

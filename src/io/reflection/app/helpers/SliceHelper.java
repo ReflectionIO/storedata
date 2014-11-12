@@ -20,14 +20,24 @@ public class SliceHelper {
 	private static final Calendar c = Calendar.getInstance();
 
 	private static final int DEFAULT_DAYS_PER_SLICE = 30;
-	private static final long MILLIS_PER_DAY = 24 * 60 * 60 * 1000;
 
 	public static long offset(Date date) {
 		return offset(date, DEFAULT_DAYS_PER_SLICE);
 	}
 
-	public static long offset(Date date, int sliceDays) {
-		return date.getTime() / (MILLIS_PER_DAY * (long) sliceDays);
+	public static long offset(Date date, int daysPerSlice) {
+		return date.getTime() / (ApiHelper.MILLIS_PER_DAY * (long) daysPerSlice);
+	}
+
+	/**
+	 * This method is a really bad idea because some days are not 24 hours long because of time changes with seasons
+	 * 
+	 * @param date
+	 * @param slicesPerDay
+	 * @return
+	 */
+	public static long subDayOffset(Date date, int slicesPerDay) {
+		return date.getTime() / (ApiHelper.MILLIS_PER_DAY / (long) slicesPerDay);
 	}
 
 	public static Date startDate(long slice) {
@@ -35,7 +45,6 @@ public class SliceHelper {
 	}
 
 	public static Date startDate(long slice, int daysPerSlice) {
-
 		c.setTime(new Date(0));
 		c.add(Calendar.DAY_OF_YEAR, (int) (slice * daysPerSlice));
 
