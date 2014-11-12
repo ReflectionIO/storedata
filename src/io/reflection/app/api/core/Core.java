@@ -83,6 +83,7 @@ import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
+import io.reflection.app.datatypes.shared.EmailFormatType;
 import io.reflection.app.datatypes.shared.FormType;
 import io.reflection.app.datatypes.shared.ModelRun;
 import io.reflection.app.datatypes.shared.Permission;
@@ -92,6 +93,7 @@ import io.reflection.app.datatypes.shared.Sale;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.helpers.ApiHelper;
+import io.reflection.app.helpers.EmailHelper;
 import io.reflection.app.helpers.SliceHelper;
 import io.reflection.app.itemrankarchivers.ItemRankArchiver;
 import io.reflection.app.itemrankarchivers.ItemRankArchiverFactory;
@@ -115,6 +117,7 @@ import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.service.user.IUserService;
 import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
+import io.reflection.app.shared.util.FormattingHelper;
 import io.reflection.app.shared.util.PagerHelper;
 
 import java.text.SimpleDateFormat;
@@ -297,10 +300,10 @@ public final class Core extends ActionHandler {
 
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(input.on);
-//			cal.set(Calendar.HOUR_OF_DAY, 0);
-//			cal.set(Calendar.MINUTE, 0);
-//			cal.set(Calendar.SECOND, 0);
-//			cal.set(Calendar.MILLISECOND, 1);
+			// cal.set(Calendar.HOUR_OF_DAY, 0);
+			// cal.set(Calendar.MINUTE, 0);
+			// cal.set(Calendar.SECOND, 0);
+			// cal.set(Calendar.MILLISECOND, 1);
 			Date end = cal.getTime();
 			cal.add(Calendar.DAY_OF_YEAR, -1);
 			Date start = cal.getTime();
@@ -425,10 +428,10 @@ public final class Core extends ActionHandler {
 
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(input.on);
-//				cal.set(Calendar.HOUR_OF_DAY, 0);
-//				cal.set(Calendar.MINUTE, 0);
-//				cal.set(Calendar.SECOND, 0);
-//				cal.set(Calendar.MILLISECOND, 1);
+				// cal.set(Calendar.HOUR_OF_DAY, 0);
+				// cal.set(Calendar.MINUTE, 0);
+				// cal.set(Calendar.SECOND, 0);
+				// cal.set(Calendar.MILLISECOND, 1);
 				Date end = cal.getTime();
 				cal.add(Calendar.DAY_OF_YEAR, -1);
 				Date start = cal.getTime();
@@ -1185,6 +1188,23 @@ public final class Core extends ActionHandler {
 
 			if (!hasPermission && !isAdmin) {
 				UserServiceProvider.provide().assignPermission(input.session.user, hlaPermission);
+			}
+
+			if (output.account != null) {
+				if (input.session.user == null || input.session.user.forename == null) {
+					input.session.user = UserServiceProvider.provide().getUser(input.session.user.id);
+				}
+
+				EmailHelper
+						.sendEmail(
+								"hello@reflection.io",
+								"chi@reflection.io",
+								"Chi Dire",
+								"A user's has linked thier account account",
+								String.format(
+										"Hi Chi,\n\nThis is to let you know that the user [%d - %s] has added the data account [%d] for the data source [%s] and the username.\n\nReflection",
+										input.session.user.id.longValue(), FormattingHelper.getUserLongName(input.session.user), output.account.id.longValue(),
+										input.source.name, output.account.username), EmailFormatType.EmailFormatTypePlainText);
 			}
 
 			output.status = StatusType.StatusTypeSuccess;
