@@ -989,7 +989,7 @@ final class UserService implements IUserService {
 				}
 
 				values.put("user", user);
-				values.put("link", String.format("http://testenv1.reflection.io/#!%s/%d/%s", pageAction, user.id.longValue(), code));
+				values.put("link", String.format("http://www.reflection.io/#!%s/%d/%s", pageAction, user.id.longValue(), code));
 
 				if (LOG.isLoggable(GaeLevel.DEBUG)) {
 					LOG.fine(String.format("Sending action code url [%s] to [%s]", values.get("link"), user.username));
