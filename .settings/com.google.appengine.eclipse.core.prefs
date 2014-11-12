@@ -22,5 +22,5 @@ prodIsConfigured=true
 testDatabaseName=rio
 testDatabasePassword=sooth28@duns
 testDatabaseUser=rio_app_user
-testInstanceName=reflectiontestenv1\:reflectiondb
+testInstanceName=storedatacollector\:reflectiondb
 testIsConfigured=true

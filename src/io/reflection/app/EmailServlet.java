@@ -126,7 +126,7 @@ public class EmailServlet extends HttpServlet {
 //					+ ",\r\n\r\n"
 //					+ "We have received your request to be invited to our beta starting early 2014.\r\n\r\n"
 //					+ "We are working hard to create a functional, relevant and beautiful service for app market intelligence. We can't wait to share it with you.\r\n\r\n"
-//					+ "Stay tuned,\r\n\r\n" + "The Reflection Team\r\n" + "testenv1.reflection.io";
+//					+ "Stay tuned,\r\n\r\n" + "The Reflection Team\r\n" + "www.reflection.io";
 //
 //			if (EmailHelper.sendEmail("hello@reflection.io", emailTo, name, "Thank you", body, EmailFormatType.EmailFormatTypePlainText)) {
 				resp.getOutputStream().write(1);
