@@ -179,6 +179,28 @@ public class FilterHelper {
 	}
 
 	/**
+	 * Normalize the date being sure the milliseconds are set at zero.
+	 * 
+	 * @param date
+	 *            Date to be set at noon
+	 * @return newDate The new date set at noon
+	 */
+	@SuppressWarnings("deprecation")
+	public static Date normalizeDate(Date date) {
+		 Date newDate = null;
+
+		 if (date != null) {
+		 newDate = new Date(0L);
+		 newDate.setDate(date.getDate());
+		 newDate.setMonth(date.getMonth());
+		 newDate.setYear(date.getYear());
+		 newDate.setHours(0);
+		 }
+		
+		 return newDate;
+	}
+
+	/**
 	 * Disable dates between startDate and endDate
 	 * 
 	 * @param datePicker

@@ -77,6 +77,7 @@ import io.reflection.app.api.exception.AuthorisationException;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.shared.Category;
@@ -1642,6 +1643,7 @@ public final class Core extends ActionHandler {
 				cal.add(Calendar.DAY_OF_YEAR, -30);
 				input.start = cal.getTime();
 			}
+			input.start = FilterHelper.normalizeDate(input.start);
 
 			long diff = input.end.getTime() - input.start.getTime();
 			long diffDays = diff / ApiHelper.MILLIS_PER_DAY;
