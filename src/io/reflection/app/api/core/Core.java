@@ -1780,7 +1780,7 @@ public final class Core extends ActionHandler {
 									|| sale.typeIdentifier.equals(FREE_OR_PAID_APP_UNIVERSAL_IOS) || sale.typeIdentifier.equals(FREE_OR_PAID_APP_IPAD_IOS)) {
 								rank.downloads += sale.units.intValue();
 								// Ignore price if the Sale is a refund or a promotion
-								if (rank.price == null && !DataTypeHelper.isZero(sale.customerPrice.floatValue()) && sale.promoCode.equals(" ")) {
+								if (rank.price == null && sale.units.intValue() > 0 && sale.promoCode.equals(" ")) {
 									rank.price = sale.customerPrice;
 								}
 							}
