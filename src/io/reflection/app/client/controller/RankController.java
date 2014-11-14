@@ -185,10 +185,10 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 					float rankPaid = 0;
 
-					if (output.ranks != null) {
+					if (output.ranks != null && output.ranks.size() > 0 && output.item.price != null) {
 						for (Rank rank : output.ranks) {
 							if (rank.downloads != null && rank.revenue != null) {
-								paid += (rankPaid = (float) rank.downloads.intValue() * rank.price.floatValue());
+								paid += (rankPaid = (float) rank.downloads.intValue() * output.item.price.floatValue());
 								iap += (rank.revenue.floatValue() - rankPaid);
 							}
 						}
@@ -197,7 +197,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 					itemRevenue.countryFlagStyleName = CountryController.get().getCountryFlag(input.country.a2Code);
 					itemRevenue.countryName = CountryController.get().getCountry(input.country.a2Code).name;
 
-					if (output.ranks != null) {
+					if (output.ranks != null && output.ranks.size() > 0) {
 						itemRevenue.currency = output.ranks.get(0).currency;
 					} else if (output.item.currency != null) {
 						itemRevenue.currency = output.item.currency;
