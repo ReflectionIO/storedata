@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.http.client.Request;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
@@ -48,6 +49,7 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 	private List<MyApp> userItems = null;
 	private Map<String, MyApp> userItemsLookup = new HashMap<String, MyApp>();
 	private long mCount = -1;
+	private Request current;
 
 	public static MyAppsController get() {
 		if (mOne == null) {
@@ -61,6 +63,10 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 	 * Fetch the list of Item related to the linked account currently selected in the filter
 	 */
 	public void fetchLinkedAccountItems() {
+		if (current != null) {
+			current.cancel();
+			current = null;
+		}
 
 		updateRowCount(0, false);
 
@@ -89,10 +95,11 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 
 		input.listType = FilterController.get().getListTypes().get(0);
 
-		service.getLinkedAccountItems(input, new AsyncCallback<GetLinkedAccountItemsResponse>() {
+		current = service.getLinkedAccountItems(input, new AsyncCallback<GetLinkedAccountItemsResponse>() {
 
 			@Override
 			public void onSuccess(GetLinkedAccountItemsResponse output) {
+				current = null;
 				if (output.status == StatusType.StatusTypeSuccess) {
 
 					if (output.pager != null) {
@@ -134,6 +141,7 @@ public class MyAppsController extends AsyncDataProvider<MyApp> implements Servic
 
 			@Override
 			public void onFailure(Throwable caught) {
+				current = null;
 				EventController.get().fireEventFromSource(new GetLinkedAccountItemsFailure(input, caught), MyAppsController.this);
 			}
 		});

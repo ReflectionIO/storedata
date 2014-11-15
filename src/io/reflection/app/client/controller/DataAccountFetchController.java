@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.google.gwt.http.client.Request;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
@@ -41,6 +42,7 @@ public class DataAccountFetchController extends AsyncDataProvider<DataAccountFet
 	private List<DataAccountFetch> dataAccountFetchList = new ArrayList<DataAccountFetch>();
 	private long count = -1;
 	private Pager pager;
+	private Request current;
 
 	private Long dataAccountId;
 
@@ -55,6 +57,11 @@ public class DataAccountFetchController extends AsyncDataProvider<DataAccountFet
 	}
 
 	public void fetchDataAccountFetches() {
+		if (current != null) {
+			current.cancel();
+			current = null;
+		}
+
 		AdminService service = ServiceCreator.createAdminService();
 
 		final GetDataAccountFetchesRequest input = new GetDataAccountFetchesRequest();
@@ -78,10 +85,11 @@ public class DataAccountFetchController extends AsyncDataProvider<DataAccountFet
 		input.start = FilterController.get().getStartDate();
 		input.end = FilterController.get().getEndDate();
 
-		service.getDataAccountFetches(input, new AsyncCallback<GetDataAccountFetchesResponse>() {
+		current = service.getDataAccountFetches(input, new AsyncCallback<GetDataAccountFetchesResponse>() {
 
 			@Override
 			public void onSuccess(GetDataAccountFetchesResponse output) {
+				current = null;
 				if (output.status == StatusType.StatusTypeSuccess) {
 					if (output.dataAccountFetches != null) {
 						dataAccountFetchList.addAll(output.dataAccountFetches);
@@ -108,6 +116,7 @@ public class DataAccountFetchController extends AsyncDataProvider<DataAccountFet
 
 			@Override
 			public void onFailure(Throwable caught) {
+				current = null;
 				EventController.get().fireEventFromSource(new GetDataAccountFetchesEventHandler.GetDataAccountFetchesFailure(input, caught),
 						DataAccountFetchController.this);
 			}
