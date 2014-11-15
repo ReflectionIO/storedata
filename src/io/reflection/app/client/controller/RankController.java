@@ -30,6 +30,7 @@ import io.reflection.app.datatypes.shared.Rank;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gwt.http.client.Request;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
@@ -47,6 +48,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 	private List<RanksGroup> mRows = new ArrayList<RanksGroup>();
 	private Pager mPager;
+	private Request current;
 
 	private ListDataProvider<ItemRevenue> itemRevenueData = new ListDataProvider<ItemRevenue>();
 
@@ -59,6 +61,11 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 	}
 
 	public void fetchTopItems() {
+		if (current != null) {
+			current.cancel();
+			current = null;
+		}
+
 		CoreService service = ServiceCreator.createCoreService();
 
 		final GetAllTopItemsRequest input = new GetAllTopItemsRequest(); // JSON Item request, containing the fields used to query the Item table on the DB
@@ -88,11 +95,11 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 		input.store = ApiCallHelper.createStoreForApiCall(FilterController.get().getStore());
 
 		// Call to retrieve top items from DB. The response contains List<Rank> for the 3 rank types (free, paid, grossing) , a List<Item> and a Pager
-		service.getAllTopItems(input, new AsyncCallback<GetAllTopItemsResponse>() {
+		current = service.getAllTopItems(input, new AsyncCallback<GetAllTopItemsResponse>() {
 
 			@Override
 			public void onSuccess(GetAllTopItemsResponse output) {
-
+				current = null;
 				if (output.status == StatusType.StatusTypeSuccess) {
 					if (output.pager != null) {
 						mPager = output.pager;// Set pager as the one received from the server
@@ -132,6 +139,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 			@Override
 			public void onFailure(Throwable caught) {
+				current = null;
 				updateRowCount(0, true);
 				EventController.get().fireEventFromSource(new GetAllTopItemsFailure(input, caught), RankController.this);
 			}

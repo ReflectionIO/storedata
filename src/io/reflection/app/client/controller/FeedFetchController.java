@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.google.gwt.http.client.Request;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.AsyncDataProvider;
@@ -46,6 +47,7 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 	private List<FeedFetch> mRows = new ArrayList<FeedFetch>();
 	private Pager mPager;
 	private long count = 0;
+	private Request current;
 
 	public static FeedFetchController get() {
 		if (mOne == null) {
@@ -56,6 +58,11 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 	}
 
 	public void fetchFeedFetches() {
+		if (current != null) {
+			current.cancel();
+			current = null;
+		}
+
 		AdminService service = ServiceCreator.createAdminService();
 
 		final GetFeedFetchesRequest input = new GetFeedFetchesRequest();
@@ -77,10 +84,11 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 		input.listTypes = FilterController.get().getListTypes();
 
 		if (input.country != null && input.store != null && input.listTypes != null) {
-			service.getFeedFetches(input, new AsyncCallback<GetFeedFetchesResponse>() {
+			current = service.getFeedFetches(input, new AsyncCallback<GetFeedFetchesResponse>() {
 
 				@Override
 				public void onSuccess(GetFeedFetchesResponse output) {
+					current = null;
 					if (output.status == StatusType.StatusTypeSuccess) {
 						if (output.feedFetches != null) {
 							if (mRows == null) {
@@ -110,6 +118,7 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 
 				@Override
 				public void onFailure(Throwable caught) {
+					current = null;
 					EventController.get().fireEventFromSource(new GetFeedFetchesFailure(input, caught), FeedFetchController.this);
 				}
 			});
@@ -158,14 +167,13 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 
 		input.session = SessionController.get().getSessionForApiCall();
 
-//		input.country = DataTypeHelper.createCountry(feedFetch.country);
-//		input.store = DataTypeHelper.createStore(feedFetch.store);
-//		input.category = ApiCallHelper.createCategoryForApiCall(feedFetch.category);
-//		input.code = feedFetch.code;
+		// input.country = DataTypeHelper.createCountry(feedFetch.country);
+		// input.store = DataTypeHelper.createStore(feedFetch.store);
+		// input.category = ApiCallHelper.createCategoryForApiCall(feedFetch.category);
+		// input.code = feedFetch.code;
 		input.modelType = ModelTypeType.ModelTypeTypeSimple;
-//		input.listTypes = Arrays.asList(feedFetch.type);
+		// input.listTypes = Arrays.asList(feedFetch.type);
 		input.feedFetch = ApiCallHelper.createFeedFetchForApiCall(feedFetch);
-		
 
 		service.triggerModel(input, new AsyncCallback<TriggerModelResponse>() {
 
@@ -227,12 +235,12 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 
 		input.session = SessionController.get().getSessionForApiCall();
 
-//		input.country = DataTypeHelper.createCountry(feedFetch.country);
-//		input.store = DataTypeHelper.createStore(feedFetch.store);
-//		input.category = ApiCallHelper.createCategoryForApiCall(feedFetch.category);
-//		input.code = feedFetch.code;
+		// input.country = DataTypeHelper.createCountry(feedFetch.country);
+		// input.store = DataTypeHelper.createStore(feedFetch.store);
+		// input.category = ApiCallHelper.createCategoryForApiCall(feedFetch.category);
+		// input.code = feedFetch.code;
 		input.modelType = ModelTypeType.ModelTypeTypeSimple;
-//		input.listTypes = Arrays.asList(feedFetch.type);
+		// input.listTypes = Arrays.asList(feedFetch.type);
 		input.simpleModelRun = new SimpleModelRun();
 		input.simpleModelRun.feedFetch = ApiCallHelper.createFeedFetchForApiCall(feedFetch);
 
