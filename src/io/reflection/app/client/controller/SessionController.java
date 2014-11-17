@@ -268,7 +268,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 
 		// Clear user data, filters and pages
 		LinkedAccountController.get().reset();
-		MyAppsController.get().reset();
+		ItemController.get().resetUserItem();
 		RankController.get().reset();
 		PostController.get().reset();
 		FilterController.get().reset();

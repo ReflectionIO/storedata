@@ -14,11 +14,14 @@ import io.reflection.app.api.core.shared.call.GetItemRanksRequest;
 import io.reflection.app.api.core.shared.call.GetItemRanksResponse;
 import io.reflection.app.api.core.shared.call.GetItemSalesRanksRequest;
 import io.reflection.app.api.core.shared.call.GetItemSalesRanksResponse;
+import io.reflection.app.api.core.shared.call.GetSalesRanksRequest;
+import io.reflection.app.api.core.shared.call.GetSalesRanksResponse;
 import io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler.GetAllTopItemsFailure;
 import io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler.GetAllTopItemsSuccess;
 import io.reflection.app.api.core.shared.call.event.GetItemRanksEventHandler;
 import io.reflection.app.api.core.shared.call.event.GetItemSalesRanksEventHandler.GetItemSalesRanksFailure;
 import io.reflection.app.api.core.shared.call.event.GetItemSalesRanksEventHandler.GetItemSalesRanksSuccess;
+import io.reflection.app.api.core.shared.call.event.GetSalesRanksEventHandler;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.client.helper.ApiCallHelper;
@@ -26,6 +29,7 @@ import io.reflection.app.client.part.datatypes.ItemRevenue;
 import io.reflection.app.client.part.datatypes.RanksGroup;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -146,6 +150,38 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 		});
 
 		// EventController.get().fireEventFromSource(new FetchingRanks(), RankController.this);
+	}
+
+	/**
+     * 
+     */
+	public void fetchSalesRanks() {
+		CoreService service = ServiceCreator.createCoreService();
+
+		final GetSalesRanksRequest input = new GetSalesRanksRequest();
+		input.accessCode = ACCESS_CODE;
+		input.session = SessionController.get().getSessionForApiCall();
+
+		input.linkedAccount = FilterController.get().getLinkedAccount();
+
+		input.category = FilterController.get().getCategory();
+		input.country = FilterController.get().getCountry();
+		input.start = FilterController.get().getStartDate();
+		input.end = FilterController.get().getEndDate();
+		input.listType = DataTypeHelper.STORE_IPAD_A3_CODE.equals(FilterController.get().getFilter().getStoreA3Code()) ? "ipad" : "";
+
+		service.getSalesRanks(input, new AsyncCallback<GetSalesRanksResponse>() {
+
+			@Override
+			public void onSuccess(GetSalesRanksResponse output) {
+				EventController.get().fireEventFromSource(new GetSalesRanksEventHandler.GetSalesRanksSuccess(input, output), RankController.this);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				EventController.get().fireEventFromSource(new GetSalesRanksEventHandler.GetSalesRanksFailure(input, caught), RankController.this);
+			}
+		});
 	}
 
 	public void fetchItemSalesRanks(final Item item) {

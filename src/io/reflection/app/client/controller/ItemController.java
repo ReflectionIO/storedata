@@ -15,10 +15,18 @@ import io.reflection.app.api.admin.shared.call.event.GetItemsEventHandler.GetIte
 import io.reflection.app.api.admin.shared.call.event.SearchForItemEventHandler.SearchForItemFailure;
 import io.reflection.app.api.admin.shared.call.event.SearchForItemEventHandler.SearchForItemSuccess;
 import io.reflection.app.api.core.client.CoreService;
+import io.reflection.app.api.core.shared.call.GetLinkedAccountItemsRequest;
+import io.reflection.app.api.core.shared.call.GetLinkedAccountItemsResponse;
 import io.reflection.app.api.core.shared.call.SearchForItemRequest;
 import io.reflection.app.api.core.shared.call.SearchForItemResponse;
+import io.reflection.app.api.core.shared.call.event.GetLinkedAccountItemsEventHandler.GetLinkedAccountItemsFailure;
+import io.reflection.app.api.core.shared.call.event.GetLinkedAccountItemsEventHandler.GetLinkedAccountItemsSuccess;
 import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.client.helper.ApiCallHelper;
+import io.reflection.app.client.part.datatypes.MyApp;
 import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.shared.util.PagerHelper;
 
 import java.util.ArrayList;
@@ -46,11 +54,16 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 
 	private Map<String, List<Item>> mItemsSearchCache = new HashMap<String, List<Item>>(); // Cache of user searches
 
+	private List<MyApp> userItemList = new ArrayList<MyApp>();
+	private Map<String, MyApp> userItemsLookup = new HashMap<String, MyApp>();
+	private long userItemCount = -1;
+
 	// private List<Item> rows;
 	// private long count = 0;
 	private Pager pager = null;
 	private String searchQuery = null;
 	private Request current;
+	private Request currentLinkedAccountItems;
 
 	// private Pager mLookupPager; // Lookup server calls pager
 	private Pager mSearchPager; // User search calls pager
@@ -194,6 +207,52 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 		});
 	}
 
+	/**
+	 * Fetch the list of Item related to the linked account currently selected in the filter
+	 */
+	public void fetchLinkedAccountItems() {
+		if (currentLinkedAccountItems != null) {
+			currentLinkedAccountItems.cancel();
+			currentLinkedAccountItems = null;
+		}
+
+		CoreService service = ServiceCreator.createCoreService();
+
+		final GetLinkedAccountItemsRequest input = new GetLinkedAccountItemsRequest();
+		input.accessCode = ACCESS_CODE;
+		input.session = SessionController.get().getSessionForApiCall();
+		if (pager == null) {
+			pager = new Pager();
+			pager.count = STEP;
+			pager.start = Long.valueOf(0);
+			pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
+		}
+		input.pager = pager;
+
+		input.linkedAccount = FilterController.get().getLinkedAccount();
+
+		Store store = new Store();
+		store.a3Code = FilterController.get().getFilter().getStoreA3Code();
+		input.store = ApiCallHelper.createStoreForApiCall(FilterController.get().getStore());
+
+		input.listType = FilterController.get().getListTypes().get(0);
+
+		currentLinkedAccountItems = service.getLinkedAccountItems(input, new AsyncCallback<GetLinkedAccountItemsResponse>() {
+
+			@Override
+			public void onSuccess(GetLinkedAccountItemsResponse output) {
+				currentLinkedAccountItems = null;
+				EventController.get().fireEventFromSource(new GetLinkedAccountItemsSuccess(input, output), ItemController.this);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				currentLinkedAccountItems = null;
+				EventController.get().fireEventFromSource(new GetLinkedAccountItemsFailure(input, caught), ItemController.this);
+			}
+		});
+	}
+
 	// /**
 	// * @return
 	// */
@@ -294,6 +353,40 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 		if (item != null) {
 			mItemCache.put(item.internalId, item);
 		}
+	}
+
+	public Item getUserItem(String itemId) {
+		return userItemsLookup.get(itemId) == null ? null : userItemsLookup.get(itemId).item;
+	}
+
+	/**
+	 * @param item
+	 */
+	public void setUserItem(Item item) {
+		if (item != null && item.internalId != null) {
+			MyApp app = new MyApp();
+			app.item = item;
+			userItemList.add(app);
+			userItemsLookup.put(item.internalId, app);
+		}
+	}
+
+	public List<MyApp> getUsetItems() {
+		return userItemList;
+	}
+
+	public long getUserItemsCount() {
+		return userItemCount;
+	}
+
+	public void setUserItemsCount(long count) {
+		userItemCount = count;
+	}
+
+	public void resetUserItem() {
+		userItemList.clear();
+		userItemsLookup.clear();
+		userItemCount = -1;
 	}
 
 	/*
