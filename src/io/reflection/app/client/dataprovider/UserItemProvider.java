@@ -19,9 +19,6 @@ import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.RankController;
 import io.reflection.app.client.part.datatypes.MyApp;
 import io.reflection.app.datatypes.shared.Item;
-import io.reflection.app.datatypes.shared.Rank;
-
-import java.util.ArrayList;
 
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
@@ -48,10 +45,10 @@ public class UserItemProvider extends AsyncDataProvider<MyApp> implements GetLin
 			Range r = display.getVisibleRange();
 			int start = r.getStart();
 			int end = start + r.getLength();
-			if (end > ItemController.get().getUsetItems().size()) {
+			if (end > ItemController.get().getUserItems().size()) {
 				// MyApps page always uses filterParamChanged to call fetchLinkedAccountItems because of the LinkedAccounts TextBox
 			} else {
-				updateRowData(start, ItemController.get().getUsetItems().subList(start, end)); // Paging with all data already retrieved
+				updateRowData(start, ItemController.get().getUserItems().subList(start, end)); // Paging with all data already retrieved
 			}
 		} else {
 			LinkedAccountController.get().fetchLinkedAccounts(); // After refresh or the user didn't visit the linked accounts page
@@ -61,7 +58,7 @@ public class UserItemProvider extends AsyncDataProvider<MyApp> implements GetLin
 	public void reset() {
 		ItemController.get().resetUserItem();
 		pager = null;
-		updateRowData(0, ItemController.get().getUsetItems());
+		updateRowData(0, ItemController.get().getUserItems());
 		updateRowCount(0, false);
 	}
 
@@ -88,7 +85,9 @@ public class UserItemProvider extends AsyncDataProvider<MyApp> implements GetLin
 				ItemController.get().addItemsToCache(output.items);
 
 				for (Item item : output.items) {
-					ItemController.get().setUserItem(item);
+					MyApp myApp = new MyApp();
+					myApp.item = item;
+					ItemController.get().setUserItem(myApp);
 				}
 
 				if (ItemController.get().getUserItemsCount() > 0) {
@@ -100,7 +99,7 @@ public class UserItemProvider extends AsyncDataProvider<MyApp> implements GetLin
 					input.pager.start.intValue(),
 					ItemController
 							.get()
-							.getUsetItems()
+							.getUserItems()
 							.subList(input.pager.start.intValue(),
 									Math.min(input.pager.start.intValue() + input.pager.count.intValue(), pager.totalCount.intValue())));
 		}
@@ -129,29 +128,10 @@ public class UserItemProvider extends AsyncDataProvider<MyApp> implements GetLin
 	public void getSalesRanksSuccess(GetSalesRanksRequest input, GetSalesRanksResponse output) {
 		if (output != null && output.status == StatusType.StatusTypeSuccess && output.ranks != null) { // Ranks available
 
-			MyApp myApp;
-			// Add Rank to related Item
-			for (Rank rank : output.ranks) {
-				myApp = new MyApp();
-				myApp.item = ItemController.get().getUserItem(rank.itemId);
-
-				if (myApp != null) {
-
-					if (myApp.ranks == null) {
-						myApp.ranks = new ArrayList<Rank>();
-					}
-
-					myApp.ranks.add(rank);
-
-				}
-			}
-
-			for (MyApp myItem : ItemController.get().getUsetItems()) {
-				myItem.updateOverallValues(); // Calculate values given the new added Ranks
-			}
+			ItemController.get().setUserItemsRanks(output.ranks);
 
 		} else { // No Ranks available
-			for (MyApp myApp : ItemController.get().getUsetItems()) {
+			for (MyApp myApp : ItemController.get().getUserItems()) {
 				if (myApp.overallDownloads == null) {
 					myApp.overallDownloads = "-";
 				}
@@ -167,7 +147,7 @@ public class UserItemProvider extends AsyncDataProvider<MyApp> implements GetLin
 			}
 		}
 
-		updateRowData(0, ItemController.get().getUsetItems());
+		updateRowData(0, ItemController.get().getUserItems());
 	}
 
 	/*

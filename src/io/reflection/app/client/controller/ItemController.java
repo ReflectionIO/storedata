@@ -26,6 +26,7 @@ import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.client.helper.ApiCallHelper;
 import io.reflection.app.client.part.datatypes.MyApp;
 import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.shared.util.PagerHelper;
 
@@ -355,23 +356,21 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 		}
 	}
 
-	public Item getUserItem(String itemId) {
-		return userItemsLookup.get(itemId) == null ? null : userItemsLookup.get(itemId).item;
+	public MyApp getUserItem(String itemId) {
+		return userItemsLookup.get(itemId);
 	}
 
 	/**
 	 * @param item
 	 */
-	public void setUserItem(Item item) {
-		if (item != null && item.internalId != null) {
-			MyApp app = new MyApp();
-			app.item = item;
-			userItemList.add(app);
-			userItemsLookup.put(item.internalId, app);
+	public void setUserItem(MyApp myApp) {
+		if (myApp != null && myApp.item != null && myApp.item.internalId != null) {
+			userItemList.add(myApp);
+			userItemsLookup.put(myApp.item.internalId, myApp);
 		}
 	}
 
-	public List<MyApp> getUsetItems() {
+	public List<MyApp> getUserItems() {
 		return userItemList;
 	}
 
@@ -381,6 +380,28 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 
 	public void setUserItemsCount(long count) {
 		userItemCount = count;
+	}
+
+	public void setUserItemsRanks(List<Rank> ranks) {
+		MyApp myApp;
+		// Add Rank to related Item
+		for (Rank rank : ranks) {
+			myApp = getUserItem(rank.itemId);
+
+			if (myApp != null) {
+
+				if (myApp.ranks == null) {
+					myApp.ranks = new ArrayList<Rank>();
+				}
+
+				myApp.ranks.add(rank);
+
+			}
+		}
+
+		for (MyApp myUserItem : getUserItems()) {
+			myUserItem.updateOverallValues(); // Calculate values given the new added Ranks
+		}
 	}
 
 	public void resetUserItem() {
