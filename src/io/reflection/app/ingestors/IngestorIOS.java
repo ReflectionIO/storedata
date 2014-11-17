@@ -32,7 +32,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.channels.Channels;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -40,6 +39,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import com.google.appengine.api.files.AppEngineFile;
 import com.google.appengine.api.files.FileReadChannel;
@@ -221,12 +223,10 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			List<Item> newItems = new ArrayList<Item>();
 			List<Item> updateItems = new ArrayList<Item>();
 
-			Calendar cal = Calendar.getInstance();
 			boolean found = false;
 			boolean update = false;
 
-			cal.setTime(new Date());
-			cal.add(Calendar.DAY_OF_YEAR, -30);
+			Date date30DaysAgo = DateTime.now(DateTimeZone.UTC).minusDays(30).toDate();
 
 			for (Item addItem : addItems) {
 				found = false;
@@ -234,7 +234,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 
 				for (Item foundItem : foundItems) {
 					if (foundItem.internalId.equals(addItem.internalId)) {
-						if (foundItem.added.before(cal.getTime())) {
+						if (foundItem.added.before(date30DaysAgo)) {
 							// if we find the item, give it the id and properties of the existing item to avoid data loss
 							addItem.id = foundItem.id;
 							addItem.properties = foundItem.properties;

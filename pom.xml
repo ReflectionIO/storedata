@@ -4,6 +4,11 @@
     <artifactId>storedatacollector</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
+    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+    
     <build>
         <sourceDirectory>src</sourceDirectory>
         <resources>
@@ -130,12 +135,17 @@
             <artifactId>markdown4j-gwt</artifactId>
             <version>1.0</version>
         </dependency>
+        
+        <dependency>
+            <groupId>org.commonjava.googlecode.emoji</groupId>
+            <artifactId>emoji-gwt</artifactId>
+            <version>1.0</version>
+        </dependency>
+        
+        <dependency>
+        	<groupId>joda-time</groupId>
+        	<artifactId>joda-time</artifactId>
+        	<version>2.3</version>
+        </dependency>
     </dependencies>
-    <repositories>
-        <repository>
-            <id>bedatadriven</id>
-            <name>bedatadriven public repo</name>
-            <url>http://nexus.bedatadriven.com/content/groups/public/</url>
-        </repository>
-    </repositories>
 </project>

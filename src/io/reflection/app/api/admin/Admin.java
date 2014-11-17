@@ -102,11 +102,13 @@ import io.reflection.app.shared.util.FormattingHelper;
 import io.reflection.app.shared.util.PagerHelper;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import com.willshex.gson.json.service.server.ActionHandler;
 import com.willshex.gson.json.service.server.InputValidationException;
@@ -1023,16 +1025,14 @@ public final class Admin extends ActionHandler {
 
 			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
-			Calendar cal = Calendar.getInstance();
-
 			if (input.end == null) {
-				input.end = cal.getTime();
+				input.end = DateTime.now(DateTimeZone.UTC).toDate();
 			}
 
 			if (input.start == null) {
-				cal.setTime(input.end);
-				cal.add(Calendar.DAY_OF_YEAR, -30);
-				input.start = cal.getTime();
+				DateTime start = new DateTime(input.end.getTime(), DateTimeZone.UTC);
+				start.minusDays(30);
+				input.start = start.toDate();
 			}
 
 			long diff = input.end.getTime() - input.start.getTime();
@@ -1189,16 +1189,14 @@ public final class Admin extends ActionHandler {
 
 			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
-			Calendar cal = Calendar.getInstance();
-
 			if (input.end == null) {
-				input.end = cal.getTime();
+				input.end = DateTime.now(DateTimeZone.UTC).toDate();
 			}
 
 			if (input.start == null) {
-				cal.setTime(input.end);
-				cal.add(Calendar.DAY_OF_YEAR, -30);
-				input.start = cal.getTime();
+				DateTime start = new DateTime(input.end.getTime(), DateTimeZone.UTC);
+				start.minusDays(30);
+				input.start = start.toDate();
 			}
 
 			long diff = input.end.getTime() - input.start.getTime();
@@ -1223,7 +1221,7 @@ public final class Admin extends ActionHandler {
 			}
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
-			
+
 			if (input.pager.sortBy == null) {
 				input.pager.sortBy = "feedfetchid";
 			}
@@ -1231,7 +1229,7 @@ public final class Admin extends ActionHandler {
 			if (input.pager.sortDirection == null) {
 				input.pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
 			}
-			
+
 			output.pager = input.pager;
 
 			List<FeedFetch> feedFetchList = FeedFetchServiceProvider.provide().getDatesFeedFetches(input.country, input.store, input.category, listTypes,
