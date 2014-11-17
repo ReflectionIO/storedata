@@ -28,12 +28,8 @@ import io.reflection.app.setup.StoresInstaller;
 import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +41,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -215,18 +215,9 @@ public class DevHelperServlet extends HttpServlet {
 				success = true;
 			} else if ("addcode".equalsIgnoreCase(action)) {
 
-				DateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH");
 				Date startDate = null, endDate = null;
-				try {
-					startDate = format.parse(date);
-					Calendar cal = Calendar.getInstance();
-					cal.setTime(startDate);
-					cal.add(Calendar.HOUR, 2);
-					endDate = cal.getTime();
-
-				} catch (ParseException e) {
-					LOG.log(Level.SEVERE, "Error parsing date", e);
-				}
+				startDate = DateTime.parse(date, DateTimeFormat.forPattern("yyyy-MM-dd-HH").withZoneUTC()).toDate();
+				endDate = (new DateTime(startDate.getTime(), DateTimeZone.UTC)).plusHours(2).toDate();
 
 				if (startDate != null) {
 					int i = 0;
@@ -480,16 +471,14 @@ public class DevHelperServlet extends HttpServlet {
 				buffer.append("#item id,date,paid position,grossing position,price");
 				buffer.append("\n");
 
-				Calendar cal = Calendar.getInstance();
-				cal.add(Calendar.DAY_OF_YEAR, -30);
-
 				Map<Long, Rank> paid = new HashMap<Long, Rank>();
 				Map<Long, Rank> grossing = new HashMap<Long, Rank>();
 
 				List<Long> codes = new ArrayList<Long>();
 
 				Query<Rank> query = ofy().load().type(Rank.class).filter("source =", DataTypeHelper.IOS_STORE_A3).filter("type =", CollectorIOS.TOP_PAID_APPS)
-						.filter("date >", cal.getTime()).filter("itemId = ", itemId).offset(Integer.parseInt(start)).limit(Integer.parseInt(count));
+						.filter("date >", new DateTime().minusDays(30).toDate()).filter("itemId = ", itemId).offset(Integer.parseInt(start))
+						.limit(Integer.parseInt(count));
 
 				for (Rank rank : query.iterable()) {
 					paid.put(rank.code, rank);
@@ -500,7 +489,7 @@ public class DevHelperServlet extends HttpServlet {
 				}
 
 				query = ofy().load().type(Rank.class).filter("source =", DataTypeHelper.IOS_STORE_A3).filter("type =", CollectorIOS.TOP_GROSSING_APPS)
-						.filter("date >", cal.getTime()).filter("itemId = ", itemId).offset(Integer.parseInt(start)).limit(Integer.parseInt(count));
+						.filter("date >", DateTime.now().toDate()).filter("itemId = ", itemId).offset(Integer.parseInt(start)).limit(Integer.parseInt(count));
 
 				for (Rank rank : query.iterable()) {
 					grossing.put(rank.code, rank);
@@ -698,13 +687,9 @@ public class DevHelperServlet extends HttpServlet {
 	 */
 	private void cacheRanks() {
 
-		Date date = new Date();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		cal.add(Calendar.HOUR_OF_DAY, -12);
-		Date end = cal.getTime();
-		cal.add(Calendar.DAY_OF_YEAR, -1);
-		Date start = cal.getTime();
+		DateTime dt = DateTime.now(DateTimeZone.UTC).minusHours(12);
+		Date end = dt.toDate();
+		Date start = dt.minusDays(1).toDate();
 
 		Store s = new Store();
 		s.a3Code = DataTypeHelper.IOS_STORE_A3;

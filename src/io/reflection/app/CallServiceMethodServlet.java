@@ -24,7 +24,6 @@ import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.shared.util.PagerHelper;
 
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -36,6 +35,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
@@ -99,13 +101,9 @@ public class CallServiceMethodServlet extends HttpServlet {
 					Category category = CategoryServiceProvider.provide().getCategory(Long.valueOf(categoryParameter));
 
 					if (code == null) {
-						Date date = new Date(Long.valueOf(dateParameter).longValue());
-						Calendar cal = Calendar.getInstance();
-						cal.setTime(date);
-						cal.add(Calendar.HOUR_OF_DAY, -12);
-						Date end = cal.getTime();
-						cal.add(Calendar.DAY_OF_YEAR, -1);
-						Date start = cal.getTime();
+						DateTime dt = (new DateTime(Long.valueOf(dateParameter).longValue(), DateTimeZone.UTC)).minusHours(12);
+						Date end = dt.toDate();
+						Date start = dt.minusDays(1).toDate();
 
 						// RankServiceProvider.provide().getAllRanks(country, store, category, getGrossingListName(store, listTypeParameter), start, end);
 

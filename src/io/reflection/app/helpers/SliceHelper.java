@@ -7,8 +7,11 @@
 //
 package io.reflection.app.helpers;
 
-import java.util.Calendar;
 import java.util.Date;
+
+import org.joda.time.DateTime;
+
+import org.joda.time.DateTimeZone;
 
 /**
  * @author William Shakour (billy1380)
@@ -17,7 +20,6 @@ import java.util.Date;
 public class SliceHelper {
 
 	// private static final SimpleDateFormat SDF = new SimpleDateFormat(FormattingHelper.DATE_FORMAT_YYYY_MM_DD);
-	private static final Calendar c = Calendar.getInstance();
 
 	private static final int DEFAULT_DAYS_PER_SLICE = 30;
 
@@ -45,10 +47,7 @@ public class SliceHelper {
 	}
 
 	public static Date startDate(long slice, int daysPerSlice) {
-		c.setTime(new Date(0));
-		c.add(Calendar.DAY_OF_YEAR, (int) (slice * daysPerSlice));
-
-		return new Date(c.getTimeInMillis());
+		return (new DateTime(0L, DateTimeZone.UTC)).plusDays((int) (slice * daysPerSlice)).toDate();
 	}
 
 	public static Date endDate(long slice) {
@@ -56,10 +55,7 @@ public class SliceHelper {
 	}
 
 	public static Date endDate(long slice, int daysPerSlice) {
-		c.setTime(new Date(0));
-		c.add(Calendar.DAY_OF_YEAR, (int) ((slice + 1L) * (long) daysPerSlice) - 1);
-
-		return new Date(c.getTimeInMillis());
+		return (new DateTime(0L, DateTimeZone.UTC)).plusDays((int) ((slice + 1L) * (long) daysPerSlice) - 1).toDate();
 	}
 
 	public static long[] offsets(Date startDate, Date endDate) {

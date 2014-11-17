@@ -122,7 +122,6 @@ import io.reflection.app.shared.util.PagerHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -131,6 +130,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import com.willshex.gson.json.service.server.ActionHandler;
 import com.willshex.gson.json.service.server.InputValidationException;
@@ -298,12 +300,9 @@ public final class Core extends ActionHandler {
 
 			input.listType = ValidationHelper.validateListType(input.listType, input.store);
 
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(input.on);
-			cal.add(Calendar.HOUR_OF_DAY, -12);
-			Date end = cal.getTime();
-			cal.add(Calendar.DAY_OF_YEAR, -1);
-			Date start = cal.getTime();
+			DateTime date = new DateTime(input.on.getTime(), DateTimeZone.UTC);
+			Date end = date.minusHours(12).toDate();
+			Date start = date.minusDays(1).toDate();
 
 			List<Rank> ranks = RankServiceProvider.provide().getRanks(input.country, input.store, input.category, input.listType, start, end, input.pager);
 
@@ -423,12 +422,9 @@ public final class Core extends ActionHandler {
 								ApiError.CategoryStoreMismatch.getMessage("input.category"));
 				}
 
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(input.on);
-				cal.add(Calendar.HOUR_OF_DAY, -12);
-				Date end = cal.getTime();
-				cal.add(Calendar.DAY_OF_YEAR, -1);
-				Date start = cal.getTime();
+				DateTime date = new DateTime(input.on.getTime(), DateTimeZone.UTC);
+				Date end = date.minusHours(12).toDate();
+				Date start = date.minusDays(1).toDate();
 
 				Set<String> itemIds = new HashSet<String>();
 				// final Map<String, Rank> lookup = new HashMap<String, Rank>();
@@ -565,16 +561,12 @@ public final class Core extends ActionHandler {
 					throw new InputValidationException(ApiError.CategoryStoreMismatch.getCode(), ApiError.CategoryStoreMismatch.getMessage("input.category"));
 			}
 
-			Calendar cal = Calendar.getInstance();
-
 			if (input.end == null) {
-				input.end = cal.getTime();
+				input.end = DateTime.now(DateTimeZone.UTC).toDate();
 			}
 
 			if (input.start == null) {
-				cal.setTime(input.end);
-				cal.add(Calendar.DAY_OF_YEAR, -30);
-				input.start = cal.getTime();
+				input.start = (new DateTime(input.end.getTime(), DateTimeZone.UTC)).minusDays(30).toDate();
 			}
 
 			input.listType = ValidationHelper.validateListType(input.listType, store);
@@ -1498,16 +1490,12 @@ public final class Core extends ActionHandler {
 					throw new InputValidationException(ApiError.CategoryStoreMismatch.getCode(), ApiError.CategoryStoreMismatch.getMessage("input.category"));
 			}
 
-			Calendar cal = Calendar.getInstance();
-
 			if (input.end == null) {
-				input.end = cal.getTime();
+				input.end = DateTime.now(DateTimeZone.UTC).toDate();
 			}
 
 			if (input.start == null) {
-				cal.setTime(input.end);
-				cal.add(Calendar.DAY_OF_YEAR, -30);
-				input.start = cal.getTime();
+				input.start = (new DateTime(input.end.getTime(), DateTimeZone.UTC)).minusDays(30).toDate();
 			}
 
 			long diff = input.end.getTime() - input.start.getTime();
@@ -1631,16 +1619,12 @@ public final class Core extends ActionHandler {
 					throw new InputValidationException(ApiError.CategoryStoreMismatch.getCode(), ApiError.CategoryStoreMismatch.getMessage("input.category"));
 			}
 
-			Calendar cal = Calendar.getInstance();
-
 			if (input.end == null) {
-				input.end = cal.getTime();
+				input.end = DateTime.now(DateTimeZone.UTC).toDate();
 			}
 
 			if (input.start == null) {
-				cal.setTime(input.end);
-				cal.add(Calendar.DAY_OF_YEAR, -30);
-				input.start = cal.getTime();
+				input.start = (new DateTime(input.end.getTime(), DateTimeZone.UTC)).minusDays(30).toDate();
 			}
 
 			long diff = input.end.getTime() - input.start.getTime();
@@ -1864,16 +1848,12 @@ public final class Core extends ActionHandler {
 					throw new InputValidationException(ApiError.CategoryStoreMismatch.getCode(), ApiError.CategoryStoreMismatch.getMessage("input.category"));
 			}
 
-			Calendar cal = Calendar.getInstance();
-
 			if (input.end == null) {
-				input.end = cal.getTime();
+				input.end = DateTime.now(DateTimeZone.UTC).toDate();
 			}
 
 			if (input.start == null) {
-				cal.setTime(input.end);
-				cal.add(Calendar.DAY_OF_YEAR, -30);
-				input.start = cal.getTime();
+				input.start = (new DateTime(input.end.getTime(), DateTimeZone.UTC)).minusDays(30).toDate();
 			}
 
 			long diff = input.end.getTime() - input.start.getTime();

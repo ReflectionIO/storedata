@@ -24,12 +24,14 @@ import io.reflection.app.service.ServiceType;
 import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
@@ -257,10 +259,7 @@ final class DataAccountService implements IDataAccountService {
 	}
 
 	private void enqueue(DataAccount dataAccount, int days, boolean requiresNotification) {
-		Calendar c = Calendar.getInstance();
-		c.add(Calendar.DAY_OF_MONTH, -1);
-
-		enqueue(dataAccount, c.getTime(), days, requiresNotification);
+		enqueue(dataAccount, DateTime.now().minusDays(1).toDate(), requiresNotification);
 	}
 
 	/**
@@ -268,13 +267,8 @@ final class DataAccountService implements IDataAccountService {
 	 * @param days
 	 */
 	private void enqueue(DataAccount dataAccount, Date date, int days, boolean requiresNotification) {
-		Calendar c = Calendar.getInstance();
-
 		for (int i = 0; i < days; i++) {
-			c.setTime(date);
-			c.add(Calendar.DAY_OF_MONTH, -i);
-
-			enqueue(dataAccount, c.getTime(), requiresNotification && (days - i == 1));
+			enqueue(dataAccount, (new DateTime(date.getTime(), DateTimeZone.UTC)).minusDays(i).toDate(), requiresNotification && (days - i == 1));
 		}
 	}
 
