@@ -5,7 +5,7 @@
 //  Created by William Shakour (billy1380) on 27 Aug 2014.
 //  Copyright © 2014 Reflection.io Ltd. All rights reserved.
 //
-package io.reflection.app.itemrankarchivers;
+package io.reflection.app.archivers;
 
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;

@@ -77,6 +77,8 @@ import io.reflection.app.api.exception.AuthorisationException;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.archivers.ItemRankArchiver;
+import io.reflection.app.archivers.ArchiverFactory;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.shared.Category;
@@ -95,8 +97,6 @@ import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.helpers.ApiHelper;
 import io.reflection.app.helpers.EmailHelper;
 import io.reflection.app.helpers.SliceHelper;
-import io.reflection.app.itemrankarchivers.ItemRankArchiver;
-import io.reflection.app.itemrankarchivers.ItemRankArchiverFactory;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.modellers.Modeller;
 import io.reflection.app.modellers.ModellerFactory;
@@ -580,7 +580,7 @@ public final class Core extends ActionHandler {
 				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
 						ApiError.DateRangeOutOfBounds.getMessage("0-60 days: input.end - input.start"));
 
-			ItemRankArchiver archiver = ItemRankArchiverFactory.get();
+			ItemRankArchiver archiver = ArchiverFactory.getItemRankArchiver();
 			long[] slices = SliceHelper.offsets(input.start, input.end);
 
 			String key;

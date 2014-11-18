@@ -10,6 +10,7 @@ package io.reflection.app.ingestors;
 
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.archivers.ArchiverFactory;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.collectors.StoreCollector;
@@ -19,7 +20,6 @@ import io.reflection.app.datatypes.shared.FeedFetchStatusType;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
-import io.reflection.app.itemrankarchivers.ItemRankArchiverFactory;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.modellers.Modeller;
 import io.reflection.app.modellers.ModellerFactory;
@@ -299,7 +299,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 				current.status = FeedFetchStatusType.FeedFetchStatusTypeIngested;
 				FeedFetchServiceProvider.provide().updateFeedFetch(current);
 
-				ItemRankArchiverFactory.get().enqueueIdFeedFetch(current.id);
+				ArchiverFactory.getItemRankArchiver().enqueueIdFeedFetch(current.id);
 
 				// once the feed fetch status is updated model the list
 				modeller.enqueue(current);
