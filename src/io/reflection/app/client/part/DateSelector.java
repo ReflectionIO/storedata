@@ -75,10 +75,14 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 	@UiField SpanElement icon;
 	@UiField SpanElement separator;
 
+	private Date disableBefore;
+
 	private DateRange dateRange = new DateRange();
 
-	public DateSelector() {
+	public DateSelector(final Date disableBefore) {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		this.disableBefore = disableBefore;
 
 		dateBoxFrom.setFormat(new DateBox.DefaultFormat(DATE_FORMAT_DD_MMM_YYYY));
 		dateBoxFrom.getTextBox().setReadOnly(Boolean.TRUE);
@@ -91,7 +95,7 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 		dateBoxFrom.getDatePicker().addShowRangeHandler(new ShowRangeHandler<Date>() {
 			@Override
 			public void onShowRange(ShowRangeEvent<Date> event) {
-				FilterHelper.disableOutOfRangeDates(dateBoxFrom.getDatePicker(), FilterHelper.getDaysAgo(60), dateBoxTo.getValue());
+				FilterHelper.disableOutOfRangeDates(dateBoxFrom.getDatePicker(), disableBefore, dateBoxTo.getValue());
 			}
 		});
 		dateBoxTo.getDatePicker().addShowRangeHandler(new ShowRangeHandler<Date>() {
@@ -100,7 +104,10 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 				FilterHelper.disableOutOfRangeDates(dateBoxTo.getDatePicker(), dateBoxFrom.getValue(), FilterHelper.getToday());
 			}
 		});
+	}
 
+	public DateSelector() {
+		this(null);
 	}
 
 	public void addFixedRange(PresetDateRange fixedRange) {
@@ -180,8 +187,14 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 	 */
 	@UiHandler("dateBoxFrom")
 	void onChangedSelectedFrom(ValueChangeEvent<Date> event) {
-		if (event.getValue().after(dateBoxTo.getValue()) || event.getValue().before(FilterHelper.getDaysAgo(60))) {
-			dateBoxFrom.setValue(dateRange.getFrom());
+		if (disableBefore != null) {
+			if (event.getValue().after(dateBoxTo.getValue()) || event.getValue().before(disableBefore)) {
+				dateBoxFrom.setValue(dateRange.getFrom());
+			}
+		} else {
+			if (event.getValue().after(dateBoxTo.getValue())) {
+				dateBoxFrom.setValue(dateRange.getFrom());
+			}
 		}
 	}
 

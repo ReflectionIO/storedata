@@ -1199,13 +1199,6 @@ public final class Admin extends ActionHandler {
 				input.start = start.toDate();
 			}
 
-			long diff = input.end.getTime() - input.start.getTime();
-			long diffDays = diff / ApiHelper.MILLIS_PER_DAY;
-
-			if (diffDays > 60 || diffDays < 0)
-				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
-						ApiError.DateRangeOutOfBounds.getMessage("0-60 days: input.end - input.start"));
-
 			input.country = ValidationHelper.validateCountry(input.country, "input");
 
 			input.store = ValidationHelper.validateStore(input.store, "input");

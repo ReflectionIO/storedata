@@ -431,4 +431,6 @@ public class FilterHelper {
 				|| (rhs != null && lhs != null && (rhs.getDate() == lhs.getDate()) && (rhs.getMonth() == lhs.getMonth()) && (rhs.getYear() == lhs.getYear()));
 	}
 
+	// TODO before / after method at day level
+
 }
