@@ -74,7 +74,7 @@ public class DataAccountFetchesPage extends Page implements NavigationEventHandl
 			BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) SimplePager simplePager = new SimplePager(false, false);
 
-	@UiField DateSelector dateSelector = new DateSelector();
+	@UiField DateSelector dateSelector;
 	@UiField InlineHyperlink backLink;
 	@UiField Preloader preloader;
 
@@ -117,7 +117,7 @@ public class DataAccountFetchesPage extends Page implements NavigationEventHandl
 
 		};
 		dataAccountFetchTable.addColumn(dataAccountIdColumn, "D.A. id");
-		
+
 		TextColumn<DataAccountFetch> dateColumn = new TextColumn<DataAccountFetch>() {
 
 			@Override
