@@ -1177,7 +1177,7 @@ public final class Core extends ActionHandler {
 				try {
 					DataAccountServiceProvider.provide().verifyDataAccount(dataAccountToTest, testDate);
 				} catch (ServiceException e) {
-					throw new ServiceException(e.getCode(), e.getMessage());
+					throw e;
 				}
 			}
 

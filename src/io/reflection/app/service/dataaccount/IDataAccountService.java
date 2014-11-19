@@ -150,6 +150,6 @@ public interface IDataAccountService extends IService {
 	 * @throws DataAccessException
 	 * @throws ServiceException
 	 */
-	public void verifyDataAccount(DataAccount dataAccount, Date date) throws DataAccessException, ServiceException;
+	public void verifyDataAccount(DataAccount dataAccount, Date date) throws ServiceException;
 
 }

@@ -531,7 +531,7 @@ final class DataAccountService implements IDataAccountService {
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#verifyDataAccount(io.reflection.app.datatypes.shared.DataAccount, java.util.Date)
 	 */
 	@Override
-	public void verifyDataAccount(DataAccount dataAccount, Date date) throws DataAccessException, ServiceException {
+	public void verifyDataAccount(DataAccount dataAccount, Date date) throws ServiceException {
 
 		if (dataAccount != null && dataAccount.source != null) {
 			DataAccountCollector collector = DataAccountCollectorFactory.getCollectorForSource(dataAccount.source.a3Code);
@@ -539,8 +539,7 @@ final class DataAccountService implements IDataAccountService {
 				try {
 					collector.collect(dataAccount, date);
 				} catch (ServiceException e) {
-					throw new ServiceException(e.getCode(), e.getMessage());
-
+					throw e;
 				}
 			}
 		}

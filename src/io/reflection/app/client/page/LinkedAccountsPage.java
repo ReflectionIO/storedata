@@ -458,11 +458,11 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 			PageType.UsersPageType.show(PageType.LinkedAccountsPageType.toString(user.id.toString()));
 		} else if (output.error != null) {
 			if (output.error.code == ApiError.InvalidDataAccountCredentials.getCode()) {
-				mLinkableAccount.setUsernameError("AppleConnect account or password entered incorrectly");
-				mLinkableAccount.setPasswordError("AppleConnect account or password entered incorrectly");
+				mLinkableAccount.setUsernameError("iTunes Connect username or password entered incorrectly");
+				mLinkableAccount.setPasswordError("iTunes Connect username or password entered incorrectly");
 				mLinkableAccount.setFormErrors();
 			} else if (output.error.code == ApiError.InvalidDataAccountVendor.getCode()) {
-				mLinkableAccount.setVendorError("AppleConnect vendor number entered incorrectly");
+				mIosMacForm.setVendorError("iTunes Connect vendor number entered incorrectly");
 				mLinkableAccount.setFormErrors();
 			}
 		}

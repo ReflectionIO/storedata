@@ -36,8 +36,6 @@ public interface LinkableAccountFields {
 
 	void setPasswordError(String error);
 
-	void setVendorError(String error);
-
 	void setOnEnterPressed(EnterPressedEventHandler handler);
 
 	void setEnabled(boolean enable);

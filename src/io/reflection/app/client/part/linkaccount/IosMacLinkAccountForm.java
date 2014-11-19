@@ -289,12 +289,6 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 		passwordError = error;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.part.linkaccount.LinkableAccountFields#setVendorError(java.lang.String)
-	 */
-	@Override
 	public void setVendorError(String error) {
 		vendorIdError = error;
 	}
