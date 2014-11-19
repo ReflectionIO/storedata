@@ -30,7 +30,7 @@ public enum ApiError {
 	PagerStartLargerThanTotal(100007, "Invalid value for start, should be less than totalCount for Pager: {0}.pager"),
 
 	NegativeValueNotAllowed(100008, "Invalid negative value for {0}: {1}"),
-	NumericValueTooSmall(100009,  "Invalid value too small ({0}-{1}): {2}"),
+	NumericValueTooSmall(100009, "Invalid value too small ({0}-{1}): {2}"),
 	NumericValueTooLarge(100010, "Invalid value too large ({0}-{1}): {2}"),
 
 	CountryNull(100011, "Invalid value null for Country: {0}.country"),
@@ -79,6 +79,8 @@ public enum ApiError {
 	DataAccountNull(100042, "Invalid value null for DataAccount: {0}"),
 	DataAccountNotFound(100043, "Data account not found DataAccount: {0}"),
 	DataAccountNoLookup(100044, "Invalid data account lookup, no id provided for DataAccount: {0}"),
+	InvalidDataAccountCredentials(100052, "Invalid data account credentials for DataAccount: {0}"),
+	InvalidDataAccountVendor(100053, "Invalid data account vendor for DataAccount: {0}"),
 
 	CategoryNull(100045, "Invalid value null for Category: {0}"),
 	CategoryNotFound(100046, "Category not found Category: {0}"),
@@ -97,11 +99,10 @@ public enum ApiError {
 
 	SimpleModelRunNull(100062, "Invalid value null for SimpleModelRun: {0}.simpleModelRun"),
 	SimpleModelRunNotFound(100063, "SimpleModelRun not found SimpleModelRun: {0}.value"),
-	
+
 	DataAccountFetchNull(100064, "Invalid value null for DataAccount: {0}"),
 	DataAccountFetchNotFound(100065, "Data account not found DataAccount: {0}"),
 	DataAccountFetchNoLookup(100066, "Invalid data account lookup, no id provided for DataAccount: {0}"),
-
 
 	GetCountriesNeedsStoreOrQuery(100101, "GetCountries call should either have a store or a query. To get all countries use * for the query: {0}"),
 
@@ -117,7 +118,7 @@ public enum ApiError {
 	MissingRoles(100501, "User does not have required role"),
 	MissingRolesAndOrPermissions(100502, "User does not have required roles and/or permissions"),
 
-	DataAccountUserMissmatch(100601, "User does not own data account"),	
+	DataAccountUserMissmatch(100601, "User does not own data account"),
 
 	;
 

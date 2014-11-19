@@ -10,6 +10,7 @@ package io.reflection.app.client.page;
 import io.reflection.app.api.core.shared.call.LinkAccountRequest;
 import io.reflection.app.api.core.shared.call.LinkAccountResponse;
 import io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler;
+import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.NavigationController;
@@ -74,8 +75,7 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 	void onLinkAccountClicked(ClickEvent event) {
 		if (mLinkableAccount.validate()) {
 			mLinkableAccount.setFormErrors();
-			mLinkableAccount.setEnabled(false);
-			mLinkAccount.setEnabled(false);
+			// mLinkAccount.setEnabled(false);
 			preloader.show();
 			LinkedAccountController.get().linkAccount(mLinkableAccount.getAccountSourceId(), mLinkableAccount.getUsername(), mLinkableAccount.getPassword(),
 					mLinkableAccount.getProperties()); // Link account
@@ -94,13 +94,19 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 	@Override
 	public void linkAccountSuccess(LinkAccountRequest input, LinkAccountResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			mLinkAccount.setEnabled(true);
 			mLinkableAccount.resetForm();
 			PageType.ReadyToStartPageType.show();
-		} else {
-			mLinkableAccount.setEnabled(true);
-			mLinkAccount.setEnabled(true);
+		} else if (output.error != null) {
+			if (output.error.code == ApiError.InvalidDataAccountCredentials.getCode()) {
+				mLinkableAccount.setUsernameError("iTunes Connect username or password entered incorrectly");
+				mLinkableAccount.setPasswordError("iTunes Connect username or password entered incorrectly");
+				mLinkableAccount.setFormErrors();
+			} else if (output.error.code == ApiError.InvalidDataAccountVendor.getCode()) {
+				mIosMacForm.setVendorError("iTunes Connect vendor number entered incorrectly");
+				mLinkableAccount.setFormErrors();
+			}
 		}
+		// mLinkAccount.setEnabled(true);
 		preloader.hide();
 	}
 
@@ -113,7 +119,7 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 	@Override
 	public void linkAccountFailure(LinkAccountRequest input, Throwable caught) {
 		mLinkableAccount.resetForm();
-		mLinkAccount.setEnabled(true);
+		// mLinkAccount.setEnabled(true);
 		preloader.hide();
 	}
 

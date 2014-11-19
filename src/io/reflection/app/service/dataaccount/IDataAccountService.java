@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.spacehopperstudios.service.IService;
+import com.willshex.gson.json.service.server.ServiceException;
 
 public interface IDataAccountService extends IService {
 	/**
@@ -141,5 +142,14 @@ public interface IDataAccountService extends IService {
 	 * @throws DataAccessException
 	 */
 	public void triggerMultipleDateDataAccountFetch(DataAccount dataAccount, Date date, Integer days) throws DataAccessException;
+
+	/**
+	 * 
+	 * @param dataAccount
+	 * @param date
+	 * @throws DataAccessException
+	 * @throws ServiceException
+	 */
+	public void verifyDataAccount(DataAccount dataAccount, Date date) throws ServiceException;
 
 }

@@ -40,34 +40,34 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 
 	interface IosMacLinkAccountFormUiBinder extends UiBinder<Widget, IosMacLinkAccountForm> {}
 
-	@UiField TextBox mAccountUsername;
-	@UiField HTMLPanel mAccountUsernameGroup;
-	@UiField HTMLPanel mAccountUsernameNote;
-	String mAccountUsernameError;
+	@UiField TextBox accountUsername;
+	@UiField HTMLPanel accountUsernameGroup;
+	@UiField HTMLPanel accountUsernameNote;
+	private String accountUsernameError;
 
-	@UiField PasswordTextBox mPassword;
-	@UiField HTMLPanel mPasswordGroup;
-	@UiField HTMLPanel mPasswordNote;
-	String mPasswordError;
+	@UiField PasswordTextBox password;
+	@UiField HTMLPanel passwordGroup;
+	@UiField HTMLPanel passwordNote;
+	private String passwordError;
 
-	@UiField TextBox mVendorId;
-	@UiField HTMLPanel mVendorIdGroup;
-	@UiField HTMLPanel mVendorIdNote;
-	String mVendorIdError;
+	@UiField TextBox vendorId;
+	@UiField HTMLPanel vendorIdGroup;
+	@UiField HTMLPanel vendorIdNote;
+	private String vendorIdError;
 
-	private EnterPressedEventHandler mEnterHandler;
+	private EnterPressedEventHandler enterHandler;
 
 	public IosMacLinkAccountForm() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		mAccountUsername.getElement().setAttribute("placeholder", "iTunes Connect Username");
-		mPassword.getElement().setAttribute("placeholder", "iTunes Connect Password");
-		mVendorId.getElement().setAttribute("placeholder", "Vendor number (8xxxxxxx)");
-		
-		mAccountUsername.setTabIndex(1);
-		mPassword.setTabIndex(2);
-		mVendorId.setTabIndex(3);
-		
+		accountUsername.getElement().setAttribute("placeholder", "iTunes Connect Username");
+		password.getElement().setAttribute("placeholder", "iTunes Connect Password");
+		vendorId.getElement().setAttribute("placeholder", "Vendor number (8xxxxxxx)");
+
+		accountUsername.setTabIndex(1);
+		password.setTabIndex(2);
+		vendorId.setTabIndex(3);
+
 	}
 
 	/**
@@ -88,10 +88,10 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	 * 
 	 * @param e
 	 */
-	@UiHandler({ "mAccountUsername", "mPassword", "mVendorId" })
+	@UiHandler({ "accountUsername", "password", "vendorId" })
 	void onKeyPressed(KeyPressEvent e) {
-		if (mEnterHandler != null && e.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
-			mEnterHandler.onEnterPressed();
+		if (enterHandler != null && e.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
+			enterHandler.onEnterPressed();
 		}
 	}
 
@@ -104,53 +104,53 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	public boolean validate() {
 		boolean validated = true;
 		// Retrieve fields to validate
-		String username = mAccountUsername.getText();
-		String password = mPassword.getText();
-		String vendorId = mVendorId.getText();
+		String username = accountUsername.getText();
+		String pswd = password.getText();
+		String vendor = vendorId.getText();
 
 		Stack stack = NavigationController.get().getStack();
 
 		// Check fields constraints
 		if (username == null || username.length() == 0) {
-			mAccountUsernameError = "Cannot be empty";
+			accountUsernameError = "Cannot be empty";
 			validated = false;
 		} else if (username.length() < 2) {
-			mAccountUsernameError = "Too short";
+			accountUsernameError = "Too short";
 			validated = false;
 		} else if (username.length() > 255) {
-			mAccountUsernameError = "Too long";
+			accountUsernameError = "Too long";
 			validated = false;
 		} else if (stack.getParameter(1) != null && stack.getParameter(1).equals("add") && LinkedAccountController.get().hasLinkedAccount(username)) {
-			mAccountUsernameError = "Linked account already exists";
+			accountUsernameError = "Linked account already exists";
 			validated = false;
 		} else {
-			mAccountUsernameError = null;
+			accountUsernameError = null;
 			validated = validated && true;
 		}
 
-		if (password == null || password.length() == 0) {
-			mPasswordError = "Cannot be empty";
+		if (pswd == null || pswd.length() == 0) {
+			passwordError = "Cannot be empty";
 			validated = false;
 
-		} else if (password.length() < 2) {
-			mPasswordError = "Too short";
+		} else if (pswd.length() < 2) {
+			passwordError = "Too short";
 			validated = false;
-		} else if (password.length() > 64) {
-			mPasswordError = "Too long";
+		} else if (pswd.length() > 64) {
+			passwordError = "Too long";
 			validated = false;
 		} else {
-			mPasswordError = null;
+			passwordError = null;
 			validated = validated && true;
 		}
 
-		if (vendorId == null || vendorId.length() == 0) {
-			mVendorIdError = "Cannot be empty";
+		if (vendor == null || vendor.length() == 0) {
+			vendorIdError = "Cannot be empty";
 			validated = false;
-		} else if (!FormHelper.isValidAppleVendorId(vendorId)) {
-			mVendorIdError = "Invalid vendor id";
+		} else if (!FormHelper.isValidAppleVendorId(vendor)) {
+			vendorIdError = "Invalid vendor id";
 			validated = false;
 		} else {
-			mVendorIdError = null;
+			vendorIdError = null;
 			validated = validated && true;
 		}
 
@@ -184,15 +184,15 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	 */
 	@Override
 	public String getUsername() {
-		return mAccountUsername.getText();
+		return accountUsername.getText();
 	}
 
-	public void setAccountUsername(String accountUsername) {
-		mAccountUsername.setValue(accountUsername);
+	public void setAccountUsername(String username) {
+		accountUsername.setValue(username);
 	}
 
 	public void setVendorNumber(String vendorNumber) {
-		mVendorId.setValue(vendorNumber);
+		vendorId.setValue(vendorNumber);
 	}
 
 	/*
@@ -202,7 +202,7 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	 */
 	@Override
 	public String getPassword() {
-		return mPassword.getText();
+		return password.getText();
 	}
 
 	/*
@@ -215,7 +215,7 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 		JsonObject properties = new JsonObject();
 		JsonArray vendors = new JsonArray();
 
-		JsonPrimitive vendor = new JsonPrimitive(mVendorId.getText());
+		JsonPrimitive vendor = new JsonPrimitive(vendorId.getText());
 
 		vendors.add(vendor);
 
@@ -231,7 +231,7 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	 */
 	@Override
 	public void setOnEnterPressed(EnterPressedEventHandler handler) {
-		mEnterHandler = handler;
+		enterHandler = handler;
 	}
 
 	/*
@@ -241,7 +241,7 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	 */
 	@Override
 	public Focusable getFirstToFocus() {
-		return (mAccountUsername.isEnabled()) ? mAccountUsername : mPassword;
+		return (accountUsername.isEnabled()) ? accountUsername : password;
 	}
 
 	/**
@@ -251,22 +251,46 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	 */
 	@Override
 	public void setFormErrors() {
-		if (mAccountUsernameError != null) {
-			FormHelper.showNote(true, mAccountUsernameGroup, mAccountUsernameNote, mAccountUsernameError);
+		if (accountUsernameError != null) {
+			FormHelper.showNote(true, accountUsernameGroup, accountUsernameNote, accountUsernameError);
 		} else {
-			FormHelper.hideNote(mAccountUsernameGroup, mAccountUsernameNote);
+			FormHelper.hideNote(accountUsernameGroup, accountUsernameNote);
 		}
-		if (mPasswordError != null) {
-			FormHelper.showNote(true, mPasswordGroup, mPasswordNote, mPasswordError);
+		if (passwordError != null) {
+			FormHelper.showNote(true, passwordGroup, passwordNote, passwordError);
 		} else {
-			FormHelper.hideNote(mPasswordGroup, mPasswordNote);
+			FormHelper.hideNote(passwordGroup, passwordNote);
 		}
-		if (mVendorIdError != null) {
-			FormHelper.showNote(true, mVendorIdGroup, mVendorIdNote, mVendorIdError);
+		if (vendorIdError != null) {
+			FormHelper.showNote(true, vendorIdGroup, vendorIdNote, vendorIdError);
 		} else {
-			FormHelper.hideNote(mVendorIdGroup, mVendorIdNote);
+			FormHelper.hideNote(vendorIdGroup, vendorIdNote);
 		}
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.part.linkaccount.LinkableAccountFields#setUsernameError(java.lang.String)
+	 */
+	@Override
+	public void setUsernameError(String error) {
+		accountUsernameError = error;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.part.linkaccount.LinkableAccountFields#setPasswordError(java.lang.String)
+	 */
+	@Override
+	public void setPasswordError(String error) {
+		passwordError = error;
+	}
+
+	public void setVendorError(String error) {
+		vendorIdError = error;
 	}
 
 	/*
@@ -276,19 +300,19 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	 */
 	@Override
 	public void setEnabled(boolean enabled) {
-		mAccountUsername.setEnabled(enabled);
-		mAccountUsername.setFocus(enabled);
-		mPassword.setEnabled(enabled);
-		mVendorId.setEnabled(enabled);
+		accountUsername.setEnabled(enabled);
+		accountUsername.setFocus(enabled);
+		password.setEnabled(enabled);
+		vendorId.setEnabled(enabled);
 		if (!enabled) {
-			mPassword.setFocus(false);
-			mVendorId.setFocus(false);
+			password.setFocus(false);
+			vendorId.setFocus(false);
 		}
 	}
 
 	public void setAccountUsernameEnabled(boolean enabled) {
-		mAccountUsername.setEnabled(enabled);
-		mAccountUsername.setFocus(enabled);
+		accountUsername.setEnabled(enabled);
+		accountUsername.setFocus(enabled);
 	}
 
 	/*
@@ -298,16 +322,16 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	 */
 	@Override
 	public void resetForm() {
-		setEnabled(true);
+		// setEnabled(true);
 
-		mAccountUsername.setText("");
-		mAccountUsername.setFocus(true);
-		mPassword.setText("");
-		mVendorId.setText("");
+		accountUsername.setText("");
+		accountUsername.setFocus(true);
+		password.setText("");
+		vendorId.setText("");
 
-		FormHelper.hideNote(mAccountUsernameGroup, mAccountUsernameNote);
-		FormHelper.hideNote(mPasswordGroup, mPasswordNote);
-		FormHelper.hideNote(mVendorIdGroup, mVendorIdNote);
+		FormHelper.hideNote(accountUsernameGroup, accountUsernameNote);
+		FormHelper.hideNote(passwordGroup, passwordNote);
+		FormHelper.hideNote(vendorIdGroup, vendorIdNote);
 	}
 
 }
