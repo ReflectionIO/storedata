@@ -58,7 +58,7 @@ public class SimpleModelRunsPage extends Page implements FilterEventHandler {
 	@UiField(provided = true) SimplePager simplePager = new SimplePager(false, false);
 
 	@UiField ListBox listType;
-	@UiField DateSelector dateSelector = new DateSelector();
+	@UiField DateSelector dateSelector;
 	@UiField ListBox country;
 	@UiField ListBox appStore;
 	@UiField ListBox category;

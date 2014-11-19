@@ -77,8 +77,8 @@ import io.reflection.app.api.exception.AuthorisationException;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
-import io.reflection.app.archivers.ItemRankArchiver;
 import io.reflection.app.archivers.ArchiverFactory;
+import io.reflection.app.archivers.ItemRankArchiver;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.shared.Category;
@@ -572,13 +572,6 @@ public final class Core extends ActionHandler {
 			input.listType = ValidationHelper.validateListType(input.listType, store);
 
 			FormType form = ModellerFactory.getModellerForStore(store.a3Code).getForm(input.listType);
-
-			long diff = input.end.getTime() - input.start.getTime();
-			long diffDays = diff / ApiHelper.MILLIS_PER_DAY;
-
-			if (diffDays > 60 || diffDays < 0)
-				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
-						ApiError.DateRangeOutOfBounds.getMessage("0-60 days: input.end - input.start"));
 
 			ItemRankArchiver archiver = ArchiverFactory.getItemRankArchiver();
 			long[] slices = SliceHelper.offsets(input.start, input.end);
@@ -1498,13 +1491,6 @@ public final class Core extends ActionHandler {
 				input.start = (new DateTime(input.end.getTime(), DateTimeZone.UTC)).minusDays(30).toDate();
 			}
 
-			long diff = input.end.getTime() - input.start.getTime();
-			long diffDays = diff / ApiHelper.MILLIS_PER_DAY;
-
-			if (diffDays > 60 || diffDays < 0)
-				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
-						ApiError.DateRangeOutOfBounds.getMessage("0-60 days: input.end - input.start"));
-
 			output.sales = SaleServiceProvider.provide().getSales(input.country, input.category, input.linkedAccount, input.start, input.end, input.pager);
 
 			if (input.pager.start.intValue() == 0) {
@@ -1626,13 +1612,6 @@ public final class Core extends ActionHandler {
 			if (input.start == null) {
 				input.start = (new DateTime(input.end.getTime(), DateTimeZone.UTC)).minusDays(30).toDate();
 			}
-
-			long diff = input.end.getTime() - input.start.getTime();
-			long diffDays = diff / ApiHelper.MILLIS_PER_DAY;
-
-			if (diffDays > 60 || diffDays < 0)
-				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
-						ApiError.DateRangeOutOfBounds.getMessage("0-60 days: input.end - input.start"));
 
 			// Get Items sales based on the filters
 			List<Sale> sales = SaleServiceProvider.provide().getSales(input.country, input.category, input.linkedAccount, input.start, input.end,
@@ -1855,13 +1834,6 @@ public final class Core extends ActionHandler {
 			if (input.start == null) {
 				input.start = (new DateTime(input.end.getTime(), DateTimeZone.UTC)).minusDays(30).toDate();
 			}
-
-			long diff = input.end.getTime() - input.start.getTime();
-			long diffDays = diff / ApiHelper.MILLIS_PER_DAY;
-
-			if (diffDays > 60 || diffDays < 0)
-				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
-						ApiError.DateRangeOutOfBounds.getMessage("0-60 days: input.end - input.start"));
 
 			// Get Items sales based on the filters
 			List<Sale> sales = SaleServiceProvider.provide().getItemSales(input.item, input.country, input.category, linkedAccount, input.start, input.end,
