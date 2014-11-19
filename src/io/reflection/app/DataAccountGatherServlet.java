@@ -32,6 +32,7 @@ import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 
+import com.willshex.gson.json.service.server.ServiceException;
 import com.willshex.service.ContextAwareServlet;
 
 /**
@@ -127,6 +128,9 @@ public class DataAccountGatherServlet extends ContextAwareServlet {
 			} catch (DataAccessException e) {
 				LOG.log(GaeLevel.SEVERE, String.format("Database error occured while trying to import data with accountid [%s] and date [%s]",
 						accountIdParameter, dateParameter), e);
+			} catch (ServiceException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
 		}

@@ -1163,6 +1163,24 @@ public final class Core extends ActionHandler {
 
 			DataAccountCollectorFactory.getCollectorForSource(input.source.a3Code).validateProperties(input.properties);
 
+			// If not a test user, check if is a valid Apple linked account
+			Role testRole = RoleServiceProvider.provide().getCodeRole(DataTypeHelper.ROLE_TEST_CODE);
+			if (!UserServiceProvider.provide().hasRole(input.session.user, testRole)) {
+				Date testDate = (DateTime.now(DateTimeZone.UTC)).minusDays(45).toDate();
+				DataAccount dataAccountToTest = new DataAccount();
+				dataAccountToTest.username = input.username;
+				dataAccountToTest.password = input.password;
+				dataAccountToTest.properties = input.properties;
+				dataAccountToTest.source = input.source;
+				dataAccountToTest.id = new Long(0);
+
+				try {
+					DataAccountServiceProvider.provide().verifyDataAccount(dataAccountToTest, testDate);
+				} catch (ServiceException e) {
+					throw new ServiceException(e.getCode(), e.getMessage());
+				}
+			}
+
 			output.account = UserServiceProvider.provide().addDataAccount(input.session.user, input.source, input.username, input.password, input.properties);
 
 			output.account.source = input.source;

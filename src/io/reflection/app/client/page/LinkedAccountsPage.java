@@ -20,6 +20,7 @@ import io.reflection.app.api.core.shared.call.event.DeleteLinkedAccountEventHand
 import io.reflection.app.api.core.shared.call.event.GetLinkedAccountsEventHandler;
 import io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler;
 import io.reflection.app.api.core.shared.call.event.UpdateLinkedAccountEventHandler;
+import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.LinkedAccountController;
@@ -450,15 +451,20 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	@Override
 	public void linkAccountSuccess(LinkAccountRequest input, LinkAccountResponse output) {
 		preloaderForm.hide();
-		mLinkableAccount.resetForm();
 		// mLinkableAccount.setEnabled(true);
-		// mLinkAccount.setEnabled(true);
 
 		if (output.status == StatusType.StatusTypeSuccess) {
-
+			mLinkableAccount.resetForm();
 			PageType.UsersPageType.show(PageType.LinkedAccountsPageType.toString(user.id.toString()));
-		} else {
-			showError(output.error);
+		} else if (output.error != null) {
+			if (output.error.code == ApiError.InvalidDataAccountCredentials.getCode()) {
+				mLinkableAccount.setUsernameError("AppleConnect account or password entered incorrectly");
+				mLinkableAccount.setPasswordError("AppleConnect account or password entered incorrectly");
+				mLinkableAccount.setFormErrors();
+			} else if (output.error.code == ApiError.InvalidDataAccountVendor.getCode()) {
+				mLinkableAccount.setVendorError("AppleConnect vendor number entered incorrectly");
+				mLinkableAccount.setFormErrors();
+			}
 		}
 
 	}

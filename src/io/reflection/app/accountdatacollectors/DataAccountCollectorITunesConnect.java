@@ -8,7 +8,6 @@
 //
 package io.reflection.app.accountdatacollectors;
 
-import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
@@ -112,7 +111,7 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 	 * @see io.reflection.app.accountdatacollectors.DataAccountCollector#collect(io.reflection.app.shared.datatypes.DataAccount, java.util.Date)
 	 */
 	@Override
-	public boolean collect(DataAccount dataAccount, Date date) throws DataAccessException {
+	public boolean collect(DataAccount dataAccount, Date date) throws ServiceException {
 
 		date = ApiHelper.removeTime(date);
 
@@ -122,7 +121,7 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 			LOG.info(String.format("Getting data from itunes connect for data account [%d] and date [%s]", dataAccount.id.longValue(), dateParameter));
 		}
 
-		boolean success = true;
+		boolean success = false;
 
 		URL url;
 		try {
@@ -164,6 +163,18 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 				if (dataAccountFetch.status != DataAccountFetchStatusType.DataAccountFetchStatusTypeIngested) {
 					String error = null;
 					if ((error = connection.getHeaderField("ERRORMSG")) != null) {
+
+						if (error.equals("Error :Your AppleConnect account or password was entered incorrectly."))
+							throw new ServiceException(ApiError.InvalidDataAccountCredentials.getCode(),
+									ApiError.InvalidDataAccountCredentials.getMessage(dataAccount.username));
+
+						if (error.equals("Please enter a valid vendor number."))
+							throw new ServiceException(ApiError.InvalidDataAccountVendor.getCode(),
+									ApiError.InvalidDataAccountVendor.getMessage(dataAccount.properties));
+
+						// OK error
+						// Daily reports are available only for past 30 days, please enter a date within past 30 days.
+
 						if (LOG.isLoggable(GaeLevel.WARNING)) {
 							if (data != null && dataAccount.password != null) {
 								// remove the password for the purposes of logging
