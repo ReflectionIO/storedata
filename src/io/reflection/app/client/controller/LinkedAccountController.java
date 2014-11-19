@@ -442,7 +442,9 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 		Item lookupItem = null;
 
 		if (item != null && item.internalId != null) {
-			lookupItem = MyAppsController.get().getUserItem(item.internalId);
+			if (ItemController.get().getUserItem(item.internalId) != null) {
+				lookupItem = ItemController.get().getUserItem(item.internalId);
+			}
 
 			if (lookupItem == null) {
 				fetchLinkedAccountItem(item.internalId);
@@ -467,8 +469,8 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 
 			@Override
 			public void onSuccess(GetLinkedAccountItemResponse output) {
-				if (output.status == StatusType.StatusTypeSuccess) {
-					MyAppsController.get().setUserItem(output.item);
+				if (output.status == StatusType.StatusTypeSuccess && output.item != null) {
+					ItemController.get().setUserItem(output.item);
 				}
 
 				EventController.get().fireEventFromSource(new GetLinkedAccountItemEventHandler.GetLinkedAccountItemSuccess(input, output),
