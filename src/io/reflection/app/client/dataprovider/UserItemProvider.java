@@ -19,6 +19,12 @@ import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.RankController;
 import io.reflection.app.client.part.datatypes.MyApp;
 import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.datatypes.shared.Rank;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
@@ -32,6 +38,8 @@ import com.willshex.gson.json.service.shared.StatusType;
 public class UserItemProvider extends AsyncDataProvider<MyApp> implements GetLinkedAccountItemsEventHandler, GetSalesRanksEventHandler {
 
 	private Pager pager = null;
+	private List<MyApp> myAppList = new ArrayList<MyApp>();
+	private Map<String, MyApp> myAppsLookup = new HashMap<String, MyApp>();
 
 	/*
 	 * (non-Javadoc)
@@ -48,7 +56,7 @@ public class UserItemProvider extends AsyncDataProvider<MyApp> implements GetLin
 			if (end > ItemController.get().getUserItems().size()) {
 				// MyApps page always uses filterParamChanged to call fetchLinkedAccountItems because of the LinkedAccounts TextBox
 			} else {
-				updateRowData(start, ItemController.get().getUserItems().subList(start, end)); // Paging with all data already retrieved
+				updateRowData(start, myAppList.subList(start, end)); // Paging with all data already retrieved
 			}
 		} else {
 			LinkedAccountController.get().fetchLinkedAccounts(); // After refresh or the user didn't visit the linked accounts page
@@ -57,8 +65,10 @@ public class UserItemProvider extends AsyncDataProvider<MyApp> implements GetLin
 
 	public void reset() {
 		ItemController.get().resetUserItem();
+		myAppList.clear();
+		myAppsLookup.clear();
 		pager = null;
-		updateRowData(0, ItemController.get().getUserItems());
+		updateRowData(0, myAppList);
 		updateRowCount(0, false);
 	}
 
@@ -84,24 +94,24 @@ public class UserItemProvider extends AsyncDataProvider<MyApp> implements GetLin
 
 				ItemController.get().addItemsToCache(output.items);
 
+				MyApp myApp;
 				for (Item item : output.items) {
-					MyApp myApp = new MyApp();
+					ItemController.get().setUserItem(item);
+					myAppList.add(myApp = new MyApp());
 					myApp.item = item;
-					ItemController.get().setUserItem(myApp);
+					myAppsLookup.put(item.internalId, myApp);
 				}
 
 				if (ItemController.get().getUserItemsCount() > 0) {
 					RankController.get().fetchSalesRanks();
 				}
+
 			}
 
 			updateRowData(
 					input.pager.start.intValue(),
-					ItemController
-							.get()
-							.getUserItems()
-							.subList(input.pager.start.intValue(),
-									Math.min(input.pager.start.intValue() + input.pager.count.intValue(), pager.totalCount.intValue())));
+					myAppList.subList(input.pager.start.intValue(),
+							Math.min(input.pager.start.intValue() + input.pager.count.intValue(), pager.totalCount.intValue())));
 		}
 		updateRowCount((int) ItemController.get().getUserItemsCount(), true);
 	}
@@ -128,10 +138,28 @@ public class UserItemProvider extends AsyncDataProvider<MyApp> implements GetLin
 	public void getSalesRanksSuccess(GetSalesRanksRequest input, GetSalesRanksResponse output) {
 		if (output != null && output.status == StatusType.StatusTypeSuccess && output.ranks != null) { // Ranks available
 
-			ItemController.get().setUserItemsRanks(output.ranks);
+			MyApp myApp;
+			// Add Rank to related Item
+			for (Rank rank : output.ranks) {
+
+				myApp = myAppsLookup.get(rank.itemId);
+				if (myApp != null) {
+
+					if (myApp.ranks == null) {
+						myApp.ranks = new ArrayList<Rank>();
+					}
+
+					myApp.ranks.add(rank);
+
+				}
+			}
+
+			for (MyApp myUserItem : myAppList) {
+				myUserItem.updateOverallValues(); // Calculate values given the new added Ranks
+			}
 
 		} else { // No Ranks available
-			for (MyApp myApp : ItemController.get().getUserItems()) {
+			for (MyApp myApp : myAppList) {
 				if (myApp.overallDownloads == null) {
 					myApp.overallDownloads = "-";
 				}
@@ -147,7 +175,7 @@ public class UserItemProvider extends AsyncDataProvider<MyApp> implements GetLin
 			}
 		}
 
-		updateRowData(0, ItemController.get().getUserItems());
+		updateRowData(0, myAppList);
 	}
 
 	/*

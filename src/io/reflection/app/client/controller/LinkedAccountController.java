@@ -27,7 +27,6 @@ import io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler.Link
 import io.reflection.app.api.core.shared.call.event.UpdateLinkedAccountEventHandler;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
-import io.reflection.app.client.part.datatypes.MyApp;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.Item;
@@ -444,7 +443,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 
 		if (item != null && item.internalId != null) {
 			if (ItemController.get().getUserItem(item.internalId) != null) {
-				lookupItem = ItemController.get().getUserItem(item.internalId).item;
+				lookupItem = ItemController.get().getUserItem(item.internalId);
 			}
 
 			if (lookupItem == null) {
@@ -470,10 +469,8 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 
 			@Override
 			public void onSuccess(GetLinkedAccountItemResponse output) {
-				if (output.status == StatusType.StatusTypeSuccess) {
-					MyApp myApp = new MyApp();
-					myApp.item = output.item;
-					ItemController.get().setUserItem(myApp);
+				if (output.status == StatusType.StatusTypeSuccess && output.item != null) {
+					ItemController.get().setUserItem(output.item);
 				}
 
 				EventController.get().fireEventFromSource(new GetLinkedAccountItemEventHandler.GetLinkedAccountItemSuccess(input, output),
