@@ -10,8 +10,7 @@ package io.reflection.app.service.dataaccount;
 
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
-import io.reflection.app.accountdatacollectors.DataAccountCollector;
-import io.reflection.app.accountdatacollectors.DataAccountCollectorFactory;
+import io.reflection.app.accountdatacollectors.ITunesConnectDownloadHelper;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
@@ -41,7 +40,6 @@ import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.google.appengine.api.taskqueue.TransientFailureException;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
-import com.willshex.gson.json.service.server.ServiceException;
 
 final class DataAccountService implements IDataAccountService {
 
@@ -531,18 +529,17 @@ final class DataAccountService implements IDataAccountService {
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#verifyDataAccount(io.reflection.app.datatypes.shared.DataAccount, java.util.Date)
 	 */
 	@Override
-	public void verifyDataAccount(DataAccount dataAccount, Date date) throws ServiceException {
-
-		if (dataAccount != null && dataAccount.source != null) {
-			DataAccountCollector collector = DataAccountCollectorFactory.getCollectorForSource(dataAccount.source.a3Code);
-			if (collector != null) {
-				try {
-					collector.collect(dataAccount, date);
-				} catch (ServiceException e) {
-					throw e;
-				}
+	public void verifyDataAccount(DataAccount dataAccount, Date date) throws DataAccessException {
+		switch (dataAccount.source.a3Code) {
+		case "itc":
+			try {
+				ITunesConnectDownloadHelper.getITunesSalesFile(dataAccount.username, dataAccount.password,
+						ITunesConnectDownloadHelper.getVendorId(dataAccount.properties), ITunesConnectDownloadHelper.DATE_FORMATTER.format(date), null, null);
+			} catch (Exception e) {
+				throw new DataAccessException(e);
 			}
-		}
 
+			break;
+		}
 	}
 }
