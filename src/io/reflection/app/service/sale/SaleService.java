@@ -616,4 +616,43 @@ final class SaleService implements ISaleService {
 		return dataAccount;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.sale.ISaleService#getSaleIds(io.reflection.app.datatypes.shared.Country, io.reflection.app.datatypes.shared.DataAccount,
+	 * java.util.Date, java.util.Date)
+	 */
+	@Override
+	public List<Long> getSaleIds(Country country, DataAccount linkedAccount, Date start, Date end) throws DataAccessException {
+		List<Long> saleIds = new ArrayList<Long>();
+
+		// FIXME: for now we use the all category for the iOS store... we should get the category passed in, or attempt to detect it based on the linked account
+		// (category relates to store by a3code)
+		// we are using end for date but we could equally use begin
+		String getSaleIdsQuery = String.format("SELECT `id` FROM `sale` WHERE `country`='%s' AND `dataaccountid`=%d AND %s AND `deleted`='n'", country.a2Code,
+				linkedAccount.id.longValue(), SqlQueryHelper.beforeAfterQuery(end, start, "end"));
+
+		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
+
+		try {
+			saleConnection.connect();
+			saleConnection.executeQuery(getSaleIdsQuery);
+
+			Long id;
+			while (saleConnection.fetchNextRow()) {
+				id = saleConnection.getCurrentRowLong("id");
+
+				if (id != null) {
+					saleIds.add(id);
+				}
+			}
+		} finally {
+			if (saleConnection != null) {
+				saleConnection.disconnect();
+			}
+		}
+
+		return saleIds;
+	}
+
 }

@@ -12,6 +12,7 @@ import io.reflection.app.archivers.ItemSaleArchiver;
 import io.reflection.app.collectors.CollectorIOS;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.ItemRankSummary;
 import io.reflection.app.datatypes.shared.Rank;
@@ -631,17 +632,14 @@ public class DevHelperServlet extends HttpServlet {
 				} else if ("sale".equalsIgnoreCase(object)) {
 					if (start == null && count == null) {
 						try {
-							Store store = new Store();
-							store.a3Code = "ios";
+							DataAccount linkedAccount = DataTypeHelper.createDataAccount(1L);
 
 							Country country = new Country();
 							country.a2Code = "us";
 
-							Category allCategory = CategoryServiceProvider.provide().getAllCategory(store);
-
 							ItemSaleArchiver ar = ArchiverFactory.getItemSaleArchiver();
 
-							List<Long> foundSaleIds = SaleServiceProvider.provide().getSaleIds(country, store, allCategory, new Date(0L), new Date());
+							List<Long> foundSaleIds = SaleServiceProvider.provide().getSaleIds(country, linkedAccount, new Date(0L), DateTime.now().toDate());
 
 							for (Long saleId : foundSaleIds) {
 								ar.enqueueIdSale(saleId);

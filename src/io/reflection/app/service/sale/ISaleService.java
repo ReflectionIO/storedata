@@ -35,7 +35,7 @@ public interface ISaleService extends IService {
 	// iPad
 	public static final String FREE_OR_PAID_APP_IPAD_IOS = "1T";
 	public static final String UPDATE_IPAD_IOS = "7T";
-	
+
 	// IAP
 	public static final String INAPP_PURCHASE_PURCHASE_IOS = "IA1";
 	// Subscription
@@ -49,7 +49,7 @@ public interface ISaleService extends IService {
 	public static final String FREE_OR_PAID_APP_MAC_APP = "F1";
 	public static final String UPDATE_MAC_APP = "F7";
 	public static final String INAPP_PURCHASE_MAC_APP = "FI1";
-	
+
 	// Custom
 	public static final String PAID_APP_CUSTOM_IPHONE_AND_IPOD_TOUCH_IOS = "1E";
 	public static final String PAID_APP_CUSTOM_IPAD_IOS = "1EP";
@@ -167,5 +167,16 @@ public interface ISaleService extends IService {
 	 * @throws DataAccessException
 	 */
 	public DataAccount getDataAccount(String itemId) throws DataAccessException;
+
+	/**
+	 * 
+	 * @param country
+	 * @param linkedAccount
+	 * @param start
+	 * @param end
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<Long> getSaleIds(Country country, DataAccount linkedAccount, Date start, Date end) throws DataAccessException;
 
 }
