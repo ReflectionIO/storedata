@@ -1173,13 +1173,13 @@ public final class Core extends ActionHandler {
 					String error = daEx.getCause() == null ? null : daEx.getCause().getMessage();
 
 					if (error != null) {
-						if (error.equals("Error :Your AppleConnect account or password was entered incorrectly."))
-							throw new InputValidationException(ApiError.InvalidDataAccountCredentials.getCode(),
-									ApiError.InvalidDataAccountCredentials.getMessage(dataAccountToTest.username));
-
 						if (error.equals("Please enter a valid vendor number."))
 							throw new InputValidationException(ApiError.InvalidDataAccountVendor.getCode(),
 									ApiError.InvalidDataAccountVendor.getMessage(dataAccountToTest.properties));
+
+						if (!error.equals("Daily reports are available only for past 30 days, please enter a date within past 30 days."))
+							throw new InputValidationException(ApiError.InvalidDataAccountCredentials.getCode(),
+									ApiError.InvalidDataAccountCredentials.getMessage(dataAccountToTest.username));
 					}
 				}
 			}
