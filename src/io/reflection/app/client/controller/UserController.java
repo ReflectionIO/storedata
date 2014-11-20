@@ -54,6 +54,7 @@ import io.reflection.app.client.handler.user.UsersEventHandler.ReceivedCount;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.app.shared.util.PagerHelper;
 
 import java.util.Collections;
@@ -467,7 +468,13 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 			@Override
 			public void onSuccess(DeleteUserResponse output) {
-				PagerHelper.moveBackward(pager);
+				// only refresh the user list if the current user is an admin or has manage user permission
+				if (SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_MANAGE_USERS_CODE)) {
+					PagerHelper.moveBackward(pager);
+
+					fetchUsers();
+				}
+
 				EventController.get().fireEventFromSource(new DeleteUserEventHandler.DeleteUserSuccess(input, output), UserController.this);
 			}
 
@@ -549,10 +556,12 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 			@Override
 			public void onSuccess(RegisterUserResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
-					// userList.clear();
-					PagerHelper.moveBackward(pager);
+					// only refresh the user list if the current user is an admin or has manage user permission
+					if (SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_MANAGE_USERS_CODE)) {
+						PagerHelper.moveBackward(pager);
 
-					fetchUsers();
+						fetchUsers();
+					}
 
 					EventController.get().fireEventFromSource(new UserRegistered(email), UserController.this);
 				} else {
@@ -597,10 +606,12 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 			@Override
 			public void onSuccess(RegisterUserResponse output) {
 				if (output != null && output.status == StatusType.StatusTypeSuccess) {
-					// userList.clear();
-					PagerHelper.moveBackward(pager);
+					// only refresh the user list if the current user is an admin or has manage user permission
+					if (SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_MANAGE_USERS_CODE)) {
+						PagerHelper.moveBackward(pager);
 
-					fetchUsers();
+						fetchUsers();
+					}
 				}
 
 				EventController.get().fireEventFromSource(new RegisterUserEventHandler.RegisterUserSuccess(input, output), UserController.this);
@@ -741,7 +752,13 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 			@Override
 			public void onSuccess(DeleteUsersResponse output) {
-				PagerHelper.moveBackward(pager);				
+				// only refresh the user list if the current user is an admin or has manage user permission
+				if (SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_MANAGE_USERS_CODE)) {
+					PagerHelper.moveBackward(pager);
+
+					fetchUsers();
+				}
+
 				EventController.get().fireEventFromSource(new DeleteUsersEventHandler.DeleteUsersSuccess(input, output), UserController.this);
 			}
 
