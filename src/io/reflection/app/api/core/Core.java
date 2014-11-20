@@ -74,6 +74,7 @@ import io.reflection.app.api.core.shared.call.UpdateLinkedAccountRequest;
 import io.reflection.app.api.core.shared.call.UpdateLinkedAccountResponse;
 import io.reflection.app.api.exception.AuthenticationException;
 import io.reflection.app.api.exception.AuthorisationException;
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
@@ -1159,18 +1160,27 @@ public final class Core extends ActionHandler {
 			// If not a test user, check if is a valid Apple linked account
 			Role testRole = RoleServiceProvider.provide().getCodeRole(DataTypeHelper.ROLE_TEST_CODE);
 			if (!UserServiceProvider.provide().hasRole(input.session.user, testRole)) {
-				Date testDate = (DateTime.now(DateTimeZone.UTC)).minusDays(45).toDate();
 				DataAccount dataAccountToTest = new DataAccount();
+
 				dataAccountToTest.username = input.username;
 				dataAccountToTest.password = input.password;
 				dataAccountToTest.properties = input.properties;
 				dataAccountToTest.source = input.source;
-				dataAccountToTest.id = new Long(0);
 
 				try {
-					DataAccountServiceProvider.provide().verifyDataAccount(dataAccountToTest, testDate);
-				} catch (ServiceException e) {
-					throw e;
+					DataAccountServiceProvider.provide().verifyDataAccount(dataAccountToTest, DateTime.now(DateTimeZone.UTC).minusDays(45).toDate());
+				} catch (DataAccessException daEx) {
+					String error = daEx.getCause() == null ? null : daEx.getCause().getMessage();
+
+					if (error != null) {
+						if (error.equals("Error :Your AppleConnect account or password was entered incorrectly."))
+							throw new InputValidationException(ApiError.InvalidDataAccountCredentials.getCode(),
+									ApiError.InvalidDataAccountCredentials.getMessage(dataAccountToTest.username));
+
+						if (error.equals("Please enter a valid vendor number."))
+							throw new InputValidationException(ApiError.InvalidDataAccountVendor.getCode(),
+									ApiError.InvalidDataAccountVendor.getMessage(dataAccountToTest.properties));
+					}
 				}
 			}
 
@@ -1209,6 +1219,7 @@ public final class Core extends ActionHandler {
 			output.status = StatusType.StatusTypeFailure;
 			output.error = convertToErrorAndLog(LOG, e);
 		}
+
 		LOG.finer("Exiting linkAccount");
 		return output;
 	}
