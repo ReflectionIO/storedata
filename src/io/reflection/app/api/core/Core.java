@@ -1639,7 +1639,6 @@ public final class Core extends ActionHandler {
 							|| INAPP_PURCHASE_PURCHASE_IOS.equals(sale.typeIdentifier) // IA1
 							|| INAPP_PURCHASE_SUBSCRIPTION_IOS.equals(sale.typeIdentifier) // IA9
 					) {
-
 						// If type identifier != IA1 or IA9, add parent identifiers into the Map
 						if (!sale.typeIdentifier.equals(INAPP_PURCHASE_PURCHASE_IOS) && !sale.typeIdentifier.equals(INAPP_PURCHASE_SUBSCRIPTION_IOS)) {
 							parentIdItemIdLookup.put(sale.sku, sale.item.internalId);
