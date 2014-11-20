@@ -27,6 +27,7 @@ import io.reflection.app.client.page.forum.ForumPage;
 import io.reflection.app.client.page.forum.TopicPage;
 import io.reflection.app.client.page.test.WidgetTestPage;
 import io.reflection.app.datatypes.shared.Permission;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -81,7 +82,7 @@ public enum PageType {
 	SimpleModelRunPageType("simplemodelrun", "MSM"),
 	TermsPageType("terms", false),
 	UpgradePageType("upgrade", true),
-	UsersPageType("users", "MUS"),
+	UsersPageType("users", DataTypeHelper.PERMISSION_MANAGE_USERS_CODE),
 	WidgetTestPage("test", false),
 
 	// Non navigable
