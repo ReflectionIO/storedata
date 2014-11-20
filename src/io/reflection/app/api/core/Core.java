@@ -77,6 +77,8 @@ import io.reflection.app.api.exception.AuthorisationException;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.archivers.ArchiverFactory;
+import io.reflection.app.archivers.ItemRankArchiver;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.shared.Category;
@@ -95,8 +97,6 @@ import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.helpers.ApiHelper;
 import io.reflection.app.helpers.EmailHelper;
 import io.reflection.app.helpers.SliceHelper;
-import io.reflection.app.itemrankarchivers.ItemRankArchiver;
-import io.reflection.app.itemrankarchivers.ItemRankArchiverFactory;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.modellers.Modeller;
 import io.reflection.app.modellers.ModellerFactory;
@@ -573,7 +573,7 @@ public final class Core extends ActionHandler {
 
 			FormType form = ModellerFactory.getModellerForStore(store.a3Code).getForm(input.listType);
 
-			ItemRankArchiver archiver = ItemRankArchiverFactory.get();
+			ItemRankArchiver archiver = ArchiverFactory.getItemRankArchiver();
 			long[] slices = SliceHelper.offsets(input.start, input.end);
 
 			String key;
@@ -1657,7 +1657,6 @@ public final class Core extends ActionHandler {
 							|| INAPP_PURCHASE_PURCHASE_IOS.equals(sale.typeIdentifier) // IA1
 							|| INAPP_PURCHASE_SUBSCRIPTION_IOS.equals(sale.typeIdentifier) // IA9
 					) {
-
 						// If type identifier != IA1 or IA9, add parent identifiers into the Map
 						if (!sale.typeIdentifier.equals(INAPP_PURCHASE_PURCHASE_IOS) && !sale.typeIdentifier.equals(INAPP_PURCHASE_SUBSCRIPTION_IOS)) {
 							parentIdItemIdLookup.put(sale.sku, sale.item.internalId);

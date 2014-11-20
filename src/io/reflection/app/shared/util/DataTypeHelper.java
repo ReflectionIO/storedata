@@ -9,6 +9,7 @@ package io.reflection.app.shared.util;
 
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Permission;
@@ -244,6 +245,12 @@ public class DataTypeHelper {
 		FeedFetch f = new FeedFetch();
 		f.id = id;
 		return f;
+	}
+
+	public static DataAccount createDataAccount(Long id) {
+		DataAccount da = new DataAccount();
+		da.id = id;
+		return da;
 	}
 
 }

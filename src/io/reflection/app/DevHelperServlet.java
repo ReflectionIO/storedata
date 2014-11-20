@@ -6,22 +6,25 @@ package io.reflection.app;
 import static io.reflection.app.objectify.PersistenceService.ofy;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.archivers.ArchiverFactory;
+import io.reflection.app.archivers.ItemRankArchiver;
+import io.reflection.app.archivers.ItemSaleArchiver;
 import io.reflection.app.collectors.CollectorIOS;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.ItemRankSummary;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.ingestors.Ingestor;
 import io.reflection.app.ingestors.IngestorFactory;
-import io.reflection.app.itemrankarchivers.ItemRankArchiver;
-import io.reflection.app.itemrankarchivers.ItemRankArchiverFactory;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.application.ApplicationServiceProvider;
 import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
+import io.reflection.app.service.sale.SaleServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.setup.CountriesInstaller;
 import io.reflection.app.setup.StoresInstaller;
@@ -609,7 +612,7 @@ public class DevHelperServlet extends HttpServlet {
 
 							Category allCategory = CategoryServiceProvider.provide().getAllCategory(store);
 
-							ItemRankArchiver ar = ItemRankArchiverFactory.get();
+							ItemRankArchiver ar = ArchiverFactory.getItemRankArchiver();
 
 							List<Long> foundRankIds = RankServiceProvider.provide().getRankIds(country, store, allCategory, new Date(0L), new Date());
 
@@ -620,18 +623,43 @@ public class DevHelperServlet extends HttpServlet {
 							throw new RuntimeException(e);
 						}
 					} else {
-						ItemRankArchiver ar = ItemRankArchiverFactory.get();
+						ItemRankArchiver ar = ArchiverFactory.getItemRankArchiver();
 						Pager p = new Pager();
 						p.start = start == null ? Pager.DEFAULT_START : Long.valueOf(start);
 						p.count = count == null ? Pager.DEFAULT_COUNT : Long.valueOf(count);
 						ar.enqueuePagerRanks(p, all == null ? Boolean.FALSE : Boolean.valueOf(all));
+					}
+				} else if ("sale".equalsIgnoreCase(object)) {
+					if (start == null && count == null) {
+						try {
+							DataAccount linkedAccount = DataTypeHelper.createDataAccount(1L);
+
+							Country country = new Country();
+							country.a2Code = "us";
+
+							ItemSaleArchiver ar = ArchiverFactory.getItemSaleArchiver();
+
+							List<Long> foundSaleIds = SaleServiceProvider.provide().getSaleIds(country, linkedAccount, new Date(0L), DateTime.now().toDate());
+
+							for (Long saleId : foundSaleIds) {
+								ar.enqueueIdSale(saleId);
+							}
+						} catch (DataAccessException e) {
+							throw new RuntimeException(e);
+						}
+					} else {
+						ItemSaleArchiver ar = ArchiverFactory.getItemSaleArchiver();
+						Pager p = new Pager();
+						p.start = start == null ? Pager.DEFAULT_START : Long.valueOf(start);
+						p.count = count == null ? Pager.DEFAULT_COUNT : Long.valueOf(count);
+						ar.enqueuePagerSales(p, all == null ? Boolean.FALSE : Boolean.valueOf(all));
 					}
 				}
 
 				success = true;
 			} else if ("archivemulti".equalsIgnoreCase(action)) {
 				if ("rank".equalsIgnoreCase(object)) {
-					ItemRankArchiver ar = ItemRankArchiverFactory.get();
+					ItemRankArchiver ar = ArchiverFactory.getItemRankArchiver();
 
 					String[] rankIdsArray = ids.split(",");
 
@@ -640,7 +668,18 @@ public class DevHelperServlet extends HttpServlet {
 						ar.enqueueIdRank(Long.valueOf(rankId));
 					}
 				} else if ("feedfetchrank".equalsIgnoreCase(object)) {
-					ItemRankArchiverFactory.get().enqueueIdFeedFetch(Long.valueOf(ids));
+					ArchiverFactory.getItemRankArchiver().enqueueIdFeedFetch(Long.valueOf(ids));
+				} else if ("sale".equalsIgnoreCase(object)) {
+					ItemSaleArchiver ar = ArchiverFactory.getItemSaleArchiver();
+
+					String[] saleIdsArray = ids.split(",");
+
+					for (String saleId : saleIdsArray) {
+						LOG.finer("Enqueueing sale [" + saleId + "]");
+						ar.enqueueIdSale(Long.valueOf(saleId));
+					}
+				} else if ("dataaccountfetchsale".equalsIgnoreCase(object)) {
+					ArchiverFactory.getItemSaleArchiver().enqueueIdDataAccountFetch(Long.valueOf(ids));
 				}
 
 				success = true;
@@ -650,7 +689,6 @@ public class DevHelperServlet extends HttpServlet {
 
 				success = true;
 			} else {
-
 				if (LOG.isLoggable(Level.INFO)) {
 					LOG.info(String.format("Action [%s] not supported", action));
 				}
