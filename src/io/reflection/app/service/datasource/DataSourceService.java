@@ -12,11 +12,13 @@ import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.datatypes.shared.DataSource;
+import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -196,6 +198,24 @@ final class DataSourceService implements IDataSourceService {
 
 		return dataSources;
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.datasource.IDataSourceService#getStoreDataSource(io.reflection.app.datatypes.shared.Store)
+	 */
+	@Override
+	public DataSource getStoreDataSource(Store store) throws DataAccessException {
+		DataSource dataSource = null;
+
+		switch (store.a3Code) {
+		case DataTypeHelper.IOS_STORE_A3:
+			dataSource = getA3CodeDataSource(DataTypeHelper.ITC_SOURCE_A3);
+			break;
+		}
+
+		return dataSource;
 	}
 
 }

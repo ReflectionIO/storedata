@@ -11,6 +11,8 @@ import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.DataAccount;
+import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.FormType;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Sale;
@@ -82,5 +84,20 @@ public interface ItemSaleArchiver {
 	 * @return
 	 */
 	List<Sale> getItemSales(String key);
+
+	/**
+	 * Creates a key to store and retrieve linked account times
+	 * @param linkedAccount
+	 * @param source
+	 * @param form
+	 * @return
+	 */
+	String createItemsKey(DataAccount linkedAccount, DataSource source, FormType form);
+
+	/**
+	 * @param key
+	 * @return
+	 */
+	List<Item> getItems(String key);
 
 }

@@ -13,6 +13,8 @@ import io.reflection.app.archivablekeyvalue.peristence.ValueAppender;
 import io.reflection.app.archivablekeyvalue.peristence.objectify.KeyValueArchiveManager;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.DataAccount;
+import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.FormType;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Sale;
@@ -369,5 +371,23 @@ public class DefaultItemSaleArchiver implements ItemSaleArchiver {
 				LOG.log(GaeLevel.TRACE, "Exiting...");
 			}
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.archivers.ItemSaleArchiver#createItemsKey(io.reflection.app.datatypes.shared.DataAccount, io.reflection.app.datatypes.shared.DataSource, io.reflection.app.datatypes.shared.FormType)
+	 */
+	@Override
+	public String createItemsKey(DataAccount linkedAccount, DataSource source, FormType form) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.archivers.ItemSaleArchiver#getItems(java.lang.String)
+	 */
+	@Override
+	public List<Item> getItems(String key) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

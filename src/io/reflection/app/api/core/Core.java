@@ -80,6 +80,7 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.archivers.ArchiverFactory;
 import io.reflection.app.archivers.ItemRankArchiver;
+import io.reflection.app.archivers.ItemSaleArchiver;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.shared.Category;
@@ -88,6 +89,7 @@ import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.EmailFormatType;
 import io.reflection.app.datatypes.shared.FormType;
+import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.ModelRun;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Rank;
@@ -1109,19 +1111,32 @@ public final class Core extends ActionHandler {
 			Modeller modeller = ModellerFactory.getModellerForStore(input.store.a3Code);
 			FormType form = modeller.getForm(input.listType);
 
-			List<String> freeOrPaidApps = new ArrayList<String>();
-			freeOrPaidApps.add(FREE_OR_PAID_APP_UNIVERSAL_IOS);
-			if (form == FormType.FormTypeOther) {
-				freeOrPaidApps.add(FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS);
-			} else if (form == FormType.FormTypeTablet) {
-				freeOrPaidApps.add(FREE_OR_PAID_APP_IPAD_IOS);
-			}
-
-			output.items = SaleServiceProvider.provide().getDataAccountItems(input.linkedAccount, freeOrPaidApps, input.pager);
+			ItemSaleArchiver archiver = ArchiverFactory.getItemSaleArchiver();
+			String key = archiver.createItemsKey(input.linkedAccount, input.linkedAccount.source, form);
+			List<Item> items = archiver.getItems(key);
 
 			output.pager = input.pager;
-			updatePager(output.pager, output.items,
-					input.pager.totalCount == null ? SaleServiceProvider.provide().getDataAccountItemsCount(input.linkedAccount, freeOrPaidApps) : null);
+			if (items == null || items.size() == 0) {
+				List<String> freeOrPaidApps = new ArrayList<String>();
+
+				freeOrPaidApps.add(FREE_OR_PAID_APP_UNIVERSAL_IOS);
+				if (form == FormType.FormTypeOther) {
+					freeOrPaidApps.add(FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS);
+				} else if (form == FormType.FormTypeTablet) {
+					freeOrPaidApps.add(FREE_OR_PAID_APP_IPAD_IOS);
+				}
+
+				output.items = SaleServiceProvider.provide().getDataAccountItems(input.linkedAccount, freeOrPaidApps, input.pager);
+				
+				updatePager(output.pager, output.items,
+						input.pager.totalCount == null ? SaleServiceProvider.provide().getDataAccountItemsCount(input.linkedAccount, freeOrPaidApps) : null);
+			} else {
+				if (items.size() > (input.pager.start.longValue() + input.pager.count.longValue())) {
+					output.items = items.subList(input.pager.start.intValue(), input.pager.count.intValue());
+				}
+
+				output.pager.totalCount = Long.valueOf(items.size());
+			}
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {

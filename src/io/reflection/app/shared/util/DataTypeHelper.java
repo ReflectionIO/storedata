@@ -35,6 +35,8 @@ public class DataTypeHelper {
 	public static final float SMALL_MONEY = 0.0000001f;
 
 	public static final String IOS_STORE_A3 = "ios";
+	
+	public static final String ITC_SOURCE_A3 = "itc";
 
 	private static final Store IOS_STORE = new Store();
 
