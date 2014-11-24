@@ -1,7 +1,8 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
 	<meta charset="utf-8" />
+  <!--[if IE 8]><html class="no-js ie8"><![endif]-->
 	<title>Reflection Landing page template</title>
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,17 +10,23 @@
 	<link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:700' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="fonts/fontello-709fa79f/css/reflectionglyphs.css">
-	<link rel="stylesheet" media="screen, projection" type="text/css" href="css/landing.e31b87cea5157373ab7af82f562f9739.css" />
-	<!--[if lt IE 9]>
+	<link rel="stylesheet" media="screen, projection" type="text/css" href="css/landing.2adc750efe107205d311446ecb94e561.css" />
+	<!--[if lt IE 9]>		
+		<link href="css/landing-ie8.css" media="screen, projection" rel="stylesheet" type="text/css" />
 		<script src="js/html5shiv.min.js"></script>
+		<script src="js/respond.min.js"></script>
 	<![endif]-->
-	<!--[if IE]>
-    <link href="css/landing-ie.css" media="screen, projection" rel="stylesheet" type="text/css" />
+	<!--[if IE 9]>		
+		<link href="css/landing-ie9.css" media="screen, projection" rel="stylesheet" type="text/css" />
 	<![endif]-->
-	<script src="js/picturefill.2.2.0.min.js" async></script>
+	<!--[if !lt IE 9]><!-->
+		<script src="js/picturefill.2.2.0.min.js" async></script>
+	<!-- <![endif]-->
 </head>
 <body>
-
+	<!--[if lt IE 8]>
+      <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+  <![endif]-->
 	<header class="header">
 		<div class="site-logo">
 			<a href="/">
@@ -28,11 +35,11 @@
 					<source srcset="imgs/global/logo-reflection-header.png" media="(min-width: 480px)" />
 					<source srcset="imgs/global/logo-reflection-header-mobile.png" />
 					<!--[if IE 9]></video><![endif]-->
-					<img srcset="imgs/global/logo-reflection-header.png" alt="Reflection logo" />
+					<img src="imgs/global/logo-reflection-header.png" alt="Reflection logo" />
 				</picture>
 			</a>
 		</div>
-		<div class="header__actions">			
+		<div class="header__actions">
 			<a href="#" class="ref-button-apply">Apply</a>
 			<a href="#" class="link-log-in icon-login">Log In</a>
 		</div>
@@ -48,7 +55,7 @@
 							<h1>App Intelligence to Create &amp; Plan More Successful Products</h1>
 							<p>Reflection is the only intelligence tool with a freemium pricing model that fits the needs of the entire app ecosystem.</p>
 							<div class="actions-container">
-								<a href="#" class="icon-angle-right">How Intelligence Helps</a>
+								<a href="#anchor-how-intelligence-helps" class="icon-angle-right js-scroll-to-anchor">How Intelligence Helps</a>
 								<a href="#" class="ref-button-cta-large">Apply Now</a>
 							</div>
 						</div>
@@ -71,14 +78,14 @@
 				</div>
 			</section>
 
-			<section class="landing-section-insights">
+			<section class="landing-section-insights" id="anchor-how-intelligence-helps">
 				<div class="landing-section-insights__column_one">
 					<picture>
 						<!--[if IE 9]><video style="display: none;"><![endif]-->
 						<source srcset="imgs/placeholder/placeholder-laptop-large.png" media="(min-width: 720px)" />
 						<source srcset="imgs/placeholder/placeholder-laptop-medium.png" />
 						<!--[if IE 9]></video><![endif]-->
-						<img srcset="imgs/placeholder/placeholder-laptop-large.png" alt="Leaderboard screenshot" />
+						<img src="imgs/placeholder/placeholder-laptop-large.png" alt="Leaderboard screenshot" />
 					</picture>
 				</div>
 				<div class="landing-column-thin">
@@ -98,7 +105,7 @@
 						<source srcset="imgs/placeholder/placeholder-laptop-analyse-large.png" media="(min-width: 720px)" />
 						<source srcset="imgs/placeholder/placeholder-laptop-analyse-medium.png" />
 						<!--[if IE 9]></video><![endif]-->
-						<img srcset="imgs/placeholder/placeholder-laptop-analyse-large.png" alt="Analysis screenshot" />
+						<img src="imgs/placeholder/placeholder-laptop-analyse-large.png" alt="Analysis screenshot" />
 					</picture>
 				</div>
 				<div class="landing-column-thin">
@@ -178,14 +185,14 @@
 				<div>
 					<img src="imgs/global/logo-reflection-footer.png" alt="Reflection logo" class="logo-reflection-footer" />
 				</div>
-				<div class="landing-section-contact__email">
-					<a href="mailto:info@reflection.io" class="icon-mail"><span>info@reflection.io</span></a>
-				</div>
-				<div class="landing-section-contact__tel">
-					<a href="tel:+44(0)201234567" class="icon-phone"><span>+44(0) 20 123 4567</span></a>
-				</div>
+				<a href="mailto:info@reflection.io" class="landing-section-contact__email">
+					<span class="icon-mail">info@reflection.io</span>
+				</a>
+				<a href="tel:+44(0)201234567" class="landing-section-contact__tel">
+					<span class="icon-phone">+44(0) 20 123 4567</span>
+				</a>
 				<div class="landing-section-contact__address">
-					<p class="icon-location"><span>40-45 Newman St<br />London<br />W1 ABC</span></p>
+					<p class="icon-location"><b>40-45 Newman St<br />London<br />W1 ABC</b></p>
 				</div>
 			</section>
 
@@ -205,7 +212,8 @@
 		</div>
 	</div> <!-- .l-page-container -->
 
-	<script src="js/jquery-1.11.1.min.js"></script>
+	<script src="js/jquery-1.11.1.min.js"></script>	
 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7mXBIrN4EgMflWKxUOK6C9rfoDMa5zyo"></script>
-	<script src="js/scripts.5d01cab3213f38ded511f87715303429.js"></script>
+	<script src="js/modernizr.2.8.3.custom.js"></script>
+	<script src="js/scripts.1e5fa64d90cf7bf98fe2e925694e4ac5.js"></script>
 </body>
