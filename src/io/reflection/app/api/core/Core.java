@@ -73,7 +73,6 @@ import io.reflection.app.api.core.shared.call.SearchForItemResponse;
 import io.reflection.app.api.core.shared.call.UpdateLinkedAccountRequest;
 import io.reflection.app.api.core.shared.call.UpdateLinkedAccountResponse;
 import io.reflection.app.api.exception.AuthenticationException;
-import io.reflection.app.api.exception.AuthorisationException;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.api.shared.datatypes.Pager;
@@ -1448,12 +1447,12 @@ public final class Core extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			final Permission permissionMCA = PermissionServiceProvider.provide().getCodePermission(DataTypeHelper.PERMISSION_MANAGE_CATEGORIES_CODE);
-			try {
-				ValidationHelper.validateAuthorised(input.session.user, permissionMCA);
-			} catch (AuthorisationException aEx) {
-
-			}
+//			final Permission permissionMCA = PermissionServiceProvider.provide().getCodePermission(DataTypeHelper.PERMISSION_MANAGE_CATEGORIES_CODE);
+//			try {
+//				ValidationHelper.validateAuthorised(input.session.user, permissionMCA);
+//			} catch (AuthorisationException aEx) {
+//
+//			}
 
 			input.store = ValidationHelper.validateStore(input.store, "input");
 
