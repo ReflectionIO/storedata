@@ -89,7 +89,6 @@ import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.EmailFormatType;
 import io.reflection.app.datatypes.shared.FormType;
 import io.reflection.app.datatypes.shared.Item;
-import io.reflection.app.datatypes.shared.ModelRun;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Role;
@@ -108,7 +107,6 @@ import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.datasource.DataSourceServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
-import io.reflection.app.service.modelrun.ModelRunServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
 import io.reflection.app.service.role.RoleServiceProvider;
@@ -144,6 +142,9 @@ import com.willshex.gson.json.service.shared.StatusType;
 public final class Core extends ActionHandler {
 	private static final Logger LOG = Logger.getLogger(Core.class.getName());
 
+	private final static int SESSIONLESS_MAX_ITEMS = 10;
+	private final static int PERMISSIONLESS_MAX_ITEMS = 25;
+	
 	public GetCountriesResponse getCountries(GetCountriesRequest input) {
 		LOG.finer("Entering getCountries");
 		GetCountriesResponse output = new GetCountriesResponse();
@@ -339,10 +340,6 @@ public final class Core extends ActionHandler {
 		return output;
 	}
 
-	private final static String FULL_RANK_VIEW_CODE = "FRV";
-	private final static int SESSIONLESS_MAX_ITEMS = 10;
-	private final static int PERMISSIONLESS_MAX_ITEMS = 25;
-
 	public GetAllTopItemsResponse getAllTopItems(GetAllTopItemsRequest input) {
 		LOG.finer("Entering getAllTopItems");
 		GetAllTopItemsResponse output = new GetAllTopItemsResponse();
@@ -370,7 +367,7 @@ public final class Core extends ActionHandler {
 						permissions = RoleServiceProvider.provide().getPermissions(role);
 
 						for (Permission permission : permissions) {
-							if (FULL_RANK_VIEW_CODE.equals(permission.code)) {
+							if (DataTypeHelper.PERMISSION_FULL_RANK_VIEW_CODE.equals(permission.code)) {
 								canSeeFullList = true;
 								break;
 							}
@@ -507,23 +504,6 @@ public final class Core extends ActionHandler {
 		LOG.finer("Exiting getAllTopItems");
 		return output;
 	}
-
-	// private String latestCode(List<Rank> ranks) {
-	// String code = null;
-	//
-	// if (ranks != null) {
-	// Date latest = null;
-	//
-	// for (Rank rank : ranks) {
-	// if (latest == null || (rank.date.getTime() > latest.getTime())) {
-	// latest = rank.date;
-	// code = rank.code;
-	// }
-	// }
-	// }
-	//
-	// return code;
-	// }
 
 	public GetItemRanksResponse getItemRanks(GetItemRanksRequest input) {
 		LOG.finer("Entering getItemRanks");
@@ -935,7 +915,6 @@ public final class Core extends ActionHandler {
 		LOG.finer("Entering checkUsername");
 		CheckUsernameResponse output = new CheckUsernameResponse();
 		try {
-
 			if (input == null)
 				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("CheckUsernameRequest: input"));
 
@@ -1313,35 +1292,6 @@ public final class Core extends ActionHandler {
 		return output;
 	}
 
-	// private String getFreeListName(Store store, String type) {
-	// String listName = null;
-	//
-	// if (DataTypeHelper.IOS_STORE_A3.equalsIgnoreCase(store.a3Code)) {
-	// if ("ipad".equalsIgnoreCase(type)) {
-	// listName = CollectorIOS.TOP_FREE_IPAD_APPS;
-	// } else {
-	// listName = CollectorIOS.TOP_FREE_APPS;
-	// }
-	// }
-	//
-	// return listName;
-	// }
-	//
-	// private String getPaidListName(Store store, String type) {
-	// String listName = null;
-	//
-	// if (DataTypeHelper.IOS_STORE_A3.equalsIgnoreCase(store.a3Code)) {
-	// if ("ipad".equalsIgnoreCase(type)) {
-	// listName = CollectorIOS.TOP_PAID_IPAD_APPS;
-	// } else {
-	// listName = CollectorIOS.TOP_PAID_APPS;
-	// }
-	// }
-	//
-	// return listName;
-	//
-	// }
-
 	public SearchForItemResponse searchForItem(SearchForItemRequest input) {
 		LOG.finer("Entering searchForItem");
 		SearchForItemResponse output = new SearchForItemResponse();
@@ -1446,13 +1396,6 @@ public final class Core extends ActionHandler {
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
-
-//			final Permission permissionMCA = PermissionServiceProvider.provide().getCodePermission(DataTypeHelper.PERMISSION_MANAGE_CATEGORIES_CODE);
-//			try {
-//				ValidationHelper.validateAuthorised(input.session.user, permissionMCA);
-//			} catch (AuthorisationException aEx) {
-//
-//			}
 
 			input.store = ValidationHelper.validateStore(input.store, "input");
 
@@ -1695,26 +1638,25 @@ public final class Core extends ActionHandler {
 						}
 
 						salesGroupByDate.get(key).add(sale);
-
 					}
 				}
 
-				// get the model runs constants
-				List<ModelRun> modelRuns = ModelRunServiceProvider.provide().getDateModelRunBatch(input.country, defaultStore, form, salesGroupByDate.keySet());
-
-				Map<Date, ModelRun> modelRunLookup = new HashMap<Date, ModelRun>();
-
-				for (ModelRun modelRun : modelRuns) {
-					key = keyFormat.parse(keyFormat.format(modelRun.created));
-
-					if (modelRunLookup.get(key) == null) {
-						modelRunLookup.put(key, modelRun);
-					}
-				}
+//				// get the model runs constants
+//				List<ModelRun> modelRuns = ModelRunServiceProvider.provide().getDateModelRunBatch(input.country, defaultStore, form, salesGroupByDate.keySet());
+//
+//				Map<Date, ModelRun> modelRunLookup = new HashMap<Date, ModelRun>();
+//
+//				for (ModelRun modelRun : modelRuns) {
+//					key = keyFormat.parse(keyFormat.format(modelRun.created));
+//
+//					if (modelRunLookup.get(key) == null) {
+//						modelRunLookup.put(key, modelRun);
+//					}
+//				}
 
 				// add the numbers up to create ranks and then predict the position and the grossing position
 				Rank rank;
-				ModelRun modelRun;
+//				ModelRun modelRun;
 
 				// Create a dummy rank for every Item, every day of the date range
 				output.ranks = new ArrayList<Rank>();
@@ -1733,8 +1675,7 @@ public final class Core extends ActionHandler {
 				}
 
 				for (Date salesGroupDate : dates) {
-
-					modelRun = modelRunLookup.get(salesGroupDate);
+//					modelRun = modelRunLookup.get(salesGroupDate);
 
 					itemIDsRankLookup = new HashMap<String, Rank>();
 
@@ -1754,10 +1695,10 @@ public final class Core extends ActionHandler {
 							rank.downloads = 0;
 							rank.revenue = (float) 0;
 
-							// Add common values
-							if (modelRun != null) {
-								rank.code = modelRun.code;
-							}
+//							// Add common values
+//							if (modelRun != null) {
+//								rank.code = modelRun.code;
+//							}
 
 							rank.category = category;
 
@@ -1789,11 +1730,11 @@ public final class Core extends ActionHandler {
 							}
 						}
 
-						if (modelRun != null) {
-							// TODO: use the mode to predict what rank that would be
-							// rank.grossingPosition;
-							// rank.position;
-						}
+//						if (modelRun != null) {
+//							// TODO: use the mode to predict what rank that would be
+//							// rank.grossingPosition;
+//							// rank.position;
+//						}
 
 					} // end 1 day sales loop
 
@@ -1902,7 +1843,6 @@ public final class Core extends ActionHandler {
 							|| INAPP_PURCHASE_PURCHASE_IOS.equals(sale.typeIdentifier) // IA1
 							|| INAPP_PURCHASE_SUBSCRIPTION_IOS.equals(sale.typeIdentifier) // IA9
 					) {
-
 						key = keyFormat.parse(keyFormat.format(sale.begin));
 
 						// Link list of item IDs with every day of the range
@@ -1911,26 +1851,25 @@ public final class Core extends ActionHandler {
 						}
 
 						salesGroupByDate.get(key).add(sale);
-
 					}
 				}
 
 				// get the model runs constants
-				List<ModelRun> modelRuns = ModelRunServiceProvider.provide().getDateModelRunBatch(input.country, defaultStore, form, salesGroupByDate.keySet());
-
-				Map<Date, ModelRun> modelRunLookup = new HashMap<Date, ModelRun>();
-
-				for (ModelRun modelRun : modelRuns) {
-					key = keyFormat.parse(keyFormat.format(modelRun.created));
-
-					if (modelRunLookup.get(key) == null) {
-						modelRunLookup.put(key, modelRun);
-					}
-				}
+//				List<ModelRun> modelRuns = ModelRunServiceProvider.provide().getDateModelRunBatch(input.country, defaultStore, form, salesGroupByDate.keySet());
+//
+//				Map<Date, ModelRun> modelRunLookup = new HashMap<Date, ModelRun>();
+//
+//				for (ModelRun modelRun : modelRuns) {
+//					key = keyFormat.parse(keyFormat.format(modelRun.created));
+//
+//					if (modelRunLookup.get(key) == null) {
+//						modelRunLookup.put(key, modelRun);
+//					}
+//				}
 
 				// add the numbers up to create ranks and then predict the position and the grossing position
 				Rank rank = null;
-				ModelRun modelRun;
+//				ModelRun modelRun;
 
 				// Create a dummy rank for the Item, every day of the date range
 				output.ranks = new ArrayList<Rank>();
@@ -1945,25 +1884,24 @@ public final class Core extends ActionHandler {
 					category.id = input.category.id;
 				}
 
+				boolean created;
 				for (Date salesGroupDate : dates) {
+					created = false;
 
-					boolean created = false;
-
-					modelRun = modelRunLookup.get(salesGroupDate);
+//					modelRun = modelRunLookup.get(salesGroupDate);
 
 					List<Sale> salesGroup = salesGroupByDate.get(salesGroupDate);
 
 					for (Sale sale : salesGroup) {
-
 						if (!created) {
 							rank = new Rank();
 							rank.downloads = 0;
 							rank.revenue = (float) 0;
 
-							// Add common values
-							if (modelRun != null) {
-								rank.code = modelRun.code;
-							}
+//							// Add common values
+//							if (modelRun != null) {
+//								rank.code = modelRun.code;
+//							}
 
 							rank.category = category;
 							rank.country = input.country.a2Code;
@@ -1992,12 +1930,11 @@ public final class Core extends ActionHandler {
 							}
 						}
 
-						if (modelRun != null) {
-							// TODO: use the mode to predict what rank that would be
-							// rank.grossingPosition;
-							// rank.position;
-						}
-
+//						if (modelRun != null) {
+//							// TODO: use the mode to predict what rank that would be
+//							// rank.grossingPosition;
+//							// rank.position;
+//						}
 					} // end 1 day sales loop
 
 				} // end date range loop
