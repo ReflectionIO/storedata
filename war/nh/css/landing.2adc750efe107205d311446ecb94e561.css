@@ -86,10 +86,10 @@ a {
 }
 /* line 15, ../sass/base/_reset.scss */
 a:hover {
-  -webkit-transition: all 0.4s;
-  -moz-transition: all 0.4s;
-  -o-transition: all 0.4s;
-  transition: all 0.4s;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  transition: all 0.3s;
 }
 
 /* Layout */
@@ -121,11 +121,11 @@ li {
 }
 
 /* line 6, ../sass/helpers/_placeholders.scss */
-.vertical-center, .landing-section-contact > div, .landing-footer {
+.vertical-center, .landing-section-contact > div, .landing-section-contact > a, .landing-footer {
   height: 100%;
 }
 /* line 8, ../sass/helpers/_placeholders.scss */
-.vertical-center:before, .landing-section-contact > div:before, .landing-footer:before {
+.vertical-center:before, .landing-section-contact > div:before, .landing-section-contact > a:before, .landing-footer:before {
   content: '';
   display: inline-block;
   width: 0;
@@ -135,7 +135,7 @@ li {
   /* Adjusts for spacing */
 }
 /* line 16, ../sass/helpers/_placeholders.scss */
-.vertical-center > *, .landing-section-contact > div > *, .landing-footer > * {
+.vertical-center > *, .landing-section-contact > div > *, .landing-section-contact > a > *, .landing-footer > * {
   display: inline-block;
   vertical-align: middle;
 }
@@ -167,10 +167,10 @@ li {
 }
 /* line 40, ../sass/helpers/_placeholders.scss */
 .ref-button:hover, .ref-button-apply:hover, .ref-button-cta-large:hover {
-  -webkit-transition: background-color 0.4s, color 0.4s, border-color 0.4s;
-  -moz-transition: background-color 0.4s, color 0.4s, border-color 0.4s;
-  -o-transition: background-color 0.4s, color 0.4s, border-color 0.4s;
-  transition: background-color 0.4s, color 0.4s, border-color 0.4s;
+  -webkit-transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+  -moz-transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+  -o-transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
 
 /* Global */
@@ -179,7 +179,7 @@ li {
 /* Font face declarations */
 /* Typography mixins, placeholders and variables */
 /* line 10, ../sass/ui/_typography.scss */
-.ref-button, .ref-button-apply, .ref-button-cta-large, h1, h2, h3, h4, h5, h6, .landing-section-careers .landing-column-thin li, .landing-section-contact p, .landing-section-contact a, .landing-footer a {
+.ref-button, .ref-button-apply, .ref-button-cta-large, h1, h2, h3, h4, h5, h6, .landing-section-careers .landing-column-thin li, .landing-section-contact p, .landing-section-contact span, .landing-footer a {
   font-family: "Source Sans Pro", sans-serif;
   font-weight: 600;
 }
@@ -470,10 +470,10 @@ blockquote cite span {
 /* line 49, ../sass/components/_header.scss */
 .link-log-in:hover:before {
   color: #ff496a;
-  -webkit-transition: color 0.4s;
-  -moz-transition: color 0.4s;
-  -o-transition: color 0.4s;
-  transition: color 0.4s;
+  -webkit-transition: color 0.3s;
+  -moz-transition: color 0.3s;
+  -o-transition: color 0.3s;
+  transition: color 0.3s;
 }
 
 /* line 1, ../sass/components/_site-logo.scss */
@@ -909,7 +909,6 @@ blockquote cite span {
 @media (min-width: 720px) {
   /* line 236, ../sass/components/_landing-section-main.scss */
   .list-partners ul {
-    display: table;
     display: -webkit-box;
     display: -moz-box;
     display: -ms-flexbox;
@@ -920,60 +919,71 @@ blockquote cite span {
     align-items: center;
   }
 }
-/* line 253, ../sass/components/_landing-section-main.scss */
+/* line 252, ../sass/components/_landing-section-main.scss */
 .list-partners li {
   width: 50%;
   display: inline-block;
   vertical-align: middle;
   text-align: center;
 }
-/* line 258, ../sass/components/_landing-section-main.scss */
+/* line 257, ../sass/components/_landing-section-main.scss */
 .list-partners li:last-child {
   display: none;
 }
 @media (min-width: 480px) {
-  /* line 253, ../sass/components/_landing-section-main.scss */
+  /* line 252, ../sass/components/_landing-section-main.scss */
   .list-partners li {
     width: 33%;
   }
 }
 @media (min-width: 720px) {
-  /* line 253, ../sass/components/_landing-section-main.scss */
+  /* line 252, ../sass/components/_landing-section-main.scss */
   .list-partners li {
     width: auto;
     justify-content: center;
+    -webkit-flex-grow: 1;
     flex-grow: 1;
   }
-  /* line 269, ../sass/components/_landing-section-main.scss */
+  /* line 268, ../sass/components/_landing-section-main.scss */
   .list-partners li:last-child {
     display: inline-block;
   }
 }
-/* line 274, ../sass/components/_landing-section-main.scss */
+/* line 273, ../sass/components/_landing-section-main.scss */
 .list-partners img {
   max-width: 126px;
   padding: 0px 0px 9px;
 }
 @media (min-width: 480px) {
-  /* line 274, ../sass/components/_landing-section-main.scss */
+  /* line 273, ../sass/components/_landing-section-main.scss */
   .list-partners img {
     max-width: 136px;
     padding-bottom: 15px;
   }
 }
 @media (min-width: 720px) {
-  /* line 274, ../sass/components/_landing-section-main.scss */
+  /* line 273, ../sass/components/_landing-section-main.scss */
   .list-partners img {
     max-width: 96%;
     padding-bottom: 28px;
   }
 }
 @media (min-width: 1280px) {
-  /* line 274, ../sass/components/_landing-section-main.scss */
+  /* line 273, ../sass/components/_landing-section-main.scss */
   .list-partners img {
     max-width: 160px;
     padding: 0;
   }
+}
+
+/* line 291, ../sass/components/_landing-section-main.scss */
+.no-flexbox .list-partners ul {
+  width: 100%;
+  display: block;
+}
+/* line 294, ../sass/components/_landing-section-main.scss */
+.no-flexbox .list-partners ul li {
+  display: inline-block;
 }
 
 /* line 3, ../sass/components/_landing-components.scss */
@@ -1520,47 +1530,52 @@ blockquote cite span {
   font-size: 0;
 }
 /* line 352, ../sass/components/_landing-components.scss */
-.landing-section-contact > div {
+.landing-section-contact > div, .landing-section-contact > a {
   width: 100%;
   height: 60px;
   display: inline-block;
   text-align: center;
+  vertical-align: top;
 }
 @media (min-width: 720px) {
   /* line 352, ../sass/components/_landing-components.scss */
-  .landing-section-contact > div {
+  .landing-section-contact > div, .landing-section-contact > a {
     width: 25%;
     height: 106px;
   }
 }
-/* line 363, ../sass/components/_landing-components.scss */
-.landing-section-contact p, .landing-section-contact a {
+/* line 364, ../sass/components/_landing-components.scss */
+.landing-section-contact p, .landing-section-contact span {
+  position: relative;
+  top: 2px;
   font-size: 18px;
   font-size: 1.8rem;
   line-height: 1.2;
   color: white;
 }
 @media (min-width: 720px) {
-  /* line 363, ../sass/components/_landing-components.scss */
-  .landing-section-contact p, .landing-section-contact a {
+  /* line 364, ../sass/components/_landing-components.scss */
+  .landing-section-contact p, .landing-section-contact span {
     font-size: 16.2px;
     font-size: 1.62rem;
   }
 }
 @media (min-width: 980px) {
-  /* line 363, ../sass/components/_landing-components.scss */
-  .landing-section-contact p, .landing-section-contact a {
-    position: relative;
-    top: -3px;
+  /* line 364, ../sass/components/_landing-components.scss */
+  .landing-section-contact p, .landing-section-contact span {
+    top: -1px;
     left: -8px;
     font-size: 18px;
     font-size: 1.8rem;
   }
 }
-/* line 377, ../sass/components/_landing-components.scss */
-.landing-section-contact p:before, .landing-section-contact a:before {
+/* line 379, ../sass/components/_landing-components.scss */
+.landing-section-contact p:before, .landing-section-contact span:before {
+  position: relative;
+  top: -2px;
   padding-right: 4px;
-  margin: 0;
+  margin-left: 0.2em;
+  margin-right: 0.2em;
   vertical-align: middle;
   font-size: 35px;
   font-size: 3.5rem;
@@ -1568,14 +1583,14 @@ blockquote cite span {
   color: rgba(0, 0, 0, 0.3);
 }
 @media (min-width: 720px) {
-  /* line 377, ../sass/components/_landing-components.scss */
-  .landing-section-contact p:before, .landing-section-contact a:before {
+  /* line 379, ../sass/components/_landing-components.scss */
+  .landing-section-contact p:before, .landing-section-contact span:before {
     display: none;
   }
 }
 @media screen and (min-width: 760px) {
-  /* line 377, ../sass/components/_landing-components.scss */
-  .landing-section-contact p:before, .landing-section-contact a:before {
+  /* line 379, ../sass/components/_landing-components.scss */
+  .landing-section-contact p:before, .landing-section-contact span:before {
     padding-right: 2px;
     display: inline-block;
     font-size: 28px;
@@ -1583,8 +1598,8 @@ blockquote cite span {
   }
 }
 @media (min-width: 980px) {
-  /* line 377, ../sass/components/_landing-components.scss */
-  .landing-section-contact p:before, .landing-section-contact a:before {
+  /* line 379, ../sass/components/_landing-components.scss */
+  .landing-section-contact p:before, .landing-section-contact span:before {
     margin-left: 0.2em;
     margin-right: 0.2em;
     padding-right: 4px;
@@ -1592,58 +1607,67 @@ blockquote cite span {
     font-size: 3.5rem;
   }
 }
-/* line 399, ../sass/components/_landing-components.scss */
-.landing-section-contact p span, .landing-section-contact a span {
+/* line 404, ../sass/components/_landing-components.scss */
+.landing-section-contact p b, .landing-section-contact span b {
+  position: relative;
+  top: -2px;
   display: inline-block;
   vertical-align: middle;
 }
-/* line 404, ../sass/components/_landing-components.scss */
+/* line 411, ../sass/components/_landing-components.scss */
 .landing-section-contact p {
-  left: -15px;
   display: inline-block;
   text-align: left;
 }
-/* line 409, ../sass/components/_landing-components.scss */
+/* line 415, ../sass/components/_landing-components.scss */
 .landing-section-contact .landing-section-contact__email {
   background-color: #ff496a;
 }
-/* line 411, ../sass/components/_landing-components.scss */
-.landing-section-contact .landing-section-contact__email a:before {
+/* line 417, ../sass/components/_landing-components.scss */
+.landing-section-contact .landing-section-contact__email:hover {
+  background-color: #ff1640;
+}
+/* line 420, ../sass/components/_landing-components.scss */
+.landing-section-contact .landing-section-contact__email span:before {
   padding-right: 11px;
   font-size: 28px;
   font-size: 2.8rem;
 }
 @media (min-width: 720px) {
-  /* line 411, ../sass/components/_landing-components.scss */
-  .landing-section-contact .landing-section-contact__email a:before {
+  /* line 420, ../sass/components/_landing-components.scss */
+  .landing-section-contact .landing-section-contact__email span:before {
     padding-right: 5px;
     font-size: 25.2px;
     font-size: 2.52rem;
   }
 }
 @media (min-width: 980px) {
-  /* line 411, ../sass/components/_landing-components.scss */
-  .landing-section-contact .landing-section-contact__email a:before {
+  /* line 420, ../sass/components/_landing-components.scss */
+  .landing-section-contact .landing-section-contact__email span:before {
     font-size: 28px;
     font-size: 2.8rem;
   }
 }
-/* line 423, ../sass/components/_landing-components.scss */
+/* line 432, ../sass/components/_landing-components.scss */
 .landing-section-contact .landing-section-contact__tel {
   background-color: #6d69c5;
 }
-/* line 426, ../sass/components/_landing-components.scss */
+/* line 434, ../sass/components/_landing-components.scss */
+.landing-section-contact .landing-section-contact__tel:hover {
+  background-color: #5b57be;
+}
+/* line 438, ../sass/components/_landing-components.scss */
 .landing-section-contact .landing-section-contact__address {
   height: 106px;
   background-color: #1bc79f;
 }
-/* line 429, ../sass/components/_landing-components.scss */
+/* line 441, ../sass/components/_landing-components.scss */
 .landing-section-contact .landing-section-contact__address p:before {
   font-size: 39px;
   font-size: 3.9rem;
 }
 @media (min-width: 720px) {
-  /* line 429, ../sass/components/_landing-components.scss */
+  /* line 441, ../sass/components/_landing-components.scss */
   .landing-section-contact .landing-section-contact__address p:before {
     margin: 0;
     font-size: 35.1px;
@@ -1651,7 +1675,7 @@ blockquote cite span {
   }
 }
 @media (min-width: 980px) {
-  /* line 429, ../sass/components/_landing-components.scss */
+  /* line 441, ../sass/components/_landing-components.scss */
   .landing-section-contact .landing-section-contact__address p:before {
     margin-left: 0.2em;
     margin-right: 0.2em;
@@ -1660,19 +1684,19 @@ blockquote cite span {
   }
 }
 @media (min-width: 720px) {
-  /* line 426, ../sass/components/_landing-components.scss */
+  /* line 438, ../sass/components/_landing-components.scss */
   .landing-section-contact .landing-section-contact__address {
     height: 106px;
   }
 }
 
-/* line 446, ../sass/components/_landing-components.scss */
+/* line 458, ../sass/components/_landing-components.scss */
 .logo-reflection-footer {
   width: 100%;
   max-width: 117px;
 }
 @media screen and (min-width: 760px) {
-  /* line 446, ../sass/components/_landing-components.scss */
+  /* line 458, ../sass/components/_landing-components.scss */
   .logo-reflection-footer {
     position: relative;
     top: -3px;
@@ -1915,4 +1939,12 @@ html, body {
   font-family: "Lato", sans-serif;
   font-size: 10px;
   color: #0e0e1f;
+}
+
+/* line 33, ../sass/base/_base.scss */
+p.browserupgrade {
+  width: 100%;
+  padding: 20px;
+  font-size: 16px;
+  font-weight: bold;
 }
