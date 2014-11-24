@@ -1648,24 +1648,8 @@ public final class Core extends ActionHandler {
 						}
 					}
 
-					// // get the model runs constants
-					// List<ModelRun> modelRuns = ModelRunServiceProvider.provide().getDateModelRunBatch(input.country, defaultStore, form,
-					// salesGroupByDate.keySet());
-					//
-					// Map<Date, ModelRun> modelRunLookup = new HashMap<Date, ModelRun>();
-					//
-					// for (ModelRun modelRun : modelRuns) {
-					// key = keyFormat.parse(keyFormat.format(modelRun.created));
-					//
-					// if (modelRunLookup.get(key) == null) {
-					// modelRunLookup.put(key, modelRun);
-					// }
-					// }
-
 					// add the numbers up to create ranks and then predict the position and the grossing position
 					Rank rank;
-					// ModelRun modelRun;
-
 					if (output.ranks == null) {
 						// Create a dummy rank for every Item, every day of the date range
 						output.ranks = new ArrayList<Rank>();
@@ -1677,16 +1661,7 @@ public final class Core extends ActionHandler {
 					// Get range of dates
 					Set<Date> dates = salesGroupByDate.keySet();
 
-					// // setup id only category to avoid bloating data with category
-					// Category category = null;
-					// if (input.category != null && input.category.id != null) {
-					// category = new Category();
-					// category.id = input.category.id;
-					// }
-
 					for (Date salesGroupDate : dates) {
-						// modelRun = modelRunLookup.get(salesGroupDate);
-
 						itemIDsRankLookup = new HashMap<String, Rank>();
 
 						List<Sale> salesGroup = salesGroupByDate.get(salesGroupDate);
@@ -1705,13 +1680,9 @@ public final class Core extends ActionHandler {
 								rank.downloads = 0;
 								rank.revenue = (float) 0;
 
-								// // Add common values
-								// if (modelRun != null) {
-								// rank.code = modelRun.code;
-								// }
+								// Add common values
 
 								// rank.category = category;
-
 								rank.country = input.country.a2Code;
 								rank.currency = sale.customerCurrency;
 								rank.date = salesGroupDate;
@@ -1739,12 +1710,6 @@ public final class Core extends ActionHandler {
 									rank.price = sale.customerPrice;
 								}
 							}
-
-							// if (modelRun != null) {
-							// // TODO: use the mode to predict what rank that would be
-							// // rank.grossingPosition;
-							// // rank.position;
-							// }
 						} // end 1 day sales loop
 					} // end date range loop
 				} // if sale.size > 0
@@ -1797,26 +1762,6 @@ public final class Core extends ActionHandler {
 
 			if (input.listType == null)
 				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("String: input.listType"));
-
-			// // right now category
-			// if (input.category == null) {
-			// // TODO:
-			// // input.category = CategoryServiceProvider.provide().getAllCategory(stores);
-			// } else {
-			// input.category = ValidationHelper.validateCategory(input.category, "input.category");
-			//
-			// boolean foundStore = false;
-			//
-			// for (Store store : stores) {
-			// if (store.a3Code.equals(input.category.store)) {
-			// foundStore = true;
-			// break;
-			// }
-			// }
-			//
-			// if (!foundStore)
-			// throw new InputValidationException(ApiError.CategoryStoreMismatch.getCode(), ApiError.CategoryStoreMismatch.getMessage("input.category"));
-			// }
 
 			if (input.end == null) {
 				input.end = DateTime.now(DateTimeZone.UTC).toDate();
@@ -1889,23 +1834,8 @@ public final class Core extends ActionHandler {
 						}
 					}
 
-					// get the model runs constants
-					// List<ModelRun> modelRuns = ModelRunServiceProvider.provide().getDateModelRunBatch(input.country, defaultStore, form,
-					// salesGroupByDate.keySet());
-					//
-					// Map<Date, ModelRun> modelRunLookup = new HashMap<Date, ModelRun>();
-					//
-					// for (ModelRun modelRun : modelRuns) {
-					// key = keyFormat.parse(keyFormat.format(modelRun.created));
-					//
-					// if (modelRunLookup.get(key) == null) {
-					// modelRunLookup.put(key, modelRun);
-					// }
-					// }
-
 					// add the numbers up to create ranks and then predict the position and the grossing position
 					Rank rank = null;
-					// ModelRun modelRun;
 
 					// Create a dummy rank for the Item, every day of the date range
 					output.ranks = new ArrayList<Rank>();
@@ -1913,18 +1843,9 @@ public final class Core extends ActionHandler {
 					// Get range of dates
 					Set<Date> dates = salesGroupByDate.keySet();
 
-					// // setup id only category to avoid bloating data with category
-					// Category category = null;
-					// if (input.category != null && input.category.id != null) {
-					// category = new Category();
-					// category.id = input.category.id;
-					// }
-
 					boolean created;
 					for (Date salesGroupDate : dates) {
 						created = false;
-
-						// modelRun = modelRunLookup.get(salesGroupDate);
 
 						List<Sale> salesGroup = salesGroupByDate.get(salesGroupDate);
 
@@ -1934,10 +1855,7 @@ public final class Core extends ActionHandler {
 								rank.downloads = 0;
 								rank.revenue = (float) 0;
 
-								// // Add common values
-								// if (modelRun != null) {
-								// rank.code = modelRun.code;
-								// }
+								// Add common values
 
 								// rank.category = category;
 								rank.country = input.country.a2Code;
@@ -1965,17 +1883,11 @@ public final class Core extends ActionHandler {
 									rank.price = sale.customerPrice;
 								}
 							}
-
-							// if (modelRun != null) {
-							// // TODO: use the mode to predict what rank that would be
-							// // rank.grossingPosition;
-							// // rank.position;
-							// }
 						} // end 1 day sales loop
 					} // end date range loop
 				} // if sale.size > 0
 			}
-			
+
 			DataTypeHelper.sortRanksByDate(output.ranks);
 
 			output.item = input.item;
