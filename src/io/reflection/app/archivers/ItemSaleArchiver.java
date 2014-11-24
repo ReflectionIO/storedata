@@ -9,14 +9,12 @@ package io.reflection.app.archivers;
 
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
-import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
-import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.FormType;
 import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Sale;
-import io.reflection.app.datatypes.shared.Store;
 
 import java.util.List;
 
@@ -46,7 +44,7 @@ public interface ItemSaleArchiver {
 	 * @param id
 	 */
 	void enqueueIdDataAccountFetch(Long id);
-	
+
 	/**
 	 * 
 	 * @param id
@@ -69,30 +67,34 @@ public interface ItemSaleArchiver {
 
 	/**
 	 * 
-	 * @param slice
-	 * @param item
-	 * @param form
-	 * @param store
-	 * @param country
-	 * @param category
 	 * @return
 	 */
-	String createKey(Long slice, Item item, FormType form, Store store, Country country, Category category);
+	String createItemRanksKey(Long slice, Item item, Country country, FormType form);
+
+	/**
+	 * 
+	 * @param slice
+	 * @param dataAccount
+	 * @param country
+	 * @param form
+	 * @return
+	 */
+	String createRanksKey(Long slice, DataAccount dataAccount, Country country, FormType form);
 
 	/**
 	 * @param key
 	 * @return
 	 */
-	List<Sale> getItemSales(String key);
+	List<Rank> getRanks(String key);
 
 	/**
 	 * Creates a key to store and retrieve linked account times
-	 * @param linkedAccount
-	 * @param source
+	 * 
+	 * @param dataAccount
 	 * @param form
 	 * @return
 	 */
-	String createItemsKey(DataAccount linkedAccount, DataSource source, FormType form);
+	String createItemsKey(DataAccount dataAccount, FormType form);
 
 	/**
 	 * @param key

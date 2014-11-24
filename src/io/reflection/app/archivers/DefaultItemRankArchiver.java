@@ -189,7 +189,7 @@ public class DefaultItemRankArchiver implements ItemRankArchiver {
 	 * @see io.reflection.app.itemrankarchivers.ItemRankArchiver#getItemRanks(java.lang.String)
 	 */
 	@Override
-	public List<Rank> getItemRanks(String key) {
+	public List<Rank> getRanks(String key) {
 		List<Rank> ranks = null;
 		Map<Date, Rank> ranksLookup = new HashMap<Date, Rank>();
 		ArchivableKeyValue value = KeyValueArchiveManager.get().getArchiveKeyValue(key);

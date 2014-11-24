@@ -81,6 +81,6 @@ public interface ItemRankArchiver {
 	 * @param key
 	 * @return
 	 */
-	List<Rank> getItemRanks(String key);
+	List<Rank> getRanks(String key);
 
 }

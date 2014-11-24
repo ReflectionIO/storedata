@@ -82,7 +82,6 @@ import io.reflection.app.archivers.ItemRankArchiver;
 import io.reflection.app.archivers.ItemSaleArchiver;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
-import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
@@ -144,7 +143,7 @@ public final class Core extends ActionHandler {
 
 	private final static int SESSIONLESS_MAX_ITEMS = 10;
 	private final static int PERMISSIONLESS_MAX_ITEMS = 25;
-	
+
 	public GetCountriesResponse getCountries(GetCountriesRequest input) {
 		LOG.finer("Entering getCountries");
 		GetCountriesResponse output = new GetCountriesResponse();
@@ -563,7 +562,7 @@ public final class Core extends ActionHandler {
 			for (long slice : slices) {
 				key = archiver.createKey(slice, input.item, form, store, input.country, input.category);
 
-				ranks = archiver.getItemRanks(key);
+				ranks = archiver.getRanks(key);
 
 				if (ranks != null) {
 					if (output.ranks == null) {
@@ -1090,7 +1089,7 @@ public final class Core extends ActionHandler {
 			FormType form = modeller.getForm(input.listType);
 
 			ItemSaleArchiver archiver = ArchiverFactory.getItemSaleArchiver();
-			String key = archiver.createItemsKey(input.linkedAccount, input.linkedAccount.source, form);
+			String key = archiver.createItemsKey(input.linkedAccount, form);
 			List<Item> items = archiver.getItems(key);
 
 			output.pager = input.pager;
@@ -1105,7 +1104,7 @@ public final class Core extends ActionHandler {
 				}
 
 				output.items = SaleServiceProvider.provide().getDataAccountItems(input.linkedAccount, freeOrPaidApps, input.pager);
-				
+
 				updatePager(output.pager, output.items,
 						input.pager.totalCount == null ? SaleServiceProvider.provide().getDataAccountItemsCount(input.linkedAccount, freeOrPaidApps) : null);
 			} else {
@@ -1571,26 +1570,6 @@ public final class Core extends ActionHandler {
 			if (input.listType == null)
 				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("String: input.listType"));
 
-			// right now category
-			if (input.category == null) {
-				// TODO:
-				// input.category = CategoryServiceProvider.provide().getAllCategory(stores);
-			} else {
-				input.category = ValidationHelper.validateCategory(input.category, "input.category");
-
-				boolean foundStore = false;
-
-				for (Store store : stores) {
-					if (store.a3Code.equals(input.category.store)) {
-						foundStore = true;
-						break;
-					}
-				}
-
-				if (!foundStore)
-					throw new InputValidationException(ApiError.CategoryStoreMismatch.getCode(), ApiError.CategoryStoreMismatch.getMessage("input.category"));
-			}
-
 			if (input.end == null) {
 				input.end = DateTime.now(DateTimeZone.UTC).toDate();
 			}
@@ -1599,148 +1578,177 @@ public final class Core extends ActionHandler {
 				input.start = (new DateTime(input.end.getTime(), DateTimeZone.UTC)).minusDays(30).toDate();
 			}
 
-			// Get Items sales based on the filters
-			List<Sale> sales = SaleServiceProvider.provide().getSales(input.country, input.category, input.linkedAccount, input.start, input.end,
-					PagerHelper.createInfinitePager());
+			FormType form = null;
+			Store formStore = null;
+			for (Store store : stores) {
+				Modeller modeller = ModellerFactory.getModellerForStore(store.a3Code);
+				form = modeller.getForm(input.listType);
 
-			if (sales.size() > 0) {
-				// group sales by date
-				Map<Date, List<Sale>> salesGroupByDate = new HashMap<Date, List<Sale>>();
-				Date key;
-				SimpleDateFormat keyFormat = new SimpleDateFormat("yyyy-MM-dd");
+				if (form != null) {
+					formStore = store;
+					break;
+				}
+			}
 
-				Store defaultStore = stores.get(0);
-				Modeller modeller = ModellerFactory.getModellerForStore(defaultStore.a3Code);
-				FormType form = modeller.getForm(input.listType);
+			ItemSaleArchiver archiver = ArchiverFactory.getItemSaleArchiver();
+			long[] slices = SliceHelper.offsets(input.start, input.end);
 
-				Map<String, String> parentIdItemIdLookup = new HashMap<String, String>();
-				for (Sale sale : sales) {
-					// only add Sales that are consistent with the device type
-					if (FREE_OR_PAID_APP_UNIVERSAL_IOS.equals(sale.typeIdentifier) // 1F
-							|| UPDATE_UNIVERSAL_IOS.equals(sale.typeIdentifier) // 7F
-							|| (form == FormType.FormTypeOther && (FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier))) // 1
-							|| (form == FormType.FormTypeOther && (UPDATE_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier))) // 7
-							|| (form == FormType.FormTypeTablet && (FREE_OR_PAID_APP_IPAD_IOS.equals(sale.typeIdentifier))) // 1T
-							|| (form == FormType.FormTypeTablet && (UPDATE_IPAD_IOS.equals(sale.typeIdentifier))) // 7T
-							|| INAPP_PURCHASE_PURCHASE_IOS.equals(sale.typeIdentifier) // IA1
-							|| INAPP_PURCHASE_SUBSCRIPTION_IOS.equals(sale.typeIdentifier) // IA9
-					) {
-						// If type identifier != IA1 or IA9, add parent identifiers into the Map
-						if (!sale.typeIdentifier.equals(INAPP_PURCHASE_PURCHASE_IOS) && !sale.typeIdentifier.equals(INAPP_PURCHASE_SUBSCRIPTION_IOS)) {
-							parentIdItemIdLookup.put(sale.sku, sale.item.internalId);
-						}
+			String key;
+			List<Rank> ranks = null;
+			for (long slice : slices) {
+				key = archiver.createRanksKey(slice, input.linkedAccount, input.country, form);
 
-						key = keyFormat.parse(keyFormat.format(sale.begin));
+				ranks = archiver.getRanks(key);
 
-						// Link list of item IDs with every day of the range
-						if (salesGroupByDate.get(key) == null) {
-							salesGroupByDate.put(key, new ArrayList<Sale>());
-						}
-
-						salesGroupByDate.get(key).add(sale);
+				if (ranks != null) {
+					if (output.ranks == null) {
+						output.ranks = new ArrayList<Rank>();
 					}
+
+					output.ranks.addAll(ranks);
 				}
+			}
 
-//				// get the model runs constants
-//				List<ModelRun> modelRuns = ModelRunServiceProvider.provide().getDateModelRunBatch(input.country, defaultStore, form, salesGroupByDate.keySet());
-//
-//				Map<Date, ModelRun> modelRunLookup = new HashMap<Date, ModelRun>();
-//
-//				for (ModelRun modelRun : modelRuns) {
-//					key = keyFormat.parse(keyFormat.format(modelRun.created));
-//
-//					if (modelRunLookup.get(key) == null) {
-//						modelRunLookup.put(key, modelRun);
-//					}
-//				}
+			if (output.ranks == null || output.ranks.size() == 0) {
+				// Get Items sales based on the filters
+				List<Sale> sales = SaleServiceProvider.provide().getSales(input.country, null, input.linkedAccount, input.start, input.end,
+						PagerHelper.createInfinitePager());
 
-				// add the numbers up to create ranks and then predict the position and the grossing position
-				Rank rank;
-//				ModelRun modelRun;
+				if (sales.size() > 0) {
+					// group sales by date
+					Map<Date, List<Sale>> salesGroupByDate = new HashMap<Date, List<Sale>>();
+					Date dateKey;
+					SimpleDateFormat keyFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-				// Create a dummy rank for every Item, every day of the date range
-				output.ranks = new ArrayList<Rank>();
-
-				// Keep track of the rank for a specific Item this day
-				Map<String, Rank> itemIDsRankLookup;
-
-				// Get range of dates
-				Set<Date> dates = salesGroupByDate.keySet();
-
-				// setup id only category to avoid bloating data with category
-				Category category = null;
-				if (input.category != null && input.category.id != null) {
-					category = new Category();
-					category.id = input.category.id;
-				}
-
-				for (Date salesGroupDate : dates) {
-//					modelRun = modelRunLookup.get(salesGroupDate);
-
-					itemIDsRankLookup = new HashMap<String, Rank>();
-
-					List<Sale> salesGroup = salesGroupByDate.get(salesGroupDate);
-
-					String itemId;
-					for (Sale sale : salesGroup) {
-						// Assign item id of the parent to IAP and Subscriptions
-						if (sale.typeIdentifier.equals(INAPP_PURCHASE_PURCHASE_IOS) || sale.typeIdentifier.equals(INAPP_PURCHASE_SUBSCRIPTION_IOS)) {
-							itemId = parentIdItemIdLookup.get(sale.parentIdentifier);
-						} else {
-							itemId = sale.item.internalId;
-						}
-
-						if (itemIDsRankLookup.get(itemId) == null) {
-							rank = new Rank();
-							rank.downloads = 0;
-							rank.revenue = (float) 0;
-
-//							// Add common values
-//							if (modelRun != null) {
-//								rank.code = modelRun.code;
-//							}
-
-							rank.category = category;
-
-							rank.country = input.country.a2Code;
-							rank.currency = sale.customerCurrency;
-							rank.date = salesGroupDate;
-							rank.created = salesGroupDate;
-							rank.source = defaultStore.a3Code;
-							rank.type = input.listType;
-
-							output.ranks.add(rank);
-							itemIDsRankLookup.put(itemId, rank);
-						} else {
-							rank = itemIDsRankLookup.get(itemId);
-						}
-
-						rank.itemId = itemId;
-
-						// If units and customer prices are negatives (refunds), subtract the value setting units positive
-						rank.revenue += Math.abs(sale.units.floatValue()) * sale.customerPrice.floatValue();
-
-						// Take into account price and downloads only from main Apps
-						if (sale.typeIdentifier.equals(FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS)
-								|| sale.typeIdentifier.equals(FREE_OR_PAID_APP_UNIVERSAL_IOS) || sale.typeIdentifier.equals(FREE_OR_PAID_APP_IPAD_IOS)) {
-							rank.downloads += sale.units.intValue();
-							// Ignore price if the Sale is a refund or a promotion
-							if (rank.price == null && sale.units.intValue() > 0 && sale.promoCode.equals(" ")) {
-								rank.price = sale.customerPrice;
+					Map<String, String> parentIdItemIdLookup = new HashMap<String, String>();
+					for (Sale sale : sales) {
+						// only add Sales that are consistent with the device type
+						if (FREE_OR_PAID_APP_UNIVERSAL_IOS.equals(sale.typeIdentifier) // 1F
+								|| UPDATE_UNIVERSAL_IOS.equals(sale.typeIdentifier) // 7F
+								|| (form == FormType.FormTypeOther && (FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier))) // 1
+								|| (form == FormType.FormTypeOther && (UPDATE_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier))) // 7
+								|| (form == FormType.FormTypeTablet && (FREE_OR_PAID_APP_IPAD_IOS.equals(sale.typeIdentifier))) // 1T
+								|| (form == FormType.FormTypeTablet && (UPDATE_IPAD_IOS.equals(sale.typeIdentifier))) // 7T
+								|| INAPP_PURCHASE_PURCHASE_IOS.equals(sale.typeIdentifier) // IA1
+								|| INAPP_PURCHASE_SUBSCRIPTION_IOS.equals(sale.typeIdentifier) // IA9
+						) {
+							// If type identifier != IA1 or IA9, add parent identifiers into the Map
+							if (!sale.typeIdentifier.equals(INAPP_PURCHASE_PURCHASE_IOS) && !sale.typeIdentifier.equals(INAPP_PURCHASE_SUBSCRIPTION_IOS)) {
+								parentIdItemIdLookup.put(sale.sku, sale.item.internalId);
 							}
+
+							dateKey = keyFormat.parse(keyFormat.format(sale.begin));
+
+							// Link list of item IDs with every day of the range
+							if (salesGroupByDate.get(dateKey) == null) {
+								salesGroupByDate.put(dateKey, new ArrayList<Sale>());
+							}
+
+							salesGroupByDate.get(dateKey).add(sale);
 						}
+					}
 
-//						if (modelRun != null) {
-//							// TODO: use the mode to predict what rank that would be
-//							// rank.grossingPosition;
-//							// rank.position;
-//						}
+					// // get the model runs constants
+					// List<ModelRun> modelRuns = ModelRunServiceProvider.provide().getDateModelRunBatch(input.country, defaultStore, form,
+					// salesGroupByDate.keySet());
+					//
+					// Map<Date, ModelRun> modelRunLookup = new HashMap<Date, ModelRun>();
+					//
+					// for (ModelRun modelRun : modelRuns) {
+					// key = keyFormat.parse(keyFormat.format(modelRun.created));
+					//
+					// if (modelRunLookup.get(key) == null) {
+					// modelRunLookup.put(key, modelRun);
+					// }
+					// }
 
-					} // end 1 day sales loop
+					// add the numbers up to create ranks and then predict the position and the grossing position
+					Rank rank;
+					// ModelRun modelRun;
 
-				} // end date range loop
+					if (output.ranks == null) {
+						// Create a dummy rank for every Item, every day of the date range
+						output.ranks = new ArrayList<Rank>();
+					}
 
-			} // if sale.size > 0
+					// Keep track of the rank for a specific Item this day
+					Map<String, Rank> itemIDsRankLookup;
+
+					// Get range of dates
+					Set<Date> dates = salesGroupByDate.keySet();
+
+					// // setup id only category to avoid bloating data with category
+					// Category category = null;
+					// if (input.category != null && input.category.id != null) {
+					// category = new Category();
+					// category.id = input.category.id;
+					// }
+
+					for (Date salesGroupDate : dates) {
+						// modelRun = modelRunLookup.get(salesGroupDate);
+
+						itemIDsRankLookup = new HashMap<String, Rank>();
+
+						List<Sale> salesGroup = salesGroupByDate.get(salesGroupDate);
+
+						String itemId;
+						for (Sale sale : salesGroup) {
+							// Assign item id of the parent to IAP and Subscriptions
+							if (sale.typeIdentifier.equals(INAPP_PURCHASE_PURCHASE_IOS) || sale.typeIdentifier.equals(INAPP_PURCHASE_SUBSCRIPTION_IOS)) {
+								itemId = parentIdItemIdLookup.get(sale.parentIdentifier);
+							} else {
+								itemId = sale.item.internalId;
+							}
+
+							if (itemIDsRankLookup.get(itemId) == null) {
+								rank = new Rank();
+								rank.downloads = 0;
+								rank.revenue = (float) 0;
+
+								// // Add common values
+								// if (modelRun != null) {
+								// rank.code = modelRun.code;
+								// }
+
+								// rank.category = category;
+
+								rank.country = input.country.a2Code;
+								rank.currency = sale.customerCurrency;
+								rank.date = salesGroupDate;
+								rank.created = salesGroupDate;
+								rank.source = formStore.a3Code;
+								rank.type = input.listType;
+
+								output.ranks.add(rank);
+								itemIDsRankLookup.put(itemId, rank);
+							} else {
+								rank = itemIDsRankLookup.get(itemId);
+							}
+
+							rank.itemId = itemId;
+
+							// If units and customer prices are negatives (refunds), subtract the value setting units positive
+							rank.revenue += Math.abs(sale.units.floatValue()) * sale.customerPrice.floatValue();
+
+							// Take into account price and downloads only from main Apps
+							if (sale.typeIdentifier.equals(FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS)
+									|| sale.typeIdentifier.equals(FREE_OR_PAID_APP_UNIVERSAL_IOS) || sale.typeIdentifier.equals(FREE_OR_PAID_APP_IPAD_IOS)) {
+								rank.downloads += sale.units.intValue();
+								// Ignore price if the Sale is a refund or a promotion
+								if (rank.price == null && sale.units.intValue() > 0 && sale.promoCode.equals(" ")) {
+									rank.price = sale.customerPrice;
+								}
+							}
+
+							// if (modelRun != null) {
+							// // TODO: use the mode to predict what rank that would be
+							// // rank.grossingPosition;
+							// // rank.position;
+							// }
+						} // end 1 day sales loop
+					} // end date range loop
+				} // if sale.size > 0
+			}
 
 			DataTypeHelper.sortRanksByDate(output.ranks);
 
@@ -1790,25 +1798,25 @@ public final class Core extends ActionHandler {
 			if (input.listType == null)
 				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("String: input.listType"));
 
-			// right now category
-			if (input.category == null) {
-				// TODO:
-				// input.category = CategoryServiceProvider.provide().getAllCategory(stores);
-			} else {
-				input.category = ValidationHelper.validateCategory(input.category, "input.category");
-
-				boolean foundStore = false;
-
-				for (Store store : stores) {
-					if (store.a3Code.equals(input.category.store)) {
-						foundStore = true;
-						break;
-					}
-				}
-
-				if (!foundStore)
-					throw new InputValidationException(ApiError.CategoryStoreMismatch.getCode(), ApiError.CategoryStoreMismatch.getMessage("input.category"));
-			}
+			// // right now category
+			// if (input.category == null) {
+			// // TODO:
+			// // input.category = CategoryServiceProvider.provide().getAllCategory(stores);
+			// } else {
+			// input.category = ValidationHelper.validateCategory(input.category, "input.category");
+			//
+			// boolean foundStore = false;
+			//
+			// for (Store store : stores) {
+			// if (store.a3Code.equals(input.category.store)) {
+			// foundStore = true;
+			// break;
+			// }
+			// }
+			//
+			// if (!foundStore)
+			// throw new InputValidationException(ApiError.CategoryStoreMismatch.getCode(), ApiError.CategoryStoreMismatch.getMessage("input.category"));
+			// }
 
 			if (input.end == null) {
 				input.end = DateTime.now(DateTimeZone.UTC).toDate();
@@ -1818,129 +1826,156 @@ public final class Core extends ActionHandler {
 				input.start = (new DateTime(input.end.getTime(), DateTimeZone.UTC)).minusDays(30).toDate();
 			}
 
-			// Get Items sales based on the filters
-			List<Sale> sales = SaleServiceProvider.provide().getItemSales(input.item, input.country, input.category, linkedAccount, input.start, input.end,
-					PagerHelper.createInfinitePager());
+			FormType form = null;
+			Store formStore = null;
+			for (Store store : stores) {
+				Modeller modeller = ModellerFactory.getModellerForStore(store.a3Code);
+				form = modeller.getForm(input.listType);
 
-			if (sales.size() > 0) {
-				// group sales by date
-				Map<Date, List<Sale>> salesGroupByDate = new HashMap<Date, List<Sale>>();
-				Date key;
-				SimpleDateFormat keyFormat = new SimpleDateFormat("yyyy-MM-dd");
+				if (form != null) {
+					formStore = store;
+					break;
+				}
+			}
 
-				Store defaultStore = stores.get(0);
-				Modeller modeller = ModellerFactory.getModellerForStore(defaultStore.a3Code);
-				FormType form = modeller.getForm(input.listType);
+			ItemSaleArchiver archiver = ArchiverFactory.getItemSaleArchiver();
+			long[] slices = SliceHelper.offsets(input.start, input.end);
 
-				for (Sale sale : sales) {
-					// only add Sales that are consistent with the device type
-					if (FREE_OR_PAID_APP_UNIVERSAL_IOS.equals(sale.typeIdentifier) // 1F
-							|| UPDATE_UNIVERSAL_IOS.equals(sale.typeIdentifier) // 7F
-							|| (form == FormType.FormTypeOther && (FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier))) // 1
-							|| (form == FormType.FormTypeOther && (UPDATE_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier))) // 7
-							|| (form == FormType.FormTypeTablet && (FREE_OR_PAID_APP_IPAD_IOS.equals(sale.typeIdentifier))) // 1T
-							|| (form == FormType.FormTypeTablet && (UPDATE_IPAD_IOS.equals(sale.typeIdentifier))) // 7T
-							|| INAPP_PURCHASE_PURCHASE_IOS.equals(sale.typeIdentifier) // IA1
-							|| INAPP_PURCHASE_SUBSCRIPTION_IOS.equals(sale.typeIdentifier) // IA9
-					) {
-						key = keyFormat.parse(keyFormat.format(sale.begin));
+			String key;
+			List<Rank> ranks = null;
+			for (long slice : slices) {
+				key = archiver.createItemRanksKey(slice, input.item, input.country, form);
 
-						// Link list of item IDs with every day of the range
-						if (salesGroupByDate.get(key) == null) {
-							salesGroupByDate.put(key, new ArrayList<Sale>());
-						}
+				ranks = archiver.getRanks(key);
 
-						salesGroupByDate.get(key).add(sale);
+				if (ranks != null) {
+					if (output.ranks == null) {
+						output.ranks = new ArrayList<Rank>();
 					}
+
+					output.ranks.addAll(ranks);
 				}
+			}
 
-				// get the model runs constants
-//				List<ModelRun> modelRuns = ModelRunServiceProvider.provide().getDateModelRunBatch(input.country, defaultStore, form, salesGroupByDate.keySet());
-//
-//				Map<Date, ModelRun> modelRunLookup = new HashMap<Date, ModelRun>();
-//
-//				for (ModelRun modelRun : modelRuns) {
-//					key = keyFormat.parse(keyFormat.format(modelRun.created));
-//
-//					if (modelRunLookup.get(key) == null) {
-//						modelRunLookup.put(key, modelRun);
-//					}
-//				}
+			if (output.ranks == null || output.ranks.size() == 0) {
+				// Get Items sales based on the filters
+				List<Sale> sales = SaleServiceProvider.provide().getItemSales(input.item, input.country, null, linkedAccount, input.start, input.end,
+						PagerHelper.createInfinitePager());
+				if (sales.size() > 0) {
+					// group sales by date
+					Map<Date, List<Sale>> salesGroupByDate = new HashMap<Date, List<Sale>>();
+					Date dateKey;
+					SimpleDateFormat keyFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-				// add the numbers up to create ranks and then predict the position and the grossing position
-				Rank rank = null;
-//				ModelRun modelRun;
+					for (Sale sale : sales) {
+						// only add Sales that are consistent with the device type
+						if (FREE_OR_PAID_APP_UNIVERSAL_IOS.equals(sale.typeIdentifier) // 1F
+								|| UPDATE_UNIVERSAL_IOS.equals(sale.typeIdentifier) // 7F
+								|| (form == FormType.FormTypeOther && (FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier))) // 1
+								|| (form == FormType.FormTypeOther && (UPDATE_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier))) // 7
+								|| (form == FormType.FormTypeTablet && (FREE_OR_PAID_APP_IPAD_IOS.equals(sale.typeIdentifier))) // 1T
+								|| (form == FormType.FormTypeTablet && (UPDATE_IPAD_IOS.equals(sale.typeIdentifier))) // 7T
+								|| INAPP_PURCHASE_PURCHASE_IOS.equals(sale.typeIdentifier) // IA1
+								|| INAPP_PURCHASE_SUBSCRIPTION_IOS.equals(sale.typeIdentifier) // IA9
+						) {
+							dateKey = keyFormat.parse(keyFormat.format(sale.begin));
 
-				// Create a dummy rank for the Item, every day of the date range
-				output.ranks = new ArrayList<Rank>();
-
-				// Get range of dates
-				Set<Date> dates = salesGroupByDate.keySet();
-
-				// setup id only category to avoid bloating data with category
-				Category category = null;
-				if (input.category != null && input.category.id != null) {
-					category = new Category();
-					category.id = input.category.id;
-				}
-
-				boolean created;
-				for (Date salesGroupDate : dates) {
-					created = false;
-
-//					modelRun = modelRunLookup.get(salesGroupDate);
-
-					List<Sale> salesGroup = salesGroupByDate.get(salesGroupDate);
-
-					for (Sale sale : salesGroup) {
-						if (!created) {
-							rank = new Rank();
-							rank.downloads = 0;
-							rank.revenue = (float) 0;
-
-//							// Add common values
-//							if (modelRun != null) {
-//								rank.code = modelRun.code;
-//							}
-
-							rank.category = category;
-							rank.country = input.country.a2Code;
-							rank.currency = sale.customerCurrency;
-							rank.date = salesGroupDate;
-							rank.created = salesGroupDate;
-							rank.source = defaultStore.a3Code;
-							rank.type = input.listType;
-							rank.itemId = input.item.internalId;
-
-							output.ranks.add(rank);
-
-							created = true;
-						}
-
-						// If units and customer prices are negatives (refunds), subtract the value setting units positive
-						rank.revenue += Math.abs(sale.units.floatValue()) * sale.customerPrice.floatValue();
-
-						// Take into account price and downloads only from main Apps
-						if (sale.typeIdentifier.equals(FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS)
-								|| sale.typeIdentifier.equals(FREE_OR_PAID_APP_UNIVERSAL_IOS) || sale.typeIdentifier.equals(FREE_OR_PAID_APP_IPAD_IOS)) {
-							rank.downloads += sale.units.intValue();
-							// Ignore price if the Sale is a refund or a promotion
-							if (rank.price == null && sale.units.intValue() > 0 && sale.promoCode.equals(" ")) {
-								rank.price = sale.customerPrice;
+							// Link list of item IDs with every day of the range
+							if (salesGroupByDate.get(dateKey) == null) {
+								salesGroupByDate.put(dateKey, new ArrayList<Sale>());
 							}
+
+							salesGroupByDate.get(dateKey).add(sale);
 						}
+					}
 
-//						if (modelRun != null) {
-//							// TODO: use the mode to predict what rank that would be
-//							// rank.grossingPosition;
-//							// rank.position;
-//						}
-					} // end 1 day sales loop
+					// get the model runs constants
+					// List<ModelRun> modelRuns = ModelRunServiceProvider.provide().getDateModelRunBatch(input.country, defaultStore, form,
+					// salesGroupByDate.keySet());
+					//
+					// Map<Date, ModelRun> modelRunLookup = new HashMap<Date, ModelRun>();
+					//
+					// for (ModelRun modelRun : modelRuns) {
+					// key = keyFormat.parse(keyFormat.format(modelRun.created));
+					//
+					// if (modelRunLookup.get(key) == null) {
+					// modelRunLookup.put(key, modelRun);
+					// }
+					// }
 
-				} // end date range loop
+					// add the numbers up to create ranks and then predict the position and the grossing position
+					Rank rank = null;
+					// ModelRun modelRun;
 
-			} // if sale.size > 0
+					// Create a dummy rank for the Item, every day of the date range
+					output.ranks = new ArrayList<Rank>();
 
+					// Get range of dates
+					Set<Date> dates = salesGroupByDate.keySet();
+
+					// // setup id only category to avoid bloating data with category
+					// Category category = null;
+					// if (input.category != null && input.category.id != null) {
+					// category = new Category();
+					// category.id = input.category.id;
+					// }
+
+					boolean created;
+					for (Date salesGroupDate : dates) {
+						created = false;
+
+						// modelRun = modelRunLookup.get(salesGroupDate);
+
+						List<Sale> salesGroup = salesGroupByDate.get(salesGroupDate);
+
+						for (Sale sale : salesGroup) {
+							if (!created) {
+								rank = new Rank();
+								rank.downloads = 0;
+								rank.revenue = (float) 0;
+
+								// // Add common values
+								// if (modelRun != null) {
+								// rank.code = modelRun.code;
+								// }
+
+								// rank.category = category;
+								rank.country = input.country.a2Code;
+								rank.currency = sale.customerCurrency;
+								rank.date = salesGroupDate;
+								rank.created = salesGroupDate;
+								rank.source = formStore.a3Code;
+								rank.type = input.listType;
+								rank.itemId = input.item.internalId;
+
+								output.ranks.add(rank);
+
+								created = true;
+							}
+
+							// If units and customer prices are negatives (refunds), subtract the value setting units positive
+							rank.revenue += Math.abs(sale.units.floatValue()) * sale.customerPrice.floatValue();
+
+							// Take into account price and downloads only from main Apps
+							if (sale.typeIdentifier.equals(FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS)
+									|| sale.typeIdentifier.equals(FREE_OR_PAID_APP_UNIVERSAL_IOS) || sale.typeIdentifier.equals(FREE_OR_PAID_APP_IPAD_IOS)) {
+								rank.downloads += sale.units.intValue();
+								// Ignore price if the Sale is a refund or a promotion
+								if (rank.price == null && sale.units.intValue() > 0 && sale.promoCode.equals(" ")) {
+									rank.price = sale.customerPrice;
+								}
+							}
+
+							// if (modelRun != null) {
+							// // TODO: use the mode to predict what rank that would be
+							// // rank.grossingPosition;
+							// // rank.position;
+							// }
+						} // end 1 day sales loop
+					} // end date range loop
+				} // if sale.size > 0
+			}
+			
 			DataTypeHelper.sortRanksByDate(output.ranks);
 
 			output.item = input.item;

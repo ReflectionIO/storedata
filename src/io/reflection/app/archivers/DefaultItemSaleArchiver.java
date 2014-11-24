@@ -11,14 +11,12 @@ import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.archivablekeyvalue.peristence.ValueAppender;
 import io.reflection.app.archivablekeyvalue.peristence.objectify.KeyValueArchiveManager;
-import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
-import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.FormType;
 import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Sale;
-import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.sale.SaleServiceProvider;
 
@@ -138,111 +136,105 @@ public class DefaultItemSaleArchiver implements ItemSaleArchiver {
 			}
 		});
 
-//		Category allCategory = null;
-//
-//		if (sale.category == null) {
-//			if (allCategory == null) {
-//				allCategory = CategoryServiceProvider.provide().getAllCategory(DataTypeHelper.createStore(sale.source));
-//			}
-//
-//			sale.category = allCategory;
-//		}
+		// Category allCategory = null;
+		//
+		// if (sale.category == null) {
+		// if (allCategory == null) {
+		// allCategory = CategoryServiceProvider.provide().getAllCategory(DataTypeHelper.createStore(sale.source));
+		// }
+		//
+		// sale.category = allCategory;
+		// }
 
 		KeyValueArchiveManager.get().appendToValue(createArchiveKey(sale), sale);
 	}
 
 	private String createArchiveKey(Sale sale) {
-//		Item item = new Item();
-//		item.internalId = sale.itemId;
-//
-//		Store store = DataTypeHelper.createStore(sale.source);
-//
-//		Country country = DataTypeHelper.createCountry(sale.country);
-//
-//		FormType form = ModellerFactory.getModellerForStore(store.a3Code).getForm(sale.type);
-//
-//		return createKey(Long.valueOf(SliceHelper.offset(sale.end)), item, form, store, country, sale.category);
-		
-		return null;
-	}
+		// Item item = new Item();
+		// item.internalId = sale.itemId;
+		//
+		// Store store = DataTypeHelper.createStore(sale.source);
+		//
+		// Country country = DataTypeHelper.createCountry(sale.country);
+		//
+		// FormType form = ModellerFactory.getModellerForStore(store.a3Code).getForm(sale.type);
+		//
+		// return createKey(Long.valueOf(SliceHelper.offset(sale.end)), item, form, store, country, sale.category);
 
-	@Override
-	public String createKey(Long slice, Item item, FormType form, Store store, Country country, Category category) {
-		return StringUtils.join(Arrays.asList("archiver", "item", "sale", slice.toString(), item.internalId == null ? item.id.toString() : item.internalId,
-				form.toString(), store.a3Code, country.a2Code, category.id.toString()), ".");
+		return null;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.itemsalearchivers.ItemSaleArchiver#getItemSales(java.lang.String)
+	 * @see io.reflection.app.archivers.ItemSaleArchiver#getRanks(java.lang.String)
 	 */
 	@Override
-	public List<Sale> getItemSales(String key) {
-		List<Sale> sales = null;
-//		Map<Date, Sale> salesLookup = new HashMap<Date, Sale>();
-//		ArchivableKeyValue value = KeyValueArchiveManager.get().getArchiveKeyValue(key);
-//
-//		// Date date;
-//
-//		if (value != null && value.value != null && value.value.length() > 0) {
-//			JsonElement jsonElement = (new JsonParser()).parse(value.value);
-//
-//			if (jsonElement.isJsonArray()) {
-//				JsonArray jsonArray = jsonElement.getAsJsonArray();
-//
-//				Sale sale, existingSale;
-//				for (JsonElement jsonArrayElement : jsonArray) {
-//					if (jsonArrayElement.isJsonObject()) {
-//						sale = new Sale();
-//						sale.fromJson(jsonArrayElement.getAsJsonObject());
-//
-//						if (sales == null) {
-//							sales = new ArrayList<Sale>();
-//						}
-//
-//						sale.date = ApiHelper.removeTime(sale.date);
-//
-//						if ((existingSale = salesLookup.get(sale.date)) == null) {
-//							sales.add(sale);
-//							salesLookup.put(sale.date, sale);
-//						} else {
-//							if (sale.code.longValue() == existingSale.code.longValue()) {
-//								if ((existingSale.position == null || existingSale.position.intValue() == 0) && sale.position != null
-//										&& sale.position.intValue() != 0) {
-//									existingSale.position = sale.position;
-//								}
-//
-//								if ((existingSale.grossingPosition == null || existingSale.grossingPosition.intValue() == 0) && sale.grossingPosition != null
-//										&& sale.grossingPosition.intValue() != 0) {
-//									existingSale.grossingPosition = sale.grossingPosition;
-//								}
-//							}
-//						}
-//					}
-//				}
-//			}
-//		}
-//
-//		if (sales != null) {
-//			Collections.sort(sales, new Comparator<Sale>() {
-//
-//				@Override
-//				public int compare(Sale o1, Sale o2) {
-//					int compare = 0;
-//
-//					if (o1.end.getTime() > o2.end.getTime()) {
-//						compare = 1;
-//					} else if (o1.end.getTime() < o2.end.getTime()) {
-//						compare = -1;
-//					}
-//
-//					return compare;
-//				}
-//			});
-//		}
+	public List<Rank> getRanks(String key) {
+		List<Rank> ranks = null;
+		// Map<Date, Sale> salesLookup = new HashMap<Date, Sale>();
+		// ArchivableKeyValue value = KeyValueArchiveManager.get().getArchiveKeyValue(key);
+		//
+		// // Date date;
+		//
+		// if (value != null && value.value != null && value.value.length() > 0) {
+		// JsonElement jsonElement = (new JsonParser()).parse(value.value);
+		//
+		// if (jsonElement.isJsonArray()) {
+		// JsonArray jsonArray = jsonElement.getAsJsonArray();
+		//
+		// Sale sale, existingSale;
+		// for (JsonElement jsonArrayElement : jsonArray) {
+		// if (jsonArrayElement.isJsonObject()) {
+		// sale = new Sale();
+		// sale.fromJson(jsonArrayElement.getAsJsonObject());
+		//
+		// if (sales == null) {
+		// sales = new ArrayList<Sale>();
+		// }
+		//
+		// sale.date = ApiHelper.removeTime(sale.date);
+		//
+		// if ((existingSale = salesLookup.get(sale.date)) == null) {
+		// sales.add(sale);
+		// salesLookup.put(sale.date, sale);
+		// } else {
+		// if (sale.code.longValue() == existingSale.code.longValue()) {
+		// if ((existingSale.position == null || existingSale.position.intValue() == 0) && sale.position != null
+		// && sale.position.intValue() != 0) {
+		// existingSale.position = sale.position;
+		// }
+		//
+		// if ((existingSale.grossingPosition == null || existingSale.grossingPosition.intValue() == 0) && sale.grossingPosition != null
+		// && sale.grossingPosition.intValue() != 0) {
+		// existingSale.grossingPosition = sale.grossingPosition;
+		// }
+		// }
+		// }
+		// }
+		// }
+		// }
+		// }
+		//
+		// if (sales != null) {
+		// Collections.sort(sales, new Comparator<Sale>() {
+		//
+		// @Override
+		// public int compare(Sale o1, Sale o2) {
+		// int compare = 0;
+		//
+		// if (o1.end.getTime() > o2.end.getTime()) {
+		// compare = 1;
+		// } else if (o1.end.getTime() < o2.end.getTime()) {
+		// compare = -1;
+		// }
+		//
+		// return compare;
+		// }
+		// });
+		// }
 
-		return sales;
+		return ranks;
 	}
 
 	/*
@@ -252,63 +244,63 @@ public class DefaultItemSaleArchiver implements ItemSaleArchiver {
 	 */
 	@Override
 	public void enqueuePagerSales(Pager pager, Boolean next) {
-//		try {
-//			List<Long> saleIds = SaleServiceProvider.provide().getSaleIds(pager);
-//
-//			if (saleIds != null) {
-//				for (Long saleId : saleIds) {
-//					enqueueIdSale(saleId);
-//				}
-//
-//				if (next != null && next.booleanValue() && pager.count.intValue() == saleIds.size()) {
-//					enqueueNext(pager);
-//				}
-//			}
-//		} catch (DataAccessException daEx) {
-//			throw new RuntimeException(daEx);
-//		}
+		// try {
+		// List<Long> saleIds = SaleServiceProvider.provide().getSaleIds(pager);
+		//
+		// if (saleIds != null) {
+		// for (Long saleId : saleIds) {
+		// enqueueIdSale(saleId);
+		// }
+		//
+		// if (next != null && next.booleanValue() && pager.count.intValue() == saleIds.size()) {
+		// enqueueNext(pager);
+		// }
+		// }
+		// } catch (DataAccessException daEx) {
+		// throw new RuntimeException(daEx);
+		// }
 	}
 
-//	private void enqueueNext(Pager pager) {
-//		if (LOG.isLoggable(GaeLevel.TRACE)) {
-//			LOG.log(GaeLevel.TRACE, "Entering...");
-//		}
-//
-//		try {
-//			Queue queue = QueueFactory.getQueue("archive");
-//
-//			TaskOptions options = TaskOptions.Builder.withUrl("/archive").method(Method.POST);
-//			options.param("type", "itemsale");
-//			options.param("pager", Boolean.TRUE.toString());
-//			options.param("next", Boolean.TRUE.toString());
-//			options.param("start", Long.toString(pager.start.longValue() + pager.count.longValue()));
-//			options.param("count", pager.count.toString());
-//
-//			try {
-//				queue.add(options);
-//			} catch (TransientFailureException ex) {
-//
-//				if (LOG.isLoggable(Level.WARNING)) {
-//					LOG.warning(String.format("Could not queue a message because of [%s] - will retry it once", ex.toString()));
-//				}
-//
-//				// retry once
-//				try {
-//					queue.add(options);
-//				} catch (TransientFailureException reEx) {
-//					if (LOG.isLoggable(Level.SEVERE)) {
-//						LOG.log(Level.SEVERE,
-//								String.format("Retry of with payload [%s] failed while adding to queue [%s] twice", options.toString(), queue.getQueueName()),
-//								reEx);
-//					}
-//				}
-//			}
-//		} finally {
-//			if (LOG.isLoggable(GaeLevel.TRACE)) {
-//				LOG.log(GaeLevel.TRACE, "Exiting...");
-//			}
-//		}
-//	}
+	// private void enqueueNext(Pager pager) {
+	// if (LOG.isLoggable(GaeLevel.TRACE)) {
+	// LOG.log(GaeLevel.TRACE, "Entering...");
+	// }
+	//
+	// try {
+	// Queue queue = QueueFactory.getQueue("archive");
+	//
+	// TaskOptions options = TaskOptions.Builder.withUrl("/archive").method(Method.POST);
+	// options.param("type", "itemsale");
+	// options.param("pager", Boolean.TRUE.toString());
+	// options.param("next", Boolean.TRUE.toString());
+	// options.param("start", Long.toString(pager.start.longValue() + pager.count.longValue()));
+	// options.param("count", pager.count.toString());
+	//
+	// try {
+	// queue.add(options);
+	// } catch (TransientFailureException ex) {
+	//
+	// if (LOG.isLoggable(Level.WARNING)) {
+	// LOG.warning(String.format("Could not queue a message because of [%s] - will retry it once", ex.toString()));
+	// }
+	//
+	// // retry once
+	// try {
+	// queue.add(options);
+	// } catch (TransientFailureException reEx) {
+	// if (LOG.isLoggable(Level.SEVERE)) {
+	// LOG.log(Level.SEVERE,
+	// String.format("Retry of with payload [%s] failed while adding to queue [%s] twice", options.toString(), queue.getQueueName()),
+	// reEx);
+	// }
+	// }
+	// }
+	// } finally {
+	// if (LOG.isLoggable(GaeLevel.TRACE)) {
+	// LOG.log(GaeLevel.TRACE, "Exiting...");
+	// }
+	// }
+	// }
 
 	/*
 	 * (non-Javadoc)
@@ -317,17 +309,17 @@ public class DefaultItemSaleArchiver implements ItemSaleArchiver {
 	 */
 	@Override
 	public void archiveIdDataAccountFetchSales(Long id) {
-//		try {
-//			DataAccountFetch dataAccount = DataAccountFetchServiceProvider.provide().getDataAccountFetch(id);
-//
-//			List<Sale> sales = SaleServiceProvider.provide().getDataAccountFetchSales(dataAccount, PagerHelper.createInfinitePager());
-//
-//			for (Sale sale : sales) {
-//				archiveSale(sale);
-//			}
-//		} catch (DataAccessException daEx) {
-//			throw new RuntimeException(daEx);
-//		}
+		// try {
+		// DataAccountFetch dataAccount = DataAccountFetchServiceProvider.provide().getDataAccountFetch(id);
+		//
+		// List<Sale> sales = SaleServiceProvider.provide().getDataAccountFetchSales(dataAccount, PagerHelper.createInfinitePager());
+		//
+		// for (Sale sale : sales) {
+		// archiveSale(sale);
+		// }
+		// } catch (DataAccessException daEx) {
+		// throw new RuntimeException(daEx);
+		// }
 	}
 
 	/*
@@ -373,16 +365,21 @@ public class DefaultItemSaleArchiver implements ItemSaleArchiver {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see io.reflection.app.archivers.ItemSaleArchiver#createItemsKey(io.reflection.app.datatypes.shared.DataAccount, io.reflection.app.datatypes.shared.DataSource, io.reflection.app.datatypes.shared.FormType)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.archivers.ItemSaleArchiver#createItemsKey(io.reflection.app.datatypes.shared.DataAccount,
+	 * io.reflection.app.datatypes.shared.FormType)
 	 */
 	@Override
-	public String createItemsKey(DataAccount linkedAccount, DataSource source, FormType form) {
+	public String createItemsKey(DataAccount linkedAccount, FormType form) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.archivers.ItemSaleArchiver#getItems(java.lang.String)
 	 */
 	@Override
@@ -390,4 +387,29 @@ public class DefaultItemSaleArchiver implements ItemSaleArchiver {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.archivers.ItemSaleArchiver#createItemRanksKey(java.lang.Long, io.reflection.app.datatypes.shared.Item,
+	 * io.reflection.app.datatypes.shared.Country, io.reflection.app.datatypes.shared.FormType)
+	 */
+	@Override
+	public String createItemRanksKey(Long slice, Item item, Country country, FormType form) {
+		return StringUtils.join(
+				Arrays.asList("archiver", "item", "sale", "rank", slice.toString(), item.internalId == null ? item.id.toString() : item.internalId,
+						form.toString(), country.a2Code), ".");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.archivers.ItemSaleArchiver#createRanksKey(java.lang.Long, io.reflection.app.datatypes.shared.DataAccount,
+	 * io.reflection.app.datatypes.shared.Country, io.reflection.app.datatypes.shared.FormType)
+	 */
+	@Override
+	public String createRanksKey(Long slice, DataAccount dataAccount, Country country, FormType form) {
+		return StringUtils.join(Arrays.asList("archiver", "sale", "rank", slice.toString(), dataAccount.id.toString(), form.toString(), country.a2Code), ".");
+	}
+
 }
