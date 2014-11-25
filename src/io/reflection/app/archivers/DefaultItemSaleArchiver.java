@@ -7,6 +7,14 @@
 //
 package io.reflection.app.archivers;
 
+import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPAD_IOS;
+import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS;
+import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_UNIVERSAL_IOS;
+import static io.reflection.app.service.sale.ISaleService.INAPP_PURCHASE_PURCHASE_IOS;
+import static io.reflection.app.service.sale.ISaleService.INAPP_PURCHASE_SUBSCRIPTION_IOS;
+import static io.reflection.app.service.sale.ISaleService.UPDATE_IPAD_IOS;
+import static io.reflection.app.service.sale.ISaleService.UPDATE_IPHONE_AND_IPOD_TOUCH_IOS;
+import static io.reflection.app.service.sale.ISaleService.UPDATE_UNIVERSAL_IOS;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.archivablekeyvalue.peristence.ValueAppender;
@@ -210,7 +218,21 @@ public class DefaultItemSaleArchiver implements ItemSaleArchiver {
 	 * @return
 	 */
 	private List<FormType> getSaleFormTypes(Sale sale) {
-		return null;
+		List<FormType> forms = new ArrayList<FormType>();
+
+		if (FREE_OR_PAID_APP_UNIVERSAL_IOS.equals(sale.typeIdentifier) || UPDATE_UNIVERSAL_IOS.equals(sale.typeIdentifier)
+				|| FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier) || UPDATE_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier)
+				|| INAPP_PURCHASE_PURCHASE_IOS.equals(sale.typeIdentifier) || INAPP_PURCHASE_SUBSCRIPTION_IOS.equals(sale.typeIdentifier)) {
+			forms.add(FormType.FormTypeOther);
+		}
+
+		if (FREE_OR_PAID_APP_UNIVERSAL_IOS.equals(sale.typeIdentifier) || UPDATE_UNIVERSAL_IOS.equals(sale.typeIdentifier)
+				|| FREE_OR_PAID_APP_IPAD_IOS.equals(sale.typeIdentifier) || UPDATE_IPAD_IOS.equals(sale.typeIdentifier)
+				|| INAPP_PURCHASE_PURCHASE_IOS.equals(sale.typeIdentifier) || INAPP_PURCHASE_SUBSCRIPTION_IOS.equals(sale.typeIdentifier)) {
+			forms.add(FormType.FormTypeTablet);
+		}
+
+		return forms;
 	}
 
 	/*
