@@ -16,6 +16,7 @@ import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
+import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Sale;
 import io.reflection.app.helpers.SqlQueryHelper;
@@ -654,6 +655,24 @@ final class SaleService implements ISaleService {
 		}
 
 		return saleIds;
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.sale.ISaleService#getSaleIds(io.reflection.app.api.shared.datatypes.Pager)
+	 */
+	@Override
+	public List<Long> getSaleIds(Pager pager) throws DataAccessException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.sale.ISaleService#getDataAccountFetchSales(io.reflection.app.datatypes.shared.DataAccountFetch, io.reflection.app.api.shared.datatypes.Pager)
+	 */
+	@Override
+	public List<Sale> getDataAccountFetchSales(DataAccountFetch dataAccountFetch, Pager pager) throws DataAccessException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

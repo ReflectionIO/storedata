@@ -1090,7 +1090,7 @@ public final class Core extends ActionHandler {
 
 			ItemSaleArchiver archiver = ArchiverFactory.getItemSaleArchiver();
 			String key = archiver.createItemsKey(input.linkedAccount, form);
-			List<Item> items = archiver.getItems(key);
+			List<Item> items = ItemServiceProvider.provide().getInternalIdItemBatch(archiver.getItemsIds(key));
 
 			output.pager = input.pager;
 			if (items == null || items.size() == 0) {

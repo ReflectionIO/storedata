@@ -100,6 +100,6 @@ public interface ItemSaleArchiver {
 	 * @param key
 	 * @return
 	 */
-	List<Item> getItems(String key);
+	List<String> getItemsIds(String key);
 
 }

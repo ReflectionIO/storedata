@@ -13,6 +13,7 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
+import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Sale;
 
@@ -178,5 +179,19 @@ public interface ISaleService extends IService {
 	 * @throws DataAccessException
 	 */
 	public List<Long> getSaleIds(Country country, DataAccount linkedAccount, Date start, Date end) throws DataAccessException;
+
+	/**
+	 * @param pager
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<Long> getSaleIds(Pager pager) throws DataAccessException;
+
+	/**
+	 * @param dataAccountFetch
+	 * @param pager
+	 * @return
+	 */
+	public List<Sale> getDataAccountFetchSales(DataAccountFetch dataAccountFetch, Pager pager) throws DataAccessException;
 
 }
