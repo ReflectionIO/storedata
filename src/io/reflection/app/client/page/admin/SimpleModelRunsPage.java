@@ -12,9 +12,11 @@ import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.SimpleModelRunController;
 import io.reflection.app.client.handler.FilterEventHandler;
+import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.page.Page;
@@ -25,13 +27,17 @@ import io.reflection.app.client.part.DateSelector;
 import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.part.datatypes.DateRange;
+import io.reflection.app.client.part.pager.PagerAmender;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.SimpleModelRun;
+import io.reflection.app.shared.util.PagerHelper;
 
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -47,7 +53,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Stefano Capuzzi
  *
  */
-public class SimpleModelRunsPage extends Page implements FilterEventHandler {
+public class SimpleModelRunsPage extends Page implements FilterEventHandler, NavigationEventHandler {
 
 	private static SimpleModelRunsPageUiBinder uiBinder = GWT.create(SimpleModelRunsPageUiBinder.class);
 
@@ -65,12 +71,43 @@ public class SimpleModelRunsPage extends Page implements FilterEventHandler {
 
 	@UiField Preloader preloader;
 
+	private PagerAmender pagerAmender = new PagerAmender("smrpager");
+
 	public SimpleModelRunsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		BootstrapGwtDatePicker.INSTANCE.styles().ensureInjected();
 
 		addColumns();
+
+		pagerAmender.setCount(Long.valueOf(ServiceConstants.STEP_VALUE));
+
+		simplePager.getNext().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				pagerAmender.setNextPage();
+				PageType.SimpleModelRunPageType.show(PagerHelper.getUpdatedUrl(pagerAmender));
+			}
+		});
+
+		simplePager.getPrevious().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				pagerAmender.setPreviousPage();
+				PageType.SimpleModelRunPageType.show(PagerHelper.getUpdatedUrl(pagerAmender));
+			}
+		});
+
+		simplePager.getFirst().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				pagerAmender.setFirstPage();
+				PageType.SimpleModelRunPageType.show(PagerHelper.getUpdatedUrl(pagerAmender));
+			}
+		});
 
 		FilterHelper.addCountries(country, true);
 		FilterHelper.addStores(appStore, true);
@@ -204,6 +241,7 @@ public class SimpleModelRunsPage extends Page implements FilterEventHandler {
 	protected void onAttach() {
 		super.onAttach();
 		register(EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
+		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 	}
 
 	/*
@@ -233,6 +271,20 @@ public class SimpleModelRunsPage extends Page implements FilterEventHandler {
 			simplePager.setPageStart(0);
 			SimpleModelRunController.get().fetchSimpleModelRuns();
 			PageType.SimpleModelRunPageType.show(FilterController.get().asFeedFilterString());
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
+	 * io.reflection.app.client.controller.NavigationController.Stack)
+	 */
+	@Override
+	public void navigationChanged(Stack previous, Stack current) {
+		PagerHelper.updateFromUrl(pagerAmender, current);
+		if (simplePager.getPageStart() != pagerAmender.getStart().intValue()) {
+			simplePager.setPageStart(pagerAmender.getStart().intValue());
 		}
 	}
 
