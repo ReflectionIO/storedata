@@ -158,7 +158,7 @@
 						</li>
 						<li class="divider-horizontal-header"></li>
 						<li ui:field="usersItem">
-							<g:InlineHyperlink targetHistoryToken="{UsersPageType.asTargetHistoryToken}">
+							<g:InlineHyperlink targetHistoryToken="{UsersPageType.asTargetHistoryToken}/view">
 								Users
 								<span ui:field="totalUsers" class="badge">1+</span>
 							</g:InlineHyperlink>

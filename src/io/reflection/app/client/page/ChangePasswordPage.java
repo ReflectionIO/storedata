@@ -241,7 +241,7 @@ public class ChangePasswordPage extends Page implements NavigationEventHandler, 
 
 				@Override
 				public void run() {
-					PageType.UsersPageType.show();
+					PageType.UsersPageType.show("view");
 				}
 			};
 

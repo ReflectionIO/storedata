@@ -289,8 +289,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	public void navigationChanged(Stack previous, Stack current) {
 		if (PageType.RanksPageType.equals(current.getPage())) {
 			highlight(ranksItem);
-		} else if (PageType.UsersPageType.equals(current.getPage())) {
-			if (current.getAction() == null) {
+		} else if (PageType.UsersPageType.equals(current.getPage()) && current.hasAction()) {
+			if ("view".equals(current.getAction())) {
 				highlight(adminDropdown, usersItem);
 			} else if (PageType.MyAppsPageType.equals(current.getAction())) {
 				highlight(myAccountDropdown, myAppsItem);

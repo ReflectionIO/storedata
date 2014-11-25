@@ -317,7 +317,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 			if (stackPage == null || !stackPage.isNavigable()) {
 				stackPage = PageType.HomePageType;
 			} else if (PageType.UsersPageType == stackPage) {
-				if (value.hasAction()) {
+				if (value.hasAction() && !value.getAction().equals("view")) {
 					stackPage = PageType.fromString(value.getAction());
 				}
 			}
