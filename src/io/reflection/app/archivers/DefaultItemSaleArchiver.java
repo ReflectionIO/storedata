@@ -274,7 +274,7 @@ public class DefaultItemSaleArchiver implements ItemSaleArchiver {
 	@Override
 	public void enqueuePagerSales(Pager pager, Boolean next) {
 		try {
-			List<Long> saleIds = SaleServiceProvider.provide().getSaleIds(pager);
+			List<Long> saleIds = SaleServiceProvider.provide().getAllSaleIds(pager);
 
 			if (saleIds != null) {
 				for (Long saleId : saleIds) {

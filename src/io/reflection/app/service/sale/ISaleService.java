@@ -181,13 +181,15 @@ public interface ISaleService extends IService {
 	public List<Long> getSaleIds(Country country, DataAccount linkedAccount, Date start, Date end) throws DataAccessException;
 
 	/**
+	 * Get all sale ids
 	 * @param pager
 	 * @return
 	 * @throws DataAccessException
 	 */
-	public List<Long> getSaleIds(Pager pager) throws DataAccessException;
+	public List<Long> getAllSaleIds(Pager pager) throws DataAccessException;
 
 	/**
+	 * Get data account fetch sales
 	 * @param dataAccountFetch
 	 * @param pager
 	 * @return
