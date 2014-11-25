@@ -380,40 +380,53 @@ public class DefaultItemSaleArchiver implements ItemSaleArchiver {
 	 */
 	@Override
 	public void enqueueIdDataAccountFetch(Long id) {
-		if (LOG.isLoggable(GaeLevel.TRACE)) {
-			LOG.log(GaeLevel.TRACE, "Entering...");
-		}
-
+		List<Long> saleIds = null;
 		try {
-			Queue queue = QueueFactory.getQueue("archive");
-
-			TaskOptions options = TaskOptions.Builder.withUrl("/archive").method(Method.POST);
-			options.param("type", "dataaccountfetchsales");
-			options.param("id", id.toString());
-
-			try {
-				queue.add(options);
-			} catch (TransientFailureException ex) {
-				if (LOG.isLoggable(Level.WARNING)) {
-					LOG.warning(String.format("Could not queue a message because of [%s] - will retry it once", ex.toString()));
-				}
-
-				// retry once
-				try {
-					queue.add(options);
-				} catch (TransientFailureException reEx) {
-					if (LOG.isLoggable(Level.SEVERE)) {
-						LOG.log(Level.SEVERE,
-								String.format("Retry of with payload [%s] failed while adding to queue [%s] twice", options.toString(), queue.getQueueName()),
-								reEx);
-					}
-				}
-			}
-		} finally {
-			if (LOG.isLoggable(GaeLevel.TRACE)) {
-				LOG.log(GaeLevel.TRACE, "Exiting...");
+			saleIds = SaleServiceProvider.provide().getDataAccountFetchSaleIds(DataTypeHelper.createDataAccountFetch(id),
+					PagerHelper.createInfinitePager());
+		} catch (DataAccessException daEx) {
+			throw new RuntimeException(daEx);
+		}
+		
+		if (saleIds != null) {
+			for (Long saleId : saleIds) {
+				enqueueIdSale(saleId);
 			}
 		}
+		// if (LOG.isLoggable(GaeLevel.TRACE)) {
+		// LOG.log(GaeLevel.TRACE, "Entering...");
+		// }
+		//
+		// try {
+		// Queue queue = QueueFactory.getQueue("archive");
+		//
+		// TaskOptions options = TaskOptions.Builder.withUrl("/archive").method(Method.POST);
+		// options.param("type", "dataaccountfetchsales");
+		// options.param("id", id.toString());
+		//
+		// try {
+		// queue.add(options);
+		// } catch (TransientFailureException ex) {
+		// if (LOG.isLoggable(Level.WARNING)) {
+		// LOG.warning(String.format("Could not queue a message because of [%s] - will retry it once", ex.toString()));
+		// }
+		//
+		// // retry once
+		// try {
+		// queue.add(options);
+		// } catch (TransientFailureException reEx) {
+		// if (LOG.isLoggable(Level.SEVERE)) {
+		// LOG.log(Level.SEVERE,
+		// String.format("Retry of with payload [%s] failed while adding to queue [%s] twice", options.toString(), queue.getQueueName()),
+		// reEx);
+		// }
+		// }
+		// }
+		// } finally {
+		// if (LOG.isLoggable(GaeLevel.TRACE)) {
+		// LOG.log(GaeLevel.TRACE, "Exiting...");
+		// }
+		// }
 	}
 
 	/*

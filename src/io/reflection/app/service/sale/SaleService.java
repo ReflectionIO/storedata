@@ -709,7 +709,8 @@ final class SaleService implements ISaleService {
 			dataAccountFetch = DataAccountFetchServiceProvider.provide().getDataAccountFetch(dataAccountFetch.id);
 		}
 
-		String getDataAccountFetchSalesQuery = String.format("SELECT * FROM `sale` WHERE `end`=FROM_UNIXTIME(%d) AND `linkedaccountid`=%d AND `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d");
+		String getDataAccountFetchSalesQuery = String
+				.format("SELECT * FROM `sale` WHERE `end`=FROM_UNIXTIME(%d) AND `linkedaccountid`=%d AND `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d");
 		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
 
 		try {
@@ -731,6 +732,45 @@ final class SaleService implements ISaleService {
 		}
 
 		return sales;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.sale.ISaleService#getDataAccountFetchSaleIds(io.reflection.app.datatypes.shared.DataAccountFetch,
+	 * io.reflection.app.api.shared.datatypes.Pager)
+	 */
+	@Override
+	public List<Long> getDataAccountFetchSaleIds(DataAccountFetch dataAccountFetch, Pager pager) throws DataAccessException {
+		List<Long> saleIds = new ArrayList<Long>();
+
+		if (dataAccountFetch.date == null || dataAccountFetch.linkedAccount == null) {
+			dataAccountFetch = DataAccountFetchServiceProvider.provide().getDataAccountFetch(dataAccountFetch.id);
+		}
+
+		String getDataAccountFetchSaleIdsQuery = String
+				.format("SELECT `id` FROM `sale` WHERE `end`=FROM_UNIXTIME(%d) AND `linkedaccountid`=%d AND `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d");
+		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
+
+		try {
+			saleConnection.connect();
+			saleConnection.executeQuery(getDataAccountFetchSaleIdsQuery);
+
+			Long saleId;
+			while (saleConnection.fetchNextRow()) {
+				saleId = saleConnection.getCurrentRowLong("id");
+
+				if (saleId != null) {
+					saleIds.add(saleId);
+				}
+			}
+		} finally {
+			if (saleConnection != null) {
+				saleConnection.disconnect();
+			}
+		}
+
+		return saleIds;
 	}
 
 }

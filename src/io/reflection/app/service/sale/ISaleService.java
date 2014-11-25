@@ -182,6 +182,7 @@ public interface ISaleService extends IService {
 
 	/**
 	 * Get all sale ids
+	 * 
 	 * @param pager
 	 * @return
 	 * @throws DataAccessException
@@ -190,10 +191,22 @@ public interface ISaleService extends IService {
 
 	/**
 	 * Get data account fetch sales
+	 * 
 	 * @param dataAccountFetch
 	 * @param pager
 	 * @return
+	 * @throws DataAccessException
 	 */
 	public List<Sale> getDataAccountFetchSales(DataAccountFetch dataAccountFetch, Pager pager) throws DataAccessException;
+
+	/**
+	 * Get data account fetch sale ids
+	 * 
+	 * @param dataAccountFetch
+	 * @param pager
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<Long> getDataAccountFetchSaleIds(DataAccountFetch dataAccountFetch, Pager pager) throws DataAccessException;
 
 }

@@ -10,6 +10,7 @@ package io.reflection.app.shared.util;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
+import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Permission;
@@ -35,7 +36,7 @@ public class DataTypeHelper {
 	public static final float SMALL_MONEY = 0.0000001f;
 
 	public static final String IOS_STORE_A3 = "ios";
-	
+
 	public static final String ITC_SOURCE_A3 = "itc";
 
 	private static final Store IOS_STORE = new Store();
@@ -253,6 +254,16 @@ public class DataTypeHelper {
 		DataAccount da = new DataAccount();
 		da.id = id;
 		return da;
+	}
+
+	/**
+	 * @param id
+	 * @return
+	 */
+	public static DataAccountFetch createDataAccountFetch(Long id) {
+		DataAccountFetch daf = new DataAccountFetch();
+		daf.id = id;
+		return daf;
 	}
 
 }
