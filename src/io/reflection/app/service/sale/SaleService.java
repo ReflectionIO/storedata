@@ -773,4 +773,33 @@ final class SaleService implements ISaleService {
 		return saleIds;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.sale.ISaleService#getSkuItemId(java.lang.String)
+	 */
+	@Override
+	public String getSkuItemId(String sku) throws DataAccessException {
+		String itemId = null;
+
+		String getSkuItemIdQuery = String.format("SELECT `itemid` FROM `sale` WHERE `sku`='%s' LIMIT 1", addslashes(sku));
+
+		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
+
+		try {
+			saleConnection.connect();
+			saleConnection.executeQuery(getSkuItemIdQuery);
+
+			if (saleConnection.fetchNextRow()) {
+				itemId = saleConnection.getCurrentRowString("itemid");
+			}
+		} finally {
+			if (saleConnection != null) {
+				saleConnection.disconnect();
+			}
+		}
+
+		return itemId;
+	}
+
 }

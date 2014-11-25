@@ -209,4 +209,11 @@ public interface ISaleService extends IService {
 	 */
 	public List<Long> getDataAccountFetchSaleIds(DataAccountFetch dataAccountFetch, Pager pager) throws DataAccessException;
 
+	/**
+	 * @param parentIdentifier
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public String getSkuItemId(String sku) throws DataAccessException;
+
 }

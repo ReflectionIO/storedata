@@ -30,6 +30,7 @@ import io.reflection.app.datatypes.shared.Sale;
 import io.reflection.app.helpers.SliceHelper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
+import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.sale.SaleServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.app.shared.util.PagerHelper;
@@ -208,7 +209,23 @@ public class DefaultItemSaleArchiver implements ItemSaleArchiver {
 	 * @return
 	 */
 	private Item getSaleItem(Sale sale) {
-		return null;
+		Item item = null;
+
+		try {
+			if (INAPP_PURCHASE_PURCHASE_IOS.equals(sale.typeIdentifier) || INAPP_PURCHASE_SUBSCRIPTION_IOS.equals(sale.typeIdentifier)) {
+				String internalId = SaleServiceProvider.provide().getSkuItemId(sale.parentIdentifier);
+				
+				if (internalId != null && internalId.length() != 0) {
+					item = ItemServiceProvider.provide().getInternalIdItem(internalId);
+				}
+			} else {
+				item = ItemServiceProvider.provide().getInternalIdItem(sale.item.internalId);
+			}
+		} catch (DataAccessException daEx) {
+			throw new RuntimeException(daEx);
+		}
+
+		return item;
 	}
 
 	/**
@@ -382,12 +399,11 @@ public class DefaultItemSaleArchiver implements ItemSaleArchiver {
 	public void enqueueIdDataAccountFetch(Long id) {
 		List<Long> saleIds = null;
 		try {
-			saleIds = SaleServiceProvider.provide().getDataAccountFetchSaleIds(DataTypeHelper.createDataAccountFetch(id),
-					PagerHelper.createInfinitePager());
+			saleIds = SaleServiceProvider.provide().getDataAccountFetchSaleIds(DataTypeHelper.createDataAccountFetch(id), PagerHelper.createInfinitePager());
 		} catch (DataAccessException daEx) {
 			throw new RuntimeException(daEx);
 		}
-		
+
 		if (saleIds != null) {
 			for (Long saleId : saleIds) {
 				enqueueIdSale(saleId);
