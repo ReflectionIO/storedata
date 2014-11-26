@@ -43,6 +43,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.joda.time.DateTime;
+
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
@@ -122,7 +124,13 @@ public class DefaultItemSaleArchiver implements ItemSaleArchiver {
 	 * @see io.reflection.app.itemsalearchivers.ItemSaleArchiver#archive(io.reflection.app.datatypes.shared.Sale)
 	 */
 	@Override
-	public void archiveSale(Sale sale) throws DataAccessException {
+	public void archiveSale(Sale value) throws DataAccessException {
+
+		final Country country = DataTypeHelper.createCountry(value.country);
+		final Item item = getSaleItem(value);
+		List<FormType> forms = getSaleFormTypes(value);
+		Long slice = Long.valueOf(SliceHelper.offset(value.end));
+
 		KeyValueArchiveManager.get().setAppender(Sale.class, new ValueAppender<Sale>() {
 
 			@Override
@@ -133,23 +141,59 @@ public class DefaultItemSaleArchiver implements ItemSaleArchiver {
 					JsonElement jsonElement = currentValue == null ? null : (new JsonParser()).parse(currentValue);
 					JsonArray newJsonArray = new JsonArray();
 
-					if (jsonElement != null && jsonElement.isJsonArray()) {
+					if (item != null && jsonElement != null && jsonElement.isJsonArray()) {
 						JsonArray jsonArray = jsonElement.getAsJsonArray();
-
+						boolean found = false;
 						Rank existingRank;
+
 						for (JsonElement jsonRank : jsonArray) {
 							existingRank = new Rank();
 							existingRank.fromJson(jsonRank.getAsJsonObject());
 
-							// TODO: modify rank if relevant to sale: object or create a new one if none exist
+							if (!found && existingRank.itemId == item.internalId && value.end == existingRank.date) {
+								found = true;
+								addDownloadsAndRevenue(existingRank, value);
+							}
+
+							newJsonArray.add(existingRank.toJson());
+						}
+
+						if (!found) {
+							Rank newRank = new Rank();
+
+							newRank.revenue = Float.valueOf(0.0f);
+							newRank.downloads = Integer.valueOf(0);
+
+							newRank.country = value.country;
+							newRank.currency = value.customerCurrency;
+							newRank.date = value.end;
+							newRank.created = DateTime.now().toDate();
+							newRank.itemId = item.internalId;
+							newRank.source = item.source;
+
+							addDownloadsAndRevenue(newRank, value);
+
+							newJsonArray.add(newRank.toJson());
 						}
 					}
 
-					newJsonArray.add(value.toJson());
 					newValue = JsonUtils.cleanJson(newJsonArray.toString());
 				}
 
 				return newValue;
+			}
+
+			private void addDownloadsAndRevenue(Rank rank, Sale value) {
+				rank.revenue += Math.abs(value.units.floatValue()) * value.customerPrice.floatValue();
+
+				if (value.typeIdentifier.equals(FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS) || value.typeIdentifier.equals(FREE_OR_PAID_APP_UNIVERSAL_IOS)
+						|| value.typeIdentifier.equals(FREE_OR_PAID_APP_IPAD_IOS)) {
+					rank.downloads += value.units.intValue();
+					// Ignore price if the Sale is a refund or a promotion
+					if (rank.price == null && value.units.intValue() > 0 && value.promoCode.equals(" ")) {
+						rank.price = value.customerPrice;
+					}
+				}
 			}
 		});
 
@@ -190,15 +234,10 @@ public class DefaultItemSaleArchiver implements ItemSaleArchiver {
 			}
 		});
 
-		Country country = DataTypeHelper.createCountry(sale.country);
-		Item item = getSaleItem(sale);
-		List<FormType> forms = getSaleFormTypes(sale);
-		Long slice = Long.valueOf(SliceHelper.offset(sale.end));
-
 		for (FormType form : forms) {
-			KeyValueArchiveManager.get().appendToValue(createRanksKey(slice, sale.account, country, form), sale);
-			KeyValueArchiveManager.get().appendToValue(createItemRanksKey(slice, item, country, form), sale);
-			KeyValueArchiveManager.get().appendToValue(createItemsKey(sale.account, form), item);
+			KeyValueArchiveManager.get().appendToValue(createRanksKey(slice, value.account, country, form), value);
+			KeyValueArchiveManager.get().appendToValue(createItemRanksKey(slice, item, country, form), value);
+			KeyValueArchiveManager.get().appendToValue(createItemsKey(value.account, form), item);
 		}
 	}
 
@@ -214,7 +253,7 @@ public class DefaultItemSaleArchiver implements ItemSaleArchiver {
 		try {
 			if (INAPP_PURCHASE_PURCHASE_IOS.equals(sale.typeIdentifier) || INAPP_PURCHASE_SUBSCRIPTION_IOS.equals(sale.typeIdentifier)) {
 				String internalId = SaleServiceProvider.provide().getSkuItemId(sale.parentIdentifier);
-				
+
 				if (internalId != null && internalId.length() != 0) {
 					item = ItemServiceProvider.provide().getInternalIdItem(internalId);
 				}
