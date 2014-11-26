@@ -213,7 +213,7 @@ public class DataTypeHelper {
 	 */
 	public static Store createStore(String a3Code) {
 		Store s = new Store();
-		s.a3Code = a3Code;
+		s.a3Code = a3Code.toLowerCase();
 		return s;
 	}
 
@@ -225,7 +225,7 @@ public class DataTypeHelper {
 	 */
 	public static Country createCountry(String a2Code) {
 		Country c = new Country();
-		c.a2Code = a2Code;
+		c.a2Code = a2Code.toLowerCase();
 
 		return c;
 	}

@@ -709,8 +709,11 @@ final class SaleService implements ISaleService {
 			dataAccountFetch = DataAccountFetchServiceProvider.provide().getDataAccountFetch(dataAccountFetch.id);
 		}
 
-		String getDataAccountFetchSalesQuery = String
-				.format("SELECT * FROM `sale` WHERE `end`=FROM_UNIXTIME(%d) AND `linkedaccountid`=%d AND `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d");
+		String getDataAccountFetchSalesQuery = String.format(
+				"SELECT * FROM `sale` WHERE `end`=FROM_UNIXTIME(%d) AND `dataaccountid`=%d AND `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d",
+				dataAccountFetch.date.getTime() / 1000, dataAccountFetch.linkedAccount.id.longValue(), pager.sortBy == null ? "id" : pager.sortBy,
+				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start == null ? Pager.DEFAULT_START.longValue()
+						: pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue() : pager.count.longValue());
 		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
 
 		try {
@@ -749,7 +752,10 @@ final class SaleService implements ISaleService {
 		}
 
 		String getDataAccountFetchSaleIdsQuery = String
-				.format("SELECT `id` FROM `sale` WHERE `end`=FROM_UNIXTIME(%d) AND `linkedaccountid`=%d AND `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d");
+				.format("SELECT `id` FROM `sale` WHERE `end`=FROM_UNIXTIME(%d) AND `dataaccountid`=%d AND `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d",
+						dataAccountFetch.date.getTime() / 1000, dataAccountFetch.linkedAccount.id.longValue(), pager.sortBy == null ? "id" : pager.sortBy,
+								pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start == null ? Pager.DEFAULT_START.longValue()
+										: pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue() : pager.count.longValue());
 		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
 
 		try {

@@ -125,7 +125,6 @@ public class DefaultItemSaleArchiver implements ItemSaleArchiver {
 	 */
 	@Override
 	public void archiveSale(Sale value) throws DataAccessException {
-
 		final Country country = DataTypeHelper.createCountry(value.country);
 		final Item item = getSaleItem(value);
 		List<FormType> forms = getSaleFormTypes(value);
@@ -137,46 +136,48 @@ public class DefaultItemSaleArchiver implements ItemSaleArchiver {
 			public String getNewValue(String currentValue, Sale value) {
 				String newValue = currentValue;
 
-				if (value != null) {
+				// if we have a new sale and we can find the item
+				if (value != null && item != null) {
 					JsonElement jsonElement = currentValue == null ? null : (new JsonParser()).parse(currentValue);
 					JsonArray newJsonArray = new JsonArray();
 
-					if (item != null && jsonElement != null && jsonElement.isJsonArray()) {
+					boolean found = false;
+					
+					if (jsonElement != null && jsonElement.isJsonArray()) {
 						JsonArray jsonArray = jsonElement.getAsJsonArray();
-						boolean found = false;
 						Rank existingRank;
 
 						for (JsonElement jsonRank : jsonArray) {
 							existingRank = new Rank();
 							existingRank.fromJson(jsonRank.getAsJsonObject());
-
-							if (!found && existingRank.itemId == item.internalId && value.end == existingRank.date) {
+							
+							if (!found && existingRank.itemId.equalsIgnoreCase(item.internalId) && value.end == existingRank.date) {
 								found = true;
 								addDownloadsAndRevenue(existingRank, value);
 							}
 
 							newJsonArray.add(existingRank.toJson());
 						}
-
-						if (!found) {
-							Rank newRank = new Rank();
-
-							newRank.revenue = Float.valueOf(0.0f);
-							newRank.downloads = Integer.valueOf(0);
-
-							newRank.country = value.country;
-							newRank.currency = value.customerCurrency;
-							newRank.date = value.end;
-							newRank.created = DateTime.now().toDate();
-							newRank.itemId = item.internalId;
-							newRank.source = item.source;
-
-							addDownloadsAndRevenue(newRank, value);
-
-							newJsonArray.add(newRank.toJson());
-						}
 					}
 
+					if (!found) {
+						Rank newRank = new Rank();
+
+						newRank.revenue = Float.valueOf(0.0f);
+						newRank.downloads = Integer.valueOf(0);
+
+						newRank.country = value.country;
+						newRank.currency = value.customerCurrency;
+						newRank.date = value.end;
+						newRank.created = DateTime.now().toDate();
+						newRank.itemId = item.internalId;
+						newRank.source = item.source;
+
+						addDownloadsAndRevenue(newRank, value);
+
+						newJsonArray.add(newRank.toJson());
+					}
+					
 					newValue = JsonUtils.cleanJson(newJsonArray.toString());
 				}
 
@@ -205,29 +206,30 @@ public class DefaultItemSaleArchiver implements ItemSaleArchiver {
 
 				if (value != null) {
 					JsonElement jsonElement = currentValue == null ? null : (new JsonParser()).parse(currentValue);
-
 					JsonArray newJsonArray = new JsonArray();
+					
+					boolean found = false;
 
 					if (jsonElement != null && jsonElement.isJsonArray()) {
 						JsonArray jsonArray = jsonElement.getAsJsonArray();
-
-						boolean found = false;
+						
 						String existingItemId;
 						for (JsonElement jsonItemId : jsonArray) {
 							existingItemId = jsonItemId.getAsString();
 
 							if (existingItemId.equalsIgnoreCase(value.internalId)) {
 								found = true;
-								break;
-							} else {
-								newJsonArray.add(jsonItemId);
 							}
-						}
-
-						if (!found) {
-							newJsonArray.add(new JsonPrimitive(value.internalId));
+							
+							newJsonArray.add(jsonItemId);
 						}
 					}
+					
+					if (!found) {
+						newJsonArray.add(new JsonPrimitive(value.internalId));
+					}
+					
+					newValue = JsonUtils.cleanJson(newJsonArray.toString());
 				}
 
 				return newValue;
@@ -236,8 +238,11 @@ public class DefaultItemSaleArchiver implements ItemSaleArchiver {
 
 		for (FormType form : forms) {
 			KeyValueArchiveManager.get().appendToValue(createRanksKey(slice, value.account, country, form), value);
-			KeyValueArchiveManager.get().appendToValue(createItemRanksKey(slice, item, country, form), value);
-			KeyValueArchiveManager.get().appendToValue(createItemsKey(value.account, form), item);
+			
+			if (item != null) {
+				KeyValueArchiveManager.get().appendToValue(createItemRanksKey(slice, item, country, form), value);
+				KeyValueArchiveManager.get().appendToValue(createItemsKey(value.account, form), item);
+			}
 		}
 	}
 
@@ -251,14 +256,21 @@ public class DefaultItemSaleArchiver implements ItemSaleArchiver {
 		Item item = null;
 
 		try {
+			String internalId = null;
+			
 			if (INAPP_PURCHASE_PURCHASE_IOS.equals(sale.typeIdentifier) || INAPP_PURCHASE_SUBSCRIPTION_IOS.equals(sale.typeIdentifier)) {
-				String internalId = SaleServiceProvider.provide().getSkuItemId(sale.parentIdentifier);
-
-				if (internalId != null && internalId.length() != 0) {
-					item = ItemServiceProvider.provide().getInternalIdItem(internalId);
-				}
+				internalId = SaleServiceProvider.provide().getSkuItemId(sale.parentIdentifier);
 			} else {
-				item = ItemServiceProvider.provide().getInternalIdItem(sale.item.internalId);
+				internalId = sale.item.internalId;
+			}
+			
+			if (internalId != null && internalId.length() != 0) {
+				item = ItemServiceProvider.provide().getInternalIdItem(internalId);
+				
+				if (item == null) {
+					item = new Item();
+					item.internalId = internalId;
+				}
 			}
 		} catch (DataAccessException daEx) {
 			throw new RuntimeException(daEx);
@@ -513,7 +525,7 @@ public class DefaultItemSaleArchiver implements ItemSaleArchiver {
 
 				String itemInternalId;
 				for (JsonElement jsonArrayElement : jsonArray) {
-					if (jsonArrayElement.isJsonObject()) {
+					if (jsonArrayElement.isJsonPrimitive()) {
 						itemInternalId = jsonArrayElement.getAsString();
 
 						if (items == null) {

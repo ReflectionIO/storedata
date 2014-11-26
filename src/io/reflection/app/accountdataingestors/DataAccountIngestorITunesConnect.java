@@ -87,7 +87,7 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 
 					fetch = DataAccountFetchServiceProvider.provide().updateDataAccountFetch(fetch);
 					
-					ArchiverFactory.getItemSaleArchiver().archiveIdDataAccountFetchSales(fetch.id);
+					ArchiverFactory.getItemSaleArchiver().enqueueIdDataAccountFetch(fetch.id);
 				}
 			} catch (DataAccessException e) {
 				LOG.log(GaeLevel.SEVERE, String.format("Exception occured while ingesting file for data account fetch [%d]", fetch.id.longValue()), e);
@@ -96,7 +96,7 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 			}
 		} else {
 			LOG.log(GaeLevel.WARNING,
-					String.format("Could not ingest data account fetch [%d] because it has status", fetch.id.longValue(), fetch.status.toString()));
+					String.format("Could not ingest data account fetch [%d] because it has status [%s]", fetch.id.longValue(), fetch.status.toString()));
 		}
 	}
 
@@ -235,7 +235,7 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 			}
 
 			sale.customerCurrency = split[CUSTOMER_CURRENCY_INDEX];
-			sale.country = split[COUNTRY_CODE_INDEX];
+			sale.country = split[COUNTRY_CODE_INDEX].toLowerCase();
 			sale.currency = split[CURRENCY_OF_PROCEEDS_INDEX];
 
 			sale.item = new Item();

@@ -1110,6 +1110,8 @@ public final class Core extends ActionHandler {
 			} else {
 				if (items.size() > (input.pager.start.longValue() + input.pager.count.longValue())) {
 					output.items = items.subList(input.pager.start.intValue(), input.pager.count.intValue());
+				} else {
+					output.items = items;
 				}
 
 				output.pager.totalCount = Long.valueOf(items.size());
