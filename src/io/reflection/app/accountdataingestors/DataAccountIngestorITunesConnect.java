@@ -10,6 +10,7 @@ package io.reflection.app.accountdataingestors;
 import io.reflection.app.accountdatacollectors.DataAccountCollector;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.apple.ItemPropertyLookupServlet;
+import io.reflection.app.archivers.ArchiverFactory;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
 import io.reflection.app.datatypes.shared.Item;
@@ -85,6 +86,8 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 					fetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeIngested;
 
 					fetch = DataAccountFetchServiceProvider.provide().updateDataAccountFetch(fetch);
+					
+					ArchiverFactory.getItemSaleArchiver().archiveIdDataAccountFetchSales(fetch.id);
 				}
 			} catch (DataAccessException e) {
 				LOG.log(GaeLevel.SEVERE, String.format("Exception occured while ingesting file for data account fetch [%d]", fetch.id.longValue()), e);
