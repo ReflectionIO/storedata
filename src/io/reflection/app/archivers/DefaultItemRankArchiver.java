@@ -122,7 +122,7 @@ public class DefaultItemRankArchiver implements ItemRankArchiver {
 		KeyValueArchiveManager.get().setAppender(Rank.class, new ValueAppender<Rank>() {
 
 			@Override
-			public String getNewValue(String currentValue, Rank object) {
+			public String getNewValue(String key, String currentValue, Rank object, Map<String, Object> other) {
 				String newValue = currentValue;
 
 				if (object != null) {
@@ -189,7 +189,7 @@ public class DefaultItemRankArchiver implements ItemRankArchiver {
 	 * @see io.reflection.app.itemrankarchivers.ItemRankArchiver#getItemRanks(java.lang.String)
 	 */
 	@Override
-	public List<Rank> getItemRanks(String key) {
+	public List<Rank> getRanks(String key) {
 		List<Rank> ranks = null;
 		Map<Date, Rank> ranksLookup = new HashMap<Date, Rank>();
 		ArchivableKeyValue value = KeyValueArchiveManager.get().getArchiveKeyValue(key);

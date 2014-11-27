@@ -304,7 +304,7 @@ public class ItemChart extends GChart {
 		Date lastDate = null;
 
 		for (Rank rank : ranks) {
-			if (withinChartRange(rank) || getPosition(rank) == 0) {
+			if (withinChartRange(rank) || rank.downloads == null) {
 				continue;
 			}
 
@@ -345,7 +345,7 @@ public class ItemChart extends GChart {
 		Date lastDate = null;
 
 		for (Rank rank : ranks) {
-			if (withinChartRange(rank) || getPosition(rank) == 0) {
+			if (withinChartRange(rank) || rank.revenue == null) {
 				continue;
 			}
 
