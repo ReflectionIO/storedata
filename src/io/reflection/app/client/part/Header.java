@@ -336,13 +336,15 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 		setNavBarVisible(false);
 
-		ranksLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
+		ranksLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, OVERALL_LIST_TYPE,
+				FilterController.get().asRankFilterString()));
 		User user = SessionController.get().getLoggedInUser();
 		if (user != null) {
 			myAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(),
 					FilterController.get().asMyAppsFilterString()));
 		}
-		feedBrowserLink.setTargetHistoryToken(PageType.FeedBrowserPageType.asTargetHistoryToken("view", FilterController.get().asFeedFilterString()));
+		feedBrowserLink.setTargetHistoryToken(PageType.FeedBrowserPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
+				FilterController.get().asFeedFilterString()));
 		simpleModelRunLink.setTargetHistoryToken(PageType.SimpleModelRunPageType.asTargetHistoryToken(FilterController.get().asFeedFilterString()));
 		dataAccountFetchesLink.setTargetHistoryToken(PageType.DataAccountFetchesPageType.asTargetHistoryToken(FilterController.get()
 				.asDataAccountFetchFilterString()));
