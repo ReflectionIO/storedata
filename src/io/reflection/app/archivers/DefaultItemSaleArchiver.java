@@ -129,13 +129,13 @@ public class DefaultItemSaleArchiver implements ItemSaleArchiver {
 	public void archiveSale(Sale value) throws DataAccessException {
 		Country country = DataTypeHelper.createCountry(value.country);
 		Item item = getSaleItem(value);
-		
+
 		Map<String, Object> other = new HashMap<String, Object>();
-		
+
 		if (item != null) {
 			other.put("item", item);
 		}
-		
+
 		List<FormType> forms = getSaleFormTypes(value);
 		Long slice = Long.valueOf(SliceHelper.offset(value.end));
 
@@ -162,7 +162,7 @@ public class DefaultItemSaleArchiver implements ItemSaleArchiver {
 							existingRank = new Rank();
 							existingRank.fromJson(jsonRank.getAsJsonObject());
 
-							if (!found && existingRank.itemId.equalsIgnoreCase(item.internalId) && value.end == existingRank.date) {
+							if (!found && existingRank.itemId.equalsIgnoreCase(item.internalId) && value.end.getTime() == existingRank.date.getTime()) {
 								found = true;
 								addDownloadsAndRevenue(existingRank, value);
 							}

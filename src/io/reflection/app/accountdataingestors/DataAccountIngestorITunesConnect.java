@@ -148,15 +148,18 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 				sales = new ArrayList<Sale>();
 
 				Set<String> items = new HashSet<String>();
-
+				boolean inBody = false;
+				
 				while ((line = reader.readLine()) != null) {
-
-					if (!line.startsWith("Provider")) {
+					// skip the first line
+					if (inBody) {
 						Sale sale = convertToSale(line, fetch, items);
 
 						if (sale != null) {
 							sales.add(sale);
 						}
+					} else {
+						inBody = true;
 					}
 				}
 
