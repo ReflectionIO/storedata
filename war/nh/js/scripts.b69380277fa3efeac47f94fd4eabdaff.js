@@ -29,6 +29,7 @@ function initializeMap() {
 
 	initLinkToPageTop();
 	initScrollToAnchor();
+	initLandingScrollEffect();
 
 	function initLinkToPageTop() {
 		var linkToPageTop = $('.link-to-page-top');
@@ -47,8 +48,30 @@ function initializeMap() {
 				var anchor = $(this).attr("href"),
 					navHeight = 60,
 					targetTop = $(anchor).offset().top;
-      	$('html, body').animate({ scrollTop: targetTop - navHeight }, '500');	
+      	$('html, body').animate({ scrollTop: targetTop - navHeight }, 455, 'swing');	
 			});
+		}
+	}
+
+	function initLandingScrollEffect() {
+		if($('.window-height-scroll-effect-container').length > 0 && $('.csstransforms').length > 0) {
+			var windowHeight = $(window).height(),
+					windowWidth = $(window).width(),
+					breakpointVertical = 680,
+					breakpointHorizontal = 720;
+			
+			if(windowHeight >= breakpointVertical && windowWidth >= breakpointHorizontal) {
+				$(window).scroll(function(){
+					var scrollTop = $(window).scrollTop(),
+							scrollAsPercentageOfWindowHeight = (scrollTop / windowHeight) * 50,
+							scale = 1 - (scrollAsPercentageOfWindowHeight/100),
+							opacityScale = 1 - ((scrollAsPercentageOfWindowHeight * 2.5)/100),
+							opacityScaleShadowLayer = 0 + ((scrollAsPercentageOfWindowHeight * 2)/85);
+
+					$('.landing-section-main').css({'-ms-transform': 'scale(' + scale + ')', '-webkit-transform': 'scale(' + scale + ')', 'transform': 'scale(' + scale + ')', 'top': -scrollTop/4.3 + 'px', 'opacity': opacityScale});
+					$('.section-size-shadow-layer').css('opacity', opacityScaleShadowLayer);
+				});
+			}
 		}
 	}
 

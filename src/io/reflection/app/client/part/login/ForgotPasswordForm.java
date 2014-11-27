@@ -10,6 +10,7 @@ package io.reflection.app.client.part.login;
 import io.reflection.app.api.core.shared.call.ForgotPasswordRequest;
 import io.reflection.app.api.core.shared.call.ForgotPasswordResponse;
 import io.reflection.app.api.core.shared.call.event.ForgotPasswordEventHandler;
+import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.page.PageType;
@@ -29,6 +30,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author billy1380
@@ -120,6 +122,10 @@ public class ForgotPasswordForm extends Composite implements ForgotPasswordEvent
 		return validated;
 	}
 
+	private void setUsernameError(String error) {
+		mEmailError = error;
+	}
+
 	private void resetForm() {
 		mEmail.setEnabled(true);
 		mEmail.setText("");
@@ -136,6 +142,10 @@ public class ForgotPasswordForm extends Composite implements ForgotPasswordEvent
 	 */
 	@Override
 	public void forgotPasswordSuccess(ForgotPasswordRequest input, ForgotPasswordResponse output) {
+		if (output.status == StatusType.StatusTypeFailure && output.error != null && output.error.code == ApiError.UserNotFound.getCode()) {
+			setUsernameError("Invalid email address");
+			FormHelper.showNote(true, mEmailGroup, mEmailNote, mEmailError);
+		}
 		preloaderRef.hide();
 	}
 
