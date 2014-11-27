@@ -122,7 +122,7 @@ public class DefaultItemRankArchiver implements ItemRankArchiver {
 		KeyValueArchiveManager.get().setAppender(Rank.class, new ValueAppender<Rank>() {
 
 			@Override
-			public String getNewValue(String currentValue, Rank object) {
+			public String getNewValue(String key, String currentValue, Rank object, Map<String, Object> other) {
 				String newValue = currentValue;
 
 				if (object != null) {
