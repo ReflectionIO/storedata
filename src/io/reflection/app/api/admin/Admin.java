@@ -77,7 +77,6 @@ import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.SimpleModelRun;
 import io.reflection.app.datatypes.shared.User;
-import io.reflection.app.helpers.ApiHelper;
 import io.reflection.app.helpers.EmailHelper;
 import io.reflection.app.ingestors.Ingestor;
 import io.reflection.app.ingestors.IngestorFactory;
@@ -1034,13 +1033,6 @@ public final class Admin extends ActionHandler {
 				start.minusDays(30);
 				input.start = start.toDate();
 			}
-
-			long diff = input.end.getTime() - input.start.getTime();
-			long diffDays = diff / ApiHelper.MILLIS_PER_DAY;
-
-			if (diffDays > 30 || diffDays < 0)
-				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
-						ApiError.DateRangeOutOfBounds.getMessage("0-30 days: input.end - input.start"));
 
 			if (input.dataAccount != null && input.dataAccount.id != null) {
 				output.dataAccountFetches = DataAccountFetchServiceProvider.provide().getDataAccountFetches(input.dataAccount, input.start, input.end,
