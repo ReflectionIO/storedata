@@ -27,7 +27,6 @@ import io.reflection.app.datatypes.shared.FormType;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Sale;
-import io.reflection.app.helpers.SliceHelper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
@@ -44,8 +43,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.joda.time.DateTime;
 
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
@@ -127,7 +124,7 @@ public class DefaultItemSaleArchiver implements ItemSaleArchiver {
 	 */
 	@Override
 	public void archiveSale(Sale value) throws DataAccessException {
-		Country country = DataTypeHelper.createCountry(value.country);
+//		Country country = DataTypeHelper.createCountry(value.country);
 		Item item = getSaleItem(value);
 
 		Map<String, Object> other = new HashMap<String, Object>();
@@ -137,77 +134,77 @@ public class DefaultItemSaleArchiver implements ItemSaleArchiver {
 		}
 
 		List<FormType> forms = getSaleFormTypes(value);
-		Long slice = Long.valueOf(SliceHelper.offset(value.end));
-
-		KeyValueArchiveManager.get().setAppender(Sale.class, new ValueAppender<Sale>() {
-
-			@Override
-			public String getNewValue(String key, String currentValue, Sale value, Map<String, Object> other) {
-				String newValue = currentValue;
-
-				Item item = (Item) other.get("item");
-
-				// if we have a new sale and we can find the item
-				if (value != null && item != null) {
-					JsonElement jsonElement = currentValue == null ? null : (new JsonParser()).parse(currentValue);
-					JsonArray newJsonArray = new JsonArray();
-
-					boolean found = false;
-
-					if (jsonElement != null && jsonElement.isJsonArray()) {
-						JsonArray jsonArray = jsonElement.getAsJsonArray();
-						Rank existingRank;
-
-						for (JsonElement jsonRank : jsonArray) {
-							existingRank = new Rank();
-							existingRank.fromJson(jsonRank.getAsJsonObject());
-
-							if (!found && existingRank.itemId.equalsIgnoreCase(item.internalId) && value.end.getTime() == existingRank.date.getTime()) {
-								found = true;
-								addDownloadsAndRevenue(existingRank, value);
-							}
-
-							newJsonArray.add(existingRank.toJson());
-						}
-					}
-
-					if (!found) {
-						Rank newRank = new Rank();
-
-						newRank.revenue = Float.valueOf(0.0f);
-						newRank.downloads = Integer.valueOf(0);
-
-						newRank.country = value.country;
-						newRank.currency = value.customerCurrency;
-						newRank.date = value.end;
-						newRank.created = DateTime.now().toDate();
-						newRank.itemId = item.internalId;
-						newRank.source = item.source;
-
-						addDownloadsAndRevenue(newRank, value);
-
-						newJsonArray.add(newRank.toJson());
-					}
-
-					newValue = JsonUtils.cleanJson(newJsonArray.toString());
-				}
-
-				return newValue;
-			}
-
-			private void addDownloadsAndRevenue(Rank rank, Sale value) {
-				rank.revenue += Math.abs(value.units.floatValue()) * value.customerPrice.floatValue();
-
-				if (value.typeIdentifier.equals(FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS) || value.typeIdentifier.equals(FREE_OR_PAID_APP_UNIVERSAL_IOS)
-						|| value.typeIdentifier.equals(FREE_OR_PAID_APP_IPAD_IOS)) {
-					rank.downloads += value.units.intValue();
-					// Ignore price if the Sale is a refund or a promotion
-					if (rank.price == null && value.units.intValue() > 0 && value.promoCode.equals(" ")) {
-						rank.price = value.customerPrice;
-					}
-				}
-			}
-		});
+//		Long slice = Long.valueOf(SliceHelper.offset(value.end));
+//
+//		KeyValueArchiveManager.get().setAppender(Sale.class, new ValueAppender<Sale>() {
+//
+//			@Override
+//			public String getNewValue(String key, String currentValue, Sale value, Map<String, Object> other) {
+//				String newValue = currentValue;
+//
+//				Item item = (Item) other.get("item");
+//
+//				// if we have a new sale and we can find the item
+//				if (value != null && item != null) {
+//					JsonElement jsonElement = currentValue == null ? null : (new JsonParser()).parse(currentValue);
+//					JsonArray newJsonArray = new JsonArray();
+//
+//					boolean found = false;
+//
+//					if (jsonElement != null && jsonElement.isJsonArray()) {
+//						JsonArray jsonArray = jsonElement.getAsJsonArray();
+//						Rank existingRank;
+//
+//						for (JsonElement jsonRank : jsonArray) {
+//							existingRank = new Rank();
+//							existingRank.fromJson(jsonRank.getAsJsonObject());
+//
+//							if (!found && existingRank.itemId.equalsIgnoreCase(item.internalId) && value.end.getTime() == existingRank.date.getTime()) {
+//								found = true;
+//								addDownloadsAndRevenue(existingRank, value);
+//							}
+//
+//							newJsonArray.add(existingRank.toJson());
+//						}
+//					}
+//
+//					if (!found) {
+//						Rank newRank = new Rank();
+//
+//						newRank.revenue = Float.valueOf(0.0f);
+//						newRank.downloads = Integer.valueOf(0);
+//
+//						newRank.country = value.country;
+//						newRank.currency = value.customerCurrency;
+//						newRank.date = value.end;
+//						newRank.created = DateTime.now().toDate();
+//						newRank.itemId = item.internalId;
+//						newRank.source = item.source;
+//
+//						addDownloadsAndRevenue(newRank, value);
+//
+//						newJsonArray.add(newRank.toJson());
+//					}
+//
+//					newValue = JsonUtils.cleanJson(newJsonArray.toString());
+//				}
+//
+//				return newValue;
+//			}
+//
+//			private void addDownloadsAndRevenue(Rank rank, Sale value) {
+//				rank.revenue += Math.abs(value.units.floatValue()) * value.customerPrice.floatValue();
+//
+//				if (value.typeIdentifier.equals(FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS) || value.typeIdentifier.equals(FREE_OR_PAID_APP_UNIVERSAL_IOS)
+//						|| value.typeIdentifier.equals(FREE_OR_PAID_APP_IPAD_IOS)) {
+//					rank.downloads += value.units.intValue();
+//					// Ignore price if the Sale is a refund or a promotion
+//					if (rank.price == null && value.units.intValue() > 0 && value.promoCode.equals(" ")) {
+//						rank.price = value.customerPrice;
+//					}
+//				}
+//			}
+//		});
 
 		KeyValueArchiveManager.get().setAppender(Item.class, new ValueAppender<Item>() {
 
@@ -248,10 +245,10 @@ public class DefaultItemSaleArchiver implements ItemSaleArchiver {
 		});
 
 		for (FormType form : forms) {
-			KeyValueArchiveManager.get().appendToValue(createRanksKey(slice, value.account, country, form), value, other);
+//			KeyValueArchiveManager.get().appendToValue(createRanksKey(slice, value.account, country, form), value, other);
 
 			if (item != null) {
-				KeyValueArchiveManager.get().appendToValue(createItemRanksKey(slice, item, country, form), value, other);
+//				KeyValueArchiveManager.get().appendToValue(createItemRanksKey(slice, item, country, form), value, other);
 				KeyValueArchiveManager.get().appendToValue(createItemsKey(value.account, form), item);
 			}
 		}
