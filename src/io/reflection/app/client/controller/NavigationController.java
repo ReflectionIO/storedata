@@ -42,6 +42,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 	public static final String ADD_ACTION_PARAMETER_VALUE = "add";
 	public static final String EDIT_ACTION_PARAMETER_VALUE = "edit";
 	public static final String DELETE_ACTION_PARAMETER_VALUE = "delete";
+	public static final String VIEW_ACTION_PARAMETER_VALUE = "view";
 
 	private static NavigationController one = null;
 
@@ -416,7 +417,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 			PageType.fromString(mStack.getNext().getPage()).show(mStack.getNext().toString(1));
 		} else {
 			if (SessionController.get().getLoggedInUser() != null) {
-				PageType.RanksPageType.show("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString());
+				PageType.RanksPageType.show(VIEW_ACTION_PARAMETER_VALUE, OVERALL_LIST_TYPE, FilterController.get().asRankFilterString());
 			} else {
 				PageType.HomePageType.show();
 			}

@@ -71,7 +71,6 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 
 	private static TopicPageUiBinder uiBinder = GWT.create(TopicPageUiBinder.class);
 
-	protected final static String VIEW_ACTION_PARAMETER_VALUE = "view";
 	protected final static int TOPIC_ID_PARAMETER_INDEX = 0;
 
 	private Long topicId;
@@ -279,7 +278,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 			replyText.setVisible(false);
 			replyForm.setVisible(false);
 
-			if (current.getAction() != null && VIEW_ACTION_PARAMETER_VALUE.equals(current.getAction())) {
+			if (current.getAction() != null && NavigationController.VIEW_ACTION_PARAMETER_VALUE.equals(current.getAction())) {
 				String topicIdString;
 				if ((topicIdString = current.getParameter(TOPIC_ID_PARAMETER_INDEX)) != null) {
 					topicId = Long.valueOf(topicIdString);
