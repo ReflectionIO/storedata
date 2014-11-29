@@ -51,6 +51,7 @@ import io.reflection.app.client.handler.user.UserPasswordChangedEventHandler.Use
 import io.reflection.app.client.handler.user.UserRegisteredEventHandler.UserRegistered;
 import io.reflection.app.client.handler.user.UserRegisteredEventHandler.UserRegistrationFailed;
 import io.reflection.app.client.handler.user.UsersEventHandler.ReceivedCount;
+import io.reflection.app.client.helper.MixPanelApiHelper;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
@@ -58,7 +59,9 @@ import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.app.shared.util.PagerHelper;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.http.client.Request;
 import com.google.gwt.user.client.Window;
@@ -551,10 +554,19 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 		final String email = username;
 
+		final Map<String, Object> params = new HashMap<String, Object>();
+		params.put("username", username);
+		params.put("company", company);
+		
+		if (password == null || password.length() == 0) {
+			params.put("requestInvite", Boolean.TRUE);
+		}
+
 		service.registerUser(input, new AsyncCallback<RegisterUserResponse>() {
 
 			@Override
 			public void onSuccess(RegisterUserResponse output) {
+
 				if (output.status == StatusType.StatusTypeSuccess) {
 					// only refresh the user list if the current user is an admin or has manage user permission
 					if (SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_MANAGE_USERS_CODE)) {
@@ -563,8 +575,17 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 						fetchUsers();
 					}
 
+					params.put("status", "success");
+					MixPanelApiHelper.track("registerUser", params);
+
 					EventController.get().fireEventFromSource(new UserRegistered(email), UserController.this);
 				} else {
+					params.put("status", "failure");
+					if (output.error != null && output.error.message != null) {
+						params.put("error", output.error.message);
+					}
+					MixPanelApiHelper.track("registerUser", params);
+
 					EventController.get().fireEventFromSource(new UserRegistrationFailed(output.error), UserController.this);
 				}
 
@@ -576,6 +597,10 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 				e.code = Integer.valueOf(-1);
 				e.message = caught.getMessage();
+
+				params.put("status", "failure");
+				params.put("error", caught.getMessage());
+				MixPanelApiHelper.track("registerUser", params);
 
 				EventController.get().fireEventFromSource(new UserRegistrationFailed(e), UserController.this);
 			}
@@ -592,6 +617,9 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 	 */
 	public void registerUser(String actionCode, String password) {
 		CoreService service = ServiceCreator.createCoreService();
+
+		final Map<String, Object> params = new HashMap<String, Object>();
+		params.put("actionCode", actionCode);
 
 		final RegisterUserRequest input = new RegisterUserRequest();
 		input.accessCode = ACCESS_CODE;
@@ -612,6 +640,16 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 						fetchUsers();
 					}
+
+					params.put("status", "success");
+					MixPanelApiHelper.track("registerUser", params);
+				} else {
+					params.put("status", "failure");
+					if (output.error != null && output.error.message != null) {
+						params.put("error", output.error.message);
+					}
+					
+					MixPanelApiHelper.track("registerUser", params);
 				}
 
 				EventController.get().fireEventFromSource(new RegisterUserEventHandler.RegisterUserSuccess(input, output), UserController.this);
@@ -619,6 +657,10 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 			@Override
 			public void onFailure(Throwable caught) {
+				params.put("status", "failure");
+				params.put("error", caught.getMessage());
+				MixPanelApiHelper.track("registerUser", params);
+				
 				EventController.get().fireEvent(new RegisterUserEventHandler.RegisterUserFailure(input, caught));
 			}
 		});
