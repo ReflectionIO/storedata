@@ -265,7 +265,7 @@ public class FeedBrowserPage extends Page implements FilterEventHandler, Navigat
 
 				mPager.setPage(0);
 
-				PageType.FeedBrowserPageType.show("view", FilterController.get().asFeedFilterString());
+				PageType.FeedBrowserPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, FilterController.get().asFeedFilterString());
 			}
 		}
 	}
@@ -287,7 +287,7 @@ public class FeedBrowserPage extends Page implements FilterEventHandler, Navigat
 
 				mPager.setPage(0);
 
-				PageType.FeedBrowserPageType.show("view", FilterController.get().asFeedFilterString());
+				PageType.FeedBrowserPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, FilterController.get().asFeedFilterString());
 			}
 		}
 	}
@@ -305,8 +305,8 @@ public class FeedBrowserPage extends Page implements FilterEventHandler, Navigat
 				mPager.setVisible(true);
 			}
 
-			if (current.getAction() == null || !"view".equals(current.getAction())) {
-				PageType.FeedBrowserPageType.show("view", FilterController.get().asFeedFilterString());
+			if (current.getAction() == null || !NavigationController.VIEW_ACTION_PARAMETER_VALUE.equals(current.getAction())) {
+				PageType.FeedBrowserPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, FilterController.get().asFeedFilterString());
 			} else {
 				refreshBreadcrumbs();
 

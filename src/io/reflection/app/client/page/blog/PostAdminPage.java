@@ -154,7 +154,8 @@ public class PostAdminPage extends Page implements GetPostsEventHandler, Navigat
 			public SafeHtml getValue(Post object) {
 				String s = object.id.toString();
 
-				return SafeHtmlUtils.fromTrustedString("<a href=\"" + PageType.BlogPostPageType.asHref("view", s).asString()
+				return SafeHtmlUtils.fromTrustedString("<a href=\""
+						+ PageType.BlogPostPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, s).asString()
 						+ "\" class=\"btn btn-xs btn-default\">View</a>");
 			}
 		};

@@ -6,6 +6,7 @@
 //  Copyright © 2013 SPACEHOPPER STUDIOS LTD. All rights reserved.
 //
 package io.reflection.app.client.page;
+
 import static io.reflection.app.client.helper.FormattingHelper.*;
 import static io.reflection.app.client.controller.FilterController.CATEGORY_KEY;
 import static io.reflection.app.client.controller.FilterController.COUNTRY_KEY;
@@ -306,7 +307,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 					showMorePanel.setVisible(false);
 				}
 
-				PageType.RanksPageType.show("view", selectedTab, FilterController.get().asRankFilterString());
+				PageType.RanksPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, selectedTab, FilterController.get().asRankFilterString());
 			}
 		}
 	}
@@ -333,7 +334,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 					showMorePanel.setVisible(false);
 				}
 
-				PageType.RanksPageType.show("view", selectedTab, FilterController.get().asRankFilterString());
+				PageType.RanksPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, selectedTab, FilterController.get().asRankFilterString());
 			}
 		}
 
@@ -515,16 +516,20 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 				redirect.getParent().getElement().appendChild(redirect.getElement());
 			}
 
-			if (current.getAction() == null || !"view".equals(current.getAction())) {
-				PageType.RanksPageType.show("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString());
+			if (current.getAction() == null || !NavigationController.VIEW_ACTION_PARAMETER_VALUE.equals(current.getAction())) {
+				PageType.RanksPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, OVERALL_LIST_TYPE, FilterController.get().asRankFilterString());
 			} else {
 				String currentFilter = FilterController.get().asRankFilterString();
 
 				if (currentFilter != null && currentFilter.length() > 0) {
-					mAll.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, currentFilter));
-					mPaid.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", PAID_LIST_TYPE, currentFilter));
-					mFree.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", FREE_LIST_TYPE, currentFilter));
-					mGrossing.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", GROSSING_LIST_TYPE, currentFilter));
+					mAll.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, OVERALL_LIST_TYPE,
+							currentFilter));
+					mPaid.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, PAID_LIST_TYPE,
+							currentFilter));
+					mFree.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, FREE_LIST_TYPE,
+							currentFilter));
+					mGrossing.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
+							GROSSING_LIST_TYPE, currentFilter));
 				}
 
 				selectedTab = current.getParameter(SELECTED_TAB_PARAMETER_INDEX);
