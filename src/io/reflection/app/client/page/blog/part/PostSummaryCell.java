@@ -8,6 +8,7 @@
 package io.reflection.app.client.page.blog.part;
 
 import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMAT_EEE_DD_MMM_YYYY;
+import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.helper.MarkdownHelper;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.datatypes.shared.Post;
@@ -47,7 +48,7 @@ public class PostSummaryCell extends AbstractCell<Post> {
 
 	@Override
 	public void render(Context context, Post value, SafeHtmlBuilder builder) {
-		SafeUri link = PageType.BlogPostPageType.asHref("view", value.id.toString());
+		SafeUri link = PageType.BlogPostPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, value.id.toString());
 		SafeHtml published = DateTemplate.INSTANCE.notPublished();
 
 		if (value.published != null) {

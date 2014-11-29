@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.page.forum.part;
 
+import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.helper.MarkdownHelper;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.datatypes.ForumMessage;
@@ -47,8 +48,8 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 	}
 
 	interface ForumMessageCellRenderer extends UiRenderer {
-		void render(SafeHtmlBuilder sb, String authorName, String companyName, SafeHtml content, String created, SafeUri link, String flagBar, String flagText, String editBar,
-				SafeHtml editButtonHtml, String quoteBar, String quoteText);
+		void render(SafeHtmlBuilder sb, String authorName, String companyName, SafeHtml content, String created, SafeUri link, String flagBar, String flagText,
+				String editBar, SafeHtml editButtonHtml, String quoteBar, String quoteText);
 
 		void onBrowserEvent(ForumMessageCell o, NativeEvent e, Element p, ForumMessage n);
 
@@ -98,14 +99,14 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 
 			String processedString = MarkdownHelper.process(value.getContent());
 
-			SafeUri link = UriUtils.fromSafeConstant(PageType.ForumThreadPageType.asHref("view", value.getTopicId().toString(), "view",
-					Integer.toString(value.getIndex())).asString());
-			
+			SafeUri link = UriUtils.fromSafeConstant(PageType.ForumThreadPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
+					value.getTopicId().toString(), NavigationController.VIEW_ACTION_PARAMETER_VALUE, Integer.toString(value.getIndex())).asString());
+
 			User author = value.getAuthor();
-			
+
 			String companyName = "";
 			if (author != null) {
-			    companyName = SafeHtmlUtils.htmlEscape(FormattingHelper.getCompanyName(author));
+				companyName = SafeHtmlUtils.htmlEscape(FormattingHelper.getCompanyName(author));
 			}
 
 			RENDERER.render(builder, FormattingHelper.getUserName(author), companyName, SafeHtmlUtils.fromTrustedString(processedString), FormattingHelper
@@ -115,7 +116,7 @@ public class ForumMessageCell extends AbstractCell<ForumMessage> {
 
 	}
 
-//	@UiHandler("flag")
+	// @UiHandler("flag")
 	void flagClicked(ClickEvent event, Element parent, ForumMessage value) {
 		if (value.canFlag()) {
 			if (value.isTopic()) {

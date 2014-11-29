@@ -183,7 +183,7 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
 
 				@Override
 				public void onClick(ClickEvent event) {
-					PageType.ForumThreadPageType.show("view", output.topic.id.toString());
+					PageType.ForumThreadPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, output.topic.id.toString());
 				}
 			});
 

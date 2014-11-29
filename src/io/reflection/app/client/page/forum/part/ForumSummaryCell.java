@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.page.forum.part;
 
+import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.TopicController;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.datatypes.shared.Forum;
@@ -23,21 +24,21 @@ import com.google.gwt.uibinder.client.UiRenderer;
  */
 public class ForumSummaryCell extends AbstractCell<Forum> {
 
-    interface ForumSummaryCellRenderer extends UiRenderer {
-        void render(SafeHtmlBuilder sb, SafeUri link, String title, String styleName, String description, Integer topics);
-    }
+	interface ForumSummaryCellRenderer extends UiRenderer {
+		void render(SafeHtmlBuilder sb, SafeUri link, String title, String styleName, String description, Integer topics);
+	}
 
-    private static ForumSummaryCellRenderer RENDERER = GWT.create(ForumSummaryCellRenderer.class);
+	private static ForumSummaryCellRenderer RENDERER = GWT.create(ForumSummaryCellRenderer.class);
 
-    @Override
-    public void render(Context context, Forum value, SafeHtmlBuilder builder) {
-        SafeUri link = PageType.ForumPageType.asHref("view", value.id.toString());
+	@Override
+	public void render(Context context, Forum value, SafeHtmlBuilder builder) {
+		SafeUri link = PageType.ForumPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, value.id.toString());
 
-        String styleName = "list-group-item";
-        if (value.id.equals(TopicController.get().getForumId())) {
-            styleName += " activeForum";
-        }
+		String styleName = "list-group-item";
+		if (value.id.equals(TopicController.get().getForumId())) {
+			styleName += " activeForum";
+		}
 
-        RENDERER.render(builder, link, value.title, styleName, value.description, value.numberOfTopics);
-    }
+		RENDERER.render(builder, link, value.title, styleName, value.description, value.numberOfTopics);
+	}
 }
