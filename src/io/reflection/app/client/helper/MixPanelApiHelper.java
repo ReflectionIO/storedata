@@ -24,20 +24,32 @@ public class MixPanelApiHelper {
 	public static void track(Stack value) {
 		JavaScriptObject o = JavaScriptObject.createObject();
 
+		if (value.hasPage()) {
+			JavaScriptObjectHelper.setStringProperty(o, "page", value.getPage());
+		}
+
+		if (value.hasAction()) {
+			JavaScriptObjectHelper.setStringProperty(o, "action", value.getAction());
+		}
+
 		int count = value.getParameterCount();
 		String param;
-		
 		for (int i = 0; i < count; i++) {
 			param = value.getParameter(i);
-			
-			if (i == 0) {
-				JavaScriptObjectHelper.setStringProperty(o, "page", param);
+
+			if (param.contains(":")) {
+				String[] encoded = param.split(":");
+				String[] values = Stack.decode(encoded[0] + ":", param);
+
+				for (int j = 0; j < values.length; j++) {
+					param = values[j];
+					JavaScriptObjectHelper.setStringProperty(o, encoded[0] + j, param);
+				}
 			} else {
 				JavaScriptObjectHelper.setStringProperty(o, "param" + i, param);
 			}
 		}
 
 		MixPanelApi.get().track("navigation", o);
-
 	}
 }

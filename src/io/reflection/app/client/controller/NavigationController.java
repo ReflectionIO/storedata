@@ -203,7 +203,6 @@ public class NavigationController implements ValueChangeHandler<String> {
 		public int getParameterCount() {
 			int count = mParts.length - 2;
 			return count > 0 ? count : 0;
-
 		}
 	}
 
