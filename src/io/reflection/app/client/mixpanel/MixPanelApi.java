@@ -104,8 +104,12 @@ public class MixPanelApi {
 		$wnd.mixpanel.track_forms(query, eventName, properties);
 	}-*/;
 
+	public native void register(JavaScriptObject properties) /*-{
+		$wnd.mixpanel.register(properties);
+	}-*/;
+	
 	public native void register(JavaScriptObject properties, Number days) /*-{
-		$wnd.mixpanel.register(propertiesm, days);
+		$wnd.mixpanel.register(properties, days);
 	}-*/;
 
 	public native void registerOnce(JavaScriptObject properties, Number days) /*-{
@@ -140,19 +144,19 @@ public class MixPanelApi {
 		return $wnd.mixpanel.get_property(propertyName);
 	}-*/;
 
-	public native void peopleSet(JavaScriptObject prop, JavaScriptObject to) /*-{
+	public native void peopleSet(String prop, JavaScriptObject to) /*-{
 		$wnd.mixpanel.people.set(prop, to);
 	}-*/;
 
-	public native void peopleSetOnce(JavaScriptObject prop, JavaScriptObject to) /*-{
+	public native void peopleSetOnce(String prop, JavaScriptObject to) /*-{
 		$wnd.mixpanel.people.set_once(prop, to);
 	}-*/;
 
-	public native void peopleIncrement(JavaScriptObject prop, Number by) /*-{
+	public native void peopleIncrement(String prop, Number by) /*-{
 		$wnd.mixpanel.people.increment(prop, by);
 	}-*/;
 
-	public native void peopleAppend(JavaScriptObject prop, JavaScriptObject value) /*-{
+	public native void peopleAppend(String prop, JavaScriptObject value) /*-{
 		$wnd.mixpanel.people.append(prop, value);
 	}-*/;
 

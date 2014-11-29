@@ -7,8 +7,11 @@
 //
 package io.reflection.app.client.helper;
 
+import java.util.Map;
+
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.mixpanel.MixPanelApi;
+import io.reflection.app.datatypes.shared.User;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -21,11 +24,11 @@ public class MixPanelApiHelper {
 	/**
 	 * @param value
 	 */
-	public static void track(Stack value) {
+	public static void trackNavigation(Stack value) {
 		JavaScriptObject o = JavaScriptObject.createObject();
 
 		if (value.hasPage()) {
-			JavaScriptObjectHelper.setStringProperty(o, "page", value.getPage());
+			JavaScriptObjectHelper.setStringProperty(o, "page", value.getPage().substring(1));
 		}
 
 		if (value.hasAction()) {
@@ -51,5 +54,35 @@ public class MixPanelApiHelper {
 		}
 
 		MixPanelApi.get().track("navigation", o);
+	}
+
+	public static void trackLoginUser(User user) {
+		if (user != null) {
+			JavaScriptObject o = JavaScriptObject.createObject();
+
+			JavaScriptObjectHelper.setStringProperty(o, "username", user.username);
+			JavaScriptObjectHelper.setStringProperty(o, "company", user.company);
+			JavaScriptObjectHelper.setBooleanProperty(o, "loggedin", true);
+
+			MixPanelApi.get().register(o);
+
+			MixPanelApi.get().identify(user.username);
+
+			MixPanelApi.get().track("login");
+		}
+	}
+
+	public static void trackLoggedOut() {
+		MixPanelApi.get().track("logout");
+
+		MixPanelApi.get().unregister("loggedin");
+	}
+
+	public static void track(String name, Map<String, ?> properties) {
+		JavaScriptObject o = JavaScriptObject.createObject();
+
+		JavaScriptObjectHelper.copyToJavaScriptObject(properties, o);
+
+		MixPanelApi.get().track(name, o);
 	}
 }

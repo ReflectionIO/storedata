@@ -215,7 +215,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 	}
 
 	private NavigationController() {
-		MixPanelApi.get().init("37bdb809114467433081b1213844493b");
+		MixPanelApi.get().init("400e244ec1aab9ad548fe51024506310");
 	}
 
 	/**
@@ -260,7 +260,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 	}
 
 	private void addStack(Stack value) {
-		MixPanelApiHelper.track(value);
+		MixPanelApiHelper.trackNavigation(value);
 		
 		String page = value.getPage();
 
