@@ -456,6 +456,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	 */
 	@Override
 	public void getItemRanksFailure(GetItemRanksRequest input, Throwable caught) {
+		preloader.hide();
 		mSidePanel.setLoaderVisible(false);
 		mSidePanel.setPriceInnerHTML("-");
 		setLoadingSpinnerEnabled(false);

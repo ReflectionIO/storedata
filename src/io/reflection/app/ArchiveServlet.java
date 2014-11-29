@@ -119,7 +119,7 @@ public class ArchiveServlet extends ContextAwareServlet {
 			if (id != null) {
 				ArchiverFactory.getItemRankArchiver().archiveIdFeedFetchRanks(id);
 			}
-		} else if ("itemsales".equals(type)) {
+		} else if ("itemsale".equals(type)) {
 			String pagerParam = REQUEST.get().getParameter("pager");
 			String startParam = REQUEST.get().getParameter("start");
 			String countParam = REQUEST.get().getParameter("count");

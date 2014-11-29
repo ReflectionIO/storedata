@@ -13,6 +13,7 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
+import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Sale;
 
@@ -178,5 +179,41 @@ public interface ISaleService extends IService {
 	 * @throws DataAccessException
 	 */
 	public List<Long> getSaleIds(Country country, DataAccount linkedAccount, Date start, Date end) throws DataAccessException;
+
+	/**
+	 * Get all sale ids
+	 * 
+	 * @param pager
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<Long> getAllSaleIds(Pager pager) throws DataAccessException;
+
+	/**
+	 * Get data account fetch sales
+	 * 
+	 * @param dataAccountFetch
+	 * @param pager
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<Sale> getDataAccountFetchSales(DataAccountFetch dataAccountFetch, Pager pager) throws DataAccessException;
+
+	/**
+	 * Get data account fetch sale ids
+	 * 
+	 * @param dataAccountFetch
+	 * @param pager
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<Long> getDataAccountFetchSaleIds(DataAccountFetch dataAccountFetch, Pager pager) throws DataAccessException;
+
+	/**
+	 * @param parentIdentifier
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public String getSkuItemId(String sku) throws DataAccessException;
 
 }

@@ -294,15 +294,17 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 
 			Modeller modeller = ModellerFactory.getModellerForStore(DataTypeHelper.IOS_STORE_A3);
 
+			FeedFetch fetch;
 			for (int i = 0; i < group.size(); i++) {
-				FeedFetch current = group.get(Integer.valueOf(i));
-				current.status = FeedFetchStatusType.FeedFetchStatusTypeIngested;
-				FeedFetchServiceProvider.provide().updateFeedFetch(current);
+				fetch = group.get(Integer.valueOf(i));
+				fetch.status = FeedFetchStatusType.FeedFetchStatusTypeIngested;
+				
+				fetch = FeedFetchServiceProvider.provide().updateFeedFetch(fetch);
 
-				ArchiverFactory.getItemRankArchiver().enqueueIdFeedFetch(current.id);
+				ArchiverFactory.getItemRankArchiver().enqueueIdFeedFetch(fetch.id);
 
 				// once the feed fetch status is updated model the list
-				modeller.enqueue(current);
+				modeller.enqueue(fetch);
 			}
 
 			// Store s = DataTypeHelper.getIosStore();

@@ -679,7 +679,11 @@ public class DevHelperServlet extends HttpServlet {
 						ar.enqueueIdSale(Long.valueOf(saleId));
 					}
 				} else if ("dataaccountfetchsale".equalsIgnoreCase(object)) {
-					ArchiverFactory.getItemSaleArchiver().enqueueIdDataAccountFetch(Long.valueOf(ids));
+					String[] dataAccountFetchIdsArray = ids.split(",");
+
+					for (String id : dataAccountFetchIdsArray) {
+						ArchiverFactory.getItemSaleArchiver().enqueueIdDataAccountFetch(Long.valueOf(id));
+					}
 				}
 
 				success = true;

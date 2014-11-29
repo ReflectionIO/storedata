@@ -9,6 +9,8 @@ package io.reflection.app.client.controller;
 
 import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
 import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.helper.MixPanelApiHelper;
+import io.reflection.app.client.mixpanel.MixPanelApi;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.Footer;
@@ -202,7 +204,6 @@ public class NavigationController implements ValueChangeHandler<String> {
 		public int getParameterCount() {
 			int count = mParts.length - 2;
 			return count > 0 ? count : 0;
-
 		}
 	}
 
@@ -215,54 +216,8 @@ public class NavigationController implements ValueChangeHandler<String> {
 	}
 
 	private NavigationController() {
-		addMixpanel();
+		MixPanelApi.get().init("400e244ec1aab9ad548fe51024506310");
 	}
-
-	private static native void track(String event) /*-{
-		$wnd.mixpanel.track(event);
-	}-*/;
-
-	private static native void addMixpanel() /*-{
-		(function(f, b) {
-		    if (!b.__SV) {
-		        var a, e, i, g;
-		        $wnd.mixpanel = b;
-		        b._i = [];
-		        b.init = function(a, e, d) {
-		            function f(b, h) {
-		                var a = h.split(".");
-		                2 == a.length && (b = b[a[0]], h = a[1]);
-		                b[h] = function() {
-		                    b.push([h].concat(Array.prototype.slice.call(arguments, 0)))
-		                }
-		            }
-		            var c = b;
-		            "undefined" !== typeof d ? c = b[d] = [] : d = "mixpanel";
-		            c.people = c.people || [];
-		            c.toString = function(b) {
-		                var a = "mixpanel";
-		                "mixpanel" !== d && (a += "." + d);
-		                b || (a += " (stub)");
-		                return a
-		            };
-		            c.people.toString = function() {
-		                return c.toString(1) + ".people (stub)"
-		            };
-		            i = "disable track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config people.set people.set_once people.increment people.append people.track_charge people.clear_charges people.delete_user".split(" ");
-		            for (g = 0; g < i.length; g++) f(c, i[g]);
-		            b._i.push([a, e, d])
-		        };
-		        b.__SV = 1.2;
-		        a = f.createElement("script");
-		        a.type = "text/javascript";
-		        a.async = !0;
-		        a.src = "//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";
-		        e = f.getElementsByTagName("script")[0];
-		        e.parentNode.insertBefore(a, e)
-		    }
-		})($wnd.document, $wnd.mixpanel || []);
-		$wnd.mixpanel.init("37bdb809114467433081b1213844493b");
-	}-*/;
 
 	/**
 	 * @return
@@ -294,8 +249,6 @@ public class NavigationController implements ValueChangeHandler<String> {
 	 * @param value
 	 */
 	public void addPage(String value) {
-		track(value);
-
 		FilterController.get().setFilter(value);
 
 		Stack s = Stack.parse(value);
@@ -308,6 +261,8 @@ public class NavigationController implements ValueChangeHandler<String> {
 	}
 
 	private void addStack(Stack value) {
+		MixPanelApiHelper.trackNavigation(value);
+		
 		String page = value.getPage();
 
 		if ("logout".equals(page)) {

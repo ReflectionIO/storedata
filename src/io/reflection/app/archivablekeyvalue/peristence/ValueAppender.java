@@ -7,10 +7,12 @@
 //
 package io.reflection.app.archivablekeyvalue.peristence;
 
+import java.util.Map;
+
 /**
  * @author William Shakour (billy1380)
  * 
  */
 public interface ValueAppender<T> {
-	String getNewValue(String currentValue, T value);
+	String getNewValue(String key, String currentValue, T value, Map<String, Object> other);
 }
