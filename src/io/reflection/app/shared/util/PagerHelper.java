@@ -9,6 +9,9 @@ package io.reflection.app.shared.util;
 
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.controller.NavigationController.Stack;
+import io.reflection.app.client.part.pager.UrlAmenderPager;
 
 import java.util.List;
 
@@ -97,5 +100,44 @@ public class PagerHelper {
 		}
 
 		return pager;
+	}
+
+	public static void updateFromUrl(UrlAmenderPager pagerAmender, Stack stack) {
+		if (stack.hasAction()) {
+			if (pagerAmender.isPagerParameter(stack.getAction())) {
+				pagerAmender.updateFromString(stack.getAction());
+			}
+			for (int i = 0; i < stack.getParameterCount(); i++) {
+				if (pagerAmender.isPagerParameter(stack.getParameter(i))) {
+					pagerAmender.updateFromString(stack.getParameter(i));
+				}
+			}
+		}
+	}
+
+	public static String getUpdatedUrl(UrlAmenderPager pagerAmender) {
+		String action = new String();
+		Stack stack = NavigationController.get().getStack();
+		if (stack.hasAction()) {
+			if (pagerAmender.isPagerParameter(stack.getAction())) {
+				action = "/" + pagerAmender.asUrlAmenderString();
+			} else {
+				action = stack.getAction();
+			}
+		}
+		String parameters = new String();
+		if (stack.getParameterCount() > 0) {
+			for (int i = 0; i < stack.getParameterCount(); i++) {
+				if (pagerAmender.isPagerParameter(stack.getParameter(i))) {
+					parameters += "/" + pagerAmender.asUrlAmenderString();
+				} else {
+					parameters += "/" + stack.getParameter(i);
+				}
+			}
+		} else {
+			parameters = "/" + pagerAmender.asUrlAmenderString();
+		}
+
+		return action + parameters;
 	}
 }

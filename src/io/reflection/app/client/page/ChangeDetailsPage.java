@@ -786,13 +786,13 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 				if (currentUser.id.toString().equals(editingUserId.toString())) { // Current user is the same as in the stack parameter
 					fillDetailsForm(currentUser);
 				} else if (SessionController.get().isLoggedInUserAdmin()) {
-//					User editingUser = UserController.get().getUser(editingUserId);
-//					if (editingUser != null) { // User already retrieved
-//						fillDetailsForm(editingUser);
-//					} else { // Coming from a page refreshing
-						preloaderDetails.show();
-						UserController.get().fetchUser(editingUserId);
-//					}
+					// User editingUser = UserController.get().getUser(editingUserId);
+					// if (editingUser != null) { // User already retrieved
+					// fillDetailsForm(editingUser);
+					// } else { // Coming from a page refreshing
+					preloaderDetails.show();
+					UserController.get().fetchUser(editingUserId);
+					// }
 				} else { // No access to this user
 					userRolesProvider.updateRowCount(0, true);
 					userPermissionsProvider.updateRowCount(0, true);
@@ -885,7 +885,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 
 				@Override
 				public void run() {
-					PageType.UsersPageType.show();
+					PageType.UsersPageType.show("view");
 				}
 			};
 

@@ -94,6 +94,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@UiField UListElement adminList;
 
 	@UiField LIElement usersItem;
+	@UiField InlineHyperlink usersLink;
 
 	// @UiField LIElement upgradeAccountItem;
 	// @UiField InlineHyperlink upgradeAccountLink;
@@ -158,6 +159,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 		initWidget(uiBinder.createAndBindUi(this));
 
 		loginLink.setTargetHistoryToken(PageType.LoginPageType.asTargetHistoryToken("requestinvite"));
+		simpleModelRunLink.setTargetHistoryToken(PageType.SimpleModelRunPageType.asTargetHistoryToken(FilterController.get().asFeedFilterString()));
+		usersLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken("view"));
 
 		// mQuery.getElement().setAttribute("placeholder", "Search for any app");
 		// mSearch.setHTML("<b class=\"glyphicon glyphicon-search\"></b>");
@@ -289,9 +292,10 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	public void navigationChanged(Stack previous, Stack current) {
 		if (PageType.RanksPageType.equals(current.getPage())) {
 			highlight(ranksItem);
-		} else if (PageType.UsersPageType.equals(current.getPage())) {
-			if (current.getAction() == null) {
+		} else if (PageType.UsersPageType.equals(current.getPage()) && current.hasAction()) {
+			if ("view".equals(current.getAction())) {
 				highlight(adminDropdown, usersItem);
+				usersLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(current.toString(1)));
 			} else if (PageType.MyAppsPageType.equals(current.getAction())) {
 				highlight(myAccountDropdown, myAppsItem);
 			} else if (PageType.LinkedAccountsPageType.equals(current.getAction())) {
@@ -307,6 +311,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			highlight(adminDropdown, feedBrowserItem);
 		} else if (PageType.SimpleModelRunPageType.equals(current.getPage())) {
 			highlight(adminDropdown, simpleModelRunItem);
+			simpleModelRunLink.setTargetHistoryToken(PageType.SimpleModelRunPageType.asTargetHistoryToken(current.toString(1)));
 		} else if (PageType.RolesPageType.equals(current.getPage())) {
 			highlight(adminDropdown, rolesItem);
 		} else if (PageType.PermissionsPageType.equals(current.getPage())) {
@@ -343,7 +348,6 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 					FilterController.get().asMyAppsFilterString()));
 		}
 		feedBrowserLink.setTargetHistoryToken(PageType.FeedBrowserPageType.asTargetHistoryToken("view", FilterController.get().asFeedFilterString()));
-		simpleModelRunLink.setTargetHistoryToken(PageType.SimpleModelRunPageType.asTargetHistoryToken(FilterController.get().asFeedFilterString()));
 		dataAccountFetchesLink.setTargetHistoryToken(PageType.DataAccountFetchesPageType.asTargetHistoryToken(FilterController.get()
 				.asDataAccountFetchFilterString()));
 

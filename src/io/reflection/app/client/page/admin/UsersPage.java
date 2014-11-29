@@ -16,17 +16,22 @@ import io.reflection.app.api.blog.shared.call.DeleteUserResponse;
 import io.reflection.app.api.blog.shared.call.event.DeleteUserEventHandler;
 import io.reflection.app.client.cell.StyledButtonCell;
 import io.reflection.app.client.controller.EventController;
+import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.UserController;
+import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.ConfirmationDialog;
 import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.part.SimplePager;
+import io.reflection.app.client.part.pager.PagerAmender;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.shared.util.FormattingHelper;
+import io.reflection.app.shared.util.PagerHelper;
 
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.SafeHtmlCell;
@@ -53,7 +58,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUsersEventHandler {
+public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUsersEventHandler, NavigationEventHandler {
 
 	private static UsersPageUiBinder uiBinder = GWT.create(UsersPageUiBinder.class);
 
@@ -68,6 +73,8 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 	@UiField TextBox queryTextBox;
 	private String query = "";
 
+	private PagerAmender pagerAmender = new PagerAmender("userspager");
+
 	public UsersPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
@@ -79,6 +86,35 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 		simplePager.setDisplay(usersTable);
 
 		queryTextBox.getElement().setAttribute("placeholder", "Find a user");
+
+		pagerAmender.setCount(Long.valueOf(ServiceConstants.SHORT_STEP_VALUE));
+
+		simplePager.getNext().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				pagerAmender.setNextPage();
+				PageType.UsersPageType.show(PagerHelper.getUpdatedUrl(pagerAmender));
+			}
+		});
+
+		simplePager.getPrevious().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				pagerAmender.setPreviousPage();
+				PageType.UsersPageType.show(PagerHelper.getUpdatedUrl(pagerAmender));
+			}
+		});
+
+		simplePager.getFirst().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				pagerAmender.setFirstPage();
+				PageType.UsersPageType.show(PagerHelper.getUpdatedUrl(pagerAmender));
+			}
+		});
 
 	}
 
@@ -93,6 +129,7 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 
 		register(EventController.get().addHandlerToSource(DeleteUserEventHandler.TYPE, UserController.get(), this));
 		register(EventController.get().addHandlerToSource(DeleteUsersEventHandler.TYPE, UserController.get(), this));
+		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 	}
 
 	private void createColumns() {
@@ -329,6 +366,22 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 	@Override
 	public void deleteUsersFailure(DeleteUsersRequest input, Throwable caught) {
 		preloader.hide();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
+	 * io.reflection.app.client.controller.NavigationController.Stack)
+	 */
+	@Override
+	public void navigationChanged(Stack previous, Stack current) {
+
+		PagerHelper.updateFromUrl(pagerAmender, current);
+		if (simplePager.getPageStart() != pagerAmender.getStart().intValue()) {
+			simplePager.setPageStart(pagerAmender.getStart().intValue());
+		}
+
 	}
 
 }

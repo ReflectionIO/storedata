@@ -12,12 +12,10 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.UListElement;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.AbstractPager;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Widget;
@@ -109,35 +107,35 @@ public class SimplePager extends AbstractPager {
 		setDisplay(null);
 	}
 
-	@UiHandler("mFirstPage")
-	void onFirstPageClicked(ClickEvent e) {
-		firstPage();
-	}
-
-	@UiHandler("mNextPage")
-	void onNextPageClicked(ClickEvent e) {
-		nextPage();
-	}
-
-	@UiHandler("mPrevPage")
-	void onPrevPageClicked(ClickEvent e) {
-		previousPage();
-	}
-	
-	@UiHandler("mLastPage")
-	void onLastPageClicked(ClickEvent e) {
-		lastPage();
-	}
-	
-	@UiHandler("mFastForward")
-	void onFastForwardClicked(ClickEvent e) {
-		setPage(getPage() + getFastForwardPages());
-	}
-
-	@Override
-	public void firstPage() {
-		super.firstPage();
-	}
+	// @UiHandler("mFirstPage")
+	// void onFirstPageClicked(ClickEvent e) {
+	// firstPage();
+	// }
+	//
+	// @UiHandler("mNextPage")
+	// void onNextPageClicked(ClickEvent e) {
+	// // nextPage();
+	// }
+	//
+	// @UiHandler("mPrevPage")
+	// void onPrevPageClicked(ClickEvent e) {
+	// previousPage();
+	// }
+	//
+	// @UiHandler("mLastPage")
+	// void onLastPageClicked(ClickEvent e) {
+	// lastPage();
+	// }
+	//
+	// @UiHandler("mFastForward")
+	// void onFastForwardClicked(ClickEvent e) {
+	// setPage(getPage() + getFastForwardPages());
+	// }
+	//
+	// @Override
+	// public void firstPage() {
+	// super.firstPage();
+	// }
 
 	@Override
 	public void setDisplay(HasRows display) {
@@ -278,6 +276,22 @@ public class SimplePager extends AbstractPager {
 	private void setPrevPageButtonsDisabled(boolean disabled) {
 		setDisabled(mFirstPageItem, disabled);
 		setDisabled(mPrevPageItem, disabled);
+	}
+
+	public Anchor getNext() {
+		return mNextPage;
+	}
+
+	public Anchor getPrevious() {
+		return mPrevPage;
+	}
+
+	public Anchor getFirst() {
+		return mFirstPage;
+	}
+
+	public Anchor getLast() {
+		return mLastPage;
 	}
 
 }
