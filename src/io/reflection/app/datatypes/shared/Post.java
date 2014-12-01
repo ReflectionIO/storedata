@@ -118,4 +118,44 @@ public class Post extends DataType {
 			}
 		}
 	}
+
+	public Post author(User author) {
+		this.author = author;
+		return this;
+	}
+
+	public Post tags(List<String> tags) {
+		this.tags = tags;
+		return this;
+	}
+
+	public Post published(Date published) {
+		this.published = published;
+		return this;
+	}
+
+	public Post title(String title) {
+		this.title = title;
+		return this;
+	}
+
+	public Post description(String description) {
+		this.description = description;
+		return this;
+	}
+
+	public Post content(String content) {
+		this.content = content;
+		return this;
+	}
+
+	public Post visible(boolean visible) {
+		this.visible = visible;
+		return this;
+	}
+
+	public Post commentsEnabled(boolean commentsEnabled) {
+		this.commentsEnabled = commentsEnabled;
+		return this;
+	}
 }

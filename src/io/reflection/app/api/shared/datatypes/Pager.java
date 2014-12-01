@@ -84,4 +84,35 @@ public class Pager extends Jsonable {
 			}
 		}
 	}
+
+	public Pager start(Long start) {
+		this.start = start;
+		return this;
+	}
+
+	public Pager count(Long count) {
+		this.count = count;
+		return this;
+	}
+
+	public Pager sortBy(String sortBy) {
+		this.sortBy = sortBy;
+		return this;
+	}
+
+	public Pager sortDirection(SortDirectionType sortDirection) {
+		this.sortDirection = sortDirection;
+		return this;
+	}
+
+	public Pager totalCount(Long totalCount) {
+		this.totalCount = totalCount;
+		return this;
+	}
+
+	public Pager boundless(Boolean boundless) {
+		this.boundless = boundless;
+		return this;
+	}
+
 }

@@ -35,4 +35,9 @@ public class IsAuthorisedResponse extends Response {
 			}
 		}
 	}
+
+	public IsAuthorisedResponse authorised(boolean authorised) {
+		this.authorised = authorised;
+		return this;
+	}
 }

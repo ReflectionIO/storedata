@@ -77,4 +77,19 @@ public class GetItemRanksResponse extends Response {
 			}
 		}
 	}
+
+	public GetItemRanksResponse ranks(List<Rank> ranks) {
+		this.ranks = ranks;
+		return this;
+	}
+
+	public GetItemRanksResponse pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
+
+	public GetItemRanksResponse item(Item item) {
+		this.item = item;
+		return this;
+	}
 }

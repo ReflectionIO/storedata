@@ -66,4 +66,14 @@ public class GetLinkedAccountItemsResponse extends Response {
 			}
 		}
 	}
+
+	public GetLinkedAccountItemsResponse items(List<Item> items) {
+		this.items = items;
+		return this;
+	}
+
+	public GetLinkedAccountItemsResponse pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
 }

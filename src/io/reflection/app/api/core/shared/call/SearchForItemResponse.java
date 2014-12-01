@@ -66,4 +66,14 @@ public class SearchForItemResponse extends Response {
 			}
 		}
 	}
+
+	public SearchForItemResponse items(List<Item> items) {
+		this.items = items;
+		return this;
+	}
+
+	public SearchForItemResponse pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
 }

@@ -10,32 +10,23 @@ import com.googlecode.objectify.annotation.Index;
 @Entity
 public class ItemRankSummary extends DataType {
 
-	@Index
-	public String itemId;
+	@Index public String itemId;
 
-	@Index
-	public String type;
+	@Index public String type;
 
-	@Index
-	public String source;
+	@Index public String source;
 
-	@Index
-	public Integer numberOfTimesRanked = Integer.valueOf(0);
+	@Index public Integer numberOfTimesRanked = Integer.valueOf(0);
 
-	@Index
-	public Integer numberOfTimesRankedTop10 = Integer.valueOf(0);
+	@Index public Integer numberOfTimesRankedTop10 = Integer.valueOf(0);
 
-	@Index
-	public Integer numberOfTimesRankedTop25 = Integer.valueOf(0);
+	@Index public Integer numberOfTimesRankedTop25 = Integer.valueOf(0);
 
-	@Index
-	public Integer numberOfTimesRankedTop50 = Integer.valueOf(0);
+	@Index public Integer numberOfTimesRankedTop50 = Integer.valueOf(0);
 
-	@Index
-	public Integer numberOfTimesRankedTop100 = Integer.valueOf(0);
+	@Index public Integer numberOfTimesRankedTop100 = Integer.valueOf(0);
 
-	@Index
-	public Integer numberOfTimesRankedTop200 = Integer.valueOf(0);
+	@Index public Integer numberOfTimesRankedTop200 = Integer.valueOf(0);
 
 	@Override
 	public JsonObject toJson() {
@@ -118,5 +109,50 @@ public class ItemRankSummary extends DataType {
 				numberOfTimesRankedTop200 = Integer.valueOf(jsonNumberOfTimesRankedTop200.getAsInt());
 			}
 		}
+	}
+
+	public ItemRankSummary itemId(String itemId) {
+		this.itemId = itemId;
+		return this;
+	}
+
+	public ItemRankSummary type(String type) {
+		this.type = type;
+		return this;
+	}
+
+	public ItemRankSummary source(String source) {
+		this.source = source;
+		return this;
+	}
+
+	public ItemRankSummary numberOfTimesRanked(int numberOfTimesRanked) {
+		this.numberOfTimesRanked = numberOfTimesRanked;
+		return this;
+	}
+
+	public ItemRankSummary numberOfTimesRankedTop10(int numberOfTimesRankedTop10) {
+		this.numberOfTimesRankedTop10 = numberOfTimesRankedTop10;
+		return this;
+	}
+
+	public ItemRankSummary numberOfTimesRankedTop25(int numberOfTimesRankedTop25) {
+		this.numberOfTimesRankedTop25 = numberOfTimesRankedTop25;
+		return this;
+	}
+
+	public ItemRankSummary numberOfTimesRankedTop50(int numberOfTimesRankedTop50) {
+		this.numberOfTimesRankedTop50 = numberOfTimesRankedTop50;
+		return this;
+	}
+
+	public ItemRankSummary numberOfTimesRankedTop100(int numberOfTimesRankedTop100) {
+		this.numberOfTimesRankedTop100 = numberOfTimesRankedTop100;
+		return this;
+	}
+
+	public ItemRankSummary numberOfTimesRankedTop200(int numberOfTimesRankedTop200) {
+		this.numberOfTimesRankedTop200 = numberOfTimesRankedTop200;
+		return this;
 	}
 }

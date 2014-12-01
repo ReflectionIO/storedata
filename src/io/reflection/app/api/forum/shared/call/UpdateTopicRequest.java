@@ -37,4 +37,9 @@ public class UpdateTopicRequest extends Request {
 			}
 		}
 	}
+
+	public UpdateTopicRequest topic(Topic topic) {
+		this.topic = topic;
+		return this;
+	}
 }

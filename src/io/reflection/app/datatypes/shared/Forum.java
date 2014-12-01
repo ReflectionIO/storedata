@@ -123,4 +123,39 @@ public class Forum extends DataType {
 			}
 		}
 	}
+
+	public Forum members(List<User> members) {
+		this.members = members;
+		return this;
+	}
+
+	public Forum creator(User creator) {
+		this.creator = creator;
+		return this;
+	}
+
+	public Forum topics(List<Topic> topics) {
+		this.topics = topics;
+		return this;
+	}
+
+	public Forum title(String title) {
+		this.title = title;
+		return this;
+	}
+
+	public Forum description(String description) {
+		this.description = description;
+		return this;
+	}
+
+	public Forum type(ForumTypeType type) {
+		this.type = type;
+		return this;
+	}
+
+	public Forum numberOfTopics(int numberOfTopics) {
+		this.numberOfTopics = numberOfTopics;
+		return this;
+	}
 }

@@ -17,6 +17,7 @@ import com.google.gson.JsonPrimitive;
 
 public class Sale extends DataType {
 	public DataAccount account;
+	public DataAccountFetch fetch;
 	public Item item;
 	public String country;
 	public String sku;
@@ -42,6 +43,8 @@ public class Sale extends DataType {
 		JsonObject object = super.toJson();
 		JsonElement jsonAccount = account == null ? JsonNull.INSTANCE : account.toJson();
 		object.add("account", jsonAccount);
+		JsonElement jsonFetch = fetch == null ? JsonNull.INSTANCE : fetch.toJson();
+		object.add("fetch", jsonFetch);
 		JsonElement jsonItem = item == null ? JsonNull.INSTANCE : item.toJson();
 		object.add("item", jsonItem);
 		JsonElement jsonCountry = country == null ? JsonNull.INSTANCE : new JsonPrimitive(country);
@@ -91,6 +94,13 @@ public class Sale extends DataType {
 			if (jsonAccount != null) {
 				account = new DataAccount();
 				account.fromJson(jsonAccount.getAsJsonObject());
+			}
+		}
+		if (jsonObject.has("fetch")) {
+			JsonElement jsonFetch = jsonObject.get("fetch");
+			if (jsonFetch != null) {
+				fetch = new DataAccountFetch();
+				fetch.fromJson(jsonFetch.getAsJsonObject());
 			}
 		}
 		if (jsonObject.has("item")) {
@@ -208,5 +218,110 @@ public class Sale extends DataType {
 				category = jsonCategory.getAsString();
 			}
 		}
+	}
+
+	public Sale account(DataAccount account) {
+		this.account = account;
+		return this;
+	}
+
+	public Sale fetch(DataAccountFetch fetch) {
+		this.fetch = fetch;
+		return this;
+	}
+
+	public Sale item(Item item) {
+		this.item = item;
+		return this;
+	}
+
+	public Sale country(String country) {
+		this.country = country;
+		return this;
+	}
+
+	public Sale sku(String sku) {
+		this.sku = sku;
+		return this;
+	}
+
+	public Sale developer(String developer) {
+		this.developer = developer;
+		return this;
+	}
+
+	public Sale title(String title) {
+		this.title = title;
+		return this;
+	}
+
+	public Sale version(String version) {
+		this.version = version;
+		return this;
+	}
+
+	public Sale typeIdentifier(String typeIdentifier) {
+		this.typeIdentifier = typeIdentifier;
+		return this;
+	}
+
+	public Sale units(int units) {
+		this.units = units;
+		return this;
+	}
+
+	public Sale proceeds(float proceeds) {
+		this.proceeds = proceeds;
+		return this;
+	}
+
+	public Sale currency(String currency) {
+		this.currency = currency;
+		return this;
+	}
+
+	public Sale begin(Date begin) {
+		this.begin = begin;
+		return this;
+	}
+
+	public Sale end(Date end) {
+		this.end = end;
+		return this;
+	}
+
+	public Sale customerCurrency(String customerCurrency) {
+		this.customerCurrency = customerCurrency;
+		return this;
+	}
+
+	public Sale customerPrice(float customerPrice) {
+		this.customerPrice = customerPrice;
+		return this;
+	}
+
+	public Sale promoCode(String promoCode) {
+		this.promoCode = promoCode;
+		return this;
+	}
+
+	public Sale parentIdentifier(String parentIdentifier) {
+		this.parentIdentifier = parentIdentifier;
+		return this;
+	}
+
+	public Sale subscription(String subscription) {
+		this.subscription = subscription;
+		return this;
+	}
+
+	public Sale period(String period) {
+		this.period = period;
+		return this;
+	}
+
+	public Sale category(String category) {
+		this.category = category;
+		return this;
 	}
 }

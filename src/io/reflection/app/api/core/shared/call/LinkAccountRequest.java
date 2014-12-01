@@ -65,4 +65,24 @@ public class LinkAccountRequest extends Request {
 			}
 		}
 	}
+
+	public LinkAccountRequest source(DataSource source) {
+		this.source = source;
+		return this;
+	}
+
+	public LinkAccountRequest username(String username) {
+		this.username = username;
+		return this;
+	}
+
+	public LinkAccountRequest password(String password) {
+		this.password = password;
+		return this;
+	}
+
+	public LinkAccountRequest properties(String properties) {
+		this.properties = properties;
+		return this;
+	}
 }

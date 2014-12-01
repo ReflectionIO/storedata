@@ -39,6 +39,10 @@ public class DeleteLinkedAccountRequest extends Request {
 				linkedAccount.fromJson(jsonLinkedAccount.getAsJsonObject());
 			}
 		}
+	}
 
+	public DeleteLinkedAccountRequest linkedAccount(DataAccount linkedAccount) {
+		this.linkedAccount = linkedAccount;
+		return this;
 	}
 }

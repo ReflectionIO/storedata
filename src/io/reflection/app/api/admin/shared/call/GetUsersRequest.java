@@ -47,4 +47,14 @@ public class GetUsersRequest extends Request {
 			}
 		}
 	}
+
+	public GetUsersRequest pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
+
+	public GetUsersRequest query(String query) {
+		this.query = query;
+		return this;
+	}
 }

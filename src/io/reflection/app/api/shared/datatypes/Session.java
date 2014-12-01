@@ -58,4 +58,19 @@ public class Session extends DataType {
 			}
 		}
 	}
+
+	public Session user(User user) {
+		this.user = user;
+		return this;
+	}
+
+	public Session expires(Date expires) {
+		this.expires = expires;
+		return this;
+	}
+
+	public Session token(String token) {
+		this.token = token;
+		return this;
+	}
 }

@@ -8,12 +8,12 @@
 package io.reflection.app.client.page.admin;
 
 import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMAT_DD_MMM_YYYY_HH_MM;
+import io.reflection.app.api.admin.shared.call.DeleteUserRequest;
+import io.reflection.app.api.admin.shared.call.DeleteUserResponse;
 import io.reflection.app.api.admin.shared.call.DeleteUsersRequest;
 import io.reflection.app.api.admin.shared.call.DeleteUsersResponse;
+import io.reflection.app.api.admin.shared.call.event.DeleteUserEventHandler;
 import io.reflection.app.api.admin.shared.call.event.DeleteUsersEventHandler;
-import io.reflection.app.api.blog.shared.call.DeleteUserRequest;
-import io.reflection.app.api.blog.shared.call.DeleteUserResponse;
-import io.reflection.app.api.blog.shared.call.event.DeleteUserEventHandler;
 import io.reflection.app.client.cell.StyledButtonCell;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.ServiceConstants;

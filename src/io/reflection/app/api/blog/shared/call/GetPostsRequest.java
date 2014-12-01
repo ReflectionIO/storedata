@@ -47,4 +47,14 @@ public class GetPostsRequest extends Request {
 			}
 		}
 	}
+
+	public GetPostsRequest pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
+
+	public GetPostsRequest includeContents(boolean includeContents) {
+		this.includeContents = includeContents;
+		return this;
+	}
 }

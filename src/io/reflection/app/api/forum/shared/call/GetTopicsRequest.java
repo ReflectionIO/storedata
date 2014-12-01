@@ -48,4 +48,14 @@ public class GetTopicsRequest extends Request {
 			}
 		}
 	}
+
+	public GetTopicsRequest forum(Forum forum) {
+		this.forum = forum;
+		return this;
+	}
+
+	public GetTopicsRequest pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
 }

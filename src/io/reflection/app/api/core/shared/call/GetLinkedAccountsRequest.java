@@ -47,4 +47,14 @@ public class GetLinkedAccountsRequest extends Request {
 			}
 		}
 	}
+
+	public GetLinkedAccountsRequest pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
+
+	public GetLinkedAccountsRequest query(String query) {
+		this.query = query;
+		return this;
+	}
 }

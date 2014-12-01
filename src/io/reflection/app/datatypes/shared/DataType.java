@@ -71,4 +71,19 @@ public abstract class DataType extends Jsonable {
 			}
 		}
 	}
+
+	public DataType id(long id) {
+		this.id = id;
+		return this;
+	}
+
+	public DataType created(Date created) {
+		this.created = created;
+		return this;
+	}
+
+	public DataType deleted(String deleted) {
+		this.deleted = deleted;
+		return this;
+	}
 }

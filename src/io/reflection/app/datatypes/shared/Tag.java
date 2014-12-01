@@ -43,4 +43,9 @@ public class Tag extends DataType {
 			}
 		}
 	}
+
+	public Tag name(String name) {
+		this.name = name;
+		return this;
+	}
 }

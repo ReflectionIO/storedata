@@ -118,4 +118,39 @@ public class TriggerModelRequest extends Request {
 			}
 		}
 	}
+
+	public TriggerModelRequest country(Country country) {
+		this.country = country;
+		return this;
+	}
+
+	public TriggerModelRequest store(Store store) {
+		this.store = store;
+		return this;
+	}
+
+	public TriggerModelRequest category(Category category) {
+		this.category = category;
+		return this;
+	}
+
+	public TriggerModelRequest listTypes(List<String> listTypes) {
+		this.listTypes = listTypes;
+		return this;
+	}
+
+	public TriggerModelRequest feedFetch(FeedFetch feedFetch) {
+		this.feedFetch = feedFetch;
+		return this;
+	}
+
+	public TriggerModelRequest code(long code) {
+		this.code = code;
+		return this;
+	}
+
+	public TriggerModelRequest modelType(ModelTypeType modelType) {
+		this.modelType = modelType;
+		return this;
+	}
 }

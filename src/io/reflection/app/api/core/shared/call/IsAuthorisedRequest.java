@@ -78,6 +78,15 @@ public class IsAuthorisedRequest extends Request {
 				}
 			}
 		}
+	}
 
+	public IsAuthorisedRequest permissions(List<Permission> permissions) {
+		this.permissions = permissions;
+		return this;
+	}
+
+	public IsAuthorisedRequest roles(List<Role> roles) {
+		this.roles = roles;
+		return this;
 	}
 }

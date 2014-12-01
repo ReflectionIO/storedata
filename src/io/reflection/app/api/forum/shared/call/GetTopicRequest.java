@@ -45,4 +45,14 @@ public class GetTopicRequest extends Request {
 			}
 		}
 	}
+
+	public GetTopicRequest id(long id) {
+		this.id = id;
+		return this;
+	}
+
+	public GetTopicRequest title(String title) {
+		this.title = title;
+		return this;
+	}
 }

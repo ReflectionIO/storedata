@@ -69,4 +69,24 @@ public class GetLinkedAccountItemsRequest extends Request {
 			}
 		}
 	}
+
+	public GetLinkedAccountItemsRequest linkedAccount(DataAccount linkedAccount) {
+		this.linkedAccount = linkedAccount;
+		return this;
+	}
+
+	public GetLinkedAccountItemsRequest store(Store store) {
+		this.store = store;
+		return this;
+	}
+
+	public GetLinkedAccountItemsRequest pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
+
+	public GetLinkedAccountItemsRequest listType(String listType) {
+		this.listType = listType;
+		return this;
+	}
 }

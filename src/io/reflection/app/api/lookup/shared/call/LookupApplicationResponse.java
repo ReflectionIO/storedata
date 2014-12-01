@@ -53,6 +53,10 @@ public class LookupApplicationResponse extends Response {
 				}
 			}
 		}
+	}
 
+	public LookupApplicationResponse applications(List<Application> applications) {
+		this.applications = applications;
+		return this;
 	}
 }

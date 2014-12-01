@@ -8,12 +8,12 @@
 //
 package io.reflection.app.api.admin.shared.call;
 
+import io.reflection.app.api.shared.datatypes.Request;
+import io.reflection.app.datatypes.shared.EmailTemplate;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-
-import io.reflection.app.api.shared.datatypes.Request;
-import io.reflection.app.datatypes.shared.EmailTemplate;
 
 public class UpdateEmailTemplateRequest extends Request {
 	public EmailTemplate emailTemplate;
@@ -36,5 +36,10 @@ public class UpdateEmailTemplateRequest extends Request {
 				emailTemplate.fromJson(jsonEmailTemplate.getAsJsonObject());
 			}
 		}
+	}
+
+	public UpdateEmailTemplateRequest emailTemplate(EmailTemplate emailTemplate) {
+		this.emailTemplate = emailTemplate;
+		return this;
 	}
 }

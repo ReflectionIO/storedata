@@ -136,12 +136,12 @@
                 <xsd:attribute name="typeIdentifier" type="xsd:string" />
 
                 <xsd:attribute name="units" type="xsd:int" />
-                <xsd:attribute name="proceeds" type="xsd:int" />
+                <xsd:attribute name="proceeds" type="xsd:float" />
                 <xsd:attribute name="currency" type="xsd:string" />
                 <xsd:attribute name="begin" type="xsd:date" />
                 <xsd:attribute name="end" type="xsd:date" />
                 <xsd:attribute name="customerCurrency" type="xsd:string" />
-                <xsd:attribute name="customerPrice" type="xsd:int" />
+                <xsd:attribute name="customerPrice" type="xsd:float" />
                 <xsd:attribute name="promoCode" type="xsd:string" />
 
                 <xsd:attribute name="parentIdentifier" type="xsd:string" />

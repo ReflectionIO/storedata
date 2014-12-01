@@ -37,4 +37,9 @@ public class DeletePostRequest extends Request {
 			}
 		}
 	}
+
+	public DeletePostRequest post(Post post) {
+		this.post = post;
+		return this;
+	}
 }

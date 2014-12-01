@@ -47,4 +47,14 @@ public class UpdatePostRequest extends Request {
 			}
 		}
 	}
+
+	public UpdatePostRequest post(Post post) {
+		this.post = post;
+		return this;
+	}
+
+	public UpdatePostRequest publish(boolean publish) {
+		this.publish = publish;
+		return this;
+	}
 }

@@ -45,4 +45,14 @@ public class GetUserDetailsRequest extends Request {
 			}
 		}
 	}
+
+	public GetUserDetailsRequest userId(long userId) {
+		this.userId = userId;
+		return this;
+	}
+
+	public GetUserDetailsRequest actionCode(String actionCode) {
+		this.actionCode = actionCode;
+		return this;
+	}
 }

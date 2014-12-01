@@ -35,4 +35,9 @@ public class CheckUsernameResponse extends Response {
 			}
 		}
 	}
+
+	public CheckUsernameResponse usernameInUse(boolean usernameInUse) {
+		this.usernameInUse = usernameInUse;
+		return this;
+	}
 }

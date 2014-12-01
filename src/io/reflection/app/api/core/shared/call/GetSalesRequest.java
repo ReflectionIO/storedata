@@ -92,4 +92,34 @@ public class GetSalesRequest extends Request {
 			}
 		}
 	}
+
+	public GetSalesRequest linkedAccount(DataAccount linkedAccount) {
+		this.linkedAccount = linkedAccount;
+		return this;
+	}
+
+	public GetSalesRequest country(Country country) {
+		this.country = country;
+		return this;
+	}
+
+	public GetSalesRequest category(Category category) {
+		this.category = category;
+		return this;
+	}
+
+	public GetSalesRequest pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
+
+	public GetSalesRequest start(Date start) {
+		this.start = start;
+		return this;
+	}
+
+	public GetSalesRequest end(Date end) {
+		this.end = end;
+		return this;
+	}
 }

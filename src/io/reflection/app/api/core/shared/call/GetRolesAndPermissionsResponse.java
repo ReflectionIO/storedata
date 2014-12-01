@@ -78,6 +78,15 @@ public class GetRolesAndPermissionsResponse extends Response {
 				}
 			}
 		}
+	}
 
+	public GetRolesAndPermissionsResponse roles(List<Role> roles) {
+		this.roles = roles;
+		return this;
+	}
+
+	public GetRolesAndPermissionsResponse permissions(List<Permission> permissions) {
+		this.permissions = permissions;
+		return this;
 	}
 }

@@ -37,4 +37,9 @@ public class DeleteTopicRequest extends Request {
 			}
 		}
 	}
+
+	public DeleteTopicRequest topic(Topic topic) {
+		this.topic = topic;
+		return this;
+	}
 }

@@ -47,4 +47,14 @@ public class SetPasswordRequest extends Request {
 			}
 		}
 	}
+
+	public SetPasswordRequest user(User user) {
+		this.user = user;
+		return this;
+	}
+
+	public SetPasswordRequest password(String password) {
+		this.password = password;
+		return this;
+	}
 }

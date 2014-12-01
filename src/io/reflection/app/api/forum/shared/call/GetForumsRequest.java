@@ -37,4 +37,9 @@ public class GetForumsRequest extends Request {
 			}
 		}
 	}
+
+	public GetForumsRequest pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
 }

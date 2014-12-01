@@ -39,4 +39,14 @@ public class Request extends com.willshex.gson.json.service.shared.Request {
 			}
 		}
 	}
+	
+	public Request session(Session session) {
+		this.session = session;
+		return this;
+	}
+
+	public Request accessCode(String accessCode) {
+		this.accessCode = accessCode;
+		return this;
+	}
 }

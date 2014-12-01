@@ -108,4 +108,29 @@ public class Store extends DataType {
 			}
 		}
 	}
+
+	public Store countries(List<String> countries) {
+		this.countries = countries;
+		return this;
+	}
+
+	public Store a3Code(String a3Code) {
+		this.a3Code = a3Code;
+		return this;
+	}
+
+	public Store name(String name) {
+		this.name = name;
+		return this;
+	}
+
+	public Store url(String url) {
+		this.url = url;
+		return this;
+	}
+
+	public Store datasource(String datasource) {
+		this.datasource = datasource;
+		return this;
+	}
 }

@@ -64,4 +64,24 @@ public class DataAccountFetch extends DataType {
 			}
 		}
 	}
+
+	public DataAccountFetch linkedAccount(DataAccount linkedAccount) {
+		this.linkedAccount = linkedAccount;
+		return this;
+	}
+
+	public DataAccountFetch status(DataAccountFetchStatusType status) {
+		this.status = status;
+		return this;
+	}
+
+	public DataAccountFetch data(String data) {
+		this.data = data;
+		return this;
+	}
+
+	public DataAccountFetch date(Date date) {
+		this.date = date;
+		return this;
+	}
 }

@@ -54,4 +54,19 @@ public class ChangePasswordRequest extends Request {
 			}
 		}
 	}
+
+	public ChangePasswordRequest resetCode(String resetCode) {
+		this.resetCode = resetCode;
+		return this;
+	}
+
+	public ChangePasswordRequest password(String password) {
+		this.password = password;
+		return this;
+	}
+
+	public ChangePasswordRequest newPassword(String newPassword) {
+		this.newPassword = newPassword;
+		return this;
+	}
 }

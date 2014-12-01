@@ -72,4 +72,29 @@ public class Reply extends DataType {
 			}
 		}
 	}
+
+	public Reply author(User author) {
+		this.author = author;
+		return this;
+	}
+
+	public Reply topic(Topic topic) {
+		this.topic = topic;
+		return this;
+	}
+
+	public Reply content(String content) {
+		this.content = content;
+		return this;
+	}
+
+	public Reply flagged(int flagged) {
+		this.flagged = flagged;
+		return this;
+	}
+
+	public Reply solution(boolean solution) {
+		this.solution = solution;
+		return this;
+	}
 }
