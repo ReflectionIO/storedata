@@ -9,6 +9,11 @@
 }
 
 /* line 9, ../sass/landing-ie8.scss */
+.landing-section-main {
+  position: relative !important;
+}
+
+/* line 12, ../sass/landing-ie8.scss */
 .landing-section-main__column-two {
   top: 134px !important;
   margin-top: 0 !important;
@@ -17,7 +22,7 @@
   box-sizing: content-box !important;
 }
 
-/* line 17, ../sass/landing-ie8.scss */
+/* line 20, ../sass/landing-ie8.scss */
 .link-log-in:before {
   display: inline-block !important;
   vertical-align: top !important;
@@ -25,7 +30,7 @@
   font-size: 18px !important;
 }
 
-/* line 25, ../sass/landing-ie8.scss */
+/* line 28, ../sass/landing-ie8.scss */
 .landing-section-insights__column_one,
 .landing-section-analyse__column_two {
   position: absolute !important;
@@ -39,94 +44,108 @@
   display: inline-block !important;
   text-align: left !important;
 }
-/* line 36, ../sass/landing-ie8.scss */
+/* line 39, ../sass/landing-ie8.scss */
 .landing-section-insights__column_one img,
 .landing-section-analyse__column_two img {
   width: auto !important;
 }
 
-/* line 40, ../sass/landing-ie8.scss */
+/* line 43, ../sass/landing-ie8.scss */
 .landing-section-main__column-one {
   top: 0 !important;
   margin-top: 135px !important;
 }
 
-/* line 44, ../sass/landing-ie8.scss */
+/* line 47, ../sass/landing-ie8.scss */
 .landing-section-analyse__column_two {
   float: right !important;
   top: 125px !important;
   left: inherit !important;
   right: 0 !important;
 }
-/* line 49, ../sass/landing-ie8.scss */
+/* line 52, ../sass/landing-ie8.scss */
 .landing-section-analyse__column_two img {
   float: left !important;
 }
 
-/* line 53, ../sass/landing-ie8.scss */
+/* line 56, ../sass/landing-ie8.scss */
 .landing-section-analyse {
   position: relative !important;
   padding-bottom: 20px !important;
   min-height: 927px !important;
 }
-/* line 57, ../sass/landing-ie8.scss */
+/* line 60, ../sass/landing-ie8.scss */
 .landing-section-analyse .landing-column-thin {
   width: 42.10938% !important;
   padding: 272px 4.29688% 0 5.5% !important;
   float: left !important;
 }
-/* line 61, ../sass/landing-ie8.scss */
+/* line 64, ../sass/landing-ie8.scss */
 .landing-section-analyse .landing-column-thin h2 {
   text-align: left !important;
 }
-/* line 65, ../sass/landing-ie8.scss */
+/* line 68, ../sass/landing-ie8.scss */
 .landing-section-analyse .landing-column-thin__content {
   margin: 0 auto !important;
   max-width: 378px !important;
 }
 
-/* line 70, ../sass/landing-ie8.scss */
+/* line 73, ../sass/landing-ie8.scss */
 .landing-section-insights {
   position: relative !important;
   min-height: 922px !important;
   padding-bottom: 0 !important;
 }
-/* line 74, ../sass/landing-ie8.scss */
+/* line 77, ../sass/landing-ie8.scss */
 .landing-section-insights .landing-column-thin {
   width: 42.10938% !important;
   padding: 226px 6.875% 0 4.88% !important;
   float: right !important;
   padding-left: 4.88% !important;
 }
-/* line 78, ../sass/landing-ie8.scss */
+/* line 81, ../sass/landing-ie8.scss */
 .landing-section-insights .landing-column-thin h2 {
   text-align: left !important;
 }
-/* line 83, ../sass/landing-ie8.scss */
+/* line 86, ../sass/landing-ie8.scss */
 .landing-section-insights .landing-column-thin__content {
   max-width: 430px !important;
   margin: 0 auto !important;
 }
 
-/* line 88, ../sass/landing-ie8.scss */
+/* line 91, ../sass/landing-ie8.scss */
 .img-width-landing-column-thin {
   width: 42.10938% !important;
   height: auto !important;
 }
 
-/* line 92, ../sass/landing-ie8.scss */
+/* line 95, ../sass/landing-ie8.scss */
 .img-width-landing-column-wide {
   width: 57.89062% !important;
   height: auto !important;
 }
 
-/* line 96, ../sass/landing-ie8.scss */
+/* line 99, ../sass/landing-ie8.scss */
 .logo-reflection-footer {
   width: auto;
 }
 
-/* line 101, ../sass/landing-ie8.scss */
+/* line 104, ../sass/landing-ie8.scss */
 .landing-section-contact p:before, .landing-section-contact span:before {
   display: inline-block !important;
   color: white !important;
+}
+
+/* line 111, ../sass/landing-ie8.scss */
+.gm-style .gm-style-iw * {
+  overflow: visible !important;
+}
+
+/* line 116, ../sass/landing-ie8.scss */
+.map__info-box h1 {
+  padding: 12px 0 0 23px;
+  font-size: 24px !important;
+  color: #5b5d61 !important;
+  text-indent: 0 !important;
+  background: #f0f3f5 !important;
 }
