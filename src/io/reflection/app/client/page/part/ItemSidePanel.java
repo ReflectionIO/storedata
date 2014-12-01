@@ -35,9 +35,9 @@ public class ItemSidePanel extends Composite {
 
 	interface ItemSidePanelUiBinder extends UiBinder<Widget, ItemSidePanel> {}
 
-	@UiField HeadingElement mTitle;
-	@UiField Image mImage;
-	@UiField HeadingElement mCreatorName;
+	@UiField HeadingElement title;
+	@UiField Image image;
+	@UiField HeadingElement creatorName;
 
 	@UiField SpanElement storeName;
 	@UiField AnchorElement viewInStore;
@@ -51,15 +51,15 @@ public class ItemSidePanel extends Composite {
 	}
 
 	public void setItem(Item item) {
-		mTitle.setInnerText(item.name);
-		mCreatorName.setInnerText("By " + item.creatorName);
+		title.setInnerText(item.name);
+		creatorName.setInnerText("By " + item.creatorName);
 
 		if (item.largeImage != null) {
-			mImage.setUrl(item.largeImage);
-			mImage.removeStyleName(Styles.INSTANCE.reflection().unknownAppLarge());
+			image.setUrl(item.largeImage);
+			image.removeStyleName(Styles.INSTANCE.reflection().unknownAppLarge());
 		} else {
-			mImage.setUrl("");
-			mImage.addStyleName(Styles.INSTANCE.reflection().unknownAppLarge());
+			image.setUrl("");
+			image.addStyleName(Styles.INSTANCE.reflection().unknownAppLarge());
 		}
 
 		Store s = StoreController.get().getStore(item.source);
@@ -71,18 +71,19 @@ public class ItemSidePanel extends Composite {
 	}
 
 	public void setPrice(String currency, Float value) {
-		setLoaderVisible(false);
 		if (currency != null && value != null) {
 			setPriceInnerHTML(FormattingHelper.asPriceString(currency, value.floatValue()) + iapDescription);
 		}
 	}
 
-	public void setLoaderVisible(boolean visible) {
-		spinnerLoader.setVisible(visible);
-	}
-
 	public void setPriceInnerHTML(String s) {
-		price.setInnerHTML(s);
+		if (s != null) {
+			spinnerLoader.setVisible(false);
+			price.setInnerHTML(s);
+		} else {
+			price.setInnerHTML("");
+			spinnerLoader.setVisible(true);
+		}
 	}
 
 }

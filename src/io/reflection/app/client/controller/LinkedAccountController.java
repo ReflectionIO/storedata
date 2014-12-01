@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.http.client.Request;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
@@ -59,6 +60,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 
 	private List<DataAccount> rows = new ArrayList<DataAccount>();
 	private Pager pager = null;
+	private Request currentLinkedAccountItem;
 
 	private static LinkedAccountController mOne = null;
 
@@ -446,7 +448,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 				lookupItem = ItemController.get().getUserItem(item.internalId);
 			}
 
-			if (lookupItem == null) {
+			if (lookupItem == null) {				
 				fetchLinkedAccountItem(item.internalId);
 			}
 		}
@@ -455,6 +457,11 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 	}
 
 	public void fetchLinkedAccountItem(String itemInternalId) {
+		if (currentLinkedAccountItem != null) {
+			currentLinkedAccountItem.cancel();
+			currentLinkedAccountItem = null;
+		}
+
 		CoreService service = ServiceCreator.createCoreService();
 
 		final GetLinkedAccountItemRequest input = new GetLinkedAccountItemRequest();
@@ -465,10 +472,11 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 		input.item.internalId = itemInternalId;
 		input.item.source = FilterController.get().getStore().a3Code;
 
-		service.getLinkedAccountItem(input, new AsyncCallback<GetLinkedAccountItemResponse>() {
+		currentLinkedAccountItem = service.getLinkedAccountItem(input, new AsyncCallback<GetLinkedAccountItemResponse>() {
 
 			@Override
 			public void onSuccess(GetLinkedAccountItemResponse output) {
+				currentLinkedAccountItem = null;
 				if (output.status == StatusType.StatusTypeSuccess && output.item != null) {
 					ItemController.get().setUserItem(output.item);
 				}
@@ -479,6 +487,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 
 			@Override
 			public void onFailure(Throwable caught) {
+				currentLinkedAccountItem = null;
 				EventController.get().fireEventFromSource(new GetLinkedAccountItemEventHandler.GetLinkedAccountItemFailure(input, caught),
 						LinkedAccountController.this);
 			}
