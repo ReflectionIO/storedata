@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.page.blog.part;
 
+import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.page.PageType;
 
 import com.google.gwt.core.client.GWT;
@@ -39,7 +40,7 @@ public class DisplayTag extends Composite {
 	 */
 	public void setName(String tag) {
 		name.setInnerHTML(tag);
-		link.setTargetHistoryToken(PageType.BlogTagPageType.asTargetHistoryToken("view", tag.replace(" ", "-")));
+		link.setTargetHistoryToken(PageType.BlogTagPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, tag.replace(" ", "-")));
 	}
 
 }

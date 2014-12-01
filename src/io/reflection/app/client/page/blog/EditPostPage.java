@@ -193,7 +193,7 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 		if (output.status == StatusType.StatusTypeSuccess) {
 			PostController.get().reset();
 			PostController.get().fetchPosts();
-			PageType.BlogPostPageType.show("view", postId.toString());
+			PageType.BlogPostPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, postId.toString());
 		}
 	}
 
@@ -237,7 +237,7 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 	@Override
 	public void updatePostSuccess(UpdatePostRequest input, UpdatePostResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess && postId != null) {
-			PageType.BlogPostPageType.show("view", postId.toString());
+			PageType.BlogPostPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, postId.toString());
 		}
 
 	}

@@ -52,7 +52,9 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 	private List<RanksGroup> mRows = new ArrayList<RanksGroup>();
 	private Pager mPager;
-	private Request current;
+	private Request currentTopItems;
+	private Request currentItemRanks;
+	private Request currentItemSalesRanks;
 
 	private ListDataProvider<ItemRevenue> itemRevenueData = new ListDataProvider<ItemRevenue>();
 
@@ -65,9 +67,9 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 	}
 
 	public void fetchTopItems() {
-		if (current != null) {
-			current.cancel();
-			current = null;
+		if (currentTopItems != null) {
+			currentTopItems.cancel();
+			currentTopItems = null;
 		}
 
 		CoreService service = ServiceCreator.createCoreService();
@@ -99,11 +101,11 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 		input.store = ApiCallHelper.createStoreForApiCall(FilterController.get().getStore());
 
 		// Call to retrieve top items from DB. The response contains List<Rank> for the 3 rank types (free, paid, grossing) , a List<Item> and a Pager
-		current = service.getAllTopItems(input, new AsyncCallback<GetAllTopItemsResponse>() {
+		currentTopItems = service.getAllTopItems(input, new AsyncCallback<GetAllTopItemsResponse>() {
 
 			@Override
 			public void onSuccess(GetAllTopItemsResponse output) {
-				current = null;
+				currentTopItems = null;
 				if (output.status == StatusType.StatusTypeSuccess) {
 					if (output.pager != null) {
 						mPager = output.pager;// Set pager as the one received from the server
@@ -143,7 +145,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 			@Override
 			public void onFailure(Throwable caught) {
-				current = null;
+				currentTopItems = null;
 				updateRowCount(0, true);
 				EventController.get().fireEventFromSource(new GetAllTopItemsFailure(input, caught), RankController.this);
 			}
@@ -185,6 +187,8 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 	}
 
 	public void fetchItemSalesRanks(final Item item) {
+		cancelRequestItemSalesRanks();
+
 		CoreService service = ServiceCreator.createCoreService();
 
 		final GetItemSalesRanksRequest input = new GetItemSalesRanksRequest();
@@ -210,10 +214,11 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 		input.pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
 		input.pager.sortBy = "date";
 
-		service.getItemSalesRanks(input, new AsyncCallback<GetItemSalesRanksResponse>() {
+		currentItemSalesRanks = service.getItemSalesRanks(input, new AsyncCallback<GetItemSalesRanksResponse>() {
 
 			@Override
 			public void onSuccess(GetItemSalesRanksResponse output) {
+				currentItemSalesRanks = null;
 				if (output.status == StatusType.StatusTypeSuccess) {
 					ItemController.get().addItemToCache(output.item);
 
@@ -262,12 +267,16 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 			@Override
 			public void onFailure(Throwable caught) {
+				currentItemSalesRanks = null;
 				EventController.get().fireEventFromSource(new GetItemSalesRanksFailure(input, caught), RankController.this);
 			}
 		});
 	}
 
 	public void fetchItemRanks(final Item item) {
+
+		cancelRequestItemRanks();
+
 		CoreService service = ServiceCreator.createCoreService();
 
 		final GetItemRanksRequest input = new GetItemRanksRequest();
@@ -294,10 +303,11 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 		input.pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
 		input.pager.sortBy = "date";
 
-		service.getItemRanks(input, new AsyncCallback<GetItemRanksResponse>() {
+		currentItemRanks = service.getItemRanks(input, new AsyncCallback<GetItemRanksResponse>() {
 
 			@Override
 			public void onSuccess(GetItemRanksResponse output) {
+				currentItemRanks = null;
 				if (output != null && output.status == StatusType.StatusTypeSuccess && output.item != null) {
 					ItemController.get().addItemToCache(output.item);
 
@@ -346,10 +356,25 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 			@Override
 			public void onFailure(Throwable caught) {
+				currentItemRanks = null;
 				EventController.get().fireEventFromSource(new GetItemRanksEventHandler.GetItemRanksFailure(input, caught), RankController.this);
 			}
 		});
 
+	}
+
+	public void cancelRequestItemRanks() {
+		if (currentItemRanks != null) {
+			currentItemRanks.cancel();
+			currentItemRanks = null;
+		}
+	}
+
+	public void cancelRequestItemSalesRanks() {
+		if (currentItemSalesRanks != null) {
+			currentItemSalesRanks.cancel();
+			currentItemSalesRanks = null;
+		}
 	}
 
 	/*

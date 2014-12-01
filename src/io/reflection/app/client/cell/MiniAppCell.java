@@ -8,6 +8,7 @@
 package io.reflection.app.client.cell;
 
 import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.client.res.Styles;
@@ -34,8 +35,8 @@ public class MiniAppCell extends AbstractCell<Item> {
 	@Override
 	public void render(Context context, Item value, SafeHtmlBuilder builder) {
 
-		SafeUri link = PageType.ItemPageType.asHref("view", value.internalId, FilterController.DOWNLOADS_CHART_TYPE, FilterController.get().getFilter()
-				.asItemFilterString());
+		SafeUri link = PageType.ItemPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, value.internalId, FilterController.DOWNLOADS_CHART_TYPE,
+				FilterController.get().getFilter().asItemFilterString());
 		SafeUri smallImage = UriUtils.fromString(value.smallImage == null ? "" : value.smallImage);
 
 		RENDERER.render(builder, value.name, value.creatorName, smallImage, Styles.INSTANCE.reflection().unknownAppSmall(), link);
