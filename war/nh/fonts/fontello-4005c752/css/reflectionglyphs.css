@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'reflectionglyphs';
-  src: url('../reflectionglyphs.eot?19510916');
-  src: url('../reflectionglyphs.eot?19510916#iefix') format('embedded-opentype'),
-       url('../reflectionglyphs.woff?19510916') format('woff'),
-       url('../reflectionglyphs.ttf?19510916') format('truetype'),
-       url('../reflectionglyphs.svg?19510916#reflectionglyphs') format('svg');
+  src: url('../reflectionglyphs.eot?48140115');
+  src: url('../reflectionglyphs.eot?48140115#iefix') format('embedded-opentype'),
+       url('../reflectionglyphs.woff?48140115') format('woff'),
+       url('../reflectionglyphs.ttf?48140115') format('truetype'),
+       url('../reflectionglyphs.svg?48140115#reflectionglyphs') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -14,7 +14,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'reflectionglyphs';
-    src: url('../font/reflectionglyphs.svg?19510916#reflectionglyphs') format('svg');
+    src: url('../font/reflectionglyphs.svg?48140115#reflectionglyphs') format('svg');
   }
 }
 */
@@ -97,6 +97,7 @@
 .icon-emo-happy:before { content: '\e82c'; } /* '' */
 .icon-fire:before { content: '\e82d'; } /* '' */
 .icon-emo-cry:before { content: '\e82e'; } /* '' */
+.icon-down-open-big:before { content: '\e82f'; } /* '' */
 .icon-phone:before { content: '\e830'; } /* '' */
 .icon-ok:before { content: '\e831'; } /* '' */
 .icon-users:before { content: '\e832'; } /* '' */
@@ -109,3 +110,4 @@
 .icon-mail:before { content: '\e839'; } /* '' */
 .icon-up:before { content: '\e83a'; } /* '' */
 .icon-location:before { content: '\e83b'; } /* '' */
+.icon-up-open-big:before { content: '\e83c'; } /* '' */
