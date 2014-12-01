@@ -48,4 +48,14 @@ public class GetModelOutcomeResponse extends Response {
 			}
 		}
 	}
+
+	public GetModelOutcomeResponse correlation(ModelRun correlation) {
+		this.correlation = correlation;
+		return this;
+	}
+
+	public GetModelOutcomeResponse simple(SimpleModelRun simple) {
+		this.simple = simple;
+		return this;
+	}
 }

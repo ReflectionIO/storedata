@@ -65,4 +65,14 @@ public class GetCountriesResponse extends Response {
 			}
 		}
 	}
+
+	public GetCountriesResponse countries(List<Country> countries) {
+		this.countries = countries;
+		return this;
+	}
+
+	public GetCountriesResponse pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
 }

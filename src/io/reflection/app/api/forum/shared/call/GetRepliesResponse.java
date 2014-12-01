@@ -66,4 +66,14 @@ public class GetRepliesResponse extends Response {
 			}
 		}
 	}
+
+	public GetRepliesResponse replies(List<Reply> replies) {
+		this.replies = replies;
+		return this;
+	}
+
+	public GetRepliesResponse pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
 }

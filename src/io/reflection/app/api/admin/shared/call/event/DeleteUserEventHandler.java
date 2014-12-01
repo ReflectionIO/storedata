@@ -2,14 +2,14 @@
 //  DeleteUserEventHandler.java
 //  reflection.io
 //
-//  Created by William Shakour on July 25, 2014.
+//  Created by William Shakour on December 1, 2014.
 //  Copyrights © 2014 SPACEHOPPER STUDIOS LTD. All rights reserved.
 //  Copyrights © 2014 reflection.io. All rights reserved.
 //
-package io.reflection.app.api.blog.shared.call.event;
+package io.reflection.app.api.admin.shared.call.event;
 
-import io.reflection.app.api.blog.shared.call.DeleteUserRequest;
-import io.reflection.app.api.blog.shared.call.DeleteUserResponse;
+import io.reflection.app.api.admin.shared.call.DeleteUserRequest;
+import io.reflection.app.api.admin.shared.call.DeleteUserResponse;
 
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;

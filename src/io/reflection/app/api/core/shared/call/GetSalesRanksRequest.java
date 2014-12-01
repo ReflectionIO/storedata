@@ -100,4 +100,39 @@ public class GetSalesRanksRequest extends Request {
 			}
 		}
 	}
+
+	public GetSalesRanksRequest linkedAccount(DataAccount linkedAccount) {
+		this.linkedAccount = linkedAccount;
+		return this;
+	}
+
+	public GetSalesRanksRequest country(Country country) {
+		this.country = country;
+		return this;
+	}
+
+	public GetSalesRanksRequest category(Category category) {
+		this.category = category;
+		return this;
+	}
+
+	public GetSalesRanksRequest pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
+
+	public GetSalesRanksRequest listType(String listType) {
+		this.listType = listType;
+		return this;
+	}
+
+	public GetSalesRanksRequest start(Date start) {
+		this.start = start;
+		return this;
+	}
+
+	public GetSalesRanksRequest end(Date end) {
+		this.end = end;
+		return this;
+	}
 }

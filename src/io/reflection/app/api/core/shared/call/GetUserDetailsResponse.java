@@ -37,4 +37,9 @@ public class GetUserDetailsResponse extends Response {
 			}
 		}
 	}
+
+	public GetUserDetailsResponse user(User user) {
+		this.user = user;
+		return this;
+	}
 }

@@ -158,4 +158,74 @@ public class Item extends DataType {
 			}
 		}
 	}
+
+	public Item externalId(String externalId) {
+		this.externalId = externalId;
+		return this;
+	}
+
+	public Item internalId(String internalId) {
+		this.internalId = internalId;
+		return this;
+	}
+
+	public Item name(String name) {
+		this.name = name;
+		return this;
+	}
+
+	public Item creatorName(String creatorName) {
+		this.creatorName = creatorName;
+		return this;
+	}
+
+	public Item price(float price) {
+		this.price = price;
+		return this;
+	}
+
+	public Item source(String source) {
+		this.source = source;
+		return this;
+	}
+
+	public Item type(String type) {
+		this.type = type;
+		return this;
+	}
+
+	public Item added(Date added) {
+		this.added = added;
+		return this;
+	}
+
+	public Item country(String country) {
+		this.country = country;
+		return this;
+	}
+
+	public Item currency(String currency) {
+		this.currency = currency;
+		return this;
+	}
+
+	public Item smallImage(String smallImage) {
+		this.smallImage = smallImage;
+		return this;
+	}
+
+	public Item mediumImage(String mediumImage) {
+		this.mediumImage = mediumImage;
+		return this;
+	}
+
+	public Item largeImage(String largeImage) {
+		this.largeImage = largeImage;
+		return this;
+	}
+
+	public Item properties(String properties) {
+		this.properties = properties;
+		return this;
+	}
 }

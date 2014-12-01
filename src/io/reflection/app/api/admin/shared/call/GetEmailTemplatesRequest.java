@@ -37,4 +37,9 @@ public class GetEmailTemplatesRequest extends Request {
 			}
 		}
 	}
+
+	public GetEmailTemplatesRequest pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
 }

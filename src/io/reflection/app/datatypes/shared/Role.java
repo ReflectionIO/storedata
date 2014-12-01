@@ -80,4 +80,24 @@ public class Role extends DataType {
 			}
 		}
 	}
+
+	public Role permissions(List<Permission> permissions) {
+		this.permissions = permissions;
+		return this;
+	}
+
+	public Role name(String name) {
+		this.name = name;
+		return this;
+	}
+
+	public Role description(String description) {
+		this.description = description;
+		return this;
+	}
+
+	public Role code(String code) {
+		this.code = code;
+		return this;
+	}
 }

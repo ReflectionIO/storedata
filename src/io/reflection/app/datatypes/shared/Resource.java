@@ -52,4 +52,19 @@ public class Resource extends DataType {
 			}
 		}
 	}
+
+	public Resource name(String name) {
+		this.name = name;
+		return this;
+	}
+
+	public Resource type(ResourceTypeType type) {
+		this.type = type;
+		return this;
+	}
+
+	public Resource properties(String properties) {
+		this.properties = properties;
+		return this;
+	}
 }

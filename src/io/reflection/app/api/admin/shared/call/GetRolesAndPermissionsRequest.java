@@ -74,4 +74,29 @@ public class GetRolesAndPermissionsRequest extends Request {
 			}
 		}
 	}
+
+	public GetRolesAndPermissionsRequest user(User user) {
+		this.user = user;
+		return this;
+	}
+
+	public GetRolesAndPermissionsRequest idsOnly(boolean idsOnly) {
+		this.idsOnly = idsOnly;
+		return this;
+	}
+
+	public GetRolesAndPermissionsRequest expandRoles(boolean expandRoles) {
+		this.expandRoles = expandRoles;
+		return this;
+	}
+
+	public GetRolesAndPermissionsRequest rolesOnly(boolean rolesOnly) {
+		this.rolesOnly = rolesOnly;
+		return this;
+	}
+
+	public GetRolesAndPermissionsRequest permissionsOnly(boolean permissionsOnly) {
+		this.permissionsOnly = permissionsOnly;
+		return this;
+	}
 }

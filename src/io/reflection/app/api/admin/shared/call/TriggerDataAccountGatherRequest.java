@@ -58,4 +58,19 @@ public class TriggerDataAccountGatherRequest extends Request {
 			}
 		}
 	}
+
+	public TriggerDataAccountGatherRequest dataAccount(DataAccount dataAccount) {
+		this.dataAccount = dataAccount;
+		return this;
+	}
+
+	public TriggerDataAccountGatherRequest days(int days) {
+		this.days = days;
+		return this;
+	}
+
+	public TriggerDataAccountGatherRequest from(Date from) {
+		this.from = from;
+		return this;
+	}
 }

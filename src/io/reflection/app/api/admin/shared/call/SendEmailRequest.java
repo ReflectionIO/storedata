@@ -58,4 +58,19 @@ public class SendEmailRequest extends Request {
 			}
 		}
 	}
+
+	public SendEmailRequest template(EmailTemplate template) {
+		this.template = template;
+		return this;
+	}
+
+	public SendEmailRequest toUser(User toUser) {
+		this.toUser = toUser;
+		return this;
+	}
+
+	public SendEmailRequest toAddress(String toAddress) {
+		this.toAddress = toAddress;
+		return this;
+	}
 }

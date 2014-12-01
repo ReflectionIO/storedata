@@ -111,4 +111,44 @@ public class GetSimpleModelRunsRequest extends Request {
 			}
 		}
 	}
+
+	public GetSimpleModelRunsRequest country(Country country) {
+		this.country = country;
+		return this;
+	}
+
+	public GetSimpleModelRunsRequest store(Store store) {
+		this.store = store;
+		return this;
+	}
+
+	public GetSimpleModelRunsRequest category(Category category) {
+		this.category = category;
+		return this;
+	}
+
+	public GetSimpleModelRunsRequest feedFetch(FeedFetch feedFetch) {
+		this.feedFetch = feedFetch;
+		return this;
+	}
+
+	public GetSimpleModelRunsRequest pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
+
+	public GetSimpleModelRunsRequest listType(String listType) {
+		this.listType = listType;
+		return this;
+	}
+
+	public GetSimpleModelRunsRequest start(Date start) {
+		this.start = start;
+		return this;
+	}
+
+	public GetSimpleModelRunsRequest end(Date end) {
+		this.end = end;
+		return this;
+	}
 }

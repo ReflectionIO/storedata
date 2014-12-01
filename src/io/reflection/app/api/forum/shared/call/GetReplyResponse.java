@@ -37,4 +37,9 @@ public class GetReplyResponse extends Response {
 			}
 		}
 	}
+
+	public GetReplyResponse reply(Reply reply) {
+		this.reply = reply;
+		return this;
+	}
 }

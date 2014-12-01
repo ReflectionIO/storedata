@@ -47,4 +47,14 @@ public class SearchForItemRequest extends Request {
 			}
 		}
 	}
+
+	public SearchForItemRequest pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
+
+	public SearchForItemRequest query(String query) {
+		this.query = query;
+		return this;
+	}
 }

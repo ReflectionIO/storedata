@@ -48,4 +48,14 @@ public class AssignPermissionRequest extends Request {
 			}
 		}
 	}
+
+	public AssignPermissionRequest user(User user) {
+		this.user = user;
+		return this;
+	}
+
+	public AssignPermissionRequest permission(Permission permission) {
+		this.permission = permission;
+		return this;
+	}
 }

@@ -85,4 +85,19 @@ public class LookupApplicationRequest extends Request {
 			}
 		}
 	}
+
+	public LookupApplicationRequest internalIds(List<String> internalIds) {
+		this.internalIds = internalIds;
+		return this;
+	}
+
+	public LookupApplicationRequest externalIds(List<String> externalIds) {
+		this.externalIds = externalIds;
+		return this;
+	}
+
+	public LookupApplicationRequest detail(LookupDetailType detail) {
+		this.detail = detail;
+		return this;
+	}
 }

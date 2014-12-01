@@ -9,6 +9,7 @@
 package io.reflection.app.api.blog.shared.call;
 
 import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.api.shared.datatypes.Response;
 import io.reflection.app.datatypes.shared.Post;
 
 import java.util.ArrayList;
@@ -18,7 +19,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import io.reflection.app.api.shared.datatypes.Response;
 
 public class GetPostsResponse extends Response {
 	public List<Post> posts;
@@ -65,5 +65,15 @@ public class GetPostsResponse extends Response {
 				pager.fromJson(jsonPager.getAsJsonObject());
 			}
 		}
+	}
+
+	public GetPostsResponse posts(List<Post> posts) {
+		this.posts = posts;
+		return this;
+	}
+
+	public GetPostsResponse pager(Pager pager) {
+		this.pager = pager;
+		return this;
 	}
 }

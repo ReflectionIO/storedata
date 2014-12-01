@@ -48,4 +48,14 @@ public class GetRepliesRequest extends Request {
 			}
 		}
 	}
+
+	public GetRepliesRequest topic(Topic topic) {
+		this.topic = topic;
+		return this;
+	}
+
+	public GetRepliesRequest pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
 }

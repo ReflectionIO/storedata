@@ -70,4 +70,29 @@ public class EmailTemplate extends DataType {
 			}
 		}
 	}
+
+	public EmailTemplate from(String from) {
+		this.from = from;
+		return this;
+	}
+
+	public EmailTemplate body(String body) {
+		this.body = body;
+		return this;
+	}
+
+	public EmailTemplate subject(String subject) {
+		this.subject = subject;
+		return this;
+	}
+
+	public EmailTemplate format(EmailFormatType format) {
+		this.format = format;
+		return this;
+	}
+
+	public EmailTemplate type(EmailTypeType type) {
+		this.type = type;
+		return this;
+	}
 }

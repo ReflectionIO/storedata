@@ -131,4 +131,34 @@ public class DataAccount extends DataType {
 			}
 		}
 	}
+
+	public DataAccount source(DataSource source) {
+		this.source = source;
+		return this;
+	}
+
+	public DataAccount items(List<Item> items) {
+		this.items = items;
+		return this;
+	}
+
+	public DataAccount username(String username) {
+		this.username = username;
+		return this;
+	}
+
+	public DataAccount password(String password) {
+		this.password = password;
+		return this;
+	}
+
+	public DataAccount properties(String properties) {
+		this.properties = properties;
+		return this;
+	}
+
+	public DataAccount active(String active) {
+		this.active = active;
+		return this;
+	}
 }

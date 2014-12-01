@@ -65,4 +65,14 @@ public class DeleteUsersRequest extends Request {
 			}
 		}
 	}
+
+	public DeleteUsersRequest users(List<User> users) {
+		this.users = users;
+		return this;
+	}
+
+	public DeleteUsersRequest allTestUsers(boolean allTestUsers) {
+		this.allTestUsers = allTestUsers;
+		return this;
+	}
 }

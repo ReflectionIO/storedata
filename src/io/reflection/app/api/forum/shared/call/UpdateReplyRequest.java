@@ -37,4 +37,9 @@ public class UpdateReplyRequest extends Request {
 			}
 		}
 	}
+
+	public UpdateReplyRequest reply(Reply reply) {
+		this.reply = reply;
+		return this;
+	}
 }

@@ -8,11 +8,12 @@
 //
 package io.reflection.app.api.admin.shared.call;
 
+import io.reflection.app.api.shared.datatypes.Response;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import io.reflection.app.api.shared.datatypes.Response;
 
 public class GetUsersCountResponse extends Response {
 	public Long count;
@@ -34,5 +35,10 @@ public class GetUsersCountResponse extends Response {
 				count = Long.valueOf(jsonCount.getAsLong());
 			}
 		}
+	}
+
+	public GetUsersCountResponse count(long count) {
+		this.count = count;
+		return this;
 	}
 }

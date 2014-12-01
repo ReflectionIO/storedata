@@ -48,4 +48,14 @@ public class AssignRoleRequest extends Request {
 			}
 		}
 	}
+
+	public AssignRoleRequest user(User user) {
+		this.user = user;
+		return this;
+	}
+
+	public AssignRoleRequest role(Role role) {
+		this.role = role;
+		return this;
+	}
 }

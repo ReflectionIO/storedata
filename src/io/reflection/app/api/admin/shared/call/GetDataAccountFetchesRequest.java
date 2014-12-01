@@ -8,16 +8,16 @@
 //
 package io.reflection.app.api.admin.shared.call;
 
+import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.api.shared.datatypes.Request;
+import io.reflection.app.datatypes.shared.DataAccount;
+
 import java.util.Date;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-
-import io.reflection.app.api.shared.datatypes.Pager;
-import io.reflection.app.api.shared.datatypes.Request;
-import io.reflection.app.datatypes.shared.DataAccount;
 
 public class GetDataAccountFetchesRequest extends Request {
 	public DataAccount dataAccount;
@@ -68,5 +68,25 @@ public class GetDataAccountFetchesRequest extends Request {
 				end = new Date(jsonEnd.getAsLong());
 			}
 		}
+	}
+
+	public GetDataAccountFetchesRequest dataAccount(DataAccount dataAccount) {
+		this.dataAccount = dataAccount;
+		return this;
+	}
+
+	public GetDataAccountFetchesRequest pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
+
+	public GetDataAccountFetchesRequest start(Date start) {
+		this.start = start;
+		return this;
+	}
+
+	public GetDataAccountFetchesRequest end(Date end) {
+		this.end = end;
+		return this;
 	}
 }

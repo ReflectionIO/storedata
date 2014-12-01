@@ -37,4 +37,9 @@ public class GetPermissionsRequest extends Request {
 			}
 		}
 	}
+
+	public GetPermissionsRequest pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
 }

@@ -59,4 +59,19 @@ public class GetLinkedAccountItemResponse extends Response {
 			}
 		}
 	}
+
+	public GetLinkedAccountItemResponse item(Item item) {
+		this.item = item;
+		return this;
+	}
+
+	public GetLinkedAccountItemResponse linkedAccount(DataAccount linkedAccount) {
+		this.linkedAccount = linkedAccount;
+		return this;
+	}
+
+	public GetLinkedAccountItemResponse dataSource(DataSource dataSource) {
+		this.dataSource = dataSource;
+		return this;
+	}
 }

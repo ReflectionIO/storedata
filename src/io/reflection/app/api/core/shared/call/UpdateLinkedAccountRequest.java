@@ -18,7 +18,7 @@ import io.reflection.app.datatypes.shared.DataAccount;
  * @author stefanocapuzzi
  *
  */
-public class UpdateLinkedAccountRequest  extends Request {
+public class UpdateLinkedAccountRequest extends Request {
 	public DataAccount linkedAccount;
 
 	@Override
@@ -39,5 +39,10 @@ public class UpdateLinkedAccountRequest  extends Request {
 				linkedAccount.fromJson(jsonLinkedAccount.getAsJsonObject());
 			}
 		}
+	}
+
+	public UpdateLinkedAccountRequest linkedAccount(DataAccount linkedAccount) {
+		this.linkedAccount = linkedAccount;
+		return this;
 	}
 }

@@ -62,4 +62,24 @@ public class Category extends DataType {
 			}
 		}
 	}
+
+	public Category parent(Category parent) {
+		this.parent = parent;
+		return this;
+	}
+
+	public Category internalId(Long internalId) {
+		this.internalId = internalId;
+		return this;
+	}
+
+	public Category name(String name) {
+		this.name = name;
+		return this;
+	}
+
+	public Category store(String store) {
+		this.store = store;
+		return this;
+	}
 }

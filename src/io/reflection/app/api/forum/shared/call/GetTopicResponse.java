@@ -37,4 +37,9 @@ public class GetTopicResponse extends Response {
 			}
 		}
 	}
+
+	public GetTopicResponse topic(Topic topic) {
+		this.topic = topic;
+		return this;
+	}
 }

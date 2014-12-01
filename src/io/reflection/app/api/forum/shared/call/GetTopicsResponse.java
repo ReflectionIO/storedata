@@ -66,4 +66,14 @@ public class GetTopicsResponse extends Response {
 			}
 		}
 	}
+
+	public GetTopicsResponse topics(List<Topic> topics) {
+		this.topics = topics;
+		return this;
+	}
+
+	public GetTopicsResponse pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
 }

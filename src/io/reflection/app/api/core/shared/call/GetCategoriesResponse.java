@@ -66,4 +66,14 @@ public class GetCategoriesResponse extends Response {
 			}
 		}
 	}
+
+	public GetCategoriesResponse categories(List<Category> categories) {
+		this.categories = categories;
+		return this;
+	}
+
+	public GetCategoriesResponse pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
 }

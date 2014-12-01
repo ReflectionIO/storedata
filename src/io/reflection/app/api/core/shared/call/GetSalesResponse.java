@@ -23,7 +23,7 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
 public class GetSalesResponse extends Response {
-	
+
 	public List<Sale> sales;
 	public Pager pager;
 	public List<Item> items;
@@ -102,5 +102,25 @@ public class GetSalesResponse extends Response {
 				dataSource.fromJson(jsonDataSource.getAsJsonObject());
 			}
 		}
+	}
+
+	public GetSalesResponse sales(List<Sale> sales) {
+		this.sales = sales;
+		return this;
+	}
+
+	public GetSalesResponse pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
+
+	public GetSalesResponse items(List<Item> items) {
+		this.items = items;
+		return this;
+	}
+
+	public GetSalesResponse dataSource(DataSource dataSource) {
+		this.dataSource = dataSource;
+		return this;
 	}
 }

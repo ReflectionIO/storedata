@@ -139,4 +139,29 @@ public class GetAllTopItemsResponse extends Response {
 			}
 		}
 	}
+
+	public GetAllTopItemsResponse freeRanks(List<Rank> freeRanks) {
+		this.freeRanks = freeRanks;
+		return this;
+	}
+
+	public GetAllTopItemsResponse paidRanks(List<Rank> paidRanks) {
+		this.paidRanks = paidRanks;
+		return this;
+	}
+
+	public GetAllTopItemsResponse grossingRanks(List<Rank> grossingRanks) {
+		this.grossingRanks = grossingRanks;
+		return this;
+	}
+
+	public GetAllTopItemsResponse items(List<Item> items) {
+		this.items = items;
+		return this;
+	}
+
+	public GetAllTopItemsResponse pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
 }

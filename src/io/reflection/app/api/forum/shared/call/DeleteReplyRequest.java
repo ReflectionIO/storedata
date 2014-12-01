@@ -37,4 +37,9 @@ public class DeleteReplyRequest extends Request {
 			}
 		}
 	}
+
+	public DeleteReplyRequest reply(Reply reply) {
+		this.reply = reply;
+		return this;
+	}
 }

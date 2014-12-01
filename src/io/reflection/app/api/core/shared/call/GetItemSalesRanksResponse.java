@@ -99,4 +99,29 @@ public class GetItemSalesRanksResponse extends Response {
 			}
 		}
 	}
+
+	public GetItemSalesRanksResponse ranks(List<Rank> ranks) {
+		this.ranks = ranks;
+		return this;
+	}
+
+	public GetItemSalesRanksResponse pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
+
+	public GetItemSalesRanksResponse item(Item item) {
+		this.item = item;
+		return this;
+	}
+
+	public GetItemSalesRanksResponse linkedAccount(DataAccount linkedAccount) {
+		this.linkedAccount = linkedAccount;
+		return this;
+	}
+
+	public GetItemSalesRanksResponse dataSource(DataSource dataSource) {
+		this.dataSource = dataSource;
+		return this;
+	}
 }

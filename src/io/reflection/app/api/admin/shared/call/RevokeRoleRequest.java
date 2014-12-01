@@ -48,4 +48,14 @@ public class RevokeRoleRequest extends Request {
 			}
 		}
 	}
+
+	public RevokeRoleRequest user(User user) {
+		this.user = user;
+		return this;
+	}
+
+	public RevokeRoleRequest role(Role role) {
+		this.role = role;
+		return this;
+	}
 }

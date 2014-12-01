@@ -91,4 +91,19 @@ public class GetDataAccountsResponse extends Response {
 			}
 		}
 	}
+
+	public GetDataAccountsResponse dataAccounts(List<DataAccount> dataAccounts) {
+		this.dataAccounts = dataAccounts;
+		return this;
+	}
+
+	public GetDataAccountsResponse dataSources(List<DataSource> dataSources) {
+		this.dataSources = dataSources;
+		return this;
+	}
+
+	public GetDataAccountsResponse pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
 }

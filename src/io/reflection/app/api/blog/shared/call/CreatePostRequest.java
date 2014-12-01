@@ -47,4 +47,14 @@ public class CreatePostRequest extends Request {
 			}
 		}
 	}
+
+	public CreatePostRequest post(Post post) {
+		this.post = post;
+		return this;
+	}
+
+	public CreatePostRequest publish(boolean publish) {
+		this.publish = publish;
+		return this;
+	}
 }

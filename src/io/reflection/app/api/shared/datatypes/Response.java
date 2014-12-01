@@ -10,6 +10,8 @@ package io.reflection.app.api.shared.datatypes;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+import com.willshex.gson.json.service.shared.Error;
+import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author billy1380
@@ -38,5 +40,20 @@ public class Response extends com.willshex.gson.json.service.shared.Response {
 				session.fromJson(jsonSession.getAsJsonObject());
 			}
 		}
+	}
+
+	public Response session(Session session) {
+		this.session = session;
+		return this;
+	}
+
+	public Response error(Error error) {
+		this.error = error;
+		return this;
+	}
+
+	public Response status(StatusType status) {
+		this.status = status;
+		return this;
 	}
 }

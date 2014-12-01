@@ -109,4 +109,39 @@ public class GetItemRanksRequest extends Request {
 			}
 		}
 	}
+
+	public GetItemRanksRequest item(Item item) {
+		this.item = item;
+		return this;
+	}
+
+	public GetItemRanksRequest country(Country country) {
+		this.country = country;
+		return this;
+	}
+
+	public GetItemRanksRequest category(Category category) {
+		this.category = category;
+		return this;
+	}
+
+	public GetItemRanksRequest pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
+
+	public GetItemRanksRequest start(Date start) {
+		this.start = start;
+		return this;
+	}
+
+	public GetItemRanksRequest end(Date end) {
+		this.end = end;
+		return this;
+	}
+
+	public GetItemRanksRequest listType(String listType) {
+		this.listType = listType;
+		return this;
+	}
 }
