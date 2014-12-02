@@ -39,7 +39,10 @@ public enum ServiceType {
 	ServiceTypeForum("forum"),
 	ServiceTypeTopic("topic"),
 	ServiceTypeReply("reply"),
-	ServiceTypeSimpleModelRun("simplemodelrun"), ;
+	ServiceTypeSimpleModelRun("simplemodelrun"),
+	ServiceTypeEvent("event"),
+	ServiceTypeEventSubscription("eventsubscription"),
+	ServiceTypeNotification("notification"), ;
 
 	private String value;
 	private static Map<String, ServiceType> valueLookup = null;

@@ -440,7 +440,7 @@
 				<xsd:attribute name="type" type="EventTypeType" />
 				<xsd:attribute name="code" type="xsd:string" />
 				<xsd:attribute name="description" type="xsd:string" />
-				<xsd:attribute name="priority" type="PriorityType" />
+				<xsd:attribute name="priority" type="EventPriorityType" />
 				<xsd:attribute name="subject" type="xsd:string" />
 				<xsd:attribute name="shortBody" type="xsd:string" />
 				<xsd:attribute name="longBody" type="xsd:string" />
@@ -456,10 +456,10 @@
 					<xsd:element name="event" type="Event" maxOccurs="1" />
 					<xsd:element name="eavesDropping" type="User" maxOccurs="1" />
 				</xsd:sequence>
-				<xsd:attribute name="email" type="PriorityType" default="high" />
-				<xsd:attribute name="text" type="PriorityType" default="critical" />
-				<xsd:attribute name="push" type="PriorityType" default="normal" />
-				<xsd:attribute name="notificationCenter" type="PriorityType" default="debug" />
+				<xsd:attribute name="email" type="EventPriorityType" default="high" />
+				<xsd:attribute name="text" type="EventPriorityType" default="critical" />
+				<xsd:attribute name="push" type="EventPriorityType" default="normal" />
+				<xsd:attribute name="notificationCenter" type="EventPriorityType" default="debug" />
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
@@ -593,7 +593,7 @@
 		</xsd:restriction>
 	</xsd:simpleType>
 
-	<xsd:simpleType name="PriorityType">
+	<xsd:simpleType name="EventPriorityType">
 		<xsd:restriction base="xsd:string">
 			<xsd:enumeration value="critical" />
 			<xsd:enumeration value="high" />
