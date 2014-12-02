@@ -27,8 +27,9 @@ public class MixPanelApiHelper {
 	public static void trackNavigation(Stack value) {
 		JavaScriptObject o = JavaScriptObject.createObject();
 
-		if (value.hasPage()) {
-			JavaScriptObjectHelper.setStringProperty(o, "page", value.getPage().substring(1));
+		String page = null;
+		if (value.hasPage() && (page = value.getPage()).length() > 1) {
+			JavaScriptObjectHelper.setStringProperty(o, "page", page.substring(1));
 		}
 
 		if (value.hasAction()) {
