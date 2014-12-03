@@ -439,6 +439,7 @@
 			<xsd:extension base="DataType">
 				<xsd:attribute name="type" type="EventTypeType" />
 				<xsd:attribute name="code" type="xsd:string" />
+				<xsd:attribute name="name" type="xsd:string" />
 				<xsd:attribute name="description" type="xsd:string" />
 				<xsd:attribute name="priority" type="EventPriorityType" />
 				<xsd:attribute name="subject" type="xsd:string" />
@@ -471,8 +472,7 @@
 					<xsd:element name="cause" type="EventSubscription" maxOccurs="1" />
 				</xsd:sequence>
 				<xsd:attribute name="subject" type="xsd:string" />
-				<xsd:attribute name="shortBody" type="xsd:string" />
-				<xsd:attribute name="longBody" type="xsd:string" />
+				<xsd:attribute name="body" type="xsd:string" />
 				<xsd:attribute name="status" type="NotificationStatusType" />
 				<xsd:attribute name="type" type="NotificationTypeType" />
 			</xsd:extension>
@@ -605,6 +605,7 @@
 
 	<xsd:simpleType name="NotificationStatusType">
 		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="sending" />
 			<xsd:enumeration value="sent" />
 			<xsd:enumeration value="read" />
 			<xsd:enumeration value="failed" />
