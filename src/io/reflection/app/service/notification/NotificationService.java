@@ -8,8 +8,12 @@
 //
 package io.reflection.app.service.notification;
 
+import static com.spacehopperstudios.utility.StringUtils.*;
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.datatypes.shared.EventSubscription;
 import io.reflection.app.datatypes.shared.Notification;
+import io.reflection.app.datatypes.shared.NotificationStatusType;
+import io.reflection.app.datatypes.shared.NotificationTypeType;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
@@ -52,10 +56,12 @@ final class NotificationService implements INotificationService {
 	 */
 	private Notification toNotification(Connection connection) throws DataAccessException {
 		Notification notification = new Notification();
-		notification.id = connection.getCurrentRowLong("id");
-		notification.created = connection.getCurrentRowDateTime("created");
-		notification.deleted = connection.getCurrentRowString("deleted");
-		notification.longBody = connection.getCurrentRowString("longbody");
+		notification.id(connection.getCurrentRowLong("id")).created(connection.getCurrentRowDateTime("created"))
+				.deleted(connection.getCurrentRowString("deleted"));
+		notification.cause((EventSubscription) new EventSubscription().id(connection.getCurrentRowLong("causeid")))
+				.longBody(stripslashes(connection.getCurrentRowString("longbody"))).shortBody(stripslashes(connection.getCurrentRowString("shortbody")))
+				.status(NotificationStatusType.fromString(connection.getCurrentRowString("status")))
+				.subject(stripslashes(connection.getCurrentRowString("subject"))).type(NotificationTypeType.fromString(connection.getCurrentRowString("type")));
 		return notification;
 	}
 

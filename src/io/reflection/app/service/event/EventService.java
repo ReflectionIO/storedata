@@ -8,8 +8,11 @@
 //
 package io.reflection.app.service.event;
 
+import static com.spacehopperstudios.utility.StringUtils.*;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.datatypes.shared.Event;
+import io.reflection.app.datatypes.shared.EventPriorityType;
+import io.reflection.app.datatypes.shared.EventTypeType;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
@@ -52,7 +55,12 @@ final class EventService implements IEventService {
 	 */
 	private Event toEvent(Connection connection) throws DataAccessException {
 		Event event = new Event();
-		event.id = connection.getCurrentRowLong("id");
+		event.id(connection.getCurrentRowLong("id")).created(connection.getCurrentRowDateTime("created")).deleted(connection.getCurrentRowString("deleted"));
+		event.code(stripslashes(connection.getCurrentRowString("code"))).description(stripslashes(connection.getCurrentRowString("description")))
+				.longBody(stripslashes(connection.getCurrentRowString("longbody"))).shortBody(stripslashes(connection.getCurrentRowString("shortbody")))
+				.subject(stripslashes(connection.getCurrentRowString("subject")))
+				.priority(EventPriorityType.fromString(connection.getCurrentRowString("priority")))
+				.type(EventTypeType.fromString(connection.getCurrentRowString("type")));
 		return event;
 	}
 

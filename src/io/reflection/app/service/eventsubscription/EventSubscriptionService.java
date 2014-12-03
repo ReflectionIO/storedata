@@ -9,7 +9,10 @@
 package io.reflection.app.service.eventsubscription;
 
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.datatypes.shared.Event;
+import io.reflection.app.datatypes.shared.EventPriorityType;
 import io.reflection.app.datatypes.shared.EventSubscription;
+import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
@@ -52,7 +55,14 @@ final class EventSubscriptionService implements IEventSubscriptionService {
 	 */
 	private EventSubscription toEventSubscription(Connection connection) throws DataAccessException {
 		EventSubscription eventSubscription = new EventSubscription();
-		eventSubscription.id = connection.getCurrentRowLong("id");
+		eventSubscription.id(connection.getCurrentRowLong("id")).created(connection.getCurrentRowDateTime("created"))
+				.deleted(connection.getCurrentRowString("deleted"));
+		eventSubscription.eavesDropping((User) new User().id(connection.getCurrentRowLong("eavesdroppingid")))
+				.email(EventPriorityType.fromString(connection.getCurrentRowString("email")))
+				.event((Event) new Event().id(connection.getCurrentRowLong("eventid")))
+				.notificationCenter(EventPriorityType.fromString(connection.getCurrentRowString("notificationcenter")))
+				.push(EventPriorityType.fromString(connection.getCurrentRowString("push")))
+				.text(EventPriorityType.fromString(connection.getCurrentRowString("text"))).user((User) new User().id(connection.getCurrentRowLong("userid")));
 		return eventSubscription;
 	}
 
