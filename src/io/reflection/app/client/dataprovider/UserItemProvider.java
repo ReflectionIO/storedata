@@ -13,7 +13,6 @@ import io.reflection.app.api.core.shared.call.GetSalesRanksRequest;
 import io.reflection.app.api.core.shared.call.GetSalesRanksResponse;
 import io.reflection.app.api.core.shared.call.event.GetLinkedAccountItemsEventHandler;
 import io.reflection.app.api.core.shared.call.event.GetSalesRanksEventHandler;
-import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.client.controller.ItemController;
 import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.RankController;
@@ -37,7 +36,6 @@ import com.willshex.gson.json.service.shared.StatusType;
  */
 public class UserItemProvider extends AsyncDataProvider<MyApp> implements GetLinkedAccountItemsEventHandler, GetSalesRanksEventHandler {
 
-	private Pager pager = null;
 	private List<MyApp> myAppList = new ArrayList<MyApp>();
 	private Map<String, MyApp> myAppsLookup = new HashMap<String, MyApp>();
 
@@ -54,7 +52,8 @@ public class UserItemProvider extends AsyncDataProvider<MyApp> implements GetLin
 			int start = r.getStart();
 			int end = start + r.getLength();
 			if (end > ItemController.get().getUserItems().size()) {
-				// MyApps page always uses filterParamChanged to call fetchLinkedAccountItems because of the LinkedAccounts TextBox
+				// Changed page
+				ItemController.get().fetchLinkedAccountItems();
 			} else {
 				updateRowData(start, myAppList.subList(start, end)); // Paging with all data already retrieved
 			}
@@ -67,7 +66,6 @@ public class UserItemProvider extends AsyncDataProvider<MyApp> implements GetLin
 		ItemController.get().resetUserItem();
 		myAppList.clear();
 		myAppsLookup.clear();
-		pager = null;
 		updateRowData(0, myAppList);
 		updateRowCount(0, false);
 	}
@@ -82,21 +80,10 @@ public class UserItemProvider extends AsyncDataProvider<MyApp> implements GetLin
 	public void getLinkedAccountItemsSuccess(GetLinkedAccountItemsRequest input, GetLinkedAccountItemsResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 
-			if (output.pager != null) {
-				pager = output.pager;
-
-				if (pager.totalCount != null) {
-					ItemController.get().setUserItemsCount(pager.totalCount.longValue());
-				}
-			}
-
 			if (output.items != null) { // There are items associated with this linked account
-
-				ItemController.get().addItemsToCache(output.items);
 
 				MyApp myApp;
 				for (Item item : output.items) {
-					ItemController.get().setUserItem(item);
 					myAppList.add(myApp = new MyApp());
 					myApp.item = item;
 					myAppsLookup.put(item.internalId, myApp);
@@ -111,7 +98,7 @@ public class UserItemProvider extends AsyncDataProvider<MyApp> implements GetLin
 			updateRowData(
 					input.pager.start.intValue(),
 					myAppList.subList(input.pager.start.intValue(),
-							Math.min(input.pager.start.intValue() + input.pager.count.intValue(), pager.totalCount.intValue())));
+							Math.min(input.pager.start.intValue() + input.pager.count.intValue(), (int) ItemController.get().getUserItemsCount())));
 		}
 		updateRowCount((int) ItemController.get().getUserItemsCount(), true);
 	}
