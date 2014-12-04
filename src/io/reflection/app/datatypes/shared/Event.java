@@ -16,6 +16,7 @@ import com.google.gson.JsonPrimitive;
 public class Event extends DataType {
 	public EventTypeType type;
 	public String code;
+	public String name;
 	public String description;
 	public EventPriorityType priority;
 	public String subject;
@@ -29,6 +30,8 @@ public class Event extends DataType {
 		object.add("type", jsonType);
 		JsonElement jsonCode = code == null ? JsonNull.INSTANCE : new JsonPrimitive(code);
 		object.add("code", jsonCode);
+		JsonElement jsonName = name == null ? JsonNull.INSTANCE : new JsonPrimitive(name);
+		object.add("name", jsonName);
 		JsonElement jsonDescription = description == null ? JsonNull.INSTANCE : new JsonPrimitive(description);
 		object.add("description", jsonDescription);
 		JsonElement jsonPriority = priority == null ? JsonNull.INSTANCE : new JsonPrimitive(priority.toString());
@@ -55,6 +58,12 @@ public class Event extends DataType {
 			JsonElement jsonCode = jsonObject.get("code");
 			if (jsonCode != null) {
 				code = jsonCode.getAsString();
+			}
+		}
+		if (jsonObject.has("name")) {
+			JsonElement jsonName = jsonObject.get("name");
+			if (jsonName != null) {
+				name = jsonName.getAsString();
 			}
 		}
 		if (jsonObject.has("description")) {
@@ -96,6 +105,11 @@ public class Event extends DataType {
 
 	public Event code(String code) {
 		this.code = code;
+		return this;
+	}
+
+	public Event name(String name) {
+		this.name = name;
 		return this;
 	}
 

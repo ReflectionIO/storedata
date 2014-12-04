@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum NotificationStatusType {
+	NotificationStatusTypeSending("sending"),
 	NotificationStatusTypeSent("sent"),
 	NotificationStatusTypeRead("read"),
 	NotificationStatusTypeFailed("failed"), ;

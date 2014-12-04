@@ -8,7 +8,7 @@
 //
 package io.reflection.app.service.notification;
 
-import static com.spacehopperstudios.utility.StringUtils.*;
+import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.datatypes.shared.EventSubscription;
 import io.reflection.app.datatypes.shared.Notification;
@@ -59,8 +59,7 @@ final class NotificationService implements INotificationService {
 		notification.id(connection.getCurrentRowLong("id")).created(connection.getCurrentRowDateTime("created"))
 				.deleted(connection.getCurrentRowString("deleted"));
 		notification.cause((EventSubscription) new EventSubscription().id(connection.getCurrentRowLong("causeid")))
-				.longBody(stripslashes(connection.getCurrentRowString("longbody"))).shortBody(stripslashes(connection.getCurrentRowString("shortbody")))
-				.status(NotificationStatusType.fromString(connection.getCurrentRowString("status")))
+				.body(stripslashes(connection.getCurrentRowString("body"))).status(NotificationStatusType.fromString(connection.getCurrentRowString("status")))
 				.subject(stripslashes(connection.getCurrentRowString("subject"))).type(NotificationTypeType.fromString(connection.getCurrentRowString("type")));
 		return notification;
 	}

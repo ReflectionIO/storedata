@@ -8,7 +8,7 @@
 //
 package io.reflection.app.service.event;
 
-import static com.spacehopperstudios.utility.StringUtils.*;
+import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.datatypes.shared.Event;
 import io.reflection.app.datatypes.shared.EventPriorityType;
@@ -57,8 +57,8 @@ final class EventService implements IEventService {
 		Event event = new Event();
 		event.id(connection.getCurrentRowLong("id")).created(connection.getCurrentRowDateTime("created")).deleted(connection.getCurrentRowString("deleted"));
 		event.code(stripslashes(connection.getCurrentRowString("code"))).description(stripslashes(connection.getCurrentRowString("description")))
-				.longBody(stripslashes(connection.getCurrentRowString("longbody"))).shortBody(stripslashes(connection.getCurrentRowString("shortbody")))
-				.subject(stripslashes(connection.getCurrentRowString("subject")))
+				.name(stripslashes(connection.getCurrentRowString("name"))).longBody(stripslashes(connection.getCurrentRowString("longbody")))
+				.shortBody(stripslashes(connection.getCurrentRowString("shortbody"))).subject(stripslashes(connection.getCurrentRowString("subject")))
 				.priority(EventPriorityType.fromString(connection.getCurrentRowString("priority")))
 				.type(EventTypeType.fromString(connection.getCurrentRowString("type")));
 		return event;

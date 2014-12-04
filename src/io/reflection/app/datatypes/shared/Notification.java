@@ -14,10 +14,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 public class Notification extends DataType {
+
 	public EventSubscription cause;
 	public String subject;
-	public String shortBody;
-	public String longBody;
+	public String body;
 	public NotificationStatusType status;
 	public NotificationTypeType type;
 
@@ -28,10 +28,8 @@ public class Notification extends DataType {
 		object.add("cause", jsonCause);
 		JsonElement jsonSubject = subject == null ? JsonNull.INSTANCE : new JsonPrimitive(subject);
 		object.add("subject", jsonSubject);
-		JsonElement jsonShortBody = shortBody == null ? JsonNull.INSTANCE : new JsonPrimitive(shortBody);
-		object.add("shortBody", jsonShortBody);
-		JsonElement jsonLongBody = longBody == null ? JsonNull.INSTANCE : new JsonPrimitive(longBody);
-		object.add("longBody", jsonLongBody);
+		JsonElement jsonBody = body == null ? JsonNull.INSTANCE : new JsonPrimitive(body);
+		object.add("body", jsonBody);
 		JsonElement jsonStatus = status == null ? JsonNull.INSTANCE : new JsonPrimitive(status.toString());
 		object.add("status", jsonStatus);
 		JsonElement jsonType = type == null ? JsonNull.INSTANCE : new JsonPrimitive(type.toString());
@@ -55,16 +53,10 @@ public class Notification extends DataType {
 				subject = jsonSubject.getAsString();
 			}
 		}
-		if (jsonObject.has("shortBody")) {
-			JsonElement jsonShortBody = jsonObject.get("shortBody");
-			if (jsonShortBody != null) {
-				shortBody = jsonShortBody.getAsString();
-			}
-		}
-		if (jsonObject.has("longBody")) {
-			JsonElement jsonLongBody = jsonObject.get("longBody");
-			if (jsonLongBody != null) {
-				longBody = jsonLongBody.getAsString();
+		if (jsonObject.has("body")) {
+			JsonElement jsonBody = jsonObject.get("body");
+			if (jsonBody != null) {
+				body = jsonBody.getAsString();
 			}
 		}
 		if (jsonObject.has("status")) {
@@ -91,13 +83,8 @@ public class Notification extends DataType {
 		return this;
 	}
 
-	public Notification shortBody(String shortBody) {
-		this.shortBody = shortBody;
-		return this;
-	}
-
-	public Notification longBody(String longBody) {
-		this.longBody = longBody;
+	public Notification body(String body) {
+		this.body = body;
 		return this;
 	}
 
