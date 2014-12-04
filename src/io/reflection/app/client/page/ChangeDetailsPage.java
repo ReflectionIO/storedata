@@ -30,8 +30,8 @@ import io.reflection.app.api.core.shared.call.GetUserDetailsRequest;
 import io.reflection.app.api.core.shared.call.GetUserDetailsResponse;
 import io.reflection.app.api.core.shared.call.event.ChangeUserDetailsEventHandler;
 import io.reflection.app.api.core.shared.call.event.GetUserDetailsEventHandler;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.StyledButtonCell;
-import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
@@ -271,16 +271,16 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	protected void onAttach() {
 		super.onAttach();
 
-		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
-		register(EventController.get().addHandlerToSource(ChangeUserDetailsEventHandler.TYPE, SessionController.get(), this));
-		register(EventController.get().addHandlerToSource(UserPasswordChangedEventHandler.TYPE, UserController.get(), this));
-		register(EventController.get().addHandlerToSource(UserPasswordChangedEventHandler.TYPE, SessionController.get(), this));
-		register(EventController.get().addHandlerToSource(GetRolesAndPermissionsEventHandler.TYPE, UserController.get(), this));
-		register(EventController.get().addHandlerToSource(AssignRoleEventHandler.TYPE, UserController.get(), this));
-		register(EventController.get().addHandlerToSource(AssignPermissionEventHandler.TYPE, UserController.get(), this));
-		register(EventController.get().addHandlerToSource(RevokeRoleEventHandler.TYPE, UserController.get(), this));
-		register(EventController.get().addHandlerToSource(RevokePermissionEventHandler.TYPE, UserController.get(), this));
-		register(EventController.get().addHandlerToSource(GetUserDetailsEventHandler.TYPE, UserController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(ChangeUserDetailsEventHandler.TYPE, SessionController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(UserPasswordChangedEventHandler.TYPE, UserController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(UserPasswordChangedEventHandler.TYPE, SessionController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(GetRolesAndPermissionsEventHandler.TYPE, UserController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(AssignRoleEventHandler.TYPE, UserController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(AssignPermissionEventHandler.TYPE, UserController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(RevokeRoleEventHandler.TYPE, UserController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(RevokePermissionEventHandler.TYPE, UserController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(GetUserDetailsEventHandler.TYPE, UserController.get(), this));
 
 	}
 

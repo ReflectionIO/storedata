@@ -30,6 +30,7 @@ import io.reflection.app.api.blog.shared.call.event.UpdatePostEventHandler.Updat
 import io.reflection.app.api.blog.shared.call.event.UpdatePostEventHandler.UpdatePostSuccess;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.Preloader;
 import io.reflection.app.datatypes.shared.Post;
@@ -124,12 +125,12 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 									Math.min(input.pager.start.intValue() + input.pager.count.intValue(), pager.totalCount.intValue())));
 				}
 
-				EventController.get().fireEventFromSource(new GetPostsSuccess(input, output), PostController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetPostsSuccess(input, output), PostController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new GetPostsFailure(input, caught), PostController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetPostsFailure(input, caught), PostController.this);
 			}
 		});
 	}
@@ -157,12 +158,12 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 					}
 				}
 
-				EventController.get().fireEventFromSource(new GetPostSuccess(input, output), PostController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetPostSuccess(input, output), PostController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new GetPostFailure(input, caught), PostController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetPostFailure(input, caught), PostController.this);
 			}
 		});
 	}
@@ -257,12 +258,12 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 					fetchPosts();
 				}
 
-				EventController.get().fireEventFromSource(new UpdatePostSuccess(input, output), PostController.this);
+				DefaultEventBus.get().fireEventFromSource(new UpdatePostSuccess(input, output), PostController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new UpdatePostFailure(input, caught), PostController.this);
+				DefaultEventBus.get().fireEventFromSource(new UpdatePostFailure(input, caught), PostController.this);
 			}
 		});
 	}
@@ -302,12 +303,12 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 			public void onSuccess(CreatePostResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {}
 
-				EventController.get().fireEventFromSource(new CreatePostSuccess(input, output), PostController.this);
+				DefaultEventBus.get().fireEventFromSource(new CreatePostSuccess(input, output), PostController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new CreatePostFailure(input, caught), PostController.this);
+				DefaultEventBus.get().fireEventFromSource(new CreatePostFailure(input, caught), PostController.this);
 			}
 		});
 	}
@@ -382,12 +383,12 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 					}
 				}
 
-				EventController.get().fireEventFromSource(new DeletePostSuccess(input, output), PostController.this);
+				DefaultEventBus.get().fireEventFromSource(new DeletePostSuccess(input, output), PostController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new DeletePostFailure(input, caught), PostController.this);
+				DefaultEventBus.get().fireEventFromSource(new DeletePostFailure(input, caught), PostController.this);
 			}
 		});
 	}

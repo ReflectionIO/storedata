@@ -333,18 +333,6 @@
 		</xsd:complexContent>
 	</xsd:complexType>
 
-	<xsd:complexType name="EmailTemplate">
-		<xsd:complexContent>
-			<xsd:extension base="DataType">
-				<xsd:attribute name="from" type="xsd:string" />
-				<xsd:attribute name="body" type="xsd:string" />
-				<xsd:attribute name="subject" type="xsd:string" />
-				<xsd:attribute name="format" type="EmailFormatType" />
-				<xsd:attribute name="type" type="EmailTypeType" />
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
 	<xsd:complexType name="Post">
 		<xsd:complexContent>
 			<xsd:extension base="DataType">

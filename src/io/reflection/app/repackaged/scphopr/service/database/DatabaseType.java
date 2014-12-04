@@ -30,7 +30,6 @@ public enum DatabaseType {
 	DatabaseTypeDataAccountFetch("dataaccountfetch"),
 	DatabaseTypeCategory("category"),
 	DatabaseTypeResource("resource"),
-	DatabaseTypeEmailTemplate("emailtemplate"),
 	DatabaseTypePost("post"),
 	DatabaseTypeTag("tag"),
 	DatabaseTypeForum("forum"),

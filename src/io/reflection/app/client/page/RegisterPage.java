@@ -14,7 +14,7 @@ import io.reflection.app.api.core.shared.call.RegisterUserResponse;
 import io.reflection.app.api.core.shared.call.event.GetUserDetailsEventHandler;
 import io.reflection.app.api.core.shared.call.event.RegisterUserEventHandler;
 import io.reflection.app.api.shared.datatypes.Session;
-import io.reflection.app.client.controller.EventController;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.SessionController;
@@ -90,11 +90,11 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
     protected void onAttach() {
         super.onAttach();
 
-        register(EventController.get().addHandlerToSource(UserRegisteredEventHandler.TYPE, UserController.get(), this));
-        register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
-        register(EventController.get().addHandlerToSource(GetUserDetailsEventHandler.TYPE, UserController.get(), this));
-        register(EventController.get().addHandlerToSource(RegisterUserEventHandler.TYPE, UserController.get(), this));
-        register(EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
+        register(DefaultEventBus.get().addHandlerToSource(UserRegisteredEventHandler.TYPE, UserController.get(), this));
+        register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+        register(DefaultEventBus.get().addHandlerToSource(GetUserDetailsEventHandler.TYPE, UserController.get(), this));
+        register(DefaultEventBus.get().addHandlerToSource(RegisterUserEventHandler.TYPE, UserController.get(), this));
+        register(DefaultEventBus.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
 
     }
 

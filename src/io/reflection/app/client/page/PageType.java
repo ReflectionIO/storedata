@@ -10,7 +10,7 @@ package io.reflection.app.client.page;
 import io.reflection.app.client.page.admin.CategoriesPage;
 import io.reflection.app.client.page.admin.DataAccountFetchesPage;
 import io.reflection.app.client.page.admin.DataAccountsPage;
-import io.reflection.app.client.page.admin.EmailTemplatePage;
+import io.reflection.app.client.page.admin.EventPage;
 import io.reflection.app.client.page.admin.FeedBrowserPage;
 import io.reflection.app.client.page.admin.ItemsPage;
 import io.reflection.app.client.page.admin.PermissionsPage;
@@ -57,7 +57,7 @@ public enum PageType {
 	ChangePasswordPageType("changepassword", true),
 	DataAccountFetchesPageType("dataaccountfetches", "MDF"),
 	DataAccountsPageType("dataaccounts", "MDA"),
-	EmailTemplatesPageType("emailtemplates", "MET"),
+	EventsPageType("events", "MET"),
 	FeedBrowserPageType("feedbrowser", "MFF"),
 	ForgotPasswordPageType("forgotpassword", false),
 	ForumEditTopicPageType("forumtopicedit", false),
@@ -260,8 +260,8 @@ public enum PageType {
 		case MyAppsPageType:
 			page = new MyAppsPage();
 			break;
-		case EmailTemplatesPageType:
-			page = new EmailTemplatePage();
+		case EventsPageType:
+			page = new EventPage();
 			break;
 		case ForgotPasswordPageType:
 			page = new ForgotPasswordPage();

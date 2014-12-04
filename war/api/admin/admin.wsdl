@@ -50,11 +50,11 @@
 			<xsd:element name="GetPermissionsInput" type="sda:GetPermissionsRequest" />
 			<xsd:element name="GetPermissionsOutput" type="sda:GetPermissionsResponse" />
 
-			<xsd:element name="GetEmailTemplatesInput" type="sda:GetEmailTemplatesRequest" />
-			<xsd:element name="GetEmailTemplatesOutput" type="sda:GetEmailTemplatesResponse" />
+			<xsd:element name="GetEventsInput" type="sda:GetEventsRequest" />
+			<xsd:element name="GetEventsOutput" type="sda:GetEventsResponse" />
 
-			<xsd:element name="SendEmailInput" type="sda:SendEmailRequest" />
-			<xsd:element name="SendEmailOutput" type="sda:SendEmailResponse" />
+			<xsd:element name="SendNotificationInput" type="sda:SendNotificationRequest" />
+			<xsd:element name="SendNotificationOutput" type="sda:SendNotificationResponse" />
 
 			<xsd:element name="GetItemsInput" type="sda:GetItemsRequest" />
 			<xsd:element name="GetItemsOutput" type="sda:GetItemsResponse" />
@@ -68,8 +68,11 @@
 			<xsd:element name="GetRolesAndPermissionsInput" type="sda:GetRolesAndPermissionsRequest" />
 			<xsd:element name="GetRolesAndPermissionsOutput" type="sda:GetRolesAndPermissionsResponse" />
 
-			<xsd:element name="UpdateEmailTemplateInput" type="sda:UpdateEmailTemplateRequest" />
-			<xsd:element name="UpdateEmailTemplateOutput" type="sda:UpdateEmailTemplateResponse" />
+			<xsd:element name="UpdateEventInput" type="sda:UpdateEventRequest" />
+			<xsd:element name="UpdateEventOutput" type="sda:UpdateEventResponse" />
+			
+			<xsd:element name="AddEventInput" type="sda:AddEventRequest" />
+            <xsd:element name="AddEventOutput" type="sda:AddEventResponse" />
 
 			<xsd:element name="GetDataAccountsInput" type="sda:GetDataAccountsRequest" />
 			<xsd:element name="GetDataAccountsOutput" type="sda:GetDataAccountsResponse" />
@@ -411,7 +414,7 @@
 				</xsd:complexContent>
 			</xsd:complexType>
 
-			<xsd:complexType name="GetEmailTemplatesRequest">
+			<xsd:complexType name="GetEventsRequest">
 				<xsd:complexContent>
 					<xsd:extension base="sd:Request">
 						<xsd:sequence>
@@ -421,22 +424,22 @@
 				</xsd:complexContent>
 			</xsd:complexType>
 
-			<xsd:complexType name="GetEmailTemplatesResponse">
+			<xsd:complexType name="GetEventsResponse">
 				<xsd:complexContent>
 					<xsd:extension base="sd:Response">
 						<xsd:sequence>
-							<xsd:element name="templates" type="sd:EmailTemplate" maxOccurs="unbounded" />
+							<xsd:element name="events" type="sd:Event" maxOccurs="unbounded" />
 							<xsd:element name="pager" type="sd:Pager" />
 						</xsd:sequence>
 					</xsd:extension>
 				</xsd:complexContent>
 			</xsd:complexType>
 
-			<xsd:complexType name="SendEmailRequest">
+			<xsd:complexType name="SendNotificationRequest">
 				<xsd:complexContent>
 					<xsd:extension base="sd:Request">
 						<xsd:sequence>
-							<xsd:element name="template" type="sd:EmailTemplate" />
+							<xsd:element name="event" type="sd:Event" />
 							<xsd:element name="toUser" type="sd:User" />
 						</xsd:sequence>
 						<xsd:attribute name="toAddress" type="xsd:string" />
@@ -444,7 +447,7 @@
 				</xsd:complexContent>
 			</xsd:complexType>
 
-			<xsd:complexType name="SendEmailResponse">
+			<xsd:complexType name="SendNotificationResponse">
 				<xsd:complexContent>
 					<xsd:extension base="sd:Response" />
 				</xsd:complexContent>
@@ -529,21 +532,37 @@
 				</xsd:complexContent>
 			</xsd:complexType>
 
-			<xsd:complexType name="UpdateEmailTemplateRequest">
+			<xsd:complexType name="UpdateEventRequest">
 				<xsd:complexContent>
 					<xsd:extension base="sd:Request">
 						<xsd:sequence>
-							<xsd:element name="emailTemplate" type="sd:EmailTemplate" maxOccurs="1" />
+							<xsd:element name="event" type="sd:Event" maxOccurs="1" />
 						</xsd:sequence>
 					</xsd:extension>
 				</xsd:complexContent>
 			</xsd:complexType>
-			<xsd:complexType name="UpdateEmailTemplateResponse">
+			<xsd:complexType name="UpdateEventResponse">
 				<xsd:complexContent>
 					<xsd:extension base="sd:Response">
 					</xsd:extension>
 				</xsd:complexContent>
 			</xsd:complexType>
+			
+			<xsd:complexType name="AddEventRequest">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Request">
+                        <xsd:sequence>
+                            <xsd:element name="event" type="sd:Event" maxOccurs="1" />
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+            <xsd:complexType name="AddEventResponse">
+                <xsd:complexContent>
+                    <xsd:extension base="sd:Response">
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
 
 			<xsd:complexType name="GetDataAccountsRequest">
 				<xsd:complexContent>
@@ -784,18 +803,18 @@
 		<wsdl:part name="output" element="sda:GetPermissionsOutput" />
 	</wsdl:message>
 
-	<wsdl:message name="GetEmailTemplatesRequest">
-		<wsdl:part name="input" element="sda:GetEmailTemplatesInput" />
+	<wsdl:message name="GetEventsRequest">
+		<wsdl:part name="input" element="sda:GetEventsInput" />
 	</wsdl:message>
-	<wsdl:message name="GetEmailTemplatesResponse">
-		<wsdl:part name="output" element="sda:GetEmailTemplatesOutput" />
+	<wsdl:message name="GetEventsResponse">
+		<wsdl:part name="output" element="sda:GetEventsOutput" />
 	</wsdl:message>
 
-	<wsdl:message name="SendEmailRequest">
-		<wsdl:part name="input" element="sda:SendEmailInput" />
+	<wsdl:message name="SendNotificationRequest">
+		<wsdl:part name="input" element="sda:SendNotificationInput" />
 	</wsdl:message>
-	<wsdl:message name="SendEmailResponse">
-		<wsdl:part name="output" element="sda:SendEmailOutput" />
+	<wsdl:message name="SendNotificationResponse">
+		<wsdl:part name="output" element="sda:SendNotificationOutput" />
 	</wsdl:message>
 
 	<wsdl:message name="GetItemsRequest">
@@ -826,12 +845,19 @@
 		<wsdl:part name="output" element="sda:GetRolesAndPermissionsOutput" />
 	</wsdl:message>
 
-	<wsdl:message name="UpdateEmailTemplateRequest">
-		<wsdl:part name="input" element="sda:UpdateEmailTemplateInput" />
+	<wsdl:message name="UpdateEventRequest">
+		<wsdl:part name="input" element="sda:UpdateEventInput" />
 	</wsdl:message>
-	<wsdl:message name="UpdateEmailTemplateResponse">
-		<wsdl:part name="output" element="sda:UpdateEmailTemplateOutput" />
+	<wsdl:message name="UpdateEventResponse">
+		<wsdl:part name="output" element="sda:UpdateEventOutput" />
 	</wsdl:message>
+	
+	<wsdl:message name="AddEventRequest">
+        <wsdl:part name="input" element="sda:AddEventInput" />
+    </wsdl:message>
+    <wsdl:message name="AddEventResponse">
+        <wsdl:part name="output" element="sda:AddEventOutput" />
+    </wsdl:message>
 
 	<wsdl:message name="GetDataAccountsRequest">
 		<wsdl:part name="input" element="sda:GetDataAccountsInput" />
@@ -945,14 +971,14 @@
 			<wsdl:output message="sda:GetPermissionsResponse" />
 		</wsdl:operation>
 
-		<wsdl:operation name="GetEmailTemplates">
-			<wsdl:input message="sda:GetEmailTemplatesRequest" />
-			<wsdl:output message="sda:GetEmailTemplatesResponse" />
+		<wsdl:operation name="GetEvents">
+			<wsdl:input message="sda:GetEventsRequest" />
+			<wsdl:output message="sda:GetEventsResponse" />
 		</wsdl:operation>
 
-		<wsdl:operation name="SendEmail">
-			<wsdl:input message="sda:SendEmailRequest" />
-			<wsdl:output message="sda:SendEmailResponse" />
+		<wsdl:operation name="SendNotification">
+			<wsdl:input message="sda:SendNotificationRequest" />
+			<wsdl:output message="sda:SendNotificationResponse" />
 		</wsdl:operation>
 
 		<wsdl:operation name="GetItems">
@@ -975,10 +1001,15 @@
 			<wsdl:output message="sda:GetRolesAndPermissionsResponse" />
 		</wsdl:operation>
 
-		<wsdl:operation name="UpdateEmailTemplate">
-			<wsdl:input message="sda:UpdateEmailTemplateRequest" />
-			<wsdl:output message="sda:UpdateEmailTemplateResponse" />
+		<wsdl:operation name="UpdateEvent">
+			<wsdl:input message="sda:UpdateEventRequest" />
+			<wsdl:output message="sda:UpdateEventResponse" />
 		</wsdl:operation>
+		
+		<wsdl:operation name="AddEvent">
+            <wsdl:input message="sda:AddEventRequest" />
+            <wsdl:output message="sda:AddEventResponse" />
+        </wsdl:operation>
 
 		<wsdl:operation name="GetDataAccounts">
 			<wsdl:input message="sda:GetDataAccountsRequest" />
@@ -1156,8 +1187,8 @@
 			</wsdl:output>
 		</wsdl:operation>
 
-		<wsdl:operation name="GetEmailTemplates">
-			<soap:operation soapAction="http://app.reflection.io/admin/GetEmailTemplates" />
+		<wsdl:operation name="GetEvents">
+			<soap:operation soapAction="http://app.reflection.io/admin/GetEvents" />
 			<wsdl:input>
 				<soap:body use="literal" />
 			</wsdl:input>
@@ -1166,8 +1197,8 @@
 			</wsdl:output>
 		</wsdl:operation>
 
-		<wsdl:operation name="SendEmail">
-			<soap:operation soapAction="http://app.reflection.io/admin/SendEmail" />
+		<wsdl:operation name="SendNotification">
+			<soap:operation soapAction="http://app.reflection.io/admin/SendNotification" />
 			<wsdl:input>
 				<soap:body use="literal" />
 			</wsdl:input>
@@ -1216,8 +1247,8 @@
 			</wsdl:output>
 		</wsdl:operation>
 
-		<wsdl:operation name="UpdateEmailTemplate">
-			<soap:operation soapAction="http://app.reflection.io/admin/UpdateEmailTemplate" />
+		<wsdl:operation name="UpdateEvent">
+			<soap:operation soapAction="http://app.reflection.io/admin/UpdateEvent" />
 			<wsdl:input>
 				<soap:body use="literal" />
 			</wsdl:input>
@@ -1225,6 +1256,16 @@
 				<soap:body use="literal" />
 			</wsdl:output>
 		</wsdl:operation>
+		
+		<wsdl:operation name="AddEvent">
+            <soap:operation soapAction="http://app.reflection.io/admin/AddEvent" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
 
 		<wsdl:operation name="GetDataAccounts">
 			<soap:operation soapAction="http://app.reflection.io/admin/GetDataAccounts" />

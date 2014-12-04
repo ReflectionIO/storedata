@@ -8,7 +8,7 @@
 package io.reflection.app.client.part.login;
 
 import io.reflection.app.api.shared.datatypes.Session;
-import io.reflection.app.client.controller.EventController;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.user.SessionEventHandler;
 import io.reflection.app.client.page.Page;
@@ -45,7 +45,7 @@ public class WelcomePanel extends Page implements SessionEventHandler {
 	@Override
 	protected void onAttach() {
 		super.onAttach();
-		register(EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
 	}
 
 	/*

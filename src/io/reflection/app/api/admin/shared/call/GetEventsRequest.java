@@ -1,8 +1,8 @@
 //  
-//  GetEmailTemplatesRequest.java
+//  GetEventsRequest.java
 //  reflection.io
 //
-//  Created by William Shakour on February 20, 2014.
+//  Created by William Shakour on December 4, 2014.
 //  Copyrights © 2014 SPACEHOPPER STUDIOS LTD. All rights reserved.
 //  Copyrights © 2014 reflection.io. All rights reserved.
 //
@@ -15,7 +15,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
-public class GetEmailTemplatesRequest extends Request {
+public class GetEventsRequest extends Request {
 	public Pager pager;
 
 	@Override
@@ -38,7 +38,7 @@ public class GetEmailTemplatesRequest extends Request {
 		}
 	}
 
-	public GetEmailTemplatesRequest pager(Pager pager) {
+	public GetEventsRequest pager(Pager pager) {
 		this.pager = pager;
 		return this;
 	}

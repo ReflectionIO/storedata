@@ -85,7 +85,6 @@ import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
-import io.reflection.app.datatypes.shared.EmailFormatType;
 import io.reflection.app.datatypes.shared.FormType;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Permission;
@@ -1205,7 +1204,7 @@ public final class Core extends ActionHandler {
 								String.format(
 										"Hi Chi,\n\nThis is to let you know that the user [%d - %s] has added the data account [%d] for the data source [%s] and the username.\n\nReflection",
 										input.session.user.id.longValue(), FormattingHelper.getUserLongName(input.session.user), output.account.id.longValue(),
-										input.source.name, output.account.username), EmailFormatType.EmailFormatTypePlainText);
+										input.source.name, output.account.username), false);
 			}
 
 			output.status = StatusType.StatusTypeSuccess;
@@ -1592,24 +1591,24 @@ public final class Core extends ActionHandler {
 				}
 			}
 
-//			ItemSaleArchiver archiver = ArchiverFactory.getItemSaleArchiver();
-//			long[] slices = SliceHelper.offsets(input.start, input.end);
-//
-//			String key;
-//			List<Rank> ranks = null;
-//			for (long slice : slices) {
-//				key = archiver.createRanksKey(slice, input.linkedAccount, input.country, form);
-//
-//				ranks = archiver.getRanks(key);
-//
-//				if (ranks != null) {
-//					if (output.ranks == null) {
-//						output.ranks = new ArrayList<Rank>();
-//					}
-//
-//					output.ranks.addAll(ranks);
-//				}
-//			}
+			// ItemSaleArchiver archiver = ArchiverFactory.getItemSaleArchiver();
+			// long[] slices = SliceHelper.offsets(input.start, input.end);
+			//
+			// String key;
+			// List<Rank> ranks = null;
+			// for (long slice : slices) {
+			// key = archiver.createRanksKey(slice, input.linkedAccount, input.country, form);
+			//
+			// ranks = archiver.getRanks(key);
+			//
+			// if (ranks != null) {
+			// if (output.ranks == null) {
+			// output.ranks = new ArrayList<Rank>();
+			// }
+			//
+			// output.ranks.addAll(ranks);
+			// }
+			// }
 
 			if (output.ranks == null || output.ranks.size() == 0) {
 				// Get Items sales based on the filters
@@ -1785,24 +1784,24 @@ public final class Core extends ActionHandler {
 				}
 			}
 
-//			ItemSaleArchiver archiver = ArchiverFactory.getItemSaleArchiver();
-//			long[] slices = SliceHelper.offsets(input.start, input.end);
-//
-//			String key;
-//			List<Rank> ranks = null;
-//			for (long slice : slices) {
-//				key = archiver.createItemRanksKey(slice, input.item, input.country, form);
-//
-//				ranks = archiver.getRanks(key);
-//
-//				if (ranks != null) {
-//					if (output.ranks == null) {
-//						output.ranks = new ArrayList<Rank>();
-//					}
-//
-//					output.ranks.addAll(ranks);
-//				}
-//			}
+			// ItemSaleArchiver archiver = ArchiverFactory.getItemSaleArchiver();
+			// long[] slices = SliceHelper.offsets(input.start, input.end);
+			//
+			// String key;
+			// List<Rank> ranks = null;
+			// for (long slice : slices) {
+			// key = archiver.createItemRanksKey(slice, input.item, input.country, form);
+			//
+			// ranks = archiver.getRanks(key);
+			//
+			// if (ranks != null) {
+			// if (output.ranks == null) {
+			// output.ranks = new ArrayList<Rank>();
+			// }
+			//
+			// output.ranks.addAll(ranks);
+			// }
+			// }
 
 			if (output.ranks == null || output.ranks.size() == 0) {
 				// Get Items sales based on the filters

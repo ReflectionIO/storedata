@@ -14,6 +14,7 @@ import io.reflection.app.api.core.shared.call.event.GetCategoriesEventHandler.Ge
 import io.reflection.app.api.core.shared.call.event.GetCategoriesEventHandler.GetCategoriesSuccess;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.datatypes.shared.Category;
 
 import java.util.ArrayList;
@@ -109,12 +110,12 @@ public class CategoryController extends AsyncDataProvider<Category> implements S
 									Math.min(input.pager.start.intValue() + input.pager.count.intValue(), pager.totalCount.intValue())));
 				}
 
-				EventController.get().fireEventFromSource(new GetCategoriesSuccess(input, output), CategoryController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetCategoriesSuccess(input, output), CategoryController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new GetCategoriesFailure(input, caught), CategoryController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetCategoriesFailure(input, caught), CategoryController.this);
 			}
 
 		});

@@ -18,7 +18,7 @@ import io.reflection.app.api.core.shared.call.event.ChangeUserDetailsEventHandle
 import io.reflection.app.api.core.shared.call.event.DeleteLinkedAccountEventHandler;
 import io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler;
 import io.reflection.app.api.shared.datatypes.Session;
-import io.reflection.app.client.controller.EventController;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.NavigationController;
@@ -121,7 +121,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@UiField LIElement dataAccountFetchesItem;
 	@UiField InlineHyperlink dataAccountFetchesLink;
 
-	@UiField LIElement emailTemplatesItem;
+	@UiField LIElement eventsItem;
 
 	@UiField LIElement itemsItem;
 
@@ -187,13 +187,13 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	protected void onAttach() {
 		super.onAttach();
 
-		EventController.get().addHandlerToSource(UsersEventHandler.TYPE, UserController.get(), this);
-		EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this);
-		EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this);
-		EventController.get().addHandlerToSource(UserPowersEventHandler.TYPE, SessionController.get(), this);
-		EventController.get().addHandlerToSource(ChangeUserDetailsEventHandler.TYPE, SessionController.get(), this);
-		EventController.get().addHandlerToSource(LinkAccountEventHandler.TYPE, LinkedAccountController.get(), this);
-		EventController.get().addHandlerToSource(DeleteLinkedAccountEventHandler.TYPE, LinkedAccountController.get(), this);
+		DefaultEventBus.get().addHandlerToSource(UsersEventHandler.TYPE, UserController.get(), this);
+		DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this);
+		DefaultEventBus.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this);
+		DefaultEventBus.get().addHandlerToSource(UserPowersEventHandler.TYPE, SessionController.get(), this);
+		DefaultEventBus.get().addHandlerToSource(ChangeUserDetailsEventHandler.TYPE, SessionController.get(), this);
+		DefaultEventBus.get().addHandlerToSource(LinkAccountEventHandler.TYPE, LinkedAccountController.get(), this);
+		DefaultEventBus.get().addHandlerToSource(DeleteLinkedAccountEventHandler.TYPE, LinkedAccountController.get(), this);
 	}
 
 	/*
@@ -244,7 +244,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			items.add(permissionsItem);
 			items.add(dataAccountsItem);
 			items.add(dataAccountFetchesItem);
-			items.add(emailTemplatesItem);
+			items.add(eventsItem);
 			items.add(itemsItem);
 			items.add(categoriesItem);
 			// items.add(upgradeAccountItem);
@@ -317,8 +317,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			highlight(adminDropdown, dataAccountFetchesItem);
 			// } else if (PageType.UpgradePageType.equals(current.getPage())) {
 			// highlight(upgradeAccountItem);
-		} else if (PageType.EmailTemplatesPageType.equals(current.getPage())) {
-			highlight(adminDropdown, emailTemplatesItem);
+		} else if (PageType.EventsPageType.equals(current.getPage())) {
+			highlight(adminDropdown, eventsItem);
 		} else if (PageType.ItemsPageType.equals(current.getPage())) {
 			highlight(adminDropdown, itemsItem);
 		} else if (PageType.CategoriesPageType.equals(current.getPage())) {

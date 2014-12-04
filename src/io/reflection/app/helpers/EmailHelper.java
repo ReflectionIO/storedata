@@ -7,7 +7,6 @@
 //
 package io.reflection.app.helpers;
 
-import io.reflection.app.datatypes.shared.EmailFormatType;
 import io.reflection.app.logging.GaeLevel;
 
 import java.io.UnsupportedEncodingException;
@@ -104,10 +103,10 @@ public class EmailHelper {
 	 *            the message subject
 	 * @param body
 	 *            the message body
-	 * @param format
+	 * @param isHtml
 	 * @return
 	 */
-	public static boolean sendEmail(String from, String to, String name, String subject, String body, EmailFormatType format) {
+	public static boolean sendEmail(String from, String to, String name, String subject, String body, boolean isHtml) {
 		boolean sent = false;
 
 		Properties props = new Properties();
@@ -123,13 +122,10 @@ public class EmailHelper {
 
 			msg.setSubject(subject);
 
-			switch (format) {
-			case EmailFormatTypeHtml:
+			if (isHtml) {
 				msg.setContent(body, "text/html");
-				break;
-			default:
+			} else {
 				msg.setText(body);
-				break;
 			}
 
 			Transport.send(msg);

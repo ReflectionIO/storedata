@@ -19,7 +19,7 @@ import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.DataSource;
-import io.reflection.app.datatypes.shared.EmailTemplate;
+import io.reflection.app.datatypes.shared.Event;
 import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.Forum;
 import io.reflection.app.datatypes.shared.Item;
@@ -36,7 +36,7 @@ import io.reflection.app.service.country.CountryServiceProvider;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
 import io.reflection.app.service.datasource.DataSourceServiceProvider;
-import io.reflection.app.service.emailtemplate.EmailTemplateServiceProvider;
+import io.reflection.app.service.event.EventServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
@@ -681,34 +681,35 @@ public class ValidationHelper {
 	}
 
 	/**
-	 * @param emailTemplate
+	 * @param event
 	 * @param string
 	 * @return
 	 */
-	public static EmailTemplate validateExistingEmailTemplate(EmailTemplate emailTemplate, String parent) throws ServiceException {
-		if (emailTemplate == null) throw new InputValidationException(ApiError.EmailTemplateNull.getCode(), ApiError.EmailTemplateNull.getMessage(parent));
+	public static Event validateExistingEvent(Event event, String parent) throws ServiceException {
+		if (event == null) throw new InputValidationException(ApiError.EventNull.getCode(), ApiError.EventNull.getMessage(parent));
 
-		if (emailTemplate.id == null)
-			throw new InputValidationException(ApiError.EmailTemplateNoLookup.getCode(), ApiError.EmailTemplateNoLookup.getMessage(parent));
+		if (event.id == null) throw new InputValidationException(ApiError.EventNoLookup.getCode(), ApiError.EventNoLookup.getMessage(parent));
 
-		EmailTemplate lookupEmailTemplate = EmailTemplateServiceProvider.provide().getEmailTemplate(emailTemplate.id);
+		Event lookupEvent = EventServiceProvider.provide().getEvent(event.id);
 
-		if (lookupEmailTemplate == null)
-			throw new InputValidationException(ApiError.EmailTemplateNotFound.getCode(), ApiError.EmailTemplateNotFound.getMessage(parent));
+		if (lookupEvent == null) throw new InputValidationException(ApiError.EventNotFound.getCode(), ApiError.EventNotFound.getMessage(parent));
 
-		validateEmailTemplate(emailTemplate, parent);
+		validateEvent(event, parent);
 
-		return lookupEmailTemplate;
+		return lookupEvent;
 	}
 
-	public static EmailTemplate validateEmailTemplate(EmailTemplate emailTemplate, String parent) throws ServiceException {
-		emailTemplate.from = ValidationHelper.validateEmail(emailTemplate.from, false, parent + ".from");
+	public static Event validateEvent(Event event, String parent) throws ServiceException {
+		event.subject = ValidationHelper.validateStringLength(event.subject, parent + ".subject", 1, 2000);
 
-		emailTemplate.subject = ValidationHelper.validateStringLength(emailTemplate.subject, parent + ".subject", 1, 2000);
+		event.shortBody = ValidationHelper.validateStringLength(event.shortBody, parent + ".shortBody", 1, 50000);
+		event.longBody = ValidationHelper.validateStringLength(event.longBody, parent + ".longBody", 1, 50000);
 
-		emailTemplate.body = ValidationHelper.validateStringLength(emailTemplate.body, parent + ".body", 1, 50000);
+		event.name = ValidationHelper.validateStringLength(event.name, parent + ".name", 1, 50000);
+		event.description = ValidationHelper.validateStringLength(event.description, parent + ".description", 1, 50000);
+		event.code = ValidationHelper.validateStringLength(event.code, parent + ".code", 3, 3);
 
-		return emailTemplate;
+		return event;
 	}
 
 	public static Post validateExistingPost(Post post, String parent) throws ServiceException {
@@ -763,7 +764,7 @@ public class ValidationHelper {
 			isFeedFetchIdLookup = true;
 		}
 
-		// TODO: if no lookup method is found put a better error to point api user in the correct direction 
+		// TODO: if no lookup method is found put a better error to point api user in the correct direction
 
 		SimpleModelRun lookupSimpleModelRun = null;
 		if (isIdLookup) {

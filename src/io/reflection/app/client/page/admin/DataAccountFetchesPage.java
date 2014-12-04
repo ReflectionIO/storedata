@@ -17,9 +17,9 @@ import io.reflection.app.api.admin.shared.call.TriggerDataAccountGatherResponse;
 import io.reflection.app.api.admin.shared.call.event.GetDataAccountFetchesEventHandler;
 import io.reflection.app.api.admin.shared.call.event.TriggerDataAccountFetchIngestEventHandler;
 import io.reflection.app.api.admin.shared.call.event.TriggerDataAccountGatherEventHandler;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.StyledButtonCell;
 import io.reflection.app.client.controller.DataAccountFetchController;
-import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.NavigationController;
@@ -227,11 +227,11 @@ public class DataAccountFetchesPage extends Page implements NavigationEventHandl
 	@Override
 	protected void onAttach() {
 		super.onAttach();
-		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
-		register(EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
-		register(EventController.get().addHandlerToSource(GetDataAccountFetchesEventHandler.TYPE, DataAccountFetchController.get(), this));
-		register(EventController.get().addHandlerToSource(TriggerDataAccountGatherEventHandler.TYPE, DataAccountFetchController.get(), this));
-		register(EventController.get().addHandlerToSource(TriggerDataAccountFetchIngestEventHandler.TYPE, DataAccountFetchController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(GetDataAccountFetchesEventHandler.TYPE, DataAccountFetchController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(TriggerDataAccountGatherEventHandler.TYPE, DataAccountFetchController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(TriggerDataAccountFetchIngestEventHandler.TYPE, DataAccountFetchController.get(), this));
 	}
 
 	/*

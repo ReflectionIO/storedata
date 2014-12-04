@@ -11,9 +11,9 @@ import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMAT_DD_MM
 import io.reflection.app.api.admin.shared.call.JoinDataAccountRequest;
 import io.reflection.app.api.admin.shared.call.JoinDataAccountResponse;
 import io.reflection.app.api.admin.shared.call.event.JoinDataAccountEventHandler;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.StyledButtonCell;
 import io.reflection.app.client.controller.DataAccountController;
-import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.page.Page;
@@ -187,7 +187,7 @@ public class DataAccountsPage extends Page implements JoinDataAccountEventHandle
 	@Override
 	protected void onAttach() {
 		super.onAttach();
-		register(EventController.get().addHandlerToSource(JoinDataAccountEventHandler.TYPE, DataAccountController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(JoinDataAccountEventHandler.TYPE, DataAccountController.get(), this));
 	}
 
 	/*

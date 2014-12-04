@@ -9,7 +9,7 @@
 	<ui:import field="io.reflection.app.client.page.PageType.UsersPageType" />
 	<ui:import field="io.reflection.app.client.page.PageType.RolesPageType" />
 	<ui:import field="io.reflection.app.client.page.PageType.PermissionsPageType" />
-	<ui:import field="io.reflection.app.client.page.PageType.EmailTemplatesPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.EventsPageType" />
 	<ui:import field="io.reflection.app.client.page.PageType.BlogAdminPageType" />
 	<ui:import field="io.reflection.app.client.page.PageType.RegisterPageType" />
 	<ui:import field="io.reflection.app.client.page.PageType.LoginPageType" />
@@ -177,8 +177,8 @@
 							<g:InlineHyperlink ui:field="dataAccountFetchesLink">Data account fetches</g:InlineHyperlink>
 						</li>
 						<li class="divider-horizontal-header"></li>
-						<li ui:field="emailTemplatesItem">
-							<g:InlineHyperlink targetHistoryToken="{EmailTemplatesPageType.asTargetHistoryToken}">Email Templates</g:InlineHyperlink>
+						<li ui:field="eventsItem">
+							<g:InlineHyperlink targetHistoryToken="{EventsPageType.asTargetHistoryToken}">Events</g:InlineHyperlink>
 						</li>
 						<li ui:field="blogAdminItem">
 							<g:InlineHyperlink targetHistoryToken="{BlogAdminPageType.asTargetHistoryToken}">Blog</g:InlineHyperlink>

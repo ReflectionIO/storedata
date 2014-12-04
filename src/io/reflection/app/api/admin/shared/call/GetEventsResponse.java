@@ -1,8 +1,8 @@
 //  
-//  GetEmailTemplatesResponse.java
+//  GetEventsResponse.java
 //  reflection.io
 //
-//  Created by William Shakour on February 20, 2014.
+//  Created by William Shakour on December 4, 2014.
 //  Copyrights © 2014 SPACEHOPPER STUDIOS LTD. All rights reserved.
 //  Copyrights © 2014 reflection.io. All rights reserved.
 //
@@ -10,7 +10,7 @@ package io.reflection.app.api.admin.shared.call;
 
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.Response;
-import io.reflection.app.datatypes.shared.EmailTemplate;
+import io.reflection.app.datatypes.shared.Event;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +20,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
-public class GetEmailTemplatesResponse extends Response {
-	public List<EmailTemplate> templates;
+public class GetEventsResponse extends Response {
+	public List<Event> templates;
 	public Pager pager;
 
 	@Override
@@ -47,11 +47,11 @@ public class GetEmailTemplatesResponse extends Response {
 		if (jsonObject.has("templates")) {
 			JsonElement jsonTemplates = jsonObject.get("templates");
 			if (jsonTemplates != null) {
-				templates = new ArrayList<EmailTemplate>();
-				EmailTemplate item = null;
+				templates = new ArrayList<Event>();
+				Event item = null;
 				for (int i = 0; i < jsonTemplates.getAsJsonArray().size(); i++) {
 					if (jsonTemplates.getAsJsonArray().get(i) != null) {
-						(item = new EmailTemplate()).fromJson(jsonTemplates.getAsJsonArray().get(i).getAsJsonObject());
+						(item = new Event()).fromJson(jsonTemplates.getAsJsonArray().get(i).getAsJsonObject());
 						templates.add(item);
 					}
 				}
@@ -67,12 +67,12 @@ public class GetEmailTemplatesResponse extends Response {
 		}
 	}
 
-	public GetEmailTemplatesResponse templates(List<EmailTemplate> templates) {
+	public GetEventsResponse templates(List<Event> templates) {
 		this.templates = templates;
 		return this;
 	}
 
-	public GetEmailTemplatesResponse pager(Pager pager) {
+	public GetEventsResponse pager(Pager pager) {
 		this.pager = pager;
 		return this;
 	}

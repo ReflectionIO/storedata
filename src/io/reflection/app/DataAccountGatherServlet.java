@@ -13,13 +13,13 @@ import io.reflection.app.accountdatacollectors.DataAccountCollectorFactory;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
-import io.reflection.app.datatypes.shared.EmailTemplate;
+import io.reflection.app.datatypes.shared.Event;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.helpers.EmailHelper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.datasource.DataSourceServiceProvider;
-import io.reflection.app.service.emailtemplate.EmailTemplateServiceProvider;
+import io.reflection.app.service.event.EventServiceProvider;
 import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.FormattingHelper;
 
@@ -100,17 +100,16 @@ public class DataAccountGatherServlet extends ContextAwareServlet {
 							boolean status = collector.collect(account, date);
 
 							if (status && notifyParameter != null && Boolean.parseBoolean(notifyParameter)) {
-								EmailTemplate template = EmailTemplateServiceProvider.provide().getEmailTemplate(Long.valueOf(5));
+								Event event = EventServiceProvider.provide().getEvent(Long.valueOf(5));
 
 								Map<String, Object> parameters = new HashMap<String, Object>();
 
 								User user = UserServiceProvider.provide().getDataAccountOwner(account);
 								parameters.put("user", user);
 
-								String body = EmailHelper.inflate(parameters, template.body);
+								String body = EmailHelper.inflate(parameters, event.longBody);
 
-								EmailHelper
-										.sendEmail(template.from, user.username, FormattingHelper.getUserName(user), template.subject, body, template.format);
+								EmailHelper.sendEmail("hello@reflection.io", user.username, FormattingHelper.getUserName(user), event.subject, body, true);
 							}
 
 						} else {

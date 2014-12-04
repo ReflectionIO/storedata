@@ -11,7 +11,6 @@ import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.api.core.Core;
 import io.reflection.app.api.core.shared.call.RegisterUserRequest;
 import io.reflection.app.api.core.shared.call.RegisterUserResponse;
-import io.reflection.app.datatypes.shared.EmailFormatType;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.helpers.EmailHelper;
 
@@ -105,7 +104,7 @@ public class EmailServlet extends HttpServlet {
 		RegisterUserRequest input = new RegisterUserRequest();
 
 		input.accessCode = "b72b4e32-1062-4cc7-bc6b-52498ee10f09";
-		
+
 		input.user = new User();
 		input.user.username = email;
 		input.user.forename = forename;
@@ -117,22 +116,23 @@ public class EmailServlet extends HttpServlet {
 
 		if (output.status == StatusType.StatusTypeSuccess) {
 
-//			String emailTo = input.user.username;
-//
-//			String name = input.user.forename + " " + surname;
-//
-//			String body = "Hi "
-//					+ forename
-//					+ ",\r\n\r\n"
-//					+ "We have received your request to be invited to our beta starting early 2014.\r\n\r\n"
-//					+ "We are working hard to create a functional, relevant and beautiful service for app market intelligence. We can't wait to share it with you.\r\n\r\n"
-//					+ "Stay tuned,\r\n\r\n" + "The Reflection Team\r\n" + "testenv1.reflection.io";
-//
-//			if (EmailHelper.sendEmail("hello@reflection.io", emailTo, name, "Thank you", body, EmailFormatType.EmailFormatTypePlainText)) {
-				resp.getOutputStream().write(1);
-//			} else {
-//				resp.getOutputStream().write(0);
-//			}
+			// String emailTo = input.user.username;
+			//
+			// String name = input.user.forename + " " + surname;
+			//
+			// String body = "Hi "
+			// + forename
+			// + ",\r\n\r\n"
+			// + "We have received your request to be invited to our beta starting early 2014.\r\n\r\n"
+			// +
+			// "We are working hard to create a functional, relevant and beautiful service for app market intelligence. We can't wait to share it with you.\r\n\r\n"
+			// + "Stay tuned,\r\n\r\n" + "The Reflection Team\r\n" + "testenv1.reflection.io";
+			//
+			// if (EmailHelper.sendEmail("hello@reflection.io", emailTo, name, "Thank you", body, EmailFormatType.EmailFormatTypePlainText)) {
+			resp.getOutputStream().write(1);
+			// } else {
+			// resp.getOutputStream().write(0);
+			// }
 		} else {
 			resp.getOutputStream().write(0);
 		}
@@ -183,7 +183,7 @@ public class EmailServlet extends HttpServlet {
 
 		String body = "Name: " + name + " \r\nEmail: " + email + "\r\nMessage: " + message + "\r\n";
 
-		if (EmailHelper.sendEmail("hello@reflection.io (Reflection)", emailTo, "Reflection", subject, body, EmailFormatType.EmailFormatTypePlainText)) {
+		if (EmailHelper.sendEmail("hello@reflection.io (Reflection)", emailTo, "Reflection", subject, body, false)) {
 			resp.getOutputStream().write(1);
 		} else {
 			resp.getOutputStream().write(0);

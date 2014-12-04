@@ -20,9 +20,9 @@ import io.reflection.app.api.core.shared.call.GetLinkedAccountItemResponse;
 import io.reflection.app.api.core.shared.call.event.GetItemRanksEventHandler;
 import io.reflection.app.api.core.shared.call.event.GetItemSalesRanksEventHandler;
 import io.reflection.app.api.core.shared.call.event.GetLinkedAccountItemEventHandler;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.ImageAndTextCell;
 import io.reflection.app.client.cell.content.ConcreteImageAndText;
-import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.ItemController;
@@ -231,12 +231,12 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	protected void onAttach() {
 		super.onAttach();
 
-		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		// register(EventController.get().addHandlerToSource(SearchForItemEventHandler.TYPE, ItemController.get(), this));
-		register(EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
-		register(EventController.get().addHandlerToSource(GetItemRanksEventHandler.TYPE, RankController.get(), this));
-		register(EventController.get().addHandlerToSource(GetItemSalesRanksEventHandler.TYPE, RankController.get(), this));
-		register(EventController.get().addHandlerToSource(GetLinkedAccountItemEventHandler.TYPE, LinkedAccountController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(GetItemRanksEventHandler.TYPE, RankController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(GetItemSalesRanksEventHandler.TYPE, RankController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(GetLinkedAccountItemEventHandler.TYPE, LinkedAccountController.get(), this));
 
 	}
 

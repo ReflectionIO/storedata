@@ -46,6 +46,7 @@ import io.reflection.app.api.core.shared.call.event.GetUserDetailsEventHandler;
 import io.reflection.app.api.core.shared.call.event.RegisterUserEventHandler;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.handler.user.UserPasswordChangedEventHandler.UserPasswordChangeFailed;
 import io.reflection.app.client.handler.user.UserPasswordChangedEventHandler.UserPasswordChanged;
 import io.reflection.app.client.handler.user.UserRegisteredEventHandler.UserRegistered;
@@ -202,13 +203,13 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 					updateRowData(input.pager.start.intValue(), output.users == null ? Collections.<User> emptyList() : output.users);
 				}
 
-				EventController.get().fireEventFromSource(new GetUsersSuccess(input, output), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetUsersSuccess(input, output), UserController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
 				current = null;
-				EventController.get().fireEventFromSource(new GetUsersFailure(input, caught), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetUsersFailure(input, caught), UserController.this);
 			}
 		});
 
@@ -294,7 +295,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 				if (result.status == StatusType.StatusTypeSuccess) {
 					// count = result.count;
 
-					EventController.get().fireEventFromSource(new ReceivedCount(result.count), UserController.this);
+					DefaultEventBus.get().fireEventFromSource(new ReceivedCount(result.count), UserController.this);
 				}
 			}
 
@@ -325,12 +326,12 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 				if (output.status == StatusType.StatusTypeSuccess) {
 					// not sure what to do
 				}
-				EventController.get().fireEventFromSource(new AssignRoleEventHandler.AssignRoleSuccess(input, output), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new AssignRoleEventHandler.AssignRoleSuccess(input, output), UserController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new AssignRoleEventHandler.AssignRoleFailure(input, caught), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new AssignRoleEventHandler.AssignRoleFailure(input, caught), UserController.this);
 			}
 		});
 	}
@@ -361,12 +362,12 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 				if (output.status == StatusType.StatusTypeSuccess) {
 					// not sure what to do
 				}
-				EventController.get().fireEventFromSource(new AssignPermissionEventHandler.AssignPermissionSuccess(input, output), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new AssignPermissionEventHandler.AssignPermissionSuccess(input, output), UserController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new AssignPermissionEventHandler.AssignPermissionFailure(input, caught), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new AssignPermissionEventHandler.AssignPermissionFailure(input, caught), UserController.this);
 			}
 		});
 	}
@@ -397,12 +398,12 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 				if (output.status == StatusType.StatusTypeSuccess) {
 					// not sure what to do
 				}
-				EventController.get().fireEventFromSource(new RevokeRoleEventHandler.RevokeRoleSuccess(input, output), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new RevokeRoleEventHandler.RevokeRoleSuccess(input, output), UserController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new RevokeRoleEventHandler.RevokeRoleFailure(input, caught), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new RevokeRoleEventHandler.RevokeRoleFailure(input, caught), UserController.this);
 			}
 
 		});
@@ -435,12 +436,12 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 				if (output.status == StatusType.StatusTypeSuccess) {
 					// not sure what to do
 				}
-				EventController.get().fireEventFromSource(new RevokePermissionEventHandler.RevokePermissionSuccess(input, output), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new RevokePermissionEventHandler.RevokePermissionSuccess(input, output), UserController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new RevokePermissionEventHandler.RevokePermissionFailure(input, caught), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new RevokePermissionEventHandler.RevokePermissionFailure(input, caught), UserController.this);
 			}
 		});
 	}
@@ -478,12 +479,12 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 					fetchUsers();
 				}
 
-				EventController.get().fireEventFromSource(new DeleteUserEventHandler.DeleteUserSuccess(input, output), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new DeleteUserEventHandler.DeleteUserSuccess(input, output), UserController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new DeleteUserEventHandler.DeleteUserFailure(input, caught), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new DeleteUserEventHandler.DeleteUserFailure(input, caught), UserController.this);
 			}
 
 		});
@@ -517,15 +518,15 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 				e.code = Integer.valueOf(-1);
 				e.message = caught.getMessage();
 
-				EventController.get().fireEventFromSource(new UserPasswordChangeFailed(e), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new UserPasswordChangeFailed(e), UserController.this);
 			}
 
 			@Override
 			public void onSuccess(SetPasswordResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
-					EventController.get().fireEventFromSource(new UserPasswordChanged(input.user.id), UserController.this);
+					DefaultEventBus.get().fireEventFromSource(new UserPasswordChanged(input.user.id), UserController.this);
 				} else {
-					EventController.get().fireEventFromSource(new UserPasswordChangeFailed(output.error), UserController.this);
+					DefaultEventBus.get().fireEventFromSource(new UserPasswordChangeFailed(output.error), UserController.this);
 				}
 			}
 		});
@@ -578,7 +579,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 					params.put("status", "success");
 					MixPanelApiHelper.track("registerUser", params);
 
-					EventController.get().fireEventFromSource(new UserRegistered(email), UserController.this);
+					DefaultEventBus.get().fireEventFromSource(new UserRegistered(email), UserController.this);
 				} else {
 					params.put("status", "failure");
 					if (output.error != null && output.error.message != null) {
@@ -586,7 +587,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 					}
 					MixPanelApiHelper.track("registerUser", params);
 
-					EventController.get().fireEventFromSource(new UserRegistrationFailed(output.error), UserController.this);
+					DefaultEventBus.get().fireEventFromSource(new UserRegistrationFailed(output.error), UserController.this);
 				}
 
 			}
@@ -602,7 +603,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 				params.put("error", caught.getMessage());
 				MixPanelApiHelper.track("registerUser", params);
 
-				EventController.get().fireEventFromSource(new UserRegistrationFailed(e), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new UserRegistrationFailed(e), UserController.this);
 			}
 		});
 	}
@@ -652,7 +653,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 					MixPanelApiHelper.track("registerUser", params);
 				}
 
-				EventController.get().fireEventFromSource(new RegisterUserEventHandler.RegisterUserSuccess(input, output), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new RegisterUserEventHandler.RegisterUserSuccess(input, output), UserController.this);
 			}
 
 			@Override
@@ -661,7 +662,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 				params.put("error", caught.getMessage());
 				MixPanelApiHelper.track("registerUser", params);
 				
-				EventController.get().fireEvent(new RegisterUserEventHandler.RegisterUserFailure(input, caught));
+				DefaultEventBus.get().fireEvent(new RegisterUserEventHandler.RegisterUserFailure(input, caught));
 			}
 		});
 	}
@@ -701,12 +702,12 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 					// userLookup.put(output.user.id, output.user);
 				}
 
-				EventController.get().fireEventFromSource(new GetUserDetailsEventHandler.GetUserDetailsSuccess(input, output), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetUserDetailsEventHandler.GetUserDetailsSuccess(input, output), UserController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new GetUserDetailsEventHandler.GetUserDetailsFailure(input, caught), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetUserDetailsEventHandler.GetUserDetailsFailure(input, caught), UserController.this);
 			}
 		});
 	}
@@ -734,12 +735,12 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 					// userLook|up.put(output.user.id, output.user);
 				}
 
-				EventController.get().fireEventFromSource(new GetUserDetailsEventHandler.GetUserDetailsSuccess(input, output), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetUserDetailsEventHandler.GetUserDetailsSuccess(input, output), UserController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new GetUserDetailsEventHandler.GetUserDetailsFailure(input, caught), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetUserDetailsEventHandler.GetUserDetailsFailure(input, caught), UserController.this);
 			}
 		});
 	}
@@ -766,13 +767,13 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 			@Override
 			public void onSuccess(GetRolesAndPermissionsResponse output) {
-				EventController.get().fireEventFromSource(new GetRolesAndPermissionsEventHandler.GetRolesAndPermissionsSuccess(input, output),
+				DefaultEventBus.get().fireEventFromSource(new GetRolesAndPermissionsEventHandler.GetRolesAndPermissionsSuccess(input, output),
 						UserController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new GetRolesAndPermissionsEventHandler.GetRolesAndPermissionsFailure(input, caught),
+				DefaultEventBus.get().fireEventFromSource(new GetRolesAndPermissionsEventHandler.GetRolesAndPermissionsFailure(input, caught),
 						UserController.this);
 			}
 
@@ -801,12 +802,12 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 					fetchUsers();
 				}
 
-				EventController.get().fireEventFromSource(new DeleteUsersEventHandler.DeleteUsersSuccess(input, output), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new DeleteUsersEventHandler.DeleteUsersSuccess(input, output), UserController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new DeleteUsersEventHandler.DeleteUsersFailure(input, caught), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new DeleteUsersEventHandler.DeleteUsersFailure(input, caught), UserController.this);
 			}
 
 		});

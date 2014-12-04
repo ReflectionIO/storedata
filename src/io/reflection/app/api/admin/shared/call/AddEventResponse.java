@@ -1,17 +1,18 @@
 //  
-//  SendEmailResponse.java
+//  AddEventResponse.java
 //  reflection.io
 //
-//  Created by William Shakour on February 20, 2014.
+//  Created by William Shakour on December 4, 2014.
 //  Copyrights © 2014 SPACEHOPPER STUDIOS LTD. All rights reserved.
 //  Copyrights © 2014 reflection.io. All rights reserved.
 //
 package io.reflection.app.api.admin.shared.call;
 
-import com.google.gson.JsonObject;
 import io.reflection.app.api.shared.datatypes.Response;
 
-public class SendEmailResponse extends Response {
+import com.google.gson.JsonObject;
+
+public class AddEventResponse extends Response {
 	@Override
 	public JsonObject toJson() {
 		JsonObject object = super.toJson();

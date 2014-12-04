@@ -9,7 +9,11 @@
 package io.reflection.app.service.event;
 
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
+
+import java.util.List;
+
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.Event;
 import io.reflection.app.datatypes.shared.EventPriorityType;
 import io.reflection.app.datatypes.shared.EventTypeType;
@@ -77,6 +81,24 @@ final class EventService implements IEventService {
 	@Override
 	public void deleteEvent(Event event) throws DataAccessException {
 		throw new UnsupportedOperationException();
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.event.IEventService#getEvents(io.reflection.app.api.shared.datatypes.Pager)
+	 */
+	@Override
+	public List<Event> getEvents(Pager pager) throws DataAccessException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.event.IEventService#getEventsCount()
+	 */
+	@Override
+	public Long getEventsCount() throws DataAccessException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

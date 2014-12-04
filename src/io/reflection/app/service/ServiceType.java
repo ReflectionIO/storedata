@@ -33,7 +33,6 @@ public enum ServiceType {
 	ServiceTypeDataAccountFetch("dataaccountfetch"),
 	ServiceTypeCategory("category"),
 	ServiceTypeResource("resource"),
-	ServiceTypeEmailTemplate("emailtemplate"),
 	ServiceTypePost("post"),
 	ServiceTypeTag("tag"),
 	ServiceTypeForum("forum"),

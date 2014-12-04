@@ -13,6 +13,7 @@ import io.reflection.app.api.admin.shared.call.GetSimpleModelRunsResponse;
 import io.reflection.app.api.admin.shared.call.event.GetSimpleModelRunsEventHandler;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.helper.ApiCallHelper;
 import io.reflection.app.datatypes.shared.SimpleModelRun;
 
@@ -103,14 +104,14 @@ public class SimpleModelRunController extends AsyncDataProvider<SimpleModelRun> 
 									Math.min(input.pager.start.intValue() + input.pager.count.intValue(), pager.totalCount.intValue())));
 				}
 
-				EventController.get().fireEventFromSource(new GetSimpleModelRunsEventHandler.GetSimpleModelRunsSuccess(input, output),
+				DefaultEventBus.get().fireEventFromSource(new GetSimpleModelRunsEventHandler.GetSimpleModelRunsSuccess(input, output),
 						SimpleModelRunController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
 				current = null;
-				EventController.get().fireEventFromSource(new GetSimpleModelRunsEventHandler.GetSimpleModelRunsFailure(input, caught),
+				DefaultEventBus.get().fireEventFromSource(new GetSimpleModelRunsEventHandler.GetSimpleModelRunsFailure(input, caught),
 						SimpleModelRunController.this);
 			}
 		});

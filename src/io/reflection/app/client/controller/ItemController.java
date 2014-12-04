@@ -23,6 +23,7 @@ import io.reflection.app.api.core.shared.call.event.GetLinkedAccountItemsEventHa
 import io.reflection.app.api.core.shared.call.event.GetLinkedAccountItemsEventHandler.GetLinkedAccountItemsSuccess;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.helper.ApiCallHelper;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Store;
@@ -126,12 +127,12 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 					mItemsSearchCache.put(input.query, output.items == null ? new ArrayList<Item>() : output.items);
 				}
 
-				EventController.get().fireEventFromSource(new SearchForItemSuccess(input, output), ItemController.this);
+				DefaultEventBus.get().fireEventFromSource(new SearchForItemSuccess(input, output), ItemController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new SearchForItemFailure(input, caught), ItemController.this);
+				DefaultEventBus.get().fireEventFromSource(new SearchForItemFailure(input, caught), ItemController.this);
 			}
 		});
 	}
@@ -195,13 +196,13 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 					updateRowData(input.pager.start.intValue(), output.items == null ? Collections.<Item> emptyList() : output.items);
 				}
 
-				EventController.get().fireEventFromSource(new GetItemsSuccess(input, output), ItemController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetItemsSuccess(input, output), ItemController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
 				current = null;
-				EventController.get().fireEventFromSource(new GetItemsFailure(input, caught), ItemController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetItemsFailure(input, caught), ItemController.this);
 			}
 		});
 	}
@@ -241,13 +242,13 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 			@Override
 			public void onSuccess(GetLinkedAccountItemsResponse output) {
 				currentLinkedAccountItems = null;
-				EventController.get().fireEventFromSource(new GetLinkedAccountItemsSuccess(input, output), ItemController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetLinkedAccountItemsSuccess(input, output), ItemController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
 				currentLinkedAccountItems = null;
-				EventController.get().fireEventFromSource(new GetLinkedAccountItemsFailure(input, caught), ItemController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetLinkedAccountItemsFailure(input, caught), ItemController.this);
 			}
 		});
 	}
