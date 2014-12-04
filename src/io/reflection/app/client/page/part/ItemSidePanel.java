@@ -73,6 +73,8 @@ public class ItemSidePanel extends Composite {
 	public void setPrice(String currency, Float value) {
 		if (currency != null && value != null) {
 			setPriceInnerHTML(FormattingHelper.asPriceString(currency, value.floatValue()) + iapDescription);
+		} else {
+			setPriceInnerHTML("-");
 		}
 	}
 
