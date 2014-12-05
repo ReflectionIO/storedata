@@ -475,7 +475,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 				// only refresh the user list if the current user is an admin or has manage user permission
 				if (SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_MANAGE_USERS_CODE)) {
 					PagerHelper.moveBackward(pager);
-
+					reset();
 					fetchUsers();
 				}
 
@@ -798,7 +798,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 				// only refresh the user list if the current user is an admin or has manage user permission
 				if (SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_MANAGE_USERS_CODE)) {
 					PagerHelper.moveBackward(pager);
-
+					reset();
 					fetchUsers();
 				}
 

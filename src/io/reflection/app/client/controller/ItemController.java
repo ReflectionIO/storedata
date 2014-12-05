@@ -61,6 +61,7 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 	// private List<Item> rows;
 	// private long count = 0;
 	private Pager pager = null;
+	private Pager pagerUserItem = null;
 	private String searchQuery = null;
 	private Request current;
 	private Request currentLinkedAccountItems;
@@ -221,13 +222,13 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 		final GetLinkedAccountItemsRequest input = new GetLinkedAccountItemsRequest();
 		input.accessCode = ACCESS_CODE;
 		input.session = SessionController.get().getSessionForApiCall();
-		if (pager == null) {
-			pager = new Pager();
-			pager.count = STEP;
-			pager.start = Long.valueOf(0);
-			pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
+		if (pagerUserItem == null) {
+			pagerUserItem = new Pager();
+			pagerUserItem.count = STEP;
+			pagerUserItem.start = Long.valueOf(0);
+			pagerUserItem.sortDirection = SortDirectionType.SortDirectionTypeDescending;
 		}
-		input.pager = pager;
+		input.pager = pagerUserItem;
 
 		input.linkedAccount = FilterController.get().getLinkedAccount();
 
@@ -242,6 +243,22 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 			@Override
 			public void onSuccess(GetLinkedAccountItemsResponse output) {
 				currentLinkedAccountItems = null;
+
+				if (output.pager != null) {
+					pagerUserItem = output.pager;
+
+					if (pagerUserItem.totalCount != null) {
+						userItemCount = pagerUserItem.totalCount.longValue();
+						for (Item item : output.items) {
+							setUserItem(item);
+						}
+					}
+				}
+
+				if (output.items != null) { // There are items associated with this linked account
+					addItemsToCache(output.items);
+				}
+
 				DefaultEventBus.get().fireEventFromSource(new GetLinkedAccountItemsSuccess(input, output), ItemController.this);
 			}
 
@@ -377,14 +394,11 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 		return userItemCount;
 	}
 
-	public void setUserItemsCount(long count) {
-		userItemCount = count;
-	}
-
 	public void resetUserItem() {
 		userItemList.clear();
 		userItemsLookup.clear();
 		userItemCount = -1;
+		pagerUserItem = null;
 	}
 
 	/*

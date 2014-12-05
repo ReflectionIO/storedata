@@ -217,6 +217,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
 		if (LinkedAccountController.get().hasLinkedAccounts()) { // There are linked accounts
 			myAppsEmptyTable.setLinkAccountVisible(false);
+			simplePager.setPageStart(0);
 			userItemProvider.reset();
 			myAppsTopPanel.setFiltersEnabled(false);
 			ItemController.get().fetchLinkedAccountItems();
@@ -236,6 +237,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
 		if (LinkedAccountController.get().hasLinkedAccounts()) { // There are linked accounts
 			myAppsEmptyTable.setLinkAccountVisible(false);
+			simplePager.setPageStart(0);
 			userItemProvider.reset();
 			myAppsTopPanel.setFiltersEnabled(false);
 			ItemController.get().fetchLinkedAccountItems();
@@ -358,7 +360,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	@Override
 	public void getLinkedAccountItemsSuccess(GetLinkedAccountItemsRequest input, GetLinkedAccountItemsResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			if (ItemController.get().getUserItemsCount() > output.pager.count) {
+			if (ItemController.get().getUserItemsCount() > output.pager.count.longValue()) {
 				simplePager.setVisible(true);
 			} else {
 				simplePager.setVisible(false);

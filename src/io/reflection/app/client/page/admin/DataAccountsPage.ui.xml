@@ -10,14 +10,8 @@
 		<div class="row">
 			<g:HTMLPanel styleName="col-sm-10 col-sm-offset-1">
 				<h2>Data Accounts</h2>
-
-				<p:Preloader ui:field="preloader">
-					<g:HTMLPanel>
-						<c:CellTable ui:field="dataAccountTable" styleName="table table-hover table-striped" />
-						<p:SimplePager styleName="text-center" ui:field="simplePager" rangeLimited="true" />
-					</g:HTMLPanel>
-				</p:Preloader>
-
+					<c:CellTable ui:field="dataAccountTable" styleName="table table-hover table-striped" />
+					<p:SimplePager styleName="text-center" ui:field="simplePager" rangeLimited="true" />
 			</g:HTMLPanel>
 			<g:HTMLPanel styleName="filler-bottom col-md-12 hidden-xs hidden-sm" />
 		</div>

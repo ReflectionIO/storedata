@@ -22,7 +22,6 @@ import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.BootstrapGwtDatePicker;
 import io.reflection.app.client.part.DateSelector;
-import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.client.res.Images;
@@ -62,8 +61,6 @@ public class SimpleModelRunsPage extends Page implements FilterEventHandler {
 	@UiField ListBox country;
 	@UiField ListBox appStore;
 	@UiField ListBox category;
-
-	@UiField Preloader preloader;
 
 	public SimpleModelRunsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
