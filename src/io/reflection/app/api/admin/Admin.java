@@ -685,9 +685,9 @@ public final class Admin extends ActionHandler {
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
-			output.templates = EventServiceProvider.provide().getEvents(input.pager);
+			output.events = EventServiceProvider.provide().getEvents(input.pager);
 			output.pager = input.pager;
-			updatePager(output.pager, output.templates, input.pager.totalCount == null ? EventServiceProvider.provide().getEventsCount() : null);
+			updatePager(output.pager, output.events, input.pager.totalCount == null ? EventServiceProvider.provide().getEventsCount() : null);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {

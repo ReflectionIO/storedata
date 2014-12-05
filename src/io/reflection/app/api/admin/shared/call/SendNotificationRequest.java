@@ -18,15 +18,15 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 public class SendNotificationRequest extends Request {
-	public Event template;
+	public Event event;
 	public User toUser;
 	public String toAddress;
 
 	@Override
 	public JsonObject toJson() {
 		JsonObject object = super.toJson();
-		JsonElement jsonTemplate = template == null ? JsonNull.INSTANCE : template.toJson();
-		object.add("template", jsonTemplate);
+		JsonElement jsonEvent = event == null ? JsonNull.INSTANCE : event.toJson();
+		object.add("event", jsonEvent);
 		JsonElement jsonToUser = toUser == null ? JsonNull.INSTANCE : toUser.toJson();
 		object.add("toUser", jsonToUser);
 		JsonElement jsonToAddress = toAddress == null ? JsonNull.INSTANCE : new JsonPrimitive(toAddress);
@@ -37,11 +37,11 @@ public class SendNotificationRequest extends Request {
 	@Override
 	public void fromJson(JsonObject jsonObject) {
 		super.fromJson(jsonObject);
-		if (jsonObject.has("template")) {
-			JsonElement jsonTemplate = jsonObject.get("template");
-			if (jsonTemplate != null) {
-				template = new Event();
-				template.fromJson(jsonTemplate.getAsJsonObject());
+		if (jsonObject.has("event")) {
+			JsonElement jsonEvent = jsonObject.get("event");
+			if (jsonEvent != null) {
+				event = new Event();
+				event.fromJson(jsonEvent.getAsJsonObject());
 			}
 		}
 		if (jsonObject.has("toUser")) {
@@ -59,8 +59,8 @@ public class SendNotificationRequest extends Request {
 		}
 	}
 
-	public SendNotificationRequest template(Event template) {
-		this.template = template;
+	public SendNotificationRequest event(Event event) {
+		this.event = event;
 		return this;
 	}
 

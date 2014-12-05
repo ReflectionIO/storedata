@@ -57,4 +57,11 @@ public interface IEventService extends IService {
 	 */
 	public Long getEventsCount() throws DataAccessException;
 
+	/**
+	 * @param newUserEventKey
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public Event getCodeEvent(String code) throws DataAccessException;
+
 }

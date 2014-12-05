@@ -21,21 +21,22 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
 public class GetEventsResponse extends Response {
-	public List<Event> templates;
+
+	public List<Event> events;
 	public Pager pager;
 
 	@Override
 	public JsonObject toJson() {
 		JsonObject object = super.toJson();
-		JsonElement jsonTemplates = JsonNull.INSTANCE;
-		if (templates != null) {
-			jsonTemplates = new JsonArray();
-			for (int i = 0; i < templates.size(); i++) {
-				JsonElement jsonTemplatesItem = templates.get(i) == null ? JsonNull.INSTANCE : templates.get(i).toJson();
-				((JsonArray) jsonTemplates).add(jsonTemplatesItem);
+		JsonElement jsonEvents = JsonNull.INSTANCE;
+		if (events != null) {
+			jsonEvents = new JsonArray();
+			for (int i = 0; i < events.size(); i++) {
+				JsonElement jsonEventsItem = events.get(i) == null ? JsonNull.INSTANCE : events.get(i).toJson();
+				((JsonArray) jsonEvents).add(jsonEventsItem);
 			}
 		}
-		object.add("templates", jsonTemplates);
+		object.add("events", jsonEvents);
 		JsonElement jsonPager = pager == null ? JsonNull.INSTANCE : pager.toJson();
 		object.add("pager", jsonPager);
 		return object;
@@ -44,15 +45,15 @@ public class GetEventsResponse extends Response {
 	@Override
 	public void fromJson(JsonObject jsonObject) {
 		super.fromJson(jsonObject);
-		if (jsonObject.has("templates")) {
-			JsonElement jsonTemplates = jsonObject.get("templates");
-			if (jsonTemplates != null) {
-				templates = new ArrayList<Event>();
+		if (jsonObject.has("events")) {
+			JsonElement jsonEvents = jsonObject.get("events");
+			if (jsonEvents != null) {
+				events = new ArrayList<Event>();
 				Event item = null;
-				for (int i = 0; i < jsonTemplates.getAsJsonArray().size(); i++) {
-					if (jsonTemplates.getAsJsonArray().get(i) != null) {
-						(item = new Event()).fromJson(jsonTemplates.getAsJsonArray().get(i).getAsJsonObject());
-						templates.add(item);
+				for (int i = 0; i < jsonEvents.getAsJsonArray().size(); i++) {
+					if (jsonEvents.getAsJsonArray().get(i) != null) {
+						(item = new Event()).fromJson(jsonEvents.getAsJsonArray().get(i).getAsJsonObject());
+						events.add(item);
 					}
 				}
 			}
@@ -67,8 +68,8 @@ public class GetEventsResponse extends Response {
 		}
 	}
 
-	public GetEventsResponse templates(List<Event> templates) {
-		this.templates = templates;
+	public GetEventsResponse events(List<Event> events) {
+		this.events = events;
 		return this;
 	}
 

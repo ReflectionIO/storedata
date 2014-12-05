@@ -101,4 +101,13 @@ final class EventService implements IEventService {
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.event.IEventService#getCodeEvent(java.lang.String)
+	 */
+	@Override
+	public Event getCodeEvent(String code) throws DataAccessException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

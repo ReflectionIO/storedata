@@ -74,10 +74,10 @@ public class EventController extends AsyncDataProvider<Event> implements Service
 			@Override
 			public void onSuccess(GetEventsResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
-					if (output.templates != null) {
-						mEvents.addAll(output.templates);
-						for (Event template : output.templates) {
-							eventLookup.put(template.id, template);
+					if (output.events != null) {
+						mEvents.addAll(output.events);
+						for (Event event : output.events) {
+							eventLookup.put(event.id, event);
 						}
 					}
 

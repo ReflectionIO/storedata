@@ -14,8 +14,10 @@ import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.client.helper.MarkdownHelper;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
+import io.reflection.app.datatypes.shared.Event;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
@@ -27,6 +29,7 @@ import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
+import io.reflection.app.service.event.EventServiceProvider;
 import io.reflection.app.service.role.RoleServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.app.shared.util.FormattingHelper;
@@ -44,8 +47,6 @@ import com.spacehopperstudios.utility.StringUtils;
 final class UserService implements IUserService {
 
 	private static final String SALT = "salt.username.magic";
-	private static final long PASSWORD_EMAIL_TEMPLATE_ID = 4;
-	private static final long WELCOME_EMAIL_TEMPLATE_ID = 1;
 
 	private static final Logger LOG = Logger.getLogger(UserService.class.getName());
 
@@ -158,10 +159,13 @@ final class UserService implements IUserService {
 				Map<String, Object> values = new HashMap<String, Object>();
 				values.put("user", addedUser);
 
-				EmailTemplate template = EmailTemplateServiceProvider.provide().getEmailTemplate(Long.valueOf(WELCOME_EMAIL_TEMPLATE_ID));
-				String body = EmailHelper.inflate(values, template.body);
+				Event event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.NEW_USER_EVENT_KEY);
+				String markdownBody = EmailHelper.inflate(values, event.longBody);
 
-				if (!EmailHelper.sendEmail(template.from, user.username, FormattingHelper.getUserName(user), template.subject, body, template.format)) {
+				String body = MarkdownHelper.process(markdownBody);
+
+				if (!EmailHelper.sendEmail("hello@reflection.io", user.username, FormattingHelper.getUserName(user), event.subject, body,
+						!markdownBody.equals(body))) {
 					LOG.severe(String.format("Failed to welcome user [%d]", user.id.longValue()));
 				}
 			}
@@ -1103,7 +1107,7 @@ final class UserService implements IUserService {
 		markForEmailAction(user, "resetpassword", 3);
 	}
 
-	private void markForEmailAction(User user, String pageAction, long templateId) throws DataAccessException {
+	private void markForEmailAction(User user, String pageAction, long eventId) throws DataAccessException {
 		String markForEmailActionQuery = String.format("UPDATE `user` SET `code`=CAST(UUID() AS BINARY) WHERE `deleted`='n' AND `id`=%d", user.id.longValue());
 
 		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
@@ -1128,12 +1132,14 @@ final class UserService implements IUserService {
 					LOG.fine(String.format("Sending action code url [%s] to [%s]", values.get("link"), user.username));
 				}
 
-				EmailTemplate template = EmailTemplateServiceProvider.provide().getEmailTemplate(Long.valueOf(templateId));
+				Event event = EventServiceProvider.provide().getEvent(Long.valueOf(eventId));
 
-				String body = EmailHelper.inflate(values, template.body);
-				String subject = EmailHelper.inflate(values, template.subject);
+				String subject = EmailHelper.inflate(values, event.subject);
 
-				EmailHelper.sendEmail(template.from, user.username, FormattingHelper.getUserName(user), subject, body, template.format);
+				String markdownBody = EmailHelper.inflate(values, event.longBody);
+				String body = MarkdownHelper.process(markdownBody);
+
+				EmailHelper.sendEmail("hello@reflection.io", user.username, FormattingHelper.getUserName(user), subject, body, !markdownBody.equals(body));
 			}
 
 		} finally {
@@ -1163,10 +1169,12 @@ final class UserService implements IUserService {
 				Map<String, Object> values = new HashMap<String, Object>();
 				values.put("user", user);
 
-				EmailTemplate template = EmailTemplateServiceProvider.provide().getEmailTemplate(Long.valueOf(PASSWORD_EMAIL_TEMPLATE_ID));
-				String body = EmailHelper.inflate(values, template.body);
+				Event event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.PASSWORD_EVENT_CODE);
+				String markdownBody = EmailHelper.inflate(values, event.longBody);
+				String body = MarkdownHelper.process(markdownBody);
 
-				if (!EmailHelper.sendEmail(template.from, user.username, FormattingHelper.getUserName(user), template.subject, body, template.format)) {
+				if (!EmailHelper.sendEmail("hello@reflection.io", user.username, FormattingHelper.getUserName(user), event.subject, body,
+						!markdownBody.equals(body))) {
 					LOG.severe(String.format("Failed to notify user [%d] of password change", user.id.longValue()));
 				}
 			}
