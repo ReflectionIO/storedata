@@ -142,7 +142,7 @@ public class EventPage extends Page implements NavigationEventHandler, GetEvents
 
 			@Override
 			public String getValue(Event object) {
-				return object.subject;
+				return object.name;
 			}
 
 		};
@@ -176,7 +176,7 @@ public class EventPage extends Page implements NavigationEventHandler, GetEvents
 			@Override
 			public SafeHtml getValue(Event object) {
 				String id = object.id.toString();
-				return SafeHtmlUtils.fromTrustedString("<a href=\""
+				return SafeHtmlUtils.fromTrustedString("<a class=\"btn btn-xs btn-default\" href=\""
 						+ PageType.EventsPageType.asHref(NavigationController.EDIT_ACTION_PARAMETER_VALUE, id).asString() + "\">Edit</a>");
 			}
 		};
@@ -276,9 +276,15 @@ public class EventPage extends Page implements NavigationEventHandler, GetEvents
 		if (validate()) {
 			clearErrors();
 			preloader.show();
+
 			event.subject = subjectTextBox.getText();
 			event.id = Long.valueOf(NavigationController.get().getStack().getParameter(EVENT_ID_PARAMETER));
-			event.shortBody = textArea.getText();
+			event.shortBody = shortBodyTextArea.getText();
+			event.longBody = longBodyEditor.getText();
+			event.name = nameTextBox.getText();
+			event.description = descriptionTextBox.getText();
+			event.code = codeTextBox.getText();
+
 			EventController.get().updateEvent(event);
 		} else {
 			if (codeError != null) {
@@ -400,8 +406,8 @@ public class EventPage extends Page implements NavigationEventHandler, GetEvents
 		super.onAttach();
 
 		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
-		register(DefaultEventBus.get().addHandlerToSource(GetEventsEventHandler.TYPE, DefaultEventBus.get(), this));
-		register(DefaultEventBus.get().addHandlerToSource(UpdateEventEventHandler.TYPE, DefaultEventBus.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(GetEventsEventHandler.TYPE, EventController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(UpdateEventEventHandler.TYPE, EventController.get(), this));
 	}
 
 	/*
@@ -412,15 +418,7 @@ public class EventPage extends Page implements NavigationEventHandler, GetEvents
 	 */
 	@Override
 	public void getEventsSuccess(GetEventsRequest input, GetEventsResponse output) {
-		if (output.status == StatusType.StatusTypeSuccess) {
-			if (EventController.get().getEventsCount() > output.pager.count) {
-				simplePager.setVisible(true);
-			} else {
-				simplePager.setVisible(false);
-			}
-		} else {
-			simplePager.setVisible(false);
-		}
+		simplePager.setVisible(output.status == StatusType.StatusTypeSuccess);
 	}
 
 	/*
@@ -443,8 +441,11 @@ public class EventPage extends Page implements NavigationEventHandler, GetEvents
 	@Override
 	public void updateEventSuccess(UpdateEventRequest input, UpdateEventResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
+			events.redraw();
+
 			PageType.EventsPageType.show();
 		}
+
 		preloader.hide();
 	}
 

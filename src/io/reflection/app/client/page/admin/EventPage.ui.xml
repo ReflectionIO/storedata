@@ -43,7 +43,7 @@
                         </g:HTMLPanel>
                         
                         <g:HTMLPanel ui:field="descriptionGroup" styleName="form-group">
-                            <label>Subject</label>
+                            <label>Description</label>
                             <g:TextBox styleName="form-control" ui:field="descriptionTextBox" />
                             <g:HTMLPanel styleName="noteDetail" ui:field="descriptionNote" visible="false" />
                         </g:HTMLPanel>
@@ -55,13 +55,13 @@
 						</g:HTMLPanel>
 						<g:HTMLPanel ui:field="shortBodyGroup" styleName="form-group">
 							<label>Short body</label>
-							<g:TextArea ui:field="shortBodyTextArea" styleName="form-control" width="100%" height="200px" visible="false" />
+							<g:TextArea ui:field="shortBodyTextArea" styleName="form-control" width="100%" height="200px" />
 							<g:HTMLPanel styleName="noteDetail" ui:field="shortBodyNote" visible="false" />
 						</g:HTMLPanel>
 						
 						<g:HTMLPanel ui:field="longBodyGroup" styleName="form-group">
                             <label>Long body</label>
-                            <pt:MarkdownEditor ui:field="longBodyEditor" visible="false" />
+                            <pt:MarkdownEditor ui:field="longBodyEditor" />
                             <g:HTMLPanel styleName="noteDetail" ui:field="longBodyNote" visible="false" />
                         </g:HTMLPanel>
                         

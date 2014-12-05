@@ -153,7 +153,7 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 
 			@Override
 			public SafeHtml getValue(User object) {
-				return SafeHtmlUtils.fromTrustedString("<a href=\"" + PageType.UsersPageType.asHref("changedetails", object.id.toString()).asString()
+				return SafeHtmlUtils.fromTrustedString("<a class=\"btn btn-xs btn-default\" href=\"" + PageType.UsersPageType.asHref("changedetails", object.id.toString()).asString()
 						+ "\">Edit</a>");
 			}
 		};

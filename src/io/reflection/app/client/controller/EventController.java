@@ -19,12 +19,13 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.datatypes.shared.Event;
+import io.reflection.app.shared.util.PagerHelper;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.http.client.Request;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
@@ -37,23 +38,28 @@ import com.willshex.gson.json.service.shared.StatusType;
  */
 public class EventController extends AsyncDataProvider<Event> implements ServiceConstants {
 
-	private List<Event> mEvents = new ArrayList<Event>();
+//	private List<Event> mEvents = new ArrayList<Event>();
 	private Map<Long, Event> eventLookup = new HashMap<Long, Event>();
-	private long count = -1;
+//	private long count = -1;
 	private Pager pager;
+	private Request current;
 
-	private static EventController mOne = null;
+	private static EventController one = null;
 
 	public static EventController get() {
-		if (mOne == null) {
-			mOne = new EventController();
+		if (one == null) {
+			one = new EventController();
 		}
 
-		return mOne;
+		return one;
 	}
 
 	private void fetchEvents() {
-
+		if (current != null) {
+			current.cancel();
+			current = null;
+		}
+		
 		AdminService service = ServiceCreator.createAdminService();
 
 		final GetEventsRequest input = new GetEventsRequest();
@@ -67,15 +73,17 @@ public class EventController extends AsyncDataProvider<Event> implements Service
 			pager.start = Long.valueOf(0);
 			pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
 		}
+		
 		input.pager = pager;
 
-		service.getEvents(input, new AsyncCallback<GetEventsResponse>() {
-
+		current = service.getEvents(input, new AsyncCallback<GetEventsResponse>() {
 			@Override
 			public void onSuccess(GetEventsResponse output) {
+				current = null;
+				
 				if (output.status == StatusType.StatusTypeSuccess) {
 					if (output.events != null) {
-						mEvents.addAll(output.events);
+//						mEvents.addAll(output.events);
 						for (Event event : output.events) {
 							eventLookup.put(event.id, event);
 						}
@@ -84,16 +92,13 @@ public class EventController extends AsyncDataProvider<Event> implements Service
 					if (output.pager != null) {
 						pager = output.pager;
 
-						if (pager.totalCount != null) {
-							count = pager.totalCount.longValue();
-						}
+//						if (pager.totalCount != null) {
+//							count = pager.totalCount.longValue();
+//						}
 					}
-
-					updateRowCount((int) count, true);
-					updateRowData(
-							input.pager.start.intValue(),
-							mEvents.subList(input.pager.start.intValue(),
-									Math.min(input.pager.start.intValue() + input.pager.count.intValue(), pager.totalCount.intValue())));
+					
+					updateRowCount(Integer.MAX_VALUE, false);
+					updateRowData(input.pager.start.intValue(), output.events == null ? Collections.<Event> emptyList() : output.events);
 				}
 
 				DefaultEventBus.get().fireEventFromSource(new GetEventsSuccess(input, output), EventController.this);
@@ -101,6 +106,8 @@ public class EventController extends AsyncDataProvider<Event> implements Service
 
 			@Override
 			public void onFailure(Throwable caught) {
+				current = null;
+				
 				DefaultEventBus.get().fireEventFromSource(new GetEventsFailure(input, caught), EventController.this);
 			}
 		});
@@ -114,14 +121,12 @@ public class EventController extends AsyncDataProvider<Event> implements Service
 	 * @param body
 	 */
 	public void updateEvent(Event event) {
-
 		AdminService service = ServiceCreator.createAdminService();
+		
 		final UpdateEventRequest input = new UpdateEventRequest();
 
 		input.accessCode = ACCESS_CODE;
-
 		input.session = SessionController.get().getSessionForApiCall();
-
 		input.event = event;
 
 		service.updateEvent(input, new AsyncCallback<UpdateEventResponse>() {
@@ -129,7 +134,7 @@ public class EventController extends AsyncDataProvider<Event> implements Service
 			@Override
 			public void onSuccess(UpdateEventResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
-					updateRowData(0, mEvents.subList(0, (mEvents.size() < STEP_VALUE ? mEvents.size() : STEP_VALUE)));
+					// do nothing
 				}
 
 				DefaultEventBus.get().fireEventFromSource(new UpdateEventEventHandler.UpdateEventSuccess(input, output), EventController.this);
@@ -141,27 +146,6 @@ public class EventController extends AsyncDataProvider<Event> implements Service
 			}
 
 		});
-	}
-
-	public List<Event> getEvents() {
-		return mEvents;
-	}
-
-	public long getEventsCount() {
-		return count;
-	}
-
-	public boolean hasEvents() {
-		return getEventsCount() > 0;
-	}
-
-	/**
-	 * Return true if Events already fetched
-	 * 
-	 * @return
-	 */
-	public boolean eventsFetched() {
-		return count != -1;
 	}
 
 	/**
@@ -183,14 +167,11 @@ public class EventController extends AsyncDataProvider<Event> implements Service
 	protected void onRangeChanged(HasData<Event> display) {
 		Range r = display.getVisibleRange();
 
-		int start = r.getStart();
-		int end = start + r.getLength();
-
-		if (!eventsFetched() || (eventsFetched() && getEventsCount() != mEvents.size() && end > mEvents.size())) {
-			fetchEvents();
-		} else {
-			updateRowData(start, mEvents.size() == 0 ? mEvents : mEvents.subList(start, Math.min(mEvents.size(), end)));
-		}
+		pager = PagerHelper.createDefaultPager();
+		pager.start = Long.valueOf(r.getStart());
+		pager.count = Long.valueOf(r.getLength());
+		
+		fetchEvents();
 	}
 
 }
