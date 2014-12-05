@@ -474,7 +474,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 				// only refresh the user list if the current user is an admin or has manage user permission
 				if (SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_MANAGE_USERS_CODE)) {
 					PagerHelper.moveBackward(pager);
-
+					reset();
 					fetchUsers();
 				}
 
@@ -557,7 +557,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		final Map<String, Object> params = new HashMap<String, Object>();
 		params.put("username", username);
 		params.put("company", company);
-		
+
 		if (password == null || password.length() == 0) {
 			params.put("requestInvite", Boolean.TRUE);
 		}
@@ -648,7 +648,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 					if (output.error != null && output.error.message != null) {
 						params.put("error", output.error.message);
 					}
-					
+
 					MixPanelApiHelper.track("registerUser", params);
 				}
 
@@ -660,7 +660,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 				params.put("status", "failure");
 				params.put("error", caught.getMessage());
 				MixPanelApiHelper.track("registerUser", params);
-				
+
 				EventController.get().fireEvent(new RegisterUserEventHandler.RegisterUserFailure(input, caught));
 			}
 		});
@@ -797,7 +797,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 				// only refresh the user list if the current user is an admin or has manage user permission
 				if (SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_MANAGE_USERS_CODE)) {
 					PagerHelper.moveBackward(pager);
-
+					reset();
 					fetchUsers();
 				}
 
