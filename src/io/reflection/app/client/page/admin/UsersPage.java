@@ -22,7 +22,6 @@ import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.ConfirmationDialog;
-import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.User;
@@ -63,7 +62,7 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 	@UiField(provided = true) SimplePager simplePager = new SimplePager(false, false);
 
 	private ConfirmationDialog confirmationDialog;
-	@UiField Preloader preloader;
+
 	@UiField Button deleteTestUsers;
 	@UiField TextBox queryTextBox;
 	private String query = "";
@@ -188,7 +187,6 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 
 						@Override
 						public void onClick(ClickEvent event) {
-							preloader.show();
 							UserController.get().deleteUser(object.id);
 							confirmationDialog.reset();
 						}
@@ -252,7 +250,6 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 
 			@Override
 			public void onClick(ClickEvent event) {
-				preloader.show();
 				UserController.get().deleteTestUsers();
 				confirmationDialog.reset();
 			}
@@ -279,14 +276,8 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 	public void deleteUserSuccess(DeleteUserRequest input, DeleteUserResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			queryTextBox.setText("");
-			UserController.get().reset();
-			if (simplePager.getPageStart() >= simplePager.getPageSize()) {
-				simplePager.setPageStart(0);
-			} else {
-				UserController.get().fetchUsers();
-			}
+			simplePager.setPageStart(0);
 		}
-		preloader.hide();
 	}
 
 	/*
@@ -296,9 +287,7 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 	 * java.lang.Throwable)
 	 */
 	@Override
-	public void deleteUserFailure(DeleteUserRequest input, Throwable caught) {
-		preloader.hide();
-	}
+	public void deleteUserFailure(DeleteUserRequest input, Throwable caught) {}
 
 	/*
 	 * (non-Javadoc)
@@ -310,14 +299,8 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 	public void deleteUsersSuccess(DeleteUsersRequest input, DeleteUsersResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			queryTextBox.setText("");
-			UserController.get().reset();
-			if (simplePager.getPageStart() >= simplePager.getPageSize()) {
-				simplePager.setPageStart(0);
-			} else {
-				UserController.get().fetchUsers();
-			}
+			simplePager.setPageStart(0);
 		}
-		preloader.hide();
 	}
 
 	/*
@@ -327,8 +310,6 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 	 * java.lang.Throwable)
 	 */
 	@Override
-	public void deleteUsersFailure(DeleteUsersRequest input, Throwable caught) {
-		preloader.hide();
-	}
+	public void deleteUsersFailure(DeleteUsersRequest input, Throwable caught) {}
 
 }

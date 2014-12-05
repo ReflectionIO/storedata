@@ -8,18 +8,13 @@
 package io.reflection.app.client.page.admin;
 
 import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMAT_DD_MMM_YYYY;
-import io.reflection.app.api.admin.shared.call.JoinDataAccountRequest;
-import io.reflection.app.api.admin.shared.call.JoinDataAccountResponse;
-import io.reflection.app.api.admin.shared.call.event.JoinDataAccountEventHandler;
 import io.reflection.app.client.cell.StyledButtonCell;
 import io.reflection.app.client.controller.DataAccountController;
-import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
-import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.DataAccount;
@@ -42,7 +37,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Stefano Capuzzi
  * 
  */
-public class DataAccountsPage extends Page implements JoinDataAccountEventHandler {
+public class DataAccountsPage extends Page {
 
 	private static DataAccountsPageUiBinder uiBinder = GWT.create(DataAccountsPageUiBinder.class);
 
@@ -57,8 +52,6 @@ public class DataAccountsPage extends Page implements JoinDataAccountEventHandle
 
 	@UiField(provided = true) CellTable<DataAccount> dataAccountTable = new CellTable<DataAccount>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) SimplePager simplePager = new SimplePager(false, false);
-
-	@UiField Preloader preloader;
 
 	public DataAccountsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -170,7 +163,6 @@ public class DataAccountsPage extends Page implements JoinDataAccountEventHandle
 
 			@Override
 			public void update(int index, DataAccount object, String value) {
-				preloader.show();
 				DataAccountController.get().joinDataAccount(object);
 			}
 		};
@@ -179,36 +171,4 @@ public class DataAccountsPage extends Page implements JoinDataAccountEventHandle
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.page.Page#onAttach()
-	 */
-	@Override
-	protected void onAttach() {
-		super.onAttach();
-		register(EventController.get().addHandlerToSource(JoinDataAccountEventHandler.TYPE, DataAccountController.get(), this));
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.api.admin.shared.call.event.JoinDataAccountEventHandler#joinDataAccountSuccess(io.reflection.app.api.admin.shared.call.
-	 * JoinDataAccountRequest, io.reflection.app.api.admin.shared.call.JoinDataAccountResponse)
-	 */
-	@Override
-	public void joinDataAccountSuccess(JoinDataAccountRequest input, JoinDataAccountResponse output) {
-		preloader.hide();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.api.admin.shared.call.event.JoinDataAccountEventHandler#joinDataAccountFailure(io.reflection.app.api.admin.shared.call.
-	 * JoinDataAccountRequest, java.lang.Throwable)
-	 */
-	@Override
-	public void joinDataAccountFailure(JoinDataAccountRequest input, Throwable caught) {
-		preloader.hide();
-	}
 }

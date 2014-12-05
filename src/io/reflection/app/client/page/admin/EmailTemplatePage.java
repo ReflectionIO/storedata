@@ -23,7 +23,6 @@ import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
-import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.part.text.MarkdownEditor;
 import io.reflection.app.client.res.Images;
@@ -97,7 +96,6 @@ public class EmailTemplatePage extends Page implements NavigationEventHandler, G
 	@UiField Button addLinkBtn;
 	@UiField ListBox formatListBox;
 	@UiField Button buttonUpdate;
-	@UiField Preloader preloader;
 
 	public EmailTemplatePage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -273,7 +271,6 @@ public class EmailTemplatePage extends Page implements NavigationEventHandler, G
 	void onUpdateClicked(ClickEvent event) {
 		if (validate()) {
 			clearErrors();
-			preloader.show();
 			emailTemplate.from = fromTextBox.getText();
 			emailTemplate.subject = subjectTextBox.getText();
 			emailTemplate.id = Long.valueOf(NavigationController.get().getStack().getParameter(TEMPLATE_EMAIL_ID_PARAMETER));
@@ -400,7 +397,6 @@ public class EmailTemplatePage extends Page implements NavigationEventHandler, G
 		if (output.status == StatusType.StatusTypeSuccess) {
 			PageType.EmailTemplatesPageType.show();
 		}
-		preloader.hide();
 	}
 
 	/*
@@ -410,8 +406,6 @@ public class EmailTemplatePage extends Page implements NavigationEventHandler, G
 	 * UpdateEmailTemplateRequest, java.lang.Throwable)
 	 */
 	@Override
-	public void updateEmailTemplateFailure(UpdateEmailTemplateRequest input, Throwable caught) {
-		preloader.hide();
-	}
+	public void updateEmailTemplateFailure(UpdateEmailTemplateRequest input, Throwable caught) {}
 
 }
