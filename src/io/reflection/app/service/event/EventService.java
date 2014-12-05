@@ -8,10 +8,8 @@
 //
 package io.reflection.app.service.event;
 
+import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
-
-import java.util.List;
-
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.Event;
@@ -22,6 +20,9 @@ import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProv
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 final class EventService implements IEventService {
 	public String getName() {
@@ -51,6 +52,35 @@ final class EventService implements IEventService {
 		return event;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.event.IEventService#getCodeEvent(java.lang.String)
+	 */
+	@Override
+	public Event getCodeEvent(String code) throws DataAccessException {
+		Event event = null;
+
+		IDatabaseService databaseService = DatabaseServiceProvider.provide();
+		Connection eventConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeEvent.toString());
+
+		String getEventQuery = String.format("SELECT * FROM `event` WHERE `deleted`='n' AND `code`='%s' LIMIT 1", addslashes(code));
+		try {
+			eventConnection.connect();
+			eventConnection.executeQuery(getEventQuery);
+
+			if (eventConnection.fetchNextRow()) {
+				event = toEvent(eventConnection);
+			}
+		} finally {
+			if (eventConnection != null) {
+				eventConnection.disconnect();
+			}
+		}
+
+		return event;
+	}
+
 	/**
 	 * To event
 	 * 
@@ -75,7 +105,29 @@ final class EventService implements IEventService {
 
 	@Override
 	public Event updateEvent(Event event) throws DataAccessException {
-		throw new UnsupportedOperationException();
+		Event updatedEvent = null;
+
+		final String updateEventQuery = String
+				.format("UPDATE `event` SET `code`='%s', `name`='%s', `description`='%s', `subject`='%s', `shortbody`='%s', `longbody`='%s',`priority`='%s',`type`='%s'  WHERE `id`=%d AND `deleted`='n'",
+						addslashes(event.code), addslashes(event.name), addslashes(event.description), addslashes(event.subject), addslashes(event.shortBody),
+						addslashes(event.longBody), event.priority.toString(), event.type.toString(), event.id.longValue());
+
+		Connection eventConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeEvent.toString());
+
+		try {
+			eventConnection.connect();
+			eventConnection.executeQuery(updateEventQuery);
+
+			if (eventConnection.getAffectedRowCount() > 0) {
+				updatedEvent = getEvent(event.id);
+			}
+		} finally {
+			if (eventConnection != null) {
+				eventConnection.disconnect();
+			}
+		}
+
+		return updatedEvent;
 	}
 
 	@Override
@@ -83,31 +135,76 @@ final class EventService implements IEventService {
 		throw new UnsupportedOperationException();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.service.event.IEventService#getEvents(io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
 	public List<Event> getEvents(Pager pager) throws DataAccessException {
-		// TODO Auto-generated method stub
-		return null;
+		List<Event> events = new ArrayList<Event>();
+
+		IDatabaseService databaseService = DatabaseServiceProvider.provide();
+		Connection eventConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeEvent.toString());
+
+		String getEventsQuery = "SELECT * FROM `event` WHERE `deleted`='n'";
+
+		if (pager != null) {
+			String sortByQuery = "id";
+
+			if (pager.sortBy != null && ("code".equals(pager.sortBy) || "name".equals(pager.sortBy))) {
+				sortByQuery = pager.sortBy;
+			}
+
+			String sortDirectionQuery = "DESC";
+
+			if (pager.sortDirection != null) {
+				switch (pager.sortDirection) {
+				case SortDirectionTypeAscending:
+					sortDirectionQuery = "ASC";
+					break;
+				default:
+					break;
+				}
+			}
+
+			getEventsQuery += String.format(" ORDER BY `%s` %s", sortByQuery, sortDirectionQuery);
+		}
+
+		if (pager.start != null && pager.count != null) {
+			getEventsQuery += String.format(" LIMIT %d, %d", pager.start.longValue(), pager.count.longValue());
+		} else if (pager.count != null) {
+			getEventsQuery += String.format(" LIMIT %d", pager.count.longValue());
+		}
+
+		try {
+			eventConnection.connect();
+			eventConnection.executeQuery(getEventsQuery);
+
+			while (eventConnection.fetchNextRow()) {
+				Event event = this.toEvent(eventConnection);
+
+				if (event != null) {
+					events.add(event);
+				}
+			}
+		} finally {
+			if (eventConnection != null) {
+				eventConnection.disconnect();
+			}
+		}
+
+		return events;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.service.event.IEventService#getEventsCount()
 	 */
 	@Override
 	public Long getEventsCount() throws DataAccessException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see io.reflection.app.service.event.IEventService#getCodeEvent(java.lang.String)
-	 */
-	@Override
-	public Event getCodeEvent(String code) throws DataAccessException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException("getEventsCount");
 	}
 
 }

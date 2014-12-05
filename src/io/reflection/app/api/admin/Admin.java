@@ -687,7 +687,8 @@ public final class Admin extends ActionHandler {
 
 			output.events = EventServiceProvider.provide().getEvents(input.pager);
 			output.pager = input.pager;
-			updatePager(output.pager, output.events, input.pager.totalCount == null ? EventServiceProvider.provide().getEventsCount() : null);
+			
+			updatePager(output.pager, output.events, null);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {

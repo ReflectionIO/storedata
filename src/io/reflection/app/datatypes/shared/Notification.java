@@ -14,8 +14,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 public class Notification extends DataType {
-
 	public EventSubscription cause;
+	public String from;
 	public String subject;
 	public String body;
 	public NotificationStatusType status;
@@ -26,6 +26,8 @@ public class Notification extends DataType {
 		JsonObject object = super.toJson();
 		JsonElement jsonCause = cause == null ? JsonNull.INSTANCE : cause.toJson();
 		object.add("cause", jsonCause);
+		JsonElement jsonFrom = from == null ? JsonNull.INSTANCE : new JsonPrimitive(from);
+		object.add("from", jsonFrom);
 		JsonElement jsonSubject = subject == null ? JsonNull.INSTANCE : new JsonPrimitive(subject);
 		object.add("subject", jsonSubject);
 		JsonElement jsonBody = body == null ? JsonNull.INSTANCE : new JsonPrimitive(body);
@@ -45,6 +47,12 @@ public class Notification extends DataType {
 			if (jsonCause != null) {
 				cause = new EventSubscription();
 				cause.fromJson(jsonCause.getAsJsonObject());
+			}
+		}
+		if (jsonObject.has("from")) {
+			JsonElement jsonFrom = jsonObject.get("from");
+			if (jsonFrom != null) {
+				from = jsonFrom.getAsString();
 			}
 		}
 		if (jsonObject.has("subject")) {
@@ -75,6 +83,11 @@ public class Notification extends DataType {
 
 	public Notification cause(EventSubscription cause) {
 		this.cause = cause;
+		return this;
+	}
+
+	public Notification from(String from) {
+		this.from = from;
 		return this;
 	}
 

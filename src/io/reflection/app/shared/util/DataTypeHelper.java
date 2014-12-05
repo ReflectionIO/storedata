@@ -69,7 +69,7 @@ public class DataTypeHelper {
 	public static final String PERMISSION_MANAGE_SIMPLE_MODEL_RUN_CODE = "MSM";
 	
 	public static final String PASSWORD_EVENT_CODE = "PAS";
-	public static final String NEW_USER_EVENT_KEY = "NEW";
+	public static final String NEW_USER_EVENT_KEY = "WEL";
 
 	public static final String ROLE_ADMIN_CODE = "ADM";
 	public static final Long ROLE_ADMIN_ID = Long.valueOf(1);

@@ -59,7 +59,8 @@ final class NotificationService implements INotificationService {
 		notification.id(connection.getCurrentRowLong("id")).created(connection.getCurrentRowDateTime("created"))
 				.deleted(connection.getCurrentRowString("deleted"));
 		notification.cause((EventSubscription) new EventSubscription().id(connection.getCurrentRowLong("causeid")))
-				.body(stripslashes(connection.getCurrentRowString("body"))).status(NotificationStatusType.fromString(connection.getCurrentRowString("status")))
+				.from(connection.getCurrentRowString("from")).body(stripslashes(connection.getCurrentRowString("body")))
+				.status(NotificationStatusType.fromString(connection.getCurrentRowString("status")))
 				.subject(stripslashes(connection.getCurrentRowString("subject"))).type(NotificationTypeType.fromString(connection.getCurrentRowString("type")));
 		return notification;
 	}
