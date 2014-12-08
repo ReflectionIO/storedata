@@ -86,6 +86,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@UiField LIElement linkedAccountsItem;
 	@UiField InlineHyperlink accountSettingsLink;
 	@UiField LIElement accountSettingsItem;
+	@UiField InlineHyperlink notificationsLink;
+	@UiField LIElement notificationsItem;
 
 	@UiField LIElement blogItem;
 
@@ -505,11 +507,11 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	}
 
 	private void addMyAccount(User user) {
-
 		myAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController
 				.get().asMyAppsFilterString()));
 		linkedAccountsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(), user.id.toString()));
 		accountSettingsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.ChangeDetailsPageType.toString(), user.id.toString()));
+		notificationsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.NotificationsPageType.toString(), user.id.toString()));
 
 		navList.appendChild(myAccountList);
 	}

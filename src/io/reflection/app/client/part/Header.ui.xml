@@ -120,6 +120,12 @@
 									Account Settings
 								</g:InlineHyperlink>
 							</li>
+							<li ui:field="notificationsItem">
+                                <g:InlineHyperlink ui:field="notificationsLink">
+                                    <i class="icon-emo-happy"></i>
+                                    Notifications
+                                </g:InlineHyperlink>
+                            </li>
 						</ul>
 					</li>
 				</ul>
