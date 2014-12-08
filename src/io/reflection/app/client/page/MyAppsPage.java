@@ -222,9 +222,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 			myAppsTopPanel.setFiltersEnabled(false);
 			ItemController.get().fetchLinkedAccountItems();
 		}
-		myAccountSidePanel.getMyAppsLink().setTargetHistoryToken(
-				PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController.get()
-						.asMyAppsFilterString()));
+		myAccountSidePanel.setUser(user);
 		PageType.UsersPageType.show(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController.get().asMyAppsFilterString());
 	}
 
@@ -242,9 +240,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 			myAppsTopPanel.setFiltersEnabled(false);
 			ItemController.get().fetchLinkedAccountItems();
 		}
-		myAccountSidePanel.getMyAppsLink().setTargetHistoryToken(
-				PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController.get()
-						.asMyAppsFilterString()));
+		myAccountSidePanel.setUser(user);
 		PageType.UsersPageType.show(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController.get().asMyAppsFilterString());
 	}
 
@@ -257,28 +253,12 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
 
-		myAccountSidePanel.setMyAppsLinkActive();
+		myAccountSidePanel.setActive(getPageType());
 
 		user = SessionController.get().getLoggedInUser();
 
 		if (user != null) {
-			myAccountSidePanel.getLinkedAccountsLink().setTargetHistoryToken(
-					PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(), user.id.toString()));
-
-			myAccountSidePanel.getCreatorNameLink().setInnerText(user.company);
-
-			myAccountSidePanel.getPersonalDetailsLink().setTargetHistoryToken(
-					PageType.UsersPageType.asTargetHistoryToken(PageType.ChangeDetailsPageType.toString(), user.id.toString()));
-
-		}
-
-		String currentFilter = FilterController.get().asMyAppsFilterString();
-		if (currentFilter != null && currentFilter.length() > 0) {
-			if (user != null) {
-				myAccountSidePanel.getMyAppsLink().setTargetHistoryToken(
-						PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController.get()
-								.asMyAppsFilterString()));
-			}
+			myAccountSidePanel.setUser(user);
 		}
 
 		// Linked accounts retrieved in LinkedAccountPage but not here, or Check if Added or deleted a linked account

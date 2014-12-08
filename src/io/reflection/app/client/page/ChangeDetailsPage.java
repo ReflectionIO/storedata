@@ -7,8 +7,6 @@
 //
 package io.reflection.app.client.page;
 
-import java.util.List;
-
 import io.reflection.app.api.admin.shared.call.AssignPermissionRequest;
 import io.reflection.app.api.admin.shared.call.AssignPermissionResponse;
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
@@ -32,7 +30,6 @@ import io.reflection.app.api.core.shared.call.event.ChangeUserDetailsEventHandle
 import io.reflection.app.api.core.shared.call.event.GetUserDetailsEventHandler;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.StyledButtonCell;
-import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.SessionController;
@@ -53,6 +50,8 @@ import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.shared.util.DataTypeHelper;
+
+import java.util.List;
 
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.core.client.GWT;
@@ -722,26 +721,10 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		currentUser = SessionController.get().getLoggedInUser(); // Update user using the system
 		mChangeDetails.setEnabled(false);
 		mChangePassword.setEnabled(false);
-		myAccountSidePanel.setPersonalDetailsLinkActive();
+		myAccountSidePanel.setActive(getPageType());
 
 		if (currentUser != null) {
-			myAccountSidePanel.getLinkedAccountsLink().setTargetHistoryToken(
-					PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(), currentUser.id.toString()));
-
-			myAccountSidePanel.getCreatorNameLink().setInnerText(currentUser.company);
-
-			myAccountSidePanel.getPersonalDetailsLink().setTargetHistoryToken(
-					PageType.UsersPageType.asTargetHistoryToken(PageType.ChangeDetailsPageType.toString(), currentUser.id.toString()));
-
-		}
-
-		String currentFilter = FilterController.get().asMyAppsFilterString();
-		if (currentFilter != null && currentFilter.length() > 0) {
-			if (currentUser != null) {
-				myAccountSidePanel.getMyAppsLink().setTargetHistoryToken(
-						PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), currentUser.id.toString(), FilterController.get()
-								.asMyAppsFilterString()));
-			}
+			myAccountSidePanel.setUser(currentUser);
 		}
 
 		resetForm();
@@ -829,7 +812,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 					.setVisible(true);
 			currentUser = SessionController.get().getLoggedInUser();
 
-			myAccountSidePanel.getCreatorNameLink().setInnerText(currentUser.company);
+			myAccountSidePanel.setUser(currentUser);
 
 			mChangeDetails.setEnabled(false);
 			mForename.setFocus(true);
