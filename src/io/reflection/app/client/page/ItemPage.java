@@ -132,7 +132,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	 */
 	private void setLoadingSpinnerEnabled(boolean enabled) {
 		if (enabled) {
-			revenueTable.setRowCount(1, true);
 			revenueTable.setRowData(0, tablePlaceholder);
 		} else {
 			revenueTable.setRowCount(0, true);
@@ -550,10 +549,12 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	 */
 	@Override
 	public void getLinkedAccountItemSuccess(GetLinkedAccountItemRequest input, GetLinkedAccountItemResponse output) {
-		if (item != null && input.item.internalId.equals(item.internalId) && output.status == StatusType.StatusTypeSuccess) {
+		if (output.status == StatusType.StatusTypeSuccess) {
 			if (output.item == null) {
 				RankController.get().fetchItemRanks(item);
 			} else {
+				item = output.item;
+				sidePanel.setItem(item);
 				RankController.get().fetchItemSalesRanks(item);
 			}
 		} else {

@@ -263,6 +263,7 @@ public class ValidationHelper {
 			// if that fails try to get it from the the sales table
 			if (lookupItem == null) {
 				lookupItem = SaleServiceProvider.provide().getItem(item.internalId);
+				lookupItem.source = itemStore.a3Code;
 			}
 		}
 

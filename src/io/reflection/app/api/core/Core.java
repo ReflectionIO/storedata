@@ -1105,6 +1105,12 @@ public final class Core extends ActionHandler {
 
 				output.items = SaleServiceProvider.provide().getDataAccountItems(input.linkedAccount, freeOrPaidApps, input.pager);
 
+				for (Item item : output.items) {
+					if (item.source == null) {
+						item.source = input.store.a3Code;
+					}
+				}
+
 				updatePager(output.pager, output.items,
 						input.pager.totalCount == null ? SaleServiceProvider.provide().getDataAccountItemsCount(input.linkedAccount, freeOrPaidApps) : null);
 			} else {
@@ -1592,24 +1598,24 @@ public final class Core extends ActionHandler {
 				}
 			}
 
-//			ItemSaleArchiver archiver = ArchiverFactory.getItemSaleArchiver();
-//			long[] slices = SliceHelper.offsets(input.start, input.end);
-//
-//			String key;
-//			List<Rank> ranks = null;
-//			for (long slice : slices) {
-//				key = archiver.createRanksKey(slice, input.linkedAccount, input.country, form);
-//
-//				ranks = archiver.getRanks(key);
-//
-//				if (ranks != null) {
-//					if (output.ranks == null) {
-//						output.ranks = new ArrayList<Rank>();
-//					}
-//
-//					output.ranks.addAll(ranks);
-//				}
-//			}
+			// ItemSaleArchiver archiver = ArchiverFactory.getItemSaleArchiver();
+			// long[] slices = SliceHelper.offsets(input.start, input.end);
+			//
+			// String key;
+			// List<Rank> ranks = null;
+			// for (long slice : slices) {
+			// key = archiver.createRanksKey(slice, input.linkedAccount, input.country, form);
+			//
+			// ranks = archiver.getRanks(key);
+			//
+			// if (ranks != null) {
+			// if (output.ranks == null) {
+			// output.ranks = new ArrayList<Rank>();
+			// }
+			//
+			// output.ranks.addAll(ranks);
+			// }
+			// }
 
 			if (output.ranks == null || output.ranks.size() == 0) {
 				// Get Items sales based on the filters
@@ -1785,24 +1791,24 @@ public final class Core extends ActionHandler {
 				}
 			}
 
-//			ItemSaleArchiver archiver = ArchiverFactory.getItemSaleArchiver();
-//			long[] slices = SliceHelper.offsets(input.start, input.end);
-//
-//			String key;
-//			List<Rank> ranks = null;
-//			for (long slice : slices) {
-//				key = archiver.createItemRanksKey(slice, input.item, input.country, form);
-//
-//				ranks = archiver.getRanks(key);
-//
-//				if (ranks != null) {
-//					if (output.ranks == null) {
-//						output.ranks = new ArrayList<Rank>();
-//					}
-//
-//					output.ranks.addAll(ranks);
-//				}
-//			}
+			// ItemSaleArchiver archiver = ArchiverFactory.getItemSaleArchiver();
+			// long[] slices = SliceHelper.offsets(input.start, input.end);
+			//
+			// String key;
+			// List<Rank> ranks = null;
+			// for (long slice : slices) {
+			// key = archiver.createItemRanksKey(slice, input.item, input.country, form);
+			//
+			// ranks = archiver.getRanks(key);
+			//
+			// if (ranks != null) {
+			// if (output.ranks == null) {
+			// output.ranks = new ArrayList<Rank>();
+			// }
+			//
+			// output.ranks.addAll(ranks);
+			// }
+			// }
 
 			if (output.ranks == null || output.ranks.size() == 0) {
 				// Get Items sales based on the filters
