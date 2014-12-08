@@ -28,6 +28,7 @@ import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.ItemController;
 import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.controller.StoreController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.RankController;
 import io.reflection.app.client.handler.FilterEventHandler;
@@ -132,7 +133,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	 */
 	private void setLoadingSpinnerEnabled(boolean enabled) {
 		if (enabled) {
-			revenueTable.setRowCount(1, true);
 			revenueTable.setRowData(0, tablePlaceholder);
 		} else {
 			revenueTable.setRowCount(0, true);
@@ -260,12 +260,13 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				internalId = newInternalId;
 
 				if ((item = ItemController.get().lookupItem(internalId)) != null) {
+					item.source = StoreController.get().getStore(FilterController.get().getFilter().getStoreA3Code()).a3Code;
 					displayItemDetails(null);
 				} else {
 					// Coming from a refresh page
 					item = new Item();
 					item.internalId = internalId;
-					item.source = FilterController.get().getFilter().getStoreA3Code();
+					item.source = StoreController.get().getStore(FilterController.get().getFilter().getStoreA3Code()).a3Code;
 				}
 			}
 
@@ -423,8 +424,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public void getItemRanksSuccess(GetItemRanksRequest input, GetItemRanksResponse output) {
 		if (output != null && output.status == StatusType.StatusTypeSuccess) {
-			if (output.ranks != null && output.ranks.size() > 0) {
-				item = output.item;
+			if (output.ranks != null && output.ranks.size() > 0 && output.item != null) {
+
+				setItemInfo(output.item);
 
 				displayItemDetails(output.ranks.get(0));
 
@@ -507,8 +509,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public void getItemSalesRanksSuccess(GetItemSalesRanksRequest input, GetItemSalesRanksResponse output) {
 		if (output != null && output.status == StatusType.StatusTypeSuccess) {
-			if (output.ranks != null && output.ranks.size() > 0) {
-				item = output.item;
+			if (output.ranks != null && output.ranks.size() > 0 && output.item != null) {
+
+				setItemInfo(output.item);
 
 				displayItemDetails(output.ranks.get(0));
 
@@ -550,10 +553,12 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	 */
 	@Override
 	public void getLinkedAccountItemSuccess(GetLinkedAccountItemRequest input, GetLinkedAccountItemResponse output) {
-		if (item != null && input.item.internalId.equals(item.internalId) && output.status == StatusType.StatusTypeSuccess) {
+		if (output.status == StatusType.StatusTypeSuccess) {
 			if (output.item == null) {
 				RankController.get().fetchItemRanks(item);
 			} else {
+				setItemInfo(output.item);
+				sidePanel.setItem(item);
 				RankController.get().fetchItemSalesRanks(item);
 			}
 		} else {
@@ -574,6 +579,18 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		preloader.hide();
 		sidePanel.setPriceInnerHTML("-");
 		setLoadingSpinnerEnabled(false);
+	}
+
+	private void setItemInfo(Item i) {
+		if (i.name != null) {
+			item.name = i.name;
+		}
+		if (i.creatorName != null) {
+			item.creatorName = i.creatorName;
+		}
+		if (i.largeImage != null) {
+			item.largeImage = i.largeImage;
+		}
 	}
 
 }
