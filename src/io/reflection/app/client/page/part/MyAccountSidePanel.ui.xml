@@ -29,6 +29,10 @@
 				<g:InlineHyperlink ui:field="accountSettingsLink" text="Account Settings" />
 			</li>
 			<li class="divider-horizontal {style.horDivider}" />
+			<li ui:field="accountNotificationsListItem">
+                <g:InlineHyperlink ui:field="accountNotificationsLink" text="Notifications" />
+            </li>
+            <li class="divider-horizontal {style.horDivider}" />
 		</ul>
 	</g:HTMLPanel>
 </ui:UiBinder> 

@@ -84,6 +84,8 @@ public enum PageType {
 	UpgradePageType("upgrade", true),
 	UsersPageType("users", DataTypeHelper.PERMISSION_MANAGE_USERS_CODE),
 	WidgetTestPage("test", false),
+	NotificationsPageType("notifications", true),
+	
 
 	// Non navigable
 	LoadingPageType("loading"), ;
@@ -308,6 +310,9 @@ public enum PageType {
 		case ForumEditTopicPageType:
 			page = new EditTopicPage();
 			break;
+		case NotificationsPageType:
+			page = new NotificationsPage();
+			break;
 		case HomePageType:
 		default:
 			if (defaultPage == null) {
@@ -316,6 +321,7 @@ public enum PageType {
 			page = defaultPage;
 			break;
 		}
+		page.setPageType(this);
 
 		return page;
 	}

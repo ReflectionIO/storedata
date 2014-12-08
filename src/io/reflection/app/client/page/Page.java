@@ -21,6 +21,7 @@ import com.google.gwt.user.client.ui.Composite;
 public class Page extends Composite {
 
 	private List<HandlerRegistration> handlers = new ArrayList<HandlerRegistration>();
+	private PageType pageType = null;
 
 	protected void register(HandlerRegistration registration) {
 		handlers.add(registration);
@@ -54,5 +55,15 @@ public class Page extends Composite {
 
 	public String getTitle() {
 		return "Reflection.io";
+	}
+
+	protected PageType getPageType() {
+		return pageType;
+	}
+
+	public void setPageType(PageType type) {
+		if (pageType == null) {
+			pageType = type;
+		} else throw new RuntimeException("Page type is alread " + pageType.toString());
 	}
 }
