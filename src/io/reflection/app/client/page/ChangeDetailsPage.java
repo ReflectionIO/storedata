@@ -727,16 +727,14 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 			myAccountSidePanel.setUser(currentUser);
 		}
 
-		resetForm();
-		resetPasswordForm();
-		resetRoleForm();
-		resetPermissionForm();
-
 		if (isValidStack(current)) {
-
 			boolean editingUserChanged = editingUserId != Long.valueOf(current.getParameter(0));
 			if (editingUserChanged) {
-
+				resetForm();
+				resetPasswordForm();
+				resetRoleForm();
+				resetPermissionForm();
+				
 				// Create and fetch Roles and Permissions providers
 				editingUserId = Long.valueOf(current.getParameter(0)); // Update user to edit
 				User dummyEditingUser = DataTypeHelper.createUser(editingUserId);
@@ -780,16 +778,14 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 					userRolesProvider.updateRowCount(0, true);
 					userPermissionsProvider.updateRowCount(0, true);
 				}
+				
 				mForename.setFocus(true);
 				mForename.setCursorPos(mForename.getText().length());
-
 			}
 
 		} else {
-
 			userRolesProvider.updateRowCount(0, true);
 			userPermissionsProvider.updateRowCount(0, true);
-
 		}
 	}
 
@@ -1079,6 +1075,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		if (output.status == StatusType.StatusTypeSuccess && output.user != null) {
 			fillDetailsForm(output.user);
 		}
+		
 		preloaderDetails.hide();
 	}
 

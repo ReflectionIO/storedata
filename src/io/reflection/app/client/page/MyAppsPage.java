@@ -87,7 +87,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 	private MyAppsEmptyTable myAppsEmptyTable = new MyAppsEmptyTable();
 
-	private User user = SessionController.get().getLoggedInUser();
+	private User user;
 
 	long linkedAccountsCount = -1;
 

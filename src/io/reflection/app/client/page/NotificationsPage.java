@@ -9,10 +9,12 @@ package io.reflection.app.client.page;
 
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.page.part.MyAccountSidePanel;
 import io.reflection.app.client.res.Styles;
+import io.reflection.app.datatypes.shared.User;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -30,6 +32,7 @@ public class NotificationsPage extends Page implements NavigationEventHandler {
 	interface NotificationsPageUiBinder extends UiBinder<Widget, NotificationsPage> {}
 
 	@UiField MyAccountSidePanel myAccountSidePanel;
+	private User user;
 
 	public NotificationsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -58,6 +61,12 @@ public class NotificationsPage extends Page implements NavigationEventHandler {
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
 		myAccountSidePanel.setActive(getPageType());
+
+		user = SessionController.get().getLoggedInUser();
+
+		if (user != null) {
+			myAccountSidePanel.setUser(user);
+		}
 	}
 
 }
