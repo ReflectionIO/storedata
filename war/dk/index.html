@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8" />
+  <!--[if IE 8]><html class="no-js ie8"><![endif]-->
+	<title>Reflection Design Kit</title>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600,700' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:600' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" media="screen, projection" type="text/css" href="css/reflection-main.css" />
+	<!--[if lt IE 9]>		
+	<![endif]-->	
+	<!--[if (lt IE 9)]>
+		<script src="js/vendor/html5shiv.min.js"></script>
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="css/reflection-main-ie8.css" />
+	<![endif]-->
+ 	<!--[if !lt IE 9]><!-->
+		<script src="js/vendor/picturefill.2.2.0.min.js" async></script>
+	<!-- <![endif]-->
+	<!--[if (gte IE 9)|(IEMobile)|(!IE)]><!-->
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="css/reflection-main.css" />
+	<!--<![endif]-->
+</head>
+<body>
+	<!--[if lt IE 8]>
+      <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+  <![endif]-->
+
+  <header class="global-header">
+  	<div class="hamburger">
+  		<button class="hamburger__button ref-icon-before ref-icon-before--hamburger is-selected js-hamburger-button"></button>
+  	</div>
+		<div class="site-logo">
+			<a href="/">
+				<picture> <!-- uses js/picturefill.2.2.0.min.js -->
+					<!--[if IE 9]><video style="display: none;"><![endif]-->
+					<source srcset="images/logo-reflection-header.png" media="(min-width: 720px)" />
+					<source srcset="images/logo-reflection-header-mobile.png" />
+					<!--[if IE 9]></video><![endif]-->
+					<img src="images/logo-reflection-header.png" alt="Reflection logo" />
+				</picture>
+			</a>
+		</div>
+		<div class="global-header__actions">
+			<form class="form--search">
+				<label class="ref-icon-before ref-icon-before--search form--search__label-search" for="site-search">Search: </label>
+				<input type="search" name="site-search" id="site-search" placeholder="Search for app or developer" class="form--search__input-search" />
+			</form>
+			<div class="actions-group-container">
+				<div class="actions-group ref-icon-before ref-icon-before--cog">
+					<div class="actions-group__content">
+						<a href="#" class="ref-button ref-button--small">Apply</a>
+						<div class="link-log-in-container">
+							<a href="#" class="link-log-in">Log In</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</header>
+
+	<div class="l-page-container panel-left-open">		
+		<div class="panel-left">
+			<nav class="main-navigation js-main-nav" role="navigation">
+				<ul>
+					<li><a href="#" class="ref-icon-before ref-icon-before--my-data">My Data</a></li>
+					<li class="has-child is-selected js-is-collapsible">
+						<a href="#" class="ref-icon-before ref-icon-before--leaderboard">Leaderboards</a>
+						<ul>
+							<li><a href="#">App Leaderboard</a></li>
+							<li class="is-selected has-child js-is-collapsible">
+								<a href="#">Developer Leaderboard</a>
+								<ul>
+									<li><a href="#">Dolor Amet Lorem</a></li>
+									<li class="is-selected"><a href="#">Tertiary navigation</a></li>
+									<li><a href="#">Suspendisse Nisi</a></li>
+								</ul>
+							</li>
+							<li><a href="#">Dolor Amet Lorem</a></li>
+							<li class="has-child js-is-collapsible">
+								<a href="#">Suspendisse Hibendum Dolor ipsum</a>
+								<ul>
+									<li><a href="#">Dolor Amet Lorem</a></li>
+									<li class="is-selected"><a href="#">Tertiary navigation</a></li>
+									<li><a href="#">Suspendisse Nisi</a></li>
+								</ul>
+							</li>
+							<li><a href="#">Dolor Amet Lorem</a></li>
+						</ul>
+					</li>
+					<li><a href="#" class="ref-icon-before ref-icon-before--forum">Forum</a></li>
+					<li><a href="#" class="ref-icon-before ref-icon-before--blog">Blog</a></li>
+					<li><a href="#" class="ref-icon-before ref-icon-before--help">Support</a></li>
+					<li><a href="#" class="ref-icon-before ref-icon-before--info">About</a></li>
+				</ul>
+			</nav>
+			<ul class="main-social-links">
+				<li><a href="#" class="ref-icon-before ref-icon-before--facebook" onclick="return false;"><span>Facebook</span></a></li>
+				<li><a href="#" class="ref-icon-before ref-icon-before--twitter" onclick="return false;"><span>Twitter</span></a></li>
+				<li><a href="#" class="ref-icon-before ref-icon-before--linkedin" onclick="return false;"><span>LinkedIn</span></a></li>
+			</ul>
+			<div class="main-footer-links">
+				<ul>
+					<li><a href="#">Contact Us</a></li>
+					<li><a href="#">Terms &amp; Conditions</a></li>
+					<li><a href="#">Privacy</a></li>
+					<li><a href="#">Sitemap</a></li>
+				</ul>
+			</div>
+		</div>
+
+		<div id="main" class="l-main" role="main">
+		</div>
+	</div>
+
+	<div class="panel-right-container">
+			<div class="panel-right__overlay"></div>
+			<div class="panel-right">
+				<form class="reflection-form" autocomplete="off">
+					<div class="form-field">						
+						<input type="email" name="email" id="email" autocomplete="off" />
+						<label for="email">Email</label>
+					</div>
+					<div class="form-field">						
+						<input type="password" name="password" id="password" autocomplete="off" />
+						<label for="password">Password</label>
+					</div>
+					<a href="#" class="form-link">I've misplaced my password</a>
+					<div class="form-field--checkbox">
+						<input type="checkbox" name="signedin" id="signedin" /><labeL for="signedin">Keep me signed in</label>
+					</div>
+					<input type="submit" class="ref-button ref-button--login-form-submit" value="Log in" />
+				</form>
+				<div class="blockquote-container">
+					<blockquote>
+						<p>We see our customers as invited guests to a party, and we are the hosts. It's our job every day to make every important aspect of the customer experience a little bit better.</p>
+						<footer>
+							<cite>
+								<span>Jeff Bezos</span>
+								Founder, Amazon
+							</cite>
+						</footer>
+					</blockquote>
+				</div>
+			</div>
+		</div>
+
+ 	<script src="js/vendor/jquery-1.11.1.min.js"></script>
+ 	<script src="js/vendor/jquery-ui.custom.min.js"></script>
+	<script src="js/vendor/modernizr.2.8.3.custom.min.js"></script>
+	<script src="js/scripts.js"></script>
+</body>

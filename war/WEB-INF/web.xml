@@ -267,6 +267,15 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
   </auth-constraint>
 </security-constraint>
 
+<security-constraint>
+  <web-resource-collection>
+    <url-pattern>/dk/*</url-pattern>
+  </web-resource-collection>
+  <auth-constraint>
+    <role-name>admin</role-name>
+  </auth-constraint>
+</security-constraint>
+
 <!-- <security-constraint>
   <web-resource-collection>
     <url-pattern>/internal/*</url-pattern>
