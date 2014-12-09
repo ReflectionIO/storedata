@@ -252,6 +252,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			// items.add(upgradeAccountItem);
 			items.add(loginItem);
 			// items.add(mRegisterItem);
+			items.add(notificationsItem);
 		}
 	}
 
@@ -300,6 +301,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 				highlight(myAccountDropdown, linkedAccountsItem);
 			} else if (PageType.ChangeDetailsPageType.equals(current.getAction())) {
 				highlight(myAccountDropdown, accountSettingsItem);
+			} else if (PageType.NotificationsPageType.equals(current.getAction())) {
+				highlight(myAccountDropdown, notificationsItem);
 			}
 		} else if (PageType.LoginPageType.equals(current.getPage())) {
 			highlight(loginItem);

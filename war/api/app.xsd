@@ -464,6 +464,7 @@
 				<xsd:attribute name="body" type="xsd:string" />
 				<xsd:attribute name="status" type="NotificationStatusType" />
 				<xsd:attribute name="type" type="NotificationTypeType" />
+				<xsd:attribute name="priority" type="EventPriorityType" />
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>

@@ -20,6 +20,7 @@ public class Notification extends DataType {
 	public String body;
 	public NotificationStatusType status;
 	public NotificationTypeType type;
+	public EventPriorityType priority;
 
 	@Override
 	public JsonObject toJson() {
@@ -36,6 +37,8 @@ public class Notification extends DataType {
 		object.add("status", jsonStatus);
 		JsonElement jsonType = type == null ? JsonNull.INSTANCE : new JsonPrimitive(type.toString());
 		object.add("type", jsonType);
+		JsonElement jsonPriority = priority == null ? JsonNull.INSTANCE : new JsonPrimitive(priority.toString());
+		object.add("priority", jsonPriority);
 		return object;
 	}
 
@@ -79,6 +82,12 @@ public class Notification extends DataType {
 				type = NotificationTypeType.fromString(jsonType.getAsString());
 			}
 		}
+		if (jsonObject.has("priority")) {
+			JsonElement jsonPriority = jsonObject.get("priority");
+			if (jsonPriority != null) {
+				priority = EventPriorityType.fromString(jsonPriority.getAsString());
+			}
+		}
 	}
 
 	public Notification cause(EventSubscription cause) {
@@ -108,6 +117,11 @@ public class Notification extends DataType {
 
 	public Notification type(NotificationTypeType type) {
 		this.type = type;
+		return this;
+	}
+
+	public Notification priority(EventPriorityType priority) {
+		this.priority = priority;
 		return this;
 	}
 }
