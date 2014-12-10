@@ -38,7 +38,9 @@ CREATE TABLE `eventsubscription` (
 CREATE TABLE `notification` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `causeid` int(11) NOT NULL,
+    `causeid` int(11) NULL,
+	`eventid` int(11) NOT NULL,
+	`userid` int (11) NOT NULL,
     `from` text COLLATE utf8mb4_unicode_ci,
     `subject` text COLLATE utf8mb4_unicode_ci,
     `body` text COLLATE utf8mb4_unicode_ci,
@@ -46,6 +48,7 @@ CREATE TABLE `notification` (
     `type` enum('email', 'text', 'push', 'internal') COLLATE utf8mb4_unicode_ci DEFAULT 'internal',
     `deleted` enum('y', 'n') COLLATE utf8mb4_unicode_ci DEFAULT 'n',
     PRIMARY KEY (`id`),
+	KEY `index_userid` (`userid`),
     KEY `index_causeid` (`causeid`),
     KEY `index_status` (`status`),
     KEY `index_type` (`type`)

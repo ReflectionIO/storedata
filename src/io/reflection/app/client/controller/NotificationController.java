@@ -16,7 +16,6 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.datatypes.shared.Notification;
-import io.reflection.app.shared.util.PagerHelper;
 
 import java.util.Collections;
 
@@ -43,6 +42,8 @@ public class NotificationController extends AsyncDataProvider<Notification> impl
 		return one;
 	}
 
+	private static final String SORT_BY_CREATED = "created";
+
 	private Pager pager;
 	private Request current;
 
@@ -60,10 +61,7 @@ public class NotificationController extends AsyncDataProvider<Notification> impl
 		input.session = SessionController.get().getSessionForApiCall();
 
 		if (pager == null) {
-			pager = new Pager();
-			pager.count = STEP;
-			pager.start = Long.valueOf(0);
-			pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
+			pager = new Pager().start(Pager.DEFAULT_START).count(STEP).sortBy(SORT_BY_CREATED).sortDirection(SortDirectionType.SortDirectionTypeDescending);
 		}
 
 		input.pager = pager;
@@ -78,7 +76,7 @@ public class NotificationController extends AsyncDataProvider<Notification> impl
 						pager = output.pager;
 					}
 
-					updateRowCount(output.notifications.size(), false);
+					updateRowCount(output.notifications == null ? 0 : input.pager.start.intValue() + input.pager.count.intValue(), output.notifications == null);
 					updateRowData(input.pager.start.intValue(), output.notifications == null ? Collections.<Notification> emptyList() : output.notifications);
 				}
 
@@ -103,9 +101,8 @@ public class NotificationController extends AsyncDataProvider<Notification> impl
 	protected void onRangeChanged(HasData<Notification> display) {
 		Range r = display.getVisibleRange();
 
-		pager = PagerHelper.createDefaultPager();
-		pager.start = Long.valueOf(r.getStart());
-		pager.count = Long.valueOf(r.getLength());
+		pager = new Pager().start(Long.valueOf(r.getStart())).count(Long.valueOf(r.getLength())).sortBy(SORT_BY_CREATED)
+				.sortDirection(SortDirectionType.SortDirectionTypeDescending);
 
 		fetchNotifications();
 	}

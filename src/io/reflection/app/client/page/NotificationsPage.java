@@ -8,14 +8,22 @@
 package io.reflection.app.client.page;
 
 import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMAT_DD_MMM_YYYY;
+import io.reflection.app.api.core.shared.call.DeleteNotificationsRequest;
+import io.reflection.app.api.core.shared.call.DeleteNotificationsResponse;
+import io.reflection.app.api.core.shared.call.UpdateNotificationsRequest;
+import io.reflection.app.api.core.shared.call.UpdateNotificationsResponse;
+import io.reflection.app.api.core.shared.call.event.DeleteNotificationsEventHandler;
+import io.reflection.app.api.core.shared.call.event.UpdateNotificationsEventHandler;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
+import io.reflection.app.client.controller.NotificationController;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.page.part.MyAccountSidePanel;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
+import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Notification;
@@ -34,7 +42,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author William Shakour (billy1380)
  *
  */
-public class NotificationsPage extends Page implements NavigationEventHandler {
+public class NotificationsPage extends Page implements NavigationEventHandler, DeleteNotificationsEventHandler, UpdateNotificationsEventHandler {
 
 	private static NotificationsPageUiBinder uiBinder = GWT.create(NotificationsPageUiBinder.class);
 
@@ -43,6 +51,7 @@ public class NotificationsPage extends Page implements NavigationEventHandler {
 	@UiField MyAccountSidePanel myAccountSidePanel;
 	@UiField(provided = true) CellTable<Notification> notificationsTable = new CellTable<Notification>(Pager.DEFAULT_COUNT.intValue(),
 			BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true) SimplePager simplePager = new SimplePager(false, false);
 	private User user;
 	private TextColumn<Notification> columnCreated;
 	private TextColumn<Notification> columnPriority;
@@ -53,6 +62,14 @@ public class NotificationsPage extends Page implements NavigationEventHandler {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		Styles.INSTANCE.reflection().ensureInjected();
+
+		createColumns();
+
+		notificationsTable.setEmptyTableWidget(new HTMLPanel("No notifications <i class=\"icon-emo-happy\"></i>"));
+		notificationsTable.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
+
+		NotificationController.get().addDataDisplay(notificationsTable);
+		simplePager.setDisplay(notificationsTable);
 	}
 
 	/*
@@ -65,11 +82,8 @@ public class NotificationsPage extends Page implements NavigationEventHandler {
 		super.onAttach();
 
 		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
-
-		createColumns();
-
-		notificationsTable.setEmptyTableWidget(new HTMLPanel("No Messages"));
-		notificationsTable.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
+		register(DefaultEventBus.get().addHandlerToSource(DeleteNotificationsEventHandler.TYPE, NotificationController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(UpdateNotificationsEventHandler.TYPE, NotificationController.get(), this));
 	}
 
 	private void createColumns() {
@@ -121,6 +135,54 @@ public class NotificationsPage extends Page implements NavigationEventHandler {
 		if (user != null) {
 			myAccountSidePanel.setUser(user);
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.core.shared.call.event.UpdateNotificationsEventHandler#updateNotificationsSuccess(io.reflection.app.api.core.shared.call.
+	 * UpdateNotificationsRequest, io.reflection.app.api.core.shared.call.UpdateNotificationsResponse)
+	 */
+	@Override
+	public void updateNotificationsSuccess(UpdateNotificationsRequest input, UpdateNotificationsResponse output) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.core.shared.call.event.UpdateNotificationsEventHandler#updateNotificationsFailure(io.reflection.app.api.core.shared.call.
+	 * UpdateNotificationsRequest, java.lang.Throwable)
+	 */
+	@Override
+	public void updateNotificationsFailure(UpdateNotificationsRequest input, Throwable caught) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.core.shared.call.event.DeleteNotificationsEventHandler#deleteNotificationsSuccess(io.reflection.app.api.core.shared.call.
+	 * DeleteNotificationsRequest, io.reflection.app.api.core.shared.call.DeleteNotificationsResponse)
+	 */
+	@Override
+	public void deleteNotificationsSuccess(DeleteNotificationsRequest input, DeleteNotificationsResponse output) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.core.shared.call.event.DeleteNotificationsEventHandler#deleteNotificationsFailure(io.reflection.app.api.core.shared.call.
+	 * DeleteNotificationsRequest, java.lang.Throwable)
+	 */
+	@Override
+	public void deleteNotificationsFailure(DeleteNotificationsRequest input, Throwable caught) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

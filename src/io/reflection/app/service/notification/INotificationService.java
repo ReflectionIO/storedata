@@ -9,7 +9,12 @@
 package io.reflection.app.service.notification;
 
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.Notification;
+import io.reflection.app.datatypes.shared.NotificationTypeType;
+import io.reflection.app.datatypes.shared.User;
+
+import java.util.List;
 
 import com.spacehopperstudios.service.IService;
 
@@ -40,5 +45,14 @@ public interface INotificationService extends IService {
 	 * @throws DataAccessException
 	 */
 	public void deleteNotification(Notification notification) throws DataAccessException;
+
+	/**
+	 * @param user
+	 * @param type
+	 * @param pager
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<Notification> getUserNotifications(User user, NotificationTypeType type, Pager pager) throws DataAccessException;
 
 }

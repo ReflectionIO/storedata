@@ -93,6 +93,7 @@ import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.FormType;
 import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.datatypes.shared.NotificationTypeType;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Role;
@@ -111,6 +112,7 @@ import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.datasource.DataSourceServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
+import io.reflection.app.service.notification.NotificationServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
 import io.reflection.app.service.role.RoleServiceProvider;
@@ -1922,7 +1924,7 @@ public final class Core extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
-			input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			input.item = ValidationHelper.validateItem(input.item, "input.item");
 
@@ -1954,6 +1956,25 @@ public final class Core extends ActionHandler {
 		LOG.finer("Entering getNotifications");
 		GetNotificationsResponse output = new GetNotificationsResponse();
 		try {
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			if (input.pager.sortBy == null) {
+				input.pager.sortBy = "created";
+			}
+
+			if (input.pager.sortDirection == null) {
+				input.pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
+			}
+
+			input.pager = ValidationHelper.validatePager(input.pager, "input.pager");
+			
+			output.notifications = NotificationServiceProvider.provide().getUserNotifications(input.session.user,
+					NotificationTypeType.NotificationTypeTypeInternal, input.pager);
+
+			PagerHelper.updatePager(output.pager = input.pager, output.notifications);
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;

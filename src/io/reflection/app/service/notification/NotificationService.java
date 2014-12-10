@@ -9,11 +9,18 @@
 package io.reflection.app.service.notification;
 
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.datatypes.shared.EventSubscription;
 import io.reflection.app.datatypes.shared.Notification;
 import io.reflection.app.datatypes.shared.NotificationStatusType;
 import io.reflection.app.datatypes.shared.NotificationTypeType;
+import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
@@ -80,4 +87,38 @@ final class NotificationService implements INotificationService {
 		throw new UnsupportedOperationException();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.notification.INotificationService#getUserNotifications(io.reflection.app.datatypes.shared.User,
+	 * io.reflection.app.datatypes.shared.NotificationTypeType, io.reflection.app.api.shared.datatypes.Pager)
+	 */
+	@Override
+	public List<Notification> getUserNotifications(User user, NotificationTypeType type, Pager pager) throws DataAccessException {
+		List<Notification> notifications = new ArrayList<Notification>();
+
+		String getUserNotificationsQuery = String.format("SELECT * FROM `notification` WHERE %s `deleted`='n' AND `userid`=%d ORDER BY `%s` %s LIMIT %d",
+				type == null ? "" : "`type`='" + type.toString() + "' AND", user.id.longValue(), pager.sortBy == null ? "id" : stripslashes(pager.sortBy),
+				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start == null ? Pager.DEFAULT_START.longValue()
+						: pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue() : pager.count.longValue());
+
+		Connection notificationConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeNotification.toString());
+		try {
+			notificationConnection.connect();
+			notificationConnection.executeQuery(getUserNotificationsQuery);
+
+			while (notificationConnection.fetchNextRow()) {
+				Notification notification = toNotification(notificationConnection);
+				if (notification != null) {
+					notifications.add(notification);
+				}
+			}
+		} finally {
+			if (notificationConnection != null) {
+				notificationConnection.disconnect();
+			}
+		}
+
+		return notifications;
+	}
 }

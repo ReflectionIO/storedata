@@ -18,10 +18,12 @@
 			<part:Preloader ui:field="preloaderTable">
 				<g:HTMLPanel ui:field="notificationsPanel">
 
-					<c:CellTable ui:field="notificationsTable"  styleName="table table-hover table-striped" />
 					<div class="text-left">
 						<g:Button ui:field="actions" styleName="btn btn-default text-center" visible="false">Actions</g:Button>
 					</div>
+					<c:CellTable ui:field="notificationsTable" styleName="table table-hover table-striped" />
+					<part:SimplePager styleName="text-center" ui:field="simplePager" />
+
 				</g:HTMLPanel>
 			</part:Preloader>
 
