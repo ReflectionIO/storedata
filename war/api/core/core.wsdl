@@ -1,1251 +1,1386 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <wsdl:definitions name="core" targetNamespace="http://app.reflection.io/core" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:sdc="http://app.reflection.io/core"
-    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <wsdl:types>
-        <xsd:schema targetNamespace="http://app.reflection.io/core" xmlns:sd="http://app.reflection.io">
-            <xsd:import schemaLocation="../app.xsd" namespace="http://app.reflection.io" />
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<wsdl:types>
+		<xsd:schema targetNamespace="http://app.reflection.io/core" xmlns:sd="http://app.reflection.io">
+			<xsd:import schemaLocation="../app.xsd" namespace="http://app.reflection.io" />
 
-            <xsd:element name="GetCountriesInput" type="sdc:GetCountriesRequest" />
-            <xsd:element name="GetCountriesOutput" type="sdc:GetCountriesResponse" />
+			<xsd:element name="GetCountriesInput" type="sdc:GetCountriesRequest" />
+			<xsd:element name="GetCountriesOutput" type="sdc:GetCountriesResponse" />
 
-            <xsd:element name="GetStoresInput" type="sdc:GetStoresRequest" />
-            <xsd:element name="GetStoresOutput" type="sdc:GetStoresResponse" />
+			<xsd:element name="GetStoresInput" type="sdc:GetStoresRequest" />
+			<xsd:element name="GetStoresOutput" type="sdc:GetStoresResponse" />
 
-            <xsd:element name="GetTopItemsInput" type="sdc:GetTopItemsRequest" />
-            <xsd:element name="GetTopItemsOutput" type="sdc:GetTopItemsResponse" />
+			<xsd:element name="GetTopItemsInput" type="sdc:GetTopItemsRequest" />
+			<xsd:element name="GetTopItemsOutput" type="sdc:GetTopItemsResponse" />
 
-            <xsd:element name="GetAllTopItemsInput" type="sdc:GetAllTopItemsRequest" />
-            <xsd:element name="GetAllTopItemsOutput" type="sdc:GetAllTopItemsResponse" />
+			<xsd:element name="GetAllTopItemsInput" type="sdc:GetAllTopItemsRequest" />
+			<xsd:element name="GetAllTopItemsOutput" type="sdc:GetAllTopItemsResponse" />
 
-            <xsd:element name="GetItemRanksInput" type="sdc:GetItemRanksRequest" />
-            <xsd:element name="GetItemRanksOutput" type="sdc:GetItemRanksResponse" />
+			<xsd:element name="GetItemRanksInput" type="sdc:GetItemRanksRequest" />
+			<xsd:element name="GetItemRanksOutput" type="sdc:GetItemRanksResponse" />
 
-            <xsd:element name="RegisterUserInput" type="sdc:RegisterUserRequest" />
-            <xsd:element name="RegisterUserOutput" type="sdc:RegisterUserResponse" />
+			<xsd:element name="RegisterUserInput" type="sdc:RegisterUserRequest" />
+			<xsd:element name="RegisterUserOutput" type="sdc:RegisterUserResponse" />
 
-            <xsd:element name="LoginInput" type="sdc:LoginRequest" />
-            <xsd:element name="LoginOutput" type="sdc:LoginResponse" />
+			<xsd:element name="LoginInput" type="sdc:LoginRequest" />
+			<xsd:element name="LoginOutput" type="sdc:LoginResponse" />
 
-            <xsd:element name="LogoutInput" type="sdc:LogoutRequest" />
-            <xsd:element name="LogoutOutput" type="sdc:LogoutResponse" />
+			<xsd:element name="LogoutInput" type="sdc:LogoutRequest" />
+			<xsd:element name="LogoutOutput" type="sdc:LogoutResponse" />
 
-            <xsd:element name="ChangePasswordInput" type="sdc:ChangePasswordRequest" />
-            <xsd:element name="ChangePasswordOutput" type="sdc:ChangePasswordResponse" />
-
-            <xsd:element name="ChangeUserDetailsInput" type="sdc:ChangeUserDetailsRequest" />
-            <xsd:element name="ChangeUserDetailsOutput" type="sdc:ChangeUserDetailsResponse" />
-
-            <xsd:element name="UpdateLinkedAccountInput" type="sdc:UpdateLinkedAccountRequest" />
-            <xsd:element name="UpdateLinkedAccountOutput" type="sdc:UpdateLinkedAccountResponse" />
-
-            <xsd:element name="DeleteLinkedAccountInput" type="sdc:DeleteLinkedAccountRequest" />
-            <xsd:element name="DeleteLinkedAccountOutput" type="sdc:DeleteLinkedAccountResponse" />
-
-            <xsd:element name="CheckUsernameInput" type="sdc:CheckUsernameRequest" />
-            <xsd:element name="CheckUsernameOutput" type="sdc:CheckUsernameResponse" />
-
-            <xsd:element name="GetRolesAndPermissionsInput" type="sdc:GetRolesAndPermissionsRequest" />
-            <xsd:element name="GetRolesAndPermissionsOutput" type="sdc:GetRolesAndPermissionsResponse" />
-
-            <xsd:element name="GetLinkedAccountsInput" type="sdc:GetLinkedAccountsRequest" />
-            <xsd:element name="GetLinkedAccountsOutput" type="sdc:GetLinkedAccountsResponse" />
-
-            <xsd:element name="GetLinkedAccountItemsInput" type="sdc:GetLinkedAccountItemsRequest" />
-            <xsd:element name="GetLinkedAccountItemsOutput" type="sdc:GetLinkedAccountItemsResponse" />
-
-            <xsd:element name="LinkAccountInput" type="sdc:LinkAccountRequest" />
-            <xsd:element name="LinkAccountOutput" type="sdc:LinkAccountResponse" />
-
-            <xsd:element name="IsAuthorisedInput" type="sdc:IsAuthorisedRequest" />
-            <xsd:element name="IsAuthorisedOutput" type="sdc:IsAuthorisedResponse" />
-
-            <xsd:element name="SearchForItemInput" type="sdc:SearchForItemRequest" />
-            <xsd:element name="SearchForItemOutput" type="sdc:SearchForItemResponse" />
-
-            <xsd:element name="ForgotPasswordInput" type="sdc:ForgotPasswordRequest" />
-            <xsd:element name="ForgotPasswordOutput" type="sdc:ForgotPasswordResponse" />
-
-            <xsd:element name="GetUserDetailsInput" type="sdc:GetUserDetailsRequest" />
-            <xsd:element name="GetUserDetailsOutput" type="sdc:GetUserDetailsResponse" />
-
-            <xsd:element name="GetCategoriesInput" type="sdc:GetCategoriesRequest" />
-            <xsd:element name="GetCategoriesOutput" type="sdc:GetCategoriesResponse" />
-
-            <xsd:element name="GetSalesInput" type="sdc:GetSalesRequest" />
-            <xsd:element name="GetSalesOutput" type="sdc:GetSalesResponse" />
-
-            <xsd:element name="GetItemSalesInput" type="sdc:GetItemSalesRequest" />
-            <xsd:element name="GetItemSalesOutput" type="sdc:GetItemSalesResponse" />
-
-            <xsd:element name="GetSalesRanksInput" type="sdc:GetSalesRanksRequest" />
-            <xsd:element name="GetSalesRanksOutput" type="sdc:GetSalesRanksResponse" />
-
-            <xsd:element name="GetItemSalesRanksInput" type="sdc:GetItemSalesRanksRequest" />
-            <xsd:element name="GetItemSalesRanksOutput" type="sdc:GetItemSalesRanksResponse" />
-
-            <xsd:element name="GetLinkedAccountItemInput" type="sdc:GetLinkedAccountItemRequest" />
-            <xsd:element name="GetLinkedAccountItemOutput" type="sdc:GetLinkedAccountItemResponse" />
-
-            <xsd:complexType name="GetCountriesRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="store" type="sd:Store" />
-                            <xsd:element name="pager" type="sd:Pager" />
-                        </xsd:sequence>
-                        <xsd:attribute name="query" type="xsd:string" />
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="GetCountriesResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                        <xsd:sequence>
-                            <xsd:element name="countries" type="sd:Country" maxOccurs="unbounded" />
-                            <xsd:element name="pager" type="sd:Pager" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="GetStoresRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="country" type="sd:Country" />
-                            <xsd:element name="pager" type="sd:Pager" />
-                        </xsd:sequence>
-
-                        <xsd:attribute name="query" type="xsd:string" />
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="GetStoresResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                        <xsd:sequence>
-                            <xsd:element name="stores" type="sd:Store" maxOccurs="unbounded" />
-                            <xsd:element name="pager" type="sd:Pager" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="GetTopItemsRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="country" type="sd:Country" />
-                            <xsd:element name="store" type="sd:Store" />
-                            <xsd:element name="category" type="sd:Category" />
-                            <xsd:element name="pager" type="sd:Pager" />
-                        </xsd:sequence>
-
-                        <!-- The list type e.g. for ios store it would be freeiphone or grossingipad -->
-                        <xsd:attribute name="listType" type="xsd:string" />
-                        <xsd:attribute name="on" type="xsd:dateTime" />
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="GetTopItemsResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                        <xsd:sequence>
-                            <xsd:element name="ranks" type="sd:Rank" maxOccurs="unbounded" />
-                            <xsd:element name="items" type="sd:Item" maxOccurs="unbounded" />
-                            <xsd:element name="pager" type="sd:Pager" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="GetAllTopItemsRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sdc:GetTopItemsRequest" />
-                </xsd:complexContent>
-            </xsd:complexType>
-            <xsd:complexType name="GetAllTopItemsResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                        <xsd:sequence>
-                            <xsd:element name="freeRanks" type="sd:Rank" maxOccurs="unbounded" />
-                            <xsd:element name="paidRanks" type="sd:Rank" maxOccurs="unbounded" />
-                            <xsd:element name="grossingRanks" type="sd:Rank" maxOccurs="unbounded" />
-
-                            <xsd:element name="items" type="sd:Item" maxOccurs="unbounded" />
-                            <xsd:element name="pager" type="sd:Pager" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="GetItemRanksRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="item" type="sd:Item" />
-                            <xsd:element name="country" type="sd:Country" />
-                            <xsd:element name="category" type="sd:Category" />
-                            <xsd:element name="pager" type="sd:Pager" />
-                        </xsd:sequence>
-
-                        <xsd:attribute name="start" type="xsd:dateTime" />
-                        <xsd:attribute name="end" type="xsd:dateTime" />
-                        <xsd:attribute name="listType" type="xsd:string" />
-
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-            <xsd:complexType name="GetItemRanksResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                        <xsd:sequence>
-                            <xsd:element name="ranks" type="sd:Rank" maxOccurs="unbounded" />
-                            <xsd:element name="pager" type="sd:Pager" />
-                            <xsd:element name="item" type="sd:Item" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="RegisterUserRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="user" type="sd:User" maxOccurs="1" />
-                        </xsd:sequence>
-                        <xsd:attribute name="actionCode" type="xsd:string" use="optional" />
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-            <xsd:complexType name="RegisterUserResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response" />
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="CheckUsernameRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:attribute use="required" name="username" type="xsd:string" />
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-            <xsd:complexType name="CheckUsernameResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                        <xsd:attribute name="usernameInUse" type="xsd:boolean" />
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="LoginRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:attribute type="xsd:string" name="username" />
-                        <xsd:attribute type="xsd:string" name="password" />
-                        <xsd:attribute type="xsd:boolean" name="longTerm" />
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-            <xsd:complexType name="LoginResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                        <xsd:sequence>
-                            <xsd:element name="session" type="sd:Session" maxOccurs="1" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="LogoutRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-            <xsd:complexType name="LogoutResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="ChangePasswordRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:attribute name="resetCode" type="xsd:string" />
-                        <xsd:attribute name="password" type="xsd:string" />
-                        <xsd:attribute name="newPassword" type="xsd:string" />
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-            <xsd:complexType name="ChangePasswordResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="ChangeUserDetailsRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="user" type="sd:User" maxOccurs="1" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-            <xsd:complexType name="ChangeUserDetailsResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="UpdateLinkedAccountRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="linkedAccount" type="sd:DataAccount" maxOccurs="1" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-            <xsd:complexType name="UpdateLinkedAccountResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="DeleteLinkedAccountRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="linkedAccount" type="sd:DataAccount" maxOccurs="1" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-            <xsd:complexType name="DeleteLinkedAccountResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="GetRolesAndPermissionsRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:attribute name="idsOnly" type="xsd:boolean" default="true" />
-                        <xsd:attribute name="expandRoles" type="xsd:boolean" default="false" />
-                        <xsd:attribute name="rolesOnly" type="xsd:boolean" default="false" />
-                        <xsd:attribute name="permissionsOnly" type="xsd:boolean" default="false" />
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-            <xsd:complexType name="GetRolesAndPermissionsResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                        <xsd:sequence>
-                            <xsd:element name="roles" type="sd:Role" minOccurs="0" maxOccurs="unbounded" />
-                            <xsd:element name="permissions" type="sd:Permission" minOccurs="0" maxOccurs="unbounded" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="GetLinkedAccountsRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="pager" type="sd:Pager" />
-                        </xsd:sequence>
-                        <xsd:attribute name="query" type="xsd:string" />
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="GetLinkedAccountsResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                        <xsd:sequence>
-                            <xsd:element name="linkedAccounts" type="sd:DataAccount" maxOccurs="unbounded" />
-                            <xsd:element name="dataSources" type="sd:DataSource" maxOccurs="unbounded" />
-                            <xsd:element name="pager" type="sd:Pager" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="GetLinkedAccountItemsRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="linkedAccount" type="sd:DataAccount" />
-                            <xsd:element name="store" type="sd:Store" />
-                            <xsd:element name="pager" type="sd:Pager" />
-                        </xsd:sequence>
-                        <xsd:attribute name="listType" type="xsd:string" />
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="GetLinkedAccountItemsResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                        <xsd:sequence>
-                            <xsd:element name="items" type="sd:Item" maxOccurs="unbounded" />
-                            <xsd:element name="pager" type="sd:Pager" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="LinkAccountRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="source" type="sd:DataSource" />
-                        </xsd:sequence>
-                        <xsd:attribute name="username" type="xsd:string" />
-                        <xsd:attribute name="password" type="xsd:string" />
-                        <xsd:attribute name="properties" type="xsd:string" />
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="LinkAccountResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                        <xsd:sequence>
-                            <xsd:element name="account" type="sd:DataAccount" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="IsAuthorisedRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="permissions" type="sd:Permission" minOccurs="0" maxOccurs="unbounded" />
-                            <xsd:element name="roles" type="sd:Role" minOccurs="0" maxOccurs="unbounded" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="IsAuthorisedResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                        <xsd:attribute name="authorised" type="xsd:boolean" />
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="SearchForItemRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="pager" type="sd:Pager" />
-                        </xsd:sequence>
-                        <xsd:attribute name="query" type="xsd:string" />
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="SearchForItemResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                        <xsd:sequence>
-                            <xsd:element name="items" type="sd:Item" maxOccurs="unbounded" />
-                            <xsd:element name="pager" type="sd:Pager" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="ForgotPasswordRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:attribute name="username" type="xsd:string" />
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="ForgotPasswordResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="GetUserDetailsRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:attribute name="userId" type="xsd:long" />
-                        <xsd:attribute name="actionCode" type="xsd:string" use="optional" />
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="GetUserDetailsResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                        <xsd:sequence>
-                            <xsd:element name="user" type="sd:User" maxOccurs="1" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="GetCategoriesRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="store" type="sd:Store" />
-                            <xsd:element name="pager" type="sd:Pager" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="GetCategoriesResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                        <xsd:sequence>
-                            <xsd:element name="categories" type="sd:Category" maxOccurs="unbounded" />
-                            <xsd:element name="pager" type="sd:Pager" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="GetSalesRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="linkedAccount" type="sd:DataAccount" />
-                            <xsd:element name="country" type="sd:Country" />
-                            <xsd:element name="category" type="sd:Category" />
-                            <xsd:element name="pager" type="sd:Pager" />
-                        </xsd:sequence>
-                        <xsd:attribute name="start" type="xsd:dateTime" />
-                        <xsd:attribute name="end" type="xsd:dateTime" />
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="GetSalesResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                        <xsd:sequence>
-                            <xsd:element name="sales" type="sd:Sale" maxOccurs="unbounded" />
-                            <xsd:element name="pager" type="sd:Pager" />
-                            <xsd:element name="items" type="sd:Item" maxOccurs="unbounded" />
-                            <xsd:element name="dataSource" type="sd:DataSource" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="GetItemSalesRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="item" type="sd:Item" />
-                            <xsd:element name="country" type="sd:Country" />
-                            <xsd:element name="category" type="sd:Category" />
-                            <xsd:element name="pager" type="sd:Pager" />
-                        </xsd:sequence>
-                        <xsd:attribute name="start" type="xsd:dateTime" />
-                        <xsd:attribute name="end" type="xsd:dateTime" />
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="GetItemSalesResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                        <xsd:sequence>
-                            <xsd:element name="sales" type="sd:Sale" maxOccurs="unbounded" />
-                            <xsd:element name="pager" type="sd:Pager" />
-                            <xsd:element name="item" type="sd:Item" />
-                            <xsd:element name="linkedAccount" type="sd:DataAccount" />
-                            <xsd:element name="dataSource" type="sd:DataSource" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="GetSalesRanksRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="linkedAccount" type="sd:DataAccount" />
-                            <xsd:element name="country" type="sd:Country" />
-                            <xsd:element name="category" type="sd:Category" />
-                            <xsd:element name="pager" type="sd:Pager" />
-                        </xsd:sequence>
-                        <xsd:attribute name="listType" type="xsd:string" />
-                        <xsd:attribute name="start" type="xsd:dateTime" />
-                        <xsd:attribute name="end" type="xsd:dateTime" />
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="GetSalesRanksResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                        <xsd:sequence>
-                            <xsd:element name="ranks" type="sd:Rank" maxOccurs="unbounded" />
-                            <xsd:element name="pager" type="sd:Pager" />
-                            <xsd:element name="items" type="sd:Item" maxOccurs="unbounded" />
-                            <xsd:element name="linkedAccount" type="sd:DataAccount" />
-                            <xsd:element name="dataSource" type="sd:DataSource" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="GetItemSalesRanksRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="item" type="sd:Item" />
-                            <xsd:element name="country" type="sd:Country" />
-                            <xsd:element name="category" type="sd:Category" />
-                            <xsd:element name="pager" type="sd:Pager" />
-                        </xsd:sequence>
-                        <xsd:attribute name="listType" type="xsd:string" />
-                        <xsd:attribute name="start" type="xsd:dateTime" />
-                        <xsd:attribute name="end" type="xsd:dateTime" />
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="GetItemSalesRanksResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                        <xsd:sequence>
-                            <xsd:element name="ranks" type="sd:Rank" maxOccurs="unbounded" />
-                            <xsd:element name="pager" type="sd:Pager" />
-                            <xsd:element name="item" type="sd:Item" />
-                            <xsd:element name="linkedAccount" type="sd:DataAccount" />
-                            <xsd:element name="dataSource" type="sd:DataSource" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="GetLinkedAccountItemRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="item" type="sd:Item" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-            <xsd:complexType name="GetLinkedAccountItemResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                        <xsd:sequence>
-                            <xsd:element name="item" type="sd:Item" />
-                            <xsd:element name="linkedAccount" type="sd:DataAccount" />
-                            <xsd:element name="dataSource" type="sd:DataSource" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-
-        </xsd:schema>
-    </wsdl:types>
-
-    <wsdl:message name="GetCountriesRequest">
-        <wsdl:part name="input" element="sdc:GetCountriesInput" />
+			<xsd:element name="ChangePasswordInput" type="sdc:ChangePasswordRequest" />
+			<xsd:element name="ChangePasswordOutput" type="sdc:ChangePasswordResponse" />
+
+			<xsd:element name="ChangeUserDetailsInput" type="sdc:ChangeUserDetailsRequest" />
+			<xsd:element name="ChangeUserDetailsOutput" type="sdc:ChangeUserDetailsResponse" />
+
+			<xsd:element name="UpdateLinkedAccountInput" type="sdc:UpdateLinkedAccountRequest" />
+			<xsd:element name="UpdateLinkedAccountOutput" type="sdc:UpdateLinkedAccountResponse" />
+
+			<xsd:element name="DeleteLinkedAccountInput" type="sdc:DeleteLinkedAccountRequest" />
+			<xsd:element name="DeleteLinkedAccountOutput" type="sdc:DeleteLinkedAccountResponse" />
+
+			<xsd:element name="CheckUsernameInput" type="sdc:CheckUsernameRequest" />
+			<xsd:element name="CheckUsernameOutput" type="sdc:CheckUsernameResponse" />
+
+			<xsd:element name="GetRolesAndPermissionsInput" type="sdc:GetRolesAndPermissionsRequest" />
+			<xsd:element name="GetRolesAndPermissionsOutput" type="sdc:GetRolesAndPermissionsResponse" />
+
+			<xsd:element name="GetLinkedAccountsInput" type="sdc:GetLinkedAccountsRequest" />
+			<xsd:element name="GetLinkedAccountsOutput" type="sdc:GetLinkedAccountsResponse" />
+
+			<xsd:element name="GetLinkedAccountItemsInput" type="sdc:GetLinkedAccountItemsRequest" />
+			<xsd:element name="GetLinkedAccountItemsOutput" type="sdc:GetLinkedAccountItemsResponse" />
+
+			<xsd:element name="LinkAccountInput" type="sdc:LinkAccountRequest" />
+			<xsd:element name="LinkAccountOutput" type="sdc:LinkAccountResponse" />
+
+			<xsd:element name="IsAuthorisedInput" type="sdc:IsAuthorisedRequest" />
+			<xsd:element name="IsAuthorisedOutput" type="sdc:IsAuthorisedResponse" />
+
+			<xsd:element name="SearchForItemInput" type="sdc:SearchForItemRequest" />
+			<xsd:element name="SearchForItemOutput" type="sdc:SearchForItemResponse" />
+
+			<xsd:element name="ForgotPasswordInput" type="sdc:ForgotPasswordRequest" />
+			<xsd:element name="ForgotPasswordOutput" type="sdc:ForgotPasswordResponse" />
+
+			<xsd:element name="GetUserDetailsInput" type="sdc:GetUserDetailsRequest" />
+			<xsd:element name="GetUserDetailsOutput" type="sdc:GetUserDetailsResponse" />
+
+			<xsd:element name="GetCategoriesInput" type="sdc:GetCategoriesRequest" />
+			<xsd:element name="GetCategoriesOutput" type="sdc:GetCategoriesResponse" />
+
+			<xsd:element name="GetSalesInput" type="sdc:GetSalesRequest" />
+			<xsd:element name="GetSalesOutput" type="sdc:GetSalesResponse" />
+
+			<xsd:element name="GetItemSalesInput" type="sdc:GetItemSalesRequest" />
+			<xsd:element name="GetItemSalesOutput" type="sdc:GetItemSalesResponse" />
+
+			<xsd:element name="GetSalesRanksInput" type="sdc:GetSalesRanksRequest" />
+			<xsd:element name="GetSalesRanksOutput" type="sdc:GetSalesRanksResponse" />
+
+			<xsd:element name="GetItemSalesRanksInput" type="sdc:GetItemSalesRanksRequest" />
+			<xsd:element name="GetItemSalesRanksOutput" type="sdc:GetItemSalesRanksResponse" />
+
+			<xsd:element name="GetLinkedAccountItemInput" type="sdc:GetLinkedAccountItemRequest" />
+			<xsd:element name="GetLinkedAccountItemOutput" type="sdc:GetLinkedAccountItemResponse" />
+
+			<xsd:element name="GetNotificationsInput" type="sdc:GetNotificationsRequest" />
+			<xsd:element name="GetNotificationsOutput" type="sdc:GetNotificationsResponse" />
+
+			<xsd:element name="DeleteNotificationsInput" type="sdc:DeleteNotificationsRequest" />
+			<xsd:element name="DeleteNotificationsOutput" type="sdc:DeleteNotificationsResponse" />
+
+			<xsd:element name="UpdateNotificationsInput" type="sdc:UpdateNotificationsRequest" />
+			<xsd:element name="UpdateNotificationsOutput" type="sdc:UpdateNotificationsResponse" />
+
+			<xsd:complexType name="GetCountriesRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="store" type="sd:Store" />
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+						<xsd:attribute name="query" type="xsd:string" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetCountriesResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+							<xsd:element name="countries" type="sd:Country" maxOccurs="unbounded" />
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetStoresRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="country" type="sd:Country" />
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+
+						<xsd:attribute name="query" type="xsd:string" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetStoresResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+							<xsd:element name="stores" type="sd:Store" maxOccurs="unbounded" />
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetTopItemsRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="country" type="sd:Country" />
+							<xsd:element name="store" type="sd:Store" />
+							<xsd:element name="category" type="sd:Category" />
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+
+						<!-- The list type e.g. for ios store it would be freeiphone or grossingipad -->
+						<xsd:attribute name="listType" type="xsd:string" />
+						<xsd:attribute name="on" type="xsd:dateTime" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetTopItemsResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+							<xsd:element name="ranks" type="sd:Rank" maxOccurs="unbounded" />
+							<xsd:element name="items" type="sd:Item" maxOccurs="unbounded" />
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetAllTopItemsRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sdc:GetTopItemsRequest" />
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:complexType name="GetAllTopItemsResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+							<xsd:element name="freeRanks" type="sd:Rank" maxOccurs="unbounded" />
+							<xsd:element name="paidRanks" type="sd:Rank" maxOccurs="unbounded" />
+							<xsd:element name="grossingRanks" type="sd:Rank" maxOccurs="unbounded" />
+
+							<xsd:element name="items" type="sd:Item" maxOccurs="unbounded" />
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetItemRanksRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="item" type="sd:Item" />
+							<xsd:element name="country" type="sd:Country" />
+							<xsd:element name="category" type="sd:Category" />
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+
+						<xsd:attribute name="start" type="xsd:dateTime" />
+						<xsd:attribute name="end" type="xsd:dateTime" />
+						<xsd:attribute name="listType" type="xsd:string" />
+
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:complexType name="GetItemRanksResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+							<xsd:element name="ranks" type="sd:Rank" maxOccurs="unbounded" />
+							<xsd:element name="pager" type="sd:Pager" />
+							<xsd:element name="item" type="sd:Item" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="RegisterUserRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="user" type="sd:User" maxOccurs="1" />
+						</xsd:sequence>
+						<xsd:attribute name="actionCode" type="xsd:string" use="optional" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:complexType name="RegisterUserResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response" />
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="CheckUsernameRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:attribute use="required" name="username" type="xsd:string" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:complexType name="CheckUsernameResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:attribute name="usernameInUse" type="xsd:boolean" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="LoginRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:attribute type="xsd:string" name="username" />
+						<xsd:attribute type="xsd:string" name="password" />
+						<xsd:attribute type="xsd:boolean" name="longTerm" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:complexType name="LoginResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+							<xsd:element name="session" type="sd:Session" maxOccurs="1" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="LogoutRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:complexType name="LogoutResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="ChangePasswordRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:attribute name="resetCode" type="xsd:string" />
+						<xsd:attribute name="password" type="xsd:string" />
+						<xsd:attribute name="newPassword" type="xsd:string" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:complexType name="ChangePasswordResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="ChangeUserDetailsRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="user" type="sd:User" maxOccurs="1" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:complexType name="ChangeUserDetailsResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="UpdateLinkedAccountRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="linkedAccount" type="sd:DataAccount" maxOccurs="1" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:complexType name="UpdateLinkedAccountResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="DeleteLinkedAccountRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="linkedAccount" type="sd:DataAccount" maxOccurs="1" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:complexType name="DeleteLinkedAccountResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetRolesAndPermissionsRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:attribute name="idsOnly" type="xsd:boolean" default="true" />
+						<xsd:attribute name="expandRoles" type="xsd:boolean" default="false" />
+						<xsd:attribute name="rolesOnly" type="xsd:boolean" default="false" />
+						<xsd:attribute name="permissionsOnly" type="xsd:boolean" default="false" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:complexType name="GetRolesAndPermissionsResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+							<xsd:element name="roles" type="sd:Role" minOccurs="0" maxOccurs="unbounded" />
+							<xsd:element name="permissions" type="sd:Permission" minOccurs="0" maxOccurs="unbounded" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetLinkedAccountsRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+						<xsd:attribute name="query" type="xsd:string" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetLinkedAccountsResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+							<xsd:element name="linkedAccounts" type="sd:DataAccount" maxOccurs="unbounded" />
+							<xsd:element name="dataSources" type="sd:DataSource" maxOccurs="unbounded" />
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetLinkedAccountItemsRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="linkedAccount" type="sd:DataAccount" />
+							<xsd:element name="store" type="sd:Store" />
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+						<xsd:attribute name="listType" type="xsd:string" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetLinkedAccountItemsResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+							<xsd:element name="items" type="sd:Item" maxOccurs="unbounded" />
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="LinkAccountRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="source" type="sd:DataSource" />
+						</xsd:sequence>
+						<xsd:attribute name="username" type="xsd:string" />
+						<xsd:attribute name="password" type="xsd:string" />
+						<xsd:attribute name="properties" type="xsd:string" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="LinkAccountResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+							<xsd:element name="account" type="sd:DataAccount" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="IsAuthorisedRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="permissions" type="sd:Permission" minOccurs="0" maxOccurs="unbounded" />
+							<xsd:element name="roles" type="sd:Role" minOccurs="0" maxOccurs="unbounded" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="IsAuthorisedResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:attribute name="authorised" type="xsd:boolean" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="SearchForItemRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+						<xsd:attribute name="query" type="xsd:string" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="SearchForItemResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+							<xsd:element name="items" type="sd:Item" maxOccurs="unbounded" />
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="ForgotPasswordRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:attribute name="username" type="xsd:string" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="ForgotPasswordResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetUserDetailsRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:attribute name="userId" type="xsd:long" />
+						<xsd:attribute name="actionCode" type="xsd:string" use="optional" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetUserDetailsResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+							<xsd:element name="user" type="sd:User" maxOccurs="1" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetCategoriesRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="store" type="sd:Store" />
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetCategoriesResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+							<xsd:element name="categories" type="sd:Category" maxOccurs="unbounded" />
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetSalesRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="linkedAccount" type="sd:DataAccount" />
+							<xsd:element name="country" type="sd:Country" />
+							<xsd:element name="category" type="sd:Category" />
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+						<xsd:attribute name="start" type="xsd:dateTime" />
+						<xsd:attribute name="end" type="xsd:dateTime" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetSalesResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+							<xsd:element name="sales" type="sd:Sale" maxOccurs="unbounded" />
+							<xsd:element name="pager" type="sd:Pager" />
+							<xsd:element name="items" type="sd:Item" maxOccurs="unbounded" />
+							<xsd:element name="dataSource" type="sd:DataSource" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetItemSalesRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="item" type="sd:Item" />
+							<xsd:element name="country" type="sd:Country" />
+							<xsd:element name="category" type="sd:Category" />
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+						<xsd:attribute name="start" type="xsd:dateTime" />
+						<xsd:attribute name="end" type="xsd:dateTime" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetItemSalesResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+							<xsd:element name="sales" type="sd:Sale" maxOccurs="unbounded" />
+							<xsd:element name="pager" type="sd:Pager" />
+							<xsd:element name="item" type="sd:Item" />
+							<xsd:element name="linkedAccount" type="sd:DataAccount" />
+							<xsd:element name="dataSource" type="sd:DataSource" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetSalesRanksRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="linkedAccount" type="sd:DataAccount" />
+							<xsd:element name="country" type="sd:Country" />
+							<xsd:element name="category" type="sd:Category" />
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+						<xsd:attribute name="listType" type="xsd:string" />
+						<xsd:attribute name="start" type="xsd:dateTime" />
+						<xsd:attribute name="end" type="xsd:dateTime" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetSalesRanksResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+							<xsd:element name="ranks" type="sd:Rank" maxOccurs="unbounded" />
+							<xsd:element name="pager" type="sd:Pager" />
+							<xsd:element name="items" type="sd:Item" maxOccurs="unbounded" />
+							<xsd:element name="linkedAccount" type="sd:DataAccount" />
+							<xsd:element name="dataSource" type="sd:DataSource" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetItemSalesRanksRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="item" type="sd:Item" />
+							<xsd:element name="country" type="sd:Country" />
+							<xsd:element name="category" type="sd:Category" />
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+						<xsd:attribute name="listType" type="xsd:string" />
+						<xsd:attribute name="start" type="xsd:dateTime" />
+						<xsd:attribute name="end" type="xsd:dateTime" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetItemSalesRanksResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+							<xsd:element name="ranks" type="sd:Rank" maxOccurs="unbounded" />
+							<xsd:element name="pager" type="sd:Pager" />
+							<xsd:element name="item" type="sd:Item" />
+							<xsd:element name="linkedAccount" type="sd:DataAccount" />
+							<xsd:element name="dataSource" type="sd:DataSource" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetLinkedAccountItemRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="item" type="sd:Item" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetLinkedAccountItemResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+							<xsd:element name="item" type="sd:Item" />
+							<xsd:element name="linkedAccount" type="sd:DataAccount" />
+							<xsd:element name="dataSource" type="sd:DataSource" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetNotificationsRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+						<xsd:attribute name="query" type="xsd:string" />
+						<xsd:attribute name="includeDeleted" type="xsd:boolean" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetNotificationsResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+							<xsd:element name="notifications" type="sd:Notification" maxOccurs="unbounded" />
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="DeleteNotificationsRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="notifications" type="sd:Notification" maxOccurs="unbounded" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="DeleteNotificationsResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="UpdateNotificationsRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="notifications" type="sd:Notification" maxOccurs="unbounded" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="UpdateNotificationsResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+		</xsd:schema>
+	</wsdl:types>
+
+	<wsdl:message name="GetCountriesRequest">
+		<wsdl:part name="input" element="sdc:GetCountriesInput" />
+	</wsdl:message>
+	<wsdl:message name="GetCountriesResponse">
+		<wsdl:part name="output" element="sdc:GetCountriesOutput" />
+	</wsdl:message>
+	<wsdl:message name="GetStoresRequest">
+		<wsdl:part name="input" element="sdc:GetStoresInput" />
+	</wsdl:message>
+	<wsdl:message name="GetStoresResponse">
+		<wsdl:part name="output" element="sdc:GetStoresOutput" />
+	</wsdl:message>
+
+	<wsdl:message name="GetTopItemsRequest">
+		<wsdl:part name="input" element="sdc:GetTopItemsInput" />
+	</wsdl:message>
+	<wsdl:message name="GetTopItemsResponse">
+		<wsdl:part name="output" element="sdc:GetTopItemsOutput" />
+	</wsdl:message>
+
+	<wsdl:message name="GetAllTopItemsRequest">
+		<wsdl:part name="input" element="sdc:GetAllTopItemsInput" />
+	</wsdl:message>
+	<wsdl:message name="GetAllTopItemsResponse">
+		<wsdl:part name="output" element="sdc:GetAllTopItemsOutput" />
+	</wsdl:message>
+
+	<wsdl:message name="GetItemRanksRequest">
+		<wsdl:part name="input" element="sdc:GetItemRanksInput" />
+	</wsdl:message>
+	<wsdl:message name="GetItemRanksResponse">
+		<wsdl:part name="output" element="sdc:GetItemRanksOutput" />
+	</wsdl:message>
+
+	<wsdl:message name="RegisterUserRequest">
+		<wsdl:part name="input" element="sdc:RegisterUserInput" />
+	</wsdl:message>
+	<wsdl:message name="RegisterUserResponse">
+		<wsdl:part name="output" element="sdc:RegisterUserOutput" />
+	</wsdl:message>
+
+	<wsdl:message name="LoginRequest">
+		<wsdl:part name="input" element="sdc:LoginInput" />
+	</wsdl:message>
+	<wsdl:message name="LoginResponse">
+		<wsdl:part name="output" element="sdc:LoginOutput" />
+	</wsdl:message>
+
+	<wsdl:message name="LogoutRequest">
+		<wsdl:part name="input" element="sdc:LogoutInput" />
+	</wsdl:message>
+	<wsdl:message name="LogoutResponse">
+		<wsdl:part name="output" element="sdc:LogoutOutput" />
+	</wsdl:message>
+
+	<wsdl:message name="ChangePasswordRequest">
+		<wsdl:part name="input" element="sdc:ChangePasswordInput" />
+	</wsdl:message>
+	<wsdl:message name="ChangePasswordResponse">
+		<wsdl:part name="output" element="sdc:ChangePasswordOutput" />
+	</wsdl:message>
+
+	<wsdl:message name="ChangeUserDetailsRequest">
+		<wsdl:part name="input" element="sdc:ChangeUserDetailsInput" />
+	</wsdl:message>
+	<wsdl:message name="ChangeUserDetailsResponse">
+		<wsdl:part name="output" element="sdc:ChangeUserDetailsOutput" />
+	</wsdl:message>
+
+	<wsdl:message name="UpdateLinkedAccountRequest">
+		<wsdl:part name="input" element="sdc:UpdateLinkedAccountInput" />
+	</wsdl:message>
+	<wsdl:message name="UpdateLinkedAccountResponse">
+		<wsdl:part name="output" element="sdc:UpdateLinkedAccountOutput" />
+	</wsdl:message>
+
+	<wsdl:message name="DeleteLinkedAccountRequest">
+		<wsdl:part name="input" element="sdc:DeleteLinkedAccountInput" />
+	</wsdl:message>
+	<wsdl:message name="DeleteLinkedAccountResponse">
+		<wsdl:part name="output" element="sdc:DeleteLinkedAccountOutput" />
+	</wsdl:message>
+
+	<wsdl:message name="CheckUsernameRequest">
+		<wsdl:part name="input" element="sdc:CheckUsernameInput" />
+	</wsdl:message>
+	<wsdl:message name="CheckUsernameResponse">
+		<wsdl:part name="output" element="sdc:CheckUsernameOutput" />
+	</wsdl:message>
+
+	<wsdl:message name="GetRolesAndPermissionsRequest">
+		<wsdl:part name="input" element="sdc:GetRolesAndPermissionsInput" />
+	</wsdl:message>
+	<wsdl:message name="GetRolesAndPermissionsResponse">
+		<wsdl:part name="output" element="sdc:GetRolesAndPermissionsOutput" />
+	</wsdl:message>
+
+	<wsdl:message name="GetLinkedAccountsRequest">
+		<wsdl:part name="input" element="sdc:GetLinkedAccountsInput" />
+	</wsdl:message>
+	<wsdl:message name="GetLinkedAccountsResponse">
+		<wsdl:part name="output" element="sdc:GetLinkedAccountsOutput" />
+	</wsdl:message>
+
+	<wsdl:message name="GetLinkedAccountItemsRequest">
+		<wsdl:part name="input" element="sdc:GetLinkedAccountItemsInput" />
+	</wsdl:message>
+	<wsdl:message name="GetLinkedAccountItemsResponse">
+		<wsdl:part name="output" element="sdc:GetLinkedAccountItemsOutput" />
+	</wsdl:message>
+
+	<wsdl:message name="LinkAccountRequest">
+		<wsdl:part name="input" element="sdc:LinkAccountInput" />
+	</wsdl:message>
+	<wsdl:message name="LinkAccountResponse">
+		<wsdl:part name="output" element="sdc:LinkAccountOutput" />
+	</wsdl:message>
+
+	<wsdl:message name="IsAuthorisedRequest">
+		<wsdl:part name="input" element="sdc:IsAuthorisedInput" />
+	</wsdl:message>
+	<wsdl:message name="IsAuthorisedResponse">
+		<wsdl:part name="output" element="sdc:IsAuthorisedOutput" />
+	</wsdl:message>
+
+	<wsdl:message name="SearchForItemRequest">
+		<wsdl:part name="input" element="sdc:SearchForItemInput" />
+	</wsdl:message>
+	<wsdl:message name="SearchForItemResponse">
+		<wsdl:part name="output" element="sdc:SearchForItemOutput" />
+	</wsdl:message>
+
+	<wsdl:message name="ForgotPasswordRequest">
+		<wsdl:part name="input" element="sdc:ForgotPasswordInput" />
+	</wsdl:message>
+	<wsdl:message name="ForgotPasswordResponse">
+		<wsdl:part name="output" element="sdc:ForgotPasswordOutput" />
+	</wsdl:message>
+
+	<wsdl:message name="GetUserDetailsRequest">
+		<wsdl:part name="input" element="sdc:GetUserDetailsInput" />
+	</wsdl:message>
+	<wsdl:message name="GetUserDetailsResponse">
+		<wsdl:part name="output" element="sdc:GetUserDetailsOutput" />
+	</wsdl:message>
+
+	<wsdl:message name="GetCategoriesRequest">
+		<wsdl:part name="input" element="sdc:GetCategoriesInput" />
+	</wsdl:message>
+	<wsdl:message name="GetCategoriesResponse">
+		<wsdl:part name="output" element="sdc:GetCategoriesOutput" />
+	</wsdl:message>
+
+	<wsdl:message name="GetSalesRequest">
+		<wsdl:part name="input" element="sdc:GetSalesInput" />
+	</wsdl:message>
+	<wsdl:message name="GetSalesResponse">
+		<wsdl:part name="output" element="sdc:GetSalesOutput" />
+	</wsdl:message>
+
+	<wsdl:message name="GetItemSalesRequest">
+		<wsdl:part name="input" element="sdc:GetItemSalesInput" />
+	</wsdl:message>
+	<wsdl:message name="GetItemSalesResponse">
+		<wsdl:part name="output" element="sdc:GetItemSalesOutput" />
+	</wsdl:message>
+
+	<wsdl:message name="GetSalesRanksRequest">
+		<wsdl:part name="input" element="sdc:GetSalesRanksInput" />
+	</wsdl:message>
+	<wsdl:message name="GetSalesRanksResponse">
+		<wsdl:part name="output" element="sdc:GetSalesRanksOutput" />
+	</wsdl:message>
+
+	<wsdl:message name="GetItemSalesRanksRequest">
+		<wsdl:part name="input" element="sdc:GetItemSalesRanksInput" />
+	</wsdl:message>
+	<wsdl:message name="GetItemSalesRanksResponse">
+		<wsdl:part name="output" element="sdc:GetItemSalesRanksOutput" />
+	</wsdl:message>
+
+	<wsdl:message name="GetLinkedAccountItemRequest">
+		<wsdl:part name="input" element="sdc:GetLinkedAccountItemInput" />
+	</wsdl:message>
+	<wsdl:message name="GetLinkedAccountItemResponse">
+		<wsdl:part name="output" element="sdc:GetLinkedAccountItemOutput" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetNotificationsRequest">
+        <wsdl:part name="input" element="sdc:GetNotificationsInput" />
     </wsdl:message>
-    <wsdl:message name="GetCountriesResponse">
-        <wsdl:part name="output" element="sdc:GetCountriesOutput" />
-    </wsdl:message>
-    <wsdl:message name="GetStoresRequest">
-        <wsdl:part name="input" element="sdc:GetStoresInput" />
-    </wsdl:message>
-    <wsdl:message name="GetStoresResponse">
-        <wsdl:part name="output" element="sdc:GetStoresOutput" />
-    </wsdl:message>
-
-    <wsdl:message name="GetTopItemsRequest">
-        <wsdl:part name="input" element="sdc:GetTopItemsInput" />
-    </wsdl:message>
-    <wsdl:message name="GetTopItemsResponse">
-        <wsdl:part name="output" element="sdc:GetTopItemsOutput" />
-    </wsdl:message>
-
-    <wsdl:message name="GetAllTopItemsRequest">
-        <wsdl:part name="input" element="sdc:GetAllTopItemsInput" />
-    </wsdl:message>
-    <wsdl:message name="GetAllTopItemsResponse">
-        <wsdl:part name="output" element="sdc:GetAllTopItemsOutput" />
-    </wsdl:message>
-
-    <wsdl:message name="GetItemRanksRequest">
-        <wsdl:part name="input" element="sdc:GetItemRanksInput" />
-    </wsdl:message>
-    <wsdl:message name="GetItemRanksResponse">
-        <wsdl:part name="output" element="sdc:GetItemRanksOutput" />
-    </wsdl:message>
-
-    <wsdl:message name="RegisterUserRequest">
-        <wsdl:part name="input" element="sdc:RegisterUserInput" />
-    </wsdl:message>
-    <wsdl:message name="RegisterUserResponse">
-        <wsdl:part name="output" element="sdc:RegisterUserOutput" />
-    </wsdl:message>
-
-    <wsdl:message name="LoginRequest">
-        <wsdl:part name="input" element="sdc:LoginInput" />
-    </wsdl:message>
-    <wsdl:message name="LoginResponse">
-        <wsdl:part name="output" element="sdc:LoginOutput" />
-    </wsdl:message>
-
-    <wsdl:message name="LogoutRequest">
-        <wsdl:part name="input" element="sdc:LogoutInput" />
-    </wsdl:message>
-    <wsdl:message name="LogoutResponse">
-        <wsdl:part name="output" element="sdc:LogoutOutput" />
-    </wsdl:message>
-
-    <wsdl:message name="ChangePasswordRequest">
-        <wsdl:part name="input" element="sdc:ChangePasswordInput" />
-    </wsdl:message>
-    <wsdl:message name="ChangePasswordResponse">
-        <wsdl:part name="output" element="sdc:ChangePasswordOutput" />
-    </wsdl:message>
-
-    <wsdl:message name="ChangeUserDetailsRequest">
-        <wsdl:part name="input" element="sdc:ChangeUserDetailsInput" />
-    </wsdl:message>
-    <wsdl:message name="ChangeUserDetailsResponse">
-        <wsdl:part name="output" element="sdc:ChangeUserDetailsOutput" />
-    </wsdl:message>
-
-    <wsdl:message name="UpdateLinkedAccountRequest">
-        <wsdl:part name="input" element="sdc:UpdateLinkedAccountInput" />
-    </wsdl:message>
-    <wsdl:message name="UpdateLinkedAccountResponse">
-        <wsdl:part name="output" element="sdc:UpdateLinkedAccountOutput" />
-    </wsdl:message>
-
-    <wsdl:message name="DeleteLinkedAccountRequest">
-        <wsdl:part name="input" element="sdc:DeleteLinkedAccountInput" />
-    </wsdl:message>
-    <wsdl:message name="DeleteLinkedAccountResponse">
-        <wsdl:part name="output" element="sdc:DeleteLinkedAccountOutput" />
-    </wsdl:message>
-
-    <wsdl:message name="CheckUsernameRequest">
-        <wsdl:part name="input" element="sdc:CheckUsernameInput" />
-    </wsdl:message>
-    <wsdl:message name="CheckUsernameResponse">
-        <wsdl:part name="output" element="sdc:CheckUsernameOutput" />
-    </wsdl:message>
-
-    <wsdl:message name="GetRolesAndPermissionsRequest">
-        <wsdl:part name="input" element="sdc:GetRolesAndPermissionsInput" />
-    </wsdl:message>
-    <wsdl:message name="GetRolesAndPermissionsResponse">
-        <wsdl:part name="output" element="sdc:GetRolesAndPermissionsOutput" />
-    </wsdl:message>
-
-    <wsdl:message name="GetLinkedAccountsRequest">
-        <wsdl:part name="input" element="sdc:GetLinkedAccountsInput" />
-    </wsdl:message>
-    <wsdl:message name="GetLinkedAccountsResponse">
-        <wsdl:part name="output" element="sdc:GetLinkedAccountsOutput" />
-    </wsdl:message>
-
-    <wsdl:message name="GetLinkedAccountItemsRequest">
-        <wsdl:part name="input" element="sdc:GetLinkedAccountItemsInput" />
-    </wsdl:message>
-    <wsdl:message name="GetLinkedAccountItemsResponse">
-        <wsdl:part name="output" element="sdc:GetLinkedAccountItemsOutput" />
-    </wsdl:message>
-
-    <wsdl:message name="LinkAccountRequest">
-        <wsdl:part name="input" element="sdc:LinkAccountInput" />
-    </wsdl:message>
-    <wsdl:message name="LinkAccountResponse">
-        <wsdl:part name="output" element="sdc:LinkAccountOutput" />
-    </wsdl:message>
-
-    <wsdl:message name="IsAuthorisedRequest">
-        <wsdl:part name="input" element="sdc:IsAuthorisedInput" />
-    </wsdl:message>
-    <wsdl:message name="IsAuthorisedResponse">
-        <wsdl:part name="output" element="sdc:IsAuthorisedOutput" />
-    </wsdl:message>
-
-    <wsdl:message name="SearchForItemRequest">
-        <wsdl:part name="input" element="sdc:SearchForItemInput" />
-    </wsdl:message>
-    <wsdl:message name="SearchForItemResponse">
-        <wsdl:part name="output" element="sdc:SearchForItemOutput" />
-    </wsdl:message>
-
-    <wsdl:message name="ForgotPasswordRequest">
-        <wsdl:part name="input" element="sdc:ForgotPasswordInput" />
-    </wsdl:message>
-    <wsdl:message name="ForgotPasswordResponse">
-        <wsdl:part name="output" element="sdc:ForgotPasswordOutput" />
-    </wsdl:message>
-
-    <wsdl:message name="GetUserDetailsRequest">
-        <wsdl:part name="input" element="sdc:GetUserDetailsInput" />
-    </wsdl:message>
-    <wsdl:message name="GetUserDetailsResponse">
-        <wsdl:part name="output" element="sdc:GetUserDetailsOutput" />
-    </wsdl:message>
-
-    <wsdl:message name="GetCategoriesRequest">
-        <wsdl:part name="input" element="sdc:GetCategoriesInput" />
-    </wsdl:message>
-    <wsdl:message name="GetCategoriesResponse">
-        <wsdl:part name="output" element="sdc:GetCategoriesOutput" />
-    </wsdl:message>
-
-    <wsdl:message name="GetSalesRequest">
-        <wsdl:part name="input" element="sdc:GetSalesInput" />
-    </wsdl:message>
-    <wsdl:message name="GetSalesResponse">
-        <wsdl:part name="output" element="sdc:GetSalesOutput" />
-    </wsdl:message>
-
-    <wsdl:message name="GetItemSalesRequest">
-        <wsdl:part name="input" element="sdc:GetItemSalesInput" />
-    </wsdl:message>
-    <wsdl:message name="GetItemSalesResponse">
-        <wsdl:part name="output" element="sdc:GetItemSalesOutput" />
-    </wsdl:message>
-
-    <wsdl:message name="GetSalesRanksRequest">
-        <wsdl:part name="input" element="sdc:GetSalesRanksInput" />
-    </wsdl:message>
-    <wsdl:message name="GetSalesRanksResponse">
-        <wsdl:part name="output" element="sdc:GetSalesRanksOutput" />
-    </wsdl:message>
-
-    <wsdl:message name="GetItemSalesRanksRequest">
-        <wsdl:part name="input" element="sdc:GetItemSalesRanksInput" />
-    </wsdl:message>
-    <wsdl:message name="GetItemSalesRanksResponse">
-        <wsdl:part name="output" element="sdc:GetItemSalesRanksOutput" />
+    <wsdl:message name="GetNotificationsResponse">
+        <wsdl:part name="output" element="sdc:GetNotificationsOutput" />
     </wsdl:message>
     
-    <wsdl:message name="GetLinkedAccountItemRequest">
-        <wsdl:part name="input" element="sdc:GetLinkedAccountItemInput" />
+    <wsdl:message name="DeleteNotificationsRequest">
+        <wsdl:part name="input" element="sdc:DeleteNotificationsInput" />
     </wsdl:message>
-    <wsdl:message name="GetLinkedAccountItemResponse">
-        <wsdl:part name="output" element="sdc:GetLinkedAccountItemOutput" />
+    <wsdl:message name="DeleteNotificationsResponse">
+        <wsdl:part name="output" element="sdc:DeleteNotificationsOutput" />
     </wsdl:message>
+    
+    <wsdl:message name="UpdateNotificationsRequest">
+        <wsdl:part name="input" element="sdc:UpdateNotificationsInput" />
+    </wsdl:message>
+    <wsdl:message name="UpdateNotificationsResponse">
+        <wsdl:part name="output" element="sdc:UpdateNotificationsOutput" />
+    </wsdl:message>
+    
 
-    <wsdl:portType name="core">
-        <wsdl:operation name="GetCountries">
-            <wsdl:input message="sdc:GetCountriesRequest" />
-            <wsdl:output message="sdc:GetCountriesResponse" />
-        </wsdl:operation>
+	<wsdl:portType name="core">
+		<wsdl:operation name="GetCountries">
+			<wsdl:input message="sdc:GetCountriesRequest" />
+			<wsdl:output message="sdc:GetCountriesResponse" />
+		</wsdl:operation>
 
-        <wsdl:operation name="GetStores">
-            <wsdl:input message="sdc:GetStoresRequest" />
-            <wsdl:output message="sdc:GetStoresResponse" />
-        </wsdl:operation>
+		<wsdl:operation name="GetStores">
+			<wsdl:input message="sdc:GetStoresRequest" />
+			<wsdl:output message="sdc:GetStoresResponse" />
+		</wsdl:operation>
 
-        <wsdl:operation name="GetTopItems">
-            <wsdl:input message="sdc:GetTopItemsRequest" />
-            <wsdl:output message="sdc:GetTopItemsResponse" />
-        </wsdl:operation>
+		<wsdl:operation name="GetTopItems">
+			<wsdl:input message="sdc:GetTopItemsRequest" />
+			<wsdl:output message="sdc:GetTopItemsResponse" />
+		</wsdl:operation>
 
-        <wsdl:operation name="GetAllTopItems">
-            <wsdl:input message="sdc:GetAllTopItemsRequest" />
-            <wsdl:output message="sdc:GetAllTopItemsResponse" />
-        </wsdl:operation>
+		<wsdl:operation name="GetAllTopItems">
+			<wsdl:input message="sdc:GetAllTopItemsRequest" />
+			<wsdl:output message="sdc:GetAllTopItemsResponse" />
+		</wsdl:operation>
 
-        <wsdl:operation name="GetItemRanks">
-            <wsdl:input message="sdc:GetItemRanksRequest" />
-            <wsdl:output message="sdc:GetItemRanksResponse" />
-        </wsdl:operation>
+		<wsdl:operation name="GetItemRanks">
+			<wsdl:input message="sdc:GetItemRanksRequest" />
+			<wsdl:output message="sdc:GetItemRanksResponse" />
+		</wsdl:operation>
 
-        <wsdl:operation name="RegisterUser">
-            <wsdl:input message="sdc:RegisterUserRequest" />
-            <wsdl:output message="sdc:RegisterUserResponse" />
-        </wsdl:operation>
+		<wsdl:operation name="RegisterUser">
+			<wsdl:input message="sdc:RegisterUserRequest" />
+			<wsdl:output message="sdc:RegisterUserResponse" />
+		</wsdl:operation>
 
-        <wsdl:operation name="Login">
-            <wsdl:input message="sdc:LoginRequest" />
-            <wsdl:output message="sdc:LoginResponse" />
-        </wsdl:operation>
+		<wsdl:operation name="Login">
+			<wsdl:input message="sdc:LoginRequest" />
+			<wsdl:output message="sdc:LoginResponse" />
+		</wsdl:operation>
 
-        <wsdl:operation name="Logout">
-            <wsdl:input message="sdc:LogoutRequest" />
-            <wsdl:output message="sdc:LogoutResponse" />
-        </wsdl:operation>
+		<wsdl:operation name="Logout">
+			<wsdl:input message="sdc:LogoutRequest" />
+			<wsdl:output message="sdc:LogoutResponse" />
+		</wsdl:operation>
 
-        <wsdl:operation name="ChangePassword">
-            <wsdl:input message="sdc:ChangePasswordRequest" />
-            <wsdl:output message="sdc:ChangePasswordResponse" />
-        </wsdl:operation>
+		<wsdl:operation name="ChangePassword">
+			<wsdl:input message="sdc:ChangePasswordRequest" />
+			<wsdl:output message="sdc:ChangePasswordResponse" />
+		</wsdl:operation>
 
-        <wsdl:operation name="ChangeUserDetails">
-            <wsdl:input message="sdc:ChangeUserDetailsRequest" />
-            <wsdl:output message="sdc:ChangeUserDetailsResponse" />
-        </wsdl:operation>
+		<wsdl:operation name="ChangeUserDetails">
+			<wsdl:input message="sdc:ChangeUserDetailsRequest" />
+			<wsdl:output message="sdc:ChangeUserDetailsResponse" />
+		</wsdl:operation>
 
-        <wsdl:operation name="UpdateLinkedAccount">
-            <wsdl:input message="sdc:UpdateLinkedAccountRequest" />
-            <wsdl:output message="sdc:UpdateLinkedAccountResponse" />
-        </wsdl:operation>
+		<wsdl:operation name="UpdateLinkedAccount">
+			<wsdl:input message="sdc:UpdateLinkedAccountRequest" />
+			<wsdl:output message="sdc:UpdateLinkedAccountResponse" />
+		</wsdl:operation>
 
-        <wsdl:operation name="DeleteLinkedAccount">
-            <wsdl:input message="sdc:DeleteLinkedAccountRequest" />
-            <wsdl:output message="sdc:DeleteLinkedAccountResponse" />
-        </wsdl:operation>
+		<wsdl:operation name="DeleteLinkedAccount">
+			<wsdl:input message="sdc:DeleteLinkedAccountRequest" />
+			<wsdl:output message="sdc:DeleteLinkedAccountResponse" />
+		</wsdl:operation>
 
-        <wsdl:operation name="CheckUsername">
-            <wsdl:input message="sdc:CheckUsernameRequest" />
-            <wsdl:output message="sdc:CheckUsernameResponse" />
-        </wsdl:operation>
+		<wsdl:operation name="CheckUsername">
+			<wsdl:input message="sdc:CheckUsernameRequest" />
+			<wsdl:output message="sdc:CheckUsernameResponse" />
+		</wsdl:operation>
 
-        <wsdl:operation name="GetRolesAndPermissions">
-            <wsdl:input message="sdc:GetRolesAndPermissionsRequest" />
-            <wsdl:output message="sdc:GetRolesAndPermissionsResponse" />
-        </wsdl:operation>
+		<wsdl:operation name="GetRolesAndPermissions">
+			<wsdl:input message="sdc:GetRolesAndPermissionsRequest" />
+			<wsdl:output message="sdc:GetRolesAndPermissionsResponse" />
+		</wsdl:operation>
 
-        <wsdl:operation name="GetLinkedAccounts">
-            <wsdl:input message="sdc:GetLinkedAccountsRequest" />
-            <wsdl:output message="sdc:GetLinkedAccountsResponse" />
-        </wsdl:operation>
+		<wsdl:operation name="GetLinkedAccounts">
+			<wsdl:input message="sdc:GetLinkedAccountsRequest" />
+			<wsdl:output message="sdc:GetLinkedAccountsResponse" />
+		</wsdl:operation>
 
-        <wsdl:operation name="GetLinkedAccountItems">
-            <wsdl:input message="sdc:GetLinkedAccountItemsRequest" />
-            <wsdl:output message="sdc:GetLinkedAccountItemsResponse" />
-        </wsdl:operation>
+		<wsdl:operation name="GetLinkedAccountItems">
+			<wsdl:input message="sdc:GetLinkedAccountItemsRequest" />
+			<wsdl:output message="sdc:GetLinkedAccountItemsResponse" />
+		</wsdl:operation>
 
-        <wsdl:operation name="LinkAccount">
-            <wsdl:input message="sdc:LinkAccountRequest" />
-            <wsdl:output message="sdc:LinkAccountResponse" />
-        </wsdl:operation>
+		<wsdl:operation name="LinkAccount">
+			<wsdl:input message="sdc:LinkAccountRequest" />
+			<wsdl:output message="sdc:LinkAccountResponse" />
+		</wsdl:operation>
 
-        <wsdl:operation name="IsAuthorised">
-            <wsdl:input message="sdc:IsAuthorisedRequest" />
-            <wsdl:output message="sdc:IsAuthorisedResponse" />
-        </wsdl:operation>
+		<wsdl:operation name="IsAuthorised">
+			<wsdl:input message="sdc:IsAuthorisedRequest" />
+			<wsdl:output message="sdc:IsAuthorisedResponse" />
+		</wsdl:operation>
 
-        <wsdl:operation name="SearchForItem">
-            <wsdl:input message="sdc:SearchForItemRequest" />
-            <wsdl:output message="sdc:SearchForItemResponse" />
-        </wsdl:operation>
+		<wsdl:operation name="SearchForItem">
+			<wsdl:input message="sdc:SearchForItemRequest" />
+			<wsdl:output message="sdc:SearchForItemResponse" />
+		</wsdl:operation>
 
-        <wsdl:operation name="ForgotPassword">
-            <wsdl:input message="sdc:ForgotPasswordRequest" />
-            <wsdl:output message="sdc:ForgotPasswordResponse" />
-        </wsdl:operation>
+		<wsdl:operation name="ForgotPassword">
+			<wsdl:input message="sdc:ForgotPasswordRequest" />
+			<wsdl:output message="sdc:ForgotPasswordResponse" />
+		</wsdl:operation>
 
-        <wsdl:operation name="GetUserDetails">
-            <wsdl:input message="sdc:GetUserDetailsRequest" />
-            <wsdl:output message="sdc:GetUserDetailsResponse" />
-        </wsdl:operation>
+		<wsdl:operation name="GetUserDetails">
+			<wsdl:input message="sdc:GetUserDetailsRequest" />
+			<wsdl:output message="sdc:GetUserDetailsResponse" />
+		</wsdl:operation>
 
-        <wsdl:operation name="GetCategories">
-            <wsdl:input message="sdc:GetCategoriesRequest" />
-            <wsdl:output message="sdc:GetCategoriesResponse" />
-        </wsdl:operation>
+		<wsdl:operation name="GetCategories">
+			<wsdl:input message="sdc:GetCategoriesRequest" />
+			<wsdl:output message="sdc:GetCategoriesResponse" />
+		</wsdl:operation>
 
-        <wsdl:operation name="GetSales">
-            <wsdl:input message="sdc:GetSalesRequest" />
-            <wsdl:output message="sdc:GetSalesResponse" />
-        </wsdl:operation>
+		<wsdl:operation name="GetSales">
+			<wsdl:input message="sdc:GetSalesRequest" />
+			<wsdl:output message="sdc:GetSalesResponse" />
+		</wsdl:operation>
 
-        <wsdl:operation name="GetItemSales">
-            <wsdl:input message="sdc:GetItemSalesRequest" />
-            <wsdl:output message="sdc:GetItemSalesResponse" />
-        </wsdl:operation>
+		<wsdl:operation name="GetItemSales">
+			<wsdl:input message="sdc:GetItemSalesRequest" />
+			<wsdl:output message="sdc:GetItemSalesResponse" />
+		</wsdl:operation>
 
-        <wsdl:operation name="GetSalesRanks">
-            <wsdl:input message="sdc:GetSalesRanksRequest" />
-            <wsdl:output message="sdc:GetSalesRanksResponse" />
-        </wsdl:operation>
+		<wsdl:operation name="GetSalesRanks">
+			<wsdl:input message="sdc:GetSalesRanksRequest" />
+			<wsdl:output message="sdc:GetSalesRanksResponse" />
+		</wsdl:operation>
 
-        <wsdl:operation name="GetItemSalesRanks">
-            <wsdl:input message="sdc:GetItemSalesRanksRequest" />
-            <wsdl:output message="sdc:GetItemSalesRanksResponse" />
+		<wsdl:operation name="GetItemSalesRanks">
+			<wsdl:input message="sdc:GetItemSalesRanksRequest" />
+			<wsdl:output message="sdc:GetItemSalesRanksResponse" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetLinkedAccountItem">
+			<wsdl:input message="sdc:GetLinkedAccountItemRequest" />
+			<wsdl:output message="sdc:GetLinkedAccountItemResponse" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetNotifications">
+			<wsdl:input message="sdc:GetNotificationsRequest" />
+			<wsdl:output message="sdc:GetNotificationsResponse" />
+		</wsdl:operation>
+
+		<wsdl:operation name="DeleteNotifications">
+			<wsdl:input message="sdc:DeleteNotificationsRequest" />
+			<wsdl:output message="sdc:DeleteNotificationsResponse" />
+		</wsdl:operation>
+
+		<wsdl:operation name="UpdateNotifications">
+			<wsdl:input message="sdc:UpdateNotificationsRequest" />
+			<wsdl:output message="sdc:UpdateNotificationsResponse" />
+		</wsdl:operation>
+
+	</wsdl:portType>
+	<wsdl:binding name="coreSOAP" type="sdc:core">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="GetCountries">
+			<soap:operation soapAction="http://app.reflection.io/core/GetCountries" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="GetStores">
+			<soap:operation soapAction="http://app.reflection.io/core/GetStores" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetTopItems">
+			<soap:operation soapAction="http://app.reflection.io/core/GetTopItems" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="GetAllTopItems">
+			<soap:operation soapAction="http://app.reflection.io/core/GetAllTopItems" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="GetItemRanks">
+			<soap:operation soapAction="http://app.reflection.io/core/GetItemRanks" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="RegisterUser">
+			<soap:operation soapAction="http://app.reflection.io/core/RegisterUser" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="Login">
+			<soap:operation soapAction="http://app.reflection.io/core/Login" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="Logout">
+			<soap:operation soapAction="http://app.reflection.io/core/Logout" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="ChangePassword">
+			<soap:operation soapAction="http://app.reflection.io/core/ChangePassword" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="ChangeUserDetails">
+			<soap:operation soapAction="http://app.reflection.io/core/ChangeUserDetails" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="UpdateLinkedAccount">
+			<soap:operation soapAction="http://app.reflection.io/core/UpdateLinkedAccount" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="DeleteLinkedAccount">
+			<soap:operation soapAction="http://app.reflection.io/core/DeleteLinkedAccount" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="CheckUsername">
+			<soap:operation soapAction="http://app.reflection.io/core/CheckUsername" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="GetRolesAndPermissions">
+			<soap:operation soapAction="http://app.reflection.io/core/GetRolesAndPermissions" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="GetLinkedAccounts">
+			<soap:operation soapAction="http://app.reflection.io/core/GetLinkedAccounts" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="GetLinkedAccountItems">
+			<soap:operation soapAction="http://app.reflection.io/core/GetLinkedAccountItems" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="LinkAccount">
+			<soap:operation soapAction="http://app.reflection.io/core/LinkAccount" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="IsAuthorised">
+			<soap:operation soapAction="http://app.reflection.io/core/IsAuthorised" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="SearchForItem">
+			<soap:operation soapAction="http://app.reflection.io/core/SearchForItem" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="ForgotPassword">
+			<soap:operation soapAction="http://app.reflection.io/core/ForgotPassword" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="GetUserDetails">
+			<soap:operation soapAction="http://app.reflection.io/core/GetUserDetails" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="GetCategories">
+			<soap:operation soapAction="http://app.reflection.io/core/GetCategories" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="GetSales">
+			<soap:operation soapAction="http://app.reflection.io/core/GetSales" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="GetItemSales">
+			<soap:operation soapAction="http://app.reflection.io/core/GetItemSales" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="GetSalesRanks">
+			<soap:operation soapAction="http://app.reflection.io/core/GetSalesRanks" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="GetItemSalesRanks">
+			<soap:operation soapAction="http://app.reflection.io/core/GetItemSalesRanks" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="GetLinkedAccountItem">
+			<soap:operation soapAction="http://app.reflection.io/core/GetLinkedAccountItem" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetNotifications">
+            <soap:operation soapAction="http://app.reflection.io/core/GetNotifications" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
         </wsdl:operation>
         
-        <wsdl:operation name="GetLinkedAccountItem">
-            <wsdl:input message="sdc:GetLinkedAccountItemRequest" />
-            <wsdl:output message="sdc:GetLinkedAccountItemResponse" />
-        </wsdl:operation>
-
-    </wsdl:portType>
-    <wsdl:binding name="coreSOAP" type="sdc:core">
-        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
-        <wsdl:operation name="GetCountries">
-            <soap:operation soapAction="http://app.reflection.io/core/GetCountries" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-
-        <wsdl:operation name="GetStores">
-            <soap:operation soapAction="http://app.reflection.io/core/GetStores" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="GetTopItems">
-            <soap:operation soapAction="http://app.reflection.io/core/GetTopItems" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-
-        <wsdl:operation name="GetAllTopItems">
-            <soap:operation soapAction="http://app.reflection.io/core/GetAllTopItems" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-
-        <wsdl:operation name="GetItemRanks">
-            <soap:operation soapAction="http://app.reflection.io/core/GetItemRanks" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-
-        <wsdl:operation name="RegisterUser">
-            <soap:operation soapAction="http://app.reflection.io/core/RegisterUser" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-
-        <wsdl:operation name="Login">
-            <soap:operation soapAction="http://app.reflection.io/core/Login" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-
-        <wsdl:operation name="Logout">
-            <soap:operation soapAction="http://app.reflection.io/core/Logout" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-
-        <wsdl:operation name="ChangePassword">
-            <soap:operation soapAction="http://app.reflection.io/core/ChangePassword" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-
-        <wsdl:operation name="ChangeUserDetails">
-            <soap:operation soapAction="http://app.reflection.io/core/ChangeUserDetails" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-
-        <wsdl:operation name="UpdateLinkedAccount">
-            <soap:operation soapAction="http://app.reflection.io/core/UpdateLinkedAccount" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-
-        <wsdl:operation name="DeleteLinkedAccount">
-            <soap:operation soapAction="http://app.reflection.io/core/DeleteLinkedAccount" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-
-        <wsdl:operation name="CheckUsername">
-            <soap:operation soapAction="http://app.reflection.io/core/CheckUsername" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-
-        <wsdl:operation name="GetRolesAndPermissions">
-            <soap:operation soapAction="http://app.reflection.io/core/GetRolesAndPermissions" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-
-        <wsdl:operation name="GetLinkedAccounts">
-            <soap:operation soapAction="http://app.reflection.io/core/GetLinkedAccounts" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-
-        <wsdl:operation name="GetLinkedAccountItems">
-            <soap:operation soapAction="http://app.reflection.io/core/GetLinkedAccountItems" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-
-        <wsdl:operation name="LinkAccount">
-            <soap:operation soapAction="http://app.reflection.io/core/LinkAccount" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-
-        <wsdl:operation name="IsAuthorised">
-            <soap:operation soapAction="http://app.reflection.io/core/IsAuthorised" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-
-        <wsdl:operation name="SearchForItem">
-            <soap:operation soapAction="http://app.reflection.io/core/SearchForItem" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-
-        <wsdl:operation name="ForgotPassword">
-            <soap:operation soapAction="http://app.reflection.io/core/ForgotPassword" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-
-        <wsdl:operation name="GetUserDetails">
-            <soap:operation soapAction="http://app.reflection.io/core/GetUserDetails" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-
-        <wsdl:operation name="GetCategories">
-            <soap:operation soapAction="http://app.reflection.io/core/GetCategories" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-
-        <wsdl:operation name="GetSales">
-            <soap:operation soapAction="http://app.reflection.io/core/GetSales" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-
-        <wsdl:operation name="GetItemSales">
-            <soap:operation soapAction="http://app.reflection.io/core/GetItemSales" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-
-        <wsdl:operation name="GetSalesRanks">
-            <soap:operation soapAction="http://app.reflection.io/core/GetSalesRanks" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-
-        <wsdl:operation name="GetItemSalesRanks">
-            <soap:operation soapAction="http://app.reflection.io/core/GetItemSalesRanks" />
+        <wsdl:operation name="DeleteNotifications">
+            <soap:operation soapAction="http://app.reflection.io/core/DeleteNotifications" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
@@ -1254,8 +1389,8 @@
             </wsdl:output>
         </wsdl:operation>
         
-        <wsdl:operation name="GetLinkedAccountItem">
-            <soap:operation soapAction="http://app.reflection.io/core/GetLinkedAccountItem" />
+        <wsdl:operation name="UpdateNotifications">
+            <soap:operation soapAction="http://app.reflection.io/core/UpdateNotifications" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
@@ -1264,10 +1399,10 @@
             </wsdl:output>
         </wsdl:operation>
 
-    </wsdl:binding>
-    <wsdl:service name="core">
-        <wsdl:port name="coreSOAP" binding="sdc:coreSOAP">
-            <soap:address location="http://app.reflection.io/core/" />
-        </wsdl:port>
-    </wsdl:service>
+	</wsdl:binding>
+	<wsdl:service name="core">
+		<wsdl:port name="coreSOAP" binding="sdc:coreSOAP">
+			<soap:address location="http://app.reflection.io/core/" />
+		</wsdl:port>
+	</wsdl:service>
 </wsdl:definitions>

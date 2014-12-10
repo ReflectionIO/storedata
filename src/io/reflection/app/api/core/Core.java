@@ -26,6 +26,8 @@ import io.reflection.app.api.core.shared.call.CheckUsernameRequest;
 import io.reflection.app.api.core.shared.call.CheckUsernameResponse;
 import io.reflection.app.api.core.shared.call.DeleteLinkedAccountRequest;
 import io.reflection.app.api.core.shared.call.DeleteLinkedAccountResponse;
+import io.reflection.app.api.core.shared.call.DeleteNotificationsRequest;
+import io.reflection.app.api.core.shared.call.DeleteNotificationsResponse;
 import io.reflection.app.api.core.shared.call.ForgotPasswordRequest;
 import io.reflection.app.api.core.shared.call.ForgotPasswordResponse;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
@@ -46,6 +48,8 @@ import io.reflection.app.api.core.shared.call.GetLinkedAccountItemsRequest;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountItemsResponse;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountsRequest;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountsResponse;
+import io.reflection.app.api.core.shared.call.GetNotificationsRequest;
+import io.reflection.app.api.core.shared.call.GetNotificationsResponse;
 import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsRequest;
 import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsResponse;
 import io.reflection.app.api.core.shared.call.GetSalesRanksRequest;
@@ -72,6 +76,8 @@ import io.reflection.app.api.core.shared.call.SearchForItemRequest;
 import io.reflection.app.api.core.shared.call.SearchForItemResponse;
 import io.reflection.app.api.core.shared.call.UpdateLinkedAccountRequest;
 import io.reflection.app.api.core.shared.call.UpdateLinkedAccountResponse;
+import io.reflection.app.api.core.shared.call.UpdateNotificationsRequest;
+import io.reflection.app.api.core.shared.call.UpdateNotificationsResponse;
 import io.reflection.app.api.exception.AuthenticationException;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.ApiError;
@@ -1941,6 +1947,45 @@ public final class Core extends ActionHandler {
 			output.error = convertToErrorAndLog(LOG, e);
 		}
 		LOG.finer("Exiting getLinkedAccountItem");
+		return output;
+	}
+
+	public GetNotificationsResponse getNotifications(GetNotificationsRequest input) {
+		LOG.finer("Entering getNotifications");
+		GetNotificationsResponse output = new GetNotificationsResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getNotifications");
+		return output;
+	}
+
+	public DeleteNotificationsResponse deleteNotifications(DeleteNotificationsRequest input) {
+		LOG.finer("Entering deleteNotifications");
+		DeleteNotificationsResponse output = new DeleteNotificationsResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting deleteNotifications");
+		return output;
+	}
+
+	public UpdateNotificationsResponse updateNotifications(UpdateNotificationsRequest input) {
+		LOG.finer("Entering updateNotifications");
+		UpdateNotificationsResponse output = new UpdateNotificationsResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting updateNotifications");
 		return output;
 	}
 }
