@@ -11,13 +11,15 @@
 	});
 
 	reflectionMap = function() {
+		var isDraggable = $('html.touch').length == 0;
 		this.myLatlng = new google.maps.LatLng(51.518680, -0.136578);
 		this.mapOptions = {
 		  zoom: 17,
 		  center: this.myLatlng,
 		  disableDefaultUI: true,
 		  scrollwheel: false,
-		  streetViewControl: true
+		  streetViewControl: true,
+		  draggable: isDraggable
 		}
 		this.markerImage = {
 	    url: 'imgs/contact/Map_Pin@2x.png',
@@ -41,7 +43,7 @@
       '<div class="map__text-content">' +
       '<p>40-44 Newman Street<br />London<br />W1T 1QD</p>' +
       '<p onclick="window.refMap.toggleStreetView();" class="map__street-view-link">Streetview</p>' +
-      '</div></div><div class="map__info-box__down-arrow"></div>';
+      '<p><a href="https://www.google.co.uk/maps/place/44+Newman+St,+Marylebone,+London+W1T+1QD/@51.5187779,-0.1364135,17z/data=!4m7!1m4!3m3!1s0x48761b2b95192b1b:0xc2fcb9753b8ff12b!2s44+Newman+St,+Marylebone,+London+W1T+1QD!3b1!3m1!1s0x48761b2b95192b1b:0xc2fcb9753b8ff12b" target="_blank">Open in Google Maps</a></p></div></div><div class="map__info-box__down-arrow"></div>';
 
 		  var infowindow = new google.maps.InfoWindow({
 		      content: contentString
@@ -81,7 +83,7 @@
 
 		$win.on("scroll", function(){
 			if(!dropped) {
-				if($win.scrollTop() > mapTop - 200) {
+				if($win.scrollTop() > (mapTop - ($win.height()/2))) {
 					window.refMap.addMarker();
 					dropped = true;
 				}
@@ -94,7 +96,7 @@
 		if(linkToPageTop.length > 0) {
 			linkToPageTop.click(function (e) {
 	      e.preventDefault();
-	      $('html, body').animate({ scrollTop: 0 }, 'slow', 'swing');	        
+	      $('html, body').animate({ scrollTop: 0 }, 'slow', 'swing');
 	  	});
 		}		
 	}
@@ -112,11 +114,15 @@
 	}
 
 	function initLandingScrollEffect() {
+		var scrollValue = $('#scroll-value');
+		$(window).bind('touchmove', function(e) { 
+		    scrollValue.text($(this).scrollTop());
+		});
 		if($('.window-height-scroll-effect-container').length > 0 && $('.csstransforms').length > 0 && $('.no-touch').length > 0) {
 			var windowHeight = $(window).height(),
 					windowWidth = $(window).width(),
 					breakpointVertical = 680,
-					breakpointHorizontal = 720;
+					breakpointHorizontal = 980;
 			
 			if(windowHeight >= breakpointVertical && windowWidth >= breakpointHorizontal) {
 				$(window).scroll(function(){
