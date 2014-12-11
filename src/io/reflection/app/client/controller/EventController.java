@@ -97,7 +97,7 @@ public class EventController extends AsyncDataProvider<Event> implements Service
 						// }
 					}
 
-					updateRowCount(output.events == null ? 0 : input.pager.start.intValue() + input.pager.count.intValue(), output.events == null);
+					updateRowCount(output.events == null ? 0 : input.pager.start.intValue() + output.events.size(), output.events == null);
 					updateRowData(input.pager.start.intValue(), output.events == null ? Collections.<Event> emptyList() : output.events);
 				}
 

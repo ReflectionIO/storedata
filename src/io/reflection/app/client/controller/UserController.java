@@ -199,7 +199,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 						// }
 					}
 
-					updateRowCount(output.users == null ? 0 : input.pager.start.intValue() + input.pager.count.intValue(), output.users == null);
+					updateRowCount(output.users == null ? 0 : input.pager.start.intValue() + output.users.size(), output.users == null);
 					updateRowData(input.pager.start.intValue(), output.users == null ? Collections.<User> emptyList() : output.users);
 				}
 

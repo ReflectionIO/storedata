@@ -124,6 +124,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@UiField InlineHyperlink dataAccountFetchesLink;
 
 	@UiField LIElement eventsItem;
+	@UiField LIElement eventSubscriptionsItem;
+	@UiField LIElement sendNotificationItem;
 
 	@UiField LIElement itemsItem;
 
@@ -253,6 +255,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			items.add(loginItem);
 			// items.add(mRegisterItem);
 			items.add(notificationsItem);
+			items.add(eventSubscriptionsItem);
+			items.add(sendNotificationItem);
 		}
 	}
 
@@ -324,6 +328,10 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			// highlight(upgradeAccountItem);
 		} else if (PageType.EventsPageType.equals(current.getPage())) {
 			highlight(adminDropdown, eventsItem);
+		} else if (PageType.EventSubscriptionsPageType.equals(current.getPage())) {
+			highlight(adminDropdown, eventSubscriptionsItem);
+		} else if (PageType.SendNotificationPageType.equals(current.getPage())) {
+			highlight(adminDropdown, sendNotificationItem);
 		} else if (PageType.ItemsPageType.equals(current.getPage())) {
 			highlight(adminDropdown, itemsItem);
 		} else if (PageType.CategoriesPageType.equals(current.getPage())) {

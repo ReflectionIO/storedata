@@ -19,6 +19,8 @@
 	<ui:import field="io.reflection.app.client.page.PageType.DataAccountsPageType" />
 	<ui:import field="io.reflection.app.client.page.PageType.DataAccountFetchesPageType" />
 	<ui:import field="io.reflection.app.client.page.PageType.SimpleModelRunPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.EventSubscriptionsPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.SendNotificationPageType" />
 
 	<ui:with field="res" type='io.reflection.app.client.res.Images' />
 	<ui:with field="global" type="io.reflection.app.client.res.Styles" />
@@ -186,6 +188,13 @@
 						<li ui:field="eventsItem">
 							<g:InlineHyperlink targetHistoryToken="{EventsPageType.asTargetHistoryToken}">Events</g:InlineHyperlink>
 						</li>
+						<li ui:field="eventSubscriptionsItem">
+							<g:InlineHyperlink targetHistoryToken="{EventSubscriptionsPageType.asTargetHistoryToken}">Event Subscriptions</g:InlineHyperlink>
+						</li>
+						<li ui:field="sendNotificationItem">
+							<g:InlineHyperlink targetHistoryToken="{SendNotificationPageType.asTargetHistoryToken}">Send Notification</g:InlineHyperlink>
+						</li>
+						<li class="divider-horizontal-header"></li>
 						<li ui:field="blogAdminItem">
 							<g:InlineHyperlink targetHistoryToken="{BlogAdminPageType.asTargetHistoryToken}">Blog</g:InlineHyperlink>
 						</li>

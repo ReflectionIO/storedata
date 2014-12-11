@@ -76,7 +76,7 @@ public class NotificationController extends AsyncDataProvider<Notification> impl
 						pager = output.pager;
 					}
 
-					updateRowCount(output.notifications == null ? 0 : input.pager.start.intValue() + input.pager.count.intValue(), output.notifications == null);
+					updateRowCount(output.notifications == null ? 0 : input.pager.start.intValue() + output.notifications.size(), output.notifications == null);
 					updateRowData(input.pager.start.intValue(), output.notifications == null ? Collections.<Notification> emptyList() : output.notifications);
 				}
 

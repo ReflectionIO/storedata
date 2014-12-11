@@ -11,10 +11,12 @@ import io.reflection.app.client.page.admin.CategoriesPage;
 import io.reflection.app.client.page.admin.DataAccountFetchesPage;
 import io.reflection.app.client.page.admin.DataAccountsPage;
 import io.reflection.app.client.page.admin.EventPage;
+import io.reflection.app.client.page.admin.EventSubscriptionsPage;
 import io.reflection.app.client.page.admin.FeedBrowserPage;
 import io.reflection.app.client.page.admin.ItemsPage;
 import io.reflection.app.client.page.admin.PermissionsPage;
 import io.reflection.app.client.page.admin.RolesPage;
+import io.reflection.app.client.page.admin.SendNotificationPage;
 import io.reflection.app.client.page.admin.SimpleModelRunsPage;
 import io.reflection.app.client.page.admin.UsersPage;
 import io.reflection.app.client.page.blog.EditPostPage;
@@ -85,7 +87,8 @@ public enum PageType {
 	UsersPageType("users", DataTypeHelper.PERMISSION_MANAGE_USERS_CODE),
 	WidgetTestPage("test", false),
 	NotificationsPageType("notifications", true),
-	
+	SendNotificationPageType("sendnotification", true),
+	EventSubscriptionsPageType("eventsubscriptions", true),
 
 	// Non navigable
 	LoadingPageType("loading"), ;
@@ -312,6 +315,12 @@ public enum PageType {
 			break;
 		case NotificationsPageType:
 			page = new NotificationsPage();
+			break;
+		case EventSubscriptionsPageType:
+			page = new EventSubscriptionsPage();
+			break;
+		case SendNotificationPageType:
+			page = new SendNotificationPage();
 			break;
 		case HomePageType:
 		default:

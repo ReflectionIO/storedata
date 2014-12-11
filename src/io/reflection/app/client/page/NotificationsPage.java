@@ -65,7 +65,7 @@ public class NotificationsPage extends Page implements NavigationEventHandler, D
 
 		createColumns();
 
-		notificationsTable.setEmptyTableWidget(new HTMLPanel("No notifications <i class=\"icon-emo-happy\"></i>"));
+		notificationsTable.setEmptyTableWidget((new HTMLPanel("<h6>No notifications <i class=\"icon-emo-happy\"></i></h6>")));
 		notificationsTable.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 
 		NotificationController.get().addDataDisplay(notificationsTable);
