@@ -81,14 +81,20 @@
 				mapTop = $('.landing-section-map').offset().top,
 				dropped = false;
 
-		$win.on("scroll", function(){
-			if(!dropped) {
-				if($win.scrollTop() > (mapTop - ($win.height()/2))) {
-					window.refMap.addMarker();
-					dropped = true;
-				}
-			}			
-		});
+		if($('.no-touch').length > 0 && $win.scrollTop() < (mapTop - ($win.height()/2))) {
+			$win.on("scroll", function(){
+				if(!dropped) {
+					if($win.scrollTop() > (mapTop - ($win.height()/2))) {
+						window.refMap.addMarker();
+						dropped = true;
+					}
+				}			
+			});
+		}
+		else {
+			window.refMap.addMarker();
+			dropped = true;
+		}
 	}
 
 	function initLinkToPageTop() {
