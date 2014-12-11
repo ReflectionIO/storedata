@@ -199,7 +199,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 						// }
 					}
 
-					updateRowCount(Integer.MAX_VALUE, false);
+					updateRowCount(output.users == null ? 0 : input.pager.start.intValue() + input.pager.count.intValue(), output.users == null);
 					updateRowData(input.pager.start.intValue(), output.users == null ? Collections.<User> emptyList() : output.users);
 				}
 
@@ -558,7 +558,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		final Map<String, Object> params = new HashMap<String, Object>();
 		params.put("username", username);
 		params.put("company", company);
-		
+
 		if (password == null || password.length() == 0) {
 			params.put("requestInvite", Boolean.TRUE);
 		}
@@ -649,7 +649,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 					if (output.error != null && output.error.message != null) {
 						params.put("error", output.error.message);
 					}
-					
+
 					MixPanelApiHelper.track("registerUser", params);
 				}
 
@@ -661,7 +661,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 				params.put("status", "failure");
 				params.put("error", caught.getMessage());
 				MixPanelApiHelper.track("registerUser", params);
-				
+
 				DefaultEventBus.get().fireEvent(new RegisterUserEventHandler.RegisterUserFailure(input, caught));
 			}
 		});

@@ -38,9 +38,9 @@ import com.willshex.gson.json.service.shared.StatusType;
  */
 public class EventController extends AsyncDataProvider<Event> implements ServiceConstants {
 
-//	private List<Event> mEvents = new ArrayList<Event>();
+	// private List<Event> mEvents = new ArrayList<Event>();
 	private Map<Long, Event> eventLookup = new HashMap<Long, Event>();
-//	private long count = -1;
+	// private long count = -1;
 	private Pager pager;
 	private Request current;
 
@@ -59,7 +59,7 @@ public class EventController extends AsyncDataProvider<Event> implements Service
 			current.cancel();
 			current = null;
 		}
-		
+
 		AdminService service = ServiceCreator.createAdminService();
 
 		final GetEventsRequest input = new GetEventsRequest();
@@ -73,17 +73,17 @@ public class EventController extends AsyncDataProvider<Event> implements Service
 			pager.start = Long.valueOf(0);
 			pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
 		}
-		
+
 		input.pager = pager;
 
 		current = service.getEvents(input, new AsyncCallback<GetEventsResponse>() {
 			@Override
 			public void onSuccess(GetEventsResponse output) {
 				current = null;
-				
+
 				if (output.status == StatusType.StatusTypeSuccess) {
 					if (output.events != null) {
-//						mEvents.addAll(output.events);
+						// mEvents.addAll(output.events);
 						for (Event event : output.events) {
 							eventLookup.put(event.id, event);
 						}
@@ -92,12 +92,12 @@ public class EventController extends AsyncDataProvider<Event> implements Service
 					if (output.pager != null) {
 						pager = output.pager;
 
-//						if (pager.totalCount != null) {
-//							count = pager.totalCount.longValue();
-//						}
+						// if (pager.totalCount != null) {
+						// count = pager.totalCount.longValue();
+						// }
 					}
-					
-					updateRowCount(Integer.MAX_VALUE, false);
+
+					updateRowCount(output.events == null ? 0 : input.pager.start.intValue() + input.pager.count.intValue(), output.events == null);
 					updateRowData(input.pager.start.intValue(), output.events == null ? Collections.<Event> emptyList() : output.events);
 				}
 
@@ -107,7 +107,7 @@ public class EventController extends AsyncDataProvider<Event> implements Service
 			@Override
 			public void onFailure(Throwable caught) {
 				current = null;
-				
+
 				DefaultEventBus.get().fireEventFromSource(new GetEventsFailure(input, caught), EventController.this);
 			}
 		});
@@ -122,7 +122,7 @@ public class EventController extends AsyncDataProvider<Event> implements Service
 	 */
 	public void updateEvent(Event event) {
 		AdminService service = ServiceCreator.createAdminService();
-		
+
 		final UpdateEventRequest input = new UpdateEventRequest();
 
 		input.accessCode = ACCESS_CODE;
@@ -170,7 +170,7 @@ public class EventController extends AsyncDataProvider<Event> implements Service
 		pager = PagerHelper.createDefaultPager();
 		pager.start = Long.valueOf(r.getStart());
 		pager.count = Long.valueOf(r.getLength());
-		
+
 		fetchEvents();
 	}
 
