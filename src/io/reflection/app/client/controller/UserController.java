@@ -59,6 +59,7 @@ import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.app.shared.util.PagerHelper;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -67,6 +68,9 @@ import java.util.Map;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
+import com.google.gwt.user.client.ui.MultiWordSuggestOracle.MultiWordSuggestion;
+import com.google.gwt.user.client.ui.SuggestOracle;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
 import com.google.gwt.view.client.Range;
@@ -78,6 +82,21 @@ import com.willshex.gson.json.service.shared.StatusType;
  * 
  */
 public class UserController extends AsyncDataProvider<User> implements ServiceConstants {
+
+	private SuggestOracle.Request request;
+	private SuggestOracle.Callback callback;
+	private Oracle oracle;
+
+	class Oracle extends MultiWordSuggestOracle {
+
+		@Override
+		public void requestSuggestions(SuggestOracle.Request request, final SuggestOracle.Callback callback) {
+			UserController.this.reset();
+			UserController.this.request = request;
+			UserController.this.callback = callback;
+			UserController.this.fetchUsers(request.getQuery());
+		}
+	}
 
 	// private List<User> userList = new ArrayList<User>();
 	// private long count = -1;
@@ -188,15 +207,25 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 			public void onSuccess(GetUsersResponse output) {
 				current = null;
 				if (output.status == StatusType.StatusTypeSuccess) {
-
-					// if (output.users != null) {}
-
 					if (output.pager != null) {
 						pager = output.pager;
 
 						// if (pager.totalCount != null) {
 						// count = pager.totalCount.longValue();
 						// }
+					}
+
+					// send the oracle response if we have any
+					if (output.users != null && oracle != null && UserController.this.request != null && UserController.this.callback != null) {
+						SuggestOracle.Response response = new SuggestOracle.Response();
+						List<MultiWordSuggestion> users = new ArrayList<MultiWordSuggestOracle.MultiWordSuggestion>();
+
+						for (User user : output.users) {
+							users.add(new MultiWordSuggestion(user.id.toString(), user.username));
+						}
+
+						response.setSuggestions(users);
+						UserController.this.callback.onSuggestionsReady(UserController.this.request, response);
 					}
 
 					updateRowCount(output.users == null ? 0 : input.pager.start.intValue() + output.users.size(), output.users == null);
@@ -219,6 +248,8 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		pager = null;
 		// count = -1;
 		searchQuery = null;
+		request = null;
+		callback = null;
 
 		updateRowCount(0, false);
 	}
@@ -821,4 +852,14 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		deleteUsers(users, false);
 	}
 
+	/**
+	 * @return
+	 */
+	public Oracle oracle() {
+		if (oracle == null) {
+			oracle = new Oracle();
+		}
+
+		return oracle;
+	}
 }
