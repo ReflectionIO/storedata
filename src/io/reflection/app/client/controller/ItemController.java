@@ -49,9 +49,9 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 
 	private static ItemController mOne = null;
 
-	private Map<String, Item> mItemCache = new HashMap<String, Item>(); // Cache items meanwhile user is logged in
+	private Map<String, Item> itemLookup = new HashMap<String, Item>(); // Cache items meanwhile user is logged in
 
-	private Map<String, List<Item>> mItemsSearchCache = new HashMap<String, List<Item>>(); // Cache of user searches
+	private Map<String, List<Item>> itemSearchLookup = new HashMap<String, List<Item>>(); // Cache of user searches
 
 	private List<Item> userItemList = new ArrayList<Item>();
 	private Map<String, Item> userItemsLookup = new HashMap<String, Item>();
@@ -84,7 +84,7 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 	 * @return searchResults Items retrieved after user search
 	 */
 	public List<Item> searchForItems(String query) {
-		List<Item> searchResults = mItemsSearchCache.get(query); // Get, if exists, a cached search
+		List<Item> searchResults = itemSearchLookup.get(query); // Get, if exists, a cached search
 
 		if (searchResults == null) {
 			fetchItemsQuery(query); // If not cached, search in the DB
@@ -124,7 +124,7 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 					addItemsToCache(output.items);
 
 					// Add retrieved items into search items cache ( Map<"query", List<Item>> )
-					mItemsSearchCache.put(input.query, output.items == null ? new ArrayList<Item>() : output.items);
+					itemSearchLookup.put(input.query, output.items == null ? new ArrayList<Item>() : output.items);
 				}
 
 				EventController.get().fireEventFromSource(new SearchForItemSuccess(input, output), ItemController.this);
@@ -248,8 +248,10 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 
 					if (pagerUserItem.totalCount != null) {
 						userItemCount = pagerUserItem.totalCount.longValue();
-						for (Item item : output.items) {
-							setUserItem(item);
+						if (output.items != null) {
+							for (Item item : output.items) {
+								setUserItem(item);
+							}
 						}
 					}
 				}
@@ -327,7 +329,7 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 	 * Clear Items cache when user logs out
 	 */
 	public void clearItemCache() {
-		mItemCache.clear();
+		itemLookup.clear();
 	}
 
 	/**
@@ -340,7 +342,7 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 	public void addItemsToCache(List<Item> items) {
 		if (items != null) {
 			for (Item item : items) {
-				mItemCache.put(item.internalId, item);
+				itemLookup.put(item.internalId, item);
 			}
 		}
 	}
@@ -353,7 +355,7 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 	 * @return the item
 	 */
 	public Item lookupItem(String internalId) {
-		Item item = mItemCache.get(internalId);
+		Item item = itemLookup.get(internalId);
 
 		// if (item == null) {
 		// fetchItem(internalId);
@@ -367,7 +369,7 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 	 */
 	public void addItemToCache(Item item) {
 		if (item != null) {
-			mItemCache.put(item.internalId, item);
+			itemLookup.put(item.internalId, item);
 		}
 	}
 
