@@ -21,13 +21,19 @@ import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.datatypes.shared.Event;
 import io.reflection.app.shared.util.PagerHelper;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
+import com.google.gwt.safehtml.client.SafeHtmlTemplates;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
+import com.google.gwt.user.client.ui.MultiWordSuggestOracle.MultiWordSuggestion;
 import com.google.gwt.user.client.ui.SuggestOracle;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
@@ -39,6 +45,13 @@ import com.willshex.gson.json.service.shared.StatusType;
  * 
  */
 public class EventController extends AsyncDataProvider<Event> implements ServiceConstants {
+
+	interface OracleTemplates extends SafeHtmlTemplates {
+		OracleTemplates INSTANCE = GWT.create(OracleTemplates.class);
+
+		@Template("{0}: {1}")
+		SafeHtml suggestionDescription(String code, String name);
+	}
 
 	private SuggestOracle.Request request;
 	private SuggestOracle.Callback callback;
@@ -54,7 +67,7 @@ public class EventController extends AsyncDataProvider<Event> implements Service
 			EventController.this.fetchEvents(request.getQuery());
 		}
 	}
-	
+
 	// private List<Event> mEvents = new ArrayList<Event>();
 	private Map<Long, Event> eventLookup = new HashMap<Long, Event>();
 	// private long count = -1;
@@ -86,13 +99,16 @@ public class EventController extends AsyncDataProvider<Event> implements Service
 		input.session = SessionController.get().getSessionForApiCall();
 
 		if (pager == null) {
-			pager = new Pager();
-			pager.count = STEP;
-			pager.start = Long.valueOf(0);
-			pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
+			pager = new Pager().count(STEP).start(Long.valueOf(0)).sortDirection(SortDirectionType.SortDirectionTypeDescending);
 		}
 
 		input.pager = pager;
+
+		input.query = searchQuery = query;
+
+		if ("" == input.query) {
+			input.query = searchQuery = null;
+		}
 
 		current = service.getEvents(input, new AsyncCallback<GetEventsResponse>() {
 			@Override
@@ -113,6 +129,20 @@ public class EventController extends AsyncDataProvider<Event> implements Service
 						// if (pager.totalCount != null) {
 						// count = pager.totalCount.longValue();
 						// }
+					}
+
+					// send the oracle response if we have any
+					if (output.events != null && oracle != null && EventController.this.request != null && EventController.this.callback != null) {
+						SuggestOracle.Response response = new SuggestOracle.Response();
+						List<MultiWordSuggestion> events = new ArrayList<MultiWordSuggestOracle.MultiWordSuggestion>();
+
+						for (Event event : output.events) {
+							String description = EventController.this.getOracleEventDescription(event);
+							events.add(new MultiWordSuggestion(description, description));
+						}
+
+						response.setSuggestions(events);
+						EventController.this.callback.onSuggestionsReady(EventController.this.request, response);
 					}
 
 					updateRowCount(output.events == null ? 0 : input.pager.start.intValue() + output.events.size(), output.events == null);
@@ -201,12 +231,27 @@ public class EventController extends AsyncDataProvider<Event> implements Service
 
 		updateRowCount(0, false);
 	}
-	
+
 	/**
 	 * @return
 	 */
 	public Oracle oracle() {
+		if (oracle == null) {
+			oracle = new Oracle();
+		}
+
 		return oracle;
+	}
+
+	/**
+	 * @return
+	 */
+	public String getQuery() {
+		return searchQuery;
+	}
+
+	public String getOracleEventDescription(Event event) {
+		return OracleTemplates.INSTANCE.suggestionDescription(event.code, event.name).asString();
 	}
 
 }

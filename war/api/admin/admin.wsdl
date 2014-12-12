@@ -70,9 +70,9 @@
 
 			<xsd:element name="UpdateEventInput" type="sda:UpdateEventRequest" />
 			<xsd:element name="UpdateEventOutput" type="sda:UpdateEventResponse" />
-			
+
 			<xsd:element name="AddEventInput" type="sda:AddEventRequest" />
-            <xsd:element name="AddEventOutput" type="sda:AddEventResponse" />
+			<xsd:element name="AddEventOutput" type="sda:AddEventResponse" />
 
 			<xsd:element name="GetDataAccountsInput" type="sda:GetDataAccountsRequest" />
 			<xsd:element name="GetDataAccountsOutput" type="sda:GetDataAccountsResponse" />
@@ -91,7 +91,6 @@
 
 			<xsd:element name="GetSimpleModelRunsInput" type="sda:GetSimpleModelRunsRequest" />
 			<xsd:element name="GetSimpleModelRunsOutput" type="sda:GetSimpleModelRunsResponse" />
-
 
 			<xsd:complexType name="GetUsersRequest">
 				<xsd:complexContent>
@@ -420,6 +419,7 @@
 						<xsd:sequence>
 							<xsd:element name="pager" type="sd:Pager" />
 						</xsd:sequence>
+						<xsd:attribute name="query" type="xsd:string" />
 					</xsd:extension>
 				</xsd:complexContent>
 			</xsd:complexType>
@@ -547,22 +547,22 @@
 					</xsd:extension>
 				</xsd:complexContent>
 			</xsd:complexType>
-			
+
 			<xsd:complexType name="AddEventRequest">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Request">
-                        <xsd:sequence>
-                            <xsd:element name="event" type="sd:Event" maxOccurs="1" />
-                        </xsd:sequence>
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
-            <xsd:complexType name="AddEventResponse">
-                <xsd:complexContent>
-                    <xsd:extension base="sd:Response">
-                    </xsd:extension>
-                </xsd:complexContent>
-            </xsd:complexType>
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="event" type="sd:Event" maxOccurs="1" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:complexType name="AddEventResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
 
 			<xsd:complexType name="GetDataAccountsRequest">
 				<xsd:complexContent>
@@ -851,13 +851,13 @@
 	<wsdl:message name="UpdateEventResponse">
 		<wsdl:part name="output" element="sda:UpdateEventOutput" />
 	</wsdl:message>
-	
+
 	<wsdl:message name="AddEventRequest">
-        <wsdl:part name="input" element="sda:AddEventInput" />
-    </wsdl:message>
-    <wsdl:message name="AddEventResponse">
-        <wsdl:part name="output" element="sda:AddEventOutput" />
-    </wsdl:message>
+		<wsdl:part name="input" element="sda:AddEventInput" />
+	</wsdl:message>
+	<wsdl:message name="AddEventResponse">
+		<wsdl:part name="output" element="sda:AddEventOutput" />
+	</wsdl:message>
 
 	<wsdl:message name="GetDataAccountsRequest">
 		<wsdl:part name="input" element="sda:GetDataAccountsInput" />
@@ -1005,11 +1005,11 @@
 			<wsdl:input message="sda:UpdateEventRequest" />
 			<wsdl:output message="sda:UpdateEventResponse" />
 		</wsdl:operation>
-		
+
 		<wsdl:operation name="AddEvent">
-            <wsdl:input message="sda:AddEventRequest" />
-            <wsdl:output message="sda:AddEventResponse" />
-        </wsdl:operation>
+			<wsdl:input message="sda:AddEventRequest" />
+			<wsdl:output message="sda:AddEventResponse" />
+		</wsdl:operation>
 
 		<wsdl:operation name="GetDataAccounts">
 			<wsdl:input message="sda:GetDataAccountsRequest" />
@@ -1256,16 +1256,16 @@
 				<soap:body use="literal" />
 			</wsdl:output>
 		</wsdl:operation>
-		
+
 		<wsdl:operation name="AddEvent">
-            <soap:operation soapAction="http://app.reflection.io/admin/AddEvent" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
+			<soap:operation soapAction="http://app.reflection.io/admin/AddEvent" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
 
 		<wsdl:operation name="GetDataAccounts">
 			<soap:operation soapAction="http://app.reflection.io/admin/GetDataAccounts" />

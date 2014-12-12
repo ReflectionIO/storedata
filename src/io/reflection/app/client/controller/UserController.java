@@ -65,7 +65,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
+import com.google.gwt.safehtml.client.SafeHtmlTemplates;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
@@ -82,6 +85,13 @@ import com.willshex.gson.json.service.shared.StatusType;
  * 
  */
 public class UserController extends AsyncDataProvider<User> implements ServiceConstants {
+
+	interface OracleTemplates extends SafeHtmlTemplates {
+		OracleTemplates INSTANCE = GWT.create(OracleTemplates.class);
+
+		@Template("{0}: {1}")
+		SafeHtml suggestionDescription(Long userid, String username);
+	}
 
 	private SuggestOracle.Request request;
 	private SuggestOracle.Callback callback;
@@ -107,14 +117,14 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 	// private Map<Long, User> userLookup = new HashMap<Long, User>();
 
-	private static UserController mOne = null;
+	private static UserController one = null;
 
 	public static UserController get() {
-		if (mOne == null) {
-			mOne = new UserController();
+		if (one == null) {
+			one = new UserController();
 		}
 
-		return mOne;
+		return one;
 	}
 
 	// public void fetchUsers() {
@@ -221,7 +231,8 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 						List<MultiWordSuggestion> users = new ArrayList<MultiWordSuggestOracle.MultiWordSuggestion>();
 
 						for (User user : output.users) {
-							users.add(new MultiWordSuggestion(user.id.toString() + ":" + user.username, user.username));
+							String description = UserController.this.getOracleUserDescription(user);
+							users.add(new MultiWordSuggestion(description, description));
 						}
 
 						response.setSuggestions(users);
@@ -868,5 +879,9 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 	 */
 	public String getQuery() {
 		return searchQuery;
+	}
+
+	public String getOracleUserDescription(User user) {
+		return OracleTemplates.INSTANCE.suggestionDescription(user.id, user.username).asString();
 	}
 }

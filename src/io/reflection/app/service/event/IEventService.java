@@ -8,11 +8,11 @@
 //
 package io.reflection.app.service.event;
 
-import java.util.List;
-
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.Event;
+
+import java.util.List;
 
 import com.spacehopperstudios.service.IService;
 
@@ -58,10 +58,19 @@ public interface IEventService extends IService {
 	public Long getEventsCount() throws DataAccessException;
 
 	/**
-	 * @param newUserEventKey
+	 * @param code
 	 * @return
 	 * @throws DataAccessException
 	 */
 	public Event getCodeEvent(String code) throws DataAccessException;
+	
+	/**
+	 * Search events
+	 * @param mask
+	 * @param pager
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<Event> searchEvents(String mask, Pager pager) throws DataAccessException;
 
 }

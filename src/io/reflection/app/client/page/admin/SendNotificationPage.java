@@ -7,8 +7,11 @@
 //
 package io.reflection.app.client.page.admin;
 
+import io.reflection.app.api.admin.shared.call.GetEventsRequest;
+import io.reflection.app.api.admin.shared.call.GetEventsResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersResponse;
+import io.reflection.app.api.admin.shared.call.event.GetEventsEventHandler;
 import io.reflection.app.api.admin.shared.call.event.GetUsersEventHandler;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.EventController;
@@ -27,6 +30,7 @@ import java.util.Map;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -43,7 +47,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author William Shakour (billy1380)
  *
  */
-public class SendNotificationPage extends Page implements GetUsersEventHandler {
+public class SendNotificationPage extends Page implements GetUsersEventHandler, GetEventsEventHandler {
 
 	private static SendNotificationPageUiBinder uiBinder = GWT.create(SendNotificationPageUiBinder.class);
 
@@ -92,6 +96,7 @@ public class SendNotificationPage extends Page implements GetUsersEventHandler {
 		addFrom();
 
 		register(DefaultEventBus.get().addHandlerToSource(GetUsersEventHandler.TYPE, UserController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(GetEventsEventHandler.TYPE, EventController.get(), this));
 
 		super.onAttach();
 	}
@@ -106,15 +111,40 @@ public class SendNotificationPage extends Page implements GetUsersEventHandler {
 	}
 
 	@UiHandler("userSuggestBox")
-	void onUserSuggestBoxSSelectionEvent(SelectionEvent<Suggestion> e) {
+	void onUserSuggestBoxSelectionEvent(SelectionEvent<Suggestion> e) {
 		user = userLookup.get(e.getSelectedItem().getReplacementString());
 		UserController.get().reset();
+
+		if (event != null) {
+			subjectTextBox.setText(fillUserDetails(subjectTextBox.getText()));
+			bodyEditor.setText(fillUserDetails(bodyEditor.getText()));
+		}
 	}
 
 	@UiHandler("eventSuggestBox")
-	void onEventSuggestBoxSSelectionEvent(SelectionEvent<Suggestion> e) {
+	void onEventSuggestBoxSelectionEvent(SelectionEvent<Suggestion> e) {
 		event = eventLookup.get(e.getSelectedItem().getReplacementString());
 		EventController.get().reset();
+
+		if (event != null) {
+			subjectTextBox.setText(SafeHtmlUtils.fromString(fillUserDetails(event.subject)).asString());
+			bodyEditor.setText(SafeHtmlUtils.fromString(fillUserDetails(event.longBody)).asString());
+		}
+	}
+
+	/**
+	 * @param text
+	 * @return
+	 */
+	private String fillUserDetails(String text) {
+		String filled = text;
+		if (user != null) {
+			filled = filled.replaceAll("\\$\\{user\\.forename\\}", user.forename);
+			filled = filled.replaceAll("\\$\\{user\\.surname\\}", user.surname);
+			filled = filled.replaceAll("\\$\\{user\\.username\\}", user.username);
+		}
+
+		return filled;
 	}
 
 	@UiHandler("buttonSend")
@@ -140,7 +170,7 @@ public class SendNotificationPage extends Page implements GetUsersEventHandler {
 			userLookup.clear();
 
 			for (User user : output.users) {
-				userLookup.put(user.id.toString() + ":" + user.username, user);
+				userLookup.put(UserController.get().getOracleUserDescription(user), user);
 			}
 		}
 	}
@@ -153,5 +183,31 @@ public class SendNotificationPage extends Page implements GetUsersEventHandler {
 	 */
 	@Override
 	public void getUsersFailure(GetUsersRequest input, Throwable caught) {}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.admin.shared.call.event.GetEventsEventHandler#getEventsSuccess(io.reflection.app.api.admin.shared.call.GetEventsRequest,
+	 * io.reflection.app.api.admin.shared.call.GetEventsResponse)
+	 */
+	@Override
+	public void getEventsSuccess(GetEventsRequest input, GetEventsResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess && output.events != null && output.events.size() > 0) {
+			eventLookup.clear();
+
+			for (Event event : output.events) {
+				eventLookup.put(EventController.get().getOracleEventDescription(event), event);
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.admin.shared.call.event.GetEventsEventHandler#getEventsFailure(io.reflection.app.api.admin.shared.call.GetEventsRequest,
+	 * java.lang.Throwable)
+	 */
+	@Override
+	public void getEventsFailure(GetEventsRequest input, Throwable caught) {}
 
 }

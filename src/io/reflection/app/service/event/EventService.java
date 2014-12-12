@@ -207,4 +207,68 @@ final class EventService implements IEventService {
 		throw new UnsupportedOperationException("getEventsCount");
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.event.IEventService#searchEvents(java.lang.String, io.reflection.app.api.shared.datatypes.Pager)
+	 */
+	@Override
+	public List<Event> searchEvents(String mask, Pager pager) throws DataAccessException {
+		List<Event> events = new ArrayList<Event>();
+
+		IDatabaseService databaseService = DatabaseServiceProvider.provide();
+		Connection eventConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeEvent.toString());
+
+		String searchEventsQuery = String.format("SELECT * FROM `event` WHERE `deleted`='n' AND (`code` LIKE '%%%1$s%%' OR `name` LIKE '%%%1$s%%')",
+				addslashes(mask));
+
+		if (pager != null) {
+			String sortByQuery = "id";
+
+			if (pager.sortBy != null
+					&& ("code".equals(pager.sortBy) || "name".equals(pager.sortBy) || "type".equals(pager.sortBy) || "priority".equals(pager.sortBy))) {
+				sortByQuery = pager.sortBy;
+			}
+
+			String sortDirectionQuery = "DESC";
+
+			if (pager.sortDirection != null) {
+				switch (pager.sortDirection) {
+				case SortDirectionTypeAscending:
+					sortDirectionQuery = "ASC";
+					break;
+				default:
+					break;
+				}
+			}
+
+			searchEventsQuery += String.format(" ORDER BY `%s` %s", sortByQuery, sortDirectionQuery);
+		}
+
+		if (pager.start != null && pager.count != null) {
+			searchEventsQuery += String.format(" LIMIT %d, %d", pager.start.longValue(), pager.count.longValue());
+		} else if (pager.count != null) {
+			searchEventsQuery += String.format(" LIMIT %d", pager.count);
+		}
+
+		try {
+			eventConnection.connect();
+			eventConnection.executeQuery(searchEventsQuery);
+
+			while (eventConnection.fetchNextRow()) {
+				Event event = this.toEvent(eventConnection);
+
+				if (event != null) {
+					events.add(event);
+				}
+			}
+		} finally {
+			if (eventConnection != null) {
+				eventConnection.disconnect();
+			}
+		}
+
+		return events;
+	}
+
 }

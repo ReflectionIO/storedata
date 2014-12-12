@@ -685,9 +685,17 @@ public final class Admin extends ActionHandler {
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
-			output.events = EventServiceProvider.provide().getEvents(input.pager);
+			boolean isQuery = false;
+			try {
+				input.query = ValidationHelper.validateQuery(input.query, "input");
+				isQuery = true;
+			} catch (InputValidationException ex) {}
+
+			output.events = isQuery ? EventServiceProvider.provide().searchEvents(input.query, input.pager) : EventServiceProvider.provide().getEvents(
+					input.pager);
+
 			output.pager = input.pager;
-			
+
 			updatePager(output.pager, output.events, null);
 
 			output.status = StatusType.StatusTypeSuccess;
