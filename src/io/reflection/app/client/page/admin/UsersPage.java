@@ -74,11 +74,9 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 
 		usersTable.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 		usersTable.setEmptyTableWidget(new HTMLPanel("No Users found!"));
-		UserController.get().addDataDisplay(usersTable);
 		simplePager.setDisplay(usersTable);
 
 		queryTextBox.getElement().setAttribute("placeholder", "Find a user");
-
 	}
 
 	/*
@@ -89,9 +87,21 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 	@Override
 	protected void onAttach() {
 		super.onAttach();
-
+		
+		queryTextBox.setText(UserController.get().getQuery());
+		UserController.get().addDataDisplay(usersTable);
+		
 		register(DefaultEventBus.get().addHandlerToSource(DeleteUserEventHandler.TYPE, UserController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(DeleteUsersEventHandler.TYPE, UserController.get(), this));
+	}
+	
+	/* (non-Javadoc)
+	 * @see io.reflection.app.client.page.Page#onDetach()
+	 */
+	@Override
+	protected void onDetach() {
+		UserController.get().removeDataDisplay(usersTable);
+		super.onDetach();
 	}
 
 	private void createColumns() {

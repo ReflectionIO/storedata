@@ -17,7 +17,7 @@
 			<p:Preloader ui:field="preloader">
 				<g:HTMLPanel ui:field="eventGroup" styleName="form-group">
 					<label>Event</label>
-					<g:SuggestBox styleName="form-control" ui:field="eventTextBox" />
+					<g:SuggestBox styleName="form-control" ui:field="eventSuggestBox" />
 					<g:HTMLPanel styleName="text-muted small">Enter an event code or id</g:HTMLPanel>
 					<g:HTMLPanel styleName="noteDetail" ui:field="eventNote" visible="false" />
 				</g:HTMLPanel>

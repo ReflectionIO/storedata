@@ -27,6 +27,8 @@ import java.util.Map;
 
 import com.google.gwt.http.client.Request;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
+import com.google.gwt.user.client.ui.SuggestOracle;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
 import com.google.gwt.view.client.Range;
@@ -38,10 +40,26 @@ import com.willshex.gson.json.service.shared.StatusType;
  */
 public class EventController extends AsyncDataProvider<Event> implements ServiceConstants {
 
+	private SuggestOracle.Request request;
+	private SuggestOracle.Callback callback;
+	private Oracle oracle;
+
+	class Oracle extends MultiWordSuggestOracle {
+
+		@Override
+		public void requestSuggestions(SuggestOracle.Request request, final SuggestOracle.Callback callback) {
+			EventController.this.reset();
+			EventController.this.request = request;
+			EventController.this.callback = callback;
+			EventController.this.fetchEvents(request.getQuery());
+		}
+	}
+	
 	// private List<Event> mEvents = new ArrayList<Event>();
 	private Map<Long, Event> eventLookup = new HashMap<Long, Event>();
 	// private long count = -1;
 	private Pager pager;
+	private String searchQuery = null;
 	private Request current;
 
 	private static EventController one = null;
@@ -54,7 +72,7 @@ public class EventController extends AsyncDataProvider<Event> implements Service
 		return one;
 	}
 
-	private void fetchEvents() {
+	private void fetchEvents(String query) {
 		if (current != null) {
 			current.cancel();
 			current = null;
@@ -171,7 +189,24 @@ public class EventController extends AsyncDataProvider<Event> implements Service
 		pager.start = Long.valueOf(r.getStart());
 		pager.count = Long.valueOf(r.getLength());
 
-		fetchEvents();
+		fetchEvents(null);
+	}
+
+	public void reset() {
+		pager = null;
+		// count = -1;
+		searchQuery = null;
+		request = null;
+		callback = null;
+
+		updateRowCount(0, false);
+	}
+	
+	/**
+	 * @return
+	 */
+	public Oracle oracle() {
+		return oracle;
 	}
 
 }

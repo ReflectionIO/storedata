@@ -221,7 +221,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 						List<MultiWordSuggestion> users = new ArrayList<MultiWordSuggestOracle.MultiWordSuggestion>();
 
 						for (User user : output.users) {
-							users.add(new MultiWordSuggestion(user.id.toString(), user.username));
+							users.add(new MultiWordSuggestion(user.id.toString() + ":" + user.username, user.username));
 						}
 
 						response.setSuggestions(users);
@@ -861,5 +861,12 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		}
 
 		return oracle;
+	}
+
+	/**
+	 * @return
+	 */
+	public String getQuery() {
+		return searchQuery;
 	}
 }
