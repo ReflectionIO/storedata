@@ -68,17 +68,28 @@ final class EventSubscriptionService implements IEventSubscriptionService {
 
 	@Override
 	public EventSubscription addEventSubscription(EventSubscription eventSubscription) throws DataAccessException {
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException("addEventSubscription");
 	}
 
 	@Override
 	public EventSubscription updateEventSubscription(EventSubscription eventSubscription) throws DataAccessException {
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException("updateEventSubscription");
 	}
 
 	@Override
 	public void deleteEventSubscription(EventSubscription eventSubscription) throws DataAccessException {
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException("deleteEventSubscription");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.eventsubscription.IEventSubscriptionService#getUserEventEventSubscription(io.reflection.app.datatypes.shared.Event,
+	 * io.reflection.app.datatypes.shared.User)
+	 */
+	@Override
+	public EventSubscription getUserEventEventSubscription(Event event, User user) throws DataAccessException {
+		throw new UnsupportedOperationException("getUserEventEventSubscription");
 	}
 
 }

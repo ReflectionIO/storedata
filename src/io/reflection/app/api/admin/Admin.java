@@ -92,6 +92,7 @@ import io.reflection.app.service.datasource.DataSourceServiceProvider;
 import io.reflection.app.service.event.EventServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
+import io.reflection.app.service.notification.NotificationServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
 import io.reflection.app.service.role.RoleServiceProvider;
 import io.reflection.app.service.simplemodelrun.SimpleModelRunServiceProvider;
@@ -721,13 +722,9 @@ public final class Admin extends ActionHandler {
 
 			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
-			input.toAddress = ValidationHelper.validateEmail(input.toAddress, true, "input.toAddress");
+			ValidationHelper.validateNewNotification(input.notification, "input.notification");
 
-			if (input.toAddress == null) {
-				input.toUser = ValidationHelper.validateExistingUser(input.toUser, "input.toUser");
-			}
-
-			input.event = ValidationHelper.validateEvent(input.event, "input.event");
+			NotificationServiceProvider.provide().addNotification(input.notification);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {

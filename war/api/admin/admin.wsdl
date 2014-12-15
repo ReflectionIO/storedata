@@ -439,10 +439,8 @@
 				<xsd:complexContent>
 					<xsd:extension base="sd:Request">
 						<xsd:sequence>
-							<xsd:element name="event" type="sd:Event" />
-							<xsd:element name="toUser" type="sd:User" />
+							<xsd:element name="notification" type="sd:Notification"/>
 						</xsd:sequence>
-						<xsd:attribute name="toAddress" type="xsd:string" />
 					</xsd:extension>
 				</xsd:complexContent>
 			</xsd:complexType>

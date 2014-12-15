@@ -15,6 +15,8 @@ import com.google.gson.JsonPrimitive;
 
 public class Notification extends DataType {
 	public EventSubscription cause;
+	public Event event;
+	public User user;
 	public String from;
 	public String subject;
 	public String body;
@@ -27,6 +29,10 @@ public class Notification extends DataType {
 		JsonObject object = super.toJson();
 		JsonElement jsonCause = cause == null ? JsonNull.INSTANCE : cause.toJson();
 		object.add("cause", jsonCause);
+		JsonElement jsonEvent = event == null ? JsonNull.INSTANCE : event.toJson();
+		object.add("event", jsonEvent);
+		JsonElement jsonUser = user == null ? JsonNull.INSTANCE : user.toJson();
+		object.add("user", jsonUser);
 		JsonElement jsonFrom = from == null ? JsonNull.INSTANCE : new JsonPrimitive(from);
 		object.add("from", jsonFrom);
 		JsonElement jsonSubject = subject == null ? JsonNull.INSTANCE : new JsonPrimitive(subject);
@@ -50,6 +56,20 @@ public class Notification extends DataType {
 			if (jsonCause != null) {
 				cause = new EventSubscription();
 				cause.fromJson(jsonCause.getAsJsonObject());
+			}
+		}
+		if (jsonObject.has("event")) {
+			JsonElement jsonEvent = jsonObject.get("event");
+			if (jsonEvent != null) {
+				event = new Event();
+				event.fromJson(jsonEvent.getAsJsonObject());
+			}
+		}
+		if (jsonObject.has("user")) {
+			JsonElement jsonUser = jsonObject.get("user");
+			if (jsonUser != null) {
+				user = new User();
+				user.fromJson(jsonUser.getAsJsonObject());
 			}
 		}
 		if (jsonObject.has("from")) {
@@ -92,6 +112,16 @@ public class Notification extends DataType {
 
 	public Notification cause(EventSubscription cause) {
 		this.cause = cause;
+		return this;
+	}
+
+	public Notification event(Event event) {
+		this.event = event;
+		return this;
+	}
+
+	public Notification user(User user) {
+		this.user = user;
 		return this;
 	}
 

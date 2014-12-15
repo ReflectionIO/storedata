@@ -458,6 +458,8 @@
 			<xsd:extension base="DataType">
 				<xsd:sequence>
 					<xsd:element name="cause" type="EventSubscription" maxOccurs="1" />
+					<xsd:element name="event" type="Event" maxOccurs="1" />
+					<xsd:element name="user" type="User" maxOccurs="1" />
 				</xsd:sequence>
 				<xsd:attribute name="from" type="xsd:string" />
 				<xsd:attribute name="subject" type="xsd:string" />

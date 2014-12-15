@@ -20,9 +20,11 @@ import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.Event;
+import io.reflection.app.datatypes.shared.EventSubscription;
 import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.Forum;
 import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.datatypes.shared.Notification;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Post;
 import io.reflection.app.datatypes.shared.Reply;
@@ -37,6 +39,7 @@ import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
 import io.reflection.app.service.datasource.DataSourceServiceProvider;
 import io.reflection.app.service.event.EventServiceProvider;
+import io.reflection.app.service.eventsubscription.EventSubscriptionServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
@@ -694,7 +697,7 @@ public class ValidationHelper {
 
 		if (lookupEvent == null) throw new InputValidationException(ApiError.EventNotFound.getCode(), ApiError.EventNotFound.getMessage(parent));
 
-		validateEvent(event, parent);
+//		validateEvent(event, parent);
 
 		return lookupEvent;
 	}
@@ -800,5 +803,97 @@ public class ValidationHelper {
 			throw new InputValidationException(ApiError.DataAccountFetchNotFound.getCode(), ApiError.DataAccountFetchNotFound.getMessage(parent));
 
 		return lookupDataAccountFetch;
+	}
+
+	/**
+	 * @param notification
+	 * @param string
+	 * @return
+	 * @throws ServiceException
+	 */
+	public static Notification validateNewNotification(Notification notification, String parent) throws ServiceException {
+
+		if (notification == null) throw new InputValidationException(ApiError.NotificationNull.getCode(), ApiError.NotificationNull.getMessage(parent));
+
+		if (notification.cause == null) {
+			notification.user = ValidationHelper.validateExistingUser(notification.user, parent + ".user");
+		}
+
+		if (notification.cause == null && notification.event != null) {
+			notification.event = ValidationHelper.validateExistingEvent(notification.event, parent + ".event");
+		}
+
+		if (notification.cause != null) {
+			notification.cause = validateExistingEventSubscription(notification.cause, parent + ".cause");
+
+			if (notification.user != null) {
+				if (notification.cause.user.id.longValue() != notification.user.id.longValue())
+					throw new ServiceException(0, "TODO: these should match in this very unlikely scenario");
+			}
+
+			if (notification.event != null) {
+				if (notification.cause.event.id.longValue() != notification.event.id.longValue())
+					throw new ServiceException(0, "TODO: these should match in this very unlikely scenario");
+			}
+		}
+
+		notification.from = validateEmail(notification.from, false, parent + ".from");
+
+		if (notification.subject == null)
+			throw new InputValidationException(ApiError.StringNull.getCode(), ApiError.StringNull.getMessage(parent + ".subject"));
+		notification.subject = ValidationHelper.validateStringLength(notification.subject, parent + ".subject", 1, 2000);
+
+		if (notification.body == null) throw new InputValidationException(ApiError.StringNull.getCode(), ApiError.StringNull.getMessage(parent + ".body"));
+		notification.body = ValidationHelper.validateStringLength(notification.body, parent + ".body", 1, 50000);
+
+		return notification;
+	}
+
+	/**
+	 * @param eventSubscription
+	 * @param parent
+	 * @return
+	 * 
+	 * @throws ServiceException
+	 */
+	private static EventSubscription validateExistingEventSubscription(EventSubscription eventSubscription, String parent) throws ServiceException {
+		if (eventSubscription == null)
+			throw new InputValidationException(ApiError.EventSubscriptionNull.getCode(), ApiError.EventSubscriptionNull.getMessage(parent));
+
+		boolean isIdLookup = false, isUserAndEventLookup = false;
+
+		if (eventSubscription.id != null) {
+			isIdLookup = true;
+		} else {
+			boolean hasUser = false, hasEvent = false;
+
+			try {
+				eventSubscription.user = validateExistingUser(eventSubscription.user, parent + ".user");
+				hasUser = true;
+			} catch (ServiceException s) {}
+
+			try {
+				eventSubscription.event = validateEvent(eventSubscription.event, parent + ".event");
+				hasEvent = true;
+			} catch (ServiceException s) {}
+
+			if (hasUser && hasEvent) {
+				isUserAndEventLookup = true;
+			}
+		}
+
+		if (!(isIdLookup || isUserAndEventLookup))
+			throw new InputValidationException(ApiError.EventSubscriptionNoLookup.getCode(), ApiError.EventSubscriptionNoLookup.getMessage(parent));
+
+		EventSubscription lookupEventSubscription = null;
+		if (isIdLookup) {
+			lookupEventSubscription = EventSubscriptionServiceProvider.provide().getEventSubscription(eventSubscription.id);
+		} else if (isUserAndEventLookup) {
+			lookupEventSubscription = EventSubscriptionServiceProvider.provide().getUserEventEventSubscription(eventSubscription.event, eventSubscription.user);
+		}
+
+		if (lookupEventSubscription == null) throw new InputValidationException(ApiError.RoleNotFound.getCode(), ApiError.RoleNotFound.getMessage(parent));
+
+		return lookupEventSubscription;
 	}
 }

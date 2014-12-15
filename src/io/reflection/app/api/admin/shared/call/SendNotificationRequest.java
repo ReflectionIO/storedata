@@ -9,68 +9,37 @@
 package io.reflection.app.api.admin.shared.call;
 
 import io.reflection.app.api.shared.datatypes.Request;
-import io.reflection.app.datatypes.shared.Event;
-import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.datatypes.shared.Notification;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 
 public class SendNotificationRequest extends Request {
-	public Event event;
-	public User toUser;
-	public String toAddress;
+	public Notification notification;
 
 	@Override
 	public JsonObject toJson() {
 		JsonObject object = super.toJson();
-		JsonElement jsonEvent = event == null ? JsonNull.INSTANCE : event.toJson();
-		object.add("event", jsonEvent);
-		JsonElement jsonToUser = toUser == null ? JsonNull.INSTANCE : toUser.toJson();
-		object.add("toUser", jsonToUser);
-		JsonElement jsonToAddress = toAddress == null ? JsonNull.INSTANCE : new JsonPrimitive(toAddress);
-		object.add("toAddress", jsonToAddress);
+		JsonElement jsonNotification = notification == null ? JsonNull.INSTANCE : notification.toJson();
+		object.add("notification", jsonNotification);
 		return object;
 	}
 
 	@Override
 	public void fromJson(JsonObject jsonObject) {
 		super.fromJson(jsonObject);
-		if (jsonObject.has("event")) {
-			JsonElement jsonEvent = jsonObject.get("event");
-			if (jsonEvent != null) {
-				event = new Event();
-				event.fromJson(jsonEvent.getAsJsonObject());
-			}
-		}
-		if (jsonObject.has("toUser")) {
-			JsonElement jsonToUser = jsonObject.get("toUser");
-			if (jsonToUser != null) {
-				toUser = new User();
-				toUser.fromJson(jsonToUser.getAsJsonObject());
-			}
-		}
-		if (jsonObject.has("toAddress")) {
-			JsonElement jsonToAddress = jsonObject.get("toAddress");
-			if (jsonToAddress != null) {
-				toAddress = jsonToAddress.getAsString();
+		if (jsonObject.has("notification")) {
+			JsonElement jsonNotification = jsonObject.get("notification");
+			if (jsonNotification != null) {
+				notification = new Notification();
+				notification.fromJson(jsonNotification.getAsJsonObject());
 			}
 		}
 	}
 
-	public SendNotificationRequest event(Event event) {
-		this.event = event;
-		return this;
-	}
-
-	public SendNotificationRequest toUser(User toUser) {
-		this.toUser = toUser;
-		return this;
-	}
-
-	public SendNotificationRequest toAddress(String toAddress) {
-		this.toAddress = toAddress;
+	public SendNotificationRequest notification(Notification notification) {
+		this.notification = notification;
 		return this;
 	}
 }

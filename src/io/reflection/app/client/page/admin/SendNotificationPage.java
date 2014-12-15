@@ -11,13 +11,21 @@ import io.reflection.app.api.admin.shared.call.GetEventsRequest;
 import io.reflection.app.api.admin.shared.call.GetEventsResponse;
 import io.reflection.app.api.admin.shared.call.GetUsersRequest;
 import io.reflection.app.api.admin.shared.call.GetUsersResponse;
+import io.reflection.app.api.admin.shared.call.SendNotificationRequest;
+import io.reflection.app.api.admin.shared.call.SendNotificationResponse;
 import io.reflection.app.api.admin.shared.call.event.GetEventsEventHandler;
 import io.reflection.app.api.admin.shared.call.event.GetUsersEventHandler;
+import io.reflection.app.api.admin.shared.call.event.SendNotificationEventHandler;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.EventController;
+import io.reflection.app.client.controller.NotificationController;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.UserController;
+import io.reflection.app.client.helper.AlertBoxHelper;
+import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.page.Page;
+import io.reflection.app.client.part.AlertBox;
+import io.reflection.app.client.part.AlertBox.AlertBoxType;
 import io.reflection.app.client.part.BootstrapGwtSuggestBox;
 import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.part.text.MarkdownEditor;
@@ -34,6 +42,7 @@ import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.ListBox;
@@ -47,31 +56,40 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author William Shakour (billy1380)
  *
  */
-public class SendNotificationPage extends Page implements GetUsersEventHandler, GetEventsEventHandler {
+public class SendNotificationPage extends Page implements GetUsersEventHandler, GetEventsEventHandler, SendNotificationEventHandler {
 
 	private static SendNotificationPageUiBinder uiBinder = GWT.create(SendNotificationPageUiBinder.class);
 
 	interface SendNotificationPageUiBinder extends UiBinder<Widget, SendNotificationPage> {}
 
 	@UiField Preloader preloader;
+	@UiField AlertBox alert;
 
 	@UiField(provided = true) SuggestBox eventSuggestBox = new SuggestBox(EventController.get().oracle());
 	@UiField HTMLPanel eventGroup;
 	@UiField HTMLPanel eventNote;
+	String eventError;
 
 	@UiField(provided = true) SuggestBox userSuggestBox = new SuggestBox(UserController.get().oracle());
 	@UiField HTMLPanel userGroup;
 	@UiField HTMLPanel userNote;
+	String userError;
 
 	@UiField HTMLPanel fromGroup;
 	@UiField ListBox fromListBox;
 	@UiField HTMLPanel fromNote;
+	String fromError;
+
 	@UiField HTMLPanel subjectGroup;
 	@UiField TextBox subjectTextBox;
 	@UiField HTMLPanel subjectNote;
+	String subjectError;
+
 	@UiField HTMLPanel bodyGroup;
 	@UiField MarkdownEditor bodyEditor;
 	@UiField HTMLPanel bodyNote;
+	String bodyError;
+
 	@UiField Button buttonSend;
 
 	private User user;
@@ -97,6 +115,7 @@ public class SendNotificationPage extends Page implements GetUsersEventHandler, 
 
 		register(DefaultEventBus.get().addHandlerToSource(GetUsersEventHandler.TYPE, UserController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(GetEventsEventHandler.TYPE, EventController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(SendNotificationEventHandler.TYPE, NotificationController.get(), this));
 
 		super.onAttach();
 	}
@@ -150,12 +169,107 @@ public class SendNotificationPage extends Page implements GetUsersEventHandler, 
 	@UiHandler("buttonSend")
 	void onButtonSendClicked(ClickEvent e) {
 		if (validate()) {
+			clearErrors();
+			preloader.show();
+			NotificationController.get().sendNotification(event == null ? null : event.id, user.id, fromListBox.getSelectedValue(), subjectTextBox.getText(),
+					bodyEditor.getText());
+		} else {
+			if (eventError != null) {
+				FormHelper.showNote(true, eventGroup, eventNote, eventError);
+			} else {
+				FormHelper.hideNote(eventGroup, eventNote);
+			}
 
+			if (userError != null) {
+				FormHelper.showNote(true, userGroup, userNote, userError);
+			} else {
+				FormHelper.hideNote(userGroup, userNote);
+			}
+
+			if (fromError != null) {
+				FormHelper.showNote(true, fromGroup, fromNote, fromError);
+			} else {
+				FormHelper.hideNote(fromGroup, fromNote);
+			}
+
+			if (subjectError != null) {
+				FormHelper.showNote(true, subjectGroup, subjectNote, subjectError);
+			} else {
+				FormHelper.hideNote(subjectGroup, subjectNote);
+			}
+
+			if (bodyError != null) {
+				FormHelper.showNote(true, bodyGroup, bodyNote, bodyError);
+			} else {
+				FormHelper.hideNote(bodyGroup, bodyNote);
+			}
 		}
 	}
 
 	private boolean validate() {
-		return false;
+		boolean validated = true;
+
+		String eventText = eventSuggestBox.getText();
+		String userText = userSuggestBox.getText();
+		String fromText = fromListBox.getSelectedValue();
+		String subjectText = subjectTextBox.getText();
+		String bodyText = bodyEditor.getText();
+
+		if (event == null && !eventText.isEmpty()) {
+			eventError = "Unrecognised event: try searching and selecting from the list";
+			validated = false;
+		} else {
+			eventError = null;
+			validated = validated && true;
+		}
+
+		if (user == null && !userText.isEmpty()) {
+			userError = "Cannot be empty";
+			validated = false;
+		} else if (user == null) {
+			userError = "Unrecognised user: try searching and selecting from the list";
+			validated = false;
+		} else {
+			userError = null;
+			validated = validated && true;
+		}
+
+		if (fromText.isEmpty()) {
+			// this should never happen
+			fromError = "Select a user from the list";
+			validated = false;
+		} else {
+			fromError = null;
+			validated = validated && true;
+		}
+
+		if (subjectText.isEmpty()) {
+			subjectError = "Cannot be empty";
+			validated = false;
+		} else {
+			subjectError = null;
+			validated = validated && true;
+		}
+
+		if (bodyText.isEmpty()) {
+			bodyError = "Cannot be empty";
+			validated = false;
+		} else {
+			bodyError = null;
+			validated = validated && true;
+		}
+
+		return validated;
+	}
+
+	private void clearErrors() {
+		FormHelper.hideNote(userGroup, userNote);
+		FormHelper.hideNote(eventGroup, eventNote);
+		FormHelper.hideNote(fromGroup, fromNote);
+		FormHelper.hideNote(subjectGroup, subjectNote);
+		FormHelper.hideNote(bodyGroup, bodyNote);
+
+		alert.setVisible(false);
 	}
 
 	/*
@@ -209,5 +323,58 @@ public class SendNotificationPage extends Page implements GetUsersEventHandler, 
 	 */
 	@Override
 	public void getEventsFailure(GetEventsRequest input, Throwable caught) {}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.admin.shared.call.event.SendNotificationEventHandler#sendNotificationSuccess(io.reflection.app.api.admin.shared.call.
+	 * SendNotificationRequest, io.reflection.app.api.admin.shared.call.SendNotificationResponse)
+	 */
+	@Override
+	public void sendNotificationSuccess(SendNotificationRequest input, SendNotificationResponse output) {
+		if (output.status == StatusType.StatusTypeFailure) {
+			AlertBoxHelper.showError(alert, output.error);
+		} else if (output.status == StatusType.StatusTypeSuccess) {
+			clearForm();
+
+			AlertBoxHelper.configureAlert(alert, AlertBoxType.SuccessAlertBoxType, false, "Done", "Notification sent", true);
+			alert.setVisible(true);
+
+			(new Timer() {
+				@Override
+				public void run() {
+					alert.setVisible(false);
+				}
+			}).schedule(2000);
+		}
+
+		preloader.hide();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.admin.shared.call.event.SendNotificationEventHandler#sendNotificationFailure(io.reflection.app.api.admin.shared.call.
+	 * SendNotificationRequest, java.lang.Throwable)
+	 */
+	@Override
+	public void sendNotificationFailure(SendNotificationRequest input, Throwable caught) {
+		AlertBoxHelper.showError(alert, FormHelper.convertToError(caught));
+
+		preloader.hide();
+	}
+
+	private void clearForm() {
+		clearErrors();
+
+		event = null;
+		user = null;
+
+		eventSuggestBox.setText("");
+		userSuggestBox.setText("");
+		fromListBox.setSelectedIndex(0);
+		subjectTextBox.setText("");
+		bodyEditor.setText("");
+	}
 
 }

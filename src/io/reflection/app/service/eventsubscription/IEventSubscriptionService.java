@@ -9,7 +9,9 @@
 package io.reflection.app.service.eventsubscription;
 
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.datatypes.shared.Event;
 import io.reflection.app.datatypes.shared.EventSubscription;
+import io.reflection.app.datatypes.shared.User;
 
 import com.spacehopperstudios.service.IService;
 
@@ -40,5 +42,13 @@ public interface IEventSubscriptionService extends IService {
 	 * @throws DataAccessException
 	 */
 	public void deleteEventSubscription(EventSubscription eventSubscription) throws DataAccessException;
+
+	/**
+	 * @param event
+	 * @param user
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public EventSubscription getUserEventEventSubscription(Event event, User user) throws DataAccessException;
 
 }

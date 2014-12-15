@@ -7,6 +7,10 @@
 //
 package io.reflection.app.client.controller;
 
+import io.reflection.app.api.admin.client.AdminService;
+import io.reflection.app.api.admin.shared.call.SendNotificationRequest;
+import io.reflection.app.api.admin.shared.call.SendNotificationResponse;
+import io.reflection.app.api.admin.shared.call.event.SendNotificationEventHandler;
 import io.reflection.app.api.core.client.CoreService;
 import io.reflection.app.api.core.shared.call.GetNotificationsRequest;
 import io.reflection.app.api.core.shared.call.GetNotificationsResponse;
@@ -15,7 +19,10 @@ import io.reflection.app.api.core.shared.call.event.GetNotificationsEventHandler
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.client.DefaultEventBus;
+import io.reflection.app.datatypes.shared.Event;
 import io.reflection.app.datatypes.shared.Notification;
+import io.reflection.app.datatypes.shared.NotificationTypeType;
+import io.reflection.app.datatypes.shared.User;
 
 import java.util.Collections;
 
@@ -105,6 +112,39 @@ public class NotificationController extends AsyncDataProvider<Notification> impl
 				.sortDirection(SortDirectionType.SortDirectionTypeDescending);
 
 		fetchNotifications();
+	}
+
+	/**
+	 * @param eventId
+	 * @param userId
+	 * @param from
+	 * @param subject
+	 * @param body
+	 */
+	public void sendNotification(Long eventId, Long userId, String from, String subject, String body) {
+		// Window.alert("user [" + eventId == null ? null : eventId.toString() + "] userId [" + userId.toString() + "] from [" + from + "] subject [" + subject
+		// + "] body [" + body + "]");
+
+		final SendNotificationRequest input = new SendNotificationRequest();
+
+		input.accessCode(ACCESS_CODE).session(SessionController.get().getSessionForApiCall());
+		(input.notification = new Notification()).from(from).type(NotificationTypeType.NotificationTypeTypeInternal).subject(subject).body(body);
+		(input.notification.event = new Event()).id(eventId);
+		(input.notification.user = new User()).id(userId);
+
+		AdminService service = ServiceCreator.createAdminService();
+		service.sendNotification(input, new AsyncCallback<SendNotificationResponse>() {
+
+			@Override
+			public void onSuccess(SendNotificationResponse output) {
+				DefaultEventBus.get().fireEventFromSource(new SendNotificationEventHandler.SendNotificationSuccess(input, output), NotificationController.this);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				DefaultEventBus.get().fireEventFromSource(new SendNotificationEventHandler.SendNotificationFailure(input, caught), NotificationController.this);
+			}
+		});
 	}
 
 }

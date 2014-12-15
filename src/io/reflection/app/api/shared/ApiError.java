@@ -120,7 +120,11 @@ public enum ApiError {
 
 	DataAccountUserMissmatch(100601, "User does not own data account"),
 
-	;
+	NotificationNull(100067, "Invalid value null for Notification: {0}"),
+
+	EventSubscriptionNull(100070, "Invalid value null for EventSubscription: {0}"),
+	EventSubscriptionNotFound(100071, "Event subscription not found EventSubscription: {0}"),
+	EventSubscriptionNoLookup(100072, "Invalid user event subscription lookup, need id or user and event EventSubscription: {0}"), ;
 
 	private static final RegExp PARAM_0 = RegExp.compile("\\{0\\}");
 	private static final RegExp PARAM_1 = RegExp.compile("\\{1\\}");
