@@ -46,6 +46,7 @@ CREATE TABLE `notification` (
     `body` text COLLATE utf8mb4_unicode_ci,
     `status` enum('sending', 'sent', 'read', 'failed') COLLATE utf8mb4_unicode_ci DEFAULT 'sending',
     `type` enum('email', 'text', 'push', 'internal') COLLATE utf8mb4_unicode_ci DEFAULT 'internal',
+    `priority`  enum('critical','high','normal','low','debug') COLLATE utf8mb4_unicode_ci DEFAULT 'normal',
     `deleted` enum('y', 'n') COLLATE utf8mb4_unicode_ci DEFAULT 'n',
     PRIMARY KEY (`id`),
 	KEY `index_userid` (`userid`),

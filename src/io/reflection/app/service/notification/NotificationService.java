@@ -92,11 +92,11 @@ final class NotificationService implements INotificationService {
 		}
 
 		String addNotificationQuery = String
-				.format("INSERT INTO `notification` (`causeid`,`eventid`,`userid`,`from`,`subject`,`body`,`status`,`type`,`priority`) values (%s,%s,%d,'%s','%s','%s','%s','%s','%s');",
+				.format("INSERT INTO `notification` (`causeid`,`eventid`,`userid`,`from`,`subject`,`body`,`status`,`type`,`priority`) values (%s,%s,%d,'%s','%s','%s','%s','%s','%s')",
 						notification.cause == null ? "NULL" : notification.cause.id.toString(),
 						notification.event == null ? "NULL" : notification.event.id.toString(), notification.user.id.longValue(),
 						stripslashes(notification.from), stripslashes(notification.subject), stripslashes(notification.body), notification.status.toString(),
-						notification.status.toString(), notification.priority.toString());
+						notification.type.toString(), notification.priority.toString());
 
 		Connection notificationConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeNotification.toString());
 
