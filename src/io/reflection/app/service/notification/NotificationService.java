@@ -16,6 +16,7 @@ import java.util.List;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.datatypes.shared.EventPriorityType;
 import io.reflection.app.datatypes.shared.EventSubscription;
 import io.reflection.app.datatypes.shared.Notification;
 import io.reflection.app.datatypes.shared.NotificationStatusType;
@@ -74,7 +75,47 @@ final class NotificationService implements INotificationService {
 
 	@Override
 	public Notification addNotification(Notification notification) throws DataAccessException {
-		throw new UnsupportedOperationException();
+		Notification addedNotification = null;
+
+		if (notification.type == null) {
+			notification.type = NotificationTypeType.NotificationTypeTypeInternal;
+		}
+
+		if (notification.status == null && notification.type != NotificationTypeType.NotificationTypeTypeInternal) {
+			notification.status = NotificationStatusType.NotificationStatusTypeSending;
+		} else {
+			notification.status = NotificationStatusType.NotificationStatusTypeSent;
+		}
+
+		if (notification.priority == null) {
+			notification.priority = EventPriorityType.EventPriorityTypeNormal;
+		}
+
+		String addNotificationQuery = String
+				.format("INSERT INTO `notification` (`causeid`,`eventid`,`userid`,`from`,`subject`,`body`,`status`,`type`,`priority`) values (%s,%s,%d,'%s','%s','%s','%s','%s','%s');",
+						notification.cause == null ? "NULL" : notification.cause.id.toString(),
+						notification.event == null ? "NULL" : notification.event.id.toString(), notification.user.id.longValue(),
+						stripslashes(notification.from), stripslashes(notification.subject), stripslashes(notification.body), notification.status.toString(),
+						notification.status.toString(), notification.priority.toString());
+
+		Connection notificationConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeNotification.toString());
+
+		try {
+			notificationConnection.connect();
+			notificationConnection.executeQuery(addNotificationQuery);
+
+			if (notificationConnection.getAffectedRowCount() > 0) {
+				notification.id = Long.valueOf(notificationConnection.getInsertedId());
+
+				addedNotification = getNotification(notification.id);
+			}
+		} finally {
+			if (notificationConnection != null) {
+				notificationConnection.disconnect();
+			}
+		}
+
+		return addedNotification;
 	}
 
 	@Override

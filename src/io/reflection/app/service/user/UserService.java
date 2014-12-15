@@ -145,7 +145,7 @@ final class UserService implements IUserService {
 			userConnection.executeQuery(addUserQuery);
 
 			if (userConnection.getAffectedRowCount() > 0) {
-				user.id = userConnection.getInsertedId();
+				user.id = Long.valueOf(userConnection.getInsertedId());
 				user.password = null;
 
 				addedUser = this.getUser(user.id);
