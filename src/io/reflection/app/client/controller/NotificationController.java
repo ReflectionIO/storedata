@@ -122,14 +122,15 @@ public class NotificationController extends AsyncDataProvider<Notification> impl
 	 * @param body
 	 */
 	public void sendNotification(Long eventId, Long userId, String from, String subject, String body) {
-		// Window.alert("user [" + eventId == null ? null : eventId.toString() + "] userId [" + userId.toString() + "] from [" + from + "] subject [" + subject
-		// + "] body [" + body + "]");
-
 		final SendNotificationRequest input = new SendNotificationRequest();
 
 		input.accessCode(ACCESS_CODE).session(SessionController.get().getSessionForApiCall());
 		(input.notification = new Notification()).from(from).type(NotificationTypeType.NotificationTypeTypeInternal).subject(subject).body(body);
-		(input.notification.event = new Event()).id(eventId);
+
+		if (eventId != null) {
+			(input.notification.event = new Event()).id(eventId);
+		}
+
 		(input.notification.user = new User()).id(userId);
 
 		AdminService service = ServiceCreator.createAdminService();

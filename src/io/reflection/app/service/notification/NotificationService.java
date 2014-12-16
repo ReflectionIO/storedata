@@ -16,6 +16,7 @@ import java.util.List;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.datatypes.shared.Event;
 import io.reflection.app.datatypes.shared.EventPriorityType;
 import io.reflection.app.datatypes.shared.EventSubscription;
 import io.reflection.app.datatypes.shared.Notification;
@@ -66,10 +67,37 @@ final class NotificationService implements INotificationService {
 		Notification notification = new Notification();
 		notification.id(connection.getCurrentRowLong("id")).created(connection.getCurrentRowDateTime("created"))
 				.deleted(connection.getCurrentRowString("deleted"));
-		notification.cause((EventSubscription) new EventSubscription().id(connection.getCurrentRowLong("causeid")))
-				.from(connection.getCurrentRowString("from")).body(stripslashes(connection.getCurrentRowString("body")))
+
+		String from = connection.getCurrentRowString("from");
+
+		if ("beta@reflection.io".equals(from)) {
+			from = "Beta (" + from + ")";
+		} else if ("hello@reflection.io".equals(from)) {
+			from = "Hello (" + from + ")";
+		} else {
+			from = "Admin";
+		}
+
+		notification.from(from).body(stripslashes(connection.getCurrentRowString("body")))
 				.status(NotificationStatusType.fromString(connection.getCurrentRowString("status")))
-				.subject(stripslashes(connection.getCurrentRowString("subject"))).type(NotificationTypeType.fromString(connection.getCurrentRowString("type")));
+				.subject(stripslashes(connection.getCurrentRowString("subject"))).type(NotificationTypeType.fromString(connection.getCurrentRowString("type")))
+				.priority(EventPriorityType.fromString(connection.getCurrentRowString("priority")));
+
+		Long causeId = connection.getCurrentRowLong("causeid");
+		if (causeId != null) {
+			(notification.cause = new EventSubscription()).id(causeId);
+		}
+
+		Long eventId = connection.getCurrentRowLong("eventid");
+		if (eventId != null) {
+			(notification.event = new Event()).id(eventId);
+		}
+
+		Long userId = connection.getCurrentRowLong("userid");
+		if (userId != null) {
+			(notification.user = new User()).id(userId);
+		}
+
 		return notification;
 	}
 
@@ -138,7 +166,7 @@ final class NotificationService implements INotificationService {
 	public List<Notification> getUserNotifications(User user, NotificationTypeType type, Pager pager) throws DataAccessException {
 		List<Notification> notifications = new ArrayList<Notification>();
 
-		String getUserNotificationsQuery = String.format("SELECT * FROM `notification` WHERE %s `deleted`='n' AND `userid`=%d ORDER BY `%s` %s LIMIT %d",
+		String getUserNotificationsQuery = String.format("SELECT * FROM `notification` WHERE %s `deleted`='n' AND `userid`=%d ORDER BY `%s` %s LIMIT %d, %d",
 				type == null ? "" : "`type`='" + type.toString() + "' AND", user.id.longValue(), pager.sortBy == null ? "id" : stripslashes(pager.sortBy),
 				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start == null ? Pager.DEFAULT_START.longValue()
 						: pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue() : pager.count.longValue());

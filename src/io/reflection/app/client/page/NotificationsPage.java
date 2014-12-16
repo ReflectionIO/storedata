@@ -7,7 +7,6 @@
 //
 package io.reflection.app.client.page;
 
-import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMAT_DD_MMM_YYYY;
 import io.reflection.app.api.core.shared.call.DeleteNotificationsRequest;
 import io.reflection.app.api.core.shared.call.DeleteNotificationsResponse;
 import io.reflection.app.api.core.shared.call.UpdateNotificationsRequest;
@@ -27,12 +26,19 @@ import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Notification;
+import io.reflection.app.datatypes.shared.NotificationStatusType;
 import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.shared.util.FormattingHelper;
 
+import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -54,8 +60,8 @@ public class NotificationsPage extends Page implements NavigationEventHandler, D
 	@UiField(provided = true) SimplePager simplePager = new SimplePager(false, false);
 	private User user;
 	private TextColumn<Notification> columnCreated;
-	private TextColumn<Notification> columnPriority;
-	private TextColumn<Notification> columnSubject;
+	private Column<Notification, SafeHtml> columnPriority;
+	private Column<Notification, SafeHtml> columnSubject;
 	private TextColumn<Notification> columnFrom;
 
 	public NotificationsPage() {
@@ -87,10 +93,31 @@ public class NotificationsPage extends Page implements NavigationEventHandler, D
 	}
 
 	private void createColumns() {
-		columnPriority = new TextColumn<Notification>() {
+		columnPriority = new Column<Notification, SafeHtml>(new SafeHtmlCell()) {
 			@Override
-			public String getValue(Notification object) {
-				return object.priority.toString();
+			public SafeHtml getValue(Notification object) {
+				SafeHtml priority = null;
+				
+				switch (object.priority) {
+				case EventPriorityTypeCritical:
+					priority = SafeHtmlUtils.fromSafeConstant("<i class=\"glyphicon glyphicon-exclamation-sign\" style=\"color:#ff496a\"></i>");
+					break;
+				case EventPriorityTypeDebug:
+					priority = SafeHtmlUtils.fromSafeConstant("<i class=\"glyphicon glyphicon-minus\" style=\"color:#EEE\"></i>");
+					break;
+				case EventPriorityTypeHigh:
+					priority = SafeHtmlUtils.fromSafeConstant("<i class=\"glyphicon glyphicon-bell\" style=\"color:#f8c765\"></i>");
+					break;
+				case EventPriorityTypeLow:
+					priority = SafeHtmlUtils.fromSafeConstant("<i class=\"glyphicon glyphicon-arrow-down\" style=\"color:#DDD\"></i>");
+					break;
+				case EventPriorityTypeNormal:
+					priority = SafeHtmlUtils.fromSafeConstant("<i class=\"glyphicon glyphicon-bell\" style=\"color:#CCC\"></i>");
+					break;
+				default:
+					break;
+				}
+				return priority;
 			}
 		};
 		notificationsTable.addColumn(columnPriority);
@@ -98,15 +125,24 @@ public class NotificationsPage extends Page implements NavigationEventHandler, D
 		columnCreated = new TextColumn<Notification>() {
 			@Override
 			public String getValue(Notification object) {
-				return (object.created != null) ? DATE_FORMAT_DD_MMM_YYYY.format(object.created, null) : "-";
+				return object.created != null ? FormattingHelper.getTimeSince(object.created) : "-";
 			}
 		};
 		notificationsTable.addColumn(columnCreated, "date");
 
-		columnSubject = new TextColumn<Notification>() {
+		columnSubject = new Column<Notification, SafeHtml>(new SafeHtmlCell()) {
 			@Override
-			public String getValue(Notification object) {
-				return object.subject;
+			public SafeHtml getValue(Notification object) {
+				SafeHtmlBuilder builder = new SafeHtmlBuilder();
+				if (object.status == NotificationStatusType.NotificationStatusTypeSent) {
+					builder.appendHtmlConstant("<strong>");
+					builder.appendEscaped(object.subject);
+					builder.appendHtmlConstant("</strong>");
+				} else {
+					builder.appendEscaped(object.subject);
+				}
+
+				return builder.toSafeHtml();
 			}
 		};
 		notificationsTable.addColumn(columnSubject, "subject");
