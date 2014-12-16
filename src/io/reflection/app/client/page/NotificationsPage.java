@@ -20,8 +20,11 @@ import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.NotificationController;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.helper.MarkdownHelper;
 import io.reflection.app.client.page.part.MyAccountSidePanel;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
+import io.reflection.app.client.part.ExpandableCellTableBuilder;
+import io.reflection.app.client.part.ExpandableCellTableBuilder.PlaceHolderColumn;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.client.res.Styles;
@@ -62,6 +65,7 @@ public class NotificationsPage extends Page implements NavigationEventHandler, D
 	private TextColumn<Notification> columnCreated;
 	private Column<Notification, SafeHtml> columnPriority;
 	private Column<Notification, SafeHtml> columnSubject;
+	private Column<Notification, SafeHtml> columnBody;
 	private TextColumn<Notification> columnFrom;
 
 	public NotificationsPage() {
@@ -76,6 +80,16 @@ public class NotificationsPage extends Page implements NavigationEventHandler, D
 
 		NotificationController.get().addDataDisplay(notificationsTable);
 		simplePager.setDisplay(notificationsTable);
+
+		PlaceHolderColumn<Notification, SafeHtml> placeholder = new PlaceHolderColumn<Notification, SafeHtml>(new SafeHtmlCell()) {
+			@Override
+			public SafeHtml getValue(Notification object) {
+				return SafeHtmlUtils.fromSafeConstant(getSelected() ? "<i class=\"glyphicon glyphicon-chevron-down\"></i>"
+						: "<i class=\"glyphicon glyphicon-chevron-right\"></i>");
+			}
+		};
+
+		notificationsTable.setTableBuilder(new ExpandableCellTableBuilder<Notification, SafeHtml>(notificationsTable, columnBody, placeholder));
 	}
 
 	/*
@@ -93,6 +107,15 @@ public class NotificationsPage extends Page implements NavigationEventHandler, D
 	}
 
 	private void createColumns() {
+		columnBody = new Column<Notification, SafeHtml>(new SafeHtmlCell()) {
+
+			@Override
+			public SafeHtml getValue(Notification object) {
+				return SafeHtmlUtils.fromTrustedString(MarkdownHelper.process(object.body));
+			}
+		};
+		notificationsTable.addColumn(columnBody);
+
 		columnPriority = new Column<Notification, SafeHtml>(new SafeHtmlCell()) {
 			@Override
 			public SafeHtml getValue(Notification object) {
@@ -178,10 +201,7 @@ public class NotificationsPage extends Page implements NavigationEventHandler, D
 	 * UpdateNotificationsRequest, io.reflection.app.api.core.shared.call.UpdateNotificationsResponse)
 	 */
 	@Override
-	public void updateNotificationsSuccess(UpdateNotificationsRequest input, UpdateNotificationsResponse output) {
-		// TODO Auto-generated method stub
-
-	}
+	public void updateNotificationsSuccess(UpdateNotificationsRequest input, UpdateNotificationsResponse output) {}
 
 	/*
 	 * (non-Javadoc)
@@ -190,10 +210,7 @@ public class NotificationsPage extends Page implements NavigationEventHandler, D
 	 * UpdateNotificationsRequest, java.lang.Throwable)
 	 */
 	@Override
-	public void updateNotificationsFailure(UpdateNotificationsRequest input, Throwable caught) {
-		// TODO Auto-generated method stub
-
-	}
+	public void updateNotificationsFailure(UpdateNotificationsRequest input, Throwable caught) {}
 
 	/*
 	 * (non-Javadoc)
@@ -202,10 +219,7 @@ public class NotificationsPage extends Page implements NavigationEventHandler, D
 	 * DeleteNotificationsRequest, io.reflection.app.api.core.shared.call.DeleteNotificationsResponse)
 	 */
 	@Override
-	public void deleteNotificationsSuccess(DeleteNotificationsRequest input, DeleteNotificationsResponse output) {
-		// TODO Auto-generated method stub
-
-	}
+	public void deleteNotificationsSuccess(DeleteNotificationsRequest input, DeleteNotificationsResponse output) {}
 
 	/*
 	 * (non-Javadoc)
@@ -214,9 +228,6 @@ public class NotificationsPage extends Page implements NavigationEventHandler, D
 	 * DeleteNotificationsRequest, java.lang.Throwable)
 	 */
 	@Override
-	public void deleteNotificationsFailure(DeleteNotificationsRequest input, Throwable caught) {
-		// TODO Auto-generated method stub
-
-	}
+	public void deleteNotificationsFailure(DeleteNotificationsRequest input, Throwable caught) {}
 
 }

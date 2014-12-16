@@ -1,7 +1,6 @@
 @CHARSET "UTF-8";
 
 @def selectionBorderWidth 0px;
-
 .cellTableWidget {
 	
 }
@@ -79,7 +78,7 @@
 }
 
 .cellTableSelectedRowCell {
-	
+	background-color: red;
 }
 
 .cellTableKeyboardSelectedCell {
