@@ -97,24 +97,22 @@ public class NotificationsPage extends Page implements NavigationEventHandler, D
 			@Override
 			public SafeHtml getValue(Notification object) {
 				SafeHtml priority = null;
-				
+
 				switch (object.priority) {
 				case EventPriorityTypeCritical:
 					priority = SafeHtmlUtils.fromSafeConstant("<i class=\"glyphicon glyphicon-exclamation-sign\" style=\"color:#ff496a\"></i>");
 					break;
 				case EventPriorityTypeDebug:
-					priority = SafeHtmlUtils.fromSafeConstant("<i class=\"glyphicon glyphicon-minus\" style=\"color:#EEE\"></i>");
+					priority = SafeHtmlUtils.fromSafeConstant("<i class=\"glyphicon glyphicon-minus\" style=\"color:#eee\"></i>");
 					break;
 				case EventPriorityTypeHigh:
 					priority = SafeHtmlUtils.fromSafeConstant("<i class=\"glyphicon glyphicon-bell\" style=\"color:#f8c765\"></i>");
 					break;
 				case EventPriorityTypeLow:
-					priority = SafeHtmlUtils.fromSafeConstant("<i class=\"glyphicon glyphicon-arrow-down\" style=\"color:#DDD\"></i>");
+					priority = SafeHtmlUtils.fromSafeConstant("<i class=\"glyphicon glyphicon-arrow-down\" style=\"color:#ddd\"></i>");
 					break;
 				case EventPriorityTypeNormal:
-					priority = SafeHtmlUtils.fromSafeConstant("<i class=\"glyphicon glyphicon-bell\" style=\"color:#CCC\"></i>");
-					break;
-				default:
+					priority = SafeHtmlUtils.fromSafeConstant("<i class=\"glyphicon glyphicon-bell\" style=\"color:#ccc\"></i>");
 					break;
 				}
 				return priority;
@@ -128,7 +126,7 @@ public class NotificationsPage extends Page implements NavigationEventHandler, D
 				return object.created != null ? FormattingHelper.getTimeSince(object.created) : "-";
 			}
 		};
-		notificationsTable.addColumn(columnCreated, "date");
+		notificationsTable.addColumn(columnCreated);
 
 		columnSubject = new Column<Notification, SafeHtml>(new SafeHtmlCell()) {
 			@Override
@@ -145,7 +143,7 @@ public class NotificationsPage extends Page implements NavigationEventHandler, D
 				return builder.toSafeHtml();
 			}
 		};
-		notificationsTable.addColumn(columnSubject, "subject");
+		notificationsTable.addColumn(columnSubject, "Subject");
 
 		columnFrom = new TextColumn<Notification>() {
 			@Override
@@ -153,7 +151,7 @@ public class NotificationsPage extends Page implements NavigationEventHandler, D
 				return object.from;
 			}
 		};
-		notificationsTable.addColumn(columnFrom, "from");
+		notificationsTable.addColumn(columnFrom, "From");
 	}
 
 	/*
