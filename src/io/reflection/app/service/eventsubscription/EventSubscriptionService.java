@@ -31,7 +31,7 @@ final class EventSubscriptionService implements IEventSubscriptionService {
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection eventSubscriptionConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeEventSubscription.toString());
 
-		String getEventSubscriptionQuery = String.format("SELECT * FROM `eventSubscription` WHERE `deleted`='n' AND `id`=%d LIMIT 1", id.longValue());
+		String getEventSubscriptionQuery = String.format("SELECT * FROM `eventsubscription` WHERE `deleted`='n' AND `id`=%d LIMIT 1", id.longValue());
 		try {
 			eventSubscriptionConnection.connect();
 			eventSubscriptionConnection.executeQuery(getEventSubscriptionQuery);
@@ -57,12 +57,26 @@ final class EventSubscriptionService implements IEventSubscriptionService {
 		EventSubscription eventSubscription = new EventSubscription();
 		eventSubscription.id(connection.getCurrentRowLong("id")).created(connection.getCurrentRowDateTime("created"))
 				.deleted(connection.getCurrentRowString("deleted"));
-		eventSubscription.eavesDropping((User) new User().id(connection.getCurrentRowLong("eavesdroppingid")))
-				.email(EventPriorityType.fromString(connection.getCurrentRowString("email")))
-				.event((Event) new Event().id(connection.getCurrentRowLong("eventid")))
+		eventSubscription.email(EventPriorityType.fromString(connection.getCurrentRowString("email")))
 				.notificationCenter(EventPriorityType.fromString(connection.getCurrentRowString("notificationcenter")))
 				.push(EventPriorityType.fromString(connection.getCurrentRowString("push")))
-				.text(EventPriorityType.fromString(connection.getCurrentRowString("text"))).user((User) new User().id(connection.getCurrentRowLong("userid")));
+				.text(EventPriorityType.fromString(connection.getCurrentRowString("text")));
+
+		Long eventId = connection.getCurrentRowLong("eventid");
+		if (eventId != null) {
+			(eventSubscription.event = new Event()).id(eventId);
+		}
+
+		Long userId = connection.getCurrentRowLong("eavesdroppingid");
+		if (userId != null) {
+			(eventSubscription.eavesDropping = new User()).id(userId);
+		}
+
+		userId = connection.getCurrentRowLong("userid");
+		if (userId != null) {
+			(eventSubscription.user = new User()).id(userId);
+		}
+
 		return eventSubscription;
 	}
 

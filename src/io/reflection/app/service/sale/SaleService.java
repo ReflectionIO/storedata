@@ -92,12 +92,22 @@ final class SaleService implements ISaleService {
 		sale.version = stripslashes(connection.getCurrentRowString("version"));
 		sale.typeIdentifier = stripslashes(connection.getCurrentRowString("typeidentifier"));
 		sale.units = connection.getCurrentRowInteger("units");
-		sale.proceeds = Float.valueOf(connection.getCurrentRowInteger("proceeds").floatValue() / 100.0f);
+		
+		Integer proceeds = connection.getCurrentRowInteger("proceeds");
+		if (proceeds != null) {
+			sale.proceeds = Float.valueOf(proceeds.floatValue() / 100.0f);
+		}
+		
 		sale.currency = stripslashes(connection.getCurrentRowString("currency"));
 		sale.begin = connection.getCurrentRowDateTime("begin");
 		sale.end = connection.getCurrentRowDateTime("end");
 		sale.customerCurrency = stripslashes(connection.getCurrentRowString("customercurrency"));
-		sale.customerPrice = Float.valueOf(connection.getCurrentRowInteger("customerprice").floatValue() / 100.0f);
+
+		Integer customerPrice = connection.getCurrentRowInteger("customerprice");
+		if (customerPrice != null) {
+			sale.customerPrice = Float.valueOf(customerPrice.floatValue() / 100.0f);
+		}
+
 		sale.promoCode = stripslashes(connection.getCurrentRowString("promocode"));
 		sale.parentIdentifier = stripslashes(connection.getCurrentRowString("parentidentifier"));
 		sale.subscription = stripslashes(connection.getCurrentRowString("subscription"));
@@ -711,9 +721,10 @@ final class SaleService implements ISaleService {
 
 		String getDataAccountFetchSalesQuery = String.format(
 				"SELECT * FROM `sale` WHERE `end`=FROM_UNIXTIME(%d) AND `dataaccountid`=%d AND `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d",
-				dataAccountFetch.date.getTime() / 1000, dataAccountFetch.linkedAccount.id.longValue(), pager.sortBy == null ? "id" : stripslashes(pager.sortBy),
-				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start == null ? Pager.DEFAULT_START.longValue()
-						: pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue() : pager.count.longValue());
+				dataAccountFetch.date.getTime() / 1000, dataAccountFetch.linkedAccount.id.longValue(),
+				pager.sortBy == null ? "id" : stripslashes(pager.sortBy), pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
+				pager.start == null ? Pager.DEFAULT_START.longValue() : pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue()
+						: pager.count.longValue());
 		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
 
 		try {
@@ -753,9 +764,10 @@ final class SaleService implements ISaleService {
 
 		String getDataAccountFetchSaleIdsQuery = String.format(
 				"SELECT `id` FROM `sale` WHERE `end`=FROM_UNIXTIME(%d) AND `dataaccountid`=%d AND `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d",
-				dataAccountFetch.date.getTime() / 1000, dataAccountFetch.linkedAccount.id.longValue(), pager.sortBy == null ? "id" : stripslashes(pager.sortBy),
-				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start == null ? Pager.DEFAULT_START.longValue()
-						: pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue() : pager.count.longValue());
+				dataAccountFetch.date.getTime() / 1000, dataAccountFetch.linkedAccount.id.longValue(),
+				pager.sortBy == null ? "id" : stripslashes(pager.sortBy), pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
+				pager.start == null ? Pager.DEFAULT_START.longValue() : pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue()
+						: pager.count.longValue());
 		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
 
 		try {

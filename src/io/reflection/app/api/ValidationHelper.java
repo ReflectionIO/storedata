@@ -891,7 +891,7 @@ public class ValidationHelper {
 			lookupEventSubscription = EventSubscriptionServiceProvider.provide().getUserEventEventSubscription(eventSubscription.event, eventSubscription.user);
 		}
 
-		if (lookupEventSubscription == null) throw new InputValidationException(ApiError.RoleNotFound.getCode(), ApiError.RoleNotFound.getMessage(parent));
+		if (lookupEventSubscription == null) throw new InputValidationException(ApiError.EventSubscriptionNotFound.getCode(), ApiError.EventSubscriptionNotFound.getMessage(parent));
 
 		return lookupEventSubscription;
 	}
