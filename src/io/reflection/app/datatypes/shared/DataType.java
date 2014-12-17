@@ -72,7 +72,7 @@ public abstract class DataType extends Jsonable {
 		}
 	}
 
-	public DataType id(long id) {
+	public DataType id(Long id) {
 		this.id = id;
 		return this;
 	}

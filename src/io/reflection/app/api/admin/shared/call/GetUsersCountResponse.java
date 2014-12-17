@@ -37,7 +37,7 @@ public class GetUsersCountResponse extends Response {
 		}
 	}
 
-	public GetUsersCountResponse count(long count) {
+	public GetUsersCountResponse count(Long count) {
 		this.count = count;
 		return this;
 	}

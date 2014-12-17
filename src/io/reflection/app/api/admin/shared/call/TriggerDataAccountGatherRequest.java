@@ -64,7 +64,7 @@ public class TriggerDataAccountGatherRequest extends Request {
 		return this;
 	}
 
-	public TriggerDataAccountGatherRequest days(int days) {
+	public TriggerDataAccountGatherRequest days(Integer days) {
 		this.days = days;
 		return this;
 	}

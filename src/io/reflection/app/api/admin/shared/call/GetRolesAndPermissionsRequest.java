@@ -80,22 +80,22 @@ public class GetRolesAndPermissionsRequest extends Request {
 		return this;
 	}
 
-	public GetRolesAndPermissionsRequest idsOnly(boolean idsOnly) {
+	public GetRolesAndPermissionsRequest idsOnly(Boolean idsOnly) {
 		this.idsOnly = idsOnly;
 		return this;
 	}
 
-	public GetRolesAndPermissionsRequest expandRoles(boolean expandRoles) {
+	public GetRolesAndPermissionsRequest expandRoles(Boolean expandRoles) {
 		this.expandRoles = expandRoles;
 		return this;
 	}
 
-	public GetRolesAndPermissionsRequest rolesOnly(boolean rolesOnly) {
+	public GetRolesAndPermissionsRequest rolesOnly(Boolean rolesOnly) {
 		this.rolesOnly = rolesOnly;
 		return this;
 	}
 
-	public GetRolesAndPermissionsRequest permissionsOnly(boolean permissionsOnly) {
+	public GetRolesAndPermissionsRequest permissionsOnly(Boolean permissionsOnly) {
 		this.permissionsOnly = permissionsOnly;
 		return this;
 	}

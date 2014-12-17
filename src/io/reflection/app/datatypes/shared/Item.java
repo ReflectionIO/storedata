@@ -179,7 +179,7 @@ public class Item extends DataType {
 		return this;
 	}
 
-	public Item price(float price) {
+	public Item price(Float price) {
 		this.price = price;
 		return this;
 	}

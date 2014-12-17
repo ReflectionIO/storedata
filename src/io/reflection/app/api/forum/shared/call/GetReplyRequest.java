@@ -46,7 +46,7 @@ public class GetReplyRequest extends Request {
 		}
 	}
 
-	public GetReplyRequest id(long id) {
+	public GetReplyRequest id(Long id) {
 		this.id = id;
 		return this;
 	}

@@ -267,15 +267,13 @@ final class SaleService implements ISaleService {
 			}
 
 			items.addAll(skuItemLookup.values());
-
 		} finally {
 			if (saleConnection != null) {
-				saleConnection.disconnect();
+				saleConnection.disconnect(); 
 			}
 		}
 
 		return items;
-
 	}
 
 	/*

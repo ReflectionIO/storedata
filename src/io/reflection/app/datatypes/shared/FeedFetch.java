@@ -161,7 +161,7 @@ public class FeedFetch extends DataType {
 		return this;
 	}
 
-	public FeedFetch ingested(boolean ingested) {
+	public FeedFetch ingested(Boolean ingested) {
 		this.ingested = ingested;
 		return this;
 	}
@@ -171,12 +171,12 @@ public class FeedFetch extends DataType {
 		return this;
 	}
 
-	public FeedFetch part(int part) {
+	public FeedFetch part(Integer part) {
 		this.part = part;
 		return this;
 	}
 
-	public FeedFetch totalParts(int totalParts) {
+	public FeedFetch totalParts(Integer totalParts) {
 		this.totalParts = totalParts;
 		return this;
 	}
@@ -186,7 +186,7 @@ public class FeedFetch extends DataType {
 		return this;
 	}
 
-	public FeedFetch code(long code) {
+	public FeedFetch code(Long code) {
 		this.code = code;
 		return this;
 	}

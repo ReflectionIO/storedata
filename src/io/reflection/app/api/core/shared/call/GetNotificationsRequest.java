@@ -67,7 +67,7 @@ public class GetNotificationsRequest extends Request {
 		return this;
 	}
 
-	public GetNotificationsRequest includeDeleted(boolean includeDeleted) {
+	public GetNotificationsRequest includeDeleted(Boolean includeDeleted) {
 		this.includeDeleted = includeDeleted;
 		return this;
 	}
