@@ -42,6 +42,7 @@ import io.reflection.app.service.event.EventServiceProvider;
 import io.reflection.app.service.eventsubscription.EventSubscriptionServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
+import io.reflection.app.service.notification.NotificationServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
 import io.reflection.app.service.role.RoleServiceProvider;
 import io.reflection.app.service.sale.SaleServiceProvider;
@@ -155,7 +156,6 @@ public class ValidationHelper {
 	 * @throws InputValidationException
 	 */
 	public static Pager validatePager(Pager pager, String parent) throws InputValidationException {
-
 		if (pager == null) {
 			pager = new Pager();
 
@@ -195,7 +195,6 @@ public class ValidationHelper {
 	 * @throws InputValidationException
 	 */
 	public static Country validateCountry(Country country, String parent) throws ServiceException {
-
 		if (country == null) throw new InputValidationException(ApiError.CountryNull.getCode(), ApiError.CountryNull.getMessage(parent));
 
 		boolean isIdLookup = false, isA2CodeLookup = false, isNameLookup = false;
@@ -895,5 +894,19 @@ public class ValidationHelper {
 		if (lookupEventSubscription == null) throw new InputValidationException(ApiError.RoleNotFound.getCode(), ApiError.RoleNotFound.getMessage(parent));
 
 		return lookupEventSubscription;
+	}
+	
+	public static Notification validateExistingNotification(Notification notification, String parent) throws ServiceException {
+		if (notification == null) throw new InputValidationException(ApiError.NotificationNull.getCode(), ApiError.NotificationNull.getMessage(parent));
+
+		if (notification.id == null)
+			throw new InputValidationException(ApiError.NotificationNoLookup.getCode(), ApiError.NotificationNoLookup.getMessage(parent));
+
+		Notification lookupNotification = NotificationServiceProvider.provide().getNotification(notification.id);
+
+		if (lookupNotification == null)
+			throw new InputValidationException(ApiError.NotificationNotFound.getCode(), ApiError.NotificationNotFound.getMessage(parent));
+
+		return lookupNotification;
 	}
 }

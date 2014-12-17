@@ -13,17 +13,18 @@ import io.reflection.app.api.core.shared.call.UpdateNotificationsRequest;
 import io.reflection.app.api.core.shared.call.UpdateNotificationsResponse;
 import io.reflection.app.api.core.shared.call.event.DeleteNotificationsEventHandler;
 import io.reflection.app.api.core.shared.call.event.UpdateNotificationsEventHandler;
-import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.NotificationController;
+import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.MarkdownHelper;
 import io.reflection.app.client.page.part.MyAccountSidePanel;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.ExpandableCellTableBuilder;
+import io.reflection.app.client.part.ExpandableCellTableBuilder.ExpandMultiSelectionModel;
 import io.reflection.app.client.part.ExpandableCellTableBuilder.PlaceHolderColumn;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.res.Images;
@@ -46,6 +47,8 @@ import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.view.client.SelectionChangeEvent;
+import com.google.gwt.view.client.SelectionChangeEvent.Handler;
 
 /**
  * @author William Shakour (billy1380)
@@ -58,7 +61,7 @@ public class NotificationsPage extends Page implements NavigationEventHandler, D
 	interface NotificationsPageUiBinder extends UiBinder<Widget, NotificationsPage> {}
 
 	@UiField MyAccountSidePanel myAccountSidePanel;
-	@UiField(provided = true) CellTable<Notification> notificationsTable = new CellTable<Notification>(Pager.DEFAULT_COUNT.intValue(),
+	@UiField(provided = true) CellTable<Notification> notificationsTable = new CellTable<Notification>(ServiceConstants.SHORT_STEP.intValue(),
 			BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) SimplePager simplePager = new SimplePager(false, false);
 	private User user;
@@ -88,8 +91,23 @@ public class NotificationsPage extends Page implements NavigationEventHandler, D
 						: "<i class=\"glyphicon glyphicon-chevron-right\"></i>");
 			}
 		};
+		placeholder.setCellStyleNames("text-muted");
 
 		notificationsTable.setTableBuilder(new ExpandableCellTableBuilder<Notification, SafeHtml>(notificationsTable, columnBody, placeholder));
+		notificationsTable.getSelectionModel().addSelectionChangeHandler(new Handler() {
+
+			@Override
+			public void onSelectionChange(SelectionChangeEvent event) {
+				@SuppressWarnings("unchecked")
+				Notification value = ((ExpandMultiSelectionModel<Notification>) notificationsTable.getSelectionModel()).getLastSelection();
+
+				if (value.status != NotificationStatusType.NotificationStatusTypeRead) {
+					value.status = NotificationStatusType.NotificationStatusTypeRead;
+					NotificationController.get().updateNotifications(value);
+					notificationsTable.redrawRow(notificationsTable.getVisibleItems().indexOf(value));
+				}
+			}
+		});
 	}
 
 	/*

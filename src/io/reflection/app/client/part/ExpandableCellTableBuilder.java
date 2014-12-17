@@ -8,7 +8,9 @@
 package io.reflection.app.client.part;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.Cell.Context;
@@ -27,6 +29,7 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConst
 import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SelectionModel;
 import com.google.gwt.view.client.SelectionModel.AbstractSelectionModel;
+import com.google.gwt.view.client.SetSelectionModel;
 
 /**
  * @author William Shakour (billy1380)
@@ -47,9 +50,10 @@ public class ExpandableCellTableBuilder<T, U> extends AbstractCellTableBuilder<T
 	private final String lastColumnStyle;
 	private final String selectedCellStyle;
 
-	public static class ExpandMultiSelectionModel<T> extends AbstractSelectionModel<T> {
+	public static class ExpandMultiSelectionModel<T> extends AbstractSelectionModel<T> implements SetSelectionModel<T> {
 
 		Map<Object, T> selected = new HashMap<Object, T>();
+		private T lastSelected;
 
 		/**
 		 * @param keyProvider
@@ -82,11 +86,41 @@ public class ExpandableCellTableBuilder<T, U> extends AbstractCellTableBuilder<T
 			Object key = getKey(object);
 			if (isKeySelected(key)) {
 				this.selected.remove(key);
+				lastSelected = null;
 			} else {
 				this.selected.put(key, object);
+				lastSelected = object;
 			}
 			scheduleSelectionChangeEvent();
 		}
+
+		public T getLastSelection() {
+			return lastSelected;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see com.google.gwt.view.client.SetSelectionModel#clear()
+		 */
+		@Override
+		public void clear() {
+			lastSelected = null;
+			selected.clear();
+
+			scheduleSelectionChangeEvent();
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see com.google.gwt.view.client.SetSelectionModel#getSelectedSet()
+		 */
+		@Override
+		public Set<T> getSelectedSet() {
+			return new HashSet<T>(selected.values());
+		}
+
 	}
 
 	public static abstract class PlaceHolderColumn<T, C> extends Column<T, C> {

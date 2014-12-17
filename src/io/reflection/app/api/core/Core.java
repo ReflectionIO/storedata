@@ -93,6 +93,7 @@ import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.FormType;
 import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.datatypes.shared.Notification;
 import io.reflection.app.datatypes.shared.NotificationTypeType;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Rank;
@@ -1969,7 +1970,7 @@ public final class Core extends ActionHandler {
 			}
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input.pager");
-			
+
 			output.notifications = NotificationServiceProvider.provide().getUserNotifications(input.session.user,
 					NotificationTypeType.NotificationTypeTypeInternal, input.pager);
 
@@ -1988,6 +1989,24 @@ public final class Core extends ActionHandler {
 		LOG.finer("Entering deleteNotifications");
 		DeleteNotificationsResponse output = new DeleteNotificationsResponse();
 		try {
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			if (input.notifications == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("input.notifications"));
+
+			// all or nothing validation
+			int i = 0;
+			for (Notification notification : input.notifications) {
+				ValidationHelper.validateExistingNotification(notification, "input.notifications[" + Integer.toString(i++) + "]");
+			}
+
+			// once validation/lookup is done... delete the items
+			for (Notification notification : input.notifications) {
+				NotificationServiceProvider.provide().deleteNotification(notification);
+			}
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -2001,6 +2020,29 @@ public final class Core extends ActionHandler {
 		LOG.finer("Entering updateNotifications");
 		UpdateNotificationsResponse output = new UpdateNotificationsResponse();
 		try {
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			if (input.notifications == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("input.notifications"));
+
+			// all or nothing validation
+			int i = 0;
+			String path;
+			for (Notification notification : input.notifications) {
+				path = "input.notifications[" + Integer.toString(i++) + "]";
+				ValidationHelper.validateExistingNotification(notification, path);
+
+				// if the item exists, verify that the new parameters are valid update values
+				ValidationHelper.validateNewNotification(notification, path);
+			}
+
+			// once validation/lookup is done... delete the items
+			for (Notification notification : input.notifications) {
+				NotificationServiceProvider.provide().updateNotification(notification);
+			}
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;

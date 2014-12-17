@@ -12,10 +12,16 @@ import io.reflection.app.api.admin.shared.call.SendNotificationRequest;
 import io.reflection.app.api.admin.shared.call.SendNotificationResponse;
 import io.reflection.app.api.admin.shared.call.event.SendNotificationEventHandler;
 import io.reflection.app.api.core.client.CoreService;
+import io.reflection.app.api.core.shared.call.DeleteNotificationsRequest;
+import io.reflection.app.api.core.shared.call.DeleteNotificationsResponse;
 import io.reflection.app.api.core.shared.call.GetNotificationsRequest;
 import io.reflection.app.api.core.shared.call.GetNotificationsResponse;
+import io.reflection.app.api.core.shared.call.UpdateNotificationsRequest;
+import io.reflection.app.api.core.shared.call.UpdateNotificationsResponse;
+import io.reflection.app.api.core.shared.call.event.DeleteNotificationsEventHandler;
 import io.reflection.app.api.core.shared.call.event.GetNotificationsEventHandler.GetNotificationsFailure;
 import io.reflection.app.api.core.shared.call.event.GetNotificationsEventHandler.GetNotificationsSuccess;
+import io.reflection.app.api.core.shared.call.event.UpdateNotificationsEventHandler;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.client.DefaultEventBus;
@@ -24,7 +30,9 @@ import io.reflection.app.datatypes.shared.Notification;
 import io.reflection.app.datatypes.shared.NotificationTypeType;
 import io.reflection.app.datatypes.shared.User;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import com.google.gwt.http.client.Request;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -68,7 +76,8 @@ public class NotificationController extends AsyncDataProvider<Notification> impl
 		input.session = SessionController.get().getSessionForApiCall();
 
 		if (pager == null) {
-			pager = new Pager().start(Pager.DEFAULT_START).count(STEP).sortBy(SORT_BY_CREATED).sortDirection(SortDirectionType.SortDirectionTypeDescending);
+			pager = new Pager().start(Pager.DEFAULT_START).count(SHORT_STEP).sortBy(SORT_BY_CREATED)
+					.sortDirection(SortDirectionType.SortDirectionTypeDescending);
 		}
 
 		input.pager = pager;
@@ -144,6 +153,61 @@ public class NotificationController extends AsyncDataProvider<Notification> impl
 			@Override
 			public void onFailure(Throwable caught) {
 				DefaultEventBus.get().fireEventFromSource(new SendNotificationEventHandler.SendNotificationFailure(input, caught), NotificationController.this);
+			}
+		});
+	}
+
+	/**
+	 * @param value
+	 */
+	public void updateNotifications(Notification... notification) {
+		updateNotifications(Arrays.asList(notification));
+	}
+
+	public void updateNotifications(List<Notification> notifications) {
+		final UpdateNotificationsRequest input = new UpdateNotificationsRequest();
+		input.accessCode(ACCESS_CODE).session(SessionController.get().getSessionForApiCall());
+		input.notifications(notifications);
+
+		CoreService service = ServiceCreator.createCoreService();
+		service.updateNotifications(input, new AsyncCallback<UpdateNotificationsResponse>() {
+
+			@Override
+			public void onSuccess(UpdateNotificationsResponse output) {
+				DefaultEventBus.get().fireEventFromSource(new UpdateNotificationsEventHandler.UpdateNotificationsSuccess(input, output),
+						NotificationController.this);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				DefaultEventBus.get().fireEventFromSource(new UpdateNotificationsEventHandler.UpdateNotificationsFailure(input, caught),
+						NotificationController.this);
+			}
+		});
+	}
+
+	public void deleteNotifications(Notification... notification) {
+		deleteNotifications(Arrays.asList(notification));
+	}
+
+	public void deleteNotifications(List<Notification> notifications) {
+		final DeleteNotificationsRequest input = new DeleteNotificationsRequest();
+		input.accessCode(ACCESS_CODE).session(SessionController.get().getSessionForApiCall());
+		input.notifications(notifications);
+
+		CoreService service = ServiceCreator.createCoreService();
+		service.deleteNotifications(input, new AsyncCallback<DeleteNotificationsResponse>() {
+
+			@Override
+			public void onSuccess(DeleteNotificationsResponse output) {
+				DefaultEventBus.get().fireEventFromSource(new DeleteNotificationsEventHandler.DeleteNotificationsSuccess(input, output),
+						NotificationController.this);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				DefaultEventBus.get().fireEventFromSource(new DeleteNotificationsEventHandler.DeleteNotificationsFailure(input, caught),
+						NotificationController.this);
 			}
 		});
 	}

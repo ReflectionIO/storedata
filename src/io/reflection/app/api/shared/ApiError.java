@@ -121,6 +121,8 @@ public enum ApiError {
 	DataAccountUserMissmatch(100601, "User does not own data account"),
 
 	NotificationNull(100067, "Invalid value null for Notification: {0}"),
+	NotificationNotFound(100068, "Notification not found Notification: {0}"),
+	NotificationNoLookup(100069, "Invalid user notification lookup, need id or user and event Notification: {0}"),
 
 	EventSubscriptionNull(100070, "Invalid value null for EventSubscription: {0}"),
 	EventSubscriptionNotFound(100071, "Event subscription not found EventSubscription: {0}"),
