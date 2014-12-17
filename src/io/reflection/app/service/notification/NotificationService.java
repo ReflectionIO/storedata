@@ -67,18 +67,7 @@ final class NotificationService implements INotificationService {
 		Notification notification = new Notification();
 		notification.id(connection.getCurrentRowLong("id")).created(connection.getCurrentRowDateTime("created"))
 				.deleted(connection.getCurrentRowString("deleted"));
-
-		String from = connection.getCurrentRowString("from");
-
-		if ("beta@reflection.io".equals(from)) {
-			from = "Beta (" + from + ")";
-		} else if ("hello@reflection.io".equals(from)) {
-			from = "Hello (" + from + ")";
-		} else {
-			from = "Admin";
-		}
-
-		notification.from(from).body(stripslashes(connection.getCurrentRowString("body")))
+		notification.from(connection.getCurrentRowString("from")).body(stripslashes(connection.getCurrentRowString("body")))
 				.status(NotificationStatusType.fromString(connection.getCurrentRowString("status")))
 				.subject(stripslashes(connection.getCurrentRowString("subject"))).type(NotificationTypeType.fromString(connection.getCurrentRowString("type")))
 				.priority(EventPriorityType.fromString(connection.getCurrentRowString("priority")));

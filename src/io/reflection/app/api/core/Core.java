@@ -1974,6 +1974,18 @@ public final class Core extends ActionHandler {
 			output.notifications = NotificationServiceProvider.provide().getUserNotifications(input.session.user,
 					NotificationTypeType.NotificationTypeTypeInternal, input.pager);
 
+			if (output.notifications != null) {
+				for (Notification notification : output.notifications) {
+					if ("beta@reflection.io".equals(notification.from)) {
+						notification.from = "Beta (" + notification.from + ")";
+					} else if ("hello@reflection.io".equals(notification.from)) {
+						notification.from = "Hello (" + notification.from + ")";
+					} else {
+						notification.from = "Admin";
+					}
+				}
+			}
+
 			PagerHelper.updatePager(output.pager = input.pager, output.notifications);
 
 			output.status = StatusType.StatusTypeSuccess;
@@ -2030,9 +2042,13 @@ public final class Core extends ActionHandler {
 			// all or nothing validation
 			int i = 0;
 			String path;
+			Notification existing;
 			for (Notification notification : input.notifications) {
 				path = "input.notifications[" + Integer.toString(i++) + "]";
-				ValidationHelper.validateExistingNotification(notification, path);
+				existing = ValidationHelper.validateExistingNotification(notification, path);
+
+				// from is when sent to a client and we NEVER want to update it
+				notification.from = existing.from;
 
 				// if the item exists, verify that the new parameters are valid update values
 				ValidationHelper.validateNewNotification(notification, path);

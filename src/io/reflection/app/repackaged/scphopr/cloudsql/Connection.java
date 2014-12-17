@@ -224,8 +224,9 @@ public final class Connection {
 
 		if (queryResult != null) {
 			try {
-				if (!queryResult.wasNull()) {
-					value = queryResult.getObject(key);
+				value = queryResult.getObject(key);
+				if (queryResult.wasNull()) {
+					value = null;
 				}
 			} catch (SQLException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error getting value for column", ex);
@@ -242,8 +243,9 @@ public final class Connection {
 
 		if (queryResult != null) {
 			try {
-				if (!queryResult.wasNull()) {
-					value = queryResult.getInt(key);
+				value = queryResult.getInt(key);
+				if (queryResult.wasNull()) {
+					value = null;
 				}
 			} catch (SQLException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error getting value for column", ex);
@@ -260,11 +262,9 @@ public final class Connection {
 
 		if (queryResult != null) {
 			try {
-				if (!queryResult.wasNull()) {
-					Timestamp t;
-					if ((t = queryResult.getTimestamp(key)) != null) {
-						value = new Date(t.getTime());
-					}
+				Timestamp t = queryResult.getTimestamp(key);
+				if (!queryResult.wasNull() && t != null) {
+					value = new Date(t.getTime());
 				}
 			} catch (SQLException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error getting value for column", ex);
@@ -281,8 +281,9 @@ public final class Connection {
 
 		if (queryResult != null) {
 			try {
-				if (!queryResult.wasNull()) {
-					value = queryResult.getLong(key);
+				value = queryResult.getLong(key);
+				if (queryResult.wasNull()) {
+					value = null;
 				}
 			} catch (SQLException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error getting value for column", ex);
@@ -299,8 +300,9 @@ public final class Connection {
 
 		if (queryResult != null) {
 			try {
-				if (!queryResult.wasNull()) {
-					value = queryResult.getDouble(key);
+				value = queryResult.getDouble(key);
+				if (queryResult.wasNull()) {
+					value = null;
 				}
 			} catch (SQLException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error getting value for column", ex);
@@ -317,8 +319,9 @@ public final class Connection {
 
 		if (queryResult != null) {
 			try {
-				if (!queryResult.wasNull()) {
-					value = queryResult.getString(key);
+				value = queryResult.getString(key);
+				if (queryResult.wasNull()) {
+					value = null;
 				}
 			} catch (SQLException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error getting value for column", ex);
