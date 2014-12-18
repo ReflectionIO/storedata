@@ -8,6 +8,7 @@
 //
 package io.reflection.app.service.notification;
 
+import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
@@ -66,7 +67,7 @@ final class NotificationService implements INotificationService {
 		Notification notification = new Notification();
 		notification.id(connection.getCurrentRowLong("id")).created(connection.getCurrentRowDateTime("created"))
 				.deleted(connection.getCurrentRowString("deleted"));
-		notification.from(connection.getCurrentRowString("from")).body(stripslashes(connection.getCurrentRowString("body")))
+		notification.from(stripslashes(connection.getCurrentRowString("from"))).body(stripslashes(connection.getCurrentRowString("body")))
 				.status(NotificationStatusType.fromString(connection.getCurrentRowString("status")))
 				.subject(stripslashes(connection.getCurrentRowString("subject"))).type(NotificationTypeType.fromString(connection.getCurrentRowString("type")))
 				.priority(EventPriorityType.fromString(connection.getCurrentRowString("priority")));
@@ -111,7 +112,7 @@ final class NotificationService implements INotificationService {
 				.format("INSERT INTO `notification` (`causeid`,`eventid`,`userid`,`from`,`subject`,`body`,`status`,`type`,`priority`) values (%s,%s,%d,'%s','%s','%s','%s','%s','%s')",
 						notification.cause == null ? "NULL" : notification.cause.id.toString(),
 						notification.event == null ? "NULL" : notification.event.id.toString(), notification.user.id.longValue(),
-						stripslashes(notification.from), stripslashes(notification.subject), stripslashes(notification.body), notification.status.toString(),
+						addslashes(notification.from), addslashes(notification.subject), addslashes(notification.body), notification.status.toString(),
 						notification.type.toString(), notification.priority.toString());
 
 		Connection notificationConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeNotification.toString());
@@ -139,11 +140,11 @@ final class NotificationService implements INotificationService {
 		Notification updatedNotification = null;
 
 		final String updateNotificationQuery = String
-				.format("UPDATE `notification` SET `causeid`=%s,`eventid`=%s,userid`=%s,`from`='%s',`subject`='%s',`body`='%s',`status`='%s',`type`='%s' WHERE `deleted`='n' AND `id`=%d",
+				.format("UPDATE `notification` SET `causeid`=%s,`eventid`=%s,`userid`=%s,`from`='%s',`subject`='%s',`body`='%s',`status`='%s',`type`='%s' WHERE `deleted`='n' AND `id`=%d",
 						notification.cause == null ? "NULL" : notification.cause.id.toString(),
 						notification.event == null ? "NULL" : notification.event.id.toString(),
-						notification.user == null ? "NULL" : notification.user.id.toString(), notification.from, notification.subject,
-						notification.body.toCharArray(), notification.status.toString(), notification.type.toString(), notification.id.longValue());
+						notification.user == null ? "NULL" : notification.user.id.toString(), addslashes(notification.from), addslashes(notification.subject),
+						addslashes(notification.body), notification.status.toString(), notification.type.toString(), notification.id.longValue());
 
 		Connection notificationConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeNotification.toString());
 
@@ -191,7 +192,7 @@ final class NotificationService implements INotificationService {
 		List<Notification> notifications = new ArrayList<Notification>();
 
 		String getUserNotificationsQuery = String.format("SELECT * FROM `notification` WHERE %s `deleted`='n' AND `userid`=%d ORDER BY `%s` %s LIMIT %d, %d",
-				type == null ? "" : "`type`='" + type.toString() + "' AND", user.id.longValue(), pager.sortBy == null ? "id" : stripslashes(pager.sortBy),
+				type == null ? "" : "`type`='" + type.toString() + "' AND", user.id.longValue(), pager.sortBy == null ? "id" : addslashes(pager.sortBy),
 				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start == null ? Pager.DEFAULT_START.longValue()
 						: pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue() : pager.count.longValue());
 

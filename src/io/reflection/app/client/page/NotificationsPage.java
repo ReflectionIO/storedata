@@ -101,7 +101,7 @@ public class NotificationsPage extends Page implements NavigationEventHandler, D
 				@SuppressWarnings("unchecked")
 				Notification value = ((ExpandMultiSelectionModel<Notification>) notificationsTable.getSelectionModel()).getLastSelection();
 
-				if (value.status != NotificationStatusType.NotificationStatusTypeRead) {
+				if (value != null && value.status != NotificationStatusType.NotificationStatusTypeRead) {
 					value.status = NotificationStatusType.NotificationStatusTypeRead;
 					NotificationController.get().updateNotifications(value);
 					notificationsTable.redrawRow(notificationsTable.getVisibleItems().indexOf(value));
