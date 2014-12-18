@@ -9,10 +9,6 @@
 package io.reflection.app.service.notification;
 
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
@@ -28,6 +24,9 @@ import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProv
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 final class NotificationService implements INotificationService {
 	public String getName() {
@@ -137,12 +136,48 @@ final class NotificationService implements INotificationService {
 
 	@Override
 	public Notification updateNotification(Notification notification) throws DataAccessException {
-		throw new UnsupportedOperationException();
+		Notification updatedNotification = null;
+
+		final String updateNotificationQuery = String
+				.format("UPDATE `notification` SET `causeid`=%s,`eventid`=%s,userid`=%s,`from`='%s',`subject`='%s',`body`='%s',`status`='%s',`type`='%s' WHERE `deleted`='n' AND `id`=%d",
+						notification.cause == null ? "NULL" : notification.cause.id.toString(),
+						notification.event == null ? "NULL" : notification.event.id.toString(),
+						notification.user == null ? "NULL" : notification.user.id.toString(), notification.from, notification.subject,
+						notification.body.toCharArray(), notification.status.toString(), notification.type.toString(), notification.id.longValue());
+
+		Connection notificationConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeNotification.toString());
+
+		try {
+			notificationConnection.connect();
+			notificationConnection.executeQuery(updateNotificationQuery);
+
+			if (notificationConnection.getAffectedRowCount() > 0) {
+				updatedNotification = getNotification(notification.id);
+			} else {
+				updatedNotification = notification;
+			}
+		} finally {
+			if (notificationConnection != null) {
+				notificationConnection.disconnect();
+			}
+		}
+
+		return updatedNotification;
 	}
 
 	@Override
 	public void deleteNotification(Notification notification) throws DataAccessException {
-		throw new UnsupportedOperationException();
+
+		String deleteNotificationQuery = String.format("UPDATE `notification` SET `deleted`='y' WHERE `id`=%d", notification.id.longValue());
+		Connection notificationConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeNotification.toString());
+		try {
+			notificationConnection.connect();
+			notificationConnection.executeQuery(deleteNotificationQuery);
+		} finally {
+			if (notificationConnection != null) {
+				notificationConnection.disconnect();
+			}
+		}
 	}
 
 	/*
