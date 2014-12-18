@@ -25,6 +25,8 @@ import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProv
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
+import io.reflection.app.service.event.EventServiceProvider;
+import io.reflection.app.service.eventsubscription.EventSubscriptionServiceProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,6 +96,15 @@ final class NotificationService implements INotificationService {
 	public Notification addNotification(Notification notification) throws DataAccessException {
 		Notification addedNotification = null;
 
+		if (notification.cause != null) {
+			if (notification.cause.user == null || notification.cause.event == null) {
+				notification.cause = EventSubscriptionServiceProvider.provide().getEventSubscription(notification.cause.id);
+
+				notification.event = notification.cause.event;
+				notification.user = notification.cause.user;
+			}
+		}
+
 		if (notification.type == null) {
 			notification.type = NotificationTypeType.NotificationTypeTypeInternal;
 		}
@@ -105,7 +116,15 @@ final class NotificationService implements INotificationService {
 		}
 
 		if (notification.priority == null) {
-			notification.priority = EventPriorityType.EventPriorityTypeNormal;
+			if (notification.event == null) {
+				notification.priority = EventPriorityType.EventPriorityTypeNormal;
+			} else {
+				if (notification.event.priority == null) {
+					notification.event = EventServiceProvider.provide().getEvent(notification.event.id);
+				}
+
+				notification.priority = notification.event.priority;
+			}
 		}
 
 		String addNotificationQuery = String

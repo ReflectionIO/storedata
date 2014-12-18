@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.page.admin;
 
+import static io.reflection.app.client.helper.FormattingHelper.convertEventPriorityToIcon;
 import io.reflection.app.api.admin.shared.call.GetEventsRequest;
 import io.reflection.app.api.admin.shared.call.GetEventsResponse;
 import io.reflection.app.api.admin.shared.call.UpdateEventRequest;
@@ -28,6 +29,7 @@ import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.part.text.MarkdownEditor;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.Event;
+import io.reflection.app.datatypes.shared.EventPriorityType;
 import io.reflection.app.helpers.EmailHelper;
 
 import com.google.gwt.cell.client.SafeHtmlCell;
@@ -46,6 +48,7 @@ import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -107,6 +110,11 @@ public class EventPage extends Page implements NavigationEventHandler, GetEvents
 	@UiField HTMLPanel shortBodyNote;
 	private String shortBodyError = null;
 
+	@UiField ListBox priorityListBox;
+	@UiField HTMLPanel priorityGroup;
+	@UiField HTMLPanel priorityNote;
+	private String priorityError = null;
+
 	@UiField Button addForenameBtn;
 	@UiField Button addSurnameBtn;
 	@UiField Button addUsernameBtn;
@@ -124,6 +132,17 @@ public class EventPage extends Page implements NavigationEventHandler, GetEvents
 		events.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 		EventController.get().addDataDisplay(events);
 		simplePager.setDisplay(events);
+
+		addPriorities(priorityListBox);
+	}
+
+	/**
+	 * @param listBox
+	 */
+	private void addPriorities(ListBox listBox) {
+		for (EventPriorityType p : EventPriorityType.values()) {
+			listBox.addItem(p.toString(), p.toString());
+		}
 	}
 
 	public void addColumns() {
@@ -138,6 +157,14 @@ public class EventPage extends Page implements NavigationEventHandler, GetEvents
 
 		events.addColumn(codeColumn, "Code");
 
+		Column<Event, SafeHtml> columnPriority = new Column<Event, SafeHtml>(new SafeHtmlCell()) {
+			@Override
+			public SafeHtml getValue(Event object) {
+				return convertEventPriorityToIcon(object.priority);
+			}
+		};
+		events.addColumn(columnPriority);
+
 		TextColumn<Event> nameColumn = new TextColumn<Event>() {
 
 			@Override
@@ -146,7 +173,6 @@ public class EventPage extends Page implements NavigationEventHandler, GetEvents
 			}
 
 		};
-
 		events.addColumn(nameColumn, "Name");
 
 		TextColumn<Event> typeColumn = new TextColumn<Event>() {
@@ -207,6 +233,8 @@ public class EventPage extends Page implements NavigationEventHandler, GetEvents
 			subjectTextBox.setText(event.subject);
 			shortBodyTextArea.setText(event.shortBody);
 			longBodyEditor.getTextArea().setText(event.longBody);
+			priorityListBox.setSelectedIndex(FormHelper.getItemIndex(priorityListBox, (event.priority == null ? EventPriorityType.EventPriorityTypeNormal
+					: event.priority).toString()));
 
 		} else {
 			editEventPanel.setVisible(false);
@@ -284,6 +312,7 @@ public class EventPage extends Page implements NavigationEventHandler, GetEvents
 			event.name = nameTextBox.getText();
 			event.description = descriptionTextBox.getText();
 			event.code = codeTextBox.getText();
+			event.priority = EventPriorityType.fromString(priorityListBox.getSelectedValue());
 
 			EventController.get().updateEvent(event);
 		} else {
@@ -322,6 +351,12 @@ public class EventPage extends Page implements NavigationEventHandler, GetEvents
 			} else {
 				FormHelper.hideNote(longBodyGroup, longBodyNote);
 			}
+
+			if (priorityError != null) {
+				FormHelper.showNote(true, priorityGroup, priorityNote, priorityError);
+			} else {
+				FormHelper.hideNote(priorityGroup, priorityNote);
+			}
 		}
 	}
 
@@ -335,6 +370,7 @@ public class EventPage extends Page implements NavigationEventHandler, GetEvents
 		String subject = subjectTextBox.getText();
 		String shortBody = shortBodyTextArea.getText();
 		String longBody = longBodyEditor.getText();
+		EventPriorityType priority = EventPriorityType.fromString(priorityListBox.getSelectedValue());
 
 		if (code == null || code.length() == 0) {
 			codeError = "Cannot be empty";
@@ -381,6 +417,19 @@ public class EventPage extends Page implements NavigationEventHandler, GetEvents
 			validated = false;
 		} else {
 			longBodyError = null;
+			validated = validated && true;
+		}
+
+		if (priority == null) {
+			StringBuffer values = new StringBuffer();
+			for (EventPriorityType priorityType : EventPriorityType.values()) {
+				values.append(", ");
+				values.append(priorityType.toString());
+			}
+
+			priorityError = "Priority should be one of: " + values;
+		} else {
+			priorityError = null;
 			validated = validated && true;
 		}
 

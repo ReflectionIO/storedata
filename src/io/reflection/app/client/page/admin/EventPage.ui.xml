@@ -71,6 +71,13 @@
 						<g:Button ui:field="addCompanyBtn" styleName="btn btn-sm btn-default">Add company</g:Button>
 						<g:Button ui:field="addLinkBtn" styleName="btn btn-sm btn-default">Add link</g:Button>
 					</g:HTMLPanel>
+
+					<g:HTMLPanel ui:field="priorityGroup" styleName="form-group">
+						<label>Priority</label>
+						<g:ListBox styleName="form-control" ui:field="priorityListBox" />
+						<g:HTMLPanel styleName="noteDetail" ui:field="priorityNote" visible="false" />
+					</g:HTMLPanel>
+
 					<g:HTMLPanel styleName="formEdit">
 						<g:Button ui:field="buttonUpdate" styleName="btn btn-lg btn-primary btn-block" text="Save changes" />
 					</g:HTMLPanel>

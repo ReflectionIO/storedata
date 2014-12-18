@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.page;
 
+import static io.reflection.app.client.helper.FormattingHelper.convertEventPriorityToIcon;
 import io.reflection.app.api.core.shared.call.DeleteNotificationsRequest;
 import io.reflection.app.api.core.shared.call.DeleteNotificationsResponse;
 import io.reflection.app.api.core.shared.call.UpdateNotificationsRequest;
@@ -137,26 +138,7 @@ public class NotificationsPage extends Page implements NavigationEventHandler, D
 		columnPriority = new Column<Notification, SafeHtml>(new SafeHtmlCell()) {
 			@Override
 			public SafeHtml getValue(Notification object) {
-				SafeHtml priority = null;
-
-				switch (object.priority) {
-				case EventPriorityTypeCritical:
-					priority = SafeHtmlUtils.fromSafeConstant("<i class=\"glyphicon glyphicon-exclamation-sign\" style=\"color:#ff496a\"></i>");
-					break;
-				case EventPriorityTypeDebug:
-					priority = SafeHtmlUtils.fromSafeConstant("<i class=\"glyphicon glyphicon-minus\" style=\"color:#eee\"></i>");
-					break;
-				case EventPriorityTypeHigh:
-					priority = SafeHtmlUtils.fromSafeConstant("<i class=\"glyphicon glyphicon-bell\" style=\"color:#f8c765\"></i>");
-					break;
-				case EventPriorityTypeLow:
-					priority = SafeHtmlUtils.fromSafeConstant("<i class=\"glyphicon glyphicon-arrow-down\" style=\"color:#ddd\"></i>");
-					break;
-				case EventPriorityTypeNormal:
-					priority = SafeHtmlUtils.fromSafeConstant("<i class=\"glyphicon glyphicon-bell\" style=\"color:#ccc\"></i>");
-					break;
-				}
-				return priority;
+				return convertEventPriorityToIcon(object.priority);
 			}
 		};
 		notificationsTable.addColumn(columnPriority);
