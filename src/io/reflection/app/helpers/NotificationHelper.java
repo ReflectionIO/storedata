@@ -11,6 +11,9 @@ import io.reflection.app.logging.GaeLevel;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -151,11 +154,14 @@ public class NotificationHelper {
 
 	private static Object getPropertyValue(Object object, String propertyName) {
 		Object value = null;
-		Field[] fields = object.getClass().getDeclaredFields();
+		List<Field>fields = new ArrayList<Field>();
+		Class<? extends Object> type = object.getClass();
+		
+		do {
+			fields.addAll(Arrays.asList(type.getDeclaredFields()));
+		} while ((type = type.getSuperclass()) != null);
 
-		Field field = null;
-		for (int i = 0; i < fields.length; i++) {
-			field = fields[i];
+		for (Field field : fields) {
 			if (propertyName.equals(field.getName())) {
 				try {
 					value = field.get(object);
