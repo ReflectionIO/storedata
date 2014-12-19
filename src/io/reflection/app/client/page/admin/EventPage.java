@@ -30,7 +30,7 @@ import io.reflection.app.client.part.text.MarkdownEditor;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.Event;
 import io.reflection.app.datatypes.shared.EventPriorityType;
-import io.reflection.app.helpers.EmailHelper;
+import io.reflection.app.helpers.NotificationHelper;
 
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
@@ -250,27 +250,27 @@ public class EventPage extends Page implements NavigationEventHandler, GetEvents
 
 	@UiHandler("addForenameBtn")
 	void onAddForenameClicked(ClickEvent ce) {
-		appendCode(EmailHelper.USER_FORENAME_CODE);
+		appendCode(NotificationHelper.USER_FORENAME_CODE);
 	}
 
 	@UiHandler("addSurnameBtn")
 	void onAddSurnameClicked(ClickEvent ce) {
-		appendCode(EmailHelper.USER_SURNAME_CODE);
+		appendCode(NotificationHelper.USER_SURNAME_CODE);
 	}
 
 	@UiHandler("addUsernameBtn")
 	void onAddUsernameClicked(ClickEvent ce) {
-		appendCode(EmailHelper.USER_USERNAME_CODE);
+		appendCode(NotificationHelper.USER_USERNAME_CODE);
 	}
 
 	@UiHandler("addCompanyBtn")
 	void onAddCompanyClicked(ClickEvent ce) {
-		appendCode(EmailHelper.USER_COMPANY_CODE);
+		appendCode(NotificationHelper.USER_COMPANY_CODE);
 	}
 
 	@UiHandler("addLinkBtn")
 	void onAddLinkClicked(ClickEvent ce) {
-		appendCode(EmailHelper.LINK_CODE);
+		appendCode(NotificationHelper.LINK_CODE);
 	}
 
 	/**

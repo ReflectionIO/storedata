@@ -13,6 +13,7 @@ import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.client.helper.MarkdownHelper;
 import io.reflection.app.datatypes.shared.Event;
 import io.reflection.app.datatypes.shared.EventPriorityType;
 import io.reflection.app.datatypes.shared.EventSubscription;
@@ -20,6 +21,7 @@ import io.reflection.app.datatypes.shared.Notification;
 import io.reflection.app.datatypes.shared.NotificationStatusType;
 import io.reflection.app.datatypes.shared.NotificationTypeType;
 import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.helpers.NotificationHelper;
 import io.reflection.app.persistentcounter.CounterServiceFactory;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
@@ -28,15 +30,19 @@ import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
 import io.reflection.app.service.event.EventServiceProvider;
 import io.reflection.app.service.eventsubscription.EventSubscriptionServiceProvider;
+import io.reflection.app.shared.util.FormattingHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 final class NotificationService implements INotificationService {
 
 	private static final String COUNTER_USER_NOTIFICATIONS = "notification.user.%d";
 	private static final String COUNTER_USER_NOTIFICATIONS_UNREAD = "notification.user.%d.unread";
 	private static final String COUNTER_USER_NOTIFICATIONS_UNREAD_CRITICAL = "notification.user.%d.unread.critical";
+
+	private static final Logger LOG = Logger.getLogger(NotificationService.class.getName());
 
 	public String getName() {
 		return ServiceType.ServiceTypeNotification.toString();
@@ -111,10 +117,6 @@ final class NotificationService implements INotificationService {
 			}
 		}
 
-		if (notification.type == null) {
-			notification.type = NotificationTypeType.NotificationTypeTypeInternal;
-		}
-
 		if (notification.status == null && notification.type != NotificationTypeType.NotificationTypeTypeInternal) {
 			notification.status = NotificationStatusType.NotificationStatusTypeSending;
 		} else {
@@ -130,6 +132,23 @@ final class NotificationService implements INotificationService {
 				}
 
 				notification.priority = notification.event.priority;
+			}
+		}
+
+		if (notification.type == null) {
+			if (notification.priority == null) {
+				notification.type = NotificationTypeType.NotificationTypeTypeInternal;
+			} else {
+				switch (notification.priority) {
+				case EventPriorityTypeCritical:
+				case EventPriorityTypeHigh:
+				case EventPriorityTypeNormal:
+					notification.type = NotificationTypeType.NotificationTypeTypeEmail;
+					break;
+				default:
+					notification.type = NotificationTypeType.NotificationTypeTypeInternal;
+					break;
+				}
 			}
 		}
 
@@ -149,18 +168,38 @@ final class NotificationService implements INotificationService {
 			if (notificationConnection.getAffectedRowCount() > 0) {
 				notification.id = Long.valueOf(notificationConnection.getInsertedId());
 
-				addedNotification = getNotification(notification.id);
+				if (notification.id != null) {
+					addedNotification = getNotification(notification.id);
 
-				if (addedNotification.type == NotificationTypeType.NotificationTypeTypeInternal) {
-					String userCounter = String.format(COUNTER_USER_NOTIFICATIONS, notification.user.id.longValue());
-					CounterServiceFactory.getCounterService().increment(userCounter);
+					// replace with more complete objects
+					addedNotification.user(notification.user).event(notification.event).cause(notification.cause);
 
-					String userUnReadCounter = String.format(COUNTER_USER_NOTIFICATIONS_UNREAD, notification.user.id.longValue());
-					CounterServiceFactory.getCounterService().increment(userUnReadCounter);
+					if (addedNotification.type == NotificationTypeType.NotificationTypeTypeEmail) {
+						String markdownBody = addedNotification.body;
+						String body = MarkdownHelper.process(markdownBody);
 
-					if (addedNotification.priority == EventPriorityType.EventPriorityTypeCritical) {
-						String userUnReadCriticalCounter = String.format(COUNTER_USER_NOTIFICATIONS_UNREAD_CRITICAL, notification.user.id.longValue());
-						CounterServiceFactory.getCounterService().increment(userUnReadCriticalCounter);
+						if (NotificationHelper.sendEmail(addedNotification.from, addedNotification.user.username,
+								FormattingHelper.getUserName(addedNotification.user), addedNotification.subject, body, !markdownBody.equals(body))) {
+
+							addedNotification.status = NotificationStatusType.NotificationStatusTypeSent;
+							addedNotification = updateNotification(addedNotification);
+
+							// replace with more complete objects
+							addedNotification.user(notification.user).event(notification.event).cause(notification.cause);
+						} else {
+							LOG.severe(String.format("Failed to send email for notification [%d]", addedNotification.id.longValue()));
+						}
+					} else if (addedNotification.type == NotificationTypeType.NotificationTypeTypeInternal) {
+						String userCounter = String.format(COUNTER_USER_NOTIFICATIONS, addedNotification.user.id.longValue());
+						CounterServiceFactory.getCounterService().increment(userCounter);
+
+						String userUnReadCounter = String.format(COUNTER_USER_NOTIFICATIONS_UNREAD, addedNotification.user.id.longValue());
+						CounterServiceFactory.getCounterService().increment(userUnReadCounter);
+
+						if (addedNotification.priority == EventPriorityType.EventPriorityTypeCritical) {
+							String userUnReadCriticalCounter = String.format(COUNTER_USER_NOTIFICATIONS_UNREAD_CRITICAL, addedNotification.user.id.longValue());
+							CounterServiceFactory.getCounterService().increment(userUnReadCriticalCounter);
+						}
 					}
 				}
 			}
@@ -171,6 +210,16 @@ final class NotificationService implements INotificationService {
 		}
 
 		return addedNotification;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.notification.INotificationService#updateNotification(io.reflection.app.datatypes.shared.Notification)
+	 */
+	@Override
+	public Notification updateNotification(Notification notification) throws DataAccessException {
+		return updateNotification(null, notification);
 	}
 
 	/*
@@ -199,7 +248,7 @@ final class NotificationService implements INotificationService {
 				updatedNotification = getNotification(toUpdate.id);
 
 				if (updatedNotification.type == NotificationTypeType.NotificationTypeTypeInternal) {
-					if (existing.status != NotificationStatusType.NotificationStatusTypeRead
+					if (existing != null && existing.status != NotificationStatusType.NotificationStatusTypeRead
 							&& updatedNotification.status == NotificationStatusType.NotificationStatusTypeRead) {
 						String userUnReadCounter = String.format(COUNTER_USER_NOTIFICATIONS_UNREAD, toUpdate.user.id.longValue());
 						CounterServiceFactory.getCounterService().increment(userUnReadCounter, Integer.valueOf(-1));

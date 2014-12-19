@@ -74,11 +74,14 @@ import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
+import io.reflection.app.datatypes.shared.EventPriorityType;
 import io.reflection.app.datatypes.shared.FeedFetch;
+import io.reflection.app.datatypes.shared.Notification;
+import io.reflection.app.datatypes.shared.NotificationTypeType;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.SimpleModelRun;
 import io.reflection.app.datatypes.shared.User;
-import io.reflection.app.helpers.EmailHelper;
+import io.reflection.app.helpers.NotificationHelper;
 import io.reflection.app.ingestors.Ingestor;
 import io.reflection.app.ingestors.IngestorFactory;
 import io.reflection.app.modellers.Modeller;
@@ -99,7 +102,6 @@ import io.reflection.app.service.simplemodelrun.SimpleModelRunServiceProvider;
 import io.reflection.app.service.user.IUserService;
 import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
-import io.reflection.app.shared.util.FormattingHelper;
 import io.reflection.app.shared.util.PagerHelper;
 
 import java.util.ArrayList;
@@ -1166,16 +1168,28 @@ public final class Admin extends ActionHandler {
 
 			DataSource dataSource = DataSourceServiceProvider.provide().getDataSource(input.dataAccount.source.id);
 
-			EmailHelper
-					.sendEmail(
-							"hello@reflection.io",
-							"chi@reflection.io",
-							"Chi Dire",
-							"An admin has linked to a user's account",
-							String.format(
-									"Hi Chi,\n\nThis is to let you know that the admin user [%d - %s] has added the data account [%d] for the data source [%s] and the username [%s]. This data account belongs to the user [%d - %s].\n\nReflection",
-									adminUser.id.longValue(), FormattingHelper.getUserLongName(adminUser), input.dataAccount.id.longValue(), dataSource.name,
-									input.dataAccount.username, ownerUser.id.longValue(), FormattingHelper.getUserLongName(ownerUser)), false);
+			User listeningUser = UserServiceProvider.provide().getUsernameUser("chi@reflection.io");
+			
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			parameters.put("listener", listeningUser);
+			parameters.put("admin", adminUser);
+			parameters.put("owner", ownerUser);
+			parameters.put("data", input.dataAccount);
+			parameters.put("source", dataSource);
+			
+			String body = NotificationHelper
+					.inflate(
+							parameters,
+							"Hi ${listener.forename},\n\nThis is to let you know that the admin user [${admin.id} - ${admin.forename} ${admin.surname}] has added the data account [${data.id}] for the data source [${source.name}] and the username [${data.username}]. This data account belongs to the user [${owner.id} - ${owner.forename} ${owner.surname}].\n\nReflection");
+
+			Notification notification = (new Notification()).from("hello@reflection.io").user(listeningUser).body(body)
+					.priority(EventPriorityType.EventPriorityTypeCritical).subject("An admin has linked to a user's account");
+			Notification added = NotificationServiceProvider.provide().addNotification(notification);
+
+			if (added.type != NotificationTypeType.NotificationTypeTypeInternal) {
+				notification.type = NotificationTypeType.NotificationTypeTypeInternal;
+				NotificationServiceProvider.provide().addNotification(notification);
+			}
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {

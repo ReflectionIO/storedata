@@ -91,6 +91,7 @@ import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
+import io.reflection.app.datatypes.shared.EventPriorityType;
 import io.reflection.app.datatypes.shared.FormType;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Notification;
@@ -102,7 +103,7 @@ import io.reflection.app.datatypes.shared.Sale;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.helpers.ApiHelper;
-import io.reflection.app.helpers.EmailHelper;
+import io.reflection.app.helpers.NotificationHelper;
 import io.reflection.app.helpers.SliceHelper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.modellers.Modeller;
@@ -124,7 +125,6 @@ import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.service.user.IUserService;
 import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
-import io.reflection.app.shared.util.FormattingHelper;
 import io.reflection.app.shared.util.PagerHelper;
 
 import java.text.SimpleDateFormat;
@@ -1204,16 +1204,27 @@ public final class Core extends ActionHandler {
 					input.session.user = UserServiceProvider.provide().getUser(input.session.user.id);
 				}
 
-				EmailHelper
-						.sendEmail(
-								"hello@reflection.io",
-								"chi@reflection.io",
-								"Chi Dire",
-								"A user's has linked thier account account",
-								String.format(
-										"Hi Chi,\n\nThis is to let you know that the user [%d - %s] has added the data account [%d] for the data source [%s] and the username.\n\nReflection",
-										input.session.user.id.longValue(), FormattingHelper.getUserLongName(input.session.user), output.account.id.longValue(),
-										input.source.name, output.account.username), false);
+				User listeningUser = UserServiceProvider.provide().getUsernameUser("chi@reflection.io");
+
+				Map<String, Object> parameters = new HashMap<String, Object>();
+				parameters.put("listener", listeningUser);
+				parameters.put("user", input.session.user);
+				parameters.put("account", output.account);
+				parameters.put("source", input.source);
+
+				String body = NotificationHelper
+						.inflate(
+								parameters,
+								"Hi ${listener.forename},\n\nThis is to let you know that the user [${user.id} - ${user.forename} ${user.surname}] has added the data account [${account.id}] for the data source [${source.name}] and the username ${account.username}.\n\nReflection");
+
+				Notification notification = (new Notification()).from("hello@reflection.io").user(listeningUser).body(body)
+						.priority(EventPriorityType.EventPriorityTypeHigh).subject("A user's has linked thier account account");
+				Notification added = NotificationServiceProvider.provide().addNotification(notification);
+
+				if (added.type != NotificationTypeType.NotificationTypeTypeInternal) {
+					notification.type = NotificationTypeType.NotificationTypeTypeInternal;
+					NotificationServiceProvider.provide().addNotification(notification);
+				}
 			}
 
 			output.status = StatusType.StatusTypeSuccess;

@@ -12,7 +12,7 @@ import io.reflection.app.api.core.Core;
 import io.reflection.app.api.core.shared.call.RegisterUserRequest;
 import io.reflection.app.api.core.shared.call.RegisterUserResponse;
 import io.reflection.app.datatypes.shared.User;
-import io.reflection.app.helpers.EmailHelper;
+import io.reflection.app.helpers.NotificationHelper;
 
 import java.io.IOException;
 
@@ -183,7 +183,7 @@ public class EmailServlet extends HttpServlet {
 
 		String body = "Name: " + name + " \r\nEmail: " + email + "\r\nMessage: " + message + "\r\n";
 
-		if (EmailHelper.sendEmail("hello@reflection.io (Reflection)", emailTo, "Reflection", subject, body, false)) {
+		if (NotificationHelper.sendEmail("hello@reflection.io (Reflection)", emailTo, "Reflection", subject, body, false)) {
 			resp.getOutputStream().write(1);
 		} else {
 			resp.getOutputStream().write(0);

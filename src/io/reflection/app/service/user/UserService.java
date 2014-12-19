@@ -14,14 +14,15 @@ import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
-import io.reflection.app.client.helper.MarkdownHelper;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.Event;
+import io.reflection.app.datatypes.shared.Notification;
+import io.reflection.app.datatypes.shared.NotificationTypeType;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
-import io.reflection.app.helpers.EmailHelper;
+import io.reflection.app.helpers.NotificationHelper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
@@ -30,9 +31,9 @@ import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.event.EventServiceProvider;
+import io.reflection.app.service.notification.NotificationServiceProvider;
 import io.reflection.app.service.role.RoleServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
-import io.reflection.app.shared.util.FormattingHelper;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -160,13 +161,14 @@ final class UserService implements IUserService {
 				values.put("user", addedUser);
 
 				Event event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.NEW_USER_EVENT_KEY);
-				String markdownBody = EmailHelper.inflate(values, event.longBody);
+				String body = NotificationHelper.inflate(values, event.longBody);
 
-				String body = MarkdownHelper.process(markdownBody);
+				Notification notification = (new Notification()).from("hello@reflection.io").user(user).event(event).body(body).subject(event.subject);
+				Notification added = NotificationServiceProvider.provide().addNotification(notification);
 
-				if (!EmailHelper.sendEmail("hello@reflection.io", user.username, FormattingHelper.getUserName(user), event.subject, body,
-						!markdownBody.equals(body))) {
-					LOG.severe(String.format("Failed to welcome user [%d]", user.id.longValue()));
+				if (added.type != NotificationTypeType.NotificationTypeTypeInternal) {
+					notification.type = NotificationTypeType.NotificationTypeTypeInternal;
+					NotificationServiceProvider.provide().addNotification(notification);
 				}
 			}
 		} finally {
@@ -1134,12 +1136,17 @@ final class UserService implements IUserService {
 
 				Event event = EventServiceProvider.provide().getEvent(Long.valueOf(eventId));
 
-				String subject = EmailHelper.inflate(values, event.subject);
+				String subject = NotificationHelper.inflate(values, event.subject);
 
-				String markdownBody = EmailHelper.inflate(values, event.longBody);
-				String body = MarkdownHelper.process(markdownBody);
+				String body = NotificationHelper.inflate(values, event.longBody);
 
-				EmailHelper.sendEmail("hello@reflection.io", user.username, FormattingHelper.getUserName(user), subject, body, !markdownBody.equals(body));
+				Notification notification = (new Notification()).from("hello@reflection.io").user(user).event(event).body(body).subject(subject);
+				Notification added = NotificationServiceProvider.provide().addNotification(notification);
+
+				if (added.type != NotificationTypeType.NotificationTypeTypeInternal) {
+					notification.type = NotificationTypeType.NotificationTypeTypeInternal;
+					NotificationServiceProvider.provide().addNotification(notification);
+				}
 			}
 
 		} finally {
@@ -1170,12 +1177,14 @@ final class UserService implements IUserService {
 				values.put("user", user);
 
 				Event event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.PASSWORD_EVENT_CODE);
-				String markdownBody = EmailHelper.inflate(values, event.longBody);
-				String body = MarkdownHelper.process(markdownBody);
+				String body = NotificationHelper.inflate(values, event.longBody);
 
-				if (!EmailHelper.sendEmail("hello@reflection.io", user.username, FormattingHelper.getUserName(user), event.subject, body,
-						!markdownBody.equals(body))) {
-					LOG.severe(String.format("Failed to notify user [%d] of password change", user.id.longValue()));
+				Notification notification = (new Notification()).from("hello@reflection.io").user(user).event(event).body(body).subject(event.subject);
+				Notification added = NotificationServiceProvider.provide().addNotification(notification);
+
+				if (added.type != NotificationTypeType.NotificationTypeTypeInternal) {
+					notification.type = NotificationTypeType.NotificationTypeTypeInternal;
+					NotificationServiceProvider.provide().addNotification(notification);
 				}
 			}
 		} finally {

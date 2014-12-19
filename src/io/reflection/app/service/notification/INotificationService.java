@@ -44,6 +44,14 @@ public interface INotificationService extends IService {
 	public Notification updateNotification(Notification existing, Notification toUpdate) throws DataAccessException;
 
 	/**
+	 * 
+	 * @param notification
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public Notification updateNotification(Notification notification) throws DataAccessException;
+
+	/**
 	 * @param notification
 	 * @throws DataAccessException
 	 */

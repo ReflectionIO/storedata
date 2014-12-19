@@ -28,9 +28,9 @@ import javax.mail.internet.MimeMessage;
  * @author billy1380
  * 
  */
-public class EmailHelper {
+public class NotificationHelper {
 
-	private static final Logger LOG = Logger.getLogger(EmailHelper.class.getName());
+	private static final Logger LOG = Logger.getLogger(NotificationHelper.class.getName());
 
 	public static final String USER_FORENAME_CODE = "${user.forename}";
 	public static final String USER_SURNAME_CODE = "${user.surname}";

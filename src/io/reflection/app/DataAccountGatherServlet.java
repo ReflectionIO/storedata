@@ -14,14 +14,16 @@ import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.Event;
+import io.reflection.app.datatypes.shared.Notification;
+import io.reflection.app.datatypes.shared.NotificationTypeType;
 import io.reflection.app.datatypes.shared.User;
-import io.reflection.app.helpers.EmailHelper;
+import io.reflection.app.helpers.NotificationHelper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.datasource.DataSourceServiceProvider;
 import io.reflection.app.service.event.EventServiceProvider;
+import io.reflection.app.service.notification.NotificationServiceProvider;
 import io.reflection.app.service.user.UserServiceProvider;
-import io.reflection.app.shared.util.FormattingHelper;
 
 import java.io.IOException;
 import java.util.Date;
@@ -101,15 +103,21 @@ public class DataAccountGatherServlet extends ContextAwareServlet {
 
 							if (status && notifyParameter != null && Boolean.parseBoolean(notifyParameter)) {
 								Event event = EventServiceProvider.provide().getEvent(Long.valueOf(5));
-
-								Map<String, Object> parameters = new HashMap<String, Object>();
-
 								User user = UserServiceProvider.provide().getDataAccountOwner(account);
+								
+								Map<String, Object> parameters = new HashMap<String, Object>();
 								parameters.put("user", user);
 
-								String body = EmailHelper.inflate(parameters, event.longBody);
+								String body = NotificationHelper.inflate(parameters, event.longBody);
 
-								EmailHelper.sendEmail("hello@reflection.io", user.username, FormattingHelper.getUserName(user), event.subject, body, true);
+								Notification notification = (new Notification()).from("hello@reflection.io").user(user).event(event).body(body)
+										.subject(event.subject);
+								Notification added = NotificationServiceProvider.provide().addNotification(notification);
+
+								if (added.type != NotificationTypeType.NotificationTypeTypeInternal) {
+									notification.type = NotificationTypeType.NotificationTypeTypeInternal;
+									NotificationServiceProvider.provide().addNotification(notification);
+								}
 							}
 
 						} else {
