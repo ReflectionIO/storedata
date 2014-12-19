@@ -49,6 +49,12 @@
 					<g:HTMLPanel styleName="noteDetail" ui:field="bodyNote" visible="false" />
 				</g:HTMLPanel>
 
+				<g:HTMLPanel ui:field="priorityGroup" styleName="form-group">
+					<label>Priority</label>
+					<g:ListBox styleName="form-control" ui:field="priorityListBox" />
+					<g:HTMLPanel styleName="noteDetail" ui:field="priorityNote" visible="false" />
+				</g:HTMLPanel>
+
 				<g:HTMLPanel styleName="formEdit">
 					<g:Button ui:field="buttonSend" styleName="btn btn-lg btn-primary btn-block" text="Send notification" />
 				</g:HTMLPanel>

@@ -26,6 +26,7 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.datatypes.shared.Event;
+import io.reflection.app.datatypes.shared.EventPriorityType;
 import io.reflection.app.datatypes.shared.Notification;
 import io.reflection.app.datatypes.shared.NotificationTypeType;
 import io.reflection.app.datatypes.shared.User;
@@ -92,7 +93,9 @@ public class NotificationController extends AsyncDataProvider<Notification> impl
 						pager = output.pager;
 					}
 
-					updateRowCount(output.notifications == null ? 0 : input.pager.start.intValue() + output.notifications.size(), output.notifications == null);
+					updateRowCount(
+							output.pager.totalCount == null ? (output.notifications == null ? 0 : input.pager.start.intValue() + output.notifications.size())
+									: output.pager.totalCount.intValue(), output.pager.totalCount == null ? output.notifications == null : true);
 					updateRowData(input.pager.start.intValue(), output.notifications == null ? Collections.<Notification> emptyList() : output.notifications);
 				}
 
@@ -129,12 +132,14 @@ public class NotificationController extends AsyncDataProvider<Notification> impl
 	 * @param from
 	 * @param subject
 	 * @param body
+	 * @param priority
 	 */
-	public void sendNotification(Long eventId, Long userId, String from, String subject, String body) {
+	public void sendNotification(Long eventId, Long userId, String from, String subject, String body, EventPriorityType priority) {
 		final SendNotificationRequest input = new SendNotificationRequest();
 
 		input.accessCode(ACCESS_CODE).session(SessionController.get().getSessionForApiCall());
-		(input.notification = new Notification()).from(from).type(NotificationTypeType.NotificationTypeTypeInternal).subject(subject).body(body);
+		(input.notification = new Notification()).from(from).type(NotificationTypeType.NotificationTypeTypeInternal).subject(subject).body(body)
+				.priority(priority);
 
 		if (eventId != null) {
 			(input.notification.event = new Event()).id(eventId);

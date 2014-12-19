@@ -10,6 +10,7 @@ package io.reflection.app.service.notification;
 
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.datatypes.shared.EventPriorityType;
 import io.reflection.app.datatypes.shared.Notification;
 import io.reflection.app.datatypes.shared.NotificationTypeType;
 import io.reflection.app.datatypes.shared.User;
@@ -34,11 +35,13 @@ public interface INotificationService extends IService {
 	public Notification addNotification(Notification notification) throws DataAccessException;
 
 	/**
-	 * @param notification
+	 * 
+	 * @param existing
+	 * @param toUpdate
 	 * @return
 	 * @throws DataAccessException
 	 */
-	public Notification updateNotification(Notification notification) throws DataAccessException;
+	public Notification updateNotification(Notification existing, Notification toUpdate) throws DataAccessException;
 
 	/**
 	 * @param notification
@@ -55,4 +58,14 @@ public interface INotificationService extends IService {
 	 */
 	public List<Notification> getUserNotifications(User user, NotificationTypeType type, Pager pager) throws DataAccessException;
 
+	/**
+	 * 
+	 * @param user
+	 * @param type
+	 * @param priority
+	 * @param unread
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public Long getUserNotificationsCount(User user, NotificationTypeType type, EventPriorityType priority, Boolean unread) throws DataAccessException;
 }

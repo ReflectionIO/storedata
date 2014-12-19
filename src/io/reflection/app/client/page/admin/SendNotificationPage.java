@@ -30,6 +30,7 @@ import io.reflection.app.client.part.BootstrapGwtSuggestBox;
 import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.part.text.MarkdownEditor;
 import io.reflection.app.datatypes.shared.Event;
+import io.reflection.app.datatypes.shared.EventPriorityType;
 import io.reflection.app.datatypes.shared.User;
 
 import java.util.HashMap;
@@ -90,6 +91,11 @@ public class SendNotificationPage extends Page implements GetUsersEventHandler, 
 	@UiField HTMLPanel bodyNote;
 	String bodyError;
 
+	@UiField ListBox priorityListBox;
+	@UiField HTMLPanel priorityGroup;
+	@UiField HTMLPanel priorityNote;
+	private String priorityError = null;
+
 	@UiField Button buttonSend;
 
 	private User user;
@@ -102,6 +108,17 @@ public class SendNotificationPage extends Page implements GetUsersEventHandler, 
 		initWidget(uiBinder.createAndBindUi(this));
 
 		BootstrapGwtSuggestBox.INSTANCE.styles().ensureInjected();
+
+		addPriorities(priorityListBox);
+	}
+
+	/**
+	 * @param listBox
+	 */
+	private void addPriorities(ListBox listBox) {
+		for (EventPriorityType p : EventPriorityType.values()) {
+			listBox.addItem(p.toString(), p.toString());
+		}
 	}
 
 	/*
@@ -148,6 +165,8 @@ public class SendNotificationPage extends Page implements GetUsersEventHandler, 
 		if (event != null) {
 			subjectTextBox.setText(SafeHtmlUtils.fromString(fillUserDetails(event.subject)).asString());
 			bodyEditor.setText(SafeHtmlUtils.fromString(fillUserDetails(event.longBody)).asString());
+
+			priorityListBox.setSelectedIndex(FormHelper.getItemIndex(priorityListBox, event.priority.toString()));
 		}
 	}
 
@@ -172,7 +191,7 @@ public class SendNotificationPage extends Page implements GetUsersEventHandler, 
 			clearErrors();
 			preloader.show();
 			NotificationController.get().sendNotification(event == null ? null : event.id, user.id, fromListBox.getSelectedValue(), subjectTextBox.getText(),
-					bodyEditor.getText());
+					bodyEditor.getText(), EventPriorityType.fromString(priorityListBox.getSelectedValue()));
 		} else {
 			if (eventError != null) {
 				FormHelper.showNote(true, eventGroup, eventNote, eventError);
@@ -203,6 +222,12 @@ public class SendNotificationPage extends Page implements GetUsersEventHandler, 
 			} else {
 				FormHelper.hideNote(bodyGroup, bodyNote);
 			}
+
+			if (priorityError != null) {
+				FormHelper.showNote(true, priorityGroup, priorityNote, priorityError);
+			} else {
+				FormHelper.hideNote(priorityGroup, priorityNote);
+			}
 		}
 	}
 
@@ -214,6 +239,7 @@ public class SendNotificationPage extends Page implements GetUsersEventHandler, 
 		String fromText = fromListBox.getSelectedValue();
 		String subjectText = subjectTextBox.getText();
 		String bodyText = bodyEditor.getText();
+		EventPriorityType priority = EventPriorityType.fromString(priorityListBox.getSelectedValue());
 
 		if (event == null && !eventText.isEmpty()) {
 			eventError = "Unrecognised event: try searching and selecting from the list";
@@ -259,6 +285,19 @@ public class SendNotificationPage extends Page implements GetUsersEventHandler, 
 			validated = validated && true;
 		}
 
+		if (priority == null) {
+			StringBuffer values = new StringBuffer();
+			for (EventPriorityType priorityType : EventPriorityType.values()) {
+				values.append(", ");
+				values.append(priorityType.toString());
+			}
+
+			priorityError = "Priority should be one of: " + values;
+		} else {
+			priorityError = null;
+			validated = validated && true;
+		}
+
 		return validated;
 	}
 
@@ -268,6 +307,7 @@ public class SendNotificationPage extends Page implements GetUsersEventHandler, 
 		FormHelper.hideNote(fromGroup, fromNote);
 		FormHelper.hideNote(subjectGroup, subjectNote);
 		FormHelper.hideNote(bodyGroup, bodyNote);
+		FormHelper.hideNote(priorityGroup, priorityNote);
 
 		alert.setVisible(false);
 	}
@@ -375,6 +415,7 @@ public class SendNotificationPage extends Page implements GetUsersEventHandler, 
 		fromListBox.setSelectedIndex(0);
 		subjectTextBox.setText("");
 		bodyEditor.setText("");
+		priorityListBox.setSelectedIndex(FormHelper.getItemIndex(priorityListBox, EventPriorityType.EventPriorityTypeNormal.toString()));
 	}
 
 }

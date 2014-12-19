@@ -1986,7 +1986,9 @@ public final class Core extends ActionHandler {
 				}
 			}
 
-			PagerHelper.updatePager(output.pager = input.pager, output.notifications);
+			PagerHelper.updatePager(output.pager = input.pager, output.notifications, input.pager.totalCount == null ? NotificationServiceProvider.provide()
+					.getUserNotificationsCount(input.session.user, NotificationTypeType.NotificationTypeTypeInternal, null, Boolean.FALSE)
+					: input.pager.totalCount);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -2042,13 +2044,16 @@ public final class Core extends ActionHandler {
 			// all or nothing validation
 			int i = 0;
 			String path;
-			Notification existing;
+			Map<String, Notification> existing = new HashMap<String, Notification>();
+			Notification lookup;
 			for (Notification notification : input.notifications) {
 				path = "input.notifications[" + Integer.toString(i++) + "]";
-				existing = ValidationHelper.validateExistingNotification(notification, path);
+
+				lookup = ValidationHelper.validateExistingNotification(notification, path);
+				existing.put(notification.id.toString(), lookup);
 
 				// from is when sent to a client and we NEVER want to update it
-				notification.from = existing.from;
+				notification.from = lookup.from;
 
 				// if the item exists, verify that the new parameters are valid update values
 				ValidationHelper.validateNewNotification(notification, path);
@@ -2056,7 +2061,7 @@ public final class Core extends ActionHandler {
 
 			// once validation/lookup is done... delete the items
 			for (Notification notification : input.notifications) {
-				NotificationServiceProvider.provide().updateNotification(notification);
+				NotificationServiceProvider.provide().updateNotification(existing.get(notification.id.toString()), notification);
 			}
 
 			output.status = StatusType.StatusTypeSuccess;

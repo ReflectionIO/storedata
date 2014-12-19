@@ -443,6 +443,7 @@ public class EventPage extends Page implements NavigationEventHandler, GetEvents
 		FormHelper.hideNote(subjectGroup, subjectNote);
 		FormHelper.hideNote(shortBodyGroup, shortBodyNote);
 		FormHelper.hideNote(longBodyGroup, longBodyNote);
+		FormHelper.hideNote(priorityGroup, priorityNote);
 	}
 
 	/*
