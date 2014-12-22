@@ -132,11 +132,11 @@ public class EventSubscriptionController extends AsyncDataProvider<EventSubscrip
 
 	}
 
-	public void deleteSubscriptions(EventSubscription... subscription) {
-		deleteSubscriptions(Arrays.asList(subscription));
+	public void deleteEventSubscriptions(Long... id) {
+		deleteEventSubscriptions(Arrays.asList(id));
 	}
 
-	public void deleteSubscriptions(List<EventSubscription> subscriptions) {
+	public void deleteEventSubscriptions(List<Long> id) {
 
 	}
 

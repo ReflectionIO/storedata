@@ -89,6 +89,7 @@ public enum PageType {
 	NotificationsPageType("notifications", true),
 	SendNotificationPageType("sendnotification", true),
 	EventSubscriptionsPageType("eventsubscriptions", true),
+	EditEventSubscriptionPageType("editeventsubscription", true),
 
 	// Non navigable
 	LoadingPageType("loading"), ;

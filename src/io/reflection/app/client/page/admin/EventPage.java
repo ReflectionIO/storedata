@@ -61,8 +61,6 @@ import com.willshex.gson.json.service.shared.StatusType;
 public class EventPage extends Page implements NavigationEventHandler, GetEventsEventHandler, UpdateEventEventHandler {
 
 	public static final int EVENT_ID_PARAMETER = 0;
-	public static final String FORMAT_PLAIN_TEXT_VALUE = "plainText";
-	public static final String FORMAT_HTML_VALUE = "html";
 	public static final int FORMAT_PLAIN_TEXT_INDEX = 0;
 	public static final int FORMAT_HTML_INDEX = 1;
 
