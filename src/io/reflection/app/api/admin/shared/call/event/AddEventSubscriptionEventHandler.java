@@ -9,6 +9,7 @@
 package io.reflection.app.api.admin.shared.call.event;
 
 import io.reflection.app.api.admin.shared.call.AddEventSubscriptionRequest;
+import io.reflection.app.api.admin.shared.call.AddEventSubscriptionResponse;
 
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
@@ -16,15 +17,15 @@ import com.google.gwt.event.shared.GwtEvent;
 public interface AddEventSubscriptionEventHandler extends EventHandler {
 	public static final GwtEvent.Type<AddEventSubscriptionEventHandler> TYPE = new GwtEvent.Type<AddEventSubscriptionEventHandler>();
 
-	public void addEventSubscriptionSuccess(final AddEventSubscriptionRequest input, final AddEventSubscriptionRequest output);
+	public void addEventSubscriptionSuccess(final AddEventSubscriptionRequest input, final AddEventSubscriptionResponse output);
 
 	public void addEventSubscriptionFailure(final AddEventSubscriptionRequest input, final Throwable caught);
 
 	public class AddEventSubscriptionSuccess extends GwtEvent<AddEventSubscriptionEventHandler> {
 		private AddEventSubscriptionRequest input;
-		private AddEventSubscriptionRequest output;
+		private AddEventSubscriptionResponse output;
 
-		public AddEventSubscriptionSuccess(final AddEventSubscriptionRequest input, final AddEventSubscriptionRequest output) {
+		public AddEventSubscriptionSuccess(final AddEventSubscriptionRequest input, final AddEventSubscriptionResponse output) {
 			this.input = input;
 			this.output = output;
 		}
