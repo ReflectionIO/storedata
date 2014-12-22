@@ -62,8 +62,8 @@
 			<xsd:element name="DeleteUserInput" type="sda:DeleteUserRequest" />
 			<xsd:element name="DeleteUserOutput" type="sda:DeleteUserResponse" />
 
-			<xsd:element name="DeleteUsersInput" type="sda:DeleteUserRequest" />
-			<xsd:element name="DeleteUsersOutput" type="sda:DeleteUserResponse" />
+			<xsd:element name="DeleteUsersInput" type="sda:DeleteUsersRequest" />
+			<xsd:element name="DeleteUsersOutput" type="sda:DeleteUsersResponse" />
 
 			<xsd:element name="GetRolesAndPermissionsInput" type="sda:GetRolesAndPermissionsRequest" />
 			<xsd:element name="GetRolesAndPermissionsOutput" type="sda:GetRolesAndPermissionsResponse" />
@@ -91,6 +91,15 @@
 
 			<xsd:element name="GetSimpleModelRunsInput" type="sda:GetSimpleModelRunsRequest" />
 			<xsd:element name="GetSimpleModelRunsOutput" type="sda:GetSimpleModelRunsResponse" />
+
+			<xsd:element name="GetEventSubscriptionsInput" type="sda:GetEventSubscriptionsRequest" />
+			<xsd:element name="GetEventSubscriptionsOutput" type="sda:GetEventSubscriptionsResponse" />
+
+			<xsd:element name="AddEventSubscriptionInput" type="sda:AddEventSubscriptionRequest" />
+			<xsd:element name="AddEventSubscriptionOutput" type="sda:AddEventSubscriptionResponse" />
+
+			<xsd:element name="DeleteEventSubscriptionsInput" type="sda:DeleteEventSubscriptionsRequest" />
+			<xsd:element name="DeleteEventSubscriptionsOutput" type="sda:DeleteEventSubscriptionsResponse" />
 
 			<xsd:complexType name="GetUsersRequest">
 				<xsd:complexContent>
@@ -439,7 +448,7 @@
 				<xsd:complexContent>
 					<xsd:extension base="sd:Request">
 						<xsd:sequence>
-							<xsd:element name="notification" type="sd:Notification"/>
+							<xsd:element name="notification" type="sd:Notification" />
 						</xsd:sequence>
 					</xsd:extension>
 				</xsd:complexContent>
@@ -693,6 +702,60 @@
 				</xsd:complexContent>
 			</xsd:complexType>
 
+			<xsd:complexType name="GetEventSubscriptionsRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+						<xsd:attribute name="query" type="xsd:string" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetEventSubscriptionsResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+							<xsd:element name="eventSubscriptions" type="sd:EventSubscription" maxOccurs="unbounded" />
+							<xsd:element name="pager" type="sd:Pager" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="AddEventSubscriptionRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="eventSubscription" type="sd:EventSubscription" maxOccurs="1" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:complexType name="AddEventSubscriptionResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="DeleteEventSubscriptionsRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="eventSubscriptions" type="sd:EventSubscription" maxOccurs="unbounded" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:complexType name="DeleteEventSubscriptionsResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
 		</xsd:schema>
 	</wsdl:types>
 
@@ -899,6 +962,27 @@
 		<wsdl:part name="output" element="sda:GetSimpleModelRunsOutput" />
 	</wsdl:message>
 
+	<wsdl:message name="GetEventSubscriptionsRequest">
+		<wsdl:part name="input" element="sda:GetEventSubscriptionsInput" />
+	</wsdl:message>
+	<wsdl:message name="GetEventSubscriptionsResponse">
+		<wsdl:part name="output" element="sda:GetEventSubscriptionsOutput" />
+	</wsdl:message>
+
+	<wsdl:message name="AddEventSubscriptionRequest">
+		<wsdl:part name="input" element="sda:AddEventSubscriptionInput" />
+	</wsdl:message>
+	<wsdl:message name="AddEventSubscriptionResponse">
+		<wsdl:part name="output" element="sda:AddEventSubscriptionOutput" />
+	</wsdl:message>
+
+	<wsdl:message name="DeleteEventSubscriptionsRequest">
+		<wsdl:part name="input" element="sda:DeleteEventSubscriptionsInput" />
+	</wsdl:message>
+	<wsdl:message name="DeleteEventSubscriptionsResponse">
+		<wsdl:part name="output" element="sda:DeleteEventSubscriptionsOutput" />
+	</wsdl:message>
+
 	<wsdl:portType name="admin">
 		<wsdl:operation name="GetUsers">
 			<wsdl:input message="sda:GetUsersRequest" />
@@ -1037,6 +1121,21 @@
 		<wsdl:operation name="GetSimpleModelRuns">
 			<wsdl:input message="sda:GetSimpleModelRunsRequest" />
 			<wsdl:output message="sda:GetSimpleModelRunsResponse" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetEventSubscriptions">
+			<wsdl:input message="sda:GetEventSubscriptionsRequest" />
+			<wsdl:output message="sda:GetEventSubscriptionsResponse" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="AddEventSubscription">
+			<wsdl:input message="sda:AddEventSubscriptionRequest" />
+			<wsdl:output message="sda:AddEventSubscriptionRequest" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="DeleteEventSubscriptions">
+			<wsdl:input message="sda:DeleteEventSubscriptionsRequest" />
+			<wsdl:output message="sda:DeleteEventSubscriptionsResponse" />
 		</wsdl:operation>
 	</wsdl:portType>
 
@@ -1317,6 +1416,36 @@
 
 		<wsdl:operation name="GetSimpleModelRuns">
 			<soap:operation soapAction="http://app.reflection.io/admin/GetSimpleModelRuns" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetEventSubscriptions">
+			<soap:operation soapAction="http://app.reflection.io/admin/GetEventSubscriptions" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		
+		<wsdl:operation name="AddEventSubscription">
+			<soap:operation soapAction="http://app.reflection.io/admin/AddEventSubscription" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		
+		<wsdl:operation name="DeleteEventSubscriptions">
+			<soap:operation soapAction="http://app.reflection.io/admin/DeleteEventSubscriptions" />
 			<wsdl:input>
 				<soap:body use="literal" />
 			</wsdl:input>
