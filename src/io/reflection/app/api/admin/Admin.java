@@ -12,10 +12,14 @@ import static io.reflection.app.shared.util.PagerHelper.updatePager;
 import io.reflection.app.api.ValidationHelper;
 import io.reflection.app.api.admin.shared.call.AddEventRequest;
 import io.reflection.app.api.admin.shared.call.AddEventResponse;
+import io.reflection.app.api.admin.shared.call.AddEventSubscriptionRequest;
+import io.reflection.app.api.admin.shared.call.AddEventSubscriptionResponse;
 import io.reflection.app.api.admin.shared.call.AssignPermissionRequest;
 import io.reflection.app.api.admin.shared.call.AssignPermissionResponse;
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
 import io.reflection.app.api.admin.shared.call.AssignRoleResponse;
+import io.reflection.app.api.admin.shared.call.DeleteEventSubscriptionsRequest;
+import io.reflection.app.api.admin.shared.call.DeleteEventSubscriptionsResponse;
 import io.reflection.app.api.admin.shared.call.DeleteUserRequest;
 import io.reflection.app.api.admin.shared.call.DeleteUserResponse;
 import io.reflection.app.api.admin.shared.call.DeleteUsersRequest;
@@ -24,6 +28,8 @@ import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesRequest;
 import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesResponse;
 import io.reflection.app.api.admin.shared.call.GetDataAccountsRequest;
 import io.reflection.app.api.admin.shared.call.GetDataAccountsResponse;
+import io.reflection.app.api.admin.shared.call.GetEventSubscriptionsRequest;
+import io.reflection.app.api.admin.shared.call.GetEventSubscriptionsResponse;
 import io.reflection.app.api.admin.shared.call.GetEventsRequest;
 import io.reflection.app.api.admin.shared.call.GetEventsResponse;
 import io.reflection.app.api.admin.shared.call.GetFeedFetchesRequest;
@@ -1169,14 +1175,14 @@ public final class Admin extends ActionHandler {
 			DataSource dataSource = DataSourceServiceProvider.provide().getDataSource(input.dataAccount.source.id);
 
 			User listeningUser = UserServiceProvider.provide().getUsernameUser("chi@reflection.io");
-			
+
 			Map<String, Object> parameters = new HashMap<String, Object>();
 			parameters.put("listener", listeningUser);
 			parameters.put("admin", adminUser);
 			parameters.put("owner", ownerUser);
 			parameters.put("data", input.dataAccount);
 			parameters.put("source", dataSource);
-			
+
 			String body = NotificationHelper
 					.inflate(
 							parameters,
@@ -1285,6 +1291,45 @@ public final class Admin extends ActionHandler {
 			output.error = convertToErrorAndLog(LOG, e);
 		}
 		LOG.finer("Exiting getSimpleModelRuns");
+		return output;
+	}
+
+	public GetEventSubscriptionsResponse getEventSubscriptions(GetEventSubscriptionsRequest input) {
+		LOG.finer("Entering getEventSubscriptions");
+		GetEventSubscriptionsResponse output = new GetEventSubscriptionsResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getEventSubscriptions");
+		return output;
+	}
+
+	public AddEventSubscriptionResponse addEventSubscription(AddEventSubscriptionRequest input) {
+		LOG.finer("Entering addEventSubscription");
+		AddEventSubscriptionResponse output = new AddEventSubscriptionResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting addEventSubscription");
+		return output;
+	}
+
+	public DeleteEventSubscriptionsResponse deleteEventSubscriptions(DeleteEventSubscriptionsRequest input) {
+		LOG.finer("Entering deleteEventSubscriptions");
+		DeleteEventSubscriptionsResponse output = new DeleteEventSubscriptionsResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting deleteEventSubscriptions");
 		return output;
 	}
 }

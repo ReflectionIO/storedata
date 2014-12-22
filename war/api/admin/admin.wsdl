@@ -1130,7 +1130,7 @@
 		
 		<wsdl:operation name="AddEventSubscription">
 			<wsdl:input message="sda:AddEventSubscriptionRequest" />
-			<wsdl:output message="sda:AddEventSubscriptionRequest" />
+			<wsdl:output message="sda:AddEventSubscriptionResponse" />
 		</wsdl:operation>
 		
 		<wsdl:operation name="DeleteEventSubscriptions">

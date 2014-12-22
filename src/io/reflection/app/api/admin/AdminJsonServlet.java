@@ -9,12 +9,15 @@
 package io.reflection.app.api.admin;
 
 import io.reflection.app.api.admin.shared.call.AddEventRequest;
+import io.reflection.app.api.admin.shared.call.AddEventSubscriptionRequest;
 import io.reflection.app.api.admin.shared.call.AssignPermissionRequest;
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
+import io.reflection.app.api.admin.shared.call.DeleteEventSubscriptionsRequest;
 import io.reflection.app.api.admin.shared.call.DeleteUserRequest;
 import io.reflection.app.api.admin.shared.call.DeleteUsersRequest;
 import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesRequest;
 import io.reflection.app.api.admin.shared.call.GetDataAccountsRequest;
+import io.reflection.app.api.admin.shared.call.GetEventSubscriptionsRequest;
 import io.reflection.app.api.admin.shared.call.GetEventsRequest;
 import io.reflection.app.api.admin.shared.call.GetFeedFetchesRequest;
 import io.reflection.app.api.admin.shared.call.GetItemsRequest;
@@ -163,7 +166,20 @@ public final class AdminJsonServlet extends JsonServlet {
 			GetSimpleModelRunsRequest input = new GetSimpleModelRunsRequest();
 			input.fromJson(request);
 			output = service.getSimpleModelRuns(input).toString();
+		} else if ("GetEventSubscriptions".equals(action)) {
+			GetEventSubscriptionsRequest input = new GetEventSubscriptionsRequest();
+			input.fromJson(request);
+			output = service.getEventSubscriptions(input).toString();
+		} else if ("AddEventSubscription".equals(action)) {
+			AddEventSubscriptionRequest input = new AddEventSubscriptionRequest();
+			input.fromJson(request);
+			output = service.addEventSubscription(input).toString();
+		} else if ("DeleteEventSubscriptions".equals(action)) {
+			DeleteEventSubscriptionsRequest input = new DeleteEventSubscriptionsRequest();
+			input.fromJson(request);
+			output = service.deleteEventSubscriptions(input).toString();
 		}
+
 		return output;
 	}
 }

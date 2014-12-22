@@ -10,10 +10,14 @@ package io.reflection.app.api.admin.client;
 
 import io.reflection.app.api.admin.shared.call.AddEventRequest;
 import io.reflection.app.api.admin.shared.call.AddEventResponse;
+import io.reflection.app.api.admin.shared.call.AddEventSubscriptionRequest;
+import io.reflection.app.api.admin.shared.call.AddEventSubscriptionResponse;
 import io.reflection.app.api.admin.shared.call.AssignPermissionRequest;
 import io.reflection.app.api.admin.shared.call.AssignPermissionResponse;
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
 import io.reflection.app.api.admin.shared.call.AssignRoleResponse;
+import io.reflection.app.api.admin.shared.call.DeleteEventSubscriptionsRequest;
+import io.reflection.app.api.admin.shared.call.DeleteEventSubscriptionsResponse;
 import io.reflection.app.api.admin.shared.call.DeleteUserRequest;
 import io.reflection.app.api.admin.shared.call.DeleteUserResponse;
 import io.reflection.app.api.admin.shared.call.DeleteUsersRequest;
@@ -22,6 +26,8 @@ import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesRequest;
 import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesResponse;
 import io.reflection.app.api.admin.shared.call.GetDataAccountsRequest;
 import io.reflection.app.api.admin.shared.call.GetDataAccountsResponse;
+import io.reflection.app.api.admin.shared.call.GetEventSubscriptionsRequest;
+import io.reflection.app.api.admin.shared.call.GetEventSubscriptionsResponse;
 import io.reflection.app.api.admin.shared.call.GetEventsRequest;
 import io.reflection.app.api.admin.shared.call.GetEventsResponse;
 import io.reflection.app.api.admin.shared.call.GetFeedFetchesRequest;
@@ -1032,6 +1038,105 @@ public final class AdminService extends JsonService {
 		} catch (RequestException exception) {
 			output.onFailure(exception);
 			onCallFailure(AdminService.this, AdminMethodGetSimpleModelRuns, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String AdminMethodGetEventSubscriptions = "GetEventSubscriptions";
+
+	public Request getEventSubscriptions(final GetEventSubscriptionsRequest input, final AsyncCallback<GetEventSubscriptionsResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(AdminMethodGetEventSubscriptions, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						GetEventSubscriptionsResponse outputParameter = new GetEventSubscriptionsResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodGetEventSubscriptions, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodGetEventSubscriptions, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(AdminService.this, AdminMethodGetEventSubscriptions, input, exception);
+				}
+			});
+			onCallStart(AdminService.this, AdminMethodGetEventSubscriptions, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodGetEventSubscriptions, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String AdminMethodAddEventSubscription = "AddEventSubscription";
+
+	public Request addEventSubscription(final AddEventSubscriptionRequest input, final AsyncCallback<AddEventSubscriptionResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(AdminMethodAddEventSubscription, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						AddEventSubscriptionResponse outputParameter = new AddEventSubscriptionResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodAddEventSubscription, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodAddEventSubscription, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(AdminService.this, AdminMethodAddEventSubscription, input, exception);
+				}
+			});
+			onCallStart(AdminService.this, AdminMethodAddEventSubscription, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodAddEventSubscription, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String AdminMethodDeleteEventSubscriptions = "DeleteEventSubscriptions";
+
+	public Request deleteEventSubscriptions(final DeleteEventSubscriptionsRequest input, final AsyncCallback<DeleteEventSubscriptionsResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(AdminMethodDeleteEventSubscriptions, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						DeleteEventSubscriptionsResponse outputParameter = new DeleteEventSubscriptionsResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodDeleteEventSubscriptions, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodDeleteEventSubscriptions, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(AdminService.this, AdminMethodDeleteEventSubscriptions, input, exception);
+				}
+			});
+			onCallStart(AdminService.this, AdminMethodDeleteEventSubscriptions, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodDeleteEventSubscriptions, input, exception);
 		}
 		return handle;
 	}
