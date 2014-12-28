@@ -1,0 +1,8 @@
+[
+  "-f:c:\\Users\\billy1380\\git\\storedata\\war\\api\\blog\\blog.wsdl",
+  "-d:c:\\Users\\billy1380\\temp\\StoreData\\Blog",
+  "-c:Copyrights © ^{YEAR} SPACEHOPPER STUDIOS LTD. All rights reserved.\r\nCopyrights © ^{YEAR} reflection.io. All rights reserved.",
+  "-a:William Shakour",
+  "-p:reflection.io",
+  "-n:io.reflection.app.api.blog"
+]
