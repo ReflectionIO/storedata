@@ -2,6 +2,27 @@
 (function($) {
 
 	window.refMap; // global map object
+	window.generateMap = function() {
+		window.refMap = new reflectionMap(),
+				$win = $(window),
+				mapTop = $('.landing-section-map').offset().top,
+				dropped = false;
+
+		if($('.no-touch').length > 0 && $win.scrollTop() < (mapTop - ($win.height()/2))) {
+			$win.on("scroll", function(){
+				if(!dropped) {
+					if($win.scrollTop() > (mapTop - ($win.height()/2))) {
+						window.refMap.addMarker();
+						dropped = true;
+					}
+				}			
+			});
+		}
+		else {
+			window.refMap.addMarker();
+			dropped = true;
+		}
+	}
 
 	initLinkToPageTop();
 	initScrollToAnchor();
@@ -76,25 +97,10 @@
 	}
 
 	function initializeMap() {
-		window.refMap = new reflectionMap(),
-				$win = $(window),
-				mapTop = $('.landing-section-map').offset().top,
-				dropped = false;
-
-		if($('.no-touch').length > 0 && $win.scrollTop() < (mapTop - ($win.height()/2))) {
-			$win.on("scroll", function(){
-				if(!dropped) {
-					if($win.scrollTop() > (mapTop - ($win.height()/2))) {
-						window.refMap.addMarker();
-						dropped = true;
-					}
-				}			
-			});
-		}
-		else {
-			window.refMap.addMarker();
-			dropped = true;
-		}
+	  var script = document.createElement('script');
+	  script.type = 'text/javascript';
+	  script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyD7mXBIrN4EgMflWKxUOK6C9rfoDMa5zyo&callback=generateMap';
+	  document.head.appendChild(script);
 	}
 
 	function initLinkToPageTop() {
