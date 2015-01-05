@@ -118,7 +118,7 @@ public class TriggerGatherRequest extends Request {
 		return this;
 	}
 
-	public TriggerGatherRequest code(long code) {
+	public TriggerGatherRequest code(Long code) {
 		this.code = code;
 		return this;
 	}

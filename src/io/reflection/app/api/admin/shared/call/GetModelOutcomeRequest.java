@@ -104,7 +104,7 @@ public class GetModelOutcomeRequest extends Request {
 		return this;
 	}
 
-	public GetModelOutcomeRequest code(long code) {
+	public GetModelOutcomeRequest code(Long code) {
 		this.code = code;
 		return this;
 	}

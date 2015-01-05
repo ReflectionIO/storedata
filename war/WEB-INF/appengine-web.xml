@@ -33,9 +33,9 @@
     <property name="db.connection.catalogue" value="rio" />
 	<!-- <property name="db.connection.server" value="storedatacollector:reflectiondb" /> -->
     
-	<!-- <property name="db.connection.server" value="localhost" /> -->
-    <!-- <property name="db.connection.username" value="root" /> -->
-    <!-- <property name="db.connection.password" value="" /> -->
+<!-- 	<property name="db.connection.server" value="localhost" /> -->
+<!--     <property name="db.connection.username" value="root" /> -->
+<!--     <property name="db.connection.password" value="" /> -->
     
     <property name="db.connection.server" value="173.194.81.93" />
     <property name="db.connection.username" value="rio_app_user" />

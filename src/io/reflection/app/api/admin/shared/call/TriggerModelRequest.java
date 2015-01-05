@@ -144,7 +144,7 @@ public class TriggerModelRequest extends Request {
 		return this;
 	}
 
-	public TriggerModelRequest code(long code) {
+	public TriggerModelRequest code(Long code) {
 		this.code = code;
 		return this;
 	}

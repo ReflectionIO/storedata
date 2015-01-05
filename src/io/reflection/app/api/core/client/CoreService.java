@@ -16,6 +16,8 @@ import io.reflection.app.api.core.shared.call.CheckUsernameRequest;
 import io.reflection.app.api.core.shared.call.CheckUsernameResponse;
 import io.reflection.app.api.core.shared.call.DeleteLinkedAccountRequest;
 import io.reflection.app.api.core.shared.call.DeleteLinkedAccountResponse;
+import io.reflection.app.api.core.shared.call.DeleteNotificationsRequest;
+import io.reflection.app.api.core.shared.call.DeleteNotificationsResponse;
 import io.reflection.app.api.core.shared.call.ForgotPasswordRequest;
 import io.reflection.app.api.core.shared.call.ForgotPasswordResponse;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
@@ -36,6 +38,8 @@ import io.reflection.app.api.core.shared.call.GetLinkedAccountItemsRequest;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountItemsResponse;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountsRequest;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountsResponse;
+import io.reflection.app.api.core.shared.call.GetNotificationsRequest;
+import io.reflection.app.api.core.shared.call.GetNotificationsResponse;
 import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsRequest;
 import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsResponse;
 import io.reflection.app.api.core.shared.call.GetSalesRanksRequest;
@@ -62,6 +66,8 @@ import io.reflection.app.api.core.shared.call.SearchForItemRequest;
 import io.reflection.app.api.core.shared.call.SearchForItemResponse;
 import io.reflection.app.api.core.shared.call.UpdateLinkedAccountRequest;
 import io.reflection.app.api.core.shared.call.UpdateLinkedAccountResponse;
+import io.reflection.app.api.core.shared.call.UpdateNotificationsRequest;
+import io.reflection.app.api.core.shared.call.UpdateNotificationsResponse;
 
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
@@ -960,6 +966,105 @@ public final class CoreService extends JsonService {
 		} catch (RequestException exception) {
 			output.onFailure(exception);
 			onCallFailure(CoreService.this, CoreMethodGetLinkedAccountItem, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String CoreMethodGetNotifications = "GetNotifications";
+
+	public Request getNotifications(final GetNotificationsRequest input, final AsyncCallback<GetNotificationsResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(CoreMethodGetNotifications, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						GetNotificationsResponse outputParameter = new GetNotificationsResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(CoreService.this, CoreMethodGetNotifications, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(CoreService.this, CoreMethodGetNotifications, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(CoreService.this, CoreMethodGetNotifications, input, exception);
+				}
+			});
+			onCallStart(CoreService.this, CoreMethodGetNotifications, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(CoreService.this, CoreMethodGetNotifications, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String CoreMethodDeleteNotifications = "DeleteNotifications";
+
+	public Request deleteNotifications(final DeleteNotificationsRequest input, final AsyncCallback<DeleteNotificationsResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(CoreMethodDeleteNotifications, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						DeleteNotificationsResponse outputParameter = new DeleteNotificationsResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(CoreService.this, CoreMethodDeleteNotifications, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(CoreService.this, CoreMethodDeleteNotifications, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(CoreService.this, CoreMethodDeleteNotifications, input, exception);
+				}
+			});
+			onCallStart(CoreService.this, CoreMethodDeleteNotifications, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(CoreService.this, CoreMethodDeleteNotifications, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String CoreMethodUpdateNotifications = "UpdateNotifications";
+
+	public Request updateNotifications(final UpdateNotificationsRequest input, final AsyncCallback<UpdateNotificationsResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(CoreMethodUpdateNotifications, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						UpdateNotificationsResponse outputParameter = new UpdateNotificationsResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(CoreService.this, CoreMethodUpdateNotifications, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(CoreService.this, CoreMethodUpdateNotifications, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(CoreService.this, CoreMethodUpdateNotifications, input, exception);
+				}
+			});
+			onCallStart(CoreService.this, CoreMethodUpdateNotifications, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(CoreService.this, CoreMethodUpdateNotifications, input, exception);
 		}
 		return handle;
 	}

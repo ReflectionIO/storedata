@@ -149,12 +149,12 @@ public class Post extends DataType {
 		return this;
 	}
 
-	public Post visible(boolean visible) {
+	public Post visible(Boolean visible) {
 		this.visible = visible;
 		return this;
 	}
 
-	public Post commentsEnabled(boolean commentsEnabled) {
+	public Post commentsEnabled(Boolean commentsEnabled) {
 		this.commentsEnabled = commentsEnabled;
 		return this;
 	}

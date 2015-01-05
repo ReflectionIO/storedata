@@ -10,11 +10,13 @@ package io.reflection.app.client.page;
 import io.reflection.app.client.page.admin.CategoriesPage;
 import io.reflection.app.client.page.admin.DataAccountFetchesPage;
 import io.reflection.app.client.page.admin.DataAccountsPage;
-import io.reflection.app.client.page.admin.EmailTemplatePage;
+import io.reflection.app.client.page.admin.EventPage;
+import io.reflection.app.client.page.admin.EventSubscriptionsPage;
 import io.reflection.app.client.page.admin.FeedBrowserPage;
 import io.reflection.app.client.page.admin.ItemsPage;
 import io.reflection.app.client.page.admin.PermissionsPage;
 import io.reflection.app.client.page.admin.RolesPage;
+import io.reflection.app.client.page.admin.SendNotificationPage;
 import io.reflection.app.client.page.admin.SimpleModelRunsPage;
 import io.reflection.app.client.page.admin.UsersPage;
 import io.reflection.app.client.page.blog.EditPostPage;
@@ -57,7 +59,7 @@ public enum PageType {
 	ChangePasswordPageType("changepassword", true),
 	DataAccountFetchesPageType("dataaccountfetches", "MDF"),
 	DataAccountsPageType("dataaccounts", "MDA"),
-	EmailTemplatesPageType("emailtemplates", "MET"),
+	EventsPageType("events", "MET"),
 	FeedBrowserPageType("feedbrowser", "MFF"),
 	ForgotPasswordPageType("forgotpassword", false),
 	ForumEditTopicPageType("forumtopicedit", false),
@@ -84,6 +86,10 @@ public enum PageType {
 	UpgradePageType("upgrade", true),
 	UsersPageType("users", DataTypeHelper.PERMISSION_MANAGE_USERS_CODE),
 	WidgetTestPage("test", false),
+	NotificationsPageType("notifications", true),
+	SendNotificationPageType("sendnotification", true),
+	EventSubscriptionsPageType("eventsubscriptions", true),
+	EditEventSubscriptionPageType("editeventsubscription", true),
 
 	// Non navigable
 	LoadingPageType("loading"), ;
@@ -260,8 +266,8 @@ public enum PageType {
 		case MyAppsPageType:
 			page = new MyAppsPage();
 			break;
-		case EmailTemplatesPageType:
-			page = new EmailTemplatePage();
+		case EventsPageType:
+			page = new EventPage();
 			break;
 		case ForgotPasswordPageType:
 			page = new ForgotPasswordPage();
@@ -308,6 +314,15 @@ public enum PageType {
 		case ForumEditTopicPageType:
 			page = new EditTopicPage();
 			break;
+		case NotificationsPageType:
+			page = new NotificationsPage();
+			break;
+		case EventSubscriptionsPageType:
+			page = new EventSubscriptionsPage();
+			break;
+		case SendNotificationPageType:
+			page = new SendNotificationPage();
+			break;
 		case HomePageType:
 		default:
 			if (defaultPage == null) {
@@ -316,6 +331,7 @@ public enum PageType {
 			page = defaultPage;
 			break;
 		}
+		page.setPageType(this);
 
 		return page;
 	}

@@ -32,6 +32,7 @@ import io.reflection.app.api.core.shared.call.event.LoginEventHandler.LoginFailu
 import io.reflection.app.api.core.shared.call.event.LoginEventHandler.LoginSuccess;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.api.shared.datatypes.Session;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.handler.user.SessionEventHandler.UserLoggedIn;
 import io.reflection.app.client.handler.user.SessionEventHandler.UserLoggedOut;
@@ -81,7 +82,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	private Session mSession = null;
 
 	private SessionController() {
-		EventController.get().addHandler(JsonServiceCallEventHandler.TYPE, this);
+		DefaultEventBus.get().addHandler(JsonServiceCallEventHandler.TYPE, this);
 	}
 
 	public static SessionController get() {
@@ -126,16 +127,16 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 						setLoggedInUser(output.session.user, output.session); // Set User
 					}
 				} else {
-					EventController.get().fireEventFromSource(new UserLoginFailed(output.error), SessionController.this);
+					DefaultEventBus.get().fireEventFromSource(new UserLoginFailed(output.error), SessionController.this);
 				}
 
-				EventController.get().fireEventFromSource(new LoginSuccess(input, output), SessionController.this);
+				DefaultEventBus.get().fireEventFromSource(new LoginSuccess(input, output), SessionController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new UserLoginFailed(FormHelper.convertToError(caught)), SessionController.this);
-				EventController.get().fireEventFromSource(new LoginFailure(input, caught), SessionController.this);
+				DefaultEventBus.get().fireEventFromSource(new UserLoginFailed(FormHelper.convertToError(caught)), SessionController.this);
+				DefaultEventBus.get().fireEventFromSource(new LoginFailure(input, caught), SessionController.this);
 			}
 		});
 	}
@@ -175,9 +176,9 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 			MixPanelApiHelper.trackLoginUser(mLoggedInUser);
 
 			if (mLoggedInUser == null) { // used if previous logged out
-				EventController.get().fireEventFromSource(new UserLoggedOut(), SessionController.this);
+				DefaultEventBus.get().fireEventFromSource(new UserLoggedOut(), SessionController.this);
 			} else {
-				EventController.get().fireEventFromSource(new UserLoggedIn(mLoggedInUser, mSession), SessionController.this); // Fire user logged in event
+				DefaultEventBus.get().fireEventFromSource(new UserLoggedIn(mLoggedInUser, mSession), SessionController.this); // Fire user logged in event
 			}
 		}
 
@@ -222,20 +223,20 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 								}
 							}
 
-							EventController.get().fireEventFromSource(new GotUserPowers(mLoggedInUser, mLoggedInUser.roles, mLoggedInUser.permissions),
+							DefaultEventBus.get().fireEventFromSource(new GotUserPowers(mLoggedInUser, mLoggedInUser.roles, mLoggedInUser.permissions),
 									SessionController.this);
 						}
 					} else {
-						EventController.get().fireEventFromSource(new GetUserPowersFailed(output.error), SessionController.this);
+						DefaultEventBus.get().fireEventFromSource(new GetUserPowersFailed(output.error), SessionController.this);
 					}
 
-					EventController.get().fireEventFromSource(new GetRolesAndPermissionsSuccess(input, output), SessionController.this);
+					DefaultEventBus.get().fireEventFromSource(new GetRolesAndPermissionsSuccess(input, output), SessionController.this);
 				}
 
 				@Override
 				public void onFailure(Throwable caught) {
-					EventController.get().fireEventFromSource(new GetUserPowersFailed(FormHelper.convertToError(caught)), SessionController.this);
-					EventController.get().fireEventFromSource(new GetRolesAndPermissionsFailure(input, caught), SessionController.this);
+					DefaultEventBus.get().fireEventFromSource(new GetUserPowersFailed(FormHelper.convertToError(caught)), SessionController.this);
+					DefaultEventBus.get().fireEventFromSource(new GetRolesAndPermissionsFailure(input, caught), SessionController.this);
 				}
 			});
 		}
@@ -485,15 +486,15 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 				e.code = Integer.valueOf(-1);
 				e.message = caught.getMessage();
 
-				EventController.get().fireEventFromSource(new UserPasswordChangeFailed(e), SessionController.this);
+				DefaultEventBus.get().fireEventFromSource(new UserPasswordChangeFailed(e), SessionController.this);
 			}
 
 			@Override
 			public void onSuccess(ChangePasswordResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
-					EventController.get().fireEventFromSource(new UserPasswordChanged(mLoggedInUser.id), SessionController.this);
+					DefaultEventBus.get().fireEventFromSource(new UserPasswordChanged(mLoggedInUser.id), SessionController.this);
 				} else {
-					EventController.get().fireEventFromSource(new UserPasswordChangeFailed(output.error), SessionController.this);
+					DefaultEventBus.get().fireEventFromSource(new UserPasswordChangeFailed(output.error), SessionController.this);
 				}
 			}
 		});
@@ -521,12 +522,12 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new ChangePasswordEventHandler.ChangePasswordFailure(input, caught), SessionController.this);
+				DefaultEventBus.get().fireEventFromSource(new ChangePasswordEventHandler.ChangePasswordFailure(input, caught), SessionController.this);
 			}
 
 			@Override
 			public void onSuccess(ChangePasswordResponse output) {
-				EventController.get().fireEventFromSource(new ChangePasswordEventHandler.ChangePasswordSuccess(input, output), SessionController.this);
+				DefaultEventBus.get().fireEventFromSource(new ChangePasswordEventHandler.ChangePasswordSuccess(input, output), SessionController.this);
 			}
 		});
 	}
@@ -570,12 +571,12 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 					mLoggedInUser.username = mSession.user.username;
 				}
 
-				EventController.get().fireEventFromSource(new ChangeUserDetailsEventHandler.ChangeUserDetailsSuccess(input, output), SessionController.this);
+				DefaultEventBus.get().fireEventFromSource(new ChangeUserDetailsEventHandler.ChangeUserDetailsSuccess(input, output), SessionController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new ChangeUserDetailsEventHandler.ChangeUserDetailsFailure(input, caught), SessionController.this);
+				DefaultEventBus.get().fireEventFromSource(new ChangeUserDetailsEventHandler.ChangeUserDetailsFailure(input, caught), SessionController.this);
 			}
 		});
 	}
@@ -604,17 +605,17 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 							setLoggedInUser(output.session.user, output.session);
 						}
 					} else {
-						EventController.get().fireEventFromSource(new UserLoginFailed(output.error), SessionController.this);
+						DefaultEventBus.get().fireEventFromSource(new UserLoginFailed(output.error), SessionController.this);
 					}
 
-					EventController.get().fireEventFromSource(new LoginSuccess(input, output), SessionController.this);
+					DefaultEventBus.get().fireEventFromSource(new LoginSuccess(input, output), SessionController.this);
 				}
 
 				@Override
 				public void onFailure(Throwable caught) {
-					EventController.get().fireEventFromSource(new UserLoginFailed(FormHelper.convertToError(caught)), SessionController.this);
+					DefaultEventBus.get().fireEventFromSource(new UserLoginFailed(FormHelper.convertToError(caught)), SessionController.this);
 
-					EventController.get().fireEventFromSource(new LoginFailure(input, caught), SessionController.this);
+					DefaultEventBus.get().fireEventFromSource(new LoginFailure(input, caught), SessionController.this);
 				}
 			});
 		}
@@ -665,12 +666,12 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 
 				@Override
 				public void onSuccess(IsAuthorisedResponse output) {
-					EventController.get().fireEventFromSource(new IsAuthorisedEventHandler.IsAuthorisedSuccess(input, output), SessionController.this);
+					DefaultEventBus.get().fireEventFromSource(new IsAuthorisedEventHandler.IsAuthorisedSuccess(input, output), SessionController.this);
 				}
 
 				@Override
 				public void onFailure(Throwable caught) {
-					EventController.get().fireEventFromSource(new IsAuthorisedEventHandler.IsAuthorisedFailure(input, caught), SessionController.this);
+					DefaultEventBus.get().fireEventFromSource(new IsAuthorisedEventHandler.IsAuthorisedFailure(input, caught), SessionController.this);
 				}
 			});
 		}
@@ -705,12 +706,12 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 
 				@Override
 				public void onSuccess(ForgotPasswordResponse output) {
-					EventController.get().fireEventFromSource(new ForgotPasswordEventHandler.ForgotPasswordSuccess(input, output), SessionController.this);
+					DefaultEventBus.get().fireEventFromSource(new ForgotPasswordEventHandler.ForgotPasswordSuccess(input, output), SessionController.this);
 				}
 
 				@Override
 				public void onFailure(Throwable caught) {
-					EventController.get().fireEventFromSource(new ForgotPasswordEventHandler.ForgotPasswordFailure(input, caught), SessionController.this);
+					DefaultEventBus.get().fireEventFromSource(new ForgotPasswordEventHandler.ForgotPasswordFailure(input, caught), SessionController.this);
 				}
 			});
 		}

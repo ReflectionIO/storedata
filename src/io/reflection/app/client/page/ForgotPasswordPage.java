@@ -10,7 +10,7 @@ package io.reflection.app.client.page;
 import io.reflection.app.api.core.shared.call.ForgotPasswordRequest;
 import io.reflection.app.api.core.shared.call.ForgotPasswordResponse;
 import io.reflection.app.api.core.shared.call.event.ForgotPasswordEventHandler;
-import io.reflection.app.client.controller.EventController;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.part.login.ForgotPasswordForm;
@@ -58,8 +58,8 @@ public class ForgotPasswordPage extends Page implements ForgotPasswordEventHandl
 		reminder.setVisible(false);
 		form.setVisible(true);
 
-		register(EventController.get().addHandlerToSource(ForgotPasswordEventHandler.TYPE, SessionController.get(), this));
-		register(EventController.get().addHandlerToSource(ForgotPasswordEventHandler.TYPE, SessionController.get(), form));
+		register(DefaultEventBus.get().addHandlerToSource(ForgotPasswordEventHandler.TYPE, SessionController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(ForgotPasswordEventHandler.TYPE, SessionController.get(), form));
 
 	}
 

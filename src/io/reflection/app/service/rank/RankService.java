@@ -115,15 +115,26 @@ final class RankService implements IRankService {
 		rank.grossingPosition = connection.getCurrentRowInteger("grossingposition");
 		rank.itemId = stripslashes(connection.getCurrentRowString("itemid"));
 		rank.position = connection.getCurrentRowInteger("position");
-		rank.price = Float.valueOf(connection.getCurrentRowInteger("price").floatValue() / 100.0f);
+
+		Integer price = connection.getCurrentRowInteger("price");
+		if (price != null) {
+			rank.price = Float.valueOf(price.floatValue() / 100.0f);
+		}
+
 		rank.source = stripslashes(connection.getCurrentRowString("source"));
 		rank.type = stripslashes(connection.getCurrentRowString("type"));
 
-		rank.revenue = Float.valueOf(connection.getCurrentRowLong("revenue").floatValue() / 100.0f);
+		Long revenue = connection.getCurrentRowLong("revenue");
+		if (revenue != null) {
+			rank.revenue = Float.valueOf(revenue.floatValue() / 100.0f);
+		}
+
 		rank.downloads = connection.getCurrentRowInteger("downloads");
 
-		rank.category = new Category();
-		rank.category.id = connection.getCurrentRowLong("categoryid");
+		Long categoryId = connection.getCurrentRowLong("categoryid");
+		if (categoryId != null) {
+			(rank.category = new Category()).id(categoryId);
+		}
 
 		return rank;
 	}

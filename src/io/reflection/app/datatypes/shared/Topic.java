@@ -216,22 +216,22 @@ public class Topic extends DataType {
 		return this;
 	}
 
-	public Topic heat(int heat) {
+	public Topic heat(Integer heat) {
 		this.heat = heat;
 		return this;
 	}
 
-	public Topic sticky(boolean sticky) {
+	public Topic sticky(Boolean sticky) {
 		this.sticky = sticky;
 		return this;
 	}
 
-	public Topic flagged(int flagged) {
+	public Topic flagged(Integer flagged) {
 		this.flagged = flagged;
 		return this;
 	}
 
-	public Topic locked(boolean locked) {
+	public Topic locked(Boolean locked) {
 		this.locked = locked;
 		return this;
 	}
@@ -241,7 +241,7 @@ public class Topic extends DataType {
 		return this;
 	}
 
-	public Topic numberOfReplies(int numberOfReplies) {
+	public Topic numberOfReplies(Integer numberOfReplies) {
 		this.numberOfReplies = numberOfReplies;
 		return this;
 	}

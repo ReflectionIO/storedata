@@ -265,12 +265,12 @@ public class Sale extends DataType {
 		return this;
 	}
 
-	public Sale units(int units) {
+	public Sale units(Integer units) {
 		this.units = units;
 		return this;
 	}
 
-	public Sale proceeds(float proceeds) {
+	public Sale proceeds(Float proceeds) {
 		this.proceeds = proceeds;
 		return this;
 	}
@@ -295,7 +295,7 @@ public class Sale extends DataType {
 		return this;
 	}
 
-	public Sale customerPrice(float customerPrice) {
+	public Sale customerPrice(Float customerPrice) {
 		this.customerPrice = customerPrice;
 		return this;
 	}

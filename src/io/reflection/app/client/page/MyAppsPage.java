@@ -15,8 +15,8 @@ import io.reflection.app.api.core.shared.call.GetLinkedAccountsResponse;
 import io.reflection.app.api.core.shared.call.event.GetLinkedAccountItemsEventHandler;
 import io.reflection.app.api.core.shared.call.event.GetLinkedAccountsEventHandler;
 import io.reflection.app.api.core.shared.call.event.GetSalesRanksEventHandler;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.MiniAppCell;
-import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.ItemController;
@@ -87,7 +87,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 	private MyAppsEmptyTable myAppsEmptyTable = new MyAppsEmptyTable();
 
-	private User user = SessionController.get().getLoggedInUser();
+	private User user;
 
 	long linkedAccountsCount = -1;
 
@@ -130,12 +130,12 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	protected void onAttach() {
 		super.onAttach();
 
-		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
-		register(EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
-		register(EventController.get().addHandlerToSource(GetLinkedAccountsEventHandler.TYPE, LinkedAccountController.get(), this));
-		register(EventController.get().addHandlerToSource(GetLinkedAccountItemsEventHandler.TYPE, ItemController.get(), this));
-		register(EventController.get().addHandlerToSource(GetLinkedAccountItemsEventHandler.TYPE, ItemController.get(), userItemProvider));
-		register(EventController.get().addHandlerToSource(GetSalesRanksEventHandler.TYPE, RankController.get(), userItemProvider));
+		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(GetLinkedAccountsEventHandler.TYPE, LinkedAccountController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(GetLinkedAccountItemsEventHandler.TYPE, ItemController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(GetLinkedAccountItemsEventHandler.TYPE, ItemController.get(), userItemProvider));
+		register(DefaultEventBus.get().addHandlerToSource(GetSalesRanksEventHandler.TYPE, RankController.get(), userItemProvider));
 
 		// boolean hasPermission = SessionController.get().loggedInUserHas(SessionController.);
 
@@ -222,9 +222,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 			myAppsTopPanel.setFiltersEnabled(false);
 			ItemController.get().fetchLinkedAccountItems();
 		}
-		myAccountSidePanel.getMyAppsLink().setTargetHistoryToken(
-				PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController.get()
-						.asMyAppsFilterString()));
+		myAccountSidePanel.setUser(user);
 		PageType.UsersPageType.show(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController.get().asMyAppsFilterString());
 	}
 
@@ -242,9 +240,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 			myAppsTopPanel.setFiltersEnabled(false);
 			ItemController.get().fetchLinkedAccountItems();
 		}
-		myAccountSidePanel.getMyAppsLink().setTargetHistoryToken(
-				PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController.get()
-						.asMyAppsFilterString()));
+		myAccountSidePanel.setUser(user);
 		PageType.UsersPageType.show(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController.get().asMyAppsFilterString());
 	}
 
@@ -257,28 +253,12 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
 
-		myAccountSidePanel.setMyAppsLinkActive();
+		myAccountSidePanel.setActive(getPageType());
 
 		user = SessionController.get().getLoggedInUser();
 
 		if (user != null) {
-			myAccountSidePanel.getLinkedAccountsLink().setTargetHistoryToken(
-					PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(), user.id.toString()));
-
-			myAccountSidePanel.getCreatorNameLink().setInnerText(user.company);
-
-			myAccountSidePanel.getPersonalDetailsLink().setTargetHistoryToken(
-					PageType.UsersPageType.asTargetHistoryToken(PageType.ChangeDetailsPageType.toString(), user.id.toString()));
-
-		}
-
-		String currentFilter = FilterController.get().asMyAppsFilterString();
-		if (currentFilter != null && currentFilter.length() > 0) {
-			if (user != null) {
-				myAccountSidePanel.getMyAppsLink().setTargetHistoryToken(
-						PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController.get()
-								.asMyAppsFilterString()));
-			}
+			myAccountSidePanel.setUser(user);
 		}
 
 		// Linked accounts retrieved in LinkedAccountPage but not here, or Check if Added or deleted a linked account

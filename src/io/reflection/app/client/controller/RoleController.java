@@ -14,6 +14,7 @@ import io.reflection.app.api.admin.shared.call.event.GetRolesEventHandler.GetRol
 import io.reflection.app.api.admin.shared.call.event.GetRolesEventHandler.GetRolesSuccess;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.datatypes.shared.Role;
 
 import java.util.ArrayList;
@@ -86,12 +87,12 @@ public class RoleController extends AsyncDataProvider<Role> implements ServiceCo
 									Math.min(input.pager.start.intValue() + input.pager.count.intValue(), mPager.totalCount.intValue())));
 				}
 
-				EventController.get().fireEventFromSource(new GetRolesSuccess(input, output), RoleController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetRolesSuccess(input, output), RoleController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new GetRolesFailure(input, caught), RoleController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetRolesFailure(input, caught), RoleController.this);
 			}
 		});
 	}

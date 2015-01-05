@@ -15,9 +15,13 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.HasAllFocusHandlers;
 import com.google.gwt.event.logical.shared.BeforeSelectionEvent;
 import com.google.gwt.event.logical.shared.BeforeSelectionHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -33,7 +37,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author daniel
  * 
  */
-public class MarkdownEditor extends Composite implements HasText {
+public class MarkdownEditor extends Composite implements HasText, HasAllFocusHandlers {
 
 	private static MarkdownEditorUiBinder uiBinder = GWT.create(MarkdownEditorUiBinder.class);
 
@@ -248,6 +252,22 @@ public class MarkdownEditor extends Composite implements HasText {
 
 	public TextArea getTextArea() {
 		return textArea;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.google.gwt.event.dom.client.HasFocusHandlers#addFocusHandler(com.google.gwt.event.dom.client.FocusHandler)
+	 */
+	@Override
+	public HandlerRegistration addFocusHandler(FocusHandler handler) {
+		return textArea.addFocusHandler(handler);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.google.gwt.event.dom.client.HasBlurHandlers#addBlurHandler(com.google.gwt.event.dom.client.BlurHandler)
+	 */
+	@Override
+	public HandlerRegistration addBlurHandler(BlurHandler handler) {
+		return textArea.addBlurHandler(handler);
 	}
 
 }

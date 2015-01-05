@@ -11,7 +11,7 @@
 	}
 	</ui:style>
 	<g:HTMLPanel>
-		<g:HTMLPanel styleName="row blog-container">
+		<g:HTMLPanel styleName="row">
 			<g:HTMLPanel styleName="col-sm-10 col-sm-offset-1">
 				<h2>Blog Admin</h2>
 

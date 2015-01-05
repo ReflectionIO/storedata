@@ -168,12 +168,12 @@ public class Rank extends DataType {
 		return this;
 	}
 
-	public Rank position(int position) {
+	public Rank position(Integer position) {
 		this.position = position;
 		return this;
 	}
 
-	public Rank grossingPosition(int grossingPosition) {
+	public Rank grossingPosition(Integer grossingPosition) {
 		this.grossingPosition = grossingPosition;
 		return this;
 	}
@@ -203,7 +203,7 @@ public class Rank extends DataType {
 		return this;
 	}
 
-	public Rank price(float price) {
+	public Rank price(Float price) {
 		this.price = price;
 		return this;
 	}
@@ -213,17 +213,17 @@ public class Rank extends DataType {
 		return this;
 	}
 
-	public Rank code(long code) {
+	public Rank code(Long code) {
 		this.code = code;
 		return this;
 	}
 
-	public Rank revenue(float revenue) {
+	public Rank revenue(Float revenue) {
 		this.revenue = revenue;
 		return this;
 	}
 
-	public Rank downloads(int downloads) {
+	public Rank downloads(Integer downloads) {
 		this.downloads = downloads;
 		return this;
 	}

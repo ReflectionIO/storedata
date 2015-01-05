@@ -370,7 +370,7 @@ final class DataAccountService implements IDataAccountService {
 
 		String getDataAccountsQuery = String
 				.format("SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` FROM `dataaccount` WHERE `deleted`='n' ORDER BY `%s` %s LIMIT %d,%d",
-						key(), pager.sortBy == null ? "id" : pager.sortBy,
+						key(), pager.sortBy == null ? "id" : stripslashes(pager.sortBy),
 						pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
 
 		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
@@ -464,7 +464,7 @@ final class DataAccountService implements IDataAccountService {
 
 		String getIdsDataAccountsQuery = String
 				.format("SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` FROM `dataaccount` WHERE `id` in (%s) AND `deleted`='n' ORDER BY `%s` %s",
-						key(), joinedIds, pager.sortBy == null ? "id" : pager.sortBy,
+						key(), joinedIds, pager.sortBy == null ? "id" : stripslashes(pager.sortBy),
 						pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC");
 
 		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());

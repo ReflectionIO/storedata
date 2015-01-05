@@ -126,32 +126,32 @@ public class ItemRankSummary extends DataType {
 		return this;
 	}
 
-	public ItemRankSummary numberOfTimesRanked(int numberOfTimesRanked) {
+	public ItemRankSummary numberOfTimesRanked(Integer numberOfTimesRanked) {
 		this.numberOfTimesRanked = numberOfTimesRanked;
 		return this;
 	}
 
-	public ItemRankSummary numberOfTimesRankedTop10(int numberOfTimesRankedTop10) {
+	public ItemRankSummary numberOfTimesRankedTop10(Integer numberOfTimesRankedTop10) {
 		this.numberOfTimesRankedTop10 = numberOfTimesRankedTop10;
 		return this;
 	}
 
-	public ItemRankSummary numberOfTimesRankedTop25(int numberOfTimesRankedTop25) {
+	public ItemRankSummary numberOfTimesRankedTop25(Integer numberOfTimesRankedTop25) {
 		this.numberOfTimesRankedTop25 = numberOfTimesRankedTop25;
 		return this;
 	}
 
-	public ItemRankSummary numberOfTimesRankedTop50(int numberOfTimesRankedTop50) {
+	public ItemRankSummary numberOfTimesRankedTop50(Integer numberOfTimesRankedTop50) {
 		this.numberOfTimesRankedTop50 = numberOfTimesRankedTop50;
 		return this;
 	}
 
-	public ItemRankSummary numberOfTimesRankedTop100(int numberOfTimesRankedTop100) {
+	public ItemRankSummary numberOfTimesRankedTop100(Integer numberOfTimesRankedTop100) {
 		this.numberOfTimesRankedTop100 = numberOfTimesRankedTop100;
 		return this;
 	}
 
-	public ItemRankSummary numberOfTimesRankedTop200(int numberOfTimesRankedTop200) {
+	public ItemRankSummary numberOfTimesRankedTop200(Integer numberOfTimesRankedTop200) {
 		this.numberOfTimesRankedTop200 = numberOfTimesRankedTop200;
 		return this;
 	}

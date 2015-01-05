@@ -7,8 +7,7 @@
 //
 package io.reflection.app.client.page;
 
-import io.reflection.app.client.controller.EventController;
-import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.SessionController;
@@ -19,8 +18,8 @@ import io.reflection.app.client.helper.AlertBoxHelper;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.page.part.MyAccountSidePanel;
 import io.reflection.app.client.part.AlertBox;
-import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.part.AlertBox.AlertBoxType;
+import io.reflection.app.client.part.Preloader;
 import io.reflection.app.datatypes.shared.User;
 
 import com.google.gwt.core.client.GWT;
@@ -94,9 +93,9 @@ public class ChangePasswordPage extends Page implements NavigationEventHandler, 
 	protected void onAttach() {
 		super.onAttach();
 
-		register(EventController.get().addHandlerToSource(UserPasswordChangedEventHandler.TYPE, UserController.get(), this));
-		register(EventController.get().addHandlerToSource(UserPasswordChangedEventHandler.TYPE, SessionController.get(), this));
-		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(UserPasswordChangedEventHandler.TYPE, UserController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(UserPasswordChangedEventHandler.TYPE, SessionController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 	}
 
 	@UiHandler("mChangePassword")
@@ -301,28 +300,12 @@ public class ChangePasswordPage extends Page implements NavigationEventHandler, 
 
 		mChangePassword.setEnabled(false);
 
-		myAccountSidePanel.setChangePasswordLinkActive();
+		myAccountSidePanel.setActive(getPageType());
 
 		user = SessionController.get().getLoggedInUser();
 
 		if (user != null) {
-			myAccountSidePanel.getLinkedAccountsLink().setTargetHistoryToken(
-					PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(), user.id.toString()));
-
-			myAccountSidePanel.getCreatorNameLink().setInnerText(user.company);
-
-			myAccountSidePanel.getPersonalDetailsLink().setTargetHistoryToken(
-					PageType.UsersPageType.asTargetHistoryToken(PageType.ChangeDetailsPageType.toString(), user.id.toString()));
-
-		}
-
-		String currentFilter = FilterController.get().asMyAppsFilterString();
-		if (currentFilter != null && currentFilter.length() > 0) {
-			if (user != null) {
-				myAccountSidePanel.getMyAppsLink().setTargetHistoryToken(
-						PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController.get()
-								.asMyAppsFilterString()));
-			}
+			myAccountSidePanel.setUser(user);
 		}
 
 		resetForm();

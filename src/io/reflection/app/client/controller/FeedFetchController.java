@@ -19,6 +19,7 @@ import io.reflection.app.api.admin.shared.call.TriggerPredictResponse;
 import io.reflection.app.api.admin.shared.call.event.GetFeedFetchesEventHandler.GetFeedFetchesFailure;
 import io.reflection.app.api.admin.shared.call.event.GetFeedFetchesEventHandler.GetFeedFetchesSuccess;
 import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.helper.ApiCallHelper;
 import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.ModelTypeType;
@@ -113,13 +114,13 @@ public class FeedFetchController extends AsyncDataProvider<FeedFetch> implements
 										+ input.pager.count.intValue(), count == 0 ? (mRows == null ? 0 : mRows.size()) : (int) count)));
 					}
 
-					EventController.get().fireEventFromSource(new GetFeedFetchesSuccess(input, output), FeedFetchController.this);
+					DefaultEventBus.get().fireEventFromSource(new GetFeedFetchesSuccess(input, output), FeedFetchController.this);
 				}
 
 				@Override
 				public void onFailure(Throwable caught) {
 					current = null;
-					EventController.get().fireEventFromSource(new GetFeedFetchesFailure(input, caught), FeedFetchController.this);
+					DefaultEventBus.get().fireEventFromSource(new GetFeedFetchesFailure(input, caught), FeedFetchController.this);
 				}
 			});
 		}

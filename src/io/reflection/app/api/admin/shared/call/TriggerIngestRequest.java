@@ -118,7 +118,7 @@ public class TriggerIngestRequest extends Request {
 		return this;
 	}
 
-	public TriggerIngestRequest code(long code) {
+	public TriggerIngestRequest code(Long code) {
 		this.code = code;
 		return this;
 	}

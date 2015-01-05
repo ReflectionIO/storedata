@@ -114,7 +114,11 @@ final class ItemService implements IItemService {
 		item.externalId = stripslashes(connection.getCurrentRowString("externalid"));
 		item.internalId = stripslashes(connection.getCurrentRowString("internalid"));
 		item.name = stripslashes(connection.getCurrentRowString("name"));
-		item.price = Float.valueOf(connection.getCurrentRowInteger("price").floatValue() / 100.0f);
+
+		Integer price = connection.getCurrentRowInteger("price");
+		if (price != null) {
+			item.price = Float.valueOf(price.floatValue() / 100.0f);
+		}
 
 		item.smallImage = stripslashes(connection.getCurrentRowString("smallimage"));
 		item.mediumImage = stripslashes(connection.getCurrentRowString("mediumimage"));
@@ -466,7 +470,7 @@ final class ItemService implements IItemService {
 		List<Item> items = new ArrayList<Item>();
 		String getDataItemQuery = String
 				.format("SELECT * FROM `item` WHERE (`externalid` LIKE '%%%1$s%%' OR `name` LIKE '%%%1$s%%' OR `creatorname` LIKE '%%%1$s%%') AND `deleted`='n' ORDER BY `%2$s` %3$s LIMIT %4$d, %5$d",
-						query, pager.sortBy == null ? "id" : pager.sortBy,
+						query, pager.sortBy == null ? "id" : stripslashes(pager.sortBy),
 						pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
 						pager.start == null ? Pager.DEFAULT_START.longValue() : pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue()
 								: pager.count.longValue());
@@ -692,8 +696,8 @@ final class ItemService implements IItemService {
 				// "SELECT `internalid` FROM `item` GROUP BY `internalid` HAVING COUNT(`internalid`) > 1 ORDER BY `%s` %s LIMIT %d,%d",
 				// "SELECT `internalid`, count(1) as `count` FROM `item` WHERE `deleted`='n' GROUP BY `internalid` HAVING `count` > 1 ORDER BY `%s` %s LIMIT %d,%d",
 				"SELECT `internalid`, count(1) as `count` FROM `item` GROUP BY `internalid` HAVING `count` > 1 ORDER BY `%s` %s LIMIT %d,%d",
-				pager.sortBy == null ? "id" : pager.sortBy, pager.sortDirection == SortDirectionType.SortDirectionTypeDescending ? "DESC" : "ASC", pager.start,
-				pager.count);
+				pager.sortBy == null ? "id" : stripslashes(pager.sortBy),
+				pager.sortDirection == SortDirectionType.SortDirectionTypeDescending ? "DESC" : "ASC", pager.start, pager.count);
 
 		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
 

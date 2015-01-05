@@ -171,7 +171,7 @@ public class ModelRun extends DataType {
 		return this;
 	}
 
-	public ModelRun code(long code) {
+	public ModelRun code(Long code) {
 		this.code = code;
 		return this;
 	}
@@ -181,57 +181,57 @@ public class ModelRun extends DataType {
 		return this;
 	}
 
-	public ModelRun grossingA(double grossingA) {
+	public ModelRun grossingA(Double grossingA) {
 		this.grossingA = grossingA;
 		return this;
 	}
 
-	public ModelRun paidA(double paidA) {
+	public ModelRun paidA(Double paidA) {
 		this.paidA = paidA;
 		return this;
 	}
 
-	public ModelRun bRatio(double bRatio) {
+	public ModelRun bRatio(Double bRatio) {
 		this.bRatio = bRatio;
 		return this;
 	}
 
-	public ModelRun totalDownloads(double totalDownloads) {
+	public ModelRun totalDownloads(Double totalDownloads) {
 		this.totalDownloads = totalDownloads;
 		return this;
 	}
 
-	public ModelRun paidB(double paidB) {
+	public ModelRun paidB(Double paidB) {
 		this.paidB = paidB;
 		return this;
 	}
 
-	public ModelRun grossingB(double grossingB) {
+	public ModelRun grossingB(Double grossingB) {
 		this.grossingB = grossingB;
 		return this;
 	}
 
-	public ModelRun paidAIap(double paidAIap) {
+	public ModelRun paidAIap(Double paidAIap) {
 		this.paidAIap = paidAIap;
 		return this;
 	}
 
-	public ModelRun grossingAIap(double grossingAIap) {
+	public ModelRun grossingAIap(Double grossingAIap) {
 		this.grossingAIap = grossingAIap;
 		return this;
 	}
 
-	public ModelRun freeA(double freeA) {
+	public ModelRun freeA(Double freeA) {
 		this.freeA = freeA;
 		return this;
 	}
 
-	public ModelRun theta(double theta) {
+	public ModelRun theta(Double theta) {
 		this.theta = theta;
 		return this;
 	}
 
-	public ModelRun freeB(double freeB) {
+	public ModelRun freeB(Double freeB) {
 		this.freeB = freeB;
 		return this;
 	}

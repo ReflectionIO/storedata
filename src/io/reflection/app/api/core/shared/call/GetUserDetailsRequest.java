@@ -46,7 +46,7 @@ public class GetUserDetailsRequest extends Request {
 		}
 	}
 
-	public GetUserDetailsRequest userId(long userId) {
+	public GetUserDetailsRequest userId(Long userId) {
 		this.userId = userId;
 		return this;
 	}

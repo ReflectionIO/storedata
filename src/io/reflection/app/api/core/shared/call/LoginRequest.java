@@ -65,7 +65,7 @@ public class LoginRequest extends Request {
 		return this;
 	}
 
-	public LoginRequest longTerm(boolean longTerm) {
+	public LoginRequest longTerm(Boolean longTerm) {
 		this.longTerm = longTerm;
 		return this;
 	}

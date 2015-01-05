@@ -71,7 +71,12 @@ final class StoreService implements IStoreService {
 		store.deleted = connection.getCurrentRowString("deleted");
 
 		store.a3Code = stripslashes(connection.getCurrentRowString("a3code"));
-		store.countries = Arrays.asList(connection.getCurrentRowString("countries").split(","));
+
+		String countryCodes = connection.getCurrentRowString("countries");
+		if (countryCodes != null) {
+			store.countries = Arrays.asList(countryCodes.split(","));
+		}
+
 		store.name = stripslashes(connection.getCurrentRowString("name"));
 		store.url = stripslashes(connection.getCurrentRowString("url"));
 		store.datasource = stripslashes(connection.getCurrentRowString("datasource"));
@@ -277,7 +282,7 @@ final class StoreService implements IStoreService {
 				}
 			}
 		}
-		
+
 		return stores;
 	}
 
