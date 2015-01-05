@@ -13,6 +13,7 @@ import io.reflection.app.api.core.shared.call.GetCountriesResponse;
 import io.reflection.app.api.core.shared.call.event.GetCountriesEventHandler.GetCountriesFailure;
 import io.reflection.app.api.core.shared.call.event.GetCountriesEventHandler.GetCountriesSuccess;
 import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.res.flags.Styles;
 import io.reflection.app.datatypes.shared.Country;
 
@@ -82,12 +83,12 @@ public class CountryController implements ServiceConstants {
 					}
 				}
 
-				EventController.get().fireEventFromSource(new GetCountriesSuccess(input, output), CountryController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetCountriesSuccess(input, output), CountryController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new GetCountriesFailure(input, caught), CountryController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetCountriesFailure(input, caught), CountryController.this);
 			}
 		});
 	}

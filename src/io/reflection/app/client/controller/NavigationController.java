@@ -8,6 +8,7 @@
 package io.reflection.app.client.controller;
 
 import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.MixPanelApiHelper;
 import io.reflection.app.client.mixpanel.MixPanelApi;
@@ -350,7 +351,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 				Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 					@Override
 					public void execute() {
-						EventController.get().fireEventFromSource(new NavigationEventHandler.ChangedEvent(previous, mStack), NavigationController.this);
+						DefaultEventBus.get().fireEventFromSource(new NavigationEventHandler.ChangedEvent(previous, mStack), NavigationController.this);
 					}
 				});
 

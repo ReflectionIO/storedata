@@ -8,7 +8,7 @@
 package io.reflection.app.client.page.admin;
 
 import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMAT_DD_MMM_YYYY;
-import io.reflection.app.client.controller.EventController;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.NavigationController;
@@ -200,7 +200,7 @@ public class SimpleModelRunsPage extends Page implements FilterEventHandler {
 	@Override
 	protected void onAttach() {
 		super.onAttach();
-		register(EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
 	}
 
 	/*

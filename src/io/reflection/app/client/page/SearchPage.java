@@ -10,7 +10,7 @@ package io.reflection.app.client.page;
 import io.reflection.app.api.admin.shared.call.event.SearchForItemEventHandler;
 import io.reflection.app.api.core.shared.call.SearchForItemRequest;
 import io.reflection.app.api.core.shared.call.SearchForItemResponse;
-import io.reflection.app.client.controller.EventController;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.ItemController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
@@ -50,8 +50,8 @@ public class SearchPage extends Page implements NavigationEventHandler, SearchFo
 	protected void onAttach() {
 		super.onAttach();
 
-		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
-		register(EventController.get().addHandlerToSource(SearchForItemEventHandler.TYPE, ItemController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(SearchForItemEventHandler.TYPE, ItemController.get(), this));
 	}
 
 	/*

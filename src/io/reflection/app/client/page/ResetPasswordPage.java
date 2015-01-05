@@ -10,7 +10,7 @@ package io.reflection.app.client.page;
 import io.reflection.app.api.core.shared.call.ChangePasswordRequest;
 import io.reflection.app.api.core.shared.call.ChangePasswordResponse;
 import io.reflection.app.api.core.shared.call.event.ChangePasswordEventHandler;
-import io.reflection.app.client.controller.EventController;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.SessionController;
@@ -55,9 +55,9 @@ public class ResetPasswordPage extends Page implements NavigationEventHandler, C
 
 		form.setVisible(true);
 
-		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
-		register(EventController.get().addHandlerToSource(ChangePasswordEventHandler.TYPE, SessionController.get(), this));
-		register(EventController.get().addHandlerToSource(ChangePasswordEventHandler.TYPE, SessionController.get(), form));
+		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(ChangePasswordEventHandler.TYPE, SessionController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(ChangePasswordEventHandler.TYPE, SessionController.get(), form));
 	}
 
 	/*

@@ -14,6 +14,7 @@ import io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler.GetFo
 import io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler.GetForumsSuccess;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.datatypes.shared.Forum;
 
 import java.util.ArrayList;
@@ -96,12 +97,12 @@ public class ForumController extends AsyncDataProvider<Forum> implements Service
                                     + input.pager.count.intValue(), count == 0 ? (forums == null ? 0 : forums.size()) : (int) count)));
                 }
 
-                EventController.get().fireEventFromSource(new GetForumsSuccess(input, output), ForumController.this);
+                DefaultEventBus.get().fireEventFromSource(new GetForumsSuccess(input, output), ForumController.this);
             }
 
             @Override
             public void onFailure(Throwable caught) {
-                EventController.get().fireEventFromSource(new GetForumsFailure(input, caught), ForumController.this);
+                DefaultEventBus.get().fireEventFromSource(new GetForumsFailure(input, caught), ForumController.this);
             }
         });
     }

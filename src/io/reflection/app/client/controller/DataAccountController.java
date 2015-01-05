@@ -18,6 +18,7 @@ import io.reflection.app.api.admin.shared.call.event.JoinDataAccountEventHandler
 import io.reflection.app.api.admin.shared.call.event.JoinDataAccountEventHandler.JoinDataAccountSuccess;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.datatypes.shared.DataAccount;
 
 import java.util.ArrayList;
@@ -89,12 +90,12 @@ public class DataAccountController extends AsyncDataProvider<DataAccount> implem
 									Math.min(input.pager.start.intValue() + input.pager.count.intValue(), pager.totalCount.intValue())));
 				}
 
-				EventController.get().fireEventFromSource(new GetDataAccountsSuccess(input, output), DataAccountController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetDataAccountsSuccess(input, output), DataAccountController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new GetDataAccountsFailure(input, caught), DataAccountController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetDataAccountsFailure(input, caught), DataAccountController.this);
 			}
 		});
 	}
@@ -116,12 +117,12 @@ public class DataAccountController extends AsyncDataProvider<DataAccount> implem
 				if (output.status == StatusType.StatusTypeSuccess) {
 
 				}
-				EventController.get().fireEventFromSource(new JoinDataAccountSuccess(input, output), DataAccountController.this);
+				DefaultEventBus.get().fireEventFromSource(new JoinDataAccountSuccess(input, output), DataAccountController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new JoinDataAccountFailure(input, caught), DataAccountController.this);
+				DefaultEventBus.get().fireEventFromSource(new JoinDataAccountFailure(input, caught), DataAccountController.this);
 			}
 
 		});

@@ -11,7 +11,7 @@ import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMAT_EEE_D
 import io.reflection.app.api.blog.shared.call.GetPostRequest;
 import io.reflection.app.api.blog.shared.call.GetPostResponse;
 import io.reflection.app.api.blog.shared.call.event.GetPostEventHandler;
-import io.reflection.app.client.controller.EventController;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.PostController;
@@ -85,8 +85,8 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 	protected void onAttach() {
 		super.onAttach();
 
-		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
-		register(EventController.get().addHandlerToSource(GetPostEventHandler.TYPE, PostController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(GetPostEventHandler.TYPE, PostController.get(), this));
 
 		// this is not a uifield because it requires html id
 		comments = DivElement.as(Document.get().getElementById("disqus_thread"));

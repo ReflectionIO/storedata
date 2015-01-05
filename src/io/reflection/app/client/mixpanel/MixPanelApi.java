@@ -20,14 +20,14 @@ public class MixPanelApi {
 
 	public static MixPanelApi get() {
 		if (one == null) {
-			add();
+			inject();
 			one = new MixPanelApi();
 		}
 
 		return one;
 	}
 
-	private static native MixPanelApi add() /*-{
+	private static native MixPanelApi inject() /*-{
 		(function(f, b) {
 		    if (!b.__SV) {
 		        var a, e, i, g;

@@ -9,7 +9,7 @@ package io.reflection.app.client.part;
 
 import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
 import io.reflection.app.api.shared.datatypes.Session;
-import io.reflection.app.client.controller.EventController;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.FilterController.Filter;
@@ -135,8 +135,8 @@ public class Footer extends Composite implements FilterEventHandler, SessionEven
 	protected void onAttach() {
 		super.onAttach();
 
-		filterChangedRegistration = EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this);
-		sessionRegistration = EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this);
+		filterChangedRegistration = DefaultEventBus.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this);
+		sessionRegistration = DefaultEventBus.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this);
 	}
 
 	/*

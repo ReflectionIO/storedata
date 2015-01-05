@@ -154,7 +154,7 @@ public class Forum extends DataType {
 		return this;
 	}
 
-	public Forum numberOfTopics(int numberOfTopics) {
+	public Forum numberOfTopics(Integer numberOfTopics) {
 		this.numberOfTopics = numberOfTopics;
 		return this;
 	}

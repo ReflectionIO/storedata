@@ -11,7 +11,7 @@ import io.reflection.app.api.core.shared.call.LinkAccountRequest;
 import io.reflection.app.api.core.shared.call.LinkAccountResponse;
 import io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler;
 import io.reflection.app.api.shared.ApiError;
-import io.reflection.app.client.controller.EventController;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
@@ -67,8 +67,8 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 	protected void onAttach() {
 		super.onAttach();
 
-		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
-		register(EventController.get().addHandlerToSource(LinkAccountEventHandler.TYPE, LinkedAccountController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(LinkAccountEventHandler.TYPE, LinkedAccountController.get(), this));
 	}
 
 	@UiHandler("mLinkAccount")

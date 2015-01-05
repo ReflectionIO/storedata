@@ -71,7 +71,7 @@ public class DeleteUsersRequest extends Request {
 		return this;
 	}
 
-	public DeleteUsersRequest allTestUsers(boolean allTestUsers) {
+	public DeleteUsersRequest allTestUsers(Boolean allTestUsers) {
 		this.allTestUsers = allTestUsers;
 		return this;
 	}

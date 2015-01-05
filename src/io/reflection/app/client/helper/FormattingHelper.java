@@ -7,10 +7,13 @@
 //
 package io.reflection.app.client.helper;
 
+import io.reflection.app.datatypes.shared.EventPriorityType;
 import io.reflection.app.shared.util.DataTypeHelper;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 
 /**
  * @author William Shakour (billy1380)
@@ -61,5 +64,29 @@ public class FormattingHelper {
 		}
 
 		return priceRangeString;
+	}
+
+	public static SafeHtml convertEventPriorityToIcon(EventPriorityType priority) {
+		SafeHtml icon = SafeHtmlUtils.EMPTY_SAFE_HTML;
+
+		switch (priority) {
+		case EventPriorityTypeCritical:
+			icon = SafeHtmlUtils.fromSafeConstant("<i class=\"glyphicon glyphicon-exclamation-sign\" style=\"color:#ff496a\"></i>");
+			break;
+		case EventPriorityTypeDebug:
+			icon = SafeHtmlUtils.fromSafeConstant("<i class=\"glyphicon glyphicon-minus\" style=\"color:#eee\"></i>");
+			break;
+		case EventPriorityTypeHigh:
+			icon = SafeHtmlUtils.fromSafeConstant("<i class=\"glyphicon glyphicon-bell\" style=\"color:#f8c765\"></i>");
+			break;
+		case EventPriorityTypeLow:
+			icon = SafeHtmlUtils.fromSafeConstant("<i class=\"glyphicon glyphicon-arrow-down\" style=\"color:#ddd\"></i>");
+			break;
+		case EventPriorityTypeNormal:
+			icon = SafeHtmlUtils.fromSafeConstant("<i class=\"glyphicon glyphicon-bell\" style=\"color:#ccc\"></i>");
+			break;
+		}
+
+		return icon;
 	}
 }

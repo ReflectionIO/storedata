@@ -71,7 +71,10 @@ final class DataSourceService implements IDataSourceService {
 		dataSource.name = stripslashes(connection.getCurrentRowString("name"));
 		dataSource.url = stripslashes(connection.getCurrentRowString("url"));
 
-		dataSource.stores = Arrays.asList(stripslashes(connection.getCurrentRowString("stores")).split(","));
+		String storeCodes = connection.getCurrentRowString("stores");
+		if (storeCodes != null) {
+			dataSource.stores = Arrays.asList(stripslashes(storeCodes).split(","));
+		}
 
 		return dataSource;
 	}

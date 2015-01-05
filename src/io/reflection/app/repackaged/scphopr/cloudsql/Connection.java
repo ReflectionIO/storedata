@@ -126,7 +126,7 @@ public final class Connection {
 				connection = DriverManager.getConnection(url, username, password);
 				connection.setAutoCommit(!isTransactionMode);
 				executeQuery(String.format("SET NAMES \'%s\'", encoding));
-//			 	 executeQuery(String.format("SET CHARACTER SET \'%s\'", encoding));
+				// executeQuery(String.format("SET CHARACTER SET \'%s\'", encoding));
 			}
 		} catch (SQLException ex) {
 			LOG.log(GaeLevel.SEVERE, "Error conneting to databse", ex);
@@ -164,7 +164,7 @@ public final class Connection {
 		try {
 			if (statement == null) {
 				statement = connection.createStatement();
-//				statement.setQueryTimeout(60);
+				// statement.setQueryTimeout(60);
 			}
 
 			if (statement.execute(query, Statement.RETURN_GENERATED_KEYS)) {
@@ -225,6 +225,9 @@ public final class Connection {
 		if (queryResult != null) {
 			try {
 				value = queryResult.getObject(key);
+				if (queryResult.wasNull()) {
+					value = null;
+				}
 			} catch (SQLException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error getting value for column", ex);
 
@@ -241,6 +244,9 @@ public final class Connection {
 		if (queryResult != null) {
 			try {
 				value = queryResult.getInt(key);
+				if (queryResult.wasNull()) {
+					value = null;
+				}
 			} catch (SQLException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error getting value for column", ex);
 
@@ -256,8 +262,8 @@ public final class Connection {
 
 		if (queryResult != null) {
 			try {
-				Timestamp t;
-				if ((t = queryResult.getTimestamp(key)) != null) {
+				Timestamp t = queryResult.getTimestamp(key);
+				if (!queryResult.wasNull() && t != null) {
 					value = new Date(t.getTime());
 				}
 			} catch (SQLException ex) {
@@ -276,6 +282,9 @@ public final class Connection {
 		if (queryResult != null) {
 			try {
 				value = queryResult.getLong(key);
+				if (queryResult.wasNull()) {
+					value = null;
+				}
 			} catch (SQLException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error getting value for column", ex);
 
@@ -292,6 +301,9 @@ public final class Connection {
 		if (queryResult != null) {
 			try {
 				value = queryResult.getDouble(key);
+				if (queryResult.wasNull()) {
+					value = null;
+				}
 			} catch (SQLException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error getting value for column", ex);
 
@@ -308,6 +320,9 @@ public final class Connection {
 		if (queryResult != null) {
 			try {
 				value = queryResult.getString(key);
+				if (queryResult.wasNull()) {
+					value = null;
+				}
 			} catch (SQLException ex) {
 				LOG.log(GaeLevel.SEVERE, "Error getting value for column", ex);
 

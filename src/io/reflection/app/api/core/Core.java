@@ -26,6 +26,8 @@ import io.reflection.app.api.core.shared.call.CheckUsernameRequest;
 import io.reflection.app.api.core.shared.call.CheckUsernameResponse;
 import io.reflection.app.api.core.shared.call.DeleteLinkedAccountRequest;
 import io.reflection.app.api.core.shared.call.DeleteLinkedAccountResponse;
+import io.reflection.app.api.core.shared.call.DeleteNotificationsRequest;
+import io.reflection.app.api.core.shared.call.DeleteNotificationsResponse;
 import io.reflection.app.api.core.shared.call.ForgotPasswordRequest;
 import io.reflection.app.api.core.shared.call.ForgotPasswordResponse;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
@@ -46,6 +48,8 @@ import io.reflection.app.api.core.shared.call.GetLinkedAccountItemsRequest;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountItemsResponse;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountsRequest;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountsResponse;
+import io.reflection.app.api.core.shared.call.GetNotificationsRequest;
+import io.reflection.app.api.core.shared.call.GetNotificationsResponse;
 import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsRequest;
 import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsResponse;
 import io.reflection.app.api.core.shared.call.GetSalesRanksRequest;
@@ -72,6 +76,8 @@ import io.reflection.app.api.core.shared.call.SearchForItemRequest;
 import io.reflection.app.api.core.shared.call.SearchForItemResponse;
 import io.reflection.app.api.core.shared.call.UpdateLinkedAccountRequest;
 import io.reflection.app.api.core.shared.call.UpdateLinkedAccountResponse;
+import io.reflection.app.api.core.shared.call.UpdateNotificationsRequest;
+import io.reflection.app.api.core.shared.call.UpdateNotificationsResponse;
 import io.reflection.app.api.exception.AuthenticationException;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.ApiError;
@@ -85,9 +91,11 @@ import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
-import io.reflection.app.datatypes.shared.EmailFormatType;
+import io.reflection.app.datatypes.shared.EventPriorityType;
 import io.reflection.app.datatypes.shared.FormType;
 import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.datatypes.shared.Notification;
+import io.reflection.app.datatypes.shared.NotificationTypeType;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Role;
@@ -95,7 +103,7 @@ import io.reflection.app.datatypes.shared.Sale;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.helpers.ApiHelper;
-import io.reflection.app.helpers.EmailHelper;
+import io.reflection.app.helpers.NotificationHelper;
 import io.reflection.app.helpers.SliceHelper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.modellers.Modeller;
@@ -106,6 +114,7 @@ import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.datasource.DataSourceServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
+import io.reflection.app.service.notification.NotificationServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
 import io.reflection.app.service.role.RoleServiceProvider;
@@ -116,7 +125,6 @@ import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.service.user.IUserService;
 import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
-import io.reflection.app.shared.util.FormattingHelper;
 import io.reflection.app.shared.util.PagerHelper;
 
 import java.text.SimpleDateFormat;
@@ -1196,16 +1204,27 @@ public final class Core extends ActionHandler {
 					input.session.user = UserServiceProvider.provide().getUser(input.session.user.id);
 				}
 
-				EmailHelper
-						.sendEmail(
-								"hello@reflection.io",
-								"chi@reflection.io",
-								"Chi Dire",
-								"A user's has linked thier account account",
-								String.format(
-										"Hi Chi,\n\nThis is to let you know that the user [%d - %s] has added the data account [%d] for the data source [%s] and the username.\n\nReflection",
-										input.session.user.id.longValue(), FormattingHelper.getUserLongName(input.session.user), output.account.id.longValue(),
-										input.source.name, output.account.username), EmailFormatType.EmailFormatTypePlainText);
+				User listeningUser = UserServiceProvider.provide().getUsernameUser("chi@reflection.io");
+
+				Map<String, Object> parameters = new HashMap<String, Object>();
+				parameters.put("listener", listeningUser);
+				parameters.put("user", input.session.user);
+				parameters.put("account", output.account);
+				parameters.put("source", input.source);
+
+				String body = NotificationHelper
+						.inflate(
+								parameters,
+								"Hi ${listener.forename},\n\nThis is to let you know that the user [${user.id} - ${user.forename} ${user.surname}] has added the data account [${account.id}] for the data source [${source.name}] and the username ${account.username}.\n\nReflection");
+
+				Notification notification = (new Notification()).from("hello@reflection.io").user(listeningUser).body(body)
+						.priority(EventPriorityType.EventPriorityTypeHigh).subject("A user's has linked thier account account");
+				Notification added = NotificationServiceProvider.provide().addNotification(notification);
+
+				if (added.type != NotificationTypeType.NotificationTypeTypeInternal) {
+					notification.type = NotificationTypeType.NotificationTypeTypeInternal;
+					NotificationServiceProvider.provide().addNotification(notification);
+				}
 			}
 
 			output.status = StatusType.StatusTypeSuccess;
@@ -1917,7 +1936,7 @@ public final class Core extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
-			input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			input.item = ValidationHelper.validateItem(input.item, "input.item");
 
@@ -1942,6 +1961,126 @@ public final class Core extends ActionHandler {
 			output.error = convertToErrorAndLog(LOG, e);
 		}
 		LOG.finer("Exiting getLinkedAccountItem");
+		return output;
+	}
+
+	public GetNotificationsResponse getNotifications(GetNotificationsRequest input) {
+		LOG.finer("Entering getNotifications");
+		GetNotificationsResponse output = new GetNotificationsResponse();
+		try {
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			if (input.pager.sortBy == null) {
+				input.pager.sortBy = "created";
+			}
+
+			if (input.pager.sortDirection == null) {
+				input.pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
+			}
+
+			input.pager = ValidationHelper.validatePager(input.pager, "input.pager");
+
+			output.notifications = NotificationServiceProvider.provide().getUserNotifications(input.session.user,
+					NotificationTypeType.NotificationTypeTypeInternal, input.pager);
+
+			if (output.notifications != null) {
+				for (Notification notification : output.notifications) {
+					if ("beta@reflection.io".equals(notification.from)) {
+						notification.from = "Beta (" + notification.from + ")";
+					} else if ("hello@reflection.io".equals(notification.from)) {
+						notification.from = "Hello (" + notification.from + ")";
+					} else {
+						notification.from = "Admin";
+					}
+				}
+			}
+
+			PagerHelper.updatePager(output.pager = input.pager, output.notifications, input.pager.totalCount == null ? NotificationServiceProvider.provide()
+					.getUserNotificationsCount(input.session.user, NotificationTypeType.NotificationTypeTypeInternal, null, Boolean.FALSE)
+					: input.pager.totalCount);
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getNotifications");
+		return output;
+	}
+
+	public DeleteNotificationsResponse deleteNotifications(DeleteNotificationsRequest input) {
+		LOG.finer("Entering deleteNotifications");
+		DeleteNotificationsResponse output = new DeleteNotificationsResponse();
+		try {
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			if (input.notifications == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("input.notifications"));
+
+			// all or nothing validation
+			int i = 0;
+			for (Notification notification : input.notifications) {
+				ValidationHelper.validateExistingNotification(notification, "input.notifications[" + Integer.toString(i++) + "]");
+			}
+
+			// once validation/lookup is done... delete the items
+			for (Notification notification : input.notifications) {
+				NotificationServiceProvider.provide().deleteNotification(notification);
+			}
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting deleteNotifications");
+		return output;
+	}
+
+	public UpdateNotificationsResponse updateNotifications(UpdateNotificationsRequest input) {
+		LOG.finer("Entering updateNotifications");
+		UpdateNotificationsResponse output = new UpdateNotificationsResponse();
+		try {
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			if (input.notifications == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("input.notifications"));
+
+			// all or nothing validation
+			int i = 0;
+			String path;
+			Map<String, Notification> existing = new HashMap<String, Notification>();
+			Notification lookup;
+			for (Notification notification : input.notifications) {
+				path = "input.notifications[" + Integer.toString(i++) + "]";
+
+				lookup = ValidationHelper.validateExistingNotification(notification, path);
+				existing.put(notification.id.toString(), lookup);
+
+				// from is when sent to a client and we NEVER want to update it
+				notification.from = lookup.from;
+
+				// if the item exists, verify that the new parameters are valid update values
+				ValidationHelper.validateNewNotification(notification, path);
+			}
+
+			// once validation/lookup is done... delete the items
+			for (Notification notification : input.notifications) {
+				NotificationServiceProvider.provide().updateNotification(existing.get(notification.id.toString()), notification);
+			}
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting updateNotifications");
 		return output;
 	}
 }

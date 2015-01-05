@@ -25,6 +25,7 @@ import io.reflection.app.api.forum.shared.call.event.UpdateReplyEventHandler.Upd
 import io.reflection.app.api.forum.shared.call.event.UpdateReplyEventHandler.UpdateReplySuccess;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.part.datatypes.ForumMessage;
 import io.reflection.app.datatypes.shared.Reply;
 import io.reflection.app.datatypes.shared.Topic;
@@ -153,12 +154,12 @@ public class ReplyController implements ServiceConstants {
 						}
 					}
 
-					EventController.get().fireEventFromSource(new GetReplyEventHandler.GetReplySuccess(input, output), replyController);
+					DefaultEventBus.get().fireEventFromSource(new GetReplyEventHandler.GetReplySuccess(input, output), replyController);
 				}
 
 				@Override
 				public void onFailure(Throwable caught) {
-					EventController.get().fireEventFromSource(new GetReplyEventHandler.GetReplyFailure(input, caught), replyController);
+					DefaultEventBus.get().fireEventFromSource(new GetReplyEventHandler.GetReplyFailure(input, caught), replyController);
 				}
 			});
 		}
@@ -224,12 +225,12 @@ public class ReplyController implements ServiceConstants {
 						}
 					}
 
-					EventController.get().fireEventFromSource(new GetRepliesSuccess(input, output), replyController);
+					DefaultEventBus.get().fireEventFromSource(new GetRepliesSuccess(input, output), replyController);
 				}
 
 				@Override
 				public void onFailure(Throwable caught) {
-					EventController.get().fireEventFromSource(new GetRepliesFailure(input, caught), replyController);
+					DefaultEventBus.get().fireEventFromSource(new GetRepliesFailure(input, caught), replyController);
 				}
 			});
 		}
@@ -277,12 +278,12 @@ public class ReplyController implements ServiceConstants {
 						addForumMessage((int) topic.numberOfReplies, output.reply, topic, output.reply.id.intValue());
 					}
 
-					EventController.get().fireEventFromSource(new AddReplySuccess(input, output), replyController);
+					DefaultEventBus.get().fireEventFromSource(new AddReplySuccess(input, output), replyController);
 				}
 
 				@Override
 				public void onFailure(Throwable caught) {
-					EventController.get().fireEventFromSource(new AddReplyFailure(input, caught), replyController);
+					DefaultEventBus.get().fireEventFromSource(new AddReplyFailure(input, caught), replyController);
 				}
 			});
 		}
@@ -303,7 +304,7 @@ public class ReplyController implements ServiceConstants {
 
 				@Override
 				public void onFailure(Throwable caught) {
-					EventController.get().fireEventFromSource(new UpdateReplyFailure(input, caught), replyController);
+					DefaultEventBus.get().fireEventFromSource(new UpdateReplyFailure(input, caught), replyController);
 
 				}
 
@@ -313,7 +314,7 @@ public class ReplyController implements ServiceConstants {
 						replyController.reset();
 					}
 
-					EventController.get().fireEventFromSource(new UpdateReplySuccess(input, output), replyController);
+					DefaultEventBus.get().fireEventFromSource(new UpdateReplySuccess(input, output), replyController);
 
 				}
 			});

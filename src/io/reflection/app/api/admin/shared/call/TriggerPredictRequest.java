@@ -160,7 +160,7 @@ public class TriggerPredictRequest extends Request {
 		return this;
 	}
 
-	public TriggerPredictRequest code(long code) {
+	public TriggerPredictRequest code(Long code) {
 		this.code = code;
 		return this;
 	}

@@ -20,7 +20,6 @@ public class PagerHelper {
 
 	public static void updatePager(Pager pager, List<?> list) {
 		updatePager(pager, list, null);
-
 	}
 
 	public static void updatePager(Pager pager, List<?> list, Long total) {
@@ -36,23 +35,12 @@ public class PagerHelper {
 	}
 
 	public static Pager createInfinitePager() {
-		Pager pager = new Pager();
-
-		pager.start = Pager.DEFAULT_START;
-		pager.count = Long.valueOf(Long.MAX_VALUE);
-
-		return pager;
+		return new Pager().start(Pager.DEFAULT_START).count(Long.valueOf(Long.MAX_VALUE));
 	}
 
 	public static Pager createDefaultPager() {
-		Pager pager = new Pager();
-
-		pager.start = Pager.DEFAULT_START;
-		pager.count = Pager.DEFAULT_COUNT;
-		pager.sortBy = Pager.DEFAULT_SORT_BY;
-		pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
-
-		return pager;
+		return new Pager().start(Pager.DEFAULT_START).count(Pager.DEFAULT_COUNT).sortBy(Pager.DEFAULT_SORT_BY)
+				.sortDirection(SortDirectionType.SortDirectionTypeDescending);
 	}
 
 	public static Pager moveForward(Pager pager) {

@@ -14,6 +14,7 @@ import io.reflection.app.api.admin.shared.call.event.GetPermissionsEventHandler.
 import io.reflection.app.api.admin.shared.call.event.GetPermissionsEventHandler.GetPermissionsSuccess;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.datatypes.shared.Permission;
 
 import java.util.ArrayList;
@@ -86,12 +87,12 @@ public class PermissionController extends AsyncDataProvider<Permission> implemen
 									Math.min(input.pager.start.intValue() + input.pager.count.intValue(), mPager.totalCount.intValue())));
 				}
 
-				EventController.get().fireEventFromSource(new GetPermissionsSuccess(input, output), PermissionController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetPermissionsSuccess(input, output), PermissionController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new GetPermissionsFailure(input, caught), PermissionController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetPermissionsFailure(input, caught), PermissionController.this);
 			}
 		});
 	}

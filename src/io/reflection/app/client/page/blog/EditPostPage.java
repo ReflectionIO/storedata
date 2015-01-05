@@ -16,7 +16,7 @@ import io.reflection.app.api.blog.shared.call.UpdatePostResponse;
 import io.reflection.app.api.blog.shared.call.event.CreatePostEventHandler;
 import io.reflection.app.api.blog.shared.call.event.GetPostEventHandler;
 import io.reflection.app.api.blog.shared.call.event.UpdatePostEventHandler;
-import io.reflection.app.client.controller.EventController;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.PostController;
@@ -83,10 +83,10 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 	protected void onAttach() {
 		super.onAttach();
 
-		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
-		register(EventController.get().addHandlerToSource(CreatePostEventHandler.TYPE, PostController.get(), this));
-		register(EventController.get().addHandlerToSource(GetPostEventHandler.TYPE, PostController.get(), this));
-		register(EventController.get().addHandlerToSource(UpdatePostEventHandler.TYPE, PostController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(CreatePostEventHandler.TYPE, PostController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(GetPostEventHandler.TYPE, PostController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(UpdatePostEventHandler.TYPE, PostController.get(), this));
 
 		resetForm();
 	}

@@ -8,7 +8,7 @@
 package io.reflection.app.client.page;
 
 import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
-import io.reflection.app.client.controller.EventController;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
@@ -45,7 +45,7 @@ public class ReadyToStartPage extends Page implements NavigationEventHandler {
 	protected void onAttach() {
 		super.onAttach();
 
-		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 	}
 
 	/*

@@ -46,7 +46,7 @@ public class GetTopicRequest extends Request {
 		}
 	}
 
-	public GetTopicRequest id(long id) {
+	public GetTopicRequest id(Long id) {
 		this.id = id;
 		return this;
 	}

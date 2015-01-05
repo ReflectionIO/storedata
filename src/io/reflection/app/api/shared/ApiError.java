@@ -88,9 +88,9 @@ public enum ApiError {
 
 	CategoryStoreMismatch(100048, "The category store does not a store in another parameter for Category: {0}"),
 
-	EmailTemplateNull(100049, "Invalid value null for EmailTemplate: {0}"),
-	EmailTemplateNoLookup(100050, "Invalid email template lookup, an id should be provided for EmailTemplate: {0}"),
-	EmailTemplateNotFound(100051, "Email template not found EmailTemplate: {0}"),
+	EventNull(100049, "Invalid value null for Event: {0}"),
+	EventNoLookup(100050, "Invalid event lookup, an id should be provided for Event: {0}"),
+	EventNotFound(100051, "Event not found Event: {0}"),
 
 	InvalidActionCode(100055, "Invalid action code String: {0}"),
 
@@ -120,7 +120,13 @@ public enum ApiError {
 
 	DataAccountUserMissmatch(100601, "User does not own data account"),
 
-	;
+	NotificationNull(100067, "Invalid value null for Notification: {0}"),
+	NotificationNotFound(100068, "Notification not found Notification: {0}"),
+	NotificationNoLookup(100069, "Invalid user notification lookup, need id or user and event Notification: {0}"),
+
+	EventSubscriptionNull(100070, "Invalid value null for EventSubscription: {0}"),
+	EventSubscriptionNotFound(100071, "Event subscription not found EventSubscription: {0}"),
+	EventSubscriptionNoLookup(100072, "Invalid user event subscription lookup, need id or user and event EventSubscription: {0}"), ;
 
 	private static final RegExp PARAM_0 = RegExp.compile("\\{0\\}");
 	private static final RegExp PARAM_1 = RegExp.compile("\\{1\\}");

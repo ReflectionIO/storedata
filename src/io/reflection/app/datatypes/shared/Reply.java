@@ -88,12 +88,12 @@ public class Reply extends DataType {
 		return this;
 	}
 
-	public Reply flagged(int flagged) {
+	public Reply flagged(Integer flagged) {
 		this.flagged = flagged;
 		return this;
 	}
 
-	public Reply solution(boolean solution) {
+	public Reply solution(Boolean solution) {
 		this.solution = solution;
 		return this;
 	}

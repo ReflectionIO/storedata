@@ -13,7 +13,7 @@ import io.reflection.app.api.forum.shared.call.GetTopicRequest;
 import io.reflection.app.api.forum.shared.call.GetTopicResponse;
 import io.reflection.app.api.forum.shared.call.event.AddReplyEventHandler;
 import io.reflection.app.api.forum.shared.call.event.GetTopicEventHandler;
-import io.reflection.app.client.controller.EventController;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.ReplyController;
@@ -147,9 +147,9 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 	protected void onAttach() {
 		super.onAttach();
 
-		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
-		register(EventController.get().addHandlerToSource(GetTopicEventHandler.TYPE, TopicController.get(), this));
-		register(EventController.get().addHandlerToSource(AddReplyEventHandler.TYPE, ReplyController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(GetTopicEventHandler.TYPE, TopicController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(AddReplyEventHandler.TYPE, ReplyController.get(), this));
 
 		registerOnMessagesLoadedHandler();
 

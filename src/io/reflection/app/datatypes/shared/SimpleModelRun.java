@@ -59,12 +59,12 @@ public class SimpleModelRun extends DataType {
 		return this;
 	}
 
-	public SimpleModelRun a(double a) {
+	public SimpleModelRun a(Double a) {
 		this.a = a;
 		return this;
 	}
 
-	public SimpleModelRun b(double b) {
+	public SimpleModelRun b(Double b) {
 		this.b = b;
 		return this;
 	}

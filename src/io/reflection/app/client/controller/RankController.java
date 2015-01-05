@@ -24,6 +24,7 @@ import io.reflection.app.api.core.shared.call.event.GetItemSalesRanksEventHandle
 import io.reflection.app.api.core.shared.call.event.GetSalesRanksEventHandler;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.helper.ApiCallHelper;
 import io.reflection.app.client.part.datatypes.ItemRevenue;
 import io.reflection.app.client.part.datatypes.RanksGroup;
@@ -140,14 +141,14 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 				}
 				updateRowCount(mRows.size(), true);
 
-				EventController.get().fireEventFromSource(new GetAllTopItemsSuccess(input, output), RankController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetAllTopItemsSuccess(input, output), RankController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
 				currentTopItems = null;
 				updateRowCount(0, true);
-				EventController.get().fireEventFromSource(new GetAllTopItemsFailure(input, caught), RankController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetAllTopItemsFailure(input, caught), RankController.this);
 			}
 		});
 
@@ -176,12 +177,12 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 			@Override
 			public void onSuccess(GetSalesRanksResponse output) {
-				EventController.get().fireEventFromSource(new GetSalesRanksEventHandler.GetSalesRanksSuccess(input, output), RankController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetSalesRanksEventHandler.GetSalesRanksSuccess(input, output), RankController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new GetSalesRanksEventHandler.GetSalesRanksFailure(input, caught), RankController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetSalesRanksEventHandler.GetSalesRanksFailure(input, caught), RankController.this);
 			}
 		});
 	}
@@ -262,13 +263,13 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 					itemRevenueData.refresh();
 				}
 
-				EventController.get().fireEventFromSource(new GetItemSalesRanksSuccess(input, output), RankController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetItemSalesRanksSuccess(input, output), RankController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
 				currentItemSalesRanks = null;
-				EventController.get().fireEventFromSource(new GetItemSalesRanksFailure(input, caught), RankController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetItemSalesRanksFailure(input, caught), RankController.this);
 			}
 		});
 	}
@@ -351,13 +352,13 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 					itemRevenueData.refresh();
 				}
 
-				EventController.get().fireEventFromSource(new GetItemRanksEventHandler.GetItemRanksSuccess(input, output), RankController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetItemRanksEventHandler.GetItemRanksSuccess(input, output), RankController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
 				currentItemRanks = null;
-				EventController.get().fireEventFromSource(new GetItemRanksEventHandler.GetItemRanksFailure(input, caught), RankController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetItemRanksEventHandler.GetItemRanksFailure(input, caught), RankController.this);
 			}
 		});
 
