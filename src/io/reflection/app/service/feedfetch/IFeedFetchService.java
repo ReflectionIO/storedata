@@ -14,6 +14,7 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.FeedFetch;
+import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
 
 import java.util.Collection;
@@ -123,7 +124,7 @@ public interface IFeedFetchService extends IService {
 	 * @param code
 	 * @return
 	 */
-	public Boolean isReadyToModel(Country country, Store store, Collection<String> types, Long code) throws DataAccessException;
+	public Boolean isReadyToModel(Country country, Store store, Category category, Collection<String> types, Long code) throws DataAccessException;
 
 	/**
 	 * 
@@ -133,7 +134,8 @@ public interface IFeedFetchService extends IService {
 	 * @param code
 	 * @return
 	 */
-	public List<FeedFetch> getGatherCodeFeedFetches(Country country, Store store, Collection<String> types, Long code) throws DataAccessException;
+	public List<FeedFetch> getGatherCodeFeedFetches(Country country, Store store, Category category, Collection<String> types, Long code)
+			throws DataAccessException;
 
 	/**
 	 * Gets a feed fetch code instead of an guid
@@ -189,5 +191,11 @@ public interface IFeedFetchService extends IService {
 	 */
 	public List<FeedFetch> getDatesFeedFetches(Country country, Store store, Category category, Collection<String> types, Date after, Date before)
 			throws DataAccessException;
+
+	/**
+	 * @param rank
+	 * @return
+	 */
+	public List<FeedFetch> getRankFeedFetch(Rank rank) throws DataAccessException;
 
 }

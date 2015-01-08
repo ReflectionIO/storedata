@@ -147,5 +147,10 @@
 			<artifactId>joda-time</artifactId>
 			<version>2.3</version>
 		</dependency>
+		<dependency>
+			<groupId>com.google.appengine.tools</groupId>
+			<artifactId>appengine-pipeline</artifactId>
+			<version>RELEASE</version>
+		</dependency>
 	</dependencies>
 </project>

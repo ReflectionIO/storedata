@@ -17,6 +17,7 @@ public class SimpleModelRun extends DataType {
 	public FeedFetch feedFetch;
 	public Double a;
 	public Double b;
+	public Double accuracy;
 
 	@Override
 	public JsonObject toJson() {
