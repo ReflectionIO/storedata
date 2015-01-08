@@ -26,7 +26,7 @@ import com.google.appengine.tools.pipeline.Value;
  */
 public class TestCase2 {
 
-	public static class TestCase2Generator extends Job2<Void, Category, Rank> {
+	public static class TestCase2Generator extends Job2<Rank, Category, Rank> {
 
 		/**
 		 * 
@@ -39,15 +39,20 @@ public class TestCase2 {
 		 * @see com.google.appengine.tools.pipeline.Job2#run(java.lang.Object, java.lang.Object)
 		 */
 		@Override
-		public Value<Void> run(Category category, Rank rank) throws Exception {
+		public Value<Rank> run(Category category, Rank rank) throws Exception {
 			FutureValue<Rank> subCategoryRank = futureCall(new GetSubcategoryRank(), immediate(rank), immediate(category));
 
-			return null;
+			return subCategoryRank;
 		}
 
 	}
 
 	public static class SubCategoryBranch extends Job3<Void, Rank, Category, Rank> {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -2487696358427962804L;
 
 		/*
 		 * (non-Javadoc)
@@ -69,6 +74,11 @@ public class TestCase2 {
 	}
 
 	public static class HasSubCategory extends Job3<Void, Rank, Category, Rank> {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 3209813458334544306L;
 
 		/*
 		 * (non-Javadoc)
@@ -107,6 +117,11 @@ public class TestCase2 {
 
 	public static class SubCatetgoryRevenueSetter extends Job2<Void, Rank, Float> {
 
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 5092815602557654268L;
+
 		/*
 		 * (non-Javadoc)
 		 * 
@@ -131,6 +146,11 @@ public class TestCase2 {
 	}
 
 	public static class HasNoSubCategory extends Job1<Void, Rank> {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -247515890190021528L;
 
 		/*
 		 * (non-Javadoc)
