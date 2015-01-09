@@ -56,6 +56,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.i18n.client.TimeZone;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.willshex.gson.json.service.client.JsonService;
@@ -145,8 +146,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	private void updateSessionExpiryWithTimezone() {
 		if (mSession != null && mSession.expires != null) {
 			long time = mSession.expires.getTime();
-			time -= mSession.expires.getTimezoneOffset() * 60 * 1000;
-
+			time += TimeZone.createTimeZone(mSession.expires.getTimezoneOffset()).getDaylightAdjustment(mSession.expires) * 60 * 1000;
 			mSession.expires = new Date(time);
 		}
 	}
