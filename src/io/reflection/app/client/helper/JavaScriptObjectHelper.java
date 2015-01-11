@@ -12,6 +12,9 @@ import java.util.Map;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsDate;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.LinkElement;
+import com.google.gwt.dom.client.ScriptElement;
 
 /**
  * @author William Shakour (billy1380)
@@ -55,7 +58,7 @@ public class JavaScriptObjectHelper {
 			} else if (value instanceof Date) {
 				setDateProperty(object, key, (Date) value);
 			}
-			
+
 			// TODO: need numbers
 		}
 	}
@@ -63,5 +66,51 @@ public class JavaScriptObjectHelper {
 	private static native void setObjectProperty(JavaScriptObject object, String propertyName, JavaScriptObject value) /*-{
 		object[propertyName] = value;
 	}-*/;
+
+	/**
+	 * Attach element to head
+	 */
+	public static native void appendToHead(JavaScriptObject object) /*-{
+		$doc.getElementsByTagName("head")[0].appendChild(object);
+	}-*/;
+
+	/**
+	 * Detach element to head
+	 */
+	public static native void removeFromHead(JavaScriptObject object) /*-{
+		$doc.getElementsByTagName("head")[0].removeChild(object);
+	}-*/;
+
+	/**
+	 * Attach element to body
+	 */
+	public static native void appendToBody(JavaScriptObject object) /*-{
+		$doc.getElementsByTagName("body")[0].appendChild(object);
+	}-*/;
+
+	/**
+	 * Detach element to body
+	 */
+	public static native void removeFromBody(JavaScriptObject object) /*-{
+		$doc.getElementsByTagName("body")[0].removeChild(object);
+	}-*/;
+
+	/** Load CSS file from url */
+	public static LinkElement getCssLinkFromUrl(String url) {
+		LinkElement link = Document.get().createLinkElement();
+		link.setRel("stylesheet");
+		link.setType("text/css");
+		link.setMedia("screen, projection");
+		link.setHref(url);
+		return link;
+	}
+
+	/** Load CSS file from url */
+	public static ScriptElement getJSScriptFromUrl(String url) {
+		ScriptElement script = Document.get().createScriptElement();
+		script.setType("text/javascript");
+		script.setSrc(url);
+		return script;
+	}
 
 }
