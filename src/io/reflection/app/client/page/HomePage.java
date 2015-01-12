@@ -8,7 +8,7 @@
 package io.reflection.app.client.page;
 
 import io.reflection.app.client.controller.NavigationController;
-import io.reflection.app.client.helper.JavaScriptObjectHelper;
+import io.reflection.app.client.helper.DOMHelper;
 import io.reflection.app.client.part.Footer;
 import io.reflection.app.client.part.Header;
 
@@ -50,14 +50,14 @@ public class HomePage extends Page {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		// Create scripts to append and remove in this page
-		cssCustom = JavaScriptObjectHelper.getCssLinkFromUrl("css/landing.bb941a53a0033496daa0b0267436cf57.css");
-		scriptCustom = JavaScriptObjectHelper.getJSScriptFromUrl("js/scripts.09e97b99c481635dd27df308491898.js");
+		cssCustom = DOMHelper.getCssLinkFromUrl("css/landing.bb941a53a0033496daa0b0267436cf57.css");
+		scriptCustom = DOMHelper.getJSScriptFromUrl("js/scripts.09e97b99c481635dd27df308491898.js");
 		// Conditional elements
-		cssCustomIE8 = JavaScriptObjectHelper.getCssLinkFromUrl("css/landing-ie8.1a51cdbd334937176c269c0fe5935208.css");
-		cssCustomIE9 = JavaScriptObjectHelper.getCssLinkFromUrl("css/landing-ie9.b88a72995eb11c8b63771dacdc057bc8.css");
-		scriptHtml5Shiv = JavaScriptObjectHelper.getJSScriptFromUrl("js/html5shiv.min.js");
-		scriptRespond = JavaScriptObjectHelper.getJSScriptFromUrl("js/respond.min.js");
-		scriptPictureFill = JavaScriptObjectHelper.getJSScriptFromUrl("js/picturefill.2.2.0.min.js");
+		cssCustomIE8 = DOMHelper.getCssLinkFromUrl("css/landing-ie8.1a51cdbd334937176c269c0fe5935208.css");
+		cssCustomIE9 = DOMHelper.getCssLinkFromUrl("css/landing-ie9.b88a72995eb11c8b63771dacdc057bc8.css");
+		scriptHtml5Shiv = DOMHelper.getJSScriptFromUrl("js/html5shiv.min.js");
+		scriptRespond = DOMHelper.getJSScriptFromUrl("js/respond.min.js");
+		scriptPictureFill = DOMHelper.getJSScriptFromUrl("js/picturefill.2.2.0.min.js");
 		scriptPictureFill.setAttribute("async", "");
 
 		applyBtn.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken("requestinvite"));
@@ -77,29 +77,29 @@ public class HomePage extends Page {
 
 		// Compatibility code
 		Document.get().getElementsByTagName("html").getItem(0).setAttribute("style", "height: auto");
-		Document.get().getBody().setAttribute("style", "height: auto");		
+		Document.get().getBody().setAttribute("style", "height: auto");
 		NavigationController.get().getPageHolderPanel().getElement().setAttribute("style", "padding: 0px 0px 0px 0px;");
 		((Footer) NavigationController.get().getFooter()).setVisible(false);
 		((Header) NavigationController.get().getHeader()).setVisible(false);
 
-		JavaScriptObjectHelper.appendToHead(cssCustom);
-		JavaScriptObjectHelper.appendToBody(scriptCustom);
+		DOMHelper.appendToHead(cssCustom);
+		DOMHelper.appendToBody(scriptCustom);
 
 		String userAgent = Window.Navigator.getUserAgent();
 		if (userAgent.contains("MSIE")) { // Internet Explorer
 			if (userAgent.contains("MSIE 2") || userAgent.contains("MSIE 3") || userAgent.contains("MSIE 4") || userAgent.contains("MSIE 5")
 					|| userAgent.contains("MSIE 6") || userAgent.contains("MSIE 7") || userAgent.contains("MSIE 8")) {
-				JavaScriptObjectHelper.appendToHead(cssCustomIE8);
-				JavaScriptObjectHelper.appendToHead(scriptHtml5Shiv);
-				JavaScriptObjectHelper.appendToHead(scriptRespond);
+				DOMHelper.appendToHead(cssCustomIE8);
+				DOMHelper.appendToHead(scriptHtml5Shiv);
+				DOMHelper.appendToHead(scriptRespond);
 			} else {
-				JavaScriptObjectHelper.appendToHead(scriptPictureFill);
+				DOMHelper.appendToHead(scriptPictureFill);
 			}
 			if (userAgent.contains("MSIE 9")) {
-				JavaScriptObjectHelper.appendToHead(cssCustomIE9);
+				DOMHelper.appendToHead(cssCustomIE9);
 			}
 		} else { // Not Internet Explorer
-			JavaScriptObjectHelper.appendToHead(scriptPictureFill);
+			DOMHelper.appendToHead(scriptPictureFill);
 		}
 
 	}
@@ -120,24 +120,24 @@ public class HomePage extends Page {
 		((Footer) NavigationController.get().getFooter()).setVisible(true);
 		((Header) NavigationController.get().getHeader()).setVisible(true);
 
-		JavaScriptObjectHelper.removeFromHead(cssCustom);
-		JavaScriptObjectHelper.removeFromBody(scriptCustom);
+		DOMHelper.removeFromHead(cssCustom);
+		DOMHelper.removeFromBody(scriptCustom);
 
 		String userAgent = Window.Navigator.getUserAgent();
 		if (userAgent.contains("MSIE")) { // Internet Explorer
 			if (userAgent.contains("MSIE 2") || userAgent.contains("MSIE 3") || userAgent.contains("MSIE 4") || userAgent.contains("MSIE 5")
 					|| userAgent.contains("MSIE 6") || userAgent.contains("MSIE 7") || userAgent.contains("MSIE 8")) {
-				JavaScriptObjectHelper.removeFromHead(cssCustomIE8);
-				JavaScriptObjectHelper.removeFromHead(scriptHtml5Shiv);
-				JavaScriptObjectHelper.removeFromHead(scriptRespond);
+				DOMHelper.removeFromHead(cssCustomIE8);
+				DOMHelper.removeFromHead(scriptHtml5Shiv);
+				DOMHelper.removeFromHead(scriptRespond);
 			} else {
-				JavaScriptObjectHelper.removeFromHead(scriptPictureFill);
+				DOMHelper.removeFromHead(scriptPictureFill);
 			}
 			if (userAgent.contains("MSIE 9")) {
-				JavaScriptObjectHelper.removeFromHead(cssCustomIE9);
+				DOMHelper.removeFromHead(cssCustomIE9);
 			}
 		} else { // Not Internet Explorer
-			JavaScriptObjectHelper.removeFromHead(scriptPictureFill);
+			DOMHelper.removeFromHead(scriptPictureFill);
 		}
 
 	}
