@@ -55,7 +55,7 @@ public class JavaScriptObjectHelper {
 			} else if (value instanceof Date) {
 				setDateProperty(object, key, (Date) value);
 			}
-			
+
 			// TODO: need numbers
 		}
 	}

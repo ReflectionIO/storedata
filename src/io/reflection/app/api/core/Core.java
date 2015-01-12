@@ -85,7 +85,6 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.archivers.ArchiverFactory;
 import io.reflection.app.archivers.ItemRankArchiver;
-import io.reflection.app.archivers.ItemSaleArchiver;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.shared.Country;
@@ -93,7 +92,6 @@ import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.EventPriorityType;
 import io.reflection.app.datatypes.shared.FormType;
-import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Notification;
 import io.reflection.app.datatypes.shared.NotificationTypeType;
 import io.reflection.app.datatypes.shared.Permission;
@@ -1096,34 +1094,35 @@ public final class Core extends ActionHandler {
 			Modeller modeller = ModellerFactory.getModellerForStore(input.store.a3Code);
 			FormType form = modeller.getForm(input.listType);
 
-			ItemSaleArchiver archiver = ArchiverFactory.getItemSaleArchiver();
-			String key = archiver.createItemsKey(input.linkedAccount, form);
-			List<Item> items = ItemServiceProvider.provide().getInternalIdItemBatch(archiver.getItemsIds(key));
-
 			output.pager = input.pager;
-			if (items == null || items.size() == 0) {
-				List<String> freeOrPaidApps = new ArrayList<String>();
 
-				freeOrPaidApps.add(FREE_OR_PAID_APP_UNIVERSAL_IOS);
-				if (form == FormType.FormTypeOther) {
-					freeOrPaidApps.add(FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS);
-				} else if (form == FormType.FormTypeTablet) {
-					freeOrPaidApps.add(FREE_OR_PAID_APP_IPAD_IOS);
-				}
+			// ItemSaleArchiver archiver = ArchiverFactory.getItemSaleArchiver();
+			// String key = archiver.createItemsKey(input.linkedAccount, form);
+			// List<Item> items = ItemServiceProvider.provide().getInternalIdItemBatch(archiver.getItemsIds(key));
+			//
+			// if (items == null || items.size() == 0) {
+			List<String> freeOrPaidApps = new ArrayList<String>();
 
-				output.items = SaleServiceProvider.provide().getDataAccountItems(input.linkedAccount, freeOrPaidApps, input.pager);
-
-				updatePager(output.pager, output.items,
-						input.pager.totalCount == null ? SaleServiceProvider.provide().getDataAccountItemsCount(input.linkedAccount, freeOrPaidApps) : null);
-			} else {
-				if (items.size() > (input.pager.start.longValue() + input.pager.count.longValue())) {
-					output.items = items.subList(input.pager.start.intValue(), input.pager.count.intValue());
-				} else {
-					output.items = items;
-				}
-
-				output.pager.totalCount = Long.valueOf(items.size());
+			freeOrPaidApps.add(FREE_OR_PAID_APP_UNIVERSAL_IOS);
+			if (form == FormType.FormTypeOther) {
+				freeOrPaidApps.add(FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS);
+			} else if (form == FormType.FormTypeTablet) {
+				freeOrPaidApps.add(FREE_OR_PAID_APP_IPAD_IOS);
 			}
+
+			output.items = SaleServiceProvider.provide().getDataAccountItems(input.linkedAccount, freeOrPaidApps, input.pager);
+
+			updatePager(output.pager, output.items,
+					input.pager.totalCount == null ? SaleServiceProvider.provide().getDataAccountItemsCount(input.linkedAccount, freeOrPaidApps) : null);
+			// } else {
+			// if (items.size() > (input.pager.start.longValue() + input.pager.count.longValue())) {
+			// output.items = items.subList(input.pager.start.intValue(), input.pager.count.intValue());
+			// } else {
+			// output.items = items;
+			// }
+			//
+			// output.pager.totalCount = Long.valueOf(items.size());
+			// }
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -1471,8 +1470,7 @@ public final class Core extends ActionHandler {
 
 			// right now category
 			if (input.category == null) {
-				// TODO:
-				// input.category = CategoryServiceProvider.provide().getAllCategory(stores);
+				// TODO: input.category = CategoryServiceProvider.provide().getAllCategory(stores);
 			} else {
 				input.category = ValidationHelper.validateCategory(input.category, "input.category");
 
