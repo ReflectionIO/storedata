@@ -1,562 +1,269 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
-	<ui:import field="io.reflection.app.client.page.PageType.RegisterPageType" />
-	<ui:import field="io.reflection.app.client.page.PageType.HomePageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.TermsPageType" />
 
-	<ui:with field="global" type="io.reflection.app.client.res.Styles" />
-
-	<ui:style type="io.reflection.app.client.page.HomePage.HomePageStyle">
-	@external btn, text-muted, carousel, carousel-inner, item, carousel-control, right, left, carousel-indicators, active, noteDetail;
-	@external icon-angle-right, icon-angle-left;
-	@external icon-location-1, icon-mail, icon-phone;
-	@external icon-basket-alt, icon-chart-bar, icon-chart-pie, icon-heart, icon-globe, icon-search;
-	.logo {
-	    background: url("images/logo.png") no-repeat center;
-	    text-indent: -100000px;
-	    overflow: hidden;
-	}
+	<ui:style>
 	
-	.contact .icon-location-1,.contact .icon-mail,.contact .icon-phone {
-	    font-size: 35px;
-	    color: #7e72c9;
-	}
-	
-	.home .contact .text-muted {
-	    font-size: 14px;
-	    line-height: 14px;
-	}
-	
-	.home .noteDetail {
-	    text-align: left;
-	}
-	
-	.contact h5 {
-	    display: none;
-	}
-	
-	.home h1,.home h2 {
-	    font-size: 34px;
-	    line-height: 40px;
-	    font-weight: 600;
-	}
-	
-	.offBlack {
-	    color: #484a50;
-	}
-	
-	.custom {
-	    min-height: 780px;
-	    background: #272833 url("images/header_bg.png") fixed repeat-x bottom;
-	}
-	
-	.home .custom h1,.custom h2 {
-	    color: white;
-	    font-weight: 400;
-	}
-	
-	.custom .text-muted {
-	    color: #afb1cf;
-	}
-	
-	.home .text-muted {
-	    font-size: 16px;
-	    line-height: 26px;
-	}
-	
-	.arrow a {
-	    color: white;
-	    font-size: 50px;
-	    opacity: .5;
-	}
-	
-	.arrow a:hover,.arrow a:focus {
-	    opacity: 1;
-	}
-	
-	.moveDown {
-	    margin-top: 60px;
-	}
-	
-	.moveDownALittle {
-	    margin-top: 30px;
-	}
-	
-	.feature .icon-basket-alt,.feature .icon-chart-bar,.feature .icon-chart-pie,.feature .icon-heart,.feature .icon-globe,.feature .icon-search
-	    {
-	    font-size: 50px;
-	    color: #bbbae6;
-	    margin-bottom: 30px;
-	}
-	
-	.features {
-	    margin-top: 60px;
-	    margin-bottom: 120px;
-	}
-	
-	.whiteSmoke {
-	    background: whitesmoke;
-	}
-	
-	.carousel-control.right {
-	    background-image: none;
-	    text-shadow: none;
-	    color: #d9dce0;
-	}
-	
-	.carousel-control.left {
-	    background-image: none;
-	    text-shadow: none;
-	    color: #d9dce0;
-	}
-	
-	.carousel-control .icon-angle-left,.carousel-control .icon-angle-right {
-	    font-size: 60px;
-	    position: absolute;
-	    top: 45%;
-	    z-index: 5;
-	    display: inline-block;
-	}
-	
-	.carousel-control .icon-angle-left {
-	    left: 0px;
-	}
-	
-	.carousel-control .icon-angle-right {
-	    right: 0px;
-	}
-	
-	.carousel-control:hover .icon-angle-left,.carousel-control:focus .icon-angle-left
-	    {
-	    left: 15px;
-	}
-	
-	.carousel-control:hover .icon-angle-right,.carousel-control:focus .icon-angle-right
-	    {
-	    right: 15px;
-	}
-	
-	.carousel-indicators li {
-	    background-color: #999;
-	    border: none;
-	    cursor: default;
-	    margin-left: 5px;
-	    margin-right: 5px;
-	}
-	
-	.carousel-indicators {
-	    bottom: -20px;
-	}
-	
-	.carousel-indicators li.active {
-	    background-color: #272833;
-	    border: none;
-	    margin-left: 5px;
-	    margin-right: 5px;
-	}
-	
-	.carousel {
-	    margin-bottom: 100px;
-	    margin-top: 30px;
-	}
-	
-	.carousel-inner>.item>img {
-	    margin: 0 auto;
-	    max-height: 540px;
-	}
-	
-	.people li {
-	    border: 2px solid #e5e5e5;
-	    border-radius: 3px;
-	    padding: 25px;
-	    margin: 20px 0;
-	    list-style: none;
-	}
-	
-	.people li>p {
-	    font-size: 14px;
-	}
-	
-	.data {
-	    background-color: #7e72c9;
-	}
-	
-	.insideData {
-	    margin-top: 60px;
-	    margin-bottom: 60px;
-	}
-	
-	.insideData h3 {
-	    color: white;
-	}
-	
-	.contactFormField label {
-	    display: none;
-	}
-	
-	.social {
-	    border-top: 1px solid #d9dce0;
-	}
-	
-	.social a {
-	    color: #8587a1;
-	    font-size: 32px;
-	}
-	
-	.social a:hover {
-	    color: #272833;
-	}
-	
-	.home .btn {
-	    font-size: 16px;
-	}
-	
-	.btnHollow {
-	    background: none;
-	    border: 2px solid;
-	    border-radius: 5px;
-	    padding: 20px 25px;
-	}
-	
-	.btnPurple {
-	    color: white;
-	    border-color: #7e72c9;
-	}
-	
-	.btnPurpleLBg {
-	    color: #7e72c9;
-	    border-color: #7e72c9;
-	}
-	
-	.btnPurpleInv {
-	    color: white;
-	    border-color: white;
-	}
-	
-	.btnPurple:hover,.btnPurpleLBg:hover,.btnPurple:focus,.btnPurpleLBg:focus
-	    {
-	    color: white;
-	    background-color: #7e72c9;
-	}
-	
-	.btnPurpleInv:hover,.btnPurpleInv:focus {
-	    color: #7e72c9;
-	    background-color: white;
-	}
-	
-	.hide {
-	    opacity: 0;
-	}
-	
-	.outlineHidden {
-	    outline: 0 !important;
-	}
-	
-	.carousel-arrow-left:before {
-	    width: auto;
-	    margin-left: 0px;
-	}
-	
-	.carousel-arrow-right:before {
-	    width: auto;
-	    margin-right: 0px;
-	}
 	</ui:style>
+
+
 	<g:HTMLPanel>
-		<div class="{style.home}">
-			<div ui:field="firstPage" class="jumbotron {style.custom}">
-				<div class="container text-center {style.moveDown}">
-					<h1 class="{style.logo}">Reflection</h1>
-					<div class="row {style.moveDownALittle}">
-						<h2 class="{style.hide} {style.moveDownALittle} {global.reflection.smooth}" ui:field="homeHeading" style="display:none;">Intelligence for the global app community</h2>
-						<p class="text-muted {style.moveDown} {style.hide} {global.reflection.smooth}" style="display:none;" ui:field="homeDescription">Revenue, download and rank data for any
-							app in the store</p>
-						<g:InlineHyperlink ui:field="requestInvite" targetHistoryToken="{RegisterPageType.asTargetHistoryToken}" text="Request Invite"
-							styleName="btn {style.btnPurple} {style.btnHollow} {style.moveDownALittle} {style.hide}" visible="false" />
-						<div class="{style.arrow} {style.hide} {style.moveDownALittle} {global.reflection.smooth}" style="display:none" ui:field="gotoFeaturesContainer">
-							<g:Anchor ui:field="gotoFeatures" styleName="{global.reflection.smooth} {style.outlineHidden}" href="{HomePageType.asHref.asString}">
-								<spans class="icon-angle-down" />
-							</g:Anchor>
-						</div>
-					</div>
-				</div>
+		<!--[if lt IE 8]> <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> 
+			to improve your experience.</p> <![endif] -->
+		<header class="header">
+			<div class="site-logo">
+				<a href="/">
+					<picture> <!-- uses js/picturefill.2.2.0.min.js -->
+						<!--[if IE 9]><video style="display: none;"><![endif] -->
+						<source srcset="images/global/logo-reflection-header.png" media="(min-width: 480px)" />
+						<source srcset="images/global/logo-reflection-header-mobile.png" />
+						<!--[if IE 9]></video><![endif] -->
+						<img src="images/global/logo-reflection-header.png" alt="Reflection logo" />
+					</picture>
+				</a>
 			</div>
-
-			<div class="text-center container {style.features}" ui:field="features">
-				<div class="row">
-					<h2 class="{style.offBlack}">Features</h2>
-					<p class="text-muted {style.moveDownALittle}">We're launching soon with detailed revenue, rank and download data for apps on the iPhone and iPad stores.</p>
-				</div>
-
-				<div class="row {style.moveDown}">
-
-					<div class="col-sm-4 {style.feature}">
-						<i class="icon-chart-pie" />
-						<g:Anchor ui:field="revenueFeature" styleName=" {global.reflection.smooth}" href="{HomePageType.asHref.asString}">
-
-							<h4 class="{style.offBlack}">Revenue &amp; Download Data</h4>
-							<p class="text-muted">Analyse historical revenue, download and rank information for any app to base your business decisions on.</p>
-						</g:Anchor>
-					</div>
-					<div class="col-sm-4 {style.feature}">
-						<i class="feature icon-globe" />
-						<g:Anchor ui:field="leaderboardFeature" styleName="{global.reflection.smooth}" href="{HomePageType.asHref.asString}">
-
-							<h4 class="{style.offBlack}">Global App Leaderboard</h4>
-							<p class="text-muted">View revenue and download data for the Top 400 apps in any country, in any category, at any time.</p>
-						</g:Anchor>
-					</div>
-					<div class="col-sm-4 {style.feature}">
-						<i class="feature icon-chart-bar" />
-						<g:Anchor ui:field="modelFeature" styleName="{global.reflection.smooth} " href="{HomePageType.asHref.asString}">
-
-							<h4 class="{style.offBlack}">Powerful Statistical Model</h4>
-							<p class="text-muted">We have created an algorithm that statistically paints a very accurate picture of the stores based on public rank and
-								private
-								download and
-								revenue
-								data.</p>
-						</g:Anchor>
-					</div>
-
-				</div>
-				<div class="row">
-					<div class="col-sm-4 {style.feature}">
-						<i class="feature icon-basket-alt" />
-						<g:Anchor ui:field="storesFeature" styleName="{global.reflection.smooth} " href="{HomePageType.asHref.asString}">
-
-							<h4 class="{style.offBlack}">Supported Stores</h4>
-							<p class="text-muted">We will launch with the iPhone and iPad stores and will then work hard to add all
-								major stores starting with Google Play.</p>
-						</g:Anchor>
-					</div>
-
-					<div class="col-sm-4 {style.feature}">
-						<i class="feature icon-search" />
-						<g:Anchor ui:field="searchFeature" styleName="{global.reflection.smooth} " href="{HomePageType.asHref.asString}">
-
-							<h4 class="{style.offBlack}">Comprehensive Search</h4>
-							<p class="text-muted">Search for any app to see its revenue, download and rank history for any
-								country and date range.</p>
-						</g:Anchor>
-					</div>
-
-					<div class="col-sm-4 {style.feature}">
-						<i class="feature icon-heart" />
-						<g:Anchor ui:field="functionalFeature" styleName="{global.reflection.smooth} " href="{HomePageType.asHref.asString}">
-
-							<h4 class="{style.offBlack}">Beautiful &amp; Functional</h4>
-							<p class="text-muted">Access meaningful market intelligence wherever you are on any device through our
-								easy to use web app.</p>
-						</g:Anchor>
-					</div>
-				</div>
+			<div class="header__actions">
+				<g:InlineHyperlink ui:field="applyBtn" styleName="ref-button-apply">Apply</g:InlineHyperlink>
+				<g:InlineHyperlink ui:field="loginBtn" styleName="link-log-in icon-login">Log In</g:InlineHyperlink>
 			</div>
+		</header>
 
-			<div class="container-fluid  {style.whiteSmoke} {style.moveDown}">
-				<div class="text-center {style.moveDown}">
-					<div class="row">
-						<div class="col-sm-6 col-sm-offset-3">
-							<h2 class="{style.offBlack}">Make Smarter Decisions</h2>
+		<div>
+			<div id="main" class="l-main" role="main">
 
-							<p class="text-muted {style.moveDownALittle}">Analyse daily revenue, downloads and rank for the Top 400 apps in any country &amp; category. Make smart business,
-								marketing
-								and
-								development
-								decisions
-								by
-								comparing the performance of similar apps.</p>
-						</div>
-					</div>
-					<div class="row">
-						<div style="margin-left: auto; margin-right: auto; max-width: 1170px">
-							<div class="carousel">
-								<!-- Indicators -->
-								<ol class="carousel-indicators" ui:field="carouselIndicators">
-									<li class="{global.reflection.smooth} active"></li>
-									<li class="{global.reflection.smooth}"></li>
-									<li class="{global.reflection.smooth}"></li>
-								</ol>
-								<div class="carousel-inner" ui:field="carouselContainer">
-									<div class="item active">
-										<img src="images/leaderboard.png" alt="Leaderboard" />
-									</div>
-									<div class="item">
-										<img src="images/revenue_history.png" alt="Revenue History" />
-									</div>
-									<div class="item">
-										<img src="images/download_history.png" alt="Download History" />
+				<div class="window-height-scroll-effect-container landing-section-main-scroll-effect-container">
+					<div class="section-size-shadow-layer"></div>
+					<section class="landing-section-main">
+						<div class="landing-section-main__content">
+							<div class="landing-section-main__column-one">
+								<div>
+									<h1>App Intelligence to Create &amp; Plan More Successful Products</h1>
+									<p>Reflection is the only intelligence tool with a freemium pricing model that fits the needs of the entire app ecosystem.</p>
+									<div class="actions-container">
+										<a href="#anchor-how-intelligence-helps" class="icon-angle-right js-scroll-to-anchor">How Intelligence Helps</a>
+										<g:InlineHyperlink ui:field="applyNowBtn" styleName="ref-button-cta-large">Apply Now</g:InlineHyperlink>
 									</div>
 								</div>
-								<g:Anchor styleName="left carousel-control {global.reflection.smooth}" ui:field="carouselLeft">
-									<span class="icon-angle-left {global.reflection.smooth} {style.carousel-arrow-left}"></span>
-								</g:Anchor>
-								<g:Anchor styleName="right carousel-control {global.reflection.smooth}" ui:field="carouselRight">
-									<span class="icon-angle-right {global.reflection.smooth} {style.carousel-arrow-right}"></span>
-								</g:Anchor>
+							</div>
+							<div class="landing-section-main__column-two">
+								<img src="images/placeholder/placeholder-landing-section-1.png" alt="Leaderboard screenshot" />
+							</div>
+						</div>
+						<div class="list-partners">
+							<ul>
+								<li>
+									<img src="images/logos/Partner_Soundcloud@2x.png" alt="Soundcloud logo" />
+								</li>
+								<li>
+									<img src="images/logos/Partner_Sega@2x.png" alt="Sega logo" />
+								</li>
+								<li>
+									<img src="images/logos/Partner_Wooga@2x.png" alt="Wooga logo" />
+								</li>
+								<li>
+									<img src="images/logos/Partner_TocaBoca@2x.png" alt="Toca Boca logo" />
+								</li>
+								<li>
+									<img src="images/logos/Partner_Miniclip@2x.png" alt="Miniclip logo" />
+								</li>
+								<li>
+									<img src="images/logos/Partner_SquareEnix@2x.png" alt="Square Enix logo" />
+								</li>
+								<li>
+									<img src="images/logos/Partner_Imperial@2x.png" alt="Imperial College London logo" />
+								</li>
+							</ul>
+							<h2>Who's using Reflection</h2>
+						</div>
+					</section>
+				</div>
+
+				<section class="landing-section-insights" id="anchor-how-intelligence-helps">
+					<div class="landing-section-insights__column_one">
+						<picture>
+							<!--[if IE 9]><video style="display: none;"><![endif] -->
+							<source srcset="images/placeholder/placeholder-laptop-large.png" media="(min-width: 720px)" />
+							<source srcset="images/placeholder/placeholder-laptop-medium.png" />
+							<!--[if IE 9]></video><![endif] -->
+							<img src="images/placeholder/placeholder-laptop-large.png" alt="Leaderboard screenshot" />
+						</picture>
+					</div>
+					<div class="landing-column-thin">
+						<div class="landing-column-thin__content">
+							<h2>Discover Powerful Insights</h2>
+							<p>Reflection's app leaderboard ranks all apps in the store according to the money they make or the number of times they are downloaded.</p>
+							<p>See who is monetising their users most effectively, what pricing models and app types generate the most revenue and identify the themes and design
+								that are most popular with customers.</p>
+							<p>Filter by country, store and app category to get a tailored view of the data you are most interested in.</p>
+						</div>
+					</div>
+				</section>
+
+				<section class="landing-section-analyse">
+					<div class="landing-section-analyse__column_two">
+						<picture>
+							<!--[if IE 9]><video style="display: none;"><![endif] -->
+							<source srcset="images/placeholder/placeholder-laptop-analyse-large.png" media="(min-width: 720px)" />
+							<source srcset="images/placeholder/placeholder-laptop-analyse-medium.png" />
+							<!--[if IE 9]></video><![endif] -->
+							<img src="images/placeholder/placeholder-laptop-analyse-large.png" alt="Analysis screenshot" />
+						</picture>
+					</div>
+					<div class="landing-column-thin">
+						<div class="landing-column-thin__content">
+							<h2>Analyse App Performance</h2>
+							<p>Drill down into your own individual apps and those of other developers to analyse their rank, downloads and revenue data over a given period of time.</p>
+							<p>Discover how they are affected by internal or external influences such as time, day of the week, app update releases or promotions and use this
+								insight to evolve or plan your own product strategy.</p>
+						</div>
+					</div>
+				</section>
+
+				<section class="landing-section-story">
+					<div class="landing-column-thin">
+						<div class="landing-column-thin__content">
+							<blockquote>
+								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+									quis nostrud exercitation</p>
+								<footer>
+									<cite>
+										<span>John Smith</span>
+										Company Name
+									</cite>
+								</footer>
+							</blockquote>
+							<blockquote>
+								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor</p>
+								<footer>
+									<cite>
+										<span>John Smith</span>
+										Company Name
+									</cite>
+								</footer>
+							</blockquote>
+							<blockquote>
+								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore</p>
+								<footer>
+									<cite>
+										<span>John Smith</span>
+										Company Name
+									</cite>
+								</footer>
+							</blockquote>
+						</div>
+					</div>
+					<div class="landing-column-wide">
+						<div class="landing-column-wide__content">
+							<h2>Our Story</h2>
+							<p>Revenue, download and rank data is an essential source of product and commercial insight that until now was only available to the few members of the
+								development community who could afford to pay the hefty fee for it.</p>
+							<p>Reflection is revolutionising the app industry by providing freemium access to a comprehensive intelligence and analytics platform comprised of a set
+								of tools our partners and members have helped to create. These include some of the app industries biggest names such as Peter Molyneux OBE, Toca Boca,
+								Sega, Miniclip, Soundcloud etc etc etc</p>
+							<p>The accuracy of our data is all-important and maintained through detailed mathematical algorithms developed in conjunction with our statistical
+								partner, Imperial College London.</p>
+							<div class="logo-ref-imp-container">
+								<img src="images/logos/Reflection_Imperial_Logos.png" alt="Reflection and Imperial College logos" class="logo-ref-imp" />
 							</div>
 						</div>
 					</div>
-				</div>
+				</section>
 
-			</div>
-			<div class="container {style.moveDown}">
-				<div class="row">
-					<div class="col-sm-6">
-						<h2 class="{style.offBlack}">About Us</h2>
-
-						<p class="text-muted {style.moveDownALittle}">We’re a core team of talented engineers and designers with over 35 years of combined experience in the web and mobile space.</p>
-
-						<p class="text-muted">We were tired of how expensive and cumbersome it was to get up to date and accurate information about apps and the app market
-							so we
-							decided
-							to
-							create
-							a
-							better service ourselves.</p>
-
-						<h3 class="{style.offBlack} {style.moveDownALittle}">Work with Reflection</h3>
-
-
-						<p class="text-muted">Our small and passionate start-up is growing. If you're a self-starter, would love to be part of a growing start-up and have
-							what
-							it takes
-							to
-							get
-							things done, we’d like to hear from you.</p>
-
-						<g:Anchor ui:field="workWithUs" styleName="{style.moveDownALittle} btn {style.btnPurpleLBg} {style.btnHollow}" href="{HomePageType.asHref.asString}">Work With
-							Us</g:Anchor>
-
+				<section class="landing-section-careers">
+					<img src="images/careers/careers-col-thin.jpg" alt="Patrick" class="img-width-landing-column-thin" />
+					<img src="images/careers/careers-col-wide.jpg" alt="Chi, Gustaf and Will" class="img-width-landing-column-wide" />
+					<div class="landing-column-wide">
+						<div class="landing-column-wide__content">
+							<h2>Work With Us</h2>
+							<p>We exist to help the app development community create more successful products and to contribute something of tangible value or enjoyment to their end
+								users.</p>
+							<p>Our core values of honesty, trusworthiness, progressive thinking and strictly no time-wasting nonsense permeate everything we do from our
+								communications to our tools and services. We believe in plain talking and turning app store data into uncomplicated and actionable insight.</p>
+							<p>
+								Our multi-national and like-minded London based team is growing rapidly and we've recently moved to our swish new offices just off Oxford Street (see
+								below). If you'd like to join us in changing the app industry forever we’d like to hear from you:
+								<a href="mailto:careers@reflection.io">careers@reflection.io</a>
+							</p>
+						</div>
 					</div>
-					<ul class="col-sm-6 {style.people}">
+					<div class="landing-column-thin">
+						<div class="landing-column-thin__content">
+							<h2>We're Hiring</h2>
+							<ul>
+								<li>
+									<a href="#">Senior Front End Web Developer</a>
+								</li>
+								<li>
+									<a href="#">Junior Designer</a>
+								</li>
+								<li>
+									<a href="#">Community Manager</a>
+								</li>
+								<li>
+									<a href="#">Sales Executive</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</section>
+
+				<section class="landing-section-map">
+					<div id="js-map-location"></div>
+				</section>
+
+				<section class="landing-section-contact">
+					<div>
+						<img src="images/global/logo-reflection-footer.png" alt="Reflection logo" class="logo-reflection-footer" />
+					</div>
+					<a href="mailto:info@reflection.io" class="landing-section-contact__email">
+						<span class="icon-mail">info@reflection.io</span>
+					</a>
+					<a href="tel:+44(0)201234567" class="landing-section-contact__tel">
+						<span class="icon-phone">+44(0) 20 123 4567</span>
+					</a>
+					<a
+						href="https://www.google.co.uk/maps/place/44+Newman+St,+Marylebone,+London+W1T+1QD/@51.5187779,-0.1364135,17z/data=!4m7!1m4!3m3!1s0x48761b2b95192b1b:0xc2fcb9753b8ff12b!2s44+Newman+St,+Marylebone,+London+W1T+1QD!3b1!3m1!1s0x48761b2b95192b1b:0xc2fcb9753b8ff12b"
+						class="landing-section-contact__address" target="_blank">
+						<p class="icon-location">
+							<b>
+								40-44 Newman St
+								<br />
+								London
+								<br />
+								W1T 1QD
+							</b>
+						</p>
+					</a>
+				</section>
+
+				<footer class="landing-footer">
+					<ul class="landing-footer__social-links">
 						<li>
-							<h5 class="{style.offBlack}">William Shakour</h5>
-							<p class="text-muted">Originally from Sudan, William has written code for a large variety of devices and platforms - ranging from phones to
-								servers
-								and
-								everything
-								in-between. When he is not
-								making sense of app data he loves to write mobile games.</p>
+							<a href="https://www.facebook.com/reflection.io" class="icon-facebook-squared link-facebook"></a>
 						</li>
 						<li>
-							<h5 class="{style.offBlack}">Gustaf Leksell</h5>
-							<p class="text-muted">Before founding Reflection, Gustaf led Business Development for Games at BBC Worldwide. He has lived and worked in Seoul,
-								Shanghai and
-								Austin
-								where he designed &amp;
-								produced successful mobile and online games.</p>
+							<a href="http://www.linkedin.com/company/reflection-io-ltd" class="icon-linkedin-rect link-linkedin">
+								<span>LinkedIn</span>
+							</a>
 						</li>
 						<li>
-							<h5 class="{style.offBlack}">Chi Dire</h5>
-							<p class="text-muted">Chi has more than 20 years experience coding apps and services for small to global brands. With more than 600 apps across
-								his
-								devices,
-								he
-								thought
-								it was time to
-								try and make sense of it all.</p>
+							<a href="https://twitter.com/reflectionio" class="icon-twitter link-twitter">
+								<span>Twitter</span>
+							</a>
 						</li>
 					</ul>
-				</div>
+
+					<g:InlineHyperlink targetHistoryToken="{TermsPageType.asTargetHistoryToken}" styleName="landing-footer__inline-link">Terms &amp; Conditions and Privacy Policy</g:InlineHyperlink>
+					<span class="landing-footer__copyright">&copy;2014 Reflection. All Rights Reserved</span>
+					<a href="#" class="link-to-page-top js-scroll-to-page-top">
+						<span class="border-radius-point"></span>
+						<span class="link-to-page-top__text">Back to Top</span>
+					</a>
+				</footer>
 			</div>
-			<div class="text-center container-fluid {style.moveDown} {style.data}">
-				<div class="row {style.insideData}">
-					<h3>Need data for reports or articles? Reference us and get it for free.</h3>
-
-					<g:Anchor ui:field="getInTouch" styleName="btn {style.btnHollow} {style.btnPurpleInv} {style.moveDownALittle}" href="{HomePageType.asHref.asString}">Get In Touch</g:Anchor>
-				</div>
-			</div>
-			<div class="text-center container {style.moveDown}" ui:field="contact">
-
-				<div class="row">
-					<div class="col-sm-6 col-sm-offset-3">
-						<h2 class="{style.offBlack}">Contact us</h2>
-
-						<p class="text-muted {style.moveDownALittle}">
-							If you have any inquiries please get in touch using the form below, or send an email to
-							<strong>hello at reflection.io</strong>
-						</p>
-					</div>
-				</div>
-
-				<div class="row {style.moveDownALittle}">
-					<g:FormPanel>
-						<g:HTMLPanel styleName="col-sm-6 col-sm-offset-3">
-
-							<g:HTMLPanel ui:field="nameGroup" styleName="form-group {style.contactFormField}">
-								<label>First name</label>
-								<g:TextBox styleName="form-control" ui:field="name" />
-								<g:HTMLPanel ui:field="nameNote" visible="false" styleName="noteDetail" />
-							</g:HTMLPanel>
-
-							<g:HTMLPanel ui:field="emailGroup" styleName="form-group {style.contactFormField}">
-								<label>Email</label>
-								<g:TextBox styleName="form-control" ui:field="email" />
-								<g:HTMLPanel ui:field="emailNote" visible="false" styleName="noteDetail" />
-							</g:HTMLPanel>
-
-							<g:HTMLPanel ui:field="messageGroup" styleName="form-group {style.contactFormField}">
-								<label>Message</label>
-								<g:TextArea styleName="form-control" ui:field="message" visibleLines="4" />
-								<g:HTMLPanel ui:field="messageNote" visible="false" styleName="noteDetail" />
-							</g:HTMLPanel>
-
-							<g:Hidden ui:field="action" value="contact" name="action" />
-
-							<g:Button ui:field="submit" styleName="btn {style.btnHollow} {style.btnPurpleLBg} btn-block {style.moveDownALittle}">
-								Submit
-							</g:Button>
-
-							<p:AlertBox ui:field="contactAlert" visible="false" styleName="alert {style.moveDownALittle}" />
-
-						</g:HTMLPanel>
-					</g:FormPanel>
-				</div>
-				<div class="row {style.moveDown}">
-					<div class="col-sm-6 col-sm-offset-3">
-						<div class="col-sm-4 {style.contact} ">
-							<span class="icon-mail" />
-							<p class="text-muted">hello at reflection.io</p>
-							<p class="text-muted">careers at reflection.io</p>
-						</div>
-						<div class="col-sm-4 {style.contact} ">
-							<span class="icon-location-1" />
-							<h5>Location</h5>
-							<p class="text-muted">79 Wardour Street</p>
-							<p class="text-muted">London, W1D 6QB</p>
-						</div>
-						<div class="col-sm-4 {style.contact} ">
-							<span class="icon-phone" />
-							<h5>Contact</h5>
-							<p class="text-muted">+44 (0) 20 7851 8645</p>
-						</div>
-					</div>
-				</div>
-				<div class="row {style.moveDown}">
-					<div class="col-xs-12 {style.social}">
-						<div>
-							<a href="https://www.facebook.com/reflection.io" target="_blank" class="{global.reflection.smooth}">
-								<span class="icon-facebook-squared" />
-							</a>
-							<a href="http://www.linkedin.com/company/reflection-io-ltd" target="_blank" class="{global.reflection.smooth}">
-								<span class="icon-linkedin-squared" />
-							</a>
-							<a href="https://twitter.com/reflectionio" target="_blank" class="{global.reflection.smooth}">
-								<span class="icon-twitter" />
-							</a>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="text-center container {style.moveDown}">
-				<span class="row text-muted">
-					copyright &copy;
-					<g:Anchor ui:field="gotoTop" href="{HomePageType.asHref.asString}">Reflection.io</g:Anchor>
-					<span ui:field="year"></span>
-				</span>
-			</div>
-			<g:HTMLPanel styleName="filler-bottom col-md-12 hidden-xs hidden-sm" />
 		</div>
+
+
 	</g:HTMLPanel>
 </ui:UiBinder> 

@@ -13,6 +13,7 @@ import io.reflection.app.client.part.SuperAlertBox;
 import io.reflection.app.client.res.Styles;
 
 import com.google.gwt.dom.client.StyleInjector;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -28,10 +29,9 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 
 	static {
 		Styles.INSTANCE.reflection().ensureInjected();
-		String mediaQueries = " @media (max-width: 1024px) {."
-				+ Styles.INSTANCE.reflection().footer()
+		String mediaQueries = " @media (max-width: 1024px) {." + Styles.INSTANCE.reflection().footer()
 				+ " {display:none;} .navbar-fixed-top {position:relative;} .navbar {margin-bottom:0px;} .container-fluid{padding-top:0px !important;}}"
-				+ "@media (min-width: 992px) {html,body,#content,.container-fluid,#content>.container-fluid>.row{height: 100%} .sidepanel{height: 100%;margin-bottom:0px;}}";
+				+ "@media (min-width: 992px) {html,body,.container-fluid,.container-fluid>.row{height: 100%} .sidepanel{height: 100%;margin-bottom:0px;}}";
 		StyleInjector.injectAtEnd(mediaQueries);
 	}
 
@@ -46,8 +46,8 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 
 		GChart.setCanvasFactory(new GwtCanvasBasedCanvasFactory());
 
-		//this registers the newly created singleton, so that 
-		//fireCurrentHistoryState -> onValueChange -> addPages
+		// this registers the newly created singleton, so that
+		// fireCurrentHistoryState -> onValueChange -> addPages
 		History.addValueChangeHandler(NavigationController.get());
 
 		makeContainer();
@@ -62,8 +62,8 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 
 		// add footer
 		mContainer.add(NavigationController.get().getFooter());
-		
-		//the above are just place holders, this kicks of the actual page loading
+
+		// the above are just place holders, this kicks of the actual page loading
 		History.fireCurrentHistoryState();
 
 	}
@@ -72,7 +72,7 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 		Styles.INSTANCE.reflection().ensureInjected();
 
 		mContainer = new HTMLPanel("");
-		mContainer.getElement().setId("content");
+		mContainer.getElement().getStyle().setHeight(100, Unit.PCT);
 		RootPanel.get().add(mContainer);
 	}
 
