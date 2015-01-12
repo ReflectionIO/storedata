@@ -20,6 +20,7 @@ import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.ingestors.Ingestor;
 import io.reflection.app.ingestors.IngestorFactory;
 import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.pipeline.IosRankPipeline;
 import io.reflection.app.service.application.ApplicationServiceProvider;
 import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
@@ -44,10 +45,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.text.View;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
+import org.markdown4j.Markdown4jProcessor;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -59,6 +62,8 @@ import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Builder;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
+import com.google.appengine.tools.pipeline.PipelineService;
+import com.google.appengine.tools.pipeline.PipelineServiceFactory;
 import com.googlecode.objectify.cmd.Query;
 
 /**
@@ -692,6 +697,13 @@ public class DevHelperServlet extends HttpServlet {
 				predictQueue.add(TaskOptions.Builder.withUrl("/predict?" + req.getQueryString()).method(Method.GET));
 
 				success = true;
+			} else if ("pipelinegather".equals(action)) {
+				PipelineService service = PipelineServiceFactory.newPipelineService();
+
+				String pipelineId = service.startNewPipeline(new IosRankPipeline.GatherAll());
+
+				markup = (new Markdown4jProcessor()).process("[View " + pipelineId + "](/_ah/pipeline/status.html?root=" + pipelineId
+						+ " \"View pipeline status\")");
 			} else {
 				if (LOG.isLoggable(Level.INFO)) {
 					LOG.info(String.format("Action [%s] not supported", action));
@@ -707,6 +719,7 @@ public class DevHelperServlet extends HttpServlet {
 
 		if (markup != null) {
 			resp.getOutputStream().print(markup);
+			LOG.info(markup);
 		} else if (csv != null) {
 			resp.getOutputStream().print(csv);
 		} else {
