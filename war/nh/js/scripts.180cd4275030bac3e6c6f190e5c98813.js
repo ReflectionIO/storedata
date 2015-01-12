@@ -33,6 +33,13 @@
 
 	reflectionMap = function() {
 		var isDraggable = $('html.touch').length == 0;
+		var mapStyles = [{
+	      featureType: "poi",
+	      elementType: "labels",
+	      stylers: [
+          { visibility: "off" }
+	      ]
+	    }];
 		this.myLatlng = new google.maps.LatLng(51.518680, -0.136578);
 		this.mapOptions = {
 		  zoom: 17,
@@ -40,7 +47,8 @@
 		  disableDefaultUI: true,
 		  scrollwheel: false,
 		  streetViewControl: true,
-		  draggable: isDraggable
+		  draggable: isDraggable,
+		  styles: mapStyles
 		}
 		this.markerImage = {
 	    url: 'imgs/contact/Map_Pin@2x.png',

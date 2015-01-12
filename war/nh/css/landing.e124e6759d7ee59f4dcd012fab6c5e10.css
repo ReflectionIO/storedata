@@ -115,11 +115,11 @@ li {
 }
 
 /* line 6, ../sass/helpers/_placeholders.scss */
-.vertical-center, .landing-section-contact > div, .landing-section-contact > a, .landing-footer {
+.vertical-center, .header__actions, .landing-section-contact > div, .landing-section-contact > a, .landing-footer {
   height: 100%;
 }
 /* line 8, ../sass/helpers/_placeholders.scss */
-.vertical-center:before, .landing-section-contact > div:before, .landing-section-contact > a:before, .landing-footer:before {
+.vertical-center:before, .header__actions:before, .landing-section-contact > div:before, .landing-section-contact > a:before, .landing-footer:before {
   content: '';
   display: inline-block;
   width: 0;
@@ -129,7 +129,7 @@ li {
   /* Adjusts for spacing */
 }
 /* line 16, ../sass/helpers/_placeholders.scss */
-.vertical-center > *, .landing-section-contact > div > *, .landing-section-contact > a > *, .landing-footer > * {
+.vertical-center > *, .header__actions > *, .landing-section-contact > div > *, .landing-section-contact > a > *, .landing-footer > * {
   display: inline-block;
   vertical-align: middle;
 }
@@ -426,19 +426,27 @@ blockquote cite span {
 }
 /* line 22, ../sass/components/_header.scss */
 .header .ref-button-apply {
-  margin-right: 20px;
   vertical-align: middle;
 }
 
-/* line 27, ../sass/components/_header.scss */
+/* line 26, ../sass/components/_header.scss */
 .header__actions {
-  padding-top: 13px;
+  height: 62px;
+  padding-right: 4px;
   display: inline-block;
   float: right;
 }
+@media (min-width: 480px) {
+  /* line 26, ../sass/components/_header.scss */
+  .header__actions {
+    padding-right: 0;
+  }
+}
 
-/* line 32, ../sass/components/_header.scss */
-.link-log-in {
+/* line 36, ../sass/components/_header.scss */
+.link-log-in,
+.link-leaderboard {
+  margin-left: 12px;
   display: inline-block;
   vertical-align: middle;
   font-family: "Source Sans Pro", sans-serif;
@@ -447,8 +455,16 @@ blockquote cite span {
   letter-spacing: -0.3px;
   color: #7b7ea0;
 }
-/* line 40, ../sass/components/_header.scss */
-.link-log-in:before {
+@media (min-width: 480px) {
+  /* line 36, ../sass/components/_header.scss */
+  .link-log-in,
+  .link-leaderboard {
+    margin-left: 22px;
+  }
+}
+/* line 49, ../sass/components/_header.scss */
+.link-log-in:before,
+.link-leaderboard:before {
   vertical-align: top;
   margin-right: 9px;
   font-size: 18px;
@@ -456,15 +472,23 @@ blockquote cite span {
   -webkit-transition: color 0.2s;
   transition: color 0.2s;
 }
-/* line 47, ../sass/components/_header.scss */
-.link-log-in:hover {
+/* line 56, ../sass/components/_header.scss */
+.link-log-in:hover,
+.link-leaderboard:hover {
   color: white;
 }
-/* line 49, ../sass/components/_header.scss */
-.link-log-in:hover:before {
+/* line 58, ../sass/components/_header.scss */
+.link-log-in:hover:before,
+.link-leaderboard:hover:before {
   color: #ff496a;
   -webkit-transition: color 0.3s;
   transition: color 0.3s;
+}
+
+/* line 65, ../sass/components/_header.scss */
+.link-leaderboard:before {
+  position: relative;
+  top: -1px;
 }
 
 /* line 1, ../sass/components/_site-logo.scss */
