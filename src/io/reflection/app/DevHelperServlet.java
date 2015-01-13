@@ -45,7 +45,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.text.View;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -718,8 +717,8 @@ public class DevHelperServlet extends HttpServlet {
 		resp.setHeader("Cache-Control", "no-cache");
 
 		if (markup != null) {
+			resp.setContentType("text/html");
 			resp.getOutputStream().print(markup);
-			LOG.info(markup);
 		} else if (csv != null) {
 			resp.getOutputStream().print(csv);
 		} else {
