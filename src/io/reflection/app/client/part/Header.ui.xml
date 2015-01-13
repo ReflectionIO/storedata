@@ -123,11 +123,11 @@
 								</g:InlineHyperlink>
 							</li>
 							<li ui:field="notificationsItem">
-                                <g:InlineHyperlink ui:field="notificationsLink">
-                                    <i class="glyphicon glyphicon-bell"></i>
-                                    Notifications
-                                </g:InlineHyperlink>
-                            </li>
+								<g:InlineHyperlink ui:field="notificationsLink">
+									<i class="glyphicon glyphicon-bell"></i>
+									Notifications
+								</g:InlineHyperlink>
+							</li>
 						</ul>
 					</li>
 				</ul>

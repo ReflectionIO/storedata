@@ -48,7 +48,7 @@
 	$(window).bind('touchmove', function(e) {
 		scrollValue.text($(this).scrollTop());
 	});
-	
+
 	if ($('.window-height-scroll-effect-container').length > 0
 			&& $('.csstransforms').length > 0 && $('.no-touch').length > 0) {
 		var windowHeight = $(window).height(), windowWidth = $(window).width(), breakpointVertical = 680, breakpointHorizontal = 980;
@@ -78,7 +78,14 @@
 	}
 
 	reflectionMap = function() {
-		
+		var isDraggable = $('html.touch').length == 0;
+		var mapStyles = [ {
+			featureType : "poi",
+			elementType : "labels",
+			stylers : [ {
+				visibility : "off"
+			} ]
+		} ];
 		this.myLatlng = new google.maps.LatLng(51.518680, -0.136578);
 		this.mapOptions = {
 			zoom : 17,
@@ -86,7 +93,8 @@
 			disableDefaultUI : true,
 			scrollwheel : false,
 			streetViewControl : true,
-
+			draggable : isDraggable,
+			styles : mapStyles
 		}
 		this.markerImage = {
 			url : 'images/contact/Map_Pin@2x.png',
@@ -144,7 +152,7 @@
 		return this;
 	}
 
-	 var script = document.createElement('script');
+	var script = document.createElement('script');
 	script.type = 'text/javascript';
 	script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyD7mXBIrN4EgMflWKxUOK6C9rfoDMa5zyo&callback=generateMap';
 	document.head.appendChild(script);
