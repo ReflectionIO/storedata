@@ -2161,7 +2161,7 @@ blockquote cite span {
 .gm-style .gm-style-iw + div {
   right: 20px !important;
   top: 50px !important;
-  background: transparent url(../imgs/icons/icon-close.png) no-repeat 100% 0 !important;
+  background: transparent url(../images/icons/icon-close.png) no-repeat 100% 0 !important;
 }
 /* line 22, ../sass/components/_google-map.scss */
 .gm-style .gm-style-iw + div img {
@@ -2181,7 +2181,7 @@ blockquote cite span {
   min-width: 150px;
   height: 50px;
   display: block;
-  background: #f0f3f5 url(../imgs/global/logo-reflection-footer.png) no-repeat 23px 12px !important;
+  background: #f0f3f5 url(../images/global/logo-reflection-footer.png) no-repeat 23px 12px !important;
   background-size: 116px auto !important;
   text-align: left;
   text-indent: -999em;
