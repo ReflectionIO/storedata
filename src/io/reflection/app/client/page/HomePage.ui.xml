@@ -2,6 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
 	<ui:import field="io.reflection.app.client.page.PageType.TermsPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.HomePageType" />
 
 	<ui:style>
 	
@@ -13,7 +14,7 @@
 			to improve your experience.</p> <![endif] -->
 		<header class="header">
 			<div class="site-logo">
-				<a href="/">
+				<g:InlineHyperlink targetHistoryToken="{HomePageType.asTargetHistoryToken}">
 					<picture> <!-- uses js/picturefill.2.2.0.min.js -->
 						<!--[if IE 9]><video style="display: none;"><![endif] -->
 						<source srcset="images/global/logo-reflection-header.png" media="(min-width: 480px)" />
@@ -21,11 +22,13 @@
 						<!--[if IE 9]></video><![endif] -->
 						<img src="images/global/logo-reflection-header.png" alt="Reflection logo" />
 					</picture>
-				</a>
+				</g:InlineHyperlink>
 			</div>
-			<div class="header__actions">
+			<div class="header__actions" ui:field="headerLinks">
 				<g:InlineHyperlink ui:field="applyBtn" styleName="ref-button-apply">Apply</g:InlineHyperlink>
 				<g:InlineHyperlink ui:field="loginBtn" styleName="link-log-in icon-login">Log In</g:InlineHyperlink>
+				<g:InlineHyperlink ui:field="leaderboardBtn" styleName="link-leaderboard icon-chart-bar">Leaderboard</g:InlineHyperlink>
+				<g:InlineHyperlink ui:field="logoutBtn" styleName="link-log-in icon-logout" targetHistoryToken="logout">Sign Out</g:InlineHyperlink>
 			</div>
 		</header>
 
