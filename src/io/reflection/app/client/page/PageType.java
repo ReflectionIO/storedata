@@ -327,11 +327,15 @@ public enum PageType {
 		default:
 			if (defaultPage == null) {
 				defaultPage = new HomePage();
+				defaultPage.setPageType(this);
 			}
 			page = defaultPage;
 			break;
 		}
-		page.setPageType(this);
+		
+		if (page != defaultPage) {
+			page.setPageType(this);
+		}
 
 		return page;
 	}

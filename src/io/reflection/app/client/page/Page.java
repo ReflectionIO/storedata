@@ -64,6 +64,6 @@ public class Page extends Composite {
 	public void setPageType(PageType type) {
 		if (pageType == null) {
 			pageType = type;
-		} else throw new RuntimeException("Page type is alread " + pageType.toString());
+		} else throw new RuntimeException("Page type is already " + pageType.toString());
 	}
 }
