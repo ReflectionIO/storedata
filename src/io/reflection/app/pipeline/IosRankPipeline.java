@@ -11,22 +11,29 @@ import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.collectors.CollectorIOS;
 import io.reflection.app.datatypes.shared.Category;
+import io.reflection.app.datatypes.shared.FeedFetch;
+import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.ingestors.IngestorFactory;
+import io.reflection.app.ingestors.IngestorIOS;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.appengine.tools.pipeline.FutureValue;
 import com.google.appengine.tools.pipeline.Job0;
+import com.google.appengine.tools.pipeline.Job1;
 import com.google.appengine.tools.pipeline.Job2;
 import com.google.appengine.tools.pipeline.Job3;
 import com.google.appengine.tools.pipeline.Job4;
@@ -133,9 +140,13 @@ public class IosRankPipeline {
 			FutureValue<Long> paid = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_PAID_APPS), null, immediate(code));
 			FutureValue<Long> grossing = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_GROSSING_APPS), null, immediate(code));
 
-			final boolean ingestCountryFeeds = ingest(countryCode);
+			final boolean ingestCountryFeeds = shouldIngest(countryCode);
 			if (ingestCountryFeeds) {
-				futureCall(new ExtractRanks(), paid, free, grossing, immediate(countryCode), null, immediate(code));
+				FutureValue<String> slimmedPaidFeed = futureCall(new SlimFeed(), paid);
+				FutureValue<String> slimmedFreeFeed = futureCall(new SlimFeed(), free);
+				FutureValue<String> slimmedGrossingFeed = futureCall(new SlimFeed(), grossing);
+
+				futureCall(new IngestRanks(), paid, slimmedPaidFeed, free, slimmedFreeFeed, grossing, slimmedGrossingFeed);
 			}
 
 			free = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_FREE_IPAD_APPS), null, immediate(code));
@@ -143,9 +154,13 @@ public class IosRankPipeline {
 			grossing = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_GROSSING_IPAD_APPS), null, immediate(code));
 
 			if (ingestCountryFeeds) {
-				futureCall(new ExtractRanks(), paid, free, grossing, immediate(countryCode), null, immediate(code));
+				FutureValue<String> slimmedPaidFeed = futureCall(new SlimFeed(), paid);
+				FutureValue<String> slimmedFreeFeed = futureCall(new SlimFeed(), free);
+				FutureValue<String> slimmedGrossingFeed = futureCall(new SlimFeed(), grossing);
+
+				futureCall(new IngestRanks(), paid, slimmedPaidFeed, free, slimmedFreeFeed, grossing, slimmedGrossingFeed);
 			}
-			
+
 			// when we have gathered all the counties feeds we do the same but for each category
 			try {
 				Store store = DataTypeHelper.getIosStore();
@@ -214,9 +229,13 @@ public class IosRankPipeline {
 			FutureValue<Long> grossing = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_GROSSING_APPS), immediate(category.internalId),
 					immediate(code));
 
-			final boolean ingestCountryFeeds = ingest(countryCode);
+			final boolean ingestCountryFeeds = shouldIngest(countryCode);
 			if (ingestCountryFeeds) {
-				futureCall(new ExtractRanks(), paid, free, grossing, immediate(countryCode), immediate(categoryId), immediate(code));
+				FutureValue<String> slimmedPaidFeed = futureCall(new SlimFeed(), paid);
+				FutureValue<String> slimmedFreeFeed = futureCall(new SlimFeed(), free);
+				FutureValue<String> slimmedGrossingFeed = futureCall(new SlimFeed(), grossing);
+
+				futureCall(new IngestRanks(), paid, slimmedPaidFeed, free, slimmedFreeFeed, grossing, slimmedGrossingFeed);
 			}
 
 			free = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_FREE_IPAD_APPS), immediate(category.internalId), immediate(code));
@@ -224,7 +243,11 @@ public class IosRankPipeline {
 			grossing = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_GROSSING_IPAD_APPS), immediate(category.internalId), immediate(code));
 
 			if (ingestCountryFeeds) {
-				futureCall(new ExtractRanks(), paid, free, grossing, immediate(countryCode), immediate(categoryId), immediate(code));
+				FutureValue<String> slimmedPaidFeed = futureCall(new SlimFeed(), paid);
+				FutureValue<String> slimmedFreeFeed = futureCall(new SlimFeed(), free);
+				FutureValue<String> slimmedGrossingFeed = futureCall(new SlimFeed(), grossing);
+
+				futureCall(new IngestRanks(), paid, slimmedPaidFeed, free, slimmedFreeFeed, grossing, slimmedGrossingFeed);
 			}
 
 			return null;
@@ -251,7 +274,7 @@ public class IosRankPipeline {
 		}
 	}
 
-	public static class ExtractRanks extends Job6<Void, Long, Long, Long, String, Long, Long> {
+	public static class IngestRanks extends Job6<Void, Long, String, Long, String, Long, String> {
 
 		private static final long serialVersionUID = 5579515120223362343L;
 
@@ -262,12 +285,57 @@ public class IosRankPipeline {
 		 * java.lang.Object)
 		 */
 		@Override
-		public Value<Void> run(Long paidFeedId, Long free, Long grossing, String countryCode, Long categoryId, Long code) throws Exception {
+		public Value<Void> run(Long paidFeedId, String paidRanks, Long freeFeedId, String freeRanks, Long grossingFeedId, String grossingRanks)
+				throws Exception {
+			FeedFetch paidFetch = FeedFetchServiceProvider.provide().getFeedFetch(paidFeedId);
+			FeedFetch freeFetch = FeedFetchServiceProvider.provide().getFeedFetch(freeFeedId);
+			FeedFetch grossingFeed = FeedFetchServiceProvider.provide().getFeedFetch(grossingFeedId);
+
+			List<Rank> paidRankList = ranksFromJson(paidRanks), freeRankList = ranksFromJson(freeRanks), grossingRankList = ranksFromJson(grossingRanks);
+
+			int size = Math.max(Math.max(paidRankList == null ? 0 : paidRankList.size(), freeRankList == null ? 0 : freeRankList.size()),
+					grossingRankList == null ? 0 : grossingRankList.size());
+
+			for (int i = 0; i < size; i++) {
+				
+			}
+
+			return null;
+		}
+
+		private List<Rank> ranksFromJson(String json) {
 			return null;
 		}
 	}
 
-	private static boolean ingest(String country) {
+	public static class SlimFeed extends Job1<String, Long> {
+
+		private static final long serialVersionUID = -627864366513850701L;
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see com.google.appengine.tools.pipeline.Job1#run(java.lang.Object)
+		 */
+		@Override
+		public Value<String> run(Long feedId) throws Exception {
+			String slimmed = null;
+
+			List<FeedFetch> stored = null;
+			Map<Date, Map<Integer, FeedFetch>> grouped = null;
+			Map<Date, String> combined = null;
+			
+			stored = IngestorIOS.get(Arrays.asList(feedId));
+			grouped = IngestorIOS.groupDataByDate(stored);
+			combined = IngestorIOS.combineDataParts(grouped);
+//			(new ParserIOS()).parse(feed.country, feed.category.id, combined);
+			
+			return immediate(slimmed);
+		}
+
+	}
+
+	private static boolean shouldIngest(String country) {
 		boolean ingest = false;
 
 		Collection<String> countries = IngestorFactory.getIngestorCountries(DataTypeHelper.IOS_STORE_A3);

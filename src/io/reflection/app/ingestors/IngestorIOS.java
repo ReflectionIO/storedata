@@ -128,7 +128,6 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 
 		boolean isGrossing;
 		for (final Date key : combined.keySet()) {
-
 			if (LOG.isLoggable(GaeLevel.DEBUG)) {
 				LOG.log(GaeLevel.DEBUG, String.format("Parsing [%s]", key.toString()));
 			}
@@ -346,7 +345,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 		return rank.code + rank.source + rank.country + rank.category.id.toString() + rank.itemId;
 	}
 
-	private Map<Date, Map<Integer, FeedFetch>> groupDataByDate(List<FeedFetch> entities) {
+	public static Map<Date, Map<Integer, FeedFetch>> groupDataByDate(List<FeedFetch> entities) {
 		Map<Date, Map<Integer, FeedFetch>> map = new HashMap<Date, Map<Integer, FeedFetch>>();
 		Map<Date, Integer> sizeMap = new HashMap<Date, Integer>();
 
@@ -413,7 +412,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 		return map;
 	}
 
-	private Map<Date, String> combineDataParts(Map<Date, Map<Integer, FeedFetch>> grouped) {
+	public static Map<Date, String> combineDataParts(Map<Date, Map<Integer, FeedFetch>> grouped) {
 
 		Map<Date, String> combined = new HashMap<Date, String>(grouped.size());
 
@@ -480,7 +479,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 		return combined;
 	}
 
-	private List<FeedFetch> get(List<Long> itemIds) throws DataAccessException {
+	public static List<FeedFetch> get(List<Long> itemIds) throws DataAccessException {
 
 		if (LOG.isLoggable(Level.INFO)) {
 			LOG.info(String.format("Fetching [%d] items", itemIds == null ? 0 : itemIds.size()));
