@@ -15,6 +15,7 @@ import io.reflection.app.ingestors.IngestorFactory;
 import io.reflection.app.logging.GaeLevel;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -79,7 +80,7 @@ public class CollectorServlet extends HttpServlet {
 			}
 		}
 
-		List<String> countries = IngestorFactory.getIngestorCountries(store);
+		Collection<String> countries = IngestorFactory.getIngestorCountries(store);
 
 		if (countries.contains(country)) {
 			Ingestor ingestor = IngestorFactory.getIngestorForStore(store);

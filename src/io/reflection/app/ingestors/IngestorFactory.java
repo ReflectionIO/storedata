@@ -9,8 +9,9 @@ package io.reflection.app.ingestors;
 
 import io.reflection.app.shared.util.DataTypeHelper;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author billy1380
@@ -36,8 +37,8 @@ public class IngestorFactory {
 		return ingestor;
 	}
 
-	public static List<String> getIngestorCountries(String store) {
-		List<String> countries = new ArrayList<String>();
+	public static Collection<String> getIngestorCountries(String store) {
+		Set<String> countries = new HashSet<String>();
 		String propertyValue = System.getProperty("ingest." + store + ".countries");
 
 		if (propertyValue != null && propertyValue.length() > 0) {

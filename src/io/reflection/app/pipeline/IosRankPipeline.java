@@ -12,15 +12,17 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.collectors.CollectorIOS;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Store;
+import io.reflection.app.ingestors.IngestorFactory;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
-import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.appengine.tools.pipeline.FutureValue;
@@ -47,7 +49,7 @@ public class IosRankPipeline {
 	public static final String TOP_FREE_APPS = "topfreeapplications";
 	public static final String TOP_PAID_APPS = "toppaidapplications";
 	public static final String TOP_GROSSING_APPS = "topgrossingapplications";
-	
+
 	public static final String TOP_FREE_IPAD_APPS = "topfreeipadapplications";
 	public static final String TOP_PAID_IPAD_APPS = "toppaidipadapplications";
 	public static final String TOP_GROSSING_IPAD_APPS = "topgrossingipadapplications";
@@ -131,17 +133,22 @@ public class IosRankPipeline {
 			FutureValue<Long> paid = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_PAID_APPS), null, immediate(code));
 			FutureValue<Long> grossing = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_GROSSING_APPS), null, immediate(code));
 
-			futureCall(new ExtractRanks(), paid, free, grossing, immediate(countryCode), null, immediate(code));
+			final boolean ingestCountryFeeds = ingest(countryCode);
+			if (ingestCountryFeeds) {
+				futureCall(new ExtractRanks(), paid, free, grossing, immediate(countryCode), null, immediate(code));
+			}
 
 			free = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_FREE_IPAD_APPS), null, immediate(code));
 			paid = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_PAID_IPAD_APPS), null, immediate(code));
 			grossing = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_GROSSING_IPAD_APPS), null, immediate(code));
 
-			futureCall(new ExtractRanks(), paid, free, grossing, immediate(countryCode), null, immediate(code));
-
+			if (ingestCountryFeeds) {
+				futureCall(new ExtractRanks(), paid, free, grossing, immediate(countryCode), null, immediate(code));
+			}
+			
 			// when we have gathered all the counties feeds we do the same but for each category
 			try {
-				Store store = StoreServiceProvider.provide().getA3CodeStore(DataTypeHelper.IOS_STORE_A3);
+				Store store = DataTypeHelper.getIosStore();
 
 				// get the parent category all which references all lower categories
 				Category all = CategoryServiceProvider.provide().getAllCategory(store);
@@ -207,13 +214,18 @@ public class IosRankPipeline {
 			FutureValue<Long> grossing = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_GROSSING_APPS), immediate(category.internalId),
 					immediate(code));
 
-			futureCall(new ExtractRanks(), paid, free, grossing, immediate(countryCode), immediate(categoryId), immediate(code));
+			final boolean ingestCountryFeeds = ingest(countryCode);
+			if (ingestCountryFeeds) {
+				futureCall(new ExtractRanks(), paid, free, grossing, immediate(countryCode), immediate(categoryId), immediate(code));
+			}
 
 			free = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_FREE_IPAD_APPS), immediate(category.internalId), immediate(code));
 			paid = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_PAID_IPAD_APPS), immediate(category.internalId), immediate(code));
 			grossing = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_GROSSING_IPAD_APPS), immediate(category.internalId), immediate(code));
 
-			futureCall(new ExtractRanks(), paid, free, grossing, immediate(countryCode), immediate(categoryId), immediate(code));
+			if (ingestCountryFeeds) {
+				futureCall(new ExtractRanks(), paid, free, grossing, immediate(countryCode), immediate(categoryId), immediate(code));
+			}
 
 			return null;
 		}
@@ -231,9 +243,11 @@ public class IosRankPipeline {
 		 */
 		@Override
 		public Value<Long> run(String countryCode, String listName, Long categoryInternalId, Long code) throws Exception {
-			// we only care about the first id since we no longer attempt to store the feed in the feedfetch table (and even if we did we would only need the first id)
-			
-			return immediate(new CollectorIOS().collect(countryCode, listName, categoryInternalId == null ? null : Long.toString(categoryInternalId), code).get(0));
+			// we only care about the first id since we no longer attempt to store the feed in the feedfetch table (and even if we did we would only need the
+			// first id)
+
+			return immediate(new CollectorIOS().collect(countryCode, listName, categoryInternalId == null ? null : Long.toString(categoryInternalId), code)
+					.get(0));
 		}
 	}
 
@@ -251,7 +265,22 @@ public class IosRankPipeline {
 		public Value<Void> run(Long paidFeedId, Long free, Long grossing, String countryCode, Long categoryId, Long code) throws Exception {
 			return null;
 		}
+	}
 
+	private static boolean ingest(String country) {
+		boolean ingest = false;
+
+		Collection<String> countries = IngestorFactory.getIngestorCountries(DataTypeHelper.IOS_STORE_A3);
+
+		if (countries.contains(country)) {
+			ingest = true;
+		} else {
+			if (LOG.isLoggable(Level.INFO)) {
+				LOG.info("Country [" + country + "] not in list of countries to ingest.");
+			}
+		}
+
+		return ingest;
 	}
 
 }
