@@ -21,6 +21,8 @@ import io.reflection.app.ingestors.ParserIOS;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
+import io.reflection.app.service.item.ItemServiceProvider;
+import io.reflection.app.service.rank.RankServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
@@ -294,23 +296,55 @@ public class IosRankPipeline {
 				throws Exception {
 			FeedFetch paidFetch = FeedFetchServiceProvider.provide().getFeedFetch(paidFeedId);
 			FeedFetch freeFetch = FeedFetchServiceProvider.provide().getFeedFetch(freeFeedId);
-			FeedFetch grossingFeed = FeedFetchServiceProvider.provide().getFeedFetch(grossingFeedId);
+			FeedFetch grossingFetch = FeedFetchServiceProvider.provide().getFeedFetch(grossingFeedId);
 
 			List<Item> paidRankList = itemsFromJson(paidRanks), freeRankList = itemsFromJson(freeRanks), grossingRankList = itemsFromJson(grossingRanks);
-			Map<String, Rank> itemRanks = new HashMap<String, Rank>();
+			Map<String, Rank> ranks = new HashMap<String, Rank>();
+			Map<String, Item> items = new HashMap<String, Item>();
 
-			int size = Math.max(Math.max(paidRankList == null ? 0 : paidRankList.size(), freeRankList == null ? 0 : freeRankList.size()),
-					grossingRankList == null ? 0 : grossingRankList.size());
-
-			Item paidItem, freeItem, grossingItem;
+			int size = paidRankList == null ? 0 : paidRankList.size();
+			Item item;
 			Rank rank;
 			for (int i = 0; i < size; i++) {
-				paidItem = (paidRankList == null || paidRankList.size() >= i ? null : paidRankList.get(i));
-				freeItem = (freeRankList == null || freeRankList.size() >= i ? null : freeRankList.get(i));
-				grossingItem = (grossingRankList == null || grossingRankList.size() >= i ? null : grossingRankList.get(i));
-				
-				
+				item = paidRankList.get(i);
+				rank = new Rank().category(paidFetch.category).code(paidFetch.code).country(paidFetch.country).currency(item.currency).date(paidFetch.date)
+						.position(Integer.valueOf(i)).itemId(item.internalId).price(item.price).source(paidFetch.store).type(paidFetch.type);
+
+				items.put(item.internalId, item);
+				ranks.put(item.internalId, rank);
 			}
+
+			size = freeRankList == null ? 0 : freeRankList.size();
+			for (int i = 0; i < size; i++) {
+				item = freeRankList.get(i);
+				rank = new Rank().category(freeFetch.category).code(freeFetch.code).country(freeFetch.country).currency(item.currency).date(freeFetch.date)
+						.position(Integer.valueOf(i)).itemId(item.internalId).price(item.price).source(freeFetch.store).type(freeFetch.type);
+
+				items.put(item.internalId, item);
+				ranks.put(item.internalId, rank);
+			}
+
+			size = grossingRankList == null ? 0 : grossingRankList.size();
+			for (int i = 0; i < size; i++) {
+				item = grossingRankList.get(i);
+
+				rank = ranks.get(item.internalId);
+
+				if (rank == null) {
+					rank = new Rank().category(grossingFetch.category).code(grossingFetch.code).country(grossingFetch.country).currency(item.currency)
+							.date(grossingFetch.date).itemId(item.internalId).price(item.price).source(grossingFetch.store).type(grossingFetch.type);
+
+					items.put(item.internalId, item);
+					ranks.put(item.internalId, rank);
+				}
+
+				rank.grossingPosition(Integer.valueOf(i));
+			}
+
+			RankServiceProvider.provide().addRanksBatch(ranks.values());
+
+			// should remove ones that already exist
+			ItemServiceProvider.provide().addItemsBatch(items.values());
 
 			return null;
 		}
