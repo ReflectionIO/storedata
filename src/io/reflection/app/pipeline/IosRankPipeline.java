@@ -12,10 +12,12 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.collectors.CollectorIOS;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.FeedFetch;
+import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.ingestors.IngestorFactory;
 import io.reflection.app.ingestors.IngestorIOS;
+import io.reflection.app.ingestors.ParserIOS;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
@@ -26,6 +28,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -39,6 +43,7 @@ import com.google.appengine.tools.pipeline.Job3;
 import com.google.appengine.tools.pipeline.Job4;
 import com.google.appengine.tools.pipeline.Job6;
 import com.google.appengine.tools.pipeline.Value;
+import com.google.gson.JsonArray;
 
 /**
  * @author William Shakour (billy1380)
@@ -291,19 +296,26 @@ public class IosRankPipeline {
 			FeedFetch freeFetch = FeedFetchServiceProvider.provide().getFeedFetch(freeFeedId);
 			FeedFetch grossingFeed = FeedFetchServiceProvider.provide().getFeedFetch(grossingFeedId);
 
-			List<Rank> paidRankList = ranksFromJson(paidRanks), freeRankList = ranksFromJson(freeRanks), grossingRankList = ranksFromJson(grossingRanks);
+			List<Item> paidRankList = itemsFromJson(paidRanks), freeRankList = itemsFromJson(freeRanks), grossingRankList = itemsFromJson(grossingRanks);
+			Map<String, Rank> itemRanks = new HashMap<String, Rank>();
 
 			int size = Math.max(Math.max(paidRankList == null ? 0 : paidRankList.size(), freeRankList == null ? 0 : freeRankList.size()),
 					grossingRankList == null ? 0 : grossingRankList.size());
 
+			Item paidItem, freeItem, grossingItem;
+			Rank rank;
 			for (int i = 0; i < size; i++) {
+				paidItem = (paidRankList == null || paidRankList.size() >= i ? null : paidRankList.get(i));
+				freeItem = (freeRankList == null || freeRankList.size() >= i ? null : freeRankList.get(i));
+				grossingItem = (grossingRankList == null || grossingRankList.size() >= i ? null : grossingRankList.get(i));
+				
 				
 			}
 
 			return null;
 		}
 
-		private List<Rank> ranksFromJson(String json) {
+		private List<Item> itemsFromJson(String json) {
 			return null;
 		}
 	}
@@ -324,12 +336,34 @@ public class IosRankPipeline {
 			List<FeedFetch> stored = null;
 			Map<Date, Map<Integer, FeedFetch>> grouped = null;
 			Map<Date, String> combined = null;
-			
+
 			stored = IngestorIOS.get(Arrays.asList(feedId));
 			grouped = IngestorIOS.groupDataByDate(stored);
 			combined = IngestorIOS.combineDataParts(grouped);
-//			(new ParserIOS()).parse(feed.country, feed.category.id, combined);
-			
+
+			for (final Date key : combined.keySet()) {
+				if (LOG.isLoggable(GaeLevel.DEBUG)) {
+					LOG.log(GaeLevel.DEBUG, String.format("Parsing [%s]", key.toString()));
+				}
+
+				Map<Integer, FeedFetch> group = grouped.get(key);
+				Iterator<FeedFetch> iterator = group.values().iterator();
+				FeedFetch firstFeedFetch = iterator.next();
+
+				List<Item> items = (new ParserIOS()).parse(firstFeedFetch.country, firstFeedFetch.category.id, combined.get(key));
+
+				JsonArray itemJsonArray = new JsonArray();
+
+				for (Item item : items) {
+					itemJsonArray.add(item.toJson());
+				}
+
+				slimmed = itemJsonArray.toString();
+
+				// we are only expecting to do this for one feed for break just in-case
+				break;
+			}
+
 			return immediate(slimmed);
 		}
 
