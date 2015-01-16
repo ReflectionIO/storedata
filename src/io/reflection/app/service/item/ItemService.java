@@ -930,7 +930,7 @@ final class ItemService implements IItemService {
 			itemConnection.executeQuery(getExistingInternalIdBatchQuery);
 
 			while (itemConnection.fetchNextRow()) {
-
+				existingInternalIds.add(itemConnection.getCurrentRowString("internalid"));
 			}
 		} finally {
 			if (itemConnection != null) {

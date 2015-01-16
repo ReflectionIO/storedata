@@ -37,6 +37,9 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+
 import com.google.appengine.tools.pipeline.FutureValue;
 import com.google.appengine.tools.pipeline.Job0;
 import com.google.appengine.tools.pipeline.Job1;
@@ -46,6 +49,9 @@ import com.google.appengine.tools.pipeline.Job4;
 import com.google.appengine.tools.pipeline.Job6;
 import com.google.appengine.tools.pipeline.Value;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.spacehopperstudios.utility.JsonUtils;
 
 /**
  * @author William Shakour (billy1380)
@@ -341,7 +347,9 @@ public class IosRankPipeline {
 				rank.grossingPosition(Integer.valueOf(i));
 			}
 
-			RankServiceProvider.provide().addRanksBatch(ranks.values());
+			if (ranks.size() > 0) {
+				RankServiceProvider.provide().addRanksBatch(ranks.values());
+			}
 
 			Collection<String> existingInternalIds = ItemServiceProvider.provide().getExistingInternalIdBatch(items.keySet());
 
@@ -349,13 +357,36 @@ public class IosRankPipeline {
 				items.remove(internalId);
 			}
 
-			ItemServiceProvider.provide().addItemsBatch(items.values());
+			if (items.size() > 0) {
+				ItemServiceProvider.provide().addItemsBatch(items.values());
+			}
 
 			return null;
 		}
 
 		private List<Item> itemsFromJson(String json) {
-			return null;
+			List<Item> items = new ArrayList<Item>();
+			JsonElement jsonElement = (new JsonParser()).parse(json);
+
+			if (jsonElement != null && jsonElement.isJsonArray()) {
+				JsonArray itemJsonArray = jsonElement.getAsJsonArray();
+
+				Item item;
+				Date date = DateTime.now(DateTimeZone.UTC).toDate();
+
+				for (JsonElement current : itemJsonArray) {
+					item = new Item();
+					item.fromJson(current.getAsJsonObject());
+
+					if (item.added == null) {
+						item.added = date;
+					}
+
+					items.add(item);
+				}
+			}
+
+			return items;
 		}
 	}
 
@@ -397,7 +428,7 @@ public class IosRankPipeline {
 					itemJsonArray.add(item.toJson());
 				}
 
-				slimmed = itemJsonArray.toString();
+				slimmed = JsonUtils.cleanJson(itemJsonArray.toString());
 
 				// we are only expecting to do this for one feed for break just in-case
 				break;
