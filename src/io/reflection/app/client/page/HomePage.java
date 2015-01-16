@@ -26,6 +26,7 @@ import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.LinkElement;
 import com.google.gwt.dom.client.ScriptElement;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
@@ -98,6 +99,7 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 		NavigationController.get().getPageHolderPanel().getElement().setAttribute("style", "padding: 0px 0px 0px 0px;");
 		((Footer) NavigationController.get().getFooter()).setVisible(false);
 		((Header) NavigationController.get().getHeader()).setVisible(false);
+		headerLinks.getStyle().setDisplay(Display.INLINE_BLOCK);
 
 		DOMHelper.appendToHead(cssCustom);
 		DOMHelper.appendToBody(scriptCustom);
