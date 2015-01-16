@@ -104,10 +104,10 @@ public interface IItemService extends IService {
 	public Long getItemsCount() throws DataAccessException;
 
 	/**
-	 * @param infinitePager
+	 * @param pager
 	 * @return
 	 */
-	public List<String> getDuplicateItemsInternalId(Pager infinitePager) throws DataAccessException;
+	public List<String> getDuplicateItemsInternalId(Pager pager) throws DataAccessException;
 
 	/**
 	 * Get propertyless item count
@@ -134,5 +134,12 @@ public interface IItemService extends IService {
 	 * @throws DataAccessException
 	 */
 	public List<Long> getPropertylessItemIds(Pager pager) throws DataAccessException;
+
+	/**
+	 * @param internalIds
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public Collection<String> getExistingInternalIdBatch(Collection<String> internalIds) throws DataAccessException;
 
 }

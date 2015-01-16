@@ -343,7 +343,12 @@ public class IosRankPipeline {
 
 			RankServiceProvider.provide().addRanksBatch(ranks.values());
 
-			// should remove ones that already exist
+			Collection<String> existingInternalIds = ItemServiceProvider.provide().getExistingInternalIdBatch(items.keySet());
+
+			for (String internalId : existingInternalIds) {
+				items.remove(internalId);
+			}
+
 			ItemServiceProvider.provide().addItemsBatch(items.values());
 
 			return null;

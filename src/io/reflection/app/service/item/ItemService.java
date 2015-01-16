@@ -23,8 +23,10 @@ import io.reflection.app.service.ServiceType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 
 import com.google.appengine.api.memcache.AsyncMemcacheService;
@@ -905,5 +907,36 @@ final class ItemService implements IItemService {
 		}
 
 		return propertylessItemIds;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.item.IItemService#getExistingInternalIdBatch(java.util.Set)
+	 */
+	@Override
+	public Collection<String> getExistingInternalIdBatch(Collection<String> internalIds) throws DataAccessException {
+		Set<String> existingInternalIds = new HashSet<String>();
+
+		String commaDelimitedItemIds = StringUtils.join(internalIds, "','");
+
+		String getExistingInternalIdBatchQuery = String.format("SELECT `internalid` FROM `item` WHERE `internalid` IN ('%s') AND `deleted`='n'",
+				commaDelimitedItemIds);
+
+		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
+
+		try {
+			itemConnection.connect();
+			itemConnection.executeQuery(getExistingInternalIdBatchQuery);
+
+			while (itemConnection.fetchNextRow()) {
+
+			}
+		} finally {
+			if (itemConnection != null) {
+				itemConnection.disconnect();
+			}
+		}
+		return existingInternalIds;
 	}
 }
