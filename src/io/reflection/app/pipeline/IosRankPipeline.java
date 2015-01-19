@@ -7,23 +7,45 @@
 //
 package io.reflection.app.pipeline;
 
+import io.reflection.app.accountdatacollectors.DataAccountCollector;
+import io.reflection.app.accountdatacollectors.DataAccountCollectorFactory;
+import io.reflection.app.accountdatacollectors.ITunesConnectDownloadHelper;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.collectors.CollectorIOS;
 import io.reflection.app.datatypes.shared.Category;
+import io.reflection.app.datatypes.shared.DataAccount;
+import io.reflection.app.datatypes.shared.DataAccountFetch;
+import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
+import io.reflection.app.datatypes.shared.DataSource;
+import io.reflection.app.datatypes.shared.Event;
 import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.datatypes.shared.Notification;
+import io.reflection.app.datatypes.shared.NotificationTypeType;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
+import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.helpers.ApiHelper;
+import io.reflection.app.helpers.NotificationHelper;
 import io.reflection.app.ingestors.IngestorFactory;
 import io.reflection.app.ingestors.IngestorIOS;
 import io.reflection.app.ingestors.ParserIOS;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.category.CategoryServiceProvider;
+import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
+import io.reflection.app.service.dataaccount.IDataAccountService;
+import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
+import io.reflection.app.service.dataaccountfetch.IDataAccountFetchService;
+import io.reflection.app.service.datasource.DataSourceServiceProvider;
+import io.reflection.app.service.event.EventServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
+import io.reflection.app.service.notification.NotificationServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
+import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
+import io.reflection.app.shared.util.PagerHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,6 +69,7 @@ import com.google.appengine.tools.pipeline.Job2;
 import com.google.appengine.tools.pipeline.Job3;
 import com.google.appengine.tools.pipeline.Job4;
 import com.google.appengine.tools.pipeline.Job6;
+import com.google.appengine.tools.pipeline.PromisedValue;
 import com.google.appengine.tools.pipeline.Value;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -74,7 +97,9 @@ public class IosRankPipeline {
 	public static final String TOP_PAID_IPAD_APPS = "toppaidipadapplications";
 	public static final String TOP_GROSSING_IPAD_APPS = "topgrossingipadapplications";
 
-	public static class GatherAll extends Job0<Integer> {
+	public static final String ACCOUNT_DATA_BUCKET_KEY = "account.data.bucket";
+
+	public static class GatherAllRanks extends Job0<Integer> {
 
 		private static final long serialVersionUID = -6950514903299207863L;
 
@@ -153,7 +178,7 @@ public class IosRankPipeline {
 			FutureValue<Long> paid = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_PAID_APPS), null, immediate(code));
 			FutureValue<Long> grossing = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_GROSSING_APPS), null, immediate(code));
 
-			final boolean ingestCountryFeeds = shouldIngest(countryCode);
+			final boolean ingestCountryFeeds = shouldIngestFeedFetch(countryCode);
 			if (ingestCountryFeeds) {
 				FutureValue<String> slimmedPaidFeed = futureCall(new SlimFeed(), paid);
 				FutureValue<String> slimmedFreeFeed = futureCall(new SlimFeed(), free);
@@ -242,7 +267,7 @@ public class IosRankPipeline {
 			FutureValue<Long> grossing = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_GROSSING_APPS), immediate(category.internalId),
 					immediate(code));
 
-			final boolean ingestCountryFeeds = shouldIngest(countryCode);
+			final boolean ingestCountryFeeds = shouldIngestFeedFetch(countryCode);
 			if (ingestCountryFeeds) {
 				FutureValue<String> slimmedPaidFeed = futureCall(new SlimFeed(), paid);
 				FutureValue<String> slimmedFreeFeed = futureCall(new SlimFeed(), free);
@@ -285,6 +310,55 @@ public class IosRankPipeline {
 			return immediate(new CollectorIOS().collect(countryCode, listName, categoryInternalId == null ? null : Long.toString(categoryInternalId), code)
 					.get(0));
 		}
+	}
+
+	public static class SlimFeed extends Job1<String, Long> {
+
+		private static final long serialVersionUID = -627864366513850701L;
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see com.google.appengine.tools.pipeline.Job1#run(java.lang.Object)
+		 */
+		@Override
+		public Value<String> run(Long feedId) throws Exception {
+			String slimmed = null;
+
+			List<FeedFetch> stored = null;
+			Map<Date, Map<Integer, FeedFetch>> grouped = null;
+			Map<Date, String> combined = null;
+
+			stored = IngestorIOS.get(Arrays.asList(feedId));
+			grouped = IngestorIOS.groupDataByDate(stored);
+			combined = IngestorIOS.combineDataParts(grouped);
+
+			for (final Date key : combined.keySet()) {
+				if (LOG.isLoggable(GaeLevel.DEBUG)) {
+					LOG.log(GaeLevel.DEBUG, String.format("Parsing [%s]", key.toString()));
+				}
+
+				Map<Integer, FeedFetch> group = grouped.get(key);
+				Iterator<FeedFetch> iterator = group.values().iterator();
+				FeedFetch firstFeedFetch = iterator.next();
+
+				List<Item> items = (new ParserIOS()).parse(firstFeedFetch.country, firstFeedFetch.category.id, combined.get(key));
+
+				JsonArray itemJsonArray = new JsonArray();
+
+				for (Item item : items) {
+					itemJsonArray.add(item.toJson());
+				}
+
+				slimmed = JsonUtils.cleanJson(itemJsonArray.toString());
+
+				// we are only expecting to do this for one feed for break just in-case
+				break;
+			}
+
+			return immediate(slimmed);
+		}
+
 	}
 
 	public static class IngestRanks extends Job6<Void, Long, String, Long, String, Long, String> {
@@ -361,6 +435,12 @@ public class IosRankPipeline {
 				ItemServiceProvider.provide().addItemsBatch(items.values());
 			}
 
+			PromisedValue<Date> salesDate = newPromise();
+
+			// save the handle from salesDate.getHandle()
+
+			futureCall(new CalibrateAll(), salesDate);
+
 			return null;
 		}
 
@@ -390,9 +470,9 @@ public class IosRankPipeline {
 		}
 	}
 
-	public static class SlimFeed extends Job1<String, Long> {
+	public static final class CalibrateAll extends Job1<Void, Date> {
 
-		private static final long serialVersionUID = -627864366513850701L;
+		private static final long serialVersionUID = -2335419676158668911L;
 
 		/*
 		 * (non-Javadoc)
@@ -400,46 +480,220 @@ public class IosRankPipeline {
 		 * @see com.google.appengine.tools.pipeline.Job1#run(java.lang.Object)
 		 */
 		@Override
-		public Value<String> run(Long feedId) throws Exception {
-			String slimmed = null;
+		public Value<Void> run(Date date) throws Exception {
 
-			List<FeedFetch> stored = null;
-			Map<Date, Map<Integer, FeedFetch>> grouped = null;
-			Map<Date, String> combined = null;
-
-			stored = IngestorIOS.get(Arrays.asList(feedId));
-			grouped = IngestorIOS.groupDataByDate(stored);
-			combined = IngestorIOS.combineDataParts(grouped);
-
-			for (final Date key : combined.keySet()) {
-				if (LOG.isLoggable(GaeLevel.DEBUG)) {
-					LOG.log(GaeLevel.DEBUG, String.format("Parsing [%s]", key.toString()));
-				}
-
-				Map<Integer, FeedFetch> group = grouped.get(key);
-				Iterator<FeedFetch> iterator = group.values().iterator();
-				FeedFetch firstFeedFetch = iterator.next();
-
-				List<Item> items = (new ParserIOS()).parse(firstFeedFetch.country, firstFeedFetch.category.id, combined.get(key));
-
-				JsonArray itemJsonArray = new JsonArray();
-
-				for (Item item : items) {
-					itemJsonArray.add(item.toJson());
-				}
-
-				slimmed = JsonUtils.cleanJson(itemJsonArray.toString());
-
-				// we are only expecting to do this for one feed for break just in-case
-				break;
-			}
-
-			return immediate(slimmed);
+			return null;
 		}
 
 	}
 
-	private static boolean shouldIngest(String country) {
+	public static class GatherAllSales extends Job0<Integer> {
+
+		private static final long serialVersionUID = 8112347752177694061L;
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see com.google.appengine.tools.pipeline.Job0#run()
+		 */
+		@Override
+		public Value<Integer> run() throws Exception {
+			Pager pager = new Pager().count(Long.valueOf(100));
+
+			int count = 0;
+
+			try {
+				IDataAccountFetchService dataAccountFetchService = DataAccountFetchServiceProvider.provide();
+				IDataAccountService dataAccountService = DataAccountServiceProvider.provide();
+
+				List<DataAccount> dataAccounts = null;
+				// get data accounts 100 at a time
+				do {
+					dataAccounts = dataAccountService.getDataAccounts(pager);
+
+					for (DataAccount dataAccount : dataAccounts) {
+						// if the account has some errors then don't bother otherwise enqueue a message to do a gather for it
+
+						if (DataAccountFetchServiceProvider.provide().isFetchable(dataAccount) == Boolean.TRUE) {
+							futureCall(new GatherDataAccountForDate(), immediate(dataAccount.id), immediate(DateTime.now().minusDays(1).toDate()));
+
+							// go through all the failed attempts and get them too (failed attempts = less than 30 days old)
+							List<DataAccountFetch> failedDataAccountFetches = dataAccountFetchService.getFailedDataAccountFetches(dataAccount,
+									PagerHelper.createInfinitePager());
+
+							for (DataAccountFetch dataAccountFetch : failedDataAccountFetches) {
+								futureCall(new GatherDataAccountForDate(), immediate(dataAccount.id), immediate(dataAccountFetch.date));
+							}
+
+							count++;
+						}
+					}
+
+					PagerHelper.moveForward(pager);
+
+				} while (dataAccounts != null && dataAccounts.size() <= pager.count.intValue());
+			} catch (DataAccessException dae) {
+				LOG.log(GaeLevel.SEVERE, "A database error occured attempting to start sales gather process", dae);
+			}
+
+			return immediate(Integer.valueOf(count));
+		}
+	}
+
+	public static class GatherDataAccountForDate extends Job2<Void, Long, Date> {
+
+		private static final long serialVersionUID = -8706042892487009601L;
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see com.google.appengine.tools.pipeline.Job2#run(java.lang.Object, java.lang.Object)
+		 */
+		@Override
+		public Value<Void> run(Long dataAccountId, Date date) throws Exception {
+			boolean sendNotification = false;
+
+			try {
+				DataAccount account = DataAccountServiceProvider.provide().getDataAccount(Long.valueOf(dataAccountId));
+
+				if (account != null) {
+					if (date == null) {
+						date = new Date();
+					}
+
+					DataSource dataSource = DataSourceServiceProvider.provide().getDataSource(account.source.id);
+
+					if (dataSource != null) {
+						account.source = dataSource;
+
+						DataAccountCollector collector = DataAccountCollectorFactory.getCollectorForSource(dataSource.a3Code);
+
+						if (collector != null) {
+							boolean status = collect(account, date);
+
+							if (status && sendNotification) {
+								Event event = EventServiceProvider.provide().getEvent(Long.valueOf(5));
+								User user = UserServiceProvider.provide().getDataAccountOwner(account);
+
+								Map<String, Object> parameters = new HashMap<String, Object>();
+								parameters.put("user", user);
+
+								String body = NotificationHelper.inflate(parameters, event.longBody);
+
+								Notification notification = (new Notification()).from("hello@reflection.io").user(user).event(event).body(body)
+										.subject(event.subject);
+								Notification added = NotificationServiceProvider.provide().addNotification(notification);
+
+								if (added.type != NotificationTypeType.NotificationTypeTypeInternal) {
+									notification.type = NotificationTypeType.NotificationTypeTypeInternal;
+									NotificationServiceProvider.provide().addNotification(notification);
+								}
+							}
+
+						} else {
+							if (LOG.isLoggable(GaeLevel.WARNING)) {
+								LOG.log(GaeLevel.WARNING, "Could not find a collector for [%s]", dataSource.a3Code);
+							}
+						}
+					} else {
+						if (LOG.isLoggable(GaeLevel.WARNING)) {
+							LOG.log(GaeLevel.WARNING, "Could not find a data source for id [%d]", account.source.id.longValue());
+						}
+					}
+
+				}
+			} catch (DataAccessException e) {
+				LOG.log(GaeLevel.SEVERE,
+						String.format("Database error occured while trying to import data with accountid [%s] and date [%s]", dataAccountId, date), e);
+			}
+
+			return null;
+		}
+
+		private boolean collect(DataAccount dataAccount, Date date) throws DataAccessException {
+			date = ApiHelper.removeTime(date);
+
+			String dateParameter = ITunesConnectDownloadHelper.DATE_FORMATTER.format(date);
+
+			if (LOG.isLoggable(GaeLevel.INFO)) {
+				LOG.info(String.format("Getting data from itunes connect for data account [%s] and date [%s]", dataAccount.id == null ? dataAccount.username
+						: dataAccount.id.toString(), dateParameter));
+			}
+
+			boolean success = false;
+			String cloudFileName = null, error = null;
+			try {
+				cloudFileName = ITunesConnectDownloadHelper.getITunesSalesFile(dataAccount.username, dataAccount.password,
+						ITunesConnectDownloadHelper.getVendorId(dataAccount.properties), dateParameter, System.getProperty(ACCOUNT_DATA_BUCKET_KEY),
+						dataAccount.id.toString());
+			} catch (Exception ex) {
+				error = ex.getMessage();
+			}
+
+			DataAccountFetch dataAccountFetch = DataAccountFetchServiceProvider.provide().getDateDataAccountFetch(dataAccount, date);
+
+			if (dataAccountFetch == null) {
+				dataAccountFetch = new DataAccountFetch();
+
+				dataAccountFetch.date = date;
+				dataAccountFetch.linkedAccount = dataAccount;
+			}
+
+			if (dataAccountFetch.status != DataAccountFetchStatusType.DataAccountFetchStatusTypeIngested) {
+				if (error != null) {
+					if (error.startsWith("There are no reports") || error.startsWith("There is no report")) {
+						dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeEmpty;
+					} else {
+						dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeError;
+					}
+
+					dataAccountFetch.data = error;
+				} else if (cloudFileName != null) {
+					dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered;
+					dataAccountFetch.data = cloudFileName;
+					success = true;
+				} else {
+					dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeEmpty;
+					success = true;
+				}
+
+				if (dataAccountFetch.id == null) {
+					dataAccountFetch = DataAccountFetchServiceProvider.provide().addDataAccountFetch(dataAccountFetch);
+				} else {
+					dataAccountFetch = DataAccountFetchServiceProvider.provide().updateDataAccountFetch(dataAccountFetch);
+				}
+
+				if (dataAccountFetch != null && dataAccountFetch.status == DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered) {
+					futureCall(new IngestDataAccountFetch(), immediate(dataAccountFetch.id));
+				}
+			} else {
+				LOG.warning(String.format("Gather for data account [%s] and date [%s] skipped because of status [%s]",
+						dataAccount.id == null ? dataAccount.username : dataAccount.id.toString(), dateParameter, dataAccountFetch.status));
+			}
+
+			return success;
+		}
+
+	}
+
+	public static class IngestDataAccountFetch extends Job1<Void, Long> {
+
+		private static final long serialVersionUID = 3258834001291433964L;
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see com.google.appengine.tools.pipeline.Job1#run(java.lang.Object)
+		 */
+		@Override
+		public Value<Void> run(Long dataAccountFetchId) throws Exception {
+
+			return null;
+		}
+
+	}
+
+	private static boolean shouldIngestFeedFetch(String country) {
 		boolean ingest = false;
 
 		Collection<String> countries = IngestorFactory.getIngestorCountries(DataTypeHelper.IOS_STORE_A3);
@@ -454,5 +708,4 @@ public class IosRankPipeline {
 
 		return ingest;
 	}
-
 }

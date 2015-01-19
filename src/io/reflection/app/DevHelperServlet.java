@@ -20,7 +20,8 @@ import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.ingestors.Ingestor;
 import io.reflection.app.ingestors.IngestorFactory;
 import io.reflection.app.logging.GaeLevel;
-import io.reflection.app.pipeline.IosRankPipeline;
+import io.reflection.app.pipeline.IosRankPipeline.GatherAllRanks;
+import io.reflection.app.pipeline.IosRankPipeline.GatherAllSales;
 import io.reflection.app.service.application.ApplicationServiceProvider;
 import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
@@ -696,10 +697,17 @@ public class DevHelperServlet extends HttpServlet {
 				predictQueue.add(TaskOptions.Builder.withUrl("/predict?" + req.getQueryString()).method(Method.GET));
 
 				success = true;
-			} else if ("pipelinegather".equals(action)) {
+			} else if ("pipelineranks".equals(action)) {
 				PipelineService service = PipelineServiceFactory.newPipelineService();
 
-				String pipelineId = service.startNewPipeline(new IosRankPipeline.GatherAll());
+				String pipelineId = service.startNewPipeline(new GatherAllRanks());
+
+				markup = (new MarkdownProcessor()).process("[View " + pipelineId + "](/_ah/pipeline/status.html?root=" + pipelineId
+						+ " \"View pipeline status\")");
+			} else if ("pipelinesales".equals(action)) {
+				PipelineService service = PipelineServiceFactory.newPipelineService();
+
+				String pipelineId = service.startNewPipeline(new GatherAllSales());
 
 				markup = (new MarkdownProcessor()).process("[View " + pipelineId + "](/_ah/pipeline/status.html?root=" + pipelineId
 						+ " \"View pipeline status\")");
@@ -718,7 +726,11 @@ public class DevHelperServlet extends HttpServlet {
 
 		if (markup != null) {
 			resp.setContentType("text/html");
-			resp.getOutputStream().print(markup);
+			resp.getOutputStream().println("<html>");
+			resp.getOutputStream().println("<body>");
+			resp.getOutputStream().println(markup);
+			resp.getOutputStream().println("</body>");
+			resp.getOutputStream().println("</html>");
 		} else if (csv != null) {
 			resp.getOutputStream().print(csv);
 		} else {
