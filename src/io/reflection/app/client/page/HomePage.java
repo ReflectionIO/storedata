@@ -44,12 +44,12 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 
 	interface HomePageUiBinder extends UiBinder<Widget, HomePage> {}
 
-	@UiField InlineHyperlink applyBtn;
 	@UiField DivElement headerLinks;
 	@UiField InlineHyperlink applyNowBtn;
-	@UiField InlineHyperlink loginBtn;
-	@UiField InlineHyperlink logoutBtn;
-	@UiField InlineHyperlink leaderboardBtn;
+	private InlineHyperlink applyBtn = new InlineHyperlink();
+	private InlineHyperlink loginBtn = new InlineHyperlink();
+	private InlineHyperlink logoutBtn = new InlineHyperlink();
+	private InlineHyperlink leaderboardBtn = new InlineHyperlink();
 
 	private final LinkElement cssCustom;
 	private final LinkElement cssCustomIE8;
@@ -63,6 +63,16 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 	public HomePage() {
 
 		initWidget(uiBinder.createAndBindUi(this));
+
+		applyBtn.setText("Apply");
+		applyBtn.setStyleName("ref-button-apply");
+		loginBtn.setText("Log In");
+		loginBtn.setStyleName("link-log-in icon-login");
+		leaderboardBtn.setText("Leaderboard");
+		leaderboardBtn.setStyleName("link-leaderboard icon-chart-bar");
+		logoutBtn.setText("Sign Out");
+		logoutBtn.setStyleName("link-log-in icon-logout");
+		logoutBtn.setTargetHistoryToken("logout");
 
 		// Create scripts to append and remove in this page
 		cssCustom = DOMHelper.getCssLinkFromUrl("css/landing.e124e6759d7ee59f4dcd012fab6c5e10.css");
@@ -162,14 +172,11 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 	}
 
 	private void setLoggedInHeader(boolean loggedIn) {
+		headerLinks.removeAllChildren();
 		if (loggedIn) {
-			applyBtn.removeFromParent();
-			loginBtn.removeFromParent();
 			headerLinks.appendChild(leaderboardBtn.getElement());
 			headerLinks.appendChild(logoutBtn.getElement());
 		} else {
-			leaderboardBtn.removeFromParent();
-			logoutBtn.removeFromParent();
 			headerLinks.appendChild(applyBtn.getElement());
 			headerLinks.appendChild(loginBtn.getElement());
 		}
