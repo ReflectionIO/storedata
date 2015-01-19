@@ -13,6 +13,7 @@ import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.ingestors.Ingestor;
 import io.reflection.app.ingestors.IngestorFactory;
 import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -58,10 +59,10 @@ public class CollectorServlet extends HttpServlet {
 		String store = req.getParameter("store");
 		String country = req.getParameter("country");
 		String type = req.getParameter("type");
-		
+
 		String codeParam = req.getParameter("code");
 		Long code = codeParam == null ? null : Long.valueOf(codeParam);
-		
+
 		String category = req.getParameter("category");
 
 		List<Long> collected = null;
@@ -80,9 +81,7 @@ public class CollectorServlet extends HttpServlet {
 			}
 		}
 
-		Collection<String> countries = IngestorFactory.getIngestorCountries(store);
-
-		if (countries.contains(country)) {
+		if (shouldIngestFeedFetch(country)) {
 			Ingestor ingestor = IngestorFactory.getIngestorForStore(store);
 
 			if (ingestor != null) {
@@ -99,5 +98,21 @@ public class CollectorServlet extends HttpServlet {
 		}
 
 		resp.setHeader("Cache-Control", "no-cache");
+	}
+
+	public static boolean shouldIngestFeedFetch(String country) {
+		boolean ingest = false;
+
+		Collection<String> countries = IngestorFactory.getIngestorCountries(DataTypeHelper.IOS_STORE_A3);
+
+		if (countries.contains(country)) {
+			ingest = true;
+		} else {
+			if (LOG.isLoggable(Level.INFO)) {
+				LOG.info("Country [" + country + "] not in list of countries to ingest.");
+			}
+		}
+
+		return ingest;
 	}
 }

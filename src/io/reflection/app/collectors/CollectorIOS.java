@@ -37,10 +37,10 @@ public class CollectorIOS extends StoreCollector implements Collector {
 
 	private static final Logger LOG = Logger.getLogger(CollectorIOS.class.getName());
 
-	private static final String COUNTRIES_KEY = "gather." + DataTypeHelper.IOS_STORE_A3 + ".countries";
+	public static final String COUNTRIES_KEY = "gather." + DataTypeHelper.IOS_STORE_A3 + ".countries";
 
-	private static final String KEY_FORMAT = "gather." + DataTypeHelper.IOS_STORE_A3 + ".%s";
-	private static final String KEY_CATEGORY_FEED = "gather." + DataTypeHelper.IOS_STORE_A3 + ".category.feed.url";
+	public static final String KEY_FORMAT = "gather." + DataTypeHelper.IOS_STORE_A3 + ".%s";
+	public static final String KEY_CATEGORY_FEED = "gather." + DataTypeHelper.IOS_STORE_A3 + ".category.feed.url";
 
 	public static final String TOP_FREE_APPS = "topfreeapplications";
 	public static final String TOP_PAID_APPS = "toppaidapplications";
