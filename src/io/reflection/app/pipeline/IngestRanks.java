@@ -10,11 +10,15 @@ package io.reflection.app.pipeline;
 import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
+import io.reflection.app.modellers.Modeller;
+import io.reflection.app.modellers.ModellerFactory;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -24,12 +28,15 @@ import java.util.Map;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
+import co.spchopr.persistentmap.PersistentMapFactory;
+
 import com.google.appengine.tools.pipeline.Job6;
 import com.google.appengine.tools.pipeline.PromisedValue;
 import com.google.appengine.tools.pipeline.Value;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.spacehopperstudios.utility.StringUtils;
 
 public class IngestRanks extends Job6<Void, Long, String, Long, String, Long, String> {
 
@@ -42,8 +49,7 @@ public class IngestRanks extends Job6<Void, Long, String, Long, String, Long, St
 	 * java.lang.Object)
 	 */
 	@Override
-	public Value<Void> run(Long paidFeedId, String paidRanks, Long freeFeedId, String freeRanks, Long grossingFeedId, String grossingRanks)
-			throws Exception {
+	public Value<Void> run(Long paidFeedId, String paidRanks, Long freeFeedId, String freeRanks, Long grossingFeedId, String grossingRanks) throws Exception {
 		FeedFetch paidFetch = FeedFetchServiceProvider.provide().getFeedFetch(paidFeedId);
 		FeedFetch freeFetch = FeedFetchServiceProvider.provide().getFeedFetch(freeFeedId);
 		FeedFetch grossingFetch = FeedFetchServiceProvider.provide().getFeedFetch(grossingFeedId);
@@ -105,11 +111,17 @@ public class IngestRanks extends Job6<Void, Long, String, Long, String, Long, St
 			ItemServiceProvider.provide().addItemsBatch(items.values());
 		}
 
-		PromisedValue<Date> salesDate = newPromise();
+		PromisedValue<List<Long>> ingestedDataAccountFetchIds = newPromise();
 
 		// save the handle from salesDate.getHandle()
 
-		futureCall(new CalibrateAll(), salesDate);
+		Modeller modeller = ModellerFactory.getModellerForStore(DataTypeHelper.IOS_STORE_A3);
+		String key = StringUtils.join(Arrays.asList(grossingFetch.country, grossingFetch.store, modeller.getForm(freeFetch.type).toString()), ".");
+
+		PersistentMapFactory.createObjectify().put(key, ingestedDataAccountFetchIds.getHandle());
+
+		// TODO: this is a place holder - we need to kick off a specific calibration cycle for the country store and type
+		futureCall(new CalibrateAll(), ingestedDataAccountFetchIds);
 
 		return null;
 	}

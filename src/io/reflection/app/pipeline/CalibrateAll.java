@@ -7,12 +7,12 @@
 //
 package io.reflection.app.pipeline;
 
-import java.util.Date;
+import java.util.List;
 
 import com.google.appengine.tools.pipeline.Job1;
 import com.google.appengine.tools.pipeline.Value;
 
-public final class CalibrateAll extends Job1<Void, Date> {
+public final class CalibrateAll extends Job1<Void, List<Long>> {
 
 	private static final long serialVersionUID = -2335419676158668911L;
 
@@ -22,7 +22,7 @@ public final class CalibrateAll extends Job1<Void, Date> {
 	 * @see com.google.appengine.tools.pipeline.Job1#run(java.lang.Object)
 	 */
 	@Override
-	public Value<Void> run(Date date) throws Exception {
+	public Value<Void> run(List<Long> dataAccountFetchIds) throws Exception {
 
 		return null;
 	}

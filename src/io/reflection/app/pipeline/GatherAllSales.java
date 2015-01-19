@@ -18,11 +18,13 @@ import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvide
 import io.reflection.app.service.dataaccountfetch.IDataAccountFetchService;
 import io.reflection.app.shared.util.PagerHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
 import org.joda.time.DateTime;
 
+import com.google.appengine.tools.pipeline.FutureValue;
 import com.google.appengine.tools.pipeline.Job0;
 import com.google.appengine.tools.pipeline.Value;
 
@@ -42,6 +44,7 @@ public class GatherAllSales extends Job0<Integer> {
 		Pager pager = new Pager().count(Long.valueOf(100));
 
 		int count = 0;
+		List<FutureValue<Long>> ids = new ArrayList<>();
 
 		try {
 			IDataAccountFetchService dataAccountFetchService = DataAccountFetchServiceProvider.provide();
@@ -56,14 +59,14 @@ public class GatherAllSales extends Job0<Integer> {
 					// if the account has some errors then don't bother otherwise enqueue a message to do a gather for it
 
 					if (DataAccountFetchServiceProvider.provide().isFetchable(dataAccount) == Boolean.TRUE) {
-						futureCall(new GatherDataAccountOn(), immediate(dataAccount.id), immediate(DateTime.now().minusDays(1).toDate()));
+						ids.add(futureCall(new GatherDataAccountOn(), immediate(dataAccount.id), immediate(DateTime.now().minusDays(1).toDate())));
 
 						// go through all the failed attempts and get them too (failed attempts = less than 30 days old)
 						List<DataAccountFetch> failedDataAccountFetches = dataAccountFetchService.getFailedDataAccountFetches(dataAccount,
 								PagerHelper.createInfinitePager());
 
 						for (DataAccountFetch dataAccountFetch : failedDataAccountFetches) {
-							futureCall(new GatherDataAccountOn(), immediate(dataAccount.id), immediate(dataAccountFetch.date));
+							ids.add(futureCall(new GatherDataAccountOn(), immediate(dataAccount.id), immediate(dataAccountFetch.date)));
 						}
 
 						count++;
@@ -71,8 +74,11 @@ public class GatherAllSales extends Job0<Integer> {
 				}
 
 				PagerHelper.moveForward(pager);
-
 			} while (dataAccounts != null && dataAccounts.size() <= pager.count.intValue());
+
+			
+			// TODO: use the list of ids to kick off the clibration phase
+			
 		} catch (DataAccessException dae) {
 			LOG.log(GaeLevel.SEVERE, "A database error occured attempting to start sales gather process", dae);
 		}

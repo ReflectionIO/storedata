@@ -35,23 +35,25 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import com.google.appengine.tools.pipeline.FutureValue;
 import com.google.appengine.tools.pipeline.Job2;
 import com.google.appengine.tools.pipeline.Value;
 
-public class GatherDataAccountOn extends Job2<Void, Long, Date> {
+public class GatherDataAccountOn extends Job2<Long, Long, Date> {
 
 	private static final long serialVersionUID = -8706042892487009601L;
 
 	private static final Logger LOG = Logger.getLogger(GatherDataAccountOn.class.getName());
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see com.google.appengine.tools.pipeline.Job2#run(java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	public Value<Void> run(Long dataAccountId, Date date) throws Exception {
+	public Value<Long> run(Long dataAccountId, Date date) throws Exception {
 		boolean sendNotification = false;
+		Value<Long> collectedFetchId = null;
 
 		try {
 			DataAccount account = DataAccountServiceProvider.provide().getDataAccount(Long.valueOf(dataAccountId));
@@ -69,9 +71,9 @@ public class GatherDataAccountOn extends Job2<Void, Long, Date> {
 					DataAccountCollector collector = DataAccountCollectorFactory.getCollectorForSource(dataSource.a3Code);
 
 					if (collector != null) {
-						boolean status = collect(account, date);
+						collectedFetchId = collectAndIngest(account, date);
 
-						if (status && sendNotification) {
+						if (collectedFetchId != null && sendNotification) {
 							Event event = EventServiceProvider.provide().getEvent(Long.valueOf(5));
 							User user = UserServiceProvider.provide().getDataAccountOwner(account);
 
@@ -105,13 +107,16 @@ public class GatherDataAccountOn extends Job2<Void, Long, Date> {
 		} catch (DataAccessException e) {
 			LOG.log(GaeLevel.SEVERE,
 					String.format("Database error occured while trying to import data with accountid [%s] and date [%s]", dataAccountId, date), e);
+
+			throw e;
 		}
 
-		return null;
+		return collectedFetchId;
 	}
 
-	private boolean collect(DataAccount dataAccount, Date date) throws DataAccessException {
+	private FutureValue<Long> collectAndIngest(DataAccount dataAccount, Date date) throws DataAccessException {
 		date = ApiHelper.removeTime(date);
+		FutureValue<Long> ingestedFetchId = null;
 
 		String dateParameter = ITunesConnectDownloadHelper.DATE_FORMATTER.format(date);
 
@@ -164,14 +169,14 @@ public class GatherDataAccountOn extends Job2<Void, Long, Date> {
 			}
 
 			if (dataAccountFetch != null && dataAccountFetch.status == DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered) {
-				futureCall(new IngestDataAccountFetch(), immediate(dataAccountFetch.id));
+				ingestedFetchId = futureCall(new IngestDataAccountFetch(), immediate(dataAccountFetch.id));
 			}
 		} else {
 			LOG.warning(String.format("Gather for data account [%s] and date [%s] skipped because of status [%s]",
 					dataAccount.id == null ? dataAccount.username : dataAccount.id.toString(), dateParameter, dataAccountFetch.status));
 		}
 
-		return success;
+		return (ingestedFetchId == null || !success) ? null : ingestedFetchId;
 	}
 
 }
