@@ -49,7 +49,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
-import org.markdown4j.Markdown4jProcessor;
+import org.markdown4j.server.MarkdownProcessor;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -701,7 +701,7 @@ public class DevHelperServlet extends HttpServlet {
 
 				String pipelineId = service.startNewPipeline(new IosRankPipeline.GatherAll());
 
-				markup = (new Markdown4jProcessor()).process("[View " + pipelineId + "](/_ah/pipeline/status.html?root=" + pipelineId
+				markup = (new MarkdownProcessor()).process("[View " + pipelineId + "](/_ah/pipeline/status.html?root=" + pipelineId
 						+ " \"View pipeline status\")");
 			} else {
 				if (LOG.isLoggable(Level.INFO)) {
