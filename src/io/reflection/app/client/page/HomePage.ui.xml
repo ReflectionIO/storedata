@@ -25,10 +25,6 @@
 				</g:InlineHyperlink>
 			</div>
 			<div class="header__actions" ui:field="headerLinks">
-				<g:InlineHyperlink ui:field="applyBtn" styleName="ref-button-apply">Apply</g:InlineHyperlink>
-				<g:InlineHyperlink ui:field="loginBtn" styleName="link-log-in icon-login">Log In</g:InlineHyperlink>
-				<g:InlineHyperlink ui:field="leaderboardBtn" styleName="link-leaderboard icon-chart-bar">Leaderboard</g:InlineHyperlink>
-				<g:InlineHyperlink ui:field="logoutBtn" styleName="link-log-in icon-logout" targetHistoryToken="logout">Sign Out</g:InlineHyperlink>
 			</div>
 		</header>
 
