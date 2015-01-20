@@ -155,6 +155,6 @@
 	var script = document.createElement('script');
 	script.type = 'text/javascript';
 	script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyD7mXBIrN4EgMflWKxUOK6C9rfoDMa5zyo&callback=generateMap';
-	document.head.appendChild(script);
+	document.getElementsByTagName('head')[0].appendChild(script);
 
 })(jQuery);

@@ -17,6 +17,7 @@ import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.res.flags.Styles;
 import io.reflection.app.datatypes.shared.Country;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,7 +79,7 @@ public class CountryController implements ServiceConstants {
 						for (Country country : output.countries) {
 							mCountryLookup.put(country.a2Code, country);
 						}
-						
+
 						countries = output.countries;
 					}
 				}
@@ -146,7 +147,11 @@ public class CountryController implements ServiceConstants {
 	}
 
 	public List<Country> getCountries() {
+		List<Country> sublist = new ArrayList<Country>();
 		// only return first 7 items (for now)
-		return countries.subList(0, 7);
+		if (countries != null && countries.size() >= 7) {
+			sublist = countries.subList(0, 7);
+		}
+		return sublist;
 	}
 }
