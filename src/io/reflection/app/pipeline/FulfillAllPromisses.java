@@ -1,5 +1,5 @@
 //
-//  CalibrateAll.java
+//  FulfillAllPromisses.java
 //  storedata
 //
 //  Created by William Shakour (billy1380) on 19 Jan 2015.
@@ -7,12 +7,12 @@
 //
 package io.reflection.app.pipeline;
 
-import java.util.List;
+import java.util.Map;
 
 import com.google.appengine.tools.pipeline.Job1;
 import com.google.appengine.tools.pipeline.Value;
 
-public final class CalibrateAll extends Job1<Void, List<Long>> {
+public final class FulfillAllPromisses extends Job1<Void, Map<String, Double>> {
 
 	private static final long serialVersionUID = -2335419676158668911L;
 
@@ -22,7 +22,7 @@ public final class CalibrateAll extends Job1<Void, List<Long>> {
 	 * @see com.google.appengine.tools.pipeline.Job1#run(java.lang.Object)
 	 */
 	@Override
-	public Value<Void> run(List<Long> dataAccountFetchIds) throws Exception {
+	public Value<Void> run(Map<String, Double> dataAccountFetchSummary) throws Exception {
 
 		return null;
 	}

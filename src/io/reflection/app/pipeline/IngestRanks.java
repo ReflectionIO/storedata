@@ -111,17 +111,16 @@ public class IngestRanks extends Job6<Void, Long, String, Long, String, Long, St
 			ItemServiceProvider.provide().addItemsBatch(items.values());
 		}
 
-		PromisedValue<List<Long>> ingestedDataAccountFetchIds = newPromise();
+		PromisedValue<String> salesSummary = newPromise();
 
 		// save the handle from salesDate.getHandle()
 
 		Modeller modeller = ModellerFactory.getModellerForStore(DataTypeHelper.IOS_STORE_A3);
 		String key = StringUtils.join(Arrays.asList(grossingFetch.country, grossingFetch.store, modeller.getForm(freeFetch.type).toString()), ".");
 
-		PersistentMapFactory.createObjectify().put(key, ingestedDataAccountFetchIds.getHandle());
+		PersistentMapFactory.createObjectify().put(key, salesSummary.getHandle());
 
-		// TODO: this is a place holder - we need to kick off a specific calibration cycle for the country store and type
-		futureCall(new CalibrateAll(), ingestedDataAccountFetchIds);
+		// TODO: we need to kick off a specific calibration cycle for the country store and type
 
 		return null;
 	}
