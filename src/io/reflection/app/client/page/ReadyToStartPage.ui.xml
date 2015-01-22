@@ -2,7 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:with field='images' type='io.reflection.app.client.res.Images' />
     <ui:import field="io.reflection.app.client.page.PageType.ForumPageType" />
-    <ui:style>
+    <ui:style gss="true">
     .HtmlPanelStyle {
     	margin-top: -20px;
     }

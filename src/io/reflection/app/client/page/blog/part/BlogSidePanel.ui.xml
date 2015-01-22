@@ -3,7 +3,7 @@
     xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:import
         field="io.reflection.app.client.page.PageType.BlogPostsPageType" />
-    <ui:style>
+    <ui:style gss="true">
     .blogLink {
     	font-size: 16px;
     }

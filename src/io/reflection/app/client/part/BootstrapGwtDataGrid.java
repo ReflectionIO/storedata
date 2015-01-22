@@ -19,6 +19,6 @@ public interface BootstrapGwtDataGrid extends DataGrid.Resources {
 
 	public interface BootstrapGwtDataGridStyle extends DataGrid.Style {};
 
-	@Source("res/bootstrapgwtdatagrid.css")
+	@Source("res/bootstrapgwtdatagrid.gss")
 	BootstrapGwtDataGridStyle dataGridStyle();
 }

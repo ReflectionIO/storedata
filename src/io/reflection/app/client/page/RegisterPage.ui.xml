@@ -6,31 +6,31 @@
 	<ui:import field="io.reflection.app.client.page.PageType.LoginPageType" />
 
 	<ui:with field='images' type='io.reflection.app.client.res.Images' />
-	<ui:style type="io.reflection.app.client.page.RegisterPage.Style">
+	<ui:style gss="true" type="io.reflection.app.client.page.RegisterPage.Style">
 	.mainPanel {
-	    margin-top: 20px;
+		margin-top: 20px;
 	}
 	
 	.registerform {
-	    padding: 0px;
-	    margin-top: 20px;
+		padding: 0px;
+		margin-top: 20px;
 	}
 	
 	.spaceFiller {
-	    height: 100px;
+		height: 100px;
 	}
 	
 	.inviteRegisterTab {
-	    background-color: #fafafa;
-	    font-weight: 600;
-	    height: 65px;
-	    font-size: 18px;
-	    padding-top: 35px;
-	    border-radius: 0px;
-	    border: 0px;
-	    outline: 0;
-	    text-align: center;
-	    color: #0e0e1f;
+		background-color: #fafafa;
+		font-weight: 600;
+		height: 65px;
+		font-size: 18px;
+		padding-top: 35px;
+		border-radius: 0px;
+		border: 0px;
+		outline: 0;
+		text-align: center;
+		color: #0e0e1f;
 	}
 	</ui:style>
 	<g:HTMLPanel styleName="container">

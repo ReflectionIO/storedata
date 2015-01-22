@@ -20,7 +20,7 @@ public interface BootstrapGwtTopicCellList extends CellList.Resources {
 
 	public interface BootstrapGwtTopicCellListStyle extends Style {};
 
-	@Source("res/bootstrapgwttopiccelllist.css")
+	@Source("res/bootstrapgwttopiccelllist.gss")
 	BootstrapGwtTopicCellListStyle cellListStyle();
 
 };

@@ -2,7 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:with field="text" type="com.google.gwt.safehtml.shared.SafeHtml" />
     <ui:with field="image" type="java.lang.String" />
-    <ui:style>
+    <ui:style gss="true">
     .image {
     	vertical-align: middle;
     	margin-right: 5px;

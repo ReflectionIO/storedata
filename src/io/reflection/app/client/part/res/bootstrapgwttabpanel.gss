@@ -1,19 +1,10 @@
 @external gwt-TabLayoutPanelTab, gwt-TabBarItem, gwt-TabBarItem-selected;
 
 /* gwt TabPanel */
-.gwt-TabLayoutPanelTab,
-.gwt-TabBarItem
-{
+.gwt-TabLayoutPanelTab,.gwt-TabBarItem {
     height: 3em;
     width: 100px;
     text-align: center;
-    background: -webkit-linear-gradient(#f6f7f9, #eeeff1);
-    /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(#f6f7f9, #eeeff1);
-    /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(#f6f7f9, #eeeff1);
-    /* For Firefox 3.6 to 15 */
-    background: linear-gradient(#f6f7f9, #eeeff1); /* Standard syntax */
     color: #434346;
     padding-left: 12px;
     padding-top: 5px;
@@ -28,6 +19,24 @@
     cursor: pointer;
     margin:0px;
     padding:0px;
+}
+
+@if (is("safari")) {
+	.gwt-TabLayoutPanelTab,.gwt-TabBarItem {
+		background: -webkit-linear-gradient(#f6f7f9, #eeeff1);
+	}
+} @elseif (is("opera")) {
+	.gwt-TabLayoutPanelTab,.gwt-TabBarItem {
+		background: -o-linear-gradient(#f6f7f9, #eeeff1);
+	}
+} @elseif (is("gecko1_8")) {
+	.gwt-TabLayoutPanelTab,.gwt-TabBarItem {
+		background: -moz-linear-gradient(#f6f7f9, #eeeff1);
+	}
+} @else {
+	.gwt-TabLayoutPanelTab,.gwt-TabBarItem {
+		background: linear-gradient(#f6f7f9, #eeeff1); /* Standard syntax */
+	}
 }
 
 .gwt-TabBarItem-selected

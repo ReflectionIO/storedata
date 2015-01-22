@@ -1,6 +1,4 @@
-@CHARSET "UTF-8";
-
-@def selectionBorderWidth 0px;
+@def SELECTION_BORDER_WIDTH 0px;
 .cellTableWidget {
 	
 }
@@ -78,6 +76,7 @@
 }
 
 .cellTableSelectedRowCell {
+	
 }
 
 .cellTableKeyboardSelectedCell {
@@ -96,8 +95,8 @@
 	
 }
 
-@sprite .cellTableLoading {
-	gwt-image: 'cellTableLoading';
+.cellTableLoading {
+	gwt-sprite: 'cellTableLoading';
 	padding: 30px;
 	background: none;
 }

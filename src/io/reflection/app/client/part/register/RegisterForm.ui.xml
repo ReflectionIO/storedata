@@ -4,7 +4,7 @@
 
     <ui:import field="io.reflection.app.client.page.PageType.TermsPageType" />
 
-    <ui:style>
+    <ui:style gss="true">
     .password {
         margin-top: 7px;
     }

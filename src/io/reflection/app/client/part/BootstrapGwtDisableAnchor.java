@@ -24,6 +24,6 @@ public interface BootstrapGwtDisableAnchor extends ClientBundle {
 
 	public static final BootstrapGwtDisableAnchor INSTANCE = GWT.create(BootstrapGwtDisableAnchor.class);
 
-	@Source("res/bootstrapgwtdisableanchor.css")
+	@Source("res/bootstrapgwtdisableanchor.gss")
 	BootstrapGwtDisableAnchorStyles styles();
 }

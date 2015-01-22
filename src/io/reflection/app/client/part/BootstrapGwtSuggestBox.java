@@ -20,6 +20,6 @@ public interface BootstrapGwtSuggestBox extends ClientBundle {
 
 	public interface BootstrapGwtSuggestBoxStyle extends CssResource {};
 	
-	@Source("res/bootstrapgwtsuggestbox.css")
+	@Source("res/bootstrapgwtsuggestbox.gss")
 	BootstrapGwtSuggestBoxStyle styles();
 };

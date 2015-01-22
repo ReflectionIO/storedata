@@ -2,7 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
 	xmlns:l="urn:import:io.reflection.app.client.part.linkaccount">
 	<ui:with field='images' type='io.reflection.app.client.res.Images' />
-	<ui:style>
+	<ui:style gss="true">
 	.spaceFiller {
 	    height: 100px;
 	}

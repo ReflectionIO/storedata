@@ -20,6 +20,6 @@ public interface BootstrapGwtTabPanel extends ClientBundle {
 
 	public static final BootstrapGwtTabPanel INSTANCE = GWT.create(BootstrapGwtTabPanel.class);
 
-	@Source("res/bootstrapgwttabpanel.css")
+	@Source("res/bootstrapgwttabpanel.gss")
 	BootstrapGwtTabPanelStyles styles();
 }

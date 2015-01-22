@@ -1,5 +1,3 @@
-@CHARSET "UTF-8";
-
 @external popupContent, btn-cancel, btn-delete, gwt-PopupPanel, gwt-PopupPanelGlass, active;
     /* Colors palette: Purple #6d69c5; DarkBlue 272933; Gold #eabc3e; LightGrey: #f8f9f9; Green: #1bc79f; Blue: #3357cc; Red: #e73c48; */
 .gwt-PopupPanel {
