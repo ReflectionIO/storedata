@@ -5,7 +5,7 @@
     <ui:import
         field="io.reflection.app.client.page.PageType.ForgotPasswordPageType" />
 
-    <ui:style>
+    <ui:style gss="true">
     .passwordLink {
         font-weight: 400;
         font-size: 14px;

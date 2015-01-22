@@ -1,5 +1,3 @@
-@CHARSET "UTF-8";
-
 @external blog-container, blog-title, posts-panel, post, post-title, post-info, post-list, text-area;
 .blog-container {
     margin-top: 100px;

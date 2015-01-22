@@ -1,156 +1,162 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.user.datepicker.client">
 
-    <ui:style type="io.reflection.app.client.part.DateRangePicker.Style">
-    @external datePickerDay, datePickerWeekdayLabel, datePickerWeekendLabel, gwt-DatePicker,datePickerDayIsValue,datePickerDayIsToday,datePickerDayIsHighlighted,datePickerDayIsFiller,row,list-group;
-    	/* inline style used on date pickers - this is done using add style so it does not trash existing styles on the containers*/
-    .inline {
-    	display: inline-block;
-    }
-    
-    .highlightRange.datePickerDay,.highlightRange.datePickerWeekdayLabel,.highlightRange.datePickerWeekendLabel,.highlightRange.datePickerDayIsFiller
-    	{
-    	color: white;
-    	padding: 4px 7px;
-    }
-    
-    .highlightRange.datePickerDayIsHighlighted {
-    	background: #6D69C5;
-    	border-color: #8873CD;
-    	-webkit-border-radius: 0;
-    	-moz-border-radius: 0;
-    	border-radius: 0;
-    }
-    
-    .highlightRange,.highlightRange.datePickerDayIsFiller {
-    	color: white;
-    	font-weight: bold;
-    	background: rgba(109, 105, 197, 0.75) /*#6D69C5*/;
-    	border-color: #8873CD;
-    	font-style: normal;
-    }
-    
-    .fromHighlightRangeBoundary,.toHighlightRangeBoundary {
-    	color: white;
-    	font-weight: bold;
-    	background: #6D69C5;
-    	border-color: #8873CD;
-    	font-style: normal;
-    }
-    
-    .fromHighlightRangeBoundary,.fromHighlightRangeBoundary.datePickerDayIsValue,.fromHighlightRangeBoundary.datePickerDayIsFiller
-    	{
-    	color: white;
-    	font-weight: bold;
-    	/*background: #6D69C5;
-                                                                            	border-color: #8873CD;*/
-    	font-style: normal;
-    	-webkit-border-radius: 4px 0 0 4px;
-    	-moz-border-radius: 4px 0 0 4px;
-    	border-radius: 4px 0 0 4px;
-    }
-    
-    .toHighlightRangeBoundary,.toHighlightRangeBoundary.datePickerDayIsValue,.toHighlightRangeBoundary.datePickerDayIsFiller
-    	{
-    	color: white;
-    	font-weight: bold;
-    	/*background: #6D69C5;
-                                                                            	border-color: #8873CD;*/
-    	font-style: normal;
-    	-webkit-border-radius: 0 4px 4px 0;
-    	-moz-border-radius: 0 4px 4px 0;
-    	border-radius: 0 4px 4px 0;
-    }
-    
-    .toHighlightRangeBoundary.datePickerDayIsToday,.fromHighlightRangeBoundary.datePickerDayIsToday,.toHighlightRangeBoundary.datePickerDayIsToday.datePickerDayIsValue,.fromHighlightRangeBoundary.datePickerDayIsToday.datePickerDayIsValue
-    	{
-    	color: white;
-    	font-weight: bold;
-    	font-style: normal;
-    	background: #474949;
-    	border-color: #474949;
-    }
-    
-    .toHighlightRangeBoundary.datePickerDayIsToday {
-    	-webkit-border-radius: 0 4px 4px 0;
-    	-moz-border-radius: 0 4px 4px 0;
-    	border-radius: 0 4px 4px 0;
-    }
-    
-    .fromHighlightRangeBoundary.datePickerDayIsToday {
-    	-webkit-border-radius: 4px 0 0 4px;
-    	-moz-border-radius: 4px 0 0 4px;
-    	border-radius: 4px 0 0 4px;
-    }
-    
-    .fromHighlightRangeBoundary.toHighlightRangeBoundary.datePickerDayIsToday
-    	{
-    	-webkit-border-radius: 4px;
-    	-moz-border-radius: 4px;
-    	border-radius: 4px;
-    }
-    
-    .holder {
-    	border-collapse: separate;
-    	cursor: default;
-    	padding: 4px 4px;
-    	margin: 2px 0 0;
-    	list-style: none;
-    	background-color: #fff;
-    	border: 1px solid #ccc;
-    	border: 1px solid rgba(0, 0, 0, 0.2);
-    	-webkit-border-radius: 5px;
-    	-moz-border-radius: 5px;
-    	border-radius: 5px;
-    	-webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    	-moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    	-webkit-background-clip: padding-box;
-    	-moz-background-clip: padding;
-    	background-clip: padding-box;
-    	display: inline-block;
-    }
-    
-    .holder>.row>.gwt-DatePicker {
-    	padding: 0;
-    	margin: 0;
-    	list-style: none;
-    	background-color: transparent;
-    	border: none;
-    	-webkit-border-radius: 0;
-    	-moz-border-radius: 0;
-    	border-radius: 0;
-    	-webkit-box-shadow: none;
-    	-moz-box-shadow: none;
-    	box-shadow: none;
-    	-webkit-background-clip: none;
-    	-moz-background-clip: none;
-    	background-clip: none;
-    }
-    
-    .ranges {
-    	vertical-align: top;
-    	text-align: center;
-    }
-    
-    .holder>.row>.list-group {
+	<ui:style gss="true" type="io.reflection.app.client.part.DateRangePicker.Style">
+	@external datePickerDay, datePickerWeekdayLabel, datePickerWeekendLabel, gwt-DatePicker,datePickerDayIsValue,datePickerDayIsToday,datePickerDayIsHighlighted,datePickerDayIsFiller,row,list-group;
+		/* inline style used on date pickers - this is done using add style so it does not trash existing styles on the containers*/
+	.inline {
+		display: inline-block;
+	}
+	
+	.highlightRange.datePickerDay, .highlightRange.datePickerWeekdayLabel,
+		.highlightRange.datePickerWeekendLabel, .highlightRange.datePickerDayIsFiller
+		{
+		color: white;
+		padding: 4px 7px;
+	}
+	
+	.highlightRange.datePickerDayIsHighlighted {
+		background: #6D69C5;
+		border-color: #8873CD;
+		-webkit-border-radius: 0;
+		-moz-border-radius: 0;
+		border-radius: 0;
+	}
+	
+	.highlightRange, .highlightRange.datePickerDayIsFiller {
+		color: white;
+		font-weight: bold;
+		background: rgba(109, 105, 197, 0.75) /*#6D69C5*/;
+		border-color: #8873CD;
+		font-style: normal;
+	}
+	
+	.fromHighlightRangeBoundary, .toHighlightRangeBoundary {
+		color: white;
+		font-weight: bold;
+		background: #6D69C5;
+		border-color: #8873CD;
+		font-style: normal;
+	}
+	
+	.fromHighlightRangeBoundary, .fromHighlightRangeBoundary.datePickerDayIsValue,
+		.fromHighlightRangeBoundary.datePickerDayIsFiller {
+		color: white;
+		font-weight: bold;
+		/*background: #6D69C5;
+		                                                                            	border-color: #8873CD;*/
+		font-style: normal;
+		-webkit-border-radius: 4px 0 0 4px;
+		-moz-border-radius: 4px 0 0 4px;
+		border-radius: 4px 0 0 4px;
+	}
+	
+	.toHighlightRangeBoundary, .toHighlightRangeBoundary.datePickerDayIsValue,
+		.toHighlightRangeBoundary.datePickerDayIsFiller {
+		color: white;
+		font-weight: bold;
+		/*background: #6D69C5;
+		                                                                            	border-color: #8873CD;*/
+		font-style: normal;
+		-webkit-border-radius: 0 4px 4px 0;
+		-moz-border-radius: 0 4px 4px 0;
+		border-radius: 0 4px 4px 0;
+	}
+	
+	.toHighlightRangeBoundary.datePickerDayIsToday,
+		.fromHighlightRangeBoundary.datePickerDayIsToday,
+		.toHighlightRangeBoundary.datePickerDayIsToday.datePickerDayIsValue,
+		.fromHighlightRangeBoundary.datePickerDayIsToday.datePickerDayIsValue {
+		color: white;
+		font-weight: bold;
+		font-style: normal;
+		background: #474949;
+		border-color: #474949;
+	}
+	
+	.toHighlightRangeBoundary.datePickerDayIsToday {
+		-webkit-border-radius: 0 4px 4px 0;
+		-moz-border-radius: 0 4px 4px 0;
+		border-radius: 0 4px 4px 0;
+	}
+	
+	.fromHighlightRangeBoundary.datePickerDayIsToday {
+		-webkit-border-radius: 4px 0 0 4px;
+		-moz-border-radius: 4px 0 0 4px;
+		border-radius: 4px 0 0 4px;
+	}
+	
+	.fromHighlightRangeBoundary.toHighlightRangeBoundary.datePickerDayIsToday
+		{
+		-webkit-border-radius: 4px;
+		-moz-border-radius: 4px;
+		border-radius: 4px;
+	}
+	
+	.holder {
+		border-collapse: separate;
+		cursor: default;
+		padding: 4px 4px;
+		margin: 2px 0 0;
+		list-style: none;
+		background-color: #fff;
+		border: 1px solid #ccc;
+		/* @alternate */
+		border: 1px solid rgba(0, 0, 0, 0.2);
+		-webkit-border-radius: 5px;
+		-moz-border-radius: 5px;
+		border-radius: 5px;
+		box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+		/* @alternate */
+		-webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+		/* @alternate */
+		-moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+		-webkit-background-clip: padding-box;
+		-moz-background-clip: padding;
+		background-clip: padding-box;
+		display: inline-block;
+	}
+	
+	.holder>.row>.gwt-DatePicker {
+		padding: 0;
+		margin: 0;
+		list-style: none;
+		background-color: transparent;
+		border: none;
+		-webkit-border-radius: 0;
+		-moz-border-radius: 0;
+		border-radius: 0;
+		-webkit-box-shadow: none;
+		-moz-box-shadow: none;
+		box-shadow: none;
+		-webkit-background-clip: none;
+		-moz-background-clip: none;
+		background-clip: none;
+	}
+	
+	.ranges {
+		vertical-align: top;
+		text-align: center;
+	}
+	
+	.holder>.row>.list-group {
 		margin-bottom: 0px;
 	}
-    </ui:style>
+	</ui:style>
 
-    <g:HTMLPanel>
-        <div class="{style.holder}">
-            <div class="row">
-                <d:DatePicker ui:field="mFromPicker" />
-                <d:DatePicker ui:field="mToPicker" />
-                <g:HTMLPanel ui:field="ranges" styleName="{style.inline} {style.ranges} list-group">
-                </g:HTMLPanel>
-            </div>
-            <div class="row" ui:field="buttons">
-                <g:Button ui:field="apply" styleName="btn btn-primary">Apply</g:Button>
-                <g:Button ui:field="cancel" styleName="btn btn-default">Cancel</g:Button>
-            </div>
-        </div>
-    </g:HTMLPanel>
+	<g:HTMLPanel>
+		<div class="{style.holder}">
+			<div class="row">
+				<d:DatePicker ui:field="mFromPicker" />
+				<d:DatePicker ui:field="mToPicker" />
+				<g:HTMLPanel ui:field="ranges" styleName="{style.inline} {style.ranges} list-group">
+				</g:HTMLPanel>
+			</div>
+			<div class="row" ui:field="buttons">
+				<g:Button ui:field="apply" styleName="btn btn-primary">Apply</g:Button>
+				<g:Button ui:field="cancel" styleName="btn btn-default">Cancel</g:Button>
+			</div>
+		</div>
+	</g:HTMLPanel>
 
 </ui:UiBinder> 

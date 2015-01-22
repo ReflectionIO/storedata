@@ -3,7 +3,7 @@
 	xmlns:c="urn:import:com.google.gwt.user.cellview.client" xmlns:pp="urn:import:io.reflection.app.client.page.part">
 	<ui:import field="io.reflection.app.client.page.PageType.UpgradePageType" />
 
-	<ui:style type="io.reflection.app.client.page.RanksPage.RanksPageStyle">
+	<ui:style gss="true" type="io.reflection.app.client.page.RanksPage.RanksPageStyle">
 	.red {
 		color: red;
 	}

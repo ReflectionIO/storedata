@@ -18,7 +18,7 @@
 	<ui:import field="io.reflection.app.client.page.PageType.ForumThreadPageType" />
 	<ui:import field="io.reflection.app.client.page.PageType.ForumEditTopicPageType" />
 
-	<ui:style>
+	<ui:style gss="true">
 	@external forumMessageLink;
 	.split {
 		border-top: solid 1px #999;

@@ -27,6 +27,6 @@ public interface BootstrapGwtNumberedPager extends ClientBundle {
 
 	public static final BootstrapGwtNumberedPager INSTANCE = GWT.create(BootstrapGwtNumberedPager.class);
 
-	@Source("res/bootstrapgwtnumberedpager.css")
+	@Source("res/bootstrapgwtnumberedpager.gss")
 	BootstrapGwtNumberedPagerStyles styles();
 }

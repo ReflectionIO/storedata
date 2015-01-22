@@ -36,7 +36,7 @@ public interface Styles extends ClientBundle {
 	ImageResource spriteSheet();
 	
 	
-	@Source("flags.css")
+	@Source("flags.gss")
 	FlagStyles flags();
 
 }

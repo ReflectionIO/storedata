@@ -5,7 +5,7 @@
     <ui:with field="res" type='io.reflection.app.client.res.Images' />
     <ui:with field='global' type='io.reflection.app.client.res.Styles' />
 
-    <ui:style>
+    <ui:style gss="true">
 
         .upPanel {
         height: 40px;

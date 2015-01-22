@@ -70,13 +70,13 @@ public interface Styles extends ClientBundle {
 	@ImageOptions(repeatStyle = RepeatStyle.None)
 	ImageResource linkedAccountSprite();
 
-	@Source("reflection.css")
+	@Source("reflection.gss")
 	ReflectionStyles reflection();
 
-	@Source("confirmationdialog.css")
+	@Source("confirmationdialog.gss")
 	ConfirmationDialogStyles confirmationDialog();
 
-	@Source("blog.css")
+	@Source("blog.gss")
 	ConfirmationDialogStyles blog();
 
 }

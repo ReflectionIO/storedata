@@ -4,7 +4,7 @@
 	<ui:import field="io.reflection.app.client.page.PageType.TermsPageType" />
 	<ui:import field="io.reflection.app.client.page.PageType.HomePageType" />
 
-	<ui:style>
+	<ui:style gss="true">
 	
 	</ui:style>
 
