@@ -19,6 +19,7 @@ import io.reflection.app.client.handler.user.SessionEventHandler;
 import io.reflection.app.client.helper.DOMHelper;
 import io.reflection.app.client.part.Footer;
 import io.reflection.app.client.part.Header;
+import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.User;
 
 import com.google.gwt.core.client.GWT;
@@ -26,7 +27,7 @@ import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.LinkElement;
 import com.google.gwt.dom.client.ScriptElement;
-import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
@@ -46,44 +47,26 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 
 	@UiField DivElement headerLinks;
 	@UiField InlineHyperlink applyNowBtn;
-	private InlineHyperlink applyBtn = new InlineHyperlink();
-	private InlineHyperlink loginBtn = new InlineHyperlink();
-	private InlineHyperlink logoutBtn = new InlineHyperlink();
-	private InlineHyperlink leaderboardBtn = new InlineHyperlink();
+	@UiField InlineHyperlink applyBtn;
+	@UiField InlineHyperlink loginBtn;
+	@UiField InlineHyperlink logoutBtn;
+	@UiField InlineHyperlink leaderboardBtn;
 
-	private final LinkElement cssCustom;
-	private final LinkElement cssCustomIE8;
-	private final LinkElement cssCustomIE9;
+	public static final LinkElement cssCustomIE8 = DOMHelper.getCssLinkFromUrl("css/landing-ie8.1a51cdbd334937176c269c0fe5935208.css");
+	public static final LinkElement cssCustomIE9 = DOMHelper.getCssLinkFromUrl("css/landing-ie9.b88a72995eb11c8b63771dacdc057bc8.css");
 
-	private final ScriptElement scriptCustom;
-	private final ScriptElement scriptHtml5Shiv;
-	private final ScriptElement scriptRespond;
-	private final ScriptElement scriptPictureFill;
+	private final ScriptElement scriptCustom = DOMHelper.getJSScriptFromUrl("js/scripts.180cd4275030bac3e6c6f190e5c98813.js");
+	public static final ScriptElement scriptHtml5Shiv = DOMHelper.getJSScriptFromUrl("js/html5shiv.min.js");
+	public static final ScriptElement scriptRespond = DOMHelper.getJSScriptFromUrl("js/respond.min.js");
+	public static final ScriptElement scriptPictureFill = DOMHelper.getJSScriptFromUrl("js/picturefill.2.2.0.min.js", "async");
 
 	public HomePage() {
 
 		initWidget(uiBinder.createAndBindUi(this));
 
-		applyBtn.setText("Apply");
-		applyBtn.setStyleName("ref-button-apply");
-		loginBtn.setText("Log In");
-		loginBtn.setStyleName("link-log-in icon-login");
-		leaderboardBtn.setText("Leaderboard");
-		leaderboardBtn.setStyleName("link-leaderboard icon-chart-bar");
-		logoutBtn.setText("Sign Out");
-		logoutBtn.setStyleName("link-log-in icon-logout");
-		logoutBtn.setTargetHistoryToken("logout");
+		StyleInjector.injectAtStart(Styles.INSTANCE.homePageStyle().getText());
 
-		// Create scripts to append and remove in this page
-		cssCustom = DOMHelper.getCssLinkFromUrl("css/landing.e124e6759d7ee59f4dcd012fab6c5e10.css");
-		scriptCustom = DOMHelper.getJSScriptFromUrl("js/scripts.180cd4275030bac3e6c6f190e5c98813.js");
-		// Conditional elements
-		cssCustomIE8 = DOMHelper.getCssLinkFromUrl("css/landing-ie8.1a51cdbd334937176c269c0fe5935208.css");
-		cssCustomIE9 = DOMHelper.getCssLinkFromUrl("css/landing-ie9.b88a72995eb11c8b63771dacdc057bc8.css");
-		scriptHtml5Shiv = DOMHelper.getJSScriptFromUrl("js/html5shiv.min.js");
-		scriptRespond = DOMHelper.getJSScriptFromUrl("js/respond.min.js");
-		scriptPictureFill = DOMHelper.getJSScriptFromUrl("js/picturefill.2.2.0.min.js");
-		scriptPictureFill.setAttribute("async", "");
+		headerLinks.removeAllChildren();
 
 		applyBtn.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken("requestinvite"));
 		applyNowBtn.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken("requestinvite"));
@@ -105,31 +88,31 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 
 		// Compatibility code
 		Document.get().getElementsByTagName("html").getItem(0).setAttribute("style", "height: auto");
-		Document.get().getBody().setAttribute("style", "height: auto");
 		NavigationController.get().getPageHolderPanel().getElement().setAttribute("style", "padding: 0px 0px 0px 0px;");
+		Document.get().getBody().setAttribute("style", "height: auto");
 		((Footer) NavigationController.get().getFooter()).setVisible(false);
 		((Header) NavigationController.get().getHeader()).setVisible(false);
-		headerLinks.getStyle().setDisplay(Display.INLINE_BLOCK);
 
-		DOMHelper.appendToHead(cssCustom);
-		DOMHelper.appendToBody(scriptCustom);
-
+		// Append to Head
 		String userAgent = Window.Navigator.getUserAgent();
 		if (userAgent.contains("MSIE")) { // Internet Explorer
 			if (userAgent.contains("MSIE 2") || userAgent.contains("MSIE 3") || userAgent.contains("MSIE 4") || userAgent.contains("MSIE 5")
 					|| userAgent.contains("MSIE 6") || userAgent.contains("MSIE 7") || userAgent.contains("MSIE 8")) {
-				DOMHelper.appendToHead(cssCustomIE8);
-				DOMHelper.appendToHead(scriptHtml5Shiv);
-				DOMHelper.appendToHead(scriptRespond);
+				Document.get().getHead().appendChild(HomePage.cssCustomIE8);
+				Document.get().getHead().appendChild(HomePage.scriptHtml5Shiv);
+				Document.get().getHead().appendChild(HomePage.scriptRespond);
 			} else {
-				DOMHelper.appendToHead(scriptPictureFill);
+				Document.get().getHead().appendChild(HomePage.scriptPictureFill);
 			}
 			if (userAgent.contains("MSIE 9")) {
-				DOMHelper.appendToHead(cssCustomIE9);
+				Document.get().getHead().appendChild(HomePage.cssCustomIE9);
 			}
 		} else { // Not Internet Explorer
-			DOMHelper.appendToHead(scriptPictureFill);
+			Document.get().getHead().appendChild(HomePage.scriptPictureFill);
 		}
+
+		// Append to Body
+		Document.get().getBody().appendChild(scriptCustom);
 
 	}
 
@@ -144,31 +127,31 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 
 		// Compatibility code
 		Document.get().getElementsByTagName("html").getItem(0).removeAttribute("style");
-		Document.get().getBody().removeAttribute("style");
 		NavigationController.get().getPageHolderPanel().getElement().setAttribute("style", "padding: 60px 0px 39px 0px;");
+		Document.get().getBody().removeAttribute("style");
 		((Footer) NavigationController.get().getFooter()).setVisible(true);
 		((Header) NavigationController.get().getHeader()).setVisible(true);
 
-		DOMHelper.removeFromHead(cssCustom);
-		DOMHelper.removeFromBody(scriptCustom);
-
+		// Remove from Head
 		String userAgent = Window.Navigator.getUserAgent();
 		if (userAgent.contains("MSIE")) { // Internet Explorer
 			if (userAgent.contains("MSIE 2") || userAgent.contains("MSIE 3") || userAgent.contains("MSIE 4") || userAgent.contains("MSIE 5")
 					|| userAgent.contains("MSIE 6") || userAgent.contains("MSIE 7") || userAgent.contains("MSIE 8")) {
-				DOMHelper.removeFromHead(cssCustomIE8);
-				DOMHelper.removeFromHead(scriptHtml5Shiv);
-				DOMHelper.removeFromHead(scriptRespond);
+				Document.get().getHead().removeChild(HomePage.cssCustomIE8);
+				Document.get().getHead().removeChild(HomePage.scriptHtml5Shiv);
+				Document.get().getHead().removeChild(HomePage.scriptRespond);
 			} else {
-				DOMHelper.removeFromHead(scriptPictureFill);
+				Document.get().getHead().removeChild(HomePage.scriptPictureFill);
 			}
 			if (userAgent.contains("MSIE 9")) {
-				DOMHelper.removeFromHead(cssCustomIE9);
+				Document.get().getHead().removeChild(HomePage.cssCustomIE9);
 			}
 		} else { // Not Internet Explorer
-			DOMHelper.removeFromHead(scriptPictureFill);
+			Document.get().getHead().removeChild(HomePage.scriptPictureFill);
 		}
 
+		// Romove from Body
+		Document.get().getBody().removeChild(scriptCustom);
 	}
 
 	private void setLoggedInHeader(boolean loggedIn) {
