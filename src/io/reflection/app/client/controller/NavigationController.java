@@ -12,6 +12,7 @@ import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.MixPanelApiHelper;
 import io.reflection.app.client.mixpanel.MixPanelApi;
+import io.reflection.app.client.page.HomePage;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.Footer;
@@ -27,8 +28,10 @@ import java.util.Map;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.gwt.crypto.bouncycastle.util.encoders.Base64;
@@ -240,10 +243,64 @@ public class NavigationController implements ValueChangeHandler<String> {
 			pages.put(type.toString(), page = type.create());
 		}
 
+		appendScripts(type);
+
 		if (!page.isAttached()) {
 			mPanel.clear();
 			mPanel.add(page);
 		}
+	}
+
+	private void appendScripts(PageType type) {
+		String userAgent = Window.Navigator.getUserAgent();
+		switch (type) {
+		case HomePageType:
+			Document.get().getElementsByTagName("html").getItem(0).setAttribute("style", "height: auto");
+			NavigationController.get().getPageHolderPanel().getElement().setAttribute("style", "padding: 0px 0px 0px 0px;");
+			((Footer) NavigationController.get().getFooter()).setVisible(false);
+			((Header) NavigationController.get().getHeader()).setVisible(false);
+
+			userAgent = Window.Navigator.getUserAgent();
+			if (userAgent.contains("MSIE")) { // Internet Explorer
+				if (userAgent.contains("MSIE 2") || userAgent.contains("MSIE 3") || userAgent.contains("MSIE 4") || userAgent.contains("MSIE 5")
+						|| userAgent.contains("MSIE 6") || userAgent.contains("MSIE 7") || userAgent.contains("MSIE 8")) {
+					Document.get().getHead().appendChild(HomePage.cssCustomIE8);
+					Document.get().getHead().appendChild(HomePage.scriptHtml5Shiv);
+					Document.get().getHead().appendChild(HomePage.scriptRespond);
+				} else {
+					Document.get().getHead().appendChild(HomePage.scriptPictureFill);
+				}
+				if (userAgent.contains("MSIE 9")) {
+					Document.get().getHead().appendChild(HomePage.cssCustomIE9);
+				}
+			} else { // Not Internet Explorer
+				Document.get().getHead().appendChild(HomePage.scriptPictureFill);
+			}
+			break;
+		default:
+			Document.get().getElementsByTagName("html").getItem(0).removeAttribute("style");
+			NavigationController.get().getPageHolderPanel().getElement().setAttribute("style", "padding: 60px 0px 39px 0px;");
+			((Footer) NavigationController.get().getFooter()).setVisible(true);
+			((Header) NavigationController.get().getHeader()).setVisible(true);
+
+			if (userAgent.contains("MSIE")) { // Internet Explorer
+				if (userAgent.contains("MSIE 2") || userAgent.contains("MSIE 3") || userAgent.contains("MSIE 4") || userAgent.contains("MSIE 5")
+						|| userAgent.contains("MSIE 6") || userAgent.contains("MSIE 7") || userAgent.contains("MSIE 8")) {
+					Document.get().getHead().removeChild(HomePage.cssCustomIE8);
+					Document.get().getHead().removeChild(HomePage.scriptHtml5Shiv);
+					Document.get().getHead().removeChild(HomePage.scriptRespond);
+				} else {
+					Document.get().getHead().removeChild(HomePage.scriptPictureFill);
+				}
+				if (userAgent.contains("MSIE 9")) {
+					Document.get().getHead().removeChild(HomePage.cssCustomIE9);
+				}
+			} else { // Not Internet Explorer
+				Document.get().getHead().removeChild(HomePage.scriptPictureFill);
+			}
+			break;
+		}
+
 	}
 
 	/**
@@ -263,7 +320,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 
 	private void addStack(Stack value) {
 		MixPanelApiHelper.trackNavigation(value);
-		
+
 		String page = value.getPage();
 
 		if ("logout".equals(page)) {
