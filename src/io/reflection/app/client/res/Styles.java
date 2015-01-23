@@ -53,6 +53,9 @@ public interface Styles extends ClientBundle {
 	}
 
 	public interface HomePageStyles extends CssResource {
+
+		String temporary();
+
 		@ClassName("actions-container")
 		String actionsContainer();
 

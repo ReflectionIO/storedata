@@ -17,6 +17,8 @@ import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.handler.user.SessionEventHandler;
 import io.reflection.app.client.helper.DOMHelper;
+import io.reflection.app.client.part.Footer;
+import io.reflection.app.client.part.Header;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.User;
 
@@ -25,9 +27,10 @@ import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.LinkElement;
 import com.google.gwt.dom.client.ScriptElement;
-import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.Error;
@@ -59,9 +62,9 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 
 	public HomePage() {
 
-		Styles.INSTANCE.homePageStyle().ensureInjected();
-
 		initWidget(uiBinder.createAndBindUi(this));
+
+		StyleInjector.injectAtStart(Styles.INSTANCE.homePageStyle().getText());
 
 		headerLinks.removeAllChildren();
 
@@ -83,9 +86,32 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
 
-		headerLinks.getStyle().setDisplay(Display.INLINE_BLOCK);
-
+		// Compatibility code
+		Document.get().getElementsByTagName("html").getItem(0).setAttribute("style", "height: auto");
+		NavigationController.get().getPageHolderPanel().getElement().setAttribute("style", "padding: 0px 0px 0px 0px;");
 		Document.get().getBody().setAttribute("style", "height: auto");
+		((Footer) NavigationController.get().getFooter()).setVisible(false);
+		((Header) NavigationController.get().getHeader()).setVisible(false);
+
+		// Append to Head
+		String userAgent = Window.Navigator.getUserAgent();
+		if (userAgent.contains("MSIE")) { // Internet Explorer
+			if (userAgent.contains("MSIE 2") || userAgent.contains("MSIE 3") || userAgent.contains("MSIE 4") || userAgent.contains("MSIE 5")
+					|| userAgent.contains("MSIE 6") || userAgent.contains("MSIE 7") || userAgent.contains("MSIE 8")) {
+				Document.get().getHead().appendChild(HomePage.cssCustomIE8);
+				Document.get().getHead().appendChild(HomePage.scriptHtml5Shiv);
+				Document.get().getHead().appendChild(HomePage.scriptRespond);
+			} else {
+				Document.get().getHead().appendChild(HomePage.scriptPictureFill);
+			}
+			if (userAgent.contains("MSIE 9")) {
+				Document.get().getHead().appendChild(HomePage.cssCustomIE9);
+			}
+		} else { // Not Internet Explorer
+			Document.get().getHead().appendChild(HomePage.scriptPictureFill);
+		}
+
+		// Append to Body
 		Document.get().getBody().appendChild(scriptCustom);
 
 	}
@@ -99,7 +125,32 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 	protected void onDetach() {
 		super.onDetach();
 
+		// Compatibility code
+		Document.get().getElementsByTagName("html").getItem(0).removeAttribute("style");
+		NavigationController.get().getPageHolderPanel().getElement().setAttribute("style", "padding: 60px 0px 39px 0px;");
 		Document.get().getBody().removeAttribute("style");
+		((Footer) NavigationController.get().getFooter()).setVisible(true);
+		((Header) NavigationController.get().getHeader()).setVisible(true);
+
+		// Remove from Head
+		String userAgent = Window.Navigator.getUserAgent();
+		if (userAgent.contains("MSIE")) { // Internet Explorer
+			if (userAgent.contains("MSIE 2") || userAgent.contains("MSIE 3") || userAgent.contains("MSIE 4") || userAgent.contains("MSIE 5")
+					|| userAgent.contains("MSIE 6") || userAgent.contains("MSIE 7") || userAgent.contains("MSIE 8")) {
+				Document.get().getHead().removeChild(HomePage.cssCustomIE8);
+				Document.get().getHead().removeChild(HomePage.scriptHtml5Shiv);
+				Document.get().getHead().removeChild(HomePage.scriptRespond);
+			} else {
+				Document.get().getHead().removeChild(HomePage.scriptPictureFill);
+			}
+			if (userAgent.contains("MSIE 9")) {
+				Document.get().getHead().removeChild(HomePage.cssCustomIE9);
+			}
+		} else { // Not Internet Explorer
+			Document.get().getHead().removeChild(HomePage.scriptPictureFill);
+		}
+
+		// Romove from Body
 		Document.get().getBody().removeChild(scriptCustom);
 	}
 
