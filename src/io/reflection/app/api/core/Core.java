@@ -309,8 +309,21 @@ public final class Core extends ActionHandler {
 			input.listType = ValidationHelper.validateListType(input.listType, input.store);
 
 			DateTime date = new DateTime(input.on.getTime(), DateTimeZone.UTC);
-			Date end = date.minusHours(12).toDate();
-			Date start = date.minusDays(1).toDate();
+			int secondOfMinute = date.getSecondOfMinute();
+			int millisOfSeconds = date.getMillisOfSecond();
+
+			Date end;
+			Date start;
+
+			boolean isPastDate = (secondOfMinute == 0) && (millisOfSeconds == 0);
+
+			if (isPastDate) { // a date in the past
+				end = date.plusHours(24).toDate();
+				start = date.toDate();
+			} else { // today
+				end = date.minusHours(12).toDate();
+				start = date.minusHours(24).toDate();
+			}
 
 			List<Rank> ranks = RankServiceProvider.provide().getRanks(input.country, input.store, input.category, input.listType, start, end, input.pager);
 
@@ -427,8 +440,21 @@ public final class Core extends ActionHandler {
 				}
 
 				DateTime date = new DateTime(input.on.getTime(), DateTimeZone.UTC);
-				Date end = date.minusHours(12).toDate();
-				Date start = date.minusDays(1).toDate();
+				int secondOfMinute = date.getSecondOfMinute();
+				int millisOfSeconds = date.getMillisOfSecond();
+
+				Date end;
+				Date start;
+
+				boolean isPastDate = (secondOfMinute == 0) && (millisOfSeconds == 0);
+
+				if (isPastDate) { // a date in the past
+					end = date.plusHours(24).toDate();
+					start = date.toDate();
+				} else { // today
+					end = date.minusHours(12).toDate();
+					start = date.minusHours(24).toDate();
+				}
 
 				Set<String> itemIds = new HashSet<String>();
 				// final Map<String, Rank> lookup = new HashMap<String, Rank>();
