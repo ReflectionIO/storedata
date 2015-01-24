@@ -6,7 +6,7 @@
 //  Copyright © 2013 SPACEHOPPER STUDIOS LTD. All rights reserved.
 //
 package io.reflection.app.client.page;
-import static io.reflection.app.client.helper.FormattingHelper.*;
+
 import static io.reflection.app.client.controller.FilterController.CATEGORY_KEY;
 import static io.reflection.app.client.controller.FilterController.COUNTRY_KEY;
 import static io.reflection.app.client.controller.FilterController.DAILY_DATA_KEY;
@@ -16,6 +16,7 @@ import static io.reflection.app.client.controller.FilterController.GROSSING_LIST
 import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
 import static io.reflection.app.client.controller.FilterController.PAID_LIST_TYPE;
 import static io.reflection.app.client.controller.FilterController.STORE_KEY;
+import static io.reflection.app.client.helper.FormattingHelper.WHOLE_NUMBER_FORMAT;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
 import io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler;
@@ -45,6 +46,7 @@ import java.util.Map;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.resources.client.CssResource;
@@ -101,43 +103,44 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		SafeHtml code(Long code);
 	}
 
-	@UiField(provided = true) CellTable<RanksGroup> mRanks = new CellTable<RanksGroup>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true) CellTable<RanksGroup> ranksTable = new CellTable<RanksGroup>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 
 	@UiField RankSidePanel mSidePanel;
 
-	@UiField InlineHyperlink mAll;
-	@UiField InlineHyperlink mFree;
-	@UiField InlineHyperlink mGrossing;
-	@UiField InlineHyperlink mPaid;
+	@UiField InlineHyperlink allLink;
+	@UiField InlineHyperlink freeLink;
+	@UiField InlineHyperlink grossingLink;
+	@UiField InlineHyperlink paidLink;
 
-	@UiField LIElement mAllItem;
-	@UiField LIElement mFreeItem;
-	@UiField LIElement mGrossingItem;
-	@UiField LIElement mPaidItem;
+	@UiField LIElement allItem;
+	@UiField LIElement freeItem;
+	@UiField LIElement grossingItem;
+	@UiField LIElement paidItem;
 
 	@UiField HTMLPanel showMorePanel;
 	@UiField Button viewAllBtn;
 	@UiField InlineHyperlink redirect;
 
-	private Column<RanksGroup, Rank> mGrossingColumn;
-	private Column<RanksGroup, Rank> mFreeColumn;
-	private Column<RanksGroup, Rank> mPaidColumn;
+	private TextColumn<RanksGroup> rankColumn;
+	private Column<RanksGroup, Rank> grossingColumn;
+	private Column<RanksGroup, Rank> freeColumn;
+	private Column<RanksGroup, Rank> paidColumn;
+	private TextColumn<RanksGroup> priceColumn;
+	private TextColumn<RanksGroup> downloadsColumn;
+	private TextColumn<RanksGroup> revenueColumn;
+	private Column<RanksGroup, SafeHtml> iapColumn;
+	private Column<RanksGroup, SafeHtml> comingSoonColumn;
 
-	private TextColumn<RanksGroup> mPriceColumn;
-	private TextColumn<RanksGroup> mDownloadsColumn;
-	private TextColumn<RanksGroup> mRevenueColumn;
-	private Column<RanksGroup, SafeHtml> mIapColumn;
+	private Map<String, LIElement> tabs = new HashMap<String, LIElement>();
 
-	private Map<String, LIElement> mTabs = new HashMap<String, LIElement>();
-
-	private TextHeader mPaidHeader;
-	private TextHeader mFreeHeader;
-	private TextHeader mGrossingHeader;
-
-	private TextHeader mDownloadsHeader;
-	private TextHeader mRevenueHeader;
-	private TextHeader mIapHeader;
-	private TextHeader mPriceHeader;
+	private TextHeader rankHeader;
+	private TextHeader paidHeader;
+	private TextHeader freeHeader;
+	private TextHeader grossingHeader;
+	private TextHeader downloadsHeader;
+	private TextHeader revenueHeader;
+	private TextHeader iapHeader;
+	private TextHeader priceHeader;
 
 	private String selectedTab = OVERALL_LIST_TYPE;
 
@@ -147,27 +150,38 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		initWidget(uiBinder.createAndBindUi(this));
 
 		// set the overall tab title (this is because it is modified for admins to contain the gather code)
-		mAll.setText(ALL_TEXT);
+		allLink.setText(ALL_TEXT);
 
 		showModelPredictions = SessionController.get().isLoggedInUserAdmin();
 
 		createColumns();
 
-		mTabs.put(OVERALL_LIST_TYPE, mAllItem);
-		mTabs.put(FREE_LIST_TYPE, mFreeItem);
-		mTabs.put(PAID_LIST_TYPE, mPaidItem);
-		mTabs.put(GROSSING_LIST_TYPE, mGrossingItem);
+		tabs.put(OVERALL_LIST_TYPE, allItem);
+		tabs.put(FREE_LIST_TYPE, freeItem);
+		tabs.put(PAID_LIST_TYPE, paidItem);
+		tabs.put(GROSSING_LIST_TYPE, grossingItem);
+
+		if (!SessionController.get().isLoggedInUserAdmin()) {
+			paidLink.setText("(Coming soon)");
+			paidLink.getElement().getStyle().setColor("lightgrey");
+			paidLink.getElement().getStyle().setCursor(Cursor.DEFAULT);
+			paidItem.getStyle().setCursor(Cursor.DEFAULT);
+			grossingLink.setText("(Coming soon)");
+			grossingLink.getElement().getStyle().setColor("lightgrey");
+			grossingLink.getElement().getStyle().setCursor(Cursor.DEFAULT);
+			grossingItem.getStyle().setCursor(Cursor.DEFAULT);
+		}
 
 		HTMLPanel emptyTableWidget = new HTMLPanel("<h6 class=" + style.emptyTableHeading() + ">No ranking data for filter!</h6>");
 		emptyTableWidget.setStyleName(style.emptyTableContainer());
-		mRanks.setEmptyTableWidget(emptyTableWidget);
-		mRanks.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
+		ranksTable.setEmptyTableWidget(emptyTableWidget);
+		ranksTable.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 
-		RankController.get().addDataDisplay(mRanks);
+		RankController.get().addDataDisplay(ranksTable);
 	}
 
 	private void createColumns() {
-		TextColumn<RanksGroup> position = new TextColumn<RanksGroup>() {
+		rankColumn = new TextColumn<RanksGroup>() {
 
 			@Override
 			public String getValue(RanksGroup object) {
@@ -178,7 +192,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 		AppRankCell appRankCell = new AppRankCell(showModelPredictions);
 
-		mPaidColumn = new Column<RanksGroup, Rank>(appRankCell) {
+		paidColumn = new Column<RanksGroup, Rank>(appRankCell) {
 
 			@Override
 			public Rank getValue(RanksGroup object) {
@@ -186,7 +200,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			}
 		};
 
-		mFreeColumn = new Column<RanksGroup, Rank>(appRankCell) {
+		freeColumn = new Column<RanksGroup, Rank>(appRankCell) {
 
 			@Override
 			public Rank getValue(RanksGroup object) {
@@ -195,7 +209,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 		};
 
-		mGrossingColumn = new Column<RanksGroup, Rank>(appRankCell) {
+		grossingColumn = new Column<RanksGroup, Rank>(appRankCell) {
 
 			@Override
 			public Rank getValue(RanksGroup object) {
@@ -203,7 +217,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			}
 		};
 
-		mPriceColumn = new TextColumn<RanksGroup>() {
+		priceColumn = new TextColumn<RanksGroup>() {
 
 			@Override
 			public String getValue(RanksGroup object) {
@@ -212,27 +226,27 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			}
 
 		};
-		mDownloadsColumn = new TextColumn<RanksGroup>() {
+		downloadsColumn = new TextColumn<RanksGroup>() {
 
 			@Override
 			public String getValue(RanksGroup object) {
 				Rank rank = rankForListType(object);
-				return WHOLE_NUMBER_FORMAT.format(rank.downloads);
+				return (rank.downloads != null) ? WHOLE_NUMBER_FORMAT.format(rank.downloads) : "-";
 			}
 
 		};
 
-		mRevenueColumn = new TextColumn<RanksGroup>() {
+		revenueColumn = new TextColumn<RanksGroup>() {
 
 			@Override
 			public String getValue(RanksGroup object) {
 				Rank rank = rankForListType(object);
-				return FormattingHelper.asWholeMoneyString(rank.currency, rank.revenue.floatValue());
+				return (rank.currency != null && rank.revenue != null) ? FormattingHelper.asWholeMoneyString(rank.currency, rank.revenue.floatValue()) : "-";
 			}
 
 		};
 
-		mIapColumn = new Column<RanksGroup, SafeHtml>(new SafeHtmlCell()) {
+		iapColumn = new Column<RanksGroup, SafeHtml>(new SafeHtmlCell()) {
 
 			private final String IAP_DONT_KNOW_HTML = "<span class=\"icon-help " + style.silver() + "\"></span>";
 			private final String IAP_YES_HTML = "<span class=\"icon-ok " + style.green() + "\"></span>";
@@ -246,27 +260,26 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 		};
 
-		TextHeader rankHeader = new TextHeader("Rank");
-		rankHeader.setHeaderStyleNames("col-xs-1");
-		mRanks.addColumn(position, rankHeader);
-		mPaidHeader = new TextHeader("Paid");
-		mFreeHeader = new TextHeader("Free");
-		mGrossingHeader = new TextHeader("Grossing");
-		mPriceHeader = new TextHeader("Price");
-		mDownloadsHeader = new TextHeader("Downloads");
-		mRevenueHeader = new TextHeader("Revenue");
-		mIapHeader = new TextHeader("IAP");
+		comingSoonColumn = new Column<RanksGroup, SafeHtml>(new SafeHtmlCell()) {
 
-		mRanks.setWidth("100%", true);
-		mRanks.setColumnWidth(position, 25.0, Unit.PCT);
-		mRanks.setColumnWidth(mPaidColumn, 100.0, Unit.PCT);
-		mRanks.setColumnWidth(mFreeColumn, 100.0, Unit.PCT);
-		mRanks.setColumnWidth(mGrossingColumn, 100.0, Unit.PCT);
-		mRanks.setColumnWidth(mPriceColumn, 60.0, Unit.PCT);
-		mRanks.setColumnWidth(mDownloadsColumn, 60.0, Unit.PCT);
-		mRanks.setColumnWidth(mRevenueColumn, 60.0, Unit.PCT);
-		mRanks.setColumnWidth(mIapColumn, 20.0, Unit.PCT);
+			@Override
+			public SafeHtml getValue(RanksGroup object) {
+				return SafeHtmlUtils.fromSafeConstant("<p>Coming Soon</p>");
+			}
 
+		};
+
+		rankHeader = new TextHeader("Rank");
+		paidHeader = new TextHeader("Paid");
+		freeHeader = new TextHeader("Free");
+		grossingHeader = new TextHeader("Grossing");
+		priceHeader = new TextHeader("Price");
+		downloadsHeader = new TextHeader("Downloads");
+		revenueHeader = new TextHeader("Revenue");
+		iapHeader = new TextHeader("IAP");
+
+		ranksTable.setWidth("100%", true);
+		ranksTable.setColumnWidth(comingSoonColumn, 100.0, Unit.PCT);
 	}
 
 	/**
@@ -299,7 +312,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 							.equals(name)))) {
 
 				if (foundDailyData) {
-					mRanks.redraw();
+					ranksTable.redraw();
 				} else {
 					RankController.get().reset();
 					RankController.get().fetchTopItems();
@@ -326,7 +339,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 					|| previousValues.get(END_DATE_KEY) != null || (foundDailyData = (previousValues.get(DAILY_DATA_KEY) != null))) {
 
 				if (foundDailyData) {
-					mRanks.redraw();
+					ranksTable.redraw();
 				} else {
 					RankController.get().reset();
 					RankController.get().fetchTopItems();
@@ -408,69 +421,103 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 		if (OVERALL_LIST_TYPE.equals(selectedTab)) {
 			removeAllColumns();
-			addColumn(mPaidColumn, mPaidHeader);
-			addColumn(mFreeColumn, mFreeHeader);
-			addColumn(mGrossingColumn, mGrossingHeader);
+			ranksTable.setColumnWidth(rankColumn, 13.0, Unit.PCT);
+			ranksTable.setColumnWidth(freeColumn, 29.0, Unit.PCT);
+			ranksTable.setColumnWidth(paidColumn, 29.0, Unit.PCT);
+			ranksTable.setColumnWidth(grossingColumn, 29.0, Unit.PCT);
+			addColumn(rankColumn, rankHeader);
+			addColumn(freeColumn, freeHeader);
+			addColumn(paidColumn, paidHeader);
+			addColumn(grossingColumn, grossingHeader);
 		} else if (FREE_LIST_TYPE.equals(selectedTab)) {
 			removeAllColumns();
-
-			addColumn(mFreeColumn, mFreeHeader);
-
-			addColumn(mPriceColumn, mPriceHeader);
-			addColumn(mDownloadsColumn, mDownloadsHeader);
-			addColumn(mRevenueColumn, mRevenueHeader);
-			addColumn(mIapColumn, mIapHeader);
+			if (SessionController.get().isLoggedInUserAdmin()) {
+				ranksTable.setColumnWidth(rankColumn, 13.0, Unit.PCT);
+				ranksTable.setColumnWidth(freeColumn, 35.0, Unit.PCT);
+				ranksTable.setColumnWidth(priceColumn, 13.0, Unit.PCT);
+				ranksTable.setColumnWidth(downloadsColumn, 13.0, Unit.PCT);
+				ranksTable.setColumnWidth(revenueColumn, 13.0, Unit.PCT);
+				ranksTable.setColumnWidth(iapColumn, 13.0, Unit.PCT);
+			} else {
+				ranksTable.setColumnWidth(rankColumn, 14.0, Unit.PCT);
+				ranksTable.setColumnWidth(freeColumn, 40.0, Unit.PCT);
+				ranksTable.setColumnWidth(priceColumn, 16.0, Unit.PCT);
+				ranksTable.setColumnWidth(downloadsColumn, 16.0, Unit.PCT);
+				ranksTable.setColumnWidth(iapColumn, 14.0, Unit.PCT);
+			}
+			addColumn(rankColumn, rankHeader);
+			addColumn(freeColumn, freeHeader);
+			addColumn(priceColumn, priceHeader);
+			addColumn(downloadsColumn, downloadsHeader);
+			if (SessionController.get().isLoggedInUserAdmin()) {
+				addColumn(revenueColumn, revenueHeader);
+			}
+			addColumn(iapColumn, iapHeader);
 		} else if (PAID_LIST_TYPE.equals(selectedTab)) {
-			removeAllColumns();
-
-			addColumn(mPaidColumn, mPaidHeader);
-
-			addColumn(mPriceColumn, mPriceHeader);
-			addColumn(mDownloadsColumn, mDownloadsHeader);
-			addColumn(mRevenueColumn, mRevenueHeader);
-			addColumn(mIapColumn, mIapHeader);
+			if (SessionController.get().isLoggedInUserAdmin()) {
+				removeAllColumns();
+				ranksTable.setColumnWidth(rankColumn, 13.0, Unit.PCT);
+				ranksTable.setColumnWidth(paidColumn, 35.0, Unit.PCT);
+				ranksTable.setColumnWidth(priceColumn, 13.0, Unit.PCT);
+				ranksTable.setColumnWidth(downloadsColumn, 13.0, Unit.PCT);
+				ranksTable.setColumnWidth(revenueColumn, 13.0, Unit.PCT);
+				ranksTable.setColumnWidth(iapColumn, 13.0, Unit.PCT);
+				addColumn(rankColumn, rankHeader);
+				addColumn(paidColumn, paidHeader);
+				addColumn(priceColumn, priceHeader);
+				addColumn(downloadsColumn, downloadsHeader);
+				addColumn(revenueColumn, revenueHeader);
+				addColumn(iapColumn, iapHeader);
+			}
 		} else if (GROSSING_LIST_TYPE.equals(selectedTab)) {
-			removeAllColumns();
-
-			addColumn(mGrossingColumn, mGrossingHeader);
-
-			addColumn(mPriceColumn, mPriceHeader);
-			addColumn(mDownloadsColumn, mDownloadsHeader);
-			addColumn(mRevenueColumn, mRevenueHeader);
-			addColumn(mIapColumn, mIapHeader);
+			if (SessionController.get().isLoggedInUserAdmin()) {
+				removeAllColumns();
+				ranksTable.setColumnWidth(rankColumn, 13.0, Unit.PCT);
+				ranksTable.setColumnWidth(grossingColumn, 35.0, Unit.PCT);
+				ranksTable.setColumnWidth(priceColumn, 13.0, Unit.PCT);
+				ranksTable.setColumnWidth(downloadsColumn, 13.0, Unit.PCT);
+				ranksTable.setColumnWidth(revenueColumn, 13.0, Unit.PCT);
+				ranksTable.setColumnWidth(iapColumn, 13.0, Unit.PCT);
+				addColumn(rankColumn, rankHeader);
+				addColumn(grossingColumn, grossingHeader);
+				addColumn(priceColumn, priceHeader);
+				addColumn(downloadsColumn, downloadsHeader);
+				addColumn(revenueColumn, revenueHeader);
+				addColumn(iapColumn, iapHeader);
+			}
 		}
 
 	}
 
 	private void removeColumn(Column<RanksGroup, ?> column) {
-		int currentIndex = mRanks.getColumnIndex(column);
+		int currentIndex = ranksTable.getColumnIndex(column);
 
 		if (currentIndex != -1) {
-			mRanks.removeColumn(column);
+			ranksTable.removeColumn(column);
 		}
 	}
 
 	private void removeAllColumns() {
-		removeColumn(mFreeColumn);
-		removeColumn(mPaidColumn);
-		removeColumn(mGrossingColumn);
-
-		removeColumn(mPriceColumn);
-		removeColumn(mRevenueColumn);
-		removeColumn(mDownloadsColumn);
-		removeColumn(mIapColumn);
+		removeColumn(rankColumn);
+		removeColumn(freeColumn);
+		removeColumn(paidColumn);
+		removeColumn(grossingColumn);
+		removeColumn(priceColumn);
+		removeColumn(revenueColumn);
+		removeColumn(downloadsColumn);
+		removeColumn(iapColumn);
 	}
 
 	private void addColumn(Column<RanksGroup, ?> column, TextHeader header) {
-		mRanks.addColumn(column, header);
+		ranksTable.addColumn(column, header);
 	}
 
 	private void refreshTabs() {
-		for (String key : mTabs.keySet()) {
-			mTabs.get(key).removeClassName("active");
+		for (String key : tabs.keySet()) {
+			tabs.get(key).removeClassName("active");
 		}
 
-		LIElement selected = mTabs.get(selectedTab);
+		LIElement selected = tabs.get(selectedTab);
 
 		if (selected != null) {
 			selected.addClassName("active");
@@ -480,11 +527,11 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	@UiHandler("viewAllBtn")
 	void onViewAllButtonClicked(ClickEvent event) {
 		if (((Button) event.getSource()).isEnabled()) {
-			if (mRanks.getVisibleItemCount() == ServiceConstants.STEP_VALUE) {
-				mRanks.setVisibleRange(0, VIEW_ALL_LENGTH_VALUE);
+			if (ranksTable.getVisibleItemCount() == ServiceConstants.STEP_VALUE) {
+				ranksTable.setVisibleRange(0, VIEW_ALL_LENGTH_VALUE);
 				viewAllBtn.setText("View Less Apps");
 			} else {
-				mRanks.setVisibleRange(0, ServiceConstants.STEP_VALUE);
+				ranksTable.setVisibleRange(0, ServiceConstants.STEP_VALUE);
 				viewAllBtn.setText("View All Apps");
 			}
 		}
@@ -501,7 +548,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 		if (PageType.RanksPageType.equals(current.getPage())) {
 
-			if (mRanks.getVisibleItemCount() > 0) {
+			if (ranksTable.getVisibleItemCount() > 0) {
 				showMorePanel.setVisible(true);
 			}
 
@@ -521,13 +568,13 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 				String currentFilter = FilterController.get().asRankFilterString();
 
 				if (currentFilter != null && currentFilter.length() > 0) {
-					mAll.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, OVERALL_LIST_TYPE,
-							currentFilter));
-					mPaid.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, PAID_LIST_TYPE,
-							currentFilter));
-					mFree.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, FREE_LIST_TYPE,
-							currentFilter));
-					mGrossing.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
+					allLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
+							OVERALL_LIST_TYPE, currentFilter));
+					paidLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
+							PAID_LIST_TYPE, currentFilter));
+					freeLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
+							FREE_LIST_TYPE, currentFilter));
+					grossingLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
 							GROSSING_LIST_TYPE, currentFilter));
 				}
 
@@ -536,15 +583,24 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 				refreshTabs();
 				refreshRanks();
 
-				if (FREE_LIST_TYPE.equals(selectedTab) || PAID_LIST_TYPE.equals(selectedTab) || GROSSING_LIST_TYPE.equals(selectedTab)) {
-					mSidePanel.setDataFilterVisible(false);
-				} else {
-					mSidePanel.setDataFilterVisible(true);
-					selectedTab = OVERALL_LIST_TYPE;
+				if (SessionController.get().isLoggedInUserAdmin()) {
+					if (FREE_LIST_TYPE.equals(selectedTab) || PAID_LIST_TYPE.equals(selectedTab) || GROSSING_LIST_TYPE.equals(selectedTab)) {
+						mSidePanel.setDataFilterVisible(false);
+					} else {
+						mSidePanel.setDataFilterVisible(true);
+						selectedTab = OVERALL_LIST_TYPE;
+					}
 				}
 
 				mSidePanel.updateFromFilter();
 			}
+		}
+	}
+
+	@UiHandler("paidLink")
+	void onComingSoonClicked(ClickEvent event) {
+		if (!SessionController.get().isLoggedInUserAdmin()) {
+			event.preventDefault();
 		}
 	}
 
@@ -592,13 +648,13 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 			if (SessionController.get().isLoggedInUserAdmin()) {
 				if (output.freeRanks != null && output.freeRanks.size() > 0 && output.freeRanks.get(0).code != null) {
-					mAll.setHTML(AllAdminCodeTemplate.INSTANCE.code(output.freeRanks.get(0).code));
+					allLink.setHTML(AllAdminCodeTemplate.INSTANCE.code(output.freeRanks.get(0).code));
 				} else if (output.paidRanks != null && output.paidRanks.size() > 0 && output.paidRanks.get(0).code != null) {
-					mAll.setHTML(AllAdminCodeTemplate.INSTANCE.code(output.paidRanks.get(0).code));
+					allLink.setHTML(AllAdminCodeTemplate.INSTANCE.code(output.paidRanks.get(0).code));
 				} else if (output.grossingRanks != null && output.grossingRanks.size() > 0 && output.grossingRanks.get(0).code != null) {
-					mAll.setHTML(AllAdminCodeTemplate.INSTANCE.code(output.grossingRanks.get(0).code));
+					allLink.setHTML(AllAdminCodeTemplate.INSTANCE.code(output.grossingRanks.get(0).code));
 				} else {
-					mAll.setText(ALL_TEXT);
+					allLink.setText(ALL_TEXT);
 				}
 			}
 		} else {

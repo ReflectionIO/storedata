@@ -52,8 +52,8 @@ public class RankSidePanel extends Composite {
 	// @UiField ListBox mListType;
 	@UiField ListBox mCountry;
 	@UiField ListBox category;
-	@UiField RadioButton mDailyDataRevenue;
-	@UiField RadioButton mDailyDataDownloads;
+	@UiField RadioButton dailyDataRevenue;
+	@UiField RadioButton dailyDataDownloads;
 
 	@UiField HTMLPanel dailyDataRadio;
 
@@ -61,7 +61,11 @@ public class RankSidePanel extends Composite {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		BootstrapGwtDatePicker.INSTANCE.styles().ensureInjected();
-		
+
+		if (!SessionController.get().isLoggedInUserAdmin()) {
+			dailyDataRadio.removeFromParent();
+		}
+
 		FilterHelper.addStores(mAppStore, SessionController.get().isLoggedInUserAdmin());
 		FilterHelper.addCountries(mCountry, SessionController.get().isLoggedInUserAdmin());
 		FilterHelper.addCategories(category, SessionController.get().isLoggedInUserAdmin());
@@ -116,12 +120,12 @@ public class RankSidePanel extends Composite {
 		FilterController.get().setCategory(getCatgegory());
 	}
 
-	@UiHandler("mDailyDataRevenue")
+	@UiHandler("dailyDataRevenue")
 	void onDailyDataRevenueSelected(ClickEvent event) {
 		FilterController.get().setDailyData(REVENUE_DAILY_DATA_TYPE);
 	}
 
-	@UiHandler("mDailyDataDownloads")
+	@UiHandler("dailyDataDownloads")
 	void onDailyDataDownloadsSelected(ClickEvent event) {
 		FilterController.get().setDailyData(DOWNLOADS_DAILY_DATA_TYPE);
 	}
@@ -173,9 +177,9 @@ public class RankSidePanel extends Composite {
 
 		String dailyDataType = fc.getFilter().getDailyData();
 		if (REVENUE_DAILY_DATA_TYPE.equals(dailyDataType)) {
-			mDailyDataRevenue.setValue(true);
+			dailyDataRevenue.setValue(true);
 		} else {
-			mDailyDataDownloads.setValue(true);
+			dailyDataDownloads.setValue(true);
 		}
 	}
 
