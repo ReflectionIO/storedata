@@ -8,7 +8,7 @@
     <ui:with field="dailyData" type="com.google.gwt.safehtml.shared.SafeHtml" />
     <ui:with field="displayDailyData" type="java.lang.String" />
 
-    <ui:style>
+    <ui:style gss="true">
     .image {
         width: 45px;
         height: 45px;
@@ -19,7 +19,6 @@
         overflow: hidden;
         padding-left: 20px;
         white-space: nowrap;
-        overflow: hidden;
         text-overflow: ellipsis;
     }
     </ui:style>

@@ -2,7 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:with field='images' type='io.reflection.app.client.res.Images' />
-	<ui:style>
+	<ui:style gss="true">
 	.partStyle {
 		margin-top: 50px;
 		margin-bottom: 60px;

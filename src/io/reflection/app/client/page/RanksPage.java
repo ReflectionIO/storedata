@@ -6,6 +6,7 @@
 //  Copyright © 2013 SPACEHOPPER STUDIOS LTD. All rights reserved.
 //
 package io.reflection.app.client.page;
+
 import static io.reflection.app.client.helper.FormattingHelper.*;
 import static io.reflection.app.client.controller.FilterController.CATEGORY_KEY;
 import static io.reflection.app.client.controller.FilterController.COUNTRY_KEY;
@@ -171,7 +172,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 			@Override
 			public String getValue(RanksGroup object) {
-				return object.free.position.toString();
+				return (object.free.position != null) ? object.free.position.toString() : "-";
 			}
 
 		};
@@ -208,16 +209,16 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			@Override
 			public String getValue(RanksGroup object) {
 				Rank rank = rankForListType(object);
-				return FormattingHelper.asPriceString(rank.currency, rank.price.floatValue());
+				return (rank.currency != null && rank.price != null) ? FormattingHelper.asPriceString(rank.currency, rank.price.floatValue()) : "-";
 			}
-
 		};
+
 		mDownloadsColumn = new TextColumn<RanksGroup>() {
 
 			@Override
 			public String getValue(RanksGroup object) {
 				Rank rank = rankForListType(object);
-				return WHOLE_NUMBER_FORMAT.format(rank.downloads);
+				return (rank.downloads != null) ? WHOLE_NUMBER_FORMAT.format(rank.downloads) : "-";
 			}
 
 		};
@@ -227,7 +228,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			@Override
 			public String getValue(RanksGroup object) {
 				Rank rank = rankForListType(object);
-				return FormattingHelper.asWholeMoneyString(rank.currency, rank.revenue.floatValue());
+				return (rank.currency != null && rank.revenue != null) ? FormattingHelper.asWholeMoneyString(rank.currency, rank.revenue.floatValue()) : "-";
 			}
 
 		};

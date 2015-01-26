@@ -1,19 +1,20 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
-
 	<ui:import field="io.reflection.app.client.page.PageType.TermsPageType" />
 	<ui:import field="io.reflection.app.client.page.PageType.HomePageType" />
 
-	<ui:style>
+	<ui:import field="io.reflection.app.client.res.Styles.INSTANCE" />
+
+	<ui:style gss="true">
 	
 	</ui:style>
 
 
-	<g:HTMLPanel>
+	<g:HTMLPanel styleName="{INSTANCE.homePageStyle.temporary}">
 		<!--[if lt IE 8]> <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> 
 			to improve your experience.</p> <![endif] -->
-		<header class="header">
-			<div class="site-logo">
+		<header class="{INSTANCE.homePageStyle.header}">
+			<div class="{INSTANCE.homePageStyle.siteLogo}">
 				<g:InlineHyperlink targetHistoryToken="{HomePageType.asTargetHistoryToken}">
 					<picture> <!-- uses js/picturefill.2.2.0.min.js -->
 						<!--[if IE 9]><video style="display: none;"><![endif] -->
@@ -24,32 +25,36 @@
 					</picture>
 				</g:InlineHyperlink>
 			</div>
-			<div class="header__actions" ui:field="headerLinks">
+			<div class="{INSTANCE.homePageStyle.header__actions}" ui:field="headerLinks">
+				<g:InlineHyperlink ui:field="applyBtn" styleName="{INSTANCE.homePageStyle.refButtonApply}">Apply</g:InlineHyperlink>
+				<g:InlineHyperlink ui:field="loginBtn" styleName="{INSTANCE.homePageStyle.linkLogIn} icon-login">Log In</g:InlineHyperlink>
+				<g:InlineHyperlink ui:field="leaderboardBtn" styleName="{INSTANCE.homePageStyle.linkLeaderboard} icon-chart-bar">Leaderboard</g:InlineHyperlink>
+				<g:InlineHyperlink ui:field="logoutBtn" styleName="{INSTANCE.homePageStyle.linkLogIn} icon-logout" targetHistoryToken="logout">Sign Out</g:InlineHyperlink>
 			</div>
 		</header>
 
 		<div>
-			<div id="main" class="l-main" role="main">
+			<div id="main" role="main">
 
-				<div class="window-height-scroll-effect-container landing-section-main-scroll-effect-container">
-					<div class="section-size-shadow-layer"></div>
-					<section class="landing-section-main">
-						<div class="landing-section-main__content">
-							<div class="landing-section-main__column-one">
+				<div class="{INSTANCE.homePageStyle.windowHeightScrollEffectContainer} {INSTANCE.homePageStyle.landingSectionMainScrollEffectContainer}">
+					<div class="{INSTANCE.homePageStyle.sectionSizeShadowLayer"></div>
+					<section class="{INSTANCE.homePageStyle.landingSectionMain}">
+						<div class="{INSTANCE.homePageStyle.landingSectionMain__content}">
+							<div class="{INSTANCE.homePageStyle.landingSectionMain__columnOne}">
 								<div>
 									<h1>App Intelligence to Create &amp; Plan More Successful Products</h1>
 									<p>Reflection is the only intelligence tool with a freemium pricing model that fits the needs of the entire app ecosystem.</p>
-									<div class="actions-container">
+									<div class="{INSTANCE.homePageStyle.actionsContainer}">
 										<a href="#anchor-how-intelligence-helps" class="icon-angle-right js-scroll-to-anchor">How Intelligence Helps</a>
-										<g:InlineHyperlink ui:field="applyNowBtn" styleName="ref-button-cta-large">Apply Now</g:InlineHyperlink>
+										<g:InlineHyperlink ui:field="applyNowBtn" styleName="{INSTANCE.homePageStyle.refButtonCtaLarge}">Apply Now</g:InlineHyperlink>
 									</div>
 								</div>
 							</div>
-							<div class="landing-section-main__column-two">
+							<div class="{INSTANCE.homePageStyle.landingSectionMain__columnTwo}">
 								<img src="images/placeholder/placeholder-landing-section-1.png" alt="Leaderboard screenshot" />
 							</div>
 						</div>
-						<div class="list-partners">
+						<div class="{INSTANCE.homePageStyle.listPartners}">
 							<ul>
 								<li>
 									<img src="images/logos/Partner_Soundcloud@2x.png" alt="Soundcloud logo" />
@@ -78,8 +83,8 @@
 					</section>
 				</div>
 
-				<section class="landing-section-insights" id="anchor-how-intelligence-helps">
-					<div class="landing-section-insights__column_one">
+				<section class="{INSTANCE.homePageStyle.landingSectionInsights}" id="anchor-how-intelligence-helps">
+					<div class="{INSTANCE.homePageStyle.landingSectionInsights__column_one}">
 						<picture>
 							<!--[if IE 9]><video style="display: none;"><![endif] -->
 							<source srcset="images/placeholder/placeholder-laptop-large.png" media="(min-width: 720px)" />
@@ -88,8 +93,8 @@
 							<img src="images/placeholder/placeholder-laptop-large.png" alt="Leaderboard screenshot" />
 						</picture>
 					</div>
-					<div class="landing-column-thin">
-						<div class="landing-column-thin__content">
+					<div class="{INSTANCE.homePageStyle.landingColumnThin}">
+						<div class="{INSTANCE.homePageStyle.landingColumnThin__content}">
 							<h2>Discover Powerful Insights</h2>
 							<p>Reflection's app leaderboard ranks all apps in the store according to the money they make or the number of times they are downloaded.</p>
 							<p>See who is monetising their users most effectively, what pricing models and app types generate the most revenue and identify the themes and design
@@ -99,8 +104,8 @@
 					</div>
 				</section>
 
-				<section class="landing-section-analyse">
-					<div class="landing-section-analyse__column_two">
+				<section class="{INSTANCE.homePageStyle.landingSectionAnalyse}">
+					<div class="{INSTANCE.homePageStyle.landingSectionAnalyse__column_two}">
 						<picture>
 							<!--[if IE 9]><video style="display: none;"><![endif] -->
 							<source srcset="images/placeholder/placeholder-laptop-analyse-large.png" media="(min-width: 720px)" />
@@ -109,8 +114,8 @@
 							<img src="images/placeholder/placeholder-laptop-analyse-large.png" alt="Analysis screenshot" />
 						</picture>
 					</div>
-					<div class="landing-column-thin">
-						<div class="landing-column-thin__content">
+					<div class="{INSTANCE.homePageStyle.landingColumnThin}">
+						<div class="{INSTANCE.homePageStyle.landingColumnThin__content}">
 							<h2>Analyse App Performance</h2>
 							<p>Drill down into your own individual apps and those of other developers to analyse their rank, downloads and revenue data over a given period of time.</p>
 							<p>Discover how they are affected by internal or external influences such as time, day of the week, app update releases or promotions and use this
@@ -119,9 +124,9 @@
 					</div>
 				</section>
 
-				<section class="landing-section-story">
-					<div class="landing-column-thin">
-						<div class="landing-column-thin__content">
+				<section class="{INSTANCE.homePageStyle.landingSectionStory}">
+					<div class="{INSTANCE.homePageStyle.landingColumnThin}">
+						<div class="{INSTANCE.homePageStyle.landingColumnThin__content}">
 							<blockquote>
 								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 									quis nostrud exercitation</p>
@@ -152,8 +157,8 @@
 							</blockquote>
 						</div>
 					</div>
-					<div class="landing-column-wide">
-						<div class="landing-column-wide__content">
+					<div class="{INSTANCE.homePageStyle.landingColumnWide}">
+						<div class="{INSTANCE.homePageStyle.landingColumnWide__content}">
 							<h2>Our Story</h2>
 							<p>Revenue, download and rank data is an essential source of product and commercial insight that until now was only available to the few members of the
 								development community who could afford to pay the hefty fee for it.</p>
@@ -162,18 +167,18 @@
 								Sega, Miniclip, Soundcloud etc etc etc</p>
 							<p>The accuracy of our data is all-important and maintained through detailed mathematical algorithms developed in conjunction with our statistical
 								partner, Imperial College London.</p>
-							<div class="logo-ref-imp-container">
-								<img src="images/logos/Reflection_Imperial_Logos.png" alt="Reflection and Imperial College logos" class="logo-ref-imp" />
+							<div class="{INSTANCE.homePageStyle.logoRefImpContainer}">
+								<img src="images/logos/Reflection_Imperial_Logos.png" alt="Reflection and Imperial College logos" class="{INSTANCE.homePageStyle.logoRefImp}" />
 							</div>
 						</div>
 					</div>
 				</section>
 
-				<section class="landing-section-careers">
-					<img src="images/careers/careers-col-thin.jpg" alt="Patrick" class="img-width-landing-column-thin" />
-					<img src="images/careers/careers-col-wide.jpg" alt="Chi, Gustaf and Will" class="img-width-landing-column-wide" />
-					<div class="landing-column-wide">
-						<div class="landing-column-wide__content">
+				<section class="{INSTANCE.homePageStyle.landingSectionCareers}">
+					<img src="images/careers/careers-col-thin.jpg" alt="Patrick" class="{INSTANCE.homePageStyle.imgWidthLandingColumnThin}" />
+					<img src="images/careers/careers-col-wide.jpg" alt="Chi, Gustaf and Will" class="{INSTANCE.homePageStyle.imgWidthLandingColumnWide}" />
+					<div class="{INSTANCE.homePageStyle.landingColumnWide}">
+						<div class="{INSTANCE.homePageStyle.landingColumnWide__content}">
 							<h2>Work With Us</h2>
 							<p>We exist to help the app development community create more successful products and to contribute something of tangible value or enjoyment to their end
 								users.</p>
@@ -186,8 +191,8 @@
 							</p>
 						</div>
 					</div>
-					<div class="landing-column-thin">
-						<div class="landing-column-thin__content">
+					<div class="{INSTANCE.homePageStyle.landingColumnThin}">
+						<div class="{INSTANCE.homePageStyle.landingColumnThin__content}">
 							<h2>We're Hiring</h2>
 							<ul>
 								<li>
@@ -207,23 +212,23 @@
 					</div>
 				</section>
 
-				<section class="landing-section-map">
+				<section class="{INSTANCE.homePageStyle.landingSectionMap}">
 					<div id="js-map-location"></div>
 				</section>
 
-				<section class="landing-section-contact">
+				<section class="{INSTANCE.homePageStyle.landingSectionContact}">
 					<div>
-						<img src="images/global/logo-reflection-footer.png" alt="Reflection logo" class="logo-reflection-footer" />
+						<img src="images/global/logo-reflection-footer.png" alt="Reflection logo" class="{INSTANCE.homePageStyle.logoReflectionFooter}" />
 					</div>
-					<a href="mailto:info@reflection.io" class="landing-section-contact__email">
+					<a href="mailto:info@reflection.io" class="{INSTANCE.homePageStyle.landingSectionContact__email}">
 						<span class="icon-mail">info@reflection.io</span>
 					</a>
-					<a href="tel:+44(0)201234567" class="landing-section-contact__tel">
+					<a href="tel:+44(0)201234567" class="{INSTANCE.homePageStyle.landingSectionContact__tel}">
 						<span class="icon-phone">+44(0) 20 123 4567</span>
 					</a>
 					<a
 						href="https://www.google.co.uk/maps/place/44+Newman+St,+Marylebone,+London+W1T+1QD/@51.5187779,-0.1364135,17z/data=!4m7!1m4!3m3!1s0x48761b2b95192b1b:0xc2fcb9753b8ff12b!2s44+Newman+St,+Marylebone,+London+W1T+1QD!3b1!3m1!1s0x48761b2b95192b1b:0xc2fcb9753b8ff12b"
-						class="landing-section-contact__address" target="_blank">
+						class="{INSTANCE.homePageStyle.landingSectionContact__address}" target="_blank">
 						<p class="icon-location">
 							<b>
 								40-44 Newman St
@@ -236,28 +241,28 @@
 					</a>
 				</section>
 
-				<footer class="landing-footer">
-					<ul class="landing-footer__social-links">
+				<footer class="{INSTANCE.homePageStyle.landingFooter}">
+					<ul class="{INSTANCE.homePageStyle.landingFooter__socialLinks}">
 						<li>
-							<a href="https://www.facebook.com/reflection.io" class="icon-facebook-squared link-facebook"></a>
+							<a href="https://www.facebook.com/reflection.io" class="icon-facebook-squared {INSTANCE.homePageStyle.linkFacebook}"></a>
 						</li>
 						<li>
-							<a href="http://www.linkedin.com/company/reflection-io-ltd" class="icon-linkedin-rect link-linkedin">
+							<a href="http://www.linkedin.com/company/reflection-io-ltd" class="icon-linkedin-rect {INSTANCE.homePageStyle.linkLinkedin}">
 								<span>LinkedIn</span>
 							</a>
 						</li>
 						<li>
-							<a href="https://twitter.com/reflectionio" class="icon-twitter link-twitter">
+							<a href="https://twitter.com/reflectionio" class="icon-twitter {INSTANCE.homePageStyle.linkTwitter}">
 								<span>Twitter</span>
 							</a>
 						</li>
 					</ul>
 
-					<g:InlineHyperlink targetHistoryToken="{TermsPageType.asTargetHistoryToken}" styleName="landing-footer__inline-link">Terms &amp; Conditions and Privacy Policy</g:InlineHyperlink>
-					<span class="landing-footer__copyright">&copy;2014 Reflection. All Rights Reserved</span>
-					<a href="#" class="link-to-page-top js-scroll-to-page-top">
-						<span class="border-radius-point"></span>
-						<span class="link-to-page-top__text">Back to Top</span>
+					<g:InlineHyperlink targetHistoryToken="{TermsPageType.asTargetHistoryToken}" styleName="{INSTANCE.homePageStyle.landingFooter__inlineLink}">Terms &amp; Conditions and Privacy Policy</g:InlineHyperlink>
+					<span class="{INSTANCE.homePageStyle.landingFooter__copyright}">&copy;2014 Reflection. All Rights Reserved</span>
+					<a href="#" class="{INSTANCE.homePageStyle.linkToPageTop} js-scroll-to-page-top">
+						<span class="{INSTANCE.homePageStyle.borderRadiusPoint}"></span>
+						<span class="{INSTANCE.homePageStyle.linkToPageTop__text}">Back to Top</span>
 					</a>
 				</footer>
 			</div>

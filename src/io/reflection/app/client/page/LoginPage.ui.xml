@@ -5,36 +5,36 @@
 	<!-- <ui:import field="io.reflection.app.client.page.PageType.RegisterPageType" /> -->
 	<ui:import field="io.reflection.app.client.page.PageType.LoginPageType" />
 
-	<ui:style type="io.reflection.app.client.page.LoginPage.Style">
+	<ui:style gss="true" type="io.reflection.app.client.page.LoginPage.Style">
 	.noteDetail {
-	    font-size: smaller;
-	    margin-top: 5px;
+		font-size: smaller;
+		margin-top: 5px;
 	}
 	
 	.other_options {
-	    padding: 0;
-	    margin: 0;
+		padding: 0;
+		margin: 0;
 	}
 	
 	.other_options li {
-	    list-style: none;
+		list-style: none;
 	}
 	
 	.panel {
-	    margin-top: 80px;
+		margin-top: 80px;
 	}
 	
 	.mainPanel {
-	    margin-top: 20px;
+		margin-top: 20px;
 	}
 	
 	.spaceFiller {
-	    height: 100px;
+		height: 100px;
 	}
 	
 	.loginform {
-	    padding: 0px;
-	    margin-top: 20px;
+		padding: 0px;
+		margin-top: 20px;
 	}
 	</ui:style>
 	<g:HTMLPanel styleName="container">

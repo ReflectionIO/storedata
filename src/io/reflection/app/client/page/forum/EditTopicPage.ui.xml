@@ -2,7 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:com.google.gwt.user.cellview.client"
 	xmlns:p="urn:import:io.reflection.app.client.part.text" xmlns:a="urn:import:io.reflection.app.client.part" xmlns:pp="urn:import:io.reflection.app.client.page.forum.part">
 
-	<ui:style>
+	<ui:style gss="true">
 	.important {
 		font-weight: bold;
 	}

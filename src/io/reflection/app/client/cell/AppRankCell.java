@@ -28,6 +28,7 @@ import com.google.gwt.safecss.shared.SafeStylesUtils;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiRenderer;
@@ -77,11 +78,19 @@ public class AppRankCell extends AbstractCell<Rank> {
 		SafeHtml dailyData;
 
 		if (REVENUE_DAILY_DATA_TYPE.equals(dailyDataType)) {
-			dailyData = DailyDataTemplate.INSTANCE.dailyData("icon-dollar", "padding-right: 6px",
-					FormattingHelper.asWholeMoneyString(value.currency, showModelPredictions ? value.revenue.floatValue() : 0.0f));
+			if (value.downloads != null && value.revenue != null) {
+				dailyData = DailyDataTemplate.INSTANCE.dailyData("icon-dollar", "padding-right: 6px",
+						FormattingHelper.asWholeMoneyString(value.currency, showModelPredictions ? value.revenue.floatValue() : 0.0f));
+			} else {
+				dailyData = SafeHtmlUtils.fromSafeConstant("-");
+			}
 		} else {
-			dailyData = DailyDataTemplate.INSTANCE.dailyData("icon-download-alt", "padding-right: 6px",
-					WHOLE_NUMBER_FORMAT.format(showModelPredictions ? value.downloads.doubleValue() : 0.0));
+			if (value.downloads != null) {
+				dailyData = DailyDataTemplate.INSTANCE.dailyData("icon-download-alt", "padding-right: 6px",
+						WHOLE_NUMBER_FORMAT.format(showModelPredictions ? value.downloads.doubleValue() : 0.0));
+			} else {
+				dailyData = SafeHtmlUtils.fromSafeConstant("-");
+			}
 		}
 
 		Stack s = NavigationController.get().getStack();

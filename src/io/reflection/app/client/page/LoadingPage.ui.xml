@@ -1,7 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
     
-    <ui:style type="io.reflection.app.client.page.LoadingPage.LoadingPageStyle">
+    <ui:style gss="true" type="io.reflection.app.client.page.LoadingPage.LoadingPageStyle">
     .wrap {
         margin-top: 154px;
         margin-bottom: 30px;

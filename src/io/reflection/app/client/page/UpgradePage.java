@@ -8,7 +8,9 @@
 package io.reflection.app.client.page;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -21,8 +23,12 @@ public class UpgradePage extends Page {
 
 	interface UpgradePageUiBinder extends UiBinder<Widget, UpgradePage> {}
 
+	@UiField AnchorElement requestInvite;
+
 	public UpgradePage() {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		requestInvite.setHref(PageType.LoginPageType.asHref("requestinvite"));
 	}
 
 }

@@ -1,6 +1,4 @@
-@CHARSET "UTF-8";
-
-@def selectionBorderWidth 0px;
+@def SELECTION_BORDER_WIDTH 0px;
 
 .dataGridWidget {
   

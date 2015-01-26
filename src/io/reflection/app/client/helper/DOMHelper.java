@@ -7,7 +7,6 @@
 //
 package io.reflection.app.client.helper;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.LinkElement;
 import com.google.gwt.dom.client.ScriptElement;
@@ -17,34 +16,6 @@ import com.google.gwt.dom.client.ScriptElement;
  *
  */
 public class DOMHelper {
-
-	/**
-	 * Attach element to head
-	 */
-	public static native void appendToHead(JavaScriptObject object) /*-{
-		$doc.getElementsByTagName("head")[0].appendChild(object);
-	}-*/;
-
-	/**
-	 * Detach element to head
-	 */
-	public static native void removeFromHead(JavaScriptObject object) /*-{
-		$doc.getElementsByTagName("head")[0].removeChild(object);
-	}-*/;
-
-	/**
-	 * Attach element to body
-	 */
-	public static native void appendToBody(JavaScriptObject object) /*-{
-		$doc.getElementsByTagName("body")[0].appendChild(object);
-	}-*/;
-
-	/**
-	 * Detach element to body
-	 */
-	public static native void removeFromBody(JavaScriptObject object) /*-{
-		$doc.getElementsByTagName("body")[0].removeChild(object);
-	}-*/;
 
 	/** Load CSS file from url */
 	public static LinkElement getCssLinkFromUrl(String url) {
@@ -61,6 +32,15 @@ public class DOMHelper {
 		ScriptElement script = Document.get().createScriptElement();
 		script.setType("text/javascript");
 		script.setSrc(url);
+		return script;
+	}
+
+	/** Load CSS file from url */
+	public static ScriptElement getJSScriptFromUrl(String url, String attribute) {
+		ScriptElement script = Document.get().createScriptElement();
+		script.setType("text/javascript");
+		script.setSrc(url);
+		script.setAttribute(attribute, "");
 		return script;
 	}
 

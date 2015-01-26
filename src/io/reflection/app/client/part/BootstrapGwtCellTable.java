@@ -19,6 +19,6 @@ public interface BootstrapGwtCellTable extends CellTable.Resources {
 
 	public interface BootstrapGwtCellTableStyle extends CellTable.Style {};
 
-	@Source("res/bootstrapgwtcelltable.css")
+	@Source("res/bootstrapgwtcelltable.gss")
 	BootstrapGwtCellTableStyle cellTableStyle();
 };

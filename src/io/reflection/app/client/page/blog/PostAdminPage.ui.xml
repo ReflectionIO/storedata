@@ -4,7 +4,7 @@
 
 	<ui:import field="io.reflection.app.client.page.PageType.BlogEditPostPageType" />
 	<ui:import field="io.reflection.app.client.page.PageType.BlogPostsPageType" />
-	<ui:style>
+	<ui:style gss="true">
 	.toolbar {
 	    margin-top: 10px;
 	    margin-bottom: 30px;

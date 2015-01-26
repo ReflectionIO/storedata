@@ -12,11 +12,13 @@ import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.handler.EnterPressedEventHandler;
 import io.reflection.app.client.helper.FormHelper;
+import io.reflection.app.client.page.PageType;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -55,10 +57,14 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	@UiField HTMLPanel vendorIdNote;
 	private String vendorIdError;
 
+	@UiField AnchorElement vendorLink;
+
 	private EnterPressedEventHandler enterHandler;
 
 	public IosMacLinkAccountForm() {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		vendorLink.setHref(PageType.BlogPostPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, "7"));
 
 		accountUsername.getElement().setAttribute("placeholder", "iTunes Connect Username");
 		password.getElement().setAttribute("placeholder", "iTunes Connect Password");
