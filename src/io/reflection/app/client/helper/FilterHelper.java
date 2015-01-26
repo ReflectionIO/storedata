@@ -114,8 +114,8 @@ public class FilterHelper {
 				}
 			}
 		} else {
-			Country gbCountry = CountryController.get().getCountry("gb");
-			list.addItem(gbCountry.name, gbCountry.a2Code);
+			Country defaultCountry = CountryController.get().getCountry("gb");
+			list.addItem(defaultCountry.name, defaultCountry.a2Code);
 			list.setEnabled(false);
 		}
 	}
