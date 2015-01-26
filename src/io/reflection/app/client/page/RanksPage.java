@@ -162,11 +162,11 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		tabs.put(GROSSING_LIST_TYPE, grossingItem);
 
 		if (!SessionController.get().isLoggedInUserAdmin()) {
-			paidLink.setText("(Coming soon)");
+			paidLink.setText(paidLink.getText() + " (Coming soon)");
 			paidLink.getElement().getStyle().setColor("lightgrey");
 			paidLink.getElement().getStyle().setCursor(Cursor.DEFAULT);
 			paidItem.getStyle().setCursor(Cursor.DEFAULT);
-			grossingLink.setText("(Coming soon)");
+			grossingLink.setText(grossingLink.getText() + " (Coming soon)");
 			grossingLink.getElement().getStyle().setColor("lightgrey");
 			grossingLink.getElement().getStyle().setCursor(Cursor.DEFAULT);
 			grossingItem.getStyle().setCursor(Cursor.DEFAULT);
@@ -594,13 +594,6 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 				mSidePanel.updateFromFilter();
 			}
-		}
-	}
-
-	@UiHandler("paidLink")
-	void onComingSoonClicked(ClickEvent event) {
-		if (!SessionController.get().isLoggedInUserAdmin()) {
-			event.preventDefault();
 		}
 	}
 
