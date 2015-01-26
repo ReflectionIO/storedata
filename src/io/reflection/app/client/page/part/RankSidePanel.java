@@ -167,13 +167,19 @@ public class RankSidePanel extends Composite {
 	public void updateFromFilter() {
 		FilterController fc = FilterController.get();
 
-		mAppStore.setSelectedIndex(FormHelper.getItemIndex(mAppStore, fc.getFilter().getStoreA3Code()));
 		long endTime = fc.getFilter().getEndTime().longValue();
 		Date endDate = new Date(endTime);
 		date.setValue(endDate);
 		currentDate.setTime(endDate.getTime());
-		mCountry.setSelectedIndex(FormHelper.getItemIndex(mCountry, fc.getFilter().getCountryA2Code()));
-		category.setSelectedIndex(FormHelper.getItemIndex(category, fc.getFilter().getCategoryId().toString()));
+		if (SessionController.get().isLoggedInUserAdmin()) {
+			mAppStore.setSelectedIndex(FormHelper.getItemIndex(mAppStore, fc.getFilter().getStoreA3Code()));
+			mCountry.setSelectedIndex(FormHelper.getItemIndex(mCountry, fc.getFilter().getCountryA2Code()));
+			category.setSelectedIndex(FormHelper.getItemIndex(category, fc.getFilter().getCategoryId().toString()));
+		} else {
+			mAppStore.setSelectedIndex(0);
+			mCountry.setSelectedIndex(0);
+			category.setSelectedIndex(0);
+		}
 
 		String dailyDataType = fc.getFilter().getDailyData();
 		if (REVENUE_DAILY_DATA_TYPE.equals(dailyDataType)) {
