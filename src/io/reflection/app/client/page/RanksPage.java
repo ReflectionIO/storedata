@@ -187,7 +187,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 			@Override
 			public String getValue(RanksGroup object) {
-				return object.free.position.toString();
+				return (object.free.position != null) ? object.free.position.toString() : "-";
 			}
 
 		};
@@ -224,10 +224,10 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			@Override
 			public String getValue(RanksGroup object) {
 				Rank rank = rankForListType(object);
-				return FormattingHelper.asPriceString(rank.currency, rank.price.floatValue());
+				return (rank.currency != null && rank.price != null) ? FormattingHelper.asPriceString(rank.currency, rank.price.floatValue()) : "-";
 			}
-
 		};
+
 		downloadsColumn = new TextColumn<RanksGroup>() {
 
 			@Override
