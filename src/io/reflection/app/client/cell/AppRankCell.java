@@ -14,6 +14,7 @@ import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.ItemController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
+import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.page.RanksPage;
@@ -98,24 +99,25 @@ public class AppRankCell extends AbstractCell<Rank> {
 			listType = s.getParameter(RanksPage.SELECTED_TAB_PARAMETER_INDEX);
 		}
 
-		SafeStyles display;
+		SafeStyles display = null;
 		if (FilterController.OVERALL_LIST_TYPE.equals(listType)) {
 			switch (context.getColumn()) {
 			case 1:
 				filter = Filter.parse(filter.asItemFilterString());
-				filter.setListType(FilterController.PAID_LIST_TYPE);
+				filter.setListType(FilterController.FREE_LIST_TYPE);
+				display = SafeStylesUtils.fromTrustedString("");
 				break;
 			case 2:
 				filter = Filter.parse(filter.asItemFilterString());
-				filter.setListType(FilterController.FREE_LIST_TYPE);
+				filter.setListType(FilterController.PAID_LIST_TYPE);
+				display = SessionController.get().isLoggedInUserAdmin() ? SafeStylesUtils.fromTrustedString("") : SafeStylesUtils.forDisplay(Display.NONE);
 				break;
 			case 3:
 				filter = Filter.parse(filter.asItemFilterString());
 				filter.setListType(FilterController.GROSSING_LIST_TYPE);
+				display = SessionController.get().isLoggedInUserAdmin() ? SafeStylesUtils.fromTrustedString("") : SafeStylesUtils.forDisplay(Display.NONE);
 				break;
 			}
-
-			display = SafeStylesUtils.fromTrustedString("");
 		} else {
 			display = SafeStylesUtils.forDisplay(Display.NONE);
 		}
