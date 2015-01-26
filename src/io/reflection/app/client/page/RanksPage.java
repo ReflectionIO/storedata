@@ -144,7 +144,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 	private String selectedTab = OVERALL_LIST_TYPE;
 
-	private boolean showModelPredictions;
+	private boolean showAllPredictions;
 
 	public RanksPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -152,14 +152,16 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		// set the overall tab title (this is because it is modified for admins to contain the gather code)
 		allLink.setText(ALL_TEXT);
 
-		showModelPredictions = SessionController.get().isLoggedInUserAdmin();
+		showAllPredictions = SessionController.get().isLoggedInUserAdmin();
 
 		createColumns();
 
 		tabs.put(OVERALL_LIST_TYPE, allItem);
 		tabs.put(FREE_LIST_TYPE, freeItem);
-		tabs.put(PAID_LIST_TYPE, paidItem);
-		tabs.put(GROSSING_LIST_TYPE, grossingItem);
+		if (SessionController.get().isLoggedInUserAdmin()) {
+			tabs.put(PAID_LIST_TYPE, paidItem);
+			tabs.put(GROSSING_LIST_TYPE, grossingItem);
+		}
 
 		if (!SessionController.get().isLoggedInUserAdmin()) {
 			paidLink.setText(paidLink.getText() + " (Coming soon)");
@@ -190,7 +192,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 		};
 
-		AppRankCell appRankCell = new AppRankCell(showModelPredictions);
+		AppRankCell appRankCell = new AppRankCell(showAllPredictions);
 
 		paidColumn = new Column<RanksGroup, Rank>(appRankCell) {
 
@@ -570,12 +572,17 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 				if (currentFilter != null && currentFilter.length() > 0) {
 					allLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
 							OVERALL_LIST_TYPE, currentFilter));
-					paidLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
-							PAID_LIST_TYPE, currentFilter));
 					freeLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
 							FREE_LIST_TYPE, currentFilter));
-					grossingLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
-							GROSSING_LIST_TYPE, currentFilter));
+					if (SessionController.get().isLoggedInUserAdmin()) {
+						paidLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
+								PAID_LIST_TYPE, currentFilter));
+						grossingLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
+								GROSSING_LIST_TYPE, currentFilter));
+					} else {
+						paidLink.setTargetHistoryToken(current.toString());
+						grossingLink.setTargetHistoryToken(current.toString());
+					}
 				}
 
 				selectedTab = current.getParameter(SELECTED_TAB_PARAMETER_INDEX);
