@@ -28,9 +28,10 @@ import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.ItemController;
 import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.NavigationController;
-import io.reflection.app.client.controller.StoreController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.RankController;
+import io.reflection.app.client.controller.SessionController;
+import io.reflection.app.client.controller.StoreController;
 import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.FormattingHelper;
@@ -63,7 +64,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
-import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -92,7 +92,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 	@UiField Preloader preloader;
 
-	@UiField(provided = true) CellTable<ItemRevenue> revenueTable = new CellTable<ItemRevenue>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true) CellTable<ItemRevenue> revenueTable;
 
 	private String internalId;
 
@@ -114,13 +114,17 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 		Styles.INSTANCE.flags().ensureInjected();
 
-		createColumns();
-
 		mTabs.put(REVENUE_CHART_TYPE, revenueItem);
 		mTabs.put(DOWNLOADS_CHART_TYPE, downloadsItem);
 		mTabs.put(RANKING_CHART_TYPE, rankingItem);
 
-		RankController.get().getItemRevenueDataProvider().addDataDisplay(revenueTable);
+		if (SessionController.get().isLoggedInUserAdmin()) {
+			revenueTable = new CellTable<ItemRevenue>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
+			createColumns();
+			RankController.get().getItemRevenueDataProvider().addDataDisplay(revenueTable);
+		} else {
+			revenueTable.removeFromParent();
+		}
 
 		tablePlaceholder.add(itemRevenuePlaceholder);
 
@@ -132,10 +136,12 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	 * @param enabled
 	 */
 	private void setLoadingSpinnerEnabled(boolean enabled) {
-		if (enabled) {
-			revenueTable.setRowData(0, tablePlaceholder);
-		} else {
-			revenueTable.setRowCount(0, true);
+		if (SessionController.get().isLoggedInUserAdmin()) {
+			if (enabled) {
+				revenueTable.setRowData(0, tablePlaceholder);
+			} else {
+				revenueTable.setRowCount(0, true);
+			}
 		}
 	}
 
@@ -196,30 +202,20 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			}
 		};
 
-		TextHeader countryHeader = new TextHeader("Country");
-		revenueTable.addColumn(countryColumn, countryHeader);
-
+		revenueTable.addColumn(countryColumn, "Country");
 		// TextHeader percentageHeader = new TextHeader("% total revenue");
 		// revenue.addColumn(percentageColumn, percentageHeader);
-
-		TextHeader paidHeader = new TextHeader("Paid");
-		revenueTable.addColumn(paidColumn, paidHeader);
-
-		TextHeader subscriptionHeader = new TextHeader("Subscription");
-		revenueTable.addColumn(subscriptionColumn, subscriptionHeader);
-
-		TextHeader iapHeader = new TextHeader("IAP");
-		revenueTable.addColumn(iapColumn, iapHeader);
-
-		TextHeader totalHeader = new TextHeader("Total");
-		revenueTable.addColumn(totalColumn, totalHeader);
-
+		revenueTable.addColumn(paidColumn, "Paid");
+		revenueTable.addColumn(subscriptionColumn, "Subscription");
+		revenueTable.addColumn(iapColumn, "IAP");
+		revenueTable.addColumn(totalColumn, "Total");
 		revenueTable.setWidth("100%", true);
 		revenueTable.setColumnWidth(countryColumn, 136.0, Unit.PX);
 		revenueTable.setColumnWidth(paidColumn, 51.0, Unit.PX);
 		revenueTable.setColumnWidth(subscriptionColumn, 51.0, Unit.PX);
 		revenueTable.setColumnWidth(iapColumn, 51.0, Unit.PX);
 		revenueTable.setColumnWidth(totalColumn, 51.0, Unit.PX);
+
 	}
 
 	/*
