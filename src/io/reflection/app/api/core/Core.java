@@ -87,6 +87,8 @@ import io.reflection.app.archivers.ArchiverFactory;
 import io.reflection.app.archivers.ItemRankArchiver;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
+import io.reflection.app.collectors.CollectorIOS;
+import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
@@ -416,6 +418,16 @@ public final class Core extends ActionHandler {
 			}
 
 			if (!skip) {
+				boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, DataTypeHelper.adminRole());
+
+				if (!isAdmin) {
+					input.country = new Country();
+					input.country.a2Code = "gb";
+					input.store = new Store();
+					input.store.a3Code = DataTypeHelper.IOS_STORE_A3;
+					input.category = new Category();
+					input.category.id = 15L;
+				}
 				input.country = ValidationHelper.validateCountry(input.country, "input");
 
 				if (input.listType == null)
@@ -473,6 +485,13 @@ public final class Core extends ActionHandler {
 
 					for (Rank rank : ranks) {
 						itemIds.add(rank.itemId);
+					}
+
+					if (!isAdmin && !CollectorIOS.TOP_FREE_APPS.equals(listType)) {
+						for (Rank rank : ranks) {
+							rank.downloads = null;
+							rank.revenue = null;
+						}
 					}
 
 					if (collector.isFree(listType)) {

@@ -269,10 +269,10 @@ public class FilterController {
 		setLinkedAccount(Long.valueOf(0));
 		setStore(DataTypeHelper.STORE_IPHONE_A3_CODE);
 		setListType(OVERALL_LIST_TYPE);
-		setCountry("us");
+		setCountry("gb");
 		setEndDate(FilterHelper.getToday());
 		setStartDate(FilterHelper.getWeeksAgo(4));
-		setCategory(Long.valueOf(24));
+		setCategory(Long.valueOf(15));
 		setDailyData(REVENUE_DAILY_DATA_TYPE);
 		setChartType(RANKING_CHART_TYPE);
 		setSummaryType(TODAY_SUMMARY_TYPE);

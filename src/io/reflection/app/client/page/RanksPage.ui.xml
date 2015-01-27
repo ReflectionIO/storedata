@@ -60,25 +60,22 @@
 
 		<g:HTMLPanel styleName="col-md-9 col-lg-10 {style.content}">
 			<ul class="nav nav-tabs nav-justified ranks">
-				<li ui:field="mAllItem">
-					<g:InlineHyperlink ui:field="mAll" styleName="{style.all}">Overview
-						/ All</g:InlineHyperlink>
+				<li ui:field="allItem">
+					<g:InlineHyperlink ui:field="allLink" styleName="{style.all}">Overview / All</g:InlineHyperlink>
 				</li>
-				<li ui:field="mPaidItem">
-					<g:InlineHyperlink ui:field="mPaid" styleName="{style.paid}">Paid</g:InlineHyperlink>
+				<li ui:field="freeItem">
+					<g:InlineHyperlink ui:field="freeLink" styleName="{style.free}">Free</g:InlineHyperlink>
 				</li>
-				<li ui:field="mFreeItem">
-					<g:InlineHyperlink ui:field="mFree" styleName="{style.free}">Free</g:InlineHyperlink>
+				<li ui:field="paidItem">
+					<g:InlineHyperlink ui:field="paidLink" styleName="{style.paid}">Paid</g:InlineHyperlink>
 				</li>
-				<li ui:field="mGrossingItem">
-					<g:InlineHyperlink ui:field="mGrossing">Grossing</g:InlineHyperlink>
+				<li ui:field="grossingItem">
+					<g:InlineHyperlink ui:field="grossingLink">Grossing</g:InlineHyperlink>
 				</li>
 			</ul>
 
 			<g:HTMLPanel styleName="{style.table}">
-
-				<c:CellTable ui:field="mRanks" styleName="table table-hover table-striped table-rank" />
-
+				<c:CellTable ui:field="ranksTable" styleName="table table-hover table-striped table-rank" />
 				<g:HTMLPanel ui:field="showMorePanel" visible="false">
 					<g:HTMLPanel>
 						<g:Button ui:field="viewAllBtn" styleName="btn btn-default pull-left {style.viewButton}">
@@ -90,10 +87,9 @@
 							View All Apps
 						</g:InlineHyperlink>
 					</g:HTMLPanel>
-
 				</g:HTMLPanel>
-
 			</g:HTMLPanel>
+
 			<g:HTMLPanel styleName="filler-bottom col-md-12 hidden-xs hidden-sm" />
 		</g:HTMLPanel>
 

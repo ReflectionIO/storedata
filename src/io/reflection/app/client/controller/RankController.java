@@ -51,8 +51,8 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 	private static RankController mOne = null;
 
-	private List<RanksGroup> mRows = new ArrayList<RanksGroup>();
-	private Pager mPager;
+	private List<RanksGroup> rows = new ArrayList<RanksGroup>();
+	private Pager pager;
 	private Request currentTopItems;
 	private Request currentItemRanks;
 	private Request currentItemSalesRanks;
@@ -90,14 +90,14 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 		input.category = FilterController.get().getCategory();
 
-		if (mPager == null) {
-			mPager = new Pager();
-			mPager.count = STEP;
-			mPager.start = Long.valueOf(0);
-			mPager.boundless = Boolean.TRUE;
+		if (pager == null) {
+			pager = new Pager();
+			pager.count = STEP;
+			pager.start = Long.valueOf(0);
+			pager.boundless = Boolean.TRUE;
 		}
 
-		input.pager = mPager; // Set pager used to retrieve and format the wished items (start, number of elements, sorting order)
+		input.pager = pager; // Set pager used to retrieve and format the wished items (start, number of elements, sorting order)
 
 		input.store = ApiCallHelper.createStoreForApiCall(FilterController.get().getStore());
 
@@ -109,9 +109,9 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 				currentTopItems = null;
 				if (output.status == StatusType.StatusTypeSuccess) {
 					if (output.pager != null) {
-						mPager = output.pager;// Set pager as the one received from the server
-						if (mPager != null && mPager.totalCount == null && output.freeRanks != null && output.freeRanks.size() > 0) {
-							mPager.totalCount = Long.valueOf(output.freeRanks.size());
+						pager = output.pager;// Set pager as the one received from the server
+						if (pager != null && pager.totalCount == null && output.freeRanks != null && output.freeRanks.size() > 0) {
+							pager.totalCount = Long.valueOf(output.freeRanks.size());
 						}
 					}
 
@@ -131,15 +131,15 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 					RanksGroup r;
 					for (int i = 0; i < count; i++) {
-						mRows.add(r = new RanksGroup());
+						rows.add(r = new RanksGroup());
 						r.free = output.freeRanks.get(i);
 						r.paid = output.paidRanks.get(i);
 						r.grossing = output.grossingRanks.get(i);
 					}
 
-					updateRowData(0, mRows); // Inform the displays of the new data. @params Start index, data values
+					updateRowData(0, rows); // Inform the displays of the new data. @params Start index, data values
 				}
-				updateRowCount(mRows.size(), true);
+				updateRowCount(rows.size(), true);
 
 				DefaultEventBus.get().fireEventFromSource(new GetAllTopItemsSuccess(input, output), RankController.this);
 			}
@@ -391,19 +391,19 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 		int start = r.getStart();
 		int end = start + r.getLength();
 
-		if (mRows == null || mPager == null || mPager.totalCount == null || (end > mRows.size() && mRows.size() != mPager.totalCount.intValue())) {
+		if (rows == null || pager == null || pager.totalCount == null || (end > rows.size() && rows.size() != pager.totalCount.intValue())) {
 			fetchTopItems();
 		} else {
-			updateRowData(start, mRows.subList(start, Math.min(end, mRows.size())));
+			updateRowData(start, rows.subList(start, Math.min(end, rows.size())));
 		}
 	}
 
 	public void reset() {
 
-		mPager = null;
-		mRows.clear();
+		pager = null;
+		rows.clear();
 
-		updateRowData(0, mRows);
+		updateRowData(0, rows);
 		updateRowCount(0, false);
 
 	}
