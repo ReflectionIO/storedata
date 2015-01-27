@@ -605,7 +605,7 @@ public class DevHelperServlet extends HttpServlet {
 					if (start == null && count == null) {
 						try {
 							Store store = new Store();
-							store.a3Code = "ios";
+							store.a3Code = DataTypeHelper.IOS_STORE_A3;
 
 							Country country = new Country();
 							country.a2Code = "us";

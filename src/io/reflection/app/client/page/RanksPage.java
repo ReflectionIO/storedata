@@ -63,6 +63,7 @@ import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -164,11 +165,13 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		}
 
 		if (!SessionController.get().isLoggedInUserAdmin()) {
-			paidLink.setText(paidLink.getText() + " (Coming soon)");
+			InlineHTML comingSoon = new InlineHTML("&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;Coming soon");
+			comingSoon.getElement().getStyle().setFontSize(14.0, Unit.PX);
+			paidLink.setHTML(paidLink.getText() + comingSoon);
 			paidLink.getElement().getStyle().setColor("lightgrey");
 			paidLink.getElement().getStyle().setCursor(Cursor.DEFAULT);
 			paidItem.getStyle().setCursor(Cursor.DEFAULT);
-			grossingLink.setText(grossingLink.getText() + " (Coming soon)");
+			grossingLink.setHTML(grossingLink.getText() + comingSoon);
 			grossingLink.getElement().getStyle().setColor("lightgrey");
 			grossingLink.getElement().getStyle().setCursor(Cursor.DEFAULT);
 			grossingItem.getStyle().setCursor(Cursor.DEFAULT);
