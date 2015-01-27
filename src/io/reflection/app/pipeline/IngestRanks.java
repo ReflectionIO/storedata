@@ -10,15 +10,11 @@ package io.reflection.app.pipeline;
 import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
-import io.reflection.app.modellers.Modeller;
-import io.reflection.app.modellers.ModellerFactory;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
-import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -28,17 +24,13 @@ import java.util.Map;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
-import co.spchopr.persistentmap.PersistentMapFactory;
-
 import com.google.appengine.tools.pipeline.Job6;
-import com.google.appengine.tools.pipeline.PromisedValue;
 import com.google.appengine.tools.pipeline.Value;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.spacehopperstudios.utility.StringUtils;
 
-public class IngestRanks extends Job6<Void, Long, String, Long, String, Long, String> {
+public class IngestRanks extends Job6<Long, Long, String, Long, String, Long, String> {
 
 	private static final long serialVersionUID = 5579515120223362343L;
 
@@ -49,7 +41,9 @@ public class IngestRanks extends Job6<Void, Long, String, Long, String, Long, St
 	 * java.lang.Object)
 	 */
 	@Override
-	public Value<Void> run(Long paidFeedId, String paidRanks, Long freeFeedId, String freeRanks, Long grossingFeedId, String grossingRanks) throws Exception {
+	public Value<Long> run(Long paidFeedId, String paidRanks, Long freeFeedId, String freeRanks, Long grossingFeedId, String grossingRanks) throws Exception {
+		Long addedRankCount = Long.valueOf(0);
+		
 		FeedFetch paidFetch = FeedFetchServiceProvider.provide().getFeedFetch(paidFeedId);
 		FeedFetch freeFetch = FeedFetchServiceProvider.provide().getFeedFetch(freeFeedId);
 		FeedFetch grossingFetch = FeedFetchServiceProvider.provide().getFeedFetch(grossingFeedId);
@@ -98,7 +92,7 @@ public class IngestRanks extends Job6<Void, Long, String, Long, String, Long, St
 		}
 
 		if (ranks.size() > 0) {
-			RankServiceProvider.provide().addRanksBatch(ranks.values());
+			addedRankCount = RankServiceProvider.provide().addRanksBatch(ranks.values());
 		}
 
 		Collection<String> existingInternalIds = ItemServiceProvider.provide().getExistingInternalIdBatch(items.keySet());
@@ -110,19 +104,8 @@ public class IngestRanks extends Job6<Void, Long, String, Long, String, Long, St
 		if (items.size() > 0) {
 			ItemServiceProvider.provide().addItemsBatch(items.values());
 		}
-
-		PromisedValue<String> salesSummary = newPromise();
-
-		// save the handle from salesDate.getHandle()
-
-		Modeller modeller = ModellerFactory.getModellerForStore(DataTypeHelper.IOS_STORE_A3);
-		String key = StringUtils.join(Arrays.asList(grossingFetch.country, grossingFetch.store, modeller.getForm(freeFetch.type).toString()), ".");
-
-		PersistentMapFactory.createObjectify().put(key, salesSummary.getHandle());
-
-		// TODO: we need to kick off a specific calibration cycle for the country store and type
-
-		return null;
+		
+		return immediate(addedRankCount);
 	}
 
 	private List<Item> itemsFromJson(String json) {

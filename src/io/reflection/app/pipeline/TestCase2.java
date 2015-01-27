@@ -28,9 +28,6 @@ public class TestCase2 {
 
 	public static class TestCase2Generator extends Job2<Rank, Category, Rank> {
 
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = -6698702257767292151L;
 
 		/*
@@ -49,9 +46,6 @@ public class TestCase2 {
 
 	public static class SubCategoryBranch extends Job3<Void, Rank, Category, Rank> {
 
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = -2487696358427962804L;
 
 		/*
@@ -75,9 +69,6 @@ public class TestCase2 {
 
 	public static class HasSubCategory extends Job3<Void, Rank, Category, Rank> {
 
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 3209813458334544306L;
 
 		/*
@@ -117,9 +108,6 @@ public class TestCase2 {
 
 	public static class SubCatetgoryRevenueSetter extends Job2<Void, Rank, Float> {
 
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 5092815602557654268L;
 
 		/*
@@ -147,9 +135,6 @@ public class TestCase2 {
 
 	public static class HasNoSubCategory extends Job1<Void, Rank> {
 
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = -247515890190021528L;
 
 		/*
@@ -170,9 +155,6 @@ public class TestCase2 {
 
 	public static class GetSubcategoryRank extends Job2<Rank, Rank, Category> {
 
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = -174418267956110993L;
 
 		/*

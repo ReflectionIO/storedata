@@ -216,4 +216,11 @@ public interface ISaleService extends IService {
 	 */
 	public String getSkuItemId(String sku) throws DataAccessException;
 
+	/**
+	 * @param saleIds
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<Sale> getSalesBatch(Collection<Long> saleIds) throws DataAccessException;
+
 }

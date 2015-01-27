@@ -13,6 +13,8 @@ import static io.reflection.app.collectors.CollectorIOS.TOP_GROSSING_APPS;
 import static io.reflection.app.collectors.CollectorIOS.TOP_GROSSING_IPAD_APPS;
 import static io.reflection.app.collectors.CollectorIOS.TOP_PAID_APPS;
 import static io.reflection.app.collectors.CollectorIOS.TOP_PAID_IPAD_APPS;
+import static io.reflection.app.pipeline.SummariseDataAccountFetch.DOWNLOADS_LIST_PROPERTY;
+import static io.reflection.app.pipeline.SummariseDataAccountFetch.REVENUE_LIST_PROPERTY;
 import io.reflection.app.CollectorServlet;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
@@ -23,10 +25,12 @@ import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import com.google.appengine.tools.pipeline.FutureValue;
 import com.google.appengine.tools.pipeline.Job2;
+import com.google.appengine.tools.pipeline.PromisedValue;
 import com.google.appengine.tools.pipeline.Value;
 
 public class GatherCountry extends Job2<Void, String, Long> {
@@ -35,6 +39,26 @@ public class GatherCountry extends Job2<Void, String, Long> {
 
 	private static final Logger LOG = Logger.getLogger(GatherCountry.class.getName());
 
+	private PromisedValue<Map<String, Double>> revenueOtherSummaryValue;
+	private PromisedValue<Map<String, Double>> downloadsOtherSummaryValue;
+	private PromisedValue<Map<String, Double>> revenueTabletSummaryValue;
+	private PromisedValue<Map<String, Double>> downloadsTabletSummaryValue;
+
+	/**
+	 * @param revenueOtherSummaryValue
+	 * @param downloadsOtherSummaryValue
+	 * 
+	 * @param revenueTabletSummaryValue
+	 * @param downloadsTabletSummaryValue
+	 */
+	public GatherCountry(PromisedValue<Map<String, Double>> revenueOtherSummaryValue, PromisedValue<Map<String, Double>> downloadsOtherSummaryValue,
+			PromisedValue<Map<String, Double>> revenueTabletSummaryValue, PromisedValue<Map<String, Double>> downloadsTabletSummaryValue) {
+		this.revenueOtherSummaryValue = revenueOtherSummaryValue;
+		this.downloadsOtherSummaryValue = downloadsOtherSummaryValue;
+		this.revenueTabletSummaryValue = revenueTabletSummaryValue;
+		this.downloadsTabletSummaryValue = downloadsTabletSummaryValue;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -42,29 +66,38 @@ public class GatherCountry extends Job2<Void, String, Long> {
 	 */
 	@Override
 	public Value<Void> run(String countryCode, Long code) throws Exception {
-		FutureValue<Long> free = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_FREE_APPS), null, immediate(code));
-		FutureValue<Long> paid = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_PAID_APPS), null, immediate(code));
-		FutureValue<Long> grossing = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_GROSSING_APPS), null, immediate(code));
+		FutureValue<Long> freeFeedId = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_FREE_APPS), null, immediate(code));
+		FutureValue<Long> paidFeedId = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_PAID_APPS), null, immediate(code));
+		FutureValue<Long> grossingFeedId = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_GROSSING_APPS), null, immediate(code));
 
 		final boolean ingestCountryFeeds = CollectorServlet.shouldIngestFeedFetch(countryCode);
+		FutureValue<Long> rankCount;
 		if (ingestCountryFeeds) {
-			FutureValue<String> slimmedPaidFeed = futureCall(new SlimFeed(), paid);
-			FutureValue<String> slimmedFreeFeed = futureCall(new SlimFeed(), free);
-			FutureValue<String> slimmedGrossingFeed = futureCall(new SlimFeed(), grossing);
+			FutureValue<String> slimmedPaidFeed = futureCall(new SlimFeed(), paidFeedId);
+			FutureValue<String> slimmedFreeFeed = futureCall(new SlimFeed(), freeFeedId);
+			FutureValue<String> slimmedGrossingFeed = futureCall(new SlimFeed(), grossingFeedId);
 
-			futureCall(new IngestRanks(), paid, slimmedPaidFeed, free, slimmedFreeFeed, grossing, slimmedGrossingFeed);
+			rankCount = futureCall(new IngestRanks(), paidFeedId, slimmedPaidFeed, freeFeedId, slimmedFreeFeed, grossingFeedId, slimmedGrossingFeed);
+
+			futureCall(new ModelData(), rankCount, paidFeedId, DOWNLOADS_LIST_PROPERTY, downloadsOtherSummaryValue);
+			futureCall(new ModelData(), rankCount, freeFeedId, DOWNLOADS_LIST_PROPERTY, downloadsOtherSummaryValue);
+			futureCall(new ModelData(), rankCount, grossingFeedId, REVENUE_LIST_PROPERTY, revenueOtherSummaryValue);
 		}
 
-		free = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_FREE_IPAD_APPS), null, immediate(code));
-		paid = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_PAID_IPAD_APPS), null, immediate(code));
-		grossing = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_GROSSING_IPAD_APPS), null, immediate(code));
+		freeFeedId = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_FREE_IPAD_APPS), null, immediate(code));
+		paidFeedId = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_PAID_IPAD_APPS), null, immediate(code));
+		grossingFeedId = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_GROSSING_IPAD_APPS), null, immediate(code));
 
 		if (ingestCountryFeeds) {
-			FutureValue<String> slimmedPaidFeed = futureCall(new SlimFeed(), paid);
-			FutureValue<String> slimmedFreeFeed = futureCall(new SlimFeed(), free);
-			FutureValue<String> slimmedGrossingFeed = futureCall(new SlimFeed(), grossing);
+			FutureValue<String> slimmedPaidFeed = futureCall(new SlimFeed(), paidFeedId);
+			FutureValue<String> slimmedFreeFeed = futureCall(new SlimFeed(), freeFeedId);
+			FutureValue<String> slimmedGrossingFeed = futureCall(new SlimFeed(), grossingFeedId);
 
-			futureCall(new IngestRanks(), paid, slimmedPaidFeed, free, slimmedFreeFeed, grossing, slimmedGrossingFeed);
+			rankCount = futureCall(new IngestRanks(), paidFeedId, slimmedPaidFeed, freeFeedId, slimmedFreeFeed, grossingFeedId, slimmedGrossingFeed);
+
+			futureCall(new ModelData(), rankCount, paidFeedId, DOWNLOADS_LIST_PROPERTY, downloadsTabletSummaryValue);
+			futureCall(new ModelData(), rankCount, freeFeedId, DOWNLOADS_LIST_PROPERTY, downloadsTabletSummaryValue);
+			futureCall(new ModelData(), rankCount, grossingFeedId, REVENUE_LIST_PROPERTY, revenueTabletSummaryValue);
 		}
 
 		// when we have gathered all the counties feeds we do the same but for each category
@@ -94,9 +127,9 @@ public class GatherCountry extends Job2<Void, String, Long> {
 							LOG.log(GaeLevel.DEBUG, String.format("Enqueueing gather tasks for country [%s]", countryCode));
 						}
 
-						// for each category
 						for (Category category : categories) {
-							futureCall(new GatherCategory(), immediate(countryCode), immediate(category.id), immediate(code));
+							futureCall(new GatherCategory(revenueOtherSummaryValue, downloadsOtherSummaryValue, revenueTabletSummaryValue,
+									downloadsTabletSummaryValue), immediate(countryCode), immediate(category.id), immediate(code));
 						}
 					}
 				}
