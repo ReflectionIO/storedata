@@ -24,7 +24,7 @@ public class CalibrateSimpleModel extends Job3<Long, String, Map<String, Double>
 	 * @see com.google.appengine.tools.pipeline.Job3#run(java.lang.Object, java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	public Value<Long> run(String download, Map<String, Double> summary, Long feedFetchId) throws Exception {
+	public Value<Long> run(String type, Map<String, Double> summary, Long feedFetchId) throws Exception {
 		return null;
 	}
 
