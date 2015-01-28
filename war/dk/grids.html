@@ -5,16 +5,16 @@
 	<title>Reflection Design Kit - Grid &amp; Breakpoints</title>
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<link rel="stylesheet" media="screen, projection" type="text/css" href="css/designkit.7756b64545d2a7a35373.css" />
+	<link rel="stylesheet" media="screen, projection" type="text/css" href="css/designkit.13a7083861fbf013bb1d.css" />
 	<!--[if (lt IE 9)]>
 		<script src="js/vendor/html5shiv.min.js"></script>
-		<link rel="stylesheet" media="screen, projection" type="text/css" href="css/reflection-main-ie8.51336312dc40a2dac5b8.css" />
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="css/reflection-main-ie8.4d83d814d6b1bc40495d.css" />
 	<![endif]-->
  	<!--[if !lt IE 9]><!-->
 		<script src="js/vendor/picturefill.2.2.0.min.js" async></script>
 	<!-- <![endif]-->
 	<!--[if (gte IE 9)|(IEMobile)|(!IE)]><!-->
-		<link rel="stylesheet" media="screen, projection" type="text/css" href="css/reflection-main.1bd47931a2fa4fee7fdc.css" />
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="css/reflection-main.f079736b125e101d11b8.css" />
 	<!--<![endif]-->
 	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
 </head>
@@ -34,25 +34,29 @@
 			<div id="js-component-import--design-kit-banner" class="banner banner--component"></div>
 
 			<div class="grid-container dk-components-container">
-				<div class="grid__row grid__row--demo">
-					<ul class="tab-links-container">
-						<li class="grid__column grid__column--one-quarter grid-demo-column grid-demo-column--alternate">
-							<a href="#" class="tab-link js-toggle-grid js-change-grid-desktop">
+				<div class="grid__row">
+					<ul class="tabs-container">
+						<li class="grid__column grid__column--one-quarter tabs__tab is-active js-tab-select js-change-grid-desktop">
+							<div class="tab-animate-active"></div>
+							<a href="#tab-content-one" class="tabs__link">
 								<span class="ref-icon-before ref-icon-before--leaderboard"><span>Desktop</span></span>
 							</a>
 						</li>
-						<li class="grid__column grid__column--one-quarter grid-demo-column">
-							<a href="#" class="tab-link js-toggle-grid js-change-grid-tablet">
+						<li class="grid__column grid__column--one-quarter tabs__tab js-tab-select js-change-grid-tablet">
+							<div class="tab-animate-active"></div>
+							<a href="#tab-content-two" class="tabs__link">
 								<span class="ref-icon-before ref-icon-before--leaderboard"><span>Tablet</span></span>
 							</a>
 						</li>
-						<li class="grid__column grid__column--one-quarter grid-demo-column">
-							<a href="#" class="tab-link js-toggle-grid js-change-grid-phablet">
+						<li class="grid__column grid__column--one-quarter tabs__tab js-tab-select js-change-grid-phablet">
+							<div class="tab-animate-active"></div>
+							<a href="#tab-content-three" class="tabs__link">
 								<span class="ref-icon-before ref-icon-before--leaderboard"><span>Phablet</span></span>
 							</a>
 						</li>
-						<li class="grid__column grid__column--one-quarter grid-demo-column">
-							<a href="#" class="tab-link js-toggle-grid js-change-grid-mobile">
+						<li class="grid__column grid__column--one-quarter tabs__tab js-tab-select js-change-grid-mobile">
+							<div class="tab-animate-active"></div>
+							<a href="#tab-content-four" class="tabs__link">
 								<span class="ref-icon-before ref-icon-before--leaderboard"><span>Mobile</span></span>
 							</a>
 						</li>
@@ -61,7 +65,7 @@
 			
 				<div class="grid__row grid__row--demo">
 					<div class="grid__column grid__column--full-width grid-demo-column vertical-centre-content">
-						<button class="ref-button--cta-small js-toggle-overlay">Overlay Grid</button>
+						<button class="ref-button--function-small js-toggle-overlay">Overlay Grid</button>
 					</div>
 				</div>
 			</div>
@@ -234,11 +238,11 @@
 					</div>
 				</div>
 
+				<div class="grid__column grid__column--full-width">
+					<h2>Responsive Breakpoints</h2>
+				</div>
+					
 				<div class="grid__row dk-component-row">
-					<div class="grid__column grid__column--full-width">
-						<h2>Responsive Breakpoints</h2>
-					</div>
-
 					<div class="grid__column grid__column--one-half">
 						<h3 class="heading-style--heading-four">Breakpoint mixin</h3>
 						<p>The Breakpoint (<a href="http://breakpoint-sass.com" target="_blank">http://breakpoint-sass.com</a>) Ruby gem for SASS is used to create media queries. SASS styling should be structured from smallest screen width upwards. When styling for a particular breakpoint the breakpoint(x) mixin should be called, where the x paramenter is a variable set to the minimum screen width size for the media query.</p>
@@ -283,65 +287,16 @@
 		<script src="js/vendor/jquery.mCustomScrollbar.concat.min.js"></script>
 	<![endif]-->
 
-	<script src="js/designkit-global-templates.js"></script>
+  <div id="js-appendScriptsContainer"></div>
+
+	<script src="js/designkit-global-templates-2.js"></script>
+  <script src="js/application-2.js"></script>
+  <script src="js/designkit-app-2.js"></script>
   <script>
-  	(function($) {
+  	function initScripts() {
+  		new GridsPage();
+  	}
 
-	   	var templateDesignKitBanner = Handlebars.templates['designKitBanner'];
-			var htmlDesignKitBanner = templateDesignKitBanner({ bannerImage: "images/banner-icon-grids.aa5d09c094aad8d0c8e7.png", bannerImageAlt: "Grid icon", sectionTitle: "Design Assets", componentTitle: "Grids & Breakpoints", Intro: "The base grid for our responsive app is structured of 12 columns with 2% padding and 0 gutters. There is a fixed margin on either side which changes based on screen width: 30px on laptop /desktop, 20px on phablet and 10px on mobile. Use the tabs below to see how this grid changes across different devices." });
-			$("#js-component-import--design-kit-banner").html(htmlDesignKitBanner);
-		
-		})(jQuery);
-
-		function loadScripts() {
-		  loadComponentScripts();
-		}
-
-		function loadComponentScripts() {
-			// load custom scroll bars for everything but IE9/10
-			if (/*@cc_on!@*/true) {
-				var script = document.createElement('script');
-			  script.type = 'text/javascript';
-			  script.src = 'js/vendor/jquery.mCustomScrollbar.concat.min.js';
-		  	document.body.appendChild(script);
-			}
-	
-			var script = document.createElement('script');
-		  script.type = 'text/javascript';
-		  script.src = 'js/nav-structure.js';
-	  	document.body.appendChild(script);
-
-	  	var script = document.createElement('script');
-		  script.type = 'text/javascript';
-		  script.src = 'js/search-global.js';
-	  	document.body.appendChild(script);
-
-	  	var thisPageLink = $('#js-component-import--panel-left').find('a[href="grids.html"]');
-	  	thisPageLink.parent("li").addClass("is-selected");
-
-	  	$('.js-toggle-overlay').on("click", function(){
-	  		$('.grid-demo-layer-top').toggleClass("has-transparency");
-	  	});
-
-	  	$('.js-toggle-grid').on("click", function(e){
-	  		e.preventDefault();
-	  		$('.tab-links-container .grid-demo-column--alternate').removeClass('grid-demo-column--alternate');
-	  		$(this).parent('.grid-demo-column').addClass('grid-demo-column--alternate');
-	  	});
-	  	$('.js-change-grid-desktop').on("click", function(){
-	  		$('.grid-demo-container').removeClass("mobile-width phablet-width tablet-width");
-	  	});
-	  	$('.js-change-grid-tablet').on("click", function(){
-	  		$('.grid-demo-container').removeClass("mobile-width phablet-width").addClass("tablet-width");
-	  	});
-	  	$('.js-change-grid-phablet').on("click", function(){
-	  		$('.grid-demo-container').removeClass("mobile-width tablet-width").addClass("phablet-width");
-	  	});
-	  	$('.js-change-grid-mobile').on("click", function(){
-	  		$('.grid-demo-container').removeClass("phablet-width tablet-width").addClass("mobile-width");
-	  	});
-	  }
-
-		window.onload = loadScripts;
+  	window.onready = initScripts();
   </script>
 </body>
