@@ -92,15 +92,16 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 	@UiField Preloader preloader;
 
-	@UiField(provided = true) CellTable<ItemRevenue> revenueTable;
+	@UiField(provided = true) CellTable<ItemRevenue> revenueTable = new CellTable<ItemRevenue>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
 
 	private String internalId;
+	private String comingPage;
 
 	private RankingType rankingType;
 	private YAxisDataType dataType;
 	private Item item;
 
-	private Map<String, LIElement> mTabs = new HashMap<String, LIElement>();
+	private Map<String, LIElement> tabs = new HashMap<String, LIElement>();
 
 	private String selectedTab;
 
@@ -114,12 +115,11 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 		Styles.INSTANCE.flags().ensureInjected();
 
-		mTabs.put(REVENUE_CHART_TYPE, revenueItem);
-		mTabs.put(DOWNLOADS_CHART_TYPE, downloadsItem);
-		mTabs.put(RANKING_CHART_TYPE, rankingItem);
+		tabs.put(REVENUE_CHART_TYPE, revenueItem);
+		tabs.put(DOWNLOADS_CHART_TYPE, downloadsItem);
+		tabs.put(RANKING_CHART_TYPE, rankingItem);
 
 		if (SessionController.get().isLoggedInUserAdmin()) {
-			revenueTable = new CellTable<ItemRevenue>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
 			createColumns();
 			RankController.get().getItemRevenueDataProvider().addDataDisplay(revenueTable);
 		} else {
@@ -246,6 +246,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	public void navigationChanged(Stack previous, Stack current) {
 		if (isValidStack(current)) {
 
+			comingPage = current.getParameter(2);
+
 			String newInternalId = current.getParameter(0);
 			boolean isNewDataRequired = false;
 
@@ -281,11 +283,11 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			}
 
 			revenueLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
-					REVENUE_CHART_TYPE, filterContents));
+					REVENUE_CHART_TYPE, comingPage, filterContents));
 			downloadsLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
-					DOWNLOADS_CHART_TYPE, filterContents));
+					DOWNLOADS_CHART_TYPE, comingPage, filterContents));
 			rankingLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
-					RANKING_CHART_TYPE, filterContents));
+					RANKING_CHART_TYPE, comingPage, filterContents));
 
 			topPanel.updateFromFilter();
 
@@ -330,12 +332,14 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 	private boolean isValidStack(Stack current) {
 		return (current != null
-				&& current.getParameterCount() >= 3
+				&& current.getParameterCount() >= 4
 				&& PageType.ItemPageType.equals(current.getPage())
 				&& NavigationController.VIEW_ACTION_PARAMETER_VALUE.equals(current.getAction())
 				&& current.getParameter(0).matches("[0-9]+")
 				&& (current.getParameter(1).equals(REVENUE_CHART_TYPE) || current.getParameter(1).equals(DOWNLOADS_CHART_TYPE) || current.getParameter(1)
-						.equals(RANKING_CHART_TYPE)) && current.getParameter(2).startsWith(FilterController.ITEM_FILTER_KEY));
+						.equals(RANKING_CHART_TYPE))
+				&& (current.getParameter(2).equals(RanksPage.COMING_FROM_PARAMETER) || current.getParameter(2).equals(MyAppsPage.COMING_FROM_PARAMETER)) && current
+				.getParameter(3).startsWith(FilterController.ITEM_FILTER_KEY));
 	}
 
 	private void displayItemDetails(Rank rank) {
@@ -403,11 +407,11 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	// }
 
 	private void refreshTabs() {
-		for (String key : mTabs.keySet()) {
-			mTabs.get(key).removeClassName("active");
+		for (String key : tabs.keySet()) {
+			tabs.get(key).removeClassName("active");
 		}
 
-		mTabs.get(selectedTab).addClassName("active");
+		tabs.get(selectedTab).addClassName("active");
 	}
 
 	/*
@@ -467,8 +471,14 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			RankController.get().cancelRequestItemRanks();
 			RankController.get().cancelRequestItemSalesRanks();
 			if (LinkedAccountController.get().getLinkedAccountItem(item) != null) {
-				RankController.get().fetchItemSalesRanks(item);
+				if (MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
+					RankController.get().fetchItemSalesRanks(item);
+				} else {
+					RankController.get().fetchItemRanks(item);
+				}
 			}
+		} else {
+			// item == null
 		}
 	}
 
@@ -480,7 +490,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
 		if (NavigationController.get().getCurrentPage() == PageType.ItemPageType) {
-			PageType.ItemPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId, selectedTab, FilterController.get().asItemFilterString());
+			PageType.ItemPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId, selectedTab, comingPage, FilterController.get()
+					.asItemFilterString());
 		}
 	}
 
@@ -492,7 +503,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
 		if (NavigationController.get().getCurrentPage() == PageType.ItemPageType) {
-			PageType.ItemPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId, selectedTab, FilterController.get().asItemFilterString());
+			PageType.ItemPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId, selectedTab, comingPage, FilterController.get()
+					.asItemFilterString());
 		}
 	}
 
@@ -550,12 +562,16 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public void getLinkedAccountItemSuccess(GetLinkedAccountItemRequest input, GetLinkedAccountItemResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			if (output.item == null) {
+			if (output.item == null) { // Not my app
 				RankController.get().fetchItemRanks(item);
 			} else {
 				setItemInfo(output.item);
 				sidePanel.setItem(item);
-				RankController.get().fetchItemSalesRanks(item);
+				if (MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
+					RankController.get().fetchItemSalesRanks(item);
+				} else {
+					RankController.get().fetchItemRanks(item);
+				}
 			}
 		} else {
 			sidePanel.setPriceInnerHTML("-");
