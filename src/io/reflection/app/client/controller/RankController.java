@@ -26,6 +26,7 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.helper.ApiCallHelper;
+import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.part.datatypes.ItemRevenue;
 import io.reflection.app.client.part.datatypes.RanksGroup;
 import io.reflection.app.datatypes.shared.Item;
@@ -33,10 +34,12 @@ import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.http.client.Request;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
 import com.google.gwt.view.client.ListDataProvider;
@@ -88,6 +91,11 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 		input.on = FilterController.get().getEndDate(); // Get start date from filter
 
+		Date today = FilterHelper.getToday();
+		if (CalendarUtil.isSameDate(input.on, today)) {
+			input.on = today;
+		}
+		
 		input.category = FilterController.get().getCategory();
 
 		if (pager == null) {
