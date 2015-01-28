@@ -7,8 +7,8 @@
 //
 package io.reflection.app.client.cell;
 
-import static io.reflection.app.client.helper.FormattingHelper.WHOLE_NUMBER_FORMAT;
 import static io.reflection.app.client.controller.FilterController.REVENUE_DAILY_DATA_TYPE;
+import static io.reflection.app.client.helper.FormattingHelper.WHOLE_NUMBER_FORMAT;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.ItemController;
@@ -43,7 +43,7 @@ public class AppRankCell extends AbstractCell<Rank> {
 		void render(SafeHtmlBuilder sb, String name, String creatorName, SafeUri smallImage, SafeUri link, SafeHtml dailyData, String displayDailyData);
 	}
 
-	private boolean showModelPredictions;
+	private boolean showAllPredictions;
 
 	interface DailyDataTemplate extends SafeHtmlTemplates {
 		DailyDataTemplate INSTANCE = GWT.create(DailyDataTemplate.class);
@@ -52,8 +52,8 @@ public class AppRankCell extends AbstractCell<Rank> {
 		SafeHtml dailyData(String icon, String style, String value);
 	}
 
-	public AppRankCell(boolean showModelPredictions) {
-		this.showModelPredictions = showModelPredictions;
+	public AppRankCell(boolean showAllPredictions) {
+		this.showAllPredictions = showAllPredictions;
 	}
 
 	private static AppRankCellRenderer RENDERER = GWT.create(AppRankCellRenderer.class);
@@ -77,17 +77,17 @@ public class AppRankCell extends AbstractCell<Rank> {
 
 		SafeHtml dailyData;
 
-		if (REVENUE_DAILY_DATA_TYPE.equals(dailyDataType)) {
+		if (REVENUE_DAILY_DATA_TYPE.equals(dailyDataType) && showAllPredictions) {
 			if (value.downloads != null && value.revenue != null) {
 				dailyData = DailyDataTemplate.INSTANCE.dailyData("icon-dollar", "padding-right: 6px",
-						FormattingHelper.asWholeMoneyString(value.currency, showModelPredictions ? value.revenue.floatValue() : 0.0f));
+						FormattingHelper.asWholeMoneyString(value.currency, showAllPredictions ? value.revenue.floatValue() : 0.0f));
 			} else {
 				dailyData = SafeHtmlUtils.fromSafeConstant("-");
 			}
 		} else {
 			if (value.downloads != null) {
 				dailyData = DailyDataTemplate.INSTANCE.dailyData("icon-download-alt", "padding-right: 6px",
-						WHOLE_NUMBER_FORMAT.format(showModelPredictions ? value.downloads.doubleValue() : 0.0));
+						WHOLE_NUMBER_FORMAT.format(value.downloads.doubleValue()));
 			} else {
 				dailyData = SafeHtmlUtils.fromSafeConstant("-");
 			}
@@ -98,24 +98,25 @@ public class AppRankCell extends AbstractCell<Rank> {
 			listType = s.getParameter(RanksPage.SELECTED_TAB_PARAMETER_INDEX);
 		}
 
-		SafeStyles display;
+		SafeStyles display = null;
 		if (FilterController.OVERALL_LIST_TYPE.equals(listType)) {
 			switch (context.getColumn()) {
 			case 1:
 				filter = Filter.parse(filter.asItemFilterString());
-				filter.setListType(FilterController.PAID_LIST_TYPE);
+				filter.setListType(FilterController.FREE_LIST_TYPE);
+				display = SafeStylesUtils.fromTrustedString("");
 				break;
 			case 2:
 				filter = Filter.parse(filter.asItemFilterString());
-				filter.setListType(FilterController.FREE_LIST_TYPE);
+				filter.setListType(FilterController.PAID_LIST_TYPE);
+				display = showAllPredictions ? SafeStylesUtils.fromTrustedString("") : SafeStylesUtils.forDisplay(Display.NONE);
 				break;
 			case 3:
 				filter = Filter.parse(filter.asItemFilterString());
 				filter.setListType(FilterController.GROSSING_LIST_TYPE);
+				display = showAllPredictions ? SafeStylesUtils.fromTrustedString("") : SafeStylesUtils.forDisplay(Display.NONE);
 				break;
 			}
-
-			display = SafeStylesUtils.fromTrustedString("");
 		} else {
 			display = SafeStylesUtils.forDisplay(Display.NONE);
 		}
