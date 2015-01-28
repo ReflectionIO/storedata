@@ -94,6 +94,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	public static final int SELECTED_TAB_PARAMETER_INDEX = 0;
 	public static final int VIEW_ALL_LENGTH_VALUE = Integer.MAX_VALUE;
 	public static final String ALL_TEXT = "Overview / All";
+	public static final String COMING_FROM_PARAMETER = "leaderboard";
 
 	@UiField RanksPageStyle style;
 
@@ -444,11 +445,11 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 				ranksTable.setColumnWidth(revenueColumn, 13.0, Unit.PCT);
 				ranksTable.setColumnWidth(iapColumn, 13.0, Unit.PCT);
 			} else {
-				ranksTable.setColumnWidth(rankColumn, 14.0, Unit.PCT);
-				ranksTable.setColumnWidth(freeColumn, 40.0, Unit.PCT);
+				ranksTable.setColumnWidth(rankColumn, 13.0, Unit.PCT);
+				ranksTable.setColumnWidth(freeColumn, 42.0, Unit.PCT);
 				ranksTable.setColumnWidth(priceColumn, 16.0, Unit.PCT);
 				ranksTable.setColumnWidth(downloadsColumn, 16.0, Unit.PCT);
-				ranksTable.setColumnWidth(iapColumn, 14.0, Unit.PCT);
+				ranksTable.setColumnWidth(iapColumn, 13.0, Unit.PCT);
 			}
 			addColumn(rankColumn, rankHeader);
 			addColumn(freeColumn, freeHeader);
