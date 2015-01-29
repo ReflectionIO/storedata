@@ -28,9 +28,10 @@ import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.ItemController;
 import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.NavigationController;
-import io.reflection.app.client.controller.StoreController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.RankController;
+import io.reflection.app.client.controller.SessionController;
+import io.reflection.app.client.controller.StoreController;
 import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.FormattingHelper;
@@ -56,6 +57,7 @@ import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -63,7 +65,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
-import com.google.gwt.user.cellview.client.TextHeader;
+import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -83,7 +85,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField InlineHyperlink revenueLink;
 	@UiField InlineHyperlink downloadsLink;
 	@UiField InlineHyperlink rankingLink;
-
+	private InlineHTML comingSoon = new InlineHTML("&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;Coming soon");
 	@UiField LIElement revenueItem;
 	@UiField LIElement downloadsItem;
 	@UiField LIElement rankingItem;
@@ -95,12 +97,13 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField(provided = true) CellTable<ItemRevenue> revenueTable = new CellTable<ItemRevenue>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
 
 	private String internalId;
+	private String comingPage;
 
 	private RankingType rankingType;
 	private YAxisDataType dataType;
 	private Item item;
 
-	private Map<String, LIElement> mTabs = new HashMap<String, LIElement>();
+	private Map<String, LIElement> tabs = new HashMap<String, LIElement>();
 
 	private String selectedTab;
 
@@ -114,13 +117,18 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 		Styles.INSTANCE.flags().ensureInjected();
 
-		createColumns();
+		tabs.put(REVENUE_CHART_TYPE, revenueItem);
+		tabs.put(DOWNLOADS_CHART_TYPE, downloadsItem);
+		tabs.put(RANKING_CHART_TYPE, rankingItem);
+		comingSoon.getElement().getStyle().setFontSize(14.0, Unit.PX);
+		setRevenueDownloadTabsEnabled(false);
 
-		mTabs.put(REVENUE_CHART_TYPE, revenueItem);
-		mTabs.put(DOWNLOADS_CHART_TYPE, downloadsItem);
-		mTabs.put(RANKING_CHART_TYPE, rankingItem);
-
-		RankController.get().getItemRevenueDataProvider().addDataDisplay(revenueTable);
+		if (SessionController.get().isLoggedInUserAdmin()) {
+			createColumns();
+			RankController.get().getItemRevenueDataProvider().addDataDisplay(revenueTable);
+		} else {
+			revenueTable.removeFromParent();
+		}
 
 		tablePlaceholder.add(itemRevenuePlaceholder);
 
@@ -132,10 +140,12 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	 * @param enabled
 	 */
 	private void setLoadingSpinnerEnabled(boolean enabled) {
-		if (enabled) {
-			revenueTable.setRowData(0, tablePlaceholder);
-		} else {
-			revenueTable.setRowCount(0, true);
+		if (SessionController.get().isLoggedInUserAdmin()) {
+			if (enabled) {
+				revenueTable.setRowData(0, tablePlaceholder);
+			} else {
+				revenueTable.setRowCount(0, true);
+			}
 		}
 	}
 
@@ -196,30 +206,20 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			}
 		};
 
-		TextHeader countryHeader = new TextHeader("Country");
-		revenueTable.addColumn(countryColumn, countryHeader);
-
+		revenueTable.addColumn(countryColumn, "Country");
 		// TextHeader percentageHeader = new TextHeader("% total revenue");
 		// revenue.addColumn(percentageColumn, percentageHeader);
-
-		TextHeader paidHeader = new TextHeader("Paid");
-		revenueTable.addColumn(paidColumn, paidHeader);
-
-		TextHeader subscriptionHeader = new TextHeader("Subscription");
-		revenueTable.addColumn(subscriptionColumn, subscriptionHeader);
-
-		TextHeader iapHeader = new TextHeader("IAP");
-		revenueTable.addColumn(iapColumn, iapHeader);
-
-		TextHeader totalHeader = new TextHeader("Total");
-		revenueTable.addColumn(totalColumn, totalHeader);
-
+		revenueTable.addColumn(paidColumn, "Paid");
+		revenueTable.addColumn(subscriptionColumn, "Subscription");
+		revenueTable.addColumn(iapColumn, "IAP");
+		revenueTable.addColumn(totalColumn, "Total");
 		revenueTable.setWidth("100%", true);
 		revenueTable.setColumnWidth(countryColumn, 136.0, Unit.PX);
 		revenueTable.setColumnWidth(paidColumn, 51.0, Unit.PX);
 		revenueTable.setColumnWidth(subscriptionColumn, 51.0, Unit.PX);
 		revenueTable.setColumnWidth(iapColumn, 51.0, Unit.PX);
 		revenueTable.setColumnWidth(totalColumn, 51.0, Unit.PX);
+
 	}
 
 	/*
@@ -249,6 +249,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
 		if (isValidStack(current)) {
+
+			comingPage = current.getParameter(2);
 
 			String newInternalId = current.getParameter(0);
 			boolean isNewDataRequired = false;
@@ -284,41 +286,46 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				isNewDataRequired = true;
 			}
 
-			revenueLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
-					REVENUE_CHART_TYPE, filterContents));
-			downloadsLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
-					DOWNLOADS_CHART_TYPE, filterContents));
+			// revenueLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
+			// REVENUE_CHART_TYPE, comingPage, filterContents));
+			// downloadsLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
+			// DOWNLOADS_CHART_TYPE, comingPage, filterContents));
 			rankingLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
-					RANKING_CHART_TYPE, filterContents));
+					RANKING_CHART_TYPE, comingPage, filterContents));
 
-			topPanel.updateFromFilter();
-
-			String newSelectedTab = current.getParameter(SELECTED_TAB_PARAMETER_INDEX);
-			boolean isNewSelectedTab = false;
-			if (selectedTab == null || !selectedTab.equals(newSelectedTab)) {
-				selectedTab = newSelectedTab;
-				refreshTabs();
-				isNewSelectedTab = true;
+			boolean showAllData = true;
+			if (!SessionController.get().isLoggedInUserAdmin() && !MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
+				setRevenueDownloadTabsEnabled(false);
+				showAllData = false;
+			} else {
+				setRevenueDownloadTabsEnabled(true);
 			}
 
-			dataType = YAxisDataType.fromString(selectedTab);
-			historyChart.setDataType(dataType);
-
-			if (isNewSelectedTab && !isNewDataRequired) {
-				historyChart.drawData();
-			}
-
-			if (isNewDataRequired) {
-				setLoadingSpinnerEnabled(true);
-				sidePanel.setPriceInnerHTML(null);
-				getHistoryChartData();
-			}
-
-			Element chartBackgroundElem = historyChart.getElement().getFirstChildElement().getFirstChildElement().getFirstChildElement().getFirstChildElement()
-					.getNextSiblingElement().getFirstChildElement().getFirstChildElement();
-			if (chartBackgroundElem != null) {
-				chartBackgroundElem.getStyle()
-						.setProperty("background", "repeating-linear-gradient(180deg, #FAFAFA, #FAFAFA 50px, #FFFFFF 50px,#FFFFFF 100px)");
+			if (showAllData || (!showAllData && current.getParameter(1).equals(RANKING_CHART_TYPE))) {
+				topPanel.updateFromFilter();
+				String newSelectedTab = current.getParameter(SELECTED_TAB_PARAMETER_INDEX);
+				boolean isNewSelectedTab = false;
+				if (selectedTab == null || !selectedTab.equals(newSelectedTab)) {
+					selectedTab = newSelectedTab;
+					refreshTabs();
+					isNewSelectedTab = true;
+				}
+				dataType = YAxisDataType.fromString(selectedTab);
+				historyChart.setDataType(dataType);
+				if (isNewSelectedTab && !isNewDataRequired) {
+					historyChart.drawData();
+				}
+				if (isNewDataRequired) {
+					setLoadingSpinnerEnabled(true);
+					sidePanel.setPriceInnerHTML(null);
+					getHistoryChartData();
+				}
+				Element chartBackgroundElem = historyChart.getElement().getFirstChildElement().getFirstChildElement().getFirstChildElement()
+						.getFirstChildElement().getNextSiblingElement().getFirstChildElement().getFirstChildElement();
+				if (chartBackgroundElem != null) {
+					chartBackgroundElem.getStyle().setProperty("background",
+							"repeating-linear-gradient(180deg, #FAFAFA, #FAFAFA 50px, #FFFFFF 50px,#FFFFFF 100px)");
+				}
 			}
 
 			// AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.SuccessAlertBoxType, false, "Item",
@@ -334,12 +341,14 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 	private boolean isValidStack(Stack current) {
 		return (current != null
-				&& current.getParameterCount() >= 3
+				&& current.getParameterCount() >= 4
 				&& PageType.ItemPageType.equals(current.getPage())
 				&& NavigationController.VIEW_ACTION_PARAMETER_VALUE.equals(current.getAction())
 				&& current.getParameter(0).matches("[0-9]+")
 				&& (current.getParameter(1).equals(REVENUE_CHART_TYPE) || current.getParameter(1).equals(DOWNLOADS_CHART_TYPE) || current.getParameter(1)
-						.equals(RANKING_CHART_TYPE)) && current.getParameter(2).startsWith(FilterController.ITEM_FILTER_KEY));
+						.equals(RANKING_CHART_TYPE))
+				&& (current.getParameter(2).equals(RanksPage.COMING_FROM_PARAMETER) || current.getParameter(2).equals(MyAppsPage.COMING_FROM_PARAMETER)) && current
+				.getParameter(3).startsWith(FilterController.ITEM_FILTER_KEY));
 	}
 
 	private void displayItemDetails(Rank rank) {
@@ -407,11 +416,11 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	// }
 
 	private void refreshTabs() {
-		for (String key : mTabs.keySet()) {
-			mTabs.get(key).removeClassName("active");
+		for (String key : tabs.keySet()) {
+			tabs.get(key).removeClassName("active");
 		}
 
-		mTabs.get(selectedTab).addClassName("active");
+		tabs.get(selectedTab).addClassName("active");
 	}
 
 	/*
@@ -471,8 +480,14 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			RankController.get().cancelRequestItemRanks();
 			RankController.get().cancelRequestItemSalesRanks();
 			if (LinkedAccountController.get().getLinkedAccountItem(item) != null) {
-				RankController.get().fetchItemSalesRanks(item);
+				if (MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
+					RankController.get().fetchItemSalesRanks(item);
+				} else {
+					RankController.get().fetchItemRanks(item);
+				}
 			}
+		} else {
+			// item == null
 		}
 	}
 
@@ -484,7 +499,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
 		if (NavigationController.get().getCurrentPage() == PageType.ItemPageType) {
-			PageType.ItemPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId, selectedTab, FilterController.get().asItemFilterString());
+			PageType.ItemPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId, selectedTab, comingPage, FilterController.get()
+					.asItemFilterString());
 		}
 	}
 
@@ -496,7 +512,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
 		if (NavigationController.get().getCurrentPage() == PageType.ItemPageType) {
-			PageType.ItemPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId, selectedTab, FilterController.get().asItemFilterString());
+			PageType.ItemPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId, selectedTab, comingPage, FilterController.get()
+					.asItemFilterString());
 		}
 	}
 
@@ -554,12 +571,16 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public void getLinkedAccountItemSuccess(GetLinkedAccountItemRequest input, GetLinkedAccountItemResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			if (output.item == null) {
+			if (output.item == null) { // Not my app
 				RankController.get().fetchItemRanks(item);
 			} else {
 				setItemInfo(output.item);
 				sidePanel.setItem(item);
-				RankController.get().fetchItemSalesRanks(item);
+				if (MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
+					RankController.get().fetchItemSalesRanks(item);
+				} else {
+					RankController.get().fetchItemRanks(item);
+				}
 			}
 		} else {
 			sidePanel.setPriceInnerHTML("-");
@@ -590,6 +611,43 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		}
 		if (i.largeImage != null) {
 			item.largeImage = i.largeImage;
+		}
+	}
+
+	private void setRevenueDownloadTabsEnabled(boolean enable) {
+		if (enable) {
+			revenueLink.setHTML("Revenue");
+			revenueLink.getElement().getStyle().setColor("#0e0e1f");
+			revenueLink.getElement().getStyle().setCursor(Cursor.POINTER);
+			revenueItem.getStyle().setCursor(Cursor.DEFAULT);
+			downloadsLink.setHTML("Downloads");
+			downloadsLink.getElement().getStyle().setColor("#0e0e1f");
+			downloadsLink.getElement().getStyle().setCursor(Cursor.POINTER);
+			downloadsItem.getStyle().setCursor(Cursor.DEFAULT);
+			revenueLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
+					REVENUE_CHART_TYPE, comingPage, filterContents));
+			downloadsLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
+					DOWNLOADS_CHART_TYPE, comingPage, filterContents));
+			tabs.put(REVENUE_CHART_TYPE, revenueItem);
+			tabs.put(DOWNLOADS_CHART_TYPE, downloadsItem);
+		} else {
+			revenueLink.setHTML("Revenue" + comingSoon);
+			revenueLink.getElement().getStyle().setColor("lightgrey");
+			revenueLink.getElement().getStyle().setCursor(Cursor.DEFAULT);
+			revenueItem.getStyle().setCursor(Cursor.DEFAULT);
+			downloadsLink.setHTML("Downloads" + comingSoon);
+			downloadsLink.getElement().getStyle().setColor("lightgrey");
+			downloadsLink.getElement().getStyle().setCursor(Cursor.DEFAULT);
+			downloadsItem.getStyle().setCursor(Cursor.DEFAULT);
+			revenueLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
+			downloadsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
+			for (String key : tabs.keySet()) {
+				tabs.get(key).removeClassName("active");
+			}
+			tabs.get(RANKING_CHART_TYPE).addClassName("active");
+			tabs.remove(REVENUE_CHART_TYPE);
+			tabs.remove(DOWNLOADS_CHART_TYPE);
+
 		}
 	}
 

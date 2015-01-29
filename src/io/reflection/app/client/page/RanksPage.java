@@ -94,6 +94,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	public static final int SELECTED_TAB_PARAMETER_INDEX = 0;
 	public static final int VIEW_ALL_LENGTH_VALUE = Integer.MAX_VALUE;
 	public static final String ALL_TEXT = "Overview / All";
+	public static final String COMING_FROM_PARAMETER = "leaderboard";
 
 	@UiField RanksPageStyle style;
 
@@ -426,10 +427,10 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 		if (OVERALL_LIST_TYPE.equals(selectedTab)) {
 			removeAllColumns();
-			ranksTable.setColumnWidth(rankColumn, 13.0, Unit.PCT);
-			ranksTable.setColumnWidth(freeColumn, 29.0, Unit.PCT);
-			ranksTable.setColumnWidth(paidColumn, 29.0, Unit.PCT);
-			ranksTable.setColumnWidth(grossingColumn, 29.0, Unit.PCT);
+			ranksTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+			ranksTable.setColumnWidth(freeColumn, 30.0, Unit.PCT);
+			ranksTable.setColumnWidth(paidColumn, 30.0, Unit.PCT);
+			ranksTable.setColumnWidth(grossingColumn, 30.0, Unit.PCT);
 			addColumn(rankColumn, rankHeader);
 			addColumn(freeColumn, freeHeader);
 			addColumn(paidColumn, paidHeader);
@@ -437,18 +438,18 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		} else if (FREE_LIST_TYPE.equals(selectedTab)) {
 			removeAllColumns();
 			if (SessionController.get().isLoggedInUserAdmin()) {
-				ranksTable.setColumnWidth(rankColumn, 13.0, Unit.PCT);
-				ranksTable.setColumnWidth(freeColumn, 35.0, Unit.PCT);
+				ranksTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+				ranksTable.setColumnWidth(freeColumn, 38.0, Unit.PCT);
 				ranksTable.setColumnWidth(priceColumn, 13.0, Unit.PCT);
 				ranksTable.setColumnWidth(downloadsColumn, 13.0, Unit.PCT);
 				ranksTable.setColumnWidth(revenueColumn, 13.0, Unit.PCT);
 				ranksTable.setColumnWidth(iapColumn, 13.0, Unit.PCT);
 			} else {
-				ranksTable.setColumnWidth(rankColumn, 14.0, Unit.PCT);
-				ranksTable.setColumnWidth(freeColumn, 40.0, Unit.PCT);
+				ranksTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+				ranksTable.setColumnWidth(freeColumn, 42.0, Unit.PCT);
 				ranksTable.setColumnWidth(priceColumn, 16.0, Unit.PCT);
 				ranksTable.setColumnWidth(downloadsColumn, 16.0, Unit.PCT);
-				ranksTable.setColumnWidth(iapColumn, 14.0, Unit.PCT);
+				ranksTable.setColumnWidth(iapColumn, 16.0, Unit.PCT);
 			}
 			addColumn(rankColumn, rankHeader);
 			addColumn(freeColumn, freeHeader);
@@ -461,8 +462,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		} else if (PAID_LIST_TYPE.equals(selectedTab)) {
 			if (SessionController.get().isLoggedInUserAdmin()) {
 				removeAllColumns();
-				ranksTable.setColumnWidth(rankColumn, 13.0, Unit.PCT);
-				ranksTable.setColumnWidth(paidColumn, 35.0, Unit.PCT);
+				ranksTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+				ranksTable.setColumnWidth(paidColumn, 38.0, Unit.PCT);
 				ranksTable.setColumnWidth(priceColumn, 13.0, Unit.PCT);
 				ranksTable.setColumnWidth(downloadsColumn, 13.0, Unit.PCT);
 				ranksTable.setColumnWidth(revenueColumn, 13.0, Unit.PCT);
@@ -477,8 +478,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		} else if (GROSSING_LIST_TYPE.equals(selectedTab)) {
 			if (SessionController.get().isLoggedInUserAdmin()) {
 				removeAllColumns();
-				ranksTable.setColumnWidth(rankColumn, 13.0, Unit.PCT);
-				ranksTable.setColumnWidth(grossingColumn, 35.0, Unit.PCT);
+				ranksTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+				ranksTable.setColumnWidth(grossingColumn, 38.0, Unit.PCT);
 				ranksTable.setColumnWidth(priceColumn, 13.0, Unit.PCT);
 				ranksTable.setColumnWidth(downloadsColumn, 13.0, Unit.PCT);
 				ranksTable.setColumnWidth(revenueColumn, 13.0, Unit.PCT);

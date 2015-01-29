@@ -303,33 +303,35 @@ public class ItemChart extends GChart {
 		int minY = Integer.MAX_VALUE, maxY = 0;
 		Date lastDate = null;
 
-		for (Rank rank : ranks) {
-			if (withinChartRange(rank) || rank.downloads == null) {
-				continue;
-			}
-
-			int gap = 0;
-
-			if (rank.downloads.intValue() < minY) {
-				minY = rank.downloads.intValue();
-			}
-
-			if (rank.downloads.intValue() > maxY) {
-				maxY = rank.downloads.intValue();
-			}
-
-			if (lastDate != null && (gap = CalendarUtil.getDaysBetween(lastDate, rank.date)) > 1) {
-				for (int i = 0; i < gap; i++) {
-					CalendarUtil.addDaysToDate(lastDate, 1);
-					curve.addPoint(lastDate.getTime(), Integer.MAX_VALUE);
+		if (ranks != null) {
+			for (Rank rank : ranks) {
+				if (withinChartRange(rank) || rank.downloads == null) {
+					continue;
 				}
-			} else {
-				lastDate = CalendarUtil.copyDate(rank.date);
-				curve.addPoint(rank.date.getTime(), showModelPredictions ? rank.downloads.intValue() : 0);
-			}
-		}
 
-		setYAxisRange(minY, maxY);
+				int gap = 0;
+
+				if (rank.downloads.intValue() < minY) {
+					minY = rank.downloads.intValue();
+				}
+
+				if (rank.downloads.intValue() > maxY) {
+					maxY = rank.downloads.intValue();
+				}
+
+				if (lastDate != null && (gap = CalendarUtil.getDaysBetween(lastDate, rank.date)) > 1) {
+					for (int i = 0; i < gap; i++) {
+						CalendarUtil.addDaysToDate(lastDate, 1);
+						curve.addPoint(lastDate.getTime(), Integer.MAX_VALUE);
+					}
+				} else {
+					lastDate = CalendarUtil.copyDate(rank.date);
+					curve.addPoint(rank.date.getTime(), showModelPredictions ? rank.downloads.intValue() : 0);
+				}
+			}
+
+			setYAxisRange(minY, maxY);
+		}
 	}
 
 	/**
@@ -344,33 +346,35 @@ public class ItemChart extends GChart {
 		int minY = Integer.MAX_VALUE, maxY = 0;
 		Date lastDate = null;
 
-		for (Rank rank : ranks) {
-			if (withinChartRange(rank) || rank.revenue == null) {
-				continue;
-			}
-
-			int gap = 0;
-
-			if (rank.revenue.intValue() < minY) {
-				minY = rank.revenue.intValue();
-			}
-
-			if (rank.revenue.intValue() > maxY) {
-				maxY = rank.revenue.intValue();
-			}
-
-			if (lastDate != null && (gap = CalendarUtil.getDaysBetween(lastDate, rank.date)) > 1) {
-				for (int i = 0; i < gap; i++) {
-					CalendarUtil.addDaysToDate(lastDate, 1);
-					curve.addPoint(lastDate.getTime(), Integer.MAX_VALUE);
+		if (ranks != null) {
+			for (Rank rank : ranks) {
+				if (withinChartRange(rank) || rank.revenue == null) {
+					continue;
 				}
-			} else {
-				lastDate = CalendarUtil.copyDate(rank.date);
-				curve.addPoint(rank.date.getTime(), showModelPredictions ? rank.revenue.floatValue() : 0);
-			}
-		}
 
-		setYAxisRange(minY, maxY);
+				int gap = 0;
+
+				if (rank.revenue.intValue() < minY) {
+					minY = rank.revenue.intValue();
+				}
+
+				if (rank.revenue.intValue() > maxY) {
+					maxY = rank.revenue.intValue();
+				}
+
+				if (lastDate != null && (gap = CalendarUtil.getDaysBetween(lastDate, rank.date)) > 1) {
+					for (int i = 0; i < gap; i++) {
+						CalendarUtil.addDaysToDate(lastDate, 1);
+						curve.addPoint(lastDate.getTime(), Integer.MAX_VALUE);
+					}
+				} else {
+					lastDate = CalendarUtil.copyDate(rank.date);
+					curve.addPoint(rank.date.getTime(), showModelPredictions ? rank.revenue.floatValue() : 0);
+				}
+			}
+
+			setYAxisRange(minY, maxY);
+		}
 	}
 
 	private void drawRanking() {
@@ -378,32 +382,34 @@ public class ItemChart extends GChart {
 		int position;
 		Date lastDate = null;
 
-		for (Rank rank : ranks) {
-			if (withinChartRange(rank) || (position = getPosition(rank)) == 0) {
-				continue;
-			}
-
-			if (position < minY) {
-				minY = position;
-			}
-
-			if (position > maxY) {
-				maxY = position;
-			}
-
-			int gap = 0;
-			if (lastDate != null && (gap = CalendarUtil.getDaysBetween(lastDate, rank.date)) > 1) {
-				for (int i = 0; i < gap; i++) {
-					CalendarUtil.addDaysToDate(lastDate, 1);
-					curve.addPoint(lastDate.getTime(), Integer.MAX_VALUE);
+		if (ranks != null) {
+			for (Rank rank : ranks) {
+				if (withinChartRange(rank) || (position = getPosition(rank)) == 0) {
+					continue;
 				}
-			} else {
-				lastDate = CalendarUtil.copyDate(rank.date);
-				curve.addPoint(rank.date.getTime(), position);
-			}
-		}
 
-		setYAxisRange(minY, maxY);
+				if (position < minY) {
+					minY = position;
+				}
+
+				if (position > maxY) {
+					maxY = position;
+				}
+
+				int gap = 0;
+				if (lastDate != null && (gap = CalendarUtil.getDaysBetween(lastDate, rank.date)) > 1) {
+					for (int i = 0; i < gap; i++) {
+						CalendarUtil.addDaysToDate(lastDate, 1);
+						curve.addPoint(lastDate.getTime(), Integer.MAX_VALUE);
+					}
+				} else {
+					lastDate = CalendarUtil.copyDate(rank.date);
+					curve.addPoint(rank.date.getTime(), position);
+				}
+			}
+
+			setYAxisRange(minY, maxY);
+		}
 	}
 
 	/**

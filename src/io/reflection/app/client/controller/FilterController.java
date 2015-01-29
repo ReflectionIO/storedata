@@ -329,7 +329,7 @@ public class FilterController {
 			}
 			if (allParts[0].equals("!item") && pageTypeFilter != PageType.ItemPageType) { // Dump object reference and make item filter independent again
 				pageTypeFilter = PageType.ItemPageType;
-				mCurrentFilter = Filter.parse(allParts[4]);
+				mCurrentFilter = Filter.parse(allParts[5]);
 			}
 			filters.put(PageType.ItemPageType, mCurrentFilter);
 		}

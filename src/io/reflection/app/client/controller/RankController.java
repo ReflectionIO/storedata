@@ -195,6 +195,11 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 		});
 	}
 
+	/**
+	 * Retrieve real data
+	 * 
+	 * @param item
+	 */
 	public void fetchItemSalesRanks(final Item item) {
 		cancelRequestItemSalesRanks();
 
@@ -282,6 +287,11 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 		});
 	}
 
+	/**
+	 * Retrieve predictions
+	 * 
+	 * @param item
+	 */
 	public void fetchItemRanks(final Item item) {
 
 		cancelRequestItemRanks();
