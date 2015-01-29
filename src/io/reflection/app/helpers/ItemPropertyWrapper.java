@@ -22,6 +22,8 @@ import static com.willshex.gson.json.shared.Convert.toJsonObject;
  */
 public class ItemPropertyWrapper {
 
+	public static final int IAP_DAY_OFFSET = 10;
+	
 	public static final String PROPERTY_IAP = "usesIap";
 	public static final String PROPERTY_IAP_ON = "usesIap.on";
 	

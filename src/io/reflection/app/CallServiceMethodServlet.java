@@ -7,6 +7,9 @@
 //
 package io.reflection.app;
 
+import static io.reflection.app.helpers.ItemPropertyWrapper.IAP_DAY_OFFSET;
+import static io.reflection.app.helpers.ItemPropertyWrapper.PROPERTY_IAP;
+import static io.reflection.app.helpers.ItemPropertyWrapper.PROPERTY_IAP_ON;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
@@ -163,9 +166,9 @@ public class CallServiceMethodServlet extends HttpServlet {
 								if (item != null) {
 									wrapper = new ItemPropertyWrapper(item.properties);
 
-									if ((usesIap = wrapper.getBoolean(ItemPropertyWrapper.PROPERTY_IAP, null)) == null || usesIap == Boolean.FALSE) {
-										wrapper.setBoolean(ItemPropertyWrapper.PROPERTY_IAP, Boolean.TRUE);
-										wrapper.setDate(ItemPropertyWrapper.PROPERTY_IAP_ON, DateTime.now(DateTimeZone.UTC).toDate());
+									if ((usesIap = wrapper.getBoolean(PROPERTY_IAP, null)) == null || usesIap == Boolean.FALSE) {
+										wrapper.setBoolean(PROPERTY_IAP, Boolean.TRUE);
+										wrapper.setDate(PROPERTY_IAP_ON, DateTime.now(DateTimeZone.UTC).plusDays(IAP_DAY_OFFSET).toDate());
 
 										item.properties = wrapper.toString();
 
