@@ -57,6 +57,7 @@ import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -64,6 +65,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -83,7 +85,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField InlineHyperlink revenueLink;
 	@UiField InlineHyperlink downloadsLink;
 	@UiField InlineHyperlink rankingLink;
-
+	private InlineHTML comingSoon = new InlineHTML("&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;Coming soon");
 	@UiField LIElement revenueItem;
 	@UiField LIElement downloadsItem;
 	@UiField LIElement rankingItem;
@@ -118,6 +120,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		tabs.put(REVENUE_CHART_TYPE, revenueItem);
 		tabs.put(DOWNLOADS_CHART_TYPE, downloadsItem);
 		tabs.put(RANKING_CHART_TYPE, rankingItem);
+		comingSoon.getElement().getStyle().setFontSize(14.0, Unit.PX);
+		setRevenueDownloadTabsEnabled(false);
 
 		if (SessionController.get().isLoggedInUserAdmin()) {
 			createColumns();
@@ -282,41 +286,46 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				isNewDataRequired = true;
 			}
 
-			revenueLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
-					REVENUE_CHART_TYPE, comingPage, filterContents));
-			downloadsLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
-					DOWNLOADS_CHART_TYPE, comingPage, filterContents));
+			// revenueLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
+			// REVENUE_CHART_TYPE, comingPage, filterContents));
+			// downloadsLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
+			// DOWNLOADS_CHART_TYPE, comingPage, filterContents));
 			rankingLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
 					RANKING_CHART_TYPE, comingPage, filterContents));
 
-			topPanel.updateFromFilter();
-
-			String newSelectedTab = current.getParameter(SELECTED_TAB_PARAMETER_INDEX);
-			boolean isNewSelectedTab = false;
-			if (selectedTab == null || !selectedTab.equals(newSelectedTab)) {
-				selectedTab = newSelectedTab;
-				refreshTabs();
-				isNewSelectedTab = true;
+			boolean showAllData = true;
+			if (!SessionController.get().isLoggedInUserAdmin() && !MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
+				setRevenueDownloadTabsEnabled(false);
+				showAllData = false;
+			} else {
+				setRevenueDownloadTabsEnabled(true);
 			}
 
-			dataType = YAxisDataType.fromString(selectedTab);
-			historyChart.setDataType(dataType);
-
-			if (isNewSelectedTab && !isNewDataRequired) {
-				historyChart.drawData();
-			}
-
-			if (isNewDataRequired) {
-				setLoadingSpinnerEnabled(true);
-				sidePanel.setPriceInnerHTML(null);
-				getHistoryChartData();
-			}
-
-			Element chartBackgroundElem = historyChart.getElement().getFirstChildElement().getFirstChildElement().getFirstChildElement().getFirstChildElement()
-					.getNextSiblingElement().getFirstChildElement().getFirstChildElement();
-			if (chartBackgroundElem != null) {
-				chartBackgroundElem.getStyle()
-						.setProperty("background", "repeating-linear-gradient(180deg, #FAFAFA, #FAFAFA 50px, #FFFFFF 50px,#FFFFFF 100px)");
+			if (showAllData || (!showAllData && current.getParameter(1).equals(RANKING_CHART_TYPE))) {
+				topPanel.updateFromFilter();
+				String newSelectedTab = current.getParameter(SELECTED_TAB_PARAMETER_INDEX);
+				boolean isNewSelectedTab = false;
+				if (selectedTab == null || !selectedTab.equals(newSelectedTab)) {
+					selectedTab = newSelectedTab;
+					refreshTabs();
+					isNewSelectedTab = true;
+				}
+				dataType = YAxisDataType.fromString(selectedTab);
+				historyChart.setDataType(dataType);
+				if (isNewSelectedTab && !isNewDataRequired) {
+					historyChart.drawData();
+				}
+				if (isNewDataRequired) {
+					setLoadingSpinnerEnabled(true);
+					sidePanel.setPriceInnerHTML(null);
+					getHistoryChartData();
+				}
+				Element chartBackgroundElem = historyChart.getElement().getFirstChildElement().getFirstChildElement().getFirstChildElement()
+						.getFirstChildElement().getNextSiblingElement().getFirstChildElement().getFirstChildElement();
+				if (chartBackgroundElem != null) {
+					chartBackgroundElem.getStyle().setProperty("background",
+							"repeating-linear-gradient(180deg, #FAFAFA, #FAFAFA 50px, #FFFFFF 50px,#FFFFFF 100px)");
+				}
 			}
 
 			// AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.SuccessAlertBoxType, false, "Item",
@@ -602,6 +611,43 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		}
 		if (i.largeImage != null) {
 			item.largeImage = i.largeImage;
+		}
+	}
+
+	private void setRevenueDownloadTabsEnabled(boolean enable) {
+		if (enable) {
+			revenueLink.setHTML("Revenue");
+			revenueLink.getElement().getStyle().setColor("#0e0e1f");
+			revenueLink.getElement().getStyle().setCursor(Cursor.POINTER);
+			revenueItem.getStyle().setCursor(Cursor.DEFAULT);
+			downloadsLink.setHTML("Downloads");
+			downloadsLink.getElement().getStyle().setColor("#0e0e1f");
+			downloadsLink.getElement().getStyle().setCursor(Cursor.POINTER);
+			downloadsItem.getStyle().setCursor(Cursor.DEFAULT);
+			revenueLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
+					REVENUE_CHART_TYPE, comingPage, filterContents));
+			downloadsLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
+					DOWNLOADS_CHART_TYPE, comingPage, filterContents));
+			tabs.put(REVENUE_CHART_TYPE, revenueItem);
+			tabs.put(DOWNLOADS_CHART_TYPE, downloadsItem);
+		} else {
+			revenueLink.setHTML("Revenue" + comingSoon);
+			revenueLink.getElement().getStyle().setColor("lightgrey");
+			revenueLink.getElement().getStyle().setCursor(Cursor.DEFAULT);
+			revenueItem.getStyle().setCursor(Cursor.DEFAULT);
+			downloadsLink.setHTML("Downloads" + comingSoon);
+			downloadsLink.getElement().getStyle().setColor("lightgrey");
+			downloadsLink.getElement().getStyle().setCursor(Cursor.DEFAULT);
+			downloadsItem.getStyle().setCursor(Cursor.DEFAULT);
+			revenueLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
+			downloadsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
+			for (String key : tabs.keySet()) {
+				tabs.get(key).removeClassName("active");
+			}
+			tabs.get(RANKING_CHART_TYPE).addClassName("active");
+			tabs.remove(REVENUE_CHART_TYPE);
+			tabs.remove(DOWNLOADS_CHART_TYPE);
+
 		}
 	}
 
