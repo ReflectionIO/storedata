@@ -70,6 +70,12 @@ final class SimpleModelRunService implements ISimpleModelRunService {
 		simpleModelRun.a = connection.getCurrentRowDouble("a");
 		simpleModelRun.b = connection.getCurrentRowDouble("b");
 
+		simpleModelRun.aStandardError = connection.getCurrentRowDouble("astandarderror");
+		simpleModelRun.bStandardError = connection.getCurrentRowDouble("bstandarderror");
+
+		simpleModelRun.adjustedRSquared = connection.getCurrentRowDouble("adjustedrsquared");
+		simpleModelRun.regressionSumSquares = connection.getCurrentRowDouble("regressionsumsquares");
+
 		return simpleModelRun;
 	}
 
@@ -77,8 +83,13 @@ final class SimpleModelRunService implements ISimpleModelRunService {
 	public SimpleModelRun addSimpleModelRun(SimpleModelRun simpleModelRun) throws DataAccessException {
 		SimpleModelRun addedSimpleModelRun = null;
 
-		final String addSimpleModelRunQuery = String.format("INSERT INTO `simplemodelrun` (`feedfetchid`,`a`,`b`) VALUES (%d,%f,%f);",
-				simpleModelRun.feedFetch.id.longValue(), simpleModelRun.a.doubleValue(), simpleModelRun.b.doubleValue());
+		final String addSimpleModelRunQuery = String
+				.format("INSERT INTO `simplemodelrun` (`feedfetchid`,`a`,`b`,`astandarderror`,`bstandarderror`,`adjustedrsquared`,`regressionsumsquares`) VALUES (%d,%f,%f,%s,%s,%s,%s);",
+						simpleModelRun.feedFetch.id.longValue(), simpleModelRun.a.doubleValue(), simpleModelRun.b.doubleValue(),
+						simpleModelRun.aStandardError == null ? "NULL" : simpleModelRun.aStandardError.toString(),
+						simpleModelRun.bStandardError == null ? "NULL" : simpleModelRun.bStandardError.toString(),
+						simpleModelRun.adjustedRSquared == null ? "NULL" : simpleModelRun.adjustedRSquared.toString(),
+						simpleModelRun.regressionSumSquares == null ? "NULL" : simpleModelRun.regressionSumSquares.toString());
 
 		Connection simpleModelRunConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSimpleModelRun.toString());
 
@@ -107,8 +118,13 @@ final class SimpleModelRunService implements ISimpleModelRunService {
 	public SimpleModelRun updateSimpleModelRun(SimpleModelRun simpleModelRun) throws DataAccessException {
 		SimpleModelRun updatedSimpleModelRun = null;
 
-		final String updateSimpleModelRunQuery = String.format("UPDATE `simplemodelrun` SET `feedfetchid`=%d,`a`=%f,`b`=%f WHERE `id`=%d AND `deleted`='n';",
-				simpleModelRun.feedFetch.id, simpleModelRun.a.doubleValue(), simpleModelRun.b.doubleValue(), simpleModelRun.id.longValue());
+		final String updateSimpleModelRunQuery = String
+				.format("UPDATE `simplemodelrun` SET `feedfetchid`=%d,`a`=%f,`b`=%f,`astandarderror`=%s,`bstandarderror`=%s,`adjustedrsquared`=%s,`regressionsumsquares`=%s WHERE `id`=%d AND `deleted`='n';",
+						simpleModelRun.feedFetch.id, simpleModelRun.a.doubleValue(), simpleModelRun.b.doubleValue(),
+						simpleModelRun.aStandardError == null ? "NULL" : simpleModelRun.aStandardError.toString(),
+						simpleModelRun.bStandardError == null ? "NULL" : simpleModelRun.bStandardError.toString(),
+						simpleModelRun.adjustedRSquared == null ? "NULL" : simpleModelRun.adjustedRSquared.toString(),
+						simpleModelRun.regressionSumSquares == null ? "NULL" : simpleModelRun.regressionSumSquares.toString(), simpleModelRun.id.longValue());
 
 		Connection simpleSimpleModelRunConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSimpleModelRun.toString());
 
