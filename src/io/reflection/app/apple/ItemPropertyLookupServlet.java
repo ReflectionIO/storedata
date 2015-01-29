@@ -9,6 +9,8 @@ package io.reflection.app.apple;
 
 import static com.willshex.gson.json.shared.Convert.fromJsonObject;
 import static com.willshex.gson.json.shared.Convert.toJsonObject;
+import static io.reflection.app.helpers.ItemPropertyWrapper.PROPERTY_IAP;
+import static io.reflection.app.helpers.ItemPropertyWrapper.PROPERTY_IAP_ON;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.lookup.shared.datatypes.LookupDetailType;
 import io.reflection.app.collectors.HttpExternalGetter;
@@ -60,10 +62,7 @@ import com.google.gson.JsonPrimitive;
 public class ItemPropertyLookupServlet extends HttpServlet {
 	private static final Logger LOG = Logger.getLogger(ItemPropertyLookupServlet.class.getName());
 
-	public static final String PROPERTY_IAP = "usesIap";
-	private static final String PROPERTY_IAP_ON = "usesIap.on";
-
-	private static final long DURATION_30_DAYS = 30L * ApiHelper.MILLIS_PER_DAY;
+	private static final long DURATION_REFRESH_DAYS = 10L * ApiHelper.MILLIS_PER_DAY;
 
 	public static final String ADD_IF_NEW_ACTION = "addIfNew";
 	public static final String REMOVE_DUPLICATES_ACTION = "removeDuplicates";
@@ -165,7 +164,7 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 							Date on = new Date(value.getAsLong());
 							Date now = new Date();
 
-							if (now.getTime() - on.getTime() > DURATION_30_DAYS) {
+							if (now.getTime() - on.getTime() > DURATION_REFRESH_DAYS) {
 								doCurl = true;
 							}
 						}
@@ -179,7 +178,6 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 							doCurl = false;
 
 							setIap(item, properties, usesIap);
-
 						}
 					} catch (DataAccessException e) {
 						throw new RuntimeException(e);

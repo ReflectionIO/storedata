@@ -711,6 +711,9 @@ public class DevHelperServlet extends HttpServlet {
 
 				markup = (new MarkdownProcessor()).process("[View " + pipelineId + "](/_ah/pipeline/status.html?root=" + pipelineId
 						+ " \"View pipeline status\")");
+			} else if ("enqueuegetallranks".equalsIgnoreCase(action)) {
+				CallServiceMethodServlet.enqueueGetAllRanks("us", "ios", Long.valueOf(24), "topfreeapplications", Long.valueOf(33));
+				success = true;
 			} else {
 				if (LOG.isLoggable(Level.INFO)) {
 					LOG.info(String.format("Action [%s] not supported", action));
