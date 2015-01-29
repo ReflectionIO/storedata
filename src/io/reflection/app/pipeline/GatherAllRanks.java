@@ -8,8 +8,8 @@
 package io.reflection.app.pipeline;
 
 import static io.reflection.app.collectors.CollectorIOS.COUNTRIES_KEY;
-import static io.reflection.app.pipeline.SummariseDataAccountFetch.DOWNLOADS_LIST_PROPERTY;
-import static io.reflection.app.pipeline.SummariseDataAccountFetch.REVENUE_LIST_PROPERTY;
+import static io.reflection.app.pipeline.SummariseDataAccountFetch.DOWNLOADS_LIST_PROPERTY_VALUE;
+import static io.reflection.app.pipeline.SummariseDataAccountFetch.REVENUE_LIST_PROPERTY_VALUE;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.datatypes.shared.FormType;
 import io.reflection.app.logging.GaeLevel;
@@ -86,10 +86,10 @@ public class GatherAllRanks extends Job0<Integer> {
 					// Other
 					revenueOtherPromiseKey = StringUtils.join(
 							Arrays.asList(code.toString(), countryCode, DataTypeHelper.IOS_STORE_A3, FormType.FormTypeOther.toString(),
-									REVENUE_LIST_PROPERTY.getValue()), ".");
+									REVENUE_LIST_PROPERTY_VALUE.getValue()), ".");
 					downloadsOtherPromiseKey = StringUtils.join(
 							Arrays.asList(code.toString(), countryCode, DataTypeHelper.IOS_STORE_A3, FormType.FormTypeOther.toString(),
-									DOWNLOADS_LIST_PROPERTY.getValue()), ".");
+									DOWNLOADS_LIST_PROPERTY_VALUE.getValue()), ".");
 					revenueOtherSummaryValue = newPromise();
 					downloadsOtherSummaryValue = newPromise();
 					persist.put(revenueOtherPromiseKey, revenueOtherSummaryValue.getHandle());
@@ -98,9 +98,9 @@ public class GatherAllRanks extends Job0<Integer> {
 					// Tablet
 					revenueTabletPromiseKey = StringUtils.join(
 							Arrays.asList(code.toString(), countryCode, DataTypeHelper.IOS_STORE_A3, FormType.FormTypeTablet.toString(),
-									REVENUE_LIST_PROPERTY.getValue()), ".");
+									REVENUE_LIST_PROPERTY_VALUE.getValue()), ".");
 					downloadsTabletPromiseKey = StringUtils.join(Arrays.asList(code.toString(), countryCode, DataTypeHelper.IOS_STORE_A3,
-							FormType.FormTypeTablet.toString(), DOWNLOADS_LIST_PROPERTY.getValue()), ".");
+							FormType.FormTypeTablet.toString(), DOWNLOADS_LIST_PROPERTY_VALUE.getValue()), ".");
 					revenueTabletSummaryValue = newPromise();
 					downloadsTabletSummaryValue = newPromise();
 					persist.put(revenueTabletPromiseKey, revenueTabletSummaryValue.getHandle());

@@ -13,8 +13,8 @@ import static io.reflection.app.collectors.CollectorIOS.TOP_GROSSING_APPS;
 import static io.reflection.app.collectors.CollectorIOS.TOP_GROSSING_IPAD_APPS;
 import static io.reflection.app.collectors.CollectorIOS.TOP_PAID_APPS;
 import static io.reflection.app.collectors.CollectorIOS.TOP_PAID_IPAD_APPS;
-import static io.reflection.app.pipeline.SummariseDataAccountFetch.DOWNLOADS_LIST_PROPERTY;
-import static io.reflection.app.pipeline.SummariseDataAccountFetch.REVENUE_LIST_PROPERTY;
+import static io.reflection.app.pipeline.SummariseDataAccountFetch.DOWNLOADS_LIST_PROPERTY_VALUE;
+import static io.reflection.app.pipeline.SummariseDataAccountFetch.REVENUE_LIST_PROPERTY_VALUE;
 import io.reflection.app.CollectorServlet;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.logging.GaeLevel;
@@ -83,9 +83,9 @@ public class GatherCategory extends Job3<Void, String, Long, Long> {
 
 			rankCount = futureCall(new IngestRanks(), paidFeedId, slimmedPaidFeed, freeFeedId, slimmedFreeFeed, grossingFeedId, slimmedGrossingFeed);
 			
-			futureCall(new ModelData(), rankCount, paidFeedId, DOWNLOADS_LIST_PROPERTY, downloadsOtherSummaryValue);
-			futureCall(new ModelData(), rankCount, freeFeedId, DOWNLOADS_LIST_PROPERTY, downloadsOtherSummaryValue);
-			futureCall(new ModelData(), rankCount, grossingFeedId, REVENUE_LIST_PROPERTY, revenueOtherSummaryValue);
+			futureCall(new ModelData(), rankCount, paidFeedId, DOWNLOADS_LIST_PROPERTY_VALUE, downloadsOtherSummaryValue);
+			futureCall(new ModelData(), rankCount, freeFeedId, DOWNLOADS_LIST_PROPERTY_VALUE, downloadsOtherSummaryValue);
+			futureCall(new ModelData(), rankCount, grossingFeedId, REVENUE_LIST_PROPERTY_VALUE, revenueOtherSummaryValue);
 		}
 
 		// tablet
@@ -101,9 +101,9 @@ public class GatherCategory extends Job3<Void, String, Long, Long> {
 
 			rankCount = futureCall(new IngestRanks(), paidFeedId, slimmedPaidFeed, freeFeedId, slimmedFreeFeed, grossingFeedId, slimmedGrossingFeed);
 			
-			futureCall(new ModelData(), rankCount, paidFeedId, DOWNLOADS_LIST_PROPERTY, downloadsTabletSummaryValue);
-			futureCall(new ModelData(), rankCount, freeFeedId, DOWNLOADS_LIST_PROPERTY, downloadsTabletSummaryValue);
-			futureCall(new ModelData(), rankCount, grossingFeedId, REVENUE_LIST_PROPERTY, revenueTabletSummaryValue);
+			futureCall(new ModelData(), rankCount, paidFeedId, DOWNLOADS_LIST_PROPERTY_VALUE, downloadsTabletSummaryValue);
+			futureCall(new ModelData(), rankCount, freeFeedId, DOWNLOADS_LIST_PROPERTY_VALUE, downloadsTabletSummaryValue);
+			futureCall(new ModelData(), rankCount, grossingFeedId, REVENUE_LIST_PROPERTY_VALUE, revenueTabletSummaryValue);
 		}
 
 		return null;

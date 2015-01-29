@@ -42,8 +42,11 @@ public class SummariseDataAccountFetch extends Job1<Map<String, Double>, Long> {
 
 	private static final long serialVersionUID = 7363371689981793909L;
 
-	public static final ImmediateValue<String> DOWNLOADS_LIST_PROPERTY = immediate("downloads");
-	public static final ImmediateValue<String> REVENUE_LIST_PROPERTY = immediate("revenue");
+	public static final String DOWNLOADS_LIST_PROPERTY = "downloads";
+	public static final String REVENUE_LIST_PROPERTY = "revenue";
+
+	public static final ImmediateValue<String> DOWNLOADS_LIST_PROPERTY_VALUE = immediate(DOWNLOADS_LIST_PROPERTY);
+	public static final ImmediateValue<String> REVENUE_LIST_PROPERTY_VALUE = immediate(REVENUE_LIST_PROPERTY);
 
 	/*
 	 * (non-Javadoc)
@@ -60,7 +63,7 @@ public class SummariseDataAccountFetch extends Job1<Map<String, Double>, Long> {
 		Double value;
 		Collection<String> keys;
 		for (Sale sale : sales) {
-			keys = createKeys(sale, REVENUE_LIST_PROPERTY.getValue());
+			keys = createKeys(sale, REVENUE_LIST_PROPERTY_VALUE.getValue());
 
 			for (String key : keys) {
 				value = apps.get(key);
@@ -74,7 +77,7 @@ public class SummariseDataAccountFetch extends Job1<Map<String, Double>, Long> {
 				apps.put(key, value);
 			}
 
-			keys = createKeys(sale, DOWNLOADS_LIST_PROPERTY.getValue());
+			keys = createKeys(sale, DOWNLOADS_LIST_PROPERTY_VALUE.getValue());
 			for (String key : keys) {
 				value = apps.get(key);
 

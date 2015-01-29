@@ -61,7 +61,6 @@ public final class FulfillAllPromisses extends Job2<Void, Map<String, Map<String
 			code = FeedFetchServiceProvider.provide().getGatherCode(iosStore, start.toDate(), on);
 			
 			fulfill(dataAccountFetchSummary, code, persist, pipelineService);
-			
 		}
 
 		return null;

@@ -31,9 +31,12 @@ public class ModelData extends Job4<Void, Long, Long, String, Map<String, Double
 	public Value<Void> run(Long count, Long feedFetchId, String summaryType, Map<String, Double> summary) throws Exception {
 		ImmediateValue<Long> feedFetchIdValue = immediate(feedFetchId);
 
-		FutureValue<Long> simpleModelRunIdValue = futureCall(new CalibrateSimpleModel(), immediate(summaryType), immediate(summary), feedFetchIdValue);
+		// FIXME: we could probably just figure out the type from the feed fetch
+		ImmediateValue<String> summaryTypeValue = immediate(summaryType);
 
-		futureCall(new FillRevenue(), feedFetchIdValue, simpleModelRunIdValue);
+		FutureValue<Long> simpleModelRunIdValue = futureCall(new CalibrateSimpleModel(), summaryTypeValue, immediate(summary), feedFetchIdValue);
+
+		futureCall(new FillRevenue(), summaryTypeValue, feedFetchIdValue, simpleModelRunIdValue);
 
 		return null;
 	}

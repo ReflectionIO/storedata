@@ -86,8 +86,8 @@ public class TestCase2 {
 
 			SimpleModelRun subCategoryModelRun = SimpleModelRunServiceProvider.provide().getFeedFetchSimpleModelRun(subCategoryFeedFetch);
 
-			if (rankSimpleModelRun.accuracy > subCategoryModelRun.accuracy) {
-				rank.revenue = rank.price * rank.downloads;
+			if (rankSimpleModelRun.adjustedRSquared.doubleValue() > subCategoryModelRun.adjustedRSquared) {
+				rank.revenue = Float.valueOf((float) (rank.price.doubleValue() * rank.downloads.doubleValue()));
 
 				// commit
 
