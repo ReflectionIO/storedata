@@ -692,6 +692,9 @@ public class DevHelperServlet extends HttpServlet {
 				predictQueue.add(TaskOptions.Builder.withUrl("/predict?" + req.getQueryString()).method(Method.GET));
 
 				success = true;
+			} else if ("enqueuegetallranks".equalsIgnoreCase(action)) {
+				CallServiceMethodServlet.enqueueGetAllRanks("us", "ios", Long.valueOf(24), "topfreeapplications", Long.valueOf(33));
+				success = true;
 			} else {
 				if (LOG.isLoggable(Level.INFO)) {
 					LOG.info(String.format("Action [%s] not supported", action));
