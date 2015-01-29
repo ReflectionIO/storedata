@@ -82,7 +82,15 @@ final class ItemService implements IItemService {
 				// cal.setTime(new Date());
 				// cal.add(Calendar.DAY_OF_MONTH, 20);
 				// asyncCache.put(memcacheKey, item.toString(), cal.getTime());
-				asyncCache.put(memcacheKey, item.toString());
+				String json = item.toString();
+
+				asyncCache.put(memcacheKey, json);
+
+				memcacheKey = getName() + ".external." + item.internalId;
+				asyncCache.put(memcacheKey, json);
+
+				memcacheKey = getName() + ".internal." + item.internalId;
+				asyncCache.put(memcacheKey, json);
 
 			}
 		} else {
@@ -185,7 +193,7 @@ final class ItemService implements IItemService {
 			if (itemConnection.getAffectedRowCount() > 0) {
 
 				String memcacheKey = getName() + ".id." + item.id;
-				asyncCache.delete(memcacheKey);
+				syncCache.delete(memcacheKey);
 
 				updatedItem = getItem(item.id);
 			} else {
@@ -213,6 +221,12 @@ final class ItemService implements IItemService {
 
 			if (itemConnection.getAffectedRowCount() > 0) {
 				String memcacheKey = getName() + ".id." + item.id;
+				asyncCache.delete(memcacheKey);
+
+				memcacheKey = getName() + ".external." + item.internalId;
+				asyncCache.delete(memcacheKey);
+
+				memcacheKey = getName() + ".internal." + item.internalId;
 				asyncCache.delete(memcacheKey);
 			}
 
