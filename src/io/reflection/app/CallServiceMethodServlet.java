@@ -107,7 +107,7 @@ public class CallServiceMethodServlet extends HttpServlet {
 
 						// RankServiceProvider.provide().getAllRanks(country, store, category, getGrossingListName(store, listTypeParameter), start, end);
 
-						code = FeedFetchServiceProvider.provide().getGatherCode(country, store, start, end);
+						code = FeedFetchServiceProvider.provide().getGatherCode(store, start, end);
 					}
 
 					List<String> listTypes = ApiHelper.getAllListTypes(store, listTypeParameter);

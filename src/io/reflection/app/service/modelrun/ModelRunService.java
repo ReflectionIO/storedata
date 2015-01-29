@@ -204,7 +204,7 @@ final class ModelRunService implements IModelRunService {
 	public ModelRun getModelRun(Country country, Store store, FormType form, Date start, Date end) throws DataAccessException {
 		ModelRun modelRun = null;
 
-		Long code = FeedFetchServiceProvider.provide().getGatherCode(country, store, start, end);
+		Long code = FeedFetchServiceProvider.provide().getGatherCode(store, start, end);
 
 		String getModelRunQuery = String
 				.format("SELECT * FROM `modelrun` WHERE CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`store` AS BINARY)=CAST('%s' AS BINARY) AND `form`='%s' AND `code2`=%d `deleted`='n' ORDER BY `id` DESC LIMIT 1",

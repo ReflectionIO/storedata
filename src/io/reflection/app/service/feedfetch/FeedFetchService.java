@@ -525,11 +525,10 @@ final class FeedFetchService implements IFeedFetchService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.service.feedfetch.IFeedFetchService#getGatherCode(io.reflection.app.datatypes.shared.Country,
-	 * io.reflection.app.datatypes.shared.Store, java.util.Date, java.util.Date)
+	 * @see io.reflection.app.service.feedfetch.IFeedFetchService#getGatherCode( io.reflection.app.datatypes.shared.Store, java.util.Date, java.util.Date)
 	 */
 	@Override
-	public Long getGatherCode(Country country, Store store, Date after, Date before) throws DataAccessException {
+	public Long getGatherCode(Store store, Date after, Date before) throws DataAccessException {
 		Long code = null;
 
 		// String memcacheKey = getName() + ".gathercode." + country.a2Code + "." + store.a3Code + "." + (after == null ? "none" : after.getTime()) + "."
@@ -541,9 +540,9 @@ final class FeedFetchService implements IFeedFetchService {
 
 		try {
 			feedFetchConnection.connect();
-			String getGatherCode = String
-					.format("SELECT `code2` FROM `feedfetch` WHERE CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`store` AS BINARY)=CAST('%s' AS BINARY) AND %s AND `deleted`='n' ORDER BY `date` DESC LIMIT 1",
-							addslashes(country.a2Code), addslashes(store.a3Code), beforeAfterQuery(before, after));
+			String getGatherCode = String.format(
+					"SELECT `code2` FROM `feedfetch` WHERE CAST(`store` AS BINARY)=CAST('%s' AS BINARY) AND %s AND `deleted`='n' ORDER BY `date` DESC LIMIT 1",
+					addslashes(store.a3Code), beforeAfterQuery(before, after));
 
 			feedFetchConnection.executeQuery(getGatherCode);
 
@@ -638,16 +637,6 @@ final class FeedFetchService implements IFeedFetchService {
 		}
 
 		return feedFetches;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.service.feedfetch.IFeedFetchService#getDateCode(java.util.Date, java.lang.Integer)
-	 */
-	@Override
-	public Long getDateCode(Date date, Integer gatherTimes) throws DataAccessException {
-		return null;
 	}
 
 	/*

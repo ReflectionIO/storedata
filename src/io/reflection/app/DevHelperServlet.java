@@ -760,12 +760,9 @@ public class DevHelperServlet extends HttpServlet {
 		Store s = new Store();
 		s.a3Code = DataTypeHelper.IOS_STORE_A3;
 
-		Country c = new Country();
-		c.a2Code = "us";
-
 		Long code = null;
 		try {
-			code = FeedFetchServiceProvider.provide().getGatherCode(c, s, start, end);
+			code = FeedFetchServiceProvider.provide().getGatherCode(s, start, end);
 		} catch (DataAccessException e) {
 			throw new RuntimeException(e);
 		}

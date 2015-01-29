@@ -471,7 +471,7 @@ public final class Core extends ActionHandler {
 				Set<String> itemIds = new HashSet<String>();
 				// final Map<String, Rank> lookup = new HashMap<String, Rank>();
 
-				Long code = FeedFetchServiceProvider.provide().getGatherCode(input.country, input.store, start, end);
+				Long code = FeedFetchServiceProvider.provide().getGatherCode(input.store, start, end);
 
 				List<String> listTypes = ApiHelper.getAllListTypes(input.store, input.listType);
 				Collector collector = CollectorFactory.getCollectorForStore(input.store.a3Code);
