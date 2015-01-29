@@ -1,40 +1,44 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder">
 
-    <ui:with field="name" type="java.lang.String" />
-    <ui:with field="creatorName" type="java.lang.String" />
-    <ui:with field="smallImage" type="com.google.gwt.safehtml.shared.SafeUri" />
-    <ui:with field="styleName" type="java.lang.String" />
-    <ui:with field="link" type="com.google.gwt.safehtml.shared.SafeUri" />
+	<ui:with field="name" type="java.lang.String" />
+	<ui:with field="creatorName" type="java.lang.String" />
+	<ui:with field="smallImage" type="com.google.gwt.safehtml.shared.SafeUri" />
+	<ui:with field="styleName" type="java.lang.String" />
+	<ui:with field="link" type="com.google.gwt.safehtml.shared.SafeUri" />
+	<ui:with field="displayActiveLink" type="java.lang.String" />
+	<ui:with field="displayInactiveLink" type="java.lang.String" />
 
-    <ui:style gss="true">
-    .image {
-    	width: 45px;
-    	height: 45px;
-    	float: left;
-    }
-    
-    .description {
-    	overflow: hidden;
+	<ui:style gss="true">
+	.image {
+		width: 45px;
+		height: 45px;
+		float: left;
+	}
+	
+	.description {
+		overflow: hidden;
 		padding-left: 20px;
-		white-space:nowrap; 	
-		text-overflow:ellipsis; 
-    }
-    
-    </ui:style>
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+	</ui:style>
 
-    <div>
-        <img class="img-rounded {style.image} {styleName}" src="{smallImage}" />
-        <div class="{style.description}">
-            <span>
-                <a href="{link}">
-                    <ui:text from="{name}" />
-                </a>
-                <br />
-            </span>
-            <span class="text-muted">
-                <ui:text from="{creatorName}" />
-            </span>
-        </div>
-    </div>
+	<div>
+		<img class="img-rounded {style.image} {styleName}" src="{smallImage}" />
+		<div class="{style.description}">
+			<span>
+				<a href="{link}" style="{displayActiveLink}">
+					<ui:text from="{name}" />
+				</a>
+				<span style="{displayInactiveLink}">
+					<ui:text from="{name}" />
+				</span>
+				<br />
+			</span>
+			<span class="text-muted">
+				<ui:text from="{creatorName}" />
+			</span>
+		</div>
+	</div>
 </ui:UiBinder>

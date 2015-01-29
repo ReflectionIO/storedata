@@ -117,7 +117,17 @@ public class AppRankCell extends AbstractCell<Rank> {
 				display = showAllPredictions ? SafeStylesUtils.fromTrustedString("") : SafeStylesUtils.forDisplay(Display.NONE);
 				break;
 			}
-		} else {
+		} else if (FilterController.FREE_LIST_TYPE.equals(listType)) {
+			filter = Filter.parse(filter.asItemFilterString());
+			filter.setListType(FilterController.FREE_LIST_TYPE);
+			display = SafeStylesUtils.forDisplay(Display.NONE);
+		} else if (FilterController.PAID_LIST_TYPE.equals(listType)) {
+			filter = Filter.parse(filter.asItemFilterString());
+			filter.setListType(FilterController.PAID_LIST_TYPE);
+			display = SafeStylesUtils.forDisplay(Display.NONE);
+		} else if (FilterController.GROSSING_LIST_TYPE.equals(listType)) {
+			filter = Filter.parse(filter.asItemFilterString());
+			filter.setListType(FilterController.GROSSING_LIST_TYPE);
 			display = SafeStylesUtils.forDisplay(Display.NONE);
 		}
 
