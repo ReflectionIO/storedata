@@ -85,6 +85,8 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	@UiField MyAppsTopPanel myAppsTopPanel;
 	@UiField MyAccountSidePanel myAccountSidePanel;
 
+	public static final String COMING_FROM_PARAMETER = "myapps";
+
 	private MyAppsEmptyTable myAppsEmptyTable = new MyAppsEmptyTable();
 
 	private User user;
