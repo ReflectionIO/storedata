@@ -286,6 +286,21 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				isNewDataRequired = true;
 			}
 
+			switch (newFilter.getListType()) {
+			case (FilterController.FREE_LIST_TYPE):
+				rankingLink.setText("Free rank");
+				break;
+			case (FilterController.PAID_LIST_TYPE):
+				rankingLink.setText("Paid rank");
+				break;
+			case (FilterController.GROSSING_LIST_TYPE):
+				rankingLink.setText("Grossing rank");
+				break;
+			default:
+				rankingLink.setText("Rank");
+				break;
+			}
+
 			// revenueLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
 			// REVENUE_CHART_TYPE, comingPage, filterContents));
 			// downloadsLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
