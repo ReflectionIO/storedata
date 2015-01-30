@@ -49,8 +49,9 @@ public class GatherAllSales extends Job0<Integer> {
 		int count = 0;
 		List<FutureValue<Long>> ids = new ArrayList<>();
 
-		ImmediateValue<Date> yesterday = immediate(DateTime.now().minusDays(1).toDate());
-		
+		ImmediateValue<Date> forDate = immediate(DateTime.now().minusDays(Integer.valueOf(System.getProperty("pipeline.model.for.date", "1")).intValue())
+				.toDate());
+
 		try {
 			IDataAccountFetchService dataAccountFetchService = DataAccountFetchServiceProvider.provide();
 			IDataAccountService dataAccountService = DataAccountServiceProvider.provide();
@@ -64,7 +65,7 @@ public class GatherAllSales extends Job0<Integer> {
 					// if the account has some errors then don't bother otherwise enqueue a message to do a gather for it
 
 					if (DataAccountFetchServiceProvider.provide().isFetchable(dataAccount) == Boolean.TRUE) {
-						ids.add(futureCall(new GatherDataAccountOn(), immediate(dataAccount.id), yesterday));
+						ids.add(futureCall(new GatherDataAccountOn(), immediate(dataAccount.id), forDate));
 
 						// go through all the failed attempts and get them too (failed attempts = less than 30 days old)
 						List<DataAccountFetch> failedDataAccountFetches = dataAccountFetchService.getFailedDataAccountFetches(dataAccount,
@@ -84,8 +85,8 @@ public class GatherAllSales extends Job0<Integer> {
 			} while (dataAccounts != null && dataAccounts.size() == pager.count.intValue());
 
 			FutureValue<Map<String, Map<String, Double>>> organizedSummaries = futureCall(new SummariseFetchedDataAccounts(), futureList(ids));
-			
-			futureCall(new FulfillAllPromisses(), organizedSummaries, yesterday);
+
+			futureCall(new SubmitPromisses(), organizedSummaries, forDate);
 
 		} catch (DataAccessException dae) {
 			LOG.log(GaeLevel.SEVERE, "A database error occured attempting to start sales gather process", dae);

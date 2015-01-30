@@ -1,5 +1,5 @@
 //
-//  FulfillAllPromisses.java
+//  SubmitPromisses.java
 //  storedata
 //
 //  Created by William Shakour (billy1380) on 19 Jan 2015.
@@ -31,11 +31,11 @@ import com.google.appengine.tools.pipeline.PipelineServiceFactory;
 import com.google.appengine.tools.pipeline.Value;
 import com.spacehopperstudios.utility.StringUtils;
 
-public final class FulfillAllPromisses extends Job2<Void, Map<String, Map<String, Double>>, Date> {
+public final class SubmitPromisses extends Job2<Void, Map<String, Map<String, Double>>, Date> {
 
 	private static final long serialVersionUID = -2335419676158668911L;
 
-	private static final Logger LOG = Logger.getLogger(FulfillAllPromisses.class.getName());
+	private static final Logger LOG = Logger.getLogger(SubmitPromisses.class.getName());
 
 	/*
 	 * (non-Javadoc)
