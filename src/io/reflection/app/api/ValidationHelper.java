@@ -690,13 +690,26 @@ public class ValidationHelper {
 	public static Event validateExistingEvent(Event event, String parent) throws ServiceException {
 		if (event == null) throw new InputValidationException(ApiError.EventNull.getCode(), ApiError.EventNull.getMessage(parent));
 
-		if (event.id == null) throw new InputValidationException(ApiError.EventNoLookup.getCode(), ApiError.EventNoLookup.getMessage(parent));
+		boolean isIdLookup = false, isCodeLookup = false;
 
-		Event lookupEvent = EventServiceProvider.provide().getEvent(event.id);
+		if (event.id != null) {
+			isIdLookup = true;
+		} else if (event.code != null) {
+			isCodeLookup = true;
+		}
+
+		if (!(isIdLookup || isCodeLookup)) throw new InputValidationException(ApiError.EventNoLookup.getCode(), ApiError.EventNoLookup.getMessage(parent));
+
+		Event lookupEvent = null;
+		if (isIdLookup) {
+			lookupEvent = EventServiceProvider.provide().getEvent(event.id);
+		} else if (isCodeLookup) {
+			lookupEvent = EventServiceProvider.provide().getCodeEvent(event.code);
+		}
 
 		if (lookupEvent == null) throw new InputValidationException(ApiError.EventNotFound.getCode(), ApiError.EventNotFound.getMessage(parent));
 
-//		validateEvent(event, parent);
+		// validateEvent(event, parent);
 
 		return lookupEvent;
 	}
@@ -891,11 +904,12 @@ public class ValidationHelper {
 			lookupEventSubscription = EventSubscriptionServiceProvider.provide().getUserEventEventSubscription(eventSubscription.event, eventSubscription.user);
 		}
 
-		if (lookupEventSubscription == null) throw new InputValidationException(ApiError.EventSubscriptionNotFound.getCode(), ApiError.EventSubscriptionNotFound.getMessage(parent));
+		if (lookupEventSubscription == null)
+			throw new InputValidationException(ApiError.EventSubscriptionNotFound.getCode(), ApiError.EventSubscriptionNotFound.getMessage(parent));
 
 		return lookupEventSubscription;
 	}
-	
+
 	public static Notification validateExistingNotification(Notification notification, String parent) throws ServiceException {
 		if (notification == null) throw new InputValidationException(ApiError.NotificationNull.getCode(), ApiError.NotificationNull.getMessage(parent));
 

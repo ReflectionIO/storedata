@@ -67,9 +67,12 @@ public class DataTypeHelper {
 	public static final String PERMISSION_MANAGE_CATEGORIES_CODE = "MCA";
 	public static final String PERMISSION_MANAGE_DATA_ACCOUNTS_CODE = "MDA";
 	public static final String PERMISSION_MANAGE_SIMPLE_MODEL_RUN_CODE = "MSM";
-	
-	public static final String PASSWORD_EVENT_CODE = "PAS";
-	public static final String NEW_USER_EVENT_KEY = "WEL";
+
+	public static final String CHANGE_PASSWORD_EVENT_CODE = "PAS";
+	public static final String RESET_PASSWORD_EVENT_CODE = "RPS";
+	public static final String NEW_USER_EVENT_CODE = "WEL";
+	public static final String SELECTED_USER_EVENT_CODE = "SEL";
+	public static final String THANK_YOU_EVENT_CODE = "TRQ";
 
 	public static final String ROLE_ADMIN_CODE = "ADM";
 	public static final Long ROLE_ADMIN_ID = Long.valueOf(1);
