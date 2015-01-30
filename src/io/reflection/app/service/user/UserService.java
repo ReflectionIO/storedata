@@ -160,7 +160,7 @@ final class UserService implements IUserService {
 				Map<String, Object> values = new HashMap<String, Object>();
 				values.put("user", addedUser);
 
-				Event event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.NEW_USER_EVENT_KEY);
+				Event event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.THANK_YOU_EVENT_CODE);
 				String body = NotificationHelper.inflate(values, event.longBody);
 
 				Notification notification = (new Notification()).from("hello@reflection.io").user(user).event(event).body(body).subject(event.subject);
@@ -624,8 +624,8 @@ final class UserService implements IUserService {
 					LOG.info(String.format("Role with roleid [%d] was added to user with userid [%d]", role.id.longValue(), user.id.longValue()));
 				}
 
-				if (role.id == Long.valueOf(5) || "BT1".equals(role.code)) {
-					markForEmailAction(user, "register/complete", 2);
+				if ("BT1".equals(role.code)) {
+					markForEmailAction(user, "register/complete", DataTypeHelper.SELECTED_USER_EVENT_CODE);
 				}
 			} else {
 				if (LOG.isLoggable(Level.WARNING)) {
@@ -1106,10 +1106,10 @@ final class UserService implements IUserService {
 	 */
 	@Override
 	public void markForReset(User user) throws DataAccessException {
-		markForEmailAction(user, "resetpassword", 3);
+		markForEmailAction(user, "resetpassword", DataTypeHelper.RESET_PASSWORD_EVENT_CODE);
 	}
 
-	private void markForEmailAction(User user, String pageAction, long eventId) throws DataAccessException {
+	private void markForEmailAction(User user, String pageAction, String eventCode) throws DataAccessException {
 		String markForEmailActionQuery = String.format("UPDATE `user` SET `code`=CAST(UUID() AS BINARY) WHERE `deleted`='n' AND `id`=%d", user.id.longValue());
 
 		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
@@ -1128,13 +1128,13 @@ final class UserService implements IUserService {
 				}
 
 				values.put("user", user);
-				values.put("link", String.format("http://testenv1.reflection.io/#!%s/%d/%s", pageAction, user.id.longValue(), code));
+				values.put("link", String.format("#!%s/%d/%s", pageAction, user.id.longValue(), code));
 
 				if (LOG.isLoggable(GaeLevel.DEBUG)) {
 					LOG.fine(String.format("Sending action code url [%s] to [%s]", values.get("link"), user.username));
 				}
 
-				Event event = EventServiceProvider.provide().getEvent(Long.valueOf(eventId));
+				Event event = EventServiceProvider.provide().getCodeEvent(eventCode);
 
 				String subject = NotificationHelper.inflate(values, event.subject);
 
@@ -1176,7 +1176,7 @@ final class UserService implements IUserService {
 				Map<String, Object> values = new HashMap<String, Object>();
 				values.put("user", user);
 
-				Event event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.PASSWORD_EVENT_CODE);
+				Event event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.CHANGE_PASSWORD_EVENT_CODE);
 				String body = NotificationHelper.inflate(values, event.longBody);
 
 				Notification notification = (new Notification()).from("hello@reflection.io").user(user).event(event).body(body).subject(event.subject);

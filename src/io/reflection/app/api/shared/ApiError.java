@@ -89,7 +89,7 @@ public enum ApiError {
 	CategoryStoreMismatch(100048, "The category store does not a store in another parameter for Category: {0}"),
 
 	EventNull(100049, "Invalid value null for Event: {0}"),
-	EventNoLookup(100050, "Invalid event lookup, an id should be provided for Event: {0}"),
+	EventNoLookup(100050, "Invalid event lookup, an id or a code should be provided for Event: {0}"),
 	EventNotFound(100051, "Event not found Event: {0}"),
 
 	InvalidActionCode(100055, "Invalid action code String: {0}"),
