@@ -40,6 +40,8 @@
     <property name="db.connection.server" value="173.194.81.93" />
     <property name="db.connection.username" value="rio_app_user" />
     <property name="db.connection.password" value="sooth28@duns" />
+    
+    <property name="pipeline.model.for.date" value="0" />
 
   </system-properties>
 
