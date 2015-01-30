@@ -24,6 +24,7 @@ import io.reflection.app.service.datasource.DataSourceServiceProvider;
 import io.reflection.app.service.event.EventServiceProvider;
 import io.reflection.app.service.notification.NotificationServiceProvider;
 import io.reflection.app.service.user.UserServiceProvider;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.io.IOException;
 import java.util.Date;
@@ -102,7 +103,7 @@ public class DataAccountGatherServlet extends ContextAwareServlet {
 							boolean status = collector.collect(account, date);
 
 							if (status && notifyParameter != null && Boolean.parseBoolean(notifyParameter)) {
-								Event event = EventServiceProvider.provide().getEvent(Long.valueOf(5));
+								Event event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.NEW_USER_EVENT_CODE);
 								User user = UserServiceProvider.provide().getDataAccountOwner(account);
 								
 								Map<String, Object> parameters = new HashMap<String, Object>();
