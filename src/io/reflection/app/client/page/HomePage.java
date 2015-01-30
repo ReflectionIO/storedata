@@ -25,7 +25,6 @@ import io.reflection.app.datatypes.shared.User;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.LinkElement;
 import com.google.gwt.dom.client.ScriptElement;
 import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -51,9 +50,6 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 	@UiField InlineHyperlink loginBtn;
 	@UiField InlineHyperlink logoutBtn;
 	@UiField InlineHyperlink leaderboardBtn;
-
-	public static final LinkElement cssCustomIE8 = DOMHelper.getCssLinkFromUrl("css/landing-ie8.1a51cdbd334937176c269c0fe5935208.css");
-	public static final LinkElement cssCustomIE9 = DOMHelper.getCssLinkFromUrl("css/landing-ie9.b88a72995eb11c8b63771dacdc057bc8.css");
 
 	private final ScriptElement scriptCustom = DOMHelper.getJSScriptFromUrl("js/scripts.180cd4275030bac3e6c6f190e5c98813.js");
 	public static final ScriptElement scriptHtml5Shiv = DOMHelper.getJSScriptFromUrl("js/html5shiv.min.js");
@@ -98,14 +94,10 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 		if (userAgent.contains("MSIE")) { // Internet Explorer
 			if (userAgent.contains("MSIE 2") || userAgent.contains("MSIE 3") || userAgent.contains("MSIE 4") || userAgent.contains("MSIE 5")
 					|| userAgent.contains("MSIE 6") || userAgent.contains("MSIE 7") || userAgent.contains("MSIE 8")) {
-				Document.get().getHead().appendChild(HomePage.cssCustomIE8);
 				Document.get().getHead().appendChild(HomePage.scriptHtml5Shiv);
 				Document.get().getHead().appendChild(HomePage.scriptRespond);
 			} else {
 				Document.get().getHead().appendChild(HomePage.scriptPictureFill);
-			}
-			if (userAgent.contains("MSIE 9")) {
-				Document.get().getHead().appendChild(HomePage.cssCustomIE9);
 			}
 		} else { // Not Internet Explorer
 			Document.get().getHead().appendChild(HomePage.scriptPictureFill);
@@ -137,14 +129,10 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 		if (userAgent.contains("MSIE")) { // Internet Explorer
 			if (userAgent.contains("MSIE 2") || userAgent.contains("MSIE 3") || userAgent.contains("MSIE 4") || userAgent.contains("MSIE 5")
 					|| userAgent.contains("MSIE 6") || userAgent.contains("MSIE 7") || userAgent.contains("MSIE 8")) {
-				Document.get().getHead().removeChild(HomePage.cssCustomIE8);
 				Document.get().getHead().removeChild(HomePage.scriptHtml5Shiv);
 				Document.get().getHead().removeChild(HomePage.scriptRespond);
 			} else {
 				Document.get().getHead().removeChild(HomePage.scriptPictureFill);
-			}
-			if (userAgent.contains("MSIE 9")) {
-				Document.get().getHead().removeChild(HomePage.cssCustomIE9);
 			}
 		} else { // Not Internet Explorer
 			Document.get().getHead().removeChild(HomePage.scriptPictureFill);
