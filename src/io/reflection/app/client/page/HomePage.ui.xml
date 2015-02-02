@@ -4,6 +4,7 @@
 	<ui:import field="io.reflection.app.client.page.PageType.HomePageType" />
 
 	<ui:import field="io.reflection.app.client.res.Styles.INSTANCE" />
+	<ui:with field="images" type="io.reflection.app.client.res.Images" />
 
 	<ui:style gss="true">
 	
@@ -18,10 +19,10 @@
 				<g:InlineHyperlink targetHistoryToken="{HomePageType.asTargetHistoryToken}">
 					<picture> <!-- uses js/picturefill.2.2.0.min.js -->
 						<!--[if IE 9]><video style="display: none;"><![endif] -->
-						<source srcset="images/global/logo-reflection-header.png" media="(min-width: 480px)" />
-						<source srcset="images/global/logo-reflection-header-mobile.png" />
+						<source srcset="{images.reflectionLogoBeta.getSafeUri.asString}" media="(min-width: 480px)" />
+						<source srcset="{images.mobileReflectionLogoBeta.getSafeUri.asString}" />
 						<!--[if IE 9]></video><![endif] -->
-						<img src="images/global/logo-reflection-header.png" alt="Reflection logo" />
+						<img src="{images.reflectionLogoBeta.getSafeUri}"  alt="Reflection logo" />
 					</picture>
 				</g:InlineHyperlink>
 			</div>
