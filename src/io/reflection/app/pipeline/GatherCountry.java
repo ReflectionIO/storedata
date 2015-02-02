@@ -15,11 +15,11 @@ import static io.reflection.app.collectors.CollectorIOS.TOP_PAID_APPS;
 import static io.reflection.app.collectors.CollectorIOS.TOP_PAID_IPAD_APPS;
 import static io.reflection.app.pipeline.SummariseDataAccountFetch.DOWNLOADS_LIST_PROPERTY_VALUE;
 import static io.reflection.app.pipeline.SummariseDataAccountFetch.REVENUE_LIST_PROPERTY_VALUE;
-import io.reflection.app.CollectorServlet;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Store;
+import io.reflection.app.ingestors.IngestorFactory;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
@@ -39,10 +39,10 @@ public class GatherCountry extends Job2<Void, String, Long> {
 
 	private static final Logger LOG = Logger.getLogger(GatherCountry.class.getName());
 
-	private PromisedValue<Map<String, Double>> revenueOtherSummaryValue;
-	private PromisedValue<Map<String, Double>> downloadsOtherSummaryValue;
-	private PromisedValue<Map<String, Double>> revenueTabletSummaryValue;
-	private PromisedValue<Map<String, Double>> downloadsTabletSummaryValue;
+	private String revenueOtherSummaryHandle;
+	private String downloadsOtherSummaryHandle;
+	private String revenueTabletSummaryHandle;
+	private String downloadsTabletSummaryHandle;
 
 	/**
 	 * @param revenueOtherSummaryValue
@@ -51,12 +51,12 @@ public class GatherCountry extends Job2<Void, String, Long> {
 	 * @param revenueTabletSummaryValue
 	 * @param downloadsTabletSummaryValue
 	 */
-	public GatherCountry(PromisedValue<Map<String, Double>> revenueOtherSummaryValue, PromisedValue<Map<String, Double>> downloadsOtherSummaryValue,
-			PromisedValue<Map<String, Double>> revenueTabletSummaryValue, PromisedValue<Map<String, Double>> downloadsTabletSummaryValue) {
-		this.revenueOtherSummaryValue = revenueOtherSummaryValue;
-		this.downloadsOtherSummaryValue = downloadsOtherSummaryValue;
-		this.revenueTabletSummaryValue = revenueTabletSummaryValue;
-		this.downloadsTabletSummaryValue = downloadsTabletSummaryValue;
+	public GatherCountry(String revenueOtherSummaryHandle, String downloadsOtherSummaryHandle, String revenueTabletSummaryHandle,
+			String downloadsTabletSummaryHandle) {
+		this.revenueOtherSummaryHandle = revenueOtherSummaryHandle;
+		this.downloadsOtherSummaryHandle = downloadsOtherSummaryHandle;
+		this.revenueTabletSummaryHandle = revenueTabletSummaryHandle;
+		this.downloadsTabletSummaryHandle = downloadsTabletSummaryHandle;
 	}
 
 	/*
@@ -70,7 +70,7 @@ public class GatherCountry extends Job2<Void, String, Long> {
 		FutureValue<Long> paidFeedId = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_PAID_APPS), null, immediate(code));
 		FutureValue<Long> grossingFeedId = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_GROSSING_APPS), null, immediate(code));
 
-		final boolean ingestCountryFeeds = CollectorServlet.shouldIngestFeedFetch(countryCode);
+		final boolean ingestCountryFeeds = IngestorFactory.shouldIngestFeedFetch(DataTypeHelper.IOS_STORE_A3, countryCode);
 		FutureValue<Long> rankCount;
 		if (ingestCountryFeeds) {
 			FutureValue<String> slimmedPaidFeed = futureCall(new SlimFeed(), paidFeedId);
@@ -78,6 +78,9 @@ public class GatherCountry extends Job2<Void, String, Long> {
 			FutureValue<String> slimmedGrossingFeed = futureCall(new SlimFeed(), grossingFeedId);
 
 			rankCount = futureCall(new IngestRanks(), paidFeedId, slimmedPaidFeed, freeFeedId, slimmedFreeFeed, grossingFeedId, slimmedGrossingFeed);
+
+			PromisedValue<Map<String, Double>> downloadsOtherSummaryValue = promise(downloadsOtherSummaryHandle);
+			PromisedValue<Map<String, Double>> revenueOtherSummaryValue = promise(revenueOtherSummaryHandle);
 
 			futureCall(new ModelData(), rankCount, paidFeedId, DOWNLOADS_LIST_PROPERTY_VALUE, downloadsOtherSummaryValue);
 			futureCall(new ModelData(), rankCount, freeFeedId, DOWNLOADS_LIST_PROPERTY_VALUE, downloadsOtherSummaryValue);
@@ -94,6 +97,9 @@ public class GatherCountry extends Job2<Void, String, Long> {
 			FutureValue<String> slimmedGrossingFeed = futureCall(new SlimFeed(), grossingFeedId);
 
 			rankCount = futureCall(new IngestRanks(), paidFeedId, slimmedPaidFeed, freeFeedId, slimmedFreeFeed, grossingFeedId, slimmedGrossingFeed);
+
+			PromisedValue<Map<String, Double>> downloadsTabletSummaryValue = promise(downloadsTabletSummaryHandle);
+			PromisedValue<Map<String, Double>> revenueTabletSummaryValue = promise(revenueTabletSummaryHandle);
 
 			futureCall(new ModelData(), rankCount, paidFeedId, DOWNLOADS_LIST_PROPERTY_VALUE, downloadsTabletSummaryValue);
 			futureCall(new ModelData(), rankCount, freeFeedId, DOWNLOADS_LIST_PROPERTY_VALUE, downloadsTabletSummaryValue);
@@ -128,8 +134,8 @@ public class GatherCountry extends Job2<Void, String, Long> {
 						}
 
 						for (Category category : categories) {
-							futureCall(new GatherCategory(revenueOtherSummaryValue, downloadsOtherSummaryValue, revenueTabletSummaryValue,
-									downloadsTabletSummaryValue), immediate(countryCode), immediate(category.id), immediate(code));
+							futureCall(new GatherCategory(revenueOtherSummaryHandle, downloadsOtherSummaryHandle, revenueTabletSummaryHandle,
+									downloadsTabletSummaryHandle), immediate(countryCode), immediate(category.id), immediate(code));
 						}
 					}
 				}

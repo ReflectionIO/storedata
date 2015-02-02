@@ -15,10 +15,11 @@ import static io.reflection.app.collectors.CollectorIOS.TOP_PAID_APPS;
 import static io.reflection.app.collectors.CollectorIOS.TOP_PAID_IPAD_APPS;
 import static io.reflection.app.pipeline.SummariseDataAccountFetch.DOWNLOADS_LIST_PROPERTY_VALUE;
 import static io.reflection.app.pipeline.SummariseDataAccountFetch.REVENUE_LIST_PROPERTY_VALUE;
-import io.reflection.app.CollectorServlet;
 import io.reflection.app.datatypes.shared.Category;
+import io.reflection.app.ingestors.IngestorFactory;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.category.CategoryServiceProvider;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.Map;
 import java.util.logging.Logger;
@@ -33,10 +34,10 @@ public class GatherCategory extends Job3<Void, String, Long, Long> {
 
 	private static final Logger LOG = Logger.getLogger(GatherCategory.class.getName());
 
-	private PromisedValue<Map<String, Double>> revenueOtherSummaryValue;
-	private PromisedValue<Map<String, Double>> downloadsOtherSummaryValue;
-	private PromisedValue<Map<String, Double>> revenueTabletSummaryValue;
-	private PromisedValue<Map<String, Double>> downloadsTabletSummaryValue;
+	private String revenueOtherSummaryHandle;
+	private String downloadsOtherSummaryHandle;
+	private String revenueTabletSummaryHandle;
+	private String downloadsTabletSummaryHandle;
 
 	/**
 	 * @param revenueOtherSummaryValue
@@ -45,14 +46,14 @@ public class GatherCategory extends Job3<Void, String, Long, Long> {
 	 * @param revenueTabletSummaryValue
 	 * @param downloadsTabletSummaryValue
 	 */
-	public GatherCategory(PromisedValue<Map<String, Double>> revenueOtherSummaryValue, PromisedValue<Map<String, Double>> downloadsOtherSummaryValue,
-			PromisedValue<Map<String, Double>> revenueTabletSummaryValue, PromisedValue<Map<String, Double>> downloadsTabletSummaryValue) {
-		this.revenueOtherSummaryValue = revenueOtherSummaryValue;
-		this.downloadsOtherSummaryValue = downloadsOtherSummaryValue;
-		this.revenueTabletSummaryValue = revenueTabletSummaryValue;
-		this.downloadsTabletSummaryValue = downloadsTabletSummaryValue;
+	public GatherCategory(String revenueOtherSummaryHandle, String downloadsOtherSummaryHandle, String revenueTabletSummaryHandle,
+			String downloadsTabletSummaryHandle) {
+		this.revenueOtherSummaryHandle = revenueOtherSummaryHandle;
+		this.downloadsOtherSummaryHandle = downloadsOtherSummaryHandle;
+		this.revenueTabletSummaryHandle = revenueTabletSummaryHandle;
+		this.downloadsTabletSummaryHandle = downloadsTabletSummaryHandle;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -68,20 +69,25 @@ public class GatherCategory extends Job3<Void, String, Long, Long> {
 		Category category = CategoryServiceProvider.provide().getCategory(categoryId);
 
 		// Other
-		
-		FutureValue<Long> freeFeedId = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_FREE_APPS), immediate(category.internalId), immediate(code));
-		FutureValue<Long> paidFeedId = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_PAID_APPS), immediate(category.internalId), immediate(code));
+
+		FutureValue<Long> freeFeedId = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_FREE_APPS), immediate(category.internalId),
+				immediate(code));
+		FutureValue<Long> paidFeedId = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_PAID_APPS), immediate(category.internalId),
+				immediate(code));
 		FutureValue<Long> grossingFeedId = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_GROSSING_APPS), immediate(category.internalId),
 				immediate(code));
-		
+
 		FutureValue<Long> rankCount;
-		final boolean ingestCountryFeeds = CollectorServlet.shouldIngestFeedFetch(countryCode);
+		final boolean ingestCountryFeeds = IngestorFactory.shouldIngestFeedFetch(DataTypeHelper.IOS_STORE_A3, countryCode);
 		if (ingestCountryFeeds) {
 			FutureValue<String> slimmedPaidFeed = futureCall(new SlimFeed(), paidFeedId);
 			FutureValue<String> slimmedFreeFeed = futureCall(new SlimFeed(), freeFeedId);
 			FutureValue<String> slimmedGrossingFeed = futureCall(new SlimFeed(), grossingFeedId);
 
 			rankCount = futureCall(new IngestRanks(), paidFeedId, slimmedPaidFeed, freeFeedId, slimmedFreeFeed, grossingFeedId, slimmedGrossingFeed);
+
+			PromisedValue<Map<String, Double>> downloadsOtherSummaryValue = promise(downloadsOtherSummaryHandle);
+			PromisedValue<Map<String, Double>> revenueOtherSummaryValue = promise(revenueOtherSummaryHandle);
 			
 			futureCall(new ModelData(), rankCount, paidFeedId, DOWNLOADS_LIST_PROPERTY_VALUE, downloadsOtherSummaryValue);
 			futureCall(new ModelData(), rankCount, freeFeedId, DOWNLOADS_LIST_PROPERTY_VALUE, downloadsOtherSummaryValue);
@@ -89,10 +95,11 @@ public class GatherCategory extends Job3<Void, String, Long, Long> {
 		}
 
 		// tablet
-		
+
 		freeFeedId = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_FREE_IPAD_APPS), immediate(category.internalId), immediate(code));
 		paidFeedId = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_PAID_IPAD_APPS), immediate(category.internalId), immediate(code));
-		grossingFeedId = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_GROSSING_IPAD_APPS), immediate(category.internalId), immediate(code));
+		grossingFeedId = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_GROSSING_IPAD_APPS), immediate(category.internalId),
+				immediate(code));
 
 		if (ingestCountryFeeds) {
 			FutureValue<String> slimmedPaidFeed = futureCall(new SlimFeed(), paidFeedId);
@@ -100,6 +107,9 @@ public class GatherCategory extends Job3<Void, String, Long, Long> {
 			FutureValue<String> slimmedGrossingFeed = futureCall(new SlimFeed(), grossingFeedId);
 
 			rankCount = futureCall(new IngestRanks(), paidFeedId, slimmedPaidFeed, freeFeedId, slimmedFreeFeed, grossingFeedId, slimmedGrossingFeed);
+
+			PromisedValue<Map<String, Double>> downloadsTabletSummaryValue = promise(downloadsTabletSummaryHandle);
+			PromisedValue<Map<String, Double>> revenueTabletSummaryValue = promise(revenueTabletSummaryHandle);
 			
 			futureCall(new ModelData(), rankCount, paidFeedId, DOWNLOADS_LIST_PROPERTY_VALUE, downloadsTabletSummaryValue);
 			futureCall(new ModelData(), rankCount, freeFeedId, DOWNLOADS_LIST_PROPERTY_VALUE, downloadsTabletSummaryValue);

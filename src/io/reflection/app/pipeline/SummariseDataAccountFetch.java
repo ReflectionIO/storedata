@@ -45,8 +45,8 @@ public class SummariseDataAccountFetch extends Job1<Map<String, Double>, Long> {
 	public static final String DOWNLOADS_LIST_PROPERTY = "downloads";
 	public static final String REVENUE_LIST_PROPERTY = "revenue";
 
-	public static final ImmediateValue<String> DOWNLOADS_LIST_PROPERTY_VALUE = immediate(DOWNLOADS_LIST_PROPERTY);
-	public static final ImmediateValue<String> REVENUE_LIST_PROPERTY_VALUE = immediate(REVENUE_LIST_PROPERTY);
+	public static final transient ImmediateValue<String> DOWNLOADS_LIST_PROPERTY_VALUE = immediate(DOWNLOADS_LIST_PROPERTY);
+	public static final transient ImmediateValue<String> REVENUE_LIST_PROPERTY_VALUE = immediate(REVENUE_LIST_PROPERTY);
 
 	/*
 	 * (non-Javadoc)

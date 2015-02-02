@@ -12,6 +12,8 @@ import io.reflection.app.shared.util.DataTypeHelper;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author billy1380
@@ -19,6 +21,8 @@ import java.util.Set;
  */
 public class IngestorFactory {
 
+	private static final Logger LOG = Logger.getLogger(IngestorFactory.class.getName());
+	
 	/**
 	 * @param store
 	 * @return
@@ -54,5 +58,21 @@ public class IngestorFactory {
 		}
 
 		return countries;
+	}
+	
+	public static boolean shouldIngestFeedFetch(String store, String country) {
+		boolean ingest = false;
+
+		Collection<String> countries = getIngestorCountries(store);
+
+		if (countries.contains(country)) {
+			ingest = true;
+		} else {
+			if (LOG.isLoggable(Level.INFO)) {
+				LOG.info("Country [" + country + "] not in list of countries to ingest.");
+			}
+		}
+
+		return ingest;
 	}
 }

@@ -12,22 +12,22 @@ import static io.reflection.app.pipeline.SummariseDataAccountFetch.DOWNLOADS_LIS
 import static io.reflection.app.pipeline.SummariseDataAccountFetch.REVENUE_LIST_PROPERTY_VALUE;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.datatypes.shared.FormType;
+import io.reflection.app.ingestors.IngestorFactory;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 import co.spchopr.persistentmap.PersistentMap;
 import co.spchopr.persistentmap.PersistentMapFactory;
 
 import com.google.appengine.tools.pipeline.Job0;
-import com.google.appengine.tools.pipeline.PromisedValue;
 import com.google.appengine.tools.pipeline.Value;
 import com.spacehopperstudios.utility.StringUtils;
 
@@ -77,37 +77,45 @@ public class GatherAllRanks extends Job0<Integer> {
 				PersistentMap persist = PersistentMapFactory.createObjectify();
 
 				String revenueTabletPromiseKey, downloadsTabletPromiseKey, revenueOtherPromiseKey, downloadsOtherPromiseKey;
-				PromisedValue<Map<String, Double>> revenueTabletSummaryValue, downloadsTabletSummaryValue, revenueOtherSummaryValue, downloadsOtherSummaryValue;
+				String revenueTabletSummaryHandle, downloadsTabletSummaryHandle, revenueOtherSummaryHandle, downloadsOtherSummaryHandle;
+
+				Collection<String> countriesToIngest = IngestorFactory.getIngestorCountries(DataTypeHelper.IOS_STORE_A3);
 				for (String countryCode : splitCountries) {
 					if (LOG.isLoggable(GaeLevel.DEBUG)) {
 						LOG.log(GaeLevel.DEBUG, String.format("Enqueueing gather tasks for country [%s]", countryCode));
 					}
 
-					// Other
-					revenueOtherPromiseKey = StringUtils.join(
-							Arrays.asList(code.toString(), countryCode, DataTypeHelper.IOS_STORE_A3, FormType.FormTypeOther.toString(),
-									REVENUE_LIST_PROPERTY_VALUE.getValue()), ".");
-					downloadsOtherPromiseKey = StringUtils.join(
-							Arrays.asList(code.toString(), countryCode, DataTypeHelper.IOS_STORE_A3, FormType.FormTypeOther.toString(),
-									DOWNLOADS_LIST_PROPERTY_VALUE.getValue()), ".");
-					revenueOtherSummaryValue = newPromise();
-					downloadsOtherSummaryValue = newPromise();
-					persist.put(revenueOtherPromiseKey, revenueOtherSummaryValue.getHandle());
-					persist.put(downloadsOtherPromiseKey, downloadsOtherSummaryValue.getHandle());
+					revenueOtherSummaryHandle = null;
+					downloadsOtherSummaryHandle = null;
+					revenueTabletSummaryHandle = null;
+					downloadsTabletSummaryHandle = null;
 
-					// Tablet
-					revenueTabletPromiseKey = StringUtils.join(
-							Arrays.asList(code.toString(), countryCode, DataTypeHelper.IOS_STORE_A3, FormType.FormTypeTablet.toString(),
-									REVENUE_LIST_PROPERTY_VALUE.getValue()), ".");
-					downloadsTabletPromiseKey = StringUtils.join(Arrays.asList(code.toString(), countryCode, DataTypeHelper.IOS_STORE_A3,
-							FormType.FormTypeTablet.toString(), DOWNLOADS_LIST_PROPERTY_VALUE.getValue()), ".");
-					revenueTabletSummaryValue = newPromise();
-					downloadsTabletSummaryValue = newPromise();
-					persist.put(revenueTabletPromiseKey, revenueTabletSummaryValue.getHandle());
-					persist.put(downloadsTabletPromiseKey, downloadsTabletSummaryValue.getHandle());
+					if (countriesToIngest.contains(countryCode)) {
+						// Other
+						revenueOtherPromiseKey = StringUtils.join(Arrays.asList(code.toString(), countryCode, DataTypeHelper.IOS_STORE_A3,
+								FormType.FormTypeOther.toString(), REVENUE_LIST_PROPERTY_VALUE.getValue()), ".");
+						downloadsOtherPromiseKey = StringUtils.join(Arrays.asList(code.toString(), countryCode, DataTypeHelper.IOS_STORE_A3,
+								FormType.FormTypeOther.toString(), DOWNLOADS_LIST_PROPERTY_VALUE.getValue()), ".");
 
-					futureCall(new GatherCountry(revenueOtherSummaryValue, downloadsOtherSummaryValue, revenueTabletSummaryValue, downloadsTabletSummaryValue),
-							immediate(countryCode), immediate(code));
+						revenueOtherSummaryHandle = newPromise().getHandle();
+						downloadsOtherSummaryHandle = newPromise().getHandle();
+						persist.put(revenueOtherPromiseKey, revenueOtherSummaryHandle);
+						persist.put(downloadsOtherPromiseKey, downloadsOtherSummaryHandle);
+
+						// Tablet
+						revenueTabletPromiseKey = StringUtils.join(Arrays.asList(code.toString(), countryCode, DataTypeHelper.IOS_STORE_A3,
+								FormType.FormTypeTablet.toString(), REVENUE_LIST_PROPERTY_VALUE.getValue()), ".");
+						downloadsTabletPromiseKey = StringUtils.join(Arrays.asList(code.toString(), countryCode, DataTypeHelper.IOS_STORE_A3,
+								FormType.FormTypeTablet.toString(), DOWNLOADS_LIST_PROPERTY_VALUE.getValue()), ".");
+
+						revenueTabletSummaryHandle = newPromise().getHandle();
+						downloadsTabletSummaryHandle = newPromise().getHandle();
+						persist.put(revenueTabletPromiseKey, revenueTabletSummaryHandle);
+						persist.put(downloadsTabletPromiseKey, downloadsTabletSummaryHandle);
+					}
+
+					futureCall(new GatherCountry(revenueOtherSummaryHandle, downloadsOtherSummaryHandle, revenueTabletSummaryHandle,
+							downloadsTabletSummaryHandle), immediate(countryCode), immediate(code));
 
 					count++;
 				}
