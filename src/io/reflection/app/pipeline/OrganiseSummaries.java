@@ -32,7 +32,6 @@ public class OrganiseSummaries extends Job1<Map<String, Map<String, Double>>, Li
 	 */
 	@Override
 	public Value<Map<String, Map<String, Double>>> run(List<Map<String, Double>> summaries) throws Exception {
-
 		summaries.removeAll(Collections.singleton(null));
 
 		Map<String, Map<String, Double>> organised = new HashMap<>();
@@ -51,11 +50,12 @@ public class OrganiseSummaries extends Job1<Map<String, Map<String, Double>>, Li
 			String[] parts = key.split("\\.");
 
 			String countryKey = parts[0];
-			String formKey = parts[1];
-			String typeKey = parts[2];
+			String storeKey = parts[1];
+			String formKey = parts[2];
+			String typeKey = parts[3];
 			
-			String itemsKey = StringUtils.join(Arrays.asList(countryKey, formKey, typeKey), ".");
-			String itemKey = parts[3];
+			String itemsKey = StringUtils.join(Arrays.asList(countryKey, storeKey, formKey, typeKey), ".");
+			String itemKey = parts[4];
 
 			Map<String, Double> items = organised.get(itemsKey);
 			
@@ -74,5 +74,4 @@ public class OrganiseSummaries extends Job1<Map<String, Map<String, Double>>, Li
 
 		}
 	}
-
 }

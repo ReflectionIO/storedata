@@ -37,8 +37,7 @@ public class FillRevenue extends Job3<Void, String, Long, Long> {
 	 */
 	@Override
 	public Value<Void> run(String type, Long feedFetchId, Long simpleModelRunId) throws Exception {
-		if (simpleModelRunId == null) {
-
+		if (simpleModelRunId != null) {
 			FeedFetch feedFetch = FeedFetchServiceProvider.provide().getFeedFetch(feedFetchId);
 			
 			SimpleModelRun run = SimpleModelRunServiceProvider.provide().getSimpleModelRun(simpleModelRunId);

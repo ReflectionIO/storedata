@@ -86,7 +86,7 @@ public class CalibrateSimpleModel extends Job3<Long, String, Map<String, Double>
 			run = SimpleModelRunServiceProvider.provide().addSimpleModelRun(run);
 		}
 
-		return immediate(run == null ? null : run.id);
+		return run == null ? null : immediate(run.id);
 	}
 
 	private Double getPosition(String type, Rank rank) {

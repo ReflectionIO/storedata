@@ -51,16 +51,20 @@ public final class SubmitPromisses extends Job2<Void, Map<String, Map<String, Do
 
 			// FIXME: there are better ways to get the store
 			Store iosStore = DataTypeHelper.getIosStore();
-			
+
 			DateTime start = new DateTime(on.getTime(), DateTimeZone.UTC).minusHours(12);
 			Long code = FeedFetchServiceProvider.provide().getGatherCode(iosStore, start.toDate(), on);
-			
-			fulfill(dataAccountFetchSummary, code, persist, pipelineService);
-			
-			start = new DateTime(on.getTime(), DateTimeZone.UTC).plusHours(12);
-			code = FeedFetchServiceProvider.provide().getGatherCode(iosStore, start.toDate(), on);
-			
-			fulfill(dataAccountFetchSummary, code, persist, pipelineService);
+
+			if (code != null) {
+				fulfill(dataAccountFetchSummary, code, persist, pipelineService);
+			}
+
+			DateTime end = new DateTime(on.getTime(), DateTimeZone.UTC).plusHours(12);
+			code = FeedFetchServiceProvider.provide().getGatherCode(iosStore, on, end.toDate());
+
+			if (code != null) {
+				fulfill(dataAccountFetchSummary, code, persist, pipelineService);
+			}
 		}
 
 		return null;
@@ -73,11 +77,13 @@ public final class SubmitPromisses extends Job2<Void, Map<String, Map<String, Do
 			key = StringUtils.join(Arrays.asList(code.toString(), summaryKey), ".");
 			promiseHandle = (String) persist.get(key);
 
-			try {
-				pipelineService.submitPromisedValue(promiseHandle, dataAccountFetchSummary.get(summaryKey));
-			} catch (NoSuchObjectException | OrphanedObjectException e) {
-				if (LOG.getLevel() == Level.WARNING) {
-					LOG.log(Level.WARNING, "Errro trying to fulfill promise for [" + summaryKey + "], skipping", e);
+			if (promiseHandle != null) {
+				try {
+					pipelineService.submitPromisedValue(promiseHandle, dataAccountFetchSummary.get(summaryKey));
+				} catch (NoSuchObjectException | OrphanedObjectException e) {
+					if (LOG.getLevel() == Level.WARNING) {
+						LOG.log(Level.WARNING, "Error trying to fulfill promise for [" + summaryKey + "], skipping", e);
+					}
 				}
 			}
 		}
