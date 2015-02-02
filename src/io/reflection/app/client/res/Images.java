@@ -23,6 +23,9 @@ public interface Images extends ClientBundle {
 
     @Source("reflectionlogobeta.png")
     ImageResource reflectionLogoBeta();
+    
+    @Source("mobilereflectionlogobeta.png")
+    ImageResource mobileReflectionLogoBeta();
 
     @Source("spinner.gif")
     ImageResource spinner();

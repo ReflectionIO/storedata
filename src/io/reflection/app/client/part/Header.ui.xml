@@ -22,7 +22,7 @@
 	<ui:import field="io.reflection.app.client.page.PageType.EventSubscriptionsPageType" />
 	<ui:import field="io.reflection.app.client.page.PageType.SendNotificationPageType" />
 
-	<ui:with field="res" type='io.reflection.app.client.res.Images' />
+	<ui:with field="res" type="io.reflection.app.client.res.Images" />
 	<ui:with field="global" type="io.reflection.app.client.res.Styles" />
 
 	<ui:style gss="true">
