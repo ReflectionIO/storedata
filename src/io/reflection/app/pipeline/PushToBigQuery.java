@@ -48,9 +48,10 @@ public class PushToBigQuery extends Job2<Void, String, Long> {
 
 	private static final String OAUTH_P12_PROPERTY_KEY = "oauth.p12.file";
 	private static final String OAUTH_ACC_ID_PROPERTY_KEY = "oauth.account.id";
-	
-	private static final String SCOPE = "https://www.googleapis.com/auth/bigquery";
-	private static final List<String> SCOPES = Arrays.asList(new String[] { SCOPE });
+
+	private static final String MANAGE_SCOPE = "https://www.googleapis.com/auth/bigquery";
+	private static final String INSERT_SCOPE = "https://www.googleapis.com/auth/bigquery.insertdata";
+	private static final List<String> SCOPES = Arrays.asList(new String[] { MANAGE_SCOPE, INSERT_SCOPE });
 	private static final HttpTransport HTTP_TRANSPORT = new UrlFetchTransport();
 	private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 	private static final Bigquery bigquery = new Bigquery(HTTP_TRANSPORT, JSON_FACTORY, getRequestInitializer());
