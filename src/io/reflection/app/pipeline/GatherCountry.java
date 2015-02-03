@@ -76,6 +76,10 @@ public class GatherCountry extends Job2<Void, String, Long> {
 			FutureValue<String> slimmedPaidFeed = futureCall(new SlimFeed(), paidFeedId);
 			FutureValue<String> slimmedFreeFeed = futureCall(new SlimFeed(), freeFeedId);
 			FutureValue<String> slimmedGrossingFeed = futureCall(new SlimFeed(), grossingFeedId);
+			
+			futureCall(new PushToBigQuery(), slimmedPaidFeed, paidFeedId);
+			futureCall(new PushToBigQuery(), slimmedFreeFeed, freeFeedId);
+			futureCall(new PushToBigQuery(), slimmedGrossingFeed, grossingFeedId);
 
 			rankCount = futureCall(new IngestRanks(), paidFeedId, slimmedPaidFeed, freeFeedId, slimmedFreeFeed, grossingFeedId, slimmedGrossingFeed);
 
@@ -95,6 +99,10 @@ public class GatherCountry extends Job2<Void, String, Long> {
 			FutureValue<String> slimmedPaidFeed = futureCall(new SlimFeed(), paidFeedId);
 			FutureValue<String> slimmedFreeFeed = futureCall(new SlimFeed(), freeFeedId);
 			FutureValue<String> slimmedGrossingFeed = futureCall(new SlimFeed(), grossingFeedId);
+			
+			futureCall(new PushToBigQuery(), slimmedPaidFeed, paidFeedId);
+			futureCall(new PushToBigQuery(), slimmedFreeFeed, freeFeedId);
+			futureCall(new PushToBigQuery(), slimmedGrossingFeed, grossingFeedId);
 
 			rankCount = futureCall(new IngestRanks(), paidFeedId, slimmedPaidFeed, freeFeedId, slimmedFreeFeed, grossingFeedId, slimmedGrossingFeed);
 

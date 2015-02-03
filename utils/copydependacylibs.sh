@@ -1,5 +1,4 @@
 #! /bin/bash
-cp ~/.m2/repository/com/googlecode/objectify/objectify/4.1.3/objectify-4.1.3.jar $1/storedata/war/WEB-INF/lib/.
 cp ~/.m2/repository/com/google/appengine/appengine-api-1.0-sdk/1.9.5/appengine-api-1.0-sdk-1.9.5.jar $1/storedata/war/WEB-INF/lib/.
 cp ~/.m2/repository/com/googlecode/objectify/objectify/4.1.3/objectify-4.1.3.jar $1/storedata/war/WEB-INF/lib/.
 cp ~/.m2/repository/com/google/code/gson/gson/2.2.4/gson-2.2.4.jar $1/storedata/war/WEB-INF/lib/.
@@ -30,8 +29,6 @@ cp ~/.m2/repository/org/json/json/20090211/json-20090211.jar $1/storedata/war/WE
 cp ~/.m2/repository/com/google/guava/guava/18.0/guava-18.0.jar $1/storedata/war/WEB-INF/lib/.
 cp ~/.m2/repository/com/google/appengine/tools/appengine-gcs-client/0.4.4/appengine-gcs-client-0.4.4.jar $1/storedata/war/WEB-INF/lib/.
 cp ~/.m2/repository/com/google/apis/google-api-services-storage/v1-rev15-1.19.0/google-api-services-storage-v1-rev15-1.19.0.jar $1/storedata/war/WEB-INF/lib/.
-cp ~/.m2/repository/com/google/api-client/google-api-client/1.19.0/google-api-client-1.19.0.jar $1/storedata/war/WEB-INF/lib/.
-cp ~/.m2/repository/com/google/oauth-client/google-oauth-client/1.19.0/google-oauth-client-1.19.0.jar $1/storedata/war/WEB-INF/lib/.
 cp ~/.m2/repository/com/google/api-client/google-api-client-appengine/1.19.1/google-api-client-appengine-1.19.1.jar $1/storedata/war/WEB-INF/lib/.
 cp ~/.m2/repository/com/google/oauth-client/google-oauth-client-appengine/1.19.0/google-oauth-client-appengine-1.19.0.jar $1/storedata/war/WEB-INF/lib/.
 cp ~/.m2/repository/com/google/oauth-client/google-oauth-client-servlet/1.19.0/google-oauth-client-servlet-1.19.0.jar $1/storedata/war/WEB-INF/lib/.
@@ -49,6 +46,10 @@ cp ~/.m2/repository/com/google/http-client/google-http-client-appengine/1.19.0/g
 cp ~/.m2/repository/com/google/http-client/google-http-client-jackson2/1.19.0/google-http-client-jackson2-1.19.0.jar $1/storedata/war/WEB-INF/lib/.
 cp ~/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.1.3/jackson-core-2.1.3.jar $1/storedata/war/WEB-INF/lib/.
 cp ~/.m2/repository/org/apache/commons/commons-math3/3.4/commons-math3-3.4.jar $1/storedata/war/WEB-INF/lib/.
+cp ~/.m2/repository/com/google/apis/google-api-services-bigquery/v2-rev188-1.19.1/google-api-services-bigquery-v2-rev188-1.19.1.jar $1/storedata/war/WEB-INF/lib/.
+cp ~/.m2/repository/com/google/api-client/google-api-client/1.19.1/google-api-client-1.19.1.jar $1/storedata/war/WEB-INF/lib/.
+cp ~/.m2/repository/com/google/oauth-client/google-oauth-client/1.19.0/google-oauth-client-1.19.0.jar $1/storedata/war/WEB-INF/lib/.
+cp ~/.m2/repository/com/google/guava/guava-jdk5/13.0/guava-jdk5-13.0.jar $1/storedata/war/WEB-INF/lib/.
 cp ~/temp/sdk/gwt-2.7.0/gwt-servlet.jar $1/storedata/war/WEB-INF/lib/.
 cp ~/temp/sdk/appengine-java-sdk-1.9.5/lib/shared/jsp-api.jar $1/storedata/war/WEB-INF/lib/.
 cp ~/temp/sdk/appengine-java-sdk-1.9.5/lib/shared/jsp/repackaged-appengine-jasper-el-6.0.29.jar $1/storedata/war/WEB-INF/lib/.

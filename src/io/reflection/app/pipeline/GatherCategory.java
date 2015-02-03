@@ -84,11 +84,15 @@ public class GatherCategory extends Job3<Void, String, Long, Long> {
 			FutureValue<String> slimmedFreeFeed = futureCall(new SlimFeed(), freeFeedId);
 			FutureValue<String> slimmedGrossingFeed = futureCall(new SlimFeed(), grossingFeedId);
 
+			futureCall(new PushToBigQuery(), slimmedPaidFeed, paidFeedId);
+			futureCall(new PushToBigQuery(), slimmedFreeFeed, freeFeedId);
+			futureCall(new PushToBigQuery(), slimmedGrossingFeed, grossingFeedId);
+
 			rankCount = futureCall(new IngestRanks(), paidFeedId, slimmedPaidFeed, freeFeedId, slimmedFreeFeed, grossingFeedId, slimmedGrossingFeed);
 
 			PromisedValue<Map<String, Double>> downloadsOtherSummaryValue = promise(downloadsOtherSummaryHandle);
 			PromisedValue<Map<String, Double>> revenueOtherSummaryValue = promise(revenueOtherSummaryHandle);
-			
+
 			futureCall(new ModelData(), rankCount, paidFeedId, DOWNLOADS_LIST_PROPERTY_VALUE, downloadsOtherSummaryValue);
 			futureCall(new ModelData(), rankCount, freeFeedId, DOWNLOADS_LIST_PROPERTY_VALUE, downloadsOtherSummaryValue);
 			futureCall(new ModelData(), rankCount, grossingFeedId, REVENUE_LIST_PROPERTY_VALUE, revenueOtherSummaryValue);
@@ -105,12 +109,16 @@ public class GatherCategory extends Job3<Void, String, Long, Long> {
 			FutureValue<String> slimmedPaidFeed = futureCall(new SlimFeed(), paidFeedId);
 			FutureValue<String> slimmedFreeFeed = futureCall(new SlimFeed(), freeFeedId);
 			FutureValue<String> slimmedGrossingFeed = futureCall(new SlimFeed(), grossingFeedId);
+			
+			futureCall(new PushToBigQuery(), slimmedPaidFeed, paidFeedId);
+			futureCall(new PushToBigQuery(), slimmedFreeFeed, freeFeedId);
+			futureCall(new PushToBigQuery(), slimmedGrossingFeed, grossingFeedId);
 
 			rankCount = futureCall(new IngestRanks(), paidFeedId, slimmedPaidFeed, freeFeedId, slimmedFreeFeed, grossingFeedId, slimmedGrossingFeed);
 
 			PromisedValue<Map<String, Double>> downloadsTabletSummaryValue = promise(downloadsTabletSummaryHandle);
 			PromisedValue<Map<String, Double>> revenueTabletSummaryValue = promise(revenueTabletSummaryHandle);
-			
+
 			futureCall(new ModelData(), rankCount, paidFeedId, DOWNLOADS_LIST_PROPERTY_VALUE, downloadsTabletSummaryValue);
 			futureCall(new ModelData(), rankCount, freeFeedId, DOWNLOADS_LIST_PROPERTY_VALUE, downloadsTabletSummaryValue);
 			futureCall(new ModelData(), rankCount, grossingFeedId, REVENUE_LIST_PROPERTY_VALUE, revenueTabletSummaryValue);
