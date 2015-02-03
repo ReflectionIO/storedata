@@ -58,7 +58,7 @@ public class IngestRanks extends Job6<Long, Long, String, Long, String, Long, St
 		for (int i = 0; i < size; i++) {
 			item = paidRankList.get(i);
 			rank = new Rank().category(paidFetch.category).code(paidFetch.code).country(paidFetch.country).currency(item.currency).date(paidFetch.date)
-					.position(Integer.valueOf(i)).itemId(item.internalId).price(item.price).source(paidFetch.store).type(paidFetch.type);
+					.position(Integer.valueOf(i + 1)).itemId(item.internalId).price(item.price).source(paidFetch.store).type(paidFetch.type);
 
 			items.put(item.internalId, item);
 			ranks.put(item.internalId, rank);
@@ -68,7 +68,7 @@ public class IngestRanks extends Job6<Long, Long, String, Long, String, Long, St
 		for (int i = 0; i < size; i++) {
 			item = freeRankList.get(i);
 			rank = new Rank().category(freeFetch.category).code(freeFetch.code).country(freeFetch.country).currency(item.currency).date(freeFetch.date)
-					.position(Integer.valueOf(i)).itemId(item.internalId).price(item.price).source(freeFetch.store).type(freeFetch.type);
+					.position(Integer.valueOf(i + 1)).itemId(item.internalId).price(item.price).source(freeFetch.store).type(freeFetch.type);
 
 			items.put(item.internalId, item);
 			ranks.put(item.internalId, rank);
@@ -88,7 +88,7 @@ public class IngestRanks extends Job6<Long, Long, String, Long, String, Long, St
 				ranks.put(item.internalId, rank);
 			}
 
-			rank.grossingPosition(Integer.valueOf(i));
+			rank.grossingPosition(Integer.valueOf(i + 1));
 		}
 
 		if (ranks.size() > 0) {
