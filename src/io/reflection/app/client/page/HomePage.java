@@ -25,11 +25,15 @@ import io.reflection.app.datatypes.shared.User;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.dom.client.ScriptElement;
 import com.google.gwt.dom.client.StyleInjector;
+import com.google.gwt.dom.client.VideoElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.Error;
@@ -51,6 +55,18 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 	@UiField InlineHyperlink logoutBtn;
 	@UiField InlineHyperlink leaderboardBtn;
 
+	// elements for IE consitionals
+	@UiField HTMLPanel mainPanel;
+	@UiField Element picture1;
+	@UiField Element picture2;
+	@UiField Element picture3;
+	@UiField Element source1;
+	@UiField Element source2;
+	@UiField Element source3;
+	@UiField Element source4;
+	@UiField Element source5;
+	@UiField Element source6;
+
 	private final ScriptElement scriptCustom = DOMHelper.getJSScriptFromUrl("js/scripts.180cd4275030bac3e6c6f190e5c98813.js");
 	public static final ScriptElement scriptHtml5Shiv = DOMHelper.getJSScriptFromUrl("js/html5shiv.min.js");
 	public static final ScriptElement scriptRespond = DOMHelper.getJSScriptFromUrl("js/respond.min.js");
@@ -67,6 +83,8 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 		applyBtn.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken("requestinvite"));
 		applyNowBtn.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken("requestinvite"));
 		loginBtn.setTargetHistoryToken(PageType.LoginPageType.asTargetHistoryToken("requestinvite"));
+
+		appendConditionalTags();
 
 	}
 
@@ -150,6 +168,41 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 		} else {
 			headerLinks.appendChild(applyBtn.getElement());
 			headerLinks.appendChild(loginBtn.getElement());
+		}
+	}
+
+	private void appendConditionalTags() {
+		String userAgent = Window.Navigator.getUserAgent();
+		if (userAgent.contains("MSIE 2") || userAgent.contains("MSIE 3") || userAgent.contains("MSIE 4") || userAgent.contains("MSIE 5")
+				|| userAgent.contains("MSIE 6") || userAgent.contains("MSIE 7")) {
+			ParagraphElement outdatedBrowser = Document.get().createPElement(); // TODO the element z-index need to be set up higher
+			outdatedBrowser.addClassName("browserupgrade");
+			outdatedBrowser
+					.setInnerHTML("You are using an <strong>outdated</strong> browser. Please <a href=\"http://browsehappy.com/\">upgrade your browser</a> to improve your experience.");
+			mainPanel.getElement().insertFirst(outdatedBrowser);
+		}
+		if (userAgent.contains("MSIE 9")) {
+			picture1.removeChild(source1);
+			picture1.removeChild(source2);
+			picture2.removeChild(source3);
+			picture2.removeChild(source4);
+			picture3.removeChild(source5);
+			picture3.removeChild(source6);
+			VideoElement video1 = Document.get().createVideoElement();
+			video1.setAttribute("style", "display: none;");
+			VideoElement video2 = Document.get().createVideoElement();
+			video2.setAttribute("style", "display: none;");
+			VideoElement video3 = Document.get().createVideoElement();
+			video3.setAttribute("style", "display: none;");
+			picture1.insertFirst(video1);
+			picture2.insertFirst(video2);
+			picture3.insertFirst(video3);
+			video1.appendChild(source1);
+			video1.appendChild(source2);
+			video2.appendChild(source3);
+			video2.appendChild(source4);
+			video3.appendChild(source5);
+			video3.appendChild(source6);
 		}
 	}
 
