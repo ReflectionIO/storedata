@@ -19,16 +19,16 @@ import io.reflection.app.client.handler.user.SessionEventHandler;
 import io.reflection.app.client.helper.DOMHelper;
 import io.reflection.app.client.part.Footer;
 import io.reflection.app.client.part.Header;
-import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.User;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.LinkElement;
 import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.dom.client.ScriptElement;
-import com.google.gwt.dom.client.StyleInjector;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.VideoElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -67,6 +67,9 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 	@UiField Element source5;
 	@UiField Element source6;
 
+	public static final LinkElement cssCustom = DOMHelper.getCssLinkFromUrl("css/landing.48c66b87e54f97b1a16f60e8abd48511.css");
+	public static final LinkElement cssCustomIE8 = DOMHelper.getCssLinkFromUrl("css/landing-ie8.52bdcf7918329c177c2fe30a3a521b79.css");
+	public static final LinkElement cssCustomIE9 = DOMHelper.getCssLinkFromUrl("css/landing-ie9.b88a72995eb11c8b63771dacdc057bc8.css");
 	private final ScriptElement scriptCustom = DOMHelper.getJSScriptFromUrl("js/scripts.180cd4275030bac3e6c6f190e5c98813.js");
 	public static final ScriptElement scriptHtml5Shiv = DOMHelper.getJSScriptFromUrl("js/html5shiv.min.js");
 	public static final ScriptElement scriptRespond = DOMHelper.getJSScriptFromUrl("js/respond.min.js");
@@ -76,7 +79,7 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 
 		initWidget(uiBinder.createAndBindUi(this));
 
-		StyleInjector.injectAtStart(Styles.INSTANCE.homePageStyle().getText());
+		// StyleInjector.injectAtStart(Styles.INSTANCE.homePageStyle().getText());
 
 		headerLinks.removeAllChildren();
 
@@ -106,16 +109,22 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 		Document.get().getBody().setAttribute("style", "height: auto");
 		((Footer) NavigationController.get().getFooter()).setVisible(false);
 		((Header) NavigationController.get().getHeader()).setVisible(false);
+		headerLinks.getStyle().setDisplay(Display.INLINE_BLOCK);
 
 		// Append to Head
+		Document.get().getHead().appendChild(HomePage.cssCustom);
 		String userAgent = Window.Navigator.getUserAgent();
 		if (userAgent.contains("MSIE")) { // Internet Explorer
 			if (userAgent.contains("MSIE 2") || userAgent.contains("MSIE 3") || userAgent.contains("MSIE 4") || userAgent.contains("MSIE 5")
 					|| userAgent.contains("MSIE 6") || userAgent.contains("MSIE 7") || userAgent.contains("MSIE 8")) {
+				Document.get().getHead().appendChild(HomePage.cssCustomIE8);
 				Document.get().getHead().appendChild(HomePage.scriptHtml5Shiv);
 				Document.get().getHead().appendChild(HomePage.scriptRespond);
 			} else {
 				Document.get().getHead().appendChild(HomePage.scriptPictureFill);
+			}
+			if (userAgent.contains("MSIE 9")) {
+				Document.get().getHead().appendChild(HomePage.cssCustomIE9);
 			}
 		} else { // Not Internet Explorer
 			Document.get().getHead().appendChild(HomePage.scriptPictureFill);
@@ -143,14 +152,19 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 		((Header) NavigationController.get().getHeader()).setVisible(true);
 
 		// Remove from Head
+		Document.get().getHead().removeChild(HomePage.cssCustom);
 		String userAgent = Window.Navigator.getUserAgent();
 		if (userAgent.contains("MSIE")) { // Internet Explorer
 			if (userAgent.contains("MSIE 2") || userAgent.contains("MSIE 3") || userAgent.contains("MSIE 4") || userAgent.contains("MSIE 5")
 					|| userAgent.contains("MSIE 6") || userAgent.contains("MSIE 7") || userAgent.contains("MSIE 8")) {
+				Document.get().getHead().removeChild(HomePage.cssCustomIE8);
 				Document.get().getHead().removeChild(HomePage.scriptHtml5Shiv);
 				Document.get().getHead().removeChild(HomePage.scriptRespond);
 			} else {
 				Document.get().getHead().removeChild(HomePage.scriptPictureFill);
+			}
+			if (userAgent.contains("MSIE 9")) {
+				Document.get().getHead().removeChild(HomePage.cssCustomIE9);
 			}
 		} else { // Not Internet Explorer
 			Document.get().getHead().removeChild(HomePage.scriptPictureFill);
