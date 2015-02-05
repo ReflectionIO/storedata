@@ -67,7 +67,7 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 	@UiField Element source5;
 	@UiField Element source6;
 
-	public static final LinkElement cssCustom = DOMHelper.getCssLinkFromUrl("css/landing.48c66b87e54f97b1a16f60e8abd48511.css");
+	public static final LinkElement cssCustom = DOMHelper.getCssLinkFromUrl("css/landing.918d141fd11f34b156a448da3f931c8d.css");
 	public static final LinkElement cssCustomIE8 = DOMHelper.getCssLinkFromUrl("css/landing-ie8.52bdcf7918329c177c2fe30a3a521b79.css");
 	public static final LinkElement cssCustomIE9 = DOMHelper.getCssLinkFromUrl("css/landing-ie9.b88a72995eb11c8b63771dacdc057bc8.css");
 	private final ScriptElement scriptCustom = DOMHelper.getJSScriptFromUrl("js/scripts.180cd4275030bac3e6c6f190e5c98813.js");
