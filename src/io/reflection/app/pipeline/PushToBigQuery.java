@@ -19,6 +19,8 @@ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.appengine.http.UrlFetchTransport;
@@ -30,6 +32,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.bigquery.Bigquery;
 import com.google.api.services.bigquery.model.TableDataInsertAllRequest;
+import com.google.api.services.bigquery.model.TableDataInsertAllResponse;
 import com.google.api.services.bigquery.model.TableRow;
 import com.google.appengine.api.appidentity.AppIdentityServiceFactory;
 import com.google.appengine.tools.pipeline.Job2;
@@ -45,6 +48,8 @@ import com.google.gson.JsonParser;
 public class PushToBigQuery extends Job2<Void, String, Long> {
 
 	private static final long serialVersionUID = 1L;
+
+	private static final Logger LOG = Logger.getLogger(PushToBigQuery.class.getName());
 
 	private static final String OAUTH_P12_PROPERTY_KEY = "oauth.p12.file";
 	private static final String OAUTH_ACC_ID_PROPERTY_KEY = "oauth.account.id";
@@ -71,12 +76,12 @@ public class PushToBigQuery extends Job2<Void, String, Long> {
 			final int size = array.size();
 			if (size > 0) {
 				TableDataInsertAllRequest.Rows rows = new TableDataInsertAllRequest.Rows();
-				rows.setInsertId(feedFetchId.toString());
 
 				Item item;
 				TableRow row;
 				JsonObject object;
 
+				List<TableDataInsertAllRequest.Rows> rowList = new ArrayList<>();
 				for (int i = 0; i < size; i++) {
 					object = array.get(i).getAsJsonObject();
 
@@ -90,21 +95,28 @@ public class PushToBigQuery extends Job2<Void, String, Long> {
 					row.set("country", feedFetch.country);
 					row.set("store", feedFetch.store);
 					row.set("listtype", feedFetch.type);
-					row.set("date", feedFetch.date);
+					row.set("date", Long.valueOf(feedFetch.date.getTime() / 1000));
 					row.set("currency", item.currency);
 					row.set("itemid", item.internalId);
 					row.set("position", Integer.valueOf(i + 1));
 					row.set("price", item.price);
 
+					rows.setInsertId(feedFetchId.toString() + Integer.toString(i + 1));
 					rows.setJson(row);
+					rowList.add(rows);
 				}
 
-				List<TableDataInsertAllRequest.Rows> rowList = new ArrayList<>();
-				rowList.add(rows);
-
 				TableDataInsertAllRequest content = new TableDataInsertAllRequest().setRows(rowList);
-				// TableDataInsertAllResponse response =
-				bigquery.tabledata().insertAll(getProjectId(), "pipelinetest", "rank", content).execute();
+
+				if (LOG.isLoggable(Level.INFO)) {
+					LOG.info(content.toPrettyString());
+				}
+
+				TableDataInsertAllResponse response = bigquery.tabledata().insertAll(getProjectId(), "pipelinetest", "rank", content).execute();
+
+				if (LOG.isLoggable(Level.INFO)) {
+					LOG.info(response.toPrettyString());
+				}
 			}
 		}
 
