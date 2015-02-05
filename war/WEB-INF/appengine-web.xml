@@ -31,9 +31,9 @@
 		<property name="db.connection.catalogue" value="rio" />
 		<!-- <property name="db.connection.server" value="storedatacollector:reflectiondb" /> -->
 
-<!-- 		<property name="db.connection.server" value="localhost" /> -->
-<!-- 		<property name="db.connection.username" value="root" /> -->
-<!-- 		<property name="db.connection.password" value="" /> -->
+		<!-- <property name="db.connection.server" value="localhost" /> -->
+		<!-- <property name="db.connection.username" value="root" /> -->
+		<!-- <property name="db.connection.password" value="" /> -->
 
 		<property name="db.connection.server" value="173.194.81.93" />
 		<property name="db.connection.username" value="rio_app_user" />
@@ -45,6 +45,8 @@
 
 		<property name="oauth.p12.file" value="reflectiontestenv1-fc95529edea3.p12" />
 		<property name="oauth.account.id" value="486144765626-ggsh9o83jthtcli9jtoel2la92a702ab@developer.gserviceaccount.com" />
+
+		<property name="bigquery.dataset.name" value="pipelinetest" />
 
 	</system-properties>
 
