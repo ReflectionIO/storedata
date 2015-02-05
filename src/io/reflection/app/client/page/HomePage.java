@@ -19,6 +19,7 @@ import io.reflection.app.client.handler.user.SessionEventHandler;
 import io.reflection.app.client.helper.DOMHelper;
 import io.reflection.app.client.part.Footer;
 import io.reflection.app.client.part.Header;
+import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.User;
 
 import com.google.gwt.core.client.GWT;
@@ -32,8 +33,10 @@ import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.VideoElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.Error;
@@ -55,29 +58,31 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 	@UiField InlineHyperlink logoutBtn;
 	@UiField InlineHyperlink leaderboardBtn;
 
+	@UiField InlineHyperlink homeBtn;
+
+	Element picture1, source1, source2;
+
 	// elements for IE consitionals
 	@UiField HTMLPanel mainPanel;
-	@UiField Element picture1;
 	@UiField Element picture2;
 	@UiField Element picture3;
-	@UiField Element source1;
-	@UiField Element source2;
 	@UiField Element source3;
 	@UiField Element source4;
 	@UiField Element source5;
 	@UiField Element source6;
 
-	public static final LinkElement cssCustom = DOMHelper.getCssLinkFromUrl("css/landing.918d141fd11f34b156a448da3f931c8d.css");
-	public static final LinkElement cssCustomIE8 = DOMHelper.getCssLinkFromUrl("css/landing-ie8.52bdcf7918329c177c2fe30a3a521b79.css");
-	public static final LinkElement cssCustomIE9 = DOMHelper.getCssLinkFromUrl("css/landing-ie9.b88a72995eb11c8b63771dacdc057bc8.css");
-	private final ScriptElement scriptCustom = DOMHelper.getJSScriptFromUrl("js/scripts.180cd4275030bac3e6c6f190e5c98813.js");
-	public static final ScriptElement scriptHtml5Shiv = DOMHelper.getJSScriptFromUrl("js/html5shiv.min.js");
-	public static final ScriptElement scriptRespond = DOMHelper.getJSScriptFromUrl("js/respond.min.js");
-	public static final ScriptElement scriptPictureFill = DOMHelper.getJSScriptFromUrl("js/picturefill.2.2.0.min.js", "async");
+	private static final LinkElement cssCustom = DOMHelper.getCssLinkFromUrl("css/landing.918d141fd11f34b156a448da3f931c8d.css");
+	private static final LinkElement cssCustomIE8 = DOMHelper.getCssLinkFromUrl("css/landing-ie8.52bdcf7918329c177c2fe30a3a521b79.css");
+	private static final LinkElement cssCustomIE9 = DOMHelper.getCssLinkFromUrl("css/landing-ie9.b88a72995eb11c8b63771dacdc057bc8.css");
+	private static final ScriptElement scriptCustom = DOMHelper.getJSScriptFromUrl("js/scripts.180cd4275030bac3e6c6f190e5c98813.js");
+	private static final ScriptElement scriptRespond = DOMHelper.getJSScriptFromUrl("js/respond.min.js");
+	private static final ScriptElement scriptPictureFill = DOMHelper.getJSScriptFromUrl("js/picturefill.2.2.0.min.js", "async");
 
 	public HomePage() {
 
 		initWidget(uiBinder.createAndBindUi(this));
+
+		createHomeBtn();
 
 		// StyleInjector.injectAtStart(Styles.INSTANCE.homePageStyle().getText());
 
@@ -89,6 +94,26 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 
 		appendConditionalTags();
 
+	}
+
+	private void createHomeBtn() {
+		picture1 = DOM.createElement("picture");
+
+		source1 = DOM.createElement("source");
+		source1.setAttribute("srcset", Images.INSTANCE.reflectionLogoBeta().getSafeUri().asString());
+		source1.setAttribute("media", "(min-width: 480px)");
+
+		source2 = DOM.createElement("source");
+		source2.setAttribute("srcset", Images.INSTANCE.mobileReflectionLogoBeta().getSafeUri().asString());
+
+		Image img = new Image(Images.INSTANCE.reflectionLogoBeta());
+		img.setAltText("Reflection logo");
+
+		picture1.appendChild(source1);
+		picture1.appendChild(source2);
+		picture1.appendChild(img.getElement());
+
+		homeBtn.getElement().appendChild(picture1);
 	}
 
 	/*
@@ -118,7 +143,6 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 			if (userAgent.contains("MSIE 2") || userAgent.contains("MSIE 3") || userAgent.contains("MSIE 4") || userAgent.contains("MSIE 5")
 					|| userAgent.contains("MSIE 6") || userAgent.contains("MSIE 7") || userAgent.contains("MSIE 8")) {
 				Document.get().getHead().appendChild(HomePage.cssCustomIE8);
-				Document.get().getHead().appendChild(HomePage.scriptHtml5Shiv);
 				Document.get().getHead().appendChild(HomePage.scriptRespond);
 			} else {
 				Document.get().getHead().appendChild(HomePage.scriptPictureFill);
@@ -158,7 +182,6 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 			if (userAgent.contains("MSIE 2") || userAgent.contains("MSIE 3") || userAgent.contains("MSIE 4") || userAgent.contains("MSIE 5")
 					|| userAgent.contains("MSIE 6") || userAgent.contains("MSIE 7") || userAgent.contains("MSIE 8")) {
 				Document.get().getHead().removeChild(HomePage.cssCustomIE8);
-				Document.get().getHead().removeChild(HomePage.scriptHtml5Shiv);
 				Document.get().getHead().removeChild(HomePage.scriptRespond);
 			} else {
 				Document.get().getHead().removeChild(HomePage.scriptPictureFill);
