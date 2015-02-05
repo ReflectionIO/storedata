@@ -67,9 +67,9 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 	Element picture2, source3, source4;
 	Element picture3, source5, source6;
 
-	private static final LinkElement cssCustom = DOMHelper.getCssLinkFromUrl("css/landing.918d141fd11f34b156a448da3f931c8d.css");
-	private static final LinkElement cssCustomIE8 = DOMHelper.getCssLinkFromUrl("css/landing-ie8.52bdcf7918329c177c2fe30a3a521b79.css");
-	private static final LinkElement cssCustomIE9 = DOMHelper.getCssLinkFromUrl("css/landing-ie9.b88a72995eb11c8b63771dacdc057bc8.css");
+	private static final LinkElement cssCustom = DOMHelper.getCssLinkFromUrl("css/landing.73169dbec3b7e9bcd0bc7cb18ad0e460.css");
+	private static final LinkElement cssCustomIE8 = DOMHelper.getCssLinkFromUrl("css/landing-ie8.c3580041f1c6167d265d3570874fd1c4.css");
+	private static final LinkElement cssCustomIE9 = DOMHelper.getCssLinkFromUrl("css/landing-ie9.42a5a45361f9f95fe006be82a699c864.css");
 	private static final ScriptElement scriptCustom = DOMHelper.getJSScriptFromUrl("js/scripts.180cd4275030bac3e6c6f190e5c98813.js");
 	private static final ScriptElement scriptRespond = DOMHelper.getJSScriptFromUrl("js/respond.min.js");
 	private static final ScriptElement scriptPictureFill = DOMHelper.getJSScriptFromUrl("js/picturefill.2.2.0.min.js", "async");
