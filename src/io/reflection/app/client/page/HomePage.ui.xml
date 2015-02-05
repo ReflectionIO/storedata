@@ -8,19 +8,10 @@
 	<ui:style gss="true">
 	
 	</ui:style>
-
-
 	<g:HTMLPanel ui:field="mainPanel">
-
 		<header class="header">
 			<div class="site-logo">
-				<g:InlineHyperlink targetHistoryToken="{HomePageType.asTargetHistoryToken}">
-					<picture ui:field="picture1"> <!-- uses js/picturefill.2.2.0.min.js -->
-						<source ui:field="source1" srcset="{images.reflectionLogoBeta.getSafeUri.asString}" media="(min-width: 480px)" />
-						<source ui:field="source2" srcset="{images.mobileReflectionLogoBeta.getSafeUri.asString}" />
-						<img src="{images.reflectionLogoBeta.getSafeUri}" alt="Reflection logo" />
-					</picture>
-				</g:InlineHyperlink>
+				<g:InlineHyperlink targetHistoryToken="{HomePageType.asTargetHistoryToken}" ui:field="homeBtn" />
 			</div>
 			<div class="header__actions" ui:field="headerLinks">
 				<g:InlineHyperlink ui:field="applyBtn" styleName="ref-button-apply">Apply</g:InlineHyperlink>
