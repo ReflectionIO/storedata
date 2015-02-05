@@ -79,7 +79,7 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 	private static final ScriptElement scriptPictureFill = DOMHelper.getJSScriptFromUrl("js/picturefill.2.2.0.min.js", "async");
 
 	public HomePage() {
-		
+
 		initWidget(uiBinder.createAndBindUi(this));
 
 		createHomeBtn();
@@ -219,8 +219,8 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 			mainPanel.getElement().insertFirst(outdatedBrowser);
 		}
 		if (userAgent.contains("MSIE 9")) {
-			// picture1.removeChild(source1);
-			// picture1.removeChild(source2);
+			picture1.removeChild(source1);
+			picture1.removeChild(source2);
 			picture2.removeChild(source3);
 			picture2.removeChild(source4);
 			picture3.removeChild(source5);
@@ -231,11 +231,11 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 			video2.setAttribute("style", "display: none;");
 			VideoElement video3 = Document.get().createVideoElement();
 			video3.setAttribute("style", "display: none;");
-			// picture1.insertFirst(video1);
+			picture1.insertFirst(video1);
 			picture2.insertFirst(video2);
 			picture3.insertFirst(video3);
-			// video1.appendChild(source1);
-			// video1.appendChild(source2);
+			video1.appendChild(source1);
+			video1.appendChild(source2);
 			video2.appendChild(source3);
 			video2.appendChild(source4);
 			video3.appendChild(source5);
