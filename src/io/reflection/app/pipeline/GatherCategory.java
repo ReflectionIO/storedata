@@ -84,9 +84,9 @@ public class GatherCategory extends Job3<Void, String, Long, Long> {
 			FutureValue<String> slimmedFreeFeed = futureCall(new SlimFeed(), freeFeedId);
 			FutureValue<String> slimmedGrossingFeed = futureCall(new SlimFeed(), grossingFeedId);
 
-			futureCall(new PushToBigQuery(), slimmedPaidFeed, paidFeedId);
-			futureCall(new PushToBigQuery(), slimmedFreeFeed, freeFeedId);
-			futureCall(new PushToBigQuery(), slimmedGrossingFeed, grossingFeedId);
+			futureCall(new PushRanksToBigQuery(), slimmedPaidFeed, paidFeedId);
+			futureCall(new PushRanksToBigQuery(), slimmedFreeFeed, freeFeedId);
+			futureCall(new PushRanksToBigQuery(), slimmedGrossingFeed, grossingFeedId);
 
 			rankCount = futureCall(new IngestRanks(), paidFeedId, slimmedPaidFeed, freeFeedId, slimmedFreeFeed, grossingFeedId, slimmedGrossingFeed);
 
@@ -110,9 +110,9 @@ public class GatherCategory extends Job3<Void, String, Long, Long> {
 			FutureValue<String> slimmedFreeFeed = futureCall(new SlimFeed(), freeFeedId);
 			FutureValue<String> slimmedGrossingFeed = futureCall(new SlimFeed(), grossingFeedId);
 			
-			futureCall(new PushToBigQuery(), slimmedPaidFeed, paidFeedId);
-			futureCall(new PushToBigQuery(), slimmedFreeFeed, freeFeedId);
-			futureCall(new PushToBigQuery(), slimmedGrossingFeed, grossingFeedId);
+			futureCall(new PushRanksToBigQuery(), slimmedPaidFeed, paidFeedId);
+			futureCall(new PushRanksToBigQuery(), slimmedFreeFeed, freeFeedId);
+			futureCall(new PushRanksToBigQuery(), slimmedGrossingFeed, grossingFeedId);
 
 			rankCount = futureCall(new IngestRanks(), paidFeedId, slimmedPaidFeed, freeFeedId, slimmedFreeFeed, grossingFeedId, slimmedGrossingFeed);
 
