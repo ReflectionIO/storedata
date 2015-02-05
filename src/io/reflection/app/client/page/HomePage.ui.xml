@@ -8,7 +8,7 @@
 	<ui:style gss="true">
 	
 	</ui:style>
-	<g:HTMLPanel ui:field="mainPanel">
+	<g:HTMLPanel>
 		<header class="header">
 			<div class="site-logo">
 				<g:InlineHyperlink targetHistoryToken="{HomePageType.asTargetHistoryToken}" ui:field="homeBtn" />
@@ -72,13 +72,7 @@
 				</div>
 
 				<section class="landing-section-insights" id="anchor-how-intelligence-helps">
-					<div class="landing-section-insights__column_one">
-						<picture ui:field="picture2">
-							<source ui:field="source3" srcset="images/placeholder/placeholder-laptop-large.png" media="(min-width: 720px)" />
-							<source ui:field="source4" srcset="images/placeholder/placeholder-laptop-medium.png" />
-							<img src="images/placeholder/placeholder-laptop-large.png" alt="Leaderboard screenshot" />
-						</picture>
-					</div>
+					<g:HTMLPanel styleName="landing-section-insights__column_one"  ui:field="leaderBoardScreenshot"/>						
 					<div class="landing-column-thin">
 						<div class="landing-column-thin__content">
 							<h2>Discover Powerful Insights</h2>
@@ -91,13 +85,7 @@
 				</section>
 
 				<section class="landing-section-analyse">
-					<div class="landing-section-analyse__column_two">
-						<picture ui:field="picture3">
-							<source ui:field="source5" srcset="images/placeholder/placeholder-laptop-analyse-large.png" media="(min-width: 720px)" />
-							<source ui:field="source6" srcset="images/placeholder/placeholder-laptop-analyse-medium.png" />
-							<img src="images/placeholder/placeholder-laptop-analyse-large.png" alt="Analysis screenshot" />
-						</picture>
-					</div>
+					<g:HTMLPanel styleName="landing-section-analyse__column_two" ui:field="analysisScreenshot" />
 					<div class="landing-column-thin">
 						<div class="landing-column-thin__content">
 							<h2>Analyse App Performance</h2>

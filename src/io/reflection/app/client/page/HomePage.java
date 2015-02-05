@@ -59,17 +59,13 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 	@UiField InlineHyperlink leaderboardBtn;
 
 	@UiField InlineHyperlink homeBtn;
-
-	Element picture1, source1, source2;
+	@UiField HTMLPanel leaderBoardScreenshot;
+	@UiField HTMLPanel analysisScreenshot;
 
 	// elements for IE consitionals
-	@UiField HTMLPanel mainPanel;
-	@UiField Element picture2;
-	@UiField Element picture3;
-	@UiField Element source3;
-	@UiField Element source4;
-	@UiField Element source5;
-	@UiField Element source6;
+	Element picture1, source1, source2;
+	Element picture2, source3, source4;
+	Element picture3, source5, source6;
 
 	private static final LinkElement cssCustom = DOMHelper.getCssLinkFromUrl("css/landing.918d141fd11f34b156a448da3f931c8d.css");
 	private static final LinkElement cssCustomIE8 = DOMHelper.getCssLinkFromUrl("css/landing-ie8.52bdcf7918329c177c2fe30a3a521b79.css");
@@ -82,7 +78,9 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 
 		initWidget(uiBinder.createAndBindUi(this));
 
-		createHomeBtn();
+		addHomeBtnPicture();
+		addLeaderboardScreenshotPicture();
+		addAnalysisScreenshotPicture();
 
 		// StyleInjector.injectAtStart(Styles.INSTANCE.homePageStyle().getText());
 
@@ -96,7 +94,7 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 
 	}
 
-	private void createHomeBtn() {
+	private void addHomeBtnPicture() {
 		picture1 = DOM.createElement("picture");
 
 		source1 = DOM.createElement("source");
@@ -114,6 +112,46 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 		picture1.appendChild(img.getElement());
 
 		homeBtn.getElement().appendChild(picture1);
+	}
+
+	private void addLeaderboardScreenshotPicture() {
+		picture2 = DOM.createElement("picture");
+
+		source3 = DOM.createElement("source");
+		source3.setAttribute("srcset", "images/placeholder/placeholder-laptop-large.png");
+		source3.setAttribute("media", "(min-width: 720px)");
+
+		source4 = DOM.createElement("source");
+		source4.setAttribute("srcset", "images/placeholder/placeholder-laptop-medium.png");
+
+		Image img = new Image("images/placeholder/placeholder-laptop-large.png");
+		img.setAltText("Leaderboard screenshot");
+
+		picture2.appendChild(source3);
+		picture2.appendChild(source4);
+		picture2.appendChild(img.getElement());
+
+		leaderBoardScreenshot.getElement().appendChild(picture2);
+	}
+
+	private void addAnalysisScreenshotPicture() {
+		picture3 = DOM.createElement("picture");
+
+		source5 = DOM.createElement("source");
+		source5.setAttribute("srcset", "images/placeholder/placeholder-laptop-analyse-large.png");
+		source5.setAttribute("media", "(min-width: 720px)");
+
+		source6 = DOM.createElement("source");
+		source6.setAttribute("srcset", "images/placeholder/placeholder-laptop-analyse-medium.png");
+
+		Image img = new Image("images/placeholder/placeholder-laptop-analyse-large.png");
+		img.setAltText("Analysis screenshot");
+
+		picture3.appendChild(source5);
+		picture3.appendChild(source6);
+		picture3.appendChild(img.getElement());
+
+		analysisScreenshot.getElement().appendChild(picture3);
 	}
 
 	/*
@@ -216,7 +254,7 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 			outdatedBrowser.addClassName("browserupgrade");
 			outdatedBrowser
 					.setInnerHTML("You are using an <strong>outdated</strong> browser. Please <a href=\"http://browsehappy.com/\">upgrade your browser</a> to improve your experience.");
-			mainPanel.getElement().insertFirst(outdatedBrowser);
+			this.getElement().insertFirst(outdatedBrowser);
 		}
 		if (userAgent.contains("MSIE 9")) {
 			picture1.removeChild(source1);
