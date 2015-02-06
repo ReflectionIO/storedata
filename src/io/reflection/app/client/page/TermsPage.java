@@ -9,6 +9,7 @@ package io.reflection.app.client.page;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -23,6 +24,18 @@ public class TermsPage extends Page {
 
 	public TermsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.page.Page#onAttach()
+	 */
+	@Override
+	protected void onAttach() {
+		super.onAttach();
+
+		Window.scrollTo(0, 0);
 	}
 
 }
