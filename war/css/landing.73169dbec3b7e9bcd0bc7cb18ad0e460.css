@@ -1079,7 +1079,7 @@ blockquote cite span {
 @media (min-width: 720px) {
   /* line 352, ../sass/components/_landing-section-main.scss */
   .list-partners img {
-    max-width: 96%;
+    max-width: 100px;
     padding-bottom: 28px;
   }
 }
@@ -1767,8 +1767,8 @@ blockquote cite span {
   position: relative;
   top: -2px;
   padding-right: 4px;
-  margin-left: 0.2em;
-  margin-right: 0.2em;
+  margin-left: 0.2em !important;
+  margin-right: 0.2em !important;
   vertical-align: middle;
   font-size: 35px;
   font-size: 3.5rem;
@@ -1793,8 +1793,8 @@ blockquote cite span {
 @media (min-width: 980px) {
   /* line 414, ../sass/components/_landing-components.scss */
   .landing-section-contact p:before, .landing-section-contact span:before {
-    margin-left: 0.2em;
-    margin-right: 0.2em;
+    margin-left: 0.2em !important;
+    margin-right: 0.2em !important;
     padding-right: 4px;
     font-size: 35px;
     font-size: 3.5rem;
