@@ -65,6 +65,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
@@ -111,6 +112,10 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 	private ItemRevenue itemRevenuePlaceholder = new ItemRevenue();
 	private List<ItemRevenue> tablePlaceholder = new ArrayList<ItemRevenue>();
+
+	@UiField HTMLPanel chartContainer;
+
+	// private Chart chart;
 
 	public ItemPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -238,6 +243,10 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		register(DefaultEventBus.get().addHandlerToSource(GetItemSalesRanksEventHandler.TYPE, RankController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(GetLinkedAccountItemEventHandler.TYPE, LinkedAccountController.get(), this));
 
+		// if (chart == null) {
+		// chart = ChartHelper.createAndInjectChart(chartContainer);
+		// }
+
 	}
 
 	/*
@@ -327,8 +336,10 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				}
 				dataType = YAxisDataType.fromString(selectedTab);
 				historyChart.setDataType(dataType);
+				// chart.setDataType(dataType);
 				if (isNewSelectedTab && !isNewDataRequired) {
 					historyChart.drawData();
+					// chart.drawData();
 				}
 				if (isNewDataRequired) {
 					setLoadingSpinnerEnabled(true);
@@ -454,6 +465,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 				displayItemDetails(output.ranks.get(0));
 
+				// chart.setDataType(dataType);
+				// chart.setData(output.ranks);
+				// chart.drawData();
 				historyChart.setMode(rankingType);
 				historyChart.setDataType(dataType);
 
@@ -548,6 +562,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				displayItemDetails(output.ranks.get(0));
 
 				historyChart.setMode(RankingType.PositionRankingType);
+				// chart.setDataType(dataType);
+				// chart.setData(output.ranks);
+				// chart.drawData();
 				historyChart.setDataType(dataType);
 
 				// redraw the graph with the new data

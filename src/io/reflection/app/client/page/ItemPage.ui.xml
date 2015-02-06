@@ -3,29 +3,33 @@
 	xmlns:c="urn:import:com.google.gwt.user.cellview.client" xmlns:pp="urn:import:io.reflection.app.client.page.part">
 	<ui:style gss="true">
 	.cellTable {
-	    margin-top: 50px;
+		margin-top: 50px;
 	}
 	
 	.chart {
-	    margin-top: 50px;
-	    margin-left: 20px;
+		margin-top: 50px;
+		margin-left: 20px;
 	}
 	
 	.content {
-	    padding-left: 0px;
-	    padding-right: 0px;
-	    overflow-x: hidden;
+		padding-left: 0px;
+		padding-right: 0px;
+		overflow-x: hidden;
 	}
 	
 	.table {
-	    margin-left: 25px;
-	    margin-right: 25px;
-	    margin-top: 20px;
+		margin-left: 25px;
+		margin-right: 25px;
+		margin-top: 20px;
 	}
 	
 	.downloads {
-	    border-left: 1px solid #d9dce0 !important;
-	    border-right: 1px solid #d9dce0 !important;
+		border-left: 1px solid #d9dce0 !important;
+		border-right: 1px solid #d9dce0 !important;
+	}
+	
+	.a {
+		background-color: orange;
 	}
 	</ui:style>
 	<g:HTMLPanel styleName="row">
@@ -60,8 +64,12 @@
 						<pp:ItemChart ui:field="historyChart" styleName="{style.chart}" />
 					</g:HTMLPanel>
 				</p:Preloader>
+
+				<g:HTMLPanel styleName="{style.a}" ui:field="chartContainer"></g:HTMLPanel>
+
 				<c:CellTable ui:field="revenueTable" styleName="table table-hover table-striped table-item {style.cellTable}"></c:CellTable>
 			</g:HTMLPanel>
+
 			<g:HTMLPanel styleName="filler-bottom col-md-12 hidden-xs hidden-sm" />
 		</div>
 		<!-- <p:AlertBox ui:field="mAlertBox" visible="false" /> -->
