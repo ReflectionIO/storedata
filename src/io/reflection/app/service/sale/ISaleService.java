@@ -16,6 +16,7 @@ import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Sale;
+import io.reflection.app.service.ServiceType;
 
 import java.util.Collection;
 import java.util.Date;
@@ -25,6 +26,8 @@ import com.spacehopperstudios.service.IService;
 
 public interface ISaleService extends IService {
 
+	public static final String DEFAULT_NAME = ServiceType.ServiceTypeSale.toString();
+	
 	/**
 	 * @param id
 	 * @return
@@ -136,7 +139,7 @@ public interface ISaleService extends IService {
 	 * @return
 	 * @throws DataAccessException
 	 */
-	public DataAccount getDataAccount(String itemId) throws DataAccessException;
+	public DataAccount getItemIdDataAccount(String itemId) throws DataAccessException;
 
 	/**
 	 * 

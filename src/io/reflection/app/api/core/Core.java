@@ -1815,7 +1815,7 @@ public final class Core extends ActionHandler {
 
 			input.item = ValidationHelper.validateItem(input.item, "input.item");
 
-			DataAccount linkedAccount = SaleServiceProvider.provide().getDataAccount(input.item.internalId);
+			DataAccount linkedAccount = SaleServiceProvider.provide().getItemIdDataAccount(input.item.internalId);
 
 			// if we only have a partial data source get look it up - because it is required for getting the stores
 			if (linkedAccount.source.stores == null) {
@@ -1983,7 +1983,7 @@ public final class Core extends ActionHandler {
 
 			input.item = ValidationHelper.validateItem(input.item, "input.item");
 
-			DataAccount linkedAccount = SaleServiceProvider.provide().getDataAccount(input.item.internalId);
+			DataAccount linkedAccount = SaleServiceProvider.provide().getItemIdDataAccount(input.item.internalId);
 
 			if (linkedAccount != null) {
 				boolean hasLinkedAccount = UserServiceProvider.provide().hasDataAccount(input.session.user, linkedAccount);

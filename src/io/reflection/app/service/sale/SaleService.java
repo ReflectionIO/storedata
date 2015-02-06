@@ -24,7 +24,6 @@ import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
-import io.reflection.app.service.ServiceType;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
@@ -39,8 +38,9 @@ import java.util.Map;
 import com.spacehopperstudios.utility.StringUtils;
 
 final class SaleService implements ISaleService {
+	
 	public String getName() {
-		return ServiceType.ServiceTypeSale.toString();
+		return DEFAULT_NAME;
 	}
 
 	@Override
@@ -604,7 +604,7 @@ final class SaleService implements ISaleService {
 	 * @see io.reflection.app.service.sale.ISaleService#getDataAccount(java.lang.String)
 	 */
 	@Override
-	public DataAccount getDataAccount(String itemId) throws DataAccessException {
+	public DataAccount getItemIdDataAccount(String itemId) throws DataAccessException {
 		DataAccount dataAccount = null;
 
 		String getDataAccountIdQuery = String.format("SELECT `dataaccountid` FROM `sale` WHERE `itemid`='%s' AND `deleted`='n' LIMIT 1", itemId);
