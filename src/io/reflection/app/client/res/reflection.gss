@@ -40,8 +40,8 @@ body {
 }
 
 .navbar-brand {
-	padding-left: 25px;
-	padding-top: 12px;
+	padding-left: 30px;
+	padding-top: 11px;
 	padding-right: 50px;
 }
 
