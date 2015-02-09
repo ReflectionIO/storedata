@@ -74,6 +74,8 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 	private static final ScriptElement scriptRespond = DOMHelper.getJSScriptFromUrl("js/respond.min.js");
 	private static final ScriptElement scriptPictureFill = DOMHelper.getJSScriptFromUrl("js/picturefill.2.2.0.min.js", "async");
 
+	private int toTop = 0;
+
 	public HomePage() {
 
 		initWidget(uiBinder.createAndBindUi(this));
@@ -163,6 +165,8 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 	protected void onAttach() {
 		super.onAttach();
 
+		Window.scrollTo(0, toTop);
+
 		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
 
@@ -233,6 +237,8 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 
 		// Romove from Body
 		Document.get().getBody().removeChild(scriptCustom);
+
+		toTop = Window.getScrollTop();
 	}
 
 	private void setLoggedInHeader(boolean loggedIn) {

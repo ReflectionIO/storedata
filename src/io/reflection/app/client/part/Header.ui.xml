@@ -28,7 +28,7 @@
 	<ui:style gss="true">
 	.searchBox {
 		margin-top: 5px;
-		margin-right: 24px;
+		margin-right: 34px !important;
 		height: 40px;
 		background-color: #21222b;
 		padding-top: 10px;
