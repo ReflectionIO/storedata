@@ -80,6 +80,7 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@UiField LIElement ranksItem;
 
 	@UiField UListElement myAccountList;
+	@UiField UListElement myAppsDropdown;
 	@UiField InlineHyperlink myAppsLink;
 	@UiField LIElement myAppsItem;
 	@UiField InlineHyperlink linkedAccountsLink;
@@ -522,7 +523,17 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 				.get().asMyAppsFilterString()));
 		linkedAccountsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(), user.id.toString()));
 		accountSettingsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.ChangeDetailsPageType.toString(), user.id.toString()));
-		notificationsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.NotificationsPageType.toString(), user.id.toString()));
+
+		if (SessionController.get().isLoggedInUserAdmin()) {
+			if (!myAppsDropdown.isOrHasChild(notificationsItem)) {
+				myAppsDropdown.appendChild(notificationsItem);
+			}
+			notificationsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.NotificationsPageType.toString(), user.id.toString()));
+		} else {
+			if (myAppsDropdown.isOrHasChild(notificationsItem)) {
+				myAppsDropdown.removeChild(notificationsItem);
+			}
+		}
 
 		navList.appendChild(myAccountList);
 	}

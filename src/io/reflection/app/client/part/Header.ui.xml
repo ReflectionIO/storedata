@@ -103,7 +103,7 @@
 							My Account
 							<span class="caret headerCaret"></span>
 						</g:Anchor>
-						<ul class="dropdown-menu">
+						<ul class="dropdown-menu" ui:field="myAppsDropdown">
 							<li ui:field="myAppsItem">
 								<g:InlineHyperlink ui:field="myAppsLink">
 									<i class="glyphicon glyphicon-th"></i>
