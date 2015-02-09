@@ -59,7 +59,7 @@ public enum PageType {
 	ChangePasswordPageType("changepassword", true),
 	DataAccountFetchesPageType("dataaccountfetches", "MDF"),
 	DataAccountsPageType("dataaccounts", "MDA"),
-	EventsPageType("events", "MET"),
+	EventsPageType("events", DataTypeHelper.PERMISSION_MANAGE_EVENTS_CODE),
 	FeedBrowserPageType("feedbrowser", "MFF"),
 	ForgotPasswordPageType("forgotpassword", false),
 	ForumEditTopicPageType("forumtopicedit", false),
@@ -87,9 +87,9 @@ public enum PageType {
 	UsersPageType("users", DataTypeHelper.PERMISSION_MANAGE_USERS_CODE),
 	WidgetTestPage("test", false),
 	NotificationsPageType("notifications", true),
-	SendNotificationPageType("sendnotification", true),
-	EventSubscriptionsPageType("eventsubscriptions", true),
-	EditEventSubscriptionPageType("editeventsubscription", true),
+	SendNotificationPageType("sendnotification", DataTypeHelper.PERMISSION_SEND_NOTIFICATIONS_CODE),
+	EventSubscriptionsPageType("eventsubscriptions", DataTypeHelper.PERMISSION_MANAGE_EVENT_SUBSCRIPTIONS_CODE),
+	EditEventSubscriptionPageType("editeventsubscription", DataTypeHelper.PERMISSION_MANAGE_EVENT_SUBSCRIPTIONS_CODE),
 
 	// Non navigable
 	LoadingPageType("loading"), ;
@@ -332,7 +332,7 @@ public enum PageType {
 			page = defaultPage;
 			break;
 		}
-		
+
 		if (page != defaultPage) {
 			page.setPageType(this);
 		}

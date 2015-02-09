@@ -40,8 +40,8 @@ body {
 }
 
 .navbar-brand {
-	padding-left: 25px;
-	padding-top: 12px;
+	padding-left: 30px;
+	padding-top: 11px;
 	padding-right: 50px;
 }
 
@@ -859,5 +859,11 @@ content: "";
 
 header a:hover, header a:active, header a:focus {
 	color: #ffffff;
+}
+
+.navbar-inverse .navbar-nav>.active>a .headerCaret{
+	border-top-color: #6d69c5;
+	border-bottom-color: #6d69c5;
+	color: #6d69c5;
 }
 

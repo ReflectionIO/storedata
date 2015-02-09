@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
 	<application>reflectiontestenv1</application>
-	<version>testenv1-39</version>
+	<version>testenv1-40</version>
 
 	<!-- Allows App Engine to send multiple requests to one instance in parallel: -->
 	<threadsafe>true</threadsafe>
@@ -44,7 +44,7 @@
 		<!-- <property name="oauth.account.id" value="486144765626-ggsh9o83jthtcli9jtoel2la92a702ab@developer.gserviceaccount.com" /> -->
 
 		<!-- <property name="bigquery.dataset.name" value="dev" /> -->
-		
+
 		<property name="bigquery.dataset.name" value="reflection" />
 
 	</system-properties>
