@@ -491,9 +491,10 @@ blockquote cite span {
 
 /* line 1, ../sass/components/_site-logo.scss */
 .site-logo {
+  float: left;
   display: inline-block;
 }
-/* line 3, ../sass/components/_site-logo.scss */
+/* line 4, ../sass/components/_site-logo.scss */
 .site-logo img {
   width: 100%;
 }
@@ -2153,7 +2154,7 @@ blockquote cite span {
 }
 /* line 19, ../sass/components/_google-map.scss */
 .gm-style .gm-style-iw + div {
-  left: 237px !important;
+  left: 215px !important;
   top: 50px !important;
   background: transparent url(../images/icons/icon-close.png) no-repeat 100% 0 !important;
 }
