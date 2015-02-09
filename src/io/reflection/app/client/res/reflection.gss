@@ -861,3 +861,9 @@ header a:hover, header a:active, header a:focus {
 	color: #ffffff;
 }
 
+.navbar-inverse .navbar-nav>.active>a .headerCaret{
+	border-top-color: #6d69c5;
+	border-bottom-color: #6d69c5;
+	color: #6d69c5;
+}
+
