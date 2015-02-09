@@ -356,6 +356,10 @@ public class NavigationController implements ValueChangeHandler<String> {
 				Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 					@Override
 					public void execute() {
+						if (currentPage != PageType.HomePageType) {
+							HomePage.removeHomePageTweeks();
+						}
+
 						attachPage(currentPage);
 
 						Scheduler.get().scheduleDeferred(new ScheduledCommand() {
