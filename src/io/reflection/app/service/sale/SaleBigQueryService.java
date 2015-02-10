@@ -149,7 +149,7 @@ final class SaleBigQueryService implements ISaleService {
 			row.set("period", sale.period);
 			row.set("category", sale.category);
 
-			rows.setInsertId(sale.fetch.toString() + "-" + Long.toString(i++));
+			rows.setInsertId(sale.fetch.id.toString() + "-" + Long.toString(i++));
 			rows.setJson(row);
 
 			rowList.add(rows);
@@ -177,7 +177,7 @@ final class SaleBigQueryService implements ISaleService {
 			} catch (IOException ex) {}
 		}
 
-		// TODO: should really check the response code and return 0 if failed to insert
+		// FIXME: should really check the response code and return 0 if failed to insert
 		return Long.valueOf(i);
 	}
 
