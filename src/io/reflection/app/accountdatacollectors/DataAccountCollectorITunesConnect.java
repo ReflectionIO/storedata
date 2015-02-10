@@ -132,6 +132,7 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 			} else {
 				dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeEmpty;
 				dataAccountFetch.data = "Internal: The report was empty but there was no error from itunes connect";
+				success = true;
 			}
 
 			if (dataAccountFetch.id == null) {
