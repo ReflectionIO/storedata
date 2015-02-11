@@ -16,6 +16,7 @@ import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Sale;
+import io.reflection.app.helpers.SqlQueryHelper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.ServiceType;
 
@@ -26,6 +27,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.google.api.services.bigquery.model.QueryResponse;
 import com.google.api.services.bigquery.model.TableDataInsertAllRequest;
 import com.google.api.services.bigquery.model.TableDataInsertAllResponse;
 import com.google.api.services.bigquery.model.TableRow;
@@ -189,7 +191,155 @@ final class SaleBigQueryService implements ISaleService {
 	 */
 	@Override
 	public List<Sale> getSales(Country country, Category category, DataAccount linkedAccount, Date start, Date end, Pager pager) throws DataAccessException {
-		throw new UnsupportedOperationException();
+		List<Sale> sales = new ArrayList<Sale>();
+
+		// FIXME: for now we use the all category for the iOS store... we should get the category passed in, or attempt to detect it based on the linked account
+		// (category relates to store by a3code)
+		// we are using end for date but we could equally use begin
+		String getSalesQuery = String.format("SELECT * FROM sale WHERE country='%s' AND (%d=%d OR category='%s') AND dataaccountid=%d AND %s", country.a2Code,
+				24, category == null ? 24 : category.id.longValue(), category == null ? "" : category.name, linkedAccount.id.longValue(),
+				SqlQueryHelper.beforeAfterQuery(end, start, "end"));
+
+		if (pager != null) {
+			String sortByQuery = "id";
+
+			// if (pager.sortBy != null && ("code".equals(pager.sortBy) || "name".equals(pager.sortBy))) {
+			// sortByQuery = pager.sortBy;
+			// }
+
+			String sortDirectionQuery = "DESC";
+
+			if (pager.sortDirection != null) {
+				switch (pager.sortDirection) {
+				case SortDirectionTypeAscending:
+					sortDirectionQuery = "ASC";
+					break;
+				default:
+					break;
+				}
+			}
+
+			getSalesQuery += String.format(" ORDER BY `%s` %s", sortByQuery, sortDirectionQuery);
+		}
+
+		if (pager.start != null && pager.count != null) {
+			getSalesQuery += String.format(" LIMIT %d, %d", pager.start.longValue(), pager.count.longValue());
+		} else if (pager.count != null) {
+			getSalesQuery += String.format(" LIMIT %d", pager.count.longValue());
+		}
+
+		try {
+			QueryResponse response = BigQueryHelper.queryBigqueryQuick(getSalesQuery);
+
+			List<TableRow> rows;
+			if (response != null && (rows = response.getRows()) != null) {
+				Sale sale;
+				for (TableRow row : rows) {
+					sale = toSale(row);
+
+					if (sale != null) {
+						sales.add(sale);
+					}
+				}
+			}
+		} catch (IOException e) {
+			throw new DataAccessException(e);
+		}
+
+		return sales;
+	}
+
+	private Sale toSale(TableRow row) {
+		Sale sale = new Sale();
+
+		if (row.containsKey("dataaccountfetchid")) {
+			sale.fetch = new DataAccountFetch();
+			sale.fetch.id = (Long) row.get("dataaccountfetchid");
+		}
+
+		if (row.containsKey("dataaccountid")) {
+			sale.account = new DataAccount();
+			sale.account.id = (Long) row.get("dataaccountid");
+		}
+
+		if (row.containsKey("itemid")) {
+			sale.item = new Item();
+			sale.item.internalId = (String) row.get("itemid");
+		}
+
+		if (row.containsKey("country")) {
+			sale.country = (String) row.get("country");
+		}
+
+		if (row.containsKey("sku")) {
+			sale.sku = (String) row.get("sku");
+		}
+
+		if (row.containsKey("developer")) {
+			sale.developer = (String) row.get("developer");
+		}
+
+		if (row.containsKey("title")) {
+			sale.title = (String) row.get("title");
+		}
+
+		if (row.containsKey("version")) {
+			sale.version = (String) row.get("version");
+		}
+
+		if (row.containsKey("typeidentifier")) {
+			sale.typeIdentifier = (String) row.get("typeidentifier");
+		}
+
+		if (row.containsKey("units")) {
+			sale.units = (Integer) row.get("units");
+		}
+
+		if (row.containsKey("proceeds")) {
+			sale.proceeds = (Float) row.get("proceeds");
+		}
+
+		if (row.containsKey("currency")) {
+			sale.currency = (String) row.get("currency");
+		}
+
+		if (row.containsKey("begin")) {
+			sale.begin = BigQueryHelper.dateColumn(row.get("begin"));
+		}
+
+		if (row.containsKey("end")) {
+			sale.end = BigQueryHelper.dateColumn(row.get("end"));
+		}
+
+		if (row.containsKey("customercurrency")) {
+			sale.customerCurrency = (String) row.get("customercurrency");
+		}
+
+		if (row.containsKey("customerprice")) {
+			sale.customerPrice = (Float) row.get("customerprice");
+		}
+
+		if (row.containsKey("promocode")) {
+			sale.promoCode = (String) row.get("promocode");
+		}
+
+		if (row.containsKey("parentidentifier")) {
+			sale.parentIdentifier = (String) row.get("parentidentifier");
+		}
+
+		if (row.containsKey("subscription")) {
+			sale.subscription = (String) row.get("subscription");
+		}
+
+		if (row.containsKey("period")) {
+			sale.period = (String) row.get("period");
+		}
+
+		if (row.containsKey("category")) {
+			sale.category = (String) row.get("category");
+		}
+
+		return sale;
 	}
 
 	/*
@@ -234,7 +384,42 @@ final class SaleBigQueryService implements ISaleService {
 	 */
 	@Override
 	public Item getItem(String itemId) throws DataAccessException {
-		throw new UnsupportedOperationException();
+		Item item = null;
+
+		String getItemQuery = String.format("SELECT developer, title, itemid FROM dev.sale WHERE itemid ='%s' LIMIT 1", itemId);
+
+		try {
+			QueryResponse response = BigQueryHelper.queryBigqueryQuick(getItemQuery);
+
+			List<TableRow> rows;
+			if (response != null && (rows = response.getRows()) != null) {
+				for (TableRow row : rows) {
+					item = toMockItem(row);
+				}
+			}
+		} catch (IOException e) {
+			throw new DataAccessException(e);
+		}
+
+		return item;
+	}
+
+	private Item toMockItem(TableRow row) {
+		Item item = new Item();
+
+		if (row.containsKey("developer")) {
+			item.creatorName = (String) row.get("developer");
+		}
+
+		if (row.containsKey("title")) {
+			item.name = (String) row.get("title");
+		}
+
+		if (row.containsKey("itemid")) {
+			item.internalId = (String) row.get("itemid");
+		}
+
+		return item;
 	}
 
 	/*

@@ -13,6 +13,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import com.google.api.client.auth.oauth2.Credential;
@@ -56,7 +57,7 @@ public class BigQueryHelper {
 	 * @return
 	 * @throws IOException
 	 */
-	public QueryResponse queryBigqueryQuick(String query) throws IOException {
+	public static QueryResponse queryBigqueryQuick(String query) throws IOException {
 		return bigquery.jobs().query(getProjectId(), new QueryRequest().setQuery(query)).execute();
 	}
 
@@ -102,4 +103,45 @@ public class BigQueryHelper {
 		return new AppIdentityCredential(SCOPES);
 	}
 
+	/**
+	 * 
+	 * @param before
+	 * @param after
+	 * @param dateName
+	 * @return
+	 */
+	public static String beforeAfterQuery(Date before, Date after, String dateName) {
+		StringBuffer buffer = new StringBuffer();
+		if (before != null && after != null) {
+			buffer.append("(" + dateName + " BETWEEN FROM_UNIXTIME(");
+			buffer.append(after.getTime() / 1000);
+			buffer.append(") AND FROM_UNIXTIME(");
+			buffer.append(before.getTime() / 1000);
+			buffer.append("))");
+		} else if (after != null && before == null) {
+			buffer.append(dateName + ">=FROM_UNIXTIME(");
+			buffer.append(after.getTime() / 1000);
+			buffer.append(")");
+		} else if (before != null && after == null) {
+			buffer.append(dateName + "<FROM_UNIXTIME(");
+			buffer.append(before.getTime() / 1000);
+			buffer.append(")");
+		}
+
+		return buffer.toString();
+	}
+
+	/**
+	 * 
+	 * @param before
+	 * @param after
+	 * @return
+	 */
+	public static String beforeAfterQuery(Date before, Date after) {
+		return beforeAfterQuery(before, after, "date");
+	}
+
+	public static Date dateColumn(Object value) {
+		return value == null ? null : new Date(((Long) value).longValue() * 1000);
+	}
 }
