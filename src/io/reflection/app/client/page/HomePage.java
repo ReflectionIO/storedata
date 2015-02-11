@@ -123,9 +123,6 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 				Document.get().getHead().appendChild(HomePage.scriptPictureFill);
 			}
 
-			// Append to Body
-			Document.get().getBody().appendChild(scriptCustom);
-
 			tweeked = true;
 		}
 	}
@@ -154,9 +151,6 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 			} else { // Not Internet Explorer
 				Document.get().getHead().removeChild(HomePage.scriptPictureFill);
 			}
-
-			// Romove from Body
-			Document.get().getBody().removeChild(scriptCustom);
 
 			tweeked = false;
 		}
@@ -239,6 +233,9 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 		((Footer) NavigationController.get().getFooter()).setVisible(false);
 		((Header) NavigationController.get().getHeader()).setVisible(false);
 		headerLinks.getStyle().setDisplay(Display.INLINE_BLOCK);
+		
+		// Append to Body
+		Document.get().getBody().appendChild(scriptCustom);
 	}
 
 	/*
@@ -254,6 +251,9 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 		((Header) NavigationController.get().getHeader()).setVisible(true);
 
 		toTop = Window.getScrollTop();
+		
+		// Romove from Body
+		Document.get().getBody().removeChild(scriptCustom);
 	}
 
 	private void setLoggedInHeader(boolean loggedIn) {
