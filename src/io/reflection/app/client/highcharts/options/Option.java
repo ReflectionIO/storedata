@@ -32,6 +32,12 @@ public abstract class Option<T> {
 	}
 
 	@SuppressWarnings("unchecked")
+	public T setOption(String name, double property) {
+		JavaScriptObjectHelper.setDoubleProperty(option, name, property);
+		return (T) this;
+	}
+
+	@SuppressWarnings("unchecked")
 	public T setOption(String name, boolean property) {
 		JavaScriptObjectHelper.setBooleanProperty(option, name, property);
 		return (T) this;

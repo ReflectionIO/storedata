@@ -259,7 +259,7 @@ public abstract class Axis<T extends Option> extends Option<T> {
 		return setOption("linkedTo", linkedTo);
 	}
 
-	public T setMax(int max) {
+	public T setMax(double max) {
 		return setOption("max", max);
 	}
 
@@ -267,7 +267,7 @@ public abstract class Axis<T extends Option> extends Option<T> {
 		return setOption("maxPadding", maxPadding);
 	}
 
-	public T setMin(int min) {
+	public T setMin(double min) {
 		return setOption("min", min);
 	}
 
