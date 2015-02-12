@@ -113,19 +113,17 @@ public class BigQueryHelper {
 	public static String beforeAfterQuery(Date before, Date after, String dateName) {
 		StringBuffer buffer = new StringBuffer();
 		if (before != null && after != null) {
-			buffer.append("(" + dateName + " BETWEEN FROM_UNIXTIME(");
-			buffer.append(after.getTime() / 1000);
-			buffer.append(") AND FROM_UNIXTIME(");
-			buffer.append(before.getTime() / 1000);
-			buffer.append("))");
+			buffer.append("([" + dateName + "]>");
+			buffer.append(after.getTime() * 1000l);
+			buffer.append(" AND [" + dateName + "]<");
+			buffer.append(before.getTime() * 1000l);
+			buffer.append(")");
 		} else if (after != null && before == null) {
-			buffer.append(dateName + ">=FROM_UNIXTIME(");
-			buffer.append(after.getTime() / 1000);
-			buffer.append(")");
+			buffer.append("[" + dateName + "]>=");
+			buffer.append(after.getTime() * 1000l);
 		} else if (before != null && after == null) {
-			buffer.append(dateName + "<FROM_UNIXTIME(");
-			buffer.append(before.getTime() / 1000);
-			buffer.append(")");
+			buffer.append("[" + dateName + "]<");
+			buffer.append(before.getTime() * 1000l);
 		}
 
 		return buffer.toString();

@@ -9,6 +9,7 @@ package io.reflection.app.service.sale;
 
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.bigquery.BigQueryHelper;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
@@ -19,18 +20,23 @@ import io.reflection.app.datatypes.shared.Sale;
 import io.reflection.app.helpers.SqlQueryHelper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.ServiceType;
+import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
+import io.reflection.app.service.item.ItemServiceProvider;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import com.google.api.services.bigquery.model.QueryResponse;
 import com.google.api.services.bigquery.model.TableDataInsertAllRequest;
 import com.google.api.services.bigquery.model.TableDataInsertAllResponse;
 import com.google.api.services.bigquery.model.TableRow;
+import com.spacehopperstudios.utility.StringUtils;
 
 /**
  * @author William Shakour (billy1380)
@@ -100,7 +106,110 @@ final class SaleBigQueryService implements ISaleService {
 	 */
 	@Override
 	public List<Item> getDataAccountItems(DataAccount dataAccount, List<String> typeIdentifiers, Pager pager) throws DataAccessException {
-		throw new UnsupportedOperationException();
+		List<String> itemIds = new ArrayList<String>();
+		List<String> itemIdsTop400 = new ArrayList<String>();
+		List<Item> items = new ArrayList<Item>();
+
+		String typeId = "";
+		if (typeIdentifiers != null && typeIdentifiers.size() > 0) {
+			typeId = "AND [typeidentifier] IN ('" + StringUtils.join(typeIdentifiers, "','") + "')";
+		}
+
+		String getSaleQuery = String.format("SELECT [itemid] FROM [sale] WHERE [dataaccountid]=%d %s GROUP BY [itemid] ORDER BY [%s] %s LIMIT %d, %d",
+				dataAccount.id.longValue(), typeId, pager.sortBy == null ? "id" : pager.sortBy,
+				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start == null ? Pager.DEFAULT_START.longValue()
+						: pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue() : pager.count.longValue());
+
+		try {
+			QueryResponse response = BigQueryHelper.queryBigqueryQuick(getSaleQuery);
+
+			List<TableRow> rows;
+			if (response != null && (rows = response.getRows()) != null) {
+				for (TableRow row : rows) {
+					if (row.containsKey("itemid")) {
+						itemIds.add((String) row.get("itemid"));
+					}
+				}
+			}
+
+			items.addAll(ItemServiceProvider.provide().getInternalIdItemBatch(itemIds)); // return only Items in the top 400
+
+			for (Item i : items) {
+				itemIdsTop400.add(i.internalId);
+			}
+		} catch (IOException ex) {
+			throw new DataAccessException(ex);
+		}
+
+		itemIds.removeAll(itemIdsTop400); // get IDs of items out of the top 400
+
+		if (itemIds.size() > 0) {
+			items.addAll(generateDummyItems(itemIds, typeIdentifiers)); // generate dummy items from sale table for items out of the top 400
+		}
+
+		return items;
+	}
+
+	/**
+	 * Generate dummy items from sale table for items out of the top 400
+	 * 
+	 * @param itemId
+	 * @return
+	 * @throws DataAccessException
+	 */
+	private List<Item> generateDummyItems(Collection<String> itemId, List<String> typeIdentifiers) throws DataAccessException {
+		List<Item> items = new ArrayList<Item>();
+
+		String typeId = "";
+		if (typeIdentifiers != null && typeIdentifiers.size() > 0) {
+			typeId = "AND [typeidentifier] IN ('" + StringUtils.join(typeIdentifiers, "','") + "')";
+		}
+
+		String typesQueryPart = null;
+		if (itemId.size() == 1) {
+			typesQueryPart = String.format("CAST([itemid] AS BINARY)=CAST('%s' AS BINARY)", itemId.iterator().next());
+		} else {
+			typesQueryPart = "CAST([itemid] AS BINARY) IN (CAST('" + StringUtils.join(itemId, "' AS BINARY),CAST('") + "' AS BINARY))";
+		}
+
+		String getSaleItemQuery = String.format("SELECT [title],[developer],[itemid],[sku] FROM [sale] WHERE %s %s GROUP BY [itemid]", typesQueryPart, typeId);
+
+		try {
+			QueryResponse response = BigQueryHelper.queryBigqueryQuick(getSaleItemQuery);
+
+			List<TableRow> rows;
+			if (response != null && (rows = response.getRows()) != null) {
+				Map<String, Item> skuItemLookup = new HashMap<String, Item>();
+				for (TableRow row : rows) {
+					Item mockItem = toMockItem(row);
+					skuItemLookup.put((String) row.get("sku"), mockItem);
+				}
+
+				// Add IAP property if has IA1 or IA9 sales
+				String parentIdentifiers = "";
+				if (skuItemLookup.size() > 0) {
+					parentIdentifiers = "AND [parentidentifier] IN ('" + StringUtils.join(skuItemLookup.keySet(), "','") + "')";
+				}
+
+				String getIAPQuery = String.format(
+						"SELECT [parentidentifier] FROM [sale] WHERE [typeidentifier] IN ('IA1','IA9') %s GROUP BY [parentidentifier]", parentIdentifiers);
+
+				response = BigQueryHelper.queryBigqueryQuick(getIAPQuery);
+
+				if (response != null && (rows = response.getRows()) != null) {
+					for (TableRow row : rows) {
+						// TODO: use properties helper for this
+						skuItemLookup.get((String) row.get("parentidentifier")).properties = "{\"usesIap\":true}";
+					}
+				}
+
+				items.addAll(skuItemLookup.values());
+			}
+		} catch (IOException ex) {
+			throw new DataAccessException(ex);
+		}
+
+		return items;
 	}
 
 	/*
@@ -110,7 +219,29 @@ final class SaleBigQueryService implements ISaleService {
 	 */
 	@Override
 	public Long getDataAccountItemsCount(DataAccount dataAccount, List<String> typeIdentifiers) throws DataAccessException {
-		throw new UnsupportedOperationException();
+		Long dataCount = Long.valueOf(0);
+		String typeId = "";
+		if (typeIdentifiers != null && typeIdentifiers.size() > 0) {
+			typeId = "AND [typeidentifier] IN ('" + StringUtils.join(typeIdentifiers, "','") + "')";
+		}
+
+		String getDataAccountsCountQuery = String.format("SELECT COUNT(DISTINCT [itemid]) AS [datacount] FROM [sale] WHERE [dataaccountid]=%d %s",
+				dataAccount.id.longValue(), typeId);
+
+		try {
+			QueryResponse response = BigQueryHelper.queryBigqueryQuick(getDataAccountsCountQuery);
+
+			List<TableRow> rows;
+			if (response != null && (rows = response.getRows()) != null) {
+				if (rows.size() > 0) {
+					dataCount = (Long) rows.get(0).get("datacount");
+				}
+			}
+		} catch (IOException ex) {
+			throw new DataAccessException(ex);
+		}
+
+		return dataCount;
 	}
 
 	/*
@@ -196,9 +327,9 @@ final class SaleBigQueryService implements ISaleService {
 		// FIXME: for now we use the all category for the iOS store... we should get the category passed in, or attempt to detect it based on the linked account
 		// (category relates to store by a3code)
 		// we are using end for date but we could equally use begin
-		String getSalesQuery = String.format("SELECT * FROM sale WHERE country='%s' AND (%d=%d OR category='%s') AND dataaccountid=%d AND %s", country.a2Code,
-				24, category == null ? 24 : category.id.longValue(), category == null ? "" : category.name, linkedAccount.id.longValue(),
-				SqlQueryHelper.beforeAfterQuery(end, start, "end"));
+		String getSalesQuery = String.format("SELECT * FROM [sale] WHERE [country]='%s' AND (%d=%d OR [category]='%s') AND [dataaccountid]=%d AND %s",
+				country.a2Code, 24, category == null ? 24 : category.id.longValue(), category == null ? "" : category.name, linkedAccount.id.longValue(),
+				BigQueryHelper.beforeAfterQuery(end, start, "end"));
 
 		if (pager != null) {
 			String sortByQuery = "id";
@@ -219,7 +350,7 @@ final class SaleBigQueryService implements ISaleService {
 				}
 			}
 
-			getSalesQuery += String.format(" ORDER BY `%s` %s", sortByQuery, sortDirectionQuery);
+			getSalesQuery += String.format(" ORDER BY [%s] %s", sortByQuery, sortDirectionQuery);
 		}
 
 		if (pager.start != null && pager.count != null) {
@@ -242,8 +373,8 @@ final class SaleBigQueryService implements ISaleService {
 					}
 				}
 			}
-		} catch (IOException e) {
-			throw new DataAccessException(e);
+		} catch (IOException ex) {
+			throw new DataAccessException(ex);
 		}
 
 		return sales;
@@ -363,7 +494,65 @@ final class SaleBigQueryService implements ISaleService {
 	@Override
 	public List<Sale> getItemSales(Item item, Country country, Category category, DataAccount linkedAccount, Date start, Date end, Pager pager)
 			throws DataAccessException {
-		throw new UnsupportedOperationException();
+		List<Sale> sales = new ArrayList<Sale>();
+
+		// FIXME: for now we use the all category for the iOS store... we should get the category passed in, or attempt
+		// to detect it based on the linked account
+		// (category relates to store by a3code)
+		// we are using end for date but we could equally use begin
+		String getSalesQuery = String
+				.format("SELECT * FROM [sale] WHERE [country]='%s' AND (%d=%d OR [category]='%s') AND [dataaccountid]=%d AND %s AND ([itemid]='%7$s' OR [parentidentifier] = (SELECT [sku] FROM [sale] WHERE [itemid]='%7$s' LIMIT 1))",
+						country.a2Code, 24, category == null ? 24 : category.id.longValue(), category == null ? "" : category.name,
+						linkedAccount.id.longValue(), SqlQueryHelper.beforeAfterQuery(end, start, "end"), item.internalId);
+
+		if (pager != null) {
+			String sortByQuery = "id";
+
+			// if (pager.sortBy != null && ("code".equals(pager.sortBy) || "name".equals(pager.sortBy))) {
+			// sortByQuery = pager.sortBy;
+			// }
+
+			String sortDirectionQuery = "DESC";
+
+			if (pager.sortDirection != null) {
+				switch (pager.sortDirection) {
+				case SortDirectionTypeAscending:
+					sortDirectionQuery = "ASC";
+					break;
+				default:
+					break;
+				}
+			}
+
+			getSalesQuery += String.format(" ORDER BY [%s] %s", sortByQuery, sortDirectionQuery);
+		}
+
+		if (pager.start != null && pager.count != null) {
+			getSalesQuery += String.format(" LIMIT %d, %d", pager.start.longValue(), pager.count.longValue());
+		} else if (pager.count != null) {
+			getSalesQuery += String.format(" LIMIT %d", pager.count.longValue());
+		}
+
+		try {
+			QueryResponse response = BigQueryHelper.queryBigqueryQuick(getSalesQuery);
+
+			List<TableRow> rows;
+			if (response != null && (rows = response.getRows()) != null) {
+				Sale sale;
+
+				for (TableRow row : rows) {
+					sale = toSale(row);
+
+					if (sale != null) {
+						sales.add(sale);
+					}
+				}
+			}
+		} catch (IOException ex) {
+			throw new DataAccessException(ex);
+		}
+
+		return sales;
 	}
 
 	/*
@@ -397,8 +586,8 @@ final class SaleBigQueryService implements ISaleService {
 					item = toMockItem(row);
 				}
 			}
-		} catch (IOException e) {
-			throw new DataAccessException(e);
+		} catch (IOException ex) {
+			throw new DataAccessException(ex);
 		}
 
 		return item;
@@ -429,7 +618,24 @@ final class SaleBigQueryService implements ISaleService {
 	 */
 	@Override
 	public DataAccount getItemIdDataAccount(String itemId) throws DataAccessException {
-		throw new UnsupportedOperationException();
+		DataAccount dataAccount = null;
+
+		String getDataAccountIdQuery = String.format("SELECT [dataaccountid] FROM [sale] WHERE [itemid]='%s' LIMIT 1", itemId);
+
+		try {
+			QueryResponse response = BigQueryHelper.queryBigqueryQuick(getDataAccountIdQuery);
+
+			List<TableRow> rows;
+			if (response != null && (rows = response.getRows()) != null) {
+				if (rows.size() > 0) {
+					dataAccount = DataAccountServiceProvider.provide().getDataAccount((Long) rows.get(0).get("dataaccountid"));
+				}
+			}
+		} catch (IOException ex) {
+			throw new DataAccessException(ex);
+		}
+
+		return dataAccount;
 	}
 
 	/*

@@ -259,10 +259,11 @@ final class SaleService implements ISaleService {
 			if (skuItemLookup.size() > 0) {
 				parentIdentifiers = "AND `parentidentifier` IN ('" + StringUtils.join(skuItemLookup.keySet(), "','") + "')";
 			}
-			String getIAPQuery = String.format("SELECT DISTINCT parentidentifier FROM `sale` WHERE `typeidentifier` IN ('IA1','IA9') %s", parentIdentifiers);
+			String getIAPQuery = String.format("SELECT DISTINCT `parentidentifier` FROM `sale` WHERE `typeidentifier` IN ('IA1','IA9') %s", parentIdentifiers);
 
 			saleConnection.executeQuery(getIAPQuery);
 			while (saleConnection.fetchNextRow()) {
+				// TODO: use properties helper for this
 				skuItemLookup.get(saleConnection.getCurrentRowString("parentidentifier")).properties = "{\"usesIap\":true}";
 			}
 
@@ -473,7 +474,7 @@ final class SaleService implements ISaleService {
 		// (category relates to store by a3code)
 		// we are using end for date but we could equally use begin
 		String getSalesQuery = String
-				.format("SELECT * FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d AND %s AND (`itemid`='%7$s' OR parentidentifier = (SELECT `sku` FROM `sale` WHERE `itemid`='%7$s' LIMIT 1)) AND `deleted`='n'",
+				.format("SELECT * FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d AND %s AND (`itemid`='%7$s' OR `parentidentifier` = (SELECT `sku` FROM `sale` WHERE `itemid`='%7$s' LIMIT 1)) AND `deleted`='n'",
 						country.a2Code, 24, category == null ? 24 : category.id.longValue(), category == null ? "" : category.name,
 						linkedAccount.id.longValue(), SqlQueryHelper.beforeAfterQuery(end, start, "end"), item.internalId);
 
