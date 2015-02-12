@@ -15,12 +15,12 @@ import com.google.gwt.core.client.JavaScriptObject;
  */
 class NativeChart {
 
-	static native void nativeAddAxis(JavaScriptObject options, boolean isX, boolean redraw, boolean animate) /*-{
-		chart.addAxis(isX, redraw, animate);
+	static native void nativeAddAxis(JavaScriptObject chart, JavaScriptObject options, boolean isX, boolean redraw, boolean animate) /*-{
+		chart.addAxis(options, isX, redraw, animate);
 	}-*/;
 
-	static native void nativeAddAxis(JavaScriptObject options, boolean isX, boolean redraw, JavaScriptObject animation) /*-{
-		chart.addAxis(isX, redraw, animation);
+	static native void nativeAddAxis(JavaScriptObject chart, JavaScriptObject options, boolean isX, boolean redraw, JavaScriptObject animation) /*-{
+		chart.addAxis(options, isX, redraw, animation);
 	}-*/;
 
 	public static native void nativeAddSeries(JavaScriptObject chart, JavaScriptObject series, boolean redraw, boolean animate) /*-{

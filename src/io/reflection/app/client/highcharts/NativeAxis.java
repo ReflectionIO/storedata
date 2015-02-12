@@ -24,6 +24,18 @@ class NativeAxis {
 		axis.addPlotLine(plotLine);
 	}-*/;
 
+	static native JavaScriptObject nativeGetExtremes(JavaScriptObject axis)/*-{
+		return axis.getExtremes();
+	}-*/;
+
+	static native JavaScriptObject nativeGetXAxis(JavaScriptObject chart, int index)/*-{
+		return chart.xAxis[index];
+	}-*/;
+
+	static native JavaScriptObject nativeGetYAxis(JavaScriptObject chart, int index)/*-{
+		return chart.yAxis[index];
+	}-*/;
+
 	static native void nativeRemove(JavaScriptObject axis)/*-{
 		axis.remove();
 	}-*/;
