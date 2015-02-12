@@ -25,10 +25,12 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.bigquery.Bigquery;
+import com.google.api.services.bigquery.model.DatasetReference;
 import com.google.api.services.bigquery.model.QueryRequest;
 import com.google.api.services.bigquery.model.QueryResponse;
 import com.google.api.services.bigquery.model.TableDataInsertAllRequest;
 import com.google.api.services.bigquery.model.TableDataInsertAllResponse;
+import com.google.api.services.bigquery.model.TableRow;
 import com.google.appengine.api.appidentity.AppIdentityServiceFactory;
 
 /**
@@ -58,7 +60,27 @@ public class BigQueryHelper {
 	 * @throws IOException
 	 */
 	public static QueryResponse queryBigqueryQuick(String query) throws IOException {
-		return bigquery.jobs().query(getProjectId(), new QueryRequest().setQuery(query)).execute();
+		return bigquery
+				.jobs()
+				.query(getProjectId(),
+						new QueryRequest().setQuery(query)
+								.setDefaultDataset(new DatasetReference().setDatasetId(System.getProperty(DATASET_NAME_PROPERTY_KEY)))).execute();
+	}
+
+	/**
+	 * Queries BigQuery with paging
+	 * 
+	 * @param query
+	 * @return
+	 * @throws IOException
+	 */
+	public static QueryResponse queryBigqueryPaged(String query, Long start, Long count) throws IOException {
+		QueryRequest request = new QueryRequest().setQuery(query).setMaxResults(count)
+				.setDefaultDataset(new DatasetReference().setDatasetId(System.getProperty(DATASET_NAME_PROPERTY_KEY)));
+
+		QueryResponse response = bigquery.jobs().query(getProjectId(), request).execute();
+
+		return response;
 	}
 
 	/**
@@ -140,6 +162,16 @@ public class BigQueryHelper {
 	}
 
 	public static Date dateColumn(Object value) {
-		return value == null ? null : new Date(((Long) value).longValue() * 1000);
+		return value == null ? null : new Date(Double.valueOf((String) value).longValue() * 1000l);
+	}
+
+	public static void tablise(QueryResponse response) {
+		if (response != null && response.getRows() != null) {
+			for (TableRow row : response.getRows()) {
+				for (int i = 0; i < row.getF().size(); i++) {
+					row.set(response.getSchema().getFields().get(i).getName(), row.getF().get(i).getV());
+				}
+			}
+		}
 	}
 }
