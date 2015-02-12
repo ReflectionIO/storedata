@@ -79,4 +79,8 @@ public class JavaScriptObjectHelper {
 		object[propertyName] = value;
 	}-*/;
 
+	public static native JavaScriptObject getNativeNull() /*-{
+		return null;
+	}-*/;
+
 }
