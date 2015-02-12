@@ -166,3 +166,8 @@
 .no-flexbox .list-partners ul li {
   width: 33% !important;
 }
+
+/* line 141, ../sass/landing-ie8.scss */
+.landing-column-wide .content-list {
+  padding-top: 30px !important;
+}

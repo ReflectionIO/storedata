@@ -67,9 +67,9 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 	Element picture2, source3, source4;
 	Element picture3, source5, source6;
 
-	private static final LinkElement cssCustom = DOMHelper.getCssLinkFromUrl("css/landing.a19184c20308d66626e3776dc788d3b3.css");
+	private static final LinkElement cssCustom = DOMHelper.getCssLinkFromUrl("css/landing.442f4ad718c6f2a15a2bb8413e83b3b8.css");
 
-	private static final LinkElement cssCustomIE8 = DOMHelper.getCssLinkFromUrl("css/landing-ie8.c3580041f1c6167d265d3570874fd1c4.css");
+	private static final LinkElement cssCustomIE8 = DOMHelper.getCssLinkFromUrl("css/landing-ie8.659484547a4409f243a1bb7d085c2c52.css");
 	private static final LinkElement cssCustomIE9 = DOMHelper.getCssLinkFromUrl("css/landing-ie9.42a5a45361f9f95fe006be82a699c864.css");
 
 	private static final ScriptElement scriptCustom = DOMHelper.getJSScriptFromUrl("js/scripts.180cd4275030bac3e6c6f190e5c98813.js");
@@ -180,13 +180,13 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 		picture2 = DOM.createElement("picture");
 
 		source3 = DOM.createElement("source");
-		source3.setAttribute("srcset", "images/placeholder/placeholder-laptop-large.png");
+		source3.setAttribute("srcset", "images/screenshots/Leaderboard_Revenue.png");
 		source3.setAttribute("media", "(min-width: 720px)");
 
 		source4 = DOM.createElement("source");
-		source4.setAttribute("srcset", "images/placeholder/placeholder-laptop-medium.png");
+		source4.setAttribute("srcset", "images/screenshots/Leaderboard_Revenue_Mobile.png");
 
-		Image img = new Image("images/placeholder/placeholder-laptop-large.png");
+		Image img = new Image("images/screenshots/Leaderboard_Revenue.png");
 		img.setAltText("Leaderboard screenshot");
 
 		picture2.appendChild(source3);
@@ -200,13 +200,13 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 		picture3 = DOM.createElement("picture");
 
 		source5 = DOM.createElement("source");
-		source5.setAttribute("srcset", "images/placeholder/placeholder-laptop-analyse-large.png");
+		source5.setAttribute("srcset", "images/screenshots/App_Page.png");
 		source5.setAttribute("media", "(min-width: 720px)");
 
 		source6 = DOM.createElement("source");
-		source6.setAttribute("srcset", "images/placeholder/placeholder-laptop-analyse-medium.png");
+		source6.setAttribute("srcset", "images/screenshots/App_Page_Mobile.png");
 
-		Image img = new Image("images/placeholder/placeholder-laptop-analyse-large.png");
+		Image img = new Image("images/screenshots/App_Page.png");
 		img.setAltText("Analysis screenshot");
 
 		picture3.appendChild(source5);
