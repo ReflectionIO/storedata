@@ -7,16 +7,11 @@
 //
 package io.reflection.app.client.highcharts;
 
-import static io.reflection.app.client.controller.FilterController.DOWNLOADS_CHART_TYPE;
-import static io.reflection.app.client.controller.FilterController.FREE_LIST_TYPE;
-import static io.reflection.app.client.controller.FilterController.GROSSING_LIST_TYPE;
-import static io.reflection.app.client.controller.FilterController.PAID_LIST_TYPE;
-import static io.reflection.app.client.controller.FilterController.RANKING_CHART_TYPE;
-import static io.reflection.app.client.controller.FilterController.REVENUE_CHART_TYPE;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.JavaScriptObjectHelper;
-import io.reflection.app.client.highcharts.options.Axis;
+import io.reflection.app.client.highcharts.ChartHelper.RankType;
+import io.reflection.app.client.highcharts.ChartHelper.YDataType;
 import io.reflection.app.client.highcharts.options.ChartOption;
 import io.reflection.app.client.highcharts.options.Colors;
 import io.reflection.app.client.highcharts.options.Credits;
@@ -27,12 +22,14 @@ import io.reflection.app.client.highcharts.options.Loading;
 import io.reflection.app.client.highcharts.options.NoData;
 import io.reflection.app.client.highcharts.options.Option;
 import io.reflection.app.client.highcharts.options.PlotOption;
+import io.reflection.app.client.highcharts.options.Series;
 import io.reflection.app.client.highcharts.options.Subtitle;
 import io.reflection.app.client.highcharts.options.Title;
 import io.reflection.app.client.highcharts.options.Tooltip;
 import io.reflection.app.client.highcharts.options.XAxis;
 import io.reflection.app.client.highcharts.options.YAxis;
 import io.reflection.app.datatypes.shared.Rank;
+import io.reflection.app.shared.util.FormattingHelper;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -42,8 +39,6 @@ import java.util.Map;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayMixed;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
@@ -66,6 +61,7 @@ public class Chart extends Composite {
 	public static final String OPTION_LOADING = "loading";
 	public static final String OPTION_NO_DATA = "noData";
 	public static final String OPTION_PLOT_OPTIONS = "plotOptions";
+	public static final String OPTION_SERIES = "series";
 	public static final String OPTION_SUBTITLE = "subtitle";
 	public static final String OPTION_TITLE = "title";
 	public static final String OPTION_TOOLTIP = "tooltip";
@@ -81,6 +77,7 @@ public class Chart extends Composite {
 	private RankType rankingType;
 	private List<Rank> ranks;
 	private boolean showModelPredictions;
+	private String currency;
 
 	public Chart() {
 		chartDiv = new HTMLPanel("");
@@ -88,62 +85,7 @@ public class Chart extends Composite {
 		initWidget(chartDiv);
 		options = JavaScriptObject.createObject();
 		getChartOption().setRenderTo(id);
-		setDefaultChart();
 		showModelPredictions = SessionController.get().isLoggedInUserAdmin();
-	}
-
-	public enum YDataType {
-		RevenueYAxisDataType,
-		DownloadsYAxisDataType,
-		RankingYAxisDataType;
-
-		/**
-		 * @param value
-		 * @return
-		 */
-		public static YDataType fromString(String value) {
-			YDataType dataType = null;
-
-			switch (value) {
-			case RANKING_CHART_TYPE:
-				dataType = RankingYAxisDataType;
-				break;
-			case DOWNLOADS_CHART_TYPE:
-				dataType = DownloadsYAxisDataType;
-				break;
-			case REVENUE_CHART_TYPE:
-				dataType = RevenueYAxisDataType;
-				break;
-			}
-
-			return dataType;
-		}
-	}
-
-	public enum RankType {
-		PositionRankingType,
-		GrossingPositionRankingType;
-
-		/**
-		 * @param value
-		 * @return
-		 */
-		public static RankType fromString(String value) {
-			RankType rankType = null;
-
-			switch (value) {
-			case FREE_LIST_TYPE:
-			case PAID_LIST_TYPE:
-				rankType = PositionRankingType;
-				break;
-			case GROSSING_LIST_TYPE:
-			default:
-				rankType = GrossingPositionRankingType;
-				break;
-			}
-
-			return rankType;
-		}
 	}
 
 	private native JavaScriptObject createGraph(JavaScriptObject options) /*-{
@@ -227,6 +169,14 @@ public class Chart extends Composite {
 		return (PlotOption) optionsLookup.get(OPTION_PLOT_OPTIONS);
 	}
 
+	public Series getSeriesOption() {
+		if (optionsLookup.get(OPTION_SERIES) == null) {
+			optionsLookup.put(OPTION_SERIES, new Series());
+			JavaScriptObjectHelper.setObjectProperty(options, OPTION_SERIES, optionsLookup.get(OPTION_SERIES).getProperty());
+		}
+		return (Series) optionsLookup.get(OPTION_SERIES);
+	}
+
 	public Subtitle getSubtitleOption() {
 		if (optionsLookup.get(OPTION_SUBTITLE) == null) {
 			optionsLookup.put(OPTION_SUBTITLE, new Subtitle());
@@ -267,25 +217,6 @@ public class Chart extends Composite {
 		return (YAxis) optionsLookup.get(OPTION_Y_AXIS);
 	}
 
-	public Chart setDefaultChart() {
-		getChartOption().setType(ChartHelper.TYPE_AREA).setPlotBackgroundColor("#fafafa").setPlotBorderColor("#e5e5e5").setPlotBorderWidth(1)
-				.setMargin(ChartHelper.createMarginsArray(0, 0, 50, 0)).setHeight(450);
-		// getColorsOption().setColors(colors); TODO set default colors
-		getCreditsOption().setEnabled(false); // Disable highcharts credits text
-		getLegendOption().setEnabled(false); // Disable legend
-		getPlotOption().setCursor("default").setFillOpacity(0.2).setLineColor("#6a64c4").setLineWidth(2).setMarkerEnabled(false).setMarkerFillColor("#6a64c4")
-				.setMarkerHeight(10).setMarkerLineColor("#6a64c4").setMarkerWidth(10).setMarkerLineWidth(0);
-		getTitleOption().setText(null); // Disable title
-		getTooltipOption().setBackgroundColor("#ffffff").setBorderColor("#ffffff").setBorderRadius(2).setBorderWidth(0).setCrosshairs(true)
-				.setDateTimeLabelFormats(ChartHelper.getDefaultTooltipDateTimeLabelFormat()).setValueDecimals(2);
-		getXAxis().setType(Axis.TYPE_DATETIME).setDateTimeLabelFormats(ChartHelper.getDefaultAxisDateTimeLabelFormat()).setTickWidth(0)
-				.setTickInterval(86400000).setShowFirstLabel(false).setShowLastLabel(false).setLabelsStyle(ChartHelper.getDefaultAxisStyle()).setLabelsY(30)
-				.setStartOnTick(false).setEndOnTick(false).setMinPadding(0).setMaxPadding(0);
-		getYAxis().setAllowDecimals(false).setTitleText(null).setOffset(-30).setLineWidth(0).setLabelsY(-7).setLabelsStyle(ChartHelper.getDefaultAxisStyle())
-				.setShowLastLabel(false).setLabelsAlign("left").setLabelsFormat("£ {value}");
-		return this;
-	}
-
 	public void setDataType(YDataType value) {
 		this.yDataType = value;
 	}
@@ -296,6 +227,9 @@ public class Chart extends Composite {
 
 	public void setData(List<Rank> ranks) {
 		this.ranks = ranks;
+		if (this.ranks != null && this.ranks.size() > 0) {
+			currency = FormattingHelper.getCurrencySymbol(this.ranks.get(0).currency);
+		}
 		drawData();
 	}
 
@@ -308,7 +242,6 @@ public class Chart extends Composite {
 
 			JsArray<JsArrayMixed> values = JavaScriptObject.createArray().cast();
 
-			JavaScriptObject yAxisOptions = JavaScriptObject.createObject();
 			int yMin = Integer.MAX_VALUE;
 			int yMax = 0;
 			switch (yDataType) {
@@ -345,7 +278,6 @@ public class Chart extends Composite {
 						values.push(point);
 					}
 				}
-				JavaScriptObjectHelper.setBooleanProperty(yAxisOptions, "reversed", false);
 				break;
 			case RevenueYAxisDataType:
 				for (Rank rank : ranks) {
@@ -380,7 +312,6 @@ public class Chart extends Composite {
 						values.push(point);
 					}
 				}
-				JavaScriptObjectHelper.setBooleanProperty(yAxisOptions, "reversed", false);
 				break;
 			case RankingYAxisDataType:
 			default:
@@ -404,7 +335,7 @@ public class Chart extends Composite {
 
 						JsArrayMixed point = JavaScriptObject.createArray().cast();
 						point.push(rank.date.getTime());
-						if ((position = getPosition(rank)) != 0) {
+						if ((position = getRankPosition(rank)) != 0) {
 							if (position < yMin) {
 								yMin = position;
 							}
@@ -418,18 +349,42 @@ public class Chart extends Composite {
 						values.push(point);
 					}
 				}
-				JavaScriptObjectHelper.setBooleanProperty(yAxisOptions, "reversed", true);
 				break;
 			}
-			JavaScriptObject yAxis = NativeAxis.nativeGetYAxis(chart, 0);
-			NativeAxis.nativeUpdate(yAxis, yAxisOptions, true); // update y axis
+
+			// setLoading(false);
 			// NativeAxis.nativeSetExtremes(yAxis, yMin, yMax, true, true);
 
+			updateOptions(yDataType);
 			JavaScriptObject series = JavaScriptObject.createObject();
 			JavaScriptObjectHelper.setObjectProperty(series, "data", values);
-
 			addSeries(series);
+
 		}
+	}
+
+	private void updateOptions(YDataType yDataType) {
+		switch (yDataType) {
+		case DownloadsYAxisDataType:
+			getPlotOption().setFillOpacity(0.2);
+			getTooltipOption().setValueDecimals(0).setValuePrefix("");
+			getYAxis().setReversed(false).setLabelsFormat("{value}");
+
+			break;
+		case RevenueYAxisDataType:
+			getPlotOption().setFillOpacity(0.2);
+			getTooltipOption().setValueDecimals(2).setValuePrefix(currency + " ");
+			getYAxis().setReversed(false).setLabelsFormat(currency + " {value}");
+			break;
+		case RankingYAxisDataType:
+			getPlotOption().setFillOpacity(0);
+			getTooltipOption().setValueDecimals(0).setValuePrefix("");
+			getYAxis().setReversed(true).setLabelsFormat("{value}");
+		default:
+			break;
+		}
+		NativeAxis.nativeUpdate(NativeAxis.nativeGetYAxis(chart, 0), getYAxis().getProperty(), true); // update y axis
+
 	}
 
 	/**
@@ -440,13 +395,6 @@ public class Chart extends Composite {
 	 */
 	private boolean withinChartRange(Rank rank) {
 		return rank.date.getTime() >= FilterController.get().getStartDate().getTime() && rank.date.getTime() <= FilterController.get().getEndDate().getTime();
-	}
-
-	// Save some typing in the getExtremes() method
-	private Number getNumberFromJSONObject(JSONObject jsonObject, String key) {
-		JSONValue jsonValue = jsonObject.get(key);
-		if (jsonValue != null && jsonValue.isNumber() != null) { return jsonValue.isNumber().doubleValue(); }
-		return null;
 	}
 
 	public void setLoading(boolean loading) {
@@ -468,7 +416,7 @@ public class Chart extends Composite {
 		// }
 	}
 
-	private int getPosition(Rank rank) {
+	private int getRankPosition(Rank rank) {
 		return rankingType == RankType.PositionRankingType ? rank.position.intValue() : rank.grossingPosition.intValue();
 	}
 

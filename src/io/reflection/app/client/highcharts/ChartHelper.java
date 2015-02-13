@@ -7,7 +7,14 @@
 //
 package io.reflection.app.client.highcharts;
 
+import static io.reflection.app.client.controller.FilterController.DOWNLOADS_CHART_TYPE;
+import static io.reflection.app.client.controller.FilterController.FREE_LIST_TYPE;
+import static io.reflection.app.client.controller.FilterController.GROSSING_LIST_TYPE;
+import static io.reflection.app.client.controller.FilterController.PAID_LIST_TYPE;
+import static io.reflection.app.client.controller.FilterController.RANKING_CHART_TYPE;
+import static io.reflection.app.client.controller.FilterController.REVENUE_CHART_TYPE;
 import io.reflection.app.client.helper.JavaScriptObjectHelper;
+import io.reflection.app.client.highcharts.options.Axis;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,8 +52,63 @@ public class ChartHelper {
 	public static final String DASH_STYLE_LONG_DASH_DOT = "LongDashDot";
 	public static final String DASH_STYLE_LONG_DASH_DOT_DOT = "LongDashDotDot";
 
+	public enum YDataType {
+		RevenueYAxisDataType,
+		DownloadsYAxisDataType,
+		RankingYAxisDataType;
+
+		/**
+		 * @param value
+		 * @return
+		 */
+		public static YDataType fromString(String value) {
+			YDataType dataType = null;
+
+			switch (value) {
+			case RANKING_CHART_TYPE:
+				dataType = RankingYAxisDataType;
+				break;
+			case DOWNLOADS_CHART_TYPE:
+				dataType = DownloadsYAxisDataType;
+				break;
+			case REVENUE_CHART_TYPE:
+				dataType = RevenueYAxisDataType;
+				break;
+			}
+
+			return dataType;
+		}
+	}
+
+	public enum RankType {
+		PositionRankingType,
+		GrossingPositionRankingType;
+
+		/**
+		 * @param value
+		 * @return
+		 */
+		public static RankType fromString(String value) {
+			RankType rankType = null;
+
+			switch (value) {
+			case FREE_LIST_TYPE:
+			case PAID_LIST_TYPE:
+				rankType = PositionRankingType;
+				break;
+			case GROSSING_LIST_TYPE:
+			default:
+				rankType = GrossingPositionRankingType;
+				break;
+			}
+
+			return rankType;
+		}
+	}
+
 	public static Chart createAndInjectChart(HTMLPanel container) {
 		Chart chart = new Chart();
+		setDefaultOptions(chart);
 		container.getElement().appendChild(chart.getElement());
 		chart.inject();
 		return chart;
@@ -54,9 +116,37 @@ public class ChartHelper {
 
 	public static Chart createAndInjectChart(DivElement container) {
 		Chart chart = new Chart();
+		setDefaultOptions(chart);
 		container.appendChild(chart.getElement());
 		chart.inject();
 		return chart;
+	}
+
+	private static void setDefaultOptions(Chart chart) {
+		chart.getChartOption().setType(ChartHelper.TYPE_AREA).setPlotBackgroundColor("#fafafa").setPlotBorderColor("#e5e5e5").setPlotBorderWidth(1)
+				.setMargin(ChartHelper.createMarginsArray(0, 0, 50, 0)).setSpacing(ChartHelper.createMarginsArray(0, 0, 0, 0)).setHeight(450);
+		chart.getPlotOption().setCursor("default").setFillOpacity(0.2).setColor("#6a64c4").setLineColor("#6a64c4").setLineWidth(2).setMarkerEnabled(false)
+				.setHoverHaloOpacity(0).setMarkerSymbol("circle").setMarkerFillColor("#6a64c4").setMarkerLineColor("#6a64c4");
+		// getColorsOption().setColors(colors); TODO set default colors
+		chart.getCreditsOption().setEnabled(false); // Disable highcharts credits text
+		chart.getLegendOption().setEnabled(false); // Disable legend
+		chart.getTitleOption().setText(null); // Disable title
+		chart.getTooltipOption()
+				.setShadow(false)
+				.setBackgroundColor("#ffffff")
+				.setBorderColor("#ffffff")
+				.setBorderWidth(0)
+				.setCrosshairs(true)
+				.setStyle(ChartHelper.getDefaultTooltipStyle())
+				.setDateTimeLabelFormats(ChartHelper.getDefaultTooltipDateTimeLabelFormat())
+				.setHeaderFormat(
+						"<span style=\"font-size: 10px; font-weight: bold; color: #81879d; font-family: \"Lato\", sans-serif;\">{point.key}</span><br/><br/>")
+				.setPointFormat("<span style=\"font-size: 18px; font-weight: regular; color: #363a47; font-family: \"Lato\", sans-serif;\">{point.y}</span>");
+		chart.getXAxis().setType(Axis.TYPE_DATETIME).setDateTimeLabelFormats(ChartHelper.getDefaultAxisDateTimeLabelFormat()).setTickWidth(0)
+				.setTickInterval(86400000).setShowFirstLabel(false).setShowLastLabel(false).setLabelsStyle(ChartHelper.getDefaultAxisStyle()).setLabelsY(30)
+				.setStartOnTick(false).setEndOnTick(false).setMinPadding(0).setMaxPadding(0).setLineWidth(0).setMinorGridLineWidth(0);
+		chart.getYAxis().setAllowDecimals(false).setTitleText(null).setOffset(-30).setLineWidth(0).setLabelsY(-7)
+				.setLabelsStyle(ChartHelper.getDefaultAxisStyle()).setShowLastLabel(false).setLabelsAlign("left");
 	}
 
 	public static JsArrayNumber createMarginsArray(int marginTop, int marginRight, int marginBottom, int marginLeft) {
@@ -75,10 +165,15 @@ public class ChartHelper {
 		return crosshairs;
 	}
 
-	public static JavaScriptObject getJSObjectFromMap(HashMap<String, String> map) {
+	public static JavaScriptObject getJSObjectFromMap(HashMap<String, Object> map) {
 		JavaScriptObject JSObject = JavaScriptObject.createObject();
-		for (Map.Entry<String, String> entry : map.entrySet()) {
-			JavaScriptObjectHelper.setStringProperty(JSObject, entry.getKey(), entry.getValue());
+		for (Map.Entry<String, Object> entry : map.entrySet()) {
+			if (entry.getValue() instanceof String) {
+				JavaScriptObjectHelper.setStringProperty(JSObject, entry.getKey(), (String) entry.getValue());
+			}
+			if (entry.getValue() instanceof Integer) {
+				JavaScriptObjectHelper.setIntegerProperty(JSObject, entry.getKey(), (Integer) entry.getValue());
+			}
 		}
 		return JSObject;
 
@@ -105,8 +200,17 @@ public class ChartHelper {
 	}
 
 	public static JavaScriptObject getDefaultAxisStyle() {
-		HashMap<String, String> styleValues = new HashMap<String, String>();
-		styleValues.put("fontSize", "14px");
+		HashMap<String, Object> styleValues = new HashMap<String, Object>();
+		styleValues.put("fontSize", "12px");
+		styleValues.put("fontWeight", "bold");
+		styleValues.put("color", "#63656a");
+		styleValues.put("fontFamily", "\"Lato\", sans-serif");
+		return getJSObjectFromMap(styleValues);
+	}
+
+	public static JavaScriptObject getDefaultTooltipStyle() {
+		HashMap<String, Object> styleValues = new HashMap<String, Object>();
+		styleValues.put("padding", 14);
 		return getJSObjectFromMap(styleValues);
 	}
 
