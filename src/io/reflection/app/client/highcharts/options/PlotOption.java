@@ -20,10 +20,12 @@ public class PlotOption extends Option<PlotOption> {
 	private JavaScriptObject series;
 	private JavaScriptObject dataLabels;
 	private JavaScriptObject marker;
+	private JavaScriptObject markerStates;
+	private JavaScriptObject markerHover;
 
-	JavaScriptObject states;
-	JavaScriptObject hover;
-	JavaScriptObject halo;
+	private JavaScriptObject states;
+	private JavaScriptObject hover;
+	private JavaScriptObject halo;
 
 	/*
 	 * (non-Javadoc)
@@ -279,6 +281,27 @@ public class PlotOption extends Option<PlotOption> {
 		return this;
 	}
 
+	public JavaScriptObject getMarkerStates() {
+		if (markerStates == null) {
+			markerStates = JavaScriptObject.createObject();
+			JavaScriptObjectHelper.setObjectProperty(getMarker(), "states", markerStates);
+		}
+		return markerStates;
+	}
+
+	public JavaScriptObject getMarkerHover() {
+		if (markerHover == null) {
+			markerHover = JavaScriptObject.createObject();
+			JavaScriptObjectHelper.setObjectProperty(getMarkerStates(), "hover", markerHover);
+		}
+		return markerHover;
+	}
+
+	public PlotOption setMarkerHoverLineWidthPlus(int width) {
+		JavaScriptObjectHelper.setIntegerProperty(getMarkerHover(), "lineWidthPlus", width);
+		return this;
+	}
+
 	public PlotOption setMarkerSymbol(String symbol) {
 		JavaScriptObjectHelper.setStringProperty(getMarker(), "symbol", symbol);
 		return this;
@@ -377,6 +400,11 @@ public class PlotOption extends Option<PlotOption> {
 
 	public PlotOption setHoverHaloOpacity(int opacity) {
 		JavaScriptObjectHelper.setIntegerProperty(getHalo(), "opacity", opacity);
+		return this;
+	}
+
+	public PlotOption setHoverLineWidthPlus(int width) {
+		JavaScriptObjectHelper.setIntegerProperty(getHover(), "lineWidthPlus", width);
 		return this;
 	}
 
