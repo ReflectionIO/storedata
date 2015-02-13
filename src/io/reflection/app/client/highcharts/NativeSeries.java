@@ -20,16 +20,6 @@ public class NativeSeries {
 		return chart.series[index];
 	}-*/;
 
-	static native void nativeRemove(JavaScriptObject series, boolean redraw) /*-{
-		series.remove(redraw);
-	}-*/;
-
-	static native void nativeRemoveAll(JavaScriptObject chart, boolean redraw) /*-{
-		while (chart.series.length > 0) {
-			chart.series[0].remove(redraw);
-		}
-	}-*/;
-
 	public static native void nativeAddPoint(JavaScriptObject series, JavaScriptObject point, boolean redraw, boolean shift, boolean animate) /*-{
 		series.addPoint(point, redraw, shift, animate);
 	}-*/;
@@ -44,6 +34,20 @@ public class NativeSeries {
 
 	public static native void nativeAddPoint(JavaScriptObject series, JsArrayMixed point, boolean redraw, boolean shift, JavaScriptObject animation) /*-{
 		series.addPoint(point, redraw, shift, animation);
+	}-*/;
+
+	static native void nativeRemove(JavaScriptObject series, boolean redraw) /*-{
+		series.remove(redraw);
+	}-*/;
+
+	static native void nativeRemoveAll(JavaScriptObject chart, boolean redraw) /*-{
+		while (chart.series.length > 0) {
+			chart.series[0].remove(redraw);
+		}
+	}-*/;
+
+	static native void nativeUpdate(JavaScriptObject series, JavaScriptObject options, boolean redraw)/*-{
+		series.update(options, redraw);
 	}-*/;
 
 }

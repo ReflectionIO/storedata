@@ -53,23 +53,23 @@ public abstract class Axis<T extends Option> extends Option<T> {
 		return setOption("endOnTick", endOnTick);
 	}
 
-	@SuppressWarnings("unchecked")
-	public T setAfterSetExtremes(JavaScriptObject afterSetExtremesFunction) {
+	public JavaScriptObject getEvents() {
 		if (events == null) {
 			events = JavaScriptObject.createObject();
 			setOption("events", events);
 		}
-		JavaScriptObjectHelper.setObjectProperty(events, "afterSetExtremes", afterSetExtremesFunction);
+		return events;
+	}
+
+	@SuppressWarnings("unchecked")
+	public T setAfterSetExtremes(JavaScriptObject afterSetExtremesFunction) {
+		JavaScriptObjectHelper.setObjectProperty(getEvents(), "afterSetExtremes", afterSetExtremesFunction);
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
 	public T setSetExtremes(JavaScriptObject setExtremesFunction) {
-		if (events == null) {
-			events = JavaScriptObject.createObject();
-			setOption("events", events);
-		}
-		JavaScriptObjectHelper.setObjectProperty(events, "setExtremes", setExtremesFunction);
+		JavaScriptObjectHelper.setObjectProperty(getEvents(), "setExtremes", setExtremesFunction);
 		return (T) this;
 	}
 
@@ -97,153 +97,101 @@ public abstract class Axis<T extends Option> extends Option<T> {
 		return setOption("id", id);
 	}
 
-	@SuppressWarnings("unchecked")
-	public T setLabelsAlign(String align) {
+	public JavaScriptObject getLabels() {
 		if (labels == null) {
 			labels = JavaScriptObject.createObject();
 			setOption("labels", labels);
 		}
-		JavaScriptObjectHelper.setStringProperty(labels, "align", align);
+		return labels;
+	}
+
+	@SuppressWarnings("unchecked")
+	public T setLabelsAlign(String align) {
+		JavaScriptObjectHelper.setStringProperty(getLabels(), "align", align);
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
 	public T setLabelsDistance(int distance) {
-		if (labels == null) {
-			labels = JavaScriptObject.createObject();
-			setOption("labels", labels);
-		}
-		JavaScriptObjectHelper.setIntegerProperty(labels, "distance", distance);
+		JavaScriptObjectHelper.setIntegerProperty(getLabels(), "distance", distance);
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
 	public T setLabelsEnabled(boolean enable) {
-		if (labels == null) {
-			labels = JavaScriptObject.createObject();
-			setOption("labels", labels);
-		}
-		JavaScriptObjectHelper.setBooleanProperty(labels, "enabled", enable);
+		JavaScriptObjectHelper.setBooleanProperty(getLabels(), "enabled", enable);
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
 	public T setLabelsFormat(String format) {
-		if (labels == null) {
-			labels = JavaScriptObject.createObject();
-			setOption("labels", labels);
-		}
-		JavaScriptObjectHelper.setStringProperty(labels, "format", format);
+		JavaScriptObjectHelper.setStringProperty(getLabels(), "format", format);
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
 	public T setLabelsFormatter(JavaScriptObject formatterFunction) {
-		if (labels == null) {
-			labels = JavaScriptObject.createObject();
-			setOption("labels", labels);
-		}
-		JavaScriptObjectHelper.setObjectProperty(labels, "formatter", formatterFunction);
+		JavaScriptObjectHelper.setObjectProperty(getLabels(), "formatter", formatterFunction);
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
 	public T setLabelsMaxStaggerLines(int maxStaggerLines) {
-		if (labels == null) {
-			labels = JavaScriptObject.createObject();
-			setOption("labels", labels);
-		}
-		JavaScriptObjectHelper.setIntegerProperty(labels, "maxStaggerLines", maxStaggerLines);
+		JavaScriptObjectHelper.setIntegerProperty(getLabels(), "maxStaggerLines", maxStaggerLines);
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
 	public T setLabelsOverflow(String overflow) {
-		if (labels == null) {
-			labels = JavaScriptObject.createObject();
-			setOption("labels", labels);
-		}
-		JavaScriptObjectHelper.setStringProperty(labels, "overflow", overflow);
+		JavaScriptObjectHelper.setStringProperty(getLabels(), "overflow", overflow);
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
 	public T setLabelsRotation(int degreeRotation) {
-		if (labels == null) {
-			labels = JavaScriptObject.createObject();
-			setOption("labels", labels);
-		}
-		JavaScriptObjectHelper.setIntegerProperty(labels, "rotation", degreeRotation);
+		JavaScriptObjectHelper.setIntegerProperty(getLabels(), "rotation", degreeRotation);
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
 	public T setLabelsStaggerLines(int staggerLines) {
-		if (labels == null) {
-			labels = JavaScriptObject.createObject();
-			setOption("labels", labels);
-		}
-		JavaScriptObjectHelper.setIntegerProperty(labels, "staggerLines", staggerLines);
+		JavaScriptObjectHelper.setIntegerProperty(getLabels(), "staggerLines", staggerLines);
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
 	public T setLabelsStep(int step) {
-		if (labels == null) {
-			labels = JavaScriptObject.createObject();
-			setOption("labels", labels);
-		}
-		JavaScriptObjectHelper.setIntegerProperty(labels, "step", step);
+		JavaScriptObjectHelper.setIntegerProperty(getLabels(), "step", step);
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
 	public T setLabelsStyle(JavaScriptObject style) {
-		if (labels == null) {
-			labels = JavaScriptObject.createObject();
-			setOption("labels", labels);
-		}
-		JavaScriptObjectHelper.setObjectProperty(labels, "style", style);
+		JavaScriptObjectHelper.setObjectProperty(getLabels(), "style", style);
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
 	public T setLabelsUseHTML(boolean useHTML) {
-		if (labels == null) {
-			labels = JavaScriptObject.createObject();
-			setOption("labels", labels);
-		}
-		JavaScriptObjectHelper.setBooleanProperty(labels, "useHTML", useHTML);
+		JavaScriptObjectHelper.setBooleanProperty(getLabels(), "useHTML", useHTML);
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
 	public T setLabelsX(int x) {
-		if (labels == null) {
-			labels = JavaScriptObject.createObject();
-			setOption("labels", labels);
-		}
-		JavaScriptObjectHelper.setIntegerProperty(labels, "x", x);
+		JavaScriptObjectHelper.setIntegerProperty(getLabels(), "x", x);
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
 	public T setLabelsY(int y) {
-		if (labels == null) {
-			labels = JavaScriptObject.createObject();
-			setOption("labels", labels);
-		}
-		JavaScriptObjectHelper.setIntegerProperty(labels, "y", y);
+		JavaScriptObjectHelper.setIntegerProperty(getLabels(), "y", y);
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
 	public T setLabelsZIndex(int zIndex) {
-		if (labels == null) {
-			labels = JavaScriptObject.createObject();
-			setOption("labels", labels);
-		}
-		JavaScriptObjectHelper.setIntegerProperty(labels, "zIndex", zIndex);
+		JavaScriptObjectHelper.setIntegerProperty(getLabels(), "zIndex", zIndex);
 		return (T) this;
 	}
 
@@ -389,63 +337,47 @@ public abstract class Axis<T extends Option> extends Option<T> {
 		return setOption("tickmarkPlacement", tickmarkPlacement);
 	}
 
-	@SuppressWarnings("unchecked")
-	public T setTitleAlign(String align) {
+	public JavaScriptObject getTitle() {
 		if (title == null) {
 			title = JavaScriptObject.createObject();
 			setOption("title", title);
 		}
-		JavaScriptObjectHelper.setStringProperty(title, "align", align);
+		return title;
+	}
+
+	@SuppressWarnings("unchecked")
+	public T setTitleAlign(String align) {
+		JavaScriptObjectHelper.setStringProperty(getTitle(), "align", align);
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
 	public T setTitleMargin(int margin) {
-		if (title == null) {
-			title = JavaScriptObject.createObject();
-			setOption("title", title);
-		}
-		JavaScriptObjectHelper.setIntegerProperty(title, "margin", margin);
+		JavaScriptObjectHelper.setIntegerProperty(getTitle(), "margin", margin);
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
 	public T setTitleOffset(int offset) {
-		if (title == null) {
-			title = JavaScriptObject.createObject();
-			setOption("title", title);
-		}
-		JavaScriptObjectHelper.setIntegerProperty(title, "offset", offset);
+		JavaScriptObjectHelper.setIntegerProperty(getTitle(), "offset", offset);
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
 	public T setTitleRotation(int rotation) {
-		if (title == null) {
-			title = JavaScriptObject.createObject();
-			setOption("title", title);
-		}
-		JavaScriptObjectHelper.setIntegerProperty(title, "rotation", rotation);
+		JavaScriptObjectHelper.setIntegerProperty(getTitle(), "rotation", rotation);
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
 	public T setTitleStyle(JavaScriptObject style) {
-		if (title == null) {
-			title = JavaScriptObject.createObject();
-			setOption("title", title);
-		}
-		JavaScriptObjectHelper.setObjectProperty(title, "style", style);
+		JavaScriptObjectHelper.setObjectProperty(getTitle(), "style", style);
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
 	public T setTitleText(String text) {
-		if (title == null) {
-			title = JavaScriptObject.createObject();
-			setOption("title", title);
-		}
-		JavaScriptObjectHelper.setStringProperty(title, "text", text);
+		JavaScriptObjectHelper.setStringProperty(getTitle(), "text", text);
 		return (T) this;
 	}
 

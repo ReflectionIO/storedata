@@ -21,6 +21,10 @@ public class PlotOption extends Option<PlotOption> {
 	private JavaScriptObject dataLabels;
 	private JavaScriptObject marker;
 
+	JavaScriptObject states;
+	JavaScriptObject hover;
+	JavaScriptObject halo;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -31,405 +35,348 @@ public class PlotOption extends Option<PlotOption> {
 		return "plotOptions";
 	}
 
-	private void createSeriesIfNotExists() {
+	public JavaScriptObject getSeries() {
 		if (series == null) {
 			series = JavaScriptObject.createObject();
 			setOption("series", series);
 		}
+		return series;
 	}
 
 	public PlotOption setAllowPointSelect(boolean allow) {
-		createSeriesIfNotExists();
-		JavaScriptObjectHelper.setBooleanProperty(series, "allowPointSelect", allow);
+		JavaScriptObjectHelper.setBooleanProperty(getSeries(), "allowPointSelect", allow);
 		return this;
 	}
 
 	public PlotOption setAnimation(boolean animate) {
-		createSeriesIfNotExists();
-		JavaScriptObjectHelper.setBooleanProperty(series, "animation", animate);
+		JavaScriptObjectHelper.setBooleanProperty(getSeries(), "animation", animate);
 		return this;
 	}
 
 	public PlotOption setAnimation(JavaScriptObject animation) {
-		createSeriesIfNotExists();
-		JavaScriptObjectHelper.setObjectProperty(series, "animation", animation);
+		JavaScriptObjectHelper.setObjectProperty(getSeries(), "animation", animation);
 		return this;
 	}
 
 	public PlotOption setColor(String color) {
-		createSeriesIfNotExists();
-		JavaScriptObjectHelper.setStringProperty(series, "color", color);
+		JavaScriptObjectHelper.setStringProperty(getSeries(), "color", color);
 		return this;
 	}
 
 	public PlotOption setConnectNulls(boolean connect) {
-		createSeriesIfNotExists();
-		JavaScriptObjectHelper.setBooleanProperty(series, "connectNulls", connect);
+		JavaScriptObjectHelper.setBooleanProperty(getSeries(), "connectNulls", connect);
 		return this;
 	}
 
 	public PlotOption setCropThreshold(int threshold) {
-		createSeriesIfNotExists();
-		JavaScriptObjectHelper.setIntegerProperty(series, "cropThreshold", threshold);
+		JavaScriptObjectHelper.setIntegerProperty(getSeries(), "cropThreshold", threshold);
 		return this;
 	}
 
 	public PlotOption setCursor(String cursor) {
-		createSeriesIfNotExists();
-		JavaScriptObjectHelper.setStringProperty(series, "cursor", cursor);
+		JavaScriptObjectHelper.setStringProperty(getSeries(), "cursor", cursor);
 		return this;
 	}
 
 	public PlotOption setDashStyle(String dashStyle) {
-		createSeriesIfNotExists();
-		JavaScriptObjectHelper.setStringProperty(series, "dashStyle", dashStyle);
+		JavaScriptObjectHelper.setStringProperty(getSeries(), "dashStyle", dashStyle);
 		return this;
 	}
 
-	private void createDataLabelsIfNotExists() {
+	public JavaScriptObject getDataLabels() {
 		if (dataLabels == null) {
 			dataLabels = JavaScriptObject.createObject();
-			JavaScriptObjectHelper.setObjectProperty(series, "dataLabels", dataLabels);
+			JavaScriptObjectHelper.setObjectProperty(getSeries(), "dataLabels", dataLabels);
 		}
+		return dataLabels;
 	}
 
 	public PlotOption setDataLabelsAlign(String align) {
-		createSeriesIfNotExists();
-		createDataLabelsIfNotExists();
-		JavaScriptObjectHelper.setStringProperty(dataLabels, "align", align);
+		JavaScriptObjectHelper.setStringProperty(getDataLabels(), "align", align);
 		return this;
 	}
 
 	public PlotOption setDataLabelsBackgroundColor(String color) {
-		createSeriesIfNotExists();
-		createDataLabelsIfNotExists();
-		JavaScriptObjectHelper.setStringProperty(dataLabels, "backgroundColor", color);
+		JavaScriptObjectHelper.setStringProperty(getDataLabels(), "backgroundColor", color);
 		return this;
 	}
 
 	public PlotOption setDataLabelsBorderColor(String color) {
-		createSeriesIfNotExists();
-		createDataLabelsIfNotExists();
-		JavaScriptObjectHelper.setStringProperty(dataLabels, "borderColor", color);
+		JavaScriptObjectHelper.setStringProperty(getDataLabels(), "borderColor", color);
 		return this;
 	}
 
 	public PlotOption setDataLabelsBorderRadius(int borderRadius) {
-		createSeriesIfNotExists();
-		createDataLabelsIfNotExists();
-		JavaScriptObjectHelper.setIntegerProperty(dataLabels, "borderRadius", borderRadius);
+		JavaScriptObjectHelper.setIntegerProperty(getDataLabels(), "borderRadius", borderRadius);
 		return this;
 	}
 
 	public PlotOption setDataLabelsBorderWidth(int borderWidth) {
-		createSeriesIfNotExists();
-		createDataLabelsIfNotExists();
-		JavaScriptObjectHelper.setIntegerProperty(dataLabels, "borderWidth", borderWidth);
+		JavaScriptObjectHelper.setIntegerProperty(getDataLabels(), "borderWidth", borderWidth);
 		return this;
 	}
 
 	public PlotOption setDataLabelsColor(String color) {
-		createSeriesIfNotExists();
-		createDataLabelsIfNotExists();
-		JavaScriptObjectHelper.setStringProperty(dataLabels, "color", color);
+		JavaScriptObjectHelper.setStringProperty(getDataLabels(), "color", color);
 		return this;
 	}
 
 	public PlotOption setDataLabelsCrop(boolean crop) {
-		createSeriesIfNotExists();
-		createDataLabelsIfNotExists();
-		JavaScriptObjectHelper.setBooleanProperty(dataLabels, "crop", crop);
+		JavaScriptObjectHelper.setBooleanProperty(getDataLabels(), "crop", crop);
 		return this;
 	}
 
 	public PlotOption setDataLabelsDefer(boolean defer) {
-		createSeriesIfNotExists();
-		createDataLabelsIfNotExists();
-		JavaScriptObjectHelper.setBooleanProperty(dataLabels, "defer", defer);
+		JavaScriptObjectHelper.setBooleanProperty(getDataLabels(), "defer", defer);
 		return this;
 	}
 
 	public PlotOption setDataLabelsEnabled(boolean enable) {
-		createSeriesIfNotExists();
-		createDataLabelsIfNotExists();
-		JavaScriptObjectHelper.setBooleanProperty(dataLabels, "enabled", enable);
+		JavaScriptObjectHelper.setBooleanProperty(getDataLabels(), "enabled", enable);
 		return this;
 	}
 
 	public PlotOption setDataLabelsFormat(String format) {
-		createSeriesIfNotExists();
-		createDataLabelsIfNotExists();
-		JavaScriptObjectHelper.setStringProperty(dataLabels, "format", format);
+		JavaScriptObjectHelper.setStringProperty(getDataLabels(), "format", format);
 		return this;
 	}
 
 	public PlotOption setDataLabelsFormatter(JavaScriptObject formatterFunction) {
-		createSeriesIfNotExists();
-		createDataLabelsIfNotExists();
-		JavaScriptObjectHelper.setObjectProperty(dataLabels, "formatter", formatterFunction);
+		JavaScriptObjectHelper.setObjectProperty(getDataLabels(), "formatter", formatterFunction);
 		return this;
 	}
 
 	public PlotOption setDataLabelsInside(boolean inside) {
-		createSeriesIfNotExists();
-		createDataLabelsIfNotExists();
-		JavaScriptObjectHelper.setBooleanProperty(dataLabels, "inside", inside);
+		JavaScriptObjectHelper.setBooleanProperty(getDataLabels(), "inside", inside);
 		return this;
 	}
 
 	public PlotOption setDataLabelsOverflow(String overflow) {
-		createSeriesIfNotExists();
-		createDataLabelsIfNotExists();
-		JavaScriptObjectHelper.setStringProperty(dataLabels, "overflow", overflow);
+		JavaScriptObjectHelper.setStringProperty(getDataLabels(), "overflow", overflow);
 		return this;
 	}
 
 	public PlotOption setDataLabelsPadding(int padding) {
-		createSeriesIfNotExists();
-		createDataLabelsIfNotExists();
-		JavaScriptObjectHelper.setIntegerProperty(dataLabels, "padding", padding);
+		JavaScriptObjectHelper.setIntegerProperty(getDataLabels(), "padding", padding);
 		return this;
 	}
 
 	public PlotOption setDataLabelsRotation(int rotation) {
-		createSeriesIfNotExists();
-		createDataLabelsIfNotExists();
-		JavaScriptObjectHelper.setIntegerProperty(dataLabels, "rotation", rotation);
+		JavaScriptObjectHelper.setIntegerProperty(getDataLabels(), "rotation", rotation);
 		return this;
 	}
 
 	public PlotOption setDataLabelsShadow(boolean shadow) {
-		createSeriesIfNotExists();
-		createDataLabelsIfNotExists();
-		JavaScriptObjectHelper.setBooleanProperty(dataLabels, "shadow", shadow);
+		JavaScriptObjectHelper.setBooleanProperty(getDataLabels(), "shadow", shadow);
 		return this;
 	}
 
 	public PlotOption setDataLabelsShadow(JavaScriptObject shadow) {
-		createSeriesIfNotExists();
-		createDataLabelsIfNotExists();
-		JavaScriptObjectHelper.setObjectProperty(dataLabels, "shadow", shadow);
+		JavaScriptObjectHelper.setObjectProperty(getDataLabels(), "shadow", shadow);
 		return this;
 	}
 
 	public PlotOption setDataLabelsStyle(JavaScriptObject style) {
-		createSeriesIfNotExists();
-		createDataLabelsIfNotExists();
-		JavaScriptObjectHelper.setObjectProperty(dataLabels, "style", style);
+		JavaScriptObjectHelper.setObjectProperty(getDataLabels(), "style", style);
 		return this;
 	}
 
 	public PlotOption setDataLabelsUserHTML(boolean useHTML) {
-		createSeriesIfNotExists();
-		createDataLabelsIfNotExists();
-		JavaScriptObjectHelper.setBooleanProperty(dataLabels, "useHTML", useHTML);
+		JavaScriptObjectHelper.setBooleanProperty(getDataLabels(), "useHTML", useHTML);
 		return this;
 	}
 
 	public PlotOption setDataLabelsVerticalAlign(String alignment) {
-		createSeriesIfNotExists();
-		createDataLabelsIfNotExists();
-		JavaScriptObjectHelper.setStringProperty(dataLabels, "verticalAlign", alignment);
+		JavaScriptObjectHelper.setStringProperty(getDataLabels(), "verticalAlign", alignment);
 		return this;
 	}
 
 	public PlotOption setDataLabelsX(int x) {
-		createSeriesIfNotExists();
-		createDataLabelsIfNotExists();
-		JavaScriptObjectHelper.setIntegerProperty(dataLabels, "x", x);
+		JavaScriptObjectHelper.setIntegerProperty(getDataLabels(), "x", x);
 		return this;
 	}
 
 	public PlotOption setDataLabelsY(int y) {
-		createSeriesIfNotExists();
-		createDataLabelsIfNotExists();
-		JavaScriptObjectHelper.setIntegerProperty(dataLabels, "y", y);
+		JavaScriptObjectHelper.setIntegerProperty(getDataLabels(), "y", y);
 		return this;
 	}
 
 	public PlotOption setDataLabelsZIndex(int zIndex) {
-		createSeriesIfNotExists();
-		createDataLabelsIfNotExists();
-		JavaScriptObjectHelper.setIntegerProperty(dataLabels, "zIndex", zIndex);
+		JavaScriptObjectHelper.setIntegerProperty(getDataLabels(), "zIndex", zIndex);
 		return this;
 	}
 
 	public PlotOption setEnableMouseTracking(boolean enable) {
-		createSeriesIfNotExists();
-		JavaScriptObjectHelper.setBooleanProperty(series, "enableMouseTracking", enable);
+		JavaScriptObjectHelper.setBooleanProperty(getSeries(), "enableMouseTracking", enable);
 		return this;
 	}
 
 	public PlotOption setFillColor(String color) {
-		createSeriesIfNotExists();
-		JavaScriptObjectHelper.setStringProperty(series, "fillColor", color);
+		JavaScriptObjectHelper.setStringProperty(getSeries(), "fillColor", color);
 		return this;
 	}
 
 	public PlotOption setFillColor(JavaScriptObject color) {
-		createSeriesIfNotExists();
-		JavaScriptObjectHelper.setObjectProperty(series, "fillColor", color);
+		JavaScriptObjectHelper.setObjectProperty(getSeries(), "fillColor", color);
 		return this;
 	}
 
 	public PlotOption setFillOpacity(double opacity) {
-		createSeriesIfNotExists();
-		JavaScriptObjectHelper.setDoubleProperty(series, "fillOpacity", opacity);
+		JavaScriptObjectHelper.setDoubleProperty(getSeries(), "fillOpacity", opacity);
 		return this;
 	}
 
 	public PlotOption setLineColor(String color) {
-		createSeriesIfNotExists();
-		JavaScriptObjectHelper.setStringProperty(series, "lineColor", color);
+		JavaScriptObjectHelper.setStringProperty(getSeries(), "lineColor", color);
 		return this;
 	}
 
 	public PlotOption setLineWidth(int width) {
-		createSeriesIfNotExists();
-		JavaScriptObjectHelper.setIntegerProperty(series, "lineWidth", width);
+		JavaScriptObjectHelper.setIntegerProperty(getSeries(), "lineWidth", width);
 		return this;
 	}
 
 	public PlotOption setLinkedTo(String linkedTo) {
-		createSeriesIfNotExists();
-		JavaScriptObjectHelper.setStringProperty(series, "linkedTo", linkedTo);
+		JavaScriptObjectHelper.setStringProperty(getSeries(), "linkedTo", linkedTo);
 		return this;
 	}
 
-	private void createMarkerIfNotExists() {
+	public JavaScriptObject getMarker() {
 		if (marker == null) {
 			marker = JavaScriptObject.createObject();
-			JavaScriptObjectHelper.setObjectProperty(series, "marker", marker);
+			JavaScriptObjectHelper.setObjectProperty(getSeries(), "marker", marker);
 		}
+		return marker;
 	}
 
 	public PlotOption setMarkerEnabled(boolean enable) {
-		createSeriesIfNotExists();
-		createMarkerIfNotExists();
-		JavaScriptObjectHelper.setBooleanProperty(marker, "enabled", enable);
+		JavaScriptObjectHelper.setBooleanProperty(getMarker(), "enabled", enable);
 		return this;
 	}
 
 	public PlotOption setMarkerFillColor(String color) {
-		createSeriesIfNotExists();
-		createMarkerIfNotExists();
-		JavaScriptObjectHelper.setStringProperty(marker, "fillColor", color);
+		JavaScriptObjectHelper.setStringProperty(getMarker(), "fillColor", color);
 		return this;
 	}
 
 	public PlotOption setMarkerHeight(int height) {
-		createSeriesIfNotExists();
-		createMarkerIfNotExists();
-		JavaScriptObjectHelper.setIntegerProperty(marker, "height", height);
+		JavaScriptObjectHelper.setIntegerProperty(getMarker(), "height", height);
 		return this;
 	}
 
 	public PlotOption setMarkerLineColor(String color) {
-		createSeriesIfNotExists();
-		createMarkerIfNotExists();
-		JavaScriptObjectHelper.setStringProperty(marker, "lineColor", color);
+		JavaScriptObjectHelper.setStringProperty(getMarker(), "lineColor", color);
 		return this;
 	}
 
 	public PlotOption setMarkerLineWidth(int width) {
-		createSeriesIfNotExists();
-		createMarkerIfNotExists();
-		JavaScriptObjectHelper.setIntegerProperty(marker, "lineWidth", width);
+		JavaScriptObjectHelper.setIntegerProperty(getMarker(), "lineWidth", width);
 		return this;
 	}
 
 	public PlotOption setMarkerRadius(int radius) {
-		createSeriesIfNotExists();
-		createMarkerIfNotExists();
-		JavaScriptObjectHelper.setIntegerProperty(marker, "radius", radius);
+		JavaScriptObjectHelper.setIntegerProperty(getMarker(), "radius", radius);
 		return this;
 	}
 
 	public PlotOption setMarkerSymbol(String symbol) {
-		createSeriesIfNotExists();
-		createMarkerIfNotExists();
-		JavaScriptObjectHelper.setStringProperty(marker, "symbol", symbol);
+		JavaScriptObjectHelper.setStringProperty(getMarker(), "symbol", symbol);
 		return this;
 	}
 
 	public PlotOption setMarkerWidth(int width) {
-		createSeriesIfNotExists();
-		createMarkerIfNotExists();
-		JavaScriptObjectHelper.setIntegerProperty(marker, "width", width);
+		JavaScriptObjectHelper.setIntegerProperty(getMarker(), "width", width);
 		return this;
 	}
 
 	public PlotOption setNegativeColor(String color) {
-		createSeriesIfNotExists();
-		JavaScriptObjectHelper.setStringProperty(series, "negativeColor", color);
+		JavaScriptObjectHelper.setStringProperty(getSeries(), "negativeColor", color);
 		return this;
 	}
 
 	public PlotOption setNegativeFillColor(String color) {
-		createSeriesIfNotExists();
-		JavaScriptObjectHelper.setStringProperty(series, "negativeFillColor", color);
+		JavaScriptObjectHelper.setStringProperty(getSeries(), "negativeFillColor", color);
 		return this;
 	}
 
 	// point property
 
 	public PlotOption setPointInterval(int interval) {
-		createSeriesIfNotExists();
-		JavaScriptObjectHelper.setIntegerProperty(series, "pointInterval", interval);
+		JavaScriptObjectHelper.setIntegerProperty(getSeries(), "pointInterval", interval);
 		return this;
 	}
 
 	public PlotOption setPointPlacement(String pointPlacement) {
-		createSeriesIfNotExists();
-		JavaScriptObjectHelper.setStringProperty(series, "pointPlacement", pointPlacement);
+		JavaScriptObjectHelper.setStringProperty(getSeries(), "pointPlacement", pointPlacement);
 		return this;
 	}
 
 	public PlotOption setPointPlacement(int pointPlacement) {
-		createSeriesIfNotExists();
-		JavaScriptObjectHelper.setIntegerProperty(series, "pointPlacement", pointPlacement);
+		JavaScriptObjectHelper.setIntegerProperty(getSeries(), "pointPlacement", pointPlacement);
 		return this;
 	}
 
 	public PlotOption setPointStart(int pointStart) {
-		createSeriesIfNotExists();
-		JavaScriptObjectHelper.setIntegerProperty(series, "pointStart", pointStart);
+		JavaScriptObjectHelper.setIntegerProperty(getSeries(), "pointStart", pointStart);
 		return this;
 	}
 
 	public PlotOption setSelected(boolean select) {
-		createSeriesIfNotExists();
-		JavaScriptObjectHelper.setBooleanProperty(series, "selected", select);
+		JavaScriptObjectHelper.setBooleanProperty(getSeries(), "selected", select);
 		return this;
 	}
 
 	public PlotOption setShadow(boolean shadow) {
-		createSeriesIfNotExists();
-		JavaScriptObjectHelper.setBooleanProperty(series, "shadow", shadow);
+		JavaScriptObjectHelper.setBooleanProperty(getSeries(), "shadow", shadow);
 		return this;
 	}
 
 	public PlotOption setShadow(JavaScriptObject shadow) {
-		createSeriesIfNotExists();
-		JavaScriptObjectHelper.setObjectProperty(series, "shadow", shadow);
+		JavaScriptObjectHelper.setObjectProperty(getSeries(), "shadow", shadow);
 		return this;
 	}
 
 	public PlotOption setShowCheckbox(boolean show) {
-		createSeriesIfNotExists();
-		JavaScriptObjectHelper.setBooleanProperty(series, "showCheckbox", show);
+		JavaScriptObjectHelper.setBooleanProperty(getSeries(), "showCheckbox", show);
 		return this;
 	}
 
 	public PlotOption setShowInLegend(boolean show) {
-		createSeriesIfNotExists();
-		JavaScriptObjectHelper.setBooleanProperty(series, "showInLegend", show);
+		JavaScriptObjectHelper.setBooleanProperty(getSeries(), "showInLegend", show);
 		return this;
 	}
 
 	public PlotOption setStacking(String stacking) {
-		createSeriesIfNotExists();
-		JavaScriptObjectHelper.setStringProperty(series, "stacking", stacking);
+		JavaScriptObjectHelper.setStringProperty(getSeries(), "stacking", stacking);
+		return this;
+	}
+
+	public JavaScriptObject getStates() {
+		if (states == null) {
+			states = JavaScriptObject.createObject();
+			JavaScriptObjectHelper.setObjectProperty(getSeries(), "states", states);
+		}
+		return states;
+	}
+
+	public JavaScriptObject getHover() {
+		if (hover == null) {
+			hover = JavaScriptObject.createObject();
+			JavaScriptObjectHelper.setObjectProperty(getStates(), "hover", hover);
+		}
+		return hover;
+	}
+
+	public JavaScriptObject getHalo() {
+		if (halo == null) {
+			halo = JavaScriptObject.createObject();
+			JavaScriptObjectHelper.setObjectProperty(getHover(), "halo", halo);
+		}
+		return halo;
+	}
+
+	public PlotOption setHoverHaloOpacity(int opacity) {
+		JavaScriptObjectHelper.setIntegerProperty(getHalo(), "opacity", opacity);
 		return this;
 	}
 
@@ -440,32 +387,27 @@ public class PlotOption extends Option<PlotOption> {
 	// }
 
 	public PlotOption setStickyTracking(boolean stickyTracking) {
-		createSeriesIfNotExists();
-		JavaScriptObjectHelper.setBooleanProperty(series, "stickyTracking", stickyTracking);
+		JavaScriptObjectHelper.setBooleanProperty(getSeries(), "stickyTracking", stickyTracking);
 		return this;
 	}
 
 	public PlotOption setThreshold(int threshold) {
-		createSeriesIfNotExists();
-		JavaScriptObjectHelper.setIntegerProperty(series, "threshold", threshold);
+		JavaScriptObjectHelper.setIntegerProperty(getSeries(), "threshold", threshold);
 		return this;
 	}
 
 	public PlotOption setTrackByArea(boolean trackByArea) {
-		createSeriesIfNotExists();
-		JavaScriptObjectHelper.setBooleanProperty(series, "trackByArea", trackByArea);
+		JavaScriptObjectHelper.setBooleanProperty(getSeries(), "trackByArea", trackByArea);
 		return this;
 	}
 
 	public PlotOption setTurboThreshold(int turboThreshold) {
-		createSeriesIfNotExists();
-		JavaScriptObjectHelper.setIntegerProperty(series, "turboThreshold", turboThreshold);
+		JavaScriptObjectHelper.setIntegerProperty(getSeries(), "turboThreshold", turboThreshold);
 		return this;
 	}
 
 	public PlotOption setVisible(boolean visible) {
-		createSeriesIfNotExists();
-		JavaScriptObjectHelper.setBooleanProperty(series, "visible", visible);
+		JavaScriptObjectHelper.setBooleanProperty(getSeries(), "visible", visible);
 		return this;
 	}
 

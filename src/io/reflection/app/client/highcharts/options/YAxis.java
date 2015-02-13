@@ -45,102 +45,66 @@ public class YAxis extends Axis<YAxis> {
 		return setOption("reversedStacks", reversedStacks);
 	}
 
-	public YAxis setStackLabelsAlign(String align) {
+	public JavaScriptObject getStackLabels() {
 		if (stackLabels == null) {
 			stackLabels = JavaScriptObject.createObject();
 			setOption("stackLabels", stackLabels);
 		}
-		JavaScriptObjectHelper.setStringProperty(stackLabels, "align", align);
+		return stackLabels;
+	}
+
+	public YAxis setStackLabelsAlign(String align) {
+		JavaScriptObjectHelper.setStringProperty(getStackLabels(), "align", align);
 		return this;
 	}
 
 	public YAxis setStackLabelsEnabled(boolean enable) {
-		if (stackLabels == null) {
-			stackLabels = JavaScriptObject.createObject();
-			setOption("stackLabels", stackLabels);
-		}
-		JavaScriptObjectHelper.setBooleanProperty(stackLabels, "enabled", enable);
+		JavaScriptObjectHelper.setBooleanProperty(getStackLabels(), "enabled", enable);
 		return this;
 	}
 
 	public YAxis setStackLabelsFormat(String format) {
-		if (stackLabels == null) {
-			stackLabels = JavaScriptObject.createObject();
-			setOption("stackLabels", stackLabels);
-		}
-		JavaScriptObjectHelper.setStringProperty(stackLabels, "format", format);
+		JavaScriptObjectHelper.setStringProperty(getStackLabels(), "format", format);
 		return this;
 	}
 
 	public YAxis setStackLabelsFormatter(JavaScriptObject formatterFunction) {
-		if (stackLabels == null) {
-			stackLabels = JavaScriptObject.createObject();
-			setOption("stackLabels", stackLabels);
-		}
-		JavaScriptObjectHelper.setObjectProperty(stackLabels, "formatter", formatterFunction);
+		JavaScriptObjectHelper.setObjectProperty(getStackLabels(), "formatter", formatterFunction);
 		return this;
 	}
 
 	public YAxis setStackLabelsRotation(int rotation) {
-		if (stackLabels == null) {
-			stackLabels = JavaScriptObject.createObject();
-			setOption("stackLabels", stackLabels);
-		}
-		JavaScriptObjectHelper.setIntegerProperty(stackLabels, "rotation", rotation);
+		JavaScriptObjectHelper.setIntegerProperty(getStackLabels(), "rotation", rotation);
 		return this;
 	}
 
 	public YAxis setStackLabelsStyle(JavaScriptObject style) {
-		if (stackLabels == null) {
-			stackLabels = JavaScriptObject.createObject();
-			setOption("stackLabels", stackLabels);
-		}
-		JavaScriptObjectHelper.setObjectProperty(stackLabels, "style", style);
+		JavaScriptObjectHelper.setObjectProperty(getStackLabels(), "style", style);
 		return this;
 	}
 
 	public YAxis setStackLabelsTextAlign(String align) {
-		if (stackLabels == null) {
-			stackLabels = JavaScriptObject.createObject();
-			setOption("stackLabels", stackLabels);
-		}
-		JavaScriptObjectHelper.setStringProperty(stackLabels, "textAlign", align);
+		JavaScriptObjectHelper.setStringProperty(getStackLabels(), "textAlign", align);
 		return this;
 	}
 
 	public YAxis setStackLabelsUseHTML(boolean useHTML) {
-		if (stackLabels == null) {
-			stackLabels = JavaScriptObject.createObject();
-			setOption("stackLabels", stackLabels);
-		}
-		JavaScriptObjectHelper.setBooleanProperty(stackLabels, "useHTML", useHTML);
+		JavaScriptObjectHelper.setBooleanProperty(getStackLabels(), "useHTML", useHTML);
 		return this;
 	}
 
 	public YAxis setStackLabelsVerticalAlign(String align) {
-		if (stackLabels == null) {
-			stackLabels = JavaScriptObject.createObject();
-			setOption("stackLabels", stackLabels);
-		}
-		JavaScriptObjectHelper.setStringProperty(stackLabels, "verticalAlign", align);
+		JavaScriptObjectHelper.setStringProperty(getStackLabels(), "verticalAlign", align);
 		return this;
 	}
 
 	public YAxis setStackLabelsX(int x) {
-		if (stackLabels == null) {
-			stackLabels = JavaScriptObject.createObject();
-			setOption("stackLabels", stackLabels);
-		}
-		JavaScriptObjectHelper.setIntegerProperty(stackLabels, "x", x);
+		JavaScriptObjectHelper.setIntegerProperty(getStackLabels(), "x", x);
 		return this;
 	}
 
 	public YAxis setStackLabelsY(int y) {
-		if (stackLabels == null) {
-			stackLabels = JavaScriptObject.createObject();
-			setOption("stackLabels", stackLabels);
-		}
-		JavaScriptObjectHelper.setIntegerProperty(stackLabels, "y", y);
+		JavaScriptObjectHelper.setIntegerProperty(getStackLabels(), "y", y);
 		return this;
 	}
 }
