@@ -13,7 +13,6 @@ import io.reflection.app.client.helper.JavaScriptObjectHelper;
 import io.reflection.app.client.highcharts.ChartHelper.RankType;
 import io.reflection.app.client.highcharts.ChartHelper.YDataType;
 import io.reflection.app.client.highcharts.options.ChartOption;
-import io.reflection.app.client.highcharts.options.Colors;
 import io.reflection.app.client.highcharts.options.Credits;
 import io.reflection.app.client.highcharts.options.Data;
 import io.reflection.app.client.highcharts.options.Labels;
@@ -39,6 +38,7 @@ import java.util.Map;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayMixed;
+import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
@@ -103,14 +103,6 @@ public class Chart extends Composite {
 			JavaScriptObjectHelper.setObjectProperty(options, OPTION_CHART, optionsLookup.get(OPTION_CHART).getProperty());
 		}
 		return (ChartOption) optionsLookup.get(OPTION_CHART);
-	}
-
-	public Colors getColorsOption() {
-		if (optionsLookup.get(OPTION_COLORS) == null) {
-			optionsLookup.put(OPTION_COLORS, new Colors());
-			JavaScriptObjectHelper.setObjectProperty(options, OPTION_COLORS, optionsLookup.get(OPTION_COLORS).getProperty());
-		}
-		return (Colors) optionsLookup.get(OPTION_COLORS);
 	}
 
 	public Credits getCreditsOption() {
@@ -448,6 +440,10 @@ public class Chart extends Composite {
 
 	public void reflow() {
 		NativeChart.nativeReflow(chart);
+	}
+
+	public void setColors(JsArrayString colors) {
+		JavaScriptObjectHelper.setObjectProperty(options, OPTION_COLORS, colors);
 	}
 
 	public void setSize(int width, int height) {

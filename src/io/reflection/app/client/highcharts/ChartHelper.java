@@ -22,6 +22,7 @@ import java.util.Map;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayBoolean;
 import com.google.gwt.core.client.JsArrayNumber;
+import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.user.client.ui.HTMLPanel;
 
@@ -124,10 +125,10 @@ public class ChartHelper {
 
 	private static void setDefaultOptions(Chart chart) {
 		chart.getChartOption().setType(ChartHelper.TYPE_AREA).setPlotBackgroundColor("#fafafa").setPlotBorderColor("#e5e5e5").setPlotBorderWidth(1)
-				.setMargin(ChartHelper.createMarginsArray(0, 0, 50, 0)).setSpacing(ChartHelper.createMarginsArray(0, 0, 0, 0)).setHeight(450);
-		chart.getPlotOption().setCursor("default").setFillOpacity(0.2).setColor("#6a64c4").setLineColor("#6a64c4").setLineWidth(2).setMarkerEnabled(false)
-				.setHoverHaloOpacity(0).setMarkerSymbol("circle").setMarkerFillColor("#6a64c4").setMarkerLineColor("#6a64c4");
-		// getColorsOption().setColors(colors); TODO set default colors
+				.setMargin(ChartHelper.createMarginsArray(1, 1, 60, 1));
+		chart.getPlotOption().setCursor("default").setFillOpacity(0.2).setLineWidth(2).setMarkerEnabled(false).setMarkerRadius(3).setHoverHaloOpacity(0)
+				.setHoverLineWidthPlus(0).setMarkerSymbol("circle").setMarkerHoverLineWidthPlus(0);
+		chart.setColors(getDefaultColors());
 		chart.getCreditsOption().setEnabled(false); // Disable highcharts credits text
 		chart.getLegendOption().setEnabled(false); // Disable legend
 		chart.getTitleOption().setText(null); // Disable title
@@ -144,9 +145,9 @@ public class ChartHelper {
 				.setPointFormat("<span style=\"font-size: 18px; font-weight: regular; color: #363a47; font-family: \"Lato\", sans-serif;\">{point.y}</span>");
 		chart.getXAxis().setType(Axis.TYPE_DATETIME).setDateTimeLabelFormats(ChartHelper.getDefaultAxisDateTimeLabelFormat()).setTickWidth(0)
 				.setTickInterval(86400000).setShowFirstLabel(false).setShowLastLabel(false).setLabelsStyle(ChartHelper.getDefaultAxisStyle()).setLabelsY(30)
-				.setStartOnTick(false).setEndOnTick(false).setMinPadding(0).setMaxPadding(0).setLineWidth(0).setMinorGridLineWidth(0);
-		chart.getYAxis().setAllowDecimals(false).setTitleText(null).setOffset(-30).setLineWidth(0).setLabelsY(-7)
-				.setLabelsStyle(ChartHelper.getDefaultAxisStyle()).setShowLastLabel(false).setLabelsAlign("left");
+				.setStartOnTick(false).setEndOnTick(false).setMinPadding(0).setMaxPadding(0).setMinorGridLineWidth(0).setLineColor("#e5e5e5");
+		chart.getYAxis().setAllowDecimals(false).setTitleText(null).setOffset(-30).setLabelsY(-7).setLabelsStyle(ChartHelper.getDefaultAxisStyle())
+				.setShowLastLabel(false).setLabelsAlign("left");
 	}
 
 	public static JsArrayNumber createMarginsArray(int marginTop, int marginRight, int marginBottom, int marginLeft) {
@@ -185,6 +186,12 @@ public class ChartHelper {
 			JavaScriptObjectHelper.setStringProperty(dateTimeLabelFormatObject, entry.getKey(), entry.getValue());
 		}
 		return dateTimeLabelFormatObject;
+	}
+
+	public static JsArrayString getDefaultColors() {
+		JsArrayString colors = JavaScriptObject.createArray().cast();
+		colors.push("#6a64c4");
+		return colors;
 	}
 
 	public static JavaScriptObject getDefaultAxisDateTimeLabelFormat() {
