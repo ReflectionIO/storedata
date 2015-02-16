@@ -25,6 +25,15 @@ public class NativeHighcharts {
 		return new $wnd.Highcharts.Chart(options);
 	}-*/;
 
+	static native String nativeDateFormat(String format, double millisec, boolean capitalize)/*-{
+		return $wnd.Highcharts.dateFormat(format, millisec, capitalize);
+	}-*/;
+
+	static native String nativeNumberFormat(double number, int decimals, String decimalPoint, String thousandsSeparator)/*-{
+		return $wnd.Highcharts.numberFormat(number, decimals, decimalPoint,
+				thousandsSeparator);
+	}-*/;
+
 	/**
 	 * Set global options before graph initialization
 	 * 
