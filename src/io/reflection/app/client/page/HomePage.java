@@ -200,13 +200,13 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 		picture3 = DOM.createElement("picture");
 
 		source5 = DOM.createElement("source");
-		source5.setAttribute("srcset", "images/screenshots/App_Page.png");
+		source5.setAttribute("srcset", "images/screenshots/App_Page-v2.png");
 		source5.setAttribute("media", "(min-width: 720px)");
 
 		source6 = DOM.createElement("source");
 		source6.setAttribute("srcset", "images/screenshots/App_Page_Mobile.png");
 
-		Image img = new Image("images/screenshots/App_Page.png");
+		Image img = new Image("images/screenshots/App_Page-v2.png");
 		img.setAltText("Analysis screenshot");
 
 		picture3.appendChild(source5);
