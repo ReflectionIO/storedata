@@ -28,8 +28,16 @@
 		border-right: 1px solid #d9dce0 !important;
 	}
 	
-	.a {
-		background-color: orange;
+	.topPanel {
+		margin-bottom: 0px;
+		border-bottom-left-radius: 0px;
+		border-bottom-right-radius: 0px;
+		border-bottom: 0px;
+	}
+	
+	.chartContainer {
+		margin: 0px;
+		padding: 0px;
 	}
 	</ui:style>
 	<g:HTMLPanel styleName="row">
@@ -57,15 +65,16 @@
 				</li>
 			</ul>
 			<g:HTMLPanel styleName="{style.table}">
-				<pp:ItemTopPanel ui:field="topPanel" styleName="well well-sm" />
-				<!-- <p:CircleProgressBar visible="false" ui:field="loader" styleName="{style.loading}" /> -->
+				<pp:ItemTopPanel ui:field="topPanel" styleName="well well-sm {style.topPanel}" />
+
 				<p:Preloader ui:field="preloader">
-					<g:HTMLPanel>
-						<pp:ItemChart ui:field="historyChart" styleName="{style.chart}" />
-					</g:HTMLPanel>
+					<g:HTMLPanel ui:field="chartContainer" styleName="{style.chartContainer}"></g:HTMLPanel>
 				</p:Preloader>
 
-				<g:HTMLPanel styleName="{style.a}" ui:field="chartContainer"></g:HTMLPanel>
+
+				<!-- <p:CircleProgressBar visible="false" ui:field="loader" styleName="{style.loading}" /> -->
+				<pp:ItemChart ui:field="historyChart" styleName="col-sm-12 {style.chart}" />
+
 
 				<c:CellTable ui:field="revenueTable" styleName="table table-hover table-striped table-item {style.cellTable}"></c:CellTable>
 			</g:HTMLPanel>
