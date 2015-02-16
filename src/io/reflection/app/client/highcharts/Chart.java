@@ -70,7 +70,7 @@ public class Chart extends Composite {
 
 	private final HTMLPanel chartDiv;
 	private final String id = HTMLPanel.createUniqueId();
-	private JavaScriptObject options;
+	private JavaScriptObject options = JavaScriptObject.createObject();
 	private JavaScriptObject chart;
 	private Map<String, Option<?>> optionsLookup = new HashMap<String, Option<?>>();
 	private YDataType yDataType;
@@ -82,18 +82,14 @@ public class Chart extends Composite {
 	public Chart() {
 		chartDiv = new HTMLPanel("");
 		chartDiv.getElement().setId(id);
-		initWidget(chartDiv);
-		options = JavaScriptObject.createObject();
 		getChartOption().setRenderTo(id);
 		showModelPredictions = SessionController.get().isLoggedInUserAdmin();
+
+		initWidget(chartDiv);
 	}
 
-	private native JavaScriptObject createGraph(JavaScriptObject options) /*-{
-		return new $wnd.Highcharts.Chart(options);
-	}-*/;
-
 	public Chart inject() {
-		chart = createGraph(options);
+		chart = NativeHighcharts.nativeChart(options);
 		return this;
 	}
 
@@ -226,157 +222,198 @@ public class Chart extends Composite {
 	}
 
 	public void drawData() {
+
+		setLoading(false);
+
 		if (ranks != null && yDataType != null) {
-
-			removeAllSeries();
-
-			Date progressiveDate = FilterController.get().getStartDate();
-
-			JsArray<JsArrayMixed> values = JavaScriptObject.createArray().cast();
-
-			int yMin = Integer.MAX_VALUE;
-			int yMax = 0;
 			switch (yDataType) {
 			case DownloadsYAxisDataType:
-				for (Rank rank : ranks) {
-					if (withinChartRange(rank)) {
-						// Fill with blank values missing dates
-						if (!CalendarUtil.isSameDate(progressiveDate, rank.date)) {
-							while (!CalendarUtil.isSameDate(progressiveDate, rank.date)
-									&& (progressiveDate.before(CalendarUtil.copyDate(FilterController.get().getEndDate())) || CalendarUtil.isSameDate(
-											progressiveDate, FilterController.get().getEndDate()))) {
-								JsArrayMixed emptyPoint = JavaScriptObject.createArray().cast();
-								emptyPoint.push(progressiveDate.getTime());
-								emptyPoint.push(JavaScriptObjectHelper.getNativeNull());
-								values.push(emptyPoint);
-								CalendarUtil.addDaysToDate(progressiveDate, 1);
-							}
-						}
-						CalendarUtil.addDaysToDate(progressiveDate, 1);
-
-						JsArrayMixed point = JavaScriptObject.createArray().cast();
-						point.push(rank.date.getTime());
-						if (rank.downloads != null && showModelPredictions) {
-							if (rank.downloads.intValue() < yMin) {
-								yMin = rank.downloads.intValue();
-							}
-							if (rank.downloads.intValue() > yMax) {
-								yMax = rank.downloads.intValue();
-							}
-							point.push(rank.downloads.intValue());
-						} else {
-							point.push(JavaScriptObjectHelper.getNativeNull());
-						}
-						values.push(point);
-					}
-				}
+				drawDownloads();
 				break;
+
 			case RevenueYAxisDataType:
-				for (Rank rank : ranks) {
-					if (withinChartRange(rank)) {
-						// Fill with blank values missing dates
-						if (!CalendarUtil.isSameDate(progressiveDate, rank.date)) {
-							while (!CalendarUtil.isSameDate(progressiveDate, rank.date)
-									&& (progressiveDate.before(CalendarUtil.copyDate(FilterController.get().getEndDate())) || CalendarUtil.isSameDate(
-											progressiveDate, FilterController.get().getEndDate()))) {
-								JsArrayMixed emptyPoint = JavaScriptObject.createArray().cast();
-								emptyPoint.push(progressiveDate.getTime());
-								emptyPoint.push(JavaScriptObjectHelper.getNativeNull());
-								values.push(emptyPoint);
-								CalendarUtil.addDaysToDate(progressiveDate, 1);
-							}
-						}
-						CalendarUtil.addDaysToDate(progressiveDate, 1);
-
-						JsArrayMixed point = JavaScriptObject.createArray().cast();
-						point.push(rank.date.getTime());
-						if (rank.revenue != null && showModelPredictions) {
-							if (rank.revenue.intValue() < yMin) {
-								yMin = rank.revenue.intValue();
-							}
-							if (rank.revenue.intValue() > yMax) {
-								yMax = rank.revenue.intValue();
-							}
-							point.push(rank.revenue.floatValue());
-						} else {
-							point.push(JavaScriptObjectHelper.getNativeNull());
-						}
-						values.push(point);
-					}
-				}
+				drawRevenue();
 				break;
+
 			case RankingYAxisDataType:
 			default:
-				int position;
-				for (Rank rank : ranks) {
-					if (withinChartRange(rank)) {
-
-						// Fill with blank values missing dates
-						if (!CalendarUtil.isSameDate(progressiveDate, rank.date)) {
-							while (!CalendarUtil.isSameDate(progressiveDate, rank.date)
-									&& (progressiveDate.before(CalendarUtil.copyDate(FilterController.get().getEndDate())) || CalendarUtil.isSameDate(
-											progressiveDate, FilterController.get().getEndDate()))) {
-								JsArrayMixed emptyPoint = JavaScriptObject.createArray().cast();
-								emptyPoint.push(progressiveDate.getTime());
-								emptyPoint.push(JavaScriptObjectHelper.getNativeNull());
-								values.push(emptyPoint);
-								CalendarUtil.addDaysToDate(progressiveDate, 1);
-							}
-						}
-						CalendarUtil.addDaysToDate(progressiveDate, 1);
-
-						JsArrayMixed point = JavaScriptObject.createArray().cast();
-						point.push(rank.date.getTime());
-						if ((position = getRankPosition(rank)) != 0) {
-							if (position < yMin) {
-								yMin = position;
-							}
-							if (position > yMax) {
-								yMax = position;
-							}
-							point.push(position);
-						} else {
-							point.push(JavaScriptObjectHelper.getNativeNull());
-						}
-						values.push(point);
-					}
-				}
+				drawRanking();
 				break;
 			}
-
-			// setLoading(false);
-			// NativeAxis.nativeSetExtremes(yAxis, yMin, yMax, true, true);
-
-			updateOptions(yDataType);
-			JavaScriptObject series = JavaScriptObject.createObject();
-			JavaScriptObjectHelper.setObjectProperty(series, "data", values);
-			addSeries(series);
-
 		}
 	}
 
-	private void updateOptions(YDataType yDataType) {
-		switch (yDataType) {
-		case DownloadsYAxisDataType:
-			getPlotOption().setFillOpacity(0.2);
-			getTooltipOption().setValueDecimals(0).setValuePrefix("");
-			getYAxis().setReversed(false).setLabelsFormat("{value}");
+	private void drawDownloads() {
+		Date progressiveDate = FilterController.get().getStartDate();
+		JsArray<JsArrayMixed> values = JavaScriptObject.createArray().cast();
+		int yMin = Integer.MAX_VALUE;
+		int yMax = 0;
+		getTooltipOption().setValuePrefix("");
+		getYAxis().setReversed(false).setLabelsFormatter(ChartHelper.getNativeLabelFormatter("", ""));
+		if (NativeChart.nativeGet(chart, "revenue") != null) {
+			NativeSeries.nativeHide(NativeChart.nativeGet(chart, "revenue"));
+		}
+		if (NativeChart.nativeGet(chart, "ranking") != null) {
+			NativeSeries.nativeHide(NativeChart.nativeGet(chart, "ranking"));
+		}
+		if (NativeChart.nativeGet(chart, "downloads") == null) {
+			for (Rank rank : ranks) {
+				if (withinChartRange(rank)) {
+					// Fill with blank values missing dates
+					if (!CalendarUtil.isSameDate(progressiveDate, rank.date)) {
+						while (!CalendarUtil.isSameDate(progressiveDate, rank.date)
+								&& (progressiveDate.before(CalendarUtil.copyDate(FilterController.get().getEndDate())) || CalendarUtil.isSameDate(
+										progressiveDate, FilterController.get().getEndDate()))) {
+							JsArrayMixed emptyPoint = JavaScriptObject.createArray().cast();
+							emptyPoint.push(progressiveDate.getTime());
+							emptyPoint.push(JavaScriptObjectHelper.getNativeNull());
+							values.push(emptyPoint);
+							CalendarUtil.addDaysToDate(progressiveDate, 1);
+						}
+					}
+					CalendarUtil.addDaysToDate(progressiveDate, 1);
 
-			break;
-		case RevenueYAxisDataType:
-			getPlotOption().setFillOpacity(0.2);
-			getTooltipOption().setValueDecimals(2).setValuePrefix(currency + " ");
-			getYAxis().setReversed(false).setLabelsFormat(currency + " {value}");
-			break;
-		case RankingYAxisDataType:
-			getPlotOption().setFillOpacity(0);
-			getTooltipOption().setValueDecimals(0).setValuePrefix("");
-			getYAxis().setReversed(true).setLabelsFormat("{value}");
-		default:
-			break;
+					JsArrayMixed point = JavaScriptObject.createArray().cast();
+					point.push(rank.date.getTime());
+					if (rank.downloads != null && showModelPredictions) {
+						if (rank.downloads.intValue() < yMin) {
+							yMin = rank.downloads.intValue();
+						}
+						if (rank.downloads.intValue() > yMax) {
+							yMax = rank.downloads.intValue();
+						}
+						point.push(rank.downloads.intValue());
+					} else {
+						point.push(JavaScriptObjectHelper.getNativeNull());
+					}
+					values.push(point);
+				}
+			}
+			JavaScriptObject seriesDownloads = JavaScriptObject.createObject();
+			JavaScriptObjectHelper.setObjectProperty(seriesDownloads, "data", values);
+			JavaScriptObjectHelper.setStringProperty(seriesDownloads, "type", ChartHelper.TYPE_AREA);
+			JavaScriptObjectHelper.setStringProperty(seriesDownloads, "id", "downloads");
+			addSeries(seriesDownloads);
+		} else {
+			NativeSeries.nativeShow(NativeChart.nativeGet(chart, "downloads"));
 		}
 		NativeAxis.nativeUpdate(NativeAxis.nativeGetYAxis(chart, 0), getYAxis().getProperty(), true); // update y axis
+	}
 
+	private void drawRevenue() {
+		Date progressiveDate = FilterController.get().getStartDate();
+		JsArray<JsArrayMixed> values = JavaScriptObject.createArray().cast();
+		int yMin = Integer.MAX_VALUE;
+		int yMax = 0;
+		getTooltipOption().setValuePrefix(currency + " ");
+		getYAxis().setReversed(false).setLabelsFormatter(ChartHelper.getNativeLabelFormatter(currency + " ", ""));
+		if (NativeChart.nativeGet(chart, "downloads") != null) {
+			NativeSeries.nativeHide(NativeChart.nativeGet(chart, "downloads"));
+		}
+		if (NativeChart.nativeGet(chart, "ranking") != null) {
+			NativeSeries.nativeHide(NativeChart.nativeGet(chart, "ranking"));
+		}
+		if (NativeChart.nativeGet(chart, "revenue") == null) {
+			for (Rank rank : ranks) {
+				if (withinChartRange(rank)) {
+					// Fill with blank values missing dates
+					if (!CalendarUtil.isSameDate(progressiveDate, rank.date)) {
+						while (!CalendarUtil.isSameDate(progressiveDate, rank.date)
+								&& (progressiveDate.before(CalendarUtil.copyDate(FilterController.get().getEndDate())) || CalendarUtil.isSameDate(
+										progressiveDate, FilterController.get().getEndDate()))) {
+							JsArrayMixed emptyPoint = JavaScriptObject.createArray().cast();
+							emptyPoint.push(progressiveDate.getTime());
+							emptyPoint.push(JavaScriptObjectHelper.getNativeNull());
+							values.push(emptyPoint);
+							CalendarUtil.addDaysToDate(progressiveDate, 1);
+						}
+					}
+					CalendarUtil.addDaysToDate(progressiveDate, 1);
+
+					JsArrayMixed point = JavaScriptObject.createArray().cast();
+					point.push(rank.date.getTime());
+					if (rank.revenue != null && showModelPredictions) {
+						if (rank.revenue.intValue() < yMin) {
+							yMin = rank.revenue.intValue();
+						}
+						if (rank.revenue.intValue() > yMax) {
+							yMax = rank.revenue.intValue();
+						}
+						point.push(rank.revenue.floatValue());
+					} else {
+						point.push(JavaScriptObjectHelper.getNativeNull());
+					}
+					values.push(point);
+				}
+			}
+			JavaScriptObject seriesRevenue = JavaScriptObject.createObject();
+			JavaScriptObjectHelper.setObjectProperty(seriesRevenue, "data", values);
+			JavaScriptObjectHelper.setStringProperty(seriesRevenue, "type", ChartHelper.TYPE_AREA);
+			JavaScriptObjectHelper.setStringProperty(seriesRevenue, "id", "revenue");
+			addSeries(seriesRevenue);
+		} else {
+			NativeSeries.nativeShow(NativeChart.nativeGet(chart, "revenue"));
+		}
+		NativeAxis.nativeUpdate(NativeAxis.nativeGetYAxis(chart, 0), getYAxis().getProperty(), true); // update y axis
+	}
+
+	private void drawRanking() {
+		Date progressiveDate = FilterController.get().getStartDate();
+		JsArray<JsArrayMixed> values = JavaScriptObject.createArray().cast();
+		int yMin = Integer.MAX_VALUE;
+		int yMax = 0;
+		getTooltipOption().setValuePrefix("");
+		getYAxis().setReversed(true).setLabelsFormatter(ChartHelper.getNativeLabelFormatter("", ""));
+		if (NativeChart.nativeGet(chart, "downloads") != null) {
+			NativeSeries.nativeHide(NativeChart.nativeGet(chart, "downloads"));
+		}
+		if (NativeChart.nativeGet(chart, "revenue") != null) {
+			NativeSeries.nativeHide(NativeChart.nativeGet(chart, "revenue"));
+		}
+		if (NativeChart.nativeGet(chart, "ranking") == null) {
+			int position;
+			for (Rank rank : ranks) {
+				if (withinChartRange(rank)) {
+
+					// Fill with blank values missing dates
+					if (!CalendarUtil.isSameDate(progressiveDate, rank.date)) {
+						while (!CalendarUtil.isSameDate(progressiveDate, rank.date)
+								&& (progressiveDate.before(CalendarUtil.copyDate(FilterController.get().getEndDate())) || CalendarUtil.isSameDate(
+										progressiveDate, FilterController.get().getEndDate()))) {
+							JsArrayMixed emptyPoint = JavaScriptObject.createArray().cast();
+							emptyPoint.push(progressiveDate.getTime());
+							emptyPoint.push(JavaScriptObjectHelper.getNativeNull());
+							values.push(emptyPoint);
+							CalendarUtil.addDaysToDate(progressiveDate, 1);
+						}
+					}
+					CalendarUtil.addDaysToDate(progressiveDate, 1);
+
+					JsArrayMixed point = JavaScriptObject.createArray().cast();
+					point.push(rank.date.getTime());
+					if ((position = getRankPosition(rank)) != 0) {
+						if (position < yMin) {
+							yMin = position;
+						}
+						if (position > yMax) {
+							yMax = position;
+						}
+						point.push(position);
+					} else {
+						point.push(JavaScriptObjectHelper.getNativeNull());
+					}
+					values.push(point);
+				}
+			}
+			JavaScriptObject seriesRanking = JavaScriptObject.createObject();
+			JavaScriptObjectHelper.setObjectProperty(seriesRanking, "data", values);
+			JavaScriptObjectHelper.setStringProperty(seriesRanking, "type", ChartHelper.TYPE_LINE);
+			JavaScriptObjectHelper.setStringProperty(seriesRanking, "id", "ranking");
+			addSeries(seriesRanking);
+		} else {
+			NativeSeries.nativeShow(NativeChart.nativeGet(chart, "ranking"));
+		}
+		NativeAxis.nativeUpdate(NativeAxis.nativeGetYAxis(chart, 0), getYAxis().getProperty(), true); // update y axis
 	}
 
 	/**
@@ -389,23 +426,20 @@ public class Chart extends Composite {
 		return rank.date.getTime() >= FilterController.get().getStartDate().getTime() && rank.date.getTime() <= FilterController.get().getEndDate().getTime();
 	}
 
+	@SuppressWarnings("deprecation")
 	public void setLoading(boolean loading) {
 
-		// if (curve != null) {
-		// curve.setVisible(!loading);
-		//
 		if (loading) {
 			removeAllSeries();
-			NativeAxis.nativeSetExtremes(NativeAxis.nativeGetXAxis(chart, 0), FilterController.get().getStartDate().getTime(), FilterController.get()
-					.getEndDate().getTime(), true, true);
-			//
-			// getYAxis().setAxisMax(1);
-			// getYAxis().setAxisMin(8);
-			// getYAxis().setTickCount(8);
+			ranks = null;
+			Date startDate = FilterController.get().getStartDate();
+			Date endDate = FilterController.get().getEndDate();
+			NativeAxis.nativeSetExtremes(NativeAxis.nativeGetXAxis(chart, 0),
+					new Date(startDate.getYear(), startDate.getMonth(), startDate.getDate()).getTime(),
+					new Date(endDate.getYear(), endDate.getMonth(), endDate.getDate()).getTime(), true, null);
+
 		}
-		//
-		// update();
-		// }
+
 	}
 
 	private int getRankPosition(Rank rank) {
@@ -413,7 +447,9 @@ public class Chart extends Composite {
 	}
 
 	public void addAxis(JavaScriptObject options, boolean isX) {
-		NativeChart.nativeAddAxis(chart, options, isX, true, true);
+		if (chart != null) { // Check if the chart has been already created and injected
+			NativeChart.nativeAddAxis(chart, options, isX, true, true);
+		}
 	}
 
 	public void addSeries(JavaScriptObject series) {
@@ -428,10 +464,6 @@ public class Chart extends Composite {
 
 	public void get(String id) {
 		NativeChart.nativeGet(chart, id);
-	}
-
-	public void hideLoading() {
-		NativeChart.nativeHideLoading(chart);
 	}
 
 	public void redraw() {
@@ -452,10 +484,6 @@ public class Chart extends Composite {
 
 	public void setTitle(JavaScriptObject title, JavaScriptObject subtitle) {
 		NativeChart.nativeSetTitle(chart, title, subtitle, true);
-	}
-
-	public void showLoading(String loadingText) {
-		NativeChart.nativeShowLoading(chart, loadingText);
 	}
 
 	public void removeAllSeries() {

@@ -324,8 +324,8 @@ public class PlotOption extends Option<PlotOption> {
 
 	// point property
 
-	public PlotOption setPointInterval(int interval) {
-		JavaScriptObjectHelper.setIntegerProperty(getSeries(), "pointInterval", interval);
+	public PlotOption setPointInterval(double interval) {
+		JavaScriptObjectHelper.setDoubleProperty(getSeries(), "pointInterval", interval);
 		return this;
 	}
 

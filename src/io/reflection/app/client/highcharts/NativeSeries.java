@@ -36,6 +36,14 @@ public class NativeSeries {
 		series.addPoint(point, redraw, shift, animation);
 	}-*/;
 
+	static native void nativeHide(JavaScriptObject series) /*-{
+		series.hide();
+	}-*/;
+
+	static native void nativeShow(JavaScriptObject series) /*-{
+		series.show();
+	}-*/;
+
 	static native void nativeRemove(JavaScriptObject series, boolean redraw) /*-{
 		series.remove(redraw);
 	}-*/;

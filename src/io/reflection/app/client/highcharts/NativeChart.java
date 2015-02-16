@@ -75,4 +75,8 @@ class NativeChart {
 		chart.showLoading(loadingText);
 	}-*/;
 
+	static native void nativeShowLoading(JavaScriptObject chart) /*-{
+		chart.showLoading();
+	}-*/;
+
 }

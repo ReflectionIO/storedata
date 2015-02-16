@@ -40,6 +40,12 @@ class NativeAxis {
 		axis.remove();
 	}-*/;
 
+	static native void nativeRemoveAllY(JavaScriptObject chart, boolean redraw) /*-{
+		while (chart.yAxis.length > 0) {
+			chart.yAxis[0].remove(redraw);
+		}
+	}-*/;
+
 	static native void nativeRemovePlotBand(JavaScriptObject axis, String id) /*-{
 		axis.removePlotBand(id);
 	}-*/;

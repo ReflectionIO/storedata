@@ -124,30 +124,31 @@ public class ChartHelper {
 	}
 
 	private static void setDefaultOptions(Chart chart) {
-		chart.getChartOption().setType(ChartHelper.TYPE_AREA).setPlotBackgroundColor("#fafafa").setPlotBorderColor("#e5e5e5").setPlotBorderWidth(1)
-				.setMargin(ChartHelper.createMarginsArray(1, 1, 60, 1));
+		chart.getChartOption().setPlotBackgroundColor("#fafafa").setPlotBorderColor("#e5e5e5").setPlotBorderWidth(1).setMargin(createMarginsArray(1, 1, 60, 1));
 		chart.getPlotOption().setCursor("default").setFillOpacity(0.2).setLineWidth(2).setMarkerEnabled(false).setMarkerRadius(3).setHoverHaloOpacity(0)
-				.setHoverLineWidthPlus(0).setMarkerSymbol("circle").setMarkerHoverLineWidthPlus(0);
+				.setHoverLineWidthPlus(0).setMarkerSymbol("circle").setMarkerHoverLineWidthPlus(0).setPointInterval(24 * 3600 * 1000);
 		chart.setColors(getDefaultColors());
 		chart.getCreditsOption().setEnabled(false); // Disable highcharts credits text
 		chart.getLegendOption().setEnabled(false); // Disable legend
 		chart.getTitleOption().setText(null); // Disable title
 		chart.getTooltipOption()
+				.setUseHTML(false)
 				.setShadow(false)
 				.setBackgroundColor("#ffffff")
 				.setBorderColor("#ffffff")
 				.setBorderWidth(0)
+				.setValueDecimals(0)
 				.setCrosshairs(true)
-				.setStyle(ChartHelper.getDefaultTooltipStyle())
-				.setDateTimeLabelFormats(ChartHelper.getDefaultTooltipDateTimeLabelFormat())
+				.setStyle(getDefaultTooltipStyle())
+				.setDateTimeLabelFormats(getDefaultTooltipDateTimeLabelFormat())
 				.setHeaderFormat(
 						"<span style=\"font-size: 10px; font-weight: bold; color: #81879d; font-family: \"Lato\", sans-serif;\">{point.key}</span><br/><br/>")
 				.setPointFormat("<span style=\"font-size: 18px; font-weight: regular; color: #363a47; font-family: \"Lato\", sans-serif;\">{point.y}</span>");
-		chart.getXAxis().setType(Axis.TYPE_DATETIME).setDateTimeLabelFormats(ChartHelper.getDefaultAxisDateTimeLabelFormat()).setTickWidth(0)
-				.setTickInterval(86400000).setShowFirstLabel(false).setShowLastLabel(false).setLabelsStyle(ChartHelper.getDefaultAxisStyle()).setLabelsY(30)
-				.setStartOnTick(false).setEndOnTick(false).setMinPadding(0).setMaxPadding(0).setMinorGridLineWidth(0).setLineColor("#e5e5e5");
-		chart.getYAxis().setAllowDecimals(false).setTitleText(null).setOffset(-30).setLabelsY(-7).setLabelsStyle(ChartHelper.getDefaultAxisStyle())
-				.setShowLastLabel(false).setLabelsAlign("left");
+		chart.getXAxis().setType(Axis.TYPE_DATETIME).setDateTimeLabelFormats(getDefaultAxisDateTimeLabelFormat()).setTickWidth(0).setTickInterval(86400000)
+				.setShowFirstLabel(false).setShowLastLabel(false).setLabelsStyle(getDefaultAxisStyle()).setLabelsY(30).setStartOnTick(false)
+				.setEndOnTick(false).setMinPadding(0).setMaxPadding(0).setMinorGridLineWidth(0).setLineColor("#e5e5e5").setLabelsMaxStaggerLines(2);
+		chart.getYAxis().setAllowDecimals(false).setTitleText(null).setOffset(-30).setLabelsY(-7).setLabelsStyle(getDefaultAxisStyle()).setShowLastLabel(false)
+				.setLabelsAlign("left");
 	}
 
 	public static JsArrayNumber createMarginsArray(int marginTop, int marginRight, int marginBottom, int marginLeft) {
@@ -206,6 +207,12 @@ public class ChartHelper {
 		return createDateTimeLabelFormat(dateTimeLabelFormatValues);
 	}
 
+	public static native JavaScriptObject getNativeLabelFormatter(String prefix, String suffix) /*-{
+		return function() {
+			return prefix + this.axis.defaultLabelFormatter.call(this) + suffix;
+		}
+	}-*/;
+
 	public static JavaScriptObject getDefaultAxisStyle() {
 		HashMap<String, Object> styleValues = new HashMap<String, Object>();
 		styleValues.put("fontSize", "12px");
@@ -218,6 +225,15 @@ public class ChartHelper {
 	public static JavaScriptObject getDefaultTooltipStyle() {
 		HashMap<String, Object> styleValues = new HashMap<String, Object>();
 		styleValues.put("padding", 14);
+		styleValues.put("width", 300);
+		styleValues.put("boxShadow", "0px 0px 20px #888888");
+		return getJSObjectFromMap(styleValues);
+	}
+
+	public static JavaScriptObject getDefaultLoadingStyle() {
+		HashMap<String, Object> styleValues = new HashMap<String, Object>();
+		styleValues.put("backgroundImage", "url(\"http://jsfiddle.net/img/logo.png\")");
+		styleValues.put("display", "block");
 		return getJSObjectFromMap(styleValues);
 	}
 
