@@ -218,7 +218,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 	}
 
 	private NavigationController() {
-		MixPanelApi.get().init("400e244ec1aab9ad548fe51024506310");
+		MixPanelApi.get().init("69afe8ba753ea33015dbd4cdbf11d1c8");
 	}
 
 	/**
