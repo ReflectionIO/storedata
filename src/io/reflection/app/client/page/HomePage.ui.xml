@@ -30,8 +30,8 @@
 						<div class="landing-section-main__content">
 							<div class="landing-section-main__column-one">
 								<div>
-									<h1>App Intelligence to Create &amp; Plan More Successful Products</h1>
-									<p>Reflection is the only intelligence tool with a freemium pricing model that fits the needs of the entire app ecosystem.</p>
+									<h1>Powerful Intelligence for the Global App Industry</h1>
+									<p>View revenue and download intelligence for apps. Apply for free access to our data.</p>
 									<div class="actions-container">
 										<a href="#anchor-how-intelligence-helps" class="icon-angle-right js-scroll-to-anchor">How Intelligence Helps</a>
 										<g:InlineHyperlink ui:field="applyNowBtn" styleName="ref-button-cta-large">Apply Now</g:InlineHyperlink>
@@ -39,32 +39,16 @@
 								</div>
 							</div>
 							<div class="landing-section-main__column-two">
-								<img src="images/placeholder/placeholder-landing-section-1.png" alt="Leaderboard screenshot" />
+								<img src="images/screenshots/Leaderboard_Free.png" alt="Leaderboard screenshot" />
 							</div>
 						</div>
 						<div class="list-partners">
 							<ul>
-								<li>
-									<img src="images/logos/Partner_Soundcloud@2x.png" alt="Soundcloud logo" />
-								</li>
-								<li>
-									<img src="images/logos/Partner_Sega@2x.png" alt="Sega logo" />
-								</li>
-								<li>
-									<img src="images/logos/Partner_Wooga@2x.png" alt="Wooga logo" />
-								</li>
-								<li>
-									<img src="images/logos/Partner_TocaBoca@2x.png" alt="Toca Boca logo" />
-								</li>
-								<li>
-									<img src="images/logos/Partner_Miniclip@2x.png" alt="Miniclip logo" />
-								</li>
-								<li>
-									<img src="images/logos/Partner_SquareEnix@2x.png" alt="Square Enix logo" />
-								</li>
-								<li>
-									<img src="images/logos/Partner_Imperial@2x.png" alt="Imperial College London logo" />
-								</li>
+								<li><img src="images/logos/Partner_Soundcloud@2x.png" alt="Soundcloud logo" /></li>
+								<li><img src="images/logos/Partner_Wooga@2x.png" alt="Wooga logo" /></li>
+								<li><img src="images/logos/BBC_Worldwide@2x.png" alt="BBC Worldwide logo" /></li>
+								<li><img src="images/logos/Partner_TocaBoca@2x-v2.png" alt="Toca Boca logo" /></li>
+								<li><img src="images/logos/Partner_Miniclip@2x.png" alt="Miniclip logo" /></li>
 							</ul>
 							<h2>Who's using Reflection</h2>
 						</div>
@@ -75,11 +59,12 @@
 					<g:HTMLPanel styleName="landing-section-insights__column_one"  ui:field="leaderBoardScreenshot"/>						
 					<div class="landing-column-thin">
 						<div class="landing-column-thin__content">
-							<h2>Discover Powerful Insights</h2>
-							<p>Reflection's app leaderboard ranks all apps in the store according to the money they make or the number of times they are downloaded.</p>
-							<p>See who is monetising their users most effectively, what pricing models and app types generate the most revenue and identify the themes and design
-								that are most popular with customers.</p>
-							<p>Filter by country, store and app category to get a tailored view of the data you are most interested in.</p>
+							<h2>Essential Market Insight</h2>
+							<p>Analyse and benchmark apps and market data for revenue, rank and downloads. Make strategic decisions on app development, marketing and investment.</p>
+							<ul class="content-list">
+								<li><span>Daily updates of Top 200 paid and free apps for rank, revenue and download data.</span></li>
+								<li><span>Tailored view filtered by country, platform and category for your own insights.</span></li>
+							</ul>
 						</div>
 					</div>
 				</section>
@@ -89,9 +74,8 @@
 					<div class="landing-column-thin">
 						<div class="landing-column-thin__content">
 							<h2>Analyse App Performance</h2>
-							<p>Drill down into your own individual apps and those of other developers to analyse their rank, downloads and revenue data over a given period of time.</p>
-							<p>Discover how they are affected by internal or external influences such as time, day of the week, app update releases or promotions and use this
-								insight to evolve or plan your own product strategy.</p>
+							<p>Benchmark your apps' revenue, rank and download performance against other apps over time.</p>
+							<p>Discover and identify competitive apps' pricing models, popular themes and designs to plan for your apps' effective monetisation strategy.</p>
 						</div>
 					</div>
 				</section>
@@ -99,68 +83,40 @@
 				<section class="landing-section-story">
 					<div class="landing-column-thin">
 						<div class="landing-column-thin__content">
-							<blockquote>
-								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-									quis nostrud exercitation</p>
-								<footer>
-									<cite>
-										<span>John Smith</span>
-										Company Name
-									</cite>
-								</footer>
-							</blockquote>
-							<blockquote>
-								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor</p>
-								<footer>
-									<cite>
-										<span>John Smith</span>
-										Company Name
-									</cite>
-								</footer>
-							</blockquote>
-							<blockquote>
-								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore</p>
-								<footer>
-									<cite>
-										<span>John Smith</span>
-										Company Name
-									</cite>
-								</footer>
-							</blockquote>
 						</div>
 					</div>
 					<div class="landing-column-wide">
 						<div class="landing-column-wide__content">
-							<h2>Our Story</h2>
-							<p>Revenue, download and rank data is an essential source of product and commercial insight that until now was only available to the few members of the
-								development community who could afford to pay the hefty fee for it.</p>
-							<p>Reflection is revolutionising the app industry by providing freemium access to a comprehensive intelligence and analytics platform comprised of a set
-								of tools our partners and members have helped to create. These include some of the app industries biggest names such as Peter Molyneux OBE, Toca Boca,
-								Sega, Miniclip, Soundcloud etc etc etc</p>
-							<p>The accuracy of our data is all-important and maintained through detailed mathematical algorithms developed in conjunction with our statistical
-								partner, Imperial College London.</p>
+							<h2>Building for the Future</h2>
+							<p>Reflection helps you reach where you want to be in the app market.</p>
+							<p>We understand that app intelligence is currently inaccessible and unaffordable, and it can be cumbersome to gain useful intelligence about apps and app markets. We are here to deliver what is missing.</p>
+							<p>Be a Reflection beta partner and help us define features that will impact the growing needs of developers, publishers, and other stakeholders in the growing app space.</p>
 							<div class="logo-ref-imp-container">
-								<img src="images/logos/Reflection_Imperial_Logos.png" alt="Reflection and Imperial College logos" class="logo-ref-imp" />
+								<h4>Official Statistics Partner</h4>
+								<img src="images/logos/Imperial_College_London_Logo.png" alt="Imperial College London logo" class="logo-ref-imp" />
 							</div>
 						</div>
 					</div>
 				</section>
 
 				<section class="landing-section-careers">
-					<img src="images/careers/careers-col-thin.jpg" alt="Patrick" class="img-width-landing-column-thin" />
-					<img src="images/careers/careers-col-wide.jpg" alt="Chi, Gustaf and Will" class="img-width-landing-column-wide" />
+					<img src="images/careers/careers-col-thin-2.jpg" alt="Meeting" class="img-width-landing-column-thin" />
+					<img src="images/careers/careers-col-wide-2.jpg" alt="The Reflection office" class="img-width-landing-column-wide" />	
 					<div class="landing-column-wide">
 						<div class="landing-column-wide__content">
 							<h2>Work With Us</h2>
-							<p>We exist to help the app development community create more successful products and to contribute something of tangible value or enjoyment to their end
-								users.</p>
-							<p>Our core values of honesty, trusworthiness, progressive thinking and strictly no time-wasting nonsense permeate everything we do from our
-								communications to our tools and services. We believe in plain talking and turning app store data into uncomplicated and actionable insight.</p>
-							<p>
-								Our multi-national and like-minded London based team is growing rapidly and we've recently moved to our swish new offices just off Oxford Street (see
-								below). If you'd like to join us in changing the app industry forever we’d like to hear from you:
-								<a href="mailto:careers@reflection.io">careers@reflection.io</a>
-							</p>
+							<p>Reflection is a start-up with the ambition to disrupt the entire app ecosystem by providing accessible and affordable intelligence and tools.</p>
+							<p>We are always looking for talented people to join our growing team here in London. If you are a self-starter, would love to be part of an exciting, expanding company and have what it takes to get things done, we’d like to hear from you.</p>
+							<h3>Our Benefits</h3>
+							<ul class="content-list">
+								<li><span>Stock options plan</span></li>
+								<li><span>Hardware of your choice at work</span></li>
+								<li><span>Central London location just off Oxford Street</span></li>
+								<li><span>Opportunities to learn all there is to know about the mobile and app market</span></li>
+								<li><span>Friendly and collaborative culture</span></li>
+								<li><span>Support for your research and other development projects</span></li>
+								<li><span>All the espresso you can drink</span></li>
+							</ul>
 						</div>
 					</div>
 					<div class="landing-column-thin">
@@ -168,16 +124,10 @@
 							<h2>We're Hiring</h2>
 							<ul>
 								<li>
-									<a href="#">Senior Front End Web Developer</a>
+									<a href="http://reflection.workable.com/jobs/40809" target="_blank">Java Developer</a>
 								</li>
 								<li>
-									<a href="#">Junior Designer</a>
-								</li>
-								<li>
-									<a href="#">Community Manager</a>
-								</li>
-								<li>
-									<a href="#">Sales Executive</a>
+									<a href="http://reflection.workable.com/jobs/40810" target="_blank">Data Scientist</a>
 								</li>
 							</ul>
 						</div>
@@ -194,9 +144,6 @@
 					</div>
 					<a href="mailto:info@reflection.io" class="landing-section-contact__email">
 						<span class="icon-mail">info@reflection.io</span>
-					</a>
-					<a href="tel:+44(0)201234567" class="landing-section-contact__tel">
-						<span class="icon-phone">+44(0) 20 123 4567</span>
 					</a>
 					<a
 						href="https://www.google.co.uk/maps/place/44+Newman+St,+Marylebone,+London+W1T+1QD/@51.5187779,-0.1364135,17z/data=!4m7!1m4!3m3!1s0x48761b2b95192b1b:0xc2fcb9753b8ff12b!2s44+Newman+St,+Marylebone,+London+W1T+1QD!3b1!3m1!1s0x48761b2b95192b1b:0xc2fcb9753b8ff12b"
@@ -231,7 +178,7 @@
 					</ul>
 
 					<g:InlineHyperlink targetHistoryToken="{TermsPageType.asTargetHistoryToken}" styleName="landing-footer__inline-link">Terms &amp; Conditions and Privacy Policy</g:InlineHyperlink>
-					<span class="landing-footer__copyright">&copy;2014 Reflection. All Rights Reserved</span>
+					<span class="landing-footer__copyright">&copy;2015 Reflection. All Rights Reserved</span>
 					<a href="#" class="link-to-page-top js-scroll-to-page-top">
 						<span class="border-radius-point"></span>
 						<span class="link-to-page-top__text">Back to Top</span>
