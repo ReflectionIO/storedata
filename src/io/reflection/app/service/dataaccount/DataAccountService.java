@@ -260,7 +260,7 @@ final class DataAccountService implements IDataAccountService {
 	}
 
 	private void enqueue(DataAccount dataAccount, int days, boolean requiresNotification) {
-		enqueue(dataAccount, DateTime.now().minusDays(1).toDate(), requiresNotification);
+		enqueue(dataAccount, DateTime.now().minusDays(1).toDate(), days, requiresNotification);
 	}
 
 	/**
