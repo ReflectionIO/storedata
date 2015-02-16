@@ -44,27 +44,11 @@
 						</div>
 						<div class="list-partners">
 							<ul>
-								<li>
-									<img src="images/logos/Partner_Soundcloud@2x.png" alt="Soundcloud logo" />
-								</li>
-								<li>
-									<img src="images/logos/Partner_Sega@2x.png" alt="Sega logo" />
-								</li>
-								<li>
-									<img src="images/logos/Partner_Wooga@2x.png" alt="Wooga logo" />
-								</li>
-								<li>
-									<img src="images/logos/Partner_TocaBoca@2x.png" alt="Toca Boca logo" />
-								</li>
-								<li>
-									<img src="images/logos/Partner_Miniclip@2x.png" alt="Miniclip logo" />
-								</li>
-								<li>
-									<img src="images/logos/Partner_SquareEnix@2x.png" alt="Square Enix logo" />
-								</li>
-								<li>
-									<img src="images/logos/Partner_Imperial@2x.png" alt="Imperial College London logo" />
-								</li>
+								<li><img src="images/logos/Partner_Soundcloud@2x.png" alt="Soundcloud logo" /></li>
+								<li><img src="images/logos/Partner_Wooga@2x.png" alt="Wooga logo" /></li>
+								<li><img src="images/logos/BBC_Worldwide@2x.png" alt="BBC Worldwide logo" /></li>
+								<li><img src="images/logos/Partner_TocaBoca@2x-v2.png" alt="Toca Boca logo" /></li>
+								<li><img src="images/logos/Partner_Miniclip@2x.png" alt="Miniclip logo" /></li>
 							</ul>
 							<h2>Who's using Reflection</h2>
 						</div>
@@ -99,34 +83,6 @@
 				<section class="landing-section-story">
 					<div class="landing-column-thin">
 						<div class="landing-column-thin__content">
-							<blockquote>
-								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-									quis nostrud exercitation</p>
-								<footer>
-									<cite>
-										<span>John Smith</span>
-										Company Name
-									</cite>
-								</footer>
-							</blockquote>
-							<blockquote>
-								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor</p>
-								<footer>
-									<cite>
-										<span>John Smith</span>
-										Company Name
-									</cite>
-								</footer>
-							</blockquote>
-							<blockquote>
-								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore</p>
-								<footer>
-									<cite>
-										<span>John Smith</span>
-										Company Name
-									</cite>
-								</footer>
-							</blockquote>
 						</div>
 					</div>
 					<div class="landing-column-wide">
